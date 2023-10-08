@@ -1,0 +1,20 @@
+{
+  "name": "aione-lynx",
+  "version": "0.1.0",
+  "description": "Control, launch and manage all your AI from a single dashboard.",
+  "license": "MIT",
+  "author": {
+    "name": "AIOne Lynx Maintainers",
+    "email": "kindofbrazy@gmail.com",
+    "url": "https://github.com/KindaBrazy/AIOne-Lynx"
+  },
+  "main": "./dist/main/main.js",
+  "scripts": {
+    "rebuild": "node -r ts-node/register ../../.erb/scripts/electron-rebuild.js",
+    "postinstall": "npm run rebuild && npm run link-modules",
+    "link-modules": "node -r ts-node/register ../../.erb/scripts/link-modules.ts"
+  },
+  "dependencies": {
+    "node-pty": "^1.0.0"
+  }
+}

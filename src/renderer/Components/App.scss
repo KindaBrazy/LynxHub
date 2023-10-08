@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind utilities;
+@import "Fonts";
+
+:root {
+  color-scheme: light dark;
+}
+
+button:focus, button:active {
+  outline: none;
+}
+
+* {
+  font-family: Lato, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-image: linear-gradient(to right top, #212121, #202020, #1f1f1f, #1e1e1e, #1d1d1d, #1c1c1c, #1b1b1b, #1a1a1a, #181818, #161616, #141414, #121212);
+    color: white;
+  }
+  .imgDarkLightFilter {
+    filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+  }
+  .sideBarSeperator {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
+  }
+  .sideBarSeperatorVertical {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    background-image: linear-gradient(to right top, #f3f3f3, #f3f3f3, #f3f3f3, #f3f3f3, #f3f3f3, #f4f4f5, #f4f4f6, #f4f5f8, #f3f7fc, #f0fafe, #eefdfe, #eefffc);
+    color: #212121;
+  }
+  .imgDarkLightFilter {
+    filter: invert(0%) sepia(100%) saturate(0%) hue-rotate(206deg) brightness(104%) contrast(105%);
+  }
+  .sideBarSeperator {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
+  }
+  .sideBarSeperatorVertical {
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
+  }
+}
+
+.LynxBlueFilter {
+  filter: brightness(0) saturate(100%) invert(24%) sepia(87%) saturate(3067%) hue-rotate(238deg) brightness(89%) contrast(101%);
+}
+
+.LynxPurpleFilter {
+  filter: brightness(0) saturate(100%) invert(10%) sepia(86%) saturate(7499%) hue-rotate(276deg) brightness(106%) contrast(116%);
+}
+
+.blueVerticalSeperator {
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgb(73, 66, 228, 1) 50%, rgba(0, 0, 0, 0) 100%);
+}
+
+.cardSeperator {
+  border: 1px dashed gray;
+  border-left: 100px dashed transparent;
+  border-right: 100px dashed transparent;
+}
+
+body {
+  overflow: hidden;
+  height: 100vh;
+  font-size: 18pt;
+}
+
+.draggable {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
+.notDraggable {
+  -webkit-app-region: no-drag;
+}
