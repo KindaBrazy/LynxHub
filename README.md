@@ -3,9 +3,6 @@
  <h1>AIOne Lynx</h1>
 
 ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/KindaBrazy/AIOne-Lynx)
-![GitHub](https://img.shields.io/github/license/KindaBrazy/AIOne-Lynx)
-
-
 </div>
 
 <div align='center'>
