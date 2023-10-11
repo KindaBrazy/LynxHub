@@ -1,8 +1,8 @@
 {
   "name": "aione-lynx",
   "version": "0.1.0",
-  "description": "Control, launch and manage all your AI from a single dashboard.",
-  "license": "MIT",
+  "description": "Manage and launch all your AI from a single dashboard.",
+  "license": "GPL 3.0",
   "author": {
     "name": "AIOne Lynx Maintainers",
     "email": "kindofbrazy@gmail.com",
