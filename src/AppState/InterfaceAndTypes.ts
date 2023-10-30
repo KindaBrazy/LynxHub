@@ -1,7 +1,5 @@
-/* --------------------------------------- Stable Diffusion Arguments ---------------------------------- */
-
 // Enum for frontend element types of arguments and command lines
-export enum SDSettingType {
+export enum SettingComponentType {
   ChooseDirectory = 'ChooseDirectory',
   ChooseFile = 'ChooseFile',
   InputBox = 'InputBox',
@@ -9,11 +7,13 @@ export enum SDSettingType {
   CheckBox = 'CheckBox',
 }
 
+/* --------------------------------------- Stable Diffusion Arguments ---------------------------------- */
+
 // Interface for each environment and command line arguments (like name, type, default value ...)
 export interface SDArgSetting {
   Name: string;
   // Type of setting e.g. input, checkbox etc
-  Type: SDSettingType;
+  Type: SettingComponentType;
   Default: any;
   Description: string;
   // Only for DropDown type
@@ -31,6 +31,25 @@ export type SDLaunchConfig = {
     value: string;
   }[];
 };
+
+/* --------------------------------------- Stable Diffusion Arguments ---------------------------------- */
+export interface TGArgSetting {
+  Name: string;
+  // Type of setting e.g. input, checkbox etc
+  Type: SettingComponentType;
+  Description: string;
+  // Only for DropDown type
+  Values?: Record<string, string>;
+}
+
+// Type for TG batch file
+export type TGLaunchConfig = {
+  flags: {
+    id: string;
+    value: string;
+  }[];
+};
+
 /* --------------------------------------- WebUi ---------------------------------- */
 type SdConfig = {
   [key: string]: any;
@@ -41,13 +60,24 @@ type SdConfig = {
   batchFileName: string;
   selectedLaunchSettings: string;
 };
+type TgConfig = {
+  [key: string]: any;
+
+  installed: boolean;
+  name: string;
+  localDir: string;
+  batchFileName: string;
+  flagsFileName: string;
+  selectedLaunchSettings: string;
+};
 
 // Available WebUi
 export type WebUiRepos = {
-  [key: string]: SdConfig;
+  [key: string]: SdConfig | TgConfig;
 
   AUTOMATIC1111: SdConfig;
   LSHQQYTIGER: SdConfig;
+  OOBABOOGA: TgConfig;
 };
 /* --------------------------------------- AIOne Lynx ---------------------------------- */
 

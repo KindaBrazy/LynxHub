@@ -25,6 +25,7 @@ export const RendererLogDebug = colors.gray;
 export const DefaultWebUiDir: string = '\\WebUi';
 // Stable Diffusion Directory
 export const DefaultImageGenerateDir: string = `${DefaultWebUiDir}\\ImageGenerate`;
+export const DefaultTextGenerateDir: string = `${DefaultWebUiDir}\\TextGenerate`;
 
 /* WebUi Locations */
 
@@ -32,6 +33,7 @@ export const DefaultImageGenerateDir: string = `${DefaultWebUiDir}\\ImageGenerat
 export const DefaultA1Dir: string = `${DefaultImageGenerateDir}\\AUTOMATIC1111`;
 // LSHQQYTIGER Repository WebUi Directory
 export const DefaultLSHDir: string = `${DefaultImageGenerateDir}\\LSHQQYTIGER`;
+export const DefaultOOBADir: string = `${DefaultTextGenerateDir}\\OOBABOOGA`;
 
 /* Shadow styles */
 
@@ -141,6 +143,12 @@ type WebUiInfo = {
       };
     };
   };
+  TextGenerate: {
+    OOBABOOGA: {
+      name: string;
+      address: string;
+    };
+  };
 };
 
 // Object of repository addresses
@@ -151,6 +159,7 @@ export const webUiInfo: WebUiInfo = {
       LSHQQYTIGER: {name: 'LSHQQYTIGER', address: 'https://github.com/lshqqytiger/stable-diffusion-webui-directml'},
     },
   },
+  TextGenerate: {OOBABOOGA: {name: 'OOBABOOGA', address: 'https://github.com/oobabooga/text-generation-webui'}},
 };
 
 export function getWebUiUrlByName(uiName: string) {
@@ -159,6 +168,21 @@ export function getWebUiUrlByName(uiName: string) {
       return webUiInfo.ImageGenerate.StableDiffusion.AUTOMATIC1111.address;
     case 'LSHQQYTIGER':
       return webUiInfo.ImageGenerate.StableDiffusion.LSHQQYTIGER.address;
+    case 'OOBABOOGA':
+      return webUiInfo.TextGenerate.OOBABOOGA.address;
+    default:
+      return '';
+  }
+}
+
+export function getWebUiCatgeoryByName(uiName: string) {
+  switch (uiName) {
+    case 'AUTOMATIC1111':
+      return 'Stable Diffusion';
+    case 'LSHQQYTIGER':
+      return 'Stable Diffusion';
+    case 'OOBABOOGA':
+      return 'Text Generation';
     default:
       return '';
   }
@@ -167,9 +191,5 @@ export function getWebUiUrlByName(uiName: string) {
 export type WebuiList = {
   LSHQQYTIGER: boolean;
   AUTOMATIC1111: boolean;
+  OOBABOOGA: boolean;
 };
-
-export const webuiNames: {
-  AUTOMATIC1111: string;
-  LSHQQYTIGER: string;
-} = {AUTOMATIC1111: 'AUTOMATIC1111', LSHQQYTIGER: 'LSHQQYTIGER'};

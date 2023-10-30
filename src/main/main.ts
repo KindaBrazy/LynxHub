@@ -55,6 +55,7 @@ async function createMainWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       webviewTag: true,
+      devTools: false,
     },
   });
 

@@ -1,7 +1,7 @@
 import {motion, useIsPresent, Variants} from 'framer-motion';
 import React, {useContext, useEffect, useState} from 'react';
 import OpenDialog from '../Components/Customizable/OpenDialog';
-import {getBlack, getWebUiUrlByName, getWhite, getWhiteFourth, getWhiteThird} from '../../AppState/AppConstants';
+import {getBlack, getWebUiCatgeoryByName, getWebUiUrlByName, getWhite, getWhiteFourth, getWhiteThird} from '../../AppState/AppConstants';
 import StatusContext, {StatusContextType} from '../Components/GlobalStateContext';
 import SimpleCloseButton from '../Components/Customizable/SimpleCloseButton';
 import {ipcUserData, ipcUtil} from '../Components/RendererIpcHandler';
@@ -115,7 +115,7 @@ export default function InstallSD({repoUserName, setInstallWebui}: Props) {
           <h1 className="mb-4 mt-4 cursor-default select-none text-3xl font-semibold">Install WebUi</h1>
           <span className="mx-5 mt-4 text-black/60 dark:text-white/60">
             You are about to <span className="text-black dark:text-white">install</span> (clone){' '}
-            <span className="text-black dark:text-white">Stable Diffusion</span> WebUi Repository by{' '}
+            <span className="text-black dark:text-white">{getWebUiCatgeoryByName(repoUserName)}</span> WebUi Repository by{' '}
             <span className="text-black dark:text-white">{repoUserName}</span> :
           </span>
           <div

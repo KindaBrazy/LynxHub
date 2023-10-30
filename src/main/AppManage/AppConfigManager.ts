@@ -25,6 +25,14 @@ const appConfig: AppConfig = {
       batchFileName: '',
       selectedLaunchSettings: '',
     },
+    OOBABOOGA: {
+      installed: false,
+      name: 'OOBABOOGA',
+      localDir: '',
+      batchFileName: 'start_windows.bat',
+      flagsFileName: 'CMD_FLAGS.txt',
+      selectedLaunchSettings: '',
+    },
   },
 };
 
@@ -39,6 +47,8 @@ export function GetDirectoryByName(name: string) {
       return appConfig.WebUi.AUTOMATIC1111?.localDir;
     case 'LSHQQYTIGER':
       return appConfig.WebUi.LSHQQYTIGER?.localDir;
+    case 'OOBABOOGA':
+      return appConfig.WebUi.OOBABOOGA?.localDir;
     default:
       return undefined;
   }
@@ -50,9 +60,15 @@ export function GetLaunchSettingsByName(name: string) {
       return appConfig.WebUi.AUTOMATIC1111?.selectedLaunchSettings;
     case 'LSHQQYTIGER':
       return appConfig.WebUi.LSHQQYTIGER?.selectedLaunchSettings;
+    case 'OOBABOOGA':
+      return appConfig.WebUi.OOBABOOGA?.selectedLaunchSettings;
     default:
       return undefined;
   }
+}
+
+export function GetFlagsFileName() {
+  return appConfig.WebUi.OOBABOOGA?.flagsFileName;
 }
 
 export function GetBatchFileByName(name: string) {
@@ -61,6 +77,8 @@ export function GetBatchFileByName(name: string) {
       return appConfig.WebUi.AUTOMATIC1111?.batchFileName;
     case 'LSHQQYTIGER':
       return appConfig.WebUi.LSHQQYTIGER?.batchFileName;
+    case 'OOBABOOGA':
+      return appConfig.WebUi.OOBABOOGA?.batchFileName;
     default:
       return undefined;
   }
@@ -97,7 +115,7 @@ export function GetThemeConfig(): string {
  * @param {Partial<AppConfig>} updates - Partial object with updates to app config
  * @param {boolean} save - Whether to save updates to file, Default is false.
  */
-export function UpdateAppConfig(updates: Partial<AppConfig>, save: boolean = false): void {
+export function UpdateSDAppConfig(updates: Partial<AppConfig>, save: boolean = false): void {
   if (!updates) return;
   // Apply updates to appConfig object
   Object.keys(updates).forEach((key: string): void => {
@@ -131,10 +149,13 @@ export function UpdateBatchFileByName(name: string, batchFileName: string, save:
   console.log(MainLogInfo(`UpdateBatchFileByName-> ${batchFileName}`));
   switch (name) {
     case 'AUTOMATIC1111':
-      UpdateAppConfig({WebUi: {...appConfig.WebUi, AUTOMATIC1111: {...appConfig.WebUi.AUTOMATIC1111, batchFileName}}}, save);
+      UpdateSDAppConfig({WebUi: {...appConfig.WebUi, AUTOMATIC1111: {...appConfig.WebUi.AUTOMATIC1111, batchFileName}}}, save);
       break;
     case 'LSHQQYTIGER':
-      UpdateAppConfig({WebUi: {...appConfig.WebUi, LSHQQYTIGER: {...appConfig.WebUi.LSHQQYTIGER, batchFileName}}}, save);
+      UpdateSDAppConfig({WebUi: {...appConfig.WebUi, LSHQQYTIGER: {...appConfig.WebUi.LSHQQYTIGER, batchFileName}}}, save);
+      break;
+    case 'OOBABOOGA':
+      UpdateSDAppConfig({WebUi: {...appConfig.WebUi, OOBABOOGA: {...appConfig.WebUi.OOBABOOGA, batchFileName}}}, save);
       break;
     default:
       break;
@@ -145,10 +166,21 @@ export function UpdateLaunchSettingByName(name: string, launchSetting: string, s
   console.log(MainLogInfo(`UpdateLaunchSettingByName-> ${launchSetting}`));
   switch (name) {
     case 'AUTOMATIC1111':
-      UpdateAppConfig({WebUi: {...appConfig.WebUi, AUTOMATIC1111: {...appConfig.WebUi.AUTOMATIC1111, selectedLaunchSettings: launchSetting}}}, save);
+      UpdateSDAppConfig(
+        {
+          WebUi: {
+            ...appConfig.WebUi,
+            AUTOMATIC1111: {...appConfig.WebUi.AUTOMATIC1111, selectedLaunchSettings: launchSetting},
+          },
+        },
+        save,
+      );
       break;
     case 'LSHQQYTIGER':
-      UpdateAppConfig({WebUi: {...appConfig.WebUi, LSHQQYTIGER: {...appConfig.WebUi.LSHQQYTIGER, selectedLaunchSettings: launchSetting}}}, save);
+      UpdateSDAppConfig({WebUi: {...appConfig.WebUi, LSHQQYTIGER: {...appConfig.WebUi.LSHQQYTIGER, selectedLaunchSettings: launchSetting}}}, save);
+      break;
+    case 'OOBABOOGA':
+      UpdateSDAppConfig({WebUi: {...appConfig.WebUi, OOBABOOGA: {...appConfig.WebUi.OOBABOOGA, selectedLaunchSettings: launchSetting}}}, save);
       break;
     default:
       break;
@@ -167,7 +199,7 @@ export function LoadAppConfig(): void {
 
     console.log(`config object -> ${MainLogWarning(JSON.stringify(config))}`);
     // Update appConfig object data
-    UpdateAppConfig(config);
+    UpdateSDAppConfig(config);
 
     console.log(MainLogInfo(`Loaded Config File : ${JSON.stringify(config)}`));
   } catch (error) {

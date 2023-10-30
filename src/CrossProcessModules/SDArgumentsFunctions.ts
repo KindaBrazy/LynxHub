@@ -1,5 +1,5 @@
 import {environmentVariables, sda1CommandLines} from '../AppState/SDArgumentsContainer';
-import {SDSettingType} from '../AppState/InterfaceAndTypes';
+import {SettingComponentType} from '../AppState/InterfaceAndTypes';
 
 /**
  * Returns the type of the key argument.
@@ -28,9 +28,9 @@ export function getArgumentKeyType(key: string): 'env' | 'cl' | undefined {
 /**
  * This function retrieves the type of given environment variable.
  * @param {string} envVarId - The ID of the environment variable.
- * @returns {SDSettingType | undefined} - The type of the environment variable or undefined if not found.
+ * @returns {SettingComponentType | undefined} - The type of the environment variable or undefined if not found.
  */
-function getEnvironmentVariableType(envVarId: string): SDSettingType | undefined {
+function getEnvironmentVariableType(envVarId: string): SettingComponentType | undefined {
   // Find the environment variable by its ID.
   const foundEnvVarKey = Object.keys(environmentVariables).find((key) => envVarId === environmentVariables[key].Name);
 
@@ -46,10 +46,10 @@ function getEnvironmentVariableType(envVarId: string): SDSettingType | undefined
 /**
  * This function retrieves the type of given command line argument.
  * @param {string} cmdArgId - The ID of the command line argument.
- * @returns {SDSettingType | undefined} - The type of the command line argument or undefined if not found.
+ * @returns {SettingComponentType | undefined} - The type of the command line argument or undefined if not found.
  */
-function getCommandLineArgType(cmdArgId: string): SDSettingType | undefined {
-  let foundCmdArgType: SDSettingType | undefined;
+function getSDCommandLineArgType(cmdArgId: string): SettingComponentType | undefined {
+  let foundCmdArgType: SettingComponentType | undefined;
 
   // Iterate over the command line arguments until the argument with the given ID is found.
   Object.keys(sda1CommandLines).some((key) => {
@@ -75,7 +75,7 @@ function getCommandLineArgType(cmdArgId: string): SDSettingType | undefined {
  * @param {string} argID The command line argument or environment variable id to evaluate.
  * @returns {boolean} Returns true if the command line argument or environment variable is existing or valid, false otherwise.
  */
-export function isValidArg(argID: string): boolean {
+export function isValidSDArg(argID: string): boolean {
   const foundEnvVarKey: boolean = Object.keys(environmentVariables).some((key) => argID === environmentVariables[key].Name);
   let foundClVarKey: boolean = false;
   Object.keys(sda1CommandLines).some((key) => {
@@ -92,11 +92,12 @@ export function isValidArg(argID: string): boolean {
  * @param {string} argID The command line argument or environment variable id to evaluate.
  * @returns {boolean} Returns true if the command line argument or environment variable is type of ChooseFile/ChooseDirectory, false otherwise.
  */
-export function isFileOrFolderArg(argID: string): boolean {
+export function isFileOrFolderSDArg(argID: string): boolean {
   const clResult: boolean =
-    getCommandLineArgType(argID) === SDSettingType.ChooseFile || getCommandLineArgType(argID) === SDSettingType.ChooseDirectory;
+    getSDCommandLineArgType(argID) === SettingComponentType.ChooseFile || getSDCommandLineArgType(argID) === SettingComponentType.ChooseDirectory;
   const envResult: boolean =
-    getEnvironmentVariableType(argID) === SDSettingType.ChooseFile || getEnvironmentVariableType(argID) === SDSettingType.ChooseDirectory;
+    getEnvironmentVariableType(argID) === SettingComponentType.ChooseFile ||
+    getEnvironmentVariableType(argID) === SettingComponentType.ChooseDirectory;
 
   return clResult || envResult;
 }
@@ -107,9 +108,9 @@ export function isFileOrFolderArg(argID: string): boolean {
  * @param {string} argID The command line argument or environment variable id to evaluate.
  * @returns {boolean} Returns true if the command line argument or environment variable is type of CheckBox, false otherwise.
  */
-export function isCheckBoxArg(argID: string): boolean {
-  const clResult: boolean = getCommandLineArgType(argID) === SDSettingType.CheckBox;
-  const envResult: boolean = getEnvironmentVariableType(argID) === SDSettingType.CheckBox;
+export function isCheckBoxSDArg(argID: string): boolean {
+  const clResult: boolean = getSDCommandLineArgType(argID) === SettingComponentType.CheckBox;
+  const envResult: boolean = getEnvironmentVariableType(argID) === SettingComponentType.CheckBox;
 
   return clResult || envResult;
 }

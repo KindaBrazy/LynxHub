@@ -3,6 +3,9 @@
  <h1>AIOne Lynx</h1>
 
 ![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/KindaBrazy/AIOne-Lynx)
+![GitHub](https://img.shields.io/github/license/KindaBrazy/AIOne-Lynx)
+
+
 </div>
 
 <div align='center'>
@@ -44,6 +47,7 @@ alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 |---------------------------------------------------|---------------------------------------------------------------------------------------------------|
 | [AUTOMATIC1111](https://github.com/AUTOMATIC1111) | [stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui)                 |
 | [LSHQQYTIGER](https://github.com/lshqqytiger)     | [stable-diffusion-webui-directml](https://github.com/lshqqytiger/stable-diffusion-webui-directml) |
+| [OOBABOOGA](https://github.com/oobabooga)         | [Text generation web UI](https://github.com/oobabooga/text-generation-webui)                      |
 
 > Note: this software will not install any Git, Python or Python libraries
 
@@ -81,6 +85,7 @@ To use the in-app features, such as cloning and launching WebUI, you need to hav
 - Run `npm run start` to run application
     - The Application will be `auto refreshed` after any changes in the `renderer process`.
     - Application will be auto `restarted` after any changes in the `main procces`.
+- Press `CRTL + Shift + I` For DevTools
 
 ### Native modules
 
@@ -92,11 +97,11 @@ To use the in-app features, such as cloning and launching WebUI, you need to hav
     - Change the `"build"` section in [package.json](package.json) for the target platform of your need.
     - You can add the option to package with `-- --[option]` (e.g., `npm run package -- --win`)
 
-# Licence
-
-AIOne Lynx licensed under the GPL-3.0.Refer to the [LICENSE.txt](LICENSE.txt) file.
-
 ## Acknowledgement
 
 - [Electron React Boilerplate](https://github.com/electron-react-boilerplate/electron-react-boilerplate) for providing a
   great starter template for Electron React development.
+
+# Licence
+
+AIOne Lynx licensed under the GPL-3.0.Refer to the [LICENSE.txt](LICENSE.txt) file.
