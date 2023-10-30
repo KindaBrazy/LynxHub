@@ -4,7 +4,7 @@ import {useContext} from 'react';
 import {motion, Variants} from 'framer-motion';
 // Import Components
 import StatusContext, {StatusContextType} from '../GlobalStateContext';
-import {getBlack, getWhite, getWhiteFourth, getWhiteSecond, getWhiteThird} from '../../../AppState/AppConstants';
+import {getBlack, getLynxBlue, getWhite, getWhiteFourth} from '../../../AppState/AppConstants';
 
 type Props = {
   // Extra class names for the root element
@@ -30,6 +30,8 @@ export default function SideBarButton({extraClasses, icon, btnId, selected, setS
   // Motion animation variants
   const buttonVariants: Variants = {
     hover: {
+      borderWidth: '1px',
+      borderColor: isDarkMode ? getWhite(0.2) : getBlack(0.2),
       backgroundColor: isDarkMode ? getWhite(0.1) : getWhiteFourth(),
       transition: {duration: 0.15},
     },
@@ -40,11 +42,13 @@ export default function SideBarButton({extraClasses, icon, btnId, selected, setS
       transition: {duration: 0.1},
     },
     active: {
-      borderColor: isDarkMode ? getWhite(0.2) : getBlack(0.3),
+      borderWidth: '2px',
+      borderColor: getLynxBlue(0.5),
       backgroundColor: isDarkMode ? getWhite(0) : getWhiteFourth(0),
       transition: {duration: 0.3},
     },
     deActive: {
+      borderWidth: '0px',
       borderColor: 'rgba(0,0,0,0)',
       transition: {duration: 0.3},
     },
@@ -63,8 +67,8 @@ export default function SideBarButton({extraClasses, icon, btnId, selected, setS
       {/* Button Icon */}
       <img
         src={icon}
-        className={[selected === btnId ? 'LynxBlueFilter' : 'imgDarkLightFilter', 'pointer-events-none h-8 w-8'].join(' ')}
-        alt="Image Generate"
+        className={[selected === btnId ? 'LynxBlueFilter' : 'imgDarkLightFilter', 'pointer-events-none h-8 w-8 opacity-[85%]'].join(' ')}
+        alt={btnId}
       />
     </motion.button>
   );

@@ -1,5 +1,5 @@
 import {ipcRenderer, IpcRendererEvent} from 'electron';
-import {AppConfig, SDLaunchConfig} from '../../AppState/InterfaceAndTypes';
+import {AppConfig, SDLaunchConfig, TGLaunchConfig} from '../../AppState/InterfaceAndTypes';
 
 export const ipcWindowManager = {
   changeWindowState: (status: 'Minimize' | 'Maximize' | 'Close') => ipcRenderer.send('windowManager:changeWindowState', status),
@@ -21,7 +21,7 @@ export const ipcUserData = {
   modifyData: (op: 'save' | 'update' | 'load', updateData?: Partial<AppConfig>, saveOnUpdate?: boolean) =>
     ipcRenderer.send('userData:modifyData', op, updateData, saveOnUpdate),
   getUserData: () => ipcRenderer.invoke('userData:getUserData'),
-  saveSDArgsToBat: (data: SDLaunchConfig, uiName: string) => ipcRenderer.send('userData:saveSDArgsToBat', data, uiName),
+  saveLaunchArgsToFile: (data: SDLaunchConfig | TGLaunchConfig, uiName: string) => ipcRenderer.send('userData:saveLaunchArgsToFile', data, uiName),
   getLaunchData: (uiName: string) => ipcRenderer.invoke('userData:getLaunchData', uiName),
   readLaunchDataFromFile: (uiName: string) => ipcRenderer.send('userData:readLaunchDataFromFile', uiName),
   onLaunchDataChange: (result: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => ipcRenderer.on('userData:onLaunchDataChange', result),

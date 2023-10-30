@@ -9,7 +9,7 @@ import treeKill from 'tree-kill';
 // Import app utils
 import {getRemoteUrl} from './Utils/GitUtil';
 import {getWebUiUrlByName, MainLogDebug, MainLogError, MainLogInfo, MainLogWarning, webUiInfo} from '../AppState/AppConstants';
-import {readLaunchData, saveLaunchConfig, getBatchFilePathForPty, getSDLaunchConfigByName} from '../CrossProcessModules/SdLauncherConfig';
+import {readSdLaunchData, saveSDLaunchConfig, getBatchFilePathForPty, getSDLaunchConfigByName} from '../CrossProcessModules/SDLauncherConfig';
 import {
   ChangeThemeConfig,
   GetDirectoryByName,
@@ -17,10 +17,11 @@ import {
   GetUserConfigData,
   LoadAppConfig,
   SaveAppConfig,
-  UpdateAppConfig,
+  UpdateSDAppConfig,
 } from './AppManage/AppConfigManager';
-import {AppConfig, SDLaunchConfig} from '../AppState/InterfaceAndTypes';
+import {AppConfig, SDLaunchConfig, TGLaunchConfig} from '../AppState/InterfaceAndTypes';
 import {saveInstalledUiConfig} from '../CrossProcessModules/CrossFunctions';
+import {getTGLaunchConfig, readTgLaunchData, saveTGLaunchConfig} from '../CrossProcessModules/TGLauncherConfig';
 
 // Variable to hold the main and active BrowserWindow reference
 let mainWindowRef: BrowserWindow;
@@ -144,6 +145,13 @@ async function locateRepo(repoName: string): Promise<boolean> {
 
   const remote: string | undefined = await getRemoteUrl(selectedLocation[0]);
 
+  if (repoName === 'OOBABOOGA') {
+    const isValidTG: boolean = remote === webUiInfo.TextGenerate.OOBABOOGA.address;
+    if (isValidTG) {
+      saveInstalledUiConfig(repoName, selectedLocation[0]);
+    }
+    return isValidTG;
+  }
   const isSDRepo: boolean = remote
     ? [webUiInfo.ImageGenerate.StableDiffusion.AUTOMATIC1111.address, webUiInfo.ImageGenerate.StableDiffusion.LSHQQYTIGER.address].includes(remote)
     : false;
@@ -174,7 +182,7 @@ async function locateRepo(repoName: string): Promise<boolean> {
 function modifyData(op: 'save' | 'update' | 'load', updateData?: Partial<AppConfig>, saveOnUpdate?: boolean) {
   switch (op) {
     case 'update':
-      if (updateData) UpdateAppConfig(updateData, saveOnUpdate);
+      if (updateData) UpdateSDAppConfig(updateData, saveOnUpdate);
       break;
     case 'load':
       LoadAppConfig();
@@ -214,7 +222,7 @@ function backendPtyProcess(operation: 'start' | 'stop', uiName: string) {
   if (operation === 'start') {
     const dir: string | undefined = GetDirectoryByName(uiName);
     if (!dir) return;
-    ptyProcess = pty.spawn(ptyShell, [], {cwd: dir, cols: 150, rows: 50, name: 'Sda1'});
+    ptyProcess = pty.spawn(ptyShell, [], {cwd: dir, cols: 150, rows: 50, name: 'LynxWebUI'});
     const batchFile: string | undefined = getBatchFilePathForPty(uiName);
 
     // Write the batch file address to run to the pseudo terminal process
@@ -247,8 +255,28 @@ function resizePty(newSize: {cols: number; rows: number}) {
   }
 }
 
+function saveLaunchArgsToFile(data: SDLaunchConfig | TGLaunchConfig, uiName: string) {
+  if (uiName === 'OOBABOOGA') {
+    saveTGLaunchConfig(data as TGLaunchConfig, uiName);
+  } else {
+    saveSDLaunchConfig(data as SDLaunchConfig, uiName);
+  }
+}
+
+function getLaunchData(uiName: string) {
+  if (uiName === 'OOBABOOGA') {
+    return getTGLaunchConfig();
+  }
+  return getSDLaunchConfigByName(uiName);
+}
+
 function readLaunchDataFromBatch(uiName: string) {
-  const modifiedData: SDLaunchConfig = readLaunchData(uiName);
+  let modifiedData: SDLaunchConfig | TGLaunchConfig;
+  if (uiName === 'OOBABOOGA') {
+    modifiedData = readTgLaunchData();
+  } else {
+    modifiedData = readSdLaunchData(uiName);
+  }
   // Sends updated launch data to the renderer process.
   mainWindowRef.webContents.send('userData:onLaunchDataChange', modifiedData);
 }
@@ -279,8 +307,8 @@ export function MainProcessIpcHandler(mainWindow: BrowserWindow): void {
     modifyData(op, updateData, saveOnUpdate),
   );
   ipcMain.handle('userData:getUserData', () => GetUserConfigData());
-  ipcMain.on('userData:saveSDArgsToBat', (_e, data: SDLaunchConfig, uiName: string) => saveLaunchConfig(data, uiName));
-  ipcMain.handle('userData:getLaunchData', (_e, uiName: string) => getSDLaunchConfigByName(uiName));
+  ipcMain.on('userData:saveLaunchArgsToFile', (_e, data: SDLaunchConfig | TGLaunchConfig, uiName: string) => saveLaunchArgsToFile(data, uiName));
+  ipcMain.handle('userData:getLaunchData', (_e, uiName: string) => getLaunchData(uiName));
   ipcMain.on('userData:readLaunchDataFromFile', (_e, uiName: string) => readLaunchDataFromBatch(uiName));
 
   /* --------------------------------------- PTY ---------------------------------------- */

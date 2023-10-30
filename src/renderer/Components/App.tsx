@@ -3,6 +3,7 @@ import './App.scss';
 // import packages
 import {RefObject, useEffect, useMemo, useRef, useState} from 'react';
 import {WebviewTag} from 'electron';
+import {motion} from 'framer-motion';
 // import modules
 import {ipcUserData, ipcWindowManager} from './RendererIpcHandler';
 // import components
@@ -15,6 +16,10 @@ import WebUiViewer from './Launcher/WebUiViewer';
 import {RendererLogError, WebuiList} from '../../AppState/AppConstants';
 import SdLshWebUi from './WebuiCard/SdLshWebUi';
 import {AppConfig} from '../../AppState/InterfaceAndTypes';
+import OOBABOOGAWebUI from './WebuiCard/OOBABOOGAWebUI';
+
+const sideBarPictureId: string = 'sideBarPicture';
+const sideBarTextId: string = 'sideBarText';
 
 export default function App() {
   // Whether user theme is on dark mode
@@ -22,7 +27,8 @@ export default function App() {
 
   // Block background of an opened window to be not interactive
   const [blockBackground, setBlockBackground] = useState<boolean>(false);
-  const [installedWebUi, setInstalledWebUi] = useState<WebuiList>({AUTOMATIC1111: false, LSHQQYTIGER: false});
+  const [selectedPage, setSelectedPage] = useState<string>(sideBarPictureId);
+  const [installedWebUi, setInstalledWebUi] = useState<WebuiList>({AUTOMATIC1111: false, LSHQQYTIGER: false, OOBABOOGA: false});
   const [webuiRunning, setWebuiRunning] = useState<boolean>(false);
 
   const webViewRef = useRef<WebviewTag>(null);
@@ -54,7 +60,11 @@ export default function App() {
       .getUserData()
       .then((value: AppConfig) => {
         // @ts-ignore
-        setInstalledWebUi({AUTOMATIC1111: value.WebUi.AUTOMATIC1111?.installed, LSHQQYTIGER: value.WebUi.LSHQQYTIGER?.installed});
+        setInstalledWebUi({
+          AUTOMATIC1111: value.WebUi.AUTOMATIC1111?.installed,
+          LSHQQYTIGER: value.WebUi.LSHQQYTIGER?.installed,
+          OOBABOOGA: value.WebUi.OOBABOOGA?.installed,
+        });
         return value;
       })
       .catch((error) => console.log(RendererLogError(error)));
@@ -69,12 +79,14 @@ export default function App() {
       setInstalledWebUi,
       webuiRunning,
       setWebuiRunning,
+      selectedPage,
+      setSelectedPage,
       webuiLaunch,
       setWebuiLaunch,
       isDarkMode,
       setIsDarkMode,
     }),
-    [isDarkMode, blockBackground, installedWebUi, webuiRunning, webuiLaunch],
+    [isDarkMode, blockBackground, installedWebUi, webuiRunning, webuiLaunch, selectedPage],
   );
 
   /* (Main Component)
@@ -99,15 +111,41 @@ export default function App() {
       <TitleBar />
       <SideBar />
       {/* Webui cards container */}
-      <div className="absolute bottom-0 left-24 right-0 top-10 flex flex-wrap content-start overflow-hidden">
+      <div className="absolute bottom-0 left-24 right-0 top-10 overflow-hidden">
         {webuiRunning ? (
           <WebUiViewer />
         ) : (
           <>
-            {/* Automatic1111 WebUi */}
-            <Sda1WebUi />
-            {/* LSHQQYTIGER (DirectMl) WebUi */}
-            <SdLshWebUi />
+            <motion.div
+              className="absolute flex h-full w-full flex-wrap content-start opacity-0"
+              animate={{
+                translateY: selectedPage === sideBarPictureId ? '0px' : '-700px',
+                opacity: selectedPage === sideBarPictureId ? 1 : 0,
+              }}
+              transition={{
+                ease: selectedPage === sideBarPictureId ? 'backOut' : 'backIn',
+                duration: 0.3,
+                delay: selectedPage === sideBarPictureId ? 0.15 : 0,
+              }}>
+              {/* Automatic1111 WebUi */}
+              <Sda1WebUi />
+              {/* LSHQQYTIGER (DirectMl) WebUi */}
+              <SdLshWebUi />
+            </motion.div>
+            <motion.div
+              className="absolute flex h-full w-full flex-wrap content-start opacity-0"
+              animate={{
+                translateY: selectedPage === sideBarTextId ? '0px' : '700px',
+                opacity: selectedPage === sideBarTextId ? 1 : 0,
+              }}
+              transition={{
+                ease: selectedPage === sideBarTextId ? 'backOut' : 'backIn',
+                duration: 0.3,
+                delay: selectedPage === sideBarTextId ? 0.15 : 0,
+              }}>
+              {/* OOBABOOGAWebUI WebUi */}
+              <OOBABOOGAWebUI />
+            </motion.div>
           </>
         )}
       </div>

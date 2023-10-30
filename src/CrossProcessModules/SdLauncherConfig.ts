@@ -14,8 +14,9 @@ import {
   UpdateLaunchSettingByName,
 } from '../main/AppManage/AppConfigManager';
 import {MainLogError, MainLogInfo} from '../AppState/AppConstants';
-import {isCheckBoxArg, isFileOrFolderArg, isValidArg} from './SDArgumentsFunctions';
+import {isCheckBoxSDArg, isFileOrFolderSDArg, isValidSDArg} from './SDArgumentsFunctions';
 import {SDLaunchConfig} from '../AppState/InterfaceAndTypes';
+import {getWebUiTGBatchFilePath} from './TGLauncherConfig';
 
 // The launch configuration object
 const sda1LaunchConfig: SDLaunchConfig = {
@@ -54,6 +55,21 @@ export function getSDLaunchConfigByName(uiName: string): SDLaunchConfig {
     default:
       console.log('getSDLaunchConfigByName -> Wrong uiName');
       return sda1LaunchConfig;
+  }
+}
+
+export function resetSDLaunchConfigByName(uiName: string): void {
+  switch (uiName) {
+    case 'AUTOMATIC1111':
+      sda1LaunchConfig.env = [{id: 'COMMANDLINE_ARGS', value: ''}];
+      sda1LaunchConfig.cl = [{id: '', value: ''}];
+      break;
+    case 'LSHQQYTIGER':
+      sdlshLaunchConfig.env = [{id: 'COMMANDLINE_ARGS', value: ''}];
+      sdlshLaunchConfig.cl = [{id: '', value: ''}];
+      break;
+    default:
+      console.log('getSDLaunchConfigByName -> Wrong uiName');
   }
 }
 
@@ -116,7 +132,7 @@ function getWebUiBatchFilePath(uiName: string): string {
 
 // Get the path to batch file and insert ` before spaces for correct running on terminal
 export function getBatchFilePathForPty(uiName: string) {
-  const batPath: string = getWebUiBatchFilePath(uiName);
+  const batPath: string = uiName === 'OOBABOOGA' ? getWebUiTGBatchFilePath(uiName) : getWebUiBatchFilePath(uiName);
   return batPath.replace(' ', '` ');
 }
 
@@ -129,7 +145,7 @@ export function getBatchFilePathForPty(uiName: string) {
  * @param {SDLaunchConfig} launchConfig - The launch configuration data to save.
  * @param uiName The repository WebUi name
  */
-export function saveLaunchConfig(launchConfig: SDLaunchConfig, uiName: string): void {
+export function saveSDLaunchConfig(launchConfig: SDLaunchConfig, uiName: string): void {
   // Map launch configuration data to an object with environment and command line ids
   const mappedLaunchData: {env: {id: string}[]; cl: {id: string}[]} = {
     env: launchConfig.env.map((envItem: {id: string; value: string}): {id: string} => ({id: envItem.id})),
@@ -154,7 +170,7 @@ export function saveLaunchConfig(launchConfig: SDLaunchConfig, uiName: string): 
   launchConfig.cl.forEach((clItem: {id: string; value: string}): void => {
     if (clItem.value.startsWith('CheckBox')) {
       clArgsData += clItem.value === 'CheckBox-true' ? `${clItem.id} ` : '';
-    } else if (isFileOrFolderArg(clItem.id)) {
+    } else if (isFileOrFolderSDArg(clItem.id)) {
       clArgsData += `${clItem.id} "${clItem.value}" `;
     } else {
       clArgsData += `${clItem.id} ${clItem.value} `;
@@ -175,10 +191,13 @@ export function saveLaunchConfig(launchConfig: SDLaunchConfig, uiName: string): 
 }
 
 // Read launch data from webui batch file
-export function readLaunchData(uiName: string): SDLaunchConfig {
+export function readSdLaunchData(uiName: string): SDLaunchConfig {
   try {
     // Read the batch file
     const data: string = fs.readFileSync(getWebUiBatchFilePath(uiName), 'utf-8');
+
+    resetSDLaunchConfigByName(uiName);
+
     // Split the data into lines
     const lines: string[] = data.split('\n');
 
@@ -204,8 +223,8 @@ export function readLaunchData(uiName: string): SDLaunchConfig {
         // Process each argument
         result.forEach((value: {id: string; value: string}): void => {
           // Check if the argument exists or valid
-          if (isValidArg(value.id)) {
-            if (isCheckBoxArg(value.id)) {
+          if (isValidSDArg(value.id)) {
+            if (isCheckBoxSDArg(value.id)) {
               getSDLaunchConfigByName(uiName).cl.push({id: value.id, value: 'CheckBox-true'});
             } else {
               getSDLaunchConfigByName(uiName).cl.push({id: value.id, value: value.value});

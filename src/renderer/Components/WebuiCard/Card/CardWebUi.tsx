@@ -101,17 +101,19 @@ export default function CardWebUi({webuiData, launchSettingsMenu, toggleSettings
   const cardVariants: Variants = {
     hover: {
       borderColor: isDarkMode ? getWhite(0.5) : getBlack(0.5),
+      borderRadius: '17px',
       transition: {
-        duration: 0.3,
+        duration: 0.5,
       },
     },
-    animate: {borderColor: isDarkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)', transition: {duration: 0.1}},
+    animate: {borderColor: isDarkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)', transition: {duration: 0.5}},
   };
 
   // Repository user avatar motion animation variants
   const avatarVariant: Variants = {
-    initial: {opacity: 0, scale: 0, translateX: '-50%'},
-    animate: {opacity: 1, scale: 1, transition: {duration: 0.6, type: 'spring', delay: 0.1}},
+    initial: {opacity: 0, scale: 0, translateX: '-50%', borderRadius: '70px'},
+    animate: {opacity: 1, scale: 1, borderRadius: '70px', transition: {duration: 0.6, type: 'spring', delay: 0.1}},
+    hover: {borderRadius: '20px'},
   };
 
   // Description WebUi motion animation variants
@@ -122,6 +124,10 @@ export default function CardWebUi({webuiData, launchSettingsMenu, toggleSettings
       bottom: '0px',
       height: isWebuiInstalled ? '150px' : '180px',
       transition: {duration: 0.4, type: 'tween', ease: 'easeOut'},
+    },
+    hover: {
+      borderColor: isDarkMode ? getWhite(0.7) : getBlack(0.7),
+      transition: {duration: 0.3},
     },
   };
 
@@ -174,8 +180,11 @@ export default function CardWebUi({webuiData, launchSettingsMenu, toggleSettings
         {/* Webui repository developer avatar */}
         <motion.div
           variants={avatarVariant}
-          className="relative left-1/2 z-10 h-32 w-32 -translate-x-1/2 overflow-hidden rounded-full border-2 
-          border-LynxRaisinBlack/70 shadow-Card transition-colors duration-500 dark:border-white">
+          initial="initial"
+          animate="animate"
+          whileHover="hover"
+          className="relative left-1/2 z-10 h-32 w-32 -translate-x-1/2 overflow-hidden border-2
+           border-LynxRaisinBlack/70 shadow-Card dark:border-white">
           <img src={webuiData.repoAvatarImg} alt="AUTOMATIC1111" className="pointer-events-none" />
         </motion.div>
 
@@ -185,7 +194,7 @@ export default function CardWebUi({webuiData, launchSettingsMenu, toggleSettings
           animate="animate"
           whileHover="hover"
           className="absolute top-[64px] flex h-[86%] w-full overflow-hidden rounded-3xl
-        border-2 border-black/30 text-center shadow-Card transition-colors duration-500 dark:border-white/30">
+        border-2 border-black/30 text-center shadow-Card dark:border-white/30">
           <img src={webuiData.cardBackgroundImg} alt="Stable Diffusion" className={`h-full object-none ${webuiData.cardBackgroundPosition}`} />
 
           {/* WebUi description */}
@@ -193,8 +202,10 @@ export default function CardWebUi({webuiData, launchSettingsMenu, toggleSettings
             variants={descVariant}
             initial="initial"
             animate="animate"
-            className="absolute bottom-0 flex h-[180px] w-full flex-col items-center rounded-t-[40px] border-t
-          border-black/30 backdrop-blur-2xl backdrop-brightness-150 dark:border-white/30 dark:backdrop-blur-xl dark:backdrop-brightness-50">
+            whileHover="hover"
+            className="absolute bottom-0 flex h-[180px] w-full flex-col items-center rounded-t-[40px] border-t border-black/30
+             bg-LynxWhiteSecond/50 backdrop-blur-2xl backdrop-brightness-150 dark:border-white/30 dark:bg-LynxRaisinBlack/50
+              dark:backdrop-blur-xl dark:backdrop-brightness-50">
             {/* Repo user name */}
             <h2 className="pointer-events-none mt-4 select-none font-Lato text-lg font-black">{webuiData.repoUserName}</h2>
 
