@@ -5,13 +5,36 @@ import {GetUserConfigData, UpdateSDAppConfig} from '../main/AppManage/AppConfigM
 export function setInstalledWebUiById(repoUserName: string, setState: React.Dispatch<React.SetStateAction<WebuiList>>): void {
   switch (repoUserName) {
     case 'AUTOMATIC1111':
-      setState((prevState) => ({AUTOMATIC1111: true, LSHQQYTIGER: prevState.LSHQQYTIGER, OOBABOOGA: prevState.OOBABOOGA}));
+      setState((prevState) => ({
+        AUTOMATIC1111: true,
+        LSHQQYTIGER: prevState.LSHQQYTIGER,
+        OOBABOOGA: prevState.OOBABOOGA,
+        RSXDALV: prevState.RSXDALV,
+      }));
       break;
     case 'LSHQQYTIGER':
-      setState((prevState) => ({AUTOMATIC1111: prevState.AUTOMATIC1111, LSHQQYTIGER: true, OOBABOOGA: prevState.OOBABOOGA}));
+      setState((prevState) => ({
+        AUTOMATIC1111: prevState.AUTOMATIC1111,
+        LSHQQYTIGER: true,
+        OOBABOOGA: prevState.OOBABOOGA,
+        RSXDALV: prevState.RSXDALV,
+      }));
       break;
     case 'OOBABOOGA':
-      setState((prevState) => ({AUTOMATIC1111: prevState.AUTOMATIC1111, LSHQQYTIGER: prevState.LSHQQYTIGER, OOBABOOGA: true}));
+      setState((prevState) => ({
+        AUTOMATIC1111: prevState.AUTOMATIC1111,
+        LSHQQYTIGER: prevState.LSHQQYTIGER,
+        OOBABOOGA: true,
+        RSXDALV: prevState.RSXDALV,
+      }));
+      break;
+    case 'RSXDALV':
+      setState((prevState) => ({
+        AUTOMATIC1111: prevState.AUTOMATIC1111,
+        LSHQQYTIGER: prevState.LSHQQYTIGER,
+        OOBABOOGA: prevState.OOBABOOGA,
+        RSXDALV: true,
+      }));
       break;
     default:
       console.log(`No correct repoUserName -> ${repoUserName}`);
@@ -27,6 +50,8 @@ export function getIsInstalledById(repoUserName: string, installedWebUi: WebuiLi
       return installedWebUi.LSHQQYTIGER;
     case 'OOBABOOGA':
       return installedWebUi.OOBABOOGA;
+    case 'RSXDALV':
+      return installedWebUi.RSXDALV;
     default:
       console.log(`No correct repoUserName -> ${repoUserName}`);
       return false;
@@ -60,6 +85,16 @@ export function saveInstalledUiConfig(uiName: string, dir: string) {
         WebUi: {
           ...GetUserConfigData().WebUi,
           OOBABOOGA: {...GetUserConfigData().WebUi.OOBABOOGA, installed: true, localDir: dir},
+        },
+      },
+      true,
+    );
+  } else if (uiName === 'RSXDALV') {
+    UpdateSDAppConfig(
+      {
+        WebUi: {
+          ...GetUserConfigData().WebUi,
+          RSXDALV: {...GetUserConfigData().WebUi.RSXDALV, installed: true, localDir: dir},
         },
       },
       true,

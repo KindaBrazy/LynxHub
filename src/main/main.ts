@@ -55,7 +55,7 @@ async function createMainWindow() {
       nodeIntegration: true,
       contextIsolation: false,
       webviewTag: true,
-      devTools: false,
+      // devTools: false,
     },
   });
 
@@ -94,6 +94,13 @@ async function createMainWindow() {
     shell.openExternal(eData.url);
     // Deny the creation of new windows
     return {action: 'deny'};
+  });
+
+  mainWindow.webContents.on('did-attach-webview', (event, webContents) => {
+    webContents.setWindowOpenHandler((details) => {
+      shell.openExternal(details.url);
+      return {action: 'deny'};
+    });
   });
 
   // new AppUpdater();

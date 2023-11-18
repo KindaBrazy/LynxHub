@@ -70,14 +70,22 @@ type TgConfig = {
   flagsFileName: string;
   selectedLaunchSettings: string;
 };
+type TTSConfig = {
+  [key: string]: any;
 
+  installed: boolean;
+  name: string;
+  localDir: string;
+  batchFileName: string;
+};
 // Available WebUi
 export type WebUiRepos = {
-  [key: string]: SdConfig | TgConfig;
+  [key: string]: SdConfig | TgConfig | TTSConfig;
 
   AUTOMATIC1111: SdConfig;
   LSHQQYTIGER: SdConfig;
   OOBABOOGA: TgConfig;
+  RSXDALV: TTSConfig;
 };
 /* --------------------------------------- AIOne Lynx ---------------------------------- */
 

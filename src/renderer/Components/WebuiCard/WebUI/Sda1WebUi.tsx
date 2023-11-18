@@ -2,12 +2,12 @@
 import React, {useEffect, useState} from 'react';
 import {AnimatePresence} from 'framer-motion';
 // Import components
-import CardWebUi from './Card/CardWebUi';
-import WebUiSDLaunchSettings from './WebUiSDLaunchSettings';
+import CardWebUi from '../Card/CardWebUi';
+import WebUiSDLaunchSettings from '../LaunchSettings/WebUiSDLaunchSettings';
 // Import assets
-import automatic1111Img from '../../../Assets/AiCard/RepoUser/AUTOMATIC1111.png';
-import stableDiffusionImg from '../../../Assets/AiCard/BGCardImageGeneration.png';
-import {ipcUserData} from '../RendererIpcHandler';
+import automatic1111Img from '../../../../Assets/AiCard/RepoUser/AUTOMATIC1111.png';
+import stableDiffusionImg from '../../../../Assets/AiCard/BGCardImageGeneration.png';
+import {ipcUserData} from '../../RendererIpcHandler';
 
 const userName: string = 'AUTOMATIC1111';
 

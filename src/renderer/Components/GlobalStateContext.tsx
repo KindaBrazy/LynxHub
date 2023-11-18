@@ -19,8 +19,8 @@ export interface StatusContextType {
   webuiRunning: boolean;
   setWebuiRunning: React.Dispatch<React.SetStateAction<boolean>>;
 
-  selectedPage: string;
-  setSelectedPage: React.Dispatch<React.SetStateAction<string>>;
+  selectedPage: number;
+  setSelectedPage: React.Dispatch<React.SetStateAction<number>>;
 
   webuiLaunch: {
     webViewRef: RefObject<WebviewTag>;

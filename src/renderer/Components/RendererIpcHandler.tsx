@@ -31,4 +31,5 @@ export const ipcBackendRuns = {
   ptyProcess: (operation: 'start' | 'stop', uiName: string) => ipcRenderer.invoke('backendRuns:ptyProcess', operation, uiName),
   getPtyOutput: (result: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => ipcRenderer.on('backendRuns:getPtyOutput', result),
   resizePty: (newSize: {cols: number; rows: number}) => ipcRenderer.send('backendRuns:resizePty', newSize),
+  writeToPty: (data: string) => ipcRenderer.send('backendRuns:writeToPty', data),
 };

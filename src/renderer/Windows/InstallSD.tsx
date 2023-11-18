@@ -125,6 +125,15 @@ export default function InstallSD({repoUserName, setInstallWebui}: Props) {
               {getWebUiUrlByName(repoUserName)}
             </button>
           </div>
+          {repoUserName === 'RSXDALV' && (
+            <div
+              className="mx-5 mt-2 self-start text-[14pt] text-black/70 transition duration-150
+          hover:text-black dark:text-white/50 dark:hover:text-white/80">
+              <button type="button" onClick={openUrl} className="hover:underline">
+                https://github.com/rsxdalv/tts-generation-webui
+              </button>
+            </div>
+          )}
           <OpenDialog
             categoryText="Directory :"
             defaultDir={defaultInstallLocation}

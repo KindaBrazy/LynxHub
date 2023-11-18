@@ -1,6 +1,7 @@
 import {motion, Variants} from 'framer-motion';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 import StatusContext, {StatusContextType} from '../GlobalStateContext';
+import {RendererLogError} from '../../../AppState/AppConstants';
 
 type Props = {
   // Extra class names for the root element
@@ -9,6 +10,15 @@ type Props = {
 export default function WebViewBrowser({extraClasses}: Props) {
   const {webuiLaunch} = useContext(StatusContext) as StatusContextType;
 
+  webuiLaunch.webViewRef.current?.addEventListener('click', (e) => {
+    console.log(RendererLogError(`** -> will-navigate${e.target}`));
+  });
+
+  useEffect(() => {
+    webuiLaunch.webViewRef.current?.addEventListener('click', (e) => {
+      console.log(RendererLogError(`** -> will-navigate${e.target}`));
+    });
+  }, [webuiLaunch, webuiLaunch.webViewRef, webuiLaunch.webViewRef.current]);
   // Motion animation variants
   const variants: Variants = {
     initial: {
@@ -28,7 +38,8 @@ export default function WebViewBrowser({extraClasses}: Props) {
       initial="initial"
       animate="animate"
       className={['absolute inset-2 overflow-hidden rounded-xl bg-blue-600/0', extraClasses].join(' ')}>
-      <webview ref={webuiLaunch.webViewRef} className="absolute h-full w-full" src={webuiLaunch.currentAddress} title="WebUi" />
+      {/* @ts-ignore */}
+      <webview ref={webuiLaunch.webViewRef} className="absolute h-full w-full" src={webuiLaunch.currentAddress} allowpopups="true" />
     </motion.div>
   );
 }

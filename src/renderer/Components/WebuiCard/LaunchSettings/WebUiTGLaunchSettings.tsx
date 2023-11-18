@@ -2,23 +2,23 @@
 import React, {useContext, useEffect, useReducer, useState} from 'react';
 import {AnimatePresence, motion, Variants} from 'framer-motion';
 // Import modules
-import {getBlack, getWhite, getWhiteFourth, getWhiteThird, RendererLogError, RendererLogInfo} from '../../../AppState/AppConstants';
-import StatusContext, {StatusContextType} from '../GlobalStateContext';
-import {ipcUserData} from '../RendererIpcHandler';
-import {getSDLaunchConfig} from '../../../CrossProcessModules/SDLauncherConfig';
-import {SDArgSetting, SDLaunchConfig, SettingComponentType} from '../../../AppState/InterfaceAndTypes';
-import {environmentVariables, sda1CommandLines} from '../../../AppState/SDArgumentsContainer';
-import {getArgumentKeyType} from '../../../CrossProcessModules/SDArgumentsFunctions';
+import {getBlack, getWhite, getWhiteFourth, getWhiteThird, RendererLogError, RendererLogInfo} from '../../../../AppState/AppConstants';
+import StatusContext, {StatusContextType} from '../../GlobalStateContext';
+import {ipcUserData} from '../../RendererIpcHandler';
+import {SettingComponentType, TGArgSetting, TGLaunchConfig} from '../../../../AppState/InterfaceAndTypes';
 // Import components
-import FilterSDLaunchSettings from './FilterLaunchSettings/FilterSDLaunchSettings';
-import SmoothScroll from '../Customizable/SmoothScroll';
-import SimpleCloseButton from '../Customizable/SimpleCloseButton';
-import LCheckBox from '../Customizable/LCheckBox';
-import OpenDialog from '../Customizable/OpenDialog';
-import DropDownMenu from '../Customizable/DropDownMenu';
-import LInputBox from '../Customizable/LInputBox';
+import SmoothScroll from '../../Customizable/SmoothScroll';
+import SimpleCloseButton from '../../Customizable/SimpleCloseButton';
+import LCheckBox from '../../Customizable/LCheckBox';
+import OpenDialog from '../../Customizable/OpenDialog';
+import DropDownMenu from '../../Customizable/DropDownMenu';
+import LInputBox from '../../Customizable/LInputBox';
 // Import Assets
-import {FilterIcon} from '../../../Assets/Icons/SvgIcons';
+import {FilterIcon} from '../../../../Assets/Icons/SvgIcons';
+import {getTGLaunchConfig} from '../../../../CrossProcessModules/TGLauncherConfig';
+import {isValidTGArg} from '../../../../CrossProcessModules/TGArgumentsFunctions';
+import {commandLineFlags} from '../../../../AppState/TGArgumentsContainer';
+import FilterTGLaunchSettings from '../FilterLaunchSettings/FilterTGLaunchSettings';
 
 type Props = {
   // Toggle showing launch setting or Webui card
@@ -38,20 +38,6 @@ type elementData = {
 // Launch data reducer dispatch types
 type LaunchAction =
   | {
-      type: 'ADD_ENV';
-      name: {
-        id: string;
-        value: string;
-      };
-    }
-  | {
-      type: 'REMOVE_ENV';
-      name: {
-        id: string;
-        value: string;
-      };
-    }
-  | {
       type: 'ADD_CL';
       name: {
         id: string;
@@ -70,37 +56,26 @@ type LaunchAction =
     }
   | {
       type: 'NEW_DATA';
-      data: SDLaunchConfig;
+      data: TGLaunchConfig;
     };
 
-const launchArgsReducer = (state: SDLaunchConfig, action: LaunchAction): SDLaunchConfig => {
+const launchArgsReducer = (state: TGLaunchConfig, action: LaunchAction): TGLaunchConfig => {
   switch (action.type) {
-    case 'ADD_ENV':
-      if (state.env.includes(action.name)) return state;
-      return {
-        ...state,
-        env: [...state.env, action.name],
-      };
-    case 'REMOVE_ENV':
-      return {
-        ...state,
-        env: state.env.filter((item) => item.id !== action.name.id),
-      };
     case 'ADD_CL':
-      if (state.cl.includes(action.name)) return state;
+      if (state.flags.includes(action.name)) return state;
       return {
         ...state,
-        cl: [...state.cl, action.name],
+        flags: [...state.flags, action.name],
       };
     case 'REMOVE_CL':
       return {
         ...state,
-        cl: state.cl.filter((item) => item.id !== action.name.id),
+        flags: state.flags.filter((item) => item.id !== action.name.id),
       };
     case 'CLEAR_CL':
       return {
         ...state,
-        cl: [],
+        flags: [],
       };
     case 'NEW_DATA':
       return action.data;
@@ -109,14 +84,14 @@ const launchArgsReducer = (state: SDLaunchConfig, action: LaunchAction): SDLaunc
   }
 };
 
-export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Props) {
+export default function WebUiTGLaunchSettings({repoUserName, ToggleSettings}: Props) {
   const {isDarkMode, setBlockBackground} = useContext(StatusContext) as StatusContextType;
 
-  const [launchArgs, launchArgsDispatch] = useReducer(launchArgsReducer, getSDLaunchConfig());
+  const [launchArgs, launchArgsDispatch] = useReducer(launchArgsReducer, getTGLaunchConfig());
 
   const [hoverSaveBtn, setHoverSaveBtn] = useState<boolean>();
   const [showListMenu, setShowListMenu] = useState<boolean>(false);
-  const [dataToSave, setDataToSave] = useState<SDLaunchConfig>(getSDLaunchConfig());
+  const [dataToSave, setDataToSave] = useState<TGLaunchConfig>(getTGLaunchConfig());
   const [dataToShow, setDataToShow] = useState<elementData>({
     CheckBox: new Set<React.JSX.Element>(),
     ChoosePath: new Set<React.JSX.Element>(),
@@ -125,10 +100,9 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
   });
 
   useEffect(() => {
-    // Read webui launch the config object from backend and initialize sda1LaunchArg state with it
     ipcUserData
       .getLaunchData(repoUserName)
-      .then((value: SDLaunchConfig) => {
+      .then((value: TGLaunchConfig) => {
         launchArgsDispatch({type: 'NEW_DATA', data: value});
         return null;
       })
@@ -136,38 +110,28 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
         console.log(RendererLogError(error));
       });
 
-    // Update sda1LaunchArg every time webui launch config changed
     ipcUserData.onLaunchDataChange((_event, args) => {
       launchArgsDispatch({type: 'NEW_DATA', data: args});
     });
   }, []);
 
-  // Save launch settings to the batch file and close the settings menu
   const SaveSettings = () => {
     launchArgsDispatch({type: 'NEW_DATA', data: dataToSave});
     ipcUserData.saveLaunchArgsToFile(dataToSave, repoUserName);
     ToggleSettings();
   };
 
-  /**
-   * Handles changes to settings.
-   * First check setting type is 'env' or 'cl', then checks if the id exists it updates the value, otherwise it adds a new item with the id and value.
-   *
-   * @param {('env' | 'cl')} settingType - The type of the setting.
-   * @param {string} id - The id of the setting.
-   * @param {string} value - The new value of the setting.
-   */
-  function handleSettingChange(settingType: 'env' | 'cl', id: string, value: string): void {
-    setDataToSave((prevState: SDLaunchConfig) => {
+  function handleSettingChange(id: string, value: string): void {
+    setDataToSave((prevState: TGLaunchConfig) => {
       // Check if the setting already exists.
-      const settingExists: boolean = prevState[settingType].some((setting: {id: string; value: string}): boolean => setting.id === id);
+      const settingExists: boolean = prevState.flags.some((setting: {id: string; value: string}): boolean => setting.id === id);
 
       // If the setting exists, update its value. Otherwise, add the new setting.
       const updatedSettings: {
         id: string;
         value: string;
       }[] = settingExists
-        ? prevState[settingType].map(
+        ? prevState.flags.map(
             (setting: {
               id: string;
               value: string;
@@ -176,10 +140,10 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
               value: string;
             } => (setting.id === id ? {...setting, value} : setting),
           )
-        : [...prevState[settingType], {id, value}];
+        : [...prevState.flags, {id, value}];
 
       // Update the state with the new settings.
-      const resultData = {...prevState, [settingType]: updatedSettings};
+      const resultData = {...prevState, flags: updatedSettings};
 
       console.log(RendererLogInfo(JSON.stringify(resultData)));
 
@@ -187,22 +151,14 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
     });
   }
 
-  /**
-   * Handles the change of a component's value.
-   * @param {('checkbox' | 'string')} type - The type of the component.
-   * @param {string} id - The id of the launch setting.
-   * @param {string} value - The value of the launch setting.
-   */
   function handleCompChange(type: 'checkbox' | 'string', id: string, value: string) {
-    const settingType: 'env' | 'cl' | undefined = getArgumentKeyType(id);
-
-    if (settingType) {
+    if (isValidTGArg(id)) {
       switch (type) {
         case 'checkbox':
-          handleSettingChange(settingType, id, value);
+          handleSettingChange(id, value);
           break;
         case 'string':
-          if (value) handleSettingChange(settingType, id, value);
+          if (value) handleSettingChange(id, value);
           break;
         default:
           break;
@@ -212,23 +168,7 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
     }
   }
 
-  /**
-   * Get a component based on the type of setting provided.
-   * Also handle the change events for different types of components.
-   *
-   * @param {SDArgSetting} setting - The setting based on which the component is to be fetched.
-   * @param {Object} currentData - The current data of the component.
-   * @param {string} currentData.id - The current id of the component.
-   * @param {string} currentData.value - The current value of the component.
-   */
-  function fetchComponentBySettingType(
-    setting: SDArgSetting,
-    currentData?: {
-      id: string;
-      value: string;
-    },
-  ) {
-    // Handle checkbox change
+  function fetchComponentBySettingType(setting: TGArgSetting, currentData?: {id: string; value: string}) {
     const onCheckBoxChange = (
       name: {
         id: string;
@@ -336,10 +276,6 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
     }
   }
 
-  /**
-   * Initialize the data to save and show, and fetch the components based on the launch arguments.
-   * Also set the default value for checkboxes if not provided.
-   */
   useEffect(() => {
     // Initialize data to save and show
     setDataToSave(launchArgs);
@@ -351,25 +287,32 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
     });
 
     console.log(` -> ${JSON.stringify(launchArgs)}`);
-    // Fetch components for environment variables
-    launchArgs.env.forEach((envVar: {id: string; value: string}): void => {
-      if (envVar.id !== 'COMMANDLINE_ARGS') {
-        if (environmentVariables[envVar.id].Type === SettingComponentType.CheckBox && envVar.value === '') {
-          envVar.value = 'CheckBox-false';
-        }
-        fetchComponentBySettingType(environmentVariables[envVar.id], envVar);
-      }
-    });
-
     // Fetch components for command line arguments
-    launchArgs.cl.forEach((clArg: {id: string; value: string}): void => {
-      ['Configuration', 'Performance', 'Features'].some((key: string) => {
-        const foundKey = Object.keys(sda1CommandLines[key]).find((childKey: string) => sda1CommandLines[key][childKey].Name === clArg.id);
+    launchArgs.flags.forEach((flagArg: {id: string; value: string}): void => {
+      [
+        'BasicSettings',
+        'ModelLoader',
+        'AccelerateTransformers',
+        'Accelerate4bit',
+        'GGUF',
+        'LlamaCpp',
+        'CTransformers',
+        'AutoGPTQ',
+        'ExLlama',
+        'GPTQForLLaMa',
+        'DeepSpeed',
+        'RWKV',
+        'RoPE',
+        'Gradio',
+        'API',
+        'Multimodal',
+      ].some((key: string) => {
+        const foundKey = Object.keys(commandLineFlags[key]).find((childKey: string) => commandLineFlags[key][childKey].Name === flagArg.id);
         if (foundKey) {
-          if (sda1CommandLines[key][foundKey].Type === SettingComponentType.CheckBox && clArg.value === '') {
-            clArg.value = 'CheckBox-false';
+          if (commandLineFlags[key][foundKey].Type === SettingComponentType.CheckBox && flagArg.value === '') {
+            flagArg.value = 'CheckBox-false';
           }
-          fetchComponentBySettingType(sda1CommandLines[key][foundKey], clArg);
+          fetchComponentBySettingType(commandLineFlags[key][foundKey], flagArg);
         }
         return !!foundKey;
       });
@@ -500,7 +443,7 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
 
       {/* Filter launch settings menu */}
       <AnimatePresence>
-        {showListMenu && <FilterSDLaunchSettings launchArgs={launchArgs} launchArgsDispatch={launchArgsDispatch} setShowListMenu={setShowListMenu} />}
+        {showListMenu && <FilterTGLaunchSettings launchArgs={launchArgs} launchArgsDispatch={launchArgsDispatch} setShowListMenu={setShowListMenu} />}
       </AnimatePresence>
     </>
   );

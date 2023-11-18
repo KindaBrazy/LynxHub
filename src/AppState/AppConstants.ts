@@ -1,5 +1,7 @@
 import chalk from 'chalk';
 import colors from 'colors/safe';
+import {Variants} from 'framer-motion';
+import exp from 'constants';
 
 /* Styled Logging in the main process */
 // Chalk red text style
@@ -129,6 +131,35 @@ export function getBlack(alpha: number = 1): string {
   return `rgba(0,0,0,${alpha})`;
 }
 
+export type SideBarButtonId = {
+  Image: number;
+  Text: number;
+  Audio: number;
+};
+
+export const sideBarButtonId: SideBarButtonId = {
+  Image: 0,
+  Text: 1,
+  Audio: 2,
+};
+
+export function getTotalPagesNumber(): number {
+  return Object.keys(sideBarButtonId).length;
+}
+
+export function getSidebarButtonId(Button: 'sideBarPicture' | 'sideBarText' | 'sideBarAudio' | string) {
+  switch (Button) {
+    case 'sideBarPicture':
+      return sideBarButtonId.Image;
+    case 'sideBarText':
+      return sideBarButtonId.Text;
+    case 'sideBarAudio':
+      return sideBarButtonId.Audio;
+    default:
+      return sideBarButtonId.Image;
+  }
+}
+
 // Type for repository addresses
 type WebUiInfo = {
   ImageGenerate: {
@@ -149,6 +180,12 @@ type WebUiInfo = {
       address: string;
     };
   };
+  AudioGenerate: {
+    RSXDALV: {
+      name: string;
+      address: string;
+    };
+  };
 };
 
 // Object of repository addresses
@@ -160,6 +197,7 @@ export const webUiInfo: WebUiInfo = {
     },
   },
   TextGenerate: {OOBABOOGA: {name: 'OOBABOOGA', address: 'https://github.com/oobabooga/text-generation-webui'}},
+  AudioGenerate: {RSXDALV: {name: 'RSXDALV', address: 'https://github.com/rsxdalv/one-click-installers-tts'}},
 };
 
 export function getWebUiUrlByName(uiName: string) {
@@ -170,6 +208,8 @@ export function getWebUiUrlByName(uiName: string) {
       return webUiInfo.ImageGenerate.StableDiffusion.LSHQQYTIGER.address;
     case 'OOBABOOGA':
       return webUiInfo.TextGenerate.OOBABOOGA.address;
+    case 'RSXDALV':
+      return webUiInfo.AudioGenerate.RSXDALV.address;
     default:
       return '';
   }
@@ -183,6 +223,8 @@ export function getWebUiCatgeoryByName(uiName: string) {
       return 'Stable Diffusion';
     case 'OOBABOOGA':
       return 'Text Generation';
+    case 'RSXDALV':
+      return 'TTS Generation';
     default:
       return '';
   }
@@ -192,4 +234,5 @@ export type WebuiList = {
   LSHQQYTIGER: boolean;
   AUTOMATIC1111: boolean;
   OOBABOOGA: boolean;
+  RSXDALV: boolean;
 };

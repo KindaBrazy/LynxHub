@@ -11,7 +11,7 @@
 
 ### New Features
 
-- Text generation section
+- Text generation page
 - OOBABOOGA Text Generation WebUI
 
 ### Improvement
@@ -21,3 +21,20 @@
 ### Bug Fixes
 
 - Fix bug causing duplication of setting menu item after terminating running WebUI
+
+# V0.3.1
+
+### New Features
+
+- Audio generation page
+- RSXDALV TTS Generation WebUI
+
+### Improvement
+
+- Enable to open webui browser links in user default browser
+- Enable input for terminal
+- Adjusting page transition animation
+
+### Bug Fixes
+
+- Fix bug when terminating WebUi and relaunch, default view will be empty browser instead of terminal

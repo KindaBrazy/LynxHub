@@ -10,9 +10,9 @@
 
 <div align='center'>
 <picture>
- <source media="(prefers-color-scheme: dark)" srcset="Preview/Screenshot_Dark_V0.1.0-pre-alpha.png" width='777'>
- <source media="(prefers-color-scheme: light)" srcset="Preview/Screenshot_Light_V0.1.0-pre-alpha.png" width='777'>
- <img alt="AIOne Lynx Screenshot" src="Preview/Screenshot_Dark_V0.1.0-pre-alpha.png" width='777'>
+ <source media="(prefers-color-scheme: dark)" srcset="Preview/Screenshot_Dark_V0.3.1-pre-alpha.png" width='777'>
+ <source media="(prefers-color-scheme: light)" srcset="Preview/Screenshot_Light_V0.3.1-pre-alpha.png" width='777'>
+ <img alt="AIOne Lynx Screenshot" src="Preview/Screenshot_Dark_V0.3.1-pre-alpha.png" width='777'>
 </picture>
 </div>
 
@@ -43,11 +43,12 @@ alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 
 ### Currently supported WebUI:
 
-| Developer                                         | Repository                                                                                        |
-|---------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| [AUTOMATIC1111](https://github.com/AUTOMATIC1111) | [stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui)                 |
-| [LSHQQYTIGER](https://github.com/lshqqytiger)     | [stable-diffusion-webui-directml](https://github.com/lshqqytiger/stable-diffusion-webui-directml) |
-| [OOBABOOGA](https://github.com/oobabooga)         | [Text generation web UI](https://github.com/oobabooga/text-generation-webui)                      |
+| Developer                                         | Repository                                                                                          |
+|---------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| [AUTOMATIC1111](https://github.com/AUTOMATIC1111) | [Stable Diffusion WebUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui)                   |
+| [LSHQQYTIGER](https://github.com/lshqqytiger)     | [Stable Diffusion WebUI - DirectML](https://github.com/lshqqytiger/stable-diffusion-webui-directml) |
+| [OOBABOOGA](https://github.com/oobabooga)         | [Text Generation WebUI](https://github.com/oobabooga/text-generation-webui)                         |
+| [RSXDALV](https://github.com/rsxdalv)             | [TTS Generation WebUI](https://github.com/rsxdalv/tts-generation-webui)                             |
 
 > Note: this software will not install any Git, Python or Python libraries
 
@@ -59,6 +60,10 @@ alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 | Linux    | ❌      |
 | MacOS    | ❌      |
 
+## What’s New:
+
+[Changelog - V0.3.1](CHANGELOG.md#v031)
+
 # Install & Requirements
 
 For software self you don't need any Requirements
@@ -69,7 +74,7 @@ launch it.**
 To use the in-app features, such as cloning and launching WebUI, you need to have installed:
 
 - **[Git](https://git-scm.com/downloads)**
-- **[Python](https://www.python.org/downloads)** (Latest or the version that the WebUI repository guide provides)
+- **[Python](https://www.python.org/downloads)** (Recommended: [V3.10.11](https://www.python.org/downloads/release/python-31011/))
 
 # Development
 

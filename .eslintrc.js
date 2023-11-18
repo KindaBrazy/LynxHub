@@ -15,6 +15,7 @@ module.exports = {
     'no-console': 'off',
     'react-hooks/exhaustive-deps': 'off',
     'jsx-a11y/control-has-associated-label': 'off',
+    'react/no-unknown-property': 'off',
     'max-len': ['error', {code: 150}],
     'prettier/prettier': ['error', {printWidth: 150, bracketSpacing: false, bracketSameLine: true, useTabs: false}],
   },

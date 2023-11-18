@@ -7,6 +7,8 @@ import os from 'os';
 import * as pty from 'node-pty';
 import treeKill from 'tree-kill';
 // Import app utils
+import path from 'path';
+import fs from 'fs';
 import {getRemoteUrl} from './Utils/GitUtil';
 import {getWebUiUrlByName, MainLogDebug, MainLogError, MainLogInfo, MainLogWarning, webUiInfo} from '../AppState/AppConstants';
 import {readSdLaunchData, saveSDLaunchConfig, getBatchFilePathForPty, getSDLaunchConfigByName} from '../CrossProcessModules/SDLauncherConfig';
@@ -140,36 +142,49 @@ async function cloneRepo(uiName: string, dir: string): Promise<void> {
  */
 async function locateRepo(repoName: string): Promise<boolean> {
   const selectedLocation: string[] | undefined = dialog.showOpenDialogSync(mainWindowRef, {properties: ['openDirectory']});
-
   if (!selectedLocation) return false;
 
-  const remote: string | undefined = await getRemoteUrl(selectedLocation[0]);
+  const remote: string | undefined = repoName === 'RSXDALV' ? '' : await getRemoteUrl(selectedLocation[0]);
 
-  if (repoName === 'OOBABOOGA') {
-    const isValidTG: boolean = remote === webUiInfo.TextGenerate.OOBABOOGA.address;
-    if (isValidTG) {
-      saveInstalledUiConfig(repoName, selectedLocation[0]);
-    }
-    return isValidTG;
-  }
-  const isSDRepo: boolean = remote
-    ? [webUiInfo.ImageGenerate.StableDiffusion.AUTOMATIC1111.address, webUiInfo.ImageGenerate.StableDiffusion.LSHQQYTIGER.address].includes(remote)
-    : false;
+  const saveConfig = () => {
+    saveInstalledUiConfig(repoName, selectedLocation[0]);
+  };
 
-  const A1Info = webUiInfo.ImageGenerate.StableDiffusion.AUTOMATIC1111;
-  const LSHInfo = webUiInfo.ImageGenerate.StableDiffusion.LSHQQYTIGER;
-  let repoType;
-  if (remote === A1Info.address) {
-    repoType = A1Info.name;
-  } else if (remote === LSHInfo.address) {
-    repoType = LSHInfo.name;
+  switch (repoName) {
+    case 'AUTOMATIC1111':
+      if (remote === webUiInfo.ImageGenerate.StableDiffusion.AUTOMATIC1111.address) {
+        saveConfig();
+        return true;
+      }
+      return false;
+    case 'LSHQQYTIGER':
+      if (remote === webUiInfo.ImageGenerate.StableDiffusion.LSHQQYTIGER.address) {
+        saveConfig();
+        return true;
+      }
+      return false;
+    case 'OOBABOOGA':
+      if (remote === webUiInfo.TextGenerate.OOBABOOGA.address) {
+        saveConfig();
+        return true;
+      }
+      return false;
+    case 'RSXDALV':
+      try {
+        console.log(MainLogDebug('Try RSXDALV'));
+        if (fs.readFileSync(path.join(selectedLocation[0], '.gitignore'), 'utf-8').includes('tts-generation-webui')) {
+          saveConfig();
+          return true;
+        }
+        return false;
+      } catch (e) {
+        console.log(MainLogDebug('Catch RSXDALV'));
+        console.log(MainLogError(e));
+        return false;
+      }
+    default:
+      return false;
   }
-  const isValidRepoByName: boolean = isSDRepo && repoType === repoName;
-  if (isValidRepoByName) {
-    if (repoType) saveInstalledUiConfig(repoType, selectedLocation[0]);
-  }
-  // TODO: Error Dialog
-  return isValidRepoByName;
 }
 
 /**
@@ -255,6 +270,17 @@ function resizePty(newSize: {cols: number; rows: number}) {
   }
 }
 
+/**
+ * Write data from user input (Xterm input) to terminal if running.
+ *
+ * @param {string} data - Data to write
+ */
+function writeToPty(data: string) {
+  if (ptyProcess && ptyProcess.pid && isPtyRunning) {
+    ptyProcess.write(data);
+  }
+}
+
 function saveLaunchArgsToFile(data: SDLaunchConfig | TGLaunchConfig, uiName: string) {
   if (uiName === 'OOBABOOGA') {
     saveTGLaunchConfig(data as TGLaunchConfig, uiName);
@@ -315,6 +341,8 @@ export function MainProcessIpcHandler(mainWindow: BrowserWindow): void {
 
   // Handle the start and stop operations from renderer for the pseudo terminal process
   ipcMain.handle('backendRuns:ptyProcess', (_e, operation: 'start' | 'stop', uiName: string) => backendPtyProcess(operation, uiName));
-  // Handle the resizing of the terminal
+  // Resize the terminal (PTY)
   ipcMain.on('backendRuns:resizePty', (_e, newSize: {cols: number; rows: number}): void => resizePty(newSize));
+  // Write data from user input to terminal (PTY)
+  ipcMain.on('backendRuns:writeToPty', (_e, data: string): void => writeToPty(data));
 }

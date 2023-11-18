@@ -63,13 +63,14 @@ export default function TerminalOutputUi({extraClasses}: Props) {
   // Showing data from backend to ui
   const showContent = useCallback((_event: any, data: string) => {
     // Check if webui ready to show
-    if (data.toLowerCase().includes('Running on'.toLowerCase())) {
+    if (!webuiLaunch.currentAddress && data.toLowerCase().includes('Running on'.toLowerCase())) {
       console.log(RendererLogInfo(`Found Launch Here: ${data}`));
       /* Extract ip address of webui running to open in webView */
       const addressRegex: RegExp = /(http:\/\/[\d.:]+)/;
       const match: RegExpMatchArray | null = data.match(addressRegex);
       if (match) {
         console.log(RendererLogInfo(`The Address Is : ${match[1]}`));
+        if (match[1] === 'http://0.0.0.0:7860') match[1] = 'http://localhost:7860';
         // Load webui after delay to be sure completely is ready.
         setTimeout(() => {
           if (setWebuiLaunch) setWebuiLaunch({webViewRef: webuiLaunch.webViewRef, currentView: 'webView', currentAddress: match[1]});
@@ -85,7 +86,6 @@ export default function TerminalOutputUi({extraClasses}: Props) {
       // Create and initialize the terminal object with a default background and cursor
       term.current = new Terminal({
         theme: {foreground: isDarkMode ? getWhite() : getBlack(), background: isDarkMode ? getLynxRaisinBlack() : getWhite()},
-        cursorStyle: 'underline',
         allowProposedApi: true,
         scrollback: 10000,
       });
@@ -137,6 +137,13 @@ export default function TerminalOutputUi({extraClasses}: Props) {
 
       // Resize pty background cols and rows to the current size of terminal ui
       if (webuiRunning) ipcBackendRuns.resizePty({cols: term.current.cols, rows: term.current.rows});
+
+      // Write data from input to backend terminal (PTY)
+      term.current.onData((data) => {
+        if (data) {
+          ipcBackendRuns.writeToPty(data);
+        }
+      });
     }
 
     // Get output from Pty backend and show in renderer terminal
