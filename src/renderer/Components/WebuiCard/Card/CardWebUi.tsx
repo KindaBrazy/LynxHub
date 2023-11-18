@@ -28,12 +28,13 @@ type WebUiData = {
 };
 type Props = {
   webuiData: WebUiData;
+  haveSettingsMenu?: boolean;
   // Launch setting panel is open
-  launchSettingsMenu: boolean;
+  launchSettingsMenu?: boolean;
   // Callback on setting button click
-  toggleSettings: () => void;
+  toggleSettings?: () => void;
 };
-export default function CardWebUi({webuiData, launchSettingsMenu, toggleSettings}: Props) {
+export default function CardWebUi({webuiData, haveSettingsMenu, launchSettingsMenu, toggleSettings}: Props) {
   const [hoverLaunch, setHoverLaunch] = useState(false);
   const {isDarkMode, installedWebUi, setInstalledWebUi, setWebuiRunning, setBlockBackground} = useContext(StatusContext) as StatusContextType;
   const [isWebuiInstalled, setIsWebuiInstalled] = useState<boolean>(getIsInstalledById(webuiData.repoUserName, installedWebUi));
@@ -54,7 +55,7 @@ export default function CardWebUi({webuiData, launchSettingsMenu, toggleSettings
         // If locate was valid, read launch data from batch file
         if (result) {
           setInstalledWebUiById(webuiData.repoUserName, setInstalledWebUi);
-          ipcUserData.readLaunchDataFromFile(webuiData.repoUserName);
+          if (haveSettingsMenu) ipcUserData.readLaunchDataFromFile(webuiData.repoUserName);
         }
         return null;
       })
@@ -165,10 +166,6 @@ export default function CardWebUi({webuiData, launchSettingsMenu, toggleSettings
     },
   };
 
-  /* ----------------------------- Motion framer animations ----------------------------- */
-
-  // TODO: zoom effect on hover
-
   return (
     <>
       <motion.div
@@ -219,18 +216,21 @@ export default function CardWebUi({webuiData, launchSettingsMenu, toggleSettings
 
             {/* If webui installed just show launch and setting, if not shows install and locate */}
             {isWebuiInstalled ? (
-              <div className="absolute bottom-0 left-1/2 h-[40%] w-full -translate-x-1/2">
-                {/* Setting button */}
-                <motion.div
-                  variants={buttonVariants}
-                  whileHover="hover"
-                  whileTap="tap"
-                  animate="animate"
-                  onClick={toggleSettings}
-                  className="absolute right-4 top-1/2 h-[70%] -translate-y-1/2 rounded-xl border bg-black/40 p-2">
-                  <img src={SettingsIcon} className="imgDarkLightFilter pointer-events-none h-full w-full" alt="SDA1 Setting" />
-                </motion.div>
-
+              <div className={`absolute bottom-0 left-1/2 flex h-[40%] w-full -translate-x-1/2 ${haveSettingsMenu ? '' : 'justify-center'}`}>
+                {haveSettingsMenu && (
+                  <>
+                    {/* Setting button */}
+                    <motion.div
+                      variants={buttonVariants}
+                      whileHover="hover"
+                      whileTap="tap"
+                      animate="animate"
+                      onClick={toggleSettings}
+                      className="absolute right-4 top-1/2 h-[70%] -translate-y-1/2 rounded-xl border bg-black/40 p-2">
+                      <img src={SettingsIcon} className="imgDarkLightFilter pointer-events-none h-full w-full" alt="SDA1 Setting" />
+                    </motion.div>
+                  </>
+                )}
                 {/* Launch button */}
                 <motion.div
                   onMouseEnter={() => setHoverLaunch(true)}
@@ -240,7 +240,9 @@ export default function CardWebUi({webuiData, launchSettingsMenu, toggleSettings
                   whileTap="tap"
                   animate="animate"
                   onClick={RunSda1}
-                  className="absolute left-4 top-1/2 h-[70%] w-[50%] -translate-y-1/2 rounded-xl border bg-black/40 outline-none">
+                  className={`absolute ${
+                    haveSettingsMenu ? 'left-4 w-[50%]' : 'w-[90%]'
+                  } top-1/2 h-[70%] -translate-y-1/2 rounded-xl border bg-black/40 outline-none`}>
                   <PlayIcon
                     className={`pointer-events-none absolute left-1 top-1/2 h-[55%] -translate-y-1/2 transition duration-150 ${
                       hoverLaunch ? 'fill-LynxPurple' : 'fill-LynxBlue'
@@ -248,7 +250,7 @@ export default function CardWebUi({webuiData, launchSettingsMenu, toggleSettings
                   />
                   <span className="sideBarSeperatorVertical absolute left-10 top-1/2 h-[90%] w-[0.11rem] -translate-y-1/2" />
                   <span
-                    className={`absolute left-[3.9rem] top-1/2 -translate-y-1/2 cursor-default  select-none
+                    className={`absolute ${haveSettingsMenu ? 'left-[3.9rem]' : 'left-28'} top-1/2 -translate-y-1/2 cursor-default  select-none
                   font-Lato text-xl font-normal transition duration-150 ${hoverLaunch ? 'text-LynxPurple' : 'text-LynxBlue'}`}>
                     Launch
                   </span>
@@ -270,3 +272,8 @@ export default function CardWebUi({webuiData, launchSettingsMenu, toggleSettings
     </>
   );
 }
+CardWebUi.defaultProps = {
+  haveSettingsMenu: true,
+  launchSettingsMenu: false,
+  toggleSettings: undefined,
+};

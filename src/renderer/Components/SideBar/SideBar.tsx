@@ -5,13 +5,15 @@ import {motion, Variants} from 'framer-motion';
 import SideBarButton from './SideBarButton';
 import StatusContext, {StatusContextType} from '../GlobalStateContext';
 // Imports Assets
-import ImageGenerateIcon from '../../../Assets/Icons/Category/ImageGenerate.png';
-import TextGenerateIcon from '../../../Assets/Icons/Category/TextGenerate.png';
+import ImageGenerateIcon from '../../../Assets/Icons/Category/ImageGeneration.png';
+import TextGenerateIcon from '../../../Assets/Icons/Category/TextGeneration.png';
+import AudioGenerateIcon from '../../../Assets/Icons/Category/AudioGeneration.png';
 
 // import SettingsIcon from '../../../Assets/Icons/Category/Settings.png';
 
 const sideBarPictureId: string = 'sideBarPicture';
 const sideBarTextId: string = 'sideBarText';
+const sideBarAudioId: string = 'sideBarAudio';
 // const sideBarSettingsId: string = 'sideBarSetting';
 
 export default function SideBar() {
@@ -59,6 +61,8 @@ export default function SideBar() {
         <SideBarButton selected={selectedPage} setSelected={setSelectedPage} btnId={sideBarPictureId} icon={ImageGenerateIcon} />
         {/* Button -> Ai collections of text generate */}
         <SideBarButton selected={selectedPage} setSelected={setSelectedPage} btnId={sideBarTextId} icon={TextGenerateIcon} />
+        {/* Button -> Ai collections of audio generate */}
+        <SideBarButton selected={selectedPage} setSelected={setSelectedPage} btnId={sideBarAudioId} icon={AudioGenerateIcon} />
       </div>
 
       {/* Button -> App Settings 

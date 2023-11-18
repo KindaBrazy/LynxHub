@@ -2,16 +2,16 @@
 import React, {useEffect, useState} from 'react';
 import {AnimatePresence} from 'framer-motion';
 // Import components
-import CardWebUi from './Card/CardWebUi';
-import WebUiSDLaunchSettings from './WebUiSDLaunchSettings';
+import CardWebUi from '../Card/CardWebUi';
 // Import assets
-import lshqqytigerImg from '../../../Assets/AiCard/RepoUser/LSHQQYTIGER.png';
-import stableDiffusionImg from '../../../Assets/AiCard/BGCardImageGeneration.png';
-import {ipcUserData} from '../RendererIpcHandler';
+import oobaboogaImg from '../../../../Assets/AiCard/RepoUser/OOBABOOGA.png';
+import cardBackgroundImg from '../../../../Assets/AiCard/BGCardTextGeneration.jpg';
+import {ipcUserData} from '../../RendererIpcHandler';
+import WebUiTGLaunchSettings from '../LaunchSettings/WebUiTGLaunchSettings';
 
-const userName: string = 'LSHQQYTIGER';
+const userName: string = 'OOBABOOGA';
 
-export default function SdLshWebUi() {
+export default function OOBABOOGAWebUI() {
   const [launchSettingsMenu, setLaunchSettingsMenu] = useState(false);
 
   // Toggle to show launch settings or WebUi card
@@ -29,16 +29,16 @@ export default function SdLshWebUi() {
       <CardWebUi
         webuiData={{
           repoUserName: userName,
-          webUiDesc: 'Stable Diffusion Directml WebUi',
-          repoAvatarImg: lshqqytigerImg,
-          cardBackgroundImg: stableDiffusionImg,
-          cardBackgroundPosition: 'object-right-top',
+          webUiDesc: 'Text Generation WebUi',
+          repoAvatarImg: oobaboogaImg,
+          cardBackgroundImg,
+          cardBackgroundPosition: 'object-bottom',
         }}
         launchSettingsMenu={launchSettingsMenu}
         toggleSettings={ToggleSettings}
       />
       {/* AnimatePresence for exit animations */}
-      <AnimatePresence>{launchSettingsMenu && <WebUiSDLaunchSettings repoUserName={userName} ToggleSettings={ToggleSettings} />}</AnimatePresence>
+      <AnimatePresence>{launchSettingsMenu && <WebUiTGLaunchSettings repoUserName={userName} ToggleSettings={ToggleSettings} />}</AnimatePresence>
     </>
   );
 }

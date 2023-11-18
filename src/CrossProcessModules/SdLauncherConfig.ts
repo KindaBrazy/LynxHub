@@ -132,7 +132,12 @@ function getWebUiBatchFilePath(uiName: string): string {
 
 // Get the path to batch file and insert ` before spaces for correct running on terminal
 export function getBatchFilePathForPty(uiName: string) {
-  const batPath: string = uiName === 'OOBABOOGA' ? getWebUiTGBatchFilePath(uiName) : getWebUiBatchFilePath(uiName);
+  let batPath: string;
+  if (uiName === 'OOBABOOGA' || uiName === 'RSXDALV') {
+    batPath = getWebUiTGBatchFilePath(uiName);
+  } else {
+    batPath = getWebUiBatchFilePath(uiName);
+  }
   return batPath.replace(' ', '` ');
 }
 

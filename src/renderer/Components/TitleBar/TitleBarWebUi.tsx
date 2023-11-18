@@ -23,7 +23,7 @@ export default function TitleBarWebUi() {
   // Terminate currently running webui by stopping pty process
   const handleStopWebUi = () => {
     ipcBackendRuns.ptyProcess('stop', '');
-    setWebuiLaunch({webViewRef: webuiLaunch.webViewRef, currentView: webuiLaunch.currentView, currentAddress: ''});
+    setWebuiLaunch({webViewRef: webuiLaunch.webViewRef, currentView: 'terminal', currentAddress: ''});
     setWebuiRunning(false);
   };
 

@@ -33,6 +33,12 @@ const appConfig: AppConfig = {
       flagsFileName: 'CMD_FLAGS.txt',
       selectedLaunchSettings: '',
     },
+    RSXDALV: {
+      installed: false,
+      name: 'RSXDALV',
+      localDir: '',
+      batchFileName: 'start_windows.bat',
+    },
   },
 };
 
@@ -49,6 +55,8 @@ export function GetDirectoryByName(name: string) {
       return appConfig.WebUi.LSHQQYTIGER?.localDir;
     case 'OOBABOOGA':
       return appConfig.WebUi.OOBABOOGA?.localDir;
+    case 'RSXDALV':
+      return appConfig.WebUi.RSXDALV?.localDir;
     default:
       return undefined;
   }
@@ -79,6 +87,8 @@ export function GetBatchFileByName(name: string) {
       return appConfig.WebUi.LSHQQYTIGER?.batchFileName;
     case 'OOBABOOGA':
       return appConfig.WebUi.OOBABOOGA?.batchFileName;
+    case 'RSXDALV':
+      return appConfig.WebUi.RSXDALV?.batchFileName;
     default:
       return undefined;
   }
@@ -156,6 +166,9 @@ export function UpdateBatchFileByName(name: string, batchFileName: string, save:
       break;
     case 'OOBABOOGA':
       UpdateSDAppConfig({WebUi: {...appConfig.WebUi, OOBABOOGA: {...appConfig.WebUi.OOBABOOGA, batchFileName}}}, save);
+      break;
+    case 'RSXDALV':
+      UpdateSDAppConfig({WebUi: {...appConfig.WebUi, RSXDALV: {...appConfig.WebUi.RSXDALV, batchFileName}}}, save);
       break;
     default:
       break;
