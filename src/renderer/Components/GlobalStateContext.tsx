@@ -16,11 +16,13 @@ export interface StatusContextType {
 
   /* Running Manage */
 
-  webuiRunning: boolean;
-  setWebuiRunning: React.Dispatch<React.SetStateAction<boolean>>;
+  webuiRunning: {running: boolean; uiName: string};
+  setWebuiRunning: React.Dispatch<React.SetStateAction<{running: boolean; uiName: string}>>;
 
   selectedPage: number;
   setSelectedPage: React.Dispatch<React.SetStateAction<number>>;
+  lastSelectedPage: number;
+  setLastSelectedPage: React.Dispatch<React.SetStateAction<number>>;
 
   webuiLaunch: {
     webViewRef: RefObject<WebviewTag>;

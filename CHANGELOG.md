@@ -12,7 +12,7 @@
 ### New Features
 
 - Text generation page
-- OOBABOOGA Text Generation WebUI
+    - OOBABOOGA Text Generation WebUI
 
 ### Improvement
 
@@ -27,7 +27,7 @@
 ### New Features
 
 - Audio generation page
-- RSXDALV TTS Generation WebUI
+    - RSXDALV TTS Generation WebUI
 
 ### Improvement
 
@@ -38,3 +38,26 @@
 ### Bug Fixes
 
 - Fix bug when terminating WebUi and relaunch, default view will be empty browser instead of terminal
+
+# V0.5.0
+
+### New Features
+
+- Support COMFYANONYMOUS (Modular Stable Diffusion - ComfyUI) WebUI
+
+### Improvement
+
+- Settings Menu
+    - Change Theme To `Dark` - `Light` - `System`
+    - Manage app taskbar and tray
+        - `Both: Taskbar & Tray` - `Just in taskbar` - `Just in tray` - `Move to tray when minimized`
+    - Manage app startup
+        - Window size on start
+            - `Last used size` - `Default`
+        - Page view on Start
+            - `Last opened page` - `Image generation` - `Text generation` - `Audio generation`
+    - Customize Discord activity
+        - Show `AIOne Lynx` as status - Show time elapsed in `AIOne Lynx`
+        - Show `Running WebUI` as status - Show time elapsed in WebUI - Show WebUI Name in status
+
+- Optimize scrollbar style and behavior

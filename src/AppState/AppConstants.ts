@@ -35,7 +35,9 @@ export const DefaultTextGenerateDir: string = `${DefaultWebUiDir}\\TextGenerate`
 export const DefaultA1Dir: string = `${DefaultImageGenerateDir}\\AUTOMATIC1111`;
 // LSHQQYTIGER Repository WebUi Directory
 export const DefaultLSHDir: string = `${DefaultImageGenerateDir}\\LSHQQYTIGER`;
+export const DefaultComfyDir: string = `${DefaultImageGenerateDir}\\COMFYANONYMOUS`;
 export const DefaultOOBADir: string = `${DefaultTextGenerateDir}\\OOBABOOGA`;
+export const DefaultRSXDir: string = `${DefaultTextGenerateDir}\\OOBABOOGA`;
 
 /* Shadow styles */
 
@@ -135,19 +137,21 @@ export type SideBarButtonId = {
   Image: number;
   Text: number;
   Audio: number;
+  Settings: number;
 };
 
 export const sideBarButtonId: SideBarButtonId = {
   Image: 0,
   Text: 1,
   Audio: 2,
+  Settings: 9,
 };
 
 export function getTotalPagesNumber(): number {
   return Object.keys(sideBarButtonId).length;
 }
 
-export function getSidebarButtonId(Button: 'sideBarPicture' | 'sideBarText' | 'sideBarAudio' | string) {
+export function getSidebarButtonId(Button: 'sideBarPicture' | 'sideBarText' | 'sideBarAudio' | 'sideBarSetting' | string) {
   switch (Button) {
     case 'sideBarPicture':
       return sideBarButtonId.Image;
@@ -155,6 +159,8 @@ export function getSidebarButtonId(Button: 'sideBarPicture' | 'sideBarText' | 's
       return sideBarButtonId.Text;
     case 'sideBarAudio':
       return sideBarButtonId.Audio;
+    case 'sideBarSetting':
+      return sideBarButtonId.Settings;
     default:
       return sideBarButtonId.Image;
   }
@@ -169,6 +175,10 @@ type WebUiInfo = {
         address: string;
       };
       LSHQQYTIGER: {
+        name: string;
+        address: string;
+      };
+      COMFYANONYMOUS: {
         name: string;
         address: string;
       };
@@ -194,6 +204,7 @@ export const webUiInfo: WebUiInfo = {
     StableDiffusion: {
       AUTOMATIC1111: {name: 'AUTOMATIC1111', address: 'https://github.com/AUTOMATIC1111/stable-diffusion-webui'},
       LSHQQYTIGER: {name: 'LSHQQYTIGER', address: 'https://github.com/lshqqytiger/stable-diffusion-webui-directml'},
+      COMFYANONYMOUS: {name: 'COMFYANONYMOUS', address: 'https://github.com/comfyanonymous/ComfyUI'},
     },
   },
   TextGenerate: {OOBABOOGA: {name: 'OOBABOOGA', address: 'https://github.com/oobabooga/text-generation-webui'}},
@@ -206,6 +217,8 @@ export function getWebUiUrlByName(uiName: string) {
       return webUiInfo.ImageGenerate.StableDiffusion.AUTOMATIC1111.address;
     case 'LSHQQYTIGER':
       return webUiInfo.ImageGenerate.StableDiffusion.LSHQQYTIGER.address;
+    case 'COMFYANONYMOUS':
+      return webUiInfo.ImageGenerate.StableDiffusion.COMFYANONYMOUS.address;
     case 'OOBABOOGA':
       return webUiInfo.TextGenerate.OOBABOOGA.address;
     case 'RSXDALV':
@@ -221,6 +234,8 @@ export function getWebUiCatgeoryByName(uiName: string) {
       return 'Stable Diffusion';
     case 'LSHQQYTIGER':
       return 'Stable Diffusion';
+    case 'COMFYANONYMOUS':
+      return 'Modular Stable Diffusion';
     case 'OOBABOOGA':
       return 'Text Generation';
     case 'RSXDALV':
@@ -231,8 +246,9 @@ export function getWebUiCatgeoryByName(uiName: string) {
 }
 
 export type WebuiList = {
-  LSHQQYTIGER: boolean;
   AUTOMATIC1111: boolean;
+  LSHQQYTIGER: boolean;
+  COMFYANONYMOUS: boolean;
   OOBABOOGA: boolean;
   RSXDALV: boolean;
 };

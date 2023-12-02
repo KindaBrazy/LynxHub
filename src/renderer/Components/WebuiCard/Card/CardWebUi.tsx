@@ -3,7 +3,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {AnimatePresence, motion, Variants} from 'framer-motion';
 
 // Import modules
-import {ipcBackendRuns, ipcUserData, ipcUtil} from '../../RendererIpcHandler';
+import {ipcBackendRuns, ipcUserData, ipcUtil, ipcWindowManager} from '../../RendererIpcHandler';
 import {getBlack, getLynxRaisinBlack, getWhite, RendererLogError, RendererLogInfo} from '../../../../AppState/AppConstants';
 import StatusContext, {StatusContextType} from '../../GlobalStateContext';
 // Import components
@@ -29,12 +29,10 @@ type WebUiData = {
 type Props = {
   webuiData: WebUiData;
   haveSettingsMenu?: boolean;
-  // Launch setting panel is open
-  launchSettingsMenu?: boolean;
   // Callback on setting button click
   toggleSettings?: () => void;
 };
-export default function CardWebUi({webuiData, haveSettingsMenu, launchSettingsMenu, toggleSettings}: Props) {
+export default function CardWebUi({webuiData, haveSettingsMenu, toggleSettings}: Props) {
   const [hoverLaunch, setHoverLaunch] = useState(false);
   const {isDarkMode, installedWebUi, setInstalledWebUi, setWebuiRunning, setBlockBackground} = useContext(StatusContext) as StatusContextType;
   const [isWebuiInstalled, setIsWebuiInstalled] = useState<boolean>(getIsInstalledById(webuiData.repoUserName, installedWebUi));
@@ -74,7 +72,8 @@ export default function CardWebUi({webuiData, haveSettingsMenu, launchSettingsMe
   const RunSda1 = () => {
     // Start backend pty terminal and run batch file
     ipcBackendRuns.ptyProcess('start', webuiData.repoUserName);
-    setWebuiRunning(true);
+    setWebuiRunning({running: true, uiName: webuiData.repoUserName});
+    ipcWindowManager.setDiscordWebUIRunning({running: true, uiName: webuiData.repoUserName});
   };
 
   /* ----------------------------- Motion framer animations ----------------------------- */
@@ -87,9 +86,9 @@ export default function CardWebUi({webuiData, haveSettingsMenu, launchSettingsMe
       translateY: '0px',
     },
     animate: {
-      opacity: launchSettingsMenu ? 0 : 1,
-      scale: launchSettingsMenu ? 0.5 : 1,
-      translateY: launchSettingsMenu ? '777px' : '0px',
+      opacity: 1,
+      scale: 1,
+      translateY: '0px',
       transition: {
         duration: 0.7,
         type: 'spring',
@@ -274,6 +273,5 @@ export default function CardWebUi({webuiData, haveSettingsMenu, launchSettingsMe
 }
 CardWebUi.defaultProps = {
   haveSettingsMenu: true,
-  launchSettingsMenu: false,
   toggleSettings: undefined,
 };

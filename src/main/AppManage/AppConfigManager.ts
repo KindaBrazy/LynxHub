@@ -3,12 +3,18 @@ import fs from 'fs';
 import {app, nativeTheme} from 'electron';
 import path from 'path';
 import {MainLogInfo, MainLogWarning} from '../../AppState/AppConstants';
-import {AppConfig} from '../../AppState/InterfaceAndTypes';
+import {AppConfig, DiscordRP} from '../../AppState/InterfaceAndTypes';
 
 // Default config object
 const appConfig: AppConfig = {
   ConfigVersion: 0.1,
-  Theme: 'dark',
+  Theme: 'system',
+  TaskbarStatus: 'justTaskbar',
+  LastWindowSize: {width: 1024, height: 768},
+  WindowSize: 'lastSize',
+  LastPage: 0,
+  StartPage: 'last',
+  DiscordRP: {AIOneLynx: {Enabled: true, TimeElapsed: true}, RunningWebUI: {Enabled: true, TimeElapsed: true, WebUIName: true}},
 
   WebUi: {
     AUTOMATIC1111: {
@@ -21,6 +27,13 @@ const appConfig: AppConfig = {
     LSHQQYTIGER: {
       installed: false,
       name: 'LSHQQYTIGER',
+      localDir: '',
+      batchFileName: '',
+      selectedLaunchSettings: '',
+    },
+    COMFYANONYMOUS: {
+      installed: false,
+      name: 'COMFYANONYMOUS',
       localDir: '',
       batchFileName: '',
       selectedLaunchSettings: '',
@@ -53,6 +66,8 @@ export function GetDirectoryByName(name: string) {
       return appConfig.WebUi.AUTOMATIC1111?.localDir;
     case 'LSHQQYTIGER':
       return appConfig.WebUi.LSHQQYTIGER?.localDir;
+    case 'COMFYANONYMOUS':
+      return appConfig.WebUi.COMFYANONYMOUS?.localDir;
     case 'OOBABOOGA':
       return appConfig.WebUi.OOBABOOGA?.localDir;
     case 'RSXDALV':
@@ -75,16 +90,18 @@ export function GetLaunchSettingsByName(name: string) {
   }
 }
 
-export function GetFlagsFileName() {
+export function GetFlagsFileName(): string {
   return appConfig.WebUi.OOBABOOGA?.flagsFileName;
 }
 
-export function GetBatchFileByName(name: string) {
+export function GetBatchFileByName(name: string): string | undefined {
   switch (name) {
     case 'AUTOMATIC1111':
       return appConfig.WebUi.AUTOMATIC1111?.batchFileName;
     case 'LSHQQYTIGER':
       return appConfig.WebUi.LSHQQYTIGER?.batchFileName;
+    case 'COMFYANONYMOUS':
+      return appConfig.WebUi.COMFYANONYMOUS?.batchFileName;
     case 'OOBABOOGA':
       return appConfig.WebUi.OOBABOOGA?.batchFileName;
     case 'RSXDALV':
@@ -112,10 +129,64 @@ export function ChangeThemeConfig(theme: 'dark' | 'system' | 'light'): void {
   SaveAppConfig();
 }
 
+export function GetTaskbarConfig(): 'taskbarAndTray' | 'justTaskbar' | 'justTray' | 'trayWhenMinimized' {
+  return appConfig.TaskbarStatus;
+}
+
+export function ChangeTaskbarConfig(status: 'taskbarAndTray' | 'justTaskbar' | 'justTray' | 'trayWhenMinimized'): void {
+  appConfig.TaskbarStatus = status;
+  SaveAppConfig();
+}
+
 export function GetThemeConfig(): string {
   // @ts-ignore
   nativeTheme.themeSource = appConfig.Theme;
   return appConfig.Theme;
+}
+
+export function ChangeWindowSizeConfig(status: 'lastSize' | 'default'): void {
+  appConfig.WindowSize = status;
+  SaveAppConfig();
+}
+
+export function GetWindowSizeConfig(): 'lastSize' | 'default' {
+  return appConfig.WindowSize;
+}
+
+export function ChangeLastPageConfig(pageId: number): void {
+  appConfig.LastPage = pageId;
+  SaveAppConfig();
+}
+
+export function GetLastPageConfig(): number {
+  return appConfig.LastPage;
+}
+
+export function ChangeLastWindowSizeConfig(windowSize: {width: number; height: number}): void {
+  appConfig.LastWindowSize = windowSize;
+  SaveAppConfig();
+}
+
+export function GetLastWindowSizeConfig(): {width: number; height: number} {
+  return appConfig.LastWindowSize;
+}
+
+export function ChangeStartPageConfig(status: 'last' | 'image' | 'text' | 'audio'): void {
+  appConfig.StartPage = status;
+  SaveAppConfig();
+}
+
+export function GetStartPageConfig(): 'last' | 'image' | 'text' | 'audio' {
+  return appConfig.StartPage;
+}
+
+export function ChangeDiscordRPConfig(status: DiscordRP): void {
+  appConfig.DiscordRP = status;
+  SaveAppConfig();
+}
+
+export function GetDiscordRPConfig(): DiscordRP {
+  return appConfig.DiscordRP;
 }
 
 // Update config object in-memory and save to file
@@ -144,13 +215,14 @@ export function UpdateSDAppConfig(updates: Partial<AppConfig>, save: boolean = f
   console.log(MainLogInfo(`Updated App Config : ${JSON.stringify(appConfig)} \nSaved:${save}`));
 }
 
-/* export function UpdateAppConfig(updates: Partial<AppConfig>, save: boolean = false): void {
+/* Export function UpdateAppConfig(updates: Partial<AppConfig>, save: boolean = false): void {
   if (!updates) return;
   // Apply updates to appConfig object
+
   Object.assign(appConfig, updates);
 
   // Save to the file if requested.
-  if (save) SaveAppConfig();
+  If (save) SaveAppConfig();
 
   console.log(MainLogInfo(`Updated App Config: ${JSON.stringify(appConfig)} \nSaved:${save}`));
 } */

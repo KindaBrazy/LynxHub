@@ -1,5 +1,3 @@
-// Import packages
-import React from 'react';
 // Import components
 import CardWebUi from '../Card/CardWebUi';
 // Import assets
@@ -8,12 +6,12 @@ import cardBackgroundImg from '../../../../Assets/AiCard/BGCardAudioGeneration.j
 
 const userName: string = 'RSXDALV';
 
-export default function RSXDALVWebUI() {
+export default function RsxdalvWebUI() {
   return (
     <CardWebUi
       webuiData={{
         repoUserName: userName,
-        webUiDesc: 'TTS Generation WebUI',
+        webUiDesc: 'TTS Generation',
         repoAvatarImg: rsxdalvImg,
         cardBackgroundImg,
         cardBackgroundPosition: 'object-right',

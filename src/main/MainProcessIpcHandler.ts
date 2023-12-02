@@ -10,20 +10,32 @@ import treeKill from 'tree-kill';
 import path from 'path';
 import fs from 'fs';
 import {getRemoteUrl} from './Utils/GitUtil';
-import {getWebUiUrlByName, MainLogDebug, MainLogError, MainLogInfo, MainLogWarning, webUiInfo} from '../AppState/AppConstants';
+import {getWebUiUrlByName, MainLogDebug, MainLogError, MainLogInfo, MainLogWarning, sideBarButtonId, webUiInfo} from '../AppState/AppConstants';
 import {readSdLaunchData, saveSDLaunchConfig, getBatchFilePathForPty, getSDLaunchConfigByName} from '../CrossProcessModules/SDLauncherConfig';
 import {
+  ChangeDiscordRPConfig,
+  ChangeLastPageConfig,
+  ChangeStartPageConfig,
+  ChangeTaskbarConfig,
   ChangeThemeConfig,
+  ChangeWindowSizeConfig,
   GetDirectoryByName,
+  GetDiscordRPConfig,
+  GetLastPageConfig,
+  GetStartPageConfig,
+  GetTaskbarConfig,
   GetThemeConfig,
   GetUserConfigData,
+  GetWindowSizeConfig,
   LoadAppConfig,
   SaveAppConfig,
   UpdateSDAppConfig,
 } from './AppManage/AppConfigManager';
-import {AppConfig, SDLaunchConfig, TGLaunchConfig} from '../AppState/InterfaceAndTypes';
+import {AppConfig, DiscordRP, SDLaunchConfig, TGLaunchConfig} from '../AppState/InterfaceAndTypes';
 import {saveInstalledUiConfig} from '../CrossProcessModules/CrossFunctions';
 import {getTGLaunchConfig, readTgLaunchData, saveTGLaunchConfig} from '../CrossProcessModules/TGLauncherConfig';
+import {TrayManagerCreate, TrayManagerDestroy} from './TrayManager';
+import {DRPCRunningWebUI, DRPCUpdateDiscordRP} from './DiscordRPCManager';
 
 // Variable to hold the main and active BrowserWindow reference
 let mainWindowRef: BrowserWindow;
@@ -63,18 +75,110 @@ function changeWindowState(state: 'Minimize' | 'Maximize' | 'Close'): void {
  *
  * @param {'Toggle' | 'System'} status - 'Toggle' to toggle current theme, 'System' to use system theme
  */
-function changeDarkMode(status: 'Toggle' | 'System'): void {
-  if (status === 'Toggle') {
+function changeDarkMode(status: 'toggle' | 'system' | 'dark' | 'light'): void {
+  if (status === 'toggle') {
     const newTheme: 'light' | 'dark' = nativeTheme.shouldUseDarkColors ? 'light' : 'dark';
-    nativeTheme.themeSource = newTheme;
     ChangeThemeConfig(newTheme);
   } else {
-    nativeTheme.themeSource = 'system';
+    ChangeThemeConfig(status);
   }
 }
 
-function getCurrentDarkMode(): string {
-  return GetThemeConfig();
+function appTaskbarStatus(status: 'taskbarAndTray' | 'justTaskbar' | 'justTray' | 'trayWhenMinimized'): void {
+  switch (status) {
+    case 'taskbarAndTray':
+      ChangeTaskbarConfig('taskbarAndTray');
+      TrayManagerCreate();
+      mainWindowRef.setSkipTaskbar(false);
+      break;
+    case 'justTaskbar':
+      ChangeTaskbarConfig('justTaskbar');
+      TrayManagerDestroy();
+      mainWindowRef.setSkipTaskbar(false);
+      break;
+    case 'justTray':
+      ChangeTaskbarConfig('justTray');
+      TrayManagerCreate();
+      mainWindowRef.setSkipTaskbar(true);
+      break;
+    case 'trayWhenMinimized':
+      ChangeTaskbarConfig('trayWhenMinimized');
+      TrayManagerDestroy();
+      mainWindowRef.setSkipTaskbar(false);
+      break;
+    default:
+      console.log(MainLogError('Wrong status for app taskbar status'));
+      break;
+  }
+}
+
+function getIsDarkMode(): boolean {
+  return nativeTheme.shouldUseDarkColors;
+}
+
+function getTaskbarMode() {
+  return GetTaskbarConfig();
+}
+
+function getWindowSize(): 'lastSize' | 'default' {
+  return GetWindowSizeConfig();
+}
+
+function setWindowSize(status: 'lastSize' | 'default'): void {
+  ChangeWindowSizeConfig(status);
+}
+
+function getStartPage(): 'last' | 'image' | 'text' | 'audio' {
+  return GetStartPageConfig();
+}
+
+function setStartPage(status: 'last' | 'image' | 'text' | 'audio'): void {
+  ChangeStartPageConfig(status);
+}
+
+function getPageToShow(): 'image' | 'text' | 'audio' | 'settings' {
+  if (GetStartPageConfig() === 'last') {
+    switch (GetLastPageConfig()) {
+      case sideBarButtonId.Image:
+        return 'image';
+      case sideBarButtonId.Text:
+        return 'text';
+      case sideBarButtonId.Audio:
+        return 'audio';
+      case sideBarButtonId.Settings:
+        return 'settings';
+      default:
+        return 'image';
+    }
+  }
+  switch (GetStartPageConfig()) {
+    case 'image':
+      return 'image';
+    case 'text':
+      return 'text';
+    case 'audio':
+      return 'audio';
+    default:
+      return 'image';
+  }
+}
+
+function getLastPage(): number {
+  return GetLastPageConfig();
+}
+
+function setLastPage(pageId: number): void {
+  ChangeLastPageConfig(pageId);
+}
+
+function getDiscordRp(): DiscordRP {
+  return GetDiscordRPConfig();
+}
+
+function setDiscordRp(data: DiscordRP): void {
+  ChangeDiscordRPConfig(data);
+  console.log(MainLogError(`********* Called Here : MainProcessIpcHandler.ts`));
+  DRPCUpdateDiscordRP();
 }
 
 /**
@@ -163,6 +267,12 @@ async function locateRepo(repoName: string): Promise<boolean> {
         return true;
       }
       return false;
+    case 'COMFYANONYMOUS':
+      if (remote === webUiInfo.ImageGenerate.StableDiffusion.COMFYANONYMOUS.address) {
+        saveConfig();
+        return true;
+      }
+      return false;
     case 'OOBABOOGA':
       if (remote === webUiInfo.TextGenerate.OOBABOOGA.address) {
         saveConfig();
@@ -238,15 +348,24 @@ function backendPtyProcess(operation: 'start' | 'stop', uiName: string) {
     const dir: string | undefined = GetDirectoryByName(uiName);
     if (!dir) return;
     ptyProcess = pty.spawn(ptyShell, [], {cwd: dir, cols: 150, rows: 50, name: 'LynxWebUI'});
-    const batchFile: string | undefined = getBatchFilePathForPty(uiName);
-
-    // Write the batch file address to run to the pseudo terminal process
-    if (os.platform() === 'win32') {
-      console.log(MainLogDebug(`Pty command -> ${batchFile}`));
-      ptyProcess.write(`${batchFile}\r`);
+    ptyProcess.write(`Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process\r`);
+    if (uiName === 'COMFYANONYMOUS') {
+      // Write the batch file address to run to the pseudo terminal process
+      if (os.platform() === 'win32') {
+        ptyProcess.write(`python main.py\r`);
+      }
     } else {
-      ptyProcess.write(`./${batchFile}\n`);
+      const batchFile: string | undefined = getBatchFilePathForPty(uiName);
+
+      // Write the batch file address to run to the pseudo terminal process
+      if (os.platform() === 'win32') {
+        console.log(MainLogDebug(`Pty command -> ${batchFile}`));
+        ptyProcess.write(`${batchFile}\r`);
+      } else {
+        ptyProcess.write(`./${batchFile}\n`);
+      }
     }
+
     // Send the output of the pseudo terminal process to the renderer
     ptyProcess.onData((data: string): void => {
       mainWindowRef.webContents.send('backendRuns:getPtyOutput', data);
@@ -313,12 +432,37 @@ export function MainProcessIpcHandler(mainWindow: BrowserWindow): void {
   /* --------------------------------------- Window Manager ----------------------------- */
 
   ipcMain.on('windowManager:changeWindowState', (_e, state: 'Minimize' | 'Maximize' | 'Close') => changeWindowState(state));
-  ipcMain.on('windowManager:changeDarkMode', (_e, status: 'Toggle' | 'System') => changeDarkMode(status));
-  ipcMain.handle('windowManager:getCurrentDarkMode', () => getCurrentDarkMode());
+  ipcMain.on('windowManager:changeDarkMode', (_e, status: 'toggle' | 'system' | 'dark' | 'light') => changeDarkMode(status));
+  ipcMain.on('windowManager:appTaskbarStatus', (_e, status: 'taskbarAndTray' | 'justTaskbar' | 'justTray' | 'trayWhenMinimized') =>
+    appTaskbarStatus(status),
+  );
+  ipcMain.handle('windowManager:getThemeSource', () => GetThemeConfig());
+  ipcMain.handle('windowManager:getIsDarkMode', () => getIsDarkMode());
+
+  ipcMain.handle('windowManager:getTaskbarMode', () => getTaskbarMode());
+
+  ipcMain.handle('windowManager:getWindowSize', () => getWindowSize());
+  ipcMain.on('windowManager:setWindowSize', (_e, status: 'lastSize' | 'default') => setWindowSize(status));
+
+  ipcMain.handle('windowManager:getStartPage', () => getStartPage());
+  ipcMain.on('windowManager:setStartPage', (_e, status: 'last' | 'image' | 'text' | 'audio') => setStartPage(status));
+
+  ipcMain.handle('windowManager:getLastPage', () => getLastPage());
+  ipcMain.on('windowManager:setLastPage', (_e, pageId: number) => setLastPage(pageId));
+
+  ipcMain.handle('windowManager:getPageToShow', () => getPageToShow());
+
+  ipcMain.handle('windowManager:getDiscordRp', () => getDiscordRp());
+  ipcMain.on('windowManager:setDiscordRp', (_e, data: DiscordRP) => setDiscordRp(data));
+
+  ipcMain.on('windowManager:setDiscordWebUIRunning', (_e, status: {running: boolean; uiName: string}) => DRPCRunningWebUI(status));
   // Handler for native theme updates. Sends the dark mode status to the renderer.
-  /* nativeTheme.on('updated', () => {
-    if (mainWindowRef) mainWindowRef.webContents.send('windowManager:onDarkModeChange', nativeTheme.shouldUseDarkColors);
-  }); */
+  nativeTheme.on('updated', () => {
+    if (mainWindowRef) {
+      mainWindowRef.webContents.send('windowManager:onDarkModeChange', nativeTheme.shouldUseDarkColors);
+      console.log(MainLogError('Dark Mode Changes.'));
+    }
+  });
   /* --------------------------------------- Util --------------------------------------- */
 
   ipcMain.handle('util:openDialog', (_e, option: 'openDirectory' | 'openFile'): string | undefined => openDialog(option));
@@ -342,7 +486,16 @@ export function MainProcessIpcHandler(mainWindow: BrowserWindow): void {
   // Handle the start and stop operations from renderer for the pseudo terminal process
   ipcMain.handle('backendRuns:ptyProcess', (_e, operation: 'start' | 'stop', uiName: string) => backendPtyProcess(operation, uiName));
   // Resize the terminal (PTY)
-  ipcMain.on('backendRuns:resizePty', (_e, newSize: {cols: number; rows: number}): void => resizePty(newSize));
+  ipcMain.on(
+    'backendRuns:resizePty',
+    (
+      _e,
+      newSize: {
+        cols: number;
+        rows: number;
+      },
+    ): void => resizePty(newSize),
+  );
   // Write data from user input to terminal (PTY)
   ipcMain.on('backendRuns:writeToPty', (_e, data: string): void => writeToPty(data));
 }

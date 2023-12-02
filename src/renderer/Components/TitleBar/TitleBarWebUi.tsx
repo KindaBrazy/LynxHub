@@ -2,7 +2,7 @@
 import React, {useContext} from 'react';
 import {motion} from 'framer-motion';
 // Import Components
-import {ipcBackendRuns} from '../RendererIpcHandler';
+import {ipcBackendRuns, ipcWindowManager} from '../RendererIpcHandler';
 import StatusContext, {StatusContextType} from '../GlobalStateContext';
 import {getBlack} from '../../../AppState/AppConstants';
 // Import Assets
@@ -24,7 +24,8 @@ export default function TitleBarWebUi() {
   const handleStopWebUi = () => {
     ipcBackendRuns.ptyProcess('stop', '');
     setWebuiLaunch({webViewRef: webuiLaunch.webViewRef, currentView: 'terminal', currentAddress: ''});
-    setWebuiRunning(false);
+    setWebuiRunning({running: false, uiName: ''});
+    ipcWindowManager.setDiscordWebUIRunning({running: false, uiName: ''});
   };
 
   // Reload webview element

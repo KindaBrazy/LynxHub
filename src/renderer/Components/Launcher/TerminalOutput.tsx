@@ -63,7 +63,10 @@ export default function TerminalOutputUi({extraClasses}: Props) {
   // Showing data from backend to ui
   const showContent = useCallback((_event: any, data: string) => {
     // Check if webui ready to show
-    if (!webuiLaunch.currentAddress && data.toLowerCase().includes('Running on'.toLowerCase())) {
+    if (
+      (!webuiLaunch.currentAddress && data.toLowerCase().includes('Running on'.toLowerCase())) ||
+      data.toLowerCase().includes('To see the GUI'.toLowerCase())
+    ) {
       console.log(RendererLogInfo(`Found Launch Here: ${data}`));
       /* Extract ip address of webui running to open in webView */
       const addressRegex: RegExp = /(http:\/\/[\d.:]+)/;
@@ -136,7 +139,7 @@ export default function TerminalOutputUi({extraClasses}: Props) {
       fitAddon.current.fit();
 
       // Resize pty background cols and rows to the current size of terminal ui
-      if (webuiRunning) ipcBackendRuns.resizePty({cols: term.current.cols, rows: term.current.rows});
+      if (webuiRunning.running) ipcBackendRuns.resizePty({cols: term.current.cols, rows: term.current.rows});
 
       // Write data from input to backend terminal (PTY)
       term.current.onData((data) => {
@@ -152,7 +155,7 @@ export default function TerminalOutputUi({extraClasses}: Props) {
 
   // Fitting the terminal's dimensions to the element.
   window.addEventListener('resize', () => {
-    if (webuiRunning) {
+    if (webuiRunning.running) {
       fitAddon.current.fit();
       // Resize pty background cols and rows to the current size of terminal ui
       ipcBackendRuns.resizePty({cols: term.current.cols, rows: term.current.rows});

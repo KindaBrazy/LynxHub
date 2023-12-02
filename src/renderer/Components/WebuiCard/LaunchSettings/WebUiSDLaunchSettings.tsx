@@ -11,7 +11,6 @@ import {environmentVariables, sda1CommandLines} from '../../../../AppState/SDArg
 import {getArgumentKeyType} from '../../../../CrossProcessModules/SDArgumentsFunctions';
 // Import components
 import FilterSDLaunchSettings from '../FilterLaunchSettings/FilterSDLaunchSettings';
-import SmoothScroll from '../../Customizable/SmoothScroll';
 import SimpleCloseButton from '../../Customizable/SimpleCloseButton';
 import LCheckBox from '../../Customizable/LCheckBox';
 import OpenDialog from '../../Customizable/OpenDialog';
@@ -19,6 +18,7 @@ import DropDownMenu from '../../Customizable/DropDownMenu';
 import LInputBox from '../../Customizable/LInputBox';
 // Import Assets
 import {FilterIcon} from '../../../../Assets/Icons/SvgIcons';
+import LScrollBar from '../../Customizable/LScrollBar';
 
 type Props = {
   // Toggle showing launch setting or Webui card
@@ -229,14 +229,8 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
     },
   ) {
     // Handle checkbox change
-    const onCheckBoxChange = (
-      name: {
-        id: string;
-        value: string;
-      },
-      enabled: boolean,
-    ) => {
-      handleCompChange('checkbox', name.id, `CheckBox-${enabled}`);
+    const onCheckBoxChange = (name: string, enabled: boolean) => {
+      handleCompChange('checkbox', name, `CheckBox-${enabled}`);
     };
 
     // Handle text change
@@ -250,7 +244,7 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
       case SettingComponentType.CheckBox: {
         const element: React.JSX.Element = (
           <LCheckBox
-            onValueChange={onCheckBoxChange}
+            onClick={onCheckBoxChange}
             highlightEnabled={false}
             key={setting.Name}
             name={setting.Name}
@@ -382,7 +376,6 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
     setShowListMenu((prevState) => !prevState);
   };
 
-  const [scrollKey, setScrollKey] = useState<number>(0);
   const [newData, setNewData] = useState<React.JSX.Element[]>([]);
 
   /**
@@ -401,8 +394,6 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
         </div>,
       ]);
     }
-
-    setScrollKey((prevState) => prevState + 1);
   }, [dataToShow]);
 
   // Save button motion animation variants
@@ -444,7 +435,7 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
         initial={{translateY: '-500px', opacity: 0, scale: 0.5}}
         animate={{translateY: '0px', opacity: 1, scale: 1, transition: {duration: 0.4, ease: 'backOut'}}}
         exit={{translateY: '-500px', opacity: 0, scale: 0.5, transition: {duration: 0.3, ease: 'backIn'}}}
-        className="absolute inset-y-5 left-4 right-4 z-20 flex flex-col items-center overflow-hidden
+        className="fixed bottom-5 left-28 right-4 top-16 z-20 flex flex-col items-center overflow-hidden
          rounded-2xl bg-white/60 shadow-SideBar backdrop-blur-3xl dark:bg-LynxRaisinBlack/80">
         {/* Close button */}
         <SimpleCloseButton
@@ -472,11 +463,13 @@ export default function WebUiSDLaunchSettings({repoUserName, ToggleSettings}: Pr
         </motion.div>
 
         {/* Launch settings data */}
-        <SmoothScroll key={`SettingsWebuiScroll${scrollKey}`}>
-          {newData.map((value) => {
-            return value;
-          })}
-        </SmoothScroll>
+        <LScrollBar extraClassName="pb-4 pt-2">
+          <div className="flex w-full flex-col items-center">
+            {newData.map((value) => {
+              return value;
+            })}
+          </div>
+        </LScrollBar>
         <div className="flex h-[5rem] w-full items-center justify-around">
           {/* Save data button */}
           <motion.div

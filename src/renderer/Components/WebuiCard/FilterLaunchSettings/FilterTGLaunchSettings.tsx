@@ -2,7 +2,6 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {AnimatePresence, motion, Variants} from 'framer-motion';
 // Import components
-import SmoothScroll from '../../Customizable/SmoothScroll';
 import SimpleCloseButton from '../../Customizable/SimpleCloseButton';
 import ListItemComp from './ListItemComp';
 import FullTitleComp from './SubComps/FullTitleComp';
@@ -15,6 +14,7 @@ import StatusContext, {StatusContextType} from '../../GlobalStateContext';
 // Import assets
 import {SearchIcon} from '../../../../Assets/Icons/SvgIcons';
 import {commandLineFlags} from '../../../../AppState/TGArgumentsContainer';
+import LScrollBar from '../../Customizable/LScrollBar';
 
 type Props = {
   launchArgs: TGLaunchConfig;
@@ -107,7 +107,7 @@ export default function FilterTGLaunchSettings({setShowListMenu, launchArgs, lau
   }
 
   // Update launch settings
-  const updateLaunchSettings = (arg: {id: string; value: string}, enabled: boolean) => {
+  const updateLaunchSettings = (arg: string, enabled: boolean) => {
     let isFound: boolean = false;
 
     // If not found in environment properties
@@ -132,9 +132,9 @@ export default function FilterTGLaunchSettings({setShowListMenu, launchArgs, lau
       ].find((value) => {
         value.data.find((childValue) => {
           const propertyValue: TGArgSetting = commandLineFlags[value.type][childValue];
-          if (arg.id === propertyValue.Name) {
+          if (arg === propertyValue.Name) {
             isFound = true;
-            updateLaunchData(arg, enabled);
+            updateLaunchData({id: arg, value: ''}, enabled);
           }
           return isFound;
         });
@@ -206,9 +206,6 @@ export default function FilterTGLaunchSettings({setShowListMenu, launchArgs, lau
   const toggleSearch = () => {
     setIsSearching((prevState) => !prevState);
   };
-
-  // Utilize useState to manage the scrollKey state
-  const [scrollKey, setScrollKey] = useState<number>(0);
 
   // Memorizing the result of newData this prevents unnecessary re-renders when the dependencies [clEnabled, searchValue] have not changed
   const newData = useMemo(() => {
@@ -320,9 +317,6 @@ export default function FilterTGLaunchSettings({setShowListMenu, launchArgs, lau
       if (value) elements.push(value);
     });
 
-    // Increment the scrollKey state to trigger a re-render of the scrollable component
-    setScrollKey((prevState) => prevState + 1);
-
     return elements;
   }, [searchValue]);
 
@@ -379,7 +373,9 @@ export default function FilterTGLaunchSettings({setShowListMenu, launchArgs, lau
       </div>
 
       {/* Setting items to show */}
-      <SmoothScroll key={`FilterLaunchScroll${scrollKey}`}>{newData.map((value) => value)}</SmoothScroll>
+      <LScrollBar extraClassName="pb-4 pt-2">
+        <div className="flex w-full flex-col items-center">{newData.map((value) => value)}</div>
+      </LScrollBar>
     </motion.div>
   );
 }

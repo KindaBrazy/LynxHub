@@ -1,9 +1,18 @@
-import path from 'path';
 import {app, BrowserWindow, shell} from 'electron';
+import path from 'path';
 import {MainProcessIpcHandler, killWebui} from './MainProcessIpcHandler';
 import resolveHtmlPath from './Utils/AppUtil';
-import {LoadAppConfig, ValidateConfig} from './AppManage/AppConfigManager';
+import {
+  ChangeLastWindowSizeConfig,
+  GetLastWindowSizeConfig,
+  GetTaskbarConfig,
+  GetWindowSizeConfig,
+  LoadAppConfig,
+  ValidateConfig,
+} from './AppManage/AppConfigManager';
 import {MainLogError} from '../AppState/AppConstants';
+import {TrayManagerCreate, TrayManagerDestroy, TrayManagerInit} from './TrayManager';
+import {DRPCStartUp} from './DiscordRPCManager';
 
 /* class AppUpdater {
   constructor() {
@@ -36,7 +45,6 @@ if (process.env.NODE_ENV === 'production') {
 async function createMainWindow() {
   // The absolute path of the assets folder
   const RESOURCES_PATH = app.isPackaged ? path.join(process.resourcesPath, 'assets') : path.join(__dirname, '../../assets');
-
   // Get the asset path for a given file or subfolder
   const getAssetPath = (...paths: string[]): string => {
     return path.join(RESOURCES_PATH, ...paths);
@@ -64,13 +72,32 @@ async function createMainWindow() {
     console.log(MainLogError(`mainWindow.loadURL -> ${error}`));
   });
 
+  // Initialize tray manager data
+  TrayManagerInit(mainWindow, getAssetPath('icon.ico'), getAssetPath('icons/16x16.png'));
+
+  TrayManagerCreate();
   // Initialize and call MainProcessIpcHandler module
   MainProcessIpcHandler(mainWindow);
 
   // Load app config data on startup
   LoadAppConfig();
 
+  mainWindow.on('minimize', () => {
+    if (GetTaskbarConfig() === 'trayWhenMinimized') {
+      TrayManagerCreate();
+      mainWindow?.setSkipTaskbar(true);
+    }
+  });
+
+  mainWindow.on('focus', () => {
+    if (GetTaskbarConfig() === 'trayWhenMinimized') {
+      TrayManagerDestroy();
+      mainWindow?.setSkipTaskbar(false);
+    }
+  });
+
   mainWindow.on('ready-to-show', () => {
+    console.log(MainLogError(`********* ready-to-show`));
     if (!mainWindow) {
       throw new Error('mainWindow is not defined');
     }
@@ -82,6 +109,36 @@ async function createMainWindow() {
     }
 
     if (process.platform === 'win32') app.setAppUserModelId('AIOne Lynx');
+
+    switch (GetTaskbarConfig()) {
+      case 'justTray':
+        TrayManagerCreate();
+        mainWindow?.setSkipTaskbar(true);
+        break;
+      case 'taskbarAndTray':
+        TrayManagerCreate();
+        mainWindow?.setSkipTaskbar(false);
+        break;
+      case 'justTaskbar':
+        TrayManagerDestroy();
+        mainWindow?.setSkipTaskbar(false);
+        break;
+      default:
+        break;
+    }
+
+    if (GetWindowSizeConfig() === 'lastSize') {
+      const resultSize: {width: number; height: number} = GetLastWindowSizeConfig();
+      mainWindow.setSize(resultSize.width, resultSize.height, true);
+    }
+  });
+
+  mainWindow.on('close', () => {
+    const sizeResult: {width: number; height: number} = {width: 1024, height: 768};
+    if (mainWindow?.getSize()[0]) sizeResult.width = mainWindow?.getSize()[0];
+    if (mainWindow?.getSize()[1]) sizeResult.height = mainWindow?.getSize()[1];
+
+    ChangeLastWindowSizeConfig(sizeResult);
   });
 
   mainWindow.on('closed', () => {
@@ -96,13 +153,14 @@ async function createMainWindow() {
     return {action: 'deny'};
   });
 
-  mainWindow.webContents.on('did-attach-webview', (event, webContents) => {
+  mainWindow.webContents.on('did-attach-webview', (_event, webContents) => {
     webContents.setWindowOpenHandler((details) => {
       shell.openExternal(details.url);
       return {action: 'deny'};
     });
   });
 
+  DRPCStartUp();
   // new AppUpdater();
 }
 
@@ -114,7 +172,6 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-
 app
   .whenReady()
   .then(() => {

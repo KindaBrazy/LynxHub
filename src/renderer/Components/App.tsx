@@ -1,5 +1,6 @@
 // import basic style
 import './App.scss';
+import './ScrollStyle.scss';
 // import packages
 import React, {RefObject, useEffect, useMemo, useRef, useState} from 'react';
 import {WebviewTag} from 'electron';
@@ -22,8 +23,15 @@ export default function App() {
   // Block background of an opened window to be not interactive
   const [blockBackground, setBlockBackground] = useState<boolean>(false);
   const [selectedPage, setSelectedPage] = useState<number>(sideBarButtonId.Image);
-  const [installedWebUi, setInstalledWebUi] = useState<WebuiList>({AUTOMATIC1111: false, LSHQQYTIGER: false, OOBABOOGA: false, RSXDALV: false});
-  const [webuiRunning, setWebuiRunning] = useState<boolean>(false);
+  const [lastSelectedPage, setLastSelectedPage] = useState<number>(sideBarButtonId.Image);
+  const [installedWebUi, setInstalledWebUi] = useState<WebuiList>({
+    AUTOMATIC1111: false,
+    LSHQQYTIGER: false,
+    COMFYANONYMOUS: false,
+    OOBABOOGA: false,
+    RSXDALV: false,
+  });
+  const [webuiRunning, setWebuiRunning] = useState<{running: boolean; uiName: string}>({running: false, uiName: ''});
 
   const webViewRef = useRef<WebviewTag>(null);
 
@@ -36,7 +44,7 @@ export default function App() {
   useEffect(() => {
     // initialize isDarkMode state
     async function initDarkMode() {
-      const value = await ipcWindowManager.getCurrentDarkMode();
+      const value = await ipcWindowManager.getThemeSource();
       if (value !== undefined) {
         if (value === 'light') setIsDarkMode(false);
         if (value === 'dark') setIsDarkMode(true);
@@ -45,9 +53,31 @@ export default function App() {
 
     initDarkMode();
 
-    /* ipcWindowManager.onDarkModeChange((_event, darkMode: boolean) => {
+    async function initLastPage() {
+      switch (await ipcWindowManager.getStartPage()) {
+        case 'last':
+          setSelectedPage(await ipcWindowManager.getLastPage());
+          break;
+        case 'image':
+          setSelectedPage(sideBarButtonId.Image);
+          break;
+        case 'text':
+          setSelectedPage(sideBarButtonId.Text);
+          break;
+        case 'audio':
+          setSelectedPage(sideBarButtonId.Audio);
+          break;
+        default:
+          setSelectedPage(sideBarButtonId.Image);
+          break;
+      }
+    }
+
+    initLastPage();
+
+    ipcWindowManager.onDarkModeChange((_event, darkMode: boolean) => {
       setIsDarkMode(darkMode);
-    }); */
+    });
 
     // Get app config and initialize sda1Installed whether webui is installed or not
     ipcUserData
@@ -57,6 +87,7 @@ export default function App() {
         setInstalledWebUi({
           AUTOMATIC1111: value.WebUi.AUTOMATIC1111?.installed,
           LSHQQYTIGER: value.WebUi.LSHQQYTIGER?.installed,
+          COMFYANONYMOUS: value.WebUi.COMFYANONYMOUS?.installed,
           OOBABOOGA: value.WebUi.OOBABOOGA?.installed,
           RSXDALV: value.WebUi.RSXDALV?.installed,
         });
@@ -64,6 +95,13 @@ export default function App() {
       })
       .catch((error) => console.log(RendererLogError(error)));
   }, []);
+
+  useEffect(() => {
+    if (selectedPage !== sideBarButtonId.Settings && selectedPage !== lastSelectedPage) {
+      setLastSelectedPage(selectedPage);
+      ipcWindowManager.setLastPage(selectedPage);
+    }
+  }, [selectedPage]);
 
   // Initialize GlobalStateContext with useMemo
   const contextValue: StatusContextType = useMemo(
@@ -76,12 +114,14 @@ export default function App() {
       setWebuiRunning,
       selectedPage,
       setSelectedPage,
+      lastSelectedPage,
+      setLastSelectedPage,
       webuiLaunch,
       setWebuiLaunch,
       isDarkMode,
       setIsDarkMode,
     }),
-    [isDarkMode, blockBackground, installedWebUi, webuiRunning, webuiLaunch, selectedPage],
+    [isDarkMode, blockBackground, installedWebUi, webuiRunning, webuiLaunch, selectedPage, lastSelectedPage],
   );
 
   /* (Main Component)
@@ -106,7 +146,7 @@ export default function App() {
       <TitleBar />
       <SideBar />
       {/* Webui cards container */}
-      <div className="absolute bottom-0 left-24 right-0 top-10 overflow-hidden">{webuiRunning ? <WebUiViewer /> : <PageContainer />}</div>
+      <div className="absolute bottom-0 left-24 right-0 top-10 overflow-hidden">{webuiRunning.running ? <WebUiViewer /> : <PageContainer />}</div>
     </StatusContext.Provider>
   );
 }

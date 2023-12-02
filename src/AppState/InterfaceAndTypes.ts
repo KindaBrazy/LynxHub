@@ -1,4 +1,5 @@
 // Enum for frontend element types of arguments and command lines
+
 export enum SettingComponentType {
   ChooseDirectory = 'ChooseDirectory',
   ChooseFile = 'ChooseFile',
@@ -84,10 +85,23 @@ export type WebUiRepos = {
 
   AUTOMATIC1111: SdConfig;
   LSHQQYTIGER: SdConfig;
+  COMFYANONYMOUS: TTSConfig;
   OOBABOOGA: TgConfig;
   RSXDALV: TTSConfig;
 };
 /* --------------------------------------- AIOne Lynx ---------------------------------- */
+
+export type DiscordRP = {
+  AIOneLynx: {
+    Enabled: boolean;
+    TimeElapsed: boolean;
+  };
+  RunningWebUI: {
+    Enabled: boolean;
+    TimeElapsed: boolean;
+    WebUIName: boolean;
+  };
+};
 
 // Interface for the config json file
 export interface AppConfig {
@@ -95,5 +109,11 @@ export interface AppConfig {
 
   ConfigVersion: number;
   Theme: string;
+  TaskbarStatus: 'taskbarAndTray' | 'justTaskbar' | 'justTray' | 'trayWhenMinimized';
+  LastWindowSize: {width: number; height: number};
+  WindowSize: 'lastSize' | 'default';
+  LastPage: number;
+  StartPage: 'last' | 'image' | 'text' | 'audio';
+  DiscordRP: DiscordRP;
   WebUi: WebUiRepos;
 }
