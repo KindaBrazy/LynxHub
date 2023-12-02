@@ -25,7 +25,7 @@ export default function BlockBackground({ShowBlock}: Props) {
             backgroundColor: isDarkMode ? getBlack(0) : getWhite(0),
             backdropFilter: 'blur(0px)',
           }}
-          className="absolute top-10 z-40 h-full w-full bg-black"
+          className="fixed top-10 z-40 h-full w-full bg-black"
         />
       )}
     </AnimatePresence>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {DefaultA1Dir, DefaultLSHDir, DefaultOOBADir, WebuiList} from '../AppState/AppConstants';
+import {DefaultA1Dir, DefaultComfyDir, DefaultLSHDir, DefaultOOBADir, DefaultRSXDir, WebuiList} from '../AppState/AppConstants';
 import {GetUserConfigData, UpdateSDAppConfig} from '../main/AppManage/AppConfigManager';
 
 export function setInstalledWebUiById(repoUserName: string, setState: React.Dispatch<React.SetStateAction<WebuiList>>): void {
@@ -10,6 +10,7 @@ export function setInstalledWebUiById(repoUserName: string, setState: React.Disp
         LSHQQYTIGER: prevState.LSHQQYTIGER,
         OOBABOOGA: prevState.OOBABOOGA,
         RSXDALV: prevState.RSXDALV,
+        COMFYANONYMOUS: prevState.COMFYANONYMOUS,
       }));
       break;
     case 'LSHQQYTIGER':
@@ -18,6 +19,16 @@ export function setInstalledWebUiById(repoUserName: string, setState: React.Disp
         LSHQQYTIGER: true,
         OOBABOOGA: prevState.OOBABOOGA,
         RSXDALV: prevState.RSXDALV,
+        COMFYANONYMOUS: prevState.COMFYANONYMOUS,
+      }));
+      break;
+    case 'COMFYANONYMOUS':
+      setState((prevState) => ({
+        AUTOMATIC1111: prevState.AUTOMATIC1111,
+        LSHQQYTIGER: prevState.LSHQQYTIGER,
+        OOBABOOGA: prevState.OOBABOOGA,
+        RSXDALV: prevState.RSXDALV,
+        COMFYANONYMOUS: true,
       }));
       break;
     case 'OOBABOOGA':
@@ -26,6 +37,7 @@ export function setInstalledWebUiById(repoUserName: string, setState: React.Disp
         LSHQQYTIGER: prevState.LSHQQYTIGER,
         OOBABOOGA: true,
         RSXDALV: prevState.RSXDALV,
+        COMFYANONYMOUS: prevState.COMFYANONYMOUS,
       }));
       break;
     case 'RSXDALV':
@@ -34,6 +46,7 @@ export function setInstalledWebUiById(repoUserName: string, setState: React.Disp
         LSHQQYTIGER: prevState.LSHQQYTIGER,
         OOBABOOGA: prevState.OOBABOOGA,
         RSXDALV: true,
+        COMFYANONYMOUS: prevState.COMFYANONYMOUS,
       }));
       break;
     default:
@@ -48,6 +61,8 @@ export function getIsInstalledById(repoUserName: string, installedWebUi: WebuiLi
       return installedWebUi.AUTOMATIC1111;
     case 'LSHQQYTIGER':
       return installedWebUi.LSHQQYTIGER;
+    case 'COMFYANONYMOUS':
+      return installedWebUi.COMFYANONYMOUS;
     case 'OOBABOOGA':
       return installedWebUi.OOBABOOGA;
     case 'RSXDALV':
@@ -75,6 +90,16 @@ export function saveInstalledUiConfig(uiName: string, dir: string) {
         WebUi: {
           ...GetUserConfigData().WebUi,
           LSHQQYTIGER: {...GetUserConfigData().WebUi.LSHQQYTIGER, installed: true, localDir: dir},
+        },
+      },
+      true,
+    );
+  } else if (uiName === 'COMFYANONYMOUS') {
+    UpdateSDAppConfig(
+      {
+        WebUi: {
+          ...GetUserConfigData().WebUi,
+          COMFYANONYMOUS: {...GetUserConfigData().WebUi.COMFYANONYMOUS, installed: true, localDir: dir},
         },
       },
       true,
@@ -108,8 +133,12 @@ export function getDefaultDirByID(uiName: string) {
       return DefaultA1Dir;
     case 'LSHQQYTIGER':
       return DefaultLSHDir;
+    case 'COMFYANONYMOUS':
+      return DefaultComfyDir;
     case 'OOBABOOGA':
       return DefaultOOBADir;
+    case 'RSXDALV':
+      return DefaultRSXDir;
     default:
       console.log(`getDefaultDirByID -> No correct repoUserName -> ${uiName}`);
       return '';

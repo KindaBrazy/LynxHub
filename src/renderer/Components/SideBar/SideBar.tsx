@@ -8,23 +8,32 @@ import StatusContext, {StatusContextType} from '../GlobalStateContext';
 import ImageGenerateIcon from '../../../Assets/Icons/Category/ImageGeneration.png';
 import TextGenerateIcon from '../../../Assets/Icons/Category/TextGeneration.png';
 import AudioGenerateIcon from '../../../Assets/Icons/Category/AudioGeneration.png';
-
-// import SettingsIcon from '../../../Assets/Icons/Category/Settings.png';
+import SettingsIcon from '../../../Assets/Icons/Category/Settings.png';
+import {sideBarButtonId} from '../../../AppState/AppConstants';
 
 const sideBarPictureId: string = 'sideBarPicture';
 const sideBarTextId: string = 'sideBarText';
 const sideBarAudioId: string = 'sideBarAudio';
-// const sideBarSettingsId: string = 'sideBarSetting';
+const sideBarSettingsId: string = 'sideBarSetting';
 
 export default function SideBar() {
   const {webuiRunning, selectedPage, setSelectedPage} = useContext(StatusContext) as StatusContextType;
 
   // Whether show or hiding sideBar
-  const [showSideBar, setShowSideBar] = useState(!webuiRunning);
+  const [showSideBar, setShowSideBar] = useState(!webuiRunning.running);
 
   // When a webui is running hide the SideBar
   useEffect(() => {
-    setShowSideBar(!webuiRunning);
+    if (selectedPage === sideBarButtonId.Settings) {
+      setShowSideBar(false);
+    } else {
+      setShowSideBar(true);
+    }
+  }, [selectedPage]);
+
+  useEffect(() => {
+    console.log(`aaaaaa -> ${webuiRunning.running}`);
+    setShowSideBar(!webuiRunning.running);
   }, [webuiRunning]);
 
   // Variants for animating show and hide of the sidebar
@@ -65,17 +74,11 @@ export default function SideBar() {
         <SideBarButton selected={selectedPage} setSelected={setSelectedPage} btnId={sideBarAudioId} icon={AudioGenerateIcon} />
       </div>
 
-      {/* Button -> App Settings 
+      {/* Button -> App Settings */}
       <div className="flex flex-col">
         <span className="sideBarSeperator h-[0.11rem] w-full" />
-        <SideBarButton
-          selected={currentSelected}
-          setSelected={setCurrentSelected}
-          btnId={sideBarSettingsId}
-          extraClasses="mb-2"
-          icon={SettingsIcon}
-        />
-      </div> */}
+        <SideBarButton selected={selectedPage} setSelected={setSelectedPage} btnId={sideBarSettingsId} extraClasses="mb-2" icon={SettingsIcon} />
+      </div>
     </motion.div>
   );
 }

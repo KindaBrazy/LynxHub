@@ -1,5 +1,5 @@
 // Import packages
-import {useContext, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {motion} from 'framer-motion';
 // Import Assets
 import {TickIcon} from '../../../Assets/Icons/SvgIcons';
@@ -17,21 +17,25 @@ type Props = {
   // Whether highlight tick with app second color theme
   highlightEnabled?: boolean;
   // Callback when checkbox value change
-  onValueChange?: (name: {id: string; value: string}, enabled: boolean) => void;
+  onClick?: (name: string, enabled: boolean) => void;
 };
 
-export default function LCheckBox({name, defaultEnabled, extraClasses, highlightEnabled, onValueChange}: Props) {
+export default function LCheckBox({name, defaultEnabled, extraClasses, highlightEnabled, onClick}: Props) {
   const {isDarkMode} = useContext(StatusContext) as StatusContextType;
   const [enabled, setEnabled] = useState(defaultEnabled);
   const [isHover, setIsHover] = useState(false);
+
+  useEffect(() => {
+    setEnabled(defaultEnabled);
+  }, [defaultEnabled]);
 
   // Handle click on check box and update enabled state value
   const onClickHandle = () => {
     setEnabled((prevState) => {
       const newState = !prevState;
-      if (onValueChange) {
+      if (onClick) {
         // Delay the execution of onValueChange to avoid state update during render
-        setTimeout(() => onValueChange({id: name, value: ''}, newState), 0);
+        setTimeout(() => onClick(name, newState), 0);
       }
       return newState;
     });
@@ -51,15 +55,11 @@ export default function LCheckBox({name, defaultEnabled, extraClasses, highlight
   return (
     <motion.div
       whileTap={{scale: 0.95, backgroundColor: getBlack(0.4), transition: {duration: 0.2}}}
-      animate={{backgroundColor: getCompBgColor()}}
+      animate={{backgroundColor: getCompBgColor(), transition: {duration: 0.3}}}
       onClick={onClickHandle}
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => setIsHover(false)}
       className={['flex flex-row items-center rounded-xl px-4 py-2', extraClasses].join(' ')}>
-      {/* Title Text */}
-      <span className={`mr-4 text-[16pt] transition duration-500 ${enabled && highlightEnabled ? 'text-LynxBlue' : 'text-black dark:text-white'}`}>
-        {name}
-      </span>
       {/* Tick container */}
       <motion.div
         animate={{borderRadius: '9px', borderColor: getTickBorderColor()}}
@@ -72,9 +72,13 @@ export default function LCheckBox({name, defaultEnabled, extraClasses, highlight
           whileHover={{backgroundColor: isDarkMode ? getBlack(0.8) : getWhiteThird()}}
           className="bg-LynxWhiteSecond p-1 dark:bg-black/50">
           {/* Tick Icon */}
-          <TickIcon className="h-full w-full stroke-LynxBlue stroke-[2]" />
+          <TickIcon className={`h-full w-full stroke-LynxBlue transition-all duration-300 ${isHover ? 'stroke-[3]' : 'stroke-[2]'}`} />
         </motion.div>
       </motion.div>
+      {/* Title Text */}
+      <span className={`ml-2 text-[16pt] transition duration-500 ${enabled && highlightEnabled ? 'text-LynxBlue' : 'text-black dark:text-white'}`}>
+        {name}
+      </span>
     </motion.div>
   );
 }
@@ -84,5 +88,5 @@ LCheckBox.defaultProps = {
   defaultEnabled: false,
   extraClasses: '',
   highlightEnabled: true,
-  onValueChange: null,
+  onClick: null,
 };

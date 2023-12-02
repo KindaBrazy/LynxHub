@@ -1,5 +1,5 @@
 // Import packages
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {AnimatePresence} from 'framer-motion';
 // Import components
 import CardWebUi from '../Card/CardWebUi';
@@ -8,11 +8,14 @@ import WebUiSDLaunchSettings from '../LaunchSettings/WebUiSDLaunchSettings';
 import automatic1111Img from '../../../../Assets/AiCard/RepoUser/AUTOMATIC1111.png';
 import stableDiffusionImg from '../../../../Assets/AiCard/BGCardImageGeneration.png';
 import {ipcUserData} from '../../RendererIpcHandler';
+import StatusContext, {StatusContextType} from '../../GlobalStateContext';
 
 const userName: string = 'AUTOMATIC1111';
 
-export default function Sda1WebUi() {
+export default function Sda1WebUI() {
+  const {selectedPage} = useContext(StatusContext) as StatusContextType;
   const [launchSettingsMenu, setLaunchSettingsMenu] = useState(false);
+  const [startedWithPage] = useState<number>(selectedPage);
 
   // Toggle to show launch settings or WebUi card
   const ToggleSettings = () => {
@@ -29,16 +32,19 @@ export default function Sda1WebUi() {
       <CardWebUi
         webuiData={{
           repoUserName: userName,
-          webUiDesc: 'Stable Diffusion WebUi',
+          webUiDesc: 'Stable Diffusion',
           repoAvatarImg: automatic1111Img,
           cardBackgroundImg: stableDiffusionImg,
           cardBackgroundPosition: 'object-bottom',
         }}
-        launchSettingsMenu={launchSettingsMenu}
         toggleSettings={ToggleSettings}
       />
-      {/* AnimatePresence for exit animations */}
-      <AnimatePresence>{launchSettingsMenu && <WebUiSDLaunchSettings repoUserName={userName} ToggleSettings={ToggleSettings} />}</AnimatePresence>
+      {selectedPage === startedWithPage && (
+        <>
+          {/* AnimatePresence for exit animations */}
+          <AnimatePresence>{launchSettingsMenu && <WebUiSDLaunchSettings repoUserName={userName} ToggleSettings={ToggleSettings} />}</AnimatePresence>
+        </>
+      )}
     </>
   );
 }

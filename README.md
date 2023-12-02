@@ -10,9 +10,9 @@
 
 <div align='center'>
 <picture>
- <source media="(prefers-color-scheme: dark)" srcset="Preview/Screenshot_Dark_V0.3.1-pre-alpha.png" width='777'>
- <source media="(prefers-color-scheme: light)" srcset="Preview/Screenshot_Light_V0.3.1-pre-alpha.png" width='777'>
- <img alt="AIOne Lynx Screenshot" src="Preview/Screenshot_Dark_V0.3.1-pre-alpha.png" width='777'>
+ <source media="(prefers-color-scheme: dark)" srcset="Preview/Screenshot_Dark_V0.5.0-pre-alpha.png" width='777'>
+ <source media="(prefers-color-scheme: light)" srcset="Preview/Screenshot_Light_V0.5.0-pre-alpha.png" width='777'>
+ <img alt="AIOne Lynx Screenshot" src="Preview/Screenshot_Dark_V0.5.0-pre-alpha.png" width='798'>
 </picture>
 </div>
 
@@ -35,20 +35,26 @@ alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 
 - Clone from GitHub
 - Locate pre-installed WebUI
-- Edit command line arguments
-- Filter command line arguments
+- Edit command line flags
+- Filter command line flags
 - In-app console
 - In-app WebUI browser
 - Detect and autolaunch UI
+- Discord Activity Status (Rich Presence)
+    - Running AIOneLynx status (Time Elapsed)
+    - Running WebUI status (UI name, Time Elapsed)
+        - WebUI Descriptions like `🖼️ Generating images with: ${WebUi Name} WebUI . . .`
+    - Global Description like `🖼️ Generating awesome images . . .`
 
 ### Currently supported WebUI:
 
-| Developer                                         | Repository                                                                                          |
-|---------------------------------------------------|-----------------------------------------------------------------------------------------------------|
-| [AUTOMATIC1111](https://github.com/AUTOMATIC1111) | [Stable Diffusion WebUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui)                   |
-| [LSHQQYTIGER](https://github.com/lshqqytiger)     | [Stable Diffusion WebUI - DirectML](https://github.com/lshqqytiger/stable-diffusion-webui-directml) |
-| [OOBABOOGA](https://github.com/oobabooga)         | [Text Generation WebUI](https://github.com/oobabooga/text-generation-webui)                         |
-| [RSXDALV](https://github.com/rsxdalv)             | [TTS Generation WebUI](https://github.com/rsxdalv/tts-generation-webui)                             |
+| Developer                                           | Repository                                                                                          |
+|-----------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| [AUTOMATIC1111](https://github.com/AUTOMATIC1111)   | [Stable Diffusion WebUI](https://github.com/AUTOMATIC1111/stable-diffusion-webui)                   |
+| [LSHQQYTIGER](https://github.com/lshqqytiger)       | [Stable Diffusion WebUI - DirectML](https://github.com/lshqqytiger/stable-diffusion-webui-directml) |
+| [COMFYANONYMOUS](https://github.com/comfyanonymous) | [Modular Stable Diffusion (ComfyUI)](https://github.com/comfyanonymous/ComfyUI)                     |
+| [OOBABOOGA](https://github.com/oobabooga)           | [Text Generation WebUI](https://github.com/oobabooga/text-generation-webui)                         |
+| [RSXDALV](https://github.com/rsxdalv)               | [TTS Generation WebUI](https://github.com/rsxdalv/tts-generation-webui)                             |
 
 > Note: this software will not install any Git, Python or Python libraries
 
@@ -74,7 +80,8 @@ launch it.**
 To use the in-app features, such as cloning and launching WebUI, you need to have installed:
 
 - **[Git](https://git-scm.com/downloads)**
-- **[Python](https://www.python.org/downloads)** (Recommended: [V3.10.11](https://www.python.org/downloads/release/python-31011/))
+- **[Python](https://www.python.org/downloads)** (
+  Recommended: [V3.10.11](https://www.python.org/downloads/release/python-31011/))
 
 # Development
 
@@ -90,7 +97,9 @@ To use the in-app features, such as cloning and launching WebUI, you need to hav
 - Run `npm run start` to run application
     - The Application will be `auto refreshed` after any changes in the `renderer process`.
     - Application will be auto `restarted` after any changes in the `main procces`.
-- Press `CRTL + Shift + I` For DevTools
+- Hotkeys
+    - Press `CRTL + Shift + I` For DevTools
+    - Press `CRTL + Insert` For copy terminal highlighted text
 
 ### Native modules
 

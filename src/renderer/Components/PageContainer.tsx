@@ -1,11 +1,14 @@
-import {AnimatePresence, motion, Variants} from 'framer-motion';
+import {AnimatePresence, Variants, motion} from 'framer-motion';
 import React, {useContext, ReactElement} from 'react';
 import StatusContext, {StatusContextType} from './GlobalStateContext';
 import {sideBarButtonId} from '../../AppState/AppConstants';
-import Sda1WebUi from './WebuiCard/WebUI/Sda1WebUi';
-import SdLshWebUi from './WebuiCard/WebUI/SdLshWebUi';
-import OOBABOOGAWebUI from './WebuiCard/WebUI/OOBABOOGAWebUI';
-import RSXDALVWebUI from './WebuiCard/WebUI/RSXDALVWebUI';
+import Sda1WebUI from './WebuiCard/WebUI/Sda1WebUI';
+import SdLshWebUI from './WebuiCard/WebUI/SdLshWebUI';
+import OobaboogaWebUI from './WebuiCard/WebUI/OobaboogaWebUI';
+import RsxdalvWebUI from './WebuiCard/WebUI/RsxdalvWebUI';
+import SettingsMenu from './WebuiCard/SettingsMenu';
+import ComfyWebUI from './WebuiCard/WebUI/ComfyWebUI';
+import LScrollBar from './Customizable/LScrollBar';
 
 const pageTransitionVariants: Variants = {
   initial: {translateX: -200, opacity: 0, scale: 0.8},
@@ -28,16 +31,19 @@ const pageTransitionVariants: Variants = {
   },
 };
 
-const getPage = (pageId: number) => {
+function GetPage(pageId: number) {
   let resultElements: ReactElement;
+
   switch (pageId) {
     case sideBarButtonId.Image:
       resultElements = (
         <>
           {/* Automatic1111 WebUi */}
-          <Sda1WebUi />
+          <Sda1WebUI />
           {/* LSHQQYTIGER (DirectMl) WebUi */}
-          <SdLshWebUi />
+          <SdLshWebUI />
+          {/* COMFYANONYMOUS WebUi */}
+          <ComfyWebUI />
         </>
       );
       break;
@@ -45,7 +51,7 @@ const getPage = (pageId: number) => {
       resultElements = (
         <>
           {/* OOBABOOGA WebUi */}
-          <OOBABOOGAWebUI />
+          <OobaboogaWebUI />
         </>
       );
       break;
@@ -53,35 +59,35 @@ const getPage = (pageId: number) => {
       resultElements = (
         <>
           {/* RSXDALV WebUi */}
-          <RSXDALVWebUI />
+          <RsxdalvWebUI />
         </>
       );
       break;
+    case sideBarButtonId.Settings:
+      return <SettingsMenu />;
     default:
       resultElements = <div />;
       break;
   }
 
   return (
-    <motion.div
-      className="absolute flex h-full w-full flex-wrap content-start opacity-0"
-      variants={pageTransitionVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit">
-      {resultElements}
-    </motion.div>
+    <LScrollBar extraClassName="pb-9">
+      <motion.div className="flex w-full flex-wrap content-start" variants={pageTransitionVariants} initial="initial" animate="animate" exit="exit">
+        {resultElements}
+      </motion.div>
+    </LScrollBar>
   );
-};
+}
 
 export default function PageContainer() {
   const {selectedPage} = useContext(StatusContext) as StatusContextType;
 
   return (
     <>
-      <AnimatePresence>{selectedPage === sideBarButtonId.Image && getPage(sideBarButtonId.Image)}</AnimatePresence>
-      <AnimatePresence>{selectedPage === sideBarButtonId.Text && getPage(sideBarButtonId.Text)}</AnimatePresence>
-      <AnimatePresence>{selectedPage === sideBarButtonId.Audio && getPage(sideBarButtonId.Audio)}</AnimatePresence>
+      <AnimatePresence>{selectedPage === sideBarButtonId.Image && GetPage(sideBarButtonId.Image)}</AnimatePresence>
+      <AnimatePresence>{selectedPage === sideBarButtonId.Text && GetPage(sideBarButtonId.Text)}</AnimatePresence>
+      <AnimatePresence>{selectedPage === sideBarButtonId.Audio && GetPage(sideBarButtonId.Audio)}</AnimatePresence>
+      <AnimatePresence>{selectedPage === sideBarButtonId.Settings && GetPage(sideBarButtonId.Settings)}</AnimatePresence>
     </>
   );
 }

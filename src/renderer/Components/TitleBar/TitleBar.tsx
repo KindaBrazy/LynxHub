@@ -21,7 +21,7 @@ export default function TitleBar() {
 
   const handleToggleTheme = () => {
     setIsDarkMode((prevState) => !prevState);
-    ipcWindowManager.changeDarkMode('Toggle');
+    ipcWindowManager.changeDarkMode('toggle');
   };
   return (
     <div
@@ -35,7 +35,7 @@ export default function TitleBar() {
         {/* App Name */}
         <span className="mb-[2px] ml-1 text-[15pt] font-light text-black transition-colors duration-100 dark:text-white">AIOne Lynx</span>
 
-        {!webuiRunning && (
+        {!webuiRunning.running && (
           <>
             {/* Toggle light/dark mode */}
             <motion.div
@@ -55,7 +55,7 @@ export default function TitleBar() {
       </div>
 
       {/* Webui Controls */}
-      {webuiRunning && <TitleBarWebUi />}
+      {webuiRunning.running && <TitleBarWebUi />}
 
       {/* Right of the title bar items */}
       <div className="flex h-full">

@@ -31,6 +31,11 @@ button:focus, button:active {
   .sideBarSeperatorVertical {
     background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
   }
+  .xterm-viewport::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+
 }
 
 @media (prefers-color-scheme: light) {
@@ -47,6 +52,11 @@ button:focus, button:active {
   .sideBarSeperatorVertical {
     background: linear-gradient(0deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 50%, rgba(0, 0, 0, 0) 100%);
   }
+  .xterm-viewport::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+
 }
 
 .LynxBlueFilter {
@@ -80,4 +90,8 @@ body {
 
 .notDraggable {
   -webkit-app-region: no-drag;
+}
+
+.xterm-viewport::-webkit-scrollbar {
+  width: 5px;
 }

@@ -2,7 +2,6 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import {AnimatePresence, motion, Variants} from 'framer-motion';
 // Import components
-import SmoothScroll from '../../Customizable/SmoothScroll';
 import SimpleCloseButton from '../../Customizable/SimpleCloseButton';
 import ListItemComp from './ListItemComp';
 import FullTitleComp from './SubComps/FullTitleComp';
@@ -15,6 +14,7 @@ import {environmentVariables, sda1CommandLines} from '../../../../AppState/SDArg
 import StatusContext, {StatusContextType} from '../../GlobalStateContext';
 // Import assets
 import {SearchIcon} from '../../../../Assets/Icons/SvgIcons';
+import LScrollBar from '../../Customizable/LScrollBar';
 
 type Props = {
   launchArgs: SDLaunchConfig;
@@ -101,14 +101,14 @@ export default function FilterSDLaunchSettings({setShowListMenu, launchArgs, lau
   }
 
   // Update launch settings
-  const updateLaunchSettings = (arg: {id: string; value: string}, enabled: boolean) => {
+  const updateLaunchSettings = (arg: string, enabled: boolean) => {
     let isFound: boolean = false;
 
     // Find in environment properties
     envProperties.find((value: string) => {
-      if (arg.id === environmentVariables[value].Name) {
+      if (arg === environmentVariables[value].Name) {
         isFound = true;
-        updateLaunchData('env', arg, enabled);
+        updateLaunchData('env', {id: arg, value: ''}, enabled);
       }
       return isFound;
     });
@@ -122,9 +122,9 @@ export default function FilterSDLaunchSettings({setShowListMenu, launchArgs, lau
       ].find((value) => {
         value.data.find((childValue) => {
           const propertyValue: SDArgSetting = sda1CommandLines[value.type][childValue];
-          if (arg.id === propertyValue.Name) {
+          if (arg === propertyValue.Name) {
             isFound = true;
-            updateLaunchData('cl', arg, enabled);
+            updateLaunchData('cl', {id: arg, value: ''}, enabled);
           }
           return isFound;
         });
@@ -191,9 +191,6 @@ export default function FilterSDLaunchSettings({setShowListMenu, launchArgs, lau
     setIsSearching((prevState) => !prevState);
   };
 
-  // Utilize useState to manage the scrollKey state
-  const [scrollKey, setScrollKey] = useState<number>(0);
-
   // Memorizing the result of newData this prevents unnecessary re-renders when the dependencies [clEnabled, searchValue] have not changed
   const newData = useMemo(() => {
     // Initialize an empty array to store the JSX elements
@@ -240,9 +237,6 @@ export default function FilterSDLaunchSettings({setShowListMenu, launchArgs, lau
       });
     }
 
-    // Increment the scrollKey state to trigger a re-render of the scrollable component
-    setScrollKey((prevState) => prevState + 1);
-
     return elements;
   }, [clEnabled, searchValue]);
 
@@ -252,7 +246,7 @@ export default function FilterSDLaunchSettings({setShowListMenu, launchArgs, lau
       initial="comeOut"
       animate="comeIn"
       exit="comeOut"
-      className="fixed inset-x-10 bottom-8 top-16 z-40 flex flex-col
+      className="fixed inset-x-10 bottom-8 top-16 !z-[70] flex flex-col
       items-center overflow-hidden rounded-2xl bg-white/30 shadow-SideBar backdrop-blur-2xl dark:bg-LynxRaisinBlack/[98%]">
       <div className="flex h-20 w-full items-center justify-center">
         {/* Close button */}
@@ -299,7 +293,9 @@ export default function FilterSDLaunchSettings({setShowListMenu, launchArgs, lau
       </div>
 
       {/* Setting items to show */}
-      <SmoothScroll key={`FilterLaunchScroll${scrollKey}`}>{newData.map((value) => value)}</SmoothScroll>
+      <LScrollBar extraClassName="pb-4 pt-2">
+        <div className="flex w-full flex-col items-center">{newData.map((value) => value)}</div>
+      </LScrollBar>
     </motion.div>
   );
 }

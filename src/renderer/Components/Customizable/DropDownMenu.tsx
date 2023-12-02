@@ -24,6 +24,8 @@ type Props = {
   setSelectedId?: (value: string) => void;
   // Callback return categoryText, and id when any item selected
   onValueChange?: (id: string, chosen: string) => void;
+  // Callback return id of clicked item
+  onItemClick?: (id: string) => void;
   // Initialize dropdown default if not initialized first item be selected as default
   defaultSelectedItem?: string;
 };
@@ -76,6 +78,7 @@ export default function DropDownMenu({
   items,
   categoryText,
   onValueChange,
+  onItemClick,
   currentOpenDrop,
   setCurrentOpenDrop,
   setSelectedId,
@@ -110,9 +113,11 @@ export default function DropDownMenu({
           0,
         ),
       );
+  }, [defaultSelectedItem]);
+  useEffect(() => {
     // When the user clicks outside of dropdown close dropdown
     document.addEventListener('click', () => {
-      if (isOpen) setIsOpen(false);
+      setIsOpen(false);
     });
   }, []);
 
@@ -229,6 +234,7 @@ export default function DropDownMenu({
                 id={options.id}
                 whileTap={{scale: 0.95}}
                 onClick={() => {
+                  if (onItemClick) onItemClick(options.id);
                   setSelectedItem(index);
                 }}
                 animate={{backgroundColor: isDarkMode ? 'rgb(37,37,37,0)' : 'rgb(255,255,255,0)'}}
@@ -253,5 +259,6 @@ DropDownMenu.defaultProps = {
   setSelectedId: undefined,
   extraClasses: undefined,
   onValueChange: null,
+  onItemClick: null,
   defaultSelectedItem: undefined,
 };

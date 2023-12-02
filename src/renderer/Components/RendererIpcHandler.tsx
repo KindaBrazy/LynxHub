@@ -1,11 +1,32 @@
 import {ipcRenderer, IpcRendererEvent} from 'electron';
-import {AppConfig, SDLaunchConfig, TGLaunchConfig} from '../../AppState/InterfaceAndTypes';
+import {AppConfig, DiscordRP, SDLaunchConfig, TGLaunchConfig} from '../../AppState/InterfaceAndTypes';
 
 export const ipcWindowManager = {
   changeWindowState: (status: 'Minimize' | 'Maximize' | 'Close') => ipcRenderer.send('windowManager:changeWindowState', status),
-  changeDarkMode: (status: 'Toggle' | 'System') => ipcRenderer.send('windowManager:changeDarkMode', status),
-  getCurrentDarkMode: () => ipcRenderer.invoke('windowManager:getCurrentDarkMode'),
-  // onDarkModeChange: (callback: (event: IpcRendererEvent, darkMode: boolean) => void) => ipcRenderer.on('windowManager:onDarkModeChange', callback),
+  changeDarkMode: (status: 'toggle' | 'system' | 'dark' | 'light') => ipcRenderer.send('windowManager:changeDarkMode', status),
+  appTaskbarStatus: (status: 'taskbarAndTray' | 'justTaskbar' | 'justTray' | 'trayWhenMinimized') =>
+    ipcRenderer.send('windowManager:appTaskbarStatus', status),
+  getThemeSource: () => ipcRenderer.invoke('windowManager:getThemeSource'),
+  getIsDarkMode: () => ipcRenderer.invoke('windowManager:getIsDarkMode'),
+
+  getTaskbarMode: () => ipcRenderer.invoke('windowManager:getTaskbarMode'),
+
+  getWindowSize: () => ipcRenderer.invoke('windowManager:getWindowSize'),
+  setWindowSize: (status: 'lastSize' | 'default') => ipcRenderer.send('windowManager:setWindowSize', status),
+
+  getStartPage: () => ipcRenderer.invoke('windowManager:getStartPage'),
+  setStartPage: (status: 'last' | 'image' | 'text' | 'audio') => ipcRenderer.send('windowManager:setStartPage', status),
+
+  getLastPage: () => ipcRenderer.invoke('windowManager:getLastPage'),
+  setLastPage: (pageId: number) => ipcRenderer.send('windowManager:setLastPage', pageId),
+
+  getPageToShow: () => ipcRenderer.invoke('windowManager:getPageToShow'),
+
+  getDiscordRp: () => ipcRenderer.invoke('windowManager:getDiscordRp'),
+  setDiscordRp: (data: DiscordRP) => ipcRenderer.send('windowManager:setDiscordRp', data),
+
+  setDiscordWebUIRunning: (status: {running: boolean; uiName: string}) => ipcRenderer.send('windowManager:setDiscordWebUIRunning', status),
+  onDarkModeChange: (callback: (event: IpcRendererEvent, darkMode: boolean) => void) => ipcRenderer.on('windowManager:onDarkModeChange', callback),
 };
 
 export const ipcUtil = {
