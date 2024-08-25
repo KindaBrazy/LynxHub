@@ -1,0 +1,24 @@
+@import "../assets/fonts.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    color-scheme: light dark;
+    font-family: Nunito, sans-serif;
+}
+
+* {
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
+
+.draggable {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+}
+
+.notDraggable {
+    -webkit-app-region: no-drag;
+}
