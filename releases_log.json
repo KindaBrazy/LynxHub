@@ -1,0 +1,11 @@
+{
+  "currentVersion": "1.0.0",
+  "currentBuild": 5,
+  "releaseDate": "2024-08-23",
+  "changeLog": [
+    {
+      "build": 5,
+      "version": "1.0.0"
+    }
+  ]
+}
