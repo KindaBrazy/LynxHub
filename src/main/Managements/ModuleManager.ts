@@ -48,7 +48,6 @@ export default class ModuleManager {
   //#region Getters
 
   public getMethodsById(id: string): CardMainMethods | undefined {
-    console.log(this.mainModules);
     return this.mainModules.find(module => module.id === id)?.methods;
   }
 
@@ -196,7 +195,7 @@ export default class ModuleManager {
         if (updateResult) updatedModules.push(module.info.id);
       }),
     );
-    console.log(updatedModules);
+
     if (updatedModules.length > 0) {
       appManager.getWebContent()?.send(modulesChannels.onUpdatedModules, updatedModules);
       await this.reloadServer();
@@ -213,7 +212,6 @@ export default class ModuleManager {
           this.server = http.createServer((req, res) => {
             const origin = is.dev ? '*' : 'file://';
 
-            console.log(origin);
             res.setHeader('Access-Control-Allow-Origin', origin);
 
             return handler(req, res, {

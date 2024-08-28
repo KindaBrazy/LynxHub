@@ -28,14 +28,15 @@ export default class ElectronAppManager {
   private static readonly MAIN_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
     frame: false,
     show: false,
-    width: 1024,
+    width: 1068,
     height: 768,
     minWidth: 800,
     minHeight: 560,
     icon,
     webPreferences: {
+      webviewTag: true,
       nodeIntegration: true,
-      preload: path.join(__dirname, '../preload/index.mjs'),
+      preload: path.join(__dirname, '../preload/index.cjs'),
       sandbox: false,
     },
   };

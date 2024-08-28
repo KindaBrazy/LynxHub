@@ -21,10 +21,11 @@ export const APP_VERSION_V: string = `V${APP_VERSION}`;
 export const APP_NAME_VERSION: string = `${APP_NAME} ${APP_VERSION}`;
 export const APP_NAME_VERSION_V: string = `${APP_NAME} ${APP_VERSION_V}`;
 
-export const APP_ICON_TRANSPARENT: string = 'AppIcon Transparent.png';
 export const MODULES_FOLDER_NAME = 'Modules' as const;
 export const BINARIES_FOLDER_NAME = 'Binaries' as const;
 export const REPOSITORIES_FOLDER_NAME = 'AIWorkspaces' as const;
+// Static Assets
+export const APP_ICON_TRANSPARENT: string = 'AppIcon Transparent.png';
 
 export const WIN_RELEASE_URL: string = 'https://raw.githubusercontent.com/KindaBrazy/LynxHub/master/releases_log.json';
 export const DISCORD_ID: string = 'kinda.brazy';
