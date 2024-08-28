@@ -9,7 +9,18 @@ export default defineConfig({
   },
   preload: {
     plugins: [externalizeDepsPlugin()],
-    build: {rollupOptions: {input: {index: resolve(__dirname, 'src/preload/index.js')}}},
+    build: {
+      rollupOptions: {
+        output: {
+          format: 'cjs',
+        },
+        input: {
+          index: resolve(__dirname, 'src/preload/index.js'),
+          dialog: resolve(__dirname, 'src/preload/dialog.js'),
+          webview: resolve(__dirname, 'src/preload/webview.js'),
+        },
+      },
+    },
   },
   renderer: {
     resolve: {alias: {'@renderer': resolve('src/renderer/src')}},
@@ -21,6 +32,7 @@ export default defineConfig({
           index: resolve(__dirname, 'src/renderer/index.html'),
           initializer: resolve(__dirname, 'src/renderer/initializer.html'),
           loading: resolve(__dirname, 'src/renderer/loading.html'),
+          dialog: resolve(__dirname, 'src/renderer/dialog.html'),
         },
       },
       target: 'esnext',

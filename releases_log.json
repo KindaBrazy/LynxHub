@@ -1,8 +1,18 @@
 {
-  "currentVersion": "1.0.0",
-  "currentBuild": 5,
-  "releaseDate": "2024-08-23",
+  "currentVersion": "1.0.1",
+  "currentBuild": 6,
+  "releaseDate": "2024-08-28",
   "changeLog": [
+    {
+      "build": 6,
+      "version": "1.0.1",
+      "bug": [
+        "Fixed issue where 'Save As', 'Save', or 'Export' workflow buttons in the ComfyUI did not trigger the expected save dialog."
+      ],
+      "new": [
+        "Added a custom modal to replace the default `prompt` for all WebUI."
+      ]
+    },
     {
       "build": 5,
       "version": "1.0.0"

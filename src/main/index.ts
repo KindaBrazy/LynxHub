@@ -10,6 +10,7 @@ import {APP_NAME} from '../cross/CrossConstants';
 import AppInitializer from './Managements/AppInitializer';
 import {checkForUpdate} from './Managements/AppUpdater';
 import {ValidateCards} from './Managements/DataValidator';
+import DialogManager from './Managements/DialogManager';
 import DiscordRpcManager from './Managements/DiscordRpcManager';
 import ElectronAppManager from './Managements/ElectronAppManager';
 import {listenToAllChannels} from './Managements/Ipc/IpcHandler';
@@ -70,6 +71,8 @@ async function onAppReady() {
   if (is.dev) await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS]);
 
   listenToAllChannels();
+
+  DialogManager();
 
   checkForUpdate();
 

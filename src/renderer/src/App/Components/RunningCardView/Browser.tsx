@@ -25,7 +25,7 @@ export default function Browser() {
       animate={animate}
       variants={variants}
       className="absolute inset-2 overflow-hidden rounded-lg bg-white shadow-md dark:bg-LynxRaisinBlack">
-      <iframe src={address} id={browserId} className="relative size-full" />
+      <webview src={address} id={browserId} className="relative size-full" />
     </motion.div>
   );
 }

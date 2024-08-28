@@ -4,7 +4,7 @@ import {motion} from 'framer-motion';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {APP_ICON_TRANSPARENT, APP_NAME, APP_NAME_VERSION_V, IS_EA} from '../../../../../cross/CrossConstants';
+import {APP_ICON_TRANSPARENT, APP_NAME, APP_NAME_VERSION_V} from '../../../../../cross/CrossConstants';
 import {getIconByName} from '../../../assets/icons/SvgIconsContainer';
 import {modalActions} from '../../Redux/AI/ModalsReducer';
 import {useAppState} from '../../Redux/App/AppReducer';
