@@ -32,7 +32,7 @@ export default class AppInitializer {
     icon,
     webPreferences: {
       nodeIntegration: true,
-      preload: path.join(__dirname, '../preload/index.mjs'),
+      preload: path.join(__dirname, '../preload/index.cjs'),
       sandbox: false,
     },
   };

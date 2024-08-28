@@ -1,8 +1,15 @@
 {
-  "currentVersion": "1.0.1",
-  "currentBuild": 6,
+  "currentVersion": "1.0.2",
+  "currentBuild": 7,
   "releaseDate": "2024-08-28",
   "changeLog": [
+    {
+      "build": 7,
+      "version": "1.0.2",
+      "bug": [
+        "Fixed issue where Initializer window not working (White Screen)."
+      ]
+    },
     {
       "build": 6,
       "version": "1.0.1",
@@ -10,7 +17,7 @@
         "Fixed issue where 'Save As', 'Save', or 'Export' workflow buttons in the ComfyUI did not trigger the expected save dialog."
       ],
       "new": [
-        "Added a custom modal to replace the default `prompt` for all WebUI."
+        "Added a custom modal to replace the default `prompt` for all WebUI's."
       ]
     },
     {
