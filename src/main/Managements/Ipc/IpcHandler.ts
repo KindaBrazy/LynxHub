@@ -1,4 +1,4 @@
-import {app, ipcMain, nativeTheme, shell} from 'electron';
+import {app, BrowserWindow, ipcMain, nativeTheme, shell} from 'electron';
 
 import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/CrossTypes';
 import {
@@ -42,37 +42,31 @@ import {ptyProcess, ptyResize, ptyWrite} from './Methods/IpcMethods-Pty';
 import {abortGitOperation, cloneRepo, getRepoInfo, pullRepo} from './Methods/IpcMethods-Repository';
 
 /** Listen for window state events */
-function onWinState() {
-  appManager.onCreateWindow = () => {
-    const window = appManager.getMainWindow();
-    const webContent = appManager.getWebContent();
+export function onWinState(window: BrowserWindow) {
+  const webContent = window.webContents;
+  if (!webContent) return;
 
-    if (!window || !webContent) return;
+  window.on('focus', (): void => webContent.send(winChannels.onChangeState, {name: 'focus', value: true}));
+  window.on('blur', (): void => webContent.send(winChannels.onChangeState, {name: 'focus', value: false}));
 
-    window.on('focus', (): void => webContent.send(winChannels.onChangeState, {name: 'focus', value: true}));
-    window.on('blur', (): void => webContent.send(winChannels.onChangeState, {name: 'focus', value: false}));
+  window.on('maximize', (): void => webContent.send(winChannels.onChangeState, {name: 'maximize', value: true}));
+  window.on('unmaximize', (): void => webContent.send(winChannels.onChangeState, {name: 'maximize', value: false}));
 
-    window.on('maximize', (): void => webContent.send(winChannels.onChangeState, {name: 'maximize', value: true}));
-    window.on('unmaximize', (): void => webContent.send(winChannels.onChangeState, {name: 'maximize', value: false}));
-
-    window.on('enter-full-screen', (): void =>
-      webContent.send(winChannels.onChangeState, {
-        name: 'full-screen',
-        value: true,
-      }),
-    );
-    window.on('leave-full-screen', (): void =>
-      webContent.send(winChannels.onChangeState, {
-        name: 'full-screen',
-        value: false,
-      }),
-    );
-  };
+  window.on('enter-full-screen', (): void =>
+    webContent.send(winChannels.onChangeState, {
+      name: 'full-screen',
+      value: true,
+    }),
+  );
+  window.on('leave-full-screen', (): void =>
+    webContent.send(winChannels.onChangeState, {
+      name: 'full-screen',
+      value: false,
+    }),
+  );
 }
 
 function win() {
-  onWinState();
-
   ipcMain.on(winChannels.changeState, (_, state: ChangeWindowState) => changeWindowState(state));
   ipcMain.handle(winChannels.getSystemDarkMode, () => getSystemDarkMode());
   ipcMain.on(winChannels.setDarkMode, (_, darkMode: DarkModeTypes) => setDarkMode(darkMode));
