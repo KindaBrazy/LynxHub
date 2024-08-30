@@ -1,8 +1,15 @@
 {
-  "currentVersion": "1.0.2",
-  "currentBuild": 7,
-  "releaseDate": "2024-08-28",
+  "currentVersion": "1.0.3",
+  "currentBuild": 8,
+  "releaseDate": "2024-08-31",
   "changeLog": [
+    {
+      "build": 8,
+      "version": "1.0.3",
+      "bug": [
+        "Fixed issue where the fullscreen mode toggle was not working."
+      ]
+    },
     {
       "build": 7,
       "version": "1.0.2",

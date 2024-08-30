@@ -5,6 +5,7 @@ import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents}
 
 import icon from '../../../resources/icon.png?asset';
 import {storageManager, trayManager} from '../index';
+import {onWinState} from './Ipc/IpcHandler';
 
 /**
  * Manages the main application window and loading window for an Electron app.
@@ -93,6 +94,7 @@ export default class ElectronAppManager {
     this.mainWindow = new BrowserWindow(ElectronAppManager.MAIN_WINDOW_CONFIG);
     this.setupMainWindowEventListeners();
     this.loadAppropriateURL(this.mainWindow, 'index.html');
+    onWinState(this.mainWindow);
     this.onCreateWindow?.();
   }
 
