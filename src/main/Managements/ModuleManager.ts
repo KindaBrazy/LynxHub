@@ -113,7 +113,7 @@ export default class ModuleManager {
 
         resolve();
       } catch (error: any) {
-        console.log(error.message);
+        console.error('Loading Module Error: ', error);
         resolve();
       }
     });

@@ -38,9 +38,13 @@ export default function SettingsGeneralTaskbar() {
       <SelectItem key="taskbar" className="cursor-default">
         Taskbar Only
       </SelectItem>
-      <SelectItem key="tray" className="cursor-default">
-        System Tray Only
-      </SelectItem>
+      {window.osPlatform === 'linux' ? (
+        <SelectItem key="!" className="hidden" />
+      ) : (
+        <SelectItem key="tray" className="cursor-default">
+          System Tray Only
+        </SelectItem>
+      )}
       <SelectItem
         key="tray-minimized"
         className="cursor-default"
