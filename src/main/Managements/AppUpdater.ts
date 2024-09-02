@@ -8,6 +8,8 @@ const {autoUpdater, CancellationToken} = updater;
 
 export function checkForUpdate() {
   autoUpdater.autoDownload = false;
+  autoUpdater.allowPrerelease = false;
+
   let cancelToken = new CancellationToken();
 
   ipcMain.on(appUpdateChannels.download, () => {
