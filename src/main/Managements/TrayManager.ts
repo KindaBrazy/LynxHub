@@ -1,3 +1,5 @@
+import os from 'node:os';
+
 import {Menu, Tray} from 'electron';
 
 import {APP_NAME, APP_NAME_VERSION} from '../../cross/CrossConstants';
@@ -45,7 +47,9 @@ export default class TrayManager {
   public createTrayIcon(): void {
     if (this.tray) return;
 
-    this.tray = new Tray(this.trayIcon);
+    const icon = os.platform() === 'win32' ? this.trayIcon : this.trayIconMenu;
+
+    this.tray = new Tray(icon);
     this.tray.setToolTip(APP_NAME);
 
     const contextMenu = Menu.buildFromTemplate([
