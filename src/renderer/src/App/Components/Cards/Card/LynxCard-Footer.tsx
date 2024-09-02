@@ -30,7 +30,8 @@ const LynxCardFooter = observer(() => {
 
   const install = useCallback(() => {
     rendererIpc.file.getAppDirectories('AIWorkspaces').then(dir => {
-      const directory = `${dir}\\${extractGitHubUrl(repoUrl).repo}`;
+      const isWin = window.osPlatform === 'win32';
+      const directory = `${dir}${isWin ? '\\' : '/'}${extractGitHubUrl(repoUrl).repo}`;
 
       dispatch(
         modalActions.openInstallCard({
