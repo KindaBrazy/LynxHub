@@ -51,6 +51,12 @@ export function onWinState(window: BrowserWindow) {
 
   window.on('maximize', (): void => webContent.send(winChannels.onChangeState, {name: 'maximize', value: true}));
   window.on('unmaximize', (): void => webContent.send(winChannels.onChangeState, {name: 'maximize', value: false}));
+  window.on('minimize', () => {
+    const {taskbarStatus} = storageManager.getData('app');
+    if (taskbarStatus === 'tray-minimized') {
+      window.hide();
+    }
+  });
 
   window.on('enter-full-screen', (): void =>
     webContent.send(winChannels.onChangeState, {
