@@ -145,7 +145,6 @@ export default class DiscordRpcManager {
    */
   public updateDiscordRP(): void {
     this.discordRP = storageManager.getData('app').discordRP;
-    console.log(this.discordRP);
     this.resetToDefaultActivity();
 
     if (this.isReadyToActivity) {

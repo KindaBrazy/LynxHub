@@ -150,12 +150,11 @@ export default class AppInitializer {
       return {action: 'deny'};
     });
 
-    const url =
-      is.dev && process.env['ELECTRON_RENDERER_URL']
-        ? `${process.env['ELECTRON_RENDERER_URL']}/initializer.html`
-        : path.join(__dirname, '../renderer/initializer.html');
-
-    await this.window.loadURL(url);
+    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+      await this.window.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/initializer.html`);
+    } else {
+      await this.window.loadFile(path.join(__dirname, `../renderer/initializer.html`));
+    }
   }
 
   //#endregion
