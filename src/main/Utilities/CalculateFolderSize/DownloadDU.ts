@@ -43,6 +43,8 @@ async function downloadAndExtractDuZip(savePath: string): Promise<void> {
 
 /** Downloads the DU utility if it's not already installed. */
 export default async function downloadDU(): Promise<void> {
+  if (os.platform() !== 'win32') return;
+
   const duBinPath = path.join(getAppDirectory('Binaries'), 'DiskUsage', DU_BINARY_NAME);
 
   try {
