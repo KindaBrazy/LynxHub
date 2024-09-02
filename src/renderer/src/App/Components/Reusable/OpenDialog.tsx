@@ -28,7 +28,8 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
   const chooseDirectory = useCallback(() => {
     rendererIpc.file.openDlg(dialogType).then(result => {
       if (result && inputRef.current) {
-        const resultDir = extraFolder ? `${result}\\${extraFolder}` : result;
+        const isWin = window.osPlatform === 'win32';
+        const resultDir = extraFolder ? `${result}${isWin ? '\\' : '/'}${extraFolder}` : result;
         setDirectory(resultDir);
         inputRef.current.value = resultDir;
       }
