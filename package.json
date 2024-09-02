@@ -3,7 +3,7 @@
   "productName": "LynxHub",
   "version": "1.0.3",
   "type": "module",
-  "description": "Seamlessly install, configure, launch, and manage all your AI interfaces from a single, intuitive platform.",
+  "description": "Seamlessly install, configure, launch, and manage AI interfaces from a single, intuitive platform.",
   "main": "./out/main/index.cjs",
   "author": {
     "name": "KindaBrazy",
@@ -18,7 +18,7 @@
   "appDetails": {
     "title": "LynxHub",
     "buildNumber": 8,
-    "detailedDescription": "LynxHub is an open-source AI management software that lets you seamlessly install, configure, launch, and manage all your AI interfaces from a single, intuitive platform.",
+    "detailedDescription": "LynxHub is an open-source AI management software that lets you seamlessly install, configure, launch, and manage AI interfaces from a single, intuitive platform.",
     "moduleContainer": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Modules/compiled/container.json",
     "mainModule": "https://github.com/KindaBrazy/LynxHub-Module-Offline-Container"
   },
@@ -26,13 +26,14 @@
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
     "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
-    "preview": "electron-vite preview",
-    "dev": "electron-vite dev -w",
+    "preview": "electron-vite preview --noSandbox",
+    "dev": "electron-vite dev -w --noSandbox",
     "build": "npm run typecheck && electron-vite build",
     "rebuild": "electron-builder node-gyp-rebuild",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "npm run build && electron-builder --dir --config electron-builder.config.cjs",
     "build:win": "npm run build && electron-builder --win --config electron-builder.config.cjs",
+    "build:linux": "npm run build && electron-builder --linux --config electron-builder.config.cjs",
     "release": "electron-builder",
     "publish": "electron-builder -p always --config electron-builder.config.cjs"
   },
