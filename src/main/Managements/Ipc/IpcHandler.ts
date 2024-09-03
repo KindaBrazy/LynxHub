@@ -1,4 +1,4 @@
-import {app, BrowserWindow, ipcMain, nativeTheme, shell} from 'electron';
+import {app, ipcMain, nativeTheme, shell} from 'electron';
 
 import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/CrossTypes';
 import {
@@ -40,37 +40,6 @@ import {disableLoadingExtensions, getExtensionsDetails, getExtensionsUpdate} fro
 import {getSystemInfo} from './Methods/IpcMethods-Platform';
 import {ptyProcess, ptyResize, ptyWrite} from './Methods/IpcMethods-Pty';
 import {abortGitOperation, cloneRepo, getRepoInfo, pullRepo} from './Methods/IpcMethods-Repository';
-
-/** Listen for window state events */
-export function onWinState(window: BrowserWindow) {
-  const webContent = window.webContents;
-  if (!webContent) return;
-
-  window.on('focus', (): void => webContent.send(winChannels.onChangeState, {name: 'focus', value: true}));
-  window.on('blur', (): void => webContent.send(winChannels.onChangeState, {name: 'focus', value: false}));
-
-  window.on('maximize', (): void => webContent.send(winChannels.onChangeState, {name: 'maximize', value: true}));
-  window.on('unmaximize', (): void => webContent.send(winChannels.onChangeState, {name: 'maximize', value: false}));
-  window.on('minimize', () => {
-    const {taskbarStatus} = storageManager.getData('app');
-    if (taskbarStatus === 'tray-minimized') {
-      window.hide();
-    }
-  });
-
-  window.on('enter-full-screen', (): void =>
-    webContent.send(winChannels.onChangeState, {
-      name: 'full-screen',
-      value: true,
-    }),
-  );
-  window.on('leave-full-screen', (): void =>
-    webContent.send(winChannels.onChangeState, {
-      name: 'full-screen',
-      value: false,
-    }),
-  );
-}
 
 function win() {
   ipcMain.on(winChannels.changeState, (_, state: ChangeWindowState) => changeWindowState(state));

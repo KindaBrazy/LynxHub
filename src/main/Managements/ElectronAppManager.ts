@@ -1,11 +1,12 @@
+import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
+import {winChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager, trayManager} from '../index';
-import {onWinState} from './Ipc/IpcHandler';
 
 /**
  * Manages the main application window and loading window for an Electron app.
@@ -94,7 +95,6 @@ export default class ElectronAppManager {
     this.mainWindow = new BrowserWindow(ElectronAppManager.MAIN_WINDOW_CONFIG);
     this.setupMainWindowEventListeners();
     this.loadAppropriateURL(this.mainWindow, 'index.html');
-    onWinState(this.mainWindow);
     this.onCreateWindow?.();
   }
 
@@ -106,19 +106,58 @@ export default class ElectronAppManager {
     });
 
     this.mainWindow?.webContents.setWindowOpenHandler(({url}) => {
-      shell.openExternal(url);
+      shell.openExternal(url).catch(e => {
+        console.error('Error on openExternal: ', e);
+      });
+
       return {action: 'deny'};
     });
 
     this.mainWindow?.on('minimize', this.handleMinimize);
     this.mainWindow?.on('focus', this.handleFocus);
+
+    const webContent = this.mainWindow?.webContents;
+    if (!webContent) return;
+
+    this.mainWindow?.on('focus', (): void => webContent.send(winChannels.onChangeState, {name: 'focus', value: true}));
+    this.mainWindow?.on('blur', (): void => webContent.send(winChannels.onChangeState, {name: 'focus', value: false}));
+
+    this.mainWindow?.on('maximize', (): void =>
+      webContent.send(winChannels.onChangeState, {
+        name: 'maximize',
+        value: true,
+      }),
+    );
+    this.mainWindow?.on('unmaximize', (): void =>
+      webContent.send(winChannels.onChangeState, {
+        name: 'maximize',
+        value: false,
+      }),
+    );
+
+    this.mainWindow?.on('enter-full-screen', (): void =>
+      webContent.send(winChannels.onChangeState, {
+        name: 'full-screen',
+        value: true,
+      }),
+    );
+    this.mainWindow?.on('leave-full-screen', (): void =>
+      webContent.send(winChannels.onChangeState, {
+        name: 'full-screen',
+        value: false,
+      }),
+    );
   }
 
   /** Handles the minimized event for the main window. */
   private handleMinimize = (): void => {
     if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
       trayManager.createTrayIcon();
-      this.mainWindow?.setSkipTaskbar(true);
+      if (platform() === 'linux') {
+        this.mainWindow?.hide();
+      } else {
+        this.mainWindow?.setSkipTaskbar(true);
+      }
     }
   };
 
