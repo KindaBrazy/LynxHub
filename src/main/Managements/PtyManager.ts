@@ -3,7 +3,6 @@ import pty from 'node-pty';
 import os from 'os';
 import treeKill from 'tree-kill';
 
-import {APP_NAME} from '../../cross/CrossConstants';
 import {ptyChannels} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
 import {getPowerShellVersion} from '../Utilities/Utils';
@@ -68,7 +67,6 @@ export default class PtyManager {
       cwd: dir,
       cols: 150,
       rows: 150,
-      name: `${APP_NAME} Terminal`,
       env: process.env,
     });
 
