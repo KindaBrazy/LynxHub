@@ -7,7 +7,7 @@ import rendererIpc from '../RendererIpc';
 const CONNECT_SRC =
   'https://github.com/ ' +
   'https://api.github.com/ ' +
-  'https://*.githubusercontent.com ' +
+  'https://*.githubusercontent.com/ ' +
   'https://image.civitai.com/ ' +
   `${import.meta.env.DEV && 'ws://localhost:5173/'}`;
 
@@ -35,7 +35,7 @@ export default function useHtmlAttributes() {
         "script-src 'self';",
         `script-src-elem 'self' http://localhost:${port};`,
         "style-src 'self' 'unsafe-inline';",
-        "img-src 'self' data:;",
+        `img-src 'self' data: ${CONNECT_SRC};`,
         'frame-src *;',
         `connect-src ${CONNECT_SRC};`,
       ].join(' ');

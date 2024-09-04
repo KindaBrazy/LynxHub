@@ -39,7 +39,7 @@ const LynxCardHeader = observer(() => {
       </Title>
 
       <Text ellipsis={{tooltip: title}} className="mb-2 self-center">
-        {title}
+        {startCase(title)}
       </Text>
 
       {!compactMode && (

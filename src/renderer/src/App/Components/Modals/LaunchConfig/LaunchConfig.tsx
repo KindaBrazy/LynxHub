@@ -61,6 +61,7 @@ const LaunchConfig = memo(() => {
     <Modal
       radius="md"
       isOpen={isOpen}
+      onClose={onClose}
       isDismissable={false}
       scrollBehavior="inside"
       className="z-40 max-w-[80%]"
