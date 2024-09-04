@@ -97,8 +97,12 @@ const InstalledExtensions = forwardRef(
             }
           };
 
-          rendererIpc.git.offProgress(onProgress);
+          rendererIpc.git.offProgress();
           rendererIpc.git.onProgress(onProgress);
+
+          return () => {
+            rendererIpc.git.offProgress();
+          };
         });
       },
       [dir],

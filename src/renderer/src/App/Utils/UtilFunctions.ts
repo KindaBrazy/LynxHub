@@ -47,7 +47,7 @@ export function convertBlobToDataUrl(blob: Blob): Promise<string> {
  * @returns Normalized GitHub repository URL or an empty string if invalid
  */
 export function validateGitRepoUrl(url: string): string {
-  const match = url.match(/^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/]+)\/([^/]+)/i);
+  const match = url.toLowerCase().match(/^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/]+)\/([^/]+?)(\.git)?$/i);
   return match ? `https://github.com/${match[1]}/${match[2]}` : '';
 }
 

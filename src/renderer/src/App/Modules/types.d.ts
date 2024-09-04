@@ -7,6 +7,9 @@ export type CardRendererMethods = {
    * @return undefined if URL is not in that line */
   catchAddress: (line: string) => string | undefined;
 
+  /** Fetching and return array of available extensions in type of `ExtensionData` */
+  fetchExtensionList?: () => Promise<ExtensionData[]>;
+
   /** Parse the given argument to string */
   parseArgsToString?: (args: ChosenArgument[]) => string;
 

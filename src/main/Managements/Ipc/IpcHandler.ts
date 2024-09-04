@@ -39,7 +39,7 @@ import {
 import {disableLoadingExtensions, getExtensionsDetails, getExtensionsUpdate} from './Methods/IpcMethods-CardExtensions';
 import {getSystemInfo} from './Methods/IpcMethods-Platform';
 import {ptyProcess, ptyResize, ptyWrite} from './Methods/IpcMethods-Pty';
-import {abortGitOperation, cloneRepo, getRepoInfo, pullRepo} from './Methods/IpcMethods-Repository';
+import {abortGitOperation, clonePromise, cloneRepo, getRepoInfo, pullRepo} from './Methods/IpcMethods-Repository';
 
 function win() {
   ipcMain.on(winChannels.changeState, (_, state: ChangeWindowState) => changeWindowState(state));
@@ -76,6 +76,7 @@ function git() {
   ipcMain.handle(gitChannels.locate, (_, url: string) => GitManager.locateCard(url));
 
   ipcMain.on(gitChannels.cloneRepo, (_, url: string, dir: CloneDirTypes) => cloneRepo(url, dir));
+  ipcMain.handle(gitChannels.clonePromise, (_, url: string, dir: CloneDirTypes) => clonePromise(url, dir));
 
   ipcMain.on(gitChannels.abortClone, () => abortGitOperation());
 

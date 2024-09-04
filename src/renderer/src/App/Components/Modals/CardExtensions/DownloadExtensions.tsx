@@ -116,8 +116,12 @@ export default function DownloadExtensions({updateTable, visible}: Props) {
       }
     };
 
-    rendererIpc.git.offProgress(onProgress);
+    rendererIpc.git.offProgress();
     rendererIpc.git.onProgress(onProgress);
+
+    return () => {
+      rendererIpc.git.offProgress();
+    };
   }, []);
 
   if (!visible) return null;

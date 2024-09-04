@@ -52,6 +52,16 @@ export function cloneRepo(url: string, dir: CloneDirTypes): void {
 }
 
 /**
+ * Clones a repository and resolve when completed and reject when got error.
+ * @param url - The URL of the repository to clone.
+ * @param dir - The directory type to clone into.
+ */
+export async function clonePromise(url: string, dir: CloneDirTypes) {
+  gitManager = new GitManager(true);
+  return gitManager.clone(url, dir);
+}
+
+/**
  * Pulls the latest changes from a repository.
  * @param dir - The directory of the repository.
  * @param id - The unique identifier for the repository.

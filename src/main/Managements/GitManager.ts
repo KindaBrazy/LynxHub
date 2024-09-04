@@ -193,15 +193,20 @@ export default class GitManager {
    * @param directory - The directory to clone into.
    */
   public async clone(url: string, directory: CloneDirTypes): Promise<void> {
-    const resultDir =
-      directory === 'moduleDir' ? path.join(ModuleManager.getModulesPath(), extractGitHubUrl(url).repo) : directory;
+    return new Promise((resolve, reject) => {
+      const resultDir =
+        directory === 'moduleDir' ? path.join(ModuleManager.getModulesPath(), extractGitHubUrl(url).repo) : directory;
 
-    try {
-      await this.git.clone(url, resultDir.toString());
-      this.handleProgressComplete();
-    } catch (error) {
-      this.handleError(error);
-    }
+      try {
+        this.git.clone(url, resultDir.toString()).then(() => {
+          this.handleProgressComplete();
+          resolve();
+        });
+      } catch (error) {
+        this.handleError(error);
+        reject(error);
+      }
+    });
   }
 
   /**

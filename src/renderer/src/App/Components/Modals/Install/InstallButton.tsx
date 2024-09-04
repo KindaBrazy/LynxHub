@@ -44,8 +44,12 @@ export default function InstallButton() {
     };
 
     // Update ui with progress
-    rendererIpc.git.offProgress(onProgress);
+    rendererIpc.git.offProgress();
     rendererIpc.git.onProgress(onProgress);
+
+    return () => {
+      rendererIpc.git.offProgress();
+    };
   }, [url, directory, cardId, dispatch]);
 
   return (
