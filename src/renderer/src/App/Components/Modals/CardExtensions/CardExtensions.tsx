@@ -6,11 +6,14 @@ import {useDispatch} from 'react-redux';
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import {modalMotionProps} from '../../../Utils/Constants';
-import DownloadExtensions from './DownloadExtensions';
-import InstalledExtensions from './InstalledExtensions';
+import Available from './Available/Available';
+import Clone from './Clone';
+import Installed from './Installed';
 
 /** Managing card extension -> install, update, uninstall and etc */
 export default function CardExtensions() {
+  const [installedExtensions, setInstalledExtensions] = useState<string[]>([]);
+
   const {isOpen, title} = useModalsState('cardExtensions');
   const [currentTab, setCurrentTab] = useState<any>('installed');
   const [updatesAvailable, setUpdatesAvailable] = useState<string[]>([]);
@@ -58,19 +61,30 @@ export default function CardExtensions() {
             onSelectionChange={setCurrentTab}
             fullWidth>
             <Tab key="installed" title="Installed" className="cursor-default" />
-            <Tab key="download" title="Download" className="cursor-default" />
+            <Tab key="available" title="Available" className="cursor-default" />
+            <Tab key="clone" title="Clone" className="cursor-default" />
           </Tabs>
         </ModalHeader>
         <ModalBody className="scrollbar-hide">
           <div className="relative h-fit">
-            <InstalledExtensions
+            <Installed
               ref={installedRef}
               setIsUpdatingAll={setIsUpdatingAll}
               updatesAvailable={updatesAvailable}
               visible={currentTab === 'installed'}
               setUpdatesAvailable={setUpdatesAvailable}
+              setInstalledExtensions={setInstalledExtensions}
             />
-            <DownloadExtensions updateTable={updateTable} visible={currentTab === 'download'} />
+            <Clone
+              updateTable={updateTable}
+              visible={currentTab === 'clone'}
+              installedExtensions={installedExtensions}
+            />
+            <Available
+              updateTable={updateTable}
+              visible={currentTab === 'available'}
+              installedExtensions={installedExtensions}
+            />
           </div>
         </ModalBody>
         <ModalFooter>

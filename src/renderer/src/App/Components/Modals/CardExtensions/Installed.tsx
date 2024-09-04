@@ -1,7 +1,7 @@
 import {getKeyValue, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@nextui-org/react';
 import {message} from 'antd';
 import {motion} from 'framer-motion';
-import {filter, find, isEmpty} from 'lodash';
+import {filter, find, isEmpty, startCase} from 'lodash';
 import {
   Dispatch,
   forwardRef,
@@ -18,6 +18,7 @@ import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
 import {useModalsState} from '../../../Redux/AI/ModalsReducer';
 import rendererIpc from '../../../RendererIpc';
 import {fetchRepoDetails} from '../../../Utils/LocalStorage';
+import {validateGitRepoUrl} from '../../../Utils/UtilFunctions';
 import {
   emptyTableElement,
   extensionsColumns,
@@ -32,14 +33,15 @@ type Props = {
   updatesAvailable: string[];
   setUpdatesAvailable: Dispatch<SetStateAction<string[]>>;
   setIsUpdatingAll: Dispatch<SetStateAction<boolean>>;
+  setInstalledExtensions: Dispatch<SetStateAction<string[]>>;
 };
 
 /**
  * Table displaying installed extensions.
  * - It handles updating, removing, and trashing extensions.
  */
-const InstalledExtensions = forwardRef(
-  ({setIsUpdatingAll, setUpdatesAvailable, updatesAvailable, visible}: Props, ref) => {
+const Installed = forwardRef(
+  ({setIsUpdatingAll, setUpdatesAvailable, updatesAvailable, visible, setInstalledExtensions}: Props, ref) => {
     const {dir, isOpen} = useModalsState('cardExtensions');
 
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean[]>([]);
@@ -162,12 +164,13 @@ const InstalledExtensions = forwardRef(
         if (data === 'empty') {
           setIsTableEmpty(true);
         } else {
+          setInstalledExtensions(data.map(ext => validateGitRepoUrl(ext.remoteUrl)));
           const resultRow = await Promise.all(
             data.map(async dataRow => {
               const details = await fetchRepoDetails(dataRow.remoteUrl);
               return {
                 key: dataRow.name,
-                name: useRowElements.nameLink(dataRow.remoteUrl, dataRow.name),
+                name: useRowElements.nameLink(dataRow.remoteUrl, startCase(dataRow.name)),
                 remove: useRowElements.removeBtn.disabled,
                 size: dataRow.size,
                 stars: useRowElements.stars(details),
@@ -243,4 +246,5 @@ const InstalledExtensions = forwardRef(
     );
   },
 );
-export default InstalledExtensions;
+
+export default Installed;

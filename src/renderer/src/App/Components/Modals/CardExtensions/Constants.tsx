@@ -24,7 +24,7 @@ export const emptyTableElement = <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} des
 
 export const useRowElements = {
   nameLink: (url: string, name: string) => (
-    <Link href={url} color="foreground" isExternal>
+    <Link href={url} color="foreground" className="text-small" isExternal>
       {name}
     </Link>
   ),
