@@ -44,6 +44,7 @@ export const useExtensions = (): DropdownItemProps | undefined => {
         modalActions.openCardExtensions({
           dir: `${card.dir}${extensionsDir}`,
           title: `${title} (${devName}) Extensions`,
+          id,
         }),
       );
     setMenuIsOpen(false);

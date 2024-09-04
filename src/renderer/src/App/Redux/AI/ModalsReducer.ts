@@ -47,6 +47,7 @@ type ModalsState = {
 
     title: string;
     dir: string;
+    id: string;
   };
   cardLaunchConfig: {
     haveArguments: boolean;
@@ -83,6 +84,7 @@ const initialState: ModalsState = {
     dir: '',
     isOpen: false,
     title: '',
+    id: '',
   },
   cardInfoModal: {
     cardId: '',
@@ -159,9 +161,10 @@ const modalSlice = createSlice({
 
     //#region Open Specif Modal
 
-    openCardExtensions: (state, action: PayloadAction<{title: string; dir: string}>) => {
+    openCardExtensions: (state, action: PayloadAction<{title: string; dir: string; id: string}>) => {
       state.cardExtensions.title = action.payload.title;
       state.cardExtensions.dir = action.payload.dir;
+      state.cardExtensions.id = action.payload.id;
 
       state.cardExtensions.isOpen = true;
     },
