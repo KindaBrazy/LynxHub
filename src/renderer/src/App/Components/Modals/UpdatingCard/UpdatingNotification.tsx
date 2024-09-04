@@ -98,8 +98,12 @@ export default function UpdatingNotification() {
       }
     };
 
-    rendererIpc.git.offProgress(onProgress);
+    rendererIpc.git.offProgress();
     rendererIpc.git.onProgress(onProgress);
+
+    return () => {
+      rendererIpc.git.offProgress();
+    };
   }, [updatingCards, dispatch]);
 
   return (

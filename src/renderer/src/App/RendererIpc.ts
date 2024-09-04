@@ -79,11 +79,12 @@ const rendererIpc = {
     bCardUpdateAvailable: (repoDir: string): Promise<boolean> => ipc.invoke(gitChannels.updateAvailable, repoDir),
 
     cloneRepo: (url: string, dir: CloneDirTypes): void => ipc.send(gitChannels.cloneRepo, url, dir),
+    clonePromise: (url: string, dir: CloneDirTypes): Promise<void> => ipc.invoke(gitChannels.clonePromise, url, dir),
 
     locateCard: (url: string): Promise<string | undefined> => ipc.invoke(gitChannels.locate, url),
 
     onProgress: (callback: GitProgressCallback) => ipc.on(gitChannels.onProgress, callback),
-    offProgress: (callback: GitProgressCallback) => ipc.removeListener(gitChannels.onProgress, callback),
+    offProgress: () => ipc.removeAllListeners(gitChannels.onProgress),
 
     pull: (repoDir: string, id: string): void => ipc.send(gitChannels.pull, repoDir, id),
   },
