@@ -1,46 +1,46 @@
-@import "../assets/fonts.css";
+@import '../assets/fonts.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-    color-scheme: light dark;
-    font-family: Nunito, sans-serif;
+  color-scheme: light dark;
+  font-family: Nunito, sans-serif;
 }
 
 * {
-    -webkit-user-select: none;
-    -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  outline: none !important;
 }
 
 @media (prefers-color-scheme: dark) {
-
-    /* Xterm(Terminal) scroll bar style */
-    .xterm-viewport::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 10px;
-    }
+  /* Xterm(Terminal) scroll bar style */
+  .xterm-viewport::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
 }
 
 @media (prefers-color-scheme: light) {
-    /* Xterm(Terminal) scroll bar style */
-    .xterm-viewport::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-    }
+  /* Xterm(Terminal) scroll bar style */
+  .xterm-viewport::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
 }
 
 /* Xterm(Terminal) scroll bar style */
 .xterm-viewport::-webkit-scrollbar {
-    width: 5px;
+  width: 5px;
 }
 
 .draggable {
-    -webkit-user-select: none;
-    -webkit-app-region: drag;
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
 }
 
 .notDraggable {
-    -webkit-app-region: no-drag;
+  -webkit-app-region: no-drag;
 }
