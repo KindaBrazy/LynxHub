@@ -22,6 +22,7 @@ type StorageTypes = {
   cards: {
     installedCards: InstalledCards;
     autoUpdateCards: string[];
+    autoUpdateExtensions: string[];
     pinnedCards: string[];
     recentlyUsedCards: string[];
     cardCompactMode: boolean;

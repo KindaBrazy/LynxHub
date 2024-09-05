@@ -163,6 +163,36 @@ class StorageManager extends BaseStorage {
 
   //#endregion
 
+  //#region Auto Update Extensions
+
+  public addAutoUpdateExtensions(cardId: string) {
+    const storedAutoUpdateExtensions = this.getData('cards').autoUpdateExtensions;
+
+    const extensionsExists = lodash.includes(storedAutoUpdateExtensions, cardId);
+
+    console.log('extensionsExists', extensionsExists);
+    if (!extensionsExists) {
+      const result: string[] = [...storedAutoUpdateExtensions, cardId];
+
+      console.log('extensionsExists', [...storedAutoUpdateExtensions, cardId]);
+      this.updateData('cards', {autoUpdateExtensions: [...storedAutoUpdateExtensions, cardId]});
+
+      appManager.getWebContent()?.send(storageUtilsChannels.onAutoUpdateExtensions, result);
+    }
+  }
+
+  public removeAutoUpdateExtensions(cardId: string) {
+    const storedAutoUpdateExtensions = this.getData('cards').autoUpdateExtensions;
+
+    const updatedAutoUpdateExtensions = lodash.filter(storedAutoUpdateExtensions, id => id !== cardId);
+
+    this.updateData('cards', {autoUpdateExtensions: updatedAutoUpdateExtensions});
+
+    appManager.getWebContent()?.send(storageUtilsChannels.onAutoUpdateExtensions, updatedAutoUpdateExtensions);
+  }
+
+  //#endregion
+
   //#region Pinned Cards
 
   public addPinnedCard(cardId: string) {

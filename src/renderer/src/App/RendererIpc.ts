@@ -18,6 +18,7 @@ import {
   HomeCategory,
   modulesChannels,
   OnPreCommands,
+  OnUpdatingExtensions,
   OpenDialogOptions,
   PreCommands,
   PreOpen,
@@ -124,6 +125,12 @@ const rendererIpc = {
     onAutoUpdateCards: (result: (event: IpcRendererEvent, cards: string[]) => void) =>
       ipc.on(storageUtilsChannels.onAutoUpdateCards, result),
 
+    addAutoUpdateExtensions: (cardId: string): void => ipc.send(storageUtilsChannels.addAutoUpdateExtensions, cardId),
+    removeAutoUpdateExtensions: (cardId: string): void =>
+      ipc.send(storageUtilsChannels.removeAutoUpdateExtensions, cardId),
+    onAutoUpdateExtensions: (result: (event: IpcRendererEvent, cards: string[]) => void) =>
+      ipc.on(storageUtilsChannels.onAutoUpdateExtensions, result),
+
     pinnedCards: (opt: StorageOperation, id: string): Promise<string[]> =>
       ipc.invoke(storageUtilsChannels.pinnedCards, opt, id),
     onPinnedCardsChange: (result: (event: IpcRendererEvent, cards: string[]) => void) =>
@@ -170,6 +177,10 @@ const rendererIpc = {
       ipc.on(utilsChannels.onCardInfo, result),
 
     offCardInfo: (): void => ipc.removeAllListeners(utilsChannels.onCardInfo),
+
+    updateAllExtensions: (data: {id: string; dir: string}): void => ipc.send(utilsChannels.updateAllExtensions, data),
+    onUpdateAllExtensions: (result: (event: IpcRendererEvent, updateInfo: OnUpdatingExtensions) => void) =>
+      ipc.on(utilsChannels.onUpdateAllExtensions, result),
 
     getExtensionsDetails: (dir: string): Promise<ExtensionsData> => ipc.invoke(utilsChannels.extensionsDetails, dir),
 

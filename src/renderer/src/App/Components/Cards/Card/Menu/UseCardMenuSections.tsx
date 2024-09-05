@@ -11,11 +11,14 @@ const useCardMenuSections = (): DropDownSectionType[] => {
   const launchConfig = useLaunchConfig();
   const extensions = useExtensions();
   const pin = usePin();
+
   const update = useUpdate();
   const checkForUpdate = useCheckForUpdate();
   const autoUpdate = useAutoUpdate();
+
   const docPage = useDocPage();
   const info = useInfo();
+
   const uninstall = useUninstall();
 
   const optionItems: DropdownItemProps[] = useMemo(() => {

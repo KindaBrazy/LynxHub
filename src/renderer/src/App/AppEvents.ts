@@ -69,6 +69,7 @@ export default function useAppEvents() {
 
       dispatch(cardsActions.setInstalledCards(storage.cards.installedCards));
       dispatch(cardsActions.setAutoUpdate(storage.cards.autoUpdateCards));
+      dispatch(cardsActions.setAutoUpdateExtensions(storage.cards.autoUpdateExtensions));
       dispatch(cardsActions.setPinnedCards(storage.cards.pinnedCards));
       dispatch(cardsActions.setRecentlyUsedCards(storage.cards.recentlyUsedCards));
       dispatch(cardsActions.setHomeCategory(storage.app.homeCategory));
@@ -118,6 +119,9 @@ export default function useAppEvents() {
     rendererIpc.storageUtils.onAutoUpdateCards((_, cards) => {
       dispatch(cardsActions.setAutoUpdate(cards));
     });
+    rendererIpc.storageUtils.onAutoUpdateExtensions((_, cards) => {
+      dispatch(cardsActions.setAutoUpdateExtensions(cards));
+    });
     rendererIpc.storageUtils.onPinnedCardsChange((_, cards) => {
       dispatch(cardsActions.setPinnedCards(cards));
     });
@@ -149,6 +153,16 @@ export default function useAppEvents() {
           dispatch(appActions.setAppState({key: 'fullscreen', value}));
           break;
       }
+    });
+
+    rendererIpc.utils.onUpdateAllExtensions((_e, result) => {
+      if (result.step === 'done') {
+        rendererIpc.pty.process('start', result.id);
+        rendererIpc.storageUtils.recentlyUsedCards('update', result.id);
+        dispatch(cardsActions.startRunningCard(result.id));
+        dispatch(cardsActions.setUpdatingExtensions(undefined));
+      }
+      dispatch(cardsActions.setUpdatingExtensions(result));
     });
     //#endregion
   }, [dispatch, navigate]);

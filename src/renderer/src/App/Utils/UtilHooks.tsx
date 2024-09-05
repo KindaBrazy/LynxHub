@@ -45,6 +45,11 @@ export function useIsAutoUpdateCard(cardId: string): boolean {
   return useMemo(() => autoUpdate.includes(cardId), [autoUpdate, cardId]);
 }
 
+export function useIsAutoUpdateExtensions(cardId: string): boolean {
+  const autoUpdate = useCardsState('autoUpdateExtensions');
+  return useMemo(() => autoUpdate.includes(cardId), [autoUpdate, cardId]);
+}
+
 /**
  * Hook to check if a card is pinned.
  * @param cardId - The ID of the card to check
