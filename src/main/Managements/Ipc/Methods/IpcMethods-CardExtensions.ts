@@ -2,7 +2,8 @@ import path from 'node:path';
 
 import fs from 'graceful-fs';
 
-import {ExtensionsData, ExtensionsUpdateStatus} from '../../../../cross/IpcChannelAndTypes';
+import {ExtensionsData, ExtensionsUpdateStatus, utilsChannels} from '../../../../cross/IpcChannelAndTypes';
+import {appManager} from '../../../index';
 import {calculateFolderSize} from '../../../Utilities/Utils';
 import GitManager from '../../GitManager';
 
@@ -95,4 +96,38 @@ export async function getExtensionsDetails(dir: string): Promise<ExtensionsData 
     console.error(`Error retrieving extension details from ${dir}:`, error);
     return 'empty';
   }
+}
+
+async function getRepoDirectories(dir: string) {
+  console.log(dir);
+  const folders = await getRepoFolders(dir);
+  return folders.map(folder => path.join(dir, folder));
+}
+
+export async function updateAllExtensions(data: {id: string; dir: string}) {
+  const directories = await getRepoDirectories(path.resolve(data.dir));
+
+  if (directories) {
+    const extensionsCount: number = directories.length;
+    let currentState: number = 1;
+    for (const dir of directories) {
+      const gitManager = new GitManager(false);
+
+      await gitManager.pullAsync(dir);
+
+      const resultUpdateCount: string = `${currentState}/${extensionsCount}`;
+
+      appManager.getWebContent()?.send(utilsChannels.onUpdateAllExtensions, {
+        id: data.id,
+        step: resultUpdateCount,
+      });
+
+      currentState++;
+    }
+  }
+
+  appManager.getWebContent()?.send(utilsChannels.onUpdateAllExtensions, {
+    id: data.id,
+    step: 'done',
+  });
 }

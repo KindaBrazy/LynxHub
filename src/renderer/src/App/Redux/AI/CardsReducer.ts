@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {includes, isEmpty} from 'lodash';
 import {useSelector} from 'react-redux';
 
+import {OnUpdatingExtensions} from '../../../../../cross/IpcChannelAndTypes';
 import {InstalledCards} from '../../../../../cross/StorageTypes';
 import {RunningCard, UpdatingCard, UpdatingCards} from '../../Utils/Types';
 import {RootState} from '../Store';
@@ -11,6 +12,9 @@ import {RootState} from '../Store';
 type CardsState = {
   installedCards: InstalledCards;
   autoUpdate: string[];
+
+  autoUpdateExtensions: string[];
+  updatingExtensions: OnUpdatingExtensions | undefined;
 
   updatingCards: UpdatingCards;
   updateAvailable: string[];
@@ -41,6 +45,8 @@ const initialState: CardsState = {
   },
   recentlyUsedCards: [],
   homeCategory: [],
+  autoUpdateExtensions: [],
+  updatingExtensions: undefined,
 };
 //#endregion
 
@@ -60,6 +66,9 @@ const cardsSlice = createSlice({
     removeUpdateAvailable: (state, action: PayloadAction<string>) => {
       state.updateAvailable = state.updateAvailable.filter(card => card !== action.payload);
     },
+    setUpdatingExtensions: (state, action: PayloadAction<OnUpdatingExtensions | undefined>) => {
+      state.updatingExtensions = action.payload;
+    },
     //#endregion
 
     //#region Updating Card
@@ -77,6 +86,9 @@ const cardsSlice = createSlice({
 
     setAutoUpdate: (state, action: PayloadAction<string[]>) => {
       state.autoUpdate = action.payload;
+    },
+    setAutoUpdateExtensions: (state, action: PayloadAction<string[]>) => {
+      state.autoUpdateExtensions = action.payload;
     },
     setInstalledCards: (state, action: PayloadAction<InstalledCards>) => {
       state.installedCards = action.payload;

@@ -55,6 +55,7 @@ export type SystemInfo = {os: NodeJS.Platform; buildNumber: string | number};
 export type LynxHotkeys = {isEnabled: boolean; FULLSCREEN: string; TOGGLE_NAV: string; TOGGLE_AI_VIEW: string};
 
 export type AppUpdateStatus = 'update-available' | 'update-downloaded' | string | UpdateDownloadProgress;
+export type OnUpdatingExtensions = {id: string; step: string | 'done'};
 //#endregion
 
 //#region Ipc Channels Names
@@ -102,6 +103,9 @@ export const gitChannels = {
 export const utilsChannels = {
   cancelExtensionsData: 'utils:cancel-extensions-data',
   cardInfo: 'utils:card-info',
+
+  updateAllExtensions: 'utils:update-all-extensions',
+  onUpdateAllExtensions: 'utils:on-update-all-extensions',
 
   extensionsDetails: 'utils:extensions-details',
   onCardInfo: 'utils:on-card-info',
@@ -174,6 +178,10 @@ export const storageUtilsChannels = {
   addAutoUpdateCard: 'storageUtils:add-autoUpdate-card',
   removeAutoUpdateCard: 'storageUtils:remove-autoUpdate-card',
   onAutoUpdateCards: 'storageUtils:on-autoUpdate-cards',
+
+  addAutoUpdateExtensions: 'storageUtils:add-autoUpdate-extensions',
+  removeAutoUpdateExtensions: 'storageUtils:remove-autoUpdate-extensions',
+  onAutoUpdateExtensions: 'storageUtils:on-autoUpdate-extensions',
 
   onPinnedCardsChange: 'storageUtils:on-pinned-cards',
   pinnedCards: 'storageUtils:pinned-cards',

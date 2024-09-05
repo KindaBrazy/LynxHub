@@ -18,16 +18,17 @@ class BaseStorage {
   private readonly STORAGE_FILE = is.dev ? `${APP_NAME}-Dev.config` : `${APP_NAME}.config`;
   private readonly STORAGE_PATH = path.join(app.getPath('userData'), this.STORAGE_FILE);
 
-  private readonly CURRENT_VERSION: number = 0.1;
+  private readonly CURRENT_VERSION: number = 0.2;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.1},
+    storage: {version: 0.2},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
       pinnedCards: [],
       recentlyUsedCards: [],
       cardCompactMode: false,
+      autoUpdateExtensions: [],
     },
     cardsConfig: {
       preCommands: [],
@@ -84,8 +85,10 @@ class BaseStorage {
 
   private migration() {
     if (this.getData('storage').version < this.CURRENT_VERSION) {
-      // Apply Migration
+      this.updateData('cards', {autoUpdateExtensions: []});
+      this.updateData('storage', {version: 0.2});
     }
+    // Version 0.2 Changes -> autoUpdateExtensions
   }
 
   //#endregion

@@ -36,7 +36,12 @@ import {
   setTaskbarStatus,
   trashDir,
 } from './Methods/IpcMethods';
-import {disableLoadingExtensions, getExtensionsDetails, getExtensionsUpdate} from './Methods/IpcMethods-CardExtensions';
+import {
+  disableLoadingExtensions,
+  getExtensionsDetails,
+  getExtensionsUpdate,
+  updateAllExtensions,
+} from './Methods/IpcMethods-CardExtensions';
 import {getSystemInfo} from './Methods/IpcMethods-Platform';
 import {ptyProcess, ptyResize, ptyWrite} from './Methods/IpcMethods-Pty';
 import {abortGitOperation, clonePromise, cloneRepo, getRepoInfo, pullRepo} from './Methods/IpcMethods-Repository';
@@ -92,6 +97,8 @@ function utils() {
 
   ipcMain.handle(utilsChannels.extensionsDetails, (_, dir: string) => getExtensionsDetails(dir));
   ipcMain.handle(utilsChannels.updateStatus, (_, dir: string) => getExtensionsUpdate(dir));
+
+  ipcMain.on(utilsChannels.updateAllExtensions, (_, data: {id: string; dir: string}) => updateAllExtensions(data));
 
   ipcMain.on(utilsChannels.cancelExtensionsData, () => disableLoadingExtensions());
 }
@@ -149,6 +156,13 @@ function storageUtilsIpc() {
   ipcMain.on(storageUtilsChannels.addAutoUpdateCard, (_, cardId: string) => storageManager.addAutoUpdateCard(cardId));
   ipcMain.on(storageUtilsChannels.removeAutoUpdateCard, (_, cardId: string) =>
     storageManager.removeAutoUpdateCard(cardId),
+  );
+
+  ipcMain.on(storageUtilsChannels.addAutoUpdateExtensions, (_, cardId: string) =>
+    storageManager.addAutoUpdateExtensions(cardId),
+  );
+  ipcMain.on(storageUtilsChannels.removeAutoUpdateExtensions, (_, cardId: string) =>
+    storageManager.removeAutoUpdateExtensions(cardId),
   );
 
   ipcMain.handle(storageUtilsChannels.pinnedCards, (_, opt: StorageOperation, id: string) =>
