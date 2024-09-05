@@ -66,7 +66,7 @@ function file() {
 
   ipcMain.handle(fileChannels.dialog, (_, option: OpenDialogOptions) => openDialog(option));
 
-  ipcMain.on(fileChannels.openPath, (_, path: string) => shell.openPath(path));
+  ipcMain.on(fileChannels.openPath, (_, dir: string) => shell.openPath(dir));
 
   ipcMain.handle(fileChannels.removeDir, (_, dir: string) => removeDir(dir));
   ipcMain.handle(fileChannels.trashDir, (_, dir: string) => trashDir(dir));

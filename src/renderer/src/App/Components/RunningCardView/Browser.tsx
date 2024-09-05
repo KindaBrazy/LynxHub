@@ -11,7 +11,6 @@ const variants = {
 
 /** Browser component that renders AI address in an iframe. */
 export default function Browser() {
-  console.log('Browser');
   const {address, browserId, currentView} = useCardsState('runningCard');
 
   const animate = useMemo(() => {

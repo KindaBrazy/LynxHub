@@ -27,7 +27,6 @@ export default function useHtmlAttributes() {
       const moduleData = await rendererIpc.module.getModulesData();
 
       const port = new URL(moduleData[0]).port;
-      console.log(port);
 
       // Set Content Security Policy (CSP)
       const csp = [

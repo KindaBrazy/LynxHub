@@ -45,7 +45,7 @@ async function getRepoFolders(dir: string): Promise<string[]> {
  */
 export async function getExtensionsUpdate(dir: string): Promise<ExtensionsUpdateStatus> {
   try {
-    const filteredFolders = await getRepoFolders(dir);
+    const filteredFolders = await getRepoFolders(path.resolve(dir));
     if (filteredFolders.length === 0) return [];
 
     loadingExtensions = true;
@@ -73,7 +73,7 @@ export async function getExtensionsUpdate(dir: string): Promise<ExtensionsUpdate
  */
 export async function getExtensionsDetails(dir: string): Promise<ExtensionsData | 'empty'> {
   try {
-    const filteredFolders = await getRepoFolders(dir);
+    const filteredFolders = await getRepoFolders(path.resolve(dir));
     if (filteredFolders.length === 0) return 'empty';
 
     loadingExtensions = true;

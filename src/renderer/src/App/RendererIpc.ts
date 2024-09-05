@@ -63,7 +63,7 @@ const rendererIpc = {
   file: {
     openDlg: (option: OpenDialogOptions): Promise<string | undefined> => ipc.invoke(fileChannels.dialog, option),
 
-    openPath: (path: string): void => ipc.send(fileChannels.openPath, path),
+    openPath: (dir: string): void => ipc.send(fileChannels.openPath, dir),
 
     getAppDirectories: (name: FolderNames): Promise<string> => ipc.invoke(fileChannels.getAppDirectories, name),
 
