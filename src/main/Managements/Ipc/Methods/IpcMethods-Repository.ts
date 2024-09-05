@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import {SimpleGitProgressEvent} from 'simple-git';
 
 import {CloneDirTypes, gitChannels, utilsChannels} from '../../../../cross/IpcChannelAndTypes';
@@ -14,10 +16,13 @@ let gitManager: GitManager | undefined;
  * @param extensionsDir - Optional directory path for extensions.
  */
 export async function getRepoInfo(id: string, repoDir: string, extensionsDir?: string): Promise<void> {
+  const repoPath = path.resolve(repoDir);
+  const extPath = extensionsDir ? path.resolve(extensionsDir) : undefined;
+
   const [installDate, lastUpdate, releaseTag] = await Promise.all([
-    getDirCreationDate(repoDir),
-    GitManager.getLastPulledDate(repoDir),
-    GitManager.getCurrentReleaseTag(repoDir),
+    getDirCreationDate(repoPath),
+    GitManager.getLastPulledDate(repoPath),
+    GitManager.getCurrentReleaseTag(repoPath),
   ]);
 
   appManager.getWebContent()?.send(utilsChannels.onCardInfo, {
@@ -27,8 +32,8 @@ export async function getRepoInfo(id: string, repoDir: string, extensionsDir?: s
   });
 
   const [extensionsSize, totalSize] = await Promise.all([
-    extensionsDir ? calculateFolderSize(extensionsDir) : Promise.resolve(''),
-    calculateFolderSize(repoDir),
+    extPath ? calculateFolderSize(extPath) : Promise.resolve(''),
+    calculateFolderSize(repoPath),
   ]);
 
   appManager.getWebContent()?.send(utilsChannels.onCardInfo, {
@@ -46,7 +51,7 @@ export async function getRepoInfo(id: string, repoDir: string, extensionsDir?: s
 export function cloneRepo(url: string, dir: CloneDirTypes): void {
   gitManager = new GitManager(true);
 
-  gitManager.clone(url, dir);
+  gitManager.clone(url, path.resolve(dir));
 
   setupGitManagerListeners(gitManager);
 }
@@ -58,7 +63,7 @@ export function cloneRepo(url: string, dir: CloneDirTypes): void {
  */
 export async function clonePromise(url: string, dir: CloneDirTypes) {
   gitManager = new GitManager(true);
-  return gitManager.clone(url, dir);
+  return gitManager.clone(url, path.resolve(dir));
 }
 
 /**
@@ -69,7 +74,7 @@ export async function clonePromise(url: string, dir: CloneDirTypes) {
 export function pullRepo(dir: string, id: string): void {
   gitManager = new GitManager();
 
-  gitManager.pull(dir);
+  gitManager.pull(path.resolve(dir));
 
   setupGitManagerListeners(gitManager, id);
 }

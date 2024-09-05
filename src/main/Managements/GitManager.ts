@@ -97,7 +97,7 @@ export default class GitManager {
    */
   public static async isUpdateAvailable(repoDir: string): Promise<boolean> {
     try {
-      const status: StatusResult = await simpleGit(repoDir).remote(['update']).status();
+      const status: StatusResult = await simpleGit(path.resolve(repoDir)).remote(['update']).status();
       return status.behind > 0;
     } catch (error) {
       console.error('Error checking for updates:', error);

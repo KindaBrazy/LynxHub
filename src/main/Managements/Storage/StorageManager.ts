@@ -321,11 +321,11 @@ class StorageManager extends BaseStorage {
 
     switch (opt) {
       case 'add':
-        typeof data.command === 'string' && this.addPreCommand(data.id, data.command);
+        if (typeof data.command === 'string') this.addPreCommand(data.id, data.command);
         break;
 
       case 'remove':
-        typeof data.command === 'number' && this.removePreCommand(data.id, data.command);
+        if (typeof data.command === 'number') this.removePreCommand(data.id, data.command);
         break;
 
       case 'get':
@@ -333,7 +333,7 @@ class StorageManager extends BaseStorage {
         break;
 
       case 'set':
-        lodash.isArray(data.command) && this.setPreCommand(data.id, data.command);
+        if (lodash.isArray(data.command)) this.setPreCommand(data.id, data.command);
         break;
     }
 
@@ -394,11 +394,11 @@ class StorageManager extends BaseStorage {
 
     switch (opt) {
       case 'add':
-        typeof data.command === 'string' && this.addCustomRun(data.id, data.command);
+        if (typeof data.command === 'string') this.addCustomRun(data.id, data.command);
         break;
 
       case 'remove':
-        typeof data.command === 'number' && this.removeCustomRun(data.id, data.command);
+        if (typeof data.command === 'number') this.removeCustomRun(data.id, data.command);
         break;
 
       case 'get':
@@ -406,7 +406,7 @@ class StorageManager extends BaseStorage {
         break;
 
       case 'set':
-        lodash.isArray(data.command) && this.setCustomRun(data.id, data.command);
+        if (lodash.isArray(data.command)) this.setCustomRun(data.id, data.command);
         break;
     }
 
@@ -444,11 +444,11 @@ class StorageManager extends BaseStorage {
 
     switch (opt) {
       case 'add':
-        typeof data.open === 'object' && data.open && this.addPreOpen(data.id, data.open);
+        if (typeof data.open === 'object' && data.open) this.addPreOpen(data.id, data.open);
         break;
 
       case 'remove':
-        typeof data.open === 'number' && this.removePreOpen(data.id, data.open);
+        if (typeof data.open === 'number') this.removePreOpen(data.id, data.open);
         break;
 
       case 'get':
