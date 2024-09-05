@@ -1,6 +1,6 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
@@ -49,6 +49,14 @@ export default function CardExtensions() {
         : rendererIpc.storageUtils.addAutoUpdateExtensions(id),
     [autoUpdate, id],
   );
+
+  const isUpdateAvailable = useMemo(() => {
+    return !isEmpty(updatesAvailable);
+  }, [updatesAvailable, id]);
+
+  const isExtensionAvailable = useMemo(() => {
+    return !isEmpty(installedExtensions);
+  }, [installedExtensions, id]);
 
   return (
     <Modal
@@ -102,7 +110,12 @@ export default function CardExtensions() {
           <div className="flex w-full flex-row justify-between">
             <div>
               {currentTab === 'installed' && (
-                <Checkbox size="sm" isSelected={autoUpdate} onValueChange={onPress} className="cursor-default">
+                <Checkbox
+                  size="sm"
+                  isSelected={autoUpdate}
+                  onValueChange={onPress}
+                  className="cursor-default"
+                  isDisabled={!isExtensionAvailable}>
                   Auto Update on Launch
                 </Checkbox>
               )}
@@ -111,11 +124,11 @@ export default function CardExtensions() {
               {currentTab === 'installed' && (
                 <Button
                   onPress={updateAll}
-                  variant={isEmpty(updatesAvailable) ? 'light' : 'flat'}
-                  isDisabled={isEmpty(updatesAvailable) || isUpdatingAll}
-                  color={isEmpty(updatesAvailable) ? 'default' : 'success'}
-                  className={`${isEmpty(updatesAvailable) && 'cursor-default'}`}>
-                  {isEmpty(updatesAvailable) ? 'No Updates Available' : isUpdatingAll ? 'Updating...' : 'Update All'}
+                  variant={isUpdateAvailable ? 'flat' : 'light'}
+                  isDisabled={!isUpdateAvailable || isUpdatingAll}
+                  color={isUpdateAvailable ? 'success' : 'default'}
+                  className={`${!isUpdateAvailable && 'cursor-default'}`}>
+                  {!isUpdateAvailable ? 'No Updates Available' : isUpdatingAll ? 'Updating...' : 'Update All'}
                 </Button>
               )}
               <Button color="danger" variant="light" onPress={onClose} className="cursor-default">

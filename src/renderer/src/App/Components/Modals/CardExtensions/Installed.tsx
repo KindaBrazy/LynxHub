@@ -163,6 +163,7 @@ const Installed = forwardRef(
       rendererIpc.utils.getExtensionsDetails(dir).then(async data => {
         if (data === 'empty') {
           setIsTableEmpty(true);
+          setInstalledExtensions([]);
         } else {
           setInstalledExtensions(data.map(ext => validateGitRepoUrl(ext.remoteUrl)));
           const resultRow = await Promise.all(
