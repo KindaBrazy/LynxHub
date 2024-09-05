@@ -109,8 +109,16 @@ export default function RunningCardManager() {
   }, [runningCard.browserId, runningCard.address]);
 
   const copyToClipboard = useCallback(() => {
-    navigator.clipboard.writeText(runningCard.address);
+    if (isHotkeyPressed('control')) {
+      window.open(runningCard.address);
+    } else {
+      navigator.clipboard.writeText(runningCard.address);
+    }
   }, [runningCard.address]);
+
+  const isBrowserView = useMemo(() => {
+    return runningCard.currentView === 'browser';
+  }, [runningCard.currentView]);
 
   const renderButtons = useMemo(
     () => (
@@ -124,23 +132,31 @@ export default function RunningCardManager() {
         {!isEmpty(runningCard.address) && (
           <>
             <Divider type="vertical" className="mr-0" />
-            <LynxTooltip
-              content={`Switch to ${runningCard.currentView === 'browser' ? 'Terminal' : 'Browser View'}`}
-              isEssential>
+            <LynxTooltip content={`Switch to ${isBrowserView ? 'Terminal' : 'Browser View'}`} isEssential>
               <div>
                 <SmallButton
                   onClick={changeAiView}
-                  icon={runningCard.currentView === 'browser' ? 'Terminal' : 'Web'}
-                  iconClassName={runningCard.currentView === 'browser' ? 'm-[8px]' : 'm-[7px]'}
+                  icon={isBrowserView ? 'Terminal' : 'Web'}
+                  iconClassName={isBrowserView ? 'm-[8px]' : 'm-[7px]'}
                 />
               </div>
             </LynxTooltip>
           </>
         )}
-        {runningCard.currentView === 'browser' && (
+        {isBrowserView && (
           <>
             <Divider type="vertical" className="mr-4" />
-            <LynxTooltip content="Copy to Clipboard" isEssential>
+            <LynxTooltip
+              content={
+                <div className="flex flex-col content-center items-center space-y-1 py-1">
+                  <span>Copy to Clipboard</span>
+                  <div className="space-x-1">
+                    <Typography.Text keyboard>CTRL + Click</Typography.Text>
+                    <span>Open in Browser</span>
+                  </div>
+                </div>
+              }
+              isEssential>
               <div>
                 <Button
                   size="sm"
@@ -153,7 +169,7 @@ export default function RunningCardManager() {
             </LynxTooltip>
           </>
         )}
-        {!isEmpty(runningCard.address) && runningCard.currentView === 'browser' && (
+        {!isEmpty(runningCard.address) && isBrowserView && (
           <>
             <Divider type="vertical" className="ml-4 mr-0" />
             <LynxTooltip content="Refresh Browser View" isEssential>
