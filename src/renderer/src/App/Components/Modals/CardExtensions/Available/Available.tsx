@@ -82,6 +82,7 @@ export default function Available({visible, updateTable, installedExtensions}: P
           onValueChange={setSearchValue}
           placeholder="Search by title, description or url..."
           startContent={getIconByName('Circle', {className: 'size-5'})}
+          autoFocus
         />
       </div>
       {isLoading ? (

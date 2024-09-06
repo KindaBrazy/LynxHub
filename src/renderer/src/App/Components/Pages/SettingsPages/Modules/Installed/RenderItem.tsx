@@ -72,6 +72,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
       setSpinningText('');
       if (updated) {
         message.success(`${item.title} has been successfully updated!`);
+        dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value: false}));
       } else {
         message.error(`An error occurred while updating ${item.title}.`);
       }

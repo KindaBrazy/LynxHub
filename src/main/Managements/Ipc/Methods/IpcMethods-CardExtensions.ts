@@ -113,14 +113,12 @@ export async function updateAllExtensions(data: {id: string; dir: string}) {
     for (const dir of directories) {
       const gitManager = new GitManager(false);
 
-      await gitManager.pullAsync(dir);
-
-      const resultUpdateCount: string = `${currentState}/${extensionsCount}`;
-
       appManager.getWebContent()?.send(utilsChannels.onUpdateAllExtensions, {
         id: data.id,
-        step: resultUpdateCount,
+        step: `${currentState}/${extensionsCount}`,
       });
+
+      await gitManager.pullAsync(dir);
 
       currentState++;
     }
