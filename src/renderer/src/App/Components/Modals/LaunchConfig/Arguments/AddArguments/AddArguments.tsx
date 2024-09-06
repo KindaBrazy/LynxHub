@@ -157,6 +157,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
               onValueChange={setSearchValue}
               placeholder="Search by name or description..."
               startContent={getIconByName('Circle', {className: 'size-3.5'})}
+              autoFocus
               isClearable
             />
             <Dropdown>

@@ -11,7 +11,7 @@ import LynxCardFooter from './LynxCard-Footer';
 import LynxCardHeader from './LynxCard-Header';
 
 const LynxCard = observer(() => {
-  const {id} = useCardData();
+  const {id, installed} = useCardData();
   const compactMode = useSettingsState('cardsCompactMode');
   const updateAvailable = useUpdateAvailable(id);
 
@@ -20,7 +20,7 @@ const LynxCard = observer(() => {
       color="green"
       placement="end"
       text="Update Available"
-      className={`z-10 ${updateAvailable ? 'opacity-100' : 'opacity-0'} transition duration-500`}>
+      className={`z-10 ${updateAvailable && installed ? 'opacity-100' : 'opacity-0'} transition duration-500`}>
       <motion.div
         layout="position"
         exit={{scale: 0.9, opacity: 0}}
