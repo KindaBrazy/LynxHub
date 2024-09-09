@@ -108,19 +108,35 @@ function handleTaskbarStatus() {
   switch (taskbarStatus) {
     case 'taskbar-tray':
       trayManager.createTrayIcon();
-      mainWindow?.setSkipTaskbar(false);
+      if (platform() === 'win32') {
+        mainWindow?.setSkipTaskbar(false);
+      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
+        app.dock.show();
+      }
       break;
     case 'taskbar':
       trayManager.destroyTrayIcon();
-      mainWindow?.setSkipTaskbar(false);
+      if (platform() === 'win32') {
+        mainWindow?.setSkipTaskbar(false);
+      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
+        app.dock.show();
+      }
       break;
     case 'tray':
       trayManager.createTrayIcon();
-      mainWindow?.setSkipTaskbar(true);
+      if (platform() === 'win32') {
+        mainWindow?.setSkipTaskbar(true);
+      } else if (platform() === 'darwin' && app.dock.isVisible()) {
+        app.dock.hide();
+      }
       break;
     case 'tray-minimized':
       trayManager.destroyTrayIcon();
-      mainWindow?.setSkipTaskbar(false);
+      if (platform() === 'win32') {
+        mainWindow?.setSkipTaskbar(false);
+      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
+        app.dock.show();
+      }
       break;
   }
 }

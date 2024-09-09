@@ -24,32 +24,42 @@ export default function SettingsGeneralTaskbar() {
 
   return (
     <Select
+      description={
+        window.osPlatform === 'darwin'
+          ? 'Select how the app should appear in the dock and system tray.'
+          : 'Select how the app should appear in the taskbar and system tray.'
+      }
       radius="sm"
-      label="Taskbar Options"
       labelPlacement="outside"
       selectedKeys={[selectedKey]}
       onSelectionChange={onChange}
       classNames={{trigger: 'cursor-default'}}
-      description="Select how the app should appear in the taskbar or system tray."
+      label={window.osPlatform === 'darwin' ? 'Dock Options' : 'Taskbar Options'}
       disallowEmptySelection>
       <SelectItem key="taskbar-tray" className="cursor-default">
-        Taskbar & Tray
+        {window.osPlatform === 'darwin' ? 'Dock & Tray' : 'Taskbar & Tray'}
       </SelectItem>
       <SelectItem key="taskbar" className="cursor-default">
-        Taskbar Only
+        {window.osPlatform === 'darwin' ? 'Dock Only' : 'Taskbar Only'}
       </SelectItem>
       {window.osPlatform === 'linux' ? (
         <SelectItem key="!" className="hidden" textValue="Nothing" />
       ) : (
         <SelectItem key="tray" className="cursor-default">
-          System Tray Only
+          {window.osPlatform === 'darwin' ? 'Tray Only' : 'Tray Only'}
         </SelectItem>
       )}
       <SelectItem
+        description={
+          window.osPlatform === 'darwin'
+            ? 'Show in the dock when focused, move to tray when minimized.'
+            : 'Show in the taskbar when focused, move to tray when minimized.'
+        }
         key="tray-minimized"
-        className="cursor-default"
-        description="Show in the taskbar when focused, move to system tray when minimized.">
-        Taskbar when focused, Tray when minimized
+        className="cursor-default">
+        {window.osPlatform === 'darwin'
+          ? 'Dock when focused, Tray when minimized'
+          : 'Taskbar when focused, Tray when minimized'}
       </SelectItem>
     </Select>
   );

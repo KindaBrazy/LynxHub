@@ -155,6 +155,8 @@ export default class ElectronAppManager {
       trayManager.createTrayIcon();
       if (platform() === 'linux') {
         this.mainWindow?.hide();
+      } else if (platform() === 'darwin' && app.dock.isVisible()) {
+        app.dock.hide();
       } else {
         this.mainWindow?.setSkipTaskbar(true);
       }
@@ -165,7 +167,11 @@ export default class ElectronAppManager {
   private handleFocus = (): void => {
     if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
       trayManager.destroyTrayIcon();
-      this.mainWindow?.setSkipTaskbar(false);
+      if (platform() === 'win32') {
+        this.mainWindow?.setSkipTaskbar(false);
+      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
+        app.dock.show();
+      }
     }
   };
 

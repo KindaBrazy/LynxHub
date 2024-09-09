@@ -31,7 +31,7 @@ const initialState: SettingState = {
   closeConfirm: true,
   terminateAIConfirm: true,
   hotkeys: {
-    FULLSCREEN: 'f11',
+    FULLSCREEN: window.osPlatform === 'darwin' ? 'f12' : 'f11',
     TOGGLE_NAV: 'alt+a',
     TOGGLE_AI_VIEW: 'alt+q',
     isEnabled: true,
