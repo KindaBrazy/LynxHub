@@ -45,7 +45,11 @@ export default function SettingsHotkeys() {
   const handleHotkeyRecord = useCallback(
     (hotkeyType: keyof LynxHotkeys) => {
       setRecordingFor(hotkeyType);
-      isRecording ? onStop() : start();
+      if (isRecording) {
+        onStop();
+      } else {
+        start();
+      }
     },
     [isRecording, onStop, start],
   );

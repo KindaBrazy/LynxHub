@@ -1,3 +1,4 @@
+import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
@@ -59,7 +60,7 @@ class BaseStorage {
         },
       },
       hotkeys: {
-        FULLSCREEN: 'f11',
+        FULLSCREEN: platform() === 'darwin' ? 'f12' : 'f11',
         TOGGLE_NAV: 'alt+a',
         TOGGLE_AI_VIEW: 'alt+q',
         isEnabled: true,

@@ -1,7 +1,7 @@
 import {platform} from 'node:os';
 import path from 'node:path';
 
-import {shell} from 'electron';
+import {app, shell} from 'electron';
 import fs from 'graceful-fs';
 
 import {DiscordRPC} from '../../../../cross/CrossTypes';
@@ -58,19 +58,35 @@ export function setTaskbarStatus(status: TaskbarStatus): void {
   const actions: Record<TaskbarStatus, () => void> = {
     'taskbar-tray': () => {
       trayManager.createTrayIcon();
-      mainWindow.setSkipTaskbar(false);
+      if (platform() === 'win32') {
+        mainWindow?.setSkipTaskbar(false);
+      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
+        app.dock.show();
+      }
     },
     taskbar: () => {
       trayManager.destroyTrayIcon();
-      mainWindow.setSkipTaskbar(false);
+      if (platform() === 'win32') {
+        mainWindow?.setSkipTaskbar(false);
+      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
+        app.dock.show();
+      }
     },
     tray: () => {
       trayManager.createTrayIcon();
-      mainWindow.setSkipTaskbar(true);
+      if (platform() === 'win32') {
+        mainWindow?.setSkipTaskbar(true);
+      } else if (platform() === 'darwin' && app.dock.isVisible()) {
+        app.dock.hide();
+      }
     },
     'tray-minimized': () => {
       trayManager.destroyTrayIcon();
-      mainWindow.setSkipTaskbar(false);
+      if (platform() === 'win32') {
+        mainWindow?.setSkipTaskbar(false);
+      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
+        app.dock.show();
+      }
     },
   };
 
