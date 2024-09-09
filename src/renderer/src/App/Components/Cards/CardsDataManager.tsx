@@ -3,6 +3,7 @@ import {createContext, useContext} from 'react';
 
 import {DiscordRunningAI} from '../../../../../cross/IpcChannelAndTypes';
 import {CardData} from '../../Modules/types';
+import {validateGitRepoUrl} from '../../Utils/UtilFunctions';
 
 export const CardContext = createContext<CardsDataManager | null>(null);
 
@@ -29,7 +30,7 @@ export class CardsDataManager {
     this.title = data.title;
     this.id = data.id;
     this.description = data.description;
-    this.repoUrl = data.repoUrl;
+    this.repoUrl = validateGitRepoUrl(data.repoUrl);
     this.bgUrl = data.bgUrl;
     this.extensionsDir = data.extensionsDir;
     this.type = data.type;
