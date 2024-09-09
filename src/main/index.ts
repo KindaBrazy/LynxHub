@@ -68,7 +68,13 @@ async function onAppReady() {
   await moduleManager.createServer();
 
   // Install browser developer extensions
-  if (is.dev) await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS]);
+  if (is.dev) {
+    try {
+      await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS]);
+    } catch (e) {
+      console.error(e);
+    }
+  }
 
   listenToAllChannels();
 
