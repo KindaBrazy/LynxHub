@@ -1,11 +1,14 @@
+import {platform} from 'node:os';
+
 import {electronApp, is, optimizer} from '@electron-toolkit/utils';
-import {app, BrowserWindow, Menu} from 'electron';
+import {app, BrowserWindow, Menu, nativeImage} from 'electron';
 import installExtension, {REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} from 'electron-devtools-installer';
 import log from 'electron-log/main';
 import updater from 'electron-updater';
 
 import trayIconMenu from '../../resources/16x16.png?asset';
 import trayIcon from '../../resources/icon.ico?asset';
+import darwinIcon from '../../resources/icon-darwin.png?asset';
 import {APP_NAME} from '../cross/CrossConstants';
 import AppInitializer from './Managements/AppInitializer';
 import {checkForUpdate} from './Managements/AppUpdater';
@@ -57,6 +60,8 @@ function setupApp() {
 
 async function onAppReady() {
   electronApp.setAppUserModelId(APP_NAME);
+
+  if (platform() === 'darwin') app.dock.setIcon(nativeImage.createFromPath(darwinIcon));
 
   appManager.startLoading();
 

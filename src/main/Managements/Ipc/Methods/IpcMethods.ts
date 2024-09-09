@@ -1,3 +1,4 @@
+import {platform} from 'node:os';
 import path from 'node:path';
 
 import {shell} from 'electron';
@@ -19,7 +20,10 @@ export function changeWindowState(state: ChangeWindowState): void {
   const actions: Record<ChangeWindowState, () => void> = {
     maximize: () => (mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()),
     minimize: () => mainWindow.minimize(),
-    close: () => mainWindow.close(),
+    close: () => {
+      mainWindow.close();
+      if (platform() === 'darwin') trayManager.destroyTrayIcon();
+    },
     fullscreen: () => mainWindow.setFullScreen(!mainWindow.isFullScreen()),
     restart: () => appManager.restart(),
   };
