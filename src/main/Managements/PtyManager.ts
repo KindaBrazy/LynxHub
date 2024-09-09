@@ -1,6 +1,7 @@
+import {platform} from 'node:os';
+
 import lodash from 'lodash';
 import pty from 'node-pty';
-import os from 'os';
 import treeKill from 'tree-kill';
 
 import {ptyChannels} from '../../cross/IpcChannelAndTypes';
@@ -45,10 +46,15 @@ export default class PtyManager {
    * @returns The shell command to use.
    */
   private determineShell(): string {
-    if (os.platform() === 'win32') {
-      return getPowerShellVersion() >= 5 ? 'pwsh.exe' : 'powershell.exe';
+    switch (platform()) {
+      case 'darwin':
+        return 'zsh';
+      case 'linux':
+        return 'bash';
+      case 'win32':
+      default:
+        return getPowerShellVersion() >= 5 ? 'pwsh.exe' : 'powershell.exe';
     }
-    return 'bash';
   }
 
   //#endregion
@@ -87,6 +93,7 @@ export default class PtyManager {
   public stop(): void {
     if (this.isAvailable() && this.process?.pid) {
       treeKill(this.process.pid);
+      if (platform() === 'darwin') this.process.kill();
       this.isRunning = false;
       this.process = undefined;
     }
