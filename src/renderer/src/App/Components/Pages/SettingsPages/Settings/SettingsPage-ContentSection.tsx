@@ -25,8 +25,7 @@ export default function SettingsSection({children, id, title, titleColor = '', i
       id={id}
       bordered={false}
       classNames={{body: 'gap-y-4 !py-2 flex-col flex', title: `text-center ${titleColor}`}}
-      className={`w-full cursor-default dark:bg-LynxRaisinBlack ${itemsCenter && 'text-center'} scroll-mt-8`}
-      hoverable>
+      className={`w-full dark:bg-LynxRaisinBlack ${itemsCenter && 'text-center'} scroll-mt-8`}>
       {children}
     </Card>
   );

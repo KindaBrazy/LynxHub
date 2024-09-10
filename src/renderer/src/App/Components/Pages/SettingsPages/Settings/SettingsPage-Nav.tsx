@@ -135,11 +135,7 @@ export default function SettingsPageNav() {
   );
 
   return (
-    <Card
-      bordered={false}
-      title="Settings"
-      className="h-full w-48 shrink-0 cursor-default text-center dark:bg-LynxRaisinBlack"
-      hoverable>
+    <Card bordered={false} title="Settings" className="h-full w-48 shrink-0 text-center dark:bg-LynxRaisinBlack">
       <ScrollShadow className="absolute inset-x-3 bottom-4 top-[3.8rem]" hideScrollBar>
         {groupSections.map((section, index) => (
           <GroupSection key={index} {...section} />
