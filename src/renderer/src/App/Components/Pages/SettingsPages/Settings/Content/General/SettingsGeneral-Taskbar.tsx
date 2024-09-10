@@ -10,7 +10,7 @@ export default function SettingsGeneralTaskbar() {
 
   const onChange = useCallback((keys: Selection) => {
     if (keys !== 'all') {
-      const value = keys.values().next().value;
+      const value = keys.values().next().value as TaskbarStatus;
       rendererIpc.win.setTaskBarStatus(value);
       setSelectedKey(value);
     }

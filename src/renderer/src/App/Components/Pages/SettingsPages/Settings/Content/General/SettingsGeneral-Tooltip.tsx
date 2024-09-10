@@ -2,6 +2,7 @@ import {Select, Selection, SelectItem} from '@nextui-org/react';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {TooltipStatus} from '../../../../../../../../../cross/IpcChannelAndTypes';
 import {settingsActions, useSettingsState} from '../../../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
@@ -15,7 +16,7 @@ export default function SettingsGeneralTooltip() {
   const onChange = useCallback(
     (keys: Selection) => {
       if (keys !== 'all') {
-        const value = keys.values().next().value;
+        const value = keys.values().next().value as TooltipStatus;
         dispatch(settingsActions.setSettingsState({key: 'tooltipLevel', value}));
         rendererIpc.storage.update('app', {tooltipStatus: value});
         setSelectedKey(value);
