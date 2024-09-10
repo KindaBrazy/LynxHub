@@ -3,6 +3,7 @@ import _ from 'lodash';
 
 import {ChosenArgumentsData} from '../../../cross/CrossTypes';
 import {
+  CustomRunBehaviorData,
   HomeCategory,
   PreCommands,
   PreOpen,
@@ -490,6 +491,22 @@ class StorageManager extends BaseStorage {
   }
 
   //#endregion
+
+  public updateCustomRunBehavior(data: CustomRunBehaviorData) {
+    let customRunBehavior = this.getData('cardsConfig').customRunBehavior;
+    const existCustom = customRunBehavior.findIndex(command => command.cardID === data.cardID);
+
+    if (existCustom !== -1) {
+      console.info('exist');
+      customRunBehavior[existCustom] = data;
+    } else {
+      console.info('not exist');
+      customRunBehavior = [...customRunBehavior, data];
+    }
+
+    console.info('customRunBehavior', customRunBehavior);
+    this.updateData('cardsConfig', {customRunBehavior});
+  }
 
   //#endregion
 }

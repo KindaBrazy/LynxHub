@@ -50,12 +50,16 @@ export async function ptyProcess(opt: PtyProcessOpt, cardId: string) {
 
     runPreOpen(cardId);
 
-    const customRun = storageManager.getCustomRunById(cardId);
-    if (lodash.isEmpty(customRun?.data)) {
+    const customRun = storageManager.getCustomRunById(cardId)?.data;
+    const behavior = storageManager
+      .getData('cardsConfig')
+      .customRunBehavior.find(custom => custom.cardID === cardId)?.terminal;
+
+    if (!lodash.isEmpty(customRun) || behavior === 'empty') {
+      runMultiCommand(customRun || []);
+    } else {
       const runCommand = (await moduleManager.getMethodsById(cardId)?.getRunCommands(card.dir)) || '';
       ptyManager.write(runCommand);
-    } else {
-      runMultiCommand(customRun?.data || []);
     }
   } else if (opt === 'stop') {
     ptyManager?.stop();

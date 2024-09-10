@@ -189,6 +189,8 @@ function storageUtilsIpc() {
     storageManager.preOpenOpt(opt, data),
   );
 
+  ipcMain.on(storageUtilsChannels.customRunBehavior, (_, data) => storageManager.updateCustomRunBehavior(data));
+
   ipcMain.handle(storageUtilsChannels.getCardArguments, (_, cardId: string) =>
     storageManager.getCardArgumentsById(cardId),
   );

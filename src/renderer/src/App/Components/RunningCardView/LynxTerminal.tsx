@@ -8,7 +8,7 @@ import {ITheme, IWindowsPty, Terminal} from '@xterm/xterm';
 import FontFaceObserver from 'fontfaceobserver';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
-import {useCallback, useEffect, useMemo, useRef} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {useModules} from '../../Modules/ModulesContext';
@@ -37,6 +37,10 @@ export default function LynxTerminal() {
   const {allCards} = useModules();
   const dispatch = useDispatch<AppDispatch>();
 
+  const [browserBehavior, setBrowserBehavior] = useState<'appBrowser' | 'defaultBrowser' | 'doNothing' | string>(
+    'appBrowser',
+  );
+
   const getTheme = useCallback(
     (): ITheme => ({
       background: darkMode ? getColor('raisinBlack') : getColor('white'),
@@ -48,6 +52,15 @@ export default function LynxTerminal() {
     }),
     [darkMode],
   );
+
+  useEffect(() => {
+    rendererIpc.storage.get('cardsConfig').then(result => {
+      const custom = result.customRunBehavior.find(customRun => customRun.cardID === id);
+      if (custom) {
+        setBrowserBehavior(custom.browser);
+      }
+    });
+  }, [id]);
 
   const setTheme = useCallback(() => {
     if (terminal.current) {
@@ -61,19 +74,23 @@ export default function LynxTerminal() {
 
   const writeData = useCallback(
     (data: string) => {
-      if (isEmpty(address)) {
+      if (isEmpty(address) && browserBehavior !== 'doNothing') {
         const catchAddress = allCards.find(card => card.id === id)?.methods.catchAddress;
         const url = catchAddress?.(data) || '';
         if (!isEmpty(url)) {
-          setTimeout(() => {
-            dispatch(cardsActions.setRunningCardAddress(url));
-            dispatch(cardsActions.setRunningCardView('browser'));
-          }, 1500);
+          if (browserBehavior === 'appBrowser') {
+            setTimeout(() => {
+              dispatch(cardsActions.setRunningCardAddress(url));
+              dispatch(cardsActions.setRunningCardView('browser'));
+            }, 1500);
+          } else {
+            window.open(url);
+          }
         }
       }
       terminal.current?.write(data);
     },
-    [address, allCards, id, dispatch],
+    [address, allCards, id, browserBehavior, dispatch],
   );
 
   useEffect(() => {

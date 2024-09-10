@@ -52,7 +52,7 @@ export default function CustomRunCommands() {
     <LaunchConfigSection
       onAddPress={addCommand}
       addTooltipTitle="Add New Command"
-      title="Custom AI Execution (Terminal Commands)"
+      title="AI Execution (Terminal Commands)"
       description="Execute these commands when 'Run AI' is clicked, overriding default settings">
       {isEmpty(commands) ? (
         <Empty
