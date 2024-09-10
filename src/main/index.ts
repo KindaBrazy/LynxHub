@@ -96,7 +96,7 @@ function handleAppReadyToShow() {
   handleTaskbarStatus();
   handleStartupBehavior();
   discordRpcManager.start();
-  setLoginItemSettings();
+  if (platform() === 'win32') setLoginItemSettings();
   cardsValidator.checkAndWatch();
   autoUpdater.checkForUpdates();
 }

@@ -8,7 +8,7 @@ export const SettingsStartupId = 'settings_startup_elem';
 export default function SettingsStartup() {
   return (
     <SettingsSection icon="Rocket" title="Startup" id={SettingsStartupId}>
-      {window.osPlatform !== 'linux' && <SettingsStartupSystem />}
+      {window.osPlatform === 'win32' && <SettingsStartupSystem />}
       <SettingsStartupStartMinimized />
       <SettingsStartupStartPage />
     </SettingsSection>
