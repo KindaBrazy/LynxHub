@@ -1,3 +1,4 @@
+import {MantineProvider} from '@mantine/core';
 import {NextUIProvider} from '@nextui-org/react';
 import {ConfigProvider, message, notification, theme} from 'antd';
 import {ReactNode, useLayoutEffect, useMemo} from 'react';
@@ -39,7 +40,7 @@ export default function UIProviders({children}: {children: ReactNode}) {
             },
             token: {colorBgMask: 'rgba(0, 0, 0, 0.2)', fontFamily: 'Nunito, sans-serif'},
           }}>
-          {children}
+          <MantineProvider forceColorScheme={darkMode ? 'dark' : 'light'}>{children}</MantineProvider>
         </ConfigProvider>
       </NextUIProvider>
     </div>
