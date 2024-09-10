@@ -33,7 +33,7 @@ export default function SettingsGeneralTaskbar() {
       labelPlacement="outside"
       selectedKeys={[selectedKey]}
       onSelectionChange={onChange}
-      classNames={{trigger: 'cursor-default'}}
+      classNames={{trigger: 'cursor-default !transition !duration-300'}}
       label={window.osPlatform === 'darwin' ? 'Dock Options' : 'Taskbar Options'}
       disallowEmptySelection>
       <SelectItem key="taskbar-tray" className="cursor-default">
