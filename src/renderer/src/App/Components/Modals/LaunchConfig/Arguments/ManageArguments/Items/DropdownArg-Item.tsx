@@ -21,8 +21,8 @@ export default function DropdownArgItem({argument, changeValue, removeArg}: Prop
   const onChange = useCallback(
     (keys: Selection) => {
       if (keys !== 'all') {
-        const value = keys.values().next().value;
-        setSelectedKey([value]);
+        const value = keys.values().next().value?.toString();
+        setSelectedKey(value ? [value] : []);
         changeValue(value);
       }
     },

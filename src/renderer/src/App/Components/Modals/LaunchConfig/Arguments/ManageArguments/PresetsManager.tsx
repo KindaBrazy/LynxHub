@@ -73,8 +73,8 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
   const changeActivePreset = useCallback(
     (keys: Selection) => {
       if (keys !== 'all') {
-        const activePreset = keys.values().next().value;
-        setChosenArguments(prevState => ({...prevState, activePreset}));
+        const activePreset = keys.values().next().value?.toString();
+        setChosenArguments(prevState => (activePreset ? {...prevState, activePreset} : {...prevState}));
       }
     },
     [setChosenArguments],

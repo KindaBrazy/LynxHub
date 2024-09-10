@@ -2,6 +2,7 @@ import {Select, Selection, SelectItem} from '@nextui-org/react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {DarkModeTypes} from '../../../../../../../../../cross/IpcChannelAndTypes';
 import {appActions, useAppState} from '../../../../../../Redux/App/AppReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
@@ -16,7 +17,7 @@ export default function SettingsGeneralTheme() {
   const onThemeChange = useCallback(
     (keys: Selection) => {
       if (keys !== 'all') {
-        const value = keys.values().next().value;
+        const value = keys.values().next().value as DarkModeTypes;
         dispatch(appActions.setAppState({key: 'darkMode', value: value !== 'light'}));
         rendererIpc.win.setDarkMode(value);
         setSelectedTheme(value);
