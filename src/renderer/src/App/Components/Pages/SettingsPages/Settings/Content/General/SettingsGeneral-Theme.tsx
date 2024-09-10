@@ -39,8 +39,8 @@ export default function SettingsGeneralTheme() {
       labelPlacement="outside"
       selectedKeys={[selectedTheme]}
       onSelectionChange={onThemeChange}
-      classNames={{trigger: 'cursor-default'}}
       description="Select the appearance theme."
+      classNames={{trigger: 'cursor-default !transition !duration-300'}}
       disallowEmptySelection>
       <SelectItem key="dark" className="cursor-default">
         Dark
