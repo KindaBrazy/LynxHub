@@ -37,8 +37,9 @@ export default function LynxSwitch({
 
   const baseClassName = useMemo(() => {
     return cn(
-      'inline-flex flex-row-reverse w-full max-w-full bg-default-100 hover:bg-default-200 items-center',
-      'justify-between cursor-pointer rounded-lg gap-2',
+      'inline-flex flex-row-reverse w-full max-w-full items-center',
+      'dark:bg-default-100 bg-default-200 dark:hover:bg-default-200 hover:bg-default-100',
+      'justify-between cursor-pointer rounded-lg gap-2 transition duration-300',
       size === 'sm' ? 'px-2 py-1' : 'px-4 py-2.5',
       'border-2 border-transparent data-[selected=true]:border-secondary/40',
     );
@@ -51,7 +52,7 @@ export default function LynxSwitch({
   const thumbClassName = useMemo(() => {
     return cn(
       size === 'sm' ? 'w-4 h-4' : 'w-5 h-5',
-      'shadow-md bg-default-500 dark:bg-white',
+      'shadow-md bg-white dark:bg-white',
       `group-data-[selected=true]:${size === 'sm' ? 'ml-4' : 'ml-5'}`,
       'group-data-[pressed=true]:w-7',
       'group-data-[selected]:group-data-[pressed]:ml-4',
