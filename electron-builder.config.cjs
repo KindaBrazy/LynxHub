@@ -17,6 +17,7 @@ const config = {
   ],
   asarUnpack: ['resources/**'],
   npmRebuild: false,
+  artifactName: '${productName}-V${version}-${os}_${arch}.${ext}',
   nsis: {
     artifactName: '${productName}-V${version}-${os}_${arch}-Setup.${ext}',
     shortcutName: '${productName}',
@@ -26,7 +27,6 @@ const config = {
     allowToChangeInstallationDirectory: true,
     createDesktopShortcut: 'always',
   },
-  artifactName: '${productName}-V${version}-${os}_${arch}.${ext}',
   linux: {
     target: [
       {target: 'deb', arch: ['x64', 'arm64']},
@@ -39,6 +39,18 @@ const config = {
       ' manage AI interfaces from a single, intuitive platform.',
     category: 'ArtificialIntelligence',
     executableArgs: ['--no-sandbox'],
+  },
+  mac: {
+    artifactName: '${productName}-V${version}-${os}.${ext}',
+    icon: 'build/icon-darwin.png',
+    entitlementsInherit: 'build/entitlements.mac.plist',
+    extendInfo: {
+      NSCameraUsageDescription: "Application requests access to the device's camera.",
+      NSMicrophoneUsageDescription: "Application requests access to the device's microphone.",
+      NSDocumentsFolderUsageDescription: "Application requests access to the user's Documents folder.",
+      NSDownloadsFolderUsageDescription: "Application requests access to the user's Downloads folder.",
+    },
+    notarize: false,
   },
   publish: {
     provider: 'github',
