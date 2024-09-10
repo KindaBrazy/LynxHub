@@ -8,6 +8,7 @@ import {
   CardInfo,
   ChangeWindowState,
   CloneDirTypes,
+  CustomRunBehaviorData,
   DarkModeTypes,
   DiscordRunningAI,
   ExtensionsData,
@@ -147,6 +148,8 @@ const rendererIpc = {
     onCustomRun: (result: (event: IpcRendererEvent, preCommands: OnPreCommands) => void) =>
       ipc.on(storageUtilsChannels.onCustomRun, result),
     offCustomRun: (): void => ipc.removeAllListeners(storageUtilsChannels.onCustomRun),
+
+    updateCustomRunBehavior: (data: CustomRunBehaviorData) => ipc.send(storageUtilsChannels.customRunBehavior, data),
 
     preOpen: (opt: StorageOperation, open: PreOpen): Promise<PreOpenData | undefined> =>
       ipc.invoke(storageUtilsChannels.preOpen, opt, open),

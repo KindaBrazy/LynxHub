@@ -19,10 +19,10 @@ class BaseStorage {
   private readonly STORAGE_FILE = is.dev ? `${APP_NAME}-Dev.config` : `${APP_NAME}.config`;
   private readonly STORAGE_PATH = path.join(app.getPath('userData'), this.STORAGE_FILE);
 
-  private readonly CURRENT_VERSION: number = 0.2;
+  private readonly CURRENT_VERSION: number = 0.3;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.2},
+    storage: {version: this.CURRENT_VERSION},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -36,6 +36,7 @@ class BaseStorage {
       customRun: [],
       preOpen: [],
       args: [],
+      customRunBehavior: [],
     },
     app: {
       closeConfirm: true,
@@ -85,11 +86,38 @@ class BaseStorage {
   //#region Private Methods
 
   private migration() {
-    if (this.getData('storage').version < this.CURRENT_VERSION) {
+    const storeVersion = this.getData('storage').version;
+
+    const version1to2 = () => {
       this.updateData('cards', {autoUpdateExtensions: []});
-      this.updateData('storage', {version: 0.2});
+    };
+    const version2to3 = () => {
+      this.updateData('cardsConfig', {customRunBehavior: []});
+    };
+
+    const updateVersion = () => {
+      this.updateData('storage', {version: this.CURRENT_VERSION});
+    };
+
+    if (storeVersion < this.CURRENT_VERSION) {
+      switch (storeVersion) {
+        case 0.1: {
+          version1to2();
+          version2to3();
+          break;
+        }
+        case 0.2: {
+          version2to3();
+          break;
+        }
+        default:
+          break;
+      }
+
+      updateVersion();
     }
     // Version 0.2 Changes -> autoUpdateExtensions
+    // Version 0.3 Changes -> customRunBehavior
   }
 
   //#endregion

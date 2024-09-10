@@ -32,6 +32,12 @@ export type CloneDirTypes = string | 'moduleDir';
 export type StorageOperation = 'add' | 'remove' | 'get' | 'set';
 export type RecentlyOperation = 'update' | 'get';
 export type StoragePreOpenData = {cardId: string; data: PreOpenData}[];
+export type CustomRunBehaviorData = {
+  cardID: string;
+  terminal: 'runScript' | 'empty' | string;
+  browser: 'appBrowser' | 'defaultBrowser' | 'doNothing' | string;
+};
+export type CustomRunBehaviorStore = CustomRunBehaviorData[];
 
 export type ExtensionsData = {name: string; remoteUrl: string; size: string}[] | 'empty';
 export type ExtensionsUpdateStatus = {id: string; updateAvailable: boolean}[];
@@ -199,6 +205,8 @@ export const storageUtilsChannels = {
   onCustomRun: 'storageUtils:on-custom-run',
 
   preOpen: 'storageUtils:pre-open',
+
+  customRunBehavior: 'storageUtils:custom-run-behavior',
 
   getCardArguments: 'storageUtils:get-card-arguments',
   setCardArguments: 'storageUtils:set-card-arguments',

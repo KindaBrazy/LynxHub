@@ -1,5 +1,6 @@
 import {DiscordRPC, StorageChosenArgumentsData} from './CrossTypes';
 import {
+  CustomRunBehaviorStore,
   DarkModeTypes,
   HomeCategory,
   LynxHotkeys,
@@ -30,6 +31,7 @@ type StorageTypes = {
   cardsConfig: {
     preCommands: {cardId: string; data: string[]}[];
     customRun: {cardId: string; data: string[]}[];
+    customRunBehavior: CustomRunBehaviorStore;
     preOpen: StoragePreOpenData;
     args: StorageChosenArgumentsData;
   };
