@@ -62,6 +62,7 @@ export default function CustomRunBehavior() {
             className="w-full"
             value={terminalValue}
             onChange={onTerminalChange}
+            classNames={{input: '!bg-default-200', dropdown: '!bg-default-200'}}
             comboboxProps={{transitionProps: {transition: 'fade', duration: 200}, radius: 'md'}}
           />
         </div>
@@ -78,6 +79,7 @@ export default function CustomRunBehavior() {
             className="w-full"
             value={browserValue}
             onChange={onBrowserChange}
+            classNames={{input: '!bg-default-200', dropdown: '!bg-default-200'}}
             comboboxProps={{transitionProps: {transition: 'fade', duration: 200}, radius: 'md'}}
           />
         </div>
