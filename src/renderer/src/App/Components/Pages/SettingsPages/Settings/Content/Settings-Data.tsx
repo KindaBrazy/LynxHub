@@ -1,4 +1,5 @@
-import {Button} from '@nextui-org/react';
+import {Button} from '@mantine/core';
+import {Button as NextButton} from '@nextui-org/react';
 import {message} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -41,11 +42,16 @@ export default function SettingsData() {
     <SettingsSection title="Data" icon="Database" id={SettingsDataId} itemsCenter>
       <span>App data, including modules and binaries, will be saved here.</span>
 
-      <Button variant="light" onPress={openFolder} endContent={getIconByName('OpenFolder')}>
+      <NextButton radius="sm" variant="light" onPress={openFolder} endContent={getIconByName('OpenFolder')}>
         {currentPath}
-      </Button>
+      </NextButton>
 
-      <Button radius="sm" variant="faded" onPress={change} className="cursor-default" fullWidth>
+      <Button
+        radius="md"
+        onClick={change}
+        variant="default"
+        className="!cursor-default !transition !duration-300"
+        fullWidth>
         Change (Restart)
       </Button>
     </SettingsSection>
