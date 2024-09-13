@@ -14,11 +14,11 @@ import {
   useState,
 } from 'react';
 
+import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
 import {useModalsState} from '../../../Redux/AI/ModalsReducer';
 import rendererIpc from '../../../RendererIpc';
 import {fetchRepoDetails} from '../../../Utils/LocalStorage';
-import {validateGitRepoUrl} from '../../../Utils/UtilFunctions';
 import {
   emptyTableElement,
   extensionsColumns,

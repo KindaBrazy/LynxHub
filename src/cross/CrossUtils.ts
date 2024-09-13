@@ -61,3 +61,13 @@ export function toMs(value: number, from: 'seconds' | 'minutes'): number {
       throw new Error('Invalid conversion type. Use "seconds" or "minutes".');
   }
 }
+
+/**
+ * Validates and normalizes a GitHub repository URL.
+ * @param url - The URL to validate
+ * @returns Normalized GitHub repository URL or an empty string if invalid
+ */
+export function validateGitRepoUrl(url: string): string {
+  const match = url.toLowerCase().match(/^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/]+)\/([^/]+?)(\.git)?(\/)?$/i);
+  return match ? `https://github.com/${match[1]}/${match[2]}` : '';
+}

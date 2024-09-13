@@ -1,9 +1,9 @@
 import {makeAutoObservable} from 'mobx';
 import {createContext, useContext} from 'react';
 
+import {validateGitRepoUrl} from '../../../../../cross/CrossUtils';
 import {DiscordRunningAI} from '../../../../../cross/IpcChannelAndTypes';
 import {CardData} from '../../Modules/types';
-import {validateGitRepoUrl} from '../../Utils/UtilFunctions';
 
 export const CardContext = createContext<CardsDataManager | null>(null);
 
