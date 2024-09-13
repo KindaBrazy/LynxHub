@@ -2,10 +2,11 @@ import {Input, Spinner} from '@nextui-org/react';
 import {Empty, List, PaginationProps} from 'antd';
 import {useEffect, useState} from 'react';
 
+import {validateGitRepoUrl} from '../../../../../../../cross/CrossUtils';
 import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
 import {useModules} from '../../../../Modules/ModulesContext';
 import {useModalsState} from '../../../../Redux/AI/ModalsReducer';
-import {searchInStrings, validateGitRepoUrl} from '../../../../Utils/UtilFunctions';
+import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import RenderItem from './RenderItem';
 
 type Props = {

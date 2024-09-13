@@ -42,16 +42,6 @@ export function convertBlobToDataUrl(blob: Blob): Promise<string> {
 }
 
 /**
- * Validates and normalizes a GitHub repository URL.
- * @param url - The URL to validate
- * @returns Normalized GitHub repository URL or an empty string if invalid
- */
-export function validateGitRepoUrl(url: string): string {
-  const match = url.toLowerCase().match(/^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/]+)\/([^/]+?)(\.git)?(\/)?$/i);
-  return match ? `https://github.com/${match[1]}/${match[2]}` : '';
-}
-
-/**
  * Converts an array of strings to an array of objects with a 'name' property.
  * @param arr - Array of strings
  * @returns Array of objects with 'name' property

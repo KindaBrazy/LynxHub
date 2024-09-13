@@ -5,14 +5,13 @@ import {capitalize, startCase} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {extractGitHubUrl} from '../../../../../../cross/CrossUtils';
+import {extractGitHubUrl, validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
 import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
 import {useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {useAppState} from '../../../Redux/App/AppReducer';
 import rendererIpc from '../../../RendererIpc';
 import {initGitProgress} from '../../../Utils/Constants';
-import {validateGitRepoUrl} from '../../../Utils/UtilFunctions';
 import {tabContentVariants} from './Constants';
 
 type Props = {
