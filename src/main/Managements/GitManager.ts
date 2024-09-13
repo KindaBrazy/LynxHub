@@ -10,7 +10,7 @@ import {
   StatusResult,
 } from 'simple-git';
 
-import {extractGitHubUrl} from '../../cross/CrossUtils';
+import {extractGitHubUrl, validateGitRepoUrl} from '../../cross/CrossUtils';
 import {CloneDirTypes} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
 import {checkPathExists, openDialog} from '../Utilities/Utils';
@@ -57,7 +57,10 @@ export default class GitManager {
     if (!path) return undefined;
 
     const remote = await this.remoteUrlFromDir(path);
-    return remote === url ? path : undefined;
+
+    if (!remote) return undefined;
+
+    return validateGitRepoUrl(remote) === url ? path : undefined;
   }
 
   /**
