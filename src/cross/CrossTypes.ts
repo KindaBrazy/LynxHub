@@ -97,6 +97,11 @@ export type AppUpdateInfo = {
   currentVersion: string;
   currentBuild: number;
   releaseDate: string;
+  earlyAccess?: {
+    version: string;
+    build: number;
+    releaseDate: string;
+  };
 };
 
 export type AppUpdateData = AppUpdateInfo & {
