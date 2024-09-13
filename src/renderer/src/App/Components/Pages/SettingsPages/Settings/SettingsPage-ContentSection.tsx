@@ -18,7 +18,7 @@ export default function SettingsSection({children, id, title, titleColor = '', i
     <Card
       title={
         <div className="flex flex-row items-center justify-center space-x-2">
-          {icon && getIconByName(icon, {className: 'size-5 mt-1'})}
+          {icon && getIconByName(icon, {className: 'size-5'})}
           <span>{title}</span>
         </div>
       }
