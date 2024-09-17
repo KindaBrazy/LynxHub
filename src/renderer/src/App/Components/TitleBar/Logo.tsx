@@ -1,15 +1,9 @@
 import {Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@nextui-org/react';
-import {Badge} from 'antd';
 import {motion} from 'framer-motion';
-import {useCallback} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {APP_ICON_TRANSPARENT, APP_NAME, APP_NAME_VERSION_V} from '../../../../../cross/CrossConstants';
 import {getIconByName} from '../../../assets/icons/SvgIconsContainer';
-import {modalActions} from '../../Redux/AI/ModalsReducer';
 import {useAppState} from '../../Redux/App/AppReducer';
-import {useSettingsState} from '../../Redux/App/SettingsReducer';
-import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {getColor} from '../../Utils/Constants';
 import LynxTooltip from '../Reusable/LynxTooltip';
@@ -22,35 +16,27 @@ const AppNameStyle = {fontSize: 'text-[12pt]'};
 
 /** App icon and name with dropdown functionality. */
 export default function Logo() {
-  const dispatch = useDispatch<AppDispatch>();
   const darkMode = useAppState('darkMode');
   const onFocus = useAppState('onFocus');
   const maximized = useAppState('maximized');
-  const updateAvailable = useSettingsState('updateAvailable');
-
-  const openUpdate = useCallback(() => {
-    dispatch(modalActions.openModal('updateApp'));
-  }, [dispatch]);
 
   return (
     <>
       <Dropdown shadow="sm">
         <DropdownTrigger>
           {/*#region App Icon */}
-          <Badge color="green" dot={updateAvailable}>
-            <img
-              className={
-                `notDraggable ml-2 size-5 transition duration-300` +
-                ` hover:scale-110 ${onFocus ? 'opacity-100' : 'opacity-50'}`
-              }
-              alt="App Icon"
-              src={APP_ICON_TRANSPARENT}
-            />
-          </Badge>
+          <img
+            className={
+              `notDraggable ml-2 size-5 transition duration-300` +
+              ` hover:scale-110 ${onFocus ? 'opacity-100' : 'opacity-50'}`
+            }
+            alt="App Icon"
+            src={APP_ICON_TRANSPARENT}
+          />
           {/*#endregion */}
         </DropdownTrigger>
         <DropdownMenu>
-          <DropdownSection showDivider={updateAvailable}>
+          <DropdownSection>
             {/*#region Maximize */}
             <DropdownItem
               onClick={() => {
@@ -94,20 +80,6 @@ export default function Logo() {
             </DropdownItem>
             {/*#endregion */}
           </DropdownSection>
-
-          {/*#region Update Available */}
-          {updateAvailable ? (
-            <DropdownItem
-              color="success"
-              onPress={openUpdate}
-              className="cursor-default"
-              startContent={getIconByName('Download2')}>
-              Update Available
-            </DropdownItem>
-          ) : (
-            <DropdownItem className="hidden" />
-          )}
-          {/*#endregion */}
         </DropdownMenu>
       </Dropdown>
 
