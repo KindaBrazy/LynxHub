@@ -8,12 +8,12 @@
 
 Seamlessly install, configure, launch, and manage all your AI interfaces from a single, intuitive platform.
 
-![GitHub Release][github-release-shield]
-![GitHub Release Date][github-release-date-shield]
-![GitHub Downloads (all assets, all releases)][github-downloads-shield]
+[![GitHub Release][github-release-shield]](https://github.com/KindaBrazy/LynxHub/releases)
+[![GitHub Release Date][github-release-date-shield]](https://github.com/KindaBrazy/LynxHub/releases)
+[![GitHub Downloads (all assets, all releases)][github-downloads-shield]](https://github.com/KindaBrazy/LynxHub/releases)
 
-![Discord][discord-shield]
-![GitHub Repo stars][github-repo-stars-shield]
+[![Discord][discord-shield]](https://discord.gg/e8rBzhtcnK)
+[![GitHub Repo stars][github-repo-stars-shield]](https://github.com/KindaBrazy/LynxHub)
 
 ![LynxHub Dashboard](/readme/screenshots/MainScreenshot.png)
 
@@ -35,14 +35,6 @@ Seamlessly install, configure, launch, and manage all your AI interfaces from a 
 
 </div>
 
-> [!IMPORTANT]
-> 🖥️ **Platform Availability**
->
-> The App is currently available for <img height="12" src="./readme/platforms/Windows.png"> **Windows** users.
-> I'm actively working on <img height="12" src="./readme/platforms/Linux.png"> **Linux** support, and after
-> that <img height="12" src="./readme/platforms/MacOs.png"> **macOS** release
-
-
 > [!TIP]
 > 🌟 **Exclusive Early Access**
 >
@@ -57,11 +49,24 @@ fixes, and compatibilities**
 
 </div>
 
+## 🖥 Platform Support
+
+| ![Windows](https://ziadoua.github.io/m3-Markdown-Badges/badges/Windows/windows1.svg) | ![Linux](https://ziadoua.github.io/m3-Markdown-Badges/badges/Linux/linux2.svg) | ![macOS](https://ziadoua.github.io/m3-Markdown-Badges/badges/macOS/macos1.svg) |
+|--------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| ✔️ Available                                                                         | ✔️ Available                                                                   | 🚀 Early-Access                                                                |
+
+### 🔗 Download Links
+
+| Platform                         | x64                                                                                                                   | arm64                                                                                                                   |
+|----------------------------------|-----------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| **Windows 10/11** (.exe)         | [**x64 (V1.1.0)**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.1.0/LynxHub-V1.1.0-win_x64-Setup.exe)   | N/A                                                                                                                     |
+| **Debian, Ubuntu** (.deb)        | [**x64 (V1.1.0)**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.1.0/LynxHub-V1.1.0-linux_amd64.deb)     | [**arm64 (V1.1.0)**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.1.0/LynxHub-V1.1.0-linux_arm64.deb)     |
+| **Red Hat, Fedora, SUSE** (.rpm) | [**x86_64 (V1.1.0)**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.1.0/LynxHub-V1.1.0-linux_x86_64.rpm) | [**aarch64 (V1.1.0)**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.1.0/LynxHub-V1.1.0-linux_aarch64.rpm) |
+
 ## 🗂️ Table of Contents
 
 - ✨ [Feature Overview](#-feature-overview)
 - 🖼️ [Screenshots](#-screenshots)
-- 🖥 [Platform Support](#-platform-support)
 - 📦 [Installation](#-installation)
 - 🔧 [Development](#-development)
 - 🤝 [Contributing](#-contributing)
@@ -113,6 +118,9 @@ Add and remove custom terminal commands as alternatives to default module-provid
 
 - **Install**, **Update** and **Uninstall** extensions
     - Batch update all extensions or update individually
+    - Option to enable Auto update all extensions
+- **List** of all available extensions
+    - View and install all available extensions for WebUI interfaces.
 
 ### 🖥️ In-App Tools
 
@@ -225,10 +233,6 @@ Streamlined extension management for each AI interface.
 
 </div>
 
-> [!NOTE]
->
-> `⚒️ In Development:` Working on listing and downloading all available extensions for all AI interfaces.
-
 ![Manage extensions screenshot](/readme/screenshots/Extensions.png)
 
 <br/>
@@ -260,12 +264,6 @@ Flexible update options with detailed changelogs:
 
 
 </details>
-
-## 🖥 Platform Support
-
-| ![Windows](https://ziadoua.github.io/m3-Markdown-Badges/badges/Windows/windows1.svg) | ![Linux](https://ziadoua.github.io/m3-Markdown-Badges/badges/Linux/linux2.svg) | ![macOS](https://ziadoua.github.io/m3-Markdown-Badges/badges/macOS/macos1.svg) |
-|--------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
-| ✔️ Available                                                                         | ⚒️ In Development...                                                           | ⏳ Scheduled                                                                    |
 
 ## 📦 Installation
 
