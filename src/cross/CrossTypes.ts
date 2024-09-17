@@ -109,3 +109,10 @@ export type AppUpdateData = AppUpdateInfo & {
 };
 
 export type FolderNames = typeof MODULES_FOLDER_NAME | typeof BINARIES_FOLDER_NAME | typeof REPOSITORIES_FOLDER_NAME;
+
+export type PatreonUserData = {
+  tier: string;
+  name: string;
+  imageUrl: string;
+  earlyAccess: boolean;
+};

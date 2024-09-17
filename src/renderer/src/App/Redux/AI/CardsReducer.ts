@@ -12,7 +12,6 @@ import {RootState} from '../Store';
 type CardsState = {
   installedCards: InstalledCards;
   autoUpdate: string[];
-
   autoUpdateExtensions: string[];
   updatingExtensions: OnUpdatingExtensions | undefined;
 
@@ -69,6 +68,7 @@ const cardsSlice = createSlice({
     setUpdatingExtensions: (state, action: PayloadAction<OnUpdatingExtensions | undefined>) => {
       state.updatingExtensions = action.payload;
     },
+
     //#endregion
 
     //#region Updating Card
