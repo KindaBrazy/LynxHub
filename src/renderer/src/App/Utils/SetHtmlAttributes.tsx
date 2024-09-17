@@ -9,6 +9,7 @@ const CONNECT_SRC =
   'https://api.github.com/ ' +
   'https://*.githubusercontent.com/ ' +
   'https://image.civitai.com/ ' +
+  'https://*.patreonusercontent.com/ ' +
   `${import.meta.env.DEV && 'ws://localhost:5173/'}`;
 
 /** HTML attributes and document title */
