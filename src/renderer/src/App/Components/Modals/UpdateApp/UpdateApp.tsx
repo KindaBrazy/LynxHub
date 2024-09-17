@@ -6,9 +6,11 @@ import {useDispatch} from 'react-redux';
 
 import {APP_BUILD_NUMBER, WIN_RELEASE_URL} from '../../../../../../cross/CrossConstants';
 import {AppUpdateData, AppUpdateInfo, UpdateDownloadProgress} from '../../../../../../cross/CrossTypes';
+import {useCardsState} from '../../../Redux/AI/CardsReducer';
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {settingsActions} from '../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../Redux/Store';
+import {useUserState} from '../../../Redux/User/UserReducer';
 import rendererIpc from '../../../RendererIpc';
 import {modalMotionProps} from '../../../Utils/Constants';
 import Downloaded from './Downloaded';
@@ -18,12 +20,14 @@ import Info from './Info';
 /** Manage updating application */
 export default function UpdateApp() {
   const {isOpen} = useModalsState('updateApp');
+  const isRunningAI = useCardsState('runningCard').isRunning;
   const [items, setItems] = useState<CollapseProps['items']>([]);
   const [updateInfo, setUpdateInfo] = useState<AppUpdateInfo>();
   const [downloadProgress, setDownloadProgress] = useState<UpdateDownloadProgress>();
   const [downloadState, setDownloadState] = useState<'failed' | 'completed' | 'progress' | undefined>(undefined);
   const [errorMsg, setErrorMsg] = useState<string>('');
   const [fetched, setFetched] = useState<boolean>(false);
+  const updateChannel = useUserState('updateChannel');
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -34,6 +38,9 @@ export default function UpdateApp() {
         setDownloadProgress(undefined);
         dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: true}));
         message.info('New Update Available!');
+        if (!isRunningAI) {
+          dispatch(modalActions.openModal('updateApp'));
+        }
       } else if (typeof result !== 'string' && 'total' in result) {
         setDownloadState('progress');
         if (result) {
@@ -49,7 +56,7 @@ export default function UpdateApp() {
         }
       }
     });
-  }, [dispatch]);
+  }, [dispatch, isRunningAI]);
 
   const onClose = useCallback(() => {
     dispatch(modalActions.closeModal('updateApp'));
@@ -83,15 +90,21 @@ export default function UpdateApp() {
       const result: CollapseProps['items'] = [];
       const response = await fetch(WIN_RELEASE_URL);
       const data = (await response.json()) as AppUpdateData;
-      if (data.currentBuild > APP_BUILD_NUMBER) {
-        const {currentVersion, currentBuild, releaseDate} = data;
 
-        setUpdateInfo({currentBuild, currentVersion, releaseDate});
+      const isEA = updateChannel === 'ea';
+      const latestBuild = (isEA ? data.earlyAccess?.build : data.currentBuild) || 0;
+
+      if (latestBuild > APP_BUILD_NUMBER) {
+        const version = (isEA ? data.earlyAccess?.version : data.currentVersion) || '';
+        const build = (isEA ? data.earlyAccess?.build : data.currentBuild) || 0;
+        const date = (isEA ? data.earlyAccess?.releaseDate : data.releaseDate) || '';
+
+        setUpdateInfo({currentBuild: build, currentVersion: version, releaseDate: date});
 
         if (isEmpty(data.changeLog)) return;
 
         data.changeLog.forEach((change, index) => {
-          if (change.build <= APP_BUILD_NUMBER) return;
+          if (change.build <= APP_BUILD_NUMBER || change.build > latestBuild) return;
           const children = (
             <Typography.Paragraph>
               {!isEmpty(change.new) && (
@@ -129,7 +142,7 @@ export default function UpdateApp() {
           result.push({
             key: index,
             label: change.version,
-            children
+            children,
           });
         });
 
@@ -141,7 +154,7 @@ export default function UpdateApp() {
     if (isOpen) {
       fetchData();
     }
-  }, [isOpen]);
+  }, [isOpen, updateChannel]);
 
   const renderTitle = useMemo(() => {
     switch (downloadState) {
