@@ -1,7 +1,7 @@
 {
   "name": "lynxhub",
   "productName": "LynxHub",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "type": "module",
   "description": "Seamlessly install, configure, launch, and manage AI interfaces from a single, intuitive platform.",
   "main": "./out/main/index.cjs",
@@ -17,7 +17,7 @@
   "homepage": "https://github.com/KindaBrazy/LynxHub",
   "appDetails": {
     "title": "LynxHub",
-    "buildNumber": 9,
+    "buildNumber": 10,
     "detailedDescription": "LynxHub is an open-source AI management software that lets you seamlessly install, configure, launch, and manage AI interfaces from a single, intuitive platform.",
     "moduleContainer": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Modules/compiled/container.json",
     "mainModule": "https://github.com/KindaBrazy/LynxHub-Module-Offline-Container"

@@ -3,17 +3,34 @@
   "currentBuild": 9,
   "releaseDate": "2024-09-17",
   "earlyAccess": {
-    "version": "1.1.0",
-    "build": 9,
-    "releaseDate": "2024-09-6"
+    "version": "1.2.0",
+    "build": 10,
+    "releaseDate": "2024-09-17"
   },
   "changeLog": [
+    {
+      "build": 10,
+      "version": "1.2.0",
+      "new": [
+        "macOS Support: Now available for macOS.",
+        "Customizable Browser and Terminal Behavior:",
+        " * Open empty terminal, launch with default command, open in-app/default browser, or disable browser opening",
+        "New Dashboard Page:",
+        " * Profile with Patreon login, update management, and sponsor credits"
+      ],
+      "improve": [
+        "Enhanced UI: Refreshed backgrounds, removed hover shadows in settings and launch config layouts",
+        "Added transition effects to settings page selects",
+        "Updated settings page UI with improved switch",
+        "Upgraded settings buttons to Mantine components"
+      ]
+    },
     {
       "build": 9,
       "version": "1.1.0",
       "new": [
         "Linux Support: Now available for Linux.",
-        "Extension List for Web UIs: View and install all available extensions for WebUI interfaces.\n",
+        "Extension List for Web UIs: View and install all available extensions for WebUI interfaces.",
         "Auto-Update Option for Extensions: Enable automatic updates for web UI extensions before launching.",
         "Open in Default Browser: Open WebUI in your default browser by holding CTRL and clicking the address bar."
       ],
