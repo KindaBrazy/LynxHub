@@ -7,6 +7,7 @@ import ImageGenerationPage, {imageGenRoutePath} from './Components/Pages/Content
 import TextGenerationPage, {textGenRoutePath} from './Components/Pages/ContentPages/TextGenerationPage';
 import RouterMainError from './Components/Pages/RouterMainError';
 import RouterPagesError from './Components/Pages/RouterPagesError';
+import DashboardPage, {dashboardRoutePath} from './Components/Pages/SettingsPages/Dashboard/DashboardPage';
 import ModulesPage, {modulesRoutePath} from './Components/Pages/SettingsPages/Modules/ModulesPage';
 import SettingsPage, {settingsRoutePath} from './Components/Pages/SettingsPages/Settings/SettingsPage';
 
@@ -45,6 +46,11 @@ const routes: RouteObject[] = [
         Component: SettingsPage,
         errorElement: <RouterPagesError />,
         path: settingsRoutePath,
+      },
+      {
+        Component: DashboardPage,
+        errorElement: <RouterPagesError />,
+        path: dashboardRoutePath,
       },
     ],
   },

@@ -4,7 +4,6 @@ import {electronApp, is, optimizer} from '@electron-toolkit/utils';
 import {app, BrowserWindow, Menu, nativeImage} from 'electron';
 import installExtension, {REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} from 'electron-devtools-installer';
 import log from 'electron-log/main';
-import updater from 'electron-updater';
 
 import trayIconMenu from '../../resources/16x16.png?asset';
 import trayIcon from '../../resources/icon.ico?asset';
@@ -26,8 +25,6 @@ log.initialize();
 Object.assign(console, log.functions);
 
 app.commandLine.appendSwitch('disable-http-cache');
-
-const {autoUpdater} = updater;
 
 export const storageManager = new StorageManager();
 export let appManager: ElectronAppManager;
@@ -98,7 +95,6 @@ function handleAppReadyToShow() {
   discordRpcManager.start();
   if (platform() === 'win32') setLoginItemSettings();
   cardsValidator.checkAndWatch();
-  autoUpdater.checkForUpdates();
 }
 
 function handleTaskbarStatus() {

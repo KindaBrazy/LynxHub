@@ -6,6 +6,7 @@ import {useModules} from '../Modules/ModulesContext';
 import {useCardsState} from '../Redux/AI/CardsReducer';
 import {useAppState} from '../Redux/App/AppReducer';
 import NavBar from './NavBar/NavBar';
+import {dashboardRoutePath} from './Pages/SettingsPages/Dashboard/DashboardPage';
 import {settingsRoutePath} from './Pages/SettingsPages/Settings/SettingsPage';
 import RunningCardView from './RunningCardView/RunningCardView';
 
@@ -38,7 +39,7 @@ const MainContents = memo(() => {
         ) : (
           <div
             className={`size-full p-3 pt-1.5 ${
-              currentPage === settingsRoutePath && navBar && 'pl-0'
+              (currentPage === settingsRoutePath || currentPage === dashboardRoutePath) && navBar && 'pl-0'
             } transition-all duration-300`}>
             {isRunning ? <RunningCardView /> : <Outlet />}
           </div>

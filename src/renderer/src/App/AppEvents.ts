@@ -8,6 +8,7 @@ import {cardsActions, useCardsState} from './Redux/AI/CardsReducer';
 import {appActions} from './Redux/App/AppReducer';
 import {settingsActions} from './Redux/App/SettingsReducer';
 import {AppDispatch} from './Redux/Store';
+import {userActions} from './Redux/User/UserReducer';
 import rendererIpc from './RendererIpc';
 
 /** Listening for various app events and modify redux states */
@@ -108,6 +109,15 @@ export default function useAppEvents() {
     });
     //#endregion
 
+    window.electron.ipcRenderer.invoke('patreon-get-info').then(result => {
+      dispatch(userActions.setUserState({key: 'patreonUserData', value: result}));
+      dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
+    });
+
+    window.electron.ipcRenderer.on('release-channel-change', (_, result) => {
+      dispatch(userActions.setUpdateChannel(result));
+    });
+
     //#region Other Events
 
     rendererIpc.module.onUpdatedModules((_, updated) => {
@@ -164,6 +174,7 @@ export default function useAppEvents() {
       }
       dispatch(cardsActions.setUpdatingExtensions(result));
     });
+
     //#endregion
   }, [dispatch, navigate]);
 }

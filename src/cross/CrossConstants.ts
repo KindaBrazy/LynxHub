@@ -28,5 +28,7 @@ export const REPOSITORIES_FOLDER_NAME = 'AIWorkspaces' as const;
 export const APP_ICON_TRANSPARENT: string = 'AppIcon Transparent.png';
 
 export const WIN_RELEASE_URL: string = 'https://raw.githubusercontent.com/KindaBrazy/LynxHub/master/releases_log.json';
-export const DISCORD_ID: string = 'kinda.brazy';
+export const PATRONS_DATA =
+  'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Patrons/refs/heads/main/data/patrons.json';
+export const DISCORD_SERVER: string = 'https://discord.gg/e8rBzhtcnK';
 export const PATREON_URL: string = 'https://www.patreon.com/LynxHub';
