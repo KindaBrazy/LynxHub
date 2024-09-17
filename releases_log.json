@@ -1,13 +1,36 @@
 {
-  "currentVersion": "1.0.3",
-  "currentBuild": 8,
-  "releaseDate": "2024-08-31",
+  "currentVersion": "1.1.0",
+  "currentBuild": 9,
+  "releaseDate": "2024-09-17",
   "earlyAccess": {
     "version": "1.1.0",
     "build": 9,
-    "releaseDate": "2024-09-12"
+    "releaseDate": "2024-09-6"
   },
   "changeLog": [
+    {
+      "build": 9,
+      "version": "1.1.0",
+      "new": [
+        "Linux Support: Now available for Linux.",
+        "Extension List for Web UIs: View and install all available extensions for WebUI interfaces.\n",
+        "Auto-Update Option for Extensions: Enable automatic updates for web UI extensions before launching.",
+        "Open in Default Browser: Open WebUI in your default browser by holding CTRL and clicking the address bar."
+      ],
+      "improve": [
+        "Close the launch configuration modal by pressing the Escape key.",
+        "Card titles now use title case for better readability.",
+        "Applied title case to installed extension names for consistency.",
+        "Reduced text size for a cleaner view of installed extensions.",
+        "Display Installed status for already cloned extensions.",
+        "Auto-focus is now enabled for search in the 'Add Argument' modal and the 'Extensions' tab."
+      ],
+      "bug": [
+        "Fixed issues with recognition and validation of Git URLs.",
+        "Fixed an issue where the update badge wasn't removed correctly after uninstallation.",
+        "The badge icon is now hidden after module updates."
+      ]
+    },
     {
       "build": 8,
       "version": "1.0.3",
