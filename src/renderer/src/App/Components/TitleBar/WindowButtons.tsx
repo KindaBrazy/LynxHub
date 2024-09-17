@@ -51,10 +51,10 @@ export default function WindowButtons() {
                 </Checkbox>
               </div>
             ),
+            centered: true,
             onCancel: () => {
               setIsConfigVisible(false);
             },
-            centered: true,
             footer: (
               <div className="mt-2 flex w-full flex-row justify-between">
                 <Button

@@ -3,11 +3,11 @@ import {Card, Typography} from 'antd';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {getIconByName, IconNameType} from '../../../../../assets/icons/SvgIconsContainer';
-import {settingsSectionId} from '../../SettingsContainer';
+import {settingsSectionId} from './SettingsContainer';
 
 const {Text} = Typography;
 
-type GroupItem = {
+export type GroupItem = {
   icon: IconNameType;
   title: string;
   color?: 'danger' | 'warning' | 'success';
@@ -15,14 +15,14 @@ type GroupItem = {
   elementId?: string;
 };
 
-type GroupProps = {
+export type GroupProps = {
   title: string;
   items: GroupItem[];
   danger?: boolean;
 };
 
 /** Navigation bar group and items */
-const GroupSection = ({title, items, danger = false}: GroupProps) => {
+export const GroupSection = ({title, items, danger = false}: GroupProps) => {
   const [isInView, setIsInView] = useState<string[]>([]);
 
   const onPress = useCallback((id: string) => {
@@ -108,25 +108,6 @@ export default function SettingsPageNav() {
             color: 'danger',
             iconColor: true,
             elementId: settingsSectionId.SettingsClearId,
-          },
-        ],
-      },
-      {
-        title: 'Support',
-        items: [
-          {
-            title: 'Report an Issue',
-            icon: 'Bug',
-            color: 'warning',
-            iconColor: true,
-            elementId: settingsSectionId.SettingsReportIssueId,
-          },
-          {
-            title: 'About',
-            icon: 'Info',
-            color: 'success',
-            iconColor: true,
-            elementId: settingsSectionId.SettingsAboutId,
           },
         ],
       },

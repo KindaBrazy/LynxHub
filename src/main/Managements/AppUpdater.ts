@@ -9,11 +9,14 @@ const {autoUpdater, CancellationToken} = updater;
 export function checkForUpdate() {
   autoUpdater.autoDownload = false;
   autoUpdater.allowPrerelease = false;
+  autoUpdater.disableWebInstaller = true;
 
   let cancelToken = new CancellationToken();
 
   ipcMain.on(appUpdateChannels.download, () => {
-    autoUpdater.downloadUpdate(cancelToken);
+    autoUpdater.downloadUpdate(cancelToken).catch(e => {
+      console.error('autoUpdater.downloadUpdate: ', e);
+    });
   });
 
   ipcMain.on(appUpdateChannels.install, () => {
