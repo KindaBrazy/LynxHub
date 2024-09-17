@@ -370,7 +370,14 @@ By becoming a patron, you'll unlock a range of exclusive perks:
 - 🎯 **Priority Support**: Receive faster responses to your questions and issues, ensuring a smooth experience.
 - 👏 **Public Recognition**: Your name will be featured in our README and in-app credits as a valued supporter.
 
-Every patron, regardless of tier, plays a vital role in the app's continued improvement and sustainability.
+> [!NOTE]
+> **💖 Prefer a one-time contribution?**
+>
+> [Click here to make a single donation and show your support!](https://www.patreon.com/collection/761614)
+
+
+Every patron, regardless of tier or one-time donation, plays a vital role in the app's continued improvement and
+sustainability.
 
 ## 💡 Acknowledgements
 

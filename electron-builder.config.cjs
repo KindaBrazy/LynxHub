@@ -45,10 +45,7 @@ const config = {
     icon: 'build/icon-darwin.png',
     entitlementsInherit: 'build/entitlements.mac.plist',
     extendInfo: {
-      NSCameraUsageDescription: "Application requests access to the device's camera.",
-      NSMicrophoneUsageDescription: "Application requests access to the device's microphone.",
-      NSDocumentsFolderUsageDescription: "Application requests access to the user's Documents folder.",
-      NSDownloadsFolderUsageDescription: "Application requests access to the user's Downloads folder.",
+      NSDocumentsFolderUsageDescription: 'LynxHub uses the Documents folder to store application data.',
     },
     notarize: false,
   },
