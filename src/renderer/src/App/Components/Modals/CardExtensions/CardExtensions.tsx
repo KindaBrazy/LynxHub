@@ -120,7 +120,7 @@ export default function CardExtensions() {
                 </Checkbox>
               )}
             </div>
-            <div>
+            <div className="space-x-1.5">
               {currentTab === 'installed' && (
                 <Button
                   onPress={updateAll}
