@@ -78,84 +78,41 @@ fixes, and compatibilities**
 LynxHub offers a comprehensive suite of features designed to streamline your AI workflow and enhance your experience.
 Here's what you can expect:
 
-### 🔧 AI Interface Management
-
-**Install and Update AI Interfaces**
-
-- **Install**
-    - **Locate** Pre-Installed
-- **Update**
-    - **Auto-Update** for seamless maintenance
-
-**Arguments Manager**
-
-- Efficiently manage all available arguments for specific AI interfaces
-    - List of all available arguments with descriptions and usage
-    - Add, remove, and edit arguments
-    - Search functionality for quick access
-    - Edit arguments based on the type:
-        - Dropdown selections
-        - Checkboxes
-        - Text input boxes
-        - Folder selection
-        - File selection
-- Create and manage **Presets**
-    - Save multiple configurations for different environments
-    - Preview or copy arguments before saving
-    - Duplicate existing presets for easy modification and testing
-
-**Custom Run Commands**
-
-Add and remove custom terminal commands as alternatives to default module-provided commands.
-
-**Pre-Launch Actions**
-
-- Set up automatic actions before running your AI interface:
+- Install and update AI interfaces
+    - Auto-update option available
+- Arguments manager
+    - List, add, remove, and edit arguments
+    - Search functionality
+    - Edit various argument types (dropdown, checkbox, text input, folder/file selection)
+    - Create and manage presets
+- Custom run commands
+- Pre-launch actions
     - Execute custom terminal commands
     - Open specific files or folders
-
-### 🧩 AI Interface Extension Management
-
-- **Install**, **Update** and **Uninstall** extensions
-    - Batch update all extensions or update individually
-    - Option to enable Auto update all extensions
-- **List** of all available extensions
-    - View and install all available extensions for WebUI interfaces.
-
-### 🖥️ In-App Tools
-
-- **Terminal**: Built-in terminal
-- **Web Browser**: Integrated browser
-- **Automatic** address **detection** from terminal and launch
-
-### 📊 AI Information Dashboard
-
-- View details about installed AI:
+- Customizable browser and terminal behavior
+- AI interface extension management
+    - Install, update, and uninstall extensions
+    - Batch update and auto-update options
+    - View and install available extensions
+- In-app integration
+    - Built-in terminal
+    - Integrated web browser
+    - Automatic address detection and launch
+- AI information dashboard
     - Developer information
     - Installation and update dates
     - Update tags and release notes
-    - Disk usage statistics (Total size, extension's size, install path)
-
-### 🎮 Discord Integration
-
-- Discord Activity Status (Rich Presence)
-    - Customizable Discord activity display
-    - LynxHub running status (with elapsed time)
-    - AI interface running status (interface name and elapsed time)
-
-### 🎨 Additional Features
-
-- Switch between full and compact mode cards
-- Dark & Light theme options
-- Pin favorite AI interfaces to home page for quick access
-
-### 🔌 Modular Design
-
-- LynxHub serves as a ready-to-use container for AI interfaces
-- Develop and publish your custom AI modules
-
-For more information on creating modules, visit [Module-Guide](https://github.com/KindaBrazy/LynxHub-Module-Guide)
-repository.
+    - Disk usage statistics
+- Discord integration
+    - Customizable activity status (Rich Presence)
+    - Display LynxHub and AI interface running status
+- UI customization
+    - Full and compact mode cards
+    - Dark and light themes
+    - Pin favorite AI interfaces to home page
+- Modular design
+    - Container for AI interfaces
+    - Support for custom AI modules development
 
 > [!TIP]
 >
