@@ -1,6 +1,9 @@
 import {Button, Tab, Tabs} from '@nextui-org/react';
 import {Key, useCallback, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {settingsActions} from '../../../../Redux/App/SettingsReducer';
+import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import Page from '../../Page';
 import DownloadModules from './Download/DownloadModules';
@@ -14,11 +17,13 @@ export default function ModulesPage() {
   const [installedModules, setInstalledModules] = useState<string[]>([]);
   const [updatingAll, setUpdatingAll] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<Key>('installed-tab');
+  const dispatch = useDispatch<AppDispatch>();
 
   const startUpdateAll = useCallback(() => {
     setUpdatingAll(true);
     rendererIpc.module.updateAllModules().then(() => {
       setUpdatingAll(false);
+      dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value: false}));
     });
   }, []);
 

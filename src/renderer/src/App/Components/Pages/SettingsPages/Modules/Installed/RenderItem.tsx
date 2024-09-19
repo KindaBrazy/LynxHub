@@ -42,6 +42,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
     rendererIpc.module.isUpdateAvailable(item.id).then(result => {
       setUpdateAvailable(result);
       setSpinningText('');
+      dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value: result}));
     });
   }, [item.id]);
 
@@ -57,6 +58,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
         message.success(`${item.title} has been successfully uninstalled.`);
         dispatch(settingsActions.removeUpdatedModule(item.id));
         dispatch(settingsActions.removeNewModule(item.id));
+        dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value: false}));
         removedModule(item.id);
       } else {
         message.error(`An error occurred while uninstalling ${item.title}!`);
