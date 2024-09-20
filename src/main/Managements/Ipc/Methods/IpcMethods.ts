@@ -2,9 +2,9 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import {app, shell} from 'electron';
-import fs from 'graceful-fs';
+import fs, {readdir} from 'graceful-fs';
 
-import {DiscordRPC} from '../../../../cross/CrossTypes';
+import {DiscordRPC, FolderListData} from '../../../../cross/CrossTypes';
 import {ChangeWindowState, DarkModeTypes, TaskbarStatus, winChannels} from '../../../../cross/IpcChannelAndTypes';
 import {appManager, discordRpcManager, storageManager, trayManager} from '../../../index';
 import {getSystemDarkMode} from '../../../Utilities/Utils';
@@ -136,4 +136,45 @@ export async function trashDir(dir: string): Promise<void> {
 export function setDiscordRP(discordRP: DiscordRPC): void {
   storageManager.updateData('app', {discordRP});
   discordRpcManager.updateDiscordRP();
+}
+
+export function listDirectory(path: string): Promise<FolderListData[]> {
+  return new Promise((resolve, reject) => {
+    readdir(path, {withFileTypes: true}, (err, files) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      const filesData: FolderListData[] = [];
+      const foldersData: FolderListData[] = [];
+
+      files.forEach(file => {
+        if (file.isDirectory()) {
+          foldersData.push({type: 'folder', name: file.name});
+        } else {
+          filesData.push({type: 'file', name: file.name});
+        }
+      });
+
+      resolve([...foldersData, ...filesData]);
+    });
+  });
+}
+
+export async function getRelativeList(dirPath: string, relatives: string[]): Promise<FolderListData[]> {
+  const resolvePath = path.resolve(dirPath, ...relatives);
+  console.log('resolvePath', resolvePath);
+  try {
+    return await listDirectory(resolvePath);
+  } catch (e) {
+    try {
+      relatives.pop();
+      const newResolvePath = path.resolve(dirPath, ...relatives);
+      return await listDirectory(newResolvePath);
+    } catch (e) {
+      console.error('Reading Dir', e);
+      return [];
+    }
+  }
 }

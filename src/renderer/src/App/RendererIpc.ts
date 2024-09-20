@@ -1,6 +1,6 @@
 import {IpcRendererEvent} from 'electron';
 
-import {ChosenArgumentsData, DiscordRPC, FolderNames, ModulesInfo} from '../../../cross/CrossTypes';
+import {ChosenArgumentsData, DiscordRPC, FolderListData, FolderNames, ModulesInfo} from '../../../cross/CrossTypes';
 import {
   appDataChannels,
   appUpdateChannels,
@@ -72,6 +72,9 @@ const rendererIpc = {
     removeDir: (dir: string): Promise<void> => ipc.invoke(fileChannels.removeDir, dir),
 
     trashDir: (dir: string): Promise<void> => ipc.invoke(fileChannels.trashDir, dir),
+
+    listDir: (dirPath: string, relatives: string[]): Promise<FolderListData[]> =>
+      ipc.invoke(fileChannels.listDir, dirPath, relatives),
   },
 
   /** Git operations */

@@ -90,6 +90,7 @@ export const fileChannels = {
   openPath: 'app:openPath',
   removeDir: 'app:removeDir',
   trashDir: 'app:trashDir',
+  listDir: 'app:listDir',
 };
 
 export const gitChannels = {
