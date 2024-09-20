@@ -17,16 +17,25 @@ type Props = {
   children?: ReactNode;
   tooltipText?: string;
   defaultCursor?: boolean;
+  extra?: ReactNode;
 };
 
-export default function ArgumentItemBase({children, icon, name, onClick, removeArg, defaultCursor = true}: Props) {
+export default function ArgumentItemBase({
+  children,
+  icon,
+  name,
+  onClick,
+  removeArg,
+  defaultCursor = true,
+  extra,
+}: Props) {
   const {id} = useModalsState('cardLaunchConfig');
   const {getArgumentsByID} = useModules();
 
   const tooltipText = useMemo(() => getArgumentDescription(name, getArgumentsByID(id)), [name]);
 
   return (
-    <Tooltip title={tooltipText} mouseEnterDelay={0.5} rootClassName="max-w-[65%] whitespace-pre-line">
+    <Tooltip title={tooltipText} mouseEnterDelay={0.8} rootClassName="max-w-[65%] whitespace-pre-line">
       <Card
         title={
           <div className="flex flex-row space-x-2">
@@ -35,15 +44,18 @@ export default function ArgumentItemBase({children, icon, name, onClick, removeA
           </div>
         }
         extra={
-          <Button
-            size="sm"
-            color="danger"
-            variant="light"
-            onPress={removeArg}
-            className="my-1 cursor-default"
-            isIconOnly>
-            {getIconByName('Close')}
-          </Button>
+          <div className="flex flex-row space-x-1">
+            {extra}
+            <Button
+              size="sm"
+              color="danger"
+              variant="light"
+              onPress={removeArg}
+              className="my-1 cursor-default"
+              isIconOnly>
+              {getIconByName('Close')}
+            </Button>
+          </div>
         }
         key={name}
         size="small"
