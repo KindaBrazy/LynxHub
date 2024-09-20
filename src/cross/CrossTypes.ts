@@ -116,3 +116,5 @@ export type PatreonUserData = {
   imageUrl: string;
   earlyAccess: boolean;
 };
+
+export type FolderListData = {type: 'folder' | 'file'; name: string};

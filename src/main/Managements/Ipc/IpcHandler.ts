@@ -30,6 +30,7 @@ import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDat
 import GitManager from '../GitManager';
 import {
   changeWindowState,
+  getRelativeList,
   removeDir,
   setDarkMode,
   setDiscordRP,
@@ -75,6 +76,10 @@ function file() {
 
   ipcMain.handle(fileChannels.removeDir, (_, dir: string) => removeDir(dir));
   ipcMain.handle(fileChannels.trashDir, (_, dir: string) => trashDir(dir));
+
+  ipcMain.handle(fileChannels.listDir, async (_e, dirPath: string, relatives: string[]) =>
+    getRelativeList(dirPath, relatives),
+  );
 }
 
 function git() {
