@@ -62,6 +62,11 @@ export type PagesData = {
 
 export type CardModules = PagesData[];
 
+export type RendererModuleImportType = {
+  default: CardModules;
+  setCurrentBuild?: (build: number) => void;
+};
+
 export type ChosenArgument = {name: string; value: string};
 
 export type ArgumentType = 'Directory' | 'File' | 'Input' | 'DropDown' | 'CheckBox';

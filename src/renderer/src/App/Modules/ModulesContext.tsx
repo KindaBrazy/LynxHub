@@ -1,7 +1,8 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 
+import {APP_BUILD_NUMBER} from '../../../../cross/CrossConstants';
 import rendererIpc from '../RendererIpc';
-import {ArgumentsData, CardData, CardModules} from './types';
+import {ArgumentsData, CardData, CardModules, RendererModuleImportType} from './types';
 
 type ModulesContextData = {
   allModules: CardModules;
@@ -32,8 +33,9 @@ const ModulesProvider = ({children}) => {
           moduleData.map(path => import(/* @vite-ignore */ `${path}/scripts/renderer.mjs?${Date.now()}`)),
         );
 
-        const newAllModules = importedModules.reduce((acc: CardModules, importedModule) => {
-          (importedModule.default as CardModules).forEach(module => {
+        const newAllModules = importedModules.reduce((acc: CardModules, importedModule: RendererModuleImportType) => {
+          importedModule.setCurrentBuild?.(APP_BUILD_NUMBER);
+          importedModule.default.forEach(module => {
             const existingModuleIndex = acc.findIndex(md => md.routePath === module.routePath);
             if (existingModuleIndex !== -1) {
               acc[existingModuleIndex].cards = [
