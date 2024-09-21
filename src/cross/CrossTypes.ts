@@ -67,6 +67,11 @@ export type MainModules = {
   methods: CardMainMethods;
 };
 
+export type MainModuleImportType = {
+  default: MainModules[];
+  setCurrentBuild?: (build: number) => void;
+};
+
 export type ModulesInfo = {
   id: string;
 

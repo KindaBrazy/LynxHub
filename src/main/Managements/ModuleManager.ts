@@ -6,7 +6,8 @@ import fs from 'graceful-fs';
 import portFinder from 'portfinder';
 import handler from 'serve-handler';
 
-import {CardMainMethods, MainModules, ModulesInfo} from '../../cross/CrossTypes';
+import {APP_BUILD_NUMBER} from '../../cross/CrossConstants';
+import {CardMainMethods, MainModuleImportType, MainModules, ModulesInfo} from '../../cross/CrossTypes';
 import {extractGitHubUrl} from '../../cross/CrossUtils';
 import {modulesChannels} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
@@ -106,9 +107,9 @@ export default class ModuleManager {
           modulesFolder.map(modulePath => import(`file://${path.join(modulePath, 'scripts', 'main.mjs')}`)),
         );
 
-        importedModules.forEach(importedModule => {
-          const modulesFromImport = importedModule.default as MainModules[];
-          this.mainModules = [...this.mainModules, ...modulesFromImport];
+        importedModules.forEach((importedModule: MainModuleImportType) => {
+          importedModule.setCurrentBuild?.(APP_BUILD_NUMBER);
+          this.mainModules = [...this.mainModules, ...importedModule.default];
         });
 
         resolve();
