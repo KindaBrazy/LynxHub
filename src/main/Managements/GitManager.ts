@@ -60,7 +60,7 @@ export default class GitManager {
 
     if (!remote) return undefined;
 
-    return validateGitRepoUrl(remote) === url ? path : undefined;
+    return validateGitRepoUrl(remote) === validateGitRepoUrl(url) ? path : undefined;
   }
 
   /**
