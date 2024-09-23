@@ -1,3 +1,4 @@
+import InstallUIModal from '@renderer/App/Components/Modals/InstallUI/InstallUIModal';
 import {memo} from 'react';
 
 import CardExtensions from './CardExtensions/CardExtensions';
@@ -16,6 +17,7 @@ const Modals = memo(() => {
   return (
     <>
       <InstallModal />
+      <InstallUIModal />
       <CardInfoModal />
       <UpdatingNotification />
       <CardExtensions />

@@ -1,11 +1,22 @@
 export type AvailablePages = '/imageGenerationPage' | '/textGenerationPage' | '/audioGenerationPage';
 
+export type InstallSteps = {title: string; description?: string};
+export type InstallCloneResult = {dir: string; locatedPreInstall: boolean};
+export type InstallStepperType = {
+  initialSteps: (steps: InstallSteps[]) => void;
+  nextStep: () => void;
+  clone: (url: string) => Promise<InstallCloneResult>;
+  execTerminalFile: (dir: string, file: string) => Promise<void>;
+  setInstalled: (dir: string) => void;
+  done: (title: string, description?: string) => void;
+};
+
 /** These methods will be called in the renderer process */
 export type CardRendererMethods = {
   /** This method will be called with terminal output line parameter
    * @return URL of running AI to be showing in browser of the user and
    * @return undefined if URL is not in that line */
-  catchAddress: (line: string) => string | undefined;
+  catchAddress?: (line: string) => string | undefined;
 
   /** Fetching and return array of available extensions in type of `ExtensionData` */
   fetchExtensionList?: () => Promise<ExtensionData[]>;
@@ -15,6 +26,10 @@ export type CardRendererMethods = {
 
   /** Parse given string to the arguments */
   parseStringToArgs?: (args: string) => ChosenArgument[];
+
+  installUI?: {
+    startInstall: (stepper: InstallStepperType) => void;
+  };
 };
 
 export type CardData = {

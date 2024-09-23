@@ -199,6 +199,8 @@ const rendererIpc = {
   /** Managing and using node-pty(Pseudo Terminal ) */
   pty: {
     process: (opt: PtyProcessOpt, cardId: string): void => ipc.send(ptyChannels.process, opt, cardId),
+    customProcess: (opt: PtyProcessOpt, dir?: string, file?: string): void =>
+      ipc.send(ptyChannels.customProcess, opt, dir, file),
 
     write: (data: string): void => ipc.send(ptyChannels.write, data),
 

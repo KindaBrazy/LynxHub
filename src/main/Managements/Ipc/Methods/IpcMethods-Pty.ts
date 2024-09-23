@@ -1,4 +1,4 @@
-import os from 'node:os';
+import os, {platform} from 'node:os';
 
 import {shell} from 'electron';
 import lodash from 'lodash';
@@ -61,6 +61,19 @@ export async function ptyProcess(opt: PtyProcessOpt, cardId: string) {
       const runCommand = (await moduleManager.getMethodsById(cardId)?.getRunCommands(card.dir)) || '';
       ptyManager.write(runCommand);
     }
+  } else if (opt === 'stop') {
+    ptyManager?.stop();
+    ptyManager = undefined;
+  }
+}
+
+export async function customPtyProcess(opt: PtyProcessOpt, dir?: string, file?: string) {
+  if (opt === 'start') {
+    if (!dir || !file) return;
+
+    ptyManager = new PtyManager();
+    ptyManager.start(dir, true);
+    ptyManager.write(`${platform() === 'win32' ? './' : 'bash ./'}${file}${LINE_ENDING}`);
   } else if (opt === 'stop') {
     ptyManager?.stop();
     ptyManager = undefined;

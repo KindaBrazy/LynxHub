@@ -44,7 +44,7 @@ import {
   updateAllExtensions,
 } from './Methods/IpcMethods-CardExtensions';
 import {getSystemInfo} from './Methods/IpcMethods-Platform';
-import {ptyProcess, ptyResize, ptyWrite} from './Methods/IpcMethods-Pty';
+import {customPtyProcess, ptyProcess, ptyResize, ptyWrite} from './Methods/IpcMethods-Pty';
 import {abortGitOperation, clonePromise, cloneRepo, getRepoInfo, pullRepo} from './Methods/IpcMethods-Repository';
 
 function win() {
@@ -122,6 +122,9 @@ function modules() {
 
 function pty() {
   ipcMain.on(ptyChannels.process, (_, opt: PtyProcessOpt, cardId: string) => ptyProcess(opt, cardId));
+  ipcMain.on(ptyChannels.customProcess, (_, opt: PtyProcessOpt, dir?: string, file?: string) =>
+    customPtyProcess(opt, dir, file),
+  );
   ipcMain.on(ptyChannels.write, (_, data: string) => ptyWrite(data));
   ipcMain.on(ptyChannels.resize, (_, cols: number, rows: number) => ptyResize(cols, rows));
 }

@@ -2,13 +2,15 @@ import {createContext, useCallback, useContext, useEffect, useMemo, useState} fr
 
 import {APP_BUILD_NUMBER} from '../../../../cross/CrossConstants';
 import rendererIpc from '../RendererIpc';
-import {ArgumentsData, CardData, CardModules, RendererModuleImportType} from './types';
+import {ArgumentsData, CardData, CardModules, CardRendererMethods, RendererModuleImportType} from './types';
 
 type ModulesContextData = {
   allModules: CardModules;
   allCards: CardData[];
   isLoading: boolean;
   getArgumentsByID: (id: string) => ArgumentsData | undefined;
+  getAllMethods: (id: string) => CardRendererMethods | undefined;
+  getMethod: <T extends keyof CardRendererMethods>(id: string, method: T) => CardRendererMethods[T] | undefined;
 };
 
 export const ModulesContext = createContext<ModulesContextData>({
@@ -16,6 +18,8 @@ export const ModulesContext = createContext<ModulesContextData>({
   allCards: [],
   isLoading: true,
   getArgumentsByID: () => undefined,
+  getAllMethods: () => undefined,
+  getMethod: () => undefined,
 });
 
 /** Load app modules and pass to children with context */
@@ -72,12 +76,29 @@ const ModulesProvider = ({children}) => {
     [allCards],
   );
 
+  const getAllMethods = useCallback(
+    (id: string): CardRendererMethods | undefined => {
+      return allCards.find(card => card.id === id)?.methods;
+    },
+    [allCards],
+  );
+
+  const getMethod = useCallback(
+    <T extends keyof CardRendererMethods>(id: string, method: T): CardRendererMethods[T] | undefined => {
+      const card = allCards.find(card => card.id === id);
+      return card?.methods[method] as CardRendererMethods[T] | undefined;
+    },
+    [allCards],
+  );
+
   const contextValue: ModulesContextData = useMemo((): ModulesContextData => {
     return {
       allModules,
       allCards,
       isLoading,
       getArgumentsByID,
+      getAllMethods,
+      getMethod,
     };
   }, [allModules, isLoading]);
 
