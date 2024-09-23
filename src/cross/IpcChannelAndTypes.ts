@@ -136,6 +136,7 @@ export const modulesChannels = {
 
 export const ptyChannels = {
   process: 'pty-process',
+  customProcess: 'pty-custom-process',
   write: 'pty-write',
   resize: 'pty-resize',
   onData: 'pty-on-data',

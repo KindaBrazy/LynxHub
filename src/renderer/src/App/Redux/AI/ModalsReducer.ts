@@ -19,6 +19,11 @@ type ModalsState = {
     downloading: boolean;
     downloadProgress: SimpleGitProgressEvent;
   };
+  installUIModal: {
+    isOpen: boolean;
+
+    cardId: string;
+  };
   warningModal: {
     isOpen: boolean;
 
@@ -137,6 +142,10 @@ const initialState: ModalsState = {
   updateApp: {
     isOpen: false,
   },
+  installUIModal: {
+    isOpen: false,
+    cardId: '',
+  },
 };
 //#endregion
 
@@ -217,6 +226,14 @@ const modalSlice = createSlice({
     },
     setInstallProgress: (state, action: PayloadAction<SimpleGitProgressEvent>) => {
       state.installModal.downloadProgress = action.payload;
+    },
+    //#endregion
+
+    //#region Install UI Card
+    openInstallUICard: (state, action: PayloadAction<string>) => {
+      state.installUIModal.cardId = action.payload;
+
+      state.installUIModal.isOpen = true;
     },
     //#endregion
 

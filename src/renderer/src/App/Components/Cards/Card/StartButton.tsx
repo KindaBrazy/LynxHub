@@ -1,4 +1,5 @@
 import {Button} from '@nextui-org/react';
+import {useModules} from '@renderer/App/Modules/ModulesContext';
 import {memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -14,6 +15,7 @@ import {useCardData} from '../CardsDataManager';
 
 const StartButton = memo(() => {
   const {id, installed, repoUrl, title, type, extensionsDir} = useCardData();
+  const {getMethod} = useModules();
   const compactMode = useSettingsState('cardsCompactMode');
   const autoUpdateExtensions = useIsAutoUpdateExtensions(id);
 
@@ -52,20 +54,24 @@ const StartButton = memo(() => {
   }, [id, autoUpdateExtensions, dispatch]);
 
   const install = useCallback(() => {
-    rendererIpc.file.getAppDirectories('AIWorkspaces').then(dir => {
-      const isWin = window.osPlatform === 'win32';
-      const directory = `${dir}${isWin ? '\\' : '/'}${extractGitUrl(repoUrl).repo}`;
+    if (!!getMethod(id, 'installUI')) {
+      dispatch(modalActions.openInstallUICard(id));
+    } else {
+      rendererIpc.file.getAppDirectories('AIWorkspaces').then(dir => {
+        const isWin = window.osPlatform === 'win32';
+        const directory = `${dir}${isWin ? '\\' : '/'}${extractGitUrl(repoUrl).repo}`;
 
-      dispatch(
-        modalActions.openInstallCard({
-          cardId: id,
-          title,
-          directory,
-          url: repoUrl,
-        }),
-      );
-    });
-  }, [repoUrl, title, id, dispatch]);
+        dispatch(
+          modalActions.openInstallCard({
+            cardId: id,
+            title,
+            directory,
+            url: repoUrl,
+          }),
+        );
+      });
+    }
+  }, [repoUrl, title, id, getMethod, dispatch]);
 
   return (
     <Button
