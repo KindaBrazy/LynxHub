@@ -198,7 +198,7 @@ export default function LynxTerminal() {
       window.removeEventListener('resize', () => {});
       rendererIpc.pty.offData();
     };
-  }, [terminalRef]);
+  }, [terminalRef.current]);
 
   const animate = useMemo(() => {
     return currentView === 'terminal' ? 'animate' : 'exit';
