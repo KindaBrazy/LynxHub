@@ -5,7 +5,7 @@ import {capitalize} from 'lodash';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extractGitHubUrl} from '../../../../../../cross/CrossUtils';
+import {extractGitUrl} from '../../../../../../cross/CrossUtils';
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import OpenDialog from '../../Reusable/OpenDialog';
@@ -61,7 +61,7 @@ export default function InstallBody() {
               directory={directory}
               dialogType="openDirectory"
               setDirectory={setDirectory}
-              extraFolder={extractGitHubUrl(url).repo}
+              extraFolder={extractGitUrl(url).repo}
             />
           </AccordionItem>
         </Accordion>

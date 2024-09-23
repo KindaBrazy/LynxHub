@@ -1,20 +1,20 @@
 /**
- * Extracts the owner and repository name from a given GitHub URL.
+ * Extracts the owner and repository name from a given GitHub | GitLab URL.
  * @param {string} url - The GitHub repository URL.
  * @returns {{owner: string, repo: string}} An object containing the owner and repository name.
  * @throws {Error} If the provided URL is not a valid GitHub repository URL.
  */
-export function extractGitHubUrl(url: string): {owner: string; repo: string} {
-  // Regular expression to match GitHub repository URLs with or without protocol
-  const githubRepoRegex = /^(https?:\/\/)?(www\.)?github\.com\/([^/]+)\/([^/.]+)(?:\.git)?$/;
-  const match = url.match(githubRepoRegex);
+export function extractGitUrl(url: string): {owner: string; repo: string; platform: 'github' | 'gitlab'} {
+  // Regular expression to match GitHub and GitLab repository URLs with or without protocol
+  const gitRepoRegex = /^(https?:\/\/)?(www\.)?(github|gitlab)\.com\/([^/]+)\/([^/.]+)(?:\.git)?$/;
+  const match = url.match(gitRepoRegex);
 
   if (!match) {
-    throw new Error(`Invalid GitHub repository URL : ${url}`);
+    throw new Error(`Invalid Git repository URL: ${url}`);
   }
 
-  const [, , , owner, repo] = match;
-  return {owner, repo};
+  const [, , , platform, owner, repo] = match;
+  return {owner, repo, platform: platform as 'github' | 'gitlab'};
 }
 
 /**
@@ -63,11 +63,24 @@ export function toMs(value: number, from: 'seconds' | 'minutes'): number {
 }
 
 /**
- * Validates and normalizes a GitHub repository URL.
+ * Validates and normalizes a GitHub | GitLab repository URL.
  * @param url - The URL to validate
  * @returns Normalized GitHub repository URL or an empty string if invalid
  */
 export function validateGitRepoUrl(url: string): string {
-  const match = url.toLowerCase().match(/^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/]+)\/([^/]+?)(\.git)?(\/)?$/i);
-  return match ? `https://github.com/${match[1]}/${match[2]}` : '';
+  const githubMatch = url
+    .toLowerCase()
+    .match(/^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/]+)\/([^/]+?)(\.git)?(\/)?$/i);
+  if (githubMatch) {
+    return `https://github.com/${githubMatch[1]}/${githubMatch[2]}`;
+  }
+
+  const gitlabMatch = url
+    .toLowerCase()
+    .match(/^(?:https?:\/\/)?(?:www\.)?gitlab\.com\/([^/]+)\/([^/]+?)(\.git)?(\/)?$/i);
+  if (gitlabMatch) {
+    return `https://gitlab.com/${gitlabMatch[1]}/${gitlabMatch[2]}`;
+  }
+
+  return '';
 }

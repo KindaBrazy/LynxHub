@@ -4,7 +4,7 @@ import {capitalize} from 'lodash';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extractGitHubUrl} from '../../../../../../../cross/CrossUtils';
+import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
 import {useModalsState} from '../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
@@ -26,7 +26,7 @@ export default function RenderItem({item, updateTable}: Props) {
   const install = useCallback(() => {
     setInstalling(true);
     rendererIpc.git
-      .clonePromise(`${item.url}` || '', `${dir}/${extractGitHubUrl(item.url).repo || ''}`)
+      .clonePromise(`${item.url}` || '', `${dir}/${extractGitUrl(item.url).repo || ''}`)
       .then(() => {
         message.success('Extension installed successfully.');
         updateTable();
@@ -70,7 +70,7 @@ export default function RenderItem({item, updateTable}: Props) {
                 className="mr-2">
                 {item.title}
               </Typography.Link>
-              <Tag bordered={false}>{capitalize(extractGitHubUrl(item.url).owner)}</Tag>
+              <Tag bordered={false}>{capitalize(extractGitUrl(item.url).owner)}</Tag>
               {item.stars && (
                 <Tag bordered={false} className="flex flex-row items-center justify-center gap-x-1">
                   {getIconByName('Star', {className: item.stars >= 1000 ? 'fill-yellow-400' : 'fill-yellow-200'})}
@@ -79,7 +79,7 @@ export default function RenderItem({item, updateTable}: Props) {
               )}
             </div>
           }
-          avatar={<Avatar size={54} src={`https://github.com/${extractGitHubUrl(item.url).owner}.png`} />}
+          avatar={<Avatar size={54} src={`https://github.com/${extractGitUrl(item.url).owner}.png`} />}
         />
       </List.Item>
     </>

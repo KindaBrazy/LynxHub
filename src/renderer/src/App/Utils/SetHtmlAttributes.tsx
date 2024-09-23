@@ -7,6 +7,9 @@ import rendererIpc from '../RendererIpc';
 const CONNECT_SRC =
   'https://github.com/ ' +
   'https://api.github.com/ ' +
+  'https://gitlab.com/api/ ' +
+  'https://gitlab.com/uploads/ ' +
+  'https://secure.gravatar.com/avatar/ ' +
   'https://*.githubusercontent.com/ ' +
   'https://image.civitai.com/ ' +
   'https://*.patreonusercontent.com/ ' +

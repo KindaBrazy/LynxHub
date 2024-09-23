@@ -7,7 +7,7 @@ import fs from 'graceful-fs';
 
 import icon from '../../../resources/icon.png?asset';
 import {APP_NAME, MAIN_MODULE_URL} from '../../cross/CrossConstants';
-import {extractGitHubUrl} from '../../cross/CrossUtils';
+import {extractGitUrl} from '../../cross/CrossUtils';
 import {initializerChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager} from '../index';
 import {createAppDirectories} from './AppDataManager';
@@ -97,7 +97,7 @@ export default class AppInitializer {
    */
   private async handleInstallAIModule(): Promise<void> {
     const modulesPath = ModuleManager.getModulesPath();
-    const {repo} = extractGitHubUrl(MAIN_MODULE_URL);
+    const {repo} = extractGitUrl(MAIN_MODULE_URL);
     const installPath = path.join(modulesPath, repo);
 
     try {

@@ -20,31 +20,37 @@ const LynxCardBody = observer(() => {
       <>
         <CardBody className="bg-[#f7f7f7] dark:bg-[#292929]">
           <Space wrap>
-            <Chip
-              size="sm"
-              radius="sm"
-              variant="flat"
-              className="transition duration-500 hover:bg-black/0"
-              startContent={getIconByName('Star', {className: 'fill-yellow-400 mx-1'})}>
-              Stars: {formatNumber(repoDetails.stars)}
-            </Chip>
-            <Chip
-              size="sm"
-              radius="sm"
-              variant="flat"
-              className="transition duration-500 hover:bg-black/0"
-              startContent={getIconByName('Fork', {className: 'mx-1'})}>
-              Forks: {formatNumber(repoDetails.forks)}
-            </Chip>
-            <Chip
-              size="sm"
-              radius="sm"
-              variant="flat"
-              className="transition duration-500 hover:bg-black/0"
-              startContent={getIconByName('Issue', {className: 'mx-1'})}>
-              Issues: {formatNumber(repoDetails.issues)}
-            </Chip>
-            {!installed && (
+            {repoDetails.stars && (
+              <Chip
+                size="sm"
+                radius="sm"
+                variant="flat"
+                className="transition duration-500 hover:bg-black/0"
+                startContent={getIconByName('Star', {className: 'fill-yellow-400 mx-1'})}>
+                Stars: {formatNumber(repoDetails.stars)}
+              </Chip>
+            )}
+            {repoDetails.forks && (
+              <Chip
+                size="sm"
+                radius="sm"
+                variant="flat"
+                className="transition duration-500 hover:bg-black/0"
+                startContent={getIconByName('Fork', {className: 'mx-1'})}>
+                Forks: {formatNumber(repoDetails.forks)}
+              </Chip>
+            )}
+            {repoDetails.issues && (
+              <Chip
+                size="sm"
+                radius="sm"
+                variant="flat"
+                className="transition duration-500 hover:bg-black/0"
+                startContent={getIconByName('Issue', {className: 'mx-1'})}>
+                Issues: {formatNumber(repoDetails.issues)}
+              </Chip>
+            )}
+            {!installed && repoDetails.size && (
               <Chip
                 size="sm"
                 radius="sm"

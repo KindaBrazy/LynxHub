@@ -10,7 +10,7 @@ import {
   StatusResult,
 } from 'simple-git';
 
-import {extractGitHubUrl, validateGitRepoUrl} from '../../cross/CrossUtils';
+import {extractGitUrl, validateGitRepoUrl} from '../../cross/CrossUtils';
 import {CloneDirTypes} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
 import {checkPathExists, openDialog} from '../Utilities/Utils';
@@ -198,7 +198,7 @@ export default class GitManager {
   public async clone(url: string, directory: CloneDirTypes): Promise<void> {
     return new Promise((resolve, reject) => {
       const resultDir =
-        directory === 'moduleDir' ? path.join(ModuleManager.getModulesPath(), extractGitHubUrl(url).repo) : directory;
+        directory === 'moduleDir' ? path.join(ModuleManager.getModulesPath(), extractGitUrl(url).repo) : directory;
 
       try {
         this.git.clone(url, resultDir.toString()).then(() => {

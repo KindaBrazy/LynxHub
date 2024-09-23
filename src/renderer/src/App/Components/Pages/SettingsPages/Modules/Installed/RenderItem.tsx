@@ -6,7 +6,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
-import {extractGitHubUrl} from '../../../../../../../../cross/CrossUtils';
+import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {useAppState} from '../../../../../Redux/App/AppReducer';
 import {settingsActions, useSettingsState} from '../../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
@@ -202,7 +202,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
                     }}>
                     {item.title}
                   </Typography.Link>
-                  <Tag bordered={false}>{capitalize(extractGitHubUrl(item.repoUrl).owner)}</Tag>
+                  <Tag bordered={false}>{capitalize(extractGitUrl(item.repoUrl).owner)}</Tag>
                 </div>
               }
               avatar={item.logoUrl && <Avatar size={59} src={avatarSrc} />}
