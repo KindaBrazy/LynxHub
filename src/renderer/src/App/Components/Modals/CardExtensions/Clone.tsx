@@ -5,7 +5,7 @@ import {capitalize, startCase} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {extractGitHubUrl, validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
+import {extractGitUrl, validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
 import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
 import {useModalsState} from '../../../Redux/AI/ModalsReducer';
@@ -49,7 +49,7 @@ export default function Clone({updateTable, visible, installedExtensions}: Props
 
       const validUrl = validateGitRepoUrl(clipText.toLowerCase());
       if (validUrl) {
-        const {owner, repo} = extractGitHubUrl(validUrl);
+        const {owner, repo} = extractGitUrl(validUrl);
         setDownloadBox({name: repo, owner, url: validUrl});
         setResultUrl(validUrl);
       }
@@ -86,7 +86,7 @@ export default function Clone({updateTable, visible, installedExtensions}: Props
 
     const validUrl = validateGitRepoUrl(lowerCaseText);
     if (validUrl) {
-      const {owner, repo} = extractGitHubUrl(validUrl);
+      const {owner, repo} = extractGitUrl(validUrl);
       setDownloadBox({
         name: repo,
         owner: owner,

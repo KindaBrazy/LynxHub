@@ -2,7 +2,7 @@ import {Button} from '@nextui-org/react';
 import {memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extractGitHubUrl} from '../../../../../../cross/CrossUtils';
+import {extractGitUrl} from '../../../../../../cross/CrossUtils';
 import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
 import {cardsActions, useCardsState} from '../../../Redux/AI/CardsReducer';
 import {modalActions} from '../../../Redux/AI/ModalsReducer';
@@ -54,7 +54,7 @@ const StartButton = memo(() => {
   const install = useCallback(() => {
     rendererIpc.file.getAppDirectories('AIWorkspaces').then(dir => {
       const isWin = window.osPlatform === 'win32';
-      const directory = `${dir}${isWin ? '\\' : '/'}${extractGitHubUrl(repoUrl).repo}`;
+      const directory = `${dir}${isWin ? '\\' : '/'}${extractGitUrl(repoUrl).repo}`;
 
       dispatch(
         modalActions.openInstallCard({

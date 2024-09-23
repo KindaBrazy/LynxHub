@@ -11,8 +11,8 @@ export type RepoInfoType = {
 export type RepoDetails = {
   stars: number;
   forks: number;
-  issues: number;
-  size: number;
+  issues?: number;
+  size?: number;
 };
 
 export type DevInfo = {

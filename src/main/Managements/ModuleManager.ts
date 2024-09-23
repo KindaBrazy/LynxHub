@@ -8,7 +8,7 @@ import handler from 'serve-handler';
 
 import {APP_BUILD_NUMBER} from '../../cross/CrossConstants';
 import {CardMainMethods, MainModuleImportType, MainModules, ModulesInfo} from '../../cross/CrossTypes';
-import {extractGitHubUrl} from '../../cross/CrossUtils';
+import {extractGitUrl} from '../../cross/CrossUtils';
 import {modulesChannels} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
 import {getAppDirectory} from './AppDataManager';
@@ -128,7 +128,7 @@ export default class ModuleManager {
     return new Promise<boolean>(resolve => {
       const gitManager = new GitManager(true);
 
-      gitManager.clone(url, path.join(this.modulesPath, extractGitHubUrl(url).repo));
+      gitManager.clone(url, path.join(this.modulesPath, extractGitUrl(url).repo));
 
       gitManager.onComplete = async () => {
         await this.reloadServer();
