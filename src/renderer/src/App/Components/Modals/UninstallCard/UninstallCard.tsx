@@ -26,7 +26,7 @@ export default function useUninstallCard() {
         closeHandle();
 
         message.loading({
-          content: type === 'removeDir' ? 'Uninstalling AI...' : 'Moving AI to trash...',
+          content: type === 'removeDir' ? 'Uninstalling...' : 'Moving to trash...',
           key: 'process',
         });
 
@@ -34,14 +34,14 @@ export default function useUninstallCard() {
           .then(() => {
             rendererIpc.storageUtils.removeInstalledCard(cardId);
             message.destroy('process');
-            message.success(type === 'removeDir' ? 'AI uninstalled successfully.' : 'AI moved to trash successfully.');
+            message.success(type === 'removeDir' ? 'Uninstalled successfully.' : 'Moved to trash successfully.');
           })
           .catch(() => {
             message.destroy('process');
             message.error(
               type === 'removeDir'
-                ? 'An error occurred while uninstalling AI.'
-                : 'An error occurred while moving AI to trash.',
+                ? 'An error occurred while uninstalling.'
+                : 'An error occurred while moving to trash.',
             );
           });
       }
