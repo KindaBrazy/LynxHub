@@ -1,5 +1,5 @@
 import {Stepper} from '@mantine/core';
-import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@nextui-org/react';
+import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Progress} from '@nextui-org/react';
 import CloneRepo from '@renderer/App/Components/Modals/InstallUI/CloneRepo';
 import LocateRepo from '@renderer/App/Components/Modals/InstallUI/LocateRepo';
 import TerminalStep from '@renderer/App/Components/Modals/InstallUI/TerminalStep';
@@ -9,13 +9,17 @@ import {modalActions, useModalsState} from '@renderer/App/Redux/AI/ModalsReducer
 import {AppDispatch} from '@renderer/App/Redux/Store';
 import rendererIpc from '@renderer/App/RendererIpc';
 import {getColor} from '@renderer/App/Utils/Constants';
-import {Popconfirm, Result} from 'antd';
+import {Descriptions, Popconfirm, Result} from 'antd';
+import DescriptionsItem from 'antd/es/descriptions/Item';
+import {capitalize} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {formatSize} from '../../../../../../cross/CrossUtils';
+import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
 import InstallStepper from './InstallStepper';
 
-type BodyState = 'clone' | 'terminal' | 'done' | '';
+type BodyState = 'clone' | 'terminal' | 'progress' | 'done' | '';
 
 type InstallState = {
   body: BodyState;
@@ -48,6 +52,9 @@ export default function InstallUIModal() {
   useEffect(() => {
     setMethods(getMethod(cardId, 'installUI'));
   }, [cardId]);
+
+  const [progressInfo, setProgressInfo] = useState<DownloadProgress | undefined>(undefined);
+  const [downloadFileUrl, setDownloadFileUrl] = useState<string | undefined>(undefined);
 
   // -----------------------------------------------> Resolvers
   const cloneResolver = useRef<((result: InstallCloneResult) => void) | null>(null);
@@ -132,6 +139,27 @@ export default function InstallUIModal() {
     [],
   );
 
+  const downloadFile = useCallback(
+    async (url: string): ReturnType<InstallStepperType['downloadFile']> => {
+      return new Promise(resolve => {
+        setProgressInfo(undefined);
+        updateState({body: 'progress'});
+        setDownloadFileUrl(url);
+        rendererIpc.utils.downloadFile(url);
+        rendererIpc.utils.offDownloadFile();
+        rendererIpc.utils.onDownloadFile((_e, progress) => {
+          if (progress.stage === 'done') {
+            setProgressInfo(undefined);
+            resolve(progress.finalPath);
+          } else {
+            setProgressInfo(progress);
+          }
+        });
+      });
+    },
+    [setProgressInfo],
+  );
+
   // -----------------------------------------------> Initial Stepper
   const stepper = useMemo(() => {
     return new InstallStepper(
@@ -142,8 +170,18 @@ export default function InstallUIModal() {
       handleDone,
       executeTerminalFile,
       execTerminalCommands,
+      downloadFile,
     );
-  }, [setSteps, setCurrentStep, handleClone, setInstalled, handleDone, executeTerminalFile, execTerminalCommands]);
+  }, [
+    setSteps,
+    setCurrentStep,
+    handleClone,
+    setInstalled,
+    handleDone,
+    executeTerminalFile,
+    execTerminalCommands,
+    downloadFile,
+  ]);
 
   useEffect(() => {
     if (isOpen && methods && stepper) {
@@ -154,6 +192,10 @@ export default function InstallUIModal() {
   // -----------------------------------------------> Handle UI
   const handleClose = useCallback(() => {
     if (state.body === 'terminal') rendererIpc.pty.customProcess('stop');
+    if (state.body === 'progress') {
+      rendererIpc.utils.offDownloadFile();
+      rendererIpc.utils.cancelDownload();
+    }
     updateState(initialState);
     setCurrentStep(0);
     setSteps([]);
@@ -183,6 +225,29 @@ export default function InstallUIModal() {
         return <CloneRepo done={doneClone} url={state.cloneUrl} start={state.startClone} />;
       case 'terminal':
         return <TerminalStep />;
+      case 'progress':
+        return progressInfo?.stage === 'failed' ? (
+          <Result
+            status="error"
+            title="Download Failed"
+            subTitle="Please check your internet connection and try again."
+          />
+        ) : (
+          <>
+            <Progress color="secondary" aria-label="aaaa" value={progressInfo?.percentage} showValueLabel />
+            <Descriptions size="small" layout="vertical">
+              <DescriptionsItem label="File Name">
+                {progressInfo?.fileName ? capitalize(progressInfo.fileName) : 'Unknown'}
+              </DescriptionsItem>
+              <DescriptionsItem label="Downloaded So Far">
+                {progressInfo?.downloaded ? formatSize(progressInfo.downloaded) : 'Calculating...'}
+              </DescriptionsItem>
+              <DescriptionsItem label="Total File Size">
+                {progressInfo?.total ? formatSize(progressInfo.total) : 'Calculating...'}
+              </DescriptionsItem>
+            </Descriptions>
+          </>
+        );
       case 'done':
         return <Result status="success" title={state.doneAll.title} subTitle={state.doneAll.desc} />;
     }
@@ -250,6 +315,11 @@ export default function InstallUIModal() {
               Install
             </Button>
           </>
+        )}
+        {progressInfo?.stage === 'failed' && downloadFileUrl && (
+          <Button variant="light" className="cursor-default" onPress={() => downloadFile(downloadFileUrl)}>
+            Try Again
+          </Button>
         )}
       </>
     );

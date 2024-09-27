@@ -43,6 +43,7 @@ import {
   getExtensionsUpdate,
   updateAllExtensions,
 } from './Methods/IpcMethods-CardExtensions';
+import {cancelDownload, downloadFile} from './Methods/IpcMethods-Downloader';
 import {getSystemInfo} from './Methods/IpcMethods-Platform';
 import {customPtyCommands, customPtyProcess, ptyProcess, ptyResize, ptyWrite} from './Methods/IpcMethods-Pty';
 import {abortGitOperation, clonePromise, cloneRepo, getRepoInfo, pullRepo} from './Methods/IpcMethods-Repository';
@@ -106,6 +107,9 @@ function utils() {
   ipcMain.on(utilsChannels.updateAllExtensions, (_, data: {id: string; dir: string}) => updateAllExtensions(data));
 
   ipcMain.on(utilsChannels.cancelExtensionsData, () => disableLoadingExtensions());
+
+  ipcMain.on(utilsChannels.downloadFile, (_, url: string) => downloadFile(url));
+  ipcMain.on(utilsChannels.cancelDownload, () => cancelDownload());
 }
 
 function modules() {
