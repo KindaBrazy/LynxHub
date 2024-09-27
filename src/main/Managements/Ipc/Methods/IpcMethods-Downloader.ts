@@ -1,4 +1,6 @@
-import {DownloadItem} from 'electron';
+import path from 'node:path';
+
+import {app, DownloadItem} from 'electron';
 import {download} from 'electron-dl';
 
 import {utilsChannels} from '../../../../cross/IpcChannelAndTypes';
@@ -11,6 +13,7 @@ export function downloadFile(url: string) {
 
   download(window, url, {
     showBadge: false,
+    directory: path.join(app.getPath('downloads'), 'LynxHub'),
     onStarted: item => {
       downloadingItem = item;
     },
