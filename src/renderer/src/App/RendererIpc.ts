@@ -201,6 +201,8 @@ const rendererIpc = {
     process: (opt: PtyProcessOpt, cardId: string): void => ipc.send(ptyChannels.process, opt, cardId),
     customProcess: (opt: PtyProcessOpt, dir?: string, file?: string): void =>
       ipc.send(ptyChannels.customProcess, opt, dir, file),
+    customCommands: (opt: PtyProcessOpt, commands?: string | string[], dir?: string) =>
+      ipc.send(ptyChannels.customCommands, opt, commands, dir),
 
     write: (data: string): void => ipc.send(ptyChannels.write, data),
 

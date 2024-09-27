@@ -116,10 +116,34 @@ export default function InstallUIModal() {
     [],
   );
 
+  const execTerminalCommands = useCallback(
+    async (commands?: string | string[], dir?: string): ReturnType<InstallStepperType['execTerminalCommands']> => {
+      return new Promise(resolve => {
+        restartTerminal.current = () => {
+          rendererIpc.pty.customCommands('stop');
+          rendererIpc.pty.customCommands('start', commands, dir);
+        };
+
+        terminalResolver.current = resolve;
+        updateState({body: 'terminal'});
+        rendererIpc.pty.customCommands('start', commands, dir);
+      });
+    },
+    [],
+  );
+
   // -----------------------------------------------> Initial Stepper
   const stepper = useMemo(() => {
-    return new InstallStepper(setSteps, setCurrentStep, handleClone, setInstalled, handleDone, executeTerminalFile);
-  }, [setSteps, setCurrentStep, handleClone, setInstalled, handleDone, executeTerminalFile]);
+    return new InstallStepper(
+      setSteps,
+      setCurrentStep,
+      handleClone,
+      setInstalled,
+      handleDone,
+      executeTerminalFile,
+      execTerminalCommands,
+    );
+  }, [setSteps, setCurrentStep, handleClone, setInstalled, handleDone, executeTerminalFile, execTerminalCommands]);
 
   useEffect(() => {
     if (isOpen && methods && stepper) {

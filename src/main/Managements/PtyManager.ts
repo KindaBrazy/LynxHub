@@ -1,6 +1,5 @@
 import {platform} from 'node:os';
 
-import lodash from 'lodash';
 import pty from 'node-pty';
 import treeKill from 'tree-kill';
 
@@ -66,9 +65,7 @@ export default class PtyManager {
    * @param dir - The working directory for the PTY process.
    * @param sendDataToRenderer - Whether to send data to the renderer process.
    */
-  public start(dir: string, sendDataToRenderer = false): void {
-    if (lodash.isEmpty(dir)) return;
-
+  public start(dir?: string, sendDataToRenderer = false): void {
     this.process = pty.spawn(this.shell, [], {
       cwd: dir,
       cols: 150,

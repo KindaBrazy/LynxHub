@@ -7,6 +7,7 @@ export type InstallStepperType = {
   nextStep: () => void;
   clone: (url: string) => Promise<InstallCloneResult>;
   execTerminalFile: (dir: string, file: string) => Promise<void>;
+  execTerminalCommands: (commands?: string | string[], dir?: string) => Promise<void>;
   setInstalled: (dir: string) => void;
   done: (title: string, description?: string) => void;
 };
