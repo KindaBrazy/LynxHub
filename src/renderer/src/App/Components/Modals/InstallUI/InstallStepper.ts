@@ -10,6 +10,7 @@ export default class InstallStepper {
   private readonly executeTerminalFile: InstallStepperType['execTerminalFile'];
   private readonly executeTerminalCommands: InstallStepperType['execTerminalCommands'];
   private readonly downloadFileURL: InstallStepperType['downloadFile'];
+  private readonly decompress: InstallStepperType['decompressFile'];
   private totalSteps: number;
 
   constructor(
@@ -21,6 +22,7 @@ export default class InstallStepper {
     execTerminalFile: InstallStepperType['execTerminalFile'],
     execTerminalCommands: InstallStepperType['execTerminalCommands'],
     downloadFile: InstallStepperType['downloadFile'],
+    decompressFile: InstallStepperType['decompressFile'],
   ) {
     this.totalSteps = 0;
     this.setSteps = setSteps;
@@ -31,6 +33,11 @@ export default class InstallStepper {
     this.executeTerminalFile = execTerminalFile;
     this.executeTerminalCommands = execTerminalCommands;
     this.downloadFileURL = downloadFile;
+    this.decompress = decompressFile;
+  }
+
+  public async decompressFile(filePath: string) {
+    return this.decompress(filePath);
   }
 
   public async execTerminalCommands(commands?: string | string[], dir?: string) {

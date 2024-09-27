@@ -139,6 +139,7 @@ export default function InstallUIModal() {
     [],
   );
 
+  // -----------------------------------------------> Handle Files
   const downloadFile = useCallback(
     async (url: string): ReturnType<InstallStepperType['downloadFile']> => {
       return new Promise(resolve => {
@@ -160,6 +161,10 @@ export default function InstallUIModal() {
     [setProgressInfo],
   );
 
+  const decompressFile = useCallback(async (filePath: string): Promise<string> => {
+    return rendererIpc.utils.decompressFile(filePath);
+  }, []);
+
   // -----------------------------------------------> Initial Stepper
   const stepper = useMemo(() => {
     return new InstallStepper(
@@ -171,6 +176,7 @@ export default function InstallUIModal() {
       executeTerminalFile,
       execTerminalCommands,
       downloadFile,
+      decompressFile,
     );
   }, [
     setSteps,
@@ -181,6 +187,7 @@ export default function InstallUIModal() {
     executeTerminalFile,
     execTerminalCommands,
     downloadFile,
+    decompressFile,
   ]);
 
   useEffect(() => {

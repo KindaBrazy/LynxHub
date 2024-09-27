@@ -9,6 +9,7 @@ export type InstallStepperType = {
   execTerminalFile: (dir: string, file: string) => Promise<void>;
   execTerminalCommands: (commands?: string | string[], dir?: string) => Promise<void>;
   downloadFile: (url: string) => Promise<string>;
+  decompressFile: (filePath: string) => Promise<string>;
   setInstalled: (dir: string) => void;
   done: (title: string, description?: string) => void;
 };

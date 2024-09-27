@@ -201,6 +201,8 @@ const rendererIpc = {
     onDownloadFile: (result: (event: IpcRendererEvent, progress: DownloadProgress) => void) =>
       ipc.on(utilsChannels.onDownloadFile, result),
     offDownloadFile: (): void => ipc.removeAllListeners(utilsChannels.onDownloadFile),
+
+    decompressFile: (filePath: string): Promise<string> => ipc.invoke(utilsChannels.decompressFile, filePath),
   },
 
   /** Managing and using node-pty(Pseudo Terminal ) */
