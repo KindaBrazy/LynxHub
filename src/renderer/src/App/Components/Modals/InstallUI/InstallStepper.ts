@@ -9,6 +9,7 @@ export default class InstallStepper {
   private readonly onDone: InstallStepperType['done'];
   private readonly executeTerminalFile: InstallStepperType['execTerminalFile'];
   private readonly executeTerminalCommands: InstallStepperType['execTerminalCommands'];
+  private readonly downloadFileURL: InstallStepperType['downloadFile'];
   private totalSteps: number;
 
   constructor(
@@ -19,6 +20,7 @@ export default class InstallStepper {
     onDone: InstallStepperType['done'],
     execTerminalFile: InstallStepperType['execTerminalFile'],
     execTerminalCommands: InstallStepperType['execTerminalCommands'],
+    downloadFile: InstallStepperType['downloadFile'],
   ) {
     this.totalSteps = 0;
     this.setSteps = setSteps;
@@ -28,10 +30,15 @@ export default class InstallStepper {
     this.onDone = onDone;
     this.executeTerminalFile = execTerminalFile;
     this.executeTerminalCommands = execTerminalCommands;
+    this.downloadFileURL = downloadFile;
   }
 
   public async execTerminalCommands(commands?: string | string[], dir?: string) {
     return this.executeTerminalCommands(commands, dir);
+  }
+
+  public async downloadFile(url: string): Promise<string> {
+    return this.downloadFileURL(url);
   }
 
   public initialSteps(steps: InstallSteps[]) {

@@ -11,6 +11,7 @@ import {
   CustomRunBehaviorData,
   DarkModeTypes,
   DiscordRunningAI,
+  DownloadProgress,
   ExtensionsData,
   ExtensionsUpdateStatus,
   fileChannels,
@@ -194,6 +195,12 @@ const rendererIpc = {
       ipc.invoke(utilsChannels.updateStatus, dir),
 
     cancelExtensionsData: (): void => ipc.send(utilsChannels.cancelExtensionsData),
+
+    downloadFile: (url: string): void => ipc.send(utilsChannels.downloadFile, url),
+    cancelDownload: (): void => ipc.send(utilsChannels.cancelDownload),
+    onDownloadFile: (result: (event: IpcRendererEvent, progress: DownloadProgress) => void) =>
+      ipc.on(utilsChannels.onDownloadFile, result),
+    offDownloadFile: (): void => ipc.removeAllListeners(utilsChannels.onDownloadFile),
   },
 
   /** Managing and using node-pty(Pseudo Terminal ) */

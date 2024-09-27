@@ -62,6 +62,15 @@ export type LynxHotkeys = {isEnabled: boolean; FULLSCREEN: string; TOGGLE_NAV: s
 
 export type AppUpdateStatus = 'update-available' | 'update-downloaded' | string | UpdateDownloadProgress;
 export type OnUpdatingExtensions = {id: string; step: string | 'done'};
+
+export type DownloadProgress = {
+  stage: 'done' | 'progress' | 'failed';
+  finalPath: string;
+  percentage: number;
+  fileName: string;
+  downloaded: number;
+  total: number;
+};
 //#endregion
 
 //#region Ipc Channels Names
@@ -117,6 +126,10 @@ export const utilsChannels = {
   extensionsDetails: 'utils:extensions-details',
   onCardInfo: 'utils:on-card-info',
   updateStatus: 'utils:extensions-update-status',
+
+  downloadFile: 'utils:download-file',
+  cancelDownload: 'utils:cancel-download',
+  onDownloadFile: 'utils:on-download-file',
 };
 
 export const modulesChannels = {
