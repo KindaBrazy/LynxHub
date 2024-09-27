@@ -8,6 +8,7 @@ export default class InstallStepper {
   private readonly setInstalledUI: InstallStepperType['setInstalled'];
   private readonly onDone: InstallStepperType['done'];
   private readonly executeTerminalFile: InstallStepperType['execTerminalFile'];
+  private readonly executeTerminalCommands: InstallStepperType['execTerminalCommands'];
   private totalSteps: number;
 
   constructor(
@@ -17,6 +18,7 @@ export default class InstallStepper {
     setInstalled: InstallStepperType['setInstalled'],
     onDone: InstallStepperType['done'],
     execTerminalFile: InstallStepperType['execTerminalFile'],
+    execTerminalCommands: InstallStepperType['execTerminalCommands'],
   ) {
     this.totalSteps = 0;
     this.setSteps = setSteps;
@@ -25,6 +27,11 @@ export default class InstallStepper {
     this.setInstalledUI = setInstalled;
     this.onDone = onDone;
     this.executeTerminalFile = execTerminalFile;
+    this.executeTerminalCommands = execTerminalCommands;
+  }
+
+  public async execTerminalCommands(commands?: string | string[], dir?: string) {
+    return this.executeTerminalCommands(commands, dir);
   }
 
   public initialSteps(steps: InstallSteps[]) {

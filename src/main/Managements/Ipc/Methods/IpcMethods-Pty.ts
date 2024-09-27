@@ -80,6 +80,23 @@ export async function customPtyProcess(opt: PtyProcessOpt, dir?: string, file?: 
   }
 }
 
+export async function customPtyCommands(opt: PtyProcessOpt, commands?: string | string[], dir?: string) {
+  if (opt === 'start') {
+    if (lodash.isEmpty(commands)) return;
+    ptyManager = new PtyManager();
+
+    ptyManager.start(dir, true);
+    if (lodash.isArray(commands)) {
+      runMultiCommand(commands);
+    } else {
+      ptyManager.write(`${commands}${LINE_ENDING}`);
+    }
+  } else if (opt === 'stop') {
+    ptyManager?.stop();
+    ptyManager = undefined;
+  }
+}
+
 /**
  * Writes data to the PTY.
  * @param data - The data to write.
