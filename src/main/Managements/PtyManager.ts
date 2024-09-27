@@ -1,4 +1,5 @@
 import {platform} from 'node:os';
+import path from 'node:path';
 
 import pty from 'node-pty';
 import treeKill from 'tree-kill';
@@ -67,7 +68,7 @@ export default class PtyManager {
    */
   public start(dir?: string, sendDataToRenderer = false): void {
     this.process = pty.spawn(this.shell, [], {
-      cwd: dir,
+      cwd: dir ? path.resolve(dir) : undefined,
       cols: 150,
       rows: 150,
       env: process.env,
