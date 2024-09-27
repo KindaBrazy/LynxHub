@@ -1,6 +1,7 @@
 import {platform} from 'node:os';
 import path from 'node:path';
 
+import decompress from 'decompress';
 import {app, shell} from 'electron';
 import fs, {readdir} from 'graceful-fs';
 
@@ -177,4 +178,18 @@ export async function getRelativeList(dirPath: string, relatives: string[]): Pro
       return [];
     }
   }
+}
+
+export async function decompressFile(filePath: string): Promise<string> {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const fileName = path.basename(filePath, path.extname(filePath));
+      const finalPath = path.join(app.getPath('downloads'), 'LynxHub', fileName);
+      await decompress(filePath, finalPath);
+      resolve(finalPath);
+    } catch (e) {
+      console.error(e);
+      reject();
+    }
+  });
 }

@@ -130,6 +130,8 @@ export const utilsChannels = {
   downloadFile: 'utils:download-file',
   cancelDownload: 'utils:cancel-download',
   onDownloadFile: 'utils:on-download-file',
+
+  decompressFile: 'utils:decompress-file',
 };
 
 export const modulesChannels = {

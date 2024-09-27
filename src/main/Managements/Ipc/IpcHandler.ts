@@ -30,6 +30,7 @@ import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDat
 import GitManager from '../GitManager';
 import {
   changeWindowState,
+  decompressFile,
   getRelativeList,
   removeDir,
   setDarkMode,
@@ -110,6 +111,8 @@ function utils() {
 
   ipcMain.on(utilsChannels.downloadFile, (_, url: string) => downloadFile(url));
   ipcMain.on(utilsChannels.cancelDownload, () => cancelDownload());
+
+  ipcMain.handle(utilsChannels.decompressFile, (_, filePath: string) => decompressFile(filePath));
 }
 
 function modules() {
