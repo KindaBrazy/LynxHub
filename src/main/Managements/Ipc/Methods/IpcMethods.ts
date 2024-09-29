@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import decompress from 'decompress';
 import {app, shell} from 'electron';
-import fs, {readdir} from 'graceful-fs';
+import {promises, readdir} from 'graceful-fs';
 
 import {DiscordRPC, FolderListData} from '../../../../cross/CrossTypes';
 import {ChangeWindowState, DarkModeTypes, TaskbarStatus, winChannels} from '../../../../cross/IpcChannelAndTypes';
@@ -108,7 +108,7 @@ export async function removeDir(dir: string): Promise<void> {
   try {
     const resolvedPath = path.resolve(dir);
     console.log(`Removing directory: ${resolvedPath}`);
-    return await fs.promises.rm(resolvedPath, {recursive: true, force: true});
+    return await promises.rm(resolvedPath, {recursive: true, force: true});
   } catch (e) {
     console.error(e);
     throw e;
@@ -192,4 +192,21 @@ export async function decompressFile(filePath: string): Promise<string> {
       reject();
     }
   });
+}
+
+export async function checkFilesExist(dir: string, files: string[]) {
+  try {
+    for (const file of files) {
+      const fullPath = path.join(dir, file);
+      try {
+        await promises.access(fullPath);
+      } catch (error) {
+        return false;
+      }
+    }
+    return true;
+  } catch (error) {
+    console.error('Error checking files:', error);
+    return false;
+  }
 }

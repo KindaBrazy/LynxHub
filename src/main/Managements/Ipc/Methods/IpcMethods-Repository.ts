@@ -104,3 +104,8 @@ function setupGitManagerListeners(manager: GitManager, id?: string): void {
     appManager.getWebContent()?.send(gitChannels.onProgress, id, 'Failed', reason);
   };
 }
+
+export async function validateGitDir(dir: string, url: string): Promise<boolean> {
+  const result = await GitManager.locateCard(url, dir);
+  return !!result;
+}

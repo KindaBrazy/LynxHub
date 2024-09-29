@@ -1,15 +1,21 @@
-import {Stepper} from '@mantine/core';
-import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Progress} from '@nextui-org/react';
+import {
+  Button,
+  ButtonGroup,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Progress,
+} from '@nextui-org/react';
 import CloneRepo from '@renderer/App/Components/Modals/InstallUI/CloneRepo';
-import LocateRepo from '@renderer/App/Components/Modals/InstallUI/LocateRepo';
 import TerminalStep from '@renderer/App/Components/Modals/InstallUI/TerminalStep';
 import {useModules} from '@renderer/App/Modules/ModulesContext';
-import {CardRendererMethods, InstallCloneResult, InstallStepperType, InstallSteps} from '@renderer/App/Modules/types';
+import {CardRendererMethods, InstallStarterStep, InstallStepperType} from '@renderer/App/Modules/types';
 import {modalActions, useModalsState} from '@renderer/App/Redux/AI/ModalsReducer';
 import {AppDispatch} from '@renderer/App/Redux/Store';
 import rendererIpc from '@renderer/App/RendererIpc';
-import {getColor} from '@renderer/App/Utils/Constants';
-import {Descriptions, Popconfirm, Result} from 'antd';
+import {Descriptions, Popconfirm, Result, Steps} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -19,30 +25,34 @@ import {formatSize} from '../../../../../../cross/CrossUtils';
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
 import InstallStepper from './InstallStepper';
 
-type BodyState = 'clone' | 'terminal' | 'progress' | 'done' | '';
+type BodyState = 'starter' | 'clone' | 'terminal' | 'progress' | 'done' | '';
 
 type InstallState = {
   body: BodyState;
   cloneUrl: string;
-  doneAll: {title: string; desc?: string};
+  doneAll: {type: 'success' | 'error'; title: string; description?: string};
   startClone: boolean;
 };
 
 const initialState: InstallState = {
   body: '',
   cloneUrl: '',
-  doneAll: {title: '', desc: ''},
+  doneAll: {
+    title: '',
+    description: '',
+    type: 'success',
+  },
   startClone: false,
 };
 
 export default function InstallUIModal() {
   const dispatch = useDispatch<AppDispatch>();
   const {getMethod} = useModules();
-  const {isOpen, cardId} = useModalsState('installUIModal');
+  const {isOpen, cardId, title} = useModalsState('installUIModal');
 
   // -----------------------------------------------> States
   const [currentStep, setCurrentStep] = useState<number>(0);
-  const [steps, setSteps] = useState<InstallSteps[]>([]);
+  const [steps, setSteps] = useState<string[]>([]);
   const [state, setState] = useState<InstallState>(initialState);
   const updateState = useCallback((newState: Partial<InstallState>) => {
     setState(prevState => ({...prevState, ...newState}));
@@ -57,15 +67,16 @@ export default function InstallUIModal() {
   const [downloadFileUrl, setDownloadFileUrl] = useState<string | undefined>(undefined);
 
   // -----------------------------------------------> Resolvers
-  const cloneResolver = useRef<((result: InstallCloneResult) => void) | null>(null);
+  const cloneResolver = useRef<((dir: string) => void) | null>(null);
   const terminalResolver = useRef<(() => void) | null>(null);
+  const starterResolver = useRef<((result: InstallStarterStep) => void) | null>(null);
   const restartTerminal = useRef<(() => void) | null>(null);
 
   // -----------------------------------------------> Handle Cloning
   const doneClone = useCallback(
-    (result: InstallCloneResult) => {
+    (dir: string) => {
       if (cloneResolver.current) {
-        cloneResolver.current(result);
+        cloneResolver.current(dir);
         cloneResolver.current = null;
       }
     },
@@ -82,10 +93,6 @@ export default function InstallUIModal() {
     [cloneResolver],
   );
 
-  const handleLocated = useCallback((dir: string) => {
-    doneClone({dir, locatedPreInstall: true});
-  }, []);
-
   // -----------------------------------------------> Handle Finishing
   const setInstalled = useCallback(
     (dir: string) => {
@@ -94,8 +101,8 @@ export default function InstallUIModal() {
     [cardId],
   );
 
-  const handleDone = useCallback((title: string, description?: string) => {
-    updateState({doneAll: {title, desc: description}, body: 'done'});
+  const handleDone = useCallback((type: 'success' | 'error', title: string, description?: string) => {
+    updateState({doneAll: {type, title, description}, body: 'done'});
   }, []);
 
   // -----------------------------------------------> Handle Terminal
@@ -165,6 +172,29 @@ export default function InstallUIModal() {
     return rendererIpc.utils.decompressFile(filePath);
   }, []);
 
+  const validateGitDir = useCallback(async (dir: string, url: string): Promise<boolean> => {
+    return new Promise(resolve => {
+      rendererIpc.git.validateGitDir(dir, url).then(resolve);
+    });
+  }, []);
+
+  const checkFilesExist = useCallback(async (dir: string, filesName: string[]): Promise<boolean> => {
+    return new Promise(resolve => {
+      rendererIpc.file.checkFilesExist(dir, filesName).then(resolve);
+    });
+  }, []);
+
+  const starterStep = useCallback(async (): Promise<InstallStarterStep> => {
+    return new Promise(resolve => {
+      starterResolver.current = resolve;
+      updateState({body: 'starter'});
+    });
+  }, []);
+
+  const utils: InstallStepperType['utils'] = useMemo(() => {
+    return {decompressFile, validateGitDir, checkFilesExist};
+  }, [decompressFile, validateGitDir]);
+
   // -----------------------------------------------> Initial Stepper
   const stepper = useMemo(() => {
     return new InstallStepper(
@@ -176,7 +206,8 @@ export default function InstallUIModal() {
       executeTerminalFile,
       execTerminalCommands,
       downloadFile,
-      decompressFile,
+      starterStep,
+      utils,
     );
   }, [
     setSteps,
@@ -188,6 +219,7 @@ export default function InstallUIModal() {
     execTerminalCommands,
     downloadFile,
     decompressFile,
+    starterStep,
   ]);
 
   useEffect(() => {
@@ -226,6 +258,12 @@ export default function InstallUIModal() {
     [dispatch],
   );
 
+  const locate = useCallback(() => {
+    rendererIpc.file.openDlg('openDirectory').then(dir => {
+      if (dir) starterResolver.current?.({chosen: 'locate', dir});
+    });
+  }, [starterResolver]);
+
   const renderBody = () => {
     switch (state.body) {
       case 'clone':
@@ -240,7 +278,7 @@ export default function InstallUIModal() {
             subTitle="Please check your internet connection and try again."
           />
         ) : (
-          <>
+          <div className="my-6">
             <Progress color="secondary" aria-label="aaaa" value={progressInfo?.percentage} showValueLabel />
             <Descriptions size="small" layout="vertical">
               <DescriptionsItem label="File Name">
@@ -253,21 +291,33 @@ export default function InstallUIModal() {
                 {progressInfo?.total ? formatSize(progressInfo.total) : 'Calculating...'}
               </DescriptionsItem>
             </Descriptions>
-          </>
+          </div>
         );
       case 'done':
-        return <Result status="success" title={state.doneAll.title} subTitle={state.doneAll.desc} />;
+        return <Result title={state.doneAll.title} status={state.doneAll.type} subTitle={state.doneAll.description} />;
+      case 'starter':
+        return (
+          <div className="my-6 space-y-6 text-center">
+            <p className="text-xl font-semibold">
+              You're about to install <span className="font-bold">{capitalize(title)}</span>
+            </p>
+            <p>Choose an option below to proceed with the installation or locate a pre-existing installation.</p>
+          </div>
+        );
     }
     return <Fragment />;
   };
 
   const renderHeaderStepper = () => {
     return (
-      <Stepper size="sm" className="w-full" active={currentStep} color={getColor('primary')}>
-        {steps.map(step => (
-          <Stepper.Step key={step.title} label={step.title} description={step.description} />
-        ))}
-      </Stepper>
+      <Steps
+        items={steps.map(step => {
+          return {title: <span className="text-foreground/80">{step}</span>};
+        })}
+        type="inline"
+        current={currentStep}
+        className="!w-full scale-125 items-center justify-center bg-foreground-200 dark:bg-foreground-100"
+      />
     );
   };
 
@@ -275,7 +325,7 @@ export default function InstallUIModal() {
     return (
       <>
         <Button
-          variant="light"
+          variant="flat"
           onPress={handleClose}
           className="cursor-default"
           color={state.body === 'done' ? 'success' : 'danger'}>
@@ -292,7 +342,7 @@ export default function InstallUIModal() {
               okButtonProps={{type: 'text', className: 'cursor-default'}}
               description="Are you sure you want to restart the terminal?"
               cancelButtonProps={{type: 'text', className: 'cursor-default !text-danger'}}>
-              <Button variant="light" color="warning" className="cursor-default">
+              <Button variant="flat" color="warning" className="cursor-default">
                 Restart Terminal
               </Button>
             </Popconfirm>
@@ -305,26 +355,37 @@ export default function InstallUIModal() {
               okButtonProps={{type: 'text', className: 'cursor-default !text-success'}}
               cancelButtonProps={{type: 'text', className: 'cursor-default !text-danger'}}
               description="Please confirm that all commands finished successfully without any errors.">
-              <Button color="success" variant="light" className="cursor-default">
+              <Button variant="flat" color="success" className="cursor-default">
                 Next
               </Button>
             </Popconfirm>
           </>
         )}
-        {state.body === 'clone' && !state.startClone && (
+        {state.body === 'starter' && (
           <>
-            <LocateRepo id={cardId} done={handleLocated} url={state.cloneUrl} />
+            <Button variant="flat" onPress={locate} className="cursor-default">
+              Locate
+            </Button>
             <Button
-              variant="light"
+              variant="flat"
               color="success"
               className="cursor-default"
-              onPress={() => updateState({startClone: true})}>
-              Install
+              onPress={() => starterResolver.current?.({chosen: 'install'})}>
+              Start Installation
             </Button>
           </>
         )}
+        {state.body === 'clone' && !state.startClone && (
+          <Button
+            variant="flat"
+            color="success"
+            className="cursor-default"
+            onPress={() => updateState({startClone: true})}>
+            Download
+          </Button>
+        )}
         {progressInfo?.stage === 'failed' && downloadFileUrl && (
-          <Button variant="light" className="cursor-default" onPress={() => downloadFile(downloadFileUrl)}>
+          <Button variant="flat" className="cursor-default" onPress={() => downloadFile(downloadFileUrl)}>
             Try Again
           </Button>
         )}
@@ -335,17 +396,26 @@ export default function InstallUIModal() {
   return (
     <Modal
       size="2xl"
+      radius="sm"
+      shadow="lg"
       isOpen={isOpen}
+      backdrop="blur"
       isDismissable={false}
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
       className={`${state.body === 'terminal' && 'max-w-[80%]'}`}
       classNames={{backdrop: 'top-10', closeButton: 'cursor-default', wrapper: 'top-10'}}
       hideCloseButton>
-      <ModalContent>
-        <ModalHeader>{renderHeaderStepper()}</ModalHeader>
+      <ModalContent className="overflow-hidden">
+        <ModalHeader className="shrink-0 overflow-hidden bg-foreground-200 shadow-md dark:bg-foreground-100">
+          {renderHeaderStepper()}
+        </ModalHeader>
         <ModalBody className="scrollbar-hide">{renderBody()}</ModalBody>
-        <ModalFooter>{renderFooterButtons()}</ModalFooter>
+        <ModalFooter className="shrink-0 justify-between overflow-hidden bg-foreground-200 dark:bg-foreground-100">
+          <ButtonGroup radius="sm" fullWidth>
+            {renderFooterButtons()}
+          </ButtonGroup>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   );
