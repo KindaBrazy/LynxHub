@@ -53,7 +53,7 @@ export default function InstallButton() {
   }, [url, directory, cardId, dispatch]);
 
   return (
-    <Button color="success" variant="light" onPress={install} className="cursor-default">
+    <Button variant="flat" color="success" onPress={install} className="cursor-default">
       Install
     </Button>
   );

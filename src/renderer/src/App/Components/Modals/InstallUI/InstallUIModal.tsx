@@ -311,8 +311,14 @@ export default function InstallUIModal() {
   const renderHeaderStepper = () => {
     return (
       <Steps
-        items={steps.map(step => {
-          return {title: <span className="text-foreground/80">{step}</span>};
+        items={steps.map((step, index) => {
+          return {
+            title: (
+              <span className={`${index < currentStep ? 'text-foreground/40' : 'font-bold text-foreground/80'}`}>
+                {step}
+              </span>
+            ),
+          };
         })}
         type="inline"
         current={currentStep}
@@ -395,16 +401,20 @@ export default function InstallUIModal() {
 
   return (
     <Modal
+      classNames={{
+        backdrop: 'top-10',
+        closeButton: 'cursor-default',
+        wrapper: 'top-10 ',
+      }}
       size="2xl"
       radius="sm"
       shadow="lg"
-      isOpen={isOpen}
       backdrop="blur"
+      isOpen={isOpen}
       isDismissable={false}
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
       className={`${state.body === 'terminal' && 'max-w-[80%]'}`}
-      classNames={{backdrop: 'top-10', closeButton: 'cursor-default', wrapper: 'top-10'}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <ModalHeader className="shrink-0 overflow-hidden bg-foreground-200 shadow-md dark:bg-foreground-100">

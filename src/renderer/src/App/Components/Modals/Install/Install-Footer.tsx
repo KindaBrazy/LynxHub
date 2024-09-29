@@ -1,4 +1,4 @@
-import {Button, ModalFooter} from '@nextui-org/react';
+import {Button, ButtonGroup, ModalFooter} from '@nextui-org/react';
 import {memo, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -23,27 +23,29 @@ const InstallFooter = memo(() => {
   }, [dispatch]);
 
   return (
-    <ModalFooter>
-      {downloading ? (
-        <Button
-          onPress={() => {
-            cancelDownload();
-            closeInstallModal();
-          }}
-          color="danger"
-          variant="light"
-          className="cursor-default">
-          Cancel
-        </Button>
-      ) : (
-        <>
-          <Button color="danger" variant="light" className="cursor-default" onPress={closeInstallModal}>
-            Close
+    <ModalFooter className="shrink-0 justify-between overflow-hidden bg-foreground-200 dark:bg-foreground-100">
+      <ButtonGroup radius="sm" fullWidth>
+        {downloading ? (
+          <Button
+            onPress={() => {
+              cancelDownload();
+              closeInstallModal();
+            }}
+            color="danger"
+            variant="flat"
+            className="cursor-default">
+            Cancel
           </Button>
-          <LocateButton />
-          <InstallButton />
-        </>
-      )}
+        ) : (
+          <>
+            <Button color="danger" variant="flat" className="cursor-default" onPress={closeInstallModal}>
+              Close
+            </Button>
+            <LocateButton />
+            <InstallButton />
+          </>
+        )}
+      </ButtonGroup>
     </ModalFooter>
   );
 });

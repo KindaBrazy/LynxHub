@@ -9,7 +9,7 @@ import InstallFooter from './Install-Footer';
 
 /** Manage downloading (Clone repo) and installing Card (WebUI, AI) */
 const InstallModal = memo(() => {
-  const {isOpen, downloading, title} = useModalsState('installModal');
+  const {isOpen, title} = useModalsState('installModal');
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -28,13 +28,17 @@ const InstallModal = memo(() => {
     <Modal
       size="2xl"
       isOpen={isOpen}
+      backdrop="blur"
       isDismissable={false}
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
-      hideCloseButton={downloading}
-      classNames={{backdrop: 'top-10', closeButton: 'cursor-default', wrapper: 'top-10'}}>
-      <ModalContent>
-        <ModalHeader>{downloading ? `Downloading ${title}...` : `${title} Installation.`}</ModalHeader>
+      classNames={{backdrop: 'top-10', closeButton: 'cursor-default', wrapper: 'top-10'}}
+      hideCloseButton>
+      <ModalContent className="overflow-hidden">
+        <ModalHeader
+          className={'shrink-0 justify-center overflow-hidden bg-foreground-200 shadow-md dark:bg-foreground-100'}>
+          {title}
+        </ModalHeader>
         <InstallBody />
         <InstallFooter />
       </ModalContent>
