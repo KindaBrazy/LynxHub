@@ -18,6 +18,7 @@ export default class InstallStepper {
     downloadFile: InstallStepperType['downloadFile'],
     starterStep: InstallStepperType['starterStep'],
     utils: InstallStepperType['utils'],
+    userInput: InstallStepperType['userInput'],
   ) {
     this.totalSteps = 0;
     this.setSteps = setSteps;
@@ -30,6 +31,7 @@ export default class InstallStepper {
     this.downloadFile = downloadFile;
     this.utils = utils;
     this.starterStep = starterStep;
+    this.userInput = userInput;
   }
 
   public utils: InstallStepperType['utils'];
@@ -45,6 +47,8 @@ export default class InstallStepper {
   public execTerminalFile: InstallStepperType['execTerminalFile'];
 
   public setInstalled: InstallStepperType['setInstalled'];
+
+  public userInput: InstallStepperType['userInput'];
 
   public initialSteps(steps: string[]) {
     this.totalSteps = steps.length - 1;

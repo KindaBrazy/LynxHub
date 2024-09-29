@@ -1,6 +1,9 @@
 export type AvailablePages = '/imageGenerationPage' | '/textGenerationPage' | '/audioGenerationPage';
 
 export type InstallStarterStep = {chosen: 'install' | 'locate'; dir?: string};
+export type InstallUserInputType = 'checkbox' | 'text-input' | 'select' | 'directory' | 'file';
+export type InstallUserInput = {id: string; label: string; type: InstallUserInputType; selectOptions?: string[]};
+export type InstallUserInputReturn = {id: string; result: string | boolean};
 export type InstallStepperType = {
   initialSteps: (steps: string[]) => void;
   nextStep: () => void;
@@ -10,6 +13,7 @@ export type InstallStepperType = {
   execTerminalCommands: (commands: string | string[], dir?: string) => Promise<void>;
   downloadFile: (url: string) => Promise<string>;
   setInstalled: (dir: string) => void;
+  userInput: (elements: InstallUserInput[]) => Promise<InstallUserInputReturn[]>;
   done: (type: 'success' | 'error', title: string, description?: string) => void;
   utils: {
     decompressFile: (filePath: string) => Promise<string>;

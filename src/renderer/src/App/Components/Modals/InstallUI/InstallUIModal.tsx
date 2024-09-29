@@ -10,8 +10,15 @@ import {
 } from '@nextui-org/react';
 import CloneRepo from '@renderer/App/Components/Modals/InstallUI/CloneRepo';
 import TerminalStep from '@renderer/App/Components/Modals/InstallUI/TerminalStep';
+import UserInputs from '@renderer/App/Components/Modals/InstallUI/UserInputs';
 import {useModules} from '@renderer/App/Modules/ModulesContext';
-import {CardRendererMethods, InstallStarterStep, InstallStepperType} from '@renderer/App/Modules/types';
+import {
+  CardRendererMethods,
+  InstallStarterStep,
+  InstallStepperType,
+  InstallUserInput,
+  InstallUserInputReturn,
+} from '@renderer/App/Modules/types';
 import {modalActions, useModalsState} from '@renderer/App/Redux/AI/ModalsReducer';
 import {AppDispatch} from '@renderer/App/Redux/Store';
 import rendererIpc from '@renderer/App/RendererIpc';
@@ -25,7 +32,7 @@ import {formatSize} from '../../../../../../cross/CrossUtils';
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
 import InstallStepper from './InstallStepper';
 
-type BodyState = 'starter' | 'clone' | 'terminal' | 'progress' | 'done' | '';
+type BodyState = 'starter' | 'clone' | 'terminal' | 'progress' | 'user-input' | 'done' | '';
 
 type InstallState = {
   body: BodyState;
@@ -66,10 +73,14 @@ export default function InstallUIModal() {
   const [progressInfo, setProgressInfo] = useState<DownloadProgress | undefined>(undefined);
   const [downloadFileUrl, setDownloadFileUrl] = useState<string | undefined>(undefined);
 
+  const [userInputElements, setUserInputElements] = useState<InstallUserInput[]>([]);
+  const [userElementsReturn, setUserElementsReturn] = useState<InstallUserInputReturn[]>([]);
+
   // -----------------------------------------------> Resolvers
   const cloneResolver = useRef<((dir: string) => void) | null>(null);
   const terminalResolver = useRef<(() => void) | null>(null);
   const starterResolver = useRef<((result: InstallStarterStep) => void) | null>(null);
+  const userInputResolver = useRef<((result: InstallUserInputReturn[]) => void) | null>(null);
   const restartTerminal = useRef<(() => void) | null>(null);
 
   // -----------------------------------------------> Handle Cloning
@@ -195,6 +206,14 @@ export default function InstallUIModal() {
     return {decompressFile, validateGitDir, checkFilesExist};
   }, [decompressFile, validateGitDir]);
 
+  const userInput = useCallback((elements: InstallUserInput[]): Promise<InstallUserInputReturn[]> => {
+    return new Promise(resolve => {
+      userInputResolver.current = resolve;
+      setUserInputElements(elements);
+      updateState({body: 'user-input'});
+    });
+  }, []);
+
   // -----------------------------------------------> Initial Stepper
   const stepper = useMemo(() => {
     return new InstallStepper(
@@ -208,6 +227,7 @@ export default function InstallUIModal() {
       downloadFile,
       starterStep,
       utils,
+      userInput,
     );
   }, [
     setSteps,
@@ -220,6 +240,7 @@ export default function InstallUIModal() {
     downloadFile,
     decompressFile,
     starterStep,
+    userInput,
   ]);
 
   useEffect(() => {
@@ -304,6 +325,8 @@ export default function InstallUIModal() {
             <p>Choose an option below to proceed with the installation or locate a pre-existing installation.</p>
           </div>
         );
+      case 'user-input':
+        return <UserInputs elements={userInputElements} setResult={setUserElementsReturn} />;
     }
     return <Fragment />;
   };
@@ -388,6 +411,17 @@ export default function InstallUIModal() {
             className="cursor-default"
             onPress={() => updateState({startClone: true})}>
             Download
+          </Button>
+        )}
+        {state.body === 'user-input' && (
+          <Button
+            onPress={() => {
+              userInputResolver.current?.(userElementsReturn);
+            }}
+            variant="flat"
+            color="success"
+            className="cursor-default">
+            Next
           </Button>
         )}
         {progressInfo?.stage === 'failed' && downloadFileUrl && (
