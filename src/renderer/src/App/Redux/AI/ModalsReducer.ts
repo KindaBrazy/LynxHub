@@ -23,6 +23,7 @@ type ModalsState = {
     isOpen: boolean;
 
     cardId: string;
+    title: string;
   };
   warningModal: {
     isOpen: boolean;
@@ -145,6 +146,7 @@ const initialState: ModalsState = {
   installUIModal: {
     isOpen: false,
     cardId: '',
+    title: '',
   },
 };
 //#endregion
@@ -230,8 +232,9 @@ const modalSlice = createSlice({
     //#endregion
 
     //#region Install UI Card
-    openInstallUICard: (state, action: PayloadAction<string>) => {
-      state.installUIModal.cardId = action.payload;
+    openInstallUICard: (state, action: PayloadAction<{id: string; title: string}>) => {
+      state.installUIModal.cardId = action.payload.id;
+      state.installUIModal.title = action.payload.title;
 
       state.installUIModal.isOpen = true;
     },

@@ -30,6 +30,7 @@ import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDat
 import GitManager from '../GitManager';
 import {
   changeWindowState,
+  checkFilesExist,
   decompressFile,
   getRelativeList,
   removeDir,
@@ -47,7 +48,14 @@ import {
 import {cancelDownload, downloadFile} from './Methods/IpcMethods-Downloader';
 import {getSystemInfo} from './Methods/IpcMethods-Platform';
 import {customPtyCommands, customPtyProcess, ptyProcess, ptyResize, ptyWrite} from './Methods/IpcMethods-Pty';
-import {abortGitOperation, clonePromise, cloneRepo, getRepoInfo, pullRepo} from './Methods/IpcMethods-Repository';
+import {
+  abortGitOperation,
+  clonePromise,
+  cloneRepo,
+  getRepoInfo,
+  pullRepo,
+  validateGitDir,
+} from './Methods/IpcMethods-Repository';
 
 function win() {
   ipcMain.on(winChannels.changeState, (_, state: ChangeWindowState) => changeWindowState(state));
@@ -82,10 +90,15 @@ function file() {
   ipcMain.handle(fileChannels.listDir, async (_e, dirPath: string, relatives: string[]) =>
     getRelativeList(dirPath, relatives),
   );
+
+  ipcMain.handle(fileChannels.checkFilesExist, (_, dir: string, fileNames: string[]) =>
+    checkFilesExist(dir, fileNames),
+  );
 }
 
 function git() {
   ipcMain.handle(gitChannels.locate, (_, url: string) => GitManager.locateCard(url));
+  ipcMain.handle(gitChannels.validateGitDir, (_, dir: string, url: string) => validateGitDir(dir, url));
 
   ipcMain.on(gitChannels.cloneRepo, (_, url: string, dir: CloneDirTypes) => cloneRepo(url, dir));
   ipcMain.handle(gitChannels.clonePromise, (_, url: string, dir: CloneDirTypes) => clonePromise(url, dir));

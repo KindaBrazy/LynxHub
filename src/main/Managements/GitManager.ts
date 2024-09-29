@@ -50,17 +50,24 @@ export default class GitManager {
   /**
    * Locates a card based on the repository URL.
    * @param url - The URL of the repository.
+   * @param dir - Optional directory instead of user choosing
    * @returns A promise that resolves to the path of the card or undefined.
    */
-  public static async locateCard(url: string): Promise<string | undefined> {
-    const path = await openDialog('openDirectory');
-    if (!path) return undefined;
+  public static async locateCard(url: string, dir?: string): Promise<string | undefined> {
+    let resultPath: string | undefined;
+    if (dir) {
+      resultPath = dir;
+    } else {
+      resultPath = await openDialog('openDirectory');
+    }
 
-    const remote = await this.remoteUrlFromDir(path);
+    if (!resultPath) return undefined;
+
+    const remote = await this.remoteUrlFromDir(resultPath);
 
     if (!remote) return undefined;
 
-    return validateGitRepoUrl(remote) === validateGitRepoUrl(url) ? path : undefined;
+    return validateGitRepoUrl(remote) === validateGitRepoUrl(url) ? resultPath : undefined;
   }
 
   /**

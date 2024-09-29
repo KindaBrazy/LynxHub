@@ -1,20 +1,14 @@
-import {InstallStepperType, InstallSteps} from '@renderer/App/Modules/types';
+import {InstallStepperType} from '@renderer/App/Modules/types';
 import {Dispatch, SetStateAction} from 'react';
 
 export default class InstallStepper {
-  private readonly setSteps: Dispatch<SetStateAction<InstallSteps[]>>;
+  private readonly setSteps: Dispatch<SetStateAction<string[]>>;
   private readonly setNextStep: Dispatch<SetStateAction<number>>;
-  private readonly onClone: InstallStepperType['clone'];
-  private readonly setInstalledUI: InstallStepperType['setInstalled'];
   private readonly onDone: InstallStepperType['done'];
-  private readonly executeTerminalFile: InstallStepperType['execTerminalFile'];
-  private readonly executeTerminalCommands: InstallStepperType['execTerminalCommands'];
-  private readonly downloadFileURL: InstallStepperType['downloadFile'];
-  private readonly decompress: InstallStepperType['decompressFile'];
   private totalSteps: number;
 
   constructor(
-    setSteps: Dispatch<SetStateAction<InstallSteps[]>>,
+    setSteps: Dispatch<SetStateAction<string[]>>,
     setCurrentStep: Dispatch<SetStateAction<number>>,
     onClone: InstallStepperType['clone'],
     setInstalled: InstallStepperType['setInstalled'],
@@ -22,33 +16,37 @@ export default class InstallStepper {
     execTerminalFile: InstallStepperType['execTerminalFile'],
     execTerminalCommands: InstallStepperType['execTerminalCommands'],
     downloadFile: InstallStepperType['downloadFile'],
-    decompressFile: InstallStepperType['decompressFile'],
+    starterStep: InstallStepperType['starterStep'],
+    utils: InstallStepperType['utils'],
   ) {
     this.totalSteps = 0;
     this.setSteps = setSteps;
     this.setNextStep = setCurrentStep;
-    this.onClone = onClone;
-    this.setInstalledUI = setInstalled;
+    this.clone = onClone;
+    this.setInstalled = setInstalled;
     this.onDone = onDone;
-    this.executeTerminalFile = execTerminalFile;
-    this.executeTerminalCommands = execTerminalCommands;
-    this.downloadFileURL = downloadFile;
-    this.decompress = decompressFile;
+    this.execTerminalFile = execTerminalFile;
+    this.execTerminalCommands = execTerminalCommands;
+    this.downloadFile = downloadFile;
+    this.utils = utils;
+    this.starterStep = starterStep;
   }
 
-  public async decompressFile(filePath: string) {
-    return this.decompress(filePath);
-  }
+  public utils: InstallStepperType['utils'];
 
-  public async execTerminalCommands(commands?: string | string[], dir?: string) {
-    return this.executeTerminalCommands(commands, dir);
-  }
+  public starterStep: InstallStepperType['starterStep'];
 
-  public async downloadFile(url: string): Promise<string> {
-    return this.downloadFileURL(url);
-  }
+  public execTerminalCommands: InstallStepperType['execTerminalCommands'];
 
-  public initialSteps(steps: InstallSteps[]) {
+  public downloadFile: InstallStepperType['downloadFile'];
+
+  public clone: InstallStepperType['clone'];
+
+  public execTerminalFile: InstallStepperType['execTerminalFile'];
+
+  public setInstalled: InstallStepperType['setInstalled'];
+
+  public initialSteps(steps: string[]) {
     this.totalSteps = steps.length - 1;
     this.setSteps(steps);
   }
@@ -57,20 +55,8 @@ export default class InstallStepper {
     this.setNextStep(prevState => (prevState < this.totalSteps ? prevState + 1 : prevState));
   }
 
-  public async clone(url: string): ReturnType<InstallStepperType['clone']> {
-    return this.onClone(url);
-  }
-
-  public async execTerminalFile(dir: string, file: string): Promise<void> {
-    return this.executeTerminalFile(dir, file);
-  }
-
-  public setInstalled(dir: string) {
-    this.setInstalledUI(dir);
-  }
-
-  public done(title: string, description?: string) {
+  public done(type: 'success' | 'error', title: string, description?: string) {
     this.setNextStep(this.totalSteps);
-    this.onDone(title, description);
+    this.onDone(type, title, description);
   }
 }

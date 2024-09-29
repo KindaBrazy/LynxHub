@@ -76,6 +76,7 @@ const rendererIpc = {
 
     listDir: (dirPath: string, relatives: string[]): Promise<FolderListData[]> =>
       ipc.invoke(fileChannels.listDir, dirPath, relatives),
+    checkFilesExist: (dir: string, fileNames: string[]) => ipc.invoke(fileChannels.checkFilesExist, dir, fileNames),
   },
 
   /** Git operations */
@@ -88,6 +89,7 @@ const rendererIpc = {
     clonePromise: (url: string, dir: CloneDirTypes): Promise<void> => ipc.invoke(gitChannels.clonePromise, url, dir),
 
     locateCard: (url: string): Promise<string | undefined> => ipc.invoke(gitChannels.locate, url),
+    validateGitDir: (dir: string, url: string): Promise<boolean> => ipc.invoke(gitChannels.validateGitDir, dir, url),
 
     onProgress: (callback: GitProgressCallback) => ipc.on(gitChannels.onProgress, callback),
     offProgress: () => ipc.removeAllListeners(gitChannels.onProgress),

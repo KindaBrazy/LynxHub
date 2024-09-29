@@ -1,6 +1,5 @@
 import {Link, ModalBody, Progress} from '@nextui-org/react';
 import OpenDialog from '@renderer/App/Components/Reusable/OpenDialog';
-import {InstallCloneResult} from '@renderer/App/Modules/types';
 import {modalActions, useModalsState} from '@renderer/App/Redux/AI/ModalsReducer';
 import {AppDispatch} from '@renderer/App/Redux/Store';
 import rendererIpc from '@renderer/App/RendererIpc';
@@ -18,7 +17,7 @@ import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
 type Props = {
   url: string;
   start: boolean;
-  done: (result: InstallCloneResult) => void;
+  done: (dir: string) => void;
 };
 
 export default function CloneRepo({url, start, done}: Props) {
@@ -60,7 +59,7 @@ export default function CloneRepo({url, start, done}: Props) {
           break;
         case 'Completed':
           setDownloading(false);
-          done({dir: directory, locatedPreInstall: false});
+          done(directory);
           break;
       }
     };
@@ -91,7 +90,7 @@ export default function CloneRepo({url, start, done}: Props) {
           </Descriptions>
         </>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-4">
           <Card bordered={false} title="Download From">
             <Link
               href={url}

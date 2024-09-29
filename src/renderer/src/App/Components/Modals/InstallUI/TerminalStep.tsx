@@ -11,7 +11,6 @@ import {WebglAddon} from '@xterm/addon-webgl';
 import {ITheme, IWindowsPty, Terminal} from '@xterm/xterm';
 import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty} from 'lodash';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useCallback, useEffect, useRef} from 'react';
 
 let resizeTimeout: any;
@@ -29,7 +28,7 @@ export default function TerminalStep() {
 
   const getTheme = useCallback(
     (): ITheme => ({
-      background: darkMode ? getColor('raisinBlack') : getColor('white'),
+      background: darkMode ? '#18181B' : '#ffffff',
       foreground: darkMode ? getColor('white') : getColor('black'),
       cursor: darkMode ? getColor('white') : getColor('black'),
       cursorAccent: darkMode ? getColor('white') : getColor('black'),
@@ -163,18 +162,5 @@ export default function TerminalStep() {
     };
   }, [terminalRef]);
 
-  return (
-    <OverlayScrollbarsComponent
-      options={{
-        overflow: {x: 'hidden', y: 'scroll'},
-        scrollbars: {
-          autoHide: 'scroll',
-          clickScroll: true,
-          theme: darkMode ? 'os-theme-light' : 'os-theme-dark',
-        },
-      }}
-      className="m-2 size-full overflow-y-scroll rounded-xl bg-white p-3 shadow-small dark:bg-LynxRaisinBlack">
-      <div ref={terminalRef} className="relative size-full" />
-    </OverlayScrollbarsComponent>
-  );
+  return <div ref={terminalRef} className={'my-2 overflow-hidden'} />;
 }

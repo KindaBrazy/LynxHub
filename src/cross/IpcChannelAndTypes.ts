@@ -100,6 +100,7 @@ export const fileChannels = {
   removeDir: 'app:removeDir',
   trashDir: 'app:trashDir',
   listDir: 'app:listDir',
+  checkFilesExist: 'app:checkFilesExist',
 };
 
 export const gitChannels = {
@@ -108,6 +109,7 @@ export const gitChannels = {
   clonePromise: 'git:clone-promise',
 
   locate: 'git:locate',
+  validateGitDir: 'git:validateGitDir',
 
   pull: 'git:pull',
 

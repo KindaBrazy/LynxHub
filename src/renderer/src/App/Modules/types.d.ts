@@ -1,17 +1,21 @@
 export type AvailablePages = '/imageGenerationPage' | '/textGenerationPage' | '/audioGenerationPage';
 
-export type InstallSteps = {title: string; description?: string};
-export type InstallCloneResult = {dir: string; locatedPreInstall: boolean};
+export type InstallStarterStep = {chosen: 'install' | 'locate'; dir?: string};
 export type InstallStepperType = {
-  initialSteps: (steps: InstallSteps[]) => void;
+  initialSteps: (steps: string[]) => void;
   nextStep: () => void;
-  clone: (url: string) => Promise<InstallCloneResult>;
+  starterStep: () => Promise<InstallStarterStep>;
+  clone: (url: string) => Promise<string>;
   execTerminalFile: (dir: string, file: string) => Promise<void>;
-  execTerminalCommands: (commands?: string | string[], dir?: string) => Promise<void>;
+  execTerminalCommands: (commands: string | string[], dir?: string) => Promise<void>;
   downloadFile: (url: string) => Promise<string>;
-  decompressFile: (filePath: string) => Promise<string>;
   setInstalled: (dir: string) => void;
-  done: (title: string, description?: string) => void;
+  done: (type: 'success' | 'error', title: string, description?: string) => void;
+  utils: {
+    decompressFile: (filePath: string) => Promise<string>;
+    validateGitDir: (dir: string, url: string) => Promise<boolean>;
+    checkFilesExist: (dir: string, filesName: string[]) => Promise<boolean>;
+  };
 };
 
 /** These methods will be called in the renderer process */
