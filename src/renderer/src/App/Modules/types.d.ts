@@ -19,6 +19,7 @@ export type InstallStepperType = {
     decompressFile: (filePath: string) => Promise<string>;
     validateGitDir: (dir: string, url: string) => Promise<boolean>;
     checkFilesExist: (dir: string, filesName: string[]) => Promise<boolean>;
+    openPath: (path: string) => void;
   };
 };
 

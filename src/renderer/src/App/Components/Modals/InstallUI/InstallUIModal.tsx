@@ -195,6 +195,10 @@ export default function InstallUIModal() {
     });
   }, []);
 
+  const openPath = useCallback((path: string) => {
+    rendererIpc.file.openPath(path);
+  }, []);
+
   const starterStep = useCallback(async (): Promise<InstallStarterStep> => {
     return new Promise(resolve => {
       starterResolver.current = resolve;
@@ -203,8 +207,8 @@ export default function InstallUIModal() {
   }, []);
 
   const utils: InstallStepperType['utils'] = useMemo(() => {
-    return {decompressFile, validateGitDir, checkFilesExist};
-  }, [decompressFile, validateGitDir]);
+    return {decompressFile, validateGitDir, checkFilesExist, openPath};
+  }, [decompressFile, validateGitDir, checkFilesExist, openPath]);
 
   const userInput = useCallback((elements: InstallUserInput[]): Promise<InstallUserInputReturn[]> => {
     return new Promise(resolve => {
