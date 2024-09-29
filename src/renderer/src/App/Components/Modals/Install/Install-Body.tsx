@@ -1,5 +1,6 @@
-import {Accordion, AccordionItem, Link, ModalBody, Progress} from '@nextui-org/react';
-import {Descriptions} from 'antd';
+import {Link, ModalBody, Progress} from '@nextui-org/react';
+import {getIconByName} from '@renderer/assets/icons/SvgIconsContainer';
+import {Card, Descriptions} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
 import {useCallback} from 'react';
@@ -25,7 +26,7 @@ export default function InstallBody() {
   );
 
   return (
-    <ModalBody className="overflow-visible">
+    <ModalBody className="scrollbar-hide">
       {downloading ? (
         <>
           <Progress
@@ -41,12 +42,18 @@ export default function InstallBody() {
           </Descriptions>
         </>
       ) : (
-        <Accordion
-          variant="splitted"
-          selectionMode="multiple"
-          defaultExpandedKeys={['1', '2']}
-          itemClasses={{trigger: 'cursor-default'}}>
-          <AccordionItem key="1" title="Download From" className="cursor-default shadow-small">
+        <div className="my-4 space-y-4">
+          <Card
+            title={
+              <div className="flex flex-row items-center justify-between space-x-2">
+                {getIconByName('GitHub', {className: 'size-4'})}
+                <span className="text-medium">Download From</span>
+                <a />
+              </div>
+            }
+            bordered={false}
+            classNames={{header: ''}}
+            className="text-center !shadow-small dark:bg-foreground-100">
             <Link
               href={url}
               color="foreground"
@@ -55,16 +62,25 @@ export default function InstallBody() {
               showAnchorIcon>
               {url}
             </Link>
-          </AccordionItem>
-          <AccordionItem key="2" title="Save To" className="cursor-default shadow-small">
+          </Card>
+          <Card
+            title={
+              <div className="flex flex-row items-center justify-between space-x-2">
+                {getIconByName('Folder2', {className: 'size-4'})}
+                <span className="text-medium">Save to</span>
+                <a />
+              </div>
+            }
+            bordered={false}
+            className="text-center !shadow-small dark:bg-foreground-100">
             <OpenDialog
               directory={directory}
               dialogType="openDirectory"
               setDirectory={setDirectory}
               extraFolder={extractGitUrl(url).repo}
             />
-          </AccordionItem>
-        </Accordion>
+          </Card>
+        </div>
       )}
     </ModalBody>
   );

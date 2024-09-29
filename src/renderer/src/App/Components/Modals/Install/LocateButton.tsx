@@ -38,7 +38,7 @@ export default function LocateButton() {
   }, [url, cardId, dispatch]);
 
   return (
-    <Button color="default" variant="light" onPress={locateExisting} className="cursor-default">
+    <Button variant="flat" color="default" onPress={locateExisting} className="cursor-default">
       Locate
     </Button>
   );

@@ -4,6 +4,7 @@ import {modalActions, useModalsState} from '@renderer/App/Redux/AI/ModalsReducer
 import {AppDispatch} from '@renderer/App/Redux/Store';
 import rendererIpc from '@renderer/App/RendererIpc';
 import {initGitProgress} from '@renderer/App/Utils/Constants';
+import {getIconByName} from '@renderer/assets/icons/SvgIconsContainer';
 import {Card, Descriptions} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
@@ -91,7 +92,18 @@ export default function CloneRepo({url, start, done}: Props) {
         </>
       ) : (
         <div className="space-y-4">
-          <Card bordered={false} title="Download From">
+          <Card
+            title={
+              <div className="flex flex-row items-center justify-between space-x-2">
+                {getIconByName('GitHub', {className: 'size-4'})}
+                <span className="text-medium">Download From</span>
+                <a />
+              </div>
+            }
+            size="small"
+            bordered={false}
+            classNames={{header: ''}}
+            className="text-center !shadow-small dark:bg-foreground-100">
             <Link
               href={url}
               color="foreground"
@@ -101,7 +113,17 @@ export default function CloneRepo({url, start, done}: Props) {
               {url}
             </Link>
           </Card>
-          <Card title="Save to" bordered={false}>
+          <Card
+            title={
+              <div className="flex flex-row items-center justify-between space-x-2">
+                {getIconByName('Folder2', {className: 'size-4'})}
+                <span className="text-medium">Save to</span>
+                <a />
+              </div>
+            }
+            size="small"
+            bordered={false}
+            className="text-center !shadow-small dark:bg-foreground-100">
             <OpenDialog
               directory={directory}
               dialogType="openDirectory"

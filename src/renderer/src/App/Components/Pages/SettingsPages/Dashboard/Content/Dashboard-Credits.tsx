@@ -99,7 +99,7 @@ export default function DashboardCredits() {
                 />
               ))}
             {(!groupedSupporters[tier] || groupedSupporters[tier].length === 0) && (
-              <Empty description="No Supporters Yet" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+              <Empty description="No Sponsors Yet" image={Empty.PRESENTED_IMAGE_SIMPLE} />
             )}
           </div>
         </div>
