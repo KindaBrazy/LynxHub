@@ -1,3 +1,4 @@
+import {useModules} from '@renderer/App/Modules/ModulesContext';
 import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
@@ -19,12 +20,20 @@ export default function useAppEvents() {
   const appUpdateInterval = useRef<NodeJS.Timeout>();
   const moduleUpdateInterval = useRef<NodeJS.Timeout>();
 
+  const {getMethod} = useModules();
+
   useEffect(() => {
     const checkForUpdate = async () => {
       for (const card of installedCards) {
         const {id, dir} = card;
-        const isAvailable = await rendererIpc.git.bCardUpdateAvailable(dir);
-        if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
+        const updateType = getMethod(id, 'manager')?.updater.updateType;
+        if (updateType !== 'stepper') {
+          const isAvailable = await rendererIpc.git.bCardUpdateAvailable(dir);
+          if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
+        } else {
+          const isAvailable = getMethod(id, 'manager')?.updater.updateAvailable?.();
+          if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
+        }
       }
     };
 
@@ -34,7 +43,7 @@ export default function useAppEvents() {
     appUpdateInterval.current = undefined;
 
     appUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
-  }, [installedCards]);
+  }, [installedCards, getMethod]);
 
   useEffect(() => {
     const checkForUpdate = () => {

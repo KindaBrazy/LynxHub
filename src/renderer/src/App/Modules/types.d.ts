@@ -39,8 +39,13 @@ export type CardRendererMethods = {
   /** Parse given string to the arguments */
   parseStringToArgs?: (args: string) => ChosenArgument[];
 
-  installUI?: {
+  manager?: {
     startInstall: (stepper: InstallStepperType) => void;
+    updater: {
+      updateType: 'git' | 'stepper';
+      startUpdate?: (stepper: InstallStepperType, dir: string) => void;
+      updateAvailable?: () => boolean;
+    };
   };
 };
 

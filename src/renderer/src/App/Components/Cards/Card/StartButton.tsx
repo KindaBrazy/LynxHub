@@ -54,8 +54,8 @@ const StartButton = memo(() => {
   }, [id, autoUpdateExtensions, dispatch]);
 
   const install = useCallback(() => {
-    if (!!getMethod(id, 'installUI')) {
-      dispatch(modalActions.openInstallUICard({id, title}));
+    if (!!getMethod(id, 'manager')) {
+      dispatch(modalActions.openInstallUICard({id, type: 'install', title}));
     } else {
       rendererIpc.file.getAppDirectories('AIWorkspaces').then(dir => {
         const isWin = window.osPlatform === 'win32';
