@@ -1,5 +1,7 @@
 import {Checkbox, DropdownItemProps, Spinner} from '@nextui-org/react';
-import {useCallback, useEffect, useMemo} from 'react';
+import {useModules} from '@renderer/App/Modules/ModulesContext';
+import {modalActions} from '@renderer/App/Redux/AI/ModalsReducer';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
@@ -22,24 +24,35 @@ export const useUpdate = (): DropdownItemProps | undefined => {
   const autoUpdate = useIsAutoUpdateCard(id);
   const webUi = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
+  const {getMethod} = useModules();
+  const [customUpdate, setCustomUpdate] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
 
+  useEffect(() => {
+    if (getMethod(id, 'manager')?.updater.updateType === 'stepper') {
+      setCustomUpdate(true);
+    }
+  }, [getMethod, id]);
+
   const onPress = useCallback(() => {
-    if (webUi) {
+    if (!!getMethod(id, 'manager')?.updater.startUpdate) {
+      dispatch(modalActions.openInstallUICard({id, type: 'update', title}));
+      setMenuIsOpen(false);
+    } else if (webUi) {
       dispatch(cardsActions.addUpdatingCard({devName, id, title}));
       setMenuIsOpen(false);
       rendererIpc.git.pull(webUi.dir, id);
     }
-  }, [webUi, dispatch, devName, id, title, setMenuIsOpen]);
+  }, [webUi, dispatch, devName, id, title, setMenuIsOpen, customUpdate]);
 
   return useMemo(
     () =>
-      !updateAvailable || autoUpdate
+      !customUpdate && (!updateAvailable || autoUpdate)
         ? undefined
         : {
-            className: 'cursor-default text-success',
-            color: 'success',
+            className: `cursor-default ${!customUpdate && 'text-success'}`,
+            color: customUpdate ? 'default' : 'success',
             endContent: updating ? <Spinner size="sm" color="primary" /> : undefined,
             isDisabled: !!updating,
             key: 'update',
@@ -47,7 +60,7 @@ export const useUpdate = (): DropdownItemProps | undefined => {
             startContent: getIconByName('Download'),
             title: 'Update',
           },
-    [updateAvailable, autoUpdate, onPress, updating],
+    [updateAvailable, autoUpdate, onPress, updating, customUpdate],
   );
 };
 
@@ -56,8 +69,16 @@ export const useCheckForUpdate = (): DropdownItemProps | undefined => {
   const autoUpdate = useIsAutoUpdateCard(id);
   const webUi = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
+  const {getMethod} = useModules();
+  const [customUpdate, setCustomUpdate] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (getMethod(id, 'manager')?.updater.updateType === 'stepper') {
+      setCustomUpdate(true);
+    }
+  }, [getMethod, id]);
 
   const onPress = useCallback(() => {
     setCheckingForUpdate(true);
@@ -71,7 +92,7 @@ export const useCheckForUpdate = (): DropdownItemProps | undefined => {
 
   return useMemo(
     () =>
-      updateAvailable || autoUpdate
+      updateAvailable || autoUpdate || customUpdate
         ? undefined
         : {
             className: 'cursor-default',
@@ -82,18 +103,26 @@ export const useCheckForUpdate = (): DropdownItemProps | undefined => {
             startContent: getIconByName('Refresh'),
             title: 'Check Now',
           },
-    [updateAvailable, autoUpdate, onPress, checkingForUpdate],
+    [updateAvailable, autoUpdate, onPress, checkingForUpdate, customUpdate],
   );
 };
 
-export const useAutoUpdate = (): DropdownItemProps => {
+export const useAutoUpdate = (): DropdownItemProps | undefined => {
   const {id, repoUrl, title} = useCardData();
   const {name: devName} = useDevInfo(repoUrl);
   const autoUpdate = useIsAutoUpdateCard(id);
   const updateAvailable = useUpdateAvailable(id);
   const webUi = useInstalledCard(id);
+  const {getMethod} = useModules();
+  const [customUpdate, setCustomUpdate] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (getMethod(id, 'manager')?.updater.updateType === 'stepper') {
+      setCustomUpdate(true);
+    }
+  }, [getMethod, id]);
 
   const onPress = useCallback(
     () =>
@@ -109,17 +138,20 @@ export const useAutoUpdate = (): DropdownItemProps => {
   }, [autoUpdate, updateAvailable, webUi, dispatch, devName, id, title]);
 
   return useMemo(
-    () => ({
-      className: 'cursor-default',
-      key: 'auto-update',
-      onPress,
-      textValue: 'Auto Update',
-      title: (
-        <Checkbox size="sm" isSelected={autoUpdate} onValueChange={onPress} className="cursor-default">
-          Auto Update
-        </Checkbox>
-      ),
-    }),
-    [onPress, autoUpdate],
+    () =>
+      customUpdate
+        ? undefined
+        : {
+            className: 'cursor-default',
+            key: 'auto-update',
+            onPress,
+            textValue: 'Auto Update',
+            title: (
+              <Checkbox size="sm" isSelected={autoUpdate} onValueChange={onPress} className="cursor-default">
+                Auto Update
+              </Checkbox>
+            ),
+          },
+    [onPress, autoUpdate, customUpdate],
   );
 };

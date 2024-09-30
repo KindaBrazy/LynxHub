@@ -22,6 +22,7 @@ import {
 import {modalActions, useModalsState} from '@renderer/App/Redux/AI/ModalsReducer';
 import {AppDispatch} from '@renderer/App/Redux/Store';
 import rendererIpc from '@renderer/App/RendererIpc';
+import {useInstalledCard} from '@renderer/App/Utils/UtilHooks';
 import {Descriptions, Popconfirm, Result, Steps} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
@@ -55,7 +56,8 @@ const initialState: InstallState = {
 export default function InstallUIModal() {
   const dispatch = useDispatch<AppDispatch>();
   const {getMethod} = useModules();
-  const {isOpen, cardId, title} = useModalsState('installUIModal');
+  const {isOpen, cardId, title, type} = useModalsState('installUIModal');
+  const installedCard = useInstalledCard(cardId);
 
   // -----------------------------------------------> States
   const [currentStep, setCurrentStep] = useState<number>(0);
@@ -65,9 +67,9 @@ export default function InstallUIModal() {
     setState(prevState => ({...prevState, ...newState}));
   }, []);
 
-  const [methods, setMethods] = useState<CardRendererMethods['installUI']>();
+  const [methods, setMethods] = useState<CardRendererMethods['manager']>();
   useEffect(() => {
-    setMethods(getMethod(cardId, 'installUI'));
+    setMethods(getMethod(cardId, 'manager'));
   }, [cardId]);
 
   const [progressInfo, setProgressInfo] = useState<DownloadProgress | undefined>(undefined);
@@ -249,9 +251,13 @@ export default function InstallUIModal() {
 
   useEffect(() => {
     if (isOpen && methods && stepper) {
-      methods.startInstall(stepper);
+      if (type === 'install') {
+        methods.startInstall(stepper);
+      } else {
+        methods.updater.startUpdate?.(stepper, installedCard!.dir);
+      }
     }
-  }, [isOpen, methods, stepper]);
+  }, [isOpen, methods, stepper, type, installedCard]);
 
   // -----------------------------------------------> Handle UI
   const handleClose = useCallback(() => {
