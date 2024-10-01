@@ -12,8 +12,8 @@ import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {extractGitUrl} from '../../../../../../cross/CrossUtils';
-import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
+import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
+import {GitProgressCallback} from '../../../../../../../cross/IpcChannelAndTypes';
 
 type Props = {
   url: string;
@@ -22,6 +22,7 @@ type Props = {
 };
 
 export default function CloneRepo({url, start, done}: Props) {
+  const {isOpen} = useModalsState('installUIModal');
   const dispatch = useDispatch<AppDispatch>();
   const {cardId} = useModalsState('installUIModal');
 
@@ -47,7 +48,7 @@ export default function CloneRepo({url, start, done}: Props) {
     // Start cloning
     rendererIpc.git.cloneRepo(url, directory);
     const onProgress: GitProgressCallback = (_e, id, state, result) => {
-      if (id) return;
+      if (id || !isOpen) return;
 
       switch (state) {
         case 'Progress':
@@ -80,6 +81,7 @@ export default function CloneRepo({url, start, done}: Props) {
         <>
           <Progress
             color="secondary"
+            aria-label="Clone Progress"
             value={downloadProgress.progress}
             isIndeterminate={downloadProgress.stage === 'unknown'}
             showValueLabel

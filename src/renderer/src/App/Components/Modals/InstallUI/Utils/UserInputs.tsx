@@ -1,11 +1,11 @@
 import {Button, Input, Select, SelectItem} from '@nextui-org/react';
 import LynxSwitch from '@renderer/App/Components/Reusable/LynxSwitch';
-import {InstallUserInput, InstallUserInputReturn} from '@renderer/App/Modules/types';
+import {UserInputField, UserInputResult} from '@renderer/App/Modules/types';
 import rendererIpc from '@renderer/App/RendererIpc';
 import {getIconByName} from '@renderer/assets/icons/SvgIconsContainer';
 import {Dispatch, SetStateAction, useCallback, useState} from 'react';
 
-type Props = {elements: InstallUserInput[]; setResult: Dispatch<SetStateAction<InstallUserInputReturn[]>>};
+type Props = {elements: UserInputField[]; setResult: Dispatch<SetStateAction<UserInputResult[]>>};
 
 export default function UserInputs({elements, setResult}: Props) {
   const [selectedFolder, setSelectedFolder] = useState<string>('Click here to select folder');
