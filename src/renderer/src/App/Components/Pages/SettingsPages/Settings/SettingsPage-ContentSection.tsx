@@ -16,6 +16,10 @@ type Props = {
 export default function SettingsSection({children, id, title, titleColor = '', itemsCenter = false, icon}: Props) {
   return (
     <Card
+      className={
+        `w-full dark:bg-LynxRaisinBlack ${itemsCenter && 'text-center'} scroll-mt-8 ` +
+        `border-2 border-foreground/10 dark:border-foreground/5`
+      }
       title={
         <div className="flex flex-row items-center justify-center space-x-2">
           {icon && getIconByName(icon, {className: 'size-5'})}
@@ -24,8 +28,7 @@ export default function SettingsSection({children, id, title, titleColor = '', i
       }
       id={id}
       bordered={false}
-      classNames={{body: 'gap-y-4 !py-2 flex-col flex', title: `text-center ${titleColor}`}}
-      className={`w-full dark:bg-LynxRaisinBlack ${itemsCenter && 'text-center'} scroll-mt-8`}>
+      classNames={{body: 'gap-y-4 !py-2 flex-col flex', title: `text-center ${titleColor}`}}>
       {children}
     </Card>
   );

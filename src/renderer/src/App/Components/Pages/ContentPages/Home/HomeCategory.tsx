@@ -1,8 +1,8 @@
-import {Card} from 'antd';
+import CardContainer from '@renderer/App/Components/Pages/CardContainer';
 import {motion} from 'framer-motion';
 import {ReactNode} from 'react';
 
-import {getIconByName, IconNameType} from '../../../../../assets/icons/SvgIconsContainer';
+import {IconNameType} from '../../../../../assets/icons/SvgIconsContainer';
 
 type Props = {
   children: ReactNode;
@@ -19,18 +19,9 @@ export default function HomeCategory({children, icon, title}: Props) {
       initial={{opacity: 0, scale: 0.95}}
       className="flex w-full flex-col p-4 py-0"
       layout>
-      <Card
-        title={
-          <div className="flex w-full flex-row items-center justify-between overflow-visible">
-            {getIconByName(icon, {className: 'size-6 mr-2 hover:transition hover:duration-500 hover:opacity-80'})}
-            <span className="text-lg font-bold hover:opacity-80 hover:transition hover:duration-500">{title}</span>
-            <div />
-          </div>
-        }
-        bordered={false}
-        className="bg-white/80 dark:bg-LynxRaisinBlack/80">
+      <CardContainer icon={icon} title={title}>
         {children}
-      </Card>
+      </CardContainer>
     </motion.div>
   );
 }

@@ -47,7 +47,7 @@ export default function ModulesPage() {
       <div
         className={
           'flex max-h-full flex-col overflow-hidden rounded-lg bg-default-200 dark:bg-LynxRaisinBlack' +
-          ' pr-0.5 transition duration-300'
+          ' border-2 border-foreground/5 pr-0.5 transition duration-300'
         }>
         {currentTab === 'installed-tab' && (
           <InstalledModules updatingAll={updatingAll} setInstalledModules={setInstalledModules} />
