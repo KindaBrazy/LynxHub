@@ -52,7 +52,13 @@ export default function DashboardPageNav() {
   );
 
   return (
-    <Card bordered={false} title="Dashboard" className="h-full w-48 shrink-0 text-center dark:bg-LynxRaisinBlack">
+    <Card
+      className={
+        'h-full w-48 shrink-0 border-2 border-foreground/10 text-center' +
+        ' dark:border-foreground/5 dark:bg-LynxRaisinBlack'
+      }
+      bordered={false}
+      title="Dashboard">
       <ScrollShadow className="absolute inset-x-3 bottom-4 top-[3.8rem]" hideScrollBar>
         {groupSections.map((section, index) => (
           <GroupSection key={index} {...section} />

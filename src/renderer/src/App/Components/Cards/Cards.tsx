@@ -1,4 +1,3 @@
-import {ScrollShadow} from '@nextui-org/react';
 import {Result} from 'antd';
 import {isEmpty} from 'lodash';
 
@@ -15,10 +14,7 @@ export function GetComponentsByPath({routePath}: {routePath: string}) {
   const installedCards = useCardsState('installedCards');
 
   return (
-    <ScrollShadow
-      size={10}
-      orientation="vertical"
-      className="flex size-full flex-row flex-wrap gap-7 overflow-y-scroll scrollbar-hide">
+    <div className="flex size-full flex-row flex-wrap gap-7 overflow-y-scroll scrollbar-hide">
       {isEmpty(cardModules) ? (
         <Page className="content-center">
           <Result
@@ -37,6 +33,6 @@ export function GetComponentsByPath({routePath}: {routePath: string}) {
           );
         })
       )}
-    </ScrollShadow>
+    </div>
   );
 }
