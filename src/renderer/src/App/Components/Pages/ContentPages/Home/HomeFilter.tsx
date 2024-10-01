@@ -28,7 +28,7 @@ const HomeFilter = memo(({selectedCategories}: Props) => {
     <Dropdown showArrow>
       <DropdownTrigger>
         <Button
-          radius="md"
+          radius="full"
           variant="light"
           className={`cursor-default bg-stone-50 shadow-md dark:bg-LynxRaisinBlack dark:hover:bg-white/15`}
           isIconOnly>

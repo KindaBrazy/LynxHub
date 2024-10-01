@@ -8,7 +8,7 @@ type Props = {searchValue: string; setSearchValue: Dispatch<SetStateAction<strin
 const HomeSearchBox = memo(({searchValue, setSearchValue}: Props) => {
   return (
     <Input
-      radius="md"
+      radius="full"
       type="search"
       spellCheck={false}
       value={searchValue}
