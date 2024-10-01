@@ -53,15 +53,16 @@ fixes, and compatibilities**
 
 | ![Windows](https://ziadoua.github.io/m3-Markdown-Badges/badges/Windows/windows1.svg) | ![Linux](https://ziadoua.github.io/m3-Markdown-Badges/badges/Linux/linux2.svg) | ![macOS](https://ziadoua.github.io/m3-Markdown-Badges/badges/macOS/macos1.svg) |
 |--------------------------------------------------------------------------------------|--------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
-| ✔️ Available                                                                         | ✔️ Available                                                                   | 🚀 Early-Access                                                                |
+| ✔️ Available                                                                         | ✔️ Available                                                                   | ✔️ Available                                                                   |
 
 ### 🔗 Download Links
 
-| Platform                         | x64                                                                                                                   | arm64                                                                                                                   |
-|----------------------------------|-----------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
-| **Windows 10/11** (.exe)         | [**x64 (V1.1.0)**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.1.0/LynxHub-V1.1.0-win_x64-Setup.exe)   | N/A                                                                                                                     |
-| **Debian, Ubuntu** (.deb)        | [**x64 (V1.1.0)**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.1.0/LynxHub-V1.1.0-linux_amd64.deb)     | [**arm64 (V1.1.0)**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.1.0/LynxHub-V1.1.0-linux_arm64.deb)     |
-| **Red Hat, Fedora, SUSE** (.rpm) | [**x86_64 (V1.1.0)**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.1.0/LynxHub-V1.1.0-linux_x86_64.rpm) | [**aarch64 (V1.1.0)**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.1.0/LynxHub-V1.1.0-linux_aarch64.rpm) |
+| Platform                         | x64                                                                                                           | arm64                                                                                                         |
+|----------------------------------|---------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
+| **Windows 10/11** (.exe)         | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.2.0/LynxHub-V1.2.0-win_x64-Setup.exe) | N/A                                                                                                           |
+| **macOS** (.dmg)                 | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.2.0/LynxHub-V1.2.0-mac.dmg)           | N/A                                                                                                           |
+| **Debian, Ubuntu** (.deb)        | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.2.0/LynxHub-V1.2.0-linux_amd64.deb)   | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.2.0/LynxHub-V1.2.0-linux_arm64.deb)   |
+| **Red Hat, Fedora, SUSE** (.rpm) | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.2.0/LynxHub-V1.2.0-linux_x86_64.rpm)  | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.2.0/LynxHub-V1.2.0-linux_aarch64.rpm) |
 
 ## 🗂️ Table of Contents
 
