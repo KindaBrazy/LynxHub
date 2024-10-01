@@ -1,9 +1,9 @@
-import InstallUIModal from '@renderer/App/Components/Modals/InstallUI/InstallUIModal';
 import {memo} from 'react';
 
 import CardExtensions from './CardExtensions/CardExtensions';
 import CardInfoModal from './CardInfo/CardInfo-Modal';
 import InstallModal from './Install/InstallModal';
+import InstallUIModal from './InstallUI/InstallUI-Modal';
 import LaunchConfig from './LaunchConfig/LaunchConfig';
 import useUninstallCard from './UninstallCard/UninstallCard';
 import UpdateApp from './UpdateApp/UpdateApp';
