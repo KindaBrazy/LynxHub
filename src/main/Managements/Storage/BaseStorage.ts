@@ -41,7 +41,7 @@ class BaseStorage {
     app: {
       closeConfirm: true,
       terminateAIConfirm: true,
-      homeCategory: ['All'],
+      homeCategory: ['All', 'Pin'],
       darkMode: 'dark',
       taskbarStatus: 'taskbar-tray',
       tooltipStatus: 'essential',
