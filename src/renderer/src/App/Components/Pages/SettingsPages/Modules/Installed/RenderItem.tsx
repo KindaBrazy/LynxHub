@@ -91,7 +91,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
         title="Are you sure you want to uninstall?"
         okButtonProps={{type: 'primary', className: 'cursor-default'}}
         cancelButtonProps={{type: 'primary', className: 'cursor-default'}}>
-        <Button size="sm" color="danger" variant="light" isLoading={uninstalling} className="cursor-default">
+        <Button size="sm" color="danger" variant="flat" isLoading={uninstalling} className="cursor-default">
           Uninstall
         </Button>
       </Popconfirm>,
@@ -109,7 +109,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
           {!updating && 'Update'}
         </Button>
       ) : (
-        <Button size="sm" variant="light" onPress={checkForUpdate} className="cursor-default">
+        <Button size="sm" variant="flat" onPress={checkForUpdate} className="cursor-default">
           Check for Updates
         </Button>
       ),
@@ -178,7 +178,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
                 <Typography.Text className="text-xs text-foreground-500">V{item.version}</Typography.Text>
                 <Button
                   size="sm"
-                  variant="light"
+                  variant="flat"
                   onPress={showInfo}
                   className="cursor-default dark:text-gray-300"
                   fullWidth>

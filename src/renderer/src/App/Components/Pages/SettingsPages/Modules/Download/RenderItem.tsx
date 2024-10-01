@@ -90,7 +90,7 @@ export default function RenderItem({item}: Props) {
             </Button>
             <Button
               size="sm"
-              variant="light"
+              variant="flat"
               color="success"
               onPress={install}
               isLoading={installing}
