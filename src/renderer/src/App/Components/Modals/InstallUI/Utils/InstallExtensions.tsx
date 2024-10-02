@@ -1,5 +1,6 @@
+import {Spinner} from '@nextui-org/react';
 import rendererIpc from '@renderer/App/RendererIpc';
-import {Steps} from 'antd';
+import {StepProps, Steps} from 'antd';
 import {startCase} from 'lodash';
 import {MutableRefObject, useEffect, useState} from 'react';
 
@@ -12,25 +13,37 @@ type Props = {
 
 export default function InstallExtensions({extensionsURLs, extensionsResolver}: Props) {
   const [current, setCurrent] = useState<number>(0);
-  const [steps, setSteps] = useState<{title: string}[]>([]);
+  const [steps, setSteps] = useState<StepProps[]>([]);
+
+  useEffect(() => {
+    setSteps(prevState =>
+      prevState.map((step, index) => {
+        if (index === current) {
+          return {...step, icon: <Spinner />};
+        } else {
+          return {...step, icon: undefined};
+        }
+      }),
+    );
+  }, [current, setSteps]);
 
   useEffect(() => {
     setSteps(
       extensionsURLs?.urls
-        .map(url => {
+        .map((url, index) => {
           const validUrl = validateGitRepoUrl(url);
           return {
             title: startCase(extractGitUrl(validUrl).repo),
+            icon: index === 0 ? <Spinner /> : undefined,
           };
         })
         .filter(Boolean) || [],
     );
+
     setCurrent(0);
 
     async function startInstall() {
-      console.log('extensionsURLs', extensionsURLs);
       for (const extensionsURL of extensionsURLs?.urls || []) {
-        console.log('installing: ', extensionsURL);
         try {
           const validUrl = validateGitRepoUrl(extensionsURL);
           await rendererIpc.git.clonePromise(validUrl, `${extensionsURLs?.dir}/${extractGitUrl(validUrl).repo}`);
