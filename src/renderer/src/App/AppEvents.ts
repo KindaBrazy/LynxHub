@@ -26,8 +26,9 @@ export default function useAppEvents() {
     const checkForUpdate = async () => {
       for (const card of installedCards) {
         const {id, dir} = card;
-        const updateType = getMethod(id, 'manager')?.updater.updateType;
-        if (updateType !== 'stepper') {
+        const updater = getMethod(id, 'manager')?.updater;
+        const updateType = updater?.updateType;
+        if (!updater || updateType === 'git') {
           const isAvailable = await rendererIpc.git.bCardUpdateAvailable(dir);
           if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
         } else {
