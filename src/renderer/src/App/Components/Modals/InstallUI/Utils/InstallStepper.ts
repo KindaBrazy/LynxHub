@@ -64,12 +64,11 @@ export default class InstallStepper {
           }
         }
         if (customArguments !== undefined) {
-          rendererIpc.storageUtils.setCardArguments(data.cardId, {
-            activePreset: customArguments.presetName,
-            data: [
-              {preset: 'Default', arguments: []},
-              {preset: customArguments.presetName, arguments: customArguments.customArguments},
-            ],
+          rendererIpc.storageUtils.getCardArguments(data.cardId).then(result => {
+            rendererIpc.storageUtils.setCardArguments(data.cardId, {
+              activePreset: customArguments.presetName,
+              data: [...result.data, {preset: customArguments.presetName, arguments: customArguments.customArguments}],
+            });
           });
         }
         if (preLaunch !== undefined) {
