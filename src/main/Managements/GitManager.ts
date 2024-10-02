@@ -207,15 +207,16 @@ export default class GitManager {
       const resultDir =
         directory === 'moduleDir' ? path.join(ModuleManager.getModulesPath(), extractGitUrl(url).repo) : directory;
 
-      try {
-        this.git.clone(url, resultDir.toString()).then(() => {
+      this.git
+        .clone(url, resultDir.toString())
+        .then(() => {
           this.handleProgressComplete();
           resolve();
+        })
+        .catch(error => {
+          this.handleError(error);
+          reject(error);
         });
-      } catch (error) {
-        this.handleError(error);
-        reject(error);
-      }
     });
   }
 
