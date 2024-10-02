@@ -9,35 +9,91 @@ export default class InstallStepper {
   private totalSteps: number;
 
   constructor(data: {
+    cardId: string;
     setSteps: Dispatch<SetStateAction<string[]>>;
     setCurrentStep: Dispatch<SetStateAction<number>>;
     cloneRepository: InstallationStepper['cloneRepository'];
-    setInstalled: InstallationStepper['setInstalled'];
     showFinalStep: InstallationStepper['showFinalStep'];
     runTerminalScript: InstallationStepper['runTerminalScript'];
     executeTerminalCommands: InstallationStepper['executeTerminalCommands'];
     downloadFileFromUrl: InstallationStepper['downloadFileFromUrl'];
     starterStep: InstallationStepper['starterStep'];
     collectUserInput: InstallationStepper['collectUserInput'];
+    installExtensions: InstallationStepper['postInstall']['installExtensions'];
   }) {
     this.totalSteps = 0;
+
     this.setSteps = data.setSteps;
     this.setNextStep = data.setCurrentStep;
     this.cloneRepository = data.cloneRepository;
-    this.setInstalled = data.setInstalled;
     this.finalStep = data.showFinalStep;
     this.runTerminalScript = data.runTerminalScript;
     this.executeTerminalCommands = data.executeTerminalCommands;
     this.downloadFileFromUrl = data.downloadFileFromUrl;
+    this.starterStep = data.starterStep;
+    this.collectUserInput = data.collectUserInput;
+
+    this.setInstalled = dir => {
+      rendererIpc.storageUtils.addInstalledCard({dir, id: data.cardId});
+    };
+
     this.utils = {
       decompressFile: rendererIpc.utils.decompressFile,
       validateGitRepository: rendererIpc.git.validateGitDir,
       verifyFilesExist: rendererIpc.file.checkFilesExist,
       openFileOrFolder: rendererIpc.file.openPath,
     };
-    this.starterStep = data.starterStep;
-    this.collectUserInput = data.collectUserInput;
+
+    this.postInstall = {
+      installExtensions: data.installExtensions,
+      config: config => {
+        const {autoUpdateExtensions, autoUpdateCard, launchBehavior, preLaunch, customCommands, customArguments} =
+          config;
+        if (autoUpdateCard !== undefined) {
+          if (autoUpdateCard) {
+            rendererIpc.storageUtils.addAutoUpdateCard(data.cardId);
+          } else {
+            rendererIpc.storageUtils.removeAutoUpdateCard(data.cardId);
+          }
+        }
+        if (autoUpdateExtensions !== undefined) {
+          if (autoUpdateExtensions) {
+            rendererIpc.storageUtils.addAutoUpdateExtensions(data.cardId);
+          } else {
+            rendererIpc.storageUtils.removeAutoUpdateExtensions(data.cardId);
+          }
+        }
+        if (customArguments !== undefined) {
+          rendererIpc.storageUtils.setCardArguments(data.cardId, {
+            activePreset: customArguments.presetName,
+            data: [
+              {preset: 'Default', arguments: []},
+              {preset: customArguments.presetName, arguments: customArguments.customArguments},
+            ],
+          });
+        }
+        if (preLaunch !== undefined) {
+          rendererIpc.storageUtils.preCommands('set', {command: preLaunch.preCommands, id: data.cardId});
+          preLaunch.openPath.forEach(({path, type}) => {
+            rendererIpc.storageUtils.preOpen('add', {id: data.cardId, open: {path, type}});
+          });
+        }
+        if (launchBehavior !== undefined) {
+          const {browser, terminal} = launchBehavior;
+          rendererIpc.storageUtils.updateCustomRunBehavior({
+            cardID: data.cardId,
+            terminal,
+            browser,
+          });
+        }
+        if (customCommands !== undefined) {
+          rendererIpc.storageUtils.customRun('set', {command: customCommands, id: data.cardId});
+        }
+      },
+    };
   }
+
+  public postInstall: InstallationStepper['postInstall'];
 
   public utils: InstallationStepper['utils'];
 

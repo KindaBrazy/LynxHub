@@ -1,6 +1,7 @@
 import {ModalBody, Progress} from '@nextui-org/react';
 import {InstallState} from '@renderer/App/Components/Modals/InstallUI/types';
 import CloneRepo from '@renderer/App/Components/Modals/InstallUI/Utils/CloneRepo';
+import InstallExtensions from '@renderer/App/Components/Modals/InstallUI/Utils/InstallExtensions';
 import TerminalStep from '@renderer/App/Components/Modals/InstallUI/Utils/TerminalStep';
 import UserInputs from '@renderer/App/Components/Modals/InstallUI/Utils/UserInputs';
 import {UserInputField, UserInputResult} from '@renderer/App/Modules/types';
@@ -19,9 +20,20 @@ type Props = {
   userInputElements: UserInputField[];
   setUserElementsReturn: Dispatch<SetStateAction<UserInputResult[]>>;
   cloneResolver: MutableRefObject<((dir: string) => void) | null>;
+  extensionsToInstall: {urls: string[]; dir: string} | undefined;
+  extensionsResolver: MutableRefObject<(() => void) | null>;
 };
 
-const InstallBody = ({state, title, progressInfo, userInputElements, setUserElementsReturn, cloneResolver}: Props) => {
+const InstallBody = ({
+  state,
+  title,
+  progressInfo,
+  userInputElements,
+  setUserElementsReturn,
+  cloneResolver,
+  extensionsToInstall,
+  extensionsResolver,
+}: Props) => {
   const doneClone = useCallback(
     (dir: string) => {
       if (cloneResolver.current) {
@@ -79,6 +91,8 @@ const InstallBody = ({state, title, progressInfo, userInputElements, setUserElem
         );
       case 'user-input':
         return <UserInputs elements={userInputElements} setResult={setUserElementsReturn} />;
+      case 'install-extensions':
+        return <InstallExtensions extensionsURLs={extensionsToInstall} extensionsResolver={extensionsResolver} />;
     }
     return <Fragment />;
   };

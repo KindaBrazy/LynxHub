@@ -62,6 +62,63 @@ export type InstallationStepper = {
    */
   showFinalStep: (resultType: 'success' | 'error', resultTitle: string, resultDescription?: string) => void;
 
+  /** Use these operations after the `setInstalled` function */
+  postInstall: {
+    /**
+     * Installs a list of extensions for the user
+     * @param extensionURLs An array of Git repository URLs to clone
+     * @param extensionsDir The target directory where the extensions will be cloned
+     * @returns A Promise that resolves when all extensions are installed
+     */
+    installExtensions: (extensionURLs: string[], extensionsDir: string) => Promise<void>;
+
+    /**
+     * Configures the WebUI with the provided settings
+     * @param configs An object containing configuration options
+     */
+    config: (configs: {
+      /** If true, automatically updates all extensions when launching WebUI */
+      autoUpdateExtensions?: boolean;
+
+      /** If true, automatically updates the WebUI itself */
+      autoUpdateCard?: boolean;
+
+      /** Pre-defined arguments to pass to the WebUI */
+      customArguments?: {
+        /** Name of the preset configuration */
+        presetName: string;
+        /** Array of custom arguments */
+        customArguments: {
+          /** Name of the argument like --use-cpu */
+          name: string;
+          /** Value of the argument
+           * - Set empty string '', if it's Boolean or CheckBox
+           */
+          value: string;
+        }[];
+      };
+
+      /** Custom commands to execute instead of the actual command to launch WebUI */
+      customCommands?: string[];
+
+      /** Defines the behavior of the browser and terminal when launching */
+      launchBehavior?: {
+        /** Specifies how to open the browser */
+        browser: 'appBrowser' | 'defaultBrowser' | 'doNothing';
+        /** Specifies how to handle the terminal */
+        terminal: 'runScript' | 'empty';
+      };
+
+      /** Actions to perform before launching WebUI */
+      preLaunch?: {
+        /** Commands to execute before launch */
+        preCommands: string[];
+        /** Paths to open before launch */
+        openPath: {path: string; type: 'folder' | 'file'}[];
+      };
+    }) => void;
+  };
+
   /** Utility functions that don't involve UI interaction */
   utils: {
     /** Decompress a file.
