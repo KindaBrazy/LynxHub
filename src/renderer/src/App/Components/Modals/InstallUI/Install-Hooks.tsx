@@ -16,6 +16,8 @@ type Props = {
   userInputResolver: MutableRefObject<((result: UserInputResult[]) => void) | null>;
   restartTerminal: MutableRefObject<(() => void) | null>;
   downloadFileFromUrl: (url: string) => ReturnType<InstallationStepper['downloadFileFromUrl']>;
+  setExtensionsToInstall: Dispatch<SetStateAction<{urls: string[]; dir: string} | undefined>>;
+  extensionsResolver: MutableRefObject<(() => void) | null>;
 };
 
 export function useStepper({
@@ -29,6 +31,8 @@ export function useStepper({
   userInputResolver,
   setUserInputElements,
   downloadFileFromUrl,
+  extensionsResolver,
+  setExtensionsToInstall,
 }: Props) {
   const {cardId} = useModalsState('installUIModal');
 
@@ -40,13 +44,6 @@ export function useStepper({
       });
     },
     [cloneResolver],
-  );
-
-  const setInstalled = useCallback(
-    (dir: string) => {
-      rendererIpc.storageUtils.addInstalledCard({dir, id: cardId});
-    },
-    [cardId],
   );
 
   const showFinalStep = useCallback((type: 'success' | 'error', title: string, description?: string) => {
@@ -100,12 +97,21 @@ export function useStepper({
     });
   }, []);
 
+  const installExtensions = useCallback((extensionURLs: string[], extensionsDir: string): Promise<void> => {
+    return new Promise(resolve => {
+      extensionsResolver.current = resolve;
+      setExtensionsToInstall({urls: extensionURLs, dir: extensionsDir});
+      updateState({body: 'install-extensions'});
+    });
+  }, []);
+
   return useMemo(() => {
     return new InstallStepper({
+      cardId,
       setSteps,
       setCurrentStep,
+      installExtensions,
       cloneRepository,
-      setInstalled,
       showFinalStep,
       runTerminalScript,
       executeTerminalCommands,
@@ -114,10 +120,11 @@ export function useStepper({
       collectUserInput,
     });
   }, [
+    cardId,
     setSteps,
     setCurrentStep,
     cloneRepository,
-    setInstalled,
+    installExtensions,
     showFinalStep,
     runTerminalScript,
     executeTerminalCommands,

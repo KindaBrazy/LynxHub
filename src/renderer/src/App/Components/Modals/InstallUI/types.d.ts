@@ -1,4 +1,12 @@
-export type BodyState = 'starter' | 'clone' | 'terminal' | 'progress' | 'user-input' | 'done' | '';
+export type BodyState =
+  | 'starter'
+  | 'clone'
+  | 'terminal'
+  | 'progress'
+  | 'user-input'
+  | 'install-extensions'
+  | 'done'
+  | '';
 
 export type InstallState = {
   body: BodyState;

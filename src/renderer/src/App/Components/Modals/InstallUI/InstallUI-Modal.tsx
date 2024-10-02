@@ -52,6 +52,8 @@ const InstallUIModal = () => {
   const [userInputElements, setUserInputElements] = useState<UserInputField[]>([]);
   const [userElementsReturn, setUserElementsReturn] = useState<UserInputResult[]>([]);
 
+  const [extensionsToInstall, setExtensionsToInstall] = useState<{urls: string[]; dir: string} | undefined>(undefined);
+
   const updateState = useCallback((newState: Partial<InstallState>) => {
     setState(prevState => ({...prevState, ...newState}));
   }, []);
@@ -66,6 +68,7 @@ const InstallUIModal = () => {
   const starterResolver = useRef<((result: InstallationMethod) => void) | null>(null);
   const userInputResolver = useRef<((result: UserInputResult[]) => void) | null>(null);
   const restartTerminal = useRef<(() => void) | null>(null);
+  const extensionsResolver = useRef<(() => void) | null>(null);
 
   // -----------------------------------------------> Handlers
 
@@ -102,6 +105,8 @@ const InstallUIModal = () => {
     starterResolver,
     userInputResolver,
     setUserInputElements,
+    setExtensionsToInstall,
+    extensionsResolver,
   });
 
   useEffect(() => {
@@ -169,6 +174,8 @@ const InstallUIModal = () => {
           progressInfo={progressInfo}
           cloneResolver={cloneResolver}
           userInputElements={userInputElements}
+          extensionsResolver={extensionsResolver}
+          extensionsToInstall={extensionsToInstall}
           setUserElementsReturn={setUserElementsReturn}
         />
         <InstallFooter
