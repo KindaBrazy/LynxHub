@@ -42,7 +42,7 @@ export default function LaunchConfigSection({
         </div>
       }
       bordered={false}
-      className="bg-default-100">
+      className="border-2 border-foreground/5 bg-default-100">
       {children}
     </Card>
   );

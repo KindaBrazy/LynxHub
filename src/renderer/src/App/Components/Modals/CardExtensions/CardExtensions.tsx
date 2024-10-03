@@ -64,13 +64,13 @@ export default function CardExtensions() {
       isOpen={isOpen}
       onClose={onClose}
       isDismissable={false}
-      className="max-w-[80%]"
       scrollBehavior="inside"
       motionProps={modalMotionProps}
       classNames={{backdrop: 'top-10', wrapper: 'top-10 scrollbar-hide'}}
+      className="max-w-[80%] border-2 border-foreground/10 dark:border-foreground/5"
       hideCloseButton>
       <ModalContent>
-        <ModalHeader className="flex-col">
+        <ModalHeader className="flex-col gap-y-2 text-center">
           {title || 'Extensions'}
           <Tabs
             variant="solid"

@@ -64,12 +64,12 @@ const LaunchConfig = memo(() => {
       onClose={onClose}
       isDismissable={false}
       scrollBehavior="inside"
-      className="z-40 max-w-[80%]"
       motionProps={modalMotionProps}
       classNames={{backdrop: 'top-10', wrapper: 'top-10 scrollbar-hide'}}
+      className="z-40 max-w-[80%] border-2 border-foreground/10 dark:border-foreground/5"
       hideCloseButton>
       <ModalContent>
-        <ModalHeader className="flex-col pb-0">
+        <ModalHeader className="flex-col gap-y-2 pb-0 text-center">
           {title || 'Launch Config'}
 
           <Tabs
