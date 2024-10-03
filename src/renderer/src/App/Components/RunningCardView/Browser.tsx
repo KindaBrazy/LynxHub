@@ -19,11 +19,14 @@ export default function Browser() {
 
   return (
     <motion.div
+      className={
+        `absolute inset-2 ${currentView === 'browser' && 'z-20'} overflow-hidden ` +
+        `rounded-lg bg-white shadow-md dark:bg-LynxRaisinBlack`
+      }
       tabIndex={-1}
       initial="init"
       animate={animate}
-      variants={variants}
-      className="absolute inset-2 overflow-hidden rounded-lg bg-white shadow-md dark:bg-LynxRaisinBlack">
+      variants={variants}>
       <webview src={address} id={browserId} className="relative size-full" />
     </motion.div>
   );

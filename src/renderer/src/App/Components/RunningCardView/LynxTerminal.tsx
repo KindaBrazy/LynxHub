@@ -211,10 +211,13 @@ export default function LynxTerminal() {
         animate: {scale: 1, opacity: 1},
         exit: {scale: 0.95, opacity: 0},
       }}
+      className={
+        `absolute inset-2 ${currentView === 'terminal' && 'z-20'} overflow-hidden ` +
+        `rounded-lg bg-white p-3 shadow-md dark:bg-LynxRaisinBlack`
+      }
       tabIndex={-1}
       initial="init"
-      animate={animate}
-      className="absolute inset-2 overflow-hidden rounded-lg bg-white p-3 shadow-md dark:bg-LynxRaisinBlack">
+      animate={animate}>
       <div ref={terminalRef} className="relative size-full" />
     </motion.div>
   );
