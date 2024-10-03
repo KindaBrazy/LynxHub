@@ -8,6 +8,11 @@ type Props = {searchValue: string; setSearchValue: Dispatch<SetStateAction<strin
 const HomeSearchBox = memo(({searchValue, setSearchValue}: Props) => {
   return (
     <Input
+      classNames={{
+        inputWrapper:
+          'dark:bg-LynxRaisinBlack dark:hover:bg-white/5 bg-stone-50 ' +
+          ' shadow-md overflow-hidden border border-foreground/10 dark:border-foreground/5',
+      }}
       radius="full"
       type="search"
       spellCheck={false}
@@ -15,7 +20,6 @@ const HomeSearchBox = memo(({searchValue, setSearchValue}: Props) => {
       onValueChange={setSearchValue}
       placeholder="Type to find AI..."
       startContent={getIconByName('Circle', {className: 'size-5'})}
-      classNames={{inputWrapper: 'dark:bg-LynxRaisinBlack dark:hover:bg-white/5 bg-stone-50 shadow-md overflow-hidden'}}
       fullWidth
     />
   );

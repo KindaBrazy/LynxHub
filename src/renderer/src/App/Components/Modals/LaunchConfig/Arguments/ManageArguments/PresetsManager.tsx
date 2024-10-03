@@ -116,7 +116,7 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
           classNames={{
             innerWrapper: 'cursor-default',
             label: 'cursor-default',
-            trigger: 'cursor-default',
+            trigger: 'cursor-default border border-foreground/5 transition duration-300',
           }}
           radius="sm"
           title="Presets"
@@ -155,13 +155,16 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
         title="New Preset"
         isOpen={createIsOpen}
         onOpenChange={setCreateIsOpen}
+        classNames={{content: 'border border-foreground/10'}}
         showArrow>
         <PopoverTrigger>
-          <Button variant="flat" className="cursor-default">
+          <Button
+            variant="flat"
+            className="cursor-default border border-foreground/5 !duration-300 hover:text-opacity-70">
             New Preset
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="space-y-1.5 p-2">
+        <PopoverContent className="space-y-1.5 p-3">
           <Input
             size="sm"
             spellCheck={false}

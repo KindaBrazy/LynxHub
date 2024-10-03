@@ -87,10 +87,11 @@ export default function CardInfoModal() {
       backdrop="transparent"
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
+      className="border-2 border-foreground/5 bg-foreground-100 drop-shadow-lg"
       classNames={{backdrop: 'top-10', closeButton: 'cursor-default', wrapper: 'top-10 scrollbar-hide'}}>
       <ModalContent className="pb-4">
-        <ModalHeader>{title}</ModalHeader>
-        <ModalBody className="mb-2 scrollbar-hide">
+        <ModalHeader className="justify-center border-b border-foreground/20 shadow-md">{title}</ModalHeader>
+        <ModalBody className="mb-2 mt-4 scrollbar-hide">
           <Space size="middle" direction="vertical">
             <CardInfoDev />
             <Divider />

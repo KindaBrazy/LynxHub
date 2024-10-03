@@ -25,12 +25,15 @@ const HomeFilter = memo(({selectedCategories}: Props) => {
   }, []);
 
   return (
-    <Dropdown showArrow>
+    <Dropdown className="border-2 border-foreground/5 drop-shadow-lg" showArrow>
       <DropdownTrigger>
         <Button
+          className={
+            `cursor-default border border-foreground/10 bg-stone-50 shadow-md ` +
+            `dark:border-foreground/5 dark:bg-LynxRaisinBlack dark:hover:bg-white/15`
+          }
           radius="full"
           variant="light"
-          className={`cursor-default bg-stone-50 shadow-md dark:bg-LynxRaisinBlack dark:hover:bg-white/15`}
           isIconOnly>
           {getIconByName('Filter', {className: 'w-full h-full p-3'})}
         </Button>
