@@ -9,8 +9,11 @@ import {
   APP_VERSION_V,
   DISCORD_SERVER,
   EMAIL,
+  GITHUB_URL,
   LICENSE_NAME,
   LICENSE_PAGE,
+  REDDIT_URL,
+  X_URL,
 } from '../../../../../../../../cross/CrossConstants';
 import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
@@ -47,15 +50,24 @@ export default function DashboardAbout() {
               <span>Contact</span>
             </div>
           </Divider>
-          <div className="flex flex-row items-center justify-center space-x-2">
+          <div className="flex flex-row flex-wrap items-center justify-center gap-2">
             <Card
               size="small"
               onClick={() => copyText(EMAIL)}
               classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
               hoverable>
               {getIconByName('Gmail', {className: 'size-4'})}
-              <span>{EMAIL}</span>
+              <span>Gmail</span>
               {getIconByName('Copy')}
+            </Card>
+            <Card
+              size="small"
+              onClick={() => window.open(GITHUB_URL)}
+              classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
+              hoverable>
+              {getIconByName('GitHub', {className: 'size-4'})}
+              <span>GitHub</span>
+              {getIconByName('ExternalLink')}
             </Card>
             <Card
               size="small"
@@ -63,12 +75,29 @@ export default function DashboardAbout() {
               classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
               hoverable>
               {getIconByName('DiscordColor', {className: 'size-4'})}
-              <span>Discord Server</span>
+              <span>Discord</span>
+              {getIconByName('ExternalLink')}
+            </Card>
+            <Card
+              size="small"
+              onClick={() => window.open(X_URL)}
+              classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
+              hoverable>
+              {getIconByName('XSite', {className: 'size-4'})}
+              <span>Twitter</span>
+              {getIconByName('ExternalLink')}
+            </Card>
+            <Card
+              size="small"
+              onClick={() => window.open(REDDIT_URL)}
+              classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
+              hoverable>
+              {getIconByName('Reddit', {className: 'size-4'})}
+              <span>Reddit</span>
               {getIconByName('ExternalLink')}
             </Card>
           </div>
         </div>
-
         <div className="flex flex-col items-center justify-center">
           <Divider dashed>
             <div className="flex items-center">
@@ -76,16 +105,15 @@ export default function DashboardAbout() {
               <span>License</span>
             </div>
           </Divider>
-          <Paragraph>
-            <Card
-              size="small"
-              onClick={() => window.open(LICENSE_PAGE)}
-              classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
-              hoverable>
-              <span>{LICENSE_NAME}</span>
-              {getIconByName('ExternalLink')}
-            </Card>
-          </Paragraph>
+          <Card
+            size="small"
+            className="w-full"
+            onClick={() => window.open(LICENSE_PAGE)}
+            classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
+            hoverable>
+            <span>{LICENSE_NAME}</span>
+            {getIconByName('ExternalLink')}
+          </Card>
         </div>
       </div>
     </SettingsSection>

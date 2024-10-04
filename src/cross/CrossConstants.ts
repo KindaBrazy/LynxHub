@@ -31,4 +31,7 @@ export const WIN_RELEASE_URL: string = 'https://raw.githubusercontent.com/KindaB
 export const PATRONS_DATA =
   'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Patrons/refs/heads/main/data/patrons.json';
 export const DISCORD_SERVER: string = 'https://discord.gg/e8rBzhtcnK';
+export const X_URL: string = 'https://x.com/LynxHubAI';
 export const PATREON_URL: string = 'https://www.patreon.com/LynxHub';
+export const GITHUB_URL: string = 'https://github.com/KindaBrazy/LynxHub';
+export const REDDIT_URL: string = 'https://www.reddit.com/r/LynxHubAI/';
