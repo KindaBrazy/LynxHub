@@ -96,6 +96,9 @@ export type ModulesInfo = {
    * - A relative path will start with './'
    */
   logoUrl?: string;
+
+  /** Is the WebUI or the repository provided by this module owned by you? */
+  owner?: boolean;
 };
 
 export type AppUpdateInfo = {
