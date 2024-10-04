@@ -203,6 +203,11 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
                     {item.title}
                   </Typography.Link>
                   <Tag bordered={false}>{capitalize(extractGitUrl(item.repoUrl).owner)}</Tag>
+                  {item.owner && (
+                    <Tag color="green" bordered={false}>
+                      Owner
+                    </Tag>
+                  )}
                 </div>
               }
               avatar={item.logoUrl && <Avatar size={59} src={avatarSrc} />}
