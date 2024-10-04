@@ -209,24 +209,46 @@ export default class ModuleManager {
       portFinder
         .getPortPromise({port: this.port})
         .then(async (port: number) => {
-          this.port = port;
-          this.server = http.createServer((req, res) => {
-            const origin = is.dev ? '*' : 'file://';
-
-            res.setHeader('Access-Control-Allow-Origin', origin);
-
-            return handler(req, res, {
-              public: this.modulesPath,
+          try {
+            this.port = port;
+            this.server = http.createServer((req, res) => {
+              try {
+                const origin = is.dev ? '*' : 'file://';
+                res.setHeader('Access-Control-Allow-Origin', origin);
+                return handler(req, res, {
+                  public: this.modulesPath,
+                });
+              } catch (handlerError) {
+                console.error('Error in request handler:', handlerError);
+                res.statusCode = 500;
+                res.end('Internal Server Error');
+                return;
+              }
             });
-          });
 
-          this.server.listen(this.port, this.host, async () => {
-            this.finalAddress = `http://${this.host}:${this.port}`;
-            await this.writeConfig();
-            resolve({hostName: this.host, port: this.port});
-          });
+            this.server.on('error', serverError => {
+              console.error('Server error:', serverError);
+              reject(serverError);
+            });
+
+            this.server.listen(this.port, this.host, async () => {
+              try {
+                this.finalAddress = `http://${this.host}:${this.port}`;
+                await this.writeConfig();
+                resolve({hostName: this.host, port: this.port});
+              } catch (configError) {
+                console.error('Error writing config:', configError);
+                this.server?.close();
+                reject(configError);
+              }
+            });
+          } catch (setupError) {
+            console.error('Error setting up server:', setupError);
+            reject(setupError);
+          }
         })
         .catch(error => {
+          console.error('Error finding available port:', error);
           reject(error);
         });
     });
