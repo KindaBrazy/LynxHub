@@ -9,6 +9,10 @@ import {RootState} from '../Store';
 type SettingState = {
   tooltipLevel: TooltipStatus;
   cardsCompactMode: boolean;
+  cardsDevImage: boolean;
+  cardsDevName: boolean;
+  cardsDesc: boolean;
+  cardsRepoInfo: boolean;
   hotkeys: LynxHotkeys;
 
   closeConfirm: boolean;
@@ -27,6 +31,10 @@ type SettingStateTypes = {
 
 const initialState: SettingState = {
   cardsCompactMode: false,
+  cardsDevImage: true,
+  cardsDevName: false,
+  cardsDesc: true,
+  cardsRepoInfo: true,
   tooltipLevel: 'essential',
   closeConfirm: true,
   terminateAIConfirm: true,
