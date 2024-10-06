@@ -55,6 +55,16 @@ export type CardMainMethods = {
 
   /** Get user configured arguments and save it to desire file */
   saveArgs?: (cardDir: string, args: ChosenArgument[]) => Promise<void>;
+
+  /**
+   * Access to the main process IPC methods.
+   * Use this to send/receive data or messages between the main process and the renderer process.
+   */
+  mainIpc?: (ipc: {
+    handle(channel: string, listener: (event: any, ...args: any[]) => any): void;
+    on(channel: string, listener: (event: any, ...args: any[]) => void): void;
+    send: (channel: string, ...args: any[]) => void;
+  }) => void;
 };
 
 export type MainModules = {

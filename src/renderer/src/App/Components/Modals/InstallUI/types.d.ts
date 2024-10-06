@@ -3,6 +3,7 @@ export type BodyState =
   | 'clone'
   | 'terminal'
   | 'progress'
+  | 'progress-bar'
   | 'user-input'
   | 'install-extensions'
   | 'done'

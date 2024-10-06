@@ -2,6 +2,7 @@ import http from 'node:http';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {ipcMain} from 'electron';
 import fs from 'graceful-fs';
 import portFinder from 'portfinder';
 import handler from 'serve-handler';
@@ -62,6 +63,33 @@ export default class ModuleManager {
 
   public getDirById(id: string) {
     return this.installedModulesInfo.find(installed => installed.info.id === id);
+  }
+
+  public listenForChannels() {
+    const listen = () => {
+      const webContent = appManager.getWebContent();
+      if (webContent) {
+        for (const {methods} of this.mainModules) {
+          methods.mainIpc?.({
+            on(channel: string, listener: (event: any, ...args: any[]) => void) {
+              return ipcMain.on(channel, listener);
+            },
+            handle(channel: string, listener: (event: any, ...args: any[]) => any) {
+              return ipcMain.handle(channel, listener);
+            },
+            send(channel: string, listener: (event: any, ...args: any[]) => void) {
+              return webContent.send(channel, listener);
+            },
+          });
+        }
+      } else {
+        setTimeout(() => {
+          listen();
+        }, 1000);
+      }
+    };
+
+    listen();
   }
 
   //#endregion

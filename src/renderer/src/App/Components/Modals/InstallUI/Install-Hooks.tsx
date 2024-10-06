@@ -18,6 +18,14 @@ type Props = {
   downloadFileFromUrl: (url: string) => ReturnType<InstallationStepper['downloadFileFromUrl']>;
   setExtensionsToInstall: Dispatch<SetStateAction<{urls: string[]; dir: string} | undefined>>;
   extensionsResolver: MutableRefObject<(() => void) | null>;
+  setProgressBarState: Dispatch<
+    SetStateAction<{
+      isIndeterminate: boolean;
+      title?: string;
+      percentage?: number;
+      description?: {label: string; value: string}[];
+    }>
+  >;
 };
 
 export function useStepper({
@@ -33,6 +41,7 @@ export function useStepper({
   downloadFileFromUrl,
   extensionsResolver,
   setExtensionsToInstall,
+  setProgressBarState,
 }: Props) {
   const {cardId} = useModalsState('installUIModal');
 
@@ -105,6 +114,22 @@ export function useStepper({
     });
   }, []);
 
+  const progressBar = useCallback(
+    (
+      isIndeterminate: boolean,
+      title?: string,
+      percentage?: number,
+      description?: {
+        label: string;
+        value: string;
+      }[],
+    ) => {
+      updateState({body: 'progress-bar'});
+      setProgressBarState({title, isIndeterminate, percentage, description});
+    },
+    [],
+  );
+
   return useMemo(() => {
     return new InstallStepper({
       cardId,
@@ -118,6 +143,7 @@ export function useStepper({
       downloadFileFromUrl,
       starterStep,
       collectUserInput,
+      progressBar,
     });
   }, [
     cardId,

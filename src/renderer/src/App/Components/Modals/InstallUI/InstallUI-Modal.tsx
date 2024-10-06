@@ -54,6 +54,13 @@ const InstallUIModal = () => {
 
   const [extensionsToInstall, setExtensionsToInstall] = useState<{urls: string[]; dir: string} | undefined>(undefined);
 
+  const [progressBarState, setProgressBarState] = useState<{
+    isIndeterminate: boolean;
+    title?: string;
+    percentage?: number;
+    description?: {label: string; value: string}[];
+  }>({title: '', isIndeterminate: true});
+
   const updateState = useCallback((newState: Partial<InstallState>) => {
     setState(prevState => ({...prevState, ...newState}));
   }, []);
@@ -107,6 +114,7 @@ const InstallUIModal = () => {
     setUserInputElements,
     setExtensionsToInstall,
     extensionsResolver,
+    setProgressBarState,
   });
 
   useEffect(() => {
@@ -173,6 +181,7 @@ const InstallUIModal = () => {
           title={title}
           progressInfo={progressInfo}
           cloneResolver={cloneResolver}
+          progressBarState={progressBarState}
           userInputElements={userInputElements}
           extensionsResolver={extensionsResolver}
           extensionsToInstall={extensionsToInstall}

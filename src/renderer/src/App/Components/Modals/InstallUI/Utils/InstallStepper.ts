@@ -20,6 +20,7 @@ export default class InstallStepper {
     starterStep: InstallationStepper['starterStep'];
     collectUserInput: InstallationStepper['collectUserInput'];
     installExtensions: InstallationStepper['postInstall']['installExtensions'];
+    progressBar: InstallationStepper['progressBar'];
   }) {
     this.totalSteps = 0;
 
@@ -32,9 +33,22 @@ export default class InstallStepper {
     this.downloadFileFromUrl = data.downloadFileFromUrl;
     this.starterStep = data.starterStep;
     this.collectUserInput = data.collectUserInput;
+    this.progressBar = data.progressBar;
 
     this.setInstalled = dir => {
       rendererIpc.storageUtils.addInstalledCard({dir, id: data.cardId});
+    };
+
+    this.ipc = {
+      on(channel: string, listener: any): () => void {
+        return window.electron.ipcRenderer.on(channel, listener);
+      },
+      send(channel: string, ...args) {
+        return window.electron.ipcRenderer.send(channel, ...args);
+      },
+      invoke(channel: string, ...args): Promise<any> {
+        return window.electron.ipcRenderer.invoke(channel, ...args);
+      },
     };
 
     this.utils = {
@@ -91,6 +105,10 @@ export default class InstallStepper {
       },
     };
   }
+
+  public progressBar: InstallationStepper['progressBar'];
+
+  public ipc: InstallationStepper['ipc'];
 
   public postInstall: InstallationStepper['postInstall'];
 
