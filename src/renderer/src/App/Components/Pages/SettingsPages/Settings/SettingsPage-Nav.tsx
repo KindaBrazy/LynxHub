@@ -92,6 +92,7 @@ export default function SettingsPageNav() {
       {
         title: 'Application',
         items: [
+          {title: 'Customize Card', icon: 'EditCard', elementId: settingsSectionId.SettingsCardId},
           {title: 'General', icon: 'Tuning', elementId: settingsSectionId.SettingsGeneralId},
           {title: 'Startup', icon: 'Rocket', elementId: settingsSectionId.SettingsStartupId},
           {title: 'Hotkeys', icon: 'Keyboard', elementId: settingsSectionId.SettingsHotkeysId},

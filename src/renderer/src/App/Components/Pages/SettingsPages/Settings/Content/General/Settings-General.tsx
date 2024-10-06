@@ -1,5 +1,4 @@
 import SettingsSection from '../../SettingsPage-ContentSection';
-import SettingsGeneralCompactMode from './SettingsGeneral-CompactMode';
 import SettingsGeneralConfirm from './SettingsGeneral-Confirm';
 import SettingsGeneralTaskbar from './SettingsGeneral-Taskbar';
 import SettingsGeneralTheme from './SettingsGeneral-Theme';
@@ -13,7 +12,6 @@ export default function SettingsGeneral() {
       <SettingsGeneralTheme />
       <SettingsGeneralTaskbar />
       <SettingsGeneralTooltip />
-      <SettingsGeneralCompactMode />
       <SettingsGeneralConfirm />
     </SettingsSection>
   );
