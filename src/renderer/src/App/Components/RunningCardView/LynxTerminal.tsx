@@ -5,10 +5,12 @@ import {Unicode11Addon} from '@xterm/addon-unicode11';
 import {WebLinksAddon} from '@xterm/addon-web-links';
 import {WebglAddon} from '@xterm/addon-webgl';
 import {ITheme, IWindowsPty, Terminal} from '@xterm/xterm';
+import {message} from 'antd';
 import FontFaceObserver from 'fontfaceobserver';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {useModules} from '../../Modules/ModulesContext';
@@ -32,6 +34,8 @@ export default function LynxTerminal() {
   const fitAddon = useRef<FitAddon | null>(null);
   const unicode11Addon = useRef<Unicode11Addon | null>(null);
 
+  const [selectedText, setSelectedText] = useState<string>('');
+
   const {address, id, currentView} = useCardsState('runningCard');
   const darkMode = useAppState('darkMode');
   const {allCards} = useModules();
@@ -52,6 +56,19 @@ export default function LynxTerminal() {
     }),
     [darkMode],
   );
+
+  const copyText = useCallback(() => {
+    if (!isEmpty(selectedText)) {
+      navigator.clipboard.writeText(selectedText);
+      message.success(`Copied to clipboard`);
+    }
+  }, [selectedText]);
+
+  useHotkeys('ctrl+c', copyText, {
+    keyup: true,
+    enableOnFormTags: true,
+    enableOnContentEditable: true,
+  });
 
   useEffect(() => {
     rendererIpc.storage.get('cardsConfig').then(result => {
@@ -172,6 +189,15 @@ export default function LynxTerminal() {
 
         // Fit terminal to element
         fitAddon.current.fit();
+
+        terminal.current.onSelectionChange(() => {
+          setSelectedText(terminal.current?.getSelection() || '');
+        });
+
+        terminal.current.attachCustomKeyEventHandler(e => {
+          const isSelectedText = isEmpty(terminal.current?.getSelection());
+          return !(e.key === 'c' && e.ctrlKey && !isSelectedText);
+        });
 
         terminal.current.onData(data => {
           if (!isEmpty(data)) rendererIpc.pty.write(data);
