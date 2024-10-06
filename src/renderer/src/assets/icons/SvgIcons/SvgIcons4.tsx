@@ -245,6 +245,7 @@ export const svgPack4 = {
       </g>
     </svg>
   ),
+
   Reddit: (props: SvgProps): ReactElement => (
     <svg {...props} width="1em" height="1em" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
       <circle r="128" cx="128" cy="128" fill="#ff4500" />
@@ -269,7 +270,8 @@ export const svgPack4 = {
       />
     </svg>
   ),
-  Tuning: (props: SvgProps): ReactElement => (
+
+  Slider: (props: SvgProps): ReactElement => (
     <svg {...props} width="32" height="32" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
       <path
         d={

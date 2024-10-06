@@ -28,7 +28,7 @@ const ContentPages: PagesType[] = [
 const SettingsPages: PagesType[] = [
   {navButton: {icon: 'Dashboard', title: 'Dashboard'}, path: dashboardRoutePath},
   {navButton: {icon: 'Extensions2', title: 'Modules'}, path: modulesRoutePath},
-  {navButton: {icon: 'Tuning', title: 'Settings'}, path: settingsRoutePath},
+  {navButton: {icon: 'Slider', title: 'Settings'}, path: settingsRoutePath},
 ];
 
 const GetPages = ({Pages}: {Pages: PagesType[]}) => {
