@@ -19,10 +19,10 @@ class BaseStorage {
   private readonly STORAGE_FILE = is.dev ? `${APP_NAME}-Dev.config` : `${APP_NAME}.config`;
   private readonly STORAGE_PATH = path.join(app.getPath('userData'), this.STORAGE_FILE);
 
-  private readonly CURRENT_VERSION: number = 0.3;
+  private readonly CURRENT_VERSION: number = 0.4;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: this.CURRENT_VERSION},
+    storage: {version: 0.4},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -30,6 +30,10 @@ class BaseStorage {
       recentlyUsedCards: [],
       cardCompactMode: false,
       autoUpdateExtensions: [],
+      cardsDevImage: true,
+      cardsDevName: false,
+      cardsDesc: true,
+      cardsRepoInfo: true,
     },
     cardsConfig: {
       preCommands: [],
@@ -95,6 +99,13 @@ class BaseStorage {
       this.updateData('cardsConfig', {customRunBehavior: []});
     };
 
+    const version3to4 = () => {
+      this.updateData('cards', {cardsDevImage: true});
+      this.updateData('cards', {cardsDevName: false});
+      this.updateData('cards', {cardsDesc: true});
+      this.updateData('cards', {cardsRepoInfo: true});
+    };
+
     const updateVersion = () => {
       this.updateData('storage', {version: this.CURRENT_VERSION});
     };
@@ -104,10 +115,16 @@ class BaseStorage {
         case 0.1: {
           version1to2();
           version2to3();
+          version3to4();
           break;
         }
         case 0.2: {
           version2to3();
+          version3to4();
+          break;
+        }
+        case 0.3: {
+          version3to4();
           break;
         }
         default:

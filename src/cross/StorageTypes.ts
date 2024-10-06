@@ -27,6 +27,10 @@ type StorageTypes = {
     pinnedCards: string[];
     recentlyUsedCards: string[];
     cardCompactMode: boolean;
+    cardsDevImage: boolean;
+    cardsDevName: boolean;
+    cardsDesc: boolean;
+    cardsRepoInfo: boolean;
   };
   cardsConfig: {
     preCommands: {cardId: string; data: string[]}[];
