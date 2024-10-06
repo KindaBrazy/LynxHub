@@ -22,6 +22,12 @@ type Props = {
   cloneResolver: MutableRefObject<((dir: string) => void) | null>;
   extensionsToInstall: {urls: string[]; dir: string} | undefined;
   extensionsResolver: MutableRefObject<(() => void) | null>;
+  progressBarState: {
+    isIndeterminate: boolean;
+    title?: string;
+    percentage?: number;
+    description?: {label: string; value: string}[];
+  };
 };
 
 const InstallBody = ({
@@ -33,6 +39,7 @@ const InstallBody = ({
   cloneResolver,
   extensionsToInstall,
   extensionsResolver,
+  progressBarState,
 }: Props) => {
   const doneClone = useCallback(
     (dir: string) => {
@@ -50,6 +57,27 @@ const InstallBody = ({
         return <CloneRepo done={doneClone} url={state.cloneUrl} start={state.startClone} />;
       case 'terminal':
         return <TerminalStep />;
+      case 'progress-bar':
+        return (
+          <div className="mb-8 mt-4 text-center">
+            {progressBarState.title && <span className="text-large font-semibold">{progressBarState.title}</span>}
+            <Progress
+              className="mt-4"
+              color="secondary"
+              aria-label="Download Progress"
+              value={progressBarState.percentage}
+              isIndeterminate={progressBarState.isIndeterminate}
+              showValueLabel
+            />
+            {progressBarState.description && (
+              <Descriptions size="small" className="mt-8" layout="vertical">
+                {progressBarState.description.map(desc => (
+                  <DescriptionsItem label={desc.label}>{desc.value}</DescriptionsItem>
+                ))}
+              </Descriptions>
+            )}
+          </div>
+        );
       case 'progress':
         return progressInfo?.stage === 'failed' ? (
           <Result

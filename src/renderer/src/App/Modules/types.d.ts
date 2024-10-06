@@ -44,6 +44,23 @@ export type InstallationStepper = {
    */
   downloadFileFromUrl: (fileUrl: string) => Promise<string>;
 
+  /**
+   * Displays a progress bar UI element.
+   * @param isIndeterminate Whether the progress is indeterminate (true) or determinate (false).
+   * @param title The title of the progress bar.
+   * @param percentage The completion percentage (0-100) for determinate progress. Ignored if isIndeterminate is true.
+   * @param description Optional array of label-value pairs to provide additional information about the progress.
+   */
+  progressBar: (
+    isIndeterminate: boolean,
+    title?: string,
+    percentage?: number,
+    description?: {
+      label: string;
+      value: string;
+    }[],
+  ) => void;
+
   /** Call this when installation is done to set the card installed
    * @param dir The directory to save
    */
@@ -61,6 +78,16 @@ export type InstallationStepper = {
    * @param resultDescription An optional detailed description of the result.
    */
   showFinalStep: (resultType: 'success' | 'error', resultTitle: string, resultDescription?: string) => void;
+
+  /**
+   * Provides access to the renderer process IPC methods.
+   * Use this to send/receive data or messages between the renderer process and the main process.
+   */
+  ipc: {
+    on(channel: string, listener: any): () => void;
+    send(channel: string, ...args: any[]): void;
+    invoke(channel: string, ...args: any[]): Promise<any>;
+  };
 
   /** Use these operations after the `setInstalled` function */
   postInstall: {

@@ -230,6 +230,10 @@ function storageUtilsIpc() {
   );
 }
 
+function modulesIpc() {
+  moduleManager.listenForChannels();
+}
+
 export function listenToAllChannels() {
   win();
   file();
@@ -240,4 +244,5 @@ export function listenToAllChannels() {
   appData();
   storage();
   storageUtilsIpc();
+  modulesIpc();
 }
