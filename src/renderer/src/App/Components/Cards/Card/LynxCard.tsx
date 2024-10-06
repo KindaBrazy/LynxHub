@@ -13,6 +13,7 @@ import LynxCardHeader from './LynxCard-Header';
 const LynxCard = observer(() => {
   const {id, installed} = useCardData();
   const compactMode = useSettingsState('cardsCompactMode');
+  const cardsRepoInfo = useSettingsState('cardsRepoInfo');
   const updateAvailable = useUpdateAvailable(id);
 
   return (
@@ -32,7 +33,7 @@ const LynxCard = observer(() => {
             ` border-1 border-foreground/10 duration-300 hover:shadow-xl dark:bg-[#323232]`
           }>
           <LynxCardHeader />
-          <LynxCardBody />
+          {!compactMode && cardsRepoInfo && <LynxCardBody />}
           <LynxCardFooter />
         </Card>
       </motion.div>

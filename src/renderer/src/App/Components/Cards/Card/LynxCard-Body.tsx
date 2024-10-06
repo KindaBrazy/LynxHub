@@ -4,18 +4,15 @@ import {observer} from 'mobx-react-lite';
 
 import {formatSizeKB} from '../../../../../../cross/CrossUtils';
 import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
-import {useSettingsState} from '../../../Redux/App/SettingsReducer';
 import {useRepoDetails} from '../../../Utils/LocalStorage';
 import {formatNumber} from '../../../Utils/UtilFunctions';
 import {useCardData} from '../CardsDataManager';
 
 const LynxCardBody = observer(() => {
   const {repoUrl, installed} = useCardData();
-  const compactMode = useSettingsState('cardsCompactMode');
   const repoDetails = useRepoDetails(repoUrl);
 
   return (
-    !compactMode &&
     repoDetails && (
       <>
         <CardBody className="bg-[#f7f7f7] dark:bg-[#292929]">

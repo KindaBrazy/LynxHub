@@ -275,7 +275,7 @@ export function useLoadImage(
           type === 'avatar' ? (
             getIconByName('User', {className: 'size-full p-2 dark:bg-LynxRaisinBlack/70 bg-white/70'})
           ) : (
-            <div className={`${darkMode ? 'darkPattern' : 'lightPattern'} absolute size-full`} />
+            <div className={`${darkMode ? 'darkPattern' : 'lightPattern'}`} />
           ),
         );
       }
@@ -291,7 +291,7 @@ export function useLoadImage(
         type === 'avatar' ? (
           getIconByName('User', {className: 'size-full p-2 dark:bg-LynxRaisinBlack/70 bg-white/70'})
         ) : (
-          <div className={`${darkMode ? 'darkPattern' : 'lightPattern'} absolute size-full`} />
+          <div className={`${darkMode ? 'darkPattern' : 'lightPattern'}`} />
         ),
       );
     }
