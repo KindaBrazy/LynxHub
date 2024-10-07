@@ -34,6 +34,7 @@ class BaseStorage {
       cardsDevName: false,
       cardsDesc: true,
       cardsRepoInfo: true,
+      zoomFactor: [],
     },
     cardsConfig: {
       preCommands: [],
@@ -100,10 +101,13 @@ class BaseStorage {
     };
 
     const version3to4 = () => {
-      this.updateData('cards', {cardsDevImage: true});
-      this.updateData('cards', {cardsDevName: false});
-      this.updateData('cards', {cardsDesc: true});
-      this.updateData('cards', {cardsRepoInfo: true});
+      this.updateData('cards', {
+        cardsDevImage: true,
+        cardsDevName: false,
+        cardsDesc: true,
+        cardsRepoInfo: true,
+        zoomFactor: [],
+      });
     };
 
     const updateVersion = () => {

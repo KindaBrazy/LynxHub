@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import rendererIpc from '@renderer/App/RendererIpc';
 import {includes, isEmpty} from 'lodash';
 import {useSelector} from 'react-redux';
 
@@ -21,6 +22,7 @@ type CardsState = {
   pinnedCards: string[];
   recentlyUsedCards: string[];
   runningCard: RunningCard;
+  webViewZoomFactor: {id: string; zoom: number}[];
   homeCategory: string[];
 };
 
@@ -46,6 +48,7 @@ const initialState: CardsState = {
   homeCategory: [],
   autoUpdateExtensions: [],
   updatingExtensions: undefined,
+  webViewZoomFactor: [],
 };
 //#endregion
 
@@ -55,6 +58,23 @@ const cardsSlice = createSlice({
   initialState,
   name: 'cards',
   reducers: {
+    updateZoomFactor: (state, action: PayloadAction<{id: string; zoom: number}>) => {
+      const factor = state.webViewZoomFactor;
+      const existFactor = factor.findIndex(zoom => zoom.id === action.payload.id);
+
+      if (existFactor !== -1) {
+        factor[existFactor] = action.payload;
+      } else {
+        factor.push(action.payload);
+      }
+
+      state.webViewZoomFactor = [...factor];
+
+      rendererIpc.storageUtils.updateZoomFactor(action.payload);
+    },
+    setZoomFactor: (state, action: PayloadAction<{id: string; zoom: number}[]>) => {
+      state.webViewZoomFactor = action.payload;
+    },
     //#region Update Available
 
     addUpdateAvailable: (state, action: PayloadAction<string>) => {

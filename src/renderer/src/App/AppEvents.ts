@@ -84,6 +84,7 @@ export default function useAppEvents() {
       dispatch(cardsActions.setPinnedCards(storage.cards.pinnedCards));
       dispatch(cardsActions.setRecentlyUsedCards(storage.cards.recentlyUsedCards));
       dispatch(cardsActions.setHomeCategory(storage.app.homeCategory));
+      dispatch(cardsActions.setZoomFactor(storage.cards.zoomFactor));
       //#endregion
 
       //#region Dark Mode

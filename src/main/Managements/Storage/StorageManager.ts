@@ -101,6 +101,20 @@ class StorageManager extends BaseStorage {
 
   //#region Public Methods
 
+  public updateZoomFactor(data: {id: string; zoom: number}) {
+    const zoomFactor = this.getData('cards').zoomFactor;
+
+    const existZoom = zoomFactor.findIndex(zoom => zoom.id === data.id);
+
+    if (existZoom !== -1) {
+      zoomFactor[existZoom].zoom = data.zoom;
+    } else {
+      zoomFactor.push(data);
+    }
+
+    this.updateData('cards', {zoomFactor});
+  }
+
   //#region Installed Cards
 
   public addInstalledCard(card: InstalledCard) {
