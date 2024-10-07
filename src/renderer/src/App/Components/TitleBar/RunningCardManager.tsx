@@ -11,6 +11,7 @@ import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import LynxTooltip from '../Reusable/LynxTooltip';
 import SmallButton from '../Reusable/SmallButton';
+import WebviewZoomFactor from './Webview-ZoomFactor';
 
 export default function RunningCardManager() {
   const runningCard = useCardsState('runningCard');
@@ -59,8 +60,7 @@ export default function RunningCardManager() {
           content: (
             <div className="mt-2 flex flex-col space-y-1">
               <Typography.Text>
-                Stopping the AI process will terminate its execution immediately. Any unsaved data or progress will be
-                lost. Do you want to proceed?
+                Stopping the AI will end its execution immediately. Unsaved data will be lost. Continue?
               </Typography.Text>
               <Checkbox size="sm" onValueChange={onShowConfirm}>
                 Always terminate without confirmation
@@ -156,13 +156,14 @@ export default function RunningCardManager() {
                   </div>
                 </div>
               }
+              delay={500}
               isEssential>
               <div>
                 <Button
                   size="sm"
-                  variant="ghost"
+                  variant="light"
                   onPress={copyToClipboard}
-                  className="notDraggable animate-appearance-in font-JetBrainsMono text-sm">
+                  className="notDraggable animate-appearance-in font-JetBrainsMono text-[0.8rem]">
                   {runningCard.address}
                 </Button>
               </div>
@@ -174,9 +175,12 @@ export default function RunningCardManager() {
             <Divider type="vertical" className="ml-4 mr-0" />
             <LynxTooltip content="Refresh Browser View" isEssential>
               <div>
-                <SmallButton icon="Refresh2" onClick={refresh} iconClassName="m-[8px]" />
+                <SmallButton icon="Refresh3" onClick={refresh} iconClassName="m-[8px]" />
               </div>
             </LynxTooltip>
+
+            <Divider type="vertical" className="ml-4 mr-0" />
+            <WebviewZoomFactor />
           </>
         )}
       </>

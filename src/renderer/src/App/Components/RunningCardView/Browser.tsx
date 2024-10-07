@@ -1,9 +1,12 @@
-import {motion} from 'framer-motion';
-import {useMemo} from 'react';
+import {WebviewTag} from 'electron';
+import {motion, Variants} from 'framer-motion';
+import {useEffect, useMemo, useRef, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
-import {useCardsState} from '../../Redux/AI/CardsReducer';
+import {cardsActions, useCardsState} from '../../Redux/AI/CardsReducer';
+import {AppDispatch} from '../../Redux/Store';
 
-const variants = {
+const variants: Variants = {
   init: {scale: 0.95, opacity: 0},
   animate: {scale: 1, opacity: 1},
   exit: {scale: 0.95, opacity: 0},
@@ -11,11 +14,32 @@ const variants = {
 
 /** Browser component that renders AI address in an iframe. */
 export default function Browser() {
-  const {address, browserId, currentView} = useCardsState('runningCard');
+  const {address, browserId, currentView, id} = useCardsState('runningCard');
+  const zoomFactor = useCardsState('webViewZoomFactor');
+  const webViewRef = useRef<WebviewTag>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const [domReady, setDomReady] = useState<boolean>(false);
 
   const animate = useMemo(() => {
     return currentView === 'browser' ? 'animate' : 'exit';
   }, [currentView]);
+
+  useEffect(() => {
+    if (webViewRef.current) {
+      webViewRef.current.addEventListener('dom-ready', () => {
+        setDomReady(true);
+      });
+    }
+  }, [webViewRef]);
+
+  useEffect(() => {
+    const factor = zoomFactor.find(zoom => zoom.id === id);
+    if (webViewRef.current && domReady && factor) {
+      webViewRef.current.setZoomFactor(factor.zoom);
+    } else if (webViewRef.current && domReady && !factor) {
+      dispatch(cardsActions.updateZoomFactor({id, zoom: 1.0}));
+    }
+  }, [webViewRef, zoomFactor, id, domReady]);
 
   return (
     <motion.div
@@ -27,7 +51,7 @@ export default function Browser() {
       initial="init"
       animate={animate}
       variants={variants}>
-      <webview src={address} id={browserId} className="relative size-full" />
+      <webview src={address} id={browserId} ref={webViewRef} className="relative size-full" />
     </motion.div>
   );
 }

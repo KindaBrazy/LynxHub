@@ -88,7 +88,7 @@ export default function DashboardUpdate() {
           textValue="Early Access"
           className="cursor-default"
           classNames={{title: 'space-x-1'}}
-          description="Get updates 1-2 weeks earlier than standard.">
+          description="Get exclusive early access to updates and new features.">
           <span>Early Access</span>
           {patreonLoggedIn ? (
             <span className="text-warning">
