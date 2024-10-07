@@ -5,7 +5,7 @@ import {getIconByName, IconNameType} from '../../../assets/icons/SvgIconsContain
 import {useAppState} from '../../Redux/App/AppReducer';
 import {getColor} from '../../Utils/Constants';
 
-type Props = {icon: IconNameType; onClick: () => void; iconClassName?: string};
+type Props = {icon: IconNameType; onClick?: () => void; iconClassName?: string};
 
 export default function SmallButton({icon, onClick, iconClassName}: Props) {
   const darkMode = useAppState('darkMode');
@@ -33,18 +33,18 @@ export default function SmallButton({icon, onClick, iconClassName}: Props) {
   }, [darkMode]);
 
   return (
-    <motion.div
+    <motion.button
       initial="init"
       animate="animate"
       onClick={onClick}
       variants={variants}
       whileTap="whileTap"
       whileHover="whileHover"
-      className="notDraggable group ml-2 flex w-[33px] rounded-md">
+      className="notDraggable group ml-2 flex w-[33px] cursor-default rounded-md">
       {getIconByName(icon, {
         className: `notDraggable fill-white h-full w-full transition
          duration-300 group-hover:scale-110 ${iconClassName}`,
       })}
-    </motion.div>
+    </motion.button>
   );
 }
