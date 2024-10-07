@@ -175,6 +175,8 @@ const rendererIpc = {
     onHomeCategory: (result: (event: IpcRendererEvent, data: HomeCategory) => void) =>
       ipc.on(storageUtilsChannels.onHomeCategory, result),
     setSystemStartup: (startup: boolean) => ipc.send(storageUtilsChannels.setSystemStartup, startup),
+
+    updateZoomFactor: (data: {id: string; zoom: number}) => ipc.send(storageUtilsChannels.updateZoomFactor, data),
   },
 
   /** Utilities methods */

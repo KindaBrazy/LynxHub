@@ -31,6 +31,7 @@ type StorageTypes = {
     cardsDevName: boolean;
     cardsDesc: boolean;
     cardsRepoInfo: boolean;
+    zoomFactor: {id: string; zoom: number}[];
   };
   cardsConfig: {
     preCommands: {cardId: string; data: string[]}[];

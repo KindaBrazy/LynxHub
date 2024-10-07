@@ -228,6 +228,8 @@ function storageUtilsIpc() {
   ipcMain.handle(storageUtilsChannels.setCardArguments, (_, cardId: string, args: ChosenArgumentsData) =>
     storageManager.setCardArguments(cardId, args),
   );
+
+  ipcMain.on(storageUtilsChannels.updateZoomFactor, (_, data) => storageManager.updateZoomFactor(data));
 }
 
 function modulesIpc() {
