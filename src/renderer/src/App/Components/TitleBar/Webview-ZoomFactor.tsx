@@ -22,17 +22,11 @@ export default function WebviewZoomFactor() {
     }
   }, [id, zoomFactor]);
 
-  const onChangeEnd = useCallback(
-    (value: number | number[]) => {
-      if (!isArray(value)) {
-        dispatch(cardsActions.updateZoomFactor({id, zoom: value / 100}));
-      }
-    },
-    [id],
-  );
-
   const onChange = useCallback((value: number | number[]) => {
-    if (!isArray(value)) setValue(value);
+    if (!isArray(value)) {
+      setValue(value);
+      dispatch(cardsActions.updateZoomFactor({id, zoom: value / 100}));
+    }
   }, []);
 
   const resetHandle = useCallback(() => {
@@ -64,11 +58,10 @@ export default function WebviewZoomFactor() {
           maxValue={300}
           color="primary"
           fillOffset={100}
-          className="w-40"
+          className="w-52"
           onChange={onChange}
           label="Browser Scale"
           aria-label="Zoom Factor"
-          onChangeEnd={onChangeEnd}
           getValue={value => `${value}%`}
           classNames={{thumb: 'cursor-default'}}
         />
