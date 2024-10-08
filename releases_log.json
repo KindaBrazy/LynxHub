@@ -3,11 +3,45 @@
   "currentBuild": 10,
   "releaseDate": "2024-10-01",
   "earlyAccess": {
-    "version": "1.2.0",
-    "build": 10,
-    "releaseDate": "2024-09-17"
+    "version": "1.3.0",
+    "build": 12,
+    "releaseDate": "2024-10-09"
   },
   "changeLog": [
+    {
+      "build": 12,
+      "version": "1.3.0",
+      "new": [
+        "New webui installer for advanced installations.",
+        "New webui updater for advanced updates.",
+        "New section to customize card layouts, enhancing user interface flexibility.",
+        "Option to choose between relative or absolute paths in argument configuration.",
+        "Support for GitLab repositories integration.",
+        "Ability to manage built-in browser zoom percentage."
+      ],
+      "improve": [
+        "Enabled Ctrl+C functionality for copying text from the terminal.",
+        "Introduced a soft teal background for dark mode.",
+        "Re-arranged navigation bar buttons and updated the Dashboard icon for improved accessibility.",
+        "Enhanced navigation bar style and overall visibility for a cleaner experience.",
+        "Improved the WebUI installation interface for smoother user interactions.",
+        "Added container boxes to image, audio, and text generation pages, improving layout structure.",
+        "Improved layout visibility with subtle borders for better section distinction.",
+        "Applied a full-round style to the home filter and search box for a modern look.",
+        "Added the 'Pin' category to the default visible sections on the home page.",
+        "Added an 'owner' tag to modules where the WebUI or repository is provided by the module's publisher.",
+        "Updated the settings icon to a more intuitive slider design.",
+        "Updated the web icon (switch between terminal and browser modes).",
+        "Updated the refresh icon.",
+        "Added spacing between buttons in the extension’s menu for better usability."
+      ],
+      "bug": [
+        "Resolved intermittent interaction issues between terminal and browser components.",
+        "Fixed module update badge display inconsistencies.",
+        "Resolve directory issues in the pty process cwd.",
+        "Handled errors occurring during the clone process."
+      ]
+    },
     {
       "build": 10,
       "version": "1.2.0",
