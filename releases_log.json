@@ -3,11 +3,18 @@
   "currentBuild": 10,
   "releaseDate": "2024-10-01",
   "earlyAccess": {
-    "version": "1.3.0",
-    "build": 12,
-    "releaseDate": "2024-10-09"
+    "version": "1.3.1",
+    "build": 13,
+    "releaseDate": "2024-10-10"
   },
   "changeLog": [
+    {
+      "build": 13,
+      "version": "1.3.1",
+      "bug": [
+        "Resolved an issue preventing non-git projects from being installed or launched correctly."
+      ]
+    },
     {
       "build": 12,
       "version": "1.3.0",
