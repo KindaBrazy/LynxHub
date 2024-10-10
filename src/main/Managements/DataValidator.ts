@@ -3,9 +3,8 @@ import path from 'node:path';
 import {FSWatcher, watch} from 'chokidar';
 import lodash from 'lodash';
 
-import {InstalledCard, InstalledCards} from '../../cross/StorageTypes';
+import {InstalledCards} from '../../cross/StorageTypes';
 import {storageManager} from '../index';
-import GitManager from './GitManager';
 
 /**
  * Handle the validation and watching of installed cards.
@@ -47,18 +46,13 @@ export class ValidateCards {
   }
 
   /**
-   * Validates the given cards by checking if their directories are Git repositories.
+   * Validates the given cards by checking if their directories not starting with `.`.
    * @param {InstalledCards} cards - The cards to validate
    * @returns {Promise<InstalledCards>} Resolves to an array of valid cards
    */
   private async validateCards(cards: InstalledCards): Promise<InstalledCards> {
-    const validatedCards = await Promise.all(
-      cards.map(async card => {
-        const isRepo = await GitManager.isDirRepo(card.dir);
-        return isRepo ? card : null;
-      }),
-    );
-    return validatedCards.filter((card): card is InstalledCard => card !== null);
+    const validCards = cards.map(card => (path.basename(card.dir).startsWith('.') ? null : card));
+    return validCards.filter(card => card !== null);
   }
 
   // -----------------------------------------------> Public Methods
