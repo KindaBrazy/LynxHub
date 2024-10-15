@@ -294,7 +294,7 @@ By becoming a patron, you'll unlock a range of exclusive perks:
 > [!NOTE]
 > **💖 Prefer a one-time contribution?**
 >
-> [Click here to make a single donation and show your support!](https://www.patreon.com/collection/761614)
+> [Click here to make a single donation and show your support!](https://www.Patreon.com/LynxHub/Shop)
 
 Every patron, regardless of tier or one-time donation, plays a vital role in the app's continued improvement and
 sustainability.
