@@ -1,3 +1,4 @@
+import federation from '@originjs/vite-plugin-federation';
 import react from '@vitejs/plugin-react';
 import {defineConfig, externalizeDepsPlugin} from 'electron-vite';
 import {resolve} from 'path';
@@ -23,9 +24,19 @@ export default defineConfig({
     },
   },
   renderer: {
+    plugins: [
+      react(),
+      federation({
+        name: 'host-app',
+        remotes: {nothing: 'nothing.js'},
+        shared: ['react', 'react-dom'],
+      }),
+    ],
     resolve: {alias: {'@renderer': resolve('src/renderer/src')}},
-    plugins: [react()],
     base: '',
+    define: {
+      'process.env': {},
+    },
     build: {
       rollupOptions: {
         input: {
@@ -36,6 +47,9 @@ export default defineConfig({
         },
       },
       target: 'esnext',
+      minify: false,
+      cssCodeSplit: false,
+      modulePreload: false,
     },
     publicDir: resolve(__dirname, 'src/renderer/public'),
   },
