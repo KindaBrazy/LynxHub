@@ -15,6 +15,7 @@ import {ValidateCards} from './Managements/DataValidator';
 import DialogManager from './Managements/DialogManager';
 import DiscordRpcManager from './Managements/DiscordRpcManager';
 import ElectronAppManager from './Managements/ElectronAppManager';
+import serveExtensions from './Managements/ExtensionManager';
 import {listenToAllChannels} from './Managements/Ipc/IpcHandler';
 import ModuleManager from './Managements/ModuleManager';
 import StorageManager from './Managements/Storage/StorageManager';
@@ -68,6 +69,8 @@ async function onAppReady() {
   moduleManager = new ModuleManager();
 
   await moduleManager.createServer();
+
+  await serveExtensions();
 
   // Install browser developer extensions
   if (is.dev) {
