@@ -1,6 +1,7 @@
-import {getIconByName, IconNameType} from '@renderer/assets/icons/SvgIconsContainer';
 import {Card} from 'antd';
 import {ReactNode} from 'react';
+
+import {getIconByName, IconNameType} from '../../../assets/icons/SvgIconsContainer';
 
 type Props = {
   children: ReactNode;

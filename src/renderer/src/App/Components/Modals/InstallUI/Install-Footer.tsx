@@ -1,10 +1,10 @@
 import {Button, ButtonGroup, ModalFooter} from '@nextui-org/react';
-import {InstallationMethod, UserInputResult} from '@renderer/App/Modules/types';
-import rendererIpc from '@renderer/App/RendererIpc';
 import {Popconfirm} from 'antd';
 import {memo, MutableRefObject, useCallback} from 'react';
 
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
+import {InstallationMethod, UserInputResult} from '../../../Modules/types';
+import rendererIpc from '../../../RendererIpc';
 import {InstallState} from './types';
 
 type Props = {

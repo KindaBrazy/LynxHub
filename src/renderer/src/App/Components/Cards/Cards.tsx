@@ -1,8 +1,8 @@
-import {AvailablePages} from '@renderer/App/Modules/types';
 import {Result} from 'antd';
 import {isEmpty} from 'lodash';
 
 import {useModules} from '../../Modules/ModulesContext';
+import {AvailablePages} from '../../Modules/types';
 import {useCardsState} from '../../Redux/AI/CardsReducer';
 import Page from '../Pages/Page';
 import LynxCard from './Card/LynxCard';

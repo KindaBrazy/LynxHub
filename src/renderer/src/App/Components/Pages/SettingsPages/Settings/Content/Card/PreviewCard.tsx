@@ -1,9 +1,10 @@
 import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Chip} from '@nextui-org/react';
-import {useAppState} from '@renderer/App/Redux/App/AppReducer';
-import {useSettingsState} from '@renderer/App/Redux/App/SettingsReducer';
-import {getIconByName} from '@renderer/assets/icons/SvgIconsContainer';
 import {Space, Typography} from 'antd';
 import {useMemo} from 'react';
+
+import {getIconByName} from '../../../../../../../assets/icons/SvgIconsContainer';
+import {useAppState} from '../../../../../../Redux/App/AppReducer';
+import {useSettingsState} from '../../../../../../Redux/App/SettingsReducer';
 
 const loremText =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt' +

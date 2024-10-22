@@ -1,10 +1,10 @@
 import {Spinner} from '@nextui-org/react';
-import rendererIpc from '@renderer/App/RendererIpc';
 import {StepProps, Steps} from 'antd';
 import {startCase} from 'lodash';
 import {MutableRefObject, useEffect, useState} from 'react';
 
 import {extractGitUrl, validateGitRepoUrl} from '../../../../../../../cross/CrossUtils';
+import rendererIpc from '../../../../RendererIpc';
 
 type Props = {
   extensionsURLs: {urls: string[]; dir: string} | undefined;

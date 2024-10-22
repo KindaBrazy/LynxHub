@@ -1,7 +1,6 @@
-import ConfigCard from '@renderer/App/Components/Pages/SettingsPages/Settings/Content/Card/ConfigCard/ConfigCard';
-import PreviewCard from '@renderer/App/Components/Pages/SettingsPages/Settings/Content/Card/PreviewCard';
-
 import SettingsSection from '../../SettingsPage-ContentSection';
+import ConfigCard from './ConfigCard/ConfigCard';
+import PreviewCard from './PreviewCard';
 
 export const SettingsCardId = 'settings_card_elem';
 

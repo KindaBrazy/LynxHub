@@ -1,5 +1,4 @@
 import {Link, ModalBody, Progress} from '@nextui-org/react';
-import {getIconByName} from '@renderer/assets/icons/SvgIconsContainer';
 import {Card, Descriptions} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
@@ -7,6 +6,7 @@ import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../cross/CrossUtils';
+import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import OpenDialog from '../../Reusable/OpenDialog';

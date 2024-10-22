@@ -1,11 +1,11 @@
 import {Checkbox, DropdownItemProps, Spinner} from '@nextui-org/react';
-import {useModules} from '@renderer/App/Modules/ModulesContext';
-import {modalActions} from '@renderer/App/Redux/AI/ModalsReducer';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {useModules} from '../../../../../Modules/ModulesContext';
 import {cardsActions} from '../../../../../Redux/AI/CardsReducer';
+import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
@@ -36,7 +36,7 @@ export const useUpdate = (): DropdownItemProps | undefined => {
   }, [getMethod, id]);
 
   const onPress = useCallback(() => {
-    if (!!getMethod(id, 'manager')?.updater.startUpdate) {
+    if (getMethod(id, 'manager')?.updater.startUpdate) {
       dispatch(modalActions.openInstallUICard({id, type: 'update', title}));
       setMenuIsOpen(false);
     } else if (webUi) {
