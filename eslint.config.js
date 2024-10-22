@@ -1,10 +1,9 @@
-import {fixupConfigRules} from '@eslint/compat';
 import {FlatCompat} from '@eslint/eslintrc';
 import eslint from '@eslint/js';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import perfectionist from 'eslint-plugin-perfectionist';
 import react from 'eslint-plugin-react';
-import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
+import hooksPlugin from 'eslint-plugin-react-hooks';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tailwind from 'eslint-plugin-tailwindcss';
 import tsEslint from 'typescript-eslint';
@@ -18,12 +17,12 @@ const compat = new FlatCompat({
 const MAX_LINE_LENGTH = 120;
 
 export default [
-  ...fixupConfigRules(compat.extends('plugin:react-hooks/recommended')),
-
   ...compat.config({
     extends: ['@electron-toolkit/eslint-config-prettier'],
   }),
 
+  eslint.configs.recommended,
+  react.configs.flat.recommended,
   ...tsEslint.configs.recommended,
   {
     rules: {
@@ -38,9 +37,8 @@ export default [
 
   {
     files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
-    ...reactRecommended,
     languageOptions: {
-      ...reactRecommended.languageOptions,
+      ...react.configs.flat.recommended.languageOptions,
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
@@ -53,9 +51,11 @@ export default [
       perfectionist,
       'simple-import-sort': simpleImportSort,
       'jsx-a11y': jsxA11y,
+      'react-hooks': hooksPlugin,
     },
 
     rules: {
+      ...hooksPlugin.configs.recommended.rules,
       'jsx-a11y/alt-text': 'error',
       'react-hooks/exhaustive-deps': 'off',
       'react/display-name': 'off',
