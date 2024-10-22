@@ -1,7 +1,7 @@
-/** @type {import('tailwindcss').Config} */
 import {nextui} from '@nextui-org/react';
 
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+export default {
   content: [
     './src/renderer/index.html',
     './src/renderer/initializer.html',
