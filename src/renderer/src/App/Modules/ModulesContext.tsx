@@ -1,36 +1,45 @@
-import {createContext, useCallback, useContext, useEffect, useMemo, useState} from 'react';
+import {createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState} from 'react';
 
 import {APP_BUILD_NUMBER} from '../../../../cross/CrossConstants';
 import rendererIpc from '../RendererIpc';
-import {ArgumentsData, CardData, CardModules, CardRendererMethods, RendererModuleImportType} from './types';
+import {
+  ArgumentsData,
+  AvailablePages,
+  CardData,
+  CardModules,
+  CardRendererMethods,
+  RendererModuleImportType,
+} from './types';
 
 type ModulesContextData = {
   allModules: CardModules;
   allCards: CardData[];
-  isLoading: boolean;
+  loadingModules: boolean;
   getArgumentsByID: (id: string) => ArgumentsData | undefined;
   getAllMethods: (id: string) => CardRendererMethods | undefined;
+  getCardsByPath: (path: AvailablePages) => CardData[] | undefined;
   getMethod: <T extends keyof CardRendererMethods>(id: string, method: T) => CardRendererMethods[T] | undefined;
 };
 
 export const ModulesContext = createContext<ModulesContextData>({
   allModules: [],
   allCards: [],
-  isLoading: true,
+  loadingModules: true,
   getArgumentsByID: () => undefined,
   getAllMethods: () => undefined,
   getMethod: () => undefined,
+  getCardsByPath: () => undefined,
 });
 
 /** Load app modules and pass to children with context */
-const ModulesProvider = ({children}) => {
+const ModulesProvider = ({children}: {children: ReactNode}) => {
   const [allModules, setAllModules] = useState<CardModules>([]);
   const [allCards, setAllCards] = useState<CardData[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [loadingModules, setLoadingModules] = useState<boolean>(true);
 
   useEffect(() => {
     const loadAllModules = async () => {
-      setIsLoading(true);
+      setLoadingModules(true);
       try {
         const moduleData = await rendererIpc.module.getModulesData();
         const importedModules = await Promise.all(
@@ -58,7 +67,7 @@ const ModulesProvider = ({children}) => {
       } catch (error) {
         console.error('Error importing modules:', error);
       } finally {
-        setIsLoading(false);
+        setLoadingModules(false);
       }
     };
 
@@ -74,6 +83,13 @@ const ModulesProvider = ({children}) => {
       return allCards.find(card => card.id === id)?.arguments;
     },
     [allCards],
+  );
+
+  const getCardsByPath = useCallback(
+    (path: AvailablePages): CardData[] | undefined => {
+      return allModules.find(module => module.routePath === path)?.cards;
+    },
+    [allModules],
   );
 
   const getAllMethods = useCallback(
@@ -95,12 +111,13 @@ const ModulesProvider = ({children}) => {
     return {
       allModules,
       allCards,
-      isLoading,
+      loadingModules,
       getArgumentsByID,
       getAllMethods,
       getMethod,
+      getCardsByPath,
     };
-  }, [allModules, isLoading]);
+  }, [allModules, loadingModules]);
 
   return <ModulesContext.Provider value={contextValue}>{children}</ModulesContext.Provider>;
 };

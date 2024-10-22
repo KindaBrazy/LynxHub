@@ -1,6 +1,6 @@
 import {MantineProvider} from '@mantine/core';
 import {NextUIProvider} from '@nextui-org/react';
-import {ConfigProvider, message, notification, theme} from 'antd';
+import {ConfigProvider as AntDProvider, message, notification, theme} from 'antd';
 import {ReactNode, useLayoutEffect, useMemo} from 'react';
 
 import {useAppState} from './Redux/App/AppReducer';
@@ -13,15 +13,15 @@ export default function UIProviders({children}: {children: ReactNode}) {
   const colorTextLightSolid = useMemo(() => (darkMode ? 'white' : 'black'), [darkMode]);
 
   useLayoutEffect(() => {
-    ConfigProvider.config({
+    AntDProvider.config({
       holderRender: children => (
-        <ConfigProvider
+        <AntDProvider
           theme={{
             algorithm,
             token: {fontFamily: 'Nunito, sans-serif'},
           }}>
           {children}
-        </ConfigProvider>
+        </AntDProvider>
       ),
     });
     message.config({top: 38, duration: 2});
@@ -31,7 +31,7 @@ export default function UIProviders({children}: {children: ReactNode}) {
   return (
     <div>
       <NextUIProvider>
-        <ConfigProvider
+        <AntDProvider
           theme={{
             algorithm,
             components: {
@@ -41,7 +41,7 @@ export default function UIProviders({children}: {children: ReactNode}) {
             token: {colorBgMask: 'rgba(0, 0, 0, 0.2)', fontFamily: 'Nunito, sans-serif'},
           }}>
           <MantineProvider forceColorScheme={darkMode ? 'dark' : 'light'}>{children}</MantineProvider>
-        </ConfigProvider>
+        </AntDProvider>
       </NextUIProvider>
     </div>
   );

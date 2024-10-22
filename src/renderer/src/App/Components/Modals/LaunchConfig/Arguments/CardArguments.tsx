@@ -27,7 +27,7 @@ export default function CardArguments({chosenArguments, setChosenArguments}: Pro
 
   const addArgumentsModal = useDisclosure();
 
-  const {allCards} = useModules();
+  const {getMethod} = useModules();
 
   useEffect(() => {
     rendererIpc.storageUtils.getCardArguments(id).then(result => {
@@ -36,9 +36,9 @@ export default function CardArguments({chosenArguments, setChosenArguments}: Pro
   }, []);
 
   useEffect(() => {
-    const getParsedArgs = allCards.find(card => card.id === id)?.methods.parseArgsToString;
+    const getParsedArgs = getMethod(id, 'parseArgsToString');
     if (getParsedArgs) setPreviewText(getParsedArgs(activePreset.arguments));
-  }, [activePreset]);
+  }, [activePreset, getMethod]);
 
   useEffect(() => {
     setPresets(chosenArguments.data.map(arg => arg.preset));

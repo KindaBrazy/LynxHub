@@ -35,19 +35,17 @@ const CardsById = ({cardIds}: {cardIds: string[]}) => {
   const cards = useCardsById(cardIds);
   const installedCardSet = useMemo(() => new Set(installedCards.map(card => card.id)), [installedCards]);
 
+  if (isEmpty(cards)) return <Empty className="size-full" description="No Card to Display!" />;
+
   return (
     <AnimatePresence>
-      {isEmpty(cards) ? (
-        <Empty className="size-full" description="No Card to Display!" />
-      ) : (
-        cards.map(card => (
-          <CardContext.Provider
-            key={`cardProv-${card.id}`}
-            value={new CardsDataManager(card, installedCardSet.has(card.id))}>
-            <LynxCard key={`${card.id}-card-key`} />
-          </CardContext.Provider>
-        ))
-      )}
+      {cards.map(card => (
+        <CardContext.Provider
+          key={`cardProv-${card.id}`}
+          value={new CardsDataManager(card, installedCardSet.has(card.id))}>
+          <LynxCard key={`${card.id}-card-key`} />
+        </CardContext.Provider>
+      ))}
     </AnimatePresence>
   );
 };
@@ -58,19 +56,17 @@ const AllCards = () => {
   const installedCards = useCardsState('installedCards');
   const installedCardSet = useMemo(() => new Set(installedCards.map(card => card.id)), [installedCards]);
 
+  if (isEmpty(allCards)) return <Empty className="size-full" description="No Card to Display!" />;
+
   return (
     <AnimatePresence>
-      {isEmpty(allCards) ? (
-        <Empty className="size-full" description="No Card to Display!" />
-      ) : (
-        allCards.map(card => (
-          <CardContext.Provider
-            key={`cardProv-${card.id}`}
-            value={new CardsDataManager(card, installedCardSet.has(card.id))}>
-            <LynxCard key={`${card.id}-card-key`} />
-          </CardContext.Provider>
-        ))
-      )}
+      {allCards.map(card => (
+        <CardContext.Provider
+          key={`cardProv-${card.id}`}
+          value={new CardsDataManager(card, installedCardSet.has(card.id))}>
+          <LynxCard key={`${card.id}-card-key`} />
+        </CardContext.Provider>
+      ))}
     </AnimatePresence>
   );
 };
