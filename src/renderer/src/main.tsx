@@ -8,10 +8,11 @@ import {createRoot} from 'react-dom/client';
 import {RouterProvider} from 'react-router-dom';
 
 import {initRouter} from './App/AppRouter';
+import {isDevRenderer} from './App/Utils/UtilFunctions';
 
 const router = await initRouter();
 
-if (!import.meta.env.DEV) {
+if (!isDevRenderer()) {
   Object.assign(console, log.functions);
 }
 

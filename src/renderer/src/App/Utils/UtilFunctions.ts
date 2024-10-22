@@ -72,3 +72,7 @@ export function searchInStrings(searchText: string, targetTexts: (string | undef
 
   return searchWords.every(word => lowerTargetTexts.some(text => text.includes(word)));
 }
+
+export function isDevRenderer() {
+  return import.meta.env.DEV;
+}
