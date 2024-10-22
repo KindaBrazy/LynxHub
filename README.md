@@ -67,11 +67,11 @@ fixes, and compatibilities**
 
 - ✨ [Feature Overview](#-feature-overview)
 - 📃 [Available Modules](#-available-modules)
-- 🖼️ [Screenshots](#-screenshots)
+- 🖼️ [Screenshots](#%EF%B8%8F-screenshots)
 - 📦 [Installation](#-installation)
 - 🔧 [Development](#-development)
 - 🤝 [Contributing](#-contributing)
-- ❤️‍🔥 [Support](#-support)
+- ❤️‍🔥 [Support](#%EF%B8%8F-support)
 - 💡 [Acknowledgement](#-acknowledgements)
 
 ## ✨ Feature Overview
