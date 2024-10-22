@@ -38,7 +38,7 @@ export default function LynxTerminal() {
 
   const {address, id, currentView} = useCardsState('runningCard');
   const darkMode = useAppState('darkMode');
-  const {allCards} = useModules();
+  const {getMethod} = useModules();
   const dispatch = useDispatch<AppDispatch>();
 
   const [browserBehavior, setBrowserBehavior] = useState<'appBrowser' | 'defaultBrowser' | 'doNothing' | string>(
@@ -92,7 +92,7 @@ export default function LynxTerminal() {
   const writeData = useCallback(
     (data: string) => {
       if (isEmpty(address) && browserBehavior !== 'doNothing') {
-        const catchAddress = allCards.find(card => card.id === id)?.methods.catchAddress;
+        const catchAddress = getMethod(id, 'catchAddress');
         const url = catchAddress?.(data) || '';
         if (!isEmpty(url)) {
           if (browserBehavior === 'appBrowser') {
@@ -107,7 +107,7 @@ export default function LynxTerminal() {
       }
       terminal.current?.write(data);
     },
-    [address, allCards, id, browserBehavior, dispatch],
+    [address, getMethod, id, browserBehavior, dispatch],
   );
 
   useEffect(() => {

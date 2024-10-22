@@ -1,3 +1,4 @@
+import {AvailablePages} from '@renderer/App/Modules/types';
 import {Result} from 'antd';
 import {isEmpty} from 'lodash';
 
@@ -8,14 +9,14 @@ import LynxCard from './Card/LynxCard';
 import {CardContext, CardsDataManager} from './CardsDataManager';
 
 export function GetComponentsByPath({routePath}: {routePath: string}) {
-  const {allModules} = useModules();
+  const {getCardsByPath} = useModules();
 
-  const cardModules = allModules.find(module => module.routePath === routePath);
+  const cards = getCardsByPath(routePath as AvailablePages);
   const installedCards = useCardsState('installedCards');
 
   return (
     <div className="flex size-full flex-row flex-wrap gap-7 overflow-y-scroll scrollbar-hide">
-      {isEmpty(cardModules) ? (
+      {isEmpty(cards) ? (
         <Page className="content-center">
           <Result
             status="info"
@@ -24,7 +25,7 @@ export function GetComponentsByPath({routePath}: {routePath: string}) {
           />
         </Page>
       ) : (
-        cardModules.cards.map((card, index) => {
+        cards!.map((card, index) => {
           const isInstalled = installedCards.some(iCard => iCard.id === card.id);
           return (
             <CardContext.Provider key={`cardProv-${index}`} value={new CardsDataManager(card, isInstalled)}>

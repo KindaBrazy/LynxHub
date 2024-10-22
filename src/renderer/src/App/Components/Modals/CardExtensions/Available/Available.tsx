@@ -29,7 +29,7 @@ export default function Available({visible, updateTable, installedExtensions}: P
   const [searchedData, setSearchedData] = useState<ExtensionsInfo[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
-  const {allCards} = useModules();
+  const {getMethod} = useModules();
 
   useEffect(() => {
     setSearchedData(
@@ -47,7 +47,7 @@ export default function Available({visible, updateTable, installedExtensions}: P
     async function fetchModules() {
       setIsLoading(true);
       try {
-        const fetchExtensionList = allCards.find(card => card.id === id)?.methods.fetchExtensionList;
+        const fetchExtensionList = getMethod(id, 'fetchExtensionList');
         if (fetchExtensionList) {
           const extensions: ExtensionsInfo[] = await fetchExtensionList();
           const filterData = extensions.filter(ext => !!validateGitRepoUrl(ext.url));
@@ -61,7 +61,7 @@ export default function Available({visible, updateTable, installedExtensions}: P
     }
 
     if (visible) fetchModules();
-  }, [visible, allCards]);
+  }, [visible, getMethod]);
 
   const onPageSizeChange: PaginationProps['onShowSizeChange'] = (_, pageSize) => {
     setPageSize(pageSize);
