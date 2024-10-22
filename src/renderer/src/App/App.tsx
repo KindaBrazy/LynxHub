@@ -3,6 +3,8 @@ import Background from './Components/Background';
 import MainContents from './Components/MainContents';
 import Modals from './Components/Modals/Modals';
 import TitleBar from './Components/TitleBar/TitleBar';
+import ExtensionsProvider from './Extensions/ExtensionsContext';
+// import ExtensionsProvider from './Extensions/ExtensionsContext_Dev';
 import UIProviders from './UIProviders';
 import useRegisterHotkeys from './Utils/RegisterHotkeys';
 import useHtmlAttributes from './Utils/SetHtmlAttributes';
@@ -17,10 +19,12 @@ export default function App() {
 
   return (
     <UIProviders>
-      <Background />
-      <TitleBar />
-      <MainContents />
-      <Modals />
+      <ExtensionsProvider>
+        <Background />
+        <TitleBar />
+        <MainContents />
+        <Modals />
+      </ExtensionsProvider>
     </UIProviders>
   );
 }
