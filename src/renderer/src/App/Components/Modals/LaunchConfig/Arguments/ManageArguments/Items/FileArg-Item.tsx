@@ -1,12 +1,12 @@
 import {Button} from '@nextui-org/react';
-import {useCardsState} from '@renderer/App/Redux/AI/CardsReducer';
-import {getIconByName} from '@renderer/assets/icons/SvgIconsContainer';
 import {Tooltip, Typography} from 'antd';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
+import {getIconByName} from '../../../../../../../assets/icons/SvgIconsContainer';
 import {useModules} from '../../../../../../Modules/ModulesContext';
+import {useCardsState} from '../../../../../../Redux/AI/CardsReducer';
 import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
 import rendererIpc from '../../../../../../RendererIpc';
 import ArgumentItemBase from './Argument-Item-Base';

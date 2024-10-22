@@ -1,8 +1,8 @@
-import CardContainer from '@renderer/App/Components/Pages/CardContainer';
 import {motion} from 'framer-motion';
 import {ReactNode} from 'react';
 
 import {IconNameType} from '../../../../../assets/icons/SvgIconsContainer';
+import CardContainer from '../../CardContainer';
 
 type Props = {
   children: ReactNode;

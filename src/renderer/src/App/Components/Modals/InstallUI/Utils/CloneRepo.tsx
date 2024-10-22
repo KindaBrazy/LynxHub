@@ -1,10 +1,4 @@
 import {Link, ModalBody, Progress} from '@nextui-org/react';
-import OpenDialog from '@renderer/App/Components/Reusable/OpenDialog';
-import {modalActions, useModalsState} from '@renderer/App/Redux/AI/ModalsReducer';
-import {AppDispatch} from '@renderer/App/Redux/Store';
-import rendererIpc from '@renderer/App/RendererIpc';
-import {initGitProgress} from '@renderer/App/Utils/Constants';
-import {getIconByName} from '@renderer/assets/icons/SvgIconsContainer';
 import {Card, Descriptions} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
@@ -14,6 +8,12 @@ import {SimpleGitProgressEvent} from 'simple-git';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../../cross/IpcChannelAndTypes';
+import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
+import {modalActions, useModalsState} from '../../../../Redux/AI/ModalsReducer';
+import {AppDispatch} from '../../../../Redux/Store';
+import rendererIpc from '../../../../RendererIpc';
+import {initGitProgress} from '../../../../Utils/Constants';
+import OpenDialog from '../../../Reusable/OpenDialog';
 
 type Props = {
   url: string;

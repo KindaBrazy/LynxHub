@@ -1,6 +1,7 @@
-import {InstallationStepper} from '@renderer/App/Modules/types';
-import rendererIpc from '@renderer/App/RendererIpc';
 import {Dispatch, SetStateAction} from 'react';
+
+import {InstallationStepper} from '../../../../Modules/types';
+import rendererIpc from '../../../../RendererIpc';
 
 export default class InstallStepper {
   private readonly setSteps: Dispatch<SetStateAction<string[]>>;

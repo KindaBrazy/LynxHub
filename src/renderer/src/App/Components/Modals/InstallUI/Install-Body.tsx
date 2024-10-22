@@ -1,10 +1,4 @@
 import {ModalBody, Progress} from '@nextui-org/react';
-import {InstallState} from '@renderer/App/Components/Modals/InstallUI/types';
-import CloneRepo from '@renderer/App/Components/Modals/InstallUI/Utils/CloneRepo';
-import InstallExtensions from '@renderer/App/Components/Modals/InstallUI/Utils/InstallExtensions';
-import TerminalStep from '@renderer/App/Components/Modals/InstallUI/Utils/TerminalStep';
-import UserInputs from '@renderer/App/Components/Modals/InstallUI/Utils/UserInputs';
-import {UserInputField, UserInputResult} from '@renderer/App/Modules/types';
 import {Descriptions, Result} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
@@ -12,6 +6,12 @@ import {Dispatch, Fragment, memo, MutableRefObject, SetStateAction, useCallback}
 
 import {formatSize} from '../../../../../../cross/CrossUtils';
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
+import {UserInputField, UserInputResult} from '../../../Modules/types';
+import {InstallState} from './types';
+import CloneRepo from './Utils/CloneRepo';
+import InstallExtensions from './Utils/InstallExtensions';
+import TerminalStep from './Utils/TerminalStep';
+import UserInputs from './Utils/UserInputs';
 
 type Props = {
   state: InstallState;
@@ -71,8 +71,10 @@ const InstallBody = ({
             />
             {progressBarState.description && (
               <Descriptions size="small" className="mt-8" layout="vertical">
-                {progressBarState.description.map(desc => (
-                  <DescriptionsItem label={desc.label}>{desc.value}</DescriptionsItem>
+                {progressBarState.description.map((desc, index) => (
+                  <DescriptionsItem key={index} label={desc.label}>
+                    {desc.value}
+                  </DescriptionsItem>
                 ))}
               </Descriptions>
             )}
@@ -112,7 +114,7 @@ const InstallBody = ({
         return (
           <div className="my-6 space-y-6 text-center">
             <p className="text-xl font-semibold">
-              You're about to install <span className="font-bold">{capitalize(title)}</span>
+              {"You're"} about to install <span className="font-bold">{capitalize(title)}</span>
             </p>
             <p>Choose an option below to proceed with the installation or locate a pre-existing installation.</p>
           </div>

@@ -1,9 +1,10 @@
 import {Button, Input, Select, SelectItem} from '@nextui-org/react';
-import LynxSwitch from '@renderer/App/Components/Reusable/LynxSwitch';
-import {UserInputField, UserInputResult} from '@renderer/App/Modules/types';
-import rendererIpc from '@renderer/App/RendererIpc';
-import {getIconByName} from '@renderer/assets/icons/SvgIconsContainer';
 import {Dispatch, SetStateAction, useCallback, useState} from 'react';
+
+import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
+import {UserInputField, UserInputResult} from '../../../../Modules/types';
+import rendererIpc from '../../../../RendererIpc';
+import LynxSwitch from '../../../Reusable/LynxSwitch';
 
 type Props = {elements: UserInputField[]; setResult: Dispatch<SetStateAction<UserInputResult[]>>};
 
@@ -63,7 +64,7 @@ export default function UserInputs({elements, setResult}: Props) {
 
   return (
     <div className="mb-6 mt-4 flex flex-col items-center justify-center gap-y-6">
-      <span className="text-large font-semibold">Please fill in the required information and click "Next"</span>
+      <span className="text-large font-semibold">Please fill in the required information and click Next</span>
       {elements.map(element => {
         const {id, label, type, selectOptions} = element;
         switch (type) {

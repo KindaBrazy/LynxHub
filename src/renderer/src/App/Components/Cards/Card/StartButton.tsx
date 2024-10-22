@@ -1,10 +1,10 @@
 import {Button} from '@nextui-org/react';
-import {useModules} from '@renderer/App/Modules/ModulesContext';
 import {memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../cross/CrossUtils';
 import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {useModules} from '../../../Modules/ModulesContext';
 import {cardsActions, useCardsState} from '../../../Redux/AI/CardsReducer';
 import {modalActions} from '../../../Redux/AI/ModalsReducer';
 import {useSettingsState} from '../../../Redux/App/SettingsReducer';
@@ -54,7 +54,7 @@ const StartButton = memo(() => {
   }, [id, autoUpdateExtensions, dispatch]);
 
   const install = useCallback(() => {
-    if (!!getMethod(id, 'manager')) {
+    if (getMethod(id, 'manager')) {
       dispatch(modalActions.openInstallUICard({id, type: 'install', title}));
     } else {
       rendererIpc.file.getAppDirectories('AIWorkspaces').then(dir => {

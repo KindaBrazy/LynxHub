@@ -1,10 +1,10 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import rendererIpc from '@renderer/App/RendererIpc';
 import {includes, isEmpty} from 'lodash';
 import {useSelector} from 'react-redux';
 
 import {OnUpdatingExtensions} from '../../../../../cross/IpcChannelAndTypes';
 import {InstalledCards} from '../../../../../cross/StorageTypes';
+import rendererIpc from '../../RendererIpc';
 import {RunningCard, UpdatingCard, UpdatingCards} from '../../Utils/Types';
 import {RootState} from '../Store';
 

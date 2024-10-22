@@ -1,9 +1,10 @@
-import {InstallState} from '@renderer/App/Components/Modals/InstallUI/types';
-import InstallStepper from '@renderer/App/Components/Modals/InstallUI/Utils/InstallStepper';
-import {InstallationMethod, InstallationStepper, UserInputField, UserInputResult} from '@renderer/App/Modules/types';
-import {useModalsState} from '@renderer/App/Redux/AI/ModalsReducer';
-import rendererIpc from '@renderer/App/RendererIpc';
 import {Dispatch, MutableRefObject, SetStateAction, useCallback, useMemo} from 'react';
+
+import {InstallationMethod, InstallationStepper, UserInputField, UserInputResult} from '../../../Modules/types';
+import {useModalsState} from '../../../Redux/AI/ModalsReducer';
+import rendererIpc from '../../../RendererIpc';
+import {InstallState} from './types';
+import InstallStepper from './Utils/InstallStepper';
 
 type Props = {
   setSteps: Dispatch<SetStateAction<string[]>>;

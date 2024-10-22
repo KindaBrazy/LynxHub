@@ -1,10 +1,10 @@
-import {useModules} from '@renderer/App/Modules/ModulesContext';
 import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
 import {toMs} from '../../../cross/CrossUtils';
 import StorageTypes from '../../../cross/StorageTypes';
+import {useModules} from './Modules/ModulesContext';
 import {cardsActions, useCardsState} from './Redux/AI/CardsReducer';
 import {appActions} from './Redux/App/AppReducer';
 import {settingsActions} from './Redux/App/SettingsReducer';

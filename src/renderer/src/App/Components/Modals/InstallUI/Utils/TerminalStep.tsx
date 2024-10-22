@@ -1,7 +1,3 @@
-import {useAppState} from '@renderer/App/Redux/App/AppReducer';
-import rendererIpc from '@renderer/App/RendererIpc';
-import {getColor} from '@renderer/App/Utils/Constants';
-import {isWebgl2Supported} from '@renderer/App/Utils/UtilFunctions';
 import {CanvasAddon} from '@xterm/addon-canvas';
 import {ClipboardAddon} from '@xterm/addon-clipboard';
 import {FitAddon} from '@xterm/addon-fit';
@@ -12,6 +8,11 @@ import {ITheme, IWindowsPty, Terminal} from '@xterm/xterm';
 import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useRef} from 'react';
+
+import {useAppState} from '../../../../Redux/App/AppReducer';
+import rendererIpc from '../../../../RendererIpc';
+import {getColor} from '../../../../Utils/Constants';
+import {isWebgl2Supported} from '../../../../Utils/UtilFunctions';
 
 let resizeTimeout: any;
 

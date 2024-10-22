@@ -1,25 +1,25 @@
 import {Modal, ModalContent} from '@nextui-org/react';
-import InstallHeader from '@renderer/App/Components/Modals/InstallUI/Install-Header';
-import {useStepper} from '@renderer/App/Components/Modals/InstallUI/Install-Hooks';
-import {InstallState} from '@renderer/App/Components/Modals/InstallUI/types';
-import {useModules} from '@renderer/App/Modules/ModulesContext';
+import {memo, useCallback, useEffect, useRef, useState} from 'react';
+import {useDispatch} from 'react-redux';
+
+import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
+import {useModules} from '../../../Modules/ModulesContext';
 import {
   CardRendererMethods,
   InstallationMethod,
   InstallationStepper,
   UserInputField,
   UserInputResult,
-} from '@renderer/App/Modules/types';
-import {modalActions, useModalsState} from '@renderer/App/Redux/AI/ModalsReducer';
-import {AppDispatch} from '@renderer/App/Redux/Store';
-import rendererIpc from '@renderer/App/RendererIpc';
-import {useInstalledCard} from '@renderer/App/Utils/UtilHooks';
-import {memo, useCallback, useEffect, useRef, useState} from 'react';
-import {useDispatch} from 'react-redux';
-
-import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
+} from '../../../Modules/types';
+import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
+import {AppDispatch} from '../../../Redux/Store';
+import rendererIpc from '../../../RendererIpc';
+import {useInstalledCard} from '../../../Utils/UtilHooks';
 import InstallBody from './Install-Body';
 import InstallFooter from './Install-Footer';
+import InstallHeader from './Install-Header';
+import {useStepper} from './Install-Hooks';
+import {InstallState} from './types';
 
 const initialState: InstallState = {
   body: '',
