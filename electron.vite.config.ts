@@ -29,10 +29,9 @@ export default defineConfig({
       federation({
         name: 'host-app',
         remotes: {nothing: 'nothing.js'},
-        shared: ['react', 'react-dom'],
+        shared: ['react', 'react-dom', 'react-redux'],
       }),
     ],
-    resolve: {alias: {'@renderer': resolve('src/renderer/src')}},
     base: '',
     define: {
       'process.env': {},
