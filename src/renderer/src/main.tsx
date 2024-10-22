@@ -11,6 +11,8 @@ import {initRouter} from './App/AppRouter';
 
 const router = await initRouter();
 
-Object.assign(console, log.functions);
+if (!import.meta.env.DEV) {
+  Object.assign(console, log.functions);
+}
 
 createRoot(document.getElementById('root') as HTMLElement).render(<RouterProvider router={router} />);
