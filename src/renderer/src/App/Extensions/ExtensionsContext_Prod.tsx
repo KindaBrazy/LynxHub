@@ -9,12 +9,12 @@ type ExtensionContextData = {
   loadingExtensions: boolean;
 };
 
-export const ExtensionContext = createContext<ExtensionContextData>({
+const ExtensionContext = createContext<ExtensionContextData>({
   loadingExtensions: false,
   statusBar: undefined,
 });
 
-export default function ExtensionsProvider({children}: {children: ReactNode}) {
+export default function ExtensionsProvider_Prod({children}: {children: ReactNode}) {
   const [loadingExtensions, setLoadingExtensions] = useState<boolean>(false);
 
   const [statusBar, setStatusBar] = useState<ExtensionStatusBar>(undefined);
@@ -88,6 +88,6 @@ export default function ExtensionsProvider({children}: {children: ReactNode}) {
   return <ExtensionContext.Provider value={contextValue}>{children}</ExtensionContext.Provider>;
 }
 
-export const useExtensions = () => {
+export const useExtensions_Prod = () => {
   return useContext(ExtensionContext);
 };
