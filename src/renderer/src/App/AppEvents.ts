@@ -1,3 +1,4 @@
+import {isEmpty} from 'lodash';
 import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
@@ -20,31 +21,33 @@ export default function useAppEvents() {
   const appUpdateInterval = useRef<NodeJS.Timeout>();
   const moduleUpdateInterval = useRef<NodeJS.Timeout>();
 
-  const {getMethod} = useModules();
+  const {getMethod, allCards} = useModules();
 
   useEffect(() => {
-    const checkForUpdate = async () => {
-      for (const card of installedCards) {
-        const {id, dir} = card;
-        const updater = getMethod(id, 'manager')?.updater;
-        const updateType = updater?.updateType;
-        if (!updater || updateType === 'git') {
-          const isAvailable = await rendererIpc.git.bCardUpdateAvailable(dir);
-          if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
-        } else {
-          const isAvailable = getMethod(id, 'manager')?.updater.updateAvailable?.();
-          if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
+    if (!isEmpty(allCards)) {
+      const checkForUpdate = async () => {
+        for (const card of installedCards) {
+          const {id, dir} = card;
+          const updater = getMethod(id, 'manager')?.updater;
+          const updateType = updater?.updateType;
+          if (!updater || updateType === 'git') {
+            const isAvailable = await rendererIpc.git.bCardUpdateAvailable(dir);
+            if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
+          } else {
+            const isAvailable = getMethod(id, 'manager')?.updater.updateAvailable?.();
+            if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
+          }
         }
-      }
-    };
+      };
 
-    checkForUpdate();
+      checkForUpdate();
 
-    clearInterval(appUpdateInterval.current);
-    appUpdateInterval.current = undefined;
+      clearInterval(appUpdateInterval.current);
+      appUpdateInterval.current = undefined;
 
-    appUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
-  }, [installedCards, getMethod]);
+      appUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
+    }
+  }, [installedCards, getMethod, allCards, dispatch]);
 
   useEffect(() => {
     const checkForUpdate = () => {
