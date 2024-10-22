@@ -8,12 +8,12 @@ type ExtensionContextData = {
   loadingExtensions: boolean;
 };
 
-export const ExtensionContext = createContext<ExtensionContextData>({
+const ExtensionContext = createContext<ExtensionContextData>({
   loadingExtensions: false,
   statusBar: undefined,
 });
 
-export default function ExtensionsProvider({children}: {children: ReactNode}) {
+export default function ExtensionsProvider_Dev({children}: {children: ReactNode}) {
   const [loadingExtensions, setLoadingExtensions] = useState<boolean>(false);
 
   const [statusBar, setStatusBar] = useState<ExtensionStatusBar>(undefined);
@@ -25,7 +25,6 @@ export default function ExtensionsProvider({children}: {children: ReactNode}) {
       const end = StatusBar.End;
 
       setStatusBar(prevState => {
-        console.log('prevState before: ', prevState);
         if (prevState) {
           if (!prevState.StatusBar) {
             prevState.StatusBar = StatusBar();
@@ -44,7 +43,6 @@ export default function ExtensionsProvider({children}: {children: ReactNode}) {
           };
         }
 
-        console.log('prevState after: ', prevState);
         return prevState;
       });
 
@@ -61,6 +59,6 @@ export default function ExtensionsProvider({children}: {children: ReactNode}) {
   return <ExtensionContext.Provider value={contextValue}>{children}</ExtensionContext.Provider>;
 }
 
-export const useExtensions = () => {
+export const useExtensions_Dev = () => {
   return useContext(ExtensionContext);
 };

@@ -3,8 +3,7 @@ import {isEmpty} from 'lodash';
 import {memo} from 'react';
 import {Outlet} from 'react-router-dom';
 
-// import {useExtensions} from '../Extensions/ExtensionsContext_Dev';
-import {useExtensions} from '../Extensions/ExtensionsContext';
+import {useExtensions} from '../Extensions/ExtensionEnv';
 import {useModules} from '../Modules/ModulesContext';
 import {useCardsState} from '../Redux/AI/CardsReducer';
 import {useAppState} from '../Redux/App/AppReducer';
