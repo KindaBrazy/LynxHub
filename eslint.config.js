@@ -59,11 +59,13 @@ export default [
       'jsx-a11y/alt-text': 'error',
       'react-hooks/exhaustive-deps': 'off',
       'react/display-name': 'off',
+      'react/react-in-jsx-scope': 'off',
 
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
 
       'tailwindcss/no-custom-classname': 'off',
+      'no-async-promise-executor': 'off',
 
       'perfectionist/sort-jsx-props': [
         'error',
