@@ -3,24 +3,20 @@ import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
 
-import {toMs} from '../../../cross/CrossUtils';
-import StorageTypes from '../../../cross/StorageTypes';
-import {useModules} from './Modules/ModulesContext';
-import {cardsActions, useCardsState} from './Redux/AI/CardsReducer';
-import {appActions} from './Redux/App/AppReducer';
-import {settingsActions} from './Redux/App/SettingsReducer';
-import {AppDispatch} from './Redux/Store';
-import {userActions} from './Redux/User/UserReducer';
-import rendererIpc from './RendererIpc';
+import {toMs} from '../../../../cross/CrossUtils';
+import StorageTypes from '../../../../cross/StorageTypes';
+import {useModules} from '../Modules/ModulesContext';
+import {cardsActions, useCardsState} from '../Redux/AI/CardsReducer';
+import {appActions} from '../Redux/App/AppReducer';
+import {settingsActions} from '../Redux/App/SettingsReducer';
+import {AppDispatch} from '../Redux/Store';
+import {userActions} from '../Redux/User/UserReducer';
+import rendererIpc from '../RendererIpc';
 
-/** Listening for various app events and modify redux states */
-export default function useAppEvents() {
+export const useCheckCardsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
   const installedCards = useCardsState('installedCards');
   const appUpdateInterval = useRef<NodeJS.Timeout>();
-  const moduleUpdateInterval = useRef<NodeJS.Timeout>();
-
   const {getMethod, allCards} = useModules();
 
   useEffect(() => {
@@ -48,7 +44,11 @@ export default function useAppEvents() {
       appUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
     }
   }, [installedCards, getMethod, allCards, dispatch]);
+};
 
+export const useCheckModulesUpdate = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const moduleUpdateInterval = useRef<NodeJS.Timeout>();
   useEffect(() => {
     const checkForUpdate = () => {
       rendererIpc.module.anyUpdateAvailable().then(value => {
@@ -62,11 +62,13 @@ export default function useAppEvents() {
     moduleUpdateInterval.current = undefined;
 
     moduleUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
-  }, []);
+  }, [dispatch]);
+};
+
+export const useOnlineEvents = () => {
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    //#region Online Status
-
     const updateOnlineStatus = () => {
       dispatch(appActions.setAppState({key: 'isOnline', value: navigator.onLine}));
     };
@@ -74,13 +76,14 @@ export default function useAppEvents() {
     window.addEventListener('online', updateOnlineStatus);
     window.addEventListener('offline', updateOnlineStatus);
     updateOnlineStatus();
-    //#endregion
+  }, [dispatch]);
+};
 
-    //#region All Storage Data
-
+export const useStorageData = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  useEffect(() => {
     rendererIpc.storage.getAll().then((storage: StorageTypes) => {
-      //#region Cards States
-
       dispatch(cardsActions.setInstalledCards(storage.cards.installedCards));
       dispatch(cardsActions.setAutoUpdate(storage.cards.autoUpdateCards));
       dispatch(cardsActions.setAutoUpdateExtensions(storage.cards.autoUpdateExtensions));
@@ -88,9 +91,6 @@ export default function useAppEvents() {
       dispatch(cardsActions.setRecentlyUsedCards(storage.cards.recentlyUsedCards));
       dispatch(cardsActions.setHomeCategory(storage.app.homeCategory));
       dispatch(cardsActions.setZoomFactor(storage.cards.zoomFactor));
-      //#endregion
-
-      //#region Dark Mode
 
       if (storage.app.darkMode === 'dark') {
         dispatch(appActions.setAppState({key: 'darkMode', value: true}));
@@ -101,9 +101,6 @@ export default function useAppEvents() {
           dispatch(appActions.setAppState({key: 'darkMode', value: result === 'dark'}));
         });
       }
-      //#endregion
-
-      //#region App Settings
 
       dispatch(settingsActions.setSettingsState({key: 'cardsCompactMode', value: storage.cards.cardCompactMode}));
       dispatch(settingsActions.setSettingsState({key: 'cardsDevImage', value: storage.cards.cardsDevImage}));
@@ -114,9 +111,6 @@ export default function useAppEvents() {
       dispatch(settingsActions.setSettingsState({key: 'tooltipLevel', value: storage.app.tooltipStatus}));
       dispatch(settingsActions.setSettingsState({key: 'closeConfirm', value: storage.app.closeConfirm}));
       dispatch(settingsActions.setSettingsState({key: 'terminateAIConfirm', value: storage.app.terminateAIConfirm}));
-      //#endregion
-
-      //#region Others
 
       if (storage.app.startupLastActivePage) {
         dispatch(appActions.setAppState({key: 'currentPage', value: storage.app.lastPage}));
@@ -124,10 +118,13 @@ export default function useAppEvents() {
       }
 
       dispatch(settingsActions.setHotkeys(storage.app.hotkeys));
-      //#endregion
     });
-    //#endregion
+  }, [dispatch, navigate]);
+};
 
+export const usePatreon = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
     window.electron.ipcRenderer.invoke('patreon-get-info').then(result => {
       dispatch(userActions.setUserState({key: 'patreonUserData', value: result}));
       dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
@@ -136,9 +133,12 @@ export default function useAppEvents() {
     window.electron.ipcRenderer.on('release-channel-change', (_, result) => {
       dispatch(userActions.setUpdateChannel(result));
     });
+  }, [dispatch]);
+};
 
-    //#region Other Events
-
+export const useIpcEvents = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
     rendererIpc.module.onUpdatedModules((_, updated) => {
       dispatch(settingsActions.addUpdatedModule(updated));
     });
@@ -193,7 +193,5 @@ export default function useAppEvents() {
       }
       dispatch(cardsActions.setUpdatingExtensions(result));
     });
-
-    //#endregion
-  }, [dispatch, navigate]);
-}
+  }, [dispatch]);
+};
