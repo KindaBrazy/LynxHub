@@ -84,3 +84,7 @@ export function validateGitRepoUrl(url: string): string {
 
   return '';
 }
+
+export function isDev() {
+  return import.meta.env.DEV;
+}

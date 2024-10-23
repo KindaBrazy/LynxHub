@@ -7,12 +7,12 @@ import log from 'electron-log/renderer';
 import {createRoot} from 'react-dom/client';
 import {RouterProvider} from 'react-router-dom';
 
+import {isDev} from '../../cross/CrossUtils';
 import {initRouter} from './App/AppRouter';
-import {isDevRenderer} from './App/Utils/UtilFunctions';
 
 const router = await initRouter();
 
-if (!isDevRenderer()) {
+if (!isDev()) {
   Object.assign(console, log.functions);
 }
 
