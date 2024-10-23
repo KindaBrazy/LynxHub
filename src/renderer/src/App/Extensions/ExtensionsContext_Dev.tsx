@@ -21,7 +21,7 @@ export default function ExtensionsProvider_Dev({children}: {children: ReactNode}
 
   useEffect(() => {
     const loadExtensions = async () => {
-      loadStatusBar(setStatusBar, StatusBar);
+      loadStatusBar(setStatusBar, [StatusBar]);
 
       setLoadingExtensions(false);
     };

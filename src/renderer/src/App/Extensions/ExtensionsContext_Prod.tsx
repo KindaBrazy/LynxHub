@@ -43,9 +43,9 @@ export default function ExtensionsProvider_Prod({children}: {children: ReactNode
 
       const importedExtensions = await Promise.all(folderNames.map(folderName => getRemote(folderName, 'Extension')));
 
-      const extensions = importedExtensions.map(ext => ext.StatusBar);
+      const StatusBars = importedExtensions.map(ext => ext.StatusBar);
 
-      extensions.forEach(extension => loadStatusBar(setStatusBar, extension));
+      loadStatusBar(setStatusBar, StatusBars);
 
       setLoadingExtensions(false);
     };
