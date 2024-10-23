@@ -1,23 +1,63 @@
 import {useAppState} from '../src/App/Redux/App/AppReducer';
+import {ContainerElements, ElementProps, StatusBarComponent} from './types';
 
-function StatusBar() {
+const StatusBar: StatusBarComponent = {};
+
+function StatusBarContainer(_elements: ContainerElements) {
   return null;
+  /*return (
+    <div
+      className={
+        'flex h-7 w-full flex-row justify-between border-t border-foreground/10' +
+        ' items-center bg-blue-700 px-3 text-small'
+      }>
+      <div>
+        {elements.start.map((Start, index) => (
+          <Start key={index} className="shrink-0" />
+        ))}
+      </div>
+      <div>
+        {elements.center.map((Center, index) => (
+          <Center key={index} className="shrink-0" />
+        ))}
+      </div>
+      <div>
+        {elements.end.map((End, index) => (
+          <End key={index} className="shrink-0" />
+        ))}
+      </div>
+    </div>
+  );*/
 }
 
-function StatusBarStart() {
+function StatusBarStart({className, ...props}: ElementProps) {
   const darkMode = useAppState('darkMode');
-  return <span className={`${darkMode ? 'text-success' : 'text-danger'}`}>{'Starting by me'}</span>;
+  return (
+    <span className={`${darkMode ? 'text-success' : 'text-danger'} ${className}`} {...props}>
+      {'Starting by me'}
+    </span>
+  );
 }
 
-function StatusBarCenter() {
+function StatusBarCenter({className, ...props}: ElementProps) {
   const darkMode = useAppState('darkMode');
-  return <span className={`${darkMode ? 'text-success' : 'text-danger'}`}>{'See me in center'}</span>;
+  return (
+    <span className={`${darkMode ? 'text-success' : 'text-danger'} ${className}`} {...props}>
+      {'See me in center'}
+    </span>
+  );
 }
 
-function StatusBarEnd() {
+function StatusBarEnd({className, ...props}: ElementProps) {
   const darkMode = useAppState('darkMode');
-  return <span className={`${darkMode ? 'text-success' : 'text-danger'}`}>{"I'm at the end."}</span>;
+  return (
+    <span className={`${darkMode ? 'text-success' : 'text-danger'} ${className}`} {...props}>
+      {"I'm at the end."}
+    </span>
+  );
 }
+
+StatusBar.Container = StatusBarContainer;
 
 StatusBar.Start = StatusBarStart;
 

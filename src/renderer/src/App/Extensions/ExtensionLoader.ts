@@ -1,4 +1,4 @@
-import {compact} from 'lodash';
+import {compact, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction} from 'react';
 
 import {StatusBarComponent} from '../../../extension/types';
@@ -6,28 +6,28 @@ import {ExtensionStatusBar} from './ExtensionTypes';
 
 export const loadStatusBar = (
   setStatusBar: Dispatch<SetStateAction<ExtensionStatusBar>>,
-  StatusBar: StatusBarComponent,
+  StatusBar: StatusBarComponent[],
 ) => {
-  const container = StatusBar.Container;
-  const start = StatusBar.Start;
-  const center = StatusBar.Center;
-  const end = StatusBar.End;
+  const container = StatusBar.map(status => status.Container);
+  const start = StatusBar.map(status => status.Start);
+  const center = StatusBar.map(status => status.Center);
+  const end = StatusBar.map(status => status.End);
 
   setStatusBar(prevState => {
     if (prevState) {
       if (!prevState.Container) {
-        prevState.Container = container;
+        prevState.Container = container.pop();
       }
-      if (start) prevState.add.start.push(start);
-      if (center) prevState.add.start.push(center);
-      if (end) prevState.add.start.push(end);
+      if (!isEmpty(start)) prevState.add.start = compact([...prevState.add.start, ...start]);
+      if (!isEmpty(center)) prevState.add.center = compact([...prevState.add.center, ...center]);
+      if (!isEmpty(end)) prevState.add.end = compact([...prevState.add.end, ...end]);
     } else {
       prevState = {
-        Container: container,
+        Container: container.pop(),
         add: {
-          start: compact([start]),
-          center: compact([center]),
-          end: compact([end]),
+          start: compact(start),
+          center: compact(center),
+          end: compact(end),
         },
       };
     }
