@@ -1,6 +1,7 @@
 import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from 'react';
 
 import {StatusBar} from '../../../extension/Extension';
+import {loadStatusBar} from './ExtensionLoader';
 import {ExtensionStatusBar} from './ExtensionTypes';
 
 type ExtensionContextData = {
@@ -20,31 +21,7 @@ export default function ExtensionsProvider_Dev({children}: {children: ReactNode}
 
   useEffect(() => {
     const loadExtensions = async () => {
-      const start = StatusBar.Start;
-      const center = StatusBar.Center;
-      const end = StatusBar.End;
-
-      setStatusBar(prevState => {
-        if (prevState) {
-          if (!prevState.StatusBar) {
-            prevState.StatusBar = StatusBar();
-          }
-          prevState.add.start.push(start);
-          prevState.add.center.push(center);
-          prevState.add.end.push(end);
-        } else {
-          prevState = {
-            StatusBar: StatusBar(),
-            add: {
-              start: [start],
-              center: [center],
-              end: [end],
-            },
-          };
-        }
-
-        return prevState;
-      });
+      loadStatusBar(setStatusBar, StatusBar);
 
       setLoadingExtensions(false);
     };
