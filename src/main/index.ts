@@ -9,6 +9,7 @@ import trayIconMenu from '../../resources/16x16.png?asset';
 import trayIcon from '../../resources/icon.ico?asset';
 import darwinIcon from '../../resources/icon-darwin.png?asset';
 import {APP_NAME} from '../cross/CrossConstants';
+import {isDev} from '../cross/CrossUtils';
 import AppInitializer from './Managements/AppInitializer';
 import {checkForUpdate} from './Managements/AppUpdater';
 import {ValidateCards} from './Managements/DataValidator';
@@ -22,7 +23,7 @@ import StorageManager from './Managements/Storage/StorageManager';
 import TrayManager from './Managements/TrayManager';
 import downloadDU from './Utilities/CalculateFolderSize/DownloadDU';
 
-if (!is.dev) {
+if (!isDev()) {
   log.initialize();
   Object.assign(console, log.functions);
 }
