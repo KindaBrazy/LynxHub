@@ -125,10 +125,15 @@ export const useStorageData = () => {
 export const usePatreon = () => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    window.electron.ipcRenderer.invoke('patreon-get-info').then(result => {
-      dispatch(userActions.setUserState({key: 'patreonUserData', value: result}));
-      dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
-    });
+    window.electron.ipcRenderer
+      .invoke('patreon-get-info')
+      .then(result => {
+        dispatch(userActions.setUserState({key: 'patreonUserData', value: result}));
+        dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
+      })
+      .catch(e => {
+        console.warn(e);
+      });
 
     window.electron.ipcRenderer.on('release-channel-change', (_, result) => {
       dispatch(userActions.setUpdateChannel(result));
