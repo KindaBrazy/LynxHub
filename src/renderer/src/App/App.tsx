@@ -1,6 +1,6 @@
 import useAppEvents from './AppEvents/AppEvents';
 import Background from './Components/Background';
-import MainContents from './Components/MainContents';
+import MainContents from './Components/MainContents/MainContents';
 import Modals from './Components/Modals/Modals';
 import TitleBar from './Components/TitleBar/TitleBar';
 import ExtensionsProvider from './Extensions/ExtensionEnv';

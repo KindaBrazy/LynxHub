@@ -1,5 +1,6 @@
 import {memo} from 'react';
 
+import {useAppState} from '../../Redux/App/AppReducer';
 import {ContentPagesButtons, SettingsPagesButtons} from './NavButtons';
 
 const CONTAINER_WIDTH = 'w-[5.5rem]';
@@ -19,6 +20,10 @@ const COMMON_STYLES =
 
 /** Navigation bar containing two sections: Contents and Settings */
 const NavBar = memo(() => {
+  const navBar = useAppState('navBar');
+
+  if (!navBar) return null;
+
   return (
     <div className={`flex h-full ${CONTAINER_WIDTH} shrink-0 flex-col items-center justify-between pb-4 pt-3`}>
       <div className={`${COMMON_STYLES} max-h-[56%]`}>
