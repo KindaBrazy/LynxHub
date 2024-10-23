@@ -1,6 +1,7 @@
 import {compact} from 'lodash';
 import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from 'react';
 
+import {loadStatusBar} from './ExtensionLoader';
 import {ExtensionStatusBar} from './ExtensionTypes';
 import {getRemote, setRemote} from './Vite-Federation';
 
@@ -44,36 +45,7 @@ export default function ExtensionsProvider_Prod({children}: {children: ReactNode
 
       const extensions = importedExtensions.map(ext => ext.StatusBar);
 
-      for (const extension of extensions) {
-        const StatusBar = extension;
-        const start = extension.Start;
-        const center = extension.Center;
-        const end = extension.End;
-
-        setStatusBar(prevState => {
-          console.log('prevState before: ', prevState);
-          if (prevState) {
-            if (!prevState.StatusBar) {
-              prevState.StatusBar = StatusBar();
-            }
-            prevState.add.start.push(start);
-            prevState.add.center.push(center);
-            prevState.add.end.push(end);
-          } else {
-            prevState = {
-              StatusBar: StatusBar(),
-              add: {
-                start: [start],
-                center: [center],
-                end: [end],
-              },
-            };
-          }
-
-          console.log('prevState after: ', prevState);
-          return prevState;
-        });
-      }
+      extensions.forEach(extension => loadStatusBar(setStatusBar, extension));
 
       setLoadingExtensions(false);
     };
