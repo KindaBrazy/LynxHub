@@ -22,8 +22,10 @@ import StorageManager from './Managements/Storage/StorageManager';
 import TrayManager from './Managements/TrayManager';
 import downloadDU from './Utilities/CalculateFolderSize/DownloadDU';
 
-log.initialize();
-Object.assign(console, log.functions);
+if (!is.dev) {
+  log.initialize();
+  Object.assign(console, log.functions);
+}
 
 app.commandLine.appendSwitch('disable-http-cache');
 
