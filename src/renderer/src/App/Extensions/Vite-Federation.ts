@@ -1,6 +1,7 @@
 // @ts-ignore-next-line
 import {__federation_method_getRemote, __federation_method_setRemote} from '__federation__';
-import {ReactNode} from 'react';
+
+import {ExtensionImport} from './ExtensionTypes';
 
 type RemotesConfig = {
   format?: 'esm' | 'systemjs' | 'var';
@@ -10,17 +11,7 @@ type RemotesConfig = {
 
 type SetRemoteModule = (remotesName: string, remotesConfig: RemotesConfig) => void;
 
-type GetRemoteModule = (
-  remoteName: string,
-  componentName: string,
-) => Promise<{
-  StatusBar: {
-    (): ReactNode;
-    Start: () => ReactNode;
-    Center: () => ReactNode;
-    End: () => ReactNode;
-  };
-}>;
+type GetRemoteModule = (remoteName: string, componentName: string) => Promise<ExtensionImport>;
 
 export const setRemote: SetRemoteModule = __federation_method_setRemote;
 export const getRemote: GetRemoteModule = __federation_method_getRemote;

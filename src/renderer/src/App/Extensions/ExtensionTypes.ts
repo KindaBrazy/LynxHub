@@ -1,10 +1,14 @@
 import {ReactNode} from 'react';
 
-export type StatusBarAdd = {place: 'start' | 'center' | 'end'; element: ReactNode}[];
+import {ContainerElements, StatusBarComponent} from '../../../extension/types';
 
 export type ExtensionStatusBar =
   | {
-      StatusBar: ReactNode;
-      add: {start: Array<() => ReactNode>; center: Array<() => ReactNode>; end: Array<() => ReactNode>};
+      Container?: (elements: ContainerElements) => ReactNode;
+      add: ContainerElements;
     }
   | undefined;
+
+export type ExtensionImport = {
+  StatusBar: StatusBarComponent;
+};
