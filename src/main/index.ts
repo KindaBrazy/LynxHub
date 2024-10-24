@@ -10,6 +10,7 @@ import trayIcon from '../../resources/icon.ico?asset';
 import darwinIcon from '../../resources/icon-darwin.png?asset';
 import {APP_NAME} from '../cross/CrossConstants';
 import {isDev} from '../cross/CrossUtils';
+import {checkAppDirectories} from './Managements/AppDataManager';
 import AppInitializer from './Managements/AppInitializer';
 import {checkForUpdate} from './Managements/AppUpdater';
 import {ValidateCards} from './Managements/DataValidator';
@@ -39,6 +40,8 @@ export let moduleManager: ModuleManager;
 
 // Remove default menu
 Menu.setApplicationMenu(null);
+
+checkAppDirectories();
 
 function setupApp() {
   appManager = new ElectronAppManager();

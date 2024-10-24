@@ -13,7 +13,7 @@ const DIRECTORIES = [MODULES_FOLDER_NAME, BINARIES_FOLDER_NAME, REPOSITORIES_FOL
  * Creates application directories in the app data path.
  * @throws {Error} If directory creation fails
  */
-export async function createAppDirectories(): Promise<void> {
+export async function checkAppDirectories(): Promise<void> {
   const appDataPath = getAppDataPath();
 
   try {
