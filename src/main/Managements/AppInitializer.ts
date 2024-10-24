@@ -10,7 +10,6 @@ import {APP_NAME, MAIN_MODULE_URL} from '../../cross/CrossConstants';
 import {extractGitUrl} from '../../cross/CrossUtils';
 import {initializerChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager} from '../index';
-import {createAppDirectories} from './AppDataManager';
 import GitManager from './GitManager';
 import ModuleManager from './ModuleManager';
 
@@ -101,7 +100,6 @@ export default class AppInitializer {
     const installPath = path.join(modulesPath, repo);
 
     try {
-      await createAppDirectories();
       // Remove existing installation if any
       await fs.promises.rm(installPath, {recursive: true, force: true});
 
