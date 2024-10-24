@@ -74,14 +74,19 @@ const AllCards = () => {
 /** Renders the "PINNED" category section */
 export const PinnedCars = memo(() => {
   const pinnedCards = useCardsState('pinnedCards');
+  const installedCards = useCardsState('installedCards');
+
+  const validPinnedCards = useMemo(() => {
+    return pinnedCards.filter(pinnedCardId => installedCards.some(installedCard => installedCard.id === pinnedCardId));
+  }, [pinnedCards, installedCards]);
 
   return (
     <HomeCategory title="PINNED" icon="CirclePin">
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
-        {isEmpty(pinnedCards) ? (
+        {isEmpty(validPinnedCards) ? (
           <Empty className="size-full" description="No Pinned Card to Display!" />
         ) : (
-          <CardsById cardIds={pinnedCards} />
+          <CardsById cardIds={validPinnedCards} />
         )}
       </div>
     </HomeCategory>
@@ -91,14 +96,21 @@ export const PinnedCars = memo(() => {
 // Renders the "RECENTLY USED" category section
 export const RecentlyCards = memo(() => {
   const recentlyUsedCards = useCardsState('recentlyUsedCards');
+  const installedCards = useCardsState('installedCards');
+
+  const validRecentlyUsed = useMemo(() => {
+    return recentlyUsedCards.filter(recentlyUsedCardId =>
+      installedCards.some(installedCard => installedCard.id === recentlyUsedCardId),
+    );
+  }, [recentlyUsedCards, installedCards]);
 
   return (
     <HomeCategory icon="CircleClock" title="RECENTLY USED">
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
-        {isEmpty(recentlyUsedCards) ? (
+        {isEmpty(validRecentlyUsed) ? (
           <Empty className="size-full" description="No Recently Used Card to Display!" />
         ) : (
-          <CardsById cardIds={recentlyUsedCards} />
+          <CardsById cardIds={validRecentlyUsed} />
         )}
       </div>
     </HomeCategory>
