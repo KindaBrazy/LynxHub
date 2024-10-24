@@ -3,11 +3,21 @@ import path from 'node:path';
 import {dialog} from 'electron';
 import fs from 'graceful-fs';
 
-import {BINARIES_FOLDER_NAME, MODULES_FOLDER_NAME, REPOSITORIES_FOLDER_NAME} from '../../cross/CrossConstants';
+import {
+  BINARIES_FOLDER_NAME,
+  EXTENSIONS_FOLDER_NAME,
+  MODULES_FOLDER_NAME,
+  REPOSITORIES_FOLDER_NAME,
+} from '../../cross/CrossConstants';
 import {FolderNames} from '../../cross/CrossTypes';
 import {appManager, storageManager} from '../index';
 
-const DIRECTORIES = [MODULES_FOLDER_NAME, BINARIES_FOLDER_NAME, REPOSITORIES_FOLDER_NAME] as const;
+const DIRECTORIES = [
+  MODULES_FOLDER_NAME,
+  EXTENSIONS_FOLDER_NAME,
+  BINARIES_FOLDER_NAME,
+  REPOSITORIES_FOLDER_NAME,
+] as const;
 
 /**
  * Creates application directories in the app data path.

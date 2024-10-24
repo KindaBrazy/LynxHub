@@ -22,6 +22,7 @@ export const APP_NAME_VERSION: string = `${APP_NAME} ${APP_VERSION}`;
 export const APP_NAME_VERSION_V: string = `${APP_NAME} ${APP_VERSION_V}`;
 
 export const MODULES_FOLDER_NAME = 'Modules' as const;
+export const EXTENSIONS_FOLDER_NAME = 'Extensions' as const;
 export const BINARIES_FOLDER_NAME = 'Binaries' as const;
 export const REPOSITORIES_FOLDER_NAME = 'AIWorkspaces' as const;
 // Static Assets
