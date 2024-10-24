@@ -1,4 +1,9 @@
-import {BINARIES_FOLDER_NAME, MODULES_FOLDER_NAME, REPOSITORIES_FOLDER_NAME} from './CrossConstants';
+import {
+  BINARIES_FOLDER_NAME,
+  EXTENSIONS_FOLDER_NAME,
+  MODULES_FOLDER_NAME,
+  REPOSITORIES_FOLDER_NAME,
+} from './CrossConstants';
 
 export type RepoInfoType = {
   totalSize: string;
@@ -126,7 +131,11 @@ export type AppUpdateData = AppUpdateInfo & {
   changeLog: {build: number; version: string; new: string[]; improve: string[]; bug: string[]}[];
 };
 
-export type FolderNames = typeof MODULES_FOLDER_NAME | typeof BINARIES_FOLDER_NAME | typeof REPOSITORIES_FOLDER_NAME;
+export type FolderNames =
+  | typeof MODULES_FOLDER_NAME
+  | typeof EXTENSIONS_FOLDER_NAME
+  | typeof BINARIES_FOLDER_NAME
+  | typeof REPOSITORIES_FOLDER_NAME;
 
 export type PatreonUserData = {
   tier: string;
