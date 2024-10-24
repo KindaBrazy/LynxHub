@@ -46,14 +46,14 @@ Seamlessly install, configure, launch, and manage your AI interfaces from a sing
 | Channel      | Version                                                                              | Date       |
 |--------------|--------------------------------------------------------------------------------------|------------|
 | Early Access | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V1.3.1_Early-Access) | 2024-10-10 |
-| Release      | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V1.2.0)              | 2024-10-01 |
+| Release      | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V1.3.1)              | 2024-10-24 |
 
 | Platform                         | x64                                                                                                           | arm64                                                                                                         |
 |----------------------------------|---------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| **Windows 10/11** (.exe)         | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.2.0/LynxHub-V1.2.0-win_x64-Setup.exe) | N/A                                                                                                           |
-| **macOS** (.dmg)                 | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.2.0/LynxHub-V1.2.0-mac.dmg)           | N/A                                                                                                           |
-| **Debian, Ubuntu** (.deb)        | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.2.0/LynxHub-V1.2.0-linux_amd64.deb)   | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.2.0/LynxHub-V1.2.0-linux_arm64.deb)   |
-| **Red Hat, Fedora, SUSE** (.rpm) | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.2.0/LynxHub-V1.2.0-linux_x86_64.rpm)  | [**V1.2.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.2.0/LynxHub-V1.2.0-linux_aarch64.rpm) |
+| **Windows 10/11** (.exe)         | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.3.1/LynxHub-V1.3.1-win_x64-Setup.exe) | N/A                                                                                                           |
+| **macOS** (.dmg)                 | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.3.1/LynxHub-V1.3.1-mac.dmg)           | N/A                                                                                                           |
+| **Debian, Ubuntu** (.deb)        | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.3.1/LynxHub-V1.3.1-linux_amd64.deb)   | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.3.1/LynxHub-V1.3.1-linux_arm64.deb)   |
+| **Red Hat, Fedora, SUSE** (.rpm) | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.3.1/LynxHub-V1.3.1-linux_x86_64.rpm)  | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.3.1/LynxHub-V1.3.1-linux_aarch64.rpm) |
 
 > [!TIP]
 > 🌟 **Exclusive Early Access**
