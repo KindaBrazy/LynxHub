@@ -50,11 +50,12 @@ export const useMainModuleInstallation = (
   useEffect(() => {
     initializerIpc.onInstallAIModule((_e, _id, state, result) => {
       switch (state) {
-        case 'Progress':
+        case 'Progress': {
           const {progress} = result as SimpleGitProgressEvent;
           setSubTitle(`${progress}%`);
           setPercent(progress);
           break;
+        }
         case 'Failed':
           setStage('failed');
           setPercent(undefined);
