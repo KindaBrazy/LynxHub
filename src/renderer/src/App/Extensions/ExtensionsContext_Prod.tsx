@@ -1,6 +1,7 @@
 import {compact} from 'lodash';
 import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from 'react';
 
+import rendererIpc from '../RendererIpc';
 import {loadStatusBar} from './ExtensionLoader';
 import {ExtensionStatusBar} from './ExtensionTypes';
 import {getRemote, setRemote} from './Vite-Federation';
@@ -22,7 +23,7 @@ export default function ExtensionsProvider_Prod({children}: {children: ReactNode
 
   useEffect(() => {
     const loadExtensions = async () => {
-      const extensionDataAddress: string[] = await window.electron.ipcRenderer.invoke('extension-address-data');
+      const extensionDataAddress: string[] = await rendererIpc.extension.getExtensionsData();
       const finalAddress: string[] = extensionDataAddress.map(ext => `${ext}/scripts/renderer/rendererEntry.mjs`);
 
       const folderNames = compact(

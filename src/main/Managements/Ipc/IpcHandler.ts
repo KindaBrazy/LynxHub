@@ -7,6 +7,7 @@ import {
   CloneDirTypes,
   DarkModeTypes,
   DiscordRunningAI,
+  extensionsChannels,
   fileChannels,
   gitChannels,
   modulesChannels,
@@ -24,7 +25,7 @@ import {
   winChannels,
 } from '../../../cross/IpcChannelAndTypes';
 import StorageTypes, {InstalledCard} from '../../../cross/StorageTypes';
-import {appManager, discordRpcManager, moduleManager, storageManager} from '../../index';
+import {appManager, discordRpcManager, extensionManager, moduleManager, storageManager} from '../../index';
 import {getSystemDarkMode, openDialog} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
 import GitManager from '../GitManager';
@@ -129,15 +130,27 @@ function utils() {
 }
 
 function modules() {
-  ipcMain.handle(modulesChannels.getModulesData, () => moduleManager.getModulesData());
-  ipcMain.handle(modulesChannels.getInstalledModulesInfo, () => moduleManager.getInstalledModulesInfo());
+  ipcMain.handle(modulesChannels.getModulesData, () => moduleManager.getPluginData());
+  ipcMain.handle(modulesChannels.getInstalledModulesInfo, () => moduleManager.getInstalledPluginInfo());
 
-  ipcMain.handle(modulesChannels.installModule, (_, url: string) => moduleManager.installModule(url));
-  ipcMain.handle(modulesChannels.uninstallModule, (_, id: string) => moduleManager.uninstallModule(id));
+  ipcMain.handle(modulesChannels.installModule, (_, url: string) => moduleManager.installPlugin(url));
+  ipcMain.handle(modulesChannels.uninstallModule, (_, id: string) => moduleManager.uninstallPlugin(id));
   ipcMain.handle(modulesChannels.isUpdateAvailable, (_, id: string) => moduleManager.isUpdateAvailable(id));
   ipcMain.handle(modulesChannels.anyUpdateAvailable, () => moduleManager.anyUpdateAvailable());
-  ipcMain.handle(modulesChannels.updateModule, (_, id: string) => moduleManager.updateModule(id));
-  ipcMain.handle(modulesChannels.updateAllModules, () => moduleManager.updateAllModules());
+  ipcMain.handle(modulesChannels.updateModule, (_, id: string) => moduleManager.updatePlugin(id));
+  ipcMain.handle(modulesChannels.updateAllModules, () => moduleManager.updateAllPlugins());
+}
+
+function extensions() {
+  ipcMain.handle(extensionsChannels.getExtensionsData, () => extensionManager.getPluginData());
+  ipcMain.handle(extensionsChannels.getInstalledExtensionsInfo, () => extensionManager.getInstalledPluginInfo());
+
+  ipcMain.handle(extensionsChannels.installExtension, (_, url: string) => extensionManager.installPlugin(url));
+  ipcMain.handle(extensionsChannels.uninstallExtension, (_, id: string) => extensionManager.uninstallPlugin(id));
+  ipcMain.handle(extensionsChannels.isUpdateAvailable, (_, id: string) => extensionManager.isUpdateAvailable(id));
+  ipcMain.handle(extensionsChannels.anyUpdateAvailable, () => extensionManager.anyUpdateAvailable());
+  ipcMain.handle(extensionsChannels.updateExtension, (_, id: string) => extensionManager.updatePlugin(id));
+  ipcMain.handle(extensionsChannels.updateAllExtensions, () => extensionManager.updateAllPlugins());
 }
 
 function pty() {
@@ -237,14 +250,19 @@ function modulesIpc() {
 }
 
 export function listenToAllChannels() {
-  win();
-  file();
-  git();
-  utils();
-  modules();
-  pty();
   appData();
   storage();
   storageUtilsIpc();
+
+  win();
+  file();
+
+  git();
+  utils();
+  pty();
+
+  modules();
   modulesIpc();
+
+  extensions();
 }
