@@ -11,7 +11,7 @@ import {extractGitUrl} from '../../cross/CrossUtils';
 import {initializerChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager} from '../index';
 import GitManager from './GitManager';
-import ModuleManager from './ModuleManager';
+import ModuleManager from './Plugin/ModuleManager';
 
 /**
  * Handle the initialization process of the application.

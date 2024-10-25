@@ -14,7 +14,7 @@ import {extractGitUrl, validateGitRepoUrl} from '../../cross/CrossUtils';
 import {CloneDirTypes} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
 import {checkPathExists, openDialog} from '../Utilities/Utils';
-import ModuleManager from './ModuleManager';
+import ModuleManager from './Plugin/ModuleManager';
 
 /** Manages Git operations such as cloning, pulling, and status checking. */
 export default class GitManager {

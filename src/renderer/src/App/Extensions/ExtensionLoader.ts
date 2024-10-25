@@ -1,7 +1,7 @@
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction} from 'react';
 
-import {StatusBarComponent} from '../../../extension/types';
+import {StatusBarComponent} from '../../../../cross/ExtensionTypes';
 import {ExtensionStatusBar} from './ExtensionTypes';
 
 export const loadStatusBar = (

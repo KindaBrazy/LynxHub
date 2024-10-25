@@ -17,9 +17,9 @@ import {ValidateCards} from './Managements/DataValidator';
 import DialogManager from './Managements/DialogManager';
 import DiscordRpcManager from './Managements/DiscordRpcManager';
 import ElectronAppManager from './Managements/ElectronAppManager';
-import serveExtensions from './Managements/ExtensionManager';
 import {listenToAllChannels} from './Managements/Ipc/IpcHandler';
-import ModuleManager from './Managements/ModuleManager';
+import ExtensionManager from './Managements/Plugin/ExtensionManager';
+import ModuleManager from './Managements/Plugin/ModuleManager';
 import StorageManager from './Managements/Storage/StorageManager';
 import TrayManager from './Managements/TrayManager';
 import downloadDU from './Utilities/CalculateFolderSize/DownloadDU';
@@ -37,6 +37,7 @@ export let trayManager: TrayManager;
 export let discordRpcManager: DiscordRpcManager;
 export let cardsValidator: ValidateCards;
 export let moduleManager: ModuleManager;
+export let extensionManager: ExtensionManager;
 
 // Remove default menu
 Menu.setApplicationMenu(null);
@@ -73,10 +74,10 @@ async function onAppReady() {
   discordRpcManager = new DiscordRpcManager();
   cardsValidator = new ValidateCards();
   moduleManager = new ModuleManager();
+  extensionManager = new ExtensionManager();
 
   await moduleManager.createServer();
-
-  await serveExtensions();
+  await extensionManager.createServer();
 
   // Install browser developer extensions
   if (is.dev) {
