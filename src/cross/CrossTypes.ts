@@ -72,6 +72,20 @@ export type CardMainMethods = {
   }) => void;
 };
 
+export type ExtensionMainMethods = {
+  listenForChannels: () => void;
+};
+
+export type MainExtensions = {
+  id: string;
+  methods: ExtensionMainMethods;
+};
+
+export type MainExtensionImportType = {
+  default: MainExtensions;
+  listenForChannels?: () => void;
+};
+
 export type MainModules = {
   /** The ID of the card that using these methods */
   id: string;
@@ -114,6 +128,30 @@ export type ModulesInfo = {
 
   /** Is the WebUI or the repository provided by this module owned by you? */
   owner?: boolean;
+};
+
+export type ExtensionsInfo = {
+  id: string;
+
+  title: string;
+
+  publishDate: string;
+
+  version: string;
+
+  updateDate: string;
+
+  changeLog: string;
+
+  description: string;
+
+  /** Repository address to be cloned when user install module */
+  repoUrl: string;
+
+  /** Url address to logo picture or relative path to the image file
+   * - A relative path will start with './'
+   */
+  logoUrl?: string;
 };
 
 export type AppUpdateInfo = {
