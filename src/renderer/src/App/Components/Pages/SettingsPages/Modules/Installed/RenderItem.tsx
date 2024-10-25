@@ -84,6 +84,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
   const actions = useCallback(() => {
     const result = [
       <Popconfirm
+        key="uninstall"
         okType="danger"
         okText="Uninstall"
         cancelText="Cancel"
