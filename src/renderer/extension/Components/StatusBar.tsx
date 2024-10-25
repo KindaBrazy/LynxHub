@@ -1,5 +1,5 @@
-import {useAppState} from '../src/App/Redux/App/AppReducer';
-import {ContainerElements, ElementProps, StatusBarComponent} from './types';
+import {ContainerElements, ElementProps, StatusBarComponent} from '../../../cross/ExtensionTypes';
+import {useAppState} from '../../src/App/Redux/App/AppReducer';
 
 const StatusBar: StatusBarComponent = {};
 
