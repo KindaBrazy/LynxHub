@@ -1,5 +1,5 @@
 import './index.css';
 
-import StatusBar from './StatusBar';
+import StatusBar from './Components/StatusBar';
 
 export {StatusBar};
