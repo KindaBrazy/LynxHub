@@ -12,6 +12,7 @@ import {
   DarkModeTypes,
   DiscordRunningAI,
   DownloadProgress,
+  extensionsChannels,
   ExtensionsData,
   ExtensionsUpdateStatus,
   fileChannels,
@@ -118,6 +119,29 @@ const rendererIpc = {
 
     onUpdatedModules: (result: (event: IpcRendererEvent, updated: string | string[]) => void) =>
       ipc.on(modulesChannels.onUpdatedModules, result),
+  },
+
+  /** Managing app extensions */
+  extension: {
+    getExtensionsData: (): Promise<string[]> => ipc.invoke(extensionsChannels.getExtensionsData),
+
+    getInstalledExtensionsInfo: (): Promise<ModulesInfo[]> => ipc.invoke(extensionsChannels.getInstalledExtensionsInfo),
+
+    installExtension: (url: string): Promise<boolean> => ipc.invoke(extensionsChannels.installExtension, url),
+
+    uninstallExtension: (id: string): Promise<boolean> => ipc.invoke(extensionsChannels.uninstallExtension, id),
+
+    isUpdateAvailable: (id: string): Promise<boolean> => ipc.invoke(extensionsChannels.isUpdateAvailable, id),
+    anyUpdateAvailable: (): Promise<boolean> => ipc.invoke(extensionsChannels.anyUpdateAvailable),
+
+    updateExtension: (id: string): Promise<boolean> => ipc.invoke(extensionsChannels.updateExtension, id),
+
+    updateAllExtensions: (): Promise<void> => ipc.invoke(extensionsChannels.updateAllExtensions),
+
+    onReload: (result: (event: IpcRendererEvent) => void) => ipc.on(extensionsChannels.onReload, result),
+
+    onUpdatedExtensions: (result: (event: IpcRendererEvent, updated: string | string[]) => void) =>
+      ipc.on(extensionsChannels.onUpdatedExtensions, result),
   },
 
   /** Utilities methods for working with app storage data */
