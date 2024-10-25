@@ -151,6 +151,21 @@ export const modulesChannels = {
   getInstalledModulesInfo: 'modules:get-installed-modules-info',
 };
 
+export const extensionsChannels = {
+  installExtension: 'extensions:install-extensions',
+  uninstallExtension: 'extensions:uninstall-extensions',
+  isUpdateAvailable: 'extensions:is-update-available',
+  anyUpdateAvailable: 'extensions:any-update-available',
+  updateExtension: 'extensions:update-extensions',
+  updateAllExtensions: 'extensions:update-all-extensions',
+
+  onReload: 'extensions:on-reload',
+  onUpdatedExtensions: 'extensions:on-updated-extensions',
+
+  getExtensionsData: 'extensions:get-extensions-data',
+  getInstalledExtensionsInfo: 'extensions:get-installed-extensions-info',
+};
+
 export const ptyChannels = {
   process: 'pty-process',
   customProcess: 'pty-custom-process',
