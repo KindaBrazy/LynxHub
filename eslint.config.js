@@ -6,6 +6,7 @@ import react from 'eslint-plugin-react';
 import hooksPlugin from 'eslint-plugin-react-hooks';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tailwind from 'eslint-plugin-tailwindcss';
+import globals from 'globals';
 import tsEslint from 'typescript-eslint';
 
 const compat = new FlatCompat({
@@ -39,6 +40,10 @@ export default [
     files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
     languageOptions: {
       ...react.configs.flat.recommended.languageOptions,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
