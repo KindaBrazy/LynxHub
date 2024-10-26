@@ -81,11 +81,6 @@ export type MainExtensions = {
   methods: ExtensionMainMethods;
 };
 
-export type MainExtensionImportType = {
-  default: MainExtensions;
-  listenForChannels?: () => void;
-};
-
 export type MainModules = {
   /** The ID of the card that using these methods */
   id: string;
