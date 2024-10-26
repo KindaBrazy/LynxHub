@@ -57,12 +57,7 @@ export abstract class BasePluginManager<
       const content = fs.readFileSync(filePath, 'utf-8');
       try {
         const jsonData = JSON.parse(content);
-        const repoUrl = await GitManager.remoteUrlFromDir(pluginPath);
-        const pluginInfo = {
-          ...jsonData,
-          repoUrl,
-        } as TInfo;
-        this.installedPluginInfo.push({dir: pluginPath, info: pluginInfo});
+        this.installedPluginInfo.push({dir: pluginPath, info: jsonData});
       } catch (error) {
         console.error(`Error parsing ${pluginPath}: ${error}`);
       }
