@@ -1,6 +1,8 @@
 import path from 'node:path';
 
-import {ExtensionsInfo, MainExtensionImportType, MainExtensions} from '../../../cross/CrossTypes';
+import compact from 'lodash/compact';
+
+import {ExtensionsInfo, MainExtensions} from '../../../cross/CrossTypes';
 import {extensionsChannels} from '../../../cross/IpcChannelAndTypes';
 import {getAppDirectory} from '../AppDataManager';
 import {BasePluginManager} from './BasePluginManager';
@@ -24,13 +26,22 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo, 
 
   protected async importPlugins(extensionFolders: string[]) {
     const importedExtensions = await Promise.all(
-      extensionFolders.map(
-        extensionPath => import(`file://${path.join(extensionPath, 'scripts', 'main', 'mainEntry.mjs')}`),
-      ),
+      extensionFolders.map(async extensionPath => {
+        const id = this.installedPluginInfo.find(plugin => plugin.dir === extensionPath)?.info.id;
+        if (!id) return;
+        return {
+          id,
+          methods: await import(`file://${path.join(extensionPath, 'scripts', 'main', 'mainEntry.mjs')}`),
+        };
+      }),
     );
 
-    importedExtensions.forEach((importedExtension: MainExtensionImportType) => {
-      this.mainMethods.push(importedExtension.default);
+    compact(importedExtensions).forEach((importedExtension: MainExtensions) => {
+      this.mainMethods.push({id: importedExtension.id, methods: importedExtension.methods});
     });
+  }
+
+  public listenForChannels() {
+    this.mainMethods.forEach(methods => methods.methods.listenForChannels());
   }
 }

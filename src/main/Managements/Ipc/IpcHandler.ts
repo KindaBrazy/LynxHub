@@ -249,6 +249,10 @@ function modulesIpc() {
   moduleManager.listenForChannels();
 }
 
+function extensionsIpc() {
+  extensionManager.listenForChannels();
+}
+
 export function listenToAllChannels() {
   appData();
   storage();
@@ -265,4 +269,5 @@ export function listenToAllChannels() {
   modulesIpc();
 
   extensions();
+  extensionsIpc();
 }
