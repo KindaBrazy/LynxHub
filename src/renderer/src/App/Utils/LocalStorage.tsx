@@ -69,7 +69,6 @@ export async function fetchRepoDetails(url: string): Promise<RepoDetails | undef
       const response = await fetch(apiUrl);
       const {forks_count, star_count} = await response.json();
 
-      console.log(forks_count, star_count);
       if (!star_count || !forks_count) return undefined;
 
       repoDetails = {
