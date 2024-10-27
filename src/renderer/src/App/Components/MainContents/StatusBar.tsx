@@ -1,7 +1,7 @@
 import {isEmpty} from 'lodash';
 import {memo} from 'react';
 
-import {useExtensions} from '../../Extensions/ExtensionEnv';
+import {useExtensions} from '../../Extensions/ExtensionsContext';
 
 const classNames = 'flex size-full items-center overflow-x-scroll scrollbar-hide';
 

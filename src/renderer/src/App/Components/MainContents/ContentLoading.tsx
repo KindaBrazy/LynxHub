@@ -1,7 +1,7 @@
 import {CircularProgress} from '@nextui-org/react';
 import {Outlet} from 'react-router-dom';
 
-import {useExtensions} from '../../Extensions/ExtensionEnv';
+import {useExtensions} from '../../Extensions/ExtensionsContext';
 import {useModules} from '../../Modules/ModulesContext';
 import {useCardsState} from '../../Redux/AI/CardsReducer';
 import {useAppState} from '../../Redux/App/AppReducer';

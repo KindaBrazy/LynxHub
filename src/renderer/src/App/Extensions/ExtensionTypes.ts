@@ -1,6 +1,6 @@
 import {ReactNode} from 'react';
 
-import {ContainerElements, StatusBarComponent} from '../../../extension/types';
+import {ContainerElements, StatusBarComponent} from '../../../../cross/ExtensionTypes';
 
 export type ExtensionStatusBar =
   | {
@@ -10,5 +10,5 @@ export type ExtensionStatusBar =
   | undefined;
 
 export type ExtensionImport = {
-  StatusBar: StatusBarComponent;
+  StatusBar?: StatusBarComponent;
 };
