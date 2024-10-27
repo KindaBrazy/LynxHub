@@ -34,7 +34,6 @@ export default function ExtensionsProvider_Prod({children}: {children: ReactNode
       );
 
       finalAddress.forEach((url, index) => {
-        console.log(url, index, folderNames[index]);
         setRemote(folderNames[index], {
           format: 'esm',
           from: 'vite',

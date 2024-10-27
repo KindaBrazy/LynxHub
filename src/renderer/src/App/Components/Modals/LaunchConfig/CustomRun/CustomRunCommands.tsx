@@ -17,7 +17,6 @@ export default function CustomRunCommands() {
       setCommands(result);
     });
     rendererIpc.storageUtils.onCustomRun((_, result) => {
-      console.log(result);
       if (result.id === id) setCommands(result.commands);
     });
 

@@ -39,7 +39,6 @@ export default function CustomRunBehavior() {
       if (!isEmpty(result.customRunBehavior)) {
         const data = result.customRunBehavior.find(customRun => customRun.cardID === id);
         if (data) {
-          console.log('data', data);
           setBrowserValue(data.browser);
           setTerminalValue(data.terminal);
         }

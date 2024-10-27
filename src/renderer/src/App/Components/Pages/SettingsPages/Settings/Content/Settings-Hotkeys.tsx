@@ -63,7 +63,6 @@ export default function SettingsHotkeys() {
         const newHotkey = Array.from(keys)
           .filter(hotkey => hotkey !== 'enter')
           .join('+');
-        console.log(newHotkey);
         updateHotkeys({[recordingFor]: newHotkey});
         onStop();
       }

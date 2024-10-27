@@ -113,7 +113,6 @@ export default function TerminalStep() {
 
           // If on webgl content losing switch to canvas
           webglAddon.onContextLoss(() => {
-            console.log('onContextLoss');
             webglAddon.dispose();
             terminal.current?.loadAddon(new CanvasAddon());
             renderMode = 'canvas';

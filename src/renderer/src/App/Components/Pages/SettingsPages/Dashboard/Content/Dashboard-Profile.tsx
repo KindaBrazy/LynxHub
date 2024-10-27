@@ -28,7 +28,6 @@ export default function DashboardProfile() {
       window.electron.ipcRenderer
         .invoke('patreon-login')
         .then((userData: PatreonUserData) => {
-          console.log(userData);
           dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
           dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
         })
