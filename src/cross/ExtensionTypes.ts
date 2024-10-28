@@ -1,7 +1,7 @@
 import {ComponentProps, ReactNode} from 'react';
 
 export type ElementProps = ComponentProps<'div'>;
-type ElementComp = (props: ElementProps) => ReactNode;
+export type ElementComp = (props: ElementProps) => ReactNode;
 
 export type ContainerElements = {
   start: ElementComp[];
