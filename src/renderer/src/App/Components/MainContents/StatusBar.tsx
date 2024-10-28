@@ -16,7 +16,7 @@ const StatusBar = () => {
             <div
               className={
                 'flex h-7 w-full flex-row justify-between overflow-hidden border-t border-foreground/10' +
-                ' items-center bg-foreground-100 px-3 text-small dark:bg-LynxRaisinBlack'
+                ' items-center bg-foreground-100/50 px-3 text-small dark:bg-LynxRaisinBlack/50'
               }>
               <div className={[classNames, 'justify-start'].join(' ')}>
                 {statusBar?.add?.start.map((Start, index) => <Start key={index} />)}
