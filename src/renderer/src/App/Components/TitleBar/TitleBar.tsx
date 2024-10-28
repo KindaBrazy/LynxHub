@@ -1,5 +1,7 @@
+import isEmpty from 'lodash/isEmpty';
 import {memo, useMemo} from 'react';
 
+import {useExtensions} from '../../Extensions/ExtensionsContext';
 import {useCardsState} from '../../Redux/AI/CardsReducer';
 import {useAppState} from '../../Redux/App/AppReducer';
 import Logo from './Logo';
@@ -18,6 +20,7 @@ const BACKGROUND_CLASSES = {
  * Displays logo, theme toggle, running card manager, and window buttons.
  */
 const TitleBar = memo(() => {
+  const {titleBar} = useExtensions();
   const fullscreen = useAppState('fullscreen');
   const onFocus = useAppState('onFocus');
   const {isRunning: isCardRunning} = useCardsState('runningCard');
@@ -36,11 +39,21 @@ const TitleBar = memo(() => {
         {!fullscreen && <Logo />}
 
         <ToggleTheme />
+        {!isEmpty(titleBar?.AddStart) && titleBar?.AddStart!.map((Start, index) => <Start key={index} />)}
       </div>
 
-      {isCardRunning && <RunningCardManager />}
+      <div>
+        {!isEmpty(titleBar?.ReplaceCenter) ? <titleBar.ReplaceCenter /> : isCardRunning && <RunningCardManager />}
+        {!isEmpty(titleBar?.AddCenter) && titleBar?.AddCenter!.map((Center, index) => <Center key={index} />)}
+      </div>
 
-      {fullscreen ? <div /> : <WindowButtons />}
+      {fullscreen ? (
+        <div>{!isEmpty(titleBar?.AddEnd) && titleBar?.AddEnd!.map((End, index) => <End key={index} />)}</div>
+      ) : !isEmpty(titleBar?.ReplaceEnd) ? (
+        <titleBar.ReplaceEnd />
+      ) : (
+        <WindowButtons />
+      )}
     </div>
   );
 });
