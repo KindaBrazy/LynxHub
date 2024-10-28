@@ -9,6 +9,9 @@ export type ExtensionStatusBar =
     }
   | undefined;
 
+export type ExtensionAppBackground = (() => ReactNode) | undefined;
+
 export type ExtensionImport = {
   StatusBar?: StatusBarComponent;
+  Background?: ExtensionAppBackground;
 };

@@ -1,27 +1,29 @@
-import {compact} from 'lodash';
+import {compact, isEmpty} from 'lodash';
 import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from 'react';
 
 import {isDev} from '../../../../cross/CrossUtils';
 import rendererIpc from '../RendererIpc';
 import {loadStatusBar} from './ExtensionLoader';
-import {ExtensionImport, ExtensionStatusBar} from './ExtensionTypes';
+import {ExtensionAppBackground, ExtensionImport, ExtensionStatusBar} from './ExtensionTypes';
 import {getRemote, setRemote} from './Vite-Federation';
 
 type ExtensionContextData = {
-  statusBar: ExtensionStatusBar;
   loadingExtensions: boolean;
+  statusBar: ExtensionStatusBar;
+  background: ExtensionAppBackground;
 };
 
 const ExtensionContext = createContext<ExtensionContextData>({
   loadingExtensions: false,
   statusBar: undefined,
+  background: undefined,
 });
 
 export default function ExtensionsProvider({children}: {children: ReactNode}) {
   const [loadingExtensions, setLoadingExtensions] = useState<boolean>(false);
 
   const [statusBar, setStatusBar] = useState<ExtensionStatusBar>(undefined);
-
+  const [background, setBackground] = useState<ExtensionAppBackground>(undefined);
   useEffect(() => {
     const loadExtensions = async () => {
       setStatusBar(undefined);
@@ -52,8 +54,10 @@ export default function ExtensionsProvider({children}: {children: ReactNode}) {
       }
 
       const StatusBars = compact(importedExtensions.map(ext => ext.StatusBar));
+      const Background = compact(importedExtensions.map(ext => ext.Background));
 
-      loadStatusBar(setStatusBar, StatusBars);
+      if (!isEmpty(StatusBars)) loadStatusBar(setStatusBar, StatusBars);
+      if (!isEmpty(Background)) setBackground(Background[0]);
 
       setLoadingExtensions(false);
     };
@@ -62,8 +66,8 @@ export default function ExtensionsProvider({children}: {children: ReactNode}) {
   }, []);
 
   const contextValue: ExtensionContextData = useMemo(() => {
-    return {loadingExtensions, statusBar};
-  }, [loadingExtensions, statusBar]);
+    return {loadingExtensions, statusBar, background};
+  }, [loadingExtensions, statusBar, background]);
 
   return <ExtensionContext.Provider value={contextValue}>{children}</ExtensionContext.Provider>;
 }
