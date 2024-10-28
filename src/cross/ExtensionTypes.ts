@@ -8,9 +8,20 @@ export type ContainerElements = {
   center: ElementComp[];
   end: ElementComp[];
 };
+
 export type StatusBarComponent = {
   Container?: (elements: ContainerElements) => ReactNode;
   Start?: ElementComp;
   Center?: ElementComp;
   End?: ElementComp;
+};
+
+export type TitleBarComponent = {
+  AddStart?: ElementComp;
+
+  ReplaceCenter?: ElementComp;
+  AddCenter?: ElementComp;
+
+  ReplaceEnd?: ElementComp;
+  AddEnd?: ElementComp;
 };

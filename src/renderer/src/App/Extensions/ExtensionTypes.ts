@@ -1,6 +1,6 @@
 import {ReactNode} from 'react';
 
-import {ContainerElements, ElementComp, StatusBarComponent} from '../../../../cross/ExtensionTypes';
+import {ContainerElements, ElementComp, StatusBarComponent, TitleBarComponent} from '../../../../cross/ExtensionTypes';
 
 export type ExtensionStatusBar =
   | {
@@ -11,8 +11,21 @@ export type ExtensionStatusBar =
 
 export type ExtensionAppBackground = (() => ReactNode) | undefined;
 
+export type ExtensionTitleBar =
+  | {
+      AddStart?: ElementComp[];
+
+      ReplaceCenter?: ElementComp;
+      AddCenter?: ElementComp[];
+
+      ReplaceEnd?: ElementComp;
+      AddEnd?: ElementComp[];
+    }
+  | undefined;
+
 export type ExtensionImport = {
   StatusBar?: StatusBarComponent;
+  TitleBar?: TitleBarComponent;
   Background?: ExtensionAppBackground;
   CustomHook?: ElementComp;
 };
