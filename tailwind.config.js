@@ -8,6 +8,7 @@ export default {
     './src/renderer/loading.html',
     './src/renderer/**/*.{js,ts,jsx,tsx}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}',
+    '!./src/renderer/extension/**/*.{html,tsx}',
   ],
   darkMode: 'class',
   plugins: [
