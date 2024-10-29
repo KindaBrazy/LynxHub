@@ -3,9 +3,14 @@ import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from
 
 import {isDev} from '../../../../cross/CrossUtils';
 import {ElementComp} from '../../../../cross/ExtensionTypes';
+import {
+  ExtensionAppBackground,
+  ExtensionImport,
+  ExtensionStatusBar,
+  ExtensionTitleBar,
+} from '../../../../cross/ExtensionTypes';
 import rendererIpc from '../RendererIpc';
 import {loadStatusBar, loadTitleBar} from './ExtensionLoader';
-import {ExtensionAppBackground, ExtensionImport, ExtensionStatusBar, ExtensionTitleBar} from './ExtensionTypes';
 import {getRemote, setRemote} from './Vite-Federation';
 
 type ExtensionContextData = {

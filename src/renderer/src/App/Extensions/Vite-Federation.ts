@@ -1,7 +1,7 @@
 // @ts-ignore-next-line
 import {__federation_method_getRemote, __federation_method_setRemote} from '__federation__';
 
-import {ExtensionImport} from './ExtensionTypes';
+import {ExtensionImport} from '../../../../cross/ExtensionTypes';
 
 type RemotesConfig = {
   format?: 'esm' | 'systemjs' | 'var';
