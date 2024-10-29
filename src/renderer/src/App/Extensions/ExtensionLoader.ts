@@ -1,74 +1,55 @@
-import {compact, isEmpty} from 'lodash';
+import {compact} from 'lodash';
 import {Dispatch, SetStateAction} from 'react';
 
-import {StatusBarComponent, TitleBarComponent} from '../../../../cross/ExtensionTypes';
-import {ExtensionStatusBar, ExtensionTitleBar} from './ExtensionTypes';
+import {
+  ExtensionStatusBar,
+  ExtensionTitleBar,
+  StatusBarComponent,
+  TitleBarComponent,
+} from '../../../../cross/ExtensionTypes';
 
 export const loadStatusBar = (
   setStatusBar: Dispatch<SetStateAction<ExtensionStatusBar>>,
   StatusBar: StatusBarComponent[],
 ) => {
-  const container = StatusBar.map(status => status.Container);
-  const start = StatusBar.map(status => status.Start);
-  const center = StatusBar.map(status => status.Center);
-  const end = StatusBar.map(status => status.End);
+  const [Container] = compact(StatusBar.map(status => status.Container));
 
-  setStatusBar(prevState => {
-    if (prevState) {
-      if (!prevState.Container) {
-        prevState.Container = container.pop();
-      }
-      if (!isEmpty(start)) prevState.add.start = compact([...prevState.add.start, ...start]);
-      if (!isEmpty(center)) prevState.add.center = compact([...prevState.add.center, ...center]);
-      if (!isEmpty(end)) prevState.add.end = compact([...prevState.add.end, ...end]);
-    } else {
-      prevState = {
-        Container: container.pop(),
-        add: {
-          start: compact(start),
-          center: compact(center),
-          end: compact(end),
-        },
-      };
-    }
+  const start = compact(StatusBar.map(status => status.Start));
+  const center = compact(StatusBar.map(status => status.Center));
+  const end = compact(StatusBar.map(status => status.End));
 
-    return prevState;
-  });
+  const add = {
+    start,
+    center,
+    end,
+  };
+
+  const result = {Container, add};
+
+  setStatusBar(result);
 };
 
 export const loadTitleBar = (
   setTitleBar: Dispatch<SetStateAction<ExtensionTitleBar>>,
   TitleBar: TitleBarComponent[],
 ) => {
-  const addStart = compact(TitleBar.map(title => title.AddStart));
-  const addCenter = compact(TitleBar.map(title => title.AddCenter));
-  const addEnd = compact(TitleBar.map(title => title.AddEnd));
+  const AddStart = compact(TitleBar.map(title => title.AddStart));
 
-  const replaceCenter = TitleBar[0].ReplaceCenter;
-  const replaceEnd = TitleBar[0].ReplaceEnd;
+  const [ReplaceCenter] = compact(TitleBar.map(title => title.ReplaceCenter));
+  const AddCenter = compact(TitleBar.map(title => title.AddCenter));
 
-  setTitleBar(prevState => {
-    if (prevState) {
-      if (!isEmpty(addStart) && prevState.AddStart) prevState.AddStart = compact([...prevState.AddStart, ...addStart]);
+  const [ReplaceEnd] = compact(TitleBar.map(title => title.ReplaceEnd));
+  const AddEnd = compact(TitleBar.map(title => title.AddEnd));
 
-      if (!isEmpty(replaceCenter)) prevState.ReplaceCenter = replaceCenter;
-      if (!isEmpty(addCenter) && prevState.AddCenter)
-        prevState.AddCenter = compact([...prevState.AddCenter, ...addCenter]);
+  const result = {
+    AddStart,
 
-      if (!isEmpty(replaceEnd)) prevState.ReplaceEnd = replaceEnd;
-      if (!isEmpty(addEnd) && prevState.AddEnd) prevState.AddEnd = compact([...prevState.AddEnd, ...addCenter]);
-    } else {
-      prevState = {
-        AddStart: compact(addStart),
+    ReplaceCenter,
+    AddCenter,
 
-        ReplaceCenter: replaceCenter,
-        AddCenter: compact(addCenter),
+    ReplaceEnd,
+    AddEnd,
+  };
 
-        ReplaceEnd: replaceEnd,
-        AddEnd: compact(addEnd),
-      };
-    }
-
-    return prevState;
-  });
+  setTitleBar(result);
 };
