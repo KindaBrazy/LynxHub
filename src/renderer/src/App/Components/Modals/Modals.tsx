@@ -5,17 +5,16 @@ import CardInfoModal from './CardInfo/CardInfo-Modal';
 import InstallModal from './Install/InstallModal';
 import InstallUIModal from './InstallUI/InstallUI-Modal';
 import LaunchConfig from './LaunchConfig/LaunchConfig';
-import useUninstallCard from './UninstallCard/UninstallCard';
+import UninstallCard from './UninstallCard/UninstallCard';
 import UpdateApp from './UpdateApp/UpdateApp';
 import UpdatingNotification from './UpdatingCard/UpdatingNotification';
-import useWarningModal from './Warning/WarningModal';
+import WarningModal from './Warning/WarningModal';
 
 const Modals = memo(() => {
-  useWarningModal();
-  useUninstallCard();
-
   return (
     <>
+      <WarningModal />
+      <UninstallCard />
       <InstallModal />
       <InstallUIModal />
       <CardInfoModal />

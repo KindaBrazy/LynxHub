@@ -1,6 +1,6 @@
 import {Button, Tooltip} from '@nextui-org/react';
 import {message, Modal, Space} from 'antd';
-import {useCallback, useEffect} from 'react';
+import {Fragment, useCallback, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
@@ -9,7 +9,7 @@ import rendererIpc from '../../../RendererIpc';
 import {useDisableTooltip, useInstalledCard} from '../../../Utils/UtilHooks';
 
 /** Display modal to manage uninstalling a card */
-export default function useUninstallCard() {
+export default function UninstallCard() {
   const {cardId, isOpen} = useModalsState('cardUninstallModal');
   const card = useInstalledCard(cardId);
   const dispatch = useDispatch<AppDispatch>();
@@ -105,4 +105,6 @@ export default function useUninstallCard() {
       });
     }
   }, [isOpen, card, dispatch]);
+
+  return <Fragment />;
 }

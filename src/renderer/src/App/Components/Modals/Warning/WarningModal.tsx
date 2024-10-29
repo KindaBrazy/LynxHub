@@ -1,6 +1,6 @@
 import {Button, Link} from '@nextui-org/react';
 import {Modal, Space} from 'antd';
-import {useCallback, useEffect} from 'react';
+import {Fragment, useCallback, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ISSUE_PAGE} from '../../../../../../cross/CrossConstants';
@@ -9,7 +9,7 @@ import {AppDispatch} from '../../../Redux/Store';
 import {warnContent, warnTitle} from './WarningContent';
 
 /** Hook to display a warning */
-export default function useWarningModal() {
+export default function WarningModal() {
   const {contentId, isOpen} = useModalsState('warningModal');
   const dispatch = useDispatch<AppDispatch>();
 
@@ -46,7 +46,7 @@ export default function useWarningModal() {
           </div>
         ),
         maskClosable: true,
-        okButtonProps: {className: 'cursor-default', color: 'red'},
+        okButtonProps: {className: 'cursor-default', color: 'danger'},
         rootClassName: 'scrollbar-hide',
         styles: {mask: {top: '2.5rem'}},
         title: warnTitle[contentId],
@@ -54,4 +54,6 @@ export default function useWarningModal() {
       });
     }
   }, [isOpen, contentId, handleClose, dispatch]);
+
+  return <Fragment />;
 }
