@@ -2,8 +2,10 @@ import {compact} from 'lodash';
 import {Dispatch, SetStateAction} from 'react';
 
 import {
+  ExtensionModal,
   ExtensionStatusBar,
   ExtensionTitleBar,
+  ModalsComponent,
   StatusBarComponent,
   TitleBarComponent,
 } from '../../../../cross/ExtensionTypes';
@@ -52,4 +54,28 @@ export const loadTitleBar = (
   };
 
   setTitleBar(result);
+};
+
+export const loadModal = (setModals: Dispatch<SetStateAction<ExtensionModal>>, Modals: ModalsComponent[]) => {
+  const [InstallModal] = compact(Modals.map(modal => modal.InstallModal));
+  const [InstallUIModal] = compact(Modals.map(modal => modal.InstallUIModal));
+  const [CardInfoModal] = compact(Modals.map(modal => modal.CardInfoModal));
+  const [WarningModal] = compact(Modals.map(modal => modal.WarningModal));
+  const [UpdateApp] = compact(Modals.map(modal => modal.UpdateApp));
+  const [CardExtensions] = compact(Modals.map(modal => modal.CardExtensions));
+  const [UninstallCard] = compact(Modals.map(modal => modal.UninstallCard));
+  const [UpdatingNotification] = compact(Modals.map(modal => modal.UpdatingNotification));
+  const [LaunchConfig] = compact(Modals.map(modal => modal.LaunchConfig));
+
+  setModals({
+    InstallModal,
+    InstallUIModal,
+    CardInfoModal,
+    WarningModal,
+    UpdateApp,
+    CardExtensions,
+    UninstallCard,
+    UpdatingNotification,
+    LaunchConfig,
+  });
 };
