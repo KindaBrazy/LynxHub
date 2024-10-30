@@ -1,3 +1,4 @@
+import compact from 'lodash/compact';
 import {createMemoryRouter, RouteObject} from 'react-router-dom';
 
 import Layout from '../Layout';
@@ -10,52 +11,63 @@ import RouterPagesError from './Components/Pages/RouterPagesError';
 import DashboardPage, {dashboardRoutePath} from './Components/Pages/SettingsPages/Dashboard/DashboardPage';
 import ModulesPage, {modulesRoutePath} from './Components/Pages/SettingsPages/Modules/ModulesPage';
 import SettingsPage, {settingsRoutePath} from './Components/Pages/SettingsPages/Settings/SettingsPage';
+import {ImportExtensions} from './Extensions/Vite-Federation';
 
-const routes: RouteObject[] = [
+const childRoutes: RouteObject[] = [
   {
-    Component: Layout,
-    errorElement: <RouterMainError />,
-    children: [
-      {
-        Component: HomePage,
-        errorElement: <RouterPagesError />,
-        path: homeRoutePath,
-      },
-      {
-        Component: ImageGenerationPage,
-        errorElement: <RouterPagesError />,
-        path: imageGenRoutePath,
-      },
-      {
-        Component: TextGenerationPage,
-        errorElement: <RouterPagesError />,
-        path: textGenRoutePath,
-      },
-      {
-        Component: AudioGenerationPage,
-        errorElement: <RouterPagesError />,
-        path: audioGenRoutePath,
-      },
+    Component: HomePage,
+    errorElement: <RouterPagesError />,
+    path: homeRoutePath,
+  },
+  {
+    Component: ImageGenerationPage,
+    errorElement: <RouterPagesError />,
+    path: imageGenRoutePath,
+  },
+  {
+    Component: TextGenerationPage,
+    errorElement: <RouterPagesError />,
+    path: textGenRoutePath,
+  },
+  {
+    Component: AudioGenerationPage,
+    errorElement: <RouterPagesError />,
+    path: audioGenRoutePath,
+  },
 
-      {
-        Component: ModulesPage,
-        errorElement: <RouterPagesError />,
-        path: modulesRoutePath,
-      },
-      {
-        Component: SettingsPage,
-        errorElement: <RouterPagesError />,
-        path: settingsRoutePath,
-      },
-      {
-        Component: DashboardPage,
-        errorElement: <RouterPagesError />,
-        path: dashboardRoutePath,
-      },
-    ],
+  {
+    Component: ModulesPage,
+    errorElement: <RouterPagesError />,
+    path: modulesRoutePath,
+  },
+  {
+    Component: SettingsPage,
+    errorElement: <RouterPagesError />,
+    path: settingsRoutePath,
+  },
+  {
+    Component: DashboardPage,
+    errorElement: <RouterPagesError />,
+    path: dashboardRoutePath,
   },
 ];
 
 export async function initRouter() {
-  return createMemoryRouter(routes, {initialEntries: [homeRoutePath]});
+  const importedExtensions = await ImportExtensions();
+
+  let extRoutes: RouteObject[] = [];
+  for (const importedExtension of importedExtensions) {
+    const pages = compact(importedExtension.RoutePage);
+    extRoutes = [...extRoutes, ...pages];
+  }
+
+  const mainRoute: RouteObject[] = [
+    {
+      Component: Layout,
+      errorElement: <RouterMainError />,
+      children: compact([...childRoutes, ...extRoutes]),
+    },
+  ];
+
+  return createMemoryRouter(mainRoute, {initialEntries: [homeRoutePath]});
 }
