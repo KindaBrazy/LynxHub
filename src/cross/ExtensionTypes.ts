@@ -108,6 +108,18 @@ export type ExtensionRunningAI = RunningAIComponent | undefined;
 // -----------------------------------------------> Background
 export type ExtensionAppBackground = (() => ReactNode) | undefined;
 
+// -----------------------------------------------> Background
+
+export type ExtensionPages = {
+  HomePage?: FC;
+  ImageGenerationPage?: FC;
+  TextGenerationPage?: FC;
+  AudioGenerationPage?: FC;
+  ModulesPage?: FC;
+  SettingsPage?: FC;
+  DashboardPage?: FC;
+};
+
 // -----------------------------------------------> Final Export
 export type ExtensionImport = {
   StatusBar?: StatusBarComponent;
@@ -116,6 +128,7 @@ export type ExtensionImport = {
   RunningAI?: RunningAIComponent;
   Background?: ExtensionAppBackground;
   RoutePage?: RouteObject[];
+  Pages?: ExtensionPages;
   CustomHook?: FcProp;
   Modals?: ModalsComponent;
 };
