@@ -1,4 +1,5 @@
 import {ComponentProps, FC, ReactNode} from 'react';
+import {RouteObject} from 'react-router-dom';
 
 // -----------------------------------------------> Elements & Props
 export type ElementProps = ComponentProps<'div'>;
@@ -114,6 +115,7 @@ export type ExtensionImport = {
   NavBar?: NavBarComponent;
   RunningAI?: RunningAIComponent;
   Background?: ExtensionAppBackground;
+  RoutePage?: RouteObject[];
   CustomHook?: FcProp;
   Modals?: ModalsComponent;
 };
