@@ -29,7 +29,7 @@ export default defineConfig({
       federation({
         name: 'host-app',
         remotes: {nothing: 'nothing.js'},
-        shared: ['react', 'react-dom', 'react-redux'],
+        shared: ['react', 'react-dom', 'react-redux', 'react-router-dom'],
       }),
     ],
     base: '',

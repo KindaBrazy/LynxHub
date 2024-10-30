@@ -24,7 +24,7 @@ export default defineConfig({
         exposes: {
           Extension: './src/renderer/extension/Extension.tsx',
         },
-        shared: ['react', 'react-dom', 'react-redux'],
+        shared: ['react', 'react-dom', 'react-redux', 'react-router-dom'],
       }),
     ],
     build: {
