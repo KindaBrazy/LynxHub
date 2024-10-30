@@ -1,21 +1,33 @@
 import {ComponentProps, FC, ReactNode} from 'react';
 
+// -----------------------------------------------> Elements & Props
 export type ElementProps = ComponentProps<'div'>;
-export type ElementComp = (props: ElementProps) => ReactNode;
+
+export type FcProp = FC<ElementProps>;
 
 export type ContainerElements = {
-  start: ElementComp[];
-  center: ElementComp[];
-  end: ElementComp[];
+  start: FcProp[];
+  center: FcProp[];
+  end: FcProp[];
 };
+
+// -----------------------------------------------> Status Bar
 
 export type StatusBarComponent = {
   Container?: (elements: ContainerElements) => ReactNode;
-  Start?: ElementComp;
-  Center?: ElementComp;
-  End?: ElementComp;
+  Start?: FcProp;
+  Center?: FcProp;
+  End?: FcProp;
 };
 
+export type ExtensionStatusBar =
+  | {
+      Container?: (elements: ContainerElements) => ReactNode;
+      add: ContainerElements;
+    }
+  | undefined;
+
+// -----------------------------------------------> Modals
 export type ModalsComponent = {
   UpdateApp?: FC;
   LaunchConfig?: FC;
@@ -27,6 +39,45 @@ export type ModalsComponent = {
   UninstallCard?: FC;
   WarningModal?: FC;
 };
+
+export type ExtensionModal =
+  | {
+      UpdateApp?: FC;
+      LaunchConfig?: FC;
+      CardExtensions?: FC;
+      UpdatingNotification?: FC;
+      CardInfoModal?: FC;
+      InstallUIModal?: FC;
+      InstallModal?: FC;
+      UninstallCard?: FC;
+      WarningModal?: FC;
+    }
+  | undefined;
+
+// -----------------------------------------------> Title Bar
+export type TitleBarComponent = {
+  AddStart?: FcProp;
+
+  ReplaceCenter?: FcProp;
+  AddCenter?: FcProp;
+
+  ReplaceEnd?: FcProp;
+  AddEnd?: FcProp;
+};
+
+export type ExtensionTitleBar =
+  | {
+      AddStart?: FcProp[];
+
+      ReplaceCenter?: FcProp;
+      AddCenter?: FcProp[];
+
+      ReplaceEnd?: FcProp;
+      AddEnd?: FcProp[];
+    }
+  | undefined;
+
+// -----------------------------------------------> Nav Bar
 
 export type NavBarComponent = {
   NavBar?: FC;
@@ -45,57 +96,15 @@ export type ExtensionNavBar =
       AddSettingsButton?: FC[];
     }
   | undefined;
-
-export type TitleBarComponent = {
-  AddStart?: ElementComp;
-
-  ReplaceCenter?: ElementComp;
-  AddCenter?: ElementComp;
-
-  ReplaceEnd?: ElementComp;
-  AddEnd?: ElementComp;
-};
-
-export type ExtensionStatusBar =
-  | {
-      Container?: (elements: ContainerElements) => ReactNode;
-      add: ContainerElements;
-    }
-  | undefined;
-
-export type ExtensionModal =
-  | {
-      UpdateApp?: FC;
-      LaunchConfig?: FC;
-      CardExtensions?: FC;
-      UpdatingNotification?: FC;
-      CardInfoModal?: FC;
-      InstallUIModal?: FC;
-      InstallModal?: FC;
-      UninstallCard?: FC;
-      WarningModal?: FC;
-    }
-  | undefined;
-
-export type ExtensionTitleBar =
-  | {
-      AddStart?: ElementComp[];
-
-      ReplaceCenter?: ElementComp;
-      AddCenter?: ElementComp[];
-
-      ReplaceEnd?: ElementComp;
-      AddEnd?: ElementComp[];
-    }
-  | undefined;
-
+// -----------------------------------------------> Background
 export type ExtensionAppBackground = (() => ReactNode) | undefined;
 
+// -----------------------------------------------> Final Export
 export type ExtensionImport = {
   StatusBar?: StatusBarComponent;
   TitleBar?: TitleBarComponent;
   NavBar?: NavBarComponent;
   Background?: ExtensionAppBackground;
-  CustomHook?: ElementComp;
+  CustomHook?: FcProp;
   Modals?: ModalsComponent;
 };

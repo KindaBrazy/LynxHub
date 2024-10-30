@@ -1,7 +1,7 @@
 import {compact, isEmpty} from 'lodash';
 import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from 'react';
 
-import {ElementComp, ExtensionModal, ExtensionNavBar} from '../../../../cross/ExtensionTypes';
+import {ExtensionModal, ExtensionNavBar, FcProp} from '../../../../cross/ExtensionTypes';
 import {
   ExtensionAppBackground,
   ExtensionImport,
@@ -18,7 +18,7 @@ type ExtensionContextData = {
   navBar: ExtensionNavBar;
   modals: ExtensionModal;
   background: ExtensionAppBackground;
-  customHooks: ElementComp[];
+  customHooks: FcProp[];
 };
 
 const ExtensionContext = createContext<ExtensionContextData>({
@@ -39,7 +39,7 @@ export default function ExtensionsProvider({children}: {children: ReactNode}) {
   const [navBar, setNavBar] = useState<ExtensionNavBar>(undefined);
   const [modals, setModals] = useState<ExtensionModal>(undefined);
   const [background, setBackground] = useState<ExtensionAppBackground>(undefined);
-  const [customHooks, setCustomHooks] = useState<ElementComp[]>([]);
+  const [customHooks, setCustomHooks] = useState<FcProp[]>([]);
 
   useEffect(() => {
     const loadExtensions = async () => {
