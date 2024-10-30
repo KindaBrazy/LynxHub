@@ -1,4 +1,4 @@
-import {compact} from 'lodash';
+import {compact, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction} from 'react';
 
 import {
@@ -22,6 +22,8 @@ export const loadStatusBar = (
   const center = compact(StatusBar.map(status => status.Center));
   const end = compact(StatusBar.map(status => status.End));
 
+  if (!Container && isEmpty(start) && isEmpty(center) && isEmpty(end)) return;
+
   const add = {start, center, end};
 
   setStatusBar({Container, add});
@@ -39,6 +41,8 @@ export const loadTitleBar = (
   const [ReplaceEnd] = compact(TitleBar.map(title => title.ReplaceEnd));
   const AddEnd = compact(TitleBar.map(title => title.AddEnd));
 
+  if (isEmpty(AddStart) && !ReplaceCenter && isEmpty(AddCenter) && !ReplaceEnd && isEmpty(AddEnd)) return;
+
   setTitleBar({AddStart, ReplaceCenter, AddCenter, ReplaceEnd, AddEnd});
 };
 
@@ -50,6 +54,8 @@ export const loadNavBar = (setNavBar: Dispatch<SetStateAction<ExtensionNavBar>>,
 
   const AddContentButton = compact(NavBarData.map(title => title.AddContentButton));
   const AddSettingsButton = compact(NavBarData.map(title => title.AddSettingsButton));
+
+  if (!NavBar && !ContentButtons && !SettingsButtons && isEmpty(AddContentButton) && isEmpty(AddSettingsButton)) return;
 
   setNavBar({NavBar, ContentButtons, SettingsButtons, AddContentButton, AddSettingsButton});
 };
@@ -64,6 +70,20 @@ export const loadModal = (setModals: Dispatch<SetStateAction<ExtensionModal>>, M
   const [UninstallCard] = compact(Modals.map(modal => modal.UninstallCard));
   const [UpdatingNotification] = compact(Modals.map(modal => modal.UpdatingNotification));
   const [LaunchConfig] = compact(Modals.map(modal => modal.LaunchConfig));
+
+  if (
+    !InstallModal &&
+    !InstallUIModal &&
+    !CardInfoModal &&
+    !WarningModal &&
+    !UpdateApp &&
+    !CardExtensions &&
+    !UninstallCard &&
+    !UpdatingNotification &&
+    !LaunchConfig
+  ) {
+    return;
+  }
 
   setModals({
     InstallModal,
