@@ -1,11 +1,14 @@
+import {useExtensions} from '../../Extensions/ExtensionsContext';
 import Browser from './Browser';
 import LynxTerminal from './LynxTerminal';
 
 export default function RunningCardView() {
+  const {runningAI} = useExtensions();
+
   return (
     <>
-      <LynxTerminal />
-      <Browser />
+      {runningAI?.Terminal ? <runningAI.Terminal /> : <LynxTerminal />}
+      {runningAI?.Browser ? <runningAI.Browser /> : <Browser />}
     </>
   );
 }

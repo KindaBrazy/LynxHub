@@ -12,7 +12,6 @@ export type ContainerElements = {
 };
 
 // -----------------------------------------------> Status Bar
-
 export type StatusBarComponent = {
   Container?: (elements: ContainerElements) => ReactNode;
   Start?: FcProp;
@@ -78,7 +77,6 @@ export type ExtensionTitleBar =
   | undefined;
 
 // -----------------------------------------------> Nav Bar
-
 export type NavBarComponent = {
   NavBar?: FC;
   ContentButtons?: FC;
@@ -96,6 +94,16 @@ export type ExtensionNavBar =
       AddSettingsButton?: FC[];
     }
   | undefined;
+
+// -----------------------------------------------> Nav Bar
+export type RunningAIComponent = {
+  Container?: FC;
+  Terminal?: FC;
+  Browser?: FC;
+};
+
+export type ExtensionRunningAI = RunningAIComponent | undefined;
+
 // -----------------------------------------------> Background
 export type ExtensionAppBackground = (() => ReactNode) | undefined;
 
@@ -104,6 +112,7 @@ export type ExtensionImport = {
   StatusBar?: StatusBarComponent;
   TitleBar?: TitleBarComponent;
   NavBar?: NavBarComponent;
+  RunningAI?: RunningAIComponent;
   Background?: ExtensionAppBackground;
   CustomHook?: FcProp;
   Modals?: ModalsComponent;
