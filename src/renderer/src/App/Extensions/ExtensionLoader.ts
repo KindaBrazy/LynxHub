@@ -4,10 +4,12 @@ import {Dispatch, SetStateAction} from 'react';
 import {
   ExtensionModal,
   ExtensionNavBar,
+  ExtensionRunningAI,
   ExtensionStatusBar,
   ExtensionTitleBar,
   ModalsComponent,
   NavBarComponent,
+  RunningAIComponent,
   StatusBarComponent,
   TitleBarComponent,
 } from '../../../../cross/ExtensionTypes';
@@ -58,6 +60,19 @@ export const loadNavBar = (setNavBar: Dispatch<SetStateAction<ExtensionNavBar>>,
   if (!NavBar && !ContentButtons && !SettingsButtons && isEmpty(AddContentButton) && isEmpty(AddSettingsButton)) return;
 
   setNavBar({NavBar, ContentButtons, SettingsButtons, AddContentButton, AddSettingsButton});
+};
+
+export const loadRunningAI = (
+  setRunningAI: Dispatch<SetStateAction<ExtensionRunningAI>>,
+  RunningAI: RunningAIComponent[],
+) => {
+  const [Container] = compact(RunningAI.map(running => running.Container));
+  const [Terminal] = compact(RunningAI.map(running => running.Terminal));
+  const [Browser] = compact(RunningAI.map(running => running.Browser));
+
+  if (!Container && !Terminal && !Browser) return;
+
+  setRunningAI({Container, Terminal, Browser});
 };
 
 export const loadModal = (setModals: Dispatch<SetStateAction<ExtensionModal>>, Modals: ModalsComponent[]) => {
