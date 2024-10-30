@@ -3,8 +3,8 @@ import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from
 
 import {ExtensionModal, ExtensionNavBar, ExtensionRunningAI, FcProp} from '../../../../cross/ExtensionTypes';
 import {ExtensionAppBackground, ExtensionStatusBar, ExtensionTitleBar} from '../../../../cross/ExtensionTypes';
-import {importedExtensions} from '../../main';
 import {loadModal, loadNavBar, loadRunningAI, loadStatusBar, loadTitleBar} from './ExtensionLoader';
+import {importedExtensions} from './Vite-Federation';
 
 type ExtensionContextData = {
   loadingExtensions: boolean;
