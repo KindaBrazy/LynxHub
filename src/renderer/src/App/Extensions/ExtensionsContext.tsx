@@ -2,14 +2,9 @@ import {compact, isEmpty} from 'lodash';
 import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from 'react';
 
 import {ExtensionModal, ExtensionNavBar, ExtensionRunningAI, FcProp} from '../../../../cross/ExtensionTypes';
-import {
-  ExtensionAppBackground,
-  ExtensionImport,
-  ExtensionStatusBar,
-  ExtensionTitleBar,
-} from '../../../../cross/ExtensionTypes';
+import {ExtensionAppBackground, ExtensionStatusBar, ExtensionTitleBar} from '../../../../cross/ExtensionTypes';
+import {importedExtensions} from '../../main';
 import {loadModal, loadNavBar, loadRunningAI, loadStatusBar, loadTitleBar} from './ExtensionLoader';
-import {ImportExtensions} from './Vite-Federation';
 
 type ExtensionContextData = {
   loadingExtensions: boolean;
@@ -46,8 +41,6 @@ export default function ExtensionsProvider({children}: {children: ReactNode}) {
 
   useEffect(() => {
     const loadExtensions = async () => {
-      const importedExtensions: ExtensionImport[] = await ImportExtensions();
-
       const StatusBars = compact(importedExtensions.map(ext => ext.StatusBar));
       const TitleBar = compact(importedExtensions.map(ext => ext.TitleBar));
       const NavBar = compact(importedExtensions.map(ext => ext.NavBar));
