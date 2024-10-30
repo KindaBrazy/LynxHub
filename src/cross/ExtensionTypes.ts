@@ -28,17 +28,23 @@ export type ModalsComponent = {
   WarningModal?: FC;
 };
 
-export const MODAL_KEYS = [
-  'UpdateApp',
-  'UpdatingNotification',
-  'InstallModal',
-  'InstallUIModal',
-  'CardInfoModal',
-  'WarningModal',
-  'CardExtensions',
-  'UninstallCard',
-  'LaunchConfig',
-] as const;
+export type NavBarComponent = {
+  NavBar?: FC;
+  ContentButtons?: FC;
+  SettingsButtons?: FC;
+  AddContentButton?: FC;
+  AddSettingsButton?: FC;
+};
+
+export type ExtensionNavBar =
+  | {
+      NavBar?: FC;
+      ContentButtons?: FC;
+      SettingsButtons?: FC;
+      AddContentButton?: FC[];
+      AddSettingsButton?: FC[];
+    }
+  | undefined;
 
 export type TitleBarComponent = {
   AddStart?: ElementComp;
@@ -88,6 +94,7 @@ export type ExtensionAppBackground = (() => ReactNode) | undefined;
 export type ExtensionImport = {
   StatusBar?: StatusBarComponent;
   TitleBar?: TitleBarComponent;
+  NavBar?: NavBarComponent;
   Background?: ExtensionAppBackground;
   CustomHook?: ElementComp;
   Modals?: ModalsComponent;

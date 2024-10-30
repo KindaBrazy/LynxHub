@@ -1,4 +1,7 @@
+import isEmpty from 'lodash/isEmpty';
+
 import {getIconByName, IconNameType} from '../../../assets/icons/SvgIconsContainer';
+import {useExtensions} from '../../Extensions/ExtensionsContext';
 import {useSettingsState} from '../../Redux/App/SettingsReducer';
 import {audioGenRoutePath} from '../Pages/ContentPages/AudioGenerationPage';
 import {homeRoutePath} from '../Pages/ContentPages/Home/HomePage';
@@ -51,9 +54,25 @@ const GetPages = ({Pages}: {Pages: PagesType[]}) => {
 };
 
 export function ContentPagesButtons() {
-  return <GetPages Pages={ContentPages} />;
+  const {navBar} = useExtensions();
+
+  return (
+    <>
+      <GetPages Pages={ContentPages} />
+      {!isEmpty(navBar?.AddContentButton) &&
+        navBar?.AddContentButton!.map((NavButton, index) => <NavButton key={index} />)}
+    </>
+  );
 }
 
 export function SettingsPagesButtons() {
-  return <GetPages Pages={SettingsPages} />;
+  const {navBar} = useExtensions();
+
+  return (
+    <>
+      <GetPages Pages={SettingsPages} />
+      {!isEmpty(navBar?.AddSettingsButton) &&
+        navBar?.AddSettingsButton!.map((NavButton, index) => <NavButton key={index} />)}
+    </>
+  );
 }
