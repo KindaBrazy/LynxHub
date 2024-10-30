@@ -32,12 +32,13 @@ function AddEnd({className, ...props}: ElementProps) {
   return null;
 }
 
+// !Important → Remove any unused Component from the below object
+
 TitleBar.AddStart = AddStart;
-
 TitleBar.AddCenter = AddCenter;
-TitleBar.ReplaceCenter = ReplaceCenter;
-
-TitleBar.ReplaceEnd = ReplaceEnd;
 TitleBar.AddEnd = AddEnd;
+
+TitleBar.ReplaceCenter = ReplaceCenter;
+TitleBar.ReplaceEnd = ReplaceEnd;
 
 export default TitleBar;

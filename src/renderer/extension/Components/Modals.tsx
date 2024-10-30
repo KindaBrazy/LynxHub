@@ -46,6 +46,7 @@ Modals.CardExtensions = CardExtensions;
 Modals.UpdatingNotification = UpdatingNotification;
 Modals.CardInfoModal = CardInfoModal;
 Modals.InstallUIModal = InstallUIModal;
+Modals.UninstallCard = UninstallCard;
 Modals.InstallModal = InstallModal;
 Modals.WarningModal = WarningModal;
 
