@@ -1,5 +1,7 @@
+import isEmpty from 'lodash/isEmpty';
 import {memo} from 'react';
 
+import {useExtensions} from '../../Extensions/ExtensionsContext';
 import {useAppState} from '../../Redux/App/AppReducer';
 import {ContentPagesButtons, SettingsPagesButtons} from './NavButtons';
 
@@ -21,17 +23,31 @@ const COMMON_STYLES =
 /** Navigation bar containing two sections: Contents and Settings */
 const NavBar = memo(() => {
   const navBar = useAppState('navBar');
+  const {navBar: navBarExt} = useExtensions();
 
   if (!navBar) return null;
 
+  if (navBarExt && navBarExt.NavBar) {
+    const ExtNavBar = navBarExt.NavBar;
+    return <ExtNavBar />;
+  }
+
   return (
     <div className={`flex h-full ${CONTAINER_WIDTH} shrink-0 flex-col items-center justify-between pb-4 pt-3`}>
-      <div className={`${COMMON_STYLES} max-h-[56%]`}>
-        <ContentPagesButtons />
-      </div>
-      <div className={`${COMMON_STYLES} sm:max-h-[35%] lg:max-h-[35%] xl:max-h-[40%]`}>
-        <SettingsPagesButtons />
-      </div>
+      {isEmpty(navBarExt?.ContentButtons) ? (
+        <div className={`${COMMON_STYLES} max-h-[56%]`}>
+          <ContentPagesButtons />
+        </div>
+      ) : (
+        <navBarExt.ContentButtons />
+      )}
+      {isEmpty(navBarExt?.SettingsButtons) ? (
+        <div className={`${COMMON_STYLES} sm:max-h-[35%] lg:max-h-[35%] xl:max-h-[40%]`}>
+          <SettingsPagesButtons />
+        </div>
+      ) : (
+        <navBarExt.SettingsButtons />
+      )}
     </div>
   );
 });
