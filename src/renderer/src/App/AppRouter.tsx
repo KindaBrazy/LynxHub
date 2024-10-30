@@ -1,4 +1,4 @@
-import {compact, isNull} from 'lodash';
+import {compact, isNil} from 'lodash';
 import {createMemoryRouter, RouteObject} from 'react-router-dom';
 
 import Layout from '../Layout';
@@ -31,38 +31,38 @@ export async function initRouter() {
 
   const childRoutes: RouteObject[] = [
     {
-      Component: isNull(homePage) ? HomePage : homePage,
+      Component: isNil(homePage) ? HomePage : homePage,
       errorElement: <RouterPagesError />,
       path: homeRoutePath,
     },
     {
-      Component: isNull(imageGenerationPage) ? ImageGenerationPage : imageGenerationPage,
+      Component: isNil(imageGenerationPage) ? ImageGenerationPage : imageGenerationPage,
       errorElement: <RouterPagesError />,
       path: imageGenRoutePath,
     },
     {
-      Component: isNull(textGenerationPage) ? TextGenerationPage : textGenerationPage,
+      Component: isNil(textGenerationPage) ? TextGenerationPage : textGenerationPage,
       errorElement: <RouterPagesError />,
       path: textGenRoutePath,
     },
     {
-      Component: isNull(audioGenerationPage) ? AudioGenerationPage : audioGenerationPage,
+      Component: isNil(audioGenerationPage) ? AudioGenerationPage : audioGenerationPage,
       errorElement: <RouterPagesError />,
       path: audioGenRoutePath,
     },
 
     {
-      Component: isNull(modulesPage) ? ModulesPage : modulesPage,
+      Component: isNil(modulesPage) ? ModulesPage : modulesPage,
       errorElement: <RouterPagesError />,
       path: modulesRoutePath,
     },
     {
-      Component: isNull(settingsPage) ? SettingsPage : settingsPage,
+      Component: isNil(settingsPage) ? SettingsPage : settingsPage,
       errorElement: <RouterPagesError />,
       path: settingsRoutePath,
     },
     {
-      Component: isNull(dashboardPage) ? DashboardPage : dashboardPage,
+      Component: isNil(dashboardPage) ? DashboardPage : dashboardPage,
       errorElement: <RouterPagesError />,
       path: dashboardRoutePath,
     },
