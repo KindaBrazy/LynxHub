@@ -1,16 +1,13 @@
 import {CircularProgress} from '@nextui-org/react';
-import {Outlet} from 'react-router-dom';
+import {ReactNode} from 'react';
 
 import {useExtensions} from '../../Extensions/ExtensionsContext';
 import {useModules} from '../../Modules/ModulesContext';
-import {useCardsState} from '../../Redux/AI/CardsReducer';
 import {useAppState} from '../../Redux/App/AppReducer';
 import {dashboardRoutePath} from '../Pages/SettingsPages/Dashboard/DashboardPage';
 import {settingsRoutePath} from '../Pages/SettingsPages/Settings/SettingsPage';
-import RunningCardView from '../RunningCardView/RunningCardView';
 
-export default function ContentLoading() {
-  const {isRunning} = useCardsState('runningCard');
+export default function ContentLoading({children}: {children: ReactNode}) {
   const navBar = useAppState('navBar');
   const currentPage = useAppState('currentPage');
 
@@ -23,7 +20,7 @@ export default function ContentLoading() {
         className={`size-full p-3 pt-1.5 ${
           (currentPage === settingsRoutePath || currentPage === dashboardRoutePath) && navBar && 'pl-0'
         } transition-all duration-300`}>
-        {isRunning ? <RunningCardView /> : <Outlet />}
+        {children}
       </div>
     );
 
