@@ -57,12 +57,12 @@ function StatusBarEnd({className, ...props}: ElementProps) {
   );
 }
 
+// !Important → Remove any unused Component from the below object
+
 StatusBar.Container = StatusBarContainer;
 
 StatusBar.Start = StatusBarStart;
-
 StatusBar.Center = StatusBarCenter;
-
 StatusBar.End = StatusBarEnd;
 
 export default StatusBar;
