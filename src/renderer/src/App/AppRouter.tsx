@@ -1,7 +1,6 @@
 import {compact, isNull} from 'lodash';
 import {createMemoryRouter, RouteObject} from 'react-router-dom';
 
-import {ExtensionImport} from '../../../cross/ExtensionTypes';
 import Layout from '../Layout';
 import AudioGenerationPage, {audioGenRoutePath} from './Components/Pages/ContentPages/AudioGenerationPage';
 import HomePage, {homeRoutePath} from './Components/Pages/ContentPages/Home/HomePage';
@@ -12,8 +11,9 @@ import RouterPagesError from './Components/Pages/RouterPagesError';
 import DashboardPage, {dashboardRoutePath} from './Components/Pages/SettingsPages/Dashboard/DashboardPage';
 import ModulesPage, {modulesRoutePath} from './Components/Pages/SettingsPages/Modules/ModulesPage';
 import SettingsPage, {settingsRoutePath} from './Components/Pages/SettingsPages/Settings/SettingsPage';
+import {importedExtensions} from './Extensions/Vite-Federation';
 
-export async function initRouter(importedExtensions: ExtensionImport[]) {
+export async function initRouter() {
   let extRoutes: RouteObject[] = [];
   for (const importedExtension of importedExtensions) {
     const pages = compact(importedExtension.RoutePage);

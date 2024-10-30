@@ -11,8 +11,8 @@ import {isDev} from '../../cross/CrossUtils';
 import {initRouter} from './App/AppRouter';
 import {ImportExtensions} from './App/Extensions/Vite-Federation';
 
-export const importedExtensions = await ImportExtensions();
-const router = await initRouter(importedExtensions);
+await ImportExtensions();
+const router = await initRouter();
 
 if (!isDev()) {
   Object.assign(console, log.functions);

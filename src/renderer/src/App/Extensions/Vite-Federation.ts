@@ -16,9 +16,9 @@ type SetRemoteModule = (remotesName: string, remotesConfig: RemotesConfig) => vo
 
 type GetRemoteModule = (remoteName: string, componentName: string) => Promise<ExtensionImport>;
 
-export async function ImportExtensions() {
-  let importedExtensions: ExtensionImport[];
+export let importedExtensions: ExtensionImport[];
 
+export async function ImportExtensions() {
   if (isDev()) {
     const extension = await import('../../../extension/Extension');
     importedExtensions = [extension];
@@ -43,8 +43,6 @@ export async function ImportExtensions() {
 
     importedExtensions = await Promise.all(folderNames.map(folderName => getRemote(folderName, 'Extension')));
   }
-
-  return importedExtensions;
 }
 
 export const setRemote: SetRemoteModule = __federation_method_setRemote;
