@@ -1,4 +1,5 @@
-import {compact, isEmpty} from 'lodash';
+import {isEmpty} from 'lodash';
+import compact from 'lodash/compact';
 import {Dispatch, SetStateAction} from 'react';
 
 import {
@@ -12,7 +13,7 @@ import {
   RunningAIComponent,
   StatusBarComponent,
   TitleBarComponent,
-} from '../../../../cross/ExtensionTypes';
+} from '../../../../../cross/ExtensionTypes';
 
 export const loadStatusBar = (
   setStatusBar: Dispatch<SetStateAction<ExtensionStatusBar>>,
