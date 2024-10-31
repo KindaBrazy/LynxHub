@@ -1,9 +1,16 @@
 import {compact, isEmpty} from 'lodash';
 import {createContext, ReactNode, useContext, useEffect, useMemo, useState} from 'react';
 
-import {ExtensionModal, ExtensionNavBar, ExtensionRunningAI, FcProp} from '../../../../cross/ExtensionTypes';
+import {
+  ExtensionCustomizePages,
+  ExtensionModal,
+  ExtensionNavBar,
+  ExtensionRunningAI,
+  FcProp,
+} from '../../../../cross/ExtensionTypes';
 import {ExtensionAppBackground, ExtensionStatusBar, ExtensionTitleBar} from '../../../../cross/ExtensionTypes';
-import {loadModal, loadNavBar, loadRunningAI, loadStatusBar, loadTitleBar} from './ExtensionLoader';
+import {loadModal, loadNavBar, loadRunningAI, loadStatusBar, loadTitleBar} from './ExtensionsLoader/ExtensionLoader';
+import {loadCustomizePages} from './ExtensionsLoader/ExtensionLoader_Pages';
 import {importedExtensions} from './Vite-Federation';
 
 type ExtensionContextData = {
@@ -14,6 +21,7 @@ type ExtensionContextData = {
   runningAI: ExtensionRunningAI;
   modals: ExtensionModal;
   background: ExtensionAppBackground;
+  customizePages: ExtensionCustomizePages;
   customHooks: FcProp[];
 };
 
@@ -25,6 +33,7 @@ const ExtensionContext = createContext<ExtensionContextData>({
   runningAI: undefined,
   modals: undefined,
   background: undefined,
+  customizePages: undefined,
   customHooks: [],
 });
 
@@ -38,6 +47,7 @@ export default function ExtensionsProvider({children}: {children: ReactNode}) {
   const [modals, setModals] = useState<ExtensionModal>(undefined);
   const [background, setBackground] = useState<ExtensionAppBackground>(undefined);
   const [customHooks, setCustomHooks] = useState<FcProp[]>([]);
+  const [customizePages, setCustomizePages] = useState<ExtensionCustomizePages>(undefined);
 
   useEffect(() => {
     const loadExtensions = async () => {
@@ -48,6 +58,7 @@ export default function ExtensionsProvider({children}: {children: ReactNode}) {
       const Modals = compact(importedExtensions.map(ext => ext.Modals));
       const Background = compact(importedExtensions.map(ext => ext.Background));
       const CustomHooks = compact(importedExtensions.map(ext => ext.CustomHook));
+      const CustomizePages = compact(importedExtensions.map(ext => ext.CustomizePages));
 
       if (!isEmpty(StatusBars)) loadStatusBar(setStatusBar, StatusBars);
       if (!isEmpty(TitleBar)) loadTitleBar(setTitleBar, TitleBar);
@@ -56,6 +67,7 @@ export default function ExtensionsProvider({children}: {children: ReactNode}) {
       if (!isEmpty(Modals)) loadModal(setModals, Modals);
       if (!isEmpty(Background)) setBackground(Background[0]);
       if (!isEmpty(CustomHooks)) setCustomHooks(CustomHooks);
+      if (!isEmpty(CustomizePages)) loadCustomizePages(setCustomizePages, CustomizePages);
 
       setLoadingExtensions(false);
     };
@@ -64,8 +76,8 @@ export default function ExtensionsProvider({children}: {children: ReactNode}) {
   }, []);
 
   const contextValue: ExtensionContextData = useMemo(() => {
-    return {loadingExtensions, statusBar, navBar, modals, runningAI, titleBar, background, customHooks};
-  }, [loadingExtensions, statusBar, navBar, modals, runningAI, titleBar, background, customHooks]);
+    return {loadingExtensions, statusBar, navBar, modals, runningAI, titleBar, background, customHooks, customizePages};
+  }, [loadingExtensions, statusBar, navBar, modals, runningAI, titleBar, background, customHooks, customizePages]);
 
   return <ExtensionContext.Provider value={contextValue}>{children}</ExtensionContext.Provider>;
 }

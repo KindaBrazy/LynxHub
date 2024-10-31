@@ -108,6 +108,34 @@ export type ExtensionRunningAI = RunningAIComponent | undefined;
 // -----------------------------------------------> Background
 export type ExtensionAppBackground = (() => ReactNode) | undefined;
 
+// -----------------------------------------------> Nav Bar
+
+export type CustomizeHomePageComponent = {
+  AddToTop?: FC;
+  AddToBottom?: FC;
+  AddToScroll_Top?: FC;
+  AddToScroll_Bottom?: FC;
+  ReplaceCategories?: FC;
+  ReplaceSearchAndFilter?: FC;
+};
+
+export type CustomizePagesComponent = {
+  CustomizeHomePage?: CustomizeHomePageComponent;
+};
+
+export type ExtensionCustomizePages =
+  | {
+      CustomizeHomePage?: {
+        AddToTop?: FC[];
+        AddToBottom?: FC[];
+        AddToScroll_Top?: FC[];
+        AddToScroll_Bottom?: FC[];
+        ReplaceSearchAndFilter?: FC;
+        ReplaceCategories?: FC;
+      };
+    }
+  | undefined;
+
 // -----------------------------------------------> Background
 
 export type ExtensionPages = {
@@ -129,6 +157,7 @@ export type ExtensionImport = {
   Background?: ExtensionAppBackground;
   RoutePage?: RouteObject[];
   Pages?: ExtensionPages;
+  CustomizePages?: CustomizePagesComponent;
   CustomHook?: FcProp;
   Modals?: ModalsComponent;
 };
