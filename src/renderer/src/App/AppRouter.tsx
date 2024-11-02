@@ -11,23 +11,16 @@ import RouterPagesError from './Components/Pages/RouterPagesError';
 import DashboardPage, {dashboardRoutePath} from './Components/Pages/SettingsPages/Dashboard/DashboardPage';
 import ModulesPage, {modulesRoutePath} from './Components/Pages/SettingsPages/Modules/ModulesPage';
 import SettingsPage, {settingsRoutePath} from './Components/Pages/SettingsPages/Settings/SettingsPage';
-import {importedExtensions} from './Extensions/Vite-Federation';
+import {extensionsData} from './Extensions/ExtensionLoader';
 
 export async function initRouter() {
-  let extRoutes: RouteObject[] = [];
-  for (const importedExtension of importedExtensions) {
-    const pages = compact(importedExtension.RoutePage);
-    extRoutes = [...extRoutes, ...pages];
-  }
-
-  const pages = compact(importedExtensions.map(ext => ext.Pages));
-  const [homePage] = compact(pages.map(page => page.HomePage));
-  const [imageGenerationPage] = compact(pages.map(page => page.ImageGenerationPage));
-  const [textGenerationPage] = compact(pages.map(page => page.TextGenerationPage));
-  const [audioGenerationPage] = compact(pages.map(page => page.AudioGenerationPage));
-  const [modulesPage] = compact(pages.map(page => page.ModulesPage));
-  const [settingsPage] = compact(pages.map(page => page.SettingsPage));
-  const [dashboardPage] = compact(pages.map(page => page.DashboardPage));
+  const homePage = extensionsData.router.replace.homePage;
+  const imageGenerationPage = extensionsData.router.replace.imageGenerationPage;
+  const textGenerationPage = extensionsData.router.replace.textGenerationPage;
+  const audioGenerationPage = extensionsData.router.replace.audioGenerationPage;
+  const modulesPage = extensionsData.router.replace.modulesPage;
+  const settingsPage = extensionsData.router.replace.settingsPage;
+  const dashboardPage = extensionsData.router.replace.dashboardPage;
 
   const childRoutes: RouteObject[] = [
     {
@@ -72,7 +65,7 @@ export async function initRouter() {
     {
       Component: Layout,
       errorElement: <RouterMainError />,
-      children: compact([...childRoutes, ...extRoutes]),
+      children: compact([...childRoutes, ...extensionsData.router.add]),
     },
   ];
 

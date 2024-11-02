@@ -1,9 +1,9 @@
-import {memo} from 'react';
+import {memo, useState} from 'react';
 
-import {useExtensions} from '../Extensions/ExtensionsContext';
+import {extensionsData} from '../Extensions/ExtensionLoader';
 
 const Background = memo(() => {
-  const {background} = useExtensions();
+  const [background] = useState(extensionsData.replaceBackground);
 
   return background ? (
     <>{background}</>

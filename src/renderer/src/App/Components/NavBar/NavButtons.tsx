@@ -1,7 +1,8 @@
 import isEmpty from 'lodash/isEmpty';
+import {useState} from 'react';
 
 import {getIconByName, IconNameType} from '../../../assets/icons/SvgIconsContainer';
-import {useExtensions} from '../../Extensions/ExtensionsContext';
+import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../Redux/App/SettingsReducer';
 import {audioGenRoutePath} from '../Pages/ContentPages/AudioGenerationPage';
 import {homeRoutePath} from '../Pages/ContentPages/Home/HomePage';
@@ -54,25 +55,25 @@ const GetPages = ({Pages}: {Pages: PagesType[]}) => {
 };
 
 export function ContentPagesButtons() {
-  const {navBar} = useExtensions();
+  const [navBar] = useState(extensionsData.navBar);
 
   return (
     <>
       <GetPages Pages={ContentPages} />
-      {!isEmpty(navBar?.AddContentButton) &&
-        navBar?.AddContentButton!.map((NavButton, index) => <NavButton key={index} />)}
+      {!isEmpty(navBar.addButton.contentBar) &&
+        navBar.addButton.contentBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
 }
 
 export function SettingsPagesButtons() {
-  const {navBar} = useExtensions();
+  const [navBar] = useState(extensionsData.navBar);
 
   return (
     <>
       <GetPages Pages={SettingsPages} />
-      {!isEmpty(navBar?.AddSettingsButton) &&
-        navBar?.AddSettingsButton!.map((NavButton, index) => <NavButton key={index} />)}
+      {!isEmpty(navBar.addButton.settingsBar) &&
+        navBar.addButton.settingsBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
 }

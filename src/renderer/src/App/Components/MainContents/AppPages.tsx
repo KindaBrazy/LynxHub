@@ -1,12 +1,13 @@
+import {FC, useState} from 'react';
 import {Outlet} from 'react-router-dom';
 
-import {useExtensions} from '../../Extensions/ExtensionsContext';
+import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../Redux/AI/CardsReducer';
 import RunningCardView from '../RunningCardView/RunningCardView';
 
 export default function AppPages() {
   const {isRunning} = useCardsState('runningCard');
-  const {runningAI} = useExtensions();
+  const [Container] = useState<FC | undefined>(extensionsData.runningAI.container);
 
-  return isRunning ? runningAI?.Container ? <runningAI.Container /> : <RunningCardView /> : <Outlet />;
+  return isRunning ? Container ? <Container /> : <RunningCardView /> : <Outlet />;
 }

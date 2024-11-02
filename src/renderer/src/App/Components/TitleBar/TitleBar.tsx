@@ -1,7 +1,7 @@
 import isEmpty from 'lodash/isEmpty';
-import {memo, useMemo} from 'react';
+import {memo, useMemo, useState} from 'react';
 
-import {useExtensions} from '../../Extensions/ExtensionsContext';
+import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../Redux/AI/CardsReducer';
 import {useAppState} from '../../Redux/App/AppReducer';
 import Logo from './Logo';
@@ -20,7 +20,7 @@ const BACKGROUND_CLASSES = {
  * Displays logo, theme toggle, running card manager, and window buttons.
  */
 const TitleBar = memo(() => {
-  const {titleBar} = useExtensions();
+  const [titleBar] = useState(extensionsData.titleBar);
   const fullscreen = useAppState('fullscreen');
   const onFocus = useAppState('onFocus');
   const {isRunning: isCardRunning} = useCardsState('runningCard');
@@ -39,18 +39,18 @@ const TitleBar = memo(() => {
         {!fullscreen && <Logo />}
 
         <ToggleTheme />
-        {!isEmpty(titleBar?.AddStart) && titleBar?.AddStart!.map((Start, index) => <Start key={index} />)}
+        {!isEmpty(titleBar.addStart) && titleBar.addStart.map((Start, index) => <Start key={index} />)}
       </div>
 
       <div>
-        {!isEmpty(titleBar?.ReplaceCenter) ? <titleBar.ReplaceCenter /> : isCardRunning && <RunningCardManager />}
-        {!isEmpty(titleBar?.AddCenter) && titleBar?.AddCenter!.map((Center, index) => <Center key={index} />)}
+        {!isEmpty(titleBar.replaceCenter) ? <titleBar.replaceCenter /> : isCardRunning && <RunningCardManager />}
+        {!isEmpty(titleBar.addCenter) && titleBar.addCenter.map((Center, index) => <Center key={index} />)}
       </div>
 
       {fullscreen ? (
-        <div>{!isEmpty(titleBar?.AddEnd) && titleBar?.AddEnd!.map((End, index) => <End key={index} />)}</div>
-      ) : !isEmpty(titleBar?.ReplaceEnd) ? (
-        <titleBar.ReplaceEnd />
+        <div>{!isEmpty(titleBar.addEnd) && titleBar.addEnd.map((End, index) => <End key={index} />)}</div>
+      ) : !isEmpty(titleBar.replaceEnd) ? (
+        <titleBar.replaceEnd />
       ) : (
         <WindowButtons />
       )}

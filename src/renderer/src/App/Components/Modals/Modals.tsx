@@ -1,6 +1,6 @@
-import {memo} from 'react';
+import {memo, useState} from 'react';
 
-import {useExtensions} from '../../Extensions/ExtensionsContext';
+import {extensionsData} from '../../Extensions/ExtensionLoader';
 import CardExtensions from './CardExtensions/CardExtensions';
 import CardInfoModal from './CardInfo/CardInfo-Modal';
 import InstallModal from './Install/InstallModal';
@@ -12,19 +12,19 @@ import UpdatingNotification from './UpdatingCard/UpdatingNotification';
 import WarningModal from './Warning/WarningModal';
 
 const Modals = memo(() => {
-  const {modals} = useExtensions();
+  const [modals] = useState(extensionsData.replaceModals);
 
   return (
     <>
-      {modals?.WarningModal ? <modals.WarningModal /> : <WarningModal />}
-      {modals?.UninstallCard ? <modals.UninstallCard /> : <UninstallCard />}
-      {modals?.InstallModal ? <modals.InstallModal /> : <InstallModal />}
-      {modals?.InstallUIModal ? <modals.InstallUIModal /> : <InstallUIModal />}
-      {modals?.CardInfoModal ? <modals.CardInfoModal /> : <CardInfoModal />}
-      {modals?.UpdatingNotification ? <modals.UpdatingNotification /> : <UpdatingNotification />}
-      {modals?.CardExtensions ? <modals.CardExtensions /> : <CardExtensions />}
-      {modals?.LaunchConfig ? <modals.LaunchConfig /> : <LaunchConfig />}
-      {modals?.UpdateApp ? <modals.UpdateApp /> : <UpdateApp />}
+      {modals.warning ? <modals.warning /> : <WarningModal />}
+      {modals.uninstallCard ? <modals.uninstallCard /> : <UninstallCard />}
+      {modals.install ? <modals.install /> : <InstallModal />}
+      {modals.installUi ? <modals.installUi /> : <InstallUIModal />}
+      {modals.cardInfo ? <modals.cardInfo /> : <CardInfoModal />}
+      {modals.updatingNotification ? <modals.updatingNotification /> : <UpdatingNotification />}
+      {modals.cardExtensions ? <modals.cardExtensions /> : <CardExtensions />}
+      {modals.launchConfig ? <modals.launchConfig /> : <LaunchConfig />}
+      {modals.updateApp ? <modals.updateApp /> : <UpdateApp />}
     </>
   );
 });

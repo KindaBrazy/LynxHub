@@ -1,7 +1,6 @@
 import {CircularProgress} from '@nextui-org/react';
 import {ReactNode} from 'react';
 
-import {useExtensions} from '../../Extensions/ExtensionsContext';
 import {useModules} from '../../Modules/ModulesContext';
 import {useAppState} from '../../Redux/App/AppReducer';
 import {dashboardRoutePath} from '../Pages/SettingsPages/Dashboard/DashboardPage';
@@ -12,17 +11,6 @@ export default function ContentLoading({children}: {children: ReactNode}) {
   const currentPage = useAppState('currentPage');
 
   const {loadingModules} = useModules();
-  const {loadingExtensions} = useExtensions();
-
-  if (!loadingModules && !loadingExtensions)
-    return (
-      <div
-        className={`size-full p-3 pt-1.5 ${
-          (currentPage === settingsRoutePath || currentPage === dashboardRoutePath) && navBar && 'pl-0'
-        } transition-all duration-300`}>
-        {children}
-      </div>
-    );
 
   return loadingModules ? (
     <div className="mr-16 flex size-full scale-125 items-center justify-center">
@@ -40,21 +28,11 @@ export default function ContentLoading({children}: {children: ReactNode}) {
       />
     </div>
   ) : (
-    loadingExtensions && (
-      <div className="mr-16 flex size-full scale-125 items-center justify-center">
-        <CircularProgress
-          classNames={{
-            svg: 'w-28 h-28 drop-shadow-md',
-            indicator: 'stroke-secondary',
-            track: 'stroke-foreground/5',
-            value: 'text-3xl font-semibold text-white',
-            label: 'font-bold text-medium',
-          }}
-          color="primary"
-          strokeWidth={4}
-          label="Loading Extensions..."
-        />
-      </div>
-    )
+    <div
+      className={`size-full p-3 pt-1.5 ${
+        (currentPage === settingsRoutePath || currentPage === dashboardRoutePath) && navBar && 'pl-0'
+      } transition-all duration-300`}>
+      {children}
+    </div>
   );
 }

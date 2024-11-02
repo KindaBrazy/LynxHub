@@ -9,9 +9,9 @@ import {RouterProvider} from 'react-router-dom';
 
 import {isDev} from '../../cross/CrossUtils';
 import {initRouter} from './App/AppRouter';
-import {ImportExtensions} from './App/Extensions/Vite-Federation';
+import {loadExtensions} from './App/Extensions/Vite-Federation';
 
-await ImportExtensions();
+await loadExtensions();
 const router = await initRouter();
 
 if (!isDev()) {
