@@ -1,4 +1,26 @@
 import './index.css';
 
-// !Important → Just export valid and used component or object
-export {};
+import {ExtensionRendererApi} from '../../cross/ExtensionTypes';
+import {
+  AddContentButton,
+  AddSettingsButton,
+  Background,
+  CustomHook,
+  HomePage_ReplaceCategories,
+  HomePage_Top,
+  HomePage_TopScroll,
+  routePage,
+  StatusBarEnd,
+} from './Components';
+
+export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
+  lynxAPI.statusBar.addEnd(StatusBarEnd);
+  lynxAPI.router.add(routePage);
+  lynxAPI.navBar.addButton.contentBar(AddContentButton);
+  lynxAPI.navBar.addButton.settingsBar(AddSettingsButton);
+  lynxAPI.addCustomHook(CustomHook);
+  lynxAPI.replaceBackground(Background);
+  lynxAPI.customizePages.home.replace.categories(HomePage_ReplaceCategories);
+  lynxAPI.customizePages.home.add.top(HomePage_Top);
+  lynxAPI.customizePages.home.add.scrollBottom(HomePage_TopScroll);
+}

@@ -3,7 +3,7 @@ import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {useMemo, useState} from 'react';
 
-import {useExtensions} from '../../../../Extensions/ExtensionsContext';
+import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../../../Redux/AI/CardsReducer';
 import {AllCardsSection, CardsBySearch, PinnedCars, RecentlyCards} from '../../../Cards/CardsByCategory';
 import Page from '../../Page';
@@ -14,19 +14,22 @@ export const homeRoutePath: string = '/homePage';
 export const homeElementId: string = 'homePageElement';
 
 export default function HomePage() {
-  const {customizePages} = useExtensions();
+  const [customizePages] = useState(extensionsData.customizePages);
   const homeCategory = useCardsState('homeCategory');
   const [searchValue, setSearchValue] = useState<string>('');
 
-  const customizeHome = useMemo(() => {
-    return customizePages?.CustomizeHomePage;
+  const replace = useMemo(() => {
+    return customizePages.home.replace;
+  }, [customizePages]);
+  const add = useMemo(() => {
+    return customizePages.home.add;
   }, [customizePages]);
 
   return (
     <Page id={homeElementId}>
       <div className="flex size-full shrink-0 flex-col">
-        {customizeHome?.ReplaceSearchAndFilter ? (
-          <customizeHome.ReplaceSearchAndFilter />
+        {replace.searchAndFilter ? (
+          <replace.searchAndFilter />
         ) : (
           <div className="my-4 flex w-full items-center justify-between space-x-3 px-2">
             <HomeSearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
@@ -34,13 +37,13 @@ export default function HomePage() {
           </div>
         )}
 
-        {customizeHome?.AddToTop && customizeHome?.AddToTop.map((Top, index) => <Top key={index} />)}
+        {add.top && add.top.map((Top, index) => <Top key={index} />)}
 
         <ScrollShadow size={20} offset={-1} className="size-full space-y-8 overflow-y-scroll py-4 scrollbar-hide">
-          {customizeHome?.AddToScroll_Top && customizeHome?.AddToScroll_Top.map((Top, index) => <Top key={index} />)}
+          {add.scrollTop && add.scrollTop.map((Top, index) => <Top key={index} />)}
 
-          {customizeHome?.ReplaceCategories ? (
-            <customizeHome.ReplaceCategories />
+          {replace.categories ? (
+            <replace.categories />
           ) : isEmpty(searchValue) ? (
             <LayoutGroup>
               <AnimatePresence>{homeCategory.includes('Pin') && <PinnedCars />}</AnimatePresence>
@@ -51,11 +54,10 @@ export default function HomePage() {
             <CardsBySearch searchValue={searchValue} />
           )}
 
-          {customizeHome?.AddToScroll_Bottom &&
-            customizeHome?.AddToScroll_Bottom.map((Top, index) => <Top key={index} />)}
+          {add.scrollBottom && add.scrollBottom.map((Top, index) => <Top key={index} />)}
         </ScrollShadow>
 
-        {customizeHome?.AddToBottom && customizeHome?.AddToBottom.map((Top, index) => <Top key={index} />)}
+        {add.bottom && add.bottom.map((Top, index) => <Top key={index} />)}
       </div>
     </Page>
   );

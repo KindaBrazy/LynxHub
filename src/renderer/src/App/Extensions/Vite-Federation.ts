@@ -1,10 +1,11 @@
 // @ts-ignore-next-line
 import {__federation_method_getRemote, __federation_method_setRemote} from '__federation__';
-import compact from 'lodash/compact';
+import {compact} from 'lodash';
 
 import {isDev} from '../../../../cross/CrossUtils';
-import {ExtensionImport} from '../../../../cross/ExtensionTypes';
 import rendererIpc from '../RendererIpc';
+import extensionLoader from './ExtensionLoader';
+import {ExtensionImport_Renderer} from './ExtensionTypes';
 
 type RemotesConfig = {
   format?: 'esm' | 'systemjs' | 'var';
@@ -14,11 +15,11 @@ type RemotesConfig = {
 
 type SetRemoteModule = (remotesName: string, remotesConfig: RemotesConfig) => void;
 
-type GetRemoteModule = (remoteName: string, componentName: string) => Promise<ExtensionImport>;
+type GetRemoteModule = (remoteName: string, componentName: string) => Promise<ExtensionImport_Renderer>;
 
-export let importedExtensions: ExtensionImport[];
+export let importedExtensions: ExtensionImport_Renderer[];
 
-export async function ImportExtensions() {
+export async function loadExtensions() {
   if (isDev()) {
     const extension = await import('../../../extension/Extension');
     importedExtensions = [extension];
@@ -43,6 +44,8 @@ export async function ImportExtensions() {
 
     importedExtensions = await Promise.all(folderNames.map(folderName => getRemote(folderName, 'Extension')));
   }
+
+  extensionLoader(importedExtensions);
 }
 
 export const setRemote: SetRemoteModule = __federation_method_setRemote;

@@ -1,10 +1,9 @@
-import {useExtensions} from './Extensions/ExtensionsContext';
+import {extensionsData} from './Extensions/ExtensionLoader';
 
 export default function ExtensionHooks() {
-  const {customHooks} = useExtensions();
   return (
     <>
-      {customHooks.map((Hook, index) => (
+      {extensionsData.addCustomHook.map((Hook, index) => (
         <Hook key={index} />
       ))}
     </>
