@@ -33,12 +33,24 @@ export default function WindowButtons() {
     [dispatch],
   );
 
+  const close = useCallback(() => {
+    rendererIpc.pty.process('stop', '');
+    // Close the app with a delay so ensure pty terminated
+    setTimeout(() => rendererIpc.win.changeWinState('close'), 200);
+  }, []);
+
+  const restart = useCallback(() => {
+    rendererIpc.pty.process('stop', '');
+    // Close the app with a delay so ensure pty terminated
+    setTimeout(() => rendererIpc.win.changeWinState('restart'), 200);
+  }, []);
+
   const changeWindowState = useCallback(
     (operation: WindowOperation) => {
       if (operation === 'close') {
         rendererIpc.storage.update('app', {lastPage: currentPage});
         if (isHotkeyPressed('control') || !showCloseConfirm) {
-          rendererIpc.win.changeWinState('close');
+          close();
         } else if (!isConfigVisible) {
           setIsConfigVisible(true);
           Modal.error({
@@ -67,10 +79,10 @@ export default function WindowButtons() {
                   Stay
                 </Button>
                 <div className="space-x-2">
-                  <Button size="sm" color="warning" onPress={() => rendererIpc.win.changeWinState('restart')}>
+                  <Button size="sm" color="warning" onPress={restart}>
                     Restart
                   </Button>
-                  <Button size="sm" color="danger" onPress={() => rendererIpc.win.changeWinState('close')}>
+                  <Button size="sm" color="danger" onPress={close}>
                     Exit
                   </Button>
                 </div>

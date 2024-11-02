@@ -8,8 +8,6 @@ const classNames = 'flex size-full items-center overflow-x-scroll scrollbar-hide
 const StatusBar = () => {
   const [statusBar] = useState(extensionsData.statusBar);
 
-  console.log(statusBar);
-
   const isEmptyAdd = useMemo(() => {
     return isEmpty(statusBar.addStart) && isEmpty(statusBar.addCenter) && isEmpty(statusBar.addEnd);
   }, [statusBar]);
