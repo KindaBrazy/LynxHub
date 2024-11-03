@@ -110,6 +110,32 @@ export default function LynxTerminal() {
     [address, getMethod, id, browserBehavior, dispatch],
   );
 
+  const onRightClickRef = useRef<((e: MouseEvent) => void) | null>(null);
+
+  useEffect(() => {
+    onRightClickRef.current = () => {
+      console.log('onRightClick');
+      const isSelectedText = !isEmpty(terminal.current?.getSelection());
+      if (isSelectedText) {
+        copyText();
+      } else {
+        navigator.clipboard.readText().then(text => {
+          console.log(text);
+          rendererIpc.pty.write(text);
+        });
+      }
+    };
+  }, [copyText, terminal]);
+
+  const stableEventHandler = useCallback(e => {
+    onRightClickRef.current?.(e);
+  }, []);
+
+  useEffect(() => {
+    terminalRef.current?.removeEventListener('contextmenu', stableEventHandler);
+    terminalRef.current?.addEventListener('contextmenu', stableEventHandler);
+  }, [terminalRef, stableEventHandler]);
+
   useEffect(() => {
     async function loadTerminal() {
       const JetBrainsMono = new FontFaceObserver(FONT_FAMILY);
