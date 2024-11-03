@@ -61,8 +61,9 @@ export default function LynxTerminal() {
     if (!isEmpty(selectedText)) {
       navigator.clipboard.writeText(selectedText);
       message.success(`Copied to clipboard`);
+      terminal.current?.clearSelection();
     }
-  }, [selectedText]);
+  }, [selectedText, terminal]);
 
   useHotkeys('ctrl+c', copyText, {
     keyup: true,
@@ -220,8 +221,8 @@ export default function LynxTerminal() {
         });
 
         terminal.current.attachCustomKeyEventHandler(e => {
-          const isSelectedText = isEmpty(terminal.current?.getSelection());
-          return !(e.key === 'c' && e.ctrlKey && !isSelectedText);
+          const isSelectedText = !isEmpty(terminal.current?.getSelection());
+          return !(e.key === 'c' && e.ctrlKey && isSelectedText);
         });
 
         terminal.current.onData(data => {
