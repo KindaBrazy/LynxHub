@@ -20,6 +20,7 @@ import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {getColor} from '../../Utils/Constants';
 import {isWebgl2Supported} from '../../Utils/UtilFunctions';
+import parseTerminalColors from './TerminalColorHandler';
 
 let resizeTimeout: any;
 
@@ -106,7 +107,7 @@ export default function LynxTerminal() {
           }
         }
       }
-      terminal.current?.write(data);
+      terminal.current?.write(parseTerminalColors(data));
     },
     [address, getMethod, id, browserBehavior, dispatch],
   );
