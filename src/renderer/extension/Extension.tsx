@@ -1,6 +1,6 @@
 import './index.css';
 
-import {ExtensionRendererApi} from '../../cross/ExtensionTypes';
+import {ExtensionRendererApi} from '../src/App/Extensions/ExtensionTypes';
 import {
   AddContentButton,
   AddSettingsButton,
@@ -14,6 +14,7 @@ import {
 } from './Components';
 
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
+  return;
   lynxAPI.statusBar.addEnd(StatusBarEnd);
   lynxAPI.router.add(routePage);
   lynxAPI.navBar.addButton.contentBar(AddContentButton);
