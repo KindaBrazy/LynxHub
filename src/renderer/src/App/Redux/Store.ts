@@ -4,6 +4,7 @@ import cardsReducer from './AI/CardsReducer';
 import modalsReducer from './AI/ModalsReducer';
 import appReducer from './App/AppReducer';
 import settingsReducer from './App/SettingsReducer';
+import terminalReducer from './App/TerminalReducer';
 import userReducer from './User/UserReducer';
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
     cards: cardsReducer,
     modals: modalsReducer,
     settings: settingsReducer,
+    terminal: terminalReducer,
   },
 });
 

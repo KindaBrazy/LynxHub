@@ -6,6 +6,9 @@ import {
   LynxHotkeys,
   StoragePreOpenData,
   TaskbarStatus,
+  TerminalCursorInactiveStyle,
+  TerminalCursorStyle,
+  TerminalUseConpty,
   TooltipStatus,
 } from './IpcChannelAndTypes';
 
@@ -55,6 +58,16 @@ type StorageTypes = {
     hotkeys: LynxHotkeys;
     initialized: boolean;
     appDataDir: string;
+  };
+  terminal: {
+    outputColor: boolean;
+    useConpty: TerminalUseConpty;
+    scrollBack: number;
+    fontSize: number;
+    cursorStyle: TerminalCursorStyle;
+    cursorInactiveStyle: TerminalCursorInactiveStyle;
+    blinkCursor: boolean;
+    resizeDelay: number;
   };
 };
 
