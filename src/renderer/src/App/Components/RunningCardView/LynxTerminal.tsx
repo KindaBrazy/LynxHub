@@ -16,6 +16,7 @@ import {useDispatch} from 'react-redux';
 import {useModules} from '../../Modules/ModulesContext';
 import {cardsActions, useCardsState} from '../../Redux/AI/CardsReducer';
 import {useAppState} from '../../Redux/App/AppReducer';
+import {useTerminalState} from '../../Redux/App/TerminalReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {getColor} from '../../Utils/Constants';
@@ -24,9 +25,7 @@ import parseTerminalColors from './TerminalColorHandler';
 
 let resizeTimeout: any;
 
-const RESIZE_DELAY = 77;
 const FONT_FAMILY = 'JetBrainsMono';
-const FONT_SIZE = 14;
 
 /** Xterm.js terminal */
 export default function LynxTerminal() {
@@ -34,6 +33,15 @@ export default function LynxTerminal() {
   const terminal = useRef<Terminal | null>(null);
   const fitAddon = useRef<FitAddon | null>(null);
   const unicode11Addon = useRef<Unicode11Addon | null>(null);
+
+  const outputColor = useTerminalState('outputColor');
+  const useConpty = useTerminalState('useConpty');
+  const scrollback = useTerminalState('scrollBack');
+  const fontSize = useTerminalState('fontSize');
+  const cursorStyle = useTerminalState('cursorStyle');
+  const cursorInactiveStyle = useTerminalState('cursorInactiveStyle');
+  const cursorBlink = useTerminalState('blinkCursor');
+  const resizeDelay = useTerminalState('resizeDelay');
 
   const [selectedText, setSelectedText] = useState<string>('');
 
@@ -107,9 +115,9 @@ export default function LynxTerminal() {
           }
         }
       }
-      terminal.current?.write(parseTerminalColors(data));
+      terminal.current?.write(outputColor ? parseTerminalColors(data) : data);
     },
-    [address, getMethod, id, browserBehavior, dispatch],
+    [address, getMethod, id, browserBehavior, outputColor, dispatch],
   );
 
   const onRightClickRef = useRef<((e: MouseEvent) => void) | null>(null);
@@ -146,7 +154,14 @@ export default function LynxTerminal() {
       const windowsPty: IWindowsPty | undefined =
         sysInfo.os === 'win32'
           ? {
-              backend: (sysInfo.buildNumber as number) >= 18309 ? 'conpty' : 'winpty',
+              backend:
+                useConpty === 'auto'
+                  ? (sysInfo.buildNumber as number) >= 18309
+                    ? 'conpty'
+                    : 'winpty'
+                  : useConpty === 'yes'
+                    ? 'conpty'
+                    : 'winpty',
               buildNumber: sysInfo.buildNumber as number,
             }
           : undefined;
@@ -159,13 +174,13 @@ export default function LynxTerminal() {
           allowProposedApi: true,
           rows: 150,
           cols: 150,
-          scrollback: 10000,
-          cursorBlink: true,
+          scrollback,
+          cursorBlink,
           fontFamily: 'JetBrainsMono',
-          fontSize: FONT_SIZE,
+          fontSize: fontSize,
           scrollOnUserInput: true,
-          cursorStyle: 'bar',
-          cursorInactiveStyle: 'none',
+          cursorStyle,
+          cursorInactiveStyle,
           windowsPty,
         });
 
@@ -240,7 +255,7 @@ export default function LynxTerminal() {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
         fitAddon.current?.fit();
-      }, RESIZE_DELAY);
+      }, resizeDelay);
     });
 
     rendererIpc.pty.onData((_, data) => {

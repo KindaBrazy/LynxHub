@@ -1,11 +1,11 @@
 import {cn, Switch} from '@nextui-org/react';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
 type Props = {
   enabled?: boolean;
   onEnabledChange?: (selected: boolean) => void;
   title: string;
-  description?: string;
+  description?: string | ReactNode;
   isDisabled?: boolean;
   className?: string;
   size?: 'sm' | 'default';

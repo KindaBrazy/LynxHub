@@ -94,6 +94,7 @@ export default function SettingsPageNav() {
         items: [
           {title: 'Customize Card', icon: 'EditCard', elementId: settingsSectionId.SettingsCardId},
           {title: 'General', icon: 'Tuning', elementId: settingsSectionId.SettingsGeneralId},
+          {title: 'Terminal', icon: 'Terminal', elementId: settingsSectionId.SettingsTerminalId},
           {title: 'Startup', icon: 'Rocket', elementId: settingsSectionId.SettingsStartupId},
           {title: 'Hotkeys', icon: 'Keyboard', elementId: settingsSectionId.SettingsHotkeysId},
           {title: 'Discord Activity', icon: 'Discord', elementId: settingsSectionId.SettingsDiscordId},

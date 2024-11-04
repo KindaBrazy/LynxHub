@@ -5,7 +5,7 @@ import pty from 'node-pty';
 import treeKill from 'tree-kill';
 
 import {ptyChannels} from '../../cross/IpcChannelAndTypes';
-import {appManager} from '../index';
+import {appManager, storageManager} from '../index';
 import {getPowerShellVersion} from '../Utilities/Utils';
 
 /** Manages pseudo-terminal (PTY) processes for different shells. */
@@ -67,11 +67,13 @@ export default class PtyManager {
    * @param sendDataToRenderer - Whether to send data to the renderer process.
    */
   public start(dir?: string, sendDataToRenderer = false): void {
+    const {useConpty} = storageManager.getData('terminal');
     this.process = pty.spawn(this.shell, [], {
       cwd: dir ? path.resolve(dir) : undefined,
       cols: 150,
       rows: 150,
       env: process.env,
+      useConpty: useConpty === 'auto' ? undefined : useConpty === 'yes',
     });
 
     this.isRunning = true;
