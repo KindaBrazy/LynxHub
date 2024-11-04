@@ -9,6 +9,7 @@ import {useModules} from '../Modules/ModulesContext';
 import {cardsActions, useCardsState} from '../Redux/AI/CardsReducer';
 import {appActions} from '../Redux/App/AppReducer';
 import {settingsActions} from '../Redux/App/SettingsReducer';
+import {terminalActions} from '../Redux/App/TerminalReducer';
 import {AppDispatch} from '../Redux/Store';
 import {userActions} from '../Redux/User/UserReducer';
 import rendererIpc from '../RendererIpc';
@@ -91,6 +92,8 @@ export const useStorageData = () => {
       dispatch(cardsActions.setRecentlyUsedCards(storage.cards.recentlyUsedCards));
       dispatch(cardsActions.setHomeCategory(storage.app.homeCategory));
       dispatch(cardsActions.setZoomFactor(storage.cards.zoomFactor));
+
+      dispatch(terminalActions.initState(storage.terminal));
 
       if (storage.app.darkMode === 'dark') {
         dispatch(appActions.setAppState({key: 'darkMode', value: true}));

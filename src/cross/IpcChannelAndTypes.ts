@@ -12,6 +12,11 @@ export type DarkModeTypes = 'dark' | 'light' | 'system';
 export type TaskbarStatus = 'taskbar-tray' | 'taskbar' | 'tray' | 'tray-minimized';
 export type TooltipStatus = 'essential' | 'full' | 'none';
 
+// Terminal
+export type TerminalUseConpty = 'auto' | 'yes' | 'no';
+export type TerminalCursorStyle = 'bar' | 'block' | 'underline';
+export type TerminalCursorInactiveStyle = 'bar' | 'block' | 'underline' | 'outline' | 'none';
+
 export type GitProgressState = 'Progress' | 'Failed' | 'Completed';
 export type GitProgressResult<T extends GitProgressState> = T extends 'Progress'
   ? SimpleGitProgressEvent

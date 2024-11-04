@@ -19,10 +19,10 @@ class BaseStorage {
   private readonly STORAGE_FILE = is.dev ? `${APP_NAME}-Dev.config` : `${APP_NAME}.config`;
   private readonly STORAGE_PATH = path.join(app.getPath('userData'), this.STORAGE_FILE);
 
-  private readonly CURRENT_VERSION: number = 0.4;
+  private readonly CURRENT_VERSION: number = 0.5;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.4},
+    storage: {version: 0.5},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -74,6 +74,16 @@ class BaseStorage {
       initialized: false,
       appDataDir: path.join(app.getPath('documents'), APP_NAME),
     },
+    terminal: {
+      outputColor: true,
+      useConpty: 'auto',
+      scrollBack: 10000,
+      fontSize: 14,
+      cursorStyle: 'bar',
+      cursorInactiveStyle: 'none',
+      blinkCursor: true,
+      resizeDelay: 77,
+    },
   };
   //#endregion
 
@@ -110,6 +120,11 @@ class BaseStorage {
       });
     };
 
+    const version4to5 = () => {
+      this.storage.data.terminal = this.DEFAULT_DATA.terminal;
+      this.storage.write();
+    };
+
     const updateVersion = () => {
       this.updateData('storage', {version: this.CURRENT_VERSION});
     };
@@ -120,15 +135,22 @@ class BaseStorage {
           version1to2();
           version2to3();
           version3to4();
+          version4to5();
           break;
         }
         case 0.2: {
           version2to3();
           version3to4();
+          version4to5();
           break;
         }
         case 0.3: {
           version3to4();
+          version4to5();
+          break;
+        }
+        case 0.4: {
+          version4to5();
           break;
         }
         default:
@@ -137,8 +159,6 @@ class BaseStorage {
 
       updateVersion();
     }
-    // Version 0.2 Changes -> autoUpdateExtensions
-    // Version 0.3 Changes -> customRunBehavior
   }
 
   //#endregion
