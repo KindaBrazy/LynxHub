@@ -70,6 +70,30 @@ export const extensionsData: ExtensionData_Renderer = {
         scrollBottom: [],
       },
     },
+    audio: {
+      add: {
+        top: [],
+        bottom: [],
+        scrollTop: [],
+        scrollBottom: [],
+      },
+    },
+    image: {
+      add: {
+        top: [],
+        bottom: [],
+        scrollTop: [],
+        scrollBottom: [],
+      },
+    },
+    text: {
+      add: {
+        top: [],
+        bottom: [],
+        scrollTop: [],
+        scrollBottom: [],
+      },
+    },
   },
 };
 
@@ -197,6 +221,30 @@ const api: ExtensionRendererApi = {
         bottom: comp => extensionsData.customizePages.home.add.bottom.push(comp),
         scrollTop: comp => extensionsData.customizePages.home.add.scrollTop.push(comp),
         scrollBottom: comp => extensionsData.customizePages.home.add.scrollBottom.push(comp),
+      },
+    },
+    audio: {
+      add: {
+        top: comp => extensionsData.customizePages.audio.add.top.push(comp),
+        bottom: comp => extensionsData.customizePages.audio.add.bottom.push(comp),
+        scrollTop: comp => extensionsData.customizePages.audio.add.scrollTop.push(comp),
+        scrollBottom: comp => extensionsData.customizePages.audio.add.scrollBottom.push(comp),
+      },
+    },
+    image: {
+      add: {
+        top: comp => extensionsData.customizePages.image.add.top.push(comp),
+        bottom: comp => extensionsData.customizePages.image.add.bottom.push(comp),
+        scrollTop: comp => extensionsData.customizePages.image.add.scrollTop.push(comp),
+        scrollBottom: comp => extensionsData.customizePages.image.add.scrollBottom.push(comp),
+      },
+    },
+    text: {
+      add: {
+        top: comp => extensionsData.customizePages.image.add.top.push(comp),
+        bottom: comp => extensionsData.customizePages.image.add.bottom.push(comp),
+        scrollTop: comp => extensionsData.customizePages.image.add.scrollTop.push(comp),
+        scrollBottom: comp => extensionsData.customizePages.image.add.scrollBottom.push(comp),
       },
     },
   },

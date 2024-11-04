@@ -79,6 +79,30 @@ export type ExtensionRendererApi = {
         scrollBottom: CompFc;
       };
     };
+    audio: {
+      add: {
+        top: CompFc;
+        bottom: CompFc;
+        scrollTop: CompFc;
+        scrollBottom: CompFc;
+      };
+    };
+    image: {
+      add: {
+        top: CompFc;
+        bottom: CompFc;
+        scrollTop: CompFc;
+        scrollBottom: CompFc;
+      };
+    };
+    text: {
+      add: {
+        top: CompFc;
+        bottom: CompFc;
+        scrollTop: CompFc;
+        scrollBottom: CompFc;
+      };
+    };
   };
 };
 
@@ -143,6 +167,30 @@ export type ExtensionData_Renderer = {
         searchAndFilter: FC | undefined;
         categories: FC | undefined;
       };
+      add: {
+        top: FC[];
+        bottom: FC[];
+        scrollTop: FC[];
+        scrollBottom: FC[];
+      };
+    };
+    audio: {
+      add: {
+        top: FC[];
+        bottom: FC[];
+        scrollTop: FC[];
+        scrollBottom: FC[];
+      };
+    };
+    image: {
+      add: {
+        top: FC[];
+        bottom: FC[];
+        scrollTop: FC[];
+        scrollBottom: FC[];
+      };
+    };
+    text: {
       add: {
         top: FC[];
         bottom: FC[];
