@@ -5,10 +5,12 @@ import SettingsData, {SettingsDataId} from './Content/Settings-Data';
 import SettingsDiscord, {SettingsDiscordId} from './Content/Settings-Discord';
 import SettingsHotkeys, {SettingsHotkeysId} from './Content/Settings-Hotkeys';
 import SettingsStartup, {SettingsStartupId} from './Content/Startup/Settings-Startup';
+import SettingsTerminal, {SettingsTerminalId} from './Content/Terminal/Settings-Terminal';
 
 export const settingsSectionId = {
   SettingsCardId,
   SettingsGeneralId,
+  SettingsTerminalId,
   SettingsStartupId,
   SettingsClearId,
   SettingsDataId,
@@ -20,6 +22,7 @@ export const SettingsSections = () => (
   <>
     <SettingsCard />
     <SettingsGeneral />
+    <SettingsTerminal />
     <SettingsStartup />
     <SettingsHotkeys />
     <SettingsDiscord />
