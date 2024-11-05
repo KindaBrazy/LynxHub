@@ -1,3 +1,5 @@
+import {Spacer} from '@nextui-org/react';
+
 import SettingsSection from '../../SettingsPage-ContentSection';
 import SettingsTerminalBlinkCursor from './SettingsTerminal-BlinkCursor';
 import SettingsTerminalConpty from './SettingsTerminal-Conpty';
@@ -22,7 +24,7 @@ export default function SettingsTerminal() {
       <SettingsTerminalCursorInactiveStyle />
       <SettingsTerminalBlinkCursor />
       <SettingsTerminalOutputColor />
-
+      <Spacer />
       <SettingsTerminalReset />
     </SettingsSection>
   );
