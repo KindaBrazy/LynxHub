@@ -1,4 +1,6 @@
+import {Button} from '@nextui-org/react';
 import {Fragment, useEffect} from 'react';
+import {useDispatch} from 'react-redux';
 import {RouteObject} from 'react-router-dom';
 
 import NavButton from '../src/App/Components/NavBar/NavButton';
@@ -6,6 +8,7 @@ import RouterPagesError from '../src/App/Components/Pages/RouterPagesError';
 import {ElementProps} from '../src/App/Extensions/ExtensionTypes';
 import {useAppState} from '../src/App/Redux/App/AppReducer';
 import {getIconByName} from '../src/assets/icons/SvgIconsContainer';
+import {extensionActions, useExtensionState} from './reducer';
 
 // @ts-ignore
 export function StatusBarEnd({className, ...props}: ElementProps) {
@@ -82,4 +85,20 @@ export function HomePage_TopScroll() {
 
 export function HomePage_Top() {
   return <div className="h-24 w-full shrink-0 bg-blue-700" />;
+}
+
+export function ReducerTester() {
+  const someNumber = useExtensionState('someNumber');
+  const dispatch = useDispatch();
+
+  const onPress = () => {
+    dispatch(extensionActions.increaseNumber());
+  };
+
+  return (
+    <div className="flex h-16 w-full flex-row items-center justify-center space-x-4">
+      <Button onPress={onPress}>Increase</Button>
+      <span>{someNumber}</span>
+    </div>
+  );
 }
