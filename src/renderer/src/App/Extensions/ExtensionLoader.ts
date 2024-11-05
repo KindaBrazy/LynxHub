@@ -95,6 +95,7 @@ export const extensionsData: ExtensionData_Renderer = {
       },
     },
   },
+  addReducer: [],
 };
 
 const api: ExtensionRendererApi = {
@@ -247,6 +248,9 @@ const api: ExtensionRendererApi = {
         scrollBottom: comp => extensionsData.customizePages.image.add.scrollBottom.push(comp),
       },
     },
+  },
+  addReducer: reducer => {
+    extensionsData.addReducer = [...extensionsData.addReducer, ...reducer];
   },
 };
 

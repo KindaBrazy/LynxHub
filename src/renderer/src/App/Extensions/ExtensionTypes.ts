@@ -1,3 +1,4 @@
+import {Reducer} from '@reduxjs/toolkit';
 import {ComponentProps, FC} from 'react';
 import {RouteObject} from 'react-router-dom';
 
@@ -10,101 +11,6 @@ export type FcProp = FC<ElementProps>;
 
 type CompFc = (component: FC) => void;
 type CompFcProp = (component: FcProp) => void;
-
-export type ExtensionRendererApi = {
-  titleBar: {
-    addStart: CompFcProp;
-    addCenter: CompFcProp;
-    addEnd: CompFcProp;
-    replaceCenter: CompFcProp;
-    replaceEnd: CompFcProp;
-  };
-  statusBar: {
-    addStart: CompFcProp;
-    addCenter: CompFcProp;
-    addEnd: CompFcProp;
-    replaceContainer: CompFc;
-  };
-  runningAI: {
-    container: CompFc;
-    terminal: CompFc;
-    browser: CompFc;
-  };
-  router: {
-    add: (routeObject: RouteObject[]) => void;
-    replace: {
-      homePage: CompFc;
-      imageGenerationPage: CompFc;
-      textGenerationPage: CompFc;
-      audioGenerationPage: CompFc;
-      modulesPage: CompFc;
-      settingsPage: CompFc;
-      dashboardPage: CompFc;
-    };
-  };
-  navBar: {
-    replace: {
-      container: CompFc;
-      contentBar: CompFc;
-      settingsBar: CompFc;
-    };
-    addButton: {
-      contentBar: CompFc;
-      settingsBar: CompFc;
-    };
-  };
-  replaceModals: {
-    updateApp: CompFc;
-    launchConfig: CompFc;
-    cardExtensions: CompFc;
-    updatingNotification: CompFc;
-    cardInfo: CompFc;
-    installUi: CompFc;
-    uninstallCard: CompFc;
-    install: CompFc;
-    warning: CompFc;
-  };
-  addCustomHook: CompFc;
-  replaceBackground: CompFc;
-  customizePages: {
-    home: {
-      replace: {
-        searchAndFilter: CompFc;
-        categories: CompFc;
-      };
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-      };
-    };
-    audio: {
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-      };
-    };
-    image: {
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-      };
-    };
-    text: {
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-      };
-    };
-  };
-};
 
 export type ExtensionData_Renderer = {
   titleBar: {
@@ -199,6 +105,103 @@ export type ExtensionData_Renderer = {
       };
     };
   };
+  addReducer: {name: string; reducer: Reducer}[];
+};
+
+export type ExtensionRendererApi = {
+  titleBar: {
+    addStart: CompFcProp;
+    addCenter: CompFcProp;
+    addEnd: CompFcProp;
+    replaceCenter: CompFcProp;
+    replaceEnd: CompFcProp;
+  };
+  statusBar: {
+    addStart: CompFcProp;
+    addCenter: CompFcProp;
+    addEnd: CompFcProp;
+    replaceContainer: CompFc;
+  };
+  runningAI: {
+    container: CompFc;
+    terminal: CompFc;
+    browser: CompFc;
+  };
+  router: {
+    add: (routeObject: RouteObject[]) => void;
+    replace: {
+      homePage: CompFc;
+      imageGenerationPage: CompFc;
+      textGenerationPage: CompFc;
+      audioGenerationPage: CompFc;
+      modulesPage: CompFc;
+      settingsPage: CompFc;
+      dashboardPage: CompFc;
+    };
+  };
+  navBar: {
+    replace: {
+      container: CompFc;
+      contentBar: CompFc;
+      settingsBar: CompFc;
+    };
+    addButton: {
+      contentBar: CompFc;
+      settingsBar: CompFc;
+    };
+  };
+  replaceModals: {
+    updateApp: CompFc;
+    launchConfig: CompFc;
+    cardExtensions: CompFc;
+    updatingNotification: CompFc;
+    cardInfo: CompFc;
+    installUi: CompFc;
+    uninstallCard: CompFc;
+    install: CompFc;
+    warning: CompFc;
+  };
+  addCustomHook: CompFc;
+  replaceBackground: CompFc;
+  customizePages: {
+    home: {
+      replace: {
+        searchAndFilter: CompFc;
+        categories: CompFc;
+      };
+      add: {
+        top: CompFc;
+        bottom: CompFc;
+        scrollTop: CompFc;
+        scrollBottom: CompFc;
+      };
+    };
+    audio: {
+      add: {
+        top: CompFc;
+        bottom: CompFc;
+        scrollTop: CompFc;
+        scrollBottom: CompFc;
+      };
+    };
+    image: {
+      add: {
+        top: CompFc;
+        bottom: CompFc;
+        scrollTop: CompFc;
+        scrollBottom: CompFc;
+      };
+    };
+    text: {
+      add: {
+        top: CompFc;
+        bottom: CompFc;
+        scrollTop: CompFc;
+        scrollBottom: CompFc;
+      };
+    };
+  };
+  addReducer: (reducer: {name: string; reducer: Reducer}[]) => void;
 };
 
 export type ExtensionImport_Renderer = {
