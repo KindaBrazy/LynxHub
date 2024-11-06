@@ -18,10 +18,12 @@ const LynxCard = observer(() => {
 
   return (
     <Badge.Ribbon
+      className={`z-10 ${
+        updateAvailable && installed ? 'block opacity-100' : 'hidden opacity-0'
+      } transition duration-500`}
       color="green"
       placement="end"
-      text="Update Available"
-      className={`z-10 ${updateAvailable && installed ? 'opacity-100' : 'opacity-0'} transition duration-500`}>
+      text="Update Available">
       <motion.div
         layout="position"
         exit={{scale: 0.9, opacity: 0}}
