@@ -1,6 +1,6 @@
 import {Empty} from 'antd';
 import {AnimatePresence} from 'framer-motion';
-import {isEmpty} from 'lodash';
+import {compact, isEmpty} from 'lodash';
 import {memo, useMemo, useState} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
@@ -55,13 +55,20 @@ const AllCards = () => {
   const installedCards = useCardsState('installedCards');
   const installedCardSet = useMemo(() => new Set(installedCards.map(card => card.id)), [installedCards]);
   const [allCategory] = useState(extensionsData.customizePages.home.add.allCategory);
+  const pinnedCards = useCardsState('pinnedCards');
 
-  if (isEmpty(allCards) && isEmpty(allCategory))
+  const sortedCards = useMemo(() => {
+    const pin = compact(allCards?.filter(card => pinnedCards.includes(card.id)));
+    const rest = compact(allCards?.filter(card => !pinnedCards.includes(card.id)));
+    return [...pin, ...rest];
+  }, [allCards, pinnedCards]);
+
+  if (isEmpty(sortedCards) && isEmpty(allCategory))
     return <Empty className="size-full" description="No Card to Display!" />;
 
   return (
     <AnimatePresence>
-      {allCards.map(card => (
+      {sortedCards.map(card => (
         <CardContext.Provider
           key={`cardProv-${card.id}`}
           value={new CardsDataManager(card, installedCardSet.has(card.id))}>
