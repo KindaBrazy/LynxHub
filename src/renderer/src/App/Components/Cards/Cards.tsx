@@ -23,7 +23,7 @@ export function GetComponentsByPath({routePath}: {routePath: string}) {
   }, [cards, pinnedCards]);
 
   return (
-    <div className="flex size-full flex-row flex-wrap gap-7 overflow-y-scroll scrollbar-hide">
+    <div className="flex size-full flex-row flex-wrap gap-7 overflow-visible">
       {isEmpty(sortedCards) ? (
         <Page className="content-center">
           <Result
