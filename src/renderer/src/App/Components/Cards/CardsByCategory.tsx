@@ -1,5 +1,5 @@
 import {Empty} from 'antd';
-import {AnimatePresence} from 'framer-motion';
+import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {compact, isEmpty} from 'lodash';
 import {memo, useMemo, useState} from 'react';
 
@@ -31,21 +31,23 @@ const useCardsById = (cardIds: string[]): CardData[] => {
 /**
  * Renders a list of cards by their IDs
  */
-const CardsById = ({cardIds}: {cardIds: string[]}) => {
+const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
   const installedCards = useCardsState('installedCards');
   const cards = useCardsById(cardIds);
   const installedCardSet = useMemo(() => new Set(installedCards.map(card => card.id)), [installedCards]);
 
   return (
-    <AnimatePresence>
-      {cards.map(card => (
-        <CardContext.Provider
-          key={`cardProv-${card.id}`}
-          value={new CardsDataManager(card, installedCardSet.has(card.id))}>
-          <LynxCard key={`${card.id}-card-key`} />
-        </CardContext.Provider>
-      ))}
-    </AnimatePresence>
+    <LayoutGroup id={`${cat}_cards_category`}>
+      <AnimatePresence>
+        {cards.map(card => (
+          <CardContext.Provider
+            key={`cardProv-${card.id}`}
+            value={new CardsDataManager(card, installedCardSet.has(card.id))}>
+            <LynxCard key={`${card.id}-card-key`} />
+          </CardContext.Provider>
+        ))}
+      </AnimatePresence>
+    </LayoutGroup>
   );
 };
 
@@ -67,16 +69,18 @@ const AllCards = () => {
     return <Empty className="size-full" description="No Card to Display!" />;
 
   return (
-    <AnimatePresence>
-      {sortedCards.map(card => (
-        <CardContext.Provider
-          key={`cardProv-${card.id}`}
-          value={new CardsDataManager(card, installedCardSet.has(card.id))}>
-          <LynxCard key={`${card.id}-card-key`} />
-          {...allCategory.map((All, index) => <All key={index} />)}
-        </CardContext.Provider>
-      ))}
-    </AnimatePresence>
+    <LayoutGroup id="all_cards_category">
+      <AnimatePresence>
+        {sortedCards.map(card => (
+          <CardContext.Provider
+            key={`cardProv-${card.id}`}
+            value={new CardsDataManager(card, installedCardSet.has(card.id))}>
+            <LynxCard key={`${card.id}-card-key`} />
+            {...allCategory.map((All, index) => <All key={index} />)}
+          </CardContext.Provider>
+        ))}
+      </AnimatePresence>
+    </LayoutGroup>
   );
 };
 
@@ -97,7 +101,7 @@ export const PinnedCars = memo(() => {
           <Empty className="size-full" description="No Pinned Card to Display!" />
         ) : (
           <>
-            <CardsById cardIds={validPinnedCards} />
+            <CardsById cat="pinned" cardIds={validPinnedCards} />
             {...pinCategory.map((Pin, index) => <Pin key={index} />)}
           </>
         )}
@@ -125,7 +129,7 @@ export const RecentlyCards = memo(() => {
           <Empty className="size-full" description="No Recently Used Card to Display!" />
         ) : (
           <>
-            <CardsById cardIds={validRecentlyUsed} />
+            <CardsById cat="recently" cardIds={validRecentlyUsed} />
             {...recentlyCategory.map((Recent, index) => <Recent key={index} />)}
           </>
         )}
