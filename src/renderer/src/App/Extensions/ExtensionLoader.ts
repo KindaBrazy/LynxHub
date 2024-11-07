@@ -68,6 +68,9 @@ export const extensionsData: ExtensionData_Renderer = {
         bottom: [],
         scrollTop: [],
         scrollBottom: [],
+        pinCategory: [],
+        recentlyCategory: [],
+        allCategory: [],
       },
     },
     audio: {
@@ -222,6 +225,9 @@ const api: ExtensionRendererApi = {
         bottom: comp => extensionsData.customizePages.home.add.bottom.push(comp),
         scrollTop: comp => extensionsData.customizePages.home.add.scrollTop.push(comp),
         scrollBottom: comp => extensionsData.customizePages.home.add.scrollBottom.push(comp),
+        pinCategory: comp => extensionsData.customizePages.home.add.pinCategory.push(comp),
+        recentlyCategory: comp => extensionsData.customizePages.home.add.recentlyCategory.push(comp),
+        allCategory: comp => extensionsData.customizePages.home.add.allCategory.push(comp),
       },
     },
     audio: {

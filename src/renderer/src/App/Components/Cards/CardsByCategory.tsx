@@ -1,8 +1,9 @@
 import {Empty} from 'antd';
 import {AnimatePresence} from 'framer-motion';
 import {isEmpty} from 'lodash';
-import {memo, useMemo} from 'react';
+import {memo, useMemo, useState} from 'react';
 
+import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useModules} from '../../Modules/ModulesContext';
 import {CardData} from '../../Modules/types';
 import {useCardsState} from '../../Redux/AI/CardsReducer';
@@ -13,7 +14,7 @@ import LynxCard from './Card/LynxCard';
 import {CardContext, CardsDataManager} from './CardsDataManager';
 
 /**
- * Custom hook to fetch cards by their IDs
+ * Custom hook that returns cards by their IDs
  * @param cardIds Array of card IDs
  * @returns Array of CardData objects
  */
@@ -35,8 +36,6 @@ const CardsById = ({cardIds}: {cardIds: string[]}) => {
   const cards = useCardsById(cardIds);
   const installedCardSet = useMemo(() => new Set(installedCards.map(card => card.id)), [installedCards]);
 
-  if (isEmpty(cards)) return <Empty className="size-full" description="No Card to Display!" />;
-
   return (
     <AnimatePresence>
       {cards.map(card => (
@@ -55,8 +54,10 @@ const AllCards = () => {
   const {allCards} = useModules();
   const installedCards = useCardsState('installedCards');
   const installedCardSet = useMemo(() => new Set(installedCards.map(card => card.id)), [installedCards]);
+  const [allCategory] = useState(extensionsData.customizePages.home.add.allCategory);
 
-  if (isEmpty(allCards)) return <Empty className="size-full" description="No Card to Display!" />;
+  if (isEmpty(allCards) && isEmpty(allCategory))
+    return <Empty className="size-full" description="No Card to Display!" />;
 
   return (
     <AnimatePresence>
@@ -65,6 +66,7 @@ const AllCards = () => {
           key={`cardProv-${card.id}`}
           value={new CardsDataManager(card, installedCardSet.has(card.id))}>
           <LynxCard key={`${card.id}-card-key`} />
+          {...allCategory.map((All, index) => <All key={index} />)}
         </CardContext.Provider>
       ))}
     </AnimatePresence>
@@ -75,6 +77,7 @@ const AllCards = () => {
 export const PinnedCars = memo(() => {
   const pinnedCards = useCardsState('pinnedCards');
   const installedCards = useCardsState('installedCards');
+  const [pinCategory] = useState(extensionsData.customizePages.home.add.pinCategory);
 
   const validPinnedCards = useMemo(() => {
     return pinnedCards.filter(pinnedCardId => installedCards.some(installedCard => installedCard.id === pinnedCardId));
@@ -83,10 +86,13 @@ export const PinnedCars = memo(() => {
   return (
     <HomeCategory title="PINNED" icon="CirclePin">
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
-        {isEmpty(validPinnedCards) ? (
+        {isEmpty(validPinnedCards) && isEmpty(pinCategory) ? (
           <Empty className="size-full" description="No Pinned Card to Display!" />
         ) : (
-          <CardsById cardIds={validPinnedCards} />
+          <>
+            <CardsById cardIds={validPinnedCards} />
+            {...pinCategory.map((Pin, index) => <Pin key={index} />)}
+          </>
         )}
       </div>
     </HomeCategory>
@@ -97,6 +103,7 @@ export const PinnedCars = memo(() => {
 export const RecentlyCards = memo(() => {
   const recentlyUsedCards = useCardsState('recentlyUsedCards');
   const installedCards = useCardsState('installedCards');
+  const [recentlyCategory] = useState(extensionsData.customizePages.home.add.recentlyCategory);
 
   const validRecentlyUsed = useMemo(() => {
     return recentlyUsedCards.filter(recentlyUsedCardId =>
@@ -107,10 +114,13 @@ export const RecentlyCards = memo(() => {
   return (
     <HomeCategory icon="CircleClock" title="RECENTLY USED">
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
-        {isEmpty(validRecentlyUsed) ? (
+        {isEmpty(validRecentlyUsed) && isEmpty(recentlyCategory) ? (
           <Empty className="size-full" description="No Recently Used Card to Display!" />
         ) : (
-          <CardsById cardIds={validRecentlyUsed} />
+          <>
+            <CardsById cardIds={validRecentlyUsed} />
+            {...recentlyCategory.map((Recent, index) => <Recent key={index} />)}
+          </>
         )}
       </div>
     </HomeCategory>
