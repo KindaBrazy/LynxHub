@@ -1,4 +1,5 @@
 import {Result} from 'antd';
+import {LayoutGroup} from 'framer-motion';
 import {compact, isEmpty} from 'lodash';
 import {useMemo} from 'react';
 
@@ -33,14 +34,16 @@ export function GetComponentsByPath({routePath}: {routePath: string}) {
           />
         </Page>
       ) : (
-        sortedCards!.map((card, index) => {
-          const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-          return (
-            <CardContext.Provider key={`cardProv-${index}`} value={new CardsDataManager(card, isInstalled)}>
-              <LynxCard key={`${card.id}-card-key`} />
-            </CardContext.Provider>
-          );
-        })
+        <LayoutGroup id={`${routePath}_cards`}>
+          {sortedCards!.map((card, index) => {
+            const isInstalled = installedCards.some(iCard => iCard.id === card.id);
+            return (
+              <CardContext.Provider key={`cardProv-${index}`} value={new CardsDataManager(card, isInstalled)}>
+                <LynxCard key={`${card.id}-card-key`} />
+              </CardContext.Provider>
+            );
+          })}
+        </LayoutGroup>
       )}
     </div>
   );
