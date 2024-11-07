@@ -160,9 +160,9 @@ const InstallUIModal = () => {
   return (
     <Modal
       classNames={{
-        backdrop: 'top-10',
+        backdrop: '!top-10',
         closeButton: 'cursor-default',
-        wrapper: 'top-10 ',
+        wrapper: '!top-10 ',
       }}
       size="2xl"
       radius="sm"

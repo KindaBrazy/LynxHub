@@ -195,7 +195,7 @@ export default function UpdateApp() {
       isDismissable={false}
       scrollBehavior="inside"
       motionProps={modalMotionProps}
-      classNames={{backdrop: 'top-10', wrapper: 'top-10 scrollbar-hide'}}
+      classNames={{backdrop: '!top-10', wrapper: '!top-10 scrollbar-hide'}}
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="text-success">{renderTitle}</ModalHeader>
