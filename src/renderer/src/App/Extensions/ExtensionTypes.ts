@@ -78,6 +78,9 @@ export type ExtensionData_Renderer = {
         bottom: FC[];
         scrollTop: FC[];
         scrollBottom: FC[];
+        pinCategory: FC[];
+        recentlyCategory: FC[];
+        allCategory: FC[];
       };
     };
     audio: {
@@ -174,6 +177,9 @@ export type ExtensionRendererApi = {
         bottom: CompFc;
         scrollTop: CompFc;
         scrollBottom: CompFc;
+        pinCategory: CompFc;
+        recentlyCategory: CompFc;
+        allCategory: CompFc;
       };
     };
     audio: {
