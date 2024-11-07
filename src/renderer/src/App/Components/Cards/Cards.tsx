@@ -1,5 +1,6 @@
 import {Result} from 'antd';
-import {isEmpty} from 'lodash';
+import {compact, isEmpty} from 'lodash';
+import {useMemo} from 'react';
 
 import {useModules} from '../../Modules/ModulesContext';
 import {AvailablePages} from '../../Modules/types';
@@ -13,10 +14,17 @@ export function GetComponentsByPath({routePath}: {routePath: string}) {
 
   const cards = getCardsByPath(routePath as AvailablePages);
   const installedCards = useCardsState('installedCards');
+  const pinnedCards = useCardsState('pinnedCards');
+
+  const sortedCards = useMemo(() => {
+    const pin = compact(cards?.filter(card => pinnedCards.includes(card.id)));
+    const rest = compact(cards?.filter(card => !pinnedCards.includes(card.id)));
+    return [...pin, ...rest];
+  }, [cards, pinnedCards]);
 
   return (
     <div className="flex size-full flex-row flex-wrap gap-7 overflow-y-scroll scrollbar-hide">
-      {isEmpty(cards) ? (
+      {isEmpty(sortedCards) ? (
         <Page className="content-center">
           <Result
             status="info"
@@ -25,7 +33,7 @@ export function GetComponentsByPath({routePath}: {routePath: string}) {
           />
         </Page>
       ) : (
-        cards!.map((card, index) => {
+        sortedCards!.map((card, index) => {
           const isInstalled = installedCards.some(iCard => iCard.id === card.id);
           return (
             <CardContext.Provider key={`cardProv-${index}`} value={new CardsDataManager(card, isInstalled)}>
