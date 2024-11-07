@@ -65,7 +65,7 @@ const LaunchConfig = memo(() => {
       isDismissable={false}
       scrollBehavior="inside"
       motionProps={modalMotionProps}
-      classNames={{backdrop: 'top-10', wrapper: 'top-10 scrollbar-hide'}}
+      classNames={{backdrop: '!top-10', wrapper: '!top-10 scrollbar-hide'}}
       className="z-40 max-w-[80%] border-2 border-foreground/10 dark:border-foreground/5"
       hideCloseButton>
       <ModalContent>

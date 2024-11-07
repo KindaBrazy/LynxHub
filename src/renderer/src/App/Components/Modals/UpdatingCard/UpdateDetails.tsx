@@ -77,7 +77,7 @@ export default function UpdateDetails() {
       isOpen={isOpen}
       className="max-w-[70%]"
       scrollBehavior="inside"
-      classNames={{backdrop: 'top-10', closeButton: 'cursor-default', wrapper: 'top-10 scrollbar-hide'}}
+      classNames={{backdrop: '!top-10', closeButton: 'cursor-default', wrapper: '!top-10 scrollbar-hide'}}
       hideCloseButton>
       <ModalContent>
         <ModalHeader>{title || <Text>Update Details.</Text>}</ModalHeader>

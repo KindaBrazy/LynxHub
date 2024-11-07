@@ -32,7 +32,7 @@ const InstallModal = memo(() => {
       isDismissable={false}
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
-      classNames={{backdrop: 'top-10', closeButton: 'cursor-default', wrapper: 'top-10'}}
+      classNames={{backdrop: '!top-10', closeButton: 'cursor-default', wrapper: '!top-10'}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <ModalHeader
