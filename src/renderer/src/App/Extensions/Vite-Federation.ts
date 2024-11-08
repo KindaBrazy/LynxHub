@@ -17,9 +17,9 @@ type SetRemoteModule = (remotesName: string, remotesConfig: RemotesConfig) => vo
 
 type GetRemoteModule = (remoteName: string, componentName: string) => Promise<ExtensionImport_Renderer>;
 
-export let importedExtensions: ExtensionImport_Renderer[];
-
 export async function loadExtensions() {
+  let importedExtensions: ExtensionImport_Renderer[];
+
   if (isDev()) {
     const extension = await import('../../../extension/Extension');
     importedExtensions = [extension];
