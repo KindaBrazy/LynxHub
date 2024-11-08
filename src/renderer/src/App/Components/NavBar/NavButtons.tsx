@@ -1,5 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
-import {useState} from 'react';
+import {useMemo} from 'react';
 
 import {getIconByName, IconNameType} from '../../../assets/icons/SvgIconsContainer';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
@@ -55,25 +55,23 @@ const GetPages = ({Pages}: {Pages: PagesType[]}) => {
 };
 
 export function ContentPagesButtons() {
-  const [navBar] = useState(extensionsData.navBar);
+  const contentBar = useMemo(() => extensionsData.navBar.addButton.contentBar, []);
 
   return (
     <>
       <GetPages Pages={ContentPages} />
-      {!isEmpty(navBar.addButton.contentBar) &&
-        navBar.addButton.contentBar.map((NavButton, index) => <NavButton key={index} />)}
+      {!isEmpty(contentBar) && contentBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
 }
 
 export function SettingsPagesButtons() {
-  const [navBar] = useState(extensionsData.navBar);
+  const settingsBar = useMemo(() => extensionsData.navBar.addButton.settingsBar, []);
 
   return (
     <>
       <GetPages Pages={SettingsPages} />
-      {!isEmpty(navBar.addButton.settingsBar) &&
-        navBar.addButton.settingsBar.map((NavButton, index) => <NavButton key={index} />)}
+      {!isEmpty(settingsBar) && settingsBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
 }

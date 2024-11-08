@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useMemo} from 'react';
 
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import DashboardAbout, {DashboardAboutId} from './Content/Dashboard-About';
@@ -16,7 +16,7 @@ export const dashboardSectionId = {
 };
 
 export const DashboardSections = () => {
-  const [content] = useState(extensionsData.customizePages.dashboard.add.content);
+  const content = useMemo(() => extensionsData.customizePages.dashboard.add.content, []);
 
   return (
     <>

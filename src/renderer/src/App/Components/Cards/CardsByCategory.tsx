@@ -1,7 +1,7 @@
 import {Empty} from 'antd';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {compact, isEmpty, isNil} from 'lodash';
-import {memo, useMemo, useState} from 'react';
+import {memo, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useModules} from '../../Modules/ModulesContext';
@@ -36,10 +36,12 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
   const cards = useCardsById(cardIds);
   const installedCardSet = useMemo(() => new Set(installedCards.map(card => card.id)), [installedCards]);
 
+  const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
+
   return (
     <LayoutGroup id={`${cat}_cards_category`}>
       <AnimatePresence>
-        {isNil(extensionsData.cards.replace) ? (
+        {isNil(ReplaceCards) ? (
           cards.map(card => (
             <CardContext.Provider
               key={`cardProv-${card.id}`}
@@ -48,7 +50,7 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
             </CardContext.Provider>
           ))
         ) : (
-          <extensionsData.cards.replace cards={cards} />
+          <ReplaceCards cards={cards} />
         )}
       </AnimatePresence>
     </LayoutGroup>
@@ -60,7 +62,10 @@ const AllCards = () => {
   const {allCards} = useModules();
   const installedCards = useCardsState('installedCards');
   const installedCardSet = useMemo(() => new Set(installedCards.map(card => card.id)), [installedCards]);
-  const [allCategory] = useState(extensionsData.customizePages.home.add.allCategory);
+
+  const allCategory = useMemo(() => extensionsData.customizePages.home.add.allCategory, []);
+  const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
+
   const pinnedCards = useCardsState('pinnedCards');
 
   const sortedCards = useMemo(() => {
@@ -75,7 +80,7 @@ const AllCards = () => {
   return (
     <LayoutGroup id="all_cards_category">
       <AnimatePresence>
-        {isNil(extensionsData.cards.replace) ? (
+        {isNil(ReplaceCards) ? (
           sortedCards.map(card => (
             <CardContext.Provider
               key={`cardProv-${card.id}`}
@@ -85,7 +90,7 @@ const AllCards = () => {
             </CardContext.Provider>
           ))
         ) : (
-          <extensionsData.cards.replace cards={sortedCards} />
+          <ReplaceCards cards={sortedCards} />
         )}
       </AnimatePresence>
     </LayoutGroup>
@@ -96,7 +101,8 @@ const AllCards = () => {
 export const PinnedCars = memo(() => {
   const pinnedCards = useCardsState('pinnedCards');
   const installedCards = useCardsState('installedCards');
-  const [pinCategory] = useState(extensionsData.customizePages.home.add.pinCategory);
+
+  const pinCategory = useMemo(() => extensionsData.customizePages.home.add.pinCategory, []);
 
   const validPinnedCards = useMemo(() => {
     return pinnedCards.filter(pinnedCardId => installedCards.some(installedCard => installedCard.id === pinnedCardId));
@@ -122,7 +128,8 @@ export const PinnedCars = memo(() => {
 export const RecentlyCards = memo(() => {
   const recentlyUsedCards = useCardsState('recentlyUsedCards');
   const installedCards = useCardsState('installedCards');
-  const [recentlyCategory] = useState(extensionsData.customizePages.home.add.recentlyCategory);
+
+  const recentlyCategory = useMemo(() => extensionsData.customizePages.home.add.recentlyCategory, []);
 
   const validRecentlyUsed = useMemo(() => {
     return recentlyUsedCards.filter(recentlyUsedCardId =>
@@ -169,11 +176,13 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
     return allCards.filter(card => searchInStrings(searchValue, searchData.find(data => data.id === card.id)?.data));
   }, [searchValue, searchData]);
 
+  const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
+
   return (
     <div className="flex w-full flex-wrap gap-5 overflow-y-scroll pb-6 pl-1 scrollbar-hide">
       {isEmpty(filteredCards) ? (
         <Empty className="w-full" description="No cards match your search." />
-      ) : isNil(extensionsData.cards.replace) ? (
+      ) : isNil(ReplaceCards) ? (
         filteredCards.map((card, index) => {
           const isInstalled = installedCards.some(iCard => iCard.id === card.id);
           return (
@@ -183,7 +192,7 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
           );
         })
       ) : (
-        <extensionsData.cards.replace cards={filteredCards} />
+        <ReplaceCards cards={filteredCards} />
       )}
     </div>
   );

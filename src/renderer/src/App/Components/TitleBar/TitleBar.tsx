@@ -1,5 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
-import {memo, useMemo, useState} from 'react';
+import {memo, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../Redux/AI/CardsReducer';
@@ -20,7 +20,7 @@ const BACKGROUND_CLASSES = {
  * Displays logo, theme toggle, running card manager, and window buttons.
  */
 const TitleBar = memo(() => {
-  const [titleBar] = useState(extensionsData.titleBar);
+  const titleBar = useMemo(() => extensionsData.titleBar, []);
   const fullscreen = useAppState('fullscreen');
   const onFocus = useAppState('onFocus');
   const {isRunning: isCardRunning} = useCardsState('runningCard');

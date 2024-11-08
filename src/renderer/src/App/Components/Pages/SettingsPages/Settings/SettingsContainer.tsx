@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useMemo} from 'react';
 
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import SettingsCard, {SettingsCardId} from './Content/Card/Settings-Card';
@@ -22,7 +22,7 @@ export const settingsSectionId = {
 };
 
 export const SettingsSections = () => {
-  const [content] = useState(extensionsData.customizePages.settings.add.content);
+  const content = useMemo(() => extensionsData.customizePages.settings.add.content, []);
 
   return (
     <>

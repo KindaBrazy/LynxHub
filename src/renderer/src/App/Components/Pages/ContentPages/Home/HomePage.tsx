@@ -14,22 +14,20 @@ export const homeRoutePath: string = '/homePage';
 export const homeElementId: string = 'homePageElement';
 
 export default function HomePage() {
-  const [customizePages] = useState(extensionsData.customizePages);
   const homeCategory = useCardsState('homeCategory');
   const [searchValue, setSearchValue] = useState<string>('');
 
-  const replace = useMemo(() => {
-    return customizePages.home.replace;
-  }, [customizePages]);
-  const add = useMemo(() => {
-    return customizePages.home.add;
-  }, [customizePages]);
+  const {searchAndFilter: SearchAndFilter, categories: Categories} = useMemo(
+    () => extensionsData.customizePages.home.replace,
+    [],
+  );
+  const {bottom, scrollBottom, scrollTop, top} = useMemo(() => extensionsData.customizePages.home.add, []);
 
   return (
     <Page id={homeElementId}>
       <div className="flex size-full shrink-0 flex-col">
-        {replace.searchAndFilter ? (
-          <replace.searchAndFilter />
+        {SearchAndFilter ? (
+          <SearchAndFilter />
         ) : (
           <div className="my-4 flex w-full items-center justify-between space-x-3 px-2">
             <HomeSearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
@@ -37,13 +35,13 @@ export default function HomePage() {
           </div>
         )}
 
-        {add.top && add.top.map((Top, index) => <Top key={index} />)}
+        {top && top.map((Top, index) => <Top key={index} />)}
 
         <ScrollShadow size={20} offset={-1} className="size-full space-y-8 overflow-y-scroll py-4 scrollbar-hide">
-          {add.scrollTop && add.scrollTop.map((Top, index) => <Top key={index} />)}
+          {scrollTop && scrollTop.map((Top, index) => <Top key={index} />)}
 
-          {replace.categories ? (
-            <replace.categories />
+          {Categories ? (
+            <Categories />
           ) : isEmpty(searchValue) ? (
             <LayoutGroup>
               <AnimatePresence>{homeCategory.includes('Pin') && <PinnedCars />}</AnimatePresence>
@@ -54,10 +52,10 @@ export default function HomePage() {
             <CardsBySearch searchValue={searchValue} />
           )}
 
-          {add.scrollBottom && add.scrollBottom.map((Top, index) => <Top key={index} />)}
+          {scrollBottom && scrollBottom.map((Top, index) => <Top key={index} />)}
         </ScrollShadow>
 
-        {add.bottom && add.bottom.map((Top, index) => <Top key={index} />)}
+        {bottom && bottom.map((Top, index) => <Top key={index} />)}
       </div>
     </Page>
   );

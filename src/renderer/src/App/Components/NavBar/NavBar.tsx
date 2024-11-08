@@ -1,5 +1,5 @@
 import {isEmpty} from 'lodash';
-import {memo, useState} from 'react';
+import {memo, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useAppState} from '../../Redux/App/AppReducer';
@@ -23,29 +23,33 @@ const COMMON_STYLES =
 /** Navigation bar containing two sections: Contents and Settings */
 const NavBar = memo(() => {
   const navBar = useAppState('navBar');
-  const [navBarExt] = useState(extensionsData.navBar);
+  const {
+    container: Container,
+    contentBar: ContentBar,
+    settingsBar: SettingsBar,
+  } = useMemo(() => extensionsData.navBar.replace, []);
 
   if (!navBar) return null;
 
-  if (navBarExt.replace.container) {
-    return <navBarExt.replace.container />;
+  if (Container) {
+    return <Container />;
   }
 
   return (
     <div className={`flex h-full ${CONTAINER_WIDTH} shrink-0 flex-col items-center justify-between pb-4 pt-3`}>
-      {isEmpty(navBarExt.replace.contentBar) ? (
+      {isEmpty(ContentBar) ? (
         <div className={`${COMMON_STYLES} max-h-[56%]`}>
           <ContentPagesButtons />
         </div>
       ) : (
-        <navBarExt.replace.contentBar />
+        <ContentBar />
       )}
-      {isEmpty(navBarExt.replace.settingsBar) ? (
+      {isEmpty(SettingsBar) ? (
         <div className={`${COMMON_STYLES} sm:max-h-[35%] lg:max-h-[35%] xl:max-h-[40%]`}>
           <SettingsPagesButtons />
         </div>
       ) : (
-        <navBarExt.replace.settingsBar />
+        <SettingsBar />
       )}
     </div>
   );

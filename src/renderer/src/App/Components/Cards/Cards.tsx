@@ -18,6 +18,8 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
   const installedCards = useCardsState('installedCards');
   const pinnedCards = useCardsState('pinnedCards');
 
+  const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
+
   const sortedCards = useMemo(() => {
     const pin = compact(cards?.filter(card => pinnedCards.includes(card.id)));
     const rest = compact(cards?.filter(card => !pinnedCards.includes(card.id)));
@@ -37,7 +39,7 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
       ) : (
         <>
           <LayoutGroup id={`${routePath}_cards`}>
-            {isNil(extensionsData.cards.replace) ? (
+            {isNil(ReplaceCards) ? (
               sortedCards.map((card, index) => {
                 const isInstalled = installedCards.some(iCard => iCard.id === card.id);
                 return (
@@ -47,7 +49,7 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
                 );
               })
             ) : (
-              <extensionsData.cards.replace cards={sortedCards} />
+              <ReplaceCards cards={sortedCards} />
             )}
           </LayoutGroup>
           {extensionsElements?.map((Comp, index) => <Comp key={index} />)}
