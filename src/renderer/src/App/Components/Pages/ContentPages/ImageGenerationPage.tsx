@@ -19,7 +19,7 @@ export default function ImageGenerationPage() {
         {customizePage.add.scrollTop &&
           customizePage.add.scrollTop.map((ScrollTop, index) => <ScrollTop key={index} />)}
         <CardContainer icon="ImageGeneration" extraClassNames="mr-3" title="Image Generation">
-          <GetComponentsByPath routePath={imageGenRoutePath} />
+          <GetComponentsByPath routePath={imageGenRoutePath} extensionsElements={customizePage.add.cardsContainer} />
         </CardContainer>
         {customizePage.add.scrollBottom &&
           customizePage.add.scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}

@@ -19,7 +19,7 @@ export default function TextGenerationPage() {
         {customizePage.add.scrollTop &&
           customizePage.add.scrollTop.map((ScrollTop, index) => <ScrollTop key={index} />)}
         <CardContainer icon="TextGeneration" extraClassNames="mr-3" title="Text Generation">
-          <GetComponentsByPath routePath={textGenRoutePath} />
+          <GetComponentsByPath routePath={textGenRoutePath} extensionsElements={customizePage.add.cardsContainer} />
         </CardContainer>
         {customizePage.add.scrollBottom &&
           customizePage.add.scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}

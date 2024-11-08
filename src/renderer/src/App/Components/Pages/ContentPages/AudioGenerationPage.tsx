@@ -20,7 +20,7 @@ export default function AudioGenerationPage() {
         {customizePage.add.scrollTop &&
           customizePage.add.scrollTop.map((ScrollTop, index) => <ScrollTop key={index} />)}
         <CardContainer icon="AudioGeneration" extraClassNames="mr-3" title="Audio Generation">
-          <GetComponentsByPath routePath={audioGenRoutePath} />
+          <GetComponentsByPath routePath={audioGenRoutePath} extensionsElements={customizePage.add.cardsContainer} />
         </CardContainer>
         {customizePage.add.scrollBottom &&
           customizePage.add.scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}
