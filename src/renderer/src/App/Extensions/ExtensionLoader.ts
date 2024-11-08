@@ -100,6 +100,12 @@ export const extensionsData: ExtensionData_Renderer = {
         cardsContainer: [],
       },
     },
+    settings: {
+      add: {
+        navButton: [],
+        content: [],
+      },
+    },
   },
   addReducer: [],
 };
@@ -258,6 +264,12 @@ const api: ExtensionRendererApi = {
         scrollTop: comp => extensionsData.customizePages.text.add.scrollTop.push(comp),
         scrollBottom: comp => extensionsData.customizePages.text.add.scrollBottom.push(comp),
         cardsContainer: comp => extensionsData.customizePages.text.add.cardsContainer.push(comp),
+      },
+    },
+    settings: {
+      add: {
+        navButton: comp => extensionsData.customizePages.settings.add.navButton.push(comp),
+        content: comp => extensionsData.customizePages.settings.add.content.push(comp),
       },
     },
   },

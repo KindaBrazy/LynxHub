@@ -6,7 +6,7 @@ import {getIconByName, IconNameType} from '../../../../../assets/icons/SvgIconsC
 type Props = {
   title: string;
   id?: string;
-  icon?: IconNameType;
+  icon?: IconNameType | ReactNode;
   children?: ReactNode;
   titleColor?: 'text-warning' | 'text-danger' | string;
   itemsCenter?: boolean;
@@ -22,7 +22,7 @@ export default function SettingsSection({children, id, title, titleColor = '', i
       }
       title={
         <div className="flex flex-row items-center justify-center space-x-2">
-          {icon && getIconByName(icon, {className: 'size-5'})}
+          {icon && typeof icon === 'string' ? getIconByName(icon as IconNameType, {className: 'size-5'}) : icon}
           <span>{title}</span>
         </div>
       }

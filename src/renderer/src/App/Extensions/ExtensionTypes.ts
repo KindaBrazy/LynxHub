@@ -110,6 +110,12 @@ export type ExtensionData_Renderer = {
         cardsContainer: FC[];
       };
     };
+    settings: {
+      add: {
+        navButton: FC[];
+        content: FC[];
+      };
+    };
   };
   addReducer: {name: string; reducer: Reducer}[];
 };
@@ -210,6 +216,12 @@ export type ExtensionRendererApi = {
         scrollTop: CompFc;
         scrollBottom: CompFc;
         cardsContainer: CompFc;
+      };
+    };
+    settings: {
+      add: {
+        navButton: CompFc;
+        content: CompFc;
       };
     };
   };
