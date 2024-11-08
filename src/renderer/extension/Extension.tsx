@@ -10,6 +10,7 @@ import {
   HomePage_Top,
   HomePage_TopScroll,
   ReducerTester,
+  ReplaceCards,
   routePage,
   StatusBarEnd,
 } from './Components/Components';
@@ -18,6 +19,8 @@ import extensionReducer from './reducer';
 
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   return;
+
+  lynxAPI.cards.replace(ReplaceCards);
 
   lynxAPI.customizePages.settings.add.navButton(SettingsNavButton);
   lynxAPI.customizePages.settings.add.content(SettingsContent);
