@@ -14,13 +14,15 @@ import SettingsPage, {settingsRoutePath} from './Components/Pages/SettingsPages/
 import {extensionsData} from './Extensions/ExtensionLoader';
 
 export async function initRouter() {
-  const homePage = extensionsData.router.replace.homePage;
-  const imageGenerationPage = extensionsData.router.replace.imageGenerationPage;
-  const textGenerationPage = extensionsData.router.replace.textGenerationPage;
-  const audioGenerationPage = extensionsData.router.replace.audioGenerationPage;
-  const modulesPage = extensionsData.router.replace.modulesPage;
-  const settingsPage = extensionsData.router.replace.settingsPage;
-  const dashboardPage = extensionsData.router.replace.dashboardPage;
+  const {
+    homePage,
+    imageGenerationPage,
+    audioGenerationPage,
+    textGenerationPage,
+    modulesPage,
+    settingsPage,
+    dashboardPage,
+  } = extensionsData.router.replace;
 
   const childRoutes: RouteObject[] = [
     {
