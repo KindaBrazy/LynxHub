@@ -1,8 +1,9 @@
 import {Result} from 'antd';
 import {LayoutGroup} from 'framer-motion';
-import {compact, isEmpty} from 'lodash';
+import {compact, isEmpty, isNil} from 'lodash';
 import {FC, useMemo} from 'react';
 
+import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useModules} from '../../Modules/ModulesContext';
 import {AvailablePages} from '../../Modules/types';
 import {useCardsState} from '../../Redux/AI/CardsReducer';
@@ -36,14 +37,18 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
       ) : (
         <>
           <LayoutGroup id={`${routePath}_cards`}>
-            {sortedCards.map((card, index) => {
-              const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-              return (
-                <CardContext.Provider key={`cardProv-${index}`} value={new CardsDataManager(card, isInstalled)}>
-                  <LynxCard key={`${card.id}-card-key`} />
-                </CardContext.Provider>
-              );
-            })}
+            {isNil(extensionsData.cards.replace) ? (
+              sortedCards.map((card, index) => {
+                const isInstalled = installedCards.some(iCard => iCard.id === card.id);
+                return (
+                  <CardContext.Provider key={`cardProv-${index}`} value={new CardsDataManager(card, isInstalled)}>
+                    <LynxCard key={`${card.id}-card-key`} />
+                  </CardContext.Provider>
+                );
+              })
+            ) : (
+              <extensionsData.cards.replace cards={sortedCards} />
+            )}
           </LayoutGroup>
           {extensionsElements?.map((Comp, index) => <Comp key={index} />)}
         </>
