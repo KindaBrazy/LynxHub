@@ -3,12 +3,12 @@ import {Fragment, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {RouteObject} from 'react-router-dom';
 
-import NavButton from '../src/App/Components/NavBar/NavButton';
-import RouterPagesError from '../src/App/Components/Pages/RouterPagesError';
-import {ElementProps} from '../src/App/Extensions/ExtensionTypes';
-import {useAppState} from '../src/App/Redux/App/AppReducer';
-import {getIconByName} from '../src/assets/icons/SvgIconsContainer';
-import {extensionActions, useExtensionState} from './reducer';
+import NavButton from '../../src/App/Components/NavBar/NavButton';
+import RouterPagesError from '../../src/App/Components/Pages/RouterPagesError';
+import {ElementProps} from '../../src/App/Extensions/ExtensionTypes';
+import {useAppState} from '../../src/App/Redux/App/AppReducer';
+import {getIconByName} from '../../src/assets/icons/SvgIconsContainer';
+import {extensionActions, useExtensionState} from '../reducer';
 
 // @ts-ignore
 export function StatusBarEnd({className, ...props}: ElementProps) {
