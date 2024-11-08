@@ -1,16 +1,18 @@
-import {useState} from 'react';
+import {isNil} from 'lodash';
+import {useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import Browser from './Browser';
 import LynxTerminal from './LynxTerminal';
 
 export default function RunningCardView() {
-  const [runningAI] = useState(extensionsData.runningAI);
+  const ExtTerminal = useMemo(() => extensionsData.runningAI.terminal, []);
+  const ExtBrowser = useMemo(() => extensionsData.runningAI.browser, []);
 
   return (
     <>
-      {runningAI.terminal ? <runningAI.terminal /> : <LynxTerminal />}
-      {runningAI.browser ? <runningAI.browser /> : <Browser />}
+      {isNil(ExtTerminal) ? <LynxTerminal /> : <ExtTerminal />}
+      {isNil(ExtBrowser) ? <Browser /> : <ExtBrowser />}
     </>
   );
 }

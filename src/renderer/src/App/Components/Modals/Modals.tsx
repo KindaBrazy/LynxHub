@@ -1,4 +1,4 @@
-import {memo, useState} from 'react';
+import {memo, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import CardExtensions from './CardExtensions/CardExtensions';
@@ -12,19 +12,29 @@ import UpdatingNotification from './UpdatingCard/UpdatingNotification';
 import WarningModal from './Warning/WarningModal';
 
 const Modals = memo(() => {
-  const [modals] = useState(extensionsData.replaceModals);
+  const {
+    warning: Warning,
+    uninstallCard: Uninstall,
+    install: Install,
+    installUi: InstallUi,
+    cardInfo: CInfo,
+    updatingNotification: UNotification,
+    cardExtensions: CExtensions,
+    launchConfig: LConfig,
+    updateApp: UApp,
+  } = useMemo(() => extensionsData.replaceModals, []);
 
   return (
     <>
-      {modals.warning ? <modals.warning /> : <WarningModal />}
-      {modals.uninstallCard ? <modals.uninstallCard /> : <UninstallCard />}
-      {modals.install ? <modals.install /> : <InstallModal />}
-      {modals.installUi ? <modals.installUi /> : <InstallUIModal />}
-      {modals.cardInfo ? <modals.cardInfo /> : <CardInfoModal />}
-      {modals.updatingNotification ? <modals.updatingNotification /> : <UpdatingNotification />}
-      {modals.cardExtensions ? <modals.cardExtensions /> : <CardExtensions />}
-      {modals.launchConfig ? <modals.launchConfig /> : <LaunchConfig />}
-      {modals.updateApp ? <modals.updateApp /> : <UpdateApp />}
+      {Warning ? <Warning /> : <WarningModal />}
+      {Uninstall ? <Uninstall /> : <UninstallCard />}
+      {Install ? <Install /> : <InstallModal />}
+      {InstallUi ? <InstallUi /> : <InstallUIModal />}
+      {CInfo ? <CInfo /> : <CardInfoModal />}
+      {UNotification ? <UNotification /> : <UpdatingNotification />}
+      {CExtensions ? <CExtensions /> : <CardExtensions />}
+      {LConfig ? <LConfig /> : <LaunchConfig />}
+      {UApp ? <UApp /> : <UpdateApp />}
     </>
   );
 });

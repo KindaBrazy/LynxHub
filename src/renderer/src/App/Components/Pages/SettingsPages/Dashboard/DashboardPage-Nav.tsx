@@ -1,6 +1,6 @@
 import {ScrollShadow} from '@nextui-org/react';
 import {Card} from 'antd';
-import {useState} from 'react';
+import {useMemo} from 'react';
 
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {GroupProps, GroupSection} from '../Settings/SettingsPage-Nav';
@@ -49,7 +49,7 @@ const groupSections: GroupProps[] = [
 ];
 
 export default function DashboardPageNav() {
-  const [buttons] = useState(extensionsData.customizePages.dashboard.add.navButton);
+  const buttons = useMemo(() => extensionsData.customizePages.dashboard.add.navButton, []);
 
   return (
     <Card

@@ -1,21 +1,21 @@
 import {isEmpty} from 'lodash';
-import {memo, useMemo, useState} from 'react';
+import {memo, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 
 const classNames = 'flex size-full items-center overflow-x-scroll scrollbar-hide';
 
 const StatusBar = () => {
-  const [statusBar] = useState(extensionsData.statusBar);
+  const {addEnd, addStart, addCenter, replaceContainer} = useMemo(() => extensionsData.statusBar, []);
 
   const isEmptyAdd = useMemo(() => {
-    return isEmpty(statusBar.addStart) && isEmpty(statusBar.addCenter) && isEmpty(statusBar.addEnd);
-  }, [statusBar]);
+    return isEmpty(addStart) && isEmpty(addCenter) && isEmpty(addEnd);
+  }, [addStart, addCenter, addEnd]);
 
   return (
     <>
-      {!isEmpty(statusBar.replaceContainer)
-        ? statusBar.replaceContainer
+      {!isEmpty(replaceContainer)
+        ? replaceContainer
         : !isEmptyAdd && (
             <div
               className={
@@ -23,17 +23,17 @@ const StatusBar = () => {
                 ' items-center bg-foreground-100/50 px-3 text-small dark:bg-LynxRaisinBlack/50'
               }>
               <div className={[classNames, 'justify-start'].join(' ')}>
-                {statusBar.addStart.map((Start, index) => (
+                {addStart.map((Start, index) => (
                   <Start key={index} />
                 ))}
               </div>
               <div className={[classNames, 'justify-center'].join(' ')}>
-                {statusBar.addCenter.map((Center, index) => (
+                {addCenter.map((Center, index) => (
                   <Center key={index} />
                 ))}
               </div>
               <div className={[classNames, 'justify-end'].join(' ')}>
-                {statusBar.addEnd.map((End, index) => (
+                {addEnd.map((End, index) => (
                   <End key={index} />
                 ))}
               </div>

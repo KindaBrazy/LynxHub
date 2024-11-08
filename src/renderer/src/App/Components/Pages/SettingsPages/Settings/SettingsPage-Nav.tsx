@@ -1,6 +1,6 @@
 import {Button, ScrollShadow} from '@nextui-org/react';
 import {Card, Typography} from 'antd';
-import {ReactNode, useCallback, useEffect, useState} from 'react';
+import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {getIconByName, IconNameType} from '../../../../../assets/icons/SvgIconsContainer';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
@@ -117,7 +117,7 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
 
 /** Settings navigation bar */
 export default function SettingsPageNav() {
-  const [buttons] = useState(extensionsData.customizePages.settings.add.navButton);
+  const buttons = useMemo(() => extensionsData.customizePages.settings.add.navButton, []);
 
   return (
     <Card

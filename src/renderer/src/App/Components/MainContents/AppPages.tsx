@@ -1,4 +1,4 @@
-import {FC, useState} from 'react';
+import {useMemo} from 'react';
 import {Outlet} from 'react-router-dom';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
@@ -7,7 +7,7 @@ import RunningCardView from '../RunningCardView/RunningCardView';
 
 export default function AppPages() {
   const {isRunning} = useCardsState('runningCard');
-  const [Container] = useState<FC | undefined>(extensionsData.runningAI.container);
+  const Container = useMemo(() => extensionsData.runningAI.container, []);
 
   return isRunning ? Container ? <Container /> : <RunningCardView /> : <Outlet />;
 }
