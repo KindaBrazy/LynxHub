@@ -1,6 +1,6 @@
 import {Empty} from 'antd';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
-import {compact, isEmpty} from 'lodash';
+import {compact, isEmpty, isNil} from 'lodash';
 import {memo, useMemo, useState} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
@@ -39,13 +39,17 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
   return (
     <LayoutGroup id={`${cat}_cards_category`}>
       <AnimatePresence>
-        {cards.map(card => (
-          <CardContext.Provider
-            key={`cardProv-${card.id}`}
-            value={new CardsDataManager(card, installedCardSet.has(card.id))}>
-            <LynxCard key={`${card.id}-card-key`} />
-          </CardContext.Provider>
-        ))}
+        {isNil(extensionsData.cards.replace) ? (
+          cards.map(card => (
+            <CardContext.Provider
+              key={`cardProv-${card.id}`}
+              value={new CardsDataManager(card, installedCardSet.has(card.id))}>
+              <LynxCard key={`${card.id}-card-key`} />
+            </CardContext.Provider>
+          ))
+        ) : (
+          <extensionsData.cards.replace cards={cards} />
+        )}
       </AnimatePresence>
     </LayoutGroup>
   );
@@ -71,14 +75,18 @@ const AllCards = () => {
   return (
     <LayoutGroup id="all_cards_category">
       <AnimatePresence>
-        {sortedCards.map(card => (
-          <CardContext.Provider
-            key={`cardProv-${card.id}`}
-            value={new CardsDataManager(card, installedCardSet.has(card.id))}>
-            <LynxCard key={`${card.id}-card-key`} />
-            {...allCategory.map((All, index) => <All key={index} />)}
-          </CardContext.Provider>
-        ))}
+        {isNil(extensionsData.cards.replace) ? (
+          sortedCards.map(card => (
+            <CardContext.Provider
+              key={`cardProv-${card.id}`}
+              value={new CardsDataManager(card, installedCardSet.has(card.id))}>
+              <LynxCard key={`${card.id}-card-key`} />
+              {...allCategory.map((All, index) => <All key={index} />)}
+            </CardContext.Provider>
+          ))
+        ) : (
+          <extensionsData.cards.replace cards={sortedCards} />
+        )}
       </AnimatePresence>
     </LayoutGroup>
   );
@@ -165,7 +173,7 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
     <div className="flex w-full flex-wrap gap-5 overflow-y-scroll pb-6 pl-1 scrollbar-hide">
       {isEmpty(filteredCards) ? (
         <Empty className="w-full" description="No cards match your search." />
-      ) : (
+      ) : isNil(extensionsData.cards.replace) ? (
         filteredCards.map((card, index) => {
           const isInstalled = installedCards.some(iCard => iCard.id === card.id);
           return (
@@ -174,6 +182,8 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
             </CardContext.Provider>
           );
         })
+      ) : (
+        <extensionsData.cards.replace cards={filteredCards} />
       )}
     </div>
   );

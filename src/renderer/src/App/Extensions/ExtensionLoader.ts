@@ -114,6 +114,7 @@ export const extensionsData: ExtensionData_Renderer = {
     },
   },
   addReducer: [],
+  cards: {replace: undefined},
 };
 
 const api: ExtensionRendererApi = {
@@ -287,6 +288,11 @@ const api: ExtensionRendererApi = {
   },
   addReducer: reducer => {
     extensionsData.addReducer = [...extensionsData.addReducer, ...reducer];
+  },
+  cards: {
+    replace: comp => {
+      extensionsData.cards.replace = comp;
+    },
   },
 };
 

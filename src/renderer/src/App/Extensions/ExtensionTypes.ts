@@ -2,15 +2,20 @@ import {Reducer} from '@reduxjs/toolkit';
 import {ComponentProps, FC} from 'react';
 import {RouteObject} from 'react-router-dom';
 
+import {CardData} from '../Modules/types';
+
 // -----------------------------------------------> Elements & Props
 export type ElementProps = ComponentProps<'div'>;
+export type CardElementProps = ComponentProps<'div'> & {cards: CardData[]};
 
 export type FcProp = FC<ElementProps>;
+export type FcPropCard = FC<CardElementProps>;
 
 // -----------------------------------------------> Extension Renderer API
 
 type CompFc = (component: FC) => void;
 type CompFcProp = (component: FcProp) => void;
+type CompFcPropCard = (component: FcPropCard) => void;
 
 export type ExtensionData_Renderer = {
   titleBar: {
@@ -124,6 +129,9 @@ export type ExtensionData_Renderer = {
     };
   };
   addReducer: {name: string; reducer: Reducer}[];
+  cards: {
+    replace: FcPropCard | undefined;
+  };
 };
 
 export type ExtensionRendererApi = {
@@ -238,6 +246,7 @@ export type ExtensionRendererApi = {
     };
   };
   addReducer: (reducer: {name: string; reducer: Reducer}[]) => void;
+  cards: {replace: CompFcPropCard};
 };
 
 export type ExtensionImport_Renderer = {
