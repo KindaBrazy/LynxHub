@@ -1,14 +1,15 @@
 import {Button, ScrollShadow} from '@nextui-org/react';
 import {Card, Typography} from 'antd';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {ReactNode, useCallback, useEffect, useState} from 'react';
 
 import {getIconByName, IconNameType} from '../../../../../assets/icons/SvgIconsContainer';
+import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {settingsSectionId} from './SettingsContainer';
 
 const {Text} = Typography;
 
 export type GroupItem = {
-  icon: IconNameType;
+  icon: IconNameType | ReactNode;
   title: string;
   color?: 'danger' | 'warning' | 'success';
   iconColor?: boolean;
@@ -20,6 +21,33 @@ export type GroupProps = {
   items: GroupItem[];
   danger?: boolean;
 };
+
+const groupSections: GroupProps[] = [
+  {
+    title: 'Application',
+    items: [
+      {title: 'Customize Card', icon: 'EditCard', elementId: settingsSectionId.SettingsCardId},
+      {title: 'General', icon: 'Tuning', elementId: settingsSectionId.SettingsGeneralId},
+      {title: 'Terminal', icon: 'Terminal', elementId: settingsSectionId.SettingsTerminalId},
+      {title: 'Startup', icon: 'Rocket', elementId: settingsSectionId.SettingsStartupId},
+      {title: 'Hotkeys', icon: 'Keyboard', elementId: settingsSectionId.SettingsHotkeysId},
+      {title: 'Discord Activity', icon: 'Discord', elementId: settingsSectionId.SettingsDiscordId},
+    ],
+  },
+  {
+    title: 'Data Management',
+    items: [
+      {title: 'Data', icon: 'Database', elementId: settingsSectionId.SettingsDataId},
+      {
+        title: 'Clear',
+        icon: 'Trash',
+        color: 'danger',
+        iconColor: true,
+        elementId: settingsSectionId.SettingsClearId,
+      },
+    ],
+  },
+];
 
 /** Navigation bar group and items */
 export const GroupSection = ({title, items, danger = false}: GroupProps) => {
@@ -73,9 +101,11 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
             key={`${item.title}_settings_section`}
             fullWidth>
             <>
-              {getIconByName(item.icon, {
-                className: `size-4 shrink-0 ${!item.iconColor && 'dark:text-white text-black'}`,
-              })}
+              {typeof item.icon === 'string'
+                ? getIconByName(item.icon as IconNameType, {
+                    className: `size-4 shrink-0 ${!item.iconColor && 'dark:text-white text-black'}`,
+                  })
+                : item.icon}
               <Text>{item.title}</Text>
             </>
           </Button>
@@ -87,35 +117,7 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
 
 /** Settings navigation bar */
 export default function SettingsPageNav() {
-  const groupSections: GroupProps[] = useMemo(
-    () => [
-      {
-        title: 'Application',
-        items: [
-          {title: 'Customize Card', icon: 'EditCard', elementId: settingsSectionId.SettingsCardId},
-          {title: 'General', icon: 'Tuning', elementId: settingsSectionId.SettingsGeneralId},
-          {title: 'Terminal', icon: 'Terminal', elementId: settingsSectionId.SettingsTerminalId},
-          {title: 'Startup', icon: 'Rocket', elementId: settingsSectionId.SettingsStartupId},
-          {title: 'Hotkeys', icon: 'Keyboard', elementId: settingsSectionId.SettingsHotkeysId},
-          {title: 'Discord Activity', icon: 'Discord', elementId: settingsSectionId.SettingsDiscordId},
-        ],
-      },
-      {
-        title: 'Data Management',
-        items: [
-          {title: 'Data', icon: 'Database', elementId: settingsSectionId.SettingsDataId},
-          {
-            title: 'Clear',
-            icon: 'Trash',
-            color: 'danger',
-            iconColor: true,
-            elementId: settingsSectionId.SettingsClearId,
-          },
-        ],
-      },
-    ],
-    [],
-  );
+  const [buttons] = useState(extensionsData.customizePages.settings.add.navButton);
 
   return (
     <Card
@@ -128,6 +130,9 @@ export default function SettingsPageNav() {
       <ScrollShadow className="absolute inset-x-3 bottom-4 top-[3.8rem]" hideScrollBar>
         {groupSections.map((section, index) => (
           <GroupSection key={index} {...section} />
+        ))}
+        {buttons.map((Btn, index) => (
+          <Btn key={index} />
         ))}
       </ScrollShadow>
     </Card>

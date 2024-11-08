@@ -1,3 +1,6 @@
+import {useState} from 'react';
+
+import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import SettingsCard, {SettingsCardId} from './Content/Card/Settings-Card';
 import SettingsGeneral, {SettingsGeneralId} from './Content/General/Settings-General';
 import SettingsClear, {SettingsClearId} from './Content/Settings-Clear';
@@ -18,16 +21,24 @@ export const settingsSectionId = {
   SettingsHotkeysId,
 };
 
-export const SettingsSections = () => (
-  <>
-    <SettingsCard />
-    <SettingsGeneral />
-    <SettingsTerminal />
-    <SettingsStartup />
-    <SettingsHotkeys />
-    <SettingsDiscord />
+export const SettingsSections = () => {
+  const [content] = useState(extensionsData.customizePages.settings.add.content);
 
-    <SettingsData />
-    <SettingsClear />
-  </>
-);
+  return (
+    <>
+      <SettingsCard />
+      <SettingsGeneral />
+      <SettingsTerminal />
+      <SettingsStartup />
+      <SettingsHotkeys />
+      <SettingsDiscord />
+
+      <SettingsData />
+      <SettingsClear />
+
+      {content.map((Content, index) => (
+        <Content key={index} />
+      ))}
+    </>
+  );
+};
