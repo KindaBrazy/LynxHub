@@ -1,7 +1,7 @@
 import {Result} from 'antd';
 import {LayoutGroup} from 'framer-motion';
 import {compact, isEmpty} from 'lodash';
-import {useMemo} from 'react';
+import {FC, useMemo} from 'react';
 
 import {useModules} from '../../Modules/ModulesContext';
 import {AvailablePages} from '../../Modules/types';
@@ -10,7 +10,7 @@ import Page from '../Pages/Page';
 import LynxCard from './Card/LynxCard';
 import {CardContext, CardsDataManager} from './CardsDataManager';
 
-export function GetComponentsByPath({routePath}: {routePath: string}) {
+export function GetComponentsByPath({routePath, extensionsElements}: {routePath: string; extensionsElements?: FC[]}) {
   const {getCardsByPath} = useModules();
 
   const cards = getCardsByPath(routePath as AvailablePages);
@@ -25,7 +25,7 @@ export function GetComponentsByPath({routePath}: {routePath: string}) {
 
   return (
     <div className="flex size-full flex-row flex-wrap gap-7 overflow-visible">
-      {isEmpty(sortedCards) ? (
+      {isEmpty(sortedCards) && isEmpty(extensionsElements) ? (
         <Page className="content-center">
           <Result
             status="info"
@@ -34,16 +34,19 @@ export function GetComponentsByPath({routePath}: {routePath: string}) {
           />
         </Page>
       ) : (
-        <LayoutGroup id={`${routePath}_cards`}>
-          {sortedCards!.map((card, index) => {
-            const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-            return (
-              <CardContext.Provider key={`cardProv-${index}`} value={new CardsDataManager(card, isInstalled)}>
-                <LynxCard key={`${card.id}-card-key`} />
-              </CardContext.Provider>
-            );
-          })}
-        </LayoutGroup>
+        <>
+          <LayoutGroup id={`${routePath}_cards`}>
+            {sortedCards.map((card, index) => {
+              const isInstalled = installedCards.some(iCard => iCard.id === card.id);
+              return (
+                <CardContext.Provider key={`cardProv-${index}`} value={new CardsDataManager(card, isInstalled)}>
+                  <LynxCard key={`${card.id}-card-key`} />
+                </CardContext.Provider>
+              );
+            })}
+          </LayoutGroup>
+          {extensionsElements?.map((Comp, index) => <Comp key={index} />)}
+        </>
       )}
     </div>
   );

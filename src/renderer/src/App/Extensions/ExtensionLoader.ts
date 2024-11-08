@@ -79,6 +79,7 @@ export const extensionsData: ExtensionData_Renderer = {
         bottom: [],
         scrollTop: [],
         scrollBottom: [],
+        cardsContainer: [],
       },
     },
     image: {
@@ -87,6 +88,7 @@ export const extensionsData: ExtensionData_Renderer = {
         bottom: [],
         scrollTop: [],
         scrollBottom: [],
+        cardsContainer: [],
       },
     },
     text: {
@@ -95,6 +97,7 @@ export const extensionsData: ExtensionData_Renderer = {
         bottom: [],
         scrollTop: [],
         scrollBottom: [],
+        cardsContainer: [],
       },
     },
   },
@@ -236,6 +239,7 @@ const api: ExtensionRendererApi = {
         bottom: comp => extensionsData.customizePages.audio.add.bottom.push(comp),
         scrollTop: comp => extensionsData.customizePages.audio.add.scrollTop.push(comp),
         scrollBottom: comp => extensionsData.customizePages.audio.add.scrollBottom.push(comp),
+        cardsContainer: comp => extensionsData.customizePages.audio.add.cardsContainer.push(comp),
       },
     },
     image: {
@@ -244,14 +248,16 @@ const api: ExtensionRendererApi = {
         bottom: comp => extensionsData.customizePages.image.add.bottom.push(comp),
         scrollTop: comp => extensionsData.customizePages.image.add.scrollTop.push(comp),
         scrollBottom: comp => extensionsData.customizePages.image.add.scrollBottom.push(comp),
+        cardsContainer: comp => extensionsData.customizePages.image.add.cardsContainer.push(comp),
       },
     },
     text: {
       add: {
-        top: comp => extensionsData.customizePages.image.add.top.push(comp),
-        bottom: comp => extensionsData.customizePages.image.add.bottom.push(comp),
-        scrollTop: comp => extensionsData.customizePages.image.add.scrollTop.push(comp),
-        scrollBottom: comp => extensionsData.customizePages.image.add.scrollBottom.push(comp),
+        top: comp => extensionsData.customizePages.text.add.top.push(comp),
+        bottom: comp => extensionsData.customizePages.text.add.bottom.push(comp),
+        scrollTop: comp => extensionsData.customizePages.text.add.scrollTop.push(comp),
+        scrollBottom: comp => extensionsData.customizePages.text.add.scrollBottom.push(comp),
+        cardsContainer: comp => extensionsData.customizePages.text.add.cardsContainer.push(comp),
       },
     },
   },

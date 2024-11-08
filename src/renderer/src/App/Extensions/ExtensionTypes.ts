@@ -89,6 +89,7 @@ export type ExtensionData_Renderer = {
         bottom: FC[];
         scrollTop: FC[];
         scrollBottom: FC[];
+        cardsContainer: FC[];
       };
     };
     image: {
@@ -97,6 +98,7 @@ export type ExtensionData_Renderer = {
         bottom: FC[];
         scrollTop: FC[];
         scrollBottom: FC[];
+        cardsContainer: FC[];
       };
     };
     text: {
@@ -105,6 +107,7 @@ export type ExtensionData_Renderer = {
         bottom: FC[];
         scrollTop: FC[];
         scrollBottom: FC[];
+        cardsContainer: FC[];
       };
     };
   };
@@ -188,6 +191,7 @@ export type ExtensionRendererApi = {
         bottom: CompFc;
         scrollTop: CompFc;
         scrollBottom: CompFc;
+        cardsContainer: CompFc;
       };
     };
     image: {
@@ -196,6 +200,7 @@ export type ExtensionRendererApi = {
         bottom: CompFc;
         scrollTop: CompFc;
         scrollBottom: CompFc;
+        cardsContainer: CompFc;
       };
     };
     text: {
@@ -204,6 +209,7 @@ export type ExtensionRendererApi = {
         bottom: CompFc;
         scrollTop: CompFc;
         scrollBottom: CompFc;
+        cardsContainer: CompFc;
       };
     };
   };
