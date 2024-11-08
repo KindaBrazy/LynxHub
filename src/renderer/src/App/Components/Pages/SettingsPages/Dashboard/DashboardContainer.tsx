@@ -1,3 +1,6 @@
+import {useState} from 'react';
+
+import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import DashboardAbout, {DashboardAboutId} from './Content/Dashboard-About';
 import DashboardCredits, {DashboardCreditsId} from './Content/Dashboard-Credits';
 import DashboardProfile, {DashboardProfileId} from './Content/Dashboard-Profile';
@@ -12,12 +15,20 @@ export const dashboardSectionId = {
   DashboardAboutId,
 };
 
-export const DashboardSections = () => (
-  <>
-    <DashboardProfile />
-    <DashboardUpdate />
-    <DashboardCredits />
-    <DashboardReportIssue />
-    <DashboardAbout />
-  </>
-);
+export const DashboardSections = () => {
+  const [content] = useState(extensionsData.customizePages.dashboard.add.content);
+
+  return (
+    <>
+      <DashboardProfile />
+      <DashboardUpdate />
+      <DashboardCredits />
+      <DashboardReportIssue />
+      <DashboardAbout />
+
+      {content.map((Content, index) => (
+        <Content key={index} />
+      ))}
+    </>
+  );
+};
