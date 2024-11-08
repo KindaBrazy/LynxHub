@@ -106,6 +106,12 @@ export const extensionsData: ExtensionData_Renderer = {
         content: [],
       },
     },
+    dashboard: {
+      add: {
+        navButton: [],
+        content: [],
+      },
+    },
   },
   addReducer: [],
 };
@@ -270,6 +276,12 @@ const api: ExtensionRendererApi = {
       add: {
         navButton: comp => extensionsData.customizePages.settings.add.navButton.push(comp),
         content: comp => extensionsData.customizePages.settings.add.content.push(comp),
+      },
+    },
+    dashboard: {
+      add: {
+        navButton: comp => extensionsData.customizePages.dashboard.add.navButton.push(comp),
+        content: comp => extensionsData.customizePages.dashboard.add.content.push(comp),
       },
     },
   },

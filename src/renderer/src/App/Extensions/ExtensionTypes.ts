@@ -116,6 +116,12 @@ export type ExtensionData_Renderer = {
         content: FC[];
       };
     };
+    dashboard: {
+      add: {
+        navButton: FC[];
+        content: FC[];
+      };
+    };
   };
   addReducer: {name: string; reducer: Reducer}[];
 };
@@ -219,6 +225,12 @@ export type ExtensionRendererApi = {
       };
     };
     settings: {
+      add: {
+        navButton: CompFc;
+        content: CompFc;
+      };
+    };
+    dashboard: {
       add: {
         navButton: CompFc;
         content: CompFc;

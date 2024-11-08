@@ -1,55 +1,55 @@
 import {ScrollShadow} from '@nextui-org/react';
 import {Card} from 'antd';
-import {useMemo} from 'react';
+import {useState} from 'react';
 
+import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {GroupProps, GroupSection} from '../Settings/SettingsPage-Nav';
 import {dashboardSectionId} from './DashboardContainer';
 
-export default function DashboardPageNav() {
-  const groupSections: GroupProps[] = useMemo(
-    () => [
+const groupSections: GroupProps[] = [
+  {
+    title: 'Application',
+    items: [
       {
-        title: 'Application',
-        items: [
-          {
-            title: 'Profiles',
-            icon: 'User',
-            elementId: dashboardSectionId.DashboardProfileId,
-          },
-          {
-            title: 'Updates',
-            icon: 'Download2',
-            elementId: dashboardSectionId.DashboardUpdateId,
-          },
-          {
-            title: 'Credits',
-            icon: 'UserHeart',
-            elementId: dashboardSectionId.DashboardCreditsId,
-          },
-        ],
+        title: 'Profiles',
+        icon: 'User',
+        elementId: dashboardSectionId.DashboardProfileId,
       },
       {
-        title: 'Info',
-        items: [
-          {
-            title: 'Report an Issue',
-            icon: 'Bug',
-            color: 'warning',
-            iconColor: true,
-            elementId: dashboardSectionId.DashboardReportIssueId,
-          },
-          {
-            title: 'About',
-            icon: 'Info',
-            color: 'success',
-            iconColor: true,
-            elementId: dashboardSectionId.DashboardAboutId,
-          },
-        ],
+        title: 'Updates',
+        icon: 'Download2',
+        elementId: dashboardSectionId.DashboardUpdateId,
+      },
+      {
+        title: 'Credits',
+        icon: 'UserHeart',
+        elementId: dashboardSectionId.DashboardCreditsId,
       },
     ],
-    [],
-  );
+  },
+  {
+    title: 'Info',
+    items: [
+      {
+        title: 'Report an Issue',
+        icon: 'Bug',
+        color: 'warning',
+        iconColor: true,
+        elementId: dashboardSectionId.DashboardReportIssueId,
+      },
+      {
+        title: 'About',
+        icon: 'Info',
+        color: 'success',
+        iconColor: true,
+        elementId: dashboardSectionId.DashboardAboutId,
+      },
+    ],
+  },
+];
+
+export default function DashboardPageNav() {
+  const [buttons] = useState(extensionsData.customizePages.dashboard.add.navButton);
 
   return (
     <Card
@@ -62,6 +62,9 @@ export default function DashboardPageNav() {
       <ScrollShadow className="absolute inset-x-3 bottom-4 top-[3.8rem]" hideScrollBar>
         {groupSections.map((section, index) => (
           <GroupSection key={index} {...section} />
+        ))}
+        {buttons.map((Btn, index) => (
+          <Btn key={index} />
         ))}
       </ScrollShadow>
     </Card>
