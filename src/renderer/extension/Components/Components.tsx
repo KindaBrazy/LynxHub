@@ -5,7 +5,7 @@ import {RouteObject} from 'react-router-dom';
 
 import NavButton from '../../src/App/Components/NavBar/NavButton';
 import RouterPagesError from '../../src/App/Components/Pages/RouterPagesError';
-import {ElementProps} from '../../src/App/Extensions/ExtensionTypes';
+import {CardElementProps, ElementProps} from '../../src/App/Extensions/ExtensionTypes';
 import {useAppState} from '../../src/App/Redux/App/AppReducer';
 import {getIconByName} from '../../src/assets/icons/SvgIconsContainer';
 import {extensionActions, useExtensionState} from '../reducer';
@@ -101,4 +101,12 @@ export function ReducerTester() {
       <span>{someNumber}</span>
     </div>
   );
+}
+
+export function ReplaceCards({cards, ...props}: CardElementProps) {
+  return cards.map((card, index) => (
+    <div key={index} className="h-48 content-center rounded-xl bg-foreground-300 p-8 text-center" {...props}>
+      {card.id}
+    </div>
+  ));
 }
