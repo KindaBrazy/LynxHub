@@ -109,7 +109,7 @@ export const PinnedCars = memo(() => {
   }, [pinnedCards, installedCards]);
 
   return (
-    <HomeCategory title="PINNED" icon="CirclePin">
+    <HomeCategory title="PINNED" icon="Pin_Color">
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         {isEmpty(validPinnedCards) && isEmpty(pinCategory) ? (
           <Empty className="size-full" description="No Pinned Card to Display!" />
@@ -138,7 +138,7 @@ export const RecentlyCards = memo(() => {
   }, [recentlyUsedCards, installedCards]);
 
   return (
-    <HomeCategory icon="CircleClock" title="RECENTLY USED">
+    <HomeCategory icon="History_Color" title="RECENTLY USED">
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         {isEmpty(validRecentlyUsed) && isEmpty(recentlyCategory) ? (
           <Empty className="size-full" description="No Recently Used Card to Display!" />
@@ -156,7 +156,7 @@ export const RecentlyCards = memo(() => {
 // Renders the "All" category section
 export const AllCardsSection = memo(() => {
   return (
-    <HomeCategory title="All" icon="CircleFill">
+    <HomeCategory title="All" icon="Apps_Color">
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         <AllCards />
       </div>
