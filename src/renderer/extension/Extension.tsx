@@ -20,25 +20,31 @@ import extensionReducer from './reducer';
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   return;
 
+  // Replace Cards Components
   lynxAPI.cards.replace(ReplaceCards);
 
+  // Add custom reducer to app
+  lynxAPI.addReducer([{name: 'extension', reducer: extensionReducer}]);
+  lynxAPI.customizePages.audio.add.scrollBottom(ReducerTester);
+
+  // Add new pages
+  lynxAPI.router.add(routePage);
+  lynxAPI.navBar.addButton.contentBar(AddContentButton);
+  lynxAPI.navBar.addButton.settingsBar(AddSettingsButton);
+
+  // Customize existing pages
   lynxAPI.customizePages.settings.add.navButton(SettingsNavButton);
   lynxAPI.customizePages.settings.add.content(SettingsContent);
   lynxAPI.customizePages.home.replace.categories(HomePage_ReplaceCategories);
   lynxAPI.customizePages.home.add.top(HomePage_Top);
   lynxAPI.customizePages.home.add.scrollBottom(HomePage_TopScroll);
-  lynxAPI.customizePages.audio.add.scrollBottom(ReducerTester);
 
+  // Add elements to status bar
   lynxAPI.statusBar.addEnd(StatusBarEnd);
 
-  lynxAPI.router.add(routePage);
-
-  lynxAPI.navBar.addButton.contentBar(AddContentButton);
-  lynxAPI.navBar.addButton.settingsBar(AddSettingsButton);
-
+  // Add custom hooks
   lynxAPI.addCustomHook(CustomHook);
 
+  // Change background
   lynxAPI.replaceBackground(Background);
-
-  lynxAPI.addReducer([{name: 'extension', reducer: extensionReducer}]);
 }
