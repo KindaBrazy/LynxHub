@@ -1,5 +1,5 @@
-import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Chip} from '@nextui-org/react';
-import {Space, Typography} from 'antd';
+import {Button, Card, CardBody, CardFooter, CardHeader} from '@nextui-org/react';
+import {Divider, Typography} from 'antd';
 import {useMemo} from 'react';
 
 import {getIconByName} from '../../../../../../../assets/icons/SvgIconsContainer';
@@ -33,7 +33,7 @@ export default function PreviewCard() {
     <Card
       className={
         ` ${compactMode ? 'w-[230px]' : 'w-[277px]'} h-fit cursor-default shadow-md !transition ` +
-        ` mx-4 border-1 border-foreground/10 duration-300 hover:shadow-xl dark:bg-[#323232]`
+        ` mx-4 border-1 border-foreground/10 duration-300 hover:shadow-xl dark:bg-[#3d3d3d]`
       }>
       <CardHeader className="flex flex-col p-0">
         <div
@@ -48,7 +48,7 @@ export default function PreviewCard() {
             className={
               `z-10 -mt-10 size-20 shrink-0 self-center overflow-hidden rounded-full` +
               ` border-1 border-white shadow-[0px_6px_5px_-3px_rgba(0,0,0,0.6)] transition duration-500` +
-              ` bg-white hover:shadow-none dark:border-black dark:bg-LynxRaisinBlack`
+              ` bg-white hover:shadow-none dark:border-LynxRaisinBlack dark:bg-LynxRaisinBlack`
             }>
             {getIconByName('User', {className: 'size-full p-2 dark:bg-LynxRaisinBlack/70 bg-white/70'})}
           </div>
@@ -62,74 +62,74 @@ export default function PreviewCard() {
 
         <Typography.Text
           className={
-            `${(compactMode || !cardsDevName) && 'mt-3 !text-large'} ` +
+            `${(compactMode || !cardsDevName) && 'mt-3 !text-large font-bold'} ` +
             `${!cardsDesc && (cardsRepoInfo || cardsDevImage) && 'mb-4'} `
           }>
           Project Title
         </Typography.Text>
 
         {(cardsDesc || compactMode) && (
-          <Typography.Paragraph type="secondary" className="mx-3 mt-1" ellipsis={{rows: 2, tooltip: loremText}}>
+          <Typography.Paragraph
+            type="secondary"
+            className="mx-8 mt-3 text-center"
+            ellipsis={{rows: 2, tooltip: loremText}}>
             {loremText}
           </Typography.Paragraph>
         )}
       </CardHeader>
       {!compactMode && cardsRepoInfo && (
-        <CardBody className="bg-[#f7f7f7] dark:bg-[#292929]">
-          <Space wrap>
-            <Chip
-              size="sm"
-              radius="sm"
-              variant="flat"
-              className="transition duration-500 hover:bg-black/0"
-              startContent={getIconByName('Star', {className: 'fill-yellow-400 mx-1'})}>
-              Stars: 7.7K
-            </Chip>
-            <Chip
-              size="sm"
-              radius="sm"
-              variant="flat"
-              className="transition duration-500 hover:bg-black/0"
-              startContent={getIconByName('Fork', {className: 'mx-1'})}>
-              Forks: 0.7K
-            </Chip>
-            <Chip
-              size="sm"
-              radius="sm"
-              variant="flat"
-              className="transition duration-500 hover:bg-black/0"
-              startContent={getIconByName('Issue', {className: 'mx-1'})}>
-              Issues: 7
-            </Chip>
-            <Chip
-              size="sm"
-              radius="sm"
-              variant="flat"
-              className="transition duration-500 hover:bg-black/0"
-              startContent={getIconByName('Download', {className: 'mx-1'})}>
-              Size: 77MB
-            </Chip>
-          </Space>
+        <CardBody className="flex flex-row items-center justify-center gap-x-2 bg-[#f7f7f7] text-xs dark:bg-[#292929]">
+          <div className="flex flex-col items-center justify-center">
+            <span className="font-bold">77K</span>
+            <div className="flex flex-row items-center">
+              {getIconByName('Star', {className: 'fill-yellow-500 mx-1'})}
+              <span>Stars</span>
+            </div>
+          </div>
+
+          <Divider type="vertical" />
+
+          <div className="flex flex-col items-center justify-center">
+            <span className="font-bold">7.7K</span>
+
+            <div className="flex flex-row items-center">
+              {getIconByName('Fork', {className: 'mx-1'})}
+              <span>Forks</span>
+            </div>
+          </div>
+
+          <Divider type="vertical" />
+
+          <div className="flex flex-col items-center justify-center">
+            <span className="font-bold">777MB</span>
+
+            <div className="flex flex-row items-center">
+              {getIconByName('Download', {className: 'mx-1'})}
+              <span>Size</span>
+            </div>
+          </div>
         </CardBody>
       )}
       <CardFooter>
-        <ButtonGroup className="mb-1" fullWidth>
+        <div className="flex w-full flex-row gap-x-3">
           <Button
             startContent={getIconByName('Download2', {
-              className: compactMode ? 'size-5 text-white' : 'size-6 text-white',
+              className: compactMode ? 'size-4' : 'size-5',
             })}
-            variant="solid"
-            color={'secondary'}
+            radius="sm"
+            variant="faded"
             size={compactMode ? 'sm' : 'md'}
-            className="z-[11] hover:scale-[1.03]"
+            className="z-[11] w-full hover:scale-[1.03]"
           />
           <Button
+            radius="sm"
+            variant="faded"
             className="cursor-default"
             size={compactMode ? 'sm' : 'md'}
             startContent={getIconByName('Document', {className: `size-full ${compactMode ? 'm-2' : 'm-2.5'}`})}
             isIconOnly
           />
-        </ButtonGroup>
+        </div>
       </CardFooter>
     </Card>
   );
