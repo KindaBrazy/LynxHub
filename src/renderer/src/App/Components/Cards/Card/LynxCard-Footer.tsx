@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, CardFooter} from '@nextui-org/react';
+import {Button, CardFooter} from '@nextui-org/react';
 import {observer} from 'mobx-react-lite';
 import {useCallback} from 'react';
 
@@ -16,14 +16,18 @@ const LynxCardFooter = observer(() => {
     window.open(repoUrl);
   }, [repoUrl]);
 
+  const cardsRepoInfo = useSettingsState('cardsRepoInfo');
+
   return (
-    <CardFooter>
-      <ButtonGroup className="mb-1" fullWidth>
+    <CardFooter className={cardsRepoInfo ? '' : 'pt-1'}>
+      <div className="flex w-full flex-row gap-x-3">
         <StartButton />
         {installed ? (
           <CardMenu />
         ) : (
           <Button
+            radius="sm"
+            variant="faded"
             onPress={openDoc}
             className="cursor-default"
             size={compactMode ? 'sm' : 'md'}
@@ -31,7 +35,7 @@ const LynxCardFooter = observer(() => {
             isIconOnly
           />
         )}
-      </ButtonGroup>
+      </div>
     </CardFooter>
   );
 });

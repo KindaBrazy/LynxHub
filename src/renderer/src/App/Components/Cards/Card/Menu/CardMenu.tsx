@@ -15,7 +15,10 @@ export const CardMenu = observer(() => {
   const menuSections = useCardMenuSections();
 
   const buttonSize = useMemo(() => (compactMode ? 'sm' : 'md'), [compactMode]);
-  const menuIcon = useMemo(() => !updating && getIconByName('MenuDots', {className: 'size-full m-2'}), [updating]);
+  const menuIcon = useMemo(
+    () => !updating && getIconByName('MenuDots', {className: 'size-full m-2 rotate-90'}),
+    [updating],
+  );
 
   return (
     <div className="flex">
@@ -24,19 +27,21 @@ export const CardMenu = observer(() => {
         isOpen={menuIsOpen}
         closeOnSelect={false}
         onOpenChange={setMenuIsOpen}
+        className="border-2 !border-foreground/5"
         classNames={{base: 'before:bg-black/70', content: 'border-black/70'}}
         showArrow>
         <DropdownTrigger>
           <Button
-            variant="solid"
+            radius="sm"
+            variant="faded"
             size={buttonSize}
             isLoading={!!updating}
             startContent={menuIcon}
-            className="cursor-default !rounded-l-none !rounded-r-xl"
+            className="cursor-default"
             isIconOnly
           />
         </DropdownTrigger>
-        <DropdownMenu items={menuSections} aria-label="Card Menu">
+        <DropdownMenu variant="faded" items={menuSections} aria-label="Card Menu">
           {sectionData => {
             const {items, ...section} = sectionData;
             return (
