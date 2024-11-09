@@ -30,7 +30,7 @@ const HomeFilter = memo(({selectedCategories}: Props) => {
         <Button
           className={
             `cursor-default border border-foreground/10 bg-stone-50 shadow-md ` +
-            `dark:border-foreground/5 dark:bg-LynxRaisinBlack dark:hover:bg-white/15`
+            `dark:border-foreground/5 dark:bg-[#292929] dark:hover:bg-white/15`
           }
           radius="full"
           variant="light"
