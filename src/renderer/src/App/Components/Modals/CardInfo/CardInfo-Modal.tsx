@@ -81,14 +81,18 @@ export default function CardInfoModal() {
 
   return (
     <Modal
+      classNames={{
+        backdrop: '!top-10',
+        closeButton: 'cursor-default hover:bg-danger text-foreground transition-colors duration-300',
+        wrapper: '!top-10 scrollbar-hide',
+      }}
       size="xl"
       isOpen={isOpen}
       onClose={onClose}
       backdrop="transparent"
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
-      className="border-2 border-foreground/5 bg-foreground-100 drop-shadow-lg"
-      classNames={{backdrop: '!top-10', closeButton: 'cursor-default', wrapper: '!top-10 scrollbar-hide'}}>
+      className="border-2 border-foreground/5 bg-foreground-100 drop-shadow-lg">
       <ModalContent className="pb-4">
         <ModalHeader className="justify-center border-b border-foreground/20 shadow-md">{title}</ModalHeader>
         <ModalBody className="mb-2 mt-4 scrollbar-hide">
