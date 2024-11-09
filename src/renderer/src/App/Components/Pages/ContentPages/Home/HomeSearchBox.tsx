@@ -10,7 +10,7 @@ const HomeSearchBox = memo(({searchValue, setSearchValue}: Props) => {
     <Input
       classNames={{
         inputWrapper:
-          'dark:bg-LynxRaisinBlack dark:hover:bg-white/5 bg-stone-50 ' +
+          'dark:bg-[#292929] dark:hover:bg-[#2f2f2f] bg-stone-50 ' +
           ' shadow-md overflow-hidden border border-foreground/10 dark:border-foreground/5',
       }}
       radius="full"
