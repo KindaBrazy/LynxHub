@@ -43,7 +43,7 @@ const LynxCardHeader = observer(() => {
           className={
             `z-10 -mt-10 size-20 shrink-0 self-center overflow-hidden rounded-full ` +
             ` border-1 border-white shadow-[0px_6px_5px_-3px_rgba(0,0,0,0.6)] transition duration-500` +
-            ` bg-white hover:shadow-none dark:border-black dark:bg-LynxRaisinBlack`
+            ` bg-white hover:shadow-none dark:border-LynxRaisinBlack dark:bg-LynxRaisinBlack`
           }>
           <Skeleton isLoaded={!!devSrc} className="size-full">
             {devSrc}
@@ -59,7 +59,7 @@ const LynxCardHeader = observer(() => {
 
       <Text
         className={
-          `${(compactMode || !cardsDevName) && 'mt-3 !text-large'} ` +
+          `${(compactMode || !cardsDevName) && 'mt-3 !text-large font-bold'} ` +
           `${!cardsDesc && (cardsRepoInfo || cardsDevImage) && 'mb-4'} px-5`
         }
         ellipsis={{tooltip: title}}>
@@ -67,7 +67,7 @@ const LynxCardHeader = observer(() => {
       </Text>
 
       {(cardsDesc || compactMode) && (
-        <Paragraph type="secondary" className="mx-3 mt-1 text-center" ellipsis={{rows: 2, tooltip: description}}>
+        <Paragraph type="secondary" className="mx-8 mt-3 text-center" ellipsis={{rows: 2, tooltip: description}}>
           {description}
         </Paragraph>
       )}

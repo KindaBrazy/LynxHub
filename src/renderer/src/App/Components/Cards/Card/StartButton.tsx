@@ -82,22 +82,18 @@ const StartButton = memo(() => {
           <span className="text-xs text-white">Updating...</span>
         ) : (
           getIconByName(installed ? 'Play' : 'Download2', {
-            className: compactMode
-              ? installed
-                ? `size-4 text-white`
-                : 'size-5 text-white'
-              : installed
-                ? 'size-5 text-white'
-                : 'size-6 text-white',
+            className: compactMode ? (installed ? `size-4` : 'size-5') : installed ? 'size-5' : 'size-5',
           })
         )
       }
-      variant="solid"
+      radius="sm"
       size={compactMode ? 'sm' : 'md'}
       className="z-[11] hover:scale-[1.03]"
       onPress={installed ? startAi : install}
+      variant={installed ? 'shadow' : 'faded'}
       isDisabled={!!updating || isUpdatingExt}
-      color={installed ? 'primary' : 'secondary'}
+      color={installed ? 'primary' : 'default'}
+      fullWidth
     />
   );
 });

@@ -1,5 +1,5 @@
-import {CardBody, Chip} from '@nextui-org/react';
-import {Space} from 'antd';
+import {CardBody} from '@nextui-org/react';
+import {Divider} from 'antd';
 import {observer} from 'mobx-react-lite';
 
 import {formatSizeKB} from '../../../../../../cross/CrossUtils';
@@ -15,49 +15,40 @@ const LynxCardBody = observer(() => {
   return (
     repoDetails && (
       <>
-        <CardBody className="bg-[#f7f7f7] dark:bg-[#292929]">
-          <Space wrap>
-            {repoDetails.stars && (
-              <Chip
-                size="sm"
-                radius="sm"
-                variant="flat"
-                className="transition duration-500 hover:bg-black/0"
-                startContent={getIconByName('Star', {className: 'fill-yellow-400 mx-1'})}>
-                Stars: {formatNumber(repoDetails.stars)}
-              </Chip>
-            )}
-            {repoDetails.forks && (
-              <Chip
-                size="sm"
-                radius="sm"
-                variant="flat"
-                className="transition duration-500 hover:bg-black/0"
-                startContent={getIconByName('Fork', {className: 'mx-1'})}>
-                Forks: {formatNumber(repoDetails.forks)}
-              </Chip>
-            )}
-            {repoDetails.issues && (
-              <Chip
-                size="sm"
-                radius="sm"
-                variant="flat"
-                className="transition duration-500 hover:bg-black/0"
-                startContent={getIconByName('Issue', {className: 'mx-1'})}>
-                Issues: {formatNumber(repoDetails.issues)}
-              </Chip>
-            )}
-            {!installed && repoDetails.size && (
-              <Chip
-                size="sm"
-                radius="sm"
-                variant="flat"
-                className="transition duration-500 hover:bg-black/0"
-                startContent={getIconByName('Download', {className: 'mx-1'})}>
-                Size: {formatSizeKB(repoDetails.size)}
-              </Chip>
-            )}
-          </Space>
+        <CardBody className="flex flex-row items-center justify-center gap-x-2 bg-[#f7f7f7] text-xs dark:bg-[#292929]">
+          <div className="flex flex-col items-center justify-center">
+            <span className="font-bold">{formatNumber(repoDetails.stars)}</span>
+            <div className="flex flex-row items-center">
+              {getIconByName('Star', {className: 'fill-yellow-500 mx-1'})}
+              <span>Stars</span>
+            </div>
+          </div>
+
+          <Divider type="vertical" />
+
+          <div className="flex flex-col items-center justify-center">
+            <span className="font-bold">{formatNumber(repoDetails.forks)}</span>
+
+            <div className="flex flex-row items-center">
+              {getIconByName('Fork', {className: 'mx-1'})}
+              <span>Forks</span>
+            </div>
+          </div>
+
+          {!installed && (
+            <>
+              <Divider type="vertical" />
+
+              <div className="flex flex-col items-center justify-center">
+                <span className="font-bold">{formatSizeKB(repoDetails.size)}</span>
+
+                <div className="flex flex-row items-center">
+                  {getIconByName('Download', {className: 'mx-1'})}
+                  <span>Size</span>
+                </div>
+              </div>
+            </>
+          )}
         </CardBody>
       </>
     )
