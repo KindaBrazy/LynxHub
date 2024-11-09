@@ -8,9 +8,10 @@ type Props = {
   children: ReactNode;
   icon: IconNameType;
   title: string;
+  subTitle?: string;
 };
 
-export default function HomeCategory({children, icon, title}: Props) {
+export default function HomeCategory({children, subTitle, icon, title}: Props) {
   return (
     <motion.div
       transition={{duration: 0.2}}
@@ -19,7 +20,7 @@ export default function HomeCategory({children, icon, title}: Props) {
       initial={{opacity: 0, scale: 0.95}}
       className="flex w-full flex-col p-4 py-0"
       layout>
-      <CardContainer icon={icon} title={title}>
+      <CardContainer icon={icon} title={title} subTitle={subTitle}>
         {children}
       </CardContainer>
     </motion.div>
