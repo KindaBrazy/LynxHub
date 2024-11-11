@@ -4,34 +4,36 @@ import {SvgProps} from '../SvgIconsContainer';
 
 export const svgPackColor = {
   History_Color: (props: SvgProps): ReactElement => (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+    <svg {...props} width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
-          fill="url(#fluentColorHistory200)"
-          d="M10 5.5a1 1 0 0 1 1 1V9h1.5a1 1 0 1 1 0 2H10a1 1 0 0 1-1-1V6.5a1 1 0 0 1 1-1"
+          fill="url(#fluentColorHistory160)"
+          d="M7.698 5a.75.75 0 0 1 .75.75V7.5h1.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1-.75-.75v-2.5a.75.75 0 0 1 .75-.75"
         />
         <path
-          d="M6.031 5.5A6 6 0 1 1 4 10a1 1 0 0 0-2 0a8 8 0 1 0 2.5-5.81V
-          3a1 1 0 0 0-2 0v3A1.5 1.5 0 0 0 4 7.5h3a1 1 0 0 0 0-2z"
-          fill="url(#fluentColorHistory201)"
+          d={
+            'M7.947 3.5a4.5 4.5 0 1 1-4.454 5.14a.75.75 0 1 0-1.485.212a6.001 6.001 0 1 0 1.94-5.324V2.75a' +
+            '.75.75 0 1 0-1.5 0v3c0 .414.335.75.75.75h2.5a.75.75 0 1 0 0-1.5H4.592a4.5 4.5 0 0 1 3.354-1.5'
+          }
+          fill="url(#fluentColorHistory161)"
         />
         <defs>
           <linearGradient
-            x1="8.156"
-            y1="16.45"
-            x2="20.094"
-            y2="11.414"
-            id="fluentColorHistory200"
+            x1="6.357"
+            y2="8.988"
+            x2="14.586"
+            y1="12.633"
+            id="fluentColorHistory160"
             gradientUnits="userSpaceOnUse">
             <stop stopColor="#d373fc" />
             <stop offset="1" stopColor="#6d37cd" />
           </linearGradient>
           <linearGradient
             x1="2"
-            x2="6.295"
-            y1="2.941"
-            y2="20.923"
-            id="fluentColorHistory201"
+            x2="5.234"
+            y1="2.706"
+            y2="16.186"
+            id="fluentColorHistory161"
             gradientUnits="userSpaceOnUse">
             <stop stopColor="#0fafff" />
             <stop offset="1" stopColor="#0067bf" />
@@ -42,44 +44,46 @@ export const svgPackColor = {
   ),
 
   Pin_Color: (props: SvgProps): ReactElement => (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+    <svg {...props} width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
           fillRule="evenodd"
           clipRule="evenodd"
-          fill="url(#fluentColorPin200)"
-          d="M8.03 11.97a.75.75 0 0 1 0 1.06l-3.75 3.75a.75.75 0 0 1-1.06-1.06l3.75-3.75a.75.75 0 0 1 1.06 0"
+          fill="url(#fluentColorPin160)"
+          d="m6.53 10.53l-3.25 3.25a.75.75 0 1 1-1.06-1.06l3.25-3.25z"
         />
         <path
-          d="M13.325 2.618a2 2 0 0 0-3.203.52L8.393 6.596a1.5 1.5 0 0 1-.784.722l-3.59
-           1.436a1 1 0 0 0-.336 1.636l5.927 5.927a1 1 0 0 0 1.636-.335l1.436-3.59a1.5 1
-           .5 0 0 1 .722-.785l3.458-1.73a2 2 0 0 0 .52-3.202z"
-          fill="url(#fluentColorPin201)"
+          d={
+            'M10.059 2.445a1.5 1.5 0 0 0-2.386.353l-2.02 3.79l-2.811.938a.5.5 0 0 0-.196.828l' +
+            '5 5a.5.5 0 0 0 .828-.196l.937-2.811l3.779-2.023a1.5 1.5 0 0 0 .354-2.38z'
+          }
+          fill="url(#fluentColorPin161)"
         />
         <path
-          d="M13.325 2.618a2 2 0 0 0-3.203.52L8.393 6.596a1.5 1.5 0 0 1-.784.722l-3.59
-           1.436a1 1 0 0 0-.336 1.636l5.927 5.927a1 1 0 0 0 1.636-.335l1.436-3.59a1.5 1
-           .5 0 0 1 .722-.785l3.458-1.73a2 2 0 0 0 .52-3.202z"
+          d={
+            'M10.059 2.445a1.5 1.5 0 0 0-2.386.353l-2.02 3.79l-2.811.938a.5.5 0 0 0-.196.828l' +
+            '5 5a.5.5 0 0 0 .828-.196l.937-2.811l3.779-2.023a1.5 1.5 0 0 0 .354-2.38z'
+          }
           fillOpacity="0.8"
-          fill="url(#fluentColorPin202)"
+          fill="url(#fluentColorPin162)"
         />
         <defs>
           <linearGradient
-            x1="4.313"
-            x2="11.096"
-            y1="15.687"
-            y2="10.279"
-            id="fluentColorPin200"
+            x1="3.133"
+            x2="8.986"
+            y2="8.201"
+            y1="12.867"
+            id="fluentColorPin160"
             gradientUnits="userSpaceOnUse">
             <stop offset=".114" stopColor="#7b7bff" />
             <stop offset=".559" stopColor="#102784" />
           </linearGradient>
           <linearGradient
-            x1="3.91"
-            y1="4.765"
-            x2="13.971"
-            y2="15.218"
-            id="fluentColorPin201"
+            x1="2.91"
+            y1="4.159"
+            x2="10.844"
+            y2="12.392"
+            id="fluentColorPin161"
             gradientUnits="userSpaceOnUse">
             <stop stopColor="#43e5ca" />
             <stop offset="1" stopColor="#1384b1" />
@@ -88,9 +92,9 @@ export const svgPackColor = {
             r="1"
             cx="0"
             cy="0"
-            id="fluentColorPin202"
+            id="fluentColorPin162"
             gradientUnits="userSpaceOnUse"
-            gradientTransform="matrix(4.37154 4.78393 -12.00179 10.9672 14.648 13.731)">
+            gradientTransform="rotate(47.615 -7.043 18.496)scale(5.10742 12.8119)">
             <stop stopColor="#e362f8" />
             <stop offset="1" stopOpacity="0" stopColor="#96f" />
           </radialGradient>
@@ -115,8 +119,10 @@ export const svgPackColor = {
           d="M8 13a1 1 0 0 1-1 1H3.5A1.5 1.5 0 0 1 2 12.5V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"
         />
         <path
-          d="M9.69 2.442a1.5 1.5 0 0 1 2.122 0l1.752 1.752a1.5 1.5 0 0 1 0 2
-          .121l-1.75 1.75a1.5 1.5 0 0 1-2.12 0L7.942 6.311a1.5 1.5 0 0 1 0-2.121z"
+          d={
+            'M9.69 2.442a1.5 1.5 0 0 1 2.122 0l1.752 1.752a1.5 1.5 0 0 1 0 2.121l-1.75 1.75a1.5 1.' +
+            '5 0 0 1-2.12 0L7.942 6.311a1.5 1.5 0 0 1 0-2.121z'
+          }
           fill="url(#fluentColorApps163)"
         />
         <defs>
