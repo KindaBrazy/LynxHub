@@ -61,12 +61,13 @@ Seamlessly install, configure, launch, and manage your AI interfaces from a sing
 > Join [Patreon](https://www.patreon.com/LynxHub) to gain **Early Access** to the **new features, bug
 fixes, and compatibilities**
 >
-> For more details, check out [❤️‍🔥 Support](#-support) section.
+> For more details, check out [❤️‍🔥 Support](#%EF%B8%8F-support) section.
 
 ## 🗂️ Table of Contents
 
 - ✨ [Feature Overview](#-feature-overview)
 - 📃 [Available Modules](#-available-modules)
+- 📺 [Demo Video](#-demo-video)
 - 🖼️ [Screenshots](#%EF%B8%8F-screenshots)
 - 📦 [Installation](#-installation)
 - 🔧 [Development](#-development)
@@ -149,6 +150,10 @@ Here's what you can expect:
 | <img height='20' src="https://avatars.githubusercontent.com/u/6757283?s=20&v=4"> Rsxdalv  | Text to Speech   | [Link](https://github.com/rsxdalv/tts-generation-webui) |
 | <img height='20' src="https://avatars.githubusercontent.com/u/36931363?s=20&v=4"> Gitmylo | Audio Generation | [Link](https://github.com/gitmylo/audio-webui)          |
 | <img height='20' src="https://avatars.githubusercontent.com/u/35898566?s=20&v=4"> Erew123 | AllTalk TTS      | [Link](https://github.com/erew123/alltalk_tts)          |
+
+## 📺 Demo Video
+
+[![LynxHub Youtube](/readme/screenshots/Youtube.png)](https://www.youtube.com/watch?v=qcIfQVwxUaA)
 
 ## 🖼️ Screenshots
 
