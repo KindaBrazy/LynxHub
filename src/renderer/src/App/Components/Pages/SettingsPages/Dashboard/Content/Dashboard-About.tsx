@@ -14,6 +14,7 @@ import {
   LICENSE_PAGE,
   REDDIT_URL,
   X_URL,
+  YOUTUBE_URL,
 } from '../../../../../../../../cross/CrossConstants';
 import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
@@ -94,6 +95,15 @@ export default function DashboardAbout() {
               hoverable>
               {getIconByName('Reddit', {className: 'size-4'})}
               <span>Reddit</span>
+              {getIconByName('ExternalLink')}
+            </Card>
+            <Card
+              size="small"
+              onClick={() => window.open(YOUTUBE_URL)}
+              classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
+              hoverable>
+              {getIconByName('Youtube_Color', {className: 'size-4'})}
+              <span>YouTube</span>
               {getIconByName('ExternalLink')}
             </Card>
           </div>
