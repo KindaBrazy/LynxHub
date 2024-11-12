@@ -23,7 +23,11 @@ export default function ImageGenerationPage() {
       <ScrollShadow size={20} className="size-full overflow-y-scroll pb-4 scrollbar-hide">
         {scrollTop && scrollTop.map((ScrollTop, index) => <ScrollTop key={index} />)}
 
-        <CardContainer icon="ImageGeneration" extraClassNames="mr-3" title="Image Generation">
+        <CardContainer
+          icon="ImageGeneration"
+          extraClassNames="mr-3"
+          title="Image Generation"
+          subTitle="Create Stunning Visuals with AI-Powered Tools">
           <GetComponentsByPath routePath={imageGenRoutePath} extensionsElements={cardsContainer} />
         </CardContainer>
 

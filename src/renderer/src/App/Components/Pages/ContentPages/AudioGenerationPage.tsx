@@ -23,7 +23,11 @@ export default function AudioGenerationPage() {
       <ScrollShadow size={20} className="size-full overflow-y-scroll pb-4 scrollbar-hide">
         {scrollTop && scrollTop.map((ScrollTop, index) => <ScrollTop key={index} />)}
 
-        <CardContainer icon="AudioGeneration" extraClassNames="mr-3" title="Audio Generation">
+        <CardContainer
+          icon="AudioGeneration"
+          extraClassNames="mr-3"
+          title="Audio Generation"
+          subTitle="Compose and Manipulate Audio Effortlessly with AI">
           <GetComponentsByPath routePath={audioGenRoutePath} extensionsElements={cardsContainer} />
         </CardContainer>
 
