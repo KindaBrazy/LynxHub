@@ -4,6 +4,7 @@ import {svgPack1} from './SvgIcons/SvgIcons1';
 import {svgPack2} from './SvgIcons/SvgIcons2';
 import {svgPack3} from './SvgIcons/SvgIcons3';
 import {svgPack4} from './SvgIcons/SvgIcons4';
+import {svgPack5} from './SvgIcons/SvgIcons5';
 import {svgPackColor} from './SvgIcons/SvgIconsColor';
 
 /*
@@ -21,6 +22,7 @@ const icons = {
   ...svgPack2,
   ...svgPack3,
   ...svgPack4,
+  ...svgPack5,
   ...svgPackColor,
 };
 
