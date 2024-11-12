@@ -7,16 +7,19 @@ import {CardData} from '../Modules/types';
 // -----------------------------------------------> Elements & Props
 export type ElementProps = ComponentProps<'div'>;
 export type CardElementProps = ComponentProps<'div'> & {cards: CardData[]};
+export type SearchResultProps = ComponentProps<'div'> & {searchValue: string};
 
 export type FcProp = FC<ElementProps>;
 
 export type FcPropCard = FC<CardElementProps>;
+export type FcPropSearchResult = FC<SearchResultProps>;
 
 // -----------------------------------------------> Extension Renderer API
 
 type CompFc = (component: FC) => void;
 type CompFcProp = (component: FcProp) => void;
 type CompFcPropCard = (component: FcPropCard) => void;
+type CompFcPropSearchResult = (component: FcPropSearchResult) => void;
 
 export type ExtensionData_Renderer = {
   titleBar: {
@@ -79,6 +82,7 @@ export type ExtensionData_Renderer = {
     home: {
       replace: {
         searchAndFilter: FC | undefined;
+        searchResult: FcPropSearchResult | undefined;
         categories: FC | undefined;
       };
       add: {
@@ -199,6 +203,7 @@ export type ExtensionRendererApi = {
     home: {
       replace: {
         searchAndFilter: CompFc;
+        searchResult: CompFcPropSearchResult;
         categories: CompFc;
       };
       add: {

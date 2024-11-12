@@ -17,10 +17,12 @@ export default function HomePage() {
   const homeCategory = useCardsState('homeCategory');
   const [searchValue, setSearchValue] = useState<string>('');
 
-  const {searchAndFilter: SearchAndFilter, categories: Categories} = useMemo(
-    () => extensionsData.customizePages.home.replace,
-    [],
-  );
+  const {
+    searchAndFilter: SearchAndFilter,
+    categories: Categories,
+    searchResult: SearchResult,
+  } = useMemo(() => extensionsData.customizePages.home.replace, []);
+
   const {bottom, scrollBottom, scrollTop, top} = useMemo(() => extensionsData.customizePages.home.add, []);
 
   return (
@@ -48,6 +50,8 @@ export default function HomePage() {
               <AnimatePresence>{homeCategory.includes('Recently') && <RecentlyCards />}</AnimatePresence>
               <AnimatePresence>{homeCategory.includes('All') && <AllCardsSection />}</AnimatePresence>
             </LayoutGroup>
+          ) : SearchResult ? (
+            <SearchResult searchValue={searchValue} />
           ) : (
             <CardsBySearch searchValue={searchValue} />
           )}
