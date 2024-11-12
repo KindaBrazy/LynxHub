@@ -139,6 +139,7 @@ export type ExtensionData_Renderer = {
   addReducer: {name: string; reducer: Reducer}[];
   cards: {
     replace: FcPropCard | undefined;
+    replaceComponent: FC | undefined;
   };
 };
 
@@ -258,7 +259,7 @@ export type ExtensionRendererApi = {
     };
   };
   addReducer: (reducer: {name: string; reducer: Reducer}[]) => void;
-  cards: {replace: CompFcPropCard};
+  cards: {replace: CompFcPropCard; replaceComponent: CompFc};
 };
 
 export type ExtensionImport_Renderer = {

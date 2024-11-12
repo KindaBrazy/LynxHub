@@ -120,7 +120,10 @@ export const extensionsData: ExtensionData_Renderer = {
     },
   },
   addReducer: [],
-  cards: {replace: undefined},
+  cards: {
+    replace: undefined,
+    replaceComponent: undefined,
+  },
 };
 
 const api: ExtensionRendererApi = {
@@ -310,6 +313,9 @@ const api: ExtensionRendererApi = {
   cards: {
     replace: comp => {
       extensionsData.cards.replace = comp;
+    },
+    replaceComponent: comp => {
+      extensionsData.cards.replaceComponent = comp;
     },
   },
 };
