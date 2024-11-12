@@ -31,6 +31,7 @@ export const extensionsData: ExtensionData_Renderer = {
       modulesPage: undefined,
       settingsPage: undefined,
       dashboardPage: undefined,
+      extensionsPage: undefined,
     },
   },
   navBar: {
@@ -173,6 +174,9 @@ const api: ExtensionRendererApi = {
       },
       dashboardPage: comp => {
         extensionsData.router.replace.dashboardPage = comp;
+      },
+      extensionsPage: comp => {
+        extensionsData.router.replace.extensionsPage = comp;
       },
     },
   },
