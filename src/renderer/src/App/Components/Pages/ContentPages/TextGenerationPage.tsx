@@ -23,7 +23,11 @@ export default function TextGenerationPage() {
       <ScrollShadow size={20} className="size-full overflow-y-scroll pb-4 scrollbar-hide">
         {scrollTop && scrollTop.map((ScrollTop, index) => <ScrollTop key={index} />)}
 
-        <CardContainer icon="TextGeneration" extraClassNames="mr-3" title="Text Generation">
+        <CardContainer
+          icon="TextGeneration"
+          extraClassNames="mr-3"
+          title="Text Generation"
+          subTitle="Unleash Your Creativity with AI-Assisted Writing">
           <GetComponentsByPath routePath={textGenRoutePath} extensionsElements={cardsContainer} />
         </CardContainer>
 
