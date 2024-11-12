@@ -1,4 +1,4 @@
-import isEmpty from 'lodash/isEmpty';
+import {isEmpty} from 'lodash';
 import {useMemo} from 'react';
 
 import {getIconByName, IconNameType} from '../../../assets/icons/SvgIconsContainer';
@@ -24,21 +24,6 @@ type PagesType = {
   };
 };
 
-const ContentPages: PagesType[] = [
-  {navButton: {icon: 'Home', title: 'Home'}, path: homeRoutePath},
-  {navButton: {icon: 'ImageGeneration', title: 'Image Generation'}, path: imageGenRoutePath},
-  {navButton: {icon: 'TextGeneration', title: 'Text Generation'}, path: textGenRoutePath},
-  {navButton: {icon: 'AudioGeneration', title: 'Audio Generation'}, path: audioGenRoutePath},
-  {navButton: {icon: 'Rocket', title: 'Tools'}, path: toolsRoutePath},
-];
-
-const SettingsPages: PagesType[] = [
-  {navButton: {icon: 'Dashboard', title: 'Dashboard'}, path: dashboardRoutePath},
-  {navButton: {icon: 'Extensions2', title: 'Modules'}, path: modulesRoutePath},
-  {navButton: {icon: 'Extensions', title: 'Extensions'}, path: extensionsRoutePath},
-  {navButton: {icon: 'Slider', title: 'Settings'}, path: settingsRoutePath},
-];
-
 const GetPages = ({Pages}: {Pages: PagesType[]}) => {
   const moduleUpdateAvailable = useSettingsState('moduleUpdateAvailable');
   const appUpdateAvailable = useSettingsState('updateAvailable');
@@ -61,13 +46,40 @@ const GetPages = ({Pages}: {Pages: PagesType[]}) => {
 export function ContentPagesButtons() {
   const contentBar = useMemo(() => extensionsData.navBar.addButton.contentBar, []);
 
+  const pagesData: PagesType[] = useMemo(() => {
+    const result: PagesType[] = [
+      {navButton: {icon: 'Home', title: 'Home'}, path: homeRoutePath},
+      {navButton: {icon: 'ImageGeneration', title: 'Image Generation'}, path: imageGenRoutePath},
+      {navButton: {icon: 'TextGeneration', title: 'Text Generation'}, path: textGenRoutePath},
+      {navButton: {icon: 'AudioGeneration', title: 'Audio Generation'}, path: audioGenRoutePath},
+    ];
+
+    if (!isEmpty(extensionsData.customizePages.tools.addComponent))
+      result.push({
+        navButton: {
+          icon: 'Rocket',
+          title: 'Tools',
+        },
+        path: toolsRoutePath,
+      });
+
+    return result;
+  }, []);
+
   return (
     <>
-      <GetPages Pages={ContentPages} />
+      <GetPages Pages={pagesData} />
       {!isEmpty(contentBar) && contentBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
 }
+
+const SettingsPages: PagesType[] = [
+  {navButton: {icon: 'Dashboard', title: 'Dashboard'}, path: dashboardRoutePath},
+  {navButton: {icon: 'Extensions2', title: 'Modules'}, path: modulesRoutePath},
+  {navButton: {icon: 'Extensions', title: 'Extensions'}, path: extensionsRoutePath},
+  {navButton: {icon: 'Slider', title: 'Settings'}, path: settingsRoutePath},
+];
 
 export function SettingsPagesButtons() {
   const settingsBar = useMemo(() => extensionsData.navBar.addButton.settingsBar, []);
