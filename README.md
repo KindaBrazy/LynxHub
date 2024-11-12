@@ -250,15 +250,17 @@ Native modules are automatically detected and compiled after installation.(`post
 
 To package the app for distribution:
 
-1. For Windows:
+- Windows:
    ```bash
    npm run build:win
    ```
-
-2. For other platforms:
-   Modify the [BuilderConfig](./electron-builder.config.cjs) file to target different platforms, then run:
+- Linux:
    ```bash
-   npm run build
+   npm run build:linux
+   ```
+- MacOS:
+   ```bash
+   npm run build:mac
    ```
 
 ## 🤝 Contributing
