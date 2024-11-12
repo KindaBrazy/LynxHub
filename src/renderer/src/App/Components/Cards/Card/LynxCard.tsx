@@ -5,6 +5,7 @@ import {observer} from 'mobx-react-lite';
 import {useMemo} from 'react';
 
 import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../../Redux/AI/CardsReducer';
 import {useAppState} from '../../../Redux/App/AppReducer';
 import {useSettingsState} from '../../../Redux/App/SettingsReducer';
@@ -25,6 +26,8 @@ const LynxCard = observer(() => {
   const isPinned = useMemo(() => {
     return pinnedCards.includes(id);
   }, [pinnedCards]);
+
+  const {header: Header, body: Body, footer: Footer} = useMemo(() => extensionsData.cards.customize, []);
 
   return (
     <Badge.Ribbon
@@ -50,9 +53,9 @@ const LynxCard = observer(() => {
               ` ${compactMode ? 'w-[230px]' : 'w-[277px]'} h-fit cursor-default shadow-md !transition ` +
               ` border-1 border-foreground/10 duration-300 hover:shadow-xl dark:bg-[#3d3d3d]`
             }>
-            <LynxCardHeader />
-            {!compactMode && cardsRepoInfo && <LynxCardBody />}
-            <LynxCardFooter />
+            {Header ? <Header /> : <LynxCardHeader />}
+            {!compactMode && cardsRepoInfo && Body ? <Body /> : <LynxCardBody />}
+            {Footer ? <Footer /> : <LynxCardFooter />}
           </Card>
         </motion.div>
       </Badge.Ribbon>
