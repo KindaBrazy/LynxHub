@@ -9,6 +9,7 @@ import {homeRoutePath} from '../Pages/ContentPages/Home/HomePage';
 import {imageGenRoutePath} from '../Pages/ContentPages/ImageGenerationPage';
 import {textGenRoutePath} from '../Pages/ContentPages/TextGenerationPage';
 import {dashboardRoutePath} from '../Pages/SettingsPages/Dashboard/DashboardPage';
+import {extensionsRoutePath} from '../Pages/SettingsPages/Extensions/ExtensionsPage';
 import {modulesRoutePath} from '../Pages/SettingsPages/Modules/ModulesPage';
 import {settingsRoutePath} from '../Pages/SettingsPages/Settings/SettingsPage';
 import NavButton from './NavButton';
@@ -32,6 +33,7 @@ const ContentPages: PagesType[] = [
 const SettingsPages: PagesType[] = [
   {navButton: {icon: 'Dashboard', title: 'Dashboard'}, path: dashboardRoutePath},
   {navButton: {icon: 'Extensions2', title: 'Modules'}, path: modulesRoutePath},
+  {navButton: {icon: 'Extensions', title: 'Extensions'}, path: extensionsRoutePath},
   {navButton: {icon: 'Slider', title: 'Settings'}, path: settingsRoutePath},
 ];
 

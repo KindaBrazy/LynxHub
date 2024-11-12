@@ -9,6 +9,7 @@ import TextGenerationPage, {textGenRoutePath} from './Components/Pages/ContentPa
 import RouterMainError from './Components/Pages/RouterMainError';
 import RouterPagesError from './Components/Pages/RouterPagesError';
 import DashboardPage, {dashboardRoutePath} from './Components/Pages/SettingsPages/Dashboard/DashboardPage';
+import ExtensionsPage, {extensionsRoutePath} from './Components/Pages/SettingsPages/Extensions/ExtensionsPage';
 import ModulesPage, {modulesRoutePath} from './Components/Pages/SettingsPages/Modules/ModulesPage';
 import SettingsPage, {settingsRoutePath} from './Components/Pages/SettingsPages/Settings/SettingsPage';
 import {extensionsData} from './Extensions/ExtensionLoader';
@@ -22,6 +23,7 @@ export async function initRouter() {
     modulesPage,
     settingsPage,
     dashboardPage,
+    extensionsPage,
   } = extensionsData.router.replace;
 
   const childRoutes: RouteObject[] = [
@@ -55,6 +57,11 @@ export async function initRouter() {
       Component: isNil(settingsPage) ? SettingsPage : settingsPage,
       errorElement: <RouterPagesError />,
       path: settingsRoutePath,
+    },
+    {
+      Component: isNil(extensionsPage) ? ExtensionsPage : extensionsPage,
+      errorElement: <RouterPagesError />,
+      path: extensionsRoutePath,
     },
     {
       Component: isNil(dashboardPage) ? DashboardPage : dashboardPage,

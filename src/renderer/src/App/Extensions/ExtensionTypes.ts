@@ -46,6 +46,7 @@ export type ExtensionData_Renderer = {
       modulesPage: FC | undefined;
       settingsPage: FC | undefined;
       dashboardPage: FC | undefined;
+      extensionsPage: FC | undefined;
     };
   };
   navBar: {
@@ -163,6 +164,7 @@ export type ExtensionRendererApi = {
       modulesPage: CompFc;
       settingsPage: CompFc;
       dashboardPage: CompFc;
+      extensionsPage: CompFc;
     };
   };
   navBar: {
