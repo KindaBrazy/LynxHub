@@ -123,6 +123,11 @@ export const extensionsData: ExtensionData_Renderer = {
   cards: {
     replace: undefined,
     replaceComponent: undefined,
+    customize: {
+      header: undefined,
+      body: undefined,
+      footer: undefined,
+    },
   },
 };
 
@@ -316,6 +321,17 @@ const api: ExtensionRendererApi = {
     },
     replaceComponent: comp => {
       extensionsData.cards.replaceComponent = comp;
+    },
+    customize: {
+      header: comp => {
+        extensionsData.cards.customize.header = comp;
+      },
+      body: comp => {
+        extensionsData.cards.customize.body = comp;
+      },
+      footer: comp => {
+        extensionsData.cards.customize.footer = comp;
+      },
     },
   },
 };
