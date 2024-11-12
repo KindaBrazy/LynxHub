@@ -144,6 +144,7 @@ export type ExtensionData_Renderer = {
       header: FC | undefined;
       body: FC | undefined;
       footer: FC | undefined;
+      menu: FC | undefined;
     };
   };
 };
@@ -271,6 +272,7 @@ export type ExtensionRendererApi = {
       header: CompFc;
       body: CompFc;
       footer: CompFc;
+      menu: CompFc;
     };
   };
 };
