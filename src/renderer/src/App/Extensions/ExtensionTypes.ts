@@ -9,6 +9,7 @@ export type ElementProps = ComponentProps<'div'>;
 export type CardElementProps = ComponentProps<'div'> & {cards: CardData[]};
 
 export type FcProp = FC<ElementProps>;
+
 export type FcPropCard = FC<CardElementProps>;
 
 // -----------------------------------------------> Extension Renderer API
@@ -43,10 +44,11 @@ export type ExtensionData_Renderer = {
       imageGenerationPage: FC | undefined;
       textGenerationPage: FC | undefined;
       audioGenerationPage: FC | undefined;
-      modulesPage: FC | undefined;
-      settingsPage: FC | undefined;
+      toolsPage: FC | undefined;
       dashboardPage: FC | undefined;
+      modulesPage: FC | undefined;
       extensionsPage: FC | undefined;
+      settingsPage: FC | undefined;
     };
   };
   navBar: {
@@ -116,6 +118,7 @@ export type ExtensionData_Renderer = {
         cardsContainer: FC[];
       };
     };
+    tools: {addComponent: FC[]};
     settings: {
       add: {
         navButton: FC[];
@@ -161,10 +164,11 @@ export type ExtensionRendererApi = {
       imageGenerationPage: CompFc;
       textGenerationPage: CompFc;
       audioGenerationPage: CompFc;
-      modulesPage: CompFc;
-      settingsPage: CompFc;
+      toolsPage: CompFc;
       dashboardPage: CompFc;
+      modulesPage: CompFc;
       extensionsPage: CompFc;
+      settingsPage: CompFc;
     };
   };
   navBar: {
@@ -234,6 +238,7 @@ export type ExtensionRendererApi = {
         cardsContainer: CompFc;
       };
     };
+    tools: {addComponent: CompFc};
     settings: {
       add: {
         navButton: CompFc;

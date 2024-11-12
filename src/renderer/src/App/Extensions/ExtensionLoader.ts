@@ -31,6 +31,7 @@ export const extensionsData: ExtensionData_Renderer = {
       modulesPage: undefined,
       settingsPage: undefined,
       dashboardPage: undefined,
+      toolsPage: undefined,
       extensionsPage: undefined,
     },
   },
@@ -113,6 +114,9 @@ export const extensionsData: ExtensionData_Renderer = {
         content: [],
       },
     },
+    tools: {
+      addComponent: [],
+    },
   },
   addReducer: [],
   cards: {replace: undefined},
@@ -166,17 +170,20 @@ const api: ExtensionRendererApi = {
       audioGenerationPage: comp => {
         extensionsData.router.replace.audioGenerationPage = comp;
       },
-      modulesPage: comp => {
-        extensionsData.router.replace.modulesPage = comp;
-      },
-      settingsPage: comp => {
-        extensionsData.router.replace.settingsPage = comp;
+      toolsPage: comp => {
+        extensionsData.router.replace.toolsPage = comp;
       },
       dashboardPage: comp => {
         extensionsData.router.replace.dashboardPage = comp;
       },
+      modulesPage: comp => {
+        extensionsData.router.replace.modulesPage = comp;
+      },
       extensionsPage: comp => {
         extensionsData.router.replace.extensionsPage = comp;
+      },
+      settingsPage: comp => {
+        extensionsData.router.replace.settingsPage = comp;
       },
     },
   },
@@ -288,6 +295,9 @@ const api: ExtensionRendererApi = {
         navButton: comp => extensionsData.customizePages.dashboard.add.navButton.push(comp),
         content: comp => extensionsData.customizePages.dashboard.add.content.push(comp),
       },
+    },
+    tools: {
+      addComponent: comp => extensionsData.customizePages.tools.addComponent.push(comp),
     },
   },
   addReducer: reducer => {
