@@ -19,6 +19,7 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
   const pinnedCards = useCardsState('pinnedCards');
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
+  const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
 
   const sortedCards = useMemo(() => {
     const pin = compact(cards?.filter(card => pinnedCards.includes(card.id)));
@@ -44,7 +45,11 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
                 const isInstalled = installedCards.some(iCard => iCard.id === card.id);
                 return (
                   <CardContext.Provider key={`cardProv-${index}`} value={new CardsDataManager(card, isInstalled)}>
-                    <LynxCard key={`${card.id}-card-key`} />
+                    {ReplaceComponent ? (
+                      <ReplaceComponent key={`${card.id}-card-key`} />
+                    ) : (
+                      <LynxCard key={`${card.id}-card-key`} />
+                    )}
                   </CardContext.Provider>
                 );
               })

@@ -37,6 +37,7 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
   const installedCardSet = useMemo(() => new Set(installedCards.map(card => card.id)), [installedCards]);
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
+  const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
 
   return (
     <LayoutGroup id={`${cat}_cards_category`}>
@@ -46,7 +47,11 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
             <CardContext.Provider
               key={`cardProv-${card.id}`}
               value={new CardsDataManager(card, installedCardSet.has(card.id))}>
-              <LynxCard key={`${card.id}-card-key`} />
+              {ReplaceComponent ? (
+                <ReplaceComponent key={`${card.id}-card-key`} />
+              ) : (
+                <LynxCard key={`${card.id}-card-key`} />
+              )}
             </CardContext.Provider>
           ))
         ) : (
@@ -65,6 +70,7 @@ const AllCards = () => {
 
   const allCategory = useMemo(() => extensionsData.customizePages.home.add.allCategory, []);
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
+  const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
 
   const pinnedCards = useCardsState('pinnedCards');
 
@@ -85,7 +91,11 @@ const AllCards = () => {
             <CardContext.Provider
               key={`cardProv-${card.id}`}
               value={new CardsDataManager(card, installedCardSet.has(card.id))}>
-              <LynxCard key={`${card.id}-card-key`} />
+              {ReplaceComponent ? (
+                <ReplaceComponent key={`${card.id}-card-key`} />
+              ) : (
+                <LynxCard key={`${card.id}-card-key`} />
+              )}
               {...allCategory.map((All, index) => <All key={index} />)}
             </CardContext.Provider>
           ))
@@ -177,6 +187,7 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
   }, [searchValue, searchData]);
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
+  const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
 
   return (
     <div className="flex w-full flex-wrap gap-5 overflow-y-scroll pb-6 pl-1 scrollbar-hide">
@@ -187,7 +198,11 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
           const isInstalled = installedCards.some(iCard => iCard.id === card.id);
           return (
             <CardContext.Provider key={`cardProv-${index}`} value={new CardsDataManager(card, isInstalled)}>
-              <LynxCard key={`${card.id}-card-key`} />
+              {ReplaceComponent ? (
+                <ReplaceComponent key={`${card.id}-card-key`} />
+              ) : (
+                <LynxCard key={`${card.id}-card-key`} />
+              )}
             </CardContext.Provider>
           );
         })
