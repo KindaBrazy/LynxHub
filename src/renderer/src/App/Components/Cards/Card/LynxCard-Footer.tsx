@@ -1,8 +1,9 @@
 import {Button, CardFooter} from '@nextui-org/react';
 import {observer} from 'mobx-react-lite';
-import {useCallback} from 'react';
+import {useCallback, useMemo} from 'react';
 
 import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../../Redux/App/SettingsReducer';
 import {useCardData} from '../CardsDataManager';
 import CardMenu from './Menu/CardMenu';
@@ -18,12 +19,18 @@ const LynxCardFooter = observer(() => {
 
   const cardsRepoInfo = useSettingsState('cardsRepoInfo');
 
+  const Menu = useMemo(() => extensionsData.cards.customize.menu, []);
+
   return (
     <CardFooter className={cardsRepoInfo ? '' : 'pt-1'}>
       <div className="flex w-full flex-row gap-x-3">
         <StartButton />
         {installed ? (
-          <CardMenu />
+          Menu ? (
+            <Menu />
+          ) : (
+            <CardMenu />
+          )
         ) : (
           <Button
             radius="sm"
