@@ -4,7 +4,7 @@ import {ReactNode} from 'react';
 import {getIconByName, IconNameType} from '../../../assets/icons/SvgIconsContainer';
 
 type Props = {
-  children: ReactNode;
+  children?: ReactNode;
   icon: IconNameType;
   title: string;
   subTitle?: string;
