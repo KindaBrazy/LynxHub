@@ -8,6 +8,7 @@ import {audioGenRoutePath} from '../Pages/ContentPages/AudioGenerationPage';
 import {homeRoutePath} from '../Pages/ContentPages/Home/HomePage';
 import {imageGenRoutePath} from '../Pages/ContentPages/ImageGenerationPage';
 import {textGenRoutePath} from '../Pages/ContentPages/TextGenerationPage';
+import {toolsRoutePath} from '../Pages/ContentPages/ToolsPage';
 import {dashboardRoutePath} from '../Pages/SettingsPages/Dashboard/DashboardPage';
 import {extensionsRoutePath} from '../Pages/SettingsPages/Extensions/ExtensionsPage';
 import {modulesRoutePath} from '../Pages/SettingsPages/Modules/ModulesPage';
@@ -28,6 +29,7 @@ const ContentPages: PagesType[] = [
   {navButton: {icon: 'ImageGeneration', title: 'Image Generation'}, path: imageGenRoutePath},
   {navButton: {icon: 'TextGeneration', title: 'Text Generation'}, path: textGenRoutePath},
   {navButton: {icon: 'AudioGeneration', title: 'Audio Generation'}, path: audioGenRoutePath},
+  {navButton: {icon: 'Rocket', title: 'Tools'}, path: toolsRoutePath},
 ];
 
 const SettingsPages: PagesType[] = [

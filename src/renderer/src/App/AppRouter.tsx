@@ -6,6 +6,7 @@ import AudioGenerationPage, {audioGenRoutePath} from './Components/Pages/Content
 import HomePage, {homeRoutePath} from './Components/Pages/ContentPages/Home/HomePage';
 import ImageGenerationPage, {imageGenRoutePath} from './Components/Pages/ContentPages/ImageGenerationPage';
 import TextGenerationPage, {textGenRoutePath} from './Components/Pages/ContentPages/TextGenerationPage';
+import ToolsPage, {toolsRoutePath} from './Components/Pages/ContentPages/ToolsPage';
 import RouterMainError from './Components/Pages/RouterMainError';
 import RouterPagesError from './Components/Pages/RouterPagesError';
 import DashboardPage, {dashboardRoutePath} from './Components/Pages/SettingsPages/Dashboard/DashboardPage';
@@ -23,6 +24,7 @@ export async function initRouter() {
     modulesPage,
     settingsPage,
     dashboardPage,
+    toolsPage,
     extensionsPage,
   } = extensionsData.router.replace;
 
@@ -46,6 +48,11 @@ export async function initRouter() {
       Component: isNil(audioGenerationPage) ? AudioGenerationPage : audioGenerationPage,
       errorElement: <RouterPagesError />,
       path: audioGenRoutePath,
+    },
+    {
+      Component: isNil(toolsPage) ? ToolsPage : toolsPage,
+      errorElement: <RouterPagesError />,
+      path: toolsRoutePath,
     },
 
     {
