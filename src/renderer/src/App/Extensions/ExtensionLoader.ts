@@ -64,6 +64,7 @@ export const extensionsData: ExtensionData_Renderer = {
       replace: {
         searchAndFilter: undefined,
         categories: undefined,
+        searchResult: undefined,
       },
       add: {
         top: [],
@@ -242,6 +243,9 @@ const api: ExtensionRendererApi = {
       replace: {
         searchAndFilter: comp => {
           extensionsData.customizePages.home.replace.searchAndFilter = comp;
+        },
+        searchResult: comp => {
+          extensionsData.customizePages.home.replace.searchResult = comp;
         },
         categories: comp => {
           extensionsData.customizePages.home.replace.categories = comp;
