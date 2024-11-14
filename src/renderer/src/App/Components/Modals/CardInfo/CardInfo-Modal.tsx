@@ -1,7 +1,7 @@
 import {Divider, Modal, ModalBody, ModalContent, ModalHeader, Spinner} from '@nextui-org/react';
 import {Space} from 'antd';
 import {isEmpty} from 'lodash';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {RepoInfoType} from '../../../../../../cross/CrossTypes';
@@ -79,6 +79,10 @@ export default function CardInfoModal() {
     }
   }, [webUI, cardId, extensionsDir]);
 
+  const haveCardInfo = useMemo(() => {
+    return !isEmpty(data.lastUpdate) || !isEmpty(data.releaseTag) || !isEmpty(data.installDate);
+  }, [data]);
+
   return (
     <Modal
       classNames={{
@@ -98,8 +102,16 @@ export default function CardInfoModal() {
         <ModalBody className="mb-2 mt-4 scrollbar-hide">
           <Space size="middle" direction="vertical">
             <CardInfoDev />
-            <Divider />
-            <CardInfoRepo lastUpdate={data.lastUpdate} releaseTag={data.releaseTag} installDate={data.installDate} />
+            {haveCardInfo && (
+              <>
+                <Divider />
+                <CardInfoRepo
+                  lastUpdate={data.lastUpdate}
+                  releaseTag={data.releaseTag}
+                  installDate={data.installDate}
+                />
+              </>
+            )}
             <Divider />
             <CardInfoDisk
               installDir={installDir}
