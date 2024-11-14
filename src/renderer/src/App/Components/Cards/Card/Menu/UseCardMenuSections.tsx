@@ -1,4 +1,5 @@
 import {DropdownItemProps} from '@nextui-org/react';
+import {compact} from 'lodash';
 import {useMemo} from 'react';
 
 import {DropDownSectionType} from '../../../../Utils/Types';
@@ -21,21 +22,19 @@ const useCardMenuSections = (): DropDownSectionType[] => {
 
   const uninstall = useUninstall();
 
-  const optionItems: DropdownItemProps[] = useMemo(() => {
-    return [launchConfig, extensions, pin].filter(Boolean) as DropdownItemProps[];
-  }, [launchConfig, extensions, pin]);
+  const optionItems: DropdownItemProps[] = useMemo(
+    () => compact([launchConfig, extensions, pin]),
+    [launchConfig, extensions, pin],
+  );
 
-  const updateItems: DropdownItemProps[] = useMemo(() => {
-    return [update, checkForUpdate, autoUpdate].filter(Boolean) as DropdownItemProps[];
-  }, [update, checkForUpdate, autoUpdate]);
+  const updateItems: DropdownItemProps[] = useMemo(
+    () => compact([update, checkForUpdate, autoUpdate]),
+    [update, checkForUpdate, autoUpdate],
+  );
 
-  const aboutItems: DropdownItemProps[] = useMemo(() => {
-    return [docPage, info].filter(Boolean) as DropdownItemProps[];
-  }, [docPage, info]);
+  const aboutItems: DropdownItemProps[] = useMemo(() => compact([docPage, info]), [docPage, info]);
 
-  const dangerItems: DropdownItemProps[] = useMemo(() => {
-    return [uninstall].filter(Boolean) as DropdownItemProps[];
-  }, [uninstall]);
+  const dangerItems: DropdownItemProps[] = useMemo(() => compact([uninstall]), [uninstall]);
 
   return [
     {

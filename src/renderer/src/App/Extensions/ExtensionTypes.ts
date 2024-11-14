@@ -3,16 +3,21 @@ import {ComponentProps, FC} from 'react';
 import {RouteObject} from 'react-router-dom';
 
 import {CardData} from '../Modules/types';
+import {DropDownSectionType} from '../Utils/Types';
 
 // -----------------------------------------------> Elements & Props
 export type ElementProps = ComponentProps<'div'>;
 export type CardElementProps = ComponentProps<'div'> & {cards: CardData[]};
 export type SearchResultProps = ComponentProps<'div'> & {searchValue: string};
+export type AddCardMenuProps = ComponentProps<'div'> & {
+  addMenu: (sections: DropDownSectionType[], index?: number) => void;
+};
 
 export type FcProp = FC<ElementProps>;
 
 export type FcPropCard = FC<CardElementProps>;
 export type FcPropSearchResult = FC<SearchResultProps>;
+export type FcPropAddCardMenu = FC<AddCardMenuProps>;
 
 // -----------------------------------------------> Extension Renderer API
 
@@ -20,6 +25,7 @@ type CompFc = (component: FC) => void;
 type CompFcProp = (component: FcProp) => void;
 type CompFcPropCard = (component: FcPropCard) => void;
 type CompFcPropSearchResult = (component: FcPropSearchResult) => void;
+type CompFcPropAddCardMenu = (component: FcPropAddCardMenu) => void;
 
 export type ExtensionData_Renderer = {
   titleBar: {
@@ -144,7 +150,7 @@ export type ExtensionData_Renderer = {
       header: FC | undefined;
       body: FC | undefined;
       footer: FC | undefined;
-      menu: FC | undefined;
+      menu: {replace: FC | undefined; addSection: FcPropAddCardMenu[]};
     };
   };
 };
@@ -272,7 +278,7 @@ export type ExtensionRendererApi = {
       header: CompFc;
       body: CompFc;
       footer: CompFc;
-      menu: CompFc;
+      menu: {replace: CompFc; addSection: CompFcPropAddCardMenu};
     };
   };
 };

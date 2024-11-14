@@ -127,7 +127,10 @@ export const extensionsData: ExtensionData_Renderer = {
       header: undefined,
       body: undefined,
       footer: undefined,
-      menu: undefined,
+      menu: {
+        replace: undefined,
+        addSection: [],
+      },
     },
   },
 };
@@ -333,8 +336,11 @@ const api: ExtensionRendererApi = {
       footer: comp => {
         extensionsData.cards.customize.footer = comp;
       },
-      menu: comp => {
-        extensionsData.cards.customize.menu = comp;
+      menu: {
+        replace: comp => {
+          extensionsData.cards.customize.menu.replace = comp;
+        },
+        addSection: comp => extensionsData.cards.customize.menu.addSection.push(comp),
       },
     },
   },
