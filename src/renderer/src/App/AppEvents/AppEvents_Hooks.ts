@@ -33,7 +33,7 @@ export const useCheckCardsUpdate = () => {
             if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
           } else {
             const lynxApi: LynxApiUpdate = {isPullAvailable: rendererIpc.git.bCardUpdateAvailable(dir)};
-            const isAvailable = getMethod(id, 'manager')?.updater.updateAvailable?.(lynxApi);
+            const isAvailable = await getMethod(id, 'manager')?.updater.updateAvailable?.(lynxApi);
             if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
           }
         }
