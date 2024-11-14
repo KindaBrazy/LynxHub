@@ -19,15 +19,15 @@ const LynxCardFooter = observer(() => {
 
   const cardsRepoInfo = useSettingsState('cardsRepoInfo');
 
-  const Menu = useMemo(() => extensionsData.cards.customize.menu, []);
+  const ReplaceMenu = useMemo(() => extensionsData.cards.customize.menu.replace, []);
 
   return (
     <CardFooter className={cardsRepoInfo ? '' : 'pt-1'}>
       <div className="flex w-full flex-row gap-x-3">
         <StartButton />
         {installed ? (
-          Menu ? (
-            <Menu />
+          ReplaceMenu ? (
+            <ReplaceMenu />
           ) : (
             <CardMenu />
           )
