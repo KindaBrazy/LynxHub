@@ -5,6 +5,7 @@ import {getIconByName, IconNameType} from '../../../assets/icons/SvgIconsContain
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../Redux/App/SettingsReducer';
 import {audioGenRoutePath} from '../Pages/ContentPages/AudioGenerationPage';
+import {gamesRoutePath} from '../Pages/ContentPages/GamesPage';
 import {homeRoutePath} from '../Pages/ContentPages/Home/HomePage';
 import {imageGenRoutePath} from '../Pages/ContentPages/ImageGenerationPage';
 import {textGenRoutePath} from '../Pages/ContentPages/TextGenerationPage';
@@ -54,7 +55,7 @@ export function ContentPagesButtons() {
       {navButton: {icon: 'AudioGeneration', title: 'Audio Generation'}, path: audioGenRoutePath},
     ];
 
-    if (!isEmpty(extensionsData.customizePages.tools.addComponent))
+    if (!isEmpty(extensionsData.customizePages.tools.addComponent)) {
       result.push({
         navButton: {
           icon: 'Rocket',
@@ -62,6 +63,17 @@ export function ContentPagesButtons() {
         },
         path: toolsRoutePath,
       });
+    }
+
+    if (!isEmpty(extensionsData.customizePages.games.addComponent)) {
+      result.push({
+        navButton: {
+          icon: 'GamePad',
+          title: 'Games',
+        },
+        path: gamesRoutePath,
+      });
+    }
 
     return result;
   }, []);

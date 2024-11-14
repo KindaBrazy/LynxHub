@@ -3,6 +3,7 @@ import {createMemoryRouter, RouteObject} from 'react-router-dom';
 
 import Layout from '../Layout';
 import AudioGenerationPage, {audioGenRoutePath} from './Components/Pages/ContentPages/AudioGenerationPage';
+import GamesPage, {gamesRoutePath} from './Components/Pages/ContentPages/GamesPage';
 import HomePage, {homeRoutePath} from './Components/Pages/ContentPages/Home/HomePage';
 import ImageGenerationPage, {imageGenRoutePath} from './Components/Pages/ContentPages/ImageGenerationPage';
 import TextGenerationPage, {textGenRoutePath} from './Components/Pages/ContentPages/TextGenerationPage';
@@ -53,6 +54,11 @@ export async function initRouter() {
       Component: isNil(toolsPage) ? ToolsPage : toolsPage,
       errorElement: <RouterPagesError />,
       path: toolsRoutePath,
+    },
+    {
+      Component: GamesPage,
+      errorElement: <RouterPagesError />,
+      path: gamesRoutePath,
     },
 
     {

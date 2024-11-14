@@ -33,6 +33,7 @@ export const extensionsData: ExtensionData_Renderer = {
       dashboardPage: undefined,
       toolsPage: undefined,
       extensionsPage: undefined,
+      gamesPage: undefined,
     },
   },
   navBar: {
@@ -118,6 +119,9 @@ export const extensionsData: ExtensionData_Renderer = {
     tools: {
       addComponent: [],
     },
+    games: {
+      addComponent: [],
+    },
   },
   addReducer: [],
   cards: {
@@ -185,6 +189,9 @@ const api: ExtensionRendererApi = {
       },
       toolsPage: comp => {
         extensionsData.router.replace.toolsPage = comp;
+      },
+      gamesPage: comp => {
+        extensionsData.router.replace.gamesPage = comp;
       },
       dashboardPage: comp => {
         extensionsData.router.replace.dashboardPage = comp;
@@ -314,6 +321,9 @@ const api: ExtensionRendererApi = {
     },
     tools: {
       addComponent: comp => extensionsData.customizePages.tools.addComponent.push(comp),
+    },
+    games: {
+      addComponent: comp => extensionsData.customizePages.games.addComponent.push(comp),
     },
   },
   addReducer: reducer => {
