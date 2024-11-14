@@ -8,27 +8,6 @@ import {AppDispatch} from '../../../../../Redux/Store';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
 import {useCardData} from '../../../CardsDataManager';
 
-export const useDocPage = (): DropdownItemProps => {
-  const {repoUrl, setMenuIsOpen} = useCardData();
-
-  const onPress = useCallback(() => {
-    window.open(repoUrl);
-    setMenuIsOpen(false);
-  }, [repoUrl, setMenuIsOpen]);
-
-  return useMemo(
-    () => ({
-      className: 'cursor-default',
-      endContent: getIconByName('ExternalLink'),
-      key: 'repository-page',
-      onPress,
-      startContent: getIconByName('Document'),
-      title: 'Repository Page',
-    }),
-    [onPress],
-  );
-};
-
 export const useInfo = (): DropdownItemProps => {
   const {id, extensionsDir, repoUrl, setMenuIsOpen, title} = useCardData();
   const {name} = useDevInfo(repoUrl);
@@ -44,7 +23,6 @@ export const useInfo = (): DropdownItemProps => {
       className: 'cursor-default',
       key: 'information',
       onPress,
-      showDivider: true,
       startContent: getIconByName('Info'),
       title: 'Information',
     }),
