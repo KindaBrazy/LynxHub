@@ -54,6 +54,7 @@ export type ExtensionData_Renderer = {
       textGenerationPage: FC | undefined;
       audioGenerationPage: FC | undefined;
       toolsPage: FC | undefined;
+      gamesPage: FC | undefined;
       dashboardPage: FC | undefined;
       modulesPage: FC | undefined;
       extensionsPage: FC | undefined;
@@ -129,6 +130,7 @@ export type ExtensionData_Renderer = {
       };
     };
     tools: {addComponent: FC[]};
+    games: {addComponent: FC[]};
     settings: {
       add: {
         navButton: FC[];
@@ -182,6 +184,7 @@ export type ExtensionRendererApi = {
       textGenerationPage: CompFc;
       audioGenerationPage: CompFc;
       toolsPage: CompFc;
+      gamesPage: CompFc;
       dashboardPage: CompFc;
       modulesPage: CompFc;
       extensionsPage: CompFc;
@@ -257,6 +260,7 @@ export type ExtensionRendererApi = {
       };
     };
     tools: {addComponent: CompFc};
+    games: {addComponent: CompFc};
     settings: {
       add: {
         navButton: CompFc;
