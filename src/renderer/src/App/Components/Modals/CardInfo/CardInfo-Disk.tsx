@@ -1,6 +1,8 @@
+import {Button} from '@nextui-org/react';
 import {Descriptions, DescriptionsProps} from 'antd';
 import {useCallback, useMemo} from 'react';
 
+import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
 import rendererIpc from '../../../RendererIpc';
 import {progressElem} from './CardInfo-Modal';
 
@@ -24,21 +26,10 @@ export default function CardInfoDisk({extensionsSize, installDir, totalSize, sup
         label: 'Total Size',
         children: totalSize ? <span>{totalSize}</span> : progressElem('Calculating...'),
       },
-      {
-        key: 'installPath',
-        label: 'Installation Path',
-        children: installDir ? (
-          <span onClick={openDir} className="cursor-pointer transition-colors duration-300 hover:text-secondary-500">
-            {installDir}
-          </span>
-        ) : (
-          progressElem('')
-        ),
-      },
     ];
 
     if (supportExtensions) {
-      items.splice(1, 0, {
+      items.push({
         key: 'extensionsSize',
         label: 'Extensions Size',
         children: extensionsSize ? <span>{extensionsSize}</span> : progressElem('Calculating...'),
@@ -46,7 +37,32 @@ export default function CardInfoDisk({extensionsSize, installDir, totalSize, sup
     }
 
     return items;
-  }, [totalSize, installDir, extensionsSize, supportExtensions, openDir]);
+  }, [totalSize, installDir, extensionsSize, supportExtensions]);
 
-  return <Descriptions column={2} size="small" items={diskUsage} layout="vertical" title="Disk Usage" />;
+  return (
+    <>
+      <Descriptions
+        title={
+          <div className="flex flex-row items-center gap-x-2">
+            <div>{getIconByName('HardDrive')}</div>
+            <span>Disk Usage</span>
+          </div>
+        }
+        column={2}
+        size="small"
+        items={diskUsage}
+        layout="vertical"
+      />
+      <Button
+        radius="sm"
+        variant="faded"
+        onPress={openDir}
+        className="my-4 justify-between"
+        startContent={getIconByName('OpenFolder')}
+        endContent={getIconByName('ExternalLink')}
+        fullWidth>
+        {installDir}
+      </Button>
+    </>
+  );
 }

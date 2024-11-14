@@ -1,15 +1,27 @@
-import {Divider, Modal, ModalBody, ModalContent, ModalHeader, Spinner} from '@nextui-org/react';
+import {
+  Button,
+  Divider,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  Spinner,
+  User,
+} from '@nextui-org/react';
 import {Space} from 'antd';
-import {isEmpty} from 'lodash';
+import {isEmpty, startCase} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {RepoInfoType} from '../../../../../../cross/CrossTypes';
+import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
+import {useDevInfo} from '../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../Utils/UtilHooks';
-import CardInfoDev from './CardInfo-Dev';
 import CardInfoDisk from './CardInfo-Disk';
 import CardInfoRepo from './CardInfo-Repo';
 
@@ -29,7 +41,7 @@ const initData = {
 export default function CardInfoModal() {
   const [data, setData] = useState<RepoInfoType>(initData);
   const [installDir, setInstallDir] = useState<string>('');
-  const {cardId, extensionsDir, isOpen, title} = useModalsState('cardInfoModal');
+  const {cardId, extensionsDir, isOpen, devName, url} = useModalsState('cardInfoModal');
   const webUI = useInstalledCard(cardId);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -46,6 +58,7 @@ export default function CardInfoModal() {
   );
 
   const onClose = useCallback(() => {
+    console.log('On Close');
     dispatch(modalActions.setInfoCardId(''));
     setData(initData);
   }, [dispatch]);
@@ -83,34 +96,40 @@ export default function CardInfoModal() {
     return !isEmpty(data.lastUpdate) || !isEmpty(data.releaseTag) || !isEmpty(data.installDate);
   }, [data]);
 
+  const {picUrl} = useDevInfo(url);
+
   return (
     <Modal
       classNames={{
         backdrop: '!top-10',
-        closeButton: 'cursor-default hover:bg-danger text-foreground transition-colors duration-300',
         wrapper: '!top-10 scrollbar-hide',
+        base: '!pb-0',
       }}
       size="xl"
       isOpen={isOpen}
       onClose={onClose}
-      backdrop="transparent"
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
-      className="border-2 border-foreground/5 bg-foreground-100 drop-shadow-lg">
+      className="overflow-hidden border-2 border-foreground/5 drop-shadow-lg"
+      hideCloseButton>
       <ModalContent className="pb-4">
-        <ModalHeader className="justify-center border-b border-foreground/20 shadow-md">{title}</ModalHeader>
-        <ModalBody className="mb-2 mt-4 scrollbar-hide">
+        <ModalHeader className="border-b border-foreground/20 bg-foreground-100 shadow-md">
+          {validateGitRepoUrl(url) && (
+            <User
+              description={
+                <Link size="sm" href={url} isExternal>
+                  {url}
+                </Link>
+              }
+              name={startCase(devName)}
+              avatarProps={{src: picUrl}}
+            />
+          )}
+        </ModalHeader>
+        <ModalBody className="mt-4 pb-0 scrollbar-hide">
           <Space size="middle" direction="vertical">
-            <CardInfoDev />
             {haveCardInfo && (
-              <>
-                <Divider />
-                <CardInfoRepo
-                  lastUpdate={data.lastUpdate}
-                  releaseTag={data.releaseTag}
-                  installDate={data.installDate}
-                />
-              </>
+              <CardInfoRepo lastUpdate={data.lastUpdate} releaseTag={data.releaseTag} installDate={data.installDate} />
             )}
             <Divider />
             <CardInfoDisk
@@ -121,6 +140,20 @@ export default function CardInfoModal() {
             />
           </Space>
         </ModalBody>
+
+        <ModalFooter className="border-t border-foreground/10 bg-foreground-100">
+          <Button
+            onPress={() => {
+              onOpenChange(false);
+              onClose();
+            }}
+            radius="sm"
+            color="danger"
+            variant="faded"
+            fullWidth>
+            <span className="font-semibold">Close</span>
+          </Button>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   );
