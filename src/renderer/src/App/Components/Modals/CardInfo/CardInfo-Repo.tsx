@@ -3,6 +3,7 @@ import {Descriptions, DescriptionsProps} from 'antd';
 import {isEmpty} from 'lodash';
 import {useMemo} from 'react';
 
+import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
 import {useModalsState} from '../../../Redux/AI/ModalsReducer';
 import LynxTooltip from '../../Reusable/LynxTooltip';
 
@@ -66,7 +67,7 @@ export default function CardInfoRepo({installDate, lastUpdate, releaseTag}: Prop
             size="sm"
             href={releasePage}
             color="foreground"
-            className="transition-colors duration-300 hover:text-secondary-500"
+            className="transition-colors duration-300 hover:text-primary"
             isExternal>
             {releasePage}
           </Link>
@@ -79,5 +80,18 @@ export default function CardInfoRepo({installDate, lastUpdate, releaseTag}: Prop
     return result;
   }, [installDate, lastUpdate, releaseTag, releasePage]);
 
-  return <Descriptions column={2} size="small" layout="vertical" title="Repository" items={repository} />;
+  return (
+    <Descriptions
+      title={
+        <div className="flex flex-row items-center gap-x-2">
+          <div>{getIconByName('GitHub')}</div>
+          <span>Repository</span>
+        </div>
+      }
+      column={2}
+      size="small"
+      layout="vertical"
+      items={repository}
+    />
+  );
 }
