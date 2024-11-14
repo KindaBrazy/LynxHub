@@ -6,6 +6,7 @@ import {useNavigate} from 'react-router-dom';
 import {toMs} from '../../../../cross/CrossUtils';
 import StorageTypes from '../../../../cross/StorageTypes';
 import {useModules} from '../Modules/ModulesContext';
+import {LynxApiUpdate} from '../Modules/types';
 import {cardsActions, useCardsState} from '../Redux/AI/CardsReducer';
 import {appActions} from '../Redux/App/AppReducer';
 import {settingsActions} from '../Redux/App/SettingsReducer';
@@ -31,7 +32,8 @@ export const useCheckCardsUpdate = () => {
             const isAvailable = await rendererIpc.git.bCardUpdateAvailable(dir);
             if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
           } else {
-            const isAvailable = getMethod(id, 'manager')?.updater.updateAvailable?.();
+            const lynxApi: LynxApiUpdate = {isPullAvailable: rendererIpc.git.bCardUpdateAvailable(dir)};
+            const isAvailable = getMethod(id, 'manager')?.updater.updateAvailable?.(lynxApi);
             if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
           }
         }
