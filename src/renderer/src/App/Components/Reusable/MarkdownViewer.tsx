@@ -1,9 +1,9 @@
+import {Kbd} from '@mantine/core';
 import {Spinner} from '@nextui-org/react';
 import {Result} from 'antd';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import React, {useEffect, useState} from 'react';
-import type {Components} from 'react-markdown';
-import ReactMarkdown from 'react-markdown';
+import {Children, isValidElement, useEffect, useState} from 'react';
+import ReactMarkdown, {Components} from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
@@ -139,14 +139,14 @@ export default function MarkdownViewer({repoPath}: MarkdownViewerProps) {
 
       if (inline) {
         return (
-          <code className="rounded bg-gray-100 px-1 py-0.5 text-sm dark:bg-gray-800" {...props}>
+          <code className="rounded bg-gray-100 px-1 py-0.5 text-foreground-100 text-sm dark:bg-gray-800" {...props}>
             {children}
           </code>
         );
       }
 
       return (
-        <code className={language ? className : ''} {...props}>
+        <code className={`${language ? className : ''} text-foreground-800`} {...props}>
           {children}
         </code>
       );
@@ -166,10 +166,9 @@ export default function MarkdownViewer({repoPath}: MarkdownViewerProps) {
       </div>
     ),
     p: ({children, ...props}) => {
-      const childArray = React.Children.toArray(children);
-      const hasOnlyImages = childArray.every(child => React.isValidElement(child) && child.type === 'img');
-      const hasMultipleImages =
-        childArray.filter(child => React.isValidElement(child) && child.type === 'img').length > 1;
+      const childArray = Children.toArray(children);
+      const hasOnlyImages = childArray.every(child => isValidElement(child) && child.type === 'img');
+      const hasMultipleImages = childArray.filter(child => isValidElement(child) && child.type === 'img').length > 1;
 
       return (
         <p
@@ -182,16 +181,7 @@ export default function MarkdownViewer({repoPath}: MarkdownViewerProps) {
         </p>
       );
     },
-    kbd: ({...props}) => (
-      <kbd
-        className={
-          'rounded-lg border border-gray-200 bg-gray-100 px-2 py-1.5 text-xs' +
-          ' font-semibold text-gray-800 dark:border-gray-500 dark:bg-gray-600' +
-          ' dark:text-gray-100'
-        }
-        {...props}
-      />
-    ),
+    kbd: ({...props}) => <Kbd {...props} />,
     details: ({...props}) => <details className="my-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-800/50" {...props} />,
     summary: ({...props}) => <summary className="cursor-pointer font-medium" {...props} />,
   };
