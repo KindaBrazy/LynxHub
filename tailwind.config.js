@@ -1,4 +1,5 @@
 import {nextui} from '@nextui-org/react';
+import typography from '@tailwindcss/typography';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -42,6 +43,7 @@ export default {
         },
       },
     }),
+    typography(),
   ],
   theme: {
     extend: {
