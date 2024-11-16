@@ -5,7 +5,6 @@ import perfectionist from 'eslint-plugin-perfectionist';
 import react from 'eslint-plugin-react';
 import hooksPlugin from 'eslint-plugin-react-hooks';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
-import tailwind from 'eslint-plugin-tailwindcss';
 import globals from 'globals';
 import tsEslint from 'typescript-eslint';
 
@@ -33,8 +32,6 @@ export default [
       '@typescript-eslint/explicit-function-return-type': 'off',
     },
   },
-
-  ...tailwind.configs['flat/recommended'],
 
   {
     files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
@@ -69,7 +66,6 @@ export default [
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
 
-      'tailwindcss/no-custom-classname': 'off',
       'no-async-promise-executor': 'off',
 
       'perfectionist/sort-jsx-props': [

@@ -3,8 +3,5 @@
   "printWidth": 120,
   "bracketSpacing": false,
   "bracketSameLine": true,
-  "arrowParens": "avoid",
-  "plugins": [
-    "prettier-plugin-tailwindcss"
-  ]
+  "arrowParens": "avoid"
 }
