@@ -3,7 +3,7 @@ import {compact} from 'lodash';
 import {useMemo} from 'react';
 
 import {DropDownSectionType} from '../../../../Utils/Types';
-import {useInfo} from './MenuItems/CardMenu-About';
+import {useInfo, useREADME} from './MenuItems/CardMenu-About';
 import {useUninstall} from './MenuItems/CardMenu-Danger';
 import {useExtensions, useLaunchConfig, usePin} from './MenuItems/CardMenu-Options';
 import {useAutoUpdate, useCheckForUpdate, useUpdate} from './MenuItems/CardMenu-Update';
@@ -18,6 +18,7 @@ const useCardMenuSections = (): DropDownSectionType[] => {
   const autoUpdate = useAutoUpdate();
 
   const info = useInfo();
+  const readme = useREADME();
 
   const uninstall = useUninstall();
 
@@ -31,18 +32,16 @@ const useCardMenuSections = (): DropDownSectionType[] => {
     [update, checkForUpdate, autoUpdate],
   );
 
-  const extraItems: DropdownItemProps[] = useMemo(() => compact([info, uninstall]), [info, uninstall]);
+  const extraItems: DropdownItemProps[] = useMemo(() => compact([info, readme, uninstall]), [info, readme, uninstall]);
 
   return [
     {
       key: 'options',
-      title: 'Options',
       showDivider: true,
       items: optionItems,
     },
     {
       key: 'update',
-      title: 'Update',
       showDivider: true,
       items: updateItems,
     },

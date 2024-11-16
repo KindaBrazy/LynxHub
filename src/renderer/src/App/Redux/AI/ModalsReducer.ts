@@ -65,6 +65,7 @@ type ModalsState = {
   updateApp: {
     isOpen: boolean;
   };
+  readmeModal: {isOpen: boolean; url: string; title: string};
 };
 
 type ModalsStateTypes = {
@@ -150,6 +151,11 @@ const initialState: ModalsState = {
     title: '',
     type: 'install',
   },
+  readmeModal: {
+    isOpen: false,
+    url: '',
+    title: '',
+  },
 };
 //#endregion
 
@@ -211,6 +217,12 @@ const modalSlice = createSlice({
     },
     setInfoCardId: (state, action: PayloadAction<string>) => {
       state.cardInfoModal.cardId = action.payload;
+    },
+    openReadme: (state, action: PayloadAction<{url: string; title: string}>) => {
+      state.readmeModal.url = action.payload.url;
+      state.readmeModal.title = action.payload.title;
+
+      state.readmeModal.isOpen = true;
     },
     //#endregion
 
