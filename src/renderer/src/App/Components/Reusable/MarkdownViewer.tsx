@@ -2,7 +2,7 @@ import {Kbd} from '@mantine/core';
 import {Spinner} from '@nextui-org/react';
 import {Result} from 'antd';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {Children, isValidElement, useEffect, useState} from 'react';
+import {Children, CSSProperties, HTMLAttributes, isValidElement, MouseEvent, useEffect, useState} from 'react';
 import ReactMarkdown, {Components} from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
@@ -16,11 +16,11 @@ interface MarkdownViewerProps {
 }
 
 // Define custom props for components that need additional properties
-interface CustomDivProps extends React.HTMLAttributes<HTMLDivElement> {
+interface CustomDivProps extends HTMLAttributes<HTMLDivElement> {
   'data-align'?: string;
 }
 
-interface CustomCodeProps extends React.HTMLAttributes<HTMLElement> {
+interface CustomCodeProps extends HTMLAttributes<HTMLElement> {
   'data-inline'?: boolean;
 }
 
@@ -70,7 +70,7 @@ export default function MarkdownViewer({repoPath}: MarkdownViewerProps) {
     return src;
   };
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
     const href = e.currentTarget.getAttribute('href');
     if (href?.startsWith('#')) {
       e.preventDefault();
@@ -83,7 +83,7 @@ export default function MarkdownViewer({repoPath}: MarkdownViewerProps) {
 
   const components: Components = {
     img: ({src, alt, height, width, ...props}) => {
-      const style: React.CSSProperties = {};
+      const style: CSSProperties = {};
 
       if (height) {
         style.height = `${height}px`;
@@ -187,7 +187,7 @@ export default function MarkdownViewer({repoPath}: MarkdownViewerProps) {
   };
 
   return loading ? (
-    <Spinner size="lg" color="primary" className="size-full" label="Please wait..." />
+    <Spinner size="lg" color="primary" label="Please wait..." className="size-full my-16" />
   ) : error ? (
     <Result title={error} status="error" subTitle="Please check your internet and try again." />
   ) : (
@@ -200,7 +200,7 @@ export default function MarkdownViewer({repoPath}: MarkdownViewerProps) {
           theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
         },
       }}
-      className="size-full">
+      className="size-full rounded-xl bg-white dark:bg-[#0d1117]">
       <div className="prose prose-slate mr-4 max-w-none rounded-xl bg-white p-8 dark:prose-invert dark:bg-[#0d1117]">
         <ReactMarkdown
           components={components}

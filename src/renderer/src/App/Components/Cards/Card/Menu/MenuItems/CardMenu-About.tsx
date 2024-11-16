@@ -29,3 +29,25 @@ export const useInfo = (): DropdownItemProps => {
     [onPress],
   );
 };
+
+export const useREADME = (): DropdownItemProps => {
+  const {repoUrl, title, setMenuIsOpen} = useCardData();
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const onPress = useCallback(() => {
+    dispatch(modalActions.openReadme({url: repoUrl, title}));
+    setMenuIsOpen(false);
+  }, [dispatch, repoUrl, setMenuIsOpen]);
+
+  return useMemo(
+    () => ({
+      className: 'cursor-default',
+      key: 'readme',
+      onPress,
+      startContent: getIconByName('Document'),
+      title: 'README',
+    }),
+    [onPress],
+  );
+};
