@@ -3,11 +3,11 @@ import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {compact, isEmpty, isNil} from 'lodash';
 import {memo, useMemo} from 'react';
 
+import {extractGitUrl} from '../../../../../cross/CrossUtils';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useModules} from '../../Modules/ModulesContext';
 import {CardData} from '../../Modules/types';
 import {useCardsState} from '../../Redux/AI/CardsReducer';
-import {getDevInfo} from '../../Utils/LocalStorage';
 import {searchInStrings} from '../../Utils/UtilFunctions';
 import HomeCategory from '../Pages/ContentPages/Home/HomeCategory';
 import LynxCard from './Card/LynxCard';
@@ -178,13 +178,19 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
   const installedCards = useCardsState('installedCards');
   const {allCards} = useModules();
 
-  const searchData = useMemo(() => {
-    return allCards.map(card => ({id: card.id, data: [card.description, card.title, getDevInfo(card.repoUrl)?.name]}));
-  }, [allCards]);
+  const searchData = useMemo(
+    () =>
+      allCards.map(card => ({
+        id: card.id,
+        data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
+      })),
+    [allCards],
+  );
 
-  const filteredCards = useMemo(() => {
-    return allCards.filter(card => searchInStrings(searchValue, searchData.find(data => data.id === card.id)?.data));
-  }, [searchValue, searchData]);
+  const filteredCards = useMemo(
+    () => allCards.filter(card => searchInStrings(searchValue, searchData.find(data => data.id === card.id)?.data)),
+    [searchValue, searchData],
+  );
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
   const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
