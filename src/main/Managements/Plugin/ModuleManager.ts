@@ -1,15 +1,22 @@
 import path from 'node:path';
 
 import {ipcMain} from 'electron';
+import isEmpty from 'lodash/isEmpty';
 
 import {APP_BUILD_NUMBER} from '../../../cross/CrossConstants';
 import {MainModuleImportType, MainModules, ModulesInfo} from '../../../cross/CrossTypes';
+import {toMs} from '../../../cross/CrossUtils';
 import {modulesChannels} from '../../../cross/IpcChannelAndTypes';
-import {appManager} from '../../index';
+import {LynxApiUpdate} from '../../../renderer/src/App/Modules/types';
+import {appManager, storageManager} from '../../index';
 import {getAppDirectory} from '../AppDataManager';
+import GitManager from '../GitManager';
 import {BasePluginManager} from './BasePluginManager';
 
 export default class ModuleManager extends BasePluginManager<ModulesInfo, MainModules> {
+  private checkInterval?: NodeJS.Timeout = undefined;
+  private availableUpdates: string[] = [];
+
   public static getModulesPath() {
     return getAppDirectory('Modules');
   }
@@ -62,5 +69,37 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo, MainMo
     };
 
     listen();
+  }
+
+  public async checkForCardsUpdate(updateTypes: {id: string; type: 'git' | 'stepper'}[]) {
+    const installedCards = storageManager.getData('cards').installedCards;
+    this.availableUpdates = [];
+
+    for (const card of installedCards) {
+      const {id, dir} = card;
+      const method = this.getMethodsById(id)?.updateAvailable;
+      const updateType = updateTypes.find(update => update.id === id)?.type;
+      if (!updateType || updateType === 'git') {
+        const isAvailable = await GitManager.isUpdateAvailable(dir);
+        if (isAvailable) {
+          this.availableUpdates.push(id);
+        }
+      } else if (method) {
+        const lynxApi: LynxApiUpdate = {isPullAvailable: GitManager.isUpdateAvailable(dir)};
+        const isAvailable = await method(lynxApi);
+        if (isAvailable) {
+          this.availableUpdates.push(id);
+        }
+      }
+    }
+
+    appManager.getWebContent()?.send(modulesChannels.onCardsUpdateAvailable, this.availableUpdates);
+  }
+
+  public async cardsUpdateInterval(updateType: {id: string; type: 'git' | 'stepper'}[]) {
+    if (!this.checkInterval && !isEmpty(updateType)) {
+      this.checkForCardsUpdate(updateType);
+      this.checkInterval = setInterval(() => this.checkForCardsUpdate(updateType), toMs(30, 'minutes'));
+    }
   }
 }

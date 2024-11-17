@@ -1,4 +1,4 @@
-import {isEmpty} from 'lodash';
+import {compact, isNil} from 'lodash';
 import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router-dom';
@@ -6,7 +6,6 @@ import {useNavigate} from 'react-router-dom';
 import {toMs} from '../../../../cross/CrossUtils';
 import StorageTypes from '../../../../cross/StorageTypes';
 import {useModules} from '../Modules/ModulesContext';
-import {LynxApiUpdate} from '../Modules/types';
 import {cardsActions, useCardsState} from '../Redux/AI/CardsReducer';
 import {appActions} from '../Redux/App/AppReducer';
 import {settingsActions} from '../Redux/App/SettingsReducer';
@@ -18,35 +17,26 @@ import rendererIpc from '../RendererIpc';
 export const useCheckCardsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
   const installedCards = useCardsState('installedCards');
-  const appUpdateInterval = useRef<NodeJS.Timeout>();
-  const {getMethod, allCards} = useModules();
+  const {getMethod} = useModules();
 
   useEffect(() => {
-    if (!isEmpty(allCards)) {
-      const checkForUpdate = async () => {
-        for (const card of installedCards) {
-          const {id, dir} = card;
-          const updater = getMethod(id, 'manager')?.updater;
-          const updateType = updater?.updateType;
-          if (!updater || updateType === 'git') {
-            const isAvailable = await rendererIpc.git.bCardUpdateAvailable(dir);
-            if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
-          } else {
-            const lynxApi: LynxApiUpdate = {isPullAvailable: rendererIpc.git.bCardUpdateAvailable(dir)};
-            const isAvailable = await getMethod(id, 'manager')?.updater.updateAvailable?.(lynxApi);
-            if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
-          }
-        }
+    rendererIpc.module.onCardsUpdateAvailable((_e, result) => {
+      console.log('update result', result);
+      dispatch(cardsActions.setUpdateAvailable(result));
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    const updateMethod = installedCards.map(card => {
+      const type = getMethod(card.id, 'manager')?.updater.updateType;
+      if (isNil(type)) return undefined;
+      return {
+        id: card.id,
+        type,
       };
-
-      checkForUpdate();
-
-      clearInterval(appUpdateInterval.current);
-      appUpdateInterval.current = undefined;
-
-      appUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
-    }
-  }, [installedCards, getMethod, allCards, dispatch]);
+    });
+    rendererIpc.module.checkCardsUpdateInterval(compact(updateMethod));
+  }, [installedCards, getMethod]);
 };
 
 export const useCheckModulesUpdate = () => {
