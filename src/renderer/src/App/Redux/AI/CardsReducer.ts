@@ -82,6 +82,9 @@ const cardsSlice = createSlice({
         state.updateAvailable = [...state.updateAvailable, action.payload];
       }
     },
+    setUpdateAvailable: (state, action: PayloadAction<string[]>) => {
+      state.updateAvailable = action.payload;
+    },
     removeUpdateAvailable: (state, action: PayloadAction<string>) => {
       state.updateAvailable = state.updateAvailable.filter(card => card !== action.payload);
     },

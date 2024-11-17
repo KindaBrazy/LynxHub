@@ -149,6 +149,9 @@ export const modulesChannels = {
   updateModule: 'modules:update-module',
   updateAllModules: 'modules:update-all-modules',
 
+  checkCardsUpdateInterval: 'modules:cards_update_interval',
+  onCardsUpdateAvailable: 'modules:on_cards_update_available',
+
   onReload: 'modules:on-reload',
   onUpdatedModules: 'modules:on-updated-modules',
 

@@ -198,7 +198,6 @@ export type CardRendererMethods = {
     updater: {
       updateType: 'git' | 'stepper';
       startUpdate?: (stepper: InstallStepperType, dir: string) => void;
-      updateAvailable?: (lynxApi: LynxApiUpdate) => Promise<boolean>;
     };
   };
 };

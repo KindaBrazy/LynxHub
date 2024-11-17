@@ -119,6 +119,12 @@ const rendererIpc = {
 
     onUpdatedModules: (result: (event: IpcRendererEvent, updated: string | string[]) => void) =>
       ipc.on(modulesChannels.onUpdatedModules, result),
+
+    checkCardsUpdateInterval: (updateType: {id: string; type: 'git' | 'stepper'}[]) =>
+      ipc.send(modulesChannels.checkCardsUpdateInterval, updateType),
+
+    onCardsUpdateAvailable: (result: (event: IpcRendererEvent, cards: string[]) => void) =>
+      ipc.on(modulesChannels.onCardsUpdateAvailable, result),
   },
 
   /** Managing app extensions */

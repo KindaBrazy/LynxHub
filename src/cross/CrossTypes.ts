@@ -1,3 +1,4 @@
+import {LynxApiUpdate} from '../renderer/src/App/Modules/types';
 import {
   BINARIES_FOLDER_NAME,
   EXTENSIONS_FOLDER_NAME,
@@ -70,6 +71,7 @@ export type CardMainMethods = {
     on(channel: string, listener: (event: any, ...args: any[]) => void): void;
     send: (channel: string, ...args: any[]) => void;
   }) => void;
+  updateAvailable?: (lynxApi: LynxApiUpdate) => Promise<boolean>;
 };
 
 export type ExtensionMainMethods = {

@@ -139,6 +139,17 @@ function modules() {
   ipcMain.handle(modulesChannels.anyUpdateAvailable, () => moduleManager.anyUpdateAvailable());
   ipcMain.handle(modulesChannels.updateModule, (_, id: string) => moduleManager.updatePlugin(id));
   ipcMain.handle(modulesChannels.updateAllModules, () => moduleManager.updateAllPlugins());
+
+  ipcMain.on(
+    modulesChannels.checkCardsUpdateInterval,
+    (
+      _,
+      updateType: {
+        id: string;
+        type: 'git' | 'stepper';
+      }[],
+    ) => moduleManager.cardsUpdateInterval(updateType),
+  );
 }
 
 function extensions() {
