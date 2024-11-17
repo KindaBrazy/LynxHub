@@ -54,7 +54,7 @@ const LynxCard = observer(() => {
               ` border-1 border-foreground/10 duration-300 hover:shadow-xl dark:bg-[#3d3d3d]`
             }>
             {Header ? <Header /> : <LynxCardHeader />}
-            {!compactMode && cardsRepoInfo && Body ? <Body /> : <LynxCardBody />}
+            {!compactMode && cardsRepoInfo && (Body ? <Body /> : <LynxCardBody />)}
             {Footer ? <Footer /> : <LynxCardFooter />}
           </Card>
         </motion.div>
