@@ -25,7 +25,7 @@ const HomeFilter = memo(({selectedCategories}: Props) => {
   }, []);
 
   return (
-    <Dropdown className="border-2 border-foreground/5 drop-shadow-lg" showArrow>
+    <Dropdown size="sm" className="border !border-foreground/15 drop-shadow-lg" showArrow>
       <DropdownTrigger>
         <Button
           className={
@@ -40,6 +40,7 @@ const HomeFilter = memo(({selectedCategories}: Props) => {
       </DropdownTrigger>
 
       <DropdownMenu
+        variant="faded"
         aria-label="pinned"
         closeOnSelect={false}
         selectionMode="multiple"
