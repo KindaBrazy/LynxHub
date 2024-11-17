@@ -110,7 +110,7 @@ export default class GitManager {
       const status: StatusResult = await simpleGit(path.resolve(repoDir)).remote(['update']).status();
       return status.behind > 0;
     } catch (error) {
-      console.error('Error checking for updates:', error);
+      console.error('Error checking for updates:', error, repoDir);
       return false;
     }
   }
