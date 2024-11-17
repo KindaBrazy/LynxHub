@@ -18,4 +18,6 @@ if (!isDev()) {
   Object.assign(console, log.functions);
 }
 
-createRoot(document.getElementById('root') as HTMLElement).render(<RouterProvider router={router} />);
+createRoot(document.getElementById('root') as HTMLElement).render(
+  <RouterProvider router={router} future={{v7_startTransition: true}} />,
+);
