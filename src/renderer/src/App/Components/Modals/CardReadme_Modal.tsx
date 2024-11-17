@@ -38,7 +38,7 @@ export default function CardReadmeModal() {
       <ModalContent className="overflow-hidden">
         <ModalHeader
           className={'shrink-0 justify-center overflow-hidden bg-foreground-200 shadow-md dark:bg-foreground-100'}>
-          <Link href={url} isExternal>
+          <Link href={url} className="text-large" isExternal>
             {title}
           </Link>
         </ModalHeader>
