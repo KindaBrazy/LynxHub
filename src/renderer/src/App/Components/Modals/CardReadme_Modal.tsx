@@ -43,7 +43,9 @@ export default function CardReadmeModal() {
           </Link>
         </ModalHeader>
         <ModalBody className="p-0">
-          {!isEmpty(url) && <MarkdownViewer repoPath={`${extractGitUrl(url).owner}/${extractGitUrl(url).repo}`} />}
+          {!isEmpty(url) && (
+            <MarkdownViewer rounded={false} repoPath={`${extractGitUrl(url).owner}/${extractGitUrl(url).repo}`} />
+          )}
         </ModalBody>
         <ModalFooter className="border-t border-foreground/10 bg-foreground-100">
           <Button

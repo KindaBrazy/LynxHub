@@ -13,9 +13,9 @@ import {useAppState} from '../../Redux/App/AppReducer';
 
 interface MarkdownViewerProps {
   repoPath: string;
+  rounded?: boolean;
 }
 
-// Define custom props for components that need additional properties
 interface CustomDivProps extends HTMLAttributes<HTMLDivElement> {
   'data-align'?: string;
 }
@@ -24,7 +24,7 @@ interface CustomCodeProps extends HTMLAttributes<HTMLElement> {
   'data-inline'?: boolean;
 }
 
-export default function MarkdownViewer({repoPath}: MarkdownViewerProps) {
+export default function MarkdownViewer({repoPath, rounded = true}: MarkdownViewerProps) {
   const [content, setContent] = useState<string>('');
   const isDarkMode = useAppState('darkMode');
   const [loading, setLoading] = useState<boolean>(true);
@@ -189,7 +189,7 @@ export default function MarkdownViewer({repoPath}: MarkdownViewerProps) {
   return loading ? (
     <Spinner size="lg" color="primary" label="Please wait..." className="size-full my-16" />
   ) : error ? (
-    <Result title={error} status="error" subTitle="Please check your internet and try again." />
+    <Result title={error} status="error" subTitle="Please check your internet connection and try again." />
   ) : (
     <OverlayScrollbarsComponent
       options={{
@@ -200,7 +200,7 @@ export default function MarkdownViewer({repoPath}: MarkdownViewerProps) {
           theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
         },
       }}
-      className="size-full rounded-xl bg-white dark:bg-[#0d1117]">
+      className={`size-full ${rounded && 'rounded-xl'} bg-white dark:bg-[#0d1117]`}>
       <div className="prose prose-slate mr-4 max-w-none rounded-xl bg-white p-8 dark:prose-invert dark:bg-[#0d1117]">
         <ReactMarkdown
           components={components}
