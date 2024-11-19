@@ -26,6 +26,8 @@ const Modals = memo(() => {
     cardReadme: CardReadme,
   } = useMemo(() => extensionsData.replaceModals, []);
 
+  const addModal = useMemo(() => extensionsData.addModal, []);
+
   return (
     <>
       {Warning ? <Warning /> : <WarningModal />}
@@ -38,6 +40,9 @@ const Modals = memo(() => {
       {LConfig ? <LConfig /> : <LaunchConfig />}
       {UApp ? <UApp /> : <UpdateApp />}
       {CardReadme ? <CardReadme /> : <CardReadmeModal />}
+      {addModal.map((Modal, index) => (
+        <Modal key={index} />
+      ))}
     </>
   );
 });
