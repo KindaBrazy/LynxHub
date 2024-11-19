@@ -139,6 +139,7 @@ export const extensionsData: ExtensionData_Renderer = {
     },
   },
   addModal: [],
+  replaceMarkdownViewer: undefined,
 };
 
 const api: ExtensionRendererApi = {
@@ -257,6 +258,9 @@ const api: ExtensionRendererApi = {
     cardReadme: comp => {
       extensionsData.replaceModals.cardReadme = comp;
     },
+  },
+  replaceMarkdownViewer: comp => {
+    extensionsData.replaceMarkdownViewer = comp;
   },
   addCustomHook: comp => extensionsData.addCustomHook.push(comp),
   addModal: comp => extensionsData.addModal.push(comp),

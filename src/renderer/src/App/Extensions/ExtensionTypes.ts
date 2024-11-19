@@ -12,12 +12,14 @@ export type SearchResultProps = ComponentProps<'div'> & {searchValue: string};
 export type AddCardMenuProps = ComponentProps<'div'> & {
   addMenu: (sections: DropDownSectionType[], index?: number) => void;
 };
+export type ReplaceMdProps = ComponentProps<'div'> & {repoPath: string; rounded?: boolean};
 
 export type FcProp = FC<ElementProps>;
 
 export type FcPropCard = FC<CardElementProps>;
 export type FcPropSearchResult = FC<SearchResultProps>;
 export type FcPropAddCardMenu = FC<AddCardMenuProps>;
+export type FcPropReplaceMd = FC<ReplaceMdProps>;
 
 // -----------------------------------------------> Extension Renderer API
 
@@ -26,6 +28,7 @@ type CompFcProp = (component: FcProp) => void;
 type CompFcPropCard = (component: FcPropCard) => void;
 type CompFcPropSearchResult = (component: FcPropSearchResult) => void;
 type CompFcPropAddCardMenu = (component: FcPropAddCardMenu) => void;
+type CompFcPropReplaceMd = (component: FcPropReplaceMd) => void;
 
 export type ExtensionData_Renderer = {
   titleBar: {
@@ -84,6 +87,7 @@ export type ExtensionData_Renderer = {
     warning: FC | undefined;
     cardReadme: FC | undefined;
   };
+  replaceMarkdownViewer: FcPropReplaceMd | undefined;
   addModal: FC[];
   addCustomHook: FC[];
   replaceBackground: FC | undefined;
@@ -216,6 +220,7 @@ export type ExtensionRendererApi = {
     warning: CompFc;
     cardReadme: CompFc;
   };
+  replaceMarkdownViewer: CompFcPropReplaceMd;
   addModal: CompFc;
   addCustomHook: CompFc;
   replaceBackground: CompFc;
