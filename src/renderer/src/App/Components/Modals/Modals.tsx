@@ -23,6 +23,7 @@ const Modals = memo(() => {
     cardExtensions: CExtensions,
     launchConfig: LConfig,
     updateApp: UApp,
+    cardReadme: CardReadme,
   } = useMemo(() => extensionsData.replaceModals, []);
 
   return (
@@ -36,7 +37,7 @@ const Modals = memo(() => {
       {CExtensions ? <CExtensions /> : <CardExtensions />}
       {LConfig ? <LConfig /> : <LaunchConfig />}
       {UApp ? <UApp /> : <UpdateApp />}
-      <CardReadmeModal />
+      {CardReadme ? <CardReadme /> : <CardReadmeModal />}
     </>
   );
 });

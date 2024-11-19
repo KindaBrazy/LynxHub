@@ -82,6 +82,7 @@ export type ExtensionData_Renderer = {
     uninstallCard: FC | undefined;
     install: FC | undefined;
     warning: FC | undefined;
+    cardReadme: FC | undefined;
   };
   addCustomHook: FC[];
   replaceBackground: FC | undefined;
@@ -212,6 +213,7 @@ export type ExtensionRendererApi = {
     uninstallCard: CompFc;
     install: CompFc;
     warning: CompFc;
+    cardReadme: CompFc;
   };
   addCustomHook: CompFc;
   replaceBackground: CompFc;
