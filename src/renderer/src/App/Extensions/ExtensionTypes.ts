@@ -84,6 +84,7 @@ export type ExtensionData_Renderer = {
     warning: FC | undefined;
     cardReadme: FC | undefined;
   };
+  addModal: FC[];
   addCustomHook: FC[];
   replaceBackground: FC | undefined;
   customizePages: {
@@ -215,6 +216,7 @@ export type ExtensionRendererApi = {
     warning: CompFc;
     cardReadme: CompFc;
   };
+  addModal: CompFc;
   addCustomHook: CompFc;
   replaceBackground: CompFc;
   customizePages: {

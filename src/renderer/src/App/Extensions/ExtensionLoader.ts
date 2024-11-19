@@ -138,6 +138,7 @@ export const extensionsData: ExtensionData_Renderer = {
       },
     },
   },
+  addModal: [],
 };
 
 const api: ExtensionRendererApi = {
@@ -258,6 +259,7 @@ const api: ExtensionRendererApi = {
     },
   },
   addCustomHook: comp => extensionsData.addCustomHook.push(comp),
+  addModal: comp => extensionsData.addModal.push(comp),
   replaceBackground: comp => {
     extensionsData.replaceBackground = comp;
   },
