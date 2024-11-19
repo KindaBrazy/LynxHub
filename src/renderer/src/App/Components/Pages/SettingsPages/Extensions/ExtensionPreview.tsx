@@ -2,8 +2,9 @@ import {List} from '@mantine/core';
 import {Button, ButtonGroup, Link, ScrollShadow, Tab, Tabs} from '@nextui-org/react';
 import {Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, Key, useCallback, useState} from 'react';
+import {Fragment, Key, useCallback, useMemo, useState} from 'react';
 
+import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import MarkdownViewer from '../../../Reusable/MarkdownViewer';
 import {testChangelog} from './testData';
 
@@ -41,6 +42,8 @@ export default function ExtensionPreview() {
     );
   }, []);
 
+  const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
+
   return (
     <div
       className={
@@ -72,7 +75,12 @@ export default function ExtensionPreview() {
           <Tab title="README" key={'readme'} className="cursor-default"></Tab>
           <Tab title="ChangeLog" key={'changelog'} className="cursor-default"></Tab>
         </Tabs>
-        {currentTab === 'readme' && <MarkdownViewer rounded={false} repoPath="kindabrazy/lynxhub" />}
+        {currentTab === 'readme' &&
+          (isNil(ReplaceMd) ? (
+            <MarkdownViewer rounded={false} repoPath="kindabrazy/lynxhub" />
+          ) : (
+            <ReplaceMd rounded={false} repoPath="kindabrazy/lynxhub" />
+          ))}
         {currentTab === 'changelog' && (
           <ScrollShadow
             className={

@@ -11,18 +11,18 @@ import remarkGfm from 'remark-gfm';
 
 import {useAppState} from '../../Redux/App/AppReducer';
 
-interface MarkdownViewerProps {
+type MarkdownViewerProps = {
   repoPath: string;
   rounded?: boolean;
-}
+};
 
-interface CustomDivProps extends HTMLAttributes<HTMLDivElement> {
+type CustomDivProps = HTMLAttributes<HTMLDivElement> & {
   'data-align'?: string;
-}
+};
 
-interface CustomCodeProps extends HTMLAttributes<HTMLElement> {
+type CustomCodeProps = HTMLAttributes<HTMLElement> & {
   'data-inline'?: boolean;
-}
+};
 
 export default function MarkdownViewer({repoPath, rounded = true}: MarkdownViewerProps) {
   const [content, setContent] = useState<string>('');

@@ -1,9 +1,10 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@nextui-org/react';
-import {isEmpty} from 'lodash';
-import {useCallback} from 'react';
+import {isEmpty, isNil} from 'lodash';
+import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../cross/CrossUtils';
+import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import MarkdownViewer from '../Reusable/MarkdownViewer';
@@ -24,6 +25,8 @@ export default function CardReadmeModal() {
     [dispatch],
   );
 
+  const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
+
   return (
     <Modal
       size="2xl"
@@ -43,9 +46,12 @@ export default function CardReadmeModal() {
           </Link>
         </ModalHeader>
         <ModalBody className="p-0">
-          {!isEmpty(url) && (
-            <MarkdownViewer rounded={false} repoPath={`${extractGitUrl(url).owner}/${extractGitUrl(url).repo}`} />
-          )}
+          {!isEmpty(url) &&
+            (isNil(ReplaceMd) ? (
+              <MarkdownViewer rounded={false} repoPath={`${extractGitUrl(url).owner}/${extractGitUrl(url).repo}`} />
+            ) : (
+              <ReplaceMd rounded={false} repoPath={`${extractGitUrl(url).owner}/${extractGitUrl(url).repo}`} />
+            ))}
         </ModalBody>
         <ModalFooter className="border-t border-foreground/10 bg-foreground-100">
           <Button
