@@ -14,12 +14,14 @@ type ApiFC_Tray = (fc: TsFC_Tray) => void;
 export type ExtensionData_Main = {
   listenForChannels: TsFC[];
   onAppReady: TsFCPromise[];
+  onReadyToShow: TsFC[];
   trayMenu_AddItem: TsFC_Tray[];
 };
 
 export type ExtensionMainApi = {
   listenForChannels: ApiFC;
   onAppReady: ApiFCPromise;
+  onReadyToShow: ApiFC;
   trayMenu_AddItem: ApiFC_Tray;
 };
 

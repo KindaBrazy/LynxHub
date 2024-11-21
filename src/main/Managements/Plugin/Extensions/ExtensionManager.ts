@@ -5,12 +5,12 @@ import {isDev} from '../../../../cross/CrossUtils';
 import {extensionsChannels} from '../../../../cross/IpcChannelAndTypes';
 import {storageManager} from '../../../index';
 import {BasePluginManager} from '../BasePluginManager';
-import {EMenuItem, ExtensionData_Main, ExtensionImport_Main, ExtensionMainApi} from './ExtensionTypes';
+import {EMenuItem, ExtensionData_Main, ExtensionImport_Main, ExtensionMainApi, MainExtensions} from './ExtensionTypes';
 
 export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> {
   private readonly extensionsData: ExtensionData_Main;
   private readonly extensionMainApi: ExtensionMainApi;
-  private readonly installedExtensions: {id: string}[];
+  private readonly installedExtensions: MainExtensions[];
 
   constructor() {
     super(
@@ -28,12 +28,14 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
     this.extensionsData = {
       listenForChannels: [],
       onAppReady: [],
+      onReadyToShow: [],
       trayMenu_AddItem: [],
     };
 
     this.extensionMainApi = {
       listenForChannels: fc => this.extensionsData.listenForChannels.push(fc),
       onAppReady: fc => this.extensionsData.onAppReady.push(fc),
+      onReadyToShow: fc => this.extensionsData.onReadyToShow.push(fc),
       trayMenu_AddItem: fc => this.extensionsData.trayMenu_AddItem.push(fc),
     };
   }
@@ -69,6 +71,12 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
   public async onAppReady() {
     for (const onAppReady of this.extensionsData.onAppReady) {
       await onAppReady();
+    }
+  }
+
+  public onReadyToShow() {
+    for (const onReadyToShow of this.extensionsData.onReadyToShow) {
+      onReadyToShow();
     }
   }
 
