@@ -1,13 +1,27 @@
+import {MenuItem, MenuItemConstructorOptions} from 'electron';
+
 import StorageManager from '../../Storage/StorageManager';
+
+export type EMenuItem = MenuItemConstructorOptions | MenuItem;
 
 type TsFC = () => void;
 type TsFCPromise = () => Promise<void>;
+type TsFC_Tray = () => {item: EMenuItem; index: number};
 type ApiFC = (fc: TsFC) => void;
 type ApiFCPromise = (fc: TsFCPromise) => void;
+type ApiFC_Tray = (fc: TsFC_Tray) => void;
 
-export type ExtensionData_Main = {listenForChannels: TsFC[]; onAppReady: TsFCPromise[]};
+export type ExtensionData_Main = {
+  listenForChannels: TsFC[];
+  onAppReady: TsFCPromise[];
+  trayMenu_AddItem: TsFC_Tray[];
+};
 
-export type ExtensionMainApi = {listenForChannels: ApiFC; onAppReady: ApiFCPromise};
+export type ExtensionMainApi = {
+  listenForChannels: ApiFC;
+  onAppReady: ApiFCPromise;
+  trayMenu_AddItem: ApiFC_Tray;
+};
 
 export type MainExtensionUtils = {storageManager: StorageManager};
 
