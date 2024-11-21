@@ -6,24 +6,21 @@ import fs from 'graceful-fs';
 import portFinder from 'portfinder';
 import handler from 'serve-handler';
 
-import {ExtensionsInfo, FolderNames, MainExtensions, MainModules, ModulesInfo} from '../../../cross/CrossTypes';
+import {ExtensionsInfo, FolderNames, MainModules, ModulesInfo} from '../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../cross/CrossUtils';
 import {appManager} from '../../index';
 import {getAppDirectory} from '../AppDataManager';
 import GitManager from '../GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
 
-export abstract class BasePluginManager<
-  TInfo extends ModulesInfo | ExtensionsInfo,
-  TMethods extends MainModules | MainExtensions,
-> {
+export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsInfo> {
   protected readonly host: string = 'localhost';
   protected port: number;
   protected server: ReturnType<typeof http.createServer> | undefined = undefined;
   protected finalAddress: string = '';
 
   protected pluginData: string[] = [];
-  protected mainMethods: TMethods[] = [];
+  protected mainMethods: MainModules[] = [];
   protected installedPluginInfo: {dir: string; info: TInfo}[] = [];
 
   protected readonly pluginPath: string;
@@ -236,7 +233,7 @@ export abstract class BasePluginManager<
     });
   }
 
-  public getMethodsById(id: string): TMethods['methods'] | undefined {
+  public getMethodsById(id: string): MainModules['methods'] | undefined {
     return this.mainMethods.find(plugin => plugin.id === id)?.methods;
   }
 
