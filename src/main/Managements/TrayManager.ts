@@ -3,7 +3,8 @@ import os from 'node:os';
 import {Menu, Tray} from 'electron';
 
 import {APP_NAME, APP_NAME_VERSION} from '../../cross/CrossConstants';
-import {appManager} from '../index';
+import {appManager, extensionManager} from '../index';
+import {EMenuItem} from './Plugin/Extensions/ExtensionTypes';
 
 /** Manages the system tray icon and its context menu for the application. */
 export default class TrayManager {
@@ -52,12 +53,15 @@ export default class TrayManager {
     this.tray = new Tray(icon);
     this.tray.setToolTip(APP_NAME);
 
-    const contextMenu = Menu.buildFromTemplate([
+    const staticItems: EMenuItem[] = [
       {enabled: false, icon: this.trayIconMenu, label: APP_NAME_VERSION},
       {type: 'separator'},
       {label: 'Show', type: 'normal', click: this.showMainWindow},
       {label: 'Quit', type: 'normal', click: this.closeMainWindow},
-    ]);
+    ];
+
+    const resultItems = extensionManager.getTrayItems(staticItems);
+    const contextMenu = Menu.buildFromTemplate(resultItems);
 
     this.tray.setContextMenu(contextMenu);
     this.tray.on('double-click', this.showMainWindow);

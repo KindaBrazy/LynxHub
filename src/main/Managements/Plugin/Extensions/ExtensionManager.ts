@@ -5,7 +5,7 @@ import {isDev} from '../../../../cross/CrossUtils';
 import {extensionsChannels} from '../../../../cross/IpcChannelAndTypes';
 import {storageManager} from '../../../index';
 import {BasePluginManager} from '../BasePluginManager';
-import {ExtensionData_Main, ExtensionImport_Main, ExtensionMainApi} from './ExtensionTypes';
+import {EMenuItem, ExtensionData_Main, ExtensionImport_Main, ExtensionMainApi} from './ExtensionTypes';
 
 export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> {
   private readonly extensionsData: ExtensionData_Main;
@@ -28,11 +28,13 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
     this.extensionsData = {
       listenForChannels: [],
       onAppReady: [],
+      trayMenu_AddItem: [],
     };
 
     this.extensionMainApi = {
       listenForChannels: fc => this.extensionsData.listenForChannels.push(fc),
       onAppReady: fc => this.extensionsData.onAppReady.push(fc),
+      trayMenu_AddItem: fc => this.extensionsData.trayMenu_AddItem.push(fc),
     };
   }
 
@@ -68,5 +70,13 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
     for (const onAppReady of this.extensionsData.onAppReady) {
       await onAppReady();
     }
+  }
+
+  public getTrayItems(staticItems: EMenuItem[]) {
+    for (const addTrayItem of this.extensionsData.trayMenu_AddItem) {
+      const item = addTrayItem();
+      staticItems.splice(item.index, 0, item.item);
+    }
+    return staticItems;
   }
 }
