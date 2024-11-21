@@ -102,6 +102,7 @@ async function onAppReady() {
 }
 
 function handleAppReadyToShow() {
+  extensionManager.onReadyToShow();
   handleTaskbarStatus();
   handleStartupBehavior();
   discordRpcManager.start();
