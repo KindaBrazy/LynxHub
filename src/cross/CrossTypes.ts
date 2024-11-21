@@ -1,3 +1,5 @@
+// Card Repository information type
+
 import {LynxApiUpdate} from '../renderer/src/App/Modules/types';
 import {
   BINARIES_FOLDER_NAME,
@@ -72,15 +74,6 @@ export type CardMainMethods = {
     send: (channel: string, ...args: any[]) => void;
   }) => void;
   updateAvailable?: (lynxApi: LynxApiUpdate) => Promise<boolean>;
-};
-
-export type ExtensionMainMethods = {
-  listenForChannels: () => void;
-};
-
-export type MainExtensions = {
-  id: string;
-  methods: ExtensionMainMethods;
 };
 
 export type MainModules = {

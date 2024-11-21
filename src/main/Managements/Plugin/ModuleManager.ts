@@ -1,10 +1,10 @@
 import path from 'node:path';
 
 import {ipcMain} from 'electron';
-import isEmpty from 'lodash/isEmpty';
+import {isEmpty} from 'lodash';
 
 import {APP_BUILD_NUMBER} from '../../../cross/CrossConstants';
-import {MainModuleImportType, MainModules, ModulesInfo} from '../../../cross/CrossTypes';
+import {MainModuleImportType, ModulesInfo} from '../../../cross/CrossTypes';
 import {toMs} from '../../../cross/CrossUtils';
 import {modulesChannels} from '../../../cross/IpcChannelAndTypes';
 import {LynxApiUpdate} from '../../../renderer/src/App/Modules/types';
@@ -13,7 +13,7 @@ import {getAppDirectory} from '../AppDataManager';
 import GitManager from '../GitManager';
 import {BasePluginManager} from './BasePluginManager';
 
-export default class ModuleManager extends BasePluginManager<ModulesInfo, MainModules> {
+export default class ModuleManager extends BasePluginManager<ModulesInfo> {
   private checkInterval?: NodeJS.Timeout = undefined;
   private availableUpdates: string[] = [];
 
