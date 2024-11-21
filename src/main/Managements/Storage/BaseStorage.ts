@@ -169,6 +169,15 @@ class BaseStorage {
     return this.storage.data[key];
   }
 
+  public getCustomData(id: string) {
+    return this.storage.data[id];
+  }
+
+  public setCustomData(id: string, data: any) {
+    this.storage.data[id] = data;
+    this.storage.write();
+  }
+
   public getAll(): StorageTypes {
     return this.storage.data;
   }
