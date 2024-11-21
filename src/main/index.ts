@@ -18,7 +18,7 @@ import DialogManager from './Managements/DialogManager';
 import DiscordRpcManager from './Managements/DiscordRpcManager';
 import ElectronAppManager from './Managements/ElectronAppManager';
 import {listenToAllChannels} from './Managements/Ipc/IpcHandler';
-import ExtensionManager from './Managements/Plugin/ExtensionManager';
+import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
 import ModuleManager from './Managements/Plugin/ModuleManager';
 import StorageManager from './Managements/Storage/StorageManager';
 import TrayManager from './Managements/TrayManager';
@@ -37,17 +37,19 @@ export let trayManager: TrayManager;
 export let discordRpcManager: DiscordRpcManager;
 export let cardsValidator: ValidateCards;
 export let moduleManager: ModuleManager;
-export let extensionManager: ExtensionManager;
+export const extensionManager: ExtensionManager = new ExtensionManager();
 
 // Remove default menu
 Menu.setApplicationMenu(null);
 
 checkAppDirectories();
 
-function setupApp() {
+async function setupApp() {
+  await extensionManager.createServer();
+
   appManager = new ElectronAppManager();
 
-  downloadDU();
+  await downloadDU();
 
   app.whenReady().then(onAppReady);
 
@@ -64,6 +66,8 @@ function setupApp() {
 }
 
 async function onAppReady() {
+  await extensionManager.onAppReady();
+
   electronApp.setAppUserModelId(APP_NAME);
 
   if (platform() === 'darwin') app.dock.setIcon(nativeImage.createFromPath(darwinIcon));
@@ -74,10 +78,8 @@ async function onAppReady() {
   discordRpcManager = new DiscordRpcManager();
   cardsValidator = new ValidateCards();
   moduleManager = new ModuleManager();
-  extensionManager = new ExtensionManager();
 
   await moduleManager.createServer();
-  await extensionManager.createServer();
 
   // Install browser developer extensions
   if (is.dev) {
