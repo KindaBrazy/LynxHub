@@ -24,8 +24,8 @@ export default class AppInitializer {
   private static readonly WINDOW_CONFIG: BrowserWindowConstructorOptions = {
     frame: false,
     show: false,
-    width: 400,
-    height: 550,
+    width: 350,
+    height: 400,
     resizable: false,
     maximizable: false,
     icon,
@@ -39,23 +39,12 @@ export default class AppInitializer {
 
   //#region Private Methods
 
-  /**
-   * Checks the version of a command-line tool.
-   * @param command - The command to execute (e.g., 'git --version')
-   * @returns A promise that resolves to the version string
-   * @throws Error if the command fails
-   */
-  private async checkToolVersion(command: 'git' | 'python'): Promise<string> {
+  private async checkGitAvailable(): Promise<string> {
     return new Promise((resolve, reject) => {
-      const commandProcess = spawn(command, ['--version']);
+      const commandProcess = spawn('git', ['--version']);
       commandProcess.stdout.on('data', data => {
-        if (command === 'git') {
-          const versionParts = data.toString().trim().split(' ');
-          resolve(`V${versionParts.slice(2).join('.').trim()}`);
-        } else {
-          const [versionNumber] = data.toString().trim().split(' ').slice(1);
-          resolve(`V${versionNumber}`);
-        }
+        const versionParts = data.toString().trim().split(' ');
+        resolve(`V${versionParts.slice(2).join('.').trim()}`);
       });
 
       commandProcess.on('error', err => {
@@ -83,8 +72,7 @@ export default class AppInitializer {
     ipcMain.on(initializerChannels.close, () => this.window?.close());
 
     // Handle version checks
-    ipcMain.handle(initializerChannels.gitAvailable, () => this.checkToolVersion('git'));
-    ipcMain.handle(initializerChannels.pythonAvailable, () => this.checkToolVersion('python'));
+    ipcMain.handle(initializerChannels.gitAvailable, () => this.checkGitAvailable());
 
     // Handle AI module installation
     ipcMain.on(initializerChannels.installAIModule, this.handleInstallAIModule.bind(this));
