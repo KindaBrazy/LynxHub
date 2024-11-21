@@ -188,7 +188,6 @@ export const initializerChannels = {
   close: 'close-initializer',
 
   gitAvailable: 'git-available-initializer',
-  pythonAvailable: 'python-available-initializer',
 
   installAIModule: 'install-ai-module-initializer',
   onInstallAIModule: 'on-install--ai-module-initializer',

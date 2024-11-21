@@ -7,7 +7,6 @@ import {getIconByName} from '../src/assets/icons/SvgIconsContainer';
 import initializerIpc from './InitializerIpc';
 import {useGitValidation} from './Steps/GitValidation';
 import {useMainModuleInstallation} from './Steps/MainModuleInstallation';
-import {usePythonValidation} from './Steps/PythonValidation';
 
 /** Main application component for initialization process */
 export default function App() {
@@ -24,10 +23,8 @@ export default function App() {
 
   const steps = [
     useGitValidation(currentState === 0, nextState),
-    usePythonValidation(currentState === 1, nextState),
-    useMainModuleInstallation(currentState === 2, nextState, setPercent),
+    useMainModuleInstallation(currentState === 1, nextState, setPercent),
     {
-      subTitle: currentState >= 3 ? '😃' : '',
       title: 'All Done',
       description: `${APP_NAME} is ready to launch.`,
     },
@@ -37,13 +34,16 @@ export default function App() {
     <ConfigProvider theme={{algorithm: theme.darkAlgorithm}}>
       <div
         className={
-          'draggable absolute flex size-full flex-col content-center ' +
+          'draggable absolute flex size-full flex-col content-center dark' +
           ' justify-between bg-LynxRaisinBlack text-center text-white'
         }>
         {/*#region Header */}
-        <header className="size-14 w-full shrink-0 content-center space-x-2 bg-white/5 shadow-xl">
-          <img alt="App Icon" src={APP_ICON_TRANSPARENT} className="absolute left-4 top-4 size-5" />
-          <span>One-time Initial</span>
+        <header
+          className={
+            'h-16 w-full shrink-0 content-center space-x-2 bg-white/5 shadow-xl border-b border-foreground-50/15'
+          }>
+          <img alt="App Icon" src={APP_ICON_TRANSPARENT} className="absolute left-4 top-4 size-8" />
+          <span className="font-semibold">Checking Requirements</span>
           <Button
             size="sm"
             variant="light"
@@ -56,7 +56,7 @@ export default function App() {
         {/*#endregion */}
 
         {/*#region Body */}
-        <main className="flex size-full flex-col items-center justify-center px-16">
+        <main className="flex size-full flex-col items-center justify-center mt-4 px-7">
           <Steps items={steps} percent={percent} className="w-full" direction="vertical" current={currentState} />
         </main>
         {/*#endregion */}
@@ -64,7 +64,7 @@ export default function App() {
         {/*#region Footer */}
         <footer className="m-3 flex flex-col items-center">
           {currentState >= 3 ? (
-            <Button radius="sm" color="success" onPress={startApp} className="notDraggable dark" fullWidth>
+            <Button radius="sm" color="success" onPress={startApp} className="notDraggable" fullWidth>
               Launch {APP_NAME}
             </Button>
           ) : (
@@ -77,8 +77,8 @@ export default function App() {
               okButtonProps={{danger: true}}
               cancelButtonProps={{type: 'primary'}}
               description="Are you sure you want to exit the initial process?">
-              <Button color="danger" variant="flat" className="notDraggable cursor-default dark" fullWidth>
-                Exit
+              <Button color="danger" variant="faded" className="notDraggable cursor-default dark" fullWidth>
+                Cancel
               </Button>
             </Popconfirm>
           )}

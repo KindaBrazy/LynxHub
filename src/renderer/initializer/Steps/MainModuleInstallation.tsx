@@ -79,7 +79,7 @@ export const useMainModuleInstallation = (
   return {
     status,
     subTitle,
-    title: 'AI Module',
+    title: 'WebUI Container Module',
     description,
     icon,
   };

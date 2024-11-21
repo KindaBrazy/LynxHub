@@ -1,5 +1,5 @@
-import {Button} from '@nextui-org/react';
-import {Spin, StepProps, Typography} from 'antd';
+import {Button, Link} from '@nextui-org/react';
+import {Spin, StepProps} from 'antd';
 import {ReactNode, useEffect, useState} from 'react';
 
 import {toMs} from '../../../cross/CrossUtils';
@@ -25,18 +25,12 @@ export const useGitValidation = (myTurn: boolean, done: () => void): StepProps =
     available: <span>Git successfully detected.</span>,
     notAvailable: (
       <div className="flex flex-col space-y-1">
-        <span>Git not detected.</span>
         <span className="text-white">
-          {'Download Git here: '}
-          <Typography.Link
-            onClick={() => {
-              window.open('https://www.git-scm.com/downloads');
-            }}
-            className="notDraggable">
-            Git Official Website
-          </Typography.Link>
+          <Link size="sm" className="notDraggable" href={'https://www.git-scm.com/downloads'} isExternal showAnchorIcon>
+            Download & Install (Official Website)
+          </Link>
         </span>
-        <Button size="sm" variant="flat" onPress={checkAgain} className="notDraggable dark">
+        <Button size="sm" color="warning" variant="faded" onPress={checkAgain} className="notDraggable">
           Retry Detection
         </Button>
       </div>
