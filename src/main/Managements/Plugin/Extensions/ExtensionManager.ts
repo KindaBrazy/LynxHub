@@ -3,14 +3,19 @@ import path from 'node:path';
 import {ExtensionsInfo} from '../../../../cross/CrossTypes';
 import {isDev} from '../../../../cross/CrossUtils';
 import {extensionsChannels} from '../../../../cross/IpcChannelAndTypes';
-import {storageManager} from '../../../index';
+import DiscordRpcManager from '../../DiscordRpcManager';
+import ElectronAppManager from '../../ElectronAppManager';
+import StorageManager from '../../Storage/StorageManager';
 import {BasePluginManager} from '../BasePluginManager';
-import {EMenuItem, ExtensionData_Main, ExtensionImport_Main, ExtensionMainApi, MainExtensions} from './ExtensionTypes';
+import ModuleManager from '../ModuleManager';
+import ExtensionApi from './ExtensionApi';
+import {EMenuItem, ExtensionImport_Main, MainExtensions} from './ExtensionTypes';
+import ExtensionUtils from './ExtensionUtils';
 
 export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> {
-  private readonly extensionsData: ExtensionData_Main;
-  private readonly extensionMainApi: ExtensionMainApi;
   private readonly installedExtensions: MainExtensions[];
+  private readonly extensionUtils: ExtensionUtils;
+  private readonly extensionApi: ExtensionApi;
 
   constructor() {
     super(
@@ -24,20 +29,8 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
     );
 
     this.installedExtensions = [];
-
-    this.extensionsData = {
-      listenForChannels: [],
-      onAppReady: [],
-      onReadyToShow: [],
-      trayMenu_AddItem: [],
-    };
-
-    this.extensionMainApi = {
-      listenForChannels: fc => this.extensionsData.listenForChannels.push(fc),
-      onAppReady: fc => this.extensionsData.onAppReady.push(fc),
-      onReadyToShow: fc => this.extensionsData.onReadyToShow.push(fc),
-      trayMenu_AddItem: fc => this.extensionsData.trayMenu_AddItem.push(fc),
-    };
+    this.extensionUtils = new ExtensionUtils();
+    this.extensionApi = new ExtensionApi();
   }
 
   protected async importPlugins(extensionFolders: string[]) {
@@ -45,7 +38,7 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
       const json = await import('../../../extension/lynxExtension.json');
       const id = json.id;
       const initial: ExtensionImport_Main = await import('../../../extension/lynxExtension');
-      await initial.initialExtension(this.extensionMainApi, {storageManager});
+      await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
       this.installedExtensions.push({id});
     } else {
       await Promise.all(
@@ -56,35 +49,47 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
           const initial: ExtensionImport_Main = await import(
             `file://${path.join(extensionPath, 'scripts', 'main', 'mainEntry.mjs')}`
           );
-          await initial.initialExtension(this.extensionMainApi, {storageManager});
+          await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
         }),
       );
     }
   }
 
+  //#region Utils
+  public setStorageManager(manager: StorageManager) {
+    this.extensionUtils.setStorageManager(manager);
+  }
+
+  public setAppManager(manager: ElectronAppManager) {
+    this.extensionUtils.setAppManager(manager);
+  }
+
+  public setDiscordRpcManager(manager: DiscordRpcManager) {
+    this.extensionUtils.setDiscordRpcManager(manager);
+  }
+
+  public setModuleManager(manager: ModuleManager) {
+    this.extensionUtils.setModuleManager(manager);
+  }
+
+  //#endregion
+
+  //#region Api
   public listenForChannels() {
-    for (const listenForChannels of this.extensionsData.listenForChannels) {
-      listenForChannels();
-    }
+    this.extensionApi.listenForChannels();
   }
 
   public async onAppReady() {
-    for (const onAppReady of this.extensionsData.onAppReady) {
-      await onAppReady();
-    }
+    await this.extensionApi.onAppReady();
   }
 
   public onReadyToShow() {
-    for (const onReadyToShow of this.extensionsData.onReadyToShow) {
-      onReadyToShow();
-    }
+    this.extensionApi.onReadyToShow();
   }
 
   public getTrayItems(staticItems: EMenuItem[]) {
-    for (const addTrayItem of this.extensionsData.trayMenu_AddItem) {
-      const item = addTrayItem();
-      staticItems.splice(item.index, 0, item.item);
-    }
-    return staticItems;
+    this.extensionApi.getTrayItems(staticItems);
   }
+
+  //#endregion
 }

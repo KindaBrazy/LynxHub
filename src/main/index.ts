@@ -46,8 +46,10 @@ checkAppDirectories();
 
 async function setupApp() {
   await extensionManager.createServer();
+  extensionManager.setStorageManager(storageManager);
 
   appManager = new ElectronAppManager();
+  extensionManager.setAppManager(appManager);
 
   await downloadDU();
 
@@ -78,8 +80,10 @@ async function onAppReady() {
   discordRpcManager = new DiscordRpcManager();
   cardsValidator = new ValidateCards();
   moduleManager = new ModuleManager();
+  extensionManager.setDiscordRpcManager(discordRpcManager);
 
   await moduleManager.createServer();
+  extensionManager.setModuleManager(moduleManager);
 
   // Install browser developer extensions
   if (is.dev) {

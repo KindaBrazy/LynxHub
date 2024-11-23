@@ -1,6 +1,9 @@
 import {MenuItem, MenuItemConstructorOptions} from 'electron';
 
+import DiscordRpcManager from '../../DiscordRpcManager';
+import ElectronAppManager from '../../ElectronAppManager';
 import StorageManager from '../../Storage/StorageManager';
+import ModuleManager from '../ModuleManager';
 
 export type EMenuItem = MenuItemConstructorOptions | MenuItem;
 
@@ -25,7 +28,12 @@ export type ExtensionMainApi = {
   trayMenu_AddItem: ApiFC_Tray;
 };
 
-export type MainExtensionUtils = {storageManager: StorageManager};
+export type MainExtensionUtils = {
+  getStorageManager: () => Promise<StorageManager>;
+  getAppManager: () => Promise<ElectronAppManager>;
+  getDiscordRpcManager: () => Promise<DiscordRpcManager>;
+  getModuleManager: () => Promise<ModuleManager>;
+};
 
 export type MainExtensions = {id: string};
 
