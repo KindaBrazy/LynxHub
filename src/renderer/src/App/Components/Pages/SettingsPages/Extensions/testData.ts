@@ -1,26 +1,6 @@
-type ListItem = {
-  name: string;
-  subitems?: ListItem[];
-};
+import {Extension_Changelogs, Extension_ListData} from '../../../../../../../cross/CrossTypes';
 
-type ChangelogItems = {
-  title: string;
-  items: ListItem[];
-};
-
-type ItemsList = {
-  id: string;
-  title: string;
-  version: string;
-  developer: string;
-  description: string;
-  changelog: ChangelogItems[];
-  updateDate: string;
-  url: string;
-  avatarUrl: string;
-};
-
-export const testChangelogs: {[key: string]: ChangelogItems[]} = {
+export const testChangelogs: {[key: string]: Extension_Changelogs[]} = {
   dark_theme_pro: [
     {
       title: "What's New in 2.1.0",
@@ -184,10 +164,10 @@ export const testChangelogs: {[key: string]: ChangelogItems[]} = {
   ],
 };
 
-export const testExtensionsList: ItemsList[] = [
+export const testExtensionsList: Extension_ListData[] = [
   {
     id: 'dark_theme_pro',
-    changelog: testChangelogs['dark_theme_pro'],
+    changeLog: testChangelogs['dark_theme_pro'],
     title: 'Dark Theme Pro',
     version: '2.1.0',
     updateDate: '2024-11-23',
@@ -199,7 +179,7 @@ export const testExtensionsList: ItemsList[] = [
   },
   {
     id: 'code_snippets_manager',
-    changelog: testChangelogs['code_snippets_manager'],
+    changeLog: testChangelogs['code_snippets_manager'],
     title: 'Code Snippets Manager',
     version: '1.4.3',
     developer: 'DevTools Solutions',
@@ -210,7 +190,7 @@ export const testExtensionsList: ItemsList[] = [
   },
   {
     id: 'auto_format_plus',
-    changelog: testChangelogs['auto_format_plus'],
+    changeLog: testChangelogs['auto_format_plus'],
     title: 'Auto Format Plus',
     version: '3.0.1',
     developer: 'CleanCode Labs',
@@ -221,7 +201,7 @@ export const testExtensionsList: ItemsList[] = [
   },
   {
     id: 'git_flow_helper',
-    changelog: testChangelogs['git_flow_helper'],
+    changeLog: testChangelogs['git_flow_helper'],
     title: 'Git Flow Helper',
     version: '1.2.0',
     updateDate: '2024-11-23',
@@ -232,7 +212,7 @@ export const testExtensionsList: ItemsList[] = [
   },
   {
     id: 'debug_toolkit',
-    changelog: testChangelogs['debug_toolkit'],
+    changeLog: testChangelogs['debug_toolkit'],
     title: 'Debug Toolkit',
     version: '2.5.4',
     developer: 'BugBusters',
@@ -244,7 +224,7 @@ export const testExtensionsList: ItemsList[] = [
   },
   {
     id: 'project_explorer_pro',
-    changelog: testChangelogs['project_explorer_pro'],
+    changeLog: testChangelogs['project_explorer_pro'],
     title: 'Project Explorer Pro',
     version: '4.1.2',
     updateDate: '2024-11-23',
@@ -255,7 +235,7 @@ export const testExtensionsList: ItemsList[] = [
   },
   {
     id: 'live_collaboration',
-    changelog: testChangelogs['live_collaboration'],
+    changeLog: testChangelogs['live_collaboration'],
     title: 'Live Collaboration',
     version: '1.0.5',
     developer: 'TeamSync Ltd.',
@@ -267,7 +247,7 @@ export const testExtensionsList: ItemsList[] = [
   },
   {
     id: 'type_checker_enhanced',
-    changelog: testChangelogs['type_checker_enhanced'],
+    changeLog: testChangelogs['type_checker_enhanced'],
     updateDate: '2024-11-23',
     title: 'Type Checker Enhanced',
     version: '2.2.1',

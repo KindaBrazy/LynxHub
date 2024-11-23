@@ -7,5 +7,5 @@
   "version": "Current extension version. example:'1.0.0'",
   "updateDate": "The update release date. example:'2024-10-24 11:00'",
   "changeLog": "Versions changelog. example:'V0.5.0\n・Publish extension' -> Just \n is acceptable by app",
-  "logoUrl": "Url address to logo picture or relative path to the image file - A relative path will start with './'"
+  "avatarUrl": "Url address to logo picture or relative path to the image file - A relative path will start with './'"
 }

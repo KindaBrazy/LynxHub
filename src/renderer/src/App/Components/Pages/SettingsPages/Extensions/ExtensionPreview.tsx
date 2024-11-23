@@ -4,19 +4,19 @@ import {Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, Key, memo, useCallback, useMemo, useState} from 'react';
 
+import {Extension_ChangelogItem, Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import MarkdownViewer from '../../../Reusable/MarkdownViewer';
-import {ItemsList, ListItem} from './ExtensionList';
 
 type Props = {
-  selectedExt: ItemsList | undefined;
+  selectedExt: Extension_ListData | undefined;
 };
 
 export default memo(function ExtensionPreview({selectedExt}: Props) {
   const [installed] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<Key>('readme');
 
-  const renderSubItems = useCallback((items?: ListItem[], parentKey: string = '') => {
+  const renderSubItems = useCallback((items?: Extension_ChangelogItem[], parentKey: string = '') => {
     if (isNil(items) || isEmpty(items)) return null;
 
     return (
@@ -90,13 +90,13 @@ export default memo(function ExtensionPreview({selectedExt}: Props) {
               ' items-start pt-8 pl-6 gap-y-4 font-Nunito'
             }
             hideScrollBar>
-            {selectedExt?.changelog.map((item, index) => (
+            {selectedExt?.changeLog.map((item, index) => (
               <Fragment key={`section_${index}`}>
                 <List listStyleType="disc">
                   <span className="text-large font-semibold">{item.title}</span>
                   {renderSubItems(item.items, `section_${index}`)}
                 </List>
-                {index < selectedExt?.changelog.length - 1 && <Divider />}
+                {index < selectedExt?.changeLog.length - 1 && <Divider />}
               </Fragment>
             ))}
           </ScrollShadow>
