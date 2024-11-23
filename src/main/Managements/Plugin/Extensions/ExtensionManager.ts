@@ -88,7 +88,7 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
   }
 
   public getTrayItems(staticItems: EMenuItem[]) {
-    this.extensionApi.getTrayItems(staticItems);
+    return this.extensionApi.getTrayItems(staticItems);
   }
 
   //#endregion
