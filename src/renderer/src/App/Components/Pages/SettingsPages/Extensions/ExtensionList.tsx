@@ -1,5 +1,6 @@
 import {
   Button,
+  Chip,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -20,6 +21,7 @@ import {useAppState} from '../../../../Redux/App/AppReducer';
 import {testExtensionsList} from './testData';
 
 type ItemsList = {
+  id: string;
   title: string;
   version: string;
   developer: string;
@@ -31,6 +33,7 @@ type ItemsList = {
 export default function ExtensionList() {
   const [selectedKeys, setSelectedKeys] = useState('all');
   const [list] = useState<ItemsList[]>(testExtensionsList);
+  const [installed] = useState<string[]>(['debug_toolkit', 'code_snippets_manager']);
   const [selectedExt, setSelectedExt] = useState<string>('Models Manager');
   const [isLoaded] = useState<boolean>(true);
   const isDarkMode = useAppState('darkMode');
@@ -74,46 +77,56 @@ export default function ExtensionList() {
     );
   }, []);
 
-  const renderList = useCallback((item: ItemsList) => {
-    return (
-      <List.Item
-        className={
-          `hover:bg-foreground-50 ${selectedExt === item.title && 'bg-foreground-50'} ` +
-          ` transition-colors duration-200 cursor-pointer relative`
-        }
-        onClick={() => onItemClick(item.title)}>
-        {selectedExt === item.title && (
-          <motion.div
-            layoutId="sel"
-            transition={{bounce: 0.2, duration: 0.4, type: 'spring'}}
-            className="inset-y-0 left-0 w-[0.15rem] bg-secondary absolute"
-          />
-        )}
-        <div className="flex flex-col gap-y-1">
-          <Skeleton isLoaded={isLoaded} className="rounded-lg">
-            <User
-              name={
-                <Link href={item.url} className="text-small text-primary-500" isExternal>
-                  {item.title}
-                </Link>
-              }
-              description={
-                <div className="space-x-2">
-                  <span>{item.version}</span>
-                  <span>{item.developer}</span>
-                </div>
-              }
-              className="justify-start mt-2"
-              avatarProps={{src: item.avatarUrl}}
+  const renderList = useCallback(
+    (item: ItemsList) => {
+      return (
+        <List.Item
+          className={
+            `hover:bg-foreground-50 ${selectedExt === item.title && 'bg-foreground-50'} ` +
+            ` transition-colors duration-200 cursor-pointer relative`
+          }
+          onClick={() => onItemClick(item.title)}>
+          {selectedExt === item.title && (
+            <motion.div
+              layoutId="sel"
+              transition={{bounce: 0.2, duration: 0.4, type: 'spring'}}
+              className="inset-y-0 left-0 w-[0.15rem] bg-secondary absolute"
             />
-          </Skeleton>
-          <Skeleton isLoaded={isLoaded} className="rounded-lg">
-            <Typography.Paragraph>{item.description}</Typography.Paragraph>
-          </Skeleton>
-        </div>
-      </List.Item>
-    );
-  }, []);
+          )}
+          <div className="flex flex-col gap-y-1">
+            <Skeleton isLoaded={isLoaded} className="rounded-lg">
+              <User
+                description={
+                  <div className="space-x-2">
+                    <span>{item.version}</span>
+                    <span>{item.developer}</span>
+                  </div>
+                }
+                name={
+                  <div className="space-x-2">
+                    <Link href={item.url} className="text-small text-primary-500" isExternal>
+                      {item.title}
+                    </Link>
+                    {installed.includes(item.id) && (
+                      <Chip size="sm" radius="sm" variant="faded" color="success">
+                        Installed
+                      </Chip>
+                    )}
+                  </div>
+                }
+                className="justify-start mt-2"
+                avatarProps={{src: item.avatarUrl}}
+              />
+            </Skeleton>
+            <Skeleton isLoaded={isLoaded} className="rounded-lg">
+              <Typography.Paragraph>{item.description}</Typography.Paragraph>
+            </Skeleton>
+          </div>
+        </List.Item>
+      );
+    },
+    [list, installed],
+  );
 
   return (
     <div
