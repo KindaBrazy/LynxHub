@@ -21,12 +21,24 @@ import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
 import {useAppState} from '../../../../Redux/App/AppReducer';
 import {testExtensionsList} from './testData';
 
+export type ListItem = {
+  name: string;
+  subitems?: ListItem[];
+};
+
+export type ChangelogItems = {
+  title: string;
+  items: ListItem[];
+};
+
 export type ItemsList = {
   id: string;
   title: string;
   version: string;
   developer: string;
   description: string;
+  changelog: ChangelogItems[];
+  updateDate: string;
   url: string;
   avatarUrl: string;
 };

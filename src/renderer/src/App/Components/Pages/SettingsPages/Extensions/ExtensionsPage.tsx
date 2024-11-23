@@ -12,7 +12,7 @@ export default function ExtensionsPage() {
   return (
     <Page className="flex flex-row gap-x-6 relative">
       <ExtensionList selectedExt={selectedExtension} setSelectedExt={setSelectedExtension} />
-      <ExtensionPreview />
+      <ExtensionPreview selectedExt={selectedExtension} />
     </Page>
   );
 }
