@@ -4,7 +4,6 @@ import {Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, Key, memo, useCallback, useMemo, useState} from 'react';
 
-import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import MarkdownViewer from '../../../Reusable/MarkdownViewer';
 import {ItemsList, ListItem} from './ExtensionList';
@@ -37,11 +36,6 @@ export default memo(function ExtensionPreview({selectedExt}: Props) {
 
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
 
-  const markDownUrl = useMemo(() => {
-    if (!selectedExt) return '';
-    const {repo, owner} = extractGitUrl(selectedExt.url);
-    return `${owner}/${repo}`;
-  }, [selectedExt]);
   return (
     <div
       className={
@@ -85,9 +79,9 @@ export default memo(function ExtensionPreview({selectedExt}: Props) {
         </Tabs>
         {currentTab === 'readme' &&
           (isNil(ReplaceMd) ? (
-            <MarkdownViewer rounded={false} repoPath={markDownUrl} />
+            <MarkdownViewer rounded={false} repoUrl={selectedExt?.url || ''} />
           ) : (
-            <ReplaceMd rounded={false} repoPath={markDownUrl} />
+            <ReplaceMd rounded={false} repoPath={selectedExt?.url || ''} />
           ))}
         {currentTab === 'changelog' && (
           <ScrollShadow

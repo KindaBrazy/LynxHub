@@ -11,6 +11,7 @@ import {
   MouseEvent,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import ReactMarkdown, {Components} from 'react-markdown';
@@ -19,10 +20,11 @@ import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 
+import {extractGitUrl} from '../../../../../cross/CrossUtils';
 import {useAppState} from '../../Redux/App/AppReducer';
 
 type MarkdownViewerProps = {
-  repoPath: string;
+  repoUrl: string;
   rounded?: boolean;
 };
 
@@ -34,11 +36,17 @@ type CustomCodeProps = HTMLAttributes<HTMLElement> & {
   'data-inline'?: boolean;
 };
 
-export default function MarkdownViewer({repoPath, rounded = true}: MarkdownViewerProps) {
+export default function MarkdownViewer({repoUrl, rounded = true}: MarkdownViewerProps) {
   const [content, setContent] = useState<string>('');
   const isDarkMode = useAppState('darkMode');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
+
+  const repository = useMemo(() => {
+    if (!repoUrl) return '';
+    const {repo, owner} = extractGitUrl(repoUrl);
+    return `${owner}/${repo}`;
+  }, [repoUrl]);
 
   useEffect(() => {
     setLoading(true);
@@ -46,7 +54,7 @@ export default function MarkdownViewer({repoPath, rounded = true}: MarkdownViewe
     setContent('');
     const fetchReadme = async () => {
       try {
-        const response = await fetch(`https://api.github.com/repos/${repoPath}/readme`, {
+        const response = await fetch(`https://api.github.com/repos/${repository}/readme`, {
           headers: {
             Accept: 'application/vnd.github.raw+json',
           },
@@ -65,8 +73,8 @@ export default function MarkdownViewer({repoPath, rounded = true}: MarkdownViewe
       }
     };
 
-    if (!isEmpty(repoPath)) fetchReadme();
-  }, [repoPath]);
+    if (!isEmpty(repository)) fetchReadme();
+  }, [repository]);
 
   const transformImageUrl = useCallback(
     (src: string) => {
@@ -74,14 +82,14 @@ export default function MarkdownViewer({repoPath, rounded = true}: MarkdownViewe
         return src;
       }
 
-      if (repoPath) {
+      if (repository) {
         const cleanPath = src.replace(/^\.?\//, '');
-        return `https://raw.githubusercontent.com/${repoPath}/HEAD/${cleanPath}`;
+        return `https://raw.githubusercontent.com/${repository}/HEAD/${cleanPath}`;
       }
 
       return src;
     },
-    [repoPath],
+    [repository],
   );
 
   const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
