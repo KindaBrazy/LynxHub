@@ -12,7 +12,7 @@ import {
   Spinner,
   User,
 } from '@nextui-org/react';
-import {List, Typography} from 'antd';
+import {Empty, List, Typography} from 'antd';
 import {motion} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
@@ -22,7 +22,6 @@ import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
 import {useAppState} from '../../../../Redux/App/AppReducer';
 import {useFetchExtensions} from './ExtensionsUtils';
-import {testExtensionsList} from './testData';
 
 type Props = {
   selectedExt: Extension_ListData | undefined;
@@ -31,7 +30,7 @@ type Props = {
 
 export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
   const [selectedKeys, setSelectedKeys] = useState('all');
-  const [list, setList] = useState<Extension_ListData[]>(testExtensionsList);
+  const [list, setList] = useState<Extension_ListData[]>([]);
   const [installed] = useState<string[]>(['debug_toolkit', 'code_snippets_manager']);
   const [isLoaded] = useState<boolean>(true);
   const isDarkMode = useAppState('darkMode');
@@ -177,6 +176,19 @@ export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
           <Spinner color="primary" className="size-full" label="Loading list..." />
         ) : (
           <List
+            locale={{
+              emptyText: (
+                <Empty
+                  description={
+                    <div className="flex flex-col items-center justify-center text-center">
+                      <p className="text-gray-500 mb-2">Currently, no extensions are available.</p>
+                      <p className="text-gray-400">Please check back later for updates!</p>
+                    </div>
+                  }
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                />
+              ),
+            }}
             size="small"
             className="size-full"
             dataSource={sortedList}
