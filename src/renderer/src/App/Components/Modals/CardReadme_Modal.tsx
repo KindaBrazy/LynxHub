@@ -3,7 +3,6 @@ import {isEmpty, isNil} from 'lodash';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extractGitUrl} from '../../../../../cross/CrossUtils';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../Redux/Store';
@@ -48,9 +47,9 @@ export default function CardReadmeModal() {
         <ModalBody className="p-0">
           {!isEmpty(url) &&
             (isNil(ReplaceMd) ? (
-              <MarkdownViewer rounded={false} repoPath={`${extractGitUrl(url).owner}/${extractGitUrl(url).repo}`} />
+              <MarkdownViewer repoUrl={url} rounded={false} />
             ) : (
-              <ReplaceMd rounded={false} repoPath={`${extractGitUrl(url).owner}/${extractGitUrl(url).repo}`} />
+              <ReplaceMd repoPath={url} rounded={false} />
             ))}
         </ModalBody>
         <ModalFooter className="border-t border-foreground/10 bg-foreground-100">
