@@ -4,25 +4,18 @@ import {Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, Key, memo, useCallback, useMemo, useState} from 'react';
 
+import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import MarkdownViewer from '../../../Reusable/MarkdownViewer';
-import {testChangelog} from './testData';
+import {ItemsList, ListItem} from './ExtensionList';
 
-type ListItem = {
-  name: string;
-  subitems?: ListItem[];
+type Props = {
+  selectedExt: ItemsList | undefined;
 };
 
-type ChangelogItems = {
-  title: string;
-  items: ListItem[];
-};
-
-export default memo(function ExtensionPreview() {
+export default memo(function ExtensionPreview({selectedExt}: Props) {
   const [installed] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<Key>('readme');
-
-  const [changelog] = useState<ChangelogItems[]>(testChangelog);
 
   const renderSubItems = useCallback((items?: ListItem[], parentKey: string = '') => {
     if (isNil(items) || isEmpty(items)) return null;
@@ -44,6 +37,11 @@ export default memo(function ExtensionPreview() {
 
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
 
+  const markDownUrl = useMemo(() => {
+    if (!selectedExt) return '';
+    const {repo, owner} = extractGitUrl(selectedExt.url);
+    return `${owner}/${repo}`;
+  }, [selectedExt]);
   return (
     <div
       className={
@@ -58,19 +56,19 @@ export default memo(function ExtensionPreview() {
         }>
         <User
           className="self-start"
-          avatarProps={{src: ''}}
+          avatarProps={{src: selectedExt?.avatarUrl}}
           name={<span className="font-semibold text-foreground text-[1rem]">Python Package Manager</span>}
         />
         <div className="flex flex-row gap-x-2 items-center">
-          <span className="text-small">V1.2.6</span>
+          <span className="text-small">{selectedExt?.version}</span>
           <Divider type="vertical" />
-          <span className="text-small">2024-11-01</span>
+          <span className="text-small">{selectedExt?.updateDate}</span>
           <Divider type="vertical" />
           <Link href={'some address'} className="text-small text-primary-500" isExternal>
-            KindaBrazy
+            {selectedExt?.developer}
           </Link>
           <Divider type="vertical" />
-          <Link href={'some address'} className="text-small text-primary-500" isExternal>
+          <Link href={selectedExt?.url} className="text-small text-primary-500" isExternal>
             Home Page
           </Link>
         </div>
@@ -87,9 +85,9 @@ export default memo(function ExtensionPreview() {
         </Tabs>
         {currentTab === 'readme' &&
           (isNil(ReplaceMd) ? (
-            <MarkdownViewer rounded={false} repoPath="kindabrazy/lynxhub" />
+            <MarkdownViewer rounded={false} repoPath={markDownUrl} />
           ) : (
-            <ReplaceMd rounded={false} repoPath="kindabrazy/lynxhub" />
+            <ReplaceMd rounded={false} repoPath={markDownUrl} />
           ))}
         {currentTab === 'changelog' && (
           <ScrollShadow
@@ -98,13 +96,13 @@ export default memo(function ExtensionPreview() {
               ' items-start pt-8 pl-6 gap-y-4 font-Nunito'
             }
             hideScrollBar>
-            {changelog.map((item, index) => (
+            {selectedExt?.changelog.map((item, index) => (
               <Fragment key={`section_${index}`}>
                 <List listStyleType="disc">
                   <span className="text-large font-semibold">{item.title}</span>
                   {renderSubItems(item.items, `section_${index}`)}
                 </List>
-                {index < changelog.length - 1 && <Divider />}
+                {index < selectedExt?.changelog.length - 1 && <Divider />}
               </Fragment>
             ))}
           </ScrollShadow>
