@@ -1,8 +1,18 @@
 import {Kbd} from '@mantine/core';
 import {Spinner} from '@nextui-org/react';
 import {Result} from 'antd';
+import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {Children, CSSProperties, HTMLAttributes, isValidElement, MouseEvent, useEffect, useState} from 'react';
+import {
+  Children,
+  CSSProperties,
+  HTMLAttributes,
+  isValidElement,
+  MouseEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import ReactMarkdown, {Components} from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeRaw from 'rehype-raw';
@@ -33,6 +43,7 @@ export default function MarkdownViewer({repoPath, rounded = true}: MarkdownViewe
   useEffect(() => {
     setLoading(true);
     setError('');
+    setContent('');
     const fetchReadme = async () => {
       try {
         const response = await fetch(`https://api.github.com/repos/${repoPath}/readme`, {
@@ -54,21 +65,24 @@ export default function MarkdownViewer({repoPath, rounded = true}: MarkdownViewe
       }
     };
 
-    fetchReadme();
-  }, []);
+    if (!isEmpty(repoPath)) fetchReadme();
+  }, [repoPath]);
 
-  const transformImageUrl = (src: string) => {
-    if (src.startsWith('http')) {
+  const transformImageUrl = useCallback(
+    (src: string) => {
+      if (src.startsWith('http')) {
+        return src;
+      }
+
+      if (repoPath) {
+        const cleanPath = src.replace(/^\.?\//, '');
+        return `https://raw.githubusercontent.com/${repoPath}/HEAD/${cleanPath}`;
+      }
+
       return src;
-    }
-
-    if (repoPath) {
-      const cleanPath = src.replace(/^\.?\//, '');
-      return `https://raw.githubusercontent.com/${repoPath}/HEAD/${cleanPath}`;
-    }
-
-    return src;
-  };
+    },
+    [repoPath],
+  );
 
   const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
     const href = e.currentTarget.getAttribute('href');
