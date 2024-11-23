@@ -14,7 +14,7 @@ import {
 import {List, Typography} from 'antd';
 import {motion} from 'framer-motion';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {useCallback, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 
 import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
 import {useAppState} from '../../../../Redux/App/AppReducer';
@@ -41,6 +41,17 @@ export default function ExtensionList() {
   const onItemClick = (id: string) => {
     setSelectedExt(id);
   };
+
+  const orderList = useMemo(() => {
+    return [...list].sort((a, b) => {
+      const aInstalled = installed.includes(a.id);
+      const bInstalled = installed.includes(b.id);
+
+      if (aInstalled && !bInstalled) return -1;
+      if (!aInstalled && bInstalled) return 1;
+      return 0;
+    });
+  }, [list, installed]);
 
   const filterMenu = useCallback(() => {
     return (
@@ -153,7 +164,13 @@ export default function ExtensionList() {
           },
         }}
         className="inset-0 absolute !top-10">
-        <List size="small" dataSource={list} className="size-full" renderItem={renderList} itemLayout="horizontal" />
+        <List
+          size="small"
+          className="size-full"
+          dataSource={orderList}
+          renderItem={renderList}
+          itemLayout="horizontal"
+        />
       </OverlayScrollbarsComponent>
     </div>
   );
