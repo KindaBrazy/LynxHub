@@ -13,14 +13,15 @@ import {
 } from '@nextui-org/react';
 import {List, Typography} from 'antd';
 import {motion} from 'framer-motion';
+import {isNil} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {useCallback, useMemo, useState} from 'react';
+import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
 import {useAppState} from '../../../../Redux/App/AppReducer';
 import {testExtensionsList} from './testData';
 
-type ItemsList = {
+export type ItemsList = {
   id: string;
   title: string;
   version: string;
@@ -30,28 +31,34 @@ type ItemsList = {
   avatarUrl: string;
 };
 
-export default function ExtensionList() {
+type Props = {
+  selectedExt: ItemsList | undefined;
+  setSelectedExt: Dispatch<SetStateAction<ItemsList | undefined>>;
+};
+
+export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
   const [selectedKeys, setSelectedKeys] = useState('all');
   const [list] = useState<ItemsList[]>(testExtensionsList);
   const [installed] = useState<string[]>(['debug_toolkit', 'code_snippets_manager']);
-  const [selectedExt, setSelectedExt] = useState<string>('Models Manager');
   const [isLoaded] = useState<boolean>(true);
   const isDarkMode = useAppState('darkMode');
 
-  const onItemClick = (id: string) => {
-    setSelectedExt(id);
-  };
+  const orderList = useMemo(
+    () =>
+      [...list].sort((a, b) => {
+        const aInstalled = installed.includes(a.id);
+        const bInstalled = installed.includes(b.id);
 
-  const orderList = useMemo(() => {
-    return [...list].sort((a, b) => {
-      const aInstalled = installed.includes(a.id);
-      const bInstalled = installed.includes(b.id);
+        if (aInstalled && !bInstalled) return -1;
+        if (!aInstalled && bInstalled) return 1;
+        return 0;
+      }),
+    [list, installed],
+  );
 
-      if (aInstalled && !bInstalled) return -1;
-      if (!aInstalled && bInstalled) return 1;
-      return 0;
-    });
-  }, [list, installed]);
+  useEffect(() => {
+    setSelectedExt(prevState => (isNil(prevState) ? orderList[0] : prevState));
+  }, [orderList]);
 
   const filterMenu = useCallback(() => {
     return (
@@ -93,11 +100,11 @@ export default function ExtensionList() {
       return (
         <List.Item
           className={
-            `hover:bg-foreground-50 ${selectedExt === item.title && 'bg-foreground-50'} ` +
-            ` transition-colors duration-200 cursor-pointer relative`
+            `hover:bg-foreground-50 ${selectedExt?.id === item.id && 'bg-foreground-50'} ` +
+            ` transition-colors duration-200 relative`
           }
-          onClick={() => onItemClick(item.title)}>
-          {selectedExt === item.title && (
+          onClick={() => setSelectedExt(item)}>
+          {selectedExt?.id === item.id && (
             <motion.div
               layoutId="sel"
               transition={{bounce: 0.2, duration: 0.4, type: 'spring'}}
@@ -115,7 +122,10 @@ export default function ExtensionList() {
                 }
                 name={
                   <div className="space-x-2">
-                    <Link href={item.url} className="text-small text-primary-500" isExternal>
+                    <Link
+                      href={item.url}
+                      className="text-small text-primary-500 transition-colors duration-300"
+                      isExternal>
                       {item.title}
                     </Link>
                     {installed.includes(item.id) && (
@@ -136,7 +146,7 @@ export default function ExtensionList() {
         </List.Item>
       );
     },
-    [list, installed],
+    [list, installed, selectedExt],
   );
 
   return (
