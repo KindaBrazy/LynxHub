@@ -1,4 +1,5 @@
 type ItemsList = {
+  id: string;
   title: string;
   version: string;
   developer: string;
@@ -8,6 +9,7 @@ type ItemsList = {
 };
 export const testExtensionsList: ItemsList[] = [
   {
+    id: 'dark_theme_pro',
     title: 'Dark Theme Pro',
     version: '2.1.0',
     developer: 'ThemeWorks Inc.',
@@ -17,6 +19,7 @@ export const testExtensionsList: ItemsList[] = [
     avatarUrl: 'https://api.dicebear.com/9.x/icons/svg?icon=truck',
   },
   {
+    id: 'code_snippets_manager',
     title: 'Code Snippets Manager',
     version: '1.4.3',
     developer: 'DevTools Solutions',
@@ -25,6 +28,7 @@ export const testExtensionsList: ItemsList[] = [
     avatarUrl: 'https://api.dicebear.com/9.x/icons/svg?icon=printer',
   },
   {
+    id: 'auto_format_plus',
     title: 'Auto Format Plus',
     version: '3.0.1',
     developer: 'CleanCode Labs',
@@ -33,6 +37,7 @@ export const testExtensionsList: ItemsList[] = [
     avatarUrl: 'https://api.dicebear.com/9.x/icons/svg?icon=mouse',
   },
   {
+    id: 'git_flow_helper',
     title: 'Git Flow Helper',
     version: '1.2.0',
     developer: 'GitMaster Team',
@@ -41,6 +46,7 @@ export const testExtensionsList: ItemsList[] = [
     avatarUrl: 'https://api.dicebear.com/9.x/icons/svg?icon=alarm',
   },
   {
+    id: 'debug_toolkit',
     title: 'Debug Toolkit',
     version: '2.5.4',
     developer: 'BugBusters',
@@ -50,6 +56,7 @@ export const testExtensionsList: ItemsList[] = [
     avatarUrl: 'https://api.dicebear.com/9.x/icons/svg?icon=moon',
   },
   {
+    id: 'project_explorer_pro',
     title: 'Project Explorer Pro',
     version: '4.1.2',
     developer: 'FileSystem Solutions',
@@ -58,6 +65,7 @@ export const testExtensionsList: ItemsList[] = [
     avatarUrl: 'https://api.dicebear.com/9.x/icons/svg?icon=mailbox',
   },
   {
+    id: 'live_collaboration',
     title: 'Live Collaboration',
     version: '1.0.5',
     developer: 'TeamSync Ltd.',
@@ -67,6 +75,7 @@ export const testExtensionsList: ItemsList[] = [
     avatarUrl: 'https://api.dicebear.com/9.x/icons/svg?icon=trophy',
   },
   {
+    id: 'type_checker_enhanced',
     title: 'Type Checker Enhanced',
     version: '2.2.1',
     developer: 'TypeMaster',
