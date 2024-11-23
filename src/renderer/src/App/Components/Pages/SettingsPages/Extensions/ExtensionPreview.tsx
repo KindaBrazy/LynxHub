@@ -51,10 +51,15 @@ export default function ExtensionPreview() {
         ' overflow-hidden shadow-small bg-white dark:bg-foreground-100' +
         ' transition-[left] duration-500 sm:left-[17rem] lg:left-[21rem] 2xl:left-[25rem]'
       }>
-      <div className="absolute bg-foreground-200 inset-x-0 flex flex-col p-4 gap-y-1 top-0">
+      <div
+        className={
+          'absolute bg-foreground-200 inset-x-0 flex flex-col p-4 gap-y-1 top-0 h-[6rem] border-b border-foreground/10'
+        }>
         <span>Python Package Manager</span>
         <div className="flex flex-row gap-x-2 items-center">
           <span className="text-small">V1.2.6</span>
+          <Divider type="vertical" />
+          <span className="text-small">2024-11-01</span>
           <Divider type="vertical" />
           <Link href={'some address'} className="text-small text-primary-500" isExternal>
             KindaBrazy
@@ -65,7 +70,7 @@ export default function ExtensionPreview() {
           </Link>
         </div>
       </div>
-      <div className="absolute inset-x-0 top-[5.2rem] flex flex-col bottom-10">
+      <div className="absolute inset-x-0 top-[6.4rem] flex flex-col bottom-10">
         <Tabs
           variant="underlined"
           className="font-Nunito"
