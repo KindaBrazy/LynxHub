@@ -9,53 +9,40 @@ import {
   Input,
   Link,
   Skeleton,
+  Spinner,
   User,
 } from '@nextui-org/react';
 import {List, Typography} from 'antd';
 import {motion} from 'framer-motion';
-import {isNil} from 'lodash';
+import {isEmpty, isNil} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
+import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
 import {useAppState} from '../../../../Redux/App/AppReducer';
+import {useFetchExtensions} from './ExtensionsUtils';
 import {testExtensionsList} from './testData';
 
-export type ListItem = {
-  name: string;
-  subitems?: ListItem[];
-};
-
-export type ChangelogItems = {
-  title: string;
-  items: ListItem[];
-};
-
-export type ItemsList = {
-  id: string;
-  title: string;
-  version: string;
-  developer: string;
-  description: string;
-  changelog: ChangelogItems[];
-  updateDate: string;
-  url: string;
-  avatarUrl: string;
-};
-
 type Props = {
-  selectedExt: ItemsList | undefined;
-  setSelectedExt: Dispatch<SetStateAction<ItemsList | undefined>>;
+  selectedExt: Extension_ListData | undefined;
+  setSelectedExt: Dispatch<SetStateAction<Extension_ListData | undefined>>;
 };
 
 export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
   const [selectedKeys, setSelectedKeys] = useState('all');
-  const [list] = useState<ItemsList[]>(testExtensionsList);
+  const [list, setList] = useState<Extension_ListData[]>(testExtensionsList);
   const [installed] = useState<string[]>(['debug_toolkit', 'code_snippets_manager']);
   const [isLoaded] = useState<boolean>(true);
   const isDarkMode = useAppState('darkMode');
 
-  const orderList = useMemo(
+  const {data, loading} = useFetchExtensions();
+
+  useEffect(() => {
+    if (!isEmpty(data)) setList(data);
+  }, [data]);
+
+  const sortedList = useMemo(
     () =>
       [...list].sort((a, b) => {
         const aInstalled = installed.includes(a.id);
@@ -69,8 +56,8 @@ export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
   );
 
   useEffect(() => {
-    setSelectedExt(prevState => (isNil(prevState) ? orderList[0] : prevState));
-  }, [orderList]);
+    setSelectedExt(prevState => (isNil(prevState) ? sortedList[0] : prevState));
+  }, [sortedList]);
 
   const filterMenu = useCallback(() => {
     return (
@@ -108,7 +95,7 @@ export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
   }, []);
 
   const renderList = useCallback(
-    (item: ItemsList) => {
+    (item: Extension_ListData) => {
       return (
         <List.Item
           className={
@@ -186,13 +173,17 @@ export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
           },
         }}
         className="inset-0 absolute !top-10">
-        <List
-          size="small"
-          className="size-full"
-          dataSource={orderList}
-          renderItem={renderList}
-          itemLayout="horizontal"
-        />
+        {loading ? (
+          <Spinner color="primary" className="size-full" label="Loading list..." />
+        ) : (
+          <List
+            size="small"
+            className="size-full"
+            dataSource={sortedList}
+            renderItem={renderList}
+            itemLayout="horizontal"
+          />
+        )}
       </OverlayScrollbarsComponent>
     </div>
   );

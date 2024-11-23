@@ -120,6 +120,28 @@ export type ModulesInfo = {
   owner?: boolean;
 };
 
+export type Extension_ChangelogItem = {
+  name: string;
+  subitems?: Extension_ChangelogItem[];
+};
+
+export type Extension_Changelogs = {
+  title: string;
+  items: Extension_ChangelogItem[];
+};
+
+export type Extension_ListData = {
+  id: string;
+  title: string;
+  version: string;
+  developer: string;
+  description: string;
+  changeLog: Extension_Changelogs[];
+  updateDate: string;
+  url: string;
+  avatarUrl?: string;
+};
+
 export type ExtensionsInfo = {
   id: string;
 
@@ -131,7 +153,7 @@ export type ExtensionsInfo = {
 
   updateDate: string;
 
-  changeLog: string;
+  changeLog: Extension_Changelogs[];
 
   description: string;
 
@@ -141,7 +163,7 @@ export type ExtensionsInfo = {
   /** Url address to logo picture or relative path to the image file
    * - A relative path will start with './'
    */
-  logoUrl?: string;
+  avatarUrl?: string;
 };
 
 export type AppUpdateInfo = {
