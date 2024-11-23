@@ -18,9 +18,7 @@
   "appDetails": {
     "title": "LynxHub",
     "buildNumber": 13,
-    "detailedDescription": "LynxHub is an open-source AI management software that lets you seamlessly install, configure, launch, and manage AI interfaces from a single, intuitive platform.",
-    "moduleContainer": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Modules/compiled/container.json",
-    "mainModule": "https://github.com/KindaBrazy/LynxHub-Module-Offline-Container"
+    "detailedDescription": "LynxHub is an open-source AI management software that lets you seamlessly install, configure, launch, and manage AI interfaces from a single, intuitive platform."
   },
   "scripts": {
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
