@@ -1,8 +1,8 @@
 import {List} from '@mantine/core';
-import {Button, ButtonGroup, Link, ScrollShadow, Tab, Tabs} from '@nextui-org/react';
+import {Button, ButtonGroup, Link, ScrollShadow, Tab, Tabs, User} from '@nextui-org/react';
 import {Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, Key, useCallback, useMemo, useState} from 'react';
+import {Fragment, Key, memo, useCallback, useMemo, useState} from 'react';
 
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import MarkdownViewer from '../../../Reusable/MarkdownViewer';
@@ -18,7 +18,7 @@ type ChangelogItems = {
   items: ListItem[];
 };
 
-export default function ExtensionPreview() {
+export default memo(function ExtensionPreview() {
   const [installed] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<Key>('readme');
 
@@ -53,9 +53,14 @@ export default function ExtensionPreview() {
       }>
       <div
         className={
-          'absolute bg-foreground-200 inset-x-0 flex flex-col p-4 gap-y-1 top-0 h-[6rem] border-b border-foreground/10'
+          'absolute bg-foreground-200 inset-x-0 flex flex-col p-4 gap-y-2 top-0 h-[6.3rem]' +
+          ' overflow-y-scroll scrollbar-hide border-b border-foreground/10'
         }>
-        <span>Python Package Manager</span>
+        <User
+          className="self-start"
+          avatarProps={{src: ''}}
+          name={<span className="font-semibold text-foreground text-[1rem]">Python Package Manager</span>}
+        />
         <div className="flex flex-row gap-x-2 items-center">
           <span className="text-small">V1.2.6</span>
           <Divider type="vertical" />
@@ -70,7 +75,7 @@ export default function ExtensionPreview() {
           </Link>
         </div>
       </div>
-      <div className="absolute inset-x-0 top-[6.4rem] flex flex-col bottom-10">
+      <div className="absolute inset-x-0 top-[6.6rem] flex flex-col bottom-10">
         <Tabs
           variant="underlined"
           className="font-Nunito"
@@ -119,4 +124,4 @@ export default function ExtensionPreview() {
       </div>
     </div>
   );
-}
+});
