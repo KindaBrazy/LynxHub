@@ -16,12 +16,12 @@ import {Empty, List, Typography} from 'antd';
 import {motion} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
+import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
 import {useAppState} from '../../../../Redux/App/AppReducer';
-import {useFetchExtensions} from './ExtensionsUtils';
+import {useFetchExtensions, useFilteredList, useSortedList} from './ExtensionsUtils';
 
 type Props = {
   selectedExt: Extension_ListData | undefined;
@@ -29,34 +29,22 @@ type Props = {
 };
 
 export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
-  const [selectedKeys, setSelectedKeys] = useState('all');
+  const [selectedKeys, setSelectedKeys] = useState<Set<'installed' | Extension_ListData['tag']> | 'all'>('all');
   const [list, setList] = useState<Extension_ListData[]>([]);
   const [installed] = useState<string[]>(['debug_toolkit', 'code_snippets_manager']);
   const [isLoaded] = useState<boolean>(true);
   const isDarkMode = useAppState('darkMode');
 
   const {data, loading} = useFetchExtensions();
-
   useEffect(() => {
     if (!isEmpty(data)) setList(data);
   }, [data]);
 
-  const sortedList = useMemo(
-    () =>
-      [...list].sort((a, b) => {
-        const aInstalled = installed.includes(a.id);
-        const bInstalled = installed.includes(b.id);
-
-        if (aInstalled && !bInstalled) return -1;
-        if (!aInstalled && bInstalled) return 1;
-        return 0;
-      }),
-    [list, installed],
-  );
-
+  const sortedList = useSortedList(list, installed);
+  const filteredList = useFilteredList(sortedList, selectedKeys, installed);
   useEffect(() => {
-    setSelectedExt(prevState => (isNil(prevState) ? sortedList[0] : prevState));
-  }, [sortedList]);
+    setSelectedExt(prevState => (isNil(prevState) ? filteredList[0] : prevState));
+  }, [filteredList]);
 
   const filterMenu = useCallback(() => {
     return (
@@ -91,7 +79,7 @@ export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
         </Dropdown>
       </>
     );
-  }, []);
+  }, [selectedKeys]);
 
   const renderList = useCallback(
     (item: Extension_ListData) => {
@@ -144,7 +132,7 @@ export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
         </List.Item>
       );
     },
-    [list, installed, selectedExt],
+    [installed, selectedExt],
   );
 
   return (
@@ -191,9 +179,9 @@ export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
             }}
             size="small"
             className="size-full"
-            dataSource={sortedList}
             renderItem={renderList}
             itemLayout="horizontal"
+            dataSource={filteredList}
           />
         )}
       </OverlayScrollbarsComponent>
