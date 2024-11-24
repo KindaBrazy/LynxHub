@@ -40,7 +40,7 @@ export function PreviewHeader({selectedExt}: {selectedExt: Extension_ListData | 
       <User
         className="self-start"
         avatarProps={{src: selectedExt?.avatarUrl}}
-        name={<span className="font-semibold text-foreground text-[1rem]">Python Package Manager</span>}
+        name={<span className="font-semibold text-foreground text-[1rem]">{selectedExt?.title}</span>}
       />
       <div className="flex flex-row gap-x-2 items-center">
         <span className="text-small">{selectedExt?.version}</span>
