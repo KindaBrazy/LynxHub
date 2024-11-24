@@ -1,11 +1,13 @@
 import {Input} from '@nextui-org/react';
 import {Empty, List} from 'antd';
+import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {Dispatch, SetStateAction, useState} from 'react';
+import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
 import {useAppState} from '../../../../Redux/App/AppReducer';
+import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useRenderList, useSortedList} from './ExtensionList_Utils';
 
 export type ExtFilter = Set<'installed' | Extension_ListData['tag']> | 'all';
@@ -33,11 +35,24 @@ export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
   const [selectedFilters, setSelectedFilters] = useState<ExtFilter>('all');
   const [list, setList] = useState<Extension_ListData[]>([]);
   const [installed] = useState<string[]>(['debug_toolkit', 'code_snippets_manager']);
+  const [searchValue, setSearchValue] = useState<string>('');
 
   const {loading} = useFetchExtensions(setList);
 
   const sortedList = useSortedList(list, installed);
   const filteredList = useFilteredList(sortedList, selectedFilters, setSelectedExt, installed);
+  const searchList = useMemo(
+    () =>
+      sortedList.filter(item =>
+        searchInStrings(searchValue, [item.title, item.description, item.url, item.tag, item.developer]),
+      ),
+    [sortedList, searchValue],
+  );
+
+  const resultList = useMemo(
+    () => (isEmpty(searchValue) ? filteredList : searchList),
+    [searchValue, filteredList, searchList],
+  );
 
   const filterMenu = useFilterMenu(selectedFilters, setSelectedFilters);
   const renderList = useRenderList(selectedExt, setSelectedExt, loading, installed);
@@ -50,8 +65,11 @@ export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
         ' transition-[width] duration-500'
       }>
       <Input
+        type="search"
         variant="flat"
+        value={searchValue}
         endContent={filterMenu()}
+        onValueChange={setSearchValue}
         placeholder="Search for extensions..."
         startContent={getIconByName('Circle', {className: 'size-5'})}
         classNames={{inputWrapper: 'bg-foreground-200 rounded-none pr-0'}}
@@ -73,7 +91,7 @@ export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
           className="size-full"
           renderItem={renderList}
           itemLayout="horizontal"
-          dataSource={filteredList}
+          dataSource={resultList}
         />
       </OverlayScrollbarsComponent>
     </div>
