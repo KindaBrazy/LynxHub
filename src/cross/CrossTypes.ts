@@ -140,6 +140,7 @@ export type Extension_ListData = {
   updateDate: string;
   url: string;
   avatarUrl?: string;
+  tag: 'tools' | 'feature' | 'games';
 };
 
 export type ExtensionsInfo = {
@@ -164,6 +165,7 @@ export type ExtensionsInfo = {
    * - A relative path will start with './'
    */
   avatarUrl?: string;
+  tag: 'tools' | 'feature' | 'games';
 };
 
 export type AppUpdateInfo = {

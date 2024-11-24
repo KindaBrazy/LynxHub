@@ -12,7 +12,7 @@ type Props = {
   selectedExt: Extension_ListData | undefined;
 };
 
-export default memo(function ExtensionPreview({selectedExt}: Props) {
+const ExtensionPreview = ({selectedExt}: Props) => {
   const [installed] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<Key>('readme');
 
@@ -125,4 +125,5 @@ export default memo(function ExtensionPreview({selectedExt}: Props) {
       )}
     </div>
   );
-});
+};
+export default memo(ExtensionPreview);
