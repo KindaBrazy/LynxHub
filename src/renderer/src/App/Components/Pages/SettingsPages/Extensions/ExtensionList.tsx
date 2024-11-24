@@ -42,8 +42,20 @@ export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
 
   const sortedList = useSortedList(list, installed);
   const filteredList = useFilteredList(sortedList, selectedKeys, installed);
+
   useEffect(() => {
-    setSelectedExt(prevState => (isNil(prevState) ? filteredList[0] : prevState));
+    setSelectedExt(prevState => {
+      if (isEmpty(filteredList)) {
+        return undefined;
+      }
+      if (isNil(prevState)) {
+        return filteredList[0];
+      }
+      if (!filteredList.some(item => item.id === prevState.id)) {
+        return filteredList[0];
+      }
+      return prevState;
+    });
   }, [filteredList]);
 
   const filterMenu = useCallback(() => {
