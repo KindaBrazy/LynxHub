@@ -1,6 +1,13 @@
 import {IpcRendererEvent} from 'electron';
 
-import {ChosenArgumentsData, DiscordRPC, FolderListData, FolderNames, ModulesInfo} from '../../../cross/CrossTypes';
+import {
+  ChosenArgumentsData,
+  DiscordRPC,
+  ExtensionsInfo,
+  FolderListData,
+  FolderNames,
+  ModulesInfo,
+} from '../../../cross/CrossTypes';
 import {
   appDataChannels,
   appUpdateChannels,
@@ -131,7 +138,8 @@ const rendererIpc = {
   extension: {
     getExtensionsData: (): Promise<string[]> => ipc.invoke(extensionsChannels.getExtensionsData),
 
-    getInstalledExtensionsInfo: (): Promise<ModulesInfo[]> => ipc.invoke(extensionsChannels.getInstalledExtensionsInfo),
+    getInstalledExtensionsInfo: (): Promise<ExtensionsInfo[]> =>
+      ipc.invoke(extensionsChannels.getInstalledExtensionsInfo),
 
     installExtension: (url: string): Promise<boolean> => ipc.invoke(extensionsChannels.installExtension, url),
 
