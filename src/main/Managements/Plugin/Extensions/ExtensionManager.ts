@@ -9,11 +9,10 @@ import StorageManager from '../../Storage/StorageManager';
 import {BasePluginManager} from '../BasePluginManager';
 import ModuleManager from '../ModuleManager';
 import ExtensionApi from './ExtensionApi';
-import {EMenuItem, ExtensionImport_Main, MainExtensions} from './ExtensionTypes';
+import {EMenuItem, ExtensionImport_Main} from './ExtensionTypes';
 import ExtensionUtils from './ExtensionUtils';
 
 export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> {
-  private readonly installedExtensions: MainExtensions[];
   private readonly extensionUtils: ExtensionUtils;
   private readonly extensionApi: ExtensionApi;
 
@@ -28,24 +27,17 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
       'Extensions',
     );
 
-    this.installedExtensions = [];
     this.extensionUtils = new ExtensionUtils();
     this.extensionApi = new ExtensionApi();
   }
 
   protected async importPlugins(extensionFolders: string[]) {
     if (isDev()) {
-      const json = await import('../../../extension/lynxExtension.json');
-      const id = json.id;
       const initial: ExtensionImport_Main = await import('../../../extension/lynxExtension');
       await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
-      this.installedExtensions.push({id});
     } else {
       await Promise.all(
         extensionFolders.map(async extensionPath => {
-          const id = this.installedPluginInfo.find(plugin => plugin.dir === extensionPath)?.info.id;
-          if (!id) return;
-          this.installedExtensions.push({id});
           const initial: ExtensionImport_Main = await import(
             `file://${path.join(extensionPath, 'scripts', 'main', 'mainEntry.mjs')}`
           );

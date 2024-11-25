@@ -35,8 +35,6 @@ export type MainExtensionUtils = {
   getModuleManager: () => Promise<ModuleManager>;
 };
 
-export type MainExtensions = {id: string};
-
 export type ExtensionImport_Main = {
   initialExtension: (lynxApi: ExtensionMainApi, utils: MainExtensionUtils) => Promise<void>;
 };
