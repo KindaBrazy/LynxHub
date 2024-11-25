@@ -1,17 +1,17 @@
 import {Result} from 'antd';
 import {isEmpty} from 'lodash';
-import {memo, useState} from 'react';
+import {memo, useMemo} from 'react';
 
-import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
+import {Extension_ListData, ExtensionsInfo} from '../../../../../../../cross/CrossTypes';
 import {PreviewBody, PreviewFooter, PreviewHeader} from './ExtensionPreview_Utils';
 
 type Props = {
   selectedExt: Extension_ListData | undefined;
+  installed: ExtensionsInfo[];
 };
 
-const ExtensionPreview = ({selectedExt}: Props) => {
-  const [installed] = useState<boolean>(false);
-
+const ExtensionPreview = ({selectedExt, installed}: Props) => {
+  const installedExt = useMemo(() => installed.find(item => item.id === selectedExt?.id), [installed, selectedExt]);
   return (
     <div
       className={
@@ -26,9 +26,9 @@ const ExtensionPreview = ({selectedExt}: Props) => {
         />
       ) : (
         <>
-          <PreviewHeader selectedExt={selectedExt} />
-          <PreviewBody installed={installed} selectedExt={selectedExt} />
-          <PreviewFooter installed={installed} updateAvailable={true} />
+          <PreviewHeader selectedExt={selectedExt} installedExt={installedExt} />
+          <PreviewBody selectedExt={selectedExt} installed={!!installedExt} />
+          <PreviewFooter updateAvailable={true} installed={!!installedExt} />
         </>
       )}
     </div>
