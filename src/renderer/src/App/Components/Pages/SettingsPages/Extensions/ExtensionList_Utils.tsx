@@ -164,6 +164,7 @@ export function useRenderList(
 ) {
   return useCallback(
     (item: Extension_ListData) => {
+      const updateAvailable = item.id === 'code_snippets_manager';
       return (
         <List.Item
           className={
@@ -183,7 +184,7 @@ export function useRenderList(
               <User
                 description={
                   <div className="space-x-2">
-                    <span>{item.version}</span>
+                    <span className={`${updateAvailable && 'text-warning'}`}>{item.version}</span>
                     <span>{item.developer}</span>
                   </div>
                 }
@@ -196,8 +197,13 @@ export function useRenderList(
                       {item.title}
                     </Link>
                     {installed.includes(item.id) && (
-                      <Chip size="sm" radius="sm" variant="faded" color="success">
+                      <Chip size="sm" radius="sm" variant="faded" color="default">
                         Installed
+                      </Chip>
+                    )}
+                    {updateAvailable && (
+                      <Chip size="sm" radius="sm" variant="faded" color="success">
+                        Update
                       </Chip>
                     )}
                   </div>
