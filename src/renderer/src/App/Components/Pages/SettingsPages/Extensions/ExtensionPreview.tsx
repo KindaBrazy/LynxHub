@@ -27,8 +27,8 @@ const ExtensionPreview = ({selectedExt}: Props) => {
       ) : (
         <>
           <PreviewHeader selectedExt={selectedExt} />
-          <PreviewBody selectedExt={selectedExt} />
-          <PreviewFooter installed={installed} />
+          <PreviewBody installed={installed} selectedExt={selectedExt} />
+          <PreviewFooter installed={installed} updateAvailable={true} />
         </>
       )}
     </div>

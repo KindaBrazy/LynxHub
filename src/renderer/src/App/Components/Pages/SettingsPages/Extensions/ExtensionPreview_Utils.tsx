@@ -30,7 +30,13 @@ function useRenderItems() {
   return renderSubItems;
 }
 
-export function PreviewHeader({selectedExt}: {selectedExt: Extension_ListData | undefined}) {
+export function PreviewHeader({
+  selectedExt,
+  installedVer,
+}: {
+  selectedExt: Extension_ListData | undefined;
+  installedVer?: string;
+}) {
   return (
     <div
       className={
@@ -43,7 +49,7 @@ export function PreviewHeader({selectedExt}: {selectedExt: Extension_ListData | 
         name={<span className="font-semibold text-foreground text-[1rem]">{selectedExt?.title}</span>}
       />
       <div className="flex flex-row gap-x-2 items-center">
-        <span className="text-small">{selectedExt?.version}</span>
+        <span className="text-small">{installedVer || selectedExt?.version}</span>
         <Divider type="vertical" />
         <span className="text-small">{selectedExt?.updateDate}</span>
         <Divider type="vertical" />
@@ -59,8 +65,14 @@ export function PreviewHeader({selectedExt}: {selectedExt: Extension_ListData | 
   );
 }
 
-export function PreviewBody({selectedExt}: {selectedExt: Extension_ListData | undefined}) {
-  const [currentTab, setCurrentTab] = useState<Key>('readme');
+export function PreviewBody({
+  selectedExt,
+  installed,
+}: {
+  selectedExt: Extension_ListData | undefined;
+  installed: boolean;
+}) {
+  const [currentTab, setCurrentTab] = useState<Key>(installed ? 'changelog' : 'readme');
 
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
   const renderSubItems = useRenderItems();
@@ -104,14 +116,14 @@ export function PreviewBody({selectedExt}: {selectedExt: Extension_ListData | un
   );
 }
 
-export function PreviewFooter({installed}: {installed: boolean}) {
+export function PreviewFooter({installed, updateAvailable}: {installed: boolean; updateAvailable: boolean}) {
   return (
     <div className="absolute bottom-0 inset-x-0">
       <ButtonGroup radius="none" variant="flat" fullWidth>
         {installed ? (
           <>
             <Button color="danger">Uninstall</Button>
-            <Button color="warning">Disable</Button>
+            {updateAvailable && <Button color="success">Update</Button>}
           </>
         ) : (
           <Button color="success">Install</Button>
