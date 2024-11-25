@@ -2,9 +2,9 @@ import {List} from '@mantine/core';
 import {Button, ButtonGroup, Link, ScrollShadow, Tab, Tabs, User} from '@nextui-org/react';
 import {Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, Key, useCallback, useMemo, useState} from 'react';
+import {Fragment, Key, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {Extension_ChangelogItem, Extension_ListData} from '../../../../../../../cross/CrossTypes';
+import {Extension_ChangelogItem, Extension_ListData, ExtensionsInfo} from '../../../../../../../cross/CrossTypes';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import MarkdownViewer from '../../../Reusable/MarkdownViewer';
 
@@ -32,10 +32,10 @@ function useRenderItems() {
 
 export function PreviewHeader({
   selectedExt,
-  installedVer,
+  installedExt,
 }: {
   selectedExt: Extension_ListData | undefined;
-  installedVer?: string;
+  installedExt: ExtensionsInfo | undefined;
 }) {
   return (
     <div
@@ -49,7 +49,7 @@ export function PreviewHeader({
         name={<span className="font-semibold text-foreground text-[1rem]">{selectedExt?.title}</span>}
       />
       <div className="flex flex-row gap-x-2 items-center">
-        <span className="text-small">{installedVer || selectedExt?.version}</span>
+        <span className="text-small">{installedExt?.version || selectedExt?.version}</span>
         <Divider type="vertical" />
         <span className="text-small">{selectedExt?.updateDate}</span>
         <Divider type="vertical" />
@@ -72,7 +72,11 @@ export function PreviewBody({
   selectedExt: Extension_ListData | undefined;
   installed: boolean;
 }) {
-  const [currentTab, setCurrentTab] = useState<Key>(installed ? 'changelog' : 'readme');
+  const [currentTab, setCurrentTab] = useState<Key>('changelog');
+
+  useEffect(() => {
+    setCurrentTab(installed ? 'changelog' : 'readme');
+  }, [installed]);
 
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
   const renderSubItems = useRenderItems();

@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 
-import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
+import {Extension_ListData, ExtensionsInfo} from '../../../../../../../cross/CrossTypes';
 import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
 import {useAppState} from '../../../../Redux/App/AppReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
@@ -15,6 +15,7 @@ export type ExtFilter = Set<'installed' | Extension_ListData['tag']> | 'all';
 type Props = {
   selectedExt: Extension_ListData | undefined;
   setSelectedExt: Dispatch<SetStateAction<Extension_ListData | undefined>>;
+  installed: ExtensionsInfo[];
 };
 
 const emptyText = (
@@ -29,18 +30,19 @@ const emptyText = (
   />
 );
 
-export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
+export default function ExtensionList({selectedExt, setSelectedExt, installed}: Props) {
   const isDarkMode = useAppState('darkMode');
 
   const [selectedFilters, setSelectedFilters] = useState<ExtFilter>('all');
   const [list, setList] = useState<Extension_ListData[]>([]);
-  const [installed] = useState<string[]>(['debug_toolkit', 'code_snippets_manager']);
   const [searchValue, setSearchValue] = useState<string>('');
+
+  const installedID = useMemo(() => installed.map(item => item.id), [installed]);
 
   const {loading} = useFetchExtensions(setList);
 
-  const sortedList = useSortedList(list, installed);
-  const filteredList = useFilteredList(sortedList, selectedFilters, setSelectedExt, installed);
+  const sortedList = useSortedList(list, installedID);
+  const filteredList = useFilteredList(sortedList, selectedFilters, setSelectedExt, installedID);
   const searchList = useMemo(
     () =>
       sortedList.filter(item =>
@@ -55,7 +57,7 @@ export default function ExtensionList({selectedExt, setSelectedExt}: Props) {
   );
 
   const filterMenu = useFilterMenu(selectedFilters, setSelectedFilters);
-  const renderList = useRenderList(selectedExt, setSelectedExt, loading, installed);
+  const renderList = useRenderList(selectedExt, setSelectedExt, loading, installedID);
 
   return (
     <div
