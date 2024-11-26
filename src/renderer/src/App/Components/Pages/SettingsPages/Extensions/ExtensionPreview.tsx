@@ -1,16 +1,18 @@
 import {Result} from 'antd';
 import {isEmpty} from 'lodash';
-import {memo, useMemo} from 'react';
+import {Dispatch, memo, SetStateAction, useMemo} from 'react';
 
-import {Extension_ListData, ExtensionsInfo} from '../../../../../../../cross/CrossTypes';
+import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {PreviewBody, PreviewFooter, PreviewHeader} from './ExtensionPreview_Utils';
+import {InstalledExt} from './ExtensionsPage';
 
 type Props = {
   selectedExt: Extension_ListData | undefined;
-  installed: ExtensionsInfo[];
+  installed: InstalledExt[];
+  setInstalled: Dispatch<SetStateAction<InstalledExt[]>>;
 };
 
-const ExtensionPreview = ({selectedExt, installed}: Props) => {
+const ExtensionPreview = ({selectedExt, installed, setInstalled}: Props) => {
   const installedExt = useMemo(() => installed.find(item => item.id === selectedExt?.id), [installed, selectedExt]);
   return (
     <div
@@ -28,7 +30,7 @@ const ExtensionPreview = ({selectedExt, installed}: Props) => {
         <>
           <PreviewHeader selectedExt={selectedExt} installedExt={installedExt} />
           <PreviewBody selectedExt={selectedExt} installed={!!installedExt} />
-          <PreviewFooter updateAvailable={true} installed={!!installedExt} />
+          <PreviewFooter selectedExt={selectedExt} installed={!!installedExt} setInstalled={setInstalled} />
         </>
       )}
     </div>
