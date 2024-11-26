@@ -19,6 +19,7 @@ import {EXTENSION_CONTAINER} from '../../../../../../../cross/CrossConstants';
 import {Extension_ListData, ExtensionsInfo} from '../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
+import {useSettingsState} from '../../../../Redux/App/SettingsReducer';
 import {ExtFilter} from './ExtensionList';
 
 export function useFetchExtensions(setList: Dispatch<SetStateAction<Extension_ListData[]>>) {
@@ -162,9 +163,9 @@ export function useRenderList(
   isLoaded: boolean,
   installed: string[],
 ) {
+  const updateAvailable = useSettingsState('extensionsUpdateAvailable');
   return useCallback(
     (item: Extension_ListData) => {
-      const updateAvailable = item.id === 'code_snippets_manager';
       return (
         <List.Item
           className={
@@ -184,7 +185,7 @@ export function useRenderList(
               <User
                 description={
                   <div className="space-x-2">
-                    <span className={`${updateAvailable && 'text-warning'}`}>{item.version}</span>
+                    <span className={`${updateAvailable.includes(item.id) && 'text-warning'}`}>{item.version}</span>
                     <span>{item.developer}</span>
                   </div>
                 }
@@ -201,7 +202,7 @@ export function useRenderList(
                         Installed
                       </Chip>
                     )}
-                    {updateAvailable && (
+                    {updateAvailable.includes(item.id) && (
                       <Chip size="sm" radius="sm" variant="faded" color="success">
                         Update
                       </Chip>
@@ -219,6 +220,6 @@ export function useRenderList(
         </List.Item>
       );
     },
-    [installed, selectedExt, isLoaded],
+    [installed, selectedExt, isLoaded, updateAvailable],
   );
 }

@@ -8,12 +8,13 @@ import {RootState} from '../Store';
 
 type SettingState = {
   tooltipLevel: TooltipStatus;
+  hotkeys: LynxHotkeys;
+
   cardsCompactMode: boolean;
   cardsDevImage: boolean;
   cardsDevName: boolean;
   cardsDesc: boolean;
   cardsRepoInfo: boolean;
-  hotkeys: LynxHotkeys;
 
   closeConfirm: boolean;
   terminateAIConfirm: boolean;
@@ -21,6 +22,8 @@ type SettingState = {
   updatedModules: string[];
   newModules: string[];
   moduleUpdateAvailable: boolean;
+
+  extensionsUpdateAvailable: string[];
 
   updateAvailable: boolean;
 };
@@ -48,6 +51,7 @@ const initialState: SettingState = {
   newModules: [],
   moduleUpdateAvailable: false,
   updateAvailable: false,
+  extensionsUpdateAvailable: [],
 };
 //#endregion
 

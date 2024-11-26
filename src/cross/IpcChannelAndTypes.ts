@@ -163,7 +163,7 @@ export const extensionsChannels = {
   installExtension: 'extensions:install-extensions',
   uninstallExtension: 'extensions:uninstall-extensions',
   isUpdateAvailable: 'extensions:is-update-available',
-  anyUpdateAvailable: 'extensions:any-update-available',
+  updateAvailableList: 'extensions:any-update-available',
   updateExtension: 'extensions:update-extensions',
   updateAllExtensions: 'extensions:update-all-extensions',
 

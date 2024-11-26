@@ -159,7 +159,7 @@ function extensions() {
   ipcMain.handle(extensionsChannels.installExtension, (_, url: string) => extensionManager.installPlugin(url));
   ipcMain.handle(extensionsChannels.uninstallExtension, (_, id: string) => extensionManager.uninstallPlugin(id));
   ipcMain.handle(extensionsChannels.isUpdateAvailable, (_, id: string) => extensionManager.isUpdateAvailable(id));
-  ipcMain.handle(extensionsChannels.anyUpdateAvailable, () => extensionManager.anyUpdateAvailable());
+  ipcMain.handle(extensionsChannels.updateAvailableList, () => extensionManager.updateAvailableList());
   ipcMain.handle(extensionsChannels.updateExtension, (_, id: string) => extensionManager.updatePlugin(id));
   ipcMain.handle(extensionsChannels.updateAllExtensions, () => extensionManager.updateAllPlugins());
 }
