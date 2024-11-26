@@ -53,9 +53,7 @@ export function PreviewHeader({
         <Divider type="vertical" />
         <span className="text-small">{selectedExt?.updateDate}</span>
         <Divider type="vertical" />
-        <Link href={'some address'} className="text-small text-primary-500" isExternal>
-          {selectedExt?.developer}
-        </Link>
+        <span className="text-small">{selectedExt?.developer}</span>
         <Divider type="vertical" />
         <Link href={selectedExt?.url} className="text-small text-primary-500" isExternal>
           Home Page
