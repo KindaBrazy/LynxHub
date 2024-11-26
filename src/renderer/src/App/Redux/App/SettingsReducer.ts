@@ -73,6 +73,9 @@ const settingsSlice = createSlice({
     setHotkeys: (state, action: PayloadAction<LynxHotkeys>) => {
       state.hotkeys = action.payload;
     },
+    removeExtUpdateAvailable: (state, action: PayloadAction<string>) => {
+      state.extensionsUpdateAvailable = state.extensionsUpdateAvailable.filter(item => item !== action.payload);
+    },
 
     addUpdatedModule: (state, action: PayloadAction<string | string[]>) => {
       const modulesToAdd = Array.isArray(action.payload) ? action.payload : [action.payload];

@@ -4,18 +4,19 @@ import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 
-import {Extension_ListData, ExtensionsInfo} from '../../../../../../../cross/CrossTypes';
+import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
 import {useAppState} from '../../../../Redux/App/AppReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useRenderList, useSortedList} from './ExtensionList_Utils';
+import {InstalledExt} from './ExtensionsPage';
 
 export type ExtFilter = Set<'installed' | Extension_ListData['tag']> | 'all';
 
 type Props = {
   selectedExt: Extension_ListData | undefined;
   setSelectedExt: Dispatch<SetStateAction<Extension_ListData | undefined>>;
-  installed: ExtensionsInfo[];
+  installed: InstalledExt[];
 };
 
 const emptyText = (
