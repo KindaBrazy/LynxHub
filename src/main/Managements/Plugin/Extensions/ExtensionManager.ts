@@ -5,6 +5,7 @@ import {isDev} from '../../../../cross/CrossUtils';
 import {extensionsChannels} from '../../../../cross/IpcChannelAndTypes';
 import DiscordRpcManager from '../../DiscordRpcManager';
 import ElectronAppManager from '../../ElectronAppManager';
+import GitManager from '../../GitManager';
 import StorageManager from '../../Storage/StorageManager';
 import {BasePluginManager} from '../BasePluginManager';
 import ModuleManager from '../ModuleManager';
@@ -44,6 +45,21 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
           await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
         }),
       );
+    }
+  }
+
+  public async updateAvailableList(): Promise<string[]> {
+    try {
+      const updateChecks = this.installedPluginInfo.map(async plugin => {
+        const hasUpdate = await GitManager.isUpdateAvailable(plugin.dir);
+        return {id: plugin.info.id, hasUpdate};
+      });
+
+      const results = await Promise.all(updateChecks);
+      return results.filter(result => result.hasUpdate).map(result => result.id);
+    } catch (error) {
+      console.error('Error checking for updates:', error);
+      return [];
     }
   }
 

@@ -146,7 +146,7 @@ const rendererIpc = {
     uninstallExtension: (id: string): Promise<boolean> => ipc.invoke(extensionsChannels.uninstallExtension, id),
 
     isUpdateAvailable: (id: string): Promise<boolean> => ipc.invoke(extensionsChannels.isUpdateAvailable, id),
-    anyUpdateAvailable: (): Promise<boolean> => ipc.invoke(extensionsChannels.anyUpdateAvailable),
+    updateAvailableList: (): Promise<string[]> => ipc.invoke(extensionsChannels.updateAvailableList),
 
     updateExtension: (id: string): Promise<boolean> => ipc.invoke(extensionsChannels.updateExtension, id),
 

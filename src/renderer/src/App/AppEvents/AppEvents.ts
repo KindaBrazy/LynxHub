@@ -1,5 +1,6 @@
 import {
   useCheckCardsUpdate,
+  useCheckExtensionsUpdate,
   useCheckModulesUpdate,
   useIpcEvents,
   useOnlineEvents,
@@ -11,6 +12,7 @@ import {
 export default function useAppEvents() {
   useCheckCardsUpdate();
   useCheckModulesUpdate();
+  useCheckExtensionsUpdate();
   useOnlineEvents();
   useStorageData();
   usePatreon();

@@ -58,6 +58,25 @@ export const useCheckModulesUpdate = () => {
   }, [dispatch]);
 };
 
+export const useCheckExtensionsUpdate = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const extensionUpdateInterval = useRef<NodeJS.Timeout>();
+  useEffect(() => {
+    const checkForUpdate = () => {
+      rendererIpc.extension.updateAvailableList().then(value => {
+        dispatch(settingsActions.setSettingsState({key: 'extensionsUpdateAvailable', value}));
+      });
+    };
+
+    checkForUpdate();
+
+    clearInterval(extensionUpdateInterval.current);
+    extensionUpdateInterval.current = undefined;
+
+    extensionUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
+  }, [dispatch]);
+};
+
 export const useOnlineEvents = () => {
   const dispatch = useDispatch<AppDispatch>();
 
