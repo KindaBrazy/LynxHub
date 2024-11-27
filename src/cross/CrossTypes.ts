@@ -143,8 +143,6 @@ export type Extension_ListData = {
   tag: 'tools' | 'feature' | 'games';
 };
 
-export type MainExtensionsInstalled = {id: string};
-
 export type ExtensionsInfo = {
   id: string;
 
