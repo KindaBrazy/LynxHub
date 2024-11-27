@@ -10,7 +10,7 @@ import StorageManager from '../../Storage/StorageManager';
 import {BasePluginManager} from '../BasePluginManager';
 import ModuleManager from '../ModuleManager';
 import ExtensionApi from './ExtensionApi';
-import {EMenuItem, ExtensionImport_Main} from './ExtensionTypes';
+import {EMenuItem, ExtensionImport_Main} from './ExtensionTypes_Main';
 import ExtensionUtils from './ExtensionUtils';
 
 export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> {

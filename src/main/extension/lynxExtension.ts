@@ -1,4 +1,4 @@
-import {EMenuItem, ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extensions/ExtensionTypes';
+import {EMenuItem, ExtensionMainApi, MainExtensionUtils} from '../Managements/Plugin/Extensions/ExtensionTypes_Main';
 import StorageManager from '../Managements/Storage/StorageManager';
 import {listenForChannels} from './Methods/IpcChannels';
 

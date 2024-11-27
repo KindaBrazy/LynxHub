@@ -2,7 +2,7 @@ import DiscordRpcManager from '../../DiscordRpcManager';
 import ElectronAppManager from '../../ElectronAppManager';
 import StorageManager from '../../Storage/StorageManager';
 import ModuleManager from '../ModuleManager';
-import {MainExtensionUtils} from './ExtensionTypes';
+import {MainExtensionUtils} from './ExtensionTypes_Main';
 
 export default class ExtensionUtils implements MainExtensionUtils {
   private managerPromises: Map<string, Promise<any>> = new Map();

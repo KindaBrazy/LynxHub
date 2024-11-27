@@ -4,7 +4,7 @@ import {Menu, Tray} from 'electron';
 
 import {APP_NAME, APP_NAME_VERSION} from '../../cross/CrossConstants';
 import {appManager, extensionManager} from '../index';
-import {EMenuItem} from './Plugin/Extensions/ExtensionTypes';
+import {EMenuItem} from './Plugin/Extensions/ExtensionTypes_Main';
 
 /** Manages the system tray icon and its context menu for the application. */
 export default class TrayManager {

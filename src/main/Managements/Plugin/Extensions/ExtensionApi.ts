@@ -1,4 +1,4 @@
-import {EMenuItem, ExtensionData_Main, ExtensionMainApi} from './ExtensionTypes';
+import {EMenuItem, ExtensionData_Main, ExtensionMainApi} from './ExtensionTypes_Main';
 
 export default class ExtensionApi {
   private readonly extensionsData: ExtensionData_Main;
