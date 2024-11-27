@@ -6,7 +6,7 @@ import Page from '../Page';
 
 export const gamesRoutePath: string = '/gamesPage';
 
-export default function GamesPage() {
+const GamesPage = () => {
   const {addComponent} = extensionsData.customizePages.games;
 
   return (
@@ -24,4 +24,6 @@ export default function GamesPage() {
       </ScrollShadow>
     </Page>
   );
-}
+};
+
+export default GamesPage;

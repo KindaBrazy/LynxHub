@@ -9,7 +9,7 @@ import rendererIpc from '../../../RendererIpc';
 import {useDisableTooltip, useInstalledCard} from '../../../Utils/UtilHooks';
 
 /** Display modal to manage uninstalling a card */
-export default function UninstallCard() {
+const UninstallCard = () => {
   const {cardId, isOpen} = useModalsState('cardUninstallModal');
   const card = useInstalledCard(cardId);
   const dispatch = useDispatch<AppDispatch>();
@@ -107,4 +107,6 @@ export default function UninstallCard() {
   }, [isOpen, card, dispatch]);
 
   return <Fragment />;
-}
+};
+
+export default UninstallCard;

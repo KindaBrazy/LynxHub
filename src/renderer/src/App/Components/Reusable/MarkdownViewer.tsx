@@ -36,7 +36,7 @@ type CustomCodeProps = HTMLAttributes<HTMLElement> & {
   'data-inline'?: boolean;
 };
 
-export default function MarkdownViewer({repoUrl, rounded = true}: MarkdownViewerProps) {
+const MarkdownViewer = ({repoUrl, rounded = true}: MarkdownViewerProps) => {
   const [content, setContent] = useState<string>('');
   const isDarkMode = useAppState('darkMode');
   const [loading, setLoading] = useState<boolean>(true);
@@ -233,4 +233,6 @@ export default function MarkdownViewer({repoUrl, rounded = true}: MarkdownViewer
       </div>
     </OverlayScrollbarsComponent>
   );
-}
+};
+
+export default MarkdownViewer;

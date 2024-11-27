@@ -1,6 +1,7 @@
 import {RouteObject} from 'react-router';
 
-import {ExtensionData_Renderer, ExtensionImport_Renderer, ExtensionRendererApi} from './ExtensionTypes';
+import {ExtensionData_Renderer, ExtensionImport_Renderer} from './ExtensionTypes_Renderer';
+import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 
 export const extensionsData: ExtensionData_Renderer = {
   titleBar: {

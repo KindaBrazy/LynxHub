@@ -32,7 +32,7 @@ const initialState: InstallState = {
   startClone: false,
 };
 
-const InstallUIModal = () => {
+const InstallUIModal = memo(() => {
   const {isOpen, cardId, title, type} = useModalsState('installUIModal');
   const {getMethod} = useModules();
   const installedCard = useInstalledCard(cardId);
@@ -203,6 +203,6 @@ const InstallUIModal = () => {
       </ModalContent>
     </Modal>
   );
-};
+});
 
-export default memo(InstallUIModal);
+export default InstallUIModal;

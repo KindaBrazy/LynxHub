@@ -116,7 +116,7 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
 };
 
 /** Settings navigation bar */
-export default function SettingsPageNav() {
+const SettingsPageNav = () => {
   const buttons = useMemo(() => extensionsData.customizePages.settings.add.navButton, []);
 
   return (
@@ -137,4 +137,6 @@ export default function SettingsPageNav() {
       </ScrollShadow>
     </Card>
   );
-}
+};
+
+export default SettingsPageNav;

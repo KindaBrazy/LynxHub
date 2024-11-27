@@ -5,7 +5,7 @@ import {compact} from 'lodash';
 import {isDev} from '../../../../cross/CrossUtils';
 import rendererIpc from '../RendererIpc';
 import extensionLoader from './ExtensionLoader';
-import {ExtensionImport_Renderer} from './ExtensionTypes';
+import {ExtensionImport_Renderer} from './ExtensionTypes_Renderer';
 
 type RemotesConfig = {
   format?: 'esm' | 'systemjs' | 'var';

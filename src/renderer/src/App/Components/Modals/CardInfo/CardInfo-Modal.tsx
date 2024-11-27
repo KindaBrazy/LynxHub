@@ -38,7 +38,7 @@ const initData = {
 };
 
 /** Displaying information about card (Disk usage, developer, repository details) */
-export default function CardInfoModal() {
+const CardInfoModal = () => {
   const [data, setData] = useState<RepoInfoType>(initData);
   const [installDir, setInstallDir] = useState<string>('');
   const {cardId, extensionsDir, isOpen, devName, url} = useModalsState('cardInfoModal');
@@ -157,4 +157,6 @@ export default function CardInfoModal() {
       </ModalContent>
     </Modal>
   );
-}
+};
+
+export default CardInfoModal;

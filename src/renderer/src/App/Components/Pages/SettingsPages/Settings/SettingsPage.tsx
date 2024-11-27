@@ -6,13 +6,13 @@ export const settingsRoutePath: string = '/settingsPage';
 export const settingsElementId: string = 'settingsElement';
 
 /** App setting manager */
-export default function SettingsPage() {
-  return (
-    <Page id={settingsElementId}>
-      <div className="flex size-full flex-row space-x-1">
-        <SettingsPageNav />
-        <SettingsPageContents />
-      </div>
-    </Page>
-  );
-}
+const SettingsPage = () => (
+  <Page id={settingsElementId}>
+    <div className="flex size-full flex-row space-x-1">
+      <SettingsPageNav />
+      <SettingsPageContents />
+    </div>
+  </Page>
+);
+
+export default SettingsPage;

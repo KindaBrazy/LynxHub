@@ -18,7 +18,7 @@ import Downloading from './Downloading';
 import Info from './Info';
 
 /** Manage updating application */
-export default function UpdateApp() {
+const UpdateApp = () => {
   const {isOpen} = useModalsState('updateApp');
   const isRunningAI = useCardsState('runningCard').isRunning;
   const [items, setItems] = useState<CollapseProps['items']>([]);
@@ -220,4 +220,6 @@ export default function UpdateApp() {
       </ModalContent>
     </Modal>
   );
-}
+};
+
+export default UpdateApp;
