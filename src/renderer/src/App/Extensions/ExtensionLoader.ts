@@ -1,4 +1,4 @@
-import {RouteObject} from 'react-router-dom';
+import {RouteObject} from 'react-router';
 
 import {ExtensionData_Renderer, ExtensionImport_Renderer, ExtensionRendererApi} from './ExtensionTypes';
 

@@ -1,7 +1,7 @@
 import {Button} from '@nextui-org/react';
 import {Fragment, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
-import {RouteObject} from 'react-router-dom';
+import {RouteObject} from 'react-router';
 
 import NavButton from '../../src/App/Components/NavBar/NavButton';
 import RouterPagesError from '../../src/App/Components/Pages/RouterPagesError';

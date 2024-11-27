@@ -3,7 +3,7 @@ import {Result, Typography} from 'antd';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {isRouteErrorResponse, useNavigate, useRouteError} from 'react-router-dom';
+import {isRouteErrorResponse, useNavigate, useRouteError} from 'react-router';
 
 import {appActions, useAppState} from '../../Redux/App/AppReducer';
 import {AppDispatch} from '../../Redux/Store';
