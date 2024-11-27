@@ -121,7 +121,7 @@ export type ModulesInfo = {
 };
 
 export type Extension_ChangelogItem = {
-  name: string;
+  label: string;
   subitems?: Extension_ChangelogItem[];
 };
 

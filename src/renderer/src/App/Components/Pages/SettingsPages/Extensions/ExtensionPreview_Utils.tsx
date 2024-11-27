@@ -23,7 +23,7 @@ function useRenderItems() {
           const currentKey = `${parentKey}_${index}`;
           return (
             <Fragment key={currentKey}>
-              <List.Item>{item.name}</List.Item>
+              <List.Item>{item.label}</List.Item>
               {item.subitems && renderSubItems(item.subitems, currentKey)}
             </Fragment>
           );
