@@ -1,11 +1,50 @@
 {
-  "id": "The id of extension to manage and recognize by LynxHub",
-  "title": "The extension title",
-  "description": "A short exclamation of what this extension will do.",
-  "publishDate": "Date of first time published. example:'2024-10-24'",
-  "repoUrl": "The url to clone and install extension with compiled scripts",
-  "version": "Current extension version. example:'1.0.0'",
-  "updateDate": "The update release date. example:'2024-10-24 11:00'",
-  "changeLog": "Versions changelog. example:'V0.5.0\n・Publish extension' -> Just \n is acceptable by app",
-  "avatarUrl": "Url address to logo picture or relative path to the image file - A relative path will start with './'"
+  "id": "git_flow_helper",
+  "title": "Git Flow Helper",
+  "description": "Simplifies Git workflow with visual branch management and common Git operations automation.",
+  "publishDate": "2024-11-27",
+  "repoUrl": "https://github.com/KindaBrazy/LynxHub",
+  "version": "1.2.0",
+  "updateDate": "2024-11-27 14:05",
+  "changeLog": [
+    {
+      "title": "Version 1.2.0 Release Notes",
+      "items": [
+        {
+          "label": "New Features",
+          "subitems": [
+            {
+              "label": "Interactive rebase helper"
+            },
+            {
+              "label": "Branch visualization improvements"
+            },
+            {
+              "label": "Commit message templates"
+            }
+          ]
+        },
+        {
+          "label": "Performance Improvements",
+          "subitems": [
+            {
+              "label": "Faster branch switching"
+            },
+            {
+              "label": "Optimized large repository handling"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Version 1.0.0",
+      "items": [
+        {
+          "label": "Releasing V1"
+        }
+      ]
+    }
+  ],
+  "avatarUrl": "https://avatars.githubusercontent.com/u/143181745?v=4"
 }
