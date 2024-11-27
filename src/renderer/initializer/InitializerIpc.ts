@@ -7,8 +7,6 @@ const initializerIpc = {
 
   gitAvailable: (): Promise<string> => window.electron.ipcRenderer.invoke(initializerChannels.gitAvailable),
 
-  pythonAvailable: (): Promise<string> => window.electron.ipcRenderer.invoke(initializerChannels.pythonAvailable),
-
   installAIModule: (): void => window.electron.ipcRenderer.send(initializerChannels.installAIModule),
 
   onInstallAIModule: (callback: GitProgressCallback) =>
