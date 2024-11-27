@@ -98,7 +98,7 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
 
   public async cardsUpdateInterval(updateType: {id: string; type: 'git' | 'stepper'}[]) {
     if (!this.checkInterval && !isEmpty(updateType)) {
-      this.checkForCardsUpdate(updateType);
+      await this.checkForCardsUpdate(updateType);
       this.checkInterval = setInterval(() => this.checkForCardsUpdate(updateType), toMs(30, 'minutes'));
     }
   }
