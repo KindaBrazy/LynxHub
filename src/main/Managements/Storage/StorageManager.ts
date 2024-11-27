@@ -185,11 +185,9 @@ class StorageManager extends BaseStorage {
 
     const extensionsExists = lodash.includes(storedAutoUpdateExtensions, cardId);
 
-    console.log('extensionsExists', extensionsExists);
     if (!extensionsExists) {
       const result: string[] = [...storedAutoUpdateExtensions, cardId];
 
-      console.log('extensionsExists', [...storedAutoUpdateExtensions, cardId]);
       this.updateData('cards', {autoUpdateExtensions: [...storedAutoUpdateExtensions, cardId]});
 
       appManager.getWebContent()?.send(storageUtilsChannels.onAutoUpdateExtensions, result);
