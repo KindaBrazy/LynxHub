@@ -13,6 +13,8 @@ function trayMenu_AddItem(): {item: EMenuItem; index: number} {
 }
 
 export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExtensionUtils) {
+  return;
+
   utils.getStorageManager().then(storageManager => {
     storeManager = storageManager;
   });

@@ -99,7 +99,6 @@ export async function getExtensionsDetails(dir: string): Promise<ExtensionsData 
 }
 
 async function getRepoDirectories(dir: string) {
-  console.log(dir);
   const folders = await getRepoFolders(dir);
   return folders.map(folder => path.join(dir, folder));
 }

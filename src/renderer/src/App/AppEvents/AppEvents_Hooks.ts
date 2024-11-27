@@ -21,7 +21,6 @@ export const useCheckCardsUpdate = () => {
 
   useEffect(() => {
     rendererIpc.module.onCardsUpdateAvailable((_e, result) => {
-      console.log('update result', result);
       dispatch(cardsActions.setUpdateAvailable(result));
     });
   }, [dispatch]);

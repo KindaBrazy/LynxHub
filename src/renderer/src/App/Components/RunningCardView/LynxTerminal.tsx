@@ -124,13 +124,11 @@ export default function LynxTerminal() {
 
   useEffect(() => {
     onRightClickRef.current = () => {
-      console.log('onRightClick');
       const isSelectedText = !isEmpty(terminal.current?.getSelection());
       if (isSelectedText) {
         copyText();
       } else {
         navigator.clipboard.readText().then(text => {
-          console.log(text);
           rendererIpc.pty.write(text);
         });
       }
