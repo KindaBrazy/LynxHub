@@ -10,7 +10,7 @@ export const imageGenRoutePath: string = '/imageGenerationPage';
 export const imageGenElementId: string = 'imageGenElement';
 
 // Generating images with AI
-export default function ImageGenerationPage() {
+const ImageGenerationPage = () => {
   const {top, scrollTop, scrollBottom, bottom, cardsContainer} = useMemo(
     () => extensionsData.customizePages.image.add,
     [],
@@ -37,4 +37,6 @@ export default function ImageGenerationPage() {
       {bottom && bottom.map((Bottom, index) => <Bottom key={index} />)}
     </Page>
   );
-}
+};
+
+export default ImageGenerationPage;

@@ -48,7 +48,7 @@ const groupSections: GroupProps[] = [
   },
 ];
 
-export default function DashboardPageNav() {
+const DashboardPageNav = () => {
   const buttons = useMemo(() => extensionsData.customizePages.dashboard.add.navButton, []);
 
   return (
@@ -69,4 +69,6 @@ export default function DashboardPageNav() {
       </ScrollShadow>
     </Card>
   );
-}
+};
+
+export default DashboardPageNav;

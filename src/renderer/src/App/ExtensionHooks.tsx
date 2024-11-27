@@ -2,7 +2,7 @@ import {useMemo} from 'react';
 
 import {extensionsData} from './Extensions/ExtensionLoader';
 
-export default function ExtensionHooks() {
+const ExtensionHooks = () => {
   const customHooks = useMemo(() => extensionsData.addCustomHook, []);
 
   return (
@@ -12,4 +12,6 @@ export default function ExtensionHooks() {
       ))}
     </>
   );
-}
+};
+
+export default ExtensionHooks;

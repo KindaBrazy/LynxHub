@@ -13,7 +13,7 @@ import rendererIpc from '../../../RendererIpc';
 import UpdateDetails from './UpdateDetails';
 
 /** Modal to display the updated card result and info */
-export default function UpdatingNotification() {
+const UpdatingNotification = () => {
   const updatingCards = useCardsState('updatingCards');
   const dispatch = useDispatch<AppDispatch>();
 
@@ -111,4 +111,6 @@ export default function UpdatingNotification() {
       <UpdateDetails />
     </>
   );
-}
+};
+
+export default UpdatingNotification;

@@ -8,7 +8,7 @@ import {modalActions, useModalsState} from '../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import MarkdownViewer from '../Reusable/MarkdownViewer';
 
-export default function CardReadmeModal() {
+const CardReadmeModal = () => {
   const {isOpen, url, title} = useModalsState('readmeModal');
 
   const dispatch = useDispatch<AppDispatch>();
@@ -67,4 +67,6 @@ export default function CardReadmeModal() {
       </ModalContent>
     </Modal>
   );
-}
+};
+
+export default CardReadmeModal;

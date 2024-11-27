@@ -5,7 +5,7 @@ import {extensionsData} from '../../Extensions/ExtensionLoader';
 
 const classNames = 'flex size-full items-center overflow-x-scroll scrollbar-hide';
 
-const StatusBar = () => {
+const StatusBar = memo(() => {
   const {addEnd, addStart, addCenter, replaceContainer: ReplaceContainer} = useMemo(() => extensionsData.statusBar, []);
 
   const isEmptyAdd = useMemo(() => {
@@ -43,5 +43,5 @@ const StatusBar = () => {
       )}
     </>
   );
-};
-export default memo(StatusBar);
+});
+export default StatusBar;

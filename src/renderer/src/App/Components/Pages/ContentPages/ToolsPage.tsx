@@ -6,7 +6,7 @@ import Page from '../Page';
 
 export const toolsRoutePath: string = '/toolsPage';
 
-export default function ToolsPage() {
+const ToolsPage = () => {
   const {addComponent} = extensionsData.customizePages.tools;
 
   return (
@@ -24,4 +24,6 @@ export default function ToolsPage() {
       </ScrollShadow>
     </Page>
   );
-}
+};
+
+export default ToolsPage;

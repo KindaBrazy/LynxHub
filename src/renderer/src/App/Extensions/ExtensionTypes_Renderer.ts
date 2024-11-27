@@ -4,6 +4,7 @@ import {RouteObject} from 'react-router';
 
 import {CardData} from '../Modules/types';
 import {DropDownSectionType} from '../Utils/Types';
+import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 
 // -----------------------------------------------> Elements & Props
 export type ElementProps = ComponentProps<'div'>;
@@ -20,15 +21,6 @@ export type FcPropCard = FC<CardElementProps>;
 export type FcPropSearchResult = FC<SearchResultProps>;
 export type FcPropAddCardMenu = FC<AddCardMenuProps>;
 export type FcPropReplaceMd = FC<ReplaceMdProps>;
-
-// -----------------------------------------------> Extension Renderer API
-
-type CompFc = (component: FC) => void;
-type CompFcProp = (component: FcProp) => void;
-type CompFcPropCard = (component: FcPropCard) => void;
-type CompFcPropSearchResult = (component: FcPropSearchResult) => void;
-type CompFcPropAddCardMenu = (component: FcPropAddCardMenu) => void;
-type CompFcPropReplaceMd = (component: FcPropReplaceMd) => void;
 
 export type ExtensionData_Renderer = {
   titleBar: {
@@ -159,139 +151,6 @@ export type ExtensionData_Renderer = {
       body: FC | undefined;
       footer: FC | undefined;
       menu: {replace: FC | undefined; addSection: FcPropAddCardMenu[]};
-    };
-  };
-};
-
-export type ExtensionRendererApi = {
-  titleBar: {
-    addStart: CompFcProp;
-    addCenter: CompFcProp;
-    addEnd: CompFcProp;
-    replaceCenter: CompFcProp;
-    replaceEnd: CompFcProp;
-  };
-  statusBar: {
-    addStart: CompFcProp;
-    addCenter: CompFcProp;
-    addEnd: CompFcProp;
-    replaceContainer: CompFc;
-  };
-  runningAI: {
-    container: CompFc;
-    terminal: CompFc;
-    browser: CompFc;
-  };
-  router: {
-    add: (routeObject: RouteObject[]) => void;
-    replace: {
-      homePage: CompFc;
-      imageGenerationPage: CompFc;
-      textGenerationPage: CompFc;
-      audioGenerationPage: CompFc;
-      toolsPage: CompFc;
-      gamesPage: CompFc;
-      dashboardPage: CompFc;
-      modulesPage: CompFc;
-      extensionsPage: CompFc;
-      settingsPage: CompFc;
-    };
-  };
-  navBar: {
-    replace: {
-      container: CompFc;
-      contentBar: CompFc;
-      settingsBar: CompFc;
-    };
-    addButton: {
-      contentBar: CompFc;
-      settingsBar: CompFc;
-    };
-  };
-  replaceModals: {
-    updateApp: CompFc;
-    launchConfig: CompFc;
-    cardExtensions: CompFc;
-    updatingNotification: CompFc;
-    cardInfo: CompFc;
-    installUi: CompFc;
-    uninstallCard: CompFc;
-    install: CompFc;
-    warning: CompFc;
-    cardReadme: CompFc;
-  };
-  replaceMarkdownViewer: CompFcPropReplaceMd;
-  addModal: CompFc;
-  addCustomHook: CompFc;
-  replaceBackground: CompFc;
-  customizePages: {
-    home: {
-      replace: {
-        searchAndFilter: CompFc;
-        searchResult: CompFcPropSearchResult;
-        categories: CompFc;
-      };
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-        pinCategory: CompFc;
-        recentlyCategory: CompFc;
-        allCategory: CompFc;
-      };
-    };
-    audio: {
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-        cardsContainer: CompFc;
-      };
-    };
-    image: {
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-        cardsContainer: CompFc;
-      };
-    };
-    text: {
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-        cardsContainer: CompFc;
-      };
-    };
-    tools: {addComponent: CompFc};
-    games: {addComponent: CompFc};
-    settings: {
-      add: {
-        navButton: CompFc;
-        content: CompFc;
-      };
-    };
-    dashboard: {
-      add: {
-        navButton: CompFc;
-        content: CompFc;
-      };
-    };
-  };
-  addReducer: (reducer: {name: string; reducer: Reducer}[]) => void;
-  cards: {
-    replace: CompFcPropCard;
-    replaceComponent: CompFc;
-    customize: {
-      header: CompFc;
-      body: CompFc;
-      footer: CompFc;
-      menu: {replace: CompFc; addSection: CompFcPropAddCardMenu};
     };
   };
 };

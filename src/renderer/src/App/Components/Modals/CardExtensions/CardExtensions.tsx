@@ -13,7 +13,7 @@ import Clone from './Clone';
 import Installed from './Installed';
 
 /** Managing card extension -> install, update, uninstall and etc */
-export default function CardExtensions() {
+const CardExtensions = () => {
   const [installedExtensions, setInstalledExtensions] = useState<string[]>([]);
 
   const {isOpen, title, id} = useModalsState('cardExtensions');
@@ -140,4 +140,6 @@ export default function CardExtensions() {
       </ModalContent>
     </Modal>
   );
-}
+};
+
+export default CardExtensions;

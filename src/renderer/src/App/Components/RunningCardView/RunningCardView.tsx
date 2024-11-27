@@ -5,7 +5,7 @@ import {extensionsData} from '../../Extensions/ExtensionLoader';
 import Browser from './Browser';
 import LynxTerminal from './LynxTerminal';
 
-export default function RunningCardView() {
+const RunningCardView = () => {
   const ExtTerminal = useMemo(() => extensionsData.runningAI.terminal, []);
   const ExtBrowser = useMemo(() => extensionsData.runningAI.browser, []);
 
@@ -15,4 +15,6 @@ export default function RunningCardView() {
       {isNil(ExtBrowser) ? <Browser /> : <ExtBrowser />}
     </>
   );
-}
+};
+
+export default RunningCardView;

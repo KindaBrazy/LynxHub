@@ -28,7 +28,7 @@ let resizeTimeout: any;
 const FONT_FAMILY = 'JetBrainsMono';
 
 /** Xterm.js terminal */
-export default function LynxTerminal() {
+const LynxTerminal = () => {
   const terminalRef = useRef<HTMLDivElement | null>(null);
   const terminal = useRef<Terminal | null>(null);
   const fitAddon = useRef<FitAddon | null>(null);
@@ -287,4 +287,6 @@ export default function LynxTerminal() {
       <div ref={terminalRef} className="relative size-full" />
     </motion.div>
   );
-}
+};
+
+export default LynxTerminal;

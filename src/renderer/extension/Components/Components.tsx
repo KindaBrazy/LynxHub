@@ -5,7 +5,7 @@ import {RouteObject} from 'react-router';
 
 import NavButton from '../../src/App/Components/NavBar/NavButton';
 import RouterPagesError from '../../src/App/Components/Pages/RouterPagesError';
-import {CardElementProps, ElementProps} from '../../src/App/Extensions/ExtensionTypes';
+import {CardElementProps, ElementProps} from '../../src/App/Extensions/ExtensionTypes_Renderer';
 import {useAppState} from '../../src/App/Redux/App/AppReducer';
 import {getIconByName} from '../../src/assets/icons/SvgIconsContainer';
 import {extensionActions, useExtensionState} from '../reducer';

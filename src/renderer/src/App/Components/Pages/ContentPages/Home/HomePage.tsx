@@ -13,7 +13,7 @@ import HomeSearchBox from './HomeSearchBox';
 export const homeRoutePath: string = '/homePage';
 export const homeElementId: string = 'homePageElement';
 
-export default function HomePage() {
+const HomePage = () => {
   const homeCategory = useCardsState('homeCategory');
   const [searchValue, setSearchValue] = useState<string>('');
 
@@ -63,4 +63,6 @@ export default function HomePage() {
       </div>
     </Page>
   );
-}
+};
+
+export default HomePage;

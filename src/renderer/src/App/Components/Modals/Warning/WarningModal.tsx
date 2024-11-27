@@ -9,7 +9,7 @@ import {AppDispatch} from '../../../Redux/Store';
 import {warnContent, warnTitle} from './WarningContent';
 
 /** Hook to display a warning */
-export default function WarningModal() {
+const WarningModal = () => {
   const {contentId, isOpen} = useModalsState('warningModal');
   const dispatch = useDispatch<AppDispatch>();
 
@@ -56,4 +56,6 @@ export default function WarningModal() {
   }, [isOpen, contentId, handleClose, dispatch]);
 
   return <Fragment />;
-}
+};
+
+export default WarningModal;

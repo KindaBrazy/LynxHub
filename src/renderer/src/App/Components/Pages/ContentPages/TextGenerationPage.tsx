@@ -10,7 +10,7 @@ export const textGenRoutePath: string = '/textGenerationPage';
 export const textGenElementId: string = 'textGenElement';
 
 // Chatting with AI
-export default function TextGenerationPage() {
+const TextGenerationPage = () => {
   const {top, scrollTop, scrollBottom, bottom, cardsContainer} = useMemo(
     () => extensionsData.customizePages.text.add,
     [],
@@ -37,4 +37,6 @@ export default function TextGenerationPage() {
       {bottom && bottom.map((Bottom, index) => <Bottom key={index} />)}
     </Page>
   );
-}
+};
+
+export default TextGenerationPage;

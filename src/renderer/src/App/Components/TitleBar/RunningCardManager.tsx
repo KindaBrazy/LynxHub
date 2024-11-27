@@ -13,7 +13,7 @@ import LynxTooltip from '../Reusable/LynxTooltip';
 import SmallButton from '../Reusable/SmallButton';
 import WebviewZoomFactor from './Webview-ZoomFactor';
 
-export default function RunningCardManager() {
+const RunningCardManager = () => {
   const runningCard = useCardsState('runningCard');
   const showTerminateConfirm = useSettingsState('terminateAIConfirm');
   const dispatch = useDispatch<AppDispatch>();
@@ -189,4 +189,6 @@ export default function RunningCardManager() {
   );
 
   return <div className="flex flex-row items-center justify-center">{renderButtons}</div>;
-}
+};
+
+export default RunningCardManager;

@@ -13,7 +13,7 @@ const variants: Variants = {
 };
 
 /** Browser component that renders AI address in an iframe. */
-export default function Browser() {
+const Browser = () => {
   const {address, browserId, currentView, id} = useCardsState('runningCard');
   const zoomFactor = useCardsState('webViewZoomFactor');
   const webViewRef = useRef<WebviewTag>(null);
@@ -54,4 +54,6 @@ export default function Browser() {
       <webview src={address} id={browserId} ref={webViewRef} className="relative size-full" />
     </motion.div>
   );
-}
+};
+
+export default Browser;

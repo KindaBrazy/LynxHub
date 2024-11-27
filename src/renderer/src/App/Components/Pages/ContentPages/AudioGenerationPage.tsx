@@ -10,7 +10,7 @@ export const audioGenRoutePath: string = '/audioGenerationPage';
 export const audioGenElementId: string = 'audioGenElement';
 
 // Generating audios with AI
-export default function AudioGenerationPage() {
+const AudioGenerationPage = () => {
   const {top, scrollTop, scrollBottom, bottom, cardsContainer} = useMemo(
     () => extensionsData.customizePages.audio.add,
     [],
@@ -37,4 +37,6 @@ export default function AudioGenerationPage() {
       {bottom && bottom.map((Bottom, index) => <Bottom key={index} />)}
     </Page>
   );
-}
+};
+
+export default AudioGenerationPage;

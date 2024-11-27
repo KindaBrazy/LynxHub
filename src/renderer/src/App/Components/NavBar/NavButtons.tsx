@@ -44,7 +44,7 @@ const GetPages = ({Pages}: {Pages: PagesType[]}) => {
   });
 };
 
-export function ContentPagesButtons() {
+export const ContentPagesButtons = () => {
   const contentBar = useMemo(() => extensionsData.navBar.addButton.contentBar, []);
 
   const pagesData: PagesType[] = useMemo(() => {
@@ -84,7 +84,7 @@ export function ContentPagesButtons() {
       {!isEmpty(contentBar) && contentBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
-}
+};
 
 const SettingsPages: PagesType[] = [
   {navButton: {icon: 'Dashboard', title: 'Dashboard'}, path: dashboardRoutePath},

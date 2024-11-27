@@ -15,7 +15,7 @@ const BUTTONS_COMMON_STYLE: string = 'notDraggable cursor-default transition-col
 type WindowOperation = 'fullscreen' | 'minimize' | 'maximize' | 'close' | 'restart';
 
 /** Managing window controls (minimize, maximize, close). */
-export default function WindowButtons() {
+const WindowButtons = () => {
   const onFocus = useAppState('onFocus');
   const maximized = useAppState('maximized');
   const currentPage = useAppState('currentPage');
@@ -133,4 +133,6 @@ export default function WindowButtons() {
       {renderButton('close', 'Power', 'pl-3 pr-[1rem] hover:bg-red-600')}
     </div>
   );
-}
+};
+
+export default WindowButtons;
