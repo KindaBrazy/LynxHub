@@ -1,6 +1,6 @@
 import {Reducer} from '@reduxjs/toolkit';
 import {ComponentProps, FC} from 'react';
-import {RouteObject} from 'react-router-dom';
+import {RouteObject} from 'react-router';
 
 import {CardData} from '../Modules/types';
 import {DropDownSectionType} from '../Utils/Types';

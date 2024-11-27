@@ -1,5 +1,5 @@
 import {compact, isNil} from 'lodash';
-import {createMemoryRouter, RouteObject} from 'react-router-dom';
+import {createMemoryRouter, RouteObject} from 'react-router';
 
 import Layout from '../Layout';
 import AudioGenerationPage, {audioGenRoutePath} from './Components/Pages/ContentPages/AudioGenerationPage';
@@ -91,14 +91,5 @@ export async function initRouter() {
     },
   ];
 
-  return createMemoryRouter(mainRoute, {
-    initialEntries: [homeRoutePath],
-    future: {
-      v7_fetcherPersist: true,
-      v7_partialHydration: true,
-      v7_normalizeFormMethod: true,
-      v7_relativeSplatPath: true,
-      v7_skipActionErrorRevalidation: true,
-    },
-  });
+  return createMemoryRouter(mainRoute, {initialEntries: [homeRoutePath]});
 }

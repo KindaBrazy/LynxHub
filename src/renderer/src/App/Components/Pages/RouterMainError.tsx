@@ -1,7 +1,7 @@
 import {Button} from '@nextui-org/react';
 import {Result} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
-import {isRouteErrorResponse, useRouteError} from 'react-router-dom';
+import {isRouteErrorResponse, useRouteError} from 'react-router';
 
 import rendererIpc from '../../RendererIpc';
 

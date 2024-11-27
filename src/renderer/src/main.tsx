@@ -5,7 +5,7 @@ import '@mantine/core/styles.css';
 
 import log from 'electron-log/renderer';
 import {createRoot} from 'react-dom/client';
-import {RouterProvider} from 'react-router-dom';
+import {RouterProvider} from 'react-router';
 
 import {isDev} from '../../cross/CrossUtils';
 import {initRouter} from './App/AppRouter';
@@ -18,6 +18,4 @@ if (!isDev()) {
   Object.assign(console, log.functions);
 }
 
-createRoot(document.getElementById('root') as HTMLElement).render(
-  <RouterProvider router={router} future={{v7_startTransition: true}} />,
-);
+createRoot(document.getElementById('root') as HTMLElement).render(<RouterProvider router={router} />);
