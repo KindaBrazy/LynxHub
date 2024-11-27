@@ -37,7 +37,6 @@ export default class ElectronAppManager {
     icon,
     webPreferences: {
       webviewTag: true,
-      nodeIntegration: true,
       preload: path.join(__dirname, '../preload/index.cjs'),
       sandbox: false,
     },
