@@ -25,7 +25,7 @@ export default class AppInitializer {
     frame: false,
     show: false,
     width: 350,
-    height: 400,
+    height: 420,
     resizable: false,
     maximizable: false,
     icon,

@@ -43,7 +43,7 @@ export default function App() {
             'h-16 w-full shrink-0 content-center space-x-2 bg-white/5 shadow-xl border-b border-foreground-50/15'
           }>
           <img alt="App Icon" src={APP_ICON_TRANSPARENT} className="absolute left-4 top-4 size-8" />
-          <span className="font-semibold">Checking Requirements</span>
+          <span className="font-semibold">Checking Requirements...</span>
           <Button
             size="sm"
             variant="light"
