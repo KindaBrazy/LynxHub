@@ -92,7 +92,7 @@ export default function Logo() {
             transition: {duration: 0.2},
           }}
           transition={{duration: 0.4}}
-          className={`notDraggable ml-2 ${AppNameStyle.fontSize}`}
+          className={`notDraggable ml-2 mt-0.5 ${AppNameStyle.fontSize}`}
           whileTap={{color: darkMode ? getColor('white', 0.8) : getColor('black', 0.6)}}>
           {APP_NAME}
         </motion.span>
