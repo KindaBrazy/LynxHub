@@ -55,7 +55,7 @@ export default function ToggleTheme() {
       <motion.div
         {...motionProps}
         onClick={handleToggle}
-        className={`notDraggable group ml-2 ${BUTTON_STYLE.width} flex rounded-md`}>
+        className={`notDraggable group ml-3 ${BUTTON_STYLE.width} flex rounded-md`}>
         {icon}
       </motion.div>
     </LynxTooltip>
