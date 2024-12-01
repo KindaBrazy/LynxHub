@@ -3,11 +3,56 @@
   "currentBuild": 13,
   "releaseDate": "2024-10-24",
   "earlyAccess": {
-    "version": "1.3.1",
-    "build": 13,
-    "releaseDate": "2024-10-10"
+    "version": "2.0.0",
+    "build": 14,
+    "releaseDate": "2024-11-30"
   },
   "changeLog": [
+    {
+      "build": 14,
+      "version": "2.0.0",
+      "new": [
+        "Extension Support (Beta): Extend the functionality of the application with custom extensions!",
+        "Terminal Enhancements:",
+        "- Customization: A new settings section allows you to personalize the terminal's behavior and styling.",
+        "- Colorized Output: Easier-to-read terminal output with color-coding based on message type (#20).",
+        "- Copy/Paste: Support copy and paste text in the terminal with right-click (#20).",
+        "Markdown Viewer: View Markdown files directly within the application.",
+        "Content & Navigation:",
+        "- README Integration: Access project README directly from the card menu.",
+        "- Pinned Card Ribbons: Visually identify your pinned cards with a new ribbon design."
+      ],
+      "improve": [
+        "Card Management:",
+        "- Pinned cards are now displayed at the top of the list for easy access.",
+        "- Non-installed cards are filtered out from \"Pinned\" and \"Recently Used\" categories (#21).",
+        "- Card reordering now features a smooth animation.",
+        "- Improved card design for better visibility and aesthetics.",
+        "- The card container background is now slightly lighter.",
+        "User Interface Enhancements:",
+        "- The information modal has been redesigned for improved clarity and visibility.",
+        "- Category icons have been updated to new colored versions with added descriptions.",
+        "- Enhanced search functionality provides better results for developers and repositories.",
+        "- The close button in the tools info modal now has a background on hover.",
+        "- The search and filter backgrounds are lightened for better visibility.",
+        "Process Management:",
+        "- AI processes are now forcefully terminated before closing or restarting the application to prevent issues (#22).",
+        "- Selected text in the terminal is now cleared automatically on copy.",
+        "Initializer:",
+        "- Python validation has been removed from the initializer.",
+        "- The initializer design and window size has been enhanced for a better visual experience.",
+        "Data Display:",
+        "- Card repository information is now conditionally rendered, only appearing when data is available."
+      ],
+      "bug": [
+        "Resolved an issue where SVG icons were not displayed correctly.",
+        "Eliminated a 1-second app freeze during startup that occurred while checking for card updates.",
+        "Fixed an issue where app elements would sometimes appear underneath the title bar.",
+        "Ensured that modals and menus no longer obscure the title bar.",
+        "Update ribbons on cards are now hidden when the card is not visible.",
+        "Resolved an issue that prevented card auto-updates from working correctly on app startup."
+      ]
+    },
     {
       "build": 13,
       "version": "1.3.1",
