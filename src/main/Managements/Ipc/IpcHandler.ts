@@ -26,6 +26,7 @@ import {
 } from '../../../cross/IpcChannelAndTypes';
 import StorageTypes, {InstalledCard} from '../../../cross/StorageTypes';
 import {appManager, discordRpcManager, extensionManager, moduleManager, storageManager} from '../../index';
+import calcFolderSize from '../../Utilities/CalculateFolderSize/CalculateFolderSize';
 import {getSystemDarkMode, openDialog} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
 import GitManager from '../GitManager';
@@ -95,6 +96,8 @@ function file() {
   ipcMain.handle(fileChannels.checkFilesExist, (_, dir: string, fileNames: string[]) =>
     checkFilesExist(dir, fileNames),
   );
+
+  ipcMain.handle(fileChannels.calcFolderSize, (_, dir) => calcFolderSize(dir));
 }
 
 function git() {
