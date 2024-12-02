@@ -51,6 +51,22 @@ export function formatSizeKB(sizeKB: number | undefined): string {
   }
 }
 
+export function formatSizeMB(mb: number): number | string {
+  if (mb > 1024) {
+    return (mb / 1024).toFixed(2) + ' GB';
+  } else {
+    return mb + ' MB';
+  }
+}
+
+export function bytesToMegabytes(bytes: number): number {
+  if (bytes < 0) {
+    throw new Error('Bytes value cannot be negative');
+  }
+  const megabytes = bytes / (1024 * 1024);
+  return parseFloat(megabytes.toFixed(2)); // Rounded to 2 decimal places
+}
+
 export function toMs(value: number, from: 'seconds' | 'minutes'): number {
   switch (from) {
     case 'seconds':
