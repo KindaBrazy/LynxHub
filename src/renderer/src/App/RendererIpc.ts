@@ -84,7 +84,10 @@ const rendererIpc = {
 
     listDir: (dirPath: string, relatives: string[]): Promise<FolderListData[]> =>
       ipc.invoke(fileChannels.listDir, dirPath, relatives),
+
     checkFilesExist: (dir: string, fileNames: string[]) => ipc.invoke(fileChannels.checkFilesExist, dir, fileNames),
+
+    calcFolderSize: (dir: string) => ipc.invoke(fileChannels.calcFolderSize, dir),
   },
 
   /** Git operations */

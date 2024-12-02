@@ -106,6 +106,7 @@ export const fileChannels = {
   trashDir: 'app:trashDir',
   listDir: 'app:listDir',
   checkFilesExist: 'app:checkFilesExist',
+  calcFolderSize: 'app:calcFolderSize',
 };
 
 export const gitChannels = {
