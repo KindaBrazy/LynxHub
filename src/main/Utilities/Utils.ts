@@ -1,4 +1,5 @@
 import {execSync} from 'node:child_process';
+import {platform} from 'node:os';
 import path from 'node:path';
 
 import {dialog, nativeTheme, OpenDialogReturnValue} from 'electron';
@@ -118,6 +119,22 @@ export function getPowerShellVersion(): number {
   } catch (err) {
     console.error('Error determining PowerShell version:', err);
     return 0;
+  }
+}
+
+/**
+ * Determines the appropriate shell based on the operating system and PowerShell version.
+ * @returns The shell command to use.
+ */
+export function determineShell(): string {
+  switch (platform()) {
+    case 'darwin':
+      return 'zsh';
+    case 'linux':
+      return 'bash';
+    case 'win32':
+    default:
+      return getPowerShellVersion() >= 5 ? 'pwsh.exe' : 'powershell.exe';
   }
 }
 
