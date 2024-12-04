@@ -6,7 +6,7 @@ import treeKill from 'tree-kill';
 
 import {ptyChannels} from '../../cross/IpcChannelAndTypes';
 import {appManager, storageManager} from '../index';
-import {getPowerShellVersion} from '../Utilities/Utils';
+import {determineShell} from '../Utilities/Utils';
 
 /** Manages pseudo-terminal (PTY) processes for different shells. */
 export default class PtyManager {
@@ -26,7 +26,7 @@ export default class PtyManager {
 
   constructor() {
     this.isRunning = false;
-    this.shell = this.determineShell();
+    this.shell = determineShell();
   }
 
   //#endregion
@@ -39,22 +39,6 @@ export default class PtyManager {
    */
   private isAvailable(): boolean {
     return this.isRunning && !!this.process?.pid;
-  }
-
-  /**
-   * Determines the appropriate shell based on the operating system and PowerShell version.
-   * @returns The shell command to use.
-   */
-  private determineShell(): string {
-    switch (platform()) {
-      case 'darwin':
-        return 'zsh';
-      case 'linux':
-        return 'bash';
-      case 'win32':
-      default:
-        return getPowerShellVersion() >= 5 ? 'pwsh.exe' : 'powershell.exe';
-    }
   }
 
   //#endregion
