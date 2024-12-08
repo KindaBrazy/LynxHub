@@ -10,9 +10,11 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useRef} from 'react';
 
 import {useAppState} from '../../../../Redux/App/AppReducer';
+import {useTerminalState} from '../../../../Redux/App/TerminalReducer';
 import rendererIpc from '../../../../RendererIpc';
 import {getColor} from '../../../../Utils/Constants';
 import {isWebgl2Supported} from '../../../../Utils/UtilFunctions';
+import parseTerminalColors from '../../../RunningCardView/TerminalColorHandler';
 
 let resizeTimeout: any;
 
@@ -26,6 +28,8 @@ export default function TerminalStep() {
   const fitAddon = useRef<FitAddon | null>(null);
   const unicode11Addon = useRef<Unicode11Addon | null>(null);
   const darkMode = useAppState('darkMode');
+
+  const outputColor = useTerminalState('outputColor');
 
   const getTheme = useCallback(
     (): ITheme => ({
@@ -51,9 +55,9 @@ export default function TerminalStep() {
 
   const writeData = useCallback(
     (data: string) => {
-      terminal.current?.write(data);
+      terminal.current?.write(outputColor ? parseTerminalColors(data) : data);
     },
-    [terminal.current],
+    [terminal.current, outputColor],
   );
 
   useEffect(() => {
