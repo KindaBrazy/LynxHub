@@ -3,7 +3,9 @@ import {Card, Empty} from 'antd';
 import {useEffect, useMemo, useState} from 'react';
 
 import {PATREON_URL, PATRONS_DATA} from '../../../../../../../../cross/CrossConstants';
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {ExternalLink_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Heart_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Patreon_Icon, UserHeart_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
 export const DashboardCreditsId = 'settings_credits_elem';
@@ -65,9 +67,11 @@ export default function DashboardCredits() {
   };
 
   return (
-    <SettingsSection title="Credits" icon="UserHeart" id={DashboardCreditsId} itemsCenter>
+    <SettingsSection title="Credits" id={DashboardCreditsId} icon={<UserHeart_Icon className="size-5" />} itemsCenter>
       <div className="mb-8 flex flex-row items-center justify-center space-x-2 text-center text-2xl font-semibold">
-        <span>{getIconByName('Heart', {className: 'text-danger'})}</span>
+        <span>
+          <Heart_Icon className="text-danger" />
+        </span>
         <span>Our Amazing Sponsors</span>
       </div>
       {tiers.map(tier => (
@@ -110,9 +114,9 @@ export default function DashboardCredits() {
         onClick={handleBecomePatron}
         classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
         hoverable>
-        {getIconByName('Patreon', {className: 'size-4'})}
+        <Patreon_Icon className="size-4" />
         <span>Become a Patron</span>
-        {getIconByName('ExternalLink')}
+        <ExternalLink_Icon className="ExternalLink" />
       </Card>
     </SettingsSection>
   );

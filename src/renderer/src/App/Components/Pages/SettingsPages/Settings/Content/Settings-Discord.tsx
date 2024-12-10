@@ -5,6 +5,7 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {APP_NAME} from '../../../../../../../../cross/CrossConstants';
 import {DiscordRPC} from '../../../../../../../../cross/CrossTypes';
+import {Discord_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import rendererIpc from '../../../../../RendererIpc';
 import SettingsSection from '../SettingsPage-ContentSection';
 
@@ -54,7 +55,10 @@ export default function SettingsDiscord() {
 
   return (
     <>
-      <SettingsSection icon="Discord" id={SettingsDiscordId} title="Discord Activity Status">
+      <SettingsSection
+        id={SettingsDiscordId}
+        title="Discord Activity Status"
+        icon={<Discord_Icon className="size-5" />}>
         <CheckboxGroup
           color="secondary"
           value={selectedLynx}

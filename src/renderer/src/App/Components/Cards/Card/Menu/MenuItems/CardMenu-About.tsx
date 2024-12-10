@@ -2,7 +2,8 @@ import {DropdownItemProps} from '@nextui-org/react';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {Document_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
@@ -23,7 +24,7 @@ export const useInfo = (): DropdownItemProps => {
       className: 'cursor-default',
       key: 'information',
       onPress,
-      startContent: getIconByName('Info'),
+      startContent: <Info_Icon />,
       title: 'Information',
     }),
     [onPress],
@@ -45,7 +46,7 @@ export const useREADME = (): DropdownItemProps => {
       className: 'cursor-default',
       key: 'readme',
       onPress,
-      startContent: getIconByName('Document'),
+      startContent: <Document_Icon />,
       title: 'README',
     }),
     [onPress],

@@ -3,6 +3,7 @@ import {isArray} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {Magnifier_Icon} from '../../../assets/icons/SvgIcons/SvgIcons4';
 import {cardsActions, useCardsState} from '../../Redux/AI/CardsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import SmallButton from '../Reusable/SmallButton';
@@ -37,7 +38,7 @@ export default function WebviewZoomFactor() {
     <Popover className="!shadow-small" showArrow shouldCloseOnBlur>
       <PopoverTrigger>
         <a>
-          <SmallButton icon="Magnifier" iconClassName="m-[8px]" />
+          <SmallButton icon={<Magnifier_Icon className="m-[8px]" />} />
         </a>
       </PopoverTrigger>
       <PopoverContent className="flex-row gap-x-2 gap-y-4 border-2 border-foreground/10 py-2 pr-6">

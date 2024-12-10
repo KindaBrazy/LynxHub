@@ -17,7 +17,6 @@ export default function PreTerminalCommands() {
       setPreCommands(result);
     });
     rendererIpc.storageUtils.onPreCommands((_, result) => {
-      console.log(result);
       if (result.id === id) setPreCommands(result.commands);
     });
 

@@ -5,7 +5,7 @@ import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
-import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
+import {Star_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {useModalsState} from '../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
@@ -73,7 +73,7 @@ export default function RenderItem({item, updateTable}: Props) {
               <Tag bordered={false}>{capitalize(extractGitUrl(item.url).owner)}</Tag>
               {item.stars && (
                 <Tag bordered={false} className="flex flex-row items-center justify-center gap-x-1">
-                  {getIconByName('Star', {className: item.stars >= 1000 ? 'fill-yellow-400' : 'fill-yellow-200'})}
+                  <Star_Icon className={item.stars >= 1000 ? 'fill-yellow-400' : 'fill-yellow-200'} />
                   {formatNumber(item.stars)}
                 </Tag>
               )}

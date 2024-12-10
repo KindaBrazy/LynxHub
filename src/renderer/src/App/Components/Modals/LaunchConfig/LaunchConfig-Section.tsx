@@ -3,7 +3,7 @@ import {Card} from 'antd';
 import {isEmpty} from 'lodash';
 import {ReactNode} from 'react';
 
-import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {Add_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
 import LynxTooltip from '../../Reusable/LynxTooltip';
 
 type Props = {
@@ -33,7 +33,7 @@ export default function LaunchConfigSection({
             {customButton || (
               <LynxTooltip content={addTooltipTitle} isEssential>
                 <Button size="sm" variant="light" onPress={onAddPress} className="cursor-default" isIconOnly>
-                  {getIconByName('Add')}
+                  <Add_Icon />
                 </Button>
               </LynxTooltip>
             )}

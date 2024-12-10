@@ -8,7 +8,8 @@ import {SimpleGitProgressEvent} from 'simple-git';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../../cross/IpcChannelAndTypes';
-import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
+import {Folder2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {GitHub_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {modalActions, useModalsState} from '../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
@@ -97,7 +98,7 @@ export default function CloneRepo({url, start, done}: Props) {
           <Card
             title={
               <div className="flex flex-row items-center justify-between space-x-2">
-                {getIconByName('GitHub', {className: 'size-4'})}
+                <GitHub_Icon className="size-4" />
                 <span className="text-medium">Download From</span>
                 <a />
               </div>
@@ -118,7 +119,7 @@ export default function CloneRepo({url, start, done}: Props) {
           <Card
             title={
               <div className="flex flex-row items-center justify-between space-x-2">
-                {getIconByName('Folder2', {className: 'size-4'})}
+                <Folder2_Icon className="size-4" />
                 <span className="text-medium">Save to</span>
                 <a />
               </div>

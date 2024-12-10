@@ -2,7 +2,8 @@ import {Button} from '@mantine/core';
 import {Typography} from 'antd';
 
 import {ISSUE_PAGE} from '../../../../../../../../cross/CrossConstants';
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {ExternalLink_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Bug_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
 const {Paragraph} = Typography;
@@ -11,7 +12,11 @@ export const DashboardReportIssueId = 'settings_report_issue_elem';
 /** Reporting app issues on GitHub */
 export default function DashboardReportIssue() {
   return (
-    <SettingsSection icon="Bug" title="Report an Issue" id={DashboardReportIssueId} itemsCenter>
+    <SettingsSection
+      title="Report an Issue"
+      id={DashboardReportIssueId}
+      icon={<Bug_Icon className="size-5" />}
+      itemsCenter>
       <Paragraph>
         <span>If you encounter any issues with the app, please open a new issue on my GitHub repository.</span>
         <br /> <br />
@@ -22,7 +27,7 @@ export default function DashboardReportIssue() {
         variant="default"
         className="!transition !duration-300"
         onClick={() => window.open(ISSUE_PAGE)}
-        rightSection={getIconByName('ExternalLink', {className: 'text-warning'})}
+        rightSection={<ExternalLink_Icon className="text-warning" />}
         fullWidth>
         <span className="text-warning">Report</span>
       </Button>

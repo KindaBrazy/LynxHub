@@ -4,7 +4,8 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
-import {getIconByName} from '../../../../../../../assets/icons/SvgIconsContainer';
+import {Folder2_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Refresh_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {useModules} from '../../../../../../Modules/ModulesContext';
 import {useCardsState} from '../../../../../../Redux/AI/CardsReducer';
 import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
@@ -56,17 +57,17 @@ export default function FileArgItem({argument, changeValue, removeArg}: Props) {
       extra={
         <Tooltip color="#111111" title={`Change to ${isRelative ? 'Absolute' : 'Relative'}`}>
           <Button size="sm" variant="light" onPress={changeType} className={`my-1 cursor-default`} isIconOnly>
-            {getIconByName('Refresh', {
-              className: `${rotateEffect && 'animate-[spin_0.5s]'}`,
-              onAnimationEnd: () => setRotateEffect(false),
-            })}
+            <Refresh_Icon
+              onAnimationEnd={() => setRotateEffect(false)}
+              className={`${rotateEffect && 'animate-[spin_0.5s]'}`}
+            />
           </Button>
         </Tooltip>
       }
-      icon="Folder2"
       onClick={changeDir}
       name={argument.name}
       removeArg={removeArg}
+      icon={<Folder2_Icon />}
       defaultCursor={isRelative}>
       {isRelative ? (
         <AutoCompletePath type="file" baseDir={baseDir!} defaultValue={selectedFile} onValueChange={changeValue} />

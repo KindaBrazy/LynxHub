@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 
 import {WIN_RELEASE_URL} from '../../../../../../../../cross/CrossConstants';
 import {AppUpdateData} from '../../../../../../../../cross/CrossTypes';
+import {Download2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {useSettingsState} from '../../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
@@ -66,7 +67,7 @@ export default function DashboardUpdate() {
   }, []);
 
   return (
-    <SettingsSection title="Updates" icon="Download2" id={DashboardUpdateId} itemsCenter>
+    <SettingsSection title="Updates" id={DashboardUpdateId} icon={<Download2_Icon className="size-5" />} itemsCenter>
       <Select
         radius="sm"
         label="Update Frequency"

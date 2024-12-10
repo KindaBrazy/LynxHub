@@ -4,7 +4,7 @@ import {filter, isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
 import {PreOpenData} from '../../../../../../../../cross/IpcChannelAndTypes';
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {Add_Icon, File_Icon, Folder2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useModalsState} from '../../../../../Redux/AI/ModalsReducer';
 import rendererIpc from '../../../../../RendererIpc';
 import LynxTooltip from '../../../../Reusable/LynxTooltip';
@@ -56,17 +56,17 @@ export default function PreOpenPath() {
             <div>
               <DropdownTrigger>
                 <Button size="sm" variant="light" className="cursor-default" isIconOnly>
-                  {getIconByName('Add')}
+                  <Add_Icon />
                 </Button>
               </DropdownTrigger>
             </div>
           </LynxTooltip>
           <DropdownMenu aria-label="Open file or folder">
             <DropdownSection title="Select">
-              <DropdownItem onPress={selectFolder} className="cursor-default">
+              <DropdownItem key="add_folder" onPress={selectFolder} className="cursor-default">
                 Folder
               </DropdownItem>
-              <DropdownItem onPress={selectFile} className="cursor-default">
+              <DropdownItem key="add_file" onPress={selectFile} className="cursor-default">
                 File
               </DropdownItem>
             </DropdownSection>
@@ -81,9 +81,11 @@ export default function PreOpenPath() {
         <div className="space-y-2">
           {toOpen.map((open, index) => {
             const icon =
-              open.type === 'folder'
-                ? getIconByName('Folder2', {className: 'absolute left-3 size-4'})
-                : getIconByName('File', {className: 'absolute left-3 size-4'});
+              open.type === 'folder' ? (
+                <Folder2_Icon className="absolute left-3 size-4" />
+              ) : (
+                <File_Icon className="absolute left-3 size-4" />
+              );
             return (
               <PreOpenPathItem
                 icon={icon}

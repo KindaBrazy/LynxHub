@@ -1,7 +1,7 @@
 import {Button, Input, Select, SelectItem} from '@nextui-org/react';
 import {Dispatch, SetStateAction, useCallback, useState} from 'react';
 
-import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
+import {File_Icon, Folder2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {UserInputField, UserInputResult} from '../../../../Modules/types';
 import rendererIpc from '../../../../RendererIpc';
 import LynxSwitch from '../../../Reusable/LynxSwitch';
@@ -107,7 +107,7 @@ export default function UserInputs({elements, setResult}: Props) {
                   variant="flat"
                   endContent={<div />}
                   className="justify-between"
-                  startContent={getIconByName('Folder2')}
+                  startContent={<Folder2_Icon />}
                   onPress={() => selectPath('folder', id)}
                   fullWidth>
                   {selectedFolder}
@@ -126,7 +126,7 @@ export default function UserInputs({elements, setResult}: Props) {
                   variant="flat"
                   endContent={<div />}
                   className="justify-between"
-                  startContent={getIconByName('File')}
+                  startContent={<File_Icon />}
                   onPress={() => selectPath('file', id)}
                   fullWidth>
                   {selectedFile}

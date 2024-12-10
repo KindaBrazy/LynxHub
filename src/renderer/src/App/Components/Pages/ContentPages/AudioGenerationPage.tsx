@@ -1,9 +1,10 @@
 import {ScrollShadow} from '@nextui-org/react';
 import {useMemo} from 'react';
 
+import {AudioGeneration_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {GetComponentsByPath} from '../../Cards/Cards';
-import CardContainer from '../CardContainer';
+import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
 
 export const audioGenRoutePath: string = '/audioGenerationPage';
@@ -24,10 +25,10 @@ const AudioGenerationPage = () => {
         {scrollTop && scrollTop.map((ScrollTop, index) => <ScrollTop key={index} />)}
 
         <CardContainer
-          icon="AudioGeneration"
           extraClassNames="mr-3"
           title="Audio Generation"
-          subTitle="Compose and Manipulate Audio Effortlessly with AI">
+          subTitle="Compose and Manipulate Audio Effortlessly with AI"
+          icon={<AudioGeneration_Icon className={CardContainerClasses} />}>
           <GetComponentsByPath routePath={audioGenRoutePath} extensionsElements={cardsContainer} />
         </CardContainer>
 

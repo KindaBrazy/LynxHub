@@ -1,13 +1,13 @@
 import {motion, Variants} from 'framer-motion';
-import {useMemo} from 'react';
+import {ReactNode, useMemo} from 'react';
 
-import {getIconByName, IconNameType} from '../../../assets/icons/SvgIconsContainer';
 import {useAppState} from '../../Redux/App/AppReducer';
 import {getColor} from '../../Utils/Constants';
 
-type Props = {icon: IconNameType; onClick?: () => void; iconClassName?: string};
+type Props = {icon: ReactNode; onClick?: () => void};
 
-export default function SmallButton({icon, onClick, iconClassName}: Props) {
+export const SmallButtonClasses = 'notDraggable fill-white h-full w-full transition duration-300 group-hover:scale-110';
+export default function SmallButton({icon, onClick}: Props) {
   const darkMode = useAppState('darkMode');
 
   const variants: Variants = useMemo(() => {
@@ -41,10 +41,7 @@ export default function SmallButton({icon, onClick, iconClassName}: Props) {
       whileTap="whileTap"
       whileHover="whileHover"
       className="notDraggable group ml-2 flex w-[33px] cursor-default rounded-md">
-      {getIconByName(icon, {
-        className: `notDraggable fill-white h-full w-full transition
-         duration-300 group-hover:scale-110 ${iconClassName}`,
-      })}
+      {icon}
     </motion.button>
   );
 }

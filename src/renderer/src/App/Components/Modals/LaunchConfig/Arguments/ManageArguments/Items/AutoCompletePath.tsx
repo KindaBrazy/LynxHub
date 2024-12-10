@@ -2,7 +2,7 @@ import {Autocomplete, AutocompleteItem} from '@nextui-org/react';
 import {Key, useEffect, useState} from 'react';
 
 import {FolderListData} from '../../../../../../../../../cross/CrossTypes';
-import {getIconByName} from '../../../../../../../assets/icons/SvgIconsContainer';
+import {File_Icon, Folder2_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import rendererIpc from '../../../../../../RendererIpc';
 import {searchInStrings} from '../../../../../../Utils/UtilFunctions';
 
@@ -96,7 +96,7 @@ export default function AutoCompletePath({baseDir, onValueChange, defaultValue, 
         <AutocompleteItem
           key={item.name.toLowerCase()}
           value={item.name.toLowerCase()}
-          startContent={item.type === 'folder' ? getIconByName('Folder2') : getIconByName('File')}>
+          startContent={item.type === 'folder' ? <Folder2_Icon /> : <File_Icon />}>
           {item.name}
         </AutocompleteItem>
       )}

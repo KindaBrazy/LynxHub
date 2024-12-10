@@ -4,7 +4,7 @@ import {motion} from 'framer-motion';
 import {observer} from 'mobx-react-lite';
 import {useMemo} from 'react';
 
-import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {Pin_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../../Redux/AI/CardsReducer';
 import {useAppState} from '../../../Redux/App/AppReducer';
@@ -39,8 +39,8 @@ const LynxCard = observer(() => {
       text="Update Available">
       <Badge.Ribbon
         placement="start"
+        text={<Pin_Icon className="m-1" />}
         color={darkMode ? '#AA00FF' : '#d500f9'}
-        text={getIconByName('Pin', {className: 'm-1'})}
         className={`z-10 ${isPinned ? 'block opacity-100' : 'hidden opacity-0'} transition duration-500`}>
         <motion.div
           layout="position"

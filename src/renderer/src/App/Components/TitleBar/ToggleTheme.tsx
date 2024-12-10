@@ -2,7 +2,8 @@ import {motion} from 'framer-motion';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {getIconByName} from '../../../assets/icons/SvgIconsContainer';
+import {DarkMode_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
+import {LightMode_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
 import {appActions, useAppState} from '../../Redux/App/AppReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
@@ -45,18 +46,13 @@ export default function ToggleTheme() {
     [darkMode, onFocus],
   );
 
-  const icon = useMemo(
-    () => getIconByName(darkMode ? 'DarkMode' : 'LightMode', {className: ICON_COMMON_STYLE}),
-    [darkMode],
-  );
-
   return (
     <LynxTooltip delay={700} content="Toggle Dark Mode">
       <motion.div
         {...motionProps}
         onClick={handleToggle}
         className={`notDraggable group ml-3 ${BUTTON_STYLE.width} flex rounded-md`}>
-        {icon}
+        {darkMode ? <DarkMode_Icon className={ICON_COMMON_STYLE} /> : <LightMode_Icon className={ICON_COMMON_STYLE} />}
       </motion.div>
     </LynxTooltip>
   );

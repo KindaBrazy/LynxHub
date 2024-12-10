@@ -15,7 +15,7 @@ import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {Close_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {convertArrToObject} from '../../../../../Utils/UtilFunctions';
 
 type Props = {
@@ -134,8 +134,8 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
                     <AntBtn
                       type="text"
                       size="small"
+                      icon={<Close_Icon />}
                       className="cursor-default"
-                      icon={getIconByName('Close')}
                       onClick={() => deletePreset(item.name)}
                       danger
                     />

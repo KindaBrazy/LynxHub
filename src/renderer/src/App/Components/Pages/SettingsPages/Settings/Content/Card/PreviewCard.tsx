@@ -2,7 +2,9 @@ import {Button, Card, CardBody, CardFooter, CardHeader} from '@nextui-org/react'
 import {Divider, Typography} from 'antd';
 import {useMemo} from 'react';
 
-import {getIconByName} from '../../../../../../../assets/icons/SvgIconsContainer';
+import {Document_Icon, Download_Icon, Download2_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Fork_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Star_Icon, User_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {useAppState} from '../../../../../../Redux/App/AppReducer';
 import {useSettingsState} from '../../../../../../Redux/App/SettingsReducer';
 
@@ -50,7 +52,7 @@ export default function PreviewCard() {
               ` border-1 border-white shadow-[0px_6px_5px_-3px_rgba(0,0,0,0.6)] transition duration-500` +
               ` bg-white hover:shadow-none dark:border-LynxRaisinBlack dark:bg-LynxRaisinBlack`
             }>
-            {getIconByName('User', {className: 'size-full p-2 dark:bg-LynxRaisinBlack/70 bg-white/70'})}
+            <User_Icon className="size-full p-2 dark:bg-LynxRaisinBlack/70 bg-white/70" />
           </div>
         )}
 
@@ -82,7 +84,7 @@ export default function PreviewCard() {
           <div className="flex flex-col items-center justify-center">
             <span className="font-bold">77K</span>
             <div className="flex flex-row items-center">
-              {getIconByName('Star', {className: 'fill-yellow-500 mx-1'})}
+              <Star_Icon className="fill-yellow-500 mx-1" />
               <span>Stars</span>
             </div>
           </div>
@@ -93,7 +95,7 @@ export default function PreviewCard() {
             <span className="font-bold">7.7K</span>
 
             <div className="flex flex-row items-center">
-              {getIconByName('Fork', {className: 'mx-1'})}
+              <Fork_Icon className="mx-1" />
               <span>Forks</span>
             </div>
           </div>
@@ -104,7 +106,7 @@ export default function PreviewCard() {
             <span className="font-bold">777MB</span>
 
             <div className="flex flex-row items-center">
-              {getIconByName('Download', {className: 'mx-1'})}
+              <Download_Icon className="mx-1" />
               <span>Size</span>
             </div>
           </div>
@@ -113,20 +115,18 @@ export default function PreviewCard() {
       <CardFooter>
         <div className="flex w-full flex-row gap-x-3">
           <Button
-            startContent={getIconByName('Download2', {
-              className: compactMode ? 'size-4' : 'size-5',
-            })}
             radius="sm"
             variant="faded"
             size={compactMode ? 'sm' : 'md'}
             className="z-[11] w-full hover:scale-[1.03]"
+            startContent={<Download2_Icon className={compactMode ? 'size-4' : 'size-5'} />}
           />
           <Button
             radius="sm"
             variant="faded"
             className="cursor-default"
             size={compactMode ? 'sm' : 'md'}
-            startContent={getIconByName('Document', {className: `size-full ${compactMode ? 'm-2' : 'm-2.5'}`})}
+            startContent={<Document_Icon className={`size-full ${compactMode ? 'm-2' : 'm-2.5'}`} />}
             isIconOnly
           />
         </div>

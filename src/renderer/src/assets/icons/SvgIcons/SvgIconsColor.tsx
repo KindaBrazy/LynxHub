@@ -2,8 +2,8 @@ import {ReactElement} from 'react';
 
 import {SvgProps} from '../SvgIconsContainer';
 
-export const svgPackColor = {
-  History_Color: (props: SvgProps): ReactElement => (
+export function History_Color_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
@@ -41,9 +41,11 @@ export const svgPackColor = {
         </defs>
       </g>
     </svg>
-  ),
+  );
+}
 
-  Pin_Color: (props: SvgProps): ReactElement => (
+export function Pin_Color_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
@@ -101,9 +103,11 @@ export const svgPackColor = {
         </defs>
       </g>
     </svg>
-  ),
+  );
+}
 
-  Apps_Color: (props: SvgProps): ReactElement => (
+export function Apps_Color_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
@@ -151,9 +155,11 @@ export const svgPackColor = {
         </defs>
       </g>
     </svg>
-  ),
+  );
+}
 
-  Youtube_Color: (props: SvgProps): ReactElement => (
+export function Youtube_Color_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} height="1em" width="1.43em" viewBox="0 0 256 180" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -166,5 +172,5 @@ export const svgPackColor = {
       />
       <path fill="#fff" d="m102.421 128.06l66.328-38.418l-66.328-38.418z" />
     </svg>
-  ),
-};
+  );
+}

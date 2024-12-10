@@ -7,7 +7,8 @@ import {SimpleGitProgressEvent} from 'simple-git';
 
 import {extractGitUrl, validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
-import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {Download2_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
+import {GitHub_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
 import {useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {useAppState} from '../../../Redux/App/AppReducer';
 import rendererIpc from '../../../RendererIpc';
@@ -147,8 +148,8 @@ export default function Clone({updateTable, visible, installedExtensions}: Props
             className="my-4"
             value={resultUrl}
             onValueChange={onValueChange}
+            startContent={<GitHub_Icon />}
             isInvalid={!isEmpty && !isValid}
-            startContent={getIconByName('GitHub')}
             placeholder="Enter a GitHub repository URL..."
             errorMessage="Please enter a valid GitHub repository URL"
           />
@@ -165,9 +166,9 @@ export default function Clone({updateTable, visible, installedExtensions}: Props
                 <Card.Meta title={<span className="text-success">This extension has already been installed.</span>} />
               ) : (
                 <>
-                  {getIconByName('Download2', {
-                    className: 'size-10 group-hover:opacity-100 left-7 opacity-50 absolute transition duration-300',
-                  })}
+                  <Download2_Icon
+                    className={'size-10 group-hover:opacity-100 left-7 opacity-50 absolute transition duration-300'}
+                  />
                   <Card.Meta
                     title={
                       <div className="flex flex-row items-center justify-center">

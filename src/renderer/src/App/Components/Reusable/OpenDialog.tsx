@@ -1,7 +1,7 @@
 import {Button, ButtonGroup, Input} from '@nextui-org/react';
 import {useCallback, useRef} from 'react';
 
-import {getIconByName} from '../../../assets/icons/SvgIconsContainer';
+import {Folder_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
 import rendererIpc from '../../RendererIpc';
 
 type Props = {
@@ -57,7 +57,7 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
         className="cursor-default"
         aria-label="Choose directory"
         isIconOnly>
-        {getIconByName('Folder', {className: 'size-[20px]'})}
+        {<Folder_Icon className="size-[20px]" />}
       </Button>
     </ButtonGroup>
   );

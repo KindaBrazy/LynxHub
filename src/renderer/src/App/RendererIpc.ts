@@ -100,6 +100,7 @@ const rendererIpc = {
     clonePromise: (url: string, dir: CloneDirTypes): Promise<void> => ipc.invoke(gitChannels.clonePromise, url, dir),
 
     locateCard: (url: string): Promise<string | undefined> => ipc.invoke(gitChannels.locate, url),
+
     validateGitDir: (dir: string, url: string): Promise<boolean> => ipc.invoke(gitChannels.validateGitDir, dir, url),
 
     onProgress: (callback: GitProgressCallback) => ipc.on(gitChannels.onProgress, callback),

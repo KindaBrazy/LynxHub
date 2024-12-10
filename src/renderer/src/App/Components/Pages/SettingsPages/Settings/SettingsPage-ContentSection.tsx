@@ -1,12 +1,10 @@
 import {Card} from 'antd';
 import {ReactNode} from 'react';
 
-import {getIconByName, IconNameType} from '../../../../../assets/icons/SvgIconsContainer';
-
 type Props = {
   title: string;
   id?: string;
-  icon?: IconNameType | ReactNode;
+  icon?: ReactNode;
   children?: ReactNode;
   titleColor?: 'text-warning' | 'text-danger' | string;
   itemsCenter?: boolean;
@@ -16,15 +14,15 @@ type Props = {
 export default function SettingsSection({children, id, title, titleColor = '', itemsCenter = false, icon}: Props) {
   return (
     <Card
+      title={
+        <div className="flex flex-row items-center justify-center space-x-2">
+          {icon}
+          <span>{title}</span>
+        </div>
+      }
       className={
         `w-full dark:bg-LynxRaisinBlack ${itemsCenter && 'text-center'} scroll-mt-8 ` +
         `border-2 border-foreground/10 dark:border-foreground/5`
-      }
-      title={
-        <div className="flex flex-row items-center justify-center space-x-2">
-          {icon && typeof icon === 'string' ? getIconByName(icon as IconNameType, {className: 'size-5'}) : icon}
-          <span>{title}</span>
-        </div>
       }
       id={id}
       bordered={false}

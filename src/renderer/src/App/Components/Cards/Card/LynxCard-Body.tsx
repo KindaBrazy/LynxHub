@@ -3,7 +3,9 @@ import {Divider} from 'antd';
 import {observer} from 'mobx-react-lite';
 
 import {formatSizeKB} from '../../../../../../cross/CrossUtils';
-import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {Download_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Fork_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Star_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
 import {useRepoDetails} from '../../../Utils/LocalStorage';
 import {formatNumber} from '../../../Utils/UtilFunctions';
 import {useCardData} from '../CardsDataManager';
@@ -19,7 +21,7 @@ const LynxCardBody = observer(() => {
           <div className="flex flex-col items-center justify-center">
             <span className="font-bold">{formatNumber(repoDetails.stars)}</span>
             <div className="flex flex-row items-center">
-              {getIconByName('Star', {className: 'fill-yellow-500 mx-1'})}
+              <Star_Icon className="fill-yellow-500 mx-1" />
               <span>Stars</span>
             </div>
           </div>
@@ -30,7 +32,7 @@ const LynxCardBody = observer(() => {
             <span className="font-bold">{formatNumber(repoDetails.forks)}</span>
 
             <div className="flex flex-row items-center">
-              {getIconByName('Fork', {className: 'mx-1'})}
+              <Fork_Icon className="mx-1" />
               <span>Forks</span>
             </div>
           </div>
@@ -43,7 +45,7 @@ const LynxCardBody = observer(() => {
                 <span className="font-bold">{formatSizeKB(repoDetails.size)}</span>
 
                 <div className="flex flex-row items-center">
-                  {getIconByName('Download', {className: 'mx-1'})}
+                  <Download_Icon className="mx-1" />
                   <span>Size</span>
                 </div>
               </div>

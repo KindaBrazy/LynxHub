@@ -4,7 +4,8 @@ import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {PatreonUserData} from '../../../../../../../../cross/CrossTypes';
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {User_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Google_Icon, Patreon_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {useAppState} from '../../../../../Redux/App/AppReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {userActions, useUserState} from '../../../../../Redux/User/UserReducer';
@@ -28,6 +29,7 @@ export default function DashboardProfile() {
       window.electron.ipcRenderer
         .invoke('patreon-login')
         .then((userData: PatreonUserData) => {
+          console.log(userData);
           dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
           dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
         })
@@ -55,10 +57,10 @@ export default function DashboardProfile() {
   };
 
   return (
-    <SettingsSection icon="User" title="Profiles" id={DashboardProfileId}>
+    <SettingsSection title="Profiles" id={DashboardProfileId} icon={<User_Icon className="size-5" />}>
       <Card shadow="sm" radius="lg" className={`${patreonLoggedIn && '!border-success/70'}`} withBorder>
         <div className="mb-3 flex flex-row items-center space-x-1.5">
-          {getIconByName('Patreon', {className: 'text-large'})}
+          <Patreon_Icon className="text-large" />
           <Text fw={500}>Patreon</Text>
         </div>
         <Group justify="space-between">
@@ -88,7 +90,7 @@ export default function DashboardProfile() {
 
       <Card shadow="sm" radius="lg" withBorder>
         <div className="mb-3 flex flex-row items-center space-x-1.5">
-          {getIconByName('Google', {className: 'text-large'})}
+          <Google_Icon className="text-large" />
           <Text fw={500}>Google</Text>
         </div>
         <Group justify="space-between">

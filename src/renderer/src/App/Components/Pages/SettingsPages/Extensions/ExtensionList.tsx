@@ -5,7 +5,7 @@ import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
-import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
+import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useAppState} from '../../../../Redux/App/AppReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useRenderList, useSortedList} from './ExtensionList_Utils';
@@ -74,7 +74,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed}: 
         endContent={filterMenu()}
         onValueChange={setSearchValue}
         placeholder="Search for extensions..."
-        startContent={getIconByName('Circle', {className: 'size-5'})}
+        startContent={<Circle_Icon className="size-5" />}
         classNames={{inputWrapper: 'bg-foreground-200 rounded-none pr-0'}}
       />
 

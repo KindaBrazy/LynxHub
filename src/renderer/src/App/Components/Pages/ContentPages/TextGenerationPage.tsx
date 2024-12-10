@@ -1,9 +1,10 @@
 import {ScrollShadow} from '@nextui-org/react';
 import {useMemo} from 'react';
 
+import {TextGeneration_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {GetComponentsByPath} from '../../Cards/Cards';
-import CardContainer from '../CardContainer';
+import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
 
 export const textGenRoutePath: string = '/textGenerationPage';
@@ -24,10 +25,10 @@ const TextGenerationPage = () => {
         {scrollTop && scrollTop.map((ScrollTop, index) => <ScrollTop key={index} />)}
 
         <CardContainer
-          icon="TextGeneration"
           extraClassNames="mr-3"
           title="Text Generation"
-          subTitle="Unleash Your Creativity with AI-Assisted Writing">
+          subTitle="Unleash Your Creativity with AI-Assisted Writing"
+          icon={<TextGeneration_Icon className={CardContainerClasses} />}>
           <GetComponentsByPath routePath={textGenRoutePath} extensionsElements={cardsContainer} />
         </CardContainer>
 

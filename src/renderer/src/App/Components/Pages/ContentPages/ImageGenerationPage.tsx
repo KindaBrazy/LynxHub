@@ -1,9 +1,10 @@
 import {ScrollShadow} from '@nextui-org/react';
 import {useMemo} from 'react';
 
+import {ImageGeneration_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {GetComponentsByPath} from '../../Cards/Cards';
-import CardContainer from '../CardContainer';
+import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
 
 export const imageGenRoutePath: string = '/imageGenerationPage';
@@ -24,10 +25,10 @@ const ImageGenerationPage = () => {
         {scrollTop && scrollTop.map((ScrollTop, index) => <ScrollTop key={index} />)}
 
         <CardContainer
-          icon="ImageGeneration"
           extraClassNames="mr-3"
           title="Image Generation"
-          subTitle="Create Stunning Visuals with AI-Powered Tools">
+          subTitle="Create Stunning Visuals with AI-Powered Tools"
+          icon={<ImageGeneration_Icon className={CardContainerClasses} />}>
           <GetComponentsByPath routePath={imageGenRoutePath} extensionsElements={cardsContainer} />
         </CardContainer>
 

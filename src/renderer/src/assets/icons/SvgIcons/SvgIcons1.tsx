@@ -2,8 +2,8 @@ import {ReactElement} from 'react';
 
 import {SvgProps} from '../SvgIconsContainer';
 
-export const svgPack1 = {
-  Add: (props: SvgProps): ReactElement => (
+export function Add_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
@@ -22,9 +22,11 @@ export const svgPack1 = {
         />
       </g>
     </svg>
-  ),
+  );
+}
 
-  AudioGeneration: (props: SvgProps): ReactElement => (
+export function AudioGeneration_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -38,9 +40,11 @@ export const svgPack1 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  CheckBox: (props: SvgProps): ReactElement => (
+export function CheckBox_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -54,18 +58,22 @@ export const svgPack1 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Circle: (props: SvgProps): ReactElement => (
+export function Circle_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
       <path
         fill="currentColor"
         d="M128 20a108 108 0 1 0 108 108A108.12 108.12 0 0 0 128 20m0 192a84 84 0 1 1 84-84a84.09 84.09 0 0 1-84 84"
       />
     </svg>
-  ),
+  );
+}
 
-  Close: (props: SvgProps): ReactElement => (
+export function Close_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <g fill="none" fillRule="evenodd">
         <path
@@ -87,9 +95,11 @@ export const svgPack1 = {
         />
       </g>
     </svg>
-  ),
+  );
+}
 
-  Copy: (props: SvgProps): ReactElement => (
+export function Copy_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -109,9 +119,11 @@ export const svgPack1 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  CrossShield: (props: SvgProps): ReactElement => (
+export function CrossShield_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -121,9 +133,11 @@ export const svgPack1 = {
         fill="current"
       />
     </svg>
-  ),
+  );
+}
 
-  DarkMode: (props: SvgProps): ReactElement => (
+export function DarkMode_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -144,9 +158,11 @@ export const svgPack1 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Document: (props: SvgProps): ReactElement => (
+export function Document_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -162,9 +178,11 @@ export const svgPack1 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Download: (props: SvgProps): ReactElement => (
+export function Download_Icon(props: SvgProps) {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -185,9 +203,11 @@ export const svgPack1 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Download2: (props: SvgProps): ReactElement => (
+export function Download2_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -210,9 +230,11 @@ export const svgPack1 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Extensions: (props: SvgProps): ReactElement => (
+export function Extensions_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -243,9 +265,11 @@ export const svgPack1 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Extensions2: (props: SvgProps): ReactElement => (
+export function Extensions2_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -256,9 +280,11 @@ export const svgPack1 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  ExternalLink: (props: SvgProps): ReactElement => (
+export function ExternalLink_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
@@ -280,9 +306,11 @@ export const svgPack1 = {
         />
       </g>
     </svg>
-  ),
+  );
+}
 
-  File: (props: SvgProps): ReactElement => (
+export function File_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
@@ -306,9 +334,11 @@ export const svgPack1 = {
         />
       </g>
     </svg>
-  ),
+  );
+}
 
-  Filter: (props: SvgProps): ReactElement => (
+export function Filter_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -322,9 +352,11 @@ export const svgPack1 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Folder: (props: SvgProps): ReactElement => (
+export function Folder_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -340,9 +372,11 @@ export const svgPack1 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Folder2: (props: SvgProps): ReactElement => (
+export function Folder2_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -357,5 +391,5 @@ export const svgPack1 = {
         fill="currentColor"
       />
     </svg>
-  ),
-};
+  );
+}

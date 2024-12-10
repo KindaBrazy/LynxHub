@@ -4,7 +4,7 @@ import {ReactNode, useEffect, useState} from 'react';
 
 import {DevInfo, RepoDetails} from '../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../cross/CrossUtils';
-import {getIconByName} from '../../assets/icons/SvgIconsContainer';
+import {User_Icon} from '../../assets/icons/SvgIcons/SvgIcons3';
 import {useAppState} from '../Redux/App/AppReducer';
 import {convertBlobToDataUrl} from './UtilFunctions';
 
@@ -272,7 +272,7 @@ export function useLoadImage(
         console.error('Error fetching and storing image:', error);
         setImageSrc(
           type === 'avatar' ? (
-            getIconByName('User', {className: 'size-full p-2 dark:bg-LynxRaisinBlack/70 bg-white/70'})
+            <User_Icon className="size-full p-2 dark:bg-LynxRaisinBlack/70 bg-white/70" />
           ) : (
             <div className={`${darkMode ? 'darkPattern' : 'lightPattern'}`} />
           ),
@@ -288,9 +288,9 @@ export function useLoadImage(
     } else {
       setImageSrc(
         type === 'avatar' ? (
-          getIconByName('User', {className: 'size-full p-2 dark:bg-LynxRaisinBlack/70 bg-white/70'})
+          <User_Icon className="size-full p-2 dark:bg-LynxRaisinBlack/70 bg-white/70" />
         ) : (
-          <div className={`${darkMode ? 'darkPattern' : 'lightPattern'}`} />
+          <div className={`${darkMode ? 'darkPattern' : 'lightPattern'} `} />
         ),
       );
     }

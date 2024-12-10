@@ -3,7 +3,7 @@ import {Card, Empty, message, Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback} from 'react';
 
-import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
+import {Copy_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
 import LynxTooltip from '../../../Reusable/LynxTooltip';
 import LaunchConfigSection from '../LaunchConfig-Section';
 
@@ -27,9 +27,7 @@ export default function PreviewArguments({text}: Props) {
       customButton={
         <LynxTooltip content="Copy Preview to Clipboard" isEssential>
           <Button size="sm" variant="light" onPress={onCopy} className="cursor-default" isIconOnly>
-            {getIconByName('Copy', {
-              className: 'size-3.5',
-            })}
+            <Copy_Icon className="size-3.5" />
           </Button>
         </LynxTooltip>
       }

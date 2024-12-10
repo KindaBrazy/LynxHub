@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback} from 'react';
 
 import {ArgumentsPresets, ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {Add_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import LynxTooltip from '../../../../Reusable/LynxTooltip';
 import LaunchConfigSection from '../../LaunchConfig-Section';
 import ManageArgumentsItem from './ManageArguments-Item';
@@ -25,7 +25,7 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
       customButton={
         <LynxTooltip content="Add New Arguments" isEssential>
           <Button size="sm" variant="light" className="cursor-default" onPress={openAddArguments} isIconOnly>
-            {getIconByName('Add')}
+            <Add_Icon />
           </Button>
         </LynxTooltip>
       }

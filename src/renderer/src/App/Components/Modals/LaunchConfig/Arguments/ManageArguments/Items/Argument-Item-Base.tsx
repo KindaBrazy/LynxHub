@@ -3,7 +3,7 @@ import {Card, Tooltip, Typography} from 'antd';
 import {ReactNode, useMemo} from 'react';
 
 import {getArgumentDescription} from '../../../../../../../../../cross/GetArgumentsData';
-import {getIconByName, IconNameType} from '../../../../../../../assets/icons/SvgIconsContainer';
+import {Close_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useModules} from '../../../../../../Modules/ModulesContext';
 import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
 
@@ -13,7 +13,7 @@ type Props = {
   onClick?: () => void;
   name: string;
   removeArg: () => void;
-  icon: IconNameType;
+  icon: ReactNode;
   children?: ReactNode;
   tooltipText?: string;
   defaultCursor?: boolean;
@@ -39,7 +39,7 @@ export default function ArgumentItemBase({
       <Card
         title={
           <div className="flex flex-row space-x-2">
-            <div className="flex items-center justify-center text-success">{getIconByName(icon)}</div>
+            <div className="flex items-center justify-center text-success">{icon}</div>
             <Text className="font-JetBrainsMono text-success">{name}</Text>
           </div>
         }
@@ -53,7 +53,7 @@ export default function ArgumentItemBase({
               onPress={removeArg}
               className="my-1 cursor-default"
               isIconOnly>
-              {getIconByName('Close')}
+              <Close_Icon />
             </Button>
           </div>
         }

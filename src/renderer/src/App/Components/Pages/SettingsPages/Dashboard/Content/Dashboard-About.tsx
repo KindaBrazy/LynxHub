@@ -16,7 +16,16 @@ import {
   X_URL,
   YOUTUBE_URL,
 } from '../../../../../../../../cross/CrossConstants';
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {Copy_Icon, ExternalLink_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {GitHub_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {CallChat_Icon, Scales_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {
+  DiscordColor_Icon,
+  Gmail_Icon,
+  Reddit_Icon,
+  XSite_Icon,
+} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {Youtube_Color_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIconsColor';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
 const {Title, Paragraph, Text} = Typography;
@@ -30,7 +39,7 @@ export default function DashboardAbout() {
   }, []);
 
   return (
-    <SettingsSection icon="Info" title="About" id={DashboardAboutId} itemsCenter>
+    <SettingsSection title="About" id={DashboardAboutId} icon={<Info_Icon className="size-5" />} itemsCenter>
       <div className="flex flex-col space-y-3">
         <div>
           <Title level={4} className="flex flex-row items-center justify-center space-x-3">
@@ -47,7 +56,7 @@ export default function DashboardAbout() {
         <div>
           <Divider dashed>
             <div className="flex flex-row items-center space-x-1">
-              {getIconByName('CallChat')}
+              <CallChat_Icon />
               <span>Contact</span>
             </div>
           </Divider>
@@ -57,61 +66,61 @@ export default function DashboardAbout() {
               onClick={() => copyText(EMAIL)}
               classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
               hoverable>
-              {getIconByName('Gmail', {className: 'size-4'})}
+              <Gmail_Icon className="size-4" />
               <span>Gmail</span>
-              {getIconByName('Copy')}
+              <Copy_Icon />
             </Card>
             <Card
               size="small"
               onClick={() => window.open(GITHUB_URL)}
               classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
               hoverable>
-              {getIconByName('GitHub', {className: 'size-4'})}
+              <GitHub_Icon className="size-4" />
               <span>GitHub</span>
-              {getIconByName('ExternalLink')}
+              <ExternalLink_Icon />
             </Card>
             <Card
               size="small"
               onClick={() => window.open(DISCORD_SERVER)}
               classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
               hoverable>
-              {getIconByName('DiscordColor', {className: 'size-4'})}
+              <DiscordColor_Icon className="size-4" />
               <span>Discord</span>
-              {getIconByName('ExternalLink')}
+              <ExternalLink_Icon />
             </Card>
             <Card
               size="small"
               onClick={() => window.open(X_URL)}
               classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
               hoverable>
-              {getIconByName('XSite', {className: 'size-4'})}
+              <XSite_Icon className="size-4" />
               <span>Twitter</span>
-              {getIconByName('ExternalLink')}
+              <ExternalLink_Icon />
             </Card>
             <Card
               size="small"
               onClick={() => window.open(REDDIT_URL)}
               classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
               hoverable>
-              {getIconByName('Reddit', {className: 'size-4'})}
+              <Reddit_Icon className="size-4" />
               <span>Reddit</span>
-              {getIconByName('ExternalLink')}
+              <ExternalLink_Icon />
             </Card>
             <Card
               size="small"
               onClick={() => window.open(YOUTUBE_URL)}
               classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
               hoverable>
-              {getIconByName('Youtube_Color', {className: 'size-4'})}
+              <Youtube_Color_Icon className="size-4" />
               <span>YouTube</span>
-              {getIconByName('ExternalLink')}
+              <ExternalLink_Icon />
             </Card>
           </div>
         </div>
         <div className="flex flex-col items-center justify-center">
           <Divider dashed>
             <div className="flex items-center">
-              {getIconByName('Scales')}
+              <Scales_Icon />
               <span>License</span>
             </div>
           </Divider>
@@ -122,7 +131,7 @@ export default function DashboardAbout() {
             classNames={{body: 'flex flex-row items-center justify-center space-x-2'}}
             hoverable>
             <span>{LICENSE_NAME}</span>
-            {getIconByName('ExternalLink')}
+            <ExternalLink_Icon />
           </Card>
         </div>
       </div>

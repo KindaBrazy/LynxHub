@@ -4,7 +4,7 @@ import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {Circle_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useAppState} from '../../../../../Redux/App/AppReducer';
 import rendererIpc from '../../../../../RendererIpc';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
@@ -60,7 +60,7 @@ export default function InstalledModules({setInstalledModules, updatingAll}: Pro
           value={searchValue}
           onValueChange={setSearchValue}
           placeholder="Type to find modules..."
-          startContent={getIconByName('Circle', {className: 'size-5'})}
+          startContent={<Circle_Icon className="size-5" />}
         />
       </div>
       <OverlayScrollbarsComponent

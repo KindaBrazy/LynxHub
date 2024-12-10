@@ -22,6 +22,8 @@ export type FcPropSearchResult = FC<SearchResultProps>;
 export type FcPropAddCardMenu = FC<AddCardMenuProps>;
 export type FcPropReplaceMd = FC<ReplaceMdProps>;
 
+// -----------------------------------------------> Extension Renderer API
+
 export type ExtensionData_Renderer = {
   titleBar: {
     addStart: FcProp[];
