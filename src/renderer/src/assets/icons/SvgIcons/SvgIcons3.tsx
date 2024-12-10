@@ -2,8 +2,8 @@ import {ReactElement} from 'react';
 
 import {SvgProps} from '../SvgIconsContainer';
 
-export const svgPack3 = {
-  Bug: (props: SvgProps): ReactElement => (
+export function Bug_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -42,9 +42,11 @@ export const svgPack3 = {
         d="M12 14.25a.75.75 0 0 1 .75.75v7h-1.5v-7a.75.75 0 0 1 .75-.75"
       />
     </svg>
-  ),
+  );
+}
 
-  CallChat: (props: SvgProps): ReactElement => (
+export function CallChat_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -65,9 +67,11 @@ export const svgPack3 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Database: (props: SvgProps): ReactElement => (
+export function Database_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -82,9 +86,11 @@ export const svgPack3 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Discord: (props: SvgProps): ReactElement => (
+export function Discord_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -103,9 +109,11 @@ export const svgPack3 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Heart: (props: SvgProps): ReactElement => (
+export function Heart_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -122,59 +130,11 @@ export const svgPack3 = {
         d="M15.038 18.91C17.981 16.592 22 14 22 9.138c0-4.863-5.5-8.312-10-3.636V20.5c1 0 2-.77 3.038-1.59"
       />
     </svg>
-  ),
+  );
+}
 
-  Reset: (props: SvgProps): ReactElement => (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d={
-          'M18.258 3.508a.75.75 0 0 1 .463.693v4.243a.75.75 0 0 1-.75.75h-4.243a.75.75 0 0 1-.53-1.' +
-          '28L14.8 6.31a7.25 7.25 0 1 0 4.393 5.783a.75.75 0 0 1 1.488-.187A8.75 8.75 0 1 1 15.93 5' +
-          '.18l1.51-1.51a.75.75 0 0 1 .817-.162'
-        }
-        fill="currentColor"
-      />
-    </svg>
-  ),
-
-  Rocket: (props: SvgProps): ReactElement => (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <g fill="none" fillRule="evenodd">
-        <path
-          d={
-            'M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035c-.01-.' +
-            '004-.019-.001-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l' +
-            '.104-.074l.012-.016l.004-.017l-.017-.427c-.002-.01-.009-.017-.017-.018m.265-.113l-.013' +
-            '.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093c.012.004.023 0 .029' +
-            '-.008l.004-.014l-.034-.614c-.003-.012-.01-.02-.02-.022m-.715.002a.023.023 0 0 0-.027.00' +
-            '6l-.006.014l-.034.614c0 .012.007.02.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017' +
-            '-.43l-.003-.012l-.01-.01z'
-          }
-        />
-        <path
-          d={
-            'm18.165 2.765l.255.032c.674.093 1.566.218 2.071.724c.414.413.573 1.085.668 1.685l.056.38' +
-            '6c.126.91.159 2.102-.056 3.426c-.424 2.613-1.815 5.731-5.308 8.145c-.019.188-.02.378-.0' +
-            '16.568l.01.284c.016.437.032.874-.09 1.298c-.19.66-.867 1.095-1.5 1.407l-.31.147l-.4.176c' +
-            '-.748.318-1.758.644-2.391.01c-.38-.379-.536-.935-.663-1.488l-.047-.207a7.55 7.55 0 0 0-' +
-            '.2-.774c-.05-.146-.104-.295-.162-.445a3.004 3.004 0 0 1-.203.225c-.345.345-.86.586-1.284' +
-            '.755c-.463.183-.987.343-1.472.475l-.249.066l-.477.119l-.432.1l-.517.11l-.323.063a1.01 1.' +
-            '01 0 0 1-1.177-1.177l.086-.431l.154-.698l.124-.51l.094-.36c.132-.484.292-1.008.476-1.47c' +
-            '.168-.425.409-.94.754-1.285l.08-.077l-.064-.026a7.912 7.912 0 0 0-.519-.177l-.277-.085c-.' +
-            '694-.21-1.436-.436-1.897-.898c-.56-.559-.371-1.41-.101-2.118l.11-.274l.177-.4l.147-.31c.3' +
-            '12-.632.747-1.309 1.407-1.499c.35-.1.714-.106 1.08-.096l.22.007c.286.01.571.021.85-.006c' +
-            '2.414-3.494 5.532-4.885 8.145-5.309a11.8 11.8 0 0 1 3.171-.088M8.353 15.44a1.001 1.001 0 ' +
-            '0 0-1.1-.06l-.11.074l-.093.083l-.125.158c-.26.376-.408.896-.523 1.382l-.108.468l-.051.21' +
-            '3l.191-.046l.418-.096c.578-.135 1.219-.31 1.613-.665a1 1 0 0 0 .088-1.314l-.082-.094l-.024' +
-            '-.023zm7.183-6.974a2 2 0 1 0-2.829 2.828a2 2 0 0 0 2.829-2.828'
-          }
-          fill="currentColor"
-        />
-      </g>
-    </svg>
-  ),
-
-  Scales: (props: SvgProps): ReactElement => (
+export function Scales_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -186,9 +146,11 @@ export const svgPack3 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  SettingsMinimal: (props: SvgProps): ReactElement => (
+export function SettingsMinimal_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -203,9 +165,11 @@ export const svgPack3 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Star: (props: SvgProps): ReactElement => (
+export function Star_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -222,9 +186,11 @@ export const svgPack3 = {
         fill="current"
       />
     </svg>
-  ),
+  );
+}
 
-  Stop: (props: SvgProps): ReactElement => (
+export function Stop_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -235,9 +201,11 @@ export const svgPack3 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Terminal: (props: SvgProps): ReactElement => (
+export function Terminal_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
@@ -262,9 +230,11 @@ export const svgPack3 = {
         />
       </g>
     </svg>
-  ),
+  );
+}
 
-  Text: (props: SvgProps): ReactElement => (
+export function Text_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -288,9 +258,11 @@ export const svgPack3 = {
         d="M6 21a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1"
       />
     </svg>
-  ),
+  );
+}
 
-  TextGeneration: (props: SvgProps): ReactElement => (
+export function TextGeneration_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
@@ -312,9 +284,11 @@ export const svgPack3 = {
         />
       </g>
     </svg>
-  ),
+  );
+}
 
-  Trash: (props: SvgProps): ReactElement => (
+export function Trash_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -331,9 +305,11 @@ export const svgPack3 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Tuning: (props: SvgProps): ReactElement => (
+export function Tuning_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -345,9 +321,11 @@ export const svgPack3 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  UnMaximize: (props: SvgProps): ReactElement => (
+export function UnMaximize_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -361,16 +339,20 @@ export const svgPack3 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  User: (props: SvgProps): ReactElement => (
+export function User_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <circle r="4" cy="6" cx="12" fill="currentColor" />
       <ellipse rx="7" ry="4" cx="12" cy="17" fill="currentColor" />
     </svg>
-  ),
+  );
+}
 
-  Web: (props: SvgProps): ReactElement => (
+export function Web_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <circle r="10" cx="12" cy="12" opacity="0.5" fill="currentColor" />
       <path
@@ -384,20 +366,5 @@ export const svgPack3 = {
         fill="currentColor"
       />
     </svg>
-  ),
-
-  Widget: (props: SvgProps): ReactElement => (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d={
-          'M2 6.5a4.5 4.5 0 0 1 9 0v3c0 .349 0 .523-.038.666a1.125 1.125 0 0 1-.796.796C10.023 11 9.85 11' +
-          ' 9.5 11h-3A4.5 4.5 0 0 1 2 6.5m11 8c0-.349 0-.523.038-.666c.104-.388.408-.692.796-.796c.143-.0' +
-          '38.317-.038.666-.038h3a4.5 4.5 0 1 1-4.5 4.5zm-11 3A4.5 4.5 0 0 1 6.5 13h2.7c.63 0 .945 0 1.18' +
-          '6.123c.211.107.384.28.491.491c.123.24.123.556.123 1.186v2.7a4.5 4.5 0 1 1-9 0m11-11a4.5 4.5 0 1' +
-          ' 1 4.5 4.5h-3.214c-.15 0-.224 0-.287-.007a1.125 1.125 0 0 1-.992-.992C13 9.938 13 9.864 13 9.714z'
-        }
-        fill="currentColor"
-      />
-    </svg>
-  ),
-};
+  );
+}

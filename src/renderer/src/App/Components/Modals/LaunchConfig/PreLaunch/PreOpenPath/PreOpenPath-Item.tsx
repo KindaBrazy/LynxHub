@@ -2,7 +2,7 @@ import {Card} from '@nextui-org/card';
 import {Button, Typography} from 'antd';
 import {ReactNode, useCallback} from 'react';
 
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {Close_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 
 const {Text} = Typography;
 type Props = {icon: ReactNode; index: number; defaultText: string; onRemove?: (index: number) => void};
@@ -24,7 +24,7 @@ export default function PreOpenPathItem({defaultText, icon, index, onRemove}: Pr
         type="text"
         size="small"
         onClick={remove}
-        icon={getIconByName('Close')}
+        icon={<Close_Icon />}
         className="absolute right-0 mx-2 cursor-default"
         danger
       />

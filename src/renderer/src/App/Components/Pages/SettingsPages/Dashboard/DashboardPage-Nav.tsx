@@ -2,6 +2,10 @@ import {ScrollShadow} from '@nextui-org/react';
 import {Card} from 'antd';
 import {useMemo} from 'react';
 
+import {Download2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Info_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Bug_Icon, User_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {UserHeart_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {GroupProps, GroupSection} from '../Settings/SettingsPage-Nav';
 import {dashboardSectionId} from './DashboardContainer';
@@ -12,17 +16,17 @@ const groupSections: GroupProps[] = [
     items: [
       {
         title: 'Profiles',
-        icon: 'User',
+        icon: <User_Icon className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardProfileId,
       },
       {
         title: 'Updates',
-        icon: 'Download2',
+        icon: <Download2_Icon className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardUpdateId,
       },
       {
         title: 'Credits',
-        icon: 'UserHeart',
+        icon: <UserHeart_Icon className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardCreditsId,
       },
     ],
@@ -32,16 +36,14 @@ const groupSections: GroupProps[] = [
     items: [
       {
         title: 'Report an Issue',
-        icon: 'Bug',
+        icon: <Bug_Icon className="size-4 shrink-0" />,
         color: 'warning',
-        iconColor: true,
         elementId: dashboardSectionId.DashboardReportIssueId,
       },
       {
         title: 'About',
-        icon: 'Info',
+        icon: <Info_Icon className="size-4 shrink-0" />,
         color: 'success',
-        iconColor: true,
         elementId: dashboardSectionId.DashboardAboutId,
       },
     ],

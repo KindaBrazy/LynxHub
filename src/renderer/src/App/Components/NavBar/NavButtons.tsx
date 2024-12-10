@@ -1,7 +1,11 @@
 import {isEmpty} from 'lodash';
-import {useMemo} from 'react';
+import {ReactNode, useMemo} from 'react';
 
-import {getIconByName, IconNameType} from '../../../assets/icons/SvgIconsContainer';
+import {AudioGeneration_Icon, Extensions_Icon, Extensions2_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
+import {Home_Icon, ImageGeneration_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
+import {TextGeneration_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
+import {Dashboard_Icon, Slider_Icon} from '../../../assets/icons/SvgIcons/SvgIcons4';
+import {GamePad_Icon, Rocket_Icon} from '../../../assets/icons/SvgIcons/SvgIcons5';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../Redux/App/SettingsReducer';
 import {audioGenRoutePath} from '../Pages/ContentPages/AudioGenerationPage';
@@ -20,7 +24,7 @@ type PagesType = {
   path: string;
   navButton: {
     title: string;
-    icon: IconNameType;
+    icon: ReactNode;
     badge?: boolean;
   };
 };
@@ -44,7 +48,7 @@ const GetPages = ({Pages}: {Pages: PagesType[]}) => {
         pageId={path}
         key={`navBtn-${path}`}
         badge={moduleBadge || dashboardBadge || extensionBadge}>
-        {getIconByName(icon, {className: 'size-full'})}
+        {icon}
       </NavButton>
     );
   });
@@ -55,16 +59,25 @@ export const ContentPagesButtons = () => {
 
   const pagesData: PagesType[] = useMemo(() => {
     const result: PagesType[] = [
-      {navButton: {icon: 'Home', title: 'Home'}, path: homeRoutePath},
-      {navButton: {icon: 'ImageGeneration', title: 'Image Generation'}, path: imageGenRoutePath},
-      {navButton: {icon: 'TextGeneration', title: 'Text Generation'}, path: textGenRoutePath},
-      {navButton: {icon: 'AudioGeneration', title: 'Audio Generation'}, path: audioGenRoutePath},
+      {navButton: {icon: <Home_Icon className="size-full" />, title: 'Home'}, path: homeRoutePath},
+      {
+        navButton: {icon: <ImageGeneration_Icon className="size-full" />, title: 'Image Generation'},
+        path: imageGenRoutePath,
+      },
+      {
+        navButton: {icon: <TextGeneration_Icon className="size-full" />, title: 'Text Generation'},
+        path: textGenRoutePath,
+      },
+      {
+        navButton: {icon: <AudioGeneration_Icon className="size-full" />, title: 'Audio Generation'},
+        path: audioGenRoutePath,
+      },
     ];
 
     if (!isEmpty(extensionsData.customizePages.tools.addComponent)) {
       result.push({
         navButton: {
-          icon: 'Rocket',
+          icon: <Rocket_Icon className="size-full" />,
           title: 'Tools',
         },
         path: toolsRoutePath,
@@ -74,7 +87,7 @@ export const ContentPagesButtons = () => {
     if (!isEmpty(extensionsData.customizePages.games.addComponent)) {
       result.push({
         navButton: {
-          icon: 'GamePad',
+          icon: <GamePad_Icon className="size-full" />,
           title: 'Games',
         },
         path: gamesRoutePath,
@@ -93,10 +106,10 @@ export const ContentPagesButtons = () => {
 };
 
 const SettingsPages: PagesType[] = [
-  {navButton: {icon: 'Dashboard', title: 'Dashboard'}, path: dashboardRoutePath},
-  {navButton: {icon: 'Extensions2', title: 'Modules'}, path: modulesRoutePath},
-  {navButton: {icon: 'Extensions', title: 'Extensions'}, path: extensionsRoutePath},
-  {navButton: {icon: 'Slider', title: 'Settings'}, path: settingsRoutePath},
+  {navButton: {icon: <Dashboard_Icon className="size-full" />, title: 'Dashboard'}, path: dashboardRoutePath},
+  {navButton: {icon: <Extensions2_Icon className="size-full" />, title: 'Modules'}, path: modulesRoutePath},
+  {navButton: {icon: <Extensions_Icon className="size-full" />, title: 'Extensions'}, path: extensionsRoutePath},
+  {navButton: {icon: <Slider_Icon className="size-full" />, title: 'Settings'}, path: settingsRoutePath},
 ];
 
 export function SettingsPagesButtons() {

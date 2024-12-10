@@ -2,8 +2,8 @@ import {ReactElement} from 'react';
 
 import {SvgProps} from '../SvgIconsContainer';
 
-export const svgPack4 = {
-  Gmail: (props: SvgProps): ReactElement => (
+export function Gmail_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} height="1em" width="1.33em" viewBox="0 0 256 193" xmlns="http://www.w3.org/2000/svg">
       <path
         fill="#4285f4"
@@ -20,9 +20,11 @@ export const svgPack4 = {
       <path fill="#fbbc04" d="M197.818 17.504V93.14L256 49.504V26.231c0-21.585-24.64-33.89-41.89-20.945z" />
       <path fill="#c5221f" d="m0 49.504l26.759 20.07L58.182 93.14V17.504L41.89 5.286C24.61-7.66 0 4.646 0 26.23z" />
     </svg>
-  ),
+  );
+}
 
-  DiscordColor: (props: SvgProps): ReactElement => (
+export function DiscordColor_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} height="1em" width="1.29em" viewBox="0 0 256 199" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -39,9 +41,11 @@ export const svgPack4 = {
         fill="#5865f2"
       />
     </svg>
-  ),
+  );
+}
 
-  Patreon: (props: SvgProps): ReactElement => (
+export function Patreon_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -53,9 +57,11 @@ export const svgPack4 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Keyboard: (props: SvgProps): ReactElement => (
+export function Keyboard_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -69,9 +75,11 @@ export const svgPack4 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  OpenFolder: (props: SvgProps): ReactElement => (
+export function OpenFolder_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -101,57 +109,11 @@ export const svgPack4 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  CircleFill: (props: SvgProps): ReactElement => (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path fill="currentColor" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12" />
-    </svg>
-  ),
-
-  CirclePin: (props: SvgProps): ReactElement => (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d={
-          'M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10m-7.89-3.581l1.4' +
-          '82 1.484c1.006 1.006 1.509 1.51 1.392 2.053c-.118.543-.784.793-2.116 1.293l-.922.346c' +
-          '-.356.134-.535.201-.672.32c-.06.053-.115.112-.161.177c-.106.148-.157.332-.258.7c-.23.8' +
-          '36-.345 1.254-.62 1.41a.762.762 0 0 1-.378.1c-.315 0-.622-.307-1.234-.92l-.473-.473l-1' +
-          '.619 1.62a.75.75 0 0 1-1.062-1.059l1.62-1.622l-.446-.448c-.61-.61-.914-.914-.916-1.228' +
-          'c0-.135.035-.269.102-.386c.157-.271.572-.386 1.402-.615c.368-.101.552-.152.7-.259a1.02 ' +
-          '1.02 0 0 0 .18-.166c.119-.138.185-.318.316-.677l.334-.911c.494-1.347.74-2.02 1.285-2.1' +
-          '4c.544-.12 1.05.386 2.064 1.4'
-        }
-        fillRule="evenodd"
-        clipRule="evenodd"
-        fill="currentColor"
-      />
-    </svg>
-  ),
-
-  CircleClock: (props: SvgProps): ReactElement => (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <mask id="solarClockCircleBold0">
-          <g fill="none">
-            <path fill="#fff" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2s10 4.477 10 10" />
-            <path
-              d={
-                'M12 7.25a.75.75 0 0 1 .75.75v3.69l2.28 2.28a.75.75 0 1 1-1.06 1.06l-2.5-2.5a.' +
-                '75.75 0 0 1-.22-.53V8a.75.75 0 0 1 .75-.75'
-              }
-              fill="#000"
-              fillRule="evenodd"
-              clipRule="evenodd"
-            />
-          </g>
-        </mask>
-      </defs>
-      <path d="M0 0h24v24H0z" fill="currentColor" mask="url(#solarClockCircleBold0)" />
-    </svg>
-  ),
-
-  Dashboard: (props: SvgProps): ReactElement => (
+export function Dashboard_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -163,16 +125,11 @@ export const svgPack4 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  User: (props: SvgProps): ReactElement => (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <circle r="4" cy="6" cx="12" fill="currentColor" />
-      <ellipse rx="7" ry="4" cx="12" cy="17" fill="currentColor" />
-    </svg>
-  ),
-
-  Google: (props: SvgProps): ReactElement => (
+export function Google_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <g fill="none" fillRule="evenodd">
         <path
@@ -194,9 +151,11 @@ export const svgPack4 = {
         />
       </g>
     </svg>
-  ),
+  );
+}
 
-  UserHeart: (props: SvgProps): ReactElement => (
+export function UserHeart_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
@@ -223,9 +182,11 @@ export const svgPack4 = {
         />
       </g>
     </svg>
-  ),
+  );
+}
 
-  XSite: (props: SvgProps): ReactElement => (
+export function XSite_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <g clipPath="url(#primeTwitter0)">
@@ -244,9 +205,11 @@ export const svgPack4 = {
         </defs>
       </g>
     </svg>
-  ),
+  );
+}
 
-  Reddit: (props: SvgProps): ReactElement => (
+export function Reddit_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
       <circle r="128" cx="128" cy="128" fill="#ff4500" />
       <path
@@ -269,9 +232,11 @@ export const svgPack4 = {
         fill="#fff"
       />
     </svg>
-  ),
+  );
+}
 
-  Slider: (props: SvgProps): ReactElement => (
+export function Slider_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="32" height="32" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -283,9 +248,11 @@ export const svgPack4 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  EditCard: (props: SvgProps): ReactElement => (
+export function EditCard_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -314,9 +281,11 @@ export const svgPack4 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  Magnifier: (props: SvgProps): ReactElement => (
+export function Magnifier_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         opacity="0.5"
@@ -328,9 +297,11 @@ export const svgPack4 = {
         d="m17.1 18.122l3.666 3.666a.723.723 0 0 0 1.023-1.022L18.122 17.1a9 9 0 0 1-1.022 1.022"
       />
     </svg>
-  ),
+  );
+}
 
-  Refresh3: (props: SvgProps): ReactElement => (
+export function Refresh3_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -350,5 +321,5 @@ export const svgPack4 = {
         fill="currentColor"
       />
     </svg>
-  ),
-};
+  );
+}

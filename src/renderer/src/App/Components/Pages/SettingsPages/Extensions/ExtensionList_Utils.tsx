@@ -18,7 +18,7 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} fro
 import {EXTENSION_CONTAINER} from '../../../../../../../cross/CrossConstants';
 import {Extension_ListData, ExtensionsInfo} from '../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
-import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
+import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {useSettingsState} from '../../../../Redux/App/SettingsReducer';
 import {ExtFilter} from './ExtensionList';
 
@@ -127,7 +127,7 @@ export function useFilterMenu(selectedKeys: ExtFilter, setSelectedKeys: Dispatch
         <Dropdown size="sm" closeOnSelect={false} className="border !border-foreground/15">
           <DropdownTrigger>
             <Button radius="none" variant="light" className="cursor-default" isIconOnly>
-              {getIconByName('MenuDots', {className: 'rotate-90 size-4'})}
+              <MenuDots_Icon className="rotate-90 size-4" />
             </Button>
           </DropdownTrigger>
           <DropdownMenu

@@ -5,6 +5,8 @@ import {useCallback, useMemo, useState} from 'react';
 import {isHotkeyPressed} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
+import {Stop_Icon, Terminal_Icon, Web_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
+import {Refresh3_Icon} from '../../../assets/icons/SvgIcons/SvgIcons4';
 import {cardsActions, useCardsState} from '../../Redux/AI/CardsReducer';
 import {settingsActions, useSettingsState} from '../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../Redux/Store';
@@ -60,7 +62,9 @@ const RunningCardManager = () => {
           content: (
             <div className="mt-2 flex flex-col space-y-1">
               <Typography.Text>
-                Stopping the AI will end its execution immediately. Unsaved data will be lost. Continue?
+                <Typography.Text>
+                  Stopping the AI will end its execution immediately. Unsaved data will be lost. Continue?
+                </Typography.Text>
               </Typography.Text>
               <Checkbox size="sm" onValueChange={onShowConfirm}>
                 Always terminate without confirmation
@@ -125,7 +129,7 @@ const RunningCardManager = () => {
       <>
         <LynxTooltip content="Terminate Process" isEssential>
           <div>
-            <SmallButton icon="Stop" onClick={stopAi} iconClassName="m-[8px] text-danger" />
+            <SmallButton onClick={stopAi} icon={<Stop_Icon className="m-[8px] text-danger" />} />
           </div>
         </LynxTooltip>
 
@@ -135,9 +139,14 @@ const RunningCardManager = () => {
             <LynxTooltip content={`Switch to ${isBrowserView ? 'Terminal' : 'Browser View'}`} isEssential>
               <div>
                 <SmallButton
+                  icon={
+                    isBrowserView ? (
+                      <Terminal_Icon className={isBrowserView ? 'm-[8px]' : 'm-[7px]'} />
+                    ) : (
+                      <Web_Icon className={isBrowserView ? 'm-[8px]' : 'm-[7px]'} />
+                    )
+                  }
                   onClick={changeAiView}
-                  icon={isBrowserView ? 'Terminal' : 'Web'}
-                  iconClassName={isBrowserView ? 'm-[8px]' : 'm-[7px]'}
                 />
               </div>
             </LynxTooltip>
@@ -175,7 +184,7 @@ const RunningCardManager = () => {
             <Divider type="vertical" className="ml-4 mr-0" />
             <LynxTooltip content="Refresh Browser View" isEssential>
               <div>
-                <SmallButton icon="Refresh3" onClick={refresh} iconClassName="m-[8px]" />
+                <SmallButton onClick={refresh} icon={<Refresh3_Icon className="m-[8px]" />} />
               </div>
             </LynxTooltip>
 

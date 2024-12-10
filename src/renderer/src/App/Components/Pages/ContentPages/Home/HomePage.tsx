@@ -22,7 +22,6 @@ const HomePage = () => {
     categories: Categories,
     searchResult: SearchResult,
   } = useMemo(() => extensionsData.customizePages.home.replace, []);
-
   const {bottom, scrollBottom, scrollTop, top} = useMemo(() => extensionsData.customizePages.home.add, []);
 
   return (

@@ -2,7 +2,9 @@ import {DropdownItemProps} from '@nextui-org/react';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {Extensions2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Pin_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {SettingsMinimal_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
@@ -25,7 +27,7 @@ export const useLaunchConfig = (): DropdownItemProps => {
       className: 'cursor-default',
       key: 'launch-config',
       onPress,
-      startContent: getIconByName('SettingsMinimal'),
+      startContent: <SettingsMinimal_Icon />,
       title: 'Launch Config',
     }),
     [onPress],
@@ -57,7 +59,7 @@ export const useExtensions = (): DropdownItemProps | undefined => {
             className: 'cursor-default',
             key: 'extensions',
             onPress,
-            startContent: getIconByName('Extensions2'),
+            startContent: <Extensions2_Icon />,
             title: 'Extensions',
           }
         : undefined,
@@ -76,10 +78,7 @@ export const usePin = (): DropdownItemProps => {
 
   const title = useMemo(() => (isPinned ? 'Unpin' : 'Pin'), [isPinned]);
   const startContent = useMemo(
-    () =>
-      getIconByName('Pin', {
-        className: `${isPinned ? 'rotate-45' : 'rotate-0'} transition duration-500`,
-      }),
+    () => <Pin_Icon className={`${isPinned ? 'rotate-45' : 'rotate-0'} transition duration-500`} />,
     [isPinned],
   );
 

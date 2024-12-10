@@ -1,3 +1,4 @@
+import {Tuning_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import SettingsSection from '../../SettingsPage-ContentSection';
 import SettingsGeneralConfirm from './SettingsGeneral-Confirm';
 import SettingsGeneralTaskbar from './SettingsGeneral-Taskbar';
@@ -8,7 +9,7 @@ export const SettingsGeneralId = 'settings_app_elem';
 
 export default function SettingsGeneral() {
   return (
-    <SettingsSection icon="Tuning" title="General" id={SettingsGeneralId}>
+    <SettingsSection title="General" id={SettingsGeneralId} icon={<Tuning_Icon className="size-5" />}>
       <SettingsGeneralTheme />
       <SettingsGeneralTaskbar />
       <SettingsGeneralTooltip />

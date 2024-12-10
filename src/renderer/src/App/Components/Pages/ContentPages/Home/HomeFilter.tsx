@@ -9,7 +9,8 @@ import {
 } from '@nextui-org/react';
 import {memo, useCallback} from 'react';
 
-import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
+import {Filter_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../../../assets/icons/SvgIcons/SvgIconsColor';
 import rendererIpc from '../../../../RendererIpc';
 
 type Props = {
@@ -35,7 +36,7 @@ const HomeFilter = memo(({selectedCategories}: Props) => {
           radius="full"
           variant="light"
           isIconOnly>
-          {getIconByName('Filter', {className: 'w-full h-full p-3'})}
+          <Filter_Icon className="w-full h-full p-3" />
         </Button>
       </DropdownTrigger>
 
@@ -48,22 +49,16 @@ const HomeFilter = memo(({selectedCategories}: Props) => {
         selectedKeys={selectedCategories}
         disallowEmptySelection>
         <DropdownSection title="Categories">
-          <DropdownItem
-            key="Pin"
-            className="cursor-default"
-            startContent={getIconByName('Pin_Color', {className: 'size-4'})}>
+          <DropdownItem key="Pin" className="cursor-default" startContent={<Pin_Color_Icon className="size-4" />}>
             PINNED
           </DropdownItem>
           <DropdownItem
             key="Recently"
             className="cursor-default"
-            startContent={getIconByName('History_Color', {className: 'size-4'})}>
+            startContent={<History_Color_Icon className="size-4" />}>
             RECENTLY USED
           </DropdownItem>
-          <DropdownItem
-            key="All"
-            className="cursor-default"
-            startContent={getIconByName('Apps_Color', {className: 'size-4'})}>
+          <DropdownItem key="All" className="cursor-default" startContent={<Apps_Color_Icon className="size-4" />}>
             All
           </DropdownItem>
         </DropdownSection>

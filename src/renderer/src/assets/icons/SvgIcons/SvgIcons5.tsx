@@ -2,8 +2,8 @@ import {ReactElement} from 'react';
 
 import {SvgProps} from '../SvgIconsContainer';
 
-export const svgPack5 = {
-  Rocket: (props: SvgProps): ReactElement => (
+export function Rocket_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -31,9 +31,11 @@ export const svgPack5 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  GamePad: (props: SvgProps): ReactElement => (
+export function GamePad_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -54,9 +56,11 @@ export const svgPack5 = {
         fill="currentColor"
       />
     </svg>
-  ),
+  );
+}
 
-  HardDrive: (props: SvgProps): ReactElement => (
+export function HardDrive_Icon(props: SvgProps): ReactElement {
+  return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
@@ -68,5 +72,5 @@ export const svgPack5 = {
         fill="currentColor"
       />
     </svg>
-  ),
-};
+  );
+}

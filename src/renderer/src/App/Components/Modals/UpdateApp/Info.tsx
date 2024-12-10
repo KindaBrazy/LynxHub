@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 
 import {APP_BUILD_NUMBER, APP_VERSION, RELEASES_PAGE} from '../../../../../../cross/CrossConstants';
 import {AppUpdateInfo} from '../../../../../../cross/CrossTypes';
-import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {ExternalLink_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
 
 type Props = {items: CollapseProps['items']; updateInfo: AppUpdateInfo | undefined};
 
@@ -49,7 +49,7 @@ export default function Info({updateInfo, items}: Props) {
               }}
               type="link"
               iconPosition="end"
-              icon={getIconByName('ExternalLink')}
+              icon={<ExternalLink_Icon />}
               block>
               Releases Page
             </Button>

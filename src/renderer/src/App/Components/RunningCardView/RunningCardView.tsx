@@ -16,5 +16,4 @@ const RunningCardView = () => {
     </>
   );
 };
-
 export default RunningCardView;

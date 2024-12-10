@@ -4,11 +4,13 @@ import {compact, isEmpty, isNil} from 'lodash';
 import {memo, useMemo} from 'react';
 
 import {extractGitUrl} from '../../../../../cross/CrossUtils';
+import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../assets/icons/SvgIcons/SvgIconsColor';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useModules} from '../../Modules/ModulesContext';
 import {CardData} from '../../Modules/types';
 import {useCardsState} from '../../Redux/AI/CardsReducer';
 import {searchInStrings} from '../../Utils/UtilFunctions';
+import {CardContainerClasses} from '../Pages/CardContainer';
 import HomeCategory from '../Pages/ContentPages/Home/HomeCategory';
 import LynxCard from './Card/LynxCard';
 import {CardContext, CardsDataManager} from './CardsDataManager';
@@ -119,7 +121,10 @@ export const PinnedCars = memo(() => {
   }, [pinnedCards, installedCards]);
 
   return (
-    <HomeCategory title="PINNED" icon="Pin_Color" subTitle="Quick Access to Your Top AI Tools">
+    <HomeCategory
+      title="PINNED"
+      subTitle="Quick Access to Your Top AI Tools"
+      icon={<Pin_Color_Icon className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         {isEmpty(validPinnedCards) && isEmpty(pinCategory) ? (
           <Empty className="size-full" description="No Pinned Card to Display!" />
@@ -148,7 +153,10 @@ export const RecentlyCards = memo(() => {
   }, [recentlyUsedCards, installedCards]);
 
   return (
-    <HomeCategory icon="History_Color" title="RECENTLY USED" subTitle="Your Most Recent AI Interactions">
+    <HomeCategory
+      title="RECENTLY USED"
+      subTitle="Your Most Recent AI Interactions"
+      icon={<History_Color_Icon className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         {isEmpty(validRecentlyUsed) && isEmpty(recentlyCategory) ? (
           <Empty className="size-full" description="No Recently Used Card to Display!" />
@@ -166,7 +174,10 @@ export const RecentlyCards = memo(() => {
 // Renders the "All" category section
 export const AllCardsSection = memo(() => {
   return (
-    <HomeCategory title="All" icon="Apps_Color" subTitle="Explore the Complete List of AI Interfaces">
+    <HomeCategory
+      title="All"
+      subTitle="Explore the Complete List of AI Interfaces"
+      icon={<Apps_Color_Icon className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         <AllCards />
       </div>

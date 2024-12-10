@@ -2,7 +2,8 @@ import {Checkbox, DropdownItemProps, Spinner} from '@nextui-org/react';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {useModules} from '../../../../../Modules/ModulesContext';
 import {cardsActions} from '../../../../../Redux/AI/CardsReducer';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
@@ -57,7 +58,7 @@ export const useUpdate = (): DropdownItemProps | undefined => {
             isDisabled: !!updating,
             key: 'update',
             onPress,
-            startContent: getIconByName('Download'),
+            startContent: <Download_Icon />,
             title: 'Update',
           },
     [updateAvailable, autoUpdate, onPress, updating, customUpdate],
@@ -100,7 +101,7 @@ export const useCheckForUpdate = (): DropdownItemProps | undefined => {
             isDisabled: checkingForUpdate,
             key: 'check-update',
             onPress,
-            startContent: getIconByName('Refresh'),
+            startContent: <Refresh_Icon />,
             title: 'Check Now',
           },
     [updateAvailable, autoUpdate, onPress, checkingForUpdate, customUpdate],

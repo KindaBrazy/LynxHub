@@ -2,6 +2,7 @@ import {Button} from '@mantine/core';
 import {message, Popconfirm} from 'antd';
 import {useCallback} from 'react';
 
+import {Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import rendererIpc from '../../../../../RendererIpc';
 import SettingsSection from '../SettingsPage-ContentSection';
 
@@ -19,7 +20,7 @@ export default function SettingsClear() {
   }, []);
 
   return (
-    <SettingsSection icon="Trash" title="Clear" id={SettingsClearId} itemsCenter>
+    <SettingsSection title="Clear" id={SettingsClearId} icon={<Trash_Icon className="size-5" />} itemsCenter>
       <Popconfirm
         okText="Clear"
         okType="danger"

@@ -2,7 +2,8 @@ import {Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} 
 import {motion} from 'framer-motion';
 
 import {APP_ICON_TRANSPARENT, APP_NAME, APP_NAME_VERSION_V} from '../../../../../cross/CrossConstants';
-import {getIconByName} from '../../../assets/icons/SvgIconsContainer';
+import {Maximize_Icon, Minimize_Icon, Power_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
+import {UnMaximize_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
 import {useAppState} from '../../Redux/App/AppReducer';
 import rendererIpc from '../../RendererIpc';
 import {getColor} from '../../Utils/Constants';
@@ -43,9 +44,11 @@ export default function Logo() {
                 changeWindowState('maximize');
               }}
               startContent={
-                maximized
-                  ? getIconByName('UnMaximize', {className: `${darkMode ? 'fill-white' : 'fill-black'} size-3`})
-                  : getIconByName('Maximize', {className: `${darkMode ? 'fill-white' : 'fill-black'} size-3`})
+                maximized ? (
+                  <UnMaximize_Icon className={`${darkMode ? 'fill-white' : 'fill-black'} size-3`} />
+                ) : (
+                  <Maximize_Icon className={`${darkMode ? 'fill-white' : 'fill-black'} size-3`} />
+                )
               }
               className="cursor-default"
               key={maximized ? 'unmaximize' : 'maximize'}>
@@ -58,11 +61,9 @@ export default function Logo() {
               onClick={() => {
                 changeWindowState('minimize');
               }}
-              startContent={getIconByName('Minimize', {
-                className: `${darkMode ? 'fill-white' : 'fill-black'} size-3`,
-              })}
               key="minimize"
-              className="cursor-default">
+              className="cursor-default"
+              startContent={<Minimize_Icon className={`${darkMode ? 'fill-white' : 'fill-black'} size-3`} />}>
               Minimize
             </DropdownItem>
             {/*#endregion */}
@@ -75,7 +76,7 @@ export default function Logo() {
               key="close"
               color="danger"
               className="cursor-default"
-              startContent={getIconByName('Power', {className: `${darkMode ? 'fill-white' : 'fill-black'} size-3`})}>
+              startContent={<Power_Icon className={`${darkMode ? 'fill-white' : 'fill-black'} size-3`} />}>
               Close
             </DropdownItem>
             {/*#endregion */}

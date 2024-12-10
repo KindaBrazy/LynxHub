@@ -1,7 +1,8 @@
 import {ScrollShadow} from '@nextui-org/react';
 
+import {GamePad_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
-import CardContainer from '../CardContainer';
+import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
 
 export const gamesRoutePath: string = '/gamesPage';
@@ -14,9 +15,9 @@ const GamesPage = () => {
       <ScrollShadow size={20} className="size-full overflow-y-scroll pb-4 scrollbar-hide">
         <CardContainer
           title="Games"
-          icon="GamePad"
           extraClassNames="mr-3"
-          subTitle="Enjoy Games, Hobbies, and Fun AI Tools">
+          subTitle="Enjoy Games, Hobbies, and Fun AI Tools"
+          icon={<GamePad_Icon className={CardContainerClasses} />}>
           {addComponent.map((Comp, index) => (
             <Comp key={index} />
           ))}

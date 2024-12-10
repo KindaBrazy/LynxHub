@@ -1,12 +1,11 @@
 import {motion} from 'framer-motion';
 import {ReactNode} from 'react';
 
-import {IconNameType} from '../../../../../assets/icons/SvgIconsContainer';
 import CardContainer from '../../CardContainer';
 
 type Props = {
   children: ReactNode;
-  icon: IconNameType;
+  icon: ReactNode;
   title: string;
   subTitle?: string;
 };

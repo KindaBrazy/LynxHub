@@ -3,7 +3,8 @@ import {Empty, Space, Spin} from 'antd';
 import {Variants} from 'framer-motion';
 
 import {RepoDetails} from '../../../../../../cross/CrossTypes';
-import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {CrossShield_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Star_Icon, Trash_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
 import {formatNumber} from '../../../Utils/UtilFunctions';
 
 export const tabContentVariants: Variants = {
@@ -36,7 +37,7 @@ export const useRowElements = {
         variant="light"
         isDisabled={true}
         className="cursor-default"
-        startContent={getIconByName('Trash', {className: 'size-4'})}
+        startContent={<Trash_Icon className="size-4" />}
         isIconOnly
       />
     ),
@@ -54,14 +55,14 @@ export const useRowElements = {
             color="danger"
             variant="light"
             className="cursor-default"
-            startContent={getIconByName('Trash', {className: 'size-4'})}
+            startContent={<Trash_Icon className="size-4" />}
             isIconOnly
           />
         </PopoverTrigger>
         <PopoverContent>
           <div className="p-2">
             <h2 className="mb-4 mt-2 flex flex-row items-center font-bold">
-              {getIconByName('CrossShield', {className: 'fill-danger size-5 mr-1 mb-0.5'})} Delete {name}
+              <CrossShield_Icon className="fill-danger size-5 mr-1 mb-0.5" /> Delete {name}
             </h2>
             <p>
               <span>This action will remove the extension and all its associated data from your device.</span>
@@ -88,16 +89,16 @@ export const useRowElements = {
       <Chip
         size="sm"
         variant="light"
-        className="transition duration-500 hover:bg-white dark:hover:bg-black"
-        startContent={getIconByName('Star', {className: 'fill-yellow-400 mx-1'})}>
+        startContent={<Star_Icon className="fill-yellow-400 mx-1" />}
+        className="transition duration-500 hover:bg-white dark:hover:bg-black">
         {formatNumber(details?.stars || 0)}
       </Chip>
     ) : (
       <Chip
         size="sm"
         variant="light"
-        className="transition duration-500 hover:bg-white dark:hover:bg-black"
-        startContent={getIconByName('Star', {className: 'fill-yellow-400 mx-1'})}>
+        startContent={<Star_Icon className="fill-yellow-400 mx-1" />}
+        className="transition duration-500 hover:bg-white dark:hover:bg-black">
         N/A
       </Chip>
     ),

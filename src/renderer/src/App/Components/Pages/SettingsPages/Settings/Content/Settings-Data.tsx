@@ -3,7 +3,8 @@ import {Button as NextButton} from '@nextui-org/react';
 import {message} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {Database_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {OpenFolder_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import rendererIpc from '../../../../../RendererIpc';
 import SettingsSection from '../SettingsPage-ContentSection';
 
@@ -39,10 +40,10 @@ export default function SettingsData() {
   }, []);
 
   return (
-    <SettingsSection title="Data" icon="Database" id={SettingsDataId} itemsCenter>
+    <SettingsSection title="Data" id={SettingsDataId} icon={<Database_Icon className="size-5" />} itemsCenter>
       <span>App data, including modules and binaries, will be saved here.</span>
 
-      <NextButton radius="sm" variant="light" onPress={openFolder} endContent={getIconByName('OpenFolder')}>
+      <NextButton radius="sm" variant="light" onPress={openFolder} endContent={<OpenFolder_Icon />}>
         {currentPath}
       </NextButton>
 

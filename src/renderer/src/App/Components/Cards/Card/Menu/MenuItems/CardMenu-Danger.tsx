@@ -2,7 +2,7 @@ import {DropdownItemProps} from '@nextui-org/react';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {useCardData} from '../../../CardsDataManager';
@@ -22,7 +22,7 @@ export const useUninstall = (): DropdownItemProps => {
       color: 'danger',
       key: 'uninstall',
       onPress,
-      startContent: getIconByName('Trash'),
+      startContent: <Trash_Icon />,
       title: 'Uninstall',
     }),
     [onPress],

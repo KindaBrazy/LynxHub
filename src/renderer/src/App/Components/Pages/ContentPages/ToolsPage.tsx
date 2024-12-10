@@ -1,7 +1,8 @@
 import {ScrollShadow} from '@nextui-org/react';
 
+import {Rocket_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
-import CardContainer from '../CardContainer';
+import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
 
 export const toolsRoutePath: string = '/toolsPage';
@@ -13,10 +14,10 @@ const ToolsPage = () => {
     <Page className="pt-6">
       <ScrollShadow size={20} className="size-full overflow-y-scroll pb-4 scrollbar-hide">
         <CardContainer
-          icon="Rocket"
           title="Tools"
           extraClassNames="mr-3"
-          subTitle="Essential AI Utilities for Your Daily Tasks">
+          subTitle="Essential AI Utilities for Your Daily Tasks"
+          icon={<Rocket_Icon className={CardContainerClasses} />}>
           {addComponent.map((Comp, index) => (
             <Comp key={index} />
           ))}

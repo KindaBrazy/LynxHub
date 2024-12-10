@@ -2,17 +2,24 @@ import {Button, ScrollShadow} from '@nextui-org/react';
 import {Card, Typography} from 'antd';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {getIconByName, IconNameType} from '../../../../../assets/icons/SvgIconsContainer';
+import {
+  Database_Icon,
+  Discord_Icon,
+  Terminal_Icon,
+  Trash_Icon,
+  Tuning_Icon,
+} from '../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {EditCard_Icon, Keyboard_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {Rocket_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {settingsSectionId} from './SettingsContainer';
 
 const {Text} = Typography;
 
 export type GroupItem = {
-  icon: IconNameType | ReactNode;
+  icon: ReactNode;
   title: string;
   color?: 'danger' | 'warning' | 'success';
-  iconColor?: boolean;
   elementId?: string;
 };
 
@@ -26,23 +33,50 @@ const groupSections: GroupProps[] = [
   {
     title: 'Application',
     items: [
-      {title: 'Customize Card', icon: 'EditCard', elementId: settingsSectionId.SettingsCardId},
-      {title: 'General', icon: 'Tuning', elementId: settingsSectionId.SettingsGeneralId},
-      {title: 'Terminal', icon: 'Terminal', elementId: settingsSectionId.SettingsTerminalId},
-      {title: 'Startup', icon: 'Rocket', elementId: settingsSectionId.SettingsStartupId},
-      {title: 'Hotkeys', icon: 'Keyboard', elementId: settingsSectionId.SettingsHotkeysId},
-      {title: 'Discord Activity', icon: 'Discord', elementId: settingsSectionId.SettingsDiscordId},
+      {
+        title: 'Customize Card',
+        icon: <EditCard_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        elementId: settingsSectionId.SettingsCardId,
+      },
+      {
+        title: 'General',
+        icon: <Tuning_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        elementId: settingsSectionId.SettingsGeneralId,
+      },
+      {
+        title: 'Terminal',
+        icon: <Terminal_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        elementId: settingsSectionId.SettingsTerminalId,
+      },
+      {
+        title: 'Startup',
+        icon: <Rocket_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        elementId: settingsSectionId.SettingsStartupId,
+      },
+      {
+        title: 'Hotkeys',
+        icon: <Keyboard_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        elementId: settingsSectionId.SettingsHotkeysId,
+      },
+      {
+        title: 'Discord Activity',
+        icon: <Discord_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        elementId: settingsSectionId.SettingsDiscordId,
+      },
     ],
   },
   {
     title: 'Data Management',
     items: [
-      {title: 'Data', icon: 'Database', elementId: settingsSectionId.SettingsDataId},
+      {
+        title: 'Data',
+        icon: <Database_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        elementId: settingsSectionId.SettingsDataId,
+      },
       {
         title: 'Clear',
-        icon: 'Trash',
+        icon: <Trash_Icon className="size-4 shrink-0" />,
         color: 'danger',
-        iconColor: true,
         elementId: settingsSectionId.SettingsClearId,
       },
     ],
@@ -101,11 +135,7 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
             key={`${item.title}_settings_section`}
             fullWidth>
             <>
-              {typeof item.icon === 'string'
-                ? getIconByName(item.icon as IconNameType, {
-                    className: `size-4 shrink-0 ${!item.iconColor && 'dark:text-white text-black'}`,
-                  })
-                : item.icon}
+              {item.icon}
               <Text>{item.title}</Text>
             </>
           </Button>

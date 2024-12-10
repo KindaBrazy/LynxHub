@@ -2,7 +2,7 @@ import {Button, CardFooter} from '@nextui-org/react';
 import {observer} from 'mobx-react-lite';
 import {useCallback, useMemo} from 'react';
 
-import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {Document_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../../Redux/App/SettingsReducer';
 import {useCardData} from '../CardsDataManager';
@@ -38,7 +38,7 @@ const LynxCardFooter = observer(() => {
             onPress={openDoc}
             className="cursor-default"
             size={compactMode ? 'sm' : 'md'}
-            startContent={getIconByName('Document', {className: `size-full ${compactMode ? 'm-2' : 'm-2.5'}`})}
+            startContent={<Document_Icon className={`size-full ${compactMode ? 'm-2' : 'm-2.5'}`} />}
             isIconOnly
           />
         )}

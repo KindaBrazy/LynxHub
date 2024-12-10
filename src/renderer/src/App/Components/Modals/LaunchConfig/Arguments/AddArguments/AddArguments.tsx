@@ -20,7 +20,7 @@ import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 
 import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../../../../cross/GetArgumentsData';
-import {getIconByName} from '../../../../../../assets/icons/SvgIconsContainer';
+import {Circle_Icon, Filter_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useModules} from '../../../../../Modules/ModulesContext';
 import {useModalsState} from '../../../../../Redux/AI/ModalsReducer';
 import {useAppState} from '../../../../../Redux/App/AppReducer';
@@ -156,14 +156,14 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
               spellCheck={false}
               onValueChange={setSearchValue}
               placeholder="Search by name or description..."
-              startContent={getIconByName('Circle', {className: 'size-3.5'})}
+              startContent={<Circle_Icon className="size-3.5" />}
               autoFocus
               isClearable
             />
             <Dropdown>
               <DropdownTrigger>
                 <Button radius="md" variant="flat" className="cursor-default" isIconOnly>
-                  {getIconByName('Filter')}
+                  <Filter_Icon />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu

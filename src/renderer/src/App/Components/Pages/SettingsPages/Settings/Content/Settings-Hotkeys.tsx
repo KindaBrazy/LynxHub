@@ -5,6 +5,7 @@ import {useHotkeys, useRecordHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {LynxHotkeys} from '../../../../../../../../cross/IpcChannelAndTypes';
+import {Keyboard_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {settingsActions, useSettingsState} from '../../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
@@ -98,7 +99,7 @@ export default function SettingsHotkeys() {
   );
 
   return (
-    <SettingsSection icon="Keyboard" title="Hotkeys" id={SettingsHotkeysId}>
+    <SettingsSection title="Hotkeys" id={SettingsHotkeysId} icon={<Keyboard_Icon className="size-5" />}>
       <LynxSwitch
         title="Enable Hotkeys"
         enabled={hotkeys.isEnabled}

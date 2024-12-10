@@ -1,11 +1,12 @@
 import {Button, Checkbox} from '@nextui-org/react';
 import {Modal, Typography} from 'antd';
 import {motion} from 'framer-motion';
-import {useCallback, useMemo, useState} from 'react';
+import {ReactNode, useCallback, useMemo, useState} from 'react';
 import {isHotkeyPressed} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
-import {getIconByName, IconNameType} from '../../../assets/icons/SvgIconsContainer';
+import {Maximize_Icon, Minimize_Icon, Power_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
+import {UnMaximize_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
 import {useAppState} from '../../Redux/App/AppReducer';
 import {settingsActions, useSettingsState} from '../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../Redux/Store';
@@ -35,13 +36,11 @@ const WindowButtons = () => {
 
   const close = useCallback(() => {
     rendererIpc.pty.process('stop', '');
-    // Close the app with a delay so ensure pty terminated
     setTimeout(() => rendererIpc.win.changeWinState('close'), 200);
   }, []);
 
   const restart = useCallback(() => {
     rendererIpc.pty.process('stop', '');
-    // Close the app with a delay so ensure pty terminated
     setTimeout(() => rendererIpc.win.changeWinState('restart'), 200);
   }, []);
 
@@ -110,13 +109,13 @@ const WindowButtons = () => {
   );
 
   const renderButton = useCallback(
-    (operation: WindowOperation, icon: IconNameType, additionalClass: string) => (
+    (operation: WindowOperation, icon: ReactNode, additionalClass: string) => (
       <motion.button
         type="button"
         {...buttonProps}
         onClick={() => changeWindowState(operation)}
         className={`${BUTTONS_COMMON_STYLE} ${additionalClass}`}>
-        {getIconByName(icon, {className: operation === 'close' ? 'h-[0.8rem] w-[0.8rem]' : 'h-3 w-3'})}
+        {icon}
       </motion.button>
     ),
     [buttonProps, changeWindowState],
@@ -124,13 +123,17 @@ const WindowButtons = () => {
 
   return (
     <div className="right-0 flex h-full flex-row space-x-0.5 bg-blue-800/0">
-      {renderButton('minimize', 'Minimize', 'px-4 hover:bg-black/[0.15] dark:hover:bg-white/[0.15]')}
       {renderButton(
-        'maximize',
-        maximized ? 'UnMaximize' : 'Maximize',
+        'minimize',
+        <Minimize_Icon className="size-3" />,
         'px-4 hover:bg-black/[0.15] dark:hover:bg-white/[0.15]',
       )}
-      {renderButton('close', 'Power', 'pl-3 pr-[1rem] hover:bg-red-600')}
+      {renderButton(
+        'maximize',
+        maximized ? <UnMaximize_Icon className="size-3" /> : <Maximize_Icon className="size-3" />,
+        'px-4 hover:bg-black/[0.15] dark:hover:bg-white/[0.15]',
+      )}
+      {renderButton('close', <Power_Icon className="size-[0.8rem]" />, 'pl-3 pr-[1rem] hover:bg-red-600')}
     </div>
   );
 };

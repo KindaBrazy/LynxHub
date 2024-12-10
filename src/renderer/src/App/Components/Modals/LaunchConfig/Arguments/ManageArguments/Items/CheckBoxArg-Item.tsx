@@ -4,7 +4,7 @@ import {useMemo} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDescription} from '../../../../../../../../../cross/GetArgumentsData';
-import {getIconByName} from '../../../../../../../assets/icons/SvgIconsContainer';
+import {CheckBox_Icon, Close_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useModules} from '../../../../../../Modules/ModulesContext';
 import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
 
@@ -24,7 +24,7 @@ export default function CheckBoxArgItem({argument, removeArg}: Props) {
         className="cursor-default dark:bg-black/40"
         classNames={{body: 'flex-row items-center flex'}}
         hoverable>
-        {getIconByName('CheckBox', {className: 'text-success absolute left-3'})}
+        <CheckBox_Icon className="text-success absolute left-3" />
         <Text className="absolute left-8 right-12 font-JetBrainsMono text-success">{argument.name}</Text>
         <Button
           size="sm"
@@ -33,7 +33,7 @@ export default function CheckBoxArgItem({argument, removeArg}: Props) {
           onPress={removeArg}
           className="absolute right-3 cursor-default"
           isIconOnly>
-          {getIconByName('Close')}
+          <Close_Icon />
         </Button>
       </Card>
     </Tooltip>

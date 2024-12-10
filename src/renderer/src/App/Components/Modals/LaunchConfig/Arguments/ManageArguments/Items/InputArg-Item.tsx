@@ -3,6 +3,7 @@ import {ChangeEvent, useCallback, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
+import {Text_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {useModules} from '../../../../../../Modules/ModulesContext';
 import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
 import ArgumentItemBase from './Argument-Item-Base';
@@ -25,7 +26,7 @@ export default function InputArgItem({argument, changeValue, removeArg}: Props) 
   }, []);
 
   return (
-    <ArgumentItemBase icon="Text" name={argument.name} removeArg={removeArg}>
+    <ArgumentItemBase icon={<Text_Icon />} name={argument.name} removeArg={removeArg}>
       <Input
         onBlur={onBlur}
         spellCheck={false}

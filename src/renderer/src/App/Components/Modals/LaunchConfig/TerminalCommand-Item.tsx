@@ -2,7 +2,7 @@ import {Card} from '@nextui-org/card';
 import {Button, Input} from 'antd';
 import {ChangeEvent, useCallback, useState} from 'react';
 
-import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {Close_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
 
 type Props = {
   index: number;
@@ -37,14 +37,7 @@ export default function TerminalCommandItem({defaultText, editCommand, focus, in
       className="flex h-[38px] flex-row items-center justify-center !transition-opacity !duration-300 hover:opacity-80">
       <Input
         addonAfter={
-          <Button
-            type="text"
-            size="small"
-            onClick={remove}
-            className="cursor-default"
-            icon={getIconByName('Close')}
-            danger
-          />
+          <Button type="text" size="small" onClick={remove} icon={<Close_Icon />} className="cursor-default" danger />
         }
         width={90}
         size="large"

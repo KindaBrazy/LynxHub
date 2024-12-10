@@ -1,5 +1,6 @@
 import {Spacer} from '@nextui-org/react';
 
+import {Terminal_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import SettingsSection from '../../SettingsPage-ContentSection';
 import SettingsTerminalBlinkCursor from './SettingsTerminal-BlinkCursor';
 import SettingsTerminalConpty from './SettingsTerminal-Conpty';
@@ -15,7 +16,7 @@ export const SettingsTerminalId = 'settings_terminal_elem';
 
 export default function SettingsTerminal() {
   return (
-    <SettingsSection icon="Terminal" title="Terminal" id={SettingsTerminalId}>
+    <SettingsSection title="Terminal" id={SettingsTerminalId} icon={<Terminal_Icon className="size-5" />}>
       <SettingsTerminalConpty />
       <SettingsTerminalScrollBack />
       <SettingsTerminalResizeDelay />

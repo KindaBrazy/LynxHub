@@ -3,7 +3,7 @@ import {isEmpty} from 'lodash';
 import {observer} from 'mobx-react-lite';
 import {useCallback, useMemo, useState} from 'react';
 
-import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
+import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../../../Redux/App/SettingsReducer';
 import {DropDownSectionType} from '../../../../Utils/Types';
@@ -29,10 +29,7 @@ export const CardMenu = observer(() => {
   );
 
   const buttonSize = useMemo(() => (compactMode ? 'sm' : 'md'), [compactMode]);
-  const menuIcon = useMemo(
-    () => !updating && getIconByName('MenuDots', {className: 'size-full m-2 rotate-90'}),
-    [updating],
-  );
+  const menuIcon = useMemo(() => !updating && <MenuDots_Icon className="size-full m-2 rotate-90" />, [updating]);
 
   const extensionAddMenu = useMemo(() => extensionsData.cards.customize.menu.addSection, []);
 

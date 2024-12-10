@@ -2,7 +2,9 @@ import {Button} from '@nextui-org/react';
 import {Descriptions, DescriptionsProps} from 'antd';
 import {useCallback, useMemo} from 'react';
 
-import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {ExternalLink_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
+import {OpenFolder_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons4';
+import {HardDrive_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 import rendererIpc from '../../../RendererIpc';
 import {progressElem} from './CardInfo-Modal';
 
@@ -44,7 +46,9 @@ export default function CardInfoDisk({extensionsSize, installDir, totalSize, sup
       <Descriptions
         title={
           <div className="flex flex-row items-center gap-x-2">
-            <div>{getIconByName('HardDrive')}</div>
+            <div>
+              <HardDrive_Icon />
+            </div>
             <span>Disk Usage</span>
           </div>
         }
@@ -58,8 +62,8 @@ export default function CardInfoDisk({extensionsSize, installDir, totalSize, sup
         variant="faded"
         onPress={openDir}
         className="my-4 justify-between"
-        startContent={getIconByName('OpenFolder')}
-        endContent={getIconByName('ExternalLink')}
+        startContent={<OpenFolder_Icon />}
+        endContent={<ExternalLink_Icon />}
         fullWidth>
         {installDir}
       </Button>

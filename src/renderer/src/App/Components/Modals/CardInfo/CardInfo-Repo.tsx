@@ -3,7 +3,7 @@ import {Descriptions, DescriptionsProps} from 'antd';
 import {isEmpty} from 'lodash';
 import {useMemo} from 'react';
 
-import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {GitHub_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
 import {useModalsState} from '../../../Redux/AI/ModalsReducer';
 import LynxTooltip from '../../Reusable/LynxTooltip';
 
@@ -84,7 +84,7 @@ export default function CardInfoRepo({installDate, lastUpdate, releaseTag}: Prop
     <Descriptions
       title={
         <div className="flex flex-row items-center gap-x-2">
-          <div>{getIconByName('GitHub')}</div>
+          <div>{<GitHub_Icon />}</div>
           <span>Repository</span>
         </div>
       }

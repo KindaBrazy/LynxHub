@@ -1,11 +1,4 @@
-import {ReactElement, SVGProps} from 'react';
-
-import {svgPack1} from './SvgIcons/SvgIcons1';
-import {svgPack2} from './SvgIcons/SvgIcons2';
-import {svgPack3} from './SvgIcons/SvgIcons3';
-import {svgPack4} from './SvgIcons/SvgIcons4';
-import {svgPack5} from './SvgIcons/SvgIcons5';
-import {svgPackColor} from './SvgIcons/SvgIconsColor';
+import {SVGProps} from 'react';
 
 /*
 Svg icons from:
@@ -16,22 +9,3 @@ Svg icons from:
 */
 
 export type SvgProps = SVGProps<SVGSVGElement>;
-
-const icons = {
-  ...svgPack1,
-  ...svgPack2,
-  ...svgPack3,
-  ...svgPack4,
-  ...svgPack5,
-  ...svgPackColor,
-};
-
-export type IconNameType = keyof typeof icons;
-
-export const getIconByName = (name: IconNameType, props: SvgProps = {}): ReactElement | null => {
-  if (name) {
-    return icons[name](props);
-  } else {
-    return null;
-  }
-};

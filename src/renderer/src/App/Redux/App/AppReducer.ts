@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {isBoolean} from 'lodash';
+import isBoolean from 'lodash/isBoolean';
 import {useSelector} from 'react-redux';
 
 import {homeRoutePath} from '../../Components/Pages/ContentPages/Home/HomePage';

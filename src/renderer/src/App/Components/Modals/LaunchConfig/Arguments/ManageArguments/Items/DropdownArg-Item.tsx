@@ -3,6 +3,7 @@ import {useCallback, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue, getArgumentValues} from '../../../../../../../../../cross/GetArgumentsData';
+import {ListCheck_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {useModules} from '../../../../../../Modules/ModulesContext';
 import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
 import {convertArrToObject} from '../../../../../../Utils/UtilFunctions';
@@ -30,7 +31,7 @@ export default function DropdownArgItem({argument, changeValue, removeArg}: Prop
   );
 
   return (
-    <ArgumentItemBase icon="ListCheck" name={argument.name} removeArg={removeArg}>
+    <ArgumentItemBase name={argument.name} removeArg={removeArg} icon={<ListCheck_Icon />}>
       <Select
         variant="flat"
         aria-label="Select an item"

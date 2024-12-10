@@ -21,6 +21,7 @@ const BACKGROUND_CLASSES = {
  */
 const TitleBar = memo(() => {
   const titleBar = useMemo(() => extensionsData.titleBar, []);
+
   const fullscreen = useAppState('fullscreen');
   const onFocus = useAppState('onFocus');
   const {isRunning: isCardRunning} = useCardsState('runningCard');

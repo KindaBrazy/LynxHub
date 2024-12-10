@@ -3,7 +3,7 @@ import {Empty, List, PaginationProps} from 'antd';
 import {useEffect, useState} from 'react';
 
 import {validateGitRepoUrl} from '../../../../../../../cross/CrossUtils';
-import {getIconByName} from '../../../../../assets/icons/SvgIconsContainer';
+import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useModules} from '../../../../Modules/ModulesContext';
 import {useModalsState} from '../../../../Redux/AI/ModalsReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
@@ -81,8 +81,8 @@ export default function Available({visible, updateTable, installedExtensions}: P
           className="w-full"
           value={searchValue}
           onValueChange={setSearchValue}
+          startContent={<Circle_Icon className="size-5" />}
           placeholder="Search by title, description or url..."
-          startContent={getIconByName('Circle', {className: 'size-5'})}
           autoFocus
         />
       </div>

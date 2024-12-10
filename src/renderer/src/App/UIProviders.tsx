@@ -5,7 +5,7 @@ import {ReactNode, useLayoutEffect, useMemo} from 'react';
 
 import {useAppState} from './Redux/App/AppReducer';
 
-/** Config NextUI and AntD and return providers */
+/** Config NextUI, AntD and Mantine and return providers */
 export default function UIProviders({children}: {children: ReactNode}) {
   const darkMode = useAppState('darkMode');
   const algorithm = useMemo(() => (darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm), [darkMode]);

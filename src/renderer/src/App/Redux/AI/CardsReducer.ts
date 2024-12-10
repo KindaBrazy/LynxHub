@@ -75,6 +75,7 @@ const cardsSlice = createSlice({
     setZoomFactor: (state, action: PayloadAction<{id: string; zoom: number}[]>) => {
       state.webViewZoomFactor = action.payload;
     },
+
     //#region Update Available
 
     addUpdateAvailable: (state, action: PayloadAction<string>) => {

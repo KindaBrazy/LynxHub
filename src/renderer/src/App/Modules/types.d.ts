@@ -194,10 +194,10 @@ export type CardRendererMethods = {
   parseStringToArgs?: (args: string) => ChosenArgument[];
 
   manager?: {
-    startInstall: (stepper: InstallStepperType) => void;
+    startInstall: (stepper: InstallationStepper) => void;
     updater: {
       updateType: 'git' | 'stepper';
-      startUpdate?: (stepper: InstallStepperType, dir: string) => void;
+      startUpdate?: (stepper: InstallationStepper, dir: string) => void;
     };
   };
 };

@@ -3,7 +3,8 @@ import {memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../cross/CrossUtils';
-import {getIconByName} from '../../../../assets/icons/SvgIconsContainer';
+import {Download2_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Play_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
 import {useModules} from '../../../Modules/ModulesContext';
 import {cardsActions, useCardsState} from '../../../Redux/AI/CardsReducer';
 import {modalActions} from '../../../Redux/AI/ModalsReducer';
@@ -80,10 +81,10 @@ const StartButton = memo(() => {
           <span className="text-xs text-white">Updating Extensions {updateCount}</span>
         ) : updating ? (
           <span className="text-xs text-white">Updating...</span>
+        ) : installed ? (
+          <Play_Icon className={compactMode ? `size-4` : 'size-5'} />
         ) : (
-          getIconByName(installed ? 'Play' : 'Download2', {
-            className: compactMode ? (installed ? `size-4` : 'size-5') : installed ? 'size-5' : 'size-5',
-          })
+          <Download2_Icon className={compactMode ? 'size-5' : 'size-5'} />
         )
       }
       radius="sm"
