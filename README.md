@@ -46,16 +46,16 @@ Seamlessly install, configure, launch, and manage your AI interfaces from a sing
 | Channel      | Version                                                                              | Date       |
 |--------------|--------------------------------------------------------------------------------------|------------|
 | Early Access | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.0.0_Early-Access) | 2024-11-30 |
-| Release      | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V1.3.1)              | 2024-10-24 |
+| Release      | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.0.0)              | 2024-12-14 |
 
 | Platform                         | x64                                                                                                           | arm64                                                                                                         |
 |----------------------------------|---------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| **Windows 10/11** (.exe)         | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.3.1/LynxHub-V1.3.1-win_x64-Setup.exe) | N/A                                                                                                           |
+| **Windows 10/11** (.exe)         | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-win_x64-Setup.exe) | N/A                                                                                                           |
 | **macOS (Beta)** - (.dmg)        | [Early-Access](https://www.patreon.com/LynxHub)                                                               | N/A                                                                                                           |
-| **Debian, Ubuntu** (.deb)        | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.3.1/LynxHub-V1.3.1-linux_amd64.deb)   | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.3.1/LynxHub-V1.3.1-linux_arm64.deb)   |
-| **Red Hat, Fedora, SUSE** (.rpm) | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.3.1/LynxHub-V1.3.1-linux_x86_64.rpm)  | [**V1.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V1.3.1/LynxHub-V1.3.1-linux_aarch64.rpm) |
+| **Debian, Ubuntu** (.deb)        | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-linux_amd64.deb)   | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-linux_arm64.deb)   |
+| **Red Hat, Fedora, SUSE** (.rpm) | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-linux_x86_64.rpm)  | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-linux_aarch64.rpm) |
 
-> [!TIP]
+> [!NOTE]
 > 🌟 **Exclusive Early Access**
 >
 > Join [Patreon](https://www.patreon.com/LynxHub) to gain **Early Access** to the **new features, bug
