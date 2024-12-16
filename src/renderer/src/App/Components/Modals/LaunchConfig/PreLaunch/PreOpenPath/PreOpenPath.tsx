@@ -31,7 +31,7 @@ export default function PreOpenPath() {
   );
 
   const selectFolder = useCallback(() => {
-    rendererIpc.file.openDlg('openDirectory').then(result => {
+    rendererIpc.file.openDlg({properties: ['openDirectory']}).then(result => {
       if (result) {
         setToOpen(prevState => [...prevState, {path: result, type: 'folder'}]);
         rendererIpc.storageUtils.preOpen('add', {id, open: {path: result, type: 'folder'}});
@@ -40,7 +40,7 @@ export default function PreOpenPath() {
   }, [id]);
 
   const selectFile = useCallback(() => {
-    rendererIpc.file.openDlg('openFile').then(result => {
+    rendererIpc.file.openDlg({properties: ['openFile']}).then(result => {
       if (result) {
         setToOpen(prevState => [...prevState, {path: result, type: 'file'}]);
         rendererIpc.storageUtils.preOpen('add', {id, open: {path: result, type: 'file'}});

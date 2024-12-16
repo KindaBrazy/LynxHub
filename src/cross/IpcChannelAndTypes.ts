@@ -7,7 +7,6 @@ import {UpdateDownloadProgress} from './CrossTypes';
 
 export type WinStateChange = {name: 'focus' | 'maximize' | 'full-screen'; value: boolean};
 export type ChangeWindowState = 'minimize' | 'maximize' | 'close' | 'fullscreen' | 'restart';
-export type OpenDialogOptions = 'openDirectory' | 'openFile';
 export type DarkModeTypes = 'dark' | 'light' | 'system';
 export type TaskbarStatus = 'taskbar-tray' | 'taskbar' | 'tray' | 'tray-minimized';
 export type TooltipStatus = 'essential' | 'full' | 'none';

@@ -43,7 +43,7 @@ const InstallFooter = ({
   }, [terminalResolver]);
 
   const locate = useCallback(() => {
-    rendererIpc.file.openDlg('openDirectory').then(targetDirectory => {
+    rendererIpc.file.openDlg({properties: ['openDirectory']}).then(targetDirectory => {
       if (targetDirectory) starterResolver.current?.({chosen: 'locate', targetDirectory});
     });
   }, [starterResolver]);

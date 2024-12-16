@@ -38,7 +38,7 @@ export default function DirectoryArgItem({argument, changeValue, removeArg}: Pro
 
   const changeDir = useCallback(() => {
     if (!isRelative) {
-      rendererIpc.file.openDlg('openDirectory').then(result => {
+      rendererIpc.file.openDlg({properties: ['openDirectory']}).then(result => {
         if (result) {
           setSelectedDir(result);
           changeValue(result);
