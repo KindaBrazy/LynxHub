@@ -76,9 +76,9 @@ export default function InstallBody() {
             className="text-center !shadow-small dark:bg-foreground-100">
             <OpenDialog
               directory={directory}
-              dialogType="openDirectory"
               setDirectory={setDirectory}
               extraFolder={extractGitUrl(url).repo}
+              dialogType={{properties: ['openDirectory']}}
             />
           </Card>
         </div>

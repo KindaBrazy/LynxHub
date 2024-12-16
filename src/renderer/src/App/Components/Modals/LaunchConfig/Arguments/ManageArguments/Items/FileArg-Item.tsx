@@ -38,7 +38,7 @@ export default function FileArgItem({argument, changeValue, removeArg}: Props) {
 
   const changeDir = useCallback(() => {
     if (!isRelative) {
-      rendererIpc.file.openDlg('openFile').then(result => {
+      rendererIpc.file.openDlg({properties: ['openFile']}).then(result => {
         if (result) {
           setSelectedFile(result);
           changeValue(result);

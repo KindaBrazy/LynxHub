@@ -34,13 +34,13 @@ export default function UserInputs({elements, setResult}: Props) {
     (type: 'folder' | 'file', id: string) => {
       switch (type) {
         case 'folder':
-          rendererIpc.file.openDlg('openDirectory').then(result => {
+          rendererIpc.file.openDlg({properties: ['openDirectory']}).then(result => {
             setSelectedFolder(result || 'Click here to select folder');
             updateResult(id, result || '');
           });
           break;
         case 'file':
-          rendererIpc.file.openDlg('openFile').then(result => {
+          rendererIpc.file.openDlg({properties: ['openFile']}).then(result => {
             setSelectedFile(result || 'Click here to select file');
             updateResult(id, result || '');
           });

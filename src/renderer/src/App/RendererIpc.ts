@@ -1,4 +1,4 @@
-import {IpcRendererEvent} from 'electron';
+import {IpcRendererEvent, OpenDialogOptions} from 'electron';
 
 import {
   ChosenArgumentsData,
@@ -29,7 +29,6 @@ import {
   modulesChannels,
   OnPreCommands,
   OnUpdatingExtensions,
-  OpenDialogOptions,
   PreCommands,
   PreOpen,
   PreOpenData,
