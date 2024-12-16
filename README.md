@@ -51,7 +51,7 @@ Seamlessly install, configure, launch, and manage your AI interfaces from a sing
 | Platform                         | x64                                                                                                           | arm64                                                                                                         |
 |----------------------------------|---------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
 | **Windows 10/11** (.exe)         | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-win_x64-Setup.exe) | N/A                                                                                                           |
-| **macOS (Beta)** - (.dmg)        | [Early-Access](https://www.patreon.com/LynxHub)                                                               | N/A                                                                                                           |
+| **macOS (Beta)** - (.dmg)        | [**Early-Access**](https://www.patreon.com/LynxHub)                                                           | N/A                                                                                                           |
 | **Debian, Ubuntu** (.deb)        | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-linux_amd64.deb)   | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-linux_arm64.deb)   |
 | **Red Hat, Fedora, SUSE** (.rpm) | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-linux_x86_64.rpm)  | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-linux_aarch64.rpm) |
 
@@ -345,11 +345,11 @@ sustainability.
 
 <div align="center">
 
-[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:kindofbrazy@gmail.com)
-[![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/LynxHub)
-[![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://www.reddit.com/r/LynxHubAI)
 [![X](https://img.shields.io/badge/X-%23000000.svg?style=for-the-badge&logo=X&logoColor=white)](https://x.com/LynxHubAI)
 [![YouTube](https://img.shields.io/badge/YouTube-%23FF0000.svg?style=for-the-badge&logo=YouTube&logoColor=white)](https://www.youtube.com/@LynxHubAI)
+[![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://www.reddit.com/r/LynxHubAI)
+[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:kindofbrazy@gmail.com)
+[![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/LynxHub)
 
 </div>
 
