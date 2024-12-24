@@ -2,6 +2,7 @@ import {Reducer} from '@reduxjs/toolkit';
 import {ComponentProps, FC} from 'react';
 import {RouteObject} from 'react-router';
 
+import {CardsDataManager} from '../Components/Cards/CardsDataManager';
 import {CardData} from '../Modules/types';
 import {DropDownSectionType} from '../Utils/Types';
 import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
@@ -12,11 +13,14 @@ export type CardElementProps = ComponentProps<'div'> & {cards: CardData[]};
 export type SearchResultProps = ComponentProps<'div'> & {searchValue: string};
 export type AddCardMenuProps = ComponentProps<'div'> & {
   addMenu: (sections: DropDownSectionType[], index?: number) => void;
+  context: CardsDataManager;
 };
+export type CardDataProps = ComponentProps<'div'> & {context: CardsDataManager};
 export type ReplaceMdProps = ComponentProps<'div'> & {repoPath: string; rounded?: boolean};
 
 export type FcProp = FC<ElementProps>;
 
+export type FcPropCardData = FC<CardDataProps>;
 export type FcPropCard = FC<CardElementProps>;
 export type FcPropSearchResult = FC<SearchResultProps>;
 export type FcPropAddCardMenu = FC<AddCardMenuProps>;
@@ -99,7 +103,7 @@ export type ExtensionData_Renderer = {
         scrollBottom: FC[];
         pinCategory: FC[];
         recentlyCategory: FC[];
-        allCategory: FC[];
+        allCategory: FcPropCardData[];
       };
     };
     audio: {
@@ -147,12 +151,12 @@ export type ExtensionData_Renderer = {
   addReducer: {name: string; reducer: Reducer}[];
   cards: {
     replace: FcPropCard | undefined;
-    replaceComponent: FC | undefined;
+    replaceComponent: FcPropCardData | undefined;
     customize: {
-      header: FC | undefined;
-      body: FC | undefined;
-      footer: FC | undefined;
-      menu: {replace: FC | undefined; addSection: FcPropAddCardMenu[]};
+      header: FcPropCardData | undefined;
+      body: FcPropCardData | undefined;
+      footer: FcPropCardData | undefined;
+      menu: {replace: FcPropCardData | undefined; addSection: FcPropAddCardMenu[]};
     };
   };
 };
