@@ -40,8 +40,6 @@ export const CardMenu = observer(() => {
       ))}
       <Dropdown
         type="menu"
-        // @ts-ignore-next-line
-        placement="auto" // TODO: fix this
         isOpen={menuIsOpen}
         closeOnSelect={false}
         onOpenChange={setMenuIsOpen}
