@@ -43,10 +43,11 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
             {isNil(ReplaceCards) ? (
               sortedCards.map((card, index) => {
                 const isInstalled = installedCards.some(iCard => iCard.id === card.id);
+                const context = new CardsDataManager(card, isInstalled);
                 return (
-                  <CardContext.Provider key={`cardProv-${index}`} value={new CardsDataManager(card, isInstalled)}>
+                  <CardContext.Provider value={context} key={`cardProv-${index}`}>
                     {ReplaceComponent ? (
-                      <ReplaceComponent key={`${card.id}-card-key`} />
+                      <ReplaceComponent context={context} key={`${card.id}-card-key`} />
                     ) : (
                       <LynxCard key={`${card.id}-card-key`} />
                     )}

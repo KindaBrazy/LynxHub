@@ -36,7 +36,7 @@ export const CardMenu = observer(() => {
   return (
     <div className="flex">
       {extensionAddMenu.map((AddMenu, index) => (
-        <AddMenu key={index} addMenu={addMenu} />
+        <AddMenu key={index} addMenu={addMenu} context={useCardData()} />
       ))}
       <Dropdown
         type="menu"

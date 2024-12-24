@@ -2,11 +2,19 @@ import {Reducer} from '@reduxjs/toolkit';
 import {FC} from 'react';
 import {RouteObject} from 'react-router';
 
-import {FcProp, FcPropAddCardMenu, FcPropCard, FcPropReplaceMd, FcPropSearchResult} from './ExtensionTypes_Renderer';
+import {
+  FcProp,
+  FcPropAddCardMenu,
+  FcPropCard,
+  FcPropCardData,
+  FcPropReplaceMd,
+  FcPropSearchResult,
+} from './ExtensionTypes_Renderer';
 
 type CompFc = (component: FC) => void;
 type CompFcProp = (component: FcProp) => void;
 type CompFcPropCard = (component: FcPropCard) => void;
+type CompFcPropCardData = (component: FcPropCardData) => void;
 type CompFcPropSearchResult = (component: FcPropSearchResult) => void;
 type CompFcPropAddCardMenu = (component: FcPropAddCardMenu) => void;
 type CompFcPropReplaceMd = (component: FcPropReplaceMd) => void;
@@ -209,7 +217,7 @@ export type ExtensionRendererApi = {
         recentlyCategory: CompFc;
         /** Add elements to the end of the "all categories" section.
          * @see {@linkcode AllCardsSection} for implementation details. */
-        allCategory: CompFc;
+        allCategory: CompFcPropCardData;
       };
     };
 
@@ -296,22 +304,22 @@ export type ExtensionRendererApi = {
     replace: CompFcPropCard;
     /** Replace the default card component used to display a single card.
      * @see {@linkcode LynxCard} for implementation details. */
-    replaceComponent: CompFc;
+    replaceComponent: CompFcPropCardData;
     /** Customize various sections of the default card component.
      * @see {@linkcode LynxCard} for implementation details. */
     customize: {
       /** Replace the card's header section. */
-      header: CompFc;
+      header: CompFcPropCardData;
       /** Replace the card's body section. */
-      body: CompFc;
+      body: CompFcPropCardData;
       /** Replace the card's footer section. */
-      footer: CompFc;
+      footer: CompFcPropCardData;
       /** Customize the card's menu.
        * @see {@linkcode CardMenu} for implementation details. */
       menu: {
         /** Replace the default card menu.
          * @see {@linkcode CardMenu} for implementation details. */
-        replace: CompFc;
+        replace: CompFcPropCardData;
         /** Add sections and items to the card menu.
          * @see {@linkcode CardMenu} for implementation details. */
         addSection: CompFcPropAddCardMenu;

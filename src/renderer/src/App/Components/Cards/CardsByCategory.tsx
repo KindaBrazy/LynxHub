@@ -45,17 +45,18 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
     <LayoutGroup id={`${cat}_cards_category`}>
       <AnimatePresence>
         {isNil(ReplaceCards) ? (
-          cards.map(card => (
-            <CardContext.Provider
-              key={`cardProv-${card.id}`}
-              value={new CardsDataManager(card, installedCardSet.has(card.id))}>
-              {ReplaceComponent ? (
-                <ReplaceComponent key={`${card.id}-card-key`} />
-              ) : (
-                <LynxCard key={`${card.id}-card-key`} />
-              )}
-            </CardContext.Provider>
-          ))
+          cards.map(card => {
+            const context = new CardsDataManager(card, installedCardSet.has(card.id));
+            return (
+              <CardContext.Provider value={context} key={`cardProv-${card.id}`}>
+                {ReplaceComponent ? (
+                  <ReplaceComponent context={context} key={`${card.id}-card-key`} />
+                ) : (
+                  <LynxCard key={`${card.id}-card-key`} />
+                )}
+              </CardContext.Provider>
+            );
+          })
         ) : (
           <ReplaceCards cards={cards} />
         )}
@@ -89,18 +90,19 @@ const AllCards = () => {
     <LayoutGroup id="all_cards_category">
       <AnimatePresence>
         {isNil(ReplaceCards) ? (
-          sortedCards.map(card => (
-            <CardContext.Provider
-              key={`cardProv-${card.id}`}
-              value={new CardsDataManager(card, installedCardSet.has(card.id))}>
-              {ReplaceComponent ? (
-                <ReplaceComponent key={`${card.id}-card-key`} />
-              ) : (
-                <LynxCard key={`${card.id}-card-key`} />
-              )}
-              {...allCategory.map((All, index) => <All key={index} />)}
-            </CardContext.Provider>
-          ))
+          sortedCards.map(card => {
+            const context = new CardsDataManager(card, installedCardSet.has(card.id));
+            return (
+              <CardContext.Provider value={context} key={`cardProv-${card.id}`}>
+                {ReplaceComponent ? (
+                  <ReplaceComponent context={context} key={`${card.id}-card-key`} />
+                ) : (
+                  <LynxCard key={`${card.id}-card-key`} />
+                )}
+                {...allCategory.map((All, index) => <All key={index} context={context} />)}
+              </CardContext.Provider>
+            );
+          })
         ) : (
           <ReplaceCards cards={sortedCards} />
         )}
@@ -213,10 +215,11 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
       ) : isNil(ReplaceCards) ? (
         filteredCards.map((card, index) => {
           const isInstalled = installedCards.some(iCard => iCard.id === card.id);
+          const context = new CardsDataManager(card, isInstalled);
           return (
-            <CardContext.Provider key={`cardProv-${index}`} value={new CardsDataManager(card, isInstalled)}>
+            <CardContext.Provider value={context} key={`cardProv-${index}`}>
               {ReplaceComponent ? (
-                <ReplaceComponent key={`${card.id}-card-key`} />
+                <ReplaceComponent context={context} key={`${card.id}-card-key`} />
               ) : (
                 <LynxCard key={`${card.id}-card-key`} />
               )}

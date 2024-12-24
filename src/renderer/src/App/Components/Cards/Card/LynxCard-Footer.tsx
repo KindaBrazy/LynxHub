@@ -27,7 +27,7 @@ const LynxCardFooter = observer(() => {
         <StartButton />
         {installed ? (
           ReplaceMenu ? (
-            <ReplaceMenu />
+            <ReplaceMenu context={useCardData()} />
           ) : (
             <CardMenu />
           )
