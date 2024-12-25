@@ -29,7 +29,16 @@ export default defineConfig({
       federation({
         name: 'host-app',
         remotes: {nothing: 'nothing.js'},
-        shared: ['react', 'react-dom', 'react-redux', 'react-router', 'mobx-react-lite'],
+        shared: [
+          'antd',
+          'react',
+          'lodash',
+          'react-dom',
+          'react-redux',
+          'react-router',
+          'mobx-react-lite',
+          '@nextui-org/react',
+        ],
       }),
     ],
     base: '',
