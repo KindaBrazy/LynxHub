@@ -30,11 +30,6 @@ export async function initRouter() {
   } = extensionsData.router.replace;
 
   const childRoutes: RouteObject[] = [
-    /*{
-      Component: TestPage,
-      errorElement: <RouterPagesError />,
-      path: homeRoutePath,
-    },*/
     {
       Component: isNil(homePage) ? HomePage : homePage,
       errorElement: <RouterPagesError />,
