@@ -6,7 +6,7 @@ import {memo, useMemo} from 'react';
 import {extractGitUrl} from '../../../../../cross/CrossUtils';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../assets/icons/SvgIcons/SvgIconsColor';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {useModules} from '../../Modules/ModulesContext';
+import {allCards} from '../../Modules/ModuleLoader';
 import {CardData} from '../../Modules/types';
 import {useCardsState} from '../../Redux/AI/CardsReducer';
 import {searchInStrings} from '../../Utils/UtilFunctions';
@@ -21,11 +21,9 @@ import {CardContext, CardsDataManager} from './CardsDataManager';
  * @returns Array of CardData objects
  */
 const useCardsById = (cardIds: string[]): CardData[] => {
-  const {allCards} = useModules();
-
   const cards = useMemo(() => {
     return cardIds.map(cardId => allCards.find(card => card && card.id === cardId)) as CardData[];
-  }, [allCards, cardIds]);
+  }, [cardIds]);
 
   return cards.filter(Boolean);
 };
@@ -67,7 +65,6 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
 
 /** Renders all available cards */
 const AllCards = () => {
-  const {allCards} = useModules();
   const installedCards = useCardsState('installedCards');
   const installedCardSet = useMemo(() => new Set(installedCards.map(card => card.id)), [installedCards]);
 
@@ -81,7 +78,7 @@ const AllCards = () => {
     const pin = compact(allCards?.filter(card => pinnedCards.includes(card.id)));
     const rest = compact(allCards?.filter(card => !pinnedCards.includes(card.id)));
     return [...pin, ...rest];
-  }, [allCards, pinnedCards]);
+  }, [pinnedCards]);
 
   if (isEmpty(sortedCards) && isEmpty(allCategory))
     return <Empty className="size-full" description="No Card to Display!" />;
@@ -189,7 +186,6 @@ export const AllCardsSection = memo(() => {
 
 export function CardsBySearch({searchValue}: {searchValue: string}) {
   const installedCards = useCardsState('installedCards');
-  const {allCards} = useModules();
 
   const searchData = useMemo(
     () =>
@@ -197,7 +193,7 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
         id: card.id,
         data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
       })),
-    [allCards],
+    [],
   );
 
   const filteredCards = useMemo(

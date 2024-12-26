@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {useModules} from '../../../../../Modules/ModulesContext';
+import {getMethod} from '../../../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../../../Redux/AI/CardsReducer';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
@@ -25,7 +25,6 @@ export const useUpdate = (): DropdownItemProps | undefined => {
   const autoUpdate = useIsAutoUpdateCard(id);
   const webUi = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
-  const {getMethod} = useModules();
   const [customUpdate, setCustomUpdate] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -34,7 +33,7 @@ export const useUpdate = (): DropdownItemProps | undefined => {
     if (getMethod(id, 'manager')?.updater.updateType === 'stepper') {
       setCustomUpdate(true);
     }
-  }, [getMethod, id]);
+  }, [id]);
 
   const onPress = useCallback(() => {
     if (getMethod(id, 'manager')?.updater.startUpdate) {
@@ -70,7 +69,6 @@ export const useCheckForUpdate = (): DropdownItemProps | undefined => {
   const autoUpdate = useIsAutoUpdateCard(id);
   const webUi = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
-  const {getMethod} = useModules();
   const [customUpdate, setCustomUpdate] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -79,7 +77,7 @@ export const useCheckForUpdate = (): DropdownItemProps | undefined => {
     if (getMethod(id, 'manager')?.updater.updateType === 'stepper') {
       setCustomUpdate(true);
     }
-  }, [getMethod, id]);
+  }, [id]);
 
   const onPress = useCallback(() => {
     setCheckingForUpdate(true);
@@ -114,7 +112,6 @@ export const useAutoUpdate = (): DropdownItemProps | undefined => {
   const autoUpdate = useIsAutoUpdateCard(id);
   const updateAvailable = useUpdateAvailable(id);
   const webUi = useInstalledCard(id);
-  const {getMethod} = useModules();
   const [customUpdate, setCustomUpdate] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -123,7 +120,7 @@ export const useAutoUpdate = (): DropdownItemProps | undefined => {
     if (getMethod(id, 'manager')?.updater.updateType === 'stepper') {
       setCustomUpdate(true);
     }
-  }, [getMethod, id]);
+  }, [id]);
 
   const onPress = useCallback(
     () =>

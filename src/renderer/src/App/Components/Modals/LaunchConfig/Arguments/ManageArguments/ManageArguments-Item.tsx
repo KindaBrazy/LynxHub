@@ -2,7 +2,7 @@ import {Dispatch, SetStateAction, useCallback} from 'react';
 
 import {ChosenArgument, ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
 import {getArgumentType} from '../../../../../../../../cross/GetArgumentsData';
-import {useModules} from '../../../../../Modules/ModulesContext';
+import {getArgumentsByID} from '../../../../../Modules/ModuleLoader';
 import {useModalsState} from '../../../../../Redux/AI/ModalsReducer';
 import CheckBoxArgItem from './Items/CheckBoxArg-Item';
 import DirectoryArgItem from './Items/DirectoryArg-Item';
@@ -15,7 +15,6 @@ type Props = {argument: ChosenArgument; setArguments: Dispatch<SetStateAction<Ch
 /** Display the argument manager element based on the argument type: DropDown, Input, Directory, etc. */
 export default function ManageArgumentsItem({argument, setArguments}: Props) {
   const {id} = useModalsState('cardLaunchConfig');
-  const {getArgumentsByID} = useModules();
 
   const removeArg = useCallback(() => {
     setArguments((prevState: ChosenArgumentsData): ChosenArgumentsData => {

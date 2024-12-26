@@ -6,7 +6,7 @@ import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
 import {Folder2_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {Refresh_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {useModules} from '../../../../../../Modules/ModulesContext';
+import {getArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import {useCardsState} from '../../../../../../Redux/AI/CardsReducer';
 import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
 import rendererIpc from '../../../../../../RendererIpc';
@@ -18,7 +18,6 @@ type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (val
 export default function FileArgItem({argument, changeValue, removeArg}: Props) {
   const {id} = useModalsState('cardLaunchConfig');
   const installedCards = useCardsState('installedCards');
-  const {getArgumentsByID} = useModules();
   const [selectedFile, setSelectedFile] = useState(
     argument.value || getArgumentDefaultValue(argument.name, getArgumentsByID(id)) || 'Click to choose file...',
   );

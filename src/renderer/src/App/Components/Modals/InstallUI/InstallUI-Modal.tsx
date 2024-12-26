@@ -3,7 +3,7 @@ import {memo, useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
-import {useModules} from '../../../Modules/ModulesContext';
+import {getMethod} from '../../../Modules/ModuleLoader';
 import {
   CardRendererMethods,
   InstallationMethod,
@@ -34,7 +34,6 @@ const initialState: InstallState = {
 
 const InstallUIModal = memo(() => {
   const {isOpen, cardId, title, type} = useModalsState('installUIModal');
-  const {getMethod} = useModules();
   const installedCard = useInstalledCard(cardId);
 
   const dispatch = useDispatch<AppDispatch>();

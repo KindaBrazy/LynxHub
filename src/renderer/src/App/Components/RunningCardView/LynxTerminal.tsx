@@ -13,7 +13,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
-import {useModules} from '../../Modules/ModulesContext';
+import {getMethod} from '../../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../../Redux/AI/CardsReducer';
 import {useAppState} from '../../Redux/App/AppReducer';
 import {useTerminalState} from '../../Redux/App/TerminalReducer';
@@ -47,7 +47,6 @@ const LynxTerminal = () => {
 
   const {address, id, currentView} = useCardsState('runningCard');
   const darkMode = useAppState('darkMode');
-  const {getMethod} = useModules();
   const dispatch = useDispatch<AppDispatch>();
 
   const [browserBehavior, setBrowserBehavior] = useState<'appBrowser' | 'defaultBrowser' | 'doNothing' | string>(
@@ -117,7 +116,7 @@ const LynxTerminal = () => {
       }
       terminal.current?.write(outputColor ? parseTerminalColors(data) : data);
     },
-    [address, getMethod, id, browserBehavior, outputColor, dispatch],
+    [address, id, browserBehavior, outputColor, dispatch],
   );
 
   const onRightClickRef = useRef<((e: MouseEvent) => void) | null>(null);

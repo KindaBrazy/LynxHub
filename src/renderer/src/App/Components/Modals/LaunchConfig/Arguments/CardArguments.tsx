@@ -3,7 +3,7 @@ import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {ArgumentsPresets, ChosenArgumentsData} from '../../../../../../../cross/CrossTypes';
-import {useModules} from '../../../../Modules/ModulesContext';
+import {getMethod} from '../../../../Modules/ModuleLoader';
 import {useModalsState} from '../../../../Redux/AI/ModalsReducer';
 import rendererIpc from '../../../../RendererIpc';
 import {tabContentVariants} from '../../CardExtensions/Constants';
@@ -27,8 +27,6 @@ export default function CardArguments({chosenArguments, setChosenArguments}: Pro
 
   const addArgumentsModal = useDisclosure();
 
-  const {getMethod} = useModules();
-
   useEffect(() => {
     rendererIpc.storageUtils.getCardArguments(id).then(result => {
       setChosenArguments(result);
@@ -38,7 +36,7 @@ export default function CardArguments({chosenArguments, setChosenArguments}: Pro
   useEffect(() => {
     const getParsedArgs = getMethod(id, 'parseArgsToString');
     if (getParsedArgs) setPreviewText(getParsedArgs(activePreset.arguments));
-  }, [activePreset, getMethod]);
+  }, [activePreset]);
 
   useEffect(() => {
     setPresets(chosenArguments.data.map(arg => arg.preset));

@@ -21,7 +21,7 @@ import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../../../../cross/GetArgumentsData';
 import {Circle_Icon, Filter_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {useModules} from '../../../../../Modules/ModulesContext';
+import {getArgumentsByID} from '../../../../../Modules/ModuleLoader';
 import {useModalsState} from '../../../../../Redux/AI/ModalsReducer';
 import {useAppState} from '../../../../../Redux/App/AppReducer';
 import ArgumentCategory from './ArgumentCategory';
@@ -52,8 +52,6 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
   const [filterArguments, setFilterArguments] = useState<Set<string>>(new Set(['all']));
   const [selectedArguments, setSelectedArguments] = useState<Set<string>>(new Set([]));
   const [searchValue, setSearchValue] = useState<string>('');
-
-  const {getArgumentsByID} = useModules();
 
   const listData = useMemo(
     () =>
@@ -106,7 +104,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
       return {...prevState, data};
     });
     onClose();
-  }, [selectedArguments, getArgumentsByID, id, onClose]);
+  }, [selectedArguments, id, onClose]);
 
   return (
     <Modal

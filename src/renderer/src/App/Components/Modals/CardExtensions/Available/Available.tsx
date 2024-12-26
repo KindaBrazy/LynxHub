@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 
 import {validateGitRepoUrl} from '../../../../../../../cross/CrossUtils';
 import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {useModules} from '../../../../Modules/ModulesContext';
+import {getMethod} from '../../../../Modules/ModuleLoader';
 import {useModalsState} from '../../../../Redux/AI/ModalsReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import RenderItem from './RenderItem';
@@ -29,7 +29,6 @@ export default function Available({visible, updateTable, installedExtensions}: P
   const [searchedData, setSearchedData] = useState<ExtensionsInfo[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
-  const {getMethod} = useModules();
 
   useEffect(() => {
     setSearchedData(
@@ -61,7 +60,7 @@ export default function Available({visible, updateTable, installedExtensions}: P
     }
 
     if (visible) fetchModules();
-  }, [visible, getMethod]);
+  }, [visible]);
 
   const onPageSizeChange: PaginationProps['onShowSizeChange'] = (_, pageSize) => {
     setPageSize(pageSize);
