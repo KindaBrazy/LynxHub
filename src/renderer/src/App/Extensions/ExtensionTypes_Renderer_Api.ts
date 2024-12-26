@@ -2,6 +2,7 @@ import {Reducer} from '@reduxjs/toolkit';
 import {FC} from 'react';
 import {RouteObject} from 'react-router';
 
+import {ModuleData} from '../Modules/ModuleLoader';
 import {
   FcProp,
   FcPropAddCardMenu,
@@ -326,4 +327,5 @@ export type ExtensionRendererApi = {
       };
     };
   };
+  modulesData?: ModuleData;
 };
