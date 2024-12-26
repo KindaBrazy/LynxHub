@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router';
 
 import {toMs} from '../../../../cross/CrossUtils';
 import StorageTypes from '../../../../cross/StorageTypes';
-import {useModules} from '../Modules/ModulesContext';
+import {getMethod} from '../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../Redux/AI/CardsReducer';
 import {appActions} from '../Redux/App/AppReducer';
 import {settingsActions} from '../Redux/App/SettingsReducer';
@@ -17,7 +17,6 @@ import rendererIpc from '../RendererIpc';
 export const useCheckCardsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
   const installedCards = useCardsState('installedCards');
-  const {getMethod} = useModules();
 
   useEffect(() => {
     rendererIpc.module.onCardsUpdateAvailable((_e, result) => {
@@ -35,7 +34,7 @@ export const useCheckCardsUpdate = () => {
       };
     });
     rendererIpc.module.checkCardsUpdateInterval(compact(updateMethod));
-  }, [installedCards, getMethod]);
+  }, [installedCards]);
 };
 
 export const useCheckModulesUpdate = () => {

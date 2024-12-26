@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import {extractGitUrl} from '../../../../../../cross/CrossUtils';
 import {Download2_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
 import {Play_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
-import {useModules} from '../../../Modules/ModulesContext';
+import {getMethod} from '../../../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../../../Redux/AI/CardsReducer';
 import {modalActions} from '../../../Redux/AI/ModalsReducer';
 import {useSettingsState} from '../../../Redux/App/SettingsReducer';
@@ -16,7 +16,6 @@ import {useCardData} from '../CardsDataManager';
 
 const StartButton = memo(() => {
   const {id, installed, repoUrl, title, type, extensionsDir} = useCardData();
-  const {getMethod} = useModules();
   const compactMode = useSettingsState('cardsCompactMode');
   const autoUpdateExtensions = useIsAutoUpdateExtensions(id);
 
@@ -72,7 +71,7 @@ const StartButton = memo(() => {
         );
       });
     }
-  }, [repoUrl, title, id, getMethod, dispatch]);
+  }, [repoUrl, title, id, dispatch]);
 
   return (
     <Button

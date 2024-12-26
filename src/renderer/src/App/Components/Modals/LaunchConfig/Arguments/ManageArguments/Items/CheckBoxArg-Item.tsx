@@ -5,7 +5,7 @@ import {useMemo} from 'react';
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDescription} from '../../../../../../../../../cross/GetArgumentsData';
 import {CheckBox_Icon, Close_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {useModules} from '../../../../../../Modules/ModulesContext';
+import {getArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
 
 const {Text} = Typography;
@@ -13,7 +13,6 @@ type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (val
 
 export default function CheckBoxArgItem({argument, removeArg}: Props) {
   const {id} = useModalsState('cardLaunchConfig');
-  const {getArgumentsByID} = useModules();
 
   const tooltipText = useMemo(() => getArgumentDescription(argument.name, getArgumentsByID(id)), [argument]);
 

@@ -4,7 +4,7 @@ import {ChangeEvent, useCallback, useState} from 'react';
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
 import {Text_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {useModules} from '../../../../../../Modules/ModulesContext';
+import {getArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
 import ArgumentItemBase from './Argument-Item-Base';
 
@@ -12,7 +12,6 @@ type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (val
 
 export default function InputArgItem({argument, changeValue, removeArg}: Props) {
   const {id} = useModalsState('cardLaunchConfig');
-  const {getArgumentsByID} = useModules();
   const [inputValue, setInputValue] = useState<string>(
     argument.value || getArgumentDefaultValue(argument.name, getArgumentsByID(id)) || '',
   );
