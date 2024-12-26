@@ -57,7 +57,7 @@ const loadModules = async () => {
     const newAllCards: CardData[] = [];
 
     // Optimize module and card aggregation using reduce for better performance
-    importedModules.reduce((_, {module}) => {
+    importedModules.reduce((acc, {module}) => {
       const importedModule = module as RendererModuleImportType;
 
       importedModule.setCurrentBuild?.(APP_BUILD_NUMBER);
@@ -80,14 +80,13 @@ const loadModules = async () => {
         }
       });
 
-      return _;
+      return acc;
     }, {});
 
     allModules = newAllModules;
     allCards = newAllCards;
   } catch (error) {
     console.error('Error importing modules:', error);
-    // Consider implementing error handling or retry mechanisms here
     throw error; // Re-throw to allow for handling at a higher level if needed
   }
 };
@@ -96,6 +95,14 @@ const loadModules = async () => {
 rendererIpc.module.onReload(() => {
   loadModules();
 });
+
+export type ModuleData = {
+  allModules: CardModules;
+  allCards: CardData[];
+  getArgumentsByID: (id: string) => ArgumentsData | undefined;
+  getCardsByPath: (path: AvailablePages) => CardData[] | undefined;
+  getMethod: <T extends keyof CardRendererMethods>(id: string, method: T) => CardRendererMethods[T] | undefined;
+};
 
 export {allCards, allModules, getArgumentsByID, getCardsByPath, getMethod};
 
