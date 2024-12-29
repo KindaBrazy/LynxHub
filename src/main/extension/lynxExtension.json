@@ -6,6 +6,11 @@
   "repoUrl": "https://github.com/KindaBrazy/LynxHub",
   "version": "1.2.0",
   "updateDate": "2024-11-27 14:05",
+  "platforms": [
+    "linux",
+    "win32",
+    "darwin"
+  ],
   "changeLog": [
     {
       "title": "Version 1.2.0 Release Notes",
