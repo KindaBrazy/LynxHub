@@ -139,6 +139,14 @@ export function PreviewFooter({
   const [installing, setInstalling] = useState<boolean>(false);
   const [uninstalling, setUninstalling] = useState<boolean>(false);
 
+  const [isCompatible, setIsCompatible] = useState<boolean>(true);
+
+  useEffect(() => {
+    rendererIpc.win.getSystemInfo().then(result => {
+      setIsCompatible(selectedExt?.platforms.includes(result.os) || false);
+    });
+  }, [selectedExt]);
+
   const later = useCallback(() => {
     Modal.destroyAll();
   }, []);
@@ -257,8 +265,12 @@ export function PreviewFooter({
             )}
           </>
         ) : (
-          <Button color="success" isLoading={installing} onPress={installExtension}>
-            Install
+          <Button
+            isLoading={installing}
+            isDisabled={!isCompatible}
+            onPress={installExtension}
+            color={isCompatible ? 'success' : 'warning'}>
+            {isCompatible ? 'Install' : 'Not Compatible'}
           </Button>
         )}
       </ButtonGroup>
