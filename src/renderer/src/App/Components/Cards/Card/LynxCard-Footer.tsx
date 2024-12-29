@@ -34,11 +34,10 @@ const LynxCardFooter = observer(() => {
         ) : (
           <Button
             radius="sm"
-            variant="faded"
             onPress={openDoc}
-            className="cursor-default"
             size={compactMode ? 'sm' : 'md'}
-            startContent={<Document_Icon className={`size-full ${compactMode ? 'm-2' : 'm-2.5'}`} />}
+            className="cursor-default bg-foreground-200 dark:bg-foreground-100"
+            startContent={<Document_Icon className={`size-5 ${compactMode ? 'm-2' : 'm-2.5'}`} />}
             isIconOnly
           />
         )}
