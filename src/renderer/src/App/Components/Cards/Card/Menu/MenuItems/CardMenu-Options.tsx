@@ -14,13 +14,12 @@ import {useCardData} from '../../../CardsDataManager';
 
 export const useLaunchConfig = (): DropdownItemProps => {
   const dispatch = useDispatch<AppDispatch>();
-  const {id, setMenuIsOpen, title, repoUrl, haveArguments} = useCardData();
-  const {name: devName} = useDevInfo(repoUrl);
+  const {id, setMenuIsOpen, title, haveArguments} = useCardData();
 
   const onPress = useCallback(() => {
-    dispatch(modalActions.openCardLaunchConfig({id: id, title: `${title} (${devName}) Launch Config`, haveArguments}));
+    dispatch(modalActions.openCardLaunchConfig({id: id, title: `${title} Launch Config`, haveArguments}));
     setMenuIsOpen(false);
-  }, [dispatch, id, title, devName, haveArguments, setMenuIsOpen]);
+  }, [dispatch, id, title, haveArguments, setMenuIsOpen]);
 
   return useMemo(
     () => ({
