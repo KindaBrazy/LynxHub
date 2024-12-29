@@ -88,11 +88,10 @@ const StartButton = memo(() => {
       }
       radius="sm"
       size={compactMode ? 'sm' : 'md'}
-      className="z-[11] hover:scale-[1.03]"
       onPress={installed ? startAi : install}
-      variant={installed ? 'shadow' : 'faded'}
       isDisabled={!!updating || isUpdatingExt}
       color={installed ? 'primary' : 'default'}
+      className={`z-[11] hover:scale-[1.03] ${!installed && 'bg-foreground-200 dark:bg-foreground-100'}`}
       fullWidth
     />
   );

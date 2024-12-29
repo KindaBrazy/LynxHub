@@ -28,9 +28,6 @@ export const CardMenu = observer(() => {
     [menuSections],
   );
 
-  const buttonSize = useMemo(() => (compactMode ? 'sm' : 'md'), [compactMode]);
-  const menuIcon = useMemo(() => !updating && <MenuDots_Icon className="size-full m-2 rotate-90" />, [updating]);
-
   const extensionAddMenu = useMemo(() => extensionsData.cards.customize.menu.addSection, []);
 
   return (
@@ -49,11 +46,10 @@ export const CardMenu = observer(() => {
         <DropdownTrigger>
           <Button
             radius="sm"
-            variant="faded"
-            size={buttonSize}
             isLoading={!!updating}
-            startContent={menuIcon}
-            className="cursor-default"
+            size={compactMode ? 'sm' : 'md'}
+            className="cursor-default bg-foreground-200 dark:bg-foreground-100"
+            startContent={!updating && <MenuDots_Icon className="size-[1.3rem] m-2 rotate-90" />}
             isIconOnly
           />
         </DropdownTrigger>
