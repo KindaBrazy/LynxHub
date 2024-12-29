@@ -28,6 +28,19 @@ export type DevInfo = {
   picUrl: string;
 };
 
+export type OsPlatforms =
+  | 'aix'
+  | 'android'
+  | 'darwin'
+  | 'freebsd'
+  | 'haiku'
+  | 'linux'
+  | 'openbsd'
+  | 'sunos'
+  | 'win32'
+  | 'cygwin'
+  | 'netbsd';
+
 export type ChosenArgument = {name: string; value: string};
 export type ArgumentsPresets = {preset: string; arguments: ChosenArgument[]};
 export type ChosenArgumentsData = {activePreset: string; data: ArgumentsPresets[]};
@@ -141,6 +154,7 @@ export type Extension_ListData = {
   url: string;
   avatarUrl?: string;
   tag: 'tools' | 'feature' | 'games';
+  platforms: OsPlatforms[];
 };
 
 export type ExtensionsInfo = {
@@ -166,6 +180,7 @@ export type ExtensionsInfo = {
    */
   avatarUrl?: string;
   tag: 'tools' | 'feature' | 'games';
+  platforms: OsPlatforms[];
 };
 
 export type AppUpdateInfo = {
