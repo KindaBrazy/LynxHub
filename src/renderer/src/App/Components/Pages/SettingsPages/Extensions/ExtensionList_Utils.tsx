@@ -19,6 +19,7 @@ import {EXTENSION_CONTAINER} from '../../../../../../../cross/CrossConstants';
 import {Extension_ListData, ExtensionsInfo} from '../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Linux_Icon, MacOS_Icon, Windows_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
 import {useSettingsState} from '../../../../Redux/App/SettingsReducer';
 import {ExtFilter} from './ExtensionList';
 
@@ -34,7 +35,7 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<Extension_Li
         const extensions = (await response.json()) as ExtensionsInfo[];
 
         const data: Extension_ListData[] = extensions.map(ext => {
-          const {id, repoUrl, title, description, avatarUrl, updateDate, version, changeLog, tag} = ext;
+          const {id, repoUrl, title, description, avatarUrl, updateDate, version, changeLog, tag, platforms} = ext;
           const {owner} = extractGitUrl(repoUrl);
 
           return {
@@ -48,6 +49,7 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<Extension_Li
             avatarUrl,
             developer: owner,
             tag,
+            platforms,
           };
         });
 
@@ -180,7 +182,7 @@ export function useRenderList(
               className="inset-y-0 left-0 w-[0.15rem] bg-secondary absolute"
             />
           )}
-          <div className="flex flex-col gap-y-1">
+          <div className="flex flex-col">
             <Skeleton isLoaded={!isLoaded} className="rounded-lg">
               <User
                 description={
@@ -216,6 +218,11 @@ export function useRenderList(
             <Skeleton isLoaded={!isLoaded} className="rounded-lg">
               <Typography.Paragraph>{item.description}</Typography.Paragraph>
             </Skeleton>
+            <div className="flex flex-row items-center gap-x-2">
+              {item.platforms.includes('linux') && <Linux_Icon className="size-5 text-[#FF9800]" />}
+              {item.platforms.includes('win32') && <Windows_Icon className="size-5 text-[#4285F4]" />}
+              {item.platforms.includes('darwin') && <MacOS_Icon className="size-5" />}
+            </div>
           </div>
         </List.Item>
       );
