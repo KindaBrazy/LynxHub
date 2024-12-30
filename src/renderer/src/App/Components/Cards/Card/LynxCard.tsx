@@ -44,10 +44,10 @@ const LynxCard = observer(() => {
         className={`z-10 ${isPinned ? 'block opacity-100' : 'hidden opacity-0'} transition duration-500`}>
         <motion.div
           layout="position"
-          layoutId={`${id}_card`}
-          exit={{scale: 0.9, opacity: 0}}
-          animate={{scale: 1, opacity: 1}}
-          initial={{scale: 0.9, opacity: 0}}>
+          exit={{opacity: 0}}
+          animate={{opacity: 1}}
+          initial={{opacity: 0}}
+          layoutId={`${id}_card`}>
           <Card
             className={
               ` ${compactMode ? 'w-[230px]' : 'w-[277px]'} h-fit cursor-default shadow-md !transition ` +
