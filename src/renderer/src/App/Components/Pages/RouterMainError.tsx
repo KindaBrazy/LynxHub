@@ -34,10 +34,10 @@ export default function RouterMainError() {
   return (
     <Result
       extra={[
-        <Button key="refresh" color="warning" onClick={handleReload} className="notDraggable">
+        <Button key="reload" color="warning" onPress={handleReload} className="notDraggable">
           Reload
         </Button>,
-        <Button key="refresh" color="danger" onClick={handleRestart} className="notDraggable">
+        <Button key="restart" color="danger" onPress={handleRestart} className="notDraggable">
           Restart
         </Button>,
       ]}
