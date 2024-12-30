@@ -55,14 +55,6 @@ Seamlessly install, configure, launch, and manage your AI interfaces from a sing
 | **Debian, Ubuntu** (.deb)        | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-linux_amd64.deb)   | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-linux_arm64.deb)   |
 | **Red Hat, Fedora, SUSE** (.rpm) | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-linux_x86_64.rpm)  | [**V2.0.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.0.0/LynxHub-V2.0.0-linux_aarch64.rpm) |
 
-> [!NOTE]
-> 🌟 **Exclusive Early Access**
->
-> Join [Patreon](https://www.patreon.com/LynxHub) to gain **Early Access** to the **new features, bug
-fixes, and compatibilities**
->
-> For more details, check out [❤️‍🔥 Support](#%EF%B8%8F-support) section.
-
 ## 🗂️ Table of Contents
 
 - ✨ [Feature Overview](#-feature-overview)
