@@ -63,10 +63,10 @@ export default function RouterPagesError() {
             <Button size="sm" key="home" color="primary" onPress={handleBackHome}>
               Back Home
             </Button>,
-            <Button size="sm" key="refresh" color="warning" onClick={handleReload}>
+            <Button size="sm" key="reload" color="warning" onPress={handleReload}>
               Reload
             </Button>,
-            <Button size="sm" key="refresh" color="danger" onClick={handleRestart}>
+            <Button size="sm" key="restart" color="danger" onPress={handleRestart}>
               Restart
             </Button>,
           ]}
