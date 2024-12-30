@@ -1,5 +1,5 @@
-import {DropdownItemProps} from '@nextui-org/react';
-import {useCallback, useMemo} from 'react';
+import {DropdownItem} from '@nextui-org/react';
+import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Document_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
@@ -9,7 +9,7 @@ import {AppDispatch} from '../../../../../Redux/Store';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
 import {useCardData} from '../../../CardsDataManager';
 
-export const useInfo = (): DropdownItemProps => {
+export const MenuInfo = () => {
   const {id, extensionsDir, repoUrl, setMenuIsOpen, title} = useCardData();
   const {name} = useDevInfo(repoUrl);
   const dispatch = useDispatch<AppDispatch>();
@@ -19,19 +19,18 @@ export const useInfo = (): DropdownItemProps => {
     setMenuIsOpen(false);
   }, [dispatch, id, name, extensionsDir, title, repoUrl, setMenuIsOpen]);
 
-  return useMemo(
-    () => ({
-      className: 'cursor-default',
-      key: 'information',
-      onPress,
-      startContent: <Info_Icon />,
-      title: 'Information',
-    }),
-    [onPress],
+  return (
+    <DropdownItem
+      key="information"
+      onPress={onPress}
+      title="Information"
+      className="cursor-default"
+      startContent={<Info_Icon />}
+    />
   );
 };
 
-export const useREADME = (): DropdownItemProps => {
+export const MenuReadme = () => {
   const {repoUrl, title, setMenuIsOpen} = useCardData();
 
   const dispatch = useDispatch<AppDispatch>();
@@ -41,14 +40,13 @@ export const useREADME = (): DropdownItemProps => {
     setMenuIsOpen(false);
   }, [dispatch, repoUrl, setMenuIsOpen]);
 
-  return useMemo(
-    () => ({
-      className: 'cursor-default',
-      key: 'readme',
-      onPress,
-      startContent: <Document_Icon />,
-      title: 'README',
-    }),
-    [onPress],
+  return (
+    <DropdownItem
+      key="readme"
+      title="ReadMe"
+      onPress={onPress}
+      className="cursor-default"
+      startContent={<Document_Icon />}
+    />
   );
 };
