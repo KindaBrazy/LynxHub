@@ -18,7 +18,7 @@ const LynxCardBody = observer(() => {
     repoDetails && (
       <>
         <CardBody className="flex flex-row items-center justify-center gap-x-2 bg-[#f7f7f7] text-xs dark:bg-[#292929]">
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center justify-center hover:opacity-50 transition duration-300">
             <span className="font-bold">{formatNumber(repoDetails.stars)}</span>
             <div className="flex flex-row items-center">
               <Star_Icon className="fill-yellow-500 mx-1" />
@@ -28,7 +28,7 @@ const LynxCardBody = observer(() => {
 
           <Divider type="vertical" />
 
-          <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center justify-center hover:opacity-50 transition duration-300">
             <span className="font-bold">{formatNumber(repoDetails.forks)}</span>
 
             <div className="flex flex-row items-center">
@@ -41,7 +41,7 @@ const LynxCardBody = observer(() => {
             <>
               <Divider type="vertical" />
 
-              <div className="flex flex-col items-center justify-center">
+              <div className="flex flex-col items-center justify-center hover:opacity-50 transition duration-300">
                 <span className="font-bold">{formatSizeKB(repoDetails.size)}</span>
 
                 <div className="flex flex-row items-center">
