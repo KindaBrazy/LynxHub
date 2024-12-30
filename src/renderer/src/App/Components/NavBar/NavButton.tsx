@@ -85,7 +85,7 @@ export default function NavButton({children, pageId, title, badge}: Props) {
           <Badge dot={badge} status="processing" color={getColor('success')} classNames={{root: 'size-full'}}>
             <div
               className={`transition duration-300 group-hover:scale-110 ${
-                isSelected ? 'opacity-100 group-hover:opacity-100' : 'opacity-40 group-hover:opacity-60 dark:opacity-40'
+                isSelected ? 'opacity-100 group-hover:opacity-100' : 'opacity-40 group-hover:opacity-60'
               }`}>
               {children}
             </div>
