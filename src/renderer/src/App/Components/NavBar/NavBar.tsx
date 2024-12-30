@@ -18,7 +18,7 @@ const NAV_BAR_STYLE = {
 const COMMON_STYLES =
   `${NAV_BAR_STYLE.width} ${NAV_BAR_STYLE.bgColor} ${NAV_BAR_STYLE.shadow} ${NAV_BAR_STYLE.paddingY}` +
   ` ${NAV_BAR_STYLE.gapY} flex relative min-h-16 flex-col flex-nowrap overflow-y-scroll rounded-full ` +
-  `scrollbar-hide drop-shadow-md border border-foreground/5`;
+  `scrollbar-hide drop-shadow-md border border-foreground-200/50 `;
 
 /** Navigation bar containing two sections: Contents and Settings */
 const NavBar = memo(() => {
