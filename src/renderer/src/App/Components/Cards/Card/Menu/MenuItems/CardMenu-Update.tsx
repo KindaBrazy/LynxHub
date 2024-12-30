@@ -1,5 +1,5 @@
-import {Checkbox, DropdownItemProps, Spinner} from '@nextui-org/react';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {Checkbox, DropdownItem, Spinner} from '@nextui-org/react';
+import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
@@ -18,7 +18,7 @@ import {
 } from '../../../../../Utils/UtilHooks';
 import {useCardData} from '../../../CardsDataManager';
 
-export const useUpdate = (): DropdownItemProps | undefined => {
+export const MenuUpdate = () => {
   const {id, repoUrl, setMenuIsOpen, title} = useCardData();
   const {name: devName} = useDevInfo(repoUrl);
   const updating = useUpdatingCard(id);
@@ -46,25 +46,24 @@ export const useUpdate = (): DropdownItemProps | undefined => {
     }
   }, [webUi, dispatch, devName, id, title, setMenuIsOpen, customUpdate]);
 
-  return useMemo(
-    () =>
-      !customUpdate && (!updateAvailable || autoUpdate)
-        ? undefined
-        : {
-            className: `cursor-default ${!customUpdate && 'text-success'}`,
-            color: customUpdate ? 'default' : 'success',
-            endContent: updating ? <Spinner size="sm" color="primary" /> : undefined,
-            isDisabled: !!updating,
-            key: 'update',
-            onPress,
-            startContent: <Download_Icon />,
-            title: 'Update',
-          },
-    [updateAvailable, autoUpdate, onPress, updating, customUpdate],
+  if (!customUpdate && (!updateAvailable || autoUpdate))
+    return <DropdownItem className="hidden" key="update-hidden" textValue="update_hidden" />;
+
+  return (
+    <DropdownItem
+      key="update"
+      title="Update"
+      onPress={onPress}
+      isDisabled={!!updating}
+      startContent={<Download_Icon />}
+      color={customUpdate ? 'default' : 'success'}
+      endContent={updating && <Spinner size="sm" color="primary" />}
+      className={`cursor-default ${!customUpdate && 'text-success'}`}
+    />
   );
 };
 
-export const useCheckForUpdate = (): DropdownItemProps | undefined => {
+export const MenuCheckForUpdate = () => {
   const {id, checkingForUpdate, setCheckingForUpdate} = useCardData();
   const autoUpdate = useIsAutoUpdateCard(id);
   const webUi = useInstalledCard(id);
@@ -87,26 +86,25 @@ export const useCheckForUpdate = (): DropdownItemProps | undefined => {
         setCheckingForUpdate(false);
       });
     }
-  }, [webUi, dispatch, id]);
+  }, [webUi, id]);
 
-  return useMemo(
-    () =>
-      updateAvailable || autoUpdate || customUpdate
-        ? undefined
-        : {
-            className: 'cursor-default',
-            endContent: checkingForUpdate ? <Spinner size="sm" color="primary" /> : undefined,
-            isDisabled: checkingForUpdate,
-            key: 'check-update',
-            onPress,
-            startContent: <Refresh_Icon />,
-            title: 'Check Now',
-          },
-    [updateAvailable, autoUpdate, onPress, checkingForUpdate, customUpdate],
+  if (updateAvailable || autoUpdate || customUpdate)
+    return <DropdownItem className="hidden" key="check-update-hidden" textValue="check_update_hidden" />;
+
+  return (
+    <DropdownItem
+      title="Check Now"
+      onPress={onPress}
+      key="check-update"
+      className="cursor-default"
+      isDisabled={checkingForUpdate}
+      startContent={<Refresh_Icon />}
+      endContent={checkingForUpdate && <Spinner size="sm" color="primary" />}
+    />
   );
 };
 
-export const useAutoUpdate = (): DropdownItemProps | undefined => {
+export const MenuAutoUpdate = () => {
   const {id, repoUrl, title} = useCardData();
   const {name: devName} = useDevInfo(repoUrl);
   const autoUpdate = useIsAutoUpdateCard(id);
@@ -135,21 +133,13 @@ export const useAutoUpdate = (): DropdownItemProps | undefined => {
     }
   }, [autoUpdate, updateAvailable, webUi, dispatch, devName, id, title]);
 
-  return useMemo(
-    () =>
-      customUpdate
-        ? undefined
-        : {
-            className: 'cursor-default',
-            key: 'auto-update',
-            onPress,
-            textValue: 'Auto Update',
-            title: (
-              <Checkbox size="sm" isSelected={autoUpdate} onValueChange={onPress} className="cursor-default">
-                Auto Update
-              </Checkbox>
-            ),
-          },
-    [onPress, autoUpdate, customUpdate],
+  if (customUpdate) return <DropdownItem className="hidden" key="auto-update-hidden" textValue="auto_update_hidden" />;
+
+  return (
+    <DropdownItem key="auto-update" onPress={onPress} textValue="Auto Update" className="cursor-default">
+      <Checkbox size="sm" isSelected={autoUpdate} onValueChange={onPress} classNames={{hiddenInput: 'cursor-default'}}>
+        Auto Update
+      </Checkbox>
+    </DropdownItem>
   );
 };

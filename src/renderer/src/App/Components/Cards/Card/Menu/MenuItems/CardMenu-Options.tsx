@@ -1,4 +1,4 @@
-import {DropdownItemProps} from '@nextui-org/react';
+import {DropdownItem} from '@nextui-org/react';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -12,28 +12,28 @@ import {useDevInfo} from '../../../../../Utils/LocalStorage';
 import {useInstalledCard, useIsPinnedCard} from '../../../../../Utils/UtilHooks';
 import {useCardData} from '../../../CardsDataManager';
 
-export const useLaunchConfig = (): DropdownItemProps => {
+export const MenuLaunchConfig = () => {
+  console.log('MenuLaunchConfig');
   const dispatch = useDispatch<AppDispatch>();
   const {id, setMenuIsOpen, title, haveArguments} = useCardData();
 
   const onPress = useCallback(() => {
     dispatch(modalActions.openCardLaunchConfig({id: id, title: `${title} Launch Config`, haveArguments}));
     setMenuIsOpen(false);
-  }, [dispatch, id, title, haveArguments, setMenuIsOpen]);
+  }, []);
 
-  return useMemo(
-    () => ({
-      className: 'cursor-default',
-      key: 'launch-config',
-      onPress,
-      startContent: <SettingsMinimal_Icon />,
-      title: 'Launch Config',
-    }),
-    [onPress],
+  return (
+    <DropdownItem
+      onPress={onPress}
+      key="launch-config"
+      title="Launch Config"
+      className="cursor-default"
+      startContent={<SettingsMinimal_Icon />}
+    />
   );
 };
 
-export const useExtensions = (): DropdownItemProps | undefined => {
+export const MenuExtensions = () => {
   const dispatch = useDispatch<AppDispatch>();
   const {id, repoUrl, extensionsDir, setMenuIsOpen, title} = useCardData();
   const {name: devName} = useDevInfo(repoUrl);
@@ -51,22 +51,20 @@ export const useExtensions = (): DropdownItemProps | undefined => {
     setMenuIsOpen(false);
   }, [card, dispatch, extensionsDir, title, devName, setMenuIsOpen]);
 
-  return useMemo(
-    () =>
-      extensionsDir
-        ? {
-            className: 'cursor-default',
-            key: 'extensions',
-            onPress,
-            startContent: <Extensions2_Icon />,
-            title: 'Extensions',
-          }
-        : undefined,
-    [onPress],
+  return extensionsDir ? (
+    <DropdownItem
+      key="extensions"
+      onPress={onPress}
+      title="Extensions"
+      className="cursor-default"
+      startContent={<Extensions2_Icon />}
+    />
+  ) : (
+    <DropdownItem className="hidden" key="extensions-hidden" textValue="extensions_hidden" />
   );
 };
 
-export const usePin = (): DropdownItemProps => {
+export const MenuPin = () => {
   const {id} = useCardData();
   const isPinned = useIsPinnedCard(id);
 
@@ -81,14 +79,13 @@ export const usePin = (): DropdownItemProps => {
     [isPinned],
   );
 
-  return useMemo(
-    () => ({
-      className: 'cursor-default',
-      key: 'pin-unpin',
-      onPress,
-      startContent,
-      title,
-    }),
-    [onPress, title, startContent],
+  return (
+    <DropdownItem
+      title={title}
+      key="pin-unpin"
+      onPress={onPress}
+      className="cursor-default"
+      startContent={startContent}
+    />
   );
 };
