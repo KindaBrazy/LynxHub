@@ -218,11 +218,14 @@ export function useRenderList(
             <Skeleton isLoaded={!isLoaded} className="rounded-lg">
               <Typography.Paragraph>{item.description}</Typography.Paragraph>
             </Skeleton>
-            <div className="flex flex-row items-center gap-x-2">
-              {item.platforms.includes('linux') && <Linux_Icon className="size-5 text-[#FF9800]" />}
-              {item.platforms.includes('win32') && <Windows_Icon className="size-5 text-[#4285F4]" />}
-              {item.platforms.includes('darwin') && <MacOS_Icon className="size-5" />}
-            </div>
+
+            <Skeleton isLoaded={!isLoaded} className="rounded-lg">
+              <div className="flex flex-row items-center gap-x-2">
+                {item.platforms.includes('linux') && <Linux_Icon className="size-5 text-[#FF9800]" />}
+                {item.platforms.includes('win32') && <Windows_Icon className="size-5 text-[#4285F4]" />}
+                {item.platforms.includes('darwin') && <MacOS_Icon className="size-5" />}
+              </div>
+            </Skeleton>
           </div>
         </List.Item>
       );
