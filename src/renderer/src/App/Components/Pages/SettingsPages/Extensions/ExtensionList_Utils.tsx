@@ -15,23 +15,24 @@ import {motion} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {EXTENSION_CONTAINER} from '../../../../../../../cross/CrossConstants';
+import {EXTENSION_CONTAINER, EXTENSION_CONTAINER_EA} from '../../../../../../../cross/CrossConstants';
 import {Extension_ListData, ExtensionsInfo} from '../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Linux_Icon, MacOS_Icon, Windows_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
 import {useSettingsState} from '../../../../Redux/App/SettingsReducer';
+import {useUserState} from '../../../../Redux/User/UserReducer';
 import {ExtFilter} from './ExtensionList';
 
 export function useFetchExtensions(setList: Dispatch<SetStateAction<Extension_ListData[]>>) {
   const [loading, setLoading] = useState<boolean>(true);
+  const userData = useUserState('patreonUserData');
 
   useEffect(() => {
-    setLoading(true);
-
     async function fetchExtensionsList() {
+      setLoading(true);
       try {
-        const response = await fetch(EXTENSION_CONTAINER);
+        const response = await fetch(userData.earlyAccess ? EXTENSION_CONTAINER_EA : EXTENSION_CONTAINER);
         const extensions = (await response.json()) as ExtensionsInfo[];
 
         const data: Extension_ListData[] = extensions.map(ext => {
@@ -62,7 +63,7 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<Extension_Li
     }
 
     fetchExtensionsList();
-  }, []);
+  }, [userData]);
 
   return {loading};
 }
