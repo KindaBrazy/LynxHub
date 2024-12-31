@@ -1,38 +1,16 @@
-import {useEffect} from 'react';
+import {DropdownItem, DropdownSection} from '@nextui-org/react';
 
-import {DropDownSectionType} from '../../src/App/Utils/Types';
-import {getIconByName} from '../../src/assets/icons/SvgIconsContainer';
+import {Bug_Icon, Trash_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons3';
 
-type Props = {
-  addMenu: (sections: DropDownSectionType[], index?: number) => void;
-};
-export default function CardsAddMenu({addMenu}: Props) {
-  useEffect(() => {
-    const items = [
-      {
-        className: 'cursor-default',
-        key: 'addBug',
-        startContent: getIconByName('Bug'),
-        title: 'Add Bug',
-      },
-      {
-        className: 'cursor-default',
-        key: 'removeBug',
-        startContent: getIconByName('Trash'),
-        title: 'Remove Bug',
-      },
-    ];
-
-    const sections = [
-      {
-        key: 'Bugs',
-        items,
-        title: 'Bugs',
-        showDivider: true,
-      },
-    ];
-
-    addMenu(sections, 2);
-  }, []);
-  return <></>;
+export default function CardsAddMenu() {
+  return (
+    <DropdownSection key="bugs" title="Bugs" showDivider>
+      <DropdownItem key="addBug" title="Add Bug" className="cursor-default" startContent={<Bug_Icon />}></DropdownItem>
+      <DropdownItem
+        key="removeBug"
+        title="Remove Bug"
+        className="cursor-default"
+        startContent={<Trash_Icon />}></DropdownItem>
+    </DropdownSection>
+  );
 }

@@ -1,6 +1,6 @@
 import './index.css';
 
-import {ExtensionRendererApi} from '../src/App/Extensions/ExtensionTypes_Renderer';
+import {ExtensionRendererApi} from '../src/App/Extensions/ExtensionTypes_Renderer_Api';
 import CardsAddMenu from './Components/Cards_AddMenu';
 import {
   AddContentButton,
@@ -22,7 +22,7 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   return;
 
   // Add new menu to the Cards
-  lynxAPI.cards.customize.menu.addSection(CardsAddMenu);
+  lynxAPI.cards.customize.menu.addSection([{index: 2, components: [CardsAddMenu]}]);
 
   // Replace Cards Components
   lynxAPI.cards.replace(ReplaceCards);
