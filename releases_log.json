@@ -11,6 +11,9 @@
     {
       "build": 15,
       "version": "2.1.0",
+      "new": [
+        "Python Toolkit Extension"
+      ],
       "improve": [
         "Apply terminal output color for AI installer",
         "Show extensions supported platforms icons"
