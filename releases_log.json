@@ -3,11 +3,23 @@
   "currentBuild": 14,
   "releaseDate": "2024-12-14",
   "earlyAccess": {
-    "version": "2.0.0",
-    "build": 14,
-    "releaseDate": "2024-11-30"
+    "version": "2.1.0",
+    "build": 15,
+    "releaseDate": "2024-12-31"
   },
   "changeLog": [
+    {
+      "build": 15,
+      "version": "2.1.0",
+      "improve": [
+        "Apply terminal output color for AI installer",
+        "Show extensions supported platforms icons"
+      ],
+      "bug": [
+        "Disable extension install button for incompatible platforms",
+        "Remove developer name from launch config modal"
+      ]
+    },
     {
       "build": 14,
       "version": "2.0.0",
