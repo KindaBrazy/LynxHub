@@ -4,27 +4,22 @@ import {RouteObject} from 'react-router';
 
 import {CardsDataManager} from '../Components/Cards/CardsDataManager';
 import {CardData} from '../Modules/types';
-import {DropDownSectionType} from '../Utils/Types';
 import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 
 // -----------------------------------------------> Elements & Props
 export type ElementProps = ComponentProps<'div'>;
 export type CardElementProps = ComponentProps<'div'> & {cards: CardData[]};
 export type SearchResultProps = ComponentProps<'div'> & {searchValue: string};
-export type AddCardMenuProps = ComponentProps<'div'> & {
-  addMenu: (sections: DropDownSectionType[], index?: number) => void;
-  context: CardsDataManager;
-};
 export type CardDataProps = ComponentProps<'div'> & {context: CardsDataManager};
 export type ReplaceMdProps = ComponentProps<'div'> & {repoPath: string; rounded?: boolean};
 
 export type FcProp = FC<ElementProps>;
-
 export type FcPropCardData = FC<CardDataProps>;
 export type FcPropCard = FC<CardElementProps>;
 export type FcPropSearchResult = FC<SearchResultProps>;
-export type FcPropAddCardMenu = FC<AddCardMenuProps>;
 export type FcPropReplaceMd = FC<ReplaceMdProps>;
+
+export type AddMenuType = {index: number; components: FcPropCardData[]};
 
 // -----------------------------------------------> Extension Renderer API
 
@@ -156,7 +151,7 @@ export type ExtensionData_Renderer = {
       header: FcPropCardData | undefined;
       body: FcPropCardData | undefined;
       footer: FcPropCardData | undefined;
-      menu: {replace: FcPropCardData | undefined; addSection: FcPropAddCardMenu[]};
+      menu: {replace: FcPropCardData | undefined; addSection: AddMenuType[]};
     };
   };
 };
