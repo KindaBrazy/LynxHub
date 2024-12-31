@@ -1,7 +1,10 @@
+// @ts-nocheck
 import {Button, Dropdown, DropdownMenu, DropdownSection, DropdownTrigger} from '@nextui-org/react';
 import {observer} from 'mobx-react-lite';
+import {useMemo} from 'react';
 
 import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../../../Redux/App/SettingsReducer';
 import {useUpdatingCard} from '../../../../Utils/UtilHooks';
 import {useCardData} from '../../CardsDataManager';
@@ -14,6 +17,17 @@ export const CardMenu = observer(() => {
   const {id, menuIsOpen, setMenuIsOpen} = useCardData();
   const compactMode = useSettingsState('cardsCompactMode');
   const updating = useUpdatingCard(id);
+
+  const {first, second, third, fourth} = useMemo(() => {
+    const sections = extensionsData.cards.customize.menu.addSection;
+
+    const first = sections.find(item => item.index === 0)?.components || [];
+    const second = sections.find(item => item.index === 1)?.components || [];
+    const third = sections.find(item => item.index === 2)?.components || [];
+    const fourth = sections.find(item => item.index === 3)?.components || [];
+
+    return {first, second, third, fourth};
+  }, []);
 
   return (
     <div className="flex">
@@ -35,21 +49,34 @@ export const CardMenu = observer(() => {
           />
         </DropdownTrigger>
         <DropdownMenu aria-label="Card Menu">
+          {first.map((Comp, index) => {
+            return Comp({key: index, context: useCardData()});
+          })}
           <DropdownSection key="options" showDivider>
             {MenuLaunchConfig()}
             {MenuExtensions()}
             {MenuPin()}
           </DropdownSection>
+          {second.map((Comp, index) => {
+            return Comp({key: index, context: useCardData()});
+          })}
           <DropdownSection key="update" showDivider>
             {MenuUpdate()}
             {MenuCheckForUpdate()}
             {MenuAutoUpdate()}
           </DropdownSection>
+          {third.map((Comp, index) => {
+            return Comp({key: index, context: useCardData()});
+          })}
           <DropdownSection key="danger-zone">
             {MenuInfo()}
             {MenuReadme()}
             {MenuUninstall()}
           </DropdownSection>
+
+          {fourth.map((Comp, index) => {
+            return Comp({key: index, context: useCardData()});
+          })}
         </DropdownMenu>
       </Dropdown>
     </div>

@@ -362,7 +362,7 @@ const api: ExtensionRendererApi = {
         replace: comp => {
           extensionsData.cards.customize.menu.replace = comp;
         },
-        addSection: comp => extensionsData.cards.customize.menu.addSection.push(comp),
+        addSection: comp => extensionsData.cards.customize.menu.addSection.push(...comp),
       },
     },
   },

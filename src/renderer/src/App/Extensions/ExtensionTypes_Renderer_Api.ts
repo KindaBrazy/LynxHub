@@ -4,8 +4,8 @@ import {RouteObject} from 'react-router';
 
 import {ModuleData} from '../Modules/ModuleLoader';
 import {
+  AddMenuType,
   FcProp,
-  FcPropAddCardMenu,
   FcPropCard,
   FcPropCardData,
   FcPropReplaceMd,
@@ -17,7 +17,7 @@ type CompFcProp = (component: FcProp) => void;
 type CompFcPropCard = (component: FcPropCard) => void;
 type CompFcPropCardData = (component: FcPropCardData) => void;
 type CompFcPropSearchResult = (component: FcPropSearchResult) => void;
-type CompFcPropAddCardMenu = (component: FcPropAddCardMenu) => void;
+type CompFcPropAddCardMenu = (component: AddMenuType[]) => void;
 type CompFcPropReplaceMd = (component: FcPropReplaceMd) => void;
 
 export type ExtensionRendererApi = {
