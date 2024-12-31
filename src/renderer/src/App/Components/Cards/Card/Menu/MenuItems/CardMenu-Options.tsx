@@ -13,7 +13,6 @@ import {useInstalledCard, useIsPinnedCard} from '../../../../../Utils/UtilHooks'
 import {useCardData} from '../../../CardsDataManager';
 
 export const MenuLaunchConfig = () => {
-  console.log('MenuLaunchConfig');
   const dispatch = useDispatch<AppDispatch>();
   const {id, setMenuIsOpen, title, haveArguments} = useCardData();
 
