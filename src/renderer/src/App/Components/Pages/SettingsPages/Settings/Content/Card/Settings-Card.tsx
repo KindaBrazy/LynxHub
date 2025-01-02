@@ -9,11 +9,11 @@ export const SettingsCardId = 'settings_card_elem';
 export default function SettingsCard() {
   return (
     <SettingsSection id={SettingsCardId} title="Customize Card" icon={<EditCard_Icon className="size-5" />} itemsCenter>
-      <div className="flex flex-row justify-between space-x-4">
+      <div className="flex md:flex-col lg:flex-row justify-between space-x-4">
         <div className="flex w-full flex-col gap-y-2">
           <ConfigCard />
         </div>
-        <div className="flex w-fit items-center justify-center">
+        <div className="flex w-full items-center justify-center">
           <PreviewCard />
         </div>
       </div>
