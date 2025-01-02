@@ -152,8 +152,7 @@ const SettingsPageNav = () => {
   return (
     <Card
       className={
-        'h-full w-48 shrink-0 border-2 border-foreground/10 text-center' +
-        ' dark:border-foreground/5 dark:bg-LynxRaisinBlack'
+        'w-48 shrink-0 border-2 border-foreground/10 text-center dark:border-foreground/5 dark:bg-LynxRaisinBlack'
       }
       bordered={false}
       title="Settings">
