@@ -3,5 +3,6 @@
   "printWidth": 120,
   "bracketSpacing": false,
   "bracketSameLine": true,
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "endOfLine": "auto"
 }
