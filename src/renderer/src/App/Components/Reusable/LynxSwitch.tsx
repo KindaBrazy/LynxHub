@@ -54,7 +54,7 @@ export default function LynxSwitch({
       size === 'sm' ? 'w-4 h-4' : 'w-5 h-5',
       'shadow-md bg-white dark:bg-white',
       `group-data-[selected=true]:${size === 'sm' ? 'ml-4' : 'ml-5'}`,
-      'group-data-[pressed=true]:w-7',
+      'group-data-[pressed=true]:w-7 shrink-0',
       'group-data-[selected]:group-data-[pressed]:ml-4',
     );
   }, [size]);
