@@ -1,4 +1,4 @@
-import {Select} from '@mantine/core';
+import {Select, Selection, SelectItem} from '@nextui-org/react';
 import {isEmpty} from 'lodash';
 import {Fragment, useEffect, useState} from 'react';
 
@@ -12,24 +12,25 @@ export default function CustomRunBehavior() {
   const [terminalValue, setTerminalValue] = useState<string>('runScript');
   const [browserValue, setBrowserValue] = useState<string>('appBrowser');
 
-  const onTerminalChange = (value: string | null) => {
-    if (value) {
-      setTerminalValue(value);
+  const onTerminalChange = (value: Selection) => {
+    if (value && value !== 'all') {
+      console.log(value);
+      setTerminalValue(value.values().next().value as string);
       rendererIpc.storageUtils.updateCustomRunBehavior({
         cardID: id,
-        terminal: value,
+        terminal: value.values().next().value as string,
         browser: browserValue,
       });
     }
   };
 
-  const onBrowserChange = (value: string | null) => {
-    if (value) {
-      setBrowserValue(value);
+  const onBrowserChange = (value: Selection) => {
+    if (value && value !== 'all') {
+      setBrowserValue(value.values().next().value as string);
       rendererIpc.storageUtils.updateCustomRunBehavior({
         cardID: id,
         terminal: terminalValue,
-        browser: value,
+        browser: value.values().next().value as string,
       });
     }
   };
@@ -47,42 +48,54 @@ export default function CustomRunBehavior() {
   }, [setTerminalValue, setBrowserValue, id]);
 
   return (
-    <LaunchConfigSection title="Launch Behavior" customButton={<Fragment />}>
-      <div className="space-y-4">
-        <div className="flex w-full flex-row items-center space-x-2">
-          <Select
-            data={[
-              {value: 'runScript', label: 'Run Script (e.g. webui.bat)'},
-              {value: 'empty', label: 'Open Empty Terminal (No command)'},
-            ]}
-            radius="md"
-            label="Terminal"
-            variant="filled"
-            className="w-full"
-            value={terminalValue}
-            onChange={onTerminalChange}
-            classNames={{input: '!bg-default-200', dropdown: '!bg-default-200'}}
-            comboboxProps={{transitionProps: {transition: 'fade', duration: 200}, radius: 'md'}}
-          />
+    <>
+      <LaunchConfigSection title="Launch Behavior" customButton={<Fragment />}>
+        <div className="space-y-4">
+          <div className="flex w-full flex-row items-center space-x-2">
+            <Select
+              label="Terminal"
+              selectionMode="single"
+              labelPlacement="outside"
+              selectedKeys={[terminalValue]}
+              onSelectionChange={onTerminalChange}
+              description="Configure how the terminal behaves when launching the AI."
+              classNames={{trigger: 'transition duration-300 data-[hover=true]:bg-foreground-300 bg-foreground-200'}}
+              disallowEmptySelection>
+              <SelectItem key="runScript" description="Execute the designated script (e.g., webui.bat).">
+                Run Script
+              </SelectItem>
+              <SelectItem key="empty" description="Open an empty terminal without executing any commands.">
+                Open Empty Terminal
+              </SelectItem>
+            </Select>
+          </div>
+          <div className="flex w-full flex-row items-center space-x-2">
+            <Select
+              label="Browser"
+              selectionMode="single"
+              labelPlacement="outside"
+              selectedKeys={[browserValue]}
+              onSelectionChange={onBrowserChange}
+              description="Define what happens when the application detects an address to launch."
+              classNames={{trigger: 'transition duration-300 data-[hover=true]:bg-foreground-300 bg-foreground-200'}}
+              disallowEmptySelection>
+              <SelectItem
+                key="appBrowser"
+                description="Open the address in the integrated in-app browser (triggered from the terminal).">
+                Use In-App Browser
+              </SelectItem>
+              <SelectItem
+                key="defaultBrowser"
+                description="Open the address in your default web browser (triggered from the terminal).">
+                Use Default Browser
+              </SelectItem>
+              <SelectItem key="doNothing" description="Take no action.">
+                Do Nothing
+              </SelectItem>
+            </Select>
+          </div>
         </div>
-        <div className="flex w-full flex-row items-center space-x-2">
-          <Select
-            data={[
-              {value: 'appBrowser', label: 'Open In-App Browser (From Terminal)'},
-              {value: 'defaultBrowser', label: 'Open Default Browser (From Terminal)'},
-              {value: 'doNothing', label: 'Do Nothing'},
-            ]}
-            radius="md"
-            label="Browser"
-            variant="filled"
-            className="w-full"
-            value={browserValue}
-            onChange={onBrowserChange}
-            classNames={{input: '!bg-default-200', dropdown: '!bg-default-200'}}
-            comboboxProps={{transitionProps: {transition: 'fade', duration: 200}, radius: 'md'}}
-          />
-        </div>
-      </div>
-    </LaunchConfigSection>
+      </LaunchConfigSection>
+    </>
   );
 }
