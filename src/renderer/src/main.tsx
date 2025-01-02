@@ -10,7 +10,9 @@ import {RouterProvider} from 'react-router';
 import {isDev} from '../../cross/CrossUtils';
 import {initRouter} from './App/AppRouter';
 import {loadExtensions} from './App/Extensions/Vite-Federation';
+import loadModules from './App/Modules/ModuleLoader';
 
+await loadModules();
 await loadExtensions();
 const router = await initRouter();
 
