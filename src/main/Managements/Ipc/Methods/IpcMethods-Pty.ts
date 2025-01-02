@@ -32,6 +32,36 @@ function runPreOpen(cardId: string): void {
   }
 }
 
+export async function customPtyProcess(opt: PtyProcessOpt, dir?: string, file?: string) {
+  if (opt === 'start') {
+    if (!dir || !file) return;
+
+    ptyManager = new PtyManager();
+    ptyManager.start(dir, true);
+    ptyManager.write(`${platform() === 'win32' ? './' : 'bash ./'}${file}${LINE_ENDING}`);
+  } else if (opt === 'stop') {
+    ptyManager?.stop();
+    ptyManager = undefined;
+  }
+}
+
+export async function customPtyCommands(opt: PtyProcessOpt, commands?: string | string[], dir?: string) {
+  if (opt === 'start') {
+    if (lodash.isEmpty(commands)) return;
+    ptyManager = new PtyManager();
+
+    ptyManager.start(dir, true);
+    if (lodash.isArray(commands)) {
+      runMultiCommand(commands);
+    } else {
+      ptyManager.write(`${commands}${LINE_ENDING}`);
+    }
+  } else if (opt === 'stop') {
+    ptyManager?.stop();
+    ptyManager = undefined;
+  }
+}
+
 /**
  * Manages the PTY process for a given card.
  * @param opt - The operation to perform ('start' or 'stop').
@@ -60,36 +90,6 @@ export async function ptyProcess(opt: PtyProcessOpt, cardId: string) {
     } else {
       const runCommand = (await moduleManager.getMethodsById(cardId)?.getRunCommands(card.dir)) || '';
       ptyManager.write(runCommand);
-    }
-  } else if (opt === 'stop') {
-    ptyManager?.stop();
-    ptyManager = undefined;
-  }
-}
-
-export async function customPtyProcess(opt: PtyProcessOpt, dir?: string, file?: string) {
-  if (opt === 'start') {
-    if (!dir || !file) return;
-
-    ptyManager = new PtyManager();
-    ptyManager.start(dir, true);
-    ptyManager.write(`${platform() === 'win32' ? './' : 'bash ./'}${file}${LINE_ENDING}`);
-  } else if (opt === 'stop') {
-    ptyManager?.stop();
-    ptyManager = undefined;
-  }
-}
-
-export async function customPtyCommands(opt: PtyProcessOpt, commands?: string | string[], dir?: string) {
-  if (opt === 'start') {
-    if (lodash.isEmpty(commands)) return;
-    ptyManager = new PtyManager();
-
-    ptyManager.start(dir, true);
-    if (lodash.isArray(commands)) {
-      runMultiCommand(commands);
-    } else {
-      ptyManager.write(`${commands}${LINE_ENDING}`);
     }
   } else if (opt === 'stop') {
     ptyManager?.stop();

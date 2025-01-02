@@ -7,7 +7,7 @@ import NavButton from '../../src/App/Components/NavBar/NavButton';
 import RouterPagesError from '../../src/App/Components/Pages/RouterPagesError';
 import {CardElementProps, ElementProps} from '../../src/App/Extensions/ExtensionTypes_Renderer';
 import {useAppState} from '../../src/App/Redux/App/AppReducer';
-import {getIconByName} from '../../src/assets/icons/SvgIconsContainer';
+import {Reddit_Icon, XSite_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons4';
 import {extensionActions, useExtensionState} from '../reducer';
 
 // @ts-ignore
@@ -44,7 +44,7 @@ export const routePage: RouteObject[] = [
 export function AddContentButton() {
   return (
     <NavButton badge={false} pageId="extContentPath" title="Ext Content Btn" key={'ext-content-btn'}>
-      {getIconByName('Reddit', {className: 'size-full'})}
+      <Reddit_Icon className="size-full" />
     </NavButton>
   );
 }
@@ -52,7 +52,7 @@ export function AddContentButton() {
 export function AddSettingsButton() {
   return (
     <NavButton badge={false} pageId="extSettingPath" title="Ext Setting Btn" key={'ext-setting-btn'}>
-      {getIconByName('XSite', {className: 'size-full'})}
+      <XSite_Icon className="size-full" />
     </NavButton>
   );
 }

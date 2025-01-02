@@ -46,7 +46,7 @@ export class ValidateCards {
   }
 
   /**
-   * Validates the given cards by checking if their directories not starting with `.`.
+   * Validates the given cards by checking if their directories are Git repositories.
    * @param {InstalledCards} cards - The cards to validate
    * @returns {Promise<InstalledCards>} Resolves to an array of valid cards
    */
