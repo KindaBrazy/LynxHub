@@ -1,4 +1,6 @@
-import {app, ipcMain, nativeTheme, shell} from 'electron';
+import path from 'node:path';
+
+import {app, ipcMain, nativeTheme, OpenDialogOptions, shell} from 'electron';
 
 import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/CrossTypes';
 import {
@@ -11,7 +13,6 @@ import {
   fileChannels,
   gitChannels,
   modulesChannels,
-  OpenDialogOptions,
   PreCommands,
   PreOpen,
   ptyChannels,
@@ -84,7 +85,7 @@ function file() {
 
   ipcMain.handle(fileChannels.dialog, (_, option: OpenDialogOptions) => openDialog(option));
 
-  ipcMain.on(fileChannels.openPath, (_, dir: string) => shell.openPath(dir));
+  ipcMain.on(fileChannels.openPath, (_, dir: string) => shell.openPath(path.resolve(dir)));
 
   ipcMain.handle(fileChannels.removeDir, (_, dir: string) => removeDir(dir));
   ipcMain.handle(fileChannels.trashDir, (_, dir: string) => trashDir(dir));

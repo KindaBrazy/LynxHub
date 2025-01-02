@@ -2,7 +2,7 @@ import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
 import path from 'node:path';
 
-import {dialog, nativeTheme, OpenDialogReturnValue} from 'electron';
+import {dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
 import fs from 'graceful-fs';
 
 import {formatSize} from '../../cross/CrossUtils';
@@ -12,15 +12,15 @@ import calcFolderSize from './CalculateFolderSize/CalculateFolderSize';
 /**
  * Opens a system file/folder dialog and returns the selected path.
  *
- * @param {'openDirectory' | 'openFile'} option - Select folder or file
+ * @param {'openDirectory' | 'openFile'} options - Select folder or file
  * @returns {string | undefined} The selected file/folder path, or undefined if cancelled.
  */
-export async function openDialog(option: 'openDirectory' | 'openFile'): Promise<string | undefined> {
+export async function openDialog(options: OpenDialogOptions): Promise<string | undefined> {
   try {
     const mainWindow = appManager.getMainWindow();
     const result: OpenDialogReturnValue = await (mainWindow
-      ? dialog.showOpenDialog(mainWindow, {properties: [option]})
-      : dialog.showOpenDialog({properties: [option]}));
+      ? dialog.showOpenDialog(mainWindow, options)
+      : dialog.showOpenDialog(options));
     if (result.filePaths) return result.filePaths[0];
     return undefined;
   } catch (error) {
