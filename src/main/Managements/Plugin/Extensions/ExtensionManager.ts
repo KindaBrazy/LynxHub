@@ -32,6 +32,21 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
     this.extensionApi = new ExtensionApi();
   }
 
+  public async updateAvailableList(): Promise<string[]> {
+    try {
+      const updateChecks = this.installedPluginInfo.map(async plugin => {
+        const hasUpdate = await GitManager.isUpdateAvailable(plugin.dir);
+        return {id: plugin.info.id, hasUpdate};
+      });
+
+      const results = await Promise.all(updateChecks);
+      return results.filter(result => result.hasUpdate).map(result => result.id);
+    } catch (error) {
+      console.error('Error checking for updates:', error);
+      return [];
+    }
+  }
+
   protected async importPlugins(extensionFolders: string[]) {
     if (isDev()) {
       const initial: ExtensionImport_Main = await import('../../../extension/lynxExtension');
@@ -45,21 +60,6 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
           await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
         }),
       );
-    }
-  }
-
-  public async updateAvailableList(): Promise<string[]> {
-    try {
-      const updateChecks = this.installedPluginInfo.map(async plugin => {
-        const hasUpdate = await GitManager.isUpdateAvailable(plugin.dir);
-        return {id: plugin.info.id, hasUpdate};
-      });
-
-      const results = await Promise.all(updateChecks);
-      return results.filter(result => result.hasUpdate).map(result => result.id);
-    } catch (error) {
-      console.error('Error checking for updates:', error);
-      return [];
     }
   }
 

@@ -65,6 +65,7 @@ export type SystemInfo = {os: NodeJS.Platform; buildNumber: string | number};
 export type LynxHotkeys = {isEnabled: boolean; FULLSCREEN: string; TOGGLE_NAV: string; TOGGLE_AI_VIEW: string};
 
 export type AppUpdateStatus = 'update-available' | 'update-downloaded' | string | UpdateDownloadProgress;
+
 export type OnUpdatingExtensions = {id: string; step: string | 'done'};
 
 export type DownloadProgress = {
@@ -225,10 +226,11 @@ export const storageUtilsChannels = {
 
   addAutoUpdateCard: 'storageUtils:add-autoUpdate-card',
   removeAutoUpdateCard: 'storageUtils:remove-autoUpdate-card',
-  onAutoUpdateCards: 'storageUtils:on-autoUpdate-cards',
 
   addAutoUpdateExtensions: 'storageUtils:add-autoUpdate-extensions',
   removeAutoUpdateExtensions: 'storageUtils:remove-autoUpdate-extensions',
+
+  onAutoUpdateCards: 'storageUtils:on-autoUpdate-cards',
   onAutoUpdateExtensions: 'storageUtils:on-autoUpdate-extensions',
 
   onPinnedCardsChange: 'storageUtils:on-pinned-cards',
@@ -246,9 +248,9 @@ export const storageUtilsChannels = {
   customRun: 'storageUtils:custom-run',
   onCustomRun: 'storageUtils:on-custom-run',
 
-  preOpen: 'storageUtils:pre-open',
-
   customRunBehavior: 'storageUtils:custom-run-behavior',
+
+  preOpen: 'storageUtils:pre-open',
 
   getCardArguments: 'storageUtils:get-card-arguments',
   setCardArguments: 'storageUtils:set-card-arguments',

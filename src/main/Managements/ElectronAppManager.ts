@@ -108,7 +108,6 @@ export default class ElectronAppManager {
       shell.openExternal(url).catch(e => {
         console.error('Error on openExternal: ', e);
       });
-
       return {action: 'deny'};
     });
 

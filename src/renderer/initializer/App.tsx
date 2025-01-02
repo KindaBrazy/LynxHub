@@ -3,7 +3,7 @@ import {ConfigProvider, Popconfirm, Steps, theme} from 'antd';
 import {useCallback, useState} from 'react';
 
 import {APP_ICON_TRANSPARENT, APP_NAME} from '../../cross/CrossConstants';
-import {getIconByName} from '../src/assets/icons/SvgIconsContainer';
+import {Minimize_Icon} from '../src/assets/icons/SvgIcons/SvgIcons2';
 import initializerIpc from './InitializerIpc';
 import {useGitValidation} from './Steps/GitValidation';
 import {useMainModuleInstallation} from './Steps/MainModuleInstallation';
@@ -50,7 +50,7 @@ export default function App() {
             onPress={minimize}
             className="notDraggable absolute right-2 top-2 cursor-default text-white"
             isIconOnly>
-            {getIconByName('Minimize')}
+            <Minimize_Icon />
           </Button>
         </header>
         {/*#endregion */}

@@ -502,8 +502,6 @@ class StorageManager extends BaseStorage {
     return result;
   }
 
-  //#endregion
-
   public updateCustomRunBehavior(data: CustomRunBehaviorData) {
     let customRunBehavior = this.getData('cardsConfig').customRunBehavior;
     const existCustom = customRunBehavior.findIndex(command => command.cardID === data.cardID);
@@ -519,6 +517,8 @@ class StorageManager extends BaseStorage {
     console.info('customRunBehavior', customRunBehavior);
     this.updateData('cardsConfig', {customRunBehavior});
   }
+
+  //#endregion
 
   //#endregion
 }
