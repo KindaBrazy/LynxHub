@@ -39,7 +39,7 @@ export const useCheckCardsUpdate = () => {
 
 export const useCheckModulesUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const moduleUpdateInterval = useRef<NodeJS.Timeout>();
+  const moduleUpdateInterval = useRef<NodeJS.Timeout>(undefined);
   useEffect(() => {
     const checkForUpdate = () => {
       rendererIpc.module.anyUpdateAvailable().then(value => {
@@ -58,7 +58,7 @@ export const useCheckModulesUpdate = () => {
 
 export const useCheckExtensionsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const extensionUpdateInterval = useRef<NodeJS.Timeout>();
+  const extensionUpdateInterval = useRef<NodeJS.Timeout>(undefined);
   useEffect(() => {
     const checkForUpdate = () => {
       rendererIpc.extension.updateAvailableList().then(value => {
