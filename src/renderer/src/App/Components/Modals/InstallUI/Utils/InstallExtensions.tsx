@@ -1,14 +1,14 @@
 import {Spinner} from '@nextui-org/react';
 import {StepProps, Steps} from 'antd';
 import {startCase} from 'lodash';
-import {MutableRefObject, useEffect, useState} from 'react';
+import {RefObject, useEffect, useState} from 'react';
 
 import {extractGitUrl, validateGitRepoUrl} from '../../../../../../../cross/CrossUtils';
 import rendererIpc from '../../../../RendererIpc';
 
 type Props = {
   extensionsURLs: {urls: string[]; dir: string} | undefined;
-  extensionsResolver: MutableRefObject<(() => void) | null>;
+  extensionsResolver: RefObject<(() => void) | null>;
 };
 
 export default function InstallExtensions({extensionsURLs, extensionsResolver}: Props) {
