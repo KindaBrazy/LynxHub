@@ -1,4 +1,4 @@
-import {Card, Group, Overlay, Text} from '@mantine/core';
+import {Card} from '@nextui-org/react';
 import {Button, Checkbox, User} from '@nextui-org/react';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -58,12 +58,12 @@ export default function DashboardProfile() {
 
   return (
     <SettingsSection title="Profiles" id={DashboardProfileId} icon={<User_Icon className="size-5" />}>
-      <Card shadow="sm" radius="lg" className={`${patreonLoggedIn && '!border-success/70'}`} withBorder>
+      <Card shadow="sm" radius="lg" className={`${patreonLoggedIn && '!border-success/70'} border-1 p-4`}>
         <div className="mb-3 flex flex-row items-center space-x-1.5">
           <Patreon_Icon className="text-large" />
-          <Text fw={500}>Patreon</Text>
+          <span className="text-medium">Patreon</span>
         </div>
-        <Group justify="space-between">
+        <div className="space-between flex flex-row justify-between items-center">
           <User
             name={patreonUserData.name}
             avatarProps={{src: patreonUserData.imageUrl}}
@@ -85,29 +85,30 @@ export default function DashboardProfile() {
               </Button>
             )}
           </div>
-        </Group>
+        </div>
       </Card>
 
-      <Card shadow="sm" radius="lg" withBorder>
+      <Card shadow="sm" radius="lg" className="p-4">
         <div className="mb-3 flex flex-row items-center space-x-1.5">
           <Google_Icon className="text-large" />
-          <Text fw={500}>Google</Text>
+          <span className="text-medium">Google</span>
         </div>
-        <Group justify="space-between">
+        <div className="space-between flex flex-row justify-between items-center">
           <User name="Guest" />
           <Button size="sm" variant="flat" color="success">
             Login
           </Button>
-        </Group>
+        </div>
         <div className="mt-4 flex flex-row justify-between">
           <Checkbox size="sm">Sync Data with Cloud</Checkbox>
         </div>
-        <Overlay
-          backgroundOpacity={0.8}
-          color={darkMode ? '#212121' : '#fff'}
-          className="texm content-center text-center">
+        <div
+          className={
+            `opacity-80 content-center text-center absolute` +
+            ` inset-0 ${darkMode ? 'bg-LynxRaisinBlack' : 'bg-white'}`
+          }>
           Coming Soon...
-        </Overlay>
+        </div>
       </Card>
     </SettingsSection>
   );
