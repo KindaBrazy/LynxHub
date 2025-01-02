@@ -19,7 +19,7 @@ export const MenuLaunchConfig = () => {
   const onPress = useCallback(() => {
     dispatch(modalActions.openCardLaunchConfig({id: id, title: `${title} Launch Config`, haveArguments}));
     setMenuIsOpen(false);
-  }, []);
+  }, [dispatch, setMenuIsOpen, title, haveArguments, id]);
 
   return (
     <DropdownItem
@@ -48,7 +48,7 @@ export const MenuExtensions = () => {
         }),
       );
     setMenuIsOpen(false);
-  }, [card, dispatch, extensionsDir, title, devName, setMenuIsOpen]);
+  }, [dispatch, setMenuIsOpen, card, extensionsDir, title, devName]);
 
   return extensionsDir ? (
     <DropdownItem

@@ -44,7 +44,7 @@ export const MenuUpdate = () => {
       setMenuIsOpen(false);
       rendererIpc.git.pull(webUi.dir, id);
     }
-  }, [webUi, dispatch, devName, id, title, setMenuIsOpen, customUpdate]);
+  }, [dispatch, setMenuIsOpen, webUi, devName, id, title]);
 
   if (!customUpdate && (!updateAvailable || autoUpdate))
     return <DropdownItem className="hidden" key="update-hidden" textValue="update_hidden" />;
@@ -76,7 +76,7 @@ export const MenuCheckForUpdate = () => {
     if (getMethod(id, 'manager')?.updater.updateType === 'stepper') {
       setCustomUpdate(true);
     }
-  }, [id]);
+  }, [setCustomUpdate, id]);
 
   const onPress = useCallback(() => {
     setCheckingForUpdate(true);
@@ -86,7 +86,7 @@ export const MenuCheckForUpdate = () => {
         setCheckingForUpdate(false);
       });
     }
-  }, [webUi, id]);
+  }, [dispatch, setCheckingForUpdate, webUi, id]);
 
   if (updateAvailable || autoUpdate || customUpdate)
     return <DropdownItem className="hidden" key="check-update-hidden" textValue="check_update_hidden" />;
@@ -131,7 +131,7 @@ export const MenuAutoUpdate = () => {
       dispatch(cardsActions.addUpdatingCard({devName, id, title}));
       rendererIpc.git.pull(webUi.dir, id);
     }
-  }, [autoUpdate, updateAvailable, webUi, dispatch, devName, id, title]);
+  }, [dispatch, autoUpdate, updateAvailable, webUi, devName, id, title]);
 
   if (customUpdate) return <DropdownItem className="hidden" key="auto-update-hidden" textValue="auto_update_hidden" />;
 
