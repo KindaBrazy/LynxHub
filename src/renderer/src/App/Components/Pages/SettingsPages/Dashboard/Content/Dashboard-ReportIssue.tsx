@@ -1,4 +1,4 @@
-import {Button} from '@mantine/core';
+import {Button} from '@nextui-org/react';
 import {Typography} from 'antd';
 
 import {ISSUE_PAGE} from '../../../../../../../../cross/CrossConstants';
@@ -22,14 +22,9 @@ export default function DashboardReportIssue() {
         <br /> <br />
         <span>This will help me investigate and resolve the problem more effectively.</span>
       </Paragraph>
-      <Button
-        radius="md"
-        variant="default"
-        className="!transition !duration-300"
-        onClick={() => window.open(ISSUE_PAGE)}
-        rightSection={<ExternalLink_Icon className="text-warning" />}
-        fullWidth>
-        <span className="text-warning">Report</span>
+
+      <Button endContent={<ExternalLink_Icon />} onPress={() => window.open(ISSUE_PAGE)} fullWidth>
+        Report
       </Button>
     </SettingsSection>
   );

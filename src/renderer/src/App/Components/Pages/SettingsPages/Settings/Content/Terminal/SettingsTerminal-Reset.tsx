@@ -1,4 +1,4 @@
-import {Button} from '@mantine/core';
+import {Button} from '@nextui-org/react';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -21,13 +21,7 @@ export default function SettingsTerminalReset() {
   }, []);
 
   return (
-    <Button
-      radius="md"
-      variant="default"
-      onClick={onApply}
-      loading={isSaving}
-      className="!cursor-default !transition !duration-300"
-      fullWidth>
+    <Button onPress={onApply} isLoading={isSaving} fullWidth>
       Reset to Defaults
     </Button>
   );

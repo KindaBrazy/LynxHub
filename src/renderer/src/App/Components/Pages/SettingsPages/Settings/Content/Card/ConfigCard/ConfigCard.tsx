@@ -1,5 +1,3 @@
-import {Overlay} from '@mantine/core';
-
 import {useSettingsState} from '../../../../../../../Redux/App/SettingsReducer';
 import ConfigCardCompactMode from './ConfigCard-CompactMode';
 import ConfigCardDesc from './ConfigCard-Desc';
@@ -13,13 +11,13 @@ export default function ConfigCard() {
   return (
     <>
       <ConfigCardCompactMode />
-      <div className="relative mt-8 space-y-4">
+      <div className="relative mt-8 space-y-4 px-4 pb-4">
         {compactMode && (
-          <Overlay blur={2} className="content-center !overflow-hidden !rounded-lg">
-            <span className="rounded-md bg-foreground/10 p-4 text-small font-semibold">
+          <div className="content-center absolute inset-0 !overflow-hidden !rounded-lg z-20 bg-black/50 ">
+            <span className="rounded-md bg-black/70 p-4 text-small font-semibold text-white ">
               Disable Compact Mode to Edit
             </span>
-          </Overlay>
+          </div>
         )}
         <ConfigCardDevImage />
         <ConfigCardDevName />

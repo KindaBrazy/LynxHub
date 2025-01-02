@@ -1,7 +1,6 @@
 import './index.css';
 import '@xterm/xterm/css/xterm.css';
 import 'overlayscrollbars/overlayscrollbars.css';
-import '@mantine/core/styles.css';
 import '@ant-design/v5-patch-for-react-19';
 
 import log from 'electron-log/renderer';

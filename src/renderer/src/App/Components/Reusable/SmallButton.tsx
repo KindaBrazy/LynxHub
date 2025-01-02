@@ -6,7 +6,6 @@ import {getColor} from '../../Utils/Constants';
 
 type Props = {icon: ReactNode; onClick?: () => void};
 
-export const SmallButtonClasses = 'notDraggable fill-white h-full w-full transition duration-300 group-hover:scale-110';
 export default function SmallButton({icon, onClick}: Props) {
   const darkMode = useAppState('darkMode');
 

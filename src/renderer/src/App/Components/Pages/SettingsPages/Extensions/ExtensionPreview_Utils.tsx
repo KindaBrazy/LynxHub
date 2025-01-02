@@ -1,4 +1,3 @@
-import {List} from '@mantine/core';
 import {Button, ButtonGroup, Link, ScrollShadow, Tab, Tabs, User} from '@nextui-org/react';
 import {Divider, Modal} from 'antd';
 import {isEmpty, isNil} from 'lodash';
@@ -18,17 +17,17 @@ function useRenderItems() {
     if (isNil(items) || isEmpty(items)) return null;
 
     return (
-      <List listStyleType="disc" withPadding>
+      <ul style={{listStyleType: 'disc', paddingLeft: '20px'}}>
         {items.map((item, index) => {
           const currentKey = `${parentKey}_${index}`;
           return (
             <Fragment key={currentKey}>
-              <List.Item>{item.label}</List.Item>
+              <li>{item.label}</li>
               {item.subitems && renderSubItems(item.subitems, currentKey)}
             </Fragment>
           );
         })}
-      </List>
+      </ul>
     );
   }, []);
 
@@ -110,10 +109,11 @@ export function PreviewBody({
           hideScrollBar>
           {selectedExt?.changeLog.map((item, index) => (
             <Fragment key={`section_${index}`}>
-              <List listStyleType="disc">
+              {/* Changed List to ul here */}
+              <ul style={{listStyleType: 'disc'}}>
                 <span className="text-large font-semibold">{item.title}</span>
                 {renderSubItems(item.items, `section_${index}`)}
-              </List>
+              </ul>
               {index < selectedExt?.changeLog.length - 1 && <Divider />}
             </Fragment>
           ))}
