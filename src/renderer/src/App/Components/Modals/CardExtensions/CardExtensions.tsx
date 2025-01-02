@@ -22,7 +22,7 @@ const CardExtensions = () => {
   const [isUpdatingAll, setIsUpdatingAll] = useState<boolean>(false);
 
   const dispatch = useDispatch<AppDispatch>();
-  const installedRef = useRef<{updateAll: () => void; getExtensions: () => void}>();
+  const installedRef = useRef<{updateAll: () => void; getExtensions: () => void}>(null);
   const autoUpdate = useIsAutoUpdateExtensions(id);
 
   const onClose = useCallback(() => {
