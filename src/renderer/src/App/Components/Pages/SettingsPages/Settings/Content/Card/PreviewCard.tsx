@@ -2,8 +2,8 @@ import {Button, Card, CardBody, CardFooter, CardHeader} from '@nextui-org/react'
 import {Divider, Typography} from 'antd';
 import {useMemo} from 'react';
 
-import {Document_Icon, Download_Icon, Download2_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Fork_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Download_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Fork_Icon, MenuDots_Icon, Play_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Star_Icon, User_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {useAppState} from '../../../../../../Redux/App/AppReducer';
 import {useSettingsState} from '../../../../../../Redux/App/SettingsReducer';
@@ -115,16 +115,16 @@ export default function PreviewCard() {
       <CardFooter>
         <div className="flex w-full flex-row gap-x-3">
           <Button
-            variant="faded"
+            color="primary"
             size={compactMode ? 'sm' : 'md'}
-            className="z-[11] w-full hover:scale-[1.03]"
-            startContent={<Download2_Icon className={compactMode ? 'size-4' : 'size-5'} />}
+            className="z-[11] hover:scale-[1.03]"
+            startContent={<Play_Icon className={compactMode ? `size-4` : 'size-5'} />}
+            fullWidth
           />
           <Button
-            variant="faded"
-            className="cursor-default"
             size={compactMode ? 'sm' : 'md'}
-            startContent={<Document_Icon className={`size-full ${compactMode ? 'm-2' : 'm-2.5'}`} />}
+            className="cursor-default bg-foreground-200 dark:bg-foreground-100"
+            startContent={<MenuDots_Icon className="size-[1.3rem] m-2 rotate-90" />}
             isIconOnly
           />
         </div>
