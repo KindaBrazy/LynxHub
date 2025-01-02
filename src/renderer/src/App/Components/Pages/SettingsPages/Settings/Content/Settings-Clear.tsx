@@ -1,4 +1,4 @@
-import {Button} from '@mantine/core';
+import {Button} from '@nextui-org/react';
 import {message, Popconfirm} from 'antd';
 import {useCallback} from 'react';
 
@@ -27,8 +27,8 @@ export default function SettingsClear() {
         title="Clear Settings"
         onConfirm={clearAppSettings}
         description="Are you sure you want to clear all app settings and restart?">
-        <Button radius="md" variant="default" className="!cursor-default !transition !duration-300" fullWidth>
-          <span className="text-danger">Clear Settings (Restart)</span>
+        <Button variant="flat" color="danger" fullWidth>
+          Clear Settings (Restart)
         </Button>
       </Popconfirm>
       <Popconfirm
@@ -37,8 +37,8 @@ export default function SettingsClear() {
         title="Clear Cache"
         onConfirm={clearCache}
         description="Are you sure you want to clear all cache?">
-        <Button radius="md" variant="default" className="!cursor-default !transition !duration-300" fullWidth>
-          <span className="text-warning">Clear Cache</span>
+        <Button variant="flat" color="warning" fullWidth>
+          Clear Cache
         </Button>
       </Popconfirm>
       <span>Please note that some data may need to be redownloaded or reconfigured after clearing.</span>

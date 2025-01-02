@@ -85,7 +85,7 @@ export default function DashboardCredits() {
                 size="sm"
                 variant="flat"
                 color={TIER_COLORS[tier]}
-                onClick={() => setExpandedTier(expandedTier === tier ? null : tier)}>
+                onPress={() => setExpandedTier(expandedTier === tier ? null : tier)}>
                 {expandedTier === tier ? 'Show Less' : 'Show All'}
               </Button>
             )}

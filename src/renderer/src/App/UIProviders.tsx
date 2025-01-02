@@ -1,11 +1,10 @@
-import {MantineProvider} from '@mantine/core';
 import {NextUIProvider} from '@nextui-org/react';
 import {ConfigProvider as AntDProvider, message, notification, theme} from 'antd';
 import {ReactNode, useLayoutEffect, useMemo} from 'react';
 
 import {useAppState} from './Redux/App/AppReducer';
 
-/** Config NextUI, AntD and Mantine and return providers */
+/** Config NextUI and AntD and return providers */
 export default function UIProviders({children}: {children: ReactNode}) {
   const darkMode = useAppState('darkMode');
   const algorithm = useMemo(() => (darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm), [darkMode]);
@@ -40,7 +39,7 @@ export default function UIProviders({children}: {children: ReactNode}) {
             },
             token: {colorBgMask: 'rgba(0, 0, 0, 0.2)', fontFamily: 'Nunito, sans-serif'},
           }}>
-          <MantineProvider forceColorScheme={darkMode ? 'dark' : 'light'}>{children}</MantineProvider>
+          {children}
         </AntDProvider>
       </NextUIProvider>
     </div>

@@ -1,5 +1,4 @@
-import {Button} from '@mantine/core';
-import {Checkbox, CheckboxGroup} from '@nextui-org/react';
+import {Button, Checkbox, CheckboxGroup} from '@nextui-org/react';
 import {message} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -89,13 +88,7 @@ export default function SettingsDiscord() {
           </Checkbox>
         </CheckboxGroup>
 
-        <Button
-          radius="md"
-          variant="default"
-          onClick={onApply}
-          loading={isSaving}
-          className="!cursor-default !transition !duration-300"
-          fullWidth>
+        <Button onPress={onApply} isLoading={isSaving}>
           Apply
         </Button>
       </SettingsSection>

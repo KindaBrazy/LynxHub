@@ -1,4 +1,4 @@
-import {Kbd} from '@mantine/core';
+import {Kbd} from '@nextui-org/react';
 import {Spinner} from '@nextui-org/react';
 import {Result} from 'antd';
 import {isEmpty} from 'lodash';
