@@ -58,7 +58,7 @@ export default class GitManager {
     if (dir) {
       resultPath = dir;
     } else {
-      resultPath = await openDialog('openDirectory');
+      resultPath = await openDialog({properties: ['openDirectory']});
     }
 
     if (!resultPath) return undefined;
