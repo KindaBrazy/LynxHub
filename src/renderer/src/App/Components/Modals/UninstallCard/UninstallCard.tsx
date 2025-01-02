@@ -86,7 +86,6 @@ const UninstallCard = () => {
                 }
                 size="sm"
                 delay={200}
-                radius="sm"
                 color="danger"
                 isDisabled={disableTooltip}
                 showArrow>

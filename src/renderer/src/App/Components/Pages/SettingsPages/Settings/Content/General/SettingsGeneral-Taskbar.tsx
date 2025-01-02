@@ -29,7 +29,6 @@ export default function SettingsGeneralTaskbar() {
           ? 'Select how the app should appear in the dock and system tray.'
           : 'Select how the app should appear in the taskbar and system tray.'
       }
-      radius="sm"
       labelPlacement="outside"
       selectedKeys={[selectedKey]}
       onSelectionChange={onChange}

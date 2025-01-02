@@ -147,9 +147,8 @@ const CardInfoModal = () => {
               onOpenChange(false);
               onClose();
             }}
-            radius="sm"
             color="danger"
-            variant="faded"
+            variant="flat"
             fullWidth>
             <span className="font-semibold">Close</span>
           </Button>

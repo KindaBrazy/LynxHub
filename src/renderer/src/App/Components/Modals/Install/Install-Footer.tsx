@@ -24,7 +24,7 @@ const InstallFooter = memo(() => {
 
   return (
     <ModalFooter className="shrink-0 justify-between overflow-hidden bg-foreground-200 dark:bg-foreground-100">
-      <ButtonGroup radius="sm" fullWidth>
+      <ButtonGroup fullWidth>
         {downloading ? (
           <Button
             onPress={() => {

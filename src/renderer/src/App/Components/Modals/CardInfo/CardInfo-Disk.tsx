@@ -58,7 +58,6 @@ export default function CardInfoDisk({extensionsSize, installDir, totalSize, sup
         layout="vertical"
       />
       <Button
-        radius="sm"
         variant="faded"
         onPress={openDir}
         className="my-4 justify-between"

@@ -32,7 +32,6 @@ export default function TerminalCommandItem({defaultText, editCommand, focus, in
 
   return (
     <Card
-      radius="sm"
       shadow="none"
       className="flex h-[38px] flex-row items-center justify-center !transition-opacity !duration-300 hover:opacity-80">
       <Input

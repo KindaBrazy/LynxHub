@@ -40,7 +40,6 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
   return (
     <ButtonGroup fullWidth>
       <Input
-        radius="sm"
         ref={inputRef}
         color="primary"
         value={directory}
@@ -52,7 +51,6 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
         multiple
       />
       <Button
-        radius="sm"
         variant="solid"
         onPress={chooseDirectory}
         className="cursor-default"

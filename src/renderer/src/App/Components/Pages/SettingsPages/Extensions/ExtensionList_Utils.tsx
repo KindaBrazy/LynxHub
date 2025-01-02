@@ -201,12 +201,12 @@ export function useRenderList(
                       {item.title}
                     </Link>
                     {installed.includes(item.id) && (
-                      <Chip size="sm" radius="sm" variant="faded" color="default">
+                      <Chip size="sm" variant="faded" color="default">
                         Installed
                       </Chip>
                     )}
                     {updateAvailable.includes(item.id) && (
-                      <Chip size="sm" radius="sm" variant="faded" color="success">
+                      <Chip size="sm" variant="faded" color="success">
                         Update
                       </Chip>
                     )}

@@ -22,7 +22,6 @@ export default function SettingsTerminalCursorStyle() {
 
   return (
     <Select
-      radius="sm"
       label="Cursor Style"
       labelPlacement="outside"
       selectedKeys={[cursorStyle]}

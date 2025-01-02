@@ -33,7 +33,6 @@ const LynxCardFooter = observer(() => {
           )
         ) : (
           <Button
-            radius="sm"
             onPress={openDoc}
             size={compactMode ? 'sm' : 'md'}
             className="cursor-default bg-foreground-200 dark:bg-foreground-100"

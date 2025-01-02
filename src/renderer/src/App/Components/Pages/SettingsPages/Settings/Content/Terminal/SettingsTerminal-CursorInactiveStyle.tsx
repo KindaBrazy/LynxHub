@@ -21,7 +21,6 @@ export default function SettingsTerminalCursorInactiveStyle() {
   );
   return (
     <Select
-      radius="sm"
       labelPlacement="outside"
       onSelectionChange={onChange}
       label="Cursor Inactive Style"

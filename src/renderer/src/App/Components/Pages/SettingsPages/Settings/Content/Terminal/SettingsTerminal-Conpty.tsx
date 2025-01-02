@@ -22,7 +22,6 @@ export default function SettingsTerminalConpty() {
 
   return (
     <Select
-      radius="sm"
       labelPlacement="outside"
       selectedKeys={[useConpty]}
       onSelectionChange={onChange}

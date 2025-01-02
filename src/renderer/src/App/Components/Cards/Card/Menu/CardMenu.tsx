@@ -40,7 +40,6 @@ export const CardMenu = observer(() => {
         showArrow>
         <DropdownTrigger>
           <Button
-            radius="sm"
             isLoading={!!updating}
             size={compactMode ? 'sm' : 'md'}
             className="cursor-default bg-foreground-200 dark:bg-foreground-100"

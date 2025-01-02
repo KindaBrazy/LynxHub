@@ -189,7 +189,6 @@ const UpdateApp = () => {
   return (
     <Modal
       size="lg"
-      radius="md"
       isOpen={isOpen}
       onClose={onClose}
       isDismissable={false}

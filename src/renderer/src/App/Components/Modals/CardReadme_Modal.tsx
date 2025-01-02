@@ -57,7 +57,6 @@ const CardReadmeModal = () => {
             onPress={() => {
               onOpenChange(false);
             }}
-            radius="sm"
             color="danger"
             variant="faded"
             fullWidth>

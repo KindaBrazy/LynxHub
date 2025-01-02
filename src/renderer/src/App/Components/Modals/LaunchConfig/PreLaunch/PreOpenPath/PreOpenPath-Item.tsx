@@ -13,7 +13,6 @@ export default function PreOpenPathItem({defaultText, icon, index, onRemove}: Pr
 
   return (
     <Card
-      radius="sm"
       shadow="none"
       className="relative flex h-[38px] flex-row items-center !transition-opacity !duration-300 hover:opacity-80">
       {icon}
