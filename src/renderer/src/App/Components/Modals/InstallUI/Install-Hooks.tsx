@@ -1,4 +1,4 @@
-import {Dispatch, MutableRefObject, SetStateAction, useCallback, useMemo} from 'react';
+import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 
 import {InstallationMethod, InstallationStepper, UserInputField, UserInputResult} from '../../../Modules/types';
 import {useModalsState} from '../../../Redux/AI/ModalsReducer';
@@ -11,14 +11,14 @@ type Props = {
   setCurrentStep: Dispatch<SetStateAction<number>>;
   setUserInputElements: Dispatch<SetStateAction<UserInputField[]>>;
   updateState: (newState: Partial<InstallState>) => void;
-  cloneResolver: MutableRefObject<((dir: string) => void) | null>;
-  terminalResolver: MutableRefObject<(() => void) | null>;
-  starterResolver: MutableRefObject<((result: InstallationMethod) => void) | null>;
-  userInputResolver: MutableRefObject<((result: UserInputResult[]) => void) | null>;
-  restartTerminal: MutableRefObject<(() => void) | null>;
+  cloneResolver: RefObject<((dir: string) => void) | null>;
+  terminalResolver: RefObject<(() => void) | null>;
+  starterResolver: RefObject<((result: InstallationMethod) => void) | null>;
+  userInputResolver: RefObject<((result: UserInputResult[]) => void) | null>;
+  restartTerminal: RefObject<(() => void) | null>;
   downloadFileFromUrl: (url: string) => ReturnType<InstallationStepper['downloadFileFromUrl']>;
   setExtensionsToInstall: Dispatch<SetStateAction<{urls: string[]; dir: string} | undefined>>;
-  extensionsResolver: MutableRefObject<(() => void) | null>;
+  extensionsResolver: RefObject<(() => void) | null>;
   setProgressBarState: Dispatch<
     SetStateAction<{
       isIndeterminate: boolean;

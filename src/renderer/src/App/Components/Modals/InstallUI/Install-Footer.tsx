@@ -1,6 +1,6 @@
 import {Button, ButtonGroup, ModalFooter} from '@nextui-org/react';
 import {Popconfirm} from 'antd';
-import {memo, MutableRefObject, useCallback} from 'react';
+import {memo, RefObject, useCallback} from 'react';
 
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
 import {InstallationMethod, UserInputResult} from '../../../Modules/types';
@@ -10,11 +10,11 @@ import {InstallState} from './types';
 type Props = {
   state: InstallState;
   handleClose: () => void;
-  restartTerminal: MutableRefObject<(() => void) | null>;
-  starterResolver: MutableRefObject<((result: InstallationMethod) => void) | null>;
-  terminalResolver: MutableRefObject<(() => void) | null>;
+  restartTerminal: RefObject<(() => void) | null>;
+  starterResolver: RefObject<((result: InstallationMethod) => void) | null>;
+  terminalResolver: RefObject<(() => void) | null>;
   updateState: (newState: Partial<InstallState>) => void;
-  userInputResolver: MutableRefObject<((result: UserInputResult[]) => void) | null>;
+  userInputResolver: RefObject<((result: UserInputResult[]) => void) | null>;
   userElementsReturn: UserInputResult[];
   downloadFileFromUrl: (url: string) => Promise<string>;
   urlToDownload: string | undefined;
