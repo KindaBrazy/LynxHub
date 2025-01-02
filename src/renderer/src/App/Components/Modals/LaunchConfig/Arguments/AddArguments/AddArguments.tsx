@@ -108,7 +108,6 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
 
   return (
     <Modal
-      radius="md"
       isDismissable={false}
       scrollBehavior="inside"
       className="z-50 max-w-[75%]"
@@ -136,7 +135,6 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
               {Array.from(selectedArguments).map((value: string) => (
                 <Chip
                   size="sm"
-                  radius="sm"
                   key={value}
                   variant="faded"
                   color="success"
@@ -150,7 +148,6 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
           )}
           <div className="flex w-full flex-row space-x-2">
             <Input
-              radius="md"
               spellCheck={false}
               onValueChange={setSearchValue}
               placeholder="Search by name or description..."
@@ -160,7 +157,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
             />
             <Dropdown>
               <DropdownTrigger>
-                <Button radius="md" variant="flat" className="cursor-default" isIconOnly>
+                <Button variant="flat" className="cursor-default" isIconOnly>
                   <Filter_Icon />
                 </Button>
               </DropdownTrigger>

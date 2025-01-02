@@ -118,7 +118,6 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
             label: 'cursor-default',
             trigger: 'cursor-default border border-foreground/5 transition duration-300',
           }}
-          radius="sm"
           title="Presets"
           items={sectionItems}
           selectionMode="single"

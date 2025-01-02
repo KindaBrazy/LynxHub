@@ -27,7 +27,6 @@ export default function SettingsGeneralTooltip() {
 
   return (
     <Select
-      radius="sm"
       label="Tooltip Behavior"
       labelPlacement="outside"
       selectedKeys={[selectedKey]}

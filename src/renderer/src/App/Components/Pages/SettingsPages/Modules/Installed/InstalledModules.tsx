@@ -53,7 +53,6 @@ export default function InstalledModules({setInstalledModules, updatingAll}: Pro
           classNames={{
             inputWrapper: 'dark:bg-black/20 dark:hover:bg-white/5 bg-stone-50 shadow-md overflow-hidden',
           }}
-          radius="md"
           type="search"
           spellCheck={false}
           className="w-full"

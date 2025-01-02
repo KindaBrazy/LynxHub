@@ -59,7 +59,6 @@ const LaunchConfig = memo(() => {
 
   return (
     <Modal
-      radius="md"
       isOpen={isOpen}
       onClose={onClose}
       isDismissable={false}

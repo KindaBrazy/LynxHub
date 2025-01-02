@@ -86,7 +86,6 @@ const StartButton = memo(() => {
           <Download2_Icon className={compactMode ? 'size-5' : 'size-5'} />
         )
       }
-      radius="sm"
       size={compactMode ? 'sm' : 'md'}
       onPress={installed ? startAi : install}
       isDisabled={!!updating || isUpdatingExt}

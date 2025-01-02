@@ -142,7 +142,6 @@ export default function Clone({updateTable, visible, installedExtensions}: Props
       {!cloning ? (
         <motion.div initial="init" animate="animate" variants={tabContentVariants}>
           <Input
-            radius="md"
             variant="flat"
             color="default"
             className="my-4"

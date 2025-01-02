@@ -164,7 +164,6 @@ const InstallUIModal = memo(() => {
         wrapper: '!top-10 ',
       }}
       size="2xl"
-      radius="sm"
       shadow="lg"
       backdrop="blur"
       isOpen={isOpen}

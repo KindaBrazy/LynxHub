@@ -42,7 +42,7 @@ export default function SettingsData() {
     <SettingsSection title="Data" id={SettingsDataId} icon={<Database_Icon className="size-5" />} itemsCenter>
       <span>App data, including extensions, modules and binaries, will be saved here.</span>
 
-      <Button radius="sm" variant="flat" onPress={openFolder} startContent={<OpenFolder_Icon />}>
+      <Button variant="flat" onPress={openFolder} startContent={<OpenFolder_Icon />}>
         {currentPath}
       </Button>
 

@@ -34,7 +34,6 @@ export default function SettingsGeneralTheme() {
 
   return (
     <Select
-      radius="sm"
       label="Theme"
       labelPlacement="outside"
       selectedKeys={[selectedTheme]}

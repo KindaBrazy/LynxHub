@@ -102,7 +102,7 @@ export default function DashboardUpdate() {
       </Select>
 
       {appUpdateAvailable && (
-        <Button radius="sm" color="success" className="mt-6" onPress={openUpdate} fullWidth>
+        <Button color="success" className="mt-6" onPress={openUpdate} fullWidth>
           Update
         </Button>
       )}

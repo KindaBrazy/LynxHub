@@ -133,9 +133,7 @@ const InstallFooter = ({
 
   return (
     <ModalFooter className="shrink-0 justify-between overflow-hidden bg-foreground-200 dark:bg-foreground-100">
-      <ButtonGroup radius="sm" fullWidth>
-        {renderFooterButtons()}
-      </ButtonGroup>
+      <ButtonGroup fullWidth>{renderFooterButtons()}</ButtonGroup>
     </ModalFooter>
   );
 };

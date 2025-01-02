@@ -115,14 +115,12 @@ export default function PreviewCard() {
       <CardFooter>
         <div className="flex w-full flex-row gap-x-3">
           <Button
-            radius="sm"
             variant="faded"
             size={compactMode ? 'sm' : 'md'}
             className="z-[11] w-full hover:scale-[1.03]"
             startContent={<Download2_Icon className={compactMode ? 'size-4' : 'size-5'} />}
           />
           <Button
-            radius="sm"
             variant="faded"
             className="cursor-default"
             size={compactMode ? 'sm' : 'md'}

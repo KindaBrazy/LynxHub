@@ -103,7 +103,6 @@ export default function UserInputs({elements, setResult}: Props) {
                 </span>
                 <Button
                   key={label}
-                  radius="sm"
                   variant="flat"
                   endContent={<div />}
                   className="justify-between"
@@ -122,7 +121,6 @@ export default function UserInputs({elements, setResult}: Props) {
                 </span>
                 <Button
                   key={label}
-                  radius="sm"
                   variant="flat"
                   endContent={<div />}
                   className="justify-between"
