@@ -14,7 +14,7 @@ export function MenuUninstall() {
   const onPress = useCallback(() => {
     dispatch(modalActions.openUninstallCard(id));
     setMenuIsOpen(false);
-  }, [id]);
+  }, [dispatch, setMenuIsOpen, id]);
 
   return (
     <DropdownItem

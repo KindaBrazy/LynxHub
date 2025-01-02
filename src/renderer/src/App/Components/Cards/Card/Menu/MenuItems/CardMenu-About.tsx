@@ -17,7 +17,7 @@ export const MenuInfo = () => {
   const onPress = useCallback(() => {
     dispatch(modalActions.openCardInfo({cardId: id, devName: name, extensionsDir, title, url: repoUrl}));
     setMenuIsOpen(false);
-  }, [dispatch, id, name, extensionsDir, title, repoUrl, setMenuIsOpen]);
+  }, [dispatch, setMenuIsOpen, id, name, extensionsDir, title, repoUrl]);
 
   return (
     <DropdownItem
@@ -38,7 +38,7 @@ export const MenuReadme = () => {
   const onPress = useCallback(() => {
     dispatch(modalActions.openReadme({url: repoUrl, title}));
     setMenuIsOpen(false);
-  }, [dispatch, repoUrl, setMenuIsOpen]);
+  }, [dispatch, setMenuIsOpen, repoUrl, title]);
 
   return (
     <DropdownItem
