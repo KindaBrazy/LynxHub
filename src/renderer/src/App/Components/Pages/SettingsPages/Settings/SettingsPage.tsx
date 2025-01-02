@@ -8,7 +8,7 @@ export const settingsElementId: string = 'settingsElement';
 /** App setting manager */
 const SettingsPage = () => (
   <Page id={settingsElementId}>
-    <div className="flex size-full flex-row space-x-1">
+    <div className="flex size-full flex-row pb-4 space-x-1 absolute">
       <SettingsPageNav />
       <SettingsPageContents />
     </div>
