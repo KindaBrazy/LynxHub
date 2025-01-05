@@ -100,8 +100,10 @@ export default class ElectronAppManager {
   /** Sets up event listeners for the main window. */
   private setupMainWindowEventListeners(): void {
     this.mainWindow?.on('ready-to-show', (): void => {
-      this.loadingWindow?.close();
-      this.onReadyToShow?.();
+      setTimeout(() => {
+        this.loadingWindow?.close();
+        this.onReadyToShow?.();
+      }, 1000);
     });
 
     this.mainWindow?.webContents.setWindowOpenHandler(({url}) => {
