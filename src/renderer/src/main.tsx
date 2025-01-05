@@ -4,6 +4,7 @@ import 'overlayscrollbars/overlayscrollbars.css';
 import '@ant-design/v5-patch-for-react-19';
 
 import log from 'electron-log/renderer';
+import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import {RouterProvider} from 'react-router';
 
@@ -20,4 +21,8 @@ if (!isDev()) {
   Object.assign(console, log.functions);
 }
 
-createRoot(document.getElementById('root') as HTMLElement).render(<RouterProvider router={router} />);
+createRoot(document.getElementById('root') as HTMLElement).render(
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>,
+);
