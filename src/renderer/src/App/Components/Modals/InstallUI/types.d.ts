@@ -14,4 +14,5 @@ export type InstallState = {
   cloneUrl: string;
   doneAll: {type: 'success' | 'error'; title: string; description?: string};
   startClone: boolean;
+  disableSelectDir: boolean;
 };

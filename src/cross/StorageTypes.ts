@@ -14,7 +14,7 @@ import {
 
 export type InstalledCard = {
   id: string;
-  dir: string;
+  dir?: string;
 };
 
 export type InstalledCards = InstalledCard[];

@@ -1,6 +1,12 @@
 import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 
-import {InstallationMethod, InstallationStepper, UserInputField, UserInputResult} from '../../../Modules/types';
+import {
+  InstallationMethod,
+  InstallationStepper,
+  StarterStepOptions,
+  UserInputField,
+  UserInputResult,
+} from '../../../Modules/types';
 import {useModalsState} from '../../../Redux/AI/ModalsReducer';
 import rendererIpc from '../../../RendererIpc';
 import {InstallState} from './types';
@@ -92,10 +98,10 @@ export function useStepper({
     [],
   );
 
-  const starterStep = useCallback(async (): Promise<InstallationMethod> => {
+  const starterStep = useCallback(async (options?: StarterStepOptions): Promise<InstallationMethod> => {
     return new Promise(resolve => {
       starterResolver.current = resolve;
-      updateState({body: 'starter'});
+      updateState({body: 'starter', disableSelectDir: options?.disableSelectDir});
     });
   }, []);
 

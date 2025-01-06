@@ -70,7 +70,7 @@ export async function customPtyCommands(opt: PtyProcessOpt, commands?: string | 
 export async function ptyProcess(opt: PtyProcessOpt, cardId: string) {
   if (opt === 'start') {
     const card = storageManager.getData('cards').installedCards.find(card => card.id === cardId);
-    if (!card?.dir) return;
+    if (!card) return;
 
     ptyManager = new PtyManager();
     ptyManager.start(card.dir, true);
@@ -88,8 +88,8 @@ export async function ptyProcess(opt: PtyProcessOpt, cardId: string) {
     if (!lodash.isEmpty(customRun) || behavior === 'empty') {
       runMultiCommand(customRun || []);
     } else {
-      const runCommand = (await moduleManager.getMethodsById(cardId)?.getRunCommands(card.dir)) || '';
-      ptyManager.write(runCommand);
+      const runCommand = await moduleManager.getMethodsById(cardId)?.getRunCommands(card.dir);
+      ptyManager.write(runCommand || '');
     }
   } else if (opt === 'stop') {
     ptyManager?.stop();

@@ -80,12 +80,15 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
       const method = this.getMethodsById(id)?.updateAvailable;
       const updateType = updateTypes.find(update => update.id === id)?.type;
       if (!updateType || updateType === 'git') {
-        const isAvailable = await GitManager.isUpdateAvailable(dir);
+        const isAvailable = await GitManager.isUpdateAvailable(dir!);
         if (isAvailable) {
           this.availableUpdates.push(id);
         }
       } else if (method) {
-        const lynxApi: LynxApiUpdate = {isPullAvailable: GitManager.isUpdateAvailable(dir)};
+        const lynxApi: LynxApiUpdate = {
+          isPullAvailable: GitManager.isUpdateAvailable(dir),
+          storage: {get: storageManager.getCustomData, set: storageManager.setCustomData},
+        };
         const isAvailable = await method(lynxApi);
         if (isAvailable) {
           this.availableUpdates.push(id);

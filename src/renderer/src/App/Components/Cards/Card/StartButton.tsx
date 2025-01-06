@@ -43,7 +43,7 @@ const StartButton = memo(() => {
 
   const startAi = useCallback(() => {
     if (autoUpdateExtensions && card) {
-      rendererIpc.utils.updateAllExtensions({id, dir: card.dir + extensionsDir});
+      rendererIpc.utils.updateAllExtensions({id, dir: card.dir! + extensionsDir!});
       setIsUpdatingExt(true);
     } else {
       rendererIpc.pty.process('start', id);

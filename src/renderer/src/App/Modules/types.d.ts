@@ -4,6 +4,7 @@ export type InstallationMethod = {chosen: 'install' | 'locate'; targetDirectory?
 export type UserInputFieldType = 'checkbox' | 'text-input' | 'select' | 'directory' | 'file';
 export type UserInputField = {id: string; label: string; type: UserInputFieldType; selectOptions?: string[]};
 export type UserInputResult = {id: string; result: string | boolean};
+export type StarterStepOptions = {disableSelectDir?: boolean};
 export type InstallationStepper = {
   /** Initialize the installation process by setting up the required steps.
    * @param stepTitles An array of step titles representing the installation workflow.
@@ -16,7 +17,7 @@ export type InstallationStepper = {
   /** Normally the first step (Contain locating or start installation)
    * @return A promise resolving to the user's choice of installation method.
    */
-  starterStep: () => Promise<InstallationMethod>;
+  starterStep: (options?: StarterStepOptions) => Promise<InstallationMethod>;
 
   /** Clone a Git repository to a user-selected directory.
    * @param repositoryUrl The URL of the Git repository to clone.
@@ -64,7 +65,7 @@ export type InstallationStepper = {
   /** Call this when installation is done to set the card installed
    * @param dir The directory to save
    */
-  setInstalled: (dir: string) => void;
+  setInstalled: (dir?: string) => void;
 
   /** Collect user input for various configuration options.
    * @param inputFields An array of input fields to present to the user.
@@ -175,7 +176,15 @@ export type InstallationStepper = {
   };
 };
 
-export type LynxApiUpdate = {isPullAvailable: Promise<boolean>};
+export type LynxApiUpdate = {
+  isPullAvailable: Promise<boolean>;
+  storage: {get: (key: string) => any; set: (key: string, data: any) => void};
+};
+
+export type LynxApiInstalled = {
+  installedDirExistAndWatch: Promise<boolean>;
+  storage: {get: (key: string) => any; set: (key: string, data: any) => void};
+};
 
 /** These methods will be called in the renderer process */
 export type CardRendererMethods = {

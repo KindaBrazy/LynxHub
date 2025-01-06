@@ -1,6 +1,6 @@
 // Card Repository information type
 
-import {LynxApiUpdate} from '../renderer/src/App/Modules/types';
+import {LynxApiInstalled, LynxApiUpdate} from '../renderer/src/App/Modules/types';
 import {
   BINARIES_FOLDER_NAME,
   EXTENSIONS_FOLDER_NAME,
@@ -69,7 +69,7 @@ export type UpdateDownloadProgress = {
 /** These methods will be called in the main process */
 export type CardMainMethods = {
   /** Return commands based on installed directory to be executed with terminal */
-  getRunCommands: (dir: string) => Promise<string | string[]>;
+  getRunCommands: (dir?: string) => Promise<string | string[]>;
 
   /** Read saved argument from file and return data with the array of type ChosenArgument */
   readArgs?: (dir: string) => Promise<ChosenArgument[]>;
@@ -87,6 +87,7 @@ export type CardMainMethods = {
     send: (channel: string, ...args: any[]) => void;
   }) => void;
   updateAvailable?: (lynxApi: LynxApiUpdate) => Promise<boolean>;
+  isInstalled?: (lynxApi: LynxApiInstalled) => Promise<boolean>;
 };
 
 export type MainModules = {

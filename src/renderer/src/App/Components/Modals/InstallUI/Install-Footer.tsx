@@ -90,9 +90,11 @@ const InstallFooter = ({
         )}
         {state.body === 'starter' && (
           <>
-            <Button variant="flat" onPress={locate} className="cursor-default">
-              Locate
-            </Button>
+            {!state.disableSelectDir && (
+              <Button variant="flat" onPress={locate} className="cursor-default">
+                Locate
+              </Button>
+            )}
             <Button
               variant="flat"
               color="success"
