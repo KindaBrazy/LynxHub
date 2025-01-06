@@ -30,6 +30,7 @@ const initialState: InstallState = {
     type: 'success',
   },
   startClone: false,
+  disableSelectDir: false,
 };
 
 const InstallUIModal = memo(() => {
@@ -121,7 +122,8 @@ const InstallUIModal = memo(() => {
       if (type === 'install') {
         methods.startInstall(stepper);
       } else {
-        methods.updater.startUpdate?.(stepper, installedCard!.dir);
+        // TODO Solve this
+        methods.updater.startUpdate?.(stepper, installedCard!.dir!);
       }
     }
   }, [isOpen, methods, stepper]);
