@@ -1,4 +1,4 @@
-import {Button, CardFooter} from '@nextui-org/react';
+import {Button, ButtonGroup, CardFooter} from '@nextui-org/react';
 import {observer} from 'mobx-react-lite';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
@@ -29,22 +29,24 @@ const LynxCardFooter = observer(() => {
   return (
     <CardFooter className={cardsRepoInfo ? '' : 'pt-1'}>
       <div className="flex w-full flex-row gap-x-3">
-        <StartButton />
-        {installed ? (
-          ReplaceMenu ? (
-            <ReplaceMenu context={useCardData()} />
+        <ButtonGroup fullWidth>
+          <StartButton />
+          {installed ? (
+            ReplaceMenu ? (
+              <ReplaceMenu context={useCardData()} />
+            ) : (
+              <CardMenu />
+            )
           ) : (
-            <CardMenu />
-          )
-        ) : (
-          <Button
-            onPress={openDoc}
-            size={compactMode ? 'sm' : 'md'}
-            className="cursor-default bg-foreground-200 dark:bg-foreground-100"
-            startContent={<Document_Icon className={`size-5 ${compactMode ? 'm-2' : 'm-2.5'}`} />}
-            isIconOnly
-          />
-        )}
+            <Button
+              onPress={openDoc}
+              size={compactMode ? 'sm' : 'md'}
+              startContent={<Document_Icon className={`size-5 ${compactMode ? 'm-2' : 'm-2.5'}`} />}
+              className="cursor-default bg-foreground-200 dark:bg-foreground-100 border-l-2 border-l-foreground/10"
+              isIconOnly
+            />
+          )}
+        </ButtonGroup>
       </div>
     </CardFooter>
   );
