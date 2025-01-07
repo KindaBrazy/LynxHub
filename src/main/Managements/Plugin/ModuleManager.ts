@@ -88,7 +88,10 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
         } else if (method) {
           const lynxApi: LynxApiUpdate = {
             isPullAvailable: GitManager.isUpdateAvailable(dir),
-            storage: {get: storageManager.getCustomData, set: storageManager.setCustomData},
+            storage: {
+              get: (key: string) => storageManager.getCustomData(key),
+              set: (key: string, data: any) => storageManager.setCustomData(key, data),
+            },
           };
           const isAvailable = await method(lynxApi);
           if (isAvailable) {
