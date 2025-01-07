@@ -76,23 +76,27 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
     this.availableUpdates = [];
 
     for (const card of installedCards) {
-      const {id, dir} = card;
-      const method = this.getMethodsById(id)?.updateAvailable;
-      const updateType = updateTypes.find(update => update.id === id)?.type;
-      if (!updateType || updateType === 'git') {
-        const isAvailable = await GitManager.isUpdateAvailable(dir!);
-        if (isAvailable) {
-          this.availableUpdates.push(id);
+      try {
+        const {id, dir} = card;
+        const method = this.getMethodsById(id)?.updateAvailable;
+        const updateType = updateTypes.find(update => update.id === id)?.type;
+        if (!updateType || updateType === 'git') {
+          const isAvailable = await GitManager.isUpdateAvailable(dir!);
+          if (isAvailable) {
+            this.availableUpdates.push(id);
+          }
+        } else if (method) {
+          const lynxApi: LynxApiUpdate = {
+            isPullAvailable: GitManager.isUpdateAvailable(dir),
+            storage: {get: storageManager.getCustomData, set: storageManager.setCustomData},
+          };
+          const isAvailable = await method(lynxApi);
+          if (isAvailable) {
+            this.availableUpdates.push(id);
+          }
         }
-      } else if (method) {
-        const lynxApi: LynxApiUpdate = {
-          isPullAvailable: GitManager.isUpdateAvailable(dir),
-          storage: {get: storageManager.getCustomData, set: storageManager.setCustomData},
-        };
-        const isAvailable = await method(lynxApi);
-        if (isAvailable) {
-          this.availableUpdates.push(id);
-        }
+      } catch (e) {
+        console.error(e);
       }
     }
 
