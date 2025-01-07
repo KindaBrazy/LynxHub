@@ -57,8 +57,8 @@ const CardReadmeModal = () => {
             onPress={() => {
               onOpenChange(false);
             }}
-            color="danger"
-            variant="faded"
+            variant="flat"
+            color="warning"
             fullWidth>
             <span className="font-semibold">Close</span>
           </Button>
