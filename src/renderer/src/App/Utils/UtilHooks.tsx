@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef} from 'react';
+import {useMemo} from 'react';
 
 import {InstalledCard} from '../../../../cross/StorageTypes';
 import {useCardsState} from '../Redux/AI/CardsReducer';
@@ -72,19 +72,3 @@ export const useDisableTooltip = (isEssential: boolean = false): boolean => {
   // Show if tooltip set to essential
   return !isEssential;
 };
-
-export function useTraceUpdate(props, name: string) {
-  const prev = useRef(props);
-  useEffect(() => {
-    const changedProps = Object.entries(props).reduce((ps, [k, v]) => {
-      if (prev.current[k] !== v) {
-        ps[k] = [prev.current[k], v];
-      }
-      return ps;
-    }, {});
-    if (Object.keys(changedProps).length > 0) {
-      console.log(`Changed props (${name}):`, changedProps);
-    }
-    prev.current = props;
-  });
-}

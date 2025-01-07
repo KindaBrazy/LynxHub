@@ -1,20 +1,6 @@
 import {isEmpty} from 'lodash';
 
 /**
- * Extracts the developer's profile URL from a given GitHub repository URL.
- * @param repositoryUrl - The full GitHub repository URL
- * @returns The developer's GitHub profile URL
- * @throws Error if the repository URL is invalid
- */
-export function getDeveloperProfileUrl(repositoryUrl: string): string {
-  const match = repositoryUrl.match(/https:\/\/github\.com\/([^/]+)/);
-  if (match && match[1]) {
-    return `https://github.com/${match[1]}`;
-  }
-  throw new Error('Invalid repository URL');
-}
-
-/**
  * Formats a number with K, M, B, T suffixes for thousands, millions, billions, and trillions.
  * @param num - The number to format
  * @returns Formatted string representation of the number
