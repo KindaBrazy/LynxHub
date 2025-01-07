@@ -39,7 +39,7 @@ export const MenuUpdate = () => {
     if (getMethod(id, 'manager')?.updater.startUpdate) {
       dispatch(modalActions.openInstallUICard({id, type: 'update', title}));
       setMenuIsOpen(false);
-    } else if (webUi) {
+    } else if (webUi && webUi.dir) {
       dispatch(cardsActions.addUpdatingCard({devName, id, title}));
       setMenuIsOpen(false);
       rendererIpc.git.pull(webUi.dir, id);
@@ -80,7 +80,7 @@ export const MenuCheckForUpdate = () => {
 
   const onPress = useCallback(() => {
     setCheckingForUpdate(true);
-    if (webUi) {
+    if (webUi && webUi.dir) {
       rendererIpc.git.bCardUpdateAvailable(webUi.dir).then((isAvailable: boolean) => {
         if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
         setCheckingForUpdate(false);
@@ -127,7 +127,7 @@ export const MenuAutoUpdate = () => {
   );
 
   useEffect(() => {
-    if (autoUpdate && updateAvailable && webUi) {
+    if (autoUpdate && updateAvailable && webUi && webUi.dir) {
       dispatch(cardsActions.addUpdatingCard({devName, id, title}));
       rendererIpc.git.pull(webUi.dir, id);
     }
