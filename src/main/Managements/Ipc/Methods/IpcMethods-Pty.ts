@@ -1,4 +1,4 @@
-import os, {platform} from 'node:os';
+import {platform} from 'node:os';
 
 import {shell} from 'electron';
 import lodash from 'lodash';
@@ -9,7 +9,7 @@ import PtyManager from '../../PtyManager';
 
 let ptyManager: PtyManager | undefined;
 
-const LINE_ENDING = os.platform() === 'win32' ? '\r' : '\n';
+const LINE_ENDING = platform() === 'win32' ? '\r' : '\n';
 
 /**
  * Runs multiple commands in the PTY.
