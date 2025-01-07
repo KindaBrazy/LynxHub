@@ -40,7 +40,7 @@ export default function Logo() {
           <DropdownSection>
             {/*#region Maximize */}
             <DropdownItem
-              onClick={() => {
+              onPress={() => {
                 changeWindowState('maximize');
               }}
               startContent={
@@ -58,7 +58,7 @@ export default function Logo() {
 
             {/*#region Minimize */}
             <DropdownItem
-              onClick={() => {
+              onPress={() => {
                 changeWindowState('minimize');
               }}
               key="minimize"
@@ -70,7 +70,7 @@ export default function Logo() {
 
             {/*#region Close */}
             <DropdownItem
-              onClick={() => {
+              onPress={() => {
                 changeWindowState('close');
               }}
               key="close"
