@@ -30,55 +30,53 @@ export const CardMenu = observer(() => {
   }, []);
 
   return (
-    <div className="flex">
-      <Dropdown
-        isOpen={menuIsOpen}
-        closeOnSelect={false}
-        onOpenChange={setMenuIsOpen}
-        className="border !border-foreground-200/70"
-        classNames={{base: 'before:bg-black/70', content: 'border-black/70'}}
-        showArrow>
-        <DropdownTrigger>
-          <Button
-            isLoading={!!updating}
-            size={compactMode ? 'sm' : 'md'}
-            className="cursor-default bg-foreground-200 dark:bg-foreground-100"
-            startContent={!updating && <MenuDots_Icon className="size-[1.3rem] m-2 rotate-90" />}
-            isIconOnly
-          />
-        </DropdownTrigger>
-        <DropdownMenu aria-label="Card Menu">
-          {first.map((Comp, index) => {
-            return Comp({key: index, context: useCardData()});
-          })}
-          <DropdownSection key="options" showDivider>
-            {MenuLaunchConfig()}
-            {MenuExtensions()}
-            {MenuPin()}
-          </DropdownSection>
-          {second.map((Comp, index) => {
-            return Comp({key: index, context: useCardData()});
-          })}
-          <DropdownSection key="update" showDivider>
-            {MenuUpdate()}
-            {MenuCheckForUpdate()}
-            {MenuAutoUpdate()}
-          </DropdownSection>
-          {third.map((Comp, index) => {
-            return Comp({key: index, context: useCardData()});
-          })}
-          <DropdownSection key="danger-zone">
-            {MenuInfo()}
-            {MenuReadme()}
-            {MenuUninstall()}
-          </DropdownSection>
+    <Dropdown
+      isOpen={menuIsOpen}
+      closeOnSelect={false}
+      onOpenChange={setMenuIsOpen}
+      className="border !border-foreground-200/70"
+      classNames={{base: 'before:bg-black/70', content: 'border-black/70'}}
+      showArrow>
+      <DropdownTrigger>
+        <Button
+          isLoading={!!updating}
+          size={compactMode ? 'sm' : 'md'}
+          className="cursor-default bg-foreground-200 dark:bg-foreground-100"
+          startContent={!updating && <MenuDots_Icon className="size-[1.3rem] m-2 rotate-90" />}
+          isIconOnly
+        />
+      </DropdownTrigger>
+      <DropdownMenu aria-label="Card Menu">
+        {first.map((Comp, index) => {
+          return Comp({key: index, context: useCardData()});
+        })}
+        <DropdownSection key="options" showDivider>
+          {MenuLaunchConfig()}
+          {MenuExtensions()}
+          {MenuPin()}
+        </DropdownSection>
+        {second.map((Comp, index) => {
+          return Comp({key: index, context: useCardData()});
+        })}
+        <DropdownSection key="update" showDivider>
+          {MenuUpdate()}
+          {MenuCheckForUpdate()}
+          {MenuAutoUpdate()}
+        </DropdownSection>
+        {third.map((Comp, index) => {
+          return Comp({key: index, context: useCardData()});
+        })}
+        <DropdownSection key="danger-zone">
+          {MenuInfo()}
+          {MenuReadme()}
+          {MenuUninstall()}
+        </DropdownSection>
 
-          {fourth.map((Comp, index) => {
-            return Comp({key: index, context: useCardData()});
-          })}
-        </DropdownMenu>
-      </Dropdown>
-    </div>
+        {fourth.map((Comp, index) => {
+          return Comp({key: index, context: useCardData()});
+        })}
+      </DropdownMenu>
+    </Dropdown>
   );
 });
 
