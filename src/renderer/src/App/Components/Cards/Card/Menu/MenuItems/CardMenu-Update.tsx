@@ -56,9 +56,9 @@ export const MenuUpdate = () => {
       onPress={onPress}
       isDisabled={!!updating}
       startContent={<Download_Icon />}
-      color={customUpdate ? 'default' : 'success'}
       endContent={updating && <Spinner size="sm" color="primary" />}
-      className={`cursor-default ${!customUpdate && 'text-success'}`}
+      color={customUpdate && !updateAvailable ? 'default' : 'success'}
+      className={`cursor-default ${updateAvailable && 'text-success'}`}
     />
   );
 };
