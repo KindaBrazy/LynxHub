@@ -206,7 +206,7 @@ export type CardRendererMethods = {
     startInstall: (stepper: InstallationStepper) => void;
     updater: {
       updateType: 'git' | 'stepper';
-      startUpdate?: (stepper: InstallationStepper, dir: string) => void;
+      startUpdate?: (stepper: InstallationStepper, dir?: string) => void;
     };
   };
 };

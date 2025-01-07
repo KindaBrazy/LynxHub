@@ -122,8 +122,7 @@ const InstallUIModal = memo(() => {
       if (type === 'install') {
         methods.startInstall(stepper);
       } else {
-        // TODO Solve this
-        methods.updater.startUpdate?.(stepper, installedCard!.dir!);
+        methods.updater.startUpdate?.(stepper, installedCard!.dir);
       }
     }
   }, [isOpen, methods, stepper]);
