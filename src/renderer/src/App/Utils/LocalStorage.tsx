@@ -89,18 +89,6 @@ export async function fetchRepoDetails(url: string): Promise<RepoDetails | undef
 }
 
 /**
- * Retrieves developer information from local storage.
- * @param repoUrl - The GitHub repository URL
- * @returns DevInfo if available, otherwise undefined
- */
-export function getDevInfo(repoUrl: string): DevInfo | undefined {
-  const {owner, repo} = extractGitUrl(repoUrl);
-  const cacheKey = `${owner}_${repo}_dev_info`;
-  const cachedData = localStorage.getItem(cacheKey);
-  return cachedData ? (JSON.parse(cachedData) as DevInfo) : undefined;
-}
-
-/**
  * Custom hook to fetch and cache developer information from GitHub or GitLab.
  * @param repoUrl - The GitHub or GitLab repository URL
  * @returns DevInfo object
