@@ -7,6 +7,7 @@ import {useMemo} from 'react';
 import {useSettingsState} from '../../../Redux/App/SettingsReducer';
 import {useDevInfo, useLoadImage} from '../../../Utils/LocalStorage';
 import {useCardData} from '../CardsDataManager';
+import Header_Pin from './Header_Pin';
 
 const {Paragraph, Text, Title} = Typography;
 
@@ -32,6 +33,7 @@ const LynxCardHeader = observer(() => {
 
   return (
     <CardHeader className="flex flex-col p-0">
+      <Header_Pin />
       <Skeleton
         isLoaded={!!bgSrc}
         className={`${compactMode ? 'h-16' : allDisabled ? 'h-16' : halfDisabled ? 'h-20' : 'h-24'} ` + ` w-full`}>

@@ -1,15 +1,13 @@
 import {DropdownItem} from '@nextui-org/react';
-import {useCallback, useMemo} from 'react';
+import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Extensions2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Pin_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {SettingsMinimal_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
-import rendererIpc from '../../../../../RendererIpc';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
-import {useInstalledCard, useIsPinnedCard} from '../../../../../Utils/UtilHooks';
+import {useInstalledCard} from '../../../../../Utils/UtilHooks';
 import {useCardData} from '../../../CardsDataManager';
 
 export const MenuLaunchConfig = () => {
@@ -60,31 +58,5 @@ export const MenuExtensions = () => {
     />
   ) : (
     <DropdownItem className="hidden" key="extensions-hidden" textValue="extensions_hidden" />
-  );
-};
-
-export const MenuPin = () => {
-  const {id} = useCardData();
-  const isPinned = useIsPinnedCard(id);
-
-  const onPress = useCallback(
-    () => rendererIpc.storageUtils.pinnedCards(isPinned ? 'remove' : 'add', id),
-    [isPinned, id],
-  );
-
-  const title = useMemo(() => (isPinned ? 'Unpin' : 'Pin'), [isPinned]);
-  const startContent = useMemo(
-    () => <Pin_Icon className={`${isPinned ? 'rotate-45' : 'rotate-0'} transition duration-500`} />,
-    [isPinned],
-  );
-
-  return (
-    <DropdownItem
-      title={title}
-      key="pin-unpin"
-      onPress={onPress}
-      className="cursor-default"
-      startContent={startContent}
-    />
   );
 };
