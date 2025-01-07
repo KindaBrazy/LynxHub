@@ -1,21 +1,26 @@
 import {Button, CardFooter} from '@nextui-org/react';
 import {observer} from 'mobx-react-lite';
 import {useCallback, useMemo} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {Document_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
+import {modalActions} from '../../../Redux/AI/ModalsReducer';
 import {useSettingsState} from '../../../Redux/App/SettingsReducer';
+import {AppDispatch} from '../../../Redux/Store';
 import {useCardData} from '../CardsDataManager';
 import CardMenu from './Menu/CardMenu';
 import StartButton from './StartButton';
 
 const LynxCardFooter = observer(() => {
-  const {installed, repoUrl} = useCardData();
+  const {installed, repoUrl, title} = useCardData();
   const compactMode = useSettingsState('cardsCompactMode');
 
+  const dispatch = useDispatch<AppDispatch>();
+
   const openDoc = useCallback(() => {
-    window.open(repoUrl);
-  }, [repoUrl]);
+    dispatch(modalActions.openReadme({url: repoUrl, title}));
+  }, [dispatch, repoUrl, title]);
 
   const cardsRepoInfo = useSettingsState('cardsRepoInfo');
 
