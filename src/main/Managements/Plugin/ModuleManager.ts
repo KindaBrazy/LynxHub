@@ -101,9 +101,8 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
       } catch (e) {
         console.error(e);
       }
+      appManager.getWebContent()?.send(modulesChannels.onCardsUpdateAvailable, this.availableUpdates);
     }
-
-    appManager.getWebContent()?.send(modulesChannels.onCardsUpdateAvailable, this.availableUpdates);
   }
 
   public async cardsUpdateInterval(updateType: {id: string; type: 'git' | 'stepper'}[]) {
