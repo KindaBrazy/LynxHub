@@ -11,6 +11,7 @@ import {
   UserInputField,
   UserInputResult,
 } from '../../../Modules/types';
+import {cardsActions} from '../../../Redux/AI/CardsReducer';
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
@@ -53,6 +54,12 @@ const InstallUIModal = memo(() => {
   const [userElementsReturn, setUserElementsReturn] = useState<UserInputResult[]>([]);
 
   const [extensionsToInstall, setExtensionsToInstall] = useState<{urls: string[]; dir: string} | undefined>(undefined);
+
+  useEffect(() => {
+    if (state.body === 'done' && state.doneAll.type === 'success' && type === 'update') {
+      dispatch(cardsActions.removeUpdateAvailable(cardId));
+    }
+  }, [state, type, cardId]);
 
   const [progressBarState, setProgressBarState] = useState<{
     isIndeterminate: boolean;
