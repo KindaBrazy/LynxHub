@@ -14,7 +14,6 @@ import {
   AppUpdateStatus,
   CardInfo,
   ChangeWindowState,
-  CloneDirTypes,
   CustomRunBehaviorData,
   DarkModeTypes,
   DiscordRunningAI,
@@ -95,8 +94,8 @@ const rendererIpc = {
 
     bCardUpdateAvailable: (repoDir: string): Promise<boolean> => ipc.invoke(gitChannels.updateAvailable, repoDir),
 
-    cloneRepo: (url: string, dir: CloneDirTypes): void => ipc.send(gitChannels.cloneRepo, url, dir),
-    clonePromise: (url: string, dir: CloneDirTypes): Promise<void> => ipc.invoke(gitChannels.clonePromise, url, dir),
+    cloneRepo: (url: string, dir: string): void => ipc.send(gitChannels.cloneRepo, url, dir),
+    clonePromise: (url: string, dir: string): Promise<void> => ipc.invoke(gitChannels.clonePromise, url, dir),
 
     locateCard: (url: string): Promise<string | undefined> => ipc.invoke(gitChannels.locate, url),
 

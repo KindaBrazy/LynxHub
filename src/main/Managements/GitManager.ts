@@ -10,11 +10,9 @@ import {
   StatusResult,
 } from 'simple-git';
 
-import {extractGitUrl, validateGitRepoUrl} from '../../cross/CrossUtils';
-import {CloneDirTypes} from '../../cross/IpcChannelAndTypes';
+import {validateGitRepoUrl} from '../../cross/CrossUtils';
 import {appManager} from '../index';
 import {checkPathExists, openDialog} from '../Utilities/Utils';
-import ModuleManager from './Plugin/ModuleManager';
 
 /** Manages Git operations such as cloning, pulling, and status checking. */
 export default class GitManager {
@@ -203,13 +201,10 @@ export default class GitManager {
    * @param url - The URL of the repository to clone.
    * @param directory - The directory to clone into.
    */
-  public async clone(url: string, directory: CloneDirTypes): Promise<void> {
+  public async clone(url: string, directory: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      const resultDir =
-        directory === 'moduleDir' ? path.join(ModuleManager.getModulesPath(), extractGitUrl(url).repo) : directory;
-
       this.git
-        .clone(url, resultDir.toString())
+        .clone(url, path.resolve(directory).toString())
         .then(() => {
           this.handleProgressComplete();
           resolve();
