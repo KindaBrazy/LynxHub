@@ -198,13 +198,13 @@ export default class GitManager {
 
   /**
    * Clones a repository to the specified directory.
-   * @param url - The URL of the repository to clone.
-   * @param directory - The directory to clone into.
    */
-  public async clone(url: string, directory: string): Promise<void> {
+  public async clone(url: string, directory: string, branch: string = 'master', depth: number = 1): Promise<void> {
+    const targetDirectory = path.resolve(directory);
+
     return new Promise((resolve, reject) => {
       this.git
-        .clone(url, path.resolve(directory).toString())
+        .clone(url, targetDirectory, [`--depth=${depth}`, '--single-branch', '--branch', branch])
         .then(() => {
           this.handleProgressComplete();
           resolve();
