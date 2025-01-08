@@ -199,7 +199,29 @@ export default class GitManager {
   /**
    * Clones a repository to the specified directory.
    */
-  public async clone(url: string, directory: string, branch: string = 'master', depth: number = 1): Promise<void> {
+  public async clone(url: string, directory: string): Promise<void> {
+    const targetDirectory = path.resolve(directory);
+
+    return new Promise((resolve, reject) => {
+      this.git
+        .clone(url, targetDirectory)
+        .then(() => {
+          this.handleProgressComplete();
+          resolve();
+        })
+        .catch(error => {
+          this.handleError(error);
+          reject(error);
+        });
+    });
+  }
+
+  public async cloneShallow(
+    url: string,
+    directory: string,
+    branch: string = 'master',
+    depth: number = 1,
+  ): Promise<void> {
     const targetDirectory = path.resolve(directory);
 
     return new Promise((resolve, reject) => {
@@ -214,6 +236,57 @@ export default class GitManager {
           reject(error);
         });
     });
+  }
+
+  public async changeBranch(directory: string, branchName: string): Promise<void> {
+    const targetDirectory = path.resolve(directory);
+
+    try {
+      await this.git.cwd(targetDirectory);
+      await this.git.fetch('origin', branchName);
+      await this.git.checkout(branchName);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes('pathspec') && error.message.includes('did not match any file(s) known to git')) {
+          this.handleError(new Error(`Branch "${branchName}" not found in the repository.`));
+        } else {
+          this.handleError(error);
+        }
+      } else {
+        this.handleError(new Error('An unknown error occurred while changing branches.'));
+      }
+      throw error;
+    }
+  }
+
+  public async changeDepth(directory: string, newDepth: number): Promise<void> {
+    const targetDirectory = path.resolve(directory);
+    try {
+      await this.git.cwd(targetDirectory);
+      await this.git.fetch(['--depth=' + newDepth]);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes('fatal: refusing to fetch into shallow repository')) {
+          this.handleError(new Error('Cannot change depth. The repository might already be a full clone.'));
+        } else {
+          this.handleError(error);
+        }
+      } else {
+        this.handleError(new Error('An unknown error occurred while changing depth.'));
+      }
+      throw error;
+    }
+  }
+
+  public async unshallow(directory: string): Promise<void> {
+    const targetDirectory = path.resolve(directory);
+    try {
+      await this.git.cwd(targetDirectory);
+      await this.git.fetch('--unshallow');
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
   }
 
   /**
