@@ -31,8 +31,6 @@ export type GitProgressCallback = <T extends GitProgressState>(
   result: GitProgressResult<T>,
 ) => void;
 
-export type CloneDirTypes = string | 'moduleDir';
-
 export type StorageOperation = 'add' | 'remove' | 'get' | 'set';
 export type RecentlyOperation = 'update' | 'get';
 export type StoragePreOpenData = {cardId: string; data: PreOpenData}[];

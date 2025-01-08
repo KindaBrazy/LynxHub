@@ -6,7 +6,6 @@ import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/Cross
 import {
   appDataChannels,
   ChangeWindowState,
-  CloneDirTypes,
   DarkModeTypes,
   DiscordRunningAI,
   extensionsChannels,
@@ -105,8 +104,8 @@ function git() {
   ipcMain.handle(gitChannels.locate, (_, url: string) => GitManager.locateCard(url));
   ipcMain.handle(gitChannels.validateGitDir, (_, dir: string, url: string) => validateGitDir(dir, url));
 
-  ipcMain.on(gitChannels.cloneRepo, (_, url: string, dir: CloneDirTypes) => cloneRepo(url, dir));
-  ipcMain.handle(gitChannels.clonePromise, (_, url: string, dir: CloneDirTypes) => clonePromise(url, dir));
+  ipcMain.on(gitChannels.cloneRepo, (_, url: string, dir: string) => cloneRepo(url, dir));
+  ipcMain.handle(gitChannels.clonePromise, (_, url: string, dir: string) => clonePromise(url, dir));
 
   ipcMain.on(gitChannels.abortClone, () => abortGitOperation());
 

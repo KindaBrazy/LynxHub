@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {CloneDirTypes, gitChannels, utilsChannels} from '../../../../cross/IpcChannelAndTypes';
+import {gitChannels, utilsChannels} from '../../../../cross/IpcChannelAndTypes';
 import {appManager} from '../../../index';
 import {calculateFolderSize, getDirCreationDate} from '../../../Utilities/Utils';
 import GitManager from '../../GitManager';
@@ -48,7 +48,7 @@ export async function getRepoInfo(id: string, repoDir: string, extensionsDir?: s
  * @param url - The URL of the repository to clone.
  * @param dir - The directory type to clone into.
  */
-export function cloneRepo(url: string, dir: CloneDirTypes): void {
+export function cloneRepo(url: string, dir: string): void {
   gitManager = new GitManager(true);
 
   gitManager.clone(url, path.resolve(dir));
@@ -61,7 +61,7 @@ export function cloneRepo(url: string, dir: CloneDirTypes): void {
  * @param url - The URL of the repository to clone.
  * @param dir - The directory type to clone into.
  */
-export async function clonePromise(url: string, dir: CloneDirTypes) {
+export async function clonePromise(url: string, dir: string) {
   gitManager = new GitManager(true);
   return gitManager.clone(url, path.resolve(dir));
 }
