@@ -1,9 +1,9 @@
-import {Button, Card, CardBody, CardFooter, CardHeader} from '@nextui-org/react';
+import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader} from '@nextui-org/react';
 import {Divider, Typography} from 'antd';
 import {useMemo} from 'react';
 
 import {Download_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Fork_Icon, MenuDots_Icon, Play_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Fork_Icon, MenuDots_Icon, Pin_Icon, Play_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Star_Icon, User_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {useAppState} from '../../../../../../Redux/App/AppReducer';
 import {useSettingsState} from '../../../../../../Redux/App/SettingsReducer';
@@ -44,6 +44,15 @@ export default function PreviewCard() {
             `${compactMode ? 'h-16' : allDisabled ? 'h-16' : halfDisabled ? 'h-20' : 'h-24'} w-full`
           }
         />
+        <Button
+          size="sm"
+          radius="full"
+          variant="flat"
+          color="default"
+          className="absolute z-20 top-3 left-3"
+          isIconOnly>
+          <Pin_Icon className="transition duration-500 -rotate-45" />
+        </Button>
 
         {!compactMode && cardsDevImage && (
           <div
@@ -113,7 +122,7 @@ export default function PreviewCard() {
         </CardBody>
       )}
       <CardFooter>
-        <div className="flex w-full flex-row gap-x-3">
+        <ButtonGroup fullWidth>
           <Button
             color="primary"
             size={compactMode ? 'sm' : 'md'}
@@ -127,7 +136,7 @@ export default function PreviewCard() {
             startContent={<MenuDots_Icon className="size-[1.3rem] m-2 rotate-90" />}
             isIconOnly
           />
-        </div>
+        </ButtonGroup>
       </CardFooter>
     </Card>
   );
