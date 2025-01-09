@@ -40,6 +40,9 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
   return (
     <ButtonGroup fullWidth>
       <Input
+        classNames={{
+          inputWrapper: 'rounded-r-none !transition !duration-150',
+        }}
         ref={inputRef}
         color="primary"
         value={directory}
@@ -47,15 +50,9 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
         defaultValue={directory}
         aria-label="Directory path"
         onValueChange={changeDirectory}
-        classNames={{clearButton: 'cursor-default', inputWrapper: 'rounded-r-none'}}
         multiple
       />
-      <Button
-        variant="solid"
-        onPress={chooseDirectory}
-        className="cursor-default"
-        aria-label="Choose directory"
-        isIconOnly>
+      <Button variant="solid" onPress={chooseDirectory} aria-label="Choose directory" isIconOnly>
         {<Folder_Icon className="size-[20px]" />}
       </Button>
     </ButtonGroup>
