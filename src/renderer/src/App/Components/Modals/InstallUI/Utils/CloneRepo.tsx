@@ -15,6 +15,7 @@ import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {initGitProgress} from '../../../../Utils/Constants';
 import OpenDialog from '../../../Reusable/OpenDialog';
+import CloneOptions from './CloneOptions';
 
 type Props = {
   url: string;
@@ -22,10 +23,21 @@ type Props = {
   done: (dir: string) => void;
 };
 
+export type CloneOptionsResult = {
+  branch: string;
+  singleBranch: boolean;
+  depth?: number;
+};
+
 export default function CloneRepo({url, start, done}: Props) {
-  const {isOpen} = useModalsState('installUIModal');
+  const {isOpen, cardId} = useModalsState('installUIModal');
   const dispatch = useDispatch<AppDispatch>();
-  const {cardId} = useModalsState('installUIModal');
+
+  const [cloneOptionsResult, setCloneOptionsResult] = useState<CloneOptionsResult>({
+    depth: 1,
+    branch: 'master',
+    singleBranch: true,
+  });
 
   const [downloading, setDownloading] = useState<boolean>(false);
   const [downloadProgress, setDownloadProgress] = useState<SimpleGitProgressEvent>(initGitProgress);
@@ -46,8 +58,9 @@ export default function CloneRepo({url, start, done}: Props) {
   const install = useCallback(() => {
     setDownloading(true);
 
-    // Start cloning
-    rendererIpc.git.cloneRepo(url, directory);
+    const {singleBranch, branch, depth} = cloneOptionsResult;
+    rendererIpc.git.cloneShallow(url, directory, singleBranch, branch, depth);
+
     const onProgress: GitProgressCallback = (_e, id, state, result) => {
       if (id || !isOpen) return;
 
@@ -74,7 +87,7 @@ export default function CloneRepo({url, start, done}: Props) {
     return () => {
       rendererIpc.git.offProgress();
     };
-  }, [url, directory, done, cardId, dispatch]);
+  }, [dispatch, url, directory, done, cardId, cloneOptionsResult]);
 
   return (
     <ModalBody className="overflow-visible px-0">
@@ -132,6 +145,7 @@ export default function CloneRepo({url, start, done}: Props) {
               dialogType={{properties: ['openDirectory']}}
             />
           </Card>
+          <CloneOptions url={url} setCloneOptionsResult={setCloneOptionsResult} />
         </div>
       )}
     </ModalBody>

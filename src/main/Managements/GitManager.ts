@@ -219,14 +219,22 @@ export default class GitManager {
   public async cloneShallow(
     url: string,
     directory: string,
-    branch: string = 'master',
-    depth: number = 1,
+    singleBranch: boolean,
+    branch: string,
+    depth?: number,
   ): Promise<void> {
     const targetDirectory = path.resolve(directory);
 
+    const cloneOptions: string[] = [];
+
+    if (depth) cloneOptions.push(`--depth=${depth}`);
+    if (singleBranch) cloneOptions.push('--single-branch');
+    cloneOptions.push('--branch');
+    cloneOptions.push(branch);
+
     return new Promise((resolve, reject) => {
       this.git
-        .clone(url, targetDirectory, [`--depth=${depth}`, '--single-branch', '--branch', branch])
+        .clone(url, targetDirectory, cloneOptions)
         .then(() => {
           this.handleProgressComplete();
           resolve();
