@@ -56,6 +56,20 @@ export function cloneRepo(url: string, dir: string): void {
   setupGitManagerListeners(gitManager);
 }
 
+export function cloneShallow(
+  url: string,
+  directory: string,
+  singleBranch: boolean,
+  branch: string,
+  depth?: number,
+): void {
+  gitManager = new GitManager(true);
+
+  gitManager.cloneShallow(url, directory, singleBranch, branch, depth);
+
+  setupGitManagerListeners(gitManager);
+}
+
 /**
  * Clones a repository and resolve when completed and reject when got error.
  * @param url - The URL of the repository to clone.

@@ -110,6 +110,7 @@ export const fileChannels = {
 export const gitChannels = {
   abortClone: 'git:abortClone',
   cloneRepo: 'git:clone-repo',
+  cloneShallow: 'git:clone-shallow',
   clonePromise: 'git:clone-promise',
 
   locate: 'git:locate',
