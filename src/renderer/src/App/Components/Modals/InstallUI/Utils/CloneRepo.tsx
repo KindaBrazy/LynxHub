@@ -97,10 +97,9 @@ export default function CloneRepo({url, start, done}: Props) {
         <div className="space-y-4">
           <Card
             title={
-              <div className="flex flex-row items-center justify-between space-x-2">
+              <div className="flex flex-row items-center space-x-2">
                 <GitHub_Icon className="size-4" />
-                <span className="text-medium">Download From</span>
-                <a />
+                <span className="text-medium">Clone Url</span>
               </div>
             }
             size="small"
@@ -110,7 +109,7 @@ export default function CloneRepo({url, start, done}: Props) {
             <Link
               href={url}
               color="foreground"
-              className="transition-colors duration-300 hover:text-secondary-500"
+              className="transition-colors duration-150 hover:text-primary"
               isExternal
               showAnchorIcon>
               {url}
@@ -118,10 +117,9 @@ export default function CloneRepo({url, start, done}: Props) {
           </Card>
           <Card
             title={
-              <div className="flex flex-row items-center justify-between space-x-2">
+              <div className="flex flex-row items-center space-x-2">
                 <Folder2_Icon className="size-4" />
                 <span className="text-medium">Save to</span>
-                <a />
               </div>
             }
             size="small"
