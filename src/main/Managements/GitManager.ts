@@ -203,8 +203,8 @@ export default class GitManager {
     url: string,
     directory: string,
     singleBranch: boolean,
-    branch?: string,
     depth?: number,
+    branch?: string,
   ): Promise<void> {
     const targetDirectory = path.resolve(directory);
 

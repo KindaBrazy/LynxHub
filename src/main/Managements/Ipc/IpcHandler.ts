@@ -112,8 +112,8 @@ function git() {
   ipcMain.on(gitChannels.cloneRepo, (_, url: string, dir: string) => cloneRepo(url, dir));
   ipcMain.on(
     gitChannels.cloneShallow,
-    (_, url: string, directory: string, singleBranch: boolean, branch?: string, depth?: number) =>
-      cloneShallow(url, directory, singleBranch, branch, depth),
+    (_, url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string) =>
+      cloneShallow(url, directory, singleBranch, depth, branch),
   );
   ipcMain.handle(gitChannels.clonePromise, (_, url: string, dir: string) => clonePromise(url, dir));
   ipcMain.handle(gitChannels.getRepoInfo, (_, dir: string) => getRepositoryInfo(dir));
