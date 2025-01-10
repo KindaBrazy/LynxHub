@@ -235,6 +235,8 @@ export type CardData = {
   /** Type of AI (Using type for things like discord activity status) */
   type?: 'image' | 'audio' | 'text' | 'unknown';
 
+  installationType: 'git' | 'others';
+
   /** List of all available arguments
    *  - Leave undefined if WebUI have no arguments to config
    */
