@@ -38,15 +38,11 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
       <Button variant="flat" color="danger" onPress={resetHard} isLoading={isResetting} fullWidth>
         Reset Hard
       </Button>
-      <Button
-        variant="flat"
-        color="secondary"
-        onPress={unShallow}
-        isDisabled={!isShallow}
-        isLoading={isLoadingShallow}
-        fullWidth>
-        UnShallow
-      </Button>
+      {isShallow && (
+        <Button variant="flat" color="secondary" onPress={unShallow} isLoading={isLoadingShallow} fullWidth>
+          UnShallow
+        </Button>
+      )}
     </ButtonGroup>
   );
 }
