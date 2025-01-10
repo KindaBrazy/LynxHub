@@ -60,12 +60,12 @@ export function cloneShallow(
   url: string,
   directory: string,
   singleBranch: boolean,
-  branch?: string,
   depth?: number,
+  branch?: string,
 ): void {
   gitManager = new GitManager(true);
 
-  gitManager.cloneShallow(url, directory, singleBranch, branch, depth);
+  gitManager.cloneShallow(url, directory, singleBranch, depth, branch);
 
   setupGitManagerListeners(gitManager);
 }

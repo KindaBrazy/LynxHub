@@ -88,7 +88,7 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
   public async installPlugin(url: string) {
     return new Promise<boolean>(resolve => {
       const gitManager = new GitManager(true);
-      gitManager.clone(url, path.join(this.pluginPath, extractGitUrl(url).repo));
+      gitManager.cloneShallow(url, path.join(this.pluginPath, extractGitUrl(url).repo), true, 1);
 
       gitManager.onComplete = async () => {
         await this.reloadServer();
