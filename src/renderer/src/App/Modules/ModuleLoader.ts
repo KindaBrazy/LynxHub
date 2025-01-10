@@ -36,6 +36,8 @@ const getCardsByPath = (path: AvailablePages): CardData[] | undefined =>
 const getMethod = <T extends keyof CardRendererMethods>(id: string, method: T): CardRendererMethods[T] | undefined =>
   allCards.find(card => card.id === id)?.methods?.[method] as CardRendererMethods[T] | undefined;
 
+const getInstallType = (id: string) => allCards.find(card => card.id === id)?.installationType || 'others';
+
 /**
  * Loads all modules and their associated cards.
  * This function fetches module data, imports the corresponding modules,
@@ -104,6 +106,6 @@ export type ModuleData = {
   getMethod: <T extends keyof CardRendererMethods>(id: string, method: T) => CardRendererMethods[T] | undefined;
 };
 
-export {allCards, allModules, getArgumentsByID, getCardsByPath, getMethod};
+export {allCards, allModules, getArgumentsByID, getCardsByPath, getInstallType, getMethod};
 
 export default loadModules;
