@@ -1,9 +1,11 @@
 import {DropdownItem} from '@nextui-org/react';
-import {useCallback} from 'react';
+import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Extensions2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {GitHub_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {SettingsMinimal_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {getInstallType} from '../../../../../Modules/ModuleLoader';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
@@ -58,5 +60,33 @@ export const MenuExtensions = () => {
     />
   ) : (
     <DropdownItem className="hidden" key="extensions-hidden" textValue="extensions_hidden" />
+  );
+};
+
+export const MenuRepoConfig = () => {
+  const {id, title, setMenuIsOpen} = useCardData();
+  const installType = useMemo(() => getInstallType(id), []);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const dir = useInstalledCard(id)?.dir;
+
+  const onPress = useCallback(() => {
+    if (dir) {
+      dispatch(modalActions.openGitManager({dir, title: `${title} Repository Settings`}));
+      setMenuIsOpen(false);
+    }
+  }, [dispatch, setMenuIsOpen, dir, title]);
+
+  if (installType === 'others')
+    return <DropdownItem className="hidden" key="repoSetting-hidden" textValue="repoSetting_hidden" />;
+
+  return (
+    <DropdownItem
+      key="repoSetting"
+      onPress={onPress}
+      title="Repository"
+      className="cursor-default"
+      startContent={<GitHub_Icon />}
+    />
   );
 };

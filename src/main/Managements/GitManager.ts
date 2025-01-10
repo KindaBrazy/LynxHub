@@ -1,6 +1,9 @@
+// noinspection ExceptionCaughtLocallyJS
+
 import path from 'node:path';
 
 import {
+  CheckRepoActions,
   GitResponseError,
   PullResult,
   RemoteWithRefs,
@@ -10,27 +13,20 @@ import {
   StatusResult,
 } from 'simple-git';
 
-import {validateGitRepoUrl} from '../../cross/CrossUtils';
+import {RepositoryInfo} from '../../cross/CrossTypes';
+import {extractGitUrl, validateGitRepoUrl} from '../../cross/CrossUtils';
 import {appManager} from '../index';
 import {checkPathExists, openDialog} from '../Utilities/Utils';
 
 /** Manages Git operations such as cloning, pulling, and status checking. */
 export default class GitManager {
-  //#region Private Properties
-
   private readonly showTaskbarProgress: boolean;
   private abortController: AbortController;
   private git: SimpleGit;
-  //#endregion
-
-  //#region Callbacks
 
   public onProgress?: (progress: SimpleGitProgressEvent) => void;
   public onComplete?: (result?: PullResult) => void;
   public onError?: (reason: string) => void;
-  //#endregion
-
-  //#region Constructor
 
   constructor(showTaskbarProgress: boolean = false) {
     this.showTaskbarProgress = showTaskbarProgress;
@@ -40,10 +36,6 @@ export default class GitManager {
       progress: this.handleProgressUpdate,
     });
   }
-
-  //#endregion
-
-  //#region Static Methods
 
   /**
    * Locates a card based on the repository URL.
@@ -122,8 +114,7 @@ export default class GitManager {
   public static async isDirRepo(dir: string): Promise<boolean> {
     if (!(await checkPathExists(dir))) return false;
     try {
-      // @ts-ignore
-      return await simpleGit(dir).checkIsRepo('root');
+      return await simpleGit(dir).checkIsRepo(CheckRepoActions.IS_REPO_ROOT);
     } catch (error) {
       console.error('Error checking if directory is a repo:', error);
       return false;
@@ -153,10 +144,6 @@ export default class GitManager {
     const result: RemoteWithRefs[] = await simpleGit(dir).getRemotes(true);
     return GitManager.formatGitUrl(result[0]?.refs.fetch);
   }
-
-  //#endregion
-
-  //#region Private Methods
 
   private handleProgressUpdate = (progress: SimpleGitProgressEvent): void => {
     if (this.abortController.signal.aborted) return;
@@ -191,10 +178,6 @@ export default class GitManager {
       this.onFailedProgress(error.toString());
     }
   }
-
-  //#endregion
-
-  //#region Public Methods
 
   /**
    * Clones a repository to the specified directory.
@@ -251,49 +234,222 @@ export default class GitManager {
 
     try {
       await this.git.cwd(targetDirectory);
-      await this.git.fetch('origin', branchName);
+
+      const branchSummary = await this.git.branchLocal();
+      if (branchSummary.all.includes(branchName)) {
+        await this.git.checkout(branchName);
+        return;
+      }
+
+      try {
+        await this.git.fetch(['origin', `${branchName}:${branchName}`]);
+      } catch (fetchError) {
+        if (fetchError instanceof Error && fetchError.message.includes('could not find remote ref')) {
+          try {
+            await this.git.fetch(['--all']);
+            await this.git.checkout(branchName);
+
+            return;
+          } catch (e) {
+            this.handleError(new Error(`Branch "${branchName}" not found in the remote repository.`));
+            throw new Error(`Branch "${branchName}" not found in the remote repository.`);
+          }
+        } else {
+          this.handleError(fetchError);
+          throw fetchError;
+        }
+      }
+
       await this.git.checkout(branchName);
     } catch (error) {
       if (error instanceof Error) {
-        if (error.message.includes('pathspec') && error.message.includes('did not match any file(s) known to git')) {
-          this.handleError(new Error(`Branch "${branchName}" not found in the repository.`));
-        } else {
-          this.handleError(error);
-        }
+        this.handleError(error);
+        throw error;
       } else {
         this.handleError(new Error('An unknown error occurred while changing branches.'));
+        throw new Error('An unknown error occurred while changing branches.');
       }
-      throw error;
     }
   }
 
-  public async changeDepth(directory: string, newDepth: number): Promise<void> {
+  public async unShallow(directory: string): Promise<void> {
     const targetDirectory = path.resolve(directory);
     try {
       await this.git.cwd(targetDirectory);
-      await this.git.fetch(['--depth=' + newDepth]);
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.message.includes('fatal: refusing to fetch into shallow repository')) {
-          this.handleError(new Error('Cannot change depth. The repository might already be a full clone.'));
-        } else {
-          this.handleError(error);
-        }
-      } else {
-        this.handleError(new Error('An unknown error occurred while changing depth.'));
-      }
-      throw error;
-    }
-  }
-
-  public async unshallow(directory: string): Promise<void> {
-    const targetDirectory = path.resolve(directory);
-    try {
-      await this.git.cwd(targetDirectory);
-      await this.git.fetch('--unshallow');
+      await this.git.fetch(['--unshallow']);
     } catch (error) {
       this.handleError(error);
       throw error;
+    }
+  }
+
+  public async resetHard(dir: string, commit: string = 'HEAD'): Promise<string> {
+    const targetDirectory = path.resolve(dir);
+
+    try {
+      this.git.cwd(targetDirectory);
+
+      // Perform the hard reset
+      const resetResult = await this.git.reset(['--hard', commit]);
+      console.log(`Hard reset successful in ${dir} to ${commit}. Output:\n${resetResult}`);
+      return resetResult;
+    } catch (error) {
+      console.error(`Error performing hard reset in ${dir}:`, error);
+      throw error; // Re-throw the error to be handled by the caller
+    }
+  }
+
+  public async getRepositoryInfo(directory: string): Promise<RepositoryInfo> {
+    const targetDirectory = path.resolve(directory);
+    try {
+      await this.git.cwd(targetDirectory);
+
+      const currentBranch = await this.getCurrentBranch();
+      const remoteUrl = await this.getRemoteUrl();
+      const isShallow = await this.isShallowRepository();
+      const lastCommitHash = await this.getLastCommitHash();
+      const lastCommitMessage = await this.getLastCommitMessage();
+      const lastCommitTime = await this.getLastCommitDate();
+      const availableBranches = await this.getAvailableBranches(remoteUrl);
+
+      return {
+        currentBranch,
+        availableBranches,
+        remoteUrl,
+        isShallow,
+        lastCommitHash,
+        lastCommitMessage,
+        lastCommitTime,
+      };
+    } catch (error) {
+      this.handleError(error);
+      throw error;
+    }
+  }
+
+  private async getLastCommitMessage(): Promise<string> {
+    try {
+      const isRepo = await this.git.checkIsRepo();
+      if (!isRepo) {
+        throw new Error(`Directory  is not a git repository.`);
+      }
+
+      const log = await this.git.log({maxCount: 1});
+
+      if (log.latest === null) {
+        return 'No commits found';
+      }
+
+      return log.latest.message;
+    } catch (error) {
+      console.error(`Error getting last commit message for:`, error);
+      return `Error: ${(error as Error).message}`;
+    }
+  }
+
+  async getLastCommitDate(): Promise<string> {
+    try {
+      const isRepo = await this.git.checkIsRepo();
+      if (!isRepo) {
+        throw new Error(`Directory is not a git repository.`);
+      }
+
+      const log = await this.git.log({maxCount: 1});
+
+      if (log.latest === null) {
+        return 'No commits found';
+      }
+
+      const lastCommitDate = new Date(log.latest.date);
+      const now = new Date();
+      const diffInMs = now.getTime() - lastCommitDate.getTime();
+      const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+      if (diffInDays > 7) {
+        return lastCommitDate.toLocaleString();
+      } else {
+        return this.getElapsedTime(lastCommitDate);
+      }
+    } catch (error) {
+      console.error(`Error getting last commit date for:`, error);
+      return `Error: ${(error as Error).message}`;
+    }
+  }
+
+  private getElapsedTime(date: Date): string {
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+
+    const seconds = Math.floor(diffInMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) {
+      return `${days} day${days > 1 ? 's' : ''} ago`;
+    } else if (hours > 0) {
+      return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else if (minutes > 0) {
+      return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    } else {
+      return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+    }
+  }
+
+  private async getCurrentBranch(): Promise<string> {
+    try {
+      const branchSummary = await this.git.branchLocal();
+      return branchSummary.current;
+    } catch (error) {
+      console.error('Error getting current branch:', error);
+      return 'unknown';
+    }
+  }
+
+  private async getAvailableBranches(url: string): Promise<string[]> {
+    try {
+      const {owner, repo} = extractGitUrl(url);
+      const branchesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/branches`);
+      if (!branchesResponse.ok) {
+        console.error(`Failed to fetch branches: ${branchesResponse.status}`);
+        return [];
+      }
+      const branchesData: {name: string}[] = await branchesResponse.json();
+
+      return branchesData.map(b => b.name);
+    } catch (err: any) {
+      console.error(err.message || 'An error occurred while fetching data.');
+      return [];
+    }
+  }
+
+  private async isShallowRepository(): Promise<boolean> {
+    try {
+      return await this.git.revparse(['--is-shallow-repository']).then(output => output.trim() === 'true');
+    } catch (error) {
+      console.error('Error checking if shallow repository:', error);
+      return false;
+    }
+  }
+
+  private async getRemoteUrl(): Promise<string> {
+    try {
+      const remotes = await this.git.getRemotes(true);
+      const originRemote = remotes.find(remote => remote.name === 'origin');
+      return originRemote ? originRemote.refs.fetch : '';
+    } catch (error) {
+      console.error('Error getting remote URL:', error);
+      return '';
+    }
+  }
+
+  private async getLastCommitHash(): Promise<string> {
+    try {
+      const log = await this.git.log(['-1', '--pretty=%H']);
+      return log.latest ? log.latest.hash : '';
+    } catch (error) {
+      console.error('Error getting last commit hash:', error);
+      return '';
     }
   }
 
@@ -329,6 +485,4 @@ export default class GitManager {
   public abort(): void {
     this.abortController.abort();
   }
-
-  //#endregion
 }

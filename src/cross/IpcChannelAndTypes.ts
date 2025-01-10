@@ -116,6 +116,11 @@ export const gitChannels = {
   locate: 'git:locate',
   validateGitDir: 'git:validateGitDir',
 
+  getRepoInfo: 'git:get-repo-info',
+  changeBranch: 'git:changeBranch',
+  unShallow: 'git:unShallow',
+  resetHard: 'git:resetHard',
+
   pull: 'git:pull',
 
   updateAvailable: 'git:updateAvailable',

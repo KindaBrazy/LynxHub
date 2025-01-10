@@ -2,6 +2,7 @@ import {memo, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import CardExtensions from './CardExtensions/CardExtensions';
+import CardGitManager_Modal from './CardGitManager/CardGitManager_Modal';
 import CardInfoModal from './CardInfo/CardInfo-Modal';
 import CardReadmeModal from './CardReadme_Modal';
 import InstallModal from './Install/InstallModal';
@@ -28,6 +29,7 @@ const Modals = memo(() => {
 
   const addModal = useMemo(() => extensionsData.addModal, []);
 
+  // TODO: add CardGitManager_Modal to extension api
   return (
     <>
       {Warning ? <Warning /> : <WarningModal />}
@@ -40,6 +42,7 @@ const Modals = memo(() => {
       {LConfig ? <LConfig /> : <LaunchConfig />}
       {UApp ? <UApp /> : <UpdateApp />}
       {CardReadme ? <CardReadme /> : <CardReadmeModal />}
+      <CardGitManager_Modal />
       {addModal.map((Modal, index) => (
         <Modal key={index} />
       ))}

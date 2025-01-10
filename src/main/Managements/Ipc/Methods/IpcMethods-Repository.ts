@@ -80,6 +80,26 @@ export async function clonePromise(url: string, dir: string) {
   return gitManager.clone(url, path.resolve(dir));
 }
 
+export async function getRepositoryInfo(dir: string) {
+  gitManager = new GitManager(true);
+  return gitManager.getRepositoryInfo(dir);
+}
+
+export async function changeBranch(dir: string, branchName: string) {
+  gitManager = new GitManager(true);
+  return gitManager.changeBranch(dir, branchName);
+}
+
+export async function unShallow(dir: string) {
+  gitManager = new GitManager(true);
+  return gitManager.unShallow(dir);
+}
+
+export async function resetHard(dir: string) {
+  gitManager = new GitManager(true);
+  return gitManager.resetHard(dir);
+}
+
 /**
  * Pulls the latest changes from a repository.
  * @param dir - The directory of the repository.

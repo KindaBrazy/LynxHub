@@ -7,6 +7,7 @@ import {
   FolderListData,
   FolderNames,
   ModulesInfo,
+  RepositoryInfo,
 } from '../../../cross/CrossTypes';
 import {
   appDataChannels,
@@ -98,6 +99,11 @@ const rendererIpc = {
     clonePromise: (url: string, dir: string): Promise<void> => ipc.invoke(gitChannels.clonePromise, url, dir),
     cloneShallow: (url: string, directory: string, singleBranch: boolean, branch: string, depth?: number): void =>
       ipc.send(gitChannels.cloneShallow, url, directory, singleBranch, branch, depth),
+    getRepoInfo: (dir: string): Promise<RepositoryInfo> => ipc.invoke(gitChannels.getRepoInfo, dir),
+    changeBranch: (dir: string, branchName: string): Promise<void> =>
+      ipc.invoke(gitChannels.changeBranch, dir, branchName),
+    unShallow: (dir: string): Promise<void> => ipc.invoke(gitChannels.unShallow, dir),
+    resetHard: (dir: string): Promise<void> => ipc.invoke(gitChannels.resetHard, dir),
 
     locateCard: (url: string): Promise<string | undefined> => ipc.invoke(gitChannels.locate, url),
 

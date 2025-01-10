@@ -84,11 +84,11 @@ const CardInfoModal = () => {
 
   useEffect(() => {
     if (webUI) {
-      setInstallDir(webUI.dir);
+      setInstallDir(webUI.dir!);
 
       const extensionsPath = extensionsDir?.startsWith('/') ? webUI.dir + extensionsDir : extensionsDir;
 
-      rendererIpc.utils.getCardInfo(cardId, webUI.dir, extensionsPath);
+      rendererIpc.utils.getCardInfo(cardId, webUI.dir!, extensionsPath);
     }
   }, [webUI, cardId, extensionsDir]);
 
