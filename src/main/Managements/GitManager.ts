@@ -203,7 +203,7 @@ export default class GitManager {
     url: string,
     directory: string,
     singleBranch: boolean,
-    branch: string,
+    branch?: string,
     depth?: number,
   ): Promise<void> {
     const targetDirectory = path.resolve(directory);
@@ -212,8 +212,10 @@ export default class GitManager {
 
     if (depth) cloneOptions.push(`--depth=${depth}`);
     if (singleBranch) cloneOptions.push('--single-branch');
-    cloneOptions.push('--branch');
-    cloneOptions.push(branch);
+    if (branch) {
+      cloneOptions.push('--branch');
+      cloneOptions.push(branch);
+    }
 
     return new Promise((resolve, reject) => {
       this.git

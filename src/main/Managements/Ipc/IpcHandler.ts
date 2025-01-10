@@ -112,7 +112,7 @@ function git() {
   ipcMain.on(gitChannels.cloneRepo, (_, url: string, dir: string) => cloneRepo(url, dir));
   ipcMain.on(
     gitChannels.cloneShallow,
-    (_, url: string, directory: string, singleBranch: boolean, branch: string, depth?: number) =>
+    (_, url: string, directory: string, singleBranch: boolean, branch?: string, depth?: number) =>
       cloneShallow(url, directory, singleBranch, branch, depth),
   );
   ipcMain.handle(gitChannels.clonePromise, (_, url: string, dir: string) => clonePromise(url, dir));
