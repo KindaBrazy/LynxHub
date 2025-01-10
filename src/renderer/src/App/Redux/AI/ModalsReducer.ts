@@ -65,7 +65,8 @@ type ModalsState = {
   updateApp: {
     isOpen: boolean;
   };
-  readmeModal: {isOpen: boolean; url: string; title: string};
+  readmeModal: {isOpen: boolean; title: string; url: string};
+  gitManager: {isOpen: boolean; title: string; dir: string};
 };
 
 type ModalsStateTypes = {
@@ -156,6 +157,11 @@ const initialState: ModalsState = {
     url: '',
     title: '',
   },
+  gitManager: {
+    isOpen: false,
+    title: '',
+    dir: '',
+  },
 };
 //#endregion
 
@@ -202,6 +208,14 @@ const modalSlice = createSlice({
       state.updateDetails.title = action.payload.title;
       state.updateDetails.details = action.payload.details;
       state.updateDetails.isOpen = true;
+    },
+    openGitManager: (state, action: PayloadAction<{title: string; dir: string}>) => {
+      state.gitManager.title = action.payload.title;
+      state.gitManager.dir = action.payload.dir;
+      state.gitManager.isOpen = true;
+    },
+    closeGitManager: state => {
+      state.gitManager = initialState.gitManager;
     },
     //#endregion
 

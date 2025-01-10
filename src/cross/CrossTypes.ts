@@ -23,6 +23,16 @@ export type RepoDetails = {
   size?: number;
 };
 
+export type RepositoryInfo = {
+  currentBranch: string;
+  availableBranches: string[];
+  remoteUrl: string;
+  isShallow: boolean;
+  lastCommitHash: string;
+  lastCommitMessage: string;
+  lastCommitTime: string;
+};
+
 export type DevInfo = {
   name: string;
   picUrl: string;

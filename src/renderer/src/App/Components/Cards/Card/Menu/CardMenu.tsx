@@ -10,7 +10,7 @@ import {useUpdatingCard} from '../../../../Utils/UtilHooks';
 import {useCardData} from '../../CardsDataManager';
 import {MenuInfo, MenuReadme} from './MenuItems/CardMenu-About';
 import {MenuUninstall} from './MenuItems/CardMenu-Danger';
-import {MenuExtensions, MenuLaunchConfig} from './MenuItems/CardMenu-Options';
+import {MenuExtensions, MenuLaunchConfig, MenuRepoConfig} from './MenuItems/CardMenu-Options';
 import {MenuAutoUpdate, MenuCheckForUpdate, MenuUpdate} from './MenuItems/CardMenu-Update';
 
 export const CardMenu = observer(() => {
@@ -53,6 +53,7 @@ export const CardMenu = observer(() => {
         <DropdownSection key="options" showDivider>
           {MenuLaunchConfig()}
           {MenuExtensions()}
+          {MenuRepoConfig()}
         </DropdownSection>
         {second.map((Comp, index) => {
           return Comp({key: index, context: useCardData()});
