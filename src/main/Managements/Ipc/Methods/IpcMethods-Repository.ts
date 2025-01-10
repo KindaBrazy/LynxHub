@@ -60,7 +60,7 @@ export function cloneShallow(
   url: string,
   directory: string,
   singleBranch: boolean,
-  branch: string,
+  branch?: string,
   depth?: number,
 ): void {
   gitManager = new GitManager(true);
