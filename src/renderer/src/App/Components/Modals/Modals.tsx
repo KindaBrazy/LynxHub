@@ -25,6 +25,7 @@ const Modals = memo(() => {
     launchConfig: LConfig,
     updateApp: UApp,
     cardReadme: CardReadme,
+    gitManager: GitManager,
   } = useMemo(() => extensionsData.replaceModals, []);
 
   const addModal = useMemo(() => extensionsData.addModal, []);
@@ -42,7 +43,7 @@ const Modals = memo(() => {
       {LConfig ? <LConfig /> : <LaunchConfig />}
       {UApp ? <UApp /> : <UpdateApp />}
       {CardReadme ? <CardReadme /> : <CardReadmeModal />}
-      <CardGitManager_Modal />
+      {GitManager ? <GitManager /> : <CardGitManager_Modal />}
       {addModal.map((Modal, index) => (
         <Modal key={index} />
       ))}
