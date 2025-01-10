@@ -60,6 +60,7 @@ export const extensionsData: ExtensionData_Renderer = {
     install: undefined,
     warning: undefined,
     cardReadme: undefined,
+    gitManager: undefined,
   },
   addCustomHook: [],
   replaceBackground: undefined,
@@ -259,6 +260,9 @@ const api: ExtensionRendererApi = {
     },
     cardReadme: comp => {
       extensionsData.replaceModals.cardReadme = comp;
+    },
+    gitManager: comp => {
+      extensionsData.replaceModals.gitManager = comp;
     },
   },
   replaceMarkdownViewer: comp => {

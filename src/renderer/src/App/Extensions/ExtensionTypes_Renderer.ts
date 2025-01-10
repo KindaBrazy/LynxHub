@@ -79,6 +79,7 @@ export type ExtensionData_Renderer = {
     install: FC | undefined;
     warning: FC | undefined;
     cardReadme: FC | undefined;
+    gitManager: FC | undefined;
   };
   replaceMarkdownViewer: FcPropReplaceMd | undefined;
   addModal: FC[];

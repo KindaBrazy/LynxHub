@@ -167,6 +167,7 @@ export type ExtensionRendererApi = {
      * This modal renders GitHub-style Markdown README files to provide users with detailed documentation.
      * @see {@linkcode CardReadmeModal} for implementation details. */
     cardReadme: CompFc;
+    gitManager: CompFc;
   };
 
   /** Replace the MarkDown viewer component.
