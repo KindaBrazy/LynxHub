@@ -99,6 +99,13 @@ const rendererIpc = {
     clonePromise: (url: string, dir: string): Promise<void> => ipc.invoke(gitChannels.clonePromise, url, dir),
     cloneShallow: (url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string): void =>
       ipc.send(gitChannels.cloneShallow, url, directory, singleBranch, depth, branch),
+    cloneShallowPromise: (
+      url: string,
+      directory: string,
+      singleBranch: boolean,
+      depth?: number,
+      branch?: string,
+    ): Promise<void> => ipc.invoke(gitChannels.cloneShallowPromise, url, directory, singleBranch, depth, branch),
     getRepoInfo: (dir: string): Promise<RepositoryInfo> => ipc.invoke(gitChannels.getRepoInfo, dir),
     changeBranch: (dir: string, branchName: string): Promise<void> =>
       ipc.invoke(gitChannels.changeBranch, dir, branchName),

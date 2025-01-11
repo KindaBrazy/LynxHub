@@ -62,7 +62,7 @@ export default function Clone({updateTable, visible, installedExtensions}: Props
   const clone = useCallback(() => {
     if (alreadyInstalled) return;
     setCloning(true);
-    rendererIpc.git.cloneRepo(`${downloadBox?.url}` || '', `${dir}/${downloadBox?.name || ''}`);
+    rendererIpc.git.cloneShallow(`${downloadBox?.url}` || '', `${dir}/${downloadBox?.name || ''}`, true, 1);
   }, [downloadBox, dir, alreadyInstalled]);
 
   useEffect(() => {
