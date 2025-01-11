@@ -11,6 +11,7 @@ import {
   extensionsChannels,
   fileChannels,
   gitChannels,
+  moduleApiChannels,
   modulesChannels,
   PreCommands,
   PreOpen,
@@ -27,7 +28,7 @@ import {
 import StorageTypes, {InstalledCard} from '../../../cross/StorageTypes';
 import {appManager, discordRpcManager, extensionManager, moduleManager, storageManager} from '../../index';
 import calcFolderSize from '../../Utilities/CalculateFolderSize/CalculateFolderSize';
-import {getSystemDarkMode, openDialog} from '../../Utilities/Utils';
+import {getDirCreationDate, getSystemDarkMode, openDialog} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
 import GitManager from '../GitManager';
 import {
@@ -57,7 +58,6 @@ import {
   cloneRepo,
   cloneShallow,
   cloneShallowPromise,
-  getRepoInfo,
   getRepositoryInfo,
   pullRepo,
   resetHard,
@@ -135,10 +135,6 @@ function git() {
 }
 
 function utils() {
-  ipcMain.on(utilsChannels.cardInfo, (_, id: string, repoDir: string, extensionsDir?: string) =>
-    getRepoInfo(id, repoDir, extensionsDir),
-  );
-
   ipcMain.handle(utilsChannels.extensionsDetails, (_, dir: string) => getExtensionsDetails(dir));
   ipcMain.handle(utilsChannels.updateStatus, (_, dir: string) => getExtensionsUpdate(dir));
 
@@ -205,6 +201,9 @@ function appData() {
 }
 
 function storage() {
+  ipcMain.handle(storageChannels.getCustom, (_, key: string) => storageManager.getCustomData(key));
+  ipcMain.on(storageChannels.setCustom, (_, key: string, data: any) => storageManager.setCustomData(key, data));
+
   ipcMain.handle(storageChannels.get, (_, key: keyof StorageTypes) => storageManager.getData(key));
   ipcMain.handle(storageChannels.getAll, () => storageManager.getAll());
 
@@ -287,6 +286,12 @@ function extensionsIpc() {
   extensionManager.listenForChannels();
 }
 
+function modulesApi() {
+  ipcMain.handle(moduleApiChannels.getFolderCreationTime, (_, dir: string) => getDirCreationDate(dir));
+  ipcMain.handle(moduleApiChannels.getLastPulledDate, (_, dir: string) => GitManager.getLastPulledDate(dir));
+  ipcMain.handle(moduleApiChannels.getCurrentReleaseTag, (_, dir: string) => GitManager.getCurrentReleaseTag(dir));
+}
+
 export function listenToAllChannels() {
   appData();
   storage();
@@ -300,6 +305,7 @@ export function listenToAllChannels() {
   pty();
 
   modules();
+  modulesApi();
   modulesIpc();
 
   extensions();

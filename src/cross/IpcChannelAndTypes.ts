@@ -49,12 +49,6 @@ export type PreOpen = {id: string; open?: {type: 'folder' | 'file'; path: string
 export type PreOpenData = {type: 'folder' | 'file'; path: string}[];
 export type OnPreCommands = {id: string; commands: string[]};
 
-export type CardInfo = {
-  id: string;
-  type: 'repo' | 'disk';
-  data: {installDate: string; lastUpdate: string; releaseTag: string} | {totalSize: string; extensionsSize: string};
-};
-
 export type PtyProcessOpt = 'start' | 'stop';
 
 export type HomeCategory = ('Pin' | 'Recently' | 'All' | string)[];
@@ -131,13 +125,11 @@ export const gitChannels = {
 
 export const utilsChannels = {
   cancelExtensionsData: 'utils:cancel-extensions-data',
-  cardInfo: 'utils:card-info',
 
   updateAllExtensions: 'utils:update-all-extensions',
   onUpdateAllExtensions: 'utils:on-update-all-extensions',
 
   extensionsDetails: 'utils:extensions-details',
-  onCardInfo: 'utils:on-card-info',
   updateStatus: 'utils:extensions-update-status',
 
   downloadFile: 'utils:download-file',
@@ -216,10 +208,20 @@ export const appDataChannels = {
 
 export const storageChannels = {
   get: 'storage:getData',
+
+  getCustom: 'storage:get-custom',
+  setCustom: 'storage:set-custom',
+
   getAll: 'storage:getAllData',
   update: 'storage:updateData',
   updateNested: 'storage:updateNested',
   clear: 'storage:clearStorage',
+};
+
+export const moduleApiChannels = {
+  getFolderCreationTime: 'module_api_getFolderCreationTime',
+  getLastPulledDate: 'module_api_getLastPulledDate',
+  getCurrentReleaseTag: 'module_api_getCurrentReleaseTag',
 };
 
 export const storageUtilsChannels = {

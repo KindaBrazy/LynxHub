@@ -1,50 +1,30 @@
-import {
-  Button,
-  Divider,
-  Link,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Spinner,
-  User,
-} from '@nextui-org/react';
-import {Space} from 'antd';
+import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@nextui-org/react';
+import {Result} from 'antd';
 import {isEmpty, startCase} from 'lodash';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {RepoInfoType} from '../../../../../../cross/CrossTypes';
 import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
+import {CardInfoDescriptions} from '../../../Modules/types';
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
-import rendererIpc from '../../../RendererIpc';
 import {useDevInfo} from '../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../Utils/UtilHooks';
-import CardInfoDisk from './CardInfo-Disk';
-import CardInfoRepo from './CardInfo-Repo';
-
-export const progressElem = (label: string) => (
-  <Spinner size="sm" label={label} className="flex-row space-x-1" classNames={{label: 'text-opacity-70'}} />
-);
-
-const initData = {
-  extensionsSize: '',
-  installDate: '',
-  lastUpdate: '',
-  releaseTag: '',
-  totalSize: '',
-};
+import CardInfoDescription from './CardInfo-Description';
+import useCardInfoApi from './UseCardInfoApi';
 
 /** Displaying information about card (Disk usage, developer, repository details) */
-const CardInfoModal = () => {
-  const [data, setData] = useState<RepoInfoType>(initData);
-  const [installDir, setInstallDir] = useState<string>('');
-  const {cardId, extensionsDir, isOpen, devName, url} = useModalsState('cardInfoModal');
+const CardInfoModalNew = () => {
+  const {cardId, isOpen, devName, url} = useModalsState('cardInfoModal');
+  const dispatch = useDispatch<AppDispatch>();
   const webUI = useInstalledCard(cardId);
 
-  const dispatch = useDispatch<AppDispatch>();
+  const [openFolders, setOpenFolders] = useState<string[] | undefined>(undefined);
+  const [cardInfoDescriptions, setCardInfoDescriptions] = useState<CardInfoDescriptions>(undefined);
+
+  const {picUrl} = useDevInfo(url);
+
+  useCardInfoApi(cardId, setOpenFolders, setCardInfoDescriptions, webUI?.dir);
 
   const onOpenChange = useCallback(
     (isOpen: boolean) =>
@@ -58,45 +38,8 @@ const CardInfoModal = () => {
   );
 
   const onClose = useCallback(() => {
-    console.log('On Close');
     dispatch(modalActions.setInfoCardId(''));
-    setData(initData);
   }, [dispatch]);
-
-  useEffect(() => {
-    setData(initData);
-    rendererIpc.utils.offCardInfo();
-
-    if (!isEmpty(cardId)) {
-      rendererIpc.utils.onCardInfo((_, cardInfo) => {
-        if (cardInfo.id === cardId) {
-          if (cardInfo.type === 'repo' && 'releaseTag' in cardInfo.data) {
-            const {installDate, lastUpdate, releaseTag} = cardInfo.data;
-            setData(prevState => ({...prevState, installDate, lastUpdate, releaseTag}));
-          } else if (cardInfo.type === 'disk' && 'totalSize' in cardInfo.data) {
-            const {extensionsSize, totalSize} = cardInfo.data;
-            setData(prevState => ({...prevState, extensionsSize, totalSize}));
-          }
-        }
-      });
-    }
-  }, [cardId]);
-
-  useEffect(() => {
-    if (webUI) {
-      setInstallDir(webUI.dir!);
-
-      const extensionsPath = extensionsDir?.startsWith('/') ? webUI.dir + extensionsDir : extensionsDir;
-
-      rendererIpc.utils.getCardInfo(cardId, webUI.dir!, extensionsPath);
-    }
-  }, [webUI, cardId, extensionsDir]);
-
-  const haveCardInfo = useMemo(() => {
-    return !isEmpty(data.lastUpdate) || !isEmpty(data.releaseTag) || !isEmpty(data.installDate);
-  }, [data]);
-
-  const {picUrl} = useDevInfo(url);
 
   return (
     <Modal
@@ -126,21 +69,13 @@ const CardInfoModal = () => {
             />
           )}
         </ModalHeader>
-        <ModalBody className="mt-4 pb-0 scrollbar-hide">
-          <Space size="middle" direction="vertical">
-            {haveCardInfo && (
-              <CardInfoRepo lastUpdate={data.lastUpdate} releaseTag={data.releaseTag} installDate={data.installDate} />
-            )}
-            <Divider />
-            <CardInfoDisk
-              installDir={installDir}
-              totalSize={data.totalSize}
-              supportExtensions={!!extensionsDir}
-              extensionsSize={data.extensionsSize}
-            />
-          </Space>
+        <ModalBody className="my-4 pb-0 scrollbar-hide">
+          {isEmpty(openFolders) && isEmpty(cardInfoDescriptions) ? (
+            <Result title="No data available to show!" />
+          ) : (
+            <CardInfoDescription folders={openFolders} descriptions={cardInfoDescriptions} />
+          )}
         </ModalBody>
-
         <ModalFooter className="border-t border-foreground/10 bg-foreground-100">
           <Button
             onPress={() => {
@@ -158,4 +93,4 @@ const CardInfoModal = () => {
   );
 };
 
-export default CardInfoModal;
+export default CardInfoModalNew;
