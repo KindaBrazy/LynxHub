@@ -58,7 +58,7 @@ export default function CardInfoDescription({folders, descriptions}: Props) {
   return (
     <>
       {descriptions?.map((desc, index) => {
-        return (
+        return isEmpty(getItems(desc.items)) ? null : (
           <div key={`desc_${index}`}>
             <Descriptions column={2} size="small" layout="vertical" title={desc.title} items={getItems(desc.items)} />
             {index !== descriptions.length - 1 && <Divider variant="dashed" className="mb-4" />}
