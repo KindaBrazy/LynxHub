@@ -70,6 +70,17 @@ export function cloneShallow(
   setupGitManagerListeners(gitManager);
 }
 
+export async function cloneShallowPromise(
+  url: string,
+  directory: string,
+  singleBranch: boolean,
+  depth?: number,
+  branch?: string,
+) {
+  gitManager = new GitManager(true);
+  return gitManager.cloneShallow(url, directory, singleBranch, depth, branch);
+}
+
 /**
  * Clones a repository and resolve when completed and reject when got error.
  * @param url - The URL of the repository to clone.

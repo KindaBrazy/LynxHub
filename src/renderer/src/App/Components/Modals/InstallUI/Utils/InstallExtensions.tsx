@@ -46,7 +46,12 @@ export default function InstallExtensions({extensionsURLs, extensionsResolver}: 
       for (const extensionsURL of extensionsURLs?.urls || []) {
         try {
           const validUrl = validateGitRepoUrl(extensionsURL);
-          await rendererIpc.git.clonePromise(validUrl, `${extensionsURLs?.dir}/${extractGitUrl(validUrl).repo}`);
+          await rendererIpc.git.cloneShallowPromise(
+            validUrl,
+            `${extensionsURLs?.dir}/${extractGitUrl(validUrl).repo}`,
+            true,
+            1,
+          );
           setCurrent(prevState => prevState + 1);
         } catch (e) {
           console.error(e);

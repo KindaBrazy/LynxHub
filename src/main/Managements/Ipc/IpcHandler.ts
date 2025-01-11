@@ -56,6 +56,7 @@ import {
   clonePromise,
   cloneRepo,
   cloneShallow,
+  cloneShallowPromise,
   getRepoInfo,
   getRepositoryInfo,
   pullRepo,
@@ -114,6 +115,11 @@ function git() {
     gitChannels.cloneShallow,
     (_, url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string) =>
       cloneShallow(url, directory, singleBranch, depth, branch),
+  );
+  ipcMain.on(
+    gitChannels.cloneShallowPromise,
+    (_, url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string) =>
+      cloneShallowPromise(url, directory, singleBranch, depth, branch),
   );
   ipcMain.handle(gitChannels.clonePromise, (_, url: string, dir: string) => clonePromise(url, dir));
   ipcMain.handle(gitChannels.getRepoInfo, (_, dir: string) => getRepositoryInfo(dir));

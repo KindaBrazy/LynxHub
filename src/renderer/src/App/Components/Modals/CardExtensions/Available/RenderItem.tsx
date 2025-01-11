@@ -26,7 +26,7 @@ export default function RenderItem({item, updateTable}: Props) {
   const install = useCallback(() => {
     setInstalling(true);
     rendererIpc.git
-      .clonePromise(`${item.url}` || '', `${dir}/${extractGitUrl(item.url).repo || ''}`)
+      .cloneShallowPromise(`${item.url}` || '', `${dir}/${extractGitUrl(item.url).repo || ''}`, true, 1)
       .then(() => {
         message.success('Extension installed successfully.');
         updateTable();
