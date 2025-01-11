@@ -114,7 +114,7 @@ const CardInfoModal = () => {
       hideCloseButton>
       <ModalContent className="pb-4">
         <ModalHeader className="border-b border-foreground/20 bg-foreground-100 shadow-md">
-          {validateGitRepoUrl(url) && (
+          {validateGitRepoUrl(url) && picUrl && (
             <User
               description={
                 <Link size="sm" href={url} isExternal>
