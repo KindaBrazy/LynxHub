@@ -13,7 +13,6 @@ import {
   appDataChannels,
   appUpdateChannels,
   AppUpdateStatus,
-  CardInfo,
   ChangeWindowState,
   CustomRunBehaviorData,
   DarkModeTypes,
@@ -26,6 +25,7 @@ import {
   gitChannels,
   GitProgressCallback,
   HomeCategory,
+  moduleApiChannels,
   modulesChannels,
   OnPreCommands,
   OnUpdatingExtensions,
@@ -151,6 +151,12 @@ const rendererIpc = {
       ipc.on(modulesChannels.onCardsUpdateAvailable, result),
   },
 
+  moduleApi: {
+    getFolderCreationTime: (dir: string): Promise<string> => ipc.invoke(moduleApiChannels.getFolderCreationTime, dir),
+    getLastPulledDate: (dir: string): Promise<string> => ipc.invoke(moduleApiChannels.getLastPulledDate, dir),
+    getCurrentReleaseTag: (dir: string): Promise<string> => ipc.invoke(moduleApiChannels.getCurrentReleaseTag, dir),
+  },
+
   /** Managing app extensions */
   extension: {
     getExtensionsData: (): Promise<string[]> => ipc.invoke(extensionsChannels.getExtensionsData),
@@ -236,14 +242,6 @@ const rendererIpc = {
 
   /** Utilities methods */
   utils: {
-    getCardInfo: (id: string, repoDir: string, extensionsDir?: string): void =>
-      ipc.send(utilsChannels.cardInfo, id, repoDir, extensionsDir),
-
-    onCardInfo: (result: (event: IpcRendererEvent, cardInfo: CardInfo) => void) =>
-      ipc.on(utilsChannels.onCardInfo, result),
-
-    offCardInfo: (): void => ipc.removeAllListeners(utilsChannels.onCardInfo),
-
     updateAllExtensions: (data: {id: string; dir: string}): void => ipc.send(utilsChannels.updateAllExtensions, data),
     onUpdateAllExtensions: (result: (event: IpcRendererEvent, updateInfo: OnUpdatingExtensions) => void) =>
       ipc.on(utilsChannels.onUpdateAllExtensions, result),
@@ -305,6 +303,9 @@ const rendererIpc = {
 
   /** Managing app storage data */
   storage: {
+    getCustom: (key: string): Promise<any> => ipc.invoke(storageChannels.getCustom, key),
+    setCustom: (key: string, data: any): void => ipc.send(storageChannels.setCustom, key, data),
+
     get: <K extends keyof StorageTypes>(key: K): Promise<StorageTypes[K]> => ipc.invoke(storageChannels.get, key),
 
     getAll: (): Promise<StorageTypes> => ipc.invoke(storageChannels.getAll),

@@ -2,46 +2,11 @@ import path from 'node:path';
 
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {gitChannels, utilsChannels} from '../../../../cross/IpcChannelAndTypes';
+import {gitChannels} from '../../../../cross/IpcChannelAndTypes';
 import {appManager} from '../../../index';
-import {calculateFolderSize, getDirCreationDate} from '../../../Utilities/Utils';
 import GitManager from '../../GitManager';
 
 let gitManager: GitManager | undefined;
-
-/**
- * Retrieves and sends repository information to the web content.
- * @param id - The unique identifier for the repository.
- * @param repoDir - The directory path of the repository.
- * @param extensionsDir - Optional directory path for extensions.
- */
-export async function getRepoInfo(id: string, repoDir: string, extensionsDir?: string): Promise<void> {
-  const repoPath = path.resolve(repoDir);
-  const extPath = extensionsDir ? path.resolve(extensionsDir) : undefined;
-
-  const [installDate, lastUpdate, releaseTag] = await Promise.all([
-    getDirCreationDate(repoPath),
-    GitManager.getLastPulledDate(repoPath),
-    GitManager.getCurrentReleaseTag(repoPath),
-  ]);
-
-  appManager.getWebContent()?.send(utilsChannels.onCardInfo, {
-    data: {installDate, lastUpdate, releaseTag},
-    id,
-    type: 'repo',
-  });
-
-  const [extensionsSize, totalSize] = await Promise.all([
-    extPath ? calculateFolderSize(extPath) : Promise.resolve(''),
-    calculateFolderSize(repoPath),
-  ]);
-
-  appManager.getWebContent()?.send(utilsChannels.onCardInfo, {
-    data: {extensionsSize, totalSize},
-    id,
-    type: 'disk',
-  });
-}
 
 /**
  * Clones a repository and sets up progress tracking.

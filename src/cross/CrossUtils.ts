@@ -85,6 +85,21 @@ export function validateGitRepoUrl(url: string): string {
   return '';
 }
 
+export function isValidURL(str: string): boolean {
+  const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+
+  if (urlRegex.test(str)) {
+    return true;
+  }
+
+  try {
+    new URL(str);
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
 export function isDev() {
   return import.meta.env.DEV;
 }

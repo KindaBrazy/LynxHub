@@ -3,7 +3,7 @@ import {memo, useMemo} from 'react';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import CardExtensions from './CardExtensions/CardExtensions';
 import CardGitManager_Modal from './CardGitManager/CardGitManager_Modal';
-import CardInfoModal from './CardInfo/CardInfo-Modal';
+import CardInfoModalNew from './CardInfo/CardInfo-Modal';
 import CardReadmeModal from './CardReadme_Modal';
 import InstallModal from './Install/InstallModal';
 import InstallUIModal from './InstallUI/InstallUI-Modal';
@@ -37,7 +37,7 @@ const Modals = memo(() => {
       {Uninstall ? <Uninstall /> : <UninstallCard />}
       {Install ? <Install /> : <InstallModal />}
       {InstallUi ? <InstallUi /> : <InstallUIModal />}
-      {CInfo ? <CInfo /> : <CardInfoModal />}
+      {CInfo ? <CInfo /> : <CardInfoModalNew />}
       {UNotification ? <UNotification /> : <UpdatingNotification />}
       {CExtensions ? <CExtensions /> : <CardExtensions />}
       {LConfig ? <LConfig /> : <LaunchConfig />}
