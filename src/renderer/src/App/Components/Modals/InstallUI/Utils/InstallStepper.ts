@@ -52,6 +52,8 @@ export default class InstallStepper {
       },
     };
 
+    this.storage = {set: rendererIpc.storage.setCustom, get: rendererIpc.storage.getCustom};
+
     this.utils = {
       decompressFile: rendererIpc.utils.decompressFile,
       validateGitRepository: rendererIpc.git.validateGitDir,
@@ -110,6 +112,8 @@ export default class InstallStepper {
   public progressBar: InstallationStepper['progressBar'];
 
   public ipc: InstallationStepper['ipc'];
+
+  public storage: InstallationStepper['storage'];
 
   public postInstall: InstallationStepper['postInstall'];
 
