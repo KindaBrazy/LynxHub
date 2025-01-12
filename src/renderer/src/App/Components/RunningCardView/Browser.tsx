@@ -30,7 +30,7 @@ const Browser = () => {
         setDomReady(true);
       });
     }
-  }, [webViewRef]);
+  }, [webViewRef, address]);
 
   useEffect(() => {
     const factor = zoomFactor.find(zoom => zoom.id === id);
