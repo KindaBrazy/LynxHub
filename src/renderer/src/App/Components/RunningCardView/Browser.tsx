@@ -51,7 +51,7 @@ const Browser = () => {
       initial="init"
       animate={animate}
       variants={variants}>
-      <webview src={address} id={browserId} ref={webViewRef} className="relative size-full" />
+      {address && <webview src={address} id={browserId} ref={webViewRef} className="relative size-full" />}
     </motion.div>
   );
 };
