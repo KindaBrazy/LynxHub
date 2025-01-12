@@ -28,7 +28,6 @@ const Modals = memo(() => {
 
   const addModal = useMemo(() => extensionsData.addModal, []);
 
-  // TODO: remove install modal from api
   return (
     <>
       {Warning ? <Warning /> : <WarningModal />}

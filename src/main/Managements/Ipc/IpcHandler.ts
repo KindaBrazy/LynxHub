@@ -53,10 +53,7 @@ import {cancelDownload, downloadFile} from './Methods/IpcMethods-Downloader';
 import {getSystemInfo} from './Methods/IpcMethods-Platform';
 import {customPtyCommands, customPtyProcess, ptyProcess, ptyResize, ptyWrite} from './Methods/IpcMethods-Pty';
 import {
-  abortGitOperation,
   changeBranch,
-  clonePromise,
-  cloneRepo,
   cloneShallow,
   cloneShallowPromise,
   getRepositoryInfo,
@@ -108,10 +105,8 @@ function file() {
 }
 
 function git() {
-  ipcMain.handle(gitChannels.locate, (_, url: string) => GitManager.locateCard(url));
   ipcMain.handle(gitChannels.validateGitDir, (_, dir: string, url: string) => validateGitDir(dir, url));
 
-  ipcMain.on(gitChannels.cloneRepo, (_, url: string, dir: string) => cloneRepo(url, dir));
   ipcMain.on(
     gitChannels.cloneShallow,
     (_, url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string) =>
@@ -122,13 +117,10 @@ function git() {
     (_, url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string) =>
       cloneShallowPromise(url, directory, singleBranch, depth, branch),
   );
-  ipcMain.handle(gitChannels.clonePromise, (_, url: string, dir: string) => clonePromise(url, dir));
   ipcMain.handle(gitChannels.getRepoInfo, (_, dir: string) => getRepositoryInfo(dir));
   ipcMain.handle(gitChannels.changeBranch, (_, dir: string, branchName: string) => changeBranch(dir, branchName));
   ipcMain.handle(gitChannels.unShallow, (_, dir: string) => unShallow(dir));
   ipcMain.handle(gitChannels.resetHard, (_, dir: string) => resetHard(dir));
-
-  ipcMain.on(gitChannels.abortClone, () => abortGitOperation());
 
   ipcMain.handle(gitChannels.updateAvailable, (_, dir: string) => GitManager.isUpdateAvailable(dir));
 

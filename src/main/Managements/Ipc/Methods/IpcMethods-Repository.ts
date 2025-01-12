@@ -8,19 +8,6 @@ import GitManager from '../../GitManager';
 
 let gitManager: GitManager | undefined;
 
-/**
- * Clones a repository and sets up progress tracking.
- * @param url - The URL of the repository to clone.
- * @param dir - The directory type to clone into.
- */
-export function cloneRepo(url: string, dir: string): void {
-  gitManager = new GitManager(true);
-
-  gitManager.clone(url, path.resolve(dir));
-
-  setupGitManagerListeners(gitManager);
-}
-
 export function cloneShallow(
   url: string,
   directory: string,
@@ -44,16 +31,6 @@ export async function cloneShallowPromise(
 ) {
   gitManager = new GitManager(true);
   return gitManager.cloneShallow(url, directory, singleBranch, depth, branch);
-}
-
-/**
- * Clones a repository and resolve when completed and reject when got error.
- * @param url - The URL of the repository to clone.
- * @param dir - The directory type to clone into.
- */
-export async function clonePromise(url: string, dir: string) {
-  gitManager = new GitManager(true);
-  return gitManager.clone(url, path.resolve(dir));
 }
 
 export async function getRepositoryInfo(dir: string) {
@@ -87,13 +64,6 @@ export function pullRepo(dir: string, id: string): void {
   gitManager.pull(path.resolve(dir));
 
   setupGitManagerListeners(gitManager, id);
-}
-
-/**
- * Aborts the current git operation.
- */
-export function abortGitOperation(): void {
-  gitManager?.abort();
 }
 
 /**
