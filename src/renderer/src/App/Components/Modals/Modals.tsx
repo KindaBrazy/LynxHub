@@ -5,8 +5,7 @@ import CardExtensions from './CardExtensions/CardExtensions';
 import CardGitManager_Modal from './CardGitManager/CardGitManager_Modal';
 import CardInfoModalNew from './CardInfo/CardInfo-Modal';
 import CardReadmeModal from './CardReadme_Modal';
-import InstallModal from './Install/InstallModal';
-import InstallUIModal from './InstallUI/InstallUI-Modal';
+import InstallModal from './InstallUI/Install-Modal';
 import LaunchConfig from './LaunchConfig/LaunchConfig';
 import UninstallCard from './UninstallCard/UninstallCard';
 import UpdateApp from './UpdateApp/UpdateApp';
@@ -17,7 +16,6 @@ const Modals = memo(() => {
   const {
     warning: Warning,
     uninstallCard: Uninstall,
-    install: Install,
     installUi: InstallUi,
     cardInfo: CInfo,
     updatingNotification: UNotification,
@@ -30,13 +28,12 @@ const Modals = memo(() => {
 
   const addModal = useMemo(() => extensionsData.addModal, []);
 
-  // TODO: add CardGitManager_Modal to extension api
+  // TODO: remove install modal from api
   return (
     <>
       {Warning ? <Warning /> : <WarningModal />}
       {Uninstall ? <Uninstall /> : <UninstallCard />}
-      {Install ? <Install /> : <InstallModal />}
-      {InstallUi ? <InstallUi /> : <InstallUIModal />}
+      {InstallUi ? <InstallUi /> : <InstallModal />}
       {CInfo ? <CInfo /> : <CardInfoModalNew />}
       {UNotification ? <UNotification /> : <UpdatingNotification />}
       {CExtensions ? <CExtensions /> : <CardExtensions />}
