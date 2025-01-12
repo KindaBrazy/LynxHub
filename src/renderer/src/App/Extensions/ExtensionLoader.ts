@@ -57,7 +57,6 @@ export const extensionsData: ExtensionData_Renderer = {
     cardInfo: undefined,
     installUi: undefined,
     uninstallCard: undefined,
-    install: undefined,
     warning: undefined,
     cardReadme: undefined,
     gitManager: undefined,
@@ -251,9 +250,6 @@ const api: ExtensionRendererApi = {
     },
     uninstallCard: comp => {
       extensionsData.replaceModals.uninstallCard = comp;
-    },
-    install: comp => {
-      extensionsData.replaceModals.install = comp;
     },
     warning: comp => {
       extensionsData.replaceModals.warning = comp;
