@@ -13,6 +13,7 @@ import {
   appDataChannels,
   appUpdateChannels,
   AppUpdateStatus,
+  appWindowChannels,
   ChangeWindowState,
   CustomRunBehaviorData,
   DarkModeTypes,
@@ -314,6 +315,10 @@ const rendererIpc = {
       ipc.invoke(storageChannels.update, key, updateData),
 
     clear: (): Promise<void> => ipc.invoke(storageChannels.clear),
+  },
+
+  appWindow: {
+    webViewAttached: (id: number) => ipc.send(appWindowChannels.webViewAttached, id),
   },
 };
 

@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 
 import {cardsActions, useCardsState} from '../../Redux/AI/CardsReducer';
 import {AppDispatch} from '../../Redux/Store';
+import rendererIpc from '../../RendererIpc';
 
 const variants: Variants = {
   init: {scale: 0.95, opacity: 0},
@@ -26,8 +27,11 @@ const Browser = () => {
 
   useEffect(() => {
     if (webViewRef.current) {
-      webViewRef.current.addEventListener('dom-ready', () => {
+      const webview = webViewRef.current;
+      webview.addEventListener('dom-ready', () => {
         setDomReady(true);
+
+        rendererIpc.appWindow.webViewAttached(webview.getWebContentsId());
       });
     }
   }, [webViewRef, address]);
@@ -51,7 +55,11 @@ const Browser = () => {
       initial="init"
       animate={animate}
       variants={variants}>
-      {address && <webview src={address} id={browserId} ref={webViewRef} className="relative size-full" />}
+      {address && (
+        // @ts-ignore-next-line
+        // eslint-disable-next-line react/no-unknown-property
+        <webview src={address} id={browserId} ref={webViewRef} allowpopups="true" className="relative size-full" />
+      )}
     </motion.div>
   );
 };
