@@ -264,4 +264,8 @@ export const storageUtilsChannels = {
 
   updateZoomFactor: 'storageUtils:update-zoom-factor',
 };
+
+export const appWindowChannels = {
+  webViewAttached: 'window:webview-attached',
+};
 //#endregion

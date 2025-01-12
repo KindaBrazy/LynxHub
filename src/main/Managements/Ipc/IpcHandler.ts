@@ -1,10 +1,11 @@
 import path from 'node:path';
 
-import {app, ipcMain, nativeTheme, OpenDialogOptions, shell} from 'electron';
+import {app, ipcMain, nativeTheme, OpenDialogOptions, shell, webContents} from 'electron';
 
 import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/CrossTypes';
 import {
   appDataChannels,
+  appWindowChannels,
   ChangeWindowState,
   DarkModeTypes,
   DiscordRunningAI,
@@ -292,6 +293,22 @@ function modulesApi() {
   ipcMain.handle(moduleApiChannels.getCurrentReleaseTag, (_, dir: string) => GitManager.getCurrentReleaseTag(dir));
 }
 
+function appWindow() {
+  ipcMain.on(appWindowChannels.webViewAttached, (_, id: number) => {
+    const webview = webContents.fromId(id);
+    if (!webview) return;
+
+    webview.on('will-navigate', (e, url) => {
+      shell.openExternal(url);
+      e.preventDefault();
+    });
+    webview.setWindowOpenHandler(({url}) => {
+      shell.openExternal(url);
+      return {action: 'deny'};
+    });
+  });
+}
+
 export function listenToAllChannels() {
   appData();
   storage();
@@ -310,4 +327,6 @@ export function listenToAllChannels() {
 
   extensions();
   extensionsIpc();
+
+  appWindow();
 }
