@@ -1,24 +1,12 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
-import {PullResult, SimpleGitProgressEvent} from 'simple-git';
+import {PullResult} from 'simple-git';
 
-import {initGitProgress} from '../../Utils/Constants';
 import {RootState} from '../Store';
 
 //#region Initialization & Types
 
 type ModalsState = {
-  installModal: {
-    isOpen: boolean;
-
-    cardId: string;
-    url: string;
-    directory: string;
-    title: string;
-
-    downloading: boolean;
-    downloadProgress: SimpleGitProgressEvent;
-  };
   installUIModal: {
     isOpen: boolean;
     type: 'install' | 'update';
@@ -73,13 +61,6 @@ type ModalsStateTypes = {
   [K in keyof ModalsState]: ModalsState[K];
 };
 
-type InstallCardData = {
-  cardId: string;
-  url: string;
-  directory: string;
-  title: string;
-};
-
 type CardInfoData = {
   cardId: string;
   title: string;
@@ -111,15 +92,6 @@ const initialState: ModalsState = {
     haveArguments: false,
   },
   cardUninstallModal: {cardId: '', isOpen: false},
-  installModal: {
-    cardId: '',
-    directory: '',
-    downloadProgress: initGitProgress,
-    downloading: false,
-    isOpen: false,
-    url: '',
-    title: '',
-  },
   updateDetails: {
     details: {
       created: [],
@@ -237,25 +209,6 @@ const modalSlice = createSlice({
       state.readmeModal.title = action.payload.title;
 
       state.readmeModal.isOpen = true;
-    },
-    //#endregion
-
-    //#region Install Card
-    openInstallCard: (state, action: PayloadAction<InstallCardData>) => {
-      state.installModal.cardId = action.payload.cardId;
-      state.installModal.url = action.payload.url;
-      state.installModal.directory = action.payload.directory;
-      state.installModal.title = action.payload.title;
-      state.installModal.isOpen = true;
-    },
-    setInstallDirectory: (state, action: PayloadAction<string>) => {
-      state.installModal.directory = action.payload;
-    },
-    setInstallDownloading: (state, action: PayloadAction<boolean>) => {
-      state.installModal.downloading = action.payload;
-    },
-    setInstallProgress: (state, action: PayloadAction<SimpleGitProgressEvent>) => {
-      state.installModal.downloadProgress = action.payload;
     },
     //#endregion
 
