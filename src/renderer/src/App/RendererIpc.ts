@@ -92,12 +92,8 @@ const rendererIpc = {
 
   /** Git operations */
   git: {
-    abortClone: (): void => ipc.send(gitChannels.abortClone),
-
     bCardUpdateAvailable: (repoDir: string): Promise<boolean> => ipc.invoke(gitChannels.updateAvailable, repoDir),
 
-    cloneRepo: (url: string, dir: string): void => ipc.send(gitChannels.cloneRepo, url, dir),
-    clonePromise: (url: string, dir: string): Promise<void> => ipc.invoke(gitChannels.clonePromise, url, dir),
     cloneShallow: (url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string): void =>
       ipc.send(gitChannels.cloneShallow, url, directory, singleBranch, depth, branch),
     cloneShallowPromise: (
@@ -112,8 +108,6 @@ const rendererIpc = {
       ipc.invoke(gitChannels.changeBranch, dir, branchName),
     unShallow: (dir: string): Promise<void> => ipc.invoke(gitChannels.unShallow, dir),
     resetHard: (dir: string): Promise<void> => ipc.invoke(gitChannels.resetHard, dir),
-
-    locateCard: (url: string): Promise<string | undefined> => ipc.invoke(gitChannels.locate, url),
 
     validateGitDir: (dir: string, url: string): Promise<boolean> => ipc.invoke(gitChannels.validateGitDir, dir, url),
 
