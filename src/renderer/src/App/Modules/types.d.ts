@@ -90,6 +90,8 @@ export type InstallationStepper = {
     invoke(channel: string, ...args: any[]): Promise<any>;
   };
 
+  storage: {get: (key: string) => any; set: (key: string, data: any) => void};
+
   /** Use these operations after the `setInstalled` function */
   postInstall: {
     /**
