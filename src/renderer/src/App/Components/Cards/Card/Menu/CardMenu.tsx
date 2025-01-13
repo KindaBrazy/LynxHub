@@ -8,7 +8,7 @@ import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../../../Redux/App/SettingsReducer';
 import {useUpdatingCard} from '../../../../Utils/UtilHooks';
 import {useCardData} from '../../CardsDataManager';
-import {MenuInfo, MenuReadme} from './MenuItems/CardMenu-About';
+import {MenuHomePage, MenuInfo} from './MenuItems/CardMenu-About';
 import {MenuUninstall} from './MenuItems/CardMenu-Danger';
 import {MenuExtensions, MenuLaunchConfig, MenuRepoConfig} from './MenuItems/CardMenu-Options';
 import {MenuAutoUpdate, MenuCheckForUpdate, MenuUpdate} from './MenuItems/CardMenu-Update';
@@ -68,7 +68,7 @@ export const CardMenu = observer(() => {
         })}
         <DropdownSection key="danger-zone">
           {MenuInfo()}
-          {MenuReadme()}
+          {MenuHomePage()}
           {MenuUninstall()}
         </DropdownSection>
 
