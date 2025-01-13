@@ -24,7 +24,6 @@ export default function Header_Pin() {
       onPress={onPress}
       variant={isPinned ? 'solid' : 'flat'}
       className="absolute z-20 top-3 left-3"
-      color={isPinned ? 'secondary' : 'default'}
       isIconOnly>
       <Pin_Icon className={`${!isPinned && '-rotate-45'} transition duration-500`} />
     </Button>
