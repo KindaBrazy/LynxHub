@@ -86,7 +86,7 @@ export const MenuRepoConfig = () => {
       onPress={onPress}
       title="Repository"
       className="cursor-default"
-      startContent={<GitHub_Icon />}
+      startContent={<GitHub_Icon className="size-[0.77rem]" />}
     />
   );
 };

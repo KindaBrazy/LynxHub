@@ -98,7 +98,7 @@ export const MenuCheckForUpdate = () => {
       key="check-update"
       className="cursor-default"
       isDisabled={checkingForUpdate}
-      startContent={<Refresh_Icon />}
+      startContent={<Refresh_Icon className="size-[0.77rem]" />}
       endContent={checkingForUpdate && <Spinner size="sm" color="primary" />}
     />
   );
