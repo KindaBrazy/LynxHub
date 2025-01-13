@@ -111,13 +111,8 @@ const AllCards = () => {
 /** Renders the "PINNED" category section */
 export const PinnedCars = memo(() => {
   const pinnedCards = useCardsState('pinnedCards');
-  const installedCards = useCardsState('installedCards');
 
   const pinCategory = useMemo(() => extensionsData.customizePages.home.add.pinCategory, []);
-
-  const validPinnedCards = useMemo(() => {
-    return pinnedCards.filter(pinnedCardId => installedCards.some(installedCard => installedCard.id === pinnedCardId));
-  }, [pinnedCards, installedCards]);
 
   return (
     <HomeCategory
@@ -125,11 +120,11 @@ export const PinnedCars = memo(() => {
       subTitle="Quick Access to Your Top AI Tools"
       icon={<Pin_Color_Icon className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
-        {isEmpty(validPinnedCards) && isEmpty(pinCategory) ? (
+        {isEmpty(pinnedCards) && isEmpty(pinCategory) ? (
           <Empty className="size-full" description="No Pinned Card to Display!" />
         ) : (
           <>
-            <CardsById cat="pinned" cardIds={validPinnedCards} />
+            <CardsById cat="pinned" cardIds={pinnedCards} />
             {...pinCategory.map((Pin, index) => <Pin key={index} />)}
           </>
         )}
@@ -141,15 +136,8 @@ export const PinnedCars = memo(() => {
 // Renders the "RECENTLY USED" category section
 export const RecentlyCards = memo(() => {
   const recentlyUsedCards = useCardsState('recentlyUsedCards');
-  const installedCards = useCardsState('installedCards');
 
   const recentlyCategory = useMemo(() => extensionsData.customizePages.home.add.recentlyCategory, []);
-
-  const validRecentlyUsed = useMemo(() => {
-    return recentlyUsedCards.filter(recentlyUsedCardId =>
-      installedCards.some(installedCard => installedCard.id === recentlyUsedCardId),
-    );
-  }, [recentlyUsedCards, installedCards]);
 
   return (
     <HomeCategory
@@ -157,11 +145,11 @@ export const RecentlyCards = memo(() => {
       subTitle="Your Most Recent AI Interactions"
       icon={<History_Color_Icon className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
-        {isEmpty(validRecentlyUsed) && isEmpty(recentlyCategory) ? (
+        {isEmpty(recentlyUsedCards) && isEmpty(recentlyCategory) ? (
           <Empty className="size-full" description="No Recently Used Card to Display!" />
         ) : (
           <>
-            <CardsById cat="recently" cardIds={validRecentlyUsed} />
+            <CardsById cat="recently" cardIds={recentlyUsedCards} />
             {...recentlyCategory.map((Recent, index) => <Recent key={index} />)}
           </>
         )}

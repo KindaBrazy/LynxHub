@@ -235,8 +235,8 @@ function storageUtilsIpc() {
     storageManager.removeAutoUpdateExtensions(cardId),
   );
 
-  ipcMain.handle(storageUtilsChannels.pinnedCards, (_, opt: StorageOperation, id: string) =>
-    storageManager.pinnedCardsOpt(opt, id),
+  ipcMain.handle(storageUtilsChannels.pinnedCards, (_, opt: StorageOperation, id: string, pinnedCards?: string[]) =>
+    storageManager.pinnedCardsOpt(opt, id, pinnedCards),
   );
 
   ipcMain.handle(storageUtilsChannels.recentlyUsedCards, (_, opt: RecentlyOperation, id: string) =>
