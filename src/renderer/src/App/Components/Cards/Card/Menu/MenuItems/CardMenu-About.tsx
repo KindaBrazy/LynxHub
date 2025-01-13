@@ -3,8 +3,7 @@ import {useCallback, useMemo, useState} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
-import {Document_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {OpenFolder_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
@@ -69,7 +68,7 @@ export const MenuInfo = () => {
   );
 };
 
-export const MenuReadme = () => {
+export const MenuHomePage = () => {
   const {repoUrl, title, setMenuIsOpen} = useCardData();
 
   const dispatch = useDispatch<AppDispatch>();
@@ -81,11 +80,11 @@ export const MenuReadme = () => {
 
   return (
     <DropdownItem
-      key="readme"
-      title="ReadMe"
+      key="homepage"
+      title="HomePage"
       onPress={onPress}
       className="cursor-default"
-      startContent={<Document_Icon />}
+      startContent={<HomeSmile_Icon className="size-3.5" />}
     />
   );
 };
