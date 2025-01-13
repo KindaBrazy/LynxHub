@@ -4,7 +4,7 @@ import {ReactNode, useMemo} from 'react';
 
 import {getArgumentDescription} from '../../../../../../../../../cross/GetArgumentsData';
 import {Close_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {getArgumentsByID} from '../../../../../../Modules/ModuleLoader';
+import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
 
 const {Text} = Typography;
@@ -31,7 +31,8 @@ export default function ArgumentItemBase({
 }: Props) {
   const {id} = useModalsState('cardLaunchConfig');
 
-  const tooltipText = useMemo(() => getArgumentDescription(name, getArgumentsByID(id)), [name]);
+  const cardArgument = useGetArgumentsByID(id);
+  const tooltipText = useMemo(() => getArgumentDescription(name, cardArgument), [name, cardArgument]);
 
   return (
     <Tooltip title={tooltipText} mouseEnterDelay={0.8} rootClassName="max-w-[65%] whitespace-pre-line">

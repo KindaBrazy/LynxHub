@@ -4,7 +4,7 @@ import {compact, isEmpty, isNil} from 'lodash';
 import {FC, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {getCardsByPath} from '../../Modules/ModuleLoader';
+import {useGetCardsByPath} from '../../Modules/ModuleLoader';
 import {AvailablePages} from '../../Modules/types';
 import {useCardsState} from '../../Redux/AI/CardsReducer';
 import Page from '../Pages/Page';
@@ -12,7 +12,7 @@ import LynxCard from './Card/LynxCard';
 import {CardContext, CardsDataManager} from './CardsDataManager';
 
 export function GetComponentsByPath({routePath, extensionsElements}: {routePath: string; extensionsElements?: FC[]}) {
-  const cards = useMemo(() => getCardsByPath(routePath as AvailablePages), [routePath]);
+  const cards = useGetCardsByPath(routePath as AvailablePages);
   const installedCards = useCardsState('installedCards');
   const pinnedCards = useCardsState('pinnedCards');
 

@@ -2,10 +2,9 @@ import {Button} from '@nextui-org/react';
 import {memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extractGitUrl} from '../../../../../../cross/CrossUtils';
 import {Download2_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
 import {Play_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
-import {getMethod} from '../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../../../Redux/AI/CardsReducer';
 import {modalActions} from '../../../Redux/AI/ModalsReducer';
 import {useSettingsState} from '../../../Redux/App/SettingsReducer';
@@ -18,6 +17,7 @@ const StartButton = memo(() => {
   const {id, installed, repoUrl, title, type, extensionsDir} = useCardData();
   const compactMode = useSettingsState('cardsCompactMode');
   const autoUpdateExtensions = useIsAutoUpdateExtensions(id);
+  const allCards = useAllCards();
 
   const updatingExtensions = useCardsState('updatingExtensions');
 
@@ -54,22 +54,8 @@ const StartButton = memo(() => {
   }, [id, autoUpdateExtensions, dispatch]);
 
   const install = useCallback(() => {
-    if (getMethod(id, 'manager')) {
+    if (getCardMethod(allCards, id, 'manager')) {
       dispatch(modalActions.openInstallUICard({id, type: 'install', title}));
-    } else {
-      rendererIpc.file.getAppDirectories('AIWorkspaces').then(dir => {
-        const isWin = window.osPlatform === 'win32';
-        const directory = `${dir}${isWin ? '\\' : '/'}${extractGitUrl(repoUrl).repo}`;
-
-        dispatch(
-          modalActions.openInstallCard({
-            cardId: id,
-            title,
-            directory,
-            url: repoUrl,
-          }),
-        );
-      });
     }
   }, [repoUrl, title, id, dispatch]);
 

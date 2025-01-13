@@ -4,7 +4,7 @@ import {useCallback, useState} from 'react';
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue, getArgumentValues} from '../../../../../../../../../cross/GetArgumentsData';
 import {ListCheck_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {getArgumentsByID} from '../../../../../../Modules/ModuleLoader';
+import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
 import {convertArrToObject} from '../../../../../../Utils/UtilFunctions';
 import ArgumentItemBase from './Argument-Item-Base';
@@ -13,9 +13,9 @@ type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (val
 
 export default function DropdownArgItem({argument, changeValue, removeArg}: Props) {
   const {id} = useModalsState('cardLaunchConfig');
-  const [defaultValue] = useState<string>(
-    argument.value || getArgumentDefaultValue(argument.name, getArgumentsByID(id)),
-  );
+  const cardArgument = useGetArgumentsByID(id);
+
+  const [defaultValue] = useState<string>(argument.value || getArgumentDefaultValue(argument.name, cardArgument));
   const [selectedKey, setSelectedKey] = useState<string[]>(defaultValue ? [defaultValue] : []);
 
   const onChange = useCallback(
@@ -39,7 +39,7 @@ export default function DropdownArgItem({argument, changeValue, removeArg}: Prop
         className="font-JetBrainsMono"
         defaultSelectedKeys={selectedKey}
         classNames={{trigger: 'cursor-default', value: 'text-xs'}}
-        items={convertArrToObject(getArgumentValues(argument.name, getArgumentsByID(id)) || [])}>
+        items={convertArrToObject(getArgumentValues(argument.name, cardArgument) || [])}>
         {item => (
           <SelectItem key={item.name} classNames={{title: 'text-xs'}} className="cursor-default font-JetBrainsMono">
             {item.name}

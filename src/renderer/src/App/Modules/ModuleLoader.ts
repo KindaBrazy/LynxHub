@@ -1,3 +1,5 @@
+import {useSyncExternalStore} from 'react';
+
 import {APP_BUILD_NUMBER} from '../../../../cross/CrossConstants';
 import rendererIpc from '../RendererIpc';
 import {
@@ -12,20 +14,37 @@ import {
 let allModules: CardModules = [];
 let allCards: CardData[] = [];
 
+const listeners = new Set<() => void>();
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+function emitChange() {
+  for (const listener of listeners) {
+    listener();
+  }
+}
+
+const useAllCards = (): CardData[] => useSyncExternalStore(subscribe, () => allCards);
+const useAllModules = (): CardModules => useSyncExternalStore(subscribe, () => allModules);
+
 /**
  * Retrieves the arguments for a specific card.
  * @param id The ID of the card.
  * @returns The arguments data or undefined if not found.
  */
-const getArgumentsByID = (id: string): ArgumentsData | undefined => allCards.find(card => card.id === id)?.arguments;
+const useGetArgumentsByID = (id: string): ArgumentsData | undefined =>
+  useAllCards().find(card => card.id === id)?.arguments;
 
 /**
  * Retrieves all cards associated with a specific path.
  * @param path The path to filter cards by.
  * @returns An array of cards or undefined if no module matches the path.
  */
-const getCardsByPath = (path: AvailablePages): CardData[] | undefined =>
-  allModules.find(module => module.routePath === path)?.cards;
+const useGetCardsByPath = (path: AvailablePages): CardData[] | undefined =>
+  useAllModules().find(module => module.routePath === path)?.cards;
 
 /**
  * Retrieves a specific method for a specific card.
@@ -33,10 +52,47 @@ const getCardsByPath = (path: AvailablePages): CardData[] | undefined =>
  * @param method The name of the method to retrieve.
  * @returns The method or undefined if not found.
  */
-const getMethod = <T extends keyof CardRendererMethods>(id: string, method: T): CardRendererMethods[T] | undefined =>
-  allCards.find(card => card.id === id)?.methods?.[method] as CardRendererMethods[T] | undefined;
+const useGetMethod = <T extends keyof CardRendererMethods>(id: string, method: T): CardRendererMethods[T] | undefined =>
+  useAllCards().find(card => card.id === id)?.methods?.[method] as CardRendererMethods[T] | undefined;
 
-const getInstallType = (id: string) => allCards.find(card => card.id === id)?.installationType || 'others';
+const getCardMethod = <T extends keyof CardRendererMethods>(
+  cards: CardData[],
+  id: string,
+  method: T,
+): CardRendererMethods[T] | undefined => {
+  return cards.find(card => card.id === id)?.methods?.[method] as CardRendererMethods[T] | undefined;
+};
+
+const useGetInstallType = (id: string) => useAllCards().find(card => card.id === id)?.installationType || 'others';
+
+/**
+ * Duplicate a card
+ * @param id The card id to duplicate.
+ */
+const duplicateCard = (id: string) => {
+  let newCard: CardData | undefined = undefined;
+  let ogPath: string = '';
+  const newId = `${id}_${Date.now()}`;
+
+  allModules.forEach(page => {
+    const found = page.cards.find(card => card.id === id);
+    if (found) {
+      newCard = {...found, id: newId};
+      ogPath = page.routePath;
+    }
+  });
+
+  if (!newCard) return;
+
+  allModules.map(page => {
+    if (page.routePath !== ogPath) return page;
+    return {routePath: page.routePath, cards: [...page.cards, newCard]};
+  });
+
+  allCards = [...allCards, newCard];
+
+  emitChange();
+};
 
 /**
  * Loads all modules and their associated cards.
@@ -87,6 +143,7 @@ const loadModules = async () => {
 
     allModules = newAllModules;
     allCards = newAllCards;
+    emitChange();
   } catch (error) {
     console.error('Error importing modules:', error);
     throw error; // Re-throw to allow for handling at a higher level if needed
@@ -106,6 +163,16 @@ export type ModuleData = {
   getMethod: <T extends keyof CardRendererMethods>(id: string, method: T) => CardRendererMethods[T] | undefined;
 };
 
-export {allCards, allModules, getArgumentsByID, getCardsByPath, getInstallType, getMethod};
+export {
+  allCards,
+  allModules,
+  duplicateCard,
+  getCardMethod,
+  useAllCards,
+  useGetArgumentsByID,
+  useGetCardsByPath,
+  useGetInstallType,
+  useGetMethod,
+};
 
 export default loadModules;
