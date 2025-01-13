@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router';
 
 import {toMs} from '../../../../cross/CrossUtils';
 import StorageTypes from '../../../../cross/StorageTypes';
-import {getMethod} from '../Modules/ModuleLoader';
+import {useAllCards} from '../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../Redux/AI/CardsReducer';
 import {appActions} from '../Redux/App/AppReducer';
 import {settingsActions} from '../Redux/App/SettingsReducer';
@@ -17,6 +17,7 @@ import rendererIpc from '../RendererIpc';
 export const useCheckCardsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
   const installedCards = useCardsState('installedCards');
+  const allCards = useAllCards();
 
   useEffect(() => {
     rendererIpc.module.onCardsUpdateAvailable((_e, result) => {
@@ -26,7 +27,7 @@ export const useCheckCardsUpdate = () => {
 
   useEffect(() => {
     const updateMethod = installedCards.map(card => {
-      const type = getMethod(card.id, 'manager')?.updater.updateType;
+      const type = allCards.find(c => c.id === card.id)?.methods?.['manager']?.updater.updateType;
       if (isNil(type)) return undefined;
       return {
         id: card.id,
@@ -34,7 +35,7 @@ export const useCheckCardsUpdate = () => {
       };
     });
     rendererIpc.module.checkCardsUpdateInterval(compact(updateMethod));
-  }, [installedCards]);
+  }, [installedCards, allCards]);
 };
 
 export const useCheckModulesUpdate = () => {

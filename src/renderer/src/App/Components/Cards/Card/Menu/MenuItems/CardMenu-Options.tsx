@@ -1,11 +1,11 @@
 import {DropdownItem} from '@nextui-org/react';
-import {useCallback, useMemo} from 'react';
+import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Extensions2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {GitHub_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {SettingsMinimal_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {getInstallType} from '../../../../../Modules/ModuleLoader';
+import {useGetInstallType} from '../../../../../Modules/ModuleLoader';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
@@ -65,7 +65,7 @@ export const MenuExtensions = () => {
 
 export const MenuRepoConfig = () => {
   const {id, title, setMenuIsOpen} = useCardData();
-  const installType = useMemo(() => getInstallType(id), []);
+  const installType = useGetInstallType(id);
   const dispatch = useDispatch<AppDispatch>();
 
   const dir = useInstalledCard(id)?.dir;

@@ -3,7 +3,7 @@ import {memo, useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
-import {getMethod} from '../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
 import {
   CardRendererMethods,
   InstallationMethod,
@@ -54,6 +54,7 @@ const InstallModal = memo(() => {
   const [userElementsReturn, setUserElementsReturn] = useState<UserInputResult[]>([]);
 
   const [extensionsToInstall, setExtensionsToInstall] = useState<{urls: string[]; dir: string} | undefined>(undefined);
+  const allCards = useAllCards();
 
   useEffect(() => {
     if (state.body === 'done' && state.doneAll.type === 'success' && type === 'update') {
@@ -73,7 +74,7 @@ const InstallModal = memo(() => {
   }, []);
 
   useEffect(() => {
-    setMethods(getMethod(cardId, 'manager'));
+    setMethods(getCardMethod(allCards, cardId, 'manager'));
   }, [cardId]);
 
   // -----------------------------------------------> Resolvers

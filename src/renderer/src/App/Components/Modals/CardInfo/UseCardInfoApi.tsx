@@ -1,7 +1,7 @@
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
 
-import {getMethod} from '../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
 import {CardInfoApi, CardInfoCallback, CardInfoDescriptions} from '../../../Modules/types';
 import rendererIpc from '../../../RendererIpc';
 
@@ -11,6 +11,8 @@ export default function useCardInfoApi(
   setCardInfoDescriptions: (descriptions: CardInfoDescriptions) => void,
   dir?: string,
 ) {
+  const allCards = useAllCards();
+
   useEffect(() => {
     if (!isEmpty(cardId)) {
       const api: CardInfoApi = {
@@ -38,7 +40,7 @@ export default function useCardInfoApi(
 
       const callBack: CardInfoCallback = {setOpenFolders, setDescription: setCardInfoDescriptions};
 
-      getMethod(cardId, 'cardInfo')?.(api, callBack);
+      getCardMethod(allCards, cardId, 'cardInfo')?.(api, callBack);
     }
   }, [cardId, dir]);
 }

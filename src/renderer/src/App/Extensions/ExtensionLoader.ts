@@ -1,6 +1,6 @@
 import {RouteObject} from 'react-router';
 
-import {allCards, allModules, getArgumentsByID, getCardsByPath, getMethod} from '../Modules/ModuleLoader';
+import {allCards, allModules, useGetArgumentsByID, useGetCardsByPath, useGetMethod} from '../Modules/ModuleLoader';
 import {ExtensionData_Renderer, ExtensionImport_Renderer} from './ExtensionTypes_Renderer';
 import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 
@@ -369,10 +369,17 @@ const api: ExtensionRendererApi = {
 };
 
 export default function extensionLoader(extensions: ExtensionImport_Renderer[]) {
+  // TODO: update these
   for (const extension of extensions) {
     extension.InitialExtensions({
       ...api,
-      modulesData: {allModules, getArgumentsByID, allCards, getCardsByPath, getMethod},
+      modulesData: {
+        allModules,
+        getArgumentsByID: useGetArgumentsByID,
+        allCards,
+        getCardsByPath: useGetCardsByPath,
+        getMethod: useGetMethod,
+      },
     });
   }
 }

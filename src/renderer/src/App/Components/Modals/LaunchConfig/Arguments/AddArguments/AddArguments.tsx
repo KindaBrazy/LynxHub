@@ -21,7 +21,7 @@ import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../../../../cross/GetArgumentsData';
 import {Circle_Icon, Filter_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {getArgumentsByID} from '../../../../../Modules/ModuleLoader';
+import {useGetArgumentsByID} from '../../../../../Modules/ModuleLoader';
 import {useModalsState} from '../../../../../Redux/AI/ModalsReducer';
 import {useAppState} from '../../../../../Redux/App/AppReducer';
 import ArgumentCategory from './ArgumentCategory';
@@ -53,13 +53,15 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
   const [selectedArguments, setSelectedArguments] = useState<Set<string>>(new Set([]));
   const [searchValue, setSearchValue] = useState<string>('');
 
+  const cardArgument = useGetArgumentsByID(id);
+
   const listData = useMemo(
     () =>
       getFilteredArguments(
-        getArgumentsByID(id),
+        cardArgument,
         chosenArguments.arguments.map(argument => argument.name),
       ),
-    [chosenArguments],
+    [chosenArguments, cardArgument],
   );
 
   const removeSelected = useCallback((value: string) => {
@@ -90,7 +92,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
       );
 
       const result: ChosenArgument[] = selectedArg.map(arg => {
-        return {name: arg, value: getArgumentDefaultValue(arg, getArgumentsByID(id)) || ''};
+        return {name: arg, value: getArgumentDefaultValue(arg, cardArgument) || ''};
       });
 
       // return {...prevState, arguments: [...prevState.arguments, result]};
@@ -104,7 +106,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
       return {...prevState, data};
     });
     onClose();
-  }, [selectedArguments, id, onClose]);
+  }, [selectedArguments, id, onClose, cardArgument]);
 
   return (
     <Modal

@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {getMethod} from '../../../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCards} from '../../../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../../../Redux/AI/CardsReducer';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
@@ -26,17 +26,18 @@ export const MenuUpdate = () => {
   const webUi = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
   const [customUpdate, setCustomUpdate] = useState<boolean>(false);
+  const allCards = useAllCards();
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (getMethod(id, 'manager')?.updater.updateType === 'stepper') {
+    if (getCardMethod(allCards, id, 'manager')?.updater.updateType === 'stepper') {
       setCustomUpdate(true);
     }
   }, [id]);
 
   const onPress = useCallback(() => {
-    if (getMethod(id, 'manager')?.updater.startUpdate) {
+    if (getCardMethod(allCards, id, 'manager')?.updater.startUpdate) {
       dispatch(modalActions.openInstallUICard({id, type: 'update', title}));
       setMenuIsOpen(false);
     } else if (webUi && webUi.dir) {
@@ -69,11 +70,12 @@ export const MenuCheckForUpdate = () => {
   const webUi = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
   const [customUpdate, setCustomUpdate] = useState<boolean>(false);
+  const allCards = useAllCards();
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (getMethod(id, 'manager')?.updater.updateType === 'stepper') {
+    if (getCardMethod(allCards, id, 'manager')?.updater.updateType === 'stepper') {
       setCustomUpdate(true);
     }
   }, [setCustomUpdate, id]);
@@ -111,11 +113,12 @@ export const MenuAutoUpdate = () => {
   const updateAvailable = useUpdateAvailable(id);
   const webUi = useInstalledCard(id);
   const [customUpdate, setCustomUpdate] = useState<boolean>(false);
+  const allCards = useAllCards();
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (getMethod(id, 'manager')?.updater.updateType === 'stepper') {
+    if (getCardMethod(allCards, id, 'manager')?.updater.updateType === 'stepper') {
       setCustomUpdate(true);
     }
   }, [id]);

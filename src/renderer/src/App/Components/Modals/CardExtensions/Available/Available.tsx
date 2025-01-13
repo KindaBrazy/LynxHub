@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 
 import {validateGitRepoUrl} from '../../../../../../../cross/CrossUtils';
 import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {getMethod} from '../../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCards} from '../../../../Modules/ModuleLoader';
 import {useModalsState} from '../../../../Redux/AI/ModalsReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import RenderItem from './RenderItem';
@@ -29,6 +29,7 @@ export default function Available({visible, updateTable, installedExtensions}: P
   const [searchedData, setSearchedData] = useState<ExtensionsInfo[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
+  const allCards = useAllCards();
 
   useEffect(() => {
     setSearchedData(
@@ -46,7 +47,7 @@ export default function Available({visible, updateTable, installedExtensions}: P
     async function fetchModules() {
       setIsLoading(true);
       try {
-        const fetchExtensionList = getMethod(id, 'fetchExtensionList');
+        const fetchExtensionList = getCardMethod(allCards, id, 'fetchExtensionList');
         if (fetchExtensionList) {
           const extensions: ExtensionsInfo[] = await fetchExtensionList();
           const filterData = extensions.filter(ext => !!validateGitRepoUrl(ext.url));

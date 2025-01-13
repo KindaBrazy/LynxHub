@@ -13,7 +13,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
-import {getMethod} from '../../Modules/ModuleLoader';
+import {getCardMethod, useAllCards} from '../../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../../Redux/AI/CardsReducer';
 import {useAppState} from '../../Redux/App/AppReducer';
 import {useTerminalState} from '../../Redux/App/TerminalReducer';
@@ -29,6 +29,8 @@ const FONT_FAMILY = 'JetBrainsMono';
 
 /** Xterm.js terminal */
 const LynxTerminal = () => {
+  const allCards = useAllCards();
+
   const terminalRef = useRef<HTMLDivElement | null>(null);
   const terminal = useRef<Terminal | null>(null);
   const fitAddon = useRef<FitAddon | null>(null);
@@ -101,7 +103,7 @@ const LynxTerminal = () => {
   const writeData = useCallback(
     (data: string) => {
       if (isEmpty(address) && browserBehavior !== 'doNothing') {
-        const catchAddress = getMethod(id, 'catchAddress');
+        const catchAddress = getCardMethod(allCards, id, 'catchAddress');
         const url = catchAddress?.(data) || '';
         if (!isEmpty(url)) {
           if (browserBehavior === 'appBrowser') {
