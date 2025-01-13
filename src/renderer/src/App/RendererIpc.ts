@@ -194,8 +194,8 @@ const rendererIpc = {
     onAutoUpdateExtensions: (result: (event: IpcRendererEvent, cards: string[]) => void) =>
       ipc.on(storageUtilsChannels.onAutoUpdateExtensions, result),
 
-    pinnedCards: (opt: StorageOperation, id: string): Promise<string[]> =>
-      ipc.invoke(storageUtilsChannels.pinnedCards, opt, id),
+    pinnedCards: (opt: StorageOperation, id: string, pinnedCards?: string[]): Promise<string[]> =>
+      ipc.invoke(storageUtilsChannels.pinnedCards, opt, id, pinnedCards),
     onPinnedCardsChange: (result: (event: IpcRendererEvent, cards: string[]) => void) =>
       ipc.on(storageUtilsChannels.onPinnedCardsChange, result),
 

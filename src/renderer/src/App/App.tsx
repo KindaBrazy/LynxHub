@@ -1,4 +1,5 @@
 import useAppEvents from './AppEvents/AppEvents';
+import useStateChange from './AppEvents/AppStates';
 import Background from './Components/Background';
 import MainContents from './Components/MainContents/MainContents';
 import Modals from './Components/Modals/Modals';
@@ -14,6 +15,7 @@ export default function App() {
   useHtmlAttributes();
   useRegisterHotkeys();
   useAppEvents();
+  useStateChange();
   //#endregion
 
   return (

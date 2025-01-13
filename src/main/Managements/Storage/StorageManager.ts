@@ -232,7 +232,7 @@ class StorageManager extends BaseStorage {
     appManager.getWebContent()?.send(storageUtilsChannels.onPinnedCardsChange, updatedPinnedCards);
   }
 
-  public pinnedCardsOpt(opt: StorageOperation, id: string) {
+  public pinnedCardsOpt(opt: StorageOperation, id: string, pinnedCards?: string[]) {
     let result: string[] = [];
 
     switch (opt) {
@@ -246,6 +246,11 @@ class StorageManager extends BaseStorage {
 
       case 'get':
         result = this.getData('cards').pinnedCards;
+        break;
+
+      case 'set':
+        this.updateData('cards', {pinnedCards});
+        appManager.getWebContent()?.send(storageUtilsChannels.onPinnedCardsChange, pinnedCards);
         break;
     }
 
