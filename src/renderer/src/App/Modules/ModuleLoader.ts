@@ -46,15 +46,6 @@ const useGetArgumentsByID = (id: string): ArgumentsData | undefined =>
 const useGetCardsByPath = (path: AvailablePages): CardData[] | undefined =>
   useAllModules().find(module => module.routePath === path)?.cards;
 
-/**
- * Retrieves a specific method for a specific card.
- * @param id The ID of the card.
- * @param method The name of the method to retrieve.
- * @returns The method or undefined if not found.
- */
-const useGetMethod = <T extends keyof CardRendererMethods>(id: string, method: T): CardRendererMethods[T] | undefined =>
-  useAllCards().find(card => card.id === id)?.methods?.[method] as CardRendererMethods[T] | undefined;
-
 const getCardMethod = <T extends keyof CardRendererMethods>(
   cards: CardData[],
   id: string,
@@ -158,9 +149,13 @@ rendererIpc.module.onReload(() => {
 export type ModuleData = {
   allModules: CardModules;
   allCards: CardData[];
-  getArgumentsByID: (id: string) => ArgumentsData | undefined;
-  getCardsByPath: (path: AvailablePages) => CardData[] | undefined;
-  getMethod: <T extends keyof CardRendererMethods>(id: string, method: T) => CardRendererMethods[T] | undefined;
+  useGetArgumentsByID: (id: string) => ArgumentsData | undefined;
+  useGetCardsByPath: (path: AvailablePages) => CardData[] | undefined;
+  getCardMethod: <T extends keyof CardRendererMethods>(
+    cards: CardData[],
+    id: string,
+    method: T,
+  ) => CardRendererMethods[T] | undefined;
 };
 
 export {
@@ -172,7 +167,6 @@ export {
   useGetArgumentsByID,
   useGetCardsByPath,
   useGetInstallType,
-  useGetMethod,
 };
 
 export default loadModules;
