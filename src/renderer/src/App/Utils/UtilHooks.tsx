@@ -1,4 +1,5 @@
-import {useMemo} from 'react';
+import {useMemo, useState} from 'react';
+import {useHotkeys} from 'react-hotkeys-hook';
 
 import {InstalledCard} from '../../../../cross/StorageTypes';
 import {useCardsState} from '../Redux/AI/CardsReducer';
@@ -71,4 +72,33 @@ export const useDisableTooltip = (isEssential: boolean = false): boolean => {
 
   // Show if tooltip set to essential
   return !isEssential;
+};
+
+export const useCtrlPressed = () => {
+  const [isCtrlPressed, setIsCtrlPressed] = useState<boolean>(false);
+
+  useHotkeys(
+    'ctrl',
+    () => {
+      setIsCtrlPressed(true);
+    },
+    {
+      keydown: true,
+      enableOnFormTags: true,
+      enableOnContentEditable: true,
+    },
+  );
+  useHotkeys(
+    'ctrl',
+    () => {
+      setIsCtrlPressed(false);
+    },
+    {
+      keyup: true,
+      enableOnFormTags: true,
+      enableOnContentEditable: true,
+    },
+  );
+
+  return {isCtrlPressed, setIsCtrlPressed};
 };

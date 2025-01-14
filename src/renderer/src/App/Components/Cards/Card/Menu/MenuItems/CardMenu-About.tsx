@@ -1,6 +1,5 @@
 import {DropdownItem} from '@nextui-org/react';
-import {useCallback, useMemo, useState} from 'react';
-import {useHotkeys} from 'react-hotkeys-hook';
+import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ExternalLink_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
@@ -10,7 +9,7 @@ import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
-import {useInstalledCard} from '../../../../../Utils/UtilHooks';
+import {useCtrlPressed, useInstalledCard} from '../../../../../Utils/UtilHooks';
 import {useCardData} from '../../../CardsDataManager';
 
 export const MenuInfo = () => {
@@ -20,38 +19,16 @@ export const MenuInfo = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const [ctrlPressed, setCtrlPressed] = useState<boolean>(false);
-  const showOpenFolder = useMemo(() => {
-    return !!webUI?.dir && ctrlPressed;
-  }, [webUI, ctrlPressed]);
+  const {isCtrlPressed, setIsCtrlPressed} = useCtrlPressed();
 
-  useHotkeys(
-    'ctrl',
-    () => {
-      setCtrlPressed(true);
-    },
-    {
-      keydown: true,
-      enableOnFormTags: true,
-      enableOnContentEditable: true,
-    },
-  );
-  useHotkeys(
-    'ctrl',
-    () => {
-      setCtrlPressed(false);
-    },
-    {
-      keyup: true,
-      enableOnFormTags: true,
-      enableOnContentEditable: true,
-    },
-  );
+  const showOpenFolder = useMemo(() => {
+    return !!webUI?.dir && isCtrlPressed;
+  }, [webUI, isCtrlPressed]);
 
   const onPress = () => {
     if (showOpenFolder) {
       rendererIpc.file.openPath(webUI!.dir!);
-      setCtrlPressed(false);
+      setIsCtrlPressed(false);
     } else {
       dispatch(modalActions.openCardInfo({cardId: id, devName: name, extensionsDir, title, url: repoUrl}));
       setMenuIsOpen(false);
@@ -72,40 +49,19 @@ export const MenuInfo = () => {
 export const MenuHomePage = () => {
   const {repoUrl, title, setMenuIsOpen} = useCardData();
 
-  const [ctrlPressed, setCtrlPressed] = useState<boolean>(false);
+  const {isCtrlPressed, setIsCtrlPressed} = useCtrlPressed();
+
   const dispatch = useDispatch<AppDispatch>();
 
   const onPress = useCallback(() => {
-    if (ctrlPressed) {
+    if (isCtrlPressed) {
       window.open(repoUrl);
+      setIsCtrlPressed(false);
     } else {
       dispatch(modalActions.openReadme({url: repoUrl, title}));
       setMenuIsOpen(false);
     }
-  }, [dispatch, setMenuIsOpen, repoUrl, title, ctrlPressed]);
-
-  useHotkeys(
-    'ctrl',
-    () => {
-      setCtrlPressed(true);
-    },
-    {
-      keydown: true,
-      enableOnFormTags: true,
-      enableOnContentEditable: true,
-    },
-  );
-  useHotkeys(
-    'ctrl',
-    () => {
-      setCtrlPressed(false);
-    },
-    {
-      keyup: true,
-      enableOnFormTags: true,
-      enableOnContentEditable: true,
-    },
-  );
+  }, [dispatch, setMenuIsOpen, repoUrl, title, isCtrlPressed]);
 
   return (
     <DropdownItem
@@ -113,7 +69,7 @@ export const MenuHomePage = () => {
       title="HomePage"
       onPress={onPress}
       className="cursor-default"
-      endContent={ctrlPressed && <ExternalLink_Icon />}
+      endContent={isCtrlPressed && <ExternalLink_Icon />}
       startContent={<HomeSmile_Icon className="size-3.5" />}
     />
   );
