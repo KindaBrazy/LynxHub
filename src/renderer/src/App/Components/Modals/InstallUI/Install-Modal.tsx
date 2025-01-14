@@ -45,6 +45,7 @@ const InstallModal = memo(() => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [state, setState] = useState<InstallState>(initialState);
 
+  // TODO: Use memo instead
   const [methods, setMethods] = useState<CardRendererMethods['manager']>();
 
   const [progressInfo, setProgressInfo] = useState<DownloadProgress | undefined>(undefined);
@@ -75,7 +76,7 @@ const InstallModal = memo(() => {
 
   useEffect(() => {
     setMethods(getCardMethod(allCards, cardId, 'manager'));
-  }, [cardId]);
+  }, [cardId, allCards]);
 
   // -----------------------------------------------> Resolvers
   const cloneResolver = useRef<((dir: string) => void) | null>(null);

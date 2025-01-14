@@ -61,7 +61,7 @@ export default function Available({visible, updateTable, installedExtensions}: P
     }
 
     if (visible) fetchModules();
-  }, [visible]);
+  }, [visible, allCards]);
 
   const onPageSizeChange: PaginationProps['onShowSizeChange'] = (_, pageSize) => {
     setPageSize(pageSize);

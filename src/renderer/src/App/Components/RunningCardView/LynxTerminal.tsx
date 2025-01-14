@@ -118,7 +118,7 @@ const LynxTerminal = () => {
       }
       terminal.current?.write(outputColor ? parseTerminalColors(data) : data);
     },
-    [address, id, browserBehavior, outputColor, dispatch],
+    [address, id, browserBehavior, outputColor, dispatch, allCards],
   );
 
   const onRightClickRef = useRef<((e: MouseEvent) => void) | null>(null);

@@ -42,5 +42,5 @@ export default function useCardInfoApi(
 
       getCardMethod(allCards, cardId, 'cardInfo')?.(api, callBack);
     }
-  }, [cardId, dir]);
+  }, [cardId, dir, allCards]);
 }
