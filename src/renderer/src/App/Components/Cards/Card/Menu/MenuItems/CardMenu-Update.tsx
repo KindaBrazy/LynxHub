@@ -34,7 +34,7 @@ export const MenuUpdate = () => {
     if (getCardMethod(allCards, id, 'manager')?.updater.updateType === 'stepper') {
       setCustomUpdate(true);
     }
-  }, [id]);
+  }, [id, allCards]);
 
   const onPress = useCallback(() => {
     if (getCardMethod(allCards, id, 'manager')?.updater.startUpdate) {
@@ -78,7 +78,7 @@ export const MenuCheckForUpdate = () => {
     if (getCardMethod(allCards, id, 'manager')?.updater.updateType === 'stepper') {
       setCustomUpdate(true);
     }
-  }, [setCustomUpdate, id]);
+  }, [setCustomUpdate, id, allCards]);
 
   const onPress = useCallback(() => {
     setCheckingForUpdate(true);
@@ -121,7 +121,7 @@ export const MenuAutoUpdate = () => {
     if (getCardMethod(allCards, id, 'manager')?.updater.updateType === 'stepper') {
       setCustomUpdate(true);
     }
-  }, [id]);
+  }, [id, allCards]);
 
   const onPress = useCallback(
     () =>

@@ -37,7 +37,7 @@ export default function CardArguments({chosenArguments, setChosenArguments}: Pro
   useEffect(() => {
     const getParsedArgs = getCardMethod(allCards, id, 'parseArgsToString');
     if (getParsedArgs) setPreviewText(getParsedArgs(activePreset.arguments));
-  }, [activePreset]);
+  }, [activePreset, id, allCards]);
 
   useEffect(() => {
     setPresets(chosenArguments.data.map(arg => arg.preset));

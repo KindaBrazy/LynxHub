@@ -16,7 +16,7 @@ export default function CheckBoxArgItem({argument, removeArg}: Props) {
 
   const cardArgument = useGetArgumentsByID(id);
 
-  const tooltipText = useMemo(() => getArgumentDescription(argument.name, cardArgument), [argument]);
+  const tooltipText = useMemo(() => getArgumentDescription(argument.name, cardArgument), [argument, cardArgument]);
 
   return (
     <Tooltip title={tooltipText} mouseEnterDelay={0.5} rootClassName="max-w-[65%] whitespace-pre-line">

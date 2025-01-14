@@ -57,7 +57,7 @@ const StartButton = memo(() => {
     if (getCardMethod(allCards, id, 'manager')) {
       dispatch(modalActions.openInstallUICard({id, type: 'install', title}));
     }
-  }, [repoUrl, title, id, dispatch]);
+  }, [repoUrl, title, id, dispatch, allCards]);
 
   return (
     <Button
