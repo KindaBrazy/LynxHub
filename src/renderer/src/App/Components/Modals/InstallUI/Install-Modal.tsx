@@ -1,5 +1,5 @@
 import {Modal, ModalContent} from '@nextui-org/react';
-import {memo, useCallback, useEffect, useRef, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
@@ -37,6 +37,7 @@ const initialState: InstallState = {
 const InstallModal = memo(() => {
   const {isOpen, cardId, title, type} = useModalsState('installUIModal');
   const installedCard = useInstalledCard(cardId);
+  const allCards = useAllCards();
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -45,8 +46,10 @@ const InstallModal = memo(() => {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [state, setState] = useState<InstallState>(initialState);
 
-  // TODO: Use memo instead
-  const [methods, setMethods] = useState<CardRendererMethods['manager']>();
+  const methods: CardRendererMethods['manager'] = useMemo(
+    () => getCardMethod(allCards, cardId, 'manager'),
+    [cardId, allCards],
+  );
 
   const [progressInfo, setProgressInfo] = useState<DownloadProgress | undefined>(undefined);
   const [urlToDownload, setUrlToDownload] = useState<string | undefined>(undefined);
@@ -55,7 +58,6 @@ const InstallModal = memo(() => {
   const [userElementsReturn, setUserElementsReturn] = useState<UserInputResult[]>([]);
 
   const [extensionsToInstall, setExtensionsToInstall] = useState<{urls: string[]; dir: string} | undefined>(undefined);
-  const allCards = useAllCards();
 
   useEffect(() => {
     if (state.body === 'done' && state.doneAll.type === 'success' && type === 'update') {
@@ -73,10 +75,6 @@ const InstallModal = memo(() => {
   const updateState = useCallback((newState: Partial<InstallState>) => {
     setState(prevState => ({...prevState, ...newState}));
   }, []);
-
-  useEffect(() => {
-    setMethods(getCardMethod(allCards, cardId, 'manager'));
-  }, [cardId, allCards]);
 
   // -----------------------------------------------> Resolvers
   const cloneResolver = useRef<((dir: string) => void) | null>(null);
