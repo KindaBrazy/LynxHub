@@ -3,6 +3,7 @@ import {useCallback, useMemo, useState} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
+import {ExternalLink_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {OpenFolder_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
@@ -71,12 +72,40 @@ export const MenuInfo = () => {
 export const MenuHomePage = () => {
   const {repoUrl, title, setMenuIsOpen} = useCardData();
 
+  const [ctrlPressed, setCtrlPressed] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
   const onPress = useCallback(() => {
-    dispatch(modalActions.openReadme({url: repoUrl, title}));
-    setMenuIsOpen(false);
-  }, [dispatch, setMenuIsOpen, repoUrl, title]);
+    if (ctrlPressed) {
+      window.open(repoUrl);
+    } else {
+      dispatch(modalActions.openReadme({url: repoUrl, title}));
+      setMenuIsOpen(false);
+    }
+  }, [dispatch, setMenuIsOpen, repoUrl, title, ctrlPressed]);
+
+  useHotkeys(
+    'ctrl',
+    () => {
+      setCtrlPressed(true);
+    },
+    {
+      keydown: true,
+      enableOnFormTags: true,
+      enableOnContentEditable: true,
+    },
+  );
+  useHotkeys(
+    'ctrl',
+    () => {
+      setCtrlPressed(false);
+    },
+    {
+      keyup: true,
+      enableOnFormTags: true,
+      enableOnContentEditable: true,
+    },
+  );
 
   return (
     <DropdownItem
@@ -84,6 +113,7 @@ export const MenuHomePage = () => {
       title="HomePage"
       onPress={onPress}
       className="cursor-default"
+      endContent={ctrlPressed && <ExternalLink_Icon />}
       startContent={<HomeSmile_Icon className="size-3.5" />}
     />
   );
