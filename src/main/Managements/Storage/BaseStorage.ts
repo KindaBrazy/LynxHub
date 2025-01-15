@@ -19,7 +19,7 @@ class BaseStorage {
   private readonly STORAGE_FILE = is.dev ? `${APP_NAME}-Dev.config` : `${APP_NAME}.config`;
   private readonly STORAGE_PATH = path.join(app.getPath('userData'), this.STORAGE_FILE);
 
-  private readonly CURRENT_VERSION: number = 0.5;
+  private readonly CURRENT_VERSION: number = 0.6;
 
   private readonly DEFAULT_DATA: StorageTypes = {
     storage: {version: 0.5},
@@ -35,6 +35,7 @@ class BaseStorage {
       cardsDesc: true,
       cardsRepoInfo: true,
       zoomFactor: [],
+      duplicated: [],
     },
     cardsConfig: {
       preCommands: [],
@@ -103,25 +104,13 @@ class BaseStorage {
   private migration() {
     const storeVersion = this.getData('storage').version;
 
-    const version1to2 = () => {
-      this.updateData('cards', {autoUpdateExtensions: []});
-    };
-    const version2to3 = () => {
-      this.updateData('cardsConfig', {customRunBehavior: []});
-    };
-
-    const version3to4 = () => {
-      this.updateData('cards', {
-        cardsDevImage: true,
-        cardsDevName: false,
-        cardsDesc: true,
-        cardsRepoInfo: true,
-        zoomFactor: [],
-      });
-    };
-
     const version4to5 = () => {
       this.storage.data.terminal = this.DEFAULT_DATA.terminal;
+      this.storage.write();
+    };
+
+    const version5to6 = () => {
+      this.storage.data.cards.duplicated = [];
       this.storage.write();
     };
 
@@ -131,26 +120,13 @@ class BaseStorage {
 
     if (storeVersion < this.CURRENT_VERSION) {
       switch (storeVersion) {
-        case 0.1: {
-          version1to2();
-          version2to3();
-          version3to4();
-          version4to5();
-          break;
-        }
-        case 0.2: {
-          version2to3();
-          version3to4();
-          version4to5();
-          break;
-        }
-        case 0.3: {
-          version3to4();
-          version4to5();
-          break;
-        }
         case 0.4: {
           version4to5();
+          version5to6();
+          break;
+        }
+        case 0.5: {
+          version5to6();
           break;
         }
         default:

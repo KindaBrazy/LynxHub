@@ -35,6 +35,7 @@ type StorageTypes = {
     cardsDesc: boolean;
     cardsRepoInfo: boolean;
     zoomFactor: {id: string; zoom: number}[];
+    duplicated: {ogID: string; id: string; title: string}[];
   };
   cardsConfig: {
     preCommands: {cardId: string; data: string[]}[];

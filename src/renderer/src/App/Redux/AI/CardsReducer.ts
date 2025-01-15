@@ -24,6 +24,7 @@ type CardsState = {
   runningCard: RunningCard;
   webViewZoomFactor: {id: string; zoom: number}[];
   homeCategory: string[];
+  duplicates: {ogID: string; id: string; title: string}[];
 };
 
 type CardsStateTypes = {
@@ -49,6 +50,7 @@ const initialState: CardsState = {
   autoUpdateExtensions: [],
   updatingExtensions: undefined,
   webViewZoomFactor: [],
+  duplicates: [],
 };
 //#endregion
 
@@ -125,6 +127,9 @@ const cardsSlice = createSlice({
     },
     setRecentlyUsedCards: (state, action: PayloadAction<string[]>) => {
       state.recentlyUsedCards = action.payload;
+    },
+    setDuplicates: (state, action: PayloadAction<{ogID: string; id: string; title: string}[]>) => {
+      state.duplicates = action.payload;
     },
 
     //#region Running Card (AI)

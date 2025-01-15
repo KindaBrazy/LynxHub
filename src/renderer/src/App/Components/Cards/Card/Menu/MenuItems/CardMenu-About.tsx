@@ -2,9 +2,11 @@ import {DropdownItem} from '@nextui-org/react';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {ExternalLink_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Copy_Icon, ExternalLink_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {OpenFolder_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {duplicateCard, removeDuplicatedCard} from '../../../../../Modules/ModuleLoader';
+import {cardsActions, useCardsState} from '../../../../../Redux/AI/CardsReducer';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
@@ -72,5 +74,35 @@ export const MenuHomePage = () => {
       endContent={isCtrlPressed && <ExternalLink_Icon />}
       startContent={<HomeSmile_Icon className="size-3.5" />}
     />
+  );
+};
+
+export const MenuDuplicate = () => {
+  const {id} = useCardData();
+  const duplicates = useCardsState('duplicates');
+  const isDuplicated = useMemo(() => duplicates.some(card => card.id === id), [duplicates, id]);
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const onPress = useCallback(() => {
+    if (isDuplicated) {
+      const removedDuplicate = duplicates.filter(d => d.id !== id);
+      rendererIpc.storage.update('cards', {duplicated: removedDuplicate});
+      dispatch(cardsActions.setDuplicates(removedDuplicate));
+      removeDuplicatedCard(id);
+    } else {
+      const duplicatedCard = duplicateCard(id);
+      if (duplicatedCard) {
+        const addedDuplicate = [...duplicates, {...duplicatedCard, ogID: id}];
+        rendererIpc.storage.update('cards', {duplicated: addedDuplicate});
+        dispatch(cardsActions.setDuplicates(addedDuplicate));
+      }
+    }
+  }, [isDuplicated]);
+
+  return (
+    <DropdownItem onPress={onPress} key="duplicate_card" className="cursor-default" startContent={<Copy_Icon />}>
+      {isDuplicated ? 'Remove Duplicate' : 'Duplicate'}
+    </DropdownItem>
   );
 };
