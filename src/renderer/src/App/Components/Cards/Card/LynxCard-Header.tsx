@@ -2,7 +2,7 @@ import {CardHeader, Skeleton} from '@nextui-org/react';
 import {Typography} from 'antd';
 import {capitalize} from 'lodash';
 import {observer} from 'mobx-react-lite';
-import {useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 
 import {useSettingsState} from '../../../Redux/App/SettingsReducer';
 import {useDevInfo, useLoadImage} from '../../../Utils/LocalStorage';
@@ -19,6 +19,10 @@ const LynxCardHeader = observer(() => {
   const cardsRepoInfo = useSettingsState('cardsRepoInfo');
   const cardsDesc = useSettingsState('cardsDesc');
 
+  const modifiedTitle = useMemo(() => {
+    return window.localStorage.getItem(`${id}_title_edited`) || title;
+  }, [id, title]);
+
   const allDisabled = useMemo(() => {
     return !cardsDevImage && !cardsDevName && !cardsRepoInfo && !cardsDesc;
   }, [cardsDevImage, cardsDevName, cardsRepoInfo, cardsDesc]);
@@ -30,6 +34,13 @@ const LynxCardHeader = observer(() => {
   const bgSrc = useLoadImage(`${id}-card-bg-img`, bgUrl);
   const {name, picUrl} = useDevInfo(repoUrl);
   const devSrc = useLoadImage(`${id}-card-dev-img`, picUrl, 'avatar');
+
+  const onTitleChange = useCallback(
+    e => {
+      window.localStorage.setItem(`${id}_title_edited`, e.currentTarget.textContent);
+    },
+    [id],
+  );
 
   return (
     <CardHeader className="flex flex-col p-0">
@@ -62,14 +73,21 @@ const LynxCardHeader = observer(() => {
       <Text
         className={
           `${(compactMode || !cardsDevName) && 'mt-3 !text-large font-bold'} ` +
-          `${!cardsDesc && (cardsRepoInfo || cardsDevImage) && 'mb-4'} px-5`
+          `${!cardsDesc && (cardsRepoInfo || cardsDevImage) && 'mb-4'} px-5 cursor-text`
         }
-        ellipsis={{tooltip: title}}>
-        {title}
+        spellCheck={false}
+        onInput={onTitleChange}
+        ellipsis={{tooltip: modifiedTitle}}
+        contentEditable
+        suppressContentEditableWarning>
+        {modifiedTitle}
       </Text>
 
       {(cardsDesc || compactMode) && (
-        <Paragraph type="secondary" className="mx-8 mt-3 text-center" ellipsis={{rows: 2, tooltip: description}}>
+        <Paragraph
+          type="secondary"
+          className="mx-8 mt-3 text-center"
+          ellipsis={{rows: 2, tooltip: {title: description, mouseEnterDelay: 0.5}}}>
           {description}
         </Paragraph>
       )}
