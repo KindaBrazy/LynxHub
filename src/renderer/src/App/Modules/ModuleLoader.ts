@@ -58,32 +58,109 @@ const useGetInstallType = (id: string) => useAllCards().find(card => card.id ===
 
 /**
  * Duplicate a card
- * @param id The card id to duplicate.
  */
-const duplicateCard = (id: string) => {
-  let newCard: CardData | undefined = undefined;
-  let ogPath: string = '';
-  const newId = `${id}_${Date.now()}`;
+const duplicateCard = (id: string, defaultID?: string, defaultTitle?: string) => {
+  let newId: string = '';
+  let newTitle: string = '';
+  let routePath: string = '';
 
-  allModules.forEach(page => {
-    const found = page.cards.find(card => card.id === id);
-    if (found) {
-      newCard = {...found, id: newId};
-      ogPath = page.routePath;
+  // Function to generate the next ID
+  const generateNewId = (baseId: string): string => {
+    let newId = `${baseId}_1`;
+    let counter = 1;
+    while (allCards.some(card => card.id === newId)) {
+      counter++;
+      newId = `${baseId}_${counter}`;
     }
+    return newId;
+  };
+
+  // Function to generate the next title
+  const generateNewTitle = (baseTitle: string): string => {
+    const regex = / \(\d+\)$/; // Matches " (number)" at the end of the string
+    if (regex.test(baseTitle)) {
+      return baseTitle.replace(regex, match => {
+        const number = parseInt(match.slice(2, -1), 10) + 1;
+        return ` (${number})`;
+      });
+    } else {
+      return `${baseTitle} (2)`;
+    }
+  };
+
+  // Use find and map together for efficiency
+  let duplicatedCard: CardData | undefined;
+  const updatedModules = allModules.map(page => {
+    const cardIndex = page.cards.findIndex(card => card.id === id);
+    if (cardIndex === -1) {
+      return page; // Card not found in this page
+    }
+
+    // Card found, duplicate and add to the page
+    const originalCard = page.cards[cardIndex];
+    newId = defaultID || generateNewId(originalCard.id);
+    newTitle = defaultTitle || generateNewTitle(originalCard.title); // Generate new title
+    duplicatedCard = {...originalCard, id: newId, title: newTitle}; // Add new title
+    const updatedCards = [...page.cards];
+    updatedCards.splice(cardIndex + 1, 0, duplicatedCard);
+
+    routePath = page.routePath;
+
+    return {...page, cards: updatedCards};
   });
 
-  if (!newCard) return;
+  if (!duplicatedCard) {
+    return undefined; // Card not found at all
+  }
 
-  allModules.map(page => {
-    if (page.routePath !== ogPath) return page;
-    return {routePath: page.routePath, cards: [...page.cards, newCard]};
-  });
-
-  allCards = [...allCards, newCard];
+  allModules = updatedModules;
+  allCards = [...allCards, duplicatedCard];
 
   emitChange();
+
+  return {id: newId, title: newTitle, routePath};
 };
+
+const removeDuplicatedCard = (id: string) => {
+  let cardRemoved = false;
+
+  // Remove from allModules
+  const updatedModules = allModules.map(page => {
+    const cardIndex = page.cards.findIndex(card => card.id === id);
+    if (cardIndex === -1) {
+      return page; // Card not found in this page
+    }
+
+    cardRemoved = true;
+    const updatedCards = [...page.cards];
+    updatedCards.splice(cardIndex, 1);
+
+    return {...page, cards: updatedCards};
+  });
+
+  // Remove from allCards
+  const initialAllCardsLength = allCards.length;
+  allCards = allCards.filter(card => card.id !== id);
+  if (allCards.length !== initialAllCardsLength) {
+    cardRemoved = true;
+  }
+
+  if (cardRemoved) {
+    allModules = updatedModules;
+    emitChange();
+  }
+};
+
+async function emitLoaded(newAllModules: CardModules, newAllCards: CardData[]) {
+  const {duplicated} = await rendererIpc.storage.get('cards');
+
+  allModules = newAllModules;
+  allCards = newAllCards;
+
+  duplicated.forEach(item => duplicateCard(item.ogID, item.id, item.title));
+
+  emitChange();
+}
 
 /**
  * Loads all modules and their associated cards.
@@ -132,9 +209,7 @@ const loadModules = async () => {
       return acc;
     }, {});
 
-    allModules = newAllModules;
-    allCards = newAllCards;
-    emitChange();
+    emitLoaded(newAllModules, newAllCards);
   } catch (error) {
     console.error('Error importing modules:', error);
     throw error; // Re-throw to allow for handling at a higher level if needed
@@ -163,6 +238,7 @@ export {
   allModules,
   duplicateCard,
   getCardMethod,
+  removeDuplicatedCard,
   useAllCards,
   useGetArgumentsByID,
   useGetCardsByPath,
