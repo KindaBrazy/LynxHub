@@ -68,6 +68,8 @@ export type DownloadProgress = {
   downloaded: number;
   total: number;
 };
+
+export type SkippedPlugins = {folderName: string; message: string};
 //#endregion
 
 //#region Ipc Channels Names
@@ -151,6 +153,8 @@ export const modulesChannels = {
 
   getModulesData: 'modules:get-modules-data',
   getInstalledModulesInfo: 'modules:get-installed-modules-info',
+
+  getSkipped: 'modules:get-skipped',
 };
 
 export const extensionsChannels = {
@@ -166,6 +170,8 @@ export const extensionsChannels = {
 
   getExtensionsData: 'extensions:get-extensions-data',
   getInstalledExtensionsInfo: 'extensions:get-installed-extensions-info',
+
+  getSkipped: 'extensions:get-skipped',
 };
 
 export const ptyChannels = {

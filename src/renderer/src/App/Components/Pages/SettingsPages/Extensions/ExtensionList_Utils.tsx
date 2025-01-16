@@ -8,6 +8,7 @@ import {
   DropdownTrigger,
   Link,
   Skeleton,
+  Tooltip,
   User,
 } from '@nextui-org/react';
 import {List, Typography} from 'antd';
@@ -18,11 +19,13 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} fro
 import {EXTENSION_CONTAINER, EXTENSION_CONTAINER_EA} from '../../../../../../../cross/CrossConstants';
 import {Extension_ListData, ExtensionsInfo} from '../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
+import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
 import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Linux_Icon, MacOS_Icon, Windows_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
 import {useSettingsState} from '../../../../Redux/App/SettingsReducer';
 import {useUserState} from '../../../../Redux/User/UserReducer';
 import {ExtFilter} from './ExtensionList';
+import {InstalledExt} from './ExtensionsPage';
 
 export function useFetchExtensions(setList: Dispatch<SetStateAction<Extension_ListData[]>>) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -164,11 +167,14 @@ export function useRenderList(
   selectedExt: Extension_ListData | undefined,
   setSelectedExt: Dispatch<SetStateAction<Extension_ListData | undefined>>,
   isLoaded: boolean,
-  installed: string[],
+  installed: InstalledExt[],
+  unloaded: SkippedPlugins[],
 ) {
   const updateAvailable = useSettingsState('extensionsUpdateAvailable');
   return useCallback(
     (item: Extension_ListData) => {
+      const foundInstalled = installed.find(i => i.id === item.id);
+      const foundUnloaded = unloaded.find(u => foundInstalled?.dir === u.folderName);
       return (
         <List.Item
           className={
@@ -200,7 +206,7 @@ export function useRenderList(
                       isExternal>
                       {item.title}
                     </Link>
-                    {installed.includes(item.id) && (
+                    {foundInstalled && (
                       <Chip size="sm" variant="faded" color="default">
                         Installed
                       </Chip>
@@ -225,6 +231,13 @@ export function useRenderList(
                 {item.platforms.includes('linux') && <Linux_Icon className="size-5 text-[#FF9800]" />}
                 {item.platforms.includes('win32') && <Windows_Icon className="size-5 text-[#4285F4]" />}
                 {item.platforms.includes('darwin') && <MacOS_Icon className="size-5" />}
+                {foundUnloaded && (
+                  <Tooltip delay={300} content={foundUnloaded.message} showArrow>
+                    <Chip size="sm" variant="faded" color="warning">
+                      Unloaded
+                    </Chip>
+                  </Tooltip>
+                )}
               </div>
             </Skeleton>
           </div>

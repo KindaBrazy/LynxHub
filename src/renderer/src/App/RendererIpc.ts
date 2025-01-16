@@ -36,6 +36,7 @@ import {
   ptyChannels,
   PtyProcessOpt,
   RecentlyOperation,
+  SkippedPlugins,
   storageChannels,
   StorageOperation,
   storageUtilsChannels,
@@ -121,7 +122,10 @@ const rendererIpc = {
   module: {
     getModulesData: (): Promise<string[]> => ipc.invoke(modulesChannels.getModulesData),
 
-    getInstalledModulesInfo: (): Promise<ModulesInfo[]> => ipc.invoke(modulesChannels.getInstalledModulesInfo),
+    getInstalledModulesInfo: (): Promise<{dir: string; info: ModulesInfo}[]> =>
+      ipc.invoke(modulesChannels.getInstalledModulesInfo),
+
+    getSkipped: (): Promise<SkippedPlugins[]> => ipc.invoke(modulesChannels.getSkipped),
 
     installModule: (url: string): Promise<boolean> => ipc.invoke(modulesChannels.installModule, url),
 
@@ -156,8 +160,9 @@ const rendererIpc = {
   extension: {
     getExtensionsData: (): Promise<string[]> => ipc.invoke(extensionsChannels.getExtensionsData),
 
-    getInstalledExtensionsInfo: (): Promise<ExtensionsInfo[]> =>
+    getInstalledExtensionsInfo: (): Promise<{dir: string; info: ExtensionsInfo}[]> =>
       ipc.invoke(extensionsChannels.getInstalledExtensionsInfo),
+    getSkipped: (): Promise<SkippedPlugins[]> => ipc.invoke(extensionsChannels.getSkipped),
 
     installExtension: (url: string): Promise<boolean> => ipc.invoke(extensionsChannels.installExtension, url),
 

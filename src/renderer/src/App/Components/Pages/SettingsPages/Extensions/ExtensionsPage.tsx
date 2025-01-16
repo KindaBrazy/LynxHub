@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
+import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
 import {settingsActions} from '../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
@@ -10,30 +11,38 @@ import ExtensionList from './ExtensionList';
 import ExtensionPreview from './ExtensionPreview';
 
 export const extensionsRoutePath: string = '/extensionPage';
-export type InstalledExt = {id: string; version?: string};
+export type InstalledExt = {dir: string; id: string; version?: string};
 
 export default function ExtensionsPage() {
   const [selectedExtension, setSelectedExtension] = useState<Extension_ListData | undefined>(undefined);
   const [installed, setInstalled] = useState<InstalledExt[]>([]);
+  const [unloaded, setUnloaded] = useState<SkippedPlugins[]>([]);
+
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     rendererIpc.extension.getInstalledExtensionsInfo().then(result => {
       setInstalled(
         result.map(item => {
-          const {id, version} = item;
-          return {id, version};
+          const {id, version} = item.info;
+          return {id, version, dir: item.dir};
         }),
       );
     });
     rendererIpc.module.anyUpdateAvailable().then(value => {
       dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value}));
     });
+    rendererIpc.extension.getSkipped().then(result => setUnloaded(result));
   }, []);
 
   return (
     <Page className="flex flex-row gap-x-6 relative">
-      <ExtensionList installed={installed} selectedExt={selectedExtension} setSelectedExt={setSelectedExtension} />
+      <ExtensionList
+        unloaded={unloaded}
+        installed={installed}
+        selectedExt={selectedExtension}
+        setSelectedExt={setSelectedExtension}
+      />
       <ExtensionPreview installed={installed} setInstalled={setInstalled} selectedExt={selectedExtension} />
     </Page>
   );

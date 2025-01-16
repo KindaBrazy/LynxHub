@@ -5,6 +5,7 @@ import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
+import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
 import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useAppState} from '../../../../Redux/App/AppReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
@@ -17,6 +18,7 @@ type Props = {
   selectedExt: Extension_ListData | undefined;
   setSelectedExt: Dispatch<SetStateAction<Extension_ListData | undefined>>;
   installed: InstalledExt[];
+  unloaded: SkippedPlugins[];
 };
 
 const emptyText = (
@@ -31,7 +33,7 @@ const emptyText = (
   />
 );
 
-export default function ExtensionList({selectedExt, setSelectedExt, installed}: Props) {
+export default function ExtensionList({selectedExt, setSelectedExt, installed, unloaded}: Props) {
   const isDarkMode = useAppState('darkMode');
 
   const [selectedFilters, setSelectedFilters] = useState<ExtFilter>('all');
@@ -58,7 +60,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed}: 
   );
 
   const filterMenu = useFilterMenu(selectedFilters, setSelectedFilters);
-  const renderList = useRenderList(selectedExt, setSelectedExt, loading, installedID);
+  const renderList = useRenderList(selectedExt, setSelectedExt, loading, installed, unloaded);
 
   return (
     <div
