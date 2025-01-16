@@ -105,9 +105,13 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
   public async uninstallPlugin(id: string) {
     const plugin = this.getDirById(id);
     if (!plugin) return false;
-    await removeDir(plugin.dir);
-    await this.reloadServer();
-    return true;
+    try {
+      await removeDir(plugin);
+      await this.reloadServer();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   public async isUpdateAvailable(id: string) {
@@ -132,7 +136,7 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     if (!plugin) return false;
     return new Promise<boolean>(resolve => {
       const gitManager = new GitManager(true);
-      gitManager.pull(plugin.dir);
+      gitManager.pull(plugin);
 
       gitManager.onComplete = async () => {
         appManager.getWebContent()?.send(this.updateChannel, id);
@@ -252,7 +256,11 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
   }
 
   public getDirById(id: string) {
-    return this.installedPluginInfo.find(installed => installed.info.id === id);
+    const plugin = this.installedPluginInfo.find(installed => installed.info.id === id);
+    if (plugin) {
+      return path.join(this.pluginPath, plugin.dir);
+    }
+    return undefined;
   }
 
   protected async validatePluginFolders(folderPaths: string[]): Promise<string[]> {
