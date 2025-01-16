@@ -6,6 +6,7 @@ import fs from 'graceful-fs';
 import portFinder from 'portfinder';
 import handler from 'serve-handler';
 
+import {APP_BUILD_NUMBER} from '../../../cross/CrossConstants';
 import {ExtensionsInfo, FolderNames, MainModules, ModulesInfo} from '../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../cross/CrossUtils';
 import {appManager} from '../../index';
@@ -48,15 +49,15 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     this.pluginPath = getAppDirectory(pluginDirName);
   }
 
-  protected async setPluginInfo(paths: string[]) {
-    for (const pluginPath of paths) {
-      const filePath = path.join(pluginPath, this.configFileName);
+  protected async setInstalledPlugins(folders: string[]) {
+    for (const folder of folders) {
+      const filePath = path.join(this.pluginPath, folder, this.configFileName);
       const content = fs.readFileSync(filePath, 'utf-8');
       try {
         const jsonData = JSON.parse(content);
-        this.installedPluginInfo.push({dir: pluginPath, info: jsonData});
+        this.installedPluginInfo.push({dir: folder, info: jsonData});
       } catch (error) {
-        console.error(`Error parsing ${pluginPath}: ${error}`);
+        console.error(`Error parsing ${folder}: ${error}`);
       }
     }
   }
@@ -65,14 +66,13 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     return new Promise<void>(async resolve => {
       try {
         const files = fs.readdirSync(this.pluginPath, {withFileTypes: true});
-        const folders = await this.validatePluginFolders(
-          files.filter(file => file.isDirectory()).map(folder => folder.name),
-        );
+        const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
+        const validFolders = await this.validatePluginFolders(folders);
 
-        this.pluginData = folders.map(folder => `${this.finalAddress}/${folder}`);
-        const pluginFolders = folders.map(folder => path.join(this.pluginPath, folder));
+        this.pluginData = validFolders.map(folder => `${this.finalAddress}/${folder}`);
+        const pluginFolders = validFolders.map(folder => path.join(this.pluginPath, folder));
 
-        await this.setPluginInfo(pluginFolders);
+        await this.setInstalledPlugins(folders);
         await this.importPlugins(pluginFolders);
 
         resolve();
@@ -269,7 +269,15 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
             fs.promises.access(path.join(dir, this.rendererScriptPath), fs.constants.F_OK),
           ]);
 
-          validatedFolders.push(folder);
+          // Read and parse the JSON file
+          const configData = await fs.promises.readFile(configPath, 'utf-8');
+          const config = JSON.parse(configData);
+
+          if (APP_BUILD_NUMBER >= config.requireAppBuild) {
+            validatedFolders.push(folder);
+          } else {
+            console.log(`Skipping folder "${folder}" because requireAppBuild not satisfied.`);
+          }
         } catch (err) {
           console.log(`Skipping folder "${folder}" due to missing requirements.`);
         }
