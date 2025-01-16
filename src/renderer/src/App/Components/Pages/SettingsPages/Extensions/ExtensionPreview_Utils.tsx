@@ -213,7 +213,7 @@ export function PreviewFooter({
             wrapClassName: 'mt-10',
           });
         }
-        setInstalled(prevState => [...prevState, {id: selectedExt.id, version: selectedExt.version}]);
+        setInstalled(prevState => [...prevState, {id: selectedExt.id, version: selectedExt.version, dir: ''}]);
       });
     }
   }, [selectedExt]);

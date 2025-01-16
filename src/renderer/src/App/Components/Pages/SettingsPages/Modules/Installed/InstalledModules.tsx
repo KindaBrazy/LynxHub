@@ -37,8 +37,9 @@ export default function InstalledModules({setInstalledModules, updatingAll}: Pro
 
   useEffect(() => {
     rendererIpc.module.getInstalledModulesInfo().then(result => {
-      setData(result);
-      setInstalledModules(result.map(module => module.id));
+      const resultInfo = result.map(item => item.info);
+      setData(resultInfo);
+      setInstalledModules(resultInfo.map(module => module.id));
     });
   }, []);
 

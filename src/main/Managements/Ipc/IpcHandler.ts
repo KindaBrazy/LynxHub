@@ -144,6 +144,7 @@ function utils() {
 function modules() {
   ipcMain.handle(modulesChannels.getModulesData, () => moduleManager.getPluginData());
   ipcMain.handle(modulesChannels.getInstalledModulesInfo, () => moduleManager.getInstalledPluginInfo());
+  ipcMain.handle(modulesChannels.getSkipped, () => moduleManager.getSkipped());
 
   ipcMain.handle(modulesChannels.installModule, (_, url: string) => moduleManager.installPlugin(url));
   ipcMain.handle(modulesChannels.uninstallModule, (_, id: string) => moduleManager.uninstallPlugin(id));
@@ -167,6 +168,7 @@ function modules() {
 function extensions() {
   ipcMain.handle(extensionsChannels.getExtensionsData, () => extensionManager.getPluginData());
   ipcMain.handle(extensionsChannels.getInstalledExtensionsInfo, () => extensionManager.getInstalledPluginInfo());
+  ipcMain.handle(extensionsChannels.getSkipped, () => extensionManager.getSkipped());
 
   ipcMain.handle(extensionsChannels.installExtension, (_, url: string) => extensionManager.installPlugin(url));
   ipcMain.handle(extensionsChannels.uninstallExtension, (_, id: string) => extensionManager.uninstallPlugin(id));

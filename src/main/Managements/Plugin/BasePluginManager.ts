@@ -9,6 +9,7 @@ import handler from 'serve-handler';
 import {APP_BUILD_NUMBER} from '../../../cross/CrossConstants';
 import {ExtensionsInfo, FolderNames, MainModules, ModulesInfo} from '../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../cross/CrossUtils';
+import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {appManager} from '../../index';
 import {getAppDirectory} from '../AppDataManager';
 import GitManager from '../GitManager';
@@ -21,6 +22,7 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
   protected finalAddress: string = '';
 
   protected pluginData: string[] = [];
+  protected skippedPlugins: SkippedPlugins[] = [];
   protected mainMethods: MainModules[] = [];
   protected installedPluginInfo: {dir: string; info: TInfo}[] = [];
 
@@ -241,8 +243,12 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     return this.pluginData;
   }
 
-  public getInstalledPluginInfo(): TInfo[] {
-    return this.installedPluginInfo.map(installed => installed.info);
+  public getSkipped(): SkippedPlugins[] {
+    return this.skippedPlugins;
+  }
+
+  public getInstalledPluginInfo(): {dir: string; info: TInfo}[] {
+    return this.installedPluginInfo;
   }
 
   public getDirById(id: string) {
@@ -276,9 +282,17 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
           if (APP_BUILD_NUMBER >= config.requireAppBuild) {
             validatedFolders.push(folder);
           } else {
+            this.skippedPlugins.push({
+              folderName: folder,
+              message: 'Unloaded because requireAppBuild not satisfied.',
+            });
             console.log(`Skipping folder "${folder}" because requireAppBuild not satisfied.`);
           }
         } catch (err) {
+          this.skippedPlugins.push({
+            folderName: folder,
+            message: 'Unloaded due to incompatible structure.',
+          });
           console.log(`Skipping folder "${folder}" due to missing requirements.`);
         }
       }
