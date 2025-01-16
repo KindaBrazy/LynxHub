@@ -2,7 +2,7 @@ import {CardHeader, Skeleton} from '@nextui-org/react';
 import {Typography} from 'antd';
 import {capitalize} from 'lodash';
 import {observer} from 'mobx-react-lite';
-import {useCallback, useMemo} from 'react';
+import {FormEvent, useCallback, useMemo} from 'react';
 
 import {useSettingsState} from '../../../Redux/App/SettingsReducer';
 import {useDevInfo, useLoadImage} from '../../../Utils/LocalStorage';
@@ -36,8 +36,8 @@ const LynxCardHeader = observer(() => {
   const devSrc = useLoadImage(`${id}-card-dev-img`, picUrl, 'avatar');
 
   const onTitleChange = useCallback(
-    e => {
-      window.localStorage.setItem(`${id}_title_edited`, e.currentTarget.textContent);
+    (e: FormEvent<HTMLSpanElement>) => {
+      window.localStorage.setItem(`${id}_title_edited`, e.currentTarget.textContent || title);
     },
     [id],
   );
