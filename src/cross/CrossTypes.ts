@@ -186,6 +186,8 @@ export type ExtensionsInfo = {
   /** Repository address to be cloned when user install module */
   repoUrl: string;
 
+  requireAppBuild: number;
+
   /** Url address to logo picture or relative path to the image file
    * - A relative path will start with './'
    */
