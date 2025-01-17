@@ -246,12 +246,17 @@ export default class GitManager {
   public async changeBranch(directory: string, branchName: string): Promise<void> {
     const targetDirectory = path.resolve(directory);
 
+    const checkout = async () => {
+      await this.git.checkout(branchName);
+      await this.git.raw(['branch', '--set-upstream-to', `origin/${branchName}`, branchName]);
+    };
+
     try {
       await this.git.cwd(targetDirectory);
 
       const branchSummary = await this.git.branchLocal();
       if (branchSummary.all.includes(branchName)) {
-        await this.git.checkout(branchName);
+        await checkout();
         return;
       }
 
@@ -261,7 +266,7 @@ export default class GitManager {
         if (fetchError instanceof Error && fetchError.message.includes('could not find remote ref')) {
           try {
             await this.git.fetch(['--all']);
-            await this.git.checkout(branchName);
+            await checkout();
 
             return;
           } catch (e) {
@@ -274,7 +279,7 @@ export default class GitManager {
         }
       }
 
-      await this.git.checkout(branchName);
+      await checkout();
     } catch (error) {
       if (error instanceof Error) {
         this.handleError(error);
