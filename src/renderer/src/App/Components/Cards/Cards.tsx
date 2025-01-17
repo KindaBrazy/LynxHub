@@ -10,6 +10,7 @@ import {useCardsState} from '../../Redux/AI/CardsReducer';
 import Page from '../Pages/Page';
 import LynxCard from './Card/LynxCard';
 import {CardContext, CardsDataManager} from './CardsDataManager';
+import NavigateModulesPage from './NavigateModulesPage';
 
 export function GetComponentsByPath({routePath, extensionsElements}: {routePath: string; extensionsElements?: FC[]}) {
   const cards = useGetCardsByPath(routePath as AvailablePages);
@@ -31,6 +32,7 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
         <Page className="content-center">
           <Result
             status="info"
+            extra={<NavigateModulesPage size="md" />}
             title="Oops! No cards to display right now"
             subTitle="Please install related modules to see cards"
           />

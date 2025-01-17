@@ -6,7 +6,6 @@ import rendererIpc from '../RendererIpc';
 export const checkEARepos = (isEA: boolean) => {
   rendererIpc.extension.checkEa(isEA).then(eEA => {
     rendererIpc.module.checkEa(isEA).then(mEA => {
-      console.log(eEA, mEA);
       if (eEA || mEA) {
         notification.info({
           duration: 0,
