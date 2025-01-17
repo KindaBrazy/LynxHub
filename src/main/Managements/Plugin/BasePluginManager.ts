@@ -122,26 +122,26 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
 
   public async checkEA(isEA: boolean) {
     const installFolders = this.installedPluginInfo.map(folder => path.join(this.pluginPath, folder.dir));
-    const requireBranch = isEA ? 'compiled_ea' : 'compiled';
+    const targetBranch = isEA ? 'compiled_ea' : 'compiled';
     let isChangedBranch: boolean = false;
 
     for (const folder of installFolders) {
-      const git = new GitManager();
+      try {
+        const git = new GitManager();
 
-      const url = await GitManager.remoteUrlFromDir(folder);
-      const currentBranch = await GitManager.getDirBranch(folder);
+        const url = await GitManager.remoteUrlFromDir(folder);
+        const currentBranch = await GitManager.getDirBranch(folder);
 
-      if (!url || currentBranch === requireBranch) continue;
+        if (!url || currentBranch === targetBranch) continue;
 
-      const branches = await git.getAvailableBranches(url);
+        const branches = await git.getAvailableBranches(url);
 
-      if (branches.includes(requireBranch)) {
-        try {
-          await git.changeBranch(folder, requireBranch);
+        if (branches.includes(targetBranch)) {
+          await git.changeBranch(folder, targetBranch);
           isChangedBranch = true;
-        } catch (e) {
-          console.error('changing ea branch: ', e);
         }
+      } catch (e) {
+        console.error('error changing ea branch: ', e);
       }
     }
 
