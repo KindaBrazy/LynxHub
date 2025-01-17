@@ -150,7 +150,9 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
 
   public async anyUpdateAvailable(): Promise<boolean> {
     try {
-      const updateChecks = this.installedPluginInfo.map(plugin => GitManager.isUpdateAvailable(plugin.dir));
+      const updateChecks = this.installedPluginInfo.map(plugin =>
+        GitManager.isUpdateAvailable(path.join(this.pluginPath, plugin.dir)),
+      );
       const results = await Promise.all(updateChecks);
       return results.some(result => result === true);
     } catch (error) {
@@ -182,7 +184,7 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     await Promise.all(
       this.installedPluginInfo.map(async plugin => {
         const gitManager = new GitManager(false);
-        const updateResult = await gitManager.pullAsync(plugin.dir);
+        const updateResult = await gitManager.pullAsync(path.join(this.pluginPath, plugin.dir));
         if (updateResult) updatedPlugins.push(plugin.info.id);
       }),
     );
