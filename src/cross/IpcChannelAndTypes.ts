@@ -145,6 +145,8 @@ export const modulesChannels = {
   updateModule: 'modules:update-module',
   updateAllModules: 'modules:update-all-modules',
 
+  checkEa: 'modules:check-ea',
+
   checkCardsUpdateInterval: 'modules:cards_update_interval',
   onCardsUpdateAvailable: 'modules:on_cards_update_available',
 
@@ -164,6 +166,8 @@ export const extensionsChannels = {
   updateAvailableList: 'extensions:any-update-available',
   updateExtension: 'extensions:update-extensions',
   updateAllExtensions: 'extensions:update-all-extensions',
+
+  checkEa: 'extensions:check-ea',
 
   onReload: 'extensions:on-reload',
   onUpdatedExtensions: 'extensions:on-updated-extensions',

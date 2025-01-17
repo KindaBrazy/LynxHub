@@ -126,6 +126,7 @@ const rendererIpc = {
       ipc.invoke(modulesChannels.getInstalledModulesInfo),
 
     getSkipped: (): Promise<SkippedPlugins[]> => ipc.invoke(modulesChannels.getSkipped),
+    checkEa: (isEA: boolean): Promise<boolean> => ipc.invoke(modulesChannels.checkEa, isEA),
 
     installModule: (url: string): Promise<boolean> => ipc.invoke(modulesChannels.installModule, url),
 
@@ -172,6 +173,8 @@ const rendererIpc = {
     updateAvailableList: (): Promise<string[]> => ipc.invoke(extensionsChannels.updateAvailableList),
 
     updateExtension: (id: string): Promise<boolean> => ipc.invoke(extensionsChannels.updateExtension, id),
+
+    checkEa: (isEA: boolean): Promise<boolean> => ipc.invoke(extensionsChannels.checkEa, isEA),
 
     updateAllExtensions: (): Promise<void> => ipc.invoke(extensionsChannels.updateAllExtensions),
 

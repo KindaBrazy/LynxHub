@@ -117,7 +117,35 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
   public async isUpdateAvailable(id: string) {
     const plugin = this.getDirById(id);
     if (!plugin) return false;
-    return await GitManager.isUpdateAvailable(plugin.dir);
+    return await GitManager.isUpdateAvailable(plugin);
+  }
+
+  public async checkEA(isEA: boolean) {
+    const installFolders = this.installedPluginInfo.map(folder => path.join(this.pluginPath, folder.dir));
+    const requireBranch = isEA ? 'compiled_ea' : 'compiled';
+    let isChangedBranch: boolean = false;
+
+    for (const folder of installFolders) {
+      const git = new GitManager();
+
+      const url = await GitManager.remoteUrlFromDir(folder);
+      const currentBranch = await GitManager.getDirBranch(folder);
+
+      if (!url || currentBranch === requireBranch) continue;
+
+      const branches = await git.getAvailableBranches(url);
+
+      if (branches.includes(requireBranch)) {
+        try {
+          await git.changeBranch(folder, requireBranch);
+          isChangedBranch = true;
+        } catch (e) {
+          console.error('changing ea branch: ', e);
+        }
+      }
+    }
+
+    return isChangedBranch;
   }
 
   public async anyUpdateAvailable(): Promise<boolean> {
