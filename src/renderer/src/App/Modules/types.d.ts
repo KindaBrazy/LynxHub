@@ -67,6 +67,8 @@ export type InstallationStepper = {
    */
   setInstalled: (dir?: string) => void;
 
+  setUpdated: () => void;
+
   /** Collect user input for various configuration options.
    * @param inputFields An array of input fields to present to the user.
    * @returns A promise resolving to an array of user input results.

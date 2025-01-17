@@ -1,4 +1,5 @@
 import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {
   InstallationMethod,
@@ -7,7 +8,9 @@ import {
   UserInputField,
   UserInputResult,
 } from '../../../Modules/types';
+import {cardsActions} from '../../../Redux/AI/CardsReducer';
 import {useModalsState} from '../../../Redux/AI/ModalsReducer';
+import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {InstallState} from './types';
 import InstallStepper from './Utils/InstallStepper';
@@ -137,6 +140,11 @@ export function useStepper({
     [],
   );
 
+  const dispatch = useDispatch<AppDispatch>();
+  const setUpdated = useCallback(() => {
+    dispatch(cardsActions.removeUpdateAvailable(cardId));
+  }, [dispatch, cardId]);
+
   return useMemo(() => {
     return new InstallStepper({
       cardId,
@@ -151,6 +159,7 @@ export function useStepper({
       starterStep,
       collectUserInput,
       progressBar,
+      setUpdated,
     });
   }, [
     cardId,
@@ -164,5 +173,6 @@ export function useStepper({
     downloadFileFromUrl,
     starterStep,
     collectUserInput,
+    setUpdated,
   ]);
 }
