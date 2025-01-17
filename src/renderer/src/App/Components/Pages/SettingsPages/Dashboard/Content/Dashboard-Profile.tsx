@@ -6,6 +6,7 @@ import {useDispatch} from 'react-redux';
 import {PatreonUserData} from '../../../../../../../../cross/CrossTypes';
 import {User_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {Google_Icon, Patreon_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {checkEARepos} from '../../../../../AppEvents/AppEvents_Utils';
 import {useAppState} from '../../../../../Redux/App/AppReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {userActions, useUserState} from '../../../../../Redux/User/UserReducer';
@@ -32,6 +33,7 @@ export default function DashboardProfile() {
           console.log(userData);
           dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
           dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
+          checkEARepos(userData.earlyAccess);
         })
         .catch(e => {
           console.error(e);
@@ -48,6 +50,7 @@ export default function DashboardProfile() {
       setIsLoading(false);
       dispatch(userActions.resetUserState('patreonUserData'));
       dispatch(userActions.resetUserState('patreonLoggedIn'));
+      checkEARepos(false);
     });
   }, []);
 

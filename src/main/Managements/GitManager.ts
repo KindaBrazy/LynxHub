@@ -60,6 +60,18 @@ export default class GitManager {
     return validateGitRepoUrl(remote) === validateGitRepoUrl(url) ? resultPath : undefined;
   }
 
+  public static async getDirBranch(dir: string) {
+    const targetDir = path.resolve(dir);
+    const git = simpleGit(targetDir);
+    try {
+      const branchSummary = await git.branchLocal();
+      return branchSummary.current;
+    } catch (error) {
+      console.error('Error getting current branch:', error);
+      return 'unknown';
+    }
+  }
+
   /**
    * Gets the date of the last pull for a repository.
    * @param repoDir - The directory of the local repository.
@@ -408,7 +420,7 @@ export default class GitManager {
     }
   }
 
-  private async getAvailableBranches(url: string): Promise<string[]> {
+  public async getAvailableBranches(url: string): Promise<string[]> {
     try {
       const {owner, repo} = extractGitUrl(url);
       const branchesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/branches`);

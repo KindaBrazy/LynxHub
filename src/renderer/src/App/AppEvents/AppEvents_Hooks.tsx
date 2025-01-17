@@ -7,12 +7,13 @@ import {toMs} from '../../../../cross/CrossUtils';
 import StorageTypes from '../../../../cross/StorageTypes';
 import {useAllCards} from '../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../Redux/AI/CardsReducer';
-import {appActions} from '../Redux/App/AppReducer';
+import {appActions, useAppState} from '../Redux/App/AppReducer';
 import {settingsActions} from '../Redux/App/SettingsReducer';
 import {terminalActions} from '../Redux/App/TerminalReducer';
 import {AppDispatch} from '../Redux/Store';
 import {userActions} from '../Redux/User/UserReducer';
 import rendererIpc from '../RendererIpc';
+import {checkEARepos} from './AppEvents_Utils';
 
 export const useCheckCardsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -138,21 +139,27 @@ export const useStorageData = () => {
 
 export const usePatreon = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const isOnline = useAppState('isOnline');
+
   useEffect(() => {
     window.electron.ipcRenderer
       .invoke('patreon-get-info')
       .then(result => {
         dispatch(userActions.setUserState({key: 'patreonUserData', value: result}));
         dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
+
+        checkEARepos(result.earlyAccess);
       })
       .catch(e => {
         console.warn(e);
+        console.log(isOnline);
+        if (isOnline) checkEARepos(false);
       });
 
     window.electron.ipcRenderer.on('release-channel-change', (_, result) => {
       dispatch(userActions.setUpdateChannel(result));
     });
-  }, [dispatch]);
+  }, [dispatch, isOnline]);
 };
 
 export const useIpcEvents = () => {
