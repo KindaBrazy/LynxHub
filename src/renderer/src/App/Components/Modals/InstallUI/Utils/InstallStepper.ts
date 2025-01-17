@@ -22,11 +22,13 @@ export default class InstallStepper {
     collectUserInput: InstallationStepper['collectUserInput'];
     installExtensions: InstallationStepper['postInstall']['installExtensions'];
     progressBar: InstallationStepper['progressBar'];
+    setUpdated: InstallationStepper['setUpdated'];
   }) {
     this.totalSteps = 0;
 
     this.setSteps = data.setSteps;
     this.setNextStep = data.setCurrentStep;
+    this.setUpdated = data.setUpdated;
     this.cloneRepository = data.cloneRepository;
     this.finalStep = data.showFinalStep;
     this.runTerminalScript = data.runTerminalScript;
@@ -132,6 +134,8 @@ export default class InstallStepper {
   public setInstalled: InstallationStepper['setInstalled'];
 
   public collectUserInput: InstallationStepper['collectUserInput'];
+
+  public setUpdated: InstallationStepper['setUpdated'];
 
   public initialSteps(steps: string[]) {
     this.totalSteps = steps.length - 1;
