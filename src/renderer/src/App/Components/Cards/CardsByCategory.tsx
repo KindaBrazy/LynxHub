@@ -14,6 +14,7 @@ import {CardContainerClasses} from '../Pages/CardContainer';
 import HomeCategory from '../Pages/ContentPages/Home/HomeCategory';
 import LynxCard from './Card/LynxCard';
 import {CardContext, CardsDataManager} from './CardsDataManager';
+import NavigateModulesPage from './NavigateModulesPage';
 
 /**
  * Custom hook that returns cards by their IDs
@@ -43,18 +44,24 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
     <LayoutGroup id={`${cat}_cards_category`}>
       <AnimatePresence>
         {isNil(ReplaceCards) ? (
-          cards.map(card => {
-            const context = new CardsDataManager(card, installedCardSet.has(card.id));
-            return (
-              <CardContext.Provider value={context} key={`cardProv-${card.id}`}>
-                {ReplaceComponent ? (
-                  <ReplaceComponent context={context} key={`${card.id}-card-key`} />
-                ) : (
-                  <LynxCard key={`${card.id}-card-key`} />
-                )}
-              </CardContext.Provider>
-            );
-          })
+          isEmpty(cards) ? (
+            <Empty className="size-full" description="No Card to Display!">
+              <NavigateModulesPage />
+            </Empty>
+          ) : (
+            cards.map(card => {
+              const context = new CardsDataManager(card, installedCardSet.has(card.id));
+              return (
+                <CardContext.Provider value={context} key={`cardProv-${card.id}`}>
+                  {ReplaceComponent ? (
+                    <ReplaceComponent context={context} key={`${card.id}-card-key`} />
+                  ) : (
+                    <LynxCard key={`${card.id}-card-key`} />
+                  )}
+                </CardContext.Provider>
+              );
+            })
+          )
         ) : (
           <ReplaceCards cards={cards} />
         )}
@@ -81,7 +88,11 @@ const AllCards = () => {
   }, [pinnedCards]);
 
   if (isEmpty(sortedCards) && isEmpty(allCategory))
-    return <Empty className="size-full" description="No Card to Display!" />;
+    return (
+      <Empty className="size-full" description="No Card to Display!">
+        <NavigateModulesPage />
+      </Empty>
+    );
 
   return (
     <LayoutGroup id="all_cards_category">
