@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, ModalFooter} from '@nextui-org/react';
+import {Button, ButtonGroup, ModalFooter} from '@heroui/react';
 import {Popconfirm} from 'antd';
 import {memo, RefObject, useCallback} from 'react';
 

@@ -1,4 +1,4 @@
-import {Button, Checkbox} from '@nextui-org/react';
+import {Button, Checkbox} from '@heroui/react';
 import {Modal, Typography} from 'antd';
 import {motion} from 'framer-motion';
 import {ReactNode, useCallback, useMemo, useState} from 'react';

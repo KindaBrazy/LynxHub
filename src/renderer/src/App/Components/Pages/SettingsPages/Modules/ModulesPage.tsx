@@ -1,4 +1,4 @@
-import {Button, Tab, Tabs} from '@nextui-org/react';
+import {Button, Tab, Tabs} from '@heroui/react';
 import {Key, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

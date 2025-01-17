@@ -1,4 +1,4 @@
-import {TRANSITION_EASINGS} from '@nextui-org/framer-utils';
+import {TRANSITION_EASINGS} from '@heroui/framer-utils';
 import {SimpleGitProgressEvent} from 'simple-git';
 
 const colors = {
@@ -63,7 +63,7 @@ export const modalMotionProps = {
     },
     exit: {
       opacity: 0,
-      scale: 1.1, // NextUI default 1.03
+      scale: 1.1, // HeroUI default 1.03
       transition: {
         duration: 0.3,
         ease: TRANSITION_EASINGS.ease,

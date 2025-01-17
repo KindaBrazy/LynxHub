@@ -1,4 +1,4 @@
-import {Button} from '@nextui-org/react';
+import {Button} from '@heroui/react';
 import {Result} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 import {isRouteErrorResponse, useRouteError} from 'react-router';

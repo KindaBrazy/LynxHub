@@ -1,4 +1,4 @@
-import {Button} from '@nextui-org/react';
+import {Button} from '@heroui/react';
 import {notification} from 'antd';
 
 import rendererIpc from '../RendererIpc';

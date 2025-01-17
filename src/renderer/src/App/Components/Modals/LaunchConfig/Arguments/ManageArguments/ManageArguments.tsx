@@ -1,4 +1,4 @@
-import {Button, useDisclosure} from '@nextui-org/react';
+import {Button, useDisclosure} from '@heroui/react';
 import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback} from 'react';

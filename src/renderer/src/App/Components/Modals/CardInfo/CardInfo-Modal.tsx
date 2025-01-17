@@ -1,4 +1,4 @@
-import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@nextui-org/react';
+import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
 import {Result} from 'antd';
 import {isEmpty, startCase} from 'lodash';
 import {useCallback, useState} from 'react';

@@ -1,4 +1,4 @@
-import {ScrollShadow} from '@nextui-org/react';
+import {ScrollShadow} from '@heroui/react';
 import {useMemo} from 'react';
 
 import {ImageGeneration_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';

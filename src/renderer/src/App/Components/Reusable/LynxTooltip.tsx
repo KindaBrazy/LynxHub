@@ -1,4 +1,4 @@
-import {Tooltip, TooltipProps} from '@nextui-org/react';
+import {Tooltip, TooltipProps} from '@heroui/react';
 
 import {useDisableTooltip} from '../../Utils/UtilHooks';
 

@@ -1,4 +1,4 @@
-import {Button} from '@nextui-org/react';
+import {Button} from '@heroui/react';
 import {Tooltip, Typography} from 'antd';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 

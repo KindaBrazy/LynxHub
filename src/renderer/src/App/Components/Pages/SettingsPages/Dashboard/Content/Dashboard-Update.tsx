@@ -1,4 +1,4 @@
-import {Button, Select, Selection, SelectItem} from '@nextui-org/react';
+import {Button, Select, Selection, SelectItem} from '@heroui/react';
 import {Descriptions, Divider, Space} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';

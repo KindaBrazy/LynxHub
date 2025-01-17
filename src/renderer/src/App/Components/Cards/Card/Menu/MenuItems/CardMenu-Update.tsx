@@ -1,4 +1,4 @@
-import {Checkbox, DropdownItem, Spinner} from '@nextui-org/react';
+import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

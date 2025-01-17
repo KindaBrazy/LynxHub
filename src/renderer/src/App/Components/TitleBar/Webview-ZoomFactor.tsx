@@ -1,4 +1,4 @@
-import {Button, Popover, PopoverContent, PopoverTrigger, Slider} from '@nextui-org/react';
+import {Button, Popover, PopoverContent, PopoverTrigger, Slider} from '@heroui/react';
 import {isArray} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';

@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Link, ScrollShadow, Tab, Tabs, User} from '@nextui-org/react';
+import {Button, ButtonGroup, Link, ScrollShadow, Tab, Tabs, User} from '@heroui/react';
 import {Divider, Modal} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {Dispatch, Fragment, Key, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';

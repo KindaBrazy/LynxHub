@@ -1,4 +1,4 @@
-import {Button} from '@nextui-org/react';
+import {Button} from '@heroui/react';
 import {Fragment, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {RouteObject} from 'react-router';

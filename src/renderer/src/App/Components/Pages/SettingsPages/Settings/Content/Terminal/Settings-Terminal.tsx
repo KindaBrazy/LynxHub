@@ -1,4 +1,4 @@
-import {Spacer} from '@nextui-org/react';
+import {Spacer} from '@heroui/react';
 
 import {Terminal_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import SettingsSection from '../../SettingsPage-ContentSection';

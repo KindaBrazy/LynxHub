@@ -1,5 +1,4 @@
-import {Card} from '@nextui-org/react';
-import {Button, Checkbox, User} from '@nextui-org/react';
+import {Button, Card, Checkbox, User} from '@heroui/react';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

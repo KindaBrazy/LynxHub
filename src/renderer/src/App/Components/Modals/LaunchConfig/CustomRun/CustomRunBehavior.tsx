@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@nextui-org/react';
+import {Select, Selection, SelectItem} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {Fragment, useEffect, useState} from 'react';
 

@@ -1,4 +1,4 @@
-import {Button, Link} from '@nextui-org/react';
+import {Button, Link} from '@heroui/react';
 import {Modal, Space} from 'antd';
 import {Fragment, useCallback, useEffect} from 'react';
 import {useDispatch} from 'react-redux';

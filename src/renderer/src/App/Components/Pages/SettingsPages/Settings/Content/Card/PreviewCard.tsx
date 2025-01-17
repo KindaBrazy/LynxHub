@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader} from '@nextui-org/react';
+import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader} from '@heroui/react';
 import {Divider, Typography} from 'antd';
 import {useMemo} from 'react';
 

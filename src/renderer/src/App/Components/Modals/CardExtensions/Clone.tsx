@@ -1,4 +1,4 @@
-import {Input, Progress} from '@nextui-org/react';
+import {Input, Progress} from '@heroui/react';
 import {Card, message} from 'antd';
 import {motion} from 'framer-motion';
 import {capitalize, startCase} from 'lodash';

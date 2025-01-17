@@ -1,10 +1,10 @@
-import {NextUIProvider} from '@nextui-org/react';
+import {HeroUIProvider} from '@heroui/react';
 import {ConfigProvider as AntDProvider, message, notification, theme} from 'antd';
 import {ReactNode, useLayoutEffect, useMemo} from 'react';
 
 import {useAppState} from './Redux/App/AppReducer';
 
-/** Config NextUI and AntD and return providers */
+/** Config HeroUI and AntD and return providers */
 export default function UIProviders({children}: {children: ReactNode}) {
   const darkMode = useAppState('darkMode');
   const algorithm = useMemo(() => (darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm), [darkMode]);
@@ -29,7 +29,7 @@ export default function UIProviders({children}: {children: ReactNode}) {
 
   return (
     <div>
-      <NextUIProvider>
+      <HeroUIProvider>
         <AntDProvider
           theme={{
             algorithm,
@@ -41,7 +41,7 @@ export default function UIProviders({children}: {children: ReactNode}) {
           }}>
           {children}
         </AntDProvider>
-      </NextUIProvider>
+      </HeroUIProvider>
     </div>
   );
 }

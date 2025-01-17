@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@nextui-org/react';
+import {Select, Selection, SelectItem} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
 
 import {TaskbarStatus} from '../../../../../../../../../cross/IpcChannelAndTypes';

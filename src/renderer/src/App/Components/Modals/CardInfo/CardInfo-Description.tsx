@@ -1,4 +1,4 @@
-import {Button, Link, Spinner} from '@nextui-org/react';
+import {Button, Link, Spinner} from '@heroui/react';
 import {Descriptions, DescriptionsProps, Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {useCallback} from 'react';

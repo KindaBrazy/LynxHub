@@ -1,4 +1,4 @@
-import {getKeyValue, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@nextui-org/react';
+import {getKeyValue, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@heroui/react';
 import {message} from 'antd';
 import {motion} from 'framer-motion';
 import {filter, find, isEmpty, startCase} from 'lodash';

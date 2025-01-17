@@ -1,4 +1,4 @@
-import {ModalBody, Progress} from '@nextui-org/react';
+import {ModalBody, Progress} from '@heroui/react';
 import {Descriptions, Result} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';

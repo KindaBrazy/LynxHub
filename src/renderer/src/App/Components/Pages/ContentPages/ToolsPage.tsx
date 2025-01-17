@@ -1,4 +1,4 @@
-import {ScrollShadow} from '@nextui-org/react';
+import {ScrollShadow} from '@heroui/react';
 
 import {Rocket_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';

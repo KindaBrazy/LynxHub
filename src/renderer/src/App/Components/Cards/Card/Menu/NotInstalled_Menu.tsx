@@ -1,4 +1,4 @@
-import {Button, Dropdown, DropdownMenu, DropdownTrigger} from '@nextui-org/react';
+import {Button, Dropdown, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {observer} from 'mobx-react-lite';
 
 import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';

@@ -1,4 +1,4 @@
-import {Button, Checkbox, CheckboxGroup} from '@nextui-org/react';
+import {Button, Checkbox, CheckboxGroup} from '@heroui/react';
 import {message} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 
