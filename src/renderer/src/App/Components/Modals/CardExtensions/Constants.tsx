@@ -1,4 +1,4 @@
-import {Button, Chip, Link, Popover, PopoverContent, PopoverTrigger, Spinner} from '@nextui-org/react';
+import {Button, Chip, Link, Popover, PopoverContent, PopoverTrigger, Spinner} from '@heroui/react';
 import {Empty, Space, Spin} from 'antd';
 import {Variants} from 'framer-motion';
 

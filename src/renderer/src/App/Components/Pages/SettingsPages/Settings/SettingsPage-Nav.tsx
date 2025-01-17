@@ -1,4 +1,4 @@
-import {Button, ScrollShadow} from '@nextui-org/react';
+import {Button, ScrollShadow} from '@heroui/react';
 import {Card, Typography} from 'antd';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 

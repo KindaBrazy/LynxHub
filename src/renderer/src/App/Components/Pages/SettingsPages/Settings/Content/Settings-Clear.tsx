@@ -1,4 +1,4 @@
-import {Button} from '@nextui-org/react';
+import {Button} from '@heroui/react';
 import {message, Popconfirm} from 'antd';
 import {useCallback} from 'react';
 

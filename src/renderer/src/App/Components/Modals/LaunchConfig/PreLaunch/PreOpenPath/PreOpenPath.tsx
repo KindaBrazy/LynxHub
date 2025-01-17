@@ -1,4 +1,4 @@
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@nextui-org/react';
+import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {Empty} from 'antd';
 import {filter, isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';

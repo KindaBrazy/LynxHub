@@ -1,4 +1,4 @@
-import {ScrollShadow} from '@nextui-org/react';
+import {ScrollShadow} from '@heroui/react';
 import {Card} from 'antd';
 import {useMemo} from 'react';
 

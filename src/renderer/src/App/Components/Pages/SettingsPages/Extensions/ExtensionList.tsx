@@ -1,4 +1,4 @@
-import {Input} from '@nextui-org/react';
+import {Input} from '@heroui/react';
 import {Empty, List} from 'antd';
 import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';

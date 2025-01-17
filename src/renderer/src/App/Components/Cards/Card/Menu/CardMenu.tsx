@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {Button, Dropdown, DropdownMenu, DropdownSection, DropdownTrigger} from '@nextui-org/react';
+import {Button, Dropdown, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {observer} from 'mobx-react-lite';
 import {useMemo} from 'react';
 

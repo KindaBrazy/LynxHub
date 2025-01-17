@@ -1,13 +1,4 @@
-import {
-  Button,
-  CircularProgress,
-  Link,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-} from '@nextui-org/react';
+import {Button, CircularProgress, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {Divider} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';

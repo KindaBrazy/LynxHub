@@ -1,4 +1,4 @@
-import {cn, Switch} from '@nextui-org/react';
+import {cn, Switch} from '@heroui/react';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
 type Props = {

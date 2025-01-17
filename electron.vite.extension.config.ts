@@ -32,7 +32,7 @@ export default defineConfig({
           'react-redux': {generate: false},
           'react-router': {generate: false},
           'mobx-react-lite': {generate: false},
-          '@nextui-org/react': {generate: false},
+          '@heroui/react': {generate: false},
         },
       }),
     ],

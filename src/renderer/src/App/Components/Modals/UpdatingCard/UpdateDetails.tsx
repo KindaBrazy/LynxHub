@@ -14,7 +14,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import {Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useMemo} from 'react';

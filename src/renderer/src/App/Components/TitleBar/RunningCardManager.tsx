@@ -1,4 +1,4 @@
-import {Button, Checkbox} from '@nextui-org/react';
+import {Button, Checkbox} from '@heroui/react';
 import {Divider, Modal, Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';

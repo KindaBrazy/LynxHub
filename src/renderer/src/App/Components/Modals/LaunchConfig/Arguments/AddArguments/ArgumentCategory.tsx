@@ -1,4 +1,4 @@
-import {Listbox, ListboxItem, ListboxSection, ScrollShadow, Selection} from '@nextui-org/react';
+import {Listbox, ListboxItem, ListboxSection, ScrollShadow, Selection} from '@heroui/react';
 import {Card, Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';

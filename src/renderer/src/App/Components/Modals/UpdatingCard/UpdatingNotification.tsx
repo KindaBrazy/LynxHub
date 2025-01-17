@@ -1,4 +1,4 @@
-import {Button} from '@nextui-org/react';
+import {Button} from '@heroui/react';
 import {Descriptions, notification} from 'antd';
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';

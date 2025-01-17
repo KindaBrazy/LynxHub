@@ -37,7 +37,7 @@ export default defineConfig({
           'react-redux',
           'react-router',
           'mobx-react-lite',
-          '@nextui-org/react',
+          '@heroui/react',
         ],
       }),
     ],

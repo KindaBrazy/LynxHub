@@ -1,4 +1,4 @@
-import {Input} from '@nextui-org/react';
+import {Input} from '@heroui/react';
 import {Empty, List, PaginationProps} from 'antd';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useEffect, useState} from 'react';

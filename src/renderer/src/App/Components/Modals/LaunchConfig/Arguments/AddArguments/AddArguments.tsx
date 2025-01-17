@@ -13,7 +13,7 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import {isEmpty, some} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';

@@ -1,4 +1,4 @@
-import {Select, Selection, SelectItem} from '@nextui-org/react';
+import {Select, Selection, SelectItem} from '@heroui/react';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

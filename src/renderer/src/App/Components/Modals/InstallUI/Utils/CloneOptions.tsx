@@ -1,4 +1,4 @@
-import {Checkbox, CircularProgress, Select, SelectItem} from '@nextui-org/react';
+import {Checkbox, CircularProgress, Select, SelectItem} from '@heroui/react';
 import {Card, InputNumber, message} from 'antd';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 

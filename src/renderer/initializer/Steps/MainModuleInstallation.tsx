@@ -1,4 +1,4 @@
-import {Button} from '@nextui-org/react';
+import {Button} from '@heroui/react';
 import {Spin, StepProps} from 'antd';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 import {SimpleGitProgressEvent} from 'simple-git';

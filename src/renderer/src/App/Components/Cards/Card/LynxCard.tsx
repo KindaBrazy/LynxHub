@@ -1,4 +1,4 @@
-import {Card} from '@nextui-org/react';
+import {Card} from '@heroui/react';
 import {Badge} from 'antd';
 import {motion} from 'framer-motion';
 import {observer} from 'mobx-react-lite';

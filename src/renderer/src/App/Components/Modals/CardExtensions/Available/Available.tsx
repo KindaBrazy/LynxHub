@@ -1,4 +1,4 @@
-import {Input, Spinner} from '@nextui-org/react';
+import {Input, Spinner} from '@heroui/react';
 import {Empty, List, PaginationProps} from 'antd';
 import {useEffect, useState} from 'react';
 

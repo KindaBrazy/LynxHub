@@ -1,4 +1,4 @@
-import {DropdownItem, DropdownSection} from '@nextui-org/react';
+import {DropdownItem, DropdownSection} from '@heroui/react';
 import {useEffect} from 'react';
 
 import {CardsDataManager} from '../../src/App/Components/Cards/CardsDataManager';

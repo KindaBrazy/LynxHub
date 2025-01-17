@@ -1,5 +1,4 @@
-import {Kbd} from '@nextui-org/react';
-import {Spinner} from '@nextui-org/react';
+import {Kbd, Spinner} from '@heroui/react';
 import {Result} from 'antd';
 import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';

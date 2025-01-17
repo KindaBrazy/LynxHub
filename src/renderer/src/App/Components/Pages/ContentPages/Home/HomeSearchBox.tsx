@@ -1,4 +1,4 @@
-import {Input} from '@nextui-org/react';
+import {Input} from '@heroui/react';
 import {Dispatch, memo, SetStateAction} from 'react';
 
 import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';

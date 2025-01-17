@@ -1,4 +1,4 @@
-import {Card} from '@nextui-org/card';
+import {Card} from '@heroui/card';
 import {Button, Input} from 'antd';
 import {ChangeEvent, useCallback, useState} from 'react';
 

@@ -1,4 +1,4 @@
-import {ModalHeader} from '@nextui-org/react';
+import {ModalHeader} from '@heroui/react';
 import {Steps} from 'antd';
 import {memo} from 'react';
 

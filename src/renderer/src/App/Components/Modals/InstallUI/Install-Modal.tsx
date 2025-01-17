@@ -1,4 +1,4 @@
-import {Modal, ModalContent} from '@nextui-org/react';
+import {Modal, ModalContent} from '@heroui/react';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 

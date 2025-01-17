@@ -8,7 +8,7 @@ import {
   Select,
   Selection,
   SelectItem,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import {Button as AntBtn} from 'antd';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';

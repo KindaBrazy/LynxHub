@@ -10,7 +10,7 @@ import {
   Skeleton,
   Tooltip,
   User,
-} from '@nextui-org/react';
+} from '@heroui/react';
 import {List, Typography} from 'antd';
 import {motion} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';

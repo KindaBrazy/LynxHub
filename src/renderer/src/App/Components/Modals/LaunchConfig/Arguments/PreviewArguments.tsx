@@ -1,4 +1,4 @@
-import {Button} from '@nextui-org/react';
+import {Button} from '@heroui/react';
 import {Card, Empty, message, Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback} from 'react';

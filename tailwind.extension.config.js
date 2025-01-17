@@ -1,4 +1,4 @@
-import {nextui} from '@nextui-org/react';
+import {heroui} from '@heroui/react';
 import typography from '@tailwindcss/typography';
 
 /** @type {import('tailwindcss').Config} */
@@ -6,7 +6,7 @@ export default {
   content: ['./src/renderer/extension/**/*.{html,tsx}'],
   darkMode: 'class',
   plugins: [
-    nextui({
+    heroui({
       themes: {
         dark: {
           colors: {

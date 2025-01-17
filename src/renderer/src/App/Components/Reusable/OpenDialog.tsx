@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Input} from '@nextui-org/react';
+import {Button, ButtonGroup, Input} from '@heroui/react';
 import {OpenDialogOptions} from 'electron';
 import {useCallback, useRef} from 'react';
 

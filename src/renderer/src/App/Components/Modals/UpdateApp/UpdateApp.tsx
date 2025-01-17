@@ -1,4 +1,4 @@
-import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@nextui-org/react';
+import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {CollapseProps, Divider, message, Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';

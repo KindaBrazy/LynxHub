@@ -1,4 +1,4 @@
-import {ButtonGroup, CardFooter} from '@nextui-org/react';
+import {ButtonGroup, CardFooter} from '@heroui/react';
 import {observer} from 'mobx-react-lite';
 import {useMemo} from 'react';
 

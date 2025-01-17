@@ -1,4 +1,4 @@
-import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@nextui-org/react';
+import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
 import {message} from 'antd';
 import {Key, memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';

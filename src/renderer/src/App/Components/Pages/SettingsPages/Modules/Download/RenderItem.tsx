@@ -1,4 +1,4 @@
-import {Button} from '@nextui-org/react';
+import {Button} from '@heroui/react';
 import {Avatar, Descriptions, List, message, Modal, Tag, Typography} from 'antd';
 import {capitalize} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';

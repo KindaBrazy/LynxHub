@@ -1,4 +1,4 @@
-import {CardBody} from '@nextui-org/react';
+import {CardBody} from '@heroui/react';
 import {Divider} from 'antd';
 import {observer} from 'mobx-react-lite';
 

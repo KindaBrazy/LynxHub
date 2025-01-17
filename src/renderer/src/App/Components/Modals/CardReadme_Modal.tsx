@@ -1,4 +1,4 @@
-import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@nextui-org/react';
+import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {isEmpty, isNil} from 'lodash';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';

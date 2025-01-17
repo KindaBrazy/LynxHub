@@ -1,4 +1,4 @@
-import {useDisclosure} from '@nextui-org/react';
+import {useDisclosure} from '@heroui/react';
 import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 

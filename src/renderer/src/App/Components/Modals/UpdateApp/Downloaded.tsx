@@ -1,4 +1,4 @@
-import {Button} from '@nextui-org/react';
+import {Button} from '@heroui/react';
 import {message, Result} from 'antd';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';

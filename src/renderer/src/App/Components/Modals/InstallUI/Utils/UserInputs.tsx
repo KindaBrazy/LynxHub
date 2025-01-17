@@ -1,4 +1,4 @@
-import {Button, Input, Select, SelectItem} from '@nextui-org/react';
+import {Button, Input, Select, SelectItem} from '@heroui/react';
 import {Dispatch, SetStateAction, useCallback, useState} from 'react';
 
 import {File_Icon, Folder2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';

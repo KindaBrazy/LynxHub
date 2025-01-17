@@ -1,4 +1,4 @@
-import {CardHeader, Skeleton} from '@nextui-org/react';
+import {CardHeader, Skeleton} from '@heroui/react';
 import {Typography} from 'antd';
 import {capitalize} from 'lodash';
 import {observer} from 'mobx-react-lite';

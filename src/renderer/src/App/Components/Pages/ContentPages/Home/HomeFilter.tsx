@@ -1,12 +1,4 @@
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownSection,
-  DropdownTrigger,
-  Selection,
-} from '@nextui-org/react';
+import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Selection} from '@heroui/react';
 import {memo, useCallback} from 'react';
 
 import {Filter_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';

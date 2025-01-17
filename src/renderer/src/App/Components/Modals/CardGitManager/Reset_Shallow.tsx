@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@nextui-org/react';
+import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
 import {message} from 'antd';
 import {useState} from 'react';
 

@@ -1,4 +1,4 @@
-import {Spinner} from '@nextui-org/react';
+import {Spinner} from '@heroui/react';
 import {StepProps, Steps} from 'antd';
 import {startCase} from 'lodash';
 import {RefObject, useEffect, useState} from 'react';
