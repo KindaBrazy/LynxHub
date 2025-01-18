@@ -98,7 +98,7 @@ export const MenuDuplicate = () => {
         dispatch(cardsActions.setDuplicates(addedDuplicate));
       }
     }
-  }, [isDuplicated]);
+  }, [dispatch, isDuplicated, duplicates, id]);
 
   return (
     <DropdownItem onPress={onPress} key="duplicate_card" className="cursor-default" startContent={<Copy_Icon />}>
