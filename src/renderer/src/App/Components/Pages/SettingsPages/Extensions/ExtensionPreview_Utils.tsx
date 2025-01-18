@@ -212,8 +212,8 @@ export function PreviewFooter({
             styles: {mask: {top: '2.5rem'}},
             wrapClassName: 'mt-10',
           });
+          setInstalled(prevState => [...prevState, {id: selectedExt.id, version: selectedExt.version, dir: ''}]);
         }
-        setInstalled(prevState => [...prevState, {id: selectedExt.id, version: selectedExt.version, dir: ''}]);
       });
     }
   }, [selectedExt]);
