@@ -82,9 +82,9 @@ export const MenuCheckForUpdate = () => {
 
   return (
     <DropdownItem
-      title="Check Now"
       onPress={onPress}
       key="check-update"
+      title="Check For Updates"
       className="cursor-default"
       isDisabled={checkingForUpdate}
       startContent={<Refresh_Icon className="size-[0.77rem]" />}
