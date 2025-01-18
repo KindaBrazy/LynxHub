@@ -116,8 +116,6 @@ export const gitChannels = {
 
   pull: 'git:pull',
 
-  updateAvailable: 'git:updateAvailable',
-
   onProgress: 'git:on-progress',
 };
 
@@ -138,6 +136,8 @@ export const utilsChannels = {
 };
 
 export const modulesChannels = {
+  cardUpdateAvailable: 'modules:card-update-available',
+
   installModule: 'modules:install-module',
   uninstallModule: 'modules:uninstall-module',
   isUpdateAvailable: 'modules:is-update-available',

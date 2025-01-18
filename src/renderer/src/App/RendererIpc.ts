@@ -93,8 +93,6 @@ const rendererIpc = {
 
   /** Git operations */
   git: {
-    bCardUpdateAvailable: (repoDir: string): Promise<boolean> => ipc.invoke(gitChannels.updateAvailable, repoDir),
-
     cloneShallow: (url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string): void =>
       ipc.send(gitChannels.cloneShallow, url, directory, singleBranch, depth, branch),
     cloneShallowPromise: (
@@ -120,6 +118,9 @@ const rendererIpc = {
 
   /** Managing app modules */
   module: {
+    cardUpdateAvailable: (card: InstalledCard, updateType: 'git' | 'stepper' | undefined): Promise<boolean> =>
+      ipc.invoke(modulesChannels.cardUpdateAvailable, card, updateType),
+
     getModulesData: (): Promise<string[]> => ipc.invoke(modulesChannels.getModulesData),
 
     getInstalledModulesInfo: (): Promise<{dir: string; info: ModulesInfo}[]> =>

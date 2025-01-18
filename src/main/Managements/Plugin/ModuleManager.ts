@@ -7,6 +7,7 @@ import {APP_BUILD_NUMBER} from '../../../cross/CrossConstants';
 import {MainModuleImportType, ModulesInfo} from '../../../cross/CrossTypes';
 import {toMs} from '../../../cross/CrossUtils';
 import {modulesChannels} from '../../../cross/IpcChannelAndTypes';
+import {InstalledCard} from '../../../cross/StorageTypes';
 import {LynxApiUpdate} from '../../../renderer/src/App/Modules/types';
 import {appManager, storageManager} from '../../index';
 import {getAppDirectory} from '../AppDataManager';
@@ -71,44 +72,47 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
     listen();
   }
 
-  public async checkForCardsUpdate(updateTypes: {id: string; type: 'git' | 'stepper'}[]) {
+  public async checkCardUpdate(card: InstalledCard, updateType: 'git' | 'stepper' | undefined) {
+    try {
+      const {id, dir} = card;
+      const method = this.getMethodsById(id)?.updateAvailable;
+      if (!updateType || updateType === 'git') {
+        return await GitManager.isUpdateAvailable(dir!);
+      } else if (method) {
+        const lynxApi: LynxApiUpdate = {
+          isPullAvailable: GitManager.isUpdateAvailable(dir),
+          storage: {
+            get: (key: string) => storageManager.getCustomData(key),
+            set: (key: string, data: any) => storageManager.setCustomData(key, data),
+          },
+        };
+        return await method(lynxApi);
+      } else {
+        return false;
+      }
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  }
+
+  private async checkAllCardsUpdate(updateTypes: {id: string; type: 'git' | 'stepper'}[]) {
     const installedCards = storageManager.getData('cards').installedCards;
     this.availableUpdates = [];
 
     for (const card of installedCards) {
-      try {
-        const {id, dir} = card;
-        const method = this.getMethodsById(id)?.updateAvailable;
-        const updateType = updateTypes.find(update => update.id === id)?.type;
-        if (!updateType || updateType === 'git') {
-          const isAvailable = await GitManager.isUpdateAvailable(dir!);
-          if (isAvailable) {
-            this.availableUpdates.push(id);
-          }
-        } else if (method) {
-          const lynxApi: LynxApiUpdate = {
-            isPullAvailable: GitManager.isUpdateAvailable(dir),
-            storage: {
-              get: (key: string) => storageManager.getCustomData(key),
-              set: (key: string, data: any) => storageManager.setCustomData(key, data),
-            },
-          };
-          const isAvailable = await method(lynxApi);
-          if (isAvailable) {
-            this.availableUpdates.push(id);
-          }
-        }
-      } catch (e) {
-        console.error(e);
-      }
+      const updateType = updateTypes.find(update => update.id === card.id)?.type;
+      const isAvailable = await this.checkCardUpdate(card, updateType);
+      if (isAvailable) this.availableUpdates.push(card.id);
       appManager.getWebContent()?.send(modulesChannels.onCardsUpdateAvailable, this.availableUpdates);
     }
   }
 
   public async cardsUpdateInterval(updateType: {id: string; type: 'git' | 'stepper'}[]) {
     if (!this.checkInterval && !isEmpty(updateType)) {
-      await this.checkForCardsUpdate(updateType);
-      this.checkInterval = setInterval(() => this.checkForCardsUpdate(updateType), toMs(30, 'minutes'));
+      await this.checkAllCardsUpdate(updateType);
+
+      this.checkInterval = setInterval(() => this.checkAllCardsUpdate(updateType), toMs(30, 'minutes'));
     }
   }
 }
