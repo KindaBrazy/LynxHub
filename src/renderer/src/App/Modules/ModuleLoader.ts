@@ -66,26 +66,27 @@ const duplicateCard = (id: string, defaultID?: string, defaultTitle?: string) =>
 
   // Function to generate the next ID
   const generateNewId = (baseId: string): string => {
-    let newId = `${baseId}_1`;
-    let counter = 1;
+    let counter = 2;
+    let newId = `${baseId}_${counter}`;
+
     while (allCards.some(card => card.id === newId)) {
       counter++;
       newId = `${baseId}_${counter}`;
     }
+
     return newId;
   };
 
-  // Function to generate the next title
-  const generateNewTitle = (baseTitle: string): string => {
-    const regex = / \(\d+\)$/; // Matches " (number)" at the end of the string
-    if (regex.test(baseTitle)) {
-      return baseTitle.replace(regex, match => {
-        const number = parseInt(match.slice(2, -1), 10) + 1;
-        return ` (${number})`;
-      });
-    } else {
-      return `${baseTitle} (2)`;
+  const generateNewTitle = (ogTitle: string) => {
+    let counter = 2;
+    let newTitle = `${ogTitle} (${counter})`;
+
+    while (allCards.some(card => card.title === newTitle)) {
+      counter++;
+      newTitle = `${ogTitle} (${counter})`;
     }
+
+    return newTitle;
   };
 
   // Use find and map together for efficiency
@@ -99,7 +100,7 @@ const duplicateCard = (id: string, defaultID?: string, defaultTitle?: string) =>
     // Card found, duplicate and add to the page
     const originalCard = page.cards[cardIndex];
     newId = defaultID || generateNewId(originalCard.id);
-    newTitle = defaultTitle || generateNewTitle(originalCard.title); // Generate new title
+    newTitle = defaultTitle || generateNewTitle(originalCard.title);
     duplicatedCard = {...originalCard, id: newId, title: newTitle}; // Add new title
     const updatedCards = [...page.cards];
     updatedCards.splice(cardIndex + 1, 0, duplicatedCard);
