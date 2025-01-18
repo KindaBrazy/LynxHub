@@ -25,16 +25,9 @@ export const MenuUpdate = () => {
   const autoUpdate = useIsAutoUpdateCard(id);
   const webUi = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
-  const [customUpdate, setCustomUpdate] = useState<boolean>(false);
   const allCards = useAllCards();
 
   const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    if (getCardMethod(allCards, id, 'manager')?.updater.updateType === 'stepper') {
-      setCustomUpdate(true);
-    }
-  }, [id, allCards]);
 
   const onPress = useCallback(() => {
     if (getCardMethod(allCards, id, 'manager')?.updater.startUpdate) {
@@ -54,11 +47,11 @@ export const MenuUpdate = () => {
     <DropdownItem
       key="update"
       title="Update"
+      color="success"
       onPress={onPress}
       isDisabled={!!updating}
       startContent={<Download_Icon />}
       endContent={updating && <Spinner size="sm" color="primary" />}
-      color={customUpdate && !updateAvailable ? 'default' : 'success'}
       className={`cursor-default ${updateAvailable && 'text-success'}`}
     />
   );
