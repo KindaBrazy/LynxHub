@@ -122,8 +122,6 @@ function git() {
   ipcMain.handle(gitChannels.unShallow, (_, dir: string) => unShallow(dir));
   ipcMain.handle(gitChannels.resetHard, (_, dir: string) => resetHard(dir));
 
-  ipcMain.handle(gitChannels.updateAvailable, (_, dir: string) => GitManager.isUpdateAvailable(dir));
-
   ipcMain.on(gitChannels.pull, (_, dir: string, id: string) => pullRepo(dir, id));
 }
 
@@ -142,6 +140,12 @@ function utils() {
 }
 
 function modules() {
+  ipcMain.handle(
+    modulesChannels.cardUpdateAvailable,
+    (_, card: InstalledCard, updateType: 'git' | 'stepper' | undefined) =>
+      moduleManager.checkCardUpdate(card, updateType),
+  );
+
   ipcMain.handle(modulesChannels.getModulesData, () => moduleManager.getPluginData());
   ipcMain.handle(modulesChannels.getInstalledModulesInfo, () => moduleManager.getInstalledPluginInfo());
   ipcMain.handle(modulesChannels.getSkipped, () => moduleManager.getSkipped());

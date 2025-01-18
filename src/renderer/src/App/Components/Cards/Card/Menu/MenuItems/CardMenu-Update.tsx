@@ -47,7 +47,7 @@ export const MenuUpdate = () => {
     }
   }, [dispatch, setMenuIsOpen, webUi, devName, id, title]);
 
-  if (!customUpdate && (!updateAvailable || autoUpdate))
+  if (!updateAvailable || autoUpdate)
     return <DropdownItem className="hidden" key="update-hidden" textValue="update_hidden" />;
 
   return (
@@ -67,30 +67,24 @@ export const MenuUpdate = () => {
 export const MenuCheckForUpdate = () => {
   const {id, checkingForUpdate, setCheckingForUpdate} = useCardData();
   const autoUpdate = useIsAutoUpdateCard(id);
-  const webUi = useInstalledCard(id);
+  const card = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
-  const [customUpdate, setCustomUpdate] = useState<boolean>(false);
   const allCards = useAllCards();
 
   const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    if (getCardMethod(allCards, id, 'manager')?.updater.updateType === 'stepper') {
-      setCustomUpdate(true);
-    }
-  }, [setCustomUpdate, id, allCards]);
-
   const onPress = useCallback(() => {
     setCheckingForUpdate(true);
-    if (webUi && webUi.dir) {
-      rendererIpc.git.bCardUpdateAvailable(webUi.dir).then((isAvailable: boolean) => {
+    if (card) {
+      const updateType = allCards.find(c => c.id === id)?.methods?.['manager']?.updater.updateType;
+      rendererIpc.module.cardUpdateAvailable(card, updateType).then((isAvailable: boolean) => {
         if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
         setCheckingForUpdate(false);
       });
     }
-  }, [dispatch, setCheckingForUpdate, webUi, id]);
+  }, [dispatch, setCheckingForUpdate, card, id, allCards]);
 
-  if (updateAvailable || autoUpdate || customUpdate)
+  if (updateAvailable || autoUpdate)
     return <DropdownItem className="hidden" key="check-update-hidden" textValue="check_update_hidden" />;
 
   return (
