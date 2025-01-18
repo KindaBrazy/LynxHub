@@ -210,7 +210,7 @@ const loadModules = async () => {
       return acc;
     }, {});
 
-    emitLoaded(newAllModules, newAllCards);
+    await emitLoaded(newAllModules, newAllCards);
   } catch (error) {
     console.error('Error importing modules:', error);
     throw error; // Re-throw to allow for handling at a higher level if needed
