@@ -5,6 +5,7 @@ import lodash from 'lodash';
 
 import {PtyProcessOpt} from '../../../../cross/IpcChannelAndTypes';
 import {moduleManager, storageManager} from '../../../index';
+import {getAppDataPath} from '../../AppDataManager';
 import PtyManager from '../../PtyManager';
 
 let ptyManager: PtyManager | undefined;
@@ -88,7 +89,12 @@ export async function ptyProcess(opt: PtyProcessOpt, cardId: string) {
     if (!lodash.isEmpty(customRun) || behavior === 'empty') {
       runMultiCommand(customRun || []);
     } else {
-      const runCommand = await moduleManager.getMethodsById(cardId)?.getRunCommands(card.dir);
+      const configPath = getAppDataPath();
+      const storage = {
+        get: (key: string) => storageManager.getCustomData(key),
+        set: (key: string, data: any) => storageManager.setCustomData(key, data),
+      };
+      const runCommand = await moduleManager.getMethodsById(cardId)?.getRunCommands(card.dir, configPath, storage);
       ptyManager.write(runCommand || '');
     }
   } else if (opt === 'stop') {
