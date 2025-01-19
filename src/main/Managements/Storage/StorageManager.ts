@@ -13,7 +13,8 @@ import {
   storageUtilsChannels,
 } from '../../../cross/IpcChannelAndTypes';
 import {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
-import {appManager, cardsValidator, moduleManager} from '../../index';
+import {appManager, cardsValidator, moduleManager, storageManager} from '../../index';
+import {getAppDataPath} from '../AppDataManager';
 import BaseStorage from './BaseStorage';
 
 class StorageManager extends BaseStorage {
@@ -76,25 +77,33 @@ class StorageManager extends BaseStorage {
     const args = this.getArgs(cardId);
     if (args) return args;
     const dir = this.getData('cards').installedCards.find(card => card.id === cardId)?.dir;
-    if (dir) {
-      const returnArgs = await moduleManager.getMethodsById(cardId)?.readArgs?.(dir);
-      const result: ChosenArgumentsData = {
-        activePreset: 'Default',
-        data: [{preset: 'Default', arguments: returnArgs || []}],
-      };
-      this.setArgs(cardId, result);
-      return result;
-    }
-    throw new Error('Something went wrong when getting arguments data!');
+
+    const configPath = getAppDataPath();
+    const storage = {
+      get: (key: string) => storageManager.getCustomData(key),
+      set: (key: string, data: any) => storageManager.setCustomData(key, data),
+    };
+    const returnArgs = await moduleManager.getMethodsById(cardId)?.readArgs?.(dir, configPath, storage);
+    const result: ChosenArgumentsData = {
+      activePreset: 'Default',
+      data: [{preset: 'Default', arguments: returnArgs || []}],
+    };
+    this.setArgs(cardId, result);
+    return result;
   }
 
   public async setCardArguments(cardId: string, args: ChosenArgumentsData) {
     this.setArgs(cardId, args);
     const dir = this.getData('cards').installedCards.find(card => card.id === cardId)?.dir;
-    if (dir) {
-      const result = args.data.find(arg => arg.preset === args.activePreset)?.arguments || [];
-      await moduleManager.getMethodsById(cardId)?.saveArgs?.(dir, result);
-    }
+
+    const result = args.data.find(arg => arg.preset === args.activePreset)?.arguments || [];
+
+    const configPath = getAppDataPath();
+    const storage = {
+      get: (key: string) => storageManager.getCustomData(key),
+      set: (key: string, data: any) => storageManager.setCustomData(key, data),
+    };
+    await moduleManager.getMethodsById(cardId)?.saveArgs?.(result, dir, configPath, storage);
   }
 
   //#endregion

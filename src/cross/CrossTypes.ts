@@ -71,13 +71,35 @@ export type UpdateDownloadProgress = {
 /** These methods will be called in the main process */
 export type CardMainMethods = {
   /** Return commands based on installed directory to be executed with terminal */
-  getRunCommands: (dir?: string) => Promise<string | string[]>;
+  getRunCommands: (
+    dir?: string,
+    configDir?: string,
+    storage?: {
+      get: (key: string) => any;
+      set: (key: string, data: any) => void;
+    },
+  ) => Promise<string | string[]>;
 
   /** Read saved argument from file and return data with the array of type ChosenArgument */
-  readArgs?: (dir: string) => Promise<ChosenArgument[]>;
+  readArgs?: (
+    dir?: string,
+    configDir?: string,
+    storage?: {
+      get: (key: string) => any;
+      set: (key: string, data: any) => void;
+    },
+  ) => Promise<ChosenArgument[]>;
 
   /** Get user configured arguments and save it to desire file */
-  saveArgs?: (cardDir: string, args: ChosenArgument[]) => Promise<void>;
+  saveArgs?: (
+    args: ChosenArgument[],
+    cardDir?: string,
+    configDir?: string,
+    storage?: {
+      get: (key: string) => any;
+      set: (key: string, data: any) => void;
+    },
+  ) => Promise<void>;
 
   /**
    * Access to the main process IPC methods.
