@@ -8,14 +8,6 @@ import {
   REPOSITORIES_FOLDER_NAME,
 } from './CrossConstants';
 
-export type RepoInfoType = {
-  totalSize: string;
-  extensionsSize: string;
-  installDate: string;
-  lastUpdate: string;
-  releaseTag: string;
-};
-
 export type RepoDetails = {
   stars: number;
   forks: number;
