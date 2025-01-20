@@ -1,5 +1,5 @@
 import {Listbox, ListboxItem, ListboxSection, ScrollShadow, Selection} from '@heroui/react';
-import {Card, Empty} from 'antd';
+import {Card} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
@@ -102,61 +102,57 @@ export default function ArgumentCategory({
     [setSelectedArguments],
   );
 
+  if (isEmptyData(dataBySearch)) return null;
+
   return (
     <Card title={title} bordered={false} className="cursor-default" hoverable>
       <ScrollShadow>
-        {isEmptyData(dataBySearch) ? (
-          <Empty description={false} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        {'section' in dataBySearch[0] ? (
+          <ScrollShadow className="scrollbar-hide">
+            <Listbox
+              variant="faded"
+              selectionMode="multiple"
+              aria-label="Arguments List"
+              selectedKeys={selectedArguments}
+              onSelectionChange={onSelectionChange}
+              items={dataBySearch as ArgumentSection[]}>
+              {section => {
+                const showDivider =
+                  (dataBySearch[dataBySearch.length - 1] as ArgumentSection).section !== section.section;
+                return (
+                  <ListboxSection
+                    key={section.section}
+                    items={section.items}
+                    title={section.section}
+                    showDivider={showDivider}>
+                    {item => (
+                      <ListboxItem key={item.name} className="cursor-default" textValue={`Select ${item.name}`}>
+                        <span className="flex w-full flex-wrap">{item.name}</span>
+                        <span className="flex w-full text-wrap text-xs text-foreground/50">{item.description}</span>
+                      </ListboxItem>
+                    )}
+                  </ListboxSection>
+                );
+              }}
+            </Listbox>
+          </ScrollShadow>
         ) : (
-          <>
-            {'section' in dataBySearch[0] ? (
-              <ScrollShadow className="scrollbar-hide">
-                <Listbox
-                  variant="faded"
-                  selectionMode="multiple"
-                  aria-label="Arguments List"
-                  selectedKeys={selectedArguments}
-                  onSelectionChange={onSelectionChange}
-                  items={dataBySearch as ArgumentSection[]}>
-                  {section => {
-                    return (
-                      <ListboxSection
-                        showDivider={
-                          (dataBySearch[dataBySearch.length - 1] as ArgumentSection).section !== section.section
-                        }
-                        key={section.section}
-                        items={section.items}
-                        title={section.section}>
-                        {item => (
-                          <ListboxItem key={item.name} className="cursor-default" textValue={`Select ${item.name}`}>
-                            <span className="flex w-full flex-wrap">{item.name}</span>
-                            <span className="flex w-full text-wrap text-xs text-foreground/50">{item.description}</span>
-                          </ListboxItem>
-                        )}
-                      </ListboxSection>
-                    );
-                  }}
-                </Listbox>
-              </ScrollShadow>
-            ) : (
-              <ScrollShadow className="scrollbar-hide">
-                <Listbox
-                  variant="faded"
-                  selectionMode="multiple"
-                  aria-label="Arguments List"
-                  selectedKeys={selectedArguments}
-                  onSelectionChange={onSelectionChange}
-                  items={dataBySearch as ArgumentItem[]}>
-                  {item => (
-                    <ListboxItem key={item.name} className="cursor-default" textValue={`Select ${item.name}`}>
-                      <span className="flex w-full flex-wrap">{item.name}</span>
-                      <span className="flex w-full text-wrap text-xs text-foreground/50">{item.description}</span>
-                    </ListboxItem>
-                  )}
-                </Listbox>
-              </ScrollShadow>
-            )}
-          </>
+          <ScrollShadow className="scrollbar-hide">
+            <Listbox
+              variant="faded"
+              selectionMode="multiple"
+              aria-label="Arguments List"
+              selectedKeys={selectedArguments}
+              onSelectionChange={onSelectionChange}
+              items={dataBySearch as ArgumentItem[]}>
+              {item => (
+                <ListboxItem key={item.name} className="cursor-default" textValue={`Select ${item.name}`}>
+                  <span className="flex w-full flex-wrap">{item.name}</span>
+                  <span className="flex w-full text-wrap text-xs text-foreground/50">{item.description}</span>
+                </ListboxItem>
+              )}
+            </Listbox>
+          </ScrollShadow>
         )}
       </ScrollShadow>
     </Card>
