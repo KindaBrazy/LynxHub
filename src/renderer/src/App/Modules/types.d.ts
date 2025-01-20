@@ -183,11 +183,13 @@ export type InstallationStepper = {
 export type LynxApiUpdate = {
   isPullAvailable: Promise<boolean>;
   storage: {get: (key: string) => any; set: (key: string, data: any) => void};
+  pty: any;
 };
 
 export type LynxApiInstalled = {
   installedDirExistAndWatch: Promise<boolean>;
   storage: {get: (key: string) => any; set: (key: string, data: any) => void};
+  pty: any;
 };
 
 export type CardInfoApi = {
