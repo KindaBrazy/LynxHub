@@ -109,6 +109,7 @@ export type CardMainMethods = {
     handle(channel: string, listener: (event: any, ...args: any[]) => any): void;
     on(channel: string, listener: (event: any, ...args: any[]) => void): void;
     send: (channel: string, ...args: any[]) => void;
+    pty: any;
   }) => void;
   updateAvailable?: (lynxApi: LynxApiUpdate) => Promise<boolean>;
   isInstalled?: (lynxApi: LynxApiInstalled) => Promise<boolean>;
