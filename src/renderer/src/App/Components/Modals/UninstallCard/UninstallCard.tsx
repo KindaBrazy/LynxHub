@@ -30,7 +30,7 @@ const UninstallCard = () => {
           key: 'process',
         });
 
-        rendererIpc.file[type](card.dir)
+        rendererIpc.file[type](card.dir!)
           .then(() => {
             rendererIpc.storageUtils.removeInstalledCard(cardId);
             message.destroy('process');
