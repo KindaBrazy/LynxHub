@@ -45,7 +45,7 @@ Seamlessly install, configure, launch, and manage your AI interfaces from a sing
 
 | Channel      | Version                                                                              | Date       |
 |--------------|--------------------------------------------------------------------------------------|------------|
-| Early Access | [**V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.1.0_Early-Access) | 2024-12-31 |
+| Early Access | [**V2.2.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.2.0_Early-Access) | 2025-01-21 |
 | Release      | [**V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.1.0)              | 2025-01-14 |
 
 | Platform                         | x64                                                                                                           | arm64                                                                                                         |

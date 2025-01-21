@@ -3,11 +3,42 @@
   "currentBuild": 15,
   "releaseDate": "2025-01-14",
   "earlyAccess": {
-    "version": "2.1.0",
-    "build": 15,
-    "releaseDate": "2024-12-31"
+    "version": "2.2.0",
+    "build": 16,
+    "releaseDate": "2025-01-21"
   },
   "changeLog": [
+    {
+      "build": 16,
+      "version": "2.2.0",
+      "new": [
+        "Git Cloning Enhancements: Added options for cloning single branches, specifying branch names, and setting clone depth.",
+        "Repository Card Menu: Introduced a new menu item on Repository cards, providing access to branch management (view, switch), repository reset, unshallow, and commit details.",
+        "Card Duplication: Added the ability to duplicate cards. "
+      ],
+      "improve": [
+        "In-App Readme Viewer: Displays the readme file within the app for cards that are not yet installed.",
+        "Staggered Card Update Checks: Card update checks are now performed sequentially on startup instead of all at once.",
+        "Streamlined Pinning: Replaced the ribbon with an icon button for pinning cards.",
+        "Shallow Cloning for AI Extensions: Utilizes shallow cloning for faster installation of AI extensions.",
+        "Optimized AI Information: Uses the cardInfo modules method for AI information instead of the built-in method.",
+        "Search Result Refinement: Hides the arguments category when search results are empty.",
+        "Ctrl+Click Shortcuts:",
+        " - Open a card's homepage in an external browser using Ctrl+click.",
+        " - Open a card's project folder by Ctrl+click on 'Open Folder' in the card menu."
+      ],
+      "bug": [
+        "Fixed an issue where card menu items might not function correctly.",
+        "Resolved issues with the settings layout extending beyond the app screen.",
+        "Correct the layout of customized card settings for smaller window sizes.",
+        "Removed the update badge after a successful card update.",
+        "The User component in card info is now rendered correctly when a valid picUrl is present.",
+        "Resolved issues with the zoom functionality in the in-app browser.",
+        "Fixed broken links within the in-app browser.",
+        "The 'Extension Installed' button is no longer shown if an installation error occurs.",
+        "The uninstall menu item is now hidden if a card has no installation directory."
+      ]
+    },
     {
       "build": 15,
       "version": "2.1.0",
