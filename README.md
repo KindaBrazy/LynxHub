@@ -6,7 +6,7 @@
 
 # LynxHub
 
-Seamlessly install, configure, launch, and manage your AI interfaces from a single, intuitive platform.
+<h3>Your All-In-One AI Platform</h3>
 
 [![GitHub Release][github-release-shield]](https://github.com/KindaBrazy/LynxHub/releases)
 [![GitHub Release Date][github-release-date-shield]](https://github.com/KindaBrazy/LynxHub/releases)
@@ -19,66 +19,52 @@ Seamlessly install, configure, launch, and manage your AI interfaces from a sing
 
 </div>
 
-<div align="center">
-
-![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
-![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
-![Electron.js](https://img.shields.io/badge/Electron-191970?style=for-the-badge&logo=Electron&logoColor=white)
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
-![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white)
-![Ant-Design](https://img.shields.io/badge/-AntDesign-%230170FE?style=for-the-badge&logo=ant-design&logoColor=white)
-![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
-![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
-
-</div>
-
-<div align="center">
-
-[![LynxHub Discord](http://invidget.switchblade.xyz/e8rBzhtcnK)](https://discord.gg/e8rBzhtcnK)
-
-</div>
+> [!TIP]
+> 💡 **Get early access to LynxHub** features, extensions, and modules. Support development and unlock exclusive
+> benefits by joining my [Patreon](https://www.patreon.com/LynxHub).
 
 ## 🔗 Download
+
+Get started with LynxHub by downloading the latest version for your platform.
 
 | Channel      | Version                                                                              | Date       |
 |--------------|--------------------------------------------------------------------------------------|------------|
 | Early Access | [**V2.2.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.2.0_Early-Access) | 2025-01-21 |
 | Release      | [**V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.1.0)              | 2025-01-14 |
 
-| Platform                         | x64                                                                                                           | arm64                                                                                                         |
-|----------------------------------|---------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------|
-| **Windows 10/11** (.exe)         | [**V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-win_x64-Setup.exe) | N/A                                                                                                           |
-| **macOS (Beta)** - (.dmg)        | [**Early-Access**](https://www.patreon.com/LynxHub)                                                           | N/A                                                                                                           |
-| **Debian, Ubuntu** (.deb)        | [**V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-linux_amd64.deb)   | [**V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-linux_arm64.deb)   |
-| **Red Hat, Fedora, SUSE** (.rpm) | [**V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-linux_x86_64.rpm)  | [**V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-linux_aarch64.rpm) |
+| Platform                         | x64                                                                                                              | arm64                                                                                                            |
+|----------------------------------|------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| **Windows 10/11** (.exe)         | [**📦 V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-win_x64-Setup.exe) | ❌ Not Available                                                                                                  |
+| **macOS (Beta)** - (.dmg)        | [**❤️‍🔥 Early-Access**](https://www.patreon.com/LynxHub)                                                        | ❌ Not Available                                                                                                  |
+| **Debian, Ubuntu** (.deb)        | [**📦 V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-linux_amd64.deb)   | [**📦 V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-linux_arm64.deb)   |
+| **Red Hat, Fedora, SUSE** (.rpm) | [**📦 V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-linux_x86_64.rpm)  | [**📦 V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-linux_aarch64.rpm) |
 
 ## 🗂️ Table of Contents
 
 - ✨ [Feature Overview](#-feature-overview)
-- 📃 [Available Modules](#-available-modules)
-- 📺 [Demo Video](#-demo-video)
+- 🧩 [Extensions](#-extensions)
+- 📃 [Modules](#-extensions)
 - 🖼️ [Screenshots](#%EF%B8%8F-screenshots)
 - 📦 [Installation](#-installation)
 - 🔧 [Development](#-development)
 - 🤝 [Contributing](#-contributing)
 - ❤️‍🔥 [Support](#%EF%B8%8F-support)
-- 💡 [Acknowledgement](#-acknowledgements)
 
 ## ✨ Feature Overview
 
 LynxHub offers a comprehensive suite of features designed to streamline your AI workflow and enhance your experience.
 Here's what you can expect:
 
+- [Extensible Architecture](https://github.com/KindaBrazy/LynxHub-Extension-Guide)
+    - Enhance LynxHub's capabilities with custom extensions.
 - [Modular Design](https://github.com/KindaBrazy/LynxHub-Module-Guide)
     - Fully modular architecture allowing third-party developers to create and publish custom modules
     - Modules can add new AI web interfaces (WebUIs) to the app, fully customizable by the developer
     - Developers can pre-define custom arguments, extensions, commands, and other configurations as part of the module,
       creating pre-configured WebUIs for users
 - AI Interface Management
-    - Install, update, and auto-update
+    - Install, config and update
+    - Switch branches, shallow clone, unshallow, see latest commit details
     - Manage AI extensions with options for batch updates and auto-update settings
     - View available extensions and install them directly
 - Arguments Manager
@@ -95,6 +81,9 @@ Here's what you can expect:
     - Built-in terminal and web browser for seamless integration
     - Automatic detection and launch of relevant addresses (URLs, files)
     - Switch easily between terminal and browser modes
+    - Terminal customization settings
+- Markdown Viewer
+    - Built-in Markdown viewer for easy reading of documentation and notes.
 - AI Information Dashboard
     - View developer information, installation and update status
     - Access update tags, release notes, and disk usage statistics for each AI interface
@@ -109,9 +98,75 @@ Here's what you can expect:
 
 </div>
 
-## 📃 [Available Modules](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container)
+## 🧩 Extensions
 
-### 🖼️ Image Generation
+### [Python Toolkit](https://github.com/KindaBrazy/LynxHub-Python-Toolkit)
+
+<details>
+<summary><kbd>Screenshot & Features</kbd></summary>
+
+![Python Toolkit Screenshot](https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/compiled/resources/python.png)
+
+#### 🐍 Python Management
+
+- **Auto-Detect Installed Pythons:** Automatically detects all installed Python versions, including those installed via
+  Conda.
+- **Install Python Versions:** Install new Python versions (official and Conda-based) directly from the extension.
+- **Set System Default Python:** Easily set any installed Python as the system default.
+- **Manage Installed Packages:** Manage packages installed in each Python environment.
+- **View Python Details:** View detailed information about installed Pythons, including version, install path, installed
+  packages count, and disk usage.
+
+#### 🌐 Virtual Environment
+
+- **Locate Existing Venvs:** Locate and list existing virtual environments.
+- **Create New Venv:** Create new virtual environments with selected Python versions (official or Conda).
+- **Associate AI with Venv:** Associate AI tools with specific virtual environments, allowing multiple AIs to share the
+  same environment.
+- **View Venv Details:** View detailed information about virtual environments, including Python version, install path,
+  installed packages count, disk usage, and associated AIs.
+- **Manage Venv Packages:** Manage packages installed in virtual environments.
+
+#### 📦 Package Manager
+
+- **Check for Updates:**
+    - Check for updates for all installed packages.
+    - Check for updates based on requirements files.
+- **Update Manager:**
+    - Interactively update packages.
+    - Categorize and colorize updates based on update type (prerelease, major, minor, patch, others).
+    - Filter updates by type and choose to update all or select packages.
+- **Install Packages:**
+    - Select and install multiple packages with version conditions.
+    - Install packages from a requirements file.
+    - View a preview of script before installation.
+- **Manage Requirements:**
+    - Manage requirements files and their associated packages.
+
+#### 📝 Requirements Manager
+
+- **Select and Change Requirements File:** Easily switch between different requirements files.
+- **Add, Remove, and Change Requirements:** Modify requirements in a user-friendly interface.
+
+#### 🤖 AI Integration
+
+- **New Menu Item for Package and Requirement Management:** Direct access to package and requirement management from the
+  AI menu.
+
+#### 🛠️ Tools Page Integration
+
+- **New Card for Individual Toolkit:** Open and manage individual pythons from a dedicated card on the tools page.
+
+</details>
+
+## 📃 Modules
+
+### [WebUI Container Module](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container)
+
+<details>
+<summary><kbd>Available AI Interfaces</kbd></summary>
+
+#### 🖼️ Image Generation
 
 | Developer                                                                                          | Project                 | GitHub                                                                     |
 |----------------------------------------------------------------------------------------------------|-------------------------|----------------------------------------------------------------------------|
@@ -128,14 +183,16 @@ Here's what you can expect:
 | <img height='20' src="https://avatars.githubusercontent.com/u/3390934?s=20&v=4"> Nerogar           | OneTrainer              | [Link](https://github.com/Nerogar/OneTrainer)                              |
 | <img height='20' src="https://avatars.githubusercontent.com/u/113954515?s=20&v=4"> InvokeAI        | InvokeAI                | [Link](https://github.com/invoke-ai/InvokeAI)                              |
 
-### 📝 Text Generation
+#### 📝 Text Generation
 
 | Developer                                                                                      | Project         | GitHub                                                     |
 |------------------------------------------------------------------------------------------------|-----------------|------------------------------------------------------------|
 | <img height='20' src="https://avatars.githubusercontent.com/u/112222186?s=20&v=4"> Oobabooga   | Text Generation | [Link](https://github.com/oobabooga/text-generation-webui) |
 | <img height='20' src="https://avatars.githubusercontent.com/u/134869877?s=20&v=4"> SillyTavern | SillyTavern     | [Link](https://github.com/SillyTavern/SillyTavern)         |
+| <img height='20' src="https://avatars.githubusercontent.com/u/158137808?s=20&v=4"> Open-WebUI  | Open WebUI      | [Link](https://github.com/open-webui/open-webui)           |
+| <img height='20' src="https://avatars.githubusercontent.com/u/827993?s=20&v=4"> ParisNeo       | LoLLMs          | [Link](https://github.com/ParisNeo/lollms-webui)           |
 
-### 🎵 Audio Generation
+#### 🎵 Audio Generation
 
 | Developer                                                                                 | Project          | GitHub                                                  |
 |-------------------------------------------------------------------------------------------|------------------|---------------------------------------------------------|
@@ -143,195 +200,94 @@ Here's what you can expect:
 | <img height='20' src="https://avatars.githubusercontent.com/u/36931363?s=20&v=4"> Gitmylo | Audio Generation | [Link](https://github.com/gitmylo/audio-webui)          |
 | <img height='20' src="https://avatars.githubusercontent.com/u/35898566?s=20&v=4"> Erew123 | AllTalk TTS      | [Link](https://github.com/erew123/alltalk_tts)          |
 
-## 📺 Demo Video
-
-[![LynxHub Youtube](/readme/screenshots/Youtube.png)](https://www.youtube.com/watch?v=qcIfQVwxUaA)
+</details>
 
 ## 🖼️ Screenshots
 
 <div align="center">
 
-### Terminal & Browser
+![Terminal and browser screenshot](/readme/screenshots/Launching.png)
 
-![Manage extensions screenshot](/readme/screenshots/Launching.png)
-
-### Arguments Management
-
-![Manage extensions screenshot](/readme/screenshots/Arguments.png)
-
-### Launch Customization
-
-![Manage extensions screenshot](/readme/screenshots/CustomLaunch.png)
-
-### Extension Management
+![Argument manager screenshot](/readme/screenshots/Arguments.png)
 
 ![Manage extensions screenshot](/readme/screenshots/Extensions.png)
 
-<br/>
+![Customize launch screenshot](/readme/screenshots/CustomLaunch.png)
 
-<details>
-<summary><kbd>More Shots?</kbd></summary>
+![Installation screenshot](/readme/screenshots/Installation.png)
 
-### Others
-
-![Manage extensions screenshot](/readme/screenshots/Update.png)
-
-![Manage extensions screenshot](/readme/screenshots/Settings.png)
-
-![Manage extensions screenshot](/readme/screenshots/Others.png)
-
-</details>
+![Update screenshot](/readme/screenshots/Update.png)
 
 </div>
 
 ## 📦 Installation
 
-Follow these steps to get LynxHub up and running on your system:
+1. **Install Prerequisites**
+    - [Git](https://git-scm.com/downloads)
+    - [Python](https://www.python.org/downloads) (required for AI interfaces; check "Add Python to PATH" during install)
 
-1. **[Install Git](https://git-scm.com/downloads)**
-2. **[Install Python](https://www.python.org/downloads)** (Optional for the app, required for AI interfaces)  
-   Recommended version: [Python 3.10.11](https://www.python.org/downloads/release/python-31011/).
-    - During installation, make sure to check "Add Python to PATH"
-3. **Install LynxHub**  
-   Get the executable setup file from **[Releases page](https://github.com/KindaBrazy/LynxHub/releases)**.
-4. **Launch the Application**
-5. **Updating**
-    - LynxHub will automatically check for updates
-    - If an update is available, you'll be prompted to download and install it
-6. **🎉 You're All Set!** Enjoy using the app!
+2. **Download LynxHub**
+    - Get the latest executable from the [Releases page](https://github.com/KindaBrazy/LynxHub/releases)
+      or [Patreon (Early-Access)](https://www.patreon.com/LynxHub).
+
+3. **Launch the Application**
+    - Updates are automatically checked and prompted during use.
 
 ## 🔧 Development
 
-This section provides guidelines for setting up your development environment and working on LynxHub.
+**Requirements**
 
-**Prerequisites**
+- [Node.js LTS](https://nodejs.org/en/download), [Git](https://git-scm.com/downloads)
 
-- [NodeJS](https://nodejs.org/en/download) (LTS version recommended)
-- [Git](https://git-scm.com/downloads)
+**Quick Start**
 
-**Setting Up the Development Environment**
+```bash
+git clone https://github.com/KindaBrazy/LynxHub && cd LynxHub
+npm install && npm run dev
+```
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/KindaBrazy/LynxHub
-   cd LynxHub
-   ```
-2. Install dependencies:
-   ```bash
-   npm i
-   ```
-3. Start the development environment:
-   ```bash
-   npm run dev
-   ```
+- **Hot Reload**: Auto-refresh on changes
+- **Hotkeys**: `F12` (DevTools), `Ctrl+R` (Refresh)
 
-   This will launch the app in development mode with the following features:
-    - **Hot Reload**: Changes in the **renderer process** will automatically refresh the app.
-    - **Auto Restart**: Changes in the **main process** will automatically restart the app.
+**Build**
 
-**Development Hotkeys**
+```bash
+npm run build
+```  
 
-- <kbd>F12</kbd>: Open DevTools
-- <kbd>CTRL</kbd> + <kbd>R</kbd>: Refresh the renderer (while DevTools is focused)
-
-**Native Modules**
-
-Native modules are automatically detected and compiled after installation.(`postinstall`)
-
-**Building and Packaging**
-
-To package the app for distribution:
-
-- Windows:
-   ```bash
-   npm run build:win
-   ```
-- Linux:
-   ```bash
-   npm run build:linux
-   ```
-- MacOS:
-   ```bash
-   npm run build:mac
-   ```
+Native modules compile automatically during installation.
 
 ## 🤝 Contributing
 
-As a solo developer, I'm thrilled by and deeply appreciate any contributions to this project! Your involvement, no
-matter how big or small, plays a crucial role in improving and growing this application. All types of contributions are
-welcome and valued!
+As a solo maintainer, I welcome and value all contributions to this project. Your participation helps improve the
+application for everyone. We accept various contribution types:
 
-**🌟 Ways to Contribute**
+**Core Contribution Areas**
 
-1. 💻 **Contributing Code**:
-    - Feel free to tackle any open issues or implement new features.
-2. 🧩 **Developing Modules**:
-    - Interested in creating a module? Great! Check
-      out [Module-Guide](https://github.com/KindaBrazy/LynxHub-Module-Guide) for guidelines.
-    - This is an excellent way to extend the app's functionality.
-3. 💡 **Suggesting Enhancements**:
-    - Have an idea to make the app better? I love to hear it!
-    - Open an issue with the tag "enhancement" and describe your proposal.
+- **Code Contributions**: Solve existing issues or propose new features via pull requests
+- **Extension/Module Development**: Build custom extensions or modules to expand functionality
+- **Feature Proposals**: Submit enhancement suggestions through issues tagged "enhancement"
 
-Remember, every contribution counts! Whether it's a typo fix or a major feature, your effort is deeply appreciated and
-helps make this project better for everyone. Thank you for being a part of this journey!
+All contributions help sustain this project. Thank you for supporting its growth.
 
 ## ❤️‍🔥 Support
 
-Your support is crucial in keeping this project alive and thriving! If you find value in this app and want to contribute
-to its growth, consider becoming a Patron.
+Sustainable development relies on community backing. Consider supporting through Patreon to access exclusive benefits:
 
 [![Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3DLynxHub%26type%3Dpatrons&style=for-the-badge)](https://www.patreon.com/LynxHub)
 
-By becoming a patron, you'll unlock a range of exclusive perks:
+**Supporter Benefits**
 
-- 🚀 **Early Access**: Be the first to experience new features and updates before they're publicly released.
-- 🏅 **Exclusive Discord Role**: Join our community with a special role that reflects your support level.
-- 📢 **Behind-the-Scenes Updates**: Get regular insider information on current development efforts and future plans.
-- 🎯 **Priority Support**: Receive faster responses to your questions and issues, ensuring a smooth experience.
-- 👏 **Public Recognition**: Your name will be featured in our README and in-app credits as a valued supporter.
+- Early feature access
+    - Early access to Lynxhub, extensions, modules, etc.
+- Exclusive community recognition
+    - Your name in GitHub Readme and Application.
+- Development roadmap insights
+- Priority technical support
 
-> [!NOTE]
-> **💖 Prefer a one-time contribution?**
->
-> [Click here to make a single donation and show your support!](https://www.Patreon.com/LynxHub/Shop)
+For one-time donations: [Support via Patreon](https://www.Patreon.com/LynxHub/Shop)
 
-Every patron, regardless of tier or one-time donation, plays a vital role in the app's continued improvement and
-sustainability.
-
-## 💎 Diamond Sponsors
-
-<div align="center">
-
-`No Sponsors Yet`
-
-</div>
-
-## 🏆 Platinum Sponsors
-
-<div align="center">
-
-`No Sponsors Yet`
-
-</div>
-
-## 💡 Acknowledgements
-
-- **[Electron-Vite](https://github.com/alex8088/electron-vite)**: For providing an outstanding boilerplate that
-  seamlessly integrates Electron and React, significantly accelerating our development process.
-- **[NPM Packages](./package.json)**: For the myriad of libraries that have been instrumental in shaping and optimizing
-  this project.
-- **[AI Interface](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container)**: To all the brilliant AI interface
-  developers whose work has been integral to this project.
-- **[Iconify](https://iconify.design/)**: For providing a wide array of beautiful open-source icons used throughout the
-  application.
-
-**Last but not least:**
-
-- `You`: For using the app, providing feedback, and supporting its development. Your engagement and support
-  are what drive this project forward.
-
-<br/>
+Every contribution directly supports ongoing development and future improvements.
 
 ---
 
