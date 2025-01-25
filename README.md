@@ -29,7 +29,7 @@ Get started with LynxHub by downloading the latest version for your platform.
 
 | Channel      | Version                                                                              | Date       |
 |--------------|--------------------------------------------------------------------------------------|------------|
-| Early Access | [**V2.2.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.2.0_Early-Access) | 2025-01-21 |
+| Early Access | [**V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.2.1_Early-Access) | 2025-01-25 |
 | Release      | [**V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.1.0)              | 2025-01-14 |
 
 | Platform                         | x64                                                                                                              | arm64                                                                                                            |

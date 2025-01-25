@@ -3,11 +3,18 @@
   "currentBuild": 15,
   "releaseDate": "2025-01-14",
   "earlyAccess": {
-    "version": "2.2.0",
-    "build": 16,
-    "releaseDate": "2025-01-21"
+    "version": "2.2.1",
+    "build": 17,
+    "releaseDate": "2025-01-25"
   },
   "changeLog": [
+    {
+      "build": 17,
+      "version": "2.2.1",
+      "bug": [
+        "Prevent modal overlay persistence when closing modals with tabs"
+      ]
+    },
     {
       "build": 16,
       "version": "2.2.0",
