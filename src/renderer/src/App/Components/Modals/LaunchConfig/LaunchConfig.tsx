@@ -77,7 +77,8 @@ const LaunchConfig = memo(() => {
             className="z-10 my-3"
             onSelectionChange={setCurrentTab}
             selectedKey={currentTab.toString()}
-            fullWidth>
+            fullWidth
+            disableAnimation>
             {haveArguments && <Tab title="Arguments" key={tabs.arguments} className="cursor-default" />}
             <Tab title="Custom Run" key={tabs.customRun} className="cursor-default" />
             <Tab title="Pre Launch" key={tabs.preLaunch} className="cursor-default" />
