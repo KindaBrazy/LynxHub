@@ -68,6 +68,8 @@ export type MainExtensionUtils = {
    * @returns A promise that resolves to the `ModuleManager`.
    */
   getModuleManager: () => Promise<ModuleManager>;
+
+  nodePty: any;
 };
 
 export type ExtensionImport_Main = {

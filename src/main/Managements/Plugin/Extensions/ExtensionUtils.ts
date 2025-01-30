@@ -1,3 +1,5 @@
+import pty from 'node-pty';
+
 import DiscordRpcManager from '../../DiscordRpcManager';
 import ElectronAppManager from '../../ElectronAppManager';
 import StorageManager from '../../Storage/StorageManager';
@@ -7,6 +9,7 @@ import {MainExtensionUtils} from './ExtensionTypes_Main';
 export default class ExtensionUtils implements MainExtensionUtils {
   private managerPromises: Map<string, Promise<any>> = new Map();
   private resolvers: Map<string, (manager: any) => void> = new Map();
+  public nodePty = pty;
 
   constructor() {
     const managers = ['storage', 'app', 'discordRpc', 'module'];
