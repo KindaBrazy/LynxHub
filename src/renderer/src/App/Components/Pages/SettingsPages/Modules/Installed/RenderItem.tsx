@@ -90,9 +90,8 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
   }, [item.id, item.title]);
 
   const actions = useCallback(() => {
-    console.log(updateAvailable);
     return [
-      !updateAvailable ? (
+      updateAvailable ? (
         <Button
           size="sm"
           variant="flat"
