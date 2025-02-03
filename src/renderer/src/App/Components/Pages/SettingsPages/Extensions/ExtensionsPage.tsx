@@ -29,8 +29,8 @@ export default function ExtensionsPage() {
         }),
       );
     });
-    rendererIpc.module.anyUpdateAvailable().then(value => {
-      dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value}));
+    rendererIpc.extension.updateAvailableList().then(value => {
+      dispatch(settingsActions.setSettingsState({key: 'extensionsUpdateAvailable', value}));
     });
     rendererIpc.extension.getSkipped().then(result => setUnloaded(result));
   }, []);

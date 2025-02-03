@@ -21,7 +21,7 @@ type SettingState = {
 
   updatedModules: string[];
   newModules: string[];
-  moduleUpdateAvailable: boolean;
+  moduleUpdateAvailable: string[];
 
   extensionsUpdateAvailable: string[];
 
@@ -49,7 +49,7 @@ const initialState: SettingState = {
   },
   updatedModules: [],
   newModules: [],
-  moduleUpdateAvailable: false,
+  moduleUpdateAvailable: [],
   updateAvailable: false,
   extensionsUpdateAvailable: [],
 };

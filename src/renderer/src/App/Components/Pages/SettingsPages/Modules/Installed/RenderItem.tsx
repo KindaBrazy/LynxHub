@@ -32,6 +32,12 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
   const avatarSrc = useCachedImageUrl(`${item.title}_module_avatar`, item.logoUrl || '');
 
   useEffect(() => {
+    if (moduleUpdateAvailable.includes(item.title)) {
+      setUpdateAvailable(true);
+    }
+  }, [moduleUpdateAvailable, item]);
+
+  useEffect(() => {
     if (updatingAll) {
       setSpinningText('Checking and updating, please wait...');
     } else {
@@ -44,19 +50,8 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
     rendererIpc.module.isUpdateAvailable(item.id).then(result => {
       setUpdateAvailable(result);
       setSpinningText('');
-      if (!moduleUpdateAvailable && result)
-        dispatch(
-          settingsActions.setSettingsState({
-            key: 'moduleUpdateAvailable',
-            value: true,
-          }),
-        );
     });
-  }, [item.id, moduleUpdateAvailable]);
-
-  useEffect(() => {
-    checkForUpdate();
-  }, [checkForUpdate]);
+  }, [item]);
 
   const uninstall = useCallback(() => {
     setUninstalling(true);
@@ -72,7 +67,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
         message.error(`An error occurred while uninstalling ${item.title}!`);
       }
     });
-  }, [item.id, item.title, dispatch]);
+  }, [item, dispatch]);
 
   const update = useCallback(() => {
     setUpdating(true);
@@ -87,7 +82,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
         message.error(`An error occurred while updating ${item.title}.`);
       }
     });
-  }, [item.id, item.title]);
+  }, [item]);
 
   const actions = useCallback(() => {
     return [
