@@ -86,8 +86,10 @@ export function PreviewBody({
   return (
     <div className="absolute inset-x-0 top-[6.6rem] flex flex-col bottom-10">
       <Tabs
-        variant="underlined"
-        className="font-Nunito"
+        radius="lg"
+        variant="light"
+        className="px-4"
+        color="secondary"
         onSelectionChange={setCurrentTab}
         selectedKey={currentTab.toString()}
         fullWidth>
