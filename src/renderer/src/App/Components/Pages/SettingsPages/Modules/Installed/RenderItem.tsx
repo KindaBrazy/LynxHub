@@ -1,5 +1,5 @@
-import {Button} from '@heroui/react';
-import {Avatar, Badge, Descriptions, List, message, Modal, Popconfirm, Spin, Tag, Typography} from 'antd';
+import {Button, Chip, Link} from '@heroui/react';
+import {Avatar, Badge, Descriptions, List, message, Modal, Popconfirm, Spin} from 'antd';
 import {capitalize, isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useCallback, useEffect, useState} from 'react';
@@ -7,6 +7,7 @@ import {useDispatch} from 'react-redux';
 
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
+import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useAppState} from '../../../../../Redux/App/AppReducer';
 import {settingsActions, useSettingsState} from '../../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
@@ -19,6 +20,7 @@ type Props = {item: ModulesInfo; updatingAll: boolean; removedModule: (id: strin
 export default function RenderItem({item, updatingAll, removedModule}: Props) {
   const isDarkMode = useAppState('darkMode');
   const updatedModules = useSettingsState('updatedModules');
+  const moduleUpdateAvailable = useSettingsState('moduleUpdateAvailable');
   const newModules = useSettingsState('newModules');
   const dispatch = useDispatch<AppDispatch>();
 
@@ -42,9 +44,15 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
     rendererIpc.module.isUpdateAvailable(item.id).then(result => {
       setUpdateAvailable(result);
       setSpinningText('');
-      dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value: result}));
+      if (!moduleUpdateAvailable && result)
+        dispatch(
+          settingsActions.setSettingsState({
+            key: 'moduleUpdateAvailable',
+            value: true,
+          }),
+        );
     });
-  }, [item.id]);
+  }, [item.id, moduleUpdateAvailable]);
 
   useEffect(() => {
     checkForUpdate();
@@ -82,7 +90,26 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
   }, [item.id, item.title]);
 
   const actions = useCallback(() => {
-    const result = [
+    console.log(updateAvailable);
+    return [
+      !updateAvailable ? (
+        <Button
+          size="sm"
+          variant="flat"
+          color="success"
+          onPress={update}
+          isLoading={updating}
+          startContent={<Download_Icon />}>
+          {!updating && 'Update'}
+        </Button>
+      ) : (
+        <Button size="sm" variant="light" onPress={checkForUpdate} className="cursor-default">
+          Check for Updates
+        </Button>
+      ),
+      <Button size="sm" key="details" variant="light" onPress={showInfo} className="cursor-default">
+        Details
+      </Button>,
       <Popconfirm
         okType="danger"
         okText="Uninstall"
@@ -92,31 +119,11 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
         title="Are you sure you want to uninstall?"
         okButtonProps={{type: 'primary', className: 'cursor-default'}}
         cancelButtonProps={{type: 'primary', className: 'cursor-default'}}>
-        <Button size="sm" color="danger" variant="flat" isLoading={uninstalling} className="cursor-default">
+        <Button size="sm" color="danger" variant="light" isLoading={uninstalling} className="cursor-default">
           Uninstall
         </Button>
       </Popconfirm>,
     ];
-
-    result.push(
-      updateAvailable ? (
-        <Button
-          size="sm"
-          variant="light"
-          color="success"
-          onPress={update}
-          isLoading={updating}
-          className="cursor-default">
-          {!updating && 'Update'}
-        </Button>
-      ) : (
-        <Button size="sm" variant="flat" onPress={checkForUpdate} className="cursor-default">
-          Check for Updates
-        </Button>
-      ),
-    );
-
-    return result;
   }, [updateAvailable]);
 
   const showInfo = useCallback(() => {
@@ -174,43 +181,33 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
               'border-transparent shadow-sm hover:border-white hover:shadow-lg dark:bg-black/15' +
               ' dark:hover:border-black dark:hover:bg-black/25'
             }
-            extra={
-              <div className="flex h-full flex-col items-center justify-center space-y-1 px-1 text-foreground-500">
-                <Typography.Text className="text-xs text-foreground-500">V{item.version}</Typography.Text>
-                <Button
-                  size="sm"
-                  variant="flat"
-                  onPress={showInfo}
-                  className="cursor-default dark:text-gray-300"
-                  fullWidth>
-                  Details
-                </Button>
-              </div>
-            }
             key={item.title}
-            actions={actions()}>
+            actions={actions()}
+            classNames={{actions: 'flex'}}>
             <List.Item.Meta
-              description={
-                <Typography.Text ellipsis={{tooltip: true}} className="text-gray-500 dark:text-gray-400">
-                  {item.description}
-                </Typography.Text>
-              }
               title={
-                <div className="space-x-2">
-                  <Typography.Link
-                    onClick={() => {
+                <div className="gap-x-2 flex items-center">
+                  <Link
+                    onPress={() => {
                       window.open(item.repoUrl);
                     }}>
                     {item.title}
-                  </Typography.Link>
-                  <Tag bordered={false}>{capitalize(extractGitUrl(item.repoUrl).owner)}</Tag>
+                  </Link>
+                  <Chip size="sm" variant="flat">
+                    V{item.version}
+                  </Chip>
+                  <Chip size="sm" variant="flat">
+                    {capitalize(extractGitUrl(item.repoUrl).owner)}
+                  </Chip>
                   {item.owner && (
-                    <Tag color="green" bordered={false}>
+                    <Chip size="sm" variant="flat" color="success">
                       Owner
-                    </Tag>
+                    </Chip>
                   )}
                 </div>
               }
+              className="!items-center"
+              description={item.description}
               avatar={item.logoUrl && <Avatar size={59} src={avatarSrc} />}
             />
           </List.Item>
