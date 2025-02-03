@@ -7,7 +7,6 @@ import {
   DropdownSection,
   DropdownTrigger,
   Link,
-  Skeleton,
   Tooltip,
   User,
 } from '@heroui/react';
@@ -190,56 +189,51 @@ export function useRenderList(
             />
           )}
           <div className="flex flex-col">
-            <Skeleton isLoaded={!isLoaded} className="rounded-lg">
-              <User
-                description={
-                  <div className="space-x-2">
-                    <span className={`${updateAvailable.includes(item.id) && 'text-warning'}`}>{item.version}</span>
-                    <span>{item.developer}</span>
-                  </div>
-                }
-                name={
-                  <div className="space-x-2">
-                    <Link
-                      href={item.url}
-                      className="text-small text-primary-500 transition-colors duration-300"
-                      isExternal>
-                      {item.title}
-                    </Link>
-                    {foundInstalled && (
-                      <Chip size="sm" variant="faded" color="default">
-                        Installed
-                      </Chip>
-                    )}
-                    {updateAvailable.includes(item.id) && (
-                      <Chip size="sm" variant="faded" color="success">
-                        Update
-                      </Chip>
-                    )}
-                  </div>
-                }
-                className="justify-start mt-2"
-                avatarProps={{src: item.avatarUrl}}
-              />
-            </Skeleton>
-            <Skeleton isLoaded={!isLoaded} className="rounded-lg">
-              <Typography.Paragraph>{item.description}</Typography.Paragraph>
-            </Skeleton>
-
-            <Skeleton isLoaded={!isLoaded} className="rounded-lg">
-              <div className="flex flex-row items-center gap-x-2">
-                {item.platforms.includes('linux') && <Linux_Icon className="size-5 text-[#FF9800]" />}
-                {item.platforms.includes('win32') && <Windows_Icon className="size-5 text-[#4285F4]" />}
-                {item.platforms.includes('darwin') && <MacOS_Icon className="size-5" />}
-                {foundUnloaded && (
-                  <Tooltip delay={300} content={foundUnloaded.message} showArrow>
-                    <Chip size="sm" variant="faded" color="warning">
-                      Unloaded
+            <User
+              description={
+                <div className="space-x-2">
+                  <span className={`${updateAvailable.includes(item.id) && 'text-warning'}`}>{item.version}</span>
+                  <span>{item.developer}</span>
+                </div>
+              }
+              name={
+                <div className="space-x-2">
+                  <Link
+                    href={item.url}
+                    className="text-small text-primary-500 transition-colors duration-300"
+                    isExternal>
+                    {item.title}
+                  </Link>
+                  {foundInstalled && (
+                    <Chip size="sm" variant="flat" color="default">
+                      Installed
                     </Chip>
-                  </Tooltip>
-                )}
-              </div>
-            </Skeleton>
+                  )}
+                  {updateAvailable.includes(item.id) && (
+                    <Chip size="sm" variant="faded" color="success">
+                      Update
+                    </Chip>
+                  )}
+                </div>
+              }
+              className="justify-start mt-2"
+              avatarProps={{src: item.avatarUrl}}
+            />
+
+            <Typography.Paragraph className="mt-2">{item.description}</Typography.Paragraph>
+
+            <div className="flex flex-row items-center gap-x-2">
+              {item.platforms.includes('linux') && <Linux_Icon className="size-5 text-[#FF9800]" />}
+              {item.platforms.includes('win32') && <Windows_Icon className="size-5 text-[#4285F4]" />}
+              {item.platforms.includes('darwin') && <MacOS_Icon className="size-5" />}
+              {foundUnloaded && (
+                <Tooltip delay={300} content={foundUnloaded.message} showArrow>
+                  <Chip size="sm" variant="faded" color="warning">
+                    Unloaded
+                  </Chip>
+                </Tooltip>
+              )}
+            </div>
           </div>
         </List.Item>
       );

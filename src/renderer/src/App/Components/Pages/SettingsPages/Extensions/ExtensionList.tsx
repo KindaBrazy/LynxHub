@@ -1,4 +1,4 @@
-import {Input} from '@heroui/react';
+import {Input, Skeleton} from '@heroui/react';
 import {Empty, List} from 'antd';
 import {isEmpty} from 'lodash';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
@@ -90,14 +90,29 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
           },
         }}
         className="inset-0 absolute !top-10">
-        <List
-          size="small"
-          locale={{emptyText}}
-          className="size-full"
-          renderItem={renderList}
-          itemLayout="horizontal"
-          dataSource={resultList}
-        />
+        {loading ? (
+          <div className="flex flex-col">
+            {Array(3)
+              .fill(null)
+              .map((_, index) => {
+                return (
+                  <div key={index} className="w-full h-36 p-2 space-y-1">
+                    <Skeleton className="w-full h-10 rounded-lg" />
+                    <Skeleton className="w-full h-20 rounded-xl" />
+                  </div>
+                );
+              })}
+          </div>
+        ) : (
+          <List
+            size="small"
+            locale={{emptyText}}
+            className="size-full"
+            renderItem={renderList}
+            itemLayout="horizontal"
+            dataSource={resultList}
+          />
+        )}
       </OverlayScrollbarsComponent>
     </div>
   );
