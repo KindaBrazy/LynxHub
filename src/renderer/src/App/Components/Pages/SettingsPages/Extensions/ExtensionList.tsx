@@ -66,8 +66,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
     <div
       className={
         'absolute inset-y-2 rounded-lg border border-foreground/10 sm:w-64 lg:w-80 2xl:w-96' +
-        ' overflow-hidden shrink-0 shadow-small bg-white dark:bg-foreground-100' +
-        ' transition-[width] duration-500'
+        ' overflow-hidden shrink-0 shadow-small transition-[width] duration-500'
       }>
       <Input
         type="search"
@@ -76,8 +75,8 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
         endContent={filterMenu()}
         onValueChange={setSearchValue}
         placeholder="Search for extensions..."
+        classNames={{inputWrapper: 'rounded-none pr-0'}}
         startContent={<Circle_Icon className="size-5" />}
-        classNames={{inputWrapper: 'bg-foreground-200 rounded-none pr-0'}}
       />
 
       <OverlayScrollbarsComponent
