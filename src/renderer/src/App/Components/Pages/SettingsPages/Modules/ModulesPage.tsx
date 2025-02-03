@@ -1,5 +1,5 @@
 import {Button, Tab, Tabs} from '@heroui/react';
-import {Key, useCallback, useState} from 'react';
+import {Key, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Download2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
@@ -26,6 +26,12 @@ export default function ModulesPage() {
     rendererIpc.module.updateAllModules().then(() => {
       setUpdatingAll(false);
       dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value: false}));
+    });
+  }, []);
+
+  useEffect(() => {
+    rendererIpc.module.updateAvailableList().then(value => {
+      dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value}));
     });
   }, []);
 

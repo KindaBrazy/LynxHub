@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import fs from 'graceful-fs';
+import {compact} from 'lodash';
 import portFinder from 'portfinder';
 import handler from 'serve-handler';
 
@@ -148,16 +149,17 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     return isChangedBranch;
   }
 
-  public async anyUpdateAvailable(): Promise<boolean> {
+  public async updateAvailableList(): Promise<string[]> {
     try {
-      const updateChecks = this.installedPluginInfo.map(plugin =>
-        GitManager.isUpdateAvailable(path.join(this.pluginPath, plugin.dir)),
-      );
+      const updateChecks = this.installedPluginInfo.map(async plugin => {
+        const available = await GitManager.isUpdateAvailable(path.join(this.pluginPath, plugin.dir));
+        return {title: plugin.info.title, available};
+      });
       const results = await Promise.all(updateChecks);
-      return results.some(result => result === true);
+      return compact(results.map(result => (result.available ? result.title : null)));
     } catch (error) {
       console.error('Error checking for updates:', error);
-      return false;
+      return [];
     }
   }
 

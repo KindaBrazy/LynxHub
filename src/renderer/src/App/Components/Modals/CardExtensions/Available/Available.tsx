@@ -94,8 +94,8 @@ export default function Available({visible, updateTable, installedExtensions}: P
           locale={{
             emptyText: (
               <Empty
-                description="Sorry, there are no extensions available to download at the moment.
-                 Please check back later!"
+                description="There are no extensions available at the moment,
+                 but be sure to check back later for new additions!"
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
               />
             ),

@@ -141,7 +141,7 @@ export const modulesChannels = {
   installModule: 'modules:install-module',
   uninstallModule: 'modules:uninstall-module',
   isUpdateAvailable: 'modules:is-update-available',
-  anyUpdateAvailable: 'modules:any-update-available',
+  updateAvailableList: 'modules:update-available-list',
   updateModule: 'modules:update-module',
   updateAllModules: 'modules:update-all-modules',
 

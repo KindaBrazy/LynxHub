@@ -134,7 +134,7 @@ const rendererIpc = {
     uninstallModule: (id: string): Promise<boolean> => ipc.invoke(modulesChannels.uninstallModule, id),
 
     isUpdateAvailable: (id: string): Promise<boolean> => ipc.invoke(modulesChannels.isUpdateAvailable, id),
-    anyUpdateAvailable: (): Promise<boolean> => ipc.invoke(modulesChannels.anyUpdateAvailable),
+    updateAvailableList: (): Promise<string[]> => ipc.invoke(modulesChannels.updateAvailableList),
 
     updateModule: (id: string): Promise<boolean> => ipc.invoke(modulesChannels.updateModule, id),
 

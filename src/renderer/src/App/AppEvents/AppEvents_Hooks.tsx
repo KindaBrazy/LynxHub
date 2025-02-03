@@ -44,7 +44,7 @@ export const useCheckModulesUpdate = () => {
   const moduleUpdateInterval = useRef<NodeJS.Timeout>(undefined);
   useEffect(() => {
     const checkForUpdate = () => {
-      rendererIpc.module.anyUpdateAvailable().then(value => {
+      rendererIpc.module.updateAvailableList().then(value => {
         dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value}));
       });
     };

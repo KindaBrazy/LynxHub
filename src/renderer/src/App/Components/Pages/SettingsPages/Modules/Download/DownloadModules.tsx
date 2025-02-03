@@ -78,8 +78,9 @@ export default function DownloadModules({installedModules}: Props) {
           locale={{
             emptyText: (
               <Empty
+                description="There are no modules available at the moment,
+                 but be sure to check back later for new additions!"
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description="Sorry, there are no modules available to download at the moment. Please check back later!"
               />
             ),
           }}
