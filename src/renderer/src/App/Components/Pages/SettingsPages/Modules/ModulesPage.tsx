@@ -43,6 +43,7 @@ export default function ModulesPage() {
         </Button>
       )}
       <Tabs
+        size="sm"
         variant="solid"
         color="secondary"
         className="z-10 mb-2"
