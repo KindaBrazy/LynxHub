@@ -2,7 +2,8 @@ import {Button, Tab, Tabs} from '@heroui/react';
 import {Key, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {settingsActions} from '../../../../Redux/App/SettingsReducer';
+import {Download2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {settingsActions, useSettingsState} from '../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import Page from '../../Page';
@@ -17,9 +18,10 @@ export default function ModulesPage() {
   const [installedModules, setInstalledModules] = useState<string[]>([]);
   const [updatingAll, setUpdatingAll] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<Key>('installed-tab');
+  const updateAvailable = useSettingsState('moduleUpdateAvailable');
   const dispatch = useDispatch<AppDispatch>();
 
-  const startUpdateAll = useCallback(() => {
+  const handleUpdateAll = useCallback(() => {
     setUpdatingAll(true);
     rendererIpc.module.updateAllModules().then(() => {
       setUpdatingAll(false);
@@ -29,8 +31,14 @@ export default function ModulesPage() {
 
   return (
     <Page className="pb-14" id={modulesElementId}>
-      {currentTab === 'installed-tab' && (
-        <Button size="sm" onPress={startUpdateAll} className="absolute bottom-4 right-4">
+      {currentTab === 'installed-tab' && updateAvailable && (
+        <Button
+          size="sm"
+          variant="flat"
+          color="success"
+          onPress={handleUpdateAll}
+          startContent={<Download2_Icon />}
+          className="absolute bottom-5 right-5">
           Update All
         </Button>
       )}
