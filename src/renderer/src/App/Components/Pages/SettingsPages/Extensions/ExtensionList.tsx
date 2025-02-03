@@ -78,7 +78,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
   return (
     <div
       className={
-        'absolute inset-y-2 rounded-lg border border-foreground/10 sm:w-64 lg:w-80 2xl:w-96' +
+        'absolute inset-y-2 rounded-lg border border-foreground/5 sm:w-64 lg:w-80 2xl:w-96' +
         ' overflow-hidden shrink-0 shadow-small transition-[width] duration-500'
       }>
       <Input

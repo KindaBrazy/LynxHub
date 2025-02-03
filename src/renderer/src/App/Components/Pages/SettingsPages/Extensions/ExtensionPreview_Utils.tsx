@@ -45,7 +45,7 @@ export function PreviewHeader({
     <div
       className={
         'absolute inset-x-0 flex flex-col p-4 gap-y-2 top-0 h-[6.3rem]' +
-        ' overflow-y-scroll scrollbar-hide border-b border-foreground/10'
+        ' overflow-y-scroll scrollbar-hide border-foreground/10'
       }>
       <User
         className="self-start"
@@ -84,12 +84,12 @@ export function PreviewBody({
   const renderSubItems = useRenderItems();
 
   return (
-    <div className="absolute inset-x-0 top-[6.6rem] flex flex-col bottom-10">
+    <div className="absolute inset-x-0 top-[6.6rem] flex flex-col bottom-12">
       <Tabs
-        radius="lg"
-        variant="light"
-        className="px-4"
+        size="sm"
+        variant="solid"
         color="secondary"
+        className="px-4 mb-2"
         onSelectionChange={setCurrentTab}
         selectedKey={currentTab.toString()}
         fullWidth>
@@ -98,9 +98,9 @@ export function PreviewBody({
       </Tabs>
       {currentTab === 'readme' &&
         (isNil(ReplaceMd) ? (
-          <MarkdownViewer rounded={false} repoUrl={selectedExt?.url || ''} />
+          <MarkdownViewer repoUrl={selectedExt?.url || ''} />
         ) : (
-          <ReplaceMd rounded={false} repoPath={selectedExt?.url || ''} />
+          <ReplaceMd repoPath={selectedExt?.url || ''} />
         ))}
       {currentTab === 'changelog' && (
         <ScrollShadow
@@ -254,7 +254,7 @@ export function PreviewFooter({
 
   return (
     <div className="absolute bottom-0 inset-x-0">
-      <ButtonGroup radius="none" variant="flat" fullWidth>
+      <ButtonGroup variant="flat" fullWidth>
         {installed ? (
           <>
             <Button color="danger" isLoading={uninstalling} onPress={uninstallExtension}>
