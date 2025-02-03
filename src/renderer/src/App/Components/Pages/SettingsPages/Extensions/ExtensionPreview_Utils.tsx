@@ -44,7 +44,7 @@ export function PreviewHeader({
   return (
     <div
       className={
-        'absolute bg-foreground-200 inset-x-0 flex flex-col p-4 gap-y-2 top-0 h-[6.3rem]' +
+        'absolute inset-x-0 flex flex-col p-4 gap-y-2 top-0 h-[6.3rem]' +
         ' overflow-y-scroll scrollbar-hide border-b border-foreground/10'
       }>
       <User
