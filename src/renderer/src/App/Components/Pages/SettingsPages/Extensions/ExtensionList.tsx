@@ -21,18 +21,6 @@ type Props = {
   unloaded: SkippedPlugins[];
 };
 
-const emptyText = (
-  <Empty
-    description={
-      <div className="flex flex-col items-center justify-center text-center">
-        <p className="text-gray-500 mb-2">Currently, no extensions are available.</p>
-        <p className="text-gray-400">Please check back later for updates!</p>
-      </div>
-    }
-    image={Empty.PRESENTED_IMAGE_SIMPLE}
-  />
-);
-
 export default function ExtensionList({selectedExt, setSelectedExt, installed, unloaded}: Props) {
   const isDarkMode = useAppState('darkMode');
 
@@ -61,6 +49,31 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
 
   const filterMenu = useFilterMenu(selectedFilters, setSelectedFilters);
   const renderList = useRenderList(selectedExt, setSelectedExt, loading, installed, unloaded);
+
+  const emptyText = useMemo(() => {
+    return (
+      <Empty
+        description={
+          <div className="flex flex-col items-center justify-center text-center">
+            {isEmpty(searchValue) ? (
+              <>
+                <p className="text-gray-300 mb-2">It looks like there are no extensions available right now.</p>
+                <p className="text-gray-500">
+                  This could be temporary. Please try again later or check your internet connection.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-gray-300 mb-2">We couldn&#39;t find any extensions matching your search.</p>
+                <p className="text-gray-500">Try refining your search terms or checking for typos.</p>
+              </>
+            )}
+          </div>
+        }
+        image={Empty.PRESENTED_IMAGE_SIMPLE}
+      />
+    );
+  }, [searchValue]);
 
   return (
     <div
