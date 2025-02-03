@@ -185,7 +185,7 @@ export function useRenderList(
             <motion.div
               layoutId="sel"
               transition={{bounce: 0.2, duration: 0.4, type: 'spring'}}
-              className="inset-y-0 left-0 w-[0.15rem] bg-secondary absolute"
+              className="inset-y-0 left-0 w-[0.15rem] bg-primary absolute"
             />
           )}
           <div className="flex flex-col">
