@@ -57,6 +57,7 @@ const CardReadmeModal = () => {
             onPress={() => {
               onOpenChange(false);
             }}
+            size="sm"
             variant="flat"
             color="warning"
             fullWidth>
