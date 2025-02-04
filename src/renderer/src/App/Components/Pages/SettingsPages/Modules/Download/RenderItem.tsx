@@ -14,10 +14,11 @@ import rendererIpc from '../../../../../RendererIpc';
 
 type Props = {
   item: ModulesInfo;
+  addModule: (id: string) => void;
 };
 
 /** Render available modules to install. */
-export default function RenderItem({item}: Props) {
+export default function RenderItem({item, addModule}: Props) {
   const isDarkMode = useAppState('darkMode');
   const [installing, setInstalling] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
@@ -29,6 +30,7 @@ export default function RenderItem({item}: Props) {
       if (result) {
         message.success(`${item.title} Installed successfully!`);
         dispatch(settingsActions.addNewModule(item.id));
+        addModule(item.id);
       } else {
         message.error(`Something went wrong while installing ${item.title}.`);
       }
