@@ -1,6 +1,8 @@
-import {useMemo, useState} from 'react';
+import {isEmpty, isNil} from 'lodash';
+import {Fragment, useMemo, useState} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 
+import {ChangelogItem} from '../../../../cross/CrossTypes';
 import {InstalledCard} from '../../../../cross/StorageTypes';
 import {useCardsState} from '../Redux/AI/CardsReducer';
 import {useSettingsState} from '../Redux/App/SettingsReducer';
@@ -102,3 +104,21 @@ export const useCtrlPressed = () => {
 
   return {isCtrlPressed, setIsCtrlPressed};
 };
+
+export function RenderSubItems(items?: ChangelogItem[], parentKey: string = '') {
+  if (isNil(items) || isEmpty(items)) return null;
+
+  return (
+    <ul style={{listStyleType: 'disc', paddingLeft: '20px'}}>
+      {items.map((item, index) => {
+        const currentKey = `${parentKey}_${index}`;
+        return (
+          <Fragment key={currentKey}>
+            <li>{item.label}</li>
+            {item.subitems && RenderSubItems(item.subitems, currentKey)}
+          </Fragment>
+        );
+      })}
+    </ul>
+  );
+}

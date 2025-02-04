@@ -1,38 +1,17 @@
 import {Button, ButtonGroup, Link, ScrollShadow, Tab, Tabs, User} from '@heroui/react';
 import {Divider, Modal} from 'antd';
-import {isEmpty, isNil} from 'lodash';
+import {isNil} from 'lodash';
 import {Dispatch, Fragment, Key, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {ChangelogItem, Extension_ListData} from '../../../../../../../cross/CrossTypes';
+import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {settingsActions, useSettingsState} from '../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
+import {RenderSubItems} from '../../../../Utils/UtilHooks';
 import MarkdownViewer from '../../../Reusable/MarkdownViewer';
 import {InstalledExt} from './ExtensionsPage';
-
-function useRenderItems() {
-  const renderSubItems = useCallback((items?: ChangelogItem[], parentKey: string = '') => {
-    if (isNil(items) || isEmpty(items)) return null;
-
-    return (
-      <ul style={{listStyleType: 'disc', paddingLeft: '20px'}}>
-        {items.map((item, index) => {
-          const currentKey = `${parentKey}_${index}`;
-          return (
-            <Fragment key={currentKey}>
-              <li>{item.label}</li>
-              {item.subitems && renderSubItems(item.subitems, currentKey)}
-            </Fragment>
-          );
-        })}
-      </ul>
-    );
-  }, []);
-
-  return renderSubItems;
-}
 
 export function PreviewHeader({
   selectedExt,
@@ -81,7 +60,6 @@ export function PreviewBody({
   }, [installed]);
 
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
-  const renderSubItems = useRenderItems();
 
   return (
     <div className="absolute inset-x-0 top-[6.6rem] flex flex-col bottom-12">
@@ -114,7 +92,7 @@ export function PreviewBody({
               {/* Changed List to ul here */}
               <ul style={{listStyleType: 'disc'}}>
                 <span className="text-large font-semibold">{item.title}</span>
-                {renderSubItems(item.items, `section_${index}`)}
+                {RenderSubItems(item.items, `section_${index}`)}
               </ul>
               {index < selectedExt?.changeLog.length - 1 && <Divider />}
             </Fragment>
