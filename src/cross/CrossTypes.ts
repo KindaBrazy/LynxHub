@@ -224,7 +224,7 @@ export type AppUpdateInfo = {
 };
 
 export type AppUpdateData = AppUpdateInfo & {
-  changeLog: {build: number; version: string; new: string[]; improve: string[]; bug: string[]}[];
+  changeLog: {build: number; version: string; changes: Changelogs[]}[];
 };
 
 export type FolderNames =

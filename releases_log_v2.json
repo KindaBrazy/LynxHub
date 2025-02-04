@@ -1,0 +1,26 @@
+{
+  "currentVersion": "2.1.0",
+  "currentBuild": 15,
+  "releaseDate": "2025-01-14",
+  "earlyAccess": {
+    "version": "2.2.1",
+    "build": 17,
+    "releaseDate": "2025-01-25"
+  },
+  "changeLog": [
+    {
+      "build": 17,
+      "version": "2.2.1",
+      "changes": [
+        {
+          "title": "\uD83E\uDEB2 Bug Fixes",
+          "items": [
+            {
+              "label": "Prevent modal overlay persistence when closing modals with tabs"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
