@@ -37,7 +37,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
   const avatarSrc = useCachedImageUrl(`${item.title}_module_avatar`, item.logoUrl || '');
 
   useEffect(() => {
-    if (moduleUpdateAvailable && item && moduleUpdateAvailable.includes(item.title)) {
+    if (moduleUpdateAvailable.includes(item.title)) {
       setUpdateAvailable(true);
     }
   }, [moduleUpdateAvailable, item]);
@@ -67,13 +67,18 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
         message.success(`${item.title} has been successfully uninstalled.`);
         dispatch(settingsActions.removeUpdatedModule(item.id));
         dispatch(settingsActions.removeNewModule(item.id));
-        dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value: false}));
+        dispatch(
+          settingsActions.setSettingsState({
+            key: 'moduleUpdateAvailable',
+            value: moduleUpdateAvailable.filter(m => m !== item.title),
+          }),
+        );
         removedModule(item.id);
       } else {
         message.error(`An error occurred while uninstalling ${item.title}!`);
       }
     });
-  }, [item, dispatch]);
+  }, [item, moduleUpdateAvailable, dispatch]);
 
   const update = useCallback(() => {
     setUpdating(true);
@@ -83,12 +88,17 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
       setSpinningText('');
       if (updated) {
         message.success(`${item.title} has been successfully updated!`);
-        dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value: false}));
+        dispatch(
+          settingsActions.setSettingsState({
+            key: 'moduleUpdateAvailable',
+            value: moduleUpdateAvailable.filter(m => m !== item.title),
+          }),
+        );
       } else {
         message.error(`An error occurred while updating ${item.title}.`);
       }
     });
-  }, [item]);
+  }, [item, moduleUpdateAvailable]);
 
   const actions = useCallback(() => {
     return [
