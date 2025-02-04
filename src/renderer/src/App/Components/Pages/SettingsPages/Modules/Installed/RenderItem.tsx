@@ -7,6 +7,8 @@ import {useDispatch} from 'react-redux';
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {HomeSmile_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {settingsActions, useSettingsState} from '../../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
@@ -124,6 +126,10 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
     setIsDetailsOpen(true);
   }, []);
 
+  const openHomePage = useCallback(() => {
+    dispatch(modalActions.openReadme({url: item.repoUrl, title: item.title}));
+  }, [dispatch, item]);
+
   return (
     <>
       <ModuleInfo item={item} isOpen={isDetailsOpen} setIsOpen={setIsDetailsOpen} />
@@ -150,24 +156,31 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
             classNames={{actions: 'flex'}}>
             <List.Item.Meta
               title={
-                <div className="gap-x-2 flex items-center">
-                  <Link
-                    onPress={() => {
-                      window.open(item.repoUrl);
-                    }}>
-                    {item.title}
-                  </Link>
-                  <Chip size="sm" variant="flat">
-                    V{item.version}
-                  </Chip>
-                  <Chip size="sm" variant="flat">
-                    {capitalize(extractGitUrl(item.repoUrl).owner)}
-                  </Chip>
-                  {item.owner && (
-                    <Chip size="sm" variant="flat" color="success">
-                      Owner
+                <div className="flex items-center justify-between">
+                  <div className="gap-x-2 flex">
+                    <Link
+                      onPress={() => {
+                        window.open(item.repoUrl);
+                      }}>
+                      {item.title}
+                    </Link>
+                    <Chip size="sm" variant="flat">
+                      V{item.version}
                     </Chip>
-                  )}
+                    <Chip size="sm" variant="flat">
+                      {capitalize(extractGitUrl(item.repoUrl).owner)}
+                    </Chip>
+                    {item.owner && (
+                      <Chip size="sm" variant="flat" color="success">
+                        Owner
+                      </Chip>
+                    )}
+                  </div>
+                  <div>
+                    <Button size="sm" variant="light" className="z-20" onPress={openHomePage} isIconOnly>
+                      <HomeSmile_Icon className="size-3.5" />
+                    </Button>
+                  </div>
                 </div>
               }
               className="!items-center"
