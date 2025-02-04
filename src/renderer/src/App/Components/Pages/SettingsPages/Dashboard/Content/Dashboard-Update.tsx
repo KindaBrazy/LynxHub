@@ -3,7 +3,7 @@ import {Descriptions, Divider, Space} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {WIN_RELEASE_URL} from '../../../../../../../../cross/CrossConstants';
+import {WIN_RELEASE_URL_V2} from '../../../../../../../../cross/CrossConstants';
 import {AppUpdateData} from '../../../../../../../../cross/CrossTypes';
 import {Download2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
@@ -28,7 +28,7 @@ export default function DashboardUpdate() {
 
   useEffect(() => {
     async function fetchStatus() {
-      const response = await fetch(WIN_RELEASE_URL);
+      const response = await fetch(WIN_RELEASE_URL_V2);
       const data = (await response.json()) as AppUpdateData;
       setStatusPublic({version: data.currentVersion, build: data.currentBuild, date: data.releaseDate});
       if (data.earlyAccess) {
