@@ -79,7 +79,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
     <div
       className={
         'absolute inset-y-2 rounded-lg border border-foreground/5 sm:w-64 lg:w-80 2xl:w-96' +
-        ' overflow-hidden shrink-0 transition-[width] duration-500'
+        ' overflow-hidden shrink-0 transition-[width] duration-500 bg-white dark:bg-LynxRaisinBlack'
       }>
       <Input
         type="search"
