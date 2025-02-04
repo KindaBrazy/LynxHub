@@ -31,6 +31,7 @@ export const MenuInfo = () => {
     if (showOpenFolder) {
       rendererIpc.file.openPath(webUI!.dir!);
       setIsCtrlPressed(false);
+      setMenuIsOpen(false);
     } else {
       dispatch(modalActions.openCardInfo({cardId: id, devName: name, extensionsDir, title, url: repoUrl}));
       setMenuIsOpen(false);
@@ -59,6 +60,7 @@ export const MenuHomePage = () => {
     if (isCtrlPressed) {
       window.open(repoUrl);
       setIsCtrlPressed(false);
+      setMenuIsOpen(false);
     } else {
       dispatch(modalActions.openReadme({url: repoUrl, title}));
       setMenuIsOpen(false);
