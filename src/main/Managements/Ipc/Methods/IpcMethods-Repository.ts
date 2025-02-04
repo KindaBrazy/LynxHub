@@ -38,6 +38,11 @@ export async function getRepositoryInfo(dir: string) {
   return gitManager.getRepositoryInfo(dir);
 }
 
+export async function stashDrop(dir: string): Promise<{message: string; type: 'error' | 'success' | 'info'}> {
+  gitManager = new GitManager(true);
+  return gitManager.stashAndDrop(dir);
+}
+
 export async function changeBranch(dir: string, branchName: string) {
   gitManager = new GitManager(true);
   return gitManager.changeBranch(dir, branchName);
