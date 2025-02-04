@@ -4,7 +4,7 @@ import {isEmpty, isNil} from 'lodash';
 import {Dispatch, Fragment, Key, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Extension_ChangelogItem, Extension_ListData} from '../../../../../../../cross/CrossTypes';
+import {ChangelogItem, Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {settingsActions, useSettingsState} from '../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
@@ -13,7 +13,7 @@ import MarkdownViewer from '../../../Reusable/MarkdownViewer';
 import {InstalledExt} from './ExtensionsPage';
 
 function useRenderItems() {
-  const renderSubItems = useCallback((items?: Extension_ChangelogItem[], parentKey: string = '') => {
+  const renderSubItems = useCallback((items?: ChangelogItem[], parentKey: string = '') => {
     if (isNil(items) || isEmpty(items)) return null;
 
     return (
