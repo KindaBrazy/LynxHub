@@ -232,7 +232,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
               }
               className="!items-center"
               description={item.description}
-              avatar={item.logoUrl && <Avatar size={59} src={avatarSrc} />}
+              avatar={item.logoUrl && <Avatar size={65} src={avatarSrc} className="shadow-md" />}
             />
           </List.Item>
         </Badge.Ribbon>
