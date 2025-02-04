@@ -45,6 +45,7 @@ const UpdatingNotification = () => {
           summary: {changes, insertions, deletions},
         } = result as PullResult;
         notification.success({
+          closeIcon: null,
           btn: (
             <>
               <Button
@@ -59,15 +60,16 @@ const UpdatingNotification = () => {
                   }
                   notification.destroy(`${card.devName}-updateDetails`);
                 }}
+                size="sm"
                 variant="light"
-                color="success"
-                className="cursor-default">
+                color="success">
                 Details
               </Button>
               <Button
                 onPress={() => {
                   notification.destroy(`${card.devName}-updateDetails`);
                 }}
+                size="sm"
                 color="danger"
                 variant="light"
                 className="cursor-default">
@@ -86,7 +88,9 @@ const UpdatingNotification = () => {
               size="small"
             />
           ),
+          duration: 0,
           key: `${card.devName}-updateDetails`,
+          className: 'dark:bg-foreground-100 !shadow-medium !overflow-hidden rounded-xl',
           message: (
             <span className="font-semibold">
               {card.title} ({card.devName}) Updated Successfully

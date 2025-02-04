@@ -17,7 +17,7 @@ import {
 } from '@heroui/react';
 import {Typography} from 'antd';
 import {isEmpty} from 'lodash';
-import {useCallback, useMemo} from 'react';
+import {ReactNode, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
@@ -27,7 +27,7 @@ const {Paragraph, Text} = Typography;
 
 type DetailsRow = {
   key: number;
-  name: string;
+  name: ReactNode;
   insertions: number;
   deletions: number;
 }[];
@@ -53,7 +53,7 @@ export default function UpdateDetails() {
         deletions: details.deletions[file] || 0,
         insertions: details.insertions[file] || 0,
         key: index,
-        name: file,
+        name: <p className="md:!max-w-72 lg:!max-w-full truncate overflow-hidden">{file}</p>,
       };
     });
   }, [details]);
@@ -75,16 +75,16 @@ export default function UpdateDetails() {
   return (
     <Modal
       isOpen={isOpen}
-      className="max-w-[70%]"
       scrollBehavior="inside"
+      className="max-w-[70%] overflow-hidden"
       classNames={{backdrop: '!top-10', closeButton: 'cursor-default', wrapper: '!top-10 scrollbar-hide'}}
       hideCloseButton>
       <ModalContent>
-        <ModalHeader>{title || <Text>Update Details.</Text>}</ModalHeader>
+        <ModalHeader className="justify-center bg-foreground-100">{title || <Text>Update Details.</Text>}</ModalHeader>
         <ModalBody className="scrollbar-hide">
           <Accordion
+            variant="light"
             className="mt-4"
-            variant="splitted"
             selectionMode="multiple"
             defaultExpandedKeys={['summary']}
             itemClasses={{trigger: 'cursor-default'}}
@@ -124,9 +124,9 @@ export default function UpdateDetails() {
             </AccordionItem>
           </Accordion>
         </ModalBody>
-        <ModalFooter>
+        <ModalFooter className="bg-foreground-100 py-2">
           <Button variant="light" color="success" onPress={handleClose} className="cursor-default">
-            Ok
+            Alright
           </Button>
         </ModalFooter>
       </ModalContent>
