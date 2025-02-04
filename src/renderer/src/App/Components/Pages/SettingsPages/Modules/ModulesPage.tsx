@@ -1,4 +1,5 @@
 import {Button, Tab, Tabs} from '@heroui/react';
+import {isEmpty} from 'lodash';
 import {Key, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -37,7 +38,7 @@ export default function ModulesPage() {
 
   return (
     <Page className="pb-14" id={modulesElementId}>
-      {currentTab === 'installed-tab' && updateAvailable && (
+      {currentTab === 'installed-tab' && !isEmpty(updateAvailable) && (
         <Button
           size="sm"
           variant="flat"
@@ -67,7 +68,9 @@ export default function ModulesPage() {
         {currentTab === 'installed-tab' && (
           <InstalledModules updatingAll={updatingAll} setInstalledModules={setInstalledModules} />
         )}
-        {currentTab === 'download-tab' && <DownloadModules installedModules={installedModules} />}
+        {currentTab === 'download-tab' && (
+          <DownloadModules installedModules={installedModules} setInstalledModules={setInstalledModules} />
+        )}
       </div>
     </Page>
   );

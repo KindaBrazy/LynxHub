@@ -31,6 +31,7 @@ export default function InstalledModules({setInstalledModules, updatingAll}: Pro
   const removedModule = useCallback(
     (id: string) => {
       setData(prevState => prevState.filter(data => data.id !== id));
+      setInstalledModules(prevState => prevState.filter(data => data !== id));
     },
     [setData],
   );

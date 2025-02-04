@@ -1,21 +1,24 @@
 import {Input} from '@heroui/react';
 import {Empty, List, PaginationProps} from 'antd';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
-import {useEffect, useState} from 'react';
+import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {MODULE_CONTAINER} from '../../../../../../../../cross/CrossConstants';
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {Circle_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useAppState} from '../../../../../Redux/App/AppReducer';
+import {useSettingsState} from '../../../../../Redux/App/SettingsReducer';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
 import RenderItem from './RenderItem';
 
 type Props = {
   installedModules: string[];
+  setInstalledModules: Dispatch<SetStateAction<string[]>>;
 };
 
 /** Fetch and display the list of available modules for installing */
-export default function DownloadModules({installedModules}: Props) {
+export default function DownloadModules({installedModules, setInstalledModules}: Props) {
+  const newModules = useSettingsState('newModules');
   const [pageSize, setPageSize] = useState<number>(6);
   const [data, setData] = useState<ModulesInfo[]>([]);
   const [searchedData, setSearchedData] = useState<ModulesInfo[]>([]);
@@ -23,6 +26,13 @@ export default function DownloadModules({installedModules}: Props) {
   const [isLoading, setIsLoading] = useState(true);
 
   const isDarkMode = useAppState('darkMode');
+
+  const addModule = useCallback(
+    (id: string) => {
+      setInstalledModules(prevState => [...prevState, id]);
+    },
+    [setData],
+  );
 
   useEffect(() => {
     setSearchedData(data.filter(module => searchInStrings(searchValue, [module.title, module.description])));
@@ -42,7 +52,7 @@ export default function DownloadModules({installedModules}: Props) {
     }
 
     fetchModules();
-  }, []);
+  }, [newModules]);
 
   const onPageSizeChange: PaginationProps['onShowSizeChange'] = (_, pageSize) => {
     setPageSize(pageSize);
@@ -98,7 +108,7 @@ export default function DownloadModules({installedModules}: Props) {
           loading={isLoading}
           itemLayout="vertical"
           dataSource={searchedData}
-          renderItem={item => <RenderItem item={item} />}
+          renderItem={item => <RenderItem item={item} addModule={addModule} />}
         />
       </OverlayScrollbarsComponent>
     </>
