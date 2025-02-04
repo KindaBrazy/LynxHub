@@ -1,5 +1,5 @@
-import {Button, Chip, Link} from '@heroui/react';
-import {Avatar, Badge, List, message, Popconfirm, Spin} from 'antd';
+import {Button, ButtonGroup, Chip, Link, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
+import {Avatar, Badge, List, message, Spin} from 'antd';
 import {capitalize, isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -7,7 +7,9 @@ import {useDispatch} from 'react-redux';
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {HomeSmile_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Refresh3_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {settingsActions, useSettingsState} from '../../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
@@ -30,6 +32,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
   const [spinningText, setSpinningText] = useState<string>('');
 
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
+  const [isUninstallConfirmOpen, setIsUninstallConfirmOpen] = useState<boolean>(false);
 
   const avatarSrc = useCachedImageUrl(`${item.title}_module_avatar`, item.logoUrl || '');
 
@@ -57,6 +60,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
 
   const uninstall = useCallback(() => {
     setUninstalling(true);
+    setIsUninstallConfirmOpen(false);
     rendererIpc.module.uninstallModule(item.id).then(uninstalled => {
       setUninstalling(false);
       if (uninstalled) {
@@ -99,28 +103,61 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
           {!updating && 'Update'}
         </Button>
       ) : (
-        <Button size="sm" variant="light" onPress={checkForUpdate} className="cursor-default">
+        <Button
+          size="sm"
+          variant="light"
+          onPress={checkForUpdate}
+          className="cursor-default"
+          startContent={<Refresh3_Icon />}>
           Check for Updates
         </Button>
       ),
-      <Button size="sm" key="changelog" variant="light" onPress={showInfo} className="cursor-default">
+      <Button
+        size="sm"
+        key="changelog"
+        variant="light"
+        onPress={showInfo}
+        className="cursor-default"
+        startContent={<Info_Icon />}>
         ChangeLog
       </Button>,
-      <Popconfirm
-        okType="danger"
-        okText="Uninstall"
-        cancelText="Cancel"
-        onConfirm={uninstall}
-        key="uninstall_confirm"
-        title="Are you sure you want to uninstall?"
-        okButtonProps={{type: 'primary', className: 'cursor-default'}}
-        cancelButtonProps={{type: 'primary', className: 'cursor-default'}}>
-        <Button size="sm" color="danger" variant="light" isLoading={uninstalling} className="cursor-default">
-          Uninstall
-        </Button>
-      </Popconfirm>,
+      <Popover
+        className="max-w-64"
+        key="uninstall-confirm"
+        isOpen={isUninstallConfirmOpen}
+        onOpenChange={setIsUninstallConfirmOpen}
+        showArrow>
+        <PopoverTrigger>
+          <Button
+            size="sm"
+            color="danger"
+            variant="light"
+            isLoading={uninstalling}
+            className="cursor-default"
+            startContent={<Trash_Icon />}>
+            Uninstall
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="p-4 gap-y-3">
+          <span className="font-semibold">
+            Are you sure you want to <span className="font-bold">Uninstall {item.title}</span>?
+          </span>
+          <ButtonGroup fullWidth>
+            <Button size="sm" variant="flat" color="danger" onPress={uninstall}>
+              Yes
+            </Button>
+            <Button
+              size="sm"
+              variant="flat"
+              className="cursor-default"
+              onPress={() => setIsUninstallConfirmOpen(false)}>
+              No
+            </Button>
+          </ButtonGroup>
+        </PopoverContent>
+      </Popover>,
     ];
-  }, [updateAvailable]);
+  }, [updateAvailable, isUninstallConfirmOpen]);
 
   const showInfo = useCallback(() => {
     setIsDetailsOpen(true);
