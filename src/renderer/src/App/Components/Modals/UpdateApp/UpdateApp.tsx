@@ -4,7 +4,7 @@ import {isEmpty, isNil} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {APP_BUILD_NUMBER, WIN_RELEASE_URL} from '../../../../../../cross/CrossConstants';
+import {APP_BUILD_NUMBER, WIN_RELEASE_URL_V2} from '../../../../../../cross/CrossConstants';
 import {AppUpdateData, AppUpdateInfo, ChangelogItem, UpdateDownloadProgress} from '../../../../../../cross/CrossTypes';
 import {useCardsState} from '../../../Redux/AI/CardsReducer';
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
@@ -112,7 +112,7 @@ const UpdateApp = () => {
 
     async function fetchData() {
       const result: CollapseProps['items'] = [];
-      const response = await fetch(WIN_RELEASE_URL);
+      const response = await fetch(WIN_RELEASE_URL_V2);
       const data = (await response.json()) as AppUpdateData;
 
       const isEA = updateChannel === 'ea';
