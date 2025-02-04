@@ -142,6 +142,7 @@ export type ModulesInfo = {
   updateDate: string;
 
   changeLog: string;
+  changes: Changelogs[];
 
   description: string;
 
@@ -159,14 +160,14 @@ export type ModulesInfo = {
   owner?: boolean;
 };
 
-export type Extension_ChangelogItem = {
+export type ChangelogItem = {
   label: string;
-  subitems?: Extension_ChangelogItem[];
+  subitems?: ChangelogItem[];
 };
 
-export type Extension_Changelogs = {
+export type Changelogs = {
   title: string;
-  items: Extension_ChangelogItem[];
+  items: ChangelogItem[];
 };
 
 export type Extension_ListData = {
@@ -175,7 +176,7 @@ export type Extension_ListData = {
   version: string;
   developer: string;
   description: string;
-  changeLog: Extension_Changelogs[];
+  changeLog: Changelogs[];
   updateDate: string;
   url: string;
   avatarUrl?: string;
@@ -194,7 +195,7 @@ export type ExtensionsInfo = {
 
   updateDate: string;
 
-  changeLog: Extension_Changelogs[];
+  changeLog: Changelogs[];
 
   description: string;
 

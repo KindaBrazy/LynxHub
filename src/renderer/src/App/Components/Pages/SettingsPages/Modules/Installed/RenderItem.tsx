@@ -1,24 +1,22 @@
 import {Button, Chip, Link} from '@heroui/react';
-import {Avatar, Badge, Descriptions, List, message, Modal, Popconfirm, Spin} from 'antd';
+import {Avatar, Badge, List, message, Popconfirm, Spin} from 'antd';
 import {capitalize, isEmpty} from 'lodash';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {useAppState} from '../../../../../Redux/App/AppReducer';
 import {settingsActions, useSettingsState} from '../../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useCachedImageUrl} from '../../../../../Utils/LocalStorage';
+import ModuleInfo from '../ModuleInfo';
 
 type Props = {item: ModulesInfo; updatingAll: boolean; removedModule: (id: string) => void};
 
 /** Render installed modules with options to update or uninstall, etc. */
 export default function RenderItem({item, updatingAll, removedModule}: Props) {
-  const isDarkMode = useAppState('darkMode');
   const updatedModules = useSettingsState('updatedModules');
   const moduleUpdateAvailable = useSettingsState('moduleUpdateAvailable');
   const newModules = useSettingsState('newModules');
@@ -28,6 +26,8 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
   const [updating, setUpdating] = useState<boolean>(false);
   const [uninstalling, setUninstalling] = useState<boolean>(false);
   const [spinningText, setSpinningText] = useState<string>('');
+
+  const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
 
   const avatarSrc = useCachedImageUrl(`${item.title}_module_avatar`, item.logoUrl || '');
 
@@ -101,8 +101,8 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
           Check for Updates
         </Button>
       ),
-      <Button size="sm" key="details" variant="light" onPress={showInfo} className="cursor-default">
-        Details
+      <Button size="sm" key="changelog" variant="light" onPress={showInfo} className="cursor-default">
+        ChangeLog
       </Button>,
       <Popconfirm
         okType="danger"
@@ -121,42 +121,12 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
   }, [updateAvailable]);
 
   const showInfo = useCallback(() => {
-    Modal.info({
-      content: (
-        <div className="space-y-4">
-          <span className="font-bold">{item.title}</span>
-          <Descriptions column={1} size="small" layout="horizontal" bordered>
-            <Descriptions.Item label="Version">{item.version}</Descriptions.Item>
-            <Descriptions.Item label="Changes" className="whitespace-pre-line">
-              <OverlayScrollbarsComponent
-                options={{
-                  overflow: {x: 'hidden', y: 'scroll'},
-                  scrollbars: {
-                    autoHide: 'scroll',
-                    clickScroll: true,
-                    theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-                  },
-                }}
-                className="max-h-32">
-                {item.changeLog}
-              </OverlayScrollbarsComponent>
-            </Descriptions.Item>
-            <Descriptions.Item label="Updated">{item.updateDate}</Descriptions.Item>
-            <Descriptions.Item label="Published">{item.publishDate}</Descriptions.Item>
-          </Descriptions>
-        </div>
-      ),
-      centered: true,
-      maskClosable: true,
-      okButtonProps: {className: 'cursor-default'},
-      rootClassName: 'scrollbar-hide',
-      styles: {mask: {top: '2.5rem'}},
-      wrapClassName: 'mt-10',
-    });
-  }, [isDarkMode, item]);
+    setIsDetailsOpen(true);
+  }, []);
 
   return (
     <>
+      <ModuleInfo item={item} isOpen={isDetailsOpen} setIsOpen={setIsDetailsOpen} />
       <Spin tip={spinningText} spinning={!isEmpty(spinningText)}>
         <Badge.Ribbon
           className={
