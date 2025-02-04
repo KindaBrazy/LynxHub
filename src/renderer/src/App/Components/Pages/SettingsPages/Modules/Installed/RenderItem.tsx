@@ -1,11 +1,12 @@
-import {Button, ButtonGroup, Chip, Link, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
+import {Button, ButtonGroup, Chip, Link, Popover, PopoverContent, PopoverTrigger, Tooltip} from '@heroui/react';
 import {Avatar, Badge, List, message, Spin} from 'antd';
 import {capitalize, isEmpty} from 'lodash';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
+import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
 import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
@@ -17,10 +18,16 @@ import rendererIpc from '../../../../../RendererIpc';
 import {useCachedImageUrl} from '../../../../../Utils/LocalStorage';
 import ModuleInfo from '../ModuleInfo';
 
-type Props = {item: ModulesInfo; updatingAll: boolean; removedModule: (id: string) => void};
+type Props = {
+  itemData: {dir: string; info: ModulesInfo};
+  updatingAll: boolean;
+  removedModule: (id: string) => void;
+  unloaded: SkippedPlugins[];
+};
 
 /** Render installed modules with options to update or uninstall, etc. */
-export default function RenderItem({item, updatingAll, removedModule}: Props) {
+export default function RenderItem({itemData, updatingAll, removedModule, unloaded}: Props) {
+  const item = useMemo(() => itemData.info, []);
   const updatedModules = useSettingsState('updatedModules');
   const moduleUpdateAvailable = useSettingsState('moduleUpdateAvailable');
   const newModules = useSettingsState('newModules');
@@ -35,6 +42,8 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
   const [isUninstallConfirmOpen, setIsUninstallConfirmOpen] = useState<boolean>(false);
 
   const avatarSrc = useCachedImageUrl(`${item.title}_module_avatar`, item.logoUrl || '');
+
+  const foundUnloaded = unloaded.find(u => itemData.dir === u.folderName);
 
   useEffect(() => {
     if (moduleUpdateAvailable.includes(item.title)) {
@@ -221,6 +230,13 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
                       <Chip size="sm" variant="flat" color="success">
                         Owner
                       </Chip>
+                    )}
+                    {foundUnloaded && (
+                      <Tooltip delay={300} content={foundUnloaded.message} showArrow>
+                        <Chip size="sm" variant="flat" color="warning">
+                          Unloaded
+                        </Chip>
+                      </Tooltip>
                     )}
                   </div>
                   <div>

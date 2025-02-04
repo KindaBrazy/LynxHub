@@ -4,6 +4,7 @@ import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
+import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
 import {Circle_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useAppState} from '../../../../../Redux/App/AppReducer';
 import rendererIpc from '../../../../../RendererIpc';
@@ -18,19 +19,20 @@ type Props = {
 /** List of installed modules */
 export default function InstalledModules({setInstalledModules, updatingAll}: Props) {
   const [pageSize, setPageSize] = useState<number>(6);
-  const [data, setData] = useState<ModulesInfo[]>([]);
-  const [searchedData, setSearchedData] = useState<ModulesInfo[]>([]);
+  const [data, setData] = useState<{dir: string; info: ModulesInfo}[]>([]);
+  const [searchedData, setSearchedData] = useState<{dir: string; info: ModulesInfo}[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
+  const [unloaded, setUnloaded] = useState<SkippedPlugins[]>([]);
 
   const isDarkMode = useAppState('darkMode');
 
   useEffect(() => {
-    setSearchedData(data.filter(module => searchInStrings(searchValue, [module.title, module.description])));
+    setSearchedData(data.filter(module => searchInStrings(searchValue, [module.info.title, module.info.description])));
   }, [searchValue, data]);
 
   const removedModule = useCallback(
     (id: string) => {
-      setData(prevState => prevState.filter(data => data.id !== id));
+      setData(prevState => prevState.filter(data => data.info.id !== id));
       setInstalledModules(prevState => prevState.filter(data => data !== id));
     },
     [setData],
@@ -38,10 +40,10 @@ export default function InstalledModules({setInstalledModules, updatingAll}: Pro
 
   useEffect(() => {
     rendererIpc.module.getInstalledModulesInfo().then(result => {
-      const resultInfo = result.map(item => item.info);
-      setData(resultInfo);
-      setInstalledModules(resultInfo.map(module => module.id));
+      setData(result);
+      setInstalledModules(result.map(module => module.info.id));
     });
+    rendererIpc.module.getSkipped().then(result => setUnloaded(result));
   }, []);
 
   const onShowSizeChange: PaginationProps['onShowSizeChange'] = (_, pageSize) => {
@@ -75,6 +77,9 @@ export default function InstalledModules({setInstalledModules, updatingAll}: Pro
         }}
         className="my-1.5 size-full p-4">
         <List
+          renderItem={item => (
+            <RenderItem itemData={item} unloaded={unloaded} updatingAll={updatingAll} removedModule={removedModule} />
+          )}
           locale={{
             emptyText: (
               <Empty
@@ -96,7 +101,6 @@ export default function InstalledModules({setInstalledModules, updatingAll}: Pro
           split={false}
           itemLayout="vertical"
           dataSource={searchedData}
-          renderItem={item => <RenderItem item={item} updatingAll={updatingAll} removedModule={removedModule} />}
         />
       </OverlayScrollbarsComponent>
     </>
