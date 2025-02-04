@@ -34,6 +34,8 @@ export const EXTENSION_CONTAINER: string =
 export const EXTENSION_CONTAINER_EA: string =
   'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Extensions-EA/compiled/container.json';
 export const WIN_RELEASE_URL: string = 'https://raw.githubusercontent.com/KindaBrazy/LynxHub/master/releases_log.json';
+export const WIN_RELEASE_URL_V2: string =
+  'https://raw.githubusercontent.com/KindaBrazy/LynxHub/master/releases_log_v2.json';
 export const PATRONS_DATA =
   'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Patrons/refs/heads/main/data/patrons.json';
 

@@ -21,8 +21,9 @@ type Props = {
 
 /** Render available modules to install. */
 export default function RenderItem({item, addModule}: Props) {
-  const [installing, setInstalling] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
+
+  const [installing, setInstalling] = useState<boolean>(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
 
   const install = useCallback(() => {

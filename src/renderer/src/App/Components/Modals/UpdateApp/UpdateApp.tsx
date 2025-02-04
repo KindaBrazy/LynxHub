@@ -1,11 +1,11 @@
 import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {CollapseProps, Divider, message, Typography} from 'antd';
-import {isEmpty} from 'lodash';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {isEmpty, isNil} from 'lodash';
+import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {APP_BUILD_NUMBER, WIN_RELEASE_URL} from '../../../../../../cross/CrossConstants';
-import {AppUpdateData, AppUpdateInfo, UpdateDownloadProgress} from '../../../../../../cross/CrossTypes';
+import {AppUpdateData, AppUpdateInfo, ChangelogItem, UpdateDownloadProgress} from '../../../../../../cross/CrossTypes';
 import {useCardsState} from '../../../Redux/AI/CardsReducer';
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {settingsActions} from '../../../Redux/App/SettingsReducer';
@@ -16,6 +16,28 @@ import {modalMotionProps} from '../../../Utils/Constants';
 import Downloaded from './Downloaded';
 import Downloading from './Downloading';
 import Info from './Info';
+
+function useRenderItems() {
+  const renderSubItems = useCallback((items?: ChangelogItem[], parentKey: string = '') => {
+    if (isNil(items) || isEmpty(items)) return null;
+
+    return (
+      <ul style={{paddingLeft: '20px'}}>
+        {items.map((item, index) => {
+          const currentKey = `${parentKey}_${index}`;
+          return (
+            <Fragment key={currentKey}>
+              <li>{item.label}</li>
+              {item.subitems && renderSubItems(item.subitems, currentKey)}
+            </Fragment>
+          );
+        })}
+      </ul>
+    );
+  }, []);
+
+  return renderSubItems;
+}
 
 /** Manage updating application */
 const UpdateApp = () => {
@@ -83,6 +105,8 @@ const UpdateApp = () => {
     startDownload();
   }, [startDownload]);
 
+  const renderSubItems = useRenderItems();
+
   useEffect(() => {
     listenProgress();
 
@@ -103,42 +127,18 @@ const UpdateApp = () => {
 
         if (isEmpty(data.changeLog)) return;
 
-        data.changeLog.forEach((change, index) => {
+        data.changeLog.map((change, index) => {
           if (change.build <= APP_BUILD_NUMBER || change.build > latestBuild) return;
-          const children = (
-            <Typography.Paragraph>
-              {!isEmpty(change.new) && (
-                <>
-                  <Divider>🚀 New Features</Divider>
-                  <ul>
-                    {change.new.map((news, index) => (
-                      <li key={index}>{news}</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-              {!isEmpty(change.improve) && (
-                <>
-                  <Divider>⚡ Improvements</Divider>
-                  <ul>
-                    {change.improve.map((improve, index) => (
-                      <li key={index}>{improve}</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-              {!isEmpty(change.bug) && (
-                <>
-                  <Divider>🪲 Bug Fixes</Divider>
-                  <ul>
-                    {change.bug.map((bug, index) => (
-                      <li key={index}>{bug}</li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </Typography.Paragraph>
-          );
+          const children = change.changes.map((item, index) => {
+            return (
+              <Typography.Paragraph key={index}>
+                <ul>
+                  <Divider>{item.title}</Divider>
+                  {renderSubItems(item.items, `section_${index}`)}
+                </ul>
+              </Typography.Paragraph>
+            );
+          });
           result.push({
             key: index,
             label: change.version,
