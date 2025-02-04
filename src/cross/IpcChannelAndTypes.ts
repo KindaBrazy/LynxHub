@@ -107,6 +107,8 @@ export const gitChannels = {
   cloneShallow: 'git:clone-shallow',
   cloneShallowPromise: 'git:clone-shallow-promise',
 
+  stashDrop: 'git:stash-drop',
+
   validateGitDir: 'git:validateGitDir',
 
   getRepoInfo: 'git:get-repo-info',

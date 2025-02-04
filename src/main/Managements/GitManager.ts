@@ -303,6 +303,33 @@ export default class GitManager {
     }
   }
 
+  public async stashAndDrop(dir: string): Promise<{message: string; type: 'error' | 'success' | 'info'}> {
+    const targetDir = path.resolve(dir);
+    await this.git.cwd(targetDir);
+
+    return new Promise(resolve => {
+      this.git
+        .stash()
+        .then(stashResult => {
+          if (stashResult) {
+            this.git
+              .stash(['drop'])
+              .then(() => {
+                resolve({message: stashResult, type: 'success'});
+              })
+              .catch(dropError => {
+                resolve({message: dropError, type: 'error'});
+              });
+          } else {
+            resolve({message: 'No local changes to save.', type: 'info'});
+          }
+        })
+        .catch(err => {
+          resolve({message: err.message, type: 'error'});
+        });
+    });
+  }
+
   public async resetHard(dir: string, commit: string = 'HEAD'): Promise<string> {
     const targetDirectory = path.resolve(dir);
 

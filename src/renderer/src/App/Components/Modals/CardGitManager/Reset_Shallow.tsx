@@ -10,10 +10,12 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
   const [isResetting, setIsResetting] = useState<boolean>(false);
 
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState<boolean>(false);
-  const [isShallowConfimOpen, setIsShallowConfimOpen] = useState<boolean>(false);
+  const [isShallowConfirmOpen, setIsShallowConfirmOpen] = useState<boolean>(false);
+
+  const [isStashingDrop, setIsStashingDrop] = useState<boolean>(false);
 
   const unShallow = () => {
-    setIsShallowConfimOpen(false);
+    setIsShallowConfirmOpen(false);
     setIsLoadingShallow(true);
     rendererIpc.git
       .unShallow(dir)
@@ -38,6 +40,24 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
       .finally(() => setIsResetting(false));
   };
 
+  const stashDrop = () => {
+    setIsStashingDrop(true);
+    rendererIpc.git
+      .stashDrop(dir)
+      .then(result => {
+        if (result.type === 'success') {
+          message.success(result.message);
+        } else if (result.type === 'info') {
+          message.info(result.message);
+        } else {
+          message.error(result.message);
+        }
+      })
+      .finally(() => {
+        setIsStashingDrop(false);
+      });
+  };
+
   return (
     <ButtonGroup fullWidth>
       <Popover isOpen={isResetConfirmOpen} onOpenChange={setIsResetConfirmOpen} showArrow>
@@ -59,7 +79,7 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
         </PopoverContent>
       </Popover>
       {isShallow && (
-        <Popover isOpen={isShallowConfimOpen} onOpenChange={setIsShallowConfimOpen} showArrow>
+        <Popover isOpen={isShallowConfirmOpen} onOpenChange={setIsShallowConfirmOpen} showArrow>
           <PopoverTrigger>
             <Button variant="flat" color="secondary" isLoading={isLoadingShallow} fullWidth>
               UnShallow
@@ -78,6 +98,9 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
           </PopoverContent>
         </Popover>
       )}
+      <Button variant="flat" onPress={stashDrop} isLoading={isStashingDrop}>
+        Stash & Drop
+      </Button>
     </ButtonGroup>
   );
 }

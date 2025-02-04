@@ -114,6 +114,12 @@ const rendererIpc = {
     offProgress: () => ipc.removeAllListeners(gitChannels.onProgress),
 
     pull: (repoDir: string, id: string): void => ipc.send(gitChannels.pull, repoDir, id),
+    stashDrop: (
+      dir: string,
+    ): Promise<{
+      message: string;
+      type: 'error' | 'success' | 'info';
+    }> => ipc.invoke(gitChannels.stashDrop, dir),
   },
 
   /** Managing app modules */

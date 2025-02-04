@@ -59,6 +59,7 @@ import {
   getRepositoryInfo,
   pullRepo,
   resetHard,
+  stashDrop,
   unShallow,
   validateGitDir,
 } from './Methods/IpcMethods-Repository';
@@ -117,6 +118,8 @@ function git() {
     (_, url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string) =>
       cloneShallowPromise(url, directory, singleBranch, depth, branch),
   );
+
+  ipcMain.handle(gitChannels.stashDrop, (_, dir: string) => stashDrop(dir));
   ipcMain.handle(gitChannels.getRepoInfo, (_, dir: string) => getRepositoryInfo(dir));
   ipcMain.handle(gitChannels.changeBranch, (_, dir: string, branchName: string) => changeBranch(dir, branchName));
   ipcMain.handle(gitChannels.unShallow, (_, dir: string) => unShallow(dir));
