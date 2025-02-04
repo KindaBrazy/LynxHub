@@ -24,7 +24,7 @@ export function PreviewHeader({
     <div
       className={
         'absolute inset-x-0 flex flex-col p-4 gap-y-2 top-0 h-[6.3rem]' +
-        ' overflow-y-scroll scrollbar-hide border-foreground/10'
+        ' overflow-y-scroll scrollbar-hide bg-white dark:bg-LynxRaisinBlack rounded-xl'
       }>
       <User
         className="self-start"
@@ -62,12 +62,12 @@ export function PreviewBody({
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
 
   return (
-    <div className="absolute inset-x-0 top-[6.6rem] flex flex-col bottom-12">
+    <div className="absolute inset-x-0 top-[7rem] flex flex-col bottom-12">
       <Tabs
         size="sm"
         variant="solid"
+        className="mb-2"
         color="secondary"
-        className="px-4 mb-2"
         onSelectionChange={setCurrentTab}
         selectedKey={currentTab.toString()}
         fullWidth>
@@ -81,23 +81,22 @@ export function PreviewBody({
           <ReplaceMd repoPath={selectedExt?.url || ''} />
         ))}
       {currentTab === 'changelog' && (
-        <ScrollShadow
-          className={
-            'absolute top-10 bottom-5 inset-x-0 flex flex-col justify-start' +
-            ' items-start pt-8 pl-6 gap-y-4 font-Nunito'
-          }
-          hideScrollBar>
-          {selectedExt?.changeLog.map((item, index) => (
-            <Fragment key={`section_${index}`}>
-              {/* Changed List to ul here */}
-              <ul style={{listStyleType: 'disc'}}>
-                <span className="text-large font-semibold">{item.title}</span>
-                {RenderSubItems(item.items, `section_${index}`)}
-              </ul>
-              {index < selectedExt?.changeLog.length - 1 && <Divider />}
-            </Fragment>
-          ))}
-        </ScrollShadow>
+        <div className="absolute top-11 bottom-1 inset-x-0 bg-white dark:bg-LynxRaisinBlack rounded-xl">
+          <ScrollShadow
+            className={'size-full flex flex-col justify-start items-start pt-8 pl-6 gap-y-4 font-Nunito'}
+            hideScrollBar>
+            {selectedExt?.changeLog.map((item, index) => (
+              <Fragment key={`section_${index}`}>
+                {/* Changed List to ul here */}
+                <ul style={{listStyleType: 'disc'}}>
+                  <span className="text-large font-semibold">{item.title}</span>
+                  {RenderSubItems(item.items, `section_${index}`)}
+                </ul>
+                {index < selectedExt?.changeLog.length - 1 && <Divider />}
+              </Fragment>
+            ))}
+          </ScrollShadow>
+        </div>
       )}
     </div>
   );
