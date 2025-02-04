@@ -37,7 +37,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
   const avatarSrc = useCachedImageUrl(`${item.title}_module_avatar`, item.logoUrl || '');
 
   useEffect(() => {
-    if (moduleUpdateAvailable.includes(item.title)) {
+    if (moduleUpdateAvailable && item && moduleUpdateAvailable.includes(item.title)) {
       setUpdateAvailable(true);
     }
   }, [moduleUpdateAvailable, item]);
@@ -179,7 +179,7 @@ export default function RenderItem({item, updatingAll, removedModule}: Props) {
                 : 'opacity-0'
             } ` + `transition duration-500`
           }
-          placement="end"
+          placement="start"
           text={updatedModules.includes(item.id) ? 'Updated' : 'New'}
           color={updatedModules.includes(item.id) ? 'green' : 'cyan'}>
           <List.Item
