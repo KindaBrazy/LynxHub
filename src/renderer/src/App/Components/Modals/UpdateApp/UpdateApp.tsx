@@ -1,11 +1,11 @@
 import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {CollapseProps, Divider, message, Typography} from 'antd';
-import {isEmpty, isNil} from 'lodash';
-import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
+import {isEmpty} from 'lodash';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {APP_BUILD_NUMBER, WIN_RELEASE_URL_V2} from '../../../../../../cross/CrossConstants';
-import {AppUpdateData, AppUpdateInfo, ChangelogItem, UpdateDownloadProgress} from '../../../../../../cross/CrossTypes';
+import {AppUpdateData, AppUpdateInfo, UpdateDownloadProgress} from '../../../../../../cross/CrossTypes';
 import {useCardsState} from '../../../Redux/AI/CardsReducer';
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {settingsActions} from '../../../Redux/App/SettingsReducer';
@@ -13,31 +13,10 @@ import {AppDispatch} from '../../../Redux/Store';
 import {useUserState} from '../../../Redux/User/UserReducer';
 import rendererIpc from '../../../RendererIpc';
 import {modalMotionProps} from '../../../Utils/Constants';
+import {RenderSubItems} from '../../../Utils/UtilHooks';
 import Downloaded from './Downloaded';
 import Downloading from './Downloading';
 import Info from './Info';
-
-function useRenderItems() {
-  const renderSubItems = useCallback((items?: ChangelogItem[], parentKey: string = '') => {
-    if (isNil(items) || isEmpty(items)) return null;
-
-    return (
-      <ul style={{paddingLeft: '20px'}}>
-        {items.map((item, index) => {
-          const currentKey = `${parentKey}_${index}`;
-          return (
-            <Fragment key={currentKey}>
-              <li>{item.label}</li>
-              {item.subitems && renderSubItems(item.subitems, currentKey)}
-            </Fragment>
-          );
-        })}
-      </ul>
-    );
-  }, []);
-
-  return renderSubItems;
-}
 
 /** Manage updating application */
 const UpdateApp = () => {
@@ -105,8 +84,6 @@ const UpdateApp = () => {
     startDownload();
   }, [startDownload]);
 
-  const renderSubItems = useRenderItems();
-
   useEffect(() => {
     listenProgress();
 
@@ -134,7 +111,7 @@ const UpdateApp = () => {
               <Typography.Paragraph key={index}>
                 <ul>
                   <Divider>{item.title}</Divider>
-                  {renderSubItems(item.items, `section_${index}`)}
+                  {RenderSubItems(item.items, `section_${index}`)}
                 </ul>
               </Typography.Paragraph>
             );
