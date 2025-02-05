@@ -5,6 +5,7 @@ export const APP_VERSION: string = packageJson.version;
 export const APP_BUILD_NUMBER: number = packageJson.appDetails.buildNumber;
 
 export const APP_DESCRIPTION: string = packageJson.description;
+export const APP_AUTHOR_NAME: string = packageJson.author.name;
 export const APP_DETAILED_DESCRIPTION: string = packageJson.appDetails.detailedDescription;
 
 export const RELEASES_PAGE = `${packageJson.homepage}/releases`;
