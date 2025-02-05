@@ -11,6 +11,7 @@ import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {RenderSubItems} from '../../../../Utils/UtilHooks';
 import MarkdownViewer from '../../../Reusable/MarkdownViewer';
+import SecurityWarning from '../SecurityWarning';
 import {InstalledExt} from './ExtensionsPage';
 
 export function PreviewHeader({
@@ -119,6 +120,7 @@ export function PreviewFooter({
   const [uninstalling, setUninstalling] = useState<boolean>(false);
 
   const [isCompatible, setIsCompatible] = useState<boolean>(true);
+  const [isSecOpen, setIsSecOpen] = useState<boolean>(false);
 
   useEffect(() => {
     rendererIpc.win.getSystemInfo().then(result => {
@@ -229,8 +231,20 @@ export function PreviewFooter({
     }
   }, [selectedExt]);
 
+  const handleInstall = () => {
+    setIsSecOpen(true);
+  };
+
   return (
     <div className="absolute bottom-0 inset-x-0">
+      <SecurityWarning
+        type="extension"
+        isOpen={isSecOpen}
+        setIsOpen={setIsSecOpen}
+        onAgree={installExtension}
+        title={selectedExt?.title}
+        owner={selectedExt?.developer}
+      />
       <ButtonGroup variant="flat" fullWidth>
         {installed ? (
           <>
@@ -246,8 +260,8 @@ export function PreviewFooter({
         ) : (
           <Button
             isLoading={installing}
+            onPress={handleInstall}
             isDisabled={!isCompatible}
-            onPress={installExtension}
             color={isCompatible ? 'success' : 'warning'}>
             {isCompatible ? 'Install' : 'Not Compatible'}
           </Button>
