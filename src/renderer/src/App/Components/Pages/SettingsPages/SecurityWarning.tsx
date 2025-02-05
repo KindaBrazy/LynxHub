@@ -1,6 +1,7 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
+import {APP_AUTHOR_NAME} from '../../../../../../cross/CrossConstants';
 import {ShieldWarning_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 
 type Props = {
@@ -19,12 +20,15 @@ export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title
   useEffect(() => {
     if (isOpen) {
       const savedDontShow = window.localStorage.getItem(storeKey);
-      if (savedDontShow !== null && JSON.parse(savedDontShow) === true) {
+      if (
+        owner?.toLowerCase() === APP_AUTHOR_NAME.toLowerCase() ||
+        (savedDontShow !== null && JSON.parse(savedDontShow) === true)
+      ) {
         setIsOpen(false);
         onAgree();
       }
     }
-  }, [isOpen, storeKey]);
+  }, [isOpen, storeKey, owner]);
 
   const handleAgree = () => {
     if (dontShow) window.localStorage.setItem(storeKey, 'true');
