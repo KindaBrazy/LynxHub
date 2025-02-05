@@ -12,6 +12,7 @@ import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
 import {settingsActions} from '../../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
+import SecurityWarning from '../../SecurityWarning';
 import ModuleInfo from '../ModuleInfo';
 
 type Props = {
@@ -25,6 +26,7 @@ export default function RenderItem({item, addModule}: Props) {
 
   const [installing, setInstalling] = useState<boolean>(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
+  const [isSecOpen, setIsSecOpen] = useState<boolean>(false);
 
   const install = useCallback(() => {
     setInstalling(true);
@@ -40,6 +42,10 @@ export default function RenderItem({item, addModule}: Props) {
     });
   }, [item.repoUrl, item.title, item.id, dispatch]);
 
+  const handleInstall = () => {
+    setIsSecOpen(true);
+  };
+
   const showInfo = useCallback(() => {
     setIsDetailsOpen(true);
   }, []);
@@ -50,6 +56,14 @@ export default function RenderItem({item, addModule}: Props) {
 
   return (
     <>
+      <SecurityWarning
+        type="module"
+        onAgree={install}
+        isOpen={isSecOpen}
+        title={item.title}
+        setIsOpen={setIsSecOpen}
+        owner={extractGitUrl(item.repoUrl).owner}
+      />
       <ModuleInfo item={item} isOpen={isDetailsOpen} setIsOpen={setIsDetailsOpen} />
       <List.Item
         className={
@@ -63,8 +77,8 @@ export default function RenderItem({item, addModule}: Props) {
             key="install"
             variant="flat"
             color="success"
-            onPress={install}
             isLoading={installing}
+            onPress={handleInstall}
             isDisabled={installing}
             startContent={<Download_Icon />}>
             {!installing && 'Install'}
