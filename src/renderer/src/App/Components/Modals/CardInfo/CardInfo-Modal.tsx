@@ -76,16 +76,16 @@ const CardInfoModalNew = () => {
             <CardInfoDescription folders={openFolders} descriptions={cardInfoDescriptions} />
           )}
         </ModalBody>
-        <ModalFooter className="border-t border-foreground/10 bg-foreground-100">
+        <ModalFooter>
           <Button
             onPress={() => {
               onOpenChange(false);
               onClose();
             }}
-            color="danger"
-            variant="flat"
-            fullWidth>
-            <span className="font-semibold">Close</span>
+            color="warning"
+            variant="light"
+            className="cursor-default">
+            Close
           </Button>
         </ModalFooter>
       </ModalContent>

@@ -52,16 +52,15 @@ const CardReadmeModal = () => {
               <ReplaceMd repoPath={url} rounded={false} />
             ))}
         </ModalBody>
-        <ModalFooter className="border-t border-foreground/10 bg-foreground-100">
+        <ModalFooter>
           <Button
             onPress={() => {
               onOpenChange(false);
             }}
-            size="sm"
-            variant="flat"
+            variant="light"
             color="warning"
-            fullWidth>
-            <span className="font-semibold">Close</span>
+            className="cursor-default">
+            Close
           </Button>
         </ModalFooter>
       </ModalContent>
