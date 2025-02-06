@@ -32,8 +32,11 @@ export default function TerminalCommandItem({defaultText, editCommand, focus, in
 
   return (
     <Card
-      shadow="none"
-      className="flex h-[38px] flex-row items-center justify-center !transition-opacity !duration-300 hover:opacity-80">
+      className={
+        'flex h-[38px] flex-row items-center justify-center !transition-opacity' +
+        ' !duration-300 hover:opacity-80 animate-appearance-in'
+      }
+      shadow="none">
       <Input
         addonAfter={
           <Button type="text" size="small" onClick={remove} icon={<Close_Icon />} className="cursor-default" danger />
