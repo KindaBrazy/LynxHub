@@ -1,13 +1,89 @@
 {
-  "currentVersion": "2.1.0",
-  "currentBuild": 15,
-  "releaseDate": "2025-01-14",
+  "currentVersion": "2.2.1",
+  "currentBuild": 17,
+  "releaseDate": "2025-02-06",
   "earlyAccess": {
-    "version": "2.2.1",
-    "build": 17,
-    "releaseDate": "2025-01-25"
+    "version": "2.3.0",
+    "build": 18,
+    "releaseDate": "2025-02-06"
   },
   "changeLog": [
+    {
+      "build": 18,
+      "version": "2.3.0",
+      "changes": [
+        {
+          "title": " ⚡ Improvements",
+          "items": [
+            {
+              "label": "Repositioned \"Close\" and \"Terminate AI\" confirmation pop-up."
+            },
+            {
+              "label": "Improved module update checking behavior and performance."
+            },
+            {
+              "label": "Added stash and drop functionality to card repository menu."
+            },
+            {
+              "label": "Added animation to command items upon addition."
+            },
+            {
+              "label": "Removed markdown viewer background."
+            },
+            {
+              "label": "Removed modals footer background; close button is now minimal."
+            }
+          ]
+        },
+        {
+          "title": "\uD83E\uDEB2 Bug Fixes",
+          "items": [
+            {
+              "label": "Refresh modules list after installing or uninstalling a module."
+            }
+          ]
+        },
+        {
+          "title": "\uD83D\uDCCC Minor Changes",
+          "items": [
+            {
+              "label": "Added security notice for extensions and modules installation."
+            },
+            {
+              "label": "Extensions Page:",
+              "subitems": [
+                {
+                  "label": "Added skeleton loading, updated panel colors, and changed selected item indicator."
+                },
+                {
+                  "label": "Modified tab appearance and improved empty search result text, and updated styles."
+                }
+              ]
+            },
+            {
+              "label": "Modules Page:",
+              "subitems": [
+                {
+                  "label": "Added changelog viewer, displays unloaded state, updated \"Update All\" button, and improved list item design."
+                },
+                {
+                  "label": "Smaller tabs, button icons, homepage link, and fixed update checking with no modules."
+                }
+              ]
+            },
+            {
+              "label": "Use custom array for app release log."
+            },
+            {
+              "label": "Updated design of update details and notification."
+            },
+            {
+              "label": "Close menu on \"Open Folder\" or \"Open Homepage\"."
+            }
+          ]
+        }
+      ]
+    },
     {
       "build": 17,
       "version": "2.2.1",
