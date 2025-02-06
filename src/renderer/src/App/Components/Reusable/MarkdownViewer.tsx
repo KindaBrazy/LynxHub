@@ -25,6 +25,7 @@ import {useAppState} from '../../Redux/App/AppReducer';
 type MarkdownViewerProps = {
   repoUrl: string;
   rounded?: boolean;
+  showBackground?: boolean;
 };
 
 type CustomDivProps = HTMLAttributes<HTMLDivElement> & {
@@ -35,7 +36,7 @@ type CustomCodeProps = HTMLAttributes<HTMLElement> & {
   'data-inline'?: boolean;
 };
 
-const MarkdownViewer = ({repoUrl, rounded = true}: MarkdownViewerProps) => {
+const MarkdownViewer = ({repoUrl, rounded = true, showBackground}: MarkdownViewerProps) => {
   const [content, setContent] = useState<string>('');
   const isDarkMode = useAppState('darkMode');
   const [loading, setLoading] = useState<boolean>(true);
@@ -221,8 +222,12 @@ const MarkdownViewer = ({repoUrl, rounded = true}: MarkdownViewerProps) => {
           theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
         },
       }}
-      className={`size-full ${rounded && 'rounded-xl'} bg-white dark:bg-[#0d1117]`}>
-      <div className="prose prose-slate mr-4 max-w-none rounded-xl bg-white p-8 dark:prose-invert dark:bg-[#0d1117]">
+      className={`size-full ${rounded && 'rounded-xl'}`}>
+      <div
+        className={
+          `prose prose-slate mr-4 max-w-none rounded-xl p-8` +
+          ` dark:prose-invert ${showBackground && 'bg-white dark:bg-[#0d1117]'}`
+        }>
         <ReactMarkdown
           components={components}
           remarkPlugins={[remarkGfm]}
