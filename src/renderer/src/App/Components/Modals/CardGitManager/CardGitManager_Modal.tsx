@@ -88,8 +88,8 @@ export default function CardGitManager_Modal() {
             </div>
           )}
         </ModalBody>
-        <ModalFooter className="border-t border-foreground/10 bg-foreground-100">
-          <Button variant="flat" color="warning" onPress={onOpenChange} fullWidth>
+        <ModalFooter>
+          <Button variant="light" color="warning" onPress={onOpenChange} className="cursor-default">
             <span className="font-semibold">Close</span>
           </Button>
         </ModalFooter>

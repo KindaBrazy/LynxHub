@@ -95,17 +95,12 @@ const LaunchConfig = memo(() => {
 
         <ModalFooter>
           {currentTab === tabs.arguments && (
-            <Button
-              variant="light"
-              color="success"
-              onPress={saveArguments}
-              isLoading={isSavingArgs}
-              className="cursor-default">
+            <Button variant="light" color="success" onPress={saveArguments} isLoading={isSavingArgs}>
               {!isSavingArgs && 'Save Arguments'}
             </Button>
           )}
-          <Button color="danger" variant="light" onPress={onClose} className="cursor-default">
-            {currentTab === tabs.arguments ? 'Cancel' : 'Close'}
+          <Button color="warning" variant="light" onPress={onClose} className="cursor-default">
+            Close
           </Button>
         </ModalFooter>
       </ModalContent>

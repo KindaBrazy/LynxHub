@@ -66,7 +66,7 @@ const CardExtensions = () => {
       scrollBehavior="inside"
       motionProps={modalMotionProps}
       classNames={{backdrop: '!top-10', wrapper: '!top-10 scrollbar-hide'}}
-      className="max-w-[80%] border-2 border-foreground/10 dark:border-foreground/5"
+      className="max-w-[80%] border-2 border-foreground/10 dark:border-foreground/5 overflow-hidden"
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="flex-col gap-y-2 text-center">
@@ -131,7 +131,7 @@ const CardExtensions = () => {
                   {!isUpdateAvailable ? 'No Updates Available' : isUpdatingAll ? 'Updating...' : 'Update All'}
                 </Button>
               )}
-              <Button color="danger" variant="light" onPress={onClose} className="cursor-default">
+              <Button color="warning" variant="light" onPress={onClose} className="cursor-default">
                 Close
               </Button>
             </div>
