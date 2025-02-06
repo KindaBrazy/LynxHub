@@ -19,25 +19,21 @@
 
 </div>
 
-> [!TIP]
-> 💡 **Get early access to LynxHub** features, extensions, and modules. Support development and unlock exclusive
-> benefits by joining my [Patreon](https://www.patreon.com/LynxHub).
-
 ## 🔗 Download
 
 Get started with LynxHub by downloading the latest version for your platform.
 
 | Channel      | Version                                                                              | Date       |
 |--------------|--------------------------------------------------------------------------------------|------------|
-| Early Access | [**V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.2.1_Early-Access) | 2025-01-25 |
-| Release      | [**V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.1.0)              | 2025-01-14 |
+| Early Access | [**V2.3.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.3.0_Early-Access) | 2025-02-06 |
+| Release      | [**V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.2.1)              | 2025-02-06 |
 
 | Platform                         | x64                                                                                                              | arm64                                                                                                            |
 |----------------------------------|------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
-| **Windows 10/11** (.exe)         | [**📦 V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-win_x64-Setup.exe) | ❌ Not Available                                                                                                  |
-| **macOS (Beta)** - (.dmg)        | [**❤️‍🔥 Early-Access**](https://www.patreon.com/LynxHub)                                                        | ❌ Not Available                                                                                                  |
-| **Debian, Ubuntu** (.deb)        | [**📦 V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-linux_amd64.deb)   | [**📦 V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-linux_arm64.deb)   |
-| **Red Hat, Fedora, SUSE** (.rpm) | [**📦 V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-linux_x86_64.rpm)  | [**📦 V2.1.0**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.1.0/LynxHub-V2.1.0-linux_aarch64.rpm) |
+| **Windows 10/11** (.exe)         | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-win_x64-Setup.exe) | ❌ Not Available                                                                                                  |
+| **Debian, Ubuntu** (.deb)        | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_amd64.deb)   | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_arm64.deb)   |
+| **Red Hat, Fedora, SUSE** (.rpm) | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_x86_64.rpm)  | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_aarch64.rpm) |
+| **macOS (Beta)** - (.dmg)        | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-mac.dmg)           | ❌ Not Available                                                                                                  |
 
 ## 🗂️ Table of Contents
 
@@ -92,11 +88,9 @@ Here's what you can expect:
     - Dark and light themes available
     - Pin favorite AI interfaces to the home page for easy access
 
-<div align="center">
-
-**Stay tuned for exciting upcoming features!**
-
-</div>
+> [!TIP]
+> 💡 **Get early access to LynxHub** features, extensions, and modules. Support development and unlock exclusive
+> benefits by joining my [Patreon](https://www.patreon.com/LynxHub).
 
 ## 🧩 Extensions
 

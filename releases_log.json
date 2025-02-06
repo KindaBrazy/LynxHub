@@ -1,13 +1,37 @@
 {
-  "currentVersion": "2.1.0",
-  "currentBuild": 15,
-  "releaseDate": "2025-01-14",
+  "currentVersion": "2.2.1",
+  "currentBuild": 17,
+  "releaseDate": "2025-02-06",
   "earlyAccess": {
-    "version": "2.2.1",
-    "build": 17,
-    "releaseDate": "2025-01-25"
+    "version": "2.3.0",
+    "build": 18,
+    "releaseDate": "2025-02-06"
   },
   "changeLog": [
+    {
+      "build": 18,
+      "version": "2.3.0",
+      "improve": [
+        "Repositioned \"Close\" and \"Terminate AI\" confirmation pop-up.",
+        "Improved module update checking behavior and performance.",
+        "Added stash and drop functionality to card repository menu.",
+        "Added animation to command items upon addition.",
+        "Removed markdown viewer background.",
+        "Removed modals footer background; close button is now minimal.",
+        "Added security notice for extensions and modules installation.",
+        "Extensions Page",
+        " - Added skeleton loading, updated panel colors, and changed selected item indicator.",
+        " - Modified tab appearance and improved empty search result text, and updated styles.",
+        "Modules Page",
+        " - Added changelog viewer, displays unloaded state, updated \"Update All\" button, and improved list item design.",
+        " - Smaller tabs, button icons, homepage link, and fixed update checking with no modules.",
+        "Updated design of update details and notification.",
+        "Close menu on \"Open Folder\" or \"Open Homepage\"."
+      ],
+      "bug": [
+        "Refresh modules list after installing or uninstalling a module."
+      ]
+    },
     {
       "build": 17,
       "version": "2.2.1",
