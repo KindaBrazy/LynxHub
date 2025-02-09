@@ -1,9 +1,10 @@
-import {Chip, Modal, ModalBody, ModalContent, ModalHeader} from '@heroui/react';
+import {Button, Chip, Modal, ModalBody, ModalContent, ModalHeader} from '@heroui/react';
 import {Divider} from 'antd';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, Fragment, SetStateAction} from 'react';
 
 import {ModulesInfo} from '../../../../../../../cross/CrossTypes';
+import {CloseSimple_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
 import {useAppState} from '../../../../Redux/App/AppReducer';
 import {RenderSubItems} from '../../../../Utils/UtilHooks';
 
@@ -14,12 +15,17 @@ export default function ModuleInfo({item, isOpen, setIsOpen}: Props) {
 
   return (
     <Modal
+      closeButton={
+        <Button variant="light" color="warning" isIconOnly>
+          <CloseSimple_Icon className="size-4" />
+        </Button>
+      }
       shadow="none"
       isOpen={isOpen}
       scrollBehavior="inside"
       onOpenChange={setIsOpen}
       className="border-1 border-foreground/10"
-      classNames={{backdrop: '!top-10', wrapper: '!top-10'}}>
+      classNames={{backdrop: '!top-10', wrapper: '!top-10', closeButton: 'cursor-default m-1'}}>
       <ModalContent>
         <ModalHeader className="justify-center">{item.title}</ModalHeader>
         <ModalBody className="mb-8">
