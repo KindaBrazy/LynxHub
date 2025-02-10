@@ -18,6 +18,9 @@ const config = {
   asarUnpack: ['resources/**'],
   npmRebuild: false,
   artifactName: '${productName}-V${version}-${os}_${arch}.${ext}',
+  win: {
+    target: [{target: 'nsis', arch: ['x64', 'arm64']}],
+  },
   nsis: {
     artifactName: '${productName}-V${version}-${os}_${arch}-Setup.${ext}',
     shortcutName: '${productName}',
@@ -48,6 +51,10 @@ const config = {
       NSDocumentsFolderUsageDescription: 'LynxHub uses the Documents folder to store application data.',
     },
     notarize: false,
+    target: [
+      {target: 'dmg', arch: ['x64', 'arm64']},
+      {target: 'zip', arch: ['x64', 'arm64']},
+    ],
   },
   publish: {
     provider: 'github',
