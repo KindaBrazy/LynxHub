@@ -35,10 +35,10 @@ Get started with LynxHub by downloading the latest version for your platform.
 | **Red Hat, Fedora, SUSE** (.rpm) | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_x86_64.rpm)  | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_aarch64.rpm) |
 | **macOS (Beta)** - (.dmg)        | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-mac.dmg)           | ❌ Not Available                                                                                                  |
 
-> [!NOTE]
+> [!IMPORTANT]
 > **Important Note for macOS Users:**
 >
-> The macOS release is currently staged as **beta**.I don't have access to a real macOS hardware for testing, and while
+> The macOS release is currently staged as **beta**.I don't have access to real macOS hardware for testing, and while
 > the build has been tested in a virtual machine, I need real-world feedback to ensure performance and stability.I
 > appreciate your help in providing feedback.
 
@@ -108,7 +108,7 @@ Here's what you can expect:
 
 ![Python Toolkit Screenshot](https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/compiled/resources/python.png)
 
-#### 🐍 Python Management
+**`🐍 Python Management`**
 
 - **Auto-Detect Installed Pythons:** Automatically detects all installed Python versions, including those installed via
   Conda.
@@ -118,7 +118,7 @@ Here's what you can expect:
 - **View Python Details:** View detailed information about installed Pythons, including version, install path, installed
   packages count, and disk usage.
 
-#### 🌐 Virtual Environment
+**`🌐 Virtual Environment`**
 
 - **Locate Existing Venvs:** Locate and list existing virtual environments.
 - **Create New Venv:** Create new virtual environments with selected Python versions (official or Conda).
@@ -128,7 +128,7 @@ Here's what you can expect:
   installed packages count, disk usage, and associated AIs.
 - **Manage Venv Packages:** Manage packages installed in virtual environments.
 
-#### 📦 Package Manager
+**`📦 Package Manager`**
 
 - **Check for Updates:**
     - Check for updates for all installed packages.
@@ -144,17 +144,17 @@ Here's what you can expect:
 - **Manage Requirements:**
     - Manage requirements files and their associated packages.
 
-#### 📝 Requirements Manager
+**`📝 Requirements Manager`**
 
 - **Select and Change Requirements File:** Easily switch between different requirements files.
 - **Add, Remove, and Change Requirements:** Modify requirements in a user-friendly interface.
 
-#### 🤖 AI Integration
+**`🤖 AI Integration`**
 
 - **New Menu Item for Package and Requirement Management:** Direct access to package and requirement management from the
   AI menu.
 
-#### 🛠️ Tools Page Integration
+**`🛠️ Tools Page Integration`**
 
 - **New Card for Individual Toolkit:** Open and manage individual pythons from a dedicated card on the tools page.
 
@@ -167,7 +167,7 @@ Here's what you can expect:
 <details>
 <summary><kbd>Available AI Interfaces</kbd></summary>
 
-#### 🖼️ Image Generation
+**`🖼️ Image Generation`**
 
 | Developer                                                                                          | Project                 | GitHub                                                                     |
 |----------------------------------------------------------------------------------------------------|-------------------------|----------------------------------------------------------------------------|
@@ -184,7 +184,7 @@ Here's what you can expect:
 | <img height='20' src="https://avatars.githubusercontent.com/u/3390934?s=20&v=4"> Nerogar           | OneTrainer              | [Link](https://github.com/Nerogar/OneTrainer)                              |
 | <img height='20' src="https://avatars.githubusercontent.com/u/113954515?s=20&v=4"> InvokeAI        | InvokeAI                | [Link](https://github.com/invoke-ai/InvokeAI)                              |
 
-#### 📝 Text Generation
+**`📝 Text Generation`**
 
 | Developer                                                                                      | Project         | GitHub                                                     |
 |------------------------------------------------------------------------------------------------|-----------------|------------------------------------------------------------|
@@ -193,7 +193,7 @@ Here's what you can expect:
 | <img height='20' src="https://avatars.githubusercontent.com/u/158137808?s=20&v=4"> Open-WebUI  | Open WebUI      | [Link](https://github.com/open-webui/open-webui)           |
 | <img height='20' src="https://avatars.githubusercontent.com/u/827993?s=20&v=4"> ParisNeo       | LoLLMs          | [Link](https://github.com/ParisNeo/lollms-webui)           |
 
-#### 🎵 Audio Generation
+**`🎵 Audio Generation`**
 
 | Developer                                                                                 | Project          | GitHub                                                  |
 |-------------------------------------------------------------------------------------------|------------------|---------------------------------------------------------|
@@ -264,7 +264,7 @@ Native modules compile automatically during installation.
 ## 🤝 Contributing
 
 As a solo maintainer, I welcome and value all contributions to this project. Your participation helps improve the
-application for everyone. We accept various contribution types:
+application for everyone. I accept various contribution types:
 
 **Core Contribution Areas**
 
