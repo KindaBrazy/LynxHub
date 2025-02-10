@@ -35,6 +35,13 @@ Get started with LynxHub by downloading the latest version for your platform.
 | **Red Hat, Fedora, SUSE** (.rpm) | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_x86_64.rpm)  | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_aarch64.rpm) |
 | **macOS (Beta)** - (.dmg)        | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-mac.dmg)           | ❌ Not Available                                                                                                  |
 
+> [!NOTE]
+> **Important Note for macOS Users:**
+>
+> The macOS release is currently staged as **beta**.I don't have access to a real macOS hardware for testing, and while
+> the build has been tested in a virtual machine, I need real-world feedback to ensure performance and stability.I
+> appreciate your help in providing feedback.
+
 ## 🗂️ Table of Contents
 
 - ✨ [Feature Overview](#-feature-overview)
