@@ -244,7 +244,10 @@ Here's what you can expect:
 
 ```bash
 git clone https://github.com/KindaBrazy/LynxHub && cd LynxHub
-npm install && npm run dev
+```
+
+```bash
+npm i --legacy-peer-deps && npm run dev
 ```
 
 - **Hot Reload**: Auto-refresh on changes
