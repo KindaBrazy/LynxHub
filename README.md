@@ -28,7 +28,7 @@ Get started with LynxHub by downloading the latest version for your platform.
 | Early Access | [**V2.3.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.3.0_Early-Access) | 2025-02-06 |
 | Release      | [**V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.2.1)              | 2025-02-06 |
 
-| Platform                         | x64                                                                                                              | arm64                                                                                                            |
+| Platform                         | x64                                                                                                              | ARM64                                                                                                            |
 |----------------------------------|------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
 | **Windows 10/11** (.exe)         | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-win_x64-Setup.exe) | ❌ Not Available                                                                                                  |
 | **Debian, Ubuntu** (.deb)        | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_amd64.deb)   | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_arm64.deb)   |
