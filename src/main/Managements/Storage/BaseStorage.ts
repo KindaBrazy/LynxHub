@@ -3,6 +3,7 @@ import {join} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {app} from 'electron';
+import fs from 'graceful-fs';
 import importSync from 'import-sync';
 
 import {APP_NAME} from '../../../cross/CrossConstants';
@@ -94,6 +95,20 @@ class BaseStorage {
   //#region Constructor
 
   constructor() {
+    if (isPortable()) {
+      const dataFolderPath = join(getExePath(), `${APP_NAME}_Data`);
+      if (!fs.existsSync(dataFolderPath)) {
+        try {
+          fs.mkdirSync(dataFolderPath, {recursive: true});
+          console.log(`Created data folder: ${dataFolderPath}`);
+        } catch (error) {
+          console.error(`Error creating data folder: ${dataFolderPath}`, error);
+          throw error;
+        }
+      } else {
+        console.log(`Data folder already exists: ${dataFolderPath}`);
+      }
+    }
     // @ts-ignore
     this.storage = JSONFileSyncPreset<StorageTypes>(this.STORAGE_PATH, this.DEFAULT_DATA);
     this.storage.read();
