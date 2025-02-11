@@ -19,7 +19,13 @@ const config = {
   npmRebuild: false,
   artifactName: '${productName}-V${version}-${os}_${arch}.${ext}',
   win: {
-    target: [{target: 'nsis', arch: ['x64', 'arm64']}],
+    target: [
+      {target: 'nsis', arch: ['x64', 'arm64']},
+      {target: 'portable', arch: ['x64', 'arm64']},
+    ],
+  },
+  portable: {
+    artifactName: '${productName}-V${version}-Portable_${arch}.${ext}',
   },
   nsis: {
     artifactName: '${productName}-V${version}-${os}_${arch}-Setup.${ext}',
@@ -35,6 +41,7 @@ const config = {
       {target: 'deb', arch: ['x64', 'arm64']},
       {target: 'rpm', arch: ['x64', 'arm64']},
       {target: 'tar.gz', arch: ['x64', 'arm64']},
+      {target: 'AppImage', arch: ['x64', 'arm64']},
     ],
     synopsis: 'Manage AI interfaces from a single platform.',
     description:
