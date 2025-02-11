@@ -1,8 +1,8 @@
 import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
-import path from 'node:path';
+import path, {dirname} from 'node:path';
 
-import {dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
+import {app, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
 import fs from 'graceful-fs';
 
 import {formatSize} from '../../cross/CrossUtils';
@@ -140,4 +140,16 @@ export function determineShell(): string {
 
 export function getSystemDarkMode() {
   return nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
+}
+
+export function isPortable(): boolean {
+  return !!(process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE);
+}
+
+export function getExePath(): string {
+  try {
+    return (process.env.PORTABLE_EXECUTABLE_FILE && dirname(process.env.PORTABLE_EXECUTABLE_FILE)) || app.getAppPath();
+  } catch (e) {
+    return '';
+  }
 }

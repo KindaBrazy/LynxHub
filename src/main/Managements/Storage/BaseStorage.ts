@@ -1,5 +1,5 @@
 import {platform} from 'node:os';
-import path from 'node:path';
+import {join} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {app} from 'electron';
@@ -8,6 +8,7 @@ import importSync from 'import-sync';
 import {APP_NAME} from '../../../cross/CrossConstants';
 import StorageTypes from '../../../cross/StorageTypes';
 import {appManager} from '../../index';
+import {getExePath, isPortable} from '../../Utilities/Utils';
 
 const {JSONFileSyncPreset} = importSync('lowdb/node');
 
@@ -17,7 +18,9 @@ class BaseStorage {
   private readonly storage;
 
   private readonly STORAGE_FILE = is.dev ? `${APP_NAME}-Dev.config` : `${APP_NAME}.config`;
-  private readonly STORAGE_PATH = path.join(app.getPath('userData'), this.STORAGE_FILE);
+  private readonly STORAGE_PATH = isPortable()
+    ? join(getExePath(), `${APP_NAME}_Data`, this.STORAGE_FILE)
+    : join(app.getPath('userData'), this.STORAGE_FILE);
 
   private readonly CURRENT_VERSION: number = 0.6;
 
@@ -73,7 +76,7 @@ class BaseStorage {
         isEnabled: true,
       },
       initialized: false,
-      appDataDir: path.join(app.getPath('documents'), APP_NAME),
+      appDataDir: isPortable() ? join(getExePath(), `${APP_NAME}_Data`) : join(app.getPath('documents'), APP_NAME),
     },
     terminal: {
       outputColor: true,
