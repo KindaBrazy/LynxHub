@@ -18,9 +18,13 @@ export const modulesElementId: string = 'modulesElement';
 export default function ModulesPage() {
   const [installedModules, setInstalledModules] = useState<string[]>([]);
   const [updatingAll, setUpdatingAll] = useState<boolean>(false);
-  const [currentTab, setCurrentTab] = useState<Key>('installed-tab');
+  const [currentTab, setCurrentTab] = useState<Key>('installed');
   const updateAvailable = useSettingsState('moduleUpdateAvailable');
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    if (isEmpty(installedModules)) setCurrentTab('download');
+  }, [installedModules]);
 
   const handleUpdateAll = useCallback(() => {
     setUpdatingAll(true);
@@ -38,7 +42,7 @@ export default function ModulesPage() {
 
   return (
     <Page className="pb-14" id={modulesElementId}>
-      {currentTab === 'installed-tab' && !isEmpty(updateAvailable) && (
+      {currentTab === 'installed' && !isEmpty(updateAvailable) && (
         <Button
           size="sm"
           variant="flat"
@@ -57,18 +61,18 @@ export default function ModulesPage() {
         onSelectionChange={setCurrentTab}
         selectedKey={currentTab.toString()}
         fullWidth>
-        <Tab title="Installed" key={'installed-tab'} className="cursor-default" />
-        <Tab title="Download" key={'download-tab'} className="cursor-default" />
+        <Tab key="installed" title="Installed" className="cursor-default" />
+        <Tab key="download" title="Download" className="cursor-default" />
       </Tabs>
       <div
         className={
           'flex max-h-full flex-col overflow-hidden rounded-lg bg-default-200 dark:bg-LynxRaisinBlack' +
           ' border-2 border-foreground/5 pr-0.5 transition duration-300'
         }>
-        {currentTab === 'installed-tab' && (
+        {currentTab === 'installed' && (
           <InstalledModules updatingAll={updatingAll} setInstalledModules={setInstalledModules} />
         )}
-        {currentTab === 'download-tab' && (
+        {currentTab === 'download' && (
           <DownloadModules installedModules={installedModules} setInstalledModules={setInstalledModules} />
         )}
       </div>
