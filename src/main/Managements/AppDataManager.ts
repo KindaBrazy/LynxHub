@@ -1,4 +1,4 @@
-import path from 'node:path';
+import {isAbsolute, join} from 'node:path';
 
 import {dialog} from 'electron';
 import fs from 'graceful-fs';
@@ -11,6 +11,7 @@ import {
 } from '../../cross/CrossConstants';
 import {FolderNames} from '../../cross/CrossTypes';
 import {appManager, storageManager} from '../index';
+import {getExePath, getRelativePath} from '../Utilities/Utils';
 
 const DIRECTORIES = [
   MODULES_FOLDER_NAME,
@@ -27,7 +28,7 @@ export async function checkAppDirectories(): Promise<void> {
   const appDataPath = getAppDataPath();
 
   try {
-    await Promise.all(DIRECTORIES.map(dir => fs.promises.mkdir(path.join(appDataPath, dir), {recursive: true})));
+    await Promise.all(DIRECTORIES.map(dir => fs.promises.mkdir(join(appDataPath, dir), {recursive: true})));
     console.log('Directories created successfully');
   } catch (error) {
     console.error('Error creating directories:', error);
@@ -41,19 +42,23 @@ export async function checkAppDirectories(): Promise<void> {
  * @returns The full path to the specified directory
  */
 export function getAppDirectory(name: FolderNames): string {
-  return path.join(getAppDataPath(), name);
+  return join(getAppDataPath(), name);
 }
 
 /** Retrieves the app data path from storage. */
 export function getAppDataPath(): string {
-  return storageManager.getData('app').appDataDir;
+  const dataDir = storageManager.getData('app').appDataDir;
+
+  if (isAbsolute(dataDir)) return dataDir;
+
+  return join(getExePath(), dataDir);
 }
 
 /**
  * Sets a new app data folder and restarts the app.
  * @param targetDir - The new destination folder
  */
-export function setAppDataFolder(targetDir: string): void {
+function setAppDataFolder(targetDir: string): void {
   storageManager.updateData('app', {appDataDir: targetDir});
   appManager.restart();
 }
@@ -75,7 +80,7 @@ export async function selectNewAppDataFolder(): Promise<string> {
   }
 
   if (result.filePaths && result.filePaths.length > 0) {
-    const newPath = result.filePaths[0];
+    const newPath = getRelativePath(getExePath(), result.filePaths[0]);
     setAppDataFolder(newPath);
     return 'New folder selected';
   } else {
