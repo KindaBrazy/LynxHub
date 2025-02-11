@@ -23,7 +23,7 @@ export default function ModulesPage() {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (isEmpty(installedModules)) setCurrentTab('download');
+    setCurrentTab(isEmpty(installedModules) ? 'download' : 'installed');
   }, [installedModules]);
 
   const handleUpdateAll = useCallback(() => {
