@@ -51,10 +51,10 @@ export function getAppDataPath(): string {
 
 /**
  * Sets a new app data folder and restarts the app.
- * @param dest - The new destination folder
+ * @param targetDir - The new destination folder
  */
-export function setAppDataFolder(dest: string): void {
-  storageManager.updateData('app', {appDataDir: dest});
+export function setAppDataFolder(targetDir: string): void {
+  storageManager.updateData('app', {appDataDir: targetDir});
   appManager.restart();
 }
 
