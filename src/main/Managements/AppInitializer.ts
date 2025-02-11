@@ -63,7 +63,7 @@ export default class AppInitializer {
     // Handle app restart
     ipcMain.on(initializerChannels.startApp, () => {
       storageManager.updateData('app', {initialized: true});
-      app.relaunch();
+      app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE});
       app.exit();
     });
 

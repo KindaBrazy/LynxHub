@@ -203,7 +203,7 @@ export default class ElectronAppManager {
 
   /** Restarts the application. */
   public restart(): void {
-    app.relaunch();
+    app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE});
     app.exit();
   }
 
