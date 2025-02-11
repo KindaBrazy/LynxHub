@@ -76,7 +76,7 @@ class BaseStorage {
         isEnabled: true,
       },
       initialized: false,
-      appDataDir: isPortable() ? join(getExePath(), `${APP_NAME}_Data`) : join(app.getPath('documents'), APP_NAME),
+      appDataDir: isPortable() ? `./${APP_NAME}_Data` : join(app.getPath('documents'), APP_NAME),
     },
     terminal: {
       outputColor: true,
