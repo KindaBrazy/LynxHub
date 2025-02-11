@@ -1,6 +1,6 @@
 import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
-import path, {dirname} from 'node:path';
+import {dirname, relative, resolve} from 'node:path';
 
 import {app, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
 import fs from 'graceful-fs';
@@ -69,7 +69,7 @@ export async function calculateFolderSize(folderPath: string): Promise<string> {
 }
 
 export async function getDirCreationDate(dir: string): Promise<string> {
-  const dirPath = path.resolve(dir);
+  const dirPath = resolve(dir);
 
   try {
     const stats = await fs.promises.stat(dirPath);
@@ -151,5 +151,14 @@ export function getExePath(): string {
     return (process.env.PORTABLE_EXECUTABLE_FILE && dirname(process.env.PORTABLE_EXECUTABLE_FILE)) || app.getAppPath();
   } catch (e) {
     return '';
+  }
+}
+
+export function getRelativePath(basePath: string, targetPath: string): string {
+  try {
+    return relative(basePath, targetPath);
+  } catch (error) {
+    console.error('Error calculating relative path:', error);
+    return resolve(targetPath);
   }
 }
