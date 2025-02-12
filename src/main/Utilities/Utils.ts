@@ -162,3 +162,8 @@ export function getRelativePath(basePath: string, targetPath: string): string {
     return resolve(targetPath);
   }
 }
+
+export function RelaunchApp() {
+  app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
+  app.exit();
+}
