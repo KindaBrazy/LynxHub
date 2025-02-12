@@ -18,11 +18,6 @@ class BaseStorage {
 
   private readonly storage;
 
-  private readonly STORAGE_FILE = is.dev ? `${APP_NAME}-Dev.config` : `${APP_NAME}.config`;
-  private readonly STORAGE_PATH = isPortable()
-    ? join(getExePath(), `${APP_NAME}_Data`, this.STORAGE_FILE)
-    : join(app.getPath('userData'), this.STORAGE_FILE);
-
   private readonly CURRENT_VERSION: number = 0.6;
 
   private readonly DEFAULT_DATA: StorageTypes = {
@@ -95,7 +90,11 @@ class BaseStorage {
   //#region Constructor
 
   constructor() {
+    const storageFile = is.dev ? `${APP_NAME}-Dev.config` : `${APP_NAME}.config`;
+    let storagePath = join(app.getPath('userData'), storageFile);
+
     if (isPortable()) {
+      storagePath = join(getExePath(), `${APP_NAME}_Data`, storageFile);
       const dataFolderPath = join(getExePath(), `${APP_NAME}_Data`);
       if (!fs.existsSync(dataFolderPath)) {
         try {
@@ -109,8 +108,9 @@ class BaseStorage {
         console.log(`Data folder already exists: ${dataFolderPath}`);
       }
     }
+
     // @ts-ignore
-    this.storage = JSONFileSyncPreset<StorageTypes>(this.STORAGE_PATH, this.DEFAULT_DATA);
+    this.storage = JSONFileSyncPreset<StorageTypes>(storagePath, this.DEFAULT_DATA);
     this.storage.read();
     this.migration();
   }
