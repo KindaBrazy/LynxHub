@@ -10,6 +10,7 @@ import {APP_NAME, MAIN_MODULE_URL} from '../../cross/CrossConstants';
 import {extractGitUrl} from '../../cross/CrossUtils';
 import {initializerChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager} from '../index';
+import {RelaunchApp} from '../Utilities/Utils';
 import GitManager from './GitManager';
 import ModuleManager from './Plugin/ModuleManager';
 
@@ -63,8 +64,7 @@ export default class AppInitializer {
     // Handle app restart
     ipcMain.on(initializerChannels.startApp, () => {
       storageManager.updateData('app', {initialized: true});
-      app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE});
-      app.exit();
+      RelaunchApp();
     });
 
     // Handle window controls

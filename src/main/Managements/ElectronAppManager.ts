@@ -7,6 +7,7 @@ import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents}
 import icon from '../../../resources/icon.png?asset';
 import {winChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager, trayManager} from '../index';
+import {RelaunchApp} from '../Utilities/Utils';
 
 /**
  * Manages the main application window and loading window for an Electron app.
@@ -203,8 +204,7 @@ export default class ElectronAppManager {
 
   /** Restarts the application. */
   public restart(): void {
-    app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE});
-    app.exit();
+    RelaunchApp();
   }
 
   /** Creates and initializes the application windows. */
