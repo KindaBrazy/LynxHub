@@ -150,7 +150,13 @@ export function isPortable(): 'win' | 'linux' | null {
 
 export function getExePath(): string {
   try {
-    return (process.env.PORTABLE_EXECUTABLE_FILE && dirname(process.env.PORTABLE_EXECUTABLE_FILE)) || app.getAppPath();
+    const winPortablePath = process.env.PORTABLE_EXECUTABLE_FILE && dirname(process.env.PORTABLE_EXECUTABLE_FILE);
+    const linuxPortablePath = process.env.APPIMAGE && dirname(process.env.APPIMAGE);
+
+    if (winPortablePath) return winPortablePath;
+    if (linuxPortablePath) return linuxPortablePath;
+
+    return app.getAppPath();
   } catch (e) {
     return '';
   }
