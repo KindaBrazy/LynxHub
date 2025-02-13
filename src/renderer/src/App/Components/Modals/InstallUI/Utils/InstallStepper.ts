@@ -23,6 +23,8 @@ export default class InstallStepper {
     installExtensions: InstallationStepper['postInstall']['installExtensions'];
     progressBar: InstallationStepper['progressBar'];
     setUpdated: InstallationStepper['setUpdated'];
+
+    checkForUpdate: (dir: string | undefined) => void;
   }) {
     this.totalSteps = 0;
 
@@ -40,6 +42,7 @@ export default class InstallStepper {
 
     this.setInstalled = dir => {
       rendererIpc.storageUtils.addInstalledCard({dir, id: data.cardId});
+      data.checkForUpdate(dir);
     };
 
     this.ipc = {
