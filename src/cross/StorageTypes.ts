@@ -11,6 +11,7 @@ import {
   TerminalUseConpty,
   TooltipStatus,
 } from './IpcChannelAndTypes';
+import {Rectangle} from 'electron';
 
 export type InstalledCard = {
   id: string;
@@ -48,6 +49,12 @@ type StorageTypes = {
     closeConfirm: boolean;
     terminateAIConfirm: boolean;
     openLastSize: boolean;
+    lastSize:
+      | {
+          maximized: boolean;
+          bounds: Rectangle | undefined;
+        }
+      | undefined;
     homeCategory: HomeCategory;
     darkMode: DarkModeTypes;
     taskbarStatus: TaskbarStatus;

@@ -6,7 +6,7 @@ import {app, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue} from
 import fs from 'graceful-fs';
 
 import {formatSize} from '../../cross/CrossUtils';
-import {appManager} from '../index';
+import {appManager, storageManager} from '../index';
 import calcFolderSize from './CalculateFolderSize/CalculateFolderSize';
 
 /**
@@ -172,6 +172,7 @@ export function getRelativePath(basePath: string, targetPath: string): string {
 }
 
 export function RelaunchApp() {
+  storageManager.updateLastSize();
   app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
   app.exit();
 }

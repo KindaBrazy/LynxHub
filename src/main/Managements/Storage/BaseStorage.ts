@@ -72,6 +72,7 @@ class BaseStorage {
       },
       initialized: false,
       appDataDir: isPortable() ? `./${APP_NAME}_Data` : join(app.getPath('documents'), APP_NAME),
+      lastSize: undefined,
     },
     terminal: {
       outputColor: true,
@@ -126,6 +127,7 @@ class BaseStorage {
 
     const version6to7 = () => {
       this.storage.data.app.openLastSize = false;
+      this.storage.data.app.lastSize = undefined;
       this.storage.write();
     };
 
