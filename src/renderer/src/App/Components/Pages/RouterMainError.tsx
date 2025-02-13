@@ -4,6 +4,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {isRouteErrorResponse, useRouteError} from 'react-router';
 
 import rendererIpc from '../../RendererIpc';
+import {isLinuxPortable} from '../../Utils/UtilHooks';
 
 // Page when router id is not valid
 export default function RouterMainError() {
@@ -31,14 +32,22 @@ export default function RouterMainError() {
     rendererIpc.win.changeWinState('restart');
   }, []);
 
+  const handleClose = useCallback(() => {
+    rendererIpc.win.changeWinState('close');
+  }, []);
+
   return (
     <Result
       extra={[
         <Button key="reload" color="warning" onPress={handleReload} className="notDraggable">
           Reload
         </Button>,
-        <Button key="restart" color="danger" onPress={handleRestart} className="notDraggable">
-          Restart
+        <Button
+          key="restart"
+          color="danger"
+          onPress={isLinuxPortable ? handleClose : handleRestart}
+          className="notDraggable">
+          {isLinuxPortable ? 'Exit' : 'Restart'}
         </Button>,
       ]}
       title={<span className="text-foreground">{title}</span>}
