@@ -136,36 +136,40 @@ export function PreviewFooter({
     rendererIpc.win.changeWinState('restart');
   }, []);
 
+  const showRestartModal = useCallback((message: string) => {
+    Modal.warning({
+      title: 'Restart Required',
+      content: message,
+      footer: (
+        <div className="mt-6 flex w-full flex-row justify-between">
+          <Button size="sm" variant="flat" color="warning" onPress={later}>
+            Restart Later
+          </Button>
+          <Button size="sm" color="success" onPress={restart}>
+            Restart Now
+          </Button>
+        </div>
+      ),
+      centered: true,
+      maskClosable: false,
+      rootClassName: 'scrollbar-hide',
+      styles: {mask: {top: '2.5rem'}},
+      wrapClassName: 'mt-10',
+    });
+  }, []);
+
   const updateExtension = useCallback(() => {
     setUpdating(true);
     if (selectedExt?.id) {
       rendererIpc.extension.updateExtension(selectedExt.id).then(updated => {
         if (updated) {
           dispatch(settingsActions.removeExtUpdateAvailable(selectedExt.id));
-          Modal.warning({
-            title: 'Restart Required',
-            content: 'To apply the updates to the extension, please restart the app.',
-            footer: (
-              <div className="mt-6 flex w-full flex-row justify-between">
-                <Button size="sm" variant="flat" color="warning" onPress={later}>
-                  Restart Later
-                </Button>
-                <Button size="sm" color="success" onPress={restart}>
-                  Restart Now
-                </Button>
-              </div>
-            ),
-            centered: true,
-            maskClosable: false,
-            rootClassName: 'scrollbar-hide',
-            styles: {mask: {top: '2.5rem'}},
-            wrapClassName: 'mt-10',
-          });
+          showRestartModal('To apply the updates to the extension, please restart the app.');
         }
         setUpdating(false);
       });
     }
-  }, [selectedExt]);
+  }, [selectedExt, showRestartModal]);
 
   const installExtension = useCallback(() => {
     setInstalling(true);
@@ -174,25 +178,7 @@ export function PreviewFooter({
       rendererIpc.extension.installExtension(selectedExt.url).then(result => {
         setInstalling(false);
         if (result) {
-          Modal.warning({
-            title: 'Restart Required',
-            content: 'To apply the installed extension, please restart the app.',
-            footer: (
-              <div className="mt-6 flex w-full flex-row justify-between">
-                <Button size="sm" variant="flat" color="warning" onPress={later}>
-                  Restart Later
-                </Button>
-                <Button size="sm" color="success" onPress={restart}>
-                  Restart Now
-                </Button>
-              </div>
-            ),
-            centered: true,
-            maskClosable: false,
-            rootClassName: 'scrollbar-hide',
-            styles: {mask: {top: '2.5rem'}},
-            wrapClassName: 'mt-10',
-          });
+          showRestartModal('To apply the installed extension, please restart the app.');
           setInstalled(prevState => [...prevState, {id: selectedExt.id, version: selectedExt.version, dir: ''}]);
         }
       });
@@ -206,25 +192,7 @@ export function PreviewFooter({
       rendererIpc.extension.uninstallExtension(selectedExt.id).then(result => {
         setUninstalling(false);
         if (result) {
-          Modal.warning({
-            title: 'Restart Required',
-            content: 'To complete the uninstallation of the extension, please restart the app.',
-            footer: (
-              <div className="mt-6 flex w-full flex-row justify-between">
-                <Button size="sm" variant="flat" color="warning" onPress={later}>
-                  Restart Later
-                </Button>
-                <Button size="sm" color="success" onPress={restart}>
-                  Restart Now
-                </Button>
-              </div>
-            ),
-            centered: true,
-            maskClosable: false,
-            rootClassName: 'scrollbar-hide',
-            styles: {mask: {top: '2.5rem'}},
-            wrapClassName: 'mt-10',
-          });
+          showRestartModal('To complete the uninstallation of the extension, please restart the app.');
         }
         setInstalled(prevState => prevState.filter(item => item.id !== selectedExt.id));
       });
