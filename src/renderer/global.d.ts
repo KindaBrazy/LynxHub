@@ -6,5 +6,6 @@ declare global {
   interface Window {
     electron: ElectronAPI;
     osPlatform: NodeJS.Platform;
+    isPortable: 'win' | 'linux' | null;
   }
 }
