@@ -4,8 +4,6 @@ import {useSelector} from 'react-redux';
 import {LynxHotkeys, TooltipStatus} from '../../../../../cross/IpcChannelAndTypes';
 import {RootState} from '../Store';
 
-//#region Initialization & Types
-
 type SettingState = {
   tooltipLevel: TooltipStatus;
   hotkeys: LynxHotkeys;
@@ -55,9 +53,6 @@ const initialState: SettingState = {
   updateAvailable: false,
   extensionsUpdateAvailable: [],
 };
-//#endregion
-
-//#region Slice
 
 const settingsSlice = createSlice({
   initialState,
@@ -95,9 +90,6 @@ const settingsSlice = createSlice({
     },
   },
 });
-//#endregion
-
-//#region Exports & Utils
 
 export const useSettingsState = <T extends keyof SettingState>(name: T): SettingStateTypes[T] =>
   useSelector((state: RootState) => state.settings[name]);
@@ -105,4 +97,3 @@ export const useSettingsState = <T extends keyof SettingState>(name: T): Setting
 export const settingsActions = settingsSlice.actions;
 
 export default settingsSlice.reducer;
-//#endregion

@@ -10,28 +10,16 @@ import {determineShell} from '../Utilities/Utils';
 
 /** Manages pseudo-terminal (PTY) processes for different shells. */
 export default class PtyManager {
-  //#region Private Properties
-
   private isRunning: boolean;
   private readonly shell: string;
   private process?: pty.IPty;
-  //#endregion
-
-  //#region Callback
 
   public onData?: (data: string) => void;
-  //#endregion
-
-  //#region Constructor
 
   constructor() {
     this.isRunning = false;
     this.shell = determineShell();
   }
-
-  //#endregion
-
-  //#region Private Methods
 
   /**
    * Checks if the PTY process is available.
@@ -40,10 +28,6 @@ export default class PtyManager {
   private isAvailable(): boolean {
     return this.isRunning && !!this.process?.pid;
   }
-
-  //#endregion
-
-  //#region Public Methods
 
   /**
    * Starts a new PTY process.
@@ -107,6 +91,4 @@ export default class PtyManager {
       this.process?.write(data);
     }
   }
-
-  //#endregion
 }

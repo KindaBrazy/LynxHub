@@ -63,7 +63,6 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
     }
   }
 
-  //#region Utils
   public setStorageManager(manager: StorageManager) {
     this.extensionUtils.setStorageManager(manager);
   }
@@ -80,9 +79,6 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
     this.extensionUtils.setModuleManager(manager);
   }
 
-  //#endregion
-
-  //#region Api
   public listenForChannels() {
     this.extensionApi.listenForChannels();
   }
@@ -98,6 +94,4 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
   public getTrayItems(staticItems: EMenuItem[]) {
     return this.extensionApi.getTrayItems(staticItems);
   }
-
-  //#endregion
 }

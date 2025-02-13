@@ -19,8 +19,6 @@ import ModuleManager from './Plugin/ModuleManager';
  * It manages first time running app -> Check git, python, and app basic module installed.
  */
 export default class AppInitializer {
-  //#region Private Properties
-
   private window?: BrowserWindow;
   private static readonly WINDOW_CONFIG: BrowserWindowConstructorOptions = {
     frame: false,
@@ -36,9 +34,6 @@ export default class AppInitializer {
       sandbox: false,
     },
   };
-  //#endregion
-
-  //#region Private Methods
 
   private async checkGitAvailable(): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -110,10 +105,6 @@ export default class AppInitializer {
     }
   }
 
-  //#endregion
-
-  //#region Public Methods
-
   public async createInitializer(): Promise<void> {
     electronApp.setAppUserModelId(APP_NAME);
 
@@ -142,6 +133,4 @@ export default class AppInitializer {
       await this.window.loadFile(path.join(__dirname, `../renderer/initializer.html`));
     }
   }
-
-  //#endregion
 }

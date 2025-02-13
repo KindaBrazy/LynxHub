@@ -5,8 +5,6 @@ import StorageTypes from '../../../../../cross/StorageTypes';
 import rendererIpc from '../../RendererIpc';
 import {RootState} from '../Store';
 
-//#region Initialization & Types
-
 type TerminalState = StorageTypes['terminal'];
 
 type TerminalStateTypes = {
@@ -23,9 +21,6 @@ const initialState: TerminalState = {
   blinkCursor: true,
   resizeDelay: 77,
 };
-//#endregion
-
-//#region Slice
 
 const terminalSlice = createSlice({
   initialState,
@@ -53,9 +48,6 @@ const terminalSlice = createSlice({
     },
   },
 });
-//#endregion
-
-//#region Exports & Utils
 
 export const useTerminalState = <T extends keyof TerminalState>(name: T): TerminalStateTypes[T] =>
   useSelector((state: RootState) => state.terminal[name]);
@@ -63,4 +55,3 @@ export const useTerminalState = <T extends keyof TerminalState>(name: T): Termin
 export const terminalActions = terminalSlice.actions;
 
 export default terminalSlice.reducer;
-//#endregion

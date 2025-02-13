@@ -8,8 +8,6 @@ import rendererIpc from '../../RendererIpc';
 import {RunningCard, UpdatingCard, UpdatingCards} from '../../Utils/Types';
 import {RootState} from '../Store';
 
-//#region Initialization & Types
-
 type CardsState = {
   installedCards: InstalledCards;
   autoUpdate: string[];
@@ -52,9 +50,6 @@ const initialState: CardsState = {
   webViewZoomFactor: [],
   duplicates: [],
 };
-//#endregion
-
-//#region Slice
 
 const cardsSlice = createSlice({
   initialState,
@@ -78,8 +73,6 @@ const cardsSlice = createSlice({
       state.webViewZoomFactor = action.payload;
     },
 
-    //#region Update Available
-
     addUpdateAvailable: (state, action: PayloadAction<string>) => {
       if (!includes(state.updateAvailable, action.payload)) {
         state.updateAvailable = [...state.updateAvailable, action.payload];
@@ -95,10 +88,6 @@ const cardsSlice = createSlice({
       state.updatingExtensions = action.payload;
     },
 
-    //#endregion
-
-    //#region Updating Card
-
     addUpdatingCard: (state, action: PayloadAction<UpdatingCard>) => {
       if (!includes(state.updatingCards, action.payload)) {
         state.updatingCards = [...state.updatingCards, action.payload];
@@ -108,7 +97,6 @@ const cardsSlice = createSlice({
       const cardId = action.payload;
       state.updatingCards = state.updatingCards.filter(card => card.id !== cardId);
     },
-    //#endregion
 
     setAutoUpdate: (state, action: PayloadAction<string[]>) => {
       state.autoUpdate = action.payload;
@@ -131,8 +119,6 @@ const cardsSlice = createSlice({
     setDuplicates: (state, action: PayloadAction<{ogID: string; id: string; title: string}[]>) => {
       state.duplicates = action.payload;
     },
-
-    //#region Running Card (AI)
 
     startRunningCard: (state, action: PayloadAction<string>) => {
       state.runningCard.isRunning = true;
@@ -158,12 +144,8 @@ const cardsSlice = createSlice({
         currentView: 'terminal',
       };
     },
-    //#endregion
   },
 });
-//#endregion
-
-//#region Exports & Utils
 
 export const useCardsState = <T extends keyof CardsState>(name: T): CardsStateTypes[T] =>
   useSelector((state: RootState) => state.cards[name]);
@@ -171,4 +153,3 @@ export const useCardsState = <T extends keyof CardsState>(name: T): CardsStateTy
 export const cardsActions = cardsSlice.actions;
 
 export default cardsSlice.reducer;
-//#endregion

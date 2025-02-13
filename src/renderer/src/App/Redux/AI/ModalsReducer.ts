@@ -4,8 +4,6 @@ import {PullResult} from 'simple-git';
 
 import {RootState} from '../Store';
 
-//#region Initialization & Types
-
 type ModalsState = {
   installUIModal: {
     isOpen: boolean;
@@ -135,16 +133,11 @@ const initialState: ModalsState = {
     dir: '',
   },
 };
-//#endregion
-
-//#region Slice
 
 const modalSlice = createSlice({
   initialState,
   name: 'modals',
   reducers: {
-    //#region General
-
     openModal: (state, action: PayloadAction<keyof ModalsState>) => {
       state[action.payload].isOpen = true;
     },
@@ -154,9 +147,6 @@ const modalSlice = createSlice({
     setIsOpen: (state, action: PayloadAction<{modalName: keyof ModalsState; isOpen: boolean}>) => {
       state[action.payload.modalName].isOpen = action.payload.isOpen;
     },
-    //#endregion
-
-    //#region Open Specif Modal
 
     openCardExtensions: (state, action: PayloadAction<{title: string; dir: string; id: string}>) => {
       state.cardExtensions.title = action.payload.title;
@@ -189,9 +179,6 @@ const modalSlice = createSlice({
     closeGitManager: state => {
       state.gitManager = initialState.gitManager;
     },
-    //#endregion
-
-    //#region Card Info
 
     openCardInfo: (state, action: PayloadAction<CardInfoData>) => {
       state.cardInfoModal.cardId = action.payload.cardId;
@@ -210,9 +197,7 @@ const modalSlice = createSlice({
 
       state.readmeModal.isOpen = true;
     },
-    //#endregion
 
-    //#region Install UI Card
     openInstallUICard: (state, action: PayloadAction<{id: string; type: 'install' | 'update'; title: string}>) => {
       state.installUIModal.cardId = action.payload.id;
       state.installUIModal.type = action.payload.type;
@@ -220,16 +205,12 @@ const modalSlice = createSlice({
 
       state.installUIModal.isOpen = true;
     },
-    //#endregion
 
     setWarningContentId: (state, action: PayloadAction<ModalsState['warningModal']['contentId']>) => {
       state.warningModal.contentId = action.payload;
     },
   },
 });
-//#endregion
-
-//#region Exports & Utils
 
 export const useModalsState = <T extends keyof ModalsState>(name: T): ModalsStateTypes[T] =>
   useSelector((state: RootState) => state.modals[name]);
@@ -237,4 +218,3 @@ export const useModalsState = <T extends keyof ModalsState>(name: T): ModalsStat
 export const modalActions = modalSlice.actions;
 
 export default modalSlice.reducer;
-//#endregion

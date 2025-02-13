@@ -25,7 +25,6 @@ export default function Logo() {
     <>
       <Dropdown shadow="sm">
         <DropdownTrigger>
-          {/*#region App Icon */}
           <img
             className={
               `notDraggable ml-2 size-5 transition duration-300` +
@@ -34,11 +33,9 @@ export default function Logo() {
             alt="App Icon"
             src={APP_ICON_TRANSPARENT}
           />
-          {/*#endregion */}
         </DropdownTrigger>
         <DropdownMenu>
           <DropdownSection>
-            {/*#region Maximize */}
             <DropdownItem
               onPress={() => {
                 changeWindowState('maximize');
@@ -54,9 +51,7 @@ export default function Logo() {
               key={maximized ? 'unmaximize' : 'maximize'}>
               {maximized ? 'Unmaximize' : 'Maximize'}
             </DropdownItem>
-            {/*#endregion */}
 
-            {/*#region Minimize */}
             <DropdownItem
               onPress={() => {
                 changeWindowState('minimize');
@@ -66,9 +61,7 @@ export default function Logo() {
               startContent={<Minimize_Icon className={`${darkMode ? 'fill-white' : 'fill-black'} size-3`} />}>
               Minimize
             </DropdownItem>
-            {/*#endregion */}
 
-            {/*#region Close */}
             <DropdownItem
               onPress={() => {
                 changeWindowState('close');
@@ -79,12 +72,10 @@ export default function Logo() {
               startContent={<Power_Icon className={`${darkMode ? 'fill-white' : 'fill-black'} size-3`} />}>
               Close
             </DropdownItem>
-            {/*#endregion */}
           </DropdownSection>
         </DropdownMenu>
       </Dropdown>
 
-      {/*#region App Name */}
       <LynxTooltip delay={500} content={APP_NAME_VERSION_V}>
         <motion.span
           animate={{
@@ -98,7 +89,6 @@ export default function Logo() {
           {APP_NAME}
         </motion.span>
       </LynxTooltip>
-      {/*#endregion */}
     </>
   );
 }

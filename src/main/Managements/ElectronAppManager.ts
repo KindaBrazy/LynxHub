@@ -13,20 +13,12 @@ import {RelaunchApp} from '../Utilities/Utils';
  * Manages the main application window and loading window for an Electron app.
  */
 export default class ElectronAppManager {
-  //#region Callbacks
-
   public onCreateWindow?: () => void;
   public onReadyToShow?: () => void;
-  //#endregion
-
-  //#region Private Properties
 
   private mainWindow?: BrowserWindow;
   private loadingWindow?: BrowserWindow;
   private isLoading?: boolean;
-  //#endregion
-
-  //#region Static Properties
 
   private static readonly MAIN_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
     frame: false,
@@ -55,9 +47,6 @@ export default class ElectronAppManager {
       sandbox: false,
     },
   };
-  //#endregion
-
-  //#region Getters
 
   public getMainWindow(): BrowserWindow | undefined {
     return this.mainWindow;
@@ -66,10 +55,6 @@ export default class ElectronAppManager {
   public getWebContent(): WebContents | undefined {
     return this.mainWindow?.webContents;
   }
-
-  //#endregion
-
-  //#region Private Methods
 
   /** Creates and configures the loading window. */
   private createLoadingWindow(): void {
@@ -198,10 +183,6 @@ export default class ElectronAppManager {
     });
   }
 
-  //#endregion
-
-  //#region Public Methods
-
   /** Restarts the application. */
   public restart(): void {
     RelaunchApp();
@@ -222,6 +203,4 @@ export default class ElectronAppManager {
       }, 300);
     }
   }
-
-  //#endregion
 }
