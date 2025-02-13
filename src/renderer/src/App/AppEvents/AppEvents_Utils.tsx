@@ -2,6 +2,7 @@ import {Button} from '@heroui/react';
 import {notification} from 'antd';
 
 import rendererIpc from '../RendererIpc';
+import {isLinuxPortable} from '../Utils/UtilHooks';
 
 export const checkEARepos = (isEA: boolean) => {
   rendererIpc.extension
@@ -24,8 +25,8 @@ export const checkEARepos = (isEA: boolean) => {
                     size="sm"
                     variant="light"
                     color="success"
-                    onPress={() => rendererIpc.win.changeWinState('restart')}>
-                    Restart
+                    onPress={() => rendererIpc.win.changeWinState(isLinuxPortable ? 'close' : 'restart')}>
+                    {isLinuxPortable ? 'Exit' : 'Restart'}
                   </Button>
                   <Button
                     size="sm"
