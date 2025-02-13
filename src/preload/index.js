@@ -2,7 +2,7 @@ import os from 'node:os';
 
 import {electronAPI} from '@electron-toolkit/preload';
 import {contextBridge} from 'electron';
-import {isPortable} from 'src/preload/utils.js';
+import {isPortable} from './utils.js';
 
 if (process.contextIsolated) {
   try {
