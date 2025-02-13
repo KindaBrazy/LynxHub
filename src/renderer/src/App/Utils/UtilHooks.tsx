@@ -122,3 +122,5 @@ export function RenderSubItems(items?: ChangelogItem[], parentKey: string = '') 
     </ul>
   );
 }
+
+export const isLinuxPortable = window.isPortable === 'linux';

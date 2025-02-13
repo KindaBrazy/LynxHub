@@ -7,6 +7,7 @@ import initializerIpc from './InitializerIpc';
 import {useGitValidation} from './Steps/GitValidation';
 import {useMainModuleInstallation} from './Steps/MainModuleInstallation';
 import CancelBtn from './CancelBtn';
+import {isLinuxPortable} from '../src/App/Utils/UtilHooks';
 
 // Are you sure you want to exit the initial process?
 
@@ -51,12 +52,8 @@ export default function App() {
 
         <footer className="m-3 flex flex-col items-center">
           {currentState >= 3 ? (
-            <Button
-              color="success"
-              onPress={window.isPortable === 'linux' ? close : startApp}
-              className="notDraggable"
-              fullWidth>
-              {window.isPortable === 'linux' ? <span>Exit Initializer</span> : <span>Launch {APP_NAME}</span>}
+            <Button color="success" onPress={isLinuxPortable ? close : startApp} className="notDraggable" fullWidth>
+              {isLinuxPortable ? <span>Exit Initializer</span> : <span>Launch {APP_NAME}</span>}
             </Button>
           ) : (
             <CancelBtn />

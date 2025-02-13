@@ -10,6 +10,7 @@ import {useAppState} from '../../Redux/App/AppReducer';
 import {settingsActions, useSettingsState} from '../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
+import {isLinuxPortable} from '../../Utils/UtilHooks';
 
 type Props = {
   buttonProps: any;
@@ -91,7 +92,7 @@ export default function WindowButtons_Close({buttonProps, commonStyles}: Props) 
             Stay
           </Button>
           <div className="space-x-2">
-            {window.isPortable !== 'linux' && (
+            {!isLinuxPortable && (
               <Button size="sm" color="warning" onPress={restart}>
                 Restart
               </Button>
