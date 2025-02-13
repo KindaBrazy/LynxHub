@@ -91,9 +91,11 @@ export default function WindowButtons_Close({buttonProps, commonStyles}: Props) 
             Stay
           </Button>
           <div className="space-x-2">
-            <Button size="sm" color="warning" onPress={restart}>
-              Restart
-            </Button>
+            {window.isPortable !== 'linux' && (
+              <Button size="sm" color="warning" onPress={restart}>
+                Restart
+              </Button>
+            )}
             <Button size="sm" color="danger" onPress={close}>
               Exit
             </Button>
