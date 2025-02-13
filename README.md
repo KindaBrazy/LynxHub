@@ -14,9 +14,19 @@
 
 ![LynxHub Dashboard](/readme/screenshots/MainScreenshot.png)
 
+<img src="https://discord.com/api/guilds/1179017720432443392/widget.png?style=banner2" alt="Discord Banner"/>
+
 </div>
 
-<img src="https://discord.com/api/guilds/1179017720432443392/widget.png?style=banner2" alt="Discord Banner"/>
+> [!IMPORTANT]
+> **LynxHub: Not a One-Click Installer**
+>
+> LynxHub is designed to be a comprehensive manager and helper with a user-friendly and flexible environment. It is
+> **not** a one-click installer.
+>
+> While LynxHub offers installation support in most cases, it's best if you have prior knowledge of installing your
+> preferred AI interface on your device. You can then integrate it with LynxHub. Alternatively, if you are already using
+> an AI interface, you can simply locate and connect it.
 
 ## 🔗 Download
 
@@ -27,19 +37,18 @@ Get started with LynxHub by downloading the latest version for your platform.
 | Early Access | [**V2.3.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.3.0_Early-Access) | 2025-02-06 |
 | Release      | [**V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.2.1)              | 2025-02-06 |
 
-| Platform                         | x64                                                                                                              | ARM64                                                                                                            |
-|----------------------------------|------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
-| **Windows 10/11** (.exe)         | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-win_x64-Setup.exe) | ❌ Not Available                                                                                                  |
-| **Debian, Ubuntu** (.deb)        | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_amd64.deb)   | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_arm64.deb)   |
-| **Red Hat, Fedora, SUSE** (.rpm) | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_x86_64.rpm)  | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_aarch64.rpm) |
-| **macOS (Beta)** - (.dmg)        | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-mac.dmg)           | ❌ Not Available                                                                                                  |
+| Platform                         | x64                                                                                                              | ARM64                                                                                                            | Portable               |
+|----------------------------------|------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|------------------------|
+| **Windows 10/11** (.exe)         | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-win_x64-Setup.exe) | 🔜 Coming soon(V2.4.0)                                                                                           | 🔜 Coming soon(V2.4.0) |
+| **Debian, Ubuntu** (.deb)        | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_amd64.deb)   | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_arm64.deb)   | 🔜 Coming soon(V2.4.0) |
+| **Red Hat, Fedora, SUSE** (.rpm) | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_x86_64.rpm)  | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_aarch64.rpm) | 🔜 Coming soon(V2.4.0) |
+| **macOS (Beta)** - (.dmg)        | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-mac.dmg)           | 🔜 Coming soon(V2.4.0)                                                                                           | ⏳ Coming later         |
 
-> [!IMPORTANT]
-> **Important Note for macOS Users:**
+> [!NOTE]
+> **macOS Beta Release**
 >
-> The macOS release is currently staged as **beta**.I don't have access to real macOS hardware for testing, and while
-> the build has been tested in a virtual machine, I need real-world feedback to ensure performance and stability.I
-> appreciate your help in providing feedback.
+> The macOS version is currently in **beta**. I have limited access to physical macOS hardware for thorough testing, so
+> issues are possible. Your feedback would be really helpful.
 
 ## 🗂️ Table of Contents
 
