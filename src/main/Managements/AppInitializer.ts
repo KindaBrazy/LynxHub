@@ -106,7 +106,7 @@ export default class AppInitializer {
       await gitManager.clone(MAIN_MODULE_URL, installPath);
     } catch (error) {
       console.error('Failed to install AI module:', error);
-      this.window?.webContents.send(initializerChannels.onInstallAIModule, 'Failed');
+      this.window?.webContents.send(initializerChannels.onInstallAIModule, '', 'Failed', error);
     }
   }
 

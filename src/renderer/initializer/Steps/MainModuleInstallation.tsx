@@ -16,13 +16,13 @@ export const useMainModuleInstallation = (
   };
   const [descriptions] = useState({
     waiting: <span>AI Module</span>,
-    installing: <span>Installing Module. Please wait...</span>,
+    installing: <span>Installing module. Please wait...</span>,
     success: <span>Module installed successfully</span>,
     failed: (
       <div className="flex flex-col space-y-1">
-        <span>Error: AI Module installation failed.</span>
+        <span>Installation failed.</span>
         <Button size="sm" variant="flat" onPress={tryAgain} className="notDraggable dark">
-          Retry Installation
+          Retry
         </Button>
       </div>
     ),
@@ -79,7 +79,7 @@ export const useMainModuleInstallation = (
   return {
     status,
     subTitle,
-    title: 'WebUI Container Module',
+    title: 'WebUI Container',
     description,
     icon,
   };
