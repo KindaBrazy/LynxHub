@@ -10,6 +10,7 @@ import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {homeRoutePath} from './ContentPages/Home/HomePage';
 import Page from './Page';
+import {isLinuxPortable} from '../../Utils/UtilHooks';
 
 // Page when router id is not valid
 export default function RouterPagesError() {
@@ -45,6 +46,10 @@ export default function RouterPagesError() {
     rendererIpc.win.changeWinState('restart');
   }, []);
 
+  const handleClose = useCallback(() => {
+    rendererIpc.win.changeWinState('close');
+  }, []);
+
   return (
     <Page>
       <OverlayScrollbarsComponent
@@ -66,8 +71,8 @@ export default function RouterPagesError() {
             <Button size="sm" key="reload" color="warning" onPress={handleReload}>
               Reload
             </Button>,
-            <Button size="sm" key="restart" color="danger" onPress={handleRestart}>
-              Restart
+            <Button size="sm" key="restart" color="danger" onPress={isLinuxPortable ? handleClose : handleRestart}>
+              {isLinuxPortable ? 'Exit' : 'Restart'}
             </Button>,
           ]}
           title={title}
