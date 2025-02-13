@@ -30,6 +30,8 @@ export default function App() {
     },
   ];
 
+  const close = useCallback(() => initializerIpc.close(), []);
+
   return (
     <ConfigProvider theme={{algorithm: theme.darkAlgorithm}}>
       <div
@@ -49,8 +51,12 @@ export default function App() {
 
         <footer className="m-3 flex flex-col items-center">
           {currentState >= 3 ? (
-            <Button color="success" onPress={startApp} className="notDraggable" fullWidth>
-              Launch {APP_NAME}
+            <Button
+              color="success"
+              onPress={window.isPortable === 'linux' ? close : startApp}
+              className="notDraggable"
+              fullWidth>
+              {window.isPortable === 'linux' ? <span>Exit Initializer</span> : <span>Launch {APP_NAME}</span>}
             </Button>
           ) : (
             <CancelBtn />
