@@ -18,10 +18,10 @@ class BaseStorage {
 
   private readonly storage;
 
-  private readonly CURRENT_VERSION: number = 0.6;
+  private readonly CURRENT_VERSION: number = 0.7;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.5},
+    storage: {version: 0.7},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -46,6 +46,7 @@ class BaseStorage {
     app: {
       closeConfirm: true,
       terminateAIConfirm: true,
+      openLastSize: false,
       homeCategory: ['All', 'Pin'],
       darkMode: 'dark',
       taskbarStatus: 'taskbar-tray',
@@ -132,6 +133,11 @@ class BaseStorage {
       this.storage.write();
     };
 
+    const version6to7 = () => {
+      this.storage.data.app.openLastSize = false;
+      this.storage.write();
+    };
+
     const updateVersion = () => {
       this.updateData('storage', {version: this.CURRENT_VERSION});
     };
@@ -141,10 +147,16 @@ class BaseStorage {
         case 0.4: {
           version4to5();
           version5to6();
+          version6to7();
           break;
         }
         case 0.5: {
           version5to6();
+          version6to7();
+          break;
+        }
+        case 0.6: {
+          version6to7();
           break;
         }
         default:
