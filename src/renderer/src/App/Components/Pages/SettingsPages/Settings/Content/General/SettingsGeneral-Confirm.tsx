@@ -10,6 +10,7 @@ import LynxSwitch from '../../../../../Reusable/LynxSwitch';
 export default function SettingsGeneralConfirm() {
   const closeConfirm = useSettingsState('closeConfirm');
   const terminateAIConfirm = useSettingsState('terminateAIConfirm');
+  const openLastSize = useSettingsState('openLastSize');
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -29,8 +30,22 @@ export default function SettingsGeneralConfirm() {
     [dispatch],
   );
 
+  const onOpenLastSizeChange = useCallback(
+    (selected: boolean) => {
+      rendererIpc.storage.update('app', {openLastSize: selected});
+      dispatch(settingsActions.setSettingsState({key: 'openLastSize', value: selected}));
+    },
+    [dispatch],
+  );
+
   return (
     <>
+      <LynxSwitch
+        description="Start the app in the same window size and position as when it was last closed."
+        enabled={openLastSize}
+        title="Start in Last Window Size and Position"
+        onEnabledChange={onOpenLastSizeChange}
+      />
       <LynxSwitch
         description="Show a confirmation window when closing the app.
          (Hold CTRL and click on close to bypass this confirmation.)"

@@ -155,12 +155,16 @@ function handleTaskbarStatus() {
 }
 
 function handleStartupBehavior() {
-  const {startMinimized} = storageManager.getData('app');
+  const {startMinimized, lastSize, openLastSize} = storageManager.getData('app');
   const mainWindow = appManager.getMainWindow();
 
   if (startMinimized) {
     mainWindow?.minimize();
   } else {
+    if (openLastSize) {
+      if (lastSize?.bounds) mainWindow?.setBounds(lastSize.bounds, false);
+      if (lastSize?.maximized) mainWindow?.maximize();
+    }
     mainWindow?.show();
   }
 }

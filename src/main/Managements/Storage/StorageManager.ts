@@ -483,6 +483,20 @@ class StorageManager extends BaseStorage {
     console.info('customRunBehavior', customRunBehavior);
     this.updateData('cardsConfig', {customRunBehavior});
   }
+
+  public updateLastSize() {
+    const isMaximized = appManager.getMainWindow()?.isMaximized() || false;
+    const bounds = appManager.getMainWindow()?.getBounds();
+
+    const prevBounds = this.getData('app').lastSize?.bounds;
+
+    this.updateData('app', {
+      lastSize: {
+        maximized: isMaximized,
+        bounds: isMaximized ? prevBounds : bounds,
+      },
+    });
+  }
 }
 
 export default StorageManager;

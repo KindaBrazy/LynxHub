@@ -22,6 +22,7 @@ export function changeWindowState(state: ChangeWindowState): void {
     maximize: () => (mainWindow.isMaximized() ? mainWindow.unmaximize() : mainWindow.maximize()),
     minimize: () => mainWindow.minimize(),
     close: () => {
+      storageManager.updateLastSize();
       mainWindow.close();
       if (platform() === 'darwin') trayManager.destroyTrayIcon();
     },
