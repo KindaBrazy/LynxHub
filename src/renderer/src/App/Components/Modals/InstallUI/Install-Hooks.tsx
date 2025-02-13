@@ -14,6 +14,8 @@ import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {InstallState} from './types';
 import InstallStepper from './Utils/InstallStepper';
+import {useAllCards} from '../../../Modules/ModuleLoader';
+import {isNil} from 'lodash';
 
 type Props = {
   setSteps: Dispatch<SetStateAction<string[]>>;
@@ -54,6 +56,7 @@ export function useStepper({
   setProgressBarState,
 }: Props) {
   const {cardId} = useModalsState('installUIModal');
+  const allCards = useAllCards();
 
   const cloneRepository = useCallback(
     async (url: string): ReturnType<InstallationStepper['cloneRepository']> => {
@@ -145,6 +148,21 @@ export function useStepper({
     dispatch(cardsActions.removeUpdateAvailable(cardId));
   }, [dispatch, cardId]);
 
+  const updateType = useMemo(() => {
+    const type = allCards.find(c => c.id === cardId)?.methods?.['manager']?.updater.updateType;
+    if (isNil(type)) return undefined;
+    return type;
+  }, [allCards, cardId]);
+
+  const checkForUpdate = useCallback(
+    (dir: string | undefined) => {
+      rendererIpc.module.cardUpdateAvailable({dir, id: cardId}, updateType).then((isAvailable: boolean) => {
+        if (isAvailable) dispatch(cardsActions.addUpdateAvailable(cardId));
+      });
+    },
+    [updateType, cardId],
+  );
+
   return useMemo(() => {
     return new InstallStepper({
       cardId,
@@ -160,6 +178,7 @@ export function useStepper({
       collectUserInput,
       progressBar,
       setUpdated,
+      checkForUpdate,
     });
   }, [
     cardId,
