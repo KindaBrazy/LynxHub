@@ -9,7 +9,7 @@ import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {settingsActions, useSettingsState} from '../../../../Redux/App/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
-import {RenderSubItems} from '../../../../Utils/UtilHooks';
+import {isLinuxPortable, RenderSubItems} from '../../../../Utils/UtilHooks';
 import MarkdownViewer from '../../../Reusable/MarkdownViewer';
 import SecurityWarning from '../SecurityWarning';
 import {InstalledExt} from './ExtensionsPage';
@@ -131,9 +131,15 @@ export function PreviewFooter({
   const later = useCallback(() => {
     Modal.destroyAll();
   }, []);
+
   const restart = useCallback(() => {
     Modal.destroyAll();
     rendererIpc.win.changeWinState('restart');
+  }, []);
+
+  const close = useCallback(() => {
+    Modal.destroyAll();
+    rendererIpc.win.changeWinState('close');
   }, []);
 
   const showRestartModal = useCallback((message: string) => {
@@ -145,8 +151,8 @@ export function PreviewFooter({
           <Button size="sm" variant="flat" color="warning" onPress={later}>
             Restart Later
           </Button>
-          <Button size="sm" color="success" onPress={restart}>
-            Restart Now
+          <Button size="sm" color="success" onPress={isLinuxPortable ? close : restart}>
+            {isLinuxPortable ? 'Exit Now' : 'Restart Now'}
           </Button>
         </div>
       ),
@@ -183,7 +189,7 @@ export function PreviewFooter({
         }
       });
     }
-  }, [selectedExt]);
+  }, [selectedExt, showRestartModal]);
 
   const uninstallExtension = useCallback(() => {
     setUninstalling(true);
@@ -197,7 +203,7 @@ export function PreviewFooter({
         setInstalled(prevState => prevState.filter(item => item.id !== selectedExt.id));
       });
     }
-  }, [selectedExt]);
+  }, [selectedExt, showRestartModal]);
 
   const handleInstall = () => {
     setIsSecOpen(true);
