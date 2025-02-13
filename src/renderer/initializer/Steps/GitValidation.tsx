@@ -25,12 +25,12 @@ export const useGitValidation = (myTurn: boolean, done: () => void): StepProps =
     available: <span>Git successfully detected.</span>,
     notAvailable: (
       <div className="flex flex-col space-y-1">
-        <span className="text-white">
+        <span className="text-white text-center">
           <Link size="sm" className="notDraggable" href={'https://www.git-scm.com/downloads'} isExternal showAnchorIcon>
-            Download & Install (Official Website)
+            Download & Install
           </Link>
         </span>
-        <Button size="sm" color="warning" variant="faded" onPress={checkAgain} className="notDraggable">
+        <Button size="sm" variant="flat" onPress={checkAgain} className="notDraggable">
           Retry Detection
         </Button>
       </div>
