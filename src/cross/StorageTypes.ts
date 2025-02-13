@@ -47,6 +47,7 @@ type StorageTypes = {
   app: {
     closeConfirm: boolean;
     terminateAIConfirm: boolean;
+    openLastSize: boolean;
     homeCategory: HomeCategory;
     darkMode: DarkModeTypes;
     taskbarStatus: TaskbarStatus;

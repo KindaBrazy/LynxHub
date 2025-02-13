@@ -126,6 +126,7 @@ export const useStorageData = () => {
       dispatch(settingsActions.setSettingsState({key: 'tooltipLevel', value: storage.app.tooltipStatus}));
       dispatch(settingsActions.setSettingsState({key: 'closeConfirm', value: storage.app.closeConfirm}));
       dispatch(settingsActions.setSettingsState({key: 'terminateAIConfirm', value: storage.app.terminateAIConfirm}));
+      dispatch(settingsActions.setSettingsState({key: 'openLastSize', value: storage.app.openLastSize}));
 
       if (storage.app.startupLastActivePage) {
         dispatch(appActions.setAppState({key: 'currentPage', value: storage.app.lastPage}));

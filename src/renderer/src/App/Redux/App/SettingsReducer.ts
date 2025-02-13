@@ -18,6 +18,7 @@ type SettingState = {
 
   closeConfirm: boolean;
   terminateAIConfirm: boolean;
+  openLastSize: boolean;
 
   updatedModules: string[];
   newModules: string[];
@@ -41,6 +42,7 @@ const initialState: SettingState = {
   tooltipLevel: 'essential',
   closeConfirm: true,
   terminateAIConfirm: true,
+  openLastSize: false,
   hotkeys: {
     FULLSCREEN: window.osPlatform === 'darwin' ? 'f12' : 'f11',
     TOGGLE_NAV: 'alt+a',
