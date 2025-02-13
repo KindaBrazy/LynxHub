@@ -10,13 +10,10 @@ import useRegisterHotkeys from './Utils/RegisterHotkeys';
 import useHtmlAttributes from './Utils/SetHtmlAttributes';
 
 export default function App() {
-  //#region Hooks
-
   useHtmlAttributes();
   useRegisterHotkeys();
   useAppEvents();
   useStateChange();
-  //#endregion
 
   return (
     <UIProviders>

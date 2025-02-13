@@ -4,8 +4,6 @@ import {useSelector} from 'react-redux';
 import {PatreonUserData} from '../../../../../cross/CrossTypes';
 import {RootState} from '../Store';
 
-//#region Initialization & Types
-
 type UserState = {
   patreonUserData: PatreonUserData;
   patreonLoggedIn: boolean;
@@ -26,9 +24,6 @@ const initialState: UserState = {
   patreonLoggedIn: false,
   updateChannel: 'public',
 };
-//#endregion
-
-//#region Slice
 
 const userSlice = createSlice({
   name: 'user',
@@ -51,9 +46,6 @@ const userSlice = createSlice({
     },
   },
 });
-//#endregion
-
-//#region Exports & Utils
 
 /**
  * Hook to access app state
@@ -66,4 +58,3 @@ export const useUserState = <K extends keyof UserState>(key: K): UserStateTypes[
 export const userActions = userSlice.actions;
 
 export default userSlice.reducer;
-//#endregion

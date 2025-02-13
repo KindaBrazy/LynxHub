@@ -5,8 +5,6 @@ import {useSelector} from 'react-redux';
 import {homeRoutePath} from '../../Components/Pages/ContentPages/Home/HomePage';
 import {RootState} from '../Store';
 
-//#region Initialization & Types
-
 type AppState = {
   darkMode: boolean;
   onFocus: boolean;
@@ -30,9 +28,6 @@ const initialState: AppState = {
   navBar: true,
   currentPage: homeRoutePath,
 };
-//#endregion
-
-//#region Slice
 
 const appSlice = createSlice({
   name: 'app',
@@ -49,9 +44,6 @@ const appSlice = createSlice({
     },
   },
 });
-//#endregion
-
-//#region Exports & Utils
 
 /**
  * Hook to access app state
@@ -64,4 +56,3 @@ export const useAppState = <K extends keyof AppState>(key: K): AppStateTypes[K] 
 export const appActions = appSlice.actions;
 
 export default appSlice.reducer;
-//#endregion

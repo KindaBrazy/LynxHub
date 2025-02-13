@@ -8,14 +8,9 @@ import {EMenuItem} from './Plugin/Extensions/ExtensionTypes_Main';
 
 /** Manages the system tray icon and its context menu for the application. */
 export default class TrayManager {
-  //#region Private Properties
-
   private tray?: Tray;
   private readonly trayIcon: string;
   private readonly trayIconMenu: string;
-  //#endregion
-
-  //#region Constructor
 
   /**
    * Creates a new TrayManager instance.
@@ -27,10 +22,6 @@ export default class TrayManager {
     this.trayIconMenu = trayIconMenu;
   }
 
-  //#endregion
-
-  //#region Private Methods
-
   /** Closes the main application window. */
   private closeMainWindow = (): void => {
     appManager.getMainWindow()?.close();
@@ -40,9 +31,6 @@ export default class TrayManager {
   private showMainWindow = (): void => {
     appManager.getMainWindow()?.show();
   };
-  //#endregion
-
-  //#region Public Methods
 
   /** Creates and sets up the tray icon with its context menu. */
   public createTrayIcon(): void {
@@ -74,6 +62,4 @@ export default class TrayManager {
     this.tray.destroy();
     this.tray = undefined;
   }
-
-  //#endregion
 }

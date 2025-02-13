@@ -3,8 +3,6 @@ import {PullResult, SimpleGitProgressEvent} from 'simple-git';
 
 import {UpdateDownloadProgress} from './CrossTypes';
 
-//#region Ipc Types
-
 export type WinStateChange = {name: 'focus' | 'maximize' | 'full-screen'; value: boolean};
 export type ChangeWindowState = 'minimize' | 'maximize' | 'close' | 'fullscreen' | 'restart';
 export type DarkModeTypes = 'dark' | 'light' | 'system';
@@ -70,9 +68,6 @@ export type DownloadProgress = {
 };
 
 export type SkippedPlugins = {folderName: string; message: string};
-//#endregion
-
-//#region Ipc Channels Names
 
 export const winChannels = {
   changeState: 'win:state-change',
@@ -276,4 +271,3 @@ export const storageUtilsChannels = {
 export const appWindowChannels = {
   webViewAttached: 'window:webview-attached',
 };
-//#endregion

@@ -14,8 +14,6 @@ import {getExePath, isPortable} from '../../Utilities/Utils';
 const {JSONFileSyncPreset} = importSync('lowdb/node');
 
 class BaseStorage {
-  //#region Private Properties
-
   private readonly storage;
 
   private readonly CURRENT_VERSION: number = 0.7;
@@ -86,9 +84,6 @@ class BaseStorage {
       resizeDelay: 77,
     },
   };
-  //#endregion
-
-  //#region Constructor
 
   constructor() {
     const storageFile = is.dev ? `${APP_NAME}-Dev.config` : `${APP_NAME}.config`;
@@ -115,10 +110,6 @@ class BaseStorage {
     this.storage.read();
     this.migration();
   }
-
-  //#endregion
-
-  //#region Private Methods
 
   private migration() {
     const storeVersion = this.getData('storage').version;
@@ -167,10 +158,6 @@ class BaseStorage {
     }
   }
 
-  //#endregion
-
-  //#region Public Methods
-
   public getData<K extends keyof StorageTypes>(key: K): StorageTypes[K] {
     return this.storage.data[key];
   }
@@ -198,8 +185,6 @@ class BaseStorage {
     this.storage.write();
     appManager.restart();
   }
-
-  //#endregion
 }
 
 export default BaseStorage;

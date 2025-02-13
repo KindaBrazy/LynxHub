@@ -18,15 +18,9 @@ import {getAppDataPath} from '../AppDataManager';
 import BaseStorage from './BaseStorage';
 
 class StorageManager extends BaseStorage {
-  //#region Constructor
-
   constructor() {
     super();
   }
-
-  //#endregion
-
-  //#region Private Methods
 
   private getPreCommands(id: string): string[] {
     return this.getData('cardsConfig').preCommands.find(preCommand => preCommand.cardId === id)?.data || [];
@@ -56,10 +50,6 @@ class StorageManager extends BaseStorage {
 
     this.updateData('cardsConfig', {args: currentArgs});
   }
-
-  //#endregion
-
-  //#region Getter
 
   public getPreOpenById(cardId: string) {
     return this.getData('cardsConfig').preOpen.find(preOpen => preOpen.cardId === cardId);
@@ -106,10 +96,6 @@ class StorageManager extends BaseStorage {
     await moduleManager.getMethodsById(cardId)?.saveArgs?.(result, dir, configPath, storage);
   }
 
-  //#endregion
-
-  //#region Public Methods
-
   public updateZoomFactor(data: {id: string; zoom: number}) {
     const zoomFactor = this.getData('cards').zoomFactor;
 
@@ -123,8 +109,6 @@ class StorageManager extends BaseStorage {
 
     this.updateData('cards', {zoomFactor});
   }
-
-  //#region Installed Cards
 
   public addInstalledCard(card: InstalledCard) {
     const storedCards = this.getData('cards').installedCards;
@@ -157,10 +141,6 @@ class StorageManager extends BaseStorage {
     appManager.getWebContent()?.send(storageUtilsChannels.onInstalledCards, this.getData('cards').installedCards);
   }
 
-  //#endregion
-
-  //#region Auto Update Cards
-
   public addAutoUpdateCard(cardId: string) {
     const storedAutoUpdateCards = this.getData('cards').autoUpdateCards;
 
@@ -185,10 +165,6 @@ class StorageManager extends BaseStorage {
     appManager.getWebContent()?.send(storageUtilsChannels.onAutoUpdateCards, updatedAutoUpdateCards);
   }
 
-  //#endregion
-
-  //#region Auto Update Extensions
-
   public addAutoUpdateExtensions(cardId: string) {
     const storedAutoUpdateExtensions = this.getData('cards').autoUpdateExtensions;
 
@@ -212,10 +188,6 @@ class StorageManager extends BaseStorage {
 
     appManager.getWebContent()?.send(storageUtilsChannels.onAutoUpdateExtensions, updatedAutoUpdateExtensions);
   }
-
-  //#endregion
-
-  //#region Pinned Cards
 
   public addPinnedCard(cardId: string) {
     const storedPinnedCards = this.getData('cards').pinnedCards;
@@ -266,10 +238,6 @@ class StorageManager extends BaseStorage {
     return result;
   }
 
-  //#endregion
-
-  //#region Recently Used Cards
-
   public updateRecentlyUsedCards(id: string) {
     const newArray = _.without(this.getData('cards').recentlyUsedCards, id);
     // Add the id to the beginning of the array
@@ -298,10 +266,6 @@ class StorageManager extends BaseStorage {
     return result;
   }
 
-  //#endregion
-
-  //#region Home Category
-
   public setHomeCategory(data: string[]) {
     this.updateData('app', {homeCategory: data});
     appManager.getWebContent()?.send(storageUtilsChannels.onHomeCategory, data);
@@ -322,10 +286,6 @@ class StorageManager extends BaseStorage {
 
     return result;
   }
-
-  //#endregion
-
-  //#region Pre Commands
 
   public addPreCommand(cardId: string, command: string): void {
     const preCommands = this.getData('cardsConfig').preCommands;
@@ -397,10 +357,6 @@ class StorageManager extends BaseStorage {
     return result;
   }
 
-  //#endregion
-
-  //#region Custom Run
-
   public addCustomRun(cardId: string, command: string): void {
     const customRun = this.getData('cardsConfig').customRun;
     const existCustomRun = customRun.findIndex(custom => custom.cardId === cardId);
@@ -470,10 +426,6 @@ class StorageManager extends BaseStorage {
     return result;
   }
 
-  //#endregion
-
-  //#region Pre Open
-
   public addPreOpen(cardId: string, open: {type: 'folder' | 'file'; path: string}): void {
     const preOpen = this.getData('cardsConfig').preOpen;
     const existCustomRun = preOpen.findIndex(custom => custom.cardId === cardId);
@@ -531,10 +483,6 @@ class StorageManager extends BaseStorage {
     console.info('customRunBehavior', customRunBehavior);
     this.updateData('cardsConfig', {customRunBehavior});
   }
-
-  //#endregion
-
-  //#endregion
 }
 
 export default StorageManager;

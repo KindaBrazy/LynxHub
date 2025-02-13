@@ -10,8 +10,6 @@ import rendererIpc from '../RendererIpc';
 
 /** Register application hotkeys */
 export default function useRegisterHotkeys() {
-  //#region Properties
-
   const hotkeys = useSettingsState('hotkeys');
   const dispatch = useDispatch<AppDispatch>();
 
@@ -25,10 +23,6 @@ export default function useRegisterHotkeys() {
     [hotkeys.isEnabled],
   );
 
-  //#endregion
-
-  //#region Methods
-
   const handleFullscreen = useCallback(() => {
     rendererIpc.win.changeWinState('fullscreen');
   }, []);
@@ -41,13 +35,7 @@ export default function useRegisterHotkeys() {
     dispatch(cardsActions.toggleRunningCardView());
   }, [dispatch]);
 
-  //#endregion
-
-  //#region useHotkeys
-
   useHotkeys(hotkeys.FULLSCREEN, handleFullscreen, hotkeyOptions, [hotkeys]);
   useHotkeys(hotkeys.TOGGLE_NAV, handleToggleNav, hotkeyOptions, [hotkeys]);
   useHotkeys(hotkeys.TOGGLE_AI_VIEW, handleToggleAIView, hotkeyOptions, [hotkeys]);
-
-  //#endregion
 }
