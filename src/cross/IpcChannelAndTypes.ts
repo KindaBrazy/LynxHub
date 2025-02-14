@@ -39,8 +39,8 @@ export type CustomRunBehaviorData = {
 };
 export type CustomRunBehaviorStore = CustomRunBehaviorData[];
 
-export type ExtensionsData = {name: string; remoteUrl: string; size: string}[] | 'empty';
-export type ExtensionsUpdateStatus = {id: string; updateAvailable: boolean}[];
+export type ExtensionsData = {name: string; remoteUrl: string; size: string; isDisabled: boolean}[] | 'empty';
+export type ExtensionsUpdateStatus = {id: string; updateAvailable: boolean; isDisabled: boolean}[];
 
 export type PreCommands = {id: string; command?: string | string[] | number};
 export type PreOpen = {id: string; open?: {type: 'folder' | 'file'; path: string} | number};
@@ -120,6 +120,7 @@ export const utilsChannels = {
   cancelExtensionsData: 'utils:cancel-extensions-data',
 
   updateAllExtensions: 'utils:update-all-extensions',
+  disableExtension: 'utils:disable-extension',
   onUpdateAllExtensions: 'utils:on-update-all-extensions',
 
   extensionsDetails: 'utils:extensions-details',

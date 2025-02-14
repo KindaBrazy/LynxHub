@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import fs from 'graceful-fs';
+import {compact} from 'lodash';
 
 import {ExtensionsData, ExtensionsUpdateStatus, utilsChannels} from '../../../../cross/IpcChannelAndTypes';
 import {appManager} from '../../../index';
@@ -32,7 +33,7 @@ async function getRepoFolders(dir: string): Promise<string[]> {
       }),
     );
 
-    return repoFolders.filter(Boolean) as string[];
+    return compact(repoFolders);
   } catch (error) {
     console.error(`Error retrieving repository folders from ${dir}:`, error);
     return [];
@@ -56,7 +57,7 @@ export async function getExtensionsUpdate(dir: string): Promise<ExtensionsUpdate
         if (!loadingExtensions) return null;
         const extensionDir = path.join(dir, extension);
         const updateAvailable = await GitManager.isUpdateAvailable(extensionDir);
-        return {id: extension, updateAvailable};
+        return {id: extension, updateAvailable, isDisabled: extension.startsWith('.')};
       }),
     );
 
@@ -87,7 +88,7 @@ export async function getExtensionsDetails(dir: string): Promise<ExtensionsData 
           GitManager.remoteUrlFromDir(extensionDir).catch(() => ''),
           calculateFolderSize(extensionDir),
         ]);
-        return {name: extension, remoteUrl, size};
+        return {name: extension, remoteUrl, size, isDisabled: extension.startsWith('.')};
       }),
     );
 
@@ -101,6 +102,43 @@ export async function getExtensionsDetails(dir: string): Promise<ExtensionsData 
 async function getRepoDirectories(dir: string) {
   const folders = await getRepoFolders(dir);
   return folders.map(folder => path.join(dir, folder));
+}
+
+export async function disableExtension(disable: boolean, dir: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    try {
+      const targetDir = path.resolve(dir);
+      if (!fs.existsSync(targetDir) || !fs.statSync(targetDir).isDirectory()) reject();
+
+      const parsedPath = path.parse(targetDir);
+      const currentName = parsedPath.base;
+      let newName = currentName;
+
+      if (disable) {
+        if (!currentName.startsWith('.')) {
+          newName = '.' + currentName;
+        } else {
+          resolve(targetDir);
+        }
+      } else {
+        if (currentName.startsWith('.')) {
+          newName = currentName.slice(1);
+        } else {
+          resolve(targetDir);
+        }
+      }
+
+      const newPath = path.join(parsedPath.dir, newName);
+
+      if (fs.existsSync(newPath)) reject();
+
+      fs.renameSync(targetDir, newPath);
+      resolve(newPath);
+    } catch (error) {
+      console.error(`Error renaming directory: ${error}`);
+      reject();
+    }
+  });
 }
 
 export async function updateAllExtensions(data: {id: string; dir: string}) {

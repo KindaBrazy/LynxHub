@@ -36,6 +36,7 @@ type Props = {
   setInstalledExtensions: Dispatch<SetStateAction<string[]>>;
 };
 
+// TODO: Use list for show items and simplify this fcking noob complexity
 /**
  * Table displaying installed extensions.
  * - It handles updating, removing, and trashing extensions.
@@ -66,6 +67,31 @@ const Installed = forwardRef(
       },
       [dir],
     );
+
+    const handleDisableExtension = useCallback((disable: boolean, targetDir: string, name: string) => {
+      setRows(prevState =>
+        prevState.map(row => (row.key === name ? {...row, disable: useRowElements.disableBtn.disable} : row)),
+      );
+      rendererIpc.utils
+        .disableExtension(!disable, targetDir)
+        .then(resultDir => {
+          setRows(prevState =>
+            prevState.map(row =>
+              row.key === name
+                ? {
+                    ...row,
+                    disable: useRowElements.disableBtn.enabled(!disable, () =>
+                      handleDisableExtension(!disable, resultDir, name),
+                    ),
+                  }
+                : row,
+            ),
+          );
+        })
+        .catch(() => {
+          message.error(`Something goes wrong when ${disable ? 'enabling' : 'disabling'} extension.`);
+        });
+    }, []);
 
     // Update an extension
     const updateExtension = useCallback(
@@ -123,10 +149,13 @@ const Installed = forwardRef(
 
       rendererIpc.utils.getExtensionsUpdateStatus(dir).then(updateStatus => {
         if (isEmpty(updateStatus)) return;
-
         setRows(prevState =>
           prevState.map((row, index) => {
-            const isUpdateAvailable = find(updateStatus, {id: row.key})?.updateAvailable;
+            const isUpdateAvailable = find(updateStatus, {id: row.key});
+            const isDisabled = find(updateStatus, {id: row.key})?.isDisabled || false;
+            const resultID = find(updateStatus, {id: row.key})?.id || '';
+            const resultDir = `${dir}/${resultID}`;
+
             if (isUpdateAvailable) setUpdatesAvailable(prevState1 => [...prevState1, row.key]);
 
             setIsDeleteModalOpen(prevState => [...prevState, false]);
@@ -145,6 +174,9 @@ const Installed = forwardRef(
                 isDeleteModalOpen[index],
                 () => handleDeleteExtension(row.key, 'removeDir', index),
                 () => handleDeleteExtension(row.key, 'trashDir', index),
+              ),
+              disable: useRowElements.disableBtn.enabled(isDisabled, () =>
+                handleDisableExtension(isDisabled, resultDir, resultID),
               ),
               update: isUpdateAvailable
                 ? useRowElements.updateBtn.available(async () => {
@@ -176,6 +208,7 @@ const Installed = forwardRef(
                 size: dataRow.size,
                 stars: useRowElements.stars(details),
                 update: useRowElements.updateBtn.initializing,
+                disable: useRowElements.disableBtn.disable,
               };
             }),
           );

@@ -261,6 +261,9 @@ const rendererIpc = {
     getExtensionsUpdateStatus: (dir: string): Promise<ExtensionsUpdateStatus> =>
       ipc.invoke(utilsChannels.updateStatus, dir),
 
+    disableExtension: (disable: boolean, dir: string): Promise<string> =>
+      ipc.invoke(utilsChannels.disableExtension, disable, dir),
+
     cancelExtensionsData: (): void => ipc.send(utilsChannels.cancelExtensionsData),
 
     downloadFile: (url: string): void => ipc.send(utilsChannels.downloadFile, url),

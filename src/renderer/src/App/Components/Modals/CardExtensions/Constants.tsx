@@ -5,6 +5,7 @@ import {Variants} from 'framer-motion';
 import {RepoDetails} from '../../../../../../cross/CrossTypes';
 import {CrossShield_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
 import {Star_Icon, Trash_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Lock_Icon, Unlock_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 import {formatNumber} from '../../../Utils/UtilFunctions';
 
 export const tabContentVariants: Variants = {
@@ -18,6 +19,7 @@ export const extensionsColumns = [
   {key: 'size', label: 'Size'},
   {key: 'update', label: 'Update Status'},
   {key: 'remove', label: 'Remove'},
+  {key: 'disable', label: 'Disable'},
 ];
 
 export const loadingTableElement = <Spinner label="Checking Extensions" />;
@@ -115,5 +117,19 @@ export const useRowElements = {
       </Button>
     ),
     updating: <Button size="sm" variant="flat" color="success" className="cursor-default" isLoading />,
+  },
+  disableBtn: {
+    disable: <Button size="sm" variant="light" isDisabled={true} isLoading isIconOnly />,
+    enabled: (isDisabled: boolean, onPress: () => void) => (
+      <Button
+        size="sm"
+        variant="light"
+        onPress={onPress}
+        className="cursor-default"
+        color={isDisabled ? 'warning' : 'default'}
+        isIconOnly>
+        {isDisabled ? <Lock_Icon className="size-4" /> : <Unlock_Icon className="size-4" />}
+      </Button>
+    ),
   },
 };
