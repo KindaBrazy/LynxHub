@@ -28,7 +28,7 @@ export default function SettingsClear() {
         onConfirm={clearAppSettings}
         description="Are you sure you want to clear all app settings and restart?">
         <Button variant="flat" color="danger" fullWidth>
-          Clear Settings (Restart)
+          Clear Settings (Restart Required)
         </Button>
       </Popconfirm>
       <Popconfirm

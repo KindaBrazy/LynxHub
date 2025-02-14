@@ -46,7 +46,7 @@ export default function SettingsData() {
         {currentPath}
       </Button>
 
-      <Button onPress={change}>Change (Restart)</Button>
+      <Button onPress={change}>Change (Restart Required)</Button>
     </SettingsSection>
   );
 }
