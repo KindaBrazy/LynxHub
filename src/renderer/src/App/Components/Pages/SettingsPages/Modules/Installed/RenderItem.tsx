@@ -147,13 +147,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
         onOpenChange={setIsUninstallConfirmOpen}
         showArrow>
         <PopoverTrigger>
-          <Button
-            size="sm"
-            color="danger"
-            variant="light"
-            isLoading={uninstalling}
-            className="cursor-default"
-            startContent={<Trash_Icon />}>
+          <Button size="sm" color="danger" variant="light" isLoading={uninstalling} startContent={<Trash_Icon />}>
             Uninstall
           </Button>
         </PopoverTrigger>

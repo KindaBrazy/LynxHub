@@ -52,7 +52,7 @@ export const MenuUpdate = () => {
       isDisabled={!!updating}
       startContent={<Download_Icon />}
       endContent={updating && <Spinner size="sm" color="primary" />}
-      className={`cursor-default ${updateAvailable && 'text-success'}`}
+      className={updateAvailable ? 'text-success' : 'cursor-default'}
     />
   );
 };
