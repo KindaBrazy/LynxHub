@@ -7,4 +7,5 @@ export type InstalledExtensionsTable = {
   size: ReactNode | string;
   update: ReactNode;
   remove: ReactNode;
+  disable: ReactNode;
 };

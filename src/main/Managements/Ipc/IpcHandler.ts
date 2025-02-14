@@ -44,6 +44,7 @@ import {
   trashDir,
 } from './Methods/IpcMethods';
 import {
+  disableExtension,
   disableLoadingExtensions,
   getExtensionsDetails,
   getExtensionsUpdate,
@@ -133,6 +134,7 @@ function utils() {
   ipcMain.handle(utilsChannels.updateStatus, (_, dir: string) => getExtensionsUpdate(dir));
 
   ipcMain.on(utilsChannels.updateAllExtensions, (_, data: {id: string; dir: string}) => updateAllExtensions(data));
+  ipcMain.handle(utilsChannels.disableExtension, (_, disable: boolean, dir: string) => disableExtension(disable, dir));
 
   ipcMain.on(utilsChannels.cancelExtensionsData, () => disableLoadingExtensions());
 
