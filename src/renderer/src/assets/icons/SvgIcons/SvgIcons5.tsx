@@ -184,17 +184,66 @@ export function CloseSimple_Icon(props: SvgProps): ReactElement {
 
 export function Clock_Icon(props: SvgProps): ReactElement {
   return (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <svg {...props} width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
+        opacity="0.5"
         fill="currentColor"
         d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2S2 6.477 2 12s4.477 10 10 10"
-        opacity="0.5"
       />
       <path
+        d={
+          'M12 7.25a.75.75 0 0 1 .75.75v3.69l2.28 2.28a.75.75 0 1 1-1.06 1.06l-2.5-2.5a.75.75 0 ' +
+          '0 1-.22-.53V8a.75.75 0 0 1 .75-.75'
+        }
+        fillRule="evenodd"
+        clipRule="evenodd"
         fill="currentColor"
-        fill-rule="evenodd"
-        d="M12 7.25a.75.75 0 0 1 .75.75v3.69l2.28 2.28a.75.75 0 1 1-1.06 1.06l-2.5-2.5a.75.75 0 0 1-.22-.53V8a.75.75 0 0 1 .75-.75"
-        clip-rule="evenodd"
+      />
+    </svg>
+  );
+}
+
+export function Lock_Icon(props: SvgProps): ReactElement {
+  return (
+    <svg {...props} width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d={
+          'M2 16c0-2.828 0-4.243.879-5.121C3.757 10 5.172 10 8 10h8c2.828 0 4.243 0 5.121.879C22' +
+          ' 11.757 22 13.172 22 16s0 4.243-.879 5.121C20.243 22 18.828 22 16 22H8c-2.828 0-4.243' +
+          ' 0-5.121-.879C2 20.243 2 18.828 2 16'
+        }
+        opacity="0.5"
+        fill="currentColor"
+      />
+      <path
+        d={
+          'M6.75 8a5.25 5.25 0 0 1 10.5 0v2.004c.567.005 1.064.018 1.5.05V8a6.75 6.75 0 0 0-13.5' +
+          ' 0v2.055a24 24 0 0 1 1.5-.051z'
+        }
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
+export function Unlock_Icon(props: SvgProps): ReactElement {
+  return (
+    <svg {...props} width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d={
+          'M2 16c0-2.828 0-4.243.879-5.121C3.757 10 5.172 10 8 10h8c2.828 0 4.243 0 ' +
+          '5.121.879C22 11.757 22 13.172 22 16s0 4.243-.879 5.121C20.243 22 18.828 22 1' +
+          '6 22H8c-2.828 0-4.243 0-5.121-.879C2 20.243 2 18.828 2 16'
+        }
+        opacity="0.5"
+        fill="currentColor"
+      />
+      <path
+        d={
+          'M6.75 8a5.25 5.25 0 0 1 10.335-1.313a.75.75 0 0 0 1.452-.374A6.75 6.75 0 0 0 ' +
+          '5.25 8v2.055a24 24 0 0 1 1.5-.051z'
+        }
+        fill="currentColor"
       />
     </svg>
   );
