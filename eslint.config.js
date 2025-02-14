@@ -1,4 +1,4 @@
-import {FlatCompat} from '@eslint/eslintrc';
+import configPrettier from '@electron-toolkit/eslint-config-prettier';
 import eslint from '@eslint/js';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import perfectionist from 'eslint-plugin-perfectionist';
@@ -8,18 +8,10 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import globals from 'globals';
 import tsEslint from 'typescript-eslint';
 
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-  resolvePluginsRelativeTo: import.meta.dirname,
-  recommendedConfig: eslint.configs.recommended,
-});
-
 const MAX_LINE_LENGTH = 120;
 
 export default [
-  ...compat.config({
-    extends: ['@electron-toolkit/eslint-config-prettier'],
-  }),
+  configPrettier,
 
   eslint.configs.recommended,
   react.configs.flat.recommended,
