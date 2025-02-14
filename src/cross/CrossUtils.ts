@@ -6,7 +6,7 @@
  */
 export function extractGitUrl(url: string): {owner: string; repo: string; platform: 'github' | 'gitlab'} {
   // Regular expression to match GitHub and GitLab repository URLs with or without protocol
-  const gitRepoRegex = /^(https?:\/\/)?(www\.)?(github|gitlab)\.com\/([^/]+)\/([^/.]+)(?:\.git)?$/;
+  const gitRepoRegex = /^(https?:\/\/)?(www\.)?(github|gitlab)\.com\/([^/]+)\/([^/]+?)(?:\.git)?$/;
   const match = url.match(gitRepoRegex);
 
   if (!match) {
