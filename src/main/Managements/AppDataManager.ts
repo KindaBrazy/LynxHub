@@ -11,7 +11,8 @@ import {
 } from '../../cross/CrossConstants';
 import {FolderNames} from '../../cross/CrossTypes';
 import {appManager, storageManager} from '../index';
-import {getExePath, getRelativePath} from '../Utilities/Utils';
+import {getExePath, getRelativePath, isPortable} from '../Utilities/Utils';
+import {changeWindowState} from './Ipc/Methods/IpcMethods';
 
 const DIRECTORIES = [
   MODULES_FOLDER_NAME,
@@ -60,7 +61,11 @@ export function getAppDataPath(): string {
  */
 function setAppDataFolder(targetDir: string): void {
   storageManager.updateData('app', {appDataDir: targetDir});
-  appManager.restart();
+  if (isPortable() === 'linux') {
+    changeWindowState('close');
+  } else {
+    appManager.restart();
+  }
 }
 
 /**

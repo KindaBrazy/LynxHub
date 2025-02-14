@@ -10,6 +10,7 @@ import {APP_NAME} from '../../../cross/CrossConstants';
 import StorageTypes from '../../../cross/StorageTypes';
 import {appManager} from '../../index';
 import {getExePath, isPortable} from '../../Utilities/Utils';
+import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 
 const {JSONFileSyncPreset} = importSync('lowdb/node');
 
@@ -185,7 +186,11 @@ class BaseStorage {
   public clearStorage(): void {
     this.storage.data = {...this.DEFAULT_DATA};
     this.storage.write();
-    appManager.restart();
+    if (isPortable() === 'linux') {
+      changeWindowState('close');
+    } else {
+      appManager.restart();
+    }
   }
 }
 
