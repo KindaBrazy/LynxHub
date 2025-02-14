@@ -153,7 +153,6 @@ export const usePatreon = () => {
       })
       .catch(e => {
         console.warn(e);
-        console.log(isOnline);
         if (isOnline) checkEARepos(false);
       });
 
