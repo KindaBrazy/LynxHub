@@ -115,7 +115,8 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
     if (!this.checkInterval && !isEmpty(updateType)) {
       await this.checkAllCardsUpdate(updateType);
 
-      this.checkInterval = setInterval(() => this.checkAllCardsUpdate(updateType), toMs(30, 'minutes'));
+      const interval = storageManager.getData('cards').checkUpdateInterval || 30;
+      this.checkInterval = setInterval(() => this.checkAllCardsUpdate(updateType), toMs(interval, 'minutes'));
     }
   }
 }

@@ -34,6 +34,7 @@ class BaseStorage {
       cardsRepoInfo: true,
       zoomFactor: [],
       duplicated: [],
+      checkUpdateInterval: 30,
     },
     cardsConfig: {
       preCommands: [],
@@ -129,6 +130,7 @@ class BaseStorage {
     const version6to7 = () => {
       this.storage.data.app.openLastSize = false;
       this.storage.data.app.lastSize = undefined;
+      this.storage.data.cards.checkUpdateInterval = 30;
       this.storage.write();
     };
 

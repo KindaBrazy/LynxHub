@@ -1,4 +1,4 @@
-import {useSettingsState} from '../../../../../../../Redux/App/SettingsReducer';
+import {useSettingsState} from '../../../../../../../../Redux/App/SettingsReducer';
 import ConfigCardCompactMode from './ConfigCard-CompactMode';
 import ConfigCardDesc from './ConfigCard-Desc';
 import ConfigCardDevImage from './ConfigCard-DevImage';

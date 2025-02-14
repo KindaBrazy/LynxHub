@@ -13,6 +13,7 @@ type CardsState = {
   autoUpdate: string[];
   autoUpdateExtensions: string[];
   updatingExtensions: OnUpdatingExtensions | undefined;
+  checkUpdateInterval: number;
 
   updatingCards: UpdatingCards;
   updateAvailable: string[];
@@ -49,6 +50,7 @@ const initialState: CardsState = {
   updatingExtensions: undefined,
   webViewZoomFactor: [],
   duplicates: [],
+  checkUpdateInterval: 30,
 };
 
 const cardsSlice = createSlice({
@@ -86,6 +88,10 @@ const cardsSlice = createSlice({
     },
     setUpdatingExtensions: (state, action: PayloadAction<OnUpdatingExtensions | undefined>) => {
       state.updatingExtensions = action.payload;
+    },
+
+    setUpdateInterval: (state, action: PayloadAction<number>) => {
+      state.checkUpdateInterval = action.payload;
     },
 
     addUpdatingCard: (state, action: PayloadAction<UpdatingCard>) => {
