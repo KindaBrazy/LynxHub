@@ -113,7 +113,7 @@ function git() {
     (_, url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string) =>
       cloneShallow(url, directory, singleBranch, depth, branch),
   );
-  ipcMain.on(
+  ipcMain.handle(
     gitChannels.cloneShallowPromise,
     (_, url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string) =>
       cloneShallowPromise(url, directory, singleBranch, depth, branch),
