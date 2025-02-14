@@ -42,7 +42,7 @@ export const MenuInfo = () => {
     <DropdownItem
       key="information"
       onPress={onPress}
-      className="cursor-default"
+      className={`${!showOpenFolder && 'cursor-default'}`}
       title={showOpenFolder ? 'Open Folder' : 'Information'}
       startContent={showOpenFolder ? <OpenFolder_Icon /> : <Info_Icon />}
     />
@@ -72,7 +72,7 @@ export const MenuHomePage = () => {
       key="homepage"
       title="HomePage"
       onPress={onPress}
-      className="cursor-default"
+      className={`${!isCtrlPressed && 'cursor-default'}`}
       endContent={isCtrlPressed && <ExternalLink_Icon />}
       startContent={<HomeSmile_Icon className="size-3.5" />}
     />
