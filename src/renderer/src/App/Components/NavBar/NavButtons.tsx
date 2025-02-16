@@ -2,9 +2,9 @@ import {isEmpty} from 'lodash';
 import {ReactNode, useMemo} from 'react';
 
 import {AudioGeneration_Icon, Extensions_Icon, Extensions2_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
-import {Home_Icon, ImageGeneration_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
+import {Home_Icon, ImageGeneration_Icon, Info_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
 import {TextGeneration_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
-import {Dashboard_Icon, Slider_Icon} from '../../../assets/icons/SvgIcons/SvgIcons4';
+import {Slider_Icon} from '../../../assets/icons/SvgIcons/SvgIcons4';
 import {GamePad_Icon, Rocket_Icon} from '../../../assets/icons/SvgIcons/SvgIcons5';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../Redux/App/SettingsReducer';
@@ -106,7 +106,7 @@ export const ContentPagesButtons = () => {
 };
 
 const SettingsPages: PagesType[] = [
-  {navButton: {icon: <Dashboard_Icon className="size-full" />, title: 'Dashboard'}, path: dashboardRoutePath},
+  {navButton: {icon: <Info_Icon className="size-full" />, title: 'Dashboard'}, path: dashboardRoutePath},
   {navButton: {icon: <Extensions2_Icon className="size-full" />, title: 'Modules'}, path: modulesRoutePath},
   {navButton: {icon: <Extensions_Icon className="size-full" />, title: 'Extensions'}, path: extensionsRoutePath},
   {navButton: {icon: <Slider_Icon className="size-full" />, title: 'Settings'}, path: settingsRoutePath},
