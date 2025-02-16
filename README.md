@@ -200,6 +200,7 @@ Here's what you can expect:
 | <img height='20' src="https://avatars.githubusercontent.com/u/134869877?s=20&v=4"> SillyTavern | SillyTavern     | [Link](https://github.com/SillyTavern/SillyTavern)         |
 | <img height='20' src="https://avatars.githubusercontent.com/u/158137808?s=20&v=4"> Open-WebUI  | Open WebUI      | [Link](https://github.com/open-webui/open-webui)           |
 | <img height='20' src="https://avatars.githubusercontent.com/u/827993?s=20&v=4"> ParisNeo       | LoLLMs          | [Link](https://github.com/ParisNeo/lollms-webui)           |
+| <img height='20' src="https://avatars.githubusercontent.com/u/128289781?s=20&v=4"> FlowiseAI   | Flowise         | [Link](https://github.com/FlowiseAI/Flowise)               |
 
 **`🎵 Audio Generation`**
 
