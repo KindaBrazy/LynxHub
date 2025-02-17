@@ -1,6 +1,6 @@
-import {platform} from 'node:os';
 import path from 'node:path';
 
+import {app} from 'electron';
 import pty from 'node-pty';
 import treeKill from 'tree-kill';
 
@@ -11,32 +11,16 @@ import {determineShell} from '../Utilities/Utils';
 /** Manages pseudo-terminal (PTY) processes for different shells. */
 export default class PtyManager {
   private isRunning: boolean;
-  private readonly shell: string;
-  private process?: pty.IPty;
+  private process: pty.IPty;
 
   public onData?: (data: string) => void;
 
-  constructor() {
-    this.isRunning = false;
-    this.shell = determineShell();
-  }
+  constructor(dir?: string, sendDataToRenderer = false) {
+    app.on('before-quit', this.stop);
 
-  /**
-   * Checks if the PTY process is available.
-   * @returns True if the process is running and has a valid PID, false otherwise.
-   */
-  private isAvailable(): boolean {
-    return this.isRunning && !!this.process?.pid;
-  }
-
-  /**
-   * Starts a new PTY process.
-   * @param dir - The working directory for the PTY process.
-   * @param sendDataToRenderer - Whether to send data to the renderer process.
-   */
-  public start(dir?: string, sendDataToRenderer = false): void {
     const {useConpty} = storageManager.getData('terminal');
-    this.process = pty.spawn(this.shell, [], {
+
+    this.process = pty.spawn(determineShell(), [], {
       cwd: dir ? path.resolve(dir) : undefined,
       cols: 150,
       rows: 150,
@@ -59,11 +43,10 @@ export default class PtyManager {
    * Stops the current PTY process.
    */
   public stop(): void {
-    if (this.isAvailable() && this.process?.pid) {
+    if (this.isRunning) {
+      this.process.kill();
       treeKill(this.process.pid);
-      if (platform() === 'darwin') this.process.kill();
       this.isRunning = false;
-      this.process = undefined;
     }
   }
 
@@ -73,8 +56,8 @@ export default class PtyManager {
    * @param rows - Number of rows.
    */
   public resize(cols: number, rows: number): void {
-    if (this.isAvailable()) {
-      this.process?.resize(cols, rows);
+    if (this.isRunning) {
+      this.process.resize(cols, rows);
     }
   }
 
@@ -83,12 +66,12 @@ export default class PtyManager {
    * @param data - The data to write, either a string or an array of strings.
    */
   public write(data: string | string[]): void {
-    if (!this.isAvailable()) return;
+    if (!this.isRunning) return;
 
     if (Array.isArray(data)) {
       data.forEach(text => this.process?.write(text));
     } else {
-      this.process?.write(data);
+      this.process.write(data);
     }
   }
 }

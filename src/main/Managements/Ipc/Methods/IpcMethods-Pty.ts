@@ -37,8 +37,8 @@ export async function customPtyProcess(opt: PtyProcessOpt, dir?: string, file?: 
   if (opt === 'start') {
     if (!dir || !file) return;
 
-    ptyManager = new PtyManager();
-    ptyManager.start(dir, true);
+    ptyManager = new PtyManager(dir, true);
+
     ptyManager.write(`${platform() === 'win32' ? './' : 'bash ./'}${file}${LINE_ENDING}`);
   } else if (opt === 'stop') {
     ptyManager?.stop();
@@ -49,9 +49,8 @@ export async function customPtyProcess(opt: PtyProcessOpt, dir?: string, file?: 
 export async function customPtyCommands(opt: PtyProcessOpt, commands?: string | string[], dir?: string) {
   if (opt === 'start') {
     if (lodash.isEmpty(commands)) return;
-    ptyManager = new PtyManager();
+    ptyManager = new PtyManager(dir, true);
 
-    ptyManager.start(dir, true);
     if (lodash.isArray(commands)) {
       runMultiCommand(commands);
     } else {
@@ -73,8 +72,7 @@ export async function ptyProcess(opt: PtyProcessOpt, cardId: string) {
     const card = storageManager.getData('cards').installedCards.find(card => card.id === cardId);
     if (!card) return;
 
-    ptyManager = new PtyManager();
-    ptyManager.start(card.dir, true);
+    ptyManager = new PtyManager(card.dir, true);
 
     const preCommands = storageManager.getPreCommandById(cardId);
     runMultiCommand(preCommands?.data || []);
