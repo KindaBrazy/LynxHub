@@ -24,10 +24,8 @@ export default function WindowButtons_Close({buttonProps, commonStyles}: Props) 
 
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
 
-  const restart = useCallback(() => {
-    rendererIpc.pty.process('stop', '');
-    setTimeout(() => rendererIpc.win.changeWinState('restart'), 200);
-  }, []);
+  const restart = useCallback(() => rendererIpc.win.changeWinState('restart'), []);
+  const close = useCallback(() => rendererIpc.win.changeWinState('close'), []);
 
   const onClick = () => {
     rendererIpc.storage.update('app', {lastPage: currentPage});
@@ -45,11 +43,6 @@ export default function WindowButtons_Close({buttonProps, commonStyles}: Props) 
     },
     [dispatch],
   );
-
-  const close = useCallback(() => {
-    rendererIpc.pty.process('stop', '');
-    setTimeout(() => rendererIpc.win.changeWinState('close'), 200);
-  }, []);
 
   return (
     <Popover
