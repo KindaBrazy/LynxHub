@@ -49,11 +49,18 @@ export default class ElectronAppManager {
   };
 
   public getMainWindow(): BrowserWindow | undefined {
+    if (!this.mainWindow) return undefined;
+
+    if (this.mainWindow.isDestroyed()) {
+      this.mainWindow = undefined;
+      return undefined;
+    }
+
     return this.mainWindow;
   }
 
   public getWebContent(): WebContents | undefined {
-    return this.mainWindow?.webContents;
+    return this.getMainWindow()?.webContents;
   }
 
   /** Creates and configures the loading window. */
@@ -85,49 +92,59 @@ export default class ElectronAppManager {
 
   /** Sets up event listeners for the main window. */
   private setupMainWindowEventListeners(): void {
-    this.mainWindow?.on('ready-to-show', (): void => {
+    this.getMainWindow()?.on('ready-to-show', (): void => {
       setTimeout(() => {
         this.loadingWindow?.close();
         this.onReadyToShow?.();
       }, 1000);
     });
 
-    this.mainWindow?.webContents.setWindowOpenHandler(({url}) => {
+    this.getWebContent()?.setWindowOpenHandler(({url}) => {
       shell.openExternal(url).catch(e => {
         console.error('Error on openExternal: ', e);
       });
       return {action: 'deny'};
     });
 
-    this.mainWindow?.on('minimize', this.handleMinimize);
-    this.mainWindow?.on('focus', this.handleFocus);
+    this.getMainWindow()?.on('minimize', this.handleMinimize);
+    this.getMainWindow()?.on('focus', this.handleFocus);
 
-    const webContent = this.mainWindow?.webContents;
+    const webContent = this.getWebContent();
     if (!webContent) return;
 
-    this.mainWindow?.on('focus', (): void => webContent.send(winChannels.onChangeState, {name: 'focus', value: true}));
-    this.mainWindow?.on('blur', (): void => webContent.send(winChannels.onChangeState, {name: 'focus', value: false}));
+    this.getMainWindow()?.on('focus', (): void =>
+      webContent.send(winChannels.onChangeState, {
+        name: 'focus',
+        value: true,
+      }),
+    );
+    this.getMainWindow()?.on('blur', (): void =>
+      webContent.send(winChannels.onChangeState, {
+        name: 'focus',
+        value: false,
+      }),
+    );
 
-    this.mainWindow?.on('maximize', (): void =>
+    this.getMainWindow()?.on('maximize', (): void =>
       webContent.send(winChannels.onChangeState, {
         name: 'maximize',
         value: true,
       }),
     );
-    this.mainWindow?.on('unmaximize', (): void =>
+    this.getMainWindow()?.on('unmaximize', (): void =>
       webContent.send(winChannels.onChangeState, {
         name: 'maximize',
         value: false,
       }),
     );
 
-    this.mainWindow?.on('enter-full-screen', (): void =>
+    this.getMainWindow()?.on('enter-full-screen', (): void =>
       webContent.send(winChannels.onChangeState, {
         name: 'full-screen',
         value: true,
       }),
     );
-    this.mainWindow?.on('leave-full-screen', (): void =>
+    this.getMainWindow()?.on('leave-full-screen', (): void =>
       webContent.send(winChannels.onChangeState, {
         name: 'full-screen',
         value: false,
@@ -140,11 +157,11 @@ export default class ElectronAppManager {
     if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
       trayManager.createTrayIcon();
       if (platform() === 'linux') {
-        this.mainWindow?.hide();
+        this.getMainWindow()?.hide();
       } else if (platform() === 'darwin' && app.dock.isVisible()) {
         app.dock.hide();
       } else {
-        this.mainWindow?.setSkipTaskbar(true);
+        this.getMainWindow()?.setSkipTaskbar(true);
       }
     }
   };
@@ -154,7 +171,7 @@ export default class ElectronAppManager {
     if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
       trayManager.destroyTrayIcon();
       if (platform() === 'win32') {
-        this.mainWindow?.setSkipTaskbar(false);
+        this.getMainWindow()?.setSkipTaskbar(false);
       } else if (platform() === 'darwin' && !app.dock.isVisible()) {
         app.dock.show();
       }
