@@ -38,6 +38,8 @@ const useAllModules = (): CardModules => useSyncExternalStore(subscribe, () => a
 const useGetArgumentsByID = (id: string): ArgumentsData | undefined =>
   useAllCards().find(card => card.id === id)?.arguments;
 
+const useGetTitleByID = (id: string): string | undefined => useAllCards().find(card => card.id === id)?.title;
+
 /**
  * Retrieves all cards associated with a specific path.
  * @param path The path to filter cards by.
@@ -244,6 +246,7 @@ export {
   useGetArgumentsByID,
   useGetCardsByPath,
   useGetInstallType,
+  useGetTitleByID,
 };
 
 export default loadModules;
