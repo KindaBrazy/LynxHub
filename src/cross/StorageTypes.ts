@@ -1,3 +1,5 @@
+import {Rectangle} from 'electron';
+
 import {DiscordRPC, StorageChosenArgumentsData} from './CrossTypes';
 import {
   CustomRunBehaviorStore,
@@ -11,7 +13,6 @@ import {
   TerminalUseConpty,
   TooltipStatus,
 } from './IpcChannelAndTypes';
-import {Rectangle} from 'electron';
 
 export type InstalledCard = {
   id: string;
@@ -50,6 +51,7 @@ type StorageTypes = {
     closeConfirm: boolean;
     terminateAIConfirm: boolean;
     openLastSize: boolean;
+    dynamicAppTitle: boolean;
     lastSize:
       | {
           maximized: boolean;
