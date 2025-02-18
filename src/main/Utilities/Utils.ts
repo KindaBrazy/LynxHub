@@ -171,8 +171,8 @@ export function getRelativePath(basePath: string, targetPath: string): string {
   }
 }
 
-export function RelaunchApp() {
-  storageManager.updateLastSize();
+export function RelaunchApp(saveLastSize: boolean = true) {
+  if (saveLastSize) storageManager.updateLastSize();
   app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
   app.exit();
 }

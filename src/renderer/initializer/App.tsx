@@ -1,26 +1,22 @@
 import {Button} from '@heroui/react';
 import {ConfigProvider, Steps, theme} from 'antd';
-import {useCallback, useState} from 'react';
+import {useState} from 'react';
 
 import {APP_ICON_TRANSPARENT, APP_NAME} from '../../cross/CrossConstants';
+import {isLinuxPortable} from '../src/App/Utils/UtilHooks';
+import CancelBtn from './CancelBtn';
 import initializerIpc from './InitializerIpc';
 import {useGitValidation} from './Steps/GitValidation';
 import {useMainModuleInstallation} from './Steps/MainModuleInstallation';
-import CancelBtn from './CancelBtn';
-import {isLinuxPortable} from '../src/App/Utils/UtilHooks';
 
 // Are you sure you want to exit the initial process?
 
-/** Main application component for initialization process */
+/** Main application element for the initialization process */
 export default function App() {
   const [currentState, setCurrentState] = useState<number>(0);
   const [percent, setPercent] = useState<number | undefined>(undefined);
 
-  const startApp = useCallback(() => initializerIpc.startApp(), []);
-
-  const nextState = useCallback(() => {
-    setCurrentState(prevState => prevState + 1);
-  }, []);
+  const nextState = () => setCurrentState(prevState => prevState + 1);
 
   const steps = [
     useGitValidation(currentState === 0, nextState),
@@ -31,8 +27,6 @@ export default function App() {
     },
   ];
 
-  const close = useCallback(() => initializerIpc.close(), []);
-
   return (
     <ConfigProvider theme={{algorithm: theme.darkAlgorithm}}>
       <div
@@ -41,7 +35,7 @@ export default function App() {
           ' justify-between bg-LynxRaisinBlack text-center text-white'
         }>
         <header className={'h-16 w-full shrink-0 flex justify-between items-center bg-white/5 shadow-sm px-4'}>
-          <img alt="App Icon" src={APP_ICON_TRANSPARENT} className="size-8" />
+          <img alt="App Icon" className="size-8" src={APP_ICON_TRANSPARENT} />
           <span className="font-semibold">Checking Requirements...</span>
           <div />
         </header>
@@ -52,7 +46,11 @@ export default function App() {
 
         <footer className="m-3 flex flex-col items-center">
           {currentState >= 3 ? (
-            <Button color="success" onPress={isLinuxPortable ? close : startApp} className="notDraggable" fullWidth>
+            <Button
+              color="success"
+              className="notDraggable"
+              onPress={isLinuxPortable ? initializerIpc.close : initializerIpc.startApp}
+              fullWidth>
               {isLinuxPortable ? <span>Exit Initializer</span> : <span>Launch {APP_NAME}</span>}
             </Button>
           ) : (
