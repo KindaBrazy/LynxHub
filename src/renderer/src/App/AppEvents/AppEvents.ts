@@ -1,4 +1,5 @@
 import {
+  useAppTitleEvents,
   useCheckCardsUpdate,
   useCheckExtensionsUpdate,
   useCheckModulesUpdate,
@@ -17,4 +18,5 @@ export default function useAppEvents() {
   useStorageData();
   usePatreon();
   useIpcEvents();
+  useAppTitleEvents();
 }

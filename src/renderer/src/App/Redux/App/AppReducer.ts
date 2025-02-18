@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import isBoolean from 'lodash/isBoolean';
 import {useSelector} from 'react-redux';
 
+import {APP_NAME} from '../../../../../cross/CrossConstants';
 import {homeRoutePath} from '../../Components/Pages/ContentPages/Home/HomePage';
 import {RootState} from '../Store';
 
@@ -13,6 +14,7 @@ type AppState = {
   isOnline: boolean;
   navBar: boolean;
   currentPage: string;
+  appTitle: string;
 };
 
 type AppStateTypes = {
@@ -27,6 +29,7 @@ const initialState: AppState = {
   onFocus: true,
   navBar: true,
   currentPage: homeRoutePath,
+  appTitle: APP_NAME,
 };
 
 const appSlice = createSlice({
@@ -35,6 +38,9 @@ const appSlice = createSlice({
   reducers: {
     setAppState: <K extends keyof AppState>(state: AppState, action: PayloadAction<{key: K; value: AppState[K]}>) => {
       state[action.payload.key] = action.payload.value;
+    },
+    setAppTitle: (state, action: PayloadAction<string>) => {
+      state.appTitle = action.payload;
     },
     toggleAppState: (state: AppState, action: PayloadAction<keyof AppState>) => {
       const key = action.payload;

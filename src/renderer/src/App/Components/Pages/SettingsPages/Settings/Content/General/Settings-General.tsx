@@ -3,6 +3,7 @@ import SettingsSection from '../../SettingsPage-ContentSection';
 import SettingsGeneralConfirm from './SettingsGeneral-Confirm';
 import SettingsGeneralTaskbar from './SettingsGeneral-Taskbar';
 import SettingsGeneralTheme from './SettingsGeneral-Theme';
+import SettingsGeneralTitleName from './SettingsGeneral-TitleName';
 import SettingsGeneralTooltip from './SettingsGeneral-Tooltip';
 
 export const SettingsGeneralId = 'settings_app_elem';
@@ -13,6 +14,7 @@ export default function SettingsGeneral() {
       <SettingsGeneralTheme />
       <SettingsGeneralTaskbar />
       <SettingsGeneralTooltip />
+      <SettingsGeneralTitleName />
       <SettingsGeneralConfirm />
     </SettingsSection>
   );

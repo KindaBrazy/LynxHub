@@ -3,9 +3,10 @@ import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 
+import {APP_NAME} from '../../../../cross/CrossConstants';
 import {toMs} from '../../../../cross/CrossUtils';
 import StorageTypes from '../../../../cross/StorageTypes';
-import {useAllCards} from '../Modules/ModuleLoader';
+import {useAllCards, useGetTitleByID} from '../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../Redux/AI/CardsReducer';
 import {appActions, useAppState} from '../Redux/App/AppReducer';
 import {settingsActions} from '../Redux/App/SettingsReducer';
@@ -127,6 +128,7 @@ export const useStorageData = () => {
       dispatch(settingsActions.setSettingsState({key: 'closeConfirm', value: storage.app.closeConfirm}));
       dispatch(settingsActions.setSettingsState({key: 'terminateAIConfirm', value: storage.app.terminateAIConfirm}));
       dispatch(settingsActions.setSettingsState({key: 'openLastSize', value: storage.app.openLastSize}));
+      dispatch(settingsActions.setSettingsState({key: 'dynamicAppTitle', value: storage.app.dynamicAppTitle}));
 
       if (storage.app.startupLastActivePage) {
         dispatch(appActions.setAppState({key: 'currentPage', value: storage.app.lastPage}));
@@ -220,4 +222,14 @@ export const useIpcEvents = () => {
       dispatch(cardsActions.setUpdatingExtensions(result));
     });
   }, [dispatch]);
+};
+
+export const useAppTitleEvents = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const runningCard = useCardsState('runningCard');
+  const title = useGetTitleByID(runningCard.id);
+
+  useEffect(() => {
+    dispatch(appActions.setAppTitle(title || APP_NAME));
+  }, [title]);
 };
