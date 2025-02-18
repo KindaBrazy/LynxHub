@@ -1,10 +1,10 @@
 import {Button, ButtonGroup, ModalFooter} from '@heroui/react';
-import {Popconfirm} from 'antd';
 import {memo, RefObject, useCallback} from 'react';
 
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
 import {InstallationMethod, UserInputResult} from '../../../Modules/types';
 import rendererIpc from '../../../RendererIpc';
+import FooterTerminal from './Footer-Terminal';
 import {InstallState} from './types';
 
 type Props = {
@@ -59,34 +59,7 @@ const InstallFooter = ({
           {state.body === 'done' ? 'OK' : 'Cancel'}
         </Button>
         {state.body === 'terminal' && (
-          <>
-            <Popconfirm
-              okText="Confirm"
-              cancelText="Cancel"
-              placement="topLeft"
-              title="Confirm Terminal Restart"
-              onConfirm={restartTerminal.current!}
-              okButtonProps={{type: 'text', className: 'cursor-default'}}
-              description="Are you sure you want to restart the terminal?"
-              cancelButtonProps={{type: 'text', className: 'cursor-default !text-danger'}}>
-              <Button variant="flat" color="warning" className="cursor-default">
-                Restart Terminal
-              </Button>
-            </Popconfirm>
-            <Popconfirm
-              okText="All good"
-              placement="topLeft"
-              cancelText="Found error"
-              onConfirm={onDoneTerminal}
-              title="Installation complete?"
-              okButtonProps={{type: 'text', className: 'cursor-default !text-success'}}
-              cancelButtonProps={{type: 'text', className: 'cursor-default !text-danger'}}
-              description="Please confirm that all commands finished successfully without any errors.">
-              <Button variant="flat" color="success" className="cursor-default">
-                Next
-              </Button>
-            </Popconfirm>
-          </>
+          <FooterTerminal onDoneTerminal={onDoneTerminal} restartTerminal={restartTerminal} />
         )}
         {state.body === 'starter' && (
           <>
