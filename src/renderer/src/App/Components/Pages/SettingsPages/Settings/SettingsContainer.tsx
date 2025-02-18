@@ -26,10 +26,10 @@ export const SettingsSections = () => {
 
   return (
     <>
-      <SettingsCard />
       <SettingsGeneral />
-      <SettingsTerminal />
       <SettingsStartup />
+      <SettingsCard />
+      <SettingsTerminal />
       <SettingsHotkeys />
       <SettingsDiscord />
 
