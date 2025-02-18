@@ -59,7 +59,7 @@ export default class AppInitializer {
     // Handle app restart
     ipcMain.on(initializerChannels.startApp, () => {
       storageManager.updateData('app', {initialized: true});
-      RelaunchApp();
+      RelaunchApp(false);
     });
 
     // Handle window controls
