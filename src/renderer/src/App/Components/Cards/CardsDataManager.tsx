@@ -10,6 +10,7 @@ export const CardContext = createContext<CardsDataManager | null>(null);
 /** MobX state manager for cards */
 export class CardsDataManager {
   /* ----------------------------- Card Information's ----------------------------- */
+
   title: string = '';
   id: string = '';
   description: string = '';
@@ -20,12 +21,14 @@ export class CardsDataManager {
   type: DiscordRunningAI['type'] = undefined;
 
   /* ----------------------------- Card States ----------------------------- */
+
   installed: boolean = false;
   menuIsOpen: boolean = false;
 
   checkingForUpdate: boolean = false;
 
   /* ----------------------------- Constructor ----------------------------- */
+
   constructor(data: CardData, isInstalled: boolean) {
     this.title = data.title;
     this.id = data.id;

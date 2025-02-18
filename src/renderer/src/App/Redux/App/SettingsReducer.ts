@@ -17,6 +17,7 @@ type SettingState = {
   closeConfirm: boolean;
   terminateAIConfirm: boolean;
   openLastSize: boolean;
+  dynamicAppTitle: boolean;
 
   updatedModules: string[];
   newModules: string[];
@@ -52,6 +53,7 @@ const initialState: SettingState = {
   moduleUpdateAvailable: [],
   updateAvailable: false,
   extensionsUpdateAvailable: [],
+  dynamicAppTitle: false,
 };
 
 const settingsSlice = createSlice({
