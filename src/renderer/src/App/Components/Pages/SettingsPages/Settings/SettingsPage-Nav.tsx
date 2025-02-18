@@ -34,24 +34,24 @@ const groupSections: GroupProps[] = [
     title: 'Application',
     items: [
       {
-        title: 'Customize Card',
-        icon: <EditCard_Icon className="size-4 shrink-0 dark:text-white text-black" />,
-        elementId: settingsSectionId.SettingsCardId,
-      },
-      {
         title: 'General',
         icon: <Tuning_Icon className="size-4 shrink-0 dark:text-white text-black" />,
         elementId: settingsSectionId.SettingsGeneralId,
       },
       {
-        title: 'Terminal',
-        icon: <Terminal_Icon className="size-4 shrink-0 dark:text-white text-black" />,
-        elementId: settingsSectionId.SettingsTerminalId,
-      },
-      {
         title: 'Startup',
         icon: <Rocket_Icon className="size-4 shrink-0 dark:text-white text-black" />,
         elementId: settingsSectionId.SettingsStartupId,
+      },
+      {
+        title: 'Customize Card',
+        icon: <EditCard_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        elementId: settingsSectionId.SettingsCardId,
+      },
+      {
+        title: 'Terminal',
+        icon: <Terminal_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        elementId: settingsSectionId.SettingsTerminalId,
       },
       {
         title: 'Hotkeys',
