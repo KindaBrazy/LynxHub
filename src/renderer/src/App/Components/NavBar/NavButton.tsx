@@ -4,6 +4,7 @@ import {ReactNode, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 
+import {APP_NAME} from '../../../../../cross/CrossConstants';
 import {appActions, useAppState} from '../../Redux/App/AppReducer';
 import {AppDispatch} from '../../Redux/Store';
 import {getColor} from '../../Utils/Constants';
@@ -41,6 +42,7 @@ export default function NavButton({children, pageId, title, badge}: Props) {
 
   const handleClick = useCallback(() => {
     if (currentPage === pageId) return;
+    dispatch(appActions.setAppTitle(title?.replace(' Generation', '') || APP_NAME));
     navigate(pageId);
     dispatch(appActions.setAppState({key: 'currentPage', value: pageId}));
   }, [currentPage, pageId, navigate, dispatch]);
