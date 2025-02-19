@@ -1,4 +1,4 @@
-import {HeroUIProvider} from '@heroui/react';
+import {HeroUIProvider, ToastProvider} from '@heroui/react';
 import {ConfigProvider as AntDProvider, message, notification, theme} from 'antd';
 import {ReactNode, useLayoutEffect, useMemo} from 'react';
 
@@ -30,6 +30,7 @@ export default function UIProviders({children}: {children: ReactNode}) {
   return (
     <div>
       <HeroUIProvider>
+        <ToastProvider />
         <AntDProvider
           theme={{
             algorithm,
