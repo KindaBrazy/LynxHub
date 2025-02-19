@@ -57,6 +57,7 @@ const getCardMethod = <T extends keyof CardRendererMethods>(
 };
 
 const useGetInstallType = (id: string) => useAllCards().find(card => card.id === id)?.installationType || 'others';
+const useGetUninstallType = (id: string) => useAllCards().find(card => card.id === id)?.uninstallType || 'others';
 
 /**
  * Duplicate a card
@@ -247,6 +248,7 @@ export {
   useGetCardsByPath,
   useGetInstallType,
   useGetTitleByID,
+  useGetUninstallType,
 };
 
 export default loadModules;
