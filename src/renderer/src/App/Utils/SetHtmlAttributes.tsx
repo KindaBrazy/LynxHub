@@ -11,7 +11,7 @@ export default function useHtmlAttributes() {
   const dynamicAppTitle = useSettingsState('dynamicAppTitle');
 
   useEffect(() => {
-    const title = dynamicAppTitle ? `${appTitle} - ${APP_NAME}` : APP_NAME;
+    const title = dynamicAppTitle && appTitle ? `${appTitle} - ${APP_NAME}` : APP_NAME;
     if (document.title !== title) {
       document.title = title;
     }

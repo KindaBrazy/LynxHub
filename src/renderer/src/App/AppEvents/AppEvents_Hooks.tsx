@@ -3,7 +3,6 @@ import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 
-import {APP_NAME} from '../../../../cross/CrossConstants';
 import {toMs} from '../../../../cross/CrossUtils';
 import StorageTypes from '../../../../cross/StorageTypes';
 import {useAllCards, useGetTitleByID} from '../Modules/ModuleLoader';
@@ -230,6 +229,6 @@ export const useAppTitleEvents = () => {
   const title = useGetTitleByID(runningCard.id);
 
   useEffect(() => {
-    dispatch(appActions.setAppTitle(title || APP_NAME));
+    dispatch(appActions.setAppTitle(title));
   }, [title]);
 };
