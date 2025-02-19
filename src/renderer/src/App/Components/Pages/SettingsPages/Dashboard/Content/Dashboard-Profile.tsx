@@ -60,7 +60,10 @@ export default function DashboardProfile() {
 
   return (
     <SettingsSection title="Profiles" id={DashboardProfileId} icon={<User_Icon className="size-5" />}>
-      <Card shadow="sm" radius="lg" className={`${patreonLoggedIn && '!border-success/70'} border-1 p-4`}>
+      <Card
+        shadow="sm"
+        radius="lg"
+        className={`${patreonLoggedIn && '!border-success/70'} border-1 border-foreground/20 p-4`}>
         <div className="mb-3 flex flex-row items-center space-x-1.5">
           <Patreon_Icon className="text-large" />
           <span className="text-medium">Patreon</span>
