@@ -252,6 +252,8 @@ export type CardData = {
 
   installationType: 'git' | 'others';
 
+  uninstallType: 'removeFolder' | 'others';
+
   /** List of all available arguments
    *  - Leave undefined if WebUI have no arguments to config
    */
