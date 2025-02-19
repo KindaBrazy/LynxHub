@@ -1,8 +1,9 @@
-import {Button, Tooltip} from '@heroui/react';
-import {message, Modal, Space} from 'antd';
-import {Fragment, useCallback, useEffect} from 'react';
+import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip} from '@heroui/react';
+import {message} from 'antd';
+import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {ShieldCross_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
@@ -17,8 +18,11 @@ const UninstallCard = () => {
 
   const closeHandle = useCallback(() => {
     dispatch(modalActions.closeModal('cardUninstallModal'));
-    Modal.destroyAll();
   }, [dispatch]);
+
+  const onOpenChange = useCallback((isOpen: boolean) => {
+    dispatch(modalActions.setIsOpen({modalName: 'cardUninstallModal', isOpen}));
+  }, []);
 
   const uninstallHandle = useCallback(
     (type: 'removeDir' | 'trashDir') => {
@@ -28,6 +32,7 @@ const UninstallCard = () => {
         message.loading({
           content: type === 'removeDir' ? 'Uninstalling...' : 'Moving to trash...',
           key: 'process',
+          duration: 0,
         });
 
         rendererIpc.file[type](card.dir!)
@@ -53,59 +58,58 @@ const UninstallCard = () => {
 
   const trash = useCallback(() => uninstallHandle('trashDir'), [uninstallHandle]);
 
-  useEffect(() => {
-    if (isOpen && card) {
-      Modal.error({
-        afterClose: () => {
-          dispatch(modalActions.closeModal('cardUninstallModal'));
-        },
-        centered: true,
-        content: (
-          <>
-            <span>This action will remove the Card and all its associated data from your device.</span>
-            <br />
-            <span>Are you sure you want to proceed?</span>
-          </>
-        ),
-        footer: (
-          <div className="mt-4 flex items-end justify-end">
-            <Space>
-              <Button variant="light" color="success" onPress={closeHandle} className="cursor-default">
-                Cancel
+  return (
+    <Modal
+      classNames={{
+        backdrop: '!top-10 !z-10',
+        wrapper: '!top-10 scrollbar-hide',
+      }}
+      isOpen={isOpen}
+      backdrop="blur"
+      onClose={closeHandle}
+      scrollBehavior="inside"
+      onOpenChange={onOpenChange}
+      className="overflow-hidden"
+      hideCloseButton>
+      <ModalContent>
+        <ModalHeader className="items-center gap-x-2">
+          <ShieldCross_Icon className="text-danger size-7" />
+          <span className="text-danger">Confirm Uninstallation</span>
+        </ModalHeader>
+        <ModalBody className="py-0">
+          <span>This action will remove the AI interface and all its associated data from your device.</span>
+          <span className="font-semibold">Are you sure you want to proceed?</span>
+        </ModalBody>
+        <ModalFooter>
+          <ButtonGroup size="sm" variant="flat" fullWidth>
+            <Button color="success" onPress={closeHandle} className="cursor-default">
+              Cancel
+            </Button>
+            <Button color="warning" onPress={trash}>
+              Move to Trash
+            </Button>
+            <Tooltip
+              content={
+                <div className="flex-col flex px-1 py-2">
+                  <div className="text-small font-semibold">This action can not be undone.</div>
+                  <div>The folder and its contents will be permanently deleted.</div>
+                </div>
+              }
+              size="sm"
+              delay={200}
+              color="danger"
+              className="max-w-64"
+              isDisabled={disableTooltip}
+              showArrow>
+              <Button color="danger" onPress={remove}>
+                Delete Permanently
               </Button>
-              <Button variant="light" color="warning" onPress={trash} className="cursor-default">
-                Move to Trash
-              </Button>
-              <Tooltip
-                content={
-                  <div className="m-1 text-center">
-                    <span>This action cannot be undone.</span>
-                    <br />
-                    <span>The folder and its contents will be permanently deleted.</span>
-                  </div>
-                }
-                size="sm"
-                delay={200}
-                color="danger"
-                isDisabled={disableTooltip}
-                showArrow>
-                <Button color="danger" variant="light" onPress={remove} className="cursor-default">
-                  Delete Permanently
-                </Button>
-              </Tooltip>
-            </Space>
-          </div>
-        ),
-        maskClosable: true,
-        rootClassName: 'scrollbar-hide',
-        styles: {mask: {top: '2.5rem'}},
-        wrapClassName: 'mt-10',
-        title: 'Confirm Uninstallation',
-      });
-    }
-  }, [isOpen, card, dispatch]);
-
-  return <Fragment />;
+            </Tooltip>
+          </ButtonGroup>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
 };
 
 export default UninstallCard;
