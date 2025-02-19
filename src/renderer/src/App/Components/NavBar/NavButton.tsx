@@ -37,11 +37,15 @@ export default function NavButton({children, pageId, title, badge}: Props) {
 
   useEffect(() => {
     setIsSelected(currentPage === pageId);
-  }, [currentPage]);
+    if (currentPage === pageId) {
+      setTimeout(() => {
+        dispatch(appActions.setAppTitle(title?.replace(' Generation', '')));
+      }, 50);
+    }
+  }, [currentPage, pageId]);
 
   const handleClick = useCallback(() => {
     if (currentPage === pageId) return;
-    dispatch(appActions.setAppTitle(title?.replace(' Generation', '')));
     navigate(pageId);
     dispatch(appActions.setAppState({key: 'currentPage', value: pageId}));
   }, [currentPage, pageId, navigate, dispatch]);
