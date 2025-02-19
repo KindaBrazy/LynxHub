@@ -53,7 +53,7 @@ const initialState: SettingState = {
   moduleUpdateAvailable: [],
   updateAvailable: false,
   extensionsUpdateAvailable: [],
-  dynamicAppTitle: false,
+  dynamicAppTitle: true,
 };
 
 const settingsSlice = createSlice({
