@@ -54,7 +54,7 @@ class BaseStorage {
       systemStartup: false,
       startMinimized: false,
       startupLastActivePage: false,
-      dynamicAppTitle: false,
+      dynamicAppTitle: true,
       lastPage: '/homePage',
       discordRP: {
         LynxHub: {
@@ -130,7 +130,7 @@ class BaseStorage {
 
     const version6to7 = () => {
       this.storage.data.app.openLastSize = false;
-      this.storage.data.app.dynamicAppTitle = false;
+      this.storage.data.app.dynamicAppTitle = true;
       this.storage.data.app.lastSize = undefined;
       this.storage.data.cards.checkUpdateInterval = 30;
       this.storage.write();
