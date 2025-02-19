@@ -105,7 +105,9 @@ export default function DashboardProfile() {
           </Button>
         </div>
         <div className="mt-4 flex flex-row justify-between">
-          <Checkbox size="sm">Sync Data with Cloud</Checkbox>
+          <Checkbox size="sm" isDisabled>
+            Sync Data with Cloud
+          </Checkbox>
         </div>
         <div
           className={
