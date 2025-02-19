@@ -1,4 +1,4 @@
-import {compact, isNil} from 'lodash';
+import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
@@ -229,6 +229,7 @@ export const useAppTitleEvents = () => {
   const title = useGetTitleByID(runningCard.id);
 
   useEffect(() => {
-    dispatch(appActions.setAppTitle(title));
-  }, [title]);
+    const currentView = capitalize(runningCard.currentView);
+    dispatch(appActions.setAppTitle(title && `${title} - ${currentView}`));
+  }, [title, runningCard]);
 };
