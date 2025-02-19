@@ -5,11 +5,10 @@ import {isEmpty} from 'lodash';
 import pty from 'node-pty';
 
 import {APP_BUILD_NUMBER} from '../../../cross/CrossConstants';
-import {MainModuleImportType, ModulesInfo} from '../../../cross/CrossTypes';
+import {LynxApiUpdate, MainModuleImportType, ModulesInfo} from '../../../cross/CrossTypes';
 import {toMs} from '../../../cross/CrossUtils';
 import {modulesChannels} from '../../../cross/IpcChannelAndTypes';
 import {InstalledCard} from '../../../cross/StorageTypes';
-import {LynxApiUpdate} from '../../../renderer/src/App/Modules/types';
 import {appManager, storageManager} from '../../index';
 import {getAppDirectory} from '../AppDataManager';
 import GitManager from '../GitManager';
@@ -60,6 +59,10 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
             },
             send(channel: string, listener: (event: any, ...args: any[]) => void) {
               return webContent.send(channel, listener);
+            },
+            storage: {
+              get: (key: string) => storageManager.getCustomData(key),
+              set: (key: string, data: any) => storageManager.setCustomData(key, data),
             },
             pty,
           });

@@ -20,7 +20,7 @@ export type GroupItem = {
   icon: ReactNode;
   title: string;
   color?: 'danger' | 'warning' | 'success';
-  elementId?: string;
+  elementId: string;
 };
 
 export type GroupProps = {
@@ -95,13 +95,14 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
     const observers: IntersectionObserver[] = [];
 
     items.forEach(item => {
-      const elem = document.getElementById(item.elementId || '');
+      const elem = document.getElementById(item.elementId);
       if (elem) {
         const observer = new IntersectionObserver(
           ([entry]) => {
             setIsInView(prevState => {
               if (entry.isIntersecting) {
-                return prevState.includes(item.elementId || '') ? prevState : [...prevState, item.elementId || ''];
+                console.log('isIntersecting', item.elementId);
+                return prevState.includes(item.elementId) ? prevState : [...prevState, item.elementId];
               } else {
                 return prevState.filter(inView => inView !== item.elementId);
               }
@@ -123,21 +124,17 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
       <div className="space-y-2">
         {items.map(item => (
           <Button
-            onPress={() => {
-              onPress(item.elementId || '');
-            }}
             className={
-              `flex cursor-default justify-start ` + `${isInView.includes(item.elementId || '') && 'bg-default-200'}`
+              `flex cursor-default justify-start ` + `${isInView.includes(item.elementId) && 'bg-default-200'}`
             }
             size="sm"
             variant="light"
             color={item.color || 'default'}
             key={`${item.title}_settings_section`}
+            onPress={() => onPress(item.elementId)}
             fullWidth>
-            <>
-              {item.icon}
-              <Text>{item.title}</Text>
-            </>
+            {item.icon}
+            <Text>{item.title}</Text>
           </Button>
         ))}
       </div>

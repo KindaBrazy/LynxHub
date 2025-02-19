@@ -1,6 +1,5 @@
 // Card Repository information type
 
-import {LynxApiInstalled, LynxApiUpdate} from '../renderer/src/App/Modules/types';
 import {
   BINARIES_FOLDER_NAME,
   EXTENSIONS_FOLDER_NAME,
@@ -68,6 +67,28 @@ export type UpdateDownloadProgress = {
   bytesPerSecond: number;
 };
 
+type StorageType = {get: (key: string) => any; set: (key: string, data: any) => void};
+
+export type LynxApiUpdate = {
+  isPullAvailable: Promise<boolean>;
+  storage: StorageType;
+  pty: any;
+};
+
+export type LynxApiInstalled = {
+  installedDirExistAndWatch: Promise<boolean>;
+  storage: StorageType;
+  pty: any;
+};
+
+export type ModuleMainIpcTypes = {
+  handle(channel: string, listener: (event: any, ...args: any[]) => any): void;
+  on(channel: string, listener: (event: any, ...args: any[]) => void): void;
+  send: (channel: string, ...args: any[]) => void;
+  storage: StorageType;
+  pty: any;
+};
+
 /** These methods will be called in the main process */
 export type CardMainMethods = {
   /** Return commands based on installed directory to be executed with terminal */
@@ -105,12 +126,7 @@ export type CardMainMethods = {
    * Access to the main process IPC methods.
    * Use this to send/receive data or messages between the main process and the renderer process.
    */
-  mainIpc?: (ipc: {
-    handle(channel: string, listener: (event: any, ...args: any[]) => any): void;
-    on(channel: string, listener: (event: any, ...args: any[]) => void): void;
-    send: (channel: string, ...args: any[]) => void;
-    pty: any;
-  }) => void;
+  mainIpc?: (ipc: ModuleMainIpcTypes) => void;
   updateAvailable?: (lynxApi: LynxApiUpdate) => Promise<boolean>;
   isInstalled?: (lynxApi: LynxApiInstalled) => Promise<boolean>;
 };

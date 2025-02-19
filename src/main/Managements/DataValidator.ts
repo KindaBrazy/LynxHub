@@ -5,8 +5,8 @@ import {promises} from 'graceful-fs';
 import lodash from 'lodash';
 import pty from 'node-pty';
 
+import {LynxApiInstalled} from '../../cross/CrossTypes';
 import {InstalledCard, InstalledCards} from '../../cross/StorageTypes';
-import {LynxApiInstalled} from '../../renderer/src/App/Modules/types';
 import {moduleManager, storageManager} from '../index';
 
 type PathCards = {
@@ -85,7 +85,10 @@ export class ValidateCards {
       if (isInstalledMethod) {
         const lynxApi: LynxApiInstalled = {
           installedDirExistAndWatch: onInstalledDirExist(card),
-          storage: {get: storageManager.getCustomData, set: storageManager.setCustomRun},
+          storage: {
+            get: (key: string) => storageManager.getCustomData(key),
+            set: (key: string, data: any) => storageManager.setCustomData(key, data),
+          },
           pty,
         };
         const installed = await isInstalledMethod(lynxApi);
