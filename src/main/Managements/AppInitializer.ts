@@ -45,11 +45,11 @@ export default class AppInitializer {
 
       commandProcess.on('error', err => {
         console.error('Failed to check version: ', err);
-        reject();
+        reject(err);
       });
       commandProcess.stderr.on('data', data => {
         console.error('Failed to check version: ', data);
-        reject();
+        reject(data);
       });
     });
   }

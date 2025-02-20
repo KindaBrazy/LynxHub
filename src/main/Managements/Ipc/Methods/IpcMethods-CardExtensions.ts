@@ -108,7 +108,9 @@ export async function disableExtension(disable: boolean, dir: string): Promise<s
   return new Promise((resolve, reject) => {
     try {
       const targetDir = path.resolve(dir);
-      if (!fs.existsSync(targetDir) || !fs.statSync(targetDir).isDirectory()) reject();
+      if (!fs.existsSync(targetDir) || !fs.statSync(targetDir).isDirectory()) {
+        reject(new Error(`${dir} not exist.`));
+      }
 
       const parsedPath = path.parse(targetDir);
       const currentName = parsedPath.base;
@@ -136,7 +138,7 @@ export async function disableExtension(disable: boolean, dir: string): Promise<s
       resolve(newPath);
     } catch (error) {
       console.error(`Error renaming directory: ${error}`);
-      reject();
+      reject(new Error(`Error renaming directory: ${error}`));
     }
   });
 }
