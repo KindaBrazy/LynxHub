@@ -83,11 +83,11 @@ export default function UpdateDetails() {
         <ModalHeader className="justify-center bg-foreground-100">{title || <Text>Update Details.</Text>}</ModalHeader>
         <ModalBody className="scrollbar-hide">
           <Accordion
-            variant="light"
             className="mt-4"
+            variant="splitted"
             selectionMode="multiple"
             defaultExpandedKeys={['summary']}
-            itemClasses={{trigger: 'cursor-default'}}
+            itemClasses={{trigger: 'cursor-default', base: 'bg-foreground-100 shadow-sm'}}
             isCompact>
             <AccordionItem key="created" title="Created Files" subtitle={details.created.length}>
               {renderFileList(details.created)}
@@ -124,7 +124,7 @@ export default function UpdateDetails() {
             </AccordionItem>
           </Accordion>
         </ModalBody>
-        <ModalFooter className="bg-foreground-100 py-2">
+        <ModalFooter>
           <Button variant="light" color="success" onPress={handleClose} className="cursor-default">
             Alright
           </Button>

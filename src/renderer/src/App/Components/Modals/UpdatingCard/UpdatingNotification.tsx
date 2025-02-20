@@ -47,7 +47,7 @@ const UpdatingNotification = () => {
         notification.success({
           closeIcon: null,
           actions: (
-            <>
+            <div className="flex flex-row gap-x-2">
               <Button
                 onPress={() => {
                   if ('summary' in result) {
@@ -75,7 +75,7 @@ const UpdatingNotification = () => {
                 className="cursor-default">
                 Close
               </Button>
-            </>
+            </div>
           ),
           description: (
             <Descriptions
