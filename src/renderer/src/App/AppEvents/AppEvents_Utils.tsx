@@ -19,7 +19,7 @@ export const checkEARepos = (isEA: boolean) => {
               closable: false,
               description:
                 "The application's configuration has been updated. Please restart for changes to be applied.",
-              btn: (
+              actions: (
                 <div className="flex flex-row gap-x-2">
                   <Button
                     size="sm"

@@ -46,7 +46,7 @@ const UpdatingNotification = () => {
         } = result as PullResult;
         notification.success({
           closeIcon: null,
-          btn: (
+          actions: (
             <>
               <Button
                 onPress={() => {
