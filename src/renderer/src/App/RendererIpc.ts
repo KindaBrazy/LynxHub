@@ -139,6 +139,9 @@ const rendererIpc = {
 
     uninstallModule: (id: string): Promise<boolean> => ipc.invoke(modulesChannels.uninstallModule, id),
 
+    uninstallCardByID: (id: string, dir?: string): Promise<void> =>
+      ipc.invoke(modulesChannels.uninstallCardByID, id, dir),
+
     isUpdateAvailable: (id: string): Promise<boolean> => ipc.invoke(modulesChannels.isUpdateAvailable, id),
     updateAvailableList: (): Promise<string[]> => ipc.invoke(modulesChannels.updateAvailableList),
 

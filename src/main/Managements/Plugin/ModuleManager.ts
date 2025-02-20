@@ -5,13 +5,14 @@ import {isEmpty} from 'lodash';
 import pty from 'node-pty';
 
 import {APP_BUILD_NUMBER} from '../../../cross/CrossConstants';
-import {LynxApiUpdate, MainModuleImportType, ModulesInfo} from '../../../cross/CrossTypes';
+import {LynxApiUninstall, LynxApiUpdate, MainModuleImportType, ModulesInfo} from '../../../cross/CrossTypes';
 import {toMs} from '../../../cross/CrossUtils';
 import {modulesChannels} from '../../../cross/IpcChannelAndTypes';
 import {InstalledCard} from '../../../cross/StorageTypes';
 import {appManager, storageManager} from '../../index';
 import {getAppDirectory} from '../AppDataManager';
 import GitManager from '../GitManager';
+import {removeDir, trashDir} from '../Ipc/Methods/IpcMethods';
 import {BasePluginManager} from './BasePluginManager';
 
 export default class ModuleManager extends BasePluginManager<ModulesInfo> {
@@ -121,5 +122,27 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
       const interval = storageManager.getData('cards').checkUpdateInterval || 30;
       this.checkInterval = setInterval(() => this.checkAllCardsUpdate(updateType), toMs(interval, 'minutes'));
     }
+  }
+
+  public async uninstallCardByID(id: string, installDir?: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const uninstall = this.getMethodsById(id)?.uninstall;
+      if (uninstall) {
+        const api: LynxApiUninstall = {
+          pty,
+          installDir,
+          removeDir,
+          trashDir,
+          storage: {
+            get: (key: string) => storageManager.getCustomData(key),
+            set: (key: string, data: any) => storageManager.setCustomData(key, data),
+          },
+        };
+        console.log('start uninstalling');
+        uninstall(api).then(resolve).catch(reject);
+      } else {
+        reject(new Error(`Card with ID "${id}" does not have an uninstall method.`));
+      }
+    });
   }
 }
