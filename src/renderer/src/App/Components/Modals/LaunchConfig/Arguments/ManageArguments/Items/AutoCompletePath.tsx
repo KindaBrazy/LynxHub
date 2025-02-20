@@ -95,7 +95,6 @@ export default function AutoCompletePath({baseDir, onValueChange, defaultValue, 
       {item => (
         <AutocompleteItem
           key={item.name.toLowerCase()}
-          value={item.name.toLowerCase()}
           startContent={item.type === 'folder' ? <Folder2_Icon /> : <File_Icon />}>
           {item.name}
         </AutocompleteItem>
