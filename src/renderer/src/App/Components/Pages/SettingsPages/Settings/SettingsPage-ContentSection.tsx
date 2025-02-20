@@ -25,7 +25,7 @@ export default function SettingsSection({children, id, title, titleColor = '', i
         `border-2 border-foreground/10 dark:border-foreground/5`
       }
       id={id}
-      bordered={false}
+      variant="borderless"
       classNames={{body: 'gap-y-4 !py-2 flex-col flex', title: `text-center ${titleColor}`}}>
       {children}
     </Card>

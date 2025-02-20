@@ -41,7 +41,7 @@ export default function LaunchConfigSection({
           {!isEmpty(description) && <span className="text-sm font-normal text-foreground-500">{description}</span>}
         </div>
       }
-      bordered={false}
+      variant="borderless"
       className="border-2 border-foreground/5 bg-default-100">
       {children}
     </Card>

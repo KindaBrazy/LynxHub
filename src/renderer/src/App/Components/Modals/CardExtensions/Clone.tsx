@@ -159,7 +159,7 @@ export default function Clone({updateTable, visible, installedExtensions}: Props
                 ` transition duration-300 ${!alreadyInstalled && 'hover:bg-default-200'}`
               }
               onClick={clone}
-              bordered={false}
+              variant="borderless"
               hoverable={!alreadyInstalled}>
               {alreadyInstalled ? (
                 <Card.Meta title={<span className="text-success">This extension has already been installed.</span>} />
@@ -184,7 +184,7 @@ export default function Clone({updateTable, visible, installedExtensions}: Props
           )}
         </motion.div>
       ) : (
-        <Card bordered={false} className="bg-default-100">
+        <Card variant="borderless" className="bg-default-100">
           <Progress
             label={`Stage: ${capitalize(cloneProgress.stage)} | 
                     Item: ${cloneProgress.processed} | Total: ${cloneProgress.total}`}

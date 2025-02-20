@@ -116,7 +116,7 @@ export default function CloneRepo({url, start, done}: Props) {
               </div>
             }
             size="small"
-            bordered={false}
+            variant="borderless"
             classNames={{header: ''}}
             className="text-center !shadow-small dark:bg-foreground-100">
             <Link
@@ -136,7 +136,7 @@ export default function CloneRepo({url, start, done}: Props) {
               </div>
             }
             size="small"
-            bordered={false}
+            variant="borderless"
             className="text-center !shadow-small dark:bg-foreground-100">
             <OpenDialog
               directory={directory}

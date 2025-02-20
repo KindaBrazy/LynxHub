@@ -59,8 +59,8 @@ const DashboardPageNav = () => {
         'h-full w-48 shrink-0 border-2 border-foreground/10 text-center' +
         ' dark:border-foreground/5 dark:bg-LynxRaisinBlack'
       }
-      bordered={false}
-      title="Dashboard">
+      title="Dashboard"
+      variant="borderless">
       <ScrollShadow className="absolute inset-x-3 bottom-4 top-[3.8rem]" hideScrollBar>
         {groupSections.map((section, index) => (
           <GroupSection key={index} {...section} />

@@ -37,7 +37,7 @@ export default function PreviewArguments({text}: Props) {
         <Empty className="m-0" image={Empty.PRESENTED_IMAGE_SIMPLE} description="No preview available to display" />
       ) : (
         <>
-          <Card bordered={false} className={`cursor-default dark:bg-black/40`} hoverable>
+          <Card variant="borderless" className={`cursor-default dark:bg-black/40`} hoverable>
             <Paragraph
               ellipsis={{expandable: 'collapsible', rows: 2}}
               className="size-full whitespace-pre-line !font-JetBrainsMono">

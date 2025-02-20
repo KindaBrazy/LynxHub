@@ -35,7 +35,7 @@ export default function Info({updateInfo, items}: Props) {
       </Descriptions>
       <Card
         size="small"
-        bordered={false}
+        variant="borderless"
         title="Release Notes"
         classNames={{title: 'text-center'}}
         className="mt-2 flex w-full cursor-default flex-col justify-center"
