@@ -112,7 +112,7 @@ const Installed = forwardRef(
             switch (state) {
               case 'Failed':
                 message.error(`Error: Unable to update ${name}.`);
-                reject();
+                reject(`Error: Unable to update ${name}.`);
                 break;
               case 'Completed':
                 message.success(`${name} updated successfully!`);

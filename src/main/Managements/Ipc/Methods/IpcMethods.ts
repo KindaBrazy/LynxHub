@@ -190,7 +190,7 @@ export async function decompressFile(filePath: string): Promise<string> {
       resolve(finalPath);
     } catch (e) {
       console.error(e);
-      reject();
+      reject(e);
     }
   });
 }
