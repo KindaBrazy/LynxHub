@@ -15,7 +15,7 @@ const HomeSearchBox = memo(({searchValue, setSearchValue}: Props) => {
       }}
       radius="full"
       type="search"
-      spellCheck={false}
+      spellCheck="false"
       value={searchValue}
       onValueChange={setSearchValue}
       placeholder="Type to find AI..."

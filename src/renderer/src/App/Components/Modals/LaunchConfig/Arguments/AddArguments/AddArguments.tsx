@@ -150,7 +150,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
           )}
           <div className="flex w-full flex-row space-x-2">
             <Input
-              spellCheck={false}
+              spellCheck="false"
               onValueChange={setSearchValue}
               placeholder="Search by name or description..."
               startContent={<Circle_Icon className="size-3.5" />}

@@ -29,7 +29,7 @@ export default function InputArgItem({argument, changeValue, removeArg}: Props) 
     <ArgumentItemBase icon={<Text_Icon />} name={argument.name} removeArg={removeArg}>
       <Input
         onBlur={onBlur}
-        spellCheck={false}
+        spellCheck="false"
         onChange={onChange}
         variant="borderless"
         defaultValue={inputValue}

@@ -75,7 +75,7 @@ const LynxCardHeader = observer(() => {
           `${(compactMode || !cardsDevName) && 'mt-3 !text-large font-bold'} ` +
           `${!cardsDesc && (cardsRepoInfo || cardsDevImage) && 'mb-4'} px-5 cursor-text`
         }
-        spellCheck={false}
+        spellCheck="false"
         onInput={onTitleChange}
         ellipsis={{tooltip: modifiedTitle}}
         contentEditable
