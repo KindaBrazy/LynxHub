@@ -21,7 +21,7 @@ export default function CheckBoxArgItem({argument, removeArg}: Props) {
   return (
     <Tooltip title={tooltipText} mouseEnterDelay={0.5} rootClassName="max-w-[65%] whitespace-pre-line">
       <Card
-        bordered={false}
+        variant="borderless"
         className="cursor-default dark:bg-black/40"
         classNames={{body: 'flex-row items-center flex'}}
         hoverable>

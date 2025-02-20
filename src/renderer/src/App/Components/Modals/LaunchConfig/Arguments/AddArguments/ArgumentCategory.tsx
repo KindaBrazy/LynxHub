@@ -105,7 +105,7 @@ export default function ArgumentCategory({
   if (isEmptyData(dataBySearch)) return null;
 
   return (
-    <Card title={title} bordered={false} className="cursor-default" hoverable>
+    <Card title={title} variant="borderless" className="cursor-default" hoverable>
       <ScrollShadow>
         {'section' in dataBySearch[0] ? (
           <ScrollShadow className="scrollbar-hide">

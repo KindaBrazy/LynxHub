@@ -76,7 +76,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
         </div>
       }
       size="small"
-      bordered={false}
+      variant="borderless"
       className="!shadow-small dark:bg-foreground-100">
       {loading ? (
         <div className="w-full flex justify-center mb-2">

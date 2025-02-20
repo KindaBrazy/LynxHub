@@ -23,7 +23,7 @@ export default function CardContainer({children, icon, title, subTitle, extraCla
           <span className="text-small text-foreground-500">{subTitle}</span>
         </div>
       }
-      bordered={false}
+      variant="borderless"
       className={['border-2 border-foreground/5 bg-white !shadow-medium dark:bg-[#292929]', extraClassNames].join(' ')}>
       {children}
     </Card>

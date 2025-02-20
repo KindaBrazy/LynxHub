@@ -59,8 +59,8 @@ export default function ArgumentItemBase({
         }
         key={name}
         size="small"
-        bordered={false}
         onClick={onClick}
+        variant="borderless"
         className={`dark:bg-black/40 ${defaultCursor && 'cursor-default'}`}
         hoverable>
         {children}
