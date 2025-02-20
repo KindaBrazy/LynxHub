@@ -45,8 +45,8 @@ export default function RouterMainError() {
         <Button
           key="restart"
           color="danger"
-          onPress={isLinuxPortable ? handleClose : handleRestart}
-          className="notDraggable">
+          className="notDraggable"
+          onPress={isLinuxPortable ? handleClose : handleRestart}>
           {isLinuxPortable ? 'Exit' : 'Restart'}
         </Button>,
       ]}
