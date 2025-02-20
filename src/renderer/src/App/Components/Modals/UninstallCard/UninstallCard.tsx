@@ -4,6 +4,7 @@ import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ShieldCross_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
+import {useGetUninstallType} from '../../../Modules/ModuleLoader';
 import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
@@ -15,6 +16,7 @@ const UninstallCard = () => {
   const card = useInstalledCard(cardId);
   const dispatch = useDispatch<AppDispatch>();
   const disableTooltip = useDisableTooltip(true);
+  const uninstallType = useGetUninstallType(cardId);
 
   const closeHandle = useCallback(() => {
     dispatch(modalActions.closeModal('cardUninstallModal'));
@@ -58,6 +60,26 @@ const UninstallCard = () => {
 
   const trash = useCallback(() => uninstallHandle('trashDir'), [uninstallHandle]);
 
+  const uninstall = useCallback(() => {
+    if (card) {
+      closeHandle();
+
+      message.loading({content: 'Uninstalling...', key: 'process', duration: 0});
+
+      rendererIpc.module
+        .uninstallCardByID(cardId, card.dir)
+        .then(() => {
+          message.destroy('process');
+          rendererIpc.storageUtils.removeInstalledCard(cardId);
+          message.success('Uninstalled successfully.');
+        })
+        .catch(() => {
+          message.destroy('process');
+          message.error('An error occurred while uninstalling.');
+        });
+    }
+  }, [card, cardId, closeHandle]);
+
   return (
     <Modal
       classNames={{
@@ -65,7 +87,6 @@ const UninstallCard = () => {
         wrapper: '!top-10 scrollbar-hide',
       }}
       isOpen={isOpen}
-      backdrop="blur"
       onClose={closeHandle}
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
@@ -85,26 +106,34 @@ const UninstallCard = () => {
             <Button color="success" onPress={closeHandle} className="cursor-default">
               Cancel
             </Button>
-            <Button color="warning" onPress={trash}>
-              Move to Trash
-            </Button>
-            <Tooltip
-              content={
-                <div className="flex-col flex px-1 py-2">
-                  <div className="text-small font-semibold">This action can not be undone.</div>
-                  <div>The folder and its contents will be permanently deleted.</div>
-                </div>
-              }
-              size="sm"
-              delay={200}
-              color="danger"
-              className="max-w-64"
-              isDisabled={disableTooltip}
-              showArrow>
-              <Button color="danger" onPress={remove}>
-                Delete Permanently
+            {uninstallType === 'removeFolder' ? (
+              <>
+                <Button color="warning" onPress={trash}>
+                  Move to Trash
+                </Button>
+                <Tooltip
+                  content={
+                    <div className="flex-col flex px-1 py-2">
+                      <div className="text-small font-semibold">This action can not be undone.</div>
+                      <div>The folder and its contents will be permanently deleted.</div>
+                    </div>
+                  }
+                  size="sm"
+                  delay={200}
+                  color="danger"
+                  className="max-w-64"
+                  isDisabled={disableTooltip}
+                  showArrow>
+                  <Button color="danger" onPress={remove}>
+                    Delete Permanently
+                  </Button>
+                </Tooltip>
+              </>
+            ) : (
+              <Button color="danger" onPress={uninstall}>
+                Uninstall
               </Button>
-            </Tooltip>
+            )}
           </ButtonGroup>
         </ModalFooter>
       </ModalContent>

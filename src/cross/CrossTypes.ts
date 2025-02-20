@@ -75,6 +75,14 @@ export type LynxApiUpdate = {
   pty: any;
 };
 
+export type LynxApiUninstall = {
+  installDir?: string;
+  trashDir: (dir: string) => Promise<void>;
+  removeDir: (dir: string) => Promise<void>;
+  storage: StorageType;
+  pty: any;
+};
+
 export type LynxApiInstalled = {
   installedDirExistAndWatch: Promise<boolean>;
   storage: StorageType;
@@ -129,6 +137,7 @@ export type CardMainMethods = {
   mainIpc?: (ipc: ModuleMainIpcTypes) => void;
   updateAvailable?: (lynxApi: LynxApiUpdate) => Promise<boolean>;
   isInstalled?: (lynxApi: LynxApiInstalled) => Promise<boolean>;
+  uninstall?: (lynxApi: LynxApiUninstall) => Promise<void>;
 };
 
 export type MainModules = {

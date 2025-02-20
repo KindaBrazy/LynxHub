@@ -138,6 +138,7 @@ export const modulesChannels = {
 
   installModule: 'modules:install-module',
   uninstallModule: 'modules:uninstall-module',
+  uninstallCardByID: 'modules:uninstall-card-by-id',
   isUpdateAvailable: 'modules:is-update-available',
   updateAvailableList: 'modules:update-available-list',
   updateModule: 'modules:update-module',

@@ -158,6 +158,9 @@ function modules() {
 
   ipcMain.handle(modulesChannels.installModule, (_, url: string) => moduleManager.installPlugin(url));
   ipcMain.handle(modulesChannels.uninstallModule, (_, id: string) => moduleManager.uninstallPlugin(id));
+  ipcMain.handle(modulesChannels.uninstallCardByID, (_, id: string, dir?: string) =>
+    moduleManager.uninstallCardByID(id, dir),
+  );
   ipcMain.handle(modulesChannels.isUpdateAvailable, (_, id: string) => moduleManager.isUpdateAvailable(id));
   ipcMain.handle(modulesChannels.updateAvailableList, () => moduleManager.updateAvailableList());
   ipcMain.handle(modulesChannels.updateModule, (_, id: string) => moduleManager.updatePlugin(id));
