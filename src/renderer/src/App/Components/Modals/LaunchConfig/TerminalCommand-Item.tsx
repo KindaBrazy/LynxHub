@@ -45,7 +45,7 @@ export default function TerminalCommandItem({defaultText, editCommand, focus, in
         size="large"
         onBlur={onBlur}
         autoFocus={focus}
-        spellCheck={false}
+        spellCheck="false"
         onChange={onChange}
         variant="borderless"
         addonBefore={index + 1}

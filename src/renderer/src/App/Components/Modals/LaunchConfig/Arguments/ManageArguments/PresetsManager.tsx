@@ -166,7 +166,7 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
         <PopoverContent className="space-y-1.5 p-3">
           <Input
             size="sm"
-            spellCheck={false}
+            spellCheck="false"
             placeholder="Name..."
             isInvalid={!isInputValid}
             onValueChange={setInputValue}

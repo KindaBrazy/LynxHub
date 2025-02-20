@@ -76,7 +76,7 @@ export default function Available({visible, updateTable, installedExtensions}: P
             inputWrapper: 'dark:bg-black/20 dark:hover:bg-white/5 bg-stone-50 shadow-md overflow-hidden',
           }}
           type="search"
-          spellCheck={false}
+          spellCheck="false"
           className="w-full"
           value={searchValue}
           onValueChange={setSearchValue}
