@@ -36,7 +36,7 @@ type Props = {
   setInstalledExtensions: Dispatch<SetStateAction<string[]>>;
 };
 
-// TODO: Use list for show items and simplify this fcking noob complexity
+// TODO: Use list for showing items and simplify this fcking noob complexity
 /**
  * Table displaying installed extensions.
  * - It handles updating, removing, and trashing extensions.
@@ -149,9 +149,10 @@ const Installed = forwardRef(
 
       rendererIpc.utils.getExtensionsUpdateStatus(dir).then(updateStatus => {
         if (isEmpty(updateStatus)) return;
+        console.log('updateStatus', updateStatus);
         setRows(prevState =>
           prevState.map((row, index) => {
-            const isUpdateAvailable = find(updateStatus, {id: row.key});
+            const isUpdateAvailable = find(updateStatus, {id: row.key})?.updateAvailable;
             const isDisabled = find(updateStatus, {id: row.key})?.isDisabled || false;
             const resultID = find(updateStatus, {id: row.key})?.id || '';
             const resultDir = `${dir}/${resultID}`;
