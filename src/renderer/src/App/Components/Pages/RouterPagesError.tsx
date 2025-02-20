@@ -8,9 +8,9 @@ import {isRouteErrorResponse, useNavigate, useRouteError} from 'react-router';
 import {appActions, useAppState} from '../../Redux/App/AppReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
+import {isLinuxPortable} from '../../Utils/UtilHooks';
 import {homeRoutePath} from './ContentPages/Home/HomePage';
 import Page from './Page';
-import {isLinuxPortable} from '../../Utils/UtilHooks';
 
 // Page when router id is not valid
 export default function RouterPagesError() {

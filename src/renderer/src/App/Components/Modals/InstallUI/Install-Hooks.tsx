@@ -1,6 +1,8 @@
+import {isNil} from 'lodash';
 import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {useAllCards} from '../../../Modules/ModuleLoader';
 import {
   InstallationMethod,
   InstallationStepper,
@@ -14,8 +16,6 @@ import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {InstallState} from './types';
 import InstallStepper from './Utils/InstallStepper';
-import {useAllCards} from '../../../Modules/ModuleLoader';
-import {isNil} from 'lodash';
 
 type Props = {
   setSteps: Dispatch<SetStateAction<string[]>>;

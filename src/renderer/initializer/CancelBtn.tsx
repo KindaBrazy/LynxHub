@@ -1,5 +1,6 @@
 import {Button, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
 import {useCallback, useState} from 'react';
+
 import initializerIpc from './InitializerIpc';
 
 export default function CancelBtn() {
@@ -9,14 +10,14 @@ export default function CancelBtn() {
 
   return (
     <Popover
-      isOpen={isOpen}
-      onOpenChange={setIsOpen}
-      backdrop="opaque"
-      className="dark text-white max-w-64 notDraggable"
       radius="sm"
+      isOpen={isOpen}
+      backdrop="opaque"
+      onOpenChange={setIsOpen}
+      className="dark text-white max-w-64 notDraggable"
       showArrow>
       <PopoverTrigger>
-        <Button color="warning" variant="flat" className="notDraggable cursor-default dark" fullWidth>
+        <Button variant="flat" color="warning" className="notDraggable cursor-default dark" fullWidth>
           Cancel
         </Button>
       </PopoverTrigger>
@@ -26,7 +27,7 @@ export default function CancelBtn() {
           <Button size="sm" variant="flat" color="warning" onPress={close}>
             Yes
           </Button>
-          <Button onPress={() => setIsOpen(false)} size="sm" variant="flat" color="success" className="cursor-default">
+          <Button size="sm" variant="flat" color="success" className="cursor-default" onPress={() => setIsOpen(false)}>
             No
           </Button>
         </div>
