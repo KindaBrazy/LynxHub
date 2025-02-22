@@ -1,16 +1,16 @@
 {
-  "currentVersion": "2.2.1",
-  "currentBuild": 17,
-  "releaseDate": "2025-02-06",
+  "currentVersion": "2.3.1",
+  "currentBuild": 18,
+  "releaseDate": "2025-02-22",
   "earlyAccess": {
-    "version": "2.3.0",
+    "version": "2.3.1",
     "build": 18,
     "releaseDate": "2025-02-06"
   },
   "changeLog": [
     {
       "build": 18,
-      "version": "2.3.0",
+      "version": "2.3.1",
       "improve": [
         "Repositioned \"Close\" and \"Terminate AI\" confirmation pop-up.",
         "Improved module update checking behavior and performance.",
@@ -29,7 +29,8 @@
         "Close menu on \"Open Folder\" or \"Open Homepage\"."
       ],
       "bug": [
-        "Refresh modules list after installing or uninstalling a module."
+        "Refresh modules list after installing or uninstalling a module.",
+        "Resolve AI interface extension installation issues"
       ]
     },
     {

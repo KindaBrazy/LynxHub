@@ -34,15 +34,15 @@ Get started with LynxHub by downloading the latest version for your platform.
 
 | Channel      | Version                                                                              | Date       |
 |--------------|--------------------------------------------------------------------------------------|------------|
-| Early Access | [**V2.3.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.3.0_Early-Access) | 2025-02-06 |
-| Release      | [**V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.2.1)              | 2025-02-06 |
+| Early Access | [**V2.3.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.3.0_Early-Access) | 2025-02-06 |
+| Release      | [**V2.3.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.3.1)              | 2025-02-06 |
 
 | Platform                         | x64                                                                                                              | ARM64                                                                                                            | Portable               |
 |----------------------------------|------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|------------------------|
-| **Windows 10/11** (.exe)         | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-win_x64-Setup.exe) | 🔜 Coming soon(V2.4.0)                                                                                           | 🔜 Coming soon(V2.4.0) |
-| **Debian, Ubuntu** (.deb)        | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_amd64.deb)   | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_arm64.deb)   | 🔜 Coming soon(V2.4.0) |
-| **Red Hat, Fedora, SUSE** (.rpm) | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_x86_64.rpm)  | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-linux_aarch64.rpm) | 🔜 Coming soon(V2.4.0) |
-| **macOS (Beta)** - (.dmg)        | [**📦 V2.2.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.2.1/LynxHub-V2.2.1-mac.dmg)           | 🔜 Coming soon(V2.4.0)                                                                                           | ⏳ Coming later         |
+| **Windows 10/11** (.exe)         | [**📦 V2.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.3.1/LynxHub-V2.3.1-win_x64-Setup.exe) | 🔜 Coming soon(V2.4.0)                                                                                           | 🔜 Coming soon(V2.4.0) |
+| **Debian, Ubuntu** (.deb)        | [**📦 V2.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.3.1/LynxHub-V2.3.1-linux_amd64.deb)   | [**📦 V2.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.3.1/LynxHub-V2.3.1-linux_arm64.deb)   | 🔜 Coming soon(V2.4.0) |
+| **Red Hat, Fedora, SUSE** (.rpm) | [**📦 V2.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.3.1/LynxHub-V2.3.1-linux_x86_64.rpm)  | [**📦 V2.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.3.1/LynxHub-V2.3.1-linux_aarch64.rpm) | 🔜 Coming soon(V2.4.0) |
+| **macOS (Beta)** - (.dmg)        | [**📦 V2.3.1**](https://github.com/KindaBrazy/LynxHub/releases/download/V2.3.1/LynxHub-V2.3.1-mac.dmg)           | 🔜 Coming soon(V2.4.0)                                                                                           | ⏳ Coming later         |
 
 > [!NOTE]
 > **macOS Beta Release**
