@@ -24,9 +24,8 @@ const config = {
       {target: 'portable', arch: ['x64', 'arm64']},
     ],
   },
-  portable: {
-    artifactName: '${productName}-V${version}-Portable_${arch}.${ext}',
-  },
+  portable: {artifactName: '${productName}-V${version}-${os}-Portable_${arch}.${ext}'},
+  appImage: {artifactName: '${productName}-V${version}-${os}-Portable_${arch}.${ext}'},
   nsis: {
     artifactName: '${productName}-V${version}-${os}_${arch}-Setup.${ext}',
     shortcutName: '${productName}',
