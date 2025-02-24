@@ -3,11 +3,132 @@
   "currentBuild": 18,
   "releaseDate": "2025-02-22",
   "earlyAccess": {
-    "version": "2.3.1",
-    "build": 18,
-    "releaseDate": "2025-02-06"
+    "version": "2.4.0",
+    "build": 19,
+    "releaseDate": "2025-02-24"
   },
   "changeLog": [
+    {
+      "build": 19,
+      "version": "2.4.0",
+      "changes": [
+        {
+          "title": "✨ New Features",
+          "items": [
+            {
+              "label": "Added ARM64 architecture",
+              "subitems": [
+                {
+                  "label": "Windows, macOS"
+                }
+              ]
+            },
+            {
+              "label": "Added Portable app",
+              "subitems": [
+                {
+                  "label": "Windows, Linux"
+                }
+              ]
+            },
+            {
+              "label": "Added option for dynamic title/taskbar name based on AI or page"
+            },
+            {
+              "label": "Added option to open app at last position/size or maximized"
+            },
+            {
+              "label": "Added ability to enable/disable AI interface extensions"
+            },
+            {
+              "label": "Added option to configure AI update check frequency"
+            },
+            {
+              "label": "Check for update on new card locate/install"
+            }
+          ]
+        },
+        {
+          "title": " ⚡ Improvements",
+          "items": [
+            {
+              "label": "Improve terminal process killing on terminate/close"
+            },
+            {
+              "label": "Update dashboard and audio generation icons"
+            },
+            {
+              "label": "Update Styles:",
+              "subitems": [
+                {
+                  "label": "Update AI installation and Settings clear popconfirm design"
+                },
+                {
+                  "label": "Update uninstall modal design"
+                },
+                {
+                  "label": "Update update details modal design"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "\uD83E\uDEB2 Bug Fixes",
+          "items": [
+            {
+              "label": "Resolve AI interface extension installation issues"
+            },
+            {
+              "label": "Correctly handle dots in repository names"
+            },
+            {
+              "label": "Fix error on closing app when an AI interface is running"
+            }
+          ]
+        },
+        {
+          "title": "\uD83D\uDCCC Minor Changes",
+          "items": [
+            {
+              "label": "Portable changes:",
+              "subitems": [
+                {
+                  "label": "Use relative path for app config storage path"
+                },
+                {
+                  "label": "Add executable path retrieval on multiple platforms"
+                },
+                {
+                  "label": "Remove Restart button on Linux portable AppImage and show exit instead of restart"
+                }
+              ]
+            },
+            {
+              "label": "In modules page auto switch to download tab if no modules installed"
+            },
+            {
+              "label": "Change button cursor to pointer in specific situations"
+            },
+            {
+              "label": "Reorder settings content and navigation buttons"
+            },
+            {
+              "label": "Update module changelog close button style"
+            },
+            {
+              "label": "Update initializer style"
+            },
+            {
+              "label": "Lower Patreon login card border opacity"
+            },
+            {
+              "label": "Disable google sync data checkbox"
+            }
+          ]
+        }
+      ]
+    },
     {
       "build": 18,
       "version": "2.3.1",
