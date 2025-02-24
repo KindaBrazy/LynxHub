@@ -3,11 +3,36 @@
   "currentBuild": 18,
   "releaseDate": "2025-02-22",
   "earlyAccess": {
-    "version": "2.3.1",
-    "build": 18,
-    "releaseDate": "2025-02-06"
+    "version": "2.4.0",
+    "build": 19,
+    "releaseDate": "2025-02-24"
   },
   "changeLog": [
+    {
+      "build": 19,
+      "version": "2.4.0",
+      "new": [
+        "Added ARM64 architecture",
+        "Added Portable app",
+        "Added option for dynamic title/taskbar name based on AI or page",
+        "Added option to open app at last position/size or maximized",
+        "Added ability to enable/disable AI interface extensions",
+        "Added option to configure AI update check frequency",
+        "Check for update on new card locate/install"
+      ],
+      "improve": [
+        "Improve terminal process killing on terminate/close",
+        "Update dashboard and audio generation icons",
+        "Update AI installation and Settings clear popconfirm design",
+        "Update uninstall modal design",
+        "Update update details modal design"
+      ],
+      "bug": [
+        "Resolve AI interface extension installation issues",
+        "Correctly handle dots in repository names",
+        "Fix error on closing app when an AI interface is running"
+      ]
+    },
     {
       "build": 18,
       "version": "2.3.1",
