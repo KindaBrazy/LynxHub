@@ -51,7 +51,7 @@ const config = {
     executableArgs: ['--no-sandbox'],
   },
   mac: {
-    artifactName: '${productName}-V${version}-${os}.${ext}',
+    artifactName: '${productName}-V${version}-${os}_${arch}.${ext}',
     icon: 'build/icon-darwin.png',
     entitlementsInherit: 'build/entitlements.mac.plist',
     extendInfo: {
