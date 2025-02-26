@@ -4,6 +4,7 @@ import Background from './Components/Background';
 import MainContents from './Components/MainContents/MainContents';
 import Modals from './Components/Modals/Modals';
 import TitleBar from './Components/TitleBar/TitleBar';
+import TopBar from './Components/TopBar/TopBar';
 import ExtensionHooks from './ExtensionHooks';
 import UIProviders from './UIProviders';
 import useRegisterHotkeys from './Utils/RegisterHotkeys';
@@ -20,6 +21,7 @@ export default function App() {
       <ExtensionHooks />
       <Background />
       <TitleBar />
+      <TopBar />
       <MainContents />
       <Modals />
     </UIProviders>
