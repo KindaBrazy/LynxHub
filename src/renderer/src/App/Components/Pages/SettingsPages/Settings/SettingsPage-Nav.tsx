@@ -101,7 +101,6 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
           ([entry]) => {
             setIsInView(prevState => {
               if (entry.isIntersecting) {
-                console.log('isIntersecting', item.elementId);
                 return prevState.includes(item.elementId) ? prevState : [...prevState, item.elementId];
               } else {
                 return prevState.filter(inView => inView !== item.elementId);
