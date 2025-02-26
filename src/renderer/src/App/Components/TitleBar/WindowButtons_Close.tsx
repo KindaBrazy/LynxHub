@@ -63,7 +63,7 @@ export default function WindowButtons_Close({buttonProps, commonStyles}: Props) 
           {...buttonProps}
           type="button"
           onClick={onClick}
-          className={`${commonStyles} pl-3 pr-[1rem] hover:bg-red-600`}>
+          className={`${commonStyles} pl-3 pr-[1rem] hover:bg-danger`}>
           <Power_Icon className="size-[0.8rem]" />
         </motion.button>
       </PopoverTrigger>
