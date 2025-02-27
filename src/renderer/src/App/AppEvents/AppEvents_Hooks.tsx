@@ -152,8 +152,7 @@ export const usePatreon = () => {
 
         checkEARepos(result.earlyAccess);
       })
-      .catch(e => {
-        console.warn(e);
+      .catch(() => {
         if (isOnline) checkEARepos(false);
       });
 
