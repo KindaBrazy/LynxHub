@@ -7,7 +7,16 @@ import NewTab from './NewTab';
 import TabItem from './TabItem';
 
 export default function TabContainer() {
-  const [items] = useState<string[]>(generate({exactly: 5, wordsPerString: 2}) as string[]);
+  const [items, setItems] = useState<string[]>(generate({exactly: 5, wordsPerString: 2}) as string[]);
+
+  const addTab = () => {
+    setItems(prevState => {
+      const result = [...prevState, ...(generate({exactly: 1, wordsPerString: 2}) as string[])];
+      setIsSelected(result.at(-1) || '');
+      return result;
+    });
+  };
+
   const [isSelected, setIsSelected] = useState<string>('');
   return (
     <div
@@ -28,7 +37,7 @@ export default function TabContainer() {
         ))}
       </div>
 
-      <NewTab />
+      <NewTab addTab={addTab} />
     </div>
   );
 }
