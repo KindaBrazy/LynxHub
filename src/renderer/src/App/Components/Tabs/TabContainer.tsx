@@ -18,6 +18,15 @@ export default function TabContainer() {
   };
 
   const [isSelected, setIsSelected] = useState<string>('');
+
+  const removeTab = (index: number) => {
+    setItems(prevState => {
+      prevState.splice(index, 1);
+
+      return [...prevState];
+    });
+  };
+
   return (
     <div
       className={
@@ -30,6 +39,7 @@ export default function TabContainer() {
               title={title}
               setIsSelected={setIsSelected}
               isSelected={isSelected === title}
+              removeTab={() => removeTab(index)}
               icon={<Web_Icon className="size-full" />}
             />
             {index < items.length - 1 && <Divider type="vertical" className="mx-1" />}
