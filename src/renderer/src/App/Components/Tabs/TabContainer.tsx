@@ -1,13 +1,25 @@
 import {Divider} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
 import {generate} from 'random-words';
-import {useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 import {Web_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
 import NewTab from './NewTab';
 import TabItem from './TabItem';
 
 export default function TabContainer() {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.addEventListener('mousedown', event => {
+        if (event.button === 1) {
+          event.preventDefault();
+        }
+      });
+    }
+  }, [containerRef]);
+
   const [items, setItems] = useState<string[]>(generate({exactly: 5, wordsPerString: 2}) as string[]);
 
   const addTab = () => {
@@ -29,7 +41,9 @@ export default function TabContainer() {
       className={
         'h-full items-center pt-1 notDraggable justify-between overflow-hidden flex flex-row pl-1 gap-x-1 relative'
       }>
-      <div className="items-center h-full w-full flex flex-row overflow-y-hidden overflow-x-scroll scrollbar-hide">
+      <div
+        ref={containerRef}
+        className="items-center h-full w-full flex flex-row overflow-y-hidden overflow-x-scroll scrollbar-hide">
         <AnimatePresence>
           {items.map((title, index) => (
             <motion.div
