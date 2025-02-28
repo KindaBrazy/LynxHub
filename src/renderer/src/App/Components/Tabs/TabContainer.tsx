@@ -29,7 +29,7 @@ export default function TabContainer() {
       className={
         'h-full items-center pt-1 notDraggable justify-between overflow-hidden flex flex-row pl-1 gap-x-1 relative'
       }>
-      <div className="items-center h-full flex flex-row overflow-x-scroll scrollbar-hide">
+      <div className="items-center h-full w-full flex flex-row overflow-y-hidden overflow-x-scroll scrollbar-hide">
         <AnimatePresence>
           {items.map((title, index) => (
             <motion.div
@@ -37,9 +37,9 @@ export default function TabContainer() {
                 layout: {duration: 0.5, type: 'spring'},
               }}
               key={title}
-              layout={'position'}
-              className="flex items-center"
+              layout="position"
               initial={{scale: 0.8, y: 10, x: 20, opacity: 0}}
+              className="h-full flex items-center max-w-60 min-w-[6rem]"
               exit={{scale: 0.5, y: 10, x: 20, transition: {duration: 0.07, ease: 'backIn'}}}
               animate={{scale: 1, y: 0, x: 0, opacity: 1, transition: {duration: 0.25, ease: 'backOut'}}}>
               <TabItem
