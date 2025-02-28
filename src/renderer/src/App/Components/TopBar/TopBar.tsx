@@ -9,7 +9,7 @@ export default function TopBar() {
   return (
     <div
       className={
-        'top-10 h-10 inset-x-0 absolute bg-white dark:bg-LynxRaisinBlack flex flex-row gap-x-2 px-2 py-1 items-center'
+        'h-10 inset-x-0 top-0 absolute bg-white dark:bg-LynxRaisinBlack flex flex-row gap-x-2 px-2 py-1 items-center'
       }>
       <Button size="sm" variant="light" className="cursor-default" isIconOnly>
         <ArrowDuo_Icon className="size-4" />
