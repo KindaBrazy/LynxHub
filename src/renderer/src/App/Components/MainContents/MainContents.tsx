@@ -13,7 +13,7 @@ const MainContents = memo(() => {
   const currentPage = useAppState('currentPage');
 
   return (
-    <div className="absolute inset-0 !top-20 flex flex-col transition duration-300">
+    <div className="absolute inset-0 !top-10 flex flex-col transition duration-300">
       <div className="relative flex size-full flex-row overflow-hidden">
         <NavBar />
         <div
