@@ -15,6 +15,7 @@ type Props = {
 
 export default function TabItem({title, icon, isSelected, isTerminal, setIsSelected, removeTab}: Props) {
   const btnRef = useRef<HTMLButtonElement | null>(null);
+
   useEffect(() => {
     if (btnRef.current) {
       btnRef.current.addEventListener('auxclick', (e: MouseEvent) => {
@@ -31,8 +32,7 @@ export default function TabItem({title, icon, isSelected, isTerminal, setIsSelec
   return (
     <Button
       className={
-        'h-full group rounded-t-lg max-w-60 min-w-[3.3rem] items-center pr-0 ' +
-        'overflow-hidden text-small pl-2 flex data-[hover=true]:bg-foreground-100 flex-row relative cursor-default ' +
+        'pr-0 text-small pl-2 flex rounded-t-lg data-[hover=true]:bg-foreground-100 flex-row cursor-default ' +
         `${isSelected && 'bg-white dark:bg-[#303033]'}`
       }
       ref={btnRef}
