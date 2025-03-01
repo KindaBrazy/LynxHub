@@ -8,16 +8,7 @@ import {Slider_Icon} from '../../../assets/icons/SvgIcons/SvgIcons4';
 import {GamePad_Icon, Rocket_Icon} from '../../../assets/icons/SvgIcons/SvgIcons5';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../Redux/Reducer/SettingsReducer';
-import {audioGenPageID} from '../Pages/ContentPages/AudioGenerationPage';
-import {gamesPageID} from '../Pages/ContentPages/GamesPage';
-import {homePageID} from '../Pages/ContentPages/Home/HomePage';
-import {imageGenPageID} from '../Pages/ContentPages/ImageGenerationPage';
-import {textGenPageID} from '../Pages/ContentPages/TextGenerationPage';
-import {toolsPageID} from '../Pages/ContentPages/ToolsPage';
-import {dashboardPageID} from '../Pages/SettingsPages/Dashboard/DashboardPage';
-import {extensionsPageID} from '../Pages/SettingsPages/Extensions/ExtensionsPage';
-import {modulesPageID} from '../Pages/SettingsPages/Modules/ModulesPage';
-import {settingsPageID} from '../Pages/SettingsPages/Settings/SettingsPage';
+import {PageID} from '../../Utils/Constants';
 import NavButton from './NavButton';
 
 type PagesType = {
@@ -59,18 +50,18 @@ export const ContentPagesButtons = () => {
 
   const pagesData: PagesType[] = useMemo(() => {
     const result: PagesType[] = [
-      {navButton: {icon: <Home_Icon className="size-full" />, title: 'Home'}, path: homePageID},
+      {navButton: {icon: <Home_Icon className="size-full" />, title: 'Home'}, path: PageID.homePageID},
       {
         navButton: {icon: <ImageGeneration_Icon className="size-full" />, title: 'Image Generation'},
-        path: imageGenPageID,
+        path: PageID.imageGenPageID,
       },
       {
         navButton: {icon: <TextGeneration_Icon className="size-full" />, title: 'Text Generation'},
-        path: textGenPageID,
+        path: PageID.textGenPageID,
       },
       {
         navButton: {icon: <AudioGeneration_Icon className="size-full" />, title: 'Audio Generation'},
-        path: audioGenPageID,
+        path: PageID.audioGenPageID,
       },
     ];
 
@@ -80,7 +71,7 @@ export const ContentPagesButtons = () => {
           icon: <Rocket_Icon className="size-full" />,
           title: 'Tools',
         },
-        path: toolsPageID,
+        path: PageID.toolsPageID,
       });
     }
 
@@ -90,7 +81,7 @@ export const ContentPagesButtons = () => {
           icon: <GamePad_Icon className="size-full" />,
           title: 'Games',
         },
-        path: gamesPageID,
+        path: PageID.gamesPageID,
       });
     }
 
@@ -106,10 +97,10 @@ export const ContentPagesButtons = () => {
 };
 
 const SettingsPages: PagesType[] = [
-  {navButton: {icon: <Info_Icon className="size-full" />, title: 'Dashboard'}, path: dashboardPageID},
-  {navButton: {icon: <Extensions2_Icon className="size-full" />, title: 'Modules'}, path: modulesPageID},
-  {navButton: {icon: <Extensions_Icon className="size-full" />, title: 'Extensions'}, path: extensionsPageID},
-  {navButton: {icon: <Slider_Icon className="size-full" />, title: 'Settings'}, path: settingsPageID},
+  {navButton: {icon: <Info_Icon className="size-full" />, title: 'Dashboard'}, path: PageID.dashboardPageID},
+  {navButton: {icon: <Extensions2_Icon className="size-full" />, title: 'Modules'}, path: PageID.modulesPageID},
+  {navButton: {icon: <Extensions_Icon className="size-full" />, title: 'Extensions'}, path: PageID.extensionsPageID},
+  {navButton: {icon: <Slider_Icon className="size-full" />, title: 'Settings'}, path: PageID.settingsPageID},
 ];
 
 export function SettingsPagesButtons() {

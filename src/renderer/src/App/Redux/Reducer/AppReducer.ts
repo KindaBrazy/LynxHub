@@ -2,7 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import isBoolean from 'lodash/isBoolean';
 import {useSelector} from 'react-redux';
 
-import {homePageID} from '../../Components/Pages/ContentPages/Home/HomePage';
+import {PageID} from '../../Utils/Constants';
 import {RootState} from '../Store';
 
 type AppState = {
@@ -27,7 +27,7 @@ const initialState: AppState = {
   maximized: false,
   onFocus: true,
   navBar: true,
-  currentPage: homePageID,
+  currentPage: PageID.homePageID,
   appTitle: undefined,
 };
 

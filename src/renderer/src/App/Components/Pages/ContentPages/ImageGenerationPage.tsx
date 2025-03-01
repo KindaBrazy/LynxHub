@@ -3,11 +3,10 @@ import {useMemo} from 'react';
 
 import {ImageGeneration_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
+import {PageID} from '../../../Utils/Constants';
 import {GetComponentsByPath} from '../../Cards/Cards';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
-
-export const imageGenPageID: string = 'imageGen';
 
 const ImageGenerationPage = () => {
   const {top, scrollTop, scrollBottom, bottom, cardsContainer} = useMemo(
@@ -27,7 +26,7 @@ const ImageGenerationPage = () => {
           title="Image Generation"
           subTitle="Create Stunning Visuals with AI-Powered Tools"
           icon={<ImageGeneration_Icon className={CardContainerClasses} />}>
-          <GetComponentsByPath routePath={imageGenPageID} extensionsElements={cardsContainer} />
+          <GetComponentsByPath routePath={PageID.imageGenPageID} extensionsElements={cardsContainer} />
         </CardContainer>
 
         {scrollBottom && scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}

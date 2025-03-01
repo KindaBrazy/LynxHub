@@ -3,11 +3,10 @@ import {useMemo} from 'react';
 
 import {AudioGeneration_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
+import {PageID} from '../../../Utils/Constants';
 import {GetComponentsByPath} from '../../Cards/Cards';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
-
-export const audioGenPageID: string = 'audioGen';
 
 // Generating audios with AI
 const AudioGenerationPage = () => {
@@ -28,7 +27,7 @@ const AudioGenerationPage = () => {
           title="Audio Generation"
           subTitle="Compose and Manipulate Audio Effortlessly with AI"
           icon={<AudioGeneration_Icon className={CardContainerClasses} />}>
-          <GetComponentsByPath routePath={audioGenPageID} extensionsElements={cardsContainer} />
+          <GetComponentsByPath routePath={PageID.audioGenPageID} extensionsElements={cardsContainer} />
         </CardContainer>
 
         {scrollBottom && scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}

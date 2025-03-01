@@ -1,6 +1,21 @@
 import {TRANSITION_EASINGS} from '@heroui/framer-utils';
 import {SimpleGitProgressEvent} from 'simple-git';
 
+import {TabInfo} from '../../../../cross/CrossTypes';
+
+export const PageID = {
+  homePageID: 'homePage',
+  imageGenPageID: 'imageGen',
+  audioGenPageID: 'audioGen',
+  gamesPageID: 'gamesPage',
+  textGenPageID: 'textGen',
+  toolsPageID: 'toolsPage',
+  dashboardPageID: 'dashboardPage',
+  extensionsPageID: 'extensionPage',
+  modulesPageID: 'modulesPage',
+  settingsPageID: 'settingsPage',
+};
+
 const colors = {
   black: `rgba(0, 0, 0, 1)`,
   danger: `rgba(220, 38, 38, 1)`,
