@@ -10,7 +10,7 @@ import Page from '../../Page';
 import ExtensionList from './ExtensionList';
 import ExtensionPreview from './ExtensionPreview';
 
-export const extensionsRoutePath: string = '/extensionPage';
+export const extensionsPageID: string = 'extensionPage';
 export type InstalledExt = {dir: string; id: string; version?: string};
 
 export default function ExtensionsPage() {

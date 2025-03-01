@@ -7,8 +7,7 @@ import {GetComponentsByPath} from '../../Cards/Cards';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
 
-export const textGenRoutePath: string = '/textGenerationPage';
-export const textGenElementId: string = 'textGenElement';
+export const textGenPageID: string = 'textGen';
 
 // Chatting with AI
 const TextGenerationPage = () => {
@@ -18,7 +17,7 @@ const TextGenerationPage = () => {
   );
 
   return (
-    <Page className="pt-6" id={textGenElementId}>
+    <Page className="pt-6">
       {top && top.map((Top, index) => <Top key={index} />)}
 
       <ScrollShadow size={20} className="size-full overflow-y-scroll pb-4 scrollbar-hide">
@@ -29,7 +28,7 @@ const TextGenerationPage = () => {
           title="Text Generation"
           subTitle="Unleash Your Creativity with AI-Assisted Writing"
           icon={<TextGeneration_Icon className={CardContainerClasses} />}>
-          <GetComponentsByPath routePath={textGenRoutePath} extensionsElements={cardsContainer} />
+          <GetComponentsByPath routePath={textGenPageID} extensionsElements={cardsContainer} />
         </CardContainer>
 
         {scrollBottom && scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}

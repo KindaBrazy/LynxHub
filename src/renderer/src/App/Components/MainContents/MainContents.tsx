@@ -2,8 +2,8 @@ import {memo} from 'react';
 
 import {useAppState} from '../../Redux/Reducer/AppReducer';
 import NavBar from '../NavBar/NavBar';
-import {dashboardRoutePath} from '../Pages/SettingsPages/Dashboard/DashboardPage';
-import {settingsRoutePath} from '../Pages/SettingsPages/Settings/SettingsPage';
+import {dashboardPageID} from '../Pages/SettingsPages/Dashboard/DashboardPage';
+import {settingsPageID} from '../Pages/SettingsPages/Settings/SettingsPage';
 import AppPages from './AppPages';
 import StatusBar from './StatusBar';
 
@@ -18,7 +18,7 @@ const MainContents = memo(() => {
         <NavBar />
         <div
           className={`size-full p-3 pt-1.5 ${
-            (currentPage === settingsRoutePath || currentPage === dashboardRoutePath) && navBar && 'pl-0'
+            (currentPage === settingsPageID || currentPage === dashboardPageID) && navBar && 'pl-0'
           } transition-all duration-300`}>
           <AppPages />
         </div>

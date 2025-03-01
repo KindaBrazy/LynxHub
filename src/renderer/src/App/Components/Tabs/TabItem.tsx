@@ -32,14 +32,14 @@ export default function TabItem({title, icon, isSelected, isTerminal, setIsSelec
   return (
     <Button
       className={
-        'pr-0 text-small pl-2 flex rounded-t-lg data-[hover=true]:bg-foreground-100 flex-row cursor-default ' +
+        'pr-0 text-small pl-2 flex rounded-t-lg data-[hover=true]:bg-foreground-100 flex-row cursor-default gap-x-0 ' +
         `${isSelected && 'bg-white dark:bg-[#303033]'}`
       }
       ref={btnRef}
       radius="none"
       variant="light"
       onPress={onPress}>
-      <div className="flex gap-x-2 flex-row items-center min-w-0 flex-1">
+      <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
         {isTerminal && <Terminal_Icon className="opacity-70 shrink-0" />}
         <div className="shrink-0 size-4 content-center">{icon}</div>
         <span className="truncate">{title}</span>
