@@ -4,7 +4,7 @@ import {ReactNode, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {appActions, useAppState} from '../../Redux/Reducer/AppReducer';
-import {tabsActions} from '../../Redux/Reducer/TabsReducer';
+import {tabsActions, useActivePage} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import {getColor} from '../../Utils/Constants';
 import LynxTooltip from '../Reusable/LynxTooltip';
@@ -29,27 +29,25 @@ type Props = {
 /** Navigation button */
 export default function NavButton({children, pageId, title, badge}: Props) {
   const darkMode = useAppState('darkMode');
-  const currentPage = useAppState('currentPage');
+  const activePage = useActivePage();
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
   // const navigate = useNavigate();
 
   useEffect(() => {
-    setIsSelected(currentPage === pageId);
-    if (currentPage === pageId) {
+    setIsSelected(activePage === pageId);
+    if (activePage === pageId) {
       setTimeout(() => {
         dispatch(appActions.setAppTitle(title?.replace(' Generation', '')));
       }, 50);
     }
-  }, [currentPage, pageId]);
+  }, [activePage, pageId]);
 
   const handleClick = useCallback(() => {
-    if (currentPage === pageId) return;
-    // navigate(pageId); TODO
-    dispatch(tabsActions.setAppState({key: 'activeTab', value: pageId}));
-    dispatch(appActions.setAppState({key: 'currentPage', value: pageId}));
-  }, [currentPage, pageId, dispatch]);
+    if (activePage === pageId) return;
+    dispatch(tabsActions.setActivePage({pageID: pageId, title: title || '', isTerminal: false}));
+  }, [activePage, pageId, dispatch]);
 
   const getBackgroundColor = useCallback(
     (state: 'hover' | 'tap') => {

@@ -93,5 +93,4 @@ export const defaultTabItem: TabInfo = {
   title: 'Home',
   isTerminal: false,
   pageID: PageID.homePageID,
-  icon: 'home',
 };

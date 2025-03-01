@@ -272,5 +272,5 @@ export type TabInfo = {
   title: string;
   isTerminal: boolean;
   pageID: string;
-  icon: string;
+  iconURL?: string;
 };

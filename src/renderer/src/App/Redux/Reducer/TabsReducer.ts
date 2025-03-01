@@ -17,7 +17,7 @@ type TabStateTypes = {
 
 const initialState: TabState = {
   tabs: [defaultTabItem],
-  activeTab: '',
+  activeTab: defaultTabItem.id,
   prevTab: '',
 };
 
@@ -44,6 +44,7 @@ const tabsSlice = createSlice({
       checkDuplicateId();
 
       state.tabs.push({...action.payload, id: newID});
+      state.activeTab = newID;
     },
     removeTab: (state: TabState, action: PayloadAction<string>) => {
       const tabIdToRemove = action.payload;
@@ -64,10 +65,19 @@ const tabsSlice = createSlice({
       state.prevTab = state.activeTab;
       state.activeTab = action.payload;
     },
-    setActivePage: (state: TabState, action: PayloadAction<string>) => {
+    setActivePage: (
+      state: TabState,
+      action: PayloadAction<{
+        pageID: string;
+        title: string;
+        isTerminal: boolean;
+        iconURL?: string;
+      }>,
+    ) => {
       const index = state.tabs.findIndex(tab => tab.id === state.activeTab);
       if (index !== -1) {
-        state.tabs[index] = {...state.tabs[index], pageID: action.payload};
+        const {pageID, title, isTerminal, iconURL} = action.payload;
+        state.tabs[index] = {...state.tabs[index], pageID, title, isTerminal, iconURL};
       }
     },
   },
