@@ -266,3 +266,11 @@ export type PatreonUserData = {
 };
 
 export type FolderListData = {type: 'folder' | 'file'; name: string};
+
+export type TabInfo = {
+  id: string;
+  title: string;
+  isTerminal: boolean;
+  pageID: string;
+  icon: string;
+};
