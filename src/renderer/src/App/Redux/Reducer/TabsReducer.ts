@@ -1,18 +1,12 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
+import {TabInfo} from '../../../../../cross/CrossTypes';
+import {defaultTabItem} from '../../Utils/Constants';
 import {RootState} from '../Store';
 
-type Tab = {
-  id: string;
-  title: string;
-  isTerminal: boolean;
-  pageID: string;
-  icon: string;
-};
-
 type TabState = {
-  tabs: Tab[];
+  tabs: TabInfo[];
   activeTab: string;
   prevTab: string;
 };
@@ -22,7 +16,7 @@ type TabStateTypes = {
 };
 
 const initialState: TabState = {
-  tabs: [],
+  tabs: [defaultTabItem],
   activeTab: '',
   prevTab: '',
 };
@@ -74,7 +68,6 @@ export const useActivePage = () => {
   const activeTab = useTabsState('activeTab');
   const tabs = useTabsState('tabs');
 
-  console.log(tabs, activeTab);
   return tabs.find(tab => tab.id === activeTab)?.pageID;
 };
 

@@ -87,3 +87,11 @@ export const modalMotionProps = {
     },
   },
 };
+
+export const defaultTabItem: TabInfo = {
+  id: 'home',
+  title: 'Home',
+  isTerminal: false,
+  pageID: PageID.homePageID,
+  icon: 'home',
+};
