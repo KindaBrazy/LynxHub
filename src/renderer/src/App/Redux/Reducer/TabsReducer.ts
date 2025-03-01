@@ -7,7 +7,7 @@ type Tab = {
   id: string;
   title: string;
   isTerminal: boolean;
-  content: string;
+  pageID: string;
   icon: string;
 };
 

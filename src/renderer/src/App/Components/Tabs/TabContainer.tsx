@@ -59,6 +59,7 @@ export default function TabContainer() {
               <TabItem
                 key={title}
                 title={title}
+                isTerminal={index == 2}
                 setIsSelected={setIsSelected}
                 isSelected={isSelected === title}
                 removeTab={() => removeTab(title)}

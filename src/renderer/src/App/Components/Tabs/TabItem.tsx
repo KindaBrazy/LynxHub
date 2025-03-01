@@ -40,8 +40,11 @@ export default function TabItem({title, icon, isSelected, isTerminal, setIsSelec
       variant="light"
       onPress={onPress}>
       <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
-        {isTerminal && <Terminal_Icon className="opacity-70 shrink-0" />}
-        <div className="shrink-0 size-4 content-center">{icon}</div>
+        {isTerminal ? (
+          <Terminal_Icon className="opacity-80 shrink-0 text-secondary" />
+        ) : (
+          <div className="shrink-0 size-4 content-center">{icon}</div>
+        )}
         <span className="truncate">{title}</span>
       </div>
 
