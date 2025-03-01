@@ -2,8 +2,6 @@ import Page from '../../Page';
 import SettingsPageContents from './SettingsPage-Contents';
 import SettingsPageNav from './SettingsPage-Nav';
 
-export const settingsPageID: string = 'settingsPage';
-
 /** App setting manager */
 const SettingsPage = () => (
   <Page>

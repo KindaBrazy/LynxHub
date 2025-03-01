@@ -3,11 +3,10 @@ import {useMemo} from 'react';
 
 import {TextGeneration_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
+import {PageID} from '../../../Utils/Constants';
 import {GetComponentsByPath} from '../../Cards/Cards';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
-
-export const textGenPageID: string = 'textGen';
 
 // Chatting with AI
 const TextGenerationPage = () => {
@@ -28,7 +27,7 @@ const TextGenerationPage = () => {
           title="Text Generation"
           subTitle="Unleash Your Creativity with AI-Assisted Writing"
           icon={<TextGeneration_Icon className={CardContainerClasses} />}>
-          <GetComponentsByPath routePath={textGenPageID} extensionsElements={cardsContainer} />
+          <GetComponentsByPath routePath={PageID.textGenPageID} extensionsElements={cardsContainer} />
         </CardContainer>
 
         {scrollBottom && scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}

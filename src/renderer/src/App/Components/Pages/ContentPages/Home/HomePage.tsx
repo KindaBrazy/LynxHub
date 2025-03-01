@@ -10,8 +10,6 @@ import Page from '../../Page';
 import HomeFilter from './HomeFilter';
 import HomeSearchBox from './HomeSearchBox';
 
-export const homePageID: string = 'homePage';
-
 const HomePage = () => {
   const homeCategory = useCardsState('homeCategory');
   const [searchValue, setSearchValue] = useState<string>('');

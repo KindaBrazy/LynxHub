@@ -5,8 +5,6 @@ import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
 
-export const toolsPageID: string = 'toolsPage';
-
 const ToolsPage = () => {
   const {addComponent} = extensionsData.customizePages.tools;
 

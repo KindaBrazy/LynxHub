@@ -11,8 +11,6 @@ import Page from '../../Page';
 import DownloadModules from './Download/DownloadModules';
 import InstalledModules from './Installed/InstalledModules';
 
-export const modulesPageID: string = 'modulesPage';
-
 /** Manage app modules -> install, uninstall or update */
 export default function ModulesPage() {
   const [installedModules, setInstalledModules] = useState<string[]>([]);
