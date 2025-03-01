@@ -1,15 +1,17 @@
 import {configureStore} from '@reduxjs/toolkit';
 
 import {extensionsData} from '../Extensions/ExtensionLoader';
+import appReducer from './Reducer/AppReducer';
 import cardsReducer from './Reducer/CardsReducer';
 import modalsReducer from './Reducer/ModalsReducer';
-import appReducer from './Reducer/AppReducer';
 import settingsReducer from './Reducer/SettingsReducer';
+import tabsReducer from './Reducer/TabsReducer';
 import terminalReducer from './Reducer/TerminalReducer';
 import userReducer from './Reducer/UserReducer';
 
 const staticReducers = {
   app: appReducer,
+  tabs: tabsReducer,
   user: userReducer,
   cards: cardsReducer,
   modals: modalsReducer,
