@@ -4,7 +4,7 @@ import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {modalActions, useModalsState} from '../../Redux/AI/ModalsReducer';
+import {modalActions, useModalsState} from '../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import MarkdownViewer from '../Reusable/MarkdownViewer';
 

@@ -5,7 +5,7 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {PreOpenData} from '../../../../../../../../cross/IpcChannelAndTypes';
 import {Add_Icon, File_Icon, Folder2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {useModalsState} from '../../../../../Redux/AI/ModalsReducer';
+import {useModalsState} from '../../../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../../../RendererIpc';
 import LynxTooltip from '../../../../Reusable/LynxTooltip';
 import LaunchConfigSection from '../../LaunchConfig-Section';

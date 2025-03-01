@@ -4,7 +4,7 @@ import {ReactNode, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 
-import {appActions, useAppState} from '../../Redux/App/AppReducer';
+import {appActions, useAppState} from '../../Redux/Reducer/AppReducer';
 import {AppDispatch} from '../../Redux/Store';
 import {getColor} from '../../Utils/Constants';
 import LynxTooltip from '../Reusable/LynxTooltip';

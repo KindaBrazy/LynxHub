@@ -6,8 +6,8 @@ import {isHotkeyPressed} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {Power_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
-import {useAppState} from '../../Redux/App/AppReducer';
-import {settingsActions, useSettingsState} from '../../Redux/App/SettingsReducer';
+import {useAppState} from '../../Redux/Reducer/AppReducer';
+import {settingsActions, useSettingsState} from '../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {isLinuxPortable} from '../../Utils/UtilHooks';

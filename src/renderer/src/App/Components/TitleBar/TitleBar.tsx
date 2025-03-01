@@ -2,7 +2,7 @@ import isEmpty from 'lodash/isEmpty';
 import {memo, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {useAppState} from '../../Redux/App/AppReducer';
+import {useAppState} from '../../Redux/Reducer/AppReducer';
 import TabContainer from '../Tabs/TabContainer';
 import WindowButtons from './WindowButtons';
 

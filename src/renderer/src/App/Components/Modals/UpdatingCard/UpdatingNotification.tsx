@@ -6,8 +6,8 @@ import {useDispatch} from 'react-redux';
 import {PullResult} from 'simple-git';
 
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
-import {cardsActions, useCardsState} from '../../../Redux/AI/CardsReducer';
-import {modalActions} from '../../../Redux/AI/ModalsReducer';
+import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
+import {modalActions} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import UpdateDetails from './UpdateDetails';

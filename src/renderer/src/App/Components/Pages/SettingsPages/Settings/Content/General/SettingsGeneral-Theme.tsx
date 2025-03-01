@@ -3,7 +3,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {DarkModeTypes} from '../../../../../../../../../cross/IpcChannelAndTypes';
-import {appActions, useAppState} from '../../../../../../Redux/App/AppReducer';
+import {appActions, useAppState} from '../../../../../../Redux/Reducer/AppReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
 

@@ -5,8 +5,8 @@ import {useMemo} from 'react';
 import {Download_Icon} from '../../../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {Fork_Icon, MenuDots_Icon, Pin_Icon, Play_Icon} from '../../../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Star_Icon, User_Icon} from '../../../../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {useAppState} from '../../../../../../../Redux/App/AppReducer';
-import {useSettingsState} from '../../../../../../../Redux/App/SettingsReducer';
+import {useAppState} from '../../../../../../../Redux/Reducer/AppReducer';
+import {useSettingsState} from '../../../../../../../Redux/Reducer/SettingsReducer';
 
 const loremText =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt' +

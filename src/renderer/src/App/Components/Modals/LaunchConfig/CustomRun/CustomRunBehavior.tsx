@@ -2,7 +2,7 @@ import {Select, Selection, SelectItem} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {Fragment, useEffect, useState} from 'react';
 
-import {useModalsState} from '../../../../Redux/AI/ModalsReducer';
+import {useModalsState} from '../../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../../RendererIpc';
 import LaunchConfigSection from '../LaunchConfig-Section';
 

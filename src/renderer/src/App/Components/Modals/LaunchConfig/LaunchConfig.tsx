@@ -4,7 +4,7 @@ import {Key, memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ChosenArgumentsData} from '../../../../../../cross/CrossTypes';
-import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
+import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {modalMotionProps} from '../../../Utils/Constants';

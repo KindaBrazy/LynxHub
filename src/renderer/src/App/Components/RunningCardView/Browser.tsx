@@ -3,7 +3,7 @@ import {motion, Variants} from 'framer-motion';
 import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {cardsActions, useCardsState} from '../../Redux/AI/CardsReducer';
+import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import TopBar from '../TopBar/TopBar';

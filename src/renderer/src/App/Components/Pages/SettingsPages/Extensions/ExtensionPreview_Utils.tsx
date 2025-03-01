@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
-import {settingsActions, useSettingsState} from '../../../../Redux/App/SettingsReducer';
+import {settingsActions, useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {isLinuxPortable, RenderSubItems} from '../../../../Utils/UtilHooks';

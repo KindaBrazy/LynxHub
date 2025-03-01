@@ -5,7 +5,7 @@ import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
 import {Text_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
+import {useModalsState} from '../../../../../../Redux/Reducer/ModalsReducer';
 import ArgumentItemBase from './Argument-Item-Base';
 
 type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void};

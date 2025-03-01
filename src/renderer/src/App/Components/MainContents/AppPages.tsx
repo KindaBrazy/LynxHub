@@ -2,7 +2,7 @@ import {useMemo} from 'react';
 import {Outlet} from 'react-router';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {useCardsState} from '../../Redux/AI/CardsReducer';
+import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import RunningCardView from '../RunningCardView/RunningCardView';
 
 export default function AppPages() {

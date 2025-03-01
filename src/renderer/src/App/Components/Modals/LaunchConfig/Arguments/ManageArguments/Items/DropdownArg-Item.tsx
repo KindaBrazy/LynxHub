@@ -5,7 +5,7 @@ import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue, getArgumentValues} from '../../../../../../../../../cross/GetArgumentsData';
 import {ListCheck_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
+import {useModalsState} from '../../../../../../Redux/Reducer/ModalsReducer';
 import {convertArrToObject} from '../../../../../../Utils/UtilFunctions';
 import ArgumentItemBase from './Argument-Item-Base';
 

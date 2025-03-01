@@ -5,8 +5,8 @@ import {isHotkeyPressed} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {Stop_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
-import {cardsActions, useCardsState} from '../../Redux/AI/CardsReducer';
-import {settingsActions, useSettingsState} from '../../Redux/App/SettingsReducer';
+import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
+import {settingsActions, useSettingsState} from '../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import SmallButton from '../Reusable/SmallButton';

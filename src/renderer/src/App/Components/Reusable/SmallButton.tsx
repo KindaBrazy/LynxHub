@@ -1,7 +1,7 @@
 import {motion, Variants} from 'framer-motion';
 import {ReactNode, useMemo} from 'react';
 
-import {useAppState} from '../../Redux/App/AppReducer';
+import {useAppState} from '../../Redux/Reducer/AppReducer';
 import {getColor} from '../../Utils/Constants';
 
 type Props = {icon: ReactNode; onClick?: () => void};

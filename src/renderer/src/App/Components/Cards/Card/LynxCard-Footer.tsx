@@ -3,7 +3,7 @@ import {observer} from 'mobx-react-lite';
 import {useMemo} from 'react';
 
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
-import {useSettingsState} from '../../../Redux/App/SettingsReducer';
+import {useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
 import {useCardData} from '../CardsDataManager';
 import CardMenu from './Menu/CardMenu';
 import NotInstalled_Menu from './Menu/NotInstalled_Menu';

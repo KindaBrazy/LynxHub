@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {Star_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {useModalsState} from '../../../../Redux/AI/ModalsReducer';
+import {useModalsState} from '../../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {formatNumber} from '../../../../Utils/UtilFunctions';

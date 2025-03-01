@@ -14,9 +14,9 @@ import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {getCardMethod, useAllCards} from '../../Modules/ModuleLoader';
-import {cardsActions, useCardsState} from '../../Redux/AI/CardsReducer';
-import {useAppState} from '../../Redux/App/AppReducer';
-import {useTerminalState} from '../../Redux/App/TerminalReducer';
+import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
+import {useAppState} from '../../Redux/Reducer/AppReducer';
+import {useTerminalState} from '../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {getColor} from '../../Utils/Constants';

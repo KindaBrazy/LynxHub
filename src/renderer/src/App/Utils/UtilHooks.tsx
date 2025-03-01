@@ -4,8 +4,8 @@ import {useHotkeys} from 'react-hotkeys-hook';
 
 import {ChangelogItem} from '../../../../cross/CrossTypes';
 import {InstalledCard} from '../../../../cross/StorageTypes';
-import {useCardsState} from '../Redux/AI/CardsReducer';
-import {useSettingsState} from '../Redux/App/SettingsReducer';
+import {useCardsState} from '../Redux/Reducer/CardsReducer';
+import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
 import {UpdatingCard} from './Types';
 
 /**

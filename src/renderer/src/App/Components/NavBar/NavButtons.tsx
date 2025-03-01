@@ -7,7 +7,7 @@ import {TextGeneration_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
 import {Slider_Icon} from '../../../assets/icons/SvgIcons/SvgIcons4';
 import {GamePad_Icon, Rocket_Icon} from '../../../assets/icons/SvgIcons/SvgIcons5';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {useSettingsState} from '../../Redux/App/SettingsReducer';
+import {useSettingsState} from '../../Redux/Reducer/SettingsReducer';
 import {audioGenRoutePath} from '../Pages/ContentPages/AudioGenerationPage';
 import {gamesRoutePath} from '../Pages/ContentPages/GamesPage';
 import {homeRoutePath} from '../Pages/ContentPages/Home/HomePage';

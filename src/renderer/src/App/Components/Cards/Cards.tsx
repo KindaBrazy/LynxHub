@@ -6,7 +6,7 @@ import {FC, useMemo} from 'react';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useGetCardsByPath} from '../../Modules/ModuleLoader';
 import {AvailablePages} from '../../Modules/types';
-import {useCardsState} from '../../Redux/AI/CardsReducer';
+import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import Page from '../Pages/Page';
 import LynxCard from './Card/LynxCard';
 import {CardContext, CardsDataManager} from './CardsDataManager';

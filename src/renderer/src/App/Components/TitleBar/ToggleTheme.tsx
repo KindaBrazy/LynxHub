@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import {DarkMode_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
 import {LightMode_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
-import {appActions, useAppState} from '../../Redux/App/AppReducer';
+import {appActions, useAppState} from '../../Redux/Reducer/AppReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {getColor} from '../../Utils/Constants';

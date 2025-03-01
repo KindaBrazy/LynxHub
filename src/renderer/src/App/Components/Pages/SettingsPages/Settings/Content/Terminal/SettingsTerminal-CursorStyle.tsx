@@ -3,7 +3,7 @@ import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {TerminalCursorStyle} from '../../../../../../../../../cross/IpcChannelAndTypes';
-import {terminalActions, useTerminalState} from '../../../../../../Redux/App/TerminalReducer';
+import {terminalActions, useTerminalState} from '../../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 
 export default function SettingsTerminalCursorStyle() {

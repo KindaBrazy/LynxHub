@@ -5,7 +5,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {isRouteErrorResponse, useNavigate, useRouteError} from 'react-router';
 
-import {appActions, useAppState} from '../../Redux/App/AppReducer';
+import {appActions, useAppState} from '../../Redux/Reducer/AppReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {isLinuxPortable} from '../../Utils/UtilHooks';

@@ -6,8 +6,8 @@ import {Copy_Icon, ExternalLink_Icon} from '../../../../../../assets/icons/SvgIc
 import {HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {OpenFolder_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {duplicateCard, removeDuplicatedCard} from '../../../../../Modules/ModuleLoader';
-import {cardsActions, useCardsState} from '../../../../../Redux/AI/CardsReducer';
-import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
+import {cardsActions, useCardsState} from '../../../../../Redux/Reducer/CardsReducer';
+import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';

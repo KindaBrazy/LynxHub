@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 import {useMemo, useState} from 'react';
 
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
-import {useCardsState} from '../../../../Redux/AI/CardsReducer';
+import {useCardsState} from '../../../../Redux/Reducer/CardsReducer';
 import {AllCardsSection, CardsBySearch, PinnedCars, RecentlyCards} from '../../../Cards/CardsByCategory';
 import Page from '../../Page';
 import HomeFilter from './HomeFilter';

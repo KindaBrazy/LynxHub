@@ -6,10 +6,10 @@ import {useDispatch} from 'react-redux';
 import {WIN_RELEASE_URL_V2} from '../../../../../../../../cross/CrossConstants';
 import {AppUpdateData} from '../../../../../../../../cross/CrossTypes';
 import {Download2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
-import {useSettingsState} from '../../../../../Redux/App/SettingsReducer';
+import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
+import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
-import {useUserState} from '../../../../../Redux/User/UserReducer';
+import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
 export const DashboardUpdateId = 'settings_update_elem';

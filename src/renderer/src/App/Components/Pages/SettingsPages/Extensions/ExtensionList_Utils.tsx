@@ -21,8 +21,8 @@ import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
 import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Linux_Icon, MacOS_Icon, Windows_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
-import {useSettingsState} from '../../../../Redux/App/SettingsReducer';
-import {useUserState} from '../../../../Redux/User/UserReducer';
+import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
+import {useUserState} from '../../../../Redux/Reducer/UserReducer';
 import {ExtFilter} from './ExtensionList';
 import {InstalledExt} from './ExtensionsPage';
 

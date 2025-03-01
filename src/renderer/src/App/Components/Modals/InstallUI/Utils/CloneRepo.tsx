@@ -10,7 +10,7 @@ import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../../cross/IpcChannelAndTypes';
 import {Folder2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {GitHub_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {modalActions, useModalsState} from '../../../../Redux/AI/ModalsReducer';
+import {modalActions, useModalsState} from '../../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {initGitProgress} from '../../../../Utils/Constants';

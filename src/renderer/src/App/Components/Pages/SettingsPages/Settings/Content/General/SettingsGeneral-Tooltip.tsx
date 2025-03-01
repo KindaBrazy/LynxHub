@@ -3,7 +3,7 @@ import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {TooltipStatus} from '../../../../../../../../../cross/IpcChannelAndTypes';
-import {settingsActions, useSettingsState} from '../../../../../../Redux/App/SettingsReducer';
+import {settingsActions, useSettingsState} from '../../../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
 

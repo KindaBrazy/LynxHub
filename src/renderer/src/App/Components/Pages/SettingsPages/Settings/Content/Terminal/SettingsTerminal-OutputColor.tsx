@@ -1,7 +1,7 @@
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {terminalActions, useTerminalState} from '../../../../../../Redux/App/TerminalReducer';
+import {terminalActions, useTerminalState} from '../../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
 

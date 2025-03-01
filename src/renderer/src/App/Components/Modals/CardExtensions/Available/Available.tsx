@@ -5,7 +5,7 @@ import {useEffect, useState} from 'react';
 import {validateGitRepoUrl} from '../../../../../../../cross/CrossUtils';
 import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {getCardMethod, useAllCards} from '../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../Redux/AI/ModalsReducer';
+import {useModalsState} from '../../../../Redux/Reducer/ModalsReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import RenderItem from './RenderItem';
 

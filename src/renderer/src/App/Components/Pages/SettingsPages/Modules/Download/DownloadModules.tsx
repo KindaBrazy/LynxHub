@@ -6,8 +6,8 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react'
 import {MODULE_CONTAINER} from '../../../../../../../../cross/CrossConstants';
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {Circle_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {useAppState} from '../../../../../Redux/App/AppReducer';
-import {useSettingsState} from '../../../../../Redux/App/SettingsReducer';
+import {useAppState} from '../../../../../Redux/Reducer/AppReducer';
+import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
 import RenderItem from './RenderItem';
 

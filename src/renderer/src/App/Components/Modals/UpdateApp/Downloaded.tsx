@@ -3,7 +3,7 @@ import {message, Result} from 'antd';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {settingsActions} from '../../../Redux/App/SettingsReducer';
+import {settingsActions} from '../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 

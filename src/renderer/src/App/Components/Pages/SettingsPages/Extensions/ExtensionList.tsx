@@ -7,7 +7,7 @@ import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
 import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {useAppState} from '../../../../Redux/App/AppReducer';
+import {useAppState} from '../../../../Redux/Reducer/AppReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useRenderList, useSortedList} from './ExtensionList_Utils';
 import {InstalledExt} from './ExtensionsPage';

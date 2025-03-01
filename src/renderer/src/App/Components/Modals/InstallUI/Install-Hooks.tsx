@@ -10,8 +10,8 @@ import {
   UserInputField,
   UserInputResult,
 } from '../../../Modules/types';
-import {cardsActions} from '../../../Redux/AI/CardsReducer';
-import {useModalsState} from '../../../Redux/AI/ModalsReducer';
+import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
+import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {InstallState} from './types';

@@ -2,7 +2,7 @@ import {isEmpty} from 'lodash';
 import {memo, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {useAppState} from '../../Redux/App/AppReducer';
+import {useAppState} from '../../Redux/Reducer/AppReducer';
 import {ContentPagesButtons, SettingsPagesButtons} from './NavButtons';
 
 const CONTAINER_WIDTH = 'w-[5.5rem]';

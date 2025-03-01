@@ -3,7 +3,7 @@ import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
+import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {useCardData} from '../../../CardsDataManager';
 
