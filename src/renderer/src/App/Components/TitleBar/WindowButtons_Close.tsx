@@ -6,8 +6,8 @@ import {isHotkeyPressed} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {Power_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
-import {useAppState} from '../../Redux/Reducer/AppReducer';
 import {settingsActions, useSettingsState} from '../../Redux/Reducer/SettingsReducer';
+import {useActivePage} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {isLinuxPortable} from '../../Utils/UtilHooks';
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default function WindowButtons_Close({buttonProps, commonStyles}: Props) {
-  const currentPage = useAppState('currentPage');
+  const activePage = useActivePage();
   const showCloseConfirm = useSettingsState('closeConfirm');
   const dispatch = useDispatch<AppDispatch>();
 
@@ -28,7 +28,7 @@ export default function WindowButtons_Close({buttonProps, commonStyles}: Props) 
   const close = useCallback(() => rendererIpc.win.changeWinState('close'), []);
 
   const onClick = () => {
-    rendererIpc.storage.update('app', {lastPage: currentPage});
+    rendererIpc.storage.update('app', {lastPage: activePage});
     if (isHotkeyPressed('control') || !showCloseConfirm) {
       close();
     } else if (!isConfirmOpen) {

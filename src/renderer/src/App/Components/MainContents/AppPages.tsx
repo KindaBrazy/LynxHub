@@ -1,4 +1,3 @@
-import {AnimatePresence} from 'framer-motion';
 import {useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
@@ -30,7 +29,7 @@ export default function AppPages() {
       <RunningCardView />
     )
   ) : (
-    <AnimatePresence>
+    <>
       {activePage === PageID.homePageID && <HomePage />}
       {activePage === PageID.imageGenPageID && <ImageGenerationPage />}
       {activePage === PageID.textGenPageID && <TextGenerationPage />}
@@ -43,6 +42,6 @@ export default function AppPages() {
       {activePage === PageID.modulesPageID && <ModulesPage />}
       {activePage === PageID.extensionsPageID && <ExtensionsPage />}
       {activePage === PageID.settingsPageID && <SettingsPage />}
-    </AnimatePresence>
+    </>
   );
 }

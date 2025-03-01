@@ -129,7 +129,6 @@ export const useStorageData = () => {
       dispatch(settingsActions.setSettingsState({key: 'dynamicAppTitle', value: storage.app.dynamicAppTitle}));
 
       if (storage.app.startupLastActivePage) {
-        dispatch(appActions.setAppState({key: 'currentPage', value: storage.app.lastPage}));
         // TODO
         dispatch(tabsActions.setAppState({key: 'activeTab', value: storage.app.lastPage}));
       }
