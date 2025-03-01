@@ -54,11 +54,29 @@ const tabsSlice = createSlice({
     removeTab: (state: TabState, action: PayloadAction<string>) => {
       state.tabs = state.tabs.filter(tab => tab.id !== action.payload);
     },
+    setActiveTab: (state: TabState, action: PayloadAction<string>) => {
+      state.prevTab = state.activeTab;
+      state.activeTab = action.payload;
+    },
+    setActivePage: (state: TabState, action: PayloadAction<string>) => {
+      const index = state.tabs.findIndex(tab => tab.id === state.activeTab);
+      if (index !== -1) {
+        state.tabs[index] = {...state.tabs[index], pageID: action.payload};
+      }
+    },
   },
 });
 
 export const useTabsState = <K extends keyof TabState>(key: K): TabStateTypes[K] =>
   useSelector((state: RootState) => state.tabs[key]);
+
+export const useActivePage = () => {
+  const activeTab = useTabsState('activeTab');
+  const tabs = useTabsState('tabs');
+
+  console.log(tabs, activeTab);
+  return tabs.find(tab => tab.id === activeTab)?.pageID;
+};
 
 export const tabsActions = tabsSlice.actions;
 
