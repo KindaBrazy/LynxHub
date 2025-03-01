@@ -46,7 +46,19 @@ const tabsSlice = createSlice({
       state.tabs.push({...action.payload, id: newID});
     },
     removeTab: (state: TabState, action: PayloadAction<string>) => {
-      state.tabs = state.tabs.filter(tab => tab.id !== action.payload);
+      const tabIdToRemove = action.payload;
+      const tabIndexToRemove = state.tabs.findIndex(tab => tab.id === tabIdToRemove);
+
+      state.tabs = state.tabs.filter(tab => tab.id !== tabIdToRemove);
+
+      if (state.activeTab === tabIdToRemove) {
+        if (state.tabs.length > 0) {
+          const newActiveTabIndex = Math.min(tabIndexToRemove, state.tabs.length - 1);
+          state.activeTab = state.tabs[newActiveTabIndex].id;
+        } else {
+          state.activeTab = defaultTabItem.id;
+        }
+      }
     },
     setActiveTab: (state: TabState, action: PayloadAction<string>) => {
       state.prevTab = state.activeTab;
