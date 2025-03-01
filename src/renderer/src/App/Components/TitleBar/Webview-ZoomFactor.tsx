@@ -4,7 +4,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Magnifier_Icon} from '../../../assets/icons/SvgIcons/SvgIcons4';
-import {cardsActions, useCardsState} from '../../Redux/AI/CardsReducer';
+import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import SmallButton from '../Reusable/SmallButton';
 

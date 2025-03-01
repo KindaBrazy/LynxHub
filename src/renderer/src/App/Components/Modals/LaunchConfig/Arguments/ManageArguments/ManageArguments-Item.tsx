@@ -3,7 +3,7 @@ import {Dispatch, SetStateAction, useCallback} from 'react';
 import {ChosenArgument, ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
 import {getArgumentType} from '../../../../../../../../cross/GetArgumentsData';
 import {useGetArgumentsByID} from '../../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../../Redux/AI/ModalsReducer';
+import {useModalsState} from '../../../../../Redux/Reducer/ModalsReducer';
 import CheckBoxArgItem from './Items/CheckBoxArg-Item';
 import DirectoryArgItem from './Items/DirectoryArg-Item';
 import DropdownArgItem from './Items/DropdownArg-Item';

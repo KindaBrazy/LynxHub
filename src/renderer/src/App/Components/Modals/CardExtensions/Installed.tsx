@@ -16,7 +16,7 @@ import {
 
 import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
-import {useModalsState} from '../../../Redux/AI/ModalsReducer';
+import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../RendererIpc';
 import {fetchRepoDetails} from '../../../Utils/LocalStorage';
 import {

@@ -5,7 +5,7 @@ import {observer} from 'mobx-react-lite';
 import {useMemo} from 'react';
 
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
-import {useSettingsState} from '../../../Redux/App/SettingsReducer';
+import {useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
 import {useUpdateAvailable} from '../../../Utils/UtilHooks';
 import {useCardData} from '../CardsDataManager';
 import LynxCardBody from './LynxCard-Body';

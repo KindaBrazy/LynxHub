@@ -5,7 +5,7 @@ import {Dispatch, Fragment, SetStateAction} from 'react';
 
 import {ModulesInfo} from '../../../../../../../cross/CrossTypes';
 import {CloseSimple_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
-import {useAppState} from '../../../../Redux/App/AppReducer';
+import {useAppState} from '../../../../Redux/Reducer/AppReducer';
 import {RenderSubItems} from '../../../../Utils/UtilHooks';
 
 type Props = {item: ModulesInfo; isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>};

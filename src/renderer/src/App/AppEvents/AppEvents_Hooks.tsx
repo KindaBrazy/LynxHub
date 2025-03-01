@@ -6,12 +6,12 @@ import {useNavigate} from 'react-router';
 import {toMs} from '../../../../cross/CrossUtils';
 import StorageTypes from '../../../../cross/StorageTypes';
 import {useAllCards, useGetTitleByID} from '../Modules/ModuleLoader';
-import {cardsActions, useCardsState} from '../Redux/AI/CardsReducer';
-import {appActions, useAppState} from '../Redux/App/AppReducer';
-import {settingsActions} from '../Redux/App/SettingsReducer';
-import {terminalActions} from '../Redux/App/TerminalReducer';
+import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
+import {appActions, useAppState} from '../Redux/Reducer/AppReducer';
+import {settingsActions} from '../Redux/Reducer/SettingsReducer';
+import {terminalActions} from '../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../Redux/Store';
-import {userActions} from '../Redux/User/UserReducer';
+import {userActions} from '../Redux/Reducer/UserReducer';
 import rendererIpc from '../RendererIpc';
 import {checkEARepos} from './AppEvents_Utils';
 

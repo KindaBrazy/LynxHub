@@ -9,8 +9,8 @@ import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useRef} from 'react';
 
-import {useAppState} from '../../../../Redux/App/AppReducer';
-import {useTerminalState} from '../../../../Redux/App/TerminalReducer';
+import {useAppState} from '../../../../Redux/Reducer/AppReducer';
+import {useTerminalState} from '../../../../Redux/Reducer/TerminalReducer';
 import rendererIpc from '../../../../RendererIpc';
 import {getColor} from '../../../../Utils/Constants';
 import {isWebgl2Supported} from '../../../../Utils/UtilFunctions';

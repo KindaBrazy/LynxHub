@@ -2,9 +2,9 @@ import {useCallback, useMemo} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
-import {cardsActions} from '../Redux/AI/CardsReducer';
-import {appActions} from '../Redux/App/AppReducer';
-import {useSettingsState} from '../Redux/App/SettingsReducer';
+import {cardsActions} from '../Redux/Reducer/CardsReducer';
+import {appActions} from '../Redux/Reducer/AppReducer';
+import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
 

@@ -5,7 +5,7 @@ import {ReactNode, useMemo} from 'react';
 import {getArgumentDescription} from '../../../../../../../../../cross/GetArgumentsData';
 import {Close_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
+import {useModalsState} from '../../../../../../Redux/Reducer/ModalsReducer';
 
 const {Text} = Typography;
 

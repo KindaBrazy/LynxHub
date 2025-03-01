@@ -6,7 +6,7 @@ import {RouteObject} from 'react-router';
 import NavButton from '../../src/App/Components/NavBar/NavButton';
 import RouterPagesError from '../../src/App/Components/Pages/RouterPagesError';
 import {CardElementProps, ElementProps} from '../../src/App/Extensions/ExtensionTypes_Renderer';
-import {useAppState} from '../../src/App/Redux/App/AppReducer';
+import {useAppState} from '../../src/App/Redux/Reducer/AppReducer';
 import {Reddit_Icon, XSite_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons4';
 import {extensionActions, useExtensionState} from '../reducer';
 

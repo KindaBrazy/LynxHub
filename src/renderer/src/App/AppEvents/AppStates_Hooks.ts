@@ -1,7 +1,7 @@
 import {isEmpty, isEqual} from 'lodash';
 import {useEffect} from 'react';
 
-import {useCardsState} from '../Redux/AI/CardsReducer';
+import {useCardsState} from '../Redux/Reducer/CardsReducer';
 import rendererIpc from '../RendererIpc';
 
 // Remove not installed cards from pinned cards

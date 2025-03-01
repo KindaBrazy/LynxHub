@@ -5,7 +5,7 @@ import {ReactNode, useEffect, useState} from 'react';
 import {DevInfo, RepoDetails} from '../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../cross/CrossUtils';
 import {User_Icon} from '../../assets/icons/SvgIcons/SvgIcons3';
-import {useAppState} from '../Redux/App/AppReducer';
+import {useAppState} from '../Redux/Reducer/AppReducer';
 import {convertBlobToDataUrl} from './UtilFunctions';
 
 /**

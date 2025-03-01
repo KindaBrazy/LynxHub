@@ -3,7 +3,7 @@ import {ReactNode, useCallback, useMemo} from 'react';
 
 import {Maximize_Icon, Minimize_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
 import {UnMaximize_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
-import {useAppState} from '../../Redux/App/AppReducer';
+import {useAppState} from '../../Redux/Reducer/AppReducer';
 import rendererIpc from '../../RendererIpc';
 import WindowButtons_Close from './WindowButtons_Close';
 

@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 import {useNavigate} from 'react-router';
 
 import {Extensions2_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
-import {appActions} from '../../Redux/App/AppReducer';
+import {appActions} from '../../Redux/Reducer/AppReducer';
 import {AppDispatch} from '../../Redux/Store';
 import {modulesRoutePath} from '../Pages/SettingsPages/Modules/ModulesPage';
 

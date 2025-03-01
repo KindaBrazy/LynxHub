@@ -6,7 +6,7 @@ import {Extensions2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons
 import {GitHub_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {SettingsMinimal_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {useGetInstallType} from '../../../../../Modules/ModuleLoader';
-import {modalActions} from '../../../../../Redux/AI/ModalsReducer';
+import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../../../Utils/UtilHooks';

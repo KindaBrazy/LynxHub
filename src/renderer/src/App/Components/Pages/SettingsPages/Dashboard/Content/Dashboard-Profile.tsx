@@ -6,9 +6,9 @@ import {PatreonUserData} from '../../../../../../../../cross/CrossTypes';
 import {User_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {Google_Icon, Patreon_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {checkEARepos} from '../../../../../AppEvents/AppEvents_Utils';
-import {useAppState} from '../../../../../Redux/App/AppReducer';
+import {useAppState} from '../../../../../Redux/Reducer/AppReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
-import {userActions, useUserState} from '../../../../../Redux/User/UserReducer';
+import {userActions, useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
 export const DashboardProfileId = 'settings_profile_elem';

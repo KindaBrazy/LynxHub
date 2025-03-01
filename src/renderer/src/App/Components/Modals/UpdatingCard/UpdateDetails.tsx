@@ -20,7 +20,7 @@ import {isEmpty} from 'lodash';
 import {ReactNode, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
+import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 
 const {Paragraph, Text} = Typography;

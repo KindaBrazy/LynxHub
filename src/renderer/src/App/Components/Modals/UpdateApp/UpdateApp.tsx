@@ -6,11 +6,11 @@ import {useDispatch} from 'react-redux';
 
 import {APP_BUILD_NUMBER, WIN_RELEASE_URL_V2} from '../../../../../../cross/CrossConstants';
 import {AppUpdateData, AppUpdateInfo, UpdateDownloadProgress} from '../../../../../../cross/CrossTypes';
-import {useCardsState} from '../../../Redux/AI/CardsReducer';
-import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
-import {settingsActions} from '../../../Redux/App/SettingsReducer';
+import {useCardsState} from '../../../Redux/Reducer/CardsReducer';
+import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
+import {settingsActions} from '../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../Redux/Store';
-import {useUserState} from '../../../Redux/User/UserReducer';
+import {useUserState} from '../../../Redux/Reducer/UserReducer';
 import rendererIpc from '../../../RendererIpc';
 import {modalMotionProps} from '../../../Utils/Constants';
 import {RenderSubItems} from '../../../Utils/UtilHooks';

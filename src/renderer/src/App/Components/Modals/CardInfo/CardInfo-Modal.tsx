@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 
 import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {CardInfoDescriptions} from '../../../Modules/types';
-import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
+import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import {useDevInfo} from '../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../Utils/UtilHooks';

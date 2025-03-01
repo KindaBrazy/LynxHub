@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 
 import {LynxHotkeys} from '../../../../../../../../cross/IpcChannelAndTypes';
 import {Keyboard_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
-import {settingsActions, useSettingsState} from '../../../../../Redux/App/SettingsReducer';
+import {settingsActions, useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import LynxSwitch from '../../../../Reusable/LynxSwitch';

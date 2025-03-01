@@ -22,8 +22,8 @@ import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '../../../..
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../../../../cross/GetArgumentsData';
 import {Circle_Icon, Filter_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useGetArgumentsByID} from '../../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../../Redux/AI/ModalsReducer';
-import {useAppState} from '../../../../../Redux/App/AppReducer';
+import {useModalsState} from '../../../../../Redux/Reducer/ModalsReducer';
+import {useAppState} from '../../../../../Redux/Reducer/AppReducer';
 import ArgumentCategory from './ArgumentCategory';
 
 type Props = {

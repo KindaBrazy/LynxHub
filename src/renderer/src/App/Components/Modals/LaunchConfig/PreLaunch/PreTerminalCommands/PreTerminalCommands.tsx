@@ -2,7 +2,7 @@ import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
-import {useModalsState} from '../../../../../Redux/AI/ModalsReducer';
+import {useModalsState} from '../../../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../../../RendererIpc';
 import LaunchConfigSection from '../../LaunchConfig-Section';
 import TerminalCommandItem from '../../TerminalCommand-Item';

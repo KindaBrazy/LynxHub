@@ -1,6 +1,6 @@
 import {memo} from 'react';
 
-import {useAppState} from '../../Redux/App/AppReducer';
+import {useAppState} from '../../Redux/Reducer/AppReducer';
 import NavBar from '../NavBar/NavBar';
 import {dashboardRoutePath} from '../Pages/SettingsPages/Dashboard/DashboardPage';
 import {settingsRoutePath} from '../Pages/SettingsPages/Settings/SettingsPage';

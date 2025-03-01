@@ -7,8 +7,8 @@ import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgum
 import {Folder2_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {Refresh_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
-import {useCardsState} from '../../../../../../Redux/AI/CardsReducer';
-import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
+import {useCardsState} from '../../../../../../Redux/Reducer/CardsReducer';
+import {useModalsState} from '../../../../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../../../../RendererIpc';
 import ArgumentItemBase from './Argument-Item-Base';
 import AutoCompletePath from './AutoCompletePath';

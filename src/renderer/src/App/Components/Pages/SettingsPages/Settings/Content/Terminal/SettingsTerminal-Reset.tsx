@@ -2,7 +2,7 @@ import {Button} from '@heroui/react';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {terminalActions} from '../../../../../../Redux/App/TerminalReducer';
+import {terminalActions} from '../../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 
 export default function SettingsTerminalReset() {

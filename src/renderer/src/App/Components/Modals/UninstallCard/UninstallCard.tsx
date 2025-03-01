@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 
 import {ShieldCross_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 import {useGetUninstallType} from '../../../Modules/ModuleLoader';
-import {modalActions, useModalsState} from '../../../Redux/AI/ModalsReducer';
+import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {useDisableTooltip, useInstalledCard} from '../../../Utils/UtilHooks';

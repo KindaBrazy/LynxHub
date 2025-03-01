@@ -4,7 +4,7 @@ import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {ArgumentsPresets, ChosenArgumentsData} from '../../../../../../../cross/CrossTypes';
 import {getCardMethod, useAllCards} from '../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../Redux/AI/ModalsReducer';
+import {useModalsState} from '../../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../../RendererIpc';
 import {tabContentVariants} from '../../CardExtensions/Constants';
 import AddArguments from './AddArguments/AddArguments';

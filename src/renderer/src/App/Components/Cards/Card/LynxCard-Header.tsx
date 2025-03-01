@@ -4,7 +4,7 @@ import {capitalize} from 'lodash';
 import {observer} from 'mobx-react-lite';
 import {FormEvent, useCallback, useMemo} from 'react';
 
-import {useSettingsState} from '../../../Redux/App/SettingsReducer';
+import {useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
 import {useDevInfo, useLoadImage} from '../../../Utils/LocalStorage';
 import {useCardData} from '../CardsDataManager';
 import Header_Pin from './Header_Pin';

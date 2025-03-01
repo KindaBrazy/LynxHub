@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux';
 
 import {Terminal_Icon, Web_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
 import {Refresh3_Icon} from '../../../assets/icons/SvgIcons/SvgIcons4';
-import {cardsActions, useCardsState} from '../../Redux/AI/CardsReducer';
+import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import LynxTooltip from '../Reusable/LynxTooltip';
 import SmallButton from '../Reusable/SmallButton';

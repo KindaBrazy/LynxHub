@@ -6,7 +6,7 @@ import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDescription} from '../../../../../../../../../cross/GetArgumentsData';
 import {CheckBox_Icon, Close_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../../../Redux/AI/ModalsReducer';
+import {useModalsState} from '../../../../../../Redux/Reducer/ModalsReducer';
 
 const {Text} = Typography;
 type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void};

@@ -1,8 +1,8 @@
 import {useEffect} from 'react';
 
 import {APP_NAME} from '../../../../cross/CrossConstants';
-import {useAppState} from '../Redux/App/AppReducer';
-import {useSettingsState} from '../Redux/App/SettingsReducer';
+import {useAppState} from '../Redux/Reducer/AppReducer';
+import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
 
 /** HTML attributes and document title */
 export default function useHtmlAttributes() {

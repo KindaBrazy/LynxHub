@@ -4,7 +4,7 @@ import {motion} from 'framer-motion';
 import {APP_ICON_TRANSPARENT, APP_NAME, APP_NAME_VERSION_V} from '../../../../../cross/CrossConstants';
 import {Maximize_Icon, Minimize_Icon, Power_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
 import {UnMaximize_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
-import {useAppState} from '../../Redux/App/AppReducer';
+import {useAppState} from '../../Redux/Reducer/AppReducer';
 import rendererIpc from '../../RendererIpc';
 import {getColor} from '../../Utils/Constants';
 import LynxTooltip from '../Reusable/LynxTooltip';

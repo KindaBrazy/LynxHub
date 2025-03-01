@@ -20,7 +20,7 @@ import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 
 import {extractGitUrl} from '../../../../../cross/CrossUtils';
-import {useAppState} from '../../Redux/App/AppReducer';
+import {useAppState} from '../../Redux/Reducer/AppReducer';
 
 type MarkdownViewerProps = {
   repoUrl: string;

@@ -2,7 +2,7 @@ import {HeroUIProvider, ToastProvider} from '@heroui/react';
 import {ConfigProvider as AntDProvider, message, notification, theme} from 'antd';
 import {ReactNode, useLayoutEffect, useMemo} from 'react';
 
-import {useAppState} from './Redux/App/AppReducer';
+import {useAppState} from './Redux/Reducer/AppReducer';
 
 /** Config HeroUI and AntD and return providers */
 export default function UIProviders({children}: {children: ReactNode}) {
