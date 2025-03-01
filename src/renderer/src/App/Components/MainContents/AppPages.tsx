@@ -3,6 +3,7 @@ import {useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
+import {useActivePage} from '../../Redux/Reducer/TabsReducer';
 import {PageID} from '../../Utils/Constants';
 import AudioGenerationPage from '../Pages/ContentPages/AudioGenerationPage';
 import GamesPage from '../Pages/ContentPages/GamesPage';
@@ -18,7 +19,7 @@ import RunningCardView from '../RunningCardView/RunningCardView';
 
 export default function AppPages() {
   const {isRunning} = useCardsState('runningCard');
-  const activeTab = useTabsState('activeTab');
+  const activePage = useActivePage();
 
   const Container = useMemo(() => extensionsData.runningAI.container, []);
 
@@ -30,18 +31,18 @@ export default function AppPages() {
     )
   ) : (
     <AnimatePresence>
-      {activeTab === PageID.homePageID && <HomePage />}
-      {activeTab === PageID.imageGenPageID && <ImageGenerationPage />}
-      {activeTab === PageID.textGenPageID && <TextGenerationPage />}
-      {activeTab === PageID.audioGenPageID && <AudioGenerationPage />}
+      {activePage === PageID.homePageID && <HomePage />}
+      {activePage === PageID.imageGenPageID && <ImageGenerationPage />}
+      {activePage === PageID.textGenPageID && <TextGenerationPage />}
+      {activePage === PageID.audioGenPageID && <AudioGenerationPage />}
 
-      {activeTab === PageID.toolsPageID && <ToolsPage />}
-      {activeTab === PageID.gamesPageID && <GamesPage />}
+      {activePage === PageID.toolsPageID && <ToolsPage />}
+      {activePage === PageID.gamesPageID && <GamesPage />}
 
-      {activeTab === PageID.dashboardPageID && <DashboardPage />}
-      {activeTab === PageID.modulesPageID && <ModulesPage />}
-      {activeTab === PageID.extensionsPageID && <ExtensionsPage />}
-      {activeTab === PageID.settingsPageID && <SettingsPage />}
+      {activePage === PageID.dashboardPageID && <DashboardPage />}
+      {activePage === PageID.modulesPageID && <ModulesPage />}
+      {activePage === PageID.extensionsPageID && <ExtensionsPage />}
+      {activePage === PageID.settingsPageID && <SettingsPage />}
     </AnimatePresence>
   );
 }
