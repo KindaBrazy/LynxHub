@@ -29,16 +29,7 @@ export default defineConfig({
       federation({
         name: 'host-app',
         remotes: {nothing: 'nothing.js'},
-        shared: [
-          'antd',
-          'react',
-          'lodash',
-          'react-dom',
-          'react-redux',
-          'react-router',
-          'mobx-react-lite',
-          '@heroui/react',
-        ],
+        shared: ['antd', 'react', 'lodash', 'react-dom', 'react-redux', 'mobx-react-lite', '@heroui/react'],
       }),
     ],
     base: '',

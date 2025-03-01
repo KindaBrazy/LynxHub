@@ -1,5 +1,3 @@
-import {RouteObject} from 'react-router';
-
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../Modules/ModuleLoader';
 import {ExtensionData_Renderer, ExtensionImport_Renderer} from './ExtensionTypes_Renderer';
 import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
@@ -176,7 +174,7 @@ const api: ExtensionRendererApi = {
     },
   },
   router: {
-    add: function (routeObject: RouteObject[]): void {
+    add: function (routeObject: []): void {
       extensionsData.router.add = [...extensionsData.router.add, ...routeObject];
     },
     replace: {

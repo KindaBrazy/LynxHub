@@ -1,6 +1,5 @@
 import {Reducer} from '@reduxjs/toolkit';
 import {FC} from 'react';
-import {RouteObject} from 'react-router';
 
 import {ModuleData} from '../Modules/ModuleLoader';
 import {
@@ -70,7 +69,7 @@ export type ExtensionRendererApi = {
   router: {
     /** Add new routes to the application router.
      * To include a navigation button for the new route, add it to the `navBar` object. */
-    add: (routeObject: RouteObject[]) => void;
+    add: (routeObject: []) => void;
     /** Replace existing pages within the router. */
     replace: {
       /** Replace the Home page component. */

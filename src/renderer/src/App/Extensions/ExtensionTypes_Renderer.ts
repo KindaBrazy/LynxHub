@@ -1,6 +1,5 @@
 import {Reducer} from '@reduxjs/toolkit';
 import {ComponentProps, FC} from 'react';
-import {RouteObject} from 'react-router';
 
 import {CardsDataManager} from '../Components/Cards/CardsDataManager';
 import {CardData} from '../Modules/types';
@@ -43,7 +42,7 @@ export type ExtensionData_Renderer = {
     browser: FC | undefined;
   };
   router: {
-    add: RouteObject[];
+    add: [];
     replace: {
       homePage: FC | undefined;
       imageGenerationPage: FC | undefined;

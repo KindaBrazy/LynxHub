@@ -12,7 +12,6 @@ import {
   HomePage_TopScroll,
   ReducerTester,
   ReplaceCards,
-  routePage,
   StatusBarEnd,
 } from './Components/Components';
 import {SettingsContent, SettingsNavButton} from './Components/Settings';
@@ -32,7 +31,6 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
   lynxAPI.customizePages.audio.add.scrollBottom(ReducerTester);
 
   // Add new pages
-  lynxAPI.router.add(routePage);
   lynxAPI.navBar.addButton.contentBar(AddContentButton);
   lynxAPI.navBar.addButton.settingsBar(AddSettingsButton);
 

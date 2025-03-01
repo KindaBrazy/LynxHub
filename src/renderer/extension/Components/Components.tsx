@@ -1,10 +1,8 @@
 import {Button} from '@heroui/react';
 import {Fragment, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
-import {RouteObject} from 'react-router';
 
 import NavButton from '../../src/App/Components/NavBar/NavButton';
-import RouterPagesError from '../../src/App/Components/Pages/RouterPagesError';
 import {CardElementProps, ElementProps} from '../../src/App/Extensions/ExtensionTypes_Renderer';
 import {useAppState} from '../../src/App/Redux/Reducer/AppReducer';
 import {Reddit_Icon, XSite_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons4';
@@ -15,31 +13,6 @@ export function StatusBarEnd({className, ...props}: ElementProps) {
   const darkMode = useAppState('darkMode');
   return <span className={darkMode ? 'text-danger' : 'text-success'}>Hello End</span>;
 }
-
-function ComponentContent() {
-  return (
-    <div className="flex size-full items-center justify-center text-large">
-      I&#39;m a text from extension router page
-    </div>
-  );
-}
-
-function ComponentSetting() {
-  return null;
-}
-
-export const routePage: RouteObject[] = [
-  {
-    Component: ComponentContent,
-    errorElement: <RouterPagesError />,
-    path: 'extContentPath',
-  },
-  {
-    Component: ComponentSetting,
-    errorElement: <RouterPagesError />,
-    path: 'extSettingPath',
-  },
-];
 
 export function AddContentButton() {
   return (
