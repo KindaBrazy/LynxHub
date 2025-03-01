@@ -10,8 +10,7 @@ import Page from '../../Page';
 import HomeFilter from './HomeFilter';
 import HomeSearchBox from './HomeSearchBox';
 
-export const homeRoutePath: string = '/homePage';
-export const homeElementId: string = 'homePageElement';
+export const homePageID: string = 'homePage';
 
 const HomePage = () => {
   const homeCategory = useCardsState('homeCategory');
@@ -25,7 +24,7 @@ const HomePage = () => {
   const {bottom, scrollBottom, scrollTop, top} = useMemo(() => extensionsData.customizePages.home.add, []);
 
   return (
-    <Page id={homeElementId}>
+    <Page>
       <div className="flex size-full shrink-0 flex-col">
         {SearchAndFilter ? (
           <SearchAndFilter />

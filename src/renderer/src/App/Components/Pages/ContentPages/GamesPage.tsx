@@ -5,7 +5,7 @@ import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
 
-export const gamesRoutePath: string = '/gamesPage';
+export const gamesPageID: string = 'gamesPage';
 
 const GamesPage = () => {
   const {addComponent} = extensionsData.customizePages.games;

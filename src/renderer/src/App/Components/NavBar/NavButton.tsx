@@ -2,9 +2,9 @@ import {Badge} from 'antd';
 import {motion} from 'framer-motion';
 import {ReactNode, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {useNavigate} from 'react-router';
 
 import {appActions, useAppState} from '../../Redux/Reducer/AppReducer';
+import {tabsActions} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import {getColor} from '../../Utils/Constants';
 import LynxTooltip from '../Reusable/LynxTooltip';
@@ -33,7 +33,7 @@ export default function NavButton({children, pageId, title, badge}: Props) {
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     setIsSelected(currentPage === pageId);
@@ -46,9 +46,10 @@ export default function NavButton({children, pageId, title, badge}: Props) {
 
   const handleClick = useCallback(() => {
     if (currentPage === pageId) return;
-    navigate(pageId);
+    // navigate(pageId); TODO
+    dispatch(tabsActions.setAppState({key: 'activeTab', value: pageId}));
     dispatch(appActions.setAppState({key: 'currentPage', value: pageId}));
-  }, [currentPage, pageId, navigate, dispatch]);
+  }, [currentPage, pageId, dispatch]);
 
   const getBackgroundColor = useCallback(
     (state: 'hover' | 'tap') => {

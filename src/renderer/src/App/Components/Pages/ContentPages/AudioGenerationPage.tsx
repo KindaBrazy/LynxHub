@@ -7,8 +7,7 @@ import {GetComponentsByPath} from '../../Cards/Cards';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
 
-export const audioGenRoutePath: string = '/audioGenerationPage';
-export const audioGenElementId: string = 'audioGenElement';
+export const audioGenPageID: string = 'audioGen';
 
 // Generating audios with AI
 const AudioGenerationPage = () => {
@@ -18,7 +17,7 @@ const AudioGenerationPage = () => {
   );
 
   return (
-    <Page className="pt-6" id={audioGenElementId}>
+    <Page className="pt-6">
       {top && top.map((Top, index) => <Top key={index} />)}
 
       <ScrollShadow size={20} className="size-full overflow-y-scroll pb-4 scrollbar-hide">
@@ -29,7 +28,7 @@ const AudioGenerationPage = () => {
           title="Audio Generation"
           subTitle="Compose and Manipulate Audio Effortlessly with AI"
           icon={<AudioGeneration_Icon className={CardContainerClasses} />}>
-          <GetComponentsByPath routePath={audioGenRoutePath} extensionsElements={cardsContainer} />
+          <GetComponentsByPath routePath={audioGenPageID} extensionsElements={cardsContainer} />
         </CardContainer>
 
         {scrollBottom && scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}

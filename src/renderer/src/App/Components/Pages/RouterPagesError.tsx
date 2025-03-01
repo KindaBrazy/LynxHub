@@ -3,19 +3,19 @@ import {Result, Typography} from 'antd';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
-import {isRouteErrorResponse, useNavigate, useRouteError} from 'react-router';
+import {isRouteErrorResponse, useRouteError} from 'react-router';
 
 import {appActions, useAppState} from '../../Redux/Reducer/AppReducer';
+import {tabsActions} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {isLinuxPortable} from '../../Utils/UtilHooks';
-import {homeRoutePath} from './ContentPages/Home/HomePage';
+import {homePageID} from './ContentPages/Home/HomePage';
 import Page from './Page';
 
 // Page when router id is not valid
 export default function RouterPagesError() {
   const error = useRouteError();
-  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const darkMode = useAppState('darkMode');
 
@@ -34,9 +34,10 @@ export default function RouterPagesError() {
   }, [error]);
 
   const handleBackHome = useCallback(() => {
-    navigate(homeRoutePath);
-    dispatch(appActions.setAppState({key: 'currentPage', value: homeRoutePath}));
-  }, [navigate, dispatch]);
+    // navigate(homeRoutePath); TODO
+    dispatch(tabsActions.setAppState({key: 'activeTab', value: homePageID}));
+    dispatch(appActions.setAppState({key: 'currentPage', value: homePageID}));
+  }, [dispatch]);
 
   const handleReload = useCallback(() => {
     window.location.reload();

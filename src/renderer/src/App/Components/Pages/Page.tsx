@@ -3,15 +3,14 @@ import {ReactNode} from 'react';
 
 type Props = {
   children: ReactNode;
-  id?: string;
   className?: string;
+  show?: boolean;
 };
 
 // App page with a fade in animation
-export default function Page({children, id, className}: Props) {
+export default function Page({children, className}: Props) {
   return (
     <motion.div
-      id={id}
       className={['size-full py-2.5', className].join(' ')}
       transition={{duration: 0.3, ease: [0.25, 0.1, 0.25, 1]}}
       animate={{filter: 'blur(0px)', opacity: 1, transform: 'translateY(0%)'}}

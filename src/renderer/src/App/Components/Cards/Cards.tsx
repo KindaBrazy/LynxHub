@@ -13,7 +13,16 @@ import {CardContext, CardsDataManager} from './CardsDataManager';
 import NavigateModulesPage from './NavigateModulesPage';
 
 export function GetComponentsByPath({routePath, extensionsElements}: {routePath: string; extensionsElements?: FC[]}) {
-  const cards = useGetCardsByPath(routePath as AvailablePages);
+  // Support legacy modules paths
+  const pagePath: AvailablePages = useMemo(() => {
+    if (routePath === 'audioGen') return '/audioGenerationPage';
+    if (routePath === 'imageGen') return '/imageGenerationPage';
+    if (routePath === 'textGen') return '/textGenerationPage';
+
+    return routePath as AvailablePages;
+  }, [routePath]);
+
+  const cards = useGetCardsByPath(pagePath);
   const installedCards = useCardsState('installedCards');
   const pinnedCards = useCardsState('pinnedCards');
 

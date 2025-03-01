@@ -1,17 +1,17 @@
 import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
-import {useNavigate} from 'react-router';
 
 import {toMs} from '../../../../cross/CrossUtils';
 import StorageTypes from '../../../../cross/StorageTypes';
 import {useAllCards, useGetTitleByID} from '../Modules/ModuleLoader';
-import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
 import {appActions, useAppState} from '../Redux/Reducer/AppReducer';
+import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
 import {settingsActions} from '../Redux/Reducer/SettingsReducer';
+import {tabsActions} from '../Redux/Reducer/TabsReducer';
 import {terminalActions} from '../Redux/Reducer/TerminalReducer';
-import {AppDispatch} from '../Redux/Store';
 import {userActions} from '../Redux/Reducer/UserReducer';
+import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
 import {checkEARepos} from './AppEvents_Utils';
 
@@ -93,7 +93,6 @@ export const useOnlineEvents = () => {
 
 export const useStorageData = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
   useEffect(() => {
     rendererIpc.storage.getAll().then((storage: StorageTypes) => {
       dispatch(cardsActions.setInstalledCards(storage.cards.installedCards));
@@ -131,12 +130,13 @@ export const useStorageData = () => {
 
       if (storage.app.startupLastActivePage) {
         dispatch(appActions.setAppState({key: 'currentPage', value: storage.app.lastPage}));
-        navigate(storage.app.lastPage);
+        // TODO
+        dispatch(tabsActions.setAppState({key: 'activeTab', value: storage.app.lastPage}));
       }
 
       dispatch(settingsActions.setHotkeys(storage.app.hotkeys));
     });
-  }, [dispatch, navigate]);
+  }, [dispatch]);
 };
 
 export const usePatreon = () => {

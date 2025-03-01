@@ -5,7 +5,7 @@ import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
 
-export const toolsRoutePath: string = '/toolsPage';
+export const toolsPageID: string = 'toolsPage';
 
 const ToolsPage = () => {
   const {addComponent} = extensionsData.customizePages.tools;

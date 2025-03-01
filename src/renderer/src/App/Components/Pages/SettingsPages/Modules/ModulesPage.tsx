@@ -11,8 +11,7 @@ import Page from '../../Page';
 import DownloadModules from './Download/DownloadModules';
 import InstalledModules from './Installed/InstalledModules';
 
-export const modulesRoutePath: string = '/modulesPage';
-export const modulesElementId: string = 'modulesElement';
+export const modulesPageID: string = 'modulesPage';
 
 /** Manage app modules -> install, uninstall or update */
 export default function ModulesPage() {
@@ -41,7 +40,7 @@ export default function ModulesPage() {
   }, []);
 
   return (
-    <Page className="pb-14" id={modulesElementId}>
+    <Page className="pb-14">
       {currentTab === 'installed' && !isEmpty(updateAvailable) && (
         <Button
           size="sm"
