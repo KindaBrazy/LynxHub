@@ -34,6 +34,12 @@ const tabsSlice = createSlice({
     setAppState: <K extends keyof TabState>(state: TabState, action: PayloadAction<{key: K; value: TabState[K]}>) => {
       state[action.payload.key] = action.payload.value;
     },
+    addTab: (state: TabState, action: PayloadAction<Tab>) => {
+      state.tabs.push(action.payload);
+    },
+    removeTab: (state: TabState, action: PayloadAction<string>) => {
+      state.tabs = state.tabs.filter(tab => tab.id !== action.payload);
+    },
   },
 });
 
