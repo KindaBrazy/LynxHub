@@ -8,15 +8,16 @@ import {GetComponentsByPath} from '../../Cards/Cards';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
 
-// Generating audios with AI
-const AudioGenerationPage = () => {
+type Props = {show: boolean};
+
+const AudioGenerationPage = ({show}: Props) => {
   const {top, scrollTop, scrollBottom, bottom, cardsContainer} = useMemo(
     () => extensionsData.customizePages.audio.add,
     [],
   );
 
   return (
-    <Page className="pt-6">
+    <Page show={show} className="pt-6">
       {top && top.map((Top, index) => <Top key={index} />)}
 
       <ScrollShadow size={20} className="size-full overflow-y-scroll pb-4 scrollbar-hide">

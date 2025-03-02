@@ -10,7 +10,9 @@ import Page from '../../Page';
 import HomeFilter from './HomeFilter';
 import HomeSearchBox from './HomeSearchBox';
 
-const HomePage = () => {
+type Props = {show: boolean};
+
+const HomePage = ({show}: Props) => {
   const homeCategory = useCardsState('homeCategory');
   const [searchValue, setSearchValue] = useState<string>('');
 
@@ -22,7 +24,7 @@ const HomePage = () => {
   const {bottom, scrollBottom, scrollTop, top} = useMemo(() => extensionsData.customizePages.home.add, []);
 
   return (
-    <Page>
+    <Page show={show}>
       <div className="flex size-full shrink-0 flex-col">
         {SearchAndFilter ? (
           <SearchAndFilter />

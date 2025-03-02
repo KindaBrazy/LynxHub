@@ -5,11 +5,13 @@ import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
 
-const GamesPage = () => {
+type Props = {show: boolean};
+
+const GamesPage = ({show}: Props) => {
   const {addComponent} = extensionsData.customizePages.games;
 
   return (
-    <Page className="pt-6">
+    <Page show={show} className="pt-6">
       <ScrollShadow size={20} className="size-full overflow-y-scroll pb-4 scrollbar-hide">
         <CardContainer
           title="Games"

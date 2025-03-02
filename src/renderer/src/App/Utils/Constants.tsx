@@ -2,6 +2,16 @@ import {TRANSITION_EASINGS} from '@heroui/framer-utils';
 import {SimpleGitProgressEvent} from 'simple-git';
 
 import {TabInfo} from '../../../../cross/CrossTypes';
+import AudioGenerationPage from '../Components/Pages/ContentPages/AudioGenerationPage';
+import GamesPage from '../Components/Pages/ContentPages/GamesPage';
+import HomePage from '../Components/Pages/ContentPages/Home/HomePage';
+import ImageGenerationPage from '../Components/Pages/ContentPages/ImageGenerationPage';
+import TextGenerationPage from '../Components/Pages/ContentPages/TextGenerationPage';
+import ToolsPage from '../Components/Pages/ContentPages/ToolsPage';
+import DashboardPage from '../Components/Pages/SettingsPages/Dashboard/DashboardPage';
+import ExtensionsPage from '../Components/Pages/SettingsPages/Extensions/ExtensionsPage';
+import ModulesPage from '../Components/Pages/SettingsPages/Modules/ModulesPage';
+import SettingsPage from '../Components/Pages/SettingsPages/Settings/SettingsPage';
 
 export const PageID = {
   homePageID: 'homePage',
@@ -14,6 +24,19 @@ export const PageID = {
   extensionsPageID: 'extensionPage',
   modulesPageID: 'modulesPage',
   settingsPageID: 'settingsPage',
+};
+
+export const PageComponents = {
+  [PageID.homePageID]: HomePage,
+  [PageID.imageGenPageID]: ImageGenerationPage,
+  [PageID.textGenPageID]: TextGenerationPage,
+  [PageID.audioGenPageID]: AudioGenerationPage,
+  [PageID.toolsPageID]: ToolsPage,
+  [PageID.gamesPageID]: GamesPage,
+  [PageID.dashboardPageID]: DashboardPage,
+  [PageID.modulesPageID]: ModulesPage,
+  [PageID.extensionsPageID]: ExtensionsPage,
+  [PageID.settingsPageID]: SettingsPage,
 };
 
 const colors = {
