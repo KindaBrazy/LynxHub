@@ -11,8 +11,9 @@ import Page from '../../Page';
 import DownloadModules from './Download/DownloadModules';
 import InstalledModules from './Installed/InstalledModules';
 
-/** Manage app modules -> install, uninstall or update */
-export default function ModulesPage() {
+type Props = {show: boolean};
+
+export default function ModulesPage({show}: Props) {
   const [installedModules, setInstalledModules] = useState<string[]>([]);
   const [updatingAll, setUpdatingAll] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<Key>('installed');
@@ -38,7 +39,7 @@ export default function ModulesPage() {
   }, []);
 
   return (
-    <Page className="pb-14">
+    <Page show={show} className="pb-14">
       {currentTab === 'installed' && !isEmpty(updateAvailable) && (
         <Button
           size="sm"

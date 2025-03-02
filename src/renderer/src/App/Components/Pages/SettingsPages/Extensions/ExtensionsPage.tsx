@@ -12,7 +12,9 @@ import ExtensionPreview from './ExtensionPreview';
 
 export type InstalledExt = {dir: string; id: string; version?: string};
 
-export default function ExtensionsPage() {
+type Props = {show: boolean};
+
+export default function ExtensionsPage({show}: Props) {
   const [selectedExtension, setSelectedExtension] = useState<Extension_ListData | undefined>(undefined);
   const [installed, setInstalled] = useState<InstalledExt[]>([]);
   const [unloaded, setUnloaded] = useState<SkippedPlugins[]>([]);
@@ -35,7 +37,7 @@ export default function ExtensionsPage() {
   }, []);
 
   return (
-    <Page className="flex flex-row gap-x-6 relative">
+    <Page show={show} className="flex flex-row gap-x-6 relative">
       <ExtensionList
         unloaded={unloaded}
         installed={installed}
