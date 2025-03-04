@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux';
 
 import {Power_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
 import {settingsActions, useSettingsState} from '../../Redux/Reducer/SettingsReducer';
-import {useActivePage} from '../../Redux/Reducer/TabsReducer';
+import {useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {isLinuxPortable} from '../../Utils/UtilHooks';
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default function WindowButtons_Close({buttonProps, commonStyles}: Props) {
-  const activePage = useActivePage();
+  const activePage = useTabsState('activePage');
   const showCloseConfirm = useSettingsState('closeConfirm');
   const dispatch = useDispatch<AppDispatch>();
 

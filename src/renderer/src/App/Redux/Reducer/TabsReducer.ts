@@ -8,6 +8,7 @@ import {RootState} from '../Store';
 type TabState = {
   tabs: TabInfo[];
   activeTab: string;
+  activePage: string;
   prevTab: string;
 };
 
@@ -18,6 +19,7 @@ type TabStateTypes = {
 const initialState: TabState = {
   tabs: [defaultTabItem],
   activeTab: defaultTabItem.id,
+  activePage: defaultTabItem.pageID,
   prevTab: '',
 };
 
@@ -25,7 +27,7 @@ const tabsSlice = createSlice({
   name: 'tabs',
   initialState,
   reducers: {
-    setAppState: <K extends keyof TabState>(state: TabState, action: PayloadAction<{key: K; value: TabState[K]}>) => {
+    setTabState: <K extends keyof TabState>(state: TabState, action: PayloadAction<{key: K; value: TabState[K]}>) => {
       state[action.payload.key] = action.payload.value;
     },
     addTab: (state: TabState, action: PayloadAction<TabInfo>) => {
@@ -45,6 +47,7 @@ const tabsSlice = createSlice({
 
       state.tabs.push({...action.payload, id: newID});
       state.activeTab = newID;
+      state.activePage = action.payload.pageID;
     },
     removeTab: (state: TabState, action: PayloadAction<string>) => {
       const tabIdToRemove = action.payload;
@@ -56,14 +59,17 @@ const tabsSlice = createSlice({
         if (state.tabs.length > 0) {
           const newActiveTabIndex = Math.min(tabIndexToRemove, state.tabs.length - 1);
           state.activeTab = state.tabs[newActiveTabIndex].id;
+          state.activePage = state.tabs[newActiveTabIndex].pageID;
         } else {
           state.activeTab = defaultTabItem.id;
+          state.activePage = defaultTabItem.pageID;
         }
       }
     },
     setActiveTab: (state: TabState, action: PayloadAction<string>) => {
       state.prevTab = state.activeTab;
       state.activeTab = action.payload;
+      state.activePage = state.tabs.find(tab => tab.id === action.payload)?.pageID || defaultTabItem.pageID;
     },
     setActivePage: (
       state: TabState,
@@ -79,19 +85,13 @@ const tabsSlice = createSlice({
         const {pageID, title, isTerminal, iconURL} = action.payload;
         state.tabs[index] = {...state.tabs[index], pageID, title, isTerminal, iconURL};
       }
+      state.activePage = action.payload.pageID;
     },
   },
 });
 
 export const useTabsState = <K extends keyof TabState>(key: K): TabStateTypes[K] =>
   useSelector((state: RootState) => state.tabs[key]);
-
-export const useActivePage = () => {
-  const activeTab = useTabsState('activeTab');
-  const tabs = useTabsState('tabs');
-
-  return tabs.find(tab => tab.id === activeTab)?.pageID;
-};
 
 export const tabsActions = tabsSlice.actions;
 

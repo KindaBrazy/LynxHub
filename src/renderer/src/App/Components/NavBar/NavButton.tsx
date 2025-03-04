@@ -4,7 +4,7 @@ import {ReactNode, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {appActions, useAppState} from '../../Redux/Reducer/AppReducer';
-import {tabsActions, useActivePage} from '../../Redux/Reducer/TabsReducer';
+import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import {getColor} from '../../Utils/Constants';
 import LynxTooltip from '../Reusable/LynxTooltip';
@@ -29,7 +29,7 @@ type Props = {
 /** Navigation button */
 export default function NavButton({children, pageId, title, badge}: Props) {
   const darkMode = useAppState('darkMode');
-  const activePage = useActivePage();
+  const activePage = useTabsState('activePage');
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
