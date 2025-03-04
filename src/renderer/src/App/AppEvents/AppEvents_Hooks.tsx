@@ -130,7 +130,7 @@ export const useStorageData = () => {
 
       if (storage.app.startupLastActivePage) {
         // TODO
-        dispatch(tabsActions.setAppState({key: 'activeTab', value: storage.app.lastPage}));
+        dispatch(tabsActions.setTabState({key: 'activeTab', value: storage.app.lastPage}));
       }
 
       dispatch(settingsActions.setHotkeys(storage.app.hotkeys));

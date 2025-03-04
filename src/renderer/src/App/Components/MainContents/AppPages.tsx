@@ -2,15 +2,15 @@ import {useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
-import {useActivePage, useTabsState} from '../../Redux/Reducer/TabsReducer';
+import {useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {PageComponents} from '../../Utils/Constants';
 import HomePage from '../Pages/ContentPages/Home/HomePage';
 import RunningCardView from '../RunningCardView/RunningCardView';
 
 export default function AppPages() {
   const {isRunning} = useCardsState('runningCard');
-  const activePage = useActivePage();
   const tabs = useTabsState('tabs');
+  const activePage = useTabsState('activePage');
   const activeTab = useTabsState('activeTab');
 
   const Container = useMemo(() => extensionsData.runningAI.container, []);

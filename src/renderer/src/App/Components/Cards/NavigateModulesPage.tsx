@@ -11,7 +11,7 @@ export default function NavigateModulesPage({size}: {size?: 'sm' | 'md'}) {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleGoModules = useCallback(() => {
-    dispatch(tabsActions.setAppState({key: 'activeTab', value: PageID.modulesPageID}));
+    dispatch(tabsActions.setTabState({key: 'activeTab', value: PageID.modulesPageID}));
     // navigate(modulesRoutePath); TODO
   }, [dispatch]);
 
