@@ -35,7 +35,7 @@ const tabsSlice = createSlice({
       const checkDuplicateId = () => {
         const existTab = state.tabs.find(tab => tab.id === newID);
         if (existTab) {
-          newID = `action.payload.id_${idNumber}`;
+          newID = `${action.payload.id}_${idNumber}`;
           idNumber++;
           checkDuplicateId();
         }
