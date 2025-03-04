@@ -37,7 +37,7 @@ export default function ExtensionsPage({show}: Props) {
   }, []);
 
   return (
-    <Page show={show} className="flex flex-row gap-x-6 relative">
+    <Page show={show} className="gap-x-6">
       <ExtensionList
         unloaded={unloaded}
         installed={installed}
