@@ -13,6 +13,7 @@ import {
 } from '../../../Modules/types';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {useInstalledCard} from '../../../Utils/UtilHooks';
@@ -35,7 +36,8 @@ const initialState: InstallState = {
 };
 
 const InstallModal = memo(() => {
-  const {isOpen, cardId, title, type} = useModalsState('installUIModal');
+  const {isOpen, cardId, title, type, tabID} = useModalsState('installUIModal');
+  const activeTab = useTabsState('activeTab');
   const installedCard = useInstalledCard(cardId);
   const allCards = useAllCards();
 
@@ -164,12 +166,14 @@ const InstallModal = memo(() => {
     [dispatch],
   );
 
+  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
+
   return (
     <Modal
       classNames={{
-        backdrop: '!top-10',
+        backdrop: `!top-10 ${show}`,
         closeButton: 'cursor-default',
-        wrapper: '!top-10 ',
+        wrapper: `!top-10 ${show}`,
       }}
       size="2xl"
       shadow="lg"

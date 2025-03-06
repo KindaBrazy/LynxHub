@@ -8,6 +8,7 @@ import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../Redux/Reducer/ModalsReducer';
 import {useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {useInstalledCard, useIsAutoUpdateExtensions, useUpdatingCard} from '../../../Utils/UtilHooks';
@@ -18,6 +19,7 @@ const StartButton = memo(() => {
   const compactMode = useSettingsState('cardsCompactMode');
   const autoUpdateExtensions = useIsAutoUpdateExtensions(id);
   const allCards = useAllCards();
+  const activeTab = useTabsState('activeTab');
 
   const updatingExtensions = useCardsState('updatingExtensions');
 
@@ -55,9 +57,9 @@ const StartButton = memo(() => {
 
   const install = useCallback(() => {
     if (getCardMethod(allCards, id, 'manager')) {
-      dispatch(modalActions.openInstallUICard({id, type: 'install', title}));
+      dispatch(modalActions.openInstallUICard({cardId: id, tabID: activeTab, type: 'install', title}));
     }
-  }, [repoUrl, title, id, dispatch, allCards]);
+  }, [repoUrl, title, id, dispatch, allCards, activeTab]);
 
   return (
     <Button

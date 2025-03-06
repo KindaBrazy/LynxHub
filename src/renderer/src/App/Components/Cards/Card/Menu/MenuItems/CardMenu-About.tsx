@@ -8,6 +8,7 @@ import {OpenFolder_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4
 import {duplicateCard, removeDuplicatedCard} from '../../../../../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../../../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
@@ -18,7 +19,7 @@ export const MenuInfo = () => {
   const {id, extensionsDir, repoUrl, setMenuIsOpen, title} = useCardData();
   const webUI = useInstalledCard(id);
   const {name} = useDevInfo(repoUrl);
-
+  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
 
   const {isCtrlPressed, setIsCtrlPressed} = useCtrlPressed();
@@ -33,7 +34,9 @@ export const MenuInfo = () => {
       setIsCtrlPressed(false);
       setMenuIsOpen(false);
     } else {
-      dispatch(modalActions.openCardInfo({cardId: id, devName: name, extensionsDir, title, url: repoUrl}));
+      dispatch(
+        modalActions.openCardInfo({cardId: id, devName: name, extensionsDir, title, url: repoUrl, tabID: activeTab}),
+      );
       setMenuIsOpen(false);
     }
   };
@@ -53,6 +56,7 @@ export const MenuHomePage = () => {
   const {repoUrl, title, setMenuIsOpen} = useCardData();
 
   const {isCtrlPressed, setIsCtrlPressed} = useCtrlPressed();
+  const activeTab = useTabsState('activeTab');
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -62,10 +66,10 @@ export const MenuHomePage = () => {
       setIsCtrlPressed(false);
       setMenuIsOpen(false);
     } else {
-      dispatch(modalActions.openReadme({url: repoUrl, title}));
+      dispatch(modalActions.openReadme({url: repoUrl, title, tabID: activeTab}));
       setMenuIsOpen(false);
     }
-  }, [dispatch, setMenuIsOpen, repoUrl, title, isCtrlPressed]);
+  }, [dispatch, setMenuIsOpen, repoUrl, title, isCtrlPressed, activeTab]);
 
   return (
     <DropdownItem

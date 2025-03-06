@@ -1,10 +1,11 @@
 import {Button, CircularProgress, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {Divider} from 'antd';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {RepositoryInfo} from '../../../../../../cross/CrossTypes';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import Branches from './Branches';
@@ -12,8 +13,8 @@ import CommitInfo from './CommitInfo';
 import Reset_Shallow from './Reset_Shallow';
 
 export default function CardGitManager_Modal() {
-  const {isOpen, dir, title} = useModalsState('gitManager');
-
+  const {isOpen, dir, title, tabID} = useModalsState('gitManager');
+  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
 
   const [repoInfo, setRepoInfo] = useState<RepositoryInfo | undefined>(undefined);
@@ -41,6 +42,8 @@ export default function CardGitManager_Modal() {
 
   const onOpenChange = useCallback(() => dispatch(modalActions.closeGitManager()), [dispatch]);
 
+  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
+
   return (
     <Modal
       size="3xl"
@@ -49,7 +52,7 @@ export default function CardGitManager_Modal() {
       isDismissable={false}
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
-      classNames={{backdrop: '!top-10', closeButton: 'cursor-default', wrapper: '!top-10'}}
+      classNames={{backdrop: `!top-10 ${show}`, closeButton: 'cursor-default', wrapper: `!top-10 ${show}`}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <ModalHeader

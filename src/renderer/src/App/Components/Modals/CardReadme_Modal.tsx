@@ -5,11 +5,13 @@ import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import MarkdownViewer from '../Reusable/MarkdownViewer';
 
 const CardReadmeModal = () => {
-  const {isOpen, url, title} = useModalsState('readmeModal');
+  const {isOpen, url, title, tabID} = useModalsState('readmeModal');
+  const activeTab = useTabsState('activeTab');
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -25,7 +27,7 @@ const CardReadmeModal = () => {
   );
 
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
-
+  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
   return (
     <Modal
       size="2xl"
@@ -35,7 +37,7 @@ const CardReadmeModal = () => {
       scrollBehavior="inside"
       className="max-w-[95%]"
       onOpenChange={onOpenChange}
-      classNames={{backdrop: '!top-10', closeButton: 'cursor-default', wrapper: '!top-10'}}
+      classNames={{backdrop: `!top-10 ${show}`, closeButton: 'cursor-default', wrapper: `!top-10 ${show}`}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <ModalHeader

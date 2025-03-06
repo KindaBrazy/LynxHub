@@ -21,6 +21,7 @@ import {ReactNode, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 
 const {Paragraph, Text} = Typography;
@@ -42,7 +43,8 @@ const columns: DetailsColumns = [
 
 /** Showing details and changes about updated card */
 export default function UpdateDetails() {
-  const {details, isOpen, title} = useModalsState('updateDetails');
+  const {details, isOpen, title, tabID} = useModalsState('updateDetails');
+  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
 
   const handleClose = useCallback(() => dispatch(modalActions.closeModal('updateDetails')), [dispatch]);
@@ -71,13 +73,17 @@ export default function UpdateDetails() {
       </Paragraph>
     );
   }, []);
-
+  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
   return (
     <Modal
+      classNames={{
+        backdrop: `!top-10 ${show}`,
+        closeButton: 'cursor-default',
+        wrapper: `!top-10 scrollbar-hide ${show}`,
+      }}
       isOpen={isOpen}
       scrollBehavior="inside"
       className="max-w-[70%] overflow-hidden"
-      classNames={{backdrop: '!top-10', closeButton: 'cursor-default', wrapper: '!top-10 scrollbar-hide'}}
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="justify-center bg-foreground-100">{title || <Text>Update Details.</Text>}</ModalHeader>

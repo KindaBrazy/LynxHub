@@ -8,6 +8,7 @@ import {PullResult} from 'simple-git';
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import UpdateDetails from './UpdateDetails';
@@ -16,6 +17,7 @@ import UpdateDetails from './UpdateDetails';
 const UpdatingNotification = () => {
   const updatingCards = useCardsState('updatingCards');
   const dispatch = useDispatch<AppDispatch>();
+  const activeTab = useTabsState('activeTab');
 
   useEffect(() => {
     if (isEmpty(updatingCards)) return;
@@ -55,6 +57,7 @@ const UpdatingNotification = () => {
                       modalActions.openUpdateDetails({
                         details: result,
                         title: `${card.title} (${card.devName}) Update Details.`,
+                        tabID: activeTab,
                       }),
                     );
                   }
@@ -108,7 +111,7 @@ const UpdatingNotification = () => {
     return () => {
       rendererIpc.git.offProgress();
     };
-  }, [updatingCards, dispatch]);
+  }, [updatingCards, dispatch, activeTab]);
 
   return (
     <>

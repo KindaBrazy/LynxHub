@@ -7,8 +7,9 @@ import {RootState} from '../Store';
 type ModalsState = {
   installUIModal: {
     isOpen: boolean;
-    type: 'install' | 'update';
+    tabID: string;
 
+    type: 'install' | 'update';
     cardId: string;
     title: string;
   };
@@ -19,6 +20,7 @@ type ModalsState = {
   };
   cardInfoModal: {
     isOpen: boolean;
+    tabID: string;
 
     cardId: string;
     title: string;
@@ -28,31 +30,50 @@ type ModalsState = {
   };
   cardUninstallModal: {
     isOpen: boolean;
+    tabID: string;
+
     cardId: string;
   };
   updateDetails: {
     isOpen: boolean;
+    tabID: string;
+
     title: string;
     details: PullResult;
   };
   cardExtensions: {
     isOpen: boolean;
+    tabID: string;
 
     title: string;
     dir: string;
     id: string;
   };
   cardLaunchConfig: {
-    haveArguments: boolean;
     isOpen: boolean;
+    tabID: string;
+
+    haveArguments: boolean;
     title: string;
     id: string;
   };
   updateApp: {
     isOpen: boolean;
   };
-  readmeModal: {isOpen: boolean; title: string; url: string};
-  gitManager: {isOpen: boolean; title: string; dir: string};
+  readmeModal: {
+    isOpen: boolean;
+    tabID: string;
+
+    title: string;
+    url: string;
+  };
+  gitManager: {
+    isOpen: boolean;
+    tabID: string;
+
+    title: string;
+    dir: string;
+  };
 };
 
 type ModalsStateTypes = {
@@ -65,6 +86,7 @@ type CardInfoData = {
   devName: string;
   url: string;
   extensionsDir?: string;
+  tabID: string;
 };
 
 const initialState: ModalsState = {
@@ -73,6 +95,7 @@ const initialState: ModalsState = {
     isOpen: false,
     title: '',
     id: '',
+    tabID: '',
   },
   cardInfoModal: {
     cardId: '',
@@ -82,14 +105,20 @@ const initialState: ModalsState = {
     isOpen: false,
     title: '',
     url: '',
+    tabID: '',
   },
   cardLaunchConfig: {
     id: '',
     isOpen: false,
     title: '',
     haveArguments: false,
+    tabID: '',
   },
-  cardUninstallModal: {cardId: '', isOpen: false},
+  cardUninstallModal: {
+    cardId: '',
+    isOpen: false,
+    tabID: '',
+  },
   updateDetails: {
     details: {
       created: [],
@@ -108,6 +137,7 @@ const initialState: ModalsState = {
     },
     isOpen: false,
     title: '',
+    tabID: '',
   },
   warningModal: {
     contentId: 'CLONE_REPO',
@@ -121,16 +151,19 @@ const initialState: ModalsState = {
     cardId: '',
     title: '',
     type: 'install',
+    tabID: '',
   },
   readmeModal: {
     isOpen: false,
     url: '',
     title: '',
+    tabID: '',
   },
   gitManager: {
     isOpen: false,
     title: '',
     dir: '',
+    tabID: '',
   },
 };
 
@@ -148,62 +181,53 @@ const modalSlice = createSlice({
       state[action.payload.modalName].isOpen = action.payload.isOpen;
     },
 
-    openCardExtensions: (state, action: PayloadAction<{title: string; dir: string; id: string}>) => {
-      state.cardExtensions.title = action.payload.title;
-      state.cardExtensions.dir = action.payload.dir;
-      state.cardExtensions.id = action.payload.id;
-
-      state.cardExtensions.isOpen = true;
+    openCardExtensions: (state, action: PayloadAction<{title: string; dir: string; id: string; tabID: string}>) => {
+      state.cardExtensions = {...action.payload, isOpen: true};
     },
-    openCardLaunchConfig: (state, action: PayloadAction<{haveArguments: boolean; title: string; id: string}>) => {
-      state.cardLaunchConfig.haveArguments = action.payload.haveArguments;
-      state.cardLaunchConfig.title = action.payload.title;
-      state.cardLaunchConfig.id = action.payload.id;
-
-      state.cardLaunchConfig.isOpen = true;
+    openCardLaunchConfig: (
+      state,
+      action: PayloadAction<{
+        haveArguments: boolean;
+        title: string;
+        id: string;
+        tabID: string;
+      }>,
+    ) => {
+      state.cardLaunchConfig = {...action.payload, isOpen: true};
     },
-    openUninstallCard: (state, action: PayloadAction<string>) => {
-      state.cardUninstallModal.cardId = action.payload;
-      state.cardUninstallModal.isOpen = true;
+    openUninstallCard: (state, action: PayloadAction<{cardId: string; tabID: string}>) => {
+      state.cardUninstallModal = {...action.payload, isOpen: true};
     },
-    openUpdateDetails: (state, action: PayloadAction<{title: string; details: PullResult}>) => {
-      state.updateDetails.title = action.payload.title;
-      state.updateDetails.details = action.payload.details;
-      state.updateDetails.isOpen = true;
+    openUpdateDetails: (state, action: PayloadAction<{title: string; details: PullResult; tabID: string}>) => {
+      state.updateDetails = {...action.payload, isOpen: true};
     },
-    openGitManager: (state, action: PayloadAction<{title: string; dir: string}>) => {
-      state.gitManager.title = action.payload.title;
-      state.gitManager.dir = action.payload.dir;
-      state.gitManager.isOpen = true;
+    openGitManager: (state, action: PayloadAction<{title: string; dir: string; tabID: string}>) => {
+      state.gitManager = {...action.payload, isOpen: true};
     },
     closeGitManager: state => {
       state.gitManager = initialState.gitManager;
     },
 
     openCardInfo: (state, action: PayloadAction<CardInfoData>) => {
-      state.cardInfoModal.cardId = action.payload.cardId;
-      state.cardInfoModal.devName = action.payload.devName;
-      state.cardInfoModal.title = action.payload.title;
-      state.cardInfoModal.url = action.payload.url;
-      state.cardInfoModal.extensionsDir = action.payload.extensionsDir;
-      state.cardInfoModal.isOpen = true;
+      state.cardInfoModal = {...action.payload, isOpen: true};
     },
     setInfoCardId: (state, action: PayloadAction<string>) => {
       state.cardInfoModal.cardId = action.payload;
     },
-    openReadme: (state, action: PayloadAction<{url: string; title: string}>) => {
-      state.readmeModal.url = action.payload.url;
-      state.readmeModal.title = action.payload.title;
-
-      state.readmeModal.isOpen = true;
+    openReadme: (state, action: PayloadAction<{url: string; title: string; tabID: string}>) => {
+      state.readmeModal = {...action.payload, isOpen: true};
     },
 
-    openInstallUICard: (state, action: PayloadAction<{id: string; type: 'install' | 'update'; title: string}>) => {
-      state.installUIModal.cardId = action.payload.id;
-      state.installUIModal.type = action.payload.type;
-      state.installUIModal.title = action.payload.title;
-
-      state.installUIModal.isOpen = true;
+    openInstallUICard: (
+      state,
+      action: PayloadAction<{
+        cardId: string;
+        type: 'install' | 'update';
+        title: string;
+        tabID: string;
+      }>,
+    ) => {
+      state.installUIModal = {...action.payload, isOpen: true};
     },
 
     setWarningContentId: (state, action: PayloadAction<ModalsState['warningModal']['contentId']>) => {

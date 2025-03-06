@@ -7,6 +7,7 @@ import {GitHub_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {SettingsMinimal_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {useGetInstallType} from '../../../../../Modules/ModuleLoader';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../../../Utils/UtilHooks';
@@ -14,12 +15,15 @@ import {useCardData} from '../../../CardsDataManager';
 
 export const MenuLaunchConfig = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const activeTab = useTabsState('activeTab');
   const {id, setMenuIsOpen, title, haveArguments} = useCardData();
 
   const onPress = useCallback(() => {
-    dispatch(modalActions.openCardLaunchConfig({id: id, title: `${title} Launch Config`, haveArguments}));
+    dispatch(
+      modalActions.openCardLaunchConfig({id: id, title: `${title} Launch Config`, haveArguments, tabID: activeTab}),
+    );
     setMenuIsOpen(false);
-  }, [dispatch, setMenuIsOpen, title, haveArguments, id]);
+  }, [dispatch, setMenuIsOpen, title, haveArguments, id, activeTab]);
 
   return (
     <DropdownItem
@@ -34,6 +38,7 @@ export const MenuLaunchConfig = () => {
 
 export const MenuExtensions = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const activeTab = useTabsState('activeTab');
   const {id, repoUrl, extensionsDir, setMenuIsOpen, title} = useCardData();
   const {name: devName} = useDevInfo(repoUrl);
   const card = useInstalledCard(id);
@@ -45,10 +50,11 @@ export const MenuExtensions = () => {
           dir: `${card.dir}${extensionsDir}`,
           title: `${title} (${devName}) Extensions`,
           id,
+          tabID: activeTab,
         }),
       );
     setMenuIsOpen(false);
-  }, [dispatch, setMenuIsOpen, card, extensionsDir, title, devName]);
+  }, [dispatch, setMenuIsOpen, card, extensionsDir, title, devName, activeTab]);
 
   return extensionsDir ? (
     <DropdownItem
@@ -67,12 +73,12 @@ export const MenuRepoConfig = () => {
   const {id, title, setMenuIsOpen} = useCardData();
   const installType = useGetInstallType(id);
   const dispatch = useDispatch<AppDispatch>();
-
+  const activeTab = useTabsState('activeTab');
   const dir = useInstalledCard(id)?.dir;
 
   const onPress = useCallback(() => {
     if (dir) {
-      dispatch(modalActions.openGitManager({dir, title: `${title} Repository Settings`}));
+      dispatch(modalActions.openGitManager({dir, title: `${title} Repository Settings`, tabID: activeTab}));
       setMenuIsOpen(false);
     }
   }, [dispatch, setMenuIsOpen, dir, title]);

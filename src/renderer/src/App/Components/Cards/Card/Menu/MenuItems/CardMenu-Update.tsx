@@ -7,6 +7,7 @@ import {Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {getCardMethod, useAllCards} from '../../../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
@@ -26,19 +27,20 @@ export const MenuUpdate = () => {
   const webUi = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
   const allCards = useAllCards();
+  const activeTab = useTabsState('activeTab');
 
   const dispatch = useDispatch<AppDispatch>();
 
   const onPress = useCallback(() => {
     if (getCardMethod(allCards, id, 'manager')?.updater.startUpdate) {
-      dispatch(modalActions.openInstallUICard({id, type: 'update', title}));
+      dispatch(modalActions.openInstallUICard({cardId: id, tabID: activeTab, type: 'update', title}));
       setMenuIsOpen(false);
     } else if (webUi && webUi.dir) {
       dispatch(cardsActions.addUpdatingCard({devName, id, title}));
       setMenuIsOpen(false);
       rendererIpc.git.pull(webUi.dir, id);
     }
-  }, [dispatch, setMenuIsOpen, webUi, devName, id, title]);
+  }, [dispatch, setMenuIsOpen, webUi, devName, id, title, activeTab]);
 
   if (!updateAvailable || autoUpdate)
     return <DropdownItem className="hidden" key="update-hidden" textValue="update_hidden" />;

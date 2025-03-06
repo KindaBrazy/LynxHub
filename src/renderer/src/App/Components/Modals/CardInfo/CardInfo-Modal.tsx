@@ -1,12 +1,13 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
 import {Result} from 'antd';
 import {isEmpty, startCase} from 'lodash';
-import {useCallback, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {CardInfoDescriptions} from '../../../Modules/types';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import {useDevInfo} from '../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../Utils/UtilHooks';
@@ -15,7 +16,9 @@ import useCardInfoApi from './UseCardInfoApi';
 
 /** Displaying information about card (Disk usage, developer, repository details) */
 const CardInfoModalNew = () => {
-  const {cardId, isOpen, devName, url} = useModalsState('cardInfoModal');
+  const {cardId, isOpen, devName, url, tabID} = useModalsState('cardInfoModal');
+  const activeTab = useTabsState('activeTab');
+
   const dispatch = useDispatch<AppDispatch>();
   const webUI = useInstalledCard(cardId);
 
@@ -40,12 +43,13 @@ const CardInfoModalNew = () => {
   const onClose = useCallback(() => {
     dispatch(modalActions.setInfoCardId(''));
   }, [dispatch]);
+  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
 
   return (
     <Modal
       classNames={{
-        backdrop: '!top-10',
-        wrapper: '!top-10 scrollbar-hide',
+        backdrop: `!top-10 ${show}`,
+        wrapper: `!top-10 scrollbar-hide ${show}`,
         base: '!pb-0',
       }}
       size="xl"
