@@ -4,6 +4,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {modalMotionProps} from '../../../Utils/Constants';
@@ -16,7 +17,9 @@ import Installed from './Installed';
 const CardExtensions = () => {
   const [installedExtensions, setInstalledExtensions] = useState<string[]>([]);
 
-  const {isOpen, title, id} = useModalsState('cardExtensions');
+  const {isOpen, title, id, tabID} = useModalsState('cardExtensions');
+  const activeTab = useTabsState('activeTab');
+
   const [currentTab, setCurrentTab] = useState<any>('installed');
   const [updatesAvailable, setUpdatesAvailable] = useState<string[]>([]);
   const [isUpdatingAll, setIsUpdatingAll] = useState<boolean>(false);
@@ -58,6 +61,8 @@ const CardExtensions = () => {
     return !isEmpty(installedExtensions);
   }, [installedExtensions, id]);
 
+  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -65,7 +70,7 @@ const CardExtensions = () => {
       isDismissable={false}
       scrollBehavior="inside"
       motionProps={modalMotionProps}
-      classNames={{backdrop: '!top-10', wrapper: '!top-10 scrollbar-hide'}}
+      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 scrollbar-hide ${show}`}}
       className="max-w-[80%] border-2 border-foreground/10 dark:border-foreground/5 overflow-hidden"
       hideCloseButton>
       <ModalContent>

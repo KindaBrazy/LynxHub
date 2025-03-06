@@ -9,8 +9,8 @@ import {AppUpdateData, AppUpdateInfo, UpdateDownloadProgress} from '../../../../
 import {useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {settingsActions} from '../../../Redux/Reducer/SettingsReducer';
-import {AppDispatch} from '../../../Redux/Store';
 import {useUserState} from '../../../Redux/Reducer/UserReducer';
+import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {modalMotionProps} from '../../../Utils/Constants';
 import {RenderSubItems} from '../../../Utils/UtilHooks';

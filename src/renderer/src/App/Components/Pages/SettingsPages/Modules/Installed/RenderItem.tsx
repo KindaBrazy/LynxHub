@@ -13,6 +13,7 @@ import {Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {Refresh3_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {settingsActions, useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
+import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useCachedImageUrl} from '../../../../../Utils/LocalStorage';
@@ -32,6 +33,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
   const moduleUpdateAvailable = useSettingsState('moduleUpdateAvailable');
   const newModules = useSettingsState('newModules');
   const dispatch = useDispatch<AppDispatch>();
+  const activeTab = useTabsState('activeTab');
 
   const [updateAvailable, setUpdateAvailable] = useState<boolean>(false);
   const [updating, setUpdating] = useState<boolean>(false);
@@ -177,8 +179,8 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
   }, []);
 
   const openHomePage = useCallback(() => {
-    dispatch(modalActions.openReadme({url: item.repoUrl, title: item.title}));
-  }, [dispatch, item]);
+    dispatch(modalActions.openReadme({url: item.repoUrl, title: item.title, tabID: activeTab}));
+  }, [dispatch, item, activeTab]);
 
   return (
     <>

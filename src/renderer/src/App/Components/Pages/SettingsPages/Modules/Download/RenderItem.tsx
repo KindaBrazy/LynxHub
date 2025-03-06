@@ -10,6 +10,7 @@ import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {settingsActions} from '../../../../../Redux/Reducer/SettingsReducer';
+import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import SecurityWarning from '../../SecurityWarning';
@@ -23,6 +24,7 @@ type Props = {
 /** Render available modules to install. */
 export default function RenderItem({item, addModule}: Props) {
   const dispatch = useDispatch<AppDispatch>();
+  const activeTab = useTabsState('activeTab');
 
   const [installing, setInstalling] = useState<boolean>(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
@@ -51,8 +53,8 @@ export default function RenderItem({item, addModule}: Props) {
   }, []);
 
   const openHomePage = useCallback(() => {
-    dispatch(modalActions.openReadme({url: item.repoUrl, title: item.title}));
-  }, [dispatch, item]);
+    dispatch(modalActions.openReadme({url: item.repoUrl, title: item.title, tabID: activeTab}));
+  }, [dispatch, item, activeTab]);
 
   return (
     <>

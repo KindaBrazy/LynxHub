@@ -1,18 +1,20 @@
 import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip} from '@heroui/react';
 import {message} from 'antd';
-import {useCallback} from 'react';
+import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ShieldCross_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 import {useGetUninstallType} from '../../../Modules/ModuleLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {useDisableTooltip, useInstalledCard} from '../../../Utils/UtilHooks';
 
 /** Display modal to manage uninstalling a card */
 const UninstallCard = () => {
-  const {cardId, isOpen} = useModalsState('cardUninstallModal');
+  const {cardId, isOpen, tabID} = useModalsState('cardUninstallModal');
+  const activeTab = useTabsState('activeTab');
   const card = useInstalledCard(cardId);
   const dispatch = useDispatch<AppDispatch>();
   const disableTooltip = useDisableTooltip(true);
@@ -79,12 +81,13 @@ const UninstallCard = () => {
         });
     }
   }, [card, cardId, closeHandle]);
+  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
 
   return (
     <Modal
       classNames={{
-        backdrop: '!top-10 !z-10',
-        wrapper: '!top-10 scrollbar-hide',
+        backdrop: `!top-10 !z-10 ${show}`,
+        wrapper: `!top-10 scrollbar-hide ${show}`,
       }}
       isOpen={isOpen}
       onClose={closeHandle}

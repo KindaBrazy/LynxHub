@@ -1,10 +1,11 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
 import {message} from 'antd';
-import {Key, memo, useCallback, useEffect, useState} from 'react';
+import {Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ChosenArgumentsData} from '../../../../../../cross/CrossTypes';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {modalMotionProps} from '../../../Utils/Constants';
@@ -20,7 +21,8 @@ const tabs = {
 
 /** Manage card launch configurations: pre-open paths, commands, arguments, etc. */
 const LaunchConfig = memo(() => {
-  const {isOpen, title, haveArguments, id} = useModalsState('cardLaunchConfig');
+  const {isOpen, title, haveArguments, id, tabID} = useModalsState('cardLaunchConfig');
+  const activeTab = useTabsState('activeTab');
   const [isSavingArgs, setIsSavingArgs] = useState<boolean>(false);
   const [chosenArguments, setChosenArguments] = useState<ChosenArgumentsData>({activePreset: '', data: []});
   const [currentTab, setCurrentTab] = useState<Key>(haveArguments ? tabs.arguments : tabs.customRun);
@@ -57,6 +59,8 @@ const LaunchConfig = memo(() => {
       });
   }, [id, chosenArguments]);
 
+  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -64,8 +68,8 @@ const LaunchConfig = memo(() => {
       isDismissable={false}
       scrollBehavior="inside"
       motionProps={modalMotionProps}
-      classNames={{backdrop: '!top-10', wrapper: '!top-10 scrollbar-hide'}}
       className="z-40 max-w-[80%] border-2 border-foreground/10 dark:border-foreground/5"
+      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 scrollbar-hide ${show}`}}
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="flex-col gap-y-2 pb-0 text-center">
