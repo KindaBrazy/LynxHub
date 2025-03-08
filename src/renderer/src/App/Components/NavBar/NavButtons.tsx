@@ -50,18 +50,18 @@ export const ContentPagesButtons = () => {
 
   const pagesData: PagesType[] = useMemo(() => {
     const result: PagesType[] = [
-      {navButton: {icon: <Home_Icon className="size-full" />, title: 'Home'}, path: PageID.homePageID},
+      {navButton: {icon: <Home_Icon className="size-full" />, title: 'Home'}, path: PageID.home},
       {
         navButton: {icon: <ImageGeneration_Icon className="size-full" />, title: 'Image Generation'},
-        path: PageID.imageGenPageID,
+        path: PageID.imageGen,
       },
       {
         navButton: {icon: <TextGeneration_Icon className="size-full" />, title: 'Text Generation'},
-        path: PageID.textGenPageID,
+        path: PageID.textGen,
       },
       {
         navButton: {icon: <AudioGeneration_Icon className="size-full" />, title: 'Audio Generation'},
-        path: PageID.audioGenPageID,
+        path: PageID.audioGen,
       },
     ];
 
@@ -71,7 +71,7 @@ export const ContentPagesButtons = () => {
           icon: <Rocket_Icon className="size-full" />,
           title: 'Tools',
         },
-        path: PageID.toolsPageID,
+        path: PageID.tools,
       });
     }
 
@@ -81,7 +81,7 @@ export const ContentPagesButtons = () => {
           icon: <GamePad_Icon className="size-full" />,
           title: 'Games',
         },
-        path: PageID.gamesPageID,
+        path: PageID.games,
       });
     }
 
@@ -97,10 +97,10 @@ export const ContentPagesButtons = () => {
 };
 
 const SettingsPages: PagesType[] = [
-  {navButton: {icon: <Info_Icon className="size-full" />, title: 'Dashboard'}, path: PageID.dashboardPageID},
-  {navButton: {icon: <Extensions2_Icon className="size-full" />, title: 'Modules'}, path: PageID.modulesPageID},
-  {navButton: {icon: <Extensions_Icon className="size-full" />, title: 'Extensions'}, path: PageID.extensionsPageID},
-  {navButton: {icon: <Slider_Icon className="size-full" />, title: 'Settings'}, path: PageID.settingsPageID},
+  {navButton: {icon: <Info_Icon className="size-full" />, title: 'Dashboard'}, path: PageID.dashboard},
+  {navButton: {icon: <Extensions2_Icon className="size-full" />, title: 'Modules'}, path: PageID.modules},
+  {navButton: {icon: <Extensions_Icon className="size-full" />, title: 'Extensions'}, path: PageID.extensions},
+  {navButton: {icon: <Slider_Icon className="size-full" />, title: 'Settings'}, path: PageID.settings},
 ];
 
 export function SettingsPagesButtons() {

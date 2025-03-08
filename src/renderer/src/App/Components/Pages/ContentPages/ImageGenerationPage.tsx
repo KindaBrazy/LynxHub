@@ -28,7 +28,7 @@ const ImageGenerationPage = ({show}: Props) => {
           title="Image Generation"
           subTitle="Create Stunning Visuals with AI-Powered Tools"
           icon={<ImageGeneration_Icon className={CardContainerClasses} />}>
-          <GetComponentsByPath routePath={PageID.imageGenPageID} extensionsElements={cardsContainer} />
+          <GetComponentsByPath routePath={PageID.imageGen} extensionsElements={cardsContainer} />
         </CardContainer>
 
         {scrollBottom && scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}
