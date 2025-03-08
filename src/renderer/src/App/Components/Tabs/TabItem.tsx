@@ -39,18 +39,18 @@ export default function TabItem({tab}: Props) {
   const onPress = () => dispatch(tabsActions.setActiveTab(tab.id));
 
   const icon = useMemo(() => {
-    if (tab.pageID === PageID.homePageID) return <Home_Icon className="size-full" />;
-    if (tab.pageID === PageID.imageGenPageID) return <ImageGeneration_Icon className="size-full" />;
-    if (tab.pageID === PageID.textGenPageID) return <TextGeneration_Icon className="size-full" />;
-    if (tab.pageID === PageID.audioGenPageID) return <AudioGeneration_Icon className="size-full" />;
+    if (tab.pageID === PageID.home) return <Home_Icon className="size-full" />;
+    if (tab.pageID === PageID.imageGen) return <ImageGeneration_Icon className="size-full" />;
+    if (tab.pageID === PageID.textGen) return <TextGeneration_Icon className="size-full" />;
+    if (tab.pageID === PageID.audioGen) return <AudioGeneration_Icon className="size-full" />;
 
-    if (tab.pageID === PageID.gamesPageID) return <GamePad_Icon className="size-full" />;
-    if (tab.pageID === PageID.toolsPageID) return <Rocket_Icon className="size-full" />;
+    if (tab.pageID === PageID.games) return <GamePad_Icon className="size-full" />;
+    if (tab.pageID === PageID.tools) return <Rocket_Icon className="size-full" />;
 
-    if (tab.pageID === PageID.dashboardPageID) return <Info_Icon className="size-full" />;
-    if (tab.pageID === PageID.modulesPageID) return <Extensions2_Icon className="size-full" />;
-    if (tab.pageID === PageID.extensionsPageID) return <Extensions_Icon className="size-full" />;
-    if (tab.pageID === PageID.settingsPageID) return <Slider_Icon className="size-full" />;
+    if (tab.pageID === PageID.dashboard) return <Info_Icon className="size-full" />;
+    if (tab.pageID === PageID.modules) return <Extensions2_Icon className="size-full" />;
+    if (tab.pageID === PageID.extensions) return <Extensions_Icon className="size-full" />;
+    if (tab.pageID === PageID.settings) return <Slider_Icon className="size-full" />;
 
     return <Web_Icon className="size-full" />;
   }, [tab]);

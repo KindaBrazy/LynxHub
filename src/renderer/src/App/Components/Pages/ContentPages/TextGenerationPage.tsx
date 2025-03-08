@@ -28,7 +28,7 @@ const TextGenerationPage = ({show}: Props) => {
           title="Text Generation"
           subTitle="Unleash Your Creativity with AI-Assisted Writing"
           icon={<TextGeneration_Icon className={CardContainerClasses} />}>
-          <GetComponentsByPath routePath={PageID.textGenPageID} extensionsElements={cardsContainer} />
+          <GetComponentsByPath routePath={PageID.textGen} extensionsElements={cardsContainer} />
         </CardContainer>
 
         {scrollBottom && scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}

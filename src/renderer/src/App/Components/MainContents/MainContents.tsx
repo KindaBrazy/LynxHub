@@ -18,7 +18,7 @@ const MainContents = memo(() => {
         <NavBar />
         <div
           className={`size-full p-3 pt-1.5 ${
-            (activePage === PageID.settingsPageID || activePage === PageID.dashboardPageID) && navBar && 'pl-0'
+            (activePage === PageID.settings || activePage === PageID.dashboard) && navBar && 'pl-0'
           } transition-all duration-300`}>
           <AppPages />
         </div>

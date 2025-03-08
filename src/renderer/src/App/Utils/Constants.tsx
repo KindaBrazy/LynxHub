@@ -14,29 +14,31 @@ import ModulesPage from '../Components/Pages/SettingsPages/Modules/ModulesPage';
 import SettingsPage from '../Components/Pages/SettingsPages/Settings/SettingsPage';
 
 export const PageID = {
-  homePageID: 'homePage',
-  imageGenPageID: 'imageGen',
-  audioGenPageID: 'audioGen',
-  gamesPageID: 'gamesPage',
-  textGenPageID: 'textGen',
-  toolsPageID: 'toolsPage',
-  dashboardPageID: 'dashboardPage',
-  extensionsPageID: 'extensionPage',
-  modulesPageID: 'modulesPage',
-  settingsPageID: 'settingsPage',
+  home: 'home_page',
+  imageGen: 'imageGen_page',
+  textGen: 'textGen_page',
+  audioGen: 'audioGen_page',
+
+  games: 'games_page',
+  tools: 'tools_page',
+
+  dashboard: 'dashboard_page',
+  extensions: 'extension_page',
+  modules: 'modules_page',
+  settings: 'settings_page',
 };
 
 export const PageComponents = {
-  [PageID.homePageID]: HomePage,
-  [PageID.imageGenPageID]: ImageGenerationPage,
-  [PageID.textGenPageID]: TextGenerationPage,
-  [PageID.audioGenPageID]: AudioGenerationPage,
-  [PageID.toolsPageID]: ToolsPage,
-  [PageID.gamesPageID]: GamesPage,
-  [PageID.dashboardPageID]: DashboardPage,
-  [PageID.modulesPageID]: ModulesPage,
-  [PageID.extensionsPageID]: ExtensionsPage,
-  [PageID.settingsPageID]: SettingsPage,
+  [PageID.home]: HomePage,
+  [PageID.imageGen]: ImageGenerationPage,
+  [PageID.textGen]: TextGenerationPage,
+  [PageID.audioGen]: AudioGenerationPage,
+  [PageID.tools]: ToolsPage,
+  [PageID.games]: GamesPage,
+  [PageID.dashboard]: DashboardPage,
+  [PageID.modules]: ModulesPage,
+  [PageID.extensions]: ExtensionsPage,
+  [PageID.settings]: SettingsPage,
 };
 
 const colors = {
@@ -115,5 +117,5 @@ export const defaultTabItem: TabInfo = {
   id: 'tab',
   title: 'Home',
   isTerminal: false,
-  pageID: PageID.homePageID,
+  pageID: PageID.home,
 };

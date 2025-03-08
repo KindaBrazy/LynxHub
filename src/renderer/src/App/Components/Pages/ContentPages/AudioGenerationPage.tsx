@@ -28,7 +28,7 @@ const AudioGenerationPage = ({show}: Props) => {
           title="Audio Generation"
           subTitle="Compose and Manipulate Audio Effortlessly with AI"
           icon={<AudioGeneration_Icon className={CardContainerClasses} />}>
-          <GetComponentsByPath routePath={PageID.audioGenPageID} extensionsElements={cardsContainer} />
+          <GetComponentsByPath routePath={PageID.audioGen} extensionsElements={cardsContainer} />
         </CardContainer>
 
         {scrollBottom && scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}
