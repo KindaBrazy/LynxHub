@@ -1,7 +1,7 @@
 {
-  "currentVersion": "2.3.1",
-  "currentBuild": 18,
-  "releaseDate": "2025-02-22",
+  "currentVersion": "2.4.0",
+  "currentBuild": 19,
+  "releaseDate": "2025-03-10",
   "earlyAccess": {
     "version": "2.4.0",
     "build": 19,
@@ -155,115 +155,6 @@
         "Update ribbons on cards are now hidden when the card is not visible.",
         "Resolved an issue that prevented card auto-updates from working correctly on app startup."
       ]
-    },
-    {
-      "build": 13,
-      "version": "1.3.1",
-      "bug": [
-        "Resolved an issue preventing non-git projects from being installed or launched correctly."
-      ]
-    },
-    {
-      "build": 12,
-      "version": "1.3.0",
-      "new": [
-        "New webui installer for advanced installations.",
-        "New webui updater for advanced updates.",
-        "New section to customize card layouts, enhancing user interface flexibility.",
-        "Option to choose between relative or absolute paths in argument configuration.",
-        "Support for GitLab repositories integration.",
-        "Ability to manage built-in browser zoom percentage."
-      ],
-      "improve": [
-        "Enabled Ctrl+C functionality for copying text from the terminal.",
-        "Introduced a soft teal background for dark mode.",
-        "Re-arranged navigation bar buttons and updated the Dashboard icon for improved accessibility.",
-        "Enhanced navigation bar style and overall visibility for a cleaner experience.",
-        "Improved the WebUI installation interface for smoother user interactions.",
-        "Added container boxes to image, audio, and text generation pages, improving layout structure.",
-        "Improved layout visibility with subtle borders for better section distinction.",
-        "Applied a full-round style to the home filter and search box for a modern look.",
-        "Added the 'Pin' category to the default visible sections on the home page.",
-        "Added an 'owner' tag to modules where the WebUI or repository is provided by the module's publisher.",
-        "Updated the settings icon to a more intuitive slider design.",
-        "Updated the web icon (switch between terminal and browser modes).",
-        "Updated the refresh icon.",
-        "Added spacing between buttons in the extension’s menu for better usability."
-      ],
-      "bug": [
-        "Resolved intermittent interaction issues between terminal and browser components.",
-        "Fixed module update badge display inconsistencies.",
-        "Resolve directory issues in the pty process cwd.",
-        "Handled errors occurring during the clone process."
-      ]
-    },
-    {
-      "build": 10,
-      "version": "1.2.0",
-      "new": [
-        "macOS Support: Now available for macOS.",
-        "Customizable Browser and Terminal Behavior:",
-        " * Open empty terminal, launch with default command, open in-app/default browser, or disable browser opening",
-        "New Dashboard Page:",
-        " * Profile with Patreon login, update management, and sponsor credits"
-      ],
-      "improve": [
-        "Enhanced UI: Refreshed backgrounds, removed hover shadows in settings and launch config layouts",
-        "Added transition effects to settings page selects",
-        "Updated settings page UI with improved switch",
-        "Upgraded settings buttons to Mantine components"
-      ]
-    },
-    {
-      "build": 9,
-      "version": "1.1.0",
-      "new": [
-        "Linux Support: Now available for Linux.",
-        "Extension List for Web UIs: View and install all available extensions for WebUI interfaces.",
-        "Auto-Update Option for Extensions: Enable automatic updates for web UI extensions before launching.",
-        "Open in Default Browser: Open WebUI in your default browser by holding CTRL and clicking the address bar."
-      ],
-      "improve": [
-        "Close the launch configuration modal by pressing the Escape key.",
-        "Card titles now use title case for better readability.",
-        "Applied title case to installed extension names for consistency.",
-        "Reduced text size for a cleaner view of installed extensions.",
-        "Display Installed status for already cloned extensions.",
-        "Auto-focus is now enabled for search in the 'Add Argument' modal and the 'Extensions' tab."
-      ],
-      "bug": [
-        "Fixed issues with recognition and validation of Git URLs.",
-        "Fixed an issue where the update badge wasn't removed correctly after uninstallation.",
-        "The badge icon is now hidden after module updates."
-      ]
-    },
-    {
-      "build": 8,
-      "version": "1.0.3",
-      "bug": [
-        "Fixed issue where the fullscreen mode toggle was not working."
-      ]
-    },
-    {
-      "build": 7,
-      "version": "1.0.2",
-      "bug": [
-        "Fixed issue where Initializer window not working (White Screen)."
-      ]
-    },
-    {
-      "build": 6,
-      "version": "1.0.1",
-      "bug": [
-        "Fixed issue where 'Save As', 'Save', or 'Export' workflow buttons in the ComfyUI did not trigger the expected save dialog."
-      ],
-      "new": [
-        "Added a custom modal to replace the default `prompt` for all WebUI's."
-      ]
-    },
-    {
-      "build": 5,
-      "version": "1.0.0"
     }
   ]
 }
