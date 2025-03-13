@@ -7,6 +7,7 @@ import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useGetCardsByPath} from '../../Modules/ModuleLoader';
 import {AvailablePages} from '../../Modules/types';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
+import {PageID} from '../../Utils/Constants';
 import Page from '../Pages/Page';
 import LynxCard from './Card/LynxCard';
 import {CardContext, CardsDataManager} from './CardsDataManager';
@@ -15,14 +16,15 @@ import NavigateModulesPage from './NavigateModulesPage';
 export function GetComponentsByPath({routePath, extensionsElements}: {routePath: string; extensionsElements?: FC[]}) {
   // Support legacy modules paths
   const pagePath: AvailablePages = useMemo(() => {
-    if (routePath === 'audioGen') return '/audioGenerationPage';
-    if (routePath === 'imageGen') return '/imageGenerationPage';
-    if (routePath === 'textGen') return '/textGenerationPage';
+    if (routePath === PageID.audioGen) return '/audioGenerationPage';
+    if (routePath === PageID.imageGen) return '/imageGenerationPage';
+    if (routePath === PageID.textGen) return '/textGenerationPage';
 
     return routePath as AvailablePages;
   }, [routePath]);
 
   const cards = useGetCardsByPath(pagePath);
+  console.log(routePath);
   const installedCards = useCardsState('installedCards');
   const pinnedCards = useCardsState('pinnedCards');
 
