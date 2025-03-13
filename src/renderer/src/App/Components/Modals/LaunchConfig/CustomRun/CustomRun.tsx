@@ -4,12 +4,12 @@ import {tabContentVariants} from '../../CardExtensions/Constants';
 import CustomRunBehavior from './CustomRunBehavior';
 import CustomRunCommands from './CustomRunCommands';
 
-/** Custom commands page */
-export default function CustomRun() {
+type Props = {id: string};
+export default function CustomRun({id}: Props) {
   return (
     <motion.div initial="init" animate="animate" className="space-y-5" variants={tabContentVariants}>
-      <CustomRunCommands />
-      <CustomRunBehavior />
+      <CustomRunCommands id={id} />
+      <CustomRunBehavior id="id" />
     </motion.div>
   );
 }

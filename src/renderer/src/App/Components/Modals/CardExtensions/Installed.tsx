@@ -16,7 +16,6 @@ import {
 
 import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
-import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../RendererIpc';
 import {fetchRepoDetails} from '../../../Utils/LocalStorage';
 import {
@@ -34,6 +33,9 @@ type Props = {
   setUpdatesAvailable: Dispatch<SetStateAction<string[]>>;
   setIsUpdatingAll: Dispatch<SetStateAction<boolean>>;
   setInstalledExtensions: Dispatch<SetStateAction<string[]>>;
+
+  dir: string;
+  isOpen: boolean;
 };
 
 // TODO: Use list for showing items and simplify this fcking noob complexity
@@ -42,9 +44,10 @@ type Props = {
  * - It handles updating, removing, and trashing extensions.
  */
 const Installed = forwardRef(
-  ({setIsUpdatingAll, setUpdatesAvailable, updatesAvailable, visible, setInstalledExtensions}: Props, ref) => {
-    const {dir, isOpen} = useModalsState('cardExtensions');
-
+  (
+    {setIsUpdatingAll, setUpdatesAvailable, updatesAvailable, visible, setInstalledExtensions, dir, isOpen}: Props,
+    ref,
+  ) => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean[]>([]);
     const [rows, setRows] = useState<InstalledExtensionsTable[]>([]);
     const [isTableEmpty, setIsTableEmpty] = useState(false);

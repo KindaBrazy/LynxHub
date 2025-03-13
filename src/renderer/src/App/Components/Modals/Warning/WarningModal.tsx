@@ -14,7 +14,7 @@ const WarningModal = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleClose = useCallback(() => {
-    dispatch(modalActions.closeModal('warningModal'));
+    dispatch(modalActions.closeWarning());
     Modal.destroyAll();
   }, [dispatch]);
 
@@ -22,7 +22,7 @@ const WarningModal = () => {
     if (isOpen) {
       Modal.warning({
         afterClose: () => {
-          dispatch(modalActions.closeModal('warningModal'));
+          dispatch(modalActions.closeWarning());
         },
         centered: true,
         content: warnContent[contentId],

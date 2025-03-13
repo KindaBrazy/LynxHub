@@ -5,7 +5,6 @@ import {ReactNode, useMemo} from 'react';
 import {getArgumentDescription} from '../../../../../../../../../cross/GetArgumentsData';
 import {Close_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../../../Redux/Reducer/ModalsReducer';
 
 const {Text} = Typography;
 
@@ -18,6 +17,7 @@ type Props = {
   tooltipText?: string;
   defaultCursor?: boolean;
   extra?: ReactNode;
+  id: string;
 };
 
 export default function ArgumentItemBase({
@@ -28,9 +28,8 @@ export default function ArgumentItemBase({
   removeArg,
   defaultCursor = true,
   extra,
+  id,
 }: Props) {
-  const {id} = useModalsState('cardLaunchConfig');
-
   const cardArgument = useGetArgumentsByID(id);
   const tooltipText = useMemo(() => getArgumentDescription(name, cardArgument), [name, cardArgument]);
 

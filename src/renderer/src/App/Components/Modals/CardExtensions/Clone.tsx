@@ -9,7 +9,6 @@ import {extractGitUrl, validateGitRepoUrl} from '../../../../../../cross/CrossUt
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
 import {Download2_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
 import {GitHub_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
-import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import rendererIpc from '../../../RendererIpc';
 import {initGitProgress} from '../../../Utils/Constants';
@@ -19,14 +18,14 @@ type Props = {
   visible: boolean;
   updateTable: () => void;
   installedExtensions: string[];
+  dir: string;
 };
 
 type ClipData = {name: string; owner: string; url: string};
 
 /** Download (Clone repo) to extension folder of installed card */
-export default function Clone({updateTable, visible, installedExtensions}: Props) {
+export default function Clone({updateTable, visible, installedExtensions, dir}: Props) {
   const isFocused = useAppState('onFocus');
-  const {dir} = useModalsState('cardExtensions');
 
   const [resultUrl, setResultUrl] = useState<string>('');
   const [downloadBox, setDownloadBox] = useState<ClipData | undefined>(undefined);

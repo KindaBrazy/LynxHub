@@ -1,19 +1,22 @@
 import {Button, CircularProgress, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {Divider} from 'antd';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {RepositoryInfo} from '../../../../../../cross/CrossTypes';
+import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
+import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
 import Branches from './Branches';
 import CommitInfo from './CommitInfo';
 import Reset_Shallow from './Reset_Shallow';
 
-export default function CardGitManager_Modal() {
-  const {isOpen, dir, title, tabID} = useModalsState('gitManager');
+type Props = {isOpen: boolean; tabID: string; title: string; dir: string};
+
+function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
 
@@ -40,7 +43,12 @@ export default function CardGitManager_Modal() {
     if (dir) getRepoInfo();
   }, [isOpen, dir]);
 
-  const onOpenChange = useCallback(() => dispatch(modalActions.closeGitManager()), [dispatch]);
+  const onOpenChange = useCallback(() => {
+    dispatch(modalActions.closeGitManager({tabID: activeTab}));
+    setTimeout(() => {
+      dispatch(modalActions.removeGitManager({tabID: activeTab}));
+    }, REMOVE_MODAL_DELAY);
+  }, [dispatch]);
 
   const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
 
@@ -100,3 +108,21 @@ export default function CardGitManager_Modal() {
     </Modal>
   );
 }
+
+const GitManagerModal = () => {
+  const GitManagerExt = useMemo(() => extensionsData.replaceModals.gitManager, []);
+
+  const gitManager = useModalsState('gitManager');
+
+  return (
+    <>
+      {gitManager.map(modal => (
+        <Fragment key={`${modal.tabID}_modal`}>
+          {GitManagerExt ? <GitManagerExt /> : <CardGitManager_Modal {...modal} />}
+        </Fragment>
+      ))}
+    </>
+  );
+};
+
+export default GitManagerModal;

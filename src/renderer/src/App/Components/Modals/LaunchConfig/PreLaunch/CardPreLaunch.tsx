@@ -4,12 +4,12 @@ import {tabContentVariants} from '../../CardExtensions/Constants';
 import PreOpenPath from './PreOpenPath/PreOpenPath';
 import PreTerminalCommands from './PreTerminalCommands/PreTerminalCommands';
 
-/** Pre-launch configuration: terminal commands and paths to open */
-export default function CardPreLaunch() {
+type Props = {id: string};
+export default function CardPreLaunch({id}: Props) {
   return (
     <motion.div initial="init" animate="animate" className="space-y-5" variants={tabContentVariants}>
-      <PreTerminalCommands />
-      <PreOpenPath />
+      <PreTerminalCommands id={id} />
+      <PreOpenPath id={id} />
     </motion.div>
   );
 }

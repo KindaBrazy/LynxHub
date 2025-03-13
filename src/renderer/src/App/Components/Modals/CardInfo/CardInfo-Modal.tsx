@@ -1,24 +1,25 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
 import {Result} from 'antd';
 import {isEmpty, startCase} from 'lodash';
-import {useCallback, useMemo, useState} from 'react';
+import {Fragment, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
+import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {CardInfoDescriptions} from '../../../Modules/types';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
+import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
 import {useDevInfo} from '../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../Utils/UtilHooks';
 import CardInfoDescription from './CardInfo-Description';
 import useCardInfoApi from './UseCardInfoApi';
 
-/** Displaying information about card (Disk usage, developer, repository details) */
-const CardInfoModalNew = () => {
-  const {cardId, isOpen, devName, url, tabID} = useModalsState('cardInfoModal');
-  const activeTab = useTabsState('activeTab');
+type Props = {cardId: string; isOpen: boolean; devName: string; url: string; tabID: string};
 
+const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
+  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
   const webUI = useInstalledCard(cardId);
 
@@ -30,19 +31,21 @@ const CardInfoModalNew = () => {
   useCardInfoApi(cardId, setOpenFolders, setCardInfoDescriptions, webUI?.dir);
 
   const onOpenChange = useCallback(
-    (isOpen: boolean) =>
-      dispatch(
-        modalActions.setIsOpen({
-          isOpen,
-          modalName: 'cardInfoModal',
-        }),
-      ),
-    [dispatch],
+    (isOpen: boolean) => {
+      if (!isOpen) {
+        dispatch(modalActions.closeCardInfo({tabID: activeTab}));
+        setTimeout(() => {
+          dispatch(modalActions.removeCardInfo({tabID: activeTab}));
+        }, REMOVE_MODAL_DELAY);
+      }
+    },
+    [dispatch, activeTab],
   );
 
   const onClose = useCallback(() => {
-    dispatch(modalActions.setInfoCardId(''));
+    dispatch(modalActions.setInfoCardId({cardID: '', tabID: activeTab}));
   }, [dispatch]);
+
   const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
 
   return (
@@ -97,4 +100,18 @@ const CardInfoModalNew = () => {
   );
 };
 
-export default CardInfoModalNew;
+const CardInfoModal = () => {
+  const CardInfo = useMemo(() => extensionsData.replaceModals.cardInfo, []);
+
+  const cardInfoModal = useModalsState('cardInfoModal');
+
+  return (
+    <>
+      {cardInfoModal.map(modal => (
+        <Fragment key={`${modal.tabID}_modal`}>{CardInfo ? <CardInfo /> : <CardInfoModalNew {...modal} />}</Fragment>
+      ))}
+    </>
+  );
+};
+
+export default CardInfoModal;

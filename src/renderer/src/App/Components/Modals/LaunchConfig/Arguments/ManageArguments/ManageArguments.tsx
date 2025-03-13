@@ -13,10 +13,11 @@ type Props = {
   addArgumentsModal: ReturnType<typeof useDisclosure>;
   chosenArguments: ArgumentsPresets;
   setChosenArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;
+  id: string;
 };
 
 /** Show selected arguments */
-export default function ManageArguments({addArgumentsModal, chosenArguments, setChosenArguments}: Props) {
+export default function ManageArguments({addArgumentsModal, chosenArguments, setChosenArguments, id}: Props) {
   const openAddArguments = useCallback(() => {
     addArgumentsModal.onOpen();
   }, [addArgumentsModal]);
@@ -36,7 +37,12 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
       ) : (
         <div className="flex flex-col space-y-2">
           {chosenArguments.arguments.map(argument => (
-            <ManageArgumentsItem argument={argument} key={`${argument.name}_Item`} setArguments={setChosenArguments} />
+            <ManageArgumentsItem
+              id={id}
+              argument={argument}
+              key={`${argument.name}_Item`}
+              setArguments={setChosenArguments}
+            />
           ))}
         </div>
       )}

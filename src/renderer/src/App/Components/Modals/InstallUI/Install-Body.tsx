@@ -28,6 +28,9 @@ type Props = {
     percentage?: number;
     description?: {label: string; value: string}[];
   };
+
+  isOpen: boolean;
+  cardId: string;
 };
 
 const InstallBody = memo(
@@ -41,6 +44,8 @@ const InstallBody = memo(
     extensionsToInstall,
     extensionsResolver,
     progressBarState,
+    isOpen,
+    cardId,
   }: Props) => {
     const doneClone = useCallback(
       (dir: string) => {
@@ -55,7 +60,9 @@ const InstallBody = memo(
     const renderBody = () => {
       switch (state.body) {
         case 'clone':
-          return <CloneRepo done={doneClone} url={state.cloneUrl} start={state.startClone} />;
+          return (
+            <CloneRepo isOpen={isOpen} cardId={cardId} done={doneClone} url={state.cloneUrl} start={state.startClone} />
+          );
         case 'terminal':
           return <TerminalStep />;
         case 'progress-bar':

@@ -6,7 +6,6 @@ import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {Star_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {useModalsState} from '../../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {formatNumber} from '../../../../Utils/UtilFunctions';
@@ -15,13 +14,13 @@ import {ExtensionsInfo} from './Available';
 type Props = {
   item: ExtensionsInfo;
   updateTable: () => void;
+  dir: string;
 };
 
 /** Render available modules to install. */
-export default function RenderItem({item, updateTable}: Props) {
+export default function RenderItem({item, updateTable, dir}: Props) {
   const [installing, setInstalling] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
-  const {dir} = useModalsState('cardExtensions');
 
   const install = useCallback(() => {
     setInstalling(true);

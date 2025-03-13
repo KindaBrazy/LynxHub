@@ -8,8 +8,8 @@ import {AppUpdateData} from '../../../../../../../../cross/CrossTypes';
 import {Download2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
-import {AppDispatch} from '../../../../../Redux/Store';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
+import {AppDispatch} from '../../../../../Redux/Store';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
 export const DashboardUpdateId = 'settings_update_elem';
@@ -44,7 +44,7 @@ export default function DashboardUpdate() {
   }, []);
 
   const openUpdate = useCallback(() => {
-    dispatch(modalActions.openModal('updateApp'));
+    dispatch(modalActions.openUpdateApp());
   }, [dispatch]);
 
   const [selection, setSelection] = useState<string[]>(['public']);

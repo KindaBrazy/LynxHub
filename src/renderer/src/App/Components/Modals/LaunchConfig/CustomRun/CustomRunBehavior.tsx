@@ -2,13 +2,11 @@ import {Select, Selection, SelectItem} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {Fragment, useEffect, useState} from 'react';
 
-import {useModalsState} from '../../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../../RendererIpc';
 import LaunchConfigSection from '../LaunchConfig-Section';
 
-export default function CustomRunBehavior() {
-  const {id} = useModalsState('cardLaunchConfig');
-
+type Props = {id: string};
+export default function CustomRunBehavior({id}: Props) {
   const [terminalValue, setTerminalValue] = useState<string>('runScript');
   const [browserValue, setBrowserValue] = useState<string>('appBrowser');
 

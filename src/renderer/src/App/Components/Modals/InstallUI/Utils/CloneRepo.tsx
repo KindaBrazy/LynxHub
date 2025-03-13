@@ -10,7 +10,7 @@ import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../../cross/IpcChannelAndTypes';
 import {Folder2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {GitHub_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {modalActions, useModalsState} from '../../../../Redux/Reducer/ModalsReducer';
+import {modalActions} from '../../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {initGitProgress} from '../../../../Utils/Constants';
@@ -21,6 +21,8 @@ type Props = {
   url: string;
   start: boolean;
   done: (dir: string) => void;
+  isOpen: string;
+  cardId: string;
 };
 
 export type CloneOptionsResult = {
@@ -29,8 +31,7 @@ export type CloneOptionsResult = {
   depth?: number;
 };
 
-export default function CloneRepo({url, start, done}: Props) {
-  const {isOpen, cardId} = useModalsState('installUIModal');
+export default function CloneRepo({url, start, done, isOpen, cardId}: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   const [cloneOptionsResult, setCloneOptionsResult] = useState<CloneOptionsResult>({
@@ -70,7 +71,7 @@ export default function CloneRepo({url, start, done}: Props) {
           break;
         case 'Failed':
           dispatch(modalActions.setWarningContentId('CLONE_REPO'));
-          dispatch(modalActions.openModal('warningModal'));
+          dispatch(modalActions.openWarning());
           setDownloading(false);
           break;
         case 'Completed':

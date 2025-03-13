@@ -41,6 +41,8 @@ export const PageComponents = {
   [PageID.settings]: SettingsPage,
 };
 
+export const REMOVE_MODAL_DELAY: number = 500;
+
 const colors = {
   black: `rgba(0, 0, 0, 1)`,
   danger: `rgba(220, 38, 38, 1)`,

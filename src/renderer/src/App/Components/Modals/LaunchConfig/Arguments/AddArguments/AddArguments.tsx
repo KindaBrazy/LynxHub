@@ -22,7 +22,6 @@ import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '../../../..
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../../../../cross/GetArgumentsData';
 import {Circle_Icon, Filter_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useGetArgumentsByID} from '../../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useAppState} from '../../../../../Redux/Reducer/AppReducer';
 import ArgumentCategory from './ArgumentCategory';
 
@@ -30,6 +29,7 @@ type Props = {
   addArgumentsModal: ReturnType<typeof useDisclosure>;
   chosenArguments: ArgumentsPresets;
   setChosenArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;
+  id: string;
 };
 
 const isEmptyData = (data): boolean => {
@@ -46,8 +46,7 @@ const isEmptyData = (data): boolean => {
 };
 
 /** Select and add arguments */
-export default function AddArguments({addArgumentsModal, chosenArguments, setChosenArguments}: Props) {
-  const {id} = useModalsState('cardLaunchConfig');
+export default function AddArguments({addArgumentsModal, chosenArguments, setChosenArguments, id}: Props) {
   const isDarkMode = useAppState('darkMode');
   const [filterArguments, setFilterArguments] = useState<Set<string>>(new Set(['all']));
   const [selectedArguments, setSelectedArguments] = useState<Set<string>>(new Set([]));

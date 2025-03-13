@@ -1,8 +1,9 @@
 import {Modal, ModalContent} from '@heroui/react';
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
+import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
 import {
   CardRendererMethods,
@@ -16,6 +17,7 @@ import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
+import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
 import {useInstalledCard} from '../../../Utils/UtilHooks';
 import InstallBody from './Install-Body';
 import InstallFooter from './Install-Footer';
@@ -35,8 +37,9 @@ const initialState: InstallState = {
   disableSelectDir: false,
 };
 
-const InstallModal = memo(() => {
-  const {isOpen, cardId, title, type, tabID} = useModalsState('installUIModal');
+type Props = {isOpen: boolean; cardId: string; title: string; type: string; tabID: string};
+
+const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
   const activeTab = useTabsState('activeTab');
   const installedCard = useInstalledCard(cardId);
   const allCards = useAllCards();
@@ -124,6 +127,7 @@ const InstallModal = memo(() => {
     setExtensionsToInstall,
     extensionsResolver,
     setProgressBarState,
+    cardId,
   });
 
   useEffect(() => {
@@ -147,22 +151,21 @@ const InstallModal = memo(() => {
     setCurrentStep(0);
     setSteps([]);
 
-    dispatch(
-      modalActions.setIsOpen({
-        isOpen: false,
-        modalName: 'installUIModal',
-      }),
-    );
-  }, [updateState, state]);
+    dispatch(modalActions.closeInstallUICard({tabID: activeTab}));
+    setTimeout(() => {
+      dispatch(modalActions.removeInstallUICard({tabID: activeTab}));
+    }, REMOVE_MODAL_DELAY);
+  }, [updateState, state, activeTab]);
 
   const onOpenChange = useCallback(
-    (isOpen: boolean) =>
-      dispatch(
-        modalActions.setIsOpen({
-          isOpen,
-          modalName: 'installUIModal',
-        }),
-      ),
+    (isOpen: boolean) => {
+      if (!isOpen) {
+        dispatch(modalActions.closeInstallUICard({tabID: activeTab}));
+        setTimeout(() => {
+          dispatch(modalActions.removeInstallUICard({tabID: activeTab}));
+        }, REMOVE_MODAL_DELAY);
+      }
+    },
     [dispatch],
   );
 
@@ -189,6 +192,8 @@ const InstallModal = memo(() => {
         <InstallBody
           state={state}
           title={title}
+          isOpen={isOpen}
+          cardId={cardId}
           progressInfo={progressInfo}
           cloneResolver={cloneResolver}
           progressBarState={progressBarState}
@@ -215,4 +220,18 @@ const InstallModal = memo(() => {
   );
 });
 
-export default InstallModal;
+const InstallCardModal = () => {
+  const InstallUI = useMemo(() => extensionsData.replaceModals.installUi, []);
+
+  const installUIModal = useModalsState('installUIModal');
+
+  return (
+    <>
+      {installUIModal.map(modal => (
+        <Fragment key={`${modal.tabID}_modal`}>{InstallUI ? <InstallUI /> : <InstallModal {...modal} />}</Fragment>
+      ))}
+    </>
+  );
+};
+
+export default InstallCardModal;

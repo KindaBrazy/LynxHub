@@ -8,15 +8,13 @@ import {Folder2_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1
 import {Refresh_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import {useCardsState} from '../../../../../../Redux/Reducer/CardsReducer';
-import {useModalsState} from '../../../../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../../../../RendererIpc';
 import ArgumentItemBase from './Argument-Item-Base';
 import AutoCompletePath from './AutoCompletePath';
 
-type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void};
+type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void; id: string};
 
-export default function FileArgItem({argument, changeValue, removeArg}: Props) {
-  const {id} = useModalsState('cardLaunchConfig');
+export default function FileArgItem({argument, changeValue, removeArg, id}: Props) {
   const installedCards = useCardsState('installedCards');
   const cardArgument = useGetArgumentsByID(id);
   const [selectedFile, setSelectedFile] = useState(
@@ -64,6 +62,7 @@ export default function FileArgItem({argument, changeValue, removeArg}: Props) {
           </Button>
         </Tooltip>
       }
+      id={id}
       onClick={changeDir}
       name={argument.name}
       removeArg={removeArg}

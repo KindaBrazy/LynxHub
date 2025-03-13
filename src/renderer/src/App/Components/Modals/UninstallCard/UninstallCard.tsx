@@ -1,19 +1,21 @@
 import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip} from '@heroui/react';
 import {message} from 'antd';
-import {useCallback, useMemo} from 'react';
+import {Fragment, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ShieldCross_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
+import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {useGetUninstallType} from '../../../Modules/ModuleLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
+import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
 import {useDisableTooltip, useInstalledCard} from '../../../Utils/UtilHooks';
 
-/** Display modal to manage uninstalling a card */
-const UninstallCard = () => {
-  const {cardId, isOpen, tabID} = useModalsState('cardUninstallModal');
+type Props = {cardId: string; isOpen: boolean; tabID: string};
+
+const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
   const activeTab = useTabsState('activeTab');
   const card = useInstalledCard(cardId);
   const dispatch = useDispatch<AppDispatch>();
@@ -21,12 +23,18 @@ const UninstallCard = () => {
   const uninstallType = useGetUninstallType(cardId);
 
   const closeHandle = useCallback(() => {
-    dispatch(modalActions.closeModal('cardUninstallModal'));
-  }, [dispatch]);
+    dispatch(modalActions.closeUninstallCard({tabID: activeTab}));
+    setTimeout(() => {
+      dispatch(modalActions.removeUninstallCard({tabID: activeTab}));
+    }, REMOVE_MODAL_DELAY);
+  }, [dispatch, activeTab]);
 
-  const onOpenChange = useCallback((isOpen: boolean) => {
-    dispatch(modalActions.setIsOpen({modalName: 'cardUninstallModal', isOpen}));
-  }, []);
+  const onOpenChange = useCallback(
+    (isOpen: boolean) => {
+      if (!isOpen) closeHandle();
+    },
+    [activeTab, closeHandle],
+  );
 
   const uninstallHandle = useCallback(
     (type: 'removeDir' | 'trashDir') => {
@@ -144,4 +152,18 @@ const UninstallCard = () => {
   );
 };
 
-export default UninstallCard;
+const UninstallCardComp = () => {
+  const Uninstall = useMemo(() => extensionsData.replaceModals.uninstallCard, []);
+
+  const cardUninstallModal = useModalsState('cardUninstallModal');
+
+  return (
+    <>
+      {cardUninstallModal.map(modal => (
+        <Fragment key={`${modal.tabID}_modal`}>{Uninstall ? <Uninstall /> : <UninstallCard {...modal} />}</Fragment>
+      ))}
+    </>
+  );
+};
+
+export default UninstallCardComp;
