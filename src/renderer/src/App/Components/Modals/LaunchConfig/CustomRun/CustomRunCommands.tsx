@@ -2,14 +2,12 @@ import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
-import {useModalsState} from '../../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../../RendererIpc';
 import LaunchConfigSection from '../LaunchConfig-Section';
 import TerminalCommandItem from '../TerminalCommand-Item';
 
-/** Launch AI and execute specified custom commands instead of default settings */
-export default function CustomRunCommands() {
-  const {id} = useModalsState('cardLaunchConfig');
+type Props = {id: string};
+export default function CustomRunCommands({id}: Props) {
   const [commands, setCommands] = useState<string[]>([]);
 
   useEffect(() => {

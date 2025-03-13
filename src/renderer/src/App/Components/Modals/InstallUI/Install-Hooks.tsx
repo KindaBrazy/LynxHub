@@ -11,7 +11,6 @@ import {
   UserInputResult,
 } from '../../../Modules/types';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
-import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {InstallState} from './types';
@@ -38,6 +37,8 @@ type Props = {
       description?: {label: string; value: string}[];
     }>
   >;
+
+  cardId: string;
 };
 
 export function useStepper({
@@ -54,8 +55,8 @@ export function useStepper({
   extensionsResolver,
   setExtensionsToInstall,
   setProgressBarState,
+  cardId,
 }: Props) {
-  const {cardId} = useModalsState('installUIModal');
   const allCards = useAllCards();
 
   const cloneRepository = useCallback(

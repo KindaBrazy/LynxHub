@@ -1,29 +1,32 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {isEmpty, isNil} from 'lodash';
-import {useCallback, useMemo} from 'react';
+import {Fragment, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
+import {REMOVE_MODAL_DELAY} from '../../Utils/Constants';
 import MarkdownViewer from '../Reusable/MarkdownViewer';
 
-const CardReadmeModal = () => {
-  const {isOpen, url, title, tabID} = useModalsState('readmeModal');
+type Props = {isOpen: boolean; url: string; title: string; tabID: string};
+
+const CardReadmeModal = ({isOpen, url, title, tabID}: Props) => {
   const activeTab = useTabsState('activeTab');
 
   const dispatch = useDispatch<AppDispatch>();
 
   const onOpenChange = useCallback(
-    (isOpen: boolean) =>
-      dispatch(
-        modalActions.setIsOpen({
-          isOpen,
-          modalName: 'readmeModal',
-        }),
-      ),
-    [dispatch],
+    (isOpen: boolean) => {
+      if (!isOpen) {
+        dispatch(modalActions.closeReadme({tabID: activeTab}));
+        setTimeout(() => {
+          dispatch(modalActions.removeReadme({tabID: activeTab}));
+        }, REMOVE_MODAL_DELAY);
+      }
+    },
+    [dispatch, activeTab],
   );
 
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
@@ -70,4 +73,18 @@ const CardReadmeModal = () => {
   );
 };
 
-export default CardReadmeModal;
+const ReadMeModal = () => {
+  const CardReadme = useMemo(() => extensionsData.replaceModals.cardReadme, []);
+
+  const readmeModals = useModalsState('readmeModal');
+
+  return (
+    <>
+      {readmeModals.map(modal => (
+        <Fragment key={`${modal.tabID}_modal`}>{CardReadme ? <CardReadme /> : <CardReadmeModal {...modal} />}</Fragment>
+      ))}
+    </>
+  );
+};
+
+export default ReadMeModal;

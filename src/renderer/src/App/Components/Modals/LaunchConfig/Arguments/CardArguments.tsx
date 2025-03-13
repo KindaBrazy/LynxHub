@@ -4,7 +4,6 @@ import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {ArgumentsPresets, ChosenArgumentsData} from '../../../../../../../cross/CrossTypes';
 import {getCardMethod, useAllCards} from '../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../../RendererIpc';
 import {tabContentVariants} from '../../CardExtensions/Constants';
 import AddArguments from './AddArguments/AddArguments';
@@ -15,12 +14,11 @@ import PreviewArguments from './PreviewArguments';
 type Props = {
   setChosenArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;
   chosenArguments: ChosenArgumentsData;
+  id: string;
 };
 
 /** Manage card arguments: add, edit, or remove */
-export default function CardArguments({chosenArguments, setChosenArguments}: Props) {
-  const {id} = useModalsState('cardLaunchConfig');
-
+export default function CardArguments({chosenArguments, setChosenArguments, id}: Props) {
   const [activePreset, setActivePreset] = useState<ArgumentsPresets>({arguments: [], preset: ''});
   const [presets, setPresets] = useState<string[]>([]);
   const [previewText, setPreviewText] = useState<string>('');
@@ -54,12 +52,14 @@ export default function CardArguments({chosenArguments, setChosenArguments}: Pro
     <motion.div initial="init" animate="animate" className="space-y-5" variants={tabContentVariants}>
       <PresetsManager presets={presets} chosenArguments={chosenArguments} setChosenArguments={setChosenArguments} />
       <ManageArguments
+        id={id}
         chosenArguments={activePreset}
         addArgumentsModal={addArgumentsModal}
         setChosenArguments={setChosenArguments}
       />
       <PreviewArguments text={previewText} />
       <AddArguments
+        id={id}
         chosenArguments={activePreset}
         addArgumentsModal={addArgumentsModal}
         setChosenArguments={setChosenArguments}

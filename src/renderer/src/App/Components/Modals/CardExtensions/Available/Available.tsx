@@ -5,7 +5,6 @@ import {useEffect, useState} from 'react';
 import {validateGitRepoUrl} from '../../../../../../../cross/CrossUtils';
 import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {getCardMethod, useAllCards} from '../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../Redux/Reducer/ModalsReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import RenderItem from './RenderItem';
 
@@ -13,6 +12,8 @@ type Props = {
   visible: boolean;
   updateTable: () => void;
   installedExtensions: string[];
+  id: string;
+  dir: string;
 };
 export type ExtensionsInfo = {
   title: string;
@@ -21,8 +22,7 @@ export type ExtensionsInfo = {
   stars?: number;
 };
 
-export default function Available({visible, updateTable, installedExtensions}: Props) {
-  const {id} = useModalsState('cardExtensions');
+export default function Available({visible, updateTable, installedExtensions, id, dir}: Props) {
   const [pageSize, setPageSize] = useState<number>(10);
   const [data, setData] = useState<ExtensionsInfo[]>([]);
   const [list, setList] = useState<ExtensionsInfo[]>([]);
@@ -113,7 +113,7 @@ export default function Available({visible, updateTable, installedExtensions}: P
           split={false}
           itemLayout="vertical"
           dataSource={searchedData}
-          renderItem={item => <RenderItem item={item} updateTable={updateTable} />}
+          renderItem={item => <RenderItem dir={dir} item={item} updateTable={updateTable} />}
         />
       )}
     </>

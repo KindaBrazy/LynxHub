@@ -23,6 +23,7 @@ import {useDispatch} from 'react-redux';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
+import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
 
 const {Paragraph, Text} = Typography;
 
@@ -43,11 +44,16 @@ const columns: DetailsColumns = [
 
 /** Showing details and changes about updated card */
 export default function UpdateDetails() {
-  const {details, isOpen, title, tabID} = useModalsState('updateDetails');
   const activeTab = useTabsState('activeTab');
+  const {details, isOpen, title, tabID} = useModalsState('updateDetails').find(modal => modal.tabID === activeTab)!;
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleClose = useCallback(() => dispatch(modalActions.closeModal('updateDetails')), [dispatch]);
+  const handleClose = useCallback(() => {
+    dispatch(modalActions.closeUpdateDetails({tabID: activeTab}));
+    setTimeout(() => {
+      dispatch(modalActions.removeUpdateDetails({tabID: activeTab}));
+    }, REMOVE_MODAL_DELAY);
+  }, [dispatch, activeTab]);
 
   const rows = useMemo<DetailsRow>(() => {
     return details.files.map((file, index) => {

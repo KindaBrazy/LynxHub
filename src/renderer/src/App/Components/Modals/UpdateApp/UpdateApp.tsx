@@ -40,7 +40,7 @@ const UpdateApp = () => {
         dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: true}));
         message.info('New Update Available!');
         if (!isRunningAI) {
-          dispatch(modalActions.openModal('updateApp'));
+          dispatch(modalActions.openUpdateApp());
         }
       } else if (typeof result !== 'string' && 'total' in result) {
         setDownloadState('progress');
@@ -60,7 +60,7 @@ const UpdateApp = () => {
   }, [dispatch, isRunningAI]);
 
   const onClose = useCallback(() => {
-    dispatch(modalActions.closeModal('updateApp'));
+    dispatch(modalActions.closeUpdateApp());
   }, [dispatch]);
 
   const cancel = useCallback(() => {

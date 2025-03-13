@@ -1,14 +1,15 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
 import {message} from 'antd';
-import {Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
+import {Fragment, Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ChosenArgumentsData} from '../../../../../../cross/CrossTypes';
+import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
-import {modalMotionProps} from '../../../Utils/Constants';
+import {modalMotionProps, REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
 import CardArguments from './Arguments/CardArguments';
 import CustomRun from './CustomRun/CustomRun';
 import CardPreLaunch from './PreLaunch/CardPreLaunch';
@@ -19,9 +20,15 @@ const tabs = {
   preLaunch: 'preLaunch',
 };
 
-/** Manage card launch configurations: pre-open paths, commands, arguments, etc. */
-const LaunchConfig = memo(() => {
-  const {isOpen, title, haveArguments, id, tabID} = useModalsState('cardLaunchConfig');
+type Props = {
+  isOpen: boolean;
+  tabID: string;
+  haveArguments: boolean;
+  title: string;
+  id: string;
+};
+
+const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => {
   const activeTab = useTabsState('activeTab');
   const [isSavingArgs, setIsSavingArgs] = useState<boolean>(false);
   const [chosenArguments, setChosenArguments] = useState<ChosenArgumentsData>({activePreset: '', data: []});
@@ -34,8 +41,11 @@ const LaunchConfig = memo(() => {
   }, [isOpen]);
 
   const onClose = useCallback(() => {
-    dispatch(modalActions.closeModal('cardLaunchConfig'));
-  }, [dispatch]);
+    dispatch(modalActions.closeCardLaunchConfig({tabID: activeTab}));
+    setTimeout(() => {
+      dispatch(modalActions.removeCardLaunchConfig({tabID: activeTab}));
+    }, REMOVE_MODAL_DELAY);
+  }, [dispatch, activeTab]);
 
   const saveArguments = useCallback(() => {
     setIsSavingArgs(true);
@@ -91,10 +101,10 @@ const LaunchConfig = memo(() => {
 
         <ModalBody className="scrollbar-hide">
           {haveArguments && currentTab === tabs.arguments && (
-            <CardArguments chosenArguments={chosenArguments} setChosenArguments={setChosenArguments} />
+            <CardArguments id={id} chosenArguments={chosenArguments} setChosenArguments={setChosenArguments} />
           )}
-          {currentTab === tabs.customRun && <CustomRun />}
-          {currentTab === tabs.preLaunch && <CardPreLaunch />}
+          {currentTab === tabs.customRun && <CustomRun id={id} />}
+          {currentTab === tabs.preLaunch && <CardPreLaunch id={id} />}
         </ModalBody>
 
         <ModalFooter>
@@ -112,4 +122,20 @@ const LaunchConfig = memo(() => {
   );
 });
 
-export default LaunchConfig;
+const LaunchConfigModal = () => {
+  const LaunchConfigExt = useMemo(() => extensionsData.replaceModals.launchConfig, []);
+
+  const cardLaunchConfig = useModalsState('cardLaunchConfig');
+
+  return (
+    <>
+      {cardLaunchConfig.map(modal => (
+        <Fragment key={`${modal.tabID}_modal`}>
+          {LaunchConfigExt ? <LaunchConfigExt /> : <LaunchConfig {...modal} />}
+        </Fragment>
+      ))}
+    </>
+  );
+};
+
+export default LaunchConfigModal;

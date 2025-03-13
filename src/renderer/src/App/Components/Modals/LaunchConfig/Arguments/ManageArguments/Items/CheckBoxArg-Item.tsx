@@ -6,14 +6,11 @@ import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDescription} from '../../../../../../../../../cross/GetArgumentsData';
 import {CheckBox_Icon, Close_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../../../Redux/Reducer/ModalsReducer';
 
 const {Text} = Typography;
-type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void};
+type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void; id: string};
 
-export default function CheckBoxArgItem({argument, removeArg}: Props) {
-  const {id} = useModalsState('cardLaunchConfig');
-
+export default function CheckBoxArgItem({argument, removeArg, id}: Props) {
   const cardArgument = useGetArgumentsByID(id);
 
   const tooltipText = useMemo(() => getArgumentDescription(argument.name, cardArgument), [argument, cardArgument]);

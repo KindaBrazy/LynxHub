@@ -5,14 +5,12 @@ import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue, getArgumentValues} from '../../../../../../../../../cross/GetArgumentsData';
 import {ListCheck_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
-import {useModalsState} from '../../../../../../Redux/Reducer/ModalsReducer';
 import {convertArrToObject} from '../../../../../../Utils/UtilFunctions';
 import ArgumentItemBase from './Argument-Item-Base';
 
-type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void};
+type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void; id: string};
 
-export default function DropdownArgItem({argument, changeValue, removeArg}: Props) {
-  const {id} = useModalsState('cardLaunchConfig');
+export default function DropdownArgItem({argument, changeValue, removeArg, id}: Props) {
   const cardArgument = useGetArgumentsByID(id);
 
   const [defaultValue] = useState<string>(argument.value || getArgumentDefaultValue(argument.name, cardArgument));
@@ -30,7 +28,7 @@ export default function DropdownArgItem({argument, changeValue, removeArg}: Prop
   );
 
   return (
-    <ArgumentItemBase name={argument.name} removeArg={removeArg} icon={<ListCheck_Icon />}>
+    <ArgumentItemBase id={id} name={argument.name} removeArg={removeArg} icon={<ListCheck_Icon />}>
       <Select
         variant="flat"
         aria-label="Select an item"

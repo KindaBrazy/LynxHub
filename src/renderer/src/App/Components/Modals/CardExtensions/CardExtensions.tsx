@@ -1,24 +1,24 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
 import {isEmpty} from 'lodash';
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {Fragment, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
-import {modalMotionProps} from '../../../Utils/Constants';
+import {modalMotionProps, REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
 import {useIsAutoUpdateExtensions} from '../../../Utils/UtilHooks';
 import Available from './Available/Available';
 import Clone from './Clone';
 import Installed from './Installed';
 
-/** Managing card extension -> install, update, uninstall and etc */
-const CardExtensions = () => {
-  const [installedExtensions, setInstalledExtensions] = useState<string[]>([]);
+type Props = {isOpen: boolean; title: string; id: string; tabID: string; dir: string};
 
-  const {isOpen, title, id, tabID} = useModalsState('cardExtensions');
+const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
   const activeTab = useTabsState('activeTab');
+  const [installedExtensions, setInstalledExtensions] = useState<string[]>([]);
 
   const [currentTab, setCurrentTab] = useState<any>('installed');
   const [updatesAvailable, setUpdatesAvailable] = useState<string[]>([]);
@@ -29,7 +29,10 @@ const CardExtensions = () => {
   const autoUpdate = useIsAutoUpdateExtensions(id);
 
   const onClose = useCallback(() => {
-    dispatch(modalActions.closeModal('cardExtensions'));
+    dispatch(modalActions.closeCardExtensions({tabID: activeTab}));
+    setTimeout(() => {
+      dispatch(modalActions.removeCardExtensions({tabID: activeTab}));
+    }, REMOVE_MODAL_DELAY);
   }, [dispatch]);
 
   const updateAll = useCallback(() => {
@@ -92,6 +95,8 @@ const CardExtensions = () => {
         <ModalBody className="scrollbar-hide">
           <div className="relative h-fit">
             <Installed
+              dir={dir}
+              isOpen={isOpen}
               ref={installedRef}
               setIsUpdatingAll={setIsUpdatingAll}
               updatesAvailable={updatesAvailable}
@@ -100,11 +105,14 @@ const CardExtensions = () => {
               setInstalledExtensions={setInstalledExtensions}
             />
             <Clone
+              dir={dir}
               updateTable={updateTable}
               visible={currentTab === 'clone'}
               installedExtensions={installedExtensions}
             />
             <Available
+              id={id}
+              dir={dir}
               updateTable={updateTable}
               visible={currentTab === 'available'}
               installedExtensions={installedExtensions}
@@ -147,4 +155,18 @@ const CardExtensions = () => {
   );
 };
 
-export default CardExtensions;
+const CardExtensionsModal = () => {
+  const CardExt = useMemo(() => extensionsData.replaceModals.cardExtensions, []);
+
+  const cardExtensions = useModalsState('cardExtensions');
+
+  return (
+    <>
+      {cardExtensions.map(modal => (
+        <Fragment key={`${modal.tabID}_modal`}>{CardExt ? <CardExt /> : <CardExtensions {...modal} />}</Fragment>
+      ))}
+    </>
+  );
+};
+
+export default CardExtensionsModal;

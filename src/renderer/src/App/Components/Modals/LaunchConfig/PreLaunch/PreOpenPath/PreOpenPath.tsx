@@ -5,15 +5,13 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {PreOpenData} from '../../../../../../../../cross/IpcChannelAndTypes';
 import {Add_Icon, File_Icon, Folder2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {useModalsState} from '../../../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../../../RendererIpc';
 import LynxTooltip from '../../../../Reusable/LynxTooltip';
 import LaunchConfigSection from '../../LaunchConfig-Section';
 import PreOpenPathItem from './PreOpenPath-Item';
 
-/** Manage paths to be opened before launching the AI */
-export default function PreOpenPath() {
-  const {id} = useModalsState('cardLaunchConfig');
+type Props = {id: string};
+export default function PreOpenPath({id}: Props) {
   const [toOpen, setToOpen] = useState<PreOpenData>([]);
 
   useEffect(() => {
