@@ -298,6 +298,17 @@ const modalSlice = createSlice({
     setWarningContentId: (state, action: PayloadAction<ModalsState['warningModal']['contentId']>) => {
       state.warningModal.contentId = action.payload;
     },
+
+    removeAllModalsForTabId: (state, action: PayloadAction<{tabId: string}>) => {
+      state.cardExtensions = state.cardExtensions.filter(modal => modal.tabID !== action.payload.tabId);
+      state.cardLaunchConfig = state.cardLaunchConfig.filter(modal => modal.tabID !== action.payload.tabId);
+      state.cardUninstallModal = state.cardUninstallModal.filter(modal => modal.tabID !== action.payload.tabId);
+      state.updateDetails = state.updateDetails.filter(modal => modal.tabID !== action.payload.tabId);
+      state.gitManager = state.gitManager.filter(modal => modal.tabID !== action.payload.tabId);
+      state.cardInfoModal = state.cardInfoModal.filter(modal => modal.tabID !== action.payload.tabId);
+      state.readmeModal = state.readmeModal.filter(modal => modal.tabID !== action.payload.tabId);
+      state.installUIModal = state.installUIModal.filter(modal => modal.tabID !== action.payload.tabId);
+    },
   },
 });
 
