@@ -50,7 +50,7 @@
     "import-sync": "^2.2.3",
     "keytar": "^7.9.0",
     "lowdb": "^7.0.1",
-    "node-pty": "^1.1.0-beta26",
+    "node-pty": "^1.1.0-beta31",
     "random-words": "^2.0.1",
     "serve-handler": "^6.1.6",
     "tree-kill": "^1.2.2"
