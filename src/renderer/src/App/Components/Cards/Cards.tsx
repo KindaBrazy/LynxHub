@@ -24,7 +24,6 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
   }, [routePath]);
 
   const cards = useGetCardsByPath(pagePath);
-  console.log(routePath);
   const installedCards = useCardsState('installedCards');
   const pinnedCards = useCardsState('pinnedCards');
 
