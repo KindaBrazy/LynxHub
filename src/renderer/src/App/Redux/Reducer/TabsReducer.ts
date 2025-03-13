@@ -65,6 +65,10 @@ const tabsSlice = createSlice({
           state.activePage = defaultTabItem.pageID;
         }
       }
+
+      if (state.tabs.length <= 0) {
+        state.tabs = initialState.tabs;
+      }
     },
     setActiveTab: (state: TabState, action: PayloadAction<string>) => {
       state.prevTab = state.activeTab;
