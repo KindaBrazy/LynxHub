@@ -31,11 +31,10 @@ type ModalsState = {
   }[];
   updateDetails: {
     isOpen: boolean;
-    tabID: string;
 
     title: string;
     details: PullResult;
-  }[];
+  };
   cardExtensions: {
     isOpen: boolean;
     tabID: string;
@@ -93,7 +92,25 @@ const initialState: ModalsState = {
   cardInfoModal: [],
   cardLaunchConfig: [],
   cardUninstallModal: [],
-  updateDetails: [],
+  updateDetails: {
+    details: {
+      created: [],
+      deleted: [],
+      deletions: {},
+      files: [],
+      insertions: {},
+      remoteMessages: {
+        all: [],
+      },
+      summary: {
+        changes: 0,
+        deletions: 0,
+        insertions: 0,
+      },
+    },
+    isOpen: false,
+    title: '',
+  },
   installUIModal: [],
   readmeModal: [],
   gitManager: [],
@@ -173,21 +190,10 @@ const modalSlice = createSlice({
     },
 
     openUpdateDetails: (state, action: PayloadAction<{title: string; details: PullResult; tabID: string}>) => {
-      state.updateDetails = [...state.updateDetails, {...action.payload, isOpen: true}];
+      state.updateDetails = {...action.payload, isOpen: true};
     },
-    closeUpdateDetails: (state, action: PayloadAction<{tabID: string}>) => {
-      state.updateDetails = state.updateDetails.map(modal =>
-        modal.tabID === action.payload.tabID
-          ? {
-              ...modal,
-              isOpen: false,
-            }
-          : modal,
-      );
-    },
-    removeUpdateDetails: (state, action: PayloadAction<{tabID: string}>) => {
-      const {tabID} = action.payload;
-      state.updateDetails = state.updateDetails.filter(modal => modal.tabID !== tabID);
+    closeUpdateDetails: state => {
+      state.updateDetails = initialState.updateDetails;
     },
 
     openGitManager: (state, action: PayloadAction<{title: string; dir: string; tabID: string}>) => {
@@ -303,7 +309,6 @@ const modalSlice = createSlice({
       state.cardExtensions = state.cardExtensions.filter(modal => modal.tabID !== action.payload.tabId);
       state.cardLaunchConfig = state.cardLaunchConfig.filter(modal => modal.tabID !== action.payload.tabId);
       state.cardUninstallModal = state.cardUninstallModal.filter(modal => modal.tabID !== action.payload.tabId);
-      state.updateDetails = state.updateDetails.filter(modal => modal.tabID !== action.payload.tabId);
       state.gitManager = state.gitManager.filter(modal => modal.tabID !== action.payload.tabId);
       state.cardInfoModal = state.cardInfoModal.filter(modal => modal.tabID !== action.payload.tabId);
       state.readmeModal = state.readmeModal.filter(modal => modal.tabID !== action.payload.tabId);

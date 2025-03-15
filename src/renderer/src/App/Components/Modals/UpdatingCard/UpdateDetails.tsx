@@ -21,9 +21,7 @@ import {ReactNode, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
-import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
-import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
 
 const {Paragraph, Text} = Typography;
 
@@ -44,16 +42,12 @@ const columns: DetailsColumns = [
 
 /** Showing details and changes about updated card */
 export default function UpdateDetails() {
-  const activeTab = useTabsState('activeTab');
-  const {details, isOpen, title, tabID} = useModalsState('updateDetails').find(modal => modal.tabID === activeTab)!;
+  const {details, isOpen, title} = useModalsState('updateDetails');
   const dispatch = useDispatch<AppDispatch>();
 
   const handleClose = useCallback(() => {
-    dispatch(modalActions.closeUpdateDetails({tabID: activeTab}));
-    setTimeout(() => {
-      dispatch(modalActions.removeUpdateDetails({tabID: activeTab}));
-    }, REMOVE_MODAL_DELAY);
-  }, [dispatch, activeTab]);
+    dispatch(modalActions.closeUpdateDetails());
+  }, [dispatch]);
 
   const rows = useMemo<DetailsRow>(() => {
     return details.files.map((file, index) => {
@@ -79,13 +73,13 @@ export default function UpdateDetails() {
       </Paragraph>
     );
   }, []);
-  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
+
   return (
     <Modal
       classNames={{
-        backdrop: `!top-10 ${show}`,
+        backdrop: `!top-10`,
         closeButton: 'cursor-default',
-        wrapper: `!top-10 scrollbar-hide ${show}`,
+        wrapper: `!top-10 scrollbar-hide`,
       }}
       isOpen={isOpen}
       scrollBehavior="inside"

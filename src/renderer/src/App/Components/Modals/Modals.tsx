@@ -9,7 +9,7 @@ import InstallCardModal from './InstallUI/Install-Modal';
 import LaunchConfigModal from './LaunchConfig/LaunchConfig';
 import UninstallCardComp from './UninstallCard/UninstallCard';
 import UpdateApp from './UpdateApp/UpdateApp';
-import CardUpdateNotif from './UpdatingCard/UpdatingNotification';
+import UpdatingNotification from './UpdatingCard/UpdatingNotification';
 import WarningModal from './Warning/WarningModal';
 
 const Modals = memo(() => {
@@ -24,10 +24,11 @@ const Modals = memo(() => {
       <UninstallCardComp />
       <InstallCardModal />
       <CardInfoModal />
-      <CardUpdateNotif />
       <CardExtensionsModal />
       <LaunchConfigModal />
       <GitManagerModal />
+
+      <UpdatingNotification />
 
       {Warning ? <Warning /> : <WarningModal />}
       {UApp ? <UApp /> : <UpdateApp />}
