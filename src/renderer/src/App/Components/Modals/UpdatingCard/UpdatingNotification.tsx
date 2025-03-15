@@ -1,14 +1,13 @@
 import {Button} from '@heroui/react';
 import {Descriptions, notification} from 'antd';
 import {isEmpty} from 'lodash';
-import {Fragment, useEffect, useMemo} from 'react';
+import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {PullResult} from 'simple-git';
 
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
-import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
-import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
+import {modalActions} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
@@ -121,18 +120,4 @@ const UpdatingNotification = () => {
   );
 };
 
-const CardUpdateNotif = () => {
-  const UpdatingNotif = useMemo(() => extensionsData.replaceModals.updatingNotification, []);
-
-  const updateDetails = useModalsState('updateDetails');
-
-  return (
-    <>
-      {updateDetails.map(modal => (
-        <Fragment key={`${modal.tabID}_modal`}>{UpdatingNotif ? <UpdatingNotif /> : <UpdatingNotification />}</Fragment>
-      ))}
-    </>
-  );
-};
-
-export default CardUpdateNotif;
+export default UpdatingNotification;
