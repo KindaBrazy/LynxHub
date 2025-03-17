@@ -8,7 +8,8 @@ export const APP_DESCRIPTION: string = packageJson.description;
 export const APP_AUTHOR_NAME: string = packageJson.author.name;
 export const APP_DETAILED_DESCRIPTION: string = packageJson.appDetails.detailedDescription;
 
-export const RELEASES_PAGE = `${packageJson.homepage}/releases`;
+export const LYNXHUB_HOMEPAGE = packageJson.homepage;
+export const RELEASES_PAGE = `${LYNXHUB_HOMEPAGE}/releases`;
 
 export const EMAIL: string = packageJson.author.email;
 export const ISSUE_PAGE: string = `${packageJson.repository.url}/issues`;
