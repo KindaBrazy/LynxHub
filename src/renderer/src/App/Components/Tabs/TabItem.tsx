@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button, Spinner} from '@heroui/react';
 import {useEffect, useMemo, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -68,7 +68,9 @@ export default function TabItem({tab}: Props) {
       variant="light"
       onPress={onPress}>
       <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
-        {tab.isTerminal ? (
+        {tab.isLoading ? (
+          <Spinner size="sm" color="primary" />
+        ) : tab.isTerminal ? (
           <Terminal_Icon className="opacity-80 shrink-0 text-secondary" />
         ) : (
           <div className="shrink-0 size-4 content-center">{icon}</div>
