@@ -269,6 +269,7 @@ export type FolderListData = {type: 'folder' | 'file'; name: string};
 
 export type TabInfo = {
   id: string;
+  isLoading: boolean;
   title: string;
   isTerminal: boolean;
   pageID: string;

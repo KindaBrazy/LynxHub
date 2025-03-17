@@ -118,6 +118,7 @@ export const modalMotionProps = {
 export const defaultTabItem: TabInfo = {
   id: 'tab',
   title: 'Home',
+  isLoading: false,
   isTerminal: false,
   pageID: PageID.home,
 };
