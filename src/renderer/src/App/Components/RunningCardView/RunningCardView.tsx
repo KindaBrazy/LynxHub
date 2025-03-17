@@ -2,7 +2,7 @@ import {isNil} from 'lodash';
 import {useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import Browser from './Browser';
+import Browser from '../Browser/Browser';
 import LynxTerminal from './LynxTerminal';
 
 const RunningCardView = () => {

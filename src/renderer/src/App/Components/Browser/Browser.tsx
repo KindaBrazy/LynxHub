@@ -48,7 +48,7 @@ const Browser = () => {
 
   return (
     <>
-      <Browser_TopBar />
+      <Browser_TopBar webview={webViewRef} isDomReady={isDomReady} />
       <motion.div
         className={
           `absolute top-[2.6rem] bottom-1 inset-x-1 ${currentView === 'browser' && 'z-20'} overflow-hidden ` +
