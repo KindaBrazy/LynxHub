@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
-import TopBar from '../TopBar/TopBar';
+import Browser_TopBar from './Browser_TopBar/Browser_TopBar';
 
 const variants: Variants = {
   init: {scale: 0.95, opacity: 0},
@@ -48,10 +48,10 @@ const Browser = () => {
 
   return (
     <>
-      <TopBar />
+      <Browser_TopBar />
       <motion.div
         className={
-          `absolute top-11 bottom-1 inset-x-1 ${currentView === 'browser' && 'z-20'} overflow-hidden ` +
+          `absolute top-[2.6rem] bottom-1 inset-x-1 ${currentView === 'browser' && 'z-20'} overflow-hidden ` +
           `rounded-lg bg-white shadow-md dark:bg-LynxRaisinBlack`
         }
         tabIndex={-1}
