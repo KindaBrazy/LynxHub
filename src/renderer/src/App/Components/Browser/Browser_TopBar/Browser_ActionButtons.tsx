@@ -19,6 +19,10 @@ export default function Browser_ActionButtons({webview, isDomReady}: Props) {
     webview.current?.goForward();
   }, [webview]);
 
+  const reload = useCallback(() => {
+    webview.current?.reload();
+  }, [webview]);
+
   useEffect(() => {
     const ref = webview.current;
     if (!ref) return;
@@ -57,7 +61,7 @@ export default function Browser_ActionButtons({webview, isDomReady}: Props) {
           <ArrowDuo_Icon className="size-4 rotate-180" />
         </Button>
       )}
-      <Button size="sm" variant="light" className="cursor-default" isIconOnly>
+      <Button size="sm" variant="light" onPress={reload} className="cursor-default" isIconOnly>
         <Refresh3_Icon className="size-4" />
       </Button>
 
