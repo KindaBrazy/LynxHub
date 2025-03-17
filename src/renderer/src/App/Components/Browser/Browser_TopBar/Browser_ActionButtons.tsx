@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import {WebviewTag} from 'electron';
-import {RefObject, useEffect, useState} from 'react';
+import {RefObject, useCallback, useEffect, useState} from 'react';
 
 import {HomeSmile_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Refresh3_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons4';
@@ -11,6 +11,13 @@ type Props = {webview: RefObject<WebviewTag | null>; isDomReady: boolean};
 export default function Browser_ActionButtons({webview, isDomReady}: Props) {
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [canGoForward, setCanGoForward] = useState<boolean>(false);
+
+  const goBack = useCallback(() => {
+    webview.current?.goBack();
+  }, [webview]);
+  const goForward = useCallback(() => {
+    webview.current?.goForward();
+  }, [webview]);
 
   useEffect(() => {
     const ref = webview.current;
@@ -39,14 +46,14 @@ export default function Browser_ActionButtons({webview, isDomReady}: Props) {
   }, [webview, isDomReady]);
 
   return (
-    <>
+    <div className="flex flex-row gap-x-1 mx-1">
       {canGoBack && (
-        <Button size="sm" variant="light" className="cursor-default" isIconOnly>
+        <Button size="sm" variant="light" onPress={goBack} className="cursor-default" isIconOnly>
           <ArrowDuo_Icon className="size-4" />
         </Button>
       )}
       {canGoForward && (
-        <Button size="sm" variant="light" className="cursor-default" isIconOnly isDisabled>
+        <Button size="sm" variant="light" onPress={goForward} className="cursor-default" isIconOnly>
           <ArrowDuo_Icon className="size-4 rotate-180" />
         </Button>
       )}
@@ -57,6 +64,6 @@ export default function Browser_ActionButtons({webview, isDomReady}: Props) {
       <Button size="sm" variant="light" className="cursor-default" isIconOnly>
         <HomeSmile_Icon className="size-4" />
       </Button>
-    </>
+    </div>
   );
 }
