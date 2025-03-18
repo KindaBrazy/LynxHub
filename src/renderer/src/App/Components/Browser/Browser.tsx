@@ -3,9 +3,11 @@ import {motion, Variants} from 'framer-motion';
 import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {LYNXHUB_HOMEPAGE} from '../../../../../cross/CrossConstants';
 import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
+import {RunningCard} from '../../Utils/Types';
 import Browser_TopBar from './Browser_TopBar/Browser_TopBar';
 
 const variants: Variants = {
@@ -14,9 +16,9 @@ const variants: Variants = {
   exit: {scale: 0.95, opacity: 0},
 };
 
-/** Browser component that renders AI address in an iframe. */
-const Browser = () => {
-  const {address, browserId, currentView, id} = useCardsState('runningCard');
+type Props = {runningCard: RunningCard};
+const Browser = ({runningCard}: Props) => {
+  const {currentView, id, webUIAddress} = runningCard;
   const zoomFactor = useCardsState('webViewZoomFactor');
   const webViewRef = useRef<WebviewTag>(null);
   const dispatch = useDispatch<AppDispatch>();
@@ -35,7 +37,7 @@ const Browser = () => {
         rendererIpc.appWindow.webViewAttached(webview.getWebContentsId());
       });
     }
-  }, [webViewRef, address]);
+  }, [webViewRef, webUIAddress]);
 
   useEffect(() => {
     const factor = zoomFactor.find(zoom => zoom.id === id);
@@ -58,14 +60,14 @@ const Browser = () => {
         initial="init"
         animate={animate}
         variants={variants}>
-        {address && (
+        {!webUIAddress && (
           <webview
-            src={address}
-            id={browserId}
             ref={webViewRef}
+            id={webUIAddress}
             // @ts-ignore-next-line
             // eslint-disable-next-line react/no-unknown-property
             allowpopups="true"
+            src={LYNXHUB_HOMEPAGE}
             className="relative size-full"
           />
         )}

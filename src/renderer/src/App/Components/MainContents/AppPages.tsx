@@ -8,30 +8,40 @@ import HomePage from '../Pages/ContentPages/Home/HomePage';
 import RunningCardView from '../RunningCardView/RunningCardView';
 
 export default function AppPages() {
-  const {isRunning} = useCardsState('runningCard');
+  const runningCard = useCardsState('runningCard');
   const tabs = useTabsState('tabs');
   const activePage = useTabsState('activePage');
   const activeTab = useTabsState('activeTab');
 
   const Container = useMemo(() => extensionsData.runningAI.container, []);
+  const RunningView = useMemo(() => {
+    return Container ? Container : RunningCardView;
+  }, [Container]);
 
-  return isRunning ? (
-    Container ? (
-      <Container />
-    ) : (
-      <RunningCardView />
-    )
-  ) : (
-    tabs.map(tab => {
-      const show = activePage === tab.pageID && activeTab === tab.id;
+  return (
+    <>
+      {tabs.map(tab => {
+        const show = activePage === tab.pageID && activeTab === tab.id;
+        const foundRunningCard = runningCard.find(card => card.tabId === tab.id);
 
-      const Component = PageComponents[tab.pageID];
+        if (foundRunningCard) {
+          return (
+            <a
+              key={`${foundRunningCard.id}_${foundRunningCard.tabId}`}
+              className={foundRunningCard.tabId === activeTab ? 'block' : 'hidden'}>
+              <RunningView runningCard={foundRunningCard} />
+            </a>
+          );
+        }
 
-      if (Component) {
-        return <Component show={show} key={tab.id} />;
-      }
+        const Component = PageComponents[tab.pageID];
 
-      return <HomePage show={true} key={tab.id} />;
-    })
+        if (Component) {
+          return <Component show={show} key={tab.id} />;
+        }
+
+        return <HomePage show={true} key={tab.id} />;
+      })}
+    </>
   );
 }

@@ -19,6 +19,7 @@ type Props = {
   downloadFileFromUrl: (url: string) => Promise<string>;
   urlToDownload: string | undefined;
   progressInfo: DownloadProgress | undefined;
+  cardId: string;
 };
 
 const InstallFooter = ({
@@ -33,10 +34,11 @@ const InstallFooter = ({
   downloadFileFromUrl,
   urlToDownload,
   progressInfo,
+  cardId,
 }: Props) => {
   const onDoneTerminal = useCallback(() => {
     if (terminalResolver.current) {
-      rendererIpc.pty.customProcess('stop');
+      rendererIpc.pty.customProcess(cardId, 'stop');
       terminalResolver.current();
       terminalResolver.current = null;
     }

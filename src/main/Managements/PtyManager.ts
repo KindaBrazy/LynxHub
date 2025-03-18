@@ -14,9 +14,11 @@ export default class PtyManager {
   private process: pty.IPty;
 
   public onData?: (data: string) => void;
+  public id: string;
 
-  constructor(dir?: string, sendDataToRenderer = false) {
+  constructor(id: string, dir?: string, sendDataToRenderer = false) {
     app.on('before-quit', this.stop);
+    this.id = id;
 
     const {useConpty} = storageManager.getData('terminal');
 
@@ -34,7 +36,7 @@ export default class PtyManager {
       if (this.onData) {
         this.onData(data);
       } else if (sendDataToRenderer) {
-        appManager.getWebContent()?.send(ptyChannels.onData, data);
+        appManager.getWebContent()?.send(ptyChannels.onData, this.id, data);
       }
     });
   }

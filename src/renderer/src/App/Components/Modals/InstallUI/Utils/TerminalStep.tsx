@@ -22,7 +22,8 @@ const RESIZE_DELAY = 77;
 const FONT_FAMILY = 'JetBrainsMono';
 const FONT_SIZE = 14;
 
-export default function TerminalStep() {
+type Props = {id: string};
+export default function TerminalStep({id}: Props) {
   const terminalRef = useRef<HTMLDivElement | null>(null);
   const terminal = useRef<Terminal | null>(null);
   const fitAddon = useRef<FitAddon | null>(null);
@@ -132,7 +133,7 @@ export default function TerminalStep() {
 
         terminal.current.onResize(size => {
           {
-            rendererIpc.pty.resize(size.cols, size.rows);
+            rendererIpc.pty.resize(id, size.cols, size.rows);
           }
         });
 
@@ -140,7 +141,7 @@ export default function TerminalStep() {
         fitAddon.current.fit();
 
         terminal.current.onData(data => {
-          if (!isEmpty(data)) rendererIpc.pty.write(data);
+          if (!isEmpty(data)) rendererIpc.pty.write(id, data);
         });
       });
     }
@@ -156,8 +157,8 @@ export default function TerminalStep() {
       }, RESIZE_DELAY);
     });
 
-    rendererIpc.pty.onData((_, data) => {
-      writeData(data);
+    rendererIpc.pty.onData((_, dataID, data) => {
+      if (dataID === id) writeData(data);
     });
 
     return () => {

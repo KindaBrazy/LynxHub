@@ -48,12 +48,12 @@ const StartButton = memo(() => {
       rendererIpc.utils.updateAllExtensions({id, dir: card.dir! + extensionsDir!});
       setIsUpdatingExt(true);
     } else {
-      rendererIpc.pty.process('start', id);
+      rendererIpc.pty.process(id, 'start', id);
       rendererIpc.storageUtils.recentlyUsedCards('update', id);
       rendererIpc.win.setDiscordRpAiRunning({running: true, name: title, type});
-      dispatch(cardsActions.startRunningCard(id));
+      dispatch(cardsActions.addRunningCard({tabId: activeTab, id}));
     }
-  }, [id, autoUpdateExtensions, dispatch]);
+  }, [id, autoUpdateExtensions, activeTab, dispatch]);
 
   const install = useCallback(() => {
     if (getCardMethod(allCards, id, 'manager')) {

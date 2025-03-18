@@ -193,15 +193,17 @@ function extensions() {
 }
 
 function pty() {
-  ipcMain.on(ptyChannels.process, (_, opt: PtyProcessOpt, cardId: string) => ptyProcess(opt, cardId));
-  ipcMain.on(ptyChannels.customProcess, (_, opt: PtyProcessOpt, dir?: string, file?: string) =>
-    customPtyProcess(opt, dir, file),
+  ipcMain.on(ptyChannels.process, (_, id: string, opt: PtyProcessOpt, cardId: string) => ptyProcess(id, opt, cardId));
+  ipcMain.on(ptyChannels.customProcess, (_, id: string, opt: PtyProcessOpt, dir?: string, file?: string) =>
+    customPtyProcess(id, opt, dir, file),
   );
-  ipcMain.on(ptyChannels.customCommands, (_, opt: PtyProcessOpt, commands?: string | string[], dir?: string) =>
-    customPtyCommands(opt, commands, dir),
+  ipcMain.on(
+    ptyChannels.customCommands,
+    (_, id: string, opt: PtyProcessOpt, commands?: string | string[], dir?: string) =>
+      customPtyCommands(id, opt, commands, dir),
   );
-  ipcMain.on(ptyChannels.write, (_, data: string) => ptyWrite(data));
-  ipcMain.on(ptyChannels.resize, (_, cols: number, rows: number) => ptyResize(cols, rows));
+  ipcMain.on(ptyChannels.write, (_, id: string, data: string) => ptyWrite(id, data));
+  ipcMain.on(ptyChannels.resize, (_, id: string, cols: number, rows: number) => ptyResize(id, cols, rows));
 }
 
 function appData() {
