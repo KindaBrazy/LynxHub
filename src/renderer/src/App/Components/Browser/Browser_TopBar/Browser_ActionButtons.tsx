@@ -1,5 +1,6 @@
 import {Button} from '@heroui/react';
 import {WebviewTag} from 'electron';
+import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
 import {RefObject, useCallback, useEffect, useState} from 'react';
 
 import {HomeSmile_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
@@ -7,6 +8,12 @@ import {Refresh3_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons4';
 import {ArrowDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 
 type Props = {webview: RefObject<WebviewTag | null>; isDomReady: boolean};
+
+const variants: Variants = {
+  animate: {scale: 1, opacity: 1},
+  exit: {scale: 0.7, opacity: 0},
+};
+const transition: Transition = {duration: 0.3};
 
 export default function Browser_ActionButtons({webview, isDomReady}: Props) {
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
@@ -51,16 +58,26 @@ export default function Browser_ActionButtons({webview, isDomReady}: Props) {
 
   return (
     <div className="flex flex-row gap-x-1 mx-1">
-      {canGoBack && (
-        <Button size="sm" variant="light" onPress={goBack} className="cursor-default" isIconOnly>
-          <ArrowDuo_Icon className="size-4" />
-        </Button>
-      )}
-      {canGoForward && (
-        <Button size="sm" variant="light" onPress={goForward} className="cursor-default" isIconOnly>
-          <ArrowDuo_Icon className="size-4 rotate-180" />
-        </Button>
-      )}
+      <AnimatePresence>
+        {canGoBack && (
+          <motion.a exit="exit" initial="exit" animate="animate" variants={variants} transition={transition}>
+            <Button size="sm" variant="light" onPress={goBack} className="cursor-default" isIconOnly>
+              <ArrowDuo_Icon className="size-4" />
+            </Button>
+          </motion.a>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {canGoForward && (
+          <motion.a exit="exit" initial="exit" animate="animate" variants={variants} transition={transition}>
+            <Button size="sm" variant="light" onPress={goForward} className="cursor-default" isIconOnly>
+              <ArrowDuo_Icon className="size-4 rotate-180" />
+            </Button>
+          </motion.a>
+        )}
+      </AnimatePresence>
+
       <Button size="sm" variant="light" onPress={reload} className="cursor-default" isIconOnly>
         <Refresh3_Icon className="size-4" />
       </Button>
