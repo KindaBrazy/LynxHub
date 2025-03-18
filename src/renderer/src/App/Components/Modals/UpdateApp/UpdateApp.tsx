@@ -9,6 +9,7 @@ import {AppUpdateData, AppUpdateInfo, UpdateDownloadProgress} from '../../../../
 import {useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {settingsActions} from '../../../Redux/Reducer/SettingsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {useUserState} from '../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
@@ -21,7 +22,8 @@ import Info from './Info';
 /** Manage updating application */
 const UpdateApp = () => {
   const {isOpen} = useModalsState('updateApp');
-  const isRunningAI = useCardsState('runningCard').isRunning;
+  const activeTab = useTabsState('activeTab');
+  const runningCard = useCardsState('runningCard');
   const [items, setItems] = useState<CollapseProps['items']>([]);
   const [updateInfo, setUpdateInfo] = useState<AppUpdateInfo>();
   const [downloadProgress, setDownloadProgress] = useState<UpdateDownloadProgress>();
@@ -39,6 +41,7 @@ const UpdateApp = () => {
         setDownloadProgress(undefined);
         dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: true}));
         message.info('New Update Available!');
+        const isRunningAI = runningCard.some(card => card.tabId === activeTab);
         if (!isRunningAI) {
           dispatch(modalActions.openUpdateApp());
         }
@@ -57,7 +60,7 @@ const UpdateApp = () => {
         }
       }
     });
-  }, [dispatch, isRunningAI]);
+  }, [dispatch, runningCard, activeTab]);
 
   const onClose = useCallback(() => {
     dispatch(modalActions.closeUpdateApp());

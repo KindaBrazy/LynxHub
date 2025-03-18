@@ -38,7 +38,8 @@ const useAllModules = (): CardModules => useSyncExternalStore(subscribe, () => a
 const useGetArgumentsByID = (id: string): ArgumentsData | undefined =>
   useAllCards().find(card => card.id === id)?.arguments;
 
-const useGetTitleByID = (id: string): string | undefined => useAllCards().find(card => card.id === id)?.title;
+const useGetTitleByID = (id: string | undefined): string | undefined =>
+  useAllCards().find(card => card.id === id)?.title;
 
 /**
  * Retrieves all cards associated with a specific path.

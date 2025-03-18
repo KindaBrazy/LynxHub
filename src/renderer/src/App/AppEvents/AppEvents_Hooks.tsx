@@ -8,7 +8,7 @@ import {useAllCards, useGetTitleByID} from '../Modules/ModuleLoader';
 import {appActions, useAppState} from '../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
 import {settingsActions} from '../Redux/Reducer/SettingsReducer';
-import {tabsActions} from '../Redux/Reducer/TabsReducer';
+import {tabsActions, useTabsState} from '../Redux/Reducer/TabsReducer';
 import {terminalActions} from '../Redux/Reducer/TerminalReducer';
 import {userActions} from '../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../Redux/Store';
@@ -162,6 +162,7 @@ export const usePatreon = () => {
 };
 
 export const useIpcEvents = () => {
+  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
     rendererIpc.module.onUpdatedModules((_, updated) => {
@@ -208,26 +209,29 @@ export const useIpcEvents = () => {
           break;
       }
     });
+  }, [dispatch]);
 
+  useEffect(() => {
     rendererIpc.utils.onUpdateAllExtensions((_e, result) => {
       if (result.step === 'done') {
-        rendererIpc.pty.process('start', result.id);
+        rendererIpc.pty.process(result.id, 'start', result.id);
         rendererIpc.storageUtils.recentlyUsedCards('update', result.id);
-        dispatch(cardsActions.startRunningCard(result.id));
+        dispatch(cardsActions.addRunningCard({id: result.id, tabId: activeTab}));
         dispatch(cardsActions.setUpdatingExtensions(undefined));
       }
       dispatch(cardsActions.setUpdatingExtensions(result));
     });
-  }, [dispatch]);
+  }, [dispatch, activeTab]);
 };
 
 export const useAppTitleEvents = () => {
+  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
   const runningCard = useCardsState('runningCard');
-  const title = useGetTitleByID(runningCard.id);
+  const title = useGetTitleByID(runningCard.find(card => card.tabId === activeTab)?.id);
 
   useEffect(() => {
-    const currentView = capitalize(runningCard.currentView);
+    const currentView = capitalize(runningCard.find(card => card.tabId === activeTab)?.currentView);
     dispatch(appActions.setAppTitle(title && `${title} - ${currentView}`));
-  }, [title, runningCard]);
+  }, [title, runningCard, activeTab]);
 };

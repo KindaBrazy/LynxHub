@@ -142,7 +142,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
 
   // -----------------------------------------------> Handle UI
   const handleClose = useCallback(() => {
-    if (state.body === 'terminal') rendererIpc.pty.customProcess('stop');
+    if (state.body === 'terminal') rendererIpc.pty.customProcess(cardId, 'stop');
     if (state.body === 'progress') {
       rendererIpc.utils.offDownloadFile();
       rendererIpc.utils.cancelDownload();
@@ -155,7 +155,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
     setTimeout(() => {
       dispatch(modalActions.removeInstallUICard({tabID: activeTab}));
     }, REMOVE_MODAL_DELAY);
-  }, [updateState, state, activeTab]);
+  }, [updateState, state, activeTab, cardId]);
 
   const onOpenChange = useCallback(
     (isOpen: boolean) => {
@@ -204,6 +204,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
         />
         <InstallFooter
           state={state}
+          cardId={cardId}
           updateState={updateState}
           handleClose={handleClose}
           progressInfo={progressInfo}

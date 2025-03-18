@@ -20,7 +20,7 @@ type CardsState = {
 
   pinnedCards: string[];
   recentlyUsedCards: string[];
-  runningCard: RunningCard;
+  runningCard: RunningCard[];
   webViewZoomFactor: {id: string; zoom: number}[];
   homeCategory: string[];
   duplicates: {ogID: string; id: string; title: string}[];
@@ -37,13 +37,7 @@ const initialState: CardsState = {
   pinnedCards: [],
   updateAvailable: [],
   updatingCards: [],
-  runningCard: {
-    isRunning: false,
-    id: '',
-    address: '',
-    currentView: 'terminal',
-    browserId: 'LynxBrowser',
-  },
+  runningCard: [],
   recentlyUsedCards: [],
   homeCategory: [],
   autoUpdateExtensions: [],
@@ -126,29 +120,29 @@ const cardsSlice = createSlice({
       state.duplicates = action.payload;
     },
 
-    startRunningCard: (state, action: PayloadAction<string>) => {
-      state.runningCard.isRunning = true;
-      state.runningCard.id = action.payload;
+    addRunningCard: (state, action: PayloadAction<{tabId: string; id: string}>) => {
+      const {tabId, id} = action.payload;
+      state.runningCard = [...state.runningCard, {tabId, id, webUIAddress: '', currentView: 'terminal'}];
     },
-    setRunningCardAddress: (state, action: PayloadAction<string>) => {
-      state.runningCard.address = action.payload;
+    setRunningCardAddress: (state, action: PayloadAction<{tabId: string; address: string}>) => {
+      const {tabId, address} = action.payload;
+      state.runningCard = state.runningCard.map(card => (card.tabId === tabId ? {...card, address} : card));
     },
-    setRunningCardView: (state, action: PayloadAction<'browser' | 'terminal'>) => {
-      state.runningCard.currentView = action.payload;
+    setRunningCardView: (state, action: PayloadAction<{tabId: string; view: 'browser' | 'terminal'}>) => {
+      const {tabId, view} = action.payload;
+      state.runningCard = state.runningCard.map(card => (card.tabId === tabId ? {...card, webUIAddress: view} : card));
     },
-    toggleRunningCardView: state => {
-      if (!isEmpty(state.runningCard.address)) {
-        state.runningCard.currentView = state.runningCard.currentView === 'browser' ? 'terminal' : 'browser';
-      }
+    toggleRunningCardView: (state, action: PayloadAction<{tabId: string}>) => {
+      const {tabId} = action.payload;
+      state.runningCard.map(card => {
+        if (isEmpty(card.webUIAddress)) return card;
+
+        const webUIAddress = card.webUIAddress === 'browser' ? 'terminal' : 'browser';
+        return card.tabId === tabId ? {...card, webUIAddress} : card;
+      });
     },
-    stopRunningCard: state => {
-      state.runningCard = {
-        isRunning: false,
-        id: '',
-        address: '',
-        browserId: 'LynxBrowser',
-        currentView: 'terminal',
-      };
+    stopRunningCard: (state, action: PayloadAction<{tabId: string}>) => {
+      state.runningCard = state.runningCard.filter(card => card.tabId !== action.payload.tabId);
     },
   },
 });

@@ -14,12 +14,14 @@ import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {getCardMethod, useAllCards} from '../../Modules/ModuleLoader';
-import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {useAppState} from '../../Redux/Reducer/AppReducer';
+import {cardsActions} from '../../Redux/Reducer/CardsReducer';
+import {useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {useTerminalState} from '../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {getColor} from '../../Utils/Constants';
+import {RunningCard} from '../../Utils/Types';
 import {isWebgl2Supported} from '../../Utils/UtilFunctions';
 import parseTerminalColors from './TerminalColorHandler';
 
@@ -27,8 +29,9 @@ let resizeTimeout: any;
 
 const FONT_FAMILY = 'JetBrainsMono';
 
-/** Xterm.js terminal */
-const LynxTerminal = () => {
+type Props = {runningCard: RunningCard};
+const LynxTerminal = ({runningCard}: Props) => {
+  const activeTab = useTabsState('activeTab');
   const allCards = useAllCards();
 
   const terminalRef = useRef<HTMLDivElement | null>(null);
@@ -47,7 +50,7 @@ const LynxTerminal = () => {
 
   const [selectedText, setSelectedText] = useState<string>('');
 
-  const {address, id, currentView} = useCardsState('runningCard');
+  const {webUIAddress, id, currentView} = runningCard;
   const darkMode = useAppState('darkMode');
   const dispatch = useDispatch<AppDispatch>();
 
@@ -102,14 +105,14 @@ const LynxTerminal = () => {
 
   const writeData = useCallback(
     (data: string) => {
-      if (isEmpty(address) && browserBehavior !== 'doNothing') {
+      if (isEmpty(webUIAddress) && browserBehavior !== 'doNothing') {
         const catchAddress = getCardMethod(allCards, id, 'catchAddress');
         const url = catchAddress?.(data) || '';
         if (!isEmpty(url)) {
           if (browserBehavior === 'appBrowser') {
             setTimeout(() => {
-              dispatch(cardsActions.setRunningCardAddress(url));
-              dispatch(cardsActions.setRunningCardView('browser'));
+              dispatch(cardsActions.setRunningCardAddress({address: url, tabId: activeTab}));
+              dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
             }, 1500);
           } else {
             window.open(url);
@@ -118,7 +121,7 @@ const LynxTerminal = () => {
       }
       terminal.current?.write(outputColor ? parseTerminalColors(data) : data);
     },
-    [address, id, browserBehavior, outputColor, dispatch, allCards],
+    [webUIAddress, id, browserBehavior, outputColor, dispatch, allCards, activeTab],
   );
 
   const onRightClickRef = useRef<((e: MouseEvent) => void) | null>(null);
@@ -130,11 +133,11 @@ const LynxTerminal = () => {
         copyText();
       } else {
         navigator.clipboard.readText().then(text => {
-          rendererIpc.pty.write(text);
+          rendererIpc.pty.write(runningCard.id, text);
         });
       }
     };
-  }, [copyText, terminal]);
+  }, [copyText, terminal, runningCard]);
 
   const stableEventHandler = useCallback(e => {
     onRightClickRef.current?.(e);
@@ -147,6 +150,7 @@ const LynxTerminal = () => {
 
   useEffect(() => {
     async function loadTerminal() {
+      console.log(runningCard);
       const JetBrainsMono = new FontFaceObserver(FONT_FAMILY);
 
       const sysInfo = await rendererIpc.win.getSystemInfo();
@@ -224,7 +228,7 @@ const LynxTerminal = () => {
 
         terminal.current.onResize(size => {
           {
-            rendererIpc.pty.resize(size.cols, size.rows);
+            rendererIpc.pty.resize(runningCard.id, size.cols, size.rows);
           }
         });
 
@@ -241,7 +245,7 @@ const LynxTerminal = () => {
         });
 
         terminal.current.onData(data => {
-          if (!isEmpty(data)) rendererIpc.pty.write(data);
+          if (!isEmpty(data)) rendererIpc.pty.write(runningCard.id, data);
         });
       });
     }
@@ -257,8 +261,8 @@ const LynxTerminal = () => {
       }, resizeDelay);
     });
 
-    rendererIpc.pty.onData((_, data) => {
-      writeData(data);
+    rendererIpc.pty.onData((_, dataID, data) => {
+      if (dataID === runningCard.id) writeData(data);
     });
 
     return () => {

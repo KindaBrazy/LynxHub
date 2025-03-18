@@ -5,26 +5,29 @@ import {isHotkeyPressed} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {Stop_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
-import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
+import {cardsActions} from '../../Redux/Reducer/CardsReducer';
 import {settingsActions, useSettingsState} from '../../Redux/Reducer/SettingsReducer';
+import {useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
+import {RunningCard} from '../../Utils/Types';
 import SmallButton from '../Reusable/SmallButton';
 
-export default function RCM_Terminate() {
+type Props = {runningCard: RunningCard};
+export default function RCM_Terminate({runningCard}: Props) {
   const dispatch = useDispatch<AppDispatch>();
-  const runningCard = useCardsState('runningCard');
+  const activeTab = useTabsState('activeTab');
   const showTerminateConfirm = useSettingsState('terminateAIConfirm');
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
 
   const destroyModal = useCallback(() => setIsConfirmOpen(false), [setIsConfirmOpen]);
 
   const onStop = useCallback(() => {
-    rendererIpc.pty.process('stop', runningCard.id);
-    dispatch(cardsActions.stopRunningCard());
+    rendererIpc.pty.process(runningCard.id, 'stop', runningCard.id);
+    dispatch(cardsActions.stopRunningCard({tabId: activeTab}));
     rendererIpc.win.setDiscordRpAiRunning({running: false});
     destroyModal();
-  }, [runningCard.id, dispatch]);
+  }, [runningCard.id, dispatch, activeTab]);
 
   const onShowConfirm = useCallback(
     (enabled: boolean) => {
@@ -38,10 +41,10 @@ export default function RCM_Terminate() {
     const wasRunning = runningCard;
     onStop();
     setTimeout(() => {
-      rendererIpc.pty.process('start', wasRunning.id);
-      dispatch(cardsActions.startRunningCard(wasRunning.id));
+      rendererIpc.pty.process(runningCard.id, 'start', wasRunning.id);
+      dispatch(cardsActions.addRunningCard({id: wasRunning.id, tabId: activeTab}));
     }, 500);
-  }, [onStop, runningCard, dispatch]);
+  }, [onStop, runningCard, dispatch, activeTab]);
 
   const stopAi = useCallback(() => {
     if (runningCard.id) {

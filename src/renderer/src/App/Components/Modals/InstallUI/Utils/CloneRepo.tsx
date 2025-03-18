@@ -21,7 +21,7 @@ type Props = {
   url: string;
   start: boolean;
   done: (dir: string) => void;
-  isOpen: string;
+  isOpen: boolean;
   cardId: string;
 };
 

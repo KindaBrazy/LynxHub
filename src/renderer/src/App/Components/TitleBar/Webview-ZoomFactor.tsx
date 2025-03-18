@@ -8,8 +8,8 @@ import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import SmallButton from '../Reusable/SmallButton';
 
-export default function WebviewZoomFactor() {
-  const {id} = useCardsState('runningCard');
+type Props = {id: string};
+export default function WebviewZoomFactor({id}: Props) {
   const zoomFactor = useCardsState('webViewZoomFactor');
   const dispatch = useDispatch<AppDispatch>();
   const [value, setValue] = useState<number>(100);

@@ -2,14 +2,16 @@ import {useCallback, useMemo} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
-import {cardsActions} from '../Redux/Reducer/CardsReducer';
 import {appActions} from '../Redux/Reducer/AppReducer';
+import {cardsActions} from '../Redux/Reducer/CardsReducer';
 import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
+import {useTabsState} from '../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
 
 /** Register application hotkeys */
 export default function useRegisterHotkeys() {
+  const activeTab = useTabsState('activeTab');
   const hotkeys = useSettingsState('hotkeys');
   const dispatch = useDispatch<AppDispatch>();
 
@@ -32,8 +34,8 @@ export default function useRegisterHotkeys() {
   }, [dispatch]);
 
   const handleToggleAIView = useCallback(() => {
-    dispatch(cardsActions.toggleRunningCardView());
-  }, [dispatch]);
+    dispatch(cardsActions.toggleRunningCardView({tabId: activeTab}));
+  }, [dispatch, activeTab]);
 
   useHotkeys(hotkeys.FULLSCREEN, handleFullscreen, hotkeyOptions, [hotkeys]);
   useHotkeys(hotkeys.TOGGLE_NAV, handleToggleNav, hotkeyOptions, [hotkeys]);

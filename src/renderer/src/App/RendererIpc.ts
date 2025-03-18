@@ -280,18 +280,17 @@ const rendererIpc = {
 
   /** Managing and using node-pty(Pseudo Terminal ) */
   pty: {
-    process: (opt: PtyProcessOpt, cardId: string): void => ipc.send(ptyChannels.process, opt, cardId),
-    customProcess: (opt: PtyProcessOpt, dir?: string, file?: string): void =>
-      ipc.send(ptyChannels.customProcess, opt, dir, file),
-    customCommands: (opt: PtyProcessOpt, commands?: string | string[], dir?: string) =>
-      ipc.send(ptyChannels.customCommands, opt, commands, dir),
+    process: (id: string, opt: PtyProcessOpt, cardId: string): void => ipc.send(ptyChannels.process, id, opt, cardId),
+    customProcess: (id: string, opt: PtyProcessOpt, dir?: string, file?: string): void =>
+      ipc.send(ptyChannels.customProcess, id, opt, dir, file),
+    customCommands: (id: string, opt: PtyProcessOpt, commands?: string | string[], dir?: string) =>
+      ipc.send(ptyChannels.customCommands, id, opt, commands, dir),
 
-    write: (data: string): void => ipc.send(ptyChannels.write, data),
+    write: (id: string, data: string): void => ipc.send(ptyChannels.write, id, data),
 
-    resize: (cols: number, rows: number): void => ipc.send(ptyChannels.resize, cols, rows),
+    resize: (id: string, cols: number, rows: number): void => ipc.send(ptyChannels.resize, id, cols, rows),
 
-    onData: (result: (event: IpcRendererEvent, data: string, cardId: string) => void) =>
-      ipc.on(ptyChannels.onData, result),
+    onData: (result: (event: IpcRendererEvent, id: string, data: string) => void) => ipc.on(ptyChannels.onData, result),
 
     offData: (): void => ipc.removeAllListeners(ptyChannels.onData),
   },
