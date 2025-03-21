@@ -14,7 +14,7 @@ import {useTerminalState} from '../../../../Redux/Reducer/TerminalReducer';
 import rendererIpc from '../../../../RendererIpc';
 import {getColor} from '../../../../Utils/Constants';
 import {isWebgl2Supported} from '../../../../Utils/UtilFunctions';
-import parseTerminalColors from '../../../Terminal/TerminalColorHandler';
+import parseTerminalColors from '../../../Browser_Terminal/Terminal/TerminalColorHandler';
 
 let resizeTimeout: any;
 
