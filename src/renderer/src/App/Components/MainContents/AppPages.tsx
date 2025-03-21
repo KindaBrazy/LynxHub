@@ -4,8 +4,8 @@ import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {PageComponents} from '../../Utils/Constants';
+import RunningCardView from '../Browser_Terminal/RunningCardView';
 import HomePage from '../Pages/ContentPages/Home/HomePage';
-import RunningCardView from '../RunningCardView/RunningCardView';
 
 export default function AppPages() {
   const runningCard = useCardsState('runningCard');
