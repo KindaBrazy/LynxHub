@@ -4,7 +4,7 @@ import {FitAddon} from '@xterm/addon-fit';
 import {Unicode11Addon} from '@xterm/addon-unicode11';
 import {WebLinksAddon} from '@xterm/addon-web-links';
 import {WebglAddon} from '@xterm/addon-webgl';
-import {ITheme, IWindowsPty, Terminal} from '@xterm/xterm';
+import {ITheme, IWindowsPty, Terminal as XTerminal} from '@xterm/xterm';
 import {message} from 'antd';
 import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty} from 'lodash';
@@ -29,12 +29,12 @@ let resizeTimeout: any;
 const FONT_FAMILY = 'JetBrainsMono';
 
 type Props = {runningCard: RunningCard};
-const LynxTerminal = ({runningCard}: Props) => {
+export default function Terminal({runningCard}: Props) {
   const activeTab = useTabsState('activeTab');
   const allCards = useAllCards();
 
   const terminalRef = useRef<HTMLDivElement | null>(null);
-  const terminal = useRef<Terminal | null>(null);
+  const terminal = useRef<XTerminal | null>(null);
   const fitAddon = useRef<FitAddon | null>(null);
   const unicode11Addon = useRef<Unicode11Addon | null>(null);
 
@@ -148,6 +148,10 @@ const LynxTerminal = ({runningCard}: Props) => {
   }, [terminalRef, stableEventHandler]);
 
   useEffect(() => {
+    fitAddon.current?.fit();
+  }, [currentView, fitAddon]);
+
+  useEffect(() => {
     async function loadTerminal() {
       console.log(runningCard);
       const JetBrainsMono = new FontFaceObserver(FONT_FAMILY);
@@ -172,7 +176,7 @@ const LynxTerminal = ({runningCard}: Props) => {
         let renderMode: 'webgl' | 'canvas' = isWebgl2Supported() ? 'webgl' : 'canvas';
 
         // Create and initialize the terminal object with a default background and cursor
-        terminal.current = new Terminal({
+        terminal.current = new XTerminal({
           allowProposedApi: true,
           rows: 150,
           cols: 150,
@@ -277,6 +281,4 @@ const LynxTerminal = ({runningCard}: Props) => {
       </div>
     </div>
   );
-};
-
-export default LynxTerminal;
+}
