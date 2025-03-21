@@ -16,7 +16,7 @@ export default function TopBar({runningCard, isDomReady, webview}: Props) {
         ' flex flex-row gap-x-1 px-2 py-1 items-center justify-between'
       }>
       {runningCard.currentView === 'terminal' ? (
-        <Terminal_TopBar />
+        <Terminal_TopBar startTime={runningCard.startTime} />
       ) : (
         <Browser_TopBar webview={webview} id={runningCard.id} isDomReady={isDomReady} />
       )}

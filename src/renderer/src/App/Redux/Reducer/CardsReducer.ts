@@ -122,7 +122,10 @@ const cardsSlice = createSlice({
 
     addRunningCard: (state, action: PayloadAction<{tabId: string; id: string}>) => {
       const {tabId, id} = action.payload;
-      state.runningCard = [...state.runningCard, {tabId, id, webUIAddress: '', currentView: 'terminal'}];
+      state.runningCard = [
+        ...state.runningCard,
+        {tabId, id, webUIAddress: '', currentView: 'terminal', startTime: new Date()},
+      ];
     },
     setRunningCardAddress: (state, action: PayloadAction<{tabId: string; address: string}>) => {
       const {tabId, address} = action.payload;
