@@ -1,17 +1,14 @@
-import {Button} from '@heroui/react';
-
-import {Stop_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
+import {RunningCard} from '../../../Utils/Types';
 import Switch from './Switch';
+import Terminate from './Terminate';
 
-type Props = {currentView: 'browser' | 'terminal'};
+type Props = {runningCard: RunningCard};
 
-export default function SwitchAndTerminate({currentView}: Props) {
+export default function SwitchAndTerminate({runningCard}: Props) {
   return (
     <div className="flex flex-row gap-x-1">
-      <Switch currentView={currentView} />
-      <Button size="sm" variant="light" className="cursor-default" isIconOnly>
-        <Stop_Icon className="size-4 text-danger" />
-      </Button>
+      <Switch currentView={runningCard.currentView} />
+      <Terminate runningCard={runningCard} />
     </div>
   );
 }
