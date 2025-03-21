@@ -1,7 +1,10 @@
-export default function Terminal_TopBar() {
+import Terminal_Timer from './Terminal_Timer';
+
+type Props = {startTime: Date};
+export default function Terminal_TopBar({startTime}: Props) {
   return (
     <>
-      <div></div>
+      <Terminal_Timer startTime={startTime} />
       <div></div>
     </>
   );
