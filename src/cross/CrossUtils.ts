@@ -103,3 +103,9 @@ export function isValidURL(str: string): boolean {
 export function isDev() {
   return import.meta.env.DEV;
 }
+
+export function secondsElapsed(startDate: Date): number {
+  const now = new Date();
+  const diffInMilliseconds = now.getTime() - startDate.getTime();
+  return Math.floor(diffInMilliseconds / 1000);
+}
