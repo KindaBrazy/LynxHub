@@ -1,6 +1,5 @@
 import {WebviewTag} from 'electron';
-import {motion, Variants} from 'framer-motion';
-import {useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {LYNXHUB_HOMEPAGE} from '../../../../../cross/CrossConstants';
@@ -10,12 +9,6 @@ import rendererIpc from '../../RendererIpc';
 import {RunningCard} from '../../Utils/Types';
 import Browser_TopBar from './Browser_TopBar/Browser_TopBar';
 
-const variants: Variants = {
-  init: {scale: 0.95, opacity: 0},
-  animate: {scale: 1, opacity: 1},
-  exit: {scale: 0.95, opacity: 0},
-};
-
 type Props = {runningCard: RunningCard};
 const Browser = ({runningCard}: Props) => {
   const {currentView, id, webUIAddress} = runningCard;
@@ -23,10 +16,6 @@ const Browser = ({runningCard}: Props) => {
   const webViewRef = useRef<WebviewTag>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [isDomReady, setIsDomReady] = useState<boolean>(false);
-
-  const animate = useMemo(() => {
-    return currentView === 'browser' ? 'animate' : 'exit';
-  }, [currentView]);
 
   useEffect(() => {
     if (webViewRef.current) {
@@ -49,17 +38,14 @@ const Browser = ({runningCard}: Props) => {
   }, [webViewRef, zoomFactor, id, isDomReady]);
 
   return (
-    <>
+    <div className={`${currentView === 'browser' ? 'block' : 'hidden'}`}>
       <Browser_TopBar webview={webViewRef} isDomReady={isDomReady} />
-      <motion.div
+      <div
         className={
-          `absolute top-[2.6rem] bottom-1 inset-x-1 ${currentView === 'browser' && 'z-20'} overflow-hidden ` +
+          `absolute top-[2.6rem] bottom-1 inset-x-1 overflow-hidden ` +
           `rounded-lg bg-white shadow-md dark:bg-LynxRaisinBlack`
         }
-        tabIndex={-1}
-        initial="init"
-        animate={animate}
-        variants={variants}>
+        tabIndex={-1}>
         {!webUIAddress && (
           <webview
             ref={webViewRef}
@@ -71,8 +57,8 @@ const Browser = ({runningCard}: Props) => {
             className="relative size-full"
           />
         )}
-      </motion.div>
-    </>
+      </div>
+    </div>
   );
 };
 

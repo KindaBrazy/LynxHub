@@ -3,7 +3,7 @@ import {WebviewTag} from 'electron';
 import {RefObject} from 'react';
 
 import {LYNXHUB_HOMEPAGE} from '../../../../../../cross/CrossConstants';
-import {Terminal_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Stop_Icon, Terminal_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
 import AddressInput from './AddressInput';
 import Browser_ActionButtons from './Browser_ActionButtons';
 
@@ -20,6 +20,9 @@ export default function Browser_TopBar({webview, isDomReady}: Props) {
 
       <Button size="sm" variant="light" className="cursor-default">
         <Terminal_Icon className="size-4" />
+      </Button>
+      <Button size="sm" variant="light" className="cursor-default" isIconOnly>
+        <Stop_Icon className="size-4 text-danger" />
       </Button>
     </div>
   );

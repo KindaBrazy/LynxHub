@@ -4,7 +4,7 @@ import {useMemo} from 'react';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {RunningCard} from '../../Utils/Types';
 import Browser from '../Browser/Browser';
-import LynxTerminal from './LynxTerminal';
+import LynxTerminal from '../Terminal/LynxTerminal';
 
 type Props = {runningCard: RunningCard};
 const RunningCardView = ({runningCard}: Props) => {

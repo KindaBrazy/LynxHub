@@ -7,9 +7,8 @@ import {WebglAddon} from '@xterm/addon-webgl';
 import {ITheme, IWindowsPty, Terminal} from '@xterm/xterm';
 import {message} from 'antd';
 import FontFaceObserver from 'fontfaceobserver';
-import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
@@ -23,6 +22,7 @@ import rendererIpc from '../../RendererIpc';
 import {getColor} from '../../Utils/Constants';
 import {RunningCard} from '../../Utils/Types';
 import {isWebgl2Supported} from '../../Utils/UtilFunctions';
+import Terminal_TopBar from './Terminal_TopBar';
 import parseTerminalColors from './TerminalColorHandler';
 
 let resizeTimeout: any;
@@ -271,26 +271,18 @@ const LynxTerminal = ({runningCard}: Props) => {
     };
   }, [terminalRef.current]);
 
-  const animate = useMemo(() => {
-    return currentView === 'terminal' ? 'animate' : 'exit';
-  }, [currentView]);
-
   return (
-    <motion.div
-      variants={{
-        init: {scale: 0.95, opacity: 0},
-        animate: {scale: 1, opacity: 1},
-        exit: {scale: 0.95, opacity: 0},
-      }}
-      className={
-        `absolute inset-2 ${currentView === 'terminal' && 'z-20'} overflow-hidden ` +
-        `rounded-lg bg-white p-3 shadow-md dark:bg-LynxRaisinBlack`
-      }
-      tabIndex={-1}
-      initial="init"
-      animate={animate}>
-      <div ref={terminalRef} className="relative size-full" />
-    </motion.div>
+    <div className={`${currentView === 'terminal' ? 'block' : 'hidden'}`}>
+      <Terminal_TopBar />
+      <div
+        className={
+          `absolute inset-2 top-[2.6rem] overflow-hidden rounded-lg ` +
+          ` bg-white p-3 shadow-md dark:bg-LynxRaisinBlack`
+        }
+        tabIndex={-1}>
+        <div ref={terminalRef} className="relative size-full" />
+      </div>
+    </div>
   );
 };
 
