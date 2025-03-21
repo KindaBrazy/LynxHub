@@ -12,17 +12,16 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
-import {getCardMethod, useAllCards} from '../../Modules/ModuleLoader';
-import {useAppState} from '../../Redux/Reducer/AppReducer';
-import {cardsActions} from '../../Redux/Reducer/CardsReducer';
-import {useTabsState} from '../../Redux/Reducer/TabsReducer';
-import {useTerminalState} from '../../Redux/Reducer/TerminalReducer';
-import {AppDispatch} from '../../Redux/Store';
-import rendererIpc from '../../RendererIpc';
-import {getColor} from '../../Utils/Constants';
-import {RunningCard} from '../../Utils/Types';
-import {isWebgl2Supported} from '../../Utils/UtilFunctions';
-import Terminal_TopBar from './Terminal_TopBar';
+import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
+import {useAppState} from '../../../Redux/Reducer/AppReducer';
+import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {useTerminalState} from '../../../Redux/Reducer/TerminalReducer';
+import {AppDispatch} from '../../../Redux/Store';
+import rendererIpc from '../../../RendererIpc';
+import {getColor} from '../../../Utils/Constants';
+import {RunningCard} from '../../../Utils/Types';
+import {isWebgl2Supported} from '../../../Utils/UtilFunctions';
 import parseTerminalColors from './TerminalColorHandler';
 
 let resizeTimeout: any;
@@ -273,7 +272,6 @@ const LynxTerminal = ({runningCard}: Props) => {
 
   return (
     <div className={`${currentView === 'terminal' ? 'block' : 'hidden'}`}>
-      <Terminal_TopBar currentView={currentView} />
       <div className="absolute inset-0 !top-10 overflow-hidden bg-white pl-3 pr-1 shadow-md dark:bg-LynxRaisinBlack">
         <div ref={terminalRef} className="relative size-full" />
       </div>

@@ -1,21 +1,23 @@
 import {WebviewTag} from 'electron';
-import {useEffect, useRef, useState} from 'react';
+import {Dispatch, RefObject, SetStateAction, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {LYNXHUB_HOMEPAGE} from '../../../../../cross/CrossConstants';
-import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
-import {AppDispatch} from '../../Redux/Store';
-import rendererIpc from '../../RendererIpc';
-import {RunningCard} from '../../Utils/Types';
-import Browser_TopBar from './Browser_TopBar/Browser_TopBar';
+import {LYNXHUB_HOMEPAGE} from '../../../../../../cross/CrossConstants';
+import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
+import {AppDispatch} from '../../../Redux/Store';
+import rendererIpc from '../../../RendererIpc';
+import {RunningCard} from '../../../Utils/Types';
 
-type Props = {runningCard: RunningCard};
-const Browser = ({runningCard}: Props) => {
+type Props = {
+  webViewRef: RefObject<WebviewTag | null>;
+  isDomReady: boolean;
+  setIsDomReady: Dispatch<SetStateAction<boolean>>;
+  runningCard: RunningCard;
+};
+const Browser = ({runningCard, webViewRef, isDomReady, setIsDomReady}: Props) => {
   const {currentView, id, webUIAddress} = runningCard;
   const zoomFactor = useCardsState('webViewZoomFactor');
-  const webViewRef = useRef<WebviewTag>(null);
   const dispatch = useDispatch<AppDispatch>();
-  const [isDomReady, setIsDomReady] = useState<boolean>(false);
 
   useEffect(() => {
     if (webViewRef.current) {
@@ -39,7 +41,6 @@ const Browser = ({runningCard}: Props) => {
 
   return (
     <div className={`${currentView === 'browser' ? 'block' : 'hidden'}`}>
-      <Browser_TopBar webview={webViewRef} isDomReady={isDomReady} currentView={currentView} />
       <div className="absolute inset-0 !top-10 overflow-hidden bg-white shadow-md dark:bg-LynxRaisinBlack">
         {!webUIAddress && (
           <webview
