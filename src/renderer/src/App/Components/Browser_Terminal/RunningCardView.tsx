@@ -5,7 +5,7 @@ import {useMemo, useRef, useState} from 'react';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {RunningCard} from '../../Utils/Types';
 import Browser from './Browser/Browser';
-import LynxTerminal from './Terminal/LynxTerminal';
+import Terminal from './Terminal/Terminal';
 import TopBar from './TopBar/TopBar';
 
 type Props = {runningCard: RunningCard};
@@ -19,7 +19,7 @@ const RunningCardView = ({runningCard}: Props) => {
   return (
     <>
       <TopBar webview={webViewRef} isDomReady={isDomReady} runningCard={runningCard} />
-      {isNil(ExtTerminal) ? <LynxTerminal runningCard={runningCard} /> : <ExtTerminal />}
+      {isNil(ExtTerminal) ? <Terminal runningCard={runningCard} /> : <ExtTerminal />}
       {isNil(ExtBrowser) ? (
         <Browser
           webViewRef={webViewRef}
