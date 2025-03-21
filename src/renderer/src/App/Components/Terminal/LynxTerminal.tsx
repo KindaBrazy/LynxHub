@@ -273,7 +273,7 @@ const LynxTerminal = ({runningCard}: Props) => {
 
   return (
     <div className={`${currentView === 'terminal' ? 'block' : 'hidden'}`}>
-      <Terminal_TopBar />
+      <Terminal_TopBar currentView={currentView} />
       <div
         className={
           `absolute inset-2 top-[2.6rem] overflow-hidden rounded-lg ` +
