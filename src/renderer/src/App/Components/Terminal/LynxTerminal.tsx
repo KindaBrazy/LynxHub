@@ -274,12 +274,7 @@ const LynxTerminal = ({runningCard}: Props) => {
   return (
     <div className={`${currentView === 'terminal' ? 'block' : 'hidden'}`}>
       <Terminal_TopBar currentView={currentView} />
-      <div
-        className={
-          `absolute inset-2 top-[2.6rem] overflow-hidden rounded-lg ` +
-          ` bg-white p-3 shadow-md dark:bg-LynxRaisinBlack`
-        }
-        tabIndex={-1}>
+      <div className="absolute inset-0 !top-10 overflow-hidden bg-white pl-3 pr-1 shadow-md dark:bg-LynxRaisinBlack">
         <div ref={terminalRef} className="relative size-full" />
       </div>
     </div>
