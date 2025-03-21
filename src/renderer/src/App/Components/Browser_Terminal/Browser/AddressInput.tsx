@@ -34,6 +34,7 @@ export default function AddressInput({address}: Props) {
       radius="full"
       value={value}
       ref={inputRef}
+      className="mx-2"
       spellCheck="false"
       onValueChange={setValue}
       startContent={<span className="text-small text-default-400">{prefix}</span>}
