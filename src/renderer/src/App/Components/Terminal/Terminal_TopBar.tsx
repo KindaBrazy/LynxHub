@@ -1,8 +1,10 @@
 import {Button} from '@heroui/react';
 
-import {Stop_Icon, Web_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
+import {Stop_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
+import Switch_BrowserTerminal from '../Reusable/Switch_BrowserTerminal';
 
-export default function Terminal_TopBar() {
+type Props = {currentView: 'browser' | 'terminal'};
+export default function Terminal_TopBar({currentView}: Props) {
   return (
     <div
       className={
@@ -12,9 +14,7 @@ export default function Terminal_TopBar() {
       <div></div>
       <div></div>
       <div className="flex flex-row gap-x-2">
-        <Button size="sm" variant="light" className="cursor-default">
-          <Web_Icon className="size-4" />
-        </Button>
+        <Switch_BrowserTerminal currentView={currentView} />
         <Button size="sm" variant="light" className="cursor-default" isIconOnly>
           <Stop_Icon className="size-4 text-danger" />
         </Button>

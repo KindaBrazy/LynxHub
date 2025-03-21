@@ -39,7 +39,7 @@ const Browser = ({runningCard}: Props) => {
 
   return (
     <div className={`${currentView === 'browser' ? 'block' : 'hidden'}`}>
-      <Browser_TopBar webview={webViewRef} isDomReady={isDomReady} />
+      <Browser_TopBar webview={webViewRef} isDomReady={isDomReady} currentView={currentView} />
       <div
         className={
           `absolute top-[2.6rem] bottom-1 inset-x-1 overflow-hidden ` +

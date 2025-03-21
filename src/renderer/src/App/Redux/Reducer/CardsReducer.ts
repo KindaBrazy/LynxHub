@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {includes, isEmpty} from 'lodash';
+import {includes} from 'lodash';
 import {useSelector} from 'react-redux';
 
 import {OnUpdatingExtensions} from '../../../../../cross/IpcChannelAndTypes';
@@ -134,11 +134,9 @@ const cardsSlice = createSlice({
     },
     toggleRunningCardView: (state, action: PayloadAction<{tabId: string}>) => {
       const {tabId} = action.payload;
-      state.runningCard.map(card => {
-        if (isEmpty(card.webUIAddress)) return card;
-
-        const webUIAddress = card.webUIAddress === 'browser' ? 'terminal' : 'browser';
-        return card.tabId === tabId ? {...card, webUIAddress} : card;
+      state.runningCard = state.runningCard.map(card => {
+        const currentView = card.currentView === 'browser' ? 'terminal' : 'browser';
+        return card.tabId === tabId ? {...card, currentView} : card;
       });
     },
     stopRunningCard: (state, action: PayloadAction<{tabId: string}>) => {
