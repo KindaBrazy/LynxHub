@@ -18,7 +18,7 @@ const RunningCardView = ({runningCard}: Props) => {
 
   return (
     <>
-      <TopBar webview={webViewRef} isDomReady={isDomReady} currentView={runningCard.currentView} />
+      <TopBar webview={webViewRef} isDomReady={isDomReady} runningCard={runningCard} />
       {isNil(ExtTerminal) ? <LynxTerminal runningCard={runningCard} /> : <ExtTerminal />}
       {isNil(ExtBrowser) ? (
         <Browser

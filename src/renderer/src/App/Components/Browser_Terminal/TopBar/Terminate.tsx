@@ -4,17 +4,16 @@ import {useCallback, useState} from 'react';
 import {isHotkeyPressed} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
-import {Stop_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
-import {cardsActions} from '../../Redux/Reducer/CardsReducer';
-import {settingsActions, useSettingsState} from '../../Redux/Reducer/SettingsReducer';
-import {useTabsState} from '../../Redux/Reducer/TabsReducer';
-import {AppDispatch} from '../../Redux/Store';
-import rendererIpc from '../../RendererIpc';
-import {RunningCard} from '../../Utils/Types';
-import SmallButton from '../Reusable/SmallButton';
+import {Stop_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
+import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
+import {settingsActions, useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {AppDispatch} from '../../../Redux/Store';
+import rendererIpc from '../../../RendererIpc';
+import {RunningCard} from '../../../Utils/Types';
 
 type Props = {runningCard: RunningCard};
-export default function RCM_Terminate({runningCard}: Props) {
+export default function Terminate({runningCard}: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const activeTab = useTabsState('activeTab');
   const showTerminateConfirm = useSettingsState('terminateAIConfirm');
@@ -58,7 +57,9 @@ export default function RCM_Terminate({runningCard}: Props) {
 
   return (
     <>
-      <SmallButton onClick={stopAi} icon={<Stop_Icon className="m-[8px] text-danger" />} />
+      <Button size="sm" variant="light" onPress={stopAi} className="cursor-default" isIconOnly>
+        <Stop_Icon className="size-4 text-danger" />
+      </Button>
       <Popover
         onClick={e => {
           // @ts-expect-error
@@ -69,7 +70,7 @@ export default function RCM_Terminate({runningCard}: Props) {
         offset={25}
         crossOffset={-16}
         backdrop="opaque"
-        placement="bottom"
+        placement="bottom-end"
         isOpen={isConfirmOpen}
         onOpenChange={setIsConfirmOpen}
         classNames={{base: 'before:dark:bg-LynxRaisinBlack', backdrop: '!top-10'}}
