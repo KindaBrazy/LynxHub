@@ -57,7 +57,7 @@ export default function Browser_ActionButtons({webview, isDomReady}: Props) {
   }, [webview, isDomReady]);
 
   return (
-    <div className="flex flex-row gap-x-1 mx-1">
+    <div className="flex flex-row gap-x-1 mr-2 ml-1">
       <AnimatePresence>
         {canGoBack && (
           <motion.a exit="exit" initial="exit" animate="animate" variants={variants} transition={transition}>
