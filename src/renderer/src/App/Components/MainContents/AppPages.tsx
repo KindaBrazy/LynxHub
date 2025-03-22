@@ -13,10 +13,10 @@ export default function AppPages() {
   const activePage = useTabsState('activePage');
   const activeTab = useTabsState('activeTab');
 
-  const Container = useMemo(() => extensionsData.runningAI.container, []);
   const RunningView = useMemo(() => {
+    const Container = extensionsData.runningAI.container;
     return Container ? Container : RunningCardView;
-  }, [Container]);
+  }, []);
 
   return (
     <>
