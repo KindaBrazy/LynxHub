@@ -109,3 +109,28 @@ export function secondsElapsed(startDate: Date): number {
   const diffInMilliseconds = now.getTime() - startDate.getTime();
   return Math.floor(diffInMilliseconds / 1000);
 }
+
+export function formatWebAddress(address: string): string {
+  if (!address) {
+    return '';
+  }
+
+  const protocolRegex = /^(?:https?:\/\/|ftp:\/\/|www\.)/i;
+  const localhostRegex = /^(?:localhost|127(?:\.\d{1,3}){3}|\[::1\])(?::\d+)?$/i;
+
+  if (localhostRegex.test(address)) {
+    if (!address.match(/^https?:\/\//i)) {
+      return 'http://' + address;
+    }
+    return address;
+  }
+
+  if (protocolRegex.test(address)) {
+    if (address.startsWith('www.') && !address.match(/^https?:\/\//i)) {
+      return 'https://' + address;
+    }
+    return address;
+  } else {
+    return 'https://' + address;
+  }
+}
