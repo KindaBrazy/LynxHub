@@ -133,7 +133,7 @@ const cardsSlice = createSlice({
     },
     setRunningCardView: (state, action: PayloadAction<{tabId: string; view: 'browser' | 'terminal'}>) => {
       const {tabId, view} = action.payload;
-      state.runningCard = state.runningCard.map(card => (card.tabId === tabId ? {...card, webUIAddress: view} : card));
+      state.runningCard = state.runningCard.map(card => (card.tabId === tabId ? {...card, currentView: view} : card));
     },
     toggleRunningCardView: (state, action: PayloadAction<{tabId: string}>) => {
       const {tabId} = action.payload;
