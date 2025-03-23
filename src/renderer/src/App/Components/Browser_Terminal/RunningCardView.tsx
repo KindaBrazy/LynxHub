@@ -28,7 +28,7 @@ const RunningCardView = ({runningCard}: Props) => {
   useEffect(() => {
     if (isDomReady && webViewRef) {
       const didNavigate = (e: DidStartNavigationEvent) => {
-        dispatch(cardsActions.setRunningCardCurrentAddress({tabId: activeTab, address: e.url}));
+        if (e.isMainFrame) dispatch(cardsActions.setRunningCardCurrentAddress({tabId: activeTab, address: e.url}));
       };
       webViewRef.removeEventListener('did-start-navigation', didNavigate);
       webViewRef.addEventListener('did-start-navigation', didNavigate);
