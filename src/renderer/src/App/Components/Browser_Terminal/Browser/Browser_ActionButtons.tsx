@@ -7,15 +7,16 @@ import {HomeSmile_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Refresh3_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons4';
 import {ArrowDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 
-type Props = {webview: WebviewTag | null; isDomReady: boolean};
-
 const variants: Variants = {
   animate: {scale: 1, opacity: 1},
   exit: {scale: 0.7, opacity: 0},
 };
+
 const transition: Transition = {duration: 0.3};
 
-export default function Browser_ActionButtons({webview, isDomReady}: Props) {
+type Props = {webview: WebviewTag | null; isDomReady: boolean; webuiAddress: string};
+
+export default function Browser_ActionButtons({webview, isDomReady, webuiAddress}: Props) {
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [canGoForward, setCanGoForward] = useState<boolean>(false);
 
@@ -29,6 +30,10 @@ export default function Browser_ActionButtons({webview, isDomReady}: Props) {
   const reload = useCallback(() => {
     webview?.reload();
   }, [webview]);
+
+  const loadWebuiAddress = useCallback(() => {
+    webview?.loadURL(webuiAddress);
+  }, [webview, webuiAddress]);
 
   useEffect(() => {
     if (!webview) return;
@@ -81,9 +86,11 @@ export default function Browser_ActionButtons({webview, isDomReady}: Props) {
         <Refresh3_Icon className="size-4" />
       </Button>
 
-      <Button size="sm" variant="light" className="cursor-default" isIconOnly>
-        <HomeSmile_Icon className="size-4" />
-      </Button>
+      {webuiAddress && (
+        <Button size="sm" variant="light" className="cursor-default" onPress={loadWebuiAddress} isIconOnly>
+          <HomeSmile_Icon className="size-4" />
+        </Button>
+      )}
     </div>
   );
 }

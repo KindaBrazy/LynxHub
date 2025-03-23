@@ -10,7 +10,7 @@ type Props = {webview: WebviewTag | null; isDomReady: boolean; runningCard: Runn
 export default function Browser_TopBar({webview, isDomReady, runningCard}: Props) {
   return (
     <>
-      <Browser_ActionButtons webview={webview} isDomReady={isDomReady} />
+      <Browser_ActionButtons webview={webview} isDomReady={isDomReady} webuiAddress={runningCard.webUIAddress} />
       <AddressInput runningCard={runningCard} />
       <Browser_Zoom id={runningCard.id} />
     </>
