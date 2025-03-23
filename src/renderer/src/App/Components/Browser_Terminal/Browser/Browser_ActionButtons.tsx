@@ -64,21 +64,21 @@ export default function Browser_ActionButtons({webview, isDomReady, webuiAddress
     <div className="flex flex-row gap-x-1 ml-1">
       <AnimatePresence>
         {canGoBack && (
-          <motion.a exit="exit" initial="exit" animate="animate" variants={variants} transition={transition}>
+          <motion.div exit="exit" initial="exit" animate="animate" variants={variants} transition={transition}>
             <Button size="sm" variant="light" onPress={goBack} className="cursor-default" isIconOnly>
               <ArrowDuo_Icon className="size-4" />
             </Button>
-          </motion.a>
+          </motion.div>
         )}
       </AnimatePresence>
 
       <AnimatePresence>
         {canGoForward && (
-          <motion.a exit="exit" initial="exit" animate="animate" variants={variants} transition={transition}>
+          <motion.div exit="exit" initial="exit" animate="animate" variants={variants} transition={transition}>
             <Button size="sm" variant="light" onPress={goForward} className="cursor-default" isIconOnly>
               <ArrowDuo_Icon className="size-4 rotate-180" />
             </Button>
-          </motion.a>
+          </motion.div>
         )}
       </AnimatePresence>
 

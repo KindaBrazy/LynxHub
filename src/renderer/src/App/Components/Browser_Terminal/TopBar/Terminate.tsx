@@ -76,7 +76,7 @@ export default function Terminate({runningCard}: Props) {
         classNames={{base: 'before:dark:bg-LynxRaisinBlack', backdrop: '!top-10'}}
         showArrow>
         <PopoverTrigger>
-          <a />
+          <div />
         </PopoverTrigger>
         <PopoverContent className="py-4 px-8 dark:bg-LynxRaisinBlack">
           <span className="self-start text-medium font-semibold">Terminate AI Execution</span>
