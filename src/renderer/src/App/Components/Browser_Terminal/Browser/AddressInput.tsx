@@ -31,8 +31,8 @@ export default function AddressInput({runningCard}: Props) {
   }, [inputRef]);
 
   useEffect(() => {
-    const {webUIAddress, customAddress} = runningCard;
-    const address = customAddress || webUIAddress;
+    const {webUIAddress, customAddress, currentAddress} = runningCard;
+    const address = currentAddress || customAddress || webUIAddress;
 
     const prefixRegex = /^(?:https?:\/\/)?(?:www\.)?/i;
 
