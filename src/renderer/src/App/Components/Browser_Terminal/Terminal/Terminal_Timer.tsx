@@ -3,14 +3,20 @@ import {useEffect, useState} from 'react';
 
 import {secondsElapsed} from '../../../../../../cross/CrossUtils';
 
-const calc = (startTime: Date) => {
-  const seconds = secondsElapsed(startTime);
+const calc = (startTime: string) => {
+  const startDate = new Date(startTime);
+
+  if (isNaN(startDate.getTime())) {
+    return {hh: 0, mm: 0, ss: 0};
+  }
+
+  const seconds = secondsElapsed(startDate);
   return {hh: Math.floor(seconds / 3600), mm: Math.floor((seconds % 3600) / 60), ss: seconds % 60};
 };
 
 type TimeType = {hh: number; mm: number; ss: number};
 
-type Props = {startTime: Date};
+type Props = {startTime: string};
 export default function Terminal_Timer({startTime}: Props) {
   const [{ss, hh, mm}, setTime] = useState<TimeType>(calc(startTime));
 
