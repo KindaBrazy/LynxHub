@@ -5,6 +5,7 @@ export type RunningCard = {
   id: string;
   tabId: string;
   webUIAddress: string;
-  startTime: Date;
+  customAddress: string;
+  startTime: string;
   currentView: 'browser' | 'terminal';
 };
