@@ -21,11 +21,16 @@ export default function AddressInput({runningCard}: Props) {
 
   useEffect(() => {
     if (inputRef.current) {
-      inputRef.current.addEventListener('focus', () => inputRef.current?.select());
+      const input = inputRef.current;
 
-      inputRef.current.onkeydown = e => {
-        const target = formatWebAddress(inputRef.current?.value || '');
-        if (e.key === 'Enter') dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: target}));
+      input.onfocus = () => input.select();
+
+      input.onkeydown = e => {
+        const target = formatWebAddress(input.value || '');
+        if (e.key === 'Enter') {
+          dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: target}));
+          input.blur();
+        }
       };
     }
   }, [inputRef]);
