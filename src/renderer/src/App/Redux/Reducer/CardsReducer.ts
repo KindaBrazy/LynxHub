@@ -24,6 +24,8 @@ type CardsState = {
   webViewZoomFactor: {id: string; zoom: number}[];
   homeCategory: string[];
   duplicates: {ogID: string; id: string; title: string}[];
+
+  activeTab: string;
 };
 
 type CardsStateTypes = {
@@ -45,6 +47,7 @@ const initialState: CardsState = {
   webViewZoomFactor: [],
   duplicates: [],
   checkUpdateInterval: 30,
+  activeTab: '',
 };
 
 const cardsSlice = createSlice({
@@ -124,7 +127,15 @@ const cardsSlice = createSlice({
       const {tabId, id} = action.payload;
       state.runningCard = [
         ...state.runningCard,
-        {tabId, id, webUIAddress: '', customAddress: '', currentView: 'terminal', startTime: new Date().toString()},
+        {
+          tabId,
+          id,
+          webUIAddress: '',
+          customAddress: '',
+          currentAddress: '',
+          currentView: 'terminal',
+          startTime: new Date().toString(),
+        },
       ];
     },
     setRunningCardAddress: (state, action: PayloadAction<{tabId: string; address: string}>) => {
@@ -145,6 +156,17 @@ const cardsSlice = createSlice({
           ? {
               ...card,
               customAddress: address,
+            }
+          : card,
+      );
+    },
+    setRunningCardCurrentAddress: (state, action: PayloadAction<{tabId: string; address: string}>) => {
+      const {tabId, address} = action.payload;
+      state.runningCard = state.runningCard.map(card =>
+        card.tabId === tabId
+          ? {
+              ...card,
+              currentAddress: address,
             }
           : card,
       );

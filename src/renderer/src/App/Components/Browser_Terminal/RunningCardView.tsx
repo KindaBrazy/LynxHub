@@ -1,6 +1,6 @@
-import {WebviewTag} from 'electron';
+import {DidStartNavigationEvent, WebviewTag} from 'electron';
 import {isNil} from 'lodash';
-import {useCallback, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
@@ -25,27 +25,31 @@ const RunningCardView = ({runningCard}: Props) => {
   const [webViewRef, setWebViewRef] = useState<WebviewTag | null>(null);
   const [isDomReady, setIsDomReady] = useState<boolean>(false);
 
-  const setAddressBar = useCallback(
-    (address: string) => {
-      dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address}));
-    },
-    [activeTab],
-  );
+  useEffect(() => {
+    if (isDomReady && webViewRef) {
+      const didNavigate = (e: DidStartNavigationEvent) => {
+        dispatch(cardsActions.setRunningCardCurrentAddress({tabId: activeTab, address: e.url}));
+      };
+      webViewRef.removeEventListener('did-start-navigation', didNavigate);
+      webViewRef.addEventListener('did-start-navigation', didNavigate);
 
-  const initWebviewRef = useCallback(node => {
+      return () => webViewRef.removeEventListener('did-start-navigation', didNavigate);
+    }
+
+    return () => {};
+  }, [isDomReady, webViewRef, activeTab]);
+
+  const initWebviewRef = useCallback((node: WebviewTag) => {
     if (node !== null) {
       setWebViewRef(node);
 
       node.addEventListener(
         'dom-ready',
         () => {
-          console.log('dom ready');
           setIsDomReady(true);
           rendererIpc.appWindow.webViewAttached(node.getWebContentsId());
-          node.addEventListener('did-navigate-in-page', e => {
-            setAddressBar(e.url);
-          });
         },
+        // @ts-ignore
         {once: true},
       );
     }
