@@ -1,29 +1,48 @@
 import {Input} from '@heroui/react';
-import {useEffect, useMemo, useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
-type Props = {address: string};
+import {formatWebAddress} from '../../../../../../cross/CrossUtils';
+import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {AppDispatch} from '../../../Redux/Store';
+import {RunningCard} from '../../../Utils/Types';
 
-export default function AddressInput({address}: Props) {
+type Props = {runningCard: RunningCard};
+
+export default function AddressInput({runningCard}: Props) {
+  const activeTab = useTabsState('activeTab');
+
+  const [value, setValue] = useState<string>('');
+  const [prefix, setPrefix] = useState<string>('');
+
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.addEventListener('focus', () => inputRef.current?.select());
+
+      inputRef.current.onkeydown = e => {
+        const target = formatWebAddress(inputRef.current?.value || '');
+        if (e.key === 'Enter') dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: target}));
+      };
     }
   }, [inputRef]);
 
-  const {prefix, target} = useMemo(() => {
+  useEffect(() => {
+    const {webUIAddress, customAddress} = runningCard;
+    const address = customAddress || webUIAddress;
+
     const prefixRegex = /^(?:https?:\/\/)?(?:www\.)?/i;
 
     const match = address.match(prefixRegex);
-    const prefix = match ? match[0] : '';
+    const prefix_value = match ? match[0] : '';
     const target = address.replace(prefixRegex, '');
 
-    return {prefix, target};
-  }, [address]);
-
-  const [value, setValue] = useState<string>('');
-
-  useEffect(() => setValue(target), [target]);
+    setPrefix(prefix_value);
+    setValue(target);
+  }, [runningCard]);
 
   return (
     <Input

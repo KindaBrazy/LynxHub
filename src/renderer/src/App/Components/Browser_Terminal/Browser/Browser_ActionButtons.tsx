@@ -1,13 +1,13 @@
 import {Button} from '@heroui/react';
 import {WebviewTag} from 'electron';
 import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
-import {RefObject, useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 import {HomeSmile_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Refresh3_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons4';
 import {ArrowDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 
-type Props = {webview: RefObject<WebviewTag | null>; isDomReady: boolean};
+type Props = {webview: WebviewTag | null; isDomReady: boolean};
 
 const variants: Variants = {
   animate: {scale: 1, opacity: 1},
@@ -20,39 +20,38 @@ export default function Browser_ActionButtons({webview, isDomReady}: Props) {
   const [canGoForward, setCanGoForward] = useState<boolean>(false);
 
   const goBack = useCallback(() => {
-    webview.current?.goBack();
+    webview?.goBack();
   }, [webview]);
   const goForward = useCallback(() => {
-    webview.current?.goForward();
+    webview?.goForward();
   }, [webview]);
 
   const reload = useCallback(() => {
-    webview.current?.reload();
+    webview?.reload();
   }, [webview]);
 
   useEffect(() => {
-    const ref = webview.current;
-    if (!ref) return;
+    if (!webview) return;
 
     const updateNavigationState = () => {
       if (isDomReady) {
-        setCanGoBack(ref.canGoBack());
-        setCanGoForward(ref.canGoForward());
+        setCanGoBack(webview.canGoBack());
+        setCanGoForward(webview.canGoForward());
       }
     };
 
     updateNavigationState();
 
-    ref.addEventListener('did-navigate', updateNavigationState);
-    ref.addEventListener('did-navigate-in-page', updateNavigationState);
-    ref.addEventListener('did-finish-load', updateNavigationState);
-    ref.addEventListener('did-stop-loading', updateNavigationState);
+    webview.addEventListener('did-navigate', updateNavigationState);
+    webview.addEventListener('did-navigate-in-page', updateNavigationState);
+    webview.addEventListener('did-finish-load', updateNavigationState);
+    webview.addEventListener('did-stop-loading', updateNavigationState);
 
     return () => {
-      ref.removeEventListener('did-navigate', updateNavigationState);
-      ref.removeEventListener('did-navigate-in-page', updateNavigationState);
-      ref.removeEventListener('did-finish-load', updateNavigationState);
-      ref.removeEventListener('did-stop-loading', updateNavigationState);
+      webview.removeEventListener('did-navigate', updateNavigationState);
+      webview.removeEventListener('did-navigate-in-page', updateNavigationState);
+      webview.removeEventListener('did-finish-load', updateNavigationState);
+      webview.removeEventListener('did-stop-loading', updateNavigationState);
     };
   }, [webview, isDomReady]);
 
