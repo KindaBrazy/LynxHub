@@ -124,12 +124,30 @@ const cardsSlice = createSlice({
       const {tabId, id} = action.payload;
       state.runningCard = [
         ...state.runningCard,
-        {tabId, id, webUIAddress: '', currentView: 'terminal', startTime: new Date().toString()},
+        {tabId, id, webUIAddress: '', customAddress: '', currentView: 'terminal', startTime: new Date().toString()},
       ];
     },
     setRunningCardAddress: (state, action: PayloadAction<{tabId: string; address: string}>) => {
       const {tabId, address} = action.payload;
-      state.runningCard = state.runningCard.map(card => (card.tabId === tabId ? {...card, address} : card));
+      state.runningCard = state.runningCard.map(card =>
+        card.tabId === tabId
+          ? {
+              ...card,
+              webUIAddress: address,
+            }
+          : card,
+      );
+    },
+    setRunningCardCustomAddress: (state, action: PayloadAction<{tabId: string; address: string}>) => {
+      const {tabId, address} = action.payload;
+      state.runningCard = state.runningCard.map(card =>
+        card.tabId === tabId
+          ? {
+              ...card,
+              customAddress: address,
+            }
+          : card,
+      );
     },
     setRunningCardView: (state, action: PayloadAction<{tabId: string; view: 'browser' | 'terminal'}>) => {
       const {tabId, view} = action.payload;

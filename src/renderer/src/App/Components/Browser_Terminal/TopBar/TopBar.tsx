@@ -1,12 +1,11 @@
 import {WebviewTag} from 'electron';
-import {RefObject} from 'react';
 
 import {RunningCard} from '../../../Utils/Types';
 import Browser_TopBar from '../Browser/Browser_TopBar';
 import Terminal_TopBar from '../Terminal/Terminal_TopBar';
 import SwitchAndTerminate from './SwitchAndTerminate';
 
-type Props = {webview: RefObject<WebviewTag | null>; isDomReady: boolean; runningCard: RunningCard};
+type Props = {webview: WebviewTag | null; isDomReady: boolean; runningCard: RunningCard};
 
 export default function TopBar({runningCard, isDomReady, webview}: Props) {
   return (
@@ -18,7 +17,7 @@ export default function TopBar({runningCard, isDomReady, webview}: Props) {
       {runningCard.currentView === 'terminal' ? (
         <Terminal_TopBar startTime={runningCard.startTime} />
       ) : (
-        <Browser_TopBar webview={webview} id={runningCard.id} isDomReady={isDomReady} />
+        <Browser_TopBar webview={webview} isDomReady={isDomReady} runningCard={runningCard} />
       )}
 
       <SwitchAndTerminate runningCard={runningCard} />
