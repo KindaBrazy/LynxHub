@@ -308,10 +308,6 @@ function appWindow() {
     const webview = webContents.fromId(id);
     if (!webview) return;
 
-    webview.on('will-navigate', (e, url) => {
-      shell.openExternal(url);
-      e.preventDefault();
-    });
     webview.setWindowOpenHandler(({url}) => {
       shell.openExternal(url);
       return {action: 'deny'};
