@@ -61,6 +61,7 @@ export default function AddressInput({runningCard}: Props) {
       className="mx-2"
       spellCheck="false"
       onValueChange={setValue}
+      placeholder="Type here to start browsing..."
       startContent={<span className="text-small text-default-400">{prefix}</span>}
     />
   );
