@@ -72,7 +72,7 @@ async function onAppReady() {
 
   electronApp.setAppUserModelId(APP_NAME);
 
-  if (platform() === 'darwin') app.dock.setIcon(nativeImage.createFromPath(darwinIcon));
+  if (platform() === 'darwin') app.dock?.setIcon(nativeImage.createFromPath(darwinIcon));
 
   appManager.startLoading();
 
@@ -123,32 +123,32 @@ function handleTaskbarStatus() {
       trayManager.createTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
-        app.dock.show();
+      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+        app.dock?.show();
       }
       break;
     case 'taskbar':
       trayManager.destroyTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
-        app.dock.show();
+      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+        app.dock?.show();
       }
       break;
     case 'tray':
       trayManager.createTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(true);
-      } else if (platform() === 'darwin' && app.dock.isVisible()) {
-        app.dock.hide();
+      } else if (platform() === 'darwin' && app.dock?.isVisible()) {
+        app.dock?.hide();
       }
       break;
     case 'tray-minimized':
       trayManager.destroyTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
-        app.dock.show();
+      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+        app.dock?.show();
       }
       break;
   }

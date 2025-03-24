@@ -158,8 +158,8 @@ export default class ElectronAppManager {
       trayManager.createTrayIcon();
       if (platform() === 'linux') {
         this.getMainWindow()?.hide();
-      } else if (platform() === 'darwin' && app.dock.isVisible()) {
-        app.dock.hide();
+      } else if (platform() === 'darwin' && app.dock?.isVisible()) {
+        app.dock?.hide();
       } else {
         this.getMainWindow()?.setSkipTaskbar(true);
       }
@@ -172,8 +172,8 @@ export default class ElectronAppManager {
       trayManager.destroyTrayIcon();
       if (platform() === 'win32') {
         this.getMainWindow()?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
-        app.dock.show();
+      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+        app.dock?.show();
       }
     }
   };
