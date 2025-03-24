@@ -5,9 +5,9 @@ import Browser_TopBar from '../Browser/Browser_TopBar';
 import Terminal_TopBar from '../Terminal/Terminal_TopBar';
 import SwitchAndTerminate from './SwitchAndTerminate';
 
-type Props = {webview: WebviewTag | null; isDomReady: boolean; runningCard: RunningCard};
+type Props = {webview: WebviewTag | null; isDomReady: boolean; runningCard: RunningCard; terminalContent: string};
 
-export default function TopBar({runningCard, isDomReady, webview}: Props) {
+export default function TopBar({runningCard, isDomReady, webview, terminalContent}: Props) {
   return (
     <div
       className={
@@ -15,7 +15,7 @@ export default function TopBar({runningCard, isDomReady, webview}: Props) {
         ' flex flex-row gap-x-1 px-2 py-1 items-center justify-between'
       }>
       {runningCard.currentView === 'terminal' ? (
-        <Terminal_TopBar startTime={runningCard.startTime} />
+        <Terminal_TopBar terminalContent={terminalContent} startTime={runningCard.startTime} />
       ) : (
         <Browser_TopBar webview={webview} isDomReady={isDomReady} runningCard={runningCard} />
       )}
