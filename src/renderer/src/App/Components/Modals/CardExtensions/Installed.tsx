@@ -152,7 +152,6 @@ const Installed = forwardRef(
 
       rendererIpc.utils.getExtensionsUpdateStatus(dir).then(updateStatus => {
         if (isEmpty(updateStatus)) return;
-        console.log('updateStatus', updateStatus);
         setRows(prevState =>
           prevState.map((row, index) => {
             const isUpdateAvailable = find(updateStatus, {id: row.key})?.updateAvailable;
