@@ -153,7 +153,6 @@ export default function Terminal({runningCard}: Props) {
 
   useEffect(() => {
     async function loadTerminal() {
-      console.log(runningCard);
       const JetBrainsMono = new FontFaceObserver(FONT_FAMILY);
 
       const sysInfo = await rendererIpc.win.getSystemInfo();

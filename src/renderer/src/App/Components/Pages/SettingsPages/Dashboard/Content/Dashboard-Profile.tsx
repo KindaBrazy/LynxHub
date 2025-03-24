@@ -7,8 +7,8 @@ import {User_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {Google_Icon, Patreon_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {checkEARepos} from '../../../../../AppEvents/AppEvents_Utils';
 import {useAppState} from '../../../../../Redux/Reducer/AppReducer';
-import {AppDispatch} from '../../../../../Redux/Store';
 import {userActions, useUserState} from '../../../../../Redux/Reducer/UserReducer';
+import {AppDispatch} from '../../../../../Redux/Store';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
 export const DashboardProfileId = 'settings_profile_elem';
@@ -29,7 +29,6 @@ export default function DashboardProfile() {
       window.electron.ipcRenderer
         .invoke('patreon-login')
         .then((userData: PatreonUserData) => {
-          console.log(userData);
           dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
           dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
           checkEARepos(userData.earlyAccess);

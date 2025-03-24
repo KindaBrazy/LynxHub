@@ -12,7 +12,6 @@ export default function CustomRunBehavior({id}: Props) {
 
   const onTerminalChange = (value: Selection) => {
     if (value && value !== 'all') {
-      console.log(value);
       setTerminalValue(value.values().next().value as string);
       rendererIpc.storageUtils.updateCustomRunBehavior({
         cardID: id,
