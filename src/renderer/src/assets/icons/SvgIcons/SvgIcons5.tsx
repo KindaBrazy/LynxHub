@@ -308,3 +308,41 @@ export function CopyDuo_Icon(props: SvgProps): ReactElement {
     </svg>
   );
 }
+
+export function CheckDuo_Icon(props: SvgProps): ReactElement {
+  return (
+    <svg {...props} width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+        <path opacity="0.5" d="m4 12.9l3.143 3.6L15 7.5" />
+        <path d="m20 7.563l-8.571 9L11 16" />
+      </g>
+    </svg>
+  );
+}
+
+export function EraserDuo_Icon(props: SvgProps): ReactElement {
+  return (
+    <svg {...props} width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d={
+          'M14.952 3c-1.037 0-1.872.835-3.542 2.505l-4.91 4.91l7.085 7.085l4.91-4.91C20.165 10.9' +
+          '2 21 10.085 21 9.048c0-1.038-.835-1.873-2.505-3.543S15.99 3 14.952 3'
+        }
+        opacity="0.5"
+        fill="currentColor"
+      />
+      <path
+        d={
+          'M13.585 17.5L6.5 10.415l-.995.995C3.835 13.08 3 13.915 3 14.952c0 1.038.835 1.873 2.505' +
+          ' 3.543S8.01 21 9.048 21c1.037 0 1.872-.835 3.542-2.505z'
+        }
+        fill="currentColor"
+      />
+      <path
+        opacity="0.5"
+        fill="currentColor"
+        d="M9.033 21H9zm.03 0c.796-.006 1.476-.506 2.51-1.5H21a.75.75 0 0 1 0 1.5z"
+      />
+    </svg>
+  );
+}
