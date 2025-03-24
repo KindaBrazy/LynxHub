@@ -55,10 +55,21 @@ const RunningCardView = ({runningCard}: Props) => {
     }
   }, []);
 
+  const [terminalContent, setTerminalContent] = useState<string>('');
+
   return (
     <>
-      <TopBar webview={webViewRef} isDomReady={isDomReady} runningCard={runningCard} />
-      {isNil(ExtTerminal) ? <Terminal runningCard={runningCard} /> : <ExtTerminal />}
+      <TopBar
+        webview={webViewRef}
+        isDomReady={isDomReady}
+        runningCard={runningCard}
+        terminalContent={terminalContent}
+      />
+      {isNil(ExtTerminal) ? (
+        <Terminal runningCard={runningCard} setTerminalContent={setTerminalContent} />
+      ) : (
+        <ExtTerminal />
+      )}
       {isNil(ExtBrowser) ? (
         <Browser
           webViewRef={webViewRef}

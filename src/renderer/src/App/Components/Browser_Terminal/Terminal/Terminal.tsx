@@ -8,7 +8,7 @@ import {ITheme, IWindowsPty, Terminal as XTerminal} from '@xterm/xterm';
 import {message} from 'antd';
 import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty} from 'lodash';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {Dispatch, SetStateAction, useCallback, useEffect, useRef, useState} from 'react';
 import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
@@ -28,8 +28,8 @@ let resizeTimeout: any;
 
 const FONT_FAMILY = 'JetBrainsMono';
 
-type Props = {runningCard: RunningCard};
-export default function Terminal({runningCard}: Props) {
+type Props = {runningCard: RunningCard; setTerminalContent: Dispatch<SetStateAction<string>>};
+export default function Terminal({runningCard, setTerminalContent}: Props) {
   const activeTab = useTabsState('activeTab');
   const allCards = useAllCards();
 
@@ -104,6 +104,9 @@ export default function Terminal({runningCard}: Props) {
 
   const writeData = useCallback(
     (data: string) => {
+      const xTerminal = terminal.current;
+      if (!xTerminal) return;
+
       if (isEmpty(webUIAddress) && browserBehavior !== 'doNothing') {
         const catchAddress = getCardMethod(allCards, id, 'catchAddress');
         const url = catchAddress?.(data) || '';
@@ -118,9 +121,20 @@ export default function Terminal({runningCard}: Props) {
           }
         }
       }
-      terminal.current?.write(outputColor ? parseTerminalColors(data) : data);
+      xTerminal.write(outputColor ? parseTerminalColors(data) : data);
+
+      let fullText = '';
+      const buffer = xTerminal.buffer.active;
+      for (let i = 0; i < buffer.length; i++) {
+        const line = buffer.getLine(i)?.translateToString(true);
+        if (line) {
+          fullText += line + '\n';
+        }
+      }
+
+      setTerminalContent(fullText);
     },
-    [webUIAddress, id, browserBehavior, outputColor, dispatch, allCards, activeTab],
+    [webUIAddress, id, terminal, browserBehavior, outputColor, dispatch, allCards, activeTab],
   );
 
   const onRightClickRef = useRef<((e: MouseEvent) => void) | null>(null);
