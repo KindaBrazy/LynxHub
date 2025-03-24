@@ -148,7 +148,7 @@ export default function Terminal({runningCard}: Props) {
   }, [terminalRef, stableEventHandler]);
 
   useEffect(() => {
-    fitAddon.current?.fit();
+    if (currentView === 'terminal') fitAddon.current?.fit();
   }, [currentView, fitAddon]);
 
   useEffect(() => {
