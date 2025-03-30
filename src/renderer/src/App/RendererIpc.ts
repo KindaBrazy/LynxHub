@@ -314,6 +314,8 @@ const rendererIpc = {
     getCurrentPath: (): Promise<string> => ipc.invoke(appDataChannels.getCurrentPath),
 
     selectAnother: (): Promise<any> => ipc.invoke(appDataChannels.selectAnother),
+
+    isAppDir: (dir: string): Promise<boolean> => ipc.invoke(appDataChannels.isAppDir, dir),
   },
 
   /** Managing app storage data */

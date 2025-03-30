@@ -1,7 +1,8 @@
-import {isAbsolute, join} from 'node:path';
+import {dirname, isAbsolute, join} from 'node:path';
 
-import {dialog} from 'electron';
+import {app, dialog} from 'electron';
 import fs from 'graceful-fs';
+import {resolve} from 'path';
 
 import {
   BINARIES_FOLDER_NAME,
@@ -91,4 +92,11 @@ export async function selectNewAppDataFolder(): Promise<string> {
   } else {
     throw new Error('No folder path selected');
   }
+}
+
+export async function isAppDir(dir: string) {
+  const appPath = resolve(dirname(app.getPath('exe')));
+  const target = resolve(dir);
+  console.log(appPath, target, target.startsWith(appPath));
+  return target.startsWith(appPath);
 }
