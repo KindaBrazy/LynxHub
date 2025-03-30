@@ -209,6 +209,7 @@ export const appUpdateChannels = {
 export const appDataChannels = {
   getCurrentPath: 'appData:get-current-path',
   selectAnother: 'appData:select-another',
+  isAppDir: 'appData:is-app-dir',
 };
 
 export const storageChannels = {

@@ -30,7 +30,7 @@ import StorageTypes, {InstalledCard} from '../../../cross/StorageTypes';
 import {appManager, discordRpcManager, extensionManager, moduleManager, storageManager} from '../../index';
 import calcFolderSize from '../../Utilities/CalculateFolderSize/CalculateFolderSize';
 import {getDirCreationDate, getSystemDarkMode, openDialog} from '../../Utilities/Utils';
-import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
+import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../AppDataManager';
 import GitManager from '../GitManager';
 import {
   changeWindowState,
@@ -209,6 +209,7 @@ function pty() {
 function appData() {
   ipcMain.handle(appDataChannels.getCurrentPath, () => getAppDataPath());
   ipcMain.handle(appDataChannels.selectAnother, () => selectNewAppDataFolder());
+  ipcMain.handle(appDataChannels.isAppDir, (_, dir: string) => isAppDir(dir));
 }
 
 function storage() {
