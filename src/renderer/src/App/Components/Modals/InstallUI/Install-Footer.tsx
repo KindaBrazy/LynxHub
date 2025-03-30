@@ -1,11 +1,12 @@
 import {Button, ButtonGroup, ModalFooter} from '@heroui/react';
-import {memo, RefObject, useCallback} from 'react';
+import {memo, RefObject, useCallback, useState} from 'react';
 
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
 import {InstallationMethod, UserInputResult} from '../../../Modules/types';
 import rendererIpc from '../../../RendererIpc';
 import FooterTerminal from './Footer-Terminal';
 import {InstallState} from './types';
+import LocateWarning from './Utils/LocateWarning';
 
 type Props = {
   state: InstallState;
@@ -36,6 +37,7 @@ const InstallFooter = ({
   progressInfo,
   cardId,
 }: Props) => {
+  const [locateWarnIsOpen, setLocateWarnIsOpen] = useState<boolean>(false);
   const onDoneTerminal = useCallback(() => {
     if (terminalResolver.current) {
       rendererIpc.pty.customProcess(cardId, 'stop');
@@ -46,13 +48,22 @@ const InstallFooter = ({
 
   const locate = useCallback(() => {
     rendererIpc.file.openDlg({properties: ['openDirectory']}).then(targetDirectory => {
-      if (targetDirectory) starterResolver.current?.({chosen: 'locate', targetDirectory});
+      if (targetDirectory) {
+        rendererIpc.appData.isAppDir(targetDirectory).then(isAppDir => {
+          if (isAppDir) {
+            setLocateWarnIsOpen(true);
+          } else {
+            starterResolver.current?.({chosen: 'locate', targetDirectory});
+          }
+        });
+      }
     });
   }, [starterResolver]);
 
   const renderFooterButtons = () => {
     return (
       <>
+        <LocateWarning isOpen={locateWarnIsOpen} setIsOpen={setLocateWarnIsOpen} />
         <Button
           variant="flat"
           onPress={handleClose}
