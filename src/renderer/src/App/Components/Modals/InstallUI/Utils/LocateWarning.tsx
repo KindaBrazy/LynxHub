@@ -19,7 +19,7 @@ export default function LocateWarning({isOpen, setIsOpen}: Props) {
         </ModalHeader>
         <ModalBody>
           <span>
-            installer Saving data to an application&#39;s installation directory can result in{' '}
+            Saving data to an application&#39;s installation directory can result in{' '}
             <span className="text-warning font-semibold">data loss</span>. Please move your data to a different folder.
           </span>
         </ModalBody>
