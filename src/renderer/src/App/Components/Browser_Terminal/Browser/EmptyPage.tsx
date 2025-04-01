@@ -1,18 +1,31 @@
 import {Button, Image, Spinner} from '@heroui/react';
 import {useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {Terminal_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
+import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {AppDispatch} from '../../../Redux/Store';
+
+// TODO: Implement recent addresses
 
 export default function EmptyPage() {
+  const activeTab = useTabsState('activeTab');
+  const dispatch = useDispatch<AppDispatch>();
+
+  const switchToTerminal = () => {
+    dispatch(cardsActions.setRunningCardView({tabId: activeTab, view: 'terminal'}));
+  };
+
   const [recentAddress] = useState([
     'Google',
     'ReactJS',
     'ElectronJS',
     'dev.to',
-    'reddit',
+    'Reddit',
     'X',
-    'youtube',
-    'discord',
+    'Youtube',
+    'Discord',
     'IGN',
   ]);
 
@@ -25,7 +38,11 @@ export default function EmptyPage() {
           </Spinner>
         </div>
 
-        <Button variant="flat" color="primary" className="size-full h-24 transition duration-500 flex-col shadow-lg">
+        <Button
+          variant="flat"
+          color="primary"
+          onPress={switchToTerminal}
+          className="size-full h-24 transition duration-500 flex-col shadow-lg">
           <Terminal_Icon className="size-6" />
           Switch to Terminal
         </Button>
