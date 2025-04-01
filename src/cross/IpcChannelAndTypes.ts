@@ -269,6 +269,9 @@ export const storageUtilsChannels = {
   setCardArguments: 'storageUtils:set-card-arguments',
 
   updateZoomFactor: 'storageUtils:update-zoom-factor',
+
+  addBrowserRecent: 'storageUtils:add-browser-recent',
+  getBrowserRecent: 'storageUtils:get-browser-recent',
 };
 
 export const appWindowChannels = {

@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {app, ipcMain, nativeTheme, OpenDialogOptions, shell, webContents} from 'electron';
 
-import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/CrossTypes';
+import {BrowserRecentAddress, ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/CrossTypes';
 import {
   appDataChannels,
   appWindowChannels,
@@ -288,6 +288,11 @@ function storageUtilsIpc() {
   );
 
   ipcMain.on(storageUtilsChannels.updateZoomFactor, (_, data) => storageManager.updateZoomFactor(data));
+
+  ipcMain.on(storageUtilsChannels.addBrowserRecent, (_, address: BrowserRecentAddress) =>
+    storageManager.addBrowserRecent(address),
+  );
+  ipcMain.handle(storageUtilsChannels.getBrowserRecent, () => storageManager.getBrowserRecent());
 }
 
 function modulesIpc() {
