@@ -6,6 +6,7 @@ import {formatWebAddress} from '../../../../../../cross/CrossUtils';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
+import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
 
 type Props = {runningCard: RunningCard};
@@ -29,6 +30,7 @@ export default function AddressInput({runningCard}: Props) {
         const target = formatWebAddress(input.value || '');
         if (e.key === 'Enter') {
           dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: target}));
+          rendererIpc.storageUtils.addBrowserRecent({url: target});
           input.blur();
         }
       };
