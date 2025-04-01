@@ -17,10 +17,10 @@ const {JSONFileSyncPreset} = importSync('lowdb/node');
 class BaseStorage {
   private readonly storage;
 
-  private readonly CURRENT_VERSION: number = 0.7;
+  private readonly CURRENT_VERSION: number = 0.8;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.7},
+    storage: {version: 0.8},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -87,6 +87,9 @@ class BaseStorage {
       blinkCursor: true,
       resizeDelay: 77,
     },
+    browser: {
+      recentAddress: [],
+    },
   };
 
   constructor() {
@@ -118,21 +121,32 @@ class BaseStorage {
   private migration() {
     const storeVersion = this.getData('storage').version;
 
-    const version4to5 = () => {
+    const v4to5 = () => {
       this.storage.data.terminal = this.DEFAULT_DATA.terminal;
+
       this.storage.write();
     };
 
-    const version5to6 = () => {
+    const v5to6 = () => {
       this.storage.data.cards.duplicated = [];
+
       this.storage.write();
     };
 
-    const version6to7 = () => {
+    const v6to7 = () => {
       this.storage.data.app.openLastSize = false;
       this.storage.data.app.dynamicAppTitle = true;
       this.storage.data.app.lastSize = undefined;
       this.storage.data.cards.checkUpdateInterval = 30;
+
+      this.storage.write();
+    };
+
+    const v7to8 = () => {
+      this.storage.data.browser = {
+        recentAddress: [],
+      };
+
       this.storage.write();
     };
 
@@ -143,18 +157,25 @@ class BaseStorage {
     if (storeVersion < this.CURRENT_VERSION) {
       switch (storeVersion) {
         case 0.4: {
-          version4to5();
-          version5to6();
-          version6to7();
+          v4to5();
+          v5to6();
+          v6to7();
+          v7to8();
           break;
         }
         case 0.5: {
-          version5to6();
-          version6to7();
+          v5to6();
+          v6to7();
+          v7to8();
           break;
         }
         case 0.6: {
-          version6to7();
+          v6to7();
+          v7to8();
+          break;
+        }
+        case 0.7: {
+          v7to8();
           break;
         }
         default:

@@ -275,3 +275,5 @@ export type TabInfo = {
   pageID: string;
   iconURL?: string;
 };
+
+export type BrowserRecentAddress = {url: string; title?: string; favIcon?: string};

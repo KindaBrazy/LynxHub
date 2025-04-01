@@ -1,6 +1,6 @@
 import {Rectangle} from 'electron';
 
-import {DiscordRPC, StorageChosenArgumentsData} from './CrossTypes';
+import {BrowserRecentAddress, DiscordRPC, StorageChosenArgumentsData} from './CrossTypes';
 import {
   CustomRunBehaviorStore,
   DarkModeTypes,
@@ -80,6 +80,9 @@ type StorageTypes = {
     cursorInactiveStyle: TerminalCursorInactiveStyle;
     blinkCursor: boolean;
     resizeDelay: number;
+  };
+  browser: {
+    recentAddress: BrowserRecentAddress[];
   };
 };
 
