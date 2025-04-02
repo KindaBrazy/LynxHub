@@ -2,7 +2,7 @@ import {Input} from '@heroui/react';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {fetchFavIconUrl, formatWebAddress, getUrlName} from '../../../../../../cross/CrossUtils';
+import {formatWebAddress} from '../../../../../../cross/CrossUtils';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
@@ -30,15 +30,8 @@ export default function AddressInput({runningCard}: Props) {
         const url = formatWebAddress(input.value || '');
         if (e.key === 'Enter') {
           dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
-          const title = getUrlName(url);
 
-          fetchFavIconUrl(url)
-            .then(favIcon => {
-              rendererIpc.storageUtils.addBrowserRecent({url, favIcon, title});
-            })
-            .catch(() => {
-              rendererIpc.storageUtils.addBrowserRecent({url, title});
-            });
+          rendererIpc.storageUtils.addBrowserRecent(url);
 
           input.blur();
         }
