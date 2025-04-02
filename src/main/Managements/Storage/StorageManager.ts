@@ -1,7 +1,7 @@
 import lodash from 'lodash';
 import _ from 'lodash';
 
-import {BrowserRecentAddress, ChosenArgumentsData} from '../../../cross/CrossTypes';
+import {ChosenArgumentsData} from '../../../cross/CrossTypes';
 import {
   CustomRunBehaviorData,
   HomeCategory,
@@ -495,18 +495,18 @@ class StorageManager extends BaseStorage {
     });
   }
 
-  public addBrowserRecent(address: BrowserRecentAddress) {
+  public addBrowserRecent(url: string) {
     let recentAddress = this.getData('browser').recentAddress;
 
-    const existUrl = recentAddress.findIndex(r => r.url === address.url);
+    const existUrl = recentAddress.findIndex(recent => recent === url);
 
     if (existUrl === -1) {
-      recentAddress = [...recentAddress, address];
+      recentAddress = [...recentAddress, url];
       this.updateData('browser', {recentAddress: recentAddress});
     }
   }
 
-  public getBrowserRecent(): BrowserRecentAddress[] {
+  public getBrowserRecent(): string[] {
     return this.getData('browser').recentAddress;
   }
 }
