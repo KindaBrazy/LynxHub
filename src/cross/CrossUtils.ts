@@ -134,3 +134,18 @@ export function formatWebAddress(address: string): string {
     return 'https://' + address;
   }
 }
+
+export async function fetchFavIconUrl(domain: string) {
+  try {
+    const fetchUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+    const response = await fetch(fetchUrl);
+
+    if (!response.ok) {
+      return undefined;
+    }
+
+    return response.url;
+  } catch (e) {
+    return undefined;
+  }
+}
