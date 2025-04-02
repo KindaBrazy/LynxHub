@@ -135,19 +135,8 @@ export function formatWebAddress(address: string): string {
   }
 }
 
-export async function fetchFavIconUrl(domain: string) {
-  try {
-    const fetchUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-    const response = await fetch(fetchUrl);
-
-    if (!response.ok) {
-      return undefined;
-    }
-
-    return response.url;
-  } catch (e) {
-    return undefined;
-  }
+export function getFavIconUrl(domain: string) {
+  return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
 }
 
 export function getUrlName(url: string): string {

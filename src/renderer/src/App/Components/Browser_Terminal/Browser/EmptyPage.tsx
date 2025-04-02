@@ -1,33 +1,28 @@
 import {Button, Image, Spinner} from '@heroui/react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {getFavIconUrl, getUrlName} from '../../../../../../cross/CrossUtils';
 import {Terminal_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
-
-// TODO: Implement recent addresses
+import rendererIpc from '../../../RendererIpc';
 
 export default function EmptyPage() {
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
+  const [recentAddress, setRecentAddress] = useState<string[]>([]);
 
   const switchToTerminal = () => {
     dispatch(cardsActions.setRunningCardView({tabId: activeTab, view: 'terminal'}));
   };
 
-  const [recentAddress] = useState([
-    'Google',
-    'ReactJS',
-    'ElectronJS',
-    'dev.to',
-    'Reddit',
-    'X',
-    'Youtube',
-    'Discord',
-    'IGN',
-  ]);
+  useEffect(() => {
+    rendererIpc.storageUtils.getBrowserRecent().then(setRecentAddress);
+  }, []);
+
+  // Add tooltip to showing complete url in recentAddress
 
   return (
     <div className="size-full flex items-center justify-center overflow-scroll scrollbar-hide">
@@ -53,8 +48,8 @@ export default function EmptyPage() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
               {recentAddress.slice(0, 8).map((site, index) => (
                 <Button key={index} variant="flat" color="default" className="flex-col size-full p-4 shadow-md">
-                  <Image radius="full" className="size-8" src="https://picsum.photos/128/?blur" />
-                  <span className="truncate text-wrap line-clamp-1">{site}</span>
+                  <Image radius="full" className="size-8" src={getFavIconUrl(site)} />
+                  <span className="truncate text-wrap line-clamp-1">{getUrlName(site)}</span>
                 </Button>
               ))}
             </div>
