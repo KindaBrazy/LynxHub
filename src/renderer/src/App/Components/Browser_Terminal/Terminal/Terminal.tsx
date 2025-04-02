@@ -115,6 +115,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
             setTimeout(() => {
               dispatch(cardsActions.setRunningCardAddress({address: url, tabId: activeTab}));
               dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
+              rendererIpc.storageUtils.addBrowserRecent(url);
             }, 1500);
           } else {
             window.open(url);
