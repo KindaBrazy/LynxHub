@@ -498,12 +498,15 @@ class StorageManager extends BaseStorage {
   public addBrowserRecent(url: string) {
     let recentAddress = this.getData('browser').recentAddress;
 
-    const existUrl = recentAddress.findIndex(recent => recent === url);
+    const existUrlIndex = recentAddress.findIndex(recent => recent === url);
 
-    if (existUrl === -1) {
-      recentAddress = [...recentAddress, url];
-      this.updateData('browser', {recentAddress: recentAddress});
+    if (existUrlIndex !== -1) {
+      recentAddress = [url, ...recentAddress.slice(0, existUrlIndex), ...recentAddress.slice(existUrlIndex + 1)];
+    } else {
+      recentAddress = [url, ...recentAddress];
     }
+
+    this.updateData('browser', {recentAddress: recentAddress});
   }
 
   public getBrowserRecent(): string[] {
