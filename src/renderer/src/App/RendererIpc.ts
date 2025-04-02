@@ -1,7 +1,6 @@
 import {IpcRendererEvent, OpenDialogOptions} from 'electron';
 
 import {
-  BrowserRecentAddress,
   ChosenArgumentsData,
   DiscordRPC,
   ExtensionsInfo,
@@ -253,8 +252,8 @@ const rendererIpc = {
 
     updateZoomFactor: (data: {id: string; zoom: number}) => ipc.send(storageUtilsChannels.updateZoomFactor, data),
 
-    addBrowserRecent: (address: BrowserRecentAddress) => ipc.send(storageUtilsChannels.addBrowserRecent, address),
-    getBrowserRecent: (): Promise<BrowserRecentAddress[]> => ipc.invoke(storageUtilsChannels.getBrowserRecent),
+    addBrowserRecent: (url: string) => ipc.send(storageUtilsChannels.addBrowserRecent, url),
+    getBrowserRecent: (): Promise<string[]> => ipc.invoke(storageUtilsChannels.getBrowserRecent),
   },
 
   /** Utilities methods */
