@@ -1,4 +1,4 @@
-import {Button, Image, Spinner} from '@heroui/react';
+import {Button, Image, Spinner, Tooltip} from '@heroui/react';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -22,8 +22,6 @@ export default function EmptyPage() {
     rendererIpc.storageUtils.getBrowserRecent().then(setRecentAddress);
   }, []);
 
-  // Add tooltip to showing complete url in recentAddress
-
   return (
     <div className="size-full flex items-center justify-center overflow-scroll scrollbar-hide">
       <div className="max-w-2xl w-full px-6 flex flex-col items-center">
@@ -46,11 +44,13 @@ export default function EmptyPage() {
           <div className="w-full mt-4">
             <h2 className="text-lg font-medium mb-3 mt-8">Recent Addresses</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-              {recentAddress.slice(0, 8).map((site, index) => (
-                <Button key={index} variant="flat" color="default" className="flex-col size-full p-4 shadow-md">
-                  <Image radius="full" className="size-8" src={getFavIconUrl(site)} />
-                  <span className="truncate text-wrap line-clamp-1">{getUrlName(site)}</span>
-                </Button>
+              {recentAddress.slice(0, 8).map((url, index) => (
+                <Tooltip key={index} delay={300} content={url} showArrow>
+                  <Button variant="flat" color="default" className="flex-col size-full p-4 shadow-md">
+                    <Image radius="full" className="size-8" src={getFavIconUrl(url)} />
+                    <span className="truncate text-wrap line-clamp-1">{getUrlName(url)}</span>
+                  </Button>
+                </Tooltip>
               ))}
             </div>
           </div>
