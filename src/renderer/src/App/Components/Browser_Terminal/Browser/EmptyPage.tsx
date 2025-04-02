@@ -22,6 +22,10 @@ export default function EmptyPage() {
     rendererIpc.storageUtils.getBrowserRecent().then(setRecentAddress);
   }, []);
 
+  const openRecent = (address: string) => {
+    dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address}));
+  };
+
   return (
     <div className="size-full flex items-center justify-center overflow-scroll scrollbar-hide">
       <div className="max-w-2xl w-full px-6 flex flex-col items-center">
@@ -45,10 +49,10 @@ export default function EmptyPage() {
             <h2 className="text-lg font-medium mb-3 mt-8">Recent Addresses</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
               {recentAddress.slice(0, 8).map((url, index) => (
-                <Tooltip key={index} delay={300} content={url} showArrow>
-                  <Button variant="flat" color="default" className="flex-col size-full p-4 shadow-md">
+                <Tooltip radius="sm" key={index} delay={300} content={url} showArrow>
+                  <Button variant="flat" onPress={() => openRecent(url)} className="flex-col size-full py-4 shadow-md">
                     <Image radius="full" className="size-8" src={getFavIconUrl(url)} />
-                    <span className="truncate text-wrap line-clamp-1">{getUrlName(url)}</span>
+                    <span className="truncate text-wrap w-full">{getUrlName(url)}</span>
                   </Button>
                 </Tooltip>
               ))}
