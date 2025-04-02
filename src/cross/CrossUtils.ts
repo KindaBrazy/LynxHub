@@ -149,3 +149,33 @@ export async function fetchFavIconUrl(domain: string) {
     return undefined;
   }
 }
+
+export function getUrlName(url: string): string {
+  try {
+    const normalizedUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+    const parsedUrl = new URL(normalizedUrl);
+    const hostname = parsedUrl.hostname;
+
+    if (hostname === 'localhost') {
+      return hostname + (parsedUrl.port ? `:${parsedUrl.port}` : '');
+    }
+
+    const hostnameParts = hostname.split('.');
+    if (hostnameParts.length >= 2) {
+      const domain = hostnameParts[hostnameParts.length - 2];
+
+      if (normalizedUrl.includes(hostname) && normalizedUrl.length > hostname.length + 8) {
+        const path = parsedUrl.pathname;
+        const formattedPath = hostname + path;
+        return formattedPath.replace(/^\/+/, '');
+      }
+
+      return domain.charAt(0).toUpperCase() + domain.slice(1);
+    }
+
+    return hostname;
+  } catch (error) {
+    console.error('Invalid URL:', url, error);
+    return url;
+  }
+}
