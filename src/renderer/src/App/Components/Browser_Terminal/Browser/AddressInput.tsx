@@ -2,7 +2,7 @@ import {Input} from '@heroui/react';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {fetchFavIconUrl, formatWebAddress} from '../../../../../../cross/CrossUtils';
+import {fetchFavIconUrl, formatWebAddress, getUrlName} from '../../../../../../cross/CrossUtils';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
@@ -27,16 +27,17 @@ export default function AddressInput({runningCard}: Props) {
       input.onfocus = () => input.select();
 
       input.onkeydown = e => {
-        const target = formatWebAddress(input.value || '');
+        const url = formatWebAddress(input.value || '');
         if (e.key === 'Enter') {
-          dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: target}));
+          dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
+          const title = getUrlName(url);
 
-          fetchFavIconUrl(target)
-            .then(fav => {
-              rendererIpc.storageUtils.addBrowserRecent({url: target, favIcon: fav});
+          fetchFavIconUrl(url)
+            .then(favIcon => {
+              rendererIpc.storageUtils.addBrowserRecent({url, favIcon, title});
             })
             .catch(() => {
-              rendererIpc.storageUtils.addBrowserRecent({url: target});
+              rendererIpc.storageUtils.addBrowserRecent({url, title});
             });
 
           input.blur();
