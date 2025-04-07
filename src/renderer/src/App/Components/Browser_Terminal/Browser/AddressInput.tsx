@@ -27,13 +27,18 @@ export default function AddressInput({runningCard}: Props) {
       input.onfocus = () => input.select();
 
       input.onkeydown = e => {
-        const url = formatWebAddress(input.value || '');
         if (e.key === 'Enter') {
-          dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
+          try {
+            const url = formatWebAddress(input.value || '');
 
-          rendererIpc.storageUtils.addBrowserRecent(url);
+            dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
 
-          input.blur();
+            rendererIpc.storageUtils.addBrowserRecent(url);
+
+            input.blur();
+          } catch (e) {
+            console.log(`Wrong url entered: ${e}`);
+          }
         }
       };
     }
