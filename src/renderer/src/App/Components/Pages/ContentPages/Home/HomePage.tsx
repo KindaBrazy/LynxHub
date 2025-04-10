@@ -7,6 +7,7 @@ import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../../../Redux/Reducer/CardsReducer';
 import {AllCardsSection, CardsBySearch, PinnedCars, RecentlyCards} from '../../../Cards/CardsByCategory';
 import Page from '../../Page';
+import Home_TopBar from './Home_TopBar';
 import HomeFilter from './HomeFilter';
 import HomeSearchBox from './HomeSearchBox';
 
@@ -34,6 +35,8 @@ const HomePage = ({show}: Props) => {
             <HomeFilter selectedCategories={homeCategory} />
           </div>
         )}
+
+        <Home_TopBar />
 
         {top && top.map((Top, index) => <Top key={index} />)}
 
