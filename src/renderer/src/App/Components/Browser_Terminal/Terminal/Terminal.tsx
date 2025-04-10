@@ -28,7 +28,7 @@ let resizeTimeout: any;
 
 const FONT_FAMILY = 'JetBrainsMono';
 
-type Props = {runningCard: RunningCard; setTerminalContent: Dispatch<SetStateAction<string>>};
+type Props = {runningCard: RunningCard; setTerminalContent?: Dispatch<SetStateAction<string>>};
 export default function Terminal({runningCard, setTerminalContent}: Props) {
   const activeTab = useTabsState('activeTab');
   const allCards = useAllCards();
@@ -133,7 +133,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
         }
       }
 
-      setTerminalContent(fullText);
+      setTerminalContent?.(fullText);
     },
     [webUIAddress, id, terminal, browserBehavior, outputColor, dispatch, allCards, activeTab],
   );
