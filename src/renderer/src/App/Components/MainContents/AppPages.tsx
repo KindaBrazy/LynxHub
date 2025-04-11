@@ -37,7 +37,7 @@ export default function AppPages() {
         const Component = PageComponents[tab.pageID];
 
         if (Component) {
-          return <Component show={show} key={tab.id} />;
+          return <Component show={show} key={tab.id} tabId={tab.id} />;
         }
 
         return <HomePage show={true} key={tab.id} />;

@@ -2,6 +2,9 @@ import {TRANSITION_EASINGS} from '@heroui/framer-utils';
 import {SimpleGitProgressEvent} from 'simple-git';
 
 import {TabInfo} from '../../../../cross/CrossTypes';
+import Empty_Browser from '../Components/Browser_Terminal/Empty_Browser';
+import Empty_Terminal from '../Components/Browser_Terminal/Empty_Terminal';
+import Empty_TerminalBrowser from '../Components/Browser_Terminal/Empty_TerminalBrowser';
 import AudioGenerationPage from '../Components/Pages/ContentPages/AudioGenerationPage';
 import GamesPage from '../Components/Pages/ContentPages/GamesPage';
 import HomePage from '../Components/Pages/ContentPages/Home/HomePage';
@@ -19,13 +22,17 @@ export const PageID = {
   textGen: 'textGen_page',
   audioGen: 'audioGen_page',
 
-  games: 'games_page',
   tools: 'tools_page',
+  games: 'games_page',
 
   dashboard: 'dashboard_page',
   extensions: 'extension_page',
   modules: 'modules_page',
   settings: 'settings_page',
+
+  emptyBrowser: 'empty_browser',
+  emptyTerminal: 'empty_terminal',
+  emptyBrowserTerminal: 'empty_browser_terminal',
 };
 
 export const PageComponents = {
@@ -33,12 +40,18 @@ export const PageComponents = {
   [PageID.imageGen]: ImageGenerationPage,
   [PageID.textGen]: TextGenerationPage,
   [PageID.audioGen]: AudioGenerationPage,
+
   [PageID.tools]: ToolsPage,
   [PageID.games]: GamesPage,
+
   [PageID.dashboard]: DashboardPage,
   [PageID.modules]: ModulesPage,
   [PageID.extensions]: ExtensionsPage,
   [PageID.settings]: SettingsPage,
+
+  [PageID.emptyBrowser]: Empty_Browser,
+  [PageID.emptyTerminal]: Empty_Terminal,
+  [PageID.emptyBrowserTerminal]: Empty_TerminalBrowser,
 };
 
 export const REMOVE_MODAL_DELAY: number = 500;
