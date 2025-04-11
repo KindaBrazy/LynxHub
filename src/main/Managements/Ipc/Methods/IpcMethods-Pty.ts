@@ -1,6 +1,6 @@
 import {platform} from 'node:os';
 
-import {shell} from 'electron';
+import {app, shell} from 'electron';
 import lodash from 'lodash';
 
 import {PtyProcessOpt} from '../../../../cross/IpcChannelAndTypes';
@@ -41,6 +41,15 @@ function getPtyByID(id: string) {
 function stopPty(id: string) {
   getPtyByID(id)?.stop();
   ptyManager = ptyManager.filter(pty => pty.id !== id);
+}
+
+export async function emptyPtyProcess(id: string, opt: PtyProcessOpt, dir?: string) {
+  if (opt === 'start') {
+    const targetDir = dir || app.getPath('home');
+    ptyManager.push(new PtyManager(id, targetDir, true));
+  } else if (opt === 'stop') {
+    stopPty(id);
+  }
 }
 
 export async function customPtyProcess(id: string, opt: PtyProcessOpt, dir?: string, file?: string) {

@@ -52,7 +52,14 @@ import {
 } from './Methods/IpcMethods-CardExtensions';
 import {cancelDownload, downloadFile} from './Methods/IpcMethods-Downloader';
 import {getSystemInfo} from './Methods/IpcMethods-Platform';
-import {customPtyCommands, customPtyProcess, ptyProcess, ptyResize, ptyWrite} from './Methods/IpcMethods-Pty';
+import {
+  customPtyCommands,
+  customPtyProcess,
+  emptyPtyProcess,
+  ptyProcess,
+  ptyResize,
+  ptyWrite,
+} from './Methods/IpcMethods-Pty';
 import {
   changeBranch,
   cloneShallow,
@@ -196,6 +203,9 @@ function pty() {
   ipcMain.on(ptyChannels.process, (_, id: string, opt: PtyProcessOpt, cardId: string) => ptyProcess(id, opt, cardId));
   ipcMain.on(ptyChannels.customProcess, (_, id: string, opt: PtyProcessOpt, dir?: string, file?: string) =>
     customPtyProcess(id, opt, dir, file),
+  );
+  ipcMain.on(ptyChannels.emptyProcess, (_, id: string, opt: PtyProcessOpt, dir?: string) =>
+    emptyPtyProcess(id, opt, dir),
   );
   ipcMain.on(
     ptyChannels.customCommands,
