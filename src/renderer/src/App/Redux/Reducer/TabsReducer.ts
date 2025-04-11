@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
 import {TabInfo} from '../../../../../cross/CrossTypes';
+import rendererIpc from '../../RendererIpc';
 import {defaultTabItem} from '../../Utils/Constants';
 import {RootState} from '../Store';
 
@@ -48,6 +49,8 @@ const tabsSlice = createSlice({
       state.tabs.push({...action.payload, id: newID});
       state.activeTab = newID;
       state.activePage = action.payload.pageID;
+
+      if (action.payload.startPtyWithTabID) rendererIpc.pty.emptyProcess(newID, 'start');
     },
     removeTab: (state: TabState, action: PayloadAction<string>) => {
       const tabIdToRemove = action.payload;
