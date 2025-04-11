@@ -180,6 +180,7 @@ export const extensionsChannels = {
 export const ptyChannels = {
   process: 'pty-process',
   customProcess: 'pty-custom-process',
+  emptyProcess: 'pty-custom-process',
   customCommands: 'pty-custom-commands',
   write: 'pty-write',
   resize: 'pty-resize',
