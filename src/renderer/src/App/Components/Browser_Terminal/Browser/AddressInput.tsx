@@ -9,9 +9,9 @@ import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
 
-type Props = {runningCard: RunningCard};
+type Props = {runningCard: RunningCard; setCustomAddress?: (address: string) => void};
 
-export default function AddressInput({runningCard}: Props) {
+export default function AddressInput({runningCard, setCustomAddress}: Props) {
   const activeTab = useTabsState('activeTab');
 
   const [value, setValue] = useState<string>('');
@@ -31,7 +31,11 @@ export default function AddressInput({runningCard}: Props) {
           try {
             const url = formatWebAddress(input.value || '');
 
-            dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
+            if (setCustomAddress) {
+              setCustomAddress(url);
+            } else {
+              dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
+            }
 
             rendererIpc.storageUtils.addBrowserRecent(url);
 
