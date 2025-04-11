@@ -147,11 +147,11 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
         copyText();
       } else {
         navigator.clipboard.readText().then(text => {
-          rendererIpc.pty.write(runningCard.id, text);
+          rendererIpc.pty.write(id, text);
         });
       }
     };
-  }, [copyText, terminal, runningCard]);
+  }, [copyText, terminal, id]);
 
   const stableEventHandler = useCallback(e => {
     onRightClickRef.current?.(e);
@@ -245,7 +245,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
 
         terminal.current.onResize(size => {
           {
-            rendererIpc.pty.resize(runningCard.id, size.cols, size.rows);
+            rendererIpc.pty.resize(id, size.cols, size.rows);
           }
         });
 
@@ -262,7 +262,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
         });
 
         terminal.current.onData(data => {
-          if (!isEmpty(data)) rendererIpc.pty.write(runningCard.id, data);
+          if (!isEmpty(data)) rendererIpc.pty.write(id, data);
         });
       });
     }
@@ -279,7 +279,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
     });
 
     rendererIpc.pty.onData((_, dataID, data) => {
-      if (dataID === runningCard.id) writeData(data);
+      if (dataID === id) writeData(data);
     });
 
     return () => {
