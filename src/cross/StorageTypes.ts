@@ -50,6 +50,7 @@ type StorageTypes = {
   app: {
     closeConfirm: boolean;
     terminateAIConfirm: boolean;
+    closeTabConfirm: boolean;
     openLastSize: boolean;
     dynamicAppTitle: boolean;
     lastSize:

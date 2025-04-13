@@ -17,10 +17,10 @@ const {JSONFileSyncPreset} = importSync('lowdb/node');
 class BaseStorage {
   private readonly storage;
 
-  private readonly CURRENT_VERSION: number = 0.8;
+  private readonly CURRENT_VERSION: number = 0.9;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.8},
+    storage: {version: 0.9},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -45,6 +45,7 @@ class BaseStorage {
     },
     app: {
       closeConfirm: true,
+      closeTabConfirm: true,
       terminateAIConfirm: true,
       openLastSize: false,
       homeCategory: ['All', 'Pin'],
@@ -150,6 +151,12 @@ class BaseStorage {
       this.storage.write();
     };
 
+    const v8to9 = () => {
+      this.storage.data.app.closeTabConfirm = true;
+
+      this.storage.write();
+    };
+
     const updateVersion = () => {
       this.updateData('storage', {version: this.CURRENT_VERSION});
     };
@@ -161,21 +168,29 @@ class BaseStorage {
           v5to6();
           v6to7();
           v7to8();
+          v8to9();
           break;
         }
         case 0.5: {
           v5to6();
           v6to7();
           v7to8();
+          v8to9();
           break;
         }
         case 0.6: {
           v6to7();
           v7to8();
+          v8to9();
           break;
         }
         case 0.7: {
           v7to8();
+          v8to9();
+          break;
+        }
+        case 0.8: {
+          v8to9();
           break;
         }
         default:
