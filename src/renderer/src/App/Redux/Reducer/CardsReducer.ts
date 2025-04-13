@@ -123,6 +123,30 @@ const cardsSlice = createSlice({
       state.duplicates = action.payload;
     },
 
+    addRunningEmpty: (state, action: PayloadAction<{tabId: string; type: 'browser' | 'terminal' | 'both'}>) => {
+      const {tabId, type} = action.payload;
+
+      const id = `${tabId}_${type}`;
+      const currentView = type === 'browser' ? 'browser' : 'terminal';
+
+      state.runningCard = [
+        ...state.runningCard,
+        {
+          tabId,
+          type,
+          id,
+          currentView,
+          webUIAddress: '',
+          customAddress: '',
+          currentAddress: '',
+          startTime: new Date().toString(),
+          isEmptyRunning: true,
+        },
+      ];
+
+      rendererIpc.pty.emptyProcess(id, 'start');
+    },
+
     addRunningCard: (state, action: PayloadAction<{tabId: string; id: string}>) => {
       const {tabId, id} = action.payload;
       state.runningCard = [
@@ -130,11 +154,13 @@ const cardsSlice = createSlice({
         {
           tabId,
           id,
+          type: 'both',
           webUIAddress: '',
           customAddress: '',
           currentAddress: '',
           currentView: 'terminal',
           startTime: new Date().toString(),
+          isEmptyRunning: false,
         },
       ];
     },

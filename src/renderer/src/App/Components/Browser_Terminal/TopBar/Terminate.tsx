@@ -7,14 +7,14 @@ import {useDispatch} from 'react-redux';
 import {Stop_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {settingsActions, useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
-import {tabsActions, useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
-import {PageID} from '../../../Utils/Constants';
 import {RunningCard} from '../../../Utils/Types';
 
-type Props = {runningCard: RunningCard; isEmptyTerminal?: boolean};
-export default function Terminate({runningCard, isEmptyTerminal}: Props) {
+type Props = {runningCard: RunningCard};
+
+export default function Terminate({runningCard}: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const activeTab = useTabsState('activeTab');
   const showTerminateConfirm = useSettingsState('terminateAIConfirm');
@@ -23,17 +23,16 @@ export default function Terminate({runningCard, isEmptyTerminal}: Props) {
   const destroyModal = useCallback(() => setIsConfirmOpen(false), [setIsConfirmOpen]);
 
   const onStop = useCallback(() => {
-    if (isEmptyTerminal) {
+    if (runningCard.isEmptyRunning) {
       rendererIpc.pty.emptyProcess(runningCard.id, 'stop');
-      dispatch(tabsActions.removeTab(runningCard.id));
     } else {
       rendererIpc.pty.process(runningCard.id, 'stop', runningCard.id);
-      dispatch(cardsActions.stopRunningCard({tabId: activeTab}));
     }
 
+    dispatch(cardsActions.stopRunningCard({tabId: activeTab}));
     rendererIpc.win.setDiscordRpAiRunning({running: false});
     destroyModal();
-  }, [runningCard.id, dispatch, activeTab, isEmptyTerminal]);
+  }, [runningCard.id, dispatch, activeTab]);
 
   const onShowConfirm = useCallback(
     (enabled: boolean) => {
@@ -45,26 +44,17 @@ export default function Terminate({runningCard, isEmptyTerminal}: Props) {
 
   const onRelaunch = useCallback(() => {
     const wasRunning = runningCard;
-    if (isEmptyTerminal) {
-      onStop();
-      dispatch(
-        tabsActions.addTab({
-          id: 'tab',
-          title: 'Terminal',
-          isLoading: false,
-          isTerminal: true,
-          pageID: PageID.emptyTerminal,
-          startPtyWithTabID: true,
-        }),
-      );
-    } else {
-      onStop();
-      setTimeout(() => {
+    onStop();
+    setTimeout(() => {
+      if (runningCard.isEmptyRunning) {
+        rendererIpc.pty.emptyProcess(runningCard.id, 'stop');
+        dispatch(cardsActions.addRunningEmpty({tabId: activeTab, type: runningCard.type}));
+      } else {
         rendererIpc.pty.process(runningCard.id, 'start', wasRunning.id);
         dispatch(cardsActions.addRunningCard({id: wasRunning.id, tabId: activeTab}));
-      }, 500);
-    }
-  }, [onStop, runningCard, dispatch, activeTab, isEmptyTerminal]);
+      }
+    }, 500);
+  }, [onStop, runningCard, dispatch, activeTab]);
 
   const stopAi = useCallback(() => {
     if (runningCard.id) {
