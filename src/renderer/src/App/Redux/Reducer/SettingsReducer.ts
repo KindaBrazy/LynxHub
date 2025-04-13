@@ -15,6 +15,7 @@ type SettingState = {
   cardsRepoInfo: boolean;
 
   closeConfirm: boolean;
+  closeTabConfirm: boolean;
   terminateAIConfirm: boolean;
   openLastSize: boolean;
   dynamicAppTitle: boolean;
@@ -40,6 +41,7 @@ const initialState: SettingState = {
   cardsRepoInfo: true,
   tooltipLevel: 'essential',
   closeConfirm: true,
+  closeTabConfirm: true,
   terminateAIConfirm: true,
   openLastSize: false,
   hotkeys: {
