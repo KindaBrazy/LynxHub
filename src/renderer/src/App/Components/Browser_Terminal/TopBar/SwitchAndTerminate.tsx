@@ -1,14 +1,18 @@
+import {useMemo} from 'react';
+
 import {RunningCard} from '../../../Utils/Types';
 import Switch from './Switch';
 import Terminate from './Terminate';
 
-type Props = {runningCard: RunningCard; isEmptyTerminal?: boolean; isEmptyBrowser?: boolean};
+type Props = {runningCard: RunningCard};
 
-export default function SwitchAndTerminate({runningCard, isEmptyTerminal, isEmptyBrowser}: Props) {
+export default function SwitchAndTerminate({runningCard}: Props) {
+  const {type, currentView} = useMemo(() => runningCard, [runningCard]);
+
   return (
     <div className="flex flex-row gap-x-1">
-      {!isEmptyTerminal && !isEmptyBrowser && <Switch currentView={runningCard.currentView} />}
-      {!isEmptyBrowser && <Terminate runningCard={runningCard} isEmptyTerminal={isEmptyTerminal} />}
+      {type === 'both' && <Switch currentView={currentView} />}
+      {(type === 'both' || type === 'terminal') && <Terminate runningCard={runningCard} />}
     </div>
   );
 }

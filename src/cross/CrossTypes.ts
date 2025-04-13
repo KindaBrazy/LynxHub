@@ -274,7 +274,6 @@ export type TabInfo = {
   isTerminal: boolean;
   pageID: string;
   iconURL?: string;
-  startPtyWithTabID?: boolean;
 };
 
 export type BrowserRecentAddress = {url: string; title?: string; favIcon?: string};

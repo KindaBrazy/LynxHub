@@ -70,16 +70,17 @@ const RunningCardView = ({runningCard}: Props) => {
       ) : (
         <ExtTerminal />
       )}
-      {isNil(ExtBrowser) ? (
-        <Browser
-          webViewRef={webViewRef}
-          isDomReady={isDomReady}
-          runningCard={runningCard}
-          initWebviewRef={initWebviewRef}
-        />
-      ) : (
-        <ExtBrowser />
-      )}
+      {runningCard.type !== 'terminal' &&
+        (isNil(ExtBrowser) ? (
+          <Browser
+            webViewRef={webViewRef}
+            isDomReady={isDomReady}
+            runningCard={runningCard}
+            initWebviewRef={initWebviewRef}
+          />
+        ) : (
+          <ExtBrowser />
+        ))}
     </>
   );
 };

@@ -9,4 +9,6 @@ export type RunningCard = {
   currentAddress: string;
   startTime: string;
   currentView: 'browser' | 'terminal';
+  type: 'browser' | 'terminal' | 'both';
+  isEmptyRunning: boolean;
 };
