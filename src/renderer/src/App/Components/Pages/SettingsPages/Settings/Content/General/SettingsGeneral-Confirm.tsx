@@ -9,6 +9,7 @@ import LynxSwitch from '../../../../../Reusable/LynxSwitch';
 /** Manage confirmation modals */
 export default function SettingsGeneralConfirm() {
   const closeConfirm = useSettingsState('closeConfirm');
+  const closeTabConfirm = useSettingsState('closeTabConfirm');
   const terminateAIConfirm = useSettingsState('terminateAIConfirm');
 
   const dispatch = useDispatch<AppDispatch>();
@@ -17,6 +18,14 @@ export default function SettingsGeneralConfirm() {
     (selected: boolean) => {
       rendererIpc.storage.update('app', {closeConfirm: selected});
       dispatch(settingsActions.setSettingsState({key: 'closeConfirm', value: selected}));
+    },
+    [dispatch],
+  );
+
+  const onCloseTabConfirmChange = useCallback(
+    (selected: boolean) => {
+      rendererIpc.storage.update('app', {closeTabConfirm: selected});
+      dispatch(settingsActions.setSettingsState({key: 'closeTabConfirm', value: selected}));
     },
     [dispatch],
   );
@@ -37,6 +46,13 @@ export default function SettingsGeneralConfirm() {
         enabled={closeConfirm}
         title="Close Confirmation"
         onEnabledChange={onCloseConfirmChange}
+      />
+      <LynxSwitch
+        description="Show a confirmation window when closing tab with terminal open.
+         (Hold CTRL and click on terminate to bypass this confirmation.)"
+        enabled={closeTabConfirm}
+        title="Close Tab Confirmation"
+        onEnabledChange={onCloseTabConfirmChange}
       />
       <LynxSwitch
         description="Show a confirmation window when terminating running AI.
