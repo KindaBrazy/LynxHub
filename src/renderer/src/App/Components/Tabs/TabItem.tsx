@@ -29,7 +29,7 @@ export default function TabItem({tab}: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
-  const showTerminateConfirm = useSettingsState('terminateAIConfirm');
+  const closeTabConfirm = useSettingsState('closeTabConfirm');
 
   const onShowConfirm = useCallback(
     (enabled: boolean) => {
@@ -39,21 +39,11 @@ export default function TabItem({tab}: Props) {
     [dispatch],
   );
 
-  useEffect(() => {
-    if (btnRef.current) {
-      btnRef.current.addEventListener('auxclick', (e: MouseEvent) => {
-        if (e.button === 1) {
-          e.preventDefault();
-          removeTab();
-        }
-      });
-    }
-  }, [btnRef, tab]);
-
   const removeTab = () => {
     dispatch(tabsActions.removeTab(tab.id));
     dispatch(modalActions.removeAllModalsForTabId({tabId: tab.id}));
     dispatch(cardsActions.stopRunningCard({tabId: tab.id}));
+    setIsConfirmOpen(false);
   };
 
   const handleRemove = () => {
@@ -62,7 +52,7 @@ export default function TabItem({tab}: Props) {
       if (running.type === 'browser') {
         removeTab();
       } else {
-        if (isHotkeyPressed('control') || !showTerminateConfirm) {
+        if (isHotkeyPressed('control') || !closeTabConfirm) {
           removeTab();
         } else if (!isConfirmOpen) {
           setIsConfirmOpen(true);
@@ -72,6 +62,24 @@ export default function TabItem({tab}: Props) {
       removeTab();
     }
   };
+  const handleEvent = (e: MouseEvent) => {
+    if (e.button === 1) {
+      e.preventDefault();
+      handleRemove();
+    }
+  };
+
+  useEffect(() => {
+    if (btnRef.current) {
+      btnRef.current.addEventListener('auxclick', handleEvent);
+    }
+
+    return () => {
+      if (btnRef.current) {
+        btnRef.current.removeEventListener('auxclick', handleEvent);
+      }
+    };
+  }, [btnRef, handleEvent]);
 
   const onPress = () => dispatch(tabsActions.setActiveTab(tab.id));
 
@@ -144,37 +152,29 @@ export default function TabItem({tab}: Props) {
           <div />
         </PopoverTrigger>
         <PopoverContent className="py-4 px-8 dark:bg-LynxRaisinBlack">
-          {/* Updated Title */}
           <span className="self-start text-medium font-semibold">Close Terminal Tab?</span>
 
           <div className="mt-2 flex flex-col space-y-1">
-            {/* Updated Body Text */}
             <Typography.Text>
               This will close the terminal tab and terminate running processes.
               <br />
               Proceed?
             </Typography.Text>
 
-            {/* Updated Checkbox Text */}
             <Checkbox size="sm" onValueChange={onShowConfirm}>
               Always close terminal tabs without confirmation
             </Checkbox>
           </div>
 
           <div className="mt-2 flex w-full flex-row justify-between">
-            {/* Updated "Keep Running" Button Text (more standard "Cancel") */}
             <Button
               onPress={() => {
                 setIsConfirmOpen(false);
               }}
-              size="sm"
-              // Consider changing color if "success" doesn't fit "Cancel" context
-              // color="default" or remove color prop for default styling
-            >
+              size="sm">
               Cancel
             </Button>
             <div className="space-x-2">
-              {/* Updated "Terminate" Button Text (more specific to action) */}
               <Button size="sm" color="danger" onPress={removeTab}>
                 Close Tab
               </Button>
