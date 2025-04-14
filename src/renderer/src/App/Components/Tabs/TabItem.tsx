@@ -1,10 +1,11 @@
-import {Button, Checkbox, Popover, PopoverContent, PopoverTrigger, Spinner, Tooltip} from '@heroui/react';
+import {Avatar, Button, Checkbox, Popover, PopoverContent, PopoverTrigger, Spinner, Tooltip} from '@heroui/react';
 import {Typography} from 'antd';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {isHotkeyPressed} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {TabInfo} from '../../../../../cross/CrossTypes';
+import {getFavIconUrl} from '../../../../../cross/CrossUtils';
 import {AudioGeneration_Icon, Extensions_Icon, Extensions2_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
 import {Home_Icon, ImageGeneration_Icon, Info_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
 import {Terminal_Icon, TextGeneration_Icon, Web_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
@@ -85,6 +86,10 @@ export default function TabItem({tab}: Props) {
   const onPress = () => dispatch(tabsActions.setActiveTab(tab.id));
 
   const icon = useMemo(() => {
+    if (tab.favIcon.show) {
+      return <Avatar name={tab.title} className="size-full" src={getFavIconUrl(tab.favIcon.targetUrl)} />;
+    }
+
     if (tab.pageID === PageID.home) return <Home_Icon className="size-full" />;
     if (tab.pageID === PageID.imageGen) return <ImageGeneration_Icon className="size-full" />;
     if (tab.pageID === PageID.textGen) return <TextGeneration_Icon className="size-full" />;
@@ -125,11 +130,11 @@ export default function TabItem({tab}: Props) {
           onPress={onPress}>
           <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
             {tab.isLoading ? (
-              <Spinner size="sm" color="primary" variant="simple" className="scale-80" />
+              <Spinner size="sm" color="primary" variant="simple" className="scale-80 mb-0.5" />
             ) : tab.isTerminal ? (
-              <Terminal_Icon className="opacity-80 shrink-0 text-secondary" />
+              <Terminal_Icon className="opacity-80 shrink-0 text-secondary mb-0.5" />
             ) : (
-              <div className="shrink-0 size-4 content-center">{icon}</div>
+              <div className="shrink-0 size-4 content-center mb-0.5">{icon}</div>
             )}
             <TabTitle title={tab.title} setIsTruncated={setIsTruncated} />
           </div>

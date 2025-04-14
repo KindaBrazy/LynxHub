@@ -81,19 +81,28 @@ const tabsSlice = createSlice({
     setActiveTabTitle: (state: TabState, action: PayloadAction<string>) => {
       state.tabs = state.tabs.map(tab => (tab.id === state.activeTab ? {...tab, title: action.payload} : tab));
     },
+    setActiveTabFavIcon: (
+      state: TabState,
+      action: PayloadAction<{
+        show: boolean;
+        targetUrl: string;
+      }>,
+    ) => {
+      state.tabs = state.tabs.map(tab => (tab.id === state.activeTab ? {...tab, favIcon: action.payload} : tab));
+    },
     setActivePage: (
       state: TabState,
       action: PayloadAction<{
         pageID: string;
         title: string;
         isTerminal: boolean;
-        iconURL?: string;
+        favIcon: {show: boolean; targetUrl: string};
       }>,
     ) => {
       const index = state.tabs.findIndex(tab => tab.id === state.activeTab);
       if (index !== -1) {
-        const {pageID, title, isTerminal, iconURL} = action.payload;
-        state.tabs[index] = {...state.tabs[index], pageID, title, isTerminal, iconURL};
+        const {pageID, title, isTerminal, favIcon} = action.payload;
+        state.tabs[index] = {...state.tabs[index], pageID, title, isTerminal, favIcon};
       }
       state.activePage = action.payload.pageID;
     },
