@@ -1,4 +1,4 @@
-import {Button, Checkbox, Popover, PopoverContent, PopoverTrigger, Spinner} from '@heroui/react';
+import {Button, Checkbox, Popover, PopoverContent, PopoverTrigger, Spinner, Tooltip} from '@heroui/react';
 import {Typography} from 'antd';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {isHotkeyPressed} from 'react-hotkeys-hook';
@@ -17,6 +17,7 @@ import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {PageID} from '../../Utils/Constants';
+import TabTitle from './TabTitle';
 
 type Props = {
   tab: TabInfo;
@@ -100,38 +101,50 @@ export default function TabItem({tab}: Props) {
     return <Web_Icon className="size-full" />;
   }, [tab]);
 
+  const [isTruncated, setIsTruncated] = useState<boolean>(false);
+
   return (
     <>
-      <Button
-        className={
-          'pr-0 text-small pl-2 flex rounded-t-lg data-[hover=true]:bg-foreground-100 flex-row ' +
-          `cursor-default gap-x-0 ${activeTab == tab.id && 'bg-white dark:bg-[#303033]'}`
-        }
-        ref={btnRef}
-        radius="none"
-        variant="light"
-        onPress={onPress}>
-        <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
-          {tab.isLoading ? (
-            <Spinner size="sm" color="primary" variant="simple" className="scale-80" />
-          ) : tab.isTerminal ? (
-            <Terminal_Icon className="opacity-80 shrink-0 text-secondary" />
-          ) : (
-            <div className="shrink-0 size-4 content-center">{icon}</div>
-          )}
-          <span className="truncate">{tab.title}</span>
-        </div>
-
+      <Tooltip
+        delay={300}
+        radius="sm"
+        offset={-2}
+        placement="bottom"
+        content={tab.title}
+        isDisabled={!isTruncated}
+        classNames={{content: 'bg-foreground-100', base: 'before:dark:bg-foreground-100'}}
+        showArrow>
         <Button
-          as="span"
-          size="sm"
+          className={
+            'pr-0 text-small pl-2 flex rounded-t-lg data-[hover=true]:bg-foreground-100 flex-row ' +
+            `cursor-default gap-x-0 ${activeTab == tab.id && 'bg-white dark:bg-[#303033]'}`
+          }
+          ref={btnRef}
+          radius="none"
           variant="light"
-          onPress={handleRemove}
-          className="scale-75 cursor-default"
-          isIconOnly>
-          <CloseSimple_Icon className="size-4" />
+          onPress={onPress}>
+          <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
+            {tab.isLoading ? (
+              <Spinner size="sm" color="primary" variant="simple" className="scale-80" />
+            ) : tab.isTerminal ? (
+              <Terminal_Icon className="opacity-80 shrink-0 text-secondary" />
+            ) : (
+              <div className="shrink-0 size-4 content-center">{icon}</div>
+            )}
+            <TabTitle title={tab.title} setIsTruncated={setIsTruncated} />
+          </div>
+
+          <Button
+            as="span"
+            size="sm"
+            variant="light"
+            onPress={handleRemove}
+            className="scale-75 cursor-default"
+            isIconOnly>
+            <CloseSimple_Icon className="size-4" />
+          </Button>
         </Button>
-      </Button>
+      </Tooltip>
 
       <Popover
         onClick={e => {
