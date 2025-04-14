@@ -40,6 +40,10 @@ const RunningCardView = ({runningCard}: Props) => {
       webViewRef.addEventListener('did-start-loading', () => onLoading(true));
       webViewRef.addEventListener('did-stop-loading', () => onLoading(false));
 
+      webViewRef.addEventListener('page-title-updated', () => {
+        dispatch(tabsActions.setActiveTabTitle(webViewRef.getTitle()));
+      });
+
       return () => {
         webViewRef.removeEventListener('did-start-navigation', didNavigate);
         webViewRef.removeEventListener('did-start-loading', () => onLoading(true));
