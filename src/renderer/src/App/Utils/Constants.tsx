@@ -123,4 +123,5 @@ export const defaultTabItem: TabInfo = {
   isLoading: false,
   isTerminal: false,
   pageID: PageID.home,
+  favIcon: {show: false, targetUrl: ''},
 };

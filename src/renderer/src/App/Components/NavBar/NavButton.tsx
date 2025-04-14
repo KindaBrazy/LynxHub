@@ -46,7 +46,14 @@ export default function NavButton({children, pageId, title, badge}: Props) {
 
   const handleClick = useCallback(() => {
     if (activePage === pageId) return;
-    dispatch(tabsActions.setActivePage({pageID: pageId, title: title || '', isTerminal: false}));
+    dispatch(
+      tabsActions.setActivePage({
+        pageID: pageId,
+        title: title || '',
+        isTerminal: false,
+        favIcon: {show: false, targetUrl: ''},
+      }),
+    );
   }, [activePage, pageId, dispatch]);
 
   const getBackgroundColor = useCallback(
