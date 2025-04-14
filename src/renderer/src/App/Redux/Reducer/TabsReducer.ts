@@ -75,6 +75,9 @@ const tabsSlice = createSlice({
       state.activeTab = action.payload;
       state.activePage = state.tabs.find(tab => tab.id === action.payload)?.pageID || defaultTabItem.pageID;
     },
+    setActiveTabLoading: (state: TabState, action: PayloadAction<boolean>) => {
+      state.tabs = state.tabs.map(tab => (tab.id === state.activeTab ? {...tab, isLoading: action.payload} : tab));
+    },
     setActivePage: (
       state: TabState,
       action: PayloadAction<{

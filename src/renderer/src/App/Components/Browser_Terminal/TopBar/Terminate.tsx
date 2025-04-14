@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux';
 import {Stop_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {settingsActions, useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
-import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {tabsActions, useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
@@ -29,6 +29,7 @@ export default function Terminate({runningCard}: Props) {
       rendererIpc.pty.process(runningCard.id, 'stop', runningCard.id);
     }
 
+    dispatch(tabsActions.setActiveTabLoading(false));
     dispatch(cardsActions.stopRunningCard({tabId: activeTab}));
     rendererIpc.win.setDiscordRpAiRunning({running: false});
     destroyModal();
