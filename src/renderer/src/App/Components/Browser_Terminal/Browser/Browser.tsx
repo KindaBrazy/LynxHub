@@ -43,7 +43,7 @@ const Browser = ({runningCard, webViewRef, initWebviewRef, isDomReady}: Props) =
             className="relative size-full"
           />
         ) : (
-          <EmptyPage />
+          <EmptyPage type={runningCard.type} />
         )}
       </div>
     </div>
