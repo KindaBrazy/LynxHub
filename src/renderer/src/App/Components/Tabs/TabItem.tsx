@@ -113,7 +113,7 @@ export default function TabItem({tab}: Props) {
         onPress={onPress}>
         <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
           {tab.isLoading ? (
-            <Spinner size="sm" color="primary" />
+            <Spinner size="sm" color="primary" variant="simple" className="scale-80" />
           ) : tab.isTerminal ? (
             <Terminal_Icon className="opacity-80 shrink-0 text-secondary" />
           ) : (

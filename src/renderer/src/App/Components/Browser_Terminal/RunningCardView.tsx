@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {cardsActions} from '../../Redux/Reducer/CardsReducer';
-import {useTabsState} from '../../Redux/Reducer/TabsReducer';
+import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {RunningCard} from '../../Utils/Types';
@@ -33,7 +33,18 @@ const RunningCardView = ({runningCard}: Props) => {
       webViewRef.removeEventListener('did-start-navigation', didNavigate);
       webViewRef.addEventListener('did-start-navigation', didNavigate);
 
-      return () => webViewRef.removeEventListener('did-start-navigation', didNavigate);
+      const onLoading = (isLoading: boolean) => dispatch(tabsActions.setActiveTabLoading(isLoading));
+
+      webViewRef.removeEventListener('did-start-loading', () => onLoading(true));
+      webViewRef.removeEventListener('did-stop-loading', () => onLoading(false));
+      webViewRef.addEventListener('did-start-loading', () => onLoading(true));
+      webViewRef.addEventListener('did-stop-loading', () => onLoading(false));
+
+      return () => {
+        webViewRef.removeEventListener('did-start-navigation', didNavigate);
+        webViewRef.removeEventListener('did-start-loading', () => onLoading(true));
+        webViewRef.removeEventListener('did-stop-loading', () => onLoading(false));
+      };
     }
 
     return () => {};
