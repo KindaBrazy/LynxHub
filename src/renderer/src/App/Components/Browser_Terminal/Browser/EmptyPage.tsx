@@ -9,7 +9,9 @@ import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 
-export default function EmptyPage() {
+type Props = {type: 'browser' | 'terminal' | 'both'};
+
+export default function EmptyPage({type}: Props) {
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
   const [recentAddress, setRecentAddress] = useState<string[]>([]);
@@ -29,20 +31,24 @@ export default function EmptyPage() {
   return (
     <div className="size-full flex items-center justify-center overflow-scroll scrollbar-hide">
       <div className="max-w-2xl w-full px-6 flex flex-col items-center">
-        <div className="mb-10 flex flex-col items-center mt-16">
-          <Spinner size="lg" variant="wave" color="secondary" classNames={{label: 'mt-2 text-xl font-bold'}}>
-            Waiting for terminal to catch webui address...
-          </Spinner>
-        </div>
+        {type === 'both' && (
+          <>
+            <div className="mb-10 flex flex-col items-center mt-16">
+              <Spinner size="lg" variant="wave" color="secondary" classNames={{label: 'mt-2 text-xl font-bold'}}>
+                Waiting for terminal to catch webui address...
+              </Spinner>
+            </div>
 
-        <Button
-          variant="flat"
-          color="primary"
-          onPress={switchToTerminal}
-          className="size-full h-24 transition duration-500 flex-col shadow-lg">
-          <Terminal_Icon className="size-6" />
-          Switch to Terminal
-        </Button>
+            <Button
+              variant="flat"
+              color="primary"
+              onPress={switchToTerminal}
+              className="size-full h-24 transition duration-500 flex-col shadow-lg">
+              <Terminal_Icon className="size-6" />
+              Switch to Terminal
+            </Button>
+          </>
+        )}
 
         {recentAddress.length > 0 && (
           <div className="w-full mt-4">
