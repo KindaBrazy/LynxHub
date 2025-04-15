@@ -3,15 +3,17 @@ import {useDispatch} from 'react-redux';
 
 import {Terminal_Icon, Web_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {cardsActions} from '../../../../Redux/Reducer/CardsReducer';
+import {useTabsState} from '../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 
 export default function Home_TopBar() {
+  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
 
   const addRunningEmpty = (type: 'browser' | 'terminal' | 'both') =>
     dispatch(
       cardsActions.addRunningEmpty({
-        tabId: 'tab',
+        tabId: activeTab,
         type,
       }),
     );
