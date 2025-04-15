@@ -1,4 +1,5 @@
-import {Button, Image, Spinner, Tooltip} from '@heroui/react';
+import {Button, Card, CardBody, Image, Spinner, Tooltip} from '@heroui/react';
+import {capitalize} from 'lodash';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -61,24 +62,24 @@ export default function EmptyPage({type}: Props) {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
               {recentAddress.slice(0, 8).map((url, index) => (
                 <Tooltip radius="sm" key={index} delay={300} content={url} showArrow>
-                  <Button
-                    variant="flat"
-                    onPress={() => openRecent(url)}
-                    className="flex-col size-full py-4 shadow-md group-hover">
-                    <Image radius="full" className="size-8" src={getFavIconUrl(url)} />
-                    <span className="truncate text-wrap w-full" contentEditable>
-                      {getUrlName(url)}
-                    </span>
-                    <Button
-                      size="sm"
-                      color="danger"
-                      variant="light"
-                      onPress={() => handleRemove(url)}
-                      className="absolute top-1 right-1 cursor-default group-hover:opacity-100 opacity-0"
-                      isIconOnly>
-                      <Trash_Icon className="size-3.5" />
-                    </Button>
-                  </Button>
+                  <Card shadow="sm" className="w-36 h-32" onPress={() => openRecent(url)} isPressable>
+                    <CardBody
+                      className={'flex-col gap-2 items-center text-center justify-center group dark:bg-foreground-100'}>
+                      <Image radius="full" className="size-8" src={getFavIconUrl(url)} />
+                      <span className="truncate text-wrap w-full line-clamp-2 text-sm">
+                        {capitalize(getUrlName(url))}
+                      </span>
+                      <Button
+                        size="sm"
+                        color="danger"
+                        variant="light"
+                        onPress={() => handleRemove(url)}
+                        className="absolute top-1 right-1 cursor-default group-hover:opacity-100 opacity-0"
+                        isIconOnly>
+                        <Trash_Icon className="size-3.5" />
+                      </Button>
+                    </CardBody>
+                  </Card>
                 </Tooltip>
               ))}
             </div>
