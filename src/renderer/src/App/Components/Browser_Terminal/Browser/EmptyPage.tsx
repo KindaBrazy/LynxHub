@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {getFavIconUrl, getUrlName} from '../../../../../../cross/CrossUtils';
-import {Terminal_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Terminal_Icon, Trash_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
@@ -26,6 +26,11 @@ export default function EmptyPage({type}: Props) {
 
   const openRecent = (address: string) => {
     dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address}));
+  };
+
+  const handleRemove = (url: string) => {
+    rendererIpc.storageUtils.removeBrowserRecent(url);
+    rendererIpc.storageUtils.getBrowserRecent().then(setRecentAddress);
   };
 
   return (
@@ -56,9 +61,23 @@ export default function EmptyPage({type}: Props) {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
               {recentAddress.slice(0, 8).map((url, index) => (
                 <Tooltip radius="sm" key={index} delay={300} content={url} showArrow>
-                  <Button variant="flat" onPress={() => openRecent(url)} className="flex-col size-full py-4 shadow-md">
+                  <Button
+                    variant="flat"
+                    onPress={() => openRecent(url)}
+                    className="flex-col size-full py-4 shadow-md group-hover">
                     <Image radius="full" className="size-8" src={getFavIconUrl(url)} />
-                    <span className="truncate text-wrap w-full">{getUrlName(url)}</span>
+                    <span className="truncate text-wrap w-full" contentEditable>
+                      {getUrlName(url)}
+                    </span>
+                    <Button
+                      size="sm"
+                      color="danger"
+                      variant="light"
+                      onPress={() => handleRemove(url)}
+                      className="absolute top-1 right-1 cursor-default group-hover:opacity-100 opacity-0"
+                      isIconOnly>
+                      <Trash_Icon className="size-3.5" />
+                    </Button>
                   </Button>
                 </Tooltip>
               ))}

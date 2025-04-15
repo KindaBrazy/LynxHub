@@ -509,6 +509,12 @@ class StorageManager extends BaseStorage {
     this.updateData('browser', {recentAddress: recentAddress});
   }
 
+  public removeBrowserRecent(url: string) {
+    const recentAddress = this.getData('browser').recentAddress;
+
+    this.updateData('browser', {recentAddress: recentAddress.filter(address => address !== url)});
+  }
+
   public getBrowserRecent(): string[] {
     return this.getData('browser').recentAddress;
   }
