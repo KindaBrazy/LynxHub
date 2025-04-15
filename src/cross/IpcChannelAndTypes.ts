@@ -272,6 +272,7 @@ export const storageUtilsChannels = {
   updateZoomFactor: 'storageUtils:update-zoom-factor',
 
   addBrowserRecent: 'storageUtils:add-browser-recent',
+  removeBrowserRecent: 'storageUtils:remove-browser-recent',
   getBrowserRecent: 'storageUtils:get-browser-recent',
 };
 

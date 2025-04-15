@@ -253,6 +253,7 @@ const rendererIpc = {
     updateZoomFactor: (data: {id: string; zoom: number}) => ipc.send(storageUtilsChannels.updateZoomFactor, data),
 
     addBrowserRecent: (url: string) => ipc.send(storageUtilsChannels.addBrowserRecent, url),
+    removeBrowserRecent: (url: string) => ipc.send(storageUtilsChannels.removeBrowserRecent, url),
     getBrowserRecent: (): Promise<string[]> => ipc.invoke(storageUtilsChannels.getBrowserRecent),
   },
 

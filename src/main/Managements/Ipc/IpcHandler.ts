@@ -300,6 +300,7 @@ function storageUtilsIpc() {
   ipcMain.on(storageUtilsChannels.updateZoomFactor, (_, data) => storageManager.updateZoomFactor(data));
 
   ipcMain.on(storageUtilsChannels.addBrowserRecent, (_, url: string) => storageManager.addBrowserRecent(url));
+  ipcMain.on(storageUtilsChannels.removeBrowserRecent, (_, url: string) => storageManager.removeBrowserRecent(url));
   ipcMain.handle(storageUtilsChannels.getBrowserRecent, () => storageManager.getBrowserRecent());
 }
 
