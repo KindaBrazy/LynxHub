@@ -58,3 +58,23 @@ export function searchInStrings(searchText: string, targetTexts: (string | undef
 
   return searchWords.every(word => lowerTargetTexts.some(text => text.includes(word)));
 }
+
+export function getUserAgent() {
+  const os = window.osPlatform;
+
+  switch (os) {
+    case 'darwin':
+      return (
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36' +
+        ' (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36'
+      );
+    case 'linux':
+      return 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36';
+    case 'win32':
+    default:
+      return (
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' +
+        ' (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36'
+      );
+  }
+}
