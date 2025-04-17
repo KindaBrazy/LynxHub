@@ -9,6 +9,7 @@ import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {RunningCard} from '../../Utils/Types';
+import {getUserAgent} from '../../Utils/UtilFunctions';
 import Browser from './Browser/Browser';
 import Terminal from './Terminal/Terminal';
 import TopBar from './TopBar/TopBar';
@@ -26,9 +27,11 @@ const RunningCardView = ({runningCard}: Props) => {
   const [isDomReady, setIsDomReady] = useState<boolean>(false);
 
   useEffect(() => {
-    if (isDomReady && webViewRef) {
+    if (webViewRef) {
       const didNavigate = (e: DidStartNavigationEvent) => {
         if (e.isMainFrame) {
+          console.log(window.osPlatform);
+          webViewRef.setUserAgent(getUserAgent());
           dispatch(cardsActions.setRunningCardCurrentAddress({tabId: activeTab, address: e.url}));
           dispatch(tabsActions.setActiveTabFavIcon({show: true, targetUrl: e.url}));
         }
@@ -55,7 +58,7 @@ const RunningCardView = ({runningCard}: Props) => {
     }
 
     return () => {};
-  }, [isDomReady, webViewRef, activeTab]);
+  }, [webViewRef, activeTab]);
 
   const initWebviewRef = useCallback((node: WebviewTag) => {
     if (node !== null) {
