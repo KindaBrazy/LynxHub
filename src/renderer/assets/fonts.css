@@ -18,15 +18,7 @@
 
 @font-face {
   font-family: 'JetBrainsMono';
-  src: url('fonts/JetBrainsMono/JetBrainsMono[wght].ttf');
+  src: url('fonts/JetBrainsMono/JetBrainsMono.ttf') format('truetype');
   font-weight: 100 800;
-  font-display: block;
-}
-
-@font-face {
-  font-family: 'JetBrainsMono';
-  src: url('fonts/JetBrainsMono/JetBrainsMono-Italic[wght].ttf');
-  font-weight: 100 800;
-  font-style: italic;
-  font-display: block;
+  font-display: swap;
 }
