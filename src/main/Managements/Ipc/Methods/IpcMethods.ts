@@ -62,32 +62,32 @@ export function setTaskbarStatus(status: TaskbarStatus): void {
       trayManager.createTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
-        app.dock.show();
+      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+        app.dock?.show();
       }
     },
     taskbar: () => {
       trayManager.destroyTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
-        app.dock.show();
+      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+        app.dock?.show();
       }
     },
     tray: () => {
       trayManager.createTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(true);
-      } else if (platform() === 'darwin' && app.dock.isVisible()) {
-        app.dock.hide();
+      } else if (platform() === 'darwin' && app.dock?.isVisible()) {
+        app.dock?.hide();
       }
     },
     'tray-minimized': () => {
       trayManager.destroyTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock.isVisible()) {
-        app.dock.show();
+      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+        app.dock?.show();
       }
     },
   };
