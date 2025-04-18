@@ -196,7 +196,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
           cols: 150,
           scrollback,
           cursorBlink,
-          fontFamily: 'JetBrainsMono',
+          fontFamily: FONT_FAMILY,
           fontSize: fontSize,
           scrollOnUserInput: true,
           cursorStyle,
