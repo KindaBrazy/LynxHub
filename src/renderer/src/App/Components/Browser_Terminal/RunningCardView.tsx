@@ -30,7 +30,6 @@ const RunningCardView = ({runningCard}: Props) => {
     if (webViewRef) {
       const didNavigate = (e: DidStartNavigationEvent) => {
         if (e.isMainFrame) {
-          console.log(window.osPlatform);
           webViewRef.setUserAgent(getUserAgent());
           dispatch(cardsActions.setRunningCardCurrentAddress({tabId: activeTab, address: e.url}));
           dispatch(tabsActions.setActiveTabFavIcon({show: true, targetUrl: e.url}));
@@ -63,7 +62,6 @@ const RunningCardView = ({runningCard}: Props) => {
   const initWebviewRef = useCallback((node: WebviewTag) => {
     if (node !== null) {
       setWebViewRef(node);
-
       node.addEventListener(
         'dom-ready',
         () => {
