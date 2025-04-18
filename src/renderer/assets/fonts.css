@@ -1,32 +1,32 @@
 /* -----------------------------------------------> Nunito */
 @font-face {
-    font-family: 'Nunito';
-    src: url('fonts/Nunito/Nunito-VariableFont_wght.ttf');
-    font-weight: 100 1000;
-    font-display: block;
+  font-family: 'Nunito';
+  src: url('fonts/Nunito/Nunito-VariableFont_wght.ttf');
+  font-weight: 100 1000;
+  font-display: block;
 }
 
 @font-face {
-    font-family: 'Nunito';
-    src: url('fonts/Nunito/Nunito-Italic-VariableFont_wght.ttf');
-    font-weight: 100 1000;
-    font-style: italic;
-    font-display: block;
+  font-family: 'Nunito';
+  src: url('fonts/Nunito/Nunito-Italic-VariableFont_wght.ttf');
+  font-weight: 100 1000;
+  font-style: italic;
+  font-display: block;
 }
 
 /* -----------------------------------------------> JetBrains Mono */
 
 @font-face {
-    font-family: 'JetBrainsMono';
-    src: url('fonts/JetBrainsMono/JetBrainsMono[wght].ttf');
-    font-weight: 100 800;
-    font-display: block;
+  font-family: 'JetBrainsMono';
+  src: url('fonts/JetBrainsMono/JetBrainsMono[wght].ttf');
+  font-weight: 100 800;
+  font-display: block;
 }
 
 @font-face {
-    font-family: 'JetBrainsMono';
-    src: url('fonts/JetBrainsMono/JetBrainsMono-Italic[wght].ttf');
-    font-weight: 100 800;
-    font-style: italic;
-    font-display: block;
+  font-family: 'JetBrainsMono';
+  src: url('fonts/JetBrainsMono/JetBrainsMono-Italic[wght].ttf');
+  font-weight: 100 800;
+  font-style: italic;
+  font-display: block;
 }
