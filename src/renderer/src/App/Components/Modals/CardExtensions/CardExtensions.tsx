@@ -70,6 +70,7 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
+      placement="center"
       isDismissable={false}
       scrollBehavior="inside"
       motionProps={modalMotionProps}

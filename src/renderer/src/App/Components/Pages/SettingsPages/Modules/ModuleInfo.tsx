@@ -22,6 +22,7 @@ export default function ModuleInfo({item, isOpen, setIsOpen}: Props) {
       }
       shadow="none"
       isOpen={isOpen}
+      placement="center"
       scrollBehavior="inside"
       onOpenChange={setIsOpen}
       className="border-1 border-foreground/10"

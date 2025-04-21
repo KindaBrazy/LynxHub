@@ -98,6 +98,7 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
         wrapper: `!top-10 scrollbar-hide ${show}`,
       }}
       isOpen={isOpen}
+      placement="center"
       onClose={closeHandle}
       scrollBehavior="inside"
       onOpenChange={onOpenChange}

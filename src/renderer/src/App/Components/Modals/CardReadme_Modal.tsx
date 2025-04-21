@@ -36,6 +36,7 @@ const CardReadmeModal = ({isOpen, url, title, tabID}: Props) => {
       size="2xl"
       isOpen={isOpen}
       backdrop="blur"
+      placement="center"
       isDismissable={false}
       scrollBehavior="inside"
       className="max-w-[95%]"

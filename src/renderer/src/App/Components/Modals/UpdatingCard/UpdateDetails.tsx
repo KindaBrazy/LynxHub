@@ -82,6 +82,7 @@ export default function UpdateDetails() {
         wrapper: `!top-10 scrollbar-hide`,
       }}
       isOpen={isOpen}
+      placement="center"
       scrollBehavior="inside"
       className="max-w-[70%] overflow-hidden"
       hideCloseButton>
