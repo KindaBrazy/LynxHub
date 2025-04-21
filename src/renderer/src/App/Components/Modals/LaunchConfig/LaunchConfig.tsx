@@ -75,6 +75,7 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
     <Modal
       isOpen={isOpen}
       onClose={onClose}
+      placement="center"
       isDismissable={false}
       scrollBehavior="inside"
       motionProps={modalMotionProps}

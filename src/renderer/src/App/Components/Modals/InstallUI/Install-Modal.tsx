@@ -182,6 +182,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
       shadow="lg"
       backdrop="blur"
       isOpen={isOpen}
+      placement="center"
       isDismissable={false}
       scrollBehavior="inside"
       onOpenChange={onOpenChange}

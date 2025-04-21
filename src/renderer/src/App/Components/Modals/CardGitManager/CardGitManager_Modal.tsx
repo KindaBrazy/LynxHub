@@ -57,6 +57,7 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
       size="3xl"
       isOpen={isOpen}
       backdrop="blur"
+      placement="center"
       isDismissable={false}
       scrollBehavior="inside"
       onOpenChange={onOpenChange}

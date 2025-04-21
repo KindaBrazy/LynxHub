@@ -171,6 +171,7 @@ const UpdateApp = () => {
       size="lg"
       isOpen={isOpen}
       onClose={onClose}
+      placement="center"
       isDismissable={false}
       scrollBehavior="inside"
       motionProps={modalMotionProps}

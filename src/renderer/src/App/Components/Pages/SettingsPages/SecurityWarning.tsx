@@ -46,6 +46,7 @@ export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title
       size="xl"
       shadow="none"
       isOpen={isOpen}
+      placement="center"
       scrollBehavior="inside"
       onOpenChange={setIsOpen}
       classNames={{backdrop: '!top-10', wrapper: '!top-10 '}}

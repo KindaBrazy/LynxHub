@@ -9,6 +9,7 @@ export default function LocateWarning({isOpen, setIsOpen}: Props) {
   return (
     <Modal
       isOpen={isOpen}
+      placement="center"
       onOpenChange={setIsOpen}
       classNames={{backdrop: '!top-10', wrapper: '!top-10'}}
       hideCloseButton>

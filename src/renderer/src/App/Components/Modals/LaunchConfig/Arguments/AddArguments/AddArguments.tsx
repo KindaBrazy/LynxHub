@@ -109,6 +109,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
 
   return (
     <Modal
+      placement="center"
       isDismissable={false}
       scrollBehavior="inside"
       className="z-50 max-w-[75%]"

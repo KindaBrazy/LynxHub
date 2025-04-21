@@ -58,6 +58,7 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
       size="xl"
       isOpen={isOpen}
       onClose={onClose}
+      placement="center"
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
       className="overflow-hidden border-2 border-foreground/5 drop-shadow-lg"
