@@ -4,6 +4,7 @@ import {ReactNode, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {appActions, useAppState} from '../../Redux/Reducer/AppReducer';
+import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import {getColor} from '../../Utils/Constants';
@@ -30,10 +31,16 @@ type Props = {
 export default function NavButton({children, pageId, title, badge}: Props) {
   const darkMode = useAppState('darkMode');
   const activePage = useTabsState('activePage');
+  const activeTab = useTabsState('activeTab');
+  const runningCard = useCardsState('runningCard');
   const [isSelected, setIsSelected] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
-  // const navigate = useNavigate();
+  useEffect(() => {
+    if (!runningCard.some(card => card.tabId === activeTab) && activePage === pageId && title) {
+      dispatch(tabsActions.setActiveTabTitle(title));
+    }
+  }, [runningCard, activeTab, title]);
 
   useEffect(() => {
     setIsSelected(activePage === pageId);
