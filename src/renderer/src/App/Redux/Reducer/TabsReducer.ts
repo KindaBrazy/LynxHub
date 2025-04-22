@@ -75,20 +75,30 @@ const tabsSlice = createSlice({
       state.activeTab = action.payload;
       state.activePage = state.tabs.find(tab => tab.id === action.payload)?.pageID || defaultTabItem.pageID;
     },
+    setTabLoading: (state: TabState, action: PayloadAction<{isLoading: boolean; tabID: string}>) => {
+      const {tabID, isLoading} = action.payload;
+      state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, isLoading} : tab));
+    },
     setActiveTabLoading: (state: TabState, action: PayloadAction<boolean>) => {
       state.tabs = state.tabs.map(tab => (tab.id === state.activeTab ? {...tab, isLoading: action.payload} : tab));
+    },
+    setTabTitle: (state: TabState, action: PayloadAction<{tabID: string; title: string}>) => {
+      const {tabID, title} = action.payload;
+      state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, title} : tab));
     },
     setActiveTabTitle: (state: TabState, action: PayloadAction<string>) => {
       state.tabs = state.tabs.map(tab => (tab.id === state.activeTab ? {...tab, title: action.payload} : tab));
     },
-    setActiveTabFavIcon: (
+    setTabFavIcon: (
       state: TabState,
       action: PayloadAction<{
         show: boolean;
         targetUrl: string;
+        tabID: string;
       }>,
     ) => {
-      state.tabs = state.tabs.map(tab => (tab.id === state.activeTab ? {...tab, favIcon: action.payload} : tab));
+      const {tabID, ...favIcon} = action.payload;
+      state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, favIcon} : tab));
     },
     setActivePage: (
       state: TabState,
