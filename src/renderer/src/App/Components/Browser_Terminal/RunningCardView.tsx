@@ -31,6 +31,8 @@ const RunningCardView = ({runningCard}: Props) => {
   const [isDomReady, setIsDomReady] = useState<boolean>(false);
 
   useEffect(() => {
+    if (runningCard.tabId !== activeTab) return;
+
     const isBrowserView = runningCard.currentView === 'browser';
 
     const terminalTitle = allCards.find(card => card.id === runningCard.id)?.title;
@@ -39,7 +41,7 @@ const RunningCardView = ({runningCard}: Props) => {
     const title = isBrowserView ? browserTitle : terminalTitle;
 
     const currentTitle = tabs.find(tab => tab.id === activeTab)?.title;
-    if (title && title !== currentTitle) dispatch(tabsActions.setActiveTabTitle(title));
+    if (title && title !== currentTitle) dispatch(tabsActions.setTabTitle({title, tabID: runningCard.tabId}));
   }, [runningCard, webViewRef, tabs, activeTab, isDomReady]);
 
   useEffect(() => {
@@ -47,21 +49,23 @@ const RunningCardView = ({runningCard}: Props) => {
       const didNavigate = (e: DidStartNavigationEvent) => {
         if (e.isMainFrame) {
           webViewRef.setUserAgent(getUserAgent());
-          dispatch(cardsActions.setRunningCardCurrentAddress({tabId: activeTab, address: e.url}));
-          dispatch(tabsActions.setActiveTabFavIcon({show: true, targetUrl: e.url}));
+          dispatch(cardsActions.setRunningCardCurrentAddress({tabId: runningCard.tabId, address: e.url}));
+          dispatch(tabsActions.setTabFavIcon({show: true, targetUrl: e.url, tabID: runningCard.tabId}));
         }
       };
       webViewRef.removeEventListener('did-start-navigation', didNavigate);
       webViewRef.addEventListener('did-start-navigation', didNavigate);
 
-      const onLoading = (isLoading: boolean) => dispatch(tabsActions.setActiveTabLoading(isLoading));
+      const onLoading = (isLoading: boolean) =>
+        dispatch(tabsActions.setTabLoading({isLoading, tabID: runningCard.tabId}));
 
       webViewRef.removeEventListener('did-start-loading', () => onLoading(true));
       webViewRef.removeEventListener('did-stop-loading', () => onLoading(false));
       webViewRef.addEventListener('did-start-loading', () => onLoading(true));
       webViewRef.addEventListener('did-stop-loading', () => onLoading(false));
 
-      const setTitle = () => dispatch(tabsActions.setActiveTabTitle(webViewRef.getTitle()));
+      const setTitle = () =>
+        dispatch(tabsActions.setTabTitle({title: webViewRef.getTitle(), tabID: runningCard.tabId}));
       webViewRef.addEventListener('page-title-updated', setTitle);
 
       return () => {
