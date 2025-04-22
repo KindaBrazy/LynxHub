@@ -62,7 +62,7 @@ const RunningCardView = ({runningCard}: Props) => {
       webViewRef.addEventListener('did-stop-loading', () => onLoading(false));
 
       const setTitle = () => dispatch(tabsActions.setActiveTabTitle(webViewRef.getTitle()));
-      webViewRef.addEventListener('page-title-updated', () => setTitle);
+      webViewRef.addEventListener('page-title-updated', setTitle);
 
       return () => {
         webViewRef.removeEventListener('did-start-navigation', didNavigate);
