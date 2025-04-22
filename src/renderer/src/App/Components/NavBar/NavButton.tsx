@@ -1,6 +1,6 @@
 import {Badge} from 'antd';
 import {motion} from 'framer-motion';
-import {ReactNode, useCallback, useEffect, useState} from 'react';
+import {ReactNode, useCallback, useEffect, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {appActions, useAppState} from '../../Redux/Reducer/AppReducer';
@@ -33,26 +33,25 @@ export default function NavButton({children, pageId, title, badge}: Props) {
   const activePage = useTabsState('activePage');
   const activeTab = useTabsState('activeTab');
   const runningCard = useCardsState('runningCard');
-  const [isSelected, setIsSelected] = useState<boolean>(false);
+  const isSelected = useMemo(() => activePage === pageId, [activePage, pageId]);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (!runningCard.some(card => card.tabId === activeTab) && activePage === pageId && title) {
+    if (!runningCard.some(card => card.tabId === activeTab) && isSelected && title) {
       dispatch(tabsActions.setActiveTabTitle(title));
     }
-  }, [runningCard, activeTab, title]);
+  }, [runningCard, activeTab, title, isSelected]);
 
   useEffect(() => {
-    setIsSelected(activePage === pageId);
-    if (activePage === pageId) {
+    if (isSelected && title) {
       setTimeout(() => {
-        dispatch(appActions.setAppTitle(title?.replace(' Generation', '')));
+        dispatch(appActions.setAppTitle(title.replace(' Generation', '')));
       }, 50);
     }
-  }, [activePage, pageId]);
+  }, [isSelected, title]);
 
   const handleClick = useCallback(() => {
-    if (activePage === pageId) return;
+    if (isSelected) return;
     dispatch(
       tabsActions.setActivePage({
         pageID: pageId,
@@ -61,7 +60,7 @@ export default function NavButton({children, pageId, title, badge}: Props) {
         favIcon: {show: false, targetUrl: ''},
       }),
     );
-  }, [activePage, pageId, dispatch]);
+  }, [isSelected, pageId, dispatch]);
 
   const getBackgroundColor = useCallback(
     (state: 'hover' | 'tap') => {
