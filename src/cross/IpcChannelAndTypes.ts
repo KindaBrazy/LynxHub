@@ -185,6 +185,7 @@ export const ptyChannels = {
   write: 'pty-write',
   resize: 'pty-resize',
   onData: 'pty-on-data',
+  onTitle: 'pty-on-title',
 };
 
 export const initializerChannels = {
