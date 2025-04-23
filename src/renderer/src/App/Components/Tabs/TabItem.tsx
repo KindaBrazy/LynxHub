@@ -4,6 +4,7 @@ import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {isHotkeyPressed} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
+import {APP_ICON_TRANSPARENT} from '../../../../../cross/CrossConstants';
 import {TabInfo} from '../../../../../cross/CrossTypes';
 import {getFavIconUrl} from '../../../../../cross/CrossUtils';
 import {AudioGeneration_Icon, Extensions_Icon, Extensions2_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
@@ -97,6 +98,9 @@ export default function TabItem({tab}: Props) {
       return <Avatar name={tab.title} className="size-full" src={getFavIconUrl(tab.favIcon.targetUrl)} />;
     }
 
+    const currentView = runningCards.find(card => card.tabId === tab.id)?.currentView;
+    if (currentView === 'browser') return <Web_Icon className="size-full" />;
+
     if (tab.pageID === PageID.home) return <Home_Icon className="size-full" />;
     if (tab.pageID === PageID.imageGen) return <ImageGeneration_Icon className="size-full" />;
     if (tab.pageID === PageID.textGen) return <TextGeneration_Icon className="size-full" />;
@@ -110,7 +114,7 @@ export default function TabItem({tab}: Props) {
     if (tab.pageID === PageID.extensions) return <Extensions_Icon className="size-full" />;
     if (tab.pageID === PageID.settings) return <Slider_Icon className="size-full" />;
 
-    return <Web_Icon className="size-full" />;
+    return <Avatar radius="none" className="size-full" src={APP_ICON_TRANSPARENT} />;
   }, [tab]);
 
   const [isTruncated, setIsTruncated] = useState<boolean>(false);
@@ -139,7 +143,7 @@ export default function TabItem({tab}: Props) {
             {tab.isLoading ? (
               <Spinner size="sm" color="primary" variant="simple" className="scale-80 mb-0.5" />
             ) : tab.isTerminal ? (
-              <Terminal_Icon className="opacity-80 shrink-0 text-secondary mb-0.5" />
+              <Terminal_Icon className="shrink-0 mb-0.5" />
             ) : (
               <div className="shrink-0 size-4 content-center mb-0.5">{icon}</div>
             )}
