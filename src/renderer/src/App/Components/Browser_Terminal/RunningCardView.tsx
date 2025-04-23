@@ -33,6 +33,15 @@ const RunningCardView = ({runningCard}: Props) => {
   const [isDomReady, setIsDomReady] = useState<boolean>(false);
 
   useEffect(() => {
+    const {tabId, currentView} = runningCard;
+
+    if (tabId === activeTab) {
+      const isBrowserView = currentView === 'browser';
+      dispatch(tabsActions.setTabIsTerminal({tabID: tabId, isTerminal: !isBrowserView}));
+    }
+  }, [runningCard]);
+
+  useEffect(() => {
     rendererIpc.pty.onTitle((_, id, title) => {
       if (id === runningCard.id) setTerminalName(title);
     });
@@ -41,11 +50,11 @@ const RunningCardView = ({runningCard}: Props) => {
   }, []);
 
   useEffect(() => {
-    const {isEmptyRunning, id, tabId} = runningCard;
+    const {isEmptyRunning, id, tabId, currentView} = runningCard;
 
     if (tabId !== activeTab) return;
 
-    const isBrowserView = runningCard.currentView === 'browser';
+    const isBrowserView = currentView === 'browser';
 
     const terminalTitle = isEmptyRunning ? terminalName : allCards.find(card => card.id === id)?.title;
     const browserTitle = webViewRef && isDomReady ? webViewRef.getTitle() : undefined;
