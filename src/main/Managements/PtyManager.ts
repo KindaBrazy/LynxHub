@@ -37,6 +37,7 @@ export default class PtyManager {
         this.onData(data);
       } else if (sendDataToRenderer) {
         appManager.getWebContent()?.send(ptyChannels.onData, this.id, data);
+        appManager.getWebContent()?.send(ptyChannels.onTitle, this.id, this.process.process);
       }
     });
   }

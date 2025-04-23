@@ -27,22 +27,34 @@ const RunningCardView = ({runningCard}: Props) => {
   const tabs = useTabsState('tabs');
   const dispatch = useDispatch<AppDispatch>();
 
+  const [terminalName, setTerminalName] = useState<string>('');
+
   const [webViewRef, setWebViewRef] = useState<WebviewTag | null>(null);
   const [isDomReady, setIsDomReady] = useState<boolean>(false);
 
   useEffect(() => {
-    if (runningCard.tabId !== activeTab) return;
+    rendererIpc.pty.onTitle((_, id, title) => {
+      if (id === runningCard.id) setTerminalName(title);
+    });
+
+    return () => rendererIpc.pty.offTitle();
+  }, []);
+
+  useEffect(() => {
+    const {isEmptyRunning, id, tabId} = runningCard;
+
+    if (tabId !== activeTab) return;
 
     const isBrowserView = runningCard.currentView === 'browser';
 
-    const terminalTitle = allCards.find(card => card.id === runningCard.id)?.title;
+    const terminalTitle = isEmptyRunning ? terminalName : allCards.find(card => card.id === id)?.title;
     const browserTitle = webViewRef && isDomReady ? webViewRef.getTitle() : undefined;
 
     const title = isBrowserView ? browserTitle : terminalTitle;
 
     const currentTitle = tabs.find(tab => tab.id === activeTab)?.title;
-    if (title && title !== currentTitle) dispatch(tabsActions.setTabTitle({title, tabID: runningCard.tabId}));
-  }, [runningCard, webViewRef, tabs, activeTab, isDomReady]);
+    if (title && title !== currentTitle) dispatch(tabsActions.setTabTitle({title, tabID: tabId}));
+  }, [runningCard, webViewRef, tabs, activeTab, isDomReady, terminalName]);
 
   useEffect(() => {
     if (webViewRef) {

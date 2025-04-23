@@ -297,8 +297,11 @@ const rendererIpc = {
     resize: (id: string, cols: number, rows: number): void => ipc.send(ptyChannels.resize, id, cols, rows),
 
     onData: (result: (event: IpcRendererEvent, id: string, data: string) => void) => ipc.on(ptyChannels.onData, result),
+    onTitle: (result: (event: IpcRendererEvent, id: string, title: string) => void) =>
+      ipc.on(ptyChannels.onTitle, result),
 
     offData: (): void => ipc.removeAllListeners(ptyChannels.onData),
+    offTitle: (): void => ipc.removeAllListeners(ptyChannels.onTitle),
   },
 
   /** Managing app automatic updates */
