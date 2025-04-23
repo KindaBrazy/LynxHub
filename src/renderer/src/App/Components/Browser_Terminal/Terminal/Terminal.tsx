@@ -97,11 +97,9 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
         const url = catchAddress?.(data) || '';
         if (!isEmpty(url)) {
           if (browserBehavior === 'appBrowser') {
-            setTimeout(() => {
-              dispatch(cardsActions.setRunningCardAddress({address: url, tabId: activeTab}));
-              dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
-              rendererIpc.storageUtils.addBrowserRecent(url);
-            }, 1500);
+            dispatch(cardsActions.setRunningCardAddress({address: url, tabId: activeTab}));
+            dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
+            rendererIpc.storageUtils.addBrowserRecent(url);
           } else {
             window.open(url);
           }
