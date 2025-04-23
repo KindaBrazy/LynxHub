@@ -26,7 +26,7 @@ export const BINARIES_FOLDER_NAME = 'Binaries' as const;
 export const REPOSITORIES_FOLDER_NAME = 'AIWorkspaces' as const;
 
 // Static Assets
-export const APP_ICON_TRANSPARENT: string = 'AppIcon Transparent.png';
+export const APP_ICON_TRANSPARENT: string = 'LynxHub.png';
 
 // Raw GitHub Files
 export const MODULE_CONTAINER: string =
