@@ -42,6 +42,13 @@ export default function TabItem({tab}: Props) {
   );
 
   const removeTab = () => {
+    const running = runningCards.find(card => card.tabId === tab.id);
+    if (running && running.type !== 'browser') {
+      rendererIpc.pty.process(running.id, 'stop', running.id);
+      rendererIpc.pty.customProcess(running.id, 'stop', running.id);
+      rendererIpc.pty.emptyProcess(running.id, 'stop', running.id);
+    }
+
     dispatch(tabsActions.removeTab(tab.id));
     dispatch(modalActions.removeAllModalsForTabId({tabId: tab.id}));
     dispatch(cardsActions.stopRunningCard({tabId: tab.id}));
