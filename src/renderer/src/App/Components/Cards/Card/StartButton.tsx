@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {memo, useCallback, useEffect, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Download2_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
@@ -12,6 +12,7 @@ import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {useInstalledCard, useIsAutoUpdateExtensions, useUpdatingCard} from '../../../Utils/UtilHooks';
+import ShinyText from '../../Reusable/ShinyText';
 import {useCardData} from '../CardsDataManager';
 
 const StartButton = memo(() => {
@@ -29,6 +30,9 @@ const StartButton = memo(() => {
   const [updateCount, setUpdateCount] = useState<string>('');
 
   const updating = useUpdatingCard(id);
+
+  const runningCard = useCardsState('runningCard');
+  const isRunning = useMemo(() => runningCard.some(item => item.id === id), [runningCard, id]);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -69,15 +73,19 @@ const StartButton = memo(() => {
         ) : updating ? (
           <span className="text-xs text-white">Updating...</span>
         ) : installed ? (
-          <Play_Icon className={compactMode ? `size-4` : 'size-5'} />
+          isRunning ? (
+            <ShinyText speed={2} text="Running..." className="font-bold" />
+          ) : (
+            <Play_Icon className={compactMode ? `size-4` : 'size-5'} />
+          )
         ) : (
           <Download2_Icon className={compactMode ? 'size-5' : 'size-5'} />
         )
       }
       size={compactMode ? 'sm' : 'md'}
       onPress={installed ? startAi : install}
-      isDisabled={!!updating || isUpdatingExt}
-      color={installed ? 'primary' : 'default'}
+      isDisabled={!!updating || isUpdatingExt || isRunning}
+      color={installed ? (isRunning ? 'secondary' : 'primary') : 'default'}
       className={`z-[11] hover:scale-[1.03] ${!installed && 'bg-foreground-200 dark:bg-foreground-100'}`}
       fullWidth
     />
