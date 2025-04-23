@@ -5,6 +5,7 @@ import {observer} from 'mobx-react-lite';
 import {useMemo} from 'react';
 
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
+import {useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
 import {useUpdateAvailable} from '../../../Utils/UtilHooks';
 import {useCardData} from '../CardsDataManager';
@@ -18,12 +19,15 @@ const LynxCard = observer(() => {
   const cardsRepoInfo = useSettingsState('cardsRepoInfo');
   const updateAvailable = useUpdateAvailable(id);
 
+  const runningCard = useCardsState('runningCard');
+  const isRunning = useMemo(() => runningCard.some(item => item.id === id), [runningCard, id]);
+
   const {header: Header, body: Body, footer: Footer} = useMemo(() => extensionsData.cards.customize, []);
 
   return (
     <Badge.Ribbon
       className={`z-10 ${
-        updateAvailable && installed ? 'block opacity-100' : 'hidden opacity-0'
+        updateAvailable && installed && !isRunning ? 'block opacity-100' : 'hidden opacity-0'
       } transition duration-500`}
       color="green"
       placement="end"
