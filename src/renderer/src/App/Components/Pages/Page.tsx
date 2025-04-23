@@ -2,8 +2,8 @@ import {motion, Variants} from 'framer-motion';
 import {ReactNode, useEffect, useState} from 'react';
 
 const pageTransitionVariants: Variants = {
-  enter: {filter: 'blur(0px)', opacity: 1, transform: 'translateY(0%)'},
-  exit: {filter: 'blur(3px)', opacity: 0, transform: 'translateY(-2%)'},
+  enter: {opacity: 1},
+  exit: {opacity: 0},
 };
 
 type Props = {
