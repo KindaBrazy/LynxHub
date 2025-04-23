@@ -86,6 +86,10 @@ const tabsSlice = createSlice({
       const {tabID, title} = action.payload;
       state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, title} : tab));
     },
+    setTabIsTerminal: (state: TabState, action: PayloadAction<{tabID: string; isTerminal: boolean}>) => {
+      const {tabID, isTerminal} = action.payload;
+      state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, isTerminal} : tab));
+    },
     setActiveTabTitle: (state: TabState, action: PayloadAction<string>) => {
       state.tabs = state.tabs.map(tab => (tab.id === state.activeTab ? {...tab, title: action.payload} : tab));
     },
