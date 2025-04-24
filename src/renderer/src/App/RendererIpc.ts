@@ -280,6 +280,8 @@ const rendererIpc = {
     offDownloadFile: (): void => ipc.removeAllListeners(utilsChannels.onDownloadFile),
 
     decompressFile: (filePath: string): Promise<string> => ipc.invoke(utilsChannels.decompressFile, filePath),
+
+    fetchBlob: (url: string): Promise<any> => ipc.invoke(utilsChannels.fetchBlob, url),
   },
 
   /** Managing and using node-pty(Pseudo Terminal ) */
