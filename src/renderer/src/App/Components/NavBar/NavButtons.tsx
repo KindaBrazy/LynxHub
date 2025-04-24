@@ -99,7 +99,7 @@ export const ContentPagesButtons = () => {
 const SettingsPages: PagesType[] = [
   {navButton: {icon: <Info_Icon className="size-full" />, title: PageTitles.dashboard}, path: PageID.dashboard},
   {navButton: {icon: <Extensions2_Icon className="size-full" />, title: PageTitles.modules}, path: PageID.modules},
-  {navButton: {icon: <Extensions_Icon className="size-full" />, title: PageTitles.modules}, path: PageID.modules},
+  {navButton: {icon: <Extensions_Icon className="size-full" />, title: PageTitles.extensions}, path: PageID.extensions},
   {navButton: {icon: <Slider_Icon className="size-full" />, title: PageTitles.settings}, path: PageID.settings},
 ];
 
