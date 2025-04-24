@@ -132,12 +132,14 @@ export const useStorageData = () => {
 
       if (storage.app.startupLastActivePage) {
         const lastPage = storage.app.lastPage;
-        tabsActions.setActivePage({
-          pageID: lastPage,
-          title: PageTitleByPageId[lastPage],
-          isTerminal: false,
-          favIcon: {show: false, targetUrl: ''},
-        });
+        dispatch(
+          tabsActions.setActivePage({
+            pageID: lastPage,
+            title: PageTitleByPageId[lastPage],
+            isTerminal: false,
+            favIcon: {show: false, targetUrl: ''},
+          }),
+        );
       }
 
       dispatch(settingsActions.setHotkeys(storage.app.hotkeys));
