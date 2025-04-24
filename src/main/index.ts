@@ -1,8 +1,7 @@
 import {platform} from 'node:os';
 
-import {electronApp, is, optimizer} from '@electron-toolkit/utils';
+import {electronApp, optimizer} from '@electron-toolkit/utils';
 import {app, BrowserWindow, Menu, nativeImage} from 'electron';
-import installExtension, {REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} from 'electron-devtools-installer';
 import log from 'electron-log/main';
 
 import trayIconMenu from '../../resources/16x16.png?asset';
@@ -84,15 +83,6 @@ async function onAppReady() {
 
   await moduleManager.createServer();
   extensionManager.setModuleManager(moduleManager);
-
-  // Install browser developer extensions
-  if (is.dev) {
-    try {
-      await installExtension([REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS]);
-    } catch (e) {
-      console.error(e);
-    }
-  }
 
   listenToAllChannels();
 
