@@ -131,6 +131,8 @@ export const utilsChannels = {
   onDownloadFile: 'utils:on-download-file',
 
   decompressFile: 'utils:decompress-file',
+
+  fetchBlob: 'utils:fetch-blob',
 };
 
 export const modulesChannels = {

@@ -6,6 +6,7 @@ import {DevInfo, RepoDetails} from '../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../cross/CrossUtils';
 import {User_Icon} from '../../assets/icons/SvgIcons/SvgIcons3';
 import {useAppState} from '../Redux/Reducer/AppReducer';
+import rendererIpc from '../RendererIpc';
 import {convertBlobToDataUrl} from './UtilFunctions';
 
 /**
@@ -208,9 +209,10 @@ export function useCachedImageUrl(id: string, url: string): string {
   useEffect(() => {
     const fetchAndStoreImage = async () => {
       try {
-        const response = await fetch(url);
-        const data = await response.blob();
-        const imageDataUrl = await convertBlobToDataUrl(data);
+        const bytes = await rendererIpc.utils.fetchBlob(url);
+        if (!bytes) return;
+        const blob = new Blob(bytes);
+        const imageDataUrl = await convertBlobToDataUrl(blob);
         localStorage.setItem(id, imageDataUrl);
         setImageSrc(imageDataUrl);
       } catch (error) {

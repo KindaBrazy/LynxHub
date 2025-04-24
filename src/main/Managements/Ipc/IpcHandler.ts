@@ -36,6 +36,7 @@ import {
   changeWindowState,
   checkFilesExist,
   decompressFile,
+  fetchBlob,
   getRelativeList,
   removeDir,
   setDarkMode,
@@ -149,6 +150,8 @@ function utils() {
   ipcMain.on(utilsChannels.cancelDownload, () => cancelDownload());
 
   ipcMain.handle(utilsChannels.decompressFile, (_, filePath: string) => decompressFile(filePath));
+
+  ipcMain.handle(utilsChannels.fetchBlob, (_, url: string) => fetchBlob(url));
 }
 
 function modules() {
