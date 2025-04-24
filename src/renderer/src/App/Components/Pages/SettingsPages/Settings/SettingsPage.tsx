@@ -6,7 +6,7 @@ type Props = {show: boolean};
 
 const SettingsPage = ({show}: Props) => (
   <Page show={show}>
-    <div className="flex size-full flex-row pb-4 space-x-1 absolute">
+    <div className="flex size-full flex-row pb-4 space-x-1 relative">
       <SettingsPageNav />
       <SettingsPageContents />
     </div>
