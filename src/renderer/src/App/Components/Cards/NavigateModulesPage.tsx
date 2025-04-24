@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import {Extensions2_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
 import {tabsActions} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
-import {PageID} from '../../Utils/Constants';
+import {PageID, PageTitles} from '../../Utils/Constants';
 
 export default function NavigateModulesPage({size}: {size?: 'sm' | 'md'}) {
   const dispatch = useDispatch<AppDispatch>();
@@ -14,7 +14,7 @@ export default function NavigateModulesPage({size}: {size?: 'sm' | 'md'}) {
     dispatch(
       tabsActions.setActivePage({
         pageID: PageID.modules,
-        title: 'Modules',
+        title: PageTitles.modules,
         isTerminal: false,
         favIcon: {show: false, targetUrl: ''},
       }),
