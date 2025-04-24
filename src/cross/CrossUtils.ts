@@ -135,10 +135,6 @@ export function formatWebAddress(address: string): string {
   }
 }
 
-export function getFavIconUrl(domain: string) {
-  return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
-}
-
 export function getUrlName(url: string): string {
   try {
     const normalizedUrl = url.endsWith('/') ? url.slice(0, -1) : url;
@@ -167,4 +163,18 @@ export function getUrlName(url: string): string {
     console.error('Invalid URL:', url, error);
     return url;
   }
+}
+
+export async function compareUrls(firstUrl: string, secondUrl: string, defaultProtocol?: 'https' | 'http' | undefined) {
+  const normalizeUrl = await import('normalize-url');
+  if (firstUrl === secondUrl) {
+    return true;
+  }
+
+  // @ts-ignore
+  const options: normalizeUrl.Options = {
+    defaultProtocol: defaultProtocol || 'https',
+  };
+
+  return normalizeUrl.default(firstUrl, options) === normalizeUrl.default(secondUrl, options);
 }
