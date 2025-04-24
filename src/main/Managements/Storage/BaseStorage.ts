@@ -4,7 +4,8 @@ import {join} from 'node:path';
 import {is} from '@electron-toolkit/utils';
 import {app} from 'electron';
 import fs from 'graceful-fs';
-import importSync from 'import-sync';
+import {LowSync} from 'lowdb';
+import {JSONFileSyncPreset} from 'lowdb/node';
 
 import {APP_NAME} from '../../../cross/CrossConstants';
 import StorageTypes from '../../../cross/StorageTypes';
@@ -12,10 +13,8 @@ import {appManager} from '../../index';
 import {getExePath, isPortable} from '../../Utilities/Utils';
 import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 
-const {JSONFileSyncPreset} = importSync('lowdb/node');
-
 class BaseStorage {
-  private readonly storage;
+  private readonly storage: LowSync<StorageTypes>;
 
   private readonly CURRENT_VERSION: number = 0.9;
 
@@ -113,7 +112,6 @@ class BaseStorage {
       }
     }
 
-    // @ts-ignore
     this.storage = JSONFileSyncPreset<StorageTypes>(storagePath, this.DEFAULT_DATA);
     this.storage.read();
     this.migration();
