@@ -6,6 +6,7 @@ import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/Cross
 import {
   appDataChannels,
   appWindowChannels,
+  BrowserRecent,
   ChangeWindowState,
   DarkModeTypes,
   DiscordRunningAI,
@@ -36,8 +37,8 @@ import {
   changeWindowState,
   checkFilesExist,
   decompressFile,
-  fetchBlob,
   getRelativeList,
+  isResponseValid,
   removeDir,
   setDarkMode,
   setDiscordRP,
@@ -151,7 +152,7 @@ function utils() {
 
   ipcMain.handle(utilsChannels.decompressFile, (_, filePath: string) => decompressFile(filePath));
 
-  ipcMain.handle(utilsChannels.fetchBlob, (_, url: string) => fetchBlob(url));
+  ipcMain.handle(utilsChannels.isResponseValid, (_, url: string) => isResponseValid(url));
 }
 
 function modules() {
@@ -302,7 +303,12 @@ function storageUtilsIpc() {
 
   ipcMain.on(storageUtilsChannels.updateZoomFactor, (_, data) => storageManager.updateZoomFactor(data));
 
-  ipcMain.on(storageUtilsChannels.addBrowserRecent, (_, url: string) => storageManager.addBrowserRecent(url));
+  ipcMain.on(storageUtilsChannels.addBrowserRecent, (_, recentEntry: BrowserRecent) =>
+    storageManager.addBrowserRecent(recentEntry),
+  );
+  ipcMain.on(storageUtilsChannels.addBrowserRecentFavIcon, (_, url: string, favIcon: string) =>
+    storageManager.addBrowserRecentFavIcon(url, favIcon),
+  );
   ipcMain.on(storageUtilsChannels.removeBrowserRecent, (_, url: string) => storageManager.removeBrowserRecent(url));
   ipcMain.handle(storageUtilsChannels.getBrowserRecent, () => storageManager.getBrowserRecent());
 }

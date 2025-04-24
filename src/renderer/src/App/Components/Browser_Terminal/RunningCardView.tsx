@@ -71,11 +71,18 @@ const RunningCardView = ({runningCard}: Props) => {
         if (e.isMainFrame) {
           webViewRef.setUserAgent(getUserAgent());
           dispatch(cardsActions.setRunningCardCurrentAddress({tabId: runningCard.tabId, address: e.url}));
-          dispatch(tabsActions.setTabFavIcon({show: true, targetUrl: e.url, tabID: runningCard.tabId}));
         }
       };
       webViewRef.removeEventListener('did-start-navigation', didNavigate);
       webViewRef.addEventListener('did-start-navigation', didNavigate);
+
+      webViewRef.addEventListener('page-favicon-updated', e => {
+        const url = e.favicons.find(icon => icon.includes('.ico')) || e.favicons[0] || '';
+        dispatch(tabsActions.setTabFavIcon({show: true, url, tabID: runningCard.tabId}));
+
+        const targetUrl = (e.target as WebviewTag).src;
+        rendererIpc.storageUtils.addBrowserRecentFavIcon(targetUrl, url);
+      });
 
       const onLoading = (isLoading: boolean) =>
         dispatch(tabsActions.setTabLoading({isLoading, tabID: runningCard.tabId}));

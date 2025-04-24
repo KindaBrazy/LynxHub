@@ -14,6 +14,7 @@ import {
   appUpdateChannels,
   AppUpdateStatus,
   appWindowChannels,
+  BrowserRecent,
   ChangeWindowState,
   CustomRunBehaviorData,
   DarkModeTypes,
@@ -252,9 +253,11 @@ const rendererIpc = {
 
     updateZoomFactor: (data: {id: string; zoom: number}) => ipc.send(storageUtilsChannels.updateZoomFactor, data),
 
-    addBrowserRecent: (url: string) => ipc.send(storageUtilsChannels.addBrowserRecent, url),
+    addBrowserRecent: (recentEntry: BrowserRecent) => ipc.send(storageUtilsChannels.addBrowserRecent, recentEntry),
+    addBrowserRecentFavIcon: (url: string, favIcon: string) =>
+      ipc.send(storageUtilsChannels.addBrowserRecentFavIcon, url, favIcon),
     removeBrowserRecent: (url: string) => ipc.send(storageUtilsChannels.removeBrowserRecent, url),
-    getBrowserRecent: (): Promise<string[]> => ipc.invoke(storageUtilsChannels.getBrowserRecent),
+    getBrowserRecent: (): Promise<BrowserRecent[]> => ipc.invoke(storageUtilsChannels.getBrowserRecent),
   },
 
   /** Utilities methods */
@@ -281,7 +284,7 @@ const rendererIpc = {
 
     decompressFile: (filePath: string): Promise<string> => ipc.invoke(utilsChannels.decompressFile, filePath),
 
-    fetchBlob: (url: string): Promise<any> => ipc.invoke(utilsChannels.fetchBlob, url),
+    isResponseValid: (url: string): Promise<boolean> => ipc.invoke(utilsChannels.isResponseValid, url),
   },
 
   /** Managing and using node-pty(Pseudo Terminal ) */

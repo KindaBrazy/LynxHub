@@ -57,7 +57,6 @@ export default function NavButton({children, pageId, title, badge}: Props) {
         pageID: pageId,
         title: title || '',
         isTerminal: false,
-        favIcon: {show: false, targetUrl: ''},
       }),
     );
   }, [isSelected, pageId, dispatch]);
