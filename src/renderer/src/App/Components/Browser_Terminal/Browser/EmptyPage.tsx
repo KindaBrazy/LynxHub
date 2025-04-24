@@ -2,6 +2,7 @@ import {Button, Spinner} from '@heroui/react';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {BrowserRecent} from '../../../../../../cross/IpcChannelAndTypes';
 import {Terminal_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
@@ -14,7 +15,7 @@ type Props = {type: 'browser' | 'terminal' | 'both'};
 export default function EmptyPage({type}: Props) {
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
-  const [recentAddress, setRecentAddress] = useState<string[]>([]);
+  const [recentAddress, setRecentAddress] = useState<BrowserRecent[]>([]);
 
   const switchToTerminal = () => {
     dispatch(cardsActions.setRunningCardView({tabId: activeTab, view: 'terminal'}));
@@ -50,8 +51,8 @@ export default function EmptyPage({type}: Props) {
           <div className="w-full mt-4">
             <h2 className="text-lg font-medium mb-3 mt-8">Recent Addresses</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-              {recentAddress.slice(0, 8).map((url, index) => (
-                <EmptyPage_Item url={url} key={index} setRecentAddress={setRecentAddress} />
+              {recentAddress.slice(0, 8).map((recent, index) => (
+                <EmptyPage_Item key={index} recent={recent} setRecentAddress={setRecentAddress} />
               ))}
             </div>
           </div>

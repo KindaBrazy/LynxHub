@@ -212,22 +212,12 @@ export async function checkFilesExist(dir: string, files: string[]) {
   }
 }
 
-export async function fetchBlob(url: string) {
+export async function isResponseValid(url: string): Promise<boolean> {
   try {
     const response = await fetch(url);
 
-    if (!response.ok || !response.body) return null;
-
-    const reader = response.body.getReader();
-    const arr: (Uint8Array<ArrayBufferLike> | undefined)[] = [];
-
-    return reader.read().then(function collectChunks({value, done}) {
-      arr.push(value);
-      if (!done) return reader.read().then(collectChunks);
-      return arr.filter(Boolean);
-    });
-  } catch (error) {
-    console.error('Error fetching and storing image:', error);
-    return null;
+    return response.ok;
+  } catch (e) {
+    return false;
   }
 }

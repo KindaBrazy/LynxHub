@@ -2,7 +2,9 @@ import lodash from 'lodash';
 import _ from 'lodash';
 
 import {ChosenArgumentsData} from '../../../cross/CrossTypes';
+import {compareUrls} from '../../../cross/CrossUtils';
 import {
+  BrowserRecent,
   CustomRunBehaviorData,
   HomeCategory,
   PreCommands,
@@ -495,27 +497,45 @@ class StorageManager extends BaseStorage {
     });
   }
 
-  public addBrowserRecent(url: string) {
+  public addBrowserRecent(recentEntry: BrowserRecent) {
     let recentAddress = this.getData('browser').recentAddress;
 
-    const existUrlIndex = recentAddress.findIndex(recent => recent === url);
+    const existUrlIndex = recentAddress.findIndex(recent => recent.url === recentEntry.url);
 
     if (existUrlIndex !== -1) {
-      recentAddress = [url, ...recentAddress.slice(0, existUrlIndex), ...recentAddress.slice(existUrlIndex + 1)];
+      recentAddress = [
+        recentEntry,
+        ...recentAddress.slice(0, existUrlIndex),
+        ...recentAddress.slice(existUrlIndex + 1),
+      ];
     } else {
-      recentAddress = [url, ...recentAddress];
+      recentAddress = [recentEntry, ...recentAddress];
     }
 
     this.updateData('browser', {recentAddress: recentAddress});
   }
 
+  public async addBrowserRecentFavIcon(url: string, favIcon: string) {
+    const recentAddress = this.getData('browser').recentAddress;
+
+    for (const recent of recentAddress) {
+      const isSame = await compareUrls(recent.url, url);
+      if (isSame) {
+        recent.favIcon = favIcon;
+        break;
+      }
+    }
+
+    this.updateData('browser', {recentAddress});
+  }
+
   public removeBrowserRecent(url: string) {
     const recentAddress = this.getData('browser').recentAddress;
 
-    this.updateData('browser', {recentAddress: recentAddress.filter(address => address !== url)});
+    this.updateData('browser', {recentAddress: recentAddress.filter(address => address.url !== url)});
   }
 
-  public getBrowserRecent(): string[] {
+  public getBrowserRecent(): BrowserRecent[] {
     return this.getData('browser').recentAddress;
   }
 }

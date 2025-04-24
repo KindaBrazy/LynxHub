@@ -2,6 +2,7 @@ import {Rectangle} from 'electron';
 
 import {DiscordRPC, StorageChosenArgumentsData} from './CrossTypes';
 import {
+  BrowserRecent,
   CustomRunBehaviorStore,
   DarkModeTypes,
   HomeCategory,
@@ -83,7 +84,7 @@ type StorageTypes = {
     resizeDelay: number;
   };
   browser: {
-    recentAddress: string[];
+    recentAddress: BrowserRecent[];
   };
 };
 

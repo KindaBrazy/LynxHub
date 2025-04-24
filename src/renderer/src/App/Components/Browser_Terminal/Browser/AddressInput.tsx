@@ -37,7 +37,7 @@ export default function AddressInput({runningCard, setCustomAddress}: Props) {
               dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
             }
 
-            rendererIpc.storageUtils.addBrowserRecent(url);
+            rendererIpc.storageUtils.addBrowserRecent({url, favIcon: ''});
 
             input.blur();
           } catch (e) {

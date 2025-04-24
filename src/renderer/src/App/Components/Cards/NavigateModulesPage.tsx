@@ -16,7 +16,6 @@ export default function NavigateModulesPage({size}: {size?: 'sm' | 'md'}) {
         pageID: PageID.modules,
         title: PageTitles.modules,
         isTerminal: false,
-        favIcon: {show: false, targetUrl: ''},
       }),
     );
   }, [dispatch]);

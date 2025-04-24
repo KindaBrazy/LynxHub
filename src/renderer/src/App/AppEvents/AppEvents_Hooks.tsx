@@ -137,7 +137,6 @@ export const useStorageData = () => {
             pageID: lastPage,
             title: PageTitleByPageId[lastPage],
             isTerminal: false,
-            favIcon: {show: false, targetUrl: ''},
           }),
         );
       }

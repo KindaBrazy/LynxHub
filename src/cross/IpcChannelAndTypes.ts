@@ -69,6 +69,8 @@ export type DownloadProgress = {
 
 export type SkippedPlugins = {folderName: string; message: string};
 
+export type BrowserRecent = {url: string; favIcon: string};
+
 export const winChannels = {
   changeState: 'win:state-change',
   onChangeState: 'win:on-state-change',
@@ -132,7 +134,7 @@ export const utilsChannels = {
 
   decompressFile: 'utils:decompress-file',
 
-  fetchBlob: 'utils:fetch-blob',
+  isResponseValid: 'utils:is-response-valid',
 };
 
 export const modulesChannels = {
@@ -275,6 +277,7 @@ export const storageUtilsChannels = {
   updateZoomFactor: 'storageUtils:update-zoom-factor',
 
   addBrowserRecent: 'storageUtils:add-browser-recent',
+  addBrowserRecentFavIcon: 'storageUtils:add-browser-recent-favicon',
   removeBrowserRecent: 'storageUtils:remove-browser-recent',
   getBrowserRecent: 'storageUtils:get-browser-recent',
 };
