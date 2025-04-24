@@ -220,11 +220,13 @@ export function useCachedImageUrl(id: string, url: string): string {
       }
     };
 
-    const cachedImage = localStorage.getItem(id);
-    if (cachedImage) {
-      setImageSrc(cachedImage);
-    } else if (isOnline) {
-      fetchAndStoreImage();
+    if (url) {
+      const cachedImage = localStorage.getItem(id);
+      if (cachedImage) {
+        setImageSrc(cachedImage);
+      } else if (isOnline) {
+        fetchAndStoreImage();
+      }
     }
   }, [id, url, isOnline]);
 
