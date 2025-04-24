@@ -43,6 +43,21 @@ export const PageTitles = {
   settings: 'Settings',
 };
 
+export const PageTitleByPageId = {
+  [PageID.home]: 'Home',
+  [PageID.imageGen]: 'Image Generation',
+  [PageID.textGen]: 'Text Generation',
+  [PageID.audioGen]: 'Audio Generation',
+
+  [PageID.tools]: 'Tools',
+  [PageID.games]: 'Games',
+
+  [PageID.dashboard]: 'Dashboard',
+  [PageID.modules]: 'Extensions',
+  [PageID.extensions]: 'Modules',
+  [PageID.settings]: 'Settings',
+};
+
 export const PageComponents = {
   [PageID.home]: HomePage,
   [PageID.imageGen]: ImageGenerationPage,

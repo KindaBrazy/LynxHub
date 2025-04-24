@@ -13,6 +13,7 @@ import {terminalActions} from '../Redux/Reducer/TerminalReducer';
 import {userActions} from '../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
+import {PageTitleByPageId} from '../Utils/Constants';
 import {checkEARepos} from './AppEvents_Utils';
 
 export const useCheckCardsUpdate = () => {
@@ -130,8 +131,13 @@ export const useStorageData = () => {
       dispatch(settingsActions.setSettingsState({key: 'dynamicAppTitle', value: storage.app.dynamicAppTitle}));
 
       if (storage.app.startupLastActivePage) {
-        // TODO
-        dispatch(tabsActions.setTabState({key: 'activeTab', value: storage.app.lastPage}));
+        const lastPage = storage.app.lastPage;
+        tabsActions.setActivePage({
+          pageID: lastPage,
+          title: PageTitleByPageId[lastPage],
+          isTerminal: false,
+          favIcon: {show: false, targetUrl: ''},
+        });
       }
 
       dispatch(settingsActions.setHotkeys(storage.app.hotkeys));
