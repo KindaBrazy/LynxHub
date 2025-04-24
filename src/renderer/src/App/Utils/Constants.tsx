@@ -28,6 +28,21 @@ export const PageID = {
   settings: 'settings_page',
 };
 
+export const PageTitles = {
+  home: 'Home',
+  imageGen: 'Image Generation',
+  textGen: 'Text Generation',
+  audioGen: 'Audio Generation',
+
+  tools: 'Tools',
+  games: 'Games',
+
+  dashboard: 'Dashboard',
+  extensions: 'Extensions',
+  modules: 'Modules',
+  settings: 'Settings',
+};
+
 export const PageComponents = {
   [PageID.home]: HomePage,
   [PageID.imageGen]: ImageGenerationPage,
