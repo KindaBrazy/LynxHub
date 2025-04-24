@@ -8,7 +8,7 @@ import {Slider_Icon} from '../../../assets/icons/SvgIcons/SvgIcons4';
 import {GamePad_Icon, Rocket_Icon} from '../../../assets/icons/SvgIcons/SvgIcons5';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../Redux/Reducer/SettingsReducer';
-import {PageID} from '../../Utils/Constants';
+import {PageID, PageTitles} from '../../Utils/Constants';
 import NavButton from './NavButton';
 
 type PagesType = {
@@ -50,17 +50,17 @@ export const ContentPagesButtons = () => {
 
   const pagesData: PagesType[] = useMemo(() => {
     const result: PagesType[] = [
-      {navButton: {icon: <Home_Icon className="size-full" />, title: 'Home'}, path: PageID.home},
+      {navButton: {icon: <Home_Icon className="size-full" />, title: PageTitles.home}, path: PageID.home},
       {
-        navButton: {icon: <ImageGeneration_Icon className="size-full" />, title: 'Image Generation'},
+        navButton: {icon: <ImageGeneration_Icon className="size-full" />, title: PageTitles.imageGen},
         path: PageID.imageGen,
       },
       {
-        navButton: {icon: <TextGeneration_Icon className="size-full" />, title: 'Text Generation'},
+        navButton: {icon: <TextGeneration_Icon className="size-full" />, title: PageTitles.textGen},
         path: PageID.textGen,
       },
       {
-        navButton: {icon: <AudioGeneration_Icon className="size-full" />, title: 'Audio Generation'},
+        navButton: {icon: <AudioGeneration_Icon className="size-full" />, title: PageTitles.audioGen},
         path: PageID.audioGen,
       },
     ];
@@ -69,7 +69,7 @@ export const ContentPagesButtons = () => {
       result.push({
         navButton: {
           icon: <Rocket_Icon className="size-full" />,
-          title: 'Tools',
+          title: PageTitles.tools,
         },
         path: PageID.tools,
       });
@@ -79,7 +79,7 @@ export const ContentPagesButtons = () => {
       result.push({
         navButton: {
           icon: <GamePad_Icon className="size-full" />,
-          title: 'Games',
+          title: PageTitles.games,
         },
         path: PageID.games,
       });
@@ -97,10 +97,10 @@ export const ContentPagesButtons = () => {
 };
 
 const SettingsPages: PagesType[] = [
-  {navButton: {icon: <Info_Icon className="size-full" />, title: 'Dashboard'}, path: PageID.dashboard},
-  {navButton: {icon: <Extensions2_Icon className="size-full" />, title: 'Modules'}, path: PageID.modules},
-  {navButton: {icon: <Extensions_Icon className="size-full" />, title: 'Extensions'}, path: PageID.extensions},
-  {navButton: {icon: <Slider_Icon className="size-full" />, title: 'Settings'}, path: PageID.settings},
+  {navButton: {icon: <Info_Icon className="size-full" />, title: PageTitles.dashboard}, path: PageID.dashboard},
+  {navButton: {icon: <Extensions2_Icon className="size-full" />, title: PageTitles.modules}, path: PageID.modules},
+  {navButton: {icon: <Extensions_Icon className="size-full" />, title: PageTitles.modules}, path: PageID.modules},
+  {navButton: {icon: <Slider_Icon className="size-full" />, title: PageTitles.settings}, path: PageID.settings},
 ];
 
 export function SettingsPagesButtons() {
