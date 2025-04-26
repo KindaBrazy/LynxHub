@@ -10,7 +10,7 @@ const HomeSearchBox = memo(({searchValue, setSearchValue}: Props) => {
     <Input
       classNames={{
         inputWrapper:
-          'dark:bg-[#23242578] dark:hover:bg-[#232425de] dark:group-data-[focus=true]:bg-[#232425]' +
+          'dark:bg-[#2a2a2a] dark:hover:bg-[#212121] dark:group-data-[focus=true]:bg-[#232425]' +
           ' bg-stone-50 !transition !duration-300 shadow-md overflow-hidden border border-foreground/10' +
           ' dark:border-foreground/5',
       }}

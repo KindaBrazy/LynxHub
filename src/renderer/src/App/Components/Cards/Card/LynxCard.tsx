@@ -41,7 +41,7 @@ const LynxCard = observer(() => {
         <Card
           className={
             ` ${compactMode ? 'w-[230px]' : 'w-[277px]'} h-fit cursor-default shadow-md !transition ` +
-            ` border-1 border-foreground/10 duration-300 hover:shadow-xl dark:bg-[#3d3d3d]`
+            ` duration-300 hover:shadow-xl dark:bg-[#3a3a3a]`
           }>
           {Header ? <Header context={useCardData()} /> : <LynxCardHeader />}
           {!compactMode && cardsRepoInfo && (Body ? <Body context={useCardData()} /> : <LynxCardBody />)}
