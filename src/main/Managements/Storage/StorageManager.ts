@@ -497,10 +497,16 @@ class StorageManager extends BaseStorage {
     });
   }
 
-  public addBrowserRecent(recentEntry: BrowserRecent) {
+  public async addBrowserRecent(recentEntry: BrowserRecent) {
     let recentAddress = this.getData('browser').recentAddress;
+    let existUrlIndex = -1;
 
-    const existUrlIndex = recentAddress.findIndex(recent => recent.url === recentEntry.url);
+    for (let i = 0; i < recentAddress.length; i++) {
+      if (await compareUrls(recentAddress[i].url, recentEntry.url)) {
+        existUrlIndex = i;
+        break;
+      }
+    }
 
     if (existUrlIndex !== -1) {
       recentAddress = [
@@ -512,7 +518,7 @@ class StorageManager extends BaseStorage {
       recentAddress = [recentEntry, ...recentAddress];
     }
 
-    this.updateData('browser', {recentAddress: recentAddress});
+    this.updateData('browser', {recentAddress});
   }
 
   public async addBrowserRecentFavIcon(url: string, favIcon: string) {
