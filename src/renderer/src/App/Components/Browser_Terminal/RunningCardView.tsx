@@ -57,7 +57,7 @@ const RunningCardView = ({runningCard}: Props) => {
     const isBrowserView = currentView === 'browser';
 
     const terminalTitle = isEmptyRunning ? terminalName : allCards.find(card => card.id === id)?.title;
-    const browserTitle = webViewRef && isDomReady ? webViewRef.getTitle() : undefined;
+    const browserTitle = webViewRef && isDomReady ? webViewRef.getTitle() : 'Browser';
 
     const title = isBrowserView ? browserTitle : terminalTitle;
 
