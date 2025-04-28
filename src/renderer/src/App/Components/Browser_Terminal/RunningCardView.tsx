@@ -18,6 +18,8 @@ import TopBar from './TopBar/TopBar';
 type Props = {runningCard: RunningCard};
 
 const RunningCardView = ({runningCard}: Props) => {
+  const {currentView, id, tabId, isEmptyRunning} = runningCard;
+
   const ExtTerminal = useMemo(() => extensionsData.runningAI.terminal, []);
   const ExtBrowser = useMemo(() => extensionsData.runningAI.browser, []);
 
@@ -33,25 +35,21 @@ const RunningCardView = ({runningCard}: Props) => {
   const [isDomReady, setIsDomReady] = useState<boolean>(false);
 
   useEffect(() => {
-    const {tabId, currentView} = runningCard;
-
     if (tabId === activeTab) {
       const isBrowserView = currentView === 'browser';
       dispatch(tabsActions.setTabIsTerminal({tabID: tabId, isTerminal: !isBrowserView}));
     }
-  }, [runningCard]);
+  }, [tabId, currentView]);
 
   useEffect(() => {
-    rendererIpc.pty.onTitle((_, id, title) => {
-      if (id === runningCard.id) setTerminalName(title);
+    rendererIpc.pty.onTitle((_, targetID, title) => {
+      if (targetID === id) setTerminalName(title);
     });
 
     return () => rendererIpc.pty.offTitle();
   }, []);
 
   useEffect(() => {
-    const {isEmptyRunning, id, tabId, currentView} = runningCard;
-
     if (tabId !== activeTab) return;
 
     const isBrowserView = currentView === 'browser';
@@ -63,14 +61,14 @@ const RunningCardView = ({runningCard}: Props) => {
 
     const currentTitle = tabs.find(tab => tab.id === activeTab)?.title;
     if (title && title !== currentTitle) dispatch(tabsActions.setTabTitle({title, tabID: tabId}));
-  }, [runningCard, webViewRef, tabs, activeTab, isDomReady, terminalName]);
+  }, [isEmptyRunning, id, tabId, currentView, webViewRef, tabs, activeTab, isDomReady, terminalName]);
 
   useEffect(() => {
     if (webViewRef) {
       const didNavigate = (e: DidStartNavigationEvent) => {
         if (e.isMainFrame) {
           webViewRef.setUserAgent(getUserAgent());
-          dispatch(cardsActions.setRunningCardCurrentAddress({tabId: runningCard.tabId, address: e.url}));
+          dispatch(cardsActions.setRunningCardCurrentAddress({tabId: tabId, address: e.url}));
         }
       };
       webViewRef.removeEventListener('did-start-navigation', didNavigate);
@@ -78,22 +76,20 @@ const RunningCardView = ({runningCard}: Props) => {
 
       webViewRef.addEventListener('page-favicon-updated', e => {
         const url = e.favicons.find(icon => icon.includes('.ico')) || e.favicons[0] || '';
-        dispatch(tabsActions.setTabFavIcon({show: true, url, tabID: runningCard.tabId}));
+        dispatch(tabsActions.setTabFavIcon({show: true, url, tabID: tabId}));
 
         const targetUrl = (e.target as WebviewTag).src;
         rendererIpc.storageUtils.addBrowserRecentFavIcon(targetUrl, url);
       });
 
-      const onLoading = (isLoading: boolean) =>
-        dispatch(tabsActions.setTabLoading({isLoading, tabID: runningCard.tabId}));
+      const onLoading = (isLoading: boolean) => dispatch(tabsActions.setTabLoading({isLoading, tabID: tabId}));
 
       webViewRef.removeEventListener('did-start-loading', () => onLoading(true));
       webViewRef.removeEventListener('did-stop-loading', () => onLoading(false));
       webViewRef.addEventListener('did-start-loading', () => onLoading(true));
       webViewRef.addEventListener('did-stop-loading', () => onLoading(false));
 
-      const setTitle = () =>
-        dispatch(tabsActions.setTabTitle({title: webViewRef.getTitle(), tabID: runningCard.tabId}));
+      const setTitle = () => dispatch(tabsActions.setTabTitle({title: webViewRef.getTitle(), tabID: tabId}));
       webViewRef.addEventListener('page-title-updated', setTitle);
 
       return () => {
