@@ -3,6 +3,7 @@ import {configureStore} from '@reduxjs/toolkit';
 import {extensionsData} from '../Extensions/ExtensionLoader';
 import appReducer from './Reducer/AppReducer';
 import cardsReducer from './Reducer/CardsReducer';
+import hotkeysReducer from './Reducer/HotkeysReducer';
 import modalsReducer from './Reducer/ModalsReducer';
 import settingsReducer from './Reducer/SettingsReducer';
 import tabsReducer from './Reducer/TabsReducer';
@@ -17,6 +18,7 @@ const staticReducers = {
   modals: modalsReducer,
   settings: settingsReducer,
   terminal: terminalReducer,
+  hotkeys: hotkeysReducer,
 };
 
 let store = configureStore({

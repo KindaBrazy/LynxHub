@@ -3,6 +3,7 @@ import {
   useCheckCardsUpdate,
   useCheckExtensionsUpdate,
   useCheckModulesUpdate,
+  useHotkeyEvents,
   useIpcEvents,
   useOnlineEvents,
   usePatreon,
@@ -19,4 +20,5 @@ export default function useAppEvents() {
   usePatreon();
   useIpcEvents();
   useAppTitleEvents();
+  useHotkeyEvents();
 }

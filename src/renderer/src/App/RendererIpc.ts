@@ -27,6 +27,7 @@ import {
   gitChannels,
   GitProgressCallback,
   HomeCategory,
+  LynxInput,
   moduleApiChannels,
   modulesChannels,
   OnPreCommands,
@@ -349,6 +350,8 @@ const rendererIpc = {
 
   appWindow: {
     webViewAttached: (id: number) => ipc.send(appWindowChannels.webViewAttached, id),
+    hotkeysChange: (result: (event: IpcRendererEvent, input: LynxInput) => void) =>
+      ipc.on(appWindowChannels.hotkeysChange, result),
   },
 };
 

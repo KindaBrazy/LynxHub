@@ -7,6 +7,7 @@ import StorageTypes from '../../../../cross/StorageTypes';
 import {useAllCards, useGetTitleByID} from '../Modules/ModuleLoader';
 import {appActions, useAppState} from '../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
+import {hotkeysActions} from '../Redux/Reducer/HotkeysReducer';
 import {settingsActions} from '../Redux/Reducer/SettingsReducer';
 import {tabsActions, useTabsState} from '../Redux/Reducer/TabsReducer';
 import {terminalActions} from '../Redux/Reducer/TerminalReducer';
@@ -242,4 +243,14 @@ export const useAppTitleEvents = () => {
     const currentView = capitalize(runningCard.find(card => card.tabId === activeTab)?.currentView);
     dispatch(appActions.setAppTitle(title && `${title} - ${currentView}`));
   }, [title, runningCard, activeTab]);
+};
+
+export const useHotkeyEvents = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    rendererIpc.appWindow.hotkeysChange((_, input) => {
+      dispatch(hotkeysActions.setInput(input));
+    });
+  }, []);
 };

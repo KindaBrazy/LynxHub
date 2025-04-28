@@ -8,6 +8,7 @@ import icon from '../../../resources/icon.png?asset';
 import {winChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager, trayManager} from '../index';
 import {getUserAgent, RelaunchApp} from '../Utilities/Utils';
+import RegisterHotkeys from './HotkeysManager';
 
 /**
  * Manages the main application window and loading window for an Electron app.
@@ -85,7 +86,10 @@ export default class ElectronAppManager {
   /** Creates and configures the main application window. */
   private createMainWindow(): void {
     this.mainWindow = new BrowserWindow(ElectronAppManager.MAIN_WINDOW_CONFIG);
+
     this.mainWindow.webContents.setUserAgent(getUserAgent());
+    RegisterHotkeys(this.mainWindow.webContents);
+
     this.setupMainWindowEventListeners();
     this.loadAppropriateURL(this.mainWindow, 'index.html');
     this.onCreateWindow?.();

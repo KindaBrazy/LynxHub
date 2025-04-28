@@ -16,6 +16,7 @@ import {ValidateCards} from './Managements/DataValidator';
 import DialogManager from './Managements/DialogManager';
 import DiscordRpcManager from './Managements/DiscordRpcManager';
 import ElectronAppManager from './Managements/ElectronAppManager';
+import RegisterHotkeys from './Managements/HotkeysManager';
 import {listenToAllChannels} from './Managements/Ipc/IpcHandler';
 import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
 import ModuleManager from './Managements/Plugin/ModuleManager';
@@ -53,6 +54,9 @@ async function setupApp() {
   await downloadDU();
 
   app.whenReady().then(onAppReady);
+  app.on('web-contents-created', (_, contents) => {
+    RegisterHotkeys(contents);
+  });
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window);
