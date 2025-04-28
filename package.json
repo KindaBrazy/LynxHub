@@ -54,6 +54,7 @@
     "node-pty": "^1.1.0-beta34",
     "normalize-url": "^8.0.1",
     "random-words": "^2.0.1",
+    "react-error-boundary": "^5.0.0",
     "serve-handler": "^6.1.6",
     "tree-kill": "^1.2.2"
   },
