@@ -2,10 +2,10 @@ import {Button, Checkbox, Popover, PopoverContent, PopoverTrigger} from '@heroui
 import {Typography} from 'antd';
 import {motion} from 'framer-motion';
 import {useCallback, useState} from 'react';
-import {isHotkeyPressed} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {Power_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
+import {useHotkeysState} from '../../Redux/Reducer/HotkeysReducer';
 import {settingsActions, useSettingsState} from '../../Redux/Reducer/SettingsReducer';
 import {useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
@@ -18,6 +18,7 @@ type Props = {
 };
 
 export default function WindowButtons_Close({buttonProps, commonStyles}: Props) {
+  const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const activePage = useTabsState('activePage');
   const showCloseConfirm = useSettingsState('closeConfirm');
   const dispatch = useDispatch<AppDispatch>();
@@ -29,7 +30,7 @@ export default function WindowButtons_Close({buttonProps, commonStyles}: Props) 
 
   const onClick = () => {
     rendererIpc.storage.update('app', {lastPage: activePage});
-    if (isHotkeyPressed('control') || !showCloseConfirm) {
+    if (isCtrlPressed || !showCloseConfirm) {
       close();
     } else if (!isConfirmOpen) {
       setIsConfirmOpen(true);
