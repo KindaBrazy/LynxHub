@@ -249,8 +249,13 @@ export const useHotkeyEvents = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    rendererIpc.appWindow.hotkeysChange((_, input) => {
+    rendererIpc.appWindow.onHotkeysChange((_, input) => {
+      console.log(input);
       dispatch(hotkeysActions.setInput(input));
     });
+
+    return () => {
+      rendererIpc.appWindow.offHotkeysChange();
+    };
   }, []);
 };
