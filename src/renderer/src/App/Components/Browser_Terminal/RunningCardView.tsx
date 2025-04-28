@@ -132,11 +132,12 @@ const RunningCardView = ({runningCard}: Props) => {
         runningCard={runningCard}
         terminalContent={terminalContent}
       />
-      {isNil(ExtTerminal) ? (
-        <Terminal runningCard={runningCard} setTerminalContent={setTerminalContent} />
-      ) : (
-        <ExtTerminal />
-      )}
+      {runningCard.type !== 'browser' &&
+        (isNil(ExtTerminal) ? (
+          <Terminal runningCard={runningCard} setTerminalContent={setTerminalContent} />
+        ) : (
+          <ExtTerminal />
+        ))}
       {runningCard.type !== 'terminal' &&
         (isNil(ExtBrowser) ? (
           <Browser
