@@ -9,12 +9,12 @@ import {message} from 'antd';
 import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useRef, useState} from 'react';
-import {useHotkeys} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
 import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
+import {useHotkeysState} from '../../../Redux/Reducer/HotkeysReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {useTerminalState} from '../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../Redux/Store';
@@ -29,6 +29,7 @@ const FONT_FAMILY = 'JetBrainsMono';
 
 type Props = {runningCard: RunningCard; setTerminalContent?: Dispatch<SetStateAction<string>>};
 export default function Terminal({runningCard, setTerminalContent}: Props) {
+  const copyPressed = useHotkeysState('copyPressed');
   const activeTab = useTabsState('activeTab');
   const allCards = useAllCards();
 
@@ -55,6 +56,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
   );
 
   const copyText = useCallback(() => {
+    console.log('aaa');
     if (!isEmpty(selectedText)) {
       navigator.clipboard.writeText(selectedText);
       message.success(`Copied to clipboard`);
@@ -62,11 +64,9 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
     }
   }, [selectedText, terminal]);
 
-  useHotkeys('ctrl+c', copyText, {
-    keyup: true,
-    enableOnFormTags: true,
-    enableOnContentEditable: true,
-  });
+  useEffect(() => {
+    if (copyPressed) copyText();
+  }, [copyPressed]);
 
   useEffect(() => {
     rendererIpc.storage.get('cardsConfig').then(result => {
