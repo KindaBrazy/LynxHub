@@ -7,22 +7,22 @@ import {HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons
 import {OpenFolder_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {duplicateCard, removeDuplicatedCard} from '../../../../../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../../../../../Redux/Reducer/CardsReducer';
+import {useHotkeysState} from '../../../../../Redux/Reducer/HotkeysReducer';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
-import {useCtrlPressed, useInstalledCard} from '../../../../../Utils/UtilHooks';
+import {useInstalledCard} from '../../../../../Utils/UtilHooks';
 import {useCardData} from '../../../CardsDataManager';
 
 export const MenuInfo = () => {
   const {id, extensionsDir, repoUrl, setMenuIsOpen, title} = useCardData();
+  const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const webUI = useInstalledCard(id);
   const {name} = useDevInfo(repoUrl);
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
-
-  const {isCtrlPressed, setIsCtrlPressed} = useCtrlPressed();
 
   const showOpenFolder = useMemo(() => {
     return !!webUI?.dir && isCtrlPressed;
@@ -31,7 +31,6 @@ export const MenuInfo = () => {
   const onPress = () => {
     if (showOpenFolder) {
       rendererIpc.file.openPath(webUI!.dir!);
-      setIsCtrlPressed(false);
       setMenuIsOpen(false);
     } else {
       dispatch(
@@ -54,8 +53,8 @@ export const MenuInfo = () => {
 
 export const MenuHomePage = () => {
   const {repoUrl, title, setMenuIsOpen} = useCardData();
+  const isCtrlPressed = useHotkeysState('isCtrlPressed');
 
-  const {isCtrlPressed, setIsCtrlPressed} = useCtrlPressed();
   const activeTab = useTabsState('activeTab');
 
   const dispatch = useDispatch<AppDispatch>();
@@ -63,7 +62,6 @@ export const MenuHomePage = () => {
   const onPress = useCallback(() => {
     if (isCtrlPressed) {
       window.open(repoUrl);
-      setIsCtrlPressed(false);
       setMenuIsOpen(false);
     } else {
       dispatch(modalActions.openReadme({url: repoUrl, title, tabID: activeTab}));

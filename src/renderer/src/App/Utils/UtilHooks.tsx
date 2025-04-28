@@ -1,6 +1,5 @@
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, useMemo, useState} from 'react';
-import {useHotkeys} from 'react-hotkeys-hook';
+import {Fragment, useMemo} from 'react';
 
 import {ChangelogItem} from '../../../../cross/CrossTypes';
 import {InstalledCard} from '../../../../cross/StorageTypes';
@@ -74,35 +73,6 @@ export const useDisableTooltip = (isEssential: boolean = false): boolean => {
 
   // Show if tooltip set to essential
   return !isEssential;
-};
-
-export const useCtrlPressed = () => {
-  const [isCtrlPressed, setIsCtrlPressed] = useState<boolean>(false);
-
-  useHotkeys(
-    'ctrl',
-    () => {
-      setIsCtrlPressed(true);
-    },
-    {
-      keydown: true,
-      enableOnFormTags: true,
-      enableOnContentEditable: true,
-    },
-  );
-  useHotkeys(
-    'ctrl',
-    () => {
-      setIsCtrlPressed(false);
-    },
-    {
-      keyup: true,
-      enableOnFormTags: true,
-      enableOnContentEditable: true,
-    },
-  );
-
-  return {isCtrlPressed, setIsCtrlPressed};
 };
 
 export function RenderSubItems(items?: ChangelogItem[], parentKey: string = '') {
