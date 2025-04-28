@@ -1,11 +1,11 @@
 import {Button, Checkbox, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
 import {Typography} from 'antd';
 import {useCallback, useState} from 'react';
-import {isHotkeyPressed} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {Stop_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
+import {useHotkeysState} from '../../../Redux/Reducer/HotkeysReducer';
 import {settingsActions, useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
 import {tabsActions, useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
@@ -16,6 +16,7 @@ type Props = {runningCard: RunningCard};
 
 export default function Terminate({runningCard}: Props) {
   const dispatch = useDispatch<AppDispatch>();
+  const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const activeTab = useTabsState('activeTab');
   const showTerminateConfirm = useSettingsState('terminateAIConfirm');
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
@@ -58,15 +59,15 @@ export default function Terminate({runningCard}: Props) {
     }, 500);
   }, [onStop, runningCard, dispatch, activeTab]);
 
-  const stopAi = useCallback(() => {
+  const stopAi = () => {
     if (runningCard.id) {
-      if (isHotkeyPressed('control') || !showTerminateConfirm) {
+      if (isCtrlPressed || !showTerminateConfirm) {
         onStop();
       } else if (!isConfirmOpen) {
         setIsConfirmOpen(true);
       }
     }
-  }, [onRelaunch, onShowConfirm, onStop, runningCard.id, showTerminateConfirm, isConfirmOpen, setIsConfirmOpen]);
+  };
 
   return (
     <>
