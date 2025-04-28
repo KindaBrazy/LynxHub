@@ -10,6 +10,7 @@ const initialKeys: LynxInput = {
   shift: false,
   key: '',
   meta: false,
+  type: '',
 };
 
 let prevKeys: LynxInput = initialKeys;
@@ -29,8 +30,8 @@ function onBlur() {
 }
 
 function onInput(_event: Event, input: Input) {
-  const {control, key, shift, alt, meta} = input;
-  currentKeys = {control, key, shift, alt, meta};
+  const {control, key, shift, alt, meta, type} = input;
+  currentKeys = {control, key, shift, alt, meta, type};
 
   sendToRenderer();
 }

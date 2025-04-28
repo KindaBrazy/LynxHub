@@ -24,6 +24,7 @@ const initialState: HotkeysState = {
     control: false,
     alt: false,
     meta: false,
+    type: '',
   },
   isCtrlPressed: false,
   isShiftPressed: false,
