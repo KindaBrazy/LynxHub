@@ -1,4 +1,4 @@
-import {IpcRendererEvent} from 'electron';
+import {Input, IpcRendererEvent} from 'electron';
 import {PullResult, SimpleGitProgressEvent} from 'simple-git';
 
 import {UpdateDownloadProgress} from './CrossTypes';
@@ -53,6 +53,7 @@ export type HomeCategory = ('Pin' | 'Recently' | 'All' | string)[];
 export type DiscordRunningAI = {running: boolean; name?: string; type?: 'image' | 'audio' | 'text' | 'unknown'};
 export type SystemInfo = {os: NodeJS.Platform; buildNumber: string | number};
 export type LynxHotkeys = {isEnabled: boolean; FULLSCREEN: string; TOGGLE_NAV: string; TOGGLE_AI_VIEW: string};
+export type LynxInput = Omit<Input, 'type' | 'code' | 'isAutoRepeat' | 'isComposing' | 'location' | 'modifiers'>;
 
 export type AppUpdateStatus = 'update-available' | 'update-downloaded' | string | UpdateDownloadProgress;
 
@@ -284,4 +285,5 @@ export const storageUtilsChannels = {
 
 export const appWindowChannels = {
   webViewAttached: 'window:webview-attached',
+  hotkeysChange: 'window:hotkeys-change',
 };
