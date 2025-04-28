@@ -5,6 +5,7 @@ import '@ant-design/v5-patch-for-react-19';
 
 import log from 'electron-log/renderer';
 import {createRoot} from 'react-dom/client';
+import {ErrorBoundary} from 'react-error-boundary';
 import {Provider as ReduxProvider} from 'react-redux';
 
 import {isDev} from '../../cross/CrossUtils';
@@ -13,6 +14,7 @@ import {loadExtensions} from './App/Extensions/Vite-Federation';
 import loadModules from './App/Modules/ModuleLoader';
 import {createStore} from './App/Redux/Store';
 import rendererIpc from './App/RendererIpc';
+import ErrorComponent from './ErrorComponent';
 
 await loadModules();
 await loadExtensions();
@@ -26,6 +28,8 @@ if (!isDev()) {
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <ReduxProvider store={createStore()}>
-    <App />
+    <ErrorBoundary FallbackComponent={ErrorComponent}>
+      <App />
+    </ErrorBoundary>
   </ReduxProvider>,
 );
