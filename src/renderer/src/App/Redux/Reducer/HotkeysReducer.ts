@@ -13,6 +13,8 @@ type HotkeysState = {
   isMetaPressed: boolean;
   key: string;
   type: 'keyUp' | 'keyDown' | string;
+
+  copyPressed: boolean;
 };
 
 type HotkeysStateTypes = {
@@ -34,6 +36,7 @@ const initialState: HotkeysState = {
   isMetaPressed: false,
   key: '',
   type: '',
+  copyPressed: false,
 };
 
 const hotkeysSlice = createSlice({
@@ -43,12 +46,16 @@ const hotkeysSlice = createSlice({
     setInput: (state: HotkeysState, action: PayloadAction<LynxInput>) => {
       state.input = action.payload;
 
-      state.isCtrlPressed = action.payload.control;
-      state.isShiftPressed = action.payload.shift;
-      state.isAltPressed = action.payload.alt;
-      state.isMetaPressed = action.payload.meta;
-      state.key = action.payload.key;
-      state.type = action.payload.type;
+      const {control, key, shift, alt, meta, type} = action.payload;
+
+      state.isCtrlPressed = control;
+      state.isShiftPressed = shift;
+      state.isAltPressed = alt;
+      state.isMetaPressed = meta;
+      state.key = key;
+      state.type = type;
+
+      state.copyPressed = (control || meta) && key === 'c' && type === 'keyUp';
     },
   },
 });

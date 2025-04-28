@@ -250,7 +250,6 @@ export const useHotkeyEvents = () => {
 
   useEffect(() => {
     rendererIpc.appWindow.onHotkeysChange((_, input) => {
-      console.log(input);
       dispatch(hotkeysActions.setInput(input));
     });
 
