@@ -31,7 +31,7 @@ function onBlur() {
 
 function onInput(_event: Event, input: Input) {
   const {control, key, shift, alt, meta, type} = input;
-  currentKeys = {control, key, shift, alt, meta, type};
+  currentKeys = {control, key: key.toLowerCase(), shift, alt, meta, type};
 
   sendToRenderer();
 }
