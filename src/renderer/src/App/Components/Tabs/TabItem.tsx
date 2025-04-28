@@ -1,12 +1,12 @@
 import {Button, Checkbox, Popover, PopoverContent, PopoverTrigger, Tooltip} from '@heroui/react';
 import {Typography} from 'antd';
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {isHotkeyPressed} from 'react-hotkeys-hook';
 import {useDispatch} from 'react-redux';
 
 import {TabInfo} from '../../../../../cross/CrossTypes';
 import {CloseSimple_Icon} from '../../../assets/icons/SvgIcons/SvgIcons5';
 import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
+import {useHotkeysState} from '../../Redux/Reducer/HotkeysReducer';
 import {modalActions} from '../../Redux/Reducer/ModalsReducer';
 import {settingsActions, useSettingsState} from '../../Redux/Reducer/SettingsReducer';
 import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
@@ -20,6 +20,7 @@ type Props = {
 };
 
 export default function TabItem({tab}: Props) {
+  const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const activeTab = useTabsState('activeTab');
   const runningCards = useCardsState('runningCard');
   const btnRef = useRef<HTMLButtonElement | null>(null);
@@ -56,7 +57,7 @@ export default function TabItem({tab}: Props) {
       if (running.type === 'browser') {
         removeTab();
       } else {
-        if (isHotkeyPressed('control') || !closeTabConfirm) {
+        if (isCtrlPressed || !closeTabConfirm) {
           removeTab();
         } else if (!isConfirmOpen) {
           setIsConfirmOpen(true);
