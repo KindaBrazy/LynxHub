@@ -6,11 +6,13 @@ import {RootState} from '../Store';
 
 type HotkeysState = {
   input: LynxInput;
+
   isCtrlPressed: boolean;
   isShiftPressed: boolean;
   isAltPressed: boolean;
   isMetaPressed: boolean;
   key: string;
+  type: 'keyUp' | 'keyDown' | string;
 };
 
 type HotkeysStateTypes = {
@@ -31,6 +33,7 @@ const initialState: HotkeysState = {
   isAltPressed: false,
   isMetaPressed: false,
   key: '',
+  type: '',
 };
 
 const hotkeysSlice = createSlice({
@@ -39,11 +42,13 @@ const hotkeysSlice = createSlice({
   reducers: {
     setInput: (state: HotkeysState, action: PayloadAction<LynxInput>) => {
       state.input = action.payload;
+
       state.isCtrlPressed = action.payload.control;
       state.isShiftPressed = action.payload.shift;
       state.isAltPressed = action.payload.alt;
       state.isMetaPressed = action.payload.meta;
       state.key = action.payload.key;
+      state.type = action.payload.type;
     },
   },
 });
