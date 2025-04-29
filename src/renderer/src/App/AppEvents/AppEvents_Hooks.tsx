@@ -142,7 +142,7 @@ export const useStorageData = () => {
         );
       }
 
-      dispatch(settingsActions.setHotkeys(storage.app.hotkeys));
+      dispatch(hotkeysActions.setHotkeys(storage.app.hotkeys));
     });
   }, [dispatch]);
 };

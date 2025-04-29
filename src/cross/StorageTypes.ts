@@ -6,7 +6,7 @@ import {
   CustomRunBehaviorStore,
   DarkModeTypes,
   HomeCategory,
-  LynxHotkeys,
+  LynxHotkey,
   StoragePreOpenData,
   TaskbarStatus,
   TerminalCursorInactiveStyle,
@@ -69,7 +69,7 @@ type StorageTypes = {
     startupLastActivePage: boolean;
     lastPage: string;
     discordRP: DiscordRPC;
-    hotkeys: LynxHotkeys;
+    hotkeys: LynxHotkey[];
     initialized: boolean;
     appDataDir: string;
   };

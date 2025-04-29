@@ -52,7 +52,6 @@ export type PtyProcessOpt = 'start' | 'stop';
 export type HomeCategory = ('Pin' | 'Recently' | 'All' | string)[];
 export type DiscordRunningAI = {running: boolean; name?: string; type?: 'image' | 'audio' | 'text' | 'unknown'};
 export type SystemInfo = {os: NodeJS.Platform; buildNumber: string | number};
-export type LynxHotkeys = {isEnabled: boolean; FULLSCREEN: string; TOGGLE_NAV: string; TOGGLE_AI_VIEW: string};
 export type LynxInput = {
   type: 'keyUp' | 'keyDown' | string;
   key: string;
@@ -61,6 +60,7 @@ export type LynxInput = {
   alt: boolean;
   meta: boolean;
 };
+export type LynxHotkey = Omit<LynxInput, 'type'> & {name: string};
 
 export type AppUpdateStatus = 'update-available' | 'update-downloaded' | string | UpdateDownloadProgress;
 

@@ -114,7 +114,6 @@
     "prettier": "^3.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-hotkeys-hook": "^5.0.1",
     "react-markdown": "^10.1.0",
     "react-redux": "^9.2.0",
     "rehype-highlight": "^7.0.2",

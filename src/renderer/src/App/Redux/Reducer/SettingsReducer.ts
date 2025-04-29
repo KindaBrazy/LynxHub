@@ -1,12 +1,11 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {LynxHotkeys, TooltipStatus} from '../../../../../cross/IpcChannelAndTypes';
+import {TooltipStatus} from '../../../../../cross/IpcChannelAndTypes';
 import {RootState} from '../Store';
 
 type SettingState = {
   tooltipLevel: TooltipStatus;
-  hotkeys: LynxHotkeys;
 
   cardsCompactMode: boolean;
   cardsDevImage: boolean;
@@ -44,12 +43,6 @@ const initialState: SettingState = {
   closeTabConfirm: true,
   terminateAIConfirm: true,
   openLastSize: false,
-  hotkeys: {
-    FULLSCREEN: window.osPlatform === 'darwin' ? 'f12' : 'f11',
-    TOGGLE_NAV: 'alt+a',
-    TOGGLE_AI_VIEW: 'alt+q',
-    isEnabled: true,
-  },
   updatedModules: [],
   newModules: [],
   moduleUpdateAvailable: [],
@@ -70,9 +63,6 @@ const settingsSlice = createSlice({
       }>,
     ) => {
       state[action.payload.key] = action.payload.value;
-    },
-    setHotkeys: (state, action: PayloadAction<LynxHotkeys>) => {
-      state.hotkeys = action.payload;
     },
     removeExtUpdateAvailable: (state, action: PayloadAction<string>) => {
       state.extensionsUpdateAvailable = state.extensionsUpdateAvailable.filter(item => item !== action.payload);
