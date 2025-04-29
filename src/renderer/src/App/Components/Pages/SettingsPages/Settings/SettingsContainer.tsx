@@ -3,10 +3,10 @@ import {useMemo} from 'react';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import SettingsCard, {SettingsCardId} from './Content/Card/Settings-Card';
 import SettingsGeneral, {SettingsGeneralId} from './Content/General/Settings-General';
+import {HotkeySettings, SettingsHotkeysId} from './Content/HotkeySettings';
 import SettingsClear, {SettingsClearId} from './Content/Settings-Clear';
 import SettingsData, {SettingsDataId} from './Content/Settings-Data';
 import SettingsDiscord, {SettingsDiscordId} from './Content/Settings-Discord';
-import SettingsHotkeys, {SettingsHotkeysId} from './Content/Settings-Hotkeys';
 import SettingsStartup, {SettingsStartupId} from './Content/Startup/Settings-Startup';
 import SettingsTerminal, {SettingsTerminalId} from './Content/Terminal/Settings-Terminal';
 
@@ -30,7 +30,7 @@ export const SettingsSections = () => {
       <SettingsStartup />
       <SettingsCard />
       <SettingsTerminal />
-      <SettingsHotkeys />
+      <HotkeySettings />
       <SettingsDiscord />
 
       <SettingsData />

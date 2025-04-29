@@ -1,10 +1,11 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {LynxInput} from '../../../../../cross/IpcChannelAndTypes';
+import {LynxHotkey, LynxInput} from '../../../../../cross/IpcChannelAndTypes';
 import {RootState} from '../Store';
 
 type HotkeysState = {
+  hotkeys: LynxHotkey[];
   input: LynxInput;
 
   isCtrlPressed: boolean;
@@ -37,6 +38,7 @@ const initialState: HotkeysState = {
   key: '',
   type: '',
   copyPressed: false,
+  hotkeys: [],
 };
 
 const hotkeysSlice = createSlice({
@@ -56,6 +58,9 @@ const hotkeysSlice = createSlice({
       state.type = type;
 
       state.copyPressed = (control || meta) && key === 'c' && type === 'keyUp';
+    },
+    setHotkeys: (state: HotkeysState, action: PayloadAction<LynxHotkey[]>) => {
+      state.hotkeys = action.payload;
     },
   },
 });

@@ -8,6 +8,7 @@ import {LowSync} from 'lowdb';
 import {JSONFileSyncPreset} from 'lowdb/node';
 
 import {APP_NAME} from '../../../cross/CrossConstants';
+import {Get_Default_Hotkeys} from '../../../cross/HotkeyConstants';
 import StorageTypes from '../../../cross/StorageTypes';
 import {appManager} from '../../index';
 import {getExePath, isPortable} from '../../Utilities/Utils';
@@ -16,10 +17,10 @@ import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
-  private readonly CURRENT_VERSION: number = 0.9;
+  private readonly CURRENT_VERSION: number = 1.0;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.9},
+    storage: {version: 1.0},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -67,12 +68,7 @@ class BaseStorage {
           AIName: true,
         },
       },
-      hotkeys: {
-        FULLSCREEN: platform() === 'darwin' ? 'f12' : 'f11',
-        TOGGLE_NAV: 'alt+a',
-        TOGGLE_AI_VIEW: 'alt+q',
-        isEnabled: true,
-      },
+      hotkeys: Get_Default_Hotkeys(platform()),
       initialized: false,
       appDataDir: isPortable() ? `./${APP_NAME}_Data` : join(app.getPath('documents'), APP_NAME),
       lastSize: undefined,
@@ -155,6 +151,12 @@ class BaseStorage {
       this.storage.write();
     };
 
+    const v9to10 = () => {
+      this.storage.data.app.hotkeys = Get_Default_Hotkeys(platform());
+
+      this.storage.write();
+    };
+
     const updateVersion = () => {
       this.updateData('storage', {version: this.CURRENT_VERSION});
     };
@@ -167,6 +169,7 @@ class BaseStorage {
           v6to7();
           v7to8();
           v8to9();
+          v9to10();
           break;
         }
         case 0.5: {
@@ -174,21 +177,29 @@ class BaseStorage {
           v6to7();
           v7to8();
           v8to9();
+          v9to10();
           break;
         }
         case 0.6: {
           v6to7();
           v7to8();
           v8to9();
+          v9to10();
           break;
         }
         case 0.7: {
           v7to8();
           v8to9();
+          v9to10();
           break;
         }
         case 0.8: {
           v8to9();
+          v9to10();
+          break;
+        }
+        case 0.9: {
+          v9to10();
           break;
         }
         default:

@@ -1,10 +1,11 @@
-import {useCallback, useMemo} from 'react';
-import {useHotkeys} from 'react-hotkeys-hook';
+import {isEqual} from 'lodash';
+import {useCallback, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {Hotkey_Names} from '../../../../cross/HotkeyConstants';
 import {appActions} from '../Redux/Reducer/AppReducer';
 import {cardsActions} from '../Redux/Reducer/CardsReducer';
-import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
+import {useHotkeysState} from '../Redux/Reducer/HotkeysReducer';
 import {useTabsState} from '../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
@@ -12,18 +13,9 @@ import rendererIpc from '../RendererIpc';
 /** Register application hotkeys */
 export default function useRegisterHotkeys() {
   const activeTab = useTabsState('activeTab');
-  const hotkeys = useSettingsState('hotkeys');
+  const hotkeys = useHotkeysState('hotkeys');
+  const input = useHotkeysState('input');
   const dispatch = useDispatch<AppDispatch>();
-
-  const hotkeyOptions = useMemo(
-    () => ({
-      keyup: true,
-      enabled: hotkeys.isEnabled,
-      enableOnFormTags: true,
-      enableOnContentEditable: true,
-    }),
-    [hotkeys.isEnabled],
-  );
 
   const handleFullscreen = useCallback(() => {
     rendererIpc.win.changeWinState('fullscreen');
@@ -37,7 +29,24 @@ export default function useRegisterHotkeys() {
     dispatch(cardsActions.toggleRunningCardView({tabId: activeTab}));
   }, [dispatch, activeTab]);
 
-  useHotkeys(hotkeys.FULLSCREEN, handleFullscreen, hotkeyOptions, [hotkeys]);
-  useHotkeys(hotkeys.TOGGLE_NAV, handleToggleNav, hotkeyOptions, [hotkeys]);
-  useHotkeys(hotkeys.TOGGLE_AI_VIEW, handleToggleAIView, hotkeyOptions, [hotkeys]);
+  useEffect(() => {
+    hotkeys.map(item => {
+      const {name, ...hotkey} = item;
+      const {type, ...current} = input;
+
+      if (type !== 'keyUp') return;
+
+      switch (name) {
+        case Hotkey_Names.fullscreen:
+          if (isEqual(current, hotkey)) handleFullscreen();
+          break;
+        case Hotkey_Names.toggleNav:
+          if (isEqual(current, hotkey)) handleToggleNav();
+          break;
+        case Hotkey_Names.toggleAiView:
+          if (isEqual(current, hotkey)) handleToggleAIView();
+          break;
+      }
+    });
+  }, [input, hotkeys]);
 }
