@@ -36,7 +36,7 @@ export default function EmptyPage_Item({recent, setRecentAddress}: Props) {
 
   return (
     <Tooltip radius="sm" delay={300} content={recent.url} showArrow>
-      <Card shadow="sm" onPress={openRecent} className="w-36 h-32" isPressable>
+      <Card as="div" shadow="sm" onPress={openRecent} className="w-36 h-32" isPressable>
         <CardBody className={'flex-col gap-2 items-center text-center justify-center group dark:bg-foreground-100'}>
           {favIcon ? <Image radius="full" src={favIcon} className="size-8" /> : <Web_Icon className="size-8" />}
           <span className="truncate text-wrap w-full line-clamp-2 text-sm">{capitalize(getUrlName(recent.url))}</span>
