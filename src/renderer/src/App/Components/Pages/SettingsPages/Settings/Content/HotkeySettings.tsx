@@ -150,7 +150,7 @@ export const HotkeySettings = () => {
 
   return (
     <SettingsSection title="Hotkeys" id={SettingsHotkeysId} icon={<Keyboard_Icon className="size-5" />}>
-      <List header="Global" className="w-full overflow-hidden" bordered>
+      <List className="w-full overflow-hidden" bordered>
         {config.map(item => {
           const {label, hotkey, description, name} = item;
           const isRecording = recordingName === name;
