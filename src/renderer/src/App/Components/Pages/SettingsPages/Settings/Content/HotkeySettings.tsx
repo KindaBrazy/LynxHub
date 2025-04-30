@@ -4,7 +4,7 @@ import {capitalize, compact} from 'lodash';
 import {KeyboardEvent, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Hotkey_Desc, Hotkey_Titles} from '../../../../../../../../cross/HotkeyConstants';
+import {Get_Default_Hotkeys, Hotkey_Desc, Hotkey_Titles} from '../../../../../../../../cross/HotkeyConstants';
 import {LynxHotkey} from '../../../../../../../../cross/IpcChannelAndTypes';
 import {Keyboard_Icon, Refresh3_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {hotkeysActions, useHotkeysState} from '../../../../../Redux/Reducer/HotkeysReducer';
@@ -104,7 +104,7 @@ export const HotkeySettings = () => {
 
     if (isModifierKey(lowerCaseKey)) {
       if (inputRefs.current[name]) {
-        // Temp
+        // It's just a modifier
       }
       return;
     }
@@ -140,6 +140,12 @@ export const HotkeySettings = () => {
         setRecordingName(null);
       }
     }, 100);
+  };
+
+  const resetToDefault = () => {
+    const result = Get_Default_Hotkeys(window.osPlatform);
+    dispatch(hotkeysActions.setHotkeys(result));
+    rendererIpc.storage.update('app', {hotkeys: result});
   };
 
   return (
@@ -184,7 +190,9 @@ export const HotkeySettings = () => {
           );
         })}
       </List>
-      <Button startContent={<Refresh3_Icon />}>Reset to Defaults</Button>
+      <Button onPress={resetToDefault} startContent={<Refresh3_Icon />}>
+        Reset to Defaults
+      </Button>
     </SettingsSection>
   );
 };
