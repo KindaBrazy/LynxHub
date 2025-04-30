@@ -31,7 +31,10 @@ export default function ErrorComponent({error, resetErrorBoundary}: Props) {
         subTitle={
           <div className="text-danger flex items-center justify-center gap-2">
             {error.message}
-            <CopyClipboard className="notDraggable" contentToCopy={error.message} />
+            <CopyClipboard
+              className="notDraggable"
+              contentToCopy={`Message:\n${error.message}\n\n\nStack:\n${error.stack}`}
+            />
           </div>
         }
         extra={
