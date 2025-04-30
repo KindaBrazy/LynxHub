@@ -6,7 +6,7 @@ import Modals from './Components/Modals/Modals';
 import TitleBar from './Components/TitleBar/TitleBar';
 import ExtensionHooks from './ExtensionHooks';
 import UIProviders from './UIProviders';
-import useRegisterHotkeys from './Utils/RegisterHotkeys';
+import {useRegisterHotkeys} from './Utils/RegisterHotkeys';
 import useHtmlAttributes from './Utils/SetHtmlAttributes';
 
 export default function App() {

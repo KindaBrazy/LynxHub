@@ -10,12 +10,18 @@ type Props = {
   isDomReady: boolean;
   runningCard: RunningCard;
   setCustomAddress?: (address: string) => void;
+  tabID: string;
 };
 
-export default function Browser_TopBar({webview, isDomReady, runningCard, setCustomAddress}: Props) {
+export default function Browser_TopBar({webview, isDomReady, runningCard, setCustomAddress, tabID}: Props) {
   return (
     <>
-      <Browser_ActionButtons webview={webview} isDomReady={isDomReady} webuiAddress={runningCard.webUIAddress} />
+      <Browser_ActionButtons
+        tabID={tabID}
+        webview={webview}
+        isDomReady={isDomReady}
+        webuiAddress={runningCard.webUIAddress}
+      />
       <AddressInput runningCard={runningCard} setCustomAddress={setCustomAddress} />
       <Browser_Zoom id={runningCard.id} />
     </>

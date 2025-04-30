@@ -4,6 +4,7 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {TabInfo} from '../../../../../cross/CrossTypes';
+import {Hotkey_Names} from '../../../../../cross/HotkeyConstants';
 import {CloseSimple_Icon} from '../../../assets/icons/SvgIcons/SvgIcons5';
 import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {useHotkeysState} from '../../Redux/Reducer/HotkeysReducer';
@@ -12,6 +13,7 @@ import {settingsActions, useSettingsState} from '../../Redux/Reducer/SettingsRed
 import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
+import useHotkeyPress from '../../Utils/RegisterHotkeys';
 import TabItem_Icon from './TabItem_Icon';
 import TabTitle from './TabTitle';
 
@@ -73,6 +75,8 @@ export default function TabItem({tab}: Props) {
       handleRemove();
     }
   };
+
+  useHotkeyPress([{name: Hotkey_Names.closeTab, method: activeTab === tab.id ? handleRemove : null}]);
 
   useEffect(() => {
     if (btnRef.current) {

@@ -123,6 +123,7 @@ const RunningCardView = ({runningCard}: Props) => {
   return (
     <>
       <TopBar
+        tabID={tabId}
         webview={webViewRef}
         isDomReady={isDomReady}
         runningCard={runningCard}

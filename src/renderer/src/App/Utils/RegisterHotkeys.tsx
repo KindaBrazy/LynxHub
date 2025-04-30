@@ -1,21 +1,38 @@
 import {isEqual} from 'lodash';
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Hotkey_Names} from '../../../../cross/HotkeyConstants';
 import {appActions} from '../Redux/Reducer/AppReducer';
 import {cardsActions} from '../Redux/Reducer/CardsReducer';
 import {useHotkeysState} from '../Redux/Reducer/HotkeysReducer';
-import {useTabsState} from '../Redux/Reducer/TabsReducer';
+import {tabsActions, useTabsState} from '../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
+import {defaultTabItem} from './Constants';
 
-/** Register application hotkeys */
-export default function useRegisterHotkeys() {
-  const activeTab = useTabsState('activeTab');
+export default function useHotkeyPress(keys: {name: string; method: (() => void) | null}[]) {
   const hotkeys = useHotkeysState('hotkeys');
   const input = useHotkeysState('input');
+
+  useEffect(() => {
+    hotkeys.forEach(item => {
+      const {name, ...hotkey} = item;
+      const {type, ...current} = input;
+
+      if (type !== 'keyUp' || !isEqual(current, hotkey)) return;
+
+      keys.find(key => key.name === name)?.method?.();
+    });
+  }, [input, hotkeys]);
+}
+
+/** Register application hotkeys */
+export function useRegisterHotkeys() {
+  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
+  const [addEmpty, setAddEmpty] = useState<boolean>(false);
+  const [emptyType, setEmptyType] = useState<'browser' | 'terminal' | 'both'>('both');
 
   const handleFullscreen = useCallback(() => {
     rendererIpc.win.changeWinState('fullscreen');
@@ -29,24 +46,44 @@ export default function useRegisterHotkeys() {
     dispatch(cardsActions.toggleRunningCardView({tabId: activeTab}));
   }, [dispatch, activeTab]);
 
+  const handleNewTab = useCallback(() => {
+    dispatch(tabsActions.addTab(defaultTabItem));
+  }, []);
+
   useEffect(() => {
-    hotkeys.map(item => {
-      const {name, ...hotkey} = item;
-      const {type, ...current} = input;
+    if (addEmpty) {
+      dispatch(
+        cardsActions.addRunningEmpty({
+          tabId: activeTab,
+          type: emptyType,
+        }),
+      );
+      setAddEmpty(false);
+    }
+  }, [activeTab]);
 
-      if (type !== 'keyUp') return;
+  const addRunningEmpty = (type: 'browser' | 'terminal' | 'both') => {
+    handleNewTab();
+    setEmptyType(type);
+    setAddEmpty(true);
+  };
 
-      switch (name) {
-        case Hotkey_Names.fullscreen:
-          if (isEqual(current, hotkey)) handleFullscreen();
-          break;
-        case Hotkey_Names.toggleNav:
-          if (isEqual(current, hotkey)) handleToggleNav();
-          break;
-        case Hotkey_Names.toggleAiView:
-          if (isEqual(current, hotkey)) handleToggleAIView();
-          break;
-      }
-    });
-  }, [input, hotkeys]);
+  const newTerminalTab = () => addRunningEmpty('terminal');
+
+  const newBrowserTab = () => addRunningEmpty('browser');
+
+  const newTerminalBrowserTab = () => addRunningEmpty('both');
+
+  useHotkeyPress([
+    {name: Hotkey_Names.fullscreen, method: handleFullscreen},
+    {
+      name: Hotkey_Names.toggleNav,
+      method: handleToggleNav,
+    },
+    {name: Hotkey_Names.toggleAiView, method: handleToggleAIView},
+    {name: Hotkey_Names.newTab, method: handleNewTab},
+    {name: Hotkey_Names.newBrowserTab, method: newBrowserTab},
+    {name: Hotkey_Names.newTerminalTab, method: newTerminalTab},
+    {name: Hotkey_Names.newBrowserTerminalTab, method: newTerminalBrowserTab},
+  ]);
 }

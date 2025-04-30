@@ -3,9 +3,12 @@ import {WebviewTag} from 'electron';
 import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
 import {useCallback, useEffect, useState} from 'react';
 
+import {Hotkey_Names} from '../../../../../../cross/HotkeyConstants';
 import {HomeSmile_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Refresh3_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons4';
 import {ArrowDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import useHotkeyPress from '../../../Utils/RegisterHotkeys';
 
 const variants: Variants = {
   animate: {scale: 1, opacity: 1},
@@ -14,9 +17,10 @@ const variants: Variants = {
 
 const transition: Transition = {duration: 0.3};
 
-type Props = {webview: WebviewTag | null; isDomReady: boolean; webuiAddress: string};
+type Props = {webview: WebviewTag | null; isDomReady: boolean; webuiAddress: string; tabID: string};
 
-export default function Browser_ActionButtons({webview, isDomReady, webuiAddress}: Props) {
+export default function Browser_ActionButtons({webview, isDomReady, webuiAddress, tabID}: Props) {
+  const activeTab = useTabsState('activeTab');
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [canGoForward, setCanGoForward] = useState<boolean>(false);
 
@@ -34,6 +38,8 @@ export default function Browser_ActionButtons({webview, isDomReady, webuiAddress
   const loadWebuiAddress = useCallback(() => {
     webview?.loadURL(webuiAddress);
   }, [webview, webuiAddress]);
+
+  useHotkeyPress([{name: Hotkey_Names.refreshTab, method: activeTab === tabID ? reload : null}]);
 
   useEffect(() => {
     if (!webview) return;
