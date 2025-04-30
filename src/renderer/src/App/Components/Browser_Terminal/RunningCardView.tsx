@@ -50,8 +50,6 @@ const RunningCardView = ({runningCard}: Props) => {
   }, []);
 
   useEffect(() => {
-    if (tabId !== activeTab) return;
-
     const isBrowserView = currentView === 'browser';
 
     const terminalTitle = isEmptyRunning ? terminalName : allCards.find(card => card.id === id)?.title;
@@ -61,7 +59,7 @@ const RunningCardView = ({runningCard}: Props) => {
 
     const currentTitle = tabs.find(tab => tab.id === activeTab)?.title;
     if (title && title !== currentTitle) dispatch(tabsActions.setTabTitle({title, tabID: tabId}));
-  }, [isEmptyRunning, id, tabId, currentView, webViewRef, tabs, activeTab, isDomReady, terminalName]);
+  }, [isEmptyRunning, id, tabId, currentView, webViewRef, activeTab, isDomReady, terminalName]);
 
   useEffect(() => {
     if (webViewRef) {
