@@ -113,7 +113,7 @@ export default function Available({visible, updateTable, installedExtensions, id
           split={false}
           itemLayout="vertical"
           dataSource={searchedData}
-          renderItem={item => <RenderItem dir={dir} item={item} updateTable={updateTable} />}
+          renderItem={item => <RenderItem dir={dir} item={item} updateTable={updateTable} searchValue={searchValue} />}
         />
       )}
     </>
