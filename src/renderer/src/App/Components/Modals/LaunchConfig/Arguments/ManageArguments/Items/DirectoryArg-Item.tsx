@@ -48,9 +48,17 @@ export default function DirectoryArgItem({argument, changeValue, removeArg, id}:
   }, [changeValue, isRelative]);
 
   const changeType = useCallback(() => {
-    setIsRelative(prevState => !prevState);
+    setIsRelative(prevState => {
+      if (baseDir && selectedDir && selectedDir !== 'Click to choose file...') {
+        rendererIpc.file[prevState ? 'getAbsolutePath' : 'getRelativePath'](baseDir, selectedDir).then(result => {
+          setSelectedDir(result);
+          changeValue(result);
+        });
+      }
+      return !prevState;
+    });
     setRotateEffect(true);
-  }, [setIsRelative, setRotateEffect]);
+  }, [setIsRelative, setRotateEffect, baseDir, selectedDir]);
 
   return (
     <ArgumentItemBase
