@@ -41,6 +41,7 @@ export const PATRONS_DATA =
   'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Patrons/refs/heads/main/data/patrons.json';
 
 export const MAIN_MODULE_URL: string = 'https://github.com/KindaBrazy/LynxHub-Module-Offline-Container';
+export const PATREON_RELEASE_HUB: string = 'https://www.patreon.com/collection/696970';
 export const DISCORD_SERVER: string = 'https://discord.gg/e8rBzhtcnK';
 export const X_URL: string = 'https://x.com/LynxHubAI';
 export const PATREON_URL: string = 'https://www.patreon.com/LynxHub';
