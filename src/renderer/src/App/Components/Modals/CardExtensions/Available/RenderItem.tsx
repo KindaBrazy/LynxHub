@@ -6,7 +6,10 @@ import Highlighter from 'react-highlight-words';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
+import {Home_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Star_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {modalActions} from '../../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {formatNumber} from '../../../../Utils/UtilFunctions';
@@ -23,6 +26,7 @@ type Props = {
 export default function RenderItem({item, updateTable, dir, searchValue}: Props) {
   const [installing, setInstalling] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
+  const activeTab = useTabsState('activeTab');
 
   const install = useCallback(() => {
     setInstalling(true);
@@ -40,6 +44,10 @@ export default function RenderItem({item, updateTable, dir, searchValue}: Props)
       });
   }, [item.url, item.title, dispatch]);
 
+  const homePage = () => {
+    dispatch(modalActions.openReadme({url: item.url, title: item.title, tabID: activeTab}));
+  };
+
   return (
     <>
       <List.Item
@@ -49,9 +57,12 @@ export default function RenderItem({item, updateTable, dir, searchValue}: Props)
           ' dark:hover:border-black dark:hover:bg-black/25'
         }
         extra={
-          <div className="flex h-full flex-col items-center justify-center space-y-1 px-1 text-gray-500">
+          <div className="flex h-full flex-row items-center justify-center gap-x-1 text-gray-500">
             <Button variant="light" color="success" onPress={install} isLoading={installing} isDisabled={installing}>
               {!installing && 'Install'}
+            </Button>
+            <Button size="sm" variant="light" onPress={homePage} isIconOnly>
+              <Home_Icon />
             </Button>
           </div>
         }
