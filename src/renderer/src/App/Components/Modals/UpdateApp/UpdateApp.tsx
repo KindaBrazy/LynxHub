@@ -4,7 +4,12 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {APP_BUILD_NUMBER, WIN_RELEASE_URL_V2} from '../../../../../../cross/CrossConstants';
+import {
+  APP_BUILD_NUMBER,
+  PATREON_RELEASE_HUB,
+  RELEASES_PAGE,
+  WIN_RELEASE_URL_V2,
+} from '../../../../../../cross/CrossConstants';
 import {AppUpdateData, AppUpdateInfo, UpdateDownloadProgress} from '../../../../../../cross/CrossTypes';
 import {useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
@@ -83,10 +88,6 @@ const UpdateApp = () => {
     setDownloadState(undefined);
   }, []);
 
-  const tryAgain = useCallback(() => {
-    startDownload();
-  }, [startDownload]);
-
   useEffect(() => {
     listenProgress();
 
@@ -152,9 +153,11 @@ const UpdateApp = () => {
   const renderBody = () => {
     switch (downloadState) {
       case 'failed':
-        return <Downloaded success={false} cancel={cancel} onClose={onClose} errMsg={errorMsg} tryAgain={tryAgain} />;
+        return (
+          <Downloaded success={false} cancel={cancel} onClose={onClose} errMsg={errorMsg} tryAgain={startDownload} />
+        );
       case 'completed':
-        return <Downloaded cancel={cancel} onClose={onClose} tryAgain={tryAgain} success />;
+        return <Downloaded cancel={cancel} onClose={onClose} tryAgain={startDownload} success />;
       case 'progress':
         return <Downloading progress={downloadProgress} />;
       default:
@@ -165,6 +168,8 @@ const UpdateApp = () => {
         );
     }
   };
+
+  const openDownloadPage = () => window.open(updateChannel === 'ea' ? PATREON_RELEASE_HUB : RELEASES_PAGE);
 
   return (
     <Modal
@@ -183,8 +188,12 @@ const UpdateApp = () => {
         {downloadState !== 'completed' && downloadState !== 'failed' && (
           <ModalFooter>
             {downloadState === undefined && (
-              <Button color="success" variant="light" onPress={startDownload} className="cursor-default">
-                Download
+              <Button
+                color="success"
+                variant="light"
+                className="cursor-default"
+                onPress={!window.isPortable ? openDownloadPage : startDownload}>
+                {!window.isPortable ? 'Download Page' : 'Download'}
               </Button>
             )}
             {downloadState === 'progress' && (
