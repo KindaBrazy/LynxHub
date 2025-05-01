@@ -1,7 +1,8 @@
 import {Listbox, ListboxItem, ListboxSection, ScrollShadow, Selection} from '@heroui/react';
 import {Card} from 'antd';
-import {isEmpty} from 'lodash';
-import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
+import {cloneDeep, isEmpty} from 'lodash';
+import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
+import Highlighter from 'react-highlight-words';
 
 import {ArgumentItem, ArgumentSection} from '../../../../../Modules/types';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
@@ -102,35 +103,54 @@ export default function ArgumentCategory({
     [setSelectedArguments],
   );
 
-  if (isEmptyData(dataBySearch)) return null;
+  const renderItem = (item: ArgumentItem) => {
+    return (
+      <ListboxItem key={item.name} className="cursor-default" textValue={`Select ${item.name}`}>
+        <Highlighter
+          highlightTag="div"
+          textToHighlight={item.name}
+          className="flex w-full flex-wrap"
+          searchWords={searchValue.split(' ')}
+          highlightClassName="bg-primary-400/70"
+        />
+        <Highlighter
+          highlightTag="div"
+          searchWords={searchValue.split(' ')}
+          highlightClassName="bg-primary-400/50"
+          textToHighlight={item.description || ''}
+          className="flex w-full text-wrap text-xs text-foreground/50"
+        />
+      </ListboxItem>
+    );
+  };
+
+  const data = useMemo(() => {
+    return cloneDeep(dataBySearch);
+  }, [dataBySearch]);
+
+  if (isEmptyData(data)) return null;
 
   return (
     <Card title={title} variant="borderless" className="cursor-default" hoverable>
       <ScrollShadow>
-        {'section' in dataBySearch[0] ? (
+        {'section' in data[0] ? (
           <ScrollShadow className="scrollbar-hide">
             <Listbox
               variant="faded"
               selectionMode="multiple"
               aria-label="Arguments List"
               selectedKeys={selectedArguments}
-              onSelectionChange={onSelectionChange}
-              items={dataBySearch as ArgumentSection[]}>
+              items={data as ArgumentSection[]}
+              onSelectionChange={onSelectionChange}>
               {section => {
-                const showDivider =
-                  (dataBySearch[dataBySearch.length - 1] as ArgumentSection).section !== section.section;
+                const showDivider = (data[data.length - 1] as ArgumentSection).section !== section.section;
                 return (
                   <ListboxSection
                     key={section.section}
                     items={section.items}
                     title={section.section}
                     showDivider={showDivider}>
-                    {item => (
-                      <ListboxItem key={item.name} className="cursor-default" textValue={`Select ${item.name}`}>
-                        <span className="flex w-full flex-wrap">{item.name}</span>
-                        <span className="flex w-full text-wrap text-xs text-foreground/50">{item.description}</span>
-                      </ListboxItem>
-                    )}
+                    {item => renderItem(item)}
                   </ListboxSection>
                 );
               }}
@@ -142,15 +162,10 @@ export default function ArgumentCategory({
               variant="faded"
               selectionMode="multiple"
               aria-label="Arguments List"
+              items={data as ArgumentItem[]}
               selectedKeys={selectedArguments}
-              onSelectionChange={onSelectionChange}
-              items={dataBySearch as ArgumentItem[]}>
-              {item => (
-                <ListboxItem key={item.name} className="cursor-default" textValue={`Select ${item.name}`}>
-                  <span className="flex w-full flex-wrap">{item.name}</span>
-                  <span className="flex w-full text-wrap text-xs text-foreground/50">{item.description}</span>
-                </ListboxItem>
-              )}
+              onSelectionChange={onSelectionChange}>
+              {item => renderItem(item)}
             </Listbox>
           </ScrollShadow>
         )}
