@@ -1,6 +1,6 @@
 import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
-import {dirname, relative, resolve} from 'node:path';
+import {dirname, isAbsolute, relative, resolve} from 'node:path';
 
 import {app, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
 import fs from 'graceful-fs';
@@ -164,6 +164,9 @@ export function getExePath(): string {
 
 export function getRelativePath(basePath: string, targetPath: string): string {
   try {
+    if (!isAbsolute(targetPath)) {
+      return targetPath;
+    }
     return relative(basePath, targetPath);
   } catch (error) {
     console.error('Error calculating relative path:', error);
