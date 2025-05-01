@@ -106,6 +106,8 @@ export const fileChannels = {
   listDir: 'app:listDir',
   checkFilesExist: 'app:checkFilesExist',
   calcFolderSize: 'app:calcFolderSize',
+  getRelativePath: 'app:getRelativePath',
+  getAbsolutePath: 'app:getAbsolutePath',
 };
 
 export const gitChannels = {

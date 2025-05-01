@@ -91,6 +91,10 @@ const rendererIpc = {
     checkFilesExist: (dir: string, fileNames: string[]) => ipc.invoke(fileChannels.checkFilesExist, dir, fileNames),
 
     calcFolderSize: (dir: string) => ipc.invoke(fileChannels.calcFolderSize, dir),
+    getRelativePath: (basePath: string, targetPath: string): Promise<string> =>
+      ipc.invoke(fileChannels.getRelativePath, basePath, targetPath),
+    getAbsolutePath: (basePath: string, targetPath: string): Promise<string> =>
+      ipc.invoke(fileChannels.getAbsolutePath, basePath, targetPath),
   },
 
   /** Git operations */
