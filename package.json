@@ -55,6 +55,7 @@
     "normalize-url": "^8.0.1",
     "random-words": "^2.0.1",
     "react-error-boundary": "^5.0.0",
+    "react-highlight-words": "^0.21.0",
     "serve-handler": "^6.1.6",
     "tree-kill": "^1.2.2"
   },
@@ -74,6 +75,7 @@
     "@types/node": "^22.14.1",
     "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
+    "@types/react-highlight-words": "^0.20.0",
     "@types/serve-handler": "^6.1.4",
     "@vitejs/plugin-react": "^4.4.1",
     "@xterm/addon-canvas": "^0.7.0",
