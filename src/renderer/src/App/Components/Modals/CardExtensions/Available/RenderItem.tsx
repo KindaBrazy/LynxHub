@@ -2,6 +2,7 @@ import {Button} from '@heroui/react';
 import {Avatar, List, message, Tag, Typography} from 'antd';
 import {capitalize} from 'lodash';
 import {useCallback, useState} from 'react';
+import Highlighter from 'react-highlight-words';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
@@ -15,10 +16,11 @@ type Props = {
   item: ExtensionsInfo;
   updateTable: () => void;
   dir: string;
+  searchValue: string;
 };
 
 /** Render available modules to install. */
-export default function RenderItem({item, updateTable, dir}: Props) {
+export default function RenderItem({item, updateTable, dir, searchValue}: Props) {
   const [installing, setInstalling] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -57,7 +59,13 @@ export default function RenderItem({item, updateTable, dir}: Props) {
         <List.Item.Meta
           description={
             <Typography.Text ellipsis={{tooltip: true}} className="text-gray-500 dark:text-gray-400">
-              {item.description}
+              <Highlighter
+                className="flex"
+                highlightTag="div"
+                highlightClassName="bg-warning/50"
+                searchWords={searchValue.split(' ')}
+                textToHighlight={item.description || ''}
+              />
             </Typography.Text>
           }
           title={
@@ -67,7 +75,13 @@ export default function RenderItem({item, updateTable, dir}: Props) {
                   window.open(item.url);
                 }}
                 className="mr-2">
-                {item.title}
+                <Highlighter
+                  className="flex"
+                  highlightTag="div"
+                  textToHighlight={item.title}
+                  highlightClassName="bg-warning/70"
+                  searchWords={searchValue.split(' ')}
+                />
               </Typography.Link>
               <Tag bordered={false}>{capitalize(extractGitUrl(item.url).owner)}</Tag>
               {item.stars && (
