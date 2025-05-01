@@ -30,7 +30,13 @@ import {
 import StorageTypes, {InstalledCard} from '../../../cross/StorageTypes';
 import {appManager, discordRpcManager, extensionManager, moduleManager, storageManager} from '../../index';
 import calcFolderSize from '../../Utilities/CalculateFolderSize/CalculateFolderSize';
-import {getDirCreationDate, getSystemDarkMode, openDialog} from '../../Utilities/Utils';
+import {
+  getAbsolutePath,
+  getDirCreationDate,
+  getRelativePath,
+  getSystemDarkMode,
+  openDialog,
+} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../AppDataManager';
 import GitManager from '../GitManager';
 import {
@@ -113,6 +119,12 @@ function file() {
   );
 
   ipcMain.handle(fileChannels.calcFolderSize, (_, dir) => calcFolderSize(dir));
+  ipcMain.handle(fileChannels.getRelativePath, (_, basePath: string, targetPath: string) =>
+    getRelativePath(basePath, targetPath),
+  );
+  ipcMain.handle(fileChannels.getAbsolutePath, (_, basePath: string, targetPath: string) =>
+    getAbsolutePath(basePath, targetPath),
+  );
 }
 
 function git() {
