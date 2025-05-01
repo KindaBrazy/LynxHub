@@ -202,6 +202,8 @@ const cardsSlice = createSlice({
       state.runningCard = state.runningCard.map(card => (card.tabId === tabId ? {...card, currentView: view} : card));
     },
     toggleRunningCardView: (state, action: PayloadAction<{tabId: string}>) => {
+      if (!state.runningCard) return;
+
       const {tabId} = action.payload;
       state.runningCard = state.runningCard.map(card => {
         const currentView = card.currentView === 'browser' ? 'terminal' : 'browser';
