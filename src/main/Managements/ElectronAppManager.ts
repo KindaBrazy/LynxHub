@@ -101,7 +101,7 @@ export default class ElectronAppManager {
       setTimeout(() => {
         this.loadingWindow?.close();
         this.onReadyToShow?.();
-      }, 1000);
+      }, 1500);
     });
 
     this.getWebContent()?.setWindowOpenHandler(({url}) => {
