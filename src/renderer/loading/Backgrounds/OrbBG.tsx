@@ -278,5 +278,5 @@ export default function OrbBG({
     };
   }, [hue, hoverIntensity, rotateOnHover, forceHoverState]);
 
-  return <div ref={ctnDom} className="size-full scale-105" />;
+  return <div ref={ctnDom} className="size-full scale-95" />;
 }
