@@ -5,6 +5,7 @@ import lodash from 'lodash';
 
 import {PtyProcessOpt} from '../../../../cross/IpcChannelAndTypes';
 import {moduleManager, storageManager} from '../../../index';
+import {getAbsolutePath, getExePath, isPortable} from '../../../Utilities/Utils';
 import {getAppDataPath} from '../../AppDataManager';
 import PtyManager from '../../PtyManager';
 
@@ -89,8 +90,9 @@ export async function ptyProcess(id: string, opt: PtyProcessOpt, cardId: string)
   if (opt === 'start') {
     const card = storageManager.getData('cards').installedCards.find(card => card.id === cardId);
     if (!card) return;
+    const dir = isPortable() ? getAbsolutePath(getExePath(), card.dir || '') : card.dir;
 
-    ptyManager.push(new PtyManager(id, card.dir, true));
+    ptyManager.push(new PtyManager(id, dir, true));
 
     const preCommands = storageManager.getPreCommandById(cardId);
     runMultiCommand(id, preCommands?.data || []);
@@ -110,7 +112,7 @@ export async function ptyProcess(id: string, opt: PtyProcessOpt, cardId: string)
         get: (key: string) => storageManager.getCustomData(key),
         set: (key: string, data: any) => storageManager.setCustomData(key, data),
       };
-      const runCommand = await moduleManager.getMethodsById(cardId)?.getRunCommands(card.dir, configPath, storage);
+      const runCommand = await moduleManager.getMethodsById(cardId)?.getRunCommands(dir, configPath, storage);
       getPtyByID(id)?.write(runCommand || '');
     }
   } else if (opt === 'stop') {

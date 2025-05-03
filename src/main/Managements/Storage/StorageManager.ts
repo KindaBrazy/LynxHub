@@ -16,6 +16,7 @@ import {
 } from '../../../cross/IpcChannelAndTypes';
 import {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
 import {appManager, cardsValidator, moduleManager, storageManager} from '../../index';
+import {getAbsolutePath, getExePath, getRelativePath, isPortable} from '../../Utilities/Utils';
 import {getAppDataPath} from '../AppDataManager';
 import BaseStorage from './BaseStorage';
 
@@ -68,7 +69,10 @@ class StorageManager extends BaseStorage {
   public async getCardArgumentsById(cardId: string) {
     const args = this.getArgs(cardId);
     if (args) return args;
-    const dir = this.getData('cards').installedCards.find(card => card.id === cardId)?.dir;
+    let dir = this.getData('cards').installedCards.find(card => card.id === cardId)?.dir;
+    if (isPortable()) {
+      dir = getAbsolutePath(getExePath(), dir || '');
+    }
 
     const configPath = getAppDataPath();
     const storage = {
@@ -86,7 +90,10 @@ class StorageManager extends BaseStorage {
 
   public async setCardArguments(cardId: string, args: ChosenArgumentsData) {
     this.setArgs(cardId, args);
-    const dir = this.getData('cards').installedCards.find(card => card.id === cardId)?.dir;
+    let dir = this.getData('cards').installedCards.find(card => card.id === cardId)?.dir;
+    if (isPortable()) {
+      dir = getAbsolutePath(getExePath(), dir || '');
+    }
 
     const result = args.data.find(arg => arg.preset === args.activePreset)?.arguments || [];
 
@@ -118,11 +125,14 @@ class StorageManager extends BaseStorage {
     const cardExists = storedCards.some(c => c.id === card.id);
 
     if (!cardExists) {
-      const result: InstalledCards = [...storedCards, card];
+      if (card.dir && isPortable()) {
+        card.dir = getRelativePath(getExePath(), card.dir);
+      }
+      const installedCards: InstalledCards = [...storedCards, card];
 
-      this.updateData('cards', {installedCards: result});
+      this.updateData('cards', {installedCards});
 
-      appManager.getWebContent()?.send(storageUtilsChannels.onInstalledCards, result);
+      appManager.getWebContent()?.send(storageUtilsChannels.onInstalledCards, installedCards);
     }
     cardsValidator.changedCards();
   }
@@ -130,17 +140,20 @@ class StorageManager extends BaseStorage {
   public removeInstalledCard(id: string) {
     const storedCards = this.getData('cards').installedCards;
 
-    const updatedCards = storedCards.filter(card => card.id !== id);
+    const installedCards = storedCards.filter(card => card.id !== id);
 
-    this.updateData('cards', {installedCards: updatedCards});
+    this.updateData('cards', {installedCards});
 
-    appManager.getWebContent()?.send(storageUtilsChannels.onInstalledCards, updatedCards);
+    appManager.getWebContent()?.send(storageUtilsChannels.onInstalledCards, installedCards);
     cardsValidator.changedCards();
   }
 
   public removeInstalledCardByPath(dir: string) {
-    this.updateData('cards', {installedCards: this.getData('cards').installedCards.filter(card => card.dir !== dir)});
-    appManager.getWebContent()?.send(storageUtilsChannels.onInstalledCards, this.getData('cards').installedCards);
+    const installedCards = this.getData('cards').installedCards.filter(
+      card => getAbsolutePath(getExePath(), card.dir || '') !== getAbsolutePath(getExePath(), dir),
+    );
+    this.updateData('cards', {installedCards});
+    appManager.getWebContent()?.send(storageUtilsChannels.onInstalledCards, installedCards);
   }
 
   public addAutoUpdateCard(cardId: string) {
@@ -428,6 +441,7 @@ class StorageManager extends BaseStorage {
     return result;
   }
 
+  // TODO: also support relative paths for pre open
   public addPreOpen(cardId: string, open: {type: 'folder' | 'file'; path: string}): void {
     const preOpen = this.getData('cardsConfig').preOpen;
     const existCustomRun = preOpen.findIndex(custom => custom.cardId === cardId);
