@@ -4,6 +4,7 @@ import {join} from 'node:path';
 import {is} from '@electron-toolkit/utils';
 import {app} from 'electron';
 import fs from 'graceful-fs';
+import lodash from 'lodash';
 import {LowSync} from 'lowdb';
 import {JSONFileSyncPreset} from 'lowdb/node';
 
@@ -11,7 +12,7 @@ import {APP_NAME} from '../../../cross/CrossConstants';
 import {Get_Default_Hotkeys} from '../../../cross/HotkeyConstants';
 import StorageTypes from '../../../cross/StorageTypes';
 import {appManager} from '../../index';
-import {getExePath, isPortable} from '../../Utilities/Utils';
+import {getAbsolutePath, getExePath, isPortable} from '../../Utilities/Utils';
 import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 
 class BaseStorage {
@@ -224,7 +225,16 @@ class BaseStorage {
   }
 
   public getAll(): StorageTypes {
-    return this.storage.data;
+    const data = this.storage.data;
+    const result = lodash.cloneDeep(data);
+
+    if (isPortable()) {
+      result.cards.installedCards = result.cards.installedCards.map(card => {
+        return {id: card.id, dir: getAbsolutePath(getExePath(), card.dir || '')};
+      });
+    }
+
+    return result;
   }
 
   public updateData<K extends keyof StorageTypes>(key: K, updateData: Partial<StorageTypes[K]>) {

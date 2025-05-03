@@ -10,6 +10,7 @@ import {toMs} from '../../../cross/CrossUtils';
 import {modulesChannels} from '../../../cross/IpcChannelAndTypes';
 import {InstalledCard} from '../../../cross/StorageTypes';
 import {appManager, storageManager} from '../../index';
+import {getAbsolutePath, getExePath, isPortable} from '../../Utilities/Utils';
 import {getAppDirectory} from '../AppDataManager';
 import GitManager from '../GitManager';
 import {removeDir, trashDir} from '../Ipc/Methods/IpcMethods';
@@ -104,7 +105,12 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
   }
 
   private async checkAllCardsUpdate(updateTypes: {id: string; type: 'git' | 'stepper'}[]) {
-    const installedCards = storageManager.getData('cards').installedCards;
+    let installedCards = storageManager.getData('cards').installedCards;
+    if (isPortable()) {
+      installedCards = installedCards.map(card => {
+        return {id: card.id, dir: getAbsolutePath(getExePath(), card.dir || '')};
+      });
+    }
     this.availableUpdates = [];
 
     for (const card of installedCards) {

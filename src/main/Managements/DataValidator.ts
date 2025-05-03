@@ -8,6 +8,7 @@ import pty from 'node-pty';
 import {LynxApiInstalled} from '../../cross/CrossTypes';
 import {InstalledCard, InstalledCards} from '../../cross/StorageTypes';
 import {moduleManager, storageManager} from '../index';
+import {getAbsolutePath, getExePath, isPortable} from '../Utilities/Utils';
 
 type PathCards = {
   id: string;
@@ -115,7 +116,12 @@ export class ValidateCards {
    * @returns {Promise<void>}
    */
   public async checkAndWatch(): Promise<void> {
-    const installedCards: InstalledCards = storageManager.getData('cards').installedCards;
+    let installedCards: InstalledCards = storageManager.getData('cards').installedCards;
+    if (isPortable()) {
+      installedCards = installedCards.map(card => {
+        return {id: card.id, dir: getAbsolutePath(getExePath(), card.dir || '')};
+      });
+    }
 
     const validCards = await this.validateCards(installedCards);
 
