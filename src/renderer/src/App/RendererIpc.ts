@@ -366,7 +366,12 @@ const rendererIpc = {
     showWindow: () => ipc.send(contextMenuChannels.showWindow),
     hideWindow: () => ipc.send(contextMenuChannels.hideWindow),
 
-    onInitView: (result: (event: IpcRendererEvent, params: ContextMenuParams) => void) =>
+    copy: (id: number) => ipc.send(contextMenuChannels.copy, id),
+    paste: (id: number) => ipc.send(contextMenuChannels.paste, id),
+    replaceMisspelling: (id: number, text: string) => ipc.send(contextMenuChannels.replaceMisspelling, id, text),
+    selectAll: (id: number) => ipc.send(contextMenuChannels.selectAll, id),
+
+    onInitView: (result: (event: IpcRendererEvent, params: ContextMenuParams, id: number) => void) =>
       ipc.on(contextMenuChannels.onInitView, result),
     offInitView: () => ipc.removeAllListeners(contextMenuChannels.onInitView),
   },

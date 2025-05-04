@@ -6,13 +6,16 @@ import {appManager} from '../index';
 let hideMenu = false;
 let listenForBlur = false;
 
+const webContents: WebContents[] = [];
+
 export default function contextMenuManager(contents: WebContents) {
+  webContents.push(contents);
   contents.on('context-menu', (_e, params) => {
     const window = appManager.getContextMenuWindow();
     if (!window) return;
 
     hideMenu = false;
-    window.webContents?.send(contextMenuChannels.onInitView, params);
+    window.webContents?.send(contextMenuChannels.onInitView, params, contents.id);
 
     const {x, y} = screen.getCursorScreenPoint();
     window.setPosition(x, y, true);
@@ -39,6 +42,19 @@ export function listenForContextChannels() {
       window.setSize(width, height, false);
       window.setContentSize(width, height);
     }
+  });
+
+  ipcMain.on(contextMenuChannels.copy, (_, id: number) => {
+    webContents.find(content => content.id === id)?.copy();
+  });
+  ipcMain.on(contextMenuChannels.paste, (_, id: number) => {
+    webContents.find(content => content.id === id)?.paste();
+  });
+  ipcMain.on(contextMenuChannels.selectAll, (_, id: number) => {
+    webContents.find(content => content.id === id)?.selectAll();
+  });
+  ipcMain.on(contextMenuChannels.replaceMisspelling, (_, id: number, text: string) => {
+    webContents.find(content => content.id === id)?.replaceMisspelling(text);
   });
 
   ipcMain.on(contextMenuChannels.showWindow, () => {
