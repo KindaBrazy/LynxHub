@@ -3,16 +3,30 @@ import {ipcMain, screen, WebContents} from 'electron';
 import {contextMenuChannels} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
 
+let hideMenu = false;
+let listenForBlur = false;
+
 export default function contextMenuManager(contents: WebContents) {
   contents.on('context-menu', (_e, params) => {
     const window = appManager.getContextMenuWindow();
     if (!window) return;
 
+    hideMenu = false;
     window.webContents?.send(contextMenuChannels.onInitView, params);
 
     const {x, y} = screen.getCursorScreenPoint();
-    window.setPosition(x, y, false);
+    window.setPosition(x, y, true);
   });
+
+  if (!listenForBlur) {
+    appManager.getContextMenuWindow()?.on('blur', () => {
+      listenForBlur = true;
+      hideMenu = true;
+      setTimeout(() => {
+        if (hideMenu) appManager.getContextMenuWindow()?.hide();
+      }, 100);
+    });
+  }
 }
 
 export function listenForContextChannels() {

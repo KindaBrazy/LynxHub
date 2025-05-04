@@ -109,10 +109,6 @@ export default class ElectronAppManager {
   private createContextWindow() {
     this.contextMenuWindow = new BrowserWindow({...ElectronAppManager.CONTEXT_WINDOW_CONFIG, parent: this.mainWindow});
 
-    this.contextMenuWindow.on('blur', () => {
-      this.contextMenuWindow?.hide();
-    });
-
     this.loadAppropriateURL(this.contextMenuWindow, 'context_menu.html');
   }
 
