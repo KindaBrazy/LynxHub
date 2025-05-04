@@ -18,6 +18,7 @@ export default class ElectronAppManager {
   public onReadyToShow?: () => void;
 
   private mainWindow?: BrowserWindow;
+  private contextMenuWindow?: BrowserWindow;
   private loadingWindow?: BrowserWindow;
   private isLoading?: boolean;
 
@@ -32,6 +33,24 @@ export default class ElectronAppManager {
     webPreferences: {
       webviewTag: true,
       preload: path.join(__dirname, '../preload/index.cjs'),
+      sandbox: false,
+    },
+  };
+
+  private static readonly CONTEXT_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
+    frame: false,
+    show: false,
+    width: 180,
+    height: 290,
+    minWidth: 0,
+    minHeight: 0,
+    resizable: false,
+    maximizable: false,
+    skipTaskbar: true,
+    useContentSize: true,
+    icon,
+    webPreferences: {
+      preload: path.join(__dirname, '../preload/context_menu.cjs'),
       sandbox: false,
     },
   };
@@ -64,6 +83,10 @@ export default class ElectronAppManager {
     return this.getMainWindow()?.webContents;
   }
 
+  public getContextMenuWindow(): BrowserWindow | undefined {
+    return this.contextMenuWindow;
+  }
+
   /** Creates and configures the loading window. */
   private createLoadingWindow(): void {
     this.loadingWindow = new BrowserWindow(ElectronAppManager.LOADING_WINDOW_CONFIG);
@@ -83,6 +106,16 @@ export default class ElectronAppManager {
     });
   }
 
+  private createContextWindow() {
+    this.contextMenuWindow = new BrowserWindow({...ElectronAppManager.CONTEXT_WINDOW_CONFIG, parent: this.mainWindow});
+
+    this.contextMenuWindow.on('blur', () => {
+      this.contextMenuWindow?.hide();
+    });
+
+    this.loadAppropriateURL(this.contextMenuWindow, 'context_menu.html');
+  }
+
   /** Creates and configures the main application window. */
   private createMainWindow(): void {
     this.mainWindow = new BrowserWindow(ElectronAppManager.MAIN_WINDOW_CONFIG);
@@ -93,6 +126,7 @@ export default class ElectronAppManager {
     this.setupMainWindowEventListeners();
     this.loadAppropriateURL(this.mainWindow, 'index.html');
     this.onCreateWindow?.();
+    this.createContextWindow();
   }
 
   /** Sets up event listeners for the main window. */

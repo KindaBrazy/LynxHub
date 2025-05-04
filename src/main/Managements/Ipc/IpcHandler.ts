@@ -38,6 +38,7 @@ import {
   openDialog,
 } from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../AppDataManager';
+import {listenForContextChannels} from '../ContextMenuManager';
 import GitManager from '../GitManager';
 import {
   changeWindowState,
@@ -371,4 +372,6 @@ export function listenToAllChannels() {
   extensionsIpc();
 
   appWindow();
+
+  listenForContextChannels();
 }

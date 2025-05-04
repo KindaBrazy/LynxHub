@@ -1,4 +1,4 @@
-import {IpcRendererEvent, OpenDialogOptions} from 'electron';
+import {ContextMenuParams, IpcRendererEvent, OpenDialogOptions} from 'electron';
 
 import {
   ChosenArgumentsData,
@@ -16,6 +16,7 @@ import {
   appWindowChannels,
   BrowserRecent,
   ChangeWindowState,
+  contextMenuChannels,
   CustomRunBehaviorData,
   DarkModeTypes,
   DiscordRunningAI,
@@ -357,6 +358,17 @@ const rendererIpc = {
     onHotkeysChange: (result: (event: IpcRendererEvent, input: LynxInput) => void) =>
       ipc.on(appWindowChannels.hotkeysChange, result),
     offHotkeysChange: () => ipc.removeAllListeners(appWindowChannels.hotkeysChange),
+  },
+
+  contextMenu: {
+    resizeWindow: (dimensions: {width: number; height: number}) =>
+      ipc.send(contextMenuChannels.resizeWindow, dimensions),
+    showWindow: () => ipc.send(contextMenuChannels.showWindow),
+    hideWindow: () => ipc.send(contextMenuChannels.hideWindow),
+
+    onInitView: (result: (event: IpcRendererEvent, params: ContextMenuParams) => void) =>
+      ipc.on(contextMenuChannels.onInitView, result),
+    offInitView: () => ipc.removeAllListeners(contextMenuChannels.onInitView),
   },
 };
 
