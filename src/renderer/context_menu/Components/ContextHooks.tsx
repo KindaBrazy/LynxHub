@@ -1,9 +1,9 @@
-import {Button, Divider} from '@heroui/react';
+import {Divider} from '@heroui/react';
 import {isArray, isEmpty} from 'lodash';
 import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect} from 'react';
 
+import {CopyDuo_Icon, DocumentTextDuo_Icon, TextSelectionDuo_Icon} from '../../loading/Backgrounds/SvgIcons';
 import rendererIpc from '../../src/App/RendererIpc';
-import {Copy_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons1';
 
 export function useResize(divRef: RefObject<HTMLDivElement | null>) {
   useEffect(() => {
@@ -24,9 +24,38 @@ export function useResize(divRef: RefObject<HTMLDivElement | null>) {
   }, [divRef]);
 }
 
+type ActionProps = {icon?: ReactNode; title: string; onPress: () => void; className?: string};
+
+function ActionButton({icon, title, onPress, className}: ActionProps) {
+  return (
+    <div
+      className={
+        `w-full hover:bg-foreground-100 transition-colors duration-300 py-2 px-3` +
+        ` flex justify-between items-center text-sm ${className}`
+      }
+      onClick={onPress}>
+      {icon || <div />}
+      <span>{title}</span>
+      <div />
+    </div>
+  );
+}
+
 export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) {
-  const copyText = (text: string) => {
-    navigator.clipboard.writeText(text);
+  const copy = (id: number) => {
+    rendererIpc.contextMenu.copy(id);
+    rendererIpc.contextMenu.hideWindow();
+  };
+  const paste = (id: number) => {
+    rendererIpc.contextMenu.paste(id);
+    rendererIpc.contextMenu.hideWindow();
+  };
+  const selectAll = (id: number) => {
+    rendererIpc.contextMenu.selectAll(id);
+    rendererIpc.contextMenu.hideWindow();
+  };
+  const replaceMisspelling = (id: number, text: string) => {
+    rendererIpc.contextMenu.replaceMisspelling(id, text);
     rendererIpc.contextMenu.hideWindow();
   };
 
@@ -38,39 +67,72 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
     setElements(prevState => [...prevState, <Divider key={key} className="my-2" />]);
   };
 
+  const addEmptySpace = (key: string) => {
+    setElements(prevState => [...prevState, <div key={key} className="w-full h-2" />]);
+  };
+
   useEffect(() => {
-    rendererIpc.contextMenu.onInitView((_e, params) => {
+    rendererIpc.contextMenu.onInitView((_e, params, id) => {
       setElements([]);
-      const {selectionText, dictionarySuggestions} = params;
+      const {selectionText, dictionarySuggestions, editFlags} = params;
+
+      addEmptySpace('starter_space');
 
       if (!isEmpty(dictionarySuggestions)) {
-        addElement(
-          dictionarySuggestions.map(dic => (
-            <Button radius="none" variant="light" key={`${dic}_dic`} fullWidth>
-              {dic}
-            </Button>
+        addElement([
+          <span key={'suggestions_title'} className="ml-2 text-sm mb-1">
+            Suggestions
+          </span>,
+          ...dictionarySuggestions.map(text => (
+            <ActionButton
+              title={text}
+              className="text-sm"
+              key={`${text}_dic`}
+              onPress={() => replaceMisspelling(id, text)}
+            />
           )),
-        );
+        ]);
 
         addSeperator('dic_sep');
       }
 
-      if (!isEmpty(selectionText)) {
-        addElement(
-          <Button
-            radius="none"
-            variant="light"
+      if (editFlags.canCopy && !isEmpty(selectionText)) {
+        addElement([
+          <span key={'actions_title'} className="ml-2 text-sm mb-1">
+            Actions
+          </span>,
+          <ActionButton
+            title="Copy"
             key="context_copy"
-            endContent={<div />}
-            className="justify-between"
-            startContent={<Copy_Icon />}
-            onPress={() => copyText(selectionText)}
-            fullWidth>
-            Copy
-          </Button>,
+            onPress={() => copy(id)}
+            icon={<CopyDuo_Icon className="size-4" />}
+          />,
+        ]);
+      }
+
+      if (editFlags.canPaste) {
+        addElement(
+          <ActionButton
+            title="Paste"
+            key="context_paste"
+            onPress={() => paste(id)}
+            icon={<DocumentTextDuo_Icon className="size-4" />}
+          />,
         );
       }
 
+      if (editFlags.canSelectAll) {
+        addElement(
+          <ActionButton
+            title="Select All"
+            key="context_selectAll"
+            onPress={() => selectAll(id)}
+            icon={<TextSelectionDuo_Icon className="size-4" />}
+          />,
+        );
+      }
+
+      addEmptySpace('end_space');
       rendererIpc.contextMenu.showWindow();
     });
 

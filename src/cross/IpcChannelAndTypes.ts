@@ -302,4 +302,8 @@ export const contextMenuChannels = {
   resizeWindow: 'context:resize-window',
   showWindow: 'context:show-window',
   hideWindow: 'context:hide-window',
+  copy: 'context:copy',
+  paste: 'context:paste',
+  replaceMisspelling: 'context:replaceMisspelling',
+  selectAll: 'context:selectAll',
 };
