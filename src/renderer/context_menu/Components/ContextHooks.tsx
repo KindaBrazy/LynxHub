@@ -2,7 +2,12 @@ import {Divider} from '@heroui/react';
 import {isArray, isEmpty} from 'lodash';
 import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect} from 'react';
 
-import {CopyDuo_Icon, DocumentTextDuo_Icon, TextSelectionDuo_Icon} from '../../loading/Backgrounds/SvgIcons';
+import {
+  CopyDuo_Icon,
+  DocumentTextDuo_Icon,
+  TextSelectionDuo_Icon,
+  UndoDuo_Icon,
+} from '../../loading/Backgrounds/SvgIcons';
 import rendererIpc from '../../src/App/RendererIpc';
 
 export function useResize(divRef: RefObject<HTMLDivElement | null>) {
@@ -42,20 +47,8 @@ function ActionButton({icon, title, onPress, className}: ActionProps) {
 }
 
 export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) {
-  const copy = (id: number) => {
-    rendererIpc.contextMenu.copy(id);
-    rendererIpc.contextMenu.hideWindow();
-  };
-  const paste = (id: number) => {
-    rendererIpc.contextMenu.paste(id);
-    rendererIpc.contextMenu.hideWindow();
-  };
-  const selectAll = (id: number) => {
-    rendererIpc.contextMenu.selectAll(id);
-    rendererIpc.contextMenu.hideWindow();
-  };
-  const replaceMisspelling = (id: number, text: string) => {
-    rendererIpc.contextMenu.replaceMisspelling(id, text);
+  const executeAction = (action: keyof typeof rendererIpc.contextItems, id: number, text?: string) => {
+    rendererIpc.contextItems[action](id, text || '');
     rendererIpc.contextMenu.hideWindow();
   };
 
@@ -88,7 +81,7 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
               title={text}
               className="text-sm"
               key={`${text}_dic`}
-              onPress={() => replaceMisspelling(id, text)}
+              onPress={() => executeAction('replaceMisspelling', id, text)}
             />
           )),
         ]);
@@ -96,18 +89,44 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
         addSeperator('dic_sep');
       }
 
-      if (editFlags.canCopy && !isEmpty(selectionText)) {
-        addElement([
+      if (editFlags.canUndo || editFlags.canRedo || editFlags.canCopy || editFlags.canPaste || editFlags.canSelectAll) {
+        addElement(
           <span key={'actions_title'} className="ml-2 text-sm mb-1">
             Actions
           </span>,
+        );
+      }
+
+      if (editFlags.canUndo) {
+        addElement(
+          <ActionButton
+            title="Undo"
+            key="context_undo"
+            onPress={() => executeAction('undo', id)}
+            icon={<UndoDuo_Icon className="size-4" />}
+          />,
+        );
+      }
+      if (editFlags.canRedo) {
+        addElement(
+          <ActionButton
+            title="Redo"
+            key="context_redo"
+            onPress={() => executeAction('redo', id)}
+            icon={<UndoDuo_Icon className="size-4 rotate-180" />}
+          />,
+        );
+      }
+
+      if (editFlags.canCopy && !isEmpty(selectionText)) {
+        addElement(
           <ActionButton
             title="Copy"
             key="context_copy"
-            onPress={() => copy(id)}
+            onPress={() => executeAction('copy', id)}
             icon={<CopyDuo_Icon className="size-4" />}
           />,
-        ]);
+        );
       }
 
       if (editFlags.canPaste) {
@@ -115,7 +134,7 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
           <ActionButton
             title="Paste"
             key="context_paste"
-            onPress={() => paste(id)}
+            onPress={() => executeAction('paste', id)}
             icon={<DocumentTextDuo_Icon className="size-4" />}
           />,
         );
@@ -126,7 +145,7 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
           <ActionButton
             title="Select All"
             key="context_selectAll"
-            onPress={() => selectAll(id)}
+            onPress={() => executeAction('selectAll', id)}
             icon={<TextSelectionDuo_Icon className="size-4" />}
           />,
         );

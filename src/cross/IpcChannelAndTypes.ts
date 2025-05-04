@@ -306,4 +306,6 @@ export const contextMenuChannels = {
   paste: 'context:paste',
   replaceMisspelling: 'context:replaceMisspelling',
   selectAll: 'context:selectAll',
+  undo: 'context:undo',
+  redo: 'context:redo',
 };
