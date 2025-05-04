@@ -56,6 +56,12 @@ export function listenForContextChannels() {
   ipcMain.on(contextMenuChannels.replaceMisspelling, (_, id: number, text: string) => {
     webContents.find(content => content.id === id)?.replaceMisspelling(text);
   });
+  ipcMain.on(contextMenuChannels.undo, (_, id: number) => {
+    webContents.find(content => content.id === id)?.undo();
+  });
+  ipcMain.on(contextMenuChannels.redo, (_, id: number) => {
+    webContents.find(content => content.id === id)?.redo();
+  });
 
   ipcMain.on(contextMenuChannels.showWindow, () => {
     const window = appManager.getContextMenuWindow();
