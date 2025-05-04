@@ -12,6 +12,7 @@ import {isDev} from '../cross/CrossUtils';
 import {checkAppDirectories} from './Managements/AppDataManager';
 import AppInitializer from './Managements/AppInitializer';
 import {checkForUpdate} from './Managements/AppUpdater';
+import contextMenuManager from './Managements/ContextMenuManager';
 import {ValidateCards} from './Managements/DataValidator';
 import DialogManager from './Managements/DialogManager';
 import DiscordRpcManager from './Managements/DiscordRpcManager';
@@ -56,6 +57,9 @@ async function setupApp() {
   app.whenReady().then(onAppReady);
   app.on('web-contents-created', (_, contents) => {
     RegisterHotkeys(contents);
+    if (contents.id > 3) {
+      contextMenuManager(contents);
+    }
   });
 
   app.on('browser-window-created', (_, window) => {

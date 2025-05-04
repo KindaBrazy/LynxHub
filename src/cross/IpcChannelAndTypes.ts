@@ -296,3 +296,10 @@ export const appWindowChannels = {
   webViewAttached: 'window:webview-attached',
   hotkeysChange: 'window:hotkeys-change',
 };
+
+export const contextMenuChannels = {
+  onInitView: 'context:init-view',
+  resizeWindow: 'context:resize-window',
+  showWindow: 'context:show-window',
+  hideWindow: 'context:hide-window',
+};
