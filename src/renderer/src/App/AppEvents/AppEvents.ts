@@ -5,6 +5,7 @@ import {
   useCheckModulesUpdate,
   useHotkeyEvents,
   useIpcEvents,
+  useNewTabEvents,
   useOnlineEvents,
   usePatreon,
   useStorageData,
@@ -21,4 +22,5 @@ export default function useAppEvents() {
   useIpcEvents();
   useAppTitleEvents();
   useHotkeyEvents();
+  useNewTabEvents();
 }

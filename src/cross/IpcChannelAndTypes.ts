@@ -308,4 +308,11 @@ export const contextMenuChannels = {
   selectAll: 'context:selectAll',
   undo: 'context:undo',
   redo: 'context:redo',
+
+  newTab: 'context:newTab',
+  openExternal: 'context:openExternal',
+};
+
+export const tabsChannels = {
+  onNewTab: 'tabs:new-tab',
 };

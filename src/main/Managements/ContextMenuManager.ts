@@ -1,6 +1,6 @@
-import {ipcMain, screen, WebContents} from 'electron';
+import {ipcMain, screen, shell, WebContents} from 'electron';
 
-import {contextMenuChannels} from '../../cross/IpcChannelAndTypes';
+import {contextMenuChannels, tabsChannels} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
 
 let hideMenu = false;
@@ -61,6 +61,12 @@ export function listenForContextChannels() {
   });
   ipcMain.on(contextMenuChannels.redo, (_, id: number) => {
     webContents.find(content => content.id === id)?.redo();
+  });
+  ipcMain.on(contextMenuChannels.openExternal, (_, url: string) => {
+    shell.openExternal(url);
+  });
+  ipcMain.on(contextMenuChannels.newTab, (_, url: string) => {
+    appManager.getWebContent()?.send(tabsChannels.onNewTab, url);
   });
 
   ipcMain.on(contextMenuChannels.showWindow, () => {

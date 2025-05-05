@@ -5,6 +5,8 @@ import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect} from 'react';
 import {
   CopyDuo_Icon,
   DocumentTextDuo_Icon,
+  ExternalDuo_Icon,
+  LibraryDuo_Icon,
   TextSelectionDuo_Icon,
   UndoDuo_Icon,
 } from '../../loading/Backgrounds/SvgIcons';
@@ -46,12 +48,10 @@ function ActionButton({icon, title, onPress, className}: ActionProps) {
   );
 }
 
-export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) {
-  const executeAction = (action: keyof typeof rendererIpc.contextItems, id: number, text?: string) => {
-    rendererIpc.contextItems[action](id, text || '');
-    rendererIpc.contextMenu.hideWindow();
-  };
-
+export function useInitView(
+  setElements: Dispatch<SetStateAction<ReactNode[]>>,
+  setWidthSize: Dispatch<SetStateAction<'sm' | 'md' | 'lg'>>,
+) {
   const addElement = (element: ReactNode | ReactNode[]) => {
     setElements(prevState => (isArray(element) ? [...prevState, ...element] : [...prevState, element]));
   };
@@ -67,7 +67,8 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
   useEffect(() => {
     rendererIpc.contextMenu.onInitView((_e, params, id) => {
       setElements([]);
-      const {selectionText, dictionarySuggestions, editFlags} = params;
+      const {selectionText, dictionarySuggestions, linkURL, editFlags} = params;
+      console.log(params);
 
       addEmptySpace('starter_space');
 
@@ -78,10 +79,13 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
           </span>,
           ...dictionarySuggestions.map(text => (
             <ActionButton
+              onPress={() => {
+                rendererIpc.contextMenu.hideWindow();
+                rendererIpc.contextItems.replaceMisspelling(id, text);
+              }}
               title={text}
               className="text-sm"
               key={`${text}_dic`}
-              onPress={() => executeAction('replaceMisspelling', id, text)}
             />
           )),
         ]);
@@ -89,7 +93,14 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
         addSeperator('dic_sep');
       }
 
-      if (editFlags.canUndo || editFlags.canRedo || editFlags.canCopy || editFlags.canPaste || editFlags.canSelectAll) {
+      if (
+        editFlags.canUndo ||
+        editFlags.canRedo ||
+        editFlags.canCopy ||
+        editFlags.canPaste ||
+        editFlags.canSelectAll ||
+        !isEmpty(linkURL)
+      ) {
         addElement(
           <span key={'actions_title'} className="ml-2 text-sm mb-1">
             Actions
@@ -97,12 +108,41 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
         );
       }
 
+      if (!isEmpty(linkURL)) {
+        addElement([
+          <ActionButton
+            onPress={() => {
+              rendererIpc.contextMenu.hideWindow();
+              rendererIpc.contextItems.newTab(linkURL);
+            }}
+            key="context_newTab"
+            title="Open link in new tab"
+            icon={<LibraryDuo_Icon className="size-4" />}
+          />,
+          <ActionButton
+            onPress={() => {
+              rendererIpc.contextMenu.hideWindow();
+              rendererIpc.contextItems.openExternal(linkURL);
+            }}
+            key="context_openExternal"
+            title="Open link in default browser"
+            icon={<ExternalDuo_Icon className="size-4" />}
+          />,
+        ]);
+        setWidthSize('md');
+      } else {
+        setWidthSize('sm');
+      }
+
       if (editFlags.canUndo) {
         addElement(
           <ActionButton
+            onPress={() => {
+              rendererIpc.contextMenu.hideWindow();
+              rendererIpc.contextItems.undo(id);
+            }}
             title="Undo"
             key="context_undo"
-            onPress={() => executeAction('undo', id)}
             icon={<UndoDuo_Icon className="size-4" />}
           />,
         );
@@ -110,9 +150,12 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
       if (editFlags.canRedo) {
         addElement(
           <ActionButton
+            onPress={() => {
+              rendererIpc.contextMenu.hideWindow();
+              rendererIpc.contextItems.redo(id);
+            }}
             title="Redo"
             key="context_redo"
-            onPress={() => executeAction('redo', id)}
             icon={<UndoDuo_Icon className="size-4 rotate-180" />}
           />,
         );
@@ -121,9 +164,12 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
       if (editFlags.canCopy && !isEmpty(selectionText)) {
         addElement(
           <ActionButton
+            onPress={() => {
+              rendererIpc.contextMenu.hideWindow();
+              rendererIpc.contextItems.copy(id);
+            }}
             title="Copy"
             key="context_copy"
-            onPress={() => executeAction('copy', id)}
             icon={<CopyDuo_Icon className="size-4" />}
           />,
         );
@@ -132,9 +178,12 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
       if (editFlags.canPaste) {
         addElement(
           <ActionButton
+            onPress={() => {
+              rendererIpc.contextMenu.hideWindow();
+              rendererIpc.contextItems.paste(id);
+            }}
             title="Paste"
             key="context_paste"
-            onPress={() => executeAction('paste', id)}
             icon={<DocumentTextDuo_Icon className="size-4" />}
           />,
         );
@@ -143,9 +192,12 @@ export function useInitView(setElements: Dispatch<SetStateAction<ReactNode[]>>) 
       if (editFlags.canSelectAll) {
         addElement(
           <ActionButton
+            onPress={() => {
+              rendererIpc.contextMenu.hideWindow();
+              rendererIpc.contextItems.selectAll(id);
+            }}
             title="Select All"
             key="context_selectAll"
-            onPress={() => executeAction('selectAll', id)}
             icon={<TextSelectionDuo_Icon className="size-4" />}
           />,
         );
