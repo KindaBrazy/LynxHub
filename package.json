@@ -13,7 +13,7 @@
     "type": "git",
     "url": "https://github.com/KindaBrazy/LynxHub"
   },
-  "license": "GPL-3.0-or-later",
+  "license": "AGPL-3.0",
   "homepage": "https://github.com/KindaBrazy/LynxHub",
   "appDetails": {
     "title": "LynxHub",
