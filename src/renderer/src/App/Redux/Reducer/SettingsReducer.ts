@@ -18,6 +18,7 @@ type SettingState = {
   terminateAIConfirm: boolean;
   openLastSize: boolean;
   dynamicAppTitle: boolean;
+  openLinkExternal: boolean;
 
   updatedModules: string[];
   newModules: string[];
@@ -49,6 +50,7 @@ const initialState: SettingState = {
   updateAvailable: false,
   extensionsUpdateAvailable: [],
   dynamicAppTitle: true,
+  openLinkExternal: false,
 };
 
 const settingsSlice = createSlice({

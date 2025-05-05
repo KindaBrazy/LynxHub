@@ -18,10 +18,10 @@ import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
-  private readonly CURRENT_VERSION: number = 1.0;
+  private readonly CURRENT_VERSION: number = 0.8;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 1.0},
+    storage: {version: 0.8},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -57,6 +57,7 @@ class BaseStorage {
       startMinimized: false,
       startupLastActivePage: false,
       dynamicAppTitle: true,
+      openLinkExternal: false,
       lastPage: '/homePage',
       discordRP: {
         LynxHub: {
@@ -142,18 +143,9 @@ class BaseStorage {
       this.storage.data.browser = {
         recentAddress: [],
       };
-
-      this.storage.write();
-    };
-
-    const v8to9 = () => {
       this.storage.data.app.closeTabConfirm = true;
-
-      this.storage.write();
-    };
-
-    const v9to10 = () => {
       this.storage.data.app.hotkeys = Get_Default_Hotkeys(platform());
+      this.storage.data.app.openLinkExternal = false;
 
       this.storage.write();
     };
@@ -169,38 +161,21 @@ class BaseStorage {
           v5to6();
           v6to7();
           v7to8();
-          v8to9();
-          v9to10();
           break;
         }
         case 0.5: {
           v5to6();
           v6to7();
           v7to8();
-          v8to9();
-          v9to10();
           break;
         }
         case 0.6: {
           v6to7();
           v7to8();
-          v8to9();
-          v9to10();
           break;
         }
         case 0.7: {
           v7to8();
-          v8to9();
-          v9to10();
-          break;
-        }
-        case 0.8: {
-          v8to9();
-          v9to10();
-          break;
-        }
-        case 0.9: {
-          v9to10();
           break;
         }
         default:
