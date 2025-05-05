@@ -13,7 +13,7 @@ export const RELEASES_PAGE = `${LYNXHUB_HOMEPAGE}/releases`;
 
 export const EMAIL: string = packageJson.author.email;
 export const ISSUE_PAGE: string = `${packageJson.repository.url}/issues`;
-export const LICENSE_PAGE: string = `${packageJson.repository.url}/blob/master/LICENSE.txt`;
+export const LICENSE_PAGE: string = `${packageJson.repository.url}/blob/master/LICENSE`;
 export const LICENSE_NAME: string = packageJson.license;
 
 export const APP_VERSION_V: string = `V${APP_VERSION}`;
