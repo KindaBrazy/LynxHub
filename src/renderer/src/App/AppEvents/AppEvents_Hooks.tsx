@@ -1,5 +1,5 @@
 import {capitalize, compact, isNil} from 'lodash';
-import {useEffect, useRef} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {toMs} from '../../../../cross/CrossUtils';
@@ -14,7 +14,7 @@ import {terminalActions} from '../Redux/Reducer/TerminalReducer';
 import {userActions} from '../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
-import {PageTitleByPageId} from '../Utils/Constants';
+import {defaultTabItem, PageTitleByPageId} from '../Utils/Constants';
 import {checkEARepos} from './AppEvents_Utils';
 
 export const useCheckCardsUpdate = () => {
@@ -255,6 +255,44 @@ export const useHotkeyEvents = () => {
 
     return () => {
       rendererIpc.appWindow.offHotkeysChange();
+    };
+  }, []);
+};
+
+export const useNewTabEvents = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const activeTab = useTabsState('activeTab');
+
+  const [addEmpty, setAddEmpty] = useState<boolean>(false);
+  const [targetUrl, setTargetUrl] = useState<string>('');
+
+  useEffect(() => {
+    if (addEmpty) {
+      dispatch(
+        cardsActions.addRunningEmpty({
+          tabId: activeTab,
+          type: 'browser',
+        }),
+      );
+      dispatch(
+        cardsActions.setRunningCardCustomAddress({
+          tabId: activeTab,
+          address: targetUrl,
+        }),
+      );
+      setAddEmpty(false);
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    rendererIpc.tab.onNewTab((_, url) => {
+      dispatch(tabsActions.addTab(defaultTabItem));
+      setAddEmpty(true);
+      setTargetUrl(url);
+    });
+
+    return () => {
+      rendererIpc.tab.offNewTab();
     };
   }, []);
 };

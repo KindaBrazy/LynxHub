@@ -44,6 +44,7 @@ import {
   StorageOperation,
   storageUtilsChannels,
   SystemInfo,
+  tabsChannels,
   TaskbarStatus,
   utilsChannels,
   winChannels,
@@ -371,6 +372,12 @@ const rendererIpc = {
     offInitView: () => ipc.removeAllListeners(contextMenuChannels.onInitView),
   },
 
+  tab: {
+    onNewTab: (result: (event: IpcRendererEvent, url: string) => void) => ipc.on(tabsChannels.onNewTab, result),
+
+    offNewTab: () => ipc.removeAllListeners(tabsChannels.onNewTab),
+  },
+
   contextItems: {
     copy: (id: number) => ipc.send(contextMenuChannels.copy, id),
     paste: (id: number) => ipc.send(contextMenuChannels.paste, id),
@@ -379,6 +386,9 @@ const rendererIpc = {
 
     undo: (id: number) => ipc.send(contextMenuChannels.undo, id),
     redo: (id: number) => ipc.send(contextMenuChannels.redo, id),
+
+    newTab: (url: string) => ipc.send(contextMenuChannels.newTab, url),
+    openExternal: (url: string) => ipc.send(contextMenuChannels.openExternal, url),
   },
 };
 
