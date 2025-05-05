@@ -5,7 +5,7 @@ import {is} from '@electron-toolkit/utils';
 import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
-import {winChannels} from '../../cross/IpcChannelAndTypes';
+import {tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager, trayManager} from '../index';
 import {getUserAgent, RelaunchApp} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
@@ -135,9 +135,12 @@ export default class ElectronAppManager {
     });
 
     this.getWebContent()?.setWindowOpenHandler(({url}) => {
-      shell.openExternal(url).catch(e => {
-        console.error('Error on openExternal: ', e);
-      });
+      const openExternal = storageManager.getData('app').openLinkExternal;
+      if (openExternal) {
+        shell.openExternal(url);
+      } else {
+        this.getWebContent()?.send(tabsChannels.onNewTab, url);
+      }
       return {action: 'deny'};
     });
 

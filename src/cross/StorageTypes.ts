@@ -54,6 +54,7 @@ type StorageTypes = {
     closeTabConfirm: boolean;
     openLastSize: boolean;
     dynamicAppTitle: boolean;
+    openLinkExternal: boolean;
     lastSize:
       | {
           maximized: boolean;

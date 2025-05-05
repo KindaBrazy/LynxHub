@@ -23,6 +23,7 @@ import {
   storageChannels,
   StorageOperation,
   storageUtilsChannels,
+  tabsChannels,
   TaskbarStatus,
   utilsChannels,
   winChannels,
@@ -345,8 +346,14 @@ function appWindow() {
     const webview = webContents.fromId(id);
     if (!webview) return;
 
+    const openExternal = storageManager.getData('app').openLinkExternal;
+
     webview.setWindowOpenHandler(({url}) => {
-      shell.openExternal(url);
+      if (openExternal) {
+        shell.openExternal(url);
+      } else {
+        appManager.getWebContent()?.send(tabsChannels.onNewTab, url);
+      }
       return {action: 'deny'};
     });
   });
