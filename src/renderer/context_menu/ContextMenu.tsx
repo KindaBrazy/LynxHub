@@ -1,6 +1,6 @@
 import {ReactNode, useRef, useState} from 'react';
 
-import {useInitView, useResize} from './Components/ContextHooks';
+import {useContextMenuSetup, useResize} from './Components/ContextHooks';
 
 export default function ContextMenu() {
   const [elements, setElements] = useState<ReactNode[]>([]);
@@ -10,7 +10,7 @@ export default function ContextMenu() {
 
   useResize(divRef);
 
-  useInitView(setElements, setWidthSize);
+  useContextMenuSetup(setElements, setWidthSize);
 
   return (
     <div
