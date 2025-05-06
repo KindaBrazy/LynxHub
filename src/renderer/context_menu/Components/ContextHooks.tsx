@@ -101,6 +101,14 @@ export function useContextMenuSetup(
           title="Open link in default browser"
           icon={<ExternalDuo_Icon className="size-4" />}
         />,
+        <ActionButton
+          onPress={createActionHandler(() => {
+            navigator.clipboard.writeText(url);
+          })}
+          key="context_copyLink"
+          title="Copy Link Address"
+          icon={<CopyDuo_Icon className="size-4" />}
+        />,
       ];
     };
 
@@ -214,7 +222,7 @@ export function useContextMenuSetup(
           const lastActionTitleIndex = collectedElements.findIndex(el => (el as ReactElement)?.key === 'actions_title');
 
           collectedElements.splice(
-            lastActionTitleIndex + 1 + (hasLinkItems ? 2 : 0),
+            lastActionTitleIndex + 1 + (hasLinkItems ? 3 : 0),
             0,
             <Divider className="my-2" key="sep_link_edit" />,
           );
