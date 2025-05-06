@@ -1,4 +1,5 @@
 import {Button, Popover, PopoverContent, PopoverTrigger, Slider} from '@heroui/react';
+import {WebviewTag} from 'electron';
 import {isArray} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -6,12 +7,16 @@ import {useDispatch} from 'react-redux';
 import {Magnifier_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons4';
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../../Redux/Store';
+import {useWebviewPress} from '../../../Utils/UtilHooks';
 
-type Props = {id: string};
-export default function Browser_Zoom({id}: Props) {
+type Props = {webview: WebviewTag | null; id: string};
+export default function Browser_Zoom({id, webview}: Props) {
   const zoomFactor = useCardsState('webViewZoomFactor');
   const dispatch = useDispatch<AppDispatch>();
   const [value, setValue] = useState<number>(100);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  useWebviewPress(webview, () => setIsOpen(false));
 
   useEffect(() => {
     const factor = zoomFactor.find(zoom => zoom.id === id);
@@ -33,7 +38,7 @@ export default function Browser_Zoom({id}: Props) {
     dispatch(cardsActions.updateZoomFactor({id, zoom: 1.0}));
   }, [id]);
   return (
-    <Popover shadow="sm" placement="bottom-end" showArrow shouldCloseOnBlur>
+    <Popover shadow="sm" isOpen={isOpen} placement="bottom-end" onOpenChange={setIsOpen} showArrow shouldCloseOnBlur>
       <PopoverTrigger>
         <Button size="sm" variant="light" className="cursor-default" isIconOnly>
           <Magnifier_Icon className="size-4" />
