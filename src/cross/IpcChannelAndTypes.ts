@@ -313,6 +313,7 @@ export const contextMenuChannels = {
   openExternal: 'context:openExternal',
 
   downloadImage: 'context:download-image',
+  navigate: 'context:navigate',
 };
 
 export const tabsChannels = {
