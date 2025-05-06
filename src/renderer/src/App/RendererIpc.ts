@@ -389,6 +389,8 @@ const rendererIpc = {
 
     newTab: (url: string) => ipc.send(contextMenuChannels.newTab, url),
     openExternal: (url: string) => ipc.send(contextMenuChannels.openExternal, url),
+
+    downloadImage: (id: number, url: string) => ipc.send(contextMenuChannels.downloadImage, id, url),
   },
 };
 
