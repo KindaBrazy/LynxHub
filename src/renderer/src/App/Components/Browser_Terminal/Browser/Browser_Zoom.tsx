@@ -33,7 +33,7 @@ export default function Browser_Zoom({id}: Props) {
     dispatch(cardsActions.updateZoomFactor({id, zoom: 1.0}));
   }, [id]);
   return (
-    <Popover placement="bottom-end" className="!shadow-small" showArrow shouldCloseOnBlur>
+    <Popover shadow="sm" placement="bottom-end" showArrow shouldCloseOnBlur>
       <PopoverTrigger>
         <Button size="sm" variant="light" className="cursor-default" isIconOnly>
           <Magnifier_Icon className="size-4" />
