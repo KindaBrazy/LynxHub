@@ -15,7 +15,12 @@ export default function contextMenuManager(contents: WebContents) {
     if (!window) return;
 
     hideMenu = false;
-    window.webContents?.send(contextMenuChannels.onInitView, params, contents.id);
+    window.webContents?.send(
+      contextMenuChannels.onInitView,
+      params,
+      {canGoBack: contents.navigationHistory.canGoBack(), canGoForward: contents.navigationHistory.canGoForward()},
+      contents.id,
+    );
 
     const {x, y} = screen.getCursorScreenPoint();
     window.setPosition(x, y, true);
@@ -70,6 +75,19 @@ export function listenForContextChannels() {
   });
   ipcMain.on(contextMenuChannels.downloadImage, (_, id: number, url: string) => {
     webContents.find(content => content.id === id)?.downloadURL(url);
+  });
+  ipcMain.on(contextMenuChannels.navigate, (_, id: number, action: 'back' | 'forward' | 'refresh') => {
+    switch (action) {
+      case 'back':
+        webContents.find(content => content.id === id)?.navigationHistory.goBack();
+        break;
+      case 'forward':
+        webContents.find(content => content.id === id)?.navigationHistory.goForward();
+        break;
+      case 'refresh':
+        webContents.find(content => content.id === id)?.reload();
+        break;
+    }
   });
 
   ipcMain.on(contextMenuChannels.showWindow, () => {

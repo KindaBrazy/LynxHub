@@ -4,6 +4,8 @@ import {isEmpty} from 'lodash';
 import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
+import {Refresh3_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons4';
+import {ArrowDuo_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons5';
 import {
   CopyDuo_Icon,
   DocumentTextDuo_Icon,
@@ -52,6 +54,21 @@ function ActionButton({icon, title, onPress, className}: ActionProps) {
   );
 }
 
+type NavProps = {icon?: ReactNode; onPress?: () => void; className?: string; isDisabled?: boolean};
+
+function NavButton({icon, onPress, className, isDisabled}: NavProps) {
+  return (
+    <div
+      className={
+        `size-full flex items-center rounded-lg justify-center transition-colors duration-150` +
+        ` ${isDisabled ? 'opacity-50' : 'hover:bg-foreground-200'} ${className}`
+      }
+      onClick={isDisabled ? undefined : onPress}>
+      {icon}
+    </div>
+  );
+}
+
 export function useContextMenuSetup(
   setElements: Dispatch<SetStateAction<ReactNode[]>>,
   setWidthSize: Dispatch<SetStateAction<'sm' | 'md' | 'lg'>>,
@@ -62,6 +79,41 @@ export function useContextMenuSetup(
         rendererIpc.contextMenu.hideWindow();
         actionFn();
       };
+    };
+
+    const buildNavigationItems = (
+      navHistory: {
+        canGoBack: boolean;
+        canGoForward: boolean;
+      },
+      contextId: number,
+    ): ReactNode[] => {
+      return [
+        <div
+          key="navItems"
+          className="w-full flex flex-row items-center justify-center h-8 px-2 overflow-hidden gap-x-1">
+          <NavButton
+            onPress={createActionHandler(() => {
+              rendererIpc.contextItems.navigate(contextId, 'back');
+            })}
+            isDisabled={!navHistory.canGoBack}
+            icon={<ArrowDuo_Icon className="size-5" />}
+          />
+          <NavButton
+            onPress={createActionHandler(() => {
+              rendererIpc.contextItems.navigate(contextId, 'forward');
+            })}
+            isDisabled={!navHistory.canGoForward}
+            icon={<ArrowDuo_Icon className="size-5 rotate-180" />}
+          />
+          <NavButton
+            onPress={createActionHandler(() => {
+              rendererIpc.contextItems.navigate(contextId, 'refresh');
+            })}
+            icon={<Refresh3_Icon className="size-4" />}
+          />
+        </div>,
+      ];
     };
 
     const buildSuggestionItems = (suggestions: string[], contextId: number): ReactNode[] => {
@@ -212,7 +264,15 @@ export function useContextMenuSetup(
       return items;
     };
 
-    const handleInitView = (_event: any, params: ContextMenuParams, contextId: number) => {
+    const handleInitView = (
+      _event: any,
+      params: ContextMenuParams,
+      navHistory: {
+        canGoBack: boolean;
+        canGoForward: boolean;
+      },
+      contextId: number,
+    ) => {
       setElements([]);
 
       setWidthSize('sm');
@@ -222,6 +282,9 @@ export function useContextMenuSetup(
       const collectedElements: ReactNode[] = [];
 
       collectedElements.push(<div key="space_start" className="w-full h-2" />);
+
+      collectedElements.push(...buildNavigationItems(navHistory, contextId));
+      collectedElements.push(<Divider key="sep_nav" className="my-1" />);
 
       const suggestionItems = buildSuggestionItems(dictionarySuggestions, contextId);
       if (suggestionItems.length > 0) {

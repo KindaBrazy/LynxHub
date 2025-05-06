@@ -367,8 +367,17 @@ const rendererIpc = {
     showWindow: () => ipc.send(contextMenuChannels.showWindow),
     hideWindow: () => ipc.send(contextMenuChannels.hideWindow),
 
-    onInitView: (result: (event: IpcRendererEvent, params: ContextMenuParams, id: number) => void) =>
-      ipc.on(contextMenuChannels.onInitView, result),
+    onInitView: (
+      result: (
+        event: IpcRendererEvent,
+        params: ContextMenuParams,
+        navHistory: {
+          canGoBack: boolean;
+          canGoForward: boolean;
+        },
+        id: number,
+      ) => void,
+    ) => ipc.on(contextMenuChannels.onInitView, result),
     offInitView: () => ipc.removeAllListeners(contextMenuChannels.onInitView),
   },
 
@@ -391,6 +400,9 @@ const rendererIpc = {
     openExternal: (url: string) => ipc.send(contextMenuChannels.openExternal, url),
 
     downloadImage: (id: number, url: string) => ipc.send(contextMenuChannels.downloadImage, id, url),
+
+    navigate: (id: number, action: 'back' | 'forward' | 'refresh') =>
+      ipc.send(contextMenuChannels.navigate, id, action),
   },
 };
 
