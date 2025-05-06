@@ -68,6 +68,9 @@ export function listenForContextChannels() {
   ipcMain.on(contextMenuChannels.newTab, (_, url: string) => {
     appManager.getWebContent()?.send(tabsChannels.onNewTab, url);
   });
+  ipcMain.on(contextMenuChannels.downloadImage, (_, id: number, url: string) => {
+    webContents.find(content => content.id === id)?.downloadURL(url);
+  });
 
   ipcMain.on(contextMenuChannels.showWindow, () => {
     const window = appManager.getContextMenuWindow();

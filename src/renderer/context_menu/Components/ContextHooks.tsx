@@ -1,17 +1,20 @@
 import {Divider} from '@heroui/react';
 import {ContextMenuParams, EditFlags} from 'electron';
 import {isEmpty} from 'lodash';
-import {Dispatch, ReactElement, ReactNode, RefObject, SetStateAction, useEffect} from 'react';
+import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect} from 'react';
 
+import rendererIpc from '../../src/App/RendererIpc';
 import {
   CopyDuo_Icon,
   DocumentTextDuo_Icon,
   ExternalDuo_Icon,
+  GalleryCircleDuo_Icon,
+  GalleryDownloadDuo_Icon,
+  GalleryWideDuo_Icon,
   LibraryDuo_Icon,
   TextSelectionDuo_Icon,
   UndoDuo_Icon,
-} from '../../loading/Backgrounds/SvgIcons';
-import rendererIpc from '../../src/App/RendererIpc';
+} from './SvgIcons';
 
 export function useResize(divRef: RefObject<HTMLDivElement | null>) {
   useEffect(() => {
@@ -112,6 +115,37 @@ export function useContextMenuSetup(
       ];
     };
 
+    const buildImageItems = (id: number, srcURL: string): ReactNode[] => {
+      if (isEmpty(srcURL)) return [];
+
+      return [
+        <ActionButton
+          onPress={createActionHandler(() => {
+            rendererIpc.contextItems.newTab(srcURL);
+          })}
+          key="context_openImageTab"
+          title="Open Image in New Tab"
+          icon={<GalleryWideDuo_Icon className="size-4" />}
+        />,
+        <ActionButton
+          onPress={createActionHandler(() => {
+            rendererIpc.contextItems.downloadImage(id, srcURL);
+          })}
+          key="context_saveImage"
+          title="Save Image As..."
+          icon={<GalleryDownloadDuo_Icon className="size-4" />}
+        />,
+        <ActionButton
+          onPress={createActionHandler(() => {
+            rendererIpc.contextItems.newTab(`https://lens.google.com/uploadbyurl?url=${encodeURIComponent(srcURL)}`);
+          })}
+          key="context_searchImage"
+          title="Search Web for Image"
+          icon={<GalleryCircleDuo_Icon className="size-4" />}
+        />,
+      ];
+    };
+
     const buildEditItems = (flags: EditFlags, selection: string, contextId: number): ReactNode[] => {
       const items: ReactNode[] = [];
 
@@ -183,7 +217,7 @@ export function useContextMenuSetup(
 
       setWidthSize('sm');
 
-      const {selectionText, dictionarySuggestions, linkURL, editFlags} = params;
+      const {selectionText, dictionarySuggestions, linkURL, editFlags, mediaType, srcURL} = params;
 
       const collectedElements: ReactNode[] = [];
 
@@ -196,9 +230,10 @@ export function useContextMenuSetup(
       }
 
       const hasLinkItems = !isEmpty(linkURL);
+      const hasImageItems = mediaType === 'image';
       const hasEditItems =
         editFlags.canUndo || editFlags.canRedo || editFlags.canCopy || editFlags.canPaste || editFlags.canSelectAll;
-      const needsActionsTitle = hasLinkItems || hasEditItems;
+      const needsActionsTitle = hasLinkItems || hasEditItems || hasImageItems;
 
       if (needsActionsTitle) {
         collectedElements.push(
@@ -208,25 +243,31 @@ export function useContextMenuSetup(
         );
       }
 
+      let previousActionSectionAdded = false;
+
       if (hasLinkItems) {
         const linkItems = buildLinkItems(linkURL);
         collectedElements.push(...linkItems);
         setWidthSize('md');
+        previousActionSectionAdded = true;
+      }
+
+      if (hasImageItems) {
+        if (previousActionSectionAdded) {
+          collectedElements.push(<Divider className="my-2" key="sep_link_image" />);
+        }
+        const imageItems = buildImageItems(contextId, srcURL);
+        collectedElements.push(...imageItems);
+        setWidthSize('md');
+        previousActionSectionAdded = true;
       }
 
       if (hasEditItems) {
+        if (previousActionSectionAdded) {
+          collectedElements.push(<Divider className="my-2" key="sep_image_edit" />);
+        }
         const editItems = buildEditItems(editFlags, selectionText, contextId);
         collectedElements.push(...editItems);
-
-        if (hasLinkItems && editItems.length > 0) {
-          const lastActionTitleIndex = collectedElements.findIndex(el => (el as ReactElement)?.key === 'actions_title');
-
-          collectedElements.splice(
-            lastActionTitleIndex + 1 + (hasLinkItems ? 3 : 0),
-            0,
-            <Divider className="my-2" key="sep_link_edit" />,
-          );
-        }
       }
 
       collectedElements.push(<div key="space_end" className="w-full h-2" />);
