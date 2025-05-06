@@ -51,7 +51,7 @@
     "import-sync": "^2.2.3",
     "keytar": "^7.9.0",
     "lowdb": "^7.0.1",
-    "node-pty": "^1.1.0-beta34",
+    "node-pty": "^1.1.0-beta33",
     "normalize-url": "^8.0.1",
     "ogl": "^1.0.11",
     "random-words": "^2.0.1",
