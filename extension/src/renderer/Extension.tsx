@@ -1,6 +1,6 @@
 import './index.css';
 
-import {ExtensionRendererApi} from '../../src/renderer/src/App/Extensions/ExtensionTypes_Renderer_Api';
+import {ExtensionRendererApi} from '../../../src/renderer/src/App/Extensions/ExtensionTypes_Renderer_Api';
 import CardsAddMenu from './Components/Cards_AddMenu';
 import {
   AddContentButton,
@@ -18,6 +18,9 @@ import {SettingsContent, SettingsNavButton} from './Components/Settings';
 import extensionReducer from './reducer';
 
 export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
+  // Add new pages
+  lynxAPI.navBar.addButton.contentBar(AddContentButton);
+  lynxAPI.navBar.addButton.settingsBar(AddSettingsButton);
   return;
 
   // Add new menu to the Cards

@@ -3,7 +3,7 @@ import typography from '@tailwindcss/typography';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./renderer/**/*.{html,tsx}'],
+  content: ['./src/renderer/**/*.{html,tsx}'],
   darkMode: 'class',
   plugins: [
     heroui({

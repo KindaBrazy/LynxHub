@@ -3,8 +3,8 @@
   "include": [
     "src/renderer/**/*",
     "src/cross/**/*",
-    "extension/renderer/**/*",
-    "extension/cross/**/*"
+    "extension/src/renderer/**/*",
+    "extension/src/cross/**/*"
   ],
   "compilerOptions": {
     "composite": true,

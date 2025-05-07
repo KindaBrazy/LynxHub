@@ -2,8 +2,8 @@ import {
   EMenuItem,
   ExtensionMainApi,
   MainExtensionUtils,
-} from '../../src/main/Managements/Plugin/Extensions/ExtensionTypes_Main';
-import StorageManager from '../../src/main/Managements/Storage/StorageManager';
+} from '../../../src/main/Managements/Plugin/Extensions/ExtensionTypes_Main';
+import StorageManager from '../../../src/main/Managements/Storage/StorageManager';
 import {listenForChannels} from './Methods/IpcChannels';
 
 let storeManager: StorageManager | undefined = undefined;
