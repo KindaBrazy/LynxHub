@@ -1,0 +1,11 @@
+{
+  "name": "extension",
+  "version": "0.1.0",
+  "type": "module",
+  "dependencies": {
+    "which": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/which": "^3.0.4"
+  }
+}

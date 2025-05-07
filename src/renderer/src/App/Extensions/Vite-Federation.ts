@@ -21,7 +21,7 @@ export async function loadExtensions() {
   let importedExtensions: ExtensionImport_Renderer[];
 
   if (isDev()) {
-    const extension = await import('../../../extension/Extension');
+    const extension = await import('../../../../../extension/renderer/Extension');
     importedExtensions = [extension];
   } else {
     const extensionDataAddress: string[] = await rendererIpc.extension.getExtensionsData();

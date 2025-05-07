@@ -2,6 +2,7 @@ node_modules
 dist
 out
 extOut
+extension_out
 
 .DS_Store
 *.log*

@@ -5,7 +5,9 @@
     "electron.vite.extension.config.*",
     "src/main/**/*",
     "src/preload/**/*",
-    "src/cross/**/*"
+    "src/cross/**/*",
+    "extension/main/**/*",
+    "extension/cross/**/*"
   ],
   "compilerOptions": {
     "composite": true,

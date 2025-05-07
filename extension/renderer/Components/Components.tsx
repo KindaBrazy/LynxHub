@@ -2,10 +2,10 @@ import {Button} from '@heroui/react';
 import {Fragment, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import NavButton from '../../src/App/Components/NavBar/NavButton';
-import {CardElementProps, ElementProps} from '../../src/App/Extensions/ExtensionTypes_Renderer';
-import {useAppState} from '../../src/App/Redux/Reducer/AppReducer';
-import {Reddit_Icon, XSite_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons4';
+import NavButton from '../../../src/renderer/src/App/Components/NavBar/NavButton';
+import {CardElementProps} from '../../../src/renderer/src/App/Extensions/ExtensionTypes_Renderer';
+import {useAppState} from '../../../src/renderer/src/App/Redux/Reducer/AppReducer';
+import {Reddit_Icon, XSite_Icon} from '../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons4';
 import {extensionActions, useExtensionState} from '../reducer';
 
 // @ts-ignore
