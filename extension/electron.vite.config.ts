@@ -7,25 +7,25 @@ import {resolve} from 'path';
 
 export default defineConfig({
   main: {
-    root: resolve('extension/main'),
+    root: resolve('extension/src/main'),
     plugins: [externalizeDepsPlugin()],
     build: {
       outDir: resolve('extension_out/main'),
       rollupOptions: {
-        input: resolve('extension/main/lynxExtension.ts'),
+        input: resolve('extension/src/main/lynxExtension.ts'),
         output: {entryFileNames: 'mainEntry.mjs'},
       },
     },
   },
   renderer: {
-    root: resolve('extension/renderer'),
+    root: resolve('extension/src/renderer'),
     plugins: [
       react(),
       federation({
         name: 'extension',
         filename: 'rendererEntry.mjs',
         exposes: {
-          Extension: resolve('extension/renderer/Extension.tsx'),
+          Extension: resolve('extension/src/renderer/Extension.tsx'),
         },
         shared: {
           antd: {generate: false},
@@ -41,7 +41,7 @@ export default defineConfig({
     build: {
       outDir: resolve('extension_out/renderer'),
       rollupOptions: {
-        input: resolve('extension/renderer/index.html'),
+        input: resolve('extension/src/renderer/index.html'),
         // external: Object.keys(packageJson.devDependencies),
         treeshake: {moduleSideEffects: false},
       },
@@ -52,6 +52,6 @@ export default defineConfig({
       modulePreload: false,
     },
 
-    publicDir: resolve(__dirname, 'extension/renderer/Public'),
+    publicDir: resolve(__dirname, 'extension/src/renderer/Public'),
   },
 });

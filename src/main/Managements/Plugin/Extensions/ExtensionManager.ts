@@ -49,7 +49,7 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
 
   protected async importPlugins(extensionFolders: string[]) {
     if (isDev()) {
-      const initial: ExtensionImport_Main = await import('../../../../../extension/main/lynxExtension');
+      const initial: ExtensionImport_Main = await import('../../../../../extension/src/main/lynxExtension');
       await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
     } else {
       await Promise.all(
