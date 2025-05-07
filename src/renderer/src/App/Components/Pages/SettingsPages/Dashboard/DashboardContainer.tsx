@@ -3,9 +3,9 @@ import {useMemo} from 'react';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import DashboardAbout, {DashboardAboutId} from './Content/Dashboard-About';
 import DashboardCredits, {DashboardCreditsId} from './Content/Dashboard-Credits';
-import DashboardProfile, {DashboardProfileId} from './Content/Dashboard-Profile';
 import DashboardReportIssue, {DashboardReportIssueId} from './Content/Dashboard-ReportIssue';
 import DashboardUpdate, {DashboardUpdateId} from './Content/Dashboard-Update';
+import DashboardProfile, {DashboardProfileId} from './Content/Profile/Dashboard-Profile';
 
 export const dashboardSectionId = {
   DashboardProfileId,
