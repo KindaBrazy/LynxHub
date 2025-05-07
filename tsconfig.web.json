@@ -2,7 +2,9 @@
   "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
   "include": [
     "src/renderer/**/*",
-    "src/cross/**/*"
+    "src/cross/**/*",
+    "extension/renderer/**/*",
+    "extension/cross/**/*"
   ],
   "compilerOptions": {
     "composite": true,

@@ -1,6 +1,6 @@
 import './index.css';
 
-import {ExtensionRendererApi} from '../src/App/Extensions/ExtensionTypes_Renderer_Api';
+import {ExtensionRendererApi} from '../../src/renderer/src/App/Extensions/ExtensionTypes_Renderer_Api';
 import CardsAddMenu from './Components/Cards_AddMenu';
 import {
   AddContentButton,
