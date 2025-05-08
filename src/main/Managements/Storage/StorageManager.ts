@@ -105,20 +105,6 @@ class StorageManager extends BaseStorage {
     await moduleManager.getMethodsById(cardId)?.saveArgs?.(result, dir, configPath, storage);
   }
 
-  public updateZoomFactor(data: {id: string; zoom: number}) {
-    const zoomFactor = this.getData('cards').zoomFactor;
-
-    const existZoom = zoomFactor.findIndex(zoom => zoom.id === data.id);
-
-    if (existZoom !== -1) {
-      zoomFactor[existZoom].zoom = data.zoom;
-    } else {
-      zoomFactor.push(data);
-    }
-
-    this.updateData('cards', {zoomFactor});
-  }
-
   public addInstalledCard(card: InstalledCard) {
     const storedCards = this.getData('cards').installedCards;
 
@@ -441,7 +427,7 @@ class StorageManager extends BaseStorage {
     return result;
   }
 
-  // TODO: also support relative paths for pre open
+  // TODO: Support relative paths for pre open
   public addPreOpen(cardId: string, open: {type: 'folder' | 'file'; path: string}): void {
     const preOpen = this.getData('cardsConfig').preOpen;
     const existCustomRun = preOpen.findIndex(custom => custom.cardId === cardId);

@@ -33,7 +33,7 @@ class BaseStorage {
       cardsDevName: false,
       cardsDesc: true,
       cardsRepoInfo: true,
-      zoomFactor: [],
+      zoomFactor: 1,
       duplicated: [],
       checkUpdateInterval: 30,
     },
@@ -146,6 +146,7 @@ class BaseStorage {
       this.storage.data.app.closeTabConfirm = true;
       this.storage.data.app.hotkeys = Get_Default_Hotkeys(platform());
       this.storage.data.app.openLinkExternal = false;
+      this.storage.data.cards.zoomFactor = 1;
 
       this.storage.write();
     };

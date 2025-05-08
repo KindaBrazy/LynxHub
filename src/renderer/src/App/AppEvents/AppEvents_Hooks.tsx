@@ -103,7 +103,6 @@ export const useStorageData = () => {
       dispatch(cardsActions.setPinnedCards(storage.cards.pinnedCards));
       dispatch(cardsActions.setRecentlyUsedCards(storage.cards.recentlyUsedCards));
       dispatch(cardsActions.setHomeCategory(storage.app.homeCategory));
-      dispatch(cardsActions.setZoomFactor(storage.cards.zoomFactor));
       dispatch(cardsActions.setDuplicates(storage.cards.duplicated));
 
       dispatch(terminalActions.initState(storage.terminal));

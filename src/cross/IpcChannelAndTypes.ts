@@ -299,7 +299,8 @@ export const appWindowChannels = {
 
 export const contextMenuChannels = {
   onInitView: 'context:init-view',
-  onFind: 'context:fin-in-page',
+  onFind: 'context:find-in-page',
+  onZoom: 'context:zoom-page',
   resizeWindow: 'context:resize-window',
   showWindow: 'context:show-window',
   hideWindow: 'context:hide-window',
@@ -328,6 +329,8 @@ export const browserChannels = {
   setVisible: 'browser:set-visible',
 
   openFindInPage: 'browser:openFindInPage',
+  openZoom: 'browser:openZoom',
   findInPage: 'browser:findInPage',
   stopFindInPage: 'browser:stopFindInPage',
+  setZoomFactor: 'browser:setZoomFactor',
 };

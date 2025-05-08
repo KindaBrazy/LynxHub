@@ -1,5 +1,5 @@
-import {Button, Input} from '@heroui/react';
-import {isEmpty} from 'lodash';
+import {Button, Input, Slider} from '@heroui/react';
+import {isArray, isEmpty} from 'lodash';
 import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
@@ -8,7 +8,73 @@ import {ArrowDuo_Icon, CloseSimple_Icon} from '../../src/assets/icons/SvgIcons/S
 export function useZoomMenu(
   setElements: Dispatch<SetStateAction<ReactNode[]>>,
   setWidthSize: Dispatch<SetStateAction<'sm' | 'md' | 'lg'>>,
-) {}
+) {
+  const [id, setId] = useState<string>('');
+  const [value, setValue] = useState<number>(100);
+
+  const updateZoom = (zoom: number) => {
+    setValue(zoom);
+    rendererIpc.browser.setZoomFactor(id, zoom / 100);
+    rendererIpc.storageUtils.updateZoomFactor(zoom / 100);
+  };
+
+  const onChange = (value: number | number[]) => {
+    if (!isArray(value)) updateZoom(value);
+  };
+
+  const handleReset = () => {
+    updateZoom(100);
+  };
+
+  useEffect(() => {
+    if (id) {
+      setElements([
+        <div key="zoom_page" className="p-3 pr-6 flex flex-row gap-x-2 gap-y-4 border-2 border-foreground/10">
+          <Button size="sm" variant="light" onPress={handleReset} className="h-14 cursor-default">
+            Reset
+          </Button>
+          <Slider
+            marks={[
+              {value: 10, label: '10'},
+              {value: 100, label: '100'},
+              {value: 200, label: '200'},
+              {value: 300, label: '300'},
+            ]}
+            step={5}
+            size="sm"
+            minValue={10}
+            value={value}
+            maxValue={300}
+            color="primary"
+            fillOffset={100}
+            className="w-52"
+            onChange={onChange}
+            label="Browser Scale"
+            aria-label="Zoom Factor"
+            getValue={value => `${value}%`}
+            classNames={{thumb: 'cursor-default'}}
+          />
+        </div>,
+      ]);
+    }
+  }, [id, value]);
+
+  useEffect(() => {
+    rendererIpc.contextMenu.onZoom((_, webID, zoomFactor) => {
+      setId(webID);
+
+      setValue(zoomFactor * 100);
+
+      setWidthSize('md');
+
+      rendererIpc.contextMenu.showWindow();
+    });
+
+    return () => {
+      rendererIpc.contextMenu.offZoom();
+    };
+  }, [setElements, setWidthSize]);
+}
 
 export function useFindMenu(
   setElements: Dispatch<SetStateAction<ReactNode[]>>,

@@ -1,10 +1,7 @@
 import {WebviewTag} from 'electron';
 import {isEmpty} from 'lodash';
-import {useEffect, useMemo} from 'react';
-import {useDispatch} from 'react-redux';
+import {useMemo} from 'react';
 
-import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
-import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
 import EmptyPage from './EmptyPage';
@@ -16,30 +13,19 @@ type Props = {
   initWebviewRef: (node: any) => void;
 };
 
-const Browser = ({runningCard, webViewRef, isDomReady}: Props) => {
-  const {currentView, id, webUIAddress, customAddress} = runningCard;
-  const zoomFactor = useCardsState('webViewZoomFactor');
-  const dispatch = useDispatch<AppDispatch>();
+const Browser = ({runningCard}: Props) => {
+  const {currentView, id, webUIAddress, customAddress, type} = runningCard;
 
-  useEffect(() => {
-    const factor = zoomFactor.find(zoom => zoom.id === id);
-    if (webViewRef && isDomReady && factor) {
-      webViewRef.setZoomFactor(factor.zoom);
-    } else if (webViewRef && isDomReady && !factor) {
-      dispatch(cardsActions.updateZoomFactor({id, zoom: 1.0}));
-    }
-  }, [webViewRef, zoomFactor, id, isDomReady]);
-
-  const finalAddress = useMemo(() => customAddress || webUIAddress, [customAddress, webUIAddress]);
-
-  useEffect(() => {
-    if (finalAddress) rendererIpc.browser.loadURL(id, finalAddress);
-  }, [finalAddress]);
+  const finalAddress = useMemo(() => {
+    const result = customAddress || webUIAddress;
+    if (result) rendererIpc.browser.loadURL(id, result);
+    return result;
+  }, [customAddress, webUIAddress]);
 
   return (
     <div className={`${currentView === 'browser' ? 'block' : 'hidden'}`}>
       <div className="absolute inset-0 !top-10 overflow-hidden bg-white shadow-md dark:bg-LynxRaisinBlack">
-        {isEmpty(finalAddress) && <EmptyPage type={runningCard.type} />}
+        {isEmpty(finalAddress) && <EmptyPage type={type} />}
       </div>
     </div>
   );

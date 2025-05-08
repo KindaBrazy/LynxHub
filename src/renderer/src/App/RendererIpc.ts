@@ -259,7 +259,7 @@ const rendererIpc = {
       ipc.on(storageUtilsChannels.onHomeCategory, result),
     setSystemStartup: (startup: boolean) => ipc.send(storageUtilsChannels.setSystemStartup, startup),
 
-    updateZoomFactor: (data: {id: string; zoom: number}) => ipc.send(storageUtilsChannels.updateZoomFactor, data),
+    updateZoomFactor: (zoomFactor: number) => ipc.send(storageUtilsChannels.updateZoomFactor, zoomFactor),
 
     addBrowserRecent: (recentEntry: BrowserRecent) => ipc.send(storageUtilsChannels.addBrowserRecent, recentEntry),
     addBrowserRecentFavIcon: (url: string, favIcon: string) =>
@@ -383,6 +383,10 @@ const rendererIpc = {
 
     onFind: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(contextMenuChannels.onFind, result),
     offFind: () => ipc.removeAllListeners(contextMenuChannels.onFind),
+
+    onZoom: (result: (event: IpcRendererEvent, id: string, zoomFactor: number) => void) =>
+      ipc.on(contextMenuChannels.onZoom, result),
+    offZoom: () => ipc.removeAllListeners(contextMenuChannels.onZoom),
   },
 
   tab: {
@@ -416,10 +420,14 @@ const rendererIpc = {
     setVisible: (id: string, visible: boolean) => ipc.send(browserChannels.setVisible, id, visible),
 
     openFindInPage: (id: string) => ipc.send(browserChannels.openFindInPage, id),
+    openZoom: (id: string) => ipc.send(browserChannels.openZoom, id),
+
     findInPage: (id: string, value: string, options: FindInPageOptions) =>
       ipc.send(browserChannels.findInPage, id, value, options),
     stopFindInPage: (id: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') =>
       ipc.send(browserChannels.stopFindInPage, id, action),
+
+    setZoomFactor: (id: string, factor: number) => ipc.send(browserChannels.setZoomFactor, id, factor),
   },
 };
 

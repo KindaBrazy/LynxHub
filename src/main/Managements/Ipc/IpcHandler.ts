@@ -324,7 +324,9 @@ function storageUtilsIpc() {
     storageManager.setCardArguments(cardId, args),
   );
 
-  ipcMain.on(storageUtilsChannels.updateZoomFactor, (_, data) => storageManager.updateZoomFactor(data));
+  ipcMain.on(storageUtilsChannels.updateZoomFactor, (_, zoomFactor: number) =>
+    storageManager.updateData('cards', {zoomFactor}),
+  );
 
   ipcMain.on(storageUtilsChannels.addBrowserRecent, (_, recentEntry: BrowserRecent) =>
     storageManager.addBrowserRecent(recentEntry),
@@ -383,8 +385,17 @@ function browserIPC() {
       browserManager.stopFindInPage(id, action),
   );
 
+  ipcMain.on(browserChannels.setZoomFactor, (_, id: string, factor: number) =>
+    browserManager.setZoomFactor(id, factor),
+  );
+
   ipcMain.on(browserChannels.openFindInPage, (_, id: string) => {
     appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onFind, id);
+  });
+  ipcMain.on(browserChannels.openZoom, (_, id: string) => {
+    appManager
+      .getContextMenuWindow()
+      ?.webContents.send(contextMenuChannels.onZoom, id, browserManager.getCurrentZoom(id));
   });
 }
 
