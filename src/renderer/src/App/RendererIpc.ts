@@ -14,6 +14,7 @@ import {
   appUpdateChannels,
   AppUpdateStatus,
   appWindowChannels,
+  browserChannels,
   BrowserRecent,
   ChangeWindowState,
   contextMenuChannels,
@@ -403,6 +404,13 @@ const rendererIpc = {
 
     navigate: (id: number, action: 'back' | 'forward' | 'refresh') =>
       ipc.send(contextMenuChannels.navigate, id, action),
+  },
+
+  browser: {
+    createBrowser: (id: string) => ipc.send(browserChannels.createBrowser, id),
+    removeBrowser: (id: string) => ipc.send(browserChannels.removeBrowser, id),
+    loadURL: (id: string, url: string) => ipc.send(browserChannels.loadURL, id, url),
+    setVisible: (id: string, visible: boolean) => ipc.send(browserChannels.setVisible, id, visible),
   },
 };
 

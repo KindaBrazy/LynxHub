@@ -144,7 +144,8 @@ const cardsSlice = createSlice({
         },
       ];
 
-      rendererIpc.pty.emptyProcess(id, 'start');
+      if (type !== 'terminal') rendererIpc.browser.createBrowser(id);
+      if (type !== 'browser') rendererIpc.pty.emptyProcess(id, 'start');
     },
 
     addRunningCard: (state, action: PayloadAction<{tabId: string; id: string}>) => {
@@ -163,6 +164,7 @@ const cardsSlice = createSlice({
           isEmptyRunning: false,
         },
       ];
+      rendererIpc.browser.createBrowser(id);
     },
     setRunningCardAddress: (state, action: PayloadAction<{tabId: string; address: string}>) => {
       const {tabId, address} = action.payload;
@@ -199,6 +201,9 @@ const cardsSlice = createSlice({
     },
     setRunningCardView: (state, action: PayloadAction<{tabId: string; view: 'browser' | 'terminal'}>) => {
       const {tabId, view} = action.payload;
+      const id = state.runningCard.find(card => card.tabId === tabId)?.id;
+      if (id) rendererIpc.browser.setVisible(id, view === 'browser');
+
       state.runningCard = state.runningCard.map(card => (card.tabId === tabId ? {...card, currentView: view} : card));
     },
     toggleRunningCardView: (state, action: PayloadAction<{tabId: string}>) => {
@@ -207,10 +212,19 @@ const cardsSlice = createSlice({
       const {tabId} = action.payload;
       state.runningCard = state.runningCard.map(card => {
         const currentView = card.currentView === 'browser' ? 'terminal' : 'browser';
-        return card.tabId === tabId ? {...card, currentView} : card;
+
+        if (card.tabId === tabId) {
+          rendererIpc.browser.setVisible(card.id, currentView === 'browser');
+          return {...card, currentView};
+        }
+
+        return card;
       });
     },
     stopRunningCard: (state, action: PayloadAction<{tabId: string}>) => {
+      const id = state.runningCard.find(card => card.tabId === action.payload.tabId)?.id;
+      if (id) rendererIpc.browser.removeBrowser(id);
+
       state.runningCard = state.runningCard.filter(card => card.tabId !== action.payload.tabId);
     },
   },

@@ -319,3 +319,10 @@ export const contextMenuChannels = {
 export const tabsChannels = {
   onNewTab: 'tabs:new-tab',
 };
+
+export const browserChannels = {
+  createBrowser: 'browser:create-browser',
+  removeBrowser: 'browser:remove-browser',
+  loadURL: 'browser:load-url',
+  setVisible: 'browser:set-visible',
+};
