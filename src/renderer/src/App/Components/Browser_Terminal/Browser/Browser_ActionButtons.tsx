@@ -8,6 +8,7 @@ import {HomeSmile_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Refresh3_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons4';
 import {ArrowDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import rendererIpc from '../../../RendererIpc';
 import useHotkeyPress from '../../../Utils/RegisterHotkeys';
 
 const variants: Variants = {
@@ -17,9 +18,9 @@ const variants: Variants = {
 
 const transition: Transition = {duration: 0.3};
 
-type Props = {webview: WebviewTag | null; isDomReady: boolean; webuiAddress: string; tabID: string};
+type Props = {webview: WebviewTag | null; isDomReady: boolean; webuiAddress: string; tabID: string; id: string};
 
-export default function Browser_ActionButtons({webview, isDomReady, webuiAddress, tabID}: Props) {
+export default function Browser_ActionButtons({webview, isDomReady, webuiAddress, tabID, id}: Props) {
   const activeTab = useTabsState('activeTab');
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [canGoForward, setCanGoForward] = useState<boolean>(false);
@@ -31,9 +32,7 @@ export default function Browser_ActionButtons({webview, isDomReady, webuiAddress
     webview?.goForward();
   }, [webview]);
 
-  const reload = useCallback(() => {
-    webview?.reload();
-  }, [webview]);
+  const reload = () => rendererIpc.browser.reload(id);
 
   const loadWebuiAddress = useCallback(() => {
     webview?.loadURL(webuiAddress);

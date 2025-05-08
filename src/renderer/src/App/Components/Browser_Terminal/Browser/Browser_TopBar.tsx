@@ -20,6 +20,7 @@ export default function Browser_TopBar({webview, isDomReady, runningCard, setCus
       <Browser_ActionButtons
         tabID={tabID}
         webview={webview}
+        id={runningCard.id}
         isDomReady={isDomReady}
         webuiAddress={runningCard.webUIAddress}
       />

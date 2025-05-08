@@ -428,6 +428,7 @@ const rendererIpc = {
       ipc.send(browserChannels.stopFindInPage, id, action),
 
     setZoomFactor: (id: string, factor: number) => ipc.send(browserChannels.setZoomFactor, id, factor),
+    reload: (id: string) => ipc.send(browserChannels.reload, id),
   },
 };
 
