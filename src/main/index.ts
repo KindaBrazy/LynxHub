@@ -12,12 +12,11 @@ import {isDev} from '../cross/CrossUtils';
 import {checkAppDirectories} from './Managements/AppDataManager';
 import AppInitializer from './Managements/AppInitializer';
 import {checkForUpdate} from './Managements/AppUpdater';
-import contextMenuManager from './Managements/ContextMenuManager';
+import BrowserManager from './Managements/BrowserManager';
 import {ValidateCards} from './Managements/DataValidator';
 import DialogManager from './Managements/DialogManager';
 import DiscordRpcManager from './Managements/DiscordRpcManager';
 import ElectronAppManager from './Managements/ElectronAppManager';
-import RegisterHotkeys from './Managements/HotkeysManager';
 import {listenToAllChannels} from './Managements/Ipc/IpcHandler';
 import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
 import ModuleManager from './Managements/Plugin/ModuleManager';
@@ -33,11 +32,14 @@ if (!isDev()) {
 app.commandLine.appendSwitch('disable-http-cache');
 
 export const storageManager = new StorageManager();
+
 export let appManager: ElectronAppManager;
 export let trayManager: TrayManager;
 export let discordRpcManager: DiscordRpcManager;
 export let cardsValidator: ValidateCards;
 export let moduleManager: ModuleManager;
+export let browserManager: BrowserManager;
+
 export const extensionManager: ExtensionManager = new ExtensionManager();
 
 // Remove default menu
@@ -55,12 +57,12 @@ async function setupApp() {
   await downloadDU();
 
   app.whenReady().then(onAppReady);
-  app.on('web-contents-created', (_, contents) => {
+  /*app.on('web-contents-created', (_, contents) => {
     RegisterHotkeys(contents);
     if (contents.id > 3) {
       contextMenuManager(contents);
     }
-  });
+  });*/
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window);
@@ -101,6 +103,10 @@ async function onAppReady() {
   appManager.startApp();
 
   appManager.onReadyToShow = handleAppReadyToShow;
+  appManager.onCreateWindow = () => {
+    const mainWindow = appManager.getMainWindow();
+    if (mainWindow) browserManager = new BrowserManager(mainWindow);
+  };
 }
 
 function handleAppReadyToShow() {

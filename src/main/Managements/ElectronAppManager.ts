@@ -7,7 +7,7 @@ import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents}
 import icon from '../../../resources/icon.png?asset';
 import {tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager, trayManager} from '../index';
-import {getUserAgent, RelaunchApp} from '../Utilities/Utils';
+import {RelaunchApp} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
 
 /**
@@ -116,7 +116,6 @@ export default class ElectronAppManager {
   private createMainWindow(): void {
     this.mainWindow = new BrowserWindow(ElectronAppManager.MAIN_WINDOW_CONFIG);
 
-    this.mainWindow.webContents.setUserAgent(getUserAgent());
     RegisterHotkeys(this.mainWindow.webContents);
 
     this.setupMainWindowEventListeners();

@@ -6,6 +6,7 @@ import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/Cross
 import {
   appDataChannels,
   appWindowChannels,
+  browserChannels,
   BrowserRecent,
   ChangeWindowState,
   DarkModeTypes,
@@ -29,7 +30,14 @@ import {
   winChannels,
 } from '../../../cross/IpcChannelAndTypes';
 import StorageTypes, {InstalledCard} from '../../../cross/StorageTypes';
-import {appManager, discordRpcManager, extensionManager, moduleManager, storageManager} from '../../index';
+import {
+  appManager,
+  browserManager,
+  discordRpcManager,
+  extensionManager,
+  moduleManager,
+  storageManager,
+} from '../../index';
 import calcFolderSize from '../../Utilities/CalculateFolderSize/CalculateFolderSize';
 import {
   getAbsolutePath,
@@ -359,6 +367,13 @@ function appWindow() {
   });
 }
 
+function browserIPC() {
+  ipcMain.on(browserChannels.createBrowser, (_, id: string) => browserManager.createBrowser(id));
+  ipcMain.on(browserChannels.removeBrowser, (_, id: string) => browserManager.removeBrowser(id));
+  ipcMain.on(browserChannels.loadURL, (_, id: string, url: string) => browserManager.loadURL(id, url));
+  ipcMain.on(browserChannels.setVisible, (_, id: string, visible: boolean) => browserManager.setVisible(id, visible));
+}
+
 export function listenToAllChannels() {
   appData();
   storage();
@@ -381,4 +396,6 @@ export function listenToAllChannels() {
   appWindow();
 
   listenForContextChannels();
+
+  browserIPC();
 }

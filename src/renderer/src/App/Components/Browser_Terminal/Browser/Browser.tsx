@@ -1,9 +1,11 @@
 import {WebviewTag} from 'electron';
+import {isEmpty} from 'lodash';
 import {useEffect, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../../Redux/Store';
+import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
 import EmptyPage from './EmptyPage';
 
@@ -14,7 +16,7 @@ type Props = {
   initWebviewRef: (node: any) => void;
 };
 
-const Browser = ({runningCard, webViewRef, initWebviewRef, isDomReady}: Props) => {
+const Browser = ({runningCard, webViewRef, isDomReady}: Props) => {
   const {currentView, id, webUIAddress, customAddress} = runningCard;
   const zoomFactor = useCardsState('webViewZoomFactor');
   const dispatch = useDispatch<AppDispatch>();
@@ -30,21 +32,18 @@ const Browser = ({runningCard, webViewRef, initWebviewRef, isDomReady}: Props) =
 
   const finalAddress = useMemo(() => customAddress || webUIAddress, [customAddress, webUIAddress]);
 
+  useEffect(() => {
+    rendererIpc.browser.setVisible(id, currentView === 'browser' && !isEmpty(finalAddress));
+  }, [currentView, finalAddress]);
+
+  useEffect(() => {
+    if (finalAddress) rendererIpc.browser.loadURL(id, finalAddress);
+  }, [finalAddress]);
+
   return (
     <div className={`${currentView === 'browser' ? 'block' : 'hidden'}`}>
       <div className="absolute inset-0 !top-10 overflow-hidden bg-white shadow-md dark:bg-LynxRaisinBlack">
-        {finalAddress ? (
-          <webview
-            // @ts-ignore-next-line
-            // eslint-disable-next-line react/no-unknown-property
-            allowpopups="true"
-            src={finalAddress}
-            ref={initWebviewRef}
-            className="relative size-full"
-          />
-        ) : (
-          <EmptyPage type={runningCard.type} />
-        )}
+        {isEmpty(finalAddress) && <EmptyPage type={runningCard.type} />}
       </div>
     </div>
   );
