@@ -20,18 +20,13 @@ const transition: Transition = {duration: 0.3};
 
 type Props = {webview: WebviewTag | null; isDomReady: boolean; webuiAddress: string; tabID: string; id: string};
 
-export default function Browser_ActionButtons({webview, isDomReady, webuiAddress, tabID, id}: Props) {
+export default function Browser_ActionButtons({webview, webuiAddress, tabID, id}: Props) {
   const activeTab = useTabsState('activeTab');
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [canGoForward, setCanGoForward] = useState<boolean>(false);
 
-  const goBack = useCallback(() => {
-    webview?.goBack();
-  }, [webview]);
-  const goForward = useCallback(() => {
-    webview?.goForward();
-  }, [webview]);
-
+  const goBack = () => rendererIpc.browser.goBack(id);
+  const goForward = () => rendererIpc.browser.goForward(id);
   const reload = () => rendererIpc.browser.reload(id);
 
   const loadWebuiAddress = useCallback(() => {
@@ -41,29 +36,17 @@ export default function Browser_ActionButtons({webview, isDomReady, webuiAddress
   useHotkeyPress([{name: Hotkey_Names.refreshTab, method: activeTab === tabID ? reload : null}]);
 
   useEffect(() => {
-    if (!webview) return;
-
-    const updateNavigationState = () => {
-      if (isDomReady) {
-        setCanGoBack(webview.canGoBack());
-        setCanGoForward(webview.canGoForward());
+    rendererIpc.browser.onCanGo((_, targetID, canGo) => {
+      console.log(targetID, canGo);
+      if (targetID == id) {
+        setCanGoBack(canGo.back);
+        setCanGoForward(canGo.forward);
       }
-    };
-
-    updateNavigationState();
-
-    webview.addEventListener('did-navigate', updateNavigationState);
-    webview.addEventListener('did-navigate-in-page', updateNavigationState);
-    webview.addEventListener('did-finish-load', updateNavigationState);
-    webview.addEventListener('did-stop-loading', updateNavigationState);
-
+    });
     return () => {
-      webview.removeEventListener('did-navigate', updateNavigationState);
-      webview.removeEventListener('did-navigate-in-page', updateNavigationState);
-      webview.removeEventListener('did-finish-load', updateNavigationState);
-      webview.removeEventListener('did-stop-loading', updateNavigationState);
+      rendererIpc.browser.offCanGo();
     };
-  }, [webview, isDomReady]);
+  }, []);
 
   return (
     <div className="flex flex-row gap-x-1 ml-1">

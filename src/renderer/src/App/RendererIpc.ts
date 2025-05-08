@@ -16,6 +16,7 @@ import {
   appWindowChannels,
   browserChannels,
   BrowserRecent,
+  CanGoType,
   ChangeWindowState,
   contextMenuChannels,
   CustomRunBehaviorData,
@@ -429,6 +430,12 @@ const rendererIpc = {
 
     setZoomFactor: (id: string, factor: number) => ipc.send(browserChannels.setZoomFactor, id, factor),
     reload: (id: string) => ipc.send(browserChannels.reload, id),
+    goBack: (id: string) => ipc.send(browserChannels.goBack, id),
+    goForward: (id: string) => ipc.send(browserChannels.goForward, id),
+
+    onCanGo: (result: (event: IpcRendererEvent, id: string, canGo: CanGoType) => void) =>
+      ipc.on(browserChannels.onCanGo, result),
+    offCanGo: () => ipc.removeAllListeners(browserChannels.onCanGo),
   },
 };
 

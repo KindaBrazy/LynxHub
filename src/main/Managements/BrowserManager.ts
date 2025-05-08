@@ -1,5 +1,6 @@
 import {BrowserWindow, FindInPageOptions, WebContentsView} from 'electron';
 
+import {browserChannels, CanGoType} from '../../cross/IpcChannelAndTypes';
 import {storageManager} from '../index';
 import {getUserAgent} from '../Utilities/Utils';
 import contextMenuManager from './ContextMenuManager';
@@ -26,6 +27,24 @@ export default class BrowserManager {
     });
   }
 
+  private listenForNavigate(id: string, view: WebContentsView) {
+    const webContents = view.webContents;
+    const sendToRenderer = () => {
+      const canGo: CanGoType = {
+        back: webContents.navigationHistory.canGoBack(),
+        forward: webContents.navigationHistory.canGoForward(),
+      };
+      this.mainWindow.webContents.send(browserChannels.onCanGo, id, canGo);
+    };
+
+    sendToRenderer();
+
+    webContents.on('did-navigate', sendToRenderer);
+    webContents.on('did-navigate-in-page', sendToRenderer);
+    webContents.on('did-finish-load', sendToRenderer);
+    webContents.on('did-stop-loading', sendToRenderer);
+  }
+
   public createBrowser(id: string) {
     if (this.browsers.some(view => view.id === id)) return;
 
@@ -33,6 +52,7 @@ export default class BrowserManager {
     newView.webContents.setUserAgent(getUserAgent());
 
     newView.webContents.setZoomFactor(storageManager.getData('cards').zoomFactor);
+    this.listenForNavigate(id, newView);
 
     this.browsers.push({id, view: newView});
     this.mainWindow.contentView.addChildView(newView);
@@ -77,5 +97,13 @@ export default class BrowserManager {
 
   public reload(id: string) {
     this.getViewByID(id)?.webContents.reload();
+  }
+
+  public goBack(id: string) {
+    this.getViewByID(id)?.webContents.navigationHistory.goBack();
+  }
+
+  public goForward(id: string) {
+    this.getViewByID(id)?.webContents.navigationHistory.goForward();
   }
 }
