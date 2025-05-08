@@ -125,6 +125,8 @@ export default class ElectronAppManager {
       const [width, height] = window.getContentSize();
       positionContextMenuAtCursor(window, width, height);
     });
+
+    this.contextMenuWindow.on('blur', () => this.contextMenuWindow?.hide());
   }
 
   /** Creates and configures the main application window. */

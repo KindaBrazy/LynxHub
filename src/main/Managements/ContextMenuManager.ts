@@ -3,9 +3,6 @@ import {ipcMain, shell, WebContents} from 'electron';
 import {contextMenuChannels, tabsChannels} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
 
-let hideMenu = false;
-let listenForBlur = false;
-
 const webContents: WebContents[] = [];
 
 export default function contextMenuManager(contents: WebContents) {
@@ -14,7 +11,6 @@ export default function contextMenuManager(contents: WebContents) {
     const window = appManager.getContextMenuWindow();
     if (!window) return;
 
-    hideMenu = false;
     window.webContents?.send(
       contextMenuChannels.onInitView,
       params,
@@ -22,16 +18,10 @@ export default function contextMenuManager(contents: WebContents) {
       contents.id,
     );
   });
+}
 
-  if (!listenForBlur) {
-    appManager.getContextMenuWindow()?.on('blur', () => {
-      listenForBlur = true;
-      hideMenu = true;
-      setTimeout(() => {
-        if (hideMenu) appManager.getContextMenuWindow()?.hide();
-      }, 100);
-    });
-  }
+function contentByID(id: number) {
+  return webContents.find(content => content.id === id);
 }
 
 export function listenForContextChannels() {
@@ -46,58 +36,34 @@ export function listenForContextChannels() {
     }
   });
 
-  ipcMain.on(contextMenuChannels.copy, (_, id: number) => {
-    webContents.find(content => content.id === id)?.copy();
-  });
-  ipcMain.on(contextMenuChannels.paste, (_, id: number) => {
-    webContents.find(content => content.id === id)?.paste();
-  });
-  ipcMain.on(contextMenuChannels.selectAll, (_, id: number) => {
-    webContents.find(content => content.id === id)?.selectAll();
-  });
-  ipcMain.on(contextMenuChannels.replaceMisspelling, (_, id: number, text: string) => {
-    webContents.find(content => content.id === id)?.replaceMisspelling(text);
-  });
-  ipcMain.on(contextMenuChannels.undo, (_, id: number) => {
-    webContents.find(content => content.id === id)?.undo();
-  });
-  ipcMain.on(contextMenuChannels.redo, (_, id: number) => {
-    webContents.find(content => content.id === id)?.redo();
-  });
-  ipcMain.on(contextMenuChannels.openExternal, (_, url: string) => {
-    shell.openExternal(url);
-  });
-  ipcMain.on(contextMenuChannels.newTab, (_, url: string) => {
-    appManager.getWebContent()?.send(tabsChannels.onNewTab, url);
-  });
-  ipcMain.on(contextMenuChannels.downloadImage, (_, id: number, url: string) => {
-    webContents.find(content => content.id === id)?.downloadURL(url);
-  });
+  ipcMain.on(contextMenuChannels.copy, (_, id: number) => contentByID(id)?.copy());
+  ipcMain.on(contextMenuChannels.paste, (_, id: number) => contentByID(id)?.paste());
+  ipcMain.on(contextMenuChannels.selectAll, (_, id: number) => contentByID(id)?.selectAll());
+  ipcMain.on(contextMenuChannels.undo, (_, id: number) => contentByID(id)?.undo());
+  ipcMain.on(contextMenuChannels.redo, (_, id: number) => contentByID(id)?.redo());
+  ipcMain.on(contextMenuChannels.openExternal, (_, url: string) => shell.openExternal(url));
+  ipcMain.on(contextMenuChannels.downloadImage, (_, id: number, url: string) => contentByID(id)?.downloadURL(url));
+
+  ipcMain.on(contextMenuChannels.showWindow, () => appManager.getContextMenuWindow()?.show());
+  ipcMain.on(contextMenuChannels.hideWindow, () => appManager.getContextMenuWindow()?.hide());
+
+  ipcMain.on(contextMenuChannels.replaceMisspelling, (_, id: number, text: string) =>
+    contentByID(id)?.replaceMisspelling(text),
+  );
+  ipcMain.on(contextMenuChannels.newTab, (_, url: string) =>
+    appManager.getWebContent()?.send(tabsChannels.onNewTab, url),
+  );
   ipcMain.on(contextMenuChannels.navigate, (_, id: number, action: 'back' | 'forward' | 'refresh') => {
     switch (action) {
       case 'back':
-        webContents.find(content => content.id === id)?.navigationHistory.goBack();
+        contentByID(id)?.navigationHistory.goBack();
         break;
       case 'forward':
-        webContents.find(content => content.id === id)?.navigationHistory.goForward();
+        contentByID(id)?.navigationHistory.goForward();
         break;
       case 'refresh':
-        webContents.find(content => content.id === id)?.reload();
+        contentByID(id)?.reload();
         break;
     }
-  });
-
-  ipcMain.on(contextMenuChannels.showWindow, () => {
-    const window = appManager.getContextMenuWindow();
-    if (!window) return;
-
-    window.show();
-  });
-
-  ipcMain.on(contextMenuChannels.hideWindow, () => {
-    const window = appManager.getContextMenuWindow();
-    if (!window) return;
-
-    window.hide();
   });
 }
