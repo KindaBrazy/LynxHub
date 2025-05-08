@@ -1,5 +1,6 @@
 import {BrowserWindow, FindInPageOptions, WebContentsView} from 'electron';
 
+import {storageManager} from '../index';
 import {getUserAgent} from '../Utilities/Utils';
 import contextMenuManager from './ContextMenuManager';
 import RegisterHotkeys from './HotkeysManager';
@@ -30,6 +31,8 @@ export default class BrowserManager {
 
     const newView = new WebContentsView();
     newView.webContents.setUserAgent(getUserAgent());
+
+    newView.webContents.setZoomFactor(storageManager.getData('cards').zoomFactor);
 
     this.browsers.push({id, view: newView});
     this.mainWindow.contentView.addChildView(newView);
@@ -62,6 +65,14 @@ export default class BrowserManager {
 
   public stopFindInPage(id: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') {
     this.getViewByID(id)?.webContents.stopFindInPage(action);
+  }
+
+  public getCurrentZoom(id: string) {
+    return this.getViewByID(id)?.webContents.getZoomFactor();
+  }
+
+  public setZoomFactor(id: string, factor: number) {
+    this.getViewByID(id)?.webContents.setZoomFactor(factor);
   }
 
   public reload(id: string) {

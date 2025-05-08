@@ -38,7 +38,7 @@ type StorageTypes = {
     cardsDevName: boolean;
     cardsDesc: boolean;
     cardsRepoInfo: boolean;
-    zoomFactor: {id: string; zoom: number}[];
+    zoomFactor: number;
     duplicated: {ogID: string; id: string; title: string}[];
   };
   cardsConfig: {

@@ -25,7 +25,7 @@ export default function Browser_TopBar({webview, isDomReady, runningCard, setCus
       />
       <AddressInput runningCard={runningCard} setCustomAddress={setCustomAddress} />
       <Browser_Search id={runningCard.id} />
-      <Browser_Zoom webview={webview} id={runningCard.id} />
+      <Browser_Zoom id={runningCard.id} />
     </>
   );
 }

@@ -21,7 +21,6 @@ type CardsState = {
   pinnedCards: string[];
   recentlyUsedCards: string[];
   runningCard: RunningCard[];
-  webViewZoomFactor: {id: string; zoom: number}[];
   homeCategory: string[];
   duplicates: {ogID: string; id: string; title: string}[];
 
@@ -44,7 +43,6 @@ const initialState: CardsState = {
   homeCategory: [],
   autoUpdateExtensions: [],
   updatingExtensions: undefined,
-  webViewZoomFactor: [],
   duplicates: [],
   checkUpdateInterval: 30,
   activeTab: '',
@@ -54,24 +52,6 @@ const cardsSlice = createSlice({
   initialState,
   name: 'cards',
   reducers: {
-    updateZoomFactor: (state, action: PayloadAction<{id: string; zoom: number}>) => {
-      const factor = state.webViewZoomFactor;
-      const existFactor = factor.findIndex(zoom => zoom.id === action.payload.id);
-
-      if (existFactor !== -1) {
-        factor[existFactor] = action.payload;
-      } else {
-        factor.push(action.payload);
-      }
-
-      state.webViewZoomFactor = [...factor];
-
-      rendererIpc.storageUtils.updateZoomFactor(action.payload);
-    },
-    setZoomFactor: (state, action: PayloadAction<{id: string; zoom: number}[]>) => {
-      state.webViewZoomFactor = action.payload;
-    },
-
     addUpdateAvailable: (state, action: PayloadAction<string>) => {
       if (!includes(state.updateAvailable, action.payload)) {
         state.updateAvailable = [...state.updateAvailable, action.payload];
