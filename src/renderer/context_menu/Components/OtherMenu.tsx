@@ -11,6 +11,7 @@ export function useZoomMenu(
 ) {
   const [id, setId] = useState<string>('');
   const [value, setValue] = useState<number>(100);
+  const [toggle, setToggle] = useState<boolean>(false);
 
   const updateZoom = (zoom: number) => {
     setValue(zoom);
@@ -57,7 +58,7 @@ export function useZoomMenu(
         </div>,
       ]);
     }
-  }, [id, value]);
+  }, [id, value, toggle]);
 
   useEffect(() => {
     rendererIpc.contextMenu.onZoom((_, webID, zoomFactor) => {
@@ -66,6 +67,8 @@ export function useZoomMenu(
       setValue(zoomFactor * 100);
 
       setWidthSize('md');
+
+      setToggle(prevState => !prevState);
 
       rendererIpc.contextMenu.showWindow();
     });
@@ -82,6 +85,8 @@ export function useFindMenu(
 ) {
   const [searchValue, setSearchValue] = useState<string>('');
   const [id, setId] = useState<string>('');
+
+  const [toggle, setToggle] = useState<boolean>(false);
 
   useEffect(() => {
     if (searchValue) {
@@ -121,10 +126,11 @@ export function useFindMenu(
         </div>,
       ]);
     }
-  }, [id, searchValue]);
+  }, [id, searchValue, toggle]);
 
   useEffect(() => {
     rendererIpc.contextMenu.onFind((_, webID) => {
+      setToggle(prevState => !prevState);
       setId(webID);
 
       setWidthSize('md');
