@@ -1,4 +1,4 @@
-import {ipcMain, screen, shell, WebContents} from 'electron';
+import {ipcMain, shell, WebContents} from 'electron';
 
 import {contextMenuChannels, tabsChannels} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
@@ -21,9 +21,6 @@ export default function contextMenuManager(contents: WebContents) {
       {canGoBack: contents.navigationHistory.canGoBack(), canGoForward: contents.navigationHistory.canGoForward()},
       contents.id,
     );
-
-    const {x, y} = screen.getCursorScreenPoint();
-    window.setPosition(x, y, true);
   });
 
   if (!listenForBlur) {
