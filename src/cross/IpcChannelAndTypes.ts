@@ -75,6 +75,8 @@ export type DownloadProgress = {
   total: number;
 };
 
+export type CanGoType = {back: boolean; forward: boolean};
+
 export type SkippedPlugins = {folderName: string; message: string};
 
 export type BrowserRecent = {url: string; favIcon: string};
@@ -335,4 +337,8 @@ export const browserChannels = {
   setZoomFactor: 'browser:setZoomFactor',
 
   reload: 'browser:reload',
+  goBack: 'browser:goBack',
+  goForward: 'browser:goForward',
+
+  onCanGo: 'browser:on-can-go',
 };
