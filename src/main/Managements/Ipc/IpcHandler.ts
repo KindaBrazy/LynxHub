@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, screen, shell, webContents} from 'electron';
+import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, shell, webContents} from 'electron';
 
 import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/CrossTypes';
 import {
@@ -385,8 +385,6 @@ function browserIPC() {
 
   ipcMain.on(browserChannels.openFindInPage, (_, id: string) => {
     appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onFind, id);
-    const {x, y} = screen.getCursorScreenPoint();
-    appManager.getContextMenuWindow()?.setPosition(x, y, true);
   });
 }
 

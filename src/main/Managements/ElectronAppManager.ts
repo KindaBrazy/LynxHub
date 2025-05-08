@@ -7,7 +7,7 @@ import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents}
 import icon from '../../../resources/icon.png?asset';
 import {tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager, trayManager} from '../index';
-import {RelaunchApp} from '../Utilities/Utils';
+import {positionContextMenuAtCursor, RelaunchApp} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
 
 /**
@@ -110,6 +110,21 @@ export default class ElectronAppManager {
     this.contextMenuWindow = new BrowserWindow({...ElectronAppManager.CONTEXT_WINDOW_CONFIG, parent: this.mainWindow});
 
     this.loadAppropriateURL(this.contextMenuWindow, 'context_menu.html');
+
+    this.contextMenuWindow.on('resize', () => {
+      const window = this.contextMenuWindow;
+      if (!window) return;
+
+      const [width, height] = window.getContentSize();
+      positionContextMenuAtCursor(window, width, height);
+    });
+    this.contextMenuWindow.on('show', () => {
+      const window = this.contextMenuWindow;
+      if (!window) return;
+
+      const [width, height] = window.getContentSize();
+      positionContextMenuAtCursor(window, width, height);
+    });
   }
 
   /** Creates and configures the main application window. */
