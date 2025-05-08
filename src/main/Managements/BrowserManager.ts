@@ -1,4 +1,4 @@
-import {BrowserWindow, WebContentsView} from 'electron';
+import {BrowserWindow, FindInPageOptions, WebContentsView} from 'electron';
 
 import {getUserAgent} from '../Utilities/Utils';
 import contextMenuManager from './ContextMenuManager';
@@ -10,6 +10,10 @@ export default class BrowserManager {
 
   constructor(mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
+  }
+
+  private getViewByID(id: string) {
+    return this.browsers.find(view => view.id === id)?.view;
   }
 
   private setBounds(view: WebContentsView) {
@@ -45,14 +49,22 @@ export default class BrowserManager {
   }
 
   public loadURL(id: string, url: string) {
-    this.browsers.find(view => view.id === id)?.view.webContents.loadURL(url);
+    this.getViewByID(id)?.webContents.loadURL(url);
   }
 
   public setVisible(id: string, visible: boolean) {
-    this.browsers.find(view => view.id === id)?.view.setVisible(visible);
+    this.getViewByID(id)?.setVisible(visible);
+  }
+
+  public findInPage(id: string, value: string, options: FindInPageOptions) {
+    this.getViewByID(id)?.webContents.findInPage(value, options);
+  }
+
+  public stopFindInPage(id: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') {
+    this.getViewByID(id)?.webContents.stopFindInPage(action);
   }
 
   public reload(id: string) {
-    this.browsers.find(view => view.id === id)?.view.webContents.reload();
+    this.getViewByID(id)?.webContents.reload();
   }
 }

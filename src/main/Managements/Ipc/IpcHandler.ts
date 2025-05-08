@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import {app, ipcMain, nativeTheme, OpenDialogOptions, shell, webContents} from 'electron';
+import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, screen, shell, webContents} from 'electron';
 
 import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/CrossTypes';
 import {
@@ -9,6 +9,7 @@ import {
   browserChannels,
   BrowserRecent,
   ChangeWindowState,
+  contextMenuChannels,
   DarkModeTypes,
   DiscordRunningAI,
   extensionsChannels,
@@ -372,6 +373,21 @@ function browserIPC() {
   ipcMain.on(browserChannels.removeBrowser, (_, id: string) => browserManager.removeBrowser(id));
   ipcMain.on(browserChannels.loadURL, (_, id: string, url: string) => browserManager.loadURL(id, url));
   ipcMain.on(browserChannels.setVisible, (_, id: string, visible: boolean) => browserManager.setVisible(id, visible));
+
+  ipcMain.on(browserChannels.findInPage, (_, id: string, value: string, options: FindInPageOptions) =>
+    browserManager.findInPage(id, value, options),
+  );
+  ipcMain.on(
+    browserChannels.stopFindInPage,
+    (_, id: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') =>
+      browserManager.stopFindInPage(id, action),
+  );
+
+  ipcMain.on(browserChannels.openFindInPage, (_, id: string) => {
+    appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onFind, id);
+    const {x, y} = screen.getCursorScreenPoint();
+    appManager.getContextMenuWindow()?.setPosition(x, y, true);
+  });
 }
 
 export function listenToAllChannels() {

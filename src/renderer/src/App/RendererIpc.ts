@@ -1,4 +1,4 @@
-import {ContextMenuParams, IpcRendererEvent, OpenDialogOptions} from 'electron';
+import {ContextMenuParams, FindInPageOptions, IpcRendererEvent, OpenDialogOptions} from 'electron';
 
 import {
   ChosenArgumentsData,
@@ -380,6 +380,9 @@ const rendererIpc = {
       ) => void,
     ) => ipc.on(contextMenuChannels.onInitView, result),
     offInitView: () => ipc.removeAllListeners(contextMenuChannels.onInitView),
+
+    onFind: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(contextMenuChannels.onFind, result),
+    offFind: () => ipc.removeAllListeners(contextMenuChannels.onFind),
   },
 
   tab: {
@@ -411,6 +414,12 @@ const rendererIpc = {
     removeBrowser: (id: string) => ipc.send(browserChannels.removeBrowser, id),
     loadURL: (id: string, url: string) => ipc.send(browserChannels.loadURL, id, url),
     setVisible: (id: string, visible: boolean) => ipc.send(browserChannels.setVisible, id, visible),
+
+    openFindInPage: (id: string) => ipc.send(browserChannels.openFindInPage, id),
+    findInPage: (id: string, value: string, options: FindInPageOptions) =>
+      ipc.send(browserChannels.findInPage, id, value, options),
+    stopFindInPage: (id: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') =>
+      ipc.send(browserChannels.stopFindInPage, id, action),
   },
 };
 
