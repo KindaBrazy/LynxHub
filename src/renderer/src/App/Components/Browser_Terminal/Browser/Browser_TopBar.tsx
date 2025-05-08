@@ -3,8 +3,8 @@ import {WebviewTag} from 'electron';
 import {RunningCard} from '../../../Utils/Types';
 import AddressInput from './AddressInput';
 import Browser_ActionButtons from './Browser_ActionButtons';
+import Browser_Search from './Browser_Search';
 import Browser_Zoom from './Browser_Zoom';
-import BrowserSearch from './BrowserSearch';
 
 type Props = {
   webview: WebviewTag | null;
@@ -24,7 +24,7 @@ export default function Browser_TopBar({webview, isDomReady, runningCard, setCus
         webuiAddress={runningCard.webUIAddress}
       />
       <AddressInput runningCard={runningCard} setCustomAddress={setCustomAddress} />
-      <BrowserSearch webview={webview} />
+      <Browser_Search id={runningCard.id} />
       <Browser_Zoom webview={webview} id={runningCard.id} />
     </>
   );
