@@ -1,8 +1,10 @@
+import {isEmpty} from 'lodash';
 import {useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../Redux/Reducer/TabsReducer';
+import rendererIpc from '../../RendererIpc';
 import {PageComponents} from '../../Utils/Constants';
 import RunningCardView from '../Browser_Terminal/RunningCardView';
 import HomePage from '../Pages/ContentPages/Home/HomePage';
@@ -25,6 +27,11 @@ export default function AppPages() {
         const foundRunningCard = runningCard.find(card => card.tabId === tab.id);
 
         if (foundRunningCard) {
+          const validAddress = !isEmpty(foundRunningCard.customAddress || foundRunningCard.webUIAddress);
+          rendererIpc.browser.setVisible(
+            foundRunningCard.id,
+            validAddress && foundRunningCard.tabId === activeTab && foundRunningCard.currentView === 'browser',
+          );
           return (
             <a
               key={`${foundRunningCard.id}_${foundRunningCard.tabId}`}

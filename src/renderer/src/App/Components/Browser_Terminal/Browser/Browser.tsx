@@ -33,10 +33,6 @@ const Browser = ({runningCard, webViewRef, isDomReady}: Props) => {
   const finalAddress = useMemo(() => customAddress || webUIAddress, [customAddress, webUIAddress]);
 
   useEffect(() => {
-    rendererIpc.browser.setVisible(id, currentView === 'browser' && !isEmpty(finalAddress));
-  }, [currentView, finalAddress]);
-
-  useEffect(() => {
     if (finalAddress) rendererIpc.browser.loadURL(id, finalAddress);
   }, [finalAddress]);
 

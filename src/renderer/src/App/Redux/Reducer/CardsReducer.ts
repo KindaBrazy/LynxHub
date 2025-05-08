@@ -201,9 +201,6 @@ const cardsSlice = createSlice({
     },
     setRunningCardView: (state, action: PayloadAction<{tabId: string; view: 'browser' | 'terminal'}>) => {
       const {tabId, view} = action.payload;
-      const id = state.runningCard.find(card => card.tabId === tabId)?.id;
-      if (id) rendererIpc.browser.setVisible(id, view === 'browser');
-
       state.runningCard = state.runningCard.map(card => (card.tabId === tabId ? {...card, currentView: view} : card));
     },
     toggleRunningCardView: (state, action: PayloadAction<{tabId: string}>) => {
@@ -212,13 +209,7 @@ const cardsSlice = createSlice({
       const {tabId} = action.payload;
       state.runningCard = state.runningCard.map(card => {
         const currentView = card.currentView === 'browser' ? 'terminal' : 'browser';
-
-        if (card.tabId === tabId) {
-          rendererIpc.browser.setVisible(card.id, currentView === 'browser');
-          return {...card, currentView};
-        }
-
-        return card;
+        return card.tabId === tabId ? {...card, currentView} : card;
       });
     },
     stopRunningCard: (state, action: PayloadAction<{tabId: string}>) => {
