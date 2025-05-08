@@ -333,4 +333,6 @@ export const browserChannels = {
   findInPage: 'browser:findInPage',
   stopFindInPage: 'browser:stopFindInPage',
   setZoomFactor: 'browser:setZoomFactor',
+
+  reload: 'browser:reload',
 };

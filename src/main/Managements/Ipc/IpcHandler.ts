@@ -397,6 +397,8 @@ function browserIPC() {
       .getContextMenuWindow()
       ?.webContents.send(contextMenuChannels.onZoom, id, browserManager.getCurrentZoom(id));
   });
+
+  ipcMain.on(browserChannels.reload, (_, id: string) => browserManager.reload(id));
 }
 
 export function listenToAllChannels() {
