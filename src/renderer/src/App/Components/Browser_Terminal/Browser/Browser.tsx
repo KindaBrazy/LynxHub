@@ -1,4 +1,3 @@
-import {WebviewTag} from 'electron';
 import {isEmpty} from 'lodash';
 import {useMemo} from 'react';
 
@@ -6,12 +5,7 @@ import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
 import EmptyPage from './EmptyPage';
 
-type Props = {
-  webViewRef: WebviewTag | null;
-  isDomReady: boolean;
-  runningCard: RunningCard;
-  initWebviewRef: (node: any) => void;
-};
+type Props = {runningCard: RunningCard};
 
 const Browser = ({runningCard}: Props) => {
   const {currentView, id, webUIAddress, customAddress, type} = runningCard;
