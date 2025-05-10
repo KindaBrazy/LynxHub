@@ -80,12 +80,8 @@ const RunningCardView = ({runningCard}: Props) => {
         rendererIpc.storageUtils.addBrowserRecentFavIcon(targetUrl, url);
       });
 
-      const setTitle = () => dispatch(tabsActions.setTabTitle({title: webViewRef.getTitle(), tabID: tabId}));
-      webViewRef.addEventListener('page-title-updated', setTitle);
-
       return () => {
         webViewRef.removeEventListener('did-start-navigation', didNavigate);
-        webViewRef.removeEventListener('page-title-updated', setTitle);
       };
     }
 

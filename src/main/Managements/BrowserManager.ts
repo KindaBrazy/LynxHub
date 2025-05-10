@@ -53,6 +53,12 @@ export default class BrowserManager {
     webContents.on('did-stop-loading', () => onLoading(false));
   }
 
+  private listenForTitle(id: string, webContents: WebContents) {
+    webContents.on('page-title-updated', () => {
+      this.mainWindow.webContents.send(browserChannels.onTitleChange, id, webContents.getTitle());
+    });
+  }
+
   private setupWindowOpenHandler(webContents: WebContents) {
     const openExternal = storageManager.getData('app').openLinkExternal;
     webContents.setWindowOpenHandler(({url}) => {
@@ -75,8 +81,9 @@ export default class BrowserManager {
 
     webContents.setZoomFactor(storageManager.getData('cards').zoomFactor);
 
-    this.listenForNavigate(id, newView.webContents);
-    this.listenForLoading(id, newView.webContents);
+    this.listenForNavigate(id, webContents);
+    this.listenForLoading(id, webContents);
+    this.listenForTitle(id, webContents);
 
     this.browsers.push({id, view: newView});
     this.mainWindow.contentView.addChildView(newView);

@@ -439,6 +439,10 @@ const rendererIpc = {
     onIsLoading: (result: (event: IpcRendererEvent, id: string, isLoading: boolean) => void) =>
       ipc.on(browserChannels.isLoading, result),
     offIsLoading: () => ipc.removeAllListeners(browserChannels.isLoading),
+
+    onTitleChange: (result: (event: IpcRendererEvent, id: string, title: string) => void) =>
+      ipc.on(browserChannels.onTitleChange, result),
+    offTitleChange: () => ipc.removeAllListeners(browserChannels.onTitleChange),
   },
 };
 
