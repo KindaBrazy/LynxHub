@@ -19,7 +19,6 @@ export default defineConfig({
           index: resolve(__dirname, 'src/preload/index.js'),
           dialog: resolve(__dirname, 'src/preload/dialog.js'),
           webview: resolve(__dirname, 'src/preload/webview.js'),
-          context_menu: resolve(__dirname, 'src/preload/context_menu.js'),
         },
       },
     },
