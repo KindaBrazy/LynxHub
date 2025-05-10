@@ -49,7 +49,7 @@ export default class ElectronAppManager {
     useContentSize: true,
     icon,
     webPreferences: {
-      preload: path.join(__dirname, '../preload/context_menu.cjs'),
+      preload: path.join(__dirname, '../preload/index.cjs'),
       sandbox: false,
     },
   };
