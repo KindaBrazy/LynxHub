@@ -1,19 +1,15 @@
-import {WebviewTag} from 'electron';
-
 import {RunningCard} from '../../../Utils/Types';
 import Browser_TopBar from '../Browser/Browser_TopBar';
 import Terminal_TopBar from '../Terminal/Terminal_TopBar';
 import SwitchAndTerminate from './SwitchAndTerminate';
 
 type Props = {
-  webview: WebviewTag | null;
-  isDomReady: boolean;
   runningCard: RunningCard;
   terminalContent: string;
   tabID: string;
 };
 
-export default function TopBar({runningCard, isDomReady, webview, terminalContent, tabID}: Props) {
+export default function TopBar({runningCard, terminalContent, tabID}: Props) {
   return (
     <div
       className={
@@ -23,7 +19,7 @@ export default function TopBar({runningCard, isDomReady, webview, terminalConten
       {runningCard.currentView === 'terminal' ? (
         <Terminal_TopBar terminalContent={terminalContent} startTime={runningCard.startTime} />
       ) : (
-        <Browser_TopBar tabID={tabID} webview={webview} isDomReady={isDomReady} runningCard={runningCard} />
+        <Browser_TopBar tabID={tabID} runningCard={runningCard} />
       )}
 
       <SwitchAndTerminate runningCard={runningCard} />

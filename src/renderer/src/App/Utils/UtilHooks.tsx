@@ -1,6 +1,5 @@
-import {WebviewTag} from 'electron';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, useEffect, useMemo, useState} from 'react';
+import {Fragment, useMemo} from 'react';
 
 import {ChangelogItem} from '../../../../cross/CrossTypes';
 import {InstalledCard} from '../../../../cross/StorageTypes';
@@ -92,47 +91,6 @@ export function RenderSubItems(items?: ChangelogItem[], parentKey: string = '') 
       })}
     </ul>
   );
-}
-
-export function useWebviewPress(webview: WebviewTag | null, onPress: () => void) {
-  const [mouseOver, setMouseOver] = useState<boolean>(false);
-  const [isBlur, setIsBlur] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (isBlur && mouseOver) {
-      onPress();
-    }
-  }, [mouseOver, isBlur]);
-
-  useEffect(() => {
-    const mouseOver = () => {
-      setMouseOver(true);
-    };
-    const mouseOut = () => {
-      setMouseOver(false);
-    };
-    const blur = () => {
-      setIsBlur(true);
-    };
-    const focus = () => {
-      setIsBlur(false);
-    };
-    if (webview) {
-      webview.addEventListener('mouseover', mouseOver);
-      webview.addEventListener('mouseout', mouseOut);
-      window.addEventListener('blur', blur);
-      window.addEventListener('focus', focus);
-    }
-
-    return () => {
-      if (webview) {
-        webview.removeEventListener('mouseover', mouseOver);
-        webview.removeEventListener('mouseout', mouseOut);
-      }
-      window.removeEventListener('blur', blur);
-      window.removeEventListener('focus', focus);
-    };
-  }, [webview]);
 }
 
 export const isLinuxPortable = window.isPortable === 'linux';
