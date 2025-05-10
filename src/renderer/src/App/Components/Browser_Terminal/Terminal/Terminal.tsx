@@ -56,7 +56,6 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
   );
 
   const copyText = useCallback(() => {
-    console.log('aaa');
     if (!isEmpty(selectedText)) {
       navigator.clipboard.writeText(selectedText);
       message.success(`Copied to clipboard`);
