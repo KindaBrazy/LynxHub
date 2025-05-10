@@ -27,8 +27,7 @@ export default class BrowserManager {
     });
   }
 
-  private listenForNavigate(id: string, view: WebContentsView) {
-    const webContents = view.webContents;
+  private listenForNavigate(id: string, webContents: WebContents) {
     const sendToRenderer = () => {
       const canGo: CanGoType = {
         back: webContents.navigationHistory.canGoBack(),
@@ -43,6 +42,15 @@ export default class BrowserManager {
     webContents.on('did-navigate-in-page', sendToRenderer);
     webContents.on('did-finish-load', sendToRenderer);
     webContents.on('did-stop-loading', sendToRenderer);
+  }
+
+  private listenForLoading(id: string, webContents: WebContents) {
+    const onLoading = (isLoading: boolean) => {
+      this.mainWindow.webContents.send(browserChannels.isLoading, id, isLoading);
+    };
+
+    webContents.on('did-start-loading', () => onLoading(true));
+    webContents.on('did-stop-loading', () => onLoading(false));
   }
 
   private setupWindowOpenHandler(webContents: WebContents) {
@@ -66,7 +74,9 @@ export default class BrowserManager {
     webContents.setUserAgent(getUserAgent());
 
     webContents.setZoomFactor(storageManager.getData('cards').zoomFactor);
-    this.listenForNavigate(id, newView);
+
+    this.listenForNavigate(id, newView.webContents);
+    this.listenForLoading(id, newView.webContents);
 
     this.browsers.push({id, view: newView});
     this.mainWindow.contentView.addChildView(newView);

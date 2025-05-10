@@ -80,21 +80,12 @@ const RunningCardView = ({runningCard}: Props) => {
         rendererIpc.storageUtils.addBrowserRecentFavIcon(targetUrl, url);
       });
 
-      const onLoading = (isLoading: boolean) => dispatch(tabsActions.setTabLoading({isLoading, tabID: tabId}));
-
-      webViewRef.removeEventListener('did-start-loading', () => onLoading(true));
-      webViewRef.removeEventListener('did-stop-loading', () => onLoading(false));
-      webViewRef.addEventListener('did-start-loading', () => onLoading(true));
-      webViewRef.addEventListener('did-stop-loading', () => onLoading(false));
-
       const setTitle = () => dispatch(tabsActions.setTabTitle({title: webViewRef.getTitle(), tabID: tabId}));
       webViewRef.addEventListener('page-title-updated', setTitle);
 
       return () => {
         webViewRef.removeEventListener('did-start-navigation', didNavigate);
         webViewRef.removeEventListener('page-title-updated', setTitle);
-        webViewRef.removeEventListener('did-start-loading', () => onLoading(true));
-        webViewRef.removeEventListener('did-stop-loading', () => onLoading(false));
       };
     }
 

@@ -296,3 +296,19 @@ export const useNewTabEvents = () => {
     };
   }, []);
 };
+
+export const useBrowserEvents = () => {
+  const runningCards = useCardsState('runningCard');
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    rendererIpc.browser.offIsLoading();
+    rendererIpc.browser.onIsLoading((_, id, isLoading) => {
+      const tabID = runningCards.find(card => card.id === id)?.tabId;
+      if (tabID) dispatch(tabsActions.setTabLoading({isLoading, tabID}));
+    });
+    return () => {
+      rendererIpc.browser.offIsLoading();
+    };
+  }, [runningCards]);
+};
