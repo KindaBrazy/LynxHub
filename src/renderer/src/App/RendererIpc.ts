@@ -435,6 +435,10 @@ const rendererIpc = {
     onCanGo: (result: (event: IpcRendererEvent, id: string, canGo: CanGoType) => void) =>
       ipc.on(browserChannels.onCanGo, result),
     offCanGo: () => ipc.removeAllListeners(browserChannels.onCanGo),
+
+    onIsLoading: (result: (event: IpcRendererEvent, id: string, isLoading: boolean) => void) =>
+      ipc.on(browserChannels.isLoading, result),
+    offIsLoading: () => ipc.removeAllListeners(browserChannels.isLoading),
   },
 };
 

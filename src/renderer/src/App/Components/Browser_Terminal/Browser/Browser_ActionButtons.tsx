@@ -37,7 +37,6 @@ export default function Browser_ActionButtons({webview, webuiAddress, tabID, id}
 
   useEffect(() => {
     rendererIpc.browser.onCanGo((_, targetID, canGo) => {
-      console.log(targetID, canGo);
       if (targetID == id) {
         setCanGoBack(canGo.back);
         setCanGoForward(canGo.forward);

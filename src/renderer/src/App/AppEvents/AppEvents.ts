@@ -1,5 +1,6 @@
 import {
   useAppTitleEvents,
+  useBrowserEvents,
   useCheckCardsUpdate,
   useCheckExtensionsUpdate,
   useCheckModulesUpdate,
@@ -23,4 +24,5 @@ export default function useAppEvents() {
   useAppTitleEvents();
   useHotkeyEvents();
   useNewTabEvents();
+  useBrowserEvents();
 }

@@ -340,4 +340,5 @@ export const browserChannels = {
   goForward: 'browser:goForward',
 
   onCanGo: 'browser:on-can-go',
+  isLoading: 'browser:is-loading',
 };
