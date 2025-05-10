@@ -1,6 +1,6 @@
 import {WebviewTag} from 'electron';
 import {isNil} from 'lodash';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
@@ -16,7 +16,7 @@ import TopBar from './TopBar/TopBar';
 type Props = {runningCard: RunningCard};
 
 const RunningCardView = ({runningCard}: Props) => {
-  const {currentView, id, tabId, isEmptyRunning} = runningCard;
+  const {currentView, id, tabId, isEmptyRunning, browserTitle} = runningCard;
 
   const ExtTerminal = useMemo(() => extensionsData.runningAI.terminal, []);
   const ExtBrowser = useMemo(() => extensionsData.runningAI.browser, []);
@@ -51,27 +51,12 @@ const RunningCardView = ({runningCard}: Props) => {
     const isBrowserView = currentView === 'browser';
 
     const terminalTitle = isEmptyRunning ? terminalName : allCards.find(card => card.id === id)?.title;
-    const browserTitle = webViewRef && isDomReady ? webViewRef.getTitle() : 'Browser';
 
     const title = isBrowserView ? browserTitle : terminalTitle;
 
     const currentTitle = tabs.find(tab => tab.id === activeTab)?.title;
     if (title && title !== currentTitle) dispatch(tabsActions.setTabTitle({title, tabID: tabId}));
-  }, [isEmptyRunning, id, tabId, currentView, webViewRef, activeTab, isDomReady, terminalName]);
-
-  const initWebviewRef = useCallback((node: WebviewTag) => {
-    if (node !== null) {
-      setWebViewRef(node);
-      node.addEventListener(
-        'dom-ready',
-        () => {
-          setIsDomReady(true);
-        },
-        // @ts-ignore
-        {once: true},
-      );
-    }
-  }, []);
+  }, [isEmptyRunning, id, tabId, currentView, activeTab, terminalName, browserTitle]);
 
   const [terminalContent, setTerminalContent] = useState<string>('');
 
@@ -90,17 +75,7 @@ const RunningCardView = ({runningCard}: Props) => {
         ) : (
           <ExtTerminal />
         ))}
-      {runningCard.type !== 'terminal' &&
-        (isNil(ExtBrowser) ? (
-          <Browser
-            webViewRef={webViewRef}
-            isDomReady={isDomReady}
-            runningCard={runningCard}
-            initWebviewRef={initWebviewRef}
-          />
-        ) : (
-          <ExtBrowser />
-        ))}
+      {runningCard.type !== 'terminal' && (isNil(ExtBrowser) ? <Browser runningCard={runningCard} /> : <ExtBrowser />)}
     </>
   );
 };

@@ -11,4 +11,5 @@ export type RunningCard = {
   currentView: 'browser' | 'terminal';
   type: 'browser' | 'terminal' | 'both';
   isEmptyRunning: boolean;
+  browserTitle: string;
 };

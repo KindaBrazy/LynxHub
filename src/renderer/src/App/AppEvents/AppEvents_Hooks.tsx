@@ -311,7 +311,10 @@ export const useBrowserEvents = () => {
     rendererIpc.browser.offTitleChange();
     rendererIpc.browser.onTitleChange((_, id, title) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
-      if (tabID) dispatch(tabsActions.setTabTitle({tabID, title}));
+      if (tabID) {
+        dispatch(tabsActions.setTabTitle({tabID, title}));
+        dispatch(cardsActions.setRunningCardBrowserTitle({tabId: tabID, title}));
+      }
     });
 
     rendererIpc.browser.offFavIconChange();

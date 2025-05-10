@@ -119,6 +119,7 @@ const cardsSlice = createSlice({
           webUIAddress: '',
           customAddress: '',
           currentAddress: '',
+          browserTitle: 'Browser',
           startTime: new Date().toString(),
           isEmptyRunning: true,
         },
@@ -139,6 +140,7 @@ const cardsSlice = createSlice({
           webUIAddress: '',
           customAddress: '',
           currentAddress: '',
+          browserTitle: 'Browser',
           currentView: 'terminal',
           startTime: new Date().toString(),
           isEmptyRunning: false,
@@ -182,6 +184,10 @@ const cardsSlice = createSlice({
     setRunningCardView: (state, action: PayloadAction<{tabId: string; view: 'browser' | 'terminal'}>) => {
       const {tabId, view} = action.payload;
       state.runningCard = state.runningCard.map(card => (card.tabId === tabId ? {...card, currentView: view} : card));
+    },
+    setRunningCardBrowserTitle: (state, action: PayloadAction<{tabId: string; title: string}>) => {
+      const {tabId, title} = action.payload;
+      state.runningCard = state.runningCard.map(card => (card.tabId === tabId ? {...card, browserTitle: title} : card));
     },
     toggleRunningCardView: (state, action: PayloadAction<{tabId: string}>) => {
       if (!state.runningCard) return;
