@@ -108,7 +108,6 @@ const RunningCardView = ({runningCard}: Props) => {
         'dom-ready',
         () => {
           setIsDomReady(true);
-          rendererIpc.appWindow.webViewAttached(node.getWebContentsId());
         },
         // @ts-ignore
         {once: true},

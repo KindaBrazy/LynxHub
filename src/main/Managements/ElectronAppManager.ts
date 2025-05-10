@@ -118,6 +118,7 @@ export default class ElectronAppManager {
       const [width, height] = window.getContentSize();
       positionContextMenuAtCursor(window, width, height);
     });
+
     this.contextMenuWindow.on('show', () => {
       const window = this.contextMenuWindow;
       if (!window) return;

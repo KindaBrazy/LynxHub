@@ -1,7 +1,7 @@
-import {BrowserWindow, FindInPageOptions, WebContentsView} from 'electron';
+import {BrowserWindow, FindInPageOptions, shell, WebContents, WebContentsView} from 'electron';
 
-import {browserChannels, CanGoType} from '../../cross/IpcChannelAndTypes';
-import {storageManager} from '../index';
+import {browserChannels, CanGoType, tabsChannels} from '../../cross/IpcChannelAndTypes';
+import {appManager, storageManager} from '../index';
 import {getUserAgent} from '../Utilities/Utils';
 import contextMenuManager from './ContextMenuManager';
 import RegisterHotkeys from './HotkeysManager';
@@ -45,13 +45,27 @@ export default class BrowserManager {
     webContents.on('did-stop-loading', sendToRenderer);
   }
 
+  private setupWindowOpenHandler(webContents: WebContents) {
+    const openExternal = storageManager.getData('app').openLinkExternal;
+    webContents.setWindowOpenHandler(({url}) => {
+      if (openExternal) {
+        shell.openExternal(url);
+      } else {
+        appManager.getWebContent()?.send(tabsChannels.onNewTab, url);
+      }
+      return {action: 'deny'};
+    });
+  }
+
   public createBrowser(id: string) {
     if (this.browsers.some(view => view.id === id)) return;
 
     const newView = new WebContentsView();
-    newView.webContents.setUserAgent(getUserAgent());
+    const webContents = newView.webContents;
 
-    newView.webContents.setZoomFactor(storageManager.getData('cards').zoomFactor);
+    webContents.setUserAgent(getUserAgent());
+
+    webContents.setZoomFactor(storageManager.getData('cards').zoomFactor);
     this.listenForNavigate(id, newView);
 
     this.browsers.push({id, view: newView});
@@ -59,8 +73,9 @@ export default class BrowserManager {
 
     this.setBounds(newView);
 
-    RegisterHotkeys(newView.webContents);
-    contextMenuManager(newView.webContents);
+    this.setupWindowOpenHandler(webContents);
+    RegisterHotkeys(webContents);
+    contextMenuManager(webContents);
   }
 
   public removeBrowser(id: string) {

@@ -357,7 +357,6 @@ const rendererIpc = {
   },
 
   appWindow: {
-    webViewAttached: (id: number) => ipc.send(appWindowChannels.webViewAttached, id),
     onHotkeysChange: (result: (event: IpcRendererEvent, input: LynxInput) => void) =>
       ipc.on(appWindowChannels.hotkeysChange, result),
     offHotkeysChange: () => ipc.removeAllListeners(appWindowChannels.hotkeysChange),

@@ -295,7 +295,6 @@ export const storageUtilsChannels = {
 };
 
 export const appWindowChannels = {
-  webViewAttached: 'window:webview-attached',
   hotkeysChange: 'window:hotkeys-change',
 };
 
