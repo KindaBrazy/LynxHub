@@ -320,10 +320,17 @@ export const useBrowserEvents = () => {
       if (tabID) dispatch(tabsActions.setTabFavIcon({tabID, show: true, url}));
     });
 
+    rendererIpc.browser.offUrlChange();
+    rendererIpc.browser.onUrlChange((_, id, url) => {
+      const tabID = runningCards.find(card => card.id === id)?.tabId;
+      if (tabID) dispatch(cardsActions.setRunningCardCurrentAddress({tabId: tabID, address: url}));
+    });
+
     return () => {
       rendererIpc.browser.offIsLoading();
       rendererIpc.browser.offTitleChange();
       rendererIpc.browser.offFavIconChange();
+      rendererIpc.browser.offUrlChange();
     };
   }, [runningCards]);
 };

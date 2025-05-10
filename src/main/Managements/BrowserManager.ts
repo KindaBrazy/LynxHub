@@ -42,6 +42,10 @@ export default class BrowserManager {
     webContents.on('did-navigate-in-page', sendToRenderer);
     webContents.on('did-finish-load', sendToRenderer);
     webContents.on('did-stop-loading', sendToRenderer);
+
+    webContents.on('did-start-navigation', e => {
+      if (e.isMainFrame) this.mainWindow.webContents.send(browserChannels.onUrlChange, id, e.url);
+    });
   }
 
   private listenForLoading(id: string, webContents: WebContents) {

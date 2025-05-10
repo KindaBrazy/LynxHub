@@ -447,6 +447,10 @@ const rendererIpc = {
     onFavIconChange: (result: (event: IpcRendererEvent, id: string, faviconUrl: string) => void) =>
       ipc.on(browserChannels.onFavIconChange, result),
     offFavIconChange: () => ipc.removeAllListeners(browserChannels.onFavIconChange),
+
+    onUrlChange: (result: (event: IpcRendererEvent, id: string, url: string) => void) =>
+      ipc.on(browserChannels.onUrlChange, result),
+    offUrlChange: () => ipc.removeAllListeners(browserChannels.onUrlChange),
   },
 };
 

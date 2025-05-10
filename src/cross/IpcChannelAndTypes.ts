@@ -343,4 +343,5 @@ export const browserChannels = {
   isLoading: 'browser:is-loading',
   onTitleChange: 'browser:on-title-change',
   onFavIconChange: 'browser:on-favicon-change',
+  onUrlChange: 'browser:on-url-change',
 };
