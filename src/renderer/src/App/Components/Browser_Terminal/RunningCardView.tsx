@@ -1,16 +1,14 @@
-import {DidStartNavigationEvent, WebviewTag} from 'electron';
+import {WebviewTag} from 'electron';
 import {isNil} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useAllCards} from '../../Modules/ModuleLoader';
-import {cardsActions} from '../../Redux/Reducer/CardsReducer';
 import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {RunningCard} from '../../Utils/Types';
-import {getUserAgent} from '../../Utils/UtilFunctions';
 import Browser from './Browser/Browser';
 import Terminal from './Terminal/Terminal';
 import TopBar from './TopBar/TopBar';
@@ -60,25 +58,6 @@ const RunningCardView = ({runningCard}: Props) => {
     const currentTitle = tabs.find(tab => tab.id === activeTab)?.title;
     if (title && title !== currentTitle) dispatch(tabsActions.setTabTitle({title, tabID: tabId}));
   }, [isEmptyRunning, id, tabId, currentView, webViewRef, activeTab, isDomReady, terminalName]);
-
-  useEffect(() => {
-    if (webViewRef) {
-      const didNavigate = (e: DidStartNavigationEvent) => {
-        if (e.isMainFrame) {
-          webViewRef.setUserAgent(getUserAgent());
-          dispatch(cardsActions.setRunningCardCurrentAddress({tabId: tabId, address: e.url}));
-        }
-      };
-      webViewRef.removeEventListener('did-start-navigation', didNavigate);
-      webViewRef.addEventListener('did-start-navigation', didNavigate);
-
-      return () => {
-        webViewRef.removeEventListener('did-start-navigation', didNavigate);
-      };
-    }
-
-    return () => {};
-  }, [webViewRef, activeTab]);
 
   const initWebviewRef = useCallback((node: WebviewTag) => {
     if (node !== null) {

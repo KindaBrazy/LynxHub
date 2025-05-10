@@ -526,7 +526,6 @@ class StorageManager extends BaseStorage {
 
     for (const recent of recentAddress) {
       const isSame = await compareUrls(recent.url, url);
-      console.log(isSame, recent.url, url, favIcon);
       if (isSame) {
         recent.favIcon = favIcon;
         break;
