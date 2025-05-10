@@ -31,7 +31,6 @@ export default class ElectronAppManager {
     minHeight: 560,
     icon,
     webPreferences: {
-      webviewTag: true,
       preload: path.join(__dirname, '../preload/index.cjs'),
       sandbox: false,
     },

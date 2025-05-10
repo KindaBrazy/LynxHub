@@ -1,4 +1,3 @@
-import {WebviewTag} from 'electron';
 import {isNil} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -28,9 +27,6 @@ const RunningCardView = ({runningCard}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [terminalName, setTerminalName] = useState<string>('');
-
-  const [webViewRef, setWebViewRef] = useState<WebviewTag | null>(null);
-  const [isDomReady, setIsDomReady] = useState<boolean>(false);
 
   useEffect(() => {
     if (tabId === activeTab) {
@@ -62,13 +58,7 @@ const RunningCardView = ({runningCard}: Props) => {
 
   return (
     <>
-      <TopBar
-        tabID={tabId}
-        webview={webViewRef}
-        isDomReady={isDomReady}
-        runningCard={runningCard}
-        terminalContent={terminalContent}
-      />
+      <TopBar tabID={tabId} runningCard={runningCard} terminalContent={terminalContent} />
       {runningCard.type !== 'browser' &&
         (isNil(ExtTerminal) ? (
           <Terminal runningCard={runningCard} setTerminalContent={setTerminalContent} />

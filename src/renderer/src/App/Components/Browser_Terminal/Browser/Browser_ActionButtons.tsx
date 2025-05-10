@@ -1,7 +1,6 @@
 import {Button} from '@heroui/react';
-import {WebviewTag} from 'electron';
 import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import {Hotkey_Names} from '../../../../../../cross/HotkeyConstants';
 import {HomeSmile_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
@@ -18,9 +17,9 @@ const variants: Variants = {
 
 const transition: Transition = {duration: 0.3};
 
-type Props = {webview: WebviewTag | null; isDomReady: boolean; webuiAddress: string; tabID: string; id: string};
+type Props = {webuiAddress: string; tabID: string; id: string};
 
-export default function Browser_ActionButtons({webview, webuiAddress, tabID, id}: Props) {
+export default function Browser_ActionButtons({webuiAddress, tabID, id}: Props) {
   const activeTab = useTabsState('activeTab');
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [canGoForward, setCanGoForward] = useState<boolean>(false);
@@ -28,10 +27,7 @@ export default function Browser_ActionButtons({webview, webuiAddress, tabID, id}
   const goBack = () => rendererIpc.browser.goBack(id);
   const goForward = () => rendererIpc.browser.goForward(id);
   const reload = () => rendererIpc.browser.reload(id);
-
-  const loadWebuiAddress = useCallback(() => {
-    webview?.loadURL(webuiAddress);
-  }, [webview, webuiAddress]);
+  const loadWebuiURL = () => rendererIpc.browser.loadURL(id, webuiAddress);
 
   useHotkeyPress([{name: Hotkey_Names.refreshTab, method: activeTab === tabID ? reload : null}]);
 
@@ -74,7 +70,7 @@ export default function Browser_ActionButtons({webview, webuiAddress, tabID, id}
       </Button>
 
       {webuiAddress && (
-        <Button size="sm" variant="light" className="cursor-default" onPress={loadWebuiAddress} isIconOnly>
+        <Button size="sm" variant="light" onPress={loadWebuiURL} className="cursor-default" isIconOnly>
           <HomeSmile_Icon className="size-4" />
         </Button>
       )}
