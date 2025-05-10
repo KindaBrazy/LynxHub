@@ -1,11 +1,10 @@
 import path from 'node:path';
 
-import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, shell, webContents} from 'electron';
+import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, shell} from 'electron';
 
 import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/CrossTypes';
 import {
   appDataChannels,
-  appWindowChannels,
   browserChannels,
   BrowserRecent,
   ChangeWindowState,
@@ -25,7 +24,6 @@ import {
   storageChannels,
   StorageOperation,
   storageUtilsChannels,
-  tabsChannels,
   TaskbarStatus,
   utilsChannels,
   winChannels,
@@ -352,24 +350,6 @@ function modulesApi() {
   ipcMain.handle(moduleApiChannels.getCurrentReleaseTag, (_, dir: string) => GitManager.getCurrentReleaseTag(dir));
 }
 
-function appWindow() {
-  ipcMain.on(appWindowChannels.webViewAttached, (_, id: number) => {
-    const webview = webContents.fromId(id);
-    if (!webview) return;
-
-    const openExternal = storageManager.getData('app').openLinkExternal;
-
-    webview.setWindowOpenHandler(({url}) => {
-      if (openExternal) {
-        shell.openExternal(url);
-      } else {
-        appManager.getWebContent()?.send(tabsChannels.onNewTab, url);
-      }
-      return {action: 'deny'};
-    });
-  });
-}
-
 function browserIPC() {
   ipcMain.on(browserChannels.createBrowser, (_, id: string) => browserManager.createBrowser(id));
   ipcMain.on(browserChannels.removeBrowser, (_, id: string) => browserManager.removeBrowser(id));
@@ -421,8 +401,6 @@ export function listenToAllChannels() {
 
   extensions();
   extensionsIpc();
-
-  appWindow();
 
   listenForContextChannels();
 
