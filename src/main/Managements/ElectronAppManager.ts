@@ -7,7 +7,7 @@ import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents}
 import icon from '../../../resources/icon.png?asset';
 import {tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager, trayManager} from '../index';
-import {positionContextMenuAtCursor, RelaunchApp} from '../Utilities/Utils';
+import {getUserAgent, positionContextMenuAtCursor, RelaunchApp} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
 
 /**
@@ -145,6 +145,7 @@ export default class ElectronAppManager {
   /** Sets up event listeners for the main window. */
   private setupMainWindowEventListeners(): void {
     this.getMainWindow()?.on('ready-to-show', (): void => {
+      this.getWebContent()?.setUserAgent(getUserAgent());
       setTimeout(() => {
         this.loadingWindow?.close();
         this.onReadyToShow?.();
