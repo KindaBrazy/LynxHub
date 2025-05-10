@@ -342,4 +342,5 @@ export const browserChannels = {
   onCanGo: 'browser:on-can-go',
   isLoading: 'browser:is-loading',
   onTitleChange: 'browser:on-title-change',
+  onFavIconChange: 'browser:on-favicon-change',
 };

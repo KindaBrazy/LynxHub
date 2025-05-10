@@ -59,6 +59,15 @@ export default class BrowserManager {
     });
   }
 
+  private listenForFavIcon(id: string, webContents: WebContents) {
+    webContents.on('page-favicon-updated', (_, favicons) => {
+      const url = favicons.find(icon => icon.includes('.ico')) || favicons[0] || '';
+      this.mainWindow.webContents.send(browserChannels.onFavIconChange, id, url);
+
+      storageManager.addBrowserRecentFavIcon(webContents.getURL(), url);
+    });
+  }
+
   private setupWindowOpenHandler(webContents: WebContents) {
     const openExternal = storageManager.getData('app').openLinkExternal;
     webContents.setWindowOpenHandler(({url}) => {
@@ -84,6 +93,7 @@ export default class BrowserManager {
     this.listenForNavigate(id, webContents);
     this.listenForLoading(id, webContents);
     this.listenForTitle(id, webContents);
+    this.listenForFavIcon(id, webContents);
 
     this.browsers.push({id, view: newView});
     this.mainWindow.contentView.addChildView(newView);
