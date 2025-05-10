@@ -304,21 +304,26 @@ export const useBrowserEvents = () => {
   useEffect(() => {
     rendererIpc.browser.offIsLoading();
     rendererIpc.browser.onIsLoading((_, id, isLoading) => {
-      console.log('loading', id);
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) dispatch(tabsActions.setTabLoading({tabID, isLoading}));
     });
 
     rendererIpc.browser.offTitleChange();
     rendererIpc.browser.onTitleChange((_, id, title) => {
-      console.log('title', id);
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) dispatch(tabsActions.setTabTitle({tabID, title}));
+    });
+
+    rendererIpc.browser.offFavIconChange();
+    rendererIpc.browser.onFavIconChange((_, id, url) => {
+      const tabID = runningCards.find(card => card.id === id)?.tabId;
+      if (tabID) dispatch(tabsActions.setTabFavIcon({tabID, show: true, url}));
     });
 
     return () => {
       rendererIpc.browser.offIsLoading();
       rendererIpc.browser.offTitleChange();
+      rendererIpc.browser.offFavIconChange();
     };
   }, [runningCards]);
 };

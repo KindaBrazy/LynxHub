@@ -443,6 +443,10 @@ const rendererIpc = {
     onTitleChange: (result: (event: IpcRendererEvent, id: string, title: string) => void) =>
       ipc.on(browserChannels.onTitleChange, result),
     offTitleChange: () => ipc.removeAllListeners(browserChannels.onTitleChange),
+
+    onFavIconChange: (result: (event: IpcRendererEvent, id: string, faviconUrl: string) => void) =>
+      ipc.on(browserChannels.onFavIconChange, result),
+    offFavIconChange: () => ipc.removeAllListeners(browserChannels.onFavIconChange),
   },
 };
 

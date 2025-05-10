@@ -72,14 +72,6 @@ const RunningCardView = ({runningCard}: Props) => {
       webViewRef.removeEventListener('did-start-navigation', didNavigate);
       webViewRef.addEventListener('did-start-navigation', didNavigate);
 
-      webViewRef.addEventListener('page-favicon-updated', e => {
-        const url = e.favicons.find(icon => icon.includes('.ico')) || e.favicons[0] || '';
-        dispatch(tabsActions.setTabFavIcon({show: true, url, tabID: tabId}));
-
-        const targetUrl = (e.target as WebviewTag).src;
-        rendererIpc.storageUtils.addBrowserRecentFavIcon(targetUrl, url);
-      });
-
       return () => {
         webViewRef.removeEventListener('did-start-navigation', didNavigate);
       };
