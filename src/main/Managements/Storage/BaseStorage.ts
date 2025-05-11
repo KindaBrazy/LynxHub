@@ -227,6 +227,10 @@ class BaseStorage {
       appManager.restart();
     }
   }
+
+  public write() {
+    this.storage.write();
+  }
 }
 
 export default BaseStorage;
