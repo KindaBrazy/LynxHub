@@ -97,6 +97,7 @@ function win() {
   nativeTheme.on('updated', () => {
     if (storageManager.getData('app').darkMode === 'system') {
       appManager.getWebContent()?.send(winChannels.onDarkMode, getSystemDarkMode());
+      appManager.getContextMenuWindow()?.webContents.send(winChannels.onDarkMode, getSystemDarkMode());
     }
   });
 
