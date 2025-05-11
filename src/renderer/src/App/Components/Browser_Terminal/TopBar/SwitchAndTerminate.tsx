@@ -2,7 +2,7 @@ import {useMemo} from 'react';
 
 import {RunningCard} from '../../../Utils/Types';
 import Switch from './Switch';
-import Terminate from './Terminate';
+import Terminate_AI from './Terminate_AI';
 
 type Props = {runningCard: RunningCard};
 
@@ -12,7 +12,7 @@ export default function SwitchAndTerminate({runningCard}: Props) {
   return (
     <div className="flex flex-row gap-x-1">
       {type === 'both' && <Switch currentView={currentView} />}
-      {(type === 'both' || type === 'terminal') && <Terminate runningCard={runningCard} />}
+      {(type === 'both' || type === 'terminal') && <Terminate_AI id={runningCard.id} />}
     </div>
   );
 }

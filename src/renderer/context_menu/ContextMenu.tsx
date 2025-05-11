@@ -16,7 +16,7 @@ export default function ContextMenu() {
     <div
       className={
         `size-fit flex flex-col dark:bg-LynxRaisinBlack bg-white ` +
-        ` ${widthSize === 'sm' ? 'w-44' : widthSize === 'md' ? 'w-72' : ''}`
+        ` ${widthSize === 'sm' ? 'w-44' : widthSize === 'md' ? 'w-72' : 'w-96'}`
       }
       ref={divRef}>
       {...elements}

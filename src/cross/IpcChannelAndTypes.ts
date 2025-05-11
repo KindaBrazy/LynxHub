@@ -304,7 +304,16 @@ export const appWindowChannels = {
 export const contextMenuChannels = {
   onInitView: 'context:init-view',
   onFind: 'context:find-in-page',
+  onTerminateAI: 'context:on-terminate-ai',
+  onTerminateTab: 'context:on-terminate-tab',
+  onCloseApp: 'context:on-terminate-tab',
   onZoom: 'context:zoom-page',
+
+  relaunchAI: 'context:relaunch-ai',
+  onRelaunchAI: 'context:on-relaunch-ai',
+  stopAI: 'context:stop-ai',
+  onStopAI: 'context:on-stop-ai',
+
   resizeWindow: 'context:resize-window',
   showWindow: 'context:show-window',
   hideWindow: 'context:hide-window',
@@ -320,6 +329,10 @@ export const contextMenuChannels = {
 
   downloadImage: 'context:download-image',
   navigate: 'context:navigate',
+
+  openTerminateAI: 'context:open-terminate-ai',
+  openTerminateTab: 'context:open-terminate-tab',
+  openCloseApp: 'context:open-close-app',
 };
 
 export const tabsChannels = {
@@ -334,6 +347,7 @@ export const browserChannels = {
 
   openFindInPage: 'browser:openFindInPage',
   openZoom: 'browser:openZoom',
+
   findInPage: 'browser:findInPage',
   stopFindInPage: 'browser:stopFindInPage',
   setZoomFactor: 'browser:setZoomFactor',

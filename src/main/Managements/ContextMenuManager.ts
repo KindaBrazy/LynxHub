@@ -66,4 +66,11 @@ export function listenForContextChannels() {
         break;
     }
   });
+
+  ipcMain.on(contextMenuChannels.relaunchAI, (_, id: string) => {
+    appManager.getWebContent()?.send(contextMenuChannels.onRelaunchAI, id);
+  });
+  ipcMain.on(contextMenuChannels.stopAI, (_, id: string) => {
+    appManager.getWebContent()?.send(contextMenuChannels.onStopAI, id);
+  });
 }

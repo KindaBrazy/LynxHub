@@ -341,3 +341,52 @@ export const useBrowserEvents = () => {
     };
   }, [runningCards]);
 };
+
+export const useContextEvents = () => {
+  const runningCards = useCardsState('runningCard');
+  const activeTab = useTabsState('activeTab');
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    const stopAI = (id: string) => {
+      const runningCard = runningCards.find(card => card.id === id);
+      if (!runningCard) return;
+
+      if (runningCard.isEmptyRunning) {
+        rendererIpc.pty.emptyProcess(runningCard.id, 'stop');
+      } else {
+        rendererIpc.pty.process(runningCard.id, 'stop', runningCard.id);
+      }
+
+      dispatch(tabsActions.setActiveTabLoading(false));
+      dispatch(tabsActions.setTabIsTerminal({tabID: activeTab, isTerminal: false}));
+      dispatch(cardsActions.stopRunningCard({tabId: activeTab}));
+      rendererIpc.win.setDiscordRpAiRunning({running: false});
+    };
+
+    rendererIpc.contextMenu.offStopAI();
+    rendererIpc.contextMenu.onStopAI((_, id) => stopAI(id));
+
+    rendererIpc.contextMenu.offRelaunchAI();
+    rendererIpc.contextMenu.onRelaunchAI((_, id) => {
+      const runningCard = runningCards.find(card => card.id === id);
+      if (!runningCard) return;
+
+      stopAI(id);
+      setTimeout(() => {
+        if (runningCard.isEmptyRunning) {
+          dispatch(cardsActions.addRunningEmpty({tabId: activeTab, type: runningCard.type}));
+        } else {
+          rendererIpc.pty.process(runningCard.id, 'start', runningCard.id);
+          dispatch(cardsActions.addRunningCard({id: runningCard.id, tabId: activeTab}));
+        }
+      }, 50);
+    });
+
+    return () => {
+      rendererIpc.contextMenu.offRelaunchAI();
+      rendererIpc.contextMenu.offStopAI();
+    };
+  }, [runningCards, dispatch, activeTab]);
+};

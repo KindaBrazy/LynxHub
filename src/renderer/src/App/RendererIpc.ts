@@ -269,7 +269,7 @@ const rendererIpc = {
     getBrowserRecent: (): Promise<BrowserRecent[]> => ipc.invoke(storageUtilsChannels.getBrowserRecent),
 
     setShowConfirm: (type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) =>
-      ipc.send(storageUtilsChannels.onConfirmChange, type, enable),
+      ipc.send(storageUtilsChannels.setShowConfirm, type, enable),
 
     onConfirmChange: (
       result: (
@@ -413,6 +413,15 @@ const rendererIpc = {
     onZoom: (result: (event: IpcRendererEvent, id: string, zoomFactor: number) => void) =>
       ipc.on(contextMenuChannels.onZoom, result),
     offZoom: () => ipc.removeAllListeners(contextMenuChannels.onZoom),
+
+    relaunchAI: (id: string) => ipc.send(contextMenuChannels.relaunchAI, id),
+    onRelaunchAI: (result: (event: IpcRendererEvent, id: string) => void) =>
+      ipc.on(contextMenuChannels.onRelaunchAI, result),
+    offRelaunchAI: () => ipc.removeAllListeners(contextMenuChannels.onRelaunchAI),
+
+    stopAI: (id: string) => ipc.send(contextMenuChannels.stopAI, id),
+    onStopAI: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(contextMenuChannels.onStopAI, result),
+    offStopAI: () => ipc.removeAllListeners(contextMenuChannels.onStopAI),
   },
 
   tab: {
