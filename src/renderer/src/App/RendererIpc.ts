@@ -268,6 +268,9 @@ const rendererIpc = {
     removeBrowserRecent: (url: string) => ipc.send(storageUtilsChannels.removeBrowserRecent, url),
     getBrowserRecent: (): Promise<BrowserRecent[]> => ipc.invoke(storageUtilsChannels.getBrowserRecent),
 
+    setShowConfirm: (type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) =>
+      ipc.send(storageUtilsChannels.onConfirmChange, type, enable),
+
     onConfirmChange: (
       result: (
         event: IpcRendererEvent,
