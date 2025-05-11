@@ -10,20 +10,25 @@ const hideWindow = () => rendererIpc.contextMenu.hideWindow();
 
 export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
   const [toggle, setToggle] = useState<boolean>(false);
+  const [showConfirmValue, setShowConfirmValue] = useState<boolean>(false);
 
   const onShowConfirm = (enabled: boolean) => {
     rendererIpc.storageUtils.setShowConfirm('closeConfirm', !enabled);
+    setShowConfirmValue(enabled);
   };
   const onRestart = () => rendererIpc.win.changeWinState('restart');
   const onClose = () => rendererIpc.win.changeWinState('close');
 
   useEffect(() => {
+    rendererIpc.storage.get('app').then(({closeConfirm}) => {
+      setShowConfirmValue(!closeConfirm);
+    });
     setElements([
       <div className="py-4 px-8" key="close_app_confirm">
         <span className="self-start text-medium font-semibold">Confirm Exit</span>
         <div className="mt-2 flex flex-col space-y-1">
           <Typography.Text>Are you sure you want to exit the application?</Typography.Text>
-          <Checkbox size="sm" onValueChange={onShowConfirm}>
+          <Checkbox size="sm" isSelected={showConfirmValue} onValueChange={onShowConfirm}>
             Always exit without confirmation
           </Checkbox>
         </div>
@@ -44,7 +49,7 @@ export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetW
         </div>
       </div>,
     ]);
-  }, [toggle]);
+  }, [toggle, showConfirmValue]);
 
   useEffect(() => {
     rendererIpc.contextMenu.onCloseApp(() => {
@@ -64,9 +69,11 @@ export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetW
 export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
   const [id, setId] = useState<string>('');
   const [toggle, setToggle] = useState<boolean>(false);
+  const [showConfirmValue, setShowConfirmValue] = useState<boolean>(false);
 
   const onShowConfirm = (enabled: boolean) => {
     rendererIpc.storageUtils.setShowConfirm('closeTabConfirm', !enabled);
+    setShowConfirmValue(enabled);
   };
   const removeTab = () => {
     rendererIpc.contextMenu.removeTab(id);
@@ -74,6 +81,9 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
   };
 
   useEffect(() => {
+    rendererIpc.storage.get('app').then(({closeTabConfirm}) => {
+      setShowConfirmValue(!closeTabConfirm);
+    });
     setElements([
       <div key="terminate_tab" className="py-4 px-5">
         <span className="self-start text-medium font-semibold">Close Terminal Tab?</span>
@@ -81,7 +91,7 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
         <div className="mt-2 flex flex-col space-y-1">
           <Typography.Text>This will terminate running processes.</Typography.Text>
 
-          <Checkbox size="sm" onValueChange={onShowConfirm}>
+          <Checkbox size="sm" isSelected={showConfirmValue} onValueChange={onShowConfirm}>
             Always close terminal tabs without confirmation
           </Checkbox>
         </div>
@@ -98,7 +108,7 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
         </div>
       </div>,
     ]);
-  }, [id, toggle]);
+  }, [id, toggle, showConfirmValue]);
 
   useEffect(() => {
     rendererIpc.contextMenu.onTerminateTab((_, webID) => {
@@ -119,9 +129,11 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
 export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
   const [id, setId] = useState<string>('');
   const [toggle, setToggle] = useState<boolean>(false);
+  const [showConfirmValue, setShowConfirmValue] = useState<boolean>(false);
 
   const onShowConfirm = (enabled: boolean) => {
     rendererIpc.storageUtils.setShowConfirm('terminateAIConfirm', !enabled);
+    setShowConfirmValue(enabled);
   };
   const onStop = () => {
     rendererIpc.contextMenu.stopAI(id);
@@ -133,6 +145,9 @@ export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: S
   };
 
   useEffect(() => {
+    rendererIpc.storage.get('app').then(({terminateAIConfirm}) => {
+      setShowConfirmValue(!terminateAIConfirm);
+    });
     setElements([
       <div className="py-4 px-5" key="terminate_ai_confirm">
         <span className="self-start text-medium font-semibold">Terminate AI Execution</span>
@@ -141,7 +156,7 @@ export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: S
             Stopping the AI will end its execution immediately.
             <br /> Unsaved data will be lost. Continue?
           </Typography.Text>
-          <Checkbox size="sm" onValueChange={onShowConfirm}>
+          <Checkbox size="sm" isSelected={showConfirmValue} onValueChange={onShowConfirm}>
             Always terminate without confirmation
           </Checkbox>
         </div>
@@ -160,7 +175,7 @@ export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: S
         </div>
       </div>,
     ]);
-  }, [id, toggle]);
+  }, [id, toggle, showConfirmValue]);
 
   useEffect(() => {
     rendererIpc.contextMenu.onTerminateAI((_, targetID) => {
