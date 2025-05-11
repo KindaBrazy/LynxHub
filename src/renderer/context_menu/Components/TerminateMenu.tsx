@@ -135,9 +135,9 @@ export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: S
       <div className="py-4 px-8" key="terminate_ai_confirm">
         <span className="self-start text-medium font-semibold">Terminate AI Execution</span>
         <div className="mt-2 flex flex-col space-y-1">
-          <Typography.Text className="text-foreground">
+          <Typography.Text>
             Stopping the AI will end its execution immediately.
-            <br className="text-foreground" /> Unsaved data will be lost. Continue?
+            <br /> Unsaved data will be lost. Continue?
           </Typography.Text>
           <Checkbox size="sm" onValueChange={onShowConfirm}>
             Always terminate without confirmation
