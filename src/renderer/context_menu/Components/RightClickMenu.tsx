@@ -1,11 +1,12 @@
 import {Divider} from '@heroui/react';
 import {ContextMenuParams, EditFlags} from 'electron';
 import {isEmpty} from 'lodash';
-import {Dispatch, ReactNode, SetStateAction, useEffect} from 'react';
+import {ReactNode, useEffect} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
 import {Refresh3_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons4';
 import {ArrowDuo_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons5';
+import {SetElementsType, SetWidthSizeType} from './ContextHooks';
 import {
   CopyDuo_Icon,
   DocumentTextDuo_Icon,
@@ -50,10 +51,7 @@ function NavButton({icon, onPress, className, isDisabled}: NavProps) {
   );
 }
 
-export default function useRightClickMenu(
-  setElements: Dispatch<SetStateAction<ReactNode[]>>,
-  setWidthSize: Dispatch<SetStateAction<'sm' | 'md' | 'lg'>>,
-) {
+export default function useRightClickMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
   useEffect(() => {
     const createActionHandler = (actionFn: () => void): (() => void) => {
       return () => {

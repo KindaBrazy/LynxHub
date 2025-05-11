@@ -1,14 +1,12 @@
 import {Button, Input, Slider} from '@heroui/react';
 import {isArray, isEmpty} from 'lodash';
-import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
 import {ArrowDuo_Icon, CloseSimple_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons5';
+import {SetElementsType, SetWidthSizeType} from './ContextHooks';
 
-export function useZoomMenu(
-  setElements: Dispatch<SetStateAction<ReactNode[]>>,
-  setWidthSize: Dispatch<SetStateAction<'sm' | 'md' | 'lg'>>,
-) {
+export function useZoomMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
   const [id, setId] = useState<string>('');
   const [value, setValue] = useState<number>(100);
   const [toggle, setToggle] = useState<boolean>(false);
@@ -79,10 +77,7 @@ export function useZoomMenu(
   }, [setElements, setWidthSize]);
 }
 
-export function useFindMenu(
-  setElements: Dispatch<SetStateAction<ReactNode[]>>,
-  setWidthSize: Dispatch<SetStateAction<'sm' | 'md' | 'lg'>>,
-) {
+export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
   const [searchValue, setSearchValue] = useState<string>('');
   const [id, setId] = useState<string>('');
 

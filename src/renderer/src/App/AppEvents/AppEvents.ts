@@ -4,6 +4,7 @@ import {
   useCheckCardsUpdate,
   useCheckExtensionsUpdate,
   useCheckModulesUpdate,
+  useContextEvents,
   useHotkeyEvents,
   useIpcEvents,
   useNewTabEvents,
@@ -25,4 +26,5 @@ export default function useAppEvents() {
   useHotkeyEvents();
   useNewTabEvents();
   useBrowserEvents();
+  useContextEvents();
 }
