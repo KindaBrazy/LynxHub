@@ -3,11 +3,14 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {useEffect, useRef} from 'react';
 
 import {useTabsState} from '../../Redux/Reducer/TabsReducer';
+import rendererIpc from '../../RendererIpc';
 import NewTab from './NewTab';
+import {useRemoveTab} from './Tab_Utils';
 import TabItem from './TabItem';
 
 export default function TabContainer() {
   const tabs = useTabsState('tabs');
+  const removeTab = useRemoveTab();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -20,6 +23,15 @@ export default function TabContainer() {
       });
     }
   }, [containerRef]);
+
+  useEffect(() => {
+    rendererIpc.contextMenu.offRemoveTab();
+    rendererIpc.contextMenu.onRemoveTab((_, tabID) => {
+      removeTab(tabID);
+    });
+
+    return () => rendererIpc.contextMenu.offRemoveTab();
+  }, []);
 
   return (
     <div
