@@ -544,6 +544,13 @@ class StorageManager extends BaseStorage {
   public getBrowserRecent(): BrowserRecent[] {
     return this.getData('browser').recentAddress;
   }
+
+  public setShowConfirm(type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) {
+    const prevState = this.getData('app');
+    prevState[type] = enable;
+
+    this.write();
+  }
 }
 
 export default StorageManager;

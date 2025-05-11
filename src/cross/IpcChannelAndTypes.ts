@@ -292,6 +292,8 @@ export const storageUtilsChannels = {
   addBrowserRecentFavIcon: 'storageUtils:add-browser-recent-favicon',
   removeBrowserRecent: 'storageUtils:remove-browser-recent',
   getBrowserRecent: 'storageUtils:get-browser-recent',
+
+  onConfirmChange: 'storage:on-confirm-change',
 };
 
 export const appWindowChannels = {
