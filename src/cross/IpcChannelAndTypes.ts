@@ -306,13 +306,16 @@ export const contextMenuChannels = {
   onFind: 'context:find-in-page',
   onTerminateAI: 'context:on-terminate-ai',
   onTerminateTab: 'context:on-terminate-tab',
-  onCloseApp: 'context:on-terminate-tab',
+  onCloseApp: 'context:on-close-app',
   onZoom: 'context:zoom-page',
 
   relaunchAI: 'context:relaunch-ai',
   onRelaunchAI: 'context:on-relaunch-ai',
   stopAI: 'context:stop-ai',
   onStopAI: 'context:on-stop-ai',
+
+  removeTab: 'context:remove-tab',
+  onRemoveTab: 'context:on-remove-tab',
 
   resizeWindow: 'context:resize-window',
   showWindow: 'context:show-window',

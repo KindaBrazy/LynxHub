@@ -422,6 +422,11 @@ const rendererIpc = {
     stopAI: (id: string) => ipc.send(contextMenuChannels.stopAI, id),
     onStopAI: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(contextMenuChannels.onStopAI, result),
     offStopAI: () => ipc.removeAllListeners(contextMenuChannels.onStopAI),
+
+    removeTab: (tabID: string) => ipc.send(contextMenuChannels.removeTab, tabID),
+    onRemoveTab: (result: (event: IpcRendererEvent, tabID: string) => void) =>
+      ipc.on(contextMenuChannels.onRemoveTab, result),
+    offRemoveTab: () => ipc.removeAllListeners(contextMenuChannels.onRemoveTab),
   },
 
   tab: {

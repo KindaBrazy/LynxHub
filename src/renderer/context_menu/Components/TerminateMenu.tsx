@@ -6,6 +6,8 @@ import rendererIpc from '../../src/App/RendererIpc';
 import {isLinuxPortable} from '../../src/App/Utils/UtilHooks';
 import {SetElementsType, SetWidthSizeType} from './ContextHooks';
 
+const hideWindow = () => rendererIpc.contextMenu.hideWindow();
+
 export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
   const [toggle, setToggle] = useState<boolean>(false);
 
@@ -62,21 +64,22 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
   const [id, setId] = useState<string>('');
   const [toggle, setToggle] = useState<boolean>(false);
 
-  const onShowConfirm = () => {};
-  const onKeepRun = () => {};
-  const removeTab = () => {};
+  const onShowConfirm = (enabled: boolean) => {
+    rendererIpc.storageUtils.setShowConfirm('closeTabConfirm', !enabled);
+  };
+  const onKeepRun = () => hideWindow();
+  const removeTab = () => {
+    rendererIpc.contextMenu.removeTab(id);
+    hideWindow();
+  };
 
   useEffect(() => {
     setElements([
-      <div key="terminate_tab" className="py-4 px-8">
+      <div key="terminate_tab" className="py-4 px-5">
         <span className="self-start text-medium font-semibold">Close Terminal Tab?</span>
 
         <div className="mt-2 flex flex-col space-y-1">
-          <Typography.Text>
-            This will close the terminal tab and terminate running processes.
-            <br />
-            Proceed?
-          </Typography.Text>
+          <Typography.Text>This will terminate running processes.</Typography.Text>
 
           <Checkbox size="sm" onValueChange={onShowConfirm}>
             Always close terminal tabs without confirmation
@@ -120,7 +123,6 @@ export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: S
   const onShowConfirm = (enabled: boolean) => {
     rendererIpc.storageUtils.setShowConfirm('terminateAIConfirm', !enabled);
   };
-  const hideWindow = () => rendererIpc.contextMenu.hideWindow();
   const onStop = () => {
     rendererIpc.contextMenu.stopAI(id);
     hideWindow();
@@ -132,7 +134,7 @@ export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: S
 
   useEffect(() => {
     setElements([
-      <div className="py-4 px-8" key="terminate_ai_confirm">
+      <div className="py-4 px-5" key="terminate_ai_confirm">
         <span className="self-start text-medium font-semibold">Terminate AI Execution</span>
         <div className="mt-2 flex flex-col space-y-1">
           <Typography.Text>

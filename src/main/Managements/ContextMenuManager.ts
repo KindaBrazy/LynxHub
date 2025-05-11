@@ -73,4 +73,7 @@ export function listenForContextChannels() {
   ipcMain.on(contextMenuChannels.stopAI, (_, id: string) => {
     appManager.getWebContent()?.send(contextMenuChannels.onStopAI, id);
   });
+  ipcMain.on(contextMenuChannels.removeTab, (_, tabID: string) => {
+    appManager.getWebContent()?.send(contextMenuChannels.onRemoveTab, tabID);
+  });
 }
