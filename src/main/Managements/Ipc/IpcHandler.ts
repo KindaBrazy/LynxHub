@@ -334,6 +334,12 @@ function storageUtilsIpc() {
   );
   ipcMain.on(storageUtilsChannels.removeBrowserRecent, (_, url: string) => storageManager.removeBrowserRecent(url));
   ipcMain.handle(storageUtilsChannels.getBrowserRecent, () => storageManager.getBrowserRecent());
+
+  ipcMain.on(
+    storageUtilsChannels.setShowConfirm,
+    (_, type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) =>
+      storageManager.setShowConfirm(type, enable),
+  );
 }
 
 function modulesIpc() {
@@ -377,6 +383,15 @@ function browserIPC() {
       .getContextMenuWindow()
       ?.webContents.send(contextMenuChannels.onZoom, id, browserManager.getCurrentZoom(id));
   });
+  ipcMain.on(contextMenuChannels.openTerminateAI, (_, id: string) => {
+    appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onTerminateAI, id);
+  });
+  ipcMain.on(contextMenuChannels.openTerminateTab, (_, id: string) => {
+    appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onTerminateTab, id);
+  });
+  ipcMain.on(contextMenuChannels.openCloseApp, () =>
+    appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onCloseApp),
+  );
 
   ipcMain.on(browserChannels.reload, (_, id: string) => browserManager.reload(id));
   ipcMain.on(browserChannels.goBack, (_, id: string) => browserManager.goBack(id));

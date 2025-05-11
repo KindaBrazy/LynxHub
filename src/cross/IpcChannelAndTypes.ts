@@ -293,6 +293,7 @@ export const storageUtilsChannels = {
   removeBrowserRecent: 'storageUtils:remove-browser-recent',
   getBrowserRecent: 'storageUtils:get-browser-recent',
 
+  setShowConfirm: 'storage:set-show-confirm',
   onConfirmChange: 'storage:on-confirm-change',
 };
 
