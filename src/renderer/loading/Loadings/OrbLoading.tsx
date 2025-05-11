@@ -7,7 +7,7 @@ export default function OrbLoading() {
     <div className="draggable absolute inset-0 overflow-hidden bg-LynxRaisinBlack scrollbar-hide">
       <OrbBG hue={5} />
       <div className="absolute top-1/2 -translate-y-1/2 w-full text-center py-5">
-        <ShinyText speed={2} text={`Powering Up ${APP_NAME}...`} className="text-[1.05rem] font-bold" />
+        <ShinyText speed={2} text={`Powering Up ${APP_NAME}...`} className="text-[0.7rem] text-medium font-semibold" />
       </div>
     </div>
   );
