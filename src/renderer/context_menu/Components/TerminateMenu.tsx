@@ -11,10 +11,11 @@ const hideWindow = () => rendererIpc.contextMenu.hideWindow();
 export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
   const [toggle, setToggle] = useState<boolean>(false);
 
-  const onShowConfirm = () => {};
-  const onCancel = () => {};
-  const onRestart = () => {};
-  const onClose = () => {};
+  const onShowConfirm = (enabled: boolean) => {
+    rendererIpc.storageUtils.setShowConfirm('closeConfirm', !enabled);
+  };
+  const onRestart = () => rendererIpc.win.changeWinState('restart');
+  const onClose = () => rendererIpc.win.changeWinState('close');
 
   useEffect(() => {
     setElements([
@@ -27,7 +28,7 @@ export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetW
           </Checkbox>
         </div>
         <div className="mt-2 flex w-full flex-row justify-between">
-          <Button size="sm" color="success" onPress={onCancel}>
+          <Button size="sm" color="success" onPress={hideWindow}>
             Stay
           </Button>
           <div className="space-x-2">
@@ -67,7 +68,6 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
   const onShowConfirm = (enabled: boolean) => {
     rendererIpc.storageUtils.setShowConfirm('closeTabConfirm', !enabled);
   };
-  const onKeepRun = () => hideWindow();
   const removeTab = () => {
     rendererIpc.contextMenu.removeTab(id);
     hideWindow();
@@ -87,7 +87,7 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
         </div>
 
         <div className="mt-2 flex w-full flex-row justify-between">
-          <Button size="sm" onPress={onKeepRun}>
+          <Button size="sm" onPress={hideWindow}>
             Cancel
           </Button>
           <div className="space-x-2">
