@@ -549,6 +549,8 @@ class StorageManager extends BaseStorage {
     const prevState = this.getData('app');
     prevState[type] = enable;
 
+    appManager.getWebContent()?.send(storageUtilsChannels.onConfirmChange, type, enable);
+
     this.write();
   }
 }
