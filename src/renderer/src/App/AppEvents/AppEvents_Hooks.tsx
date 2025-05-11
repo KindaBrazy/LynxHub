@@ -218,6 +218,10 @@ export const useIpcEvents = () => {
           break;
       }
     });
+
+    rendererIpc.storageUtils.onConfirmChange((_, type, enable) => {
+      dispatch(settingsActions.setSettingsState({key: type, value: enable}));
+    });
   }, [dispatch]);
 
   useEffect(() => {

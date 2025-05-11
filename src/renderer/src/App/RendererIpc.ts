@@ -267,6 +267,14 @@ const rendererIpc = {
       ipc.send(storageUtilsChannels.addBrowserRecentFavIcon, url, favIcon),
     removeBrowserRecent: (url: string) => ipc.send(storageUtilsChannels.removeBrowserRecent, url),
     getBrowserRecent: (): Promise<BrowserRecent[]> => ipc.invoke(storageUtilsChannels.getBrowserRecent),
+
+    onConfirmChange: (
+      result: (
+        event: IpcRendererEvent,
+        type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm',
+        enable: boolean,
+      ) => void,
+    ) => ipc.on(storageUtilsChannels.onConfirmChange, result),
   },
 
   /** Utilities methods */
@@ -381,8 +389,23 @@ const rendererIpc = {
     ) => ipc.on(contextMenuChannels.onInitView, result),
     offInitView: () => ipc.removeAllListeners(contextMenuChannels.onInitView),
 
+    openTerminateAI: (id: string) => ipc.send(contextMenuChannels.openTerminateAI, id),
+    openTerminateTab: (id: string) => ipc.send(contextMenuChannels.openTerminateTab, id),
+    openCloseApp: () => ipc.send(contextMenuChannels.openCloseApp),
+
     onFind: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(contextMenuChannels.onFind, result),
     offFind: () => ipc.removeAllListeners(contextMenuChannels.onFind),
+
+    onTerminateAI: (result: (event: IpcRendererEvent, id: string) => void) =>
+      ipc.on(contextMenuChannels.onTerminateAI, result),
+    offTerminateAI: () => ipc.removeAllListeners(contextMenuChannels.onTerminateAI),
+
+    onTerminateTab: (result: (event: IpcRendererEvent, id: string) => void) =>
+      ipc.on(contextMenuChannels.onTerminateTab, result),
+    offTerminateTab: () => ipc.removeAllListeners(contextMenuChannels.onTerminateTab),
+
+    onCloseApp: (result: (event: IpcRendererEvent) => void) => ipc.on(contextMenuChannels.onCloseApp, result),
+    offCloseApp: () => ipc.removeAllListeners(contextMenuChannels.onCloseApp),
 
     onZoom: (result: (event: IpcRendererEvent, id: string, zoomFactor: number) => void) =>
       ipc.on(contextMenuChannels.onZoom, result),
