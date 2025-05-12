@@ -27,6 +27,7 @@
     "preview": "electron-vite preview --noSandbox",
     "preview:skip": "electron-vite preview --noSandbox --skipBuild",
     "dev": "electron-vite dev -w --noSandbox",
+    "prof": "electron-vite dev -w --noSandbox -- --js-flags=\"--prof\"",
     "dev:srouce": "electron-vite dev -w --noSandbox --sourcemap",
     "postinstall": "electron-builder install-app-deps",
     "build": "npm run typecheck && electron-vite build",
