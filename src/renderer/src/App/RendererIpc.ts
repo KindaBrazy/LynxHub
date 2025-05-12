@@ -393,7 +393,8 @@ const rendererIpc = {
     offInitView: () => ipc.removeAllListeners(contextMenuChannels.onInitView),
 
     openTerminateAI: (id: string) => ipc.send(contextMenuChannels.openTerminateAI, id),
-    openTerminateTab: (id: string) => ipc.send(contextMenuChannels.openTerminateTab, id),
+    openTerminateTab: (id: string, customPosition?: {x: number; y: number}) =>
+      ipc.send(contextMenuChannels.openTerminateTab, id, customPosition),
     openCloseApp: () => ipc.send(contextMenuChannels.openCloseApp),
 
     onFind: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(contextMenuChannels.onFind, result),
