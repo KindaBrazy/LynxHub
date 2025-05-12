@@ -2,7 +2,7 @@ import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
 import {dirname, isAbsolute, relative, resolve} from 'node:path';
 
-import {app, BrowserWindow, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue, screen} from 'electron';
+import {app, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
 import fs from 'graceful-fs';
 
 import {formatSize} from '../../cross/CrossUtils';
@@ -206,32 +206,4 @@ export function getUserAgent() {
     `Mozilla/5.0 ${osString} AppleWebKit/537.36 (KHTML, like Gecko)` +
     ` Electron/${process.versions.electron} Chrome/${process.versions.chrome} Safari/537.36`
   );
-}
-
-export function positionContextMenuAtCursor(contextWindow: BrowserWindow, menuWidth: number, menuHeight: number) {
-  const {x: cursorX, y: cursorY} = screen.getCursorScreenPoint();
-
-  const currentDisplay = screen.getDisplayNearestPoint({x: cursorX, y: cursorY});
-
-  const workArea = currentDisplay.workArea;
-
-  let newX = cursorX;
-  let newY = cursorY;
-
-  if (cursorX + menuWidth > workArea.x + workArea.width) {
-    newX = workArea.x + workArea.width - menuWidth;
-  }
-  if (cursorY + menuHeight > workArea.y + workArea.height) {
-    newY = workArea.y + workArea.height - menuHeight;
-    // }
-  }
-
-  if (newX < workArea.x) {
-    newX = workArea.x;
-  }
-  if (newY < workArea.y) {
-    newY = workArea.y;
-  }
-
-  contextWindow.setPosition(Math.floor(newX), Math.floor(newY), true);
 }
