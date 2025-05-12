@@ -2,12 +2,12 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents} from 'electron';
+import {app, BrowserWindow, BrowserWindowConstructorOptions, screen, shell, WebContents} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
 import {tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager, trayManager} from '../index';
-import {getUserAgent, positionContextMenuAtCursor, RelaunchApp} from '../Utilities/Utils';
+import {getUserAgent, RelaunchApp} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
 
 /**
@@ -105,26 +105,45 @@ export default class ElectronAppManager {
     });
   }
 
+  private positionContextMenuAtCursor() {
+    const window = this.getContextMenuWindow();
+    if (!window) return;
+    const [menuWidth, menuHeight] = window.getContentSize();
+
+    const {x: cursorX, y: cursorY} = screen.getCursorScreenPoint();
+
+    const currentDisplay = screen.getDisplayNearestPoint({x: cursorX, y: cursorY});
+
+    const workArea = currentDisplay.workArea;
+
+    let newX = cursorX;
+    let newY = cursorY;
+
+    if (cursorX + menuWidth > workArea.x + workArea.width) {
+      newX = workArea.x + workArea.width - menuWidth;
+    }
+    if (cursorY + menuHeight > workArea.y + workArea.height) {
+      newY = workArea.y + workArea.height - menuHeight;
+      // }
+    }
+
+    if (newX < workArea.x) {
+      newX = workArea.x;
+    }
+    if (newY < workArea.y) {
+      newY = workArea.y;
+    }
+
+    window.setPosition(Math.floor(newX), Math.floor(newY), true);
+  }
+
   private createContextWindow() {
     this.contextMenuWindow = new BrowserWindow({...ElectronAppManager.CONTEXT_WINDOW_CONFIG, parent: this.mainWindow});
 
     this.loadAppropriateURL(this.contextMenuWindow, 'context_menu.html');
 
-    this.contextMenuWindow.on('resize', () => {
-      const window = this.contextMenuWindow;
-      if (!window) return;
-
-      const [width, height] = window.getContentSize();
-      positionContextMenuAtCursor(window, width, height);
-    });
-
-    this.contextMenuWindow.on('show', () => {
-      const window = this.contextMenuWindow;
-      if (!window) return;
-
-      const [width, height] = window.getContentSize();
-      positionContextMenuAtCursor(window, width, height);
-    });
+    this.contextMenuWindow.on('resize', () => this.positionContextMenuAtCursor());
+    this.contextMenuWindow.on('show', () => this.positionContextMenuAtCursor());
 
     this.contextMenuWindow.on('blur', () => this.contextMenuWindow?.hide());
   }
