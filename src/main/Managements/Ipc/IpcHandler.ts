@@ -387,7 +387,8 @@ function browserIPC() {
   ipcMain.on(contextMenuChannels.openTerminateAI, (_, id: string) => {
     appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onTerminateAI, id);
   });
-  ipcMain.on(contextMenuChannels.openTerminateTab, (_, id: string) => {
+  ipcMain.on(contextMenuChannels.openTerminateTab, (_, id: string, customPosition?: {x: number; y: number}) => {
+    appManager.setCustomContextPosition(customPosition);
     appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onTerminateTab, id);
   });
   ipcMain.on(contextMenuChannels.openCloseApp, () =>

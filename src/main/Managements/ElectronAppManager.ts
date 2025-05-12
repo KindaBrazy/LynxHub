@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {app, BrowserWindow, BrowserWindowConstructorOptions, screen, shell, WebContents} from 'electron';
+import {isEmpty} from 'lodash';
 
 import icon from '../../../resources/icon.png?asset';
 import {tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
@@ -21,6 +22,7 @@ export default class ElectronAppManager {
   private contextMenuWindow?: BrowserWindow;
   private loadingWindow?: BrowserWindow;
   private isLoading?: boolean;
+  private customContextPosition: {x: number; y: number} | undefined;
 
   private static readonly MAIN_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
     frame: false,
@@ -105,6 +107,10 @@ export default class ElectronAppManager {
     });
   }
 
+  public setCustomContextPosition(customPosition?: {x: number; y: number}): void {
+    this.customContextPosition = customPosition;
+  }
+
   private positionContextMenuAtCursor() {
     const window = this.getContextMenuWindow();
     if (!window) return;
@@ -134,7 +140,19 @@ export default class ElectronAppManager {
       newY = workArea.y;
     }
 
-    window.setPosition(Math.floor(newX), Math.floor(newY), true);
+    try {
+      if (!isEmpty(this.customContextPosition)) {
+        if (this.mainWindow) {
+          const x = Math.floor(this.customContextPosition.x) + this.mainWindow.getBounds().x + 10;
+          const y = Math.floor(this.customContextPosition.y) + this.mainWindow.getBounds().y + 10;
+          window.setPosition(x, y, true);
+        }
+      } else {
+        window.setPosition(Math.floor(newX), Math.floor(newY), true);
+      }
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   private createContextWindow() {

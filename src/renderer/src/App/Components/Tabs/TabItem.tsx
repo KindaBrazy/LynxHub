@@ -27,11 +27,13 @@ export default function TabItem({tab}: Props) {
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
+  const closeBtnRef = useRef<HTMLButtonElement | null>(null);
+
   const closeTabConfirm = useSettingsState('closeTabConfirm');
 
   const removeTab = useRemoveTab();
 
-  const handleRemove = () => {
+  const handleRemove = (isHokey: boolean) => {
     const running = runningCards.find(card => card.tabId === tab.id);
     if (running) {
       if (running.type === 'browser') {
@@ -40,21 +42,27 @@ export default function TabItem({tab}: Props) {
         if (isCtrlPressed || !closeTabConfirm) {
           removeTab(tab.id);
         } else {
-          rendererIpc.contextMenu.openTerminateTab(tab.id);
+          const bounds = closeBtnRef.current?.getBoundingClientRect();
+          if (bounds && isHokey) {
+            rendererIpc.contextMenu.openTerminateTab(tab.id, {x: bounds.x, y: bounds.y});
+          } else {
+            rendererIpc.contextMenu.openTerminateTab(tab.id);
+          }
         }
       }
     } else {
       removeTab(tab.id);
     }
   };
+
   const handleEvent = (e: MouseEvent) => {
     if (e.button === 1) {
       e.preventDefault();
-      handleRemove();
+      handleRemove(false);
     }
   };
 
-  useHotkeyPress([{name: Hotkey_Names.closeTab, method: activeTab === tab.id ? handleRemove : null}]);
+  useHotkeyPress([{name: Hotkey_Names.closeTab, method: activeTab === tab.id ? () => handleRemove(true) : null}]);
 
   useEffect(() => {
     if (btnRef.current) {
@@ -100,7 +108,8 @@ export default function TabItem({tab}: Props) {
           as="span"
           size="sm"
           variant="light"
-          onPress={handleRemove}
+          ref={closeBtnRef}
+          onPress={() => handleRemove(false)}
           className="scale-75 cursor-default"
           isIconOnly>
           <CloseSimple_Icon className="size-4" />
