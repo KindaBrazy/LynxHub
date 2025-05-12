@@ -11,6 +11,7 @@ export default function contextMenuManager(contents: WebContents) {
     const window = appManager.getContextMenuWindow();
     if (!window) return;
 
+    appManager.setCustomContextPosition(undefined);
     window.webContents?.send(
       contextMenuChannels.onInitView,
       params,

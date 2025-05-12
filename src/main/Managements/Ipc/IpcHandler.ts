@@ -377,23 +377,27 @@ function browserIPC() {
   );
 
   ipcMain.on(browserChannels.openFindInPage, (_, id: string) => {
+    appManager.setCustomContextPosition(undefined);
     appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onFind, id);
   });
   ipcMain.on(browserChannels.openZoom, (_, id: string) => {
+    appManager.setCustomContextPosition(undefined);
     appManager
       .getContextMenuWindow()
       ?.webContents.send(contextMenuChannels.onZoom, id, browserManager.getCurrentZoom(id));
   });
   ipcMain.on(contextMenuChannels.openTerminateAI, (_, id: string) => {
+    appManager.setCustomContextPosition(undefined);
     appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onTerminateAI, id);
   });
   ipcMain.on(contextMenuChannels.openTerminateTab, (_, id: string, customPosition?: {x: number; y: number}) => {
     appManager.setCustomContextPosition(customPosition);
     appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onTerminateTab, id);
   });
-  ipcMain.on(contextMenuChannels.openCloseApp, () =>
-    appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onCloseApp),
-  );
+  ipcMain.on(contextMenuChannels.openCloseApp, () => {
+    appManager.setCustomContextPosition(undefined);
+    appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onCloseApp);
+  });
 
   ipcMain.on(browserChannels.reload, (_, id: string) => browserManager.reload(id));
   ipcMain.on(browserChannels.goBack, (_, id: string) => browserManager.goBack(id));
