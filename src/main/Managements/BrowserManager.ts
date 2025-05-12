@@ -20,10 +20,10 @@ export default class BrowserManager {
 
   private setBounds(view: WebContentsView) {
     const [initialWidth, initialHeight] = this.mainWindow.getSize();
-    view.setBounds({x: 0, y: 80, width: initialWidth, height: initialHeight});
+    view.setBounds({x: 0, y: 80, width: initialWidth, height: initialHeight - 80});
     this.mainWindow.on('resize', () => {
       const [width, height] = this.mainWindow.getContentSize();
-      view.setBounds({x: 0, y: 80, width, height});
+      view.setBounds({x: 0, y: 80, width, height: height - 80});
     });
   }
 
