@@ -74,6 +74,7 @@ class BaseStorage {
       initialized: false,
       appDataDir: isPortable() ? `./${APP_NAME}_Data` : join(app.getPath('documents'), APP_NAME),
       lastSize: undefined,
+      hardwareAcceleration: true,
     },
     terminal: {
       outputColor: true,
@@ -147,6 +148,7 @@ class BaseStorage {
       this.storage.data.app.hotkeys = Get_Default_Hotkeys(platform());
       this.storage.data.app.openLinkExternal = false;
       this.storage.data.cards.zoomFactor = 1;
+      this.storage.data.app.hardwareAcceleration = true;
 
       this.storage.write();
     };

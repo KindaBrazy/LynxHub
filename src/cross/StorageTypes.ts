@@ -55,6 +55,7 @@ type StorageTypes = {
     openLastSize: boolean;
     dynamicAppTitle: boolean;
     openLinkExternal: boolean;
+    hardwareAcceleration: boolean;
     lastSize:
       | {
           maximized: boolean;
