@@ -130,6 +130,9 @@ export const useStorageData = () => {
       dispatch(settingsActions.setSettingsState({key: 'openLastSize', value: storage.app.openLastSize}));
       dispatch(settingsActions.setSettingsState({key: 'dynamicAppTitle', value: storage.app.dynamicAppTitle}));
       dispatch(settingsActions.setSettingsState({key: 'openLinkExternal', value: storage.app.openLinkExternal}));
+      dispatch(
+        settingsActions.setSettingsState({key: 'hardwareAcceleration', value: storage.app.hardwareAcceleration}),
+      );
 
       if (storage.app.startupLastActivePage) {
         const lastPage = storage.app.lastPage;

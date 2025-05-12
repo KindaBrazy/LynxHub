@@ -19,6 +19,7 @@ type SettingState = {
   openLastSize: boolean;
   dynamicAppTitle: boolean;
   openLinkExternal: boolean;
+  hardwareAcceleration: boolean;
 
   updatedModules: string[];
   newModules: string[];
@@ -51,6 +52,7 @@ const initialState: SettingState = {
   extensionsUpdateAvailable: [],
   dynamicAppTitle: true,
   openLinkExternal: false,
+  hardwareAcceleration: true,
 };
 
 const settingsSlice = createSlice({

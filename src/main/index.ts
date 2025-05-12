@@ -47,6 +47,10 @@ Menu.setApplicationMenu(null);
 
 checkAppDirectories();
 
+if (!storageManager.getData('app').hardwareAcceleration) {
+  app.disableHardwareAcceleration();
+}
+
 async function setupApp() {
   await extensionManager.createServer();
   extensionManager.setStorageManager(storageManager);
@@ -57,12 +61,6 @@ async function setupApp() {
   await downloadDU();
 
   app.whenReady().then(onAppReady);
-  /*app.on('web-contents-created', (_, contents) => {
-    RegisterHotkeys(contents);
-    if (contents.id > 3) {
-      contextMenuManager(contents);
-    }
-  });*/
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window);
@@ -89,6 +87,7 @@ async function onAppReady() {
   discordRpcManager = new DiscordRpcManager();
   cardsValidator = new ValidateCards();
   moduleManager = new ModuleManager();
+
   extensionManager.setDiscordRpcManager(discordRpcManager);
 
   await moduleManager.createServer();

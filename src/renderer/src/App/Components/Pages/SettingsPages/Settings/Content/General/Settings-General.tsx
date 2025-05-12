@@ -1,6 +1,7 @@
 import {Tuning_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import SettingsSection from '../../SettingsPage-ContentSection';
 import SettingsGeneralConfirm from './SettingsGeneral-Confirm';
+import SettingsGeneralHwAcc from './SettingsGeneral-HWAcc';
 import SettingsGeneralLinks from './SettingsGeneral-Links';
 import SettingsGeneralTaskbar from './SettingsGeneral-Taskbar';
 import SettingsGeneralTheme from './SettingsGeneral-Theme';
@@ -15,6 +16,7 @@ export default function SettingsGeneral() {
       <SettingsGeneralTheme />
       <SettingsGeneralTaskbar />
       <SettingsGeneralTooltip />
+      <SettingsGeneralHwAcc />
       <SettingsGeneralLinks />
       <SettingsGeneralTitleName />
       <SettingsGeneralConfirm />
