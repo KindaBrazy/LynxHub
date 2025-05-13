@@ -1,6 +1,7 @@
 import {Button} from '@heroui/react';
 import {useState} from 'react';
 
+import {BroomDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons6';
 import rendererIpc from '../../../../../../RendererIpc';
 
 export default function SettingsBrowser_ClearData() {
@@ -27,10 +28,22 @@ export default function SettingsBrowser_ClearData() {
 
   return (
     <>
-      <Button variant="flat" color="warning" onPress={clearCache} isLoading={isCacheLoading} fullWidth>
+      <Button
+        variant="flat"
+        color="warning"
+        onPress={clearCache}
+        isLoading={isCacheLoading}
+        startContent={<BroomDuo_Icon />}
+        fullWidth>
         Clear Cache
       </Button>
-      <Button variant="flat" color="warning" onPress={clearCookies} isLoading={isCookiesLoading} fullWidth>
+      <Button
+        variant="flat"
+        color="warning"
+        onPress={clearCookies}
+        isLoading={isCookiesLoading}
+        startContent={<BroomDuo_Icon />}
+        fullWidth>
         Clear Cookies
       </Button>
     </>

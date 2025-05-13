@@ -2,6 +2,7 @@ import {Button} from '@heroui/react';
 import {message} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 
+import {Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Database_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import rendererIpc from '../../../../../RendererIpc';
@@ -46,7 +47,9 @@ export default function SettingsData() {
         {currentPath}
       </Button>
 
-      <Button onPress={change}>Change (Restart Required)</Button>
+      <Button onPress={change} startContent={<Refresh_Icon />}>
+        Change (Restart Required)
+      </Button>
     </SettingsSection>
   );
 }
