@@ -1,9 +1,10 @@
 import {Checkbox, CircularProgress, Select, SelectItem} from '@heroui/react';
-import {Card, InputNumber, message} from 'antd';
+import {Card, InputNumber} from 'antd';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {SettingsMinimal_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import {CloneOptionsResult} from './CloneRepo';
 
 type Branch = {
@@ -38,7 +39,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
         const {owner, repo} = extractGitUrl(url);
         const repoResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
         if (!repoResponse.ok) {
-          message.error(`Failed to fetch repository details: ${repoResponse.status}`);
+          lynxTopToast.error(`Failed to fetch repository details: ${repoResponse.status}`);
           return;
         }
         const repoData = await repoResponse.json();
@@ -46,7 +47,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
 
         const branchesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/branches`);
         if (!branchesResponse.ok) {
-          message.error(`Failed to fetch branches: ${branchesResponse.status}`);
+          lynxTopToast.error(`Failed to fetch branches: ${branchesResponse.status}`);
           return;
         }
         const branchesData: Branch[] = await branchesResponse.json();
@@ -58,7 +59,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
           }),
         );
       } catch (err: any) {
-        message.error(err.message || 'An error occurred while fetching data.');
+        lynxTopToast.error(err.message || 'An error occurred while fetching data.');
       } finally {
         setLoading(false);
       }

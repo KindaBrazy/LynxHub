@@ -1,11 +1,12 @@
 import {Button} from '@heroui/react';
-import {message, Result} from 'antd';
+import {Result} from 'antd';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {settingsActions} from '../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
+import {lynxTopToast} from '../../../Utils/UtilHooks';
 
 type Props = {errMsg?: string; success: boolean; tryAgain: () => void; cancel: () => void; onClose: () => void};
 
@@ -15,7 +16,7 @@ export default function Downloaded({errMsg, success, tryAgain, cancel, onClose}:
 
   const installLater = useCallback(() => {
     dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: false}));
-    message.info('App will be updated when closed.');
+    lynxTopToast.info('App will be updated when closed.');
     onClose();
   }, [onClose, dispatch]);
 

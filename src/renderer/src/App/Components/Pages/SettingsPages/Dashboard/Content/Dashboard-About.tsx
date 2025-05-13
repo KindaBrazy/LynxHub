@@ -1,4 +1,4 @@
-import {Card, Divider, message, Typography} from 'antd';
+import {Card, Divider, Typography} from 'antd';
 import {useCallback} from 'react';
 
 import {
@@ -26,6 +26,7 @@ import {
   XSite_Icon,
 } from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {Youtube_Color_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIconsColor';
+import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
 const {Title, Paragraph, Text} = Typography;
@@ -35,7 +36,7 @@ export const DashboardAboutId = 'settings_about_elem';
 export default function DashboardAbout() {
   const copyText = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
-    message.success(`Copied to clipboard : ${text}`);
+    lynxTopToast.info(`Copied to clipboard : ${text}`);
   }, []);
 
   return (

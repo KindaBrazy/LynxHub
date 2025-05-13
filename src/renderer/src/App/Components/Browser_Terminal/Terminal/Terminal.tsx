@@ -5,7 +5,6 @@ import {Unicode11Addon} from '@xterm/addon-unicode11';
 import {WebLinksAddon} from '@xterm/addon-web-links';
 import {WebglAddon} from '@xterm/addon-webgl';
 import {Terminal as XTerminal} from '@xterm/xterm';
-import {message} from 'antd';
 import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useRef, useState} from 'react';
@@ -20,6 +19,7 @@ import {useTerminalState} from '../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
+import {lynxTopToast} from '../../../Utils/UtilHooks';
 import {getRendererMode, getTheme, getWindowPty} from './Terminal_Utils';
 import parseTerminalColors from './TerminalColorHandler';
 
@@ -58,7 +58,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
   const copyText = useCallback(() => {
     if (!isEmpty(selectedText)) {
       navigator.clipboard.writeText(selectedText);
-      message.success(`Copied to clipboard`);
+      lynxTopToast.success(`Copied to clipboard`);
       terminal.current?.clearSelection();
     }
   }, [selectedText, terminal]);

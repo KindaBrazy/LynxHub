@@ -1,5 +1,5 @@
 import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {CollapseProps, Divider, message, Typography} from 'antd';
+import {CollapseProps, Divider, Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -19,7 +19,7 @@ import {useUserState} from '../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {modalMotionProps} from '../../../Utils/Constants';
-import {RenderSubItems} from '../../../Utils/UtilHooks';
+import {lynxTopToast, RenderSubItems} from '../../../Utils/UtilHooks';
 import Downloaded from './Downloaded';
 import Downloading from './Downloading';
 import Info from './Info';
@@ -45,7 +45,7 @@ const UpdateApp = () => {
       if (result === 'update-available') {
         setDownloadProgress(undefined);
         dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: true}));
-        message.info('New Update Available!');
+        lynxTopToast.info('New Update Available!');
         const isRunningAI = runningCard.some(card => card.tabId === activeTab);
         if (!isRunningAI) {
           dispatch(modalActions.openUpdateApp());

@@ -1,8 +1,8 @@
 import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
-import {message} from 'antd';
 import {useState} from 'react';
 
 import rendererIpc from '../../../RendererIpc';
+import {lynxTopToast} from '../../../Utils/UtilHooks';
 
 type Props = {isShallow: boolean; dir: string; refreshData: () => void};
 export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
@@ -20,10 +20,10 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
     rendererIpc.git
       .unShallow(dir)
       .then(() => {
-        message.success('Successfully unshallowed the repository.');
+        lynxTopToast.success('Successfully unshallowed the repository.');
         refreshData();
       })
-      .catch(() => message.error(`Failed to unshallow the repository.`))
+      .catch(() => lynxTopToast.error('Failed to unshallow the repository.'))
       .finally(() => setIsLoadingShallow(false));
   };
 
@@ -33,10 +33,10 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
     rendererIpc.git
       .resetHard(dir)
       .then(() => {
-        message.success('Successfully reset the repository to its last committed state.');
+        lynxTopToast.success('Successfully reset the repository to its last committed state.');
         refreshData();
       })
-      .catch(() => message.error(`Failed to reset the repository.`))
+      .catch(() => lynxTopToast.error(`Failed to reset the repository.`))
       .finally(() => setIsResetting(false));
   };
 
@@ -46,11 +46,11 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
       .stashDrop(dir)
       .then(result => {
         if (result.type === 'success') {
-          message.success(result.message);
+          lynxTopToast.success(result.message);
         } else if (result.type === 'info') {
-          message.info(result.message);
+          lynxTopToast.info(result.message);
         } else {
-          message.error(result.message);
+          lynxTopToast.error(result.message);
         }
       })
       .finally(() => {

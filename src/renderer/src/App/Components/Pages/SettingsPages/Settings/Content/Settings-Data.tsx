@@ -1,11 +1,11 @@
 import {Button} from '@heroui/react';
-import {message} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 
 import {Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
 import {Database_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {OpenFolder_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
 import rendererIpc from '../../../../../RendererIpc';
+import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SettingsSection from '../SettingsPage-ContentSection';
 
 export const SettingsDataId = 'settings_data_elem';
@@ -15,17 +15,13 @@ export default function SettingsData() {
   const [currentPath, setCurrentPath] = useState<string>('');
 
   const change = () => {
-    message.loading({content: 'Selecting folder for data...', key: 'select-app-data', duration: 0});
     rendererIpc.appData
       .selectAnother()
       .then(() => {
-        message.destroy('select-app-data');
-        message.success('Folder selected successfully! Restarting...');
+        lynxTopToast.success('Folder selected successfully! Restarting...');
       })
-      .catch(e => {
-        message.destroy('select-app-data');
-        message.error('An error occurred while selecting the folder.');
-        console.log(e);
+      .catch(() => {
+        lynxTopToast.error('An error occurred while selecting the folder.');
       });
   };
 

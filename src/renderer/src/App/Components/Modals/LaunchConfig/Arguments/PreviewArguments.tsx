@@ -1,9 +1,10 @@
 import {Button} from '@heroui/react';
-import {Card, Empty, message, Typography} from 'antd';
+import {Card, Empty, Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback} from 'react';
 
 import {Copy_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import LynxTooltip from '../../../Reusable/LynxTooltip';
 import LaunchConfigSection from '../LaunchConfig-Section';
 
@@ -16,9 +17,9 @@ export default function PreviewArguments({text}: Props) {
   const onCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(text);
-      message.success('Copied to clipboard successfully.');
+      lynxTopToast.success('Copied to clipboard successfully.');
     } catch (_) {
-      message.error('Error: Unable to copy to clipboard.');
+      lynxTopToast.error('Error: Unable to copy to clipboard.');
     }
   }, [text]);
 

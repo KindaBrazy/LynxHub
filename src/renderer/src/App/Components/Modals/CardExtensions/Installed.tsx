@@ -1,5 +1,4 @@
 import {getKeyValue, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@heroui/react';
-import {message} from 'antd';
 import {motion} from 'framer-motion';
 import {filter, find, isEmpty, startCase} from 'lodash';
 import {
@@ -18,6 +17,7 @@ import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
 import rendererIpc from '../../../RendererIpc';
 import {fetchRepoDetails} from '../../../Utils/LocalStorage';
+import {lynxTopToast} from '../../../Utils/UtilHooks';
 import {
   emptyTableElement,
   extensionsColumns,
@@ -61,11 +61,13 @@ const Installed = forwardRef(
 
         rendererIpc.file[type](`${dir}/${name}`)
           .then(() => {
-            message.success(`${name} extension ${type === 'removeDir' ? 'removed' : 'moved to trash'} successfully.`);
+            lynxTopToast.success(
+              `${name} extension ${type === 'removeDir' ? 'removed' : 'moved to trash'} successfully.`,
+            );
             setRows(prevState => filter(prevState, row => row.key !== name));
           })
           .catch(() => {
-            message.error(`Error: Unable to ${type === 'removeDir' ? 'remove' : 'move to trash'} the folder.`);
+            lynxTopToast.error(`Error: Unable to ${type === 'removeDir' ? 'remove' : 'move to trash'} the folder.`);
           });
       },
       [dir],
@@ -92,7 +94,7 @@ const Installed = forwardRef(
           );
         })
         .catch(() => {
-          message.error(`Something goes wrong when ${disable ? 'enabling' : 'disabling'} extension.`);
+          lynxTopToast.error(`Something goes wrong when ${disable ? 'enabling' : 'disabling'} extension.`);
         });
     }, []);
 
@@ -114,11 +116,11 @@ const Installed = forwardRef(
 
             switch (state) {
               case 'Failed':
-                message.error(`Error: Unable to update ${name}.`);
+                lynxTopToast.error(`Error: Unable to update ${name}.`);
                 reject(`Error: Unable to update ${name}.`);
                 break;
               case 'Completed':
-                message.success(`${name} updated successfully!`);
+                lynxTopToast.success(`${name} updated successfully!`);
                 setRows(prevState =>
                   prevState.map(row => (row.key === name ? {...row, update: useRowElements.updateBtn.updated} : row)),
                 );

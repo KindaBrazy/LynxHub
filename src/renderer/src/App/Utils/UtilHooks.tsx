@@ -1,3 +1,4 @@
+import {addToast} from '@heroui/react';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, useMemo} from 'react';
 
@@ -61,6 +62,31 @@ export function useIsPinnedCard(cardId: string): boolean {
   const pinnedCards = useCardsState('pinnedCards');
   return useMemo(() => pinnedCards.includes(cardId), [pinnedCards, cardId]);
 }
+
+function topToast(options: {
+  title: string;
+  color?: 'success' | 'default' | 'foreground' | 'primary' | 'secondary' | 'warning' | 'danger' | undefined;
+  timeout?: number;
+  promise?: Promise<any>;
+}) {
+  const {title, color = 'success', timeout = 2000, promise} = options;
+  addToast({
+    title,
+    color,
+    variant: 'flat',
+    size: 'sm',
+    timeout,
+    promise,
+  });
+}
+
+export const lynxTopToast = {
+  success: (title: string, timeout?: number) => topToast({title, color: 'success', timeout}),
+  error: (title: string, timeout?: number) => topToast({title, color: 'danger', timeout}),
+  warning: (title: string, timeout?: number) => topToast({title, color: 'warning', timeout}),
+  info: (title: string, timeout?: number) => topToast({title, color: 'default', timeout}),
+  loading: (title: string, promise: Promise<any>) => topToast({title, color: 'default', promise, timeout: 1}),
+};
 
 export const useDisableTooltip = (isEssential: boolean = false): boolean => {
   const tooltipLevel = useSettingsState('tooltipLevel');

@@ -1,5 +1,5 @@
 import {Button, Chip, Link} from '@heroui/react';
-import {Avatar, List, message} from 'antd';
+import {Avatar, List} from 'antd';
 import {capitalize} from 'lodash';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -13,6 +13,7 @@ import {settingsActions} from '../../../../../Redux/Reducer/SettingsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
+import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SecurityWarning from '../../SecurityWarning';
 import ModuleInfo from '../ModuleInfo';
 
@@ -35,11 +36,12 @@ export default function RenderItem({item, addModule}: Props) {
     rendererIpc.module.installModule(item.repoUrl).then(result => {
       setInstalling(false);
       if (result) {
-        message.success(`${item.title} Installed successfully!`);
+        lynxTopToast.success(`${item.title} Installed successfully!`);
+
         dispatch(settingsActions.addNewModule(item.id));
         addModule(item.id);
       } else {
-        message.error(`Something went wrong while installing ${item.title}.`);
+        lynxTopToast.error(`Something went wrong while installing ${item.title}.`);
       }
     });
   }, [item.repoUrl, item.title, item.id, dispatch]);
