@@ -80,7 +80,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
     if (terminal.current) {
       terminal.current.options.theme = getTheme(darkMode);
     }
-  }, [terminal.current]);
+  }, [terminal, darkMode]);
 
   useEffect(() => {
     setTheme();
