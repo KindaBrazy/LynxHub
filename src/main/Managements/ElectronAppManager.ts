@@ -64,6 +64,7 @@ export default class ElectronAppManager {
     maximizable: false,
     icon,
     webPreferences: {
+      preload: path.join(__dirname, '../preload/index.cjs'),
       sandbox: false,
     },
   };

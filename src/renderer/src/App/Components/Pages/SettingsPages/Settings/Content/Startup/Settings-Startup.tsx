@@ -1,5 +1,6 @@
 import {Rocket_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons5';
 import SettingsSection from '../../SettingsPage-ContentSection';
+import SettingsStartupDisableLoadingAnim from './SettingsStartup-DisableLoadingAnim';
 import SettingsStartupLastSize from './SettingsStartup-LastSize';
 import SettingsStartupStartMinimized from './SettingsStartup-StartMinimized';
 import SettingsStartupStartPage from './SettingsStartup-StartPage';
@@ -14,6 +15,7 @@ export default function SettingsStartup() {
       <SettingsStartupLastSize />
       <SettingsStartupStartMinimized />
       <SettingsStartupStartPage />
+      <SettingsStartupDisableLoadingAnim />
     </SettingsSection>
   );
 }

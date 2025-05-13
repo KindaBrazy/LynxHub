@@ -74,6 +74,7 @@ type StorageTypes = {
     hotkeys: LynxHotkey[];
     initialized: boolean;
     appDataDir: string;
+    disableLoadingAnimations: boolean;
   };
   terminal: {
     outputColor: boolean;

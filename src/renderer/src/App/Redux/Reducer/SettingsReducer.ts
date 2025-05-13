@@ -20,6 +20,7 @@ type SettingState = {
   dynamicAppTitle: boolean;
   openLinkExternal: boolean;
   hardwareAcceleration: boolean;
+  disableLoadingAnimations: boolean;
 
   updatedModules: string[];
   newModules: string[];
@@ -53,6 +54,7 @@ const initialState: SettingState = {
   dynamicAppTitle: true,
   openLinkExternal: false,
   hardwareAcceleration: true,
+  disableLoadingAnimations: false,
 };
 
 const settingsSlice = createSlice({
