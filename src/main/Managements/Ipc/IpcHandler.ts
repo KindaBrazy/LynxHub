@@ -376,8 +376,8 @@ function browserIPC() {
     browserManager.setZoomFactor(id, factor),
   );
 
-  ipcMain.on(browserChannels.openFindInPage, (_, id: string) => {
-    appManager.setCustomContextPosition(undefined);
+  ipcMain.on(browserChannels.openFindInPage, (_, id: string, customPosition?: {x: number; y: number}) => {
+    appManager.setCustomContextPosition(customPosition);
     appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onFind, id);
   });
   ipcMain.on(browserChannels.openZoom, (_, id: string) => {
