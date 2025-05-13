@@ -5,6 +5,7 @@ import {useCallback, useEffect, useState} from 'react';
 import {APP_NAME} from '../../../../../../../../cross/CrossConstants';
 import {DiscordRPC} from '../../../../../../../../cross/CrossTypes';
 import {Discord_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {DiskDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons5';
 import rendererIpc from '../../../../../RendererIpc';
 import SettingsSection from '../SettingsPage-ContentSection';
 
@@ -88,7 +89,7 @@ export default function SettingsDiscord() {
           </Checkbox>
         </CheckboxGroup>
 
-        <Button onPress={onApply} isLoading={isSaving}>
+        <Button onPress={onApply} isLoading={isSaving} startContent={<DiskDuo_Icon />}>
           Apply
         </Button>
       </SettingsSection>

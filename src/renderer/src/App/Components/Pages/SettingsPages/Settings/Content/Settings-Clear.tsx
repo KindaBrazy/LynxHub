@@ -3,6 +3,8 @@ import {message} from 'antd';
 import {useState} from 'react';
 
 import {Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Refresh3_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {BroomDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons6';
 import rendererIpc from '../../../../../RendererIpc';
 import SettingsSection from '../SettingsPage-ContentSection';
 
@@ -28,18 +30,23 @@ export default function SettingsClear() {
         classNames={{base: 'before:bg-foreground-100'}}
         showArrow>
         <PopoverTrigger>
-          <Button variant="flat" color="danger" fullWidth>
-            Clear Settings (Restart Required)
+          <Button variant="flat" color="danger" startContent={<Refresh3_Icon />} fullWidth>
+            Reset Settings (Restart Required)
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-4 gap-y-2 bg-foreground-100">
-          <span className="font-bold w-full text-sm">Clear Settings</span>
-          <span>Are you sure you want to clear all app settings and restart?</span>
+          <span className="font-bold w-full text-sm">Reset Settings</span>
+          <span>Are you sure you want to reset all app settings and restart?</span>
           <ButtonGroup className="flex flex-row w-full mt-2" fullWidth>
-            <Button size="sm" color="danger" onPress={rendererIpc.storage.clear}>
-              Clear & Restart
+            <Button size="sm" color="danger" startContent={<Refresh3_Icon />} onPress={rendererIpc.storage.clear}>
+              Reset & Restart
             </Button>
-            <Button size="sm" className="cursor-default">
+            <Button
+              onPress={() => {
+                setIsClearSettingsOpen(false);
+              }}
+              size="sm"
+              className="cursor-default">
               Cancel
             </Button>
           </ButtonGroup>
@@ -53,7 +60,7 @@ export default function SettingsClear() {
         classNames={{base: 'before:bg-foreground-100'}}
         showArrow>
         <PopoverTrigger>
-          <Button variant="flat" color="warning" fullWidth>
+          <Button variant="flat" color="warning" startContent={<BroomDuo_Icon />} fullWidth>
             Clear Cache
           </Button>
         </PopoverTrigger>
@@ -61,10 +68,10 @@ export default function SettingsClear() {
           <span className="font-bold w-full text-sm">Clear Cache</span>
           <span>Are you sure you want to clear all cache?</span>
           <ButtonGroup className="flex flex-row w-full mt-2" fullWidth>
-            <Button size="sm" color="warning" onPress={clearCache}>
+            <Button size="sm" color="warning" onPress={clearCache} startContent={<BroomDuo_Icon />}>
               Clear
             </Button>
-            <Button size="sm" className="cursor-default">
+            <Button size="sm" className="cursor-default" onPress={() => setIsClearCacheOpen(false)}>
               Cancel
             </Button>
           </ButtonGroup>
