@@ -113,6 +113,7 @@ export default class BrowserManager {
     const browser = this.browsers.find(view => view.id === id);
     if (browser) {
       this.mainWindow.contentView.removeChildView(browser.view);
+      browser.view.webContents.close();
       this.browsers = this.browsers.filter(view => view.id !== id);
     }
   }
