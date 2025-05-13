@@ -460,7 +460,8 @@ const rendererIpc = {
     loadURL: (id: string, url: string) => ipc.send(browserChannels.loadURL, id, url),
     setVisible: (id: string, visible: boolean) => ipc.send(browserChannels.setVisible, id, visible),
 
-    openFindInPage: (id: string) => ipc.send(browserChannels.openFindInPage, id),
+    openFindInPage: (id: string, customPosition?: {x: number; y: number}) =>
+      ipc.send(browserChannels.openFindInPage, id, customPosition),
     openZoom: (id: string) => ipc.send(browserChannels.openZoom, id),
 
     findInPage: (id: string, value: string, options: FindInPageOptions) =>

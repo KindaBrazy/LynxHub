@@ -11,6 +11,8 @@ export const Hotkey_Names = {
   newTerminalTab: 'newTerminalTab',
   newBrowserTerminalTab: 'newBrowserTerminalTab',
   refreshTab: 'refreshTab',
+
+  findInPage: 'findInPage',
 };
 
 export const Hotkey_Titles = {
@@ -24,6 +26,8 @@ export const Hotkey_Titles = {
   newTerminalTab: 'Terminal Tab',
   newBrowserTerminalTab: 'Combo Tab',
   refreshTab: 'Refresh Tab',
+
+  findInPage: 'Find in web page',
 };
 
 export const Hotkey_Desc = {
@@ -37,6 +41,8 @@ export const Hotkey_Desc = {
   newTerminalTab: 'Use this hotkey to open a new terminal tab.',
   newBrowserTerminalTab: 'Use this hotkey to open a combined browser and terminal tab.',
   refreshTab: 'Use this hotkey to reload the current tab.',
+
+  findInPage: 'Use this hotkey to search for text within the current web page.',
 };
 
 export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | string): LynxHotkey[] => {
@@ -113,6 +119,14 @@ export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | str
       control: true,
       shift: false,
       key: 'e',
+    },
+    {
+      name: Hotkey_Names.findInPage,
+      meta: false,
+      alt: false,
+      control: true,
+      shift: false,
+      key: 'f',
     },
   ];
 };
