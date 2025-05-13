@@ -31,7 +31,7 @@ export default function TabContainer() {
     });
 
     return () => rendererIpc.contextMenu.offRemoveTab();
-  }, []);
+  }, [removeTab]);
 
   return (
     <div
