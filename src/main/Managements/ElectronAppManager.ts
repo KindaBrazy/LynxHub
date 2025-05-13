@@ -158,6 +158,13 @@ export default class ElectronAppManager {
   private createContextWindow() {
     this.contextMenuWindow = new BrowserWindow({...ElectronAppManager.CONTEXT_WINDOW_CONFIG, parent: this.mainWindow});
 
+    this.contextMenuWindow.webContents.on('before-input-event', (_, input) => {
+      if (input.key.toLowerCase() === 'escape') {
+        this.contextMenuWindow?.hide();
+        this.mainWindow?.focus();
+      }
+    });
+
     this.loadAppropriateURL(this.contextMenuWindow, 'context_menu.html');
 
     this.contextMenuWindow.on('resize', () => this.positionContextMenuAtCursor());
