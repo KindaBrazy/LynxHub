@@ -373,7 +373,7 @@ export function PenDuo_Icon(props: SvgProps): ReactElement {
 
 export function DiskDuo_Icon(props: SvgProps): ReactElement {
   return (
-    <svg {...props} width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <svg {...props} height="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path
         d={
           'M20.536 20.536C22 19.07 22 16.714 22 12c0-.341 0-.512-.015-.686a4.04 4.04 0 0 0' +
