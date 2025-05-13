@@ -1,3 +1,6 @@
+import {useEffect, useState} from 'react';
+
+import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
 import AddressInput from './AddressInput';
 import Browser_ActionButtons from './Browser_ActionButtons';
@@ -11,12 +14,28 @@ type Props = {
 };
 
 export default function Browser_TopBar({runningCard, setCustomAddress, tabID}: Props) {
+  const [isDomReady, setIsDomReady] = useState<boolean>(false);
+
+  useEffect(() => {
+    rendererIpc.browser.offDomReady();
+    rendererIpc.browser.onDomReady((_, id, isReady) => {
+      if (id === runningCard.id && isReady) setIsDomReady(true);
+    });
+
+    return () => rendererIpc.browser.offDomReady();
+  }, [runningCard]);
+
   return (
     <>
       <Browser_ActionButtons tabID={tabID} id={runningCard.id} webuiAddress={runningCard.webUIAddress} />
       <AddressInput runningCard={runningCard} setCustomAddress={setCustomAddress} />
-      <Browser_Search id={runningCard.id} />
-      <Browser_Zoom id={runningCard.id} />
+
+      {isDomReady && (
+        <>
+          <Browser_Search id={runningCard.id} />
+          <Browser_Zoom id={runningCard.id} />
+        </>
+      )}
     </>
   );
 }

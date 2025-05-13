@@ -492,6 +492,10 @@ const rendererIpc = {
     onUrlChange: (result: (event: IpcRendererEvent, id: string, url: string) => void) =>
       ipc.on(browserChannels.onUrlChange, result),
     offUrlChange: () => ipc.removeAllListeners(browserChannels.onUrlChange),
+
+    onDomReady: (result: (event: IpcRendererEvent, id: string, isReady: boolean) => void) =>
+      ipc.on(browserChannels.onDomReady, result),
+    offDomReady: () => ipc.removeAllListeners(browserChannels.onDomReady),
   },
 };
 

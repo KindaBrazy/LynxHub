@@ -94,6 +94,8 @@ export default class BrowserManager {
 
     webContents.setZoomFactor(storageManager.getData('cards').zoomFactor);
 
+    webContents.on('dom-ready', () => this.mainWindow.webContents.send(browserChannels.onDomReady, id, true));
+
     this.listenForNavigate(id, webContents);
     this.listenForLoading(id, webContents);
     this.listenForTitle(id, webContents);
