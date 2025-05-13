@@ -3,7 +3,6 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {app, BrowserWindow, BrowserWindowConstructorOptions, screen, shell, WebContents} from 'electron';
-import {isEmpty} from 'lodash';
 
 import icon from '../../../resources/icon.png?asset';
 import {tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
@@ -117,36 +116,47 @@ export default class ElectronAppManager {
     const [menuWidth, menuHeight] = window.getContentSize();
 
     const {x: cursorX, y: cursorY} = screen.getCursorScreenPoint();
-
-    const currentDisplay = screen.getDisplayNearestPoint({x: cursorX, y: cursorY});
-
-    const workArea = currentDisplay.workArea;
-
+    const defaultDisplay = screen.getDisplayNearestPoint({x: cursorX, y: cursorY});
+    const defaultWorkArea = defaultDisplay.workArea;
     let newX = cursorX;
     let newY = cursorY;
 
-    if (cursorX + menuWidth > workArea.x + workArea.width) {
-      newX = workArea.x + workArea.width - menuWidth;
+    if (newX + menuWidth > defaultWorkArea.x + defaultWorkArea.width) {
+      newX = defaultWorkArea.x + defaultWorkArea.width - menuWidth;
     }
-    if (cursorY + menuHeight > workArea.y + workArea.height) {
-      newY = workArea.y + workArea.height - menuHeight;
-      // }
+    if (newY + menuHeight > defaultWorkArea.y + defaultWorkArea.height) {
+      newY = defaultWorkArea.y + defaultWorkArea.height - menuHeight;
     }
-
-    if (newX < workArea.x) {
-      newX = workArea.x;
+    if (newX < defaultWorkArea.x) {
+      newX = defaultWorkArea.x;
     }
-    if (newY < workArea.y) {
-      newY = workArea.y;
+    if (newY < defaultWorkArea.y) {
+      newY = defaultWorkArea.y;
     }
 
     try {
-      if (!isEmpty(this.customContextPosition)) {
-        if (this.mainWindow) {
-          const x = Math.floor(this.customContextPosition.x) + this.mainWindow.getBounds().x + 10;
-          const y = Math.floor(this.customContextPosition.y) + this.mainWindow.getBounds().y + 10;
-          window.setPosition(x, y, true);
+      if (this.customContextPosition) {
+        const parentBounds = this.mainWindow!.getBounds();
+        let absX = Math.floor(this.customContextPosition.x) + parentBounds.x + 10;
+        let absY = Math.floor(this.customContextPosition.y) + parentBounds.y + 10;
+
+        const disp = screen.getDisplayNearestPoint({x: absX, y: absY});
+        const workArea = disp.workArea;
+
+        if (absX + menuWidth > workArea.x + workArea.width) {
+          absX = workArea.x + workArea.width - menuWidth;
         }
+        if (absY + menuHeight > workArea.y + workArea.height) {
+          absY = workArea.y + workArea.height - menuHeight;
+        }
+        if (absX < workArea.x) {
+          absX = workArea.x;
+        }
+        if (absY < workArea.y) {
+          absY = workArea.y;
+        }
+
+        window.setPosition(absX, absY, true);
       } else {
         window.setPosition(Math.floor(newX), Math.floor(newY), true);
       }
