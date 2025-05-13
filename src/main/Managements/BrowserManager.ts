@@ -96,6 +96,12 @@ export default class BrowserManager {
 
     webContents.on('dom-ready', () => this.mainWindow.webContents.send(browserChannels.onDomReady, id, true));
 
+    webContents.on('zoom-changed', (_, a) => {
+      let resultFactor = webContents.getZoomFactor();
+      resultFactor = a === 'in' ? resultFactor + 0.1 : resultFactor - 0.1;
+      if (resultFactor > 0.1 && resultFactor < 5) webContents.setZoomFactor(resultFactor);
+    });
+
     this.listenForNavigate(id, webContents);
     this.listenForLoading(id, webContents);
     this.listenForTitle(id, webContents);
