@@ -1,4 +1,4 @@
-import {BrowserWindow, FindInPageOptions, shell, WebContents, WebContentsView} from 'electron';
+import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
 
 import {browserChannels, CanGoType, tabsChannels} from '../../cross/IpcChannelAndTypes';
 import {appManager, storageManager} from '../index';
@@ -102,10 +102,14 @@ export default class BrowserManager {
     });
   }
 
+  private getSession() {
+    return session.fromPartition('persist:lynxhub_browser');
+  }
+
   public createBrowser(id: string) {
     if (this.browsers.some(view => view.id === id)) return;
 
-    const newView = new WebContentsView();
+    const newView = new WebContentsView({webPreferences: {session: this.getSession()}});
     const webContents = newView.webContents;
 
     webContents.setUserAgent(getUserAgent());
