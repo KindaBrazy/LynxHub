@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import {toMs} from '../../../../cross/CrossUtils';
 import StorageTypes from '../../../../cross/StorageTypes';
-import {useAllCards, useGetTitleByID} from '../Modules/ModuleLoader';
+import {useAllCards} from '../Modules/ModuleLoader';
 import {appActions, useAppState} from '../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
 import {hotkeysActions} from '../Redux/Reducer/HotkeysReducer';
@@ -241,15 +241,17 @@ export const useIpcEvents = () => {
 };
 
 export const useAppTitleEvents = () => {
-  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
+
+  const activeTab = useTabsState('activeTab');
+  const tabs = useTabsState('tabs');
   const runningCard = useCardsState('runningCard');
-  const title = useGetTitleByID(runningCard.find(card => card.tabId === activeTab)?.id);
 
   useEffect(() => {
     const currentView = capitalize(runningCard.find(card => card.tabId === activeTab)?.currentView);
+    const title = tabs.find(tab => tab.id === activeTab)?.title;
     dispatch(appActions.setAppTitle(title && `${title} - ${currentView}`));
-  }, [title, runningCard, activeTab]);
+  }, [runningCard, activeTab, tabs]);
 };
 
 export const useHotkeyEvents = () => {
