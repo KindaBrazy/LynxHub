@@ -51,10 +51,10 @@ export default function TabItem_Icon({tab}: Props) {
 
   return (
     <>
-      {tab.isLoading ? (
-        <Spinner size="sm" color="primary" variant="simple" className="scale-80 mb-0.5" />
-      ) : tab.isTerminal ? (
+      {tab.isTerminal ? (
         <Terminal_Icon className="shrink-0 mb-0.5" />
+      ) : tab.isLoading ? (
+        <Spinner size="sm" color="primary" variant="simple" className="scale-80 mb-0.5" />
       ) : (
         <div className="shrink-0 size-4 content-center mb-0.5">{icon}</div>
       )}
