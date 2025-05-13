@@ -1,8 +1,8 @@
 import {Button, Select, Selection, SelectItem} from '@heroui/react';
-import {message} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 
 import rendererIpc from '../../../RendererIpc';
+import {lynxTopToast} from '../../../Utils/UtilHooks';
 
 type Props = {
   dir: string;
@@ -32,11 +32,11 @@ export default function Branches({dir, availableBranches, currentBranch, refresh
       rendererIpc.git
         .changeBranch(dir, selectedBranch)
         .then(() => {
-          message.success(`Successfully switched to branch: ${selectedBranch}`);
+          lynxTopToast.success(`Successfully switched to branch: ${selectedBranch}`);
           refreshData();
         })
         .catch(err => {
-          message.error(`Failed to switch branch: ${err.message || 'Unknown error'}`);
+          lynxTopToast.error(`Failed to switch branch: ${err.message || 'Unknown error'}`);
         })
         .finally(() => {
           setLoading(false);

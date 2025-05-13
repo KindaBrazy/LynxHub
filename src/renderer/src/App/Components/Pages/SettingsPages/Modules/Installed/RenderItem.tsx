@@ -1,5 +1,5 @@
 import {Button, ButtonGroup, Chip, Link, Popover, PopoverContent, PopoverTrigger, Tooltip} from '@heroui/react';
-import {Avatar, Badge, List, message, Spin} from 'antd';
+import {Avatar, Badge, List, Spin} from 'antd';
 import {capitalize, isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -17,6 +17,7 @@ import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useCachedImageUrl} from '../../../../../Utils/LocalStorage';
+import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import ModuleInfo from '../ModuleInfo';
 
 type Props = {
@@ -75,7 +76,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
     rendererIpc.module.uninstallModule(item.id).then(uninstalled => {
       setUninstalling(false);
       if (uninstalled) {
-        message.success(`${item.title} has been successfully uninstalled.`);
+        lynxTopToast.success(`${item.title} has been successfully uninstalled.`);
         dispatch(settingsActions.removeUpdatedModule(item.id));
         dispatch(settingsActions.removeNewModule(item.id));
         dispatch(
@@ -86,7 +87,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
         );
         removedModule(item.id);
       } else {
-        message.error(`An error occurred while uninstalling ${item.title}!`);
+        lynxTopToast.error(`An error occurred while uninstalling ${item.title}!`);
       }
     });
   }, [item, moduleUpdateAvailable, dispatch]);
@@ -98,7 +99,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
       setUpdating(false);
       setSpinningText('');
       if (updated) {
-        message.success(`${item.title} has been successfully updated!`);
+        lynxTopToast.success(`${item.title} has been successfully updated!`);
         dispatch(
           settingsActions.setSettingsState({
             key: 'moduleUpdateAvailable',
@@ -106,7 +107,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
           }),
         );
       } else {
-        message.error(`An error occurred while updating ${item.title}.`);
+        lynxTopToast.error(`An error occurred while updating ${item.title}.`);
       }
     });
   }, [item, moduleUpdateAvailable]);

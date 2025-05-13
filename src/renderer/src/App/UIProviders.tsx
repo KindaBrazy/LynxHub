@@ -30,7 +30,7 @@ export default function UIProviders({children}: {children: ReactNode}) {
   return (
     <div>
       <HeroUIProvider>
-        <ToastProvider />
+        <ToastProvider toastOffset={40} placement="top-center" />
         <AntDProvider
           theme={{
             algorithm,

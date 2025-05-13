@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {Avatar, List, message, Tag, Typography} from 'antd';
+import {Avatar, List, Tag, Typography} from 'antd';
 import {capitalize} from 'lodash';
 import {useCallback, useState} from 'react';
 import Highlighter from 'react-highlight-words';
@@ -13,6 +13,7 @@ import {useTabsState} from '../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {formatNumber} from '../../../../Utils/UtilFunctions';
+import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import {ExtensionsInfo} from './Available';
 
 type Props = {
@@ -33,11 +34,11 @@ export default function RenderItem({item, updateTable, dir, searchValue}: Props)
     rendererIpc.git
       .cloneShallowPromise(`${item.url}` || '', `${dir}/${extractGitUrl(item.url).repo || ''}`, true, 1)
       .then(() => {
-        message.success('Extension installed successfully.');
+        lynxTopToast.success('Extension installed successfully.');
         updateTable();
       })
       .catch(() => {
-        message.error('Error: Unable to clone the extension.');
+        lynxTopToast.error('Convert default export to named');
       })
       .finally(() => {
         setInstalling(false);

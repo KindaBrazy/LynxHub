@@ -1,5 +1,5 @@
 import {Input, Progress} from '@heroui/react';
-import {Card, message} from 'antd';
+import {Card} from 'antd';
 import {motion} from 'framer-motion';
 import {capitalize, startCase} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
@@ -12,6 +12,7 @@ import {GitHub_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
 import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import rendererIpc from '../../../RendererIpc';
 import {initGitProgress} from '../../../Utils/Constants';
+import {lynxTopToast} from '../../../Utils/UtilHooks';
 import {tabContentVariants} from './Constants';
 
 type Props = {
@@ -111,7 +112,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
         case 'Failed':
           setCloneProgress(initGitProgress);
           setCloning(false);
-          message.error('Error: Unable to clone the extension.');
+          lynxTopToast.error('Error: Unable to clone the extension.');
           break;
         case 'Completed':
           setCloneProgress(initGitProgress);
@@ -120,7 +121,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
           setIsValid(true);
           setResultUrl('');
           setCloning(false);
-          message.success('Extension installed successfully.');
+          lynxTopToast.success('Extension installed successfully.');
           updateTable();
           break;
       }

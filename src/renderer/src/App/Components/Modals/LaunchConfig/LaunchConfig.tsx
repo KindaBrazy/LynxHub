@@ -1,5 +1,4 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
-import {message} from 'antd';
 import {Fragment, Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -10,6 +9,7 @@ import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {modalMotionProps, REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
+import {lynxTopToast} from '../../../Utils/UtilHooks';
 import CardArguments from './Arguments/CardArguments';
 import CustomRun from './CustomRun/CustomRun';
 import CardPreLaunch from './PreLaunch/CardPreLaunch';
@@ -54,12 +54,12 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
       .setCardArguments(id, chosenArguments)
       .then(() => {
         setTimeout(() => {
-          message.success(`Preset and arguments saved successfully.`);
+          lynxTopToast.success('Preset and arguments saved successfully.');
         }, fakeDelay);
       })
       .catch(() => {
         setTimeout(() => {
-          message.error(`An error occurred while saving the preset and arguments.`);
+          lynxTopToast.error('An error occurred while saving the preset and arguments.');
         }, fakeDelay);
       })
       .finally(() => {
