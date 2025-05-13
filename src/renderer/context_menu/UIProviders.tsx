@@ -53,6 +53,10 @@ export default function UIProviders({children}: {children: ReactNode}) {
     notification.config({duration: 4, placement: 'bottomRight'});
   }, [algorithm]);
 
+  useEffect(() => {
+    document.documentElement.className = darkMode ? 'dark' : 'light';
+  }, [darkMode]);
+
   return (
     <div>
       <HeroUIProvider>
@@ -67,7 +71,7 @@ export default function UIProviders({children}: {children: ReactNode}) {
             },
             token: {colorBgMask: 'rgba(0, 0, 0, 0.2)', fontFamily: 'Nunito, sans-serif'},
           }}>
-          <main className={`${darkMode ? 'dark' : 'light'} bg-background text-foreground`}>{children}</main>
+          <div className="bg-background text-foreground">{children}</div>
         </AntDProvider>
       </HeroUIProvider>
     </div>
