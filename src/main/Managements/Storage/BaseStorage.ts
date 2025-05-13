@@ -75,6 +75,7 @@ class BaseStorage {
       appDataDir: isPortable() ? `./${APP_NAME}_Data` : join(app.getPath('documents'), APP_NAME),
       lastSize: undefined,
       hardwareAcceleration: true,
+      disableLoadingAnimations: false,
     },
     terminal: {
       outputColor: true,
@@ -149,6 +150,7 @@ class BaseStorage {
       this.storage.data.app.openLinkExternal = false;
       this.storage.data.cards.zoomFactor = 1;
       this.storage.data.app.hardwareAcceleration = true;
+      this.storage.data.app.disableLoadingAnimations = false;
 
       this.storage.write();
     };

@@ -133,6 +133,12 @@ export const useStorageData = () => {
       dispatch(
         settingsActions.setSettingsState({key: 'hardwareAcceleration', value: storage.app.hardwareAcceleration}),
       );
+      dispatch(
+        settingsActions.setSettingsState({
+          key: 'disableLoadingAnimations',
+          value: storage.app.disableLoadingAnimations,
+        }),
+      );
 
       if (storage.app.startupLastActivePage) {
         const lastPage = storage.app.lastPage;
