@@ -84,6 +84,24 @@ export default class BrowserManager {
     });
   }
 
+  private listenForZoom(webContents: WebContents) {
+    webContents.on('zoom-changed', (_, zoomDirection) => {
+      let resultFactor = webContents.getZoomFactor();
+      resultFactor = zoomDirection === 'in' ? resultFactor + 0.1 : resultFactor - 0.1;
+      if (resultFactor > 0.1 && resultFactor < 5) webContents.setZoomFactor(resultFactor);
+    });
+  }
+
+  private listenForFullScreen(view: WebContentsView) {
+    const webContents = view.webContents;
+    webContents.on('enter-html-full-screen', () => {
+      const mainBounds = appManager.getMainWindow()?.getBounds();
+      if (mainBounds) {
+        view.setBounds({x: 0, y: 0, width: mainBounds.width, height: mainBounds.height});
+      }
+    });
+  }
+
   public createBrowser(id: string) {
     if (this.browsers.some(view => view.id === id)) return;
 
@@ -96,16 +114,12 @@ export default class BrowserManager {
 
     webContents.on('dom-ready', () => this.mainWindow.webContents.send(browserChannels.onDomReady, id, true));
 
-    webContents.on('zoom-changed', (_, a) => {
-      let resultFactor = webContents.getZoomFactor();
-      resultFactor = a === 'in' ? resultFactor + 0.1 : resultFactor - 0.1;
-      if (resultFactor > 0.1 && resultFactor < 5) webContents.setZoomFactor(resultFactor);
-    });
-
     this.listenForNavigate(id, webContents);
     this.listenForLoading(id, webContents);
     this.listenForTitle(id, webContents);
     this.listenForFavIcon(id, webContents);
+    this.listenForZoom(webContents);
+    this.listenForFullScreen(newView);
 
     this.browsers.push({id, view: newView});
     this.mainWindow.contentView.addChildView(newView);
