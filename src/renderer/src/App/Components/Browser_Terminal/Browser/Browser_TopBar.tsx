@@ -32,7 +32,7 @@ export default function Browser_TopBar({runningCard, setCustomAddress, tabID}: P
 
       {isDomReady && (
         <>
-          <Browser_Search id={runningCard.id} />
+          <Browser_Search id={runningCard.id} tabID={runningCard.tabId} />
           <Browser_Zoom id={runningCard.id} />
         </>
       )}
