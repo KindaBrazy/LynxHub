@@ -1,6 +1,7 @@
 import {useMemo} from 'react';
 
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
+import SettingsBrowser, {SettingsBrowserId} from './Content/Browser/SettingsBrowser';
 import SettingsCard, {SettingsCardId} from './Content/Card/Settings-Card';
 import SettingsGeneral, {SettingsGeneralId} from './Content/General/Settings-General';
 import {HotkeySettings, SettingsHotkeysId} from './Content/HotkeySettings';
@@ -14,6 +15,7 @@ export const settingsSectionId = {
   SettingsCardId,
   SettingsGeneralId,
   SettingsTerminalId,
+  SettingsBrowserId,
   SettingsStartupId,
   SettingsClearId,
   SettingsDataId,
@@ -30,6 +32,7 @@ export const SettingsSections = () => {
       <SettingsStartup />
       <SettingsCard />
       <SettingsTerminal />
+      <SettingsBrowser />
       <HotkeySettings />
       <SettingsDiscord />
 

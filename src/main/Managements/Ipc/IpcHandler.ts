@@ -402,6 +402,9 @@ function browserIPC() {
   ipcMain.on(browserChannels.reload, (_, id: string) => browserManager.reload(id));
   ipcMain.on(browserChannels.goBack, (_, id: string) => browserManager.goBack(id));
   ipcMain.on(browserChannels.goForward, (_, id: string) => browserManager.goForward(id));
+
+  ipcMain.on(browserChannels.clearCache, () => browserManager.clearCache());
+  ipcMain.on(browserChannels.clearCookies, () => browserManager.clearCookies());
 }
 
 export function listenToAllChannels() {

@@ -1,0 +1,15 @@
+import {Web_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import SettingsSection from '../../SettingsPage-ContentSection';
+import SettingsBrowser_ClearData from './SettingsBrowser_ClearData';
+import SettingsBrowser_Links from './SettingsBrowser_Links';
+
+export const SettingsBrowserId = 'settings_browser_elem';
+
+export default function SettingsBrowser() {
+  return (
+    <SettingsSection title="Browser" id={SettingsBrowserId} icon={<Web_Icon className="size-5" />}>
+      <SettingsBrowser_Links />
+      <SettingsBrowser_ClearData />
+    </SettingsSection>
+  );
+}
