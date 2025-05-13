@@ -8,6 +8,7 @@ import {
   Terminal_Icon,
   Trash_Icon,
   Tuning_Icon,
+  Web_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {EditCard_Icon, Keyboard_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons4';
 import {Rocket_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
@@ -52,6 +53,11 @@ const groupSections: GroupProps[] = [
         title: 'Terminal',
         icon: <Terminal_Icon className="size-4 shrink-0 dark:text-white text-black" />,
         elementId: settingsSectionId.SettingsTerminalId,
+      },
+      {
+        title: 'Browser',
+        icon: <Web_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        elementId: settingsSectionId.SettingsBrowserId,
       },
       {
         title: 'Hotkeys',

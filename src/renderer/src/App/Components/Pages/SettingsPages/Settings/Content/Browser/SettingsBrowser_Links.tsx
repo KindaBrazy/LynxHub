@@ -6,7 +6,7 @@ import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
 
-export default function SettingsGeneralLinks() {
+export default function SettingsBrowser_Links() {
   const dispatch = useDispatch<AppDispatch>();
   const openLinkExternal = useSettingsState('openLinkExternal');
 

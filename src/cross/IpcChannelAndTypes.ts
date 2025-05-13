@@ -355,6 +355,9 @@ export const browserChannels = {
   stopFindInPage: 'browser:stopFindInPage',
   setZoomFactor: 'browser:setZoomFactor',
 
+  clearCache: 'browser:clear-cache',
+  clearCookies: 'browser:clear-cookies',
+
   reload: 'browser:reload',
   goBack: 'browser:goBack',
   goForward: 'browser:goForward',

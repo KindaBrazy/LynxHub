@@ -469,6 +469,9 @@ const rendererIpc = {
     stopFindInPage: (id: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') =>
       ipc.send(browserChannels.stopFindInPage, id, action),
 
+    clearCache: () => ipc.send(browserChannels.clearCache),
+    clearCookies: () => ipc.send(browserChannels.clearCookies),
+
     setZoomFactor: (id: string, factor: number) => ipc.send(browserChannels.setZoomFactor, id, factor),
     reload: (id: string) => ipc.send(browserChannels.reload, id),
     goBack: (id: string) => ipc.send(browserChannels.goBack, id),

@@ -135,6 +135,14 @@ export default class BrowserManager {
     contextMenuManager(webContents);
   }
 
+  public clearCache() {
+    this.getSession().clearCache();
+  }
+
+  public clearCookies() {
+    this.getSession().clearData({dataTypes: ['cookies']});
+  }
+
   public removeBrowser(id: string) {
     const browser = this.browsers.find(view => view.id === id);
     if (browser) {
