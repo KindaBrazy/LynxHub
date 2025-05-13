@@ -364,4 +364,5 @@ export const browserChannels = {
   onTitleChange: 'browser:on-title-change',
   onFavIconChange: 'browser:on-favicon-change',
   onUrlChange: 'browser:on-url-change',
+  onDomReady: 'browser:on-dom-ready',
 };
