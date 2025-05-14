@@ -34,10 +34,10 @@ const LynxCard = observer(() => {
       text="Update Available">
       <motion.div
         layout="position"
-        exit={{opacity: 0}}
-        animate={{opacity: 1}}
-        initial={{opacity: 0}}
-        layoutId={`${id}_card`}>
+        layoutId={`${id}_card`}
+        exit={{opacity: 0, scale: 0.95}}
+        animate={{opacity: 1, scale: 1}}
+        initial={{opacity: 0, scale: 0.95}}>
         <Card
           className={
             ` ${compactMode ? 'w-[230px]' : 'w-[277px]'} h-fit cursor-default shadow-md !transition ` +

@@ -13,6 +13,7 @@ import {searchInStrings} from '../../Utils/UtilFunctions';
 import {CardContainerClasses} from '../Pages/CardContainer';
 import HomeCategory from '../Pages/ContentPages/Home/HomeCategory';
 import LynxCard from './Card/LynxCard';
+import LynxCardLoading from './Card/LynxCard-Loading';
 import {CardContext, CardsDataManager} from './CardsDataManager';
 import NavigateModulesPage from './NavigateModulesPage';
 
@@ -35,7 +36,6 @@ const useCardsById = (cardIds: string[]): CardData[] => {
 const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
   const installedCards = useCardsState('installedCards');
   const cards = useCardsById(cardIds);
-  const installedCardSet = useMemo(() => new Set(installedCards.map(card => card.id)), [installedCards]);
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
   const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
@@ -49,18 +49,13 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
               <NavigateModulesPage />
             </Empty>
           ) : (
-            cards.map(card => {
-              const context = new CardsDataManager(card, installedCardSet.has(card.id));
-              return (
-                <CardContext.Provider value={context} key={`cardProv-${card.id}`}>
-                  {ReplaceComponent ? (
-                    <ReplaceComponent context={context} key={`${card.id}-card-key`} />
-                  ) : (
-                    <LynxCard key={`${card.id}-card-key`} />
-                  )}
-                </CardContext.Provider>
-              );
-            })
+            <LynxCardLoading
+              startDelay={0}
+              batchDelay={70}
+              sortedCards={cards}
+              installedCards={installedCards}
+              ReplaceComponent={ReplaceComponent}
+            />
           )
         ) : (
           <ReplaceCards cards={cards} />
@@ -73,7 +68,6 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
 /** Renders all available cards */
 const AllCards = () => {
   const installedCards = useCardsState('installedCards');
-  const installedCardSet = useMemo(() => new Set(installedCards.map(card => card.id)), [installedCards]);
 
   const allCategory = useMemo(() => extensionsData.customizePages.home.add.allCategory, []);
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
@@ -98,19 +92,11 @@ const AllCards = () => {
     <LayoutGroup id="all_cards_category">
       <AnimatePresence>
         {isNil(ReplaceCards) ? (
-          sortedCards.map(card => {
-            const context = new CardsDataManager(card, installedCardSet.has(card.id));
-            return (
-              <CardContext.Provider value={context} key={`cardProv-${card.id}`}>
-                {ReplaceComponent ? (
-                  <ReplaceComponent context={context} key={`${card.id}-card-key`} />
-                ) : (
-                  <LynxCard key={`${card.id}-card-key`} />
-                )}
-                {...allCategory.map((All, index) => <All key={index} context={context} />)}
-              </CardContext.Provider>
-            );
-          })
+          <LynxCardLoading
+            sortedCards={sortedCards}
+            installedCards={installedCards}
+            ReplaceComponent={ReplaceComponent}
+          />
         ) : (
           <ReplaceCards cards={sortedCards} />
         )}

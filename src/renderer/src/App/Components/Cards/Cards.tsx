@@ -9,8 +9,7 @@ import {AvailablePages} from '../../Modules/types';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {PageID} from '../../Utils/Constants';
 import Page from '../Pages/Page';
-import LynxCard from './Card/LynxCard';
-import {CardContext, CardsDataManager} from './CardsDataManager';
+import LynxCardLoading from './Card/LynxCard-Loading';
 import NavigateModulesPage from './NavigateModulesPage';
 
 export function GetComponentsByPath({routePath, extensionsElements}: {routePath: string; extensionsElements?: FC[]}) {
@@ -51,19 +50,11 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
         <>
           <LayoutGroup id={`${routePath}_cards`}>
             {isNil(ReplaceCards) ? (
-              sortedCards.map((card, index) => {
-                const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-                const context = new CardsDataManager(card, isInstalled);
-                return (
-                  <CardContext.Provider value={context} key={`cardProv-${index}`}>
-                    {ReplaceComponent ? (
-                      <ReplaceComponent context={context} key={`${card.id}-card-key`} />
-                    ) : (
-                      <LynxCard key={`${card.id}-card-key`} />
-                    )}
-                  </CardContext.Provider>
-                );
-              })
+              <LynxCardLoading
+                sortedCards={sortedCards}
+                installedCards={installedCards}
+                ReplaceComponent={ReplaceComponent}
+              />
             ) : (
               <ReplaceCards cards={sortedCards} />
             )}
