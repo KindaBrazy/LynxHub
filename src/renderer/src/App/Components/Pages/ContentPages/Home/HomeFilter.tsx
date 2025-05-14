@@ -1,7 +1,7 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Selection} from '@heroui/react';
 import {memo, useCallback} from 'react';
 
-import {Filter_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {FilterDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons6';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../../../assets/icons/SvgIcons/SvgIconsColor';
 import rendererIpc from '../../../../RendererIpc';
 
@@ -28,7 +28,7 @@ const HomeFilter = memo(({selectedCategories}: Props) => {
           radius="full"
           variant="light"
           isIconOnly>
-          <Filter_Icon className="w-full h-full p-3" />
+          <FilterDuo_Icon className="w-full h-full p-3" />
         </Button>
       </DropdownTrigger>
 
