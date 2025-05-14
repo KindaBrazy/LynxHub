@@ -46,7 +46,10 @@ export function listenForContextChannels() {
   ipcMain.on(contextMenuChannels.downloadImage, (_, id: number, url: string) => contentByID(id)?.downloadURL(url));
 
   ipcMain.on(contextMenuChannels.showWindow, () => appManager.getContextMenuWindow()?.show());
-  ipcMain.on(contextMenuChannels.hideWindow, () => appManager.getContextMenuWindow()?.hide());
+  ipcMain.on(contextMenuChannels.hideWindow, () => {
+    appManager.getContextMenuWindow()?.hide();
+    appManager.getMainWindow()?.focus();
+  });
 
   ipcMain.on(contextMenuChannels.replaceMisspelling, (_, id: number, text: string) =>
     contentByID(id)?.replaceMisspelling(text),
