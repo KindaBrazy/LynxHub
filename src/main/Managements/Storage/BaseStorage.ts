@@ -163,7 +163,10 @@ class BaseStorage {
       this.updateData('storage', {version: this.CURRENT_VERSION});
     };
 
-    if (storeVersion < this.CURRENT_VERSION) {
+    if (storeVersion < 0.4) {
+      this.storage.data = {...this.DEFAULT_DATA};
+      this.storage.write();
+    } else if (storeVersion < this.CURRENT_VERSION) {
       switch (storeVersion) {
         case 0.4: {
           v4to5();
