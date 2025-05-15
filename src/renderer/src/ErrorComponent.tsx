@@ -6,7 +6,7 @@ import {ISSUE_PAGE} from '../../cross/CrossConstants';
 import CopyClipboard from './App/Components/Reusable/CopyClipboard';
 import rendererIpc from './App/RendererIpc';
 import {isLinuxPortable} from './App/Utils/UtilHooks';
-import {GitHub_Icon} from './assets/icons/SvgIcons/SvgIcons2';
+import {GitHub_Icon} from './assets/icons/SvgIcons/SvgIcons';
 
 type Props = {error: Error; resetErrorBoundary: () => void};
 

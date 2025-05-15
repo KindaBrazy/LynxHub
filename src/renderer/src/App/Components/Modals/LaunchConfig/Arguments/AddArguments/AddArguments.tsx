@@ -19,7 +19,7 @@ import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 
 import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../../../../cross/GetArgumentsData';
-import {Circle_Icon, Filter_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Circle_Icon, Filter_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../Modules/ModuleLoader';
 import LynxScroll from '../../../../Reusable/LynxScroll';
 import ArgumentCategory from './ArgumentCategory';

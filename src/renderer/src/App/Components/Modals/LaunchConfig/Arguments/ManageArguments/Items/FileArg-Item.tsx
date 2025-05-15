@@ -4,8 +4,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
-import {Folder2_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Refresh_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Folder2_Icon, Refresh_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import {useCardsState} from '../../../../../../Redux/Reducer/CardsReducer';
 import rendererIpc from '../../../../../../RendererIpc';

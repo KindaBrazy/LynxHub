@@ -2,20 +2,19 @@ import {ReactElement} from 'react';
 
 import {SvgProps} from '../SvgIconsContainer';
 
+/* eslint max-len: 0 */
+
 export function History_Color_Icon(props: SvgProps): ReactElement {
   return (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <svg {...props} height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
           fill="url(#fluentColorHistory160)"
           d="M7.698 5a.75.75 0 0 1 .75.75V7.5h1.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1-.75-.75v-2.5a.75.75 0 0 1 .75-.75"
         />
         <path
-          d={
-            'M7.947 3.5a4.5 4.5 0 1 1-4.454 5.14a.75.75 0 1 0-1.485.212a6.001 6.001 0 1 0 1.94-5.324V2.75a' +
-            '.75.75 0 1 0-1.5 0v3c0 .414.335.75.75.75h2.5a.75.75 0 1 0 0-1.5H4.592a4.5 4.5 0 0 1 3.354-1.5'
-          }
           fill="url(#fluentColorHistory161)"
+          d="M7.947 3.5a4.5 4.5 0 1 1-4.454 5.14a.75.75 0 1 0-1.485.212a6.001 6.001 0 1 0 1.94-5.324V2.75a.75.75 0 1 0-1.5 0v3c0 .414.335.75.75.75h2.5a.75.75 0 1 0 0-1.5H4.592a4.5 4.5 0 0 1 3.354-1.5"
         />
         <defs>
           <linearGradient
@@ -46,7 +45,7 @@ export function History_Color_Icon(props: SvgProps): ReactElement {
 
 export function Pin_Color_Icon(props: SvgProps): ReactElement {
   return (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <svg {...props} height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
           fillRule="evenodd"
@@ -55,19 +54,13 @@ export function Pin_Color_Icon(props: SvgProps): ReactElement {
           d="m6.53 10.53l-3.25 3.25a.75.75 0 1 1-1.06-1.06l3.25-3.25z"
         />
         <path
-          d={
-            'M10.059 2.445a1.5 1.5 0 0 0-2.386.353l-2.02 3.79l-2.811.938a.5.5 0 0 0-.196.828l' +
-            '5 5a.5.5 0 0 0 .828-.196l.937-2.811l3.779-2.023a1.5 1.5 0 0 0 .354-2.38z'
-          }
           fill="url(#fluentColorPin161)"
+          d="M10.059 2.445a1.5 1.5 0 0 0-2.386.353l-2.02 3.79l-2.811.938a.5.5 0 0 0-.196.828l5 5a.5.5 0 0 0 .828-.196l.937-2.811l3.779-2.023a1.5 1.5 0 0 0 .354-2.38z"
         />
         <path
-          d={
-            'M10.059 2.445a1.5 1.5 0 0 0-2.386.353l-2.02 3.79l-2.811.938a.5.5 0 0 0-.196.828l' +
-            '5 5a.5.5 0 0 0 .828-.196l.937-2.811l3.779-2.023a1.5 1.5 0 0 0 .354-2.38z'
-          }
           fillOpacity="0.8"
           fill="url(#fluentColorPin162)"
+          d="M10.059 2.445a1.5 1.5 0 0 0-2.386.353l-2.02 3.79l-2.811.938a.5.5 0 0 0-.196.828l5 5a.5.5 0 0 0 .828-.196l.937-2.811l3.779-2.023a1.5 1.5 0 0 0 .354-2.38z"
         />
         <defs>
           <linearGradient
@@ -108,7 +101,7 @@ export function Pin_Color_Icon(props: SvgProps): ReactElement {
 
 export function Apps_Color_Icon(props: SvgProps): ReactElement {
   return (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <svg {...props} height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
         <path
           fill="url(#fluentColorApps160)"
@@ -123,11 +116,8 @@ export function Apps_Color_Icon(props: SvgProps): ReactElement {
           d="M8 13a1 1 0 0 1-1 1H3.5A1.5 1.5 0 0 1 2 12.5V9a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1z"
         />
         <path
-          d={
-            'M9.69 2.442a1.5 1.5 0 0 1 2.122 0l1.752 1.752a1.5 1.5 0 0 1 0 2.121l-1.75 1.75a1.5 1.' +
-            '5 0 0 1-2.12 0L7.942 6.311a1.5 1.5 0 0 1 0-2.121z'
-          }
           fill="url(#fluentColorApps163)"
+          d="M9.69 2.442a1.5 1.5 0 0 1 2.122 0l1.752 1.752a1.5 1.5 0 0 1 0 2.121l-1.75 1.75a1.5 1.5 0 0 1-2.12 0L7.942 6.311a1.5 1.5 0 0 1 0-2.121z"
         />
         <defs>
           <linearGradient x1="2" x2="8" y1="3" y2="9" id="fluentColorApps160" gradientUnits="userSpaceOnUse">
@@ -162,13 +152,8 @@ export function Youtube_Color_Icon(props: SvgProps): ReactElement {
   return (
     <svg {...props} height="1em" width="1.43em" viewBox="0 0 256 180" xmlns="http://www.w3.org/2000/svg">
       <path
-        d={
-          'M250.346 28.075A32.18 32.18 0 0 0 227.69 5.418C207.824 0 127.87 0 127.87 0S47.912.164 28.046 ' +
-          '5.582A32.18 32.18 0 0 0 5.39 28.24c-6.009 35.298-8.34 89.084.165 122.97a32.18 32.18 0 0 0 22.' +
-          '656 22.657c19.866 5.418 99.822 5.418 99.822 5.418s79.955 0 99.82-5.418a32.18 32.18 0 0 0 22.6' +
-          '57-22.657c6.338-35.348 8.291-89.1-.164-123.134'
-        }
         fill="#f00"
+        d="M250.346 28.075A32.18 32.18 0 0 0 227.69 5.418C207.824 0 127.87 0 127.87 0S47.912.164 28.046 5.582A32.18 32.18 0 0 0 5.39 28.24c-6.009 35.298-8.34 89.084.165 122.97a32.18 32.18 0 0 0 22.656 22.657c19.866 5.418 99.822 5.418 99.822 5.418s79.955 0 99.82-5.418a32.18 32.18 0 0 0 22.657-22.657c6.338-35.348 8.291-89.1-.164-123.134"
       />
       <path fill="#fff" d="m102.421 128.06l66.328-38.418l-66.328-38.418z" />
     </svg>

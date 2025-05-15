@@ -1,7 +1,7 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Selection} from '@heroui/react';
 import {memo, useCallback} from 'react';
 
-import {FilterDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons6';
+import {FilterDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../../../assets/icons/SvgIcons/SvgIconsColor';
 import rendererIpc from '../../../../RendererIpc';
 

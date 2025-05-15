@@ -3,7 +3,7 @@ import {Card, InputNumber} from 'antd';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
-import {SettingsMinimal_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {SettingsMinimal_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import {CloneOptionsResult} from './CloneRepo';
 

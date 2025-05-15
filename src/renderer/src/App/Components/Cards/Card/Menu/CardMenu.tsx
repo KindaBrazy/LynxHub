@@ -3,7 +3,7 @@ import {Button, Dropdown, DropdownMenu, DropdownSection, DropdownTrigger} from '
 import {observer} from 'mobx-react-lite';
 import {useMemo} from 'react';
 
-import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {useUpdatingCard} from '../../../../Utils/UtilHooks';

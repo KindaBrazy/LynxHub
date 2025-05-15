@@ -5,7 +5,7 @@ import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
-import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import LynxScroll from '../../../Reusable/LynxScroll';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useRenderList, useSortedList} from './ExtensionList_Utils';

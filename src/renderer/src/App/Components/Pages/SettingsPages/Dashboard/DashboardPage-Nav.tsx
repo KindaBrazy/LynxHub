@@ -2,10 +2,13 @@ import {ScrollShadow} from '@heroui/react';
 import {Card} from 'antd';
 import {useMemo} from 'react';
 
-import {Download2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Info_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {Bug_Icon, User_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {UserHeart_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {
+  Bug_Icon,
+  Download2_Icon,
+  Info_Icon,
+  User_Icon,
+  UserHeart_Icon,
+} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {GroupProps, GroupSection} from '../Settings/SettingsPage-Nav';
 import {dashboardSectionId} from './DashboardContainer';

@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import {TabInfo} from '../../../../../cross/CrossTypes';
 import {Hotkey_Names} from '../../../../../cross/HotkeyConstants';
-import {CloseSimple_Icon} from '../../../assets/icons/SvgIcons/SvgIcons5';
+import {CloseSimple_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {useHotkeysState} from '../../Redux/Reducer/HotkeysReducer';
 import {useSettingsState} from '../../Redux/Reducer/SettingsReducer';

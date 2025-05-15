@@ -19,8 +19,7 @@ import {EXTENSION_CONTAINER, EXTENSION_CONTAINER_EA} from '../../../../../../../
 import {Extension_ListData, ExtensionsInfo} from '../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
-import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {Linux_Icon, MacOS_Icon, Windows_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
+import {Linux_Icon, MacOS_Icon, MenuDots_Icon, Windows_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {useUserState} from '../../../../Redux/Reducer/UserReducer';
 import {ExtFilter} from './ExtensionList';

@@ -16,15 +16,18 @@ import {
   X_URL,
   YOUTUBE_URL,
 } from '../../../../../../../../cross/CrossConstants';
-import {Copy_Icon, ExternalLink_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {GitHub_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {CallChat_Icon, Scales_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
 import {
+  CallChat_Icon,
+  Copy_Icon,
   DiscordColor_Icon,
+  ExternalLink_Icon,
+  GitHub_Icon,
   Gmail_Icon,
+  Info_Icon,
   Reddit_Icon,
+  Scales_Icon,
   XSite_Icon,
-} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
+} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {Youtube_Color_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIconsColor';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';

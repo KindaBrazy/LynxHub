@@ -5,13 +5,14 @@ import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 import {
   Database_Icon,
   Discord_Icon,
+  EditCard_Icon,
+  Keyboard_Icon,
+  Rocket_Icon,
   Terminal_Icon,
   Trash_Icon,
   Tuning_Icon,
   Web_Icon,
-} from '../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {EditCard_Icon, Keyboard_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons4';
-import {Rocket_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
+} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {settingsSectionId} from './SettingsContainer';
 

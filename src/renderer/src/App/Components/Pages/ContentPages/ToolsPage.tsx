@@ -1,6 +1,6 @@
 import {ScrollShadow} from '@heroui/react';
 
-import {Rocket_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
+import {Rocket_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';

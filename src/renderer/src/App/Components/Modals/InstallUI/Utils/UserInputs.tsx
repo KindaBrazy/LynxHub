@@ -1,7 +1,7 @@
 import {Button, Input, Select, SelectItem} from '@heroui/react';
 import {Dispatch, SetStateAction, useCallback, useState} from 'react';
 
-import {File_Icon, Folder2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {File_Icon, Folder2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {UserInputField, UserInputResult} from '../../../../Modules/types';
 import rendererIpc from '../../../../RendererIpc';
 import LynxSwitch from '../../../Reusable/LynxSwitch';

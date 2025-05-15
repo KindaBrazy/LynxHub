@@ -1,6 +1,6 @@
 import {ScrollShadow} from '@heroui/react';
 
-import {GamePad_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
+import {GamePad_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';

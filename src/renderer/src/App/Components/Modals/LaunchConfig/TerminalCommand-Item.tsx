@@ -2,7 +2,7 @@ import {Card} from '@heroui/card';
 import {Button, Input} from 'antd';
 import {ChangeEvent, useCallback, useState} from 'react';
 
-import {Close_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Close_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 
 type Props = {
   index: number;

@@ -2,7 +2,7 @@ import {Button, ButtonGroup, Input} from '@heroui/react';
 import {OpenDialogOptions} from 'electron';
 import {useCallback, useRef, useState} from 'react';
 
-import {Folder_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
+import {Folder_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../RendererIpc';
 
 type Props = {

@@ -7,8 +7,7 @@ import {SimpleGitProgressEvent} from 'simple-git';
 
 import {extractGitUrl, validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
-import {Download2_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
-import {GitHub_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Download2_Icon, GitHub_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import rendererIpc from '../../../RendererIpc';
 import {initGitProgress} from '../../../Utils/Constants';

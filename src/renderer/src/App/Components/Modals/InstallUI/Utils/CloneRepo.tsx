@@ -8,8 +8,7 @@ import {SimpleGitProgressEvent} from 'simple-git';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../../cross/IpcChannelAndTypes';
-import {Folder2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {GitHub_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Folder2_Icon, GitHub_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {modalActions} from '../../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';

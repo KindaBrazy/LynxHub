@@ -4,8 +4,7 @@ import {isEmpty, isNil} from 'lodash';
 import {useCallback} from 'react';
 
 import {isValidURL} from '../../../../../../cross/CrossUtils';
-import {ExternalLink_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
-import {OpenFolder_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons4';
+import {ExternalLink_Icon, OpenFolder_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {CardInfoDescriptions, CardInfoDescriptions_Items} from '../../../Modules/types';
 import rendererIpc from '../../../RendererIpc';
 

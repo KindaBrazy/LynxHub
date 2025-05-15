@@ -2,7 +2,7 @@ import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalH
 import {Fragment, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {ShieldCross_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
+import {ShieldCross_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {useGetUninstallType} from '../../../Modules/ModuleLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';

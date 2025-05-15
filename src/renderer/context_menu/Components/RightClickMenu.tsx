@@ -4,8 +4,7 @@ import {isEmpty} from 'lodash';
 import {ReactNode, useEffect} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
-import {Refresh3_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons4';
-import {ArrowDuo_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons5';
+import {ArrowDuo_Icon, Refresh3_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
 import {SetElementsType, SetWidthSizeType} from './ContextHooks';
 import {
   CopyDuo_Icon,

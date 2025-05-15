@@ -1,7 +1,7 @@
 import {Button, Dropdown, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {observer} from 'mobx-react-lite';
 
-import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {useCardData} from '../../CardsDataManager';
 import {MenuDuplicate, MenuHomePage} from './MenuItems/CardMenu-About';

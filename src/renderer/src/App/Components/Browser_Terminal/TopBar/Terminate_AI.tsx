@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 
-import {Stop_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Stop_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {useHotkeysState} from '../../../Redux/Reducer/HotkeysReducer';
 import {useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
 import rendererIpc from '../../../RendererIpc';

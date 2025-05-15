@@ -3,8 +3,7 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {APP_NAME} from '../../../../../../../../cross/CrossConstants';
 import {DiscordRPC} from '../../../../../../../../cross/CrossTypes';
-import {Discord_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {DiskDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons5';
+import {Discord_Icon, DiskDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SettingsSection from '../SettingsPage-ContentSection';

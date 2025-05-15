@@ -1,9 +1,7 @@
 import {Button} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
 
-import {Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {Database_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {OpenFolder_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {Database_Icon, OpenFolder_Icon, Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SettingsSection from '../SettingsPage-ContentSection';

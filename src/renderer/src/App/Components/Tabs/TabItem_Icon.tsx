@@ -3,11 +3,20 @@ import {ReactNode, useEffect, useState} from 'react';
 
 import {APP_ICON_TRANSPARENT} from '../../../../../cross/CrossConstants';
 import {TabInfo} from '../../../../../cross/CrossTypes';
-import {AudioGeneration_Icon, Extensions_Icon, Extensions2_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
-import {Home_Icon, ImageGeneration_Icon, Info_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
-import {Terminal_Icon, TextGeneration_Icon, Web_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
-import {Slider_Icon} from '../../../assets/icons/SvgIcons/SvgIcons4';
-import {GamePad_Icon, Rocket_Icon} from '../../../assets/icons/SvgIcons/SvgIcons5';
+import {
+  AudioGeneration_Icon,
+  Extensions_Icon,
+  Extensions2_Icon,
+  GamePad_Icon,
+  Home_Icon,
+  ImageGeneration_Icon,
+  Info_Icon,
+  Rocket_Icon,
+  Slider_Icon,
+  Terminal_Icon,
+  TextGeneration_Icon,
+  Web_Icon,
+} from '../../../assets/icons/SvgIcons/SvgIcons';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import rendererIpc from '../../RendererIpc';
 import {PageID} from '../../Utils/Constants';

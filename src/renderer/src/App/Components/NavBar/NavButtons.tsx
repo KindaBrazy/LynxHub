@@ -1,11 +1,18 @@
 import {isEmpty} from 'lodash';
 import {ReactNode, useMemo} from 'react';
 
-import {AudioGeneration_Icon, Extensions_Icon, Extensions2_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
-import {Home_Icon, ImageGeneration_Icon, Info_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
-import {TextGeneration_Icon} from '../../../assets/icons/SvgIcons/SvgIcons3';
-import {Slider_Icon} from '../../../assets/icons/SvgIcons/SvgIcons4';
-import {GamePad_Icon, Rocket_Icon} from '../../../assets/icons/SvgIcons/SvgIcons5';
+import {
+  AudioGeneration_Icon,
+  Extensions_Icon,
+  Extensions2_Icon,
+  GamePad_Icon,
+  Home_Icon,
+  ImageGeneration_Icon,
+  Info_Icon,
+  Rocket_Icon,
+  Slider_Icon,
+  TextGeneration_Icon,
+} from '../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../Redux/Reducer/SettingsReducer';
 import {PageID, PageTitles} from '../../Utils/Constants';

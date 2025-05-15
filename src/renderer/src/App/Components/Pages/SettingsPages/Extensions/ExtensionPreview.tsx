@@ -2,7 +2,7 @@ import {isEmpty} from 'lodash';
 import {Dispatch, memo, SetStateAction, useMemo} from 'react';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
-import {Extensions_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Extensions_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {PreviewBody, PreviewFooter, PreviewHeader} from './ExtensionPreview_Utils';
 import {InstalledExt} from './ExtensionsPage';
 

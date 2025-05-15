@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback} from 'react';
 
 import {ArgumentsPresets, ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
-import {Add_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Add_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import LynxTooltip from '../../../../Reusable/LynxTooltip';
 import LaunchConfigSection from '../../LaunchConfig-Section';
 import ManageArgumentsItem from './ManageArguments-Item';

@@ -1,7 +1,7 @@
 import {Input} from '@heroui/react';
 import {Dispatch, memo, SetStateAction} from 'react';
 
-import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 
 type Props = {searchValue: string; setSearchValue: Dispatch<SetStateAction<string>>};
 

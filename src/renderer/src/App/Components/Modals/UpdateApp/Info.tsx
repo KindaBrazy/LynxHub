@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 
 import {APP_BUILD_NUMBER, APP_VERSION, RELEASES_PAGE} from '../../../../../../cross/CrossConstants';
 import {AppUpdateInfo} from '../../../../../../cross/CrossTypes';
-import {ExternalLink_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
+import {ExternalLink_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 
 type Props = {items: CollapseProps['items']; updateInfo: AppUpdateInfo | undefined};
 

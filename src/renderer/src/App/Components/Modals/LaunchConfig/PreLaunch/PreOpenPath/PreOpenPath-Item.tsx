@@ -2,7 +2,7 @@ import {Card} from '@heroui/card';
 import {Button, Typography} from 'antd';
 import {ReactNode, useCallback} from 'react';
 
-import {Close_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Close_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 
 const {Text} = Typography;
 type Props = {icon: ReactNode; index: number; defaultText: string; onRemove?: (index: number) => void};

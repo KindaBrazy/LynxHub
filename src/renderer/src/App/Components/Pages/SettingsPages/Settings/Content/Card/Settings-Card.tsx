@@ -1,6 +1,6 @@
 import {Divider} from 'antd';
 
-import {EditCard_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {EditCard_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import SettingsSection from '../../SettingsPage-ContentSection';
 import CheckUpdateInterval from './CustomizeBehavior/CheckUpdateInterval';
 import CustomizeStyle from './CustomizeStyle/CustomizeStyle';

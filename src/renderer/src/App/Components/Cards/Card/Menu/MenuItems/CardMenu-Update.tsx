@@ -2,8 +2,7 @@ import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Download_Icon, Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {getCardMethod, useAllCards} from '../../../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';

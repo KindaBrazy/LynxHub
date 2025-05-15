@@ -2,7 +2,7 @@ import {Button} from '@heroui/react';
 import {useRef} from 'react';
 
 import {Hotkey_Names} from '../../../../../../cross/HotkeyConstants';
-import {Circle_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Circle_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import rendererIpc from '../../../RendererIpc';
 import useHotkeyPress from '../../../Utils/RegisterHotkeys';

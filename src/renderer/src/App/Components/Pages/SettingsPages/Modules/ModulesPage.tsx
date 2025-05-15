@@ -3,7 +3,7 @@ import {isEmpty} from 'lodash';
 import {Key, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Download2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Download2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {settingsActions, useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';

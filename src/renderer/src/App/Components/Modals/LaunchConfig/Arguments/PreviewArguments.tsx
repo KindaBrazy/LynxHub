@@ -3,7 +3,7 @@ import {Card, Empty, Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback} from 'react';
 
-import {Copy_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Copy_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import LynxTooltip from '../../../Reusable/LynxTooltip';
 import LaunchConfigSection from '../LaunchConfig-Section';

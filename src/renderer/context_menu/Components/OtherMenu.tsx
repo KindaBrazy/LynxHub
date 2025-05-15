@@ -3,7 +3,7 @@ import {isArray, isEmpty} from 'lodash';
 import {useEffect, useState} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
-import {ArrowDuo_Icon, CloseSimple_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons5';
+import {ArrowDuo_Icon, CloseSimple_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
 import {SetElementsType, SetWidthSizeType} from './ContextHooks';
 
 export function useZoomMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {

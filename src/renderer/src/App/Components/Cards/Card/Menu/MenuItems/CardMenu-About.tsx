@@ -2,9 +2,13 @@ import {DropdownItem} from '@heroui/react';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Copy_Icon, ExternalLink_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {OpenFolder_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {
+  Copy_Icon,
+  ExternalLink_Icon,
+  HomeSmile_Icon,
+  Info_Icon,
+  OpenFolder_Icon,
+} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {duplicateCard, removeDuplicatedCard} from '../../../../../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../../../../../Redux/Reducer/CardsReducer';
 import {useHotkeysState} from '../../../../../Redux/Reducer/HotkeysReducer';
