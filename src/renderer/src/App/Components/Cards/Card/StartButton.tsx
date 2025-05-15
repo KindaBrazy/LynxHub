@@ -2,8 +2,7 @@ import {Button} from '@heroui/react';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Download2_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Play_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Download2_Icon, Play_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../Redux/Reducer/ModalsReducer';

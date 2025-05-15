@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 
 import {WIN_RELEASE_URL_V2} from '../../../../../../../../cross/CrossConstants';
 import {AppUpdateData} from '../../../../../../../../cross/CrossTypes';
-import {Download2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Download2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';

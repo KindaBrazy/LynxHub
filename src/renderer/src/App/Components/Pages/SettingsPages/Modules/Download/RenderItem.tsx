@@ -6,8 +6,7 @@ import {useDispatch} from 'react-redux';
 
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Download_Icon, HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {settingsActions} from '../../../../../Redux/Reducer/SettingsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';

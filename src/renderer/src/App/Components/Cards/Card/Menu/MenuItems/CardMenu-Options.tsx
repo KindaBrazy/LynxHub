@@ -2,9 +2,7 @@ import {DropdownItem} from '@heroui/react';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Extensions2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {GitHub_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {SettingsMinimal_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Extensions2_Icon, GitHub_Icon, SettingsMinimal_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetInstallType} from '../../../../../Modules/ModuleLoader';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';

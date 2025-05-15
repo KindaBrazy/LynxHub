@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {BrowserRecent} from '../../../../../../cross/IpcChannelAndTypes';
-import {Terminal_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Terminal_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';

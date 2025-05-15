@@ -3,7 +3,7 @@ import {Empty, List, PaginationProps} from 'antd';
 import {useEffect, useState} from 'react';
 
 import {validateGitRepoUrl} from '../../../../../../../cross/CrossUtils';
-import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {getCardMethod, useAllCards} from '../../../../Modules/ModuleLoader';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import RenderItem from './RenderItem';

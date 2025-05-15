@@ -1,4 +1,4 @@
-import {User_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {User_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import SettingsSection from '../../../Settings/SettingsPage-ContentSection';
 import Profile_Patreon from './Profile_Patreon';
 

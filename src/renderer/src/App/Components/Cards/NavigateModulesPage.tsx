@@ -2,7 +2,7 @@ import {Button} from '@heroui/react';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Extensions2_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
+import {Extensions2_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import {tabsActions} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import {PageID, PageTitles} from '../../Utils/Constants';

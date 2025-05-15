@@ -3,7 +3,7 @@ import {Card} from 'antd';
 import {isEmpty} from 'lodash';
 import {ReactNode} from 'react';
 
-import {Add_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Add_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import LynxTooltip from '../../Reusable/LynxTooltip';
 
 type Props = {

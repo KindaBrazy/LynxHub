@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 import {useState} from 'react';
 
-import {BroomDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons6';
+import {BroomDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../../../../RendererIpc';
 
 export default function SettingsBrowser_ClearData() {

@@ -1,6 +1,6 @@
 import {Button, Card, Checkbox, User} from '@heroui/react';
 
-import {Google_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {Google_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useAppState} from '../../../../../../Redux/Reducer/AppReducer';
 
 export default function Profile_Google() {

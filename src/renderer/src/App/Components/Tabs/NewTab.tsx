@@ -2,7 +2,7 @@ import {Button} from '@heroui/react';
 import {motion} from 'framer-motion';
 import {useDispatch} from 'react-redux';
 
-import {Add_Icon} from '../../../assets/icons/SvgIcons/SvgIcons1';
+import {Add_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import {tabsActions} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import {defaultTabItem} from '../../Utils/Constants';

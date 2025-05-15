@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import NavButton from '../../../../src/renderer/src/App/Components/NavBar/NavButton';
 import {CardElementProps} from '../../../../src/renderer/src/App/Extensions/ExtensionTypes_Renderer';
 import {useAppState} from '../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
-import {Reddit_Icon, XSite_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons4';
+import {Reddit_Icon, XSite_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {extensionActions, useExtensionState} from '../reducer';
 
 // @ts-ignore

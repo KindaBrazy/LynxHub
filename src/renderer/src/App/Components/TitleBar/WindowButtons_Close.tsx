@@ -1,7 +1,7 @@
 import {motion} from 'framer-motion';
 import {useCallback} from 'react';
 
-import {Power_Icon} from '../../../assets/icons/SvgIcons/SvgIcons2';
+import {Power_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import {useHotkeysState} from '../../Redux/Reducer/HotkeysReducer';
 import {useSettingsState} from '../../Redux/Reducer/SettingsReducer';
 import {useTabsState} from '../../Redux/Reducer/TabsReducer';

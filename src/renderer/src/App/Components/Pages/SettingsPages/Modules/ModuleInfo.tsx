@@ -3,7 +3,7 @@ import {Divider} from 'antd';
 import {Dispatch, Fragment, SetStateAction} from 'react';
 
 import {ModulesInfo} from '../../../../../../../cross/CrossTypes';
-import {CloseSimple_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
+import {CloseSimple_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {RenderSubItems} from '../../../../Utils/UtilHooks';
 import LynxScroll from '../../../Reusable/LynxScroll';
 

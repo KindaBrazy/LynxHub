@@ -4,7 +4,7 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react'
 
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
-import {Circle_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Circle_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../../../RendererIpc';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
 import LynxScroll from '../../../../Reusable/LynxScroll';

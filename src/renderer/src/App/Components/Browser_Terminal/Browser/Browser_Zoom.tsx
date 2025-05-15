@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 
-import {Magnifier_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons4';
+import {Magnifier_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../RendererIpc';
 
 type Props = {id: string};

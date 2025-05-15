@@ -2,7 +2,7 @@ import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHead
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
 import {APP_AUTHOR_NAME} from '../../../../../../cross/CrossConstants';
-import {ShieldWarning_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
+import {ShieldWarning_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 
 type Props = {
   isOpen: boolean;

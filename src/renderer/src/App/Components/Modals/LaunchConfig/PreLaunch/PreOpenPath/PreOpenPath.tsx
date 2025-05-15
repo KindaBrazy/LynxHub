@@ -4,7 +4,7 @@ import {filter, isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
 import {PreOpenData} from '../../../../../../../../cross/IpcChannelAndTypes';
-import {Add_Icon, File_Icon, Folder2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Add_Icon, File_Icon, Folder2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../../../RendererIpc';
 import LynxTooltip from '../../../../Reusable/LynxTooltip';
 import LaunchConfigSection from '../../LaunchConfig-Section';

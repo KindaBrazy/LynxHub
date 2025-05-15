@@ -3,7 +3,7 @@ import {useCallback, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue, getArgumentValues} from '../../../../../../../../../cross/GetArgumentsData';
-import {ListCheck_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons2';
+import {ListCheck_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import {convertArrToObject} from '../../../../../../Utils/UtilFunctions';
 import ArgumentItemBase from './Argument-Item-Base';

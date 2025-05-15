@@ -3,7 +3,7 @@ import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {PatreonUserData} from '../../../../../../../../../cross/CrossTypes';
-import {Patreon_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {Patreon_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {checkEARepos} from '../../../../../../AppEvents/AppEvents_Utils';
 import {userActions, useUserState} from '../../../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';

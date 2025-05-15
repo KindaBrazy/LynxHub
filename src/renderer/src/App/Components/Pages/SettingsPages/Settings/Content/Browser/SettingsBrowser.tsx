@@ -1,4 +1,4 @@
-import {Web_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Web_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import SettingsSection from '../../SettingsPage-ContentSection';
 import SettingsBrowser_ClearData from './SettingsBrowser_ClearData';
 import SettingsBrowser_Links from './SettingsBrowser_Links';

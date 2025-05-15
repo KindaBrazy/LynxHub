@@ -1,4 +1,4 @@
-import {Rocket_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons5';
+import {Rocket_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import SettingsSection from '../../SettingsPage-ContentSection';
 import SettingsStartupDisableLoadingAnim from './SettingsStartup-DisableLoadingAnim';
 import SettingsStartupLastSize from './SettingsStartup-LastSize';

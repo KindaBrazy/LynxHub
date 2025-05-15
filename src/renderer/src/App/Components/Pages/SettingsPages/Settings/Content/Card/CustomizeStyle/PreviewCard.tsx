@@ -2,9 +2,15 @@ import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader} from '@hero
 import {Divider, Typography} from 'antd';
 import {useMemo} from 'react';
 
-import {Download_Icon} from '../../../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Fork_Icon, MenuDots_Icon, Pin_Icon, Play_Icon} from '../../../../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {Star_Icon, User_Icon} from '../../../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {
+  Download_Icon,
+  Fork_Icon,
+  MenuDots_Icon,
+  Pin_Icon,
+  Play_Icon,
+  Star_Icon,
+  User_Icon,
+} from '../../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useAppState} from '../../../../../../../Redux/Reducer/AppReducer';
 import {useSettingsState} from '../../../../../../../Redux/Reducer/SettingsReducer';
 

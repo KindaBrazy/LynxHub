@@ -3,9 +3,7 @@ import {Divider} from 'antd';
 import {observer} from 'mobx-react-lite';
 
 import {formatSizeKB} from '../../../../../../cross/CrossUtils';
-import {Download_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Fork_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
-import {Star_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Download_Icon, Fork_Icon, Star_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {useRepoDetails} from '../../../Utils/LocalStorage';
 import {formatNumber} from '../../../Utils/UtilFunctions';
 import {useCardData} from '../CardsDataManager';

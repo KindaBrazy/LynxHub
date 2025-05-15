@@ -1,6 +1,6 @@
 import {Spacer} from '@heroui/react';
 
-import {Terminal_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Terminal_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import SettingsSection from '../../SettingsPage-ContentSection';
 import SettingsTerminalBlinkCursor from './SettingsTerminal-BlinkCursor';
 import SettingsTerminalConpty from './SettingsTerminal-Conpty';

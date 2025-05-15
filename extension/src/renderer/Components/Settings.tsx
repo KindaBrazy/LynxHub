@@ -1,6 +1,6 @@
 import SettingsSection from '../../../../src/renderer/src/App/Components/Pages/SettingsPages/Settings/SettingsPage-ContentSection';
 import {GroupSection} from '../../../../src/renderer/src/App/Components/Pages/SettingsPages/Settings/SettingsPage-Nav';
-import {Bug_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons3';
+import {Bug_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 
 const sectionId = 'my_extension_settings';
 const sectionTitle = 'Config';

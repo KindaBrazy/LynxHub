@@ -7,10 +7,13 @@ import {useDispatch} from 'react-redux';
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
-import {Download_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {Refresh3_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {
+  Download_Icon,
+  HomeSmile_Icon,
+  Info_Icon,
+  Refresh3_Icon,
+  Trash_Icon,
+} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {settingsActions, useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';

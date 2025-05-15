@@ -3,7 +3,7 @@ import {Card, Tooltip, Typography} from 'antd';
 import {ReactNode, useMemo} from 'react';
 
 import {getArgumentDescription} from '../../../../../../../../../cross/GetArgumentsData';
-import {Close_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Close_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 
 const {Text} = Typography;

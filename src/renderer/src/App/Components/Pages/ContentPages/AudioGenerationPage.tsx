@@ -1,7 +1,7 @@
 import {ScrollShadow} from '@heroui/react';
 import {useMemo} from 'react';
 
-import {AudioGeneration_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
+import {AudioGeneration_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {PageID} from '../../../Utils/Constants';
 import {GetComponentsByPath} from '../../Cards/Cards';

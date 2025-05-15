@@ -2,7 +2,7 @@ import {Button} from '@heroui/react';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Refresh3_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {Refresh3_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {terminalActions} from '../../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 

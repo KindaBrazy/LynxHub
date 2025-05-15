@@ -3,7 +3,7 @@ import {ChangeEvent, useCallback, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
-import {Text_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Text_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import ArgumentItemBase from './Argument-Item-Base';
 

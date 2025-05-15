@@ -1,7 +1,7 @@
 import {Button, Tooltip} from '@heroui/react';
 import {useCallback, useState} from 'react';
 
-import {CheckDuo_Icon, CopyDuo_Icon} from '../../../assets/icons/SvgIcons/SvgIcons5';
+import {CheckDuo_Icon, CopyDuo_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 
 type Props = {tooltipTitle?: string; showTooltip?: boolean; contentToCopy: string; className?: string};
 

@@ -2,8 +2,7 @@ import {Button} from '@heroui/react';
 import {Typography} from 'antd';
 
 import {ISSUE_PAGE} from '../../../../../../../../cross/CrossConstants';
-import {ExternalLink_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Bug_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Bug_Icon, ExternalLink_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
 const {Paragraph} = Typography;

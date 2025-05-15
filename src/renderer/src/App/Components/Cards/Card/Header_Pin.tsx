@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 import {useCallback} from 'react';
 
-import {Pin_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
+import {Pin_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../RendererIpc';
 import {useIsPinnedCard} from '../../../Utils/UtilHooks';
 import {useCardData} from '../CardsDataManager';

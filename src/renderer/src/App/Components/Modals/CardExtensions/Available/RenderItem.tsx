@@ -6,8 +6,7 @@ import Highlighter from 'react-highlight-words';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
-import {Home_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons2';
-import {Star_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons3';
+import {Home_Icon, Star_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {modalActions} from '../../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../Redux/Store';

@@ -3,9 +3,13 @@ import {Empty, Space, Spin} from 'antd';
 import {Variants} from 'framer-motion';
 
 import {RepoDetails} from '../../../../../../cross/CrossTypes';
-import {CrossShield_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Star_Icon, Trash_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons3';
-import {Lock_Icon, Unlock_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
+import {
+  CrossShield_Icon,
+  Lock_Icon,
+  Star_Icon,
+  Trash_Icon,
+  Unlock_Icon,
+} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {formatNumber} from '../../../Utils/UtilFunctions';
 
 export const tabContentVariants: Variants = {

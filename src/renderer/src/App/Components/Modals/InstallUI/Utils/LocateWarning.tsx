@@ -1,7 +1,7 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {Dispatch, SetStateAction} from 'react';
 
-import {ShieldWarning_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
+import {ShieldWarning_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 
 type Props = {isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>};
 export default function LocateWarning({isOpen, setIsOpen}: Props) {

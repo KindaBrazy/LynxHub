@@ -3,9 +3,7 @@ import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
 import {useEffect, useState} from 'react';
 
 import {Hotkey_Names} from '../../../../../../cross/HotkeyConstants';
-import {HomeSmile_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons2';
-import {Refresh3_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons4';
-import {ArrowDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons5';
+import {ArrowDuo_Icon, HomeSmile_Icon, Refresh3_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import rendererIpc from '../../../RendererIpc';
 import useHotkeyPress from '../../../Utils/RegisterHotkeys';

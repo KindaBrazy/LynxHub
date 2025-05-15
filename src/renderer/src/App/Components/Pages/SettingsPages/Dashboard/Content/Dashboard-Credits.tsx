@@ -3,9 +3,12 @@ import {Card, Empty} from 'antd';
 import {useEffect, useMemo, useState} from 'react';
 
 import {PATREON_URL, PATRONS_DATA} from '../../../../../../../../cross/CrossConstants';
-import {ExternalLink_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {Heart_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {Patreon_Icon, UserHeart_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
+import {
+  ExternalLink_Icon,
+  Heart_Icon,
+  Patreon_Icon,
+  UserHeart_Icon,
+} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
 export const DashboardCreditsId = 'settings_credits_elem';

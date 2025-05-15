@@ -1,9 +1,7 @@
 import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
 import {useState} from 'react';
 
-import {Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons3';
-import {Refresh3_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons4';
-import {BroomDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons6';
+import {BroomDuo_Icon, Refresh3_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SettingsSection from '../SettingsPage-ContentSection';

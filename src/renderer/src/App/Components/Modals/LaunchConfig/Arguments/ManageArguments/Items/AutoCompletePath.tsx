@@ -2,7 +2,7 @@ import {Autocomplete, AutocompleteItem} from '@heroui/react';
 import {Key, useEffect, useState} from 'react';
 
 import {FolderListData} from '../../../../../../../../../cross/CrossTypes';
-import {File_Icon, Folder2_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {File_Icon, Folder2_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../../../../RendererIpc';
 import {searchInStrings} from '../../../../../../Utils/UtilFunctions';
 

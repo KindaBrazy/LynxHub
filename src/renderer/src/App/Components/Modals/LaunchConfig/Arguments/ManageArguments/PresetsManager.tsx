@@ -15,7 +15,7 @@ import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
-import {Close_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
+import {Close_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {convertArrToObject} from '../../../../../Utils/UtilFunctions';
 
 type Props = {
