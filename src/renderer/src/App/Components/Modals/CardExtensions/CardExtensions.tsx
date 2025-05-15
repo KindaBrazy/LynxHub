@@ -86,8 +86,7 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
             color="secondary"
             selectedKey={currentTab}
             onSelectionChange={setCurrentTab}
-            fullWidth
-            disableAnimation>
+            fullWidth>
             <Tab key="installed" title="Installed" className="cursor-default" />
             <Tab key="available" title="Available" className="cursor-default" />
             <Tab key="clone" title="Clone" className="cursor-default" />
