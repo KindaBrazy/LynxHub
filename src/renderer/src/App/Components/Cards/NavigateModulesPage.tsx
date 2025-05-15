@@ -15,7 +15,6 @@ export default function NavigateModulesPage({size}: {size?: 'sm' | 'md'}) {
       tabsActions.setActivePage({
         pageID: PageID.modules,
         title: PageTitles.modules,
-        isTerminal: false,
       }),
     );
   }, [dispatch]);
