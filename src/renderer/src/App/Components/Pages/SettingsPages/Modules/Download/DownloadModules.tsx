@@ -1,14 +1,13 @@
 import {Input} from '@heroui/react';
 import {Empty, List, PaginationProps} from 'antd';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {MODULE_CONTAINER} from '../../../../../../../../cross/CrossConstants';
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {Circle_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {useAppState} from '../../../../../Redux/Reducer/AppReducer';
 import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
+import LynxScroll from '../../../../Reusable/LynxScroll';
 import RenderItem from './RenderItem';
 
 type Props = {
@@ -24,8 +23,6 @@ export default function DownloadModules({installedModules, setInstalledModules}:
   const [searchedData, setSearchedData] = useState<ModulesInfo[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
-
-  const isDarkMode = useAppState('darkMode');
 
   const addModule = useCallback(
     (id: string) => {
@@ -74,16 +71,7 @@ export default function DownloadModules({installedModules, setInstalledModules}:
           startContent={<Circle_Icon className="size-5" />}
         />
       </div>
-      <OverlayScrollbarsComponent
-        options={{
-          overflow: {x: 'hidden', y: 'scroll'},
-          scrollbars: {
-            autoHide: 'scroll',
-            clickScroll: true,
-            theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-          },
-        }}
-        className="my-1.5 size-full p-4">
+      <LynxScroll className="my-1.5 size-full p-4">
         <List
           locale={{
             emptyText: (
@@ -110,7 +98,7 @@ export default function DownloadModules({installedModules, setInstalledModules}:
           dataSource={searchedData}
           renderItem={item => <RenderItem item={item} addModule={addModule} />}
         />
-      </OverlayScrollbarsComponent>
+      </LynxScroll>
     </>
   );
 }
