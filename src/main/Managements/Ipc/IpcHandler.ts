@@ -341,6 +341,8 @@ function storageUtilsIpc() {
     (_, type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) =>
       storageManager.setShowConfirm(type, enable),
   );
+
+  ipcMain.on(storageUtilsChannels.addReadNotif, (_, id: string) => storageManager.addReadNotif(id));
 }
 
 function modulesIpc() {

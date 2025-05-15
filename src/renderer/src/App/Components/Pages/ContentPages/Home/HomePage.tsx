@@ -10,6 +10,7 @@ import Page from '../../Page';
 import Home_TopBar from './Home_TopBar';
 import HomeFilter from './HomeFilter';
 import HomeSearchBox from './HomeSearchBox';
+import Home_Notification from './Notification/Home_Notification';
 
 type Props = {show: boolean};
 
@@ -33,6 +34,7 @@ const HomePage = ({show}: Props) => {
           <div className="my-4 flex w-full items-center justify-between space-x-3 px-2">
             <HomeSearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
             <HomeFilter selectedCategories={homeCategory} />
+            <Home_Notification />
           </div>
         )}
 

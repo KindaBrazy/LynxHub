@@ -311,7 +311,7 @@ export function CopyDuo_Icon(props: SvgProps): ReactElement {
 
 export function CheckDuo_Icon(props: SvgProps): ReactElement {
   return (
-    <svg {...props} width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <svg {...props} height="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <g fill="none" strokeWidth="1.5" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
         <path opacity="0.5" d="m4 12.9l3.143 3.6L15 7.5" />
         <path d="m20 7.563l-8.571 9L11 16" />
