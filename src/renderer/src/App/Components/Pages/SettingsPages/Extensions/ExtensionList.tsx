@@ -1,14 +1,13 @@
 import {Input, Skeleton} from '@heroui/react';
 import {Empty, List} from 'antd';
 import {isEmpty} from 'lodash';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
 import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {useAppState} from '../../../../Redux/Reducer/AppReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
+import LynxScroll from '../../../Reusable/LynxScroll';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useRenderList, useSortedList} from './ExtensionList_Utils';
 import {InstalledExt} from './ExtensionsPage';
 
@@ -22,8 +21,6 @@ type Props = {
 };
 
 export default function ExtensionList({selectedExt, setSelectedExt, installed, unloaded}: Props) {
-  const isDarkMode = useAppState('darkMode');
-
   const [selectedFilters, setSelectedFilters] = useState<ExtFilter>('all');
   const [list, setList] = useState<Extension_ListData[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
@@ -92,16 +89,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
         startContent={<Circle_Icon className="size-5" />}
       />
 
-      <OverlayScrollbarsComponent
-        options={{
-          overflow: {x: 'hidden', y: 'scroll'},
-          scrollbars: {
-            autoHide: 'scroll',
-            clickScroll: true,
-            theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-          },
-        }}
-        className="inset-0 absolute !top-10">
+      <LynxScroll className="inset-0 absolute !top-10">
         {loading ? (
           <div className="flex flex-col">
             {Array(3)
@@ -125,7 +113,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
             dataSource={resultList}
           />
         )}
-      </OverlayScrollbarsComponent>
+      </LynxScroll>
     </div>
   );
 }

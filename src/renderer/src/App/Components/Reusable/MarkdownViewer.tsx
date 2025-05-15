@@ -1,7 +1,6 @@
 import {Kbd, Spinner} from '@heroui/react';
 import {Result} from 'antd';
 import {isEmpty} from 'lodash';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {
   Children,
   CSSProperties,
@@ -20,7 +19,7 @@ import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 
 import {extractGitUrl} from '../../../../../cross/CrossUtils';
-import {useAppState} from '../../Redux/Reducer/AppReducer';
+import LynxScroll from './LynxScroll';
 
 type MarkdownViewerProps = {
   repoUrl: string;
@@ -38,7 +37,6 @@ type CustomCodeProps = HTMLAttributes<HTMLElement> & {
 
 const MarkdownViewer = ({repoUrl, rounded = true, showBackground}: MarkdownViewerProps) => {
   const [content, setContent] = useState<string>('');
-  const isDarkMode = useAppState('darkMode');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
 
@@ -213,16 +211,7 @@ const MarkdownViewer = ({repoUrl, rounded = true, showBackground}: MarkdownViewe
   ) : error ? (
     <Result title={error} status="error" subTitle="Please check your internet connection and try again." />
   ) : (
-    <OverlayScrollbarsComponent
-      options={{
-        overflow: {x: 'hidden', y: 'scroll'},
-        scrollbars: {
-          autoHide: 'scroll',
-          clickScroll: true,
-          theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-        },
-      }}
-      className={`size-full ${rounded && 'rounded-xl'}`}>
+    <LynxScroll className={`size-full ${rounded && 'rounded-xl'}`}>
       <div
         className={
           `prose prose-slate mr-4 max-w-none rounded-xl p-8` +
@@ -235,7 +224,7 @@ const MarkdownViewer = ({repoUrl, rounded = true, showBackground}: MarkdownViewe
           {content}
         </ReactMarkdown>
       </div>
-    </OverlayScrollbarsComponent>
+    </LynxScroll>
   );
 };
 

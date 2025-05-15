@@ -1,18 +1,15 @@
 import {Button, Chip, Modal, ModalBody, ModalContent, ModalHeader} from '@heroui/react';
 import {Divider} from 'antd';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, Fragment, SetStateAction} from 'react';
 
 import {ModulesInfo} from '../../../../../../../cross/CrossTypes';
 import {CloseSimple_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons5';
-import {useAppState} from '../../../../Redux/Reducer/AppReducer';
 import {RenderSubItems} from '../../../../Utils/UtilHooks';
+import LynxScroll from '../../../Reusable/LynxScroll';
 
 type Props = {item: ModulesInfo; isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>};
 
 export default function ModuleInfo({item, isOpen, setIsOpen}: Props) {
-  const isDarkMode = useAppState('darkMode');
-
   return (
     <Modal
       closeButton={
@@ -38,15 +35,7 @@ export default function ModuleInfo({item, isOpen, setIsOpen}: Props) {
               {item.updateDate}
             </Chip>
           </div>
-          <OverlayScrollbarsComponent
-            options={{
-              overflow: {x: 'hidden', y: 'scroll'},
-              scrollbars: {
-                autoHide: 'scroll',
-                clickScroll: true,
-                theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-              },
-            }}>
+          <LynxScroll>
             {item.changes &&
               item.changes.map((change, index) => (
                 <Fragment key={`section_${index}`}>
@@ -57,7 +46,7 @@ export default function ModuleInfo({item, isOpen, setIsOpen}: Props) {
                   {index < item.changes.length - 1 && <Divider />}
                 </Fragment>
               ))}
-          </OverlayScrollbarsComponent>
+          </LynxScroll>
         </ModalBody>
       </ModalContent>
     </Modal>

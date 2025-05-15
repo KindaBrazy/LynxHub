@@ -1,14 +1,13 @@
 import {Input} from '@heroui/react';
 import {Empty, List, PaginationProps} from 'antd';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
 import {Circle_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
-import {useAppState} from '../../../../../Redux/Reducer/AppReducer';
 import rendererIpc from '../../../../../RendererIpc';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
+import LynxScroll from '../../../../Reusable/LynxScroll';
 import RenderItem from './RenderItem';
 
 type Props = {
@@ -23,8 +22,6 @@ export default function InstalledModules({setInstalledModules, updatingAll}: Pro
   const [searchedData, setSearchedData] = useState<{dir: string; info: ModulesInfo}[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [unloaded, setUnloaded] = useState<SkippedPlugins[]>([]);
-
-  const isDarkMode = useAppState('darkMode');
 
   useEffect(() => {
     setSearchedData(data.filter(module => searchInStrings(searchValue, [module.info.title, module.info.description])));
@@ -66,16 +63,7 @@ export default function InstalledModules({setInstalledModules, updatingAll}: Pro
           startContent={<Circle_Icon className="size-5" />}
         />
       </div>
-      <OverlayScrollbarsComponent
-        options={{
-          overflow: {x: 'hidden', y: 'scroll'},
-          scrollbars: {
-            autoHide: 'scroll',
-            clickScroll: true,
-            theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-          },
-        }}
-        className="my-1.5 size-full p-4">
+      <LynxScroll className="my-1.5 size-full p-4">
         <List
           renderItem={item => (
             <RenderItem itemData={item} unloaded={unloaded} updatingAll={updatingAll} removedModule={removedModule} />
@@ -102,7 +90,7 @@ export default function InstalledModules({setInstalledModules, updatingAll}: Pro
           itemLayout="vertical"
           dataSource={searchedData}
         />
-      </OverlayScrollbarsComponent>
+      </LynxScroll>
     </>
   );
 }

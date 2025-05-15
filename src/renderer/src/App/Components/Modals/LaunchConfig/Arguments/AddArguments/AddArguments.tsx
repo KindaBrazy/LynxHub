@@ -15,14 +15,13 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import {isEmpty, some} from 'lodash';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 
 import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../../../../cross/GetArgumentsData';
 import {Circle_Icon, Filter_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons1';
 import {useGetArgumentsByID} from '../../../../../Modules/ModuleLoader';
-import {useAppState} from '../../../../../Redux/Reducer/AppReducer';
+import LynxScroll from '../../../../Reusable/LynxScroll';
 import ArgumentCategory from './ArgumentCategory';
 
 type Props = {
@@ -47,7 +46,6 @@ const isEmptyData = (data): boolean => {
 
 /** Select and add arguments */
 export default function AddArguments({addArgumentsModal, chosenArguments, setChosenArguments, id}: Props) {
-  const isDarkMode = useAppState('darkMode');
   const [filterArguments, setFilterArguments] = useState<Set<string>>(new Set(['all']));
   const [selectedArguments, setSelectedArguments] = useState<Set<string>>(new Set([]));
   const [searchValue, setSearchValue] = useState<string>('');
@@ -187,17 +185,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
             </Dropdown>
           </div>
         </ModalHeader>
-        <ModalBody
-          options={{
-            overflow: {x: 'hidden', y: 'scroll'},
-            scrollbars: {
-              autoHide: 'leave',
-              clickScroll: true,
-              theme: isDarkMode ? 'os-theme-light' : 'os-theme-dark',
-            },
-          }}
-          className="mr-2 pr-4"
-          as={OverlayScrollbarsComponent}>
+        <ModalBody as={LynxScroll} className="mr-2 pr-4">
           <div className="space-y-2">
             {listData?.map((data, index) => {
               if (isEmptyData(data)) return null;
