@@ -109,13 +109,19 @@ const tabsSlice = createSlice({
       action: PayloadAction<{
         pageID: string;
         title: string;
-        isTerminal: boolean;
+        isTerminal?: boolean;
       }>,
     ) => {
       const index = state.tabs.findIndex(tab => tab.id === state.activeTab);
       if (index !== -1) {
         const {pageID, title, isTerminal} = action.payload;
-        state.tabs[index] = {...state.tabs[index], pageID, title, isTerminal, favIcon: {show: false, url: ''}};
+        state.tabs[index] = {
+          ...state.tabs[index],
+          pageID,
+          title,
+          isTerminal: isTerminal || false,
+          favIcon: {show: false, url: ''},
+        };
       }
       state.activePage = action.payload.pageID;
     },
