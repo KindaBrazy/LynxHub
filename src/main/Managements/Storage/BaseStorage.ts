@@ -90,6 +90,9 @@ class BaseStorage {
     browser: {
       recentAddress: [],
     },
+    notification: {
+      readNotifs: [],
+    },
   };
 
   constructor() {
@@ -151,6 +154,7 @@ class BaseStorage {
       this.storage.data.cards.zoomFactor = 1;
       this.storage.data.app.hardwareAcceleration = true;
       this.storage.data.app.disableLoadingAnimations = false;
+      this.storage.data.notification = {readNotifs: []};
 
       this.storage.write();
     };

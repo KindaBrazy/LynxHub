@@ -28,7 +28,7 @@ const HomeFilter = memo(({selectedCategories}: Props) => {
           radius="full"
           variant="light"
           isIconOnly>
-          <FilterDuo_Icon className="w-full h-full p-3" />
+          <FilterDuo_Icon />
         </Button>
       </DropdownTrigger>
 

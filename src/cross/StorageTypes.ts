@@ -89,6 +89,9 @@ type StorageTypes = {
   browser: {
     recentAddress: BrowserRecent[];
   };
+  notification: {
+    readNotifs: string[];
+  };
 };
 
 export default StorageTypes;

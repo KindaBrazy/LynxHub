@@ -278,6 +278,8 @@ const rendererIpc = {
         enable: boolean,
       ) => void,
     ) => ipc.on(storageUtilsChannels.onConfirmChange, result),
+
+    addReadNotif: (id: string) => ipc.send(storageUtilsChannels.addReadNotif, id),
   },
 
   /** Utilities methods */

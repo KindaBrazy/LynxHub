@@ -39,6 +39,8 @@ export const WIN_RELEASE_URL_V2: string =
   'https://raw.githubusercontent.com/KindaBrazy/LynxHub/master/releases_log_v2.json';
 export const PATRONS_DATA =
   'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Patrons/refs/heads/main/data/patrons.json';
+export const NOTIFICATION_DATA: string =
+  'https://raw.githubusercontent.com/KindaBrazy/LynxHub/master/notifications.json';
 
 export const MAIN_MODULE_URL: string = 'https://github.com/KindaBrazy/LynxHub-Module-Offline-Container';
 export const PATREON_RELEASE_HUB: string = 'https://www.patreon.com/collection/696970';

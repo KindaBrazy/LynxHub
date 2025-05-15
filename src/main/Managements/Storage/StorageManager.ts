@@ -553,6 +553,14 @@ class StorageManager extends BaseStorage {
 
     this.write();
   }
+
+  public addReadNotif(id: string) {
+    const prevReadNotifs = this.getData('notification').readNotifs;
+
+    if (prevReadNotifs.includes(id)) return;
+
+    this.updateData('notification', {readNotifs: [...prevReadNotifs, id]});
+  }
 }
 
 export default StorageManager;

@@ -295,6 +295,8 @@ export const storageUtilsChannels = {
 
   setShowConfirm: 'storage:set-show-confirm',
   onConfirmChange: 'storage:on-confirm-change',
+
+  addReadNotif: 'storageUtils:add-read-notif',
 };
 
 export const appWindowChannels = {
