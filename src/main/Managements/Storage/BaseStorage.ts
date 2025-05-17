@@ -12,7 +12,7 @@ import {APP_NAME} from '../../../cross/CrossConstants';
 import {Get_Default_Hotkeys} from '../../../cross/HotkeyConstants';
 import StorageTypes from '../../../cross/StorageTypes';
 import {appManager} from '../../index';
-import {getAbsolutePath, getExePath, isPortable} from '../../Utilities/Utils';
+import {getAbsolutePath, getExePath, getUserAgent, isPortable} from '../../Utilities/Utils';
 import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 
 class BaseStorage {
@@ -89,6 +89,8 @@ class BaseStorage {
     },
     browser: {
       recentAddress: [],
+      userAgent: 'lynxhub',
+      customUserAgent: getUserAgent('lynxhub'),
     },
     notification: {
       readNotifs: [],
@@ -147,6 +149,8 @@ class BaseStorage {
     const v7to8 = () => {
       this.storage.data.browser = {
         recentAddress: [],
+        userAgent: 'lynxhub',
+        customUserAgent: getUserAgent('lynxhub'),
       };
       this.storage.data.app.closeTabConfirm = true;
       this.storage.data.app.hotkeys = Get_Default_Hotkeys(platform());

@@ -6,6 +6,7 @@ import {app, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue} from
 import fs from 'graceful-fs';
 
 import {formatSize} from '../../cross/CrossUtils';
+import {AgentTypes} from '../../cross/IpcChannelAndTypes';
 import {appManager, storageManager} from '../index';
 import calcFolderSize from './CalculateFolderSize/CalculateFolderSize';
 
@@ -192,18 +193,31 @@ export function RelaunchApp(saveLastSize: boolean = true) {
   app.exit();
 }
 
-export function getUserAgent() {
-  const os = platform();
+export function getUserAgent(type?: AgentTypes) {
+  // Determine the user agent type (parameter or from storage)
+  const targetType: AgentTypes = type || storageManager.getData('browser').userAgent || 'lynxhub';
 
-  const osString =
-    os === 'darwin'
-      ? '(Macintosh; Intel Mac OS X 10_15_7)'
-      : os === 'linux'
-        ? '(X11; Linux x86_64)'
-        : '(Windows NT 10.0; Win64; x64)';
+  // Get OS string based on the platform
+  const osMap = {
+    darwin: '(Macintosh; Intel Mac OS X 10_15_7)',
+    linux: '(X11; Linux x86_64)',
+    win32: '(Windows NT 10.0; Win64; x64)',
+  };
+  const osString = osMap[platform()] || osMap.win32;
 
-  return (
-    `Mozilla/5.0 ${osString} AppleWebKit/537.36 (KHTML, like Gecko)` +
-    ` Electron/${process.versions.electron} Chrome/${process.versions.chrome} Safari/537.36`
-  );
+  // Define version strings
+  const baseUA = `Mozilla/5.0 ${osString} AppleWebKit/537.36 (KHTML, like Gecko)`;
+  const lynxHubString = `LynxHub/${app.getVersion()}`;
+  const electronString = `Electron/${process.versions.electron}`;
+  const chromeString = `Chrome/${process.versions.chrome}`;
+
+  // User agent templates
+  const templates = {
+    lynxhub: () => `${baseUA} ${lynxHubString} ${electronString} ${chromeString} Safari/537.36`,
+    electron: () => `${baseUA} ${electronString} ${chromeString} Safari/537.36`,
+    chrome: () => `${baseUA} ${chromeString} Safari/537.36`,
+    custom: () => storageManager.getData('browser').customUserAgent,
+  };
+
+  return templates[targetType]() || templates.lynxhub();
 }

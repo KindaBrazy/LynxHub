@@ -2,6 +2,7 @@ import {Rectangle} from 'electron';
 
 import {DiscordRPC, StorageChosenArgumentsData} from './CrossTypes';
 import {
+  AgentTypes,
   BrowserRecent,
   CustomRunBehaviorStore,
   DarkModeTypes,
@@ -88,6 +89,8 @@ type StorageTypes = {
   };
   browser: {
     recentAddress: BrowserRecent[];
+    userAgent: AgentTypes;
+    customUserAgent: string;
   };
   notification: {
     readNotifs: string[];
