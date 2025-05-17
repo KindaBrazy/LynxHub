@@ -471,6 +471,8 @@ const rendererIpc = {
     stopFindInPage: (id: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') =>
       ipc.send(browserChannels.stopFindInPage, id, action),
 
+    focusWebView: (id: string) => ipc.send(browserChannels.focusWebView, id),
+
     clearCache: () => ipc.send(browserChannels.clearCache),
     clearCookies: () => ipc.send(browserChannels.clearCookies),
 
