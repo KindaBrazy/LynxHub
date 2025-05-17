@@ -75,6 +75,25 @@ const tabsSlice = createSlice({
       state.activeTab = action.payload;
       state.activePage = state.tabs.find(tab => tab.id === action.payload)?.pageID || defaultTabItem.pageID;
     },
+    switchTab: (state: TabState, action: PayloadAction<{direction: 'next' | 'prev'} | undefined>) => {
+      if (state.tabs.length <= 1) return;
+
+      const currentIndex = state.tabs.findIndex(tab => tab.id === state.activeTab);
+      if (currentIndex === -1) return;
+
+      const direction = action.payload?.direction || 'next';
+
+      let nextIndex: number;
+      if (direction === 'next') {
+        nextIndex = (currentIndex + 1) % state.tabs.length;
+      } else {
+        nextIndex = (currentIndex - 1 + state.tabs.length) % state.tabs.length;
+      }
+
+      state.prevTab = state.activeTab;
+      state.activeTab = state.tabs[nextIndex].id;
+      state.activePage = state.tabs[nextIndex].pageID;
+    },
     setTabLoading: (state: TabState, action: PayloadAction<{isLoading: boolean; tabID: string}>) => {
       const {tabID, isLoading} = action.payload;
       state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, isLoading} : tab));

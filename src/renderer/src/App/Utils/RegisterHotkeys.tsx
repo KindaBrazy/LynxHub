@@ -50,6 +50,10 @@ export function useRegisterHotkeys() {
     dispatch(tabsActions.addTab(defaultTabItem));
   }, []);
 
+  const switchTab = useCallback((direction: 'next' | 'prev') => {
+    dispatch(tabsActions.switchTab({direction}));
+  }, []);
+
   useEffect(() => {
     if (addEmpty) {
       dispatch(
@@ -82,6 +86,9 @@ export function useRegisterHotkeys() {
     },
     {name: Hotkey_Names.toggleAiView, method: handleToggleAIView},
     {name: Hotkey_Names.newTab, method: handleNewTab},
+    {name: Hotkey_Names.switchTab, method: () => switchTab('next')},
+    {name: Hotkey_Names.nextTab, method: () => switchTab('next')},
+    {name: Hotkey_Names.prevTab, method: () => switchTab('prev')},
     {name: Hotkey_Names.newBrowserTab, method: newBrowserTab},
     {name: Hotkey_Names.newTerminalTab, method: newTerminalTab},
     {name: Hotkey_Names.newBrowserTerminalTab, method: newTerminalBrowserTab},
