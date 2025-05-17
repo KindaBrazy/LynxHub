@@ -160,7 +160,7 @@ export default function Home_Notification() {
                             })}
                           </CardBody>
                           <CardFooter className="justify-end">
-                            {buttons.map(btn => {
+                            {buttons?.map(btn => {
                               const isUrl = isValidURL(btn.destination);
                               return (
                                 <Button

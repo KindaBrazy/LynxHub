@@ -1,4 +1,5 @@
 {
+  "$schema": "./lynxExtension.schema.json",
   "id": "git_flow_helper",
   "title": "Git Flow Helper",
   "description": "Simplifies Git workflow with visual branch management and common Git operations automation.",

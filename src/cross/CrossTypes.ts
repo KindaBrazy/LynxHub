@@ -280,6 +280,6 @@ export type Notification_Data = {
   id: string;
   title: string;
   description: {text: string; color?: 'primary' | 'success' | 'secondary' | 'warning' | 'danger'}[];
-  buttons: {title: string; destination: 'dashboard' | 'extensions' | 'modules' | string}[];
+  buttons?: {title: string; destination: 'dashboard' | 'extensions' | 'modules' | string}[];
   iconColor?: 'primary' | 'success' | 'secondary' | 'warning' | 'danger';
 };
