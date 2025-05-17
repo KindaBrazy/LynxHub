@@ -25,6 +25,7 @@ export default function AddressInput({runningCard, setCustomAddress}: Props) {
       const input = inputRef.current;
 
       input.onfocus = () => input.select();
+      input.onblur = () => input.setSelectionRange(0, 0);
 
       input.onkeydown = e => {
         if (e.key === 'Enter') {
