@@ -11,6 +11,9 @@ export const Hotkey_Names = {
   newTerminalTab: 'newTerminalTab',
   newBrowserTerminalTab: 'newBrowserTerminalTab',
   refreshTab: 'refreshTab',
+  switchTab: 'switchTab',
+  nextTab: 'nextTab',
+  prevTab: 'prevTab',
 
   findInPage: 'findInPage',
 };
@@ -26,6 +29,9 @@ export const Hotkey_Titles = {
   newTerminalTab: 'Terminal Tab',
   newBrowserTerminalTab: 'Combo Tab',
   refreshTab: 'Refresh Tab',
+  switchTab: 'Switch Tab',
+  nextTab: 'Next Tab',
+  prevTab: 'Prevoius Tab',
 
   findInPage: 'Find in web page',
 };
@@ -41,6 +47,9 @@ export const Hotkey_Desc = {
   newTerminalTab: 'Use this hotkey to open a new terminal tab.',
   newBrowserTerminalTab: 'Use this hotkey to open a combined browser and terminal tab.',
   refreshTab: 'Use this hotkey to reload the current tab.',
+  switchTab: 'Use this hotkey to switch between tabs.',
+  nextTab: 'Use this hotkey to switch to the next tabs.',
+  prevTab: 'Use this hotkey to switch to the previous tabs.',
 
   findInPage: 'Use this hotkey to search for text within the current web page.',
 };
@@ -87,6 +96,30 @@ export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | str
       control: false,
       shift: false,
       key: 'f5',
+    },
+    {
+      name: Hotkey_Names.switchTab,
+      meta: false,
+      alt: false,
+      control: true,
+      shift: false,
+      key: 'tab',
+    },
+    {
+      name: Hotkey_Names.nextTab,
+      meta: false,
+      alt: false,
+      control: true,
+      shift: false,
+      key: 'arrowright',
+    },
+    {
+      name: Hotkey_Names.prevTab,
+      meta: false,
+      alt: false,
+      control: true,
+      shift: false,
+      key: 'arrowleft',
     },
     {
       name: Hotkey_Names.newTab,
