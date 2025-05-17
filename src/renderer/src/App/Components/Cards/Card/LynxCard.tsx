@@ -7,6 +7,7 @@ import {useMemo} from 'react';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {useUpdateAvailable} from '../../../Utils/UtilHooks';
 import {useCardData} from '../CardsDataManager';
 import LynxCardBody from './LynxCard-Body';
@@ -14,6 +15,7 @@ import LynxCardFooter from './LynxCard-Footer';
 import LynxCardHeader from './LynxCard-Header';
 
 const LynxCard = observer(() => {
+  const activeTab = useTabsState('activeTab');
   const {id, installed} = useCardData();
   const compactMode = useSettingsState('cardsCompactMode');
   const cardsRepoInfo = useSettingsState('cardsRepoInfo');
@@ -34,10 +36,10 @@ const LynxCard = observer(() => {
       text="Update Available">
       <motion.div
         layout="position"
-        layoutId={`${id}_card`}
         exit={{opacity: 0, scale: 0.95}}
         animate={{opacity: 1, scale: 1}}
-        initial={{opacity: 0, scale: 0.95}}>
+        initial={{opacity: 0, scale: 0.95}}
+        layoutId={`${activeTab}_${id}_card`}>
         <Card
           className={
             ` ${compactMode ? 'w-[230px]' : 'w-[277px]'} h-fit cursor-default shadow-md !transition ` +
