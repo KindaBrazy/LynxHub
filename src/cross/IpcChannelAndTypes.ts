@@ -357,6 +357,8 @@ export const browserChannels = {
   stopFindInPage: 'browser:stopFindInPage',
   setZoomFactor: 'browser:setZoomFactor',
 
+  focusWebView: 'browser:focus-webview',
+
   clearCache: 'browser:clear-cache',
   clearCookies: 'browser:clear-cookies',
 

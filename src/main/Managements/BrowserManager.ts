@@ -135,6 +135,10 @@ export default class BrowserManager {
     contextMenuManager(webContents);
   }
 
+  public focusWebView(id: string) {
+    this.getViewByID(id)?.webContents.focus();
+  }
+
   public clearCache() {
     this.getSession().clearCache();
   }
