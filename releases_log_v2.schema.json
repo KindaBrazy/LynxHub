@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/appupdatedata.schema.json",
+  "title": "AppUpdateData Schema",
+  "description": "Schema for validating app update data",
+  "type": "object",
+  "properties": {
+    "currentVersion": {
+      "type": "string",
+      "description": "The current version of the app."
+    },
+    "currentBuild": {
+      "type": "integer",
+      "description": "The current build number of the app.",
+      "minimum": 0
+    },
+    "releaseDate": {
+      "type": "string",
+      "description": "The release date of the current version",
+      "format": "date"
+    },
+    "earlyAccess": {
+      "type": "object",
+      "description": "Information about an early access version, if available.",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "The version of the early access build."
+        },
+        "build": {
+          "type": "integer",
+          "description": "The build number of the early access build.",
+          "minimum": 0
+        },
+        "releaseDate": {
+          "type": "string",
+          "description": "The release date of the early access build",
+          "format": "date"
+        }
+      },
+      "required": [
+        "version",
+        "build",
+        "releaseDate"
+      ],
+      "additionalProperties": false
+    },
+    "changeLog": {
+      "type": "array",
+      "description": "A list of changelog entries, each associated with a specific build and version.",
+      "items": {
+        "$ref": "#/$defs/VersionChangeLog"
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "currentVersion",
+    "currentBuild",
+    "releaseDate",
+    "changeLog"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "VersionChangeLog": {
+      "type": "object",
+      "description": "A changelog entry for a specific app version and build.",
+      "properties": {
+        "build": {
+          "type": "integer",
+          "description": "The build number this changelog entry applies to.",
+          "minimum": 0
+        },
+        "version": {
+          "type": "string",
+          "description": "The version this changelog entry applies to."
+        },
+        "changes": {
+          "type": "array",
+          "description": "A list of changelog sections for this build/version.",
+          "items": {
+            "$ref": "#/$defs/Changelogs"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "build",
+        "version",
+        "changes"
+      ],
+      "additionalProperties": false
+    },
+    "ChangelogItem": {
+      "type": "object",
+      "description": "An individual changelog item.",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "The text of the changelog item."
+        },
+        "subitems": {
+          "type": "array",
+          "description": "A list of nested changelog items.",
+          "items": {
+            "$ref": "#/$defs/ChangelogItem"
+          }
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "Changelogs": {
+      "type": "object",
+      "description": "A section of the changelog.",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the changelog section."
+        },
+        "items": {
+          "type": "array",
+          "description": "A list of changelog items in this section.",
+          "items": {
+            "$ref": "#/$defs/ChangelogItem"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "title",
+        "items"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

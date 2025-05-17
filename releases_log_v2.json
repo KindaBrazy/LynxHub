@@ -1,4 +1,5 @@
 {
+  "$schema": "./releases_log_v2.schema.json",
   "currentVersion": "2.4.0",
   "currentBuild": 19,
   "releaseDate": "2025-03-10",

@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/notification_data.schema.json",
+  "title": "Notification_Data Schema",
+  "description": "Schema for validating an array of notification objects",
+  "type": "array",
+  "items": {
+    "$ref": "#/$defs/Notification"
+  },
+  "$defs": {
+    "Notification": {
+      "type": "object",
+      "description": "A single notification object.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "A unique identifier for the notification."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the notification."
+        },
+        "description": {
+          "type": "array",
+          "description": "An array of text segments for the notification description, each with optional color.",
+          "items": {
+            "$ref": "#/$defs/DescriptionSegment"
+          },
+          "minItems": 1
+        },
+        "buttons": {
+          "type": "array",
+          "description": "A list of buttons associated with the notification.",
+          "items": {
+            "$ref": "#/$defs/NotificationButton"
+          }
+        },
+        "iconColor": {
+          "type": "string",
+          "description": "Optional color for the notification icon.",
+          "enum": [
+            "primary",
+            "success",
+            "secondary",
+            "warning",
+            "danger"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "DescriptionSegment": {
+      "type": "object",
+      "description": "A segment of the notification description with optional color.",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The description text segment."
+        },
+        "color": {
+          "type": "string",
+          "description": "Optional color for the description text segment.",
+          "enum": [
+            "primary",
+            "success",
+            "secondary",
+            "warning",
+            "danger"
+          ]
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "NotificationButton": {
+      "type": "object",
+      "description": "A button associated with a notification.",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The text displayed on the button."
+        },
+        "destination": {
+          "type": "string",
+          "description": "The destination or action associated with the button. Can be a predefined value or a custom string.",
+          "anyOf": [
+            {
+              "enum": [
+                "dashboard",
+                "extensions",
+                "modules"
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "required": [
+        "title",
+        "destination"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
