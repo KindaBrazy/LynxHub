@@ -147,6 +147,10 @@ export default class BrowserManager {
     this.getSession().clearData({dataTypes: ['cookies']});
   }
 
+  public updateUserAgent() {
+    this.browsers.forEach(view => view.view.webContents.setUserAgent(getUserAgent()));
+  }
+
   public removeBrowser(id: string) {
     const browser = this.browsers.find(view => view.id === id);
     if (browser) {

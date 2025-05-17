@@ -4,6 +4,7 @@ import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, shell} 
 
 import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/CrossTypes';
 import {
+  AgentTypes,
   appDataChannels,
   browserChannels,
   BrowserRecent,
@@ -43,6 +44,7 @@ import {
   getDirCreationDate,
   getRelativePath,
   getSystemDarkMode,
+  getUserAgent,
   openDialog,
 } from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../AppDataManager';
@@ -409,6 +411,12 @@ function browserIPC() {
 
   ipcMain.on(browserChannels.clearCache, () => browserManager.clearCache());
   ipcMain.on(browserChannels.clearCookies, () => browserManager.clearCookies());
+
+  ipcMain.handle(browserChannels.getUserAgent, (_, type: AgentTypes) => getUserAgent(type));
+  ipcMain.on(browserChannels.updateUserAgent, () => {
+    browserManager.updateUserAgent();
+    appManager.getMainWindow()?.webContents.setUserAgent(getUserAgent());
+  });
 }
 
 export function listenToAllChannels() {

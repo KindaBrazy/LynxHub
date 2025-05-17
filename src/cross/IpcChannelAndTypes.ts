@@ -80,6 +80,7 @@ export type CanGoType = {back: boolean; forward: boolean};
 export type SkippedPlugins = {folderName: string; message: string};
 
 export type BrowserRecent = {url: string; favIcon: string};
+export type AgentTypes = 'lynxhub' | 'electron' | 'chrome' | 'custom';
 
 export const winChannels = {
   changeState: 'win:state-change',
@@ -372,4 +373,7 @@ export const browserChannels = {
   onFavIconChange: 'browser:on-favicon-change',
   onUrlChange: 'browser:on-url-change',
   onDomReady: 'browser:on-dom-ready',
+
+  getUserAgent: 'browser:get-user-agent',
+  updateUserAgent: 'browser:update-user-agent',
 };

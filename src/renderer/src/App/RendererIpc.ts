@@ -10,6 +10,7 @@ import {
   RepositoryInfo,
 } from '../../../cross/CrossTypes';
 import {
+  AgentTypes,
   appDataChannels,
   appUpdateChannels,
   AppUpdateStatus,
@@ -504,6 +505,9 @@ const rendererIpc = {
     onDomReady: (result: (event: IpcRendererEvent, id: string, isReady: boolean) => void) =>
       ipc.on(browserChannels.onDomReady, result),
     offDomReady: () => ipc.removeAllListeners(browserChannels.onDomReady),
+
+    getUserAgent: (type?: AgentTypes): Promise<string> => ipc.invoke(browserChannels.getUserAgent, type),
+    updateUserAgent: () => ipc.send(browserChannels.updateUserAgent),
   },
 };
 
