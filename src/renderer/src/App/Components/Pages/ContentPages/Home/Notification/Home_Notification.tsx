@@ -159,26 +159,29 @@ export default function Home_Notification() {
                               );
                             })}
                           </CardBody>
-                          <CardFooter className="justify-end">
-                            {buttons?.map(btn => {
-                              const isUrl = isValidURL(btn.destination);
-                              return (
-                                <Button
-                                  onPress={() => {
-                                    onClose();
-                                    if (isUrl) {
-                                      window.open(btn.destination);
-                                    } else {
-                                      openPage(btn.destination);
-                                    }
-                                  }}
-                                  variant="flat"
-                                  key={btn.title}>
-                                  {btn.title}
-                                </Button>
-                              );
-                            })}
-                          </CardFooter>
+
+                          {!isEmpty(buttons) && (
+                            <CardFooter className="justify-end">
+                              {buttons!.map(btn => {
+                                const isUrl = isValidURL(btn.destination);
+                                return (
+                                  <Button
+                                    onPress={() => {
+                                      onClose();
+                                      if (isUrl) {
+                                        window.open(btn.destination);
+                                      } else {
+                                        openPage(btn.destination);
+                                      }
+                                    }}
+                                    variant="flat"
+                                    key={btn.title}>
+                                    {btn.title}
+                                  </Button>
+                                );
+                              })}
+                            </CardFooter>
+                          )}
                         </Card>
                       </motion.div>
                     );
