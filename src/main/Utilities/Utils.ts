@@ -213,8 +213,8 @@ export function getUserAgent(type?: AgentTypes) {
 
   // User agent templates
   const templates = {
-    lynxhub: () => `${baseUA} ${lynxHubString} ${electronString} ${chromeString} Safari/537.36`,
-    electron: () => `${baseUA} ${electronString} ${chromeString} Safari/537.36`,
+    lynxhub: () => `${baseUA} ${lynxHubString} ${chromeString} ${electronString} Safari/537.36`,
+    electron: () => `${baseUA} ${chromeString} ${electronString} Safari/537.36`,
     chrome: () => `${baseUA} ${chromeString} Safari/537.36`,
     custom: () => storageManager.getData('browser').customUserAgent,
   };
