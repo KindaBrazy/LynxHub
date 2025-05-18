@@ -1,6 +1,6 @@
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
 
-import {browserChannels, CanGoType, tabsChannels} from '../../cross/IpcChannelAndTypes';
+import {browserChannels, CanGoType, tabsChannels, WHType} from '../../cross/IpcChannelAndTypes';
 import {appManager, storageManager} from '../index';
 import {getUserAgent} from '../Utilities/Utils';
 import contextMenuManager from './ContextMenuManager';
@@ -9,6 +9,7 @@ import RegisterHotkeys from './HotkeysManager';
 export default class BrowserManager {
   private browsers: {id: string; view: WebContentsView}[] = [];
   private mainWindow: BrowserWindow;
+  private extraOffset: {id: string; offset: WHType}[] = [];
 
   constructor(mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
@@ -18,12 +19,32 @@ export default class BrowserManager {
     return this.browsers.find(view => view.id === id)?.view;
   }
 
+  private getOffsetResult() {
+    let width: number = 0;
+    let height: number = 0;
+    this.extraOffset.forEach(offset => {
+      width += offset.offset.width;
+      height += offset.offset.height;
+    });
+    return {width, height};
+  }
+
   private setBounds(view: WebContentsView) {
     const [initialWidth, initialHeight] = this.mainWindow.getSize();
-    view.setBounds({x: 0, y: 80, width: initialWidth, height: initialHeight - 80});
+    view.setBounds({
+      x: 0,
+      y: 80,
+      width: initialWidth - this.getOffsetResult().width,
+      height: initialHeight - 80 - this.getOffsetResult().height,
+    });
     this.mainWindow.on('resize', () => {
       const [width, height] = this.mainWindow.getContentSize();
-      view.setBounds({x: 0, y: 80, width, height: height - 80});
+      view.setBounds({
+        x: 0,
+        y: 80,
+        width: width - this.getOffsetResult().width,
+        height: height - 80 - this.getOffsetResult().height,
+      });
     });
   }
 
@@ -145,6 +166,15 @@ export default class BrowserManager {
 
   public clearCookies() {
     this.getSession().clearData({dataTypes: ['cookies']});
+  }
+
+  public addOffset(id: string, offset: WHType) {
+    const existingOffset = this.extraOffset.findIndex(item => item.id === id);
+    if (existingOffset !== -1) {
+      this.extraOffset[existingOffset].offset = offset;
+    } else {
+      this.extraOffset.push({id, offset});
+    }
   }
 
   public updateUserAgent() {

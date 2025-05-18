@@ -27,6 +27,7 @@ import {
   storageUtilsChannels,
   TaskbarStatus,
   utilsChannels,
+  WHType,
   winChannels,
 } from '../../../cross/IpcChannelAndTypes';
 import StorageTypes, {InstalledCard} from '../../../cross/StorageTypes';
@@ -417,6 +418,8 @@ function browserIPC() {
     browserManager.updateUserAgent();
     appManager.getMainWindow()?.webContents.setUserAgent(getUserAgent());
   });
+
+  ipcMain.on(browserChannels.addOffset, (_, id: string, offset: WHType) => browserManager.addOffset(id, offset));
 }
 
 export function listenToAllChannels() {

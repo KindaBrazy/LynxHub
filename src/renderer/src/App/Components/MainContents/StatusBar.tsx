@@ -1,7 +1,8 @@
 import {isEmpty, isNil} from 'lodash';
-import {memo, useMemo} from 'react';
+import {memo, useEffect, useMemo, useRef} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
+import rendererIpc from '../../RendererIpc';
 
 const classNames = 'flex size-full items-center overflow-x-scroll scrollbar-hide';
 
@@ -11,6 +12,25 @@ const StatusBar = memo(() => {
   const isEmptyAdd = useMemo(() => {
     return isEmpty(addStart) && isEmpty(addCenter) && isEmpty(addEnd);
   }, [addStart, addCenter, addEnd]);
+
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const observer = new ResizeObserver(entries => {
+      if (entries[0]) {
+        const {height} = entries[0].contentRect;
+        rendererIpc.browser.addOffset('statusBar', {width: 0, height});
+      }
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [containerRef]);
 
   return (
     <>
@@ -22,7 +42,8 @@ const StatusBar = memo(() => {
             className={
               'flex h-7 w-full flex-row justify-between overflow-hidden border-t border-foreground/10' +
               ' items-center bg-foreground-100/50 px-3 text-small dark:bg-LynxRaisinBlack/50'
-            }>
+            }
+            ref={containerRef}>
             <div className={[classNames, 'justify-start'].join(' ')}>
               {addStart.map((Start, index) => (
                 <Start key={index} />

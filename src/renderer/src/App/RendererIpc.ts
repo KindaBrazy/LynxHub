@@ -50,6 +50,7 @@ import {
   tabsChannels,
   TaskbarStatus,
   utilsChannels,
+  WHType,
   winChannels,
   WinStateChange,
 } from '../../../cross/IpcChannelAndTypes';
@@ -508,6 +509,8 @@ const rendererIpc = {
 
     getUserAgent: (type?: AgentTypes): Promise<string> => ipc.invoke(browserChannels.getUserAgent, type),
     updateUserAgent: () => ipc.send(browserChannels.updateUserAgent),
+
+    addOffset: (id: string, offset: WHType) => ipc.send(browserChannels.addOffset, id, offset),
   },
 };
 
