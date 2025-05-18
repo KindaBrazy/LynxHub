@@ -35,7 +35,7 @@ const StatusBar = memo(() => {
   return (
     <>
       {!isNil(ReplaceContainer) ? (
-        <ReplaceContainer />
+        <ReplaceContainer ref={containerRef} />
       ) : (
         !isEmptyAdd && (
           <div
