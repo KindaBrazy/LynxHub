@@ -47,7 +47,7 @@ export type ExtensionRendererApi = {
     /** Add elements to the **end** of the Status Bar (Right-aligned). */
     addEnd: CompFcProp;
     /** Replace the entire Status Bar container. */
-    replaceContainer: CompFc;
+    replaceContainer: CompFcProp;
   };
 
   /** Modify components within the Running AI view.
