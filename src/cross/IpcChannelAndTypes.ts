@@ -81,6 +81,8 @@ export type SkippedPlugins = {folderName: string; message: string};
 
 export type BrowserRecent = {url: string; favIcon: string};
 export type AgentTypes = 'lynxhub' | 'electron' | 'chrome' | 'custom';
+export type XYType = {x: number; y: number};
+export type WHType = {width: number; height: number};
 
 export const winChannels = {
   changeState: 'win:state-change',
@@ -376,4 +378,6 @@ export const browserChannels = {
 
   getUserAgent: 'browser:get-user-agent',
   updateUserAgent: 'browser:update-user-agent',
+
+  addOffset: 'browser:add-offset',
 };
