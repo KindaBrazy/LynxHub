@@ -76,6 +76,7 @@ class BaseStorage {
       lastSize: undefined,
       hardwareAcceleration: true,
       disableLoadingAnimations: false,
+      collectErrors: true,
     },
     terminal: {
       outputColor: true,
@@ -159,6 +160,7 @@ class BaseStorage {
       this.storage.data.app.hardwareAcceleration = true;
       this.storage.data.app.disableLoadingAnimations = false;
       this.storage.data.notification = {readNotifs: []};
+      this.storage.data.app.collectErrors = true;
 
       this.storage.write();
     };
