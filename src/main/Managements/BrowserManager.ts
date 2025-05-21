@@ -1,5 +1,6 @@
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
 
+import icon from '../../../resources/icon.png?asset';
 import {browserChannels, CanGoType, tabsChannels, WHType} from '../../cross/IpcChannelAndTypes';
 import {appManager, storageManager} from '../index';
 import {getUserAgent} from '../Utilities/Utils';
@@ -94,13 +95,24 @@ export default class BrowserManager {
   }
 
   private setupWindowOpenHandler(webContents: WebContents) {
-    const openExternal = storageManager.getData('app').openLinkExternal;
-    webContents.setWindowOpenHandler(({url}) => {
-      if (openExternal) {
+    webContents.setWindowOpenHandler(({url, disposition}) => {
+      if (disposition === 'new-window') {
+        return {
+          action: 'allow',
+          overrideBrowserWindowOptions: {
+            icon,
+            parent: appManager.getMainWindow(),
+            modal: true,
+            maximizable: false,
+            fullscreenable: false,
+          },
+        };
+      } else if (storageManager.getData('app').openLinkExternal) {
         shell.openExternal(url);
       } else {
         appManager.getWebContent()?.send(tabsChannels.onNewTab, url);
       }
+
       return {action: 'deny'};
     });
   }
