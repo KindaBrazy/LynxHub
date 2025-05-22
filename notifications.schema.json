@@ -95,7 +95,8 @@
               "enum": [
                 "dashboard",
                 "extensions",
-                "modules"
+                "modules",
+                "settings"
               ]
             },
             {

@@ -66,8 +66,7 @@ export default function Home_Notification() {
     filterData(notifications);
   };
 
-  const openPage = (destination: 'modules' | 'extensions' | 'dashboard' | string) => {
-    console.log(destination);
+  const openPage = (destination: 'modules' | 'extensions' | 'dashboard' | 'settings' | string) => {
     dispatch(
       tabsActions.setActivePage({
         pageID: PageID[destination],
