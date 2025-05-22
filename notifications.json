@@ -1,2 +1,33 @@
 [
+  {
+    "$schema": "./notifications.schema.json",
+    "id": "welcome_lh_v3",
+    "title": "Welcome to LynxHub Version 3!",
+    "titleColor": "success",
+    "icon": "https://raw.githubusercontent.com/KindaBrazy/LynxHub/refs/heads/master/resources/icon.png",
+    "description": [
+      {
+        "text": "I hope you enjoy LynxHub v3's new features! 🚀 Thanks for staying with the app. I hope it keeps being useful to you. 🙏"
+      }
+    ]
+  },
+  {
+    "id": "collect_errors",
+    "title": "Help Improve LynxHub!",
+    "icon": "🪲",
+    "description": [
+      {
+        "text": "From Version 3, LynxHub will collect anonymous error reports. This helps me fix bugs faster and make the app better for you. 🛡️"
+      },
+      {
+        "text": "You can turn this on or off anytime in the Settings. ✅"
+      }
+    ],
+    "buttons": [
+      {
+        "title": "⚙️ Settings",
+        "destination": "settings"
+      }
+    ]
+  }
 ]
