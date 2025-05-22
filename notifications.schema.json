@@ -20,6 +20,17 @@
           "type": "string",
           "description": "The title of the notification."
         },
+        "titleColor": {
+          "type": "string",
+          "description": "The title of the notification.",
+          "enum": [
+            "primary",
+            "success",
+            "secondary",
+            "warning",
+            "danger"
+          ]
+        },
         "description": {
           "type": "array",
           "description": "An array of text segments for the notification description, each with optional color.",
@@ -35,16 +46,9 @@
             "$ref": "#/$defs/NotificationButton"
           }
         },
-        "iconColor": {
+        "icon": {
           "type": "string",
-          "description": "Optional color for the notification icon.",
-          "enum": [
-            "primary",
-            "success",
-            "secondary",
-            "warning",
-            "danger"
-          ]
+          "description": "Optional color for the notification icon."
         }
       },
       "required": [
@@ -102,6 +106,17 @@
             {
               "type": "string"
             }
+          ]
+        },
+        "color": {
+          "type": "string",
+          "description": "Optional color for the description text segment.",
+          "enum": [
+            "primary",
+            "success",
+            "secondary",
+            "warning",
+            "danger"
           ]
         }
       },
