@@ -11,6 +11,7 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
+  Image,
   useDisclosure,
 } from '@heroui/react';
 import {Empty} from 'antd';
@@ -22,7 +23,8 @@ import {useDispatch} from 'react-redux';
 import {NOTIFICATION_DATA} from '../../../../../../../../cross/CrossConstants';
 import {Notification_Data} from '../../../../../../../../cross/CrossTypes';
 import {isDev, isValidURL} from '../../../../../../../../cross/CrossUtils';
-import {BellDuo_Icon, CheckDuo_Icon, LightBulbMinimalDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {ExternalDuo_Icon} from '../../../../../../../context_menu/Components/SvgIcons';
+import {BellDuo_Icon, CheckDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {tabsActions} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
@@ -130,7 +132,7 @@ export default function Home_Notification() {
               ) : (
                 <div className="flex flex-col gap-y-2">
                   {notifications.map(notif => {
-                    const {buttons, iconColor, title, description} = notif;
+                    const {buttons, icon, titleColor, title, description} = notif;
                     return (
                       <motion.div
                         key={notif.id}
@@ -140,8 +142,12 @@ export default function Home_Notification() {
                         initial={{x: 300, opacity: 0}}>
                         <Card shadow="none" className="dark:bg-blck/40 bg-foreground-100">
                           <CardHeader className="justify-between">
-                            <LightBulbMinimalDuo_Icon className={iconColor ? `text-${iconColor}` : 'text-foreground'} />
-                            <span className={iconColor ? `text-${iconColor}` : 'text-foreground'}>{title}</span>
+                            {icon && isValidURL(icon) ? (
+                              <Image src={icon} height={20} radius="none" alt="Notification Icon" />
+                            ) : (
+                              <span>{icon}</span>
+                            )}
+                            <span className={titleColor ? `text-${titleColor}` : 'text-foreground'}>{title}</span>
                             <Button size="sm" variant="light" onPress={() => handleRead(notif.id)} isIconOnly>
                               <CheckDuo_Icon />
                             </Button>
@@ -174,7 +180,8 @@ export default function Home_Notification() {
                                       }
                                     }}
                                     variant="flat"
-                                    key={btn.title}>
+                                    key={btn.title}
+                                    endContent={isUrl ? <ExternalDuo_Icon className="size-[0.85rem]" /> : undefined}>
                                     {btn.title}
                                   </Button>
                                 );
