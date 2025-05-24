@@ -207,7 +207,13 @@ export default class BrowserManager {
   }
 
   public setVisible(id: string, visible: boolean) {
-    this.getViewByID(id)?.setVisible(visible);
+    const view = this.getViewByID(id);
+    if (!view) return;
+    if (visible) {
+      this.mainWindow.contentView.addChildView(view);
+    } else {
+      this.mainWindow.contentView.removeChildView(view);
+    }
   }
 
   public findInPage(id: string, value: string, options: FindInPageOptions) {
