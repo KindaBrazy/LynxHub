@@ -111,6 +111,8 @@ function win() {
   ipcMain.on(winChannels.setDiscordRpAiRunning, (_, status: DiscordRunningAI) => discordRpcManager.runningAI(status));
 
   ipcMain.handle(winChannels.getSystemInfo, () => getSystemInfo());
+
+  ipcMain.on(winChannels.openUrlDefaultBrowser, (_, url: string) => shell.openExternal(url));
 }
 
 function file() {

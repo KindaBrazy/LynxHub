@@ -99,6 +99,7 @@ export const winChannels = {
   setDiscordRpAiRunning: 'win:set-discord-rp-ai-running',
 
   getSystemInfo: 'win:get-system-info',
+  openUrlDefaultBrowser: 'win:open-url-default-browser',
 };
 
 export const fileChannels = {
