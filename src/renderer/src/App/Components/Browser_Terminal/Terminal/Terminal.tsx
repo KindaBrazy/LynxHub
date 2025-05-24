@@ -100,7 +100,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
             dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
             rendererIpc.storageUtils.addBrowserRecent({url, favIcon: ''});
           } else {
-            window.open(url);
+            rendererIpc.win.openUrlDefaultBrowser(url);
           }
         }
       }

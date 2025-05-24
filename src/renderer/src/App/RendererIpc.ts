@@ -77,6 +77,8 @@ const rendererIpc = {
     setDiscordRpAiRunning: (status: DiscordRunningAI): void => ipc.send(winChannels.setDiscordRpAiRunning, status),
 
     getSystemInfo: (): Promise<SystemInfo> => ipc.invoke(winChannels.getSystemInfo),
+
+    openUrlDefaultBrowser: (url: string): void => ipc.send(winChannels.openUrlDefaultBrowser, url),
   },
 
   /** Managing files and directories */
