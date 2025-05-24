@@ -1,4 +1,5 @@
 import {Button, Spinner} from '@heroui/react';
+import {Empty} from 'antd';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -47,7 +48,7 @@ export default function EmptyPage({type}: Props) {
           </>
         )}
 
-        {recentAddress.length > 0 && (
+        {recentAddress.length > 0 ? (
           <div className="w-full mt-4">
             <h2 className="text-lg font-medium mb-3 mt-8">Recent Addresses</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
@@ -56,6 +57,8 @@ export default function EmptyPage({type}: Props) {
               ))}
             </div>
           </div>
+        ) : (
+          <Empty className="w-full" description="No recent addresses" />
         )}
       </div>
     </div>
