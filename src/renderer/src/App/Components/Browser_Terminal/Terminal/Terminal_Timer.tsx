@@ -2,6 +2,7 @@ import NumberFlow, {NumberFlowGroup} from '@number-flow/react';
 import {useEffect, useState} from 'react';
 
 import {secondsElapsed} from '../../../../../../cross/CrossUtils';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 
 const calc = (startTime: string) => {
   const startDate = new Date(startTime);
@@ -18,6 +19,7 @@ type TimeType = {hh: number; mm: number; ss: number};
 
 type Props = {startTime: string};
 export default function Terminal_Timer({startTime}: Props) {
+  const activeTab = useTabsState('activeTab');
   const [{ss, hh, mm}, setTime] = useState<TimeType>(calc(startTime));
 
   useEffect(() => {
@@ -29,6 +31,7 @@ export default function Terminal_Timer({startTime}: Props) {
   return (
     <NumberFlowGroup>
       <div
+        key={`${activeTab}_terminal_timer`}
         className="flex overflow-hidden mx-2 text-[11pt]"
         // @ts-ignore
         style={{fontVariantNumeric: 'tabular-nums', '--number-flow-char-height': '0.85em'}}>
