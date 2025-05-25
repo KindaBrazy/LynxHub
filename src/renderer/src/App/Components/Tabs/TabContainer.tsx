@@ -1,6 +1,6 @@
 import {Divider} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
-import {useEffect, useRef} from 'react';
+import {memo, useEffect, useRef} from 'react';
 
 import {useTabsState} from '../../Redux/Reducer/TabsReducer';
 import rendererIpc from '../../RendererIpc';
@@ -8,7 +8,7 @@ import NewTab from './NewTab';
 import {useRemoveTab} from './Tab_Utils';
 import TabItem from './TabItem';
 
-export default function TabContainer() {
+const TabContainer = memo(() => {
   const tabs = useTabsState('tabs');
   const removeTab = useRemoveTab();
 
@@ -63,4 +63,6 @@ export default function TabContainer() {
       <NewTab />
     </div>
   );
-}
+});
+
+export default TabContainer;
