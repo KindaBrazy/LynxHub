@@ -1,6 +1,5 @@
 import path from 'node:path';
 
-import {app} from 'electron';
 import pty from 'node-pty';
 import treeKill from 'tree-kill';
 
@@ -11,13 +10,12 @@ import {determineShell} from '../Utilities/Utils';
 /** Manages pseudo-terminal (PTY) processes for different shells. */
 export default class PtyManager {
   private isRunning: boolean;
-  private process: pty.IPty;
+  private process: pty.IPty | undefined;
 
   public onData?: (data: string) => void;
   public id: string;
 
   constructor(id: string, dir?: string, sendDataToRenderer = false) {
-    app.on('before-quit', this.stop);
     this.id = id;
 
     const {useConpty} = storageManager.getData('terminal');
@@ -37,7 +35,23 @@ export default class PtyManager {
         this.onData(data);
       } else if (sendDataToRenderer) {
         appManager.getWebContent()?.send(ptyChannels.onData, this.id, data);
-        appManager.getWebContent()?.send(ptyChannels.onTitle, this.id, this.process.process);
+        appManager.getWebContent()?.send(ptyChannels.onTitle, this.id, this.process?.process);
+      }
+    });
+  }
+
+  public async stopAsync(): Promise<void> {
+    return new Promise<void>(resolve => {
+      if (this.isRunning && this.process) {
+        this.process.kill();
+        treeKill(this.process.pid);
+        this.isRunning = false;
+        this.process.onExit(() => {
+          this.process = undefined;
+          resolve();
+        });
+      } else {
+        resolve();
       }
     });
   }
@@ -46,10 +60,13 @@ export default class PtyManager {
    * Stops the current PTY process.
    */
   public stop(): void {
-    if (this.isRunning) {
+    if (this.isRunning && this.process) {
       this.process.kill();
       treeKill(this.process.pid);
       this.isRunning = false;
+      this.process.onExit(() => {
+        this.process = undefined;
+      });
     }
   }
 
@@ -59,7 +76,7 @@ export default class PtyManager {
    * @param rows - Number of rows.
    */
   public resize(cols: number, rows: number): void {
-    if (this.isRunning) {
+    if (this.isRunning && this.process) {
       this.process.resize(cols, rows);
     }
   }
@@ -74,7 +91,7 @@ export default class PtyManager {
     if (Array.isArray(data)) {
       data.forEach(text => this.process?.write(text));
     } else {
-      this.process.write(data);
+      this.process?.write(data);
     }
   }
 }

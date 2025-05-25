@@ -18,6 +18,7 @@ import DialogManager from './Managements/DialogManager';
 import DiscordRpcManager from './Managements/DiscordRpcManager';
 import ElectronAppManager from './Managements/ElectronAppManager';
 import {listenToAllChannels} from './Managements/Ipc/IpcHandler';
+import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
 import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
 import ModuleManager from './Managements/Plugin/ModuleManager';
 import StorageManager from './Managements/Storage/StorageManager';
@@ -61,6 +62,18 @@ async function setupApp() {
   await downloadDU();
 
   app.whenReady().then(onAppReady);
+
+  let isQuitting = false;
+
+  app.on('before-quit', e => {
+    if (!isQuitting) {
+      e.preventDefault();
+      stopAllPty().then(() => {
+        isQuitting = true;
+        app.quit();
+      });
+    }
+  });
 
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window);
