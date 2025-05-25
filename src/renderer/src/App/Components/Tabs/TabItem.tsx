@@ -100,7 +100,7 @@ export default function TabItem({tab}: Props) {
         variant="light"
         onPress={onPress}>
         <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
-          <TabItem_Icon tab={tab} />
+          <TabItem_Icon tab={tab} currentView={runningCards.find(card => card.tabId === tab.id)?.currentView} />
           <TabTitle title={tab.title} setIsTruncated={setIsTruncated} />
         </div>
 

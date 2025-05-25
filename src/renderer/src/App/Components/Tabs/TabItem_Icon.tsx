@@ -1,5 +1,5 @@
 import {Avatar, Spinner} from '@heroui/react';
-import {ReactNode, useEffect, useState} from 'react';
+import {memo, ReactNode, useEffect, useState} from 'react';
 
 import {APP_ICON_TRANSPARENT} from '../../../../../cross/CrossConstants';
 import {TabInfo} from '../../../../../cross/CrossTypes';
@@ -17,20 +17,17 @@ import {
   TextGeneration_Icon,
   Web_Icon,
 } from '../../../assets/icons/SvgIcons/SvgIcons';
-import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import rendererIpc from '../../RendererIpc';
 import {PageID} from '../../Utils/Constants';
 
-type Props = {tab: TabInfo};
+type Props = {tab: TabInfo; currentView: 'browser' | 'terminal' | undefined};
 
-export default function TabItem_Icon({tab}: Props) {
-  const runningCards = useCardsState('runningCard');
+const TabItem_Icon = memo(({tab, currentView}: Props) => {
   const [icon, setIcon] = useState<ReactNode>();
 
   useEffect(() => {
     const setFavIcon = async () => {
-      const {favIcon, pageID, id, title} = tab;
-      const currentView = runningCards.find(card => card.tabId === id)?.currentView;
+      const {favIcon, pageID, title} = tab;
       const isValidFavIcon = await rendererIpc.utils.isResponseValid(favIcon.url);
 
       if (favIcon.show && isValidFavIcon) {
@@ -60,7 +57,7 @@ export default function TabItem_Icon({tab}: Props) {
 
   return (
     <>
-      {tab.isTerminal ? (
+      {tab.isTerminal && currentView === 'terminal' ? (
         <Terminal_Icon className="shrink-0 mb-0.5" />
       ) : tab.isLoading ? (
         <Spinner size="sm" color="primary" variant="simple" className="scale-80 mb-0.5" />
@@ -69,4 +66,6 @@ export default function TabItem_Icon({tab}: Props) {
       )}
     </>
   );
-}
+});
+
+export default TabItem_Icon;
