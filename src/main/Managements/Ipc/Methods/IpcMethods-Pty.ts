@@ -44,6 +44,13 @@ function stopPty(id: string) {
   ptyManager = ptyManager.filter(pty => pty.id !== id);
 }
 
+export async function stopAllPty(): Promise<void> {
+  for (const ptyProcess of ptyManager) {
+    await ptyProcess.stopAsync();
+  }
+  ptyManager = [];
+}
+
 export async function emptyPtyProcess(id: string, opt: PtyProcessOpt, dir?: string) {
   if (opt === 'start') {
     const targetDir = dir || app.getPath('home');
