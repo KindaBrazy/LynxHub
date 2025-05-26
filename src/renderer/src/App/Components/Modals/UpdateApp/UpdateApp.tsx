@@ -192,8 +192,8 @@ const UpdateApp = () => {
                 color="success"
                 variant="light"
                 className="cursor-default"
-                onPress={!window.isPortable ? openDownloadPage : startDownload}>
-                {!window.isPortable ? 'Download Page' : 'Download'}
+                onPress={window.isPortable ? openDownloadPage : startDownload}>
+                {window.isPortable ? 'Download Page' : 'Download'}
               </Button>
             )}
             {downloadState === 'progress' && (
