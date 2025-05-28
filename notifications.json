@@ -7,7 +7,7 @@
     "icon": "https://raw.githubusercontent.com/KindaBrazy/LynxHub/refs/heads/master/resources/icon.png",
     "description": [
       {
-        "text": "I hope you enjoy LynxHub v3's new features! 🚀 Thanks for staying with the app. I hope it keeps being useful to you. 🙏"
+        "text": "I hope you enjoy LynxHub v3's new features! Thanks for staying with the app. I hope it keeps being useful to you."
       }
     ]
   },
@@ -17,10 +17,10 @@
     "icon": "🪲",
     "description": [
       {
-        "text": "From Version 3, LynxHub will collect anonymous error reports. This helps me fix bugs faster and make the app better for you. 🛡️"
+        "text": "From Version 3, LynxHub will collect anonymous error reports. This helps me fix critical bugs and make the app better for you."
       },
       {
-        "text": "You can turn this on or off anytime in the Settings. ✅"
+        "text": "You can turn this on or off anytime in the Settings."
       }
     ],
     "buttons": [

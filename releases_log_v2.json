@@ -4,11 +4,251 @@
   "currentBuild": 19,
   "releaseDate": "2025-03-10",
   "earlyAccess": {
-    "version": "2.4.0",
-    "build": 19,
-    "releaseDate": "2025-02-24"
+    "version": "3.0.0",
+    "build": 20,
+    "releaseDate": "2025-05-26"
   },
   "changeLog": [
+    {
+      "build": 20,
+      "version": "3.0.0",
+      "changes": [
+        {
+          "title": "✨ New Features",
+          "items": [
+            {
+              "label": "Tabs for Multitasking",
+              "subitems": [
+                {
+                  "label": "Open multiple modal instances, each in its own tab."
+                },
+                {
+                  "label": "Run multiple AI instances at the same time in separate tabs."
+                }
+              ]
+            },
+            {
+              "label": "Standalone Terminal & Browser Windows",
+              "subitems": [
+                {
+                  "label": "You can now open an empty terminal, browser, or a combination."
+                }
+              ]
+            },
+            {
+              "label": "Expanded Context Menu (Right-Click)",
+              "subitems": [
+                {
+                  "label": "Includes new actions for text (copy, paste, undo), links (open, copy address), images (save, open), and page navigation (back, forward)."
+                }
+              ]
+            },
+            {
+              "label": "Notification Drawer",
+              "subitems": [
+                {
+                  "label": "A new drawer to keep you updated with notifications."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "⚡ Improvements",
+          "items": [
+            {
+              "label": "Improved Hotkey System",
+              "subitems": [
+                {
+                  "label": "Hotkeys are now more reliable."
+                },
+                {
+                  "label": "Added new hotkeys for browser, terminal, and tab management."
+                }
+              ]
+            },
+            {
+              "label": "Enhanced In-App Browser",
+              "subitems": [
+                {
+                  "label": "Now includes an Address Bar, Find in Page, and Back/Forward/Reload controls."
+                },
+                {
+                  "label": "Added mouse wheel zoom and full-screen mode for web content."
+                },
+                {
+                  "label": "New setting to choose how links open (external browser or new tab) and to change the browser user agent."
+                }
+              ]
+            },
+            {
+              "label": "Enhanced In-App Terminal",
+              "subitems": [
+                {
+                  "label": "Added a button to copy all terminal content."
+                },
+                {
+                  "label": "Displays elapsed time since the AI interface started."
+                },
+                {
+                  "label": "WebUI addresses are now detected faster."
+                }
+              ]
+            },
+            {
+              "label": "Argument Handling",
+              "subitems": [
+                {
+                  "label": "Paths for files and directories can now be dynamically converted between relative and absolute."
+                }
+              ]
+            },
+            {
+              "label": "Search Highlighting",
+              "subitems": [
+                {
+                  "label": "Searched words are now highlighted in card extensions."
+                },
+                {
+                  "label": "Search terms are highlighted within argument names and descriptions."
+                }
+              ]
+            },
+            {
+              "label": "Card Extensions",
+              "subitems": [
+                {
+                  "label": "New button to open extension Readmes directly in an in-app modal."
+                }
+              ]
+            },
+            {
+              "label": "Settings & Performance",
+              "subitems": [
+                {
+                  "label": "Added a hardware acceleration toggle in settings."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "🎨 Style & UI Changes",
+          "items": [
+            {
+              "label": "New App Icon: LynxHub has a fresh new icon."
+            },
+            {
+              "label": "Dynamic Loading Backgrounds",
+              "subitems": [
+                {
+                  "label": "New animated backgrounds (Threads, LiquidChrome) during loading."
+                },
+                {
+                  "label": "Option to disable loading animations in settings."
+                }
+              ]
+            },
+            {
+              "label": "Progressive Card Loading",
+              "subitems": [
+                {
+                  "label": "Cards now load more smoothly with skeleton placeholders."
+                }
+              ]
+            },
+            {
+              "label": "Redesigned Toast Messages: Notifications have an updated look."
+            },
+            {
+              "label": "Visual Updates",
+              "subitems": [
+                {
+                  "label": "Refreshed colors for home containers, filter, and search elements."
+                },
+                {
+                  "label": "Updated home background colors and filter icon."
+                },
+                {
+                  "label": "Improved page transition animations."
+                },
+                {
+                  "label": "Adjusted dark mode background colors for consistency."
+                }
+              ]
+            },
+            {
+              "label": "UI Enhancements",
+              "subitems": [
+                {
+                  "label": "Icons added to buttons in settings for better clarity."
+                }
+              ]
+            },
+            {
+              "label": "New Error Page: A more user-friendly error boundary page."
+            }
+          ]
+        },
+        {
+          "title": "🪲 Bug Fixes",
+          "items": [
+            {
+              "label": "Fixed an issue causing terminal font corruption in some cases."
+            },
+            {
+              "label": "Prevent errors when quitting the app with active AI processes"
+            },
+            {
+              "label": "Corrected placement of modals and windows."
+            },
+            {
+              "label": "The \"update available\" badge is now hidden when an AI is running."
+            },
+            {
+              "label": "Ensured relative paths work correctly in portable mode for AI interfaces."
+            },
+            {
+              "label": "Improved app title rendering to be accurate and prevent duplicate hyphens."
+            },
+            {
+              "label": "Addressed potential data inconsistencies for users upgrading from versions below 2.0.0 by resetting relevant storage."
+            }
+          ]
+        },
+        {
+          "title": "📌 Minor Changes",
+          "items": [
+            {
+              "label": "Re-enabled tab animations in modals."
+            },
+            {
+              "label": "Prevent storing data in LynxHub Directory",
+              "subitems": [
+                {
+                  "label": "Error message now shown if LynxHub's installation directory is selected for AI data to prevent issues."
+                },
+                {
+                  "label": "Warnings are added to prevent locating AI instances within the main LynxHub directory."
+                }
+              ]
+            },
+            {
+              "label": "The start button and menu button are now disabled/hidden when an AI is active."
+            },
+            {
+              "label": "Adjust the positioning of extension previews."
+            },
+            {
+              "label": "For portable builds, the update process now opens the download page."
+            },
+            {
+              "label": "Added a setting to toggle error reporting."
+            }
+          ]
+        }
+      ]
+    },
     {
       "build": 19,
       "version": "2.4.0",
