@@ -3,9 +3,9 @@
   "currentBuild": 19,
   "releaseDate": "2025-03-10",
   "earlyAccess": {
-    "version": "2.4.0",
-    "build": 19,
-    "releaseDate": "2025-02-24"
+    "version": "3.0.0",
+    "build": 20,
+    "releaseDate": "2025-02-28"
   },
   "changeLog": [
     {
