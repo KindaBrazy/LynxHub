@@ -2,11 +2,11 @@
 
 <br/>
 
-<img height="120" alt="Application Icon" src="src/renderer/public/AppIcon%20Transparent.png">
+<img height="120" alt="Application Icon" src="src/renderer/public/LynxHub.png">
 
 # LynxHub
 
-<h3>Your All-In-One AI Platform</h3>
+### Cross-platform, extensible terminal/browser for AI management
 
 [![GitHub Release][github-release-shield]](https://github.com/KindaBrazy/LynxHub/releases)
 [![GitHub Release Date][github-release-date-shield]](https://github.com/KindaBrazy/LynxHub/releases)
@@ -14,19 +14,9 @@
 
 ![LynxHub Dashboard](/readme/screenshots/MainScreenshot.png)
 
-<img src="https://discord.com/api/guilds/1179017720432443392/widget.png?style=banner2" alt="Discord Banner"/>
+#### Open-source, cross-platform terminal and browser, designed for managing AI. Highly modular and extensible, it's the all-in-one environment for AI power users.
 
 </div>
-
-> [!IMPORTANT]
-> **LynxHub: Not a One-Click Installer**
->
-> LynxHub is designed to be a comprehensive manager and helper with a user-friendly and flexible environment. It is
-> **not** a one-click installer.
->
-> While LynxHub offers installation support in most cases, it's best if you have prior knowledge of installing your
-> preferred AI interface on your device. You can then integrate it with LynxHub. Alternatively, if you are already using
-> an AI interface, you can simply locate and connect it.
 
 ## 🔗 Download
 
@@ -34,7 +24,7 @@ Get started with LynxHub by downloading the latest version for your platform.
 
 | Channel      | Version                                                                              | Date       |
 |--------------|--------------------------------------------------------------------------------------|------------|
-| Early Access | [**V2.4.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.4.0_Early-Access) | 2025-02-24 |
+| Early Access | [**V3.0.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V3.0.0_Early-Access) | 2025-05-26 |
 | Release      | [**V2.4.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V2.4.0)              | 2025-03-10 |
 
 ### Windows (10, 11)
@@ -76,45 +66,53 @@ Get started with LynxHub by downloading the latest version for your platform.
 
 ## ✨ Feature Overview
 
-LynxHub offers a comprehensive suite of features designed to streamline your AI workflow and enhance your experience.
-Here's what you can expect:
+Discover the core features that make LynxHub a powerful tool for your AI workflow:
 
-- [Extensible Architecture](https://github.com/KindaBrazy/LynxHub-Extension-Guide)
-    - Enhance LynxHub's capabilities with custom extensions.
-- [Modular Design](https://github.com/KindaBrazy/LynxHub-Module-Guide)
-    - Fully modular architecture allowing third-party developers to create and publish custom modules
-    - Modules can add new AI web interfaces (WebUIs) to the app, fully customizable by the developer
-    - Developers can pre-define custom arguments, extensions, commands, and other configurations as part of the module,
-      creating pre-configured WebUIs for users
-- AI Interface Management
-    - Install, config and update
-    - Switch branches, shallow clone, unshallow, see latest commit details
-    - Manage AI extensions with options for batch updates and auto-update settings
-    - View available extensions and install them directly
-- Arguments Manager
-    - Available arguments list, add, remove, and edit various argument types (dropdowns, checkboxes, text input,
-      folder/file selection - **relative, absolute**)
-    - Search through arguments
-    - Create and manage argument presets for different setups
-- Custom Run Commands
-    - Set and manage custom terminal commands for executing WebUI
-- Pre-launch Actions
-    - Automatically execute custom terminal commands before launching AI interfaces
-    - Open specific files or folders as part of the pre-launch process
-- Browser and Terminal Integration
-    - Built-in terminal and web browser for seamless integration
-    - Automatic detection and launch of relevant addresses (URLs, files)
-    - Switch easily between terminal and browser modes
-    - Terminal customization settings
-- Markdown Viewer
-    - Built-in Markdown viewer for easy reading of documentation and notes.
-- AI Information Dashboard
-    - View developer information, installation and update status
-    - Access update tags, release notes, and disk usage statistics for each AI interface
-- UI Customization
-    - Customize the layout of cards for a flexible user interface
-    - Dark and light themes available
-    - Pin favorite AI interfaces to the home page for easy access
+> [!IMPORTANT]
+> **LynxHub: Not a One-Click Installer**
+>
+> LynxHub is designed to be a comprehensive manager and helper with a user-friendly and flexible environment. It is
+> **not** a one-click installer.
+>
+> While LynxHub offers installation support in most cases, it's best if you have prior knowledge of installing your
+> preferred AI interface on your device. You can then integrate it with LynxHub. Alternatively, if you are already using
+> an AI interface, you can simply locate and connect it.
+
+🧩 **Extensible & Modular:** Build and expand LynxHub to fit your needs.
+
+- **[Extensible Architecture:](https://github.com/KindaBrazy/LynxHub-Extension-Guide)** Add to LynxHub's core
+  functionality.
+- **[Modular Design:](https://github.com/KindaBrazy/LynxHub-Module-Guide)** Developers can create and share modules that
+  add new AI WebUIs, complete with pre-set arguments, extensions, commands, etc.
+
+🚀 **Manage Your AI Interfaces:** Handle your AI WebUIs easily from one place.
+
+- **Install, Locate & Configure:** Set up new AI interfaces with options for specific branches, clone depth, and quick
+  updates.
+- **Advanced Git Control:** Switch branches, reset your repository, unshallow, view commit details, and stash changes
+  directly from the interface card.
+- **Extension Management:** Find, install, enable/disable, and batch-update AI extensions. Set auto-update preferences
+  and update check frequency.
+
+🔧 **Full Customization & Control:** Shape your AI environment to your exact needs.
+
+- **Argument Manager:** Visually add, edit, and organize arguments (dropdowns, checkboxes, text, file/folder paths).
+  Search and save presets for quick setup.
+- **Custom Run Commands:** Define exactly how your AI interfaces launch.
+- **Pre-Launch Automation:** Run terminal commands or open files/folders automatically before an AI interface starts.
+
+🌐 **Integrated Workspace:** Work smarter with built-in tools.
+
+- **Tabs for Multitasking:** Open multiple AI instances, terminals, or browsers at the same time, each in its own tab.
+- **Built-in Terminal & Browser:** Switch quickly between terminal, browsing, and managing your AI. You can also open
+  standalone terminal or browser windows.
+- **Smart Detection:** Automatically finds and launches WebUIs URLs.
+- **Markdown Viewer:** Read documentation and notes directly inside LynxHub.
+
+💻 **Cross-Platform & Portable**
+
+- Available for **X64**, **ARM64** (Windows, Linux, macOS) and as a **Portable** (Windows & Linux) letting you use
+  LynxHub where you need it.
 
 > [!TIP]
 > 💡 **Get early access to LynxHub** features, extensions, and modules. Support development and unlock exclusive
@@ -124,107 +122,9 @@ Here's what you can expect:
 
 ### [Python Toolkit](https://github.com/KindaBrazy/LynxHub-Python-Toolkit)
 
-<details>
-<summary><kbd>Screenshot & Features</kbd></summary>
-
-![Python Toolkit Screenshot](https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/compiled/resources/python.png)
-
-**`🐍 Python Management`**
-
-- **Auto-Detect Installed Pythons:** Automatically detects all installed Python versions, including those installed via
-  Conda.
-- **Install Python Versions:** Install new Python versions (official and Conda-based) directly from the extension.
-- **Set System Default Python:** Easily set any installed Python as the system default.
-- **Manage Installed Packages:** Manage packages installed in each Python environment.
-- **View Python Details:** View detailed information about installed Pythons, including version, install path, installed
-  packages count, and disk usage.
-
-**`🌐 Virtual Environment`**
-
-- **Locate Existing Venvs:** Locate and list existing virtual environments.
-- **Create New Venv:** Create new virtual environments with selected Python versions (official or Conda).
-- **Associate AI with Venv:** Associate AI tools with specific virtual environments, allowing multiple AIs to share the
-  same environment.
-- **View Venv Details:** View detailed information about virtual environments, including Python version, install path,
-  installed packages count, disk usage, and associated AIs.
-- **Manage Venv Packages:** Manage packages installed in virtual environments.
-
-**`📦 Package Manager`**
-
-- **Check for Updates:**
-    - Check for updates for all installed packages.
-    - Check for updates based on requirements files.
-- **Update Manager:**
-    - Interactively update packages.
-    - Categorize and colorize updates based on update type (prerelease, major, minor, patch, others).
-    - Filter updates by type and choose to update all or select packages.
-- **Install Packages:**
-    - Select and install multiple packages with version conditions.
-    - Install packages from a requirements file.
-    - View a preview of script before installation.
-- **Manage Requirements:**
-    - Manage requirements files and their associated packages.
-
-**`📝 Requirements Manager`**
-
-- **Select and Change Requirements File:** Easily switch between different requirements files.
-- **Add, Remove, and Change Requirements:** Modify requirements in a user-friendly interface.
-
-**`🤖 AI Integration`**
-
-- **New Menu Item for Package and Requirement Management:** Direct access to package and requirement management from the
-  AI menu.
-
-**`🛠️ Tools Page Integration`**
-
-- **New Card for Individual Toolkit:** Open and manage individual pythons from a dedicated card on the tools page.
-
-</details>
-
 ## 📃 Modules
 
 ### [WebUI Container Module](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container)
-
-<details>
-<summary><kbd>Available AI Interfaces</kbd></summary>
-
-**`🖼️ Image Generation`**
-
-| Developer                                                                                          | Project                 | GitHub                                                                     |
-|----------------------------------------------------------------------------------------------------|-------------------------|----------------------------------------------------------------------------|
-| <img height='20' src="https://avatars.githubusercontent.com/u/121283862?s=20&v=4"> ComfyAnonymous  | ComfyUI                 | [Link](https://github.com/comfyanonymous/ComfyUI)                          |
-| <img height='20' src="https://avatars.githubusercontent.com/u/5392772?s=20&v=4"> Patientx          | ComfyUI Zluda           | [Link](https://github.com/patientx/ComfyUI-Zluda)                          |
-| <img height='20' src="https://avatars.githubusercontent.com/u/20920490?s=20&v=4"> Automatic1111    | Stable Diffusion        | [Link](https://github.com/AUTOMATIC1111/stable-diffusion-webui)            |
-| <img height='20' src="https://avatars.githubusercontent.com/u/39524005?s=20&v=4"> Lshqqytiger      | Stable Diffusion AMDGPU | [Link](https://github.com/lshqqytiger/stable-diffusion-webui-amdgpu)       |
-| <img height='20' src="https://avatars.githubusercontent.com/u/19834515?s=20v=4"> Lllyasviel        | SD Forge                | [Link](https://github.com/lllyasviel/stable-diffusion-webui-forge)         |
-| <img height='20' src="https://avatars.githubusercontent.com/u/39524005?s=20&v=4"> Lshqqytiger      | SD Forge AMDGPU         | [Link](https://github.com/lshqqytiger/stable-diffusion-webui-amdgpu-forge) |
-| <img height='20' src="https://avatars.githubusercontent.com/u/57876960?s=20&v=4"> Vladmandic       | SD Next                 | [Link](https://github.com/vladmandic/automatic)                            |
-| <img height='20' src="https://avatars.githubusercontent.com/u/43497670?s=20&v=4"> McMonkeyProjects | SwarmUI                 | [Link](https://github.com/mcmonkeyprojects/SwarmUI)                        |
-| <img height='20' src="https://avatars.githubusercontent.com/u/7474674?s=20&v=4"> Bmaltais          | Kohya's GUI             | [Link](https://github.com/bmaltais/kohya_ss)                               |
-| <img height='20' src="https://avatars.githubusercontent.com/u/124302297?s=20&v=4"> Anapnoe         | SD UI-UX                | [Link](https://github.com/anapnoe/stable-diffusion-webui-ux)               |
-| <img height='20' src="https://avatars.githubusercontent.com/u/3390934?s=20&v=4"> Nerogar           | OneTrainer              | [Link](https://github.com/Nerogar/OneTrainer)                              |
-| <img height='20' src="https://avatars.githubusercontent.com/u/113954515?s=20&v=4"> InvokeAI        | InvokeAI                | [Link](https://github.com/invoke-ai/InvokeAI)                              |
-
-**`📝 Text Generation`**
-
-| Developer                                                                                          | Project         | GitHub                                                     |
-|----------------------------------------------------------------------------------------------------|-----------------|------------------------------------------------------------|
-| <img height='20' src="https://avatars.githubusercontent.com/u/112222186?s=20&v=4"> Oobabooga       | Text Generation | [Link](https://github.com/oobabooga/text-generation-webui) |
-| <img height='20' src="https://avatars.githubusercontent.com/u/134869877?s=20&v=4"> SillyTavern     | SillyTavern     | [Link](https://github.com/SillyTavern/SillyTavern)         |
-| <img height='20' src="https://avatars.githubusercontent.com/u/158137808?s=20&v=4"> Open-WebUI      | Open WebUI      | [Link](https://github.com/open-webui/open-webui)           |
-| <img height='20' src="https://avatars.githubusercontent.com/u/164069192?s=20&v=4"> StackBlitz Labs | bolt.diy        | [Link](https://github.com/stackblitz-labs/bolt.diy)        |
-| <img height='20' src="https://avatars.githubusercontent.com/u/827993?s=20&v=4"> ParisNeo           | LoLLMs          | [Link](https://github.com/ParisNeo/lollms-webui)           |
-| <img height='20' src="https://avatars.githubusercontent.com/u/128289781?s=20&v=4"> FlowiseAI       | Flowise         | [Link](https://github.com/FlowiseAI/Flowise)               |
-
-**`🎵 Audio Generation`**
-
-| Developer                                                                                 | Project          | GitHub                                                  |
-|-------------------------------------------------------------------------------------------|------------------|---------------------------------------------------------|
-| <img height='20' src="https://avatars.githubusercontent.com/u/6757283?s=20&v=4"> Rsxdalv  | Text to Speech   | [Link](https://github.com/rsxdalv/tts-generation-webui) |
-| <img height='20' src="https://avatars.githubusercontent.com/u/36931363?s=20&v=4"> Gitmylo | Audio Generation | [Link](https://github.com/gitmylo/audio-webui)          |
-| <img height='20' src="https://avatars.githubusercontent.com/u/35898566?s=20&v=4"> Erew123 | AllTalk TTS      | [Link](https://github.com/erew123/alltalk_tts)          |
-
-</details>
 
 ## 🖼️ Screenshots
 
@@ -238,9 +138,6 @@ Here's what you can expect:
 
 ![Customize launch screenshot](/readme/screenshots/CustomLaunch.png)
 
-![Installation screenshot](/readme/screenshots/Installation.png)
-
-![Update screenshot](/readme/screenshots/Update.png)
 
 </div>
 
@@ -325,6 +222,8 @@ Every contribution directly supports ongoing development and future improvements
 [![Reddit](https://img.shields.io/badge/Reddit-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://www.reddit.com/r/LynxHubAI)
 [![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:kindofbrazy@gmail.com)
 [![Patreon](https://img.shields.io/badge/Patreon-F96854?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/LynxHub)
+
+[![LynxHub Discord](http://invidget.switchblade.xyz/e8rBzhtcnK)](https://discord.gg/e8rBzhtcnK)
 
 </div>
 

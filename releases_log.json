@@ -9,6 +9,34 @@
   },
   "changeLog": [
     {
+      "build": 20,
+      "version": "3.0.0",
+      "new": [
+        "Tabs for Multitasking",
+        "Standalone Terminal & Browser Windows",
+        "Expanded Context Menu (Right-Click)",
+        "Notification Drawer"
+      ],
+      "improve": [
+        "Improved Hotkey System",
+        "Enhanced In-App Browser",
+        "Enhanced In-App Terminal",
+        "Argument Handling",
+        "Search Highlighting",
+        "Card Extensions",
+        "Settings & Performance"
+      ],
+      "bug": [
+        "Fixed an issue causing terminal font corruption in some cases.",
+        "Prevent errors when quitting the app with active AI processes",
+        "Corrected placement of modals and windows.",
+        "The \"update available\" badge is now hidden when an AI is running.",
+        "Ensured relative paths work correctly in portable mode for AI interfaces.",
+        "Improved app title rendering to be accurate and prevent duplicate hyphens.",
+        "Addressed potential data inconsistencies for users upgrading from versions below 2.0.0 by resetting relevant storage."
+      ]
+    },
+    {
       "build": 19,
       "version": "2.4.0",
       "new": [
