@@ -7,12 +7,14 @@ import {
   FcProp,
   FcPropCard,
   FcPropCardData,
+  FcPropRef,
   FcPropReplaceMd,
   FcPropSearchResult,
 } from './ExtensionTypes_Renderer';
 
 type CompFc = (component: FC) => void;
 type CompFcProp = (component: FcProp) => void;
+type CompFcPropRef = (component: FcPropRef) => void;
 type CompFcPropCard = (component: FcPropCard) => void;
 type CompFcPropCardData = (component: FcPropCardData) => void;
 type CompFcPropSearchResult = (component: FcPropSearchResult) => void;
@@ -47,7 +49,7 @@ export type ExtensionRendererApi = {
     /** Add elements to the **end** of the Status Bar (Right-aligned). */
     addEnd: CompFcProp;
     /** Replace the entire Status Bar container. */
-    replaceContainer: CompFcProp;
+    replaceContainer: CompFcPropRef;
   };
 
   /** Modify components within the Running AI view.
