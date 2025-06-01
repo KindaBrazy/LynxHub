@@ -1,5 +1,5 @@
 import {Reducer} from '@reduxjs/toolkit';
-import {ComponentProps, FC} from 'react';
+import {ComponentProps, FC, RefObject} from 'react';
 
 import {CardsDataManager} from '../Components/Cards/CardsDataManager';
 import {CardData} from '../Modules/types';
@@ -7,12 +7,14 @@ import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 
 // -----------------------------------------------> Elements & Props
 export type ElementProps = ComponentProps<'div'>;
+export type RefElementProps = ComponentProps<'div'> & {ref: RefObject<HTMLDivElement | null>};
 export type CardElementProps = ComponentProps<'div'> & {cards: CardData[]};
 export type SearchResultProps = ComponentProps<'div'> & {searchValue: string};
 export type CardDataProps = ComponentProps<'div'> & {context: CardsDataManager};
 export type ReplaceMdProps = ComponentProps<'div'> & {repoPath: string; rounded?: boolean};
 
 export type FcProp = FC<ElementProps>;
+export type FcPropRef = FC<RefElementProps>;
 export type FcPropCardData = FC<CardDataProps>;
 export type FcPropCard = FC<CardElementProps>;
 export type FcPropSearchResult = FC<SearchResultProps>;
