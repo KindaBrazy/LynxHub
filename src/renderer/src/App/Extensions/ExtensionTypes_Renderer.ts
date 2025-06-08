@@ -36,7 +36,7 @@ export type ExtensionData_Renderer = {
     addStart: FcProp[];
     addCenter: FcProp[];
     addEnd: FcProp[];
-    replaceContainer: FcProp | undefined;
+    replaceContainer: FcPropRef | undefined;
   };
   runningAI: {
     container: FC | undefined;
