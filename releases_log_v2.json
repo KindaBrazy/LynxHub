@@ -6,9 +6,23 @@
   "earlyAccess": {
     "version": "3.0.0",
     "build": 20,
-    "releaseDate": "2025-05-28"
+    "releaseDate": "2025-06-08"
   },
   "changeLog": [
+    {
+      "build": 21,
+      "version": "3.0.1",
+      "changes": [
+        {
+          "title": "🪲 Bug Fixes",
+          "items": [
+            {
+              "label": "Fix card containers layout"
+            }
+          ]
+        }
+      ]
+    },
     {
       "build": 20,
       "version": "3.0.0",
