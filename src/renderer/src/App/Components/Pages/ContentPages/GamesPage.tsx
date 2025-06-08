@@ -18,9 +18,11 @@ const GamesPage = ({show}: Props) => {
           extraClassNames="mr-3"
           subTitle="Enjoy Games, Hobbies, and Fun AI Tools"
           icon={<GamePad_Icon className={CardContainerClasses} />}>
-          {addComponent.map((Comp, index) => (
-            <Comp key={index} />
-          ))}
+          <div className="flex size-full flex-row flex-wrap gap-7 overflow-visible">
+            {addComponent.map((Comp, index) => (
+              <Comp key={index} />
+            ))}
+          </div>
         </CardContainer>
       </ScrollShadow>
     </Page>
