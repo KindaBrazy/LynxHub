@@ -96,7 +96,20 @@ export default function DashboardUpdate() {
               {!patreonUserData.earlyAccess && '(Upgrade your Patreon tier to unlock)'}
             </span>
           ) : (
-            <span className="text-warning">(Log in to Patreon to unlock)</span>
+            <span className="text-warning">(Login to Patreon to unlock)</span>
+          )}
+        </SelectItem>
+        <SelectItem
+          key="insider"
+          textValue="Insider"
+          className="cursor-default"
+          classNames={{title: 'space-x-1'}}
+          description="Get immediate access to every new feature and fix for LynxHub Core, extensions and modules.">
+          <span>Insider</span>
+          {patreonLoggedIn ? (
+            <span className="text-warning">{!patreonUserData.insider && '(Upgrade your Patreon tier to unlock)'}</span>
+          ) : (
+            <span className="text-warning">(Login to Patreon to unlock)</span>
           )}
         </SelectItem>
       </Select>
