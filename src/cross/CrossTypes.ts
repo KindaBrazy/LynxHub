@@ -292,3 +292,13 @@ export type Notification_Data = {
   }[];
   icon?: string;
 };
+
+export type PatreonSupporterTier = 'Platinum Sponsor' | 'Diamond Sponsor';
+
+export type PatreonSupporter = {
+  name: string;
+  tier: PatreonSupporterTier;
+  imageUrl: string;
+  memberSince: string;
+  homePage: string;
+};

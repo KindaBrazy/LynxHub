@@ -2,10 +2,10 @@ import {Input} from '@heroui/react';
 import {Empty, List, PaginationProps} from 'antd';
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
 
-import {MODULE_CONTAINER} from '../../../../../../../../cross/CrossConstants';
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {Circle_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
+import rendererIpc from '../../../../../RendererIpc';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
 import LynxScroll from '../../../../Reusable/LynxScroll';
 import RenderItem from './RenderItem';
@@ -38,8 +38,7 @@ export default function DownloadModules({installedModules, setInstalledModules}:
   useEffect(() => {
     async function fetchModules() {
       try {
-        const response = await fetch(MODULE_CONTAINER);
-        const modules = (await response.json()) as ModulesInfo[];
+        const modules = await rendererIpc.statics.getModules();
         setData(modules.filter(module => !installedModules.includes(module.id)));
       } catch (e) {
         console.error(e);

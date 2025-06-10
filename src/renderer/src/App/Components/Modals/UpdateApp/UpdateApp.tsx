@@ -4,13 +4,8 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {
-  APP_BUILD_NUMBER,
-  PATREON_RELEASE_HUB,
-  RELEASES_PAGE,
-  WIN_RELEASE_URL_V2,
-} from '../../../../../../cross/CrossConstants';
-import {AppUpdateData, AppUpdateInfo, UpdateDownloadProgress} from '../../../../../../cross/CrossTypes';
+import {APP_BUILD_NUMBER, PATREON_RELEASE_HUB, RELEASES_PAGE} from '../../../../../../cross/CrossConstants';
+import {AppUpdateInfo, UpdateDownloadProgress} from '../../../../../../cross/CrossTypes';
 import {useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {settingsActions} from '../../../Redux/Reducer/SettingsReducer';
@@ -93,8 +88,7 @@ const UpdateApp = () => {
 
     async function fetchData() {
       const result: CollapseProps['items'] = [];
-      const response = await fetch(WIN_RELEASE_URL_V2);
-      const data = (await response.json()) as AppUpdateData;
+      const data = await rendererIpc.statics.getReleases();
 
       const isEA = updateChannel === 'ea';
       const latestBuild = (isEA ? data.earlyAccess?.build : data.currentBuild) || 0;

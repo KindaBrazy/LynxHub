@@ -20,7 +20,6 @@ import {isEmpty} from 'lodash';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {NOTIFICATION_DATA} from '../../../../../../../../cross/CrossConstants';
 import {Notification_Data} from '../../../../../../../../cross/CrossTypes';
 import {isDev, isValidURL} from '../../../../../../../../cross/CrossUtils';
 import {ExternalDuo_Icon} from '../../../../../../../context_menu/Components/SvgIcons';
@@ -49,12 +48,8 @@ export default function Home_Notification() {
         filterData(result.default as Notification_Data[]);
       });
     } else {
-      fetch(NOTIFICATION_DATA).then(response => {
-        if (response.ok) {
-          response.json().then(data => {
-            filterData(data as Notification_Data[]);
-          });
-        }
+      rendererIpc.statics.getNotification().then(data => {
+        filterData(data);
       });
     }
   };
