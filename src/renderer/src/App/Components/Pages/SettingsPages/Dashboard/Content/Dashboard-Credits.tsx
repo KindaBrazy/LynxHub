@@ -92,8 +92,9 @@ export default function DashboardCredits() {
                 <User
                   key={supporter.name}
                   name={supporter.name}
-                  className="transition duration-300 hover:scale-105"
+                  onClick={() => window.open(supporter.homePage)}
                   description={`Member Since: ${supporter.memberSince}`}
+                  className="transition duration-300 hover:scale-105 cursor-pointer"
                   avatarProps={{src: supporter.imageUrl, color: TIER_COLORS[tier], className: 'shrink-0'}}
                 />
               ))}
