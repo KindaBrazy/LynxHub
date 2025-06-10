@@ -5,6 +5,7 @@ import {
   EXTENSIONS_FOLDER_NAME,
   MODULES_FOLDER_NAME,
   REPOSITORIES_FOLDER_NAME,
+  STATICS_FOLDER_NAME,
 } from './CrossConstants';
 
 export type RepoDetails = {
@@ -251,18 +252,21 @@ export type AppUpdateInfo = {
 export type AppUpdateData = AppUpdateInfo & {
   changeLog: {build: number; version: string; changes: Changelogs[]}[];
 };
+export type AppUpdateInsiderData = Omit<AppUpdateInfo, 'earlyAccess'>;
 
 export type FolderNames =
   | typeof MODULES_FOLDER_NAME
   | typeof EXTENSIONS_FOLDER_NAME
   | typeof BINARIES_FOLDER_NAME
-  | typeof REPOSITORIES_FOLDER_NAME;
+  | typeof REPOSITORIES_FOLDER_NAME
+  | typeof STATICS_FOLDER_NAME;
 
 export type PatreonUserData = {
   tier: string;
   name: string;
   imageUrl: string;
   earlyAccess: boolean;
+  insider: boolean;
 };
 
 export type FolderListData = {type: 'folder' | 'file'; name: string};
