@@ -24,6 +24,7 @@ export const MODULES_FOLDER_NAME = 'Modules' as const;
 export const EXTENSIONS_FOLDER_NAME = 'Extensions' as const;
 export const BINARIES_FOLDER_NAME = 'Binaries' as const;
 export const REPOSITORIES_FOLDER_NAME = 'AIWorkspaces' as const;
+export const STATICS_FOLDER_NAME = 'Statics' as const;
 
 // Static Assets
 export const APP_ICON_TRANSPARENT: string = 'LynxHub.png';

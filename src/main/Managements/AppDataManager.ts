@@ -9,6 +9,7 @@ import {
   EXTENSIONS_FOLDER_NAME,
   MODULES_FOLDER_NAME,
   REPOSITORIES_FOLDER_NAME,
+  STATICS_FOLDER_NAME,
 } from '../../cross/CrossConstants';
 import {FolderNames} from '../../cross/CrossTypes';
 import {appManager, storageManager} from '../index';
@@ -20,6 +21,7 @@ const DIRECTORIES = [
   EXTENSIONS_FOLDER_NAME,
   BINARIES_FOLDER_NAME,
   REPOSITORIES_FOLDER_NAME,
+  STATICS_FOLDER_NAME,
 ] as const;
 
 /**
