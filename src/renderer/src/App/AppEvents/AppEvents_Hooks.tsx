@@ -167,7 +167,7 @@ export const usePatreon = () => {
         dispatch(userActions.setUserState({key: 'patreonUserData', value: result}));
         dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
 
-        checkEARepos(result.earlyAccess);
+        checkEARepos(result.earlyAccess || result.insider);
       })
       .catch(() => {
         if (isOnline) checkEARepos(false);
