@@ -15,13 +15,13 @@ import {motion} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {EXTENSION_CONTAINER, EXTENSION_CONTAINER_EA} from '../../../../../../../cross/CrossConstants';
-import {Extension_ListData, ExtensionsInfo} from '../../../../../../../cross/CrossTypes';
+import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
 import {Linux_Icon, MacOS_Icon, MenuDots_Icon, Windows_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {useUserState} from '../../../../Redux/Reducer/UserReducer';
+import rendererIpc from '../../../../RendererIpc';
 import {ExtFilter} from './ExtensionList';
 import {InstalledExt} from './ExtensionsPage';
 
@@ -33,8 +33,8 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<Extension_Li
     async function fetchExtensionsList() {
       setLoading(true);
       try {
-        const response = await fetch(userData.earlyAccess ? EXTENSION_CONTAINER_EA : EXTENSION_CONTAINER);
-        const extensions = (await response.json()) as ExtensionsInfo[];
+        const ipc = userData.earlyAccess ? rendererIpc.statics.getExtensionsEA : rendererIpc.statics.getExtensions;
+        const extensions = await ipc();
 
         const data: Extension_ListData[] = extensions.map(ext => {
           const {id, repoUrl, title, description, avatarUrl, updateDate, version, changeLog, tag, platforms} = ext;

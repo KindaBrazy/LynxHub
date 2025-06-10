@@ -29,20 +29,6 @@ export const STATICS_FOLDER_NAME = 'Statics' as const;
 // Static Assets
 export const APP_ICON_TRANSPARENT: string = 'LynxHub.png';
 
-// Raw GitHub Files
-export const MODULE_CONTAINER: string =
-  'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Modules/compiled/container.json';
-export const EXTENSION_CONTAINER: string =
-  'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Extensions/compiled/container.json';
-export const EXTENSION_CONTAINER_EA: string =
-  'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Extensions-EA/compiled/container.json';
-export const WIN_RELEASE_URL_V2: string =
-  'https://raw.githubusercontent.com/KindaBrazy/LynxHub/master/releases_log_v2.json';
-export const PATRONS_DATA =
-  'https://raw.githubusercontent.com/KindaBrazy/LynxHub-Patrons/refs/heads/main/data/patrons.json';
-export const NOTIFICATION_DATA: string =
-  'https://raw.githubusercontent.com/KindaBrazy/LynxHub/master/notifications.json';
-
 export const MAIN_MODULE_URL: string = 'https://github.com/KindaBrazy/LynxHub-Module-Offline-Container';
 export const PATREON_RELEASE_HUB: string = 'https://www.patreon.com/collection/696970';
 export const DISCORD_SERVER: string = 'https://discord.gg/e8rBzhtcnK';

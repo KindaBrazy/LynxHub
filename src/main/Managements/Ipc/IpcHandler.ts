@@ -22,6 +22,7 @@ import {
   ptyChannels,
   PtyProcessOpt,
   RecentlyOperation,
+  staticsChannels,
   storageChannels,
   StorageOperation,
   storageUtilsChannels,
@@ -51,6 +52,7 @@ import {
 import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../AppDataManager';
 import {listenForContextChannels} from '../ContextMenuManager';
 import GitManager from '../GitManager';
+import StaticsManager from '../StaticsManager';
 import {
   changeWindowState,
   checkFilesExist,
@@ -424,6 +426,20 @@ function browserIPC() {
   ipcMain.on(browserChannels.addOffset, (_, id: string, offset: WHType) => browserManager.addOffset(id, offset));
 }
 
+function statics() {
+  const staticManager: StaticsManager = new StaticsManager();
+  staticManager.checkRequirements();
+
+  ipcMain.handle(staticsChannels.pull, () => staticManager.pull());
+  ipcMain.handle(staticsChannels.getReleases, () => staticManager.getReleases());
+  ipcMain.handle(staticsChannels.getInsider, () => staticManager.getInsider());
+  ipcMain.handle(staticsChannels.getNotification, () => staticManager.getNotification());
+  ipcMain.handle(staticsChannels.getModules, () => staticManager.getModules());
+  ipcMain.handle(staticsChannels.getExtensions, () => staticManager.getExtensions());
+  ipcMain.handle(staticsChannels.getExtensionsEA, () => staticManager.getExtensionsEA());
+  ipcMain.handle(staticsChannels.getPatrons, () => staticManager.getPatrons());
+}
+
 export function listenToAllChannels() {
   appData();
   storage();
@@ -446,4 +462,6 @@ export function listenToAllChannels() {
   listenForContextChannels();
 
   browserIPC();
+
+  statics();
 }

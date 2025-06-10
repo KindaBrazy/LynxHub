@@ -1,12 +1,16 @@
 import {ContextMenuParams, FindInPageOptions, IpcRendererEvent, OpenDialogOptions} from 'electron';
 
 import {
+  AppUpdateData,
+  AppUpdateInsiderData,
   ChosenArgumentsData,
   DiscordRPC,
   ExtensionsInfo,
   FolderListData,
   FolderNames,
   ModulesInfo,
+  Notification_Data,
+  PatreonSupporter,
   RepositoryInfo,
 } from '../../../cross/CrossTypes';
 import {
@@ -43,6 +47,7 @@ import {
   PtyProcessOpt,
   RecentlyOperation,
   SkippedPlugins,
+  staticsChannels,
   storageChannels,
   StorageOperation,
   storageUtilsChannels,
@@ -513,6 +518,17 @@ const rendererIpc = {
     updateUserAgent: () => ipc.send(browserChannels.updateUserAgent),
 
     addOffset: (id: string, offset: WHType) => ipc.send(browserChannels.addOffset, id, offset),
+  },
+
+  statics: {
+    pull: (): Promise<void> => ipc.invoke(staticsChannels.pull),
+    getReleases: (): Promise<AppUpdateData> => ipc.invoke(staticsChannels.getReleases),
+    getInsider: (): Promise<AppUpdateInsiderData> => ipc.invoke(staticsChannels.getInsider),
+    getNotification: (): Promise<Notification_Data[]> => ipc.invoke(staticsChannels.getNotification),
+    getModules: (): Promise<ModulesInfo[]> => ipc.invoke(staticsChannels.getModules),
+    getExtensions: (): Promise<ExtensionsInfo[]> => ipc.invoke(staticsChannels.getExtensions),
+    getExtensionsEA: (): Promise<ExtensionsInfo[]> => ipc.invoke(staticsChannels.getExtensionsEA),
+    getPatrons: (): Promise<PatreonSupporter[]> => ipc.invoke(staticsChannels.getPatrons),
   },
 };
 

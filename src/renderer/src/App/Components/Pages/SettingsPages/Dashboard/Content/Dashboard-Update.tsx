@@ -3,13 +3,12 @@ import {Descriptions, Divider, Space} from 'antd';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {WIN_RELEASE_URL_V2} from '../../../../../../../../cross/CrossConstants';
-import {AppUpdateData} from '../../../../../../../../cross/CrossTypes';
 import {Download2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
+import rendererIpc from '../../../../../RendererIpc';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
 export const DashboardUpdateId = 'settings_update_elem';
@@ -28,8 +27,7 @@ export default function DashboardUpdate() {
 
   useEffect(() => {
     async function fetchStatus() {
-      const response = await fetch(WIN_RELEASE_URL_V2);
-      const data = (await response.json()) as AppUpdateData;
+      const data = await rendererIpc.statics.getReleases();
       setStatusPublic({version: data.currentVersion, build: data.currentBuild, date: data.releaseDate});
       if (data.earlyAccess) {
         setStatusEarly({

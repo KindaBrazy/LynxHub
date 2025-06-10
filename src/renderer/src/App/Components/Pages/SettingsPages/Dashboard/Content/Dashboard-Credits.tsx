@@ -2,50 +2,42 @@ import {Button, User} from '@heroui/react';
 import {Card, Empty} from 'antd';
 import {useEffect, useMemo, useState} from 'react';
 
-import {PATREON_URL, PATRONS_DATA} from '../../../../../../../../cross/CrossConstants';
+import {PATREON_URL} from '../../../../../../../../cross/CrossConstants';
+import {PatreonSupporter, PatreonSupporterTier} from '../../../../../../../../cross/CrossTypes';
 import {
   ExternalLink_Icon,
   Heart_Icon,
   Patreon_Icon,
   UserHeart_Icon,
 } from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import rendererIpc from '../../../../../RendererIpc';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
 export const DashboardCreditsId = 'settings_credits_elem';
 
-type SupporterTier = 'Platinum Sponsor' | 'Diamond Sponsor';
-
-interface Supporter {
-  name: string;
-  tier: SupporterTier;
-  imageUrl: string;
-  memberSince: string;
-}
-
-const TIER_EMOJI: Record<SupporterTier, string> = {
+const TIER_EMOJI: Record<PatreonSupporterTier, string> = {
   'Platinum Sponsor': '🏆',
   'Diamond Sponsor': '💎',
 };
 
-const TIER_COLORS: Record<SupporterTier, 'warning' | 'primary'> = {
+const TIER_COLORS: Record<PatreonSupporterTier, 'warning' | 'primary'> = {
   'Platinum Sponsor': 'warning',
   'Diamond Sponsor': 'primary',
 };
 
 const MAX_DISPLAYED_SUPPORTERS = 50;
 
-const tiers: SupporterTier[] = ['Diamond Sponsor', 'Platinum Sponsor'];
+const tiers: PatreonSupporterTier[] = ['Diamond Sponsor', 'Platinum Sponsor'];
 
 /** Reporting app issues on GitHub */
 export default function DashboardCredits() {
-  const [expandedTier, setExpandedTier] = useState<SupporterTier | null>(null);
-  const [supporters, setSupporters] = useState<Supporter[]>([]);
+  const [expandedTier, setExpandedTier] = useState<PatreonSupporterTier | null>(null);
+  const [supporters, setSupporters] = useState<PatreonSupporter[]>([]);
 
   useEffect(() => {
     async function fetchPatrons() {
-      const response = await fetch(PATRONS_DATA);
-      const data = (await response.json()) as {patrons: Supporter[]};
-      setSupporters(data.patrons);
+      const data = await rendererIpc.statics.getPatrons();
+      setSupporters(data);
     }
 
     fetchPatrons();
@@ -60,7 +52,7 @@ export default function DashboardCredits() {
           acc[supporter.tier].push(supporter);
           return acc;
         },
-        {} as Record<SupporterTier, Supporter[]>,
+        {} as Record<PatreonSupporterTier, PatreonSupporter[]>,
       ),
     [supporters],
   );

@@ -4,10 +4,12 @@ import {join} from 'node:path';
 import {
   AppUpdateData,
   AppUpdateInsiderData,
-  Extension_ListData,
+  ExtensionsInfo,
   ModulesInfo,
   Notification_Data,
+  PatreonSupporter,
 } from '../../cross/CrossTypes';
+import {toMs} from '../../cross/CrossUtils';
 import {getAppDirectory} from './AppDataManager';
 import GitManager from './GitManager';
 
@@ -16,10 +18,8 @@ const url: string = 'https://github.com/KindaBrazy/LynxHub-Statics';
 export default class StaticsManager {
   private gitManager: GitManager;
   private readonly dir: string;
-  private readonly updateOnGet: boolean;
 
-  constructor(updateOnGet: boolean = false) {
-    this.updateOnGet = updateOnGet;
+  constructor() {
     this.gitManager = new GitManager();
     this.dir = getAppDirectory('Statics');
   }
@@ -36,7 +36,7 @@ export default class StaticsManager {
     }
   }
 
-  private getDataAsJson(fileName: string) {
+  private async getDataAsJson(fileName: string) {
     const filePath = join(this.dir, fileName);
     const fileContent = readFileSync(filePath, 'utf8');
     return JSON.parse(fileContent);
@@ -45,6 +45,8 @@ export default class StaticsManager {
   public async checkRequirements() {
     await this.clone();
     await this.pull();
+
+    setInterval(() => this.pull(), toMs(10, 'minutes'));
   }
 
   public async pull() {
@@ -52,32 +54,30 @@ export default class StaticsManager {
   }
 
   public async getReleases() {
-    if (this.updateOnGet) await this.pull();
-    return this.getDataAsJson('releases.json') as AppUpdateData;
+    return (await this.getDataAsJson('releases.json')) as AppUpdateData;
   }
 
   public async getInsider() {
-    if (this.updateOnGet) await this.pull();
-    return this.getDataAsJson('insider.json') as AppUpdateInsiderData;
+    return (await this.getDataAsJson('insider.json')) as AppUpdateInsiderData;
   }
 
   public async getNotification() {
-    if (this.updateOnGet) await this.pull();
-    return this.getDataAsJson('notifications.json') as Notification_Data;
+    return (await this.getDataAsJson('notifications.json')) as Notification_Data[];
   }
 
   public async getModules() {
-    if (this.updateOnGet) await this.pull();
-    return this.getDataAsJson('modules.json') as ModulesInfo;
+    return (await this.getDataAsJson('modules.json')) as ModulesInfo[];
   }
 
   public async getExtensions() {
-    if (this.updateOnGet) await this.pull();
-    return this.getDataAsJson('extensions.json') as Extension_ListData;
+    return (await this.getDataAsJson('extensions.json')) as ExtensionsInfo[];
   }
 
   public async getExtensionsEA() {
-    if (this.updateOnGet) await this.pull();
-    return this.getDataAsJson('extensions_ea.json') as Extension_ListData;
+    return (await this.getDataAsJson('extensions_ea.json')) as ExtensionsInfo[];
+  }
+
+  public async getPatrons() {
+    return (await this.getDataAsJson('patrons.json')) as PatreonSupporter[];
   }
 }
