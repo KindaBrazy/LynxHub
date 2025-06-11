@@ -75,7 +75,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
   return (
     <div
       className={
-        'absolute inset-y-2 rounded-lg border border-foreground/5 sm:w-64 lg:w-80 2xl:w-96' +
+        'absolute inset-y-2 rounded-lg border border-foreground/5 sm:w-[17rem] lg:w-[24rem] 2xl:w-[30rem]' +
         ' overflow-hidden shrink-0 transition-[width] duration-500 bg-white dark:bg-LynxRaisinBlack'
       }>
       <Input
@@ -89,7 +89,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
         startContent={<Circle_Icon className="size-5" />}
       />
 
-      <LynxScroll className="inset-0 absolute !top-10">
+      <LynxScroll className="inset-0 absolute !top-10 py-2 px-3">
         {loading ? (
           <div className="flex flex-col">
             {Array(3)

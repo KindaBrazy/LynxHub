@@ -1,5 +1,9 @@
 import {
   Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
   Chip,
   Dropdown,
   DropdownItem,
@@ -10,8 +14,7 @@ import {
   Tooltip,
   User,
 } from '@heroui/react';
-import {List, Typography} from 'antd';
-import {motion} from 'framer-motion';
+import {Typography} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
@@ -174,40 +177,50 @@ export function useRenderList(
       const foundInstalled = installed.find(i => i.id === item.id);
       const foundUnloaded = unloaded.find(u => foundInstalled?.dir === u.folderName);
       return (
-        <List.Item
+        <Card
           className={
-            `hover:bg-foreground-50 ${selectedExt?.id === item.id && 'bg-foreground-50'} ` +
-            ` transition-colors duration-200 relative`
+            `hover:bg-foreground-100 hover:-translate-x-1 hover:shadow-medium relative ` +
+            ` border-2 border-foreground-100 ${selectedExt?.id === item.id && '!border-primary'}` +
+            ` rounded-xl !transition-all !duration-300 mb-2 bg-foreground-50`
           }
-          onClick={() => setSelectedExt(item)}>
-          {selectedExt?.id === item.id && (
-            <motion.div
-              layoutId="sel"
-              transition={{bounce: 0.2, duration: 0.4, type: 'spring'}}
-              className="inset-y-0 left-0 w-[0.15rem] bg-primary absolute"
-            />
-          )}
-          <div className="flex flex-col">
+          as="div"
+          shadow="sm"
+          onPress={() => setSelectedExt(item)}
+          fullWidth
+          isPressable>
+          <CardHeader className="pb-0">
             <User
+              avatarProps={{
+                src: item.avatarUrl,
+                radius: 'none',
+                className: 'shrink-0 !bg-opacity-0',
+              }}
               description={
-                <div className="space-x-2">
-                  <span className={`${updateAvailable.includes(item.id) && 'text-warning'}`}>{item.version}</span>
-                  <span>{item.developer}</span>
-                </div>
+                <span className="text-foreground-500 text-small">
+                  By <span className="font-bold text-foreground-500">{item.developer}</span>
+                </span>
               }
               name={
                 <div className="space-x-2">
                   <Link
+                    size="lg"
                     href={item.url}
-                    className="text-small text-primary-500 transition-colors duration-300"
+                    className="text-primary-500 transition-colors duration-300 font-semibold"
                     isExternal>
                     {item.title}
                   </Link>
-                  {foundInstalled && (
+                  <Chip
+                    size="sm"
+                    radius="sm"
+                    variant="flat"
+                    className={`${updateAvailable.includes(item.id) && 'text-warning'}`}>
+                    v{item.version}
+                  </Chip>
+                  {/*{foundInstalled && (
                     <Chip size="sm" variant="flat" color="default">
                       Installed
                     </Chip>
-                  )}
+                  )}*/}
                   {updateAvailable.includes(item.id) && (
                     <Chip size="sm" variant="faded" color="success">
                       Update
@@ -216,25 +229,30 @@ export function useRenderList(
                 </div>
               }
               className="justify-start mt-2"
-              avatarProps={{src: item.avatarUrl}}
             />
+          </CardHeader>
 
-            <Typography.Paragraph className="mt-2">{item.description}</Typography.Paragraph>
+          <CardBody className="pl-[3.7rem] py-0">
+            <Typography.Paragraph className="mt-2" ellipsis={{rows: 2, tooltip: true}}>
+              {item.description}
+            </Typography.Paragraph>
+          </CardBody>
 
-            <div className="flex flex-row items-center gap-x-2">
-              {item.platforms.includes('linux') && <Linux_Icon className="size-5 text-[#FF9800]" />}
-              {item.platforms.includes('win32') && <Windows_Icon className="size-5 text-[#4285F4]" />}
-              {item.platforms.includes('darwin') && <MacOS_Icon className="size-5" />}
-              {foundUnloaded && (
-                <Tooltip delay={300} content={foundUnloaded.message} showArrow>
-                  <Chip size="sm" variant="faded" color="warning">
-                    Unloaded
-                  </Chip>
-                </Tooltip>
-              )}
+          <CardFooter className="flex flex-row items-center gap-x-2 pl-[3.7rem] pt-0">
+            <div className="flex flex-row px-0 space-x-1">
+              {item.platforms.includes('linux') && <Linux_Icon className="size-4" />}
+              {item.platforms.includes('win32') && <Windows_Icon className="size-4" />}
+              {item.platforms.includes('darwin') && <MacOS_Icon className="size-4" />}
             </div>
-          </div>
-        </List.Item>
+            {foundUnloaded && (
+              <Tooltip delay={300} content={foundUnloaded.message} showArrow>
+                <Chip size="sm" variant="faded" color="warning">
+                  Unloaded
+                </Chip>
+              </Tooltip>
+            )}
+          </CardFooter>
+        </Card>
       );
     },
     [installed, selectedExt, isLoaded, updateAvailable],

@@ -18,7 +18,7 @@ const ExtensionPreview = ({selectedExt, installed, setInstalled}: Props) => {
     <div
       className={
         'absolute right-2 inset-y-2 rounded-lg justify-between overflow-hidden' +
-        ' transition-[left] duration-500 sm:left-[23rem] lg:left-[27rem] 2xl:left-[31rem]'
+        ' transition-[left] duration-500 sm:left-[24rem] lg:left-[31rem] 2xl:left-[37rem]'
       }>
       {isEmpty(selectedExt) ? (
         <div
