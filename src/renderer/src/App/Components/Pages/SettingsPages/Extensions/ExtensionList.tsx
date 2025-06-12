@@ -108,7 +108,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
               onPress={updateAll}
               isLoading={updatingAll}
               startContent={!updatingAll && <Refresh3_Icon />}>
-              {updatingAll ? 'Updating...' : 'Update All'}
+              {updatingAll ? 'Updating...' : `Update All (${updateAvailable.length})`}
             </Button>
           )}
         </div>
