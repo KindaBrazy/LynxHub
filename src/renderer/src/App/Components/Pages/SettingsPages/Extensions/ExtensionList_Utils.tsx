@@ -296,15 +296,17 @@ export function useRenderList(
               {item.platforms.includes('win32') && <Windows_Icon className="size-4" />}
               {item.platforms.includes('darwin') && <MacOS_Icon className="size-4" />}
 
-              <Chip
-                size="sm"
-                radius="sm"
-                variant="flat"
-                color="success"
-                className="ml-2"
-                startContent={<CheckDuo_Icon />}>
-                Installed
-              </Chip>
+              {foundInstalled && (
+                <Chip
+                  size="sm"
+                  radius="sm"
+                  variant="flat"
+                  color="success"
+                  className="ml-2"
+                  startContent={<CheckDuo_Icon />}>
+                  Installed
+                </Chip>
+              )}
             </div>
 
             <div>
