@@ -14,17 +14,27 @@ import {
   Tooltip,
   User,
 } from '@heroui/react';
-import {Typography} from 'antd';
+import {Modal, Typography} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
-import {Linux_Icon, MacOS_Icon, MenuDots_Icon, Windows_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
-import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
+import {
+  CheckDuo_Icon,
+  FilterDuo_Icon,
+  Linux_Icon,
+  MacOS_Icon,
+  Refresh3_Icon,
+  Windows_Icon,
+} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {settingsActions, useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {useUserState} from '../../../../Redux/Reducer/UserReducer';
+import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
+import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
 import {ExtFilter} from './ExtensionList';
 import {InstalledExt} from './ExtensionsPage';
 
@@ -133,8 +143,8 @@ export function useFilterMenu(selectedKeys: ExtFilter, setSelectedKeys: Dispatch
       <>
         <Dropdown size="sm" closeOnSelect={false} className="border !border-foreground/15">
           <DropdownTrigger>
-            <Button radius="none" variant="light" className="cursor-default" isIconOnly>
-              <MenuDots_Icon className="rotate-90 size-4" />
+            <Button variant="flat" isIconOnly>
+              <FilterDuo_Icon className="size-4" />
             </Button>
           </DropdownTrigger>
           <DropdownMenu
@@ -172,16 +182,68 @@ export function useRenderList(
   unloaded: SkippedPlugins[],
 ) {
   const updateAvailable = useSettingsState('extensionsUpdateAvailable');
+  const [updating, setUpdating] = useState<string>('');
+  const dispatch = useDispatch<AppDispatch>();
+
+  const later = useCallback(() => {
+    Modal.destroyAll();
+  }, []);
+
+  const restart = useCallback(() => {
+    Modal.destroyAll();
+    rendererIpc.win.changeWinState('restart');
+  }, []);
+
+  const close = useCallback(() => {
+    Modal.destroyAll();
+    rendererIpc.win.changeWinState('close');
+  }, []);
+
+  const showRestartModal = useCallback((message: string) => {
+    Modal.warning({
+      title: 'Restart Required',
+      content: message,
+      footer: (
+        <div className="mt-6 flex w-full flex-row justify-between">
+          <Button size="sm" variant="flat" color="warning" onPress={later}>
+            Restart Later
+          </Button>
+          <Button size="sm" color="success" onPress={isLinuxPortable ? close : restart}>
+            {isLinuxPortable ? 'Exit Now' : 'Restart Now'}
+          </Button>
+        </div>
+      ),
+      centered: true,
+      maskClosable: false,
+      rootClassName: 'scrollbar-hide',
+      styles: {mask: {top: '2.5rem'}},
+      wrapClassName: 'mt-10',
+    });
+  }, []);
+
+  const update = useCallback((id: string, title: string) => {
+    setUpdating(id);
+    rendererIpc.extension.updateExtension(id).then(updated => {
+      if (updated) {
+        dispatch(settingsActions.removeExtUpdateAvailable(id));
+        lynxTopToast.success(`${title} updated Successfully`);
+        showRestartModal('To apply the updates to the extension, please restart the app.');
+      }
+      setUpdating('');
+    });
+  }, []);
+
   return useCallback(
-    (item: Extension_ListData) => {
+    (item: Extension_ListData, updatingAll: boolean) => {
       const foundInstalled = installed.find(i => i.id === item.id);
       const foundUnloaded = unloaded.find(u => foundInstalled?.dir === u.folderName);
+      const isUpdating = updating === item.id;
       return (
         <Card
           className={
             `hover:bg-foreground-100 hover:-translate-x-1 hover:shadow-medium relative ` +
             ` border-2 border-foreground-100 ${selectedExt?.id === item.id && '!border-primary'}` +
-            ` rounded-xl !transition-all !duration-300 mb-2 bg-foreground-50`
+            ` rounded-xl !transition-all !duration-300 mb-2 bg-foreground-50 cursor-default`
           }
           as="div"
           shadow="sm"
@@ -216,16 +278,6 @@ export function useRenderList(
                     className={`${updateAvailable.includes(item.id) && 'text-warning'}`}>
                     v{item.version}
                   </Chip>
-                  {/*{foundInstalled && (
-                    <Chip size="sm" variant="flat" color="default">
-                      Installed
-                    </Chip>
-                  )}*/}
-                  {updateAvailable.includes(item.id) && (
-                    <Chip size="sm" variant="faded" color="success">
-                      Update
-                    </Chip>
-                  )}
                 </div>
               }
               className="justify-start mt-2"
@@ -238,23 +290,52 @@ export function useRenderList(
             </Typography.Paragraph>
           </CardBody>
 
-          <CardFooter className="flex flex-row items-center gap-x-2 pl-[3.7rem] pt-0">
-            <div className="flex flex-row px-0 space-x-1">
+          <CardFooter className="flex flex-row items-center gap-x-2 pl-[3.7rem] pt-0 justify-between">
+            <div className="flex flex-row items-center px-0 gap-x-1">
               {item.platforms.includes('linux') && <Linux_Icon className="size-4" />}
               {item.platforms.includes('win32') && <Windows_Icon className="size-4" />}
               {item.platforms.includes('darwin') && <MacOS_Icon className="size-4" />}
+
+              <Chip
+                size="sm"
+                radius="sm"
+                variant="flat"
+                color="success"
+                className="ml-2"
+                startContent={<CheckDuo_Icon />}>
+                Installed
+              </Chip>
             </div>
-            {foundUnloaded && (
-              <Tooltip delay={300} content={foundUnloaded.message} showArrow>
-                <Chip size="sm" variant="faded" color="warning">
-                  Unloaded
-                </Chip>
-              </Tooltip>
-            )}
+
+            <div>
+              {foundUnloaded && (
+                <Tooltip delay={300} content={foundUnloaded.message} showArrow>
+                  <Chip size="sm" radius="sm" variant="flat" color="danger">
+                    Unloaded
+                  </Chip>
+                </Tooltip>
+              )}
+            </div>
+
+            <div>
+              {updateAvailable.includes(item.id) && (
+                <Button
+                  size="sm"
+                  variant="flat"
+                  color="warning"
+                  className="mr-4"
+                  isLoading={isUpdating}
+                  isDisabled={updatingAll}
+                  onPress={() => update(item.id, item.title)}
+                  startContent={!isUpdating && <Refresh3_Icon />}>
+                  {isUpdating ? 'Updating...' : 'Update'}
+                </Button>
+              )}
+            </div>
           </CardFooter>
         </Card>
       );
     },
-    [installed, selectedExt, isLoaded, updateAvailable],
+    [installed, selectedExt, isLoaded, updateAvailable, updating],
   );
 }

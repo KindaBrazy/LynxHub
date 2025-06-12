@@ -1,12 +1,17 @@
-import {Input, Skeleton} from '@heroui/react';
+import {Button, Divider, Input, Skeleton} from '@heroui/react';
 import {Empty, List} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
-import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {Circle_Icon, Refresh3_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {settingsActions, useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
+import {AppDispatch} from '../../../../Redux/Store';
+import rendererIpc from '../../../../RendererIpc';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
+import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import LynxScroll from '../../../Reusable/LynxScroll';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useRenderList, useSortedList} from './ExtensionList_Utils';
 import {InstalledExt} from './ExtensionsPage';
@@ -21,9 +26,12 @@ type Props = {
 };
 
 export default function ExtensionList({selectedExt, setSelectedExt, installed, unloaded}: Props) {
+  const updateAvailable = useSettingsState('extensionsUpdateAvailable');
   const [selectedFilters, setSelectedFilters] = useState<ExtFilter>('all');
   const [list, setList] = useState<Extension_ListData[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
+  const [updatingAll, setUpdatingAll] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const installedID = useMemo(() => installed.map(item => item.id), [installed]);
 
@@ -72,24 +80,53 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
     );
   }, [searchValue]);
 
+  const updateAll = () => {
+    setUpdatingAll(true);
+    rendererIpc.extension
+      .updateAllExtensions()
+      .then(() => {
+        lynxTopToast.success('Extensions updated successfully!');
+        dispatch(settingsActions.setSettingsState({key: 'extensionsUpdateAvailable', value: []}));
+      })
+      .catch(() => lynxTopToast.error('Failed to update extensions. Please try again later.'))
+      .finally(() => setUpdatingAll(false));
+  };
+
   return (
     <div
       className={
-        'absolute inset-y-2 rounded-lg border border-foreground/5 sm:w-[17rem] lg:w-[24rem] 2xl:w-[30rem]' +
-        ' overflow-hidden shrink-0 transition-[width] duration-500 bg-white dark:bg-LynxRaisinBlack'
+        'absolute inset-y-2 border border-foreground-100 shadow-small sm:w-[19rem] lg:w-[24rem] 2xl:w-[30rem]' +
+        ' overflow-hidden shrink-0 transition-[width] duration-500 bg-white dark:bg-LynxRaisinBlack rounded-xl'
       }>
-      <Input
-        type="search"
-        variant="flat"
-        value={searchValue}
-        endContent={filterMenu()}
-        onValueChange={setSearchValue}
-        placeholder="Search for extensions..."
-        classNames={{inputWrapper: 'rounded-none pr-0'}}
-        startContent={<Circle_Icon className="size-5" />}
-      />
+      <div className="flex w-full flex-col p-4 gap-y-4 shadow-small">
+        <div className="flex w-full justify-between flex-row items-center">
+          <span className="font-semibold text-xl">Extensions</span>
+          {!isEmpty(updateAvailable) && (
+            <Button
+              size="sm"
+              color="success"
+              onPress={updateAll}
+              isLoading={updatingAll}
+              startContent={!updatingAll && <Refresh3_Icon />}>
+              {updatingAll ? 'Updating...' : 'Update All'}
+            </Button>
+          )}
+        </div>
+        <div className="flex flex-row items-center gap-x-2">
+          <Input
+            type="search"
+            value={searchValue}
+            onValueChange={setSearchValue}
+            placeholder="Search extensions..."
+            startContent={<Circle_Icon className="size-4" />}
+          />
+          {filterMenu()}
+        </div>
+      </div>
 
-      <LynxScroll className="inset-0 absolute !top-10 py-2 px-3">
+      <Divider />
+
+      <LynxScroll className="inset-0 absolute !top-32 py-2 px-3">
         {loading ? (
           <div className="flex flex-col">
             {Array(3)
@@ -108,9 +145,9 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
             size="small"
             locale={{emptyText}}
             className="size-full"
-            renderItem={renderList}
             itemLayout="horizontal"
             dataSource={resultList}
+            renderItem={item => renderList(item, updatingAll)}
           />
         )}
       </LynxScroll>

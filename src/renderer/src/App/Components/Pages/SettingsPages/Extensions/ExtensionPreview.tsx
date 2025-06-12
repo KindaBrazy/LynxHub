@@ -12,13 +12,13 @@ type Props = {
   setInstalled: Dispatch<SetStateAction<InstalledExt[]>>;
 };
 
-const ExtensionPreview = ({selectedExt, installed, setInstalled}: Props) => {
+const ExtensionPreview = memo(({selectedExt, installed, setInstalled}: Props) => {
   const installedExt = useMemo(() => installed.find(item => item.id === selectedExt?.id), [installed, selectedExt]);
   return (
     <div
       className={
-        'absolute right-2 inset-y-2 rounded-lg justify-between overflow-hidden' +
-        ' transition-[left] duration-500 sm:left-[24rem] lg:left-[31rem] 2xl:left-[37rem]'
+        'absolute right-2 inset-y-2 rounded-xl justify-between overflow-hidden' +
+        ' transition-[left] duration-500 sm:left-[26rem] lg:left-[31rem] 2xl:left-[37rem]'
       }>
       {isEmpty(selectedExt) ? (
         <div
@@ -38,5 +38,6 @@ const ExtensionPreview = ({selectedExt, installed, setInstalled}: Props) => {
       )}
     </div>
   );
-};
-export default memo(ExtensionPreview);
+});
+
+export default ExtensionPreview;
