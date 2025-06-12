@@ -1106,3 +1106,57 @@ export function LightBulbMinimalDuo_Icon(props: SvgProps): ReactElement {
     </svg>
   );
 }
+
+export function BoxDuo_Icon(props: SvgProps): ReactElement {
+  return (
+    <svg {...props} height="1rem" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path
+        fill="currentColor"
+        d="M8.422 20.618C10.178 21.54 11.056 22 12 22V12L2.638 7.073l-.04.067C2 8.154 2 9.417 2 11.942v.117c0 2.524 0 3.787.597 4.801c.598 1.015 1.674 1.58 3.825 2.709z"
+      />
+      <path
+        opacity="0.7"
+        fill="currentColor"
+        d="m17.577 4.432l-2-1.05C13.822 2.461 12.944 2 12 2c-.945 0-1.822.46-3.578 1.382l-2 1.05C4.318 5.536 3.242 6.1 2.638 7.072L12 12l9.362-4.927c-.606-.973-1.68-1.537-3.785-2.641"
+      />
+      <path
+        opacity="0.5"
+        fill="currentColor"
+        d="m21.403 7.14l-.041-.067L12 12v10c.944 0 1.822-.46 3.578-1.382l2-1.05c2.151-1.129 3.227-1.693 3.825-2.708c.597-1.014.597-2.277.597-4.8v-.117c0-2.525 0-3.788-.597-4.802"
+      />
+      <path
+        fill="currentColor"
+        d="m6.323 4.484l.1-.052l1.493-.784l9.1 5.005l4.025-2.011q.205.232.362.498c.15.254.262.524.346.825L17.75 9.964V13a.75.75 0 0 1-1.5 0v-2.286l-3.5 1.75v9.44A3 3 0 0 1 12 22c-.248 0-.493-.032-.75-.096v-9.44l-8.998-4.5c.084-.3.196-.57.346-.824q.156-.266.362-.498l9.04 4.52l3.387-1.693z"
+      />
+    </svg>
+  );
+}
+
+export function CalendarDuo_Icon(props: SvgProps): ReactElement {
+  return (
+    <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path
+        fill="currentColor"
+        d="M6.94 2c.416 0 .753.324.753.724v1.46c.668-.012 1.417-.012 2.26-.012h4.015c.842 0 1.591 0 2.259.013v-1.46c0-.4.337-.725.753-.725s.753.324.753.724V4.25c1.445.111 2.394.384 3.09 1.055c.698.67.982 1.582 1.097 2.972L22 9H2v-.724c.116-1.39.4-2.302 1.097-2.972s1.645-.944 3.09-1.055V2.724c0-.4.337-.724.753-.724"></path>
+      <path
+        opacity={0.5}
+        fill="currentColor"
+        d="M22 14v-2c0-.839-.004-2.335-.017-3H2.01c-.013.665-.01 2.161-.01 3v2c0 3.771 0 5.657 1.172 6.828S6.228 22 10 22h4c3.77 0 5.656 0 6.828-1.172S22 17.772 22 14"></path>
+      <path
+        fill="currentColor"
+        d="M18 17a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m-5 4a1 1 0 1 1-2 0a1 1 0 0 1 2 0m0-4a1 1 0 1 1-2 0a1 1 0 0 1 2 0"></path>
+    </svg>
+  );
+}
+
+export function UserDuo_Icon(props: SvgProps): ReactElement {
+  return (
+    <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <circle r={4} cy={6} cx={12} fill="currentColor"></circle>
+      <path
+        opacity={0.5}
+        fill="currentColor"
+        d="M20 17.5c0 2.485 0 4.5-8 4.5s-8-2.015-8-4.5S7.582 13 12 13s8 2.015 8 4.5"></path>
+    </svg>
+  );
+}
