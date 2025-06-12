@@ -1,7 +1,7 @@
 {
-  "currentVersion": "2.4.0",
-  "currentBuild": 19,
-  "releaseDate": "2025-03-10",
+  "currentVersion": "3.0.1",
+  "currentBuild": 21,
+  "releaseDate": "2025-06-12",
   "earlyAccess": {
     "version": "3.0.1",
     "build": 21,
