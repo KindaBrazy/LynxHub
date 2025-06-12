@@ -3,7 +3,7 @@ import {Dispatch, memo, SetStateAction, useMemo} from 'react';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {Extensions_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
-import {PreviewBody, PreviewFooter, PreviewHeader} from './ExtensionPreview_Utils';
+import {PreviewBody, PreviewHeader} from './ExtensionPreview_Utils';
 import {InstalledExt} from './ExtensionsPage';
 
 type Props = {
@@ -17,8 +17,9 @@ const ExtensionPreview = memo(({selectedExt, installed, setInstalled}: Props) =>
   return (
     <div
       className={
-        'absolute right-2 inset-y-2 rounded-xl justify-between overflow-hidden' +
-        ' transition-[left] duration-500 sm:left-[26rem] lg:left-[31rem] 2xl:left-[37rem]'
+        'absolute right-2 inset-y-2 rounded-xl border border-foreground-100 overflow-hidden' +
+        ' transition-[left] duration-500 sm:left-[26rem] lg:left-[31rem] 2xl:left-[37rem] shadow-small' +
+        'bg-white dark:bg-LynxRaisinBlack rounded-xl flex flex-col'
       }>
       {isEmpty(selectedExt) ? (
         <div
@@ -31,9 +32,8 @@ const ExtensionPreview = memo(({selectedExt, installed, setInstalled}: Props) =>
         </div>
       ) : (
         <>
-          <PreviewHeader selectedExt={selectedExt} installedExt={installedExt} />
+          <PreviewHeader selectedExt={selectedExt} installedExt={installedExt} setInstalled={setInstalled} />
           <PreviewBody selectedExt={selectedExt} installed={!!installedExt} />
-          <PreviewFooter selectedExt={selectedExt} installed={!!installedExt} setInstalled={setInstalled} />
         </>
       )}
     </div>
