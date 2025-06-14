@@ -12,6 +12,7 @@ import {
   DrawerFooter,
   DrawerHeader,
   Image,
+  Progress,
   useDisclosure,
 } from '@heroui/react';
 import {Empty} from 'antd';
@@ -33,6 +34,7 @@ import LynxScroll from '../../../../Reusable/LynxScroll';
 export default function Home_Notification() {
   const dispatch = useDispatch<AppDispatch>();
   const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure();
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const [notifications, setNotifications] = useState<Notification_Data[]>([]);
 
@@ -42,7 +44,7 @@ export default function Home_Notification() {
     });
   };
 
-  const getData = () => {
+  useEffect(() => {
     if (isDev()) {
       import('../../../../../../../../../notifications.json').then(result => {
         filterData(result.default as Notification_Data[]);
@@ -51,11 +53,11 @@ export default function Home_Notification() {
       rendererIpc.statics.getNotification().then(data => {
         filterData(data);
       });
+      setRefreshing(true);
+      rendererIpc.statics
+        .pull()
+        .finally(() => rendererIpc.statics.getNotification().finally(() => setRefreshing(false)));
     }
-  };
-
-  useEffect(() => {
-    getData();
   }, []);
 
   const handleRead = (id: string) => {
@@ -115,6 +117,7 @@ export default function Home_Notification() {
         classNames={{backdrop: 'mt-10', wrapper: 'mt-12'}}
         hideCloseButton>
         <DrawerContent className="dark:bg-LynxRaisinBlack">
+          {refreshing && <Progress size="sm" color="secondary" isIndeterminate />}
           <DrawerHeader className="flex flex-row items-center gap-x-2">
             <BellDuo_Icon className="size-5" />
             <span>Notifications</span>

@@ -40,6 +40,7 @@ import {InstalledExt} from './ExtensionsPage';
 
 export function useFetchExtensions(setList: Dispatch<SetStateAction<Extension_ListData[]>>) {
   const [loading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
   const userData = useUserState('patreonUserData');
 
   useEffect(() => {
@@ -76,10 +77,13 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<Extension_Li
       }
     }
 
+    setRefreshing(true);
+    rendererIpc.statics.pull().finally(() => fetchExtensionsList().finally(() => setRefreshing(false)));
+
     fetchExtensionsList();
   }, [userData]);
 
-  return {loading};
+  return {loading, refreshing};
 }
 
 export function useFilteredList(
