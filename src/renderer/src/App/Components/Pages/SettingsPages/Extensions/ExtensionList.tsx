@@ -1,4 +1,4 @@
-import {Button, Divider, Input, Skeleton} from '@heroui/react';
+import {Button, Divider, Input, Progress, Skeleton} from '@heroui/react';
 import {Empty, List} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
@@ -35,7 +35,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
 
   const installedID = useMemo(() => installed.map(item => item.id), [installed]);
 
-  const {loading} = useFetchExtensions(setList);
+  const {loading, refreshing} = useFetchExtensions(setList);
 
   const sortedList = useSortedList(list, installedID);
   const filteredList = useFilteredList(sortedList, selectedFilters, setSelectedExt, installedID);
@@ -98,6 +98,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
         'absolute inset-y-2 border border-foreground-100 shadow-small sm:w-[19rem] lg:w-[24rem] 2xl:w-[30rem]' +
         ' overflow-hidden shrink-0 transition-[width] duration-500 bg-white dark:bg-LynxRaisinBlack rounded-xl'
       }>
+      {refreshing && <Progress size="sm" color="secondary" isIndeterminate />}
       <div className="flex w-full flex-col p-4 gap-y-4 shadow-small">
         <div className="flex w-full justify-between flex-row items-center">
           <span className="font-semibold text-xl">Extensions</span>
