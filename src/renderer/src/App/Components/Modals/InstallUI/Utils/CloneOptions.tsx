@@ -1,9 +1,10 @@
 import {Checkbox, CircularProgress, Select, SelectItem} from '@heroui/react';
 import {Card, InputNumber} from 'antd';
+import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
-import {SettingsMinimal_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {SettingsMinimal_Icon, ShieldWarning_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import {CloneOptionsResult} from './CloneRepo';
 
@@ -21,8 +22,8 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
 
   const [enabledSingleBranch, setEnabledSingleBranch] = useState<boolean>(true);
 
-  const [selectedBranch, setSelectedBranch] = useState(['master']);
-  const [branches, setBranches] = useState<{key: string; value: string}[]>([{key: 'master', value: 'master'}]);
+  const [selectedBranch, setSelectedBranch] = useState<string[]>([]);
+  const [branches, setBranches] = useState<{key: string; value: string}[]>([]);
 
   useEffect(() => {
     setCloneOptionsResult({
@@ -83,6 +84,12 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
         <div className="w-full flex justify-center mb-2">
           <CircularProgress size="lg" label="Fetching repository info..." />
         </div>
+      ) : !isEmpty(branches) ? (
+        <div className="flex flex-col items-center justify-center p-2 gap-y-1">
+          <ShieldWarning_Icon className="size-14 text-warning" />
+          <span className="text-lg font-medium">Unable to retrieve repository branches</span>
+          <p className="text-sm text-foreground-500">The default repository branch will be used for cloning.</p>
+        </div>
       ) : (
         <div className="flex flex-col gap-y-4">
           <div className="space-x-2 flex flex-row items-center">
@@ -112,10 +119,10 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
             <span className="text-medium">
               <InputNumber
                 min={1}
-                size="small"
+                variant="filled"
                 value={depthValue}
                 disabled={!enabledDepth}
-                addonAfter="commits deep."
+                addonAfter="Commits deep"
                 className="mx-1 z-20 max-w-60"
                 onChange={value => setDepthValue(value!)}
                 changeOnWheel
