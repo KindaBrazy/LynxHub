@@ -135,6 +135,20 @@ export async function trashDir(dir: string): Promise<void> {
 }
 
 /**
+ * Checks if the specified directory is empty.
+ * @param dir - The directory path to check.
+ * @returns A promise that resolves to true if the directory is empty, false otherwise.
+ */
+export async function isEmptyDir(dir: string): Promise<boolean> {
+  try {
+    const files = await promises.readdir(dir);
+    return files.length === 0;
+  } catch (e) {
+    return true;
+  }
+}
+
+/**
  * Sets the Discord Rich Presence status.
  * @param discordRP - The Discord Rich Presence configuration.
  */

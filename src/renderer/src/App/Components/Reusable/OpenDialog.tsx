@@ -1,6 +1,6 @@
 import {Button, ButtonGroup, Input} from '@heroui/react';
 import {OpenDialogOptions} from 'electron';
-import {useCallback, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 
 import {Folder_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../RendererIpc';
@@ -16,6 +16,21 @@ type Props = {
 export default function OpenDialog({dialogType, directory, extraFolder = '', setDirectory}: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
+  useEffect(() => {
+    rendererIpc.file.isEmptyDir(directory).then(isEmpty => {
+      if (!isEmpty) {
+        setIsInvalid(true);
+        setErrorMessage('Selected directory is not empty. Please choose an empty directory.');
+      } else {
+        rendererIpc.appData.isAppDir(directory).then(isAppDir => {
+          setIsInvalid(isAppDir);
+          setErrorMessage('Selecting the app folder can be dangerous and may lead to data loss.');
+        });
+      }
+    });
+  }, [directory]);
 
   const changeDirectory = useCallback(
     (value: string) => {
@@ -34,9 +49,6 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
         const resultDir = extraFolder ? `${result}${isWin ? '\\' : '/'}${extraFolder}` : result;
         setDirectory(resultDir);
         inputRef.current.value = resultDir;
-        rendererIpc.appData.isAppDir(resultDir).then(isAppDir => {
-          setIsInvalid(isAppDir);
-        });
       }
     });
   }, [dialogType, extraFolder, setDirectory]);
@@ -54,8 +66,8 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
         isInvalid={isInvalid}
         defaultValue={directory}
         aria-label="Directory path"
+        errorMessage={errorMessage}
         onValueChange={changeDirectory}
-        errorMessage="Selecting the app folder can be dangerous and may lead to data loss."
         multiple
       />
 

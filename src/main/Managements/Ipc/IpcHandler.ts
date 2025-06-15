@@ -58,6 +58,7 @@ import {
   checkFilesExist,
   decompressFile,
   getRelativeList,
+  isEmptyDir,
   isResponseValid,
   removeDir,
   setDarkMode,
@@ -126,6 +127,7 @@ function file() {
 
   ipcMain.handle(fileChannels.removeDir, (_, dir: string) => removeDir(dir));
   ipcMain.handle(fileChannels.trashDir, (_, dir: string) => trashDir(dir));
+  ipcMain.handle(fileChannels.isEmptyDir, (_, dir: string) => isEmptyDir(dir));
 
   ipcMain.handle(fileChannels.listDir, async (_e, dirPath: string, relatives: string[]) =>
     getRelativeList(dirPath, relatives),

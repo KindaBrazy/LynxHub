@@ -108,6 +108,8 @@ const rendererIpc = {
       ipc.invoke(fileChannels.getRelativePath, basePath, targetPath),
     getAbsolutePath: (basePath: string, targetPath: string): Promise<string> =>
       ipc.invoke(fileChannels.getAbsolutePath, basePath, targetPath),
+
+    isEmptyDir: (dir: string): Promise<boolean> => ipc.invoke(fileChannels.isEmptyDir, dir),
   },
 
   /** Git operations */

@@ -114,6 +114,8 @@ export const fileChannels = {
   calcFolderSize: 'app:calcFolderSize',
   getRelativePath: 'app:getRelativePath',
   getAbsolutePath: 'app:getAbsolutePath',
+
+  isEmptyDir: 'app:isEmptyDir',
 };
 
 export const gitChannels = {
