@@ -35,7 +35,7 @@ export default function CloneRepo({url, start, done, isOpen, cardId}: Props) {
 
   const [cloneOptionsResult, setCloneOptionsResult] = useState<CloneOptionsResult>({
     depth: 1,
-    branch: 'master',
+    branch: '',
     singleBranch: true,
   });
 
