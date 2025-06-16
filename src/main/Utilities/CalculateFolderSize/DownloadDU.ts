@@ -7,6 +7,7 @@ import {createWriteStream} from 'fs';
 import fs from 'graceful-fs';
 import {pipeline} from 'stream/promises';
 
+import {storageManager} from '../../index';
 import {getAppDirectory} from '../../Managements/AppDataManager';
 
 const DU_ZIP_URL = 'https://download.sysinternals.com/files/DU.zip';
@@ -50,13 +51,16 @@ export default async function downloadDU(): Promise<void> {
   try {
     await fs.promises.access(duBinPath);
     console.log(`${DU_BINARY_NAME} found at ${duBinPath}`);
+    storageManager.updateData('app', {isDu64Ready: true});
   } catch (error) {
     try {
       console.log(`${DU_BINARY_NAME} not found at ${duBinPath}. Downloading...`);
       const savePath = path.join(getAppDirectory('Binaries'), 'DiskUsage');
       await downloadAndExtractDuZip(savePath);
       console.log(`${DU_BINARY_NAME} has been downloaded and extracted to ${savePath}`);
+      storageManager.updateData('app', {isDu64Ready: true});
     } catch (e) {
+      storageManager.updateData('app', {isDu64Ready: false});
       console.error('Failed to download DU64: ', e);
     }
   }

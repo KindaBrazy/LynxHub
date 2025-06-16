@@ -18,7 +18,7 @@ import {
 import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
-import {useEffect, useState} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Notification_Data} from '../../../../../../../../cross/CrossTypes';
@@ -30,6 +30,7 @@ import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {PageID, PageTitles} from '../../../../../Utils/Constants';
 import LynxScroll from '../../../../Reusable/LynxScroll';
+import useStaticNotifications from './StaticNotifications';
 
 export default function Home_Notification() {
   const dispatch = useDispatch<AppDispatch>();
@@ -37,6 +38,7 @@ export default function Home_Notification() {
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const [notifications, setNotifications] = useState<Notification_Data[]>([]);
+  const {staticNotifs, staticNotifCount, haveWarn} = useStaticNotifications();
 
   const filterData = (data: Notification_Data[]) => {
     rendererIpc.storage.get('notification').then(({readNotifs}) => {
@@ -54,9 +56,12 @@ export default function Home_Notification() {
         filterData(data);
       });
       setRefreshing(true);
-      rendererIpc.statics
-        .pull()
-        .finally(() => rendererIpc.statics.getNotification().finally(() => setRefreshing(false)));
+      rendererIpc.statics.pull().finally(() =>
+        rendererIpc.statics
+          .getNotification()
+          .then(data => filterData(data))
+          .finally(() => setRefreshing(false)),
+      );
     }
   }, []);
 
@@ -74,17 +79,21 @@ export default function Home_Notification() {
     );
   };
 
+  const notifCount = useMemo(() => {
+    return notifications.length + staticNotifCount;
+  }, [notifications, staticNotifCount]);
+
   return (
     <>
       <Badge
         size="sm"
         shape="circle"
         variant="solid"
-        color="success"
         showOutline={false}
         placement="top-left"
-        content={notifications.length}
-        isInvisible={notifications.length === 0}>
+        content={notifCount}
+        isInvisible={notifCount === 0}
+        color={haveWarn ? 'warning' : 'success'}>
         <Button
           className={
             `cursor-default border border-foreground/10 bg-stone-50 shadow-md ` +
@@ -125,7 +134,7 @@ export default function Home_Notification() {
 
           <DrawerBody as={LynxScroll}>
             <AnimatePresence>
-              {isEmpty(notifications) ? (
+              {notifCount <= 0 ? (
                 <Empty className="mt-24" description="No notifications yet" image={Empty.PRESENTED_IMAGE_SIMPLE} />
               ) : (
                 <div className="flex flex-col gap-y-2">
@@ -190,6 +199,8 @@ export default function Home_Notification() {
                       </motion.div>
                     );
                   })}
+
+                  {...staticNotifs}
                 </div>
               )}
             </AnimatePresence>
