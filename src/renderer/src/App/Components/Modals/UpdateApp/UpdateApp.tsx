@@ -163,7 +163,10 @@ const UpdateApp = () => {
     }
   };
 
-  const openDownloadPage = () => window.open(updateChannel === 'ea' ? PATREON_RELEASE_HUB : RELEASES_PAGE);
+  const openDownloadPage = () => {
+    window.open(updateChannel === 'ea' ? PATREON_RELEASE_HUB : RELEASES_PAGE);
+    dispatch(modalActions.closeUpdateApp());
+  };
 
   return (
     <Modal
