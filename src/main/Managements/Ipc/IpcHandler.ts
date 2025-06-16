@@ -368,7 +368,7 @@ function modulesApi() {
   ipcMain.handle(moduleApiChannels.getCurrentReleaseTag, (_, dir: string) => GitManager.getCurrentReleaseTag(dir));
 }
 
-function browserIPC() {
+export function browserIPC() {
   ipcMain.on(browserChannels.createBrowser, (_, id: string) => browserManager.createBrowser(id));
   ipcMain.on(browserChannels.removeBrowser, (_, id: string) => browserManager.removeBrowser(id));
   ipcMain.on(browserChannels.loadURL, (_, id: string, url: string) => browserManager.loadURL(id, url));
@@ -462,8 +462,6 @@ export function listenToAllChannels() {
   extensionsIpc();
 
   listenForContextChannels();
-
-  browserIPC();
 
   statics();
 }

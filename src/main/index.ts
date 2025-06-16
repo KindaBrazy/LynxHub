@@ -17,7 +17,7 @@ import {ValidateCards} from './Managements/DataValidator';
 import DialogManager from './Managements/DialogManager';
 import DiscordRpcManager from './Managements/DiscordRpcManager';
 import ElectronAppManager from './Managements/ElectronAppManager';
-import {listenToAllChannels} from './Managements/Ipc/IpcHandler';
+import {browserIPC, listenToAllChannels} from './Managements/Ipc/IpcHandler';
 import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
 import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
 import ModuleManager from './Managements/Plugin/ModuleManager';
@@ -117,7 +117,10 @@ async function onAppReady() {
   appManager.onReadyToShow = handleAppReadyToShow;
   appManager.onCreateWindow = () => {
     const mainWindow = appManager.getMainWindow();
-    if (mainWindow) browserManager = new BrowserManager(mainWindow);
+    if (mainWindow) {
+      browserManager = new BrowserManager(mainWindow);
+      browserIPC();
+    }
   };
 }
 
