@@ -252,7 +252,7 @@ export type AppUpdateInfo = {
 export type AppUpdateData = AppUpdateInfo & {
   changeLog: {build: number; version: string; changes: Changelogs[]}[];
 };
-export type AppUpdateInsiderData = Omit<AppUpdateInfo, 'earlyAccess'>;
+export type AppUpdateInsiderData = Omit<AppUpdateData, 'earlyAccess'>;
 
 export type FolderNames =
   | typeof MODULES_FOLDER_NAME

@@ -4,7 +4,12 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {APP_BUILD_NUMBER, PATREON_RELEASE_HUB, RELEASES_PAGE} from '../../../../../../cross/CrossConstants';
+import {
+  APP_BUILD_NUMBER,
+  EARLY_RELEASES_PAGE,
+  INSIDER_RELEASES_PAGE,
+  RELEASES_PAGE,
+} from '../../../../../../cross/CrossConstants';
 import {AppUpdateInfo, UpdateDownloadProgress} from '../../../../../../cross/CrossTypes';
 import {useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
@@ -88,21 +93,28 @@ const UpdateApp = () => {
 
     async function fetchData() {
       const result: CollapseProps['items'] = [];
+
       const data = await rendererIpc.statics.getReleases();
+      const insiderData = await rendererIpc.statics.getInsider();
 
       const isEA = updateChannel === 'ea';
-      const latestBuild = (isEA ? data.earlyAccess?.build : data.currentBuild) || 0;
+      const isInsider = updateChannel === 'insider';
+
+      const latestBuild =
+        (isInsider ? insiderData.currentBuild : isEA ? data.earlyAccess?.build : data.currentBuild) || 0;
 
       if (latestBuild > APP_BUILD_NUMBER) {
-        const version = (isEA ? data.earlyAccess?.version : data.currentVersion) || '';
-        const build = (isEA ? data.earlyAccess?.build : data.currentBuild) || 0;
-        const date = (isEA ? data.earlyAccess?.releaseDate : data.releaseDate) || '';
+        const version =
+          (isInsider ? insiderData.currentVersion : isEA ? data.earlyAccess?.version : data.currentVersion) || '';
+        const build = (isInsider ? insiderData.currentBuild : isEA ? data.earlyAccess?.build : data.currentBuild) || 0;
+        const date =
+          (isInsider ? insiderData.releaseDate : isEA ? data.earlyAccess?.releaseDate : data.releaseDate) || '';
 
         setUpdateInfo({currentBuild: build, currentVersion: version, releaseDate: date});
 
         if (isEmpty(data.changeLog)) return;
 
-        data.changeLog.map((change, index) => {
+        (isInsider ? insiderData : data).changeLog.forEach((change, index) => {
           if (change.build <= APP_BUILD_NUMBER || change.build > latestBuild) return;
           const children = change.changes.map((item, index) => {
             return (
@@ -164,7 +176,9 @@ const UpdateApp = () => {
   };
 
   const openDownloadPage = () => {
-    window.open(updateChannel === 'ea' ? PATREON_RELEASE_HUB : RELEASES_PAGE);
+    const isEA = updateChannel === 'ea';
+    const isInsider = updateChannel === 'insider';
+    window.open(isInsider ? INSIDER_RELEASES_PAGE : isEA ? EARLY_RELEASES_PAGE : RELEASES_PAGE);
     dispatch(modalActions.closeUpdateApp());
   };
 

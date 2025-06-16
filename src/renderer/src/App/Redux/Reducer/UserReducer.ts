@@ -7,7 +7,7 @@ import {RootState} from '../Store';
 type UserState = {
   patreonUserData: PatreonUserData;
   patreonLoggedIn: boolean;
-  updateChannel: 'ea' | 'public';
+  updateChannel: 'ea' | 'insider' | 'public';
 };
 
 type UserStateTypes = {
@@ -20,6 +20,7 @@ const initialState: UserState = {
     name: 'Guest',
     imageUrl: '',
     earlyAccess: false,
+    insider: false,
   },
   patreonLoggedIn: false,
   updateChannel: 'public',
