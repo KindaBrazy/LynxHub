@@ -51,9 +51,13 @@ export default async function downloadDU(): Promise<void> {
     await fs.promises.access(duBinPath);
     console.log(`${DU_BINARY_NAME} found at ${duBinPath}`);
   } catch (error) {
-    console.log(`${DU_BINARY_NAME} not found at ${duBinPath}. Downloading...`);
-    const savePath = path.join(getAppDirectory('Binaries'), 'DiskUsage');
-    await downloadAndExtractDuZip(savePath);
-    console.log(`${DU_BINARY_NAME} has been downloaded and extracted to ${savePath}`);
+    try {
+      console.log(`${DU_BINARY_NAME} not found at ${duBinPath}. Downloading...`);
+      const savePath = path.join(getAppDirectory('Binaries'), 'DiskUsage');
+      await downloadAndExtractDuZip(savePath);
+      console.log(`${DU_BINARY_NAME} has been downloaded and extracted to ${savePath}`);
+    } catch (e) {
+      console.error('Failed to download DU64: ', e);
+    }
   }
 }
