@@ -248,7 +248,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
               }
               className="!items-center"
               description={item.description}
-              avatar={item.logoUrl && <Avatar size={65} src={avatarSrc} className="shadow-md" />}
+              avatar={avatarSrc && <Avatar size={65} src={avatarSrc} className="shadow-md" />}
             />
           </List.Item>
         </Badge.Ribbon>
