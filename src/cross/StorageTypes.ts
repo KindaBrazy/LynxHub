@@ -77,6 +77,7 @@ type StorageTypes = {
     appDataDir: string;
     disableLoadingAnimations: boolean;
     collectErrors: boolean;
+    isDu64Ready: boolean;
   };
   terminal: {
     outputColor: boolean;

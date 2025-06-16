@@ -18,10 +18,10 @@ import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
-  private readonly CURRENT_VERSION: number = 0.8;
+  private readonly CURRENT_VERSION: number = 0.81;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.8},
+    storage: {version: 0.81},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -77,6 +77,7 @@ class BaseStorage {
       hardwareAcceleration: true,
       disableLoadingAnimations: false,
       collectErrors: true,
+      isDu64Ready: false,
     },
     terminal: {
       outputColor: true,
@@ -165,6 +166,10 @@ class BaseStorage {
       this.storage.write();
     };
 
+    const v8to81 = () => {
+      this.storage.data.app.isDu64Ready = false;
+    };
+
     const updateVersion = () => {
       this.updateData('storage', {version: this.CURRENT_VERSION});
     };
@@ -179,21 +184,29 @@ class BaseStorage {
           v5to6();
           v6to7();
           v7to8();
+          v8to81();
           break;
         }
         case 0.5: {
           v5to6();
           v6to7();
           v7to8();
+          v8to81();
           break;
         }
         case 0.6: {
           v6to7();
           v7to8();
+          v8to81();
           break;
         }
         case 0.7: {
           v7to8();
+          v8to81();
+          break;
+        }
+        case 0.8: {
+          v8to81();
           break;
         }
         default:
