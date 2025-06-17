@@ -6,7 +6,7 @@ import {
   APP_DETAILED_DESCRIPTION,
   APP_ICON_TRANSPARENT,
   APP_NAME,
-  APP_VERSION_V,
+  APP_VERSION_FORMAT,
   DISCORD_SERVER,
   EMAIL,
   GITHUB_URL,
@@ -49,7 +49,7 @@ export default function DashboardAbout() {
           <Title level={4} className="flex flex-row items-center justify-center space-x-3">
             <img alt="App Icon" className="size-6" src={APP_ICON_TRANSPARENT} />
             <span>{APP_NAME}</span>
-            <Text code>{APP_VERSION_V}</Text>
+            <Text code>{APP_VERSION_FORMAT}</Text>
             <Text className="!mx-0" code>
               Build:{APP_BUILD_NUMBER}
             </Text>

@@ -1,3 +1,5 @@
+import {capitalize} from 'lodash';
+
 import packageJson from '../../package.json';
 
 export const APP_NAME: string = packageJson.appDetails.title;
@@ -21,6 +23,9 @@ export const LICENSE_NAME: string = packageJson.license;
 export const APP_VERSION_V: string = `V${APP_VERSION}`;
 export const APP_NAME_VERSION: string = `${APP_NAME} ${APP_VERSION}`;
 export const APP_NAME_VERSION_V: string = `${APP_NAME} ${APP_VERSION_V}`;
+export const APP_VERSION_FORMAT: string = APP_VERSION_V.split('-')
+  .map(v => capitalize(v))
+  .join(' ');
 
 export const MODULES_FOLDER_NAME = 'Modules' as const;
 export const EXTENSIONS_FOLDER_NAME = 'Extensions' as const;
