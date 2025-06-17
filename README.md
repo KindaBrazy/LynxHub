@@ -22,10 +22,11 @@
 
 Get started with LynxHub by downloading the latest version for your platform.
 
-| Channel      | Version                                                                              | Date       |
-|--------------|--------------------------------------------------------------------------------------|------------|
-| Early Access | [**V3.0.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V3.0.1_Early-Access) | 2025-06-08 |
-| Release      | [**V3.0.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V3.0.1)              | 2025-06-12 |
+| Channel      | Version                                                                 | Date       |
+|--------------|-------------------------------------------------------------------------|------------|
+| Insider      | [**V3.1.0 Insider 1**](https://www.patreon.com/collection/1557749)      | 2025-06-17 |
+| Early Access | [**V3.0.1**](https://www.patreon.com/collection/714004)                 | 2025-05-28 |
+| Release      | [**V3.0.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V3.0.1) | 2025-06-12 |
 
 ### Windows (10, 11)
 
@@ -116,7 +117,7 @@ Discover the core features that make LynxHub a powerful tool for your AI workflo
 
 > [!TIP]
 > 💡 **Get early access to LynxHub** features, extensions, and modules. Support development and unlock exclusive
-> benefits by joining my [Patreon](https://www.patreon.com/LynxHub).
+> benefits by joining **[❤️‍🔥Patreon](#%EF%B8%8F-support)**.
 
 ## 🧩 Extensions
 
@@ -198,18 +199,23 @@ All contributions help sustain this project. Thank you for supporting its growth
 
 Sustainable development relies on community backing. Consider supporting through Patreon to access exclusive benefits:
 
+**[Join LynxHub Patreon for Exclusive Benefits!](https://www.patreon.com/LynxHub)**
+
 [![Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3DLynxHub%26type%3Dpatrons&style=for-the-badge)](https://www.patreon.com/LynxHub)
 
-**Supporter Benefits**
+**What's Included Across Tiers:**
 
-- Early feature access
-    - Early access to Lynxhub, extensions, modules, etc.
-- Exclusive community recognition
-    - Your name in GitHub Readme and Application.
-- Development roadmap insights
-- Priority technical support
+Here's a breakdown of the benefits you can receive as a LynxHub Patreon supporter:
 
-For one-time donations: [Support via Patreon](https://www.Patreon.com/LynxHub/Shop)
+* 🏷️ **Discord Role:** Get an exclusive Discord role.
+* 🚀 **Early Access to Updates:** Be among the first to receive updates for LynxHub Core, extensions, and modules.
+* 🛠️ **Insider Builds:** Immediate access to every new feature and fix for LynxHub Core, extensions, and modules.
+* 🎬 **Behind-the-Scenes Insights:** Get my plans for new LynxHub releases, what's next, and what's implemented.
+* ⭐ **Name in GitHub README:** Your name will be featured in the GitHub README Credit section.
+* 🌟 **Name in LynxHub Application Credits:** See your name in the LynxHub application credits.
+* 🔧 **Priority Support:** Receive faster responses to your questions and issues for a smooth experience.
+
+For one-time donations: [Patreon Shop](https://www.Patreon.com/LynxHub/Shop)
 
 Every contribution directly supports ongoing development and future improvements.
 
