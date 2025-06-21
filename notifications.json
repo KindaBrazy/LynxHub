@@ -1,6 +1,33 @@
 [
   {
     "$schema": "./notifications.schema.json",
+    "id": "new-extension_hw-monitor",
+    "title": "Hardware Monitor",
+    "icon": "https://raw.githubusercontent.com/KindaBrazy/LynxHub-Hardware-Monitor/refs/heads/compiled/resources/icon.png",
+    "description": [
+      {
+        "text": "Just dropped a new extension: Hardware Monitor!",
+        "color": "success"
+      },
+      {
+        "text": "It's super easy to keep tabs on your computer's CPU, GPU, and Memory usage, all from your LynxHub status bar. Plus, you can tweak it however you like."
+      },
+      {
+        "text": "Quick note: This one needs the .NET 8 runtime, and if some numbers aren't popping up, try running LynxHub as an administrator.",
+        "color": "warning"
+      },
+      {
+        "text": "Currently, it's just for Windows, but Linux support is coming soon!"
+      }
+    ],
+    "buttons": [
+      {
+        "title": "🧩 Extensions",
+        "destination": "extensions"
+      }
+    ]
+  },
+  {
     "id": "welcome_lh_v3",
     "title": "Welcome to LynxHub Version 3!",
     "titleColor": "success",
