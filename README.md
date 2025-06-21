@@ -121,7 +121,9 @@ Discover the core features that make LynxHub a powerful tool for your AI workflo
 
 ## 🧩 Extensions
 
-### [Python Toolkit](https://github.com/KindaBrazy/LynxHub-Python-Toolkit)
+[<img src="https://raw.githubusercontent.com/KindaBrazy/LynxHub-Python-Toolkit/refs/heads/compiled/icon.png" width='28px' style="vertical-align: middle;"/> Python Toolkit](https://github.com/KindaBrazy/LynxHub-Python-Toolkit)
+
+[<img src="https://raw.githubusercontent.com/KindaBrazy/LynxHub-Hardware-Monitor/refs/heads/compiled/resources/icon.png" width='28px' style="vertical-align: middle;"/> Hardware Monitor](https://github.com/KindaBrazy/LynxHub-Hardware-Monitor)
 
 ## 📃 Modules
 
