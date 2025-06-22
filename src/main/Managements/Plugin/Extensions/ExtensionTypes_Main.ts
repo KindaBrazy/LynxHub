@@ -3,7 +3,7 @@ import {MenuItem, MenuItemConstructorOptions} from 'electron';
 import DiscordRpcManager from '../../DiscordRpcManager';
 import ElectronAppManager from '../../ElectronAppManager';
 import StorageManager from '../../Storage/StorageManager';
-import ModuleManager from '../ModuleManager';
+import ModuleManager from '../Modules/ModuleManager';
 
 export type EMenuItem = MenuItemConstructorOptions | MenuItem;
 

@@ -1,0 +1,18 @@
+{
+  "name": "lynxhub-module",
+  "mainEntryFile": "./src/main.ts",
+  "rendererEntryFile": "./src/renderer.ts",
+  "type": "module",
+  "scripts": {
+    "build": "rimraf scripts && rollup --config",
+    "build:move": "npm run build && node index.js"
+  },
+  "dependencies": {
+    "semver": "^7.7.2",
+    "which": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/semver": "^7.7.0",
+    "@types/which": "^3.0.4"
+  }
+}

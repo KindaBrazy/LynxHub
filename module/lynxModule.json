@@ -1,0 +1,28 @@
+{
+  "$schema": "./lynxModule.schema.json",
+  "id": "lynxhub_module",
+  "title": "LynxHub Module",
+  "description": "Example module.",
+  "publishDate": "2024-08-21",
+  "requireAppBuild": 16,
+  "repoUrl": "???",
+  "version": "0.0.1",
+  "updateDate": "2025-06-18",
+  "changes": [
+    {
+      "title": "V0.0.1",
+      "items": [
+        {
+          "label": "✨ New",
+          "subitems": [
+            {
+              "label": "Nothing!"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "logoUrl": "https://avatars.githubusercontent.com/u/143181745?v=4",
+  "owner": false
+}

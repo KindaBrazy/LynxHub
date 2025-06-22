@@ -7,7 +7,8 @@
     "src/preload/**/*",
     "src/cross/**/*",
     "extension/src/main/**/*",
-    "extension/src/cross/**/*"
+    "extension/src/cross/**/*",
+    "module/src/**/*"
   ],
   "compilerOptions": {
     "composite": true,

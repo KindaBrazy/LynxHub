@@ -1,6 +1,6 @@
 import {useSyncExternalStore} from 'react';
 
-import {APP_BUILD_NUMBER} from '../../../../cross/CrossConstants';
+import {isDev} from '../../../../cross/CrossUtils';
 import rendererIpc from '../RendererIpc';
 import {
   ArgumentsData,
@@ -174,15 +174,22 @@ async function emitLoaded(newAllModules: CardModules, newAllCards: CardData[]) {
  */
 const loadModules = async () => {
   try {
-    const moduleData = await rendererIpc.module.getModulesData();
+    let importedModules: {path: string; module: RendererModuleImportType}[];
 
-    // Use Promise.all for concurrent module imports
-    const importedModules = await Promise.all(
-      moduleData.map(async path => {
-        const module = await import(/* @vite-ignore */ `${path}/scripts/renderer.mjs?${Date.now()}`);
-        return {path, module};
-      }),
-    );
+    if (isDev()) {
+      const devImport = await import('../../../../../module/src/renderer');
+      importedModules = [{path: 'dev', module: devImport}];
+    } else {
+      const moduleData = await rendererIpc.module.getModulesData();
+
+      // Use Promise.all for concurrent module imports
+      importedModules = await Promise.all(
+        moduleData.map(async path => {
+          const module = await import(/* @vite-ignore */ `${path}/scripts/renderer.mjs?${Date.now()}`);
+          return {path, module};
+        }),
+      );
+    }
 
     const newAllModules: CardModules = [];
     const newAllCards: CardData[] = [];
@@ -190,8 +197,6 @@ const loadModules = async () => {
     // Optimize module and card aggregation using reduce for better performance
     importedModules.reduce((acc, {module}) => {
       const importedModule = module as RendererModuleImportType;
-
-      importedModule.setCurrentBuild?.(APP_BUILD_NUMBER);
 
       importedModule.default.forEach(mod => {
         const existingModuleIndex = newAllModules.findIndex(m => m.routePath === mod.routePath);
@@ -217,7 +222,7 @@ const loadModules = async () => {
     await emitLoaded(newAllModules, newAllCards);
   } catch (error) {
     console.error('Error importing modules:', error);
-    throw error; // Re-throw to allow for handling at a higher level if needed
+    throw error;
   }
 };
 

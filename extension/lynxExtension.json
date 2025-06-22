@@ -8,6 +8,7 @@
   "version": "1.2.0",
   "updateDate": "2024-11-27 14:05",
   "requireAppBuild": 15,
+  "tag": "feature",
   "platforms": [
     "linux",
     "win32",

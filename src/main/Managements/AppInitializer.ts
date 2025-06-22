@@ -12,7 +12,7 @@ import {initializerChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager} from '../index';
 import {RelaunchApp} from '../Utilities/Utils';
 import GitManager from './GitManager';
-import ModuleManager from './Plugin/ModuleManager';
+import ModuleManager from './Plugin/Modules/ModuleManager';
 
 /**
  * Handle the initialization process of the application.

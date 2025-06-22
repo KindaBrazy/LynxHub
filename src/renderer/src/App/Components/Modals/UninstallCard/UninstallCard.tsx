@@ -68,26 +68,25 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
   const trash = useCallback(() => uninstallHandle('trashDir'), [uninstallHandle]);
 
   const uninstall = useCallback(() => {
-    if (card) {
-      closeHandle();
+    closeHandle();
 
-      const promise = new Promise<void>(resolve => {
-        rendererIpc.module
-          .uninstallCardByID(cardId, card.dir)
-          .then(() => {
-            resolve();
-            rendererIpc.storageUtils.removeInstalledCard(cardId);
-            lynxTopToast.success('Uninstalled successfully.');
-          })
-          .catch(() => {
-            resolve();
-            lynxTopToast.error('An error occurred while uninstalling.');
-          });
-      });
+    const promise = new Promise<void>(resolve => {
+      rendererIpc.module
+        .uninstallCardByID(cardId)
+        .then(() => {
+          resolve();
+          rendererIpc.storageUtils.removeInstalledCard(cardId);
+          lynxTopToast.success('Uninstalled successfully.');
+        })
+        .catch(() => {
+          resolve();
+          lynxTopToast.error('An error occurred while uninstalling.');
+        });
+    });
 
-      lynxTopToast.loading('Uninstalling...', promise);
-    }
-  }, [card, cardId, closeHandle]);
+    lynxTopToast.loading('Uninstalling...', promise);
+  }, [cardId, closeHandle]);
+
   const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
 
   return (
