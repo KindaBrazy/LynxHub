@@ -3,7 +3,7 @@ import pty from 'node-pty';
 import DiscordRpcManager from '../../DiscordRpcManager';
 import ElectronAppManager from '../../ElectronAppManager';
 import StorageManager from '../../Storage/StorageManager';
-import ModuleManager from '../ModuleManager';
+import ModuleManager from '../Modules/ModuleManager';
 import {MainExtensionUtils} from './ExtensionTypes_Main';
 
 export default class ExtensionUtils implements MainExtensionUtils {

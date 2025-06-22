@@ -1,5 +1,6 @@
 // Card Repository information type
 
+import {MainModuleUtils} from '../main/Managements/Plugin/Modules/ModuleTypes_Main';
 import {
   BINARIES_FOLDER_NAME,
   EXTENSIONS_FOLDER_NAME,
@@ -99,7 +100,7 @@ export type ModuleMainIpcTypes = {
 };
 
 /** These methods will be called in the main process */
-export type CardMainMethods = {
+export type CardMainMethods = (utils: MainModuleUtils) => {
   /** Return commands based on installed directory to be executed with terminal */
   getRunCommands: (
     dir?: string,
@@ -153,7 +154,6 @@ export type MainModules = {
 
 export type MainModuleImportType = {
   default: MainModules[];
-  setCurrentBuild?: (build: number) => void;
 };
 
 export type ModulesInfo = {

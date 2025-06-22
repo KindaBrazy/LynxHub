@@ -3,9 +3,7 @@ import path from 'node:path';
 import {FSWatcher, watch} from 'chokidar';
 import {promises} from 'graceful-fs';
 import lodash from 'lodash';
-import pty from 'node-pty';
 
-import {LynxApiInstalled} from '../../cross/CrossTypes';
 import {InstalledCard, InstalledCards} from '../../cross/StorageTypes';
 import {moduleManager, storageManager} from '../index';
 import {getAbsolutePath, getExePath, isPortable} from '../Utilities/Utils';
@@ -82,17 +80,9 @@ export class ValidateCards {
     };
 
     for (const card of cards) {
-      const isInstalledMethod = moduleManager.getMethodsById(card.id)?.isInstalled;
+      const isInstalledMethod = moduleManager.getMethodsById(card.id)?.().isInstalled;
       if (isInstalledMethod) {
-        const lynxApi: LynxApiInstalled = {
-          installedDirExistAndWatch: onInstalledDirExist(card),
-          storage: {
-            get: (key: string) => storageManager.getCustomData(key),
-            set: (key: string, data: any) => storageManager.setCustomData(key, data),
-          },
-          pty,
-        };
-        const installed = await isInstalledMethod(lynxApi);
+        const installed = await isInstalledMethod(() => onInstalledDirExist(card));
         if (installed) moduleCards.push(card);
       } else if (card.dir && !path.basename(card.dir).startsWith('.')) {
         const exist = await this.dirExist(card.dir);

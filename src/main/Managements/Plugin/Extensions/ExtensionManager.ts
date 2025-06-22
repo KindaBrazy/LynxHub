@@ -8,7 +8,7 @@ import ElectronAppManager from '../../ElectronAppManager';
 import GitManager from '../../GitManager';
 import StorageManager from '../../Storage/StorageManager';
 import {BasePluginManager} from '../BasePluginManager';
-import ModuleManager from '../ModuleManager';
+import ModuleManager from '../Modules/ModuleManager';
 import ExtensionApi from './ExtensionApi';
 import {EMenuItem, ExtensionImport_Main} from './ExtensionTypes_Main';
 import ExtensionUtils from './ExtensionUtils';
@@ -47,6 +47,7 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
     }
   }
 
+  // TODO: add try catch and show ui error message
   protected async importPlugins(extensionFolders: string[]) {
     if (isDev()) {
       const initial: ExtensionImport_Main = await import('../../../../../extension/src/main/lynxExtension');

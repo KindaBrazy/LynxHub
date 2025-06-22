@@ -15,9 +15,8 @@ import {
   storageUtilsChannels,
 } from '../../../cross/IpcChannelAndTypes';
 import {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
-import {appManager, cardsValidator, moduleManager, storageManager} from '../../index';
+import {appManager, cardsValidator, moduleManager} from '../../index';
 import {getAbsolutePath, getExePath, getRelativePath, isPortable} from '../../Utilities/Utils';
-import {getAppDataPath} from '../AppDataManager';
 import BaseStorage from './BaseStorage';
 
 class StorageManager extends BaseStorage {
@@ -69,17 +68,8 @@ class StorageManager extends BaseStorage {
   public async getCardArgumentsById(cardId: string) {
     const args = this.getArgs(cardId);
     if (args) return args;
-    let dir = this.getData('cards').installedCards.find(card => card.id === cardId)?.dir;
-    if (isPortable()) {
-      dir = getAbsolutePath(getExePath(), dir || '');
-    }
 
-    const configPath = getAppDataPath();
-    const storage = {
-      get: (key: string) => storageManager.getCustomData(key),
-      set: (key: string, data: any) => storageManager.setCustomData(key, data),
-    };
-    const returnArgs = await moduleManager.getMethodsById(cardId)?.readArgs?.(dir, configPath, storage);
+    const returnArgs = await moduleManager.getMethodsById(cardId)?.().readArgs?.();
     const result: ChosenArgumentsData = {
       activePreset: 'Default',
       data: [{preset: 'Default', arguments: returnArgs || []}],
@@ -90,19 +80,10 @@ class StorageManager extends BaseStorage {
 
   public async setCardArguments(cardId: string, args: ChosenArgumentsData) {
     this.setArgs(cardId, args);
-    let dir = this.getData('cards').installedCards.find(card => card.id === cardId)?.dir;
-    if (isPortable()) {
-      dir = getAbsolutePath(getExePath(), dir || '');
-    }
 
     const result = args.data.find(arg => arg.preset === args.activePreset)?.arguments || [];
 
-    const configPath = getAppDataPath();
-    const storage = {
-      get: (key: string) => storageManager.getCustomData(key),
-      set: (key: string, data: any) => storageManager.setCustomData(key, data),
-    };
-    await moduleManager.getMethodsById(cardId)?.saveArgs?.(result, dir, configPath, storage);
+    await moduleManager.getMethodsById(cardId)?.().saveArgs?.(result);
   }
 
   public addInstalledCard(card: InstalledCard) {

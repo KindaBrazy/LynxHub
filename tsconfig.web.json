@@ -4,7 +4,8 @@
     "src/renderer/**/*",
     "src/cross/**/*",
     "extension/src/renderer/**/*",
-    "extension/src/cross/**/*"
+    "extension/src/cross/**/*",
+    "module/src/**/*"
   ],
   "compilerOptions": {
     "composite": true,

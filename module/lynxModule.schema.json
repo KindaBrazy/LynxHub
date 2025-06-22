@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ModulesInfo",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier for the module."
+    },
+    "title": {
+      "type": "string",
+      "description": "The display title of the module."
+    },
+    "publishDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date when the module was first published."
+    },
+    "version": {
+      "type": "string",
+      "description": "The version of the module."
+    },
+    "updateDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date when the module was last updated."
+    },
+    "changeLog": {
+      "type": "string",
+      "description": "A summary of changes in text format."
+    },
+    "changes": {
+      "type": "array",
+      "description": "Detailed list of changes, categorized by title.",
+      "items": {
+        "$ref": "#/definitions/Changelogs"
+      }
+    },
+    "description": {
+      "type": "string",
+      "description": "A brief description of the module."
+    },
+    "requireAppBuild": {
+      "type": "integer",
+      "description": "The minimum application build number required for this module."
+    },
+    "repoUrl": {
+      "type": "string",
+      "description": "Repository address to be cloned when the user installs the module."
+    },
+    "logoUrl": {
+      "type": "string",
+      "description": "URL address to a logo picture or a relative path to the image file. A relative path will start with './'."
+    },
+    "owner": {
+      "type": "boolean",
+      "description": "Indicates if the WebUI or the repository provided by this module is owned by you."
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "publishDate",
+    "version",
+    "updateDate",
+    "changes",
+    "description",
+    "requireAppBuild",
+    "repoUrl"
+  ],
+  "definitions": {
+    "ChangelogItem": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "The label for the changelog item."
+        },
+        "subitems": {
+          "type": "array",
+          "description": "Nested changelog items.",
+          "items": {
+            "$ref": "#/definitions/ChangelogItem"
+          }
+        }
+      },
+      "required": [
+        "label"
+      ]
+    },
+    "Changelogs": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "The title of the changelog section (e.g., 'New Features', 'Bug Fixes')."
+        },
+        "items": {
+          "type": "array",
+          "description": "A list of individual changelog items for this section.",
+          "items": {
+            "$ref": "#/definitions/ChangelogItem"
+          }
+        }
+      },
+      "required": [
+        "title",
+        "items"
+      ]
+    }
+  }
+}
