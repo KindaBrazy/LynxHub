@@ -1,4 +1,5 @@
 import {Modal, ModalContent} from '@heroui/react';
+import {isEmpty, isNil} from 'lodash';
 import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -63,6 +64,29 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
   const [userElementsReturn, setUserElementsReturn] = useState<UserInputResult[]>([]);
 
   const [extensionsToInstall, setExtensionsToInstall] = useState<{urls: string[]; dir: string} | undefined>(undefined);
+
+  const canContinue = useMemo(() => {
+    if (state.body === 'user-input') {
+      for (const field of userInputElements) {
+        if (field.isRequired) {
+          const correspondingResult = userElementsReturn.find(result => result.id === field.id);
+
+          if (!correspondingResult) {
+            return false;
+          }
+
+          if (
+            typeof correspondingResult.result === 'string' &&
+            (isEmpty(correspondingResult.result) || isNil(correspondingResult.result))
+          ) {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  }, [state, userInputElements, userElementsReturn]);
 
   useEffect(() => {
     if (state.body === 'done' && state.doneAll.type === 'success' && type === 'update') {
@@ -206,6 +230,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
         <InstallFooter
           state={state}
           cardId={cardId}
+          canContinue={canContinue}
           updateState={updateState}
           handleClose={handleClose}
           progressInfo={progressInfo}

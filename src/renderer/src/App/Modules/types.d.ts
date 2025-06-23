@@ -2,7 +2,14 @@ export type AvailablePages = '/imageGenerationPage' | '/textGenerationPage' | '/
 
 export type InstallationMethod = {chosen: 'install' | 'locate'; targetDirectory?: string};
 export type UserInputFieldType = 'checkbox' | 'text-input' | 'select' | 'directory' | 'file';
-export type UserInputField = {id: string; label: string; type: UserInputFieldType; selectOptions?: string[]};
+export type UserInputField = {
+  id: string;
+  label: string;
+  type: UserInputFieldType;
+  selectOptions?: string[];
+  defaultValue?: string | boolean;
+  isRequired?: boolean;
+};
 export type UserInputResult = {id: string; result: string | boolean};
 export type StarterStepOptions = {disableSelectDir?: boolean};
 export type InstallationStepper = {

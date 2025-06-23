@@ -140,6 +140,8 @@ function startInstall(stepper: InstallationStepper) {
               id: 'gpu_type',
               type: 'select',
               label: 'Please Select PyTorch Version (Gpu)',
+              isRequired: true,
+              defaultValue: 'NVIDIA CU126',
               selectOptions,
             },
           ])
