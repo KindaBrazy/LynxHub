@@ -2,6 +2,7 @@ import {Dispatch, SetStateAction} from 'react';
 
 import {InstallationStepper} from '../../../../Modules/types';
 import rendererIpc from '../../../../RendererIpc';
+import {lynxTopToast} from '../../../../Utils/UtilHooks';
 
 export default class InstallStepper {
   private readonly setSteps: Dispatch<SetStateAction<string[]>>;
@@ -44,6 +45,8 @@ export default class InstallStepper {
       rendererIpc.storageUtils.addInstalledCard({dir, id: data.cardId});
       data.checkForUpdate(dir);
     };
+
+    this.showToast = lynxTopToast;
 
     this.ipc = {
       on(channel: string, listener: any): () => void {
@@ -135,6 +138,8 @@ export default class InstallStepper {
   public runTerminalScript: InstallationStepper['runTerminalScript'];
 
   public setInstalled: InstallationStepper['setInstalled'];
+
+  public showToast: InstallationStepper['showToast'];
 
   public collectUserInput: InstallationStepper['collectUserInput'];
 
