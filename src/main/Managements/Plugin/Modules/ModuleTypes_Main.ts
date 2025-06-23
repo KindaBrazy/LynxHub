@@ -11,4 +11,5 @@ export type MainModuleUtils = {
   removeDir: (dir: string) => Promise<void>;
   getInstallDir: (id: string) => string | undefined;
   getConfigDir: () => string | undefined;
+  pullDir: (dir: string, showTaskbarProgress?: boolean) => Promise<void>;
 };

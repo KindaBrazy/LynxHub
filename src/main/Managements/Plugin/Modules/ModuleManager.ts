@@ -62,6 +62,10 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
       removeDir,
       trashDir,
       isPullAvailable: dir => GitManager.isUpdateAvailable(dir),
+      pullDir: (dir, showTaskbarProgress = false) => {
+        const gitM = new GitManager(showTaskbarProgress);
+        return gitM.pull(dir);
+      },
       getConfigDir: () => getAppDataPath(),
       getInstallDir: id => {
         let dir = storageManager.getData('cards').installedCards.find(card => card.id === id)?.dir;
