@@ -178,6 +178,14 @@ export type InstallationStepper = {
      */
     openFileOrFolder: (itemPath: string) => void;
   };
+
+  showToast: {
+    success: (title: string, timeout?: number) => void;
+    error: (title: string, timeout?: number) => void;
+    warning: (title: string, timeout?: number) => void;
+    info: (title: string, timeout?: number) => void;
+    loading: (title: string, promise: Promise<any>) => void;
+  };
 };
 
 export type CardInfoApi = {
