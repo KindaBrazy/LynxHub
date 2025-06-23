@@ -21,6 +21,7 @@ type Props = {
   urlToDownload: string | undefined;
   progressInfo: DownloadProgress | undefined;
   cardId: string;
+  canContinue: boolean;
 };
 
 const InstallFooter = ({
@@ -36,6 +37,7 @@ const InstallFooter = ({
   urlToDownload,
   progressInfo,
   cardId,
+  canContinue,
 }: Props) => {
   const [locateWarnIsOpen, setLocateWarnIsOpen] = useState<boolean>(false);
   const onDoneTerminal = useCallback(() => {
@@ -106,6 +108,7 @@ const InstallFooter = ({
             }}
             variant="flat"
             color="success"
+            isDisabled={!canContinue}
             className="cursor-default">
             Next
           </Button>

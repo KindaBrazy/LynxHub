@@ -51,7 +51,14 @@ export type CardMainMethods = () => {
 
 export type InstallationMethod = {chosen: 'install' | 'locate'; targetDirectory?: string};
 export type UserInputFieldType = 'checkbox' | 'text-input' | 'select' | 'directory' | 'file';
-export type UserInputField = {id: string; label: string; type: UserInputFieldType; selectOptions?: string[]};
+export type UserInputField = {
+  id: string;
+  label: string;
+  type: UserInputFieldType;
+  selectOptions?: string[];
+  defaultValue?: string | boolean;
+  isRequired?: boolean;
+};
 export type UserInputResult = {id: string; result: string | boolean};
 export type StarterStepOptions = {disableSelectDir?: boolean};
 export type RendererIpcTypes = {
@@ -227,6 +234,14 @@ export type InstallationStepper = {
      * @param path Absolute path to open
      */
     openFileOrFolder: (itemPath: string) => void;
+  };
+
+  showToast: {
+    success: (title: string, timeout?: number) => void;
+    error: (title: string, timeout?: number) => void;
+    warning: (title: string, timeout?: number) => void;
+    info: (title: string, timeout?: number) => void;
+    loading: (title: string, promise: Promise<any>) => void;
   };
 };
 
