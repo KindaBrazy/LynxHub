@@ -32,6 +32,12 @@ export default defineConfig({
         shared: ['antd', 'react', 'lodash', 'react-dom', 'react-redux', 'mobx-react-lite', '@heroui/react'],
       }),
     ],
+    resolve: {
+      alias: {
+        '@lynx_module': resolve(__dirname, 'module/src'),
+        '@lynx_extension': resolve(__dirname, 'extension/src'),
+      },
+    },
     base: '',
     define: {
       'process.env': {},

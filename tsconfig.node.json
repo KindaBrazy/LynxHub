@@ -18,6 +18,14 @@
     "composite": true,
     "types": [
       "electron-vite/node"
-    ]
+    ],
+    "paths": {
+      "@lynx_module/*": [
+        "module/src/*"
+      ],
+      "@lynx_extension/*": [
+        "extension/src/*"
+      ]
+    }
   }
 }
