@@ -6,6 +6,11 @@
     "extension/src/renderer/**/*",
     "extension/src/cross/**/*"
   ],
+  "references": [
+    {
+      "path": "./module/tsconfig.json"
+    }
+  ],
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
