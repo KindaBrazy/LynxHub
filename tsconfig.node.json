@@ -9,6 +9,11 @@
     "extension/src/main/**/*",
     "extension/src/cross/**/*"
   ],
+  "references": [
+    {
+      "path": "./module/tsconfig.json"
+    }
+  ],
   "compilerOptions": {
     "composite": true,
     "types": [
