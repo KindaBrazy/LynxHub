@@ -6,9 +6,12 @@ import {UserInputField, UserInputResult} from '../../../../Modules/types';
 import rendererIpc from '../../../../RendererIpc';
 import LynxSwitch from '../../../Reusable/LynxSwitch';
 
-type Props = {elements: UserInputField[]; setResult: Dispatch<SetStateAction<UserInputResult[]>>};
+type Props = {
+  inputElements: {elements: UserInputField[]; title?: string};
+  setResult: Dispatch<SetStateAction<UserInputResult[]>>;
+};
 
-export default function UserInputs({elements, setResult}: Props) {
+export default function UserInputs({inputElements, setResult}: Props) {
   const [selectedFolder, setSelectedFolder] = useState<string>('Click here to select folder');
   const [selectedFile, setSelectedFile] = useState<string>('Click here to select file');
   const [errors, setErrors] = useState<Record<string, boolean>>({});
@@ -93,8 +96,10 @@ export default function UserInputs({elements, setResult}: Props) {
 
   return (
     <div className="mb-6 mt-4 flex flex-col items-center justify-center gap-y-6">
-      <span className="text-large font-semibold">Please fill in the required information and click Next</span>
-      {elements.map(element => {
+      <span className="text-large font-semibold">
+        {inputElements.title || 'Please fill in the required information and click Next'}
+      </span>
+      {inputElements.elements.map(element => {
         const {id, label, type, selectOptions, isRequired, defaultValue} = element;
         const hasError = errors[id] || false;
 

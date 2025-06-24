@@ -80,7 +80,7 @@ export type InstallationStepper = {
    * @param inputFields An array of input fields to present to the user.
    * @returns A promise resolving to an array of user input results.
    */
-  collectUserInput: (inputFields: UserInputField[]) => Promise<UserInputResult[]>;
+  collectUserInput: (inputFields: UserInputField[], title?: string) => Promise<UserInputResult[]>;
 
   /** Display the final step of the installation process with a result message.
    * @param resultType The type of result: 'success' or 'error'.

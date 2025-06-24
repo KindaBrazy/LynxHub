@@ -17,7 +17,7 @@ type Props = {
   state: InstallState;
   title: string;
   progressInfo?: DownloadProgress;
-  userInputElements: UserInputField[];
+  userInputElements: {elements: UserInputField[]; title?: string};
   setUserElementsReturn: Dispatch<SetStateAction<UserInputResult[]>>;
   cloneResolver: RefObject<((dir: string) => void) | null>;
   extensionsToInstall: {urls: string[]; dir: string} | undefined;
@@ -130,7 +130,7 @@ const InstallBody = memo(
             </div>
           );
         case 'user-input':
-          return <UserInputs elements={userInputElements} setResult={setUserElementsReturn} />;
+          return <UserInputs inputElements={userInputElements} setResult={setUserElementsReturn} />;
         case 'install-extensions':
           return <InstallExtensions extensionsURLs={extensionsToInstall} extensionsResolver={extensionsResolver} />;
       }
