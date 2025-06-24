@@ -4,7 +4,8 @@
     "src/renderer/**/*",
     "src/cross/**/*",
     "extension/src/renderer/**/*",
-    "extension/src/cross/**/*"
+    "extension/src/cross/**/*",
+    "module/src/**/*"
   ],
   "references": [
     {
@@ -14,6 +15,14 @@
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@lynx_module/*": [
+        "module/src/*"
+      ],
+      "@lynx_extension/*": [
+        "extension/src/*"
+      ]
+    }
   }
 }
