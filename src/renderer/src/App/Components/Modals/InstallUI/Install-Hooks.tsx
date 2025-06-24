@@ -19,7 +19,7 @@ import InstallStepper from './Utils/InstallStepper';
 type Props = {
   setSteps: Dispatch<SetStateAction<string[]>>;
   setCurrentStep: Dispatch<SetStateAction<number>>;
-  setUserInputElements: Dispatch<SetStateAction<UserInputField[]>>;
+  setUserInputElements: Dispatch<SetStateAction<{elements: UserInputField[]; title?: string}>>;
   updateState: (newState: Partial<InstallState>) => void;
   cloneResolver: RefObject<((dir: string) => void) | null>;
   terminalResolver: RefObject<(() => void) | null>;
@@ -112,10 +112,10 @@ export function useStepper({
     });
   }, []);
 
-  const collectUserInput = useCallback((elements: UserInputField[]): Promise<UserInputResult[]> => {
+  const collectUserInput = useCallback((elements: UserInputField[], title?: string): Promise<UserInputResult[]> => {
     return new Promise(resolve => {
       userInputResolver.current = resolve;
-      setUserInputElements(elements);
+      setUserInputElements({elements, title});
       updateState({body: 'user-input'});
     });
   }, []);

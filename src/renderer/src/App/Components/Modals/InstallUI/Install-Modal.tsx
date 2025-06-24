@@ -60,14 +60,17 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
   const [progressInfo, setProgressInfo] = useState<DownloadProgress | undefined>(undefined);
   const [urlToDownload, setUrlToDownload] = useState<string | undefined>(undefined);
 
-  const [userInputElements, setUserInputElements] = useState<UserInputField[]>([]);
+  const [userInputElements, setUserInputElements] = useState<{elements: UserInputField[]; title?: string}>({
+    elements: [],
+    title: '',
+  });
   const [userElementsReturn, setUserElementsReturn] = useState<UserInputResult[]>([]);
 
   const [extensionsToInstall, setExtensionsToInstall] = useState<{urls: string[]; dir: string} | undefined>(undefined);
 
   const canContinue = useMemo(() => {
     if (state.body === 'user-input') {
-      for (const field of userInputElements) {
+      for (const field of userInputElements.elements) {
         if (field.isRequired) {
           const correspondingResult = userElementsReturn.find(result => result.id === field.id);
 
