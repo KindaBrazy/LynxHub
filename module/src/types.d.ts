@@ -1,4 +1,15 @@
+import {ElectronAPI} from '@electron-toolkit/preload';
+
+import {InstalledCard} from '../../src/cross/StorageTypes';
 import {MainModuleUtils} from '../../src/main/Managements/Plugin/Modules/ModuleTypes_Main';
+
+declare global {
+  interface Window {
+    electron: ElectronAPI;
+    osPlatform: NodeJS.Platform;
+    isPortable: 'win' | 'linux' | null;
+  }
+}
 
 export type AvailablePages = '/imageGenerationPage' | '/textGenerationPage' | '/audioGenerationPage';
 

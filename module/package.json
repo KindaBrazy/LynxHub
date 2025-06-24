@@ -1,10 +1,9 @@
 {
   "name": "lynxhub-module",
-  "mainEntryFile": "./src/main.ts",
-  "rendererEntryFile": "./src/renderer.ts",
   "type": "module",
+  "typings": "src/global.d.ts",
   "scripts": {
-    "build": "rimraf scripts && rollup --config",
+    "build": "rimraf ../module_out && rollup --config rollup.config.mjs",
     "build:move": "npm run build && node index.js"
   },
   "dependencies": {
@@ -12,6 +11,10 @@
     "which": "^5.0.0"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.3",
     "@types/semver": "^7.7.0",
     "@types/which": "^3.0.4"
   }

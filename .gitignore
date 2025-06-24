@@ -3,6 +3,7 @@ dist
 out
 extOut
 extension_out
+module_out
 
 .DS_Store
 *.log*
