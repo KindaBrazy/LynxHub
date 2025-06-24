@@ -13,7 +13,7 @@ const config = {
     '!readme/*',
     '!electron.vite.config.{js,ts,mjs,cjs}',
     '!electron-builder.config.{js,ts,mjs,cjs}',
-    '!{.eslintignore,.eslintrc.cjs,eslint.config.js,.prettierignore,.prettierrc.yaml}',
+    '!{.eslintcache,eslint.config.js,.prettierignore,.prettierrc.yaml}',
     '!{.env,.env.*,.npmrc,pnpm-lock.yaml,.prettierrc.json,.ncurc.json,postcss.config.cjs,tailwind.config.js}',
     '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json,dev-app-update.yml,CHANGELOG.md,README.md}',
     '!{notifications.json,notifications.schema.json,releases_log.json}',
