@@ -55,9 +55,12 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
     } else {
       await Promise.all(
         extensionFolders.map(async extensionPath => {
-          const initial: ExtensionImport_Main = await import(
-            `file://${path.join(extensionPath, 'scripts', 'main', 'mainEntry.mjs')}`
-          );
+          const fullExtensionPath = path.join(extensionPath, 'scripts', 'main', 'mainEntry.mjs');
+
+          const extensionUrl = `file://${fullExtensionPath}`;
+
+          const initial: ExtensionImport_Main = await import(extensionUrl);
+
           await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
         }),
       );
