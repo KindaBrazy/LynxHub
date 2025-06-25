@@ -100,7 +100,11 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
         this.mainMethods.push(...method);
       } else {
         const importedModules: MainModuleImportType[] = await Promise.all(
-          moduleFolders.map(modulePath => import(`file://${path.join(modulePath, 'scripts', 'main.mjs')}`)),
+          moduleFolders.map(async modulePath => {
+            const fullModulePath = path.join(modulePath, 'scripts', 'main.mjs');
+            const moduleUrl = `file://${fullModulePath}`;
+            return (await import(moduleUrl)) as MainModuleImportType;
+          }),
         );
 
         for (const importedModule of importedModules) {
