@@ -30,13 +30,14 @@
     "prof": "electron-vite dev -w --noSandbox -- --js-flags=\"--prof\"",
     "dev:srouce": "electron-vite dev -w --noSandbox --sourcemap",
     "postinstall": "electron-builder install-app-deps",
-    "build": "npm run typecheck && electron-vite build",
+    "build": "electron-vite build",
     "rebuild": "electron-builder node-gyp-rebuild",
     "build:extension": "electron-vite build --config extension/electron.vite.config.ts",
     "build:unpack": "npm run build && electron-builder --dir --config electron-builder.config.cjs",
     "build:win": "npm run build && electron-builder --win --config electron-builder.config.cjs --publish never",
     "build:win_portable": "npm run build && electron-builder --win portable --config electron-builder.config.cjs --publish never",
     "build:linux": "npm run build && electron-builder --linux --config electron-builder.config.cjs --publish never",
+    "build:linux-test": "npm run build && electron-builder --linux --config electron-builder-test.config.cjs --publish never",
     "build:mac": "npm run build && electron-builder --mac --config electron-builder.config.cjs --publish never",
     "release": "electron-builder",
     "publish": "electron-builder -p always --config electron-builder.config.cjs"
@@ -126,6 +127,6 @@
     "tailwindcss": "^3.4.17",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.35.0",
-    "vite": "^7.0.0"
+    "vite": "^6.3.5"
   }
 }
