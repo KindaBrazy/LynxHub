@@ -336,9 +336,11 @@ const rendererIpc = {
     onData: (result: (event: IpcRendererEvent, id: string, data: string) => void) => ipc.on(ptyChannels.onData, result),
     onTitle: (result: (event: IpcRendererEvent, id: string, title: string) => void) =>
       ipc.on(ptyChannels.onTitle, result),
+    onExit: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(ptyChannels.onExit, result),
 
     offData: (): void => ipc.removeAllListeners(ptyChannels.onData),
     offTitle: (): void => ipc.removeAllListeners(ptyChannels.onTitle),
+    offExit: (): void => ipc.removeAllListeners(ptyChannels.onExit),
   },
 
   /** Managing app automatic updates */

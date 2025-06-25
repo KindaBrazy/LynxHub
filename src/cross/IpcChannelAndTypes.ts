@@ -208,6 +208,8 @@ export const ptyChannels = {
   resize: 'pty-resize',
   onData: 'pty-on-data',
   onTitle: 'pty-on-title',
+
+  onExit: 'pty-on-exit-code',
 };
 
 export const initializerChannels = {

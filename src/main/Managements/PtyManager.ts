@@ -38,6 +38,10 @@ export default class PtyManager {
         appManager.getWebContent()?.send(ptyChannels.onTitle, this.id, this.process?.process);
       }
     });
+
+    this.process.onExit(() => {
+      appManager.getWebContent()?.send(ptyChannels.onExit, this.id);
+    });
   }
 
   public async stopAsync(): Promise<void> {
