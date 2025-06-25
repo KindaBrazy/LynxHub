@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import {MainModuleUtils} from '@lynx_module/types';
 import {ipcMain} from 'electron';
 import {isEmpty} from 'lodash';
 import pty from 'node-pty';
@@ -15,7 +16,6 @@ import {getAppDataPath, getAppDirectory} from '../../AppDataManager';
 import GitManager from '../../GitManager';
 import {removeDir, trashDir} from '../../Ipc/Methods/IpcMethods';
 import {BasePluginManager} from '../BasePluginManager';
-import {MainModuleUtils} from './ModuleTypes_Main';
 
 export default class ModuleManager extends BasePluginManager<ModulesInfo> {
   private checkInterval?: NodeJS.Timeout = undefined;

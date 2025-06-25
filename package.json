@@ -33,6 +33,7 @@
     "build": "electron-vite build",
     "rebuild": "electron-builder node-gyp-rebuild",
     "build:extension": "electron-vite build --config extension/electron.vite.config.ts",
+    "build:module": "rimraf module_out && rollup --config module/rollup.config.mjs",
     "build:unpack": "npm run build && electron-builder --dir --config electron-builder.config.cjs",
     "build:win": "npm run build && electron-builder --win --config electron-builder.config.cjs --publish never",
     "build:win_portable": "npm run build && electron-builder --win portable --config electron-builder.config.cjs --publish never",

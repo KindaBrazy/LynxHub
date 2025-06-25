@@ -1,3 +1,4 @@
+import {AvailablePages} from '@lynx_module/types';
 import {Result} from 'antd';
 import {LayoutGroup} from 'framer-motion';
 import {compact, isEmpty, isNil} from 'lodash';
@@ -5,7 +6,6 @@ import {FC, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useGetCardsByPath} from '../../Modules/ModuleLoader';
-import {AvailablePages} from '../../Modules/types';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {PageID} from '../../Utils/Constants';
 import Page from '../Pages/Page';
@@ -59,7 +59,9 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
               <ReplaceCards cards={sortedCards} />
             )}
           </LayoutGroup>
-          {extensionsElements?.map((Comp, index) => <Comp key={index} />)}
+          {extensionsElements?.map((Comp, index) => (
+            <Comp key={index} />
+          ))}
         </>
       )}
     </div>

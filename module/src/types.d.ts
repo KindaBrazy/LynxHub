@@ -1,7 +1,6 @@
 import {ElectronAPI} from '@electron-toolkit/preload';
 
 import {InstalledCard} from '../../src/cross/StorageTypes';
-import {MainModuleUtils} from '../../src/main/Managements/Plugin/Modules/ModuleTypes_Main';
 
 declare global {
   interface Window {
@@ -418,4 +417,21 @@ export type ReleaseInfo = {
 
 export type MainModuleImportType = {
   default: (utils: MainModuleUtils) => Promise<MainModules[]>;
+};
+
+export type RendererModuleImportType = {
+  default: CardModules;
+  setCurrentBuild?: (build: number) => void;
+};
+
+export type MainModuleUtils = {
+  storage: StorageType;
+  ipc: MainIpcTypes;
+  pty: any;
+  isPullAvailable: (dir: string) => Promise<boolean>;
+  trashDir: (dir: string) => Promise<void>;
+  removeDir: (dir: string) => Promise<void>;
+  getInstallDir: (id: string) => string | undefined;
+  getConfigDir: () => string | undefined;
+  pullDir: (dir: string, showTaskbarProgress?: boolean) => Promise<void>;
 };

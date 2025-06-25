@@ -1,8 +1,8 @@
+import {CardData} from '@lynx_module/types';
 import {useEffect, useState} from 'react';
 
 import {InstalledCard, InstalledCards} from '../../../../../../cross/StorageTypes';
 import {FcPropCardData} from '../../../Extensions/ExtensionTypes_Renderer';
-import {CardData} from '../../../Modules/types';
 import {CardContext, CardsDataManager} from '../CardsDataManager';
 import LynxCard from './LynxCard';
 import LynxCardSkeleton from './LynxCard-Skeleton';

@@ -1,8 +1,8 @@
+import {CardData} from '@lynx_module/types';
 import {Reducer} from '@reduxjs/toolkit';
 import {ComponentProps, FC, RefObject} from 'react';
 
 import {CardsDataManager} from '../Components/Cards/CardsDataManager';
-import {CardData} from '../Modules/types';
 import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 
 // -----------------------------------------------> Elements & Props

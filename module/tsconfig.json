@@ -10,7 +10,15 @@
     "lib": [
       "ESNext",
       "DOM"
-    ]
+    ],
+    "paths": {
+      "@lynx_module/*": [
+        "./src/*"
+      ],
+      "@lynx_extension/*": [
+        "../extension/src"
+      ]
+    }
   },
   "include": [
     "src/**/*"
