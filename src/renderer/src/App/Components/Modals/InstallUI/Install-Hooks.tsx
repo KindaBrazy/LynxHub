@@ -1,15 +1,15 @@
-import {isNil} from 'lodash';
-import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
-import {useDispatch} from 'react-redux';
-
-import {useAllCards} from '../../../Modules/ModuleLoader';
 import {
   InstallationMethod,
   InstallationStepper,
   StarterStepOptions,
   UserInputField,
   UserInputResult,
-} from '../../../Modules/types';
+} from '@lynx_module/types';
+import {isNil} from 'lodash';
+import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
+import {useDispatch} from 'react-redux';
+
+import {useAllCards} from '../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';

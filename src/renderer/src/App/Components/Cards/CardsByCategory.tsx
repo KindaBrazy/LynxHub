@@ -1,3 +1,4 @@
+import {CardData} from '@lynx_module/types';
 import {Empty} from 'antd';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {compact, isEmpty, isNil} from 'lodash';
@@ -7,7 +8,6 @@ import {extractGitUrl} from '../../../../../cross/CrossUtils';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../assets/icons/SvgIcons/SvgIconsColor';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {allCards} from '../../Modules/ModuleLoader';
-import {CardData} from '../../Modules/types';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {searchInStrings} from '../../Utils/UtilFunctions';
 import {CardContainerClasses} from '../Pages/CardContainer';

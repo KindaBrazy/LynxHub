@@ -1,4 +1,5 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
+import {CardInfoDescriptions} from '@lynx_module/types';
 import {Result} from 'antd';
 import {isEmpty, startCase} from 'lodash';
 import {Fragment, useCallback, useMemo, useState} from 'react';
@@ -6,7 +7,6 @@ import {useDispatch} from 'react-redux';
 
 import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
-import {CardInfoDescriptions} from '../../../Modules/types';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';

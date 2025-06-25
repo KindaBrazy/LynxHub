@@ -2,6 +2,8 @@
 
 import {ArgumentsData} from '../../types';
 
+/* eslint max-len: 0 */
+
 const openArguments: ArgumentsData = [
   {
     category: 'App/Backend',

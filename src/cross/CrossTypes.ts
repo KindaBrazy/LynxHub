@@ -1,6 +1,7 @@
 // Card Repository information type
 
-import {MainModuleUtils} from '../main/Managements/Plugin/Modules/ModuleTypes_Main';
+import {MainModuleUtils} from '@lynx_module/types';
+
 import {
   BINARIES_FOLDER_NAME,
   EXTENSIONS_FOLDER_NAME,

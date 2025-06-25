@@ -1,6 +1,6 @@
+import {InstallationStepper} from '@lynx_module/types';
 import {Dispatch, SetStateAction} from 'react';
 
-import {InstallationStepper} from '../../../../Modules/types';
 import rendererIpc from '../../../../RendererIpc';
 import {lynxTopToast} from '../../../../Utils/UtilHooks';
 

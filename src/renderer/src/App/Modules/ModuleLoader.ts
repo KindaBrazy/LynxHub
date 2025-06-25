@@ -1,15 +1,9 @@
+import {ArgumentsData, AvailablePages, CardData, CardModules, CardRendererMethods} from '@lynx_module/types';
+import {RendererModuleImportType} from '@lynx_module/types';
 import {useSyncExternalStore} from 'react';
 
 import {isDev} from '../../../../cross/CrossUtils';
 import rendererIpc from '../RendererIpc';
-import {
-  ArgumentsData,
-  AvailablePages,
-  CardData,
-  CardModules,
-  CardRendererMethods,
-  RendererModuleImportType,
-} from './types';
 
 let allModules: CardModules = [];
 let allCards: CardData[] = [];

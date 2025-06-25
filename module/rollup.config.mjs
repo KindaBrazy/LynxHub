@@ -5,7 +5,7 @@ import typescript from '@rollup/plugin-typescript';
 
 /** @type {import('rollup').RollupOptions} */
 const config = {
-  input: ['src/main.ts', 'src/renderer.ts'],
+  input: ['module/src/main.ts', 'module/src/renderer.ts'],
   output: {
     dir: '../module_out/scripts',
     format: 'es',
@@ -13,7 +13,7 @@ const config = {
     chunkFileNames: '[name]_[hash:6].mjs',
   },
   external: ['electron'],
-  plugins: [json(), typescript(), nodeResolve(), commonjs()],
+  plugins: [json(), typescript({tsconfig: 'module/tsconfig.json'}), nodeResolve(), commonjs()],
 };
 
 export default config;
