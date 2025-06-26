@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
+import {useTerminalState} from '../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {PageComponents} from '../../Utils/Constants';
@@ -13,6 +14,7 @@ import HomePage from '../Pages/ContentPages/Home/HomePage';
 
 export default function AppPages() {
   const runningCards = useCardsState('runningCard');
+  const closeTabOnExit = useTerminalState('closeTabOnExit');
   const tabs = useTabsState('tabs');
   const activePage = useTabsState('activePage');
   const activeTab = useTabsState('activeTab');
@@ -40,12 +42,16 @@ export default function AppPages() {
       dispatch(cardsActions.stopRunningCard({tabId: activeTab}));
       rendererIpc.win.setDiscordRpAiRunning({running: false});
     };
-    rendererIpc.pty.onExit((_, id) => stopAI(id));
+
+    rendererIpc.pty.offExit();
+    rendererIpc.pty.onExit((_, id) => {
+      if (closeTabOnExit) stopAI(id);
+    });
 
     return () => {
       rendererIpc.pty.offExit();
     };
-  }, [dispatch, runningCards]);
+  }, [dispatch, runningCards, closeTabOnExit]);
 
   return (
     <>
