@@ -245,7 +245,7 @@ export function useRenderList(
       return (
         <Card
           className={
-            `hover:bg-foreground-100 hover:-translate-x-1 hover:shadow-medium relative ` +
+            `hover:bg-foreground-100 hover:shadow-medium relative ` +
             ` border-2 border-foreground-100 ${selectedExt?.id === item.id && '!border-primary'}` +
             ` rounded-xl !transition-all !duration-300 mb-2 bg-foreground-50 cursor-default`
           }
