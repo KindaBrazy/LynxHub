@@ -20,6 +20,7 @@ const initialState: TerminalState = {
   cursorInactiveStyle: 'none',
   blinkCursor: true,
   resizeDelay: 77,
+  closeTabOnExit: true,
 };
 
 const terminalSlice = createSlice({

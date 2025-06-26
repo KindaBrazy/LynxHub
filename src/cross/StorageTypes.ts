@@ -88,6 +88,7 @@ type StorageTypes = {
     cursorInactiveStyle: TerminalCursorInactiveStyle;
     blinkCursor: boolean;
     resizeDelay: number;
+    closeTabOnExit: boolean;
   };
   browser: {
     recentAddress: BrowserRecent[];

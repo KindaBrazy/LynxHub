@@ -3,6 +3,7 @@ import {Spacer} from '@heroui/react';
 import {Terminal_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import SettingsSection from '../../SettingsPage-ContentSection';
 import SettingsTerminalBlinkCursor from './SettingsTerminal-BlinkCursor';
+import SettingsTerminalCloseOnExit from './SettingsTerminal-CloseOnExit';
 import SettingsTerminalConpty from './SettingsTerminal-Conpty';
 import SettingsTerminalCursorInactiveStyle from './SettingsTerminal-CursorInactiveStyle';
 import SettingsTerminalCursorStyle from './SettingsTerminal-CursorStyle';
@@ -25,6 +26,7 @@ export default function SettingsTerminal() {
       <SettingsTerminalCursorInactiveStyle />
       <SettingsTerminalBlinkCursor />
       <SettingsTerminalOutputColor />
+      <SettingsTerminalCloseOnExit />
       <Spacer />
       <SettingsTerminalReset />
     </SettingsSection>
