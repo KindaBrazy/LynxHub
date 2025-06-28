@@ -110,9 +110,65 @@ export function secondsElapsed(startDate: Date): number {
   return Math.floor(diffInMilliseconds / 1000);
 }
 
+/**
+ * Determines if the given string is a search query rather than a URL.
+ * @param {string} input - The input string to check
+ * @returns {boolean} True if the input appears to be a search query, false if it's likely a URL
+ */
+export function isSearchQuery(input: string): boolean {
+  if (!input) {
+    return false;
+  }
+
+  const trimmedInput = input.trim();
+
+  // If it contains spaces, it's likely a search query
+  if (trimmedInput.includes(' ')) {
+    return true;
+  }
+
+  // If it starts with a protocol, it's definitely a URL
+  if (/^https?:\/\//i.test(trimmedInput)) {
+    return false;
+  }
+
+  // If it looks like localhost or IP address, it's a URL
+  if (/^(?:localhost|127(?:\.\d{1,3}){3}|\[::1\])(?::\d+)?$/i.test(trimmedInput)) {
+    return false;
+  }
+
+  // If it contains a dot and looks like a domain, it's likely a URL
+  if (/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\/.*)?$/.test(trimmedInput)) {
+    return false;
+  }
+
+  // If it starts with www., it's likely a URL
+  if (/^www\./i.test(trimmedInput)) {
+    return false;
+  }
+
+  // If it contains common search operators or patterns, it's a search query
+  if (/[+\-"'(){}[\]]/.test(trimmedInput) || /\b(and|or|not)\b/i.test(trimmedInput)) {
+    return true;
+  }
+
+  // If it's a single word without dots, it's likely a search query
+  if (!/\./.test(trimmedInput)) {
+    return true;
+  }
+
+  // Default to search query for ambiguous cases
+  return true;
+}
+
 export function formatWebAddress(address: string): string {
   if (!address) {
     return '';
+  }
+
+  // Check if the input is a search query rather than a URL
+  if (isSearchQuery(address)) {
+    return `https://www.google.com/search?q=${encodeURIComponent(address)}`;
   }
 
   const protocolRegex = /^(?:https?:\/\/|ftp:\/\/|www\.)/i;
