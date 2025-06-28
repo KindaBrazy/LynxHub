@@ -168,7 +168,7 @@ export function formatWebAddress(address: string): string {
 
   // Check if the input is a search query rather than a URL
   if (isSearchQuery(address)) {
-    return `https://www.google.com/search?q=${encodeURIComponent(address)}`;
+    return `https://google.com/search?q=${encodeURIComponent(address)}`;
   }
 
   const protocolRegex = /^(?:https?:\/\/|ftp:\/\/|www\.)/i;
