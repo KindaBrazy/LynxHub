@@ -1,12 +1,15 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {formatWebAddress} from '../../../../../../cross/CrossUtils';
+import {BrowserRecent} from '../../../../../../cross/IpcChannelAndTypes';
+import {Star_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
+
 type Props = {runningCard: RunningCard; setCustomAddress?: (address: string) => void};
 
 const parseAddressForDisplay = (address: string) => {
@@ -37,15 +40,28 @@ const parseAddressForDisplay = (address: string) => {
 
 export default function Browser_AddressBar({runningCard, setCustomAddress}: Props) {
   const [inputValue, setInputValue] = useState('');
+  const [isAddress, setIsAddress] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const editableRef = useRef<HTMLDivElement>(null);
   const isProgrammaticSelection = useRef(false);
+  const [favorites, setFavorites] = useState<BrowserRecent[]>([]);
 
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
 
+  const getFavorites = () => {
+    rendererIpc.storage.get('browser').then(result => {
+      setFavorites(result.favoriteAddress);
+    });
+  };
+
+  useEffect(() => {
+    getFavorites();
+  }, []);
+
   useEffect(() => {
     const {webUIAddress, customAddress, currentAddress} = runningCard;
+    setIsAddress(!!webUIAddress || !!customAddress || !!currentAddress);
     const address = currentAddress || customAddress || webUIAddress || '';
     setInputValue(address);
   }, [runningCard]);
@@ -113,11 +129,29 @@ export default function Browser_AddressBar({runningCard, setCustomAddress}: Prop
           dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
         }
         rendererIpc.storageUtils.addBrowserRecent({url, favIcon: ''});
+        rendererIpc.storageUtils.addBrowserHistory(url);
         editableRef.current?.blur();
       } catch (err) {
         console.error(`Invalid URL: ${err}`);
       }
     }
+  };
+
+  const isFavorite = useMemo(() => {
+    const {webUIAddress, customAddress, currentAddress} = runningCard;
+
+    const address = currentAddress || customAddress || webUIAddress || '';
+    return favorites.some(favorite => favorite.url === address);
+  }, [favorites, runningCard]);
+
+  const updateFavorite = () => {
+    const url = formatWebAddress(inputValue || '');
+    if (isFavorite) {
+      rendererIpc.storageUtils.removeBrowserFavorite(url);
+    } else {
+      rendererIpc.storageUtils.addBrowserFavorite({url, favIcon: ''});
+    }
+    getFavorites();
   };
 
   const {prefix, domain, rest} = parseAddressForDisplay(inputValue);
@@ -126,11 +160,18 @@ export default function Browser_AddressBar({runningCard, setCustomAddress}: Prop
     <div
       className="relative flex items-center w-full h-8 mx-2 overflow-hidden rounded-full
     bg-[#f1f3f4] dark:bg-[#181818] hover:dark:bg-[#151515] focus-within:dark:bg-[#121212] transition-colors">
+      {isAddress && (
+        <div onClick={updateFavorite} className="absolute right-3 z-10 cursor-pointer">
+          <Star_Icon
+            className={`${isFavorite ? 'text-yellow-400' : 'text-foreground-200'} transition-colors duration-500`}
+          />
+        </div>
+      )}
       {/* Styled Display View: Fades out when the input is focused */}
       <div
-        className={`absolute inset-0 flex items-center px-4 pointer-events-none transition-opacity duration-200 ${
+        className={`absolute flex items-center px-4 pointer-events-none transition-opacity duration-200 ${
           isFocused ? 'opacity-0' : 'opacity-100'
-        }`}>
+        }  inset-0 !right-4`}>
         {inputValue && (
           <p className="text-sm truncate">
             <span className="text-gray-500 dark:text-gray-400">{prefix}</span>

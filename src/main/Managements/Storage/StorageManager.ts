@@ -504,6 +504,7 @@ class StorageManager extends BaseStorage {
 
   public async addBrowserRecentFavIcon(url: string, favIcon: string) {
     const recentAddress = this.getData('browser').recentAddress;
+    const favoriteAddress = this.getData('browser').favoriteAddress;
 
     for (const recent of recentAddress) {
       const isSame = await compareUrls(recent.url, url);
@@ -512,14 +513,81 @@ class StorageManager extends BaseStorage {
         break;
       }
     }
+    for (const favorite of favoriteAddress) {
+      const isSame = await compareUrls(favorite.url, url);
+      if (isSame) {
+        favorite.favIcon = favIcon;
+        break;
+      }
+    }
 
-    this.updateData('browser', {recentAddress});
+    this.updateData('browser', {recentAddress, favoriteAddress});
+  }
+
+  public async addBrowserFavorite(favoriteEntry: BrowserRecent) {
+    let favoriteAddress = this.getData('browser').favoriteAddress;
+    let existUrlIndex = -1;
+
+    for (let i = 0; i < favoriteAddress.length; i++) {
+      if (await compareUrls(favoriteAddress[i].url, favoriteEntry.url)) {
+        existUrlIndex = i;
+        break;
+      }
+    }
+
+    if (existUrlIndex !== -1) {
+      favoriteAddress = [
+        favoriteEntry,
+        ...favoriteAddress.slice(0, existUrlIndex),
+        ...favoriteAddress.slice(existUrlIndex + 1),
+      ];
+    } else {
+      favoriteAddress = [favoriteEntry, ...favoriteAddress];
+    }
+
+    this.updateData('browser', {favoriteAddress});
+  }
+
+  public async addBrowserHistory(historyEntry: string) {
+    let historyAddress = this.getData('browser').historyAddress;
+    let existUrlIndex = -1;
+
+    for (let i = 0; i < historyAddress.length; i++) {
+      if (await compareUrls(historyAddress[i], historyEntry)) {
+        existUrlIndex = i;
+        break;
+      }
+    }
+
+    if (existUrlIndex !== -1) {
+      historyAddress = [
+        historyEntry,
+        ...historyAddress.slice(0, existUrlIndex),
+        ...historyAddress.slice(existUrlIndex + 1),
+      ];
+    } else {
+      historyAddress = [historyEntry, ...historyAddress];
+    }
+
+    this.updateData('browser', {historyAddress});
   }
 
   public removeBrowserRecent(url: string) {
     const recentAddress = this.getData('browser').recentAddress;
 
     this.updateData('browser', {recentAddress: recentAddress.filter(address => address.url !== url)});
+  }
+
+  public removeBrowserFavorite(url: string) {
+    const favoriteAddress = this.getData('browser').favoriteAddress;
+
+    this.updateData('browser', {favoriteAddress: favoriteAddress.filter(address => address.url !== url)});
+  }
+
+  public removeBrowserHistory(url: string) {
+    const historyAddress = this.getData('browser').historyAddress;
+
+    this.updateData('browser', {historyAddress: historyAddress.filter(address => address !== url)});
   }
 
   public getBrowserRecent(): BrowserRecent[] {

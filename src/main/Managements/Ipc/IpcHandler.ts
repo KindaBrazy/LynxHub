@@ -337,10 +337,19 @@ function storageUtilsIpc() {
   ipcMain.on(storageUtilsChannels.addBrowserRecent, (_, recentEntry: BrowserRecent) =>
     storageManager.addBrowserRecent(recentEntry),
   );
+  ipcMain.on(storageUtilsChannels.addBrowserFavorite, (_, favoriteEntry: BrowserRecent) =>
+    storageManager.addBrowserFavorite(favoriteEntry),
+  );
+  ipcMain.on(storageUtilsChannels.addBrowserHistory, (_, historyEntry: string) =>
+    storageManager.addBrowserHistory(historyEntry),
+  );
+
   ipcMain.on(storageUtilsChannels.addBrowserRecentFavIcon, (_, url: string, favIcon: string) =>
     storageManager.addBrowserRecentFavIcon(url, favIcon),
   );
   ipcMain.on(storageUtilsChannels.removeBrowserRecent, (_, url: string) => storageManager.removeBrowserRecent(url));
+  ipcMain.on(storageUtilsChannels.removeBrowserFavorite, (_, url: string) => storageManager.removeBrowserFavorite(url));
+  ipcMain.on(storageUtilsChannels.removeBrowserHistory, (_, url: string) => storageManager.removeBrowserHistory(url));
   ipcMain.handle(storageUtilsChannels.getBrowserRecent, () => storageManager.getBrowserRecent());
 
   ipcMain.on(

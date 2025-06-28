@@ -297,8 +297,12 @@ export const storageUtilsChannels = {
   updateZoomFactor: 'storageUtils:update-zoom-factor',
 
   addBrowserRecent: 'storageUtils:add-browser-recent',
+  addBrowserFavorite: 'storageUtils:add-browser-favorite',
+  addBrowserHistory: 'storageUtils:add-browser-history',
   addBrowserRecentFavIcon: 'storageUtils:add-browser-recent-favicon',
   removeBrowserRecent: 'storageUtils:remove-browser-recent',
+  removeBrowserFavorite: 'storageUtils:remove-browser-favorite',
+  removeBrowserHistory: 'storageUtils:remove-browser-favorite',
   getBrowserRecent: 'storageUtils:get-browser-recent',
 
   setShowConfirm: 'storage:set-show-confirm',
