@@ -92,6 +92,8 @@ type StorageTypes = {
   };
   browser: {
     recentAddress: BrowserRecent[];
+    favoriteAddress: BrowserRecent[];
+    historyAddress: string[];
     userAgent: AgentTypes;
     customUserAgent: string;
   };

@@ -11,9 +11,13 @@ import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 
-type Props = {recent: BrowserRecent; setRecentAddress: Dispatch<SetStateAction<BrowserRecent[]>>};
+type Props = {
+  recent: BrowserRecent;
+  setRecentAddress: Dispatch<SetStateAction<BrowserRecent[]>>;
+  type: 'recent' | 'favorite';
+};
 
-export default function EmptyPage_Item({recent, setRecentAddress}: Props) {
+export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) {
   const activeTab = useTabsState('activeTab');
   const [favIcon, setFavIcon] = useState<string>('');
 
@@ -24,8 +28,15 @@ export default function EmptyPage_Item({recent, setRecentAddress}: Props) {
   };
 
   const handleRemove = () => {
-    rendererIpc.storageUtils.removeBrowserRecent(recent.url);
-    rendererIpc.storageUtils.getBrowserRecent().then(setRecentAddress);
+    if (type === 'recent') {
+      rendererIpc.storageUtils.removeBrowserRecent(recent.url);
+      rendererIpc.storageUtils.getBrowserRecent().then(setRecentAddress);
+    } else {
+      rendererIpc.storageUtils.removeBrowserFavorite(recent.url);
+      rendererIpc.storage.get('browser').then(result => {
+        setRecentAddress(result.favoriteAddress);
+      });
+    }
   };
 
   useEffect(() => {
