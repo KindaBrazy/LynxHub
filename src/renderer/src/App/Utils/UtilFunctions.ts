@@ -1,5 +1,7 @@
 import {isEmpty} from 'lodash';
 
+import rendererIpc from '../RendererIpc';
+
 /**
  * Formats a number with K, M, B, T suffixes for thousands, millions, billions, and trillions.
  * @param num - The number to format
@@ -76,5 +78,41 @@ export function getUserAgent() {
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36' +
         ' (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36'
       );
+  }
+}
+
+export async function getCachedImage(url: string, id: string) {
+  try {
+    const cachedImage = localStorage.getItem(`${id}_${url}`);
+    if (cachedImage) return cachedImage;
+
+    const isValidUrl = rendererIpc.utils.isResponseValid(url);
+
+    if (isValid) {
+      const imageAsDataURL = await rendererIpc.utils.getImageAsDataURL(url);
+      if (imageAsDataURL) {
+        if (imageAsDataURL !== cachedImage) {
+          localStorage.setItem(`favicon_${favItem.url}`, result);
+          setFavIcon(result);
+          return;
+        }
+      }
+
+      /*.then(result => {
+          if (result) {
+            if (result !== cachedFav) {
+              localStorage.setItem(`favicon_${favItem.url}`, result);
+              setFavIcon(result);
+              return;
+            }
+          }
+
+          setRawUrl();
+        })*/
+      // .catch(setRawUrl);
+    }
+  } catch (e) {
+    console.error(e);
+    return url;
   }
 }

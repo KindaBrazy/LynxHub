@@ -4,11 +4,13 @@ import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {formatWebAddress, getUrlName} from '../../../../../../cross/CrossUtils';
+import {FavIcons} from '../../../../../../cross/IpcChannelAndTypes';
 import {Trash_Icon, Web_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
+import {useCachedImage} from '../../../Utils/UtilHooks';
 
 type Props = {
   recent: string;
@@ -18,7 +20,13 @@ type Props = {
 
 export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) {
   const activeTab = useTabsState('activeTab');
-  const [favIcon, setFavIcon] = useState<string>('');
+  const [favItem, setFavItem] = useState<FavIcons | undefined>(undefined);
+
+  const favIcon = useCachedImage(`${type}_favicon`, favItem?.favIcon || '');
+
+  useEffect(() => {
+    console.log(favIcon);
+  }, [favIcon]);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -42,36 +50,8 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
 
   useEffect(() => {
     rendererIpc.storage.get('browser').then(result => {
-      const favItem = result.favIcons.find(fav => fav.url === formatWebAddress(recent || ''));
-      if (favItem) {
-        const setRawUrl = () => {
-          setFavIcon(favItem.favIcon);
-        };
-
-        const cachedFav = localStorage.getItem(`favicon_${favItem.url}`);
-        if (cachedFav) {
-          setFavIcon(cachedFav);
-        }
-
-        rendererIpc.utils.isResponseValid(favItem.favIcon).then(isValid => {
-          if (isValid) {
-            rendererIpc.utils
-              .getImageAsDataURL(favItem.favIcon)
-              .then(result => {
-                if (result) {
-                  if (result !== cachedFav) {
-                    localStorage.setItem(`favicon_${favItem.url}`, result);
-                    setFavIcon(result);
-                    return;
-                  }
-                }
-
-                setRawUrl();
-              })
-              .catch(setRawUrl);
-          }
-        });
-      }
+      const favItem = result.favIcons.find(fav => fav.url === formatWebAddress(recent));
+      setFavItem(favItem);
     });
   }, [recent]);
 
