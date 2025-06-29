@@ -3,9 +3,9 @@ import {Rectangle} from 'electron';
 import {DiscordRPC, StorageChosenArgumentsData} from './CrossTypes';
 import {
   AgentTypes,
-  BrowserRecent,
   CustomRunBehaviorStore,
   DarkModeTypes,
+  FavIcons,
   HomeCategory,
   LynxHotkey,
   StoragePreOpenData,
@@ -91,9 +91,10 @@ type StorageTypes = {
     closeTabOnExit: boolean;
   };
   browser: {
-    recentAddress: BrowserRecent[];
-    favoriteAddress: BrowserRecent[];
+    recentAddress: string[];
+    favoriteAddress: string[];
     historyAddress: string[];
+    favIcons: FavIcons[];
     userAgent: AgentTypes;
     customUserAgent: string;
   };

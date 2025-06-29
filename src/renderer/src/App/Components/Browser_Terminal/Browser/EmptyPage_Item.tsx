@@ -3,8 +3,7 @@ import {capitalize} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {getUrlName} from '../../../../../../cross/CrossUtils';
-import {BrowserRecent} from '../../../../../../cross/IpcChannelAndTypes';
+import {formatWebAddress, getUrlName} from '../../../../../../cross/CrossUtils';
 import {Trash_Icon, Web_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
@@ -12,8 +11,8 @@ import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 
 type Props = {
-  recent: BrowserRecent;
-  setRecentAddress: Dispatch<SetStateAction<BrowserRecent[]>>;
+  recent: string;
+  setRecentAddress: Dispatch<SetStateAction<string[]>>;
   type: 'recent' | 'favorite';
 };
 
@@ -24,15 +23,17 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
   const dispatch = useDispatch<AppDispatch>();
 
   const openRecent = () => {
-    dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: recent.url}));
+    dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: recent}));
   };
 
   const handleRemove = () => {
     if (type === 'recent') {
-      rendererIpc.storageUtils.removeBrowserRecent(recent.url);
-      rendererIpc.storageUtils.getBrowserRecent().then(setRecentAddress);
+      rendererIpc.storageUtils.removeBrowserRecent(recent);
+      rendererIpc.storage.get('browser').then(result => {
+        setRecentAddress(result.recentAddress);
+      });
     } else {
-      rendererIpc.storageUtils.removeBrowserFavorite(recent.url);
+      rendererIpc.storageUtils.removeBrowserFavorite(recent);
       rendererIpc.storage.get('browser').then(result => {
         setRecentAddress(result.favoriteAddress);
       });
@@ -40,17 +41,22 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
   };
 
   useEffect(() => {
-    rendererIpc.utils.isResponseValid(recent.favIcon).then(isValid => {
-      setFavIcon(isValid ? recent.favIcon : '');
+    rendererIpc.storage.get('browser').then(result => {
+      const favItem = result.favIcons.find(fav => fav.url === formatWebAddress(recent || ''));
+      if (favItem) {
+        rendererIpc.utils.isResponseValid(favItem.favIcon).then(isValid => {
+          setFavIcon(isValid ? favItem.favIcon : '');
+        });
+      }
     });
   }, [recent]);
 
   return (
-    <Tooltip radius="sm" delay={300} content={recent.url} showArrow>
+    <Tooltip radius="sm" delay={300} content={recent} showArrow>
       <Card as="div" shadow="sm" onPress={openRecent} className="w-36 h-32" isPressable>
         <CardBody className={'flex-col gap-2 items-center text-center justify-center group dark:bg-foreground-100'}>
           {favIcon ? <Image radius="full" src={favIcon} className="size-8" /> : <Web_Icon className="size-8" />}
-          <span className="truncate text-wrap w-full line-clamp-2 text-sm">{capitalize(getUrlName(recent.url))}</span>
+          <span className="truncate text-wrap w-full line-clamp-2 text-sm">{capitalize(getUrlName(recent))}</span>
           <Button
             size="sm"
             color="danger"

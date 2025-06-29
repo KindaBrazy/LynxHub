@@ -4,7 +4,6 @@ import _ from 'lodash';
 import {ChosenArgumentsData} from '../../../cross/CrossTypes';
 import {compareUrls} from '../../../cross/CrossUtils';
 import {
-  BrowserRecent,
   CustomRunBehaviorData,
   HomeCategory,
   PreCommands,
@@ -478,12 +477,12 @@ class StorageManager extends BaseStorage {
     });
   }
 
-  public async addBrowserRecent(recentEntry: BrowserRecent) {
+  public async addBrowserRecent(recentEntry: string) {
     let recentAddress = this.getData('browser').recentAddress;
     let existUrlIndex = -1;
 
     for (let i = 0; i < recentAddress.length; i++) {
-      if (await compareUrls(recentAddress[i].url, recentEntry.url)) {
+      if (await compareUrls(recentAddress[i], recentEntry)) {
         existUrlIndex = i;
         break;
       }
@@ -502,34 +501,30 @@ class StorageManager extends BaseStorage {
     this.updateData('browser', {recentAddress});
   }
 
-  public async addBrowserRecentFavIcon(url: string, favIcon: string) {
-    const recentAddress = this.getData('browser').recentAddress;
-    const favoriteAddress = this.getData('browser').favoriteAddress;
+  public async addBrowserFavIcon(url: string, icon: string) {
+    const favIcons = this.getData('browser').favIcons;
+    let updatedExisting: boolean = false;
 
-    for (const recent of recentAddress) {
-      const isSame = await compareUrls(recent.url, url);
+    for (const favIcon of favIcons) {
+      const isSame = await compareUrls(favIcon.url, url);
       if (isSame) {
-        recent.favIcon = favIcon;
-        break;
-      }
-    }
-    for (const favorite of favoriteAddress) {
-      const isSame = await compareUrls(favorite.url, url);
-      if (isSame) {
-        favorite.favIcon = favIcon;
+        favIcon.favIcon = icon;
+        updatedExisting = true;
         break;
       }
     }
 
-    this.updateData('browser', {recentAddress, favoriteAddress});
+    if (!updatedExisting) favIcons.push({url, favIcon: icon});
+
+    this.updateData('browser', {favIcons});
   }
 
-  public async addBrowserFavorite(favoriteEntry: BrowserRecent) {
+  public async addBrowserFavorite(favoriteEntry: string) {
     let favoriteAddress = this.getData('browser').favoriteAddress;
     let existUrlIndex = -1;
 
     for (let i = 0; i < favoriteAddress.length; i++) {
-      if (await compareUrls(favoriteAddress[i].url, favoriteEntry.url)) {
+      if (await compareUrls(favoriteAddress[i], favoriteEntry)) {
         existUrlIndex = i;
         break;
       }
@@ -575,23 +570,19 @@ class StorageManager extends BaseStorage {
   public removeBrowserRecent(url: string) {
     const recentAddress = this.getData('browser').recentAddress;
 
-    this.updateData('browser', {recentAddress: recentAddress.filter(address => address.url !== url)});
+    this.updateData('browser', {recentAddress: recentAddress.filter(address => address !== url)});
   }
 
   public removeBrowserFavorite(url: string) {
     const favoriteAddress = this.getData('browser').favoriteAddress;
 
-    this.updateData('browser', {favoriteAddress: favoriteAddress.filter(address => address.url !== url)});
+    this.updateData('browser', {favoriteAddress: favoriteAddress.filter(address => address !== url)});
   }
 
   public removeBrowserHistory(url: string) {
     const historyAddress = this.getData('browser').historyAddress;
 
     this.updateData('browser', {historyAddress: historyAddress.filter(address => address !== url)});
-  }
-
-  public getBrowserRecent(): BrowserRecent[] {
-    return this.getData('browser').recentAddress;
   }
 
   public setShowConfirm(type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) {

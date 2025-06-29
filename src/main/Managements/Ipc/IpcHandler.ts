@@ -7,7 +7,6 @@ import {
   AgentTypes,
   appDataChannels,
   browserChannels,
-  BrowserRecent,
   ChangeWindowState,
   contextMenuChannels,
   DarkModeTypes,
@@ -334,10 +333,10 @@ function storageUtilsIpc() {
     storageManager.updateData('cards', {zoomFactor}),
   );
 
-  ipcMain.on(storageUtilsChannels.addBrowserRecent, (_, recentEntry: BrowserRecent) =>
+  ipcMain.on(storageUtilsChannels.addBrowserRecent, (_, recentEntry: string) =>
     storageManager.addBrowserRecent(recentEntry),
   );
-  ipcMain.on(storageUtilsChannels.addBrowserFavorite, (_, favoriteEntry: BrowserRecent) =>
+  ipcMain.on(storageUtilsChannels.addBrowserFavorite, (_, favoriteEntry: string) =>
     storageManager.addBrowserFavorite(favoriteEntry),
   );
   ipcMain.on(storageUtilsChannels.addBrowserHistory, (_, historyEntry: string) =>
@@ -345,12 +344,11 @@ function storageUtilsIpc() {
   );
 
   ipcMain.on(storageUtilsChannels.addBrowserRecentFavIcon, (_, url: string, favIcon: string) =>
-    storageManager.addBrowserRecentFavIcon(url, favIcon),
+    storageManager.addBrowserFavIcon(url, favIcon),
   );
   ipcMain.on(storageUtilsChannels.removeBrowserRecent, (_, url: string) => storageManager.removeBrowserRecent(url));
   ipcMain.on(storageUtilsChannels.removeBrowserFavorite, (_, url: string) => storageManager.removeBrowserFavorite(url));
   ipcMain.on(storageUtilsChannels.removeBrowserHistory, (_, url: string) => storageManager.removeBrowserHistory(url));
-  ipcMain.handle(storageUtilsChannels.getBrowserRecent, () => storageManager.getBrowserRecent());
 
   ipcMain.on(
     storageUtilsChannels.setShowConfirm,

@@ -98,7 +98,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
           if (browserBehavior === 'appBrowser') {
             dispatch(cardsActions.setRunningCardAddress({address: url, tabId: activeTab}));
             dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
-            rendererIpc.storageUtils.addBrowserRecent({url, favIcon: ''});
+            rendererIpc.storageUtils.addBrowserRecent(url);
           } else {
             rendererIpc.win.openUrlDefaultBrowser(url);
           }
