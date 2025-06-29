@@ -7,11 +7,6 @@
     "extension/src/cross/**/*",
     "module/src/**/*"
   ],
-  "references": [
-    {
-      "path": "./module/tsconfig.json"
-    }
-  ],
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
