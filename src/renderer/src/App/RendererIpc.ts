@@ -319,6 +319,7 @@ const rendererIpc = {
     decompressFile: (filePath: string): Promise<string> => ipc.invoke(utilsChannels.decompressFile, filePath),
 
     isResponseValid: (url: string): Promise<boolean> => ipc.invoke(utilsChannels.isResponseValid, url),
+    getImageAsDataURL: (url: string): Promise<string | null> => ipc.invoke(utilsChannels.getImageAsDataURL, url),
   },
 
   /** Managing and using node-pty(Pseudo Terminal ) */
