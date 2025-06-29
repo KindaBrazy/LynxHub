@@ -1,11 +1,12 @@
 import {addToast} from '@heroui/react';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, useMemo} from 'react';
+import {Fragment, useEffect, useMemo, useState} from 'react';
 
 import {ChangelogItem} from '../../../../cross/CrossTypes';
 import {InstalledCard} from '../../../../cross/StorageTypes';
 import {useCardsState} from '../Redux/Reducer/CardsReducer';
 import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
+import rendererIpc from '../RendererIpc';
 import {UpdatingCard} from './Types';
 
 /**
@@ -120,3 +121,47 @@ export function RenderSubItems(items?: ChangelogItem[], parentKey: string = '') 
 }
 
 export const isLinuxPortable = window.isPortable === 'linux';
+
+export function useCachedImage(id: string, url: string, refresh: boolean = true) {
+  const [cachedImage, setCachedImage] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (!url) return;
+
+    const setRawUrl = () => {
+      setCachedImage(url);
+    };
+
+    const cachedImg = localStorage.getItem(`${id}_${url}`);
+
+    if (cachedImg) {
+      setCachedImage(cachedImg);
+    }
+
+    if (refresh || !cachedImg) {
+      rendererIpc.utils.isResponseValid(url).then(isValid => {
+        if (isValid) {
+          rendererIpc.utils
+            .getImageAsDataURL(url)
+            .then(result => {
+              if (result) {
+                if (result !== cachedImg) {
+                  localStorage.setItem(`${id}_${url}`, result);
+                  setCachedImage(result);
+                }
+              } else {
+                setRawUrl();
+              }
+            })
+            .catch(() => {
+              setRawUrl();
+            });
+        } else {
+          setCachedImage(undefined);
+        }
+      });
+    }
+  }, [id, url, refresh]);
+
+  return cachedImage;
+}
