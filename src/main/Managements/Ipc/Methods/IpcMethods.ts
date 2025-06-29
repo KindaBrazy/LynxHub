@@ -238,3 +238,29 @@ export async function isResponseValid(url: string): Promise<boolean> {
     return false;
   }
 }
+
+export async function getImageAsDataURL(imageUrl: string) {
+  try {
+    const response = await fetch(imageUrl);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+    }
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.startsWith('image/')) {
+      throw new Error(`The fetched URL does not appear to be an image. Content-Type: ${contentType}`);
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+
+    const buffer = Buffer.from(arrayBuffer);
+
+    const base64String = buffer.toString('base64');
+
+    return `data:${contentType};base64,${base64String}`;
+  } catch (error: any) {
+    console.error(`Error processing image from ${imageUrl}:`, error.message);
+    return null;
+  }
+}

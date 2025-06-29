@@ -56,6 +56,7 @@ import {
   changeWindowState,
   checkFilesExist,
   decompressFile,
+  getImageAsDataURL,
   getRelativeList,
   isEmptyDir,
   isResponseValid,
@@ -183,6 +184,7 @@ function utils() {
   ipcMain.handle(utilsChannels.decompressFile, (_, filePath: string) => decompressFile(filePath));
 
   ipcMain.handle(utilsChannels.isResponseValid, (_, url: string) => isResponseValid(url));
+  ipcMain.handle(utilsChannels.getImageAsDataURL, (_, url: string) => getImageAsDataURL(url));
 }
 
 function modules() {

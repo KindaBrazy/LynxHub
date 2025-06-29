@@ -153,6 +153,7 @@ export const utilsChannels = {
   decompressFile: 'utils:decompress-file',
 
   isResponseValid: 'utils:is-response-valid',
+  getImageAsDataURL: 'utils:get-image-as-data-url',
 };
 
 export const modulesChannels = {

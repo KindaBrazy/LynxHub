@@ -90,7 +90,6 @@ export default class BrowserManager {
     webContents.on('page-favicon-updated', (_, favicons) => {
       const url = favicons.find(icon => icon.includes('.ico')) || favicons[0] || '';
       this.mainWindow.webContents.send(browserChannels.onFavIconChange, id, url);
-      console.log(webContents.getURL(), formatWebAddress(webContents.getURL()));
 
       storageManager.addBrowserFavIcon(formatWebAddress(webContents.getURL()), url);
     });
