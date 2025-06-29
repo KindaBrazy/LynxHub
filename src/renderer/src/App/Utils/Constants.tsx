@@ -1,4 +1,5 @@
 import {TRANSITION_EASINGS} from '@heroui/framer-utils';
+import {HTMLMotionProps} from 'framer-motion';
 import {SimpleGitProgressEvent} from 'simple-git';
 
 import {TabInfo} from '../../../../cross/CrossTypes';
@@ -113,7 +114,7 @@ export const initGitProgress: SimpleGitProgressEvent = {
   total: 0,
 };
 
-export const modalMotionProps = {
+export const modalMotionProps: Omit<HTMLMotionProps<'section'>, 'ref'> = {
   variants: {
     enter: {
       opacity: 1,
