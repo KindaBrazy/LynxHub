@@ -96,6 +96,7 @@ class BaseStorage {
       customUserAgent: getUserAgent('lynxhub'),
       favoriteAddress: [],
       historyAddress: [],
+      favIcons: [],
     },
     notification: {
       readNotifs: [],
@@ -156,6 +157,7 @@ class BaseStorage {
         favoriteAddress: [],
         historyAddress: [],
         recentAddress: [],
+        favIcons: [],
         userAgent: 'lynxhub',
         customUserAgent: getUserAgent('lynxhub'),
       };
@@ -182,6 +184,7 @@ class BaseStorage {
     const v82to83 = () => {
       this.storage.data.browser.favoriteAddress = [];
       this.storage.data.browser.historyAddress = [];
+      this.storage.data.browser.favIcons = [];
     };
 
     const updateVersion = () => {

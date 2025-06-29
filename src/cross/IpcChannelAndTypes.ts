@@ -79,7 +79,7 @@ export type CanGoType = {back: boolean; forward: boolean};
 
 export type SkippedPlugins = {folderName: string; message: string};
 
-export type BrowserRecent = {url: string; favIcon: string};
+export type FavIcons = {url: string; favIcon: string};
 export type AgentTypes = 'lynxhub' | 'electron' | 'chrome' | 'custom';
 export type XYType = {x: number; y: number};
 export type WHType = {width: number; height: number};
@@ -303,7 +303,6 @@ export const storageUtilsChannels = {
   removeBrowserRecent: 'storageUtils:remove-browser-recent',
   removeBrowserFavorite: 'storageUtils:remove-browser-favorite',
   removeBrowserHistory: 'storageUtils:remove-browser-favorite',
-  getBrowserRecent: 'storageUtils:get-browser-recent',
 
   setShowConfirm: 'storage:set-show-confirm',
   onConfirmChange: 'storage:on-confirm-change',

@@ -2,7 +2,6 @@ import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {formatWebAddress} from '../../../../../../cross/CrossUtils';
-import {BrowserRecent} from '../../../../../../cross/IpcChannelAndTypes';
 import {Star_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
@@ -44,7 +43,7 @@ export default function Browser_AddressBar({runningCard, setCustomAddress}: Prop
   const [isFocused, setIsFocused] = useState(false);
   const editableRef = useRef<HTMLDivElement>(null);
   const isProgrammaticSelection = useRef(false);
-  const [favorites, setFavorites] = useState<BrowserRecent[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
 
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
@@ -128,7 +127,7 @@ export default function Browser_AddressBar({runningCard, setCustomAddress}: Prop
         } else {
           dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
         }
-        rendererIpc.storageUtils.addBrowserRecent({url, favIcon: ''});
+        rendererIpc.storageUtils.addBrowserRecent(url);
         rendererIpc.storageUtils.addBrowserHistory(url);
         editableRef.current?.blur();
       } catch (err) {
@@ -141,7 +140,7 @@ export default function Browser_AddressBar({runningCard, setCustomAddress}: Prop
     const {webUIAddress, customAddress, currentAddress} = runningCard;
 
     const address = currentAddress || customAddress || webUIAddress || '';
-    return favorites.some(favorite => favorite.url === address);
+    return favorites.some(favorite => formatWebAddress(favorite) === formatWebAddress(address));
   }, [favorites, runningCard]);
 
   const updateFavorite = () => {
@@ -149,7 +148,7 @@ export default function Browser_AddressBar({runningCard, setCustomAddress}: Prop
     if (isFavorite) {
       rendererIpc.storageUtils.removeBrowserFavorite(url);
     } else {
-      rendererIpc.storageUtils.addBrowserFavorite({url, favIcon: ''});
+      rendererIpc.storageUtils.addBrowserFavorite(formatWebAddress(inputValue || ''));
     }
     getFavorites();
   };

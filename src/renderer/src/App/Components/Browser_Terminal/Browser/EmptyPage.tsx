@@ -3,7 +3,6 @@ import {Empty} from 'antd';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {BrowserRecent} from '../../../../../../cross/IpcChannelAndTypes';
 import {Star_Icon, Terminal_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {History_Color_Icon} from '../../../../assets/icons/SvgIcons/SvgIconsColor';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
@@ -17,17 +16,17 @@ type Props = {type: 'browser' | 'terminal' | 'both'};
 export default function EmptyPage({type}: Props) {
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
-  const [recentAddress, setRecentAddress] = useState<BrowserRecent[]>([]);
-  const [favoriteAddress, setFavoriteAddress] = useState<BrowserRecent[]>([]);
+  const [recentAddress, setRecentAddress] = useState<string[]>([]);
+  const [favoriteAddress, setFavoriteAddress] = useState<string[]>([]);
 
   const switchToTerminal = () => {
     dispatch(cardsActions.setRunningCardView({tabId: activeTab, view: 'terminal'}));
   };
 
   useEffect(() => {
-    rendererIpc.storageUtils.getBrowserRecent().then(setRecentAddress);
     rendererIpc.storage.get('browser').then(result => {
       setFavoriteAddress(result.favoriteAddress);
+      setRecentAddress(result.recentAddress);
     });
   }, []);
 

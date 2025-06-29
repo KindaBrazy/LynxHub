@@ -1,6 +1,7 @@
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
+import {formatWebAddress} from '../../cross/CrossUtils';
 import {browserChannels, CanGoType, tabsChannels, WHType} from '../../cross/IpcChannelAndTypes';
 import {appManager, storageManager} from '../index';
 import {getUserAgent} from '../Utilities/Utils';
@@ -89,8 +90,9 @@ export default class BrowserManager {
     webContents.on('page-favicon-updated', (_, favicons) => {
       const url = favicons.find(icon => icon.includes('.ico')) || favicons[0] || '';
       this.mainWindow.webContents.send(browserChannels.onFavIconChange, id, url);
+      console.log(webContents.getURL(), formatWebAddress(webContents.getURL()));
 
-      storageManager.addBrowserRecentFavIcon(webContents.getURL(), url);
+      storageManager.addBrowserFavIcon(formatWebAddress(webContents.getURL()), url);
     });
   }
 

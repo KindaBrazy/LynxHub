@@ -20,7 +20,6 @@ import {
   AppUpdateStatus,
   appWindowChannels,
   browserChannels,
-  BrowserRecent,
   CanGoType,
   ChangeWindowState,
   contextMenuChannels,
@@ -272,16 +271,14 @@ const rendererIpc = {
 
     updateZoomFactor: (zoomFactor: number) => ipc.send(storageUtilsChannels.updateZoomFactor, zoomFactor),
 
-    addBrowserRecent: (recentEntry: BrowserRecent) => ipc.send(storageUtilsChannels.addBrowserRecent, recentEntry),
-    addBrowserFavorite: (favoriteEntry: BrowserRecent) =>
-      ipc.send(storageUtilsChannels.addBrowserFavorite, favoriteEntry),
+    addBrowserRecent: (recentEntry: string) => ipc.send(storageUtilsChannels.addBrowserRecent, recentEntry),
+    addBrowserFavorite: (favoriteEntry: string) => ipc.send(storageUtilsChannels.addBrowserFavorite, favoriteEntry),
     addBrowserHistory: (historyEntry: string) => ipc.send(storageUtilsChannels.addBrowserHistory, historyEntry),
     addBrowserRecentFavIcon: (url: string, favIcon: string) =>
       ipc.send(storageUtilsChannels.addBrowserRecentFavIcon, url, favIcon),
     removeBrowserRecent: (url: string) => ipc.send(storageUtilsChannels.removeBrowserRecent, url),
     removeBrowserFavorite: (url: string) => ipc.send(storageUtilsChannels.removeBrowserFavorite, url),
     removeBrowserHistory: (url: string) => ipc.send(storageUtilsChannels.removeBrowserHistory, url),
-    getBrowserRecent: (): Promise<BrowserRecent[]> => ipc.invoke(storageUtilsChannels.getBrowserRecent),
 
     setShowConfirm: (type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) =>
       ipc.send(storageUtilsChannels.setShowConfirm, type, enable),
