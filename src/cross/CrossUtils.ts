@@ -181,13 +181,23 @@ export function formatWebAddress(address: string): string {
     return address;
   }
 
+  let formattedAddress = address;
+
+  // Remove www. prefix if present
+  if (formattedAddress.match(/^(?:https?:\/\/)?www\./i)) {
+    formattedAddress = formattedAddress.replace(/^(https?:\/\/)?www\./i, '$1');
+  }
+
+  // Remove trailing slash if present
+  formattedAddress = formattedAddress.replace(/\/$/, '');
+
   if (protocolRegex.test(address)) {
     if (address.startsWith('www.') && !address.match(/^https?:\/\//i)) {
-      return 'https://' + address;
+      return 'https://' + formattedAddress;
     }
-    return address;
+    return formattedAddress;
   } else {
-    return 'https://' + address;
+    return 'https://' + formattedAddress;
   }
 }
 
