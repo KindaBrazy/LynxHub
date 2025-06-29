@@ -44,8 +44,32 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
     rendererIpc.storage.get('browser').then(result => {
       const favItem = result.favIcons.find(fav => fav.url === formatWebAddress(recent || ''));
       if (favItem) {
+        const setRawUrl = () => {
+          setFavIcon(favItem.favIcon);
+        };
+
+        const cachedFav = localStorage.getItem(`favicon_${favItem.url}`);
+        if (cachedFav) {
+          setFavIcon(cachedFav);
+        }
+
         rendererIpc.utils.isResponseValid(favItem.favIcon).then(isValid => {
-          setFavIcon(isValid ? favItem.favIcon : '');
+          if (isValid) {
+            rendererIpc.utils
+              .getImageAsDataURL(favItem.favIcon)
+              .then(result => {
+                if (result) {
+                  if (result !== cachedFav) {
+                    localStorage.setItem(`favicon_${favItem.url}`, result);
+                    setFavIcon(result);
+                    return;
+                  }
+                }
+
+                setRawUrl();
+              })
+              .catch(setRawUrl);
+          }
         });
       }
     });
