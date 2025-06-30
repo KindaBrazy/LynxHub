@@ -23,10 +23,12 @@ const Browser = ({runningCard}: Props) => {
   }, [activeTab, tabId]);
 
   return (
-    <div className={`${currentView === 'browser' ? 'block' : 'hidden'}`}>
-      <div className="absolute inset-0 !top-10 overflow-hidden bg-white shadow-md dark:bg-LynxRaisinBlack">
-        {isEmpty(finalAddress) && <EmptyPage type={type} />}
-      </div>
+    <div
+      className={
+        `absolute inset-0 !top-10 bg-white shadow-md overflow-hidden ` +
+        `dark:bg-LynxRaisinBlack ${currentView === 'browser' ? 'block' : 'hidden'}`
+      }>
+      {isEmpty(finalAddress) && <EmptyPage type={type} />}
     </div>
   );
 };
