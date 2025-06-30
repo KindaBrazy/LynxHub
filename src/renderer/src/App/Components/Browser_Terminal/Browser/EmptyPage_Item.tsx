@@ -24,10 +24,6 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
 
   const favIcon = useCachedImage(`${type}_favicon`, favItem?.favIcon || '');
 
-  useEffect(() => {
-    console.log(favIcon);
-  }, [favIcon]);
-
   const dispatch = useDispatch<AppDispatch>();
 
   const openRecent = () => {
@@ -58,7 +54,11 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
   return (
     <Tooltip radius="sm" delay={300} content={recent} showArrow>
       <Card as="div" shadow="sm" onPress={openRecent} className="w-36 h-32" isPressable>
-        <CardBody className={'flex-col gap-2 items-center text-center justify-center group dark:bg-foreground-100'}>
+        <CardBody
+          className={
+            'flex-col gap-2 items-center text-center justify-center transition-colors duration-300' +
+            ' group dark:bg-foreground-100 hover:dark:bg-foreground-100/50 shrink-0 hover:bg-foreground-100/50'
+          }>
           {favIcon ? <Image radius="full" src={favIcon} className="size-8" /> : <Web_Icon className="size-8" />}
           <span className="truncate text-wrap w-full line-clamp-2 text-sm">{capitalize(getUrlName(recent))}</span>
           <Button
