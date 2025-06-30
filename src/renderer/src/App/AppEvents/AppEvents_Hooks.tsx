@@ -167,10 +167,10 @@ export const usePatreon = () => {
         dispatch(userActions.setUserState({key: 'patreonUserData', value: result}));
         dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
 
-        checkEARepos(result.earlyAccess || result.insider);
+        checkEARepos(result.earlyAccess, result.insider);
       })
       .catch(() => {
-        if (isOnline) checkEARepos(false);
+        if (isOnline) checkEARepos(false, false);
       });
 
     window.electron.ipcRenderer.on('release-channel-change', (_, result) => {
