@@ -122,9 +122,9 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     return await GitManager.isUpdateAvailable(plugin);
   }
 
-  public async checkEA(isEA: boolean) {
+  public async checkEA(isEA: boolean, isInsider: boolean) {
     const installFolders = this.installedPluginInfo.map(folder => path.join(this.pluginPath, folder.dir));
-    const targetBranch = isEA ? 'compiled_ea' : 'compiled';
+    const targetBranch = isEA ? 'compiled_ea' : isInsider ? 'compiled_insider' : 'compiled';
     let isChangedBranch: boolean = false;
 
     for (const folder of installFolders) {

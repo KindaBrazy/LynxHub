@@ -197,7 +197,9 @@ function modules() {
   ipcMain.handle(modulesChannels.getModulesData, () => moduleManager.getPluginData());
   ipcMain.handle(modulesChannels.getInstalledModulesInfo, () => moduleManager.getInstalledPluginInfo());
   ipcMain.handle(modulesChannels.getSkipped, () => moduleManager.getSkipped());
-  ipcMain.handle(modulesChannels.checkEa, (_, isEA) => moduleManager.checkEA(isEA));
+  ipcMain.handle(modulesChannels.checkEa, (_, isEA: boolean, isInsider: boolean) =>
+    moduleManager.checkEA(isEA, isInsider),
+  );
 
   ipcMain.handle(modulesChannels.installModule, (_, url: string) => moduleManager.installPlugin(url));
   ipcMain.handle(modulesChannels.uninstallModule, (_, id: string) => moduleManager.uninstallPlugin(id));
@@ -223,7 +225,9 @@ function extensions() {
   ipcMain.handle(extensionsChannels.getExtensionsData, () => extensionManager.getPluginData());
   ipcMain.handle(extensionsChannels.getInstalledExtensionsInfo, () => extensionManager.getInstalledPluginInfo());
   ipcMain.handle(extensionsChannels.getSkipped, () => extensionManager.getSkipped());
-  ipcMain.handle(extensionsChannels.checkEa, (_, isEA) => extensionManager.checkEA(isEA));
+  ipcMain.handle(extensionsChannels.checkEa, (_, isEA: boolean, isInsider: boolean) =>
+    extensionManager.checkEA(isEA, isInsider),
+  );
 
   ipcMain.handle(extensionsChannels.installExtension, (_, url: string) => extensionManager.installPlugin(url));
   ipcMain.handle(extensionsChannels.uninstallExtension, (_, id: string) => extensionManager.uninstallPlugin(id));

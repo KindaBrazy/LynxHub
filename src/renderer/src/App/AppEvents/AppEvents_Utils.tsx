@@ -4,21 +4,23 @@ import {notification} from 'antd';
 import rendererIpc from '../RendererIpc';
 import {isLinuxPortable} from '../Utils/UtilHooks';
 
-export const checkEARepos = (isEA: boolean) => {
+export const checkEARepos = (isEA: boolean, isInsider: boolean) => {
   rendererIpc.extension
-    .checkEa(isEA)
+    .checkEa(isEA, isInsider)
     .then(eEA => {
       rendererIpc.module
-        .checkEa(isEA)
+        .checkEa(isEA, isInsider)
         .then(mEA => {
           if (eEA || mEA) {
             notification.info({
               duration: 0,
               key: 'need_restart',
-              message: 'Configuration Updated',
+              message: 'Update Stage Changed',
               closable: false,
               description:
-                "The application's configuration has been updated. Please restart for changes to be applied.",
+                `The extensions and modules updates has been changed to ` +
+                `${isEA ? 'Early Access' : isInsider ? 'Insider' : 'Normal'}` +
+                ` stage. Please restart for changes to be applied.`,
               actions: (
                 <div className="flex flex-row gap-x-2">
                   <Button
