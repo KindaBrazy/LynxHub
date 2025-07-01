@@ -24,7 +24,7 @@ Get started with LynxHub by downloading the latest version for your platform.
 
 | Channel      | Version                                                                 | Date       |
 |--------------|-------------------------------------------------------------------------|------------|
-| Insider      | [**V3.1.0 Insider 1**](https://www.patreon.com/collection/1557749)      | 2025-06-17 |
+| Insider      | [**V3.1.0 Insider 2**](https://www.patreon.com/collection/1557749)      | 2025-07-01 |
 | Early Access | [**V3.0.1**](https://www.patreon.com/collection/714004)                 | 2025-05-28 |
 | Release      | [**V3.0.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V3.0.1) | 2025-06-12 |
 
