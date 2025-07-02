@@ -10,6 +10,7 @@ import {JSONFileSyncPreset} from 'lowdb/node';
 
 import {APP_NAME} from '../../../cross/CrossConstants';
 import {Get_Default_Hotkeys} from '../../../cross/HotkeyConstants';
+import {FavIcons} from '../../../cross/IpcChannelAndTypes';
 import StorageTypes from '../../../cross/StorageTypes';
 import {appManager} from '../../index';
 import {getAbsolutePath, getExePath, getUserAgent, isPortable} from '../../Utilities/Utils';
@@ -182,9 +183,12 @@ class BaseStorage {
     };
 
     const v82to83 = () => {
+      const recents = this.storage.data.browser.recentAddress as unknown[] as FavIcons[];
+
       this.storage.data.browser.favoriteAddress = [];
-      this.storage.data.browser.historyAddress = [];
-      this.storage.data.browser.favIcons = [];
+      this.storage.data.browser.favIcons = recents;
+      this.storage.data.browser.historyAddress = recents.map(recent => recent.url);
+      this.storage.data.browser.recentAddress = recents.map(recent => recent.url);
     };
 
     const updateVersion = () => {
