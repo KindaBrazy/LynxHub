@@ -302,6 +302,8 @@ const rendererIpc = {
     onUpdateAllExtensions: (result: (event: IpcRendererEvent, updateInfo: OnUpdatingExtensions) => void) =>
       ipc.on(utilsChannels.onUpdateAllExtensions, result),
 
+    offUpdateAllExtensions: () => ipc.removeAllListeners(utilsChannels.onUpdateAllExtensions),
+
     getExtensionsDetails: (dir: string): Promise<ExtensionsData> => ipc.invoke(utilsChannels.extensionsDetails, dir),
 
     getExtensionsUpdateStatus: (dir: string): Promise<ExtensionsUpdateStatus> =>
