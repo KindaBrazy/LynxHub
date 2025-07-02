@@ -14,7 +14,6 @@ import WarningModal from './Warning/WarningModal';
 
 const Modals = memo(() => {
   const {warning: Warning, updateApp: UApp} = useMemo(() => extensionsData.replaceModals, []);
-  // TODO: add props to extensions modals
 
   const addModal = useMemo(() => extensionsData.addModal, []);
 
