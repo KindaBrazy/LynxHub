@@ -234,6 +234,7 @@ export const useIpcEvents = () => {
   }, [dispatch]);
 
   useEffect(() => {
+    rendererIpc.utils.offUpdateAllExtensions();
     rendererIpc.utils.onUpdateAllExtensions((_e, result) => {
       if (result.step === 'done') {
         rendererIpc.pty.process(result.id, 'start', result.id);
