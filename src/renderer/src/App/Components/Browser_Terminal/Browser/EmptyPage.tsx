@@ -1,7 +1,7 @@
 import {Button, Spinner} from '@heroui/react';
 import {Empty} from 'antd';
-import {AnimatePresence, motion, Variants} from 'framer-motion';
-import {useEffect, useState} from 'react';
+import {AnimatePresence, motion, stagger, Variants} from 'framer-motion';
+import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Star_Icon, Terminal_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
@@ -18,11 +18,11 @@ type Props = {type: 'browser' | 'terminal' | 'both'};
 type SectionConfig = {
   title: string;
   subtitle: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   emptyTitle: string;
   emptyDescription: string;
   data: string[];
-  setData: React.Dispatch<React.SetStateAction<string[]>>;
+  setData: Dispatch<SetStateAction<string[]>>;
   itemType: 'favorite' | 'recent';
   gradient: string;
   iconBg: string;
@@ -37,7 +37,7 @@ const containerVariants: Variants = {
     transition: {
       duration: 0.6,
       ease: 'easeOut',
-      staggerChildren: 0.1,
+      delayChildren: stagger(0.1),
     },
   },
 };
@@ -166,7 +166,7 @@ export default function EmptyPage({type}: Props) {
                 ease: 'easeInOut',
               }}
               className="flex justify-center mb-6">
-              {icon}
+              <div className="scale-[2]">{icon}</div>
             </motion.div>
           }
           className={emptyStyles}
