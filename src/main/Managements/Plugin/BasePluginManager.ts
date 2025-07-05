@@ -124,7 +124,7 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
 
   public async checkEA(isEA: boolean, isInsider: boolean) {
     const installFolders = this.installedPluginInfo.map(folder => path.join(this.pluginPath, folder.dir));
-    const targetBranch = isEA ? 'compiled_ea' : isInsider ? 'compiled_insider' : 'compiled';
+    const targetBranch = isInsider ? 'compiled_insider' : isEA ? 'compiled_ea' : 'compiled';
     let isChangedBranch: boolean = false;
 
     for (const folder of installFolders) {
