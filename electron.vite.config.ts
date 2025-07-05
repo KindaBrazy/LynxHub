@@ -50,6 +50,7 @@ export default defineConfig({
           loading: resolve(__dirname, 'src/renderer/loading.html'),
           dialog: resolve(__dirname, 'src/renderer/dialog.html'),
           context_menu: resolve(__dirname, 'src/renderer/context_menu.html'),
+          error_page: resolve(__dirname, 'src/renderer/error_page.html'),
         },
       },
       target: 'esnext',
