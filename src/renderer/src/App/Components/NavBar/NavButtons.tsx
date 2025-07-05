@@ -8,10 +8,10 @@ import {
   GamePad_Icon,
   Home_Icon,
   ImageGeneration_Icon,
-  Info_Icon,
   Rocket_Icon,
-  Slider_Icon,
   TextGeneration_Icon,
+  Tuning_Icon,
+  UserDuo_Icon,
 } from '../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../Redux/Reducer/SettingsReducer';
@@ -104,10 +104,10 @@ export const ContentPagesButtons = () => {
 };
 
 const SettingsPages: PagesType[] = [
-  {navButton: {icon: <Info_Icon className="size-full" />, title: PageTitles.dashboard}, path: PageID.dashboard},
+  {navButton: {icon: <UserDuo_Icon className="size-full" />, title: PageTitles.dashboard}, path: PageID.dashboard},
   {navButton: {icon: <Extensions2_Icon className="size-full" />, title: PageTitles.modules}, path: PageID.modules},
   {navButton: {icon: <Extensions_Icon className="size-full" />, title: PageTitles.extensions}, path: PageID.extensions},
-  {navButton: {icon: <Slider_Icon className="size-full" />, title: PageTitles.settings}, path: PageID.settings},
+  {navButton: {icon: <Tuning_Icon className="size-full" />, title: PageTitles.settings}, path: PageID.settings},
 ];
 
 export function SettingsPagesButtons() {
