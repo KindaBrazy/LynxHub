@@ -184,11 +184,12 @@ class BaseStorage {
 
     const v82to83 = () => {
       const recents = this.storage.data.browser.recentAddress as unknown[] as FavIcons[];
+      const urls = recents.map(recent => recent.url);
 
       this.storage.data.browser.favoriteAddress = [];
       this.storage.data.browser.favIcons = recents;
-      this.storage.data.browser.historyAddress = recents.map(recent => recent.url);
-      this.storage.data.browser.recentAddress = recents.map(recent => recent.url);
+      this.storage.data.browser.historyAddress = urls;
+      this.storage.data.browser.recentAddress = urls;
     };
 
     const updateVersion = () => {
