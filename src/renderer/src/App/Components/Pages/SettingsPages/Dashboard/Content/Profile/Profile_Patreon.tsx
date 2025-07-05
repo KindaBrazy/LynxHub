@@ -24,7 +24,7 @@ export default function Profile_Patreon() {
         .then((userData: PatreonUserData) => {
           dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
           dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
-          checkEARepos(userData.earlyAccess);
+          checkEARepos(userData.earlyAccess, userData.insider);
         })
         .catch(e => {
           console.error(e);
@@ -41,7 +41,7 @@ export default function Profile_Patreon() {
       setIsLoading(false);
       dispatch(userActions.resetUserState('patreonUserData'));
       dispatch(userActions.resetUserState('patreonLoggedIn'));
-      checkEARepos(false);
+      checkEARepos(false, false);
     });
   }, []);
 
@@ -54,7 +54,7 @@ export default function Profile_Patreon() {
     <Card
       shadow="sm"
       radius="lg"
-      className={`${patreonLoggedIn && '!border-success/70'} border-1 border-foreground/20 p-4`}>
+      className={`${patreonLoggedIn && '!border-success/70 bg-success/5'} border-1 border-foreground/20 p-4`}>
       <div className="mb-3 flex flex-row items-center space-x-1.5">
         <Patreon_Icon className="text-large" />
         <span className="text-medium">Patreon</span>
@@ -62,8 +62,8 @@ export default function Profile_Patreon() {
       <div className="space-between flex flex-row justify-between items-center">
         <User
           name={patreonUserData.name}
+          description={patreonUserData.tier}
           avatarProps={{src: patreonUserData.imageUrl}}
-          description={`Membership Tier: ${patreonUserData.tier}`}
         />
         <div className="flex flex-row space-x-2">
           {patreonLoggedIn ? (
