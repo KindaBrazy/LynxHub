@@ -1,5 +1,4 @@
-import {Button, Select, Selection, SelectItem} from '@heroui/react';
-import {Descriptions, Divider, Space} from 'antd';
+import {Button, Card, Chip, Select, Selection, SelectItem} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -22,12 +21,14 @@ export default function DashboardUpdate() {
   const appUpdateAvailable = useSettingsState('updateAvailable');
   const [statusPublic, setStatusPublic] = useState<UpdateStatus>({version: '?', build: 0, date: '?'});
   const [statusEarly, setStatusEarly] = useState<UpdateStatus>({version: '?', build: 0, date: '?'});
+  const [statusInsider, setStatusInsider] = useState<UpdateStatus>({version: '?', build: 0, date: '?'});
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     async function fetchStatus() {
       const data = await rendererIpc.statics.getReleases();
+      const insider = await rendererIpc.statics.getInsider();
       setStatusPublic({version: data.currentVersion, build: data.currentBuild, date: data.releaseDate});
       if (data.earlyAccess) {
         setStatusEarly({
@@ -36,6 +37,8 @@ export default function DashboardUpdate() {
           date: data.earlyAccess.releaseDate,
         });
       }
+
+      setStatusInsider({version: insider.currentVersion, build: insider.currentBuild, date: insider.releaseDate});
     }
 
     fetchStatus();
@@ -118,25 +121,77 @@ export default function DashboardUpdate() {
         </Button>
       )}
 
-      <div className="text-start">
-        <Divider dashed>Status</Divider>
-        <Space direction="vertical" split={<Divider dashed />}>
-          <div>
-            <Descriptions title="Public">
-              <Descriptions.Item label="Version: ">{statusPublic.version}</Descriptions.Item>
-              <Descriptions.Item label="Build: ">{statusPublic.build}</Descriptions.Item>
-              <Descriptions.Item label="Date: ">{statusPublic.date}</Descriptions.Item>
-            </Descriptions>
-          </div>
+      <div className="w-full mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Insider Card */}
+          <Card className="p-4 bg-content2 shadow-sm cursor-default" isPressable>
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold text-secondary">Insider</h3>
+              <Chip size="sm" variant="flat" color="secondary">
+                Latest
+              </Chip>
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-default-500">Version:</span>
+                <span className="font-medium">{statusInsider.version}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-default-500">Build:</span>
+                <span className="font-medium">{statusInsider.build}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-default-500">Date:</span>
+                <span className="font-medium">{statusInsider.date}</span>
+              </div>
+            </div>
+          </Card>
 
-          <div>
-            <Descriptions title="Early Access">
-              <Descriptions.Item label="Version: ">{statusEarly.version}</Descriptions.Item>
-              <Descriptions.Item label="Build: ">{statusEarly.build || '?'}</Descriptions.Item>
-              <Descriptions.Item label="Date: ">{statusEarly.date}</Descriptions.Item>
-            </Descriptions>
-          </div>
-        </Space>
+          {/* Early Access Card */}
+          <Card className="p-4 bg-content2 shadow-sm cursor-default" isPressable>
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold text-warning">Early Access</h3>
+              <Chip size="sm" variant="flat" color="warning">
+                Preview
+              </Chip>
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-default-500">Version:</span>
+                <span className="font-medium">{statusEarly.version}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-default-500">Build:</span>
+                <span className="font-medium">{statusEarly.build || '?'}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-default-500">Date:</span>
+                <span className="font-medium">{statusEarly.date}</span>
+              </div>
+            </div>
+          </Card>
+
+          {/* Public Card */}
+          <Card className="p-4 bg-content2 shadow-sm cursor-default" isPressable>
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="text-lg font-semibold text-success">Public</h3>
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-default-500">Version:</span>
+                <span className="font-medium">{statusPublic.version}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-default-500">Build:</span>
+                <span className="font-medium">{statusPublic.build}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-default-500">Date:</span>
+                <span className="font-medium">{statusPublic.date}</span>
+              </div>
+            </div>
+          </Card>
+        </div>
       </div>
     </SettingsSection>
   );
