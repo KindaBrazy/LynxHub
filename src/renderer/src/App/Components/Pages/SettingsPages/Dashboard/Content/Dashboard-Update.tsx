@@ -124,7 +124,12 @@ export default function DashboardUpdate() {
       <div className="w-full mt-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Insider Card */}
-          <Card className="p-4 bg-content2 shadow-sm cursor-default" isPressable>
+          <Card
+            className={
+              `p-4 bg-content2 shadow-sm cursor-default ` +
+              `${selection[0] === 'insider' && 'border-2'} border-secondary/50`
+            }
+            isPressable>
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-lg font-semibold text-secondary">Insider</h3>
               <Chip size="sm" variant="flat" color="secondary">
@@ -148,7 +153,11 @@ export default function DashboardUpdate() {
           </Card>
 
           {/* Early Access Card */}
-          <Card className="p-4 bg-content2 shadow-sm cursor-default" isPressable>
+          <Card
+            className={
+              `p-4 bg-content2 shadow-sm cursor-default ` + `${selection[0] === 'ea' && 'border-2'} border-warning/50`
+            }
+            isPressable>
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-lg font-semibold text-warning">Early Access</h3>
               <Chip size="sm" variant="flat" color="warning">
@@ -172,7 +181,12 @@ export default function DashboardUpdate() {
           </Card>
 
           {/* Public Card */}
-          <Card className="p-4 bg-content2 shadow-sm cursor-default" isPressable>
+          <Card
+            className={
+              `p-4 bg-content2 shadow-sm cursor-default ` +
+              `${selection[0] === 'public' && 'border-2'} border-success/50`
+            }
+            isPressable>
             <div className="flex justify-between items-center mb-2">
               <h3 className="text-lg font-semibold text-success">Public</h3>
             </div>
