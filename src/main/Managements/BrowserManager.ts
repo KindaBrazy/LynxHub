@@ -1,4 +1,8 @@
+import {join} from 'node:path';
+
+import {is} from '@electron-toolkit/utils';
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
+import url from 'url';
 
 import icon from '../../../resources/icon.png?asset';
 import {formatWebAddress} from '../../cross/CrossUtils';
@@ -136,6 +140,33 @@ export default class BrowserManager {
     });
   }
 
+  private listenForFailLoad(view: WebContents) {
+    view.on('did-fail-load', (_, errorCode, errorDescription, validatedURL) => {
+      // Ignore benign error codes like -3 (ABORTED), which happens on normal navigation.
+      if (errorCode === -3) {
+        return;
+      }
+
+      console.error('failed load:', errorCode, errorDescription, validatedURL);
+
+      const errorPageURL =
+        is.dev && process.env['ELECTRON_RENDERER_URL']
+          ? `${process.env['ELECTRON_RENDERER_URL']}/error_page.html`
+          : url.format({
+              pathname: join(__dirname, '../renderer/error_page.html'),
+              protocol: 'file:',
+              slashes: true,
+            });
+
+      const urlWithParams = new URL(errorPageURL);
+      urlWithParams.searchParams.append('errorCode', String(errorCode));
+      urlWithParams.searchParams.append('errorDescription', errorDescription);
+      urlWithParams.searchParams.append('url', validatedURL);
+
+      view.loadURL(urlWithParams.toString());
+    });
+  }
+
   private getSession() {
     return session.fromPartition('persist:lynxhub_browser');
   }
@@ -158,6 +189,7 @@ export default class BrowserManager {
     this.listenForFavIcon(id, webContents);
     this.listenForZoom(webContents);
     this.listenForFullScreen(newView);
+    this.listenForFailLoad(webContents);
 
     this.browsers.push({id, view: newView});
     this.mainWindow.contentView.addChildView(newView);
