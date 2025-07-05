@@ -2,187 +2,126 @@ import {Client, SetActivity} from '@xhayper/discord-rpc';
 
 import {APP_NAME} from '../../cross/CrossConstants';
 import {DiscordRPC} from '../../cross/CrossTypes';
-import {toMs} from '../../cross/CrossUtils';
 import {DiscordRunningAI} from '../../cross/IpcChannelAndTypes';
 import {storageManager} from '../index';
 
-/**
- * Manages Discord Rich Presence for the LynxHub application.
- */
 export default class DiscordRpcManager {
-  //#region Static Properties
+  private static readonly CLIENT_ID = '';
 
-  private static readonly MAX_RETRY_COUNT = 7;
+  private readonly client: Client;
+  private readonly appStartTime: Date;
 
-  private static readonly RETRY_DELAY = toMs(5, 'seconds');
-  private static readonly UPDATE_INTERVAL = toMs(15, 'seconds');
-  //#endregion
-
-  //#region Private Properties
-
-  private client: Client;
-  private activity?: SetActivity;
-  private isReadyToActivity = false;
-  private discordRP?: DiscordRPC;
-  private readonly startAppTimestamp: Date;
-  private startAITimestamp?: Date;
-  private retryCount = 0;
-  private intervalRepeatActivity?: NodeJS.Timeout;
-  //#endregion
-
-  //#region Constructor
+  private config?: DiscordRPC;
+  private currentActivity: SetActivity | null = null;
+  private aiStartTime?: Date;
+  private isReady = false;
 
   constructor() {
-    this.startAppTimestamp = new Date();
-    this.client = new Client({clientId: ''});
+    this.appStartTime = new Date();
+    this.client = new Client({clientId: DiscordRpcManager.CLIENT_ID});
 
-    this.client.on('ready', this.handleClientReady);
-    this.client.login().catch(console.error);
+    this.initialize();
   }
 
-  //#endregion
+  private async initialize(): Promise<void> {
+    this.client.on('ready', () => {
+      console.log('Discord RPC client connected successfully.');
+      this.isReady = true;
+      this.updatePresence();
+    });
 
-  //#region Private Methods
+    this.client.on('disconnected', () => {
+      console.warn('Discord RPC client disconnected. It will attempt to reconnect automatically.');
+      this.isReady = false;
+    });
 
-  private handleClientReady = (): void => {
-    this.isReadyToActivity = true;
-  };
+    try {
+      await this.client.login();
+    } catch (error) {
+      console.error('Failed to login to Discord RPC. Presence will be disabled.', error);
+    }
+  }
 
-  private resetToDefaultActivity(): void {
-    this.activity = {
-      details: '🧠 Exploring AI capabilities...',
+  private updatePresence(): void {
+    if (!this.isReady) {
+      return;
+    }
+
+    if (this.currentActivity) {
+      this.client.user?.setActivity(this.currentActivity).catch(console.error);
+    } else {
+      this.client.user?.clearActivity().catch(console.error);
+    }
+  }
+
+  private buildDefaultActivity(): void {
+    if (!this.config?.LynxHub.Enabled) {
+      this.currentActivity = null;
+      return;
+    }
+
+    this.currentActivity = {
+      details: '🧠 Exploring the AI universe',
+      state: 'Managing AI models & workflows',
       largeImageKey: 'lynxhub',
-      largeImageText: APP_NAME,
-      startTimestamp:
-        this.discordRP?.LynxHub.Enabled && this.discordRP.LynxHub.TimeElapsed ? this.startAppTimestamp : undefined,
+      largeImageText: `${APP_NAME}: Your All-in-One AI Platform`,
+      startTimestamp: this.config.LynxHub.TimeElapsed ? this.appStartTime : undefined,
       instance: false,
     };
   }
 
-  private clearActivity(): void {
-    if (this.isReadyToActivity) {
-      this.retryCount = 0;
-      this.client.user?.clearActivity();
-      this.stopActivityLoop();
-    } else if (this.retryCount < DiscordRpcManager.MAX_RETRY_COUNT) {
-      this.retryCount++;
-      setTimeout(() => this.clearActivity(), DiscordRpcManager.RETRY_DELAY);
+  private buildAiActivity(status: DiscordRunningAI): void {
+    if (!this.config?.RunningAI.Enabled) {
+      this.buildDefaultActivity();
+      return;
     }
-  }
 
-  private setActivity(): void {
-    if (this.isReadyToActivity && this.activity) {
-      this.retryCount = 0;
-      this.client.user?.setActivity(this.activity);
-    } else if (this.retryCount < DiscordRpcManager.MAX_RETRY_COUNT) {
-      this.retryCount++;
-      setTimeout(() => this.setActivity(), DiscordRpcManager.RETRY_DELAY);
+    if (!this.aiStartTime) {
+      this.aiStartTime = new Date();
     }
-  }
 
-  private updateActivityLoop(): void {
-    if (this.isReadyToActivity) {
-      this.retryCount = 0;
-      if (!this.intervalRepeatActivity) {
-        this.intervalRepeatActivity = setInterval(() => this.setActivity(), DiscordRpcManager.UPDATE_INTERVAL);
-      }
-    } else if (this.retryCount < DiscordRpcManager.MAX_RETRY_COUNT) {
-      this.retryCount++;
-      setTimeout(() => this.updateActivityLoop(), DiscordRpcManager.RETRY_DELAY);
-    }
-  }
-
-  private stopActivityLoop(): void {
-    if (this.intervalRepeatActivity) {
-      clearInterval(this.intervalRepeatActivity);
-      this.intervalRepeatActivity = undefined;
-    }
-  }
-
-  private createActivityForStatus(status: DiscordRunningAI): SetActivity {
-    const baseActivity: SetActivity = {
-      ...this.activity,
-      startTimestamp: this.discordRP?.RunningAI.TimeElapsed ? this.startAITimestamp : undefined,
+    const stateMap: Record<string, string> = {
+      image: `🎨 Creating with ${status.name}`,
+      audio: `🎵 Generating with ${status.name}`,
+      text: `💬 Chatting with ${status.name}`,
+      unknown: `🔬 Working with ${status.name}`,
     };
 
-    const activityMap: Record<string, Partial<SetActivity>> = {
-      image: {
-        state: this.discordRP?.RunningAI.AIName ? `🎨 Creating images with ${status.name}` : '🎨 Generating images',
-      },
-      audio: {
-        state: this.discordRP?.RunningAI.AIName ? `🎵 Producing audio with ${status.name}` : '🎵 Generating audio',
-      },
-      text: {
-        state: this.discordRP?.RunningAI.AIName
-          ? `💬 Conversing with AI: ${status.name}`
-          : '💬 Engaging in AI conversation',
-      },
-      unknown: {
-        state: this.discordRP?.RunningAI.AIName ? `🔬 Utilizing AI: ${status.name}` : '🔬 Working with AI',
-      },
-    };
+    const state = stateMap[status.type || 'unknown'] || stateMap.unknown;
 
-    return {...baseActivity, ...activityMap[status.type || 'unknown']};
+    this.buildDefaultActivity();
+    if (this.currentActivity) {
+      this.currentActivity.details = '⚡ Running AI';
+      this.currentActivity.state = state;
+      this.currentActivity.startTimestamp = this.config.RunningAI.TimeElapsed ? this.aiStartTime : undefined;
+    }
   }
 
-  //#endregion
-
-  //#region Public Methods
-
-  /**
-   * Starts the Discord RPC manager.
-   */
   public start(): void {
     this.updateDiscordRP();
-    if (this.discordRP?.LynxHub.Enabled) {
-      this.setActivity();
-      this.updateActivityLoop();
-    }
   }
 
-  /**
-   * Updates the Discord Rich Presence settings.
-   */
   public updateDiscordRP(): void {
-    this.discordRP = storageManager.getData('app').discordRP;
-    this.resetToDefaultActivity();
+    this.config = storageManager.getData('app').discordRP;
 
-    if (this.isReadyToActivity) {
-      if (!this.discordRP.LynxHub.Enabled) {
-        this.clearActivity();
-      } else if (!this.intervalRepeatActivity) {
-        this.updateActivityLoop();
-      }
-    }
+    this.buildDefaultActivity();
+    this.updatePresence();
   }
 
-  /**
-   * Updates the activity based on the AI running status.
-   * @param status - The current AI running status
-   */
   public runningAI(status: DiscordRunningAI): void {
-    if (!this.discordRP?.LynxHub.Enabled && !status.running) {
-      this.clearActivity();
-      return;
+    if (!this.config?.LynxHub.Enabled) {
+      this.currentActivity = null;
+    } else if (status.running) {
+      this.buildAiActivity(status);
+    } else {
+      this.aiStartTime = undefined;
+      this.buildDefaultActivity();
     }
 
-    if (!this.discordRP?.RunningAI.Enabled) {
-      return;
-    }
-
-    if (!status.running) {
-      this.resetToDefaultActivity();
-      return;
-    }
-
-    this.startAITimestamp = new Date();
-    this.activity = this.createActivityForStatus(status);
-
-    if (!this.intervalRepeatActivity) {
-      this.setActivity();
-      this.updateActivityLoop();
-    }
+    this.updatePresence();
   }
 
-  //#endregion
+  public dispose(): void {
+    this.client.destroy().catch(console.error);
+  }
 }
