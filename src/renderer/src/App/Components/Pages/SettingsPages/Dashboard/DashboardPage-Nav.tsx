@@ -3,9 +3,9 @@ import {Card} from 'antd';
 import {useMemo} from 'react';
 
 import {
-  Bug_Icon,
   Download2_Icon,
   Info_Icon,
+  SmileCircleDuo_Icon,
   User_Icon,
   UserHeart_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
@@ -38,9 +38,8 @@ const groupSections: GroupProps[] = [
     title: 'Info',
     items: [
       {
-        title: 'Report an Issue',
-        icon: <Bug_Icon className="size-4 shrink-0" />,
-        color: 'warning',
+        title: 'Help & Feedback',
+        icon: <SmileCircleDuo_Icon className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardReportIssueId,
       },
       {
