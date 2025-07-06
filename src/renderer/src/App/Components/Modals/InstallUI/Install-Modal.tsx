@@ -36,6 +36,7 @@ const initialState: InstallState = {
   },
   startClone: false,
   disableSelectDir: false,
+  extensionCustomContent: undefined,
 };
 
 type Props = {isOpen: boolean; cardId: string; title: string; type: string; tabID: string};
@@ -196,6 +197,8 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
     [dispatch],
   );
 
+  const nextStep = useCallback(() => stepper.nextStep(), [stepper]);
+
   const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
 
   return (
@@ -233,6 +236,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
         <InstallFooter
           state={state}
           cardId={cardId}
+          nextStep={nextStep}
           canContinue={canContinue}
           updateState={updateState}
           handleClose={handleClose}

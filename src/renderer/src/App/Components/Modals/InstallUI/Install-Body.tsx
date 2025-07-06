@@ -133,6 +133,8 @@ const InstallBody = memo(
           return <UserInputs inputElements={userInputElements} setResult={setUserElementsReturn} />;
         case 'install-extensions':
           return <InstallExtensions extensionsURLs={extensionsToInstall} extensionsResolver={extensionsResolver} />;
+        case 'extension-custom':
+          return state.extensionCustomContent ? <state.extensionCustomContent /> : null;
       }
       return <Fragment />;
     };

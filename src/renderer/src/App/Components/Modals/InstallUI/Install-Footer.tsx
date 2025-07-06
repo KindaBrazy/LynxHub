@@ -22,110 +22,120 @@ type Props = {
   progressInfo: DownloadProgress | undefined;
   cardId: string;
   canContinue: boolean;
+  nextStep: () => void;
 };
 
-const InstallFooter = ({
-  state,
-  handleClose,
-  restartTerminal,
-  starterResolver,
-  updateState,
-  userInputResolver,
-  userElementsReturn,
-  terminalResolver,
-  downloadFileFromUrl,
-  urlToDownload,
-  progressInfo,
-  cardId,
-  canContinue,
-}: Props) => {
-  const [locateWarnIsOpen, setLocateWarnIsOpen] = useState<boolean>(false);
-  const onDoneTerminal = useCallback(() => {
-    if (terminalResolver.current) {
-      rendererIpc.pty.customProcess(cardId, 'stop');
-      terminalResolver.current();
-      terminalResolver.current = null;
-    }
-  }, [terminalResolver]);
-
-  const locate = useCallback(() => {
-    rendererIpc.file.openDlg({properties: ['openDirectory']}).then(targetDirectory => {
-      if (targetDirectory) {
-        rendererIpc.appData.isAppDir(targetDirectory).then(isAppDir => {
-          if (isAppDir) {
-            setLocateWarnIsOpen(true);
-          } else {
-            starterResolver.current?.({chosen: 'locate', targetDirectory});
-          }
-        });
+const InstallFooter = memo(
+  ({
+    state,
+    handleClose,
+    restartTerminal,
+    starterResolver,
+    updateState,
+    userInputResolver,
+    userElementsReturn,
+    terminalResolver,
+    downloadFileFromUrl,
+    urlToDownload,
+    progressInfo,
+    cardId,
+    canContinue,
+    nextStep,
+  }: Props) => {
+    const [locateWarnIsOpen, setLocateWarnIsOpen] = useState<boolean>(false);
+    const onDoneTerminal = useCallback(() => {
+      if (terminalResolver.current) {
+        rendererIpc.pty.customProcess(cardId, 'stop');
+        terminalResolver.current();
+        terminalResolver.current = null;
       }
-    });
-  }, [starterResolver]);
+    }, [terminalResolver]);
 
-  const renderFooterButtons = () => {
-    return (
-      <>
-        <LocateWarning isOpen={locateWarnIsOpen} setIsOpen={setLocateWarnIsOpen} />
-        <Button
-          variant="flat"
-          onPress={handleClose}
-          className="cursor-default"
-          color={state.body === 'done' ? 'success' : 'danger'}>
-          {state.body === 'done' ? 'OK' : 'Cancel'}
-        </Button>
-        {state.body === 'terminal' && (
-          <FooterTerminal onDoneTerminal={onDoneTerminal} restartTerminal={restartTerminal} />
-        )}
-        {state.body === 'starter' && (
-          <>
-            {!state.disableSelectDir && (
-              <Button variant="flat" onPress={locate} className="cursor-default">
-                Locate
+    const locate = useCallback(() => {
+      rendererIpc.file.openDlg({properties: ['openDirectory']}).then(targetDirectory => {
+        if (targetDirectory) {
+          rendererIpc.appData.isAppDir(targetDirectory).then(isAppDir => {
+            if (isAppDir) {
+              setLocateWarnIsOpen(true);
+            } else {
+              starterResolver.current?.({chosen: 'locate', targetDirectory});
+            }
+          });
+        }
+      });
+    }, [starterResolver]);
+
+    const renderFooterButtons = () => {
+      return (
+        <>
+          <LocateWarning isOpen={locateWarnIsOpen} setIsOpen={setLocateWarnIsOpen} />
+          <Button
+            variant="flat"
+            onPress={handleClose}
+            className="cursor-default"
+            color={state.body === 'done' ? 'success' : 'danger'}>
+            {state.body === 'done' ? 'OK' : 'Cancel'}
+          </Button>
+          {state.body === 'terminal' && (
+            <FooterTerminal onDoneTerminal={onDoneTerminal} restartTerminal={restartTerminal} />
+          )}
+          {state.body === 'starter' && (
+            <>
+              {!state.disableSelectDir && (
+                <Button variant="flat" onPress={locate} className="cursor-default">
+                  Locate
+                </Button>
+              )}
+              <Button
+                variant="flat"
+                color="success"
+                className="cursor-default"
+                onPress={() => starterResolver.current?.({chosen: 'install'})}>
+                Start Installation
               </Button>
-            )}
+            </>
+          )}
+          {state.body === 'clone' && !state.startClone && (
             <Button
               variant="flat"
               color="success"
               className="cursor-default"
-              onPress={() => starterResolver.current?.({chosen: 'install'})}>
-              Start Installation
+              onPress={() => updateState({startClone: true})}>
+              Download
             </Button>
-          </>
-        )}
-        {state.body === 'clone' && !state.startClone && (
-          <Button
-            variant="flat"
-            color="success"
-            className="cursor-default"
-            onPress={() => updateState({startClone: true})}>
-            Download
-          </Button>
-        )}
-        {state.body === 'user-input' && (
-          <Button
-            onPress={() => {
-              userInputResolver.current?.(userElementsReturn);
-            }}
-            variant="flat"
-            color="success"
-            isDisabled={!canContinue}
-            className="cursor-default">
-            Next
-          </Button>
-        )}
-        {progressInfo?.stage === 'failed' && urlToDownload && (
-          <Button variant="flat" className="cursor-default" onPress={() => downloadFileFromUrl(urlToDownload)}>
-            Try Again
-          </Button>
-        )}
-      </>
-    );
-  };
+          )}
+          {state.body === 'user-input' && (
+            <Button
+              onPress={() => {
+                userInputResolver.current?.(userElementsReturn);
+              }}
+              variant="flat"
+              color="success"
+              isDisabled={!canContinue}
+              className="cursor-default">
+              Next
+            </Button>
+          )}
+          {state.body === 'extension-custom' && (
+            <Button variant="flat" color="success" onPress={nextStep} className="cursor-default">
+              Next
+            </Button>
+          )}
+          {progressInfo?.stage === 'failed' && urlToDownload && (
+            <Button variant="flat" className="cursor-default" onPress={() => downloadFileFromUrl(urlToDownload)}>
+              Try Again
+            </Button>
+          )}
+        </>
+      );
+    };
 
-  return (
-    <ModalFooter className="shrink-0 justify-between overflow-hidden bg-foreground-200 dark:bg-foreground-100">
-      <ButtonGroup fullWidth>{renderFooterButtons()}</ButtonGroup>
-    </ModalFooter>
-  );
-};
-export default memo(InstallFooter);
+    return (
+      <ModalFooter className="shrink-0 justify-between overflow-hidden bg-foreground-200 dark:bg-foreground-100">
+        <ButtonGroup fullWidth>{renderFooterButtons()}</ButtonGroup>
+      </ModalFooter>
+    );
+  },
+);
+
+export default InstallFooter;

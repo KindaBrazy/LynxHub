@@ -1,5 +1,6 @@
 // ExtensionTypes_Events.ts
 import {FindInPageOptions, OpenDialogOptions} from 'electron';
+import {FC} from 'react';
 
 import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../../cross/CrossTypes';
 import {
@@ -24,6 +25,7 @@ export type ExtensionEvents = {
   before_card_start: {id: string};
   /** Will be called before a card start installing */
   before_card_install: {id: string};
+  card_install_addStep: {id: string; addStep: (atIndex: number, title: string, content: FC) => void};
 
   'ipc:terminal-process': {id: string; opt: PtyProcessOpt; cardId: string};
   'ipc:terminal-process_custom': {id: string; opt: PtyProcessOpt; dir?: string; file?: string};

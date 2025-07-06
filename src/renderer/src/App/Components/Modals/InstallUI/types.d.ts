@@ -1,3 +1,5 @@
+import {FC} from 'react';
+
 export type BodyState =
   | 'starter'
   | 'clone'
@@ -7,6 +9,7 @@ export type BodyState =
   | 'user-input'
   | 'install-extensions'
   | 'done'
+  | 'extension-custom'
   | '';
 
 export type InstallState = {
@@ -15,4 +18,5 @@ export type InstallState = {
   doneAll: {type: 'success' | 'error'; title: string; description?: string};
   startClone: boolean;
   disableSelectDir: boolean;
+  extensionCustomContent: FC | undefined;
 };
