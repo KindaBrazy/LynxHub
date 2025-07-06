@@ -3,6 +3,7 @@ import {Emitter} from 'mitt';
 import {FC} from 'react';
 
 import {ModuleData} from '../Modules/ModuleLoader';
+import rendererIpc from '../RendererIpc';
 import {
   AddMenuType,
   ExtensionEvents,
@@ -340,4 +341,6 @@ export type ExtensionRendererApi = {
   };
 
   modulesData?: ModuleData;
+
+  rendererIpc?: typeof rendererIpc;
 };
