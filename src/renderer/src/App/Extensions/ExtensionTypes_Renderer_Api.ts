@@ -1,9 +1,11 @@
 import {Reducer} from '@reduxjs/toolkit';
+import {Emitter} from 'mitt';
 import {FC} from 'react';
 
 import {ModuleData} from '../Modules/ModuleLoader';
 import {
   AddMenuType,
+  ExtensionEvents,
   FcProp,
   FcPropCard,
   FcPropCardData,
@@ -324,5 +326,14 @@ export type ExtensionRendererApi = {
       };
     };
   };
+
+  /** Event emitter for cross-extension communication. */
+  events: {
+    /** Register an event listener. */
+    on: Emitter<ExtensionEvents>['on'];
+    /** Emit an event. */
+    emit: Emitter<ExtensionEvents>['emit'];
+  };
+
   modulesData?: ModuleData;
 };

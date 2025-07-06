@@ -1,6 +1,10 @@
+import mitt from 'mitt';
+
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../Modules/ModuleLoader';
-import {ExtensionData_Renderer, ExtensionImport_Renderer} from './ExtensionTypes_Renderer';
+import {ExtensionData_Renderer, ExtensionEvents, ExtensionImport_Renderer} from './ExtensionTypes_Renderer';
 import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
+
+const emitter = mitt<ExtensionEvents>();
 
 export const extensionsData: ExtensionData_Renderer = {
   titleBar: {
@@ -142,7 +146,11 @@ export const extensionsData: ExtensionData_Renderer = {
   replaceMarkdownViewer: undefined,
 };
 
-const api: ExtensionRendererApi = {
+export const extensionRendererApi: ExtensionRendererApi = {
+  events: {
+    on: emitter.on,
+    emit: emitter.emit,
+  },
   titleBar: {
     addStart: comp => extensionsData.titleBar.addStart.push(comp),
     addCenter: comp => extensionsData.titleBar.addCenter.push(comp),
@@ -369,7 +377,7 @@ const api: ExtensionRendererApi = {
 export default function extensionLoader(extensions: ExtensionImport_Renderer[]) {
   for (const extension of extensions) {
     extension.InitialExtensions({
-      ...api,
+      ...extensionRendererApi,
       modulesData: {
         allModules,
         allCards,
