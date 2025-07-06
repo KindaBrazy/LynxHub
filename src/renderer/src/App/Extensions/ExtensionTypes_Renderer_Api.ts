@@ -331,6 +331,8 @@ export type ExtensionRendererApi = {
   events: {
     /** Register an event listener. */
     on: Emitter<ExtensionEvents>['on'];
+    /** Remove an event handler for the given type. */
+    off: Emitter<ExtensionEvents>['off'];
     /** Emit an event. */
     emit: Emitter<ExtensionEvents>['emit'];
   };
