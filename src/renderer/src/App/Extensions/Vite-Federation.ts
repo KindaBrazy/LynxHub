@@ -19,15 +19,17 @@ type GetRemoteModule = (remoteName: string, componentName: string) => Promise<Ex
 
 export async function loadExtensions() {
   let importedExtensions: ExtensionImport_Renderer[];
+  let folderNames: string[];
 
   if (isDev()) {
     const extension = await import('../../../../../extension/src/renderer/Extension');
     importedExtensions = [extension];
+    folderNames = ['dev-extension'];
   } else {
     const extensionDataAddress: string[] = await rendererIpc.extension.getExtensionsData();
     const finalAddress: string[] = extensionDataAddress.map(ext => `${ext}/scripts/renderer/rendererEntry.mjs`);
 
-    const folderNames = compact(
+    folderNames = compact(
       finalAddress.map(url => {
         const match = url.match(/:\/\/[^/]+\/([^/]+)\/scripts/);
         return match ? match[1] : null;
@@ -45,7 +47,12 @@ export async function loadExtensions() {
     importedExtensions = await Promise.all(folderNames.map(folderName => getRemote(folderName, 'Extension')));
   }
 
-  extensionLoader(importedExtensions);
+  const extensionsWithIds = importedExtensions.map((module, index) => ({
+    id: folderNames[index],
+    module,
+  }));
+
+  extensionLoader(extensionsWithIds);
 }
 
 export const setRemote: SetRemoteModule = __federation_method_setRemote;
