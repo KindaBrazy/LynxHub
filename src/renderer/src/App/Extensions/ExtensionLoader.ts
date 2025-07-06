@@ -147,10 +147,6 @@ export const extensionsData: ExtensionData_Renderer = {
 };
 
 export const extensionRendererApi: ExtensionRendererApi = {
-  events: {
-    on: emitter.on,
-    emit: emitter.emit,
-  },
   titleBar: {
     addStart: comp => extensionsData.titleBar.addStart.push(comp),
     addCenter: comp => extensionsData.titleBar.addCenter.push(comp),
@@ -371,6 +367,11 @@ export const extensionRendererApi: ExtensionRendererApi = {
         addSection: comp => extensionsData.cards.customize.menu.addSection.push(...comp),
       },
     },
+  },
+  events: {
+    on: emitter.on,
+    off: emitter.off,
+    emit: emitter.emit,
   },
 };
 
