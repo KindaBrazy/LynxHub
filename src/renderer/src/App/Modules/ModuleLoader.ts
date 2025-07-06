@@ -167,6 +167,11 @@ async function emitLoaded(newAllModules: CardModules, newAllCards: CardData[]) {
  * and sets the `allModules` and `allCards` variables.
  */
 const loadModules = async () => {
+  // Set up the reload listener initially
+  rendererIpc.module.onReload(() => {
+    loadModules();
+  });
+
   try {
     let importedModules: {path: string; module: RendererModuleImportType}[];
 
@@ -219,11 +224,6 @@ const loadModules = async () => {
     throw error;
   }
 };
-
-// Set up the reload listener initially
-rendererIpc.module.onReload(() => {
-  loadModules();
-});
 
 export type ModuleData = {
   allModules: CardModules;
