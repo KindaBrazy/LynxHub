@@ -3,6 +3,7 @@ import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Download2_Icon, Play_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
+import {extensionRendererApi} from '../../../Extensions/ExtensionLoader';
 import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../Redux/Reducer/ModalsReducer';
@@ -47,6 +48,7 @@ const StartButton = memo(() => {
   }, [updatingExtensions]);
 
   const startAi = useCallback(() => {
+    extensionRendererApi.events.emit('before_card_start', {id});
     if (autoUpdateExtensions && card) {
       rendererIpc.utils.updateAllExtensions({id, dir: card.dir! + extensionsDir!});
       setIsUpdatingExt(true);
@@ -60,6 +62,7 @@ const StartButton = memo(() => {
 
   const install = useCallback(() => {
     if (getCardMethod(allCards, id, 'manager')) {
+      extensionRendererApi.events.emit('before_card_install', {id});
       dispatch(modalActions.openInstallUICard({cardId: id, tabID: activeTab, type: 'install', title}));
     }
   }, [repoUrl, title, id, dispatch, allCards, activeTab]);
