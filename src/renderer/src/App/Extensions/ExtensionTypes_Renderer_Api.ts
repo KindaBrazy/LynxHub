@@ -4,9 +4,9 @@ import {FC} from 'react';
 
 import {ModuleData} from '../Modules/ModuleLoader';
 import rendererIpc from '../RendererIpc';
+import {ExtensionEvents} from './ExtensionTypes_Events';
 import {
   AddMenuType,
-  ExtensionEvents,
   FcProp,
   FcPropCard,
   FcPropCardData,
