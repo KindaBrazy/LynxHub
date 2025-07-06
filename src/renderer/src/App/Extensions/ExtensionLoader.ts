@@ -1,6 +1,7 @@
 import mitt, {Emitter} from 'mitt';
 
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../Modules/ModuleLoader';
+import rendererIpc from '../RendererIpc';
 import {ExtensionData_Renderer, ExtensionEvents, ExtensionImport_Renderer} from './ExtensionTypes_Renderer';
 import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 
@@ -393,6 +394,7 @@ export default function extensionLoader(extensions: {id: string; module: Extensi
           useGetCardsByPath,
           getCardMethod,
         },
+        rendererIpc,
       },
       extension.id,
     );

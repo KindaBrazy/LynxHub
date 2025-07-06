@@ -29,6 +29,11 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi, extensionId: st
     if (targetCard) console.log(targetCard.title, 'Started');
   });
 
+  // Listen for terminal data
+  lynxAPI.rendererIpc?.pty.onData((_, id, data) => {
+    console.log(id, data);
+  });
+
   // Add new menu to the Cards
   lynxAPI.cards.customize.menu.addSection([{index: 2, components: [CardsAddMenu]}]);
 
