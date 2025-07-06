@@ -335,6 +335,8 @@ export type ExtensionRendererApi = {
     off: Emitter<ExtensionEvents>['off'];
     /** Emit an event. */
     emit: Emitter<ExtensionEvents>['emit'];
+    /** Get the number of listeners for a specific event. */
+    getListenerCount: (eventName: keyof ExtensionEvents) => number;
   };
 
   modulesData?: ModuleData;

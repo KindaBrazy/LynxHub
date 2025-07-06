@@ -1,10 +1,12 @@
-import mitt from 'mitt';
+import mitt, {Emitter} from 'mitt';
 
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../Modules/ModuleLoader';
 import {ExtensionData_Renderer, ExtensionEvents, ExtensionImport_Renderer} from './ExtensionTypes_Renderer';
 import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 
-const emitter = mitt<ExtensionEvents>();
+type EmitterType = Emitter<ExtensionEvents> & {all: Map<string, unknown[]>};
+
+const emitter: EmitterType = mitt<ExtensionEvents>();
 
 export const extensionsData: ExtensionData_Renderer = {
   titleBar: {
@@ -372,6 +374,10 @@ export const extensionRendererApi: ExtensionRendererApi = {
     on: emitter.on,
     off: emitter.off,
     emit: emitter.emit,
+    getListenerCount: (eventName: string) => {
+      const listeners = emitter.all.get(eventName);
+      return listeners ? listeners.length : 0;
+    },
   },
 };
 
