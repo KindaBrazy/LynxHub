@@ -160,3 +160,5 @@ export type ExtensionData_Renderer = {
 export type ExtensionImport_Renderer = {
   InitialExtensions: (lynxAPI: ExtensionRendererApi) => void;
 };
+
+export type ExtensionEvents = {'': unknown};

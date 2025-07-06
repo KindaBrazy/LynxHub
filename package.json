@@ -53,6 +53,7 @@
     "import-sync": "^2.2.3",
     "keytar": "^7.9.0",
     "lowdb": "^7.0.1",
+    "mitt": "^3.0.1",
     "node-pty": "^1.1.0-beta33",
     "serve-handler": "^6.1.6",
     "tree-kill": "^1.2.2"
