@@ -1,14 +1,20 @@
 import {InstallationStepper} from '@lynx_module/types';
-import {Dispatch, SetStateAction} from 'react';
+import {Dispatch, FC, SetStateAction} from 'react';
 
+import {extensionRendererApi} from '../../../../Extensions/ExtensionLoader';
 import rendererIpc from '../../../../RendererIpc';
 import {lynxTopToast} from '../../../../Utils/UtilHooks';
+import {InstallState} from '../types';
 
 export default class InstallStepper {
   private readonly setSteps: Dispatch<SetStateAction<string[]>>;
   private readonly setNextStep: Dispatch<SetStateAction<number>>;
   private readonly finalStep: InstallationStepper['showFinalStep'];
   private totalSteps: number;
+  private customStepContents: {index: number; content: FC}[];
+  private readonly updateState: (newState: Partial<InstallState>) => void;
+  private readonly cardId: string;
+  private nextStepResolver?: () => void;
 
   constructor(data: {
     cardId: string;
@@ -26,9 +32,13 @@ export default class InstallStepper {
     setUpdated: InstallationStepper['setUpdated'];
 
     checkForUpdate: (dir: string | undefined) => void;
+    updateState: (newState: Partial<InstallState>) => void;
   }) {
     this.totalSteps = 0;
+    this.customStepContents = [];
 
+    this.cardId = data.cardId;
+    this.updateState = data.updateState;
     this.setSteps = data.setSteps;
     this.setNextStep = data.setCurrentStep;
     this.setUpdated = data.setUpdated;
@@ -148,10 +158,33 @@ export default class InstallStepper {
   public initialSteps(steps: string[]) {
     this.totalSteps = steps.length - 1;
     this.setSteps(steps);
+
+    extensionRendererApi.events.emit('card_install_addStep', {
+      id: this.cardId,
+      addStep: (atIndex, title, content) => {
+        this.setSteps(prevSteps => prevSteps.toSpliced(atIndex, 0, title));
+        this.customStepContents.push({index: atIndex, content});
+        this.totalSteps += 1;
+      },
+    });
   }
 
-  public nextStep() {
-    this.setNextStep(prevState => (prevState < this.totalSteps ? prevState + 1 : prevState));
+  public async nextStep() {
+    return new Promise<void>(resolve => {
+      if (!this.nextStepResolver) this.nextStepResolver = resolve;
+      this.setNextStep(prevState => {
+        const stepNumber = prevState < this.totalSteps ? prevState + 1 : prevState;
+        const customStep = this.customStepContents.find(step => step.index === stepNumber);
+
+        if (customStep) {
+          this.updateState({body: 'extension-custom', extensionCustomContent: customStep?.content});
+        } else if (this.nextStepResolver) {
+          this.nextStepResolver();
+        }
+
+        return stepNumber;
+      });
+    });
   }
 
   public showFinalStep(type: 'success' | 'error', title: string, description?: string) {

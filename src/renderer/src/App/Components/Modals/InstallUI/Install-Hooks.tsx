@@ -180,6 +180,7 @@ export function useStepper({
       progressBar,
       setUpdated,
       checkForUpdate,
+      updateState,
     });
   }, [
     cardId,
@@ -191,8 +192,11 @@ export function useStepper({
     runTerminalScript,
     executeTerminalCommands,
     downloadFileFromUrl,
+    progressBar,
     starterStep,
     collectUserInput,
     setUpdated,
+    checkForUpdate,
+    updateState,
   ]);
 }
