@@ -1,3 +1,4 @@
+import {Button} from '@heroui/react';
 import {motion, stagger, Variants} from 'framer-motion';
 import {useMemo} from 'react';
 
@@ -56,37 +57,6 @@ const iconVariants: Variants = {
   },
 };
 
-const buttonVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.8,
-    y: 20,
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: {
-      duration: 0.4,
-      ease: 'easeOut',
-    },
-  },
-  hover: {
-    scale: 1.05,
-    y: -2,
-    transition: {
-      duration: 0.2,
-      ease: 'easeInOut',
-    },
-  },
-  tap: {
-    scale: 0.95,
-    transition: {
-      duration: 0.1,
-    },
-  },
-};
-
 const floatingVariants: Variants = {
   float: {
     y: [-10, 10, -10],
@@ -124,13 +94,13 @@ export default function ErrorPage() {
   }, []);
 
   const handleRetry = () => {
-    window.location.reload();
+    window.location.href = errorInfo.url;
   };
 
   return (
     <div
       className={
-        'min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900' +
+        'min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark ' +
         ' text-slate-300 flex flex-col justify-center items-center p-8 relative overflow-hidden'
       }>
       {/* Animated background elements */}
@@ -243,23 +213,15 @@ export default function ErrorPage() {
         </motion.div>
 
         {/* Action buttons */}
-        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center">
-          <motion.button
-            className={
-              'px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl ' +
-              'transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500' +
-              ' focus:ring-offset-2 focus:ring-offset-slate-900'
-            }
-            whileTap="tap"
-            whileHover="hover"
-            onClick={handleRetry}
-            variants={buttonVariants}>
-            <span className="flex items-center justify-center gap-2">
-              <Refresh3_Icon className="size-5" />
-              Try Again
-            </span>
-          </motion.button>
-        </motion.div>
+
+        <Button
+          size="lg"
+          color="primary"
+          onPress={handleRetry}
+          className="hover:scale-105"
+          startContent={<Refresh3_Icon className="size-5" />}>
+          Try Again
+        </Button>
 
         {/* Additional help text */}
         <motion.div animate="float" variants={floatingVariants} className="mt-12 text-sm text-slate-500">
