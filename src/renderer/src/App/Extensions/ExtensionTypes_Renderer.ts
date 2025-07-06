@@ -161,4 +161,9 @@ export type ExtensionImport_Renderer = {
   InitialExtensions: (lynxAPI: ExtensionRendererApi, extensionId: string) => void;
 };
 
-export type ExtensionEvents = {tempTest: string};
+export type ExtensionEvents = {
+  /** Will be called before a card starts running */
+  before_card_start: {id: string};
+  /** Will be called before a card start installing */
+  before_card_install: {id: string};
+};

@@ -20,7 +20,14 @@ import extensionReducer from './reducer';
 export function InitialExtensions(lynxAPI: ExtensionRendererApi, extensionId: string) {
   return;
 
+  // The unique id for extension
   console.info(extensionId);
+
+  // Listen for a card before start
+  lynxAPI.events.on('before_card_start', ({id}) => {
+    const targetCard = lynxAPI.modulesData?.allCards.find(card => card.id === id);
+    if (targetCard) console.log(targetCard.title, 'Started');
+  });
 
   // Add new menu to the Cards
   lynxAPI.cards.customize.menu.addSection([{index: 2, components: [CardsAddMenu]}]);
