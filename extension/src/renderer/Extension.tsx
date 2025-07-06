@@ -17,8 +17,10 @@ import {
 import {SettingsContent, SettingsNavButton} from './Components/Settings';
 import extensionReducer from './reducer';
 
-export function InitialExtensions(lynxAPI: ExtensionRendererApi) {
+export function InitialExtensions(lynxAPI: ExtensionRendererApi, extensionId: string) {
   return;
+
+  console.info(extensionId);
 
   // Add new menu to the Cards
   lynxAPI.cards.customize.menu.addSection([{index: 2, components: [CardsAddMenu]}]);

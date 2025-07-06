@@ -158,7 +158,7 @@ export type ExtensionData_Renderer = {
 };
 
 export type ExtensionImport_Renderer = {
-  InitialExtensions: (lynxAPI: ExtensionRendererApi) => void;
+  InitialExtensions: (lynxAPI: ExtensionRendererApi, extensionId: string) => void;
 };
 
 export type ExtensionEvents = {tempTest: string};

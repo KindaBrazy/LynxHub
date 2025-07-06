@@ -381,17 +381,20 @@ export const extensionRendererApi: ExtensionRendererApi = {
   },
 };
 
-export default function extensionLoader(extensions: ExtensionImport_Renderer[]) {
+export default function extensionLoader(extensions: {id: string; module: ExtensionImport_Renderer}[]) {
   for (const extension of extensions) {
-    extension.InitialExtensions({
-      ...extensionRendererApi,
-      modulesData: {
-        allModules,
-        allCards,
-        useGetArgumentsByID,
-        useGetCardsByPath,
-        getCardMethod,
+    extension.module.InitialExtensions(
+      {
+        ...extensionRendererApi,
+        modulesData: {
+          allModules,
+          allCards,
+          useGetArgumentsByID,
+          useGetCardsByPath,
+          getCardMethod,
+        },
       },
-    });
+      extension.id,
+    );
   }
 }
