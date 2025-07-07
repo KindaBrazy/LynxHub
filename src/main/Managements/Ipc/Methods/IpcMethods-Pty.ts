@@ -59,13 +59,27 @@ export async function emptyPtyProcess(id: string, opt: PtyProcessOpt, dir?: stri
   }
 }
 
-export async function customPtyProcess(id: string, opt: PtyProcessOpt, dir?: string, file?: string) {
+export async function customPtyProcess(
+  id: string,
+  opt: PtyProcessOpt,
+  dir?: string,
+  file?: string,
+  preCommands?: string | string[],
+) {
   if (opt === 'start') {
     if (!dir || !file) return;
 
     ptyManager.push(new PtyManager(id, dir, true));
 
-    getPtyByID(id)?.write(`${platform() === 'win32' ? './' : 'bash ./'}${file}${LINE_ENDING}`);
+    if (!lodash.isNil(preCommands)) {
+      if (lodash.isArray(preCommands)) {
+        runMultiCommand(id, preCommands);
+      } else {
+        ptyWrite(id, preCommands + LINE_ENDING);
+      }
+    }
+
+    ptyWrite(id, `${platform() === 'win32' ? './' : 'bash ./'}${file}${LINE_ENDING}`);
   } else if (opt === 'stop') {
     stopPty(id);
   }

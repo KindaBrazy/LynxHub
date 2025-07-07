@@ -5,10 +5,11 @@ import {
   UserInputField,
   UserInputResult,
 } from '@lynx_module/types';
-import {isNil} from 'lodash';
+import {isArray, isNil} from 'lodash';
 import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {extensionRendererApi} from '../../../Extensions/ExtensionLoader';
 import {useAllCards} from '../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../../Redux/Store';
@@ -39,6 +40,32 @@ type Props = {
   >;
 
   cardId: string;
+};
+
+const terminalEvent = (id: string, job: (preCommands: string[]) => void) => {
+  const preCommands: string[] = [];
+  let doneAdd: number = 0;
+
+  const listenerCount = extensionRendererApi.events.getListenerCount('card_install_command_before_terminal_action');
+  if (listenerCount > 0) {
+    extensionRendererApi.events.emit('card_install_command_before_terminal_action', {
+      id,
+      addCommand: commands => {
+        if (isArray(commands)) {
+          preCommands.push(...commands);
+        } else {
+          preCommands.push(commands);
+        }
+        doneAdd += 1;
+
+        if (doneAdd === listenerCount) {
+          job(preCommands);
+        }
+      },
+    });
+  } else {
+    job(preCommands);
+  }
 };
 
 export function useStepper({
@@ -76,14 +103,16 @@ export function useStepper({
   const runTerminalScript = useCallback(
     async (dir: string, file: string): ReturnType<InstallationStepper['runTerminalScript']> => {
       return new Promise(resolve => {
-        restartTerminal.current = () => {
-          rendererIpc.pty.customProcess(cardId, 'stop');
-          rendererIpc.pty.customProcess(cardId, 'start', dir, file);
-        };
+        terminalEvent(cardId, preCommands => {
+          restartTerminal.current = () => {
+            rendererIpc.pty.customProcess(cardId, 'stop');
+            rendererIpc.pty.customProcess(cardId, 'start', dir, file, preCommands);
+          };
 
-        terminalResolver.current = resolve;
-        updateState({body: 'terminal'});
-        rendererIpc.pty.customProcess(cardId, 'start', dir, file);
+          terminalResolver.current = resolve;
+          updateState({body: 'terminal'});
+          rendererIpc.pty.customProcess(cardId, 'start', dir, file, preCommands);
+        });
       });
     },
     [],
@@ -92,14 +121,24 @@ export function useStepper({
   const executeTerminalCommands = useCallback(
     async (commands?: string | string[], dir?: string): ReturnType<InstallationStepper['executeTerminalCommands']> => {
       return new Promise(resolve => {
-        restartTerminal.current = () => {
-          rendererIpc.pty.customCommands(cardId, 'stop');
-          rendererIpc.pty.customCommands(cardId, 'start', commands, dir);
-        };
+        terminalEvent(cardId, preCommands => {
+          if (!isNil(commands)) {
+            if (isArray(commands)) {
+              preCommands.push(...commands);
+            } else {
+              preCommands.push(commands);
+            }
+          }
 
-        terminalResolver.current = resolve;
-        updateState({body: 'terminal'});
-        rendererIpc.pty.customCommands(cardId, 'start', commands, dir);
+          restartTerminal.current = () => {
+            rendererIpc.pty.customCommands(cardId, 'stop');
+            rendererIpc.pty.customCommands(cardId, 'start', preCommands, dir);
+          };
+
+          terminalResolver.current = resolve;
+          updateState({body: 'terminal'});
+          rendererIpc.pty.customCommands(cardId, 'start', preCommands, dir);
+        });
       });
     },
     [],
