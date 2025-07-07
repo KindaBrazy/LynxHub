@@ -180,6 +180,7 @@ export default class InstallStepper {
           this.updateState({body: 'extension-custom', extensionCustomContent: customStep?.content});
         } else if (this.nextStepResolver) {
           this.nextStepResolver();
+          this.nextStepResolver = undefined;
         }
 
         return stepNumber;
