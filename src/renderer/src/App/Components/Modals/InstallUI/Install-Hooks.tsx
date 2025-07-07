@@ -9,7 +9,7 @@ import {isArray, isNil} from 'lodash';
 import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {eventUtil_collectUserInputs, eventUtil_TerminalPreCommands} from '../../../Extensions/Extension_Utils';
+import {eventUtil_CollectUserInputs, eventUtil_TerminalPreCommands} from '../../../Extensions/Extension_Utils';
 import {useAllCards} from '../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../../Redux/Store';
@@ -127,7 +127,7 @@ export function useStepper({
 
   const collectUserInput = useCallback((elements: UserInputField[], title?: string): Promise<UserInputResult[]> => {
     return new Promise(resolve => {
-      eventUtil_collectUserInputs(cardId, extensionUserInput => {
+      eventUtil_CollectUserInputs(cardId, extensionUserInput => {
         userInputResolver.current = resolve;
         setUserInputElements({elements, title});
         updateState({body: 'user-input', extensionUserInput});

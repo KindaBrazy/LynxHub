@@ -31,6 +31,7 @@ export type ExtensionEvents = {
   card_install_command_before_terminal_action: {id: string; addCommand: (commands: string | string[]) => void};
   card_collect_user_input: {id: string; addElements: (elements: FC[]) => void};
   card_start_pre_commands: {id: string; addCommand: (commands: string | string[]) => void};
+  card_uninstall_pre_commands: {id: string; addCommand: (commands: string | string[]) => void};
 };
 
 export type ExtensionEvents_IPC = {
@@ -95,7 +96,7 @@ export type ExtensionEvents_IPC = {
   module_check_ea: {isEA: boolean; isInsider: boolean};
   module_install_module: {url: string};
   module_uninstall_module: {id: string};
-  module_uninstall_card_by_id: {id: string};
+  module_uninstall_card_by_id: {id: string; uninstallPreCommands: string[]};
   module_is_update_available: {id: string};
   module_update_available_list: Record<string, never>;
   module_update_module: {id: string};
