@@ -55,7 +55,7 @@ export const eventUtil_CardStartPreCommands = (id: string, job: (preCommands: st
   }
 };
 
-export const eventUtil_collectUserInputs = (id: string, job: (elements: FC[]) => void) => {
+export const eventUtil_CollectUserInputs = (id: string, job: (elements: FC[]) => void) => {
   const elements: FC[] = [];
   let doneAdd: number = 0;
 
@@ -74,5 +74,32 @@ export const eventUtil_collectUserInputs = (id: string, job: (elements: FC[]) =>
     });
   } else {
     job(elements);
+  }
+};
+
+export const eventUtil_UninstallPreCommands = (id: string, job: (preCommands: string[]) => void) => {
+  const preCommands: string[] = [];
+  const LINE_ENDING = window.osPlatform === 'win32' ? '\r' : '\n';
+  let doneAdd: number = 0;
+
+  const listenerCount = extensionRendererApi.events.getListenerCount('card_uninstall_pre_commands');
+  if (listenerCount > 0) {
+    extensionRendererApi.events.emit('card_uninstall_pre_commands', {
+      id,
+      addCommand: commands => {
+        if (isArray(commands)) {
+          preCommands.push(...commands.map(command => `${command}${LINE_ENDING}`));
+        } else {
+          preCommands.push(`${commands}${LINE_ENDING}`);
+        }
+        doneAdd += 1;
+
+        if (doneAdd === listenerCount) {
+          job(preCommands);
+        }
+      },
+    });
+  } else {
+    job(preCommands);
   }
 };

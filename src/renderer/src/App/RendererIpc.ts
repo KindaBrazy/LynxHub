@@ -28,6 +28,7 @@ import {
   DarkModeTypes,
   DiscordRunningAI,
   DownloadProgress,
+  eventsChannels,
   extensionsChannels,
   ExtensionsData,
   ExtensionsUpdateStatus,
@@ -265,9 +266,9 @@ const rendererIpc = {
       return ipc.invoke(modulesChannels.uninstallModule, id);
     },
 
-    uninstallCardByID: (id: string): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('module_uninstall_card_by_id', {id});
-      return ipc.invoke(modulesChannels.uninstallCardByID, id);
+    uninstallCardByID: (id: string, uninstallPreCommands: string[]): Promise<void> => {
+      extensionRendererApi.events_ipc.emit('module_uninstall_card_by_id', {id, uninstallPreCommands});
+      return ipc.invoke(modulesChannels.uninstallCardByID, id, uninstallPreCommands);
     },
 
     isUpdateAvailable: (id: string): Promise<boolean> => {
@@ -978,6 +979,10 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('statics_get_patrons', {});
       return ipc.invoke(staticsChannels.getPatrons);
     },
+  },
+
+  events: {
+    card_PreCommandUninstall: (preCommands: string[]) => ipc.send(eventsChannels.card_PreCommandUninstall, preCommands),
   },
 };
 

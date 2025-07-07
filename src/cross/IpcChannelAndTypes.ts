@@ -401,3 +401,7 @@ export const staticsChannels = {
   getExtensionsEA: 'statics:getExtensionsEA',
   getPatrons: 'statics:getPatrons',
 };
+
+export const eventsChannels = {
+  card_PreCommandUninstall: 'events:card_PreCommandUninstall',
+};
