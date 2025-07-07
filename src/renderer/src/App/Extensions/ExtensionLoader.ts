@@ -2,12 +2,15 @@ import mitt, {Emitter} from 'mitt';
 
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../Modules/ModuleLoader';
 import rendererIpc from '../RendererIpc';
-import {ExtensionData_Renderer, ExtensionEvents, ExtensionImport_Renderer} from './ExtensionTypes_Renderer';
+import {ExtensionEvents, ExtensionEvents_IPC} from './ExtensionTypes_Events';
+import {ExtensionData_Renderer, ExtensionImport_Renderer} from './ExtensionTypes_Renderer';
 import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 
 type EmitterType = Emitter<ExtensionEvents> & {all: Map<string, unknown[]>};
+type EmitterType_IPC = Emitter<ExtensionEvents_IPC> & {all: Map<string, unknown[]>};
 
 const emitter: EmitterType = mitt<ExtensionEvents>();
+const emitter_ipc: EmitterType_IPC = mitt<ExtensionEvents_IPC>();
 
 export const extensionsData: ExtensionData_Renderer = {
   titleBar: {
@@ -375,8 +378,17 @@ export const extensionRendererApi: ExtensionRendererApi = {
     on: emitter.on,
     off: emitter.off,
     emit: emitter.emit,
-    getListenerCount: (eventName: string) => {
+    getListenerCount: (eventName: keyof ExtensionEvents) => {
       const listeners = emitter.all.get(eventName);
+      return listeners ? listeners.length : 0;
+    },
+  },
+  events_ipc: {
+    on: emitter_ipc.on,
+    off: emitter_ipc.off,
+    emit: emitter_ipc.emit,
+    getListenerCount: (eventName: keyof ExtensionEvents_IPC) => {
+      const listeners = emitter_ipc.all.get(eventName);
       return listeners ? listeners.length : 0;
     },
   },
