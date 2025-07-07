@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import {toMs} from '../../../../cross/CrossUtils';
 import StorageTypes from '../../../../cross/StorageTypes';
+import {eventUtil_CardStartPreCommands} from '../Extensions/Extension_Utils';
 import {useAllCards} from '../Modules/ModuleLoader';
 import {appActions, useAppState} from '../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
@@ -237,10 +238,12 @@ export const useIpcEvents = () => {
     rendererIpc.utils.offUpdateAllExtensions();
     rendererIpc.utils.onUpdateAllExtensions((_e, result) => {
       if (result.step === 'done') {
-        rendererIpc.pty.process(result.id, 'start', result.id);
-        rendererIpc.storageUtils.recentlyUsedCards('update', result.id);
-        dispatch(cardsActions.addRunningCard({id: result.id, tabId: activeTab}));
-        dispatch(cardsActions.setUpdatingExtensions(undefined));
+        eventUtil_CardStartPreCommands(result.id, preCommands => {
+          rendererIpc.pty.process(result.id, 'start', result.id, preCommands);
+          rendererIpc.storageUtils.recentlyUsedCards('update', result.id);
+          dispatch(cardsActions.addRunningCard({id: result.id, tabId: activeTab}));
+          dispatch(cardsActions.setUpdatingExtensions(undefined));
+        });
       }
       dispatch(cardsActions.setUpdatingExtensions(result));
     });

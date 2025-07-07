@@ -582,9 +582,9 @@ const rendererIpc = {
 
   /** Managing and using node_pty(Pseudo Terminal ) */
   pty: {
-    process: (id: string, opt: PtyProcessOpt, cardId: string): void => {
-      extensionRendererApi.events_ipc.emit('terminal_process', {id, opt, cardId});
-      ipc.send(ptyChannels.process, id, opt, cardId);
+    process: (id: string, opt: PtyProcessOpt, cardId: string, preCommands?: string | string[]): void => {
+      extensionRendererApi.events_ipc.emit('terminal_process', {id, opt, cardId, preCommands});
+      ipc.send(ptyChannels.process, id, opt, cardId, preCommands);
     },
     customProcess: (
       id: string,

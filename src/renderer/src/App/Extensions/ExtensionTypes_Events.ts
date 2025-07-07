@@ -30,10 +30,11 @@ export type ExtensionEvents = {
    * (like before runTerminalScript or executeTerminalCommands) */
   card_install_command_before_terminal_action: {id: string; addCommand: (commands: string | string[]) => void};
   card_collect_user_input: {id: string; addElements: (elements: FC[]) => void};
+  card_start_pre_commands: {id: string; addCommand: (commands: string | string[]) => void};
 };
 
 export type ExtensionEvents_IPC = {
-  terminal_process: {id: string; opt: PtyProcessOpt; cardId: string};
+  terminal_process: {id: string; opt: PtyProcessOpt; cardId: string; preCommands?: string | string[]};
   terminal_process_custom: {
     id: string;
     opt: PtyProcessOpt;

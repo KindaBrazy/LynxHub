@@ -3,6 +3,7 @@ import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Download2_Icon, Play_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
+import {eventUtil_CardStartPreCommands} from '../../../Extensions/Extension_Utils';
 import {extensionRendererApi} from '../../../Extensions/ExtensionLoader';
 import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
@@ -53,10 +54,12 @@ const StartButton = memo(() => {
       rendererIpc.utils.updateAllExtensions({id, dir: card.dir! + extensionsDir!});
       setIsUpdatingExt(true);
     } else {
-      rendererIpc.pty.process(id, 'start', id);
-      rendererIpc.storageUtils.recentlyUsedCards('update', id);
-      rendererIpc.win.setDiscordRpAiRunning({running: true, name: title, type});
-      dispatch(cardsActions.addRunningCard({tabId: activeTab, id}));
+      eventUtil_CardStartPreCommands(id, preCommands => {
+        rendererIpc.pty.process(id, 'start', id, preCommands);
+        rendererIpc.storageUtils.recentlyUsedCards('update', id);
+        rendererIpc.win.setDiscordRpAiRunning({running: true, name: title, type});
+        dispatch(cardsActions.addRunningCard({tabId: activeTab, id}));
+      });
     }
   }, [id, autoUpdateExtensions, activeTab, dispatch]);
 
