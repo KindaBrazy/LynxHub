@@ -6,10 +6,10 @@ import {
   UserInputResult,
 } from '@lynx_module/types';
 import {isArray, isNil} from 'lodash';
-import {Dispatch, FC, RefObject, SetStateAction, useCallback, useMemo} from 'react';
+import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extensionRendererApi} from '../../../Extensions/ExtensionLoader';
+import {eventUtil_collectUserInputs, eventUtil_TerminalPreCommands} from '../../../Extensions/Extension_Utils';
 import {useAllCards} from '../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../../Redux/Store';
@@ -40,54 +40,6 @@ type Props = {
   >;
 
   cardId: string;
-};
-
-const terminalEvent = (id: string, job: (preCommands: string[]) => void) => {
-  const preCommands: string[] = [];
-  let doneAdd: number = 0;
-
-  const listenerCount = extensionRendererApi.events.getListenerCount('card_install_command_before_terminal_action');
-  if (listenerCount > 0) {
-    extensionRendererApi.events.emit('card_install_command_before_terminal_action', {
-      id,
-      addCommand: commands => {
-        if (isArray(commands)) {
-          preCommands.push(...commands);
-        } else {
-          preCommands.push(commands);
-        }
-        doneAdd += 1;
-
-        if (doneAdd === listenerCount) {
-          job(preCommands);
-        }
-      },
-    });
-  } else {
-    job(preCommands);
-  }
-};
-
-const collectInputsEvent = (id: string, job: (elements: FC[]) => void) => {
-  const elements: FC[] = [];
-  let doneAdd: number = 0;
-
-  const listenerCount = extensionRendererApi.events.getListenerCount('card_collect_user_input');
-  if (listenerCount > 0) {
-    extensionRendererApi.events.emit('card_collect_user_input', {
-      id,
-      addElements: element => {
-        elements.push(...element);
-        doneAdd += 1;
-
-        if (doneAdd === listenerCount) {
-          job(elements);
-        }
-      },
-    });
-  } else {
-    job(elements);
-  }
 };
 
 export function useStepper({
@@ -125,7 +77,7 @@ export function useStepper({
   const runTerminalScript = useCallback(
     async (dir: string, file: string): ReturnType<InstallationStepper['runTerminalScript']> => {
       return new Promise(resolve => {
-        terminalEvent(cardId, preCommands => {
+        eventUtil_TerminalPreCommands(cardId, preCommands => {
           restartTerminal.current = () => {
             rendererIpc.pty.customProcess(cardId, 'stop');
             rendererIpc.pty.customProcess(cardId, 'start', dir, file, preCommands);
@@ -143,7 +95,7 @@ export function useStepper({
   const executeTerminalCommands = useCallback(
     async (commands?: string | string[], dir?: string): ReturnType<InstallationStepper['executeTerminalCommands']> => {
       return new Promise(resolve => {
-        terminalEvent(cardId, preCommands => {
+        eventUtil_TerminalPreCommands(cardId, preCommands => {
           if (!isNil(commands)) {
             if (isArray(commands)) {
               preCommands.push(...commands);
@@ -175,7 +127,7 @@ export function useStepper({
 
   const collectUserInput = useCallback((elements: UserInputField[], title?: string): Promise<UserInputResult[]> => {
     return new Promise(resolve => {
-      collectInputsEvent(cardId, extensionUserInput => {
+      eventUtil_collectUserInputs(cardId, extensionUserInput => {
         userInputResolver.current = resolve;
         setUserInputElements({elements, title});
         updateState({body: 'user-input', extensionUserInput});
