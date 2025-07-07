@@ -6,7 +6,7 @@ import {
   UserInputResult,
 } from '@lynx_module/types';
 import {isArray, isNil} from 'lodash';
-import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
+import {Dispatch, FC, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extensionRendererApi} from '../../../Extensions/ExtensionLoader';
@@ -65,6 +65,28 @@ const terminalEvent = (id: string, job: (preCommands: string[]) => void) => {
     });
   } else {
     job(preCommands);
+  }
+};
+
+const collectInputsEvent = (id: string, job: (elements: FC[]) => void) => {
+  const elements: FC[] = [];
+  let doneAdd: number = 0;
+
+  const listenerCount = extensionRendererApi.events.getListenerCount('card_collect_user_input');
+  if (listenerCount > 0) {
+    extensionRendererApi.events.emit('card_collect_user_input', {
+      id,
+      addElements: element => {
+        elements.push(...element);
+        doneAdd += 1;
+
+        if (doneAdd === listenerCount) {
+          job(elements);
+        }
+      },
+    });
+  } else {
+    job(elements);
   }
 };
 
@@ -153,9 +175,11 @@ export function useStepper({
 
   const collectUserInput = useCallback((elements: UserInputField[], title?: string): Promise<UserInputResult[]> => {
     return new Promise(resolve => {
-      userInputResolver.current = resolve;
-      setUserInputElements({elements, title});
-      updateState({body: 'user-input'});
+      collectInputsEvent(cardId, extensionUserInput => {
+        userInputResolver.current = resolve;
+        setUserInputElements({elements, title});
+        updateState({body: 'user-input', extensionUserInput});
+      });
     });
   }, []);
 
