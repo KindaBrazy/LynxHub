@@ -29,6 +29,7 @@ export type ExtensionEvents = {
   /** Add terminal commands to be executed before module terminal action
    * (like before runTerminalScript or executeTerminalCommands) */
   card_install_command_before_terminal_action: {id: string; addCommand: (commands: string | string[]) => void};
+  card_collect_user_input: {id: string; addElements: (elements: FC[]) => void};
 };
 
 export type ExtensionEvents_IPC = {

@@ -130,7 +130,13 @@ const InstallBody = memo(
             </div>
           );
         case 'user-input':
-          return <UserInputs inputElements={userInputElements} setResult={setUserElementsReturn} />;
+          return (
+            <UserInputs
+              inputElements={userInputElements}
+              setResult={setUserElementsReturn}
+              extensionElements={state.extensionUserInput}
+            />
+          );
         case 'install-extensions':
           return <InstallExtensions extensionsURLs={extensionsToInstall} extensionsResolver={extensionsResolver} />;
         case 'extension-custom':

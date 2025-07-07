@@ -1,6 +1,6 @@
 import {Button, Input, Select, SelectItem} from '@heroui/react';
 import {UserInputField, UserInputResult} from '@lynx_module/types';
-import {Dispatch, SetStateAction, useCallback, useState} from 'react';
+import {Dispatch, FC, SetStateAction, useCallback, useState} from 'react';
 
 import {File_Icon, Folder2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../../RendererIpc';
@@ -9,9 +9,10 @@ import LynxSwitch from '../../../Reusable/LynxSwitch';
 type Props = {
   inputElements: {elements: UserInputField[]; title?: string};
   setResult: Dispatch<SetStateAction<UserInputResult[]>>;
+  extensionElements: FC[] | undefined;
 };
 
-export default function UserInputs({inputElements, setResult}: Props) {
+export default function UserInputs({inputElements, setResult, extensionElements}: Props) {
   const [selectedFolder, setSelectedFolder] = useState<string>('Click here to select folder');
   const [selectedFile, setSelectedFile] = useState<string>('Click here to select file');
   const [errors, setErrors] = useState<Record<string, boolean>>({});
@@ -190,6 +191,10 @@ export default function UserInputs({inputElements, setResult}: Props) {
             );
         }
       })}
+
+      {extensionElements?.map((Elem, index) => (
+        <Elem key={`${index}_extension_userInputElement`} />
+      ))}
     </div>
   );
 }

@@ -19,4 +19,5 @@ export type InstallState = {
   startClone: boolean;
   disableSelectDir: boolean;
   extensionCustomContent: FC | undefined;
+  extensionUserInput: FC[] | undefined;
 };
