@@ -84,7 +84,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
         <div className="w-full flex justify-center mb-2">
           <CircularProgress size="lg" label="Fetching repository info..." />
         </div>
-      ) : !isEmpty(branches) ? (
+      ) : isEmpty(branches) ? (
         <div className="flex flex-col items-center justify-center p-2 gap-y-1">
           <ShieldWarning_Icon className="size-14 text-warning" />
           <span className="text-lg font-medium">Unable to retrieve repository branches</span>
