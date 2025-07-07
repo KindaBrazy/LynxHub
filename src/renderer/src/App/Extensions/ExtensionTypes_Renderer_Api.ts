@@ -4,7 +4,7 @@ import {FC} from 'react';
 
 import {ModuleData} from '../Modules/ModuleLoader';
 import rendererIpc from '../RendererIpc';
-import {ExtensionEvents} from './ExtensionTypes_Events';
+import {ExtensionEvents, ExtensionEvents_IPC} from './ExtensionTypes_Events';
 import {
   AddMenuType,
   FcProp,
@@ -338,6 +338,17 @@ export type ExtensionRendererApi = {
     emit: Emitter<ExtensionEvents>['emit'];
     /** Get the number of listeners for a specific event. */
     getListenerCount: (eventName: keyof ExtensionEvents) => number;
+  };
+
+  events_ipc: {
+    /** Register an event listener. */
+    on: Emitter<ExtensionEvents_IPC>['on'];
+    /** Remove an event handler for the given type. */
+    off: Emitter<ExtensionEvents_IPC>['off'];
+    /** Emit an event. */
+    emit: Emitter<ExtensionEvents_IPC>['emit'];
+    /** Get the number of listeners for a specific event. */
+    getListenerCount: (eventName: keyof ExtensionEvents_IPC) => number;
   };
 
   modulesData?: ModuleData;
