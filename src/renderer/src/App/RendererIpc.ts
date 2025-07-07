@@ -586,9 +586,15 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('terminal_process', {id, opt, cardId});
       ipc.send(ptyChannels.process, id, opt, cardId);
     },
-    customProcess: (id: string, opt: PtyProcessOpt, dir?: string, file?: string): void => {
-      extensionRendererApi.events_ipc.emit('terminal_process_custom', {id, opt, dir, file});
-      ipc.send(ptyChannels.customProcess, id, opt, dir, file);
+    customProcess: (
+      id: string,
+      opt: PtyProcessOpt,
+      dir?: string,
+      file?: string,
+      preCommands?: string | string[],
+    ): void => {
+      extensionRendererApi.events_ipc.emit('terminal_process_custom', {id, opt, dir, file, preCommands});
+      ipc.send(ptyChannels.customProcess, id, opt, dir, file, preCommands);
     },
     emptyProcess: (id: string, opt: PtyProcessOpt, dir?: string): void => {
       extensionRendererApi.events_ipc.emit('terminal_process_empty', {id, opt, dir});
