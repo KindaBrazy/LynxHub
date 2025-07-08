@@ -203,9 +203,7 @@ function modules() {
 
   ipcMain.handle(modulesChannels.installModule, (_, url: string) => moduleManager.installPlugin(url));
   ipcMain.handle(modulesChannels.uninstallModule, (_, id: string) => moduleManager.uninstallPlugin(id));
-  ipcMain.handle(modulesChannels.uninstallCardByID, (_, id: string, uninstallPreCommands: string[]) =>
-    moduleManager.uninstallCardByID(id, uninstallPreCommands),
-  );
+  ipcMain.handle(modulesChannels.uninstallCardByID, (_, id: string) => moduleManager.uninstallCardByID(id));
   ipcMain.handle(modulesChannels.isUpdateAvailable, (_, id: string) => moduleManager.isUpdateAvailable(id));
   ipcMain.handle(modulesChannels.updateAvailableList, () => moduleManager.updateAvailableList());
   ipcMain.handle(modulesChannels.updateModule, (_, id: string) => moduleManager.updatePlugin(id));
@@ -371,6 +369,10 @@ function storageUtilsIpc() {
   );
 
   ipcMain.on(storageUtilsChannels.addReadNotif, (_, id: string) => storageManager.addReadNotif(id));
+
+  ipcMain.on(storageUtilsChannels.setCardTerminalPreCommands, (_, id: string, commands: string[]) =>
+    storageManager.setCardTerminalPreCommands(id, commands),
+  );
 }
 
 function modulesIpc() {

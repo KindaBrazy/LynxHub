@@ -75,6 +75,8 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
 
         return dir;
       },
+      getExtensions_TerminalPreCommands: (id: string) =>
+        storageManager.getData('cards').cardTerminalPreCommands.find(commands => commands.id === id)?.commands || [],
     };
 
     return utils;
@@ -173,11 +175,11 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
     }
   }
 
-  public async uninstallCardByID(id: string, uninstallPreCommands: string[]): Promise<void> {
+  public async uninstallCardByID(id: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const uninstall = this.getMethodsById(id)?.().uninstall;
       if (uninstall) {
-        uninstall(uninstallPreCommands).then(resolve).catch(reject);
+        uninstall().then(resolve).catch(reject);
       } else {
         reject(new Error(`Card with ID "${id}" does not have an uninstall method.`));
       }

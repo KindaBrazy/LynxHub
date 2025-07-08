@@ -1,3 +1,5 @@
+import {platform} from 'node:os';
+
 import lodash from 'lodash';
 import _ from 'lodash';
 
@@ -600,6 +602,22 @@ class StorageManager extends BaseStorage {
     if (prevReadNotifs.includes(id)) return;
 
     this.updateData('notification', {readNotifs: [...prevReadNotifs, id]});
+  }
+
+  public setCardTerminalPreCommands(id: string, commands: string[]) {
+    const LINE_ENDING = platform() === 'win32' ? '\r' : '\n';
+    const commandLines = commands.map(command => `${command}${LINE_ENDING}`);
+    let cardTerminalPreCommands = this.getData('cards').cardTerminalPreCommands;
+
+    const findIndex = cardTerminalPreCommands.findIndex(command => command.id === id);
+
+    if (findIndex !== -1) {
+      cardTerminalPreCommands[findIndex] = {id, commands: commandLines};
+    } else {
+      cardTerminalPreCommands = [...cardTerminalPreCommands, {id, commands: commandLines}];
+    }
+
+    this.updateData('cards', {cardTerminalPreCommands});
   }
 }
 

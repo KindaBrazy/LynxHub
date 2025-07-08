@@ -392,6 +392,9 @@ export const extensionRendererApi: ExtensionRendererApi = {
       return listeners ? listeners.length : 0;
     },
   },
+  setCards_TerminalPreCommands: (id: string, preCommands: string[]) => {
+    rendererIpc.storageUtils.setCardTerminalPreCommands(id, preCommands);
+  },
 };
 
 export default function extensionLoader(extensions: {id: string; module: ExtensionImport_Renderer}[]) {

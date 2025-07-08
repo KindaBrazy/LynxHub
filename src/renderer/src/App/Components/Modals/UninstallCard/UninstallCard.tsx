@@ -3,7 +3,6 @@ import {Fragment, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ShieldCross_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
-import {eventUtil_UninstallPreCommands} from '../../../Extensions/Extension_Utils';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {useGetUninstallType} from '../../../Modules/ModuleLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
@@ -72,19 +71,17 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
     closeHandle();
 
     const promise = new Promise<void>(resolve => {
-      eventUtil_UninstallPreCommands(cardId, preCommands => {
-        rendererIpc.module
-          .uninstallCardByID(cardId, preCommands)
-          .then(() => {
-            resolve();
-            rendererIpc.storageUtils.removeInstalledCard(cardId);
-            lynxTopToast.success('Uninstalled successfully.');
-          })
-          .catch(() => {
-            resolve();
-            lynxTopToast.error('An error occurred while uninstalling.');
-          });
-      });
+      rendererIpc.module
+        .uninstallCardByID(cardId)
+        .then(() => {
+          resolve();
+          rendererIpc.storageUtils.removeInstalledCard(cardId);
+          lynxTopToast.success('Uninstalled successfully.');
+        })
+        .catch(() => {
+          resolve();
+          lynxTopToast.error('An error occurred while uninstalling.');
+        });
     });
 
     lynxTopToast.loading('Uninstalling...', promise);

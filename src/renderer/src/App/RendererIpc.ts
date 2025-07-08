@@ -266,9 +266,9 @@ const rendererIpc = {
       return ipc.invoke(modulesChannels.uninstallModule, id);
     },
 
-    uninstallCardByID: (id: string, uninstallPreCommands: string[]): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('module_uninstall_card_by_id', {id, uninstallPreCommands});
-      return ipc.invoke(modulesChannels.uninstallCardByID, id, uninstallPreCommands);
+    uninstallCardByID: (id: string): Promise<void> => {
+      extensionRendererApi.events_ipc.emit('module_uninstall_card_by_id', {id});
+      return ipc.invoke(modulesChannels.uninstallCardByID, id);
     },
 
     isUpdateAvailable: (id: string): Promise<boolean> => {
@@ -521,6 +521,11 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('storage_utils_add_read_notif', {id});
       ipc.send(storageUtilsChannels.addReadNotif, id);
     },
+
+    setCardTerminalPreCommands: (id: string, commands: string[]) => {
+      extensionRendererApi.events_ipc.emit('storage_utils_setCardTerminalPreCommands', {id, commands});
+      ipc.send(storageUtilsChannels.setCardTerminalPreCommands, id, commands);
+    },
   },
 
   /** Utilities methods */
@@ -583,7 +588,7 @@ const rendererIpc = {
 
   /** Managing and using node_pty(Pseudo Terminal ) */
   pty: {
-    process: (id: string, opt: PtyProcessOpt, cardId: string, preCommands?: string | string[]): void => {
+    process: (id: string, opt: PtyProcessOpt, cardId: string): void => {
       extensionRendererApi.events_ipc.emit('terminal_process', {id, opt, cardId, preCommands});
       ipc.send(ptyChannels.process, id, opt, cardId, preCommands);
     },
