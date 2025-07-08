@@ -23,8 +23,6 @@ import {lynxTopToast} from '../../../Utils/UtilHooks';
 import {getRendererMode, getTheme, getWindowPty} from './Terminal_Utils';
 import parseTerminalColors from './TerminalColorHandler';
 
-let resizeTimeout: any;
-
 const FONT_FAMILY = 'JetBrainsMono';
 
 type Props = {runningCard: RunningCard; setTerminalContent?: Dispatch<SetStateAction<string>>};
@@ -224,6 +222,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
       });
     });
 
+    let resizeTimeout: any;
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
