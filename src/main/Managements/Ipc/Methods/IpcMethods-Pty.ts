@@ -1,7 +1,7 @@
 import {platform} from 'node:os';
 
 import {app, shell} from 'electron';
-import lodash, {isArray, isEmpty, isNil} from 'lodash';
+import {isArray, isEmpty, isNil} from 'lodash';
 
 import {PtyProcessOpt} from '../../../../cross/IpcChannelAndTypes';
 import {moduleManager, storageManager} from '../../../index';
@@ -18,9 +18,13 @@ const LINE_ENDING = platform() === 'win32' ? '\r' : '\n';
  * @param commands - An array of commands to run.
  */
 function runMultiCommand(id: string, commands: string[]): void {
-  if (!lodash.isEmpty(commands) && ptyManager) {
+  if (!isEmpty(commands) && ptyManager) {
     commands.forEach(command => ptyWrite(id, `${command}${LINE_ENDING}`));
   }
+}
+
+function getExtPreCommands(id: string) {
+  return storageManager.getData('cards').cardTerminalPreCommands.find(command => command.id === id)?.commands || [];
 }
 
 /**
@@ -59,19 +63,14 @@ export async function emptyPtyProcess(id: string, opt: PtyProcessOpt, dir?: stri
   }
 }
 
-export async function customPtyProcess(
-  id: string,
-  opt: PtyProcessOpt,
-  dir?: string,
-  file?: string,
-  preCommands?: string | string[],
-) {
+export async function customPtyProcess(id: string, opt: PtyProcessOpt, dir?: string, file?: string) {
   if (opt === 'start') {
     if (!dir || !file) return;
 
     ptyManager.push(new PtyManager(id, dir, true));
 
-    executeCommands(id, preCommands);
+    const extensionPreCommands = getExtPreCommands(id);
+    executeCommands(id, extensionPreCommands);
 
     executeCommands(id, `${platform() === 'win32' ? './' : 'bash ./'}${file}`);
   } else if (opt === 'stop') {
@@ -81,10 +80,20 @@ export async function customPtyProcess(
 
 export async function customPtyCommands(id: string, opt: PtyProcessOpt, commands?: string | string[], dir?: string) {
   if (opt === 'start') {
-    if (lodash.isEmpty(commands)) return;
+    if (isEmpty(commands)) return;
     ptyManager.push(new PtyManager(id, dir, true));
 
-    executeCommands(id, commands);
+    const extensionPreCommands = getExtPreCommands(id);
+
+    if (!isNil(commands) && !isEmpty(commands)) {
+      if (isArray(commands)) {
+        extensionPreCommands.push(...commands);
+      } else {
+        extensionPreCommands.push(commands);
+      }
+    }
+
+    executeCommands(id, extensionPreCommands);
   } else if (opt === 'stop') {
     stopPty(id);
   }
@@ -106,8 +115,7 @@ export async function ptyProcess(id: string, opt: PtyProcessOpt, cardId: string)
 
     const preCommands = storageManager.getPreCommandById(cardId);
 
-    const extensionPreCommands =
-      storageManager.getData('cards').cardTerminalPreCommands.find(command => command.id === id)?.commands || [];
+    const extensionPreCommands = getExtPreCommands(id);
     executeCommands(id, extensionPreCommands);
 
     executeCommands(id, preCommands?.data);
@@ -119,7 +127,7 @@ export async function ptyProcess(id: string, opt: PtyProcessOpt, cardId: string)
       .getData('cardsConfig')
       .customRunBehavior.find(custom => custom.cardID === cardId)?.terminal;
 
-    if (!lodash.isEmpty(customRun) || behavior === 'empty') {
+    if (!isEmpty(customRun) || behavior === 'empty') {
       executeCommands(id, customRun);
     } else {
       const runCommand = await moduleManager.getMethodsById(cardId)?.().getRunCommands();

@@ -40,7 +40,6 @@ export type ExtensionEvents_IPC = {
     opt: PtyProcessOpt;
     dir?: string;
     file?: string;
-    preCommands?: string | string[];
   };
   terminal_process_custom_command: {id: string; opt: PtyProcessOpt; commands?: string | string[]; dir?: string};
   terminal_process_empty: {id: string; opt: PtyProcessOpt; dir?: string};

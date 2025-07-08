@@ -5,11 +5,11 @@ import {
   UserInputField,
   UserInputResult,
 } from '@lynx_module/types';
-import {isArray, isNil} from 'lodash';
+import {isNil} from 'lodash';
 import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {eventUtil_CollectUserInputs, eventUtil_TerminalPreCommands} from '../../../Extensions/Extension_Utils';
+import {eventUtil_CollectUserInputs} from '../../../Extensions/Extension_Utils';
 import {useAllCards} from '../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../../Redux/Store';
@@ -77,16 +77,14 @@ export function useStepper({
   const runTerminalScript = useCallback(
     async (dir: string, file: string): ReturnType<InstallationStepper['runTerminalScript']> => {
       return new Promise(resolve => {
-        eventUtil_TerminalPreCommands(cardId, preCommands => {
-          restartTerminal.current = () => {
-            rendererIpc.pty.customProcess(cardId, 'stop');
-            rendererIpc.pty.customProcess(cardId, 'start', dir, file, preCommands);
-          };
+        restartTerminal.current = () => {
+          rendererIpc.pty.customProcess(cardId, 'stop');
+          rendererIpc.pty.customProcess(cardId, 'start', dir, file);
+        };
 
-          terminalResolver.current = resolve;
-          updateState({body: 'terminal'});
-          rendererIpc.pty.customProcess(cardId, 'start', dir, file, preCommands);
-        });
+        terminalResolver.current = resolve;
+        updateState({body: 'terminal'});
+        rendererIpc.pty.customProcess(cardId, 'start', dir, file);
       });
     },
     [],
@@ -95,24 +93,14 @@ export function useStepper({
   const executeTerminalCommands = useCallback(
     async (commands?: string | string[], dir?: string): ReturnType<InstallationStepper['executeTerminalCommands']> => {
       return new Promise(resolve => {
-        eventUtil_TerminalPreCommands(cardId, preCommands => {
-          if (!isNil(commands)) {
-            if (isArray(commands)) {
-              preCommands.push(...commands);
-            } else {
-              preCommands.push(commands);
-            }
-          }
+        restartTerminal.current = () => {
+          rendererIpc.pty.customCommands(cardId, 'stop');
+          rendererIpc.pty.customCommands(cardId, 'start', commands, dir);
+        };
 
-          restartTerminal.current = () => {
-            rendererIpc.pty.customCommands(cardId, 'stop');
-            rendererIpc.pty.customCommands(cardId, 'start', preCommands, dir);
-          };
-
-          terminalResolver.current = resolve;
-          updateState({body: 'terminal'});
-          rendererIpc.pty.customCommands(cardId, 'start', preCommands, dir);
-        });
+        terminalResolver.current = resolve;
+        updateState({body: 'terminal'});
+        rendererIpc.pty.customCommands(cardId, 'start', commands, dir);
       });
     },
     [],
