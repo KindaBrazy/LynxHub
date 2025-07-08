@@ -149,6 +149,7 @@ export type ExtensionEvents_IPC = {
   };
   storage_utils_add_read_notif: {id: string};
   storage_utils_setCardTerminalPreCommands: {id: string; commands: string[]};
+  storage_utils_unassignCard: {id: string; clearConfigs: boolean};
 
   // utils
   utils_update_all_extensions: {data: {id: string; dir: string}};

@@ -9,7 +9,7 @@ import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {useUpdatingCard} from '../../../../Utils/UtilHooks';
 import {useCardData} from '../../CardsDataManager';
 import {MenuDuplicate, MenuHomePage, MenuInfo} from './MenuItems/CardMenu-About';
-import {MenuUninstall} from './MenuItems/CardMenu-Danger';
+import {MenuUnAssign, MenuUninstall} from './MenuItems/CardMenu-Danger';
 import {MenuExtensions, MenuLaunchConfig, MenuRepoConfig} from './MenuItems/CardMenu-Options';
 import {MenuAutoUpdate, MenuCheckForUpdate, MenuUpdate} from './MenuItems/CardMenu-Update';
 
@@ -70,6 +70,7 @@ export const CardMenu = observer(() => {
           {MenuInfo()}
           {MenuHomePage()}
           {MenuDuplicate()}
+          {MenuUnAssign()}
           {MenuUninstall()}
         </DropdownSection>
 

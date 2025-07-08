@@ -158,6 +158,7 @@ export type ExtensionRendererApi = {
      * This modal manages the uninstallation process of a selected card.
      * @see {@linkcode UninstallCard} for implementation details. */
     uninstallCard: CompFc;
+    unassignCard: CompFc;
     /** Replace the modal for displaying warning messages.
      * This modal is used in cases like failed installations or other critical alerts.
      * @see {@linkcode WarningModal} for implementation details. */

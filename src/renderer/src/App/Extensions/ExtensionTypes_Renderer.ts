@@ -77,6 +77,7 @@ export type ExtensionData_Renderer = {
     cardInfo: FC | undefined;
     installUi: FC | undefined;
     uninstallCard: FC | undefined;
+    unassignCard: FC | undefined;
     warning: FC | undefined;
     cardReadme: FC | undefined;
     gitManager: FC | undefined;

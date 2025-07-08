@@ -367,6 +367,9 @@ function storageUtilsIpc() {
   ipcMain.on(storageUtilsChannels.setCardTerminalPreCommands, (_, id: string, commands: string[]) =>
     storageManager.setCardTerminalPreCommands(id, commands),
   );
+  ipcMain.handle(storageUtilsChannels.unassignCard, (_, id: string, clearConfigs: boolean) =>
+    storageManager.unassignCard(id, clearConfigs),
+  );
 }
 
 function modulesIpc() {
