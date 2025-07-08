@@ -309,6 +309,8 @@ export const storageUtilsChannels = {
   onConfirmChange: 'storage:on-confirm-change',
 
   addReadNotif: 'storageUtils:add-read-notif',
+
+  setCardTerminalPreCommands: 'storageUtils:card-terminal-preCommands',
 };
 
 export const appWindowChannels = {

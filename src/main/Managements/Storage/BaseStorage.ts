@@ -19,10 +19,10 @@ import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
-  private readonly CURRENT_VERSION: number = 0.83;
+  private readonly CURRENT_VERSION: number = 0.84;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.83},
+    storage: {version: 0.84},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -37,6 +37,7 @@ class BaseStorage {
       zoomFactor: 1,
       duplicated: [],
       checkUpdateInterval: 30,
+      cardTerminalPreCommands: [],
     },
     cardsConfig: {
       preCommands: [],
@@ -192,6 +193,10 @@ class BaseStorage {
       this.storage.data.browser.recentAddress = urls;
     };
 
+    const v83to84 = () => {
+      this.storage.data.cards.cardTerminalPreCommands = [];
+    };
+
     const updateVersion = () => {
       this.updateData('storage', {version: this.CURRENT_VERSION});
     };
@@ -209,6 +214,7 @@ class BaseStorage {
           v8to81();
           v81to82();
           v82to83();
+          v83to84();
           break;
         }
         case 0.5: {
@@ -218,6 +224,7 @@ class BaseStorage {
           v8to81();
           v81to82();
           v82to83();
+          v83to84();
           break;
         }
         case 0.6: {
@@ -226,6 +233,7 @@ class BaseStorage {
           v8to81();
           v81to82();
           v82to83();
+          v83to84();
           break;
         }
         case 0.7: {
@@ -233,21 +241,29 @@ class BaseStorage {
           v8to81();
           v81to82();
           v82to83();
+          v83to84();
           break;
         }
         case 0.8: {
           v8to81();
           v81to82();
           v82to83();
+          v83to84();
           break;
         }
         case 0.81: {
           v81to82();
           v82to83();
+          v83to84();
           break;
         }
         case 0.82: {
           v82to83();
+          v83to84();
+          break;
+        }
+        case 0.83: {
+          v83to84();
           break;
         }
         default:

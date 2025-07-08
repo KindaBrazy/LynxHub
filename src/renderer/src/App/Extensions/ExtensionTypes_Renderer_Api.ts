@@ -351,6 +351,8 @@ export type ExtensionRendererApi = {
     getListenerCount: (eventName: keyof ExtensionEvents_IPC) => number;
   };
 
+  setCards_TerminalPreCommands: (id: string, preCommands: string[]) => void;
+
   modulesData?: ModuleData;
 
   rendererIpc?: typeof rendererIpc;
