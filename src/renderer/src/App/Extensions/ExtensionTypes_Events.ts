@@ -34,7 +34,7 @@ export type ExtensionEvents = {
 };
 
 export type ExtensionEvents_IPC = {
-  terminal_process: {id: string; opt: PtyProcessOpt; cardId: string; preCommands?: string | string[]};
+  terminal_process: {id: string; opt: PtyProcessOpt; cardId: string};
   terminal_process_custom: {
     id: string;
     opt: PtyProcessOpt;
