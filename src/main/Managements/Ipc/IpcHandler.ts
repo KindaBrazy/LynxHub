@@ -239,10 +239,8 @@ function extensions() {
 
 function pty() {
   ipcMain.on(ptyChannels.process, (_, id: string, opt: PtyProcessOpt, cardId: string) => ptyProcess(id, opt, cardId));
-  ipcMain.on(
-    ptyChannels.customProcess,
-    (_, id: string, opt: PtyProcessOpt, dir?: string, file?: string, preCommands?: string | string[]) =>
-      customPtyProcess(id, opt, dir, file, preCommands),
+  ipcMain.on(ptyChannels.customProcess, (_, id: string, opt: PtyProcessOpt, dir?: string, file?: string) =>
+    customPtyProcess(id, opt, dir, file),
   );
   ipcMain.on(ptyChannels.emptyProcess, (_, id: string, opt: PtyProcessOpt, dir?: string) =>
     emptyPtyProcess(id, opt, dir),
