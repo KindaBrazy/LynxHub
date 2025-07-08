@@ -68,6 +68,7 @@ export const extensionsData: ExtensionData_Renderer = {
     warning: undefined,
     cardReadme: undefined,
     gitManager: undefined,
+    unassignCard: undefined,
   },
   addCustomHook: [],
   replaceBackground: undefined,
@@ -258,6 +259,9 @@ export const extensionRendererApi: ExtensionRendererApi = {
     },
     uninstallCard: comp => {
       extensionsData.replaceModals.uninstallCard = comp;
+    },
+    unassignCard: comp => {
+      extensionsData.replaceModals.unassignCard = comp;
     },
     warning: comp => {
       extensionsData.replaceModals.warning = comp;

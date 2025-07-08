@@ -526,6 +526,11 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('storage_utils_setCardTerminalPreCommands', {id, commands});
       ipc.send(storageUtilsChannels.setCardTerminalPreCommands, id, commands);
     },
+
+    unassignCard: (id: string, clearConfigs: boolean) => {
+      extensionRendererApi.events_ipc.emit('storage_utils_unassignCard', {id, clearConfigs});
+      return ipc.invoke(storageUtilsChannels.unassignCard, id, clearConfigs);
+    },
   },
 
   /** Utilities methods */

@@ -29,6 +29,12 @@ type ModalsState = {
 
     cardId: string;
   }[];
+  cardUnassignModal: {
+    isOpen: boolean;
+    tabID: string;
+
+    cardId: string;
+  }[];
   updateDetails: {
     isOpen: boolean;
 
@@ -121,6 +127,7 @@ const initialState: ModalsState = {
   updateApp: {
     isOpen: false,
   },
+  cardUnassignModal: [],
 };
 
 const modalSlice = createSlice({
@@ -187,6 +194,24 @@ const modalSlice = createSlice({
     removeUninstallCard: (state, action: PayloadAction<{tabID: string}>) => {
       const {tabID} = action.payload;
       state.cardUninstallModal = state.cardUninstallModal.filter(modal => modal.tabID !== tabID);
+    },
+
+    openUnassignCard: (state, action: PayloadAction<{cardId: string; tabID: string}>) => {
+      state.cardUnassignModal = [...state.cardUnassignModal, {...action.payload, isOpen: true}];
+    },
+    closeUnassignCard: (state, action: PayloadAction<{tabID: string}>) => {
+      state.cardUnassignModal = state.cardUnassignModal.map(modal =>
+        modal.tabID === action.payload.tabID
+          ? {
+              ...modal,
+              isOpen: false,
+            }
+          : modal,
+      );
+    },
+    removeUnassignCard: (state, action: PayloadAction<{tabID: string}>) => {
+      const {tabID} = action.payload;
+      state.cardUnassignModal = state.cardUnassignModal.filter(modal => modal.tabID !== tabID);
     },
 
     openUpdateDetails: (state, action: PayloadAction<{title: string; details: PullResult; tabID: string}>) => {

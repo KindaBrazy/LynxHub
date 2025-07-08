@@ -311,6 +311,8 @@ export const storageUtilsChannels = {
   addReadNotif: 'storageUtils:add-read-notif',
 
   setCardTerminalPreCommands: 'storageUtils:card-terminal-preCommands',
+
+  unassignCard: 'storageUtils:unassign-card',
 };
 
 export const appWindowChannels = {

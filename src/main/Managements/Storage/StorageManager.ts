@@ -619,6 +619,25 @@ class StorageManager extends BaseStorage {
 
     this.updateData('cards', {cardTerminalPreCommands});
   }
+  public unassignCard(id: string, clearConfigs: boolean) {
+    const cards = this.getData('cards');
+    const cardsConfig = this.getData('cardsConfig');
+
+    this.removeInstalledCard(id);
+
+    if (clearConfigs) {
+      cards.autoUpdateCards = cards.autoUpdateCards.filter(card => card !== id);
+      cards.autoUpdateExtensions = cards.autoUpdateExtensions.filter(card => card !== id);
+      cards.pinnedCards = cards.pinnedCards.filter(card => card !== id);
+      cards.recentlyUsedCards = cards.recentlyUsedCards.filter(card => card !== id);
+
+      cardsConfig.customRun = cardsConfig.customRun.filter(card => card.cardId !== id);
+      cardsConfig.preOpen = cardsConfig.preOpen.filter(card => card.cardId !== id);
+      cardsConfig.preCommands = cardsConfig.preCommands.filter(card => card.cardId !== id);
+      cardsConfig.customRunBehavior = cardsConfig.customRunBehavior.filter(card => card.cardID !== id);
+      cardsConfig.args = cardsConfig.args.filter(card => card.cardId !== id);
+    }
+  }
 }
 
 export default StorageManager;

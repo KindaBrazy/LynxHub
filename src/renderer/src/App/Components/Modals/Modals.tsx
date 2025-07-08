@@ -7,6 +7,7 @@ import CardInfoModal from './CardInfo/CardInfo-Modal';
 import ReadMeModal from './CardReadme_Modal';
 import InstallCardModal from './InstallUI/Install-Modal';
 import LaunchConfigModal from './LaunchConfig/LaunchConfig';
+import UnassignCardComp from './UnassignCard/UnassignCard';
 import UninstallCardComp from './UninstallCard/UninstallCard';
 import UpdateApp from './UpdateApp/UpdateApp';
 import UpdatingNotification from './UpdatingCard/UpdatingNotification';
@@ -21,6 +22,7 @@ const Modals = memo(() => {
     <>
       <ReadMeModal />
       <UninstallCardComp />
+      <UnassignCardComp />
       <InstallCardModal />
       <CardInfoModal />
       <CardExtensionsModal />
