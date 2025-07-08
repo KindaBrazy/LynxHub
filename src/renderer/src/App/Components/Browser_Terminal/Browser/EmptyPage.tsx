@@ -191,7 +191,7 @@ export default function EmptyPage({type}: Props) {
     {
       title: 'Recent',
       subtitle: 'Places you visited recently',
-      icon: <History_Color_Icon className="size-8" />,
+      icon: <History_Color_Icon className="size-8" id="empty_page_history" />,
       emptyTitle: 'Nothing here yet',
       emptyDescription: 'Your recent visits will show up here',
       data: recentAddress,
