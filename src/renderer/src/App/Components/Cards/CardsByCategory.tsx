@@ -115,7 +115,7 @@ export const PinnedCars = memo(() => {
     <HomeCategory
       title="PINNED"
       subTitle="Quick Access to Your Top AI Tools"
-      icon={<Pin_Color_Icon className={CardContainerClasses} />}>
+      icon={<Pin_Color_Icon id="home_category_pin" className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         {isEmpty(pinnedCards) && isEmpty(pinCategory) ? (
           <Empty className="size-full" description="No Pinned Card to Display!" />
@@ -140,7 +140,7 @@ export const RecentlyCards = memo(() => {
     <HomeCategory
       title="RECENTLY USED"
       subTitle="Your Most Recent AI Interactions"
-      icon={<History_Color_Icon className={CardContainerClasses} />}>
+      icon={<History_Color_Icon id="home_category_history" className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         {isEmpty(recentlyUsedCards) && isEmpty(recentlyCategory) ? (
           <Empty className="size-full" description="No Recently Used Card to Display!" />
@@ -161,7 +161,7 @@ export const AllCardsSection = memo(() => {
     <HomeCategory
       title="All"
       subTitle="Explore the Complete List of AI Interfaces"
-      icon={<Apps_Color_Icon className={CardContainerClasses} />}>
+      icon={<Apps_Color_Icon id="home_category_app_color" className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         <AllCards />
       </div>

@@ -41,16 +41,22 @@ const HomeFilter = memo(({selectedCategories}: Props) => {
         selectedKeys={selectedCategories}
         disallowEmptySelection>
         <DropdownSection title="Categories">
-          <DropdownItem key="Pin" className="cursor-default" startContent={<Pin_Color_Icon className="size-4" />}>
+          <DropdownItem
+            key="Pin"
+            className="cursor-default"
+            startContent={<Pin_Color_Icon className="size-4" id="home_filter_history" />}>
             PINNED
           </DropdownItem>
           <DropdownItem
             key="Recently"
             className="cursor-default"
-            startContent={<History_Color_Icon className="size-4" />}>
+            startContent={<History_Color_Icon className="size-4" id="home_filter_history" />}>
             RECENTLY USED
           </DropdownItem>
-          <DropdownItem key="All" className="cursor-default" startContent={<Apps_Color_Icon className="size-4" />}>
+          <DropdownItem
+            key="All"
+            className="cursor-default"
+            startContent={<Apps_Color_Icon className="size-4" id="home_filter_app_color" />}>
             All
           </DropdownItem>
         </DropdownSection>
