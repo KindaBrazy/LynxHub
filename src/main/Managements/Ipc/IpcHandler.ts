@@ -238,11 +238,7 @@ function extensions() {
 }
 
 function pty() {
-  ipcMain.on(
-    ptyChannels.process,
-    (_, id: string, opt: PtyProcessOpt, cardId: string, preCommands?: string | string[]) =>
-      ptyProcess(id, opt, cardId, preCommands),
-  );
+  ipcMain.on(ptyChannels.process, (_, id: string, opt: PtyProcessOpt, cardId: string) => ptyProcess(id, opt, cardId));
   ipcMain.on(
     ptyChannels.customProcess,
     (_, id: string, opt: PtyProcessOpt, dir?: string, file?: string, preCommands?: string | string[]) =>

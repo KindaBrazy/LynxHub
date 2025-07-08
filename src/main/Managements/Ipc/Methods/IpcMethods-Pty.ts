@@ -95,14 +95,8 @@ export async function customPtyCommands(id: string, opt: PtyProcessOpt, commands
  * @param id - The unique id of process running
  * @param opt - The operation to perform ('start' or 'stop').
  * @param cardId - The ID of the card.
- * @param extensionPreCommands Extensions commands to execute before runnning AI
  */
-export async function ptyProcess(
-  id: string,
-  opt: PtyProcessOpt,
-  cardId: string,
-  extensionPreCommands?: string | string[],
-) {
+export async function ptyProcess(id: string, opt: PtyProcessOpt, cardId: string) {
   if (opt === 'start') {
     const card = storageManager.getData('cards').installedCards.find(card => card.id === cardId);
     if (!card) return;
@@ -112,6 +106,8 @@ export async function ptyProcess(
 
     const preCommands = storageManager.getPreCommandById(cardId);
 
+    const extensionPreCommands =
+      storageManager.getData('cards').cardTerminalPreCommands.find(command => command.id === id)?.commands || [];
     executeCommands(id, extensionPreCommands);
 
     executeCommands(id, preCommands?.data);
