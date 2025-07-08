@@ -1,5 +1,7 @@
 import './index.css';
 
+import {Button} from '@heroui/react';
+
 import {ExtensionRendererApi} from '../../../src/renderer/src/App/Extensions/ExtensionTypes_Renderer_Api';
 import CardsAddMenu from './Components/Cards_AddMenu';
 import {
@@ -17,8 +19,28 @@ import {
 import {SettingsContent, SettingsNavButton} from './Components/Settings';
 import extensionReducer from './reducer';
 
+const InvokeID = 'InvokeAI_SD';
+
 export function InitialExtensions(lynxAPI: ExtensionRendererApi, extensionId: string) {
   return;
+
+  function InvokeButton() {
+    const onPress = () => {
+      lynxAPI.setCards_TerminalPreCommands(InvokeID, ['ping 8.8.8.8 -t']);
+    };
+
+    return (
+      <Button color="success" onPress={onPress} fullWidth>
+        Add Command
+      </Button>
+    );
+  }
+
+  /** Add test button to InvokeAI installer user inputs to add terminal command
+   * to run before any terminal actions in invokeAI */
+  lynxAPI.events.on('card_collect_user_input', ({id, addElements}) => {
+    if (id === InvokeID) addElements([InvokeButton]);
+  });
 
   // The unique id for extension
   console.info(extensionId);
