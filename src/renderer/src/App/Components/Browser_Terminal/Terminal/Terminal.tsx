@@ -141,7 +141,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
 
   useEffect(() => {
     if (currentView === 'terminal') fitAddon.current?.fit();
-  }, [currentView]);
+  }, [currentView, activeTab]);
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
