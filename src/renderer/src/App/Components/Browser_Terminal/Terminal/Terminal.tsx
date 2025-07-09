@@ -220,8 +220,6 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
 
         if (isSameSize) return;
 
-        console.log('Resizing', prevSize, size);
-
         rendererIpc.pty.resize(id, size.cols, size.rows);
         prevSize = size;
       });
