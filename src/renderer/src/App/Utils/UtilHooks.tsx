@@ -1,4 +1,4 @@
-import {addToast} from '@heroui/react';
+import {addToast, Button} from '@heroui/react';
 import {ToastPlacement} from '@heroui/toast/dist/use-toast';
 import {Dispatch, UnknownAction} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
@@ -72,8 +72,10 @@ function topToast(options: {
   color?: 'success' | 'default' | 'foreground' | 'primary' | 'secondary' | 'warning' | 'danger' | undefined;
   timeout?: number;
   promise?: Promise<any>;
+  placement: ToastPlacement;
 }) {
-  const {title, color = 'success', timeout = 2000, promise} = options;
+  const {title, color = 'success', timeout = 2000, promise, placement} = options;
+
   addToast({
     title,
     color,
@@ -81,17 +83,31 @@ function topToast(options: {
     size: 'sm',
     timeout,
     promise,
+    classNames: {
+      base: placement.includes('top')
+        ? 'top-10'
+        : `right-6 bottom-8 flex flex-col gap-y-2 cursor-default ${color === 'danger' && 'pt-6'}`,
+    },
+    endContent:
+      placement.includes('bottom') && color === 'danger' ? (
+        <div className="w-full flex flex-row justify-end">
+          <Button size={'sm'} color={'warning'} variant={'light'}>
+            Restart App
+          </Button>
+        </div>
+      ) : null,
   });
 }
 
 export const lynxTopToast = (dispatch: Dispatch<UnknownAction>, placement: ToastPlacement = 'top-center') => {
   dispatch(appActions.setToastPlacement(placement));
   return {
-    success: (title: string, timeout?: number) => topToast({title, color: 'success', timeout}),
-    error: (title: string, timeout?: number) => topToast({title, color: 'danger', timeout}),
-    warning: (title: string, timeout?: number) => topToast({title, color: 'warning', timeout}),
-    info: (title: string, timeout?: number) => topToast({title, color: 'default', timeout}),
-    loading: (title: string, promise: Promise<any>) => topToast({title, color: 'default', promise, timeout: 1}),
+    success: (title: string, timeout?: number) => topToast({title, color: 'success', timeout, placement}),
+    error: (title: string, timeout?: number) => topToast({title, color: 'danger', timeout, placement}),
+    warning: (title: string, timeout?: number) => topToast({title, color: 'warning', timeout, placement}),
+    info: (title: string, timeout?: number) => topToast({title, color: 'default', timeout, placement}),
+    loading: (title: string, promise: Promise<any>) =>
+      topToast({title, color: 'default', promise, timeout: 1, placement}),
   };
 };
 
