@@ -1,12 +1,12 @@
 import {CanvasAddon} from '@xterm/addon-canvas';
 import {ClipboardAddon} from '@xterm/addon-clipboard';
-import {FitAddon} from '@xterm/addon-fit';
+import {FitAddon, ITerminalDimensions} from '@xterm/addon-fit';
 import {Unicode11Addon} from '@xterm/addon-unicode11';
 import {WebLinksAddon} from '@xterm/addon-web-links';
 import {WebglAddon} from '@xterm/addon-webgl';
 import {Terminal as XTerminal} from '@xterm/xterm';
 import FontFaceObserver from 'fontfaceobserver';
-import {isEmpty} from 'lodash';
+import {isEmpty, isEqual} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -25,7 +25,14 @@ import parseTerminalColors from './TerminalColorHandler';
 
 const FONT_FAMILY = 'JetBrainsMono';
 
+const canResize = (size: ITerminalDimensions | undefined) => {
+  if (!size) return false;
+
+  return size.cols > 95 && size.rows > 22;
+};
+
 type Props = {runningCard: RunningCard; setTerminalContent?: Dispatch<SetStateAction<string>>};
+
 export default function Terminal({runningCard, setTerminalContent}: Props) {
   const copyPressed = useHotkeysState('copyPressed');
   const activeTab = useTabsState('activeTab');
@@ -133,12 +140,13 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
     };
   }, [copyText, terminal, id]);
 
-  const stableEventHandler = useCallback(e => {
+  const stableEventHandler = useCallback((e: MouseEvent) => {
     onRightClickRef.current?.(e);
   }, []);
 
   useEffect(() => {
-    if (currentView === 'terminal') fitAddon.current?.fit();
+    const fit = fitAddon.current;
+    if (fit && currentView === 'terminal' && canResize(fit.proposeDimensions())) fit.fit();
   }, [currentView, activeTab]);
 
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -155,7 +163,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
       const windowsPty = getWindowPty(sysInfo, useConpty);
       let renderMode = getRendererMode();
 
-      terminal.current = new XTerminal({
+      const xTerm = new XTerminal({
         allowProposedApi: true,
         rows: 150,
         cols: 150,
@@ -169,55 +177,67 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
         windowsPty,
       });
 
+      terminal.current = xTerm;
+
       setTheme();
 
       fitAddon.current = new FitAddon();
-      terminal.current.loadAddon(fitAddon.current);
+      xTerm.loadAddon(fitAddon.current);
 
-      terminal.current.loadAddon(new Unicode11Addon());
-      terminal.current.unicode.activeVersion = '11';
+      xTerm.loadAddon(new Unicode11Addon());
+      xTerm.unicode.activeVersion = '11';
 
-      terminal.current.loadAddon(new ClipboardAddon());
+      xTerm.loadAddon(new ClipboardAddon());
 
-      terminal.current.loadAddon(
+      xTerm.loadAddon(
         new WebLinksAddon((_event, uri) => {
           window.open(uri);
         }),
       );
 
-      terminal.current.open(terminalRef);
+      xTerm.open(terminalRef);
 
       if (renderMode === 'webgl') {
         const webglAddon: WebglAddon = new WebglAddon();
 
         webglAddon.onContextLoss(() => {
           webglAddon.dispose();
-          terminal.current?.loadAddon(new CanvasAddon());
+          xTerm.loadAddon(new CanvasAddon());
           renderMode = 'canvas';
         });
 
-        terminal.current.loadAddon(webglAddon);
+        xTerm.loadAddon(webglAddon);
 
         renderMode = 'webgl';
       } else {
-        terminal.current.loadAddon(new CanvasAddon());
+        xTerm.loadAddon(new CanvasAddon());
         renderMode = 'canvas';
       }
 
-      terminal.current.onResize(size => rendererIpc.pty.resize(id, size.cols, size.rows));
+      let prevSize: {cols: number; rows: number} | undefined;
+      xTerm.onResize(size => {
+        const isSameSize = isEqual(prevSize, size);
+
+        if (isSameSize) return;
+
+        console.log('Resizing', prevSize, size);
+
+        rendererIpc.pty.resize(id, size.cols, size.rows);
+        prevSize = size;
+      });
 
       fitAddon.current.fit();
 
-      terminal.current.onSelectionChange(() => {
-        setSelectedText(terminal.current?.getSelection() || '');
+      xTerm.onSelectionChange(() => {
+        setSelectedText(xTerm.getSelection() || '');
       });
 
-      terminal.current.attachCustomKeyEventHandler(e => {
-        const isSelectedText = !isEmpty(terminal.current?.getSelection());
+      xTerm.attachCustomKeyEventHandler(e => {
+        const isSelectedText = !isEmpty(xTerm.getSelection());
         return !(e.key === 'c' && e.ctrlKey && isSelectedText);
       });
 
-      terminal.current.onData(data => {
+      xTerm.onData(data => {
         if (!isEmpty(data)) rendererIpc.pty.write(id, data);
       });
     });
@@ -226,7 +246,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
     window.addEventListener('resize', () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(() => {
-        fitAddon.current?.fit();
+        if (canResize(fitAddon.current?.proposeDimensions())) fitAddon.current?.fit();
       }, resizeDelay);
     });
 
