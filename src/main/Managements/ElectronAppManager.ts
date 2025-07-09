@@ -5,7 +5,7 @@ import {is} from '@electron-toolkit/utils';
 import {app, BrowserWindow, BrowserWindowConstructorOptions, screen, shell, WebContents} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
-import {tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
+import {appWindowChannels, ShowToastTypes, tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
 import {storageManager, trayManager} from '../index';
 import {getUserAgent, RelaunchApp} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
@@ -82,6 +82,10 @@ export default class ElectronAppManager {
 
   public getWebContent(): WebContents | undefined {
     return this.getMainWindow()?.webContents;
+  }
+
+  public showToast(message: string, type: ShowToastTypes) {
+    this.getWebContent()?.send(appWindowChannels.showToast, message, type);
   }
 
   public getContextMenuWindow(): BrowserWindow | undefined {

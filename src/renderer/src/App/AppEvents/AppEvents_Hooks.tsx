@@ -15,6 +15,7 @@ import {userActions} from '../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
 import {defaultTabItem, PageTitleByPageId} from '../Utils/Constants';
+import {lynxTopToast} from '../Utils/UtilHooks';
 import {checkEARepos} from './AppEvents_Utils';
 
 export const useCheckCardsUpdate = () => {
@@ -401,4 +402,18 @@ export const useContextEvents = () => {
       rendererIpc.contextMenu.offStopAI();
     };
   }, [runningCards, dispatch, activeTab]);
+};
+
+export const useShowToast = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    rendererIpc.appWindow.offShowToast();
+    rendererIpc.appWindow.onShowToast((_, message, type) => {
+      dispatch(appActions.setToastPlacement('bottom-right'));
+      lynxTopToast[type](message);
+    });
+
+    return () => rendererIpc.appWindow.offShowToast();
+  }, [dispatch]);
 };
