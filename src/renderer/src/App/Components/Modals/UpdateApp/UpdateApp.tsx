@@ -45,7 +45,7 @@ const UpdateApp = () => {
       if (result === 'update-available') {
         setDownloadProgress(undefined);
         dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: true}));
-        lynxTopToast.info('New Update Available!');
+        lynxTopToast(dispatch).info('New Update Available!');
         const isRunningAI = runningCard.some(card => card.tabId === activeTab);
         if (!isRunningAI) {
           dispatch(modalActions.openUpdateApp());

@@ -1,8 +1,10 @@
 import {Button, Input, Select, Selection, SelectItem} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {AgentTypes} from '../../../../../../../../../cross/IpcChannelAndTypes';
 import {DiskDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../../Utils/UtilHooks';
 
@@ -11,6 +13,7 @@ export default function SettingsBrowser_UserAgent() {
   const [customValue, setCustomValue] = useState<string>('');
 
   const [desc, setDesc] = useState<{id: string; value: string}[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const agents = async () => {
@@ -55,7 +58,7 @@ export default function SettingsBrowser_UserAgent() {
 
   const saveCustom = () => {
     rendererIpc.storage.update('browser', {customUserAgent: customValue, userAgent: 'custom'});
-    lynxTopToast.success('Custom user agent saved successfully!');
+    lynxTopToast(dispatch).success('Custom user agent saved successfully!');
   };
 
   return (

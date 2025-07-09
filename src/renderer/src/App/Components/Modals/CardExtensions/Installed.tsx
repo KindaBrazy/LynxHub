@@ -12,9 +12,11 @@ import {
   useImperativeHandle,
   useState,
 } from 'react';
+import {useDispatch} from 'react-redux';
 
 import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
+import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {fetchRepoDetails} from '../../../Utils/LocalStorage';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
@@ -53,6 +55,7 @@ const Installed = forwardRef(
     const [isTableEmpty, setIsTableEmpty] = useState(false);
     const [emptyContent, setEmptyContent] = useState<ReactNode>(loadingTableElement);
     const [loadUpdateStatus, setLoadUpdateStatus] = useState(false);
+    const dispatch = useDispatch<AppDispatch>();
 
     // Delete or trash an extension
     const handleDeleteExtension = useCallback(
@@ -61,13 +64,15 @@ const Installed = forwardRef(
 
         rendererIpc.file[type](`${dir}/${name}`)
           .then(() => {
-            lynxTopToast.success(
+            lynxTopToast(dispatch).success(
               `${name} extension ${type === 'removeDir' ? 'removed' : 'moved to trash'} successfully.`,
             );
             setRows(prevState => filter(prevState, row => row.key !== name));
           })
           .catch(() => {
-            lynxTopToast.error(`Error: Unable to ${type === 'removeDir' ? 'remove' : 'move to trash'} the folder.`);
+            lynxTopToast(dispatch).error(
+              `Error: Unable to ${type === 'removeDir' ? 'remove' : 'move to trash'} the folder.`,
+            );
           });
       },
       [dir],
@@ -94,7 +99,7 @@ const Installed = forwardRef(
           );
         })
         .catch(() => {
-          lynxTopToast.error(`Something goes wrong when ${disable ? 'enabling' : 'disabling'} extension.`);
+          lynxTopToast(dispatch).error(`Something goes wrong when ${disable ? 'enabling' : 'disabling'} extension.`);
         });
     }, []);
 
@@ -116,11 +121,11 @@ const Installed = forwardRef(
 
             switch (state) {
               case 'Failed':
-                lynxTopToast.error(`Error: Unable to update ${name}.`);
+                lynxTopToast(dispatch).error(`Error: Unable to update ${name}.`);
                 reject(`Error: Unable to update ${name}.`);
                 break;
               case 'Completed':
-                lynxTopToast.success(`${name} updated successfully!`);
+                lynxTopToast(dispatch).success(`${name} updated successfully!`);
                 setRows(prevState =>
                   prevState.map(row => (row.key === name ? {...row, update: useRowElements.updateBtn.updated} : row)),
                 );

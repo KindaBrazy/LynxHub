@@ -237,7 +237,7 @@ function ActionButtons({
     if (selectedExt?.id) {
       rendererIpc.extension.updateExtension(selectedExt.id).then(updated => {
         if (updated) {
-          lynxTopToast.success(`${selectedExt.title} updated successfully`);
+          lynxTopToast(dispatch).success(`${selectedExt.title} updated successfully`);
           dispatch(settingsActions.removeExtUpdateAvailable(selectedExt.id));
           showRestartModal('To apply the updates to the extension, please restart the app.');
         }
@@ -253,7 +253,7 @@ function ActionButtons({
       rendererIpc.extension.installExtension(selectedExt.url).then(result => {
         setInstalling(false);
         if (result) {
-          lynxTopToast.success(`${selectedExt.title} installed successfully`);
+          lynxTopToast(dispatch).success(`${selectedExt.title} installed successfully`);
           showRestartModal('To apply the installed extension, please restart the app.');
           setInstalled(prevState => [...prevState, {id: selectedExt.id, version: selectedExt.version, dir: ''}]);
         }
@@ -268,7 +268,7 @@ function ActionButtons({
       rendererIpc.extension.uninstallExtension(selectedExt.id).then(result => {
         setUninstalling(false);
         if (result) {
-          lynxTopToast.success(`${selectedExt.title} uninstalled successfully`);
+          lynxTopToast(dispatch).success(`${selectedExt.title} uninstalled successfully`);
           showRestartModal('To complete the uninstallation of the extension, please restart the app.');
         }
         setInstalled(prevState => prevState.filter(item => item.id !== selectedExt.id));

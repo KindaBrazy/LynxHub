@@ -63,7 +63,7 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
   const copyText = useCallback(() => {
     if (!isEmpty(selectedText)) {
       navigator.clipboard.writeText(selectedText);
-      lynxTopToast.success(`Copied to clipboard`);
+      lynxTopToast(dispatch).success(`Copied to clipboard`);
       terminal.current?.clearSelection();
     }
   }, [selectedText, terminal]);

@@ -1,9 +1,11 @@
 import {Button, Checkbox, CheckboxGroup} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {APP_NAME} from '../../../../../../../../cross/CrossConstants';
 import {DiscordRPC} from '../../../../../../../../cross/CrossTypes';
 import {Discord_Icon, DiskDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SettingsSection from '../SettingsPage-ContentSection';
@@ -15,6 +17,7 @@ export default function SettingsDiscord() {
   const [selectedLynx, setSelectedLynx] = useState<string[]>([]);
   const [selectedAI, setSelectedAI] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     rendererIpc.storage.get('app').then(app => {
@@ -47,7 +50,7 @@ export default function SettingsDiscord() {
     };
     rendererIpc.win.setDiscordRP(discordRPC);
     setTimeout(() => {
-      lynxTopToast.success('Done!');
+      lynxTopToast(dispatch).success('Done!');
       setIsSaving(false);
     }, fakeDelay);
   }, [selectedLynx, selectedAI]);

@@ -38,10 +38,10 @@ const UnassignCard = ({cardId, isOpen, tabID}: Props) => {
       rendererIpc.storageUtils
         .unassignCard(cardId, clearConfig)
         .then(() => {
-          lynxTopToast.success('Unassigned successfully.');
+          lynxTopToast(dispatch).success('Unassigned successfully.');
         })
         .catch(() => {
-          lynxTopToast.error('An error occurred while unassigning.');
+          lynxTopToast(dispatch).error('An error occurred while unassigning.');
         });
     },
     [cardId, closeHandle],

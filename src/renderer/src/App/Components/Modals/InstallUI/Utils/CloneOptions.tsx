@@ -2,9 +2,11 @@ import {Checkbox, CircularProgress, Select, SelectItem} from '@heroui/react';
 import {Card, InputNumber} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {SettingsMinimal_Icon, ShieldWarning_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {AppDispatch} from '../../../../Redux/Store';
 import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import {CloneOptionsResult} from './CloneRepo';
 
@@ -24,6 +26,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
 
   const [selectedBranch, setSelectedBranch] = useState<string[]>([]);
   const [branches, setBranches] = useState<{key: string; value: string}[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     setCloneOptionsResult({
@@ -40,7 +43,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
         const {owner, repo} = extractGitUrl(url);
         const repoResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}`);
         if (!repoResponse.ok) {
-          lynxTopToast.error(`Failed to fetch repository details: ${repoResponse.status}`);
+          lynxTopToast(dispatch).error(`Failed to fetch repository details: ${repoResponse.status}`);
           return;
         }
         const repoData = await repoResponse.json();
@@ -48,7 +51,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
 
         const branchesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/branches`);
         if (!branchesResponse.ok) {
-          lynxTopToast.error(`Failed to fetch branches: ${branchesResponse.status}`);
+          lynxTopToast(dispatch).error(`Failed to fetch branches: ${branchesResponse.status}`);
           return;
         }
         const branchesData: Branch[] = await branchesResponse.json();
@@ -60,7 +63,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
           }),
         );
       } catch (err: any) {
-        lynxTopToast.error(err.message || 'An error occurred while fetching data.');
+        lynxTopToast(dispatch).error(err.message || 'An error occurred while fetching data.');
       } finally {
         setLoading(false);
       }

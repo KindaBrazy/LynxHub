@@ -1,7 +1,9 @@
 import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
 import {useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {BroomDuo_Icon, Refresh3_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SettingsSection from '../SettingsPage-ContentSection';
@@ -12,10 +14,11 @@ export const SettingsClearId = 'settings_rmv_data_elem';
 export default function SettingsClear() {
   const [isClearSettingsOpen, setIsClearSettingsOpen] = useState<boolean>(false);
   const [isClearCacheOpen, setIsClearCacheOpen] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const clearCache = () => {
     localStorage.clear();
-    lynxTopToast.success('Cache cleared successfully.');
+    lynxTopToast(dispatch).success('Cache cleared successfully.');
   };
 
   return (

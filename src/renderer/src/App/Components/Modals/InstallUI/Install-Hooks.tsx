@@ -169,6 +169,7 @@ export function useStepper({
 
   return useMemo(() => {
     return new InstallStepper({
+      dispatch,
       cardId,
       setSteps,
       setCurrentStep,

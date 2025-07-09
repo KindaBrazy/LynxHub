@@ -33,11 +33,11 @@ export default function RenderItem({item, updateTable, dir, searchValue}: Props)
     rendererIpc.git
       .cloneShallowPromise(`${item.url}` || '', `${dir}/${extractGitUrl(item.url).repo || ''}`, true, 1)
       .then(() => {
-        lynxTopToast.success('Extension installed successfully.');
+        lynxTopToast(dispatch).success('Extension installed successfully.');
         updateTable();
       })
       .catch(() => {
-        lynxTopToast.error('Convert default export to named');
+        lynxTopToast(dispatch).error('Convert default export to named');
       })
       .finally(() => {
         setInstalling(false);

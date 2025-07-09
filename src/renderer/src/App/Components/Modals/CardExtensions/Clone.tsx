@@ -3,12 +3,14 @@ import {Card} from 'antd';
 import {motion} from 'framer-motion';
 import {capitalize, startCase} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
 import {extractGitUrl, validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
 import {Download2_Icon, GitHub_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {useAppState} from '../../../Redux/Reducer/AppReducer';
+import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {initGitProgress} from '../../../Utils/Constants';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
@@ -34,6 +36,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
   const [isEmpty, setIsEmpty] = useState<boolean>(true);
   const [cloning, setCloning] = useState<boolean>(false);
   const [alreadyInstalled, setAlreadyInstalled] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (downloadBox) {
@@ -111,7 +114,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
         case 'Failed':
           setCloneProgress(initGitProgress);
           setCloning(false);
-          lynxTopToast.error('Error: Unable to clone the extension.');
+          lynxTopToast(dispatch).error('Error: Unable to clone the extension.');
           break;
         case 'Completed':
           setCloneProgress(initGitProgress);
@@ -120,7 +123,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
           setIsValid(true);
           setResultUrl('');
           setCloning(false);
-          lynxTopToast.success('Extension installed successfully.');
+          lynxTopToast(dispatch).success('Extension installed successfully.');
           updateTable();
           break;
       }

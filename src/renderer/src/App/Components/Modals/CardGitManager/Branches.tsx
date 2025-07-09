@@ -1,6 +1,8 @@
 import {Button, Select, Selection, SelectItem} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
 
@@ -14,6 +16,7 @@ type Props = {
 export default function Branches({dir, availableBranches, currentBranch, refreshData}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedBranch, setSelectedBranch] = useState<string | undefined>(undefined);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     setSelectedBranch(currentBranch);
@@ -32,11 +35,11 @@ export default function Branches({dir, availableBranches, currentBranch, refresh
       rendererIpc.git
         .changeBranch(dir, selectedBranch)
         .then(() => {
-          lynxTopToast.success(`Successfully switched to branch: ${selectedBranch}`);
+          lynxTopToast(dispatch).success(`Successfully switched to branch: ${selectedBranch}`);
           refreshData();
         })
         .catch(err => {
-          lynxTopToast.error(`Failed to switch branch: ${err.message || 'Unknown error'}`);
+          lynxTopToast(dispatch).error(`Failed to switch branch: ${err.message || 'Unknown error'}`);
         })
         .finally(() => {
           setLoading(false);
