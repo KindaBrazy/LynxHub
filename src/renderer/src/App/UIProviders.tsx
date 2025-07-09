@@ -7,6 +7,7 @@ import {useAppState} from './Redux/Reducer/AppReducer';
 /** Config HeroUI and AntD and return providers */
 export default function UIProviders({children}: {children: ReactNode}) {
   const darkMode = useAppState('darkMode');
+  const toastPlacement = useAppState('toastPlacement');
   const algorithm = useMemo(() => (darkMode ? theme.darkAlgorithm : theme.defaultAlgorithm), [darkMode]);
   const colorBgSpotlight = useMemo(() => (darkMode ? '#424242' : 'white'), [darkMode]);
   const colorTextLightSolid = useMemo(() => (darkMode ? 'white' : 'black'), [darkMode]);
@@ -30,7 +31,7 @@ export default function UIProviders({children}: {children: ReactNode}) {
   return (
     <div>
       <HeroUIProvider>
-        <ToastProvider toastOffset={40} placement="top-center" />
+        <ToastProvider toastOffset={40} placement={toastPlacement} />
         <AntDProvider
           theme={{
             algorithm,

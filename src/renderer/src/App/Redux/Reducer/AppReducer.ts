@@ -1,3 +1,4 @@
+import {ToastPlacement} from '@heroui/toast/dist/use-toast';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import isBoolean from 'lodash/isBoolean';
 import {useSelector} from 'react-redux';
@@ -12,6 +13,7 @@ type AppState = {
   isOnline: boolean;
   navBar: boolean;
   appTitle: string | undefined;
+  toastPlacement: ToastPlacement;
 };
 
 type AppStateTypes = {
@@ -26,6 +28,7 @@ const initialState: AppState = {
   onFocus: true,
   navBar: true,
   appTitle: undefined,
+  toastPlacement: 'top-center',
 };
 
 const appSlice = createSlice({
@@ -37,6 +40,9 @@ const appSlice = createSlice({
     },
     setAppTitle: (state, action: PayloadAction<string | undefined>) => {
       state.appTitle = action.payload;
+    },
+    setToastPlacement: (state, action: PayloadAction<ToastPlacement>) => {
+      state.toastPlacement = action.payload;
     },
     toggleAppState: (state: AppState, action: PayloadAction<keyof AppState>) => {
       const key = action.payload;
