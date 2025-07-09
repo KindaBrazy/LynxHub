@@ -136,13 +136,13 @@ class BaseStorage {
     const v4to5 = () => {
       this.storage.data.terminal = this.DEFAULT_DATA.terminal;
 
-      this.storage.write();
+      this.write();
     };
 
     const v5to6 = () => {
       this.storage.data.cards.duplicated = [];
 
-      this.storage.write();
+      this.write();
     };
 
     const v6to7 = () => {
@@ -151,7 +151,7 @@ class BaseStorage {
       this.storage.data.app.lastSize = undefined;
       this.storage.data.cards.checkUpdateInterval = 30;
 
-      this.storage.write();
+      this.write();
     };
 
     const v7to8 = () => {
@@ -172,7 +172,7 @@ class BaseStorage {
       this.storage.data.notification = {readNotifs: []};
       this.storage.data.app.collectErrors = true;
 
-      this.storage.write();
+      this.write();
     };
 
     const v8to81 = () => {
@@ -203,7 +203,7 @@ class BaseStorage {
 
     if (storeVersion < 0.4) {
       this.storage.data = {...this.DEFAULT_DATA};
-      this.storage.write();
+      this.write();
     } else if (storeVersion < this.CURRENT_VERSION) {
       switch (storeVersion) {
         case 0.4: {
@@ -284,7 +284,7 @@ class BaseStorage {
 
   public setCustomData(id: string, data: any) {
     this.storage.data[id] = data;
-    this.storage.write();
+    this.write();
   }
 
   public getAll(): StorageTypes {
@@ -302,12 +302,12 @@ class BaseStorage {
 
   public updateData<K extends keyof StorageTypes>(key: K, updateData: Partial<StorageTypes[K]>) {
     this.storage.data[key] = {...this.storage.data[key], ...updateData};
-    this.storage.write();
+    this.write();
   }
 
   public clearStorage(): void {
     this.storage.data = {...this.DEFAULT_DATA};
-    this.storage.write();
+    this.write();
     if (isPortable() === 'linux') {
       changeWindowState('close');
     } else {
@@ -316,7 +316,11 @@ class BaseStorage {
   }
 
   public write() {
-    this.storage.write();
+    try {
+      this.storage.write();
+    } catch (e) {
+      appManager.showToast(`Failed to save app configs: ${e.message}`, 'error');
+    }
   }
 }
 
