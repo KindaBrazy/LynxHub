@@ -37,6 +37,7 @@ const initialState: InstallState = {
   startClone: false,
   disableSelectDir: false,
   extensionCustomContent: undefined,
+  extensionUserInput: undefined,
 };
 
 type Props = {isOpen: boolean; cardId: string; title: string; type: string; tabID: string};
