@@ -85,10 +85,10 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
     rendererIpc.extension
       .updateAllExtensions()
       .then(() => {
-        lynxTopToast.success('Extensions updated successfully!');
+        lynxTopToast(dispatch).success('Extensions updated successfully!');
         dispatch(settingsActions.setSettingsState({key: 'extensionsUpdateAvailable', value: []}));
       })
-      .catch(() => lynxTopToast.error('Failed to update extensions. Please try again later.'))
+      .catch(() => lynxTopToast(dispatch).error('Failed to update extensions. Please try again later.'))
       .finally(() => setUpdatingAll(false));
   };
 

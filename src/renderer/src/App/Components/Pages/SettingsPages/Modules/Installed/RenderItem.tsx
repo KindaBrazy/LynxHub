@@ -79,7 +79,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
     rendererIpc.module.uninstallModule(item.id).then(uninstalled => {
       setUninstalling(false);
       if (uninstalled) {
-        lynxTopToast.success(`${item.title} has been successfully uninstalled.`);
+        lynxTopToast(dispatch).success(`${item.title} has been successfully uninstalled.`);
         dispatch(settingsActions.removeUpdatedModule(item.id));
         dispatch(settingsActions.removeNewModule(item.id));
         dispatch(
@@ -90,7 +90,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
         );
         removedModule(item.id);
       } else {
-        lynxTopToast.error(`An error occurred while uninstalling ${item.title}!`);
+        lynxTopToast(dispatch).error(`An error occurred while uninstalling ${item.title}!`);
       }
     });
   }, [item, moduleUpdateAvailable, dispatch]);
@@ -102,7 +102,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
       setUpdating(false);
       setSpinningText('');
       if (updated) {
-        lynxTopToast.success(`${item.title} has been successfully updated!`);
+        lynxTopToast(dispatch).success(`${item.title} has been successfully updated!`);
         dispatch(
           settingsActions.setSettingsState({
             key: 'moduleUpdateAvailable',
@@ -110,7 +110,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
           }),
         );
       } else {
-        lynxTopToast.error(`An error occurred while updating ${item.title}.`);
+        lynxTopToast(dispatch).error(`An error occurred while updating ${item.title}.`);
       }
     });
   }, [item, moduleUpdateAvailable]);

@@ -35,12 +35,12 @@ export default function RenderItem({item, addModule}: Props) {
     rendererIpc.module.installModule(item.repoUrl).then(result => {
       setInstalling(false);
       if (result) {
-        lynxTopToast.success(`${item.title} Installed successfully!`);
+        lynxTopToast(dispatch).success(`${item.title} Installed successfully!`);
 
         dispatch(settingsActions.addNewModule(item.id));
         addModule(item.id);
       } else {
-        lynxTopToast.error(`Something went wrong while installing ${item.title}.`);
+        lynxTopToast(dispatch).error(`Something went wrong while installing ${item.title}.`);
       }
     });
   }, [item.repoUrl, item.title, item.id, dispatch]);

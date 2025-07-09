@@ -2,8 +2,10 @@ import {Button} from '@heroui/react';
 import {Card, Empty, Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {Copy_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {AppDispatch} from '../../../../Redux/Store';
 import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import LynxTooltip from '../../../Reusable/LynxTooltip';
 import LaunchConfigSection from '../LaunchConfig-Section';
@@ -14,12 +16,14 @@ type Props = {text: string};
 
 /** Show arguments as text for preview and clipboard copying */
 export default function PreviewArguments({text}: Props) {
+  const dispatch = useDispatch<AppDispatch>();
+
   const onCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(text);
-      lynxTopToast.success('Copied to clipboard successfully.');
+      lynxTopToast(dispatch).success('Copied to clipboard successfully.');
     } catch (_) {
-      lynxTopToast.error('Error: Unable to copy to clipboard.');
+      lynxTopToast(dispatch).error('Error: Unable to copy to clipboard.');
     }
   }, [text]);
 

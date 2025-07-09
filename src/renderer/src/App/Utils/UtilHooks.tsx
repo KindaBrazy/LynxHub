@@ -1,9 +1,12 @@
 import {addToast} from '@heroui/react';
+import {ToastPlacement} from '@heroui/toast/dist/use-toast';
+import {Dispatch, UnknownAction} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, useEffect, useMemo, useState} from 'react';
 
 import {ChangelogItem} from '../../../../cross/CrossTypes';
 import {InstalledCard} from '../../../../cross/StorageTypes';
+import {appActions} from '../Redux/Reducer/AppReducer';
 import {useCardsState} from '../Redux/Reducer/CardsReducer';
 import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
 import rendererIpc from '../RendererIpc';
@@ -81,12 +84,15 @@ function topToast(options: {
   });
 }
 
-export const lynxTopToast = {
-  success: (title: string, timeout?: number) => topToast({title, color: 'success', timeout}),
-  error: (title: string, timeout?: number) => topToast({title, color: 'danger', timeout}),
-  warning: (title: string, timeout?: number) => topToast({title, color: 'warning', timeout}),
-  info: (title: string, timeout?: number) => topToast({title, color: 'default', timeout}),
-  loading: (title: string, promise: Promise<any>) => topToast({title, color: 'default', promise, timeout: 1}),
+export const lynxTopToast = (dispatch: Dispatch<UnknownAction>, placement: ToastPlacement = 'top-center') => {
+  dispatch(appActions.setToastPlacement(placement));
+  return {
+    success: (title: string, timeout?: number) => topToast({title, color: 'success', timeout}),
+    error: (title: string, timeout?: number) => topToast({title, color: 'danger', timeout}),
+    warning: (title: string, timeout?: number) => topToast({title, color: 'warning', timeout}),
+    info: (title: string, timeout?: number) => topToast({title, color: 'default', timeout}),
+    loading: (title: string, promise: Promise<any>) => topToast({title, color: 'default', promise, timeout: 1}),
+  };
 };
 
 export const useDisableTooltip = (isEssential: boolean = false): boolean => {

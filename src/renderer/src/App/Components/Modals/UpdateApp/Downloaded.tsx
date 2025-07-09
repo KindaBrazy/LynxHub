@@ -16,7 +16,7 @@ export default function Downloaded({errMsg, success, tryAgain, cancel, onClose}:
 
   const installLater = useCallback(() => {
     dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: false}));
-    lynxTopToast.info('App will be updated when closed.');
+    lynxTopToast(dispatch).info('App will be updated when closed.');
     onClose();
   }, [onClose, dispatch]);
 

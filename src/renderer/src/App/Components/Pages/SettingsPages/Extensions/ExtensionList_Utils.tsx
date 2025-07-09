@@ -230,7 +230,7 @@ export function useRenderList(
     rendererIpc.extension.updateExtension(id).then(updated => {
       if (updated) {
         dispatch(settingsActions.removeExtUpdateAvailable(id));
-        lynxTopToast.success(`${title} updated Successfully`);
+        lynxTopToast(dispatch).success(`${title} updated Successfully`);
         showRestartModal('To apply the updates to the extension, please restart the app.');
       }
       setUpdating('');

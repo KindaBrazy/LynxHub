@@ -410,8 +410,7 @@ export const useShowToast = () => {
   useEffect(() => {
     rendererIpc.appWindow.offShowToast();
     rendererIpc.appWindow.onShowToast((_, message, type) => {
-      dispatch(appActions.setToastPlacement('bottom-right'));
-      lynxTopToast[type](message);
+      lynxTopToast(dispatch, 'bottom-right')[type](message);
     });
 
     return () => rendererIpc.appWindow.offShowToast();

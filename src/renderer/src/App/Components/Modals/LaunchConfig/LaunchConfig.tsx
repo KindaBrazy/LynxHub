@@ -54,12 +54,12 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
       .setCardArguments(id, chosenArguments)
       .then(() => {
         setTimeout(() => {
-          lynxTopToast.success('Preset and arguments saved successfully.');
+          lynxTopToast(dispatch).success('Preset and arguments saved successfully.');
         }, fakeDelay);
       })
       .catch(() => {
         setTimeout(() => {
-          lynxTopToast.error('An error occurred while saving the preset and arguments.');
+          lynxTopToast(dispatch).error('An error occurred while saving the preset and arguments.');
         }, fakeDelay);
       })
       .finally(() => {

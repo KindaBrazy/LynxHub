@@ -45,11 +45,13 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
             .then(() => {
               rendererIpc.storageUtils.removeInstalledCard(cardId);
               resolve();
-              lynxTopToast.success(type === 'removeDir' ? 'Uninstalled successfully.' : 'Moved to trash successfully.');
+              lynxTopToast(dispatch).success(
+                type === 'removeDir' ? 'Uninstalled successfully.' : 'Moved to trash successfully.',
+              );
             })
             .catch(() => {
               resolve();
-              lynxTopToast.error(
+              lynxTopToast(dispatch).error(
                 type === 'removeDir'
                   ? 'An error occurred while uninstalling.'
                   : 'An error occurred while moving to trash.',
@@ -57,7 +59,7 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
             });
         });
 
-        lynxTopToast.loading(type === 'removeDir' ? 'Uninstalling...' : 'Moving to trash...', promise);
+        lynxTopToast(dispatch).loading(type === 'removeDir' ? 'Uninstalling...' : 'Moving to trash...', promise);
       }
     },
     [card, cardId, closeHandle],
@@ -76,15 +78,15 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
         .then(() => {
           resolve();
           rendererIpc.storageUtils.removeInstalledCard(cardId);
-          lynxTopToast.success('Uninstalled successfully.');
+          lynxTopToast(dispatch).success('Uninstalled successfully.');
         })
         .catch(() => {
           resolve();
-          lynxTopToast.error('An error occurred while uninstalling.');
+          lynxTopToast(dispatch).error('An error occurred while uninstalling.');
         });
     });
 
-    lynxTopToast.loading('Uninstalling...', promise);
+    lynxTopToast(dispatch).loading('Uninstalling...', promise);
   }, [cardId, closeHandle]);
 
   const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);

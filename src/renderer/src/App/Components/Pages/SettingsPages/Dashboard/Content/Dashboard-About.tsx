@@ -1,6 +1,7 @@
 import {Avatar, Card, Chip} from '@heroui/react';
 import {Typography} from 'antd';
 import {useCallback} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {
   APP_BUILD_NUMBER,
@@ -30,6 +31,7 @@ import {
   XSite_Icon,
 } from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {Youtube_Color_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIconsColor';
+import {AppDispatch} from '../../../../../Redux/Store';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SettingsSection from '../../Settings/SettingsPage-ContentSection';
 
@@ -38,9 +40,11 @@ export const DashboardAboutId = 'settings_about_elem';
 
 /** Information about application and developer */
 export default function DashboardAbout() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const copyText = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
-    lynxTopToast.info(`Copied to clipboard : ${text}`);
+    lynxTopToast(dispatch).info(`Copied to clipboard : ${text}`);
   }, []);
 
   const socialLinks = [

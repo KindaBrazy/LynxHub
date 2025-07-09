@@ -1,6 +1,8 @@
 import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
 import {useState} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
 
@@ -13,6 +15,7 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
   const [isShallowConfirmOpen, setIsShallowConfirmOpen] = useState<boolean>(false);
 
   const [isStashingDrop, setIsStashingDrop] = useState<boolean>(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const unShallow = () => {
     setIsShallowConfirmOpen(false);
@@ -20,10 +23,10 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
     rendererIpc.git
       .unShallow(dir)
       .then(() => {
-        lynxTopToast.success('Successfully unshallowed the repository.');
+        lynxTopToast(dispatch).success('Successfully unshallowed the repository.');
         refreshData();
       })
-      .catch(() => lynxTopToast.error('Failed to unshallow the repository.'))
+      .catch(() => lynxTopToast(dispatch).error('Failed to unshallow the repository.'))
       .finally(() => setIsLoadingShallow(false));
   };
 
@@ -33,10 +36,10 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
     rendererIpc.git
       .resetHard(dir)
       .then(() => {
-        lynxTopToast.success('Successfully reset the repository to its last committed state.');
+        lynxTopToast(dispatch).success('Successfully reset the repository to its last committed state.');
         refreshData();
       })
-      .catch(() => lynxTopToast.error(`Failed to reset the repository.`))
+      .catch(() => lynxTopToast(dispatch).error(`Failed to reset the repository.`))
       .finally(() => setIsResetting(false));
   };
 
@@ -46,11 +49,11 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
       .stashDrop(dir)
       .then(result => {
         if (result.type === 'success') {
-          lynxTopToast.success(result.message);
+          lynxTopToast(dispatch).success(result.message);
         } else if (result.type === 'info') {
-          lynxTopToast.info(result.message);
+          lynxTopToast(dispatch).info(result.message);
         } else {
-          lynxTopToast.error(result.message);
+          lynxTopToast(dispatch).error(result.message);
         }
       })
       .finally(() => {
