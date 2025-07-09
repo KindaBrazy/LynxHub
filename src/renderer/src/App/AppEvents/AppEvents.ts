@@ -10,6 +10,7 @@ import {
   useNewTabEvents,
   useOnlineEvents,
   usePatreon,
+  useShowToast,
   useStorageData,
 } from './AppEvents_Hooks';
 
@@ -27,4 +28,5 @@ export default function useAppEvents() {
   useNewTabEvents();
   useBrowserEvents();
   useContextEvents();
+  useShowToast();
 }

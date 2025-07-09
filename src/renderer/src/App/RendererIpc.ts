@@ -47,6 +47,7 @@ import {
   ptyChannels,
   PtyProcessOpt,
   RecentlyOperation,
+  ShowToastTypes,
   SkippedPlugins,
   staticsChannels,
   storageChannels,
@@ -707,6 +708,10 @@ const rendererIpc = {
     onHotkeysChange: (result: (event: IpcRendererEvent, input: LynxInput) => void) =>
       ipc.on(appWindowChannels.hotkeysChange, result),
     offHotkeysChange: () => ipc.removeAllListeners(appWindowChannels.hotkeysChange),
+
+    onShowToast: (result: (event: IpcRendererEvent, message: string, type: ShowToastTypes) => void) =>
+      ipc.on(appWindowChannels.showToast, result),
+    offShowToast: () => ipc.removeAllListeners(appWindowChannels.showToast),
   },
 
   contextMenu: {

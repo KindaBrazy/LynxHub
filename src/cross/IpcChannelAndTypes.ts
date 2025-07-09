@@ -83,6 +83,7 @@ export type FavIcons = {url: string; favIcon: string};
 export type AgentTypes = 'lynxhub' | 'electron' | 'chrome' | 'custom';
 export type XYType = {x: number; y: number};
 export type WHType = {width: number; height: number};
+export type ShowToastTypes = 'success' | 'error' | 'warning' | 'info';
 
 export const winChannels = {
   changeState: 'win:state-change',
@@ -317,6 +318,7 @@ export const storageUtilsChannels = {
 
 export const appWindowChannels = {
   hotkeysChange: 'window:hotkeys-change',
+  showToast: 'window:show-toast',
 };
 
 export const contextMenuChannels = {
