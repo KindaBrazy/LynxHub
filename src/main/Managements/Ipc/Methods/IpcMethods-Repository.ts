@@ -78,15 +78,15 @@ export function pullRepo(dir: string, id: string): void {
  */
 function setupGitManagerListeners(manager: GitManager, id?: string): void {
   manager.onProgress = (progress: SimpleGitProgressEvent) => {
-    appManager.getWebContent()?.send(gitChannels.onProgress, id, 'Progress', progress);
+    appManager?.getWebContent()?.send(gitChannels.onProgress, id, 'Progress', progress);
   };
 
   manager.onComplete = (result?: any) => {
-    appManager.getWebContent()?.send(gitChannels.onProgress, id, 'Completed', result);
+    appManager?.getWebContent()?.send(gitChannels.onProgress, id, 'Completed', result);
   };
 
   manager.onError = (reason: string) => {
-    appManager.getWebContent()?.send(gitChannels.onProgress, id, 'Failed', reason);
+    appManager?.getWebContent()?.send(gitChannels.onProgress, id, 'Failed', reason);
   };
 }
 

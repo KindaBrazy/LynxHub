@@ -25,12 +25,12 @@ export default class TrayManager {
   /** Closes the main application window. */
   private closeMainWindow = (): void => {
     storageManager.updateLastSize();
-    appManager.getMainWindow()?.close();
+    appManager?.getMainWindow()?.close();
   };
 
   /** Shows the main application window. */
   private showMainWindow = (): void => {
-    appManager.getMainWindow()?.show();
+    appManager?.getMainWindow()?.show();
   };
 
   /** Creates and sets up the tray icon with its context menu. */

@@ -106,7 +106,7 @@ export default class BrowserManager {
           action: 'allow',
           overrideBrowserWindowOptions: {
             icon,
-            parent: appManager.getMainWindow(),
+            parent: appManager?.getMainWindow(),
             modal: true,
             maximizable: false,
             fullscreenable: false,
@@ -115,7 +115,7 @@ export default class BrowserManager {
       } else if (storageManager.getData('app').openLinkExternal) {
         shell.openExternal(url);
       } else {
-        appManager.getWebContent()?.send(tabsChannels.onNewTab, url);
+        appManager?.getWebContent()?.send(tabsChannels.onNewTab, url);
       }
 
       return {action: 'deny'};
@@ -133,7 +133,7 @@ export default class BrowserManager {
   private listenForFullScreen(view: WebContentsView) {
     const webContents = view.webContents;
     webContents.on('enter-html-full-screen', () => {
-      const mainBounds = appManager.getMainWindow()?.getBounds();
+      const mainBounds = appManager?.getMainWindow()?.getBounds();
       if (mainBounds) {
         view.setBounds({x: 0, y: 0, width: mainBounds.width, height: mainBounds.height});
       }

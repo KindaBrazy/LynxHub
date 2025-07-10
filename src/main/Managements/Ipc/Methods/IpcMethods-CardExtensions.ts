@@ -152,7 +152,7 @@ export async function updateAllExtensions(data: {id: string; dir: string}) {
     for (const dir of directories) {
       const gitManager = new GitManager(false);
 
-      appManager.getWebContent()?.send(utilsChannels.onUpdateAllExtensions, {
+      appManager?.getWebContent()?.send(utilsChannels.onUpdateAllExtensions, {
         id: data.id,
         step: `${currentState}/${extensionsCount}`,
       });
@@ -163,7 +163,7 @@ export async function updateAllExtensions(data: {id: string; dir: string}) {
     }
   }
 
-  appManager.getWebContent()?.send(utilsChannels.onUpdateAllExtensions, {
+  appManager?.getWebContent()?.send(utilsChannels.onUpdateAllExtensions, {
     id: data.id,
     step: 'done',
   });

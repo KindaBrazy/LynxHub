@@ -67,7 +67,7 @@ function setAppDataFolder(targetDir: string): void {
   if (isPortable() === 'linux') {
     changeWindowState('close');
   } else {
-    appManager.restart();
+    appManager?.restart();
   }
 }
 
@@ -76,7 +76,7 @@ function setAppDataFolder(targetDir: string): void {
  * @returns A promise that resolves when a new folder is selected or rejects if cancelled
  */
 export async function selectNewAppDataFolder(): Promise<string> {
-  const window = appManager.getMainWindow();
+  const window = appManager?.getMainWindow();
   if (!window) {
     throw new Error('No main window available');
   }

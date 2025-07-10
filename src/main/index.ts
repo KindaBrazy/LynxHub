@@ -12,7 +12,6 @@ import {isDev, toMs} from '../cross/CrossUtils';
 import {checkAppDirectories} from './Managements/AppDataManager';
 import AppInitializer from './Managements/AppInitializer';
 import {checkForUpdate} from './Managements/AppUpdater';
-import BrowserManager from './Managements/BrowserManager';
 import {ValidateCards} from './Managements/DataValidator';
 import DialogManager from './Managements/DialogManager';
 import DiscordRpcManager from './Managements/DiscordRpcManager';
@@ -34,12 +33,11 @@ app.commandLine.appendSwitch('disable-http-cache');
 
 export const storageManager = new StorageManager();
 
-export let appManager: ElectronAppManager;
-export let trayManager: TrayManager;
-export let discordRpcManager: DiscordRpcManager;
-export let cardsValidator: ValidateCards;
-export let moduleManager: ModuleManager;
-export let browserManager: BrowserManager;
+export let appManager: ElectronAppManager | undefined = undefined;
+export let trayManager: TrayManager | undefined = undefined;
+export let discordRpcManager: DiscordRpcManager | undefined = undefined;
+export let cardsValidator: ValidateCards | undefined = undefined;
+export let moduleManager: ModuleManager | undefined = undefined;
 
 export const extensionManager: ExtensionManager = new ExtensionManager();
 
@@ -48,9 +46,8 @@ Menu.setApplicationMenu(null);
 
 checkAppDirectories();
 
-if (!storageManager.getData('app').hardwareAcceleration) {
-  app.disableHardwareAcceleration();
-}
+const {hardwareAcceleration} = storageManager.getData('app');
+if (!hardwareAcceleration) app.disableHardwareAcceleration();
 
 async function setupApp() {
   await extensionManager.createServer();
@@ -81,13 +78,18 @@ async function setupApp() {
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      appManager.startLoading();
-      appManager.startApp();
+      appManager?.startLoading();
+      appManager?.startApp();
     }
   });
 }
 
 async function onAppReady() {
+  if (!appManager) {
+    setTimeout(onAppReady, toMs(1, 'seconds'));
+    return;
+  }
+
   await extensionManager.onAppReady();
 
   electronApp.setAppUserModelId(APP_NAME);
@@ -103,7 +105,7 @@ async function onAppReady() {
 
   extensionManager.setDiscordRpcManager(discordRpcManager);
 
-  await moduleManager.createServer();
+  await moduleManager?.createServer();
   extensionManager.setModuleManager(moduleManager);
 
   listenToAllChannels();
@@ -115,44 +117,25 @@ async function onAppReady() {
   appManager.startApp();
 
   appManager.onReadyToShow = handleAppReadyToShow;
-  appManager.onCreateWindow = () => {
-    let retryCount = 0;
-    const maxRetries = 20;
-    const retryInterval = toMs(1, 'seconds');
-
-    function tryGetWindow() {
-      const mainWindow = appManager.getMainWindow();
-      if (mainWindow) {
-        browserManager = new BrowserManager(mainWindow);
-        browserIPC();
-      } else if (retryCount < maxRetries) {
-        retryCount++;
-        setTimeout(tryGetWindow, retryInterval);
-      } else {
-        appManager.showToast('Could not initialize browser window, please restart.', 'error');
-      }
-    }
-
-    tryGetWindow();
-  };
+  appManager.onCreateWindow = () => browserIPC();
 }
 
 function handleAppReadyToShow() {
   extensionManager.onReadyToShow();
   handleTaskbarStatus();
   handleStartupBehavior();
-  discordRpcManager.start();
+  discordRpcManager?.start();
   if (platform() === 'win32') setLoginItemSettings();
-  cardsValidator.checkAndWatch();
+  cardsValidator?.checkAndWatch();
 }
 
 function handleTaskbarStatus() {
   const {taskbarStatus} = storageManager.getData('app');
-  const mainWindow = appManager.getMainWindow();
+  const mainWindow = appManager?.getMainWindow();
 
   switch (taskbarStatus) {
     case 'taskbar-tray':
-      trayManager.createTrayIcon();
+      trayManager?.createTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(false);
       } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
@@ -160,7 +143,7 @@ function handleTaskbarStatus() {
       }
       break;
     case 'taskbar':
-      trayManager.destroyTrayIcon();
+      trayManager?.destroyTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(false);
       } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
@@ -168,7 +151,7 @@ function handleTaskbarStatus() {
       }
       break;
     case 'tray':
-      trayManager.createTrayIcon();
+      trayManager?.createTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(true);
       } else if (platform() === 'darwin' && app.dock?.isVisible()) {
@@ -176,7 +159,7 @@ function handleTaskbarStatus() {
       }
       break;
     case 'tray-minimized':
-      trayManager.destroyTrayIcon();
+      trayManager?.destroyTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(false);
       } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
@@ -188,7 +171,7 @@ function handleTaskbarStatus() {
 
 function handleStartupBehavior() {
   const {startMinimized, lastSize, openLastSize} = storageManager.getData('app');
-  const mainWindow = appManager.getMainWindow();
+  const mainWindow = appManager?.getMainWindow();
 
   if (startMinimized) {
     mainWindow?.minimize();

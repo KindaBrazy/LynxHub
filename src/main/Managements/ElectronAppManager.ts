@@ -269,7 +269,7 @@ export default class ElectronAppManager {
   /** Handles the minimized event for the main window. */
   private handleMinimize = (): void => {
     if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
-      trayManager.createTrayIcon();
+      trayManager?.createTrayIcon();
       if (platform() === 'linux') {
         this.getMainWindow()?.hide();
       } else if (platform() === 'darwin' && app.dock?.isVisible()) {
@@ -283,7 +283,7 @@ export default class ElectronAppManager {
   /** Handles the focus event for the main window. */
   private handleFocus = (): void => {
     if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
-      trayManager.destroyTrayIcon();
+      trayManager?.destroyTrayIcon();
       if (platform() === 'win32') {
         this.getMainWindow()?.setSkipTaskbar(false);
       } else if (platform() === 'darwin' && !app.dock?.isVisible()) {

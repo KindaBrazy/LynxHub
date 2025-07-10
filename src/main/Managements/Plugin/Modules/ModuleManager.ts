@@ -38,7 +38,7 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
   }
 
   private getUtils() {
-    const webContent = appManager.getWebContent();
+    const webContent = appManager?.getWebContent();
 
     if (!webContent) return undefined;
 
@@ -120,7 +120,7 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
   }
 
   public listenForChannels() {
-    const webContent = appManager.getWebContent();
+    const webContent = appManager?.getWebContent();
     if (!webContent) {
       setTimeout(() => {
         this.listenForChannels();
@@ -162,7 +162,7 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
       const updateType = updateTypes.find(update => update.id === card.id)?.type;
       const isAvailable = await this.checkCardUpdate(card, updateType);
       if (isAvailable) this.availableUpdates.push(card.id);
-      appManager.getWebContent()?.send(modulesChannels.onCardsUpdateAvailable, this.availableUpdates);
+      appManager?.getWebContent()?.send(modulesChannels.onCardsUpdateAvailable, this.availableUpdates);
     }
   }
 

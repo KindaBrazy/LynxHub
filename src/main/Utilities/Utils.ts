@@ -18,7 +18,7 @@ import calcFolderSize from './CalculateFolderSize/CalculateFolderSize';
  */
 export async function openDialog(options: OpenDialogOptions): Promise<string | undefined> {
   try {
-    const mainWindow = appManager.getMainWindow();
+    const mainWindow = appManager?.getMainWindow();
     const result: OpenDialogReturnValue = await (mainWindow
       ? dialog.showOpenDialog(mainWindow, options)
       : dialog.showOpenDialog(options));

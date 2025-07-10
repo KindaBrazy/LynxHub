@@ -172,7 +172,7 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
       gitManager.pull(plugin);
 
       gitManager.onComplete = async () => {
-        appManager.getWebContent()?.send(this.updateChannel, id);
+        appManager?.getWebContent()?.send(this.updateChannel, id);
         await this.reloadServer();
         resolve(true);
       };
@@ -193,7 +193,7 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     );
 
     if (updatedPlugins.length > 0) {
-      appManager.getWebContent()?.send(this.updateChannel, updatedPlugins);
+      appManager?.getWebContent()?.send(this.updateChannel, updatedPlugins);
       await this.reloadServer();
     }
   }
@@ -263,7 +263,7 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
           this.installedPluginInfo = [];
 
           await this.createServer();
-          appManager.getWebContent()?.send(this.reloadChannel);
+          appManager?.getWebContent()?.send(this.reloadChannel);
           resolve();
         } catch (error) {
           reject(error);

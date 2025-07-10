@@ -130,7 +130,7 @@ export async function ptyProcess(id: string, opt: PtyProcessOpt, cardId: string)
     if (!isEmpty(customRun) || behavior === 'empty') {
       executeCommands(id, customRun);
     } else {
-      const runCommand = await moduleManager.getMethodsById(cardId)?.().getRunCommands();
+      const runCommand = await moduleManager?.getMethodsById(cardId)?.().getRunCommands();
       executeCommands(id, runCommand);
     }
   } else if (opt === 'stop') {
