@@ -1,13 +1,14 @@
 import {CanvasAddon} from '@xterm/addon-canvas';
 import {ClipboardAddon} from '@xterm/addon-clipboard';
 import {FitAddon, ITerminalDimensions} from '@xterm/addon-fit';
+import {SerializeAddon} from '@xterm/addon-serialize';
 import {Unicode11Addon} from '@xterm/addon-unicode11';
 import {WebLinksAddon} from '@xterm/addon-web-links';
 import {WebglAddon} from '@xterm/addon-webgl';
 import {Terminal as XTerminal} from '@xterm/xterm';
 import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty, isEqual} from 'lodash';
-import {Dispatch, SetStateAction, useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {SystemInfo} from '../../../../../../cross/IpcChannelAndTypes';
@@ -32,9 +33,9 @@ const canResize = (size: ITerminalDimensions | undefined) => {
   return size.cols > 95 && size.rows > 22;
 };
 
-type Props = {runningCard: RunningCard; setTerminalContent?: Dispatch<SetStateAction<string>>};
+type Props = {runningCard: RunningCard; serializeAddon?: SerializeAddon};
 
-export default function Terminal({runningCard, setTerminalContent}: Props) {
+export default function Terminal({runningCard, serializeAddon}: Props) {
   const copyPressed = useHotkeysState('copyPressed');
   const activeTab = useTabsState('activeTab');
   const allCards = useAllCards();
@@ -111,17 +112,6 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
         }
       }
       xTerminal.write(outputColor ? parseTerminalColors(data) : data);
-
-      let fullText = '';
-      const buffer = xTerminal.buffer.active;
-      for (let i = 0; i < buffer.length; i++) {
-        const line = buffer.getLine(i)?.translateToString(true);
-        if (line) {
-          fullText += line + '\n';
-        }
-      }
-
-      setTerminalContent?.(fullText);
     },
     [webUIAddress, id, terminal, browserBehavior, outputColor, dispatch, allCards, activeTab],
   );
@@ -193,6 +183,8 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
           window.open(uri);
         }),
       );
+
+      if (serializeAddon) xTerm.loadAddon(serializeAddon);
 
       xTerm.open(terminalRef);
 
