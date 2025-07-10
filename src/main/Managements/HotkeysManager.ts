@@ -1,5 +1,5 @@
 import {Event, Input, WebContents} from 'electron';
-import lodash from 'lodash';
+import {isEqual} from 'lodash';
 
 import {appWindowChannels, LynxInput} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
@@ -19,7 +19,7 @@ let currentKeys: LynxInput = initialKeys;
 const registeredHotkeys: number[] = [];
 
 function sendToRenderer() {
-  if (lodash.isEqual(prevKeys, currentKeys)) return;
+  if (isEqual(prevKeys, currentKeys)) return;
   prevKeys = currentKeys;
   appManager?.getWebContent()?.send(appWindowChannels.hotkeysChange, currentKeys);
 }
