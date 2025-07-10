@@ -15,7 +15,7 @@ import {getSystemDarkMode} from '../../../Utilities/Utils';
  * @param state - The desired window state change.
  */
 export function changeWindowState(state: ChangeWindowState): void {
-  const mainWindow = appManager.getMainWindow();
+  const mainWindow = appManager?.getMainWindow();
   if (!mainWindow) return;
 
   const actions: Record<ChangeWindowState, () => void> = {
@@ -24,10 +24,10 @@ export function changeWindowState(state: ChangeWindowState): void {
     close: () => {
       storageManager.updateLastSize();
       mainWindow.close();
-      if (platform() === 'darwin') trayManager.destroyTrayIcon();
+      if (platform() === 'darwin') trayManager?.destroyTrayIcon();
     },
     fullscreen: () => mainWindow.setFullScreen(!mainWindow.isFullScreen()),
-    restart: () => appManager.restart(),
+    restart: () => appManager?.restart(),
   };
 
   const action = actions[state];
@@ -44,10 +44,10 @@ export function changeWindowState(state: ChangeWindowState): void {
  */
 export function setDarkMode(darkMode: DarkModeTypes): void {
   if (darkMode === 'system') {
-    appManager.getWebContent()?.send(winChannels.onDarkMode, getSystemDarkMode());
-    appManager.getContextMenuWindow()?.webContents?.send(winChannels.onDarkMode, getSystemDarkMode());
+    appManager?.getWebContent()?.send(winChannels.onDarkMode, getSystemDarkMode());
+    appManager?.getContextMenuWindow()?.webContents?.send(winChannels.onDarkMode, getSystemDarkMode());
   } else {
-    appManager.getContextMenuWindow()?.webContents?.send(winChannels.onDarkMode, darkMode);
+    appManager?.getContextMenuWindow()?.webContents?.send(winChannels.onDarkMode, darkMode);
   }
   storageManager.updateData('app', {darkMode});
 }
@@ -57,12 +57,12 @@ export function setDarkMode(darkMode: DarkModeTypes): void {
  * @param status - The desired taskbar status.
  */
 export function setTaskbarStatus(status: TaskbarStatus): void {
-  const mainWindow = appManager.getMainWindow();
+  const mainWindow = appManager?.getMainWindow();
   if (!mainWindow) return;
 
   const actions: Record<TaskbarStatus, () => void> = {
     'taskbar-tray': () => {
-      trayManager.createTrayIcon();
+      trayManager?.createTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(false);
       } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
@@ -70,7 +70,7 @@ export function setTaskbarStatus(status: TaskbarStatus): void {
       }
     },
     taskbar: () => {
-      trayManager.destroyTrayIcon();
+      trayManager?.destroyTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(false);
       } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
@@ -78,7 +78,7 @@ export function setTaskbarStatus(status: TaskbarStatus): void {
       }
     },
     tray: () => {
-      trayManager.createTrayIcon();
+      trayManager?.createTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(true);
       } else if (platform() === 'darwin' && app.dock?.isVisible()) {
@@ -86,7 +86,7 @@ export function setTaskbarStatus(status: TaskbarStatus): void {
       }
     },
     'tray-minimized': () => {
-      trayManager.destroyTrayIcon();
+      trayManager?.destroyTrayIcon();
       if (platform() === 'win32') {
         mainWindow?.setSkipTaskbar(false);
       } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
@@ -154,7 +154,7 @@ export async function isEmptyDir(dir: string): Promise<boolean> {
  */
 export function setDiscordRP(discordRP: DiscordRPC): void {
   storageManager.updateData('app', {discordRP});
-  discordRpcManager.updateDiscordRP();
+  discordRpcManager?.updateDiscordRP();
 }
 
 export function listDirectory(path: string): Promise<FolderListData[]> {

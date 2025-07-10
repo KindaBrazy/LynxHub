@@ -3,6 +3,7 @@ import path from 'node:path';
 import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, shell} from 'electron';
 
 import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/CrossTypes';
+import {toMs} from '../../../cross/CrossUtils';
 import {
   AgentTypes,
   appDataChannels,
@@ -31,14 +32,7 @@ import {
   winChannels,
 } from '../../../cross/IpcChannelAndTypes';
 import StorageTypes, {InstalledCard} from '../../../cross/StorageTypes';
-import {
-  appManager,
-  browserManager,
-  discordRpcManager,
-  extensionManager,
-  moduleManager,
-  storageManager,
-} from '../../index';
+import {appManager, discordRpcManager, extensionManager, moduleManager, storageManager} from '../../index';
 import calcFolderSize from '../../Utilities/CalculateFolderSize/CalculateFolderSize';
 import {
   getAbsolutePath,
@@ -49,6 +43,7 @@ import {
   openDialog,
 } from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../AppDataManager';
+import BrowserManager from '../BrowserManager';
 import {listenForContextChannels} from '../ContextMenuManager';
 import GitManager from '../GitManager';
 import StaticsManager from '../StaticsManager';
@@ -102,8 +97,8 @@ function win() {
 
   nativeTheme.on('updated', () => {
     if (storageManager.getData('app').darkMode === 'system') {
-      appManager.getWebContent()?.send(winChannels.onDarkMode, getSystemDarkMode());
-      appManager.getContextMenuWindow()?.webContents.send(winChannels.onDarkMode, getSystemDarkMode());
+      appManager?.getWebContent()?.send(winChannels.onDarkMode, getSystemDarkMode());
+      appManager?.getContextMenuWindow()?.webContents.send(winChannels.onDarkMode, getSystemDarkMode());
     }
   });
 
@@ -111,7 +106,7 @@ function win() {
 
   ipcMain.on(winChannels.setDiscordRP, (_, discordRp: DiscordRPC) => setDiscordRP(discordRp));
 
-  ipcMain.on(winChannels.setDiscordRpAiRunning, (_, status: DiscordRunningAI) => discordRpcManager.runningAI(status));
+  ipcMain.on(winChannels.setDiscordRpAiRunning, (_, status: DiscordRunningAI) => discordRpcManager?.runningAI(status));
 
   ipcMain.handle(winChannels.getSystemInfo, () => getSystemInfo());
 
@@ -191,23 +186,23 @@ function modules() {
   ipcMain.handle(
     modulesChannels.cardUpdateAvailable,
     (_, card: InstalledCard, updateType: 'git' | 'stepper' | undefined) =>
-      moduleManager.checkCardUpdate(card, updateType),
+      moduleManager?.checkCardUpdate(card, updateType),
   );
 
-  ipcMain.handle(modulesChannels.getModulesData, () => moduleManager.getPluginData());
-  ipcMain.handle(modulesChannels.getInstalledModulesInfo, () => moduleManager.getInstalledPluginInfo());
-  ipcMain.handle(modulesChannels.getSkipped, () => moduleManager.getSkipped());
+  ipcMain.handle(modulesChannels.getModulesData, () => moduleManager?.getPluginData());
+  ipcMain.handle(modulesChannels.getInstalledModulesInfo, () => moduleManager?.getInstalledPluginInfo());
+  ipcMain.handle(modulesChannels.getSkipped, () => moduleManager?.getSkipped());
   ipcMain.handle(modulesChannels.checkEa, (_, isEA: boolean, isInsider: boolean) =>
-    moduleManager.checkEA(isEA, isInsider),
+    moduleManager?.checkEA(isEA, isInsider),
   );
 
-  ipcMain.handle(modulesChannels.installModule, (_, url: string) => moduleManager.installPlugin(url));
-  ipcMain.handle(modulesChannels.uninstallModule, (_, id: string) => moduleManager.uninstallPlugin(id));
-  ipcMain.handle(modulesChannels.uninstallCardByID, (_, id: string) => moduleManager.uninstallCardByID(id));
-  ipcMain.handle(modulesChannels.isUpdateAvailable, (_, id: string) => moduleManager.isUpdateAvailable(id));
-  ipcMain.handle(modulesChannels.updateAvailableList, () => moduleManager.updateAvailableList());
-  ipcMain.handle(modulesChannels.updateModule, (_, id: string) => moduleManager.updatePlugin(id));
-  ipcMain.handle(modulesChannels.updateAllModules, () => moduleManager.updateAllPlugins());
+  ipcMain.handle(modulesChannels.installModule, (_, url: string) => moduleManager?.installPlugin(url));
+  ipcMain.handle(modulesChannels.uninstallModule, (_, id: string) => moduleManager?.uninstallPlugin(id));
+  ipcMain.handle(modulesChannels.uninstallCardByID, (_, id: string) => moduleManager?.uninstallCardByID(id));
+  ipcMain.handle(modulesChannels.isUpdateAvailable, (_, id: string) => moduleManager?.isUpdateAvailable(id));
+  ipcMain.handle(modulesChannels.updateAvailableList, () => moduleManager?.updateAvailableList());
+  ipcMain.handle(modulesChannels.updateModule, (_, id: string) => moduleManager?.updatePlugin(id));
+  ipcMain.handle(modulesChannels.updateAllModules, () => moduleManager?.updateAllPlugins());
 
   ipcMain.on(
     modulesChannels.checkCardsUpdateInterval,
@@ -217,7 +212,7 @@ function modules() {
         id: string;
         type: 'git' | 'stepper';
       }[],
-    ) => moduleManager.cardsUpdateInterval(updateType),
+    ) => moduleManager?.cardsUpdateInterval(updateType),
   );
 }
 
@@ -373,7 +368,7 @@ function storageUtilsIpc() {
 }
 
 function modulesIpc() {
-  moduleManager.listenForChannels();
+  moduleManager?.listenForChannels();
 }
 
 function extensionsIpc() {
@@ -387,6 +382,15 @@ function modulesApi() {
 }
 
 export function browserIPC() {
+  const mainWindow = appManager?.getMainWindow();
+
+  if (!mainWindow) {
+    setTimeout(browserIPC, toMs(1, 'seconds'));
+    return;
+  }
+
+  const browserManager: BrowserManager = new BrowserManager(mainWindow);
+
   ipcMain.on(browserChannels.createBrowser, (_, id: string) => browserManager.createBrowser(id));
   ipcMain.on(browserChannels.removeBrowser, (_, id: string) => browserManager.removeBrowser(id));
   ipcMain.on(browserChannels.loadURL, (_, id: string, url: string) => browserManager.loadURL(id, url));
@@ -406,26 +410,26 @@ export function browserIPC() {
   );
 
   ipcMain.on(browserChannels.openFindInPage, (_, id: string, customPosition?: {x: number; y: number}) => {
-    appManager.setCustomContextPosition(customPosition);
-    appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onFind, id);
+    appManager?.setCustomContextPosition(customPosition);
+    appManager?.getContextMenuWindow()?.webContents.send(contextMenuChannels.onFind, id);
   });
   ipcMain.on(browserChannels.openZoom, (_, id: string) => {
-    appManager.setCustomContextPosition(undefined);
+    appManager?.setCustomContextPosition(undefined);
     appManager
-      .getContextMenuWindow()
+      ?.getContextMenuWindow()
       ?.webContents.send(contextMenuChannels.onZoom, id, browserManager.getCurrentZoom(id));
   });
   ipcMain.on(contextMenuChannels.openTerminateAI, (_, id: string) => {
-    appManager.setCustomContextPosition(undefined);
-    appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onTerminateAI, id);
+    appManager?.setCustomContextPosition(undefined);
+    appManager?.getContextMenuWindow()?.webContents.send(contextMenuChannels.onTerminateAI, id);
   });
   ipcMain.on(contextMenuChannels.openTerminateTab, (_, id: string, customPosition?: {x: number; y: number}) => {
-    appManager.setCustomContextPosition(customPosition);
-    appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onTerminateTab, id);
+    appManager?.setCustomContextPosition(customPosition);
+    appManager?.getContextMenuWindow()?.webContents.send(contextMenuChannels.onTerminateTab, id);
   });
   ipcMain.on(contextMenuChannels.openCloseApp, () => {
-    appManager.setCustomContextPosition(undefined);
-    appManager.getContextMenuWindow()?.webContents.send(contextMenuChannels.onCloseApp);
+    appManager?.setCustomContextPosition(undefined);
+    appManager?.getContextMenuWindow()?.webContents.send(contextMenuChannels.onCloseApp);
   });
 
   ipcMain.on(browserChannels.reload, (_, id: string) => browserManager.reload(id));
@@ -440,7 +444,7 @@ export function browserIPC() {
   ipcMain.handle(browserChannels.getUserAgent, (_, type: AgentTypes) => getUserAgent(type));
   ipcMain.on(browserChannels.updateUserAgent, () => {
     browserManager.updateUserAgent();
-    appManager.getMainWindow()?.webContents.setUserAgent(getUserAgent());
+    appManager?.getMainWindow()?.webContents.setUserAgent(getUserAgent());
   });
 
   ipcMain.on(browserChannels.addOffset, (_, id: string, offset: WHType) => browserManager.addOffset(id, offset));

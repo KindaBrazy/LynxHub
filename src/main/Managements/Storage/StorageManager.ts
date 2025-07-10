@@ -70,7 +70,7 @@ class StorageManager extends BaseStorage {
     const args = this.getArgs(cardId);
     if (args) return args;
 
-    const returnArgs = await moduleManager.getMethodsById(cardId)?.().readArgs?.();
+    const returnArgs = await moduleManager?.getMethodsById(cardId)?.().readArgs?.();
     const result: ChosenArgumentsData = {
       activePreset: 'Default',
       data: [{preset: 'Default', arguments: returnArgs || []}],
@@ -84,7 +84,7 @@ class StorageManager extends BaseStorage {
 
     const result = args.data.find(arg => arg.preset === args.activePreset)?.arguments || [];
 
-    await moduleManager.getMethodsById(cardId)?.().saveArgs?.(result);
+    await moduleManager?.getMethodsById(cardId)?.().saveArgs?.(result);
   }
 
   public addInstalledCard(card: InstalledCard) {
@@ -100,9 +100,9 @@ class StorageManager extends BaseStorage {
 
       this.updateData('cards', {installedCards});
 
-      appManager.getWebContent()?.send(storageUtilsChannels.onInstalledCards, installedCards);
+      appManager?.getWebContent()?.send(storageUtilsChannels.onInstalledCards, installedCards);
     }
-    cardsValidator.changedCards();
+    cardsValidator?.changedCards();
   }
 
   public removeInstalledCard(id: string) {
@@ -112,8 +112,8 @@ class StorageManager extends BaseStorage {
 
     this.updateData('cards', {installedCards});
 
-    appManager.getWebContent()?.send(storageUtilsChannels.onInstalledCards, installedCards);
-    cardsValidator.changedCards();
+    appManager?.getWebContent()?.send(storageUtilsChannels.onInstalledCards, installedCards);
+    cardsValidator?.changedCards();
   }
 
   public removeInstalledCardByPath(dir: string) {
@@ -121,7 +121,7 @@ class StorageManager extends BaseStorage {
       card => getAbsolutePath(getExePath(), card.dir || '') !== getAbsolutePath(getExePath(), dir),
     );
     this.updateData('cards', {installedCards});
-    appManager.getWebContent()?.send(storageUtilsChannels.onInstalledCards, installedCards);
+    appManager?.getWebContent()?.send(storageUtilsChannels.onInstalledCards, installedCards);
   }
 
   public addAutoUpdateCard(cardId: string) {
@@ -134,7 +134,7 @@ class StorageManager extends BaseStorage {
 
       this.updateData('cards', {autoUpdateCards: [...storedAutoUpdateCards, cardId]});
 
-      appManager.getWebContent()?.send(storageUtilsChannels.onAutoUpdateCards, result);
+      appManager?.getWebContent()?.send(storageUtilsChannels.onAutoUpdateCards, result);
     }
   }
 
@@ -145,7 +145,7 @@ class StorageManager extends BaseStorage {
 
     this.updateData('cards', {autoUpdateCards: updatedAutoUpdateCards});
 
-    appManager.getWebContent()?.send(storageUtilsChannels.onAutoUpdateCards, updatedAutoUpdateCards);
+    appManager?.getWebContent()?.send(storageUtilsChannels.onAutoUpdateCards, updatedAutoUpdateCards);
   }
 
   public addAutoUpdateExtensions(cardId: string) {
@@ -158,7 +158,7 @@ class StorageManager extends BaseStorage {
 
       this.updateData('cards', {autoUpdateExtensions: [...storedAutoUpdateExtensions, cardId]});
 
-      appManager.getWebContent()?.send(storageUtilsChannels.onAutoUpdateExtensions, result);
+      appManager?.getWebContent()?.send(storageUtilsChannels.onAutoUpdateExtensions, result);
     }
   }
 
@@ -169,7 +169,7 @@ class StorageManager extends BaseStorage {
 
     this.updateData('cards', {autoUpdateExtensions: updatedAutoUpdateExtensions});
 
-    appManager.getWebContent()?.send(storageUtilsChannels.onAutoUpdateExtensions, updatedAutoUpdateExtensions);
+    appManager?.getWebContent()?.send(storageUtilsChannels.onAutoUpdateExtensions, updatedAutoUpdateExtensions);
   }
 
   public addPinnedCard(cardId: string) {
@@ -182,7 +182,7 @@ class StorageManager extends BaseStorage {
 
       this.updateData('cards', {pinnedCards: [...storedPinnedCards, cardId]});
 
-      appManager.getWebContent()?.send(storageUtilsChannels.onPinnedCardsChange, result);
+      appManager?.getWebContent()?.send(storageUtilsChannels.onPinnedCardsChange, result);
     }
   }
 
@@ -193,7 +193,7 @@ class StorageManager extends BaseStorage {
 
     this.updateData('cards', {pinnedCards: updatedPinnedCards});
 
-    appManager.getWebContent()?.send(storageUtilsChannels.onPinnedCardsChange, updatedPinnedCards);
+    appManager?.getWebContent()?.send(storageUtilsChannels.onPinnedCardsChange, updatedPinnedCards);
   }
 
   public pinnedCardsOpt(opt: StorageOperation, id: string, pinnedCards?: string[]) {
@@ -214,7 +214,7 @@ class StorageManager extends BaseStorage {
 
       case 'set':
         this.updateData('cards', {pinnedCards});
-        appManager.getWebContent()?.send(storageUtilsChannels.onPinnedCardsChange, pinnedCards);
+        appManager?.getWebContent()?.send(storageUtilsChannels.onPinnedCardsChange, pinnedCards);
         break;
     }
 
@@ -230,7 +230,7 @@ class StorageManager extends BaseStorage {
 
     this.updateData('cards', {recentlyUsedCards: result});
 
-    appManager.getWebContent()?.send(storageUtilsChannels.onRecentlyUsedCardsChange, result);
+    appManager?.getWebContent()?.send(storageUtilsChannels.onRecentlyUsedCardsChange, result);
   }
 
   public recentlyUsedCardsOpt(opt: RecentlyOperation, id: string) {
@@ -251,7 +251,7 @@ class StorageManager extends BaseStorage {
 
   public setHomeCategory(data: string[]) {
     this.updateData('app', {homeCategory: data});
-    appManager.getWebContent()?.send(storageUtilsChannels.onHomeCategory, data);
+    appManager?.getWebContent()?.send(storageUtilsChannels.onHomeCategory, data);
   }
 
   public homeCategoryOpt(opt: StorageOperation, data: string[]) {
@@ -284,7 +284,7 @@ class StorageManager extends BaseStorage {
       preCommands.push({cardId, data: [command]});
     }
 
-    appManager.getWebContent()?.send(storageUtilsChannels.onPreCommands, {commands, id: cardId});
+    appManager?.getWebContent()?.send(storageUtilsChannels.onPreCommands, {commands, id: cardId});
 
     this.updateData('cardsConfig', {preCommands});
   }
@@ -312,7 +312,7 @@ class StorageManager extends BaseStorage {
       commands = preCommands[existCommand].data;
     }
 
-    appManager.getWebContent()?.send(storageUtilsChannels.onPreCommands, {commands, id: cardId});
+    appManager?.getWebContent()?.send(storageUtilsChannels.onPreCommands, {commands, id: cardId});
     this.updateData('cardsConfig', {preCommands});
   }
 
@@ -354,7 +354,7 @@ class StorageManager extends BaseStorage {
       customRun.push({cardId, data: [command]});
     }
 
-    appManager.getWebContent()?.send(storageUtilsChannels.onCustomRun, {commands: custom, id: cardId});
+    appManager?.getWebContent()?.send(storageUtilsChannels.onCustomRun, {commands: custom, id: cardId});
     this.updateData('cardsConfig', {customRun});
   }
 
@@ -381,7 +381,7 @@ class StorageManager extends BaseStorage {
       commands = customRun[existCommand].data;
     }
 
-    appManager.getWebContent()?.send(storageUtilsChannels.onCustomRun, {commands, id: cardId});
+    appManager?.getWebContent()?.send(storageUtilsChannels.onCustomRun, {commands, id: cardId});
     this.updateData('cardsConfig', {customRun});
   }
 
@@ -466,8 +466,8 @@ class StorageManager extends BaseStorage {
   }
 
   public updateLastSize() {
-    const isMaximized = appManager.getMainWindow()?.isMaximized() || false;
-    const bounds = appManager.getMainWindow()?.getBounds();
+    const isMaximized = appManager?.getMainWindow()?.isMaximized() || false;
+    const bounds = appManager?.getMainWindow()?.getBounds();
 
     const prevBounds = this.getData('app').lastSize?.bounds;
 
@@ -591,7 +591,7 @@ class StorageManager extends BaseStorage {
     const prevState = this.getData('app');
     prevState[type] = enable;
 
-    appManager.getWebContent()?.send(storageUtilsChannels.onConfirmChange, type, enable);
+    appManager?.getWebContent()?.send(storageUtilsChannels.onConfirmChange, type, enable);
 
     this.write();
   }

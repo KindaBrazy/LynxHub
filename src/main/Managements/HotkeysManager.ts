@@ -21,7 +21,7 @@ const registeredHotkeys: number[] = [];
 function sendToRenderer() {
   if (lodash.isEqual(prevKeys, currentKeys)) return;
   prevKeys = currentKeys;
-  appManager.getWebContent()?.send(appWindowChannels.hotkeysChange, currentKeys);
+  appManager?.getWebContent()?.send(appWindowChannels.hotkeysChange, currentKeys);
 }
 
 function onBlur() {

@@ -34,13 +34,13 @@ export default class PtyManager {
       if (this.onData) {
         this.onData(data);
       } else if (sendDataToRenderer) {
-        appManager.getWebContent()?.send(ptyChannels.onData, this.id, data);
-        appManager.getWebContent()?.send(ptyChannels.onTitle, this.id, this.process?.process);
+        appManager?.getWebContent()?.send(ptyChannels.onData, this.id, data);
+        appManager?.getWebContent()?.send(ptyChannels.onTitle, this.id, this.process?.process);
       }
     });
 
     this.process.onExit(() => {
-      appManager.getWebContent()?.send(ptyChannels.onExit, this.id);
+      appManager?.getWebContent()?.send(ptyChannels.onExit, this.id);
     });
   }
 

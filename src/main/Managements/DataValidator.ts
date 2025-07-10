@@ -80,7 +80,7 @@ export class ValidateCards {
     };
 
     for (const card of cards) {
-      const isInstalledMethod = moduleManager.getMethodsById(card.id)?.().isInstalled;
+      const isInstalledMethod = moduleManager?.getMethodsById(card.id)?.().isInstalled;
       if (isInstalledMethod) {
         const installed = await isInstalledMethod(() => onInstalledDirExist(card));
         if (installed) moduleCards.push(card);

@@ -311,7 +311,7 @@ class BaseStorage {
     if (isPortable() === 'linux') {
       changeWindowState('close');
     } else {
-      appManager.restart();
+      appManager?.restart();
     }
   }
 
@@ -319,7 +319,7 @@ class BaseStorage {
     try {
       this.storage.write();
     } catch (e) {
-      appManager.showToast(`Failed to save app configs: ${e.message}`, 'error');
+      appManager?.showToast(`Failed to save app configs: ${e.message}`, 'error');
     }
   }
 }

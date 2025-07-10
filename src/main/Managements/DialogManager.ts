@@ -3,9 +3,15 @@ import path from 'node:path';
 import {is} from '@electron-toolkit/utils';
 import {app, BrowserWindow, ipcMain} from 'electron';
 
+import {toMs} from '../../cross/CrossUtils';
 import {appManager} from '../index';
 
 export default function DialogManager() {
+  if (!appManager) {
+    setTimeout(DialogManager, toMs(1, 'seconds'));
+    return;
+  }
+
   app.on('web-contents-created', (_event, contents) => {
     contents.on('will-attach-webview', (_e, webPreferences) => {
       webPreferences.preload = path.join(__dirname, '../preload/webview.cjs');
@@ -19,7 +25,7 @@ export default function DialogManager() {
       width: 300,
       height: 150,
       show: false,
-      parent: appManager.getMainWindow(),
+      parent: appManager?.getMainWindow(),
       resizable: false,
       movable: true,
       alwaysOnTop: true,

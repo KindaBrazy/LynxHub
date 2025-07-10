@@ -161,14 +161,14 @@ export default class GitManager {
   private handleProgressUpdate = (progress: SimpleGitProgressEvent): void => {
     if (this.abortController.signal.aborted) return;
     if (this.showTaskbarProgress) {
-      appManager.getMainWindow()?.setProgressBar(progress.progress / 100);
+      appManager?.getMainWindow()?.setProgressBar(progress.progress / 100);
     }
     this.onProgress?.(progress);
   };
 
   private handleProgressComplete = (result?: PullResult): void => {
     if (this.showTaskbarProgress) {
-      appManager.getMainWindow()?.setProgressBar(-1);
+      appManager?.getMainWindow()?.setProgressBar(-1);
     }
     if (this.abortController.signal.aborted) return;
     this.onComplete?.(result);
@@ -176,7 +176,7 @@ export default class GitManager {
 
   private onFailedProgress = (reason: string): void => {
     if (this.showTaskbarProgress) {
-      appManager.getMainWindow()?.setProgressBar(-1);
+      appManager?.getMainWindow()?.setProgressBar(-1);
     }
     if (this.abortController.signal.aborted) return;
     this.onError?.(reason);

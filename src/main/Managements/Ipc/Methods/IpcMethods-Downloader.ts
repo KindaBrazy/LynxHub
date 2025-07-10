@@ -9,7 +9,12 @@ import {appManager} from '../../../index';
 let downloadingItem: DownloadItem | undefined;
 
 export function downloadFile(url: string) {
-  const window = appManager.getMainWindow()!;
+  const window = appManager?.getMainWindow();
+
+  if (!window) {
+    console.error('Failed to download file: ', 'window object is undefined!');
+    return;
+  }
 
   download(window, url, {
     showBadge: false,
