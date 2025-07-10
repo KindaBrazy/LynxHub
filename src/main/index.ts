@@ -8,7 +8,7 @@ import trayIconMenu from '../../resources/16x16.png?asset';
 import trayIcon from '../../resources/icon.ico?asset';
 import darwinIcon from '../../resources/icon-darwin.png?asset';
 import {APP_NAME} from '../cross/CrossConstants';
-import {isDev} from '../cross/CrossUtils';
+import {isDev, toMs} from '../cross/CrossUtils';
 import {checkAppDirectories} from './Managements/AppDataManager';
 import AppInitializer from './Managements/AppInitializer';
 import {checkForUpdate} from './Managements/AppUpdater';
@@ -20,7 +20,7 @@ import ElectronAppManager from './Managements/ElectronAppManager';
 import {browserIPC, listenToAllChannels} from './Managements/Ipc/IpcHandler';
 import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
 import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
-import ModuleManager from './Managements/Plugin/ModuleManager';
+import ModuleManager from './Managements/Plugin/Modules/ModuleManager';
 import StorageManager from './Managements/Storage/StorageManager';
 import TrayManager from './Managements/TrayManager';
 import downloadDU from './Utilities/CalculateFolderSize/DownloadDU';
@@ -116,11 +116,24 @@ async function onAppReady() {
 
   appManager.onReadyToShow = handleAppReadyToShow;
   appManager.onCreateWindow = () => {
-    const mainWindow = appManager.getMainWindow();
-    if (mainWindow) {
-      browserManager = new BrowserManager(mainWindow);
-      browserIPC();
+    let retryCount = 0;
+    const maxRetries = 20;
+    const retryInterval = toMs(1, 'seconds');
+
+    function tryGetWindow() {
+      const mainWindow = appManager.getMainWindow();
+      if (mainWindow) {
+        browserManager = new BrowserManager(mainWindow);
+        browserIPC();
+      } else if (retryCount < maxRetries) {
+        retryCount++;
+        setTimeout(tryGetWindow, retryInterval);
+      } else {
+        appManager.showToast('Could not initialize browser window, please restart.', 'error');
+      }
     }
+
+    tryGetWindow();
   };
 }
 
