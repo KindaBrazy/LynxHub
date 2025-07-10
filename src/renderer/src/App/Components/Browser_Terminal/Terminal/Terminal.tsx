@@ -10,6 +10,7 @@ import {isEmpty, isEqual} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {SystemInfo} from '../../../../../../cross/IpcChannelAndTypes';
 import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
 import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
@@ -157,17 +158,15 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
 
     const JetBrainsMono = new FontFaceObserver(FONT_FAMILY);
 
-    Promise.all([rendererIpc.win.getSystemInfo(), JetBrainsMono.load()]).then(result => {
-      const [sysInfo] = result;
-
-      const windowsPty = getWindowPty(sysInfo, useConpty);
+    const loadTerminal = (sysInfo?: SystemInfo, fontFamily?: string) => {
+      const windowsPty = sysInfo ? getWindowPty(sysInfo, useConpty) : undefined;
       let renderMode = getRendererMode();
 
       const xTerm = new XTerminal({
         allowProposedApi: true,
         rows: 150,
         cols: 150,
-        fontFamily: 'JetBrainsMono',
+        fontFamily,
         scrollOnUserInput: true,
         scrollback,
         cursorBlink,
@@ -238,7 +237,17 @@ export default function Terminal({runningCard, setTerminalContent}: Props) {
       xTerm.onData(data => {
         if (!isEmpty(data)) rendererIpc.pty.write(id, data);
       });
-    });
+    };
+
+    Promise.all([rendererIpc.win.getSystemInfo(), JetBrainsMono.load()])
+      .then(result => {
+        const [sysInfo] = result;
+        loadTerminal(sysInfo, 'JetBrainsMono');
+      })
+      .catch(() => {
+        loadTerminal();
+        lynxTopToast(dispatch).warning('Failed to load terminal font!');
+      });
 
     let resizeTimeout: any;
     window.addEventListener('resize', () => {
