@@ -81,7 +81,13 @@ export default class ElectronAppManager {
   }
 
   public getWebContent(): WebContents | undefined {
-    return this.getMainWindow()?.webContents;
+    const webContent = this.getMainWindow()?.webContents;
+
+    if (!webContent) return undefined;
+
+    if (webContent.isDestroyed()) return undefined;
+
+    return webContent;
   }
 
   public showToast(message: string, type: ShowToastTypes) {
