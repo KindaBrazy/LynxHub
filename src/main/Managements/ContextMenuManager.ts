@@ -26,14 +26,21 @@ function contentByID(id: number) {
 }
 
 export function listenForContextChannels() {
-  ipcMain.on(contextMenuChannels.resizeWindow, (_e, dimensions: {width: number; height: number}) => {
+  ipcMain.on(contextMenuChannels.resizeWindow, (_e, dimensions: {width: number | any; height: number | any}) => {
     const window = appManager?.getContextMenuWindow();
     if (!window) return;
 
     const {width, height} = dimensions;
-    if (width && height) {
-      window.setSize(width, height, false);
-      window.setContentSize(width, height);
+
+    if (typeof width === 'number' && typeof height === 'number') {
+      if (!isNaN(width) && !isNaN(height)) {
+        window.setSize(width, height, false);
+        window.setContentSize(width, height);
+      } else {
+        console.error('Received NaN for width or height:', dimensions);
+      }
+    } else {
+      console.error('Width or height are not numbers:', dimensions);
     }
   });
 
