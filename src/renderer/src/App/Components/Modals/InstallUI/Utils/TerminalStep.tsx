@@ -8,12 +8,15 @@ import {ITheme, IWindowsPty, Terminal} from '@xterm/xterm';
 import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useRef} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {useAppState} from '../../../../Redux/Reducer/AppReducer';
 import {useTerminalState} from '../../../../Redux/Reducer/TerminalReducer';
+import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {getColor} from '../../../../Utils/Constants';
 import {isWebgl2Supported} from '../../../../Utils/UtilFunctions';
+import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import parseTerminalColors from '../../../Browser_Terminal/Terminal/TerminalColorHandler';
 
 let resizeTimeout: any;
@@ -29,6 +32,7 @@ export default function TerminalStep({id}: Props) {
   const fitAddon = useRef<FitAddon | null>(null);
   const unicode11Addon = useRef<Unicode11Addon | null>(null);
   const darkMode = useAppState('darkMode');
+  const dispatch = useDispatch<AppDispatch>();
 
   const outputColor = useTerminalState('outputColor');
 
@@ -74,7 +78,7 @@ export default function TerminalStep({id}: Props) {
             }
           : undefined;
 
-      JetBrainsMono.load().then(() => {
+      const initTerminal = (fontFamily: string | undefined) => {
         let renderMode: 'webgl' | 'canvas' = isWebgl2Supported() ? 'webgl' : 'canvas';
 
         // Create and initialize the terminal object with a default background and cursor
@@ -84,7 +88,7 @@ export default function TerminalStep({id}: Props) {
           cols: 150,
           scrollback: 10000,
           cursorBlink: true,
-          fontFamily: 'JetBrainsMono',
+          fontFamily,
           fontSize: FONT_SIZE,
           scrollOnUserInput: true,
           cursorStyle: 'bar',
@@ -143,7 +147,16 @@ export default function TerminalStep({id}: Props) {
         terminal.current.onData(data => {
           if (!isEmpty(data)) rendererIpc.pty.write(id, data);
         });
-      });
+      };
+
+      JetBrainsMono.load(null, 5)
+        .then(() => {
+          initTerminal('JetBrainsMono');
+        })
+        .catch(() => {
+          lynxTopToast(dispatch).warning('Failed to load terminal font!');
+          initTerminal(undefined);
+        });
     }
 
     if (terminalRef.current && !terminal.current) {
