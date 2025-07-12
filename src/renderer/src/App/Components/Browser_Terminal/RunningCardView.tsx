@@ -1,6 +1,6 @@
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {isNil} from 'lodash';
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
@@ -56,12 +56,17 @@ const RunningCardView = ({runningCard}: Props) => {
   }, [isEmptyRunning, id, tabId, currentView, activeTab, terminalName, browserTitle]);
 
   const [serializeAddon] = useState<SerializeAddon>(new SerializeAddon());
+  const clearTerminal = useRef<(() => void) | undefined>(undefined);
 
   return (
     <>
-      <TopBar tabID={tabId} runningCard={runningCard} serializeAddon={serializeAddon} />
+      <TopBar tabID={tabId} runningCard={runningCard} clearTerminal={clearTerminal} serializeAddon={serializeAddon} />
       {runningCard.type !== 'browser' &&
-        (isNil(ExtTerminal) ? <Terminal runningCard={runningCard} serializeAddon={serializeAddon} /> : <ExtTerminal />)}
+        (isNil(ExtTerminal) ? (
+          <Terminal runningCard={runningCard} clearTerminal={clearTerminal} serializeAddon={serializeAddon} />
+        ) : (
+          <ExtTerminal />
+        ))}
       {runningCard.type !== 'terminal' && (isNil(ExtBrowser) ? <Browser runningCard={runningCard} /> : <ExtBrowser />)}
     </>
   );

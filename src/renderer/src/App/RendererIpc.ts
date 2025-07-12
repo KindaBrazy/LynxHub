@@ -616,6 +616,11 @@ const rendererIpc = {
       ipc.send(ptyChannels.write, id, data);
     },
 
+    clear: (id: string): void => {
+      extensionRendererApi.events_ipc.emit('terminal_clear', {id});
+      ipc.send(ptyChannels.clear, id);
+    },
+
     resize: (id: string, cols: number, rows: number): void => {
       extensionRendererApi.events_ipc.emit('terminal_resize', {id, cols, rows});
       ipc.send(ptyChannels.resize, id, cols, rows);

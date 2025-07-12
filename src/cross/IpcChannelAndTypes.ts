@@ -207,6 +207,7 @@ export const ptyChannels = {
   emptyProcess: 'pty-custom-process',
   customCommands: 'pty-custom-commands',
   write: 'pty-write',
+  clear: 'pty-clear',
   resize: 'pty-resize',
   onData: 'pty-on-data',
   onTitle: 'pty-on-title',
