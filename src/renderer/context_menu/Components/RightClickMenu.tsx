@@ -24,8 +24,8 @@ function ActionButton({icon, title, onPress, className}: ActionProps) {
   return (
     <div
       className={
-        `w-full hover:bg-foreground-100 transition-colors duration-300 py-2 px-3` +
-        ` flex justify-between items-center text-sm ${className}`
+        `w-full hover:bg-foreground-200 transition-colors duration-300 py-2 px-3` +
+        ` flex justify-between items-center text-sm ${className} cursor-pointer`
       }
       onClick={onPress}>
       {icon || <div />}
@@ -42,7 +42,7 @@ function NavButton({icon, onPress, className, isDisabled}: NavProps) {
     <div
       className={
         `size-full flex items-center rounded-lg justify-center transition-colors duration-150` +
-        ` ${isDisabled ? 'opacity-50' : 'hover:bg-foreground-200'} ${className}`
+        ` ${isDisabled ? 'opacity-50' : 'hover:bg-foreground-200 cursor-pointer'} ${className}`
       }
       onClick={isDisabled ? undefined : onPress}>
       {icon}
