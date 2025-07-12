@@ -44,6 +44,7 @@ export type ExtensionEvents_IPC = {
   terminal_process_custom_command: {id: string; opt: PtyProcessOpt; commands?: string | string[]; dir?: string};
   terminal_process_empty: {id: string; opt: PtyProcessOpt; dir?: string};
   terminal_write: {id: string; data: string};
+  terminal_clear: {id: string};
   terminal_resize: {id: string; cols: number; rows: number};
 
   // win

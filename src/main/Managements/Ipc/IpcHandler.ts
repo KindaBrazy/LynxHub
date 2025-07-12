@@ -74,6 +74,7 @@ import {
   customPtyCommands,
   customPtyProcess,
   emptyPtyProcess,
+  ptyClear,
   ptyProcess,
   ptyResize,
   ptyWrite,
@@ -246,6 +247,7 @@ function pty() {
       customPtyCommands(id, opt, commands, dir),
   );
   ipcMain.on(ptyChannels.write, (_, id: string, data: string) => ptyWrite(id, data));
+  ipcMain.on(ptyChannels.clear, (_, id: string) => ptyClear(id));
   ipcMain.on(ptyChannels.resize, (_, id: string, cols: number, rows: number) => ptyResize(id, cols, rows));
 }
 

@@ -8,7 +8,7 @@ import {WebglAddon} from '@xterm/addon-webgl';
 import {Terminal as XTerminal} from '@xterm/xterm';
 import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty, isEqual} from 'lodash';
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {RefObject, useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {SystemInfo} from '../../../../../../cross/IpcChannelAndTypes';
@@ -33,9 +33,13 @@ const canResize = (size: ITerminalDimensions | undefined) => {
   return size.cols > 95 && size.rows > 22;
 };
 
-type Props = {runningCard: RunningCard; serializeAddon?: SerializeAddon};
+type Props = {
+  runningCard: RunningCard;
+  serializeAddon?: SerializeAddon;
+  clearTerminal: RefObject<(() => void) | undefined>;
+};
 
-export default function Terminal({runningCard, serializeAddon}: Props) {
+export default function Terminal({runningCard, serializeAddon, clearTerminal}: Props) {
   const copyPressed = useHotkeysState('copyPressed');
   const activeTab = useTabsState('activeTab');
   const allCards = useAllCards();
@@ -165,6 +169,11 @@ export default function Terminal({runningCard, serializeAddon}: Props) {
         cursorInactiveStyle,
         windowsPty,
       });
+
+      clearTerminal.current = () => {
+        rendererIpc.pty.clear(id);
+        xTerm.clear();
+      };
 
       terminal.current = xTerm;
 

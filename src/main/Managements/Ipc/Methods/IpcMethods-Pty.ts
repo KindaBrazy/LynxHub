@@ -157,6 +157,10 @@ export function ptyWrite(id: string, data: string): void {
   getPtyByID(id)?.write(data);
 }
 
+export function ptyClear(id: string): void {
+  getPtyByID(id)?.clear();
+}
+
 /**
  * Resizes the PTY.
  * @param id - The unique id of process running

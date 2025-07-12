@@ -1,4 +1,5 @@
 import {SerializeAddon} from '@xterm/addon-serialize';
+import {RefObject} from 'react';
 
 import {RunningCard} from '../../../Utils/Types';
 import Browser_TopBar from '../Browser/Browser_TopBar';
@@ -9,9 +10,10 @@ type Props = {
   runningCard: RunningCard;
   serializeAddon?: SerializeAddon;
   tabID: string;
+  clearTerminal: RefObject<(() => void) | undefined>;
 };
 
-export default function TopBar({runningCard, serializeAddon, tabID}: Props) {
+export default function TopBar({runningCard, serializeAddon, tabID, clearTerminal}: Props) {
   return (
     <div
       className={
@@ -19,7 +21,11 @@ export default function TopBar({runningCard, serializeAddon, tabID}: Props) {
         ' flex flex-row gap-x-1 px-2 py-1 items-center justify-between'
       }>
       {runningCard.currentView === 'terminal' ? (
-        <Terminal_TopBar serializeAddon={serializeAddon} startTime={runningCard.startTime} />
+        <Terminal_TopBar
+          clearTerminal={clearTerminal}
+          serializeAddon={serializeAddon}
+          startTime={runningCard.startTime}
+        />
       ) : (
         <Browser_TopBar tabID={tabID} runningCard={runningCard} />
       )}

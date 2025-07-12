@@ -1,3 +1,4 @@
+import {platform} from 'node:os';
 import path from 'node:path';
 
 import pty from 'node-pty';
@@ -82,6 +83,14 @@ export default class PtyManager {
   public resize(cols: number, rows: number): void {
     if (this.isRunning && this.process) {
       this.process.resize(cols, rows);
+    }
+  }
+
+  public clear(): void {
+    if (this.isRunning && this.process) {
+      const LINE_ENDING = platform() ? '\r' : '\n';
+      this.write(`clear${LINE_ENDING}`);
+      this.process.clear();
     }
   }
 
