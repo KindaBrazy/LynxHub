@@ -1,3 +1,4 @@
+import {isEmpty, isNil} from 'lodash';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -72,14 +73,13 @@ export default function Browser_AddressBar({runningCard, setCustomAddress}: Prop
   }, [inputValue]);
 
   useEffect(() => {
-    const shouldAutoFocus = !inputValue && editableRef.current;
+    if (runningCard.tabId !== activeTab && runningCard.currentView !== 'browser') return;
 
-    if (shouldAutoFocus) {
-      setTimeout(() => {
-        editableRef.current?.focus();
-      }, 0);
-    }
-  }, [inputValue]);
+    const ref = editableRef.current;
+    if (isNil(ref)) return;
+
+    if (isEmpty(inputValue) && isEmpty(runningCard.currentAddress)) ref.focus();
+  }, [activeTab, runningCard.currentView]);
 
   const handleFocus = () => {
     setIsFocused(true);
