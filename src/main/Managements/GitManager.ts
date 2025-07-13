@@ -45,20 +45,25 @@ export default class GitManager {
    * @returns A promise that resolves to the path of the card or undefined.
    */
   public static async locateCard(url: string, dir?: string): Promise<string | undefined> {
-    let resultPath: string | undefined;
-    if (dir) {
-      resultPath = dir;
-    } else {
-      resultPath = await openDialog({properties: ['openDirectory']});
+    try {
+      let resultPath: string | undefined;
+      if (dir) {
+        resultPath = dir;
+      } else {
+        resultPath = await openDialog({properties: ['openDirectory']});
+      }
+
+      if (!resultPath) return undefined;
+
+      const remote = await this.remoteUrlFromDir(resultPath);
+
+      if (!remote) return undefined;
+
+      return validateGitRepoUrl(remote) === validateGitRepoUrl(url) ? resultPath : undefined;
+    } catch (e) {
+      console.error('Error locating card:', e);
+      return undefined;
     }
-
-    if (!resultPath) return undefined;
-
-    const remote = await this.remoteUrlFromDir(resultPath);
-
-    if (!remote) return undefined;
-
-    return validateGitRepoUrl(remote) === validateGitRepoUrl(url) ? resultPath : undefined;
   }
 
   public static async getDirBranch(dir: string) {

@@ -91,6 +91,11 @@ function setupGitManagerListeners(manager: GitManager, id?: string): void {
 }
 
 export async function validateGitDir(dir: string, url: string): Promise<boolean> {
-  const result = await GitManager.locateCard(url, dir);
-  return !!result;
+  try {
+    const result = await GitManager.locateCard(url, dir);
+    return !!result;
+  } catch (e) {
+    console.error('Error validating git directory: ', e);
+    return false;
+  }
 }
