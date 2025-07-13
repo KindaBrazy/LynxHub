@@ -2,6 +2,7 @@ import {join} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
+import {isNil} from 'lodash';
 import url from 'url';
 
 import icon from '../../../resources/icon.png?asset';
@@ -56,6 +57,8 @@ export default class BrowserManager {
 
   private listenForNavigate(id: string, webContents: WebContents) {
     const sendToRenderer = () => {
+      if (isNil(webContents) || webContents.isDestroyed()) return;
+
       const canGo: CanGoType = {
         back: webContents.navigationHistory.canGoBack(),
         forward: webContents.navigationHistory.canGoForward(),
@@ -86,12 +89,16 @@ export default class BrowserManager {
 
   private listenForTitle(id: string, webContents: WebContents) {
     webContents.on('page-title-updated', () => {
+      if (isNil(webContents) || webContents.isDestroyed()) return;
+
       this.mainWindow.webContents.send(browserChannels.onTitleChange, id, webContents.getTitle());
     });
   }
 
   private listenForFavIcon(id: string, webContents: WebContents) {
     webContents.on('page-favicon-updated', (_, favicons) => {
+      if (isNil(webContents) || webContents.isDestroyed()) return;
+
       const url = favicons.find(icon => icon.includes('.ico')) || favicons[0] || '';
       this.mainWindow.webContents.send(browserChannels.onFavIconChange, id, url);
 
@@ -124,6 +131,8 @@ export default class BrowserManager {
 
   private listenForZoom(webContents: WebContents) {
     webContents.on('zoom-changed', (_, zoomDirection) => {
+      if (isNil(webContents) || webContents.isDestroyed()) return;
+
       let resultFactor = webContents.getZoomFactor();
       resultFactor = zoomDirection === 'in' ? resultFactor + 0.1 : resultFactor - 0.1;
       if (resultFactor > 0.1 && resultFactor < 5) webContents.setZoomFactor(resultFactor);
