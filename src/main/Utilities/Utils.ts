@@ -2,7 +2,7 @@ import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
 import {dirname, isAbsolute, relative, resolve} from 'node:path';
 
-import {app, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
+import {app, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue, safeStorage} from 'electron';
 import fs from 'graceful-fs';
 
 import {formatSize} from '../../cross/CrossUtils';
@@ -220,4 +220,34 @@ export function getUserAgent(type?: AgentTypes) {
   };
 
   return templates[targetType]() || templates.lynxhub();
+}
+
+/**
+ * Helper function to encrypt a string using Electron's safeStorage.
+ * Returns the encrypted data as a hexadecimal string.
+ * Provides a warning if encryption is not available.
+ */
+export function lynxEncryptString(data: string): string {
+  if (safeStorage.isEncryptionAvailable()) {
+    return safeStorage.encryptString(data).toString('hex');
+  }
+  console.warn('safeStorage encryption not available. Data will not be encrypted.');
+  return data; // Fallback: return original data if encryption isn't available
+}
+
+/**
+ * Helper function to decrypt a string using Electron's safeStorage.
+ * Expects the input to be a hexadecimal string.
+ * Provides a warning and returns the original string if decryption fails or isn't available.
+ */
+export function lynxDecryptString(encryptedData: string): string {
+  if (safeStorage.isEncryptionAvailable()) {
+    try {
+      return safeStorage.decryptString(Buffer.from(encryptedData, 'hex'));
+    } catch (e) {
+      console.error('Failed to decrypt data:', e);
+      return encryptedData; // Return original if decryption fails (e.g., malformed data)
+    }
+  }
+  return encryptedData; // Fallback: return original data if encryption isn't available
 }

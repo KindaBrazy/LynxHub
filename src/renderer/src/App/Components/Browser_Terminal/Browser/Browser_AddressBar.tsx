@@ -50,7 +50,7 @@ export default function Browser_AddressBar({runningCard, setCustomAddress}: Prop
   const dispatch = useDispatch<AppDispatch>();
 
   const getFavorites = () => {
-    rendererIpc.storage.get('browser').then(result => {
+    rendererIpc.storageUtils.getBrowserHistoryData().then(result => {
       setFavorites(result.favoriteAddress);
     });
   };

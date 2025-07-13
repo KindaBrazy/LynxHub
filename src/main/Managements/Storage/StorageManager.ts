@@ -6,6 +6,7 @@ import _ from 'lodash';
 import {ChosenArgumentsData} from '../../../cross/CrossTypes';
 import {compareUrls} from '../../../cross/CrossUtils';
 import {
+  BrowserHistoryData,
   CustomRunBehaviorData,
   HomeCategory,
   PreCommands,
@@ -17,7 +18,14 @@ import {
 } from '../../../cross/IpcChannelAndTypes';
 import {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
 import {appManager, cardsValidator, moduleManager} from '../../index';
-import {getAbsolutePath, getExePath, getRelativePath, isPortable} from '../../Utilities/Utils';
+import {
+  getAbsolutePath,
+  getExePath,
+  getRelativePath,
+  isPortable,
+  lynxDecryptString,
+  lynxEncryptString,
+} from '../../Utilities/Utils';
 import BaseStorage from './BaseStorage';
 
 class StorageManager extends BaseStorage {
@@ -479,8 +487,44 @@ class StorageManager extends BaseStorage {
     });
   }
 
+  public getBrowserDataSecurely(): BrowserHistoryData {
+    const rawData = this.getData('browser');
+
+    return {
+      recentAddress: rawData.recentAddress.map(url => lynxDecryptString(url)),
+      favoriteAddress: rawData.favoriteAddress.map(url => lynxDecryptString(url)),
+      historyAddress: rawData.historyAddress.map(url => lynxDecryptString(url)),
+      favIcons: rawData.favIcons.map(item => ({
+        url: lynxDecryptString(item.url),
+        favIcon: lynxDecryptString(item.favIcon),
+      })),
+    };
+  }
+
+  private updateBrowserDataSecurely(data: Partial<BrowserHistoryData>): void {
+    const encryptedData: Partial<BrowserHistoryData> = JSON.parse(JSON.stringify(data));
+
+    if (encryptedData.recentAddress) {
+      encryptedData.recentAddress = encryptedData.recentAddress.map(url => lynxEncryptString(url));
+    }
+    if (encryptedData.favoriteAddress) {
+      encryptedData.favoriteAddress = encryptedData.favoriteAddress.map(url => lynxEncryptString(url));
+    }
+    if (encryptedData.historyAddress) {
+      encryptedData.historyAddress = encryptedData.historyAddress.map(url => lynxEncryptString(url));
+    }
+    if (encryptedData.favIcons) {
+      encryptedData.favIcons = encryptedData.favIcons.map(item => ({
+        url: lynxEncryptString(item.url),
+        favIcon: lynxEncryptString(item.favIcon),
+      }));
+    }
+
+    this.updateData('browser', encryptedData);
+  }
+
   public async addBrowserRecent(recentEntry: string) {
-    let recentAddress = this.getData('browser').recentAddress;
+    let recentAddress = this.getBrowserDataSecurely().recentAddress;
     let existUrlIndex = -1;
 
     for (let i = 0; i < recentAddress.length; i++) {
@@ -500,11 +544,11 @@ class StorageManager extends BaseStorage {
       recentAddress = [recentEntry, ...recentAddress];
     }
 
-    this.updateData('browser', {recentAddress});
+    this.updateBrowserDataSecurely({recentAddress});
   }
 
   public async addBrowserFavIcon(url: string, icon: string) {
-    const favIcons = this.getData('browser').favIcons;
+    const favIcons = this.getBrowserDataSecurely().favIcons;
     let updatedExisting: boolean = false;
 
     for (const favIcon of favIcons) {
@@ -518,11 +562,11 @@ class StorageManager extends BaseStorage {
 
     if (!updatedExisting) favIcons.push({url, favIcon: icon});
 
-    this.updateData('browser', {favIcons});
+    this.updateBrowserDataSecurely({favIcons});
   }
 
   public async addBrowserFavorite(favoriteEntry: string) {
-    let favoriteAddress = this.getData('browser').favoriteAddress;
+    let favoriteAddress = this.getBrowserDataSecurely().favoriteAddress;
     let existUrlIndex = -1;
 
     for (let i = 0; i < favoriteAddress.length; i++) {
@@ -542,11 +586,11 @@ class StorageManager extends BaseStorage {
       favoriteAddress = [favoriteEntry, ...favoriteAddress];
     }
 
-    this.updateData('browser', {favoriteAddress});
+    this.updateBrowserDataSecurely({favoriteAddress});
   }
 
   public async addBrowserHistory(historyEntry: string) {
-    let historyAddress = this.getData('browser').historyAddress;
+    let historyAddress = this.getBrowserDataSecurely().historyAddress;
     let existUrlIndex = -1;
 
     for (let i = 0; i < historyAddress.length; i++) {
@@ -566,25 +610,25 @@ class StorageManager extends BaseStorage {
       historyAddress = [historyEntry, ...historyAddress];
     }
 
-    this.updateData('browser', {historyAddress});
+    this.updateBrowserDataSecurely({historyAddress});
   }
 
   public removeBrowserRecent(url: string) {
-    const recentAddress = this.getData('browser').recentAddress;
+    const recentAddress = this.getBrowserDataSecurely().recentAddress;
 
-    this.updateData('browser', {recentAddress: recentAddress.filter(address => address !== url)});
+    this.updateBrowserDataSecurely({recentAddress: recentAddress.filter(address => address !== url)});
   }
 
   public removeBrowserFavorite(url: string) {
-    const favoriteAddress = this.getData('browser').favoriteAddress;
+    const favoriteAddress = this.getBrowserDataSecurely().favoriteAddress;
 
-    this.updateData('browser', {favoriteAddress: favoriteAddress.filter(address => address !== url)});
+    this.updateBrowserDataSecurely({favoriteAddress: favoriteAddress.filter(address => address !== url)});
   }
 
   public removeBrowserHistory(url: string) {
-    const historyAddress = this.getData('browser').historyAddress;
+    const historyAddress = this.getBrowserDataSecurely().historyAddress;
 
-    this.updateData('browser', {historyAddress: historyAddress.filter(address => address !== url)});
+    this.updateBrowserDataSecurely({historyAddress: historyAddress.filter(address => address !== url)});
   }
 
   public setShowConfirm(type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) {
@@ -619,6 +663,7 @@ class StorageManager extends BaseStorage {
 
     this.updateData('cards', {cardTerminalPreCommands});
   }
+
   public unassignCard(id: string, clearConfigs: boolean) {
     const cards = this.getData('cards');
     const cardsConfig = this.getData('cardsConfig');

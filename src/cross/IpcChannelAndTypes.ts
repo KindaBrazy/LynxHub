@@ -80,6 +80,12 @@ export type CanGoType = {back: boolean; forward: boolean};
 export type SkippedPlugins = {folderName: string; message: string};
 
 export type FavIcons = {url: string; favIcon: string};
+export type BrowserHistoryData = {
+  recentAddress: string[];
+  favoriteAddress: string[];
+  historyAddress: string[];
+  favIcons: FavIcons[];
+};
 export type AgentTypes = 'lynxhub' | 'electron' | 'chrome' | 'custom';
 export type XYType = {x: number; y: number};
 export type WHType = {width: number; height: number};
@@ -315,6 +321,7 @@ export const storageUtilsChannels = {
   setCardTerminalPreCommands: 'storageUtils:card-terminal-preCommands',
 
   unassignCard: 'storageUtils:unassign-card',
+  getBrowserHistoryData: 'storageUtils:getBrowserHistoryData',
 };
 
 export const appWindowChannels = {

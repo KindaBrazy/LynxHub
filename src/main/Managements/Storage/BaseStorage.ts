@@ -13,13 +13,14 @@ import {Get_Default_Hotkeys} from '../../../cross/HotkeyConstants';
 import {FavIcons} from '../../../cross/IpcChannelAndTypes';
 import StorageTypes from '../../../cross/StorageTypes';
 import {appManager} from '../../index';
-import {getAbsolutePath, getExePath, getUserAgent, isPortable} from '../../Utilities/Utils';
+import {getAbsolutePath, getExePath, getUserAgent, isPortable, lynxEncryptString} from '../../Utilities/Utils';
 import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
   private readonly CURRENT_VERSION: number = 0.84;
+  private migratedTo: number = 0;
 
   private readonly DEFAULT_DATA: StorageTypes = {
     storage: {version: 0.84},
@@ -130,19 +131,33 @@ class BaseStorage {
     this.migration();
   }
 
+  public onAppReady() {
+    if (this.migratedTo === 0.84) {
+      const {recentAddress, favoriteAddress, historyAddress, favIcons} = this.getData('browser');
+
+      this.updateData('browser', {
+        recentAddress: recentAddress.map(recent => lynxEncryptString(recent)),
+        favoriteAddress: favoriteAddress.map(favorite => lynxEncryptString(favorite)),
+        historyAddress: historyAddress.map(history => lynxEncryptString(history)),
+        favIcons: favIcons.map(item => ({
+          url: lynxEncryptString(item.url),
+          favIcon: lynxEncryptString(item.favIcon),
+        })),
+      });
+
+      this.migratedTo = 0;
+    }
+  }
+
   private migration() {
     const storeVersion = this.getData('storage').version;
 
     const v4to5 = () => {
       this.storage.data.terminal = this.DEFAULT_DATA.terminal;
-
-      this.write();
     };
 
     const v5to6 = () => {
       this.storage.data.cards.duplicated = [];
-
-      this.write();
     };
 
     const v6to7 = () => {
@@ -150,8 +165,6 @@ class BaseStorage {
       this.storage.data.app.dynamicAppTitle = true;
       this.storage.data.app.lastSize = undefined;
       this.storage.data.cards.checkUpdateInterval = 30;
-
-      this.write();
     };
 
     const v7to8 = () => {
@@ -171,8 +184,6 @@ class BaseStorage {
       this.storage.data.app.disableLoadingAnimations = false;
       this.storage.data.notification = {readNotifs: []};
       this.storage.data.app.collectErrors = true;
-
-      this.write();
     };
 
     const v8to81 = () => {
@@ -195,6 +206,8 @@ class BaseStorage {
 
     const v83to84 = () => {
       this.storage.data.cards.cardTerminalPreCommands = [];
+
+      this.migratedTo = 0.84;
     };
 
     const updateVersion = () => {

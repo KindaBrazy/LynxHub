@@ -33,19 +33,19 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
   const handleRemove = () => {
     if (type === 'recent') {
       rendererIpc.storageUtils.removeBrowserRecent(recent);
-      rendererIpc.storage.get('browser').then(result => {
+      rendererIpc.storageUtils.getBrowserHistoryData().then(result => {
         setRecentAddress(result.recentAddress);
       });
     } else {
       rendererIpc.storageUtils.removeBrowserFavorite(recent);
-      rendererIpc.storage.get('browser').then(result => {
+      rendererIpc.storageUtils.getBrowserHistoryData().then(result => {
         setRecentAddress(result.favoriteAddress);
       });
     }
   };
 
   useEffect(() => {
-    rendererIpc.storage.get('browser').then(result => {
+    rendererIpc.storageUtils.getBrowserHistoryData().then(result => {
       const favItem = result.favIcons.find(fav => fav.url === formatWebAddress(recent));
       setFavItem(favItem);
     });
