@@ -48,13 +48,8 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
     rendererIpc.git
       .stashDrop(dir)
       .then(result => {
-        if (result.type === 'success') {
-          lynxTopToast(dispatch).success(result.message);
-        } else if (result.type === 'info') {
-          lynxTopToast(dispatch).info(result.message);
-        } else {
-          lynxTopToast(dispatch).error(result.message);
-        }
+        console.log(result);
+        lynxTopToast(dispatch)[result.type](result.message);
       })
       .finally(() => {
         setIsStashingDrop(false);
