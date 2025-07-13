@@ -76,13 +76,14 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
       rendererIpc.module
         .uninstallCardByID(cardId)
         .then(() => {
-          resolve();
           rendererIpc.storageUtils.removeInstalledCard(cardId);
           lynxTopToast(dispatch).success('Uninstalled successfully.');
         })
         .catch(() => {
-          resolve();
           lynxTopToast(dispatch).error('An error occurred while uninstalling.');
+        })
+        .finally(() => {
+          resolve();
         });
     });
 
