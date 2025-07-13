@@ -89,7 +89,7 @@ export default function EmptyPage({type}: Props) {
 
   useEffect(() => {
     setIsLoading(true);
-    rendererIpc.storage.get('browser').then(result => {
+    rendererIpc.storageUtils.getBrowserHistoryData().then(result => {
       setFavoriteAddress(result.favoriteAddress);
       setRecentAddress(result.recentAddress);
       setIsLoading(false);

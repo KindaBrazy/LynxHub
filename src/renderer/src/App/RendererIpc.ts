@@ -21,6 +21,7 @@ import {
   AppUpdateStatus,
   appWindowChannels,
   browserChannels,
+  BrowserHistoryData,
   CanGoType,
   ChangeWindowState,
   contextMenuChannels,
@@ -532,6 +533,8 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('storage_utils_unassignCard', {id, clearConfigs});
       return ipc.invoke(storageUtilsChannels.unassignCard, id, clearConfigs);
     },
+
+    getBrowserHistoryData: (): Promise<BrowserHistoryData> => ipc.invoke(storageUtilsChannels.getBrowserHistoryData),
   },
 
   /** Utilities methods */

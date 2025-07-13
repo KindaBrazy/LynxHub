@@ -367,6 +367,7 @@ function storageUtilsIpc() {
   ipcMain.handle(storageUtilsChannels.unassignCard, (_, id: string, clearConfigs: boolean) =>
     storageManager.unassignCard(id, clearConfigs),
   );
+  ipcMain.handle(storageUtilsChannels.getBrowserHistoryData, () => storageManager.getBrowserDataSecurely());
 }
 
 function modulesIpc() {

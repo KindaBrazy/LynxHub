@@ -85,6 +85,8 @@ async function setupApp() {
 }
 
 async function onAppReady() {
+  storageManager.onAppReady();
+
   if (!appManager) {
     setTimeout(onAppReady, toMs(1, 'seconds'));
     return;
