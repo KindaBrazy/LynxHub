@@ -318,7 +318,7 @@ export default class GitManager {
                 resolve({message: stashResult, type: 'success'});
               })
               .catch(dropError => {
-                resolve({message: dropError, type: 'error'});
+                resolve({message: dropError.message, type: 'error'});
               });
           } else {
             resolve({message: 'No local changes to save.', type: 'info'});
