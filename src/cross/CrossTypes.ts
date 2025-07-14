@@ -303,3 +303,11 @@ export type PatreonSupporter = {
   memberSince: string;
   homePage: string;
 };
+
+export type ToastWindow_MessageType = {
+  type: 'success' | 'warning' | 'error' | 'info';
+  message: string;
+  title: string;
+  showRestartBtn?: boolean;
+  buttons: ('close' | 'exit' | 'restart')[];
+};
