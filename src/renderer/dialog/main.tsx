@@ -1,4 +1,4 @@
-import './index.css';
+import '../cross_styles.css';
 
 import {createRoot} from 'react-dom/client';
 
