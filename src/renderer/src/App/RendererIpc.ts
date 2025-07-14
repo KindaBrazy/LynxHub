@@ -669,7 +669,7 @@ const rendererIpc = {
       return ipc.invoke(appDataChannels.getCurrentPath);
     },
 
-    selectAnother: (): Promise<any> => {
+    selectAnother: (): Promise<string> => {
       extensionRendererApi.events_ipc.emit('app_data_select_another', {});
       return ipc.invoke(appDataChannels.selectAnother);
     },
