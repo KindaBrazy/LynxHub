@@ -1185,3 +1185,39 @@ export function MinusSquareDuo_Icon(props: SvgProps): ReactElement {
     </svg>
   );
 }
+
+export function AlertCircle_Icon(props: SvgProps): ReactElement {
+  return (
+    <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" strokeWidth={2} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+        <circle r={10} cx={12} cy={12}></circle>
+        <path d="M12 8v4m0 4h.01"></path>
+      </g>
+    </svg>
+  );
+}
+
+export function AlertTriangle_Icon(props: SvgProps): ReactElement {
+  return (
+    <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path
+        fill="none"
+        strokeWidth={2}
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="m21.73 18l-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3M12 9v4m0 4h.01"></path>
+    </svg>
+  );
+}
+
+export function CheckCircle_Icon(props: SvgProps): ReactElement {
+  return (
+    <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <g fill="none" strokeWidth={2} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21.801 10A10 10 0 1 1 17 3.335"></path>
+        <path d="m9 11l3 3L22 4"></path>
+      </g>
+    </svg>
+  );
+}
