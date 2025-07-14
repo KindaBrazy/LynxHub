@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import {platform} from 'node:os';
 import path from 'node:path';
 
@@ -21,8 +22,19 @@ export default class PtyManager {
 
     const {useConpty} = storageManager.getData('terminal');
 
+    let validatedDir: string | undefined = dir;
+    if (dir && dir.length > 0) {
+      try {
+        fs.accessSync(dir, fs.constants.R_OK);
+        validatedDir = path.resolve(dir);
+      } catch (error) {
+        validatedDir = undefined;
+        console.warn(`Directory ${dir} is not accessible, falling back to home directory`);
+      }
+    }
+
     this.process = pty.spawn(determineShell(), [], {
-      cwd: dir ? path.resolve(dir) : undefined,
+      cwd: validatedDir,
       cols: 150,
       rows: 150,
       env: process.env,
