@@ -4,7 +4,7 @@ import lodash from 'lodash';
 import _ from 'lodash';
 
 import {ChosenArgumentsData} from '../../../cross/CrossTypes';
-import {compareUrls} from '../../../cross/CrossUtils';
+import {compareUrls, isValidURL} from '../../../cross/CrossUtils';
 import {
   BrowserHistoryData,
   CustomRunBehaviorData,
@@ -528,6 +528,8 @@ class StorageManager extends BaseStorage {
     let existUrlIndex = -1;
 
     for (let i = 0; i < recentAddress.length; i++) {
+      if (!isValidURL([recentAddress[i], recentEntry])) continue;
+
       if (await compareUrls(recentAddress[i], recentEntry)) {
         existUrlIndex = i;
         break;
@@ -552,6 +554,8 @@ class StorageManager extends BaseStorage {
     let updatedExisting: boolean = false;
 
     for (const favIcon of favIcons) {
+      if (!isValidURL([favIcon.url, url])) continue;
+
       const isSame = await compareUrls(favIcon.url, url);
       if (isSame) {
         favIcon.favIcon = icon;
@@ -570,6 +574,8 @@ class StorageManager extends BaseStorage {
     let existUrlIndex = -1;
 
     for (let i = 0; i < favoriteAddress.length; i++) {
+      if (!isValidURL([favoriteAddress[i], favoriteEntry])) continue;
+
       if (await compareUrls(favoriteAddress[i], favoriteEntry)) {
         existUrlIndex = i;
         break;
@@ -594,6 +600,8 @@ class StorageManager extends BaseStorage {
     let existUrlIndex = -1;
 
     for (let i = 0; i < historyAddress.length; i++) {
+      if (!isValidURL([historyAddress[i], historyEntry])) continue;
+
       if (await compareUrls(historyAddress[i], historyEntry)) {
         existUrlIndex = i;
         break;
