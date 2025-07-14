@@ -1,3 +1,5 @@
+import {isArray} from 'lodash';
+
 /**
  * Extracts the owner and repository name from a given GitHub | GitLab URL.
  * @param {string} url - The GitHub repository URL.
@@ -85,8 +87,22 @@ export function validateGitRepoUrl(url: string): string {
   return '';
 }
 
-export function isValidURL(str: string): boolean {
+export function isValidURL(str: string | string[]): boolean {
   const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+
+  if (isArray(str)) {
+    return str.every(url => {
+      if (urlRegex.test(url)) {
+        return true;
+      }
+      try {
+        new URL(url);
+        return true;
+      } catch (_) {
+        return false;
+      }
+    });
+  }
 
   if (urlRegex.test(str)) {
     return true;
