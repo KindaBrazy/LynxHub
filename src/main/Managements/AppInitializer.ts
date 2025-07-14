@@ -2,7 +2,7 @@ import {spawn} from 'node:child_process';
 import path from 'node:path';
 
 import {electronApp, is, optimizer} from '@electron-toolkit/utils';
-import {app, BrowserWindow, BrowserWindowConstructorOptions, ipcMain, shell} from 'electron';
+import {app, BrowserWindow, BrowserWindowConstructorOptions, ipcMain, shell, WebContents} from 'electron';
 import fs from 'graceful-fs';
 
 import icon from '../../../resources/icon.png?asset';
@@ -54,6 +54,28 @@ export default class AppInitializer {
     });
   }
 
+  public getWindow(): BrowserWindow | undefined {
+    if (!this.window) return undefined;
+
+    if (this.window.isDestroyed()) {
+      this.window = undefined;
+      return undefined;
+    }
+
+    return this.window;
+  }
+
+  public getWebContents(): WebContents | undefined {
+    const window = this.getWindow();
+    if (!window) return undefined;
+
+    if (window.webContents.isDestroyed()) {
+      return undefined;
+    }
+
+    return window.webContents;
+  }
+
   /** Sets up IPC channel listeners for various initializing actions. */
   private listenToChannels(): void {
     // Handle app restart
@@ -63,8 +85,8 @@ export default class AppInitializer {
     });
 
     // Handle window controls
-    ipcMain.on(initializerChannels.minimize, () => this.window?.minimize());
-    ipcMain.on(initializerChannels.close, () => this.window?.close());
+    ipcMain.on(initializerChannels.minimize, () => this.getWindow()?.minimize());
+    ipcMain.on(initializerChannels.close, () => this.getWindow()?.close());
 
     // Handle version checks
     ipcMain.handle(initializerChannels.gitAvailable, () => this.checkGitAvailable());
@@ -89,19 +111,19 @@ export default class AppInitializer {
       const gitManager = new GitManager();
 
       gitManager.onProgress = progress => {
-        this.window?.webContents.send(initializerChannels.onInstallAIModule, '', 'Progress', progress);
+        this.getWebContents()?.send(initializerChannels.onInstallAIModule, '', 'Progress', progress);
       };
       gitManager.onError = (reason: string) => {
-        this.window?.webContents.send(initializerChannels.onInstallAIModule, '', 'Failed', reason);
+        this.getWebContents()?.send(initializerChannels.onInstallAIModule, '', 'Failed', reason);
       };
       gitManager.onComplete = () => {
-        this.window?.webContents.send(initializerChannels.onInstallAIModule, '', 'Completed', '');
+        this.getWebContents()?.send(initializerChannels.onInstallAIModule, '', 'Completed', '');
       };
 
       await gitManager.clone(MAIN_MODULE_URL, installPath);
     } catch (error) {
       console.error('Failed to install AI module:', error);
-      this.window?.webContents.send(initializerChannels.onInstallAIModule, '', 'Failed', error);
+      this.getWebContents()?.send(initializerChannels.onInstallAIModule, '', 'Failed', error);
     }
   }
 
@@ -117,7 +139,7 @@ export default class AppInitializer {
     this.window = new BrowserWindow(AppInitializer.WINDOW_CONFIG);
 
     this.window.on('ready-to-show', () => {
-      this.window?.show();
+      this.getWindow()?.show();
     });
 
     this.listenToChannels();
