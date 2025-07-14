@@ -315,7 +315,7 @@ export default class ElectronAppManager {
   private setupAppEventListeners(): void {
     app.on('window-all-closed', () => {
       if (process.platform !== 'darwin') {
-        app.quit();
+        app.exit();
       }
     });
   }

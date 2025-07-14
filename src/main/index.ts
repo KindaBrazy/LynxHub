@@ -67,7 +67,7 @@ async function setupApp() {
       e.preventDefault();
       stopAllPty().then(() => {
         isQuitting = true;
-        app.quit();
+        app.exit();
       });
     }
   });
