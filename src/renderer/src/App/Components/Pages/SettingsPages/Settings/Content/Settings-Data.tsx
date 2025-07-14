@@ -18,11 +18,11 @@ export default function SettingsData() {
   const change = () => {
     rendererIpc.appData
       .selectAnother()
-      .then(() => {
-        lynxTopToast(dispatch).success('Folder selected successfully! Restarting...');
+      .then(result => {
+        lynxTopToast(dispatch).success(result);
       })
-      .catch(() => {
-        lynxTopToast(dispatch).error('An error occurred while selecting the folder.');
+      .catch(reason => {
+        lynxTopToast(dispatch).error(reason);
       });
   };
 

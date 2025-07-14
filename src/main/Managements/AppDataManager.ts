@@ -1,3 +1,4 @@
+import {platform} from 'node:os';
 import {dirname, isAbsolute, join} from 'node:path';
 
 import {app, dialog} from 'electron';
@@ -75,24 +76,52 @@ function setAppDataFolder(targetDir: string): void {
  * Prompts the user to select a new app data folder.
  * @returns A promise that resolves when a new folder is selected or rejects if cancelled
  */
+
 export async function selectNewAppDataFolder(): Promise<string> {
   const window = appManager?.getMainWindow();
   if (!window) {
-    throw new Error('No main window available');
+    throw new Error('Main window is not available. Please ensure the application is properly initialized.');
   }
 
-  const result = await dialog.showOpenDialog(window, {properties: ['openDirectory']});
+  const result = await dialog.showOpenDialog(window, {
+    properties: ['openDirectory'],
+    title: 'Select Application Data Folder',
+    buttonLabel: 'Select Folder',
+  });
 
   if (result.canceled) {
-    throw new Error('Folder selection cancelled');
+    throw new Error('Folder selection was cancelled.');
   }
 
-  if (result.filePaths && result.filePaths.length > 0) {
-    const newPath = getRelativePath(getExePath(), result.filePaths[0]);
+  if (!result.filePaths || result.filePaths.length === 0) {
+    throw new Error('No folder was selected. Please try again.');
+  }
+
+  const targetPath = result.filePaths[0];
+
+  try {
+    fs.accessSync(targetPath, fs.constants.R_OK | fs.constants.W_OK);
+
+    const newPath = getRelativePath(getExePath(), targetPath);
     setAppDataFolder(newPath);
-    return 'New folder selected';
-  } else {
-    throw new Error('No folder path selected');
+
+    return 'Application data folder has been successfully updated.';
+  } catch (error) {
+    if (error && typeof error === 'object' && 'code' in error) {
+      const nodeError = error as NodeJS.ErrnoException;
+      if (nodeError.code === 'ENOENT') {
+        throw new Error('The selected folder does not exist or has been moved.');
+      } else if (nodeError.code === 'EACCES') {
+        throw new Error(
+          `Permission denied. Try running as ${platform() === 'win32' ? 'administrator' : 'sudo'}` +
+            ` or select another folder.`,
+        );
+      }
+    }
+
+    throw new Error(
+      `Unable to access the selected folder: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   }
 }
 
