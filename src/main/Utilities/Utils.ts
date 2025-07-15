@@ -251,3 +251,13 @@ export function lynxDecryptString(encryptedData: string): string {
   }
   return encryptedData; // Fallback: return original data if encryption isn't available
 }
+
+export const getPrivilegeText = () => {
+  const platform = process.platform;
+  if (platform === 'win32') {
+    return 'administrator';
+  } else if (platform === 'darwin' || platform === 'linux') {
+    return 'sudo';
+  }
+  return 'elevated privileges';
+};
