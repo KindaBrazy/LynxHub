@@ -80,7 +80,6 @@ class BaseStorage {
       hardwareAcceleration: true,
       disableLoadingAnimations: false,
       collectErrors: true,
-      isDu64Ready: false,
     },
     terminal: {
       outputColor: true,
@@ -186,10 +185,6 @@ class BaseStorage {
       this.storage.data.app.collectErrors = true;
     };
 
-    const v8to81 = () => {
-      this.storage.data.app.isDu64Ready = false;
-    };
-
     const v81to82 = () => {
       this.storage.data.terminal.closeTabOnExit = true;
     };
@@ -224,7 +219,6 @@ class BaseStorage {
           v5to6();
           v6to7();
           v7to8();
-          v8to81();
           v81to82();
           v82to83();
           v83to84();
@@ -234,7 +228,6 @@ class BaseStorage {
           v5to6();
           v6to7();
           v7to8();
-          v8to81();
           v81to82();
           v82to83();
           v83to84();
@@ -243,7 +236,6 @@ class BaseStorage {
         case 0.6: {
           v6to7();
           v7to8();
-          v8to81();
           v81to82();
           v82to83();
           v83to84();
@@ -251,20 +243,12 @@ class BaseStorage {
         }
         case 0.7: {
           v7to8();
-          v8to81();
           v81to82();
           v82to83();
           v83to84();
           break;
         }
         case 0.8: {
-          v8to81();
-          v81to82();
-          v82to83();
-          v83to84();
-          break;
-        }
-        case 0.81: {
           v81to82();
           v82to83();
           v83to84();
