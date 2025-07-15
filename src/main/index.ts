@@ -47,20 +47,13 @@ export const extensionManager: ExtensionManager = new ExtensionManager();
 Menu.setApplicationMenu(null);
 
 checkAppDirectories().catch(() => {
-  const showToast = () =>
-    ShowToastWindow({
-      buttons: ['exit'],
-      title: 'Permission Error',
-      message: `Could not create app data directories. Please run as ${getPrivilegeText()}. Alternatively,
+  ShowToastWindow({
+    buttons: ['exit'],
+    title: 'Permission Error',
+    message: `Could not create app data directories. Please run as ${getPrivilegeText()}. Alternatively,
      you can change the data folder in the settings page to another folder that does not require admin rights.`,
-      type: 'error',
-    });
-
-  if (app.isReady()) {
-    showToast();
-  } else {
-    app.whenReady().then(() => showToast());
-  }
+    type: 'error',
+  });
 });
 
 const {hardwareAcceleration} = storageManager.getData('app');

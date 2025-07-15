@@ -8,40 +8,48 @@ import {ToastWindow_MessageType} from '../../cross/CrossTypes';
 import {RelaunchApp} from '../Utilities/Utils';
 
 export default function ShowToastWindow(message: ToastWindow_MessageType) {
-  const window = new BrowserWindow({
-    frame: false,
-    show: false,
-    height: 250,
-    width: 600,
-    resizable: false,
-    maximizable: false,
-    icon,
-    webPreferences: {
-      preload: path.join(__dirname, '../preload/only_ipc.cjs'),
-      sandbox: false,
-    },
-  });
+  const show = () => {
+    const window = new BrowserWindow({
+      frame: false,
+      show: false,
+      height: 250,
+      width: 600,
+      resizable: false,
+      maximizable: false,
+      icon,
+      webPreferences: {
+        preload: path.join(__dirname, '../preload/only_ipc.cjs'),
+        sandbox: false,
+      },
+    });
 
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    window.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/toast_window.html`);
+    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+      window.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/toast_window.html`);
+    } else {
+      window.loadFile(path.join(__dirname, `../renderer/toast_window.html`));
+    }
+
+    window.on('ready-to-show', () => {
+      window.show();
+      window.webContents.send('show_message', message);
+    });
+
+    window.on('closed', () => {
+      window.destroy();
+    });
+
+    ipcMain.on('close_toast', () => {
+      window.close();
+    });
+    ipcMain.on('exit_app', () => {
+      app.exit();
+    });
+    ipcMain.on('restart_app', () => RelaunchApp(false));
+  };
+
+  if (app.isReady()) {
+    show();
   } else {
-    window.loadFile(path.join(__dirname, `../renderer/toast_window.html`));
+    app.whenReady().then(() => show());
   }
-
-  window.on('ready-to-show', () => {
-    window.show();
-    window.webContents.send('show_message', message);
-  });
-
-  window.on('closed', () => {
-    window.destroy();
-  });
-
-  ipcMain.on('close_toast', () => {
-    window.close();
-  });
-  ipcMain.on('exit_app', () => {
-    app.exit();
-  });
-  ipcMain.on('restart_app', () => RelaunchApp(false));
 }
