@@ -29,33 +29,27 @@ export async function cloneShallowPromise(
   depth?: number,
   branch?: string,
 ) {
-  gitManager = new GitManager(true);
-  return gitManager.cloneShallow(url, directory, singleBranch, depth, branch);
+  return new GitManager(true).cloneShallow(url, directory, singleBranch, depth, branch);
 }
 
 export async function getRepositoryInfo(dir: string) {
-  gitManager = new GitManager(true);
-  return gitManager.getRepositoryInfo(dir);
+  return new GitManager(true).getRepositoryInfo(dir);
 }
 
 export async function stashDrop(dir: string): Promise<{message: string; type: 'error' | 'success' | 'info'}> {
-  gitManager = new GitManager(true);
-  return gitManager.stashAndDrop(dir);
+  return new GitManager(true).stashAndDrop(dir);
 }
 
 export async function changeBranch(dir: string, branchName: string) {
-  gitManager = new GitManager(true);
-  return gitManager.changeBranch(dir, branchName);
+  return new GitManager(true).changeBranch(dir, branchName);
 }
 
 export async function unShallow(dir: string) {
-  gitManager = new GitManager(true);
-  return gitManager.unShallow(dir);
+  return new GitManager(true).unShallow(dir);
 }
 
 export async function resetHard(dir: string) {
-  gitManager = new GitManager(true);
-  return gitManager.resetHard(dir);
+  return new GitManager(true).resetHard(dir);
 }
 
 /**
