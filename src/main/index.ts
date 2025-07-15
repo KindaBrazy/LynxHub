@@ -21,8 +21,10 @@ import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
 import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
 import ModuleManager from './Managements/Plugin/Modules/ModuleManager';
 import StorageManager from './Managements/Storage/StorageManager';
+import ShowToastWindow from './Managements/ToastWindowManager';
 import TrayManager from './Managements/TrayManager';
 import downloadDU from './Utilities/CalculateFolderSize/DownloadDU';
+import {getPrivilegeText} from './Utilities/Utils';
 
 if (!isDev()) {
   log.initialize();
@@ -44,7 +46,22 @@ export const extensionManager: ExtensionManager = new ExtensionManager();
 // Remove default menu
 Menu.setApplicationMenu(null);
 
-checkAppDirectories();
+checkAppDirectories().catch(() => {
+  const showToast = () =>
+    ShowToastWindow({
+      buttons: ['exit'],
+      title: 'Permission Error',
+      message: `Could not create app data directories. Please run as ${getPrivilegeText()}. Alternatively,
+     you can change the data folder in the settings page to another folder that does not require admin rights.`,
+      type: 'error',
+    });
+
+  if (app.isReady()) {
+    showToast();
+  } else {
+    app.whenReady().then(() => showToast());
+  }
+});
 
 const {hardwareAcceleration} = storageManager.getData('app');
 if (!hardwareAcceleration) app.disableHardwareAcceleration();
