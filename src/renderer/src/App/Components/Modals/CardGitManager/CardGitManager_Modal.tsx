@@ -10,6 +10,7 @@ import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
+import {lynxTopToast} from '../../../Utils/UtilHooks';
 import Branches from './Branches';
 import CommitInfo from './CommitInfo';
 import Reset_Shallow from './Reset_Shallow';
@@ -35,6 +36,10 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
       .getRepoInfo(dir)
       .then(repositoryInfo => {
         setRepoInfo(repositoryInfo);
+      })
+      .catch(e => {
+        lynxTopToast(dispatch).error('Something went wrong while getting the repository info.');
+        console.error(e);
       })
       .finally(() => setLoading(false));
   }, [dir]);
