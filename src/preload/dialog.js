@@ -1,5 +1,6 @@
-// eslint-disable-next-line
-const {contextBridge, ipcRenderer} = require('electron');
+import '@sentry/electron/preload';
+
+import {contextBridge, ipcRenderer} from 'electron';
 
 contextBridge.exposeInMainWorld('electron', {
   ipcRenderer: {

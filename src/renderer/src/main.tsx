@@ -2,9 +2,11 @@ import './index.css';
 import '@xterm/xterm/css/xterm.css';
 import 'overlayscrollbars/overlayscrollbars.css';
 import '@ant-design/v5-patch-for-react-19';
+import '../SentryInit';
 
+import {reactErrorHandler} from '@sentry/react';
 import log from 'electron-log/renderer';
-import {createRoot} from 'react-dom/client';
+import {createRoot, RootOptions} from 'react-dom/client';
 import {ErrorBoundary} from 'react-error-boundary';
 import {Provider as ReduxProvider} from 'react-redux';
 
@@ -19,15 +21,26 @@ import ErrorComponent from './ErrorComponent';
 await loadModules();
 await loadExtensions();
 
-const {darkMode} = await rendererIpc.storage.get('app');
+const {darkMode, collectErrors} = await rendererIpc.storage.get('app');
+
 document.documentElement.className = darkMode ? 'dark' : 'light';
 
 if (!isDev()) {
   Object.assign(console, log.functions);
 }
 
-createRoot(document.getElementById('root') as HTMLElement).render(
-  <ReduxProvider store={createStore()}>
+const rootOptions: RootOptions | undefined = collectErrors
+  ? {
+      onUncaughtError: reactErrorHandler((error, errorInfo) => {
+        console.warn('Uncaught error', error, errorInfo.componentStack);
+      }),
+      onCaughtError: reactErrorHandler(),
+      onRecoverableError: reactErrorHandler(),
+    }
+  : undefined;
+
+createRoot(document.getElementById('root') as HTMLElement, rootOptions).render(
+  <ReduxProvider store={createStore(collectErrors)}>
     <ErrorBoundary FallbackComponent={ErrorComponent}>
       <App />
     </ErrorBoundary>
