@@ -22,7 +22,6 @@ await loadModules();
 await loadExtensions();
 
 const {darkMode, collectErrors} = await rendererIpc.storage.get('app');
-
 document.documentElement.className = darkMode ? 'dark' : 'light';
 
 if (!isDev()) {
