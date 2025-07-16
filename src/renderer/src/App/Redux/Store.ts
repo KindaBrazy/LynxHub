@@ -1,4 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
+import {createReduxEnhancer} from '@sentry/react';
 
 import {extensionsData} from '../Extensions/ExtensionLoader';
 import appReducer from './Reducer/AppReducer';
@@ -25,7 +26,9 @@ let store = configureStore({
   reducer: staticReducers,
 });
 
-export const createStore = () => {
+const sentryReduxEnhancer = createReduxEnhancer({});
+
+export const createStore = (collectError: boolean) => {
   const extensionReducers = extensionsData.addReducer.reduce((acc, reducer) => {
     acc[reducer.name] = reducer.reducer;
     return acc;
@@ -36,6 +39,11 @@ export const createStore = () => {
       ...staticReducers,
       ...extensionReducers,
     },
+    enhancers: collectError
+      ? getDefaultEnhancers => {
+          return getDefaultEnhancers().concat(sentryReduxEnhancer);
+        }
+      : undefined,
   });
 
   return store;
