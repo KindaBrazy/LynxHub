@@ -1,12 +1,8 @@
 import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
-
-import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
 
 export default function SettingsGeneralCollectErrors() {
-  const dispatch = useDispatch<AppDispatch>();
   const [collectErrors, setCollectErrors] = useState<boolean>(true);
 
   useEffect(() => {
@@ -15,13 +11,10 @@ export default function SettingsGeneralCollectErrors() {
     });
   }, []);
 
-  const onEnabledChange = useCallback(
-    (selected: boolean) => {
-      rendererIpc.storage.update('app', {collectErrors: selected});
-      setCollectErrors(selected);
-    },
-    [dispatch],
-  );
+  const onEnabledChange = useCallback((selected: boolean) => {
+    rendererIpc.storage.update('app', {collectErrors: selected});
+    setCollectErrors(selected);
+  }, []);
 
   return (
     <LynxSwitch
