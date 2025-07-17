@@ -1,5 +1,6 @@
 import {Button, Input, Select, SelectItem} from '@heroui/react';
 import {UserInputField, UserInputResult} from '@lynx_module/types';
+import {isNil} from 'lodash';
 import {Dispatch, FC, SetStateAction, useCallback, useState} from 'react';
 
 import {File_Icon, Folder2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
@@ -105,7 +106,8 @@ export default function UserInputs({inputElements, setResult, extensionElements}
         const hasError = errors[id] || false;
 
         switch (type) {
-          case 'checkbox':
+          case 'checkbox': {
+            if (!isNil(defaultValue) && typeof defaultValue === 'boolean') onSwitchChange(defaultValue, id);
             return (
               <LynxSwitch
                 key={label}
@@ -114,7 +116,9 @@ export default function UserInputs({inputElements, setResult, extensionElements}
                 onEnabledChange={value => onSwitchChange(value, id)}
               />
             );
-          case 'text-input':
+          }
+          case 'text-input': {
+            if (!isNil(defaultValue) && typeof defaultValue === 'string') onInputChange(defaultValue, id);
             return (
               <Input
                 key={label}
@@ -126,7 +130,9 @@ export default function UserInputs({inputElements, setResult, extensionElements}
                 fullWidth
               />
             );
-          case 'select':
+          }
+          case 'select': {
+            if (!isNil(defaultValue) && typeof defaultValue === 'string') onSelectChange(defaultValue, id);
             return (
               <Select
                 onChange={e => {
@@ -143,6 +149,7 @@ export default function UserInputs({inputElements, setResult, extensionElements}
                 })}
               </Select>
             );
+          }
           case 'directory':
             return (
               <div key={`${label}_div`} className="flex w-full flex-col gap-y-2">
