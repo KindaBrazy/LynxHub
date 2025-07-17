@@ -2,6 +2,7 @@ import {Button} from '@heroui/react';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import AddBreadcrumb_Renderer from '../../../../../Breadcrumbs';
 import {Download2_Icon, Play_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionRendererApi} from '../../../Extensions/ExtensionLoader';
 import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
@@ -48,8 +49,10 @@ const StartButton = memo(() => {
   }, [updatingExtensions]);
 
   const startAi = useCallback(() => {
+    AddBreadcrumb_Renderer(`Starting AI: id:${id}`);
     extensionRendererApi.events.emit('before_card_start', {id});
     if (autoUpdateExtensions && card) {
+      AddBreadcrumb_Renderer(`Updating AI Extensions: id:${id}`);
       rendererIpc.utils.updateAllExtensions({id, dir: card.dir! + extensionsDir!});
       setIsUpdatingExt(true);
     } else {
@@ -61,6 +64,7 @@ const StartButton = memo(() => {
   }, [id, autoUpdateExtensions, activeTab, dispatch]);
 
   const install = useCallback(() => {
+    AddBreadcrumb_Renderer(`Start Installing AI: id:${id}`);
     if (getCardMethod(allCards, id, 'manager')) {
       extensionRendererApi.events.emit('before_card_install', {id});
       dispatch(modalActions.openInstallUICard({cardId: id, tabID: activeTab, type: 'install', title}));

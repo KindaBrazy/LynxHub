@@ -2,12 +2,13 @@ import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@her
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import AddBreadcrumb_Renderer from '../../../../../Breadcrumbs';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
 
-type Props = {isShallow: boolean; dir: string; refreshData: () => void};
-export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
+type Props = {isShallow: boolean; dir: string; refreshData: () => void; title: string};
+export default function Reset_Shallow({isShallow, dir, refreshData, title}: Props) {
   const [isLoadingShallow, setIsLoadingShallow] = useState<boolean>(false);
   const [isResetting, setIsResetting] = useState<boolean>(false);
 
@@ -18,6 +19,7 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   const unShallow = () => {
+    AddBreadcrumb_Renderer(`unShallow: ${title}`);
     setIsShallowConfirmOpen(false);
     setIsLoadingShallow(true);
     rendererIpc.git
@@ -31,6 +33,7 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
   };
 
   const resetHard = () => {
+    AddBreadcrumb_Renderer(`Reset Hard: ${title}`);
     setIsResetConfirmOpen(false);
     setIsResetting(true);
     rendererIpc.git
@@ -44,6 +47,7 @@ export default function Reset_Shallow({isShallow, dir, refreshData}: Props) {
   };
 
   const stashDrop = () => {
+    AddBreadcrumb_Renderer(`Stash Drop: ${title}`);
     setIsStashingDrop(true);
     rendererIpc.git
       .stashDrop(dir)

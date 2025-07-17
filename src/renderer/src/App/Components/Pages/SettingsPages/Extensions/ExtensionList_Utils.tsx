@@ -22,6 +22,7 @@ import {useDispatch} from 'react-redux';
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
+import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {
   CheckDuo_Icon,
   FilterDuo_Icon,
@@ -226,6 +227,7 @@ export function useRenderList(
   }, []);
 
   const update = useCallback((id: string, title: string) => {
+    AddBreadcrumb_Renderer(`Extension update: id:${id}`);
     setUpdating(id);
     rendererIpc.extension.updateExtension(id).then(updated => {
       if (updated) {
@@ -244,6 +246,10 @@ export function useRenderList(
       const isUpdating = updating === item.id;
       return (
         <Card
+          onPress={() => {
+            AddBreadcrumb_Renderer(`Extension Select: id:${item.id}`);
+            setSelectedExt(item);
+          }}
           className={
             `hover:bg-foreground-100 hover:shadow-medium relative ` +
             ` border-2 border-foreground-100 ${selectedExt?.id === item.id && '!border-primary'}` +
@@ -251,7 +257,6 @@ export function useRenderList(
           }
           as="div"
           shadow="sm"
-          onPress={() => setSelectedExt(item)}
           fullWidth
           isPressable>
           <CardHeader className="pb-0">

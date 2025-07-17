@@ -6,6 +6,7 @@ import {useDispatch} from 'react-redux';
 
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
+import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download_Icon, HomeSmile_Icon, Info_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {settingsActions} from '../../../../../Redux/Reducer/SettingsReducer';
@@ -31,6 +32,7 @@ export default function RenderItem({item, addModule}: Props) {
   const [isSecOpen, setIsSecOpen] = useState<boolean>(false);
 
   const install = useCallback(() => {
+    AddBreadcrumb_Renderer(`Module install: ${item.id} - (not installed)`);
     setInstalling(true);
     rendererIpc.module.installModule(item.repoUrl).then(result => {
       setInstalling(false);
@@ -46,14 +48,17 @@ export default function RenderItem({item, addModule}: Props) {
   }, [item.repoUrl, item.title, item.id, dispatch]);
 
   const handleInstall = () => {
+    AddBreadcrumb_Renderer(`Module handleInstall: ${item.id} - (not installed)`);
     setIsSecOpen(true);
   };
 
   const showInfo = useCallback(() => {
+    AddBreadcrumb_Renderer(`Module show info: ${item.id} - (not installed)`);
     setIsDetailsOpen(true);
   }, []);
 
   const openHomePage = useCallback(() => {
+    AddBreadcrumb_Renderer(`Module home page: ${item.id} - (not installed)`);
     dispatch(modalActions.openReadme({url: item.repoUrl, title: item.title, tabID: activeTab}));
   }, [dispatch, item, activeTab]);
 

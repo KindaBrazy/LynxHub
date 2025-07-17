@@ -1,6 +1,7 @@
 import {Button} from '@heroui/react';
 import {useCallback} from 'react';
 
+import AddBreadcrumb_Renderer from '../../../../../Breadcrumbs';
 import {Pin_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../RendererIpc';
 import {useIsPinnedCard} from '../../../Utils/UtilHooks';
@@ -10,10 +11,10 @@ export default function Header_Pin() {
   const {id, installed} = useCardData();
   const isPinned = useIsPinnedCard(id);
 
-  const onPress = useCallback(
-    () => rendererIpc.storageUtils.pinnedCards(isPinned ? 'remove' : 'add', id),
-    [isPinned, id],
-  );
+  const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Pin AI: id:${id} , ${isPinned ? 'remove' : 'add'}`);
+    rendererIpc.storageUtils.pinnedCards(isPinned ? 'remove' : 'add', id);
+  }, [isPinned, id]);
 
   if (!installed) return null;
 

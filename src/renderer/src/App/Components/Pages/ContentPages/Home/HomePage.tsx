@@ -3,6 +3,7 @@ import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {useMemo, useState} from 'react';
 
+import {useDebounceBreadcrumb} from '../../../../../../Breadcrumbs';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {useCardsState} from '../../../../Redux/Reducer/CardsReducer';
 import {AllCardsSection, CardsBySearch, PinnedCars, RecentlyCards} from '../../../Cards/CardsByCategory';
@@ -17,6 +18,8 @@ type Props = {show: boolean};
 const HomePage = ({show}: Props) => {
   const homeCategory = useCardsState('homeCategory');
   const [searchValue, setSearchValue] = useState<string>('');
+
+  useDebounceBreadcrumb('Home search', [searchValue]);
 
   const {
     searchAndFilter: SearchAndFilter,

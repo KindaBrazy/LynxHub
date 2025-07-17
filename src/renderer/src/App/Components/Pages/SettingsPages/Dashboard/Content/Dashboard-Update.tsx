@@ -2,6 +2,7 @@ import {Button, Card, Chip, Select, Selection, SelectItem} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
@@ -51,6 +52,7 @@ export default function DashboardUpdate() {
   const [selection, setSelection] = useState<string[]>(['public']);
 
   const onChange = useCallback((keys: Selection) => {
+    AddBreadcrumb_Renderer(`Update Channel Changed: keys:${JSON.stringify(keys)}`);
     if (keys !== 'all') {
       const value = keys.values().next().value?.toString();
       if (value) {

@@ -3,6 +3,7 @@ import {Fragment, Key, memo, useCallback, useEffect, useMemo, useState} from 're
 import {useDispatch} from 'react-redux';
 
 import {ChosenArgumentsData} from '../../../../../../cross/CrossTypes';
+import {useDebounceBreadcrumb} from '../../../../../Breadcrumbs';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
@@ -35,6 +36,9 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
   const [currentTab, setCurrentTab] = useState<Key>(haveArguments ? tabs.arguments : tabs.customRun);
 
   const dispatch = useDispatch<AppDispatch>();
+
+  useDebounceBreadcrumb('Card Launch Config Modal: ', [isOpen, title]);
+  useDebounceBreadcrumb('Card Launch Config Tabs Modal: ', [currentTab]);
 
   useEffect(() => {
     setCurrentTab(haveArguments ? tabs.arguments : tabs.customRun);

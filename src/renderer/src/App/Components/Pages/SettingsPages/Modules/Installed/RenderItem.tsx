@@ -7,6 +7,7 @@ import {useDispatch} from 'react-redux';
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
+import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {
   Download_Icon,
   HomeSmile_Icon,
@@ -66,6 +67,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
   }, [updatingAll]);
 
   const checkForUpdate = useCallback(() => {
+    AddBreadcrumb_Renderer(`Check for module update: ${item.id}`);
     setSpinningText('Checking for updates...');
     rendererIpc.module.isUpdateAvailable(item.id).then(result => {
       setUpdateAvailable(result);
@@ -74,6 +76,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
   }, [item]);
 
   const uninstall = useCallback(() => {
+    AddBreadcrumb_Renderer(`Uninstall module: ${item.id}`);
     setUninstalling(true);
     setIsUninstallConfirmOpen(false);
     rendererIpc.module.uninstallModule(item.id).then(uninstalled => {
@@ -96,6 +99,7 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
   }, [item, moduleUpdateAvailable, dispatch]);
 
   const update = useCallback(() => {
+    AddBreadcrumb_Renderer(`Update module: ${item.id}`);
     setUpdating(true);
     setSpinningText('Updating module, please wait...');
     rendererIpc.module.updateModule(item.id).then(updated => {
@@ -179,10 +183,12 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
   }, [updateAvailable, isUninstallConfirmOpen]);
 
   const showInfo = useCallback(() => {
+    AddBreadcrumb_Renderer(`Module show info: ${item.id}`);
     setIsDetailsOpen(true);
   }, []);
 
   const openHomePage = useCallback(() => {
+    AddBreadcrumb_Renderer(`Module home page: ${item.id}`);
     dispatch(modalActions.openReadme({url: item.repoUrl, title: item.title, tabID: activeTab}));
   }, [dispatch, item, activeTab]);
 

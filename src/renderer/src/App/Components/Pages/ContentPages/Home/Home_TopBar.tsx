@@ -1,6 +1,7 @@
 import {Button, ButtonGroup} from '@heroui/react';
 import {useDispatch} from 'react-redux';
 
+import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {Terminal_Icon, Web_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {cardsActions} from '../../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../../Redux/Reducer/TabsReducer';
@@ -18,11 +19,20 @@ export default function Home_TopBar() {
       }),
     );
 
-  const newTerminal = () => addRunningEmpty('terminal');
+  const newTerminal = () => {
+    AddBreadcrumb_Renderer(`New Empty Terminal`);
+    addRunningEmpty('terminal');
+  };
 
-  const newBrowser = () => addRunningEmpty('browser');
+  const newBrowser = () => {
+    AddBreadcrumb_Renderer(`New Empty Browser`);
+    addRunningEmpty('browser');
+  };
 
-  const newTerminalBrowser = () => addRunningEmpty('both');
+  const newTerminalBrowser = () => {
+    AddBreadcrumb_Renderer(`New Empty Terminal & Browser`);
+    addRunningEmpty('both');
+  };
 
   return (
     <div className="w-full shrink-0 flex flex-row gap-x-2 px-4 justify-end">

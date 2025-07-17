@@ -18,11 +18,12 @@ import {
 import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
-import {useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Notification_Data} from '../../../../../../../../cross/CrossTypes';
 import {isDev, isValidURL} from '../../../../../../../../cross/CrossUtils';
+import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {ExternalDuo_Icon} from '../../../../../../../context_menu/Components/SvgIcons';
 import {BellDuo_Icon, CheckDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {tabsActions} from '../../../../../Redux/Reducer/TabsReducer';
@@ -39,6 +40,11 @@ export default function Home_Notification() {
 
   const [notifications, setNotifications] = useState<Notification_Data[]>([]);
   const {staticNotifs, staticNotifCount, haveWarn} = useStaticNotifications();
+
+  const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Open Notifications`);
+    onOpen();
+  }, []);
 
   const filterData = (data: Notification_Data[]) => {
     rendererIpc.storage.get('notification').then(({readNotifs}) => {
@@ -101,7 +107,7 @@ export default function Home_Notification() {
           }
           radius="full"
           variant="light"
-          onPress={onOpen}
+          onPress={onPress}
           isIconOnly>
           <BellDuo_Icon />
         </Button>

@@ -4,6 +4,7 @@ import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {RepositoryInfo} from '../../../../../../cross/CrossTypes';
+import {useDebounceBreadcrumb} from '../../../../../Breadcrumbs';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
@@ -23,6 +24,8 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
 
   const [repoInfo, setRepoInfo] = useState<RepositoryInfo | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(true);
+
+  useDebounceBreadcrumb('Card Git Manager Modal: ', [isOpen, title]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -96,7 +99,7 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
                     availableBranches={repoInfo.availableBranches}
                   />
 
-                  <Reset_Shallow dir={dir} refreshData={getRepoInfo} isShallow={repoInfo.isShallow} />
+                  <Reset_Shallow dir={dir} title={title} refreshData={getRepoInfo} isShallow={repoInfo.isShallow} />
 
                   <Divider variant="dashed" />
                   <CommitInfo repoInfo={repoInfo} />
