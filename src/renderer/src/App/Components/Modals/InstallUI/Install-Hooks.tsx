@@ -14,6 +14,7 @@ import {useAllCards} from '../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
+import {lynxTopToast} from '../../../Utils/UtilHooks';
 import {InstallState} from './types';
 import InstallStepper from './Utils/InstallStepper';
 
@@ -167,9 +168,11 @@ export function useStepper({
     [updateType, cardId],
   );
 
+  const showToast = useCallback(() => lynxTopToast(dispatch), [dispatch]);
+
   return useMemo(() => {
     return new InstallStepper({
-      dispatch,
+      showToast,
       cardId,
       setSteps,
       setCurrentStep,

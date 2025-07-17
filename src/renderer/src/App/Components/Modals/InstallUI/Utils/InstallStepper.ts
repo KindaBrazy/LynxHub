@@ -1,5 +1,4 @@
 import {InstallationStepper} from '@lynx_module/types';
-import {Dispatch as ReduxDispatch, UnknownAction} from '@reduxjs/toolkit';
 import {Dispatch, FC, SetStateAction} from 'react';
 
 import {extensionRendererApi} from '../../../../Extensions/ExtensionLoader';
@@ -31,7 +30,7 @@ export default class InstallStepper {
     installExtensions: InstallationStepper['postInstall']['installExtensions'];
     progressBar: InstallationStepper['progressBar'];
     setUpdated: InstallationStepper['setUpdated'];
-    dispatch: ReduxDispatch<UnknownAction>;
+    showToast: () => ReturnType<typeof lynxTopToast>;
 
     checkForUpdate: (dir: string | undefined) => void;
     updateState: (newState: Partial<InstallState>) => void;
@@ -58,7 +57,7 @@ export default class InstallStepper {
       data.checkForUpdate(dir);
     };
 
-    this.showToast = lynxTopToast(data.dispatch);
+    this.showToast = data.showToast;
 
     this.ipc = {
       on(channel: string, listener: any): () => void {
