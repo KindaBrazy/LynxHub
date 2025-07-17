@@ -11,6 +11,7 @@ import {ErrorBoundary} from 'react-error-boundary';
 import {Provider as ReduxProvider} from 'react-redux';
 
 import {isDev} from '../../cross/CrossUtils';
+import {onBreadcrumbStateChange} from '../Breadcrumbs';
 import App from './App/App';
 import {loadExtensions} from './App/Extensions/Vite-Federation';
 import loadModules from './App/Modules/ModuleLoader';
@@ -21,7 +22,8 @@ import ErrorComponent from './ErrorComponent';
 await loadModules();
 await loadExtensions();
 
-const {darkMode, collectErrors} = await rendererIpc.storage.get('app');
+const {darkMode, collectErrors, addBreadcrumbs} = await rendererIpc.storage.get('app');
+onBreadcrumbStateChange(addBreadcrumbs);
 document.documentElement.className = darkMode ? 'dark' : 'light';
 
 if (!isDev()) {
