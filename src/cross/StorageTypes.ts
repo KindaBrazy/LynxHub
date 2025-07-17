@@ -78,6 +78,7 @@ type StorageTypes = {
     appDataDir: string;
     disableLoadingAnimations: boolean;
     collectErrors: boolean;
+    addBreadcrumbs: boolean;
   };
   terminal: {
     outputColor: boolean;
