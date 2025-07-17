@@ -1,5 +1,5 @@
 import {SerializeAddon} from '@xterm/addon-serialize';
-import {RefObject} from 'react';
+import {memo, RefObject} from 'react';
 
 import {RunningCard} from '../../../Utils/Types';
 import Browser_TopBar from '../Browser/Browser_TopBar';
@@ -13,7 +13,7 @@ type Props = {
   clearTerminal: RefObject<(() => void) | undefined>;
 };
 
-export default function TopBar({runningCard, serializeAddon, tabID, clearTerminal}: Props) {
+const TopBar = memo(({runningCard, serializeAddon, tabID, clearTerminal}: Props) => {
   return (
     <div
       className={
@@ -33,4 +33,6 @@ export default function TopBar({runningCard, serializeAddon, tabID, clearTermina
       <SwitchAndTerminate runningCard={runningCard} />
     </div>
   );
-}
+});
+
+export default TopBar;

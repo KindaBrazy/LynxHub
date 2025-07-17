@@ -1,5 +1,5 @@
 import {isEmpty} from 'lodash';
-import {useEffect, useMemo} from 'react';
+import {memo, useEffect, useMemo} from 'react';
 
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import rendererIpc from '../../../RendererIpc';
@@ -8,7 +8,7 @@ import EmptyPage from './EmptyPage';
 
 type Props = {runningCard: RunningCard};
 
-const Browser = ({runningCard}: Props) => {
+const Browser = memo(({runningCard}: Props) => {
   const activeTab = useTabsState('activeTab');
   const {currentView, id, webUIAddress, customAddress, type, tabId} = runningCard;
 
@@ -31,6 +31,6 @@ const Browser = ({runningCard}: Props) => {
       {isEmpty(finalAddress) && <EmptyPage type={type} />}
     </div>
   );
-};
+});
 
 export default Browser;

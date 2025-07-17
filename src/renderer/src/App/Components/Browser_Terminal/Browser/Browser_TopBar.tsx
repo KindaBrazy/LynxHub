@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
@@ -13,7 +13,7 @@ type Props = {
   tabID: string;
 };
 
-export default function Browser_TopBar({runningCard, setCustomAddress, tabID}: Props) {
+const Browser_TopBar = memo(({runningCard, setCustomAddress, tabID}: Props) => {
   const [isDomReady, setIsDomReady] = useState<boolean>(false);
 
   useEffect(() => {
@@ -38,4 +38,6 @@ export default function Browser_TopBar({runningCard, setCustomAddress, tabID}: P
       )}
     </>
   );
-}
+});
+
+export default Browser_TopBar;

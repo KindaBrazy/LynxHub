@@ -1,12 +1,13 @@
 import {Button} from '@heroui/react';
 import {SerializeAddon} from '@xterm/addon-serialize';
-import {RefObject, useCallback, useState} from 'react';
+import {memo, RefObject, useCallback, useState} from 'react';
 
 import {BroomDuo_Icon, CheckDuo_Icon, CopyDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import Terminal_Timer from './Terminal_Timer';
 
 type Props = {startTime: string; serializeAddon?: SerializeAddon; clearTerminal: RefObject<(() => void) | undefined>};
-export default function Terminal_TopBar({startTime, serializeAddon, clearTerminal}: Props) {
+
+const Terminal_TopBar = memo(({startTime, serializeAddon, clearTerminal}: Props) => {
   const [copied, setCopied] = useState<boolean>(false);
 
   const handleCopy = useCallback(() => {
@@ -46,4 +47,6 @@ export default function Terminal_TopBar({startTime, serializeAddon, clearTermina
       <div className="flex flex-row h-full items-center gap-x-1"></div>
     </>
   );
-}
+});
+
+export default Terminal_TopBar;
