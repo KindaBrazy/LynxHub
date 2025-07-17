@@ -8,7 +8,7 @@ import {WebglAddon} from '@xterm/addon-webgl';
 import {Terminal as XTerminal} from '@xterm/xterm';
 import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty, isEqual} from 'lodash';
-import {RefObject, useCallback, useEffect, useRef, useState} from 'react';
+import {memo, RefObject, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {SystemInfo} from '../../../../../../cross/IpcChannelAndTypes';
@@ -39,7 +39,7 @@ type Props = {
   clearTerminal: RefObject<(() => void) | undefined>;
 };
 
-export default function Terminal({runningCard, serializeAddon, clearTerminal}: Props) {
+const Terminal = memo(({runningCard, serializeAddon, clearTerminal}: Props) => {
   const copyPressed = useHotkeysState('copyPressed');
   const activeTab = useTabsState('activeTab');
   const allCards = useAllCards();
@@ -58,7 +58,8 @@ export default function Terminal({runningCard, serializeAddon, clearTerminal}: P
 
   const [selectedText, setSelectedText] = useState<string>('');
 
-  const {webUIAddress, id, currentView} = runningCard;
+  const {webUIAddress, id, currentView} = useMemo(() => runningCard, [runningCard]);
+
   const darkMode = useAppState('darkMode');
   const dispatch = useDispatch<AppDispatch>();
 
@@ -272,4 +273,6 @@ export default function Terminal({runningCard, serializeAddon, clearTerminal}: P
       </div>
     </div>
   );
-}
+});
+
+export default Terminal;
