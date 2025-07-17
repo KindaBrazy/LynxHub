@@ -83,7 +83,7 @@ export type InstallationStepper = {
   initialSteps: (stepTitles: string[]) => void;
 
   /** Advance to the next step in the installation process. */
-  nextStep: () => void;
+  nextStep: () => Promise<void>;
 
   /** Normally the first step (Contain locating or start installation)
    * @return A promise resolving to the user's choice of installation method.
@@ -246,7 +246,7 @@ export type InstallationStepper = {
     openFileOrFolder: (itemPath: string) => void;
   };
 
-  showToast: {
+  showToast: () => {
     success: (title: string, timeout?: number) => void;
     error: (title: string, timeout?: number) => void;
     warning: (title: string, timeout?: number) => void;
@@ -434,4 +434,6 @@ export type MainModuleUtils = {
   getInstallDir: (id: string) => string | undefined;
   getConfigDir: () => string | undefined;
   pullDir: (dir: string, showTaskbarProgress?: boolean) => Promise<void>;
+  /** It's best to call and get commands when need to execute (to get latest changed commands) */
+  getExtensions_TerminalPreCommands: (id: string) => string[];
 };
