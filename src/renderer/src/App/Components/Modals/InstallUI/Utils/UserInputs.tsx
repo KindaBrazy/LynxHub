@@ -1,7 +1,7 @@
 import {Button, Input, Select, SelectItem} from '@heroui/react';
 import {UserInputField, UserInputResult} from '@lynx_module/types';
 import {isNil} from 'lodash';
-import {Dispatch, FC, SetStateAction, useCallback, useState} from 'react';
+import {Dispatch, FC, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {File_Icon, Folder2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../../RendererIpc';
@@ -96,6 +96,29 @@ export default function UserInputs({inputElements, setResult, extensionElements}
     [updateResult],
   );
 
+  useEffect(() => {
+    inputElements.elements.forEach(element => {
+      const {id, type, defaultValue} = element;
+      if (!isNil(defaultValue)) {
+        switch (type) {
+          case 'checkbox':
+            if (typeof defaultValue === 'boolean') {
+              updateResult(id, defaultValue);
+            }
+            break;
+          case 'text-input':
+          case 'select':
+            if (typeof defaultValue === 'string') {
+              updateResult(id, defaultValue);
+            }
+            break;
+          default:
+            break;
+        }
+      }
+    });
+  }, [inputElements.elements]);
+
   return (
     <div className="mb-6 mt-4 flex flex-col items-center justify-center gap-y-6">
       <span className="text-large font-semibold">
@@ -106,8 +129,7 @@ export default function UserInputs({inputElements, setResult, extensionElements}
         const hasError = errors[id] || false;
 
         switch (type) {
-          case 'checkbox': {
-            if (!isNil(defaultValue) && typeof defaultValue === 'boolean') onSwitchChange(defaultValue, id);
+          case 'checkbox':
             return (
               <LynxSwitch
                 key={label}
@@ -116,9 +138,7 @@ export default function UserInputs({inputElements, setResult, extensionElements}
                 onEnabledChange={value => onSwitchChange(value, id)}
               />
             );
-          }
-          case 'text-input': {
-            if (!isNil(defaultValue) && typeof defaultValue === 'string') onInputChange(defaultValue, id);
+          case 'text-input':
             return (
               <Input
                 key={label}
@@ -130,9 +150,7 @@ export default function UserInputs({inputElements, setResult, extensionElements}
                 fullWidth
               />
             );
-          }
-          case 'select': {
-            if (!isNil(defaultValue) && typeof defaultValue === 'string') onSelectChange(defaultValue, id);
+          case 'select':
             return (
               <Select
                 onChange={e => {
@@ -149,7 +167,6 @@ export default function UserInputs({inputElements, setResult, extensionElements}
                 })}
               </Select>
             );
-          }
           case 'directory':
             return (
               <div key={`${label}_div`} className="flex w-full flex-col gap-y-2">
