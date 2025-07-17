@@ -119,15 +119,26 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
     }
   }
 
+  private maxRetries = 10;
+  private currentRetries = 0;
+
   public listenForChannels() {
     const webContent = appManager?.getWebContent();
-    if (!webContent) {
-      setTimeout(() => {
-        this.listenForChannels();
-      }, 1000);
 
+    if (!webContent || isEmpty(this.mainMethods)) {
+      if (this.currentRetries < this.maxRetries) {
+        this.currentRetries++;
+        setTimeout(() => {
+          this.listenForChannels();
+        }, 500);
+      } else {
+        console.error('Max retries reached for modules listenForChannels');
+        this.currentRetries = 0;
+      }
       return;
     }
+
+    this.currentRetries = 0;
 
     this.mainMethods.forEach(({methods}) => methods().mainIpc?.());
   }
