@@ -97,28 +97,31 @@ export default function Terminal({runningCard, serializeAddon, clearTerminal}: P
     setTheme();
   }, [darkMode]);
 
-  const writeData = useCallback(
-    (data: string) => {
-      const xTerminal = terminal.current;
-      if (!xTerminal) return;
+  useEffect(() => {
+    rendererIpc.pty.onData((_, dataID, data) => {
+      if (dataID === id) {
+        const xTerminal = terminal.current;
+        if (!xTerminal) return;
 
-      if (isEmpty(webUIAddress) && browserBehavior !== 'doNothing') {
-        const catchAddress = getCardMethod(allCards, id, 'catchAddress');
-        const url = catchAddress?.(data) || '';
-        if (!isEmpty(url)) {
-          if (browserBehavior === 'appBrowser') {
-            dispatch(cardsActions.setRunningCardAddress({address: url, tabId: activeTab}));
-            dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
-            rendererIpc.storageUtils.addBrowserRecent(url);
-          } else {
-            rendererIpc.win.openUrlDefaultBrowser(url);
+        if (isEmpty(webUIAddress) && browserBehavior !== 'doNothing') {
+          const catchAddress = getCardMethod(allCards, id, 'catchAddress');
+          const url = catchAddress?.(data) || '';
+          if (!isEmpty(url)) {
+            if (browserBehavior === 'appBrowser') {
+              dispatch(cardsActions.setRunningCardAddress({address: url, tabId: activeTab}));
+              dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
+              rendererIpc.storageUtils.addBrowserRecent(url);
+            } else {
+              rendererIpc.win.openUrlDefaultBrowser(url);
+            }
           }
         }
+        xTerminal.write(outputColor ? parseTerminalColors(data) : data);
       }
-      xTerminal.write(outputColor ? parseTerminalColors(data) : data);
-    },
-    [webUIAddress, id, terminal, browserBehavior, outputColor, dispatch, allCards, activeTab],
-  );
+    });
+
+    return () => rendererIpc.pty.offData();
+  }, [id, webUIAddress, terminal, browserBehavior, outputColor, dispatch, allCards, activeTab]);
 
   const onRightClickRef = useRef<((e: MouseEvent) => void) | null>(null);
 
@@ -256,10 +259,6 @@ export default function Terminal({runningCard, serializeAddon, clearTerminal}: P
       resizeTimeout = setTimeout(() => {
         if (canResize(fitAddon.current?.proposeDimensions())) fitAddon.current?.fit();
       }, resizeDelay);
-    });
-
-    rendererIpc.pty.onData((_, dataID, data) => {
-      if (dataID === id) writeData(data);
     });
 
     terminalRef.removeEventListener('contextmenu', stableEventHandler);
