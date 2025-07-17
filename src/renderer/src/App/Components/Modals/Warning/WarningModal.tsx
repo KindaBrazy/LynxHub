@@ -4,6 +4,7 @@ import {Fragment, useCallback, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ISSUE_PAGE} from '../../../../../../cross/CrossConstants';
+import {useDebounceBreadcrumb} from '../../../../../Breadcrumbs';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import {warnContent, warnTitle} from './WarningContent';
@@ -12,6 +13,8 @@ import {warnContent, warnTitle} from './WarningContent';
 const WarningModal = () => {
   const {contentId, isOpen} = useModalsState('warningModal');
   const dispatch = useDispatch<AppDispatch>();
+
+  useDebounceBreadcrumb('Warning Modal: ', [isOpen, contentId]);
 
   const handleClose = useCallback(() => {
     dispatch(modalActions.closeWarning());

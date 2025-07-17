@@ -5,6 +5,7 @@ import {Dispatch, Key, SetStateAction, useCallback, useEffect, useMemo, useState
 import {useDispatch} from 'react-redux';
 
 import {ChangelogItem, Extension_ListData} from '../../../../../../../cross/CrossTypes';
+import AddBreadcrumb_Renderer, {useDebounceBreadcrumb} from '../../../../../../Breadcrumbs';
 import {ExternalDuo_Icon} from '../../../../../../context_menu/Components/SvgIcons';
 import {
   BoxDuo_Icon,
@@ -67,11 +68,14 @@ export function PreviewHeader({
             {selectedExt?.developer}
           </Chip>
           <Button
+            onPress={() => {
+              AddBreadcrumb_Renderer(`Extension homepage: id:${selectedExt?.id}`);
+              window.open(selectedExt?.url);
+            }}
             size="sm"
             variant="light"
             startContent={<HomeSmile_Icon />}
             className="text-small text-primary-500"
-            onPress={() => window.open(selectedExt?.url)}
             endContent={<ExternalDuo_Icon className="size-3" />}>
             Home Page
           </Button>
@@ -105,6 +109,8 @@ export function PreviewBody({
   installed: boolean;
 }) {
   const [currentTab, setCurrentTab] = useState<Key>('changelog');
+
+  useDebounceBreadcrumb('Extension tab', [currentTab]);
 
   useEffect(() => {
     setCurrentTab(installed ? 'changelog' : 'readme');
@@ -233,6 +239,7 @@ function ActionButtons({
   }, []);
 
   const updateExtension = useCallback(() => {
+    AddBreadcrumb_Renderer(`Extension update: id:${selectedExt?.id}`);
     setUpdating(true);
     if (selectedExt?.id) {
       rendererIpc.extension.updateExtension(selectedExt.id).then(updated => {
@@ -247,6 +254,7 @@ function ActionButtons({
   }, [selectedExt, showRestartModal]);
 
   const installExtension = useCallback(() => {
+    AddBreadcrumb_Renderer(`Extension install: id:${selectedExt?.id}`);
     setInstalling(true);
 
     if (selectedExt?.url) {
@@ -262,6 +270,7 @@ function ActionButtons({
   }, [selectedExt, showRestartModal]);
 
   const uninstallExtension = useCallback(() => {
+    AddBreadcrumb_Renderer(`Extension uninstall: id:${selectedExt?.id}`);
     setUninstalling(true);
 
     if (selectedExt?.id) {
@@ -277,6 +286,7 @@ function ActionButtons({
   }, [selectedExt, showRestartModal]);
 
   const handleInstall = () => {
+    AddBreadcrumb_Renderer(`Extension handleInstall: id:${selectedExt?.id}`);
     setIsSecOpen(true);
   };
 

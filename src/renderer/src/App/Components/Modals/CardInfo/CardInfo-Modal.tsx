@@ -6,6 +6,7 @@ import {Fragment, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
+import {useDebounceBreadcrumb} from '../../../../../Breadcrumbs';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
@@ -27,6 +28,8 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
   const [cardInfoDescriptions, setCardInfoDescriptions] = useState<CardInfoDescriptions>(undefined);
 
   const {picUrl} = useDevInfo(url);
+
+  useDebounceBreadcrumb('Card Git Manager Modal: ', [isOpen, cardId]);
 
   useCardInfoApi(cardId, setOpenFolders, setCardInfoDescriptions, webUI?.dir);
 

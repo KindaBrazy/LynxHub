@@ -2,6 +2,7 @@ import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download_Icon, Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {getCardMethod, useAllCards} from '../../../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../../../Redux/Reducer/CardsReducer';
@@ -31,6 +32,7 @@ export const MenuUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Start Update AI: id:${id}`);
     if (getCardMethod(allCards, id, 'manager')?.updater.startUpdate) {
       dispatch(modalActions.openInstallUICard({cardId: id, tabID: activeTab, type: 'update', title}));
       setMenuIsOpen(false);
@@ -68,6 +70,7 @@ export const MenuCheckForUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Check Update AI: id:${id}`);
     setCheckingForUpdate(true);
     if (card) {
       const updateType = allCards.find(c => c.id === id)?.methods?.['manager']?.updater.updateType;
@@ -111,11 +114,14 @@ export const MenuAutoUpdate = () => {
     }
   }, [id, allCards]);
 
-  const onPress = useCallback(
-    () =>
-      autoUpdate ? rendererIpc.storageUtils.removeAutoUpdateCard(id) : rendererIpc.storageUtils.addAutoUpdateCard(id),
-    [autoUpdate, id],
-  );
+  const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Toggle AutoUpdate AI: id:${id}, !autoUpdate:${!autoUpdate}`);
+    if (autoUpdate) {
+      rendererIpc.storageUtils.removeAutoUpdateCard(id);
+    } else {
+      rendererIpc.storageUtils.addAutoUpdateCard(id);
+    }
+  }, [autoUpdate, id]);
 
   useEffect(() => {
     if (autoUpdate && updateAvailable && webUi && webUi.dir) {

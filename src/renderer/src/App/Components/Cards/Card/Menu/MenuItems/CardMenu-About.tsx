@@ -2,6 +2,7 @@ import {DropdownItem} from '@heroui/react';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
+import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {
   Copy_Icon,
   ExternalLink_Icon,
@@ -64,6 +65,7 @@ export const MenuHomePage = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Open AI HomePage: repoUrl:${repoUrl}, isCtrlPressed:${isCtrlPressed}`);
     if (isCtrlPressed) {
       window.open(repoUrl);
       setMenuIsOpen(false);
@@ -93,6 +95,7 @@ export const MenuDuplicate = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Duplicate AI: id:${id}, isDuplicated:${isDuplicated}`);
     if (isDuplicated) {
       const removedDuplicate = duplicates.filter(d => d.id !== id);
       rendererIpc.storage.update('cards', {duplicated: removedDuplicate});

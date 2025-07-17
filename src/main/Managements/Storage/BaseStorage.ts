@@ -14,6 +14,7 @@ import {FavIcons} from '../../../cross/IpcChannelAndTypes';
 import StorageTypes from '../../../cross/StorageTypes';
 import {appManager} from '../../index';
 import {getAbsolutePath, getExePath, getUserAgent, isPortable, lynxEncryptString} from '../../Utilities/Utils';
+import AddBreadcrumb_Main from '../Breadcrumbs';
 import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 
 class BaseStorage {
@@ -312,9 +313,38 @@ class BaseStorage {
     }
   }
 
+  private addBreadcrumb() {
+    AddBreadcrumb_Main(
+      'Update Storage: ' +
+        JSON.stringify({
+          installedCards: this.storage.data.cards.installedCards,
+          checkUpdateInterval: this.storage.data.cards.checkUpdateInterval,
+          pinnedCards: this.storage.data.cards.pinnedCards,
+          recentlyUsedCards: this.storage.data.cards.recentlyUsedCards,
+          closeConfirm: this.storage.data.app.closeConfirm,
+          terminateAIConfirm: this.storage.data.app.terminateAIConfirm,
+          closeTabConfirm: this.storage.data.app.closeTabConfirm,
+          openLastSize: this.storage.data.app.openLastSize,
+          dynamicAppTitle: this.storage.data.app.dynamicAppTitle,
+          openLinkExternal: this.storage.data.app.openLinkExternal,
+          hardwareAcceleration: this.storage.data.app.hardwareAcceleration,
+          darkMode: this.storage.data.app.darkMode,
+          systemStartup: this.storage.data.app.systemStartup,
+          startMinimized: this.storage.data.app.startMinimized,
+          startupLastActivePage: this.storage.data.app.startupLastActivePage,
+          outputColor: this.storage.data.terminal.outputColor,
+          fontSize: this.storage.data.terminal.fontSize,
+          cursorStyle: this.storage.data.terminal.cursorStyle,
+          cursorInactiveStyle: this.storage.data.terminal.cursorInactiveStyle,
+          closeTabOnExit: this.storage.data.terminal.closeTabOnExit,
+        }),
+    );
+  }
+
   public write() {
     try {
       this.storage.write();
+      this.addBreadcrumb();
     } catch (e) {
       appManager?.showToast(`Failed to save app configs: ${e.message}`, 'error');
     }

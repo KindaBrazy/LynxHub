@@ -1,6 +1,7 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Selection} from '@heroui/react';
 import {memo, useCallback} from 'react';
 
+import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {FilterDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../../../assets/icons/SvgIcons/SvgIconsColor';
 import rendererIpc from '../../../../RendererIpc';
@@ -10,6 +11,7 @@ type Props = {
 };
 const HomeFilter = memo(({selectedCategories}: Props) => {
   const onChange = useCallback((keys: Selection) => {
+    AddBreadcrumb_Renderer(`Home Filter: keys:${JSON.stringify(keys)}`);
     if (keys === 'all') {
       rendererIpc.storageUtils.homeCategory('set', ['Pin', 'Recently', 'All']);
     } else {

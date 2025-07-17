@@ -2,6 +2,7 @@ import {DropdownItem} from '@heroui/react';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
+import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {MinusSquareDuo_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
@@ -15,6 +16,7 @@ export function MenuUnAssign() {
   const activeTab = useTabsState('activeTab');
 
   const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Unassign AI: id:${id}`);
     dispatch(modalActions.openUnassignCard({cardId: id, tabID: activeTab}));
     setMenuIsOpen(false);
   }, [dispatch, setMenuIsOpen, id, activeTab]);
@@ -38,6 +40,7 @@ export function MenuUninstall() {
   const activeTab = useTabsState('activeTab');
 
   const onPress = useCallback(() => {
+    AddBreadcrumb_Renderer(`Uninstall AI: id:${id}`);
     dispatch(modalActions.openUninstallCard({cardId: id, tabID: activeTab}));
     setMenuIsOpen(false);
   }, [dispatch, setMenuIsOpen, id, activeTab]);

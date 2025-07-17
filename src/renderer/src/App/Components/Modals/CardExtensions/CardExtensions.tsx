@@ -3,6 +3,7 @@ import {isEmpty} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {useDebounceBreadcrumb} from '../../../../../Breadcrumbs';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
@@ -27,6 +28,9 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const installedRef = useRef<{updateAll: () => void; getExtensions: () => void}>(null);
   const autoUpdate = useIsAutoUpdateExtensions(id);
+
+  useDebounceBreadcrumb('Card Extension Modal: ', [isOpen, title]);
+  useDebounceBreadcrumb('Card Extension Modal Tabs: ', [currentTab]);
 
   const onClose = useCallback(() => {
     dispatch(modalActions.closeCardExtensions({tabID: activeTab}));

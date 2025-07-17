@@ -3,6 +3,7 @@ import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {PatreonUserData} from '../../../../../../../../../cross/CrossTypes';
+import AddBreadcrumb_Renderer from '../../../../../../../../Breadcrumbs';
 import {Patreon_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {checkEARepos} from '../../../../../../AppEvents/AppEvents_Utils';
 import {userActions, useUserState} from '../../../../../../Redux/Reducer/UserReducer';
@@ -17,6 +18,7 @@ export default function Profile_Patreon() {
   const dispatch = useDispatch<AppDispatch>();
 
   const loginPatreon = useCallback(() => {
+    AddBreadcrumb_Renderer(`Patreon Login`);
     if (!patreonLoggedIn) {
       setIsLoading(true);
       window.electron.ipcRenderer
@@ -36,6 +38,7 @@ export default function Profile_Patreon() {
   }, [patreonLoggedIn]);
 
   const logoutPatreon = useCallback(() => {
+    AddBreadcrumb_Renderer(`Patreon Logout`);
     setIsLoading(true);
     window.electron.ipcRenderer.invoke('patreon-logout').then(() => {
       setIsLoading(false);
@@ -46,6 +49,7 @@ export default function Profile_Patreon() {
   }, []);
 
   const cancelLoading = () => {
+    AddBreadcrumb_Renderer(`Patreon Cancel Loading`);
     setIsLoading(false);
     window.electron.ipcRenderer.send('patreon-cancel-process');
   };

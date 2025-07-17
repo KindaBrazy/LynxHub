@@ -3,6 +3,7 @@ import {motion} from 'framer-motion';
 import {ReactNode, useCallback, useEffect, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
+import AddBreadcrumb_Renderer from '../../../../Breadcrumbs';
 import {appActions, useAppState} from '../../Redux/Reducer/AppReducer';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
@@ -52,6 +53,7 @@ export default function NavButton({children, pageId, title, badge}: Props) {
 
   const handleClick = useCallback(() => {
     if (isSelected) return;
+    AddBreadcrumb_Renderer(`Nav Button: pageId:${pageId}, title:${title}`);
     dispatch(
       tabsActions.setActivePage({
         pageID: pageId,
