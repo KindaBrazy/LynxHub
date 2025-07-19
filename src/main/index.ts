@@ -42,6 +42,7 @@ export let cardsValidator: ValidateCards | undefined = undefined;
 export let moduleManager: ModuleManager | undefined = undefined;
 
 export const extensionManager: ExtensionManager = new ExtensionManager();
+export const appStartTime = Date.now();
 
 // Remove default menu
 Menu.setApplicationMenu(null);
