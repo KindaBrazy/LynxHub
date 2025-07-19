@@ -260,3 +260,21 @@ export async function compareUrls(firstUrl: string, secondUrl: string, defaultPr
 
   return normalizeUrl.default(firstUrl, options) === normalizeUrl.default(secondUrl, options);
 }
+
+export function formatTime(seconds: number): string {
+  if (seconds < 60) {
+    return `${seconds}s`;
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+
+  if (minutes < 60) {
+    return `${minutes}m${remainingSeconds > 0 ? `:${remainingSeconds}s` : ''}`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+
+  return `${hours}h:${remainingMinutes}m${remainingSeconds > 0 ? `:${remainingSeconds}s` : ''}`;
+}
