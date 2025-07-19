@@ -10,6 +10,7 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('electron', electronAPI);
     contextBridge.exposeInMainWorld('osPlatform', os.platform());
     contextBridge.exposeInMainWorld('isPortable', isPortable());
+    contextBridge.exposeInMainWorld('appStartTime', Date.now());
   } catch (error) {
     console.error(error);
   }
@@ -17,4 +18,5 @@ if (process.contextIsolated) {
   window.electron = electronAPI;
   window.osPlatform = os.platform();
   window.isPortable = isPortable();
+  window.appStartTime = Date.now();
 }

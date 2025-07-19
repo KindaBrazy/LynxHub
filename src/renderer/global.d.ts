@@ -7,5 +7,6 @@ declare global {
     electron: ElectronAPI;
     osPlatform: NodeJS.Platform;
     isPortable: 'win' | 'linux' | null;
+    appStartTime: number;
   }
 }
