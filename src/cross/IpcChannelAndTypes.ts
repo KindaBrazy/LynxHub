@@ -62,7 +62,8 @@ export type LynxInput = {
 };
 export type LynxHotkey = Omit<LynxInput, 'type'> & {name: string};
 
-export type AppUpdateStatus = 'update-available' | 'update-downloaded' | string | UpdateDownloadProgress;
+export type AppUpdateStatus = string | UpdateDownloadProgress | undefined;
+export type AppUpdateEventTypes = 'update-available' | 'download-progress' | 'update-downloaded' | 'error';
 
 export type OnUpdatingExtensions = {id: string; step: string | 'done'};
 
@@ -234,6 +235,7 @@ export const initializerChannels = {
 };
 
 export const appUpdateChannels = {
+  statusError: 'appUpdate:statusError',
   status: 'appUpdate:status',
   download: 'appUpdate:download',
   cancel: 'appUpdate:cancel',

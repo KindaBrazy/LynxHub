@@ -18,6 +18,7 @@ import {
   AgentTypes,
   appDataChannels,
   appUpdateChannels,
+  AppUpdateEventTypes,
   AppUpdateStatus,
   appWindowChannels,
   browserChannels,
@@ -641,7 +642,10 @@ const rendererIpc = {
 
   /** Managing app automatic updates */
   appUpdate: {
-    status: (result: (event: IpcRendererEvent, status: AppUpdateStatus) => void) =>
+    statusError: (result: (event: IpcRendererEvent) => void) => ipc.on(appUpdateChannels.statusError, result),
+    offStatusError: (): void => ipc.removeAllListeners(appUpdateChannels.statusError),
+
+    status: (result: (event: IpcRendererEvent, type: AppUpdateEventTypes, status: AppUpdateStatus) => void) =>
       ipc.on(appUpdateChannels.status, result),
 
     offStatus: (): void => ipc.removeAllListeners(appUpdateChannels.status),
