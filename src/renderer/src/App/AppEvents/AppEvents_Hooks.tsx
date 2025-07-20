@@ -2,12 +2,15 @@ import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {APP_BUILD_NUMBER} from '../../../../cross/CrossConstants';
 import {toMs} from '../../../../cross/CrossUtils';
 import StorageTypes from '../../../../cross/StorageTypes';
+import AddBreadcrumb_Renderer from '../../../Breadcrumbs';
 import {useAllCards} from '../Modules/ModuleLoader';
 import {appActions, useAppState} from '../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
 import {hotkeysActions} from '../Redux/Reducer/HotkeysReducer';
+import {modalActions} from '../Redux/Reducer/ModalsReducer';
 import {settingsActions} from '../Redux/Reducer/SettingsReducer';
 import {tabsActions, useTabsState} from '../Redux/Reducer/TabsReducer';
 import {terminalActions} from '../Redux/Reducer/TerminalReducer';
@@ -415,4 +418,38 @@ export const useShowToast = () => {
 
     return () => rendererIpc.appWindow.offShowToast();
   }, [dispatch]);
+};
+
+export const useListenForUpdateError = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const activeTab = useTabsState('activeTab');
+  const runningCard = useCardsState('runningCard');
+
+  useEffect(() => {
+    const statusError = async () => {
+      AddBreadcrumb_Renderer(`Update error 403`);
+      dispatch(settingsActions.setSettingsState({key: 'checkCustomUpdate', value: true}));
+
+      const insider = await rendererIpc.statics.getInsider();
+      const releases = await rendererIpc.statics.getReleases();
+
+      if (
+        insider.currentBuild > APP_BUILD_NUMBER ||
+        releases.earlyAccess.build > APP_BUILD_NUMBER ||
+        releases.currentBuild > APP_BUILD_NUMBER
+      ) {
+        dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: true}));
+        lynxTopToast(dispatch).info('New Update Available!');
+
+        const isRunningAI = runningCard.some(card => card.tabId === activeTab);
+        if (!isRunningAI) {
+          dispatch(modalActions.openUpdateApp());
+        }
+      }
+    };
+
+    rendererIpc.appUpdate.statusError(() => statusError());
+
+    return () => rendererIpc.appUpdate.offStatusError();
+  }, [dispatch, activeTab, runningCard]);
 };

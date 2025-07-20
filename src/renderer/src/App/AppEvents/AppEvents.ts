@@ -7,6 +7,7 @@ import {
   useContextEvents,
   useHotkeyEvents,
   useIpcEvents,
+  useListenForUpdateError,
   useNewTabEvents,
   useOnlineEvents,
   usePatreon,
@@ -29,4 +30,5 @@ export default function useAppEvents() {
   useBrowserEvents();
   useContextEvents();
   useShowToast();
+  useListenForUpdateError();
 }

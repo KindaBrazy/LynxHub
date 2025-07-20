@@ -2,10 +2,14 @@ import {ipcMain} from 'electron';
 import electron_log from 'electron-log';
 import updater from 'electron-updater';
 
-import {appUpdateChannels} from '../../cross/IpcChannelAndTypes';
+import {appUpdateChannels, AppUpdateEventTypes, AppUpdateStatus} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
 
 const {autoUpdater, CancellationToken} = updater;
+
+function sendToRenderer(type: AppUpdateEventTypes, status?: AppUpdateStatus) {
+  appManager?.getWebContent()?.send(appUpdateChannels.status, type, status);
+}
 
 export function checkForUpdate() {
   autoUpdater.autoDownload = false;
@@ -35,25 +39,25 @@ export function checkForUpdate() {
   });
 
   autoUpdater.on('update-available', () => {
-    console.log('update-available');
-    appManager?.getWebContent()?.send(appUpdateChannels.status, 'update-available');
+    sendToRenderer('update-available');
   });
 
   autoUpdater.on('download-progress', (info: updater.ProgressInfo) => {
-    console.log('download-progress', info);
-    appManager?.getWebContent()?.send(appUpdateChannels.status, info);
+    sendToRenderer('download-progress', info);
     appManager?.getMainWindow()?.setProgressBar(info.percent / 100);
   });
 
   autoUpdater.on('update-downloaded', () => {
-    console.log('update-downloaded');
-    appManager?.getWebContent()?.send(appUpdateChannels.status, 'update-downloaded');
+    sendToRenderer('update-downloaded');
     appManager?.getMainWindow()?.setProgressBar(-1);
   });
 
-  autoUpdater.on('error', (e, message?: string) => {
-    console.error('Update Error: ', e);
-    appManager?.getWebContent()?.send(appUpdateChannels.status, message);
-    appManager?.getMainWindow()?.setProgressBar(-1);
+  autoUpdater.on('error', (e: Error | any, message?: string) => {
+    if (e.statusCode === 403) {
+      appManager?.getWebContent()?.send(appUpdateChannels.statusError);
+    } else {
+      sendToRenderer('error', message);
+      appManager?.getMainWindow()?.setProgressBar(-1);
+    }
   });
 }

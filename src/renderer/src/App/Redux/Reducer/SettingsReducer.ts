@@ -29,6 +29,7 @@ type SettingState = {
   extensionsUpdateAvailable: string[];
 
   updateAvailable: boolean;
+  checkCustomUpdate: boolean;
 };
 
 type SettingStateTypes = {
@@ -55,6 +56,7 @@ const initialState: SettingState = {
   openLinkExternal: false,
   hardwareAcceleration: true,
   disableLoadingAnimations: false,
+  checkCustomUpdate: false,
 };
 
 const settingsSlice = createSlice({

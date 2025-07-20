@@ -243,7 +243,7 @@ export type AppUpdateInfo = {
   currentVersion: string;
   currentBuild: number;
   releaseDate: string;
-  earlyAccess?: {
+  earlyAccess: {
     version: string;
     build: number;
     releaseDate: string;

@@ -6,7 +6,7 @@ import {APP_BUILD_NUMBER, APP_VERSION, RELEASES_PAGE} from '../../../../../../cr
 import {AppUpdateInfo} from '../../../../../../cross/CrossTypes';
 import {ExternalLink_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 
-type Props = {items: CollapseProps['items']; updateInfo: AppUpdateInfo | undefined};
+type Props = {items: CollapseProps['items']; updateInfo: Omit<AppUpdateInfo, 'earlyAccess'> | undefined};
 
 /** Information and release notes about update  */
 export default function Info({updateInfo, items}: Props) {
