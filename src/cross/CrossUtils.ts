@@ -1,4 +1,4 @@
-import {isArray} from 'lodash';
+import {isArray, isEqual} from 'lodash';
 
 /**
  * Extracts the owner and repository name from a given GitHub | GitLab URL.
@@ -248,17 +248,21 @@ export function getUrlName(url: string): string {
 }
 
 export async function compareUrls(firstUrl: string, secondUrl: string, defaultProtocol?: 'https' | 'http' | undefined) {
-  const normalizeUrl = await import('normalize-url');
-  if (firstUrl === secondUrl) {
-    return true;
+  if (isEqual(firstUrl, secondUrl)) return true;
+
+  try {
+    const normalizeUrl = await import('normalize-url');
+
+    // @ts-ignore
+    const options: normalizeUrl.Options = {
+      defaultProtocol: defaultProtocol || 'https',
+    };
+
+    return normalizeUrl.default(firstUrl, options) === normalizeUrl.default(secondUrl, options);
+  } catch (e) {
+    console.error('Comparing Urls', e);
+    return false;
   }
-
-  // @ts-ignore
-  const options: normalizeUrl.Options = {
-    defaultProtocol: defaultProtocol || 'https',
-  };
-
-  return normalizeUrl.default(firstUrl, options) === normalizeUrl.default(secondUrl, options);
 }
 
 export function formatTime(seconds: number): string {
