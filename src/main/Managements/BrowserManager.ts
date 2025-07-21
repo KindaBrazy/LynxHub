@@ -2,7 +2,7 @@ import {join} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
-import {isNil} from 'lodash';
+import {isEmpty, isNil} from 'lodash';
 import url from 'url';
 
 import icon from '../../../resources/icon.png?asset';
@@ -20,6 +20,12 @@ export default class BrowserManager {
 
   constructor(mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
+
+    this.mainWindow.on('maximize', () => this.setBounds());
+    this.mainWindow.on('unmaximize', () => this.setBounds());
+    this.mainWindow.on('enter-full-screen', () => this.setBounds());
+    this.mainWindow.on('leave-full-screen', () => this.setBounds());
+    this.mainWindow.on('resize', () => this.setBounds());
   }
 
   private getViewByID(id: string) {
@@ -36,23 +42,20 @@ export default class BrowserManager {
     return {width, height};
   }
 
-  private setBounds(view: WebContentsView) {
-    const [initialWidth, initialHeight] = this.mainWindow.getSize();
-    view.setBounds({
-      x: 0,
-      y: 80,
-      width: initialWidth - this.getOffsetResult().width,
-      height: initialHeight - 80 - this.getOffsetResult().height,
-    });
-    this.mainWindow.on('resize', () => {
-      const [width, height] = this.mainWindow.getContentSize();
-      view.setBounds({
-        x: 0,
-        y: 80,
-        width: width - this.getOffsetResult().width,
-        height: height - 80 - this.getOffsetResult().height,
+  private setBounds() {
+    if (!isEmpty(this.browsers)) {
+      this.browsers.forEach(browser => {
+        setTimeout(() => {
+          const [width, height] = this.mainWindow.getContentSize();
+          browser.view.setBounds({
+            x: 0,
+            y: 80,
+            width: width - this.getOffsetResult().width,
+            height: height - 80 - this.getOffsetResult().height,
+          });
+        }, 50);
       });
-    });
+    }
   }
 
   private listenForNavigate(id: string, webContents: WebContents) {
@@ -203,7 +206,7 @@ export default class BrowserManager {
     this.browsers.push({id, view: newView});
     this.mainWindow.contentView.addChildView(newView);
 
-    this.setBounds(newView);
+    this.setBounds();
 
     this.setupWindowOpenHandler(webContents);
     RegisterHotkeys(webContents);
