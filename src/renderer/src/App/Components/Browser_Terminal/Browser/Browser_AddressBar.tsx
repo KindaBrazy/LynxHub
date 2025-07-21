@@ -67,7 +67,9 @@ export default function Browser_AddressBar({runningCard, setCustomAddress}: Prop
   }, [runningCard]);
 
   useEffect(() => {
-    if (editableRef.current && inputValue !== editableRef.current.textContent) {
+    if (inputValue.includes('error_page.html?errorCode')) {
+      setInputValue('Error loading target address...');
+    } else if (editableRef.current && inputValue !== editableRef.current.textContent) {
       editableRef.current.textContent = inputValue;
     }
   }, [inputValue]);
@@ -171,14 +173,15 @@ export default function Browser_AddressBar({runningCard, setCustomAddress}: Prop
         className={`absolute flex items-center px-4 pointer-events-none transition-opacity duration-200 ${
           isFocused ? 'opacity-0' : 'opacity-100'
         }  inset-0 !right-4`}>
-        {inputValue && (
+        {inputValue ? (
           <p className="text-sm truncate">
             <span className="text-gray-500 dark:text-gray-400">{prefix}</span>
             <span className="text-black dark:text-white font-medium">{domain}</span>
             <span className="text-gray-500 dark:text-gray-400">{rest}</span>
           </p>
+        ) : (
+          <p className="text-sm text-gray-500 dark:text-gray-400">Type here to start browsing...</p>
         )}
-        {!inputValue && <p className="text-sm text-gray-500 dark:text-gray-400">Type here to start browsing...</p>}
       </div>
 
       {/* Editable Input Layer */}
