@@ -1,5 +1,5 @@
 import {isEmpty, isNil} from 'lodash';
-import {memo, useEffect, useMemo, useRef} from 'react';
+import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import rendererIpc from '../../RendererIpc';
@@ -13,7 +13,14 @@ const StatusBar = memo(() => {
     return isEmpty(addStart) && isEmpty(addCenter) && isEmpty(addEnd);
   }, [addStart, addCenter, addEnd]);
 
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
+
+  const setRef = useCallback(
+    (node: HTMLDivElement) => {
+      setContainerRef(node);
+    },
+    [setContainerRef],
+  );
 
   useEffect(() => {
     const observer = new ResizeObserver(entries => {
@@ -23,19 +30,20 @@ const StatusBar = memo(() => {
       }
     });
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
+    if (containerRef) {
+      observer.observe(containerRef);
+    } else {
+      rendererIpc.browser.addOffset('statusBar', {width: 0, height: 0});
     }
 
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [containerRef]);
 
   return (
     <>
       {!isNil(ReplaceContainer) ? (
-        <ReplaceContainer ref={containerRef} />
+        // @ts-ignore
+        <ReplaceContainer ref={setRef} />
       ) : (
         !isEmptyAdd && (
           <div
@@ -43,7 +51,7 @@ const StatusBar = memo(() => {
               'flex h-7 w-full flex-row justify-between overflow-hidden border-t border-foreground/10' +
               ' items-center bg-foreground-100/50 px-3 text-small dark:bg-LynxRaisinBlack/50'
             }
-            ref={containerRef}>
+            ref={setRef}>
             <div className={[classNames, 'justify-start'].join(' ')}>
               {addStart.map((Start, index) => (
                 <Start key={index} />
