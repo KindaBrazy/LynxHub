@@ -3,11 +3,67 @@
   "currentBuild": 21,
   "releaseDate": "2025-06-12",
   "earlyAccess": {
-    "version": "3.0.1",
-    "build": 21,
-    "releaseDate": "2025-06-08"
+    "version": "3.1.0",
+    "build": 24,
+    "releaseDate": "2025-07-22"
   },
   "changeLog": [
+    {
+      "build": 24,
+      "version": "3.1.0",
+      "new": [
+        "Added **insider build** for **Gold sponsors** and above.",
+        "Added support for **browser Favorites management** features.",
+        "Added **unassign card** feature."
+      ],
+      "improve": [
+        "🌍 **Browser**:",
+        "Improve address bar focus handling and input validation.",
+        "Google search for non-URLs and enhanced URL visibility.",
+        "Add custom error page with animations and retry functionality when URL is not accessible.",
+        "Enhanced empty new tab animations, styling, and refactored sections.",
+        "Encrypt and securely manage URLs",
+        "🖥️ **Terminal**:",
+        "Implemented process exit handling and tab cleanup, and \"Close Tab on Exit\" option for disabling this.",
+        "Added clear button to top bar for clearing terminal content.",
+        "Optimize browser and terminal rendering performance",
+        "Cache favicon URLs.",
+        "Improve styling and interactivity for context menu items.",
+        "Redesign extension page layout.",
+        "Improve dashboard page design."
+      ],
+      "bug": [
+        "🌍 **Browser**:",
+        "Fix browser may not work correctly in some situations.",
+        "ensure browser content resizes properly on maximize, unmaximize, fullscreen toggle, and resize. Fixed #32",
+        "Improve browser window initialization to ensure loading and managing web pages correctly.",
+        "Fix errors after closing browser tab.",
+        "Fix error on resizing browser window.",
+        "🖥️ **Terminal**:",
+        "Ensure terminal resizes properly when window is resized with a non-terminal tab active.",
+        "Prevent content loss during window resizing.",
+        "Update font loading and error handling logic.",
+        "Prevent accidental automatic switching to browser view.",
+        "Resolve out-of-memory crashes.",
+        "Fix git manager stash & drop not working correctly.",
+        "Correct branch check logic when fetching repository info on installation",
+        "Fix some icons may not appear",
+        "Handle errors and permission during writing configs and show toast notification.",
+        "Add validation for working directory and fallback for inaccessible paths.",
+        "Show warning when branches fail to fetch (Use default branch for cloning).",
+        "Show warning window for DU64 setup issues.",
+        "Fix Status bar not calculating size correctly for browser resizing."
+      ],
+      "minor": [
+        "Replace icons for Dashboard and Settings pages with updated designs.",
+        "Add error handling for locating card or validating selected directory.",
+        "Enhance error handling for changing app data folder.",
+        "Handle app data directory creation failure.",
+        "Add error handling for repository info retrieval.",
+        "Show error when selected directory for cloning is not empty",
+        "Display download page button on 403 error during auto-update check."
+      ]
+    },
     {
       "build": 21,
       "version": "3.0.1",
@@ -94,9 +150,7 @@
     {
       "build": 17,
       "version": "2.2.1",
-      "bug": [
-        "Prevent modal overlay persistence when closing modals with tabs"
-      ]
+      "bug": ["Prevent modal overlay persistence when closing modals with tabs"]
     },
     {
       "build": 16,
@@ -132,13 +186,8 @@
     {
       "build": 15,
       "version": "2.1.0",
-      "new": [
-        "Python Toolkit Extension"
-      ],
-      "improve": [
-        "Apply terminal output color for AI installer",
-        "Show extensions supported platforms icons"
-      ],
+      "new": ["Python Toolkit Extension"],
+      "improve": ["Apply terminal output color for AI installer", "Show extensions supported platforms icons"],
       "bug": [
         "Disable extension install button for incompatible platforms",
         "Remove developer name from launch config modal"
