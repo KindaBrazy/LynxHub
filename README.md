@@ -23,30 +23,30 @@
 Get started with LynxHub by downloading the latest version for your platform.
 
 | Channel      | Version                                                                 | Date       |
-|--------------|-------------------------------------------------------------------------|------------|
-| Insider      | [**V3.1.0 Insider 2**](https://www.patreon.com/collection/1557749)      | 2025-07-01 |
-| Early Access | [**V3.0.1**](https://www.patreon.com/collection/714004)                 | 2025-05-28 |
+| ------------ | ----------------------------------------------------------------------- | ---------- |
+| Insider      | [**V3.1.0**](https://www.patreon.com/collection/1557749)                | 2025-07-22 |
+| Early Access | [**V3.1.0**](https://www.patreon.com/collection/714004)                 | 2025-07-22 |
 | Release      | [**V3.0.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V3.0.1) | 2025-06-12 |
 
 ### Windows (10, 11)
 
 | [X64/ARM64 (.exe)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-win-Setup.exe) | [x64 (.exe)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-win_x64-Setup.exe) | [ARM64 (.exe)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-win_arm64-Setup.exe) | [Portable (X64/ARM64) (.exe)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-win-Portable.exe) | [Portable X64 (.exe)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-win-Portable_x64.exe) | [Portable ARM64 (.exe)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-win-Portable_arm64.exe) |
-|:---------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------------------:|
+| :-------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: |
 
 ### Linux (Debian, Ubuntu)
 
 | [x64 (.deb)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_amd64.deb) | [x64 (.tar.gz)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_x64.tar.gz) | [ARM64 (.deb)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_arm64.deb) | [ARM64 (.tar.gz)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_arm64.tar.gz) | [Portable (X86/X64) (.AppImage)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux-Portable_x86_64.AppImage) | [Portable (ARM64) (.AppImage)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux-Portable_arm64.AppImage) |
-|:-----------------------------------------------------------------------------------------------------------:|-----------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------:|---------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------:|
+| :---------------------------------------------------------------------------------------------------------: | --------------------------------------------------------------------------------------------------------------- | :-----------------------------------------------------------------------------------------------------------: | ------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------: |
 
 ### Linux (Red Hat, Fedora, SUSE)
 
 | [x86/x64 (.rpm)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_x86_64.rpm) | [x64 (.tar.gz)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_x64.tar.gz) | [AARCH64 (.rpm)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_aarch64.rpm) | [Portable (X86/X64) (.AppImage)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux-Portable_x86_64.AppImage) | [Portable (ARM64) (.AppImage)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux-Portable_arm64.AppImage) |
-|:----------------------------------------------------------------------------------------------------------------:|-----------------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------:|
+| :--------------------------------------------------------------------------------------------------------------: | --------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------: |
 
 ### macOS **(Beta)**
 
 | [x64 (.dmg)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-mac_x64.dmg) | [x64 (.zip)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-mac_x64.zip) | [ARM64 (.dmg)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-mac_arm64.dmg) | [ARM64 (.zip)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-mac_arm64.zip) |
-|:-------------------------------------------------------------------------------------------------------:|---------------------------------------------------------------------------------------------------------|:-----------------------------------------------------------------------------------------------------------:|-------------------------------------------------------------------------------------------------------------|
+| :-----------------------------------------------------------------------------------------------------: | ------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------: | ----------------------------------------------------------------------------------------------------------- |
 
 > [!NOTE]
 > **macOS Beta Release**
@@ -141,21 +141,20 @@ Discover the core features that make LynxHub a powerful tool for your AI workflo
 
 ![Customize launch screenshot](/readme/screenshots/CustomLaunch.png)
 
-
 </div>
 
 ## 📦 Installation
 
 1. **Install Prerequisites**
-    - [Git](https://git-scm.com/downloads)
-    - [Python](https://www.python.org/downloads) (required for AI interfaces; check "Add Python to PATH" during install)
+   - [Git](https://git-scm.com/downloads)
+   - [Python](https://www.python.org/downloads) (required for AI interfaces; check "Add Python to PATH" during install)
 
 2. **Download LynxHub**
-    - Get the latest executable from the [Releases page](https://github.com/KindaBrazy/LynxHub/releases)
-      or [Patreon (Early-Access)](https://www.patreon.com/LynxHub).
+   - Get the latest executable from the [Releases page](https://github.com/KindaBrazy/LynxHub/releases)
+     or [Patreon (Early-Access)](https://www.patreon.com/LynxHub).
 
 3. **Launch the Application**
-    - Updates are automatically checked and prompted during use.
+   - Updates are automatically checked and prompted during use.
 
 ## 🔧 Development
 
@@ -180,7 +179,7 @@ npm i --legacy-peer-deps && npm run dev
 
 ```bash
 npm run build
-```  
+```
 
 Native modules compile automatically during installation.
 
@@ -209,13 +208,13 @@ Sustainable development relies on community backing. Consider supporting through
 
 Here's a breakdown of the benefits you can receive as a LynxHub Patreon supporter:
 
-* 🏷️ **Discord Role:** Get an exclusive Discord role.
-* 🚀 **Early Access to Updates:** Be among the first to receive updates for LynxHub Core, extensions, and modules.
-* 🛠️ **Insider Builds:** Immediate access to every new feature and fix for LynxHub Core, extensions, and modules.
-* 🎬 **Behind-the-Scenes Insights:** Get my plans for new LynxHub releases, what's next, and what's implemented.
-* ⭐ **Name in GitHub README:** Your name will be featured in the GitHub README Credit section.
-* 🌟 **Name in LynxHub Application Credits:** See your name in the LynxHub application credits.
-* 🔧 **Priority Support:** Receive faster responses to your questions and issues for a smooth experience.
+- 🏷️ **Discord Role:** Get an exclusive Discord role.
+- 🚀 **Early Access to Updates:** Be among the first to receive updates for LynxHub Core, extensions, and modules.
+- 🛠️ **Insider Builds:** Immediate access to every new feature and fix for LynxHub Core, extensions, and modules.
+- 🎬 **Behind-the-Scenes Insights:** Get my plans for new LynxHub releases, what's next, and what's implemented.
+- ⭐ **Name in GitHub README:** Your name will be featured in the GitHub README Credit section.
+- 🌟 **Name in LynxHub Application Credits:** See your name in the LynxHub application credits.
+- 🔧 **Priority Support:** Receive faster responses to your questions and issues for a smooth experience.
 
 For one-time donations: [Patreon Shop](https://www.Patreon.com/LynxHub/Shop)
 
@@ -241,8 +240,6 @@ Every contribution directly supports ongoing development and future improvements
 
 © 2025 LynxHub.
 
-[github-release-shield]:https://img.shields.io/github/v/release/KindaBrazy/LynxHub?include_prereleases&style=flat&labelColor=%23212121&color=%2300A9FF&label=Version&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IndoaXRlIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xNCAyMmgtNGMtMy43NzEgMC01LjY1NyAwLTYuODI4LTEuMTcyQzIgMTkuNjU3IDIgMTcuNzcxIDIgMTR2LTRjMC0zLjc3MSAwLTUuNjU3IDEuMTcyLTYuODI4QzQuMzQzIDIgNi4yMzkgMiAxMC4wMyAyYy42MDYgMCAxLjA5MSAwIDEuNS4wMTdjLS4wMTMuMDgtLjAyLjE2MS0uMDIuMjQ0bC0uMDEgMi44MzRjMCAxLjA5NyAwIDIuMDY3LjEwNSAyLjg0OGMuMTE0Ljg0Ny4zNzUgMS42OTQgMS4wNjcgMi4zODZjLjY5LjY5IDEuNTM4Ljk1MiAyLjM4NSAxLjA2NmMuNzgxLjEwNSAxLjc1MS4xMDUgMi44NDguMTA1aDQuMDUyYy4wNDMuNTM0LjA0MyAxLjE5LjA0MyAyLjA2M1YxNGMwIDMuNzcxIDAgNS42NTctMS4xNzIgNi44MjhDMTkuNjU3IDIyIDE3Ljc3MSAyMiAxNCAyMiIgY2xpcC1ydWxlPSJldmVub2RkIiBvcGFjaXR5PSIwLjUiLz48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTEwLjU2IDE1LjQ5OGEuNzUuNzUgMCAxIDAtMS4xMi0uOTk2bC0yLjEwNyAyLjM3bC0uNzcyLS44N2EuNzUuNzUgMCAwIDAtMS4xMjIuOTk2bDEuMzM0IDEuNWEuNzUuNzUgMCAwIDAgMS4xMiAwem0uOTUtMTMuMjM4bC0uMDEgMi44MzVjMCAxLjA5NyAwIDIuMDY2LjEwNSAyLjg0OGMuMTE0Ljg0Ny4zNzUgMS42OTQgMS4wNjcgMi4zODVjLjY5LjY5MSAxLjUzOC45NTMgMi4zODUgMS4wNjdjLjc4MS4xMDUgMS43NTEuMTA1IDIuODQ4LjEwNWg0LjA1MmMuMDEzLjE1NS4wMjIuMzIxLjAyOC41SDIyYzAtLjI2OCAwLS40MDItLjAxLS41NmE1LjMyMiA1LjMyMiAwIDAgMC0uOTU4LTIuNjQxYy0uMDk0LS4xMjgtLjE1OC0uMjA0LS4yODUtLjM1N0MxOS45NTQgNy40OTQgMTguOTEgNi4zMTIgMTggNS41Yy0uODEtLjcyNC0xLjkyMS0xLjUxNS0yLjg5LTIuMTYxYy0uODMyLS41NTYtMS4yNDgtLjgzNC0xLjgxOS0xLjA0YTUuNDg4IDUuNDg4IDAgMCAwLS41MDYtLjE1NGMtLjM4NC0uMDk1LS43NTgtLjEyOC0xLjI4NS0uMTR6Ii8+PC9zdmc+
-
-[github-release-date-shield]:https://img.shields.io/github/release-date-pre/KindaBrazy/LynxHub?style=flat&labelColor=%23212121&color=%2300A9FF&label=Date&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IndoaXRlIiBkPSJNNi45NiAyYy40MTggMCAuNzU2LjMxLjc1Ni42OTJWNC4wOWMuNjctLjAxMiAxLjQyMi0uMDEyIDIuMjY4LS4wMTJoNC4wMzJjLjg0NiAwIDEuNTk3IDAgMi4yNjguMDEyVjIuNjkyYzAtLjM4Mi4zMzgtLjY5Mi43NTYtLjY5MnMuNzU2LjMxLjc1Ni42OTJWNC4xNWMxLjQ1LjEwNiAyLjQwMy4zNjggMy4xMDMgMS4wMDhjLjcuNjQxLjk4NSAxLjUxMyAxLjEwMSAyLjg0MnYxSDJWOGMuMTE2LTEuMzI5LjQwMS0yLjIgMS4xMDEtMi44NDJjLjctLjY0IDEuNjUyLS45MDIgMy4xMDMtMS4wMDhWMi42OTJjMC0uMzgyLjMzOS0uNjkyLjc1Ni0uNjkyIi8+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0yMiAxNHYtMmMwLS44MzktLjAxMy0yLjMzNS0uMDI2LTNIMi4wMDZjLS4wMTMuNjY1IDAgMi4xNjEgMCAzdjJjMCAzLjc3MSAwIDUuNjU3IDEuMTcgNi44MjhDNC4zNDkgMjIgNi4yMzQgMjIgMTAuMDA0IDIyaDRjMy43NyAwIDUuNjU0IDAgNi44MjYtMS4xNzJDMjIgMTkuNjU3IDIyIDE3Ljc3MSAyMiAxNCIgb3BhY2l0eT0iMC41Ii8+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xOCAxNi41YTEuNSAxLjUgMCAxIDEtMyAwYTEuNSAxLjUgMCAwIDEgMyAwIi8+PC9zdmc+
-
-[github-downloads-shield]:https://img.shields.io/github/downloads/KindaBrazy/LynxHub/total?labelColor=%23212121&color=%2300A9FF&label=Downloads&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IndoaXRlIiBkPSJNMjIgMTZ2LTFjMC0yLjgyOCAwLTQuMjQyLS44NzktNS4xMkMyMC4yNDIgOSAxOC44MjggOSAxNiA5SDhjLTIuODI5IDAtNC4yNDMgMC01LjEyMi44OEMyIDEwLjc1NyAyIDEyLjE3IDIgMTQuOTk3VjE2YzAgMi44MjkgMCA0LjI0My44NzkgNS4xMjJDMy43NTcgMjIgNS4xNzIgMjIgOCAyMmg4YzIuODI4IDAgNC4yNDMgMCA1LjEyMS0uODc4QzIyIDIwLjI0MiAyMiAxOC44MjkgMjIgMTYiIG9wYWNpdHk9IjAuNSIvPjxwYXRoIGZpbGw9IndoaXRlIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMiAxLjI1YS43NS43NSAwIDAgMC0uNzUuNzV2MTAuOTczbC0xLjY4LTEuOTYxYS43NS43NSAwIDEgMC0xLjE0Ljk3NmwzIDMuNWEuNzUuNzUgMCAwIDAgMS4xNCAwbDMtMy41YS43NS43NSAwIDEgMC0xLjE0LS45NzZsLTEuNjggMS45NlYyYS43NS43NSAwIDAgMC0uNzUtLjc1IiBjbGlwLXJ1bGU9ImV2ZW5vZGQiLz48L3N2Zz4=
+[github-release-shield]: https://img.shields.io/github/v/release/KindaBrazy/LynxHub?include_prereleases&style=flat&labelColor=%23212121&color=%2300A9FF&label=Version&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IndoaXRlIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xNCAyMmgtNGMtMy43NzEgMC01LjY1NyAwLTYuODI4LTEuMTcyQzIgMTkuNjU3IDIgMTcuNzcxIDIgMTR2LTRjMC0zLjc3MSAwLTUuNjU3IDEuMTcyLTYuODI4QzQuMzQzIDIgNi4yMzkgMiAxMC4wMyAyYy42MDYgMCAxLjA5MSAwIDEuNS4wMTdjLS4wMTMuMDgtLjAyLjE2MS0uMDIuMjQ0bC0uMDEgMi44MzRjMCAxLjA5NyAwIDIuMDY3LjEwNSAyLjg0OGMuMTE0Ljg0Ny4zNzUgMS42OTQgMS4wNjcgMi4zODZjLjY5LjY5IDEuNTM4Ljk1MiAyLjM4NSAxLjA2NmMuNzgxLjEwNSAxLjc1MS4xMDUgMi44NDguMTA1aDQuMDUyYy4wNDMuNTM0LjA0MyAxLjE5LjA0MyAyLjA2M1YxNGMwIDMuNzcxIDAgNS42NTctMS4xNzIgNi44MjhDMTkuNjU3IDIyIDE3Ljc3MSAyMiAxNCAyMiIgY2xpcC1ydWxlPSJldmVub2RkIiBvcGFjaXR5PSIwLjUiLz48cGF0aCBmaWxsPSJ3aGl0ZSIgZD0iTTEwLjU2IDE1LjQ5OGEuNzUuNzUgMCAxIDAtMS4xMi0uOTk2bC0yLjEwNyAyLjM3bC0uNzcyLS44N2EuNzUuNzUgMCAwIDAtMS4xMjIuOTk2bDEuMzM0IDEuNWEuNzUuNzUgMCAwIDAgMS4xMiAwem0uOTUtMTMuMjM4bC0uMDEgMi44MzVjMCAxLjA5NyAwIDIuMDY2LjEwNSAyLjg0OGMuMTE0Ljg0Ny4zNzUgMS42OTQgMS4wNjcgMi4zODVjLjY5LjY5MSAxLjUzOC45NTMgMi4zODUgMS4wNjdjLjc4MS4xMDUgMS43NTEuMTA1IDIuODQ4LjEwNWg0LjA1MmMuMDEzLjE1NS4wMjIuMzIxLjAyOC41SDIyYzAtLjI2OCAwLS40MDItLjAxLS41NmE1LjMyMiA1LjMyMiAwIDAgMC0uOTU4LTIuNjQxYy0uMDk0LS4xMjgtLjE1OC0uMjA0LS4yODUtLjM1N0MxOS45NTQgNy40OTQgMTguOTEgNi4zMTIgMTggNS41Yy0uODEtLjcyNC0xLjkyMS0xLjUxNS0yLjg5LTIuMTYxYy0uODMyLS41NTYtMS4yNDgtLjgzNC0xLjgxOS0xLjA0YTUuNDg4IDUuNDg4IDAgMCAwLS41MDYtLjE1NGMtLjM4NC0uMDk1LS43NTgtLjEyOC0xLjI4NS0uMTR6Ii8+PC9zdmc+
+[github-release-date-shield]: https://img.shields.io/github/release-date-pre/KindaBrazy/LynxHub?style=flat&labelColor=%23212121&color=%2300A9FF&label=Date&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IndoaXRlIiBkPSJNNi45NiAyYy40MTggMCAuNzU2LjMxLjc1Ni42OTJWNC4wOWMuNjctLjAxMiAxLjQyMi0uMDEyIDIuMjY4LS4wMTJoNC4wMzJjLjg0NiAwIDEuNTk3IDAgMi4yNjguMDEyVjIuNjkyYzAtLjM4Mi4zMzgtLjY5Mi43NTYtLjY5MnMuNzU2LjMxLjc1Ni42OTJWNC4xNWMxLjQ1LjEwNiAyLjQwMy4zNjggMy4xMDMgMS4wMDhjLjcuNjQxLjk4NSAxLjUxMyAxLjEwMSAyLjg0MnYxSDJWOGMuMTE2LTEuMzI5LjQwMS0yLjIgMS4xMDEtMi44NDJjLjctLjY0IDEuNjUyLS45MDIgMy4xMDMtMS4wMDhWMi42OTJjMC0uMzgyLjMzOS0uNjkyLjc1Ni0uNjkyIi8+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0yMiAxNHYtMmMwLS44MzktLjAxMy0yLjMzNS0uMDI2LTNIMi4wMDZjLS4wMTMuNjY1IDAgMi4xNjEgMCAzdjJjMCAzLjc3MSAwIDUuNjU3IDEuMTcgNi44MjhDNC4zNDkgMjIgNi4yMzQgMjIgMTAuMDA0IDIyaDRjMy43NyAwIDUuNjU0IDAgNi44MjYtMS4xNzJDMjIgMTkuNjU3IDIyIDE3Ljc3MSAyMiAxNCIgb3BhY2l0eT0iMC41Ii8+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik0xOCAxNi41YTEuNSAxLjUgMCAxIDEtMyAwYTEuNSAxLjUgMCAwIDEgMyAwIi8+PC9zdmc+
+[github-downloads-shield]: https://img.shields.io/github/downloads/KindaBrazy/LynxHub/total?labelColor=%23212121&color=%2300A9FF&label=Downloads&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IndoaXRlIiBkPSJNMjIgMTZ2LTFjMC0yLjgyOCAwLTQuMjQyLS44NzktNS4xMkMyMC4yNDIgOSAxOC44MjggOSAxNiA5SDhjLTIuODI5IDAtNC4yNDMgMC01LjEyMi44OEMyIDEwLjc1NyAyIDEyLjE3IDIgMTQuOTk3VjE2YzAgMi44MjkgMCA0LjI0My44NzkgNS4xMjJDMy43NTcgMjIgNS4xNzIgMjIgOCAyMmg4YzIuODI4IDAgNC4yNDMgMCA1LjEyMS0uODc4QzIyIDIwLjI0MiAyMiAxOC44MjkgMjIgMTYiIG9wYWNpdHk9IjAuNSIvPjxwYXRoIGZpbGw9IndoaXRlIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xMiAxLjI1YS43NS43NSAwIDAgMC0uNzUuNzV2MTAuOTczbC0xLjY4LTEuOTYxYS43NS43NSAwIDEgMC0xLjE0Ljk3NmwzIDMuNWEuNzUuNzUgMCAwIDAgMS4xNCAwbDMtMy41YS43NS43NSAwIDEgMC0xLjE0LS45NzZsLTEuNjggMS45NlYyYS43NS43NSAwIDAgMC0uNzUtLjc1IiBjbGlwLXJ1bGU9ImV2ZW5vZGQiLz48L3N2Zz4=
