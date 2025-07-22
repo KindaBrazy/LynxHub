@@ -1,7 +1,7 @@
 {
   "name": "lynxhub",
   "productName": "LynxHub",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "type": "module",
   "description": "Cross-platform, extensible terminal/browser for AI management",
   "main": "./out/main/index.cjs",
@@ -17,7 +17,7 @@
   "homepage": "https://github.com/KindaBrazy/LynxHub",
   "appDetails": {
     "title": "LynxHub",
-    "buildNumber": 21,
+    "buildNumber": 24,
     "detailedDescription": "Open-source, cross-platform terminal and browser, designed for managing AI. Highly modular and extensible, it's the all-in-one environment for AI power users."
   },
   "scripts": {

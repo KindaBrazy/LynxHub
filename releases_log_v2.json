@@ -4,11 +4,177 @@
   "currentBuild": 21,
   "releaseDate": "2025-06-12",
   "earlyAccess": {
-    "version": "3.0.1",
-    "build": 21,
-    "releaseDate": "2025-06-08"
+    "version": "3.1.0",
+    "build": 24,
+    "releaseDate": "2025-07-22"
   },
   "changeLog": [
+    {
+      "build": 24,
+      "version": "3.1.0",
+      "changes": [
+        {
+          "title": "✨ New Features",
+          "items": [
+            {
+              "label": "Added **insider build** for **Gold sponsors** and above."
+            },
+            {
+              "label": "Added support for **browser Favorites management** features."
+            },
+            {
+              "label": "Added **unassign card** feature."
+            }
+          ]
+        },
+        {
+          "title": "⚡ Improvements",
+          "items": [
+            {
+              "label": "🌍 **Browser**:",
+              "subitems": [
+                {
+                  "label": "Improve address bar focus handling and input validation."
+                },
+                {
+                  "label": "Google search for non-URLs and enhanced URL visibility."
+                },
+                {
+                  "label": "Add custom error page with animations and retry functionality when URL is not accessible."
+                },
+                {
+                  "label": "Enhanced empty new tab animations, styling, and refactored sections."
+                },
+                {
+                  "label": "Encrypt and securely manage URLs"
+                }
+              ]
+            },
+            {
+              "label": "🖥️ **Terminal**:",
+              "subitems": [
+                {
+                  "label": "Implemented process exit handling and tab cleanup, and \"Close Tab on Exit\" option for disabling this."
+                },
+                {
+                  "label": "Added clear button to top bar for clearing terminal content."
+                }
+              ]
+            },
+            {
+              "label": "Optimize browser and terminal rendering performance"
+            },
+            {
+              "label": "Cache favicon URLs."
+            },
+            {
+              "label": "Improve styling and interactivity for context menu items."
+            },
+            {
+              "label": "Redesign extension page layout."
+            },
+            {
+              "label": "Improve dashboard page design."
+            }
+          ]
+        },
+        {
+          "title": "🪲 Bug Fixes",
+          "items": [
+            {
+              "label": "🌍 **Browser**:",
+              "subitems": [
+                {
+                  "label": "Fix browser may not work correctly in some situations."
+                },
+                {
+                  "label": "ensure browser content resizes properly on maximize, unmaximize, fullscreen toggle, and resize. Fixed #32"
+                },
+                {
+                  "label": "Improve browser window initialization to ensure loading and managing web pages correctly."
+                },
+                {
+                  "label": "Fix errors after closing browser tab."
+                },
+                {
+                  "label": "Fix error on resizing browser window."
+                }
+              ]
+            },
+            {
+              "label": "🖥️ **Terminal**:",
+              "subitems": [
+                {
+                  "label": "Ensure terminal resizes properly when window is resized with a non-terminal tab active."
+                },
+                {
+                  "label": "Prevent content loss during window resizing."
+                },
+                {
+                  "label": "Update font loading and error handling logic."
+                },
+                {
+                  "label": "Prevent accidental automatic switching to browser view."
+                }
+              ]
+            },
+            {
+              "label": "Resolve out-of-memory crashes."
+            },
+            {
+              "label": "Fix git manager stash & drop not working correctly."
+            },
+            {
+              "label": "Correct branch check logic when fetching repository info on installation"
+            },
+            {
+              "label": "Fix some icons may not appear"
+            },
+            {
+              "label": "Handle errors and permission during writing configs and show toast notification."
+            },
+            {
+              "label": "Add validation for working directory and fallback for inaccessible paths."
+            },
+            {
+              "label": "Show warning when branches fail to fetch (Use default branch for cloning)."
+            },
+            {
+              "label": "Show warning window for DU64 setup issues."
+            },
+            {
+              "label": "Fix Status bar not calculating size correctly for browser resizing."
+            }
+          ]
+        },
+        {
+          "title": "📌 Minor Changes",
+          "items": [
+            {
+              "label": "Replace icons for Dashboard and Settings pages with updated designs."
+            },
+            {
+              "label": "Add error handling for locating card or validating selected directory."
+            },
+            {
+              "label": "Enhance error handling for changing app data folder."
+            },
+            {
+              "label": "Handle app data directory creation failure."
+            },
+            {
+              "label": "Add error handling for repository info retrieval."
+            },
+            {
+              "label": "Show error when selected directory for cloning is not empty"
+            },
+            {
+              "label": "Display download page button on 403 error during auto-update check."
+            }
+          ]
+        }
+      ]
+    },
     {
       "build": 21,
       "version": "3.0.1",
