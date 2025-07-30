@@ -1,8 +1,9 @@
 import {Button, ButtonGroup} from '@heroui/react';
 import {Result} from 'antd';
-import {useCallback} from 'react';
+import {useCallback, useEffect} from 'react';
 
 import {ISSUE_PAGE} from '../../cross/CrossConstants';
+import {isDev} from '../../cross/CrossUtils';
 import CopyClipboard from './App/Components/Reusable/CopyClipboard';
 import rendererIpc from './App/RendererIpc';
 import {isLinuxPortable} from './App/Utils/UtilHooks';
@@ -24,6 +25,10 @@ export default function ErrorComponent({error, resetErrorBoundary}: Props) {
   }, []);
 
   const openIssues = () => window.open(ISSUE_PAGE);
+
+  useEffect(() => {
+    if (isDev()) console.error(error);
+  }, [error]);
 
   return (
     <div className="absolute inset-2 rounded-lg bg-black flex items-center justify-center draggable overflow-hidden">
