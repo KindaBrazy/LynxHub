@@ -22,7 +22,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Notification_Data} from '../../../../../../../../cross/CrossTypes';
-import {isDev, isValidURL} from '../../../../../../../../cross/CrossUtils';
+import {isValidURL} from '../../../../../../../../cross/CrossUtils';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {ExternalDuo_Icon} from '../../../../../../../context_menu/Components/SvgIcons';
 import {BellDuo_Icon, CheckDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
@@ -53,22 +53,16 @@ export default function Home_Notification() {
   };
 
   useEffect(() => {
-    if (isDev()) {
-      import('../../../../../../../../../notifications.json').then(result => {
-        filterData(result.default as Notification_Data[]);
-      });
-    } else {
-      rendererIpc.statics.getNotification().then(data => {
-        filterData(data);
-      });
-      setRefreshing(true);
-      rendererIpc.statics.pull().finally(() =>
-        rendererIpc.statics
-          .getNotification()
-          .then(data => filterData(data))
-          .finally(() => setRefreshing(false)),
-      );
-    }
+    rendererIpc.statics.getNotification().then(data => {
+      filterData(data);
+    });
+    setRefreshing(true);
+    rendererIpc.statics.pull().finally(() =>
+      rendererIpc.statics
+        .getNotification()
+        .then(data => filterData(data))
+        .finally(() => setRefreshing(false)),
+    );
   }, []);
 
   const handleRead = (id: string) => {
