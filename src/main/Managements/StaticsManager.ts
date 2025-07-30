@@ -18,6 +18,8 @@ const url: string = 'https://github.com/KindaBrazy/LynxHub-Statics';
 export default class StaticsManager {
   private gitManager: GitManager;
   private readonly dir: string;
+  private requirementsCheckPromise: Promise<void> | null = null;
+  private requirementsCheckCompleted: boolean = false;
 
   constructor() {
     this.gitManager = new GitManager();
@@ -37,16 +39,37 @@ export default class StaticsManager {
   }
 
   private async getDataAsJson(fileName: string) {
+    if (!this.requirementsCheckCompleted && this.requirementsCheckPromise) {
+      await this.requirementsCheckPromise;
+    } else if (!this.requirementsCheckCompleted && !this.requirementsCheckPromise) {
+      console.warn('StaticsManager: Attempting to get data before checkRequirements was initiated.');
+    }
+
     const filePath = join(this.dir, fileName);
     const fileContent = readFileSync(filePath, 'utf8');
     return JSON.parse(fileContent);
   }
 
   public async checkRequirements() {
-    await this.clone();
-    await this.pull();
+    if (this.requirementsCheckPromise) {
+      return this.requirementsCheckPromise;
+    }
 
-    setInterval(() => this.pull(), toMs(10, 'minutes'));
+    this.requirementsCheckPromise = (async () => {
+      try {
+        await this.clone();
+        await this.pull();
+
+        setInterval(() => this.pull(), toMs(10, 'minutes'));
+        this.requirementsCheckCompleted = true;
+      } catch (error) {
+        this.requirementsCheckPromise = null;
+        this.requirementsCheckCompleted = false;
+        throw error;
+      }
+    })();
+
+    return this.requirementsCheckPromise;
   }
 
   public async pull() {
@@ -54,30 +77,37 @@ export default class StaticsManager {
   }
 
   public async getReleases() {
+    await this.requirementsCheckPromise;
     return (await this.getDataAsJson('releases.json')) as AppUpdateData;
   }
 
   public async getInsider() {
+    await this.requirementsCheckPromise;
     return (await this.getDataAsJson('insider.json')) as AppUpdateInsiderData;
   }
 
   public async getNotification() {
+    await this.requirementsCheckPromise;
     return (await this.getDataAsJson('notifications.json')) as Notification_Data[];
   }
 
   public async getModules() {
+    await this.requirementsCheckPromise;
     return (await this.getDataAsJson('modules.json')) as ModulesInfo[];
   }
 
   public async getExtensions() {
+    await this.requirementsCheckPromise;
     return (await this.getDataAsJson('extensions.json')) as ExtensionsInfo[];
   }
 
   public async getExtensionsEA() {
+    await this.requirementsCheckPromise;
     return (await this.getDataAsJson('extensions_ea.json')) as ExtensionsInfo[];
   }
 
   public async getPatrons() {
+    await this.requirementsCheckPromise;
     return (await this.getDataAsJson('patrons.json')) as PatreonSupporter[];
   }
 }
