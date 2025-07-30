@@ -208,7 +208,7 @@ export default class ElectronAppManager {
 
   /** Sets up event listeners for the main window. */
   private setupMainWindowEventListeners(): void {
-    this.getMainWindow()?.on('ready-to-show', (): void => {
+    this.getMainWindow()?.once('ready-to-show', () => {
       this.getWebContent()?.setUserAgent(getUserAgent());
       setTimeout(() => {
         this.loadingWindow?.close();
