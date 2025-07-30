@@ -4,7 +4,7 @@ import {memo, RefObject} from 'react';
 import {RunningCard} from '../../../Utils/Types';
 import Browser_TopBar from '../Browser/Browser_TopBar';
 import Terminal_TopBar from '../Terminal/Terminal_TopBar';
-import SwitchAndTerminate from './SwitchAndTerminate';
+import SharedTopBar from './SharedTopBar';
 
 type Props = {
   runningCard: RunningCard;
@@ -30,7 +30,7 @@ const TopBar = memo(({runningCard, serializeAddon, tabID, clearTerminal}: Props)
         <Browser_TopBar tabID={tabID} runningCard={runningCard} />
       )}
 
-      <SwitchAndTerminate runningCard={runningCard} />
+      <SharedTopBar runningCard={runningCard} />
     </div>
   );
 });

@@ -6,7 +6,7 @@ import Terminate_AI from './Terminate_AI';
 
 type Props = {runningCard: RunningCard};
 
-export default function SwitchAndTerminate({runningCard}: Props) {
+export default function SharedTopBar({runningCard}: Props) {
   const {type, currentView} = useMemo(() => runningCard, [runningCard]);
 
   return (
