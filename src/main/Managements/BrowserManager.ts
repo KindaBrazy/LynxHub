@@ -179,7 +179,7 @@ export default class BrowserManager {
     });
   }
 
-  private getSession() {
+  public getSession() {
     return session.fromPartition('persist:lynxhub_browser');
   }
 
