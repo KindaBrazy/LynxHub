@@ -1,13 +1,13 @@
 import {CardData} from '@lynx_module/types';
 import {Reducer} from '@reduxjs/toolkit';
-import {ComponentProps, FC, RefObject} from 'react';
+import {ComponentProps, FC} from 'react';
 
 import {CardsDataManager} from '../Components/Cards/CardsDataManager';
 import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 
 // -----------------------------------------------> Elements & Props
 export type ElementProps = ComponentProps<'div'>;
-export type RefElementProps = ComponentProps<'div'> & {ref: RefObject<HTMLDivElement | null>};
+export type RefElementProps = ComponentProps<'div'> & {ref: (node: HTMLDivElement) => void};
 export type CardElementProps = ComponentProps<'div'> & {cards: CardData[]};
 export type SearchResultProps = ComponentProps<'div'> & {searchValue: string};
 export type CardDataProps = ComponentProps<'div'> & {context: CardsDataManager};
