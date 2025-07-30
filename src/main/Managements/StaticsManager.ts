@@ -1,4 +1,4 @@
-import {readFileSync} from 'node:fs';
+import {readFileSync, rmSync} from 'node:fs';
 import {join} from 'node:path';
 
 import {
@@ -73,7 +73,15 @@ export default class StaticsManager {
   }
 
   public async pull() {
-    return this.gitManager.pull(this.dir);
+    return new Promise((resolve, reject) => {
+      this.gitManager
+        .pull(this.dir)
+        .then(resolve)
+        .catch(() => {
+          rmSync(this.dir, {recursive: true, force: true});
+          this.clone().then(resolve).catch(reject);
+        });
+    });
   }
 
   public async getReleases() {
