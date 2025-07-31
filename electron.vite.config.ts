@@ -73,6 +73,7 @@ export default defineConfig(({mode}) => {
             context_menu: resolve(__dirname, 'src/renderer/context_menu.html'),
             error_page: resolve(__dirname, 'src/renderer/error_page.html'),
             toast_window: resolve(__dirname, 'src/renderer/toast_window.html'),
+            downloads_menu: resolve(__dirname, 'src/renderer/downloads_menu.html'),
           },
         },
         target: 'esnext',
