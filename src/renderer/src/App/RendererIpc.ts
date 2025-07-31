@@ -1029,7 +1029,7 @@ const rendererIpc = {
     offDone: () => ipc.removeAllListeners(browserDownloadChannels.onDone),
 
     openMenu: () => ipc.send(browserDownloadChannels.openDownloadsMenu),
-    openItem: (name: string) => ipc.send(browserDownloadChannels.openItem, name),
+    openItem: (name: string, action: 'open' | 'openFolder') => ipc.send(browserDownloadChannels.openItem, name, action),
     cancel: (name: string) => ipc.send(browserDownloadChannels.cancel, name),
     pause: (name: string) => ipc.send(browserDownloadChannels.pause, name),
     resume: (name: string) => ipc.send(browserDownloadChannels.resume, name),
