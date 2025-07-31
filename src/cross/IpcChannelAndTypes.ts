@@ -67,15 +67,6 @@ export type AppUpdateEventTypes = 'update-available' | 'download-progress' | 'up
 
 export type OnUpdatingExtensions = {id: string; step: string | 'done'};
 
-export type DownloadProgress = {
-  stage: 'done' | 'progress' | 'failed';
-  finalPath: string;
-  percentage: number;
-  fileName: string;
-  downloaded: number;
-  total: number;
-};
-
 export type CanGoType = {back: boolean; forward: boolean};
 
 export type SkippedPlugins = {folderName: string; message: string};

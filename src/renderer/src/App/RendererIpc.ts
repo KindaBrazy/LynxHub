@@ -15,6 +15,12 @@ import {
   RepositoryInfo,
 } from '../../../cross/CrossTypes';
 import {
+  browserDownloadChannels,
+  DownloadDoneInfo,
+  DownloadProgress,
+  DownloadStartInfo,
+} from '../../../cross/DownloadManagerTypes';
+import {
   AgentTypes,
   appDataChannels,
   appUpdateChannels,
@@ -29,7 +35,6 @@ import {
   CustomRunBehaviorData,
   DarkModeTypes,
   DiscordRunningAI,
-  DownloadProgress,
   eventsChannels,
   extensionsChannels,
   ExtensionsData,
@@ -1004,6 +1009,30 @@ const rendererIpc = {
 
   events: {
     card_PreCommandUninstall: (preCommands: string[]) => ipc.send(eventsChannels.card_PreCommandUninstall, preCommands),
+  },
+
+  downloadManager: {
+    onDownloadCount: (result: (event: IpcRendererEvent, count: number) => void) =>
+      ipc.on(browserDownloadChannels.mainDownloadCount, result),
+    offDownloadCount: () => ipc.removeAllListeners(browserDownloadChannels.mainDownloadCount),
+
+    onDlStart: (result: (event: IpcRendererEvent, info: DownloadStartInfo) => void) =>
+      ipc.on(browserDownloadChannels.onDlStart, result),
+    offDlStart: () => ipc.removeAllListeners(browserDownloadChannels.onDlStart),
+
+    onProgress: (result: (event: IpcRendererEvent, info: DownloadProgress) => void) =>
+      ipc.on(browserDownloadChannels.onProgress, result),
+    offProgress: () => ipc.removeAllListeners(browserDownloadChannels.onProgress),
+
+    onDone: (result: (event: IpcRendererEvent, info: DownloadDoneInfo) => void) =>
+      ipc.on(browserDownloadChannels.onDone, result),
+    offDone: () => ipc.removeAllListeners(browserDownloadChannels.onDone),
+
+    openMenu: () => ipc.send(browserDownloadChannels.openDownloadsMenu),
+    openItem: (name: string) => ipc.send(browserDownloadChannels.openItem, name),
+    cancel: (name: string) => ipc.send(browserDownloadChannels.cancel, name),
+    pause: (name: string) => ipc.send(browserDownloadChannels.pause, name),
+    resume: (name: string) => ipc.send(browserDownloadChannels.resume, name),
   },
 };
 

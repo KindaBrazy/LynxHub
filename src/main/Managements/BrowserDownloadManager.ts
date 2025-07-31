@@ -1,7 +1,19 @@
 import {basename, join} from 'node:path';
 
-import {app, DownloadItem, ipcMain, Session, WebContents} from 'electron';
+import {is} from '@electron-toolkit/utils';
+import {
+  app,
+  BrowserWindow,
+  BrowserWindowConstructorOptions,
+  DownloadItem,
+  ipcMain,
+  screen,
+  Session,
+  shell,
+  WebContents,
+} from 'electron';
 
+import icon from '../../../resources/icon.png?asset';
 import {
   browserDownloadChannels,
   DownloadDoneInfo,
@@ -10,14 +22,37 @@ import {
 } from '../../cross/DownloadManagerTypes';
 
 export default class BrowserDownloadManager {
+  private menuWindow: BrowserWindow;
   private downloadingItems: DownloadItem[];
-  private readonly webContents: WebContents;
+
+  private readonly mainWebContents: WebContents;
+  private readonly mainWindow: BrowserWindow;
   private readonly dlDirectory: string;
 
-  constructor(session: Session, webContents: WebContents) {
-    this.webContents = webContents;
+  private DOWNLOAD_MENU_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
+    width: 377,
+    height: 517,
+    frame: false,
+    show: false,
+    skipTaskbar: true,
+    resizable: false,
+    maximizable: false,
+    icon,
+    webPreferences: {
+      preload: join(__dirname, '../preload/index.cjs'),
+      sandbox: false,
+    },
+  };
+
+  constructor(session: Session, mainWindow: BrowserWindow) {
+    this.mainWindow = mainWindow;
+    this.mainWebContents = mainWindow.webContents;
+
     this.downloadingItems = [];
     this.dlDirectory = join(app.getPath('downloads'), 'LynxHub');
+
+    this.menuWindow = new BrowserWindow(this.DOWNLOAD_MENU_WINDOW_CONFIG);
+    this.initialWindow();
 
     session.on('will-download', (_, item) => {
       this.downloadingItems.push(item);
@@ -29,12 +64,54 @@ export default class BrowserDownloadManager {
     this.listenForMainChannels();
   }
 
+  private positionWindow() {
+    const [menuWidth, menuHeight] = this.menuWindow.getSize();
+
+    const {x: cursorX, y: cursorY} = screen.getCursorScreenPoint();
+    const defaultDisplay = screen.getDisplayNearestPoint({x: cursorX, y: cursorY});
+    const defaultWorkArea = defaultDisplay.workArea;
+    let newX = cursorX;
+    let newY = cursorY;
+
+    if (newX + menuWidth > defaultWorkArea.x + defaultWorkArea.width) {
+      newX = defaultWorkArea.x + defaultWorkArea.width - menuWidth - 10;
+    }
+    if (newY + menuHeight > defaultWorkArea.y + defaultWorkArea.height) {
+      newY = defaultWorkArea.y + defaultWorkArea.height - menuHeight;
+    }
+    if (newX < defaultWorkArea.x) {
+      newX = defaultWorkArea.x;
+    }
+    if (newY < defaultWorkArea.y) {
+      newY = defaultWorkArea.y;
+    }
+
+    try {
+      this.menuWindow.setPosition(Math.floor(newX), Math.floor(newY), true);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  private initialWindow() {
+    this.menuWindow.setParentWindow(this.mainWindow);
+
+    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+      this.menuWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/downloads_menu.html`);
+    } else {
+      this.menuWindow.loadFile(join(__dirname, `../renderer/downloads_menu.html`));
+    }
+
+    this.menuWindow.on('blur', () => this.menuWindow.hide());
+  }
+
   private getItemByName(name: string) {
     return this.downloadingItems.find(item => basename(item.getSavePath()) === name);
   }
 
   private sendToRenderer(channel: string, ...data: any) {
-    if (this.webContents && !this.webContents.isDestroyed()) this.webContents.send(channel, ...data);
+    if (!this.menuWindow.isDestroyed() && !this.menuWindow.webContents.isDestroyed())
+      this.menuWindow.webContents.send(channel, ...data);
   }
 
   private onDlStart(info: DownloadStartInfo) {
@@ -71,23 +148,38 @@ export default class BrowserDownloadManager {
         this.onProgress({name: itemName, totalBytes, receivedBytes, percent, bytesPerSecond, etaSecond});
       }
     });
+
+    this.mainWebContents.send(browserDownloadChannels.mainDownloadCount, this.downloadingItems.length);
   }
 
   private listenForMainChannels() {
     ipcMain.on(browserDownloadChannels.cancel, (_, name: string) => this.cancelItem(name));
     ipcMain.on(browserDownloadChannels.pause, (_, name: string) => this.pauseItem(name));
     ipcMain.on(browserDownloadChannels.resume, (_, name: string) => this.resumeItem(name));
+    ipcMain.on(browserDownloadChannels.openItem, (_, name: string) => this.openItem(name));
+
+    ipcMain.on(browserDownloadChannels.openDownloadsMenu, () => this.openDownloadsMenu());
   }
 
-  public cancelItem(name: string) {
+  private cancelItem(name: string) {
     this.getItemByName(name)?.cancel();
   }
 
-  public pauseItem(name: string) {
+  private pauseItem(name: string) {
     this.getItemByName(name)?.pause();
   }
 
-  public resumeItem(name: string) {
+  private resumeItem(name: string) {
     this.getItemByName(name)?.resume();
+  }
+
+  private openItem(name: string) {
+    const target = this.getItemByName(name)?.getSavePath();
+    if (target) shell.openPath(target);
+  }
+
+  private openDownloadsMenu() {
+    this.positionWindow();
+    this.menuWindow.show();
   }
 }

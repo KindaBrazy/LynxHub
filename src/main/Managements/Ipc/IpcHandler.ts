@@ -394,7 +394,7 @@ export function browserIPC() {
   }
 
   const browserManager: BrowserManager = new BrowserManager(mainWindow);
-  new BrowserDownloadManager(browserManager.getSession(), mainWindow.webContents);
+  new BrowserDownloadManager(browserManager.getSession(), mainWindow);
 
   ipcMain.on(browserChannels.createBrowser, (_, id: string) => browserManager.createBrowser(id));
   ipcMain.on(browserChannels.removeBrowser, (_, id: string) => browserManager.removeBrowser(id));
