@@ -6,6 +6,7 @@ import rendererIpc from '../src/App/RendererIpc';
 import {
   Clock_Icon,
   CloseSimple_Icon,
+  File_Icon,
   OpenFolder_Icon,
   Pause_Icon,
   Play_Icon,
@@ -20,7 +21,7 @@ type Props = {
 export default function DownloadItem({item, setItems}: Props) {
   const handleAction = (name: string, action: 'pause' | 'resume' | 'cancel' | 'open' | 'openFolder') => {
     if (action === 'open' || action === 'openFolder') {
-      rendererIpc.downloadManager.openItem(name);
+      rendererIpc.downloadManager.openItem(name, action);
     } else {
       setItems(prev =>
         prev.map(download => {
@@ -90,16 +91,27 @@ export default function DownloadItem({item, setItems}: Props) {
         {/* Action Buttons */}
         <ButtonGroup size="sm" variant="flat" className="flex" fullWidth>
           {item.status === 'completed' ? (
-            // TODO: Open taget file & open folder
-            <Button
-              onPress={() => {
-                handleAction(item.name, 'openFolder');
-              }}
-              color="success"
-              startContent={<OpenFolder_Icon className="size-3" />}
-              fullWidth>
-              Open Folder
-            </Button>
+            <>
+              <Button
+                onPress={() => {
+                  handleAction(item.name, 'open');
+                }}
+                color="success"
+                startContent={<File_Icon className="size-3" />}
+                fullWidth>
+                Open File
+              </Button>
+
+              <Button
+                onPress={() => {
+                  handleAction(item.name, 'openFolder');
+                }}
+                color="success"
+                startContent={<OpenFolder_Icon className="size-3" />}
+                fullWidth>
+                Open Path
+              </Button>
+            </>
           ) : (
             <>
               {item.status === 'downloading' ? (

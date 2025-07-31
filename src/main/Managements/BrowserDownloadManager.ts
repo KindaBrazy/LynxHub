@@ -156,7 +156,9 @@ export default class BrowserDownloadManager {
     ipcMain.on(browserDownloadChannels.cancel, (_, name: string) => this.cancelItem(name));
     ipcMain.on(browserDownloadChannels.pause, (_, name: string) => this.pauseItem(name));
     ipcMain.on(browserDownloadChannels.resume, (_, name: string) => this.resumeItem(name));
-    ipcMain.on(browserDownloadChannels.openItem, (_, name: string) => this.openItem(name));
+    ipcMain.on(browserDownloadChannels.openItem, (_, name: string, action: 'open' | 'openFolder') =>
+      this.openItem(name, action),
+    );
 
     ipcMain.on(browserDownloadChannels.openDownloadsMenu, () => this.openDownloadsMenu());
   }
@@ -173,9 +175,9 @@ export default class BrowserDownloadManager {
     this.getItemByName(name)?.resume();
   }
 
-  private openItem(name: string) {
-    const target = this.getItemByName(name)?.getSavePath();
-    if (target) shell.openPath(target);
+  private openItem(name: string, action: 'open' | 'openFolder') {
+    const savePath = this.getItemByName(name)?.getSavePath();
+    if (savePath) shell[action === 'open' ? 'openPath' : 'showItemInFolder'](savePath);
   }
 
   private openDownloadsMenu() {
