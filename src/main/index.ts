@@ -97,6 +97,7 @@ async function setupApp() {
 
 async function onAppReady() {
   storageManager.onAppReady();
+  storageManager.decryptBrowserData();
 
   if (!appManager) {
     setTimeout(onAppReady, toMs(1, 'seconds'));

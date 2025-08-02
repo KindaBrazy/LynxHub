@@ -29,8 +29,23 @@ import {
 import BaseStorage from './BaseStorage';
 
 class StorageManager extends BaseStorage {
+  private decryptedBrowserData!: BrowserHistoryData;
+
   constructor() {
     super();
+  }
+
+  public decryptBrowserData() {
+    const rawData = this.getData('browser');
+    this.decryptedBrowserData = {
+      recentAddress: rawData.recentAddress.map(url => lynxDecryptString(url)),
+      favoriteAddress: rawData.favoriteAddress.map(url => lynxDecryptString(url)),
+      historyAddress: rawData.historyAddress.map(url => lynxDecryptString(url)),
+      favIcons: rawData.favIcons.map(item => ({
+        url: lynxDecryptString(item.url),
+        favIcon: lynxDecryptString(item.favIcon),
+      })),
+    };
   }
 
   private getPreCommands(id: string): string[] {
@@ -488,21 +503,16 @@ class StorageManager extends BaseStorage {
   }
 
   public getBrowserDataSecurely(): BrowserHistoryData {
-    const rawData = this.getData('browser');
-
-    return {
-      recentAddress: rawData.recentAddress.map(url => lynxDecryptString(url)),
-      favoriteAddress: rawData.favoriteAddress.map(url => lynxDecryptString(url)),
-      historyAddress: rawData.historyAddress.map(url => lynxDecryptString(url)),
-      favIcons: rawData.favIcons.map(item => ({
-        url: lynxDecryptString(item.url),
-        favIcon: lynxDecryptString(item.favIcon),
-      })),
-    };
+    return this.decryptedBrowserData;
   }
 
   private updateBrowserDataSecurely(data: Partial<BrowserHistoryData>): void {
     const encryptedData: Partial<BrowserHistoryData> = JSON.parse(JSON.stringify(data));
+
+    this.decryptedBrowserData = {
+      ...this.decryptedBrowserData,
+      ...encryptedData,
+    };
 
     if (encryptedData.recentAddress) {
       encryptedData.recentAddress = encryptedData.recentAddress.map(url => lynxEncryptString(url));
