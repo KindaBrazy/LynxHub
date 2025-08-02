@@ -123,7 +123,7 @@ export default function Browser_AddressBar({runningCard, setCustomAddress}: Prop
     if (e.key === 'Enter') {
       e.preventDefault();
       try {
-        const url = formatWebAddress(inputValue || '');
+        const url = formatWebAddress(inputValue || '', true);
         if (setCustomAddress) {
           setCustomAddress(url);
         } else {

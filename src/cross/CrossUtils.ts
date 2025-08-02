@@ -177,13 +177,13 @@ export function isSearchQuery(input: string): boolean {
   return true;
 }
 
-export function formatWebAddress(address: string): string {
+export function formatWebAddress(address: string, detectSearchQuery?: boolean): string {
   if (!address) {
     return '';
   }
 
   // Check if the input is a search query rather than a URL
-  if (isSearchQuery(address)) {
+  if (detectSearchQuery && isSearchQuery(address)) {
     return `https://google.com/search?q=${encodeURIComponent(address)}`;
   }
 
