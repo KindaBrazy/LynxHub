@@ -320,6 +320,7 @@ export const storageUtilsChannels = {
 export const appWindowChannels = {
   hotkeysChange: 'window:hotkeys-change',
   showToast: 'window:show-toast',
+  toastBtnPress: 'window-toast-btn-press',
 };
 
 export const contextMenuChannels = {

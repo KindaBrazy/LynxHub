@@ -5,9 +5,10 @@ import {app, BrowserWindow, ipcMain} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
 import {ToastWindow_MessageType} from '../../cross/CrossTypes';
+import {appWindowChannels} from '../../cross/IpcChannelAndTypes';
 import {RelaunchApp} from '../Utilities/Utils';
 
-export default function ShowToastWindow(message: ToastWindow_MessageType) {
+export default function ShowToastWindow(message: ToastWindow_MessageType, onBtnPress?: (id: string) => void) {
   const show = () => {
     const window = new BrowserWindow({
       frame: false,
@@ -45,6 +46,9 @@ export default function ShowToastWindow(message: ToastWindow_MessageType) {
       app.exit();
     });
     ipcMain.on('restart_app', () => RelaunchApp(false));
+    ipcMain.on(appWindowChannels.toastBtnPress, (_, id: string) => {
+      if (onBtnPress) onBtnPress(id);
+    });
   };
 
   if (app.isReady()) {

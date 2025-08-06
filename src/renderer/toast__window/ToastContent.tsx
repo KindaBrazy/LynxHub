@@ -2,6 +2,7 @@ import {Button} from '@heroui/react';
 import {useEffect, useState} from 'react';
 
 import {ToastWindow_MessageType} from '../../cross/CrossTypes';
+import {appWindowChannels} from '../../cross/IpcChannelAndTypes';
 import {
   AlertCircle_Icon,
   AlertTriangle_Icon,
@@ -100,7 +101,7 @@ export default function ToastContent() {
       <div className="px-6 py-2 border-t border-gray-200/50 dark:border-gray-700/50">
         <div className="flex justify-between items-center">
           <div>
-            {toastMessage.buttons.includes('close') && (
+            {toastMessage.buttons && toastMessage.buttons.includes('close') && (
               <Button
                 size={'sm'}
                 onPress={handleClose}
@@ -112,7 +113,7 @@ export default function ToastContent() {
           </div>
           {/* Action buttons */}
           <div className="flex items-center gap-3">
-            {toastMessage.buttons.includes('exit') && (
+            {toastMessage.buttons && toastMessage.buttons.includes('exit') && (
               <Button
                 size={'sm'}
                 color={'danger'}
@@ -122,7 +123,7 @@ export default function ToastContent() {
                 Exit LynxHub
               </Button>
             )}
-            {toastMessage.buttons.includes('restart') && (
+            {toastMessage.buttons && toastMessage.buttons.includes('restart') && (
               <Button
                 size={'sm'}
                 color={'primary'}
@@ -132,6 +133,18 @@ export default function ToastContent() {
                 Restart LynxHub
               </Button>
             )}
+
+            {toastMessage.customButtons &&
+              toastMessage.customButtons.map(btn => (
+                <Button
+                  size="sm"
+                  key={btn.id}
+                  color={btn.color}
+                  onPress={() => window.ipc.send(appWindowChannels.toastBtnPress, btn.id)}
+                  className={`notDraggable ${btn.cursor === 'default' && 'cursor-default'}`}>
+                  {btn.label}
+                </Button>
+              ))}
           </div>
         </div>
       </div>
