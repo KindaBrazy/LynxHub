@@ -1,7 +1,7 @@
 import {platform} from 'node:os';
 import {dirname, isAbsolute, join} from 'node:path';
 
-import {app, dialog} from 'electron';
+import {app, BrowserWindow, dialog} from 'electron';
 import fs from 'graceful-fs';
 import {resolve} from 'path';
 
@@ -77,8 +77,8 @@ function setAppDataFolder(targetDir: string): void {
  * @returns A promise that resolves when a new folder is selected or rejects if cancelled
  */
 
-export async function selectNewAppDataFolder(): Promise<string> {
-  const window = appManager?.getMainWindow();
+export async function selectNewAppDataFolder(targetWindow?: BrowserWindow): Promise<string> {
+  const window = targetWindow || appManager?.getMainWindow();
   if (!window) {
     throw new Error('Main window is not available. Please ensure the application is properly initialized.');
   }
