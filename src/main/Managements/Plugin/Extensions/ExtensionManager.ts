@@ -1,5 +1,7 @@
 import path from 'node:path';
 
+import {includes, isString} from 'lodash';
+
 import {ExtensionsInfo} from '../../../../cross/CrossTypes';
 import {isDev} from '../../../../cross/CrossUtils';
 import {extensionsChannels} from '../../../../cross/IpcChannelAndTypes';
@@ -43,6 +45,10 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
       return results.filter(result => result.hasUpdate).map(result => result.id);
     } catch (error) {
       console.error('Error checking for updates:', error);
+
+      const errorMessage = isString(error) ? error : error.message;
+      if (includes(errorMessage, 'detected dubious ownership')) this.showGitOwnershipToast();
+
       return [];
     }
   }
