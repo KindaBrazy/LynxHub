@@ -5,6 +5,7 @@ import {
   AppUpdateData,
   AppUpdateInsiderData,
   ChosenArgumentsData,
+  CustomNotificationInfo,
   DiscordRPC,
   ExtensionsInfo,
   FolderListData,
@@ -16,6 +17,7 @@ import {
 } from '../../../cross/CrossTypes';
 import {
   browserDownloadChannels,
+  customNotifChannels,
   DownloadDoneInfo,
   DownloadProgress,
   DownloadStartInfo,
@@ -1033,6 +1035,17 @@ const rendererIpc = {
     cancel: (name: string) => ipc.send(browserDownloadChannels.cancel, name),
     pause: (name: string) => ipc.send(browserDownloadChannels.pause, name),
     resume: (name: string) => ipc.send(browserDownloadChannels.resume, name),
+  },
+
+  customNotification: {
+    onOpen: (result: (event: IpcRendererEvent, info: CustomNotificationInfo) => void) =>
+      ipc.on(customNotifChannels.onOpen, result),
+    onClose: (result: (event: IpcRendererEvent, key: string) => void) => ipc.on(customNotifChannels.onClose, result),
+
+    btnPress: (btnId: string, notifKey: string) => ipc.send(customNotifChannels.onBtnPress, btnId, notifKey),
+
+    offOpen: () => ipc.removeAllListeners(customNotifChannels.onOpen),
+    offClose: () => ipc.removeAllListeners(customNotifChannels.onClose),
   },
 };
 
