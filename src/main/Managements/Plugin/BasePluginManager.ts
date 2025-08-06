@@ -1,9 +1,10 @@
+import {execSync} from 'node:child_process';
 import http from 'node:http';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import fs from 'graceful-fs';
-import {compact} from 'lodash';
+import {compact, includes, isString} from 'lodash';
 import portFinder from 'portfinder';
 import handler from 'serve-handler';
 
@@ -13,9 +14,11 @@ import {ExtensionsInfo, FolderNames, ModulesInfo} from '../../../cross/CrossType
 import {extractGitUrl} from '../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {appManager} from '../../index';
-import {getAppDirectory} from '../AppDataManager';
+import {RelaunchApp} from '../../Utilities/Utils';
+import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
 import GitManager from '../GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
+import ShowToastWindow from '../ToastWindowManager';
 
 export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsInfo> {
   protected readonly host: string = 'localhost';
@@ -150,6 +153,34 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     return isChangedBranch;
   }
 
+  public showGitOwnershipToast() {
+    ShowToastWindow(
+      {
+        buttons: ['exit'],
+        customButtons: [
+          {id: 'add_safe', color: 'warning', label: 'Add to Safe Directories'},
+          {id: 'change_data_dir', color: 'success', label: 'Change Data Directory'},
+        ],
+        title: 'Git Ownership Warning',
+        message:
+          'Git has detected dubious ownership of the data directory. This can happen when the repository is owned by ' +
+          "a different user. You can either add data directory to Git's safe directories or choose a different " +
+          'location.',
+        type: 'warning',
+      },
+      (id, window) => {
+        if (id === 'add_safe') {
+          const DataDirectory = getAppDataPath();
+          execSync(`git config --global --add safe.directory '${DataDirectory}/*'`);
+        } else if (id === 'change_data_dir') {
+          selectNewAppDataFolder(window)
+            .then(() => RelaunchApp(false))
+            .catch(() => console.error('Error changing data directory'));
+        }
+      },
+    );
+  }
+
   public async updateAvailableList(): Promise<string[]> {
     try {
       const updateChecks = this.installedPluginInfo.map(async plugin => {
@@ -160,6 +191,10 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
       return compact(results.map(result => (result.available ? result.title : null)));
     } catch (error) {
       console.error('Error checking for updates:', error);
+
+      const errorMessage = isString(error) ? error : error.message;
+      if (includes(errorMessage, 'detected dubious ownership')) this.showGitOwnershipToast();
+
       return [];
     }
   }
