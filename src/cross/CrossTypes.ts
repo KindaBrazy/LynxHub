@@ -310,3 +310,17 @@ export type ToastWindow_MessageType = {
   title: string;
   buttons: ('close' | 'exit' | 'restart')[];
 };
+
+export type CustomNotificationInfo = {
+  key: string;
+  type: 'warning' | 'error' | 'info' | 'success';
+  message: string;
+  description: string;
+  buttons?: {
+    id: string;
+    label: string;
+    color: 'success' | 'danger' | 'warning' | 'default';
+    cursor?: 'default' | 'pointer';
+  }[];
+  closeBtn?: boolean;
+};

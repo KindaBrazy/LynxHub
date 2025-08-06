@@ -29,3 +29,9 @@ export const browserDownloadChannels = {
 
   mainDownloadCount: 'browserDL:main-download-count',
 };
+
+export const customNotifChannels = {
+  onOpen: 'customNotif-onOpen',
+  onClose: 'customNotif-onClose',
+  onBtnPress: 'customNotif-onBtnPress',
+};
