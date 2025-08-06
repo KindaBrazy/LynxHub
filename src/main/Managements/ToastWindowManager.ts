@@ -8,7 +8,10 @@ import {ToastWindow_MessageType} from '../../cross/CrossTypes';
 import {appWindowChannels} from '../../cross/IpcChannelAndTypes';
 import {RelaunchApp} from '../Utilities/Utils';
 
-export default function ShowToastWindow(message: ToastWindow_MessageType, onBtnPress?: (id: string) => void) {
+export default function ShowToastWindow(
+  message: ToastWindow_MessageType,
+  onBtnPress?: (id: string, window?: BrowserWindow) => void,
+) {
   const show = () => {
     const window = new BrowserWindow({
       frame: false,
@@ -47,7 +50,7 @@ export default function ShowToastWindow(message: ToastWindow_MessageType, onBtnP
     });
     ipcMain.on('restart_app', () => RelaunchApp(false));
     ipcMain.on(appWindowChannels.toastBtnPress, (_, id: string) => {
-      if (onBtnPress) onBtnPress(id);
+      if (onBtnPress) onBtnPress(id, window);
     });
   };
 
