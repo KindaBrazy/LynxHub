@@ -304,11 +304,19 @@ export type PatreonSupporter = {
   homePage: string;
 };
 
+type CustomBtn = {
+  id: string;
+  label: string;
+  color: 'success' | 'danger' | 'warning' | 'default';
+  cursor?: 'default' | 'pointer';
+};
+
 export type ToastWindow_MessageType = {
   type: 'success' | 'warning' | 'error' | 'info';
   message: string;
   title: string;
-  buttons: ('close' | 'exit' | 'restart')[];
+  buttons?: ('close' | 'exit' | 'restart')[];
+  customButtons?: CustomBtn[];
 };
 
 export type CustomNotificationInfo = {
@@ -316,11 +324,6 @@ export type CustomNotificationInfo = {
   type: 'warning' | 'error' | 'info' | 'success';
   message: string;
   description: string;
-  buttons?: {
-    id: string;
-    label: string;
-    color: 'success' | 'danger' | 'warning' | 'default';
-    cursor?: 'default' | 'pointer';
-  }[];
+  buttons?: CustomBtn[];
   closeBtn?: boolean;
 };
