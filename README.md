@@ -23,30 +23,10 @@
 Get started with LynxHub by downloading the latest version for your platform.
 
 | Channel      | Version                                                                 | Date       |
-| ------------ | ----------------------------------------------------------------------- | ---------- |
+| ------------ |-------------------------------------------------------------------------|------------|
 | Insider      | [**V3.1.0**](https://www.patreon.com/collection/1557749)                | 2025-07-22 |
 | Early Access | [**V3.1.0**](https://www.patreon.com/collection/714004)                 | 2025-07-22 |
-| Release      | [**V3.0.1**](https://github.com/KindaBrazy/LynxHub/releases/tag/V3.0.1) | 2025-06-12 |
-
-### Windows (10, 11)
-
-| [X64/ARM64 (.exe)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-win-Setup.exe) | [x64 (.exe)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-win_x64-Setup.exe) | [ARM64 (.exe)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-win_arm64-Setup.exe) | [Portable (X64/ARM64) (.exe)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-win-Portable.exe) | [Portable X64 (.exe)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-win-Portable_x64.exe) | [Portable ARM64 (.exe)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-win-Portable_arm64.exe) |
-| :-------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: |
-
-### Linux (Debian, Ubuntu)
-
-| [x64 (.deb)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_amd64.deb) | [x64 (.tar.gz)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_x64.tar.gz) | [ARM64 (.deb)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_arm64.deb) | [ARM64 (.tar.gz)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_arm64.tar.gz) | [Portable (X86/X64) (.AppImage)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux-Portable_x86_64.AppImage) | [Portable (ARM64) (.AppImage)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux-Portable_arm64.AppImage) |
-| :---------------------------------------------------------------------------------------------------------: | --------------------------------------------------------------------------------------------------------------- | :-----------------------------------------------------------------------------------------------------------: | ------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------: |
-
-### Linux (Red Hat, Fedora, SUSE)
-
-| [x86/x64 (.rpm)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_x86_64.rpm) | [x64 (.tar.gz)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_x64.tar.gz) | [AARCH64 (.rpm)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux_aarch64.rpm) | [Portable (X86/X64) (.AppImage)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux-Portable_x86_64.AppImage) | [Portable (ARM64) (.AppImage)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-linux-Portable_arm64.AppImage) |
-| :--------------------------------------------------------------------------------------------------------------: | --------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------------: |
-
-### macOS **(Beta)**
-
-| [x64 (.dmg)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-mac_x64.dmg) | [x64 (.zip)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-mac_x64.zip) | [ARM64 (.dmg)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-mac_arm64.dmg) | [ARM64 (.zip)](https://github.com/KindaBrazy/LynxHub/releases/download/V3.0.1/LynxHub-V3.0.1-mac_arm64.zip) |
-| :-----------------------------------------------------------------------------------------------------: | ------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------: | ----------------------------------------------------------------------------------------------------------- |
+| Release      | [**V3.1.0**](https://github.com/KindaBrazy/LynxHub/releases/tag/V3.1.0) | 2025-08-09 |
 
 > [!NOTE]
 > **macOS Beta Release**
