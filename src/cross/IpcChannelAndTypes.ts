@@ -397,6 +397,7 @@ export const browserChannels = {
   updateUserAgent: 'browser:update-user-agent',
 
   addOffset: 'browser:add-offset',
+  clearHistory: 'browser:clear-history',
 };
 
 export const staticsChannels = {

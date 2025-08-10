@@ -506,7 +506,7 @@ class StorageManager extends BaseStorage {
     return this.decryptedBrowserData;
   }
 
-  private updateBrowserDataSecurely(data: Partial<BrowserHistoryData>): void {
+  public updateBrowserDataSecurely(data: Partial<BrowserHistoryData>): void {
     const encryptedData: Partial<BrowserHistoryData> = JSON.parse(JSON.stringify(data));
 
     this.decryptedBrowserData = {
