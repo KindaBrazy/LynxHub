@@ -1,14 +1,36 @@
 {
   "$schema": "./releases_log_v2.schema.json",
-  "currentVersion": "3.1.0",
-  "currentBuild": 24,
-  "releaseDate": "2025-08-09",
+  "currentVersion": "3.1.1",
+  "currentBuild": 25,
+  "releaseDate": "2025-08-10",
   "earlyAccess": {
-    "version": "3.1.0",
-    "build": 24,
+    "version": "3.1.1",
+    "build": 25,
     "releaseDate": "2025-07-22"
   },
   "changeLog": [
+    {
+      "build": 25,
+      "version": "3.1.1",
+      "changes": [
+        {
+          "title": "✨ New Features",
+          "items": [
+            {
+              "label": "New browser setting option to clear history data"
+            }
+          ]
+        },
+        {
+          "title": "⚡ Improvements",
+          "items": [
+            {
+              "label": "Caching encrypt and decryption browser history data for performance improvements"
+            }
+          ]
+        }
+      ]
+    },
     {
       "build": 24,
       "version": "3.1.0",
