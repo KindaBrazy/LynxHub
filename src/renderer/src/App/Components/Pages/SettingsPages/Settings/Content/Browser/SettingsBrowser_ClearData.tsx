@@ -33,6 +33,7 @@ export default function SettingsBrowser_ClearData() {
     setTimeout(() => {
       setIsLoading(false);
       lynxTopToast(dispatch).success('Selected data cleared successfully!');
+      setSelected([]);
     }, 300);
   }, [selected, dispatch]);
 
