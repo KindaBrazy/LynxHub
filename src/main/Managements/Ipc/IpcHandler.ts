@@ -451,6 +451,7 @@ export function browserIPC() {
   });
 
   ipcMain.on(browserChannels.addOffset, (_, id: string, offset: WHType) => browserManager.addOffset(id, offset));
+  ipcMain.on(browserChannels.clearHistory, (_, selected: string[]) => browserManager.clearHistory(selected));
 }
 
 function statics() {

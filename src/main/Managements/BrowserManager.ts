@@ -234,6 +234,18 @@ export default class BrowserManager {
     }
   }
 
+  public clearHistory(selected: string[]) {
+    if (selected.includes('favorites')) {
+      storageManager.updateBrowserDataSecurely({favoriteAddress: []});
+    }
+    if (selected.includes('history')) {
+      storageManager.updateBrowserDataSecurely({historyAddress: [], recentAddress: []});
+    }
+    if (selected.includes('fav-icons')) {
+      storageManager.updateBrowserDataSecurely({favIcons: []});
+    }
+  }
+
   public updateUserAgent() {
     this.browsers.forEach(view => view.view.webContents.setUserAgent(getUserAgent()));
   }

@@ -965,6 +965,8 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('browser_add_offset', {id, offset});
       ipc.send(browserChannels.addOffset, id, offset);
     },
+
+    clearHistory: (selected: string[]) => ipc.send(browserChannels.clearHistory, selected),
   },
 
   statics: {
