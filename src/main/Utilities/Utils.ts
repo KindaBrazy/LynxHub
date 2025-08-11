@@ -234,6 +234,13 @@ export function lynxEncryptString(data: string): string {
   console.warn('safeStorage encryption not available. Data will not be encrypted.');
   return data; // Fallback: return original data if encryption isn't available
 }
+export function lynxEncryptStrings(data: string[]): string[] {
+  if (safeStorage.isEncryptionAvailable()) {
+    return data.map(item => safeStorage.encryptString(item).toString('hex'));
+  }
+  console.warn('safeStorage encryption not available. Data will not be encrypted.');
+  return data; // Fallback: return original data if encryption isn't available
+}
 
 /**
  * Helper function to decrypt a string using Electron's safeStorage.
@@ -244,6 +251,17 @@ export function lynxDecryptString(encryptedData: string): string {
   if (safeStorage.isEncryptionAvailable()) {
     try {
       return safeStorage.decryptString(Buffer.from(encryptedData, 'hex'));
+    } catch (e) {
+      console.error('Failed to decrypt data:', e);
+      return encryptedData; // Return original if decryption fails (e.g., malformed data)
+    }
+  }
+  return encryptedData; // Fallback: return original data if encryption isn't available
+}
+export function lynxDecryptStrings(encryptedData: string[]): string[] {
+  if (safeStorage.isEncryptionAvailable()) {
+    try {
+      return encryptedData.map(item => safeStorage.decryptString(Buffer.from(item, 'hex')));
     } catch (e) {
       console.error('Failed to decrypt data:', e);
       return encryptedData; // Return original if decryption fails (e.g., malformed data)
