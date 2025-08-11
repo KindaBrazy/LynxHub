@@ -1,4 +1,5 @@
-import {isArray, isEqual} from 'lodash';
+import {isEqual} from 'lodash';
+import normalizeUrl, {Options} from 'normalize-url';
 
 /**
  * Extracts the owner and repository name from a given GitHub | GitLab URL.
@@ -88,32 +89,21 @@ export function validateGitRepoUrl(url: string): string {
 }
 
 export function isValidURL(str: string | string[]): boolean {
-  const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+  const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z]{2,6})(?:[\\/\w .-]*)?$/i;
 
-  if (isArray(str)) {
-    return str.every(url => {
-      if (urlRegex.test(url)) {
-        return true;
-      }
-      try {
-        new URL(url);
-        return true;
-      } catch (_) {
-        return false;
-      }
-    });
-  }
+  const check = (url: string) => {
+    if (urlRegex.test(url)) {
+      return true;
+    }
+    try {
+      new URL(url);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
-  if (urlRegex.test(str)) {
-    return true;
-  }
-
-  try {
-    new URL(str);
-    return true;
-  } catch (_) {
-    return false;
-  }
+  return Array.isArray(str) ? str.every(check) : check(str);
 }
 
 export function isDev() {
@@ -251,14 +241,11 @@ export async function compareUrls(firstUrl: string, secondUrl: string, defaultPr
   if (isEqual(firstUrl, secondUrl)) return true;
 
   try {
-    const normalizeUrl = await import('normalize-url');
-
-    // @ts-ignore
-    const options: normalizeUrl.Options = {
+    const options: Options = {
       defaultProtocol: defaultProtocol || 'https',
     };
 
-    return normalizeUrl.default(firstUrl, options) === normalizeUrl.default(secondUrl, options);
+    return normalizeUrl(firstUrl, options) === normalizeUrl(secondUrl, options);
   } catch (e) {
     console.error('Comparing Urls', e);
     return false;
