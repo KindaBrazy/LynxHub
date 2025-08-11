@@ -24,7 +24,9 @@ import {
   getRelativePath,
   isPortable,
   lynxDecryptString,
+  lynxDecryptStrings,
   lynxEncryptString,
+  lynxEncryptStrings,
 } from '../../Utilities/Utils';
 import BaseStorage from './BaseStorage';
 
@@ -38,9 +40,9 @@ class StorageManager extends BaseStorage {
   public decryptBrowserData() {
     const rawData = this.getData('browser');
     this.decryptedBrowserData = {
-      recentAddress: rawData.recentAddress.map(url => lynxDecryptString(url)),
-      favoriteAddress: rawData.favoriteAddress.map(url => lynxDecryptString(url)),
-      historyAddress: rawData.historyAddress.map(url => lynxDecryptString(url)),
+      recentAddress: lynxDecryptStrings(rawData.recentAddress),
+      favoriteAddress: lynxDecryptStrings(rawData.favoriteAddress),
+      historyAddress: lynxDecryptStrings(rawData.historyAddress),
       favIcons: rawData.favIcons.map(item => ({
         url: lynxDecryptString(item.url),
         favIcon: lynxDecryptString(item.favIcon),
@@ -515,13 +517,13 @@ class StorageManager extends BaseStorage {
     };
 
     if (encryptedData.recentAddress) {
-      encryptedData.recentAddress = encryptedData.recentAddress.map(url => lynxEncryptString(url));
+      encryptedData.recentAddress = lynxEncryptStrings(encryptedData.recentAddress);
     }
     if (encryptedData.favoriteAddress) {
-      encryptedData.favoriteAddress = encryptedData.favoriteAddress.map(url => lynxEncryptString(url));
+      encryptedData.favoriteAddress = lynxEncryptStrings(encryptedData.favoriteAddress);
     }
     if (encryptedData.historyAddress) {
-      encryptedData.historyAddress = encryptedData.historyAddress.map(url => lynxEncryptString(url));
+      encryptedData.historyAddress = lynxEncryptStrings(encryptedData.historyAddress);
     }
     if (encryptedData.favIcons) {
       encryptedData.favIcons = encryptedData.favIcons.map(item => ({

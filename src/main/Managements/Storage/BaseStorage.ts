@@ -13,7 +13,14 @@ import {Get_Default_Hotkeys} from '../../../cross/HotkeyConstants';
 import {FavIcons} from '../../../cross/IpcChannelAndTypes';
 import StorageTypes from '../../../cross/StorageTypes';
 import {appManager} from '../../index';
-import {getAbsolutePath, getExePath, getUserAgent, isPortable, lynxEncryptString} from '../../Utilities/Utils';
+import {
+  getAbsolutePath,
+  getExePath,
+  getUserAgent,
+  isPortable,
+  lynxEncryptString,
+  lynxEncryptStrings,
+} from '../../Utilities/Utils';
 import AddBreadcrumb_Main from '../Breadcrumbs';
 import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 
@@ -137,9 +144,9 @@ class BaseStorage {
       const {recentAddress, favoriteAddress, historyAddress, favIcons} = this.getData('browser');
 
       this.updateData('browser', {
-        recentAddress: recentAddress.map(recent => lynxEncryptString(recent)),
-        favoriteAddress: favoriteAddress.map(favorite => lynxEncryptString(favorite)),
-        historyAddress: historyAddress.map(history => lynxEncryptString(history)),
+        recentAddress: lynxEncryptStrings(recentAddress),
+        favoriteAddress: lynxEncryptStrings(favoriteAddress),
+        historyAddress: lynxEncryptStrings(historyAddress),
         favIcons: favIcons.map(item => ({
           url: lynxEncryptString(item.url),
           favIcon: lynxEncryptString(item.favIcon),
