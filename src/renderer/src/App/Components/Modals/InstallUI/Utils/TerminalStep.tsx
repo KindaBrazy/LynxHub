@@ -149,7 +149,7 @@ export default function TerminalStep({id}: Props) {
         });
       };
 
-      JetBrainsMono.load(null, 5)
+      JetBrainsMono.load()
         .then(() => {
           initTerminal('JetBrainsMono');
         })
