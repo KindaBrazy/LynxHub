@@ -369,6 +369,7 @@ class BaseStorage {
       this.storage.write();
       this.addBreadcrumb();
     } catch (e) {
+      console.error(e);
       appManager?.showToast(`Failed to save app configs: ${e.message}`, 'error');
     }
   }
