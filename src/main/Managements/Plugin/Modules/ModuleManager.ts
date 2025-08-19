@@ -119,7 +119,7 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
     }
   }
 
-  private maxRetries = 10;
+  private maxRetries = 15;
   private currentRetries = 0;
 
   public listenForChannels() {
@@ -130,7 +130,7 @@ export default class ModuleManager extends BasePluginManager<ModulesInfo> {
         this.currentRetries++;
         setTimeout(() => {
           this.listenForChannels();
-        }, 500);
+        }, 1000);
       } else {
         console.error('Max retries reached for modules listenForChannels');
         this.currentRetries = 0;
