@@ -28,6 +28,19 @@ export default class BrowserManager {
     this.mainWindow.on('resize', () => this.setBounds());
   }
 
+  private getMainWindow() {
+    if (isNil(this.mainWindow) || this.mainWindow.isDestroyed()) return undefined;
+
+    return this.mainWindow;
+  }
+
+  private getMainWebContents() {
+    const window = this.getMainWindow();
+    if (isNil(window) || window.webContents.isDestroyed()) return undefined;
+
+    return window.webContents;
+  }
+
   private getViewByID(id: string) {
     return this.browsers.find(view => view.id === id)?.view;
   }
@@ -46,7 +59,9 @@ export default class BrowserManager {
     if (!isEmpty(this.browsers)) {
       this.browsers.forEach(browser => {
         setTimeout(() => {
-          const [width, height] = this.mainWindow.getContentSize();
+          const window = this.getMainWindow();
+          if (!window) return;
+          const [width, height] = window.getContentSize();
           browser.view.setBounds({
             x: 0,
             y: 80,
@@ -60,13 +75,16 @@ export default class BrowserManager {
 
   private listenForNavigate(id: string, webContents: WebContents) {
     const sendToRenderer = () => {
-      if (isNil(webContents) || webContents.isDestroyed()) return;
+      const mainWebContents = this.getMainWebContents();
+      if (!mainWebContents) return;
+      if (isNil(webContents) || isNil(mainWebContents) || webContents.isDestroyed()) return;
 
       const canGo: CanGoType = {
         back: webContents.navigationHistory.canGoBack(),
         forward: webContents.navigationHistory.canGoForward(),
       };
-      this.mainWindow.webContents.send(browserChannels.onCanGo, id, canGo);
+
+      mainWebContents.send(browserChannels.onCanGo, id, canGo);
     };
 
     sendToRenderer();
@@ -77,13 +95,17 @@ export default class BrowserManager {
     webContents.on('did-stop-loading', sendToRenderer);
 
     webContents.on('did-start-navigation', e => {
-      if (e.isMainFrame) this.mainWindow.webContents.send(browserChannels.onUrlChange, id, e.url);
+      const mainWebContents = this.getMainWebContents();
+      if (e.isMainFrame && !isNil(mainWebContents)) mainWebContents.send(browserChannels.onUrlChange, id, e.url);
     });
   }
 
   private listenForLoading(id: string, webContents: WebContents) {
     const onLoading = (isLoading: boolean) => {
-      this.mainWindow.webContents.send(browserChannels.isLoading, id, isLoading);
+      const mainWebContents = this.getMainWebContents();
+      if (isNil(mainWebContents)) return;
+
+      mainWebContents.send(browserChannels.isLoading, id, isLoading);
     };
 
     webContents.on('did-start-loading', () => onLoading(true));
@@ -92,18 +114,20 @@ export default class BrowserManager {
 
   private listenForTitle(id: string, webContents: WebContents) {
     webContents.on('page-title-updated', () => {
-      if (isNil(webContents) || webContents.isDestroyed()) return;
+      const mainWebContents = this.getMainWebContents();
+      if (isNil(webContents) || isNil(mainWebContents) || webContents.isDestroyed()) return;
 
-      this.mainWindow.webContents.send(browserChannels.onTitleChange, id, webContents.getTitle());
+      mainWebContents.send(browserChannels.onTitleChange, id, webContents.getTitle());
     });
   }
 
   private listenForFavIcon(id: string, webContents: WebContents) {
     webContents.on('page-favicon-updated', (_, favicons) => {
-      if (isNil(webContents) || webContents.isDestroyed()) return;
+      const mainWebContents = this.getMainWebContents();
+      if (isNil(webContents) || isNil(mainWebContents) || webContents.isDestroyed()) return;
 
       const url = favicons.find(icon => icon.includes('.ico')) || favicons[0] || '';
-      this.mainWindow.webContents.send(browserChannels.onFavIconChange, id, url);
+      mainWebContents.send(browserChannels.onFavIconChange, id, url);
 
       storageManager.addBrowserFavIcon(formatWebAddress(webContents.getURL()), url);
     });
@@ -193,7 +217,11 @@ export default class BrowserManager {
 
     webContents.setZoomFactor(storageManager.getData('cards').zoomFactor);
 
-    webContents.on('dom-ready', () => this.mainWindow.webContents.send(browserChannels.onDomReady, id, true));
+    webContents.on('dom-ready', () => {
+      const mainWebContents = this.getMainWebContents();
+      if (isNil(mainWebContents)) return;
+      mainWebContents.send(browserChannels.onDomReady, id, true);
+    });
 
     this.listenForNavigate(id, webContents);
     this.listenForLoading(id, webContents);
@@ -204,7 +232,9 @@ export default class BrowserManager {
     this.listenForFailLoad(webContents);
 
     this.browsers.push({id, view: newView});
-    this.mainWindow.contentView.addChildView(newView);
+
+    const mainWindow = this.getMainWindow();
+    if (!isNil(mainWindow)) mainWindow.contentView.addChildView(newView);
 
     this.setBounds();
 
@@ -252,8 +282,9 @@ export default class BrowserManager {
 
   public removeBrowser(id: string) {
     const browser = this.browsers.find(view => view.id === id);
-    if (browser) {
-      this.mainWindow.contentView.removeChildView(browser.view);
+    const mainWindow = this.getMainWindow();
+    if (browser && mainWindow) {
+      mainWindow.contentView.removeChildView(browser.view);
       browser.view.webContents.close();
       this.browsers = this.browsers.filter(view => view.id !== id);
     }
@@ -265,11 +296,13 @@ export default class BrowserManager {
 
   public setVisible(id: string, visible: boolean) {
     const view = this.getViewByID(id);
-    if (!view) return;
+    const mainWindow = this.getMainWindow();
+    if (isNil(view) || isNil(mainWindow)) return;
+
     if (visible) {
-      this.mainWindow.contentView.addChildView(view);
+      mainWindow.contentView.addChildView(view);
     } else {
-      this.mainWindow.contentView.removeChildView(view);
+      mainWindow.contentView.removeChildView(view);
     }
   }
 
