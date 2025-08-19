@@ -32,15 +32,11 @@ export function listenForContextChannels() {
 
     const {width, height} = dimensions;
 
-    if (typeof width === 'number' && typeof height === 'number') {
-      if (!isNaN(width) && !isNaN(height)) {
-        window.setSize(width, height, false);
-        window.setContentSize(width, height);
-      } else {
-        console.error('Received NaN for width or height:', dimensions);
-      }
+    if (typeof width === 'number' && typeof height === 'number' && Number.isFinite(width) && Number.isFinite(height)) {
+      window.setSize(width, height, false);
+      window.setContentSize(width, height);
     } else {
-      console.error('Width or height are not numbers:', dimensions);
+      console.error('Invalid dimensions received:', dimensions);
     }
   });
 
