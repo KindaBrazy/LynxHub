@@ -235,51 +235,54 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
 
   public async createServer() {
     return new Promise<{port: number; hostName: string}>((resolve, reject) => {
-      portFinder
-        .getPortPromise({port: this.port})
-        .then(async (port: number) => {
-          try {
-            this.port = port;
-            this.server = http.createServer((req, res) => {
-              try {
-                const origin = is.dev ? '*' : 'file://';
-                res.setHeader('Access-Control-Allow-Origin', origin);
-                return handler(req, res, {
-                  public: this.pluginPath,
-                });
-              } catch (handlerError) {
-                console.error('Error in request handler:', handlerError);
-                res.statusCode = 500;
-                res.end('Internal Server Error');
-                return;
-              }
-            });
+      const startServer = async () => {
+        try {
+          const port = await portFinder.getPortPromise({port: this.port});
+          this.port = port;
 
-            this.server.on('error', serverError => {
+          this.server = http.createServer((req, res) => {
+            try {
+              const origin = is.dev ? '*' : 'file://';
+              res.setHeader('Access-Control-Allow-Origin', origin);
+              return handler(req, res, {
+                public: this.pluginPath,
+              });
+            } catch (handlerError) {
+              console.error('Error in request handler:', handlerError);
+              res.statusCode = 500;
+              res.end('Internal Server Error');
+              return;
+            }
+          });
+
+          this.server.on('error', (serverError: NodeJS.ErrnoException) => {
+            if (serverError.code === 'EADDRINUSE') {
+              console.warn(`Port ${this.port} is still in use. Retrying with a new port...`);
+              this.closeServer();
+              startServer(); // Retry with a new port
+            } else {
               console.error('Server error:', serverError);
               reject(serverError);
-            });
+            }
+          });
 
-            this.server.listen(this.port, this.host, async () => {
-              try {
-                this.finalAddress = `http://${this.host}:${this.port}`;
-                await this.readPlugin();
-                resolve({hostName: this.host, port: this.port});
-              } catch (configError) {
-                console.error('Error writing config:', configError);
-                this.server?.close();
-                reject(configError);
-              }
-            });
-          } catch (setupError) {
-            console.error('Error setting up server:', setupError);
-            reject(setupError);
-          }
-        })
-        .catch(error => {
-          console.error('Error finding available port:', error);
+          this.server.listen(this.port, this.host, async () => {
+            try {
+              this.finalAddress = `http://${this.host}:${this.port}`;
+              await this.readPlugin();
+              resolve({hostName: this.host, port: this.port});
+            } catch (configError) {
+              console.error('Error writing config:', configError);
+              this.server?.close();
+              reject(configError);
+            }
+          });
+        } catch (error) {
+          console.error('Error finding or setting up server:', error);
           reject(error);
-        });
+        }
+      };
+      startServer();
     });
   }
 
