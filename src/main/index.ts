@@ -77,6 +77,9 @@ async function setupApp() {
     if (!isQuitting) {
       e.preventDefault();
       stopAllPty().then(() => {
+        moduleManager?.closeServer();
+        extensionManager?.closeServer();
+
         isQuitting = true;
         app.quit();
       });

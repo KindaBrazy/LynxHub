@@ -283,6 +283,12 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     });
   }
 
+  public closeServer(): void {
+    if (this.server && this.server.listening) {
+      this.server.close();
+    }
+  }
+
   public async reloadServer(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.server?.close(async err => {
