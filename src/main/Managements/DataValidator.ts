@@ -29,7 +29,15 @@ export class ValidateCards {
    */
   private startWatching(): void {
     this.dirs.forEach(dir => {
-      const watcher = watch(dir, {depth: 0, persistent: true});
+      const watcher = watch(dir, {
+        depth: 0,
+        persistent: true,
+        ignored: path => {
+          const isPageFile = path.includes('pagefile.sys');
+          const isSystemDir = path.includes('System Volume Information') || path.includes('Recovery');
+          return isPageFile || isSystemDir;
+        },
+      });
       watcher.on('unlinkDir', this.handleUnlinkedDir);
       this.watchers.push(watcher);
     });
