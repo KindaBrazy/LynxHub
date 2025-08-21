@@ -69,9 +69,13 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal}: Props) => {
 
   const copyText = useCallback(() => {
     if (!isEmpty(selectedText)) {
-      navigator.clipboard.writeText(selectedText);
-      lynxTopToast(dispatch).success(`Copied to clipboard`);
-      terminal.current?.clearSelection();
+      try {
+        navigator.clipboard.writeText(selectedText);
+        lynxTopToast(dispatch).success(`Copied to clipboard`);
+        terminal.current?.clearSelection();
+      } catch (e) {
+        lynxTopToast(dispatch).warning(`Failed to copy. Please try again.`);
+      }
     }
   }, [selectedText, terminal]);
 
