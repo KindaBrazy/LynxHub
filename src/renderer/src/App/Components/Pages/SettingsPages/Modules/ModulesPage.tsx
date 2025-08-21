@@ -28,7 +28,7 @@ export default function ModulesPage({show}: Props) {
     setUpdatingAll(true);
     rendererIpc.module.updateAllModules().then(() => {
       setUpdatingAll(false);
-      dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value: false}));
+      dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value: []}));
     });
   }, []);
 
