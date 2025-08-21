@@ -273,7 +273,7 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
               resolve({hostName: this.host, port: this.port});
             } catch (configError) {
               console.error('Error writing config:', configError);
-              this.server?.close();
+              this.closeServer();
               reject(configError);
             }
           });
@@ -294,25 +294,29 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
 
   public async reloadServer(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.server?.close(async err => {
-        if (err) {
-          console.error('reloadServer: ', err);
-          reject(err);
-          return;
-        }
+      if (this.server && this.server.listening) {
+        this.server?.close(async err => {
+          if (err) {
+            console.error('reloadServer: ', err);
+            reject(err);
+            return;
+          }
 
-        try {
-          this.pluginData = [];
-          this.mainMethods = [];
-          this.installedPluginInfo = [];
+          try {
+            this.pluginData = [];
+            this.mainMethods = [];
+            this.installedPluginInfo = [];
 
-          await this.createServer();
-          appManager?.getWebContent()?.send(this.reloadChannel);
-          resolve();
-        } catch (error) {
-          reject(error);
-        }
-      });
+            await this.createServer();
+            appManager?.getWebContent()?.send(this.reloadChannel);
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        });
+      } else {
+        reject('Server is not running');
+      }
     });
   }
 
