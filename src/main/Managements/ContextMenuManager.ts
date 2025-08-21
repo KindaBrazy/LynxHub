@@ -9,7 +9,7 @@ export default function contextMenuManager(contents: WebContents) {
   webContents.push(contents);
   contents.on('context-menu', (_e, params) => {
     const window = appManager?.getContextMenuWindow();
-    if (!window) return;
+    if (!window || window.isDestroyed()) return;
 
     appManager?.setCustomContextPosition(undefined);
     window.webContents?.send(
@@ -25,10 +25,17 @@ function contentByID(id: number) {
   return webContents.find(content => content.id === id);
 }
 
+function sendMainMessage(channel: string, ...args: any[]) {
+  const mainWebcontents = appManager?.getWebContent();
+  if (!mainWebcontents || mainWebcontents.isDestroyed()) return;
+
+  mainWebcontents.send(channel, ...args);
+}
+
 export function listenForContextChannels() {
   ipcMain.on(contextMenuChannels.resizeWindow, (_e, dimensions: {width: number | any; height: number | any}) => {
     const window = appManager?.getContextMenuWindow();
-    if (!window) return;
+    if (!window || window.isDestroyed()) return;
 
     const {width, height} = dimensions;
 
@@ -48,18 +55,25 @@ export function listenForContextChannels() {
   ipcMain.on(contextMenuChannels.openExternal, (_, url: string) => shell.openExternal(url));
   ipcMain.on(contextMenuChannels.downloadImage, (_, id: number, url: string) => contentByID(id)?.downloadURL(url));
 
-  ipcMain.on(contextMenuChannels.showWindow, () => appManager?.getContextMenuWindow()?.show());
+  ipcMain.on(contextMenuChannels.showWindow, () => {
+    const window = appManager?.getContextMenuWindow();
+    if (!window || window.isDestroyed()) return;
+
+    window.show();
+  });
   ipcMain.on(contextMenuChannels.hideWindow, () => {
-    appManager?.getContextMenuWindow()?.hide();
-    appManager?.getMainWindow()?.focus();
+    const window = appManager?.getContextMenuWindow();
+    const mainWindow = appManager?.getMainWindow();
+    if (!window || !mainWindow || window.isDestroyed() || window.isDestroyed()) return;
+
+    window.hide();
+    mainWindow.focus();
   });
 
   ipcMain.on(contextMenuChannels.replaceMisspelling, (_, id: number, text: string) =>
     contentByID(id)?.replaceMisspelling(text),
   );
-  ipcMain.on(contextMenuChannels.newTab, (_, url: string) =>
-    appManager?.getWebContent()?.send(tabsChannels.onNewTab, url),
-  );
+  ipcMain.on(contextMenuChannels.newTab, (_, url: string) => sendMainMessage(tabsChannels.onNewTab, url));
   ipcMain.on(contextMenuChannels.navigate, (_, id: number, action: 'back' | 'forward' | 'refresh') => {
     switch (action) {
       case 'back':
@@ -74,13 +88,9 @@ export function listenForContextChannels() {
     }
   });
 
-  ipcMain.on(contextMenuChannels.relaunchAI, (_, id: string) => {
-    appManager?.getWebContent()?.send(contextMenuChannels.onRelaunchAI, id);
-  });
-  ipcMain.on(contextMenuChannels.stopAI, (_, id: string) => {
-    appManager?.getWebContent()?.send(contextMenuChannels.onStopAI, id);
-  });
-  ipcMain.on(contextMenuChannels.removeTab, (_, tabID: string) => {
-    appManager?.getWebContent()?.send(contextMenuChannels.onRemoveTab, tabID);
-  });
+  ipcMain.on(contextMenuChannels.relaunchAI, (_, id: string) => sendMainMessage(contextMenuChannels.onRelaunchAI, id));
+  ipcMain.on(contextMenuChannels.stopAI, (_, id: string) => sendMainMessage(contextMenuChannels.onStopAI, id));
+  ipcMain.on(contextMenuChannels.removeTab, (_, tabID: string) =>
+    sendMainMessage(contextMenuChannels.onRemoveTab, tabID),
+  );
 }
