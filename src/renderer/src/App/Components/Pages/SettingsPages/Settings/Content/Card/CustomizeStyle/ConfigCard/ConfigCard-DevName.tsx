@@ -22,9 +22,9 @@ export default function ConfigCardDevName() {
   return (
     <LynxSwitch
       size="sm"
-      className="text-start"
       enabled={cardsDevName}
       title=" Developer Name"
+      className="text-start !pr-4"
       onEnabledChange={onEnabledChange}
       description=" Show developer name"
     />

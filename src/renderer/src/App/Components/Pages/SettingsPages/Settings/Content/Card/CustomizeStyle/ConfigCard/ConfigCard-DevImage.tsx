@@ -22,9 +22,9 @@ export default function ConfigCardDevImage() {
   return (
     <LynxSwitch
       size="sm"
-      className="text-start"
       title="Developer Image"
       enabled={cardsDevImage}
+      className="text-start !pr-4"
       onEnabledChange={onEnabledChange}
       description="Show developer avatar"
     />

@@ -22,9 +22,9 @@ export default function ConfigCardRepoInfo() {
   return (
     <LynxSwitch
       size="sm"
-      className="text-start"
       enabled={cardsRepoInfo}
       title=" Repository Info"
+      className="text-start !pr-4"
       onEnabledChange={onEnabledChange}
       description=" Show repository Information"
     />
