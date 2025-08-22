@@ -19,7 +19,7 @@ export default function DownloadMenu() {
         receivedBytes: 0,
         status: 'downloading',
       };
-      setDownloads(prevState => [...prevState, newItem]);
+      setDownloads(prevState => [newItem, ...prevState]);
     });
     rendererIpc.downloadManager.onProgress((_, info) => {
       setDownloads(prevState =>

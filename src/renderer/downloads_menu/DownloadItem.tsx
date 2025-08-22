@@ -142,7 +142,7 @@ export default function DownloadItem({item, setItems}: Props) {
                   onPress={() => {
                     handleAction(item.name, 'clear');
                   }}>
-                  Clear from list
+                  Remove from list
                 </Button>
               ) : (
                 <Button
