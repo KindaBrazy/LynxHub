@@ -26,11 +26,7 @@ export type ExtensionEvents = {
   /** Will be called before a card start installing */
   before_card_install: {id: string};
   card_install_addStep: {id: string; addStep: (atIndex: number, title: string, content: FC) => void};
-  /** Add terminal commands to be executed before module terminal action
-   * (like before runTerminalScript or executeTerminalCommands) */
-  card_install_command_before_terminal_action: {id: string; addCommand: (commands: string | string[]) => void};
   card_collect_user_input: {id: string; addElements: (elements: FC[]) => void};
-  card_start_pre_commands: {id: string; addCommand: (commands: string | string[]) => void};
 };
 
 export type ExtensionEvents_IPC = {
