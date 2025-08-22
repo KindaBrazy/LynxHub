@@ -9,7 +9,7 @@ export default function CustomRun({id}: Props) {
   return (
     <motion.div initial="init" animate="animate" className="space-y-5" variants={tabContentVariants}>
       <CustomRunCommands id={id} />
-      <CustomRunBehavior id="id" />
+      <CustomRunBehavior id={id} />
     </motion.div>
   );
 }
