@@ -1,4 +1,4 @@
-export type DownloadProgress = {
+export type DownloadManagerProgress = {
   name: string;
   totalBytes: number;
   receivedBytes: number;
@@ -10,10 +10,9 @@ export type DownloadProgress = {
 export type DownloadStartInfo = {name: string; startTime: number; url: string; totalBytes: number};
 export type DownloadDoneInfo = {name: string; state: 'completed' | 'cancelled' | 'interrupted'};
 
-export type DownloadItemInfo = DownloadProgress & {status: 'downloading' | 'paused' | 'completed' | 'cancelled'} & Omit<
-    DownloadStartInfo,
-    'name' | 'totalBytes'
-  >;
+export type DownloadItemInfo = DownloadManagerProgress & {
+  status: 'downloading' | 'paused' | 'completed' | 'cancelled';
+} & Omit<DownloadStartInfo, 'name' | 'totalBytes'>;
 
 export const browserDownloadChannels = {
   onDone: 'browserDL:on-done',

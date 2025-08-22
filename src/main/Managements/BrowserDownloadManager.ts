@@ -17,7 +17,7 @@ import icon from '../../../resources/icon.png?asset';
 import {
   browserDownloadChannels,
   DownloadDoneInfo,
-  DownloadProgress,
+  DownloadManagerProgress,
   DownloadStartInfo,
 } from '../../cross/DownloadManagerTypes';
 
@@ -118,7 +118,7 @@ export default class BrowserDownloadManager {
     this.sendToRenderer(browserDownloadChannels.onDlStart, info);
   }
 
-  private onProgress(info: DownloadProgress) {
+  private onProgress(info: DownloadManagerProgress) {
     this.sendToRenderer(browserDownloadChannels.onProgress, info);
   }
 

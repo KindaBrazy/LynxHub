@@ -19,7 +19,7 @@ import {
   browserDownloadChannels,
   customNotifChannels,
   DownloadDoneInfo,
-  DownloadProgress,
+  DownloadManagerProgress,
   DownloadStartInfo,
 } from '../../../cross/DownloadManagerTypes';
 import {
@@ -37,6 +37,7 @@ import {
   CustomRunBehaviorData,
   DarkModeTypes,
   DiscordRunningAI,
+  DownloadProgress,
   eventsChannels,
   extensionsChannels,
   ExtensionsData,
@@ -1024,7 +1025,7 @@ const rendererIpc = {
       ipc.on(browserDownloadChannels.onDlStart, result),
     offDlStart: () => ipc.removeAllListeners(browserDownloadChannels.onDlStart),
 
-    onProgress: (result: (event: IpcRendererEvent, info: DownloadProgress) => void) =>
+    onProgress: (result: (event: IpcRendererEvent, info: DownloadManagerProgress) => void) =>
       ipc.on(browserDownloadChannels.onProgress, result),
     offProgress: () => ipc.removeAllListeners(browserDownloadChannels.onProgress),
 
