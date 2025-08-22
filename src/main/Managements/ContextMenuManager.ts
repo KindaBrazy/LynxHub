@@ -4,7 +4,6 @@ import {is} from '@electron-toolkit/utils';
 import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain, screen, shell, WebContents} from 'electron';
 
 import {browserChannels, contextMenuChannels, tabsChannels} from '../../cross/IpcChannelAndTypes';
-import {appManager} from '../index';
 import BrowserManager from './BrowserManager';
 
 export default class ContextMenuManager {
@@ -35,10 +34,7 @@ export default class ContextMenuManager {
     this.mainWindow = mainWindow;
 
     this.contextMenuWindow.webContents.on('before-input-event', (_, input) => {
-      if (input.key.toLowerCase() === 'escape') {
-        this.contextMenuWindow?.hide();
-        mainWindow.focus();
-      }
+      if (input.key.toLowerCase() === 'escape') this.hideContextMenu();
     });
 
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
@@ -47,10 +43,7 @@ export default class ContextMenuManager {
       this.contextMenuWindow.loadFile(path.join(__dirname, `../renderer/context_menu.html`));
     }
 
-    this.contextMenuWindow.on('resize', () => this.positionContextMenuAtCursor());
-    this.contextMenuWindow.on('show', () => this.positionContextMenuAtCursor());
-
-    this.contextMenuWindow.on('blur', () => this.contextMenuWindow?.hide());
+    this.contextMenuWindow.on('blur', () => this.hideContextMenu(false));
   }
 
   public setCustomContextPosition(customPosition?: {x: number; y: number}): void {
@@ -97,24 +90,9 @@ export default class ContextMenuManager {
   }
 
   public listenForContextChannels() {
-    ipcMain.on(contextMenuChannels.resizeWindow, (_e, dimensions: {width: number | any; height: number | any}) => {
-      const window = this.contextMenuWindow;
-      if (!window || window.isDestroyed()) return;
-
-      const {width, height} = dimensions;
-
-      if (
-        typeof width === 'number' &&
-        typeof height === 'number' &&
-        Number.isFinite(width) &&
-        Number.isFinite(height)
-      ) {
-        window.setSize(width, height, false);
-        window.setContentSize(width, height);
-      } else {
-        console.error('Invalid dimensions received:', dimensions);
-      }
-    });
+    ipcMain.on(contextMenuChannels.resizeWindow, (_e, dimensions: {width: number | any; height: number | any}) =>
+      this.resizeContextMenu(dimensions),
+    );
 
     ipcMain.on(contextMenuChannels.copy, (_, id: number) => this.getContentById(id)?.copy());
     ipcMain.on(contextMenuChannels.paste, (_, id: number) => this.getContentById(id)?.paste());
@@ -126,20 +104,8 @@ export default class ContextMenuManager {
       this.getContentById(id)?.downloadURL(url),
     );
 
-    ipcMain.on(contextMenuChannels.showWindow, () => {
-      const window = this.contextMenuWindow;
-      if (!window || window.isDestroyed()) return;
-
-      window.show();
-    });
-    ipcMain.on(contextMenuChannels.hideWindow, () => {
-      const window = this.contextMenuWindow;
-      const mainWindow = appManager?.getMainWindow();
-      if (!window || !mainWindow || window.isDestroyed() || window.isDestroyed()) return;
-
-      window.hide();
-      mainWindow.focus();
-    });
+    ipcMain.on(contextMenuChannels.showWindow, () => this.showContextMenu());
+    ipcMain.on(contextMenuChannels.hideWindow, () => this.hideContextMenu());
 
     ipcMain.on(contextMenuChannels.replaceMisspelling, (_, id: number, text: string) =>
       this.getContentById(id)?.replaceMisspelling(text),
@@ -172,6 +138,19 @@ export default class ContextMenuManager {
     return this.contextMenuWindow;
   }
 
+  private showContextMenu() {
+    if (!this.contextMenuWindow || this.contextMenuWindow.isDestroyed()) return;
+
+    this.positionContextMenuAtCursor();
+    this.contextMenuWindow.show();
+  }
+  private hideContextMenu(focusMainWindow: boolean = true) {
+    if (!this.contextMenuWindow || this.contextMenuWindow.isDestroyed()) return;
+
+    this.contextMenuWindow.hide();
+    if (focusMainWindow && this.mainWindow && !this.mainWindow.isDestroyed()) this.mainWindow?.focus();
+  }
+
   private getContentById(id: number) {
     return this.webContents.find(content => content.id === id);
   }
@@ -181,6 +160,20 @@ export default class ContextMenuManager {
     if (!mainWebcontents || mainWebcontents.isDestroyed()) return;
 
     mainWebcontents.send(channel, ...args);
+  }
+
+  private resizeContextMenu(dimensions: {width: number | any; height: number | any}) {
+    const window = this.contextMenuWindow;
+    if (!window || window.isDestroyed()) return;
+
+    const {width, height} = dimensions;
+
+    if (typeof width === 'number' && typeof height === 'number' && Number.isFinite(width) && Number.isFinite(height)) {
+      window.setSize(width, height, false);
+      window.setContentSize(width, height);
+    } else {
+      console.error('Invalid dimensions received:', dimensions);
+    }
   }
 
   private positionContextMenuAtCursor() {
