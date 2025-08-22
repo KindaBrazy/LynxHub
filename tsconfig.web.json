@@ -8,6 +8,9 @@
     "module/src/**/*"
   ],
   "compilerOptions": {
+    "moduleResolution": "bundler",
+    "module": "ESNext",
+    "allowSyntheticDefaultImports": true,
     "composite": true,
     "jsx": "react-jsx",
     "baseUrl": ".",
