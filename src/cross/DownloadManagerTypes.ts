@@ -23,6 +23,7 @@ export const browserDownloadChannels = {
   cancel: 'browserDL:cancel',
   pause: 'browserDL:pause',
   resume: 'browserDL:resume',
+  clear: 'browserDL:clear',
   openDownloadsMenu: 'browserDL:open-downloads-menu',
 
   openItem: 'browserDL:open-item',

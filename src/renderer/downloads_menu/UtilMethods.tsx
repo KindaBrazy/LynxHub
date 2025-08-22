@@ -24,7 +24,7 @@ export const getStatusIcon = (status: string) => {
     case 'completed':
       return <CheckDuo_Icon className="size-5 text-success" />;
     case 'cancelled':
-      return <CloseSimple_Icon className="size-4 text-danger" />;
+      return <CloseSimple_Icon className="size-4 text-danger/70" />;
     default:
       return null;
   }
