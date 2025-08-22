@@ -10,7 +10,8 @@ export default class ContextMenuManager {
   private contextMenuWindow?: BrowserWindow;
   private mainWindow?: BrowserWindow;
   private customContextPosition: {x: number; y: number} | undefined;
-
+  private animationInterval?: NodeJS.Timeout;
+  private isHiding = false;
   private webContents: WebContents[] = [];
 
   private static readonly CONTEXT_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
@@ -28,6 +29,13 @@ export default class ContextMenuManager {
       sandbox: false,
     },
   };
+
+  private clearAnimation() {
+    if (this.animationInterval) {
+      clearInterval(this.animationInterval);
+      this.animationInterval = undefined;
+    }
+  }
 
   public createWindow(mainWindow: BrowserWindow) {
     this.contextMenuWindow = new BrowserWindow({...ContextMenuManager.CONTEXT_WINDOW_CONFIG, parent: mainWindow});
@@ -141,14 +149,60 @@ export default class ContextMenuManager {
   private showContextMenu() {
     if (!this.contextMenuWindow || this.contextMenuWindow.isDestroyed()) return;
 
-    this.positionContextMenuAtCursor();
-    this.contextMenuWindow.show();
-  }
-  private hideContextMenu(focusMainWindow: boolean = true) {
-    if (!this.contextMenuWindow || this.contextMenuWindow.isDestroyed()) return;
+    this.isHiding = false;
 
-    this.contextMenuWindow.hide();
-    if (focusMainWindow && this.mainWindow && !this.mainWindow.isDestroyed()) this.mainWindow?.focus();
+    this.clearAnimation();
+
+    this.positionContextMenuAtCursor();
+    this.contextMenuWindow.setOpacity(0);
+    this.contextMenuWindow.show();
+
+    let opacity = 0;
+    this.animationInterval = setInterval(() => {
+      const window = this.contextMenuWindow;
+      if (!window || window.isDestroyed()) {
+        this.clearAnimation();
+        return;
+      }
+
+      opacity += 0.2;
+      if (opacity >= 1) {
+        this.clearAnimation();
+        window.setOpacity(1);
+      } else {
+        window.setOpacity(opacity);
+      }
+    }, 10);
+  }
+
+  private hideContextMenu(focusMainWindow: boolean = true) {
+    const window = this.contextMenuWindow;
+
+    if (!window || window.isDestroyed() || !window.isVisible() || this.isHiding) {
+      return;
+    }
+
+    this.isHiding = true;
+
+    this.clearAnimation();
+
+    let opacity = 1;
+    this.animationInterval = setInterval(() => {
+      opacity -= 0.2;
+      if (opacity <= 0) {
+        this.clearAnimation();
+        window.hide();
+        window.setOpacity(1);
+
+        this.isHiding = false;
+
+        if (focusMainWindow && this.mainWindow && !this.mainWindow.isDestroyed()) {
+          this.mainWindow?.focus();
+        }
+      } else {
+        window.setOpacity(opacity);
+      }
+    }, 10);
   }
 
   private getContentById(id: number) {
@@ -169,7 +223,7 @@ export default class ContextMenuManager {
     const {width, height} = dimensions;
 
     if (typeof width === 'number' && typeof height === 'number' && Number.isFinite(width) && Number.isFinite(height)) {
-      window.setSize(width, height, false);
+      window.setSize(width, height);
       window.setContentSize(width, height);
     } else {
       console.error('Invalid dimensions received:', dimensions);
