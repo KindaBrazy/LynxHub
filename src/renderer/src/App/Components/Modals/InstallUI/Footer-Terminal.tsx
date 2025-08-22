@@ -12,6 +12,16 @@ export default function FooterTerminal({restartTerminal, onDoneTerminal}: Props)
     setIsRestartOpen(false);
   };
 
+  const foundError = () => {
+    setIsNextOpen(false);
+    setIsRestartOpen(true);
+  };
+
+  const next = () => {
+    setIsNextOpen(false);
+    onDoneTerminal();
+  };
+
   return (
     <>
       <Popover
@@ -56,10 +66,10 @@ export default function FooterTerminal({restartTerminal, onDoneTerminal}: Props)
           <span className="font-bold w-full text-sm">Installation complete?</span>
           <span>Please confirm that all commands finished successfully without any errors.</span>
           <div className="flex flex-row w-full mt-2">
-            <Button size="sm" color="danger" variant="flat">
+            <Button size="sm" color="danger" variant="flat" onPress={foundError}>
               Found error
             </Button>
-            <Button size="sm" variant="flat" color="success" onPress={onDoneTerminal}>
+            <Button size="sm" variant="flat" onPress={next} color="success">
               All good
             </Button>
           </div>
