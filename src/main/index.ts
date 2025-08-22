@@ -25,6 +25,7 @@ import ShowToastWindow from './Managements/ToastWindowManager';
 import TrayManager from './Managements/TrayManager';
 import downloadDU from './Utilities/CalculateFolderSize/DownloadDU';
 import {getPrivilegeText} from './Utilities/Utils';
+import ContextMenuManager from './Managements/ContextMenuManager';
 
 if (!isDev()) {
   log.initialize();
@@ -40,6 +41,7 @@ export let trayManager: TrayManager | undefined = undefined;
 export let discordRpcManager: DiscordRpcManager | undefined = undefined;
 export let cardsValidator: ValidateCards | undefined = undefined;
 export let moduleManager: ModuleManager | undefined = undefined;
+export const contextMenuManager: ContextMenuManager = new ContextMenuManager();
 
 export const extensionManager: ExtensionManager = new ExtensionManager();
 export const appStartTime = Date.now();

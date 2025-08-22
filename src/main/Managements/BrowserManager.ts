@@ -8,9 +8,8 @@ import url from 'url';
 import icon from '../../../resources/icon.png?asset';
 import {formatWebAddress} from '../../cross/CrossUtils';
 import {browserChannels, CanGoType, tabsChannels, WHType} from '../../cross/IpcChannelAndTypes';
-import {appManager, storageManager} from '../index';
+import {appManager, contextMenuManager, storageManager} from '../index';
 import {getUserAgent} from '../Utilities/Utils';
-import contextMenuManager from './ContextMenuManager';
 import RegisterHotkeys from './HotkeysManager';
 
 export default class BrowserManager {
@@ -240,7 +239,7 @@ export default class BrowserManager {
 
     this.setupWindowOpenHandler(webContents);
     RegisterHotkeys(webContents);
-    contextMenuManager(webContents);
+    contextMenuManager.listenForMenu(webContents);
   }
 
   public focusWebView(id: string) {
