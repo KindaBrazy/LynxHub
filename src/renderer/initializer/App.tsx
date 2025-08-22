@@ -3,11 +3,11 @@ import {ConfigProvider, Steps, theme} from 'antd';
 import {useState} from 'react';
 
 import {APP_ICON_TRANSPARENT, APP_NAME} from '../../cross/CrossConstants';
-import {isLinuxPortable} from '../src/App/Utils/UtilHooks';
 import CancelBtn from './CancelBtn';
 import initializerIpc from './InitializerIpc';
 import {useGitValidation} from './Steps/GitValidation';
 import {useMainModuleInstallation} from './Steps/MainModuleInstallation';
+import {isLinuxPortable} from './Utils';
 
 // Are you sure you want to exit the initial process?
 
