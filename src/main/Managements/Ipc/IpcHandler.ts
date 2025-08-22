@@ -9,7 +9,6 @@ import {
   appDataChannels,
   browserChannels,
   ChangeWindowState,
-  contextMenuChannels,
   DarkModeTypes,
   DiscordRunningAI,
   extensionsChannels,
@@ -32,7 +31,14 @@ import {
   winChannels,
 } from '../../../cross/IpcChannelAndTypes';
 import StorageTypes, {InstalledCard} from '../../../cross/StorageTypes';
-import {appManager, discordRpcManager, extensionManager, moduleManager, storageManager} from '../../index';
+import {
+  appManager,
+  contextMenuManager,
+  discordRpcManager,
+  extensionManager,
+  moduleManager,
+  storageManager,
+} from '../../index';
 import calcFolderSize from '../../Utilities/CalculateFolderSize/CalculateFolderSize';
 import {
   getAbsolutePath,
@@ -45,7 +51,6 @@ import {
 import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../AppDataManager';
 import BrowserDownloadManager from '../BrowserDownloadManager';
 import BrowserManager from '../BrowserManager';
-import {listenForContextChannels} from '../ContextMenuManager';
 import GitManager from '../GitManager';
 import StaticsManager from '../StaticsManager';
 import {
@@ -100,7 +105,7 @@ function win() {
   nativeTheme.on('updated', () => {
     if (storageManager.getData('app').darkMode === 'system') {
       appManager?.getWebContent()?.send(winChannels.onDarkMode, getSystemDarkMode());
-      appManager?.getContextMenuWindow()?.webContents.send(winChannels.onDarkMode, getSystemDarkMode());
+      contextMenuManager.getWindow()?.webContents.send(winChannels.onDarkMode, getSystemDarkMode());
     }
   });
 
@@ -396,6 +401,8 @@ export function browserIPC() {
   const browserManager: BrowserManager = new BrowserManager(mainWindow);
   new BrowserDownloadManager(browserManager.getSession(), mainWindow);
 
+  contextMenuManager.listenForBrowserChannels(browserManager);
+
   ipcMain.on(browserChannels.createBrowser, (_, id: string) => browserManager.createBrowser(id));
   ipcMain.on(browserChannels.removeBrowser, (_, id: string) => browserManager.removeBrowser(id));
   ipcMain.on(browserChannels.loadURL, (_, id: string, url: string) => browserManager.loadURL(id, url));
@@ -413,29 +420,6 @@ export function browserIPC() {
   ipcMain.on(browserChannels.setZoomFactor, (_, id: string, factor: number) =>
     browserManager.setZoomFactor(id, factor),
   );
-
-  ipcMain.on(browserChannels.openFindInPage, (_, id: string, customPosition?: {x: number; y: number}) => {
-    appManager?.setCustomContextPosition(customPosition);
-    appManager?.getContextMenuWindow()?.webContents.send(contextMenuChannels.onFind, id);
-  });
-  ipcMain.on(browserChannels.openZoom, (_, id: string) => {
-    appManager?.setCustomContextPosition(undefined);
-    appManager
-      ?.getContextMenuWindow()
-      ?.webContents.send(contextMenuChannels.onZoom, id, browserManager.getCurrentZoom(id));
-  });
-  ipcMain.on(contextMenuChannels.openTerminateAI, (_, id: string) => {
-    appManager?.setCustomContextPosition(undefined);
-    appManager?.getContextMenuWindow()?.webContents.send(contextMenuChannels.onTerminateAI, id);
-  });
-  ipcMain.on(contextMenuChannels.openTerminateTab, (_, id: string, customPosition?: {x: number; y: number}) => {
-    appManager?.setCustomContextPosition(customPosition);
-    appManager?.getContextMenuWindow()?.webContents.send(contextMenuChannels.onTerminateTab, id);
-  });
-  ipcMain.on(contextMenuChannels.openCloseApp, () => {
-    appManager?.setCustomContextPosition(undefined);
-    appManager?.getContextMenuWindow()?.webContents.send(contextMenuChannels.onCloseApp);
-  });
 
   ipcMain.on(browserChannels.reload, (_, id: string) => browserManager.reload(id));
   ipcMain.on(browserChannels.goBack, (_, id: string) => browserManager.goBack(id));
@@ -489,7 +473,7 @@ export function listenToAllChannels() {
   extensions();
   extensionsIpc();
 
-  listenForContextChannels();
+  contextMenuManager.listenForContextChannels();
 
   statics();
 }
