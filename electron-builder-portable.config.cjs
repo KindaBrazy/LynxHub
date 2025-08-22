@@ -23,8 +23,10 @@ const config = {
   npmRebuild: false,
   artifactName: '${productName}-V${version}-${os}_${arch}.${ext}',
   win: {
-    target: [{target: 'nsis', arch: ['x64', 'arm64']}],
+    target: [{target: 'portable', arch: ['x64', 'arm64']}],
   },
+  portable: {artifactName: '${productName}-V${version}-${os}-Portable_${arch}.${ext}'},
+  appImage: {artifactName: '${productName}-V${version}-${os}-Portable_${arch}.${ext}'},
   nsis: {
     artifactName: '${productName}-V${version}-${os}_${arch}-Setup.${ext}',
     shortcutName: '${productName}',
@@ -35,30 +37,13 @@ const config = {
     createDesktopShortcut: 'always',
   },
   linux: {
-    target: [
-      {target: 'deb', arch: ['x64', 'arm64']},
-      {target: 'rpm', arch: ['x64', 'arm64']},
-      {target: 'tar.gz', arch: ['x64', 'arm64']},
-    ],
+    target: [{target: 'AppImage', arch: ['x64', 'arm64']}],
     synopsis: 'Cross-platform, extensible terminal/browser for AI management.',
     description:
       'Open-source, cross-platform terminal and browser, designed for managing AI. Highly modular and extensible,' +
       " it's the all-in-one environment for AI power users.",
     category: 'ArtificialIntelligence',
     executableArgs: ['--no-sandbox'],
-  },
-  mac: {
-    artifactName: '${productName}-V${version}-${os}_${arch}.${ext}',
-    icon: 'build/icon-darwin.png',
-    entitlementsInherit: 'build/entitlements.mac.plist',
-    extendInfo: {
-      NSDocumentsFolderUsageDescription: 'LynxHub uses the Documents folder to store application data.',
-    },
-    notarize: false,
-    target: [
-      {target: 'dmg', arch: ['x64', 'arm64']},
-      {target: 'zip', arch: ['x64', 'arm64']},
-    ],
   },
   publish: {
     provider: 'github',
