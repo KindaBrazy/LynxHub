@@ -3,6 +3,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import isBoolean from 'lodash/isBoolean';
 import {useSelector} from 'react-redux';
 
+import rendererIpc from '../../RendererIpc';
 import {RootState} from '../Store';
 
 type AppState = {
@@ -20,8 +21,21 @@ type AppStateTypes = {
   [K in keyof AppState]: AppState[K];
 };
 
+const storageData = await rendererIpc.storage.get('app');
+
+let darkMode: boolean = true;
+
+if (storageData.darkMode === 'dark') {
+  darkMode = true;
+} else if (storageData.darkMode === 'light') {
+  darkMode = false;
+} else {
+  const systemDark = await rendererIpc.win.getSystemDarkMode();
+  darkMode = systemDark === 'dark';
+}
+
 const initialState: AppState = {
-  darkMode: true,
+  darkMode,
   fullscreen: false,
   isOnline: false,
   maximized: false,

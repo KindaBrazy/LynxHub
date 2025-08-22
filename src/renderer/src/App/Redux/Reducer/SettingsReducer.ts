@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
 import {TooltipStatus} from '../../../../../cross/IpcChannelAndTypes';
+import rendererIpc from '../../RendererIpc';
 import {RootState} from '../Store';
 
 type SettingState = {
@@ -36,26 +37,41 @@ type SettingStateTypes = {
   [K in keyof SettingState]: SettingState[K];
 };
 
+const storageData = await rendererIpc.storage.getAll();
+
+const {cardCompactMode, cardsDevImage, cardsDevName, cardsDesc, cardsRepoInfo} = storageData.cards;
+const {
+  tooltipStatus,
+  closeConfirm,
+  closeTabConfirm,
+  terminateAIConfirm,
+  openLastSize,
+  dynamicAppTitle,
+  openLinkExternal,
+  hardwareAcceleration,
+  disableLoadingAnimations,
+} = storageData.app;
+
 const initialState: SettingState = {
-  cardsCompactMode: false,
-  cardsDevImage: true,
-  cardsDevName: false,
-  cardsDesc: true,
-  cardsRepoInfo: true,
-  tooltipLevel: 'essential',
-  closeConfirm: true,
-  closeTabConfirm: true,
-  terminateAIConfirm: true,
-  openLastSize: false,
+  cardsCompactMode: cardCompactMode,
+  cardsDevImage,
+  cardsDevName,
+  cardsDesc,
+  cardsRepoInfo,
+  tooltipLevel: tooltipStatus,
+  closeConfirm,
+  closeTabConfirm,
+  terminateAIConfirm,
+  openLastSize,
   updatedModules: [],
   newModules: [],
   moduleUpdateAvailable: [],
   updateAvailable: false,
   extensionsUpdateAvailable: [],
-  dynamicAppTitle: true,
-  openLinkExternal: false,
-  hardwareAcceleration: true,
-  disableLoadingAnimations: false,
+  dynamicAppTitle,
+  openLinkExternal,
+  hardwareAcceleration,
+  disableLoadingAnimations,
   checkCustomUpdate: false,
 };
 

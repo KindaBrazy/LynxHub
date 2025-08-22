@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
 import {LynxHotkey, LynxInput} from '../../../../../cross/IpcChannelAndTypes';
+import rendererIpc from '../../RendererIpc';
 import {RootState} from '../Store';
 
 type HotkeysState = {
@@ -22,6 +23,8 @@ type HotkeysStateTypes = {
   [K in keyof HotkeysState]: HotkeysState[K];
 };
 
+const {hotkeys} = await rendererIpc.storage.get('app');
+
 const initialState: HotkeysState = {
   input: {
     key: '',
@@ -38,7 +41,7 @@ const initialState: HotkeysState = {
   key: '',
   type: '',
   copyPressed: false,
-  hotkeys: [],
+  hotkeys,
 };
 
 const hotkeysSlice = createSlice({
