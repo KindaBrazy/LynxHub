@@ -101,9 +101,12 @@ export default class PtyManager {
   public clear(): void {
     if (this.isRunning && this.process) {
       const LINE_ENDING = platform() ? '\r' : '\n';
-      this.write('\x15');
+      const clearEscape = platform() === 'win32' ? '\x1b' : '\x15';
+
+      this.write(clearEscape);
       this.write(`clear${LINE_ENDING}`);
-      this.write('\x15');
+      this.write(clearEscape);
+
       this.process.clear();
     }
   }
