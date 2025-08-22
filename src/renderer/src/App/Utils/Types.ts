@@ -13,3 +13,11 @@ export type RunningCard = {
   isEmptyRunning: boolean;
   browserTitle: string;
 };
+
+export type HeroToastPlacement =
+  | 'bottom-right'
+  | 'bottom-left'
+  | 'bottom-center'
+  | 'top-right'
+  | 'top-left'
+  | 'top-center';
