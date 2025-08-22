@@ -1037,6 +1037,7 @@ const rendererIpc = {
     cancel: (name: string) => ipc.send(browserDownloadChannels.cancel, name),
     pause: (name: string) => ipc.send(browserDownloadChannels.pause, name),
     resume: (name: string) => ipc.send(browserDownloadChannels.resume, name),
+    clear: (name: string) => ipc.send(browserDownloadChannels.clear, name),
   },
 
   customNotification: {

@@ -19,9 +19,12 @@ type Props = {
 };
 
 export default function DownloadItem({item, setItems}: Props) {
-  const handleAction = (name: string, action: 'pause' | 'resume' | 'cancel' | 'open' | 'openFolder') => {
+  const handleAction = (name: string, action: 'pause' | 'resume' | 'cancel' | 'open' | 'openFolder' | 'clear') => {
     if (action === 'open' || action === 'openFolder') {
       rendererIpc.downloadManager.openItem(name, action);
+    } else if (action === 'clear') {
+      setItems(prev => prev.filter(download => download.name !== name));
+      rendererIpc.downloadManager.clear(name);
     } else {
       setItems(prev =>
         prev.map(download => {
@@ -134,15 +137,24 @@ export default function DownloadItem({item, setItems}: Props) {
                 </Button>
               ) : null}
 
-              <Button
-                onPress={() => {
-                  handleAction(item.name, 'cancel');
-                }}
-                color="danger"
-                startContent={<CloseSimple_Icon className="size-3" />}
-                className={`${(item.status === 'downloading' || item.status === 'paused') && 'max-w-24'}`}>
-                Cancel
-              </Button>
+              {item.status === 'cancelled' ? (
+                <Button
+                  onPress={() => {
+                    handleAction(item.name, 'clear');
+                  }}>
+                  Clear from list
+                </Button>
+              ) : (
+                <Button
+                  onPress={() => {
+                    handleAction(item.name, 'cancel');
+                  }}
+                  color="danger"
+                  startContent={<CloseSimple_Icon className="size-3" />}
+                  className={`${(item.status === 'downloading' || item.status === 'paused') && 'max-w-24'}`}>
+                  Cancel
+                </Button>
+              )}
             </>
           )}
         </ButtonGroup>

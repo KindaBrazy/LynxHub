@@ -156,6 +156,7 @@ export default class BrowserDownloadManager {
     ipcMain.on(browserDownloadChannels.cancel, (_, name: string) => this.cancelItem(name));
     ipcMain.on(browserDownloadChannels.pause, (_, name: string) => this.pauseItem(name));
     ipcMain.on(browserDownloadChannels.resume, (_, name: string) => this.resumeItem(name));
+    ipcMain.on(browserDownloadChannels.clear, (_, name: string) => this.clearItem(name));
     ipcMain.on(browserDownloadChannels.openItem, (_, name: string, action: 'open' | 'openFolder') =>
       this.openItem(name, action),
     );
@@ -173,6 +174,12 @@ export default class BrowserDownloadManager {
 
   private resumeItem(name: string) {
     this.getItemByName(name)?.resume();
+  }
+
+  private clearItem(name: string) {
+    this.downloadingItems = this.downloadingItems.filter(item => basename(item.getSavePath()) !== name);
+    this.mainWebContents.send(browserDownloadChannels.mainDownloadCount, this.downloadingItems.length);
+    if (this.downloadingItems.length === 0) this.menuWindow.hide();
   }
 
   private openItem(name: string, action: 'open' | 'openFolder') {
