@@ -1,5 +1,4 @@
 import {addToast, Button} from '@heroui/react';
-import {ToastPlacement} from '@heroui/toast/dist/use-toast';
 import {Dispatch, UnknownAction} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, useEffect, useMemo, useState} from 'react';
@@ -10,7 +9,7 @@ import {appActions} from '../Redux/Reducer/AppReducer';
 import {useCardsState} from '../Redux/Reducer/CardsReducer';
 import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
 import rendererIpc from '../RendererIpc';
-import {UpdatingCard} from './Types';
+import {HeroToastPlacement, UpdatingCard} from './Types';
 
 /**
  * Hook to get an installed card by its ID.
@@ -72,7 +71,7 @@ function topToast(options: {
   color?: 'success' | 'default' | 'foreground' | 'primary' | 'secondary' | 'warning' | 'danger' | undefined;
   timeout?: number;
   promise?: Promise<any>;
-  placement: ToastPlacement;
+  placement: HeroToastPlacement;
 }) {
   const {title, color = 'success', timeout = 2000, promise, placement} = options;
 
@@ -99,7 +98,7 @@ function topToast(options: {
   });
 }
 
-export const lynxTopToast = (dispatch: Dispatch<UnknownAction>, placement: ToastPlacement = 'top-center') => {
+export const lynxTopToast = (dispatch: Dispatch<UnknownAction>, placement: HeroToastPlacement = 'top-center') => {
   dispatch(appActions.setToastPlacement(placement));
   return {
     success: (title: string, timeout?: number) => topToast({title, color: 'success', timeout, placement}),
