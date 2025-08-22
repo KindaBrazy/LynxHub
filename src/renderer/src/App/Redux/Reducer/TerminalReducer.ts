@@ -11,17 +11,7 @@ type TerminalStateTypes = {
   [K in keyof TerminalState]: TerminalState[K];
 };
 
-const initialState: TerminalState = {
-  outputColor: true,
-  useConpty: 'auto',
-  scrollBack: 10000,
-  fontSize: 14,
-  cursorStyle: 'bar',
-  cursorInactiveStyle: 'none',
-  blinkCursor: true,
-  resizeDelay: 77,
-  closeTabOnExit: true,
-};
+const initialState: TerminalState = await rendererIpc.storage.get('terminal');
 
 const terminalSlice = createSlice({
   initialState,

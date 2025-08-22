@@ -4,7 +4,6 @@ import {useDispatch} from 'react-redux';
 
 import {APP_BUILD_NUMBER} from '../../../../cross/CrossConstants';
 import {toMs} from '../../../../cross/CrossUtils';
-import StorageTypes from '../../../../cross/StorageTypes';
 import AddBreadcrumb_Renderer from '../../../Breadcrumbs';
 import {useAllCards} from '../Modules/ModuleLoader';
 import {appActions, useAppState} from '../Redux/Reducer/AppReducer';
@@ -13,7 +12,6 @@ import {hotkeysActions} from '../Redux/Reducer/HotkeysReducer';
 import {modalActions} from '../Redux/Reducer/ModalsReducer';
 import {settingsActions} from '../Redux/Reducer/SettingsReducer';
 import {tabsActions, useTabsState} from '../Redux/Reducer/TabsReducer';
-import {terminalActions} from '../Redux/Reducer/TerminalReducer';
 import {userActions} from '../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
@@ -100,52 +98,9 @@ export const useOnlineEvents = () => {
 export const useStorageData = () => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    rendererIpc.storage.getAll().then((storage: StorageTypes) => {
-      dispatch(cardsActions.setInstalledCards(storage.cards.installedCards));
-      dispatch(cardsActions.setAutoUpdate(storage.cards.autoUpdateCards));
-      dispatch(cardsActions.setAutoUpdateExtensions(storage.cards.autoUpdateExtensions));
-      dispatch(cardsActions.setPinnedCards(storage.cards.pinnedCards));
-      dispatch(cardsActions.setRecentlyUsedCards(storage.cards.recentlyUsedCards));
-      dispatch(cardsActions.setHomeCategory(storage.app.homeCategory));
-      dispatch(cardsActions.setDuplicates(storage.cards.duplicated));
-
-      dispatch(terminalActions.initState(storage.terminal));
-
-      if (storage.app.darkMode === 'dark') {
-        dispatch(appActions.setAppState({key: 'darkMode', value: true}));
-      } else if (storage.app.darkMode === 'light') {
-        dispatch(appActions.setAppState({key: 'darkMode', value: false}));
-      } else {
-        rendererIpc.win.getSystemDarkMode().then(result => {
-          dispatch(appActions.setAppState({key: 'darkMode', value: result === 'dark'}));
-        });
-      }
-
-      dispatch(settingsActions.setSettingsState({key: 'cardsCompactMode', value: storage.cards.cardCompactMode}));
-      dispatch(settingsActions.setSettingsState({key: 'cardsDevImage', value: storage.cards.cardsDevImage}));
-      dispatch(settingsActions.setSettingsState({key: 'cardsDevName', value: storage.cards.cardsDevName}));
-      dispatch(settingsActions.setSettingsState({key: 'cardsDesc', value: storage.cards.cardsDesc}));
-      dispatch(settingsActions.setSettingsState({key: 'cardsRepoInfo', value: storage.cards.cardsRepoInfo}));
-
-      dispatch(settingsActions.setSettingsState({key: 'tooltipLevel', value: storage.app.tooltipStatus}));
-      dispatch(settingsActions.setSettingsState({key: 'closeConfirm', value: storage.app.closeConfirm}));
-      dispatch(settingsActions.setSettingsState({key: 'closeTabConfirm', value: storage.app.closeTabConfirm}));
-      dispatch(settingsActions.setSettingsState({key: 'terminateAIConfirm', value: storage.app.terminateAIConfirm}));
-      dispatch(settingsActions.setSettingsState({key: 'openLastSize', value: storage.app.openLastSize}));
-      dispatch(settingsActions.setSettingsState({key: 'dynamicAppTitle', value: storage.app.dynamicAppTitle}));
-      dispatch(settingsActions.setSettingsState({key: 'openLinkExternal', value: storage.app.openLinkExternal}));
-      dispatch(
-        settingsActions.setSettingsState({key: 'hardwareAcceleration', value: storage.app.hardwareAcceleration}),
-      );
-      dispatch(
-        settingsActions.setSettingsState({
-          key: 'disableLoadingAnimations',
-          value: storage.app.disableLoadingAnimations,
-        }),
-      );
-
-      if (storage.app.startupLastActivePage) {
-        const lastPage = storage.app.lastPage;
+    rendererIpc.storage.get('app').then(app => {
+      if (app.startupLastActivePage) {
+        const lastPage = app.lastPage;
         dispatch(
           tabsActions.setActivePage({
             pageID: lastPage,
@@ -154,8 +109,6 @@ export const useStorageData = () => {
           }),
         );
       }
-
-      dispatch(hotkeysActions.setHotkeys(storage.app.hotkeys));
     });
   }, [dispatch]);
 };

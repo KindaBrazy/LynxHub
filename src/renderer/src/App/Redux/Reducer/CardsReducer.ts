@@ -31,20 +31,31 @@ type CardsStateTypes = {
   [K in keyof CardsState]: CardsState[K];
 };
 
-const initialState: CardsState = {
-  autoUpdate: [],
-  installedCards: [],
+const {
+  installedCards,
+  autoUpdateCards,
+  pinnedCards,
+  recentlyUsedCards,
+  autoUpdateExtensions,
+  duplicated,
+  checkUpdateInterval,
+} = await rendererIpc.storage.get('cards');
 
-  pinnedCards: [],
+const {homeCategory} = await rendererIpc.storage.get('app');
+
+const initialState: CardsState = {
+  autoUpdate: autoUpdateCards,
+  installedCards,
+  pinnedCards,
   updateAvailable: [],
   updatingCards: [],
   runningCard: [],
-  recentlyUsedCards: [],
-  homeCategory: [],
-  autoUpdateExtensions: [],
+  recentlyUsedCards,
+  homeCategory,
+  autoUpdateExtensions,
   updatingExtensions: undefined,
-  duplicates: [],
-  checkUpdateInterval: 30,
+  duplicates: duplicated,
+  checkUpdateInterval,
   activeTab: '',
 };
 
