@@ -109,7 +109,7 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
           )}
         </ModalBody>
         <ModalFooter>
-          <Button variant="light" color="warning" onPress={onOpenChange} className="cursor-default">
+          <Button variant="light" color="warning" onPress={onOpenChange}>
             <span className="font-semibold">Close</span>
           </Button>
         </ModalFooter>

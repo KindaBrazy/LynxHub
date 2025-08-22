@@ -117,7 +117,7 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
               {!isSavingArgs && 'Save Arguments'}
             </Button>
           )}
-          <Button color="warning" variant="light" onPress={onClose} className="cursor-default">
+          <Button color="warning" variant="light" onPress={onClose}>
             Close
           </Button>
         </ModalFooter>

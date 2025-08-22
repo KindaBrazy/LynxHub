@@ -64,8 +64,7 @@ const CardReadmeModal = ({isOpen, url, title, tabID}: Props) => {
               onOpenChange(false);
             }}
             variant="light"
-            color="warning"
-            className="cursor-default">
+            color="warning">
             Close
           </Button>
         </ModalFooter>

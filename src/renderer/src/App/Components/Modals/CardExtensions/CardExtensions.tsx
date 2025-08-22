@@ -127,12 +127,7 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
           <div className="flex w-full flex-row justify-between">
             <div>
               {currentTab === 'installed' && (
-                <Checkbox
-                  size="sm"
-                  isSelected={autoUpdate}
-                  onValueChange={onPress}
-                  className="cursor-default"
-                  isDisabled={!isExtensionAvailable}>
+                <Checkbox size="sm" isSelected={autoUpdate} onValueChange={onPress} isDisabled={!isExtensionAvailable}>
                   Auto Update on Launch
                 </Checkbox>
               )}
@@ -148,7 +143,7 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
                   {!isUpdateAvailable ? 'No Updates Available' : isUpdatingAll ? 'Updating...' : 'Update All'}
                 </Button>
               )}
-              <Button color="warning" variant="light" onPress={onClose} className="cursor-default">
+              <Button color="warning" variant="light" onPress={onClose}>
                 Close
               </Button>
             </div>
