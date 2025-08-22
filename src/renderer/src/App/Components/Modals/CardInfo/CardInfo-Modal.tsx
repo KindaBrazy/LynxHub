@@ -62,6 +62,7 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
       isOpen={isOpen}
       onClose={onClose}
       placement="center"
+      isDismissable={false}
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
       className="overflow-hidden border-2 border-foreground/5 drop-shadow-lg"
@@ -94,8 +95,7 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
               onClose();
             }}
             color="warning"
-            variant="light"
-            className="cursor-default">
+            variant="light">
             Close
           </Button>
         </ModalFooter>
