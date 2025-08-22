@@ -24,7 +24,7 @@ export default function ConfigCardDesc() {
       size="sm"
       enabled={cardsDesc}
       title="Description"
-      className="text-start"
+      className="text-start !pr-4"
       onEnabledChange={onEnabledChange}
       description="Show Project description"
     />
