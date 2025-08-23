@@ -74,6 +74,7 @@ export default defineConfig(({mode}) => {
             error_page: resolve(__dirname, 'src/renderer/error_page.html'),
             toast_window: resolve(__dirname, 'src/renderer/toast_window.html'),
             downloads_menu: resolve(__dirname, 'src/renderer/downloads_menu.html'),
+            share_screen: resolve(__dirname, 'src/renderer/share_screen.html'),
           },
         },
         target: 'esnext',
