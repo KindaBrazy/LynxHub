@@ -7,7 +7,7 @@ import {promises, readdir} from 'graceful-fs';
 
 import {DiscordRPC, FolderListData} from '../../../../cross/CrossTypes';
 import {ChangeWindowState, DarkModeTypes, TaskbarStatus, winChannels} from '../../../../cross/IpcChannelAndTypes';
-import {appManager, discordRpcManager, storageManager, trayManager} from '../../../index';
+import {appManager, contextMenuManager, discordRpcManager, storageManager, trayManager} from '../../../index';
 import {getSystemDarkMode} from '../../../Utilities/Utils';
 
 /**
@@ -45,9 +45,9 @@ export function changeWindowState(state: ChangeWindowState): void {
 export function setDarkMode(darkMode: DarkModeTypes): void {
   if (darkMode === 'system') {
     appManager?.getWebContent()?.send(winChannels.onDarkMode, getSystemDarkMode());
-    appManager?.getContextMenuWindow()?.webContents?.send(winChannels.onDarkMode, getSystemDarkMode());
+    contextMenuManager.getWindow()?.webContents?.send(winChannels.onDarkMode, getSystemDarkMode());
   } else {
-    appManager?.getContextMenuWindow()?.webContents?.send(winChannels.onDarkMode, darkMode);
+    contextMenuManager.getWindow()?.webContents?.send(winChannels.onDarkMode, darkMode);
   }
   storageManager.updateData('app', {darkMode});
 }
