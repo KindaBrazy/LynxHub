@@ -116,7 +116,7 @@ export default function ScreenShare() {
                   <Result title={<span className="text-foreground">No window found!</span>} />
                 </div>
               ) : (
-                <div className="flex flex-row flex-wrap gap-4 items-center ">
+                <div className="flex flex-row flex-wrap gap-4 items-center justify-center">
                   {currentData.map(item => renderThumbnail(item))}
                 </div>
               )}
