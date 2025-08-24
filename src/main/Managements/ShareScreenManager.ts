@@ -108,7 +108,7 @@ export default class ShareScreenManager {
     ipcMain.handle(screenShareChannels.getScreenSources, () => {
       return new Promise((resolve, reject) => {
         desktopCapturer
-          .getSources({types: ['screen'], fetchWindowIcons: true})
+          .getSources({types: ['screen'], fetchWindowIcons: true, thumbnailSize: {width: 400, height: 300}})
           .then(sources => resolveSources(sources, resolve))
           .catch(reject);
       });
@@ -116,7 +116,7 @@ export default class ShareScreenManager {
     ipcMain.handle(screenShareChannels.getWindowSources, () => {
       return new Promise((resolve, reject) => {
         desktopCapturer
-          .getSources({types: ['window'], fetchWindowIcons: true})
+          .getSources({types: ['window'], fetchWindowIcons: true, thumbnailSize: {width: 400, height: 300}})
           .then(sources => resolveSources(sources, resolve))
           .catch(reject);
       });
