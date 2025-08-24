@@ -2,8 +2,10 @@ import {StyleProvider} from '@ant-design/cssinjs';
 import {Button, Card, CardBody, CardHeader, Image, Switch, Tab, Tabs} from '@heroui/react';
 import {Result} from 'antd';
 import isEmpty from 'lodash/isEmpty';
-import {useMemo, useState} from 'react';
+import {useEffect, useState} from 'react';
 
+import {screenShareChannels} from '../../cross/ScreenShareConsts';
+import {ScreenShareSources, ScreenShareStart} from '../../cross/ScreenShareTypes';
 import {
   MonitorDuo_Icon,
   RecordDuo_Icon,
@@ -13,89 +15,53 @@ import {
   WindowFrameDuo_Icon,
 } from './SvgIcons';
 
-type WindowItem = {
-  id: number;
-  title: string;
-  thumbnail: string;
-};
-
-type ScreenItem = {
-  id: number;
-  title: string;
-  thumbnail: string;
-  isPrimary: boolean;
-};
-
 type TabType = 'windows' | 'screens';
-type ShareItem = WindowItem | ScreenItem;
 
-type ScreenShareDialogProps = {
-  siteName?: string;
-  onShare?: (item: ShareItem, audio: boolean) => void;
-  onCancel?: () => void;
-};
+const ipc = window.electron.ipcRenderer;
 
-export default function ScreenShare({siteName = 'example.com', onShare, onCancel}: ScreenShareDialogProps) {
+export default function ScreenShare() {
   const [activeTab, setActiveTab] = useState<TabType>('windows');
-  const [selectedItem, setSelectedItem] = useState<ShareItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<string | undefined>(undefined);
   const [shareAudio, setShareAudio] = useState<boolean>(false);
   const [isDarkMode] = useState<boolean>(false);
+  const [mockWindows, setMockWindows] = useState<ScreenShareSources[]>([]);
+  const [mockScreens, setMockScreens] = useState<ScreenShareSources[]>([]);
 
-  const mockWindows: WindowItem[] = useMemo(
-    () => [
-      {id: 1, title: 'Google Chrome - YouTube', thumbnail: `https://picsum.photos/seed/${Math.random()}/180/80/?blur`},
-      {id: 2, title: 'Visual Studio Code', thumbnail: `https://picsum.photos/seed/${Math.random()}/180/80/?blur`},
-      {id: 3, title: 'Discord', thumbnail: `https://picsum.photos/seed/${Math.random()}/180/80/?blur`},
-      {id: 4, title: 'Spotify', thumbnail: `https://picsum.photos/seed/${Math.random()}/180/80/?blur`},
-      {id: 5, title: 'Figma', thumbnail: `https://picsum.photos/seed/${Math.random()}/180/80/?blur`},
-      {id: 6, title: 'Terminal', thumbnail: `https://picsum.photos/seed/${Math.random()}/180/80/?blur`},
-    ],
-    [],
-  );
+  const currentData: ScreenShareSources[] = activeTab === 'windows' ? mockWindows : mockScreens;
 
-  const mockScreens: ScreenItem[] = useMemo(
-    () => [
-      {
-        id: 1,
-        title: 'Built-in Display',
-        thumbnail: `https://picsum.photos/seed/${Math.random()}/180/80/?blur`,
-        isPrimary: true,
-      },
-      {
-        id: 2,
-        title: 'External Monitor',
-        thumbnail: `https://picsum.photos/seed/${Math.random()}/180/80/?blur`,
-        isPrimary: false,
-      },
-    ],
-    [],
-  );
-
-  const handleItemSelect = (item: ShareItem): void => {
-    setSelectedItem(item);
-  };
+  useEffect(() => {
+    ipc.invoke(screenShareChannels.getScreenSources).then((result: ScreenShareSources[]) => {
+      console.log(result);
+      setMockScreens(result);
+    });
+    ipc.invoke(screenShareChannels.getWindowSources).then((result: ScreenShareSources[]) => {
+      console.log(result);
+      setMockWindows(result);
+    });
+  }, []);
 
   const handleShare = (): void => {
     if (selectedItem) {
-      console.log('Sharing:', {item: selectedItem, audio: shareAudio});
-      onShare?.(selectedItem, shareAudio);
+      const result: ScreenShareStart = {id: selectedItem, shareAudio: shareAudio, type: activeTab};
+      console.log('Sharing:', result);
+      ipc.send(screenShareChannels.startShare, result);
     }
   };
 
   const handleCancel = (): void => {
     console.log('Share cancelled');
-    onCancel?.();
+    ipc.send(screenShareChannels.cancel);
   };
 
-  const renderThumbnail = (item: ShareItem) => (
+  const renderThumbnail = (item: ScreenShareSources) => (
     <Card
       key={item.id}
-      onPress={() => handleItemSelect(item)}
       className={` shadow-md border-1 border-foreground-200`}
+      onPress={() => setSelectedItem(activeTab === 'windows' ? item.id : item.display_id)}
       isPressable>
       <CardHeader className="p-0 relative">
-        <Image radius="none" src={item.thumbnail} className="h-20 w-full object-cover rounded-t-lg" />
-        {selectedItem?.id === item.id && (
+        <Image radius="none" alt={item.name} src={item.thumbnail} className="h-20 w-full object-cover" />
+        {selectedItem === (activeTab === 'windows' ? item.id : item.display_id) && (
           <div className="absolute inset-0 flex items-center justify-center bg-primary/70 animate-appearance-in z-10">
             <RecordDuo_Icon className="size-4 animate-appearance-in" />
           </div>
@@ -106,32 +72,21 @@ export default function ScreenShare({siteName = 'example.com', onShare, onCancel
         className={
           'py-2 px-3 text-center  border-t border-foreground-100 bg-foreground-50 flex flex-row gap-x-2 items-center'
         }>
-        <Image
-          radius="sm"
-          className="size-6"
-          classNames={{wrapper: 'shrink-0'}}
-          src={`https://picsum.photos/seed/${Math.random()}/30/30`}
-        />
-        <p className="truncate text-sm font-medium text-foreground">{item.title}</p>
+        {item.icon && <Image radius="sm" src={item.icon} className="size-6" classNames={{wrapper: 'shrink-0'}} />}
+        <p className="truncate text-sm font-medium text-foreground">{item.name}</p>
       </CardBody>
     </Card>
   );
-
-  const currentData: ShareItem[] = activeTab === 'windows' ? mockWindows : mockScreens;
 
   return (
     <StyleProvider layer>
       <main className={`${isDarkMode && 'dark'} text-foreground`}>
         <div className={'w-[620px] h-[480px] dark:bg-LynxRaisinBlack flex flex-col scrollbar-hide overflow-hidden'}>
           {/* Header */}
-          <div className="px-4 py-2 border-b border-foreground-200 draggable">
+          <div className="px-4 py-2 border-b border-foreground-200">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Share your screen</h2>
+              <h2 className="text-lg font-semibold">Select window or screen to share</h2>
             </div>
-            <p className="mt-0.5 text-sm text-foreground-600">
-              {`You're`} about to share your screen {shareAudio ? 'and audio ' : ''}with{' '}
-              <span className="font-medium text-blue-600">{siteName}</span>
-            </p>
           </div>
 
           {/* Tabs */}

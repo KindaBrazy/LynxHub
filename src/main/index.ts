@@ -12,6 +12,7 @@ import {isDev, toMs} from '../cross/CrossUtils';
 import {checkAppDirectories} from './Managements/AppDataManager';
 import AppInitializer from './Managements/AppInitializer';
 import {checkForUpdate} from './Managements/AppUpdater';
+import ContextMenuManager from './Managements/ContextMenuManager';
 import {ValidateCards} from './Managements/DataValidator';
 import DialogManager from './Managements/DialogManager';
 import DiscordRpcManager from './Managements/DiscordRpcManager';
@@ -20,12 +21,12 @@ import {browserIPC, listenToAllChannels} from './Managements/Ipc/IpcHandler';
 import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
 import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
 import ModuleManager from './Managements/Plugin/Modules/ModuleManager';
+import ShareScreenManager from './Managements/ShareScreenManager';
 import StorageManager from './Managements/Storage/StorageManager';
 import ShowToastWindow from './Managements/ToastWindowManager';
 import TrayManager from './Managements/TrayManager';
 import downloadDU from './Utilities/CalculateFolderSize/DownloadDU';
 import {getPrivilegeText} from './Utilities/Utils';
-import ContextMenuManager from './Managements/ContextMenuManager';
 
 if (!isDev()) {
   log.initialize();
@@ -146,6 +147,8 @@ function handleAppReadyToShow() {
   discordRpcManager?.start();
   if (platform() === 'win32') setLoginItemSettings();
   cardsValidator?.checkAndWatch();
+
+  new ShareScreenManager().start();
 }
 
 function handleTaskbarStatus() {
