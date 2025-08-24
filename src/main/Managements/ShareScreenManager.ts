@@ -133,7 +133,7 @@ export default class ShareScreenManager {
       maximizable: false,
       skipTaskbar: true,
       parent: this.mainWindow,
-      // modal: true,
+      modal: true,
       webPreferences: {
         preload: path.join(__dirname, '../preload/index.cjs'),
         sandbox: false,
