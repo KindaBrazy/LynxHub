@@ -6,14 +6,8 @@ import {useEffect, useState} from 'react';
 
 import {screenShareChannels} from '../../cross/ScreenShareConsts';
 import {ScreenShareSources, ScreenShareStart} from '../../cross/ScreenShareTypes';
-import {
-  MonitorDuo_Icon,
-  RecordDuo_Icon,
-  Share_Icon,
-  VolumeDuo_Icon,
-  VolumeMuteDuo_Icon,
-  WindowFrameDuo_Icon,
-} from './SvgIcons';
+import {CloseSimple_Icon} from '../src/assets/icons/SvgIcons/SvgIcons';
+import {MonitorDuo_Icon, RecordDuo_Icon, Share_Icon, VolumeDuo_Icon, WindowFrameDuo_Icon} from './SvgIcons';
 
 type TabType = 'windows' | 'screens';
 
@@ -146,11 +140,16 @@ export default function ScreenShare() {
           <div className="px-4 py-2 border-t border-foreground-200 bg-foreground-100">
             <div className="flex justify-between gap-x-3">
               <Switch
+                classNames={{
+                  label: 'flex flex-row items-center gap-x-1.5',
+                  startContent: 'size-[0.65rem]',
+                  endContent: 'size-[0.65rem]',
+                }}
                 size="sm"
                 isSelected={shareAudio}
                 onValueChange={setShareAudio}
-                thumbIcon={shareAudio ? <VolumeDuo_Icon /> : <VolumeMuteDuo_Icon />}
-                classNames={{label: 'flex flex-row items-center gap-x-1.5', thumbIcon: 'size-[0.65rem]'}}>
+                startContent={<VolumeDuo_Icon />}
+                endContent={<CloseSimple_Icon />}>
                 Share audio
               </Switch>
               <div className="flex justify-between gap-x-3">
