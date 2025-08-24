@@ -1,5 +1,5 @@
 import {StyleProvider} from '@ant-design/cssinjs';
-import {Button, Card, CardBody, CardHeader, Image, Switch, Tab, Tabs} from '@heroui/react';
+import {Button, Card, CardBody, CardHeader, Image, Spinner, Switch, Tab, Tabs} from '@heroui/react';
 import {Result} from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import {useEffect, useState} from 'react';
@@ -27,11 +27,24 @@ export default function ScreenShare() {
   const [mockWindows, setMockWindows] = useState<ScreenShareSources[]>([]);
   const [mockScreens, setMockScreens] = useState<ScreenShareSources[]>([]);
 
+  const [isLoadingSources, setIsLoadingSources] = useState<boolean>(true);
+
   const currentData: ScreenShareSources[] = activeTab === 'windows' ? mockWindows : mockScreens;
 
   useEffect(() => {
-    ipc.invoke(screenShareChannels.getScreenSources).then(setMockScreens);
-    ipc.invoke(screenShareChannels.getWindowSources).then(setMockWindows);
+    setIsLoadingSources(true);
+
+    Promise.all([ipc.invoke(screenShareChannels.getScreenSources), ipc.invoke(screenShareChannels.getWindowSources)])
+      .then(([screens, windows]) => {
+        setMockScreens(screens);
+        setMockWindows(windows);
+      })
+      .finally(() => {
+        setIsLoadingSources(false);
+      })
+      .catch(() => {
+        ipc.send(screenShareChannels.cancel);
+      });
   }, []);
 
   const handleShare = (): void => {
@@ -110,17 +123,23 @@ export default function ScreenShare() {
 
           {/* Content Area */}
           <div className="flex-1 pl-6 pr-1 overflow-hidden">
-            <div className="h-full overflow-y-auto pr-2 pb-4 pt-2">
-              {isEmpty(currentData) ? (
-                <div>
-                  <Result title={<span className="text-foreground">No window found!</span>} />
-                </div>
-              ) : (
-                <div className="flex flex-row flex-wrap gap-4 items-center justify-center">
-                  {currentData.map(item => renderThumbnail(item))}
-                </div>
-              )}
-            </div>
+            {isLoadingSources ? (
+              <div className="flex size-full items-center justify-center">
+                <Spinner size="lg" label="Detecting available windows and screens..." />
+              </div>
+            ) : (
+              <div className="h-full overflow-y-auto pr-2 pb-4 pt-2">
+                {isEmpty(currentData) ? (
+                  <div className="size-full items-center flex justify-center">
+                    <Result title={<span className="text-foreground">Nothing to share</span>} />
+                  </div>
+                ) : (
+                  <div className="flex flex-row flex-wrap gap-4 items-center justify-center">
+                    {currentData.map(item => renderThumbnail(item))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Footer */}
