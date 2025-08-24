@@ -55,12 +55,14 @@ export default function ScreenShare() {
 
   const renderThumbnail = (item: ScreenShareSources) => (
     <Card
+      className={
+        `shadow-md border-1 border-foreground-200 ` + `${activeTab === 'screens' ? 'max-w-full' : 'max-w-64'} h-fit`
+      }
       key={item.id}
-      className={` shadow-md border-1 border-foreground-200`}
       onPress={() => setSelectedItem(activeTab === 'windows' ? item.id : item.display_id)}
       isPressable>
-      <CardHeader className="p-0 relative">
-        <Image radius="none" alt={item.name} src={item.thumbnail} className="h-20 w-full object-cover" />
+      <CardHeader className="p-0 relative overflow-hidden">
+        <img alt={item.name} src={item.thumbnail} className="size-full object-cover" />
         {selectedItem === (activeTab === 'windows' ? item.id : item.display_id) && (
           <div className="absolute inset-0 flex items-center justify-center bg-primary/70 animate-appearance-in z-10">
             <RecordDuo_Icon className="size-4 animate-appearance-in" />
@@ -70,7 +72,8 @@ export default function ScreenShare() {
 
       <CardBody
         className={
-          'py-2 px-3 text-center  border-t border-foreground-100 bg-foreground-50 flex flex-row gap-x-2 items-center'
+          'overflow-hidden px-3 text-center max-h-12 border-t border-foreground-100' +
+          ' bg-foreground-50 flex flex-row gap-x-2 items-center'
         }>
         {item.icon && <Image radius="sm" src={item.icon} className="size-6" classNames={{wrapper: 'shrink-0'}} />}
         <p className="truncate text-sm font-medium text-foreground">{item.name}</p>
@@ -90,7 +93,7 @@ export default function ScreenShare() {
           </div>
 
           {/* Tabs */}
-          <div className="px-6 pt-1.5">
+          <div className="px-6 py-1.5">
             <Tabs size="sm" color="secondary" fullWidth>
               <Tab
                 title={
@@ -113,22 +116,6 @@ export default function ScreenShare() {
             </Tabs>
           </div>
 
-          {/* Audio Toggle */}
-          <div className="px-6 py-2">
-            <Switch
-              size="sm"
-              isSelected={shareAudio}
-              onValueChange={setShareAudio}
-              classNames={{label: 'flex flex-row items-center gap-x-1.5'}}>
-              {shareAudio ? (
-                <VolumeDuo_Icon className="size-[0.9rem]" />
-              ) : (
-                <VolumeMuteDuo_Icon className="size-[0.9rem]" />
-              )}{' '}
-              Share audio
-            </Switch>
-          </div>
-
           {/* Content Area */}
           <div className="flex-1 pl-6 pr-1 overflow-hidden">
             <div className="h-full overflow-y-auto pr-2 pb-4 pt-2">
@@ -137,26 +124,38 @@ export default function ScreenShare() {
                   <Result title={<span className="text-foreground">No window found!</span>} />
                 </div>
               ) : (
-                <div className="grid grid-cols-3 gap-4">{currentData.map(item => renderThumbnail(item))}</div>
+                <div className="flex flex-row flex-wrap gap-4 items-center ">
+                  {currentData.map(item => renderThumbnail(item))}
+                </div>
               )}
             </div>
           </div>
 
           {/* Footer */}
           <div className="px-4 py-2 border-t border-foreground-200 bg-foreground-100">
-            <div className="flex justify-end gap-x-3">
-              <Button size="sm" variant="flat" color="warning" onPress={handleCancel}>
-                Cancel
-              </Button>
-              <Button
+            <div className="flex justify-between gap-x-3">
+              <Switch
                 size="sm"
-                variant="flat"
-                color="primary"
-                onPress={handleShare}
-                isDisabled={!selectedItem}
-                startContent={<Share_Icon className="size-4" />}>
-                Share
-              </Button>
+                isSelected={shareAudio}
+                onValueChange={setShareAudio}
+                thumbIcon={shareAudio ? <VolumeDuo_Icon /> : <VolumeMuteDuo_Icon />}
+                classNames={{label: 'flex flex-row items-center gap-x-1.5', thumbIcon: 'size-[0.65rem]'}}>
+                Share audio
+              </Switch>
+              <div className="flex justify-between gap-x-3">
+                <Button size="sm" variant="flat" color="warning" onPress={handleCancel}>
+                  Cancel
+                </Button>
+                <Button
+                  size="sm"
+                  variant="flat"
+                  color="primary"
+                  onPress={handleShare}
+                  isDisabled={!selectedItem}
+                  startContent={<Share_Icon className="size-4" />}>
+                  Share
+                </Button>
+              </div>
             </div>
           </div>
         </div>
