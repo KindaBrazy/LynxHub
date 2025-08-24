@@ -13,11 +13,12 @@ type TabType = 'windows' | 'screens';
 
 const ipc = window.electron.ipcRenderer;
 
-export default function ScreenShare() {
+type Props = {isDarkMode: boolean};
+
+export default function ScreenShare({isDarkMode}: Props) {
   const [activeTab, setActiveTab] = useState<TabType>('windows');
   const [selectedItem, setSelectedItem] = useState<string | undefined>(undefined);
   const [shareAudio, setShareAudio] = useState<boolean>(false);
-  const [isDarkMode] = useState<boolean>(false);
   const [mockWindows, setMockWindows] = useState<ScreenShareSources[]>([]);
   const [mockScreens, setMockScreens] = useState<ScreenShareSources[]>([]);
 
@@ -55,7 +56,8 @@ export default function ScreenShare() {
   const renderThumbnail = (item: ScreenShareSources) => (
     <Card
       className={
-        `shadow-md border-1 border-foreground-200 ` + `${activeTab === 'screens' ? 'max-w-full' : 'max-w-64'} h-fit`
+        `shadow-md border-1 border-foreground-200 animate-appearance-in ` +
+        `${activeTab === 'screens' ? 'max-w-full' : 'max-w-64'} h-fit`
       }
       key={item.id}
       onPress={() => setSelectedItem(activeTab === 'windows' ? item.id : item.display_id)}
