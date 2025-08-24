@@ -17,6 +17,7 @@ export function MonitorDuo_Icon(props: SvgProps): ReactElement {
     </svg>
   );
 }
+
 export function WindowFrameDuo_Icon(props: SvgProps): ReactElement {
   return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -37,6 +38,7 @@ export function WindowFrameDuo_Icon(props: SvgProps): ReactElement {
     </svg>
   );
 }
+
 export function VolumeDuo_Icon(props: SvgProps): ReactElement {
   return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
@@ -48,17 +50,7 @@ export function VolumeDuo_Icon(props: SvgProps): ReactElement {
     </svg>
   );
 }
-export function VolumeMuteDuo_Icon(props: SvgProps): ReactElement {
-  return (
-    <svg {...props} width="1em" height="1em" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        fill="currentColor"
-        d="M8.42 2.54c-.033-.795-.43-1.468-1.051-1.745c-.659-.294-1.4-.07-1.906.604q-.275.365-.525.758a1.89 1.89 0 0 1-1.457.88c-.328.021-.61.05-.855.085C1.446 3.29.599 4.258.405 5.371A9.7 9.7 0 0 0 .25 7c0 .557.067 1.126.155 1.63c.194 1.111 1.041 2.08 2.22 2.247c.246.035.528.065.856.086l.033-.499l-.033.499a1.89 1.89 0 0 1 1.457.88q.25.392.525.758c.507.674 1.247.898 1.906.604c.62-.277 1.018-.95 1.05-1.746c.045-1.094.081-2.562.081-4.46c0-1.896-.036-3.364-.08-4.458m2.11 2.43a.75.75 0 1 0-1.06 1.06l.97.97l-.97.97a.75.75 0 1 0 1.06 1.06l.97-.97l.97.97a.75.75 0 0 0 1.06-1.06L12.56 7l.97-.97a.75.75 0 0 0-1.06-1.06l-.97.97z"></path>
-    </svg>
-  );
-}
+
 export function RecordDuo_Icon(props: SvgProps): ReactElement {
   return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -71,6 +63,7 @@ export function RecordDuo_Icon(props: SvgProps): ReactElement {
     </svg>
   );
 }
+
 export function Share_Icon(props: SvgProps): ReactElement {
   return (
     <svg {...props} width="1em" height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
