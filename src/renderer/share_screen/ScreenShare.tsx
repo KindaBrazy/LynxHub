@@ -30,26 +30,18 @@ export default function ScreenShare() {
   const currentData: ScreenShareSources[] = activeTab === 'windows' ? mockWindows : mockScreens;
 
   useEffect(() => {
-    ipc.invoke(screenShareChannels.getScreenSources).then((result: ScreenShareSources[]) => {
-      console.log(result);
-      setMockScreens(result);
-    });
-    ipc.invoke(screenShareChannels.getWindowSources).then((result: ScreenShareSources[]) => {
-      console.log(result);
-      setMockWindows(result);
-    });
+    ipc.invoke(screenShareChannels.getScreenSources).then(setMockScreens);
+    ipc.invoke(screenShareChannels.getWindowSources).then(setMockWindows);
   }, []);
 
   const handleShare = (): void => {
     if (selectedItem) {
       const result: ScreenShareStart = {id: selectedItem, shareAudio: shareAudio, type: activeTab};
-      console.log('Sharing:', result);
       ipc.send(screenShareChannels.startShare, result);
     }
   };
 
   const handleCancel = (): void => {
-    console.log('Share cancelled');
     ipc.send(screenShareChannels.cancel);
   };
 
