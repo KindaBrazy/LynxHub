@@ -71,7 +71,9 @@ const useHasArguments = (id: string): boolean => {
 
 const useSearchCards = (searchValue: string) => {
   const searchData = useAllCardSearchData();
-  return allCards.filter(card => searchInStrings(searchValue, searchData.find(data => data.id === card.id)?.data));
+  return allCardDataWithPath.filter(card =>
+    searchInStrings(searchValue, searchData.find(data => data.id === card.id)?.data),
+  );
 };
 
 /**

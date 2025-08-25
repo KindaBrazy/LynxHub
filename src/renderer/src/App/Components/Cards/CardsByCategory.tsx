@@ -4,12 +4,10 @@ import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {compact, isEmpty, isNil} from 'lodash';
 import {memo, useMemo} from 'react';
 
-import {extractGitUrl} from '../../../../../cross/CrossUtils';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../assets/icons/SvgIcons/SvgIconsColor';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {useAllCardDataWithPath} from '../../Modules/ModuleLoader';
+import {useAllCardDataWithPath, useSearchCards} from '../../Modules/ModuleLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
-import {searchInStrings} from '../../Utils/UtilFunctions';
 import {CardContainerClasses} from '../Pages/CardContainer';
 import HomeCategory from '../Pages/ContentPages/Home/HomeCategory';
 import LynxCardWrapper from './Card/LynxCard-Wrapper';
@@ -165,15 +163,8 @@ export const AllCardsSection = memo(() => {
 
 export function CardsBySearch({searchValue}: {searchValue: string}) {
   const installedCards = useCardsState('installedCards');
-  const allCards = useAllCardDataWithPath();
 
-  const filteredCards = useMemo(() => {
-    const searchData = allCards.map(card => ({
-      id: card.id,
-      data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
-    }));
-    return allCards.filter(card => searchInStrings(searchValue, searchData.find(data => data.id === card.id)?.data));
-  }, [searchValue]);
+  const filteredCards = useSearchCards(searchValue);
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
