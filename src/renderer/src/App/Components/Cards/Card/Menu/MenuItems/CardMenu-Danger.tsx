@@ -7,10 +7,11 @@ import {MinusSquareDuo_Icon, Trash_Icon} from '../../../../../../assets/icons/Sv
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
-import {useCardData} from '../../../CardsDataManager';
+import {useCardStore} from '../../LynxCard-Wrapper';
 
 export function MenuUnAssign() {
-  const {id, setMenuIsOpen} = useCardData();
+  const id = useCardStore(state => state.id);
+  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
   const dispatch = useDispatch<AppDispatch>();
   const activeTab = useTabsState('activeTab');
@@ -34,7 +35,8 @@ export function MenuUnAssign() {
 }
 
 export function MenuUninstall() {
-  const {id, setMenuIsOpen} = useCardData();
+  const id = useCardStore(state => state.id);
+  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
   const dispatch = useDispatch<AppDispatch>();
   const activeTab = useTabsState('activeTab');

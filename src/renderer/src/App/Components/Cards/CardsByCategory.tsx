@@ -12,8 +12,7 @@ import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {searchInStrings} from '../../Utils/UtilFunctions';
 import {CardContainerClasses} from '../Pages/CardContainer';
 import HomeCategory from '../Pages/ContentPages/Home/HomeCategory';
-import LynxCard from './Card/LynxCard';
-import {CardContext, CardsDataManager} from './CardsDataManager';
+import LynxCardWrapper from './Card/LynxCard-Wrapper';
 import NavigateModulesPage from './NavigateModulesPage';
 
 /**
@@ -37,7 +36,6 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
   const cards = useCardsById(cardIds);
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
-  const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
 
   return (
     <LayoutGroup id={`${cat}_cards_category`}>
@@ -48,18 +46,9 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
               <NavigateModulesPage />
             </Empty>
           ) : (
-            cards.map((card, index) => {
+            cards.map(card => {
               const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-              const context = new CardsDataManager(card, isInstalled);
-              return (
-                <CardContext.Provider value={context} key={`cardProv-${index}`}>
-                  {ReplaceComponent ? (
-                    <ReplaceComponent context={context} key={`${card.id}-card-key`} />
-                  ) : (
-                    <LynxCard key={`${card.id}-card-key`} />
-                  )}
-                </CardContext.Provider>
-              );
+              return <LynxCardWrapper cardData={card} isInstalled={isInstalled} key={`${card.id}-card-wrapper-key`} />;
             })
           )
         ) : (
@@ -76,7 +65,6 @@ const AllCards = () => {
 
   const allCategory = useMemo(() => extensionsData.customizePages.home.add.allCategory, []);
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
-  const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
 
   const pinnedCards = useCardsState('pinnedCards');
 
@@ -97,18 +85,9 @@ const AllCards = () => {
     <LayoutGroup id="all_cards_category">
       <AnimatePresence>
         {isNil(ReplaceCards) ? (
-          sortedCards.map((card, index) => {
+          sortedCards.map(card => {
             const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-            const context = new CardsDataManager(card, isInstalled);
-            return (
-              <CardContext.Provider value={context} key={`cardProv-${index}`}>
-                {ReplaceComponent ? (
-                  <ReplaceComponent context={context} key={`${card.id}-card-key`} />
-                ) : (
-                  <LynxCard key={`${card.id}-card-key`} />
-                )}
-              </CardContext.Provider>
-            );
+            return <LynxCardWrapper cardData={card} isInstalled={isInstalled} key={`${card.id}-card-wrapper-key`} />;
           })
         ) : (
           <ReplaceCards cards={sortedCards} />
@@ -194,25 +173,15 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
   }, [searchValue]);
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
-  const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
 
   return (
     <div className="flex w-full flex-wrap gap-5 overflow-y-scroll pb-6 pl-1 scrollbar-hide">
       {isEmpty(filteredCards) ? (
         <Empty className="w-full" description="No cards match your search." />
       ) : isNil(ReplaceCards) ? (
-        filteredCards.map((card, index) => {
+        filteredCards.map(card => {
           const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-          const context = new CardsDataManager(card, isInstalled);
-          return (
-            <CardContext.Provider value={context} key={`cardProv-${index}`}>
-              {ReplaceComponent ? (
-                <ReplaceComponent context={context} key={`${card.id}-card-key`} />
-              ) : (
-                <LynxCard key={`${card.id}-card-key`} />
-              )}
-            </CardContext.Provider>
-          );
+          return <LynxCardWrapper cardData={card} isInstalled={isInstalled} key={`${card.id}-card-wrapper-key`} />;
         })
       ) : (
         <ReplaceCards cards={filteredCards} />

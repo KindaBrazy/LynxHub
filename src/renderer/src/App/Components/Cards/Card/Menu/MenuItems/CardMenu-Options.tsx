@@ -9,12 +9,16 @@ import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../../../Utils/UtilHooks';
-import {useCardData} from '../../../CardsDataManager';
+import {useCardStore} from '../../LynxCard-Wrapper';
 
 export const MenuLaunchConfig = () => {
   const dispatch = useDispatch<AppDispatch>();
   const activeTab = useTabsState('activeTab');
-  const {id, setMenuIsOpen, title, haveArguments} = useCardData();
+
+  const id = useCardStore(state => state.id);
+  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
+  const haveArguments = useCardStore(state => state.haveArguments);
+  const title = useCardStore(state => state.title);
 
   const onPress = useCallback(() => {
     dispatch(
@@ -37,7 +41,13 @@ export const MenuLaunchConfig = () => {
 export const MenuExtensions = () => {
   const dispatch = useDispatch<AppDispatch>();
   const activeTab = useTabsState('activeTab');
-  const {id, repoUrl, extensionsDir, setMenuIsOpen, title} = useCardData();
+
+  const id = useCardStore(state => state.id);
+  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
+  const repoUrl = useCardStore(state => state.repoUrl);
+  const extensionsDir = useCardStore(state => state.extensionsDir);
+  const title = useCardStore(state => state.title);
+
   const {name: devName} = useDevInfo(repoUrl);
   const card = useInstalledCard(id);
 
@@ -68,7 +78,10 @@ export const MenuExtensions = () => {
 };
 
 export const MenuRepoConfig = () => {
-  const {id, title, setMenuIsOpen} = useCardData();
+  const id = useCardStore(state => state.id);
+  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
+  const title = useCardStore(state => state.title);
+
   const installType = useGetInstallType(id);
   const dispatch = useDispatch<AppDispatch>();
   const activeTab = useTabsState('activeTab');

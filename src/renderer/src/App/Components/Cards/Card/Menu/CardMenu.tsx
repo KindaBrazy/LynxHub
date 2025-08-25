@@ -1,20 +1,22 @@
 // @ts-nocheck
 import {Button, Dropdown, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
-import {observer} from 'mobx-react-lite';
-import {useMemo} from 'react';
+import {memo, useMemo} from 'react';
 
 import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {useUpdatingCard} from '../../../../Utils/UtilHooks';
-import {useCardData} from '../../CardsDataManager';
+import {useCardStore} from '../LynxCard-Wrapper';
 import {MenuDuplicate, MenuHomePage, MenuInfo} from './MenuItems/CardMenu-About';
 import {MenuUnAssign, MenuUninstall} from './MenuItems/CardMenu-Danger';
 import {MenuExtensions, MenuLaunchConfig, MenuRepoConfig} from './MenuItems/CardMenu-Options';
 import {MenuAutoUpdate, MenuCheckForUpdate, MenuUpdate} from './MenuItems/CardMenu-Update';
 
-export const CardMenu = observer(() => {
-  const {id, menuIsOpen, setMenuIsOpen} = useCardData();
+export const CardMenu = memo(() => {
+  const id = useCardStore(state => state.id);
+  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
+  const menuIsOpen = useCardStore(state => state.menuIsOpen);
+
   const compactMode = useSettingsState('cardsCompactMode');
   const updating = useUpdatingCard(id);
 
@@ -48,7 +50,7 @@ export const CardMenu = observer(() => {
       </DropdownTrigger>
       <DropdownMenu aria-label="Card Menu">
         {first.map((Comp, index) => {
-          return Comp({key: index, context: useCardData()});
+          return Comp({key: index});
         })}
         <DropdownSection key="options" classNames={{divider: 'bg-foreground-100'}} showDivider>
           {MenuLaunchConfig()}
@@ -56,7 +58,7 @@ export const CardMenu = observer(() => {
           {MenuRepoConfig()}
         </DropdownSection>
         {second.map((Comp, index) => {
-          return Comp({key: index, context: useCardData()});
+          return Comp({key: index});
         })}
         <DropdownSection key="update" classNames={{divider: 'bg-foreground-100'}} showDivider>
           {MenuUpdate()}
@@ -64,7 +66,7 @@ export const CardMenu = observer(() => {
           {MenuAutoUpdate()}
         </DropdownSection>
         {third.map((Comp, index) => {
-          return Comp({key: index, context: useCardData()});
+          return Comp({key: index});
         })}
         <DropdownSection key="info" classNames={{divider: 'bg-foreground-100'}} showDivider>
           {MenuInfo()}
@@ -77,7 +79,7 @@ export const CardMenu = observer(() => {
         </DropdownSection>
 
         {fourth.map((Comp, index) => {
-          return Comp({key: index, context: useCardData()});
+          return Comp({key: index});
         })}
       </DropdownMenu>
     </Dropdown>

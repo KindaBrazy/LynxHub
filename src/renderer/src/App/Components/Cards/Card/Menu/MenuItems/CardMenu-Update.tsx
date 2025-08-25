@@ -17,10 +17,14 @@ import {
   useUpdateAvailable,
   useUpdatingCard,
 } from '../../../../../Utils/UtilHooks';
-import {useCardData} from '../../../CardsDataManager';
+import {useCardStore} from '../../LynxCard-Wrapper';
 
 export const MenuUpdate = () => {
-  const {id, repoUrl, setMenuIsOpen, title} = useCardData();
+  const id = useCardStore(state => state.id);
+  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
+  const repoUrl = useCardStore(state => state.repoUrl);
+  const title = useCardStore(state => state.title);
+
   const {name: devName} = useDevInfo(repoUrl);
   const updating = useUpdatingCard(id);
   const autoUpdate = useIsAutoUpdateCard(id);
@@ -61,7 +65,10 @@ export const MenuUpdate = () => {
 };
 
 export const MenuCheckForUpdate = () => {
-  const {id, checkingForUpdate, setCheckingForUpdate} = useCardData();
+  const id = useCardStore(state => state.id);
+  const checkingForUpdate = useCardStore(state => state.checkingForUpdate);
+  const setCheckingForUpdate = useCardStore(state => state.setCheckingForUpdate);
+
   const autoUpdate = useIsAutoUpdateCard(id);
   const card = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
@@ -98,7 +105,10 @@ export const MenuCheckForUpdate = () => {
 };
 
 export const MenuAutoUpdate = () => {
-  const {id, repoUrl, title} = useCardData();
+  const id = useCardStore(state => state.id);
+  const repoUrl = useCardStore(state => state.repoUrl);
+  const title = useCardStore(state => state.title);
+
   const {name: devName} = useDevInfo(repoUrl);
   const autoUpdate = useIsAutoUpdateCard(id);
   const updateAvailable = useUpdateAvailable(id);

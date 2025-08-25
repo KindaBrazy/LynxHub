@@ -1,15 +1,17 @@
 import {CardBody} from '@heroui/react';
 import {Divider} from 'antd';
-import {observer} from 'mobx-react-lite';
+import {memo} from 'react';
 
 import {formatSizeKB} from '../../../../../../cross/CrossUtils';
 import {Download_Icon, Fork_Icon, Star_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {useRepoDetails} from '../../../Utils/LocalStorage';
 import {formatNumber} from '../../../Utils/UtilFunctions';
-import {useCardData} from '../CardsDataManager';
+import {useCardStore} from './LynxCard-Wrapper';
 
-const LynxCardBody = observer(() => {
-  const {repoUrl, installed} = useCardData();
+const LynxCardBody = memo(() => {
+  const repoUrl = useCardStore(state => state.repoUrl);
+  const installed = useCardStore(state => state.installed);
+
   const repoDetails = useRepoDetails(repoUrl);
 
   if (!repoDetails) return null;
@@ -52,4 +54,5 @@ const LynxCardBody = observer(() => {
     </CardBody>
   );
 });
+
 export default LynxCardBody;
