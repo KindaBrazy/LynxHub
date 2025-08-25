@@ -1,4 +1,4 @@
-import {CardData} from '@lynx_module/types';
+import {LoadedCardData} from '@lynx_module/types';
 import {Reducer} from '@reduxjs/toolkit';
 import {ComponentProps, FC} from 'react';
 
@@ -7,7 +7,7 @@ import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 // -----------------------------------------------> Elements & Props
 export type ElementProps = ComponentProps<'div'>;
 export type RefElementProps = ComponentProps<'div'> & {ref: (node: HTMLDivElement) => void};
-export type CardElementProps = ComponentProps<'div'> & {cards: CardData[]};
+export type CardElementProps = ComponentProps<'div'> & {cards: LoadedCardData[]};
 export type SearchResultProps = ComponentProps<'div'> & {searchValue: string};
 export type ReplaceMdProps = ComponentProps<'div'> & {repoPath: string; rounded?: boolean};
 
