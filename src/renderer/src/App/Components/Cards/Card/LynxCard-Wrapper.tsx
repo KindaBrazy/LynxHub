@@ -1,27 +1,24 @@
 import {LoadedCardData} from '@lynx_module/types';
-import {createContext, useContext, useMemo, useRef} from 'react';
+import {createContext, useContext, useMemo} from 'react';
 
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
-import {useHasArguments} from '../../../Modules/ModuleLoader';
 import {CardState, CardStore, createCardStore} from '../CardStore';
 import LynxCard from './LynxCard';
 
 const CardStoreContext = createContext<CardStore | null>(null);
 
-type Props = {cardData: LoadedCardData; isInstalled: boolean};
+type Props = {cardData: LoadedCardData; isInstalled: boolean; hasArguments: boolean};
 
-export default function LynxCardWrapper({cardData, isInstalled}: Props) {
-  const storeRef = useRef<CardStore | null>(null);
+export default function LynxCardWrapper({cardData, isInstalled, hasArguments}: Props) {
   const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
 
-  const hasArguments = useHasArguments(cardData.id);
-
-  if (!storeRef.current) {
-    storeRef.current = createCardStore({...cardData, isInstalled, hasArguments});
-  }
+  const storeValue = useMemo(
+    () => createCardStore({...cardData, isInstalled, hasArguments}),
+    [cardData, isInstalled, hasArguments],
+  );
 
   return (
-    <CardStoreContext.Provider value={storeRef.current}>
+    <CardStoreContext.Provider value={storeValue}>
       {ReplaceComponent ? (
         <ReplaceComponent key={`${cardData.id}-card-key`} />
       ) : (

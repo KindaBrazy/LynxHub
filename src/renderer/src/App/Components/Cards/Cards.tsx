@@ -5,7 +5,7 @@ import {compact, isEmpty, isNil} from 'lodash';
 import {FC, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {useGetCardsByPath} from '../../Modules/ModuleLoader';
+import {useGetCardsByPath, useHasArguments} from '../../Modules/ModuleLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {PageID} from '../../Utils/Constants';
 import Page from '../Pages/Page';
@@ -25,6 +25,7 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
   const cards = useGetCardsByPath(pagePath);
   const installedCards = useCardsState('installedCards');
   const pinnedCards = useCardsState('pinnedCards');
+  const hasArguments = useHasArguments();
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
@@ -51,9 +52,14 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
             {isNil(ReplaceCards) ? (
               <>
                 {sortedCards.map(card => {
-                  const isInstalled = installedCards.some(iCard => iCard.id === card.id);
+                  const isInstalled = installedCards.some(item => item.id === card.id);
                   return (
-                    <LynxCardWrapper cardData={card} isInstalled={isInstalled} key={`${card.id}-card-wrapper-key`} />
+                    <LynxCardWrapper
+                      cardData={card}
+                      isInstalled={isInstalled}
+                      key={`${card.id}-card-wrapper-key`}
+                      hasArguments={hasArguments.has(card.id)}
+                    />
                   );
                 })}
               </>
