@@ -1,9 +1,19 @@
-import {ArgumentsData, AvailablePages, CardData, CardModules, CardRendererMethods} from '@lynx_module/types';
+import {
+  ArgumentsData,
+  AvailablePages,
+  CardData,
+  CardModules,
+  CardRendererMethods,
+  LoadedArguments,
+  LoadedCardData,
+  LoadedMethods,
+} from '@lynx_module/types';
 import {RendererModuleImportType} from '@lynx_module/types';
 import {useSyncExternalStore} from 'react';
 
-import {isDev} from '../../../../cross/CrossUtils';
+import {extractGitUrl, isDev} from '../../../../cross/CrossUtils';
 import rendererIpc from '../RendererIpc';
+import {searchInStrings} from '../Utils/UtilFunctions';
 
 /** TODO: Add these:
  * Have have Arguments
@@ -12,6 +22,10 @@ import rendererIpc from '../RendererIpc';
 
 let allModules: CardModules = [];
 let allCards: CardData[] = [];
+
+let allCardData: LoadedCardData[] = [];
+let allCardArguments: LoadedArguments[] = [];
+let allCardMethods: LoadedMethods[] = [];
 
 const listeners = new Set<() => void>();
 
@@ -29,16 +43,38 @@ function emitChange() {
 const useAllCards = (): CardData[] => useSyncExternalStore(subscribe, () => allCards);
 const useAllModules = (): CardModules => useSyncExternalStore(subscribe, () => allModules);
 
+const useAllCardData = (): LoadedCardData[] => useSyncExternalStore(subscribe, () => allCardData);
+const useAllCardArguments = (): LoadedArguments[] => useSyncExternalStore(subscribe, () => allCardArguments);
+const useAllCardMethods = (): LoadedMethods[] => useSyncExternalStore(subscribe, () => allCardMethods);
+
+const splitCardData = (card: CardData) => {
+  const {arguments: args, methods, ...restOfCard} = card;
+  allCardData.push(restOfCard);
+  allCardArguments.push({id: card.id, arguments: args});
+  allCardMethods.push({id: card.id, methods});
+};
+
 /**
  * Retrieves the arguments for a specific card.
  * @param id The ID of the card.
  * @returns The arguments data or undefined if not found.
  */
 const useGetArgumentsByID = (id: string): ArgumentsData | undefined =>
-  useAllCards().find(card => card.id === id)?.arguments;
+  useAllCardArguments().find(card => card.id === id)?.arguments;
 
-const useGetTitleByID = (id: string | undefined): string | undefined =>
-  useAllCards().find(card => card.id === id)?.title;
+const useHasArguments = (id: string): boolean => {
+  const args = useGetArgumentsByID(id);
+  return !!args && Object.keys(args).length > 0;
+};
+
+const useSearchCards = (searchValue: string) => {
+  const allCards = useAllCardData();
+  const searchData = allCards.map(card => ({
+    id: card.id,
+    data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
+  }));
+  return allCards.filter(card => searchInStrings(searchValue, searchData.find(data => data.id === card.id)?.data));
+};
 
 /**
  * Retrieves all cards associated with a specific path.
@@ -49,15 +85,16 @@ const useGetCardsByPath = (path: AvailablePages): CardData[] | undefined =>
   useAllModules().find(module => module.routePath === path)?.cards;
 
 const getCardMethod = <T extends keyof CardRendererMethods>(
-  cards: CardData[],
+  cardMethods: LoadedMethods[],
   id: string,
   method: T,
 ): CardRendererMethods[T] | undefined => {
-  return cards.find(card => card.id === id)?.methods?.[method] as CardRendererMethods[T] | undefined;
+  return cardMethods.find(card => card.id === id)?.methods?.[method] as CardRendererMethods[T] | undefined;
 };
 
-const useGetInstallType = (id: string) => useAllCards().find(card => card.id === id)?.installationType || 'others';
-const useGetUninstallType = (id: string) => useAllCards().find(card => card.id === id)?.uninstallType || 'removeFolder';
+const useGetInstallType = (id: string) => useAllCardData().find(card => card.id === id)?.installationType || 'others';
+const useGetUninstallType = (id: string) =>
+  useAllCardData().find(card => card.id === id)?.uninstallType || 'removeFolder';
 
 /**
  * Duplicate a card
@@ -120,6 +157,8 @@ const duplicateCard = (id: string, defaultID?: string, defaultTitle?: string) =>
   allModules = updatedModules;
   allCards = [...allCards, duplicatedCard];
 
+  splitCardData(duplicatedCard);
+
   emitChange();
 
   return {id: newId, title: newTitle, routePath};
@@ -151,15 +190,27 @@ const removeDuplicatedCard = (id: string) => {
 
   if (cardRemoved) {
     allModules = updatedModules;
+    allCardData = allCardData.filter(card => card.id !== id);
+    allCardArguments = allCardArguments.filter(arg => arg.id !== id);
+    allCardMethods = allCardMethods.filter(method => method.id !== id);
     emitChange();
   }
 };
 
-async function emitLoaded(newAllModules: CardModules, newAllCards: CardData[]) {
+async function emitLoaded(
+  _newAllModules: CardModules,
+  _newAllCards: CardData[],
+  _newCardData: LoadedCardData[],
+  _newCardArguments: LoadedArguments[],
+  _newCardMethods: LoadedMethods[],
+) {
   const {duplicated} = await rendererIpc.storage.get('cards');
 
-  allModules = newAllModules;
-  allCards = newAllCards;
+  allModules = _newAllModules;
+  allCards = _newAllCards;
+  allCardData = _newCardData;
+  allCardArguments = _newCardArguments;
+  allCardMethods = _newCardMethods;
 
   duplicated.forEach(item => duplicateCard(item.ogID, item.id, item.title));
 
@@ -198,6 +249,10 @@ const loadModules = async () => {
     const newAllModules: CardModules = [];
     const newAllCards: CardData[] = [];
 
+    const newCardData: LoadedCardData[] = [];
+    const newCardArguments: LoadedArguments[] = [];
+    const newCardMethods: LoadedMethods[] = [];
+
     // Optimize module and card aggregation using reduce for better performance
     importedModules.reduce((acc, {module}) => {
       const importedModule = module as RendererModuleImportType;
@@ -217,13 +272,15 @@ const loadModules = async () => {
         } else {
           newAllModules.push(mod);
           newAllCards.push(...mod.cards);
+
+          mod.cards.forEach(splitCardData);
         }
       });
 
       return acc;
     }, {});
 
-    await emitLoaded(newAllModules, newAllCards);
+    await emitLoaded(newAllModules, newAllCards, newCardData, newCardArguments, newCardMethods);
   } catch (error) {
     console.error('Error importing modules:', error);
     throw error;
@@ -247,13 +304,15 @@ export {
   allModules,
   duplicateCard,
   getCardMethod,
+  loadModules,
   removeDuplicatedCard,
   useAllCards,
+  useAllModules,
   useGetArgumentsByID,
   useGetCardsByPath,
   useGetInstallType,
-  useGetTitleByID,
   useGetUninstallType,
+  useHasArguments,
 };
 
 export default loadModules;
