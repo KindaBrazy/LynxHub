@@ -347,6 +347,10 @@ export type CardData = {
   methods: CardRendererMethods;
 };
 
+export type LoadedCardData = Omit<CardData, 'arguments' | 'methods'>;
+export type LoadedArguments = Pick<CardData, 'arguments' | 'id'>;
+export type LoadedMethods = Pick<CardData, 'methods' | 'id'>;
+
 export type PagesData = {
   /** Router path (For placing the card in relative page) */
   routePath: AvailablePages;
