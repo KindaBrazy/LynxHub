@@ -2,7 +2,6 @@ import {CardData} from '@lynx_module/types';
 import {Reducer} from '@reduxjs/toolkit';
 import {ComponentProps, FC} from 'react';
 
-import {CardsDataManager} from '../Components/Cards/CardsDataManager';
 import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 
 // -----------------------------------------------> Elements & Props
@@ -10,17 +9,15 @@ export type ElementProps = ComponentProps<'div'>;
 export type RefElementProps = ComponentProps<'div'> & {ref: (node: HTMLDivElement) => void};
 export type CardElementProps = ComponentProps<'div'> & {cards: CardData[]};
 export type SearchResultProps = ComponentProps<'div'> & {searchValue: string};
-export type CardDataProps = ComponentProps<'div'> & {context: CardsDataManager};
 export type ReplaceMdProps = ComponentProps<'div'> & {repoPath: string; rounded?: boolean};
 
 export type FcProp = FC<ElementProps>;
 export type FcPropRef = FC<RefElementProps>;
-export type FcPropCardData = FC<CardDataProps>;
 export type FcPropCard = FC<CardElementProps>;
 export type FcPropSearchResult = FC<SearchResultProps>;
 export type FcPropReplaceMd = FC<ReplaceMdProps>;
 
-export type AddMenuType = {index: number; components: FcPropCardData[]};
+export type AddMenuType = {index: number; components: FcProp[]};
 
 // -----------------------------------------------> Extension Renderer API
 
@@ -100,7 +97,7 @@ export type ExtensionData_Renderer = {
         scrollBottom: FC[];
         pinCategory: FC[];
         recentlyCategory: FC[];
-        allCategory: FcPropCardData[];
+        allCategory: FcProp[];
       };
     };
     audio: {
@@ -148,12 +145,12 @@ export type ExtensionData_Renderer = {
   addReducer: {name: string; reducer: Reducer}[];
   cards: {
     replace: FcPropCard | undefined;
-    replaceComponent: FcPropCardData | undefined;
+    replaceComponent: FcProp | undefined;
     customize: {
-      header: FcPropCardData | undefined;
-      body: FcPropCardData | undefined;
-      footer: FcPropCardData | undefined;
-      menu: {replace: FcPropCardData | undefined; addSection: AddMenuType[]};
+      header: FcProp | undefined;
+      body: FcProp | undefined;
+      footer: FcProp | undefined;
+      menu: {replace: FcProp | undefined; addSection: AddMenuType[]};
     };
   };
 };
