@@ -82,7 +82,7 @@ const useSearchCards = (searchValue: string) => {
  * @returns An array of cards or undefined if no module matches the path.
  */
 const useGetCardsByPath = (path: AvailablePages): LoadedCardData[] | undefined =>
-  useAllCardDataWithPath().filter(module => module.routePath !== path);
+  useAllCardDataWithPath().filter(module => module.routePath === path);
 
 const getCardMethod = <T extends keyof CardRendererMethods>(
   cardMethods: LoadedMethods[],
