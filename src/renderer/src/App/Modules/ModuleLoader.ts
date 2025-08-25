@@ -38,7 +38,6 @@ function emitChange() {
   }
 }
 
-const useAllCards = (): CardData[] => useSyncExternalStore(subscribe, () => allCards);
 const useAllModules = (): CardModules => useSyncExternalStore(subscribe, () => allModules);
 
 const useAllCardData = (): LoadedCardData[] => useSyncExternalStore(subscribe, () => allCardData);
@@ -321,7 +320,6 @@ export {
   useAllCardArguments,
   useAllCardData,
   useAllCardMethods,
-  useAllCards,
   useAllCardSearchData,
   useAllModules,
   useGetArgumentsByID,
