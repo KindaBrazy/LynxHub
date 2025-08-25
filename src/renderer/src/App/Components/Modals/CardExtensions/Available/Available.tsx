@@ -4,7 +4,7 @@ import {useEffect, useState} from 'react';
 
 import {validateGitRepoUrl} from '../../../../../../../cross/CrossUtils';
 import {Circle_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
-import {getCardMethod, useAllCards} from '../../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCardMethods} from '../../../../Modules/ModuleLoader';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import RenderItem from './RenderItem';
 
@@ -29,7 +29,7 @@ export default function Available({visible, updateTable, installedExtensions, id
   const [searchedData, setSearchedData] = useState<ExtensionsInfo[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
-  const allCards = useAllCards();
+  const allMethods = useAllCardMethods();
 
   useEffect(() => {
     setSearchedData(
@@ -47,7 +47,7 @@ export default function Available({visible, updateTable, installedExtensions, id
     async function fetchModules() {
       setIsLoading(true);
       try {
-        const fetchExtensionList = getCardMethod(allCards, id, 'fetchExtensionList');
+        const fetchExtensionList = getCardMethod(allMethods, id, 'fetchExtensionList');
         if (fetchExtensionList) {
           const extensions: ExtensionsInfo[] = await fetchExtensionList();
           const filterData = extensions.filter(ext => !!validateGitRepoUrl(ext.url));
@@ -61,7 +61,7 @@ export default function Available({visible, updateTable, installedExtensions, id
     }
 
     if (visible) fetchModules();
-  }, [visible, allCards]);
+  }, [visible, allMethods]);
 
   const onPageSizeChange: PaginationProps['onShowSizeChange'] = (_, pageSize) => {
     setPageSize(pageSize);

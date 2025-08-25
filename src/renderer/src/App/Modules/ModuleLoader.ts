@@ -318,13 +318,18 @@ export {
   getCardMethod,
   loadModules,
   removeDuplicatedCard,
+  useAllCardArguments,
+  useAllCardData,
+  useAllCardMethods,
   useAllCards,
+  useAllCardSearchData,
   useAllModules,
   useGetArgumentsByID,
   useGetCardsByPath,
   useGetInstallType,
   useGetUninstallType,
   useHasArguments,
+  useSearchCards,
 };
 
 export default loadModules;

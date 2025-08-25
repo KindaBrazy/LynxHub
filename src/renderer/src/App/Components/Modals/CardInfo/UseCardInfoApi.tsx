@@ -2,7 +2,7 @@ import {CardInfoApi, CardInfoCallback, CardInfoDescriptions} from '@lynx_module/
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
 
-import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
 import rendererIpc from '../../../RendererIpc';
 
 export default function useCardInfoApi(
@@ -11,7 +11,7 @@ export default function useCardInfoApi(
   setCardInfoDescriptions: (descriptions: CardInfoDescriptions) => void,
   dir?: string,
 ) {
-  const allCards = useAllCards();
+  const allMethods = useAllCardMethods();
 
   useEffect(() => {
     if (!isEmpty(cardId)) {
@@ -40,7 +40,7 @@ export default function useCardInfoApi(
 
       const callBack: CardInfoCallback = {setOpenFolders, setDescription: setCardInfoDescriptions};
 
-      getCardMethod(allCards, cardId, 'cardInfo')?.(api, callBack);
+      getCardMethod(allMethods, cardId, 'cardInfo')?.(api, callBack);
     }
-  }, [cardId, dir, allCards]);
+  }, [cardId, dir, allMethods]);
 }

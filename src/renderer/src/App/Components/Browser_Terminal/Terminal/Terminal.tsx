@@ -12,7 +12,7 @@ import {memo, RefObject, useCallback, useEffect, useMemo, useRef, useState} from
 import {useDispatch} from 'react-redux';
 
 import {SystemInfo} from '../../../../../../cross/IpcChannelAndTypes';
-import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
 import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useHotkeysState} from '../../../Redux/Reducer/HotkeysReducer';
@@ -42,7 +42,7 @@ type Props = {
 const Terminal = memo(({runningCard, serializeAddon, clearTerminal}: Props) => {
   const copyPressed = useHotkeysState('copyPressed');
   const activeTab = useTabsState('activeTab');
-  const allCards = useAllCards();
+  const allMethods = useAllCardMethods();
 
   const terminal = useRef<XTerminal | null>(null);
   const fitAddon = useRef<FitAddon | null>(null);
@@ -109,7 +109,7 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal}: Props) => {
         if (!xTerminal) return;
 
         if (isEmpty(webUIAddress) && browserBehavior !== 'doNothing') {
-          const catchAddress = getCardMethod(allCards, id, 'catchAddress');
+          const catchAddress = getCardMethod(allMethods, id, 'catchAddress');
           const url = catchAddress?.(data) || '';
           if (!isEmpty(url)) {
             if (browserBehavior === 'appBrowser') {
@@ -126,7 +126,7 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal}: Props) => {
     });
 
     return () => rendererIpc.pty.offData();
-  }, [id, webUIAddress, terminal, browserBehavior, outputColor, dispatch, allCards, activeTab]);
+  }, [id, webUIAddress, terminal, browserBehavior, outputColor, dispatch, allMethods, activeTab]);
 
   const onRightClickRef = useRef<((e: MouseEvent) => void) | null>(null);
 

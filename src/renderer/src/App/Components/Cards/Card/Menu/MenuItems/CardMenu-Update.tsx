@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download_Icon, Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
-import {getCardMethod, useAllCards} from '../../../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCardMethods, useAllCards} from '../../../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
@@ -30,14 +30,14 @@ export const MenuUpdate = () => {
   const autoUpdate = useIsAutoUpdateCard(id);
   const webUi = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
-  const allCards = useAllCards();
+  const allMethods = useAllCardMethods();
   const activeTab = useTabsState('activeTab');
 
   const dispatch = useDispatch<AppDispatch>();
 
   const onPress = useCallback(() => {
     AddBreadcrumb_Renderer(`Start Update AI: id:${id}`);
-    if (getCardMethod(allCards, id, 'manager')?.updater.startUpdate) {
+    if (getCardMethod(allMethods, id, 'manager')?.updater.startUpdate) {
       dispatch(modalActions.openInstallUICard({cardId: id, tabID: activeTab, type: 'update', title}));
       setMenuIsOpen(false);
     } else if (webUi && webUi.dir) {
@@ -114,15 +114,15 @@ export const MenuAutoUpdate = () => {
   const updateAvailable = useUpdateAvailable(id);
   const webUi = useInstalledCard(id);
   const [customUpdate, setCustomUpdate] = useState<boolean>(false);
-  const allCards = useAllCards();
+  const allMethods = useAllCardMethods();
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (getCardMethod(allCards, id, 'manager')?.updater.updateType === 'stepper') {
+    if (getCardMethod(allMethods, id, 'manager')?.updater.updateType === 'stepper') {
       setCustomUpdate(true);
     }
-  }, [id, allCards]);
+  }, [id, allMethods]);
 
   const onPress = useCallback(() => {
     AddBreadcrumb_Renderer(`Toggle AutoUpdate AI: id:${id}, !autoUpdate:${!autoUpdate}`);

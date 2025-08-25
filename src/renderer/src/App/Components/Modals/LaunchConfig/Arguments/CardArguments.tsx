@@ -3,7 +3,7 @@ import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
 import {ArgumentsPresets, ChosenArgumentsData} from '../../../../../../../cross/CrossTypes';
-import {getCardMethod, useAllCards} from '../../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCardMethods} from '../../../../Modules/ModuleLoader';
 import rendererIpc from '../../../../RendererIpc';
 import {tabContentVariants} from '../../CardExtensions/Constants';
 import AddArguments from './AddArguments/AddArguments';
@@ -24,7 +24,7 @@ export default function CardArguments({chosenArguments, setChosenArguments, id}:
   const [previewText, setPreviewText] = useState<string>('');
 
   const addArgumentsModal = useDisclosure();
-  const allCards = useAllCards();
+  const allMethods = useAllCardMethods();
 
   useEffect(() => {
     rendererIpc.storageUtils.getCardArguments(id).then(result => {
@@ -33,9 +33,9 @@ export default function CardArguments({chosenArguments, setChosenArguments, id}:
   }, []);
 
   useEffect(() => {
-    const getParsedArgs = getCardMethod(allCards, id, 'parseArgsToString');
+    const getParsedArgs = getCardMethod(allMethods, id, 'parseArgsToString');
     if (getParsedArgs) setPreviewText(getParsedArgs(activePreset.arguments));
-  }, [activePreset, id, allCards]);
+  }, [activePreset, id, allMethods]);
 
   useEffect(() => {
     setPresets(chosenArguments.data.map(arg => arg.preset));
