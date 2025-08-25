@@ -24,6 +24,7 @@ let allCardDataWithPath: LoadedCardData[] = [];
 let allCardArguments: LoadedArguments[] = [];
 let allCardMethods: LoadedMethods[] = [];
 let allCardSearchData: CardSearchData = [];
+let hasArguments: Set<string> = new Set([]);
 
 const listeners = new Set<() => void>();
 
@@ -44,19 +45,55 @@ const useAllCardDataWithPath = (): LoadedCardData[] => useSyncExternalStore(subs
 const useAllCardArguments = (): LoadedArguments[] => useSyncExternalStore(subscribe, () => allCardArguments);
 const useAllCardMethods = (): LoadedMethods[] => useSyncExternalStore(subscribe, () => allCardMethods);
 const useAllCardSearchData = (): CardSearchData => useSyncExternalStore(subscribe, () => allCardSearchData);
+const useHasArguments = (): Set<string> => useSyncExternalStore(subscribe, () => hasArguments);
 
-const splitCardData = (card: CardData, routePath: AvailablePages) => {
+const splitCardData = (card: CardData, routePath: AvailablePages, originalId: string) => {
   const {arguments: args, methods, ...restOfCard} = card;
-  allCardDataWithPath = [...allCardDataWithPath, {...restOfCard, routePath}];
-  allCardArguments = [...allCardArguments, {id: card.id, arguments: args}];
-  allCardMethods = [...allCardMethods, {id: card.id, methods}];
-  allCardSearchData = [
-    ...allCardSearchData,
-    {
-      id: card.id,
-      data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
-    },
-  ];
+
+  const originalIndex = allCardDataWithPath.findIndex(c => c.id === originalId);
+
+  if (originalIndex !== -1) {
+    allCardDataWithPath = [
+      ...allCardDataWithPath.slice(0, originalIndex + 1),
+      {...restOfCard, routePath},
+      ...allCardDataWithPath.slice(originalIndex + 1),
+    ];
+
+    allCardArguments = [
+      ...allCardArguments.slice(0, originalIndex + 1),
+      {id: card.id, arguments: args},
+      ...allCardArguments.slice(originalIndex + 1),
+    ];
+
+    allCardMethods = [
+      ...allCardMethods.slice(0, originalIndex + 1),
+      {id: card.id, methods},
+      ...allCardMethods.slice(originalIndex + 1),
+    ];
+
+    allCardSearchData = [
+      ...allCardSearchData.slice(0, originalIndex + 1),
+      {
+        id: card.id,
+        data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
+      },
+      ...allCardSearchData.slice(originalIndex + 1),
+    ];
+  } else {
+    // If original card is not found, add the new data to the end of a new array
+    allCardDataWithPath = [...allCardDataWithPath, {...restOfCard, routePath}];
+    allCardArguments = [...allCardArguments, {id: card.id, arguments: args}];
+    allCardMethods = [...allCardMethods, {id: card.id, methods}];
+    allCardSearchData = [
+      ...allCardSearchData,
+      {
+        id: card.id,
+        data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
+      },
+    ];
+  }
+
+  if (args) hasArguments.add(card.id);
 };
 
 /**
@@ -66,11 +103,6 @@ const splitCardData = (card: CardData, routePath: AvailablePages) => {
  */
 const useGetArgumentsByID = (id: string): ArgumentsData | undefined =>
   useAllCardArguments().find(card => card.id === id)?.arguments;
-
-const useHasArguments = (id: string): boolean => {
-  const args = useGetArgumentsByID(id);
-  return !!args && Object.keys(args).length > 0;
-};
 
 const useSearchCards = (searchValue: string) => {
   const searchData = useAllCardSearchData();
@@ -161,7 +193,7 @@ const duplicateCard = (id: string, defaultID?: string, defaultTitle?: string) =>
   allModules = updatedModules;
   allCards = [...allCards, duplicatedCard];
 
-  splitCardData(duplicatedCard, routePath);
+  splitCardData(duplicatedCard, routePath, id);
 
   emitChange();
 
@@ -197,6 +229,7 @@ const removeDuplicatedCard = (id: string) => {
   if (cardRemoved) {
     allModules = updatedModules;
     allCardDataWithPath = allCardDataWithPath.filter(card => card.id !== id);
+    hasArguments.delete(id);
     allCardArguments = allCardArguments.filter(arg => arg.id !== id);
     allCardMethods = allCardMethods.filter(method => method.id !== id);
     allCardSearchData = allCardSearchData.filter(card => card.id !== id);
@@ -218,6 +251,7 @@ async function emitLoaded(
   allCards = _newAllCards;
   allCardDataWithPath = _newCardDataWithPath;
   allCardArguments = _newCardArguments;
+  hasArguments = new Set(_newCardArguments.filter(arg => !!arg).map(item => item.id));
   allCardMethods = _newCardMethods;
   allCardSearchData = _newCardSearchData;
 
@@ -317,7 +351,7 @@ export type ModuleData = {
   allModules: CardModules;
   allCards: CardData[];
   useGetArgumentsByID: (id: string) => ArgumentsData | undefined;
-  useGetCardsByPath: (path: AvailablePages) => CardData[] | undefined;
+  useGetCardsByPath: (path: AvailablePages) => LoadedCardData[] | undefined;
   getCardMethod: <T extends keyof CardRendererMethods>(
     cards: CardData[],
     id: string,

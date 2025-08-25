@@ -6,7 +6,7 @@ import {memo, useMemo} from 'react';
 
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../assets/icons/SvgIcons/SvgIconsColor';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {useAllCardDataWithPath, useSearchCards} from '../../Modules/ModuleLoader';
+import {useAllCardDataWithPath, useHasArguments, useSearchCards} from '../../Modules/ModuleLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {CardContainerClasses} from '../Pages/CardContainer';
 import HomeCategory from '../Pages/ContentPages/Home/HomeCategory';
@@ -32,6 +32,7 @@ const useCardsById = (cardIds: string[]): LoadedCardData[] => {
 const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
   const installedCards = useCardsState('installedCards');
   const cards = useCardsById(cardIds);
+  const hasArguments = useHasArguments();
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
@@ -46,7 +47,14 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
           ) : (
             cards.map(card => {
               const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-              return <LynxCardWrapper cardData={card} isInstalled={isInstalled} key={`${card.id}-card-wrapper-key`} />;
+              return (
+                <LynxCardWrapper
+                  cardData={card}
+                  isInstalled={isInstalled}
+                  key={`${card.id}-card-wrapper-key`}
+                  hasArguments={hasArguments.has(card.id)}
+                />
+              );
             })
           )
         ) : (
@@ -65,7 +73,7 @@ const AllCards = () => {
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
   const allCards = useAllCardDataWithPath();
-
+  const hasArguments = useHasArguments();
   const pinnedCards = useCardsState('pinnedCards');
 
   const sortedCards = useMemo(() => {
@@ -87,7 +95,14 @@ const AllCards = () => {
         {isNil(ReplaceCards) ? (
           sortedCards.map(card => {
             const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-            return <LynxCardWrapper cardData={card} isInstalled={isInstalled} key={`${card.id}-card-wrapper-key`} />;
+            return (
+              <LynxCardWrapper
+                cardData={card}
+                isInstalled={isInstalled}
+                key={`${card.id}-card-wrapper-key`}
+                hasArguments={hasArguments.has(card.id)}
+              />
+            );
           })
         ) : (
           <ReplaceCards cards={sortedCards} />
@@ -163,9 +178,8 @@ export const AllCardsSection = memo(() => {
 
 export function CardsBySearch({searchValue}: {searchValue: string}) {
   const installedCards = useCardsState('installedCards');
-
   const filteredCards = useSearchCards(searchValue);
-
+  const hasArguments = useHasArguments();
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
   return (
@@ -175,7 +189,14 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
       ) : isNil(ReplaceCards) ? (
         filteredCards.map(card => {
           const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-          return <LynxCardWrapper cardData={card} isInstalled={isInstalled} key={`${card.id}-card-wrapper-key`} />;
+          return (
+            <LynxCardWrapper
+              cardData={card}
+              isInstalled={isInstalled}
+              key={`${card.id}-card-wrapper-key`}
+              hasArguments={hasArguments.has(card.id)}
+            />
+          );
         })
       ) : (
         <ReplaceCards cards={filteredCards} />
