@@ -12,7 +12,7 @@ import {useDispatch} from 'react-redux';
 
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
-import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
@@ -45,7 +45,7 @@ type Props = {isOpen: boolean; cardId: string; title: string; type: string; tabI
 const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
   const activeTab = useTabsState('activeTab');
   const installedCard = useInstalledCard(cardId);
-  const allCards = useAllCards();
+  const allMethods = useAllCardMethods();
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -55,8 +55,8 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
   const [state, setState] = useState<InstallState>(initialState);
 
   const methods: CardRendererMethods['manager'] = useMemo(
-    () => getCardMethod(allCards, cardId, 'manager'),
-    [cardId, allCards],
+    () => getCardMethod(allMethods, cardId, 'manager'),
+    [cardId, allMethods],
   );
 
   const [progressInfo, setProgressInfo] = useState<DownloadProgress | undefined>(undefined);

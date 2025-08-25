@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import AddBreadcrumb_Renderer from '../../../../../Breadcrumbs';
 import {Download2_Icon, Play_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionRendererApi} from '../../../Extensions/ExtensionLoader';
-import {getCardMethod, useAllCards} from '../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../Redux/Reducer/ModalsReducer';
 import {useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
@@ -26,7 +26,7 @@ const StartButton = memo(() => {
 
   const compactMode = useSettingsState('cardsCompactMode');
   const autoUpdateExtensions = useIsAutoUpdateExtensions(id);
-  const allCards = useAllCards();
+  const allMethods = useAllCardMethods();
   const activeTab = useTabsState('activeTab');
 
   const updatingExtensions = useCardsState('updatingExtensions');
@@ -71,11 +71,11 @@ const StartButton = memo(() => {
 
   const install = useCallback(() => {
     AddBreadcrumb_Renderer(`Start Installing AI: id:${id}`);
-    if (getCardMethod(allCards, id, 'manager')) {
+    if (getCardMethod(allMethods, id, 'manager')) {
       extensionRendererApi.events.emit('before_card_install', {id});
       dispatch(modalActions.openInstallUICard({cardId: id, tabID: activeTab, type: 'install', title}));
     }
-  }, [repoUrl, title, id, dispatch, allCards, activeTab]);
+  }, [repoUrl, title, id, dispatch, allMethods, activeTab]);
 
   return (
     <Button
