@@ -13,7 +13,6 @@ import {searchInStrings} from '../../Utils/UtilFunctions';
 import {CardContainerClasses} from '../Pages/CardContainer';
 import HomeCategory from '../Pages/ContentPages/Home/HomeCategory';
 import LynxCard from './Card/LynxCard';
-import LynxCardLoading from './Card/LynxCard-Loading';
 import {CardContext, CardsDataManager} from './CardsDataManager';
 import NavigateModulesPage from './NavigateModulesPage';
 
@@ -49,13 +48,19 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
               <NavigateModulesPage />
             </Empty>
           ) : (
-            <LynxCardLoading
-              startDelay={0}
-              batchDelay={70}
-              sortedCards={cards}
-              installedCards={installedCards}
-              ReplaceComponent={ReplaceComponent}
-            />
+            cards.map((card, index) => {
+              const isInstalled = installedCards.some(iCard => iCard.id === card.id);
+              const context = new CardsDataManager(card, isInstalled);
+              return (
+                <CardContext.Provider value={context} key={`cardProv-${index}`}>
+                  {ReplaceComponent ? (
+                    <ReplaceComponent context={context} key={`${card.id}-card-key`} />
+                  ) : (
+                    <LynxCard key={`${card.id}-card-key`} />
+                  )}
+                </CardContext.Provider>
+              );
+            })
           )
         ) : (
           <ReplaceCards cards={cards} />
@@ -92,11 +97,19 @@ const AllCards = () => {
     <LayoutGroup id="all_cards_category">
       <AnimatePresence>
         {isNil(ReplaceCards) ? (
-          <LynxCardLoading
-            sortedCards={sortedCards}
-            installedCards={installedCards}
-            ReplaceComponent={ReplaceComponent}
-          />
+          sortedCards.map((card, index) => {
+            const isInstalled = installedCards.some(iCard => iCard.id === card.id);
+            const context = new CardsDataManager(card, isInstalled);
+            return (
+              <CardContext.Provider value={context} key={`cardProv-${index}`}>
+                {ReplaceComponent ? (
+                  <ReplaceComponent context={context} key={`${card.id}-card-key`} />
+                ) : (
+                  <LynxCard key={`${card.id}-card-key`} />
+                )}
+              </CardContext.Provider>
+            );
+          })
         ) : (
           <ReplaceCards cards={sortedCards} />
         )}
