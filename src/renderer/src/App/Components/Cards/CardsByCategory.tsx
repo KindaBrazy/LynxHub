@@ -172,19 +172,13 @@ export const AllCardsSection = memo(() => {
 export function CardsBySearch({searchValue}: {searchValue: string}) {
   const installedCards = useCardsState('installedCards');
 
-  const searchData = useMemo(
-    () =>
-      allCards.map(card => ({
-        id: card.id,
-        data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
-      })),
-    [],
-  );
-
-  const filteredCards = useMemo(
-    () => allCards.filter(card => searchInStrings(searchValue, searchData.find(data => data.id === card.id)?.data)),
-    [searchValue, searchData],
-  );
+  const filteredCards = useMemo(() => {
+    const searchData = allCards.map(card => ({
+      id: card.id,
+      data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
+    }));
+    return allCards.filter(card => searchInStrings(searchValue, searchData.find(data => data.id === card.id)?.data));
+  }, [searchValue]);
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
   const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
