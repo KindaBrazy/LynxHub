@@ -50,7 +50,7 @@ export const CardMenu = observer(() => {
         {first.map((Comp, index) => {
           return Comp({key: index, context: useCardData()});
         })}
-        <DropdownSection key="options" showDivider>
+        <DropdownSection key="options" classNames={{divider: 'bg-foreground-100'}} showDivider>
           {MenuLaunchConfig()}
           {MenuExtensions()}
           {MenuRepoConfig()}
@@ -58,7 +58,7 @@ export const CardMenu = observer(() => {
         {second.map((Comp, index) => {
           return Comp({key: index, context: useCardData()});
         })}
-        <DropdownSection key="update" showDivider>
+        <DropdownSection key="update" classNames={{divider: 'bg-foreground-100'}} showDivider>
           {MenuUpdate()}
           {MenuCheckForUpdate()}
           {MenuAutoUpdate()}
@@ -66,9 +66,11 @@ export const CardMenu = observer(() => {
         {third.map((Comp, index) => {
           return Comp({key: index, context: useCardData()});
         })}
-        <DropdownSection key="danger-zone">
+        <DropdownSection key="info" classNames={{divider: 'bg-foreground-100'}} showDivider>
           {MenuInfo()}
           {MenuHomePage()}
+        </DropdownSection>
+        <DropdownSection key="card_modify">
           {MenuDuplicate()}
           {MenuUnAssign()}
           {MenuUninstall()}
