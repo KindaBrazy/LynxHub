@@ -4,7 +4,7 @@ import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {useAllCardData} from '../../Modules/ModuleLoader';
+import {useAllCardDataWithPath} from '../../Modules/ModuleLoader';
 import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
@@ -21,7 +21,7 @@ const RunningCardView = ({runningCard}: Props) => {
   const ExtTerminal = useMemo(() => extensionsData.runningAI.terminal, []);
   const ExtBrowser = useMemo(() => extensionsData.runningAI.browser, []);
 
-  const allCardsData = useAllCardData();
+  const allCardsData = useAllCardDataWithPath();
 
   const activeTab = useTabsState('activeTab');
   const tabs = useTabsState('tabs');

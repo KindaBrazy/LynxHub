@@ -20,7 +20,7 @@ type CardSearchData = {id: string; data: string[]}[];
 let allModules: CardModules = [];
 let allCards: CardData[] = [];
 
-let allCardData: LoadedCardData[] = [];
+let allCardDataWithPath: LoadedCardData[] = [];
 let allCardArguments: LoadedArguments[] = [];
 let allCardMethods: LoadedMethods[] = [];
 let allCardSearchData: CardSearchData = [];
@@ -40,14 +40,14 @@ function emitChange() {
 
 const useAllModules = (): CardModules => useSyncExternalStore(subscribe, () => allModules);
 
-const useAllCardData = (): LoadedCardData[] => useSyncExternalStore(subscribe, () => allCardData);
+const useAllCardDataWithPath = (): LoadedCardData[] => useSyncExternalStore(subscribe, () => allCardDataWithPath);
 const useAllCardArguments = (): LoadedArguments[] => useSyncExternalStore(subscribe, () => allCardArguments);
 const useAllCardMethods = (): LoadedMethods[] => useSyncExternalStore(subscribe, () => allCardMethods);
 const useAllCardSearchData = (): CardSearchData => useSyncExternalStore(subscribe, () => allCardSearchData);
 
-const splitCardData = (card: CardData) => {
+const splitCardData = (card: CardData, routePath: AvailablePages) => {
   const {arguments: args, methods, ...restOfCard} = card;
-  allCardData.push(restOfCard);
+  allCardDataWithPath.push({...restOfCard, routePath});
   allCardArguments.push({id: card.id, arguments: args});
   allCardMethods.push({id: card.id, methods});
   allCardSearchData.push({
@@ -79,8 +79,8 @@ const useSearchCards = (searchValue: string) => {
  * @param path The path to filter cards by.
  * @returns An array of cards or undefined if no module matches the path.
  */
-const useGetCardsByPath = (path: AvailablePages): CardData[] | undefined =>
-  useAllModules().find(module => module.routePath === path)?.cards;
+const useGetCardsByPath = (path: AvailablePages): LoadedCardData[] | undefined =>
+  useAllCardDataWithPath().filter(module => module.routePath !== path);
 
 const getCardMethod = <T extends keyof CardRendererMethods>(
   cardMethods: LoadedMethods[],
@@ -90,9 +90,10 @@ const getCardMethod = <T extends keyof CardRendererMethods>(
   return cardMethods.find(card => card.id === id)?.methods?.[method] as CardRendererMethods[T] | undefined;
 };
 
-const useGetInstallType = (id: string) => useAllCardData().find(card => card.id === id)?.installationType || 'others';
+const useGetInstallType = (id: string) =>
+  useAllCardDataWithPath().find(card => card.id === id)?.installationType || 'others';
 const useGetUninstallType = (id: string) =>
-  useAllCardData().find(card => card.id === id)?.uninstallType || 'removeFolder';
+  useAllCardDataWithPath().find(card => card.id === id)?.uninstallType || 'removeFolder';
 
 /**
  * Duplicate a card
@@ -100,7 +101,7 @@ const useGetUninstallType = (id: string) =>
 const duplicateCard = (id: string, defaultID?: string, defaultTitle?: string) => {
   let newId: string = '';
   let newTitle: string = '';
-  let routePath: string = '';
+  let routePath: AvailablePages = '/imageGenerationPage';
 
   // Function to generate the next ID
   const generateNewId = (baseId: string): string => {
@@ -155,7 +156,7 @@ const duplicateCard = (id: string, defaultID?: string, defaultTitle?: string) =>
   allModules = updatedModules;
   allCards = [...allCards, duplicatedCard];
 
-  splitCardData(duplicatedCard);
+  splitCardData(duplicatedCard, routePath);
 
   emitChange();
 
@@ -188,7 +189,7 @@ const removeDuplicatedCard = (id: string) => {
 
   if (cardRemoved) {
     allModules = updatedModules;
-    allCardData = allCardData.filter(card => card.id !== id);
+    allCardDataWithPath = allCardDataWithPath.filter(card => card.id !== id);
     allCardArguments = allCardArguments.filter(arg => arg.id !== id);
     allCardMethods = allCardMethods.filter(method => method.id !== id);
     allCardSearchData = allCardSearchData.filter(card => card.id !== id);
@@ -199,7 +200,7 @@ const removeDuplicatedCard = (id: string) => {
 async function emitLoaded(
   _newAllModules: CardModules,
   _newAllCards: CardData[],
-  _newCardData: LoadedCardData[],
+  _newCardDataWithPath: LoadedCardData[],
   _newCardArguments: LoadedArguments[],
   _newCardMethods: LoadedMethods[],
   _newCardSearchData: CardSearchData,
@@ -208,7 +209,7 @@ async function emitLoaded(
 
   allModules = _newAllModules;
   allCards = _newAllCards;
-  allCardData = _newCardData;
+  allCardDataWithPath = _newCardDataWithPath;
   allCardArguments = _newCardArguments;
   allCardMethods = _newCardMethods;
   allCardSearchData = _newCardSearchData;
@@ -250,7 +251,7 @@ const loadModules = async () => {
     const newAllModules: CardModules = [];
     const newAllCards: CardData[] = [];
 
-    const newCardData: LoadedCardData[] = [];
+    const newCardDataWithPath: LoadedCardData[] = [];
     const newCardArguments: LoadedArguments[] = [];
     const newCardMethods: LoadedMethods[] = [];
     const newCardSearchData: CardSearchData = [];
@@ -277,7 +278,7 @@ const loadModules = async () => {
 
           mod.cards.forEach(card => {
             const {arguments: args, methods, ...restOfCard} = card;
-            newCardData.push(restOfCard);
+            newCardDataWithPath.push({...restOfCard, routePath: mod.routePath});
             newCardArguments.push({id: card.id, arguments: args});
             newCardMethods.push({id: card.id, methods});
             newCardSearchData.push({
@@ -291,7 +292,14 @@ const loadModules = async () => {
       return acc;
     }, {});
 
-    await emitLoaded(newAllModules, newAllCards, newCardData, newCardArguments, newCardMethods, newCardSearchData);
+    await emitLoaded(
+      newAllModules,
+      newAllCards,
+      newCardDataWithPath,
+      newCardArguments,
+      newCardMethods,
+      newCardSearchData,
+    );
   } catch (error) {
     console.error('Error importing modules:', error);
     throw error;
@@ -318,7 +326,7 @@ export {
   loadModules,
   removeDuplicatedCard,
   useAllCardArguments,
-  useAllCardData,
+  useAllCardDataWithPath,
   useAllCardMethods,
   useAllCardSearchData,
   useAllModules,

@@ -1,4 +1,4 @@
-import {CardData} from '@lynx_module/types';
+import {LoadedCardData} from '@lynx_module/types';
 import {create} from 'zustand';
 
 import {validateGitRepoUrl} from '../../../../../cross/CrossUtils';
@@ -25,7 +25,7 @@ export interface CardState {
 }
 
 // Create a reusable function to generate a store
-export const createCardStore = (initialData: CardData & {isInstalled: boolean}) => {
+export const createCardStore = (initialData: LoadedCardData & {isInstalled: boolean; hasArguments: boolean}) => {
   return create<CardState>(set => ({
     // Static Info from props
     title: initialData.title,
@@ -34,7 +34,7 @@ export const createCardStore = (initialData: CardData & {isInstalled: boolean}) 
     repoUrl: validateGitRepoUrl(initialData.repoUrl),
     bgUrl: initialData.bgUrl,
     extensionsDir: initialData.extensionsDir,
-    haveArguments: !!initialData.arguments,
+    haveArguments: initialData.hasArguments,
     type: initialData.type,
 
     // Component State
