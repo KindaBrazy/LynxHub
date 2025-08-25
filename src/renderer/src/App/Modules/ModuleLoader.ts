@@ -15,10 +15,7 @@ import {extractGitUrl, isDev} from '../../../../cross/CrossUtils';
 import rendererIpc from '../RendererIpc';
 import {searchInStrings} from '../Utils/UtilFunctions';
 
-/** TODO: Add these:
- * Have have Arguments
- * searchData in CardsByCategory
- *  */
+type CardSearchData = {id: string; data: string[]}[];
 
 let allModules: CardModules = [];
 let allCards: CardData[] = [];
@@ -26,6 +23,7 @@ let allCards: CardData[] = [];
 let allCardData: LoadedCardData[] = [];
 let allCardArguments: LoadedArguments[] = [];
 let allCardMethods: LoadedMethods[] = [];
+let allCardSearchData: CardSearchData = [];
 
 const listeners = new Set<() => void>();
 
@@ -46,12 +44,17 @@ const useAllModules = (): CardModules => useSyncExternalStore(subscribe, () => a
 const useAllCardData = (): LoadedCardData[] => useSyncExternalStore(subscribe, () => allCardData);
 const useAllCardArguments = (): LoadedArguments[] => useSyncExternalStore(subscribe, () => allCardArguments);
 const useAllCardMethods = (): LoadedMethods[] => useSyncExternalStore(subscribe, () => allCardMethods);
+const useAllCardSearchData = (): CardSearchData => useSyncExternalStore(subscribe, () => allCardSearchData);
 
 const splitCardData = (card: CardData) => {
   const {arguments: args, methods, ...restOfCard} = card;
   allCardData.push(restOfCard);
   allCardArguments.push({id: card.id, arguments: args});
   allCardMethods.push({id: card.id, methods});
+  allCardSearchData.push({
+    id: card.id,
+    data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
+  });
 };
 
 /**
@@ -68,11 +71,7 @@ const useHasArguments = (id: string): boolean => {
 };
 
 const useSearchCards = (searchValue: string) => {
-  const allCards = useAllCardData();
-  const searchData = allCards.map(card => ({
-    id: card.id,
-    data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
-  }));
+  const searchData = useAllCardSearchData();
   return allCards.filter(card => searchInStrings(searchValue, searchData.find(data => data.id === card.id)?.data));
 };
 
@@ -193,6 +192,7 @@ const removeDuplicatedCard = (id: string) => {
     allCardData = allCardData.filter(card => card.id !== id);
     allCardArguments = allCardArguments.filter(arg => arg.id !== id);
     allCardMethods = allCardMethods.filter(method => method.id !== id);
+    allCardSearchData = allCardSearchData.filter(card => card.id !== id);
     emitChange();
   }
 };
@@ -203,6 +203,7 @@ async function emitLoaded(
   _newCardData: LoadedCardData[],
   _newCardArguments: LoadedArguments[],
   _newCardMethods: LoadedMethods[],
+  _newCardSearchData: CardSearchData,
 ) {
   const {duplicated} = await rendererIpc.storage.get('cards');
 
@@ -211,6 +212,7 @@ async function emitLoaded(
   allCardData = _newCardData;
   allCardArguments = _newCardArguments;
   allCardMethods = _newCardMethods;
+  allCardSearchData = _newCardSearchData;
 
   duplicated.forEach(item => duplicateCard(item.ogID, item.id, item.title));
 
@@ -252,6 +254,7 @@ const loadModules = async () => {
     const newCardData: LoadedCardData[] = [];
     const newCardArguments: LoadedArguments[] = [];
     const newCardMethods: LoadedMethods[] = [];
+    const newCardSearchData: CardSearchData = [];
 
     // Optimize module and card aggregation using reduce for better performance
     importedModules.reduce((acc, {module}) => {
@@ -273,14 +276,23 @@ const loadModules = async () => {
           newAllModules.push(mod);
           newAllCards.push(...mod.cards);
 
-          mod.cards.forEach(splitCardData);
+          mod.cards.forEach(card => {
+            const {arguments: args, methods, ...restOfCard} = card;
+            newCardData.push(restOfCard);
+            newCardArguments.push({id: card.id, arguments: args});
+            newCardMethods.push({id: card.id, methods});
+            newCardSearchData.push({
+              id: card.id,
+              data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
+            });
+          });
         }
       });
 
       return acc;
     }, {});
 
-    await emitLoaded(newAllModules, newAllCards, newCardData, newCardArguments, newCardMethods);
+    await emitLoaded(newAllModules, newAllCards, newCardData, newCardArguments, newCardMethods, newCardSearchData);
   } catch (error) {
     console.error('Error importing modules:', error);
     throw error;
