@@ -1,4 +1,4 @@
-import {CardData} from '@lynx_module/types';
+import {LoadedCardData} from '@lynx_module/types';
 import {Empty} from 'antd';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {compact, isEmpty, isNil} from 'lodash';
@@ -7,7 +7,7 @@ import {memo, useMemo} from 'react';
 import {extractGitUrl} from '../../../../../cross/CrossUtils';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../assets/icons/SvgIcons/SvgIconsColor';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {allCards} from '../../Modules/ModuleLoader';
+import {useAllCardDataWithPath} from '../../Modules/ModuleLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {searchInStrings} from '../../Utils/UtilFunctions';
 import {CardContainerClasses} from '../Pages/CardContainer';
@@ -20,12 +20,12 @@ import NavigateModulesPage from './NavigateModulesPage';
  * @param cardIds Array of card IDs
  * @returns Array of CardData objects
  */
-const useCardsById = (cardIds: string[]): CardData[] => {
-  const cards = useMemo(() => {
-    return cardIds.map(cardId => allCards.find(card => card && card.id === cardId)) as CardData[];
-  }, [cardIds]);
+const useCardsById = (cardIds: string[]): LoadedCardData[] => {
+  const allCards = useAllCardDataWithPath();
 
-  return cards.filter(Boolean);
+  return useMemo(() => {
+    return allCards.filter(card => cardIds.includes(card.id));
+  }, [cardIds]);
 };
 
 /**
@@ -65,6 +65,8 @@ const AllCards = () => {
 
   const allCategory = useMemo(() => extensionsData.customizePages.home.add.allCategory, []);
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
+
+  const allCards = useAllCardDataWithPath();
 
   const pinnedCards = useCardsState('pinnedCards');
 
@@ -163,6 +165,7 @@ export const AllCardsSection = memo(() => {
 
 export function CardsBySearch({searchValue}: {searchValue: string}) {
   const installedCards = useCardsState('installedCards');
+  const allCards = useAllCardDataWithPath();
 
   const filteredCards = useMemo(() => {
     const searchData = allCards.map(card => ({
