@@ -1,18 +1,22 @@
 import {CardHeader, Skeleton} from '@heroui/react';
 import {Typography} from 'antd';
 import {capitalize} from 'lodash';
-import {observer} from 'mobx-react-lite';
-import {FormEvent, useCallback, useMemo} from 'react';
+import {FormEvent, memo, useCallback, useMemo} from 'react';
 
 import {useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
 import {useDevInfo, useLoadImage} from '../../../Utils/LocalStorage';
-import {useCardData} from '../CardsDataManager';
 import Header_Pin from './Header_Pin';
+import {useCardStore} from './LynxCard-Wrapper';
 
 const {Paragraph, Text, Title} = Typography;
 
-const LynxCardHeader = observer(() => {
-  const {bgUrl, id, description, title, repoUrl} = useCardData();
+const LynxCardHeader = memo(() => {
+  const id = useCardStore(state => state.id);
+  const bgUrl = useCardStore(state => state.bgUrl);
+  const description = useCardStore(state => state.description);
+  const title = useCardStore(state => state.title);
+  const repoUrl = useCardStore(state => state.repoUrl);
+
   const compactMode = useSettingsState('cardsCompactMode');
   const cardsDevImage = useSettingsState('cardsDevImage');
   const cardsDevName = useSettingsState('cardsDevName');
@@ -94,4 +98,5 @@ const LynxCardHeader = observer(() => {
     </CardHeader>
   );
 });
+
 export default LynxCardHeader;

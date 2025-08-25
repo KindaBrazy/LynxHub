@@ -5,6 +5,11 @@ import {useSyncExternalStore} from 'react';
 import {isDev} from '../../../../cross/CrossUtils';
 import rendererIpc from '../RendererIpc';
 
+/** TODO: Add these:
+ * Have have Arguments
+ * searchData in CardsByCategory
+ *  */
+
 let allModules: CardModules = [];
 let allCards: CardData[] = [];
 

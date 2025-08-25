@@ -5,10 +5,12 @@ import AddBreadcrumb_Renderer from '../../../../../Breadcrumbs';
 import {Pin_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../RendererIpc';
 import {useIsPinnedCard} from '../../../Utils/UtilHooks';
-import {useCardData} from '../CardsDataManager';
+import {useCardStore} from './LynxCard-Wrapper';
 
 export default function Header_Pin() {
-  const {id, installed} = useCardData();
+  const id = useCardStore(state => state.id);
+  const installed = useCardStore(state => state.installed);
+
   const isPinned = useIsPinnedCard(id);
 
   const onPress = useCallback(() => {

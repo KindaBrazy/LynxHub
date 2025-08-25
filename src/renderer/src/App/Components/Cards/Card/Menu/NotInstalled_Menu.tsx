@@ -1,13 +1,15 @@
 import {Button, Dropdown, DropdownMenu, DropdownTrigger} from '@heroui/react';
-import {observer} from 'mobx-react-lite';
+import {memo} from 'react';
 
 import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
-import {useCardData} from '../../CardsDataManager';
+import {useCardStore} from '../LynxCard-Wrapper';
 import {MenuDuplicate, MenuHomePage} from './MenuItems/CardMenu-About';
 
-const NotInstalled_Menu = observer(() => {
-  const {menuIsOpen, setMenuIsOpen} = useCardData();
+const NotInstalled_Menu = memo(() => {
+  const menuIsOpen = useCardStore(state => state.menuIsOpen);
+  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
+
   const compactMode = useSettingsState('cardsCompactMode');
 
   return (

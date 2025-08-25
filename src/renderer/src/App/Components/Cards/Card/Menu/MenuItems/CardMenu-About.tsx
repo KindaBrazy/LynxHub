@@ -19,10 +19,15 @@ import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../../../Utils/UtilHooks';
-import {useCardData} from '../../../CardsDataManager';
+import {useCardStore} from '../../LynxCard-Wrapper';
 
 export const MenuInfo = () => {
-  const {id, extensionsDir, repoUrl, setMenuIsOpen, title} = useCardData();
+  const id = useCardStore(state => state.id);
+  const extensionsDir = useCardStore(state => state.extensionsDir);
+  const repoUrl = useCardStore(state => state.repoUrl);
+  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
+  const title = useCardStore(state => state.title);
+
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const webUI = useInstalledCard(id);
   const {name} = useDevInfo(repoUrl);
@@ -57,7 +62,10 @@ export const MenuInfo = () => {
 };
 
 export const MenuHomePage = () => {
-  const {repoUrl, title, setMenuIsOpen} = useCardData();
+  const repoUrl = useCardStore(state => state.repoUrl);
+  const title = useCardStore(state => state.title);
+  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
+
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
 
   const activeTab = useTabsState('activeTab');
@@ -88,7 +96,8 @@ export const MenuHomePage = () => {
 };
 
 export const MenuDuplicate = () => {
-  const {id} = useCardData();
+  const id = useCardStore(state => state.id);
+
   const duplicates = useCardsState('duplicates');
   const isDuplicated = useMemo(() => duplicates.some(card => card.id === id), [duplicates, id]);
 

@@ -14,10 +14,16 @@ import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {useInstalledCard, useIsAutoUpdateExtensions, useUpdatingCard} from '../../../Utils/UtilHooks';
 import ShinyText from '../../Reusable/ShinyText';
-import {useCardData} from '../CardsDataManager';
+import {useCardStore} from './LynxCard-Wrapper';
 
 const StartButton = memo(() => {
-  const {id, installed, repoUrl, title, type, extensionsDir} = useCardData();
+  const id = useCardStore(state => state.id);
+  const installed = useCardStore(state => state.installed);
+  const repoUrl = useCardStore(state => state.repoUrl);
+  const title = useCardStore(state => state.title);
+  const type = useCardStore(state => state.type);
+  const extensionsDir = useCardStore(state => state.extensionsDir);
+
   const compactMode = useSettingsState('cardsCompactMode');
   const autoUpdateExtensions = useIsAutoUpdateExtensions(id);
   const allCards = useAllCards();

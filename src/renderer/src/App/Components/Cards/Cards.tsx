@@ -9,8 +9,7 @@ import {useGetCardsByPath} from '../../Modules/ModuleLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {PageID} from '../../Utils/Constants';
 import Page from '../Pages/Page';
-import LynxCard from './Card/LynxCard';
-import {CardContext, CardsDataManager} from './CardsDataManager';
+import LynxCardWrapper from './Card/LynxCard-Wrapper';
 import NavigateModulesPage from './NavigateModulesPage';
 
 export function GetComponentsByPath({routePath, extensionsElements}: {routePath: string; extensionsElements?: FC[]}) {
@@ -28,7 +27,6 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
   const pinnedCards = useCardsState('pinnedCards');
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
-  const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
 
   const sortedCards = useMemo(() => {
     const pin = compact(cards?.filter(card => pinnedCards.includes(card.id)));
@@ -51,19 +49,14 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
         <>
           <LayoutGroup id={`${routePath}_cards`}>
             {isNil(ReplaceCards) ? (
-              sortedCards.map((card, index) => {
-                const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-                const context = new CardsDataManager(card, isInstalled);
-                return (
-                  <CardContext.Provider value={context} key={`cardProv-${index}`}>
-                    {ReplaceComponent ? (
-                      <ReplaceComponent context={context} key={`${card.id}-card-key`} />
-                    ) : (
-                      <LynxCard key={`${card.id}-card-key`} />
-                    )}
-                  </CardContext.Provider>
-                );
-              })
+              <>
+                {sortedCards.map(card => {
+                  const isInstalled = installedCards.some(iCard => iCard.id === card.id);
+                  return (
+                    <LynxCardWrapper cardData={card} isInstalled={isInstalled} key={`${card.id}-card-wrapper-key`} />
+                  );
+                })}
+              </>
             ) : (
               <ReplaceCards cards={sortedCards} />
             )}

@@ -59,7 +59,8 @@
     "mitt": "^3.0.1",
     "node-pty": "^1.1.0-beta33",
     "serve-handler": "^6.1.6",
-    "tree-kill": "^1.2.2"
+    "tree-kill": "^1.2.2",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
@@ -110,8 +111,6 @@
     "framer-motion": "^12.23.12",
     "globals": "^16.3.0",
     "lodash": "^4.17.21",
-    "mobx": "^6.13.7",
-    "mobx-react-lite": "^4.1.0",
     "normalize-url": "^8.0.2",
     "ogl": "^1.0.11",
     "overlayscrollbars": "^2.11.5",

@@ -1,14 +1,8 @@
 import {DropdownItem, DropdownSection} from '@heroui/react';
-import {useEffect} from 'react';
 
-import {CardsDataManager} from '../../../../src/renderer/src/App/Components/Cards/CardsDataManager';
 import {Bug_Icon, Trash_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 
-export default function CardsAddMenu({context}: {context: CardsDataManager}) {
-  useEffect(() => {
-    console.log(context.id);
-  }, [context]);
-
+export default function CardsAddMenu() {
   return (
     <DropdownSection key="bugs" title="Bugs" showDivider>
       <DropdownItem key="addBug" title="Add Bug" className="cursor-default" startContent={<Bug_Icon />}></DropdownItem>
