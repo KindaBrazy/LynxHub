@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import {Card} from 'antd';
-import {isEmpty} from 'lodash';
+import {isEmpty, isString} from 'lodash';
 import {ReactNode} from 'react';
 
 import {Add_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
@@ -8,7 +8,7 @@ import LynxTooltip from '../../Reusable/LynxTooltip';
 
 type Props = {
   children: ReactNode;
-  title: string;
+  title: ReactNode;
   description?: string;
   onAddPress?: () => void;
   addTooltipTitle?: string;
@@ -29,7 +29,7 @@ export default function LaunchConfigSection({
       title={
         <div className="flex w-full flex-col py-3">
           <div className="flex w-full flex-row items-center justify-between">
-            <span>{title}</span>
+            {isString(title) ? <span>{title}</span> : title}
             {customButton || (
               <LynxTooltip content={addTooltipTitle} isEssential>
                 <Button size="sm" variant="light" onPress={onAddPress} className="cursor-default" isIconOnly>
