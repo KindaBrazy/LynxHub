@@ -47,13 +47,16 @@ const useAllCardSearchData = (): CardSearchData => useSyncExternalStore(subscrib
 
 const splitCardData = (card: CardData, routePath: AvailablePages) => {
   const {arguments: args, methods, ...restOfCard} = card;
-  allCardDataWithPath.push({...restOfCard, routePath});
-  allCardArguments.push({id: card.id, arguments: args});
-  allCardMethods.push({id: card.id, methods});
-  allCardSearchData.push({
-    id: card.id,
-    data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
-  });
+  allCardDataWithPath = [...allCardDataWithPath, {...restOfCard, routePath}];
+  allCardArguments = [...allCardArguments, {id: card.id, arguments: args}];
+  allCardMethods = [...allCardMethods, {id: card.id, methods}];
+  allCardSearchData = [
+    ...allCardSearchData,
+    {
+      id: card.id,
+      data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
+    },
+  ];
 };
 
 /**
@@ -161,6 +164,8 @@ const duplicateCard = (id: string, defaultID?: string, defaultTitle?: string) =>
   splitCardData(duplicatedCard, routePath);
 
   emitChange();
+
+  console.log('duplicated');
 
   return {id: newId, title: newTitle, routePath};
 };
