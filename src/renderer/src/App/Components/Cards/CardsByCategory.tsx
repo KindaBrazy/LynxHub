@@ -10,7 +10,7 @@ import {useAllCardDataWithPath, useHasArguments, useSearchCards} from '../../Mod
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {CardContainerClasses} from '../Pages/CardContainer';
 import HomeCategory from '../Pages/ContentPages/Home/HomeCategory';
-import LynxCardWrapper from './Card/LynxCard-Wrapper';
+import LynxCardLoading from './Card/LynxCard-Loading';
 import NavigateModulesPage from './NavigateModulesPage';
 
 /**
@@ -45,17 +45,7 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
               <NavigateModulesPage />
             </Empty>
           ) : (
-            cards.map(card => {
-              const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-              return (
-                <LynxCardWrapper
-                  cardData={card}
-                  isInstalled={isInstalled}
-                  key={`${card.id}-card-wrapper-key`}
-                  hasArguments={hasArguments.has(card.id)}
-                />
-              );
-            })
+            <LynxCardLoading sortedCards={cards} hasArguments={hasArguments} installedCards={installedCards} />
           )
         ) : (
           <ReplaceCards cards={cards} />
@@ -93,17 +83,7 @@ const AllCards = () => {
     <LayoutGroup id="all_cards_category">
       <AnimatePresence>
         {isNil(ReplaceCards) ? (
-          sortedCards.map(card => {
-            const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-            return (
-              <LynxCardWrapper
-                cardData={card}
-                isInstalled={isInstalled}
-                key={`${card.id}-card-wrapper-key`}
-                hasArguments={hasArguments.has(card.id)}
-              />
-            );
-          })
+          <LynxCardLoading sortedCards={sortedCards} hasArguments={hasArguments} installedCards={installedCards} />
         ) : (
           <ReplaceCards cards={sortedCards} />
         )}
@@ -187,17 +167,14 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
       {isEmpty(filteredCards) ? (
         <Empty className="w-full" description="No cards match your search." />
       ) : isNil(ReplaceCards) ? (
-        filteredCards.map(card => {
-          const isInstalled = installedCards.some(iCard => iCard.id === card.id);
-          return (
-            <LynxCardWrapper
-              cardData={card}
-              isInstalled={isInstalled}
-              key={`${card.id}-card-wrapper-key`}
-              hasArguments={hasArguments.has(card.id)}
-            />
-          );
-        })
+        <LynxCardLoading
+          batchSize={2}
+          startDelay={0}
+          batchDelay={50}
+          sortedCards={filteredCards}
+          hasArguments={hasArguments}
+          installedCards={installedCards}
+        />
       ) : (
         <ReplaceCards cards={filteredCards} />
       )}

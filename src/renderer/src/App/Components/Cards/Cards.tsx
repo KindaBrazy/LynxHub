@@ -9,7 +9,7 @@ import {useGetCardsByPath, useHasArguments} from '../../Modules/ModuleLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {PageID} from '../../Utils/Constants';
 import Page from '../Pages/Page';
-import LynxCardWrapper from './Card/LynxCard-Wrapper';
+import LynxCardLoading from './Card/LynxCard-Loading';
 import NavigateModulesPage from './NavigateModulesPage';
 
 export function GetComponentsByPath({routePath, extensionsElements}: {routePath: string; extensionsElements?: FC[]}) {
@@ -50,19 +50,7 @@ export function GetComponentsByPath({routePath, extensionsElements}: {routePath:
         <>
           <LayoutGroup id={`${routePath}_cards`}>
             {isNil(ReplaceCards) ? (
-              <>
-                {sortedCards.map(card => {
-                  const isInstalled = installedCards.some(item => item.id === card.id);
-                  return (
-                    <LynxCardWrapper
-                      cardData={card}
-                      isInstalled={isInstalled}
-                      key={`${card.id}-card-wrapper-key`}
-                      hasArguments={hasArguments.has(card.id)}
-                    />
-                  );
-                })}
-              </>
+              <LynxCardLoading sortedCards={sortedCards} hasArguments={hasArguments} installedCards={installedCards} />
             ) : (
               <ReplaceCards cards={sortedCards} />
             )}
