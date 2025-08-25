@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download_Icon, Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
-import {getCardMethod, useAllCardMethods, useAllCards} from '../../../../../Modules/ModuleLoader';
+import {getCardMethod, useAllCardMethods} from '../../../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
@@ -72,7 +72,7 @@ export const MenuCheckForUpdate = () => {
   const autoUpdate = useIsAutoUpdateCard(id);
   const card = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
-  const allCards = useAllCards();
+  const allMethods = useAllCardMethods();
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -80,13 +80,13 @@ export const MenuCheckForUpdate = () => {
     AddBreadcrumb_Renderer(`Check Update AI: id:${id}`);
     setCheckingForUpdate(true);
     if (card) {
-      const updateType = allCards.find(c => c.id === id)?.methods?.['manager']?.updater.updateType;
+      const updateType = allMethods.find(c => c.id === id)?.methods?.['manager']?.updater.updateType;
       rendererIpc.module.cardUpdateAvailable(card, updateType).then((isAvailable: boolean) => {
         if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
         setCheckingForUpdate(false);
       });
     }
-  }, [dispatch, setCheckingForUpdate, card, id, allCards]);
+  }, [dispatch, setCheckingForUpdate, card, id, allMethods]);
 
   if (updateAvailable || autoUpdate)
     return <DropdownItem className="hidden" key="check-update-hidden" textValue="check_update_hidden" />;

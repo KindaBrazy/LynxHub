@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import {APP_BUILD_NUMBER} from '../../../../cross/CrossConstants';
 import {toMs} from '../../../../cross/CrossUtils';
 import AddBreadcrumb_Renderer from '../../../Breadcrumbs';
-import {useAllCards} from '../Modules/ModuleLoader';
+import {useAllCardMethods} from '../Modules/ModuleLoader';
 import {appActions, useAppState} from '../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
 import {hotkeysActions} from '../Redux/Reducer/HotkeysReducer';
@@ -22,7 +22,7 @@ import {checkEARepos} from './AppEvents_Utils';
 export const useCheckCardsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
   const installedCards = useCardsState('installedCards');
-  const allCards = useAllCards();
+  const allMethods = useAllCardMethods();
 
   useEffect(() => {
     rendererIpc.module.onCardsUpdateAvailable((_e, result) => {
@@ -32,7 +32,7 @@ export const useCheckCardsUpdate = () => {
 
   useEffect(() => {
     const updateMethod = installedCards.map(card => {
-      const type = allCards.find(c => c.id === card.id)?.methods?.['manager']?.updater.updateType;
+      const type = allMethods.find(c => c.id === card.id)?.methods?.['manager']?.updater.updateType;
       if (isNil(type)) return undefined;
       return {
         id: card.id,
@@ -40,7 +40,7 @@ export const useCheckCardsUpdate = () => {
       };
     });
     rendererIpc.module.checkCardsUpdateInterval(compact(updateMethod));
-  }, [installedCards, allCards]);
+  }, [installedCards, allMethods]);
 };
 
 export const useCheckModulesUpdate = () => {

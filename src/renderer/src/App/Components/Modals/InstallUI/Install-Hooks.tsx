@@ -10,7 +10,7 @@ import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {eventUtil_CollectUserInputs} from '../../../Extensions/Extension_Utils';
-import {useAllCards} from '../../../Modules/ModuleLoader';
+import {useAllCardMethods} from '../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
@@ -59,7 +59,7 @@ export function useStepper({
   setProgressBarState,
   cardId,
 }: Props) {
-  const allCards = useAllCards();
+  const allMethods = useAllCardMethods();
 
   const cloneRepository = useCallback(
     async (url: string): ReturnType<InstallationStepper['cloneRepository']> => {
@@ -154,10 +154,10 @@ export function useStepper({
   }, [dispatch, cardId]);
 
   const updateType = useMemo(() => {
-    const type = allCards.find(c => c.id === cardId)?.methods?.['manager']?.updater.updateType;
+    const type = allMethods.find(c => c.id === cardId)?.methods?.['manager']?.updater.updateType;
     if (isNil(type)) return undefined;
     return type;
-  }, [allCards, cardId]);
+  }, [allMethods, cardId]);
 
   const checkForUpdate = useCallback(
     (dir: string | undefined) => {
