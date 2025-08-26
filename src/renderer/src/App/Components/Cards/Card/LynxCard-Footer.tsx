@@ -25,7 +25,16 @@ const LynxCardFooter = memo(() => {
       <div className="flex w-full flex-row gap-x-3">
         <ButtonGroup fullWidth>
           <StartButton />
-          {!isRunning && (installed ? ReplaceMenu ? <ReplaceMenu /> : <CardMenu /> : <NotInstalled_Menu />)}
+          {!isRunning &&
+            (installed ? (
+              ReplaceMenu ? (
+                <ReplaceMenu useCardStore={useCardStore} />
+              ) : (
+                <CardMenu />
+              )
+            ) : (
+              <NotInstalled_Menu />
+            ))}
         </ButtonGroup>
       </div>
     </CardFooter>

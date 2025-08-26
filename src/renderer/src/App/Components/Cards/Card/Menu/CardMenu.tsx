@@ -50,7 +50,7 @@ export const CardMenu = memo(() => {
       </DropdownTrigger>
       <DropdownMenu aria-label="Card Menu">
         {first.map((Comp, index) => {
-          return Comp({key: index});
+          return Comp({key: index, useCardStore});
         })}
         <DropdownSection key="options" classNames={{divider: 'bg-foreground-100'}} showDivider>
           {MenuLaunchConfig()}
@@ -58,7 +58,7 @@ export const CardMenu = memo(() => {
           {MenuRepoConfig()}
         </DropdownSection>
         {second.map((Comp, index) => {
-          return Comp({key: index});
+          return Comp({key: index, useCardStore});
         })}
         <DropdownSection key="update" classNames={{divider: 'bg-foreground-100'}} showDivider>
           {MenuUpdate()}
@@ -66,7 +66,7 @@ export const CardMenu = memo(() => {
           {MenuAutoUpdate()}
         </DropdownSection>
         {third.map((Comp, index) => {
-          return Comp({key: index});
+          return Comp({key: index, useCardStore});
         })}
         <DropdownSection key="info" classNames={{divider: 'bg-foreground-100'}} showDivider>
           {MenuInfo()}
@@ -79,7 +79,7 @@ export const CardMenu = memo(() => {
         </DropdownSection>
 
         {fourth.map((Comp, index) => {
-          return Comp({key: index});
+          return Comp({key: index, useCardStore});
         })}
       </DropdownMenu>
     </Dropdown>

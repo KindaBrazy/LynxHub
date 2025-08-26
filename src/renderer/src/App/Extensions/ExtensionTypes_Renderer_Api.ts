@@ -9,6 +9,7 @@ import {
   AddMenuType,
   FcProp,
   FcPropCard,
+  FcPropCardData,
   FcPropRef,
   FcPropReplaceMd,
   FcPropSearchResult,
@@ -18,6 +19,7 @@ type CompFc = (component: FC) => void;
 type CompFcProp = (component: FcProp) => void;
 type CompFcPropRef = (component: FcPropRef) => void;
 type CompFcPropCard = (component: FcPropCard) => void;
+type CompFcPropCardData = (component: FcPropCardData) => void;
 type CompFcPropSearchResult = (component: FcPropSearchResult) => void;
 type CompFcPropAddCardMenu = (component: AddMenuType[]) => void;
 type CompFcPropReplaceMd = (component: FcPropReplaceMd) => void;
@@ -217,7 +219,7 @@ export type ExtensionRendererApi = {
         recentlyCategory: CompFc;
         /** Add elements to the end of the "all categories" section.
          * @see {@linkcode AllCardsSection} for implementation details. */
-        allCategory: CompFcProp;
+        allCategory: CompFcPropCardData;
       };
     };
 
@@ -304,22 +306,22 @@ export type ExtensionRendererApi = {
     replace: CompFcPropCard;
     /** Replace the default card component used to display a single card.
      * @see {@linkcode LynxCard} for implementation details. */
-    replaceComponent: CompFcProp;
+    replaceComponent: CompFcPropCardData;
     /** Customize various sections of the default card component.
      * @see {@linkcode LynxCard} for implementation details. */
     customize: {
       /** Replace the card's header section. */
-      header: CompFcProp;
+      header: CompFcPropCardData;
       /** Replace the card's body section. */
-      body: CompFcProp;
+      body: CompFcPropCardData;
       /** Replace the card's footer section. */
-      footer: CompFcProp;
+      footer: CompFcPropCardData;
       /** Customize the card's menu.
        * @see {@linkcode CardMenu} for implementation details. */
       menu: {
         /** Replace the default card menu.
          * @see {@linkcode CardMenu} for implementation details. */
-        replace: CompFcProp;
+        replace: CompFcPropCardData;
         /** Add sections and items to the card menu.
          * @see {@linkcode CardMenu} for implementation details. */
         addSection: CompFcPropAddCardMenu;
