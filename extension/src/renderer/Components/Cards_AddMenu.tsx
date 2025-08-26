@@ -1,7 +1,7 @@
 import {DropdownItem, DropdownSection} from '@heroui/react';
 import {useEffect} from 'react';
 
-import {UseCardStoreType} from '../../../../src/renderer/src/App/Extensions/ExtensionTypes_Renderer';
+import {UseCardStoreType} from '../../../../src/cross/plugin/ExtensionTypes_Renderer';
 import {Bug_Icon, Trash_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 
 type Props = {useCardStore: UseCardStoreType};

@@ -1,10 +1,10 @@
 import mitt, {Emitter} from 'mitt';
 
+import {ExtensionEvents, ExtensionEvents_IPC} from '../../../../cross/plugin/ExtensionTypes_Events';
+import {ExtensionData_Renderer, ExtensionImport_Renderer} from '../../../../cross/plugin/ExtensionTypes_Renderer';
+import {ExtensionRendererApi} from '../../../../cross/plugin/ExtensionTypes_Renderer_Api';
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../Modules/ModuleLoader';
 import rendererIpc from '../RendererIpc';
-import {ExtensionEvents, ExtensionEvents_IPC} from './ExtensionTypes_Events';
-import {ExtensionData_Renderer, ExtensionImport_Renderer} from './ExtensionTypes_Renderer';
-import {ExtensionRendererApi} from './ExtensionTypes_Renderer_Api';
 
 type EmitterType = Emitter<ExtensionEvents> & {all: Map<string, unknown[]>};
 type EmitterType_IPC = Emitter<ExtensionEvents_IPC> & {all: Map<string, unknown[]>};

@@ -7,6 +7,7 @@ import {
   REPOSITORIES_FOLDER_NAME,
   STATICS_FOLDER_NAME,
 } from './CrossConstants';
+import {DiscordRunningAI} from './IpcChannelAndTypes';
 import {MainModuleUtils} from './plugin/ModuleTypes';
 
 export type RepoDetails = {
@@ -325,4 +326,23 @@ export type CustomNotificationInfo = {
   description: string;
   buttons?: CustomBtn[];
   closeBtn?: boolean;
+};
+
+export type CardState = {
+  title: string;
+  id: string;
+  description: string;
+  repoUrl: string;
+  bgUrl: string;
+  extensionsDir?: string;
+  haveArguments: boolean;
+  type: DiscordRunningAI['type'];
+
+  installed: boolean;
+  menuIsOpen: boolean;
+
+  checkingForUpdate: boolean;
+
+  setMenuIsOpen: (isOpen: boolean) => void;
+  setCheckingForUpdate: (isChecking: boolean) => void;
 };

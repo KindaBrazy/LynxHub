@@ -2,8 +2,6 @@ import {Reducer} from '@reduxjs/toolkit';
 import {Emitter} from 'mitt';
 import {FC} from 'react';
 
-import {ModuleData} from '../Modules/ModuleLoader';
-import rendererIpc from '../RendererIpc';
 import {ExtensionEvents, ExtensionEvents_IPC} from './ExtensionTypes_Events';
 import {
   AddMenuType,
@@ -14,6 +12,19 @@ import {
   FcPropReplaceMd,
   FcPropSearchResult,
 } from './ExtensionTypes_Renderer';
+import {ArgumentsData, AvailablePages, CardData, CardModules, CardRendererMethods, LoadedCardData} from './ModuleTypes';
+
+export type ModuleData = {
+  allModules: CardModules;
+  allCards: CardData[];
+  useGetArgumentsByID: (id: string) => ArgumentsData | undefined;
+  useGetCardsByPath: (path: AvailablePages) => LoadedCardData[] | undefined;
+  getCardMethod: <T extends keyof CardRendererMethods>(
+    cards: CardData[],
+    id: string,
+    method: T,
+  ) => CardRendererMethods[T] | undefined;
+};
 
 type CompFc = (component: FC) => void;
 type CompFcProp = (component: FcProp) => void;
@@ -356,5 +367,5 @@ export type ExtensionRendererApi = {
 
   modulesData?: ModuleData;
 
-  rendererIpc?: typeof rendererIpc;
+  rendererIpc?: any;
 };
