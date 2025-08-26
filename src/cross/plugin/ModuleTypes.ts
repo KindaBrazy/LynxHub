@@ -1,6 +1,6 @@
 import {ElectronAPI} from '@electron-toolkit/preload';
 
-import {InstalledCard} from '../../src/cross/StorageTypes';
+import {InstalledCard} from '../StorageTypes';
 
 declare global {
   interface Window {

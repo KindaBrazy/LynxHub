@@ -1,6 +1,6 @@
-import {LoadedCardData} from '@lynx_module/types';
 import {useEffect, useMemo, useRef, useState} from 'react';
 
+import {LoadedCardData} from '../../../../../../cross/plugin/ModuleTypes';
 import {InstalledCards} from '../../../../../../cross/StorageTypes';
 import LynxCardSkeleton from './LynxCard-Skeleton';
 import LynxCardWrapper from './LynxCard-Wrapper';

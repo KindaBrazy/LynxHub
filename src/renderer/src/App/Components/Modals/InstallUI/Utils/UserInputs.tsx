@@ -1,8 +1,8 @@
 import {Button, Input, Select, SelectItem} from '@heroui/react';
-import {UserInputField, UserInputResult} from '@lynx_module/types';
 import {isNil} from 'lodash';
 import {Dispatch, FC, SetStateAction, useCallback, useEffect, useState} from 'react';
 
+import {UserInputField, UserInputResult} from '../../../../../../../cross/plugin/ModuleTypes';
 import {File_Icon, Folder2_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../../RendererIpc';
 import LynxSwitch from '../../../Reusable/LynxSwitch';

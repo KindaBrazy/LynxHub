@@ -1,8 +1,8 @@
-import {LoadedCardData} from '@lynx_module/types';
 import {create} from 'zustand';
 
 import {validateGitRepoUrl} from '../../../../../cross/CrossUtils';
 import {DiscordRunningAI} from '../../../../../cross/IpcChannelAndTypes';
+import {LoadedCardData} from '../../../../../cross/plugin/ModuleTypes';
 
 // Define the state and actions
 export interface CardState {

@@ -1,4 +1,4 @@
-import {CardInfoCallback, CardInfoDescriptions} from '../types';
+import {CardInfoCallback, CardInfoDescriptions} from '../../../src/cross/plugin/ModuleTypes';
 
 export let isWin: boolean = true;
 

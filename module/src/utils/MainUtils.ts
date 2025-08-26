@@ -8,7 +8,7 @@ import {existsSync} from 'graceful-fs';
 import treeKill from 'tree-kill';
 import which from 'which';
 
-import {ChosenArgument} from '../types';
+import {ChosenArgument} from '../../../src/cross/plugin/ModuleTypes';
 import {getVenvPythonPath, isWin} from './CrossUtils';
 
 export const LINE_ENDING = isWin ? '\r' : '\n';

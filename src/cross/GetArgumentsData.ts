@@ -1,4 +1,4 @@
-import {ArgumentItem, ArgumentsData} from '@lynx_module/types';
+import {ArgumentItem, ArgumentsData} from './plugin/ModuleTypes';
 
 /**
  * Checks if an argument with the given name exists in the Arguments data structure.

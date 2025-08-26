@@ -1,10 +1,10 @@
 import {Button, Link, Spinner} from '@heroui/react';
-import {CardInfoDescriptions, CardInfoDescriptions_Items} from '@lynx_module/types';
 import {Descriptions, DescriptionsProps, Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {useCallback} from 'react';
 
 import {isValidURL} from '../../../../../../cross/CrossUtils';
+import {CardInfoDescriptions, CardInfoDescriptions_Items} from '../../../../../../cross/plugin/ModuleTypes';
 import {ExternalLink_Icon, OpenFolder_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../RendererIpc';
 

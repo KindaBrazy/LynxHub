@@ -8,11 +8,11 @@ import {compact, includes, isString} from 'lodash';
 import portFinder from 'portfinder';
 import handler from 'serve-handler';
 
-import {MainModules} from '../../../../module/src/types';
 import {APP_BUILD_NUMBER} from '../../../cross/CrossConstants';
 import {ExtensionsInfo, FolderNames, ModulesInfo} from '../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
+import {MainModules} from '../../../cross/plugin/ModuleTypes';
 import {appManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';

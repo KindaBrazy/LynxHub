@@ -1,5 +1,5 @@
+import {CardModules} from '../../src/cross/plugin/ModuleTypes';
 import {COMFYUI_ID, OPEN_WEBUI_ID} from './Constants';
-import {CardModules} from './types';
 import comfyArguments from './WebUI/ComfyUI (comfyanonymous)/Arguments';
 import COMFYUI_RM from './WebUI/ComfyUI (comfyanonymous)/RendererMethods';
 import openArguments from './WebUI/OpenWebUI/Arguments';

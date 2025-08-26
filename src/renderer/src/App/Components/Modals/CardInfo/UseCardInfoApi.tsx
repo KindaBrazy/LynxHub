@@ -1,7 +1,7 @@
-import {CardInfoApi, CardInfoCallback, CardInfoDescriptions} from '@lynx_module/types';
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
 
+import {CardInfoApi, CardInfoCallback, CardInfoDescriptions} from '../../../../../../cross/plugin/ModuleTypes';
 import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
 import rendererIpc from '../../../RendererIpc';
 
