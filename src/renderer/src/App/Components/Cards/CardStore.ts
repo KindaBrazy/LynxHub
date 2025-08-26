@@ -1,28 +1,8 @@
 import {create} from 'zustand';
 
+import {CardState} from '../../../../../cross/CrossTypes';
 import {validateGitRepoUrl} from '../../../../../cross/CrossUtils';
-import {DiscordRunningAI} from '../../../../../cross/IpcChannelAndTypes';
 import {LoadedCardData} from '../../../../../cross/plugin/ModuleTypes';
-
-// Define the state and actions
-export interface CardState {
-  title: string;
-  id: string;
-  description: string;
-  repoUrl: string;
-  bgUrl: string;
-  extensionsDir?: string;
-  haveArguments: boolean;
-  type: DiscordRunningAI['type'];
-
-  installed: boolean;
-  menuIsOpen: boolean;
-
-  checkingForUpdate: boolean;
-
-  setMenuIsOpen: (isOpen: boolean) => void;
-  setCheckingForUpdate: (isChecking: boolean) => void;
-}
 
 // Create a reusable function to generate a store
 export const createCardStore = (initialData: LoadedCardData & {isInstalled: boolean; hasArguments: boolean}) => {

@@ -347,18 +347,6 @@ const loadModules = async () => {
   }
 };
 
-export type ModuleData = {
-  allModules: CardModules;
-  allCards: CardData[];
-  useGetArgumentsByID: (id: string) => ArgumentsData | undefined;
-  useGetCardsByPath: (path: AvailablePages) => LoadedCardData[] | undefined;
-  getCardMethod: <T extends keyof CardRendererMethods>(
-    cards: CardData[],
-    id: string,
-    method: T,
-  ) => CardRendererMethods[T] | undefined;
-};
-
 export {
   allCards,
   allModules,

@@ -3,9 +3,9 @@ import {__federation_method_getRemote, __federation_method_setRemote} from '__fe
 import {compact} from 'lodash';
 
 import {isDev} from '../../../../cross/CrossUtils';
+import {ExtensionImport_Renderer} from '../../../../cross/plugin/ExtensionTypes_Renderer';
 import rendererIpc from '../RendererIpc';
 import extensionLoader from './ExtensionLoader';
-import {ExtensionImport_Renderer} from './ExtensionTypes_Renderer';
 
 type RemotesConfig = {
   format?: 'esm' | 'systemjs' | 'var';

@@ -2,7 +2,7 @@
 import {FindInPageOptions, OpenDialogOptions} from 'electron';
 import {FC} from 'react';
 
-import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../../cross/CrossTypes';
+import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../CrossTypes';
 import {
   AgentTypes,
   ChangeWindowState,
@@ -17,8 +17,8 @@ import {
   StorageOperation,
   TaskbarStatus,
   WHType,
-} from '../../../../cross/IpcChannelAndTypes';
-import StorageTypes, {InstalledCard} from '../../../../cross/StorageTypes';
+} from '../IpcChannelAndTypes';
+import StorageTypes, {InstalledCard} from '../StorageTypes';
 
 export type ExtensionEvents = {
   /** Will be called before a card starts running */

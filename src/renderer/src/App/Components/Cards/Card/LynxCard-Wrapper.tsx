@@ -1,8 +1,9 @@
 import {createContext, memo, useContext, useMemo} from 'react';
 
+import {CardState} from '../../../../../../cross/CrossTypes';
 import {LoadedCardData} from '../../../../../../cross/plugin/ModuleTypes';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
-import {CardState, CardStore, createCardStore} from '../CardStore';
+import {CardStore, createCardStore} from '../CardStore';
 import LynxCard from './LynxCard';
 
 const CardStoreContext = createContext<CardStore | null>(null);
