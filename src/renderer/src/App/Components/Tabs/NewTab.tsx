@@ -1,5 +1,6 @@
 import {Button} from '@heroui/react';
 import {motion} from 'framer-motion';
+import {memo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Add_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
@@ -7,7 +8,7 @@ import {tabsActions} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import {defaultTabItem} from '../../Utils/Constants';
 
-export default function NewTab() {
+const NewTab = memo(() => {
   const dispatch = useDispatch<AppDispatch>();
   const addTab = () => {
     dispatch(tabsActions.addTab(defaultTabItem));
@@ -20,4 +21,6 @@ export default function NewTab() {
       </Button>
     </motion.div>
   );
-}
+});
+
+export default NewTab;

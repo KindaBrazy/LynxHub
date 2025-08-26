@@ -1,6 +1,6 @@
 import {Input} from '@heroui/react';
 import {Empty, List, PaginationProps} from 'antd';
-import {Dispatch, SetStateAction, useCallback, useEffect, useState} from 'react';
+import {Dispatch, memo, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
@@ -16,7 +16,7 @@ type Props = {
 };
 
 /** List of installed modules */
-export default function InstalledModules({setInstalledModules, updatingAll}: Props) {
+const InstalledModules = memo(({setInstalledModules, updatingAll}: Props) => {
   const [pageSize, setPageSize] = useState<number>(6);
   const [data, setData] = useState<{dir: string; info: ModulesInfo}[]>([]);
   const [searchedData, setSearchedData] = useState<{dir: string; info: ModulesInfo}[]>([]);
@@ -93,4 +93,6 @@ export default function InstalledModules({setInstalledModules, updatingAll}: Pro
       </LynxScroll>
     </>
   );
-}
+});
+
+export default InstalledModules;

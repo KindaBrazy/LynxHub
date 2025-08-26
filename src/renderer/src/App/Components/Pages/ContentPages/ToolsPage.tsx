@@ -1,4 +1,5 @@
 import {ScrollShadow} from '@heroui/react';
+import {memo} from 'react';
 
 import {Rocket_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
@@ -7,7 +8,7 @@ import Page from '../Page';
 
 type Props = {show: boolean};
 
-const ToolsPage = ({show}: Props) => {
+const ToolsPage = memo(({show}: Props) => {
   const {addComponent} = extensionsData.customizePages.tools;
 
   return (
@@ -27,6 +28,6 @@ const ToolsPage = ({show}: Props) => {
       </ScrollShadow>
     </Page>
   );
-};
+});
 
 export default ToolsPage;

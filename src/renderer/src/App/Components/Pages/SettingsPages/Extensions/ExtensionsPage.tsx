@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
@@ -14,7 +14,7 @@ export type InstalledExt = {dir: string; id: string; version?: string};
 
 type Props = {show: boolean};
 
-export default function ExtensionsPage({show}: Props) {
+const ExtensionsPage = memo(({show}: Props) => {
   const [selectedExtension, setSelectedExtension] = useState<Extension_ListData | undefined>(undefined);
   const [installed, setInstalled] = useState<InstalledExt[]>([]);
   const [unloaded, setUnloaded] = useState<SkippedPlugins[]>([]);
@@ -47,4 +47,6 @@ export default function ExtensionsPage({show}: Props) {
       <ExtensionPreview installed={installed} setInstalled={setInstalled} selectedExt={selectedExtension} />
     </Page>
   );
-}
+});
+
+export default ExtensionsPage;

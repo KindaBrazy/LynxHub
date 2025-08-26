@@ -1,7 +1,7 @@
 import {Button, ButtonGroup, Chip, Link, Popover, PopoverContent, PopoverTrigger, Tooltip} from '@heroui/react';
 import {Avatar, Badge, List, Spin} from 'antd';
 import {capitalize, isEmpty} from 'lodash';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ModulesInfo} from '../../../../../../../../cross/CrossTypes';
@@ -32,7 +32,7 @@ type Props = {
 };
 
 /** Render installed modules with options to update or uninstall, etc. */
-export default function RenderItem({itemData, updatingAll, removedModule, unloaded}: Props) {
+const RenderItem = memo(({itemData, updatingAll, removedModule, unloaded}: Props) => {
   const item = useMemo(() => itemData.info, []);
   const updatedModules = useSettingsState('updatedModules');
   const moduleUpdateAvailable = useSettingsState('moduleUpdateAvailable');
@@ -261,4 +261,6 @@ export default function RenderItem({itemData, updatingAll, removedModule, unload
       </Spin>
     </>
   );
-}
+});
+
+export default RenderItem;

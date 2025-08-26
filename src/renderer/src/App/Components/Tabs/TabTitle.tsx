@@ -1,8 +1,8 @@
-import {Dispatch, SetStateAction, useEffect, useRef} from 'react';
+import {Dispatch, memo, SetStateAction, useEffect, useRef} from 'react';
 
 type Props = {title: string; setIsTruncated: Dispatch<SetStateAction<boolean>>};
 
-export default function TabTitle({title, setIsTruncated}: Props) {
+const TabTitle = memo(({title, setIsTruncated}: Props) => {
   const spanRef = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
@@ -16,4 +16,6 @@ export default function TabTitle({title, setIsTruncated}: Props) {
       {title}
     </span>
   );
-}
+});
+
+export default TabTitle;

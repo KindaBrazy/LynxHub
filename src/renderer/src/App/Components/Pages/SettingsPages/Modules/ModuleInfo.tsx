@@ -1,6 +1,6 @@
 import {Button, Chip, Modal, ModalBody, ModalContent, ModalHeader} from '@heroui/react';
 import {Divider} from 'antd';
-import {Dispatch, Fragment, SetStateAction} from 'react';
+import {Dispatch, Fragment, memo, SetStateAction} from 'react';
 
 import {ModulesInfo} from '../../../../../../../cross/CrossTypes';
 import {CloseSimple_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
@@ -9,7 +9,7 @@ import LynxScroll from '../../../Reusable/LynxScroll';
 
 type Props = {item: ModulesInfo; isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>};
 
-export default function ModuleInfo({item, isOpen, setIsOpen}: Props) {
+const ModuleInfo = memo(({item, isOpen, setIsOpen}: Props) => {
   return (
     <Modal
       closeButton={
@@ -51,4 +51,5 @@ export default function ModuleInfo({item, isOpen, setIsOpen}: Props) {
       </ModalContent>
     </Modal>
   );
-}
+});
+export default ModuleInfo;

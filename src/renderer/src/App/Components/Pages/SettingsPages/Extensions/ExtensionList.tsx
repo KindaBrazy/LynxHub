@@ -98,7 +98,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
         'absolute inset-y-2 border border-foreground-100 shadow-small sm:w-[19rem] lg:w-[24rem] 2xl:w-[30rem]' +
         ' overflow-hidden shrink-0 transition-[width] duration-500 bg-white dark:bg-LynxRaisinBlack rounded-xl'
       }>
-      {refreshing && <Progress size="sm" color="secondary" isIndeterminate />}
+      {refreshing && <Progress size="sm" color="secondary" aria-label="Refreshing Item" isIndeterminate />}
       <div className="flex w-full flex-col p-4 gap-y-4 shadow-small">
         <div className="flex w-full justify-between flex-row items-center">
           <span className="font-semibold text-xl">Extensions</span>

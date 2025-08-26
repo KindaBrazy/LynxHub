@@ -1,5 +1,5 @@
 import {ScrollShadow} from '@heroui/react';
-import {useMemo} from 'react';
+import {memo, useMemo} from 'react';
 
 import {TextGeneration_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
@@ -10,7 +10,7 @@ import Page from '../Page';
 
 type Props = {show: boolean};
 
-const TextGenerationPage = ({show}: Props) => {
+const TextGenerationPage = memo(({show}: Props) => {
   const {top, scrollTop, scrollBottom, bottom, cardsContainer} = useMemo(
     () => extensionsData.customizePages.text.add,
     [],
@@ -37,6 +37,6 @@ const TextGenerationPage = ({show}: Props) => {
       {bottom && bottom.map((Bottom, index) => <Bottom key={index} />)}
     </Page>
   );
-};
+});
 
 export default TextGenerationPage;
