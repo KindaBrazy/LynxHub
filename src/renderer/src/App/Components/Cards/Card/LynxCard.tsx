@@ -47,9 +47,9 @@ const LynxCard = memo(() => {
             ` ${compactMode ? 'w-[230px]' : 'w-[277px]'} h-fit cursor-default shadow-md !transition ` +
             ` duration-300 hover:shadow-xl dark:bg-[#3a3a3a]`
           }>
-          {Header ? <Header /> : <LynxCardHeader />}
-          {!compactMode && cardsRepoInfo && (Body ? <Body /> : <LynxCardBody />)}
-          {Footer ? <Footer /> : <LynxCardFooter />}
+          {Header ? <Header useCardStore={useCardStore} /> : <LynxCardHeader />}
+          {!compactMode && cardsRepoInfo && (Body ? <Body useCardStore={useCardStore} /> : <LynxCardBody />)}
+          {Footer ? <Footer useCardStore={useCardStore} /> : <LynxCardFooter />}
         </Card>
       </motion.div>
     </Badge.Ribbon>
