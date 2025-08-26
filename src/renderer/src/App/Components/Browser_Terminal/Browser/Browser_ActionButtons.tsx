@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
-import {useEffect, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 
 import {Hotkey_Names} from '../../../../../../cross/HotkeyConstants';
 import {ArrowDuo_Icon, HomeSmile_Icon, Refresh3_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
@@ -17,7 +17,7 @@ const transition: Transition = {duration: 0.3};
 
 type Props = {webuiAddress: string; tabID: string; id: string};
 
-export default function Browser_ActionButtons({webuiAddress, tabID, id}: Props) {
+const Browser_ActionButtons = memo(({webuiAddress, tabID, id}: Props) => {
   const activeTab = useTabsState('activeTab');
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [canGoForward, setCanGoForward] = useState<boolean>(false);
@@ -74,4 +74,6 @@ export default function Browser_ActionButtons({webuiAddress, tabID, id}: Props) 
       )}
     </div>
   );
-}
+});
+
+export default Browser_ActionButtons;

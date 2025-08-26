@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {useCallback} from 'react';
+import {memo, useCallback} from 'react';
 
 import AddBreadcrumb_Renderer from '../../../../../Breadcrumbs';
 import {Pin_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
@@ -7,9 +7,8 @@ import rendererIpc from '../../../RendererIpc';
 import {useIsPinnedCard} from '../../../Utils/UtilHooks';
 import {useCardStore} from './LynxCard-Wrapper';
 
-export default function Header_Pin() {
+const Header_Pin = memo(() => {
   const id = useCardStore(state => state.id);
-  const installed = useCardStore(state => state.installed);
 
   const isPinned = useIsPinnedCard(id);
 
@@ -17,8 +16,6 @@ export default function Header_Pin() {
     AddBreadcrumb_Renderer(`Pin AI: id:${id} , ${isPinned ? 'remove' : 'add'}`);
     rendererIpc.storageUtils.pinnedCards(isPinned ? 'remove' : 'add', id);
   }, [isPinned, id]);
-
-  if (!installed) return null;
 
   return (
     <Button
@@ -31,4 +28,6 @@ export default function Header_Pin() {
       <Pin_Icon className={`${!isPinned && '-rotate-45'} transition duration-500`} />
     </Button>
   );
-}
+});
+
+export default Header_Pin;

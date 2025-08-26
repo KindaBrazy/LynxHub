@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {useRef} from 'react';
+import {memo, useRef} from 'react';
 
 import {Hotkey_Names} from '../../../../../../cross/HotkeyConstants';
 import {Circle_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
@@ -8,7 +8,8 @@ import rendererIpc from '../../../RendererIpc';
 import useHotkeyPress from '../../../Utils/RegisterHotkeys';
 
 type Props = {id: string; tabID: string};
-export default function Browser_Search({id, tabID}: Props) {
+
+const Browser_Search = memo(({id, tabID}: Props) => {
   const activeTab = useTabsState('activeTab');
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const openSearchMenu = () => {
@@ -28,4 +29,6 @@ export default function Browser_Search({id, tabID}: Props) {
       <Circle_Icon className="size-4" />
     </Button>
   );
-}
+});
+
+export default Browser_Search;

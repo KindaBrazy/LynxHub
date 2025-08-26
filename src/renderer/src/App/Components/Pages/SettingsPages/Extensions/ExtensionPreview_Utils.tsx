@@ -154,7 +154,7 @@ export function PreviewBody({
       {currentTab === 'changelog' && (
         <LynxScroll className="gap-y-6 ml-6 py-2 flex flex-col mr-4">
           {selectedExt?.changeLog.map((version, index) => (
-            <>
+            <div key={`${version}_${index}_changeItem`}>
               <div
                 className={
                   `border-l-4 pl-4 mt-6 transition-all duration-300 hover:-translate-x-2 ` +
@@ -169,7 +169,7 @@ export function PreviewBody({
                 </div>
               </div>
               {index === 0 && <Divider />}
-            </>
+            </div>
           ))}
         </LynxScroll>
       )}

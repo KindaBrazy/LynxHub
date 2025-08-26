@@ -1,11 +1,11 @@
 import {Button, Tooltip} from '@heroui/react';
-import {useCallback, useState} from 'react';
+import {memo, useCallback, useState} from 'react';
 
 import {CheckDuo_Icon, CopyDuo_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 
 type Props = {tooltipTitle?: string; showTooltip?: boolean; contentToCopy: string; className?: string};
 
-export default function CopyClipboard({showTooltip = true, tooltipTitle, contentToCopy, className}: Props) {
+const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, className}: Props) => {
   const [copied, setCopied] = useState<boolean>(false);
 
   const handleCopy = useCallback(() => {
@@ -32,4 +32,6 @@ export default function CopyClipboard({showTooltip = true, tooltipTitle, content
       </Button>
     </Tooltip>
   );
-}
+});
+
+export default CopyClipboard;

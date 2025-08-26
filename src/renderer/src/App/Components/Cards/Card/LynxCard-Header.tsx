@@ -16,6 +16,7 @@ const LynxCardHeader = memo(() => {
   const description = useCardStore(state => state.description);
   const title = useCardStore(state => state.title);
   const repoUrl = useCardStore(state => state.repoUrl);
+  const installed = useCardStore(state => state.installed);
 
   const compactMode = useSettingsState('cardsCompactMode');
   const cardsDevImage = useSettingsState('cardsDevImage');
@@ -48,7 +49,7 @@ const LynxCardHeader = memo(() => {
 
   return (
     <CardHeader className="flex flex-col p-0">
-      <Header_Pin />
+      {installed && <Header_Pin />}
       <Skeleton
         isLoaded={!!bgSrc}
         className={`${compactMode ? 'h-16' : allDisabled ? 'h-16' : halfDisabled ? 'h-20' : 'h-24'} ` + ` w-full`}>

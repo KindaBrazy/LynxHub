@@ -46,7 +46,7 @@ export default function LynxCardLoading({
     const loadCardsProgressively = async () => {
       if (sortedCards.length === 0) return;
 
-      setVisibleCards(prev => prev.map((c, idx) => (idx === 0 ? {...c, isPlaceholder: false} : c)));
+      setVisibleCards(prev => prev.map((c, idx) => (idx === 0 || idx === 1 ? {...c, isPlaceholder: false} : c)));
 
       if (sortedCards.length > 1) {
         await new Promise(resolve => setTimeout(resolve, startDelay));

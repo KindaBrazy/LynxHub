@@ -1,5 +1,5 @@
 import {isEmpty, isNil} from 'lodash';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {memo, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {formatWebAddress} from '../../../../../../cross/CrossUtils';
@@ -38,7 +38,7 @@ const parseAddressForDisplay = (address: string) => {
   return {prefix, domain, rest};
 };
 
-export default function Browser_AddressBar({runningCard, setCustomAddress}: Props) {
+const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
   const [inputValue, setInputValue] = useState('');
   const [isAddress, setIsAddress] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -207,4 +207,6 @@ export default function Browser_AddressBar({runningCard, setCustomAddress}: Prop
       />
     </div>
   );
-}
+});
+
+export default Browser_AddressBar;

@@ -1,6 +1,6 @@
 import {Badge} from 'antd';
 import {motion} from 'framer-motion';
-import {ReactNode, useCallback, useEffect, useMemo} from 'react';
+import {memo, ReactNode, useCallback, useEffect, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../Breadcrumbs';
@@ -29,7 +29,7 @@ type Props = {
 };
 
 /** Navigation button */
-export default function NavButton({children, pageId, title, badge}: Props) {
+const NavButton = memo(({children, pageId, title, badge}: Props) => {
   const darkMode = useAppState('darkMode');
   const activePage = useTabsState('activePage');
   const activeTab = useTabsState('activeTab');
@@ -112,4 +112,6 @@ export default function NavButton({children, pageId, title, badge}: Props) {
       </div>
     </LynxTooltip>
   );
-}
+});
+
+export default NavButton;
