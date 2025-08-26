@@ -1,6 +1,6 @@
-import {LoadedCardData} from '@lynx_module/types';
 import {createContext, memo, useContext, useMemo} from 'react';
 
+import {LoadedCardData} from '../../../../../../cross/plugin/ModuleTypes';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {CardState, CardStore, createCardStore} from '../CardStore';
 import LynxCard from './LynxCard';
@@ -20,7 +20,7 @@ const LynxCardWrapper = memo(({cardData, isInstalled, hasArguments}: Props) => {
   return (
     <CardStoreContext.Provider value={storeValue}>
       {ReplaceComponent ? (
-        <ReplaceComponent key={`${cardData.id}-card-key`} />
+        <ReplaceComponent useCardStore={useCardStore} key={`${cardData.id}-card-key`} />
       ) : (
         <LynxCard key={`${cardData.id}-card-key`} />
       )}
