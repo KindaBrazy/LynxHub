@@ -1,14 +1,14 @@
+import {isNil} from 'lodash';
+import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
+import {useDispatch} from 'react-redux';
+
 import {
   InstallationMethod,
   InstallationStepper,
   StarterStepOptions,
   UserInputField,
   UserInputResult,
-} from '@lynx_module/types';
-import {isNil} from 'lodash';
-import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
-import {useDispatch} from 'react-redux';
-
+} from '../../../../../../cross/plugin/ModuleTypes';
 import {eventUtil_CollectUserInputs} from '../../../Extensions/Extension_Utils';
 import {useAllCardMethods} from '../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';

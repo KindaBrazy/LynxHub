@@ -8,7 +8,7 @@ import {
   ChosenArgument,
   ExtensionData,
   InstallationStepper,
-} from '../../types';
+} from '../../../../src/cross/plugin/ModuleTypes';
 import {isWin} from '../../utils/CrossUtils';
 import {CardInfo, catchAddress, getArgumentType, isValidArg} from '../../utils/RendererUtils';
 import comfyArguments from './Arguments';

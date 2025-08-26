@@ -1,5 +1,4 @@
 import {ModalBody, Progress} from '@heroui/react';
-import {UserInputField, UserInputResult} from '@lynx_module/types';
 import {Descriptions, Result} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
@@ -7,6 +6,7 @@ import {Dispatch, Fragment, memo, RefObject, SetStateAction, useCallback} from '
 
 import {formatSize} from '../../../../../../cross/CrossUtils';
 import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
+import {UserInputField, UserInputResult} from '../../../../../../cross/plugin/ModuleTypes';
 import {InstallState} from './types';
 import CloneRepo from './Utils/CloneRepo';
 import InstallExtensions from './Utils/InstallExtensions';

@@ -1,3 +1,6 @@
+import {useSyncExternalStore} from 'react';
+
+import {extractGitUrl, isDev} from '../../../../cross/CrossUtils';
 import {
   ArgumentsData,
   AvailablePages,
@@ -7,11 +10,8 @@ import {
   LoadedArguments,
   LoadedCardData,
   LoadedMethods,
-} from '@lynx_module/types';
-import {RendererModuleImportType} from '@lynx_module/types';
-import {useSyncExternalStore} from 'react';
-
-import {extractGitUrl, isDev} from '../../../../cross/CrossUtils';
+} from '../../../../cross/plugin/ModuleTypes';
+import {RendererModuleImportType} from '../../../../cross/plugin/ModuleTypes';
 import rendererIpc from '../RendererIpc';
 import {searchInStrings} from '../Utils/UtilFunctions';
 

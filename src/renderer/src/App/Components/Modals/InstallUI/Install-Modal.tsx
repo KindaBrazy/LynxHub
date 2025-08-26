@@ -1,16 +1,16 @@
 import {Modal, ModalContent} from '@heroui/react';
+import {isEmpty, isNil} from 'lodash';
+import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useDispatch} from 'react-redux';
+
+import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
 import {
   CardRendererMethods,
   InstallationMethod,
   InstallationStepper,
   UserInputField,
   UserInputResult,
-} from '@lynx_module/types';
-import {isEmpty, isNil} from 'lodash';
-import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {useDispatch} from 'react-redux';
-
-import {DownloadProgress} from '../../../../../../cross/IpcChannelAndTypes';
+} from '../../../../../../cross/plugin/ModuleTypes';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';

@@ -1,10 +1,10 @@
 import {Listbox, ListboxItem, ListboxSection, ScrollShadow, Selection} from '@heroui/react';
-import {ArgumentItem, ArgumentSection} from '@lynx_module/types';
 import {Card} from 'antd';
 import {cloneDeep, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import Highlighter from 'react-highlight-words';
 
+import {ArgumentItem, ArgumentSection} from '../../../../../../../../cross/plugin/ModuleTypes';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
 
 type Props = {

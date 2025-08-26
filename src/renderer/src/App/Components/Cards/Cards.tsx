@@ -1,9 +1,9 @@
-import {AvailablePages} from '@lynx_module/types';
 import {Result} from 'antd';
 import {LayoutGroup} from 'framer-motion';
 import {compact, isEmpty, isNil} from 'lodash';
 import {FC, memo, useMemo} from 'react';
 
+import {AvailablePages} from '../../../../../cross/plugin/ModuleTypes';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useGetCardsByPath, useHasArguments} from '../../Modules/ModuleLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';

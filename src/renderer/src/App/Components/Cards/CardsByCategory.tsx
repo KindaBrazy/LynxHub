@@ -1,9 +1,9 @@
-import {LoadedCardData} from '@lynx_module/types';
 import {Empty} from 'antd';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {compact, isEmpty, isNil} from 'lodash';
 import {memo, useMemo} from 'react';
 
+import {LoadedCardData} from '../../../../../cross/plugin/ModuleTypes';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../assets/icons/SvgIcons/SvgIconsColor';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useAllCardDataWithPath, useHasArguments, useSearchCards} from '../../Modules/ModuleLoader';

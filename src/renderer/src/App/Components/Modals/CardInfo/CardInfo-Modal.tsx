@@ -1,11 +1,11 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
-import {CardInfoDescriptions} from '@lynx_module/types';
 import {Result} from 'antd';
 import {isEmpty, startCase} from 'lodash';
 import {Fragment, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
+import {CardInfoDescriptions} from '../../../../../../cross/plugin/ModuleTypes';
 import {useDebounceBreadcrumb} from '../../../../../Breadcrumbs';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';

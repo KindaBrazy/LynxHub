@@ -1,14 +1,14 @@
 import path from 'node:path';
 
-import {MainModuleUtils} from '@lynx_module/types';
 import {ipcMain} from 'electron';
 import {isEmpty} from 'lodash';
 import pty from 'node-pty';
 
-import {MainModuleImportType} from '../../../../../module/src/types';
 import {ModulesInfo} from '../../../../cross/CrossTypes';
 import {isDev, toMs} from '../../../../cross/CrossUtils';
 import {modulesChannels} from '../../../../cross/IpcChannelAndTypes';
+import {MainModuleUtils} from '../../../../cross/plugin/ModuleTypes';
+import {MainModuleImportType} from '../../../../cross/plugin/ModuleTypes';
 import {InstalledCard} from '../../../../cross/StorageTypes';
 import {appManager, storageManager} from '../../../index';
 import {getAbsolutePath, getExePath, isPortable} from '../../../Utilities/Utils';

@@ -1,7 +1,5 @@
 // Card Repository information type
 
-import {MainModuleUtils} from '@lynx_module/types';
-
 import {
   BINARIES_FOLDER_NAME,
   EXTENSIONS_FOLDER_NAME,
@@ -9,6 +7,7 @@ import {
   REPOSITORIES_FOLDER_NAME,
   STATICS_FOLDER_NAME,
 } from './CrossConstants';
+import {MainModuleUtils} from './plugin/ModuleTypes';
 
 export type RepoDetails = {
   stars: number;
