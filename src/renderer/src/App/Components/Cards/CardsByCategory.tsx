@@ -23,7 +23,7 @@ const useCardsById = (cardIds: string[]): LoadedCardData[] => {
 
   return useMemo(() => {
     return allCards.filter(card => cardIds.includes(card.id));
-  }, [cardIds]);
+  }, [cardIds, allCards]);
 };
 
 /**
@@ -70,7 +70,7 @@ const AllCards = () => {
     const pin = compact(allCards?.filter(card => pinnedCards.includes(card.id)));
     const rest = compact(allCards?.filter(card => !pinnedCards.includes(card.id)));
     return [...pin, ...rest];
-  }, [pinnedCards]);
+  }, [pinnedCards, allCards]);
 
   if (isEmpty(sortedCards) && isEmpty(allCategory))
     return (
