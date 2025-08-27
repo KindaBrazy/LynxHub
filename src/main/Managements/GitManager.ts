@@ -505,6 +505,23 @@ export default class GitManager {
     }
   }
 
+  public async getCurrentCommitHash(dir: string, short: boolean = true): Promise<string | undefined> {
+    const targetDirectory = path.resolve(dir);
+
+    try {
+      await this.git.cwd(targetDirectory);
+
+      const log = await this.git.log(['-1', '--pretty=%H']);
+      if (log.latest) {
+        return short ? log.latest.hash.substring(0, 7) : log.latest.hash;
+      }
+      return undefined;
+    } catch (error) {
+      console.error('Error getting last commit hash:', error);
+      return undefined;
+    }
+  }
+
   /**
    * Pulls the latest changes from the remote repository.
    * @param dir - The directory of the local repository.
