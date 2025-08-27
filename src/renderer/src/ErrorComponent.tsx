@@ -24,7 +24,7 @@ export default function ErrorComponent({error, resetErrorBoundary}: Props) {
     rendererIpc.win.changeWinState('close');
   }, []);
 
-  const openIssues = () => window.open(ISSUE_PAGE);
+  const openIssues = () => rendererIpc.win.openUrlDefaultBrowser(ISSUE_PAGE);
 
   useEffect(() => {
     if (isDev()) console.error(error);
@@ -63,10 +63,9 @@ export default function ErrorComponent({error, resetErrorBoundary}: Props) {
         status="403"
         className="text-center"
         title={<span className="text-white">Oops! Something went wrong.</span>}>
-        <div className="flex flex-col gap-y-2 w-full bottom-0 absolute inset-x-0">
+        <div className="flex flex-col gap-y-4 w-full bottom-0 absolute inset-x-0">
           <span className="text-warning">If the issue persists, please consider reporting it on GitHub issues.</span>
           <Button
-            size="sm"
             radius="none"
             variant="light"
             color="warning"
