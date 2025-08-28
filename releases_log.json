@@ -1,16 +1,16 @@
 {
-  "currentVersion": "3.1.3",
-  "currentBuild": 27,
+  "currentVersion": "3.1.4",
+  "currentBuild": 28,
   "releaseDate": "2025-08-28",
   "earlyAccess": {
-    "version": "3.1.3",
-    "build": 27,
+    "version": "3.1.4",
+    "build": 28,
     "releaseDate": "2025-08-28"
   },
   "changeLog": [
     {
-      "build": 27,
-      "version": "3.1.3",
+      "build": 28,
+      "version": "3.1.4",
       "bug": ["Fixed installer terminal font.", "Fixed auto-update choosing wrong target file."]
     },
     {
