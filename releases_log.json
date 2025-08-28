@@ -1,18 +1,23 @@
 {
-  "currentVersion": "3.1.2",
-  "currentBuild": 26,
-  "releaseDate": "2025-08-11",
+  "currentVersion": "3.1.3",
+  "currentBuild": 27,
+  "releaseDate": "2025-08-28",
   "earlyAccess": {
-    "version": "3.1.2",
-    "build": 26,
-    "releaseDate": "2025-07-22"
+    "version": "3.1.3",
+    "build": 27,
+    "releaseDate": "2025-08-28"
   },
   "changeLog": [
+    {
+      "build": 27,
+      "version": "3.1.3",
+      "bug": ["Fixed installer terminal font.", "Fixed auto-update choosing wrong target file."]
+    },
     {
       "build": 26,
       "version": "3.1.2",
       "improve": ["Add bulk encryption and decryption for browser history data for performance improvements."],
-      "bug": ["Fixed: White screen on startup.","Fixed: App freeze during navigation."]
+      "bug": ["Fixed: White screen on startup.", "Fixed: App freeze during navigation."]
     },
     {
       "build": 25,
