@@ -47,7 +47,7 @@ const config = {
   },
   publish: {
     provider: 'github',
-    channel: 'latest-${os}-${arch}',
+    channel: 'latest-${os}-${arch}-portable',
   },
 };
 
