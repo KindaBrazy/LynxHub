@@ -32,6 +32,7 @@ const config = {
     oneClick: false,
     perMachine: true,
     allowToChangeInstallationDirectory: true,
+    buildUniversalInstaller: false,
     createDesktopShortcut: 'always',
   },
   linux: {
@@ -62,7 +63,6 @@ const config = {
   },
   publish: {
     provider: 'github',
-    channel: 'latest-${os}-${arch}',
   },
 };
 
