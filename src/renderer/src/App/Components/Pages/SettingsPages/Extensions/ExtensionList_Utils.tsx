@@ -316,33 +316,35 @@ export function useRenderList(
                   Installed
                 </Chip>
               )}
-            </div>
 
-            <div>
               {foundUnloaded && (
-                <Tooltip delay={300} content={foundUnloaded.message} showArrow>
-                  <Chip size="sm" radius="sm" variant="flat" color="danger">
+                <Tooltip
+                  delay={300}
+                  radius="sm"
+                  color="warning"
+                  className="py-2 px-4"
+                  content={foundUnloaded.message}
+                  showArrow>
+                  <Chip size="sm" radius="sm" variant="flat" color="warning">
                     Unloaded
                   </Chip>
                 </Tooltip>
               )}
             </div>
 
-            <div>
-              {updateAvailable.includes(item.id) && (
-                <Button
-                  size="sm"
-                  variant="flat"
-                  color="warning"
-                  className="mr-4"
-                  isLoading={isUpdating}
-                  isDisabled={updatingAll}
-                  onPress={() => update(item.id, item.title)}
-                  startContent={!isUpdating && <Refresh3_Icon />}>
-                  {isUpdating ? 'Updating...' : 'Update'}
-                </Button>
-              )}
-            </div>
+            {updateAvailable.includes(item.id) && (
+              <Button
+                size="sm"
+                variant="flat"
+                color="warning"
+                className="mr-4"
+                isLoading={isUpdating}
+                isDisabled={updatingAll}
+                onPress={() => update(item.id, item.title)}
+                startContent={!isUpdating && <Refresh3_Icon />}>
+                {isUpdating ? 'Updating...' : 'Update'}
+              </Button>
+            )}
           </CardFooter>
         </Card>
       );
