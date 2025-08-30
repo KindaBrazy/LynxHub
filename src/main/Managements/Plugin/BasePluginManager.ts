@@ -6,13 +6,15 @@ import {is} from '@electron-toolkit/utils';
 import fs from 'graceful-fs';
 import {compact, includes, isString} from 'lodash';
 import portFinder from 'portfinder';
+import {ltr, satisfies} from 'semver';
 import handler from 'serve-handler';
 
-import {APP_BUILD_NUMBER} from '../../../cross/CrossConstants';
+import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
 import {ExtensionsInfo, FolderNames, ModulesInfo} from '../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
+import {PluginEngines} from '../../../cross/plugin/PluginTypes';
 import {appManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
@@ -364,19 +366,8 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
             fs.promises.access(path.join(dir, this.rendererScriptPath), fs.constants.F_OK),
           ]);
 
-          // Read and parse the JSON file
-          const configData = await fs.promises.readFile(configPath, 'utf-8');
-          const config = JSON.parse(configData);
-
-          if (APP_BUILD_NUMBER >= config.requireAppBuild) {
-            validatedFolders.push(folder);
-          } else {
-            this.skippedPlugins.push({
-              folderName: folder,
-              message: 'Unloaded because requireAppBuild not satisfied.',
-            });
-            console.log(`Skipping folder "${folder}" because requireAppBuild not satisfied.`);
-          }
+          const isCompatible = await this.compatibleCheck(folder, configPath);
+          if (isCompatible) validatedFolders.push(folder);
         } catch (err) {
           this.skippedPlugins.push({
             folderName: folder,
@@ -388,5 +379,66 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     }
 
     return validatedFolders;
+  }
+
+  /**
+   * Checks if a plugin is compatible with the current application version.
+   * @param folder The plugin's folder name, for logging purposes.
+   * @param configPath The full path to the plugin's config.json file.
+   * @returns {Promise<boolean>} True if compatible, false otherwise.
+   */
+  protected async compatibleCheck(folder: string, configPath: string): Promise<boolean> {
+    let config;
+    try {
+      const configData = await fs.promises.readFile(configPath, 'utf-8');
+      config = JSON.parse(configData);
+    } catch (error) {
+      // --- Message 1: Invalid Config ---
+      this.skippedPlugins.push({
+        folderName: folder,
+        message: 'Configuration file is unreadable or corrupt.',
+      });
+      console.error(`Skipping plugin "${folder}" due to invalid configuration file.`);
+      return false;
+    }
+
+    const engines: PluginEngines | undefined = config.engines;
+
+    if (engines && typeof engines === 'object') {
+      const checks = [
+        {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'},
+        {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'},
+      ];
+
+      for (const check of checks) {
+        const requiredRange = engines[check.api as keyof PluginEngines];
+        if (requiredRange && !satisfies(check.version, requiredRange)) {
+          // ltr(app_version, required_range) is true if the app version is lower.
+          const isAppTooOld = ltr(check.version, requiredRange);
+
+          // --- Message 2 & 3: Version Mismatch ---
+          const message = isAppTooOld
+            ? `Requires a newer version of LynxHub to run.` // App is too old for the plugin.
+            : `This ${check.type} is too old for your version of LynxHub.`; // Plugin is too old for the app.
+
+          this.skippedPlugins.push({
+            folderName: folder,
+            message: message,
+          });
+          console.log(`Skipping plugin "${folder}": ${message}`);
+          return false;
+        }
+      }
+      // If all engine checks pass, the plugin is compatible.
+      return true;
+    } else {
+      // --- Message 4: Missing Compatibility Info ---
+      this.skippedPlugins.push({
+        folderName: folder,
+        message: 'Could not verify compatibility. The plugin may be outdated or invalid.',
+      });
+      console.log(`Skipping plugin "${folder}" because it's missing compatibility information (engines field).`);
+      return false;
+    }
   }
 }

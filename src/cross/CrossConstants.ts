@@ -20,6 +20,9 @@ export const ISSUE_PAGE: string = `${packageJson.repository.url}/issues`;
 export const LICENSE_PAGE: string = `${packageJson.repository.url}/blob/master/LICENSE`;
 export const LICENSE_NAME: string = packageJson.license;
 
+export const MODULE_API_VERSION: string = packageJson.appDetails.moduleApiVersion;
+export const EXTENSION_API_VERSION: string = packageJson.appDetails.extensionApiVersion;
+
 export const APP_VERSION_V: string = `V${APP_VERSION}`;
 export const APP_NAME_VERSION: string = `${APP_NAME} ${APP_VERSION}`;
 export const APP_NAME_VERSION_V: string = `${APP_NAME} ${APP_VERSION_V}`;
