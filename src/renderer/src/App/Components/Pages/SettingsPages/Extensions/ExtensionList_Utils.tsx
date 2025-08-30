@@ -25,10 +25,11 @@ import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
 import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {
   CheckDuo_Icon,
+  Download_Icon,
   FilterDuo_Icon,
   Linux_Icon,
   MacOS_Icon,
-  Refresh3_Icon,
+  ShieldWarning_Icon,
   Windows_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {settingsActions, useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
@@ -310,7 +311,7 @@ export function useRenderList(
                   size="sm"
                   radius="sm"
                   variant="flat"
-                  color="success"
+                  color="primary"
                   className="ml-2"
                   startContent={<CheckDuo_Icon />}>
                   Installed
@@ -325,7 +326,12 @@ export function useRenderList(
                   className="py-2 px-4"
                   content={foundUnloaded.message}
                   showArrow>
-                  <Chip size="sm" radius="sm" variant="flat" color="warning">
+                  <Chip
+                    size="sm"
+                    radius="sm"
+                    variant="flat"
+                    color="warning"
+                    startContent={<ShieldWarning_Icon className="size-3.5" />}>
                     Unloaded
                   </Chip>
                 </Tooltip>
@@ -336,12 +342,12 @@ export function useRenderList(
               <Button
                 size="sm"
                 variant="flat"
-                color="warning"
+                color="success"
                 className="mr-4"
                 isLoading={isUpdating}
                 isDisabled={updatingAll}
                 onPress={() => update(item.id, item.title)}
-                startContent={!isUpdating && <Refresh3_Icon />}>
+                startContent={!isUpdating && <Download_Icon />}>
                 {isUpdating ? 'Updating...' : 'Update'}
               </Button>
             )}
