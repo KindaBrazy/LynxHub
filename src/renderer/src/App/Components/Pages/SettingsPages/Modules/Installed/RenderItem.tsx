@@ -238,7 +238,13 @@ const RenderItem = memo(({itemData, updatingAll, removedModule, unloaded}: Props
                       </Chip>
                     )}
                     {foundUnloaded && (
-                      <Tooltip delay={300} content={foundUnloaded.message} showArrow>
+                      <Tooltip
+                        delay={300}
+                        radius="sm"
+                        color="warning"
+                        className="py-2 px-4"
+                        content={foundUnloaded.message}
+                        showArrow>
                         <Chip size="sm" variant="flat" color="warning">
                           Unloaded
                         </Chip>
