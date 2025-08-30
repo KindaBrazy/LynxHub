@@ -84,16 +84,17 @@ export async function customPtyCommands(id: string, opt: PtyProcessOpt, commands
     ptyManager.push(new PtyManager(id, dir, true));
 
     const extensionPreCommands = getExtPreCommands(id);
+    let finalCommands = [...extensionPreCommands];
 
     if (!isNil(commands) && !isEmpty(commands)) {
       if (isArray(commands)) {
-        extensionPreCommands.push(...commands);
+        finalCommands = [...finalCommands, ...commands];
       } else {
-        extensionPreCommands.push(commands);
+        finalCommands = [...finalCommands, commands];
       }
     }
 
-    executeCommands(id, extensionPreCommands);
+    executeCommands(id, finalCommands);
   } else if (opt === 'stop') {
     stopPty(id);
   }
