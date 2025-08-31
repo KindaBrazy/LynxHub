@@ -48,6 +48,22 @@
       "description": "The minimum app build required to use this extension.",
       "minimum": 0
     },
+    "engines": {
+      "type": "object",
+      "description": "Specifies the versions of LynxHub APIs this extension is compatible with.",
+      "properties": {
+        "moduleApi": {
+          "type": "string",
+          "description": "The compatible SemVer range for the LynxHub Module API (e.g., '^1.0.0')."
+        },
+        "extensionApi": {
+          "type": "string",
+          "description": "The compatible SemVer range for the LynxHub Extension API (e.g., '^2.1.0')."
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 1
+    },
     "avatarUrl": {
       "type": "string",
       "description": "Url address to logo picture or relative path to the image file. A relative path will start with './'.",
@@ -56,11 +72,7 @@
     "tag": {
       "type": "string",
       "description": "A tag categorizing the extension.",
-      "enum": [
-        "tools",
-        "feature",
-        "games"
-      ]
+      "enum": ["tools", "feature", "games"]
     },
     "platforms": {
       "type": "array",
@@ -117,9 +129,7 @@
           }
         }
       },
-      "required": [
-        "label"
-      ],
+      "required": ["label"],
       "additionalProperties": false
     },
     "Changelogs": {
@@ -139,10 +149,7 @@
           "minItems": 1
         }
       },
-      "required": [
-        "title",
-        "items"
-      ],
+      "required": ["title", "items"],
       "additionalProperties": false
     }
   }
