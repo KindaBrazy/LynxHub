@@ -278,6 +278,7 @@ function ActionButtons({
         setUninstalling(false);
         if (result) {
           lynxTopToast(dispatch).success(`${selectedExt.title} uninstalled successfully`);
+          dispatch(settingsActions.removeExtUpdateAvailable(selectedExt.id));
           showRestartModal('To complete the uninstallation of the extension, please restart the app.');
         }
         setInstalled(prevState => prevState.filter(item => item.id !== selectedExt.id));
