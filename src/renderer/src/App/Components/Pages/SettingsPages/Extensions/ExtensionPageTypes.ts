@@ -1,6 +1,6 @@
 type SetKeys = 'installing' | 'updating' | 'unInstalling';
 type ManageOperation = 'add' | 'remove';
-type IdType = string | undefined;
+type IdType = string | string[] | undefined;
 
 export type ExtensionPageState = {
   installing: Set<string>;
