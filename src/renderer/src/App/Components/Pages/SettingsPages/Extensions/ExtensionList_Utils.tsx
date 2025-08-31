@@ -189,12 +189,11 @@ export function useRenderList(
 ) {
   const updateAvailable = useSettingsState('extensionsUpdateAvailable');
 
+  const manageSet = useExtensionPageStore(state => state.manageSet);
+
   const installing = useExtensionPageStore(state => state.installing);
   const updating = useExtensionPageStore(state => state.updating);
   const unInstalling = useExtensionPageStore(state => state.unInstalling);
-
-  const manageSet = useExtensionPageStore(state => state.manageSet);
-  const getHasId = useExtensionPageStore(state => state.getHasId);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -255,9 +254,9 @@ export function useRenderList(
       const foundInstalled = installed.find(i => i.id === item.id);
       const foundUnloaded = unloaded.find(u => foundInstalled?.dir === u.folderName);
 
-      const isInstalling = getHasId('installing', item.id);
-      const isUpdating = getHasId('updating', item.id);
-      const isUnInstalling = getHasId('unInstalling', item.id);
+      const isInstalling = installing.has(item.id);
+      const isUpdating = updating.has(item.id);
+      const isUnInstalling = unInstalling.has(item.id);
 
       const isUpdateAvailable = updateAvailable.includes(item.id);
 
@@ -388,6 +387,6 @@ export function useRenderList(
         </Card>
       );
     },
-    [installed, selectedExt, isLoaded, updateAvailable, installing, updating, unInstalling],
+    [installed, selectedExt, isLoaded, unloaded, updateAvailable, installing, updating, unInstalling],
   );
 }

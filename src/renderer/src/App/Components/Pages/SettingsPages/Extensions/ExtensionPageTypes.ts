@@ -8,5 +8,4 @@ export type ExtensionPageState = {
   unInstalling: Set<string>;
 
   manageSet: (key: SetKeys, id: IdType, operation: ManageOperation) => void;
-  getHasId: (key: SetKeys, id: IdType) => boolean;
 };

@@ -190,11 +190,13 @@ function ActionButtons({
   const dispatch = useDispatch<AppDispatch>();
 
   const manageSet = useExtensionPageStore(state => state.manageSet);
-  const getHasId = useExtensionPageStore(state => state.getHasId);
+  const installing = useExtensionPageStore(state => state.installing);
+  const updating = useExtensionPageStore(state => state.updating);
+  const unInstalling = useExtensionPageStore(state => state.unInstalling);
 
-  const isInstalling = getHasId('installing', selectedExt?.id);
-  const isUpdating = getHasId('updating', selectedExt?.id);
-  const isUnInstalling = getHasId('unInstalling', selectedExt?.id);
+  const isInstalling = useMemo(() => installing.has(selectedExt?.id || ''), [installing, selectedExt?.id]);
+  const isUpdating = useMemo(() => updating.has(selectedExt?.id || ''), [updating, selectedExt?.id]);
+  const isUnInstalling = useMemo(() => unInstalling.has(selectedExt?.id || ''), [unInstalling, selectedExt?.id]);
 
   const [isCompatible, setIsCompatible] = useState<boolean>(true);
   const [isSecOpen, setIsSecOpen] = useState<boolean>(false);
