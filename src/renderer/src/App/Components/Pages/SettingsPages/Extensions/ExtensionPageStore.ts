@@ -1,3 +1,4 @@
+import {isArray} from 'lodash';
 import {create} from 'zustand';
 
 import {ExtensionPageState} from './ExtensionPageTypes';
@@ -8,7 +9,11 @@ export const createExtensionStore = () => {
     updating: new Set<string>([]),
     installing: new Set<string>([]),
 
-    getHasId: (key, id) => (id ? get()[key].has(id) : false),
+    getHasId: (key, id) => {
+      if (!id || isArray(id)) return false;
+
+      return id ? get()[key].has(id) : false;
+    },
 
     manageSet: (key, id, operation) => {
       if (!id) return;
@@ -16,9 +21,17 @@ export const createExtensionStore = () => {
         // Create a new set from the current state to avoid direct mutation
         const newSet = new Set(state[key]);
         if (operation === 'add') {
-          newSet.add(id);
+          if (isArray(id)) {
+            id.forEach(id => newSet.add(id));
+          } else {
+            newSet.add(id);
+          }
         } else {
-          newSet.delete(id);
+          if (isArray(id)) {
+            id.forEach(id => newSet.delete(id));
+          } else {
+            newSet.delete(id);
+          }
         }
         // Return the updated state object
         return {[key]: newSet};
