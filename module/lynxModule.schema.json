@@ -44,6 +44,22 @@
       "type": "integer",
       "description": "The minimum application build number required for this module."
     },
+    "engines": {
+      "type": "object",
+      "description": "Specifies the versions of LynxHub APIs this module is compatible with.",
+      "properties": {
+        "moduleApi": {
+          "type": "string",
+          "description": "The compatible SemVer range for the LynxHub Module API (e.g., '^1.0.0')."
+        },
+        "extensionApi": {
+          "type": "string",
+          "description": "The compatible SemVer range for the LynxHub Extension API (e.g., '^2.1.0')."
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 1
+    },
     "repoUrl": {
       "type": "string",
       "description": "Repository address to be cloned when the user installs the module."
@@ -84,9 +100,7 @@
           }
         }
       },
-      "required": [
-        "label"
-      ]
+      "required": ["label"]
     },
     "Changelogs": {
       "type": "object",
@@ -103,10 +117,7 @@
           }
         }
       },
-      "required": [
-        "title",
-        "items"
-      ]
+      "required": ["title", "items"]
     }
   }
 }
