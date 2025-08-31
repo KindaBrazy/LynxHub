@@ -285,7 +285,7 @@ export function useRenderList(
                     size="sm"
                     radius="sm"
                     variant="flat"
-                    className={`${updateAvailable.includes(item.id) && 'text-warning'}`}>
+                    className={`${updateAvailable.includes(item.id) && 'text-success'}`}>
                     v{item.version}
                   </Chip>
                 </div>

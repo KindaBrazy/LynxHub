@@ -105,7 +105,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
           {!isEmpty(updateAvailable) && (
             <Button
               size="sm"
-              color="warning"
+              color="success"
               onPress={updateAll}
               isLoading={updatingAll}
               startContent={!updatingAll && <Refresh3_Icon />}>
