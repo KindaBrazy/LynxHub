@@ -234,18 +234,21 @@ export function useRenderList(
     });
   }, []);
 
-  const update = useCallback((id: string, title: string) => {
-    AddBreadcrumb_Renderer(`Extension update: id:${id}`);
-    manageSet('updating', selectedExt?.id, 'add');
-    rendererIpc.extension.updateExtension(id).then(updated => {
-      if (updated) {
-        dispatch(settingsActions.removeExtUpdateAvailable(id));
-        lynxTopToast(dispatch).success(`${title} updated Successfully`);
-        showRestartModal('To apply the updates to the extension, please restart the app.');
-      }
-      manageSet('updating', selectedExt?.id, 'remove');
-    });
-  }, []);
+  const update = useCallback(
+    (id: string, title: string) => {
+      AddBreadcrumb_Renderer(`Extension update: id:${id}`);
+      manageSet('updating', selectedExt?.id, 'add');
+      rendererIpc.extension.updateExtension(id).then(updated => {
+        if (updated) {
+          dispatch(settingsActions.removeExtUpdateAvailable(id));
+          lynxTopToast(dispatch).success(`${title} updated Successfully`);
+          showRestartModal('To apply the updates to the extension, please restart the app.');
+        }
+        manageSet('updating', selectedExt?.id, 'remove');
+      });
+    },
+    [selectedExt],
+  );
 
   return useCallback(
     (item: Extension_ListData, updatingAll: boolean) => {
