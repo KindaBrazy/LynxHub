@@ -14,7 +14,7 @@ import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import LynxScroll from '../../../Reusable/LynxScroll';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useRenderList, useSortedList} from './ExtensionList_Utils';
-import {InstalledExt} from './ExtensionsPage';
+import {InstalledExt, useExtensionPageStore} from './ExtensionsPage';
 
 export type ExtFilter = Set<'installed' | Extension_ListData['tag']> | 'all';
 
@@ -34,6 +34,8 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
   const dispatch = useDispatch<AppDispatch>();
 
   const installedID = useMemo(() => installed.map(item => item.id), [installed]);
+
+  const manageSet = useExtensionPageStore(state => state.manageSet);
 
   const {loading, refreshing} = useFetchExtensions(setList);
 
@@ -81,6 +83,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
   }, [searchValue]);
 
   const updateAll = () => {
+    manageSet('updating', updateAvailable, 'add');
     setUpdatingAll(true);
     rendererIpc.extension
       .updateAllExtensions()
@@ -89,7 +92,10 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
         dispatch(settingsActions.setSettingsState({key: 'extensionsUpdateAvailable', value: []}));
       })
       .catch(() => lynxTopToast(dispatch).error('Failed to update extensions. Please try again later.'))
-      .finally(() => setUpdatingAll(false));
+      .finally(() => {
+        manageSet('updating', updateAvailable, 'remove');
+        setUpdatingAll(false);
+      });
   };
 
   return (
