@@ -38,7 +38,7 @@ import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
 import {ExtFilter} from './ExtensionList';
-import {InstalledExt} from './ExtensionsPage';
+import {InstalledExt, useExtensionPageStore} from './ExtensionsPage';
 
 export function useFetchExtensions(setList: Dispatch<SetStateAction<Extension_ListData[]>>) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -188,7 +188,14 @@ export function useRenderList(
   unloaded: SkippedPlugins[],
 ) {
   const updateAvailable = useSettingsState('extensionsUpdateAvailable');
-  const [updating, setUpdating] = useState<string>('');
+
+  const installing = useExtensionPageStore(state => state.installing);
+  const updating = useExtensionPageStore(state => state.updating);
+  const unInstalling = useExtensionPageStore(state => state.unInstalling);
+
+  const manageSet = useExtensionPageStore(state => state.manageSet);
+  const getHasId = useExtensionPageStore(state => state.getHasId);
+
   const dispatch = useDispatch<AppDispatch>();
 
   const later = useCallback(() => {
@@ -229,14 +236,14 @@ export function useRenderList(
 
   const update = useCallback((id: string, title: string) => {
     AddBreadcrumb_Renderer(`Extension update: id:${id}`);
-    setUpdating(id);
+    manageSet('updating', selectedExt?.id, 'add');
     rendererIpc.extension.updateExtension(id).then(updated => {
       if (updated) {
         dispatch(settingsActions.removeExtUpdateAvailable(id));
         lynxTopToast(dispatch).success(`${title} updated Successfully`);
         showRestartModal('To apply the updates to the extension, please restart the app.');
       }
-      setUpdating('');
+      manageSet('updating', selectedExt?.id, 'remove');
     });
   }, []);
 
@@ -244,7 +251,19 @@ export function useRenderList(
     (item: Extension_ListData, updatingAll: boolean) => {
       const foundInstalled = installed.find(i => i.id === item.id);
       const foundUnloaded = unloaded.find(u => foundInstalled?.dir === u.folderName);
-      const isUpdating = updating === item.id;
+
+      const isInstalling = getHasId('installing', item.id);
+      const isUpdating = getHasId('updating', item.id);
+      const isUnInstalling = getHasId('unInstalling', item.id);
+
+      const isUpdateAvailable = updateAvailable.includes(item.id);
+
+      const {linux, win32, darwin} = {
+        linux: item.platforms.includes('linux'),
+        win32: item.platforms.includes('win32'),
+        darwin: item.platforms.includes('darwin'),
+      };
+
       return (
         <Card
           onPress={() => {
@@ -302,9 +321,9 @@ export function useRenderList(
 
           <CardFooter className="flex flex-row items-center gap-x-2 pl-[3.7rem] pt-0 justify-between">
             <div className="flex flex-row items-center px-0 gap-x-1">
-              {item.platforms.includes('linux') && <Linux_Icon className="size-4" />}
-              {item.platforms.includes('win32') && <Windows_Icon className="size-4" />}
-              {item.platforms.includes('darwin') && <MacOS_Icon className="size-4" />}
+              {linux && <Linux_Icon className="size-4" />}
+              {win32 && <Windows_Icon className="size-4" />}
+              {darwin && <MacOS_Icon className="size-4" />}
 
               {foundInstalled && (
                 <Chip
@@ -338,23 +357,34 @@ export function useRenderList(
               )}
             </div>
 
-            {updateAvailable.includes(item.id) && (
+            {isUpdateAvailable && (
               <Button
                 size="sm"
-                variant="flat"
                 color="success"
                 className="mr-4"
                 isLoading={isUpdating}
                 isDisabled={updatingAll}
+                variant={isUpdating ? 'light' : 'flat'}
                 onPress={() => update(item.id, item.title)}
                 startContent={!isUpdating && <Download_Icon />}>
                 {isUpdating ? 'Updating...' : 'Update'}
+              </Button>
+            )}
+
+            {isInstalling && (
+              <Button size="sm" color="success" variant="light" className="mr-4" isLoading isDisabled>
+                Installing...
+              </Button>
+            )}
+            {isUnInstalling && (
+              <Button size="sm" color="danger" variant="light" className="mr-4" isLoading isDisabled>
+                Uninstalling...
               </Button>
             )}
           </CardFooter>
         </Card>
       );
     },
-    [installed, selectedExt, isLoaded, updateAvailable, updating],
+    [installed, selectedExt, isLoaded, updateAvailable, installing, updating, unInstalling],
   );
 }
