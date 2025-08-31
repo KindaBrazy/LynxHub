@@ -4,16 +4,10 @@ import {create} from 'zustand';
 import {ExtensionPageState} from './ExtensionPageTypes';
 
 export const createExtensionStore = () => {
-  return create<ExtensionPageState>((set, get) => ({
+  return create<ExtensionPageState>(set => ({
     unInstalling: new Set<string>([]),
     updating: new Set<string>([]),
     installing: new Set<string>([]),
-
-    getHasId: (key, id) => {
-      if (!id || isArray(id)) return false;
-
-      return id ? get()[key].has(id) : false;
-    },
 
     manageSet: (key, id, operation) => {
       if (!id) return;
