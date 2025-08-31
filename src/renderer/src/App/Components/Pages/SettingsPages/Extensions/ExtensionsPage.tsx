@@ -1,4 +1,4 @@
-import {memo, useEffect, useState} from 'react';
+import {createContext, memo, useContext, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
@@ -8,11 +8,15 @@ import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import Page from '../../Page';
 import ExtensionList from './ExtensionList';
+import {createExtensionStore, ExtensionPageStore} from './ExtensionPageStore';
+import {ExtensionPageState} from './ExtensionPageTypes';
 import ExtensionPreview from './ExtensionPreview';
 
 export type InstalledExt = {dir: string; id: string; version?: string};
 
 type Props = {show: boolean};
+
+const ExtensionPageContext = createContext<ExtensionPageStore | null>(null);
 
 const ExtensionsPage = memo(({show}: Props) => {
   const [selectedExtension, setSelectedExtension] = useState<Extension_ListData | undefined>(undefined);
@@ -36,17 +40,27 @@ const ExtensionsPage = memo(({show}: Props) => {
     rendererIpc.extension.getSkipped().then(result => setUnloaded(result));
   }, []);
 
+  const storeValue = useMemo(() => createExtensionStore(), []);
+
   return (
-    <Page show={show} className="gap-x-6">
-      <ExtensionList
-        unloaded={unloaded}
-        installed={installed}
-        selectedExt={selectedExtension}
-        setSelectedExt={setSelectedExtension}
-      />
-      <ExtensionPreview installed={installed} setInstalled={setInstalled} selectedExt={selectedExtension} />
-    </Page>
+    <ExtensionPageContext.Provider value={storeValue}>
+      <Page show={show} className="gap-x-6">
+        <ExtensionList
+          unloaded={unloaded}
+          installed={installed}
+          selectedExt={selectedExtension}
+          setSelectedExt={setSelectedExtension}
+        />
+        <ExtensionPreview installed={installed} setInstalled={setInstalled} selectedExt={selectedExtension} />
+      </Page>
+    </ExtensionPageContext.Provider>
   );
 });
+
+export const useExtensionPageStore = <T,>(selector: (state: ExtensionPageState) => T): T => {
+  const store = useContext(ExtensionPageContext);
+  if (!store) throw new Error('Missing CardStoreContext.Provider');
+  return store(selector);
+};
 
 export default ExtensionsPage;
