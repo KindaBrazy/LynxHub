@@ -305,7 +305,7 @@ function ActionButtons({
         {updateAvailable.includes(selectedExt?.id || '') && (
           <Button
             size="sm"
-            color="warning"
+            color="success"
             isLoading={updating}
             onPress={updateExtension}
             startContent={!updating && <Refresh3_Icon />}>
@@ -316,6 +316,7 @@ function ActionButtons({
           <Button
             size="sm"
             color="danger"
+            variant="flat"
             isLoading={uninstalling}
             onPress={uninstallExtension}
             startContent={!uninstalling && <Trash_Icon />}>
