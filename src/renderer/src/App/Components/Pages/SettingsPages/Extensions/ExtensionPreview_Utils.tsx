@@ -26,7 +26,7 @@ import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
 import LynxScroll from '../../../Reusable/LynxScroll';
 import MarkdownViewer from '../../../Reusable/MarkdownViewer';
 import SecurityWarning from '../SecurityWarning';
-import {InstalledExt} from './ExtensionsPage';
+import {InstalledExt, useExtensionPageStore} from './ExtensionsPage';
 
 export function PreviewHeader({
   selectedExt,
@@ -189,9 +189,12 @@ function ActionButtons({
   const updateAvailable = useSettingsState('extensionsUpdateAvailable');
   const dispatch = useDispatch<AppDispatch>();
 
-  const [updating, setUpdating] = useState<boolean>(false);
-  const [installing, setInstalling] = useState<boolean>(false);
-  const [uninstalling, setUninstalling] = useState<boolean>(false);
+  const manageSet = useExtensionPageStore(state => state.manageSet);
+  const getHasId = useExtensionPageStore(state => state.getHasId);
+
+  const isInstalling = getHasId('installing', selectedExt?.id);
+  const isUpdating = getHasId('updating', selectedExt?.id);
+  const isUnInstalling = getHasId('unInstalling', selectedExt?.id);
 
   const [isCompatible, setIsCompatible] = useState<boolean>(true);
   const [isSecOpen, setIsSecOpen] = useState<boolean>(false);
@@ -240,7 +243,7 @@ function ActionButtons({
 
   const updateExtension = useCallback(() => {
     AddBreadcrumb_Renderer(`Extension update: id:${selectedExt?.id}`);
-    setUpdating(true);
+    manageSet('updating', selectedExt?.id, 'add');
     if (selectedExt?.id) {
       rendererIpc.extension.updateExtension(selectedExt.id).then(updated => {
         if (updated) {
@@ -248,18 +251,18 @@ function ActionButtons({
           dispatch(settingsActions.removeExtUpdateAvailable(selectedExt.id));
           showRestartModal('To apply the updates to the extension, please restart the app.');
         }
-        setUpdating(false);
+        manageSet('updating', selectedExt?.id, 'remove');
       });
     }
   }, [selectedExt, showRestartModal]);
 
   const installExtension = useCallback(() => {
     AddBreadcrumb_Renderer(`Extension install: id:${selectedExt?.id}`);
-    setInstalling(true);
+    manageSet('installing', selectedExt?.id, 'add');
 
     if (selectedExt?.url) {
       rendererIpc.extension.installExtension(selectedExt.url).then(result => {
-        setInstalling(false);
+        manageSet('installing', selectedExt?.id, 'remove');
         if (result) {
           lynxTopToast(dispatch).success(`${selectedExt.title} installed successfully`);
           showRestartModal('To apply the installed extension, please restart the app.');
@@ -271,11 +274,11 @@ function ActionButtons({
 
   const uninstallExtension = useCallback(() => {
     AddBreadcrumb_Renderer(`Extension uninstall: id:${selectedExt?.id}`);
-    setUninstalling(true);
+    manageSet('unInstalling', selectedExt?.id, 'add');
 
     if (selectedExt?.id) {
       rendererIpc.extension.uninstallExtension(selectedExt.id).then(result => {
-        setUninstalling(false);
+        manageSet('unInstalling', selectedExt?.id, 'remove');
         if (result) {
           lynxTopToast(dispatch).success(`${selectedExt.title} uninstalled successfully`);
           dispatch(settingsActions.removeExtUpdateAvailable(selectedExt.id));
@@ -306,10 +309,10 @@ function ActionButtons({
           <Button
             size="sm"
             color="success"
-            isLoading={updating}
+            isLoading={isUpdating}
             onPress={updateExtension}
-            startContent={!updating && <Refresh3_Icon />}>
-            {updating ? 'Updating...' : 'Update'}
+            startContent={!isUpdating && <Refresh3_Icon />}>
+            {isUpdating ? 'Updating...' : 'Update'}
           </Button>
         )}
         {installed ? (
@@ -317,20 +320,20 @@ function ActionButtons({
             size="sm"
             color="danger"
             variant="flat"
-            isLoading={uninstalling}
+            isLoading={isUnInstalling}
             onPress={uninstallExtension}
-            startContent={!uninstalling && <Trash_Icon />}>
-            {uninstalling ? 'Uninstalling...' : 'Uninstall'}
+            startContent={!isUnInstalling && <Trash_Icon />}>
+            {isUnInstalling ? 'Uninstalling...' : 'Uninstall'}
           </Button>
         ) : (
           <Button
             size="sm"
-            isLoading={installing}
             onPress={handleInstall}
+            isLoading={isInstalling}
             isDisabled={!isCompatible}
             color={isCompatible ? 'success' : 'warning'}
-            startContent={!installing && <Download2_Icon />}>
-            {!isCompatible ? 'Not Compatible' : installing ? 'Installing...' : 'Install'}
+            startContent={!isInstalling && <Download2_Icon />}>
+            {!isCompatible ? 'Not Compatible' : isInstalling ? 'Installing...' : 'Install'}
           </Button>
         )}
       </div>
