@@ -1,5 +1,5 @@
 import {Button, Divider, Input, Progress, Skeleton} from '@heroui/react';
-import {Empty, List} from 'antd';
+import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -55,7 +55,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
   );
 
   const filterMenu = useFilterMenu(selectedFilters, setSelectedFilters);
-  const renderList = useRenderList(selectedExt, setSelectedExt, loading, installed, unloaded);
+  const renderList = useRenderList(selectedExt, setSelectedExt, loading, installed, unloaded, updatingAll);
 
   const emptyText = useMemo(() => {
     return (
@@ -102,7 +102,8 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
     <div
       className={
         'absolute inset-y-2 border border-foreground-100 shadow-small sm:w-[19rem] lg:w-[24rem] 2xl:w-[30rem]' +
-        ' overflow-hidden shrink-0 transition-[width] duration-500 bg-white dark:bg-LynxRaisinBlack rounded-xl'
+        ' overflow-hidden shrink-0 transition-[width] duration-500 bg-white dark:bg-LynxRaisinBlack rounded-xl' +
+        ' flex flex-col'
       }>
       {refreshing && <Progress size="sm" color="secondary" aria-label="Refreshing Item" isIndeterminate />}
       <div className="flex w-full flex-col p-4 gap-y-4 shadow-small">
@@ -133,7 +134,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
 
       <Divider />
 
-      <LynxScroll className="inset-0 absolute !top-32 py-2 px-3">
+      <LynxScroll className="pt-2 px-3 size-full space-y-2">
         {loading ? (
           <div className="flex flex-col">
             {Array(3)
@@ -147,15 +148,14 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
                 );
               })}
           </div>
+        ) : isEmpty(resultList) ? (
+          emptyText
         ) : (
-          <List
-            size="small"
-            locale={{emptyText}}
-            className="size-full"
-            itemLayout="horizontal"
-            dataSource={resultList}
-            renderItem={item => renderList(item, updatingAll)}
-          />
+          <div className="flex flex-col gap-y-2 pb-4">
+            {resultList.map(item => {
+              return renderList(item);
+            })}
+          </div>
         )}
       </LynxScroll>
     </div>

@@ -186,6 +186,7 @@ export function useRenderList(
   isLoaded: boolean,
   installed: InstalledExt[],
   unloaded: SkippedPlugins[],
+  updatingAll: boolean,
 ) {
   const updateAvailable = useSettingsState('extensionsUpdateAvailable');
 
@@ -250,7 +251,7 @@ export function useRenderList(
   );
 
   return useCallback(
-    (item: Extension_ListData, updatingAll: boolean) => {
+    (item: Extension_ListData) => {
       const foundInstalled = installed.find(i => i.id === item.id);
       const foundUnloaded = unloaded.find(u => foundInstalled?.dir === u.folderName);
 
@@ -275,7 +276,7 @@ export function useRenderList(
           className={
             `hover:bg-foreground-100 hover:shadow-medium relative ` +
             ` border-2 border-foreground-100 ${selectedExt?.id === item.id && '!border-primary'}` +
-            ` rounded-xl !transition-all !duration-300 mb-2 bg-foreground-50 cursor-default`
+            ` rounded-xl !transition-all !duration-300 bg-foreground-50 cursor-default`
           }
           as="div"
           shadow="sm"
@@ -387,6 +388,6 @@ export function useRenderList(
         </Card>
       );
     },
-    [installed, selectedExt, isLoaded, unloaded, updateAvailable, installing, updating, unInstalling],
+    [installed, selectedExt, isLoaded, unloaded, updatingAll, updateAvailable, installing, updating, unInstalling],
   );
 }
