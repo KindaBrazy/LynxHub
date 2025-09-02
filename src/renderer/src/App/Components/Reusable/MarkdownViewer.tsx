@@ -126,7 +126,7 @@ const MarkdownViewer = ({repoUrl, rounded = true, showBackground}: MarkdownViewe
           loading="lazy"
           alt={alt || ''}
           src={transformImageUrl(src || '')}
-          className="mx-1 inline-block rounded-md shadow-sm"
+          className="mx-1 inline-block rounded-md shadow"
           {...props}
         />
       );

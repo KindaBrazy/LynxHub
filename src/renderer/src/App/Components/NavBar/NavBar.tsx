@@ -11,7 +11,7 @@ const NAV_BAR_STYLE = {
   bgColor: 'dark:bg-LynxRaisinBlack bg-white',
   gapY: 'gap-y-1',
   paddingY: 'py-3',
-  shadow: 'shadow-sm',
+  shadow: 'shadow-xs',
   width: 'w-14',
 };
 

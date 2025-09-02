@@ -210,7 +210,7 @@ const RenderItem = memo(({itemData, updatingAll, removedModule, unloaded}: Props
           <List.Item
             className={
               'mb-2 rounded-lg border-2 bg-gray-50 !px-2 transition duration-300 hover:bg-gray-200 ' +
-              'border-transparent shadow-sm hover:border-white hover:shadow-lg dark:bg-black/15' +
+              'border-transparent shadow hover:border-white hover:shadow-lg dark:bg-black/15' +
               ' dark:hover:border-black dark:hover:bg-black/25'
             }
             key={item.title}

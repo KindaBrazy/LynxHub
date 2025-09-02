@@ -286,7 +286,7 @@ export function useRenderList(
               avatarProps={{
                 src: item.avatarUrl,
                 radius: 'none',
-                className: 'shrink-0 !bg-opacity-0',
+                className: 'shrink-0 !bg-black/0',
               }}
               description={
                 <span className="text-foreground-500 text-small">

@@ -13,7 +13,7 @@ type Props = {
   descriptions: CardInfoDescriptions;
 };
 
-const progressElem = <Spinner size="sm" className="flex-row space-x-1" classNames={{label: 'text-opacity-70'}} />;
+const progressElem = <Spinner size="sm" className="flex-row space-x-1" classNames={{label: 'text-foreground/70'}} />;
 
 export default function CardInfoDescription({folders, descriptions}: Props) {
   const getItems = useCallback(

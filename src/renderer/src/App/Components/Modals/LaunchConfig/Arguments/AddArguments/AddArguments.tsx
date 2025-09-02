@@ -146,7 +146,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
               ))}
             </div>
           )}
-          <div className="flex w-full flex-row space-x-2">
+          <div className="flex w-full flex-row gap-x-2">
             <Input
               spellCheck="false"
               onValueChange={setSearchValue}

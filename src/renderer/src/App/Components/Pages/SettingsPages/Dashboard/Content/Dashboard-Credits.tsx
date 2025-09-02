@@ -67,19 +67,19 @@ export default function DashboardCredits() {
       {/* Hero Section */}
       <div
         className={
-          'relative mb-6 overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 via-sky-50' +
+          'relative mb-6 overflow-hidden rounded-2xl bg-linear-to-br from-blue-50 via-sky-50' +
           ' to-indigo-50 p-6 dark:from-blue-900/20 dark:via-sky-900/20 dark:to-indigo-900/20'
         }>
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-sky-500/10 to-indigo-500/10"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 via-sky-500/10 to-indigo-500/10"></div>
         <div className="relative z-10 text-center">
           <div className="mb-3 flex items-center justify-center">
-            <div className="animate-pulse rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 p-2">
+            <div className="animate-pulse rounded-full bg-linear-to-r from-blue-500 to-indigo-500 p-2">
               <Heart_Icon className="size-5 text-white" />
             </div>
           </div>
           <h2
             className={
-              'mb-1 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-2xl font-bold text-transparent'
+              'mb-1 bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-2xl font-bold text-transparent'
             }>
             Our Amazing Sponsors
           </h2>
@@ -94,7 +94,7 @@ export default function DashboardCredits() {
             {/* Tier Header */}
             <div className="mb-6 flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <div className={`rounded-full bg-gradient-to-r ${TIER_GRADIENTS[tier]} p-2 shadow-lg`}>
+                <div className={`rounded-full bg-linear-to-r ${TIER_GRADIENTS[tier]} p-2 shadow-lg`}>
                   <span className="text-lg">{TIER_EMOJI[tier]}</span>
                 </div>
                 <div className="flex flex-col items-start">
@@ -125,14 +125,14 @@ export default function DashboardCredits() {
                   <Card
                     className={
                       'group relative overflow-hidden rounded-xl bg-foreground-50' +
-                      ' p-4 shadow-sm backdrop-blur-sm transition-all duration-300 hover:scale-105' +
-                      ' hover:shadow-lg dark:border-gray-700 dark:bg-gray-800/80 !min-w-52'
+                      ' p-4 shadow backdrop-blur-xs transition-all duration-300 hover:scale-105' +
+                      ' hover:shadow-lg dark:border-gray-700 dark:bg-gray-800/80 min-w-52!'
                     }
                     key={supporter.name}
                     isPressable>
                     <div
                       className={
-                        `absolute inset-0 bg-gradient-to-br ${TIER_GRADIENTS[tier]} opacity-0` +
+                        `absolute inset-0 bg-linear-to-br ${TIER_GRADIENTS[tier]} opacity-0` +
                         ` transition-opacity duration-300 group-hover:opacity-10`
                       }
                     />
@@ -190,7 +190,7 @@ export default function DashboardCredits() {
             className={'overflow-hidden p-4 transition-all duration-300 hover:scale-105 dark:bg-foreground-100 '}
             isPressable>
             <div className="flex flex-col items-center space-y-2">
-              <div className="rounded-full bg-gradient-to-r from-blue-500 to-blue-600 p-2">
+              <div className="rounded-full bg-linear-to-r from-blue-500 to-blue-600 p-2">
                 <Patreon_Icon className="size-5 text-white" />
               </div>
               <div className="text-center">

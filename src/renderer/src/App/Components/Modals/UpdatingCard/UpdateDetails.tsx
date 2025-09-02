@@ -94,7 +94,7 @@ export default function UpdateDetails() {
             variant="splitted"
             selectionMode="multiple"
             defaultExpandedKeys={['summary']}
-            itemClasses={{trigger: 'cursor-default', base: 'bg-foreground-100 shadow-sm'}}
+            itemClasses={{trigger: 'cursor-default', base: 'bg-foreground-100 shadow'}}
             isCompact>
             <AccordionItem key="created" title="Created Files" subtitle={details.created.length}>
               {renderFileList(details.created)}
