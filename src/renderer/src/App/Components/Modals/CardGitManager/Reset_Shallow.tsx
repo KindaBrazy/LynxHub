@@ -68,7 +68,7 @@ export default function Reset_Shallow({isShallow, dir, refreshData, title}: Prop
             Reset Hard
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="p-4 max-w-72 border-1 border-foreground-200">
+        <PopoverContent className="p-4 max-w-72 border border-foreground-200">
           <div className="flex flex-col gap-y-2">
             <span className="font-bold">{"Warning: Can't be undone!"}</span>
             <span>Any changes will be discarded. Sure?</span>
@@ -87,7 +87,7 @@ export default function Reset_Shallow({isShallow, dir, refreshData, title}: Prop
               UnShallow
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="p-4 max-w-72 border-1 border-foreground-200">
+          <PopoverContent className="p-4 max-w-72 border border-foreground-200">
             <div className="flex flex-col gap-y-2">
               <span className="font-bold">Unshallowing downloads full history.</span>
               <span>May increase disk/data usage. Proceed if needed.</span>

@@ -34,7 +34,7 @@ export default function App() {
           'draggable absolute flex size-full flex-col content-center dark' +
           ' justify-between bg-LynxRaisinBlack text-center text-white'
         }>
-        <header className={'h-16 w-full shrink-0 flex justify-between items-center bg-white/5 shadow-sm px-4'}>
+        <header className={'h-16 w-full shrink-0 flex justify-between items-center bg-white/5 shadow px-4'}>
           <img alt="App Icon" className="size-8" src={APP_ICON_TRANSPARENT} />
           <span className="font-semibold">Checking Requirements...</span>
           <div />

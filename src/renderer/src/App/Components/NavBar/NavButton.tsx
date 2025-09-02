@@ -98,7 +98,7 @@ const NavButton = memo(({children, pageId, title, badge}: Props) => {
             transition: {duration: 0.1},
           }}
           onClick={handleClick}
-          className="group mx-1.5 flex w-full rounded-xl p-2.5 outline-none"
+          className="group mx-1.5 flex w-full rounded-xl p-2.5 outline-hidden"
           whileHover={{backgroundColor: getBackgroundColor('hover'), transition: {duration: 0.3}}}>
           <Badge dot={badge} status="processing" color={getColor('success')} classNames={{root: 'size-full'}}>
             <div

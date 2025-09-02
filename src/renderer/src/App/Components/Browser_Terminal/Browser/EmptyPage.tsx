@@ -73,11 +73,11 @@ export default function EmptyPage({type}: Props) {
 
   // Enhanced styles with modern glassmorphism and gradients
   const containerStyles =
-    'w-full lg:max-w-6xl md:max-w-2xl backdrop-blur-xl bg-gradient-to-br from-white/10 to-white/5' +
+    'w-full lg:max-w-6xl md:max-w-2xl backdrop-blur-xl bg-linear-to-br from-white/10 to-white/5' +
     ' dark:from-gray-900/20 dark:to-gray-800/10 rounded-3xl p-6 shadow-2xl border border-white/20' +
     ' dark:border-gray-700/30';
   const emptyStyles =
-    'w-full lg:max-w-6xl md:max-w-2xl p-12 backdrop-blur-xl bg-gradient-to-br from-gray-50/50 ' +
+    'w-full lg:max-w-6xl md:max-w-2xl p-12 backdrop-blur-xl bg-linear-to-br from-gray-50/50 ' +
     'to-white/30 dark:from-gray-900/30 dark:to-gray-800/20 rounded-3xl border border-gray-200/30' +
     ' dark:border-gray-700/30';
   const headerStyles = 'flex flex-row items-center gap-x-4 mb-10';
@@ -125,7 +125,7 @@ export default function EmptyPage({type}: Props) {
             <div>
               <span
                 className={
-                  'text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white' +
+                  'text-xl font-bold bg-linear-to-r from-gray-900 to-gray-600 dark:from-white' +
                   ' dark:to-gray-300 bg-clip-text text-transparent'
                 }>
                 {title}
@@ -186,7 +186,7 @@ export default function EmptyPage({type}: Props) {
       setData: setFavoriteAddress,
       itemType: 'favorite',
       gradient: 'from-yellow-400/20 to-orange-400/20',
-      iconBg: 'bg-gradient-to-br from-yellow-400/20 to-orange-400/20 border border-yellow-400/30',
+      iconBg: 'bg-linear-to-br from-yellow-400/20 to-orange-400/20 border border-yellow-400/30',
     },
     {
       title: 'Recent',
@@ -198,7 +198,7 @@ export default function EmptyPage({type}: Props) {
       setData: setRecentAddress,
       itemType: 'recent',
       gradient: 'from-blue-400/20 to-purple-400/20',
-      iconBg: 'bg-gradient-to-br from-blue-400/20 to-purple-400/20 border border-blue-400/30',
+      iconBg: 'bg-linear-to-br from-blue-400/20 to-purple-400/20 border border-blue-400/30',
     },
   ];
 
@@ -244,7 +244,7 @@ export default function EmptyPage({type}: Props) {
                   <Spinner
                     classNames={{
                       label:
-                        'mt-4 text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600' +
+                        'mt-4 text-xl font-bold bg-linear-to-r from-purple-600 to-blue-600' +
                         ' bg-clip-text text-transparent',
                     }}
                     size="lg"
@@ -261,7 +261,7 @@ export default function EmptyPage({type}: Props) {
                   <Button
                     className={
                       'w-full h-auto flex-col shadow-2xl p-4 ' +
-                      'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600' +
+                      'bg-linear-to-r from-blue-500 to-purple-600 hover:from-blue-600' +
                       ' hover:to-purple-700 text-white font-semibold'
                     }
                     variant="flat"

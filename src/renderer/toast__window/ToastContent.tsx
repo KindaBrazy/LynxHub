@@ -78,12 +78,12 @@ export default function ToastContent() {
           backdrop-blur-xl shadow-2xl transition-all duration-300 ease-out draggable
           `}>
       {/* Animated background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none" />
+      <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent pointer-events-none" />
 
       {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200/50 dark:border-gray-700/50">
         <div className="flex items-center gap-3">
-          <div className="flex-shrink-0">{getIcon(toastMessage.type)}</div>
+          <div className="shrink-0">{getIcon(toastMessage.type)}</div>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{toastMessage.title}</h2>
         </div>
 
@@ -151,7 +151,7 @@ export default function ToastContent() {
 
       {/* Subtle shine effect */}
       <div
-        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent
+        className="absolute inset-0 bg-linear-to-r from-transparent via-white/5 to-transparent
          -skew-x-12 animate-pulse opacity-30 pointer-events-none"
       />
     </div>

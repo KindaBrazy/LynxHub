@@ -35,6 +35,9 @@ const isEmptyData = (data: ArgumentSection[] | ArgumentItem[]) => {
   return false; // Invalid input data
 };
 
+// TODO: use heroui card and remove scroll shadow
+// TODO: update long list performance
+
 export default function ArgumentCategory({
   filterArguments,
   listData,

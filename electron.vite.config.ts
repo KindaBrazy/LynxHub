@@ -1,5 +1,6 @@
 import federation from '@originjs/vite-plugin-federation';
 import {sentryVitePlugin} from '@sentry/vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import {defineConfig, externalizeDepsPlugin} from 'electron-vite';
 import {resolve} from 'path';
@@ -47,6 +48,7 @@ export default defineConfig(({mode}) => {
           },
         }),
         react(),
+        tailwindcss(),
         federation({
           name: 'host-app',
           remotes: {nothing: 'nothing.js'},

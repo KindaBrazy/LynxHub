@@ -60,7 +60,7 @@ export function PreviewHeader({
             </div>
           }
           className="self-start"
-          avatarProps={{src: selectedExt?.avatarUrl, className: 'bg-opacity-0', radius: 'none'}}
+          avatarProps={{src: selectedExt?.avatarUrl, className: 'bg-black/0', radius: 'none'}}
           name={<span className="font-semibold text-foreground text-xl">{selectedExt?.title}</span>}
         />
         <div className="flex flex-row items-center ml-12">
@@ -90,9 +90,7 @@ export function PreviewHeader({
 const renderChangelogItem = (item: ChangelogItem, depth = 0) => (
   <div key={item.label} className={`${depth > 0 ? 'ml-4 mt-1' : 'mt-2'}`}>
     <div className="flex items-start gap-2">
-      <div
-        className={`w-1.5 h-1.5 rounded-full mt-2 flex-shrink-0 ${depth > 0 ? 'bg-foreground-400' : 'bg-blue-500'}`}
-      />
+      <div className={`w-1.5 h-1.5 rounded-full mt-2 shrink-0 ${depth > 0 ? 'bg-foreground-400' : 'bg-blue-500'}`} />
       <span className={`text-sm leading-relaxed text-foreground-600`}>{item.label}</span>
     </div>
     {item.subitems && (

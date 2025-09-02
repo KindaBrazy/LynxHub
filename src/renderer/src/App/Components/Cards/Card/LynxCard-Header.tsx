@@ -60,7 +60,7 @@ const LynxCardHeader = memo(() => {
         <div
           className={
             `z-10 -mt-10 size-20 shrink-0 self-center overflow-hidden rounded-full ` +
-            ` border-1 border-white shadow-[0px_6px_5px_-3px_rgba(0,0,0,0.6)] transition duration-500` +
+            ` border border-white shadow-[0px_6px_5px_-3px_rgba(0,0,0,0.6)] transition duration-500` +
             ` bg-white hover:shadow-none dark:border-LynxRaisinBlack dark:bg-LynxRaisinBlack`
           }>
           <Skeleton isLoaded={!!devSrc} className="size-full">

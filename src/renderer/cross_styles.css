@@ -1,11 +1,69 @@
-@import 'assets/fonts.css';
+@import './assets/fonts.css';
+@import 'tailwindcss';
 
-@layer tailwind-base, antd;
-@layer tailwind-base {
-  @tailwind base;
+@plugin '@tailwindcss/typography';
+@plugin './HeroUiConfig.ts';
+
+@source '../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-JetBrainsMono: JetBrainsMono, sans-serif;
+  --font-Nunito: Nunito, sans-serif;
+
+  --color-LynxOrange: #ff5f00;
+  --color-LynxRaisinBlack: #212121;
+
+  --color-LynxWhiteSecond: #f6f6f6;
+  --color-LynxWhiteThird: #ececec;
+  --color-LynxWhiteFourth: #e1e1e1;
+  --color-LynxWhiteFifth: #d0d0d0;
+
+  --color-DarkGray: #424242;
+
+  --animate-shine: shine 5s linear infinite;
+
+  @keyframes shine {
+    0% {
+      background-position: 100%;
+    }
+    100% {
+      background-position: -100%;
+    }
+  }
+
+  --backgroundImage-GradientDark: linear-gradient(
+    to right top,
+    #212121,
+    #202020,
+    #1f1f1f,
+    #1e1e1e,
+    #1d1d1d,
+    #1c1c1c,
+    #1b1b1b,
+    #1a1a1a,
+    #181818,
+    #161616,
+    #141414,
+    #121212
+  );
+
+  --backgroundImage-GradientLight: linear-gradient(
+    to right top,
+    #f3f3f3,
+    #f3f3f3,
+    #f3f3f3,
+    #f3f3f3,
+    #f3f3f3,
+    #f4f4f5,
+    #f4f4f6,
+    #f4f5f8,
+    #f3f7fc,
+    #f0fafe,
+    #eefdfe,
+    #eefffc
+  );
 }
-@tailwind components;
-@tailwind utilities;
 
 :root {
   color-scheme: light dark;

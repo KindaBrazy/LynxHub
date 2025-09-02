@@ -19,7 +19,7 @@ export default function useHtmlAttributes() {
   }, [appTitle, dynamicAppTitle]);
 
   useEffect(() => {
-    document.documentElement.className = `select-none text-foreground bg-background overflow-hidden 
-    ${darkMode ? 'dark' : 'light'}`;
+    document.documentElement.className =
+      `select-none text-foreground bg-background ` + `overflow-hidden ${darkMode ? 'dark' : 'light'}`;
   }, [darkMode]);
 }

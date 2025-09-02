@@ -1,3 +1,4 @@
+import {StyleProvider} from '@ant-design/cssinjs';
 import {HeroUIProvider, ToastProvider} from '@heroui/react';
 import {ConfigProvider as AntDProvider, message, notification, theme} from 'antd';
 import {ReactNode, useLayoutEffect, useMemo} from 'react';
@@ -41,7 +42,7 @@ export default function UIProviders({children}: {children: ReactNode}) {
             },
             token: {colorBgMask: 'rgba(0, 0, 0, 0.2)', fontFamily: 'Nunito, sans-serif'},
           }}>
-          {children}
+          <StyleProvider layer>{children}</StyleProvider>
         </AntDProvider>
       </HeroUIProvider>
     </div>

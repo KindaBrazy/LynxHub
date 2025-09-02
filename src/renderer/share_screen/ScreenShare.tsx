@@ -56,7 +56,7 @@ export default function ScreenShare({isDarkMode}: Props) {
   const renderThumbnail = (item: ScreenShareSources) => (
     <Card
       className={
-        `shadow-md border-1 border-foreground-200 animate-appearance-in ` +
+        `shadow-md border border-foreground-200 animate-appearance-in ` +
         `${activeTab === 'screens' ? 'max-w-full' : 'max-w-64'} h-fit`
       }
       key={item.id}

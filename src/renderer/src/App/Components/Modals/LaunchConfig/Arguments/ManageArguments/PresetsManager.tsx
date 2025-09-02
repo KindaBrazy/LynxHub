@@ -157,9 +157,7 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
         classNames={{content: 'border border-foreground/10'}}
         showArrow>
         <PopoverTrigger>
-          <Button
-            variant="flat"
-            className="cursor-default border border-foreground/5 !duration-300 hover:text-opacity-70">
+          <Button variant="flat" className="cursor-default border border-foreground/5 !duration-300">
             New Preset
           </Button>
         </PopoverTrigger>

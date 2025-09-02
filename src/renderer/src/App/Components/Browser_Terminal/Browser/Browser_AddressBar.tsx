@@ -192,7 +192,7 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
           verticalAlign: 'middle',
         }}
         className={
-          `size-full px-4 flex items-center text-sm truncate outline-none` +
+          `size-full px-4 flex items-center text-sm truncate outline-hidden` +
           ` bg-transparent ${isFocused ? 'opacity-100' : 'opacity-0'}`
         }
         ref={editableRef}

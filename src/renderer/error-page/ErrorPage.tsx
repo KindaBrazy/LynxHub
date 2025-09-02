@@ -100,7 +100,7 @@ export default function ErrorPage() {
   return (
     <div
       className={
-        'min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark ' +
+        'min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 dark ' +
         ' text-slate-300 flex flex-col justify-center items-center p-8 relative overflow-hidden'
       }>
       {/* Animated background elements */}

@@ -128,7 +128,7 @@ export default function DashboardUpdate() {
           {/* Insider Card */}
           <Card
             className={
-              `p-4 bg-content2 shadow-sm cursor-default ` +
+              `p-4 bg-content2 shadow cursor-default ` +
               `${selection[0] === 'insider' && 'border-2'} border-secondary/50`
             }
             isPressable>
@@ -157,7 +157,7 @@ export default function DashboardUpdate() {
           {/* Early Access Card */}
           <Card
             className={
-              `p-4 bg-content2 shadow-sm cursor-default ` + `${selection[0] === 'ea' && 'border-2'} border-warning/50`
+              `p-4 bg-content2 shadow cursor-default ` + `${selection[0] === 'ea' && 'border-2'} border-warning/50`
             }
             isPressable>
             <div className="flex justify-between items-center mb-2">
@@ -185,8 +185,7 @@ export default function DashboardUpdate() {
           {/* Public Card */}
           <Card
             className={
-              `p-4 bg-content2 shadow-sm cursor-default ` +
-              `${selection[0] === 'public' && 'border-2'} border-success/50`
+              `p-4 bg-content2 shadow cursor-default ` + `${selection[0] === 'public' && 'border-2'} border-success/50`
             }
             isPressable>
             <div className="flex justify-between items-center mb-2">
