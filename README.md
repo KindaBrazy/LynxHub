@@ -39,7 +39,6 @@ Get started with LynxHub by downloading the latest version for your platform.
 - ✨ [Feature Overview](#-feature-overview)
 - 🧩 [Extensions](#-extensions)
 - 📃 [Modules](#-extensions)
-- 🖼️ [Screenshots](#%EF%B8%8F-screenshots)
 - 📦 [Installation](#-installation)
 - 🔧 [Development](#-development)
 - 🤝 [Contributing](#-contributing)
@@ -108,20 +107,6 @@ Discover the core features that make LynxHub a powerful tool for your AI workflo
 ## 📃 Modules
 
 ### [WebUI Container Module](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container)
-
-## 🖼️ Screenshots
-
-<div align="center">
-
-![Terminal and browser screenshot](/readme/screenshots/Launching.png)
-
-![Argument manager screenshot](/readme/screenshots/Arguments.png)
-
-![Manage extensions screenshot](/readme/screenshots/Extensions.png)
-
-![Customize launch screenshot](/readme/screenshots/CustomLaunch.png)
-
-</div>
 
 ## 📦 Installation
 
