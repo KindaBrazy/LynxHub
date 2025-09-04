@@ -4,11 +4,160 @@
   "currentBuild": 28,
   "releaseDate": "2025-08-28",
   "earlyAccess": {
-    "version": "3.1.4",
-    "build": 28,
-    "releaseDate": "2025-08-28"
+    "version": "3.2.0",
+    "build": 29,
+    "releaseDate": "2025-09-04"
   },
   "changeLog": [
+    {
+      "build": 29,
+      "version": "3.2.0",
+      "changes": [
+        {
+          "title": "✨ New Features",
+          "items": [
+            {
+              "label": "Added Browser download manager."
+            },
+            {
+              "label": "Added screen sharing functionality."
+            }
+          ]
+        },
+        {
+          "title": "⚡ Improvements",
+          "items": [
+            {
+              "label": "Improve home searching performance."
+            },
+            {
+              "label": "Improve card's loading and usage performance."
+            },
+            {
+              "label": "Improve loading modules performance."
+            },
+            {
+              "label": "Improve ui performances."
+            },
+            {
+              "label": "Caching encryption and decryption of browser urls for better performance."
+            },
+            {
+              "label": "Handle Git ownership warnings and add safe directories handling"
+            },
+            {
+              "label": "Added retry mechanisms for extension and modules server port selecting. (When port already in use)"
+            },
+            {
+              "label": "Added error handling for the clipboard copy action in the terminal."
+            },
+            {
+              "label": "Show a window error message on calculating folder size issues."
+            },
+            {
+              "label": "Improve reloading modules and extensions and add error handling."
+            },
+            {
+              "label": "Implement smooth and robust context menu animations"
+            },
+            {
+              "label": "Added the ability to clear browser history and related data."
+            }
+          ]
+        },
+        {
+          "title": "🪲 Bug Fixes",
+          "items": [
+            {
+              "label": "Fixed installer terminal will be add commands to terminal pre commands or assignments."
+            },
+            {
+              "label": "Fixed extensions performance issues. (By loading extension initializers just once)"
+            },
+            {
+              "label": "Fixed url handing in the browser."
+            },
+            {
+              "label": "Fixed browser freezing by validating url's."
+            },
+            {
+              "label": "Fixed app crash on using Statics before initialization."
+            },
+            {
+              "label": "Fixed the white screen during initialization."
+            },
+            {
+              "label": "Fixed the terminal installer font wasn't loaded."
+            },
+            {
+              "label": "Fixed the issue when the app tries to communicate with the closed browser tab."
+            },
+            {
+              "label": "Fixed Context Menu wrong sizes by validating window size before resizing."
+            },
+            {
+              "label": "Fixed app crash in some situations by ignoring system files and directories while watching."
+            },
+            {
+              "label": "Fixed some app errors by closing modules and plugins server before app exit."
+            },
+            {
+              "label": "Fixed the issue when Context Menu tries to communicate with the closed main window."
+            },
+            {
+              "label": "Fixed Update All button in modules' page causing app error."
+            },
+            {
+              "label": "Fixed terminal clear button not working correctly on Windows."
+            },
+            {
+              "label": "Fixed changing custom run behavior not working."
+            },
+            {
+              "label": "Fixed extensions items installing or updating buttons states."
+            },
+            {
+              "label": "Removed extension update state after uninstallation."
+            }
+          ]
+        },
+        {
+          "title": "📌 Minor Changes",
+          "items": [
+            {
+              "label": "Close the next popover in the installer and open the restart terminal popover on error."
+            },
+            {
+              "label": "Adjust padding for switch components in config cards."
+            },
+            {
+              "label": "Update close buttons cursor."
+            },
+            {
+              "label": "Improve card menu styling and structure adjustments."
+            },
+            {
+              "label": "Enhance the preview argument's UI with improved styling."
+            },
+            {
+              "label": "Open Issue's page in error page in user default browser."
+            },
+            {
+              "label": "Update unloaded styles and button in modules and extensions pages."
+            },
+            {
+              "label": "Adjust unloaded tooltip styles and consolidate button."
+            },
+            {
+              "label": "Update button and chip styles, add icons for unloaded and update states."
+            },
+            {
+              "label": "Update extensions button and chip color for improved clarity"
+            }
+          ]
+        }
+      ]
+    },
     {
       "build": 28,
       "version": "3.1.4",
