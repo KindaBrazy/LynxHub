@@ -19,7 +19,7 @@ export type ExtensionData = {
   stars?: number;
 };
 
-type StorageType = {get: (key: string) => any; set: (key: string, data: any) => void};
+export type StorageType = {get: (key: string) => any; set: (key: string, data: any) => void};
 
 export type MainIpcTypes = {
   handle(channel: string, listener: (event: any, ...args: any[]) => any): void;
