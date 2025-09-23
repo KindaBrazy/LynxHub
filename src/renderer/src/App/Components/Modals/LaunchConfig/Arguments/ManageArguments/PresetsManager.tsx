@@ -9,13 +9,12 @@ import {
   Selection,
   SelectItem,
 } from '@heroui/react';
-import {Button as AntBtn} from 'antd';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
-import {Close_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {TrashDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {convertArrToObject} from '../../../../../Utils/UtilFunctions';
 
 type Props = {
@@ -106,46 +105,35 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
   const isInputValid = isEmpty(inputErrorMessage);
 
   return (
-    <motion.div
-      transition={{duration: 0.15}}
-      className="flex flex-row space-x-2"
-      animate={{opacity: 1, translateY: 0}}
-      initial={{opacity: 0, translateY: -50}}>
+    <motion.div animate={{opacity: 1}} initial={{opacity: 0}} className="flex flex-row space-x-2 items-end">
       {!isEmpty(sectionItems) && (
         <Select
-          classNames={{
-            innerWrapper: 'cursor-default',
-            label: 'cursor-default',
-            trigger: 'cursor-default border border-foreground/5 transition duration-300',
-          }}
-          title="Presets"
+          label="Preset:"
           items={sectionItems}
           selectionMode="single"
           aria-label="Select Preset"
           selectedKeys={selectedKey}
+          labelPlacement="outside-left"
           onSelectionChange={changeActivePreset}
           disallowEmptySelection>
-          {item => {
-            return (
-              <SelectItem
-                endContent={
-                  item.name !== 'Default' && (
-                    <AntBtn
-                      type="text"
-                      size="small"
-                      icon={<Close_Icon />}
-                      className="cursor-default"
-                      onClick={() => deletePreset(item.name)}
-                      danger
-                    />
-                  )
-                }
-                key={item.name}
-                className="cursor-default">
-                {item.name}
-              </SelectItem>
-            );
-          }}
+          {item => (
+            <SelectItem
+              endContent={
+                item.name !== 'Default' && (
+                  <button
+                    className={
+                      'rounded-sm transition-all duration-300 hover:bg-danger/30 size-[1.4rem] flex ' +
+                      'items-center justify-center cursor-pointer'
+                    }
+                    onClick={() => deletePreset(item.name)}>
+                    <TrashDuo_Icon className="text-danger" />
+                  </button>
+                )
+              }
+              key={item.name}>
+              {item.name}
+            </SelectItem>
+          )}
         </Select>
       )}
       <Popover
@@ -157,12 +145,13 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
         classNames={{content: 'border border-foreground/10'}}
         showArrow>
         <PopoverTrigger>
-          <Button variant="flat" className="cursor-default border border-foreground/5 !duration-300">
-            New Preset
-          </Button>
+          <Button variant="flat">New Preset</Button>
         </PopoverTrigger>
         <PopoverContent className="space-y-1.5 p-3">
           <Input
+            onKeyUp={e => {
+              if (e.key === 'Enter') createNew();
+            }}
             size="sm"
             spellCheck="false"
             placeholder="Name..."
