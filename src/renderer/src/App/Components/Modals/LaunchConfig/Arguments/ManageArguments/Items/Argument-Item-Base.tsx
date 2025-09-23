@@ -60,7 +60,7 @@ export default function ArgumentItemBase({
         size="small"
         onClick={onClick}
         variant="borderless"
-        className={`dark:bg-black/40 ${defaultCursor && 'cursor-default'}`}
+        className={`dark:bg-black/40 ${defaultCursor && 'cursor-default'} w-full`}
         hoverable>
         {children}
       </Card>
