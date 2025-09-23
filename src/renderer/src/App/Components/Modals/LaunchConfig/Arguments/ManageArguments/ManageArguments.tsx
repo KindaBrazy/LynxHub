@@ -1,7 +1,8 @@
 import {Button, Chip, Tooltip, useDisclosure} from '@heroui/react';
 import {Empty} from 'antd';
+import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
-import {Dispatch, SetStateAction, useCallback} from 'react';
+import {Dispatch, SetStateAction} from 'react';
 
 import {ArgumentsPresets, ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
 import {Add_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
@@ -17,9 +18,23 @@ type Props = {
 
 /** Show selected arguments */
 export default function ManageArguments({addArgumentsModal, chosenArguments, setChosenArguments, id}: Props) {
-  const openAddArguments = useCallback(() => {
-    addArgumentsModal.onOpen();
-  }, [addArgumentsModal]);
+  const openAddArguments = () => addArgumentsModal.onOpen();
+
+  const onReorder = (items: string[]) => {
+    const newOrder = items.map(name => chosenArguments.arguments.find(argument => argument.name === name));
+    if (newOrder.every(item => item !== undefined)) {
+      setChosenArguments(prevState => {
+        const data = prevState.data.map(arg => {
+          if (arg.preset === prevState.activePreset) {
+            return {...arg, arguments: newOrder};
+          }
+          return arg;
+        });
+        return {...prevState, data};
+      });
+    }
+  };
+
   return (
     <LaunchConfigSection
       customButton={
@@ -48,16 +63,17 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
       {isEmpty(chosenArguments.arguments) ? (
         <Empty className="m-0" image={Empty.PRESENTED_IMAGE_SIMPLE} description="No arguments available to display" />
       ) : (
-        <div className="flex flex-col space-y-2">
-          {chosenArguments.arguments.map(argument => (
-            <ManageArgumentsItem
-              id={id}
-              argument={argument}
-              key={`${argument.name}_Item`}
-              setArguments={setChosenArguments}
-            />
-          ))}
-        </div>
+        <AnimatePresence>
+          <Reorder.Group
+            axis="y"
+            onReorder={onReorder}
+            className="flex flex-col space-y-2"
+            values={chosenArguments.arguments.map(argument => argument.name)}>
+            {chosenArguments.arguments.map(argument => (
+              <ManageArgumentsItem id={id} key={argument.name} argument={argument} setArguments={setChosenArguments} />
+            ))}
+          </Reorder.Group>
+        </AnimatePresence>
       )}
     </LaunchConfigSection>
   );
