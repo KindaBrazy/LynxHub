@@ -1,7 +1,9 @@
-import {Dispatch, SetStateAction, useCallback} from 'react';
+import {Reorder, useDragControls} from 'framer-motion';
+import {Dispatch, SetStateAction, useCallback, useMemo} from 'react';
 
 import {ChosenArgument, ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
 import {getArgumentType} from '../../../../../../../../cross/GetArgumentsData';
+import {Grip_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../Modules/ModuleLoader';
 import CheckBoxArgItem from './Items/CheckBoxArg-Item';
 import DirectoryArgItem from './Items/DirectoryArg-Item';
@@ -46,18 +48,34 @@ export default function ManageArgumentsItem({argument, setArguments, id}: Props)
   }, []);
 
   const Props = {argument, changeValue, removeArg};
-  switch (getArgumentType(argument.name, cardArgument)) {
-    case 'Directory':
-      return <DirectoryArgItem {...Props} id={id} />;
-    case 'File':
-      return <FileArgItem {...Props} id={id} />;
-    case 'Input':
-      return <InputArgItem {...Props} id={id} />;
-    case 'DropDown':
-      return <DropdownArgItem {...Props} id={id} />;
-    case 'CheckBox':
-      return <CheckBoxArgItem {...Props} id="id" />;
-    default:
-      return null;
-  }
+
+  const resultItem = useMemo(() => {
+    switch (getArgumentType(argument.name, cardArgument)) {
+      case 'Directory':
+        return <DirectoryArgItem {...Props} id={id} />;
+      case 'File':
+        return <FileArgItem {...Props} id={id} />;
+      case 'Input':
+        return <InputArgItem {...Props} id={id} />;
+      case 'DropDown':
+        return <DropdownArgItem {...Props} id={id} />;
+      case 'CheckBox':
+        return <CheckBoxArgItem {...Props} id="id" />;
+      default:
+        return null;
+    }
+  }, [argument, cardArgument]);
+
+  const controls = useDragControls();
+
+  return (
+    <Reorder.Item
+      dragListener={false}
+      value={argument.name}
+      dragControls={controls}
+      className="flex flex-row items-center size-full">
+      <Grip_Icon onPointerDown={e => controls.start(e)} className="size-5 mr-1 active:cursor-grabbing cursor-grab" />
+      {resultItem}
+    </Reorder.Item>
+  );
 }
