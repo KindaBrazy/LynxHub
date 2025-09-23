@@ -13,7 +13,6 @@ type Props = {argument: ChosenArgument; setArguments: Dispatch<SetStateAction<Ch
 
 /** Display the argument manager element based on the argument type: DropDown, Input, Directory, etc. */
 const ManageArgumentsItem = memo(({argument, setArguments, id}: Props) => {
-  console.count(argument.name);
   const cardArgument = useGetArgumentsByID(id);
 
   const removeArg = useCallback(() => {
