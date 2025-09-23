@@ -2,7 +2,7 @@ import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@her
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {BroomDuo_Icon, Refresh3_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {BroomDuo_Icon, RefreshDuo_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
@@ -31,7 +31,7 @@ export default function SettingsClear() {
         classNames={{base: 'before:bg-foreground-100'}}
         showArrow>
         <PopoverTrigger>
-          <Button variant="flat" color="danger" startContent={<Refresh3_Icon />} fullWidth>
+          <Button variant="flat" color="danger" startContent={<RefreshDuo_Icon />} fullWidth>
             Reset Settings (Restart Required)
           </Button>
         </PopoverTrigger>
@@ -39,7 +39,7 @@ export default function SettingsClear() {
           <span className="font-bold w-full text-sm">Reset Settings</span>
           <span>Are you sure you want to reset all app settings and restart?</span>
           <ButtonGroup className="flex flex-row w-full mt-2" fullWidth>
-            <Button size="sm" color="danger" startContent={<Refresh3_Icon />} onPress={rendererIpc.storage.clear}>
+            <Button size="sm" color="danger" startContent={<RefreshDuo_Icon />} onPress={rendererIpc.storage.clear}>
               Reset & Restart
             </Button>
             <Button

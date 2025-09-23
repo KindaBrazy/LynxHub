@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
-import {Circle_Icon, Refresh3_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {Circle_Icon, RefreshDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {settingsActions, useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
@@ -115,7 +115,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
               color="success"
               onPress={updateAll}
               isLoading={updatingAll}
-              startContent={!updatingAll && <Refresh3_Icon />}>
+              startContent={!updatingAll && <RefreshDuo_Icon />}>
               {updatingAll ? 'Updating...' : `Update All (${updateAvailable.length})`}
             </Button>
           )}

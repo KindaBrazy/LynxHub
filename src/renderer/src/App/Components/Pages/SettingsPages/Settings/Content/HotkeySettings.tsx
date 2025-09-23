@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 
 import {Get_Default_Hotkeys, Hotkey_Desc, Hotkey_Titles} from '../../../../../../../../cross/HotkeyConstants';
 import {LynxHotkey} from '../../../../../../../../cross/IpcChannelAndTypes';
-import {Keyboard_Icon, Refresh3_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {Keyboard_Icon, RefreshDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {hotkeysActions, useHotkeysState} from '../../../../../Redux/Reducer/HotkeysReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
@@ -190,7 +190,7 @@ export const HotkeySettings = () => {
           );
         })}
       </List>
-      <Button onPress={resetToDefault} startContent={<Refresh3_Icon />}>
+      <Button onPress={resetToDefault} startContent={<RefreshDuo_Icon />}>
         Reset to Defaults
       </Button>
     </SettingsSection>

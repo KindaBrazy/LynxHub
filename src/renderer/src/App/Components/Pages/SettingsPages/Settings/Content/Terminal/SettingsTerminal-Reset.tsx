@@ -2,7 +2,7 @@ import {Button} from '@heroui/react';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Refresh3_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {RefreshDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {terminalActions} from '../../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 
@@ -22,7 +22,7 @@ export default function SettingsTerminalReset() {
   }, []);
 
   return (
-    <Button onPress={onApply} isLoading={isSaving} startContent={<Refresh3_Icon />} fullWidth>
+    <Button onPress={onApply} isLoading={isSaving} startContent={<RefreshDuo_Icon />} fullWidth>
       Reset to Defaults
     </Button>
   );
