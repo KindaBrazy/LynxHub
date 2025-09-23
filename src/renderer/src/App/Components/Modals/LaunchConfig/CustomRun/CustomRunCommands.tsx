@@ -1,9 +1,12 @@
+import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {Empty} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
+import {Add_Icon, FolderDuo_Icon, Terminal_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../../RendererIpc';
+import LynxTooltip from '../../../Reusable/LynxTooltip';
 import LaunchConfigSection from '../LaunchConfig-Section';
 import TerminalCommandItem from '../TerminalCommand-Item';
 
@@ -50,9 +53,41 @@ export default function CustomRunCommands({id}: Props) {
     setCommands(newOrder);
   };
 
+  const cdFolder = () => {
+    rendererIpc.file.openDlg({properties: ['openDirectory']}).then(result => {
+      if (result) {
+        const command = `cd "${result}"`;
+        setCommands(prevState => [...prevState, command]);
+        rendererIpc.storageUtils.customRun('add', {command, id});
+      }
+    });
+  };
+
   return (
     <LaunchConfigSection
-      onAddPress={addCommand}
+      customButton={
+        <Dropdown aria-label="Open file or folder">
+          <LynxTooltip content="Add New Command" isEssential>
+            <div>
+              <DropdownTrigger>
+                <Button size="sm" variant="light" isIconOnly>
+                  <Add_Icon />
+                </Button>
+              </DropdownTrigger>
+            </div>
+          </LynxTooltip>
+          <DropdownMenu aria-label="Open file or folder">
+            <DropdownSection title="Select">
+              <DropdownItem key="add_folder" onPress={addCommand} startContent={<Terminal_Icon />}>
+                Command
+              </DropdownItem>
+              <DropdownItem key="add_file" onPress={cdFolder} startContent={<FolderDuo_Icon />}>
+                Cd Folder
+              </DropdownItem>
+            </DropdownSection>
+          </DropdownMenu>
+        </Dropdown>
+      }
       addTooltipTitle="Add New Command"
       title="AI Execution (Terminal Commands)"
       description="Execute these commands when 'Run AI' is clicked, overriding default settings">
