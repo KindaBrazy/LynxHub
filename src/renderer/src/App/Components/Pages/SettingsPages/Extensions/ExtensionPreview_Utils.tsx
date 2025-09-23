@@ -14,7 +14,7 @@ import {
   HomeSmile_Icon,
   Info_Icon,
   ListCheck_Icon,
-  Refresh3_Icon,
+  RefreshDuo_Icon,
   Trash_Icon,
   UserDuo_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
@@ -311,7 +311,7 @@ function ActionButtons({
             color="success"
             isLoading={isUpdating}
             onPress={updateExtension}
-            startContent={!isUpdating && <Refresh3_Icon />}>
+            startContent={!isUpdating && <RefreshDuo_Icon />}>
             {isUpdating ? 'Updating...' : 'Update'}
           </Button>
         )}

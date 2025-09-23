@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 import {ReactNode, useEffect} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
-import {ArrowDuo_Icon, Refresh3_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
+import {ArrowDuo_Icon, RefreshDuo_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
 import {SetElementsType, SetWidthSizeType} from './ContextHooks';
 import {
   CopyDuo_Icon,
@@ -88,7 +88,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
             onPress={createActionHandler(() => {
               rendererIpc.contextItems.navigate(contextId, 'refresh');
             })}
-            icon={<Refresh3_Icon className="size-4" />}
+            icon={<RefreshDuo_Icon className="size-4" />}
           />
         </div>,
       ];

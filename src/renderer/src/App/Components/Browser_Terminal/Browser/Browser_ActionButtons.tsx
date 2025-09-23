@@ -3,7 +3,7 @@ import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
 import {memo, useEffect, useState} from 'react';
 
 import {Hotkey_Names} from '../../../../../../cross/HotkeyConstants';
-import {ArrowDuo_Icon, HomeSmile_Icon, Refresh3_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
+import {ArrowDuo_Icon, HomeSmile_Icon, RefreshDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import rendererIpc from '../../../RendererIpc';
 import useHotkeyPress from '../../../Utils/RegisterHotkeys';
@@ -64,7 +64,7 @@ const Browser_ActionButtons = memo(({webuiAddress, tabID, id}: Props) => {
       </AnimatePresence>
 
       <Button size="sm" variant="light" onPress={reload} className="cursor-default" isIconOnly>
-        <Refresh3_Icon className="size-4" />
+        <RefreshDuo_Icon className="size-4" />
       </Button>
 
       {webuiAddress && (

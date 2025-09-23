@@ -12,7 +12,7 @@ import {
   Download_Icon,
   HomeSmile_Icon,
   Info_Icon,
-  Refresh3_Icon,
+  RefreshDuo_Icon,
   Trash_Icon,
 } from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
@@ -137,7 +137,7 @@ const RenderItem = memo(({itemData, updatingAll, removedModule, unloaded}: Props
           variant="light"
           onPress={checkForUpdate}
           className="cursor-default"
-          startContent={<Refresh3_Icon />}>
+          startContent={<RefreshDuo_Icon />}>
           Check for Updates
         </Button>
       ),

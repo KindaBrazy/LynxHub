@@ -10,7 +10,7 @@ import {
   CloseSimple_Icon,
   Info_Icon,
   Power_Icon,
-  Refresh3_Icon,
+  RefreshDuo_Icon,
 } from '../src/assets/icons/SvgIcons/SvgIcons';
 
 const getIcon = (type: string) => {
@@ -129,7 +129,7 @@ export default function ToastContent() {
                 color={'primary'}
                 onPress={handleRestart}
                 className={'notDraggable'}
-                startContent={<Refresh3_Icon className={'size-3.5'} />}>
+                startContent={<RefreshDuo_Icon className={'size-3.5'} />}>
                 Restart LynxHub
               </Button>
             )}

@@ -2,7 +2,7 @@ import {Button} from '@heroui/react';
 import {motion, stagger, Variants} from 'framer-motion';
 import {useMemo} from 'react';
 
-import {Refresh3_Icon, ShieldCross_Icon} from '../src/assets/icons/SvgIcons/SvgIcons';
+import {RefreshDuo_Icon, ShieldCross_Icon} from '../src/assets/icons/SvgIcons/SvgIcons';
 
 // Animation variants
 const containerVariants: Variants = {
@@ -219,7 +219,7 @@ export default function ErrorPage() {
           color="primary"
           onPress={handleRetry}
           className="hover:scale-105"
-          startContent={<Refresh3_Icon className="size-5" />}>
+          startContent={<RefreshDuo_Icon className="size-5" />}>
           Try Again
         </Button>
 
