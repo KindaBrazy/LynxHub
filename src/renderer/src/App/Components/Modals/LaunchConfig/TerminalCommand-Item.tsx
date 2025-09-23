@@ -10,10 +10,11 @@ type Props = {
   onRemove?: (index: number) => void;
   focus?: boolean;
   editCommand?: (index: number, value: string) => void;
+  onDoneReorder?: () => void;
 };
 
 /** Display card for adding, removing, and editing terminal commands */
-export default function TerminalCommandItem({defaultText, editCommand, focus, index, onRemove}: Props) {
+export default function TerminalCommandItem({defaultText, editCommand, focus, index, onRemove, onDoneReorder}: Props) {
   const [inputValue, setInputValue] = useState<string>(defaultText);
 
   const onEdit = () => {
@@ -39,6 +40,7 @@ export default function TerminalCommandItem({defaultText, editCommand, focus, in
       value={defaultText}
       animate={{opacity: 1}}
       initial={{opacity: 0}}
+      onPointerUp={onDoneReorder}
       className={'rounded-medium bg-foreground-50 cursor-grab active:cursor-grabbing flex items-center gap-x-2 p-2'}>
       <Grip_Icon className="text-foreground-500" />
       <span className="text-sm">{index + 1}</span>
