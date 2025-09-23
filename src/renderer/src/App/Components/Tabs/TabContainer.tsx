@@ -1,6 +1,7 @@
 import {Divider} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
-import {memo, useEffect, useRef} from 'react';
+import {isEqual} from 'lodash';
+import {memo, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
@@ -13,10 +14,16 @@ import TabItem from './TabItem';
 const TabContainer = memo(() => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const tabs = useTabsState('tabs');
+  const tabsFromRedux = useTabsState('tabs');
   const removeTab = useRemoveTab();
 
+  const [localTabs, setLocalTabs] = useState(tabsFromRedux);
+
   const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    setLocalTabs(tabsFromRedux);
+  }, [tabsFromRedux]);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -37,10 +44,19 @@ const TabContainer = memo(() => {
     return () => rendererIpc.contextMenu.offRemoveTab();
   }, [removeTab]);
 
-  const onReorder = (items: string[]) => {
-    const newOrder = items.map(tabID => tabs.find(tab => tab.id === tabID));
-    if (newOrder.every(item => item !== undefined)) {
-      dispatch(tabsActions.setTabState({key: 'tabs', value: newOrder}));
+  const onReorder = (reorderedIds: string[]) => {
+    const newOrder = reorderedIds
+      .map(tabID => localTabs.find(tab => tab.id === tabID))
+      .filter((tab): tab is NonNullable<typeof tab> => tab !== undefined);
+
+    if (newOrder.length === localTabs.length) {
+      setLocalTabs(newOrder);
+    }
+  };
+
+  const handleReorderEnd = () => {
+    if (!isEqual(tabsFromRedux, localTabs)) {
+      dispatch(tabsActions.setTabState({key: 'tabs', value: localTabs}));
     }
   };
 
@@ -55,9 +71,10 @@ const TabContainer = memo(() => {
           as="div"
           ref={containerRef}
           onReorder={onReorder}
-          values={tabs.map(tab => tab.id)}
+          onMouseUp={handleReorderEnd}
+          values={localTabs.map(tab => tab.id)}
           className="items-center h-full w-full flex flex-row overflow-y-hidden overflow-x-scroll scrollbar-hide">
-          {tabs.map((tab, index) => (
+          {localTabs.map((tab, index) => (
             <Reorder.Item
               transition={{
                 layout: {duration: 0.5, type: 'spring'},
@@ -71,7 +88,7 @@ const TabContainer = memo(() => {
               exit={{scale: 0.5, y: 10, x: 20, transition: {duration: 0.07, ease: 'backIn'}}}
               animate={{scale: 1, y: 0, x: 0, opacity: 1, transition: {duration: 0.25, ease: 'backOut'}}}>
               <TabItem tab={tab} key={tab.id} />
-              {index < tabs.length - 1 && <Divider type="vertical" className="mx-1" />}
+              {index < localTabs.length - 1 && <Divider type="vertical" className="mx-1" />}
             </Reorder.Item>
           ))}
         </Reorder.Group>
