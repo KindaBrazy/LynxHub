@@ -1,4 +1,5 @@
 import {Empty} from 'antd';
+import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -45,6 +46,10 @@ export default function PreTerminalCommands({id}: Props) {
     rendererIpc.storageUtils.preCommands('add', {command: '', id});
   }, [id]);
 
+  const onReorder = (newOrder: string[]) => {
+    setPreCommands(newOrder);
+  };
+
   return (
     <LaunchConfigSection
       onAddPress={addCommand}
@@ -54,21 +59,23 @@ export default function PreTerminalCommands({id}: Props) {
       {isEmpty(preCommands) ? (
         <Empty className="m-0" image={Empty.PRESENTED_IMAGE_SIMPLE} description="No commans available to execute" />
       ) : (
-        <div className="space-y-2">
-          {preCommands.map((command, index) => {
-            const focus = isEmpty(command);
-            return (
-              <TerminalCommandItem
-                index={index}
-                focus={focus}
-                defaultText={command}
-                onRemove={removeCommand}
-                editCommand={editCommand}
-                key={`${index}_${command}`}
-              />
-            );
-          })}
-        </div>
+        <AnimatePresence>
+          <Reorder.Group axis="y" values={preCommands} onReorder={onReorder} className="space-y-2">
+            {preCommands.map((command, index) => {
+              const focus = isEmpty(command);
+              return (
+                <TerminalCommandItem
+                  index={index}
+                  focus={focus}
+                  key={command}
+                  defaultText={command}
+                  onRemove={removeCommand}
+                  editCommand={editCommand}
+                />
+              );
+            })}
+          </Reorder.Group>
+        </AnimatePresence>
       )}
     </LaunchConfigSection>
   );
