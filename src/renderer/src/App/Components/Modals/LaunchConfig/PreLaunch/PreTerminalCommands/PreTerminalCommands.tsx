@@ -65,20 +65,16 @@ export default function PreTerminalCommands({id}: Props) {
       ) : (
         <AnimatePresence>
           <Reorder.Group axis="y" values={preCommands} onReorder={onReorder} className="space-y-2">
-            {preCommands.map((command, index) => {
-              const focus = isEmpty(command);
-              return (
-                <TerminalCommandItem
-                  index={index}
-                  focus={focus}
-                  key={command}
-                  defaultText={command}
-                  onRemove={removeCommand}
-                  editCommand={editCommand}
-                  onDoneReorder={onDoneReorder}
-                />
-              );
-            })}
+            {preCommands.map((command, index) => (
+              <TerminalCommandItem
+                index={index}
+                key={command}
+                defaultText={command}
+                onRemove={removeCommand}
+                editCommand={editCommand}
+                onDoneReorder={onDoneReorder}
+              />
+            ))}
           </Reorder.Group>
         </AnimatePresence>
       )}

@@ -1,5 +1,6 @@
 import {Button, Input} from '@heroui/react';
 import {Reorder} from 'framer-motion';
+import {isEmpty} from 'lodash';
 import {KeyboardEvent, useCallback, useState} from 'react';
 
 import {Grip_Icon, TrashDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
@@ -8,13 +9,12 @@ type Props = {
   index: number;
   defaultText: string;
   onRemove?: (index: number) => void;
-  focus?: boolean;
   editCommand?: (index: number, value: string) => void;
   onDoneReorder?: () => void;
 };
 
 /** Display card for adding, removing, and editing terminal commands */
-export default function TerminalCommandItem({defaultText, editCommand, focus, index, onRemove, onDoneReorder}: Props) {
+export default function TerminalCommandItem({defaultText, editCommand, index, onRemove, onDoneReorder}: Props) {
   const [inputValue, setInputValue] = useState<string>(defaultText);
 
   const onEdit = () => {
@@ -48,11 +48,11 @@ export default function TerminalCommandItem({defaultText, editCommand, focus, in
         size="sm"
         variant="flat"
         onBlur={onBlur}
-        autoFocus={focus}
         onKeyUp={onKeyUp}
         spellCheck="false"
         onValueChange={onChange}
         defaultValue={defaultText}
+        autoFocus={isEmpty(defaultText)}
         classNames={{input: `!font-JetBrainsMono !text-xs`, inputWrapper: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack'}}
       />
       <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>
