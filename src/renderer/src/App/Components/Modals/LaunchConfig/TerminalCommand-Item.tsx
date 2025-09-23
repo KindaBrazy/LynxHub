@@ -41,9 +41,9 @@ export default function TerminalCommandItem({defaultText, editCommand, focus, in
       initial={{opacity: 0}}
       className={'rounded-medium bg-foreground-50 cursor-grab active:cursor-grabbing flex items-center gap-x-2 p-2'}>
       <Grip_Icon className="text-foreground-500" />
-      <span>{index + 1}</span>
+      <span className="text-sm">{index + 1}</span>
       <Input
-        size="md"
+        size="sm"
         variant="flat"
         onBlur={onBlur}
         autoFocus={focus}
