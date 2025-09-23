@@ -15,10 +15,11 @@ type Props = {
   setChosenArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;
   chosenArguments: ChosenArgumentsData;
   id: string;
+  tabId: string;
 };
 
 /** Manage card arguments: add, edit, or remove */
-export default function CardArguments({chosenArguments, setChosenArguments, id}: Props) {
+export default function CardArguments({chosenArguments, setChosenArguments, id, tabId}: Props) {
   const [activePreset, setActivePreset] = useState<ArgumentsPresets>({arguments: [], preset: ''});
   const [presets, setPresets] = useState<string[]>([]);
   const [previewText, setPreviewText] = useState<string>('');
@@ -60,6 +61,7 @@ export default function CardArguments({chosenArguments, setChosenArguments, id}:
       <PreviewArguments text={previewText} />
       <AddArguments
         id={id}
+        tabId={tabId}
         chosenArguments={activePreset}
         addArgumentsModal={addArgumentsModal}
         setChosenArguments={setChosenArguments}

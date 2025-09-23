@@ -105,7 +105,12 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
 
         <ModalBody className="scrollbar-hide">
           {haveArguments && currentTab === tabs.arguments && (
-            <CardArguments id={id} chosenArguments={chosenArguments} setChosenArguments={setChosenArguments} />
+            <CardArguments
+              id={id}
+              tabId={tabID}
+              chosenArguments={chosenArguments}
+              setChosenArguments={setChosenArguments}
+            />
           )}
           {currentTab === tabs.customRun && <CustomRun id={id} />}
           {currentTab === tabs.preLaunch && <CardPreLaunch id={id} />}

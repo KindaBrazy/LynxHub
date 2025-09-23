@@ -21,6 +21,7 @@ import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '../../../..
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../../../../cross/GetArgumentsData';
 import {Circle_Icon, Filter_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../Modules/ModuleLoader';
+import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import LynxScroll from '../../../../Reusable/LynxScroll';
 import ArgumentCategory from './ArgumentCategory';
 
@@ -29,6 +30,7 @@ type Props = {
   chosenArguments: ArgumentsPresets;
   setChosenArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;
   id: string;
+  tabId: string;
 };
 
 const isEmptyData = (data): boolean => {
@@ -45,7 +47,8 @@ const isEmptyData = (data): boolean => {
 };
 
 /** Select and add arguments */
-export default function AddArguments({addArgumentsModal, chosenArguments, setChosenArguments, id}: Props) {
+export default function AddArguments({addArgumentsModal, chosenArguments, setChosenArguments, id, tabId}: Props) {
+  const activeTab = useTabsState('activeTab');
   const [filterArguments, setFilterArguments] = useState<Set<string>>(new Set(['all']));
   const [selectedArguments, setSelectedArguments] = useState<Set<string>>(new Set([]));
   const [searchValue, setSearchValue] = useState<string>('');
@@ -105,6 +108,8 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
     onClose();
   }, [selectedArguments, id, onClose, cardArgument]);
 
+  const show = useMemo(() => (activeTab === tabId ? 'flex' : 'hidden'), [activeTab, tabId]);
+
   return (
     <Modal
       placement="center"
@@ -113,7 +118,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
       className="z-50 max-w-[75%]"
       isOpen={addArgumentsModal.isOpen}
       onOpenChange={addArgumentsModal.onOpenChange}
-      classNames={{backdrop: '!top-10', wrapper: '!top-10 scrollbar-hide'}}
+      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 scrollbar-hide ${show}`}}
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="flex flex-col space-y-2">
