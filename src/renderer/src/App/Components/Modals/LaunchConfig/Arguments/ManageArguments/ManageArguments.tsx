@@ -58,7 +58,7 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
           )}
         </div>
       }
-      description="Arguments and flags to configure AI">
+      description="Configurate environments and command lines">
       {isEmpty(chosenArguments.arguments) ? (
         <Empty className="m-" description="Nothing to display!" image={Empty.PRESENTED_IMAGE_SIMPLE} />
       ) : (
