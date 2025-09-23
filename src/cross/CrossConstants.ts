@@ -46,3 +46,56 @@ export const PATREON_URL: string = 'https://www.patreon.com/LynxHub';
 export const GITHUB_URL: string = 'https://github.com/KindaBrazy/LynxHub';
 export const REDDIT_URL: string = 'https://www.reddit.com/r/LynxHubAI';
 export const YOUTUBE_URL: string = 'https://www.youtube.com/@LynxHubAI';
+
+export const PageID = {
+  home: 'home_page',
+  imageGen: 'imageGen_page',
+  textGen: 'textGen_page',
+  audioGen: 'audioGen_page',
+
+  tools: 'tools_page',
+  games: 'games_page',
+  others: 'others_page',
+  agents: 'agents_page',
+
+  dashboard: 'dashboard_page',
+  extensions: 'extension_page',
+  modules: 'modules_page',
+  settings: 'settings_page',
+} as const;
+
+export type AvailablePageIDs = (typeof PageID)[keyof typeof PageID];
+
+export const PageTitles = {
+  home: 'Home',
+  imageGen: 'Image Generation',
+  textGen: 'Text Generation',
+  audioGen: 'Audio Generation',
+
+  tools: 'Tools',
+  games: 'Games',
+  others: 'Others',
+  agents: 'Agents',
+
+  dashboard: 'Dashboard',
+  extensions: 'Extensions',
+  modules: 'Modules',
+  settings: 'Settings',
+};
+
+export const PageTitleByPageId = {
+  [PageID.home]: 'Home',
+  [PageID.imageGen]: 'Image Generation',
+  [PageID.textGen]: 'Text Generation',
+  [PageID.audioGen]: 'Audio Generation',
+
+  [PageID.tools]: 'Tools',
+  [PageID.games]: 'Games',
+  [PageID.others]: 'Others',
+  [PageID.agents]: 'Agents',
+
+  [PageID.dashboard]: 'Dashboard',
+  [PageID.modules]: 'Extensions',
+  [PageID.extensions]: 'Modules',
+  [PageID.settings]: 'Settings',
+};

@@ -1,6 +1,7 @@
 import {isEmpty} from 'lodash';
 import {ReactNode, useMemo} from 'react';
 
+import {PageID, PageTitles} from '../../../../../cross/CrossConstants';
 import {
   AudioGeneration_Icon,
   Extensions_Icon,
@@ -8,14 +9,16 @@ import {
   GamePad_Icon,
   Home_Icon,
   ImageGeneration_Icon,
+  MagicStickDuo_Icon,
+  Robot_Icon,
   Rocket_Icon,
   TextGeneration_Icon,
   Tuning_Icon,
   UserDuo_Icon,
 } from '../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
+import {hasCardsByPath} from '../../Modules/ModuleLoader';
 import {useSettingsState} from '../../Redux/Reducer/SettingsReducer';
-import {PageID, PageTitles} from '../../Utils/Constants';
 import NavButton from './NavButton';
 
 type PagesType = {
@@ -58,19 +61,42 @@ export const ContentPagesButtons = () => {
   const pagesData: PagesType[] = useMemo(() => {
     const result: PagesType[] = [
       {navButton: {icon: <Home_Icon className="size-full" />, title: PageTitles.home}, path: PageID.home},
-      {
+    ];
+
+    if (hasCardsByPath(PageID.imageGen) || hasCardsByPath('/imageGenerationPage')) {
+      result.push({
         navButton: {icon: <ImageGeneration_Icon className="size-full" />, title: PageTitles.imageGen},
         path: PageID.imageGen,
-      },
-      {
+      });
+    }
+
+    if (hasCardsByPath(PageID.textGen) || hasCardsByPath('/textGenerationPage')) {
+      result.push({
         navButton: {icon: <TextGeneration_Icon className="size-full" />, title: PageTitles.textGen},
         path: PageID.textGen,
-      },
-      {
+      });
+    }
+
+    if (hasCardsByPath(PageID.audioGen) || hasCardsByPath('/audioGenerationPage')) {
+      result.push({
         navButton: {icon: <AudioGeneration_Icon className="size-full" />, title: PageTitles.audioGen},
         path: PageID.audioGen,
-      },
-    ];
+      });
+    }
+
+    if (hasCardsByPath(PageID.agents)) {
+      result.push({
+        navButton: {icon: <Robot_Icon className="size-full" />, title: PageTitles.agents},
+        path: PageID.agents,
+      });
+    }
+
+    if (hasCardsByPath(PageID.others)) {
+      result.push({
+        navButton: {icon: <MagicStickDuo_Icon className="size-full" />, title: PageTitles.others},
+        path: PageID.others,
+      });
+    }
 
     if (!isEmpty(extensionsData.customizePages.tools.addComponent)) {
       result.push({

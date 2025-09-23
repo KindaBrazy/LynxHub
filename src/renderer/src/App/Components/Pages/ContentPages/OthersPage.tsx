@@ -2,7 +2,7 @@ import {ScrollShadow} from '@heroui/react';
 import {memo, useMemo} from 'react';
 
 import {PageID} from '../../../../../../cross/CrossConstants';
-import {TextGeneration_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
+import {MagicStickDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {GetComponentsByPath} from '../../Cards/Cards';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
@@ -10,9 +10,9 @@ import Page from '../Page';
 
 type Props = {show: boolean};
 
-const TextGenerationPage = memo(({show}: Props) => {
+const OthersPage = memo(({show}: Props) => {
   const {top, scrollTop, scrollBottom, bottom, cardsContainer} = useMemo(
-    () => extensionsData.customizePages.text.add,
+    () => extensionsData.customizePages.others.add,
     [],
   );
 
@@ -24,11 +24,11 @@ const TextGenerationPage = memo(({show}: Props) => {
         {scrollTop && scrollTop.map((ScrollTop, index) => <ScrollTop key={index} />)}
 
         <CardContainer
+          title="Others"
           extraClassNames="mr-3"
-          title="Text Generation"
-          subTitle="Unleash Your Creativity with AI-Assisted Writing"
-          icon={<TextGeneration_Icon className={CardContainerClasses} />}>
-          <GetComponentsByPath routePath={PageID.textGen} extensionsElements={cardsContainer} />
+          subTitle="Explore miscellaneous tools and other AI features."
+          icon={<MagicStickDuo_Icon className={CardContainerClasses} />}>
+          <GetComponentsByPath routePath={PageID.agents} extensionsElements={cardsContainer} />
         </CardContainer>
 
         {scrollBottom && scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}
@@ -39,4 +39,4 @@ const TextGenerationPage = memo(({show}: Props) => {
   );
 });
 
-export default TextGenerationPage;
+export default OthersPage;

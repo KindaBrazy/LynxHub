@@ -3,27 +3,17 @@ import {LayoutGroup} from 'framer-motion';
 import {compact, isEmpty, isNil} from 'lodash';
 import {FC, memo, useMemo} from 'react';
 
-import {AvailablePages} from '../../../../../cross/plugin/ModuleTypes';
+import {AvailablePageIDs} from '../../../../../cross/CrossConstants';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useGetCardsByPath, useHasArguments} from '../../Modules/ModuleLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
-import {PageID} from '../../Utils/Constants';
 import Page from '../Pages/Page';
 import LynxCardLoading from './Card/LynxCard-Loading';
 import NavigateModulesPage from './NavigateModulesPage';
 
 export const GetComponentsByPath = memo(
-  ({routePath, extensionsElements}: {routePath: string; extensionsElements?: FC[]}) => {
-    // Support legacy modules paths
-    const pagePath: AvailablePages = useMemo(() => {
-      if (routePath === PageID.audioGen) return '/audioGenerationPage';
-      if (routePath === PageID.imageGen) return '/imageGenerationPage';
-      if (routePath === PageID.textGen) return '/textGenerationPage';
-
-      return routePath as AvailablePages;
-    }, [routePath]);
-
-    const cards = useGetCardsByPath(pagePath);
+  ({routePath, extensionsElements}: {routePath: AvailablePageIDs; extensionsElements?: FC[]}) => {
+    const cards = useGetCardsByPath(routePath);
     const installedCards = useCardsState('installedCards');
     const pinnedCards = useCardsState('pinnedCards');
     const hasArguments = useHasArguments();
