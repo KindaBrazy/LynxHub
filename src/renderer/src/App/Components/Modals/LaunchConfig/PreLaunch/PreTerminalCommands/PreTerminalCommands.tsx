@@ -61,7 +61,6 @@ export default function PreTerminalCommands({id}: Props) {
     rendererIpc.file.openDlg({properties: ['openDirectory']}).then(result => {
       if (result) {
         const command = `cd "${result}"`;
-        setPreCommands(prevState => [...prevState, command]);
         rendererIpc.storageUtils.preCommands('add', {command, id});
       }
     });
@@ -70,7 +69,7 @@ export default function PreTerminalCommands({id}: Props) {
   return (
     <LaunchConfigSection
       customButton={
-        <Dropdown aria-label="Open file or folder">
+        <Dropdown aria-label="Add new command">
           <LynxTooltip content="Add New Command" isEssential>
             <div>
               <DropdownTrigger>
@@ -80,8 +79,8 @@ export default function PreTerminalCommands({id}: Props) {
               </DropdownTrigger>
             </div>
           </LynxTooltip>
-          <DropdownMenu aria-label="Open file or folder">
-            <DropdownSection title="Select">
+          <DropdownMenu aria-label="Add new command">
+            <DropdownSection title="Add">
               <DropdownItem key="add_folder" onPress={addCommand} startContent={<Terminal_Icon />}>
                 Command
               </DropdownItem>
