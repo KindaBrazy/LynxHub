@@ -83,7 +83,6 @@ export default function AutoCompletePath({baseDir, onValueChange, defaultValue, 
 
   return (
     <Autocomplete
-      size="sm"
       items={searchData}
       selectedKey={null}
       inputValue={inputValue}
@@ -91,6 +90,8 @@ export default function AutoCompletePath({baseDir, onValueChange, defaultValue, 
       onInputChange={onInputChange}
       onSelectionChange={selectionChange}
       selectorButtonProps={{className: 'hidden'}}
+      classNames={{selectorButton: '!bg-red-500'}}
+      inputProps={{classNames: {inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird'}}}
       allowsCustomValue>
       {item => (
         <AutocompleteItem

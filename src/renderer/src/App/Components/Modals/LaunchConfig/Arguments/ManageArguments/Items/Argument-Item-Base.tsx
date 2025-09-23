@@ -48,7 +48,7 @@ export default function ArgumentItemBase({
         }
         onPointerDown={e => controls.start(e)}>
         <Grip_Icon className="size-4" />
-        <Divider orientation="vertical" className="absolute right-0 opacity-70" />
+        <Divider orientation="vertical" className="absolute right-0 bg-LynxWhiteSecond dark:bg-LynxRaisinBlack" />
       </div>
       <Tooltip title={tooltipText} mouseEnterDelay={0.8} rootClassName="max-w-[65%] whitespace-pre-line">
         <Card
