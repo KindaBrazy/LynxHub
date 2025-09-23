@@ -1,5 +1,4 @@
-import {Listbox, ListboxItem, ListboxSection, ScrollShadow, Selection} from '@heroui/react';
-import {Card} from 'antd';
+import {Card, CardBody, CardHeader, Listbox, ListboxItem, ListboxSection, Selection} from '@heroui/react';
 import {cloneDeep, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import Highlighter from 'react-highlight-words';
@@ -134,45 +133,39 @@ export default function ArgumentCategory({
   if (isEmptyData(data)) return null;
 
   return (
-    <Card title={title} variant="borderless" className="cursor-default" hoverable>
-      <ScrollShadow>
+    <Card shadow="none" className="bg-foreground-100">
+      <CardHeader className="justify-center text-LynxOrange pt-4">{title}</CardHeader>
+      <CardBody>
         {'section' in data[0] ? (
-          <ScrollShadow className="scrollbar-hide">
-            <Listbox
-              variant="faded"
-              selectionMode="multiple"
-              aria-label="Arguments List"
-              selectedKeys={selectedArguments}
-              items={data as ArgumentSection[]}
-              onSelectionChange={onSelectionChange}>
-              {section => {
-                const showDivider = (data[data.length - 1] as ArgumentSection).section !== section.section;
-                return (
-                  <ListboxSection
-                    key={section.section}
-                    items={section.items}
-                    title={section.section}
-                    showDivider={showDivider}>
-                    {item => renderItem(item)}
-                  </ListboxSection>
-                );
-              }}
-            </Listbox>
-          </ScrollShadow>
+          <Listbox
+            variant="flat"
+            selectionMode="multiple"
+            aria-label="Arguments List"
+            selectedKeys={selectedArguments}
+            items={data as ArgumentSection[]}
+            onSelectionChange={onSelectionChange}>
+            {section => (
+              <ListboxSection
+                key={section.section}
+                items={section.items}
+                title={section.section}
+                classNames={{heading: 'text-warning'}}>
+                {item => renderItem(item)}
+              </ListboxSection>
+            )}
+          </Listbox>
         ) : (
-          <ScrollShadow className="scrollbar-hide">
-            <Listbox
-              variant="faded"
-              selectionMode="multiple"
-              aria-label="Arguments List"
-              items={data as ArgumentItem[]}
-              selectedKeys={selectedArguments}
-              onSelectionChange={onSelectionChange}>
-              {item => renderItem(item)}
-            </Listbox>
-          </ScrollShadow>
+          <Listbox
+            variant="flat"
+            selectionMode="multiple"
+            aria-label="Arguments List"
+            items={data as ArgumentItem[]}
+            selectedKeys={selectedArguments}
+            onSelectionChange={onSelectionChange}>
+            {item => renderItem(item)}
+          </Listbox>
         )}
-      </ScrollShadow>
+      </CardBody>
     </Card>
   );
 }
