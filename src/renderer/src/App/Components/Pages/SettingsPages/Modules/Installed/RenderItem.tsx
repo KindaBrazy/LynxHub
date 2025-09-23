@@ -165,22 +165,11 @@ const RenderItem = memo(({itemData, updatingAll, removedModule, unloaded}: Props
           {!updating && 'Update'}
         </Button>
       ) : (
-        <Button
-          size="sm"
-          variant="light"
-          onPress={checkForUpdate}
-          className="cursor-default"
-          startContent={<RefreshDuo_Icon />}>
+        <Button size="sm" variant="light" onPress={checkForUpdate} startContent={<RefreshDuo_Icon />}>
           Check for Updates
         </Button>
       ),
-      <Button
-        size="sm"
-        key="changelog"
-        variant="light"
-        onPress={showInfo}
-        className="cursor-default"
-        startContent={<Info_Icon />}>
+      <Button size="sm" key="changelog" variant="light" onPress={showInfo} startContent={<Info_Icon />}>
         ChangeLog
       </Button>,
       <Popover
@@ -202,11 +191,7 @@ const RenderItem = memo(({itemData, updatingAll, removedModule, unloaded}: Props
             <Button size="sm" variant="flat" color="danger" onPress={uninstall}>
               Yes
             </Button>
-            <Button
-              size="sm"
-              variant="flat"
-              className="cursor-default"
-              onPress={() => setIsUninstallConfirmOpen(false)}>
+            <Button size="sm" variant="flat" onPress={() => setIsUninstallConfirmOpen(false)}>
               No
             </Button>
           </ButtonGroup>
