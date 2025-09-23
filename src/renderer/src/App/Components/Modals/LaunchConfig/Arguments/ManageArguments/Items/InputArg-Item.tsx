@@ -3,7 +3,7 @@ import {useCallback, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
-import {Text_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {TextDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import ArgumentItemBase from './Argument-Item-Base';
 
@@ -25,7 +25,7 @@ export default function InputArgItem({argument, changeValue, removeArg, id}: Pro
   }, []);
 
   return (
-    <ArgumentItemBase id={id} icon={<Text_Icon />} name={argument.name} removeArg={removeArg}>
+    <ArgumentItemBase id={id} name={argument.name} removeArg={removeArg} icon={<TextDuo_Icon />}>
       <Input
         onBlur={onBlur}
         spellCheck="false"
