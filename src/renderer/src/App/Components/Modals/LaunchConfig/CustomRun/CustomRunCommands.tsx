@@ -95,14 +95,10 @@ export default function CustomRunCommands({id}: Props) {
       title="AI Execution (Terminal Commands)"
       description="Execute these commands when 'Run AI' is clicked, overriding default settings">
       {isEmpty(commands) ? (
-        <Empty
-          className="m-0"
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description="No custom command available to execute"
-        />
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No custom command available to execute" />
       ) : (
         <AnimatePresence>
-          <Reorder.Group axis="y" values={commands} onReorder={onReorder} className="space-y-2">
+          <Reorder.Group axis="y" values={commands} onReorder={onReorder} className="space-y-2 overflow-hidden">
             {commands.map((command, index) => (
               <TerminalCommandItem
                 index={index}

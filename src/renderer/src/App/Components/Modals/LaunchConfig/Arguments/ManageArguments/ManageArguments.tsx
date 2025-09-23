@@ -60,7 +60,7 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
       }
       description="Configurate environments and command lines">
       {isEmpty(chosenArguments.arguments) ? (
-        <Empty className="m-" description="Nothing to display!" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty className="m-" image={Empty.PRESENTED_IMAGE_SIMPLE} description="No item selected to display" />
       ) : (
         <AnimatePresence>
           <Reorder.Group

@@ -74,7 +74,7 @@ export default function PreOpenPath({id}: Props) {
       title="Open"
       description="Launch AI after opening selected files or folders">
       {isEmpty(toOpen) ? (
-        <Empty className="m-0" image={Empty.PRESENTED_IMAGE_SIMPLE} description="No items available to open" />
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No items available to open" />
       ) : (
         <div className="space-y-2">
           {toOpen.map((open, index) => {

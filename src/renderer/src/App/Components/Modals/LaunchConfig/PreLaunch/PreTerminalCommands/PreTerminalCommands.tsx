@@ -95,10 +95,10 @@ export default function PreTerminalCommands({id}: Props) {
       addTooltipTitle="Add New Command"
       description="Execute these terminal commands before launching the AI.">
       {isEmpty(preCommands) ? (
-        <Empty className="m-0" image={Empty.PRESENTED_IMAGE_SIMPLE} description="No commans available to execute" />
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No commans available to execute" />
       ) : (
         <AnimatePresence>
-          <Reorder.Group axis="y" values={preCommands} onReorder={onReorder} className="space-y-2">
+          <Reorder.Group axis="y" values={preCommands} onReorder={onReorder} className="space-y-2 overflow-hidden">
             {preCommands.map((command, index) => (
               <TerminalCommandItem
                 index={index}
