@@ -1,7 +1,7 @@
 import {Avatar, Spinner} from '@heroui/react';
 import {memo, ReactNode, useEffect, useState} from 'react';
 
-import {APP_ICON_TRANSPARENT} from '../../../../../cross/CrossConstants';
+import {APP_ICON_TRANSPARENT, PageID} from '../../../../../cross/CrossConstants';
 import {TabInfo} from '../../../../../cross/CrossTypes';
 import {
   AudioGeneration_Icon,
@@ -18,7 +18,6 @@ import {
   Web_Icon,
 } from '../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../RendererIpc';
-import {PageID} from '../../Utils/Constants';
 
 type Props = {tab: TabInfo; currentView: 'browser' | 'terminal' | undefined};
 

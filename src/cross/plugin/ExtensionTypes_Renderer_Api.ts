@@ -2,6 +2,7 @@ import {Reducer} from '@reduxjs/toolkit';
 import {Emitter} from 'mitt';
 import {FC} from 'react';
 
+import {AvailablePageIDs} from '../CrossConstants';
 import {ExtensionEvents, ExtensionEvents_IPC} from './ExtensionTypes_Events';
 import {
   AddMenuType,
@@ -12,13 +13,13 @@ import {
   FcPropReplaceMd,
   FcPropSearchResult,
 } from './ExtensionTypes_Renderer';
-import {ArgumentsData, AvailablePages, CardData, CardModules, CardRendererMethods, LoadedCardData} from './ModuleTypes';
+import {ArgumentsData, CardData, CardModules, CardRendererMethods, LoadedCardData} from './ModuleTypes';
 
 export type ModuleData = {
   allModules: CardModules;
   allCards: CardData[];
   useGetArgumentsByID: (id: string) => ArgumentsData | undefined;
-  useGetCardsByPath: (path: AvailablePages) => LoadedCardData[] | undefined;
+  useGetCardsByPath: (path: AvailablePageIDs) => LoadedCardData[] | undefined;
   getCardMethod: <T extends keyof CardRendererMethods>(
     cards: CardData[],
     id: string,
@@ -264,6 +265,26 @@ export type ExtensionRendererApi = {
      * @see {@linkcode TextGenerationPage} for implementation details. */
     text: {
       /** Add new elements to the Text page. */
+      add: {
+        top: CompFc;
+        bottom: CompFc;
+        scrollTop: CompFc;
+        scrollBottom: CompFc;
+        cardsContainer: CompFc;
+      };
+    };
+
+    agents: {
+      add: {
+        top: CompFc;
+        bottom: CompFc;
+        scrollTop: CompFc;
+        scrollBottom: CompFc;
+        cardsContainer: CompFc;
+      };
+    };
+
+    others: {
       add: {
         top: CompFc;
         bottom: CompFc;

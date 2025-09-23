@@ -1,5 +1,6 @@
 import {ElectronAPI} from '@electron-toolkit/preload';
 
+import {AvailablePageIDs} from '../CrossConstants';
 import {InstalledCard} from '../StorageTypes';
 
 declare global {
@@ -9,8 +10,6 @@ declare global {
     isPortable: 'win' | 'linux' | null;
   }
 }
-
-export type AvailablePages = '/imageGenerationPage' | '/textGenerationPage' | '/audioGenerationPage';
 
 export type ExtensionData = {
   title: string;
@@ -347,13 +346,13 @@ export type CardData = {
   methods: CardRendererMethods;
 };
 
-export type LoadedCardData = Omit<CardData, 'arguments' | 'methods'> & {routePath: AvailablePages};
+export type LoadedCardData = Omit<CardData, 'arguments' | 'methods'> & {routePath: AvailablePageIDs};
 export type LoadedArguments = Pick<CardData, 'arguments' | 'id'>;
 export type LoadedMethods = Pick<CardData, 'methods' | 'id'>;
 
 export type PagesData = {
   /** Router path (For placing the card in relative page) */
-  routePath: AvailablePages;
+  routePath: AvailablePageIDs;
 
   /** Cards data */
   cards: CardData[];

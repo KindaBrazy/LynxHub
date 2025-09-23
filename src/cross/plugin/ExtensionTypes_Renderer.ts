@@ -132,6 +132,24 @@ export type ExtensionData_Renderer = {
         cardsContainer: FC[];
       };
     };
+    agents: {
+      add: {
+        top: FC[];
+        bottom: FC[];
+        scrollTop: FC[];
+        scrollBottom: FC[];
+        cardsContainer: FC[];
+      };
+    };
+    others: {
+      add: {
+        top: FC[];
+        bottom: FC[];
+        scrollTop: FC[];
+        scrollBottom: FC[];
+        cardsContainer: FC[];
+      };
+    };
     tools: {addComponent: FC[]};
     games: {addComponent: FC[]};
     settings: {

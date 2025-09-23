@@ -1,8 +1,8 @@
 import {memo} from 'react';
 
+import {PageID} from '../../../../../cross/CrossConstants';
 import {useAppState} from '../../Redux/Reducer/AppReducer';
 import {useTabsState} from '../../Redux/Reducer/TabsReducer';
-import {PageID} from '../../Utils/Constants';
 import NavBar from '../NavBar/NavBar';
 import AppPages from './AppPages';
 import StatusBar from './StatusBar';

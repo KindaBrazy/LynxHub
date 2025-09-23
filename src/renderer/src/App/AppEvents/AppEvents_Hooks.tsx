@@ -2,7 +2,7 @@ import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {APP_BUILD_NUMBER} from '../../../../cross/CrossConstants';
+import {APP_BUILD_NUMBER, PageTitleByPageId} from '../../../../cross/CrossConstants';
 import {toMs} from '../../../../cross/CrossUtils';
 import AddBreadcrumb_Renderer from '../../../Breadcrumbs';
 import {useAllCardMethods} from '../Modules/ModuleLoader';
@@ -15,7 +15,7 @@ import {tabsActions, useTabsState} from '../Redux/Reducer/TabsReducer';
 import {userActions} from '../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
-import {defaultTabItem, PageTitleByPageId} from '../Utils/Constants';
+import {defaultTabItem} from '../Utils/Constants';
 import {lynxTopToast} from '../Utils/UtilHooks';
 import {checkEARepos} from './AppEvents_Utils';
 

@@ -19,7 +19,7 @@
     "title": "LynxHub",
     "buildNumber": 29,
     "detailedDescription": "Open-source, cross-platform terminal and browser, designed for managing AI. Highly modular and extensible, it's the all-in-one environment for AI power users.",
-    "moduleApiVersion": "1.0.0",
+    "moduleApiVersion": "2.0.0",
     "extensionApiVersion": "1.0.0"
   },
   "scripts": {

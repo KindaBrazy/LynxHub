@@ -1,9 +1,9 @@
 import {useSyncExternalStore} from 'react';
 
+import {AvailablePageIDs} from '../../../../cross/CrossConstants';
 import {extractGitUrl, isDev} from '../../../../cross/CrossUtils';
 import {
   ArgumentsData,
-  AvailablePages,
   CardData,
   CardModules,
   CardRendererMethods,
@@ -47,7 +47,7 @@ const useAllCardMethods = (): LoadedMethods[] => useSyncExternalStore(subscribe,
 const useAllCardSearchData = (): CardSearchData => useSyncExternalStore(subscribe, () => allCardSearchData);
 const useHasArguments = (): Set<string> => useSyncExternalStore(subscribe, () => hasArguments);
 
-const splitCardData = (card: CardData, routePath: AvailablePages, originalId: string) => {
+const splitCardData = (card: CardData, routePath: AvailablePageIDs, originalId: string) => {
   const {arguments: args, methods, ...restOfCard} = card;
 
   const originalIndex = allCardDataWithPath.findIndex(c => c.id === originalId);
@@ -116,8 +116,12 @@ const useSearchCards = (searchValue: string) => {
  * @param path The path to filter cards by.
  * @returns An array of cards or undefined if no module matches the path.
  */
-const useGetCardsByPath = (path: AvailablePages): LoadedCardData[] | undefined =>
+const useGetCardsByPath = (path: AvailablePageIDs): LoadedCardData[] | undefined =>
   useAllCardDataWithPath().filter(module => module.routePath === path);
+
+const hasCardsByPath = (path: AvailablePageIDs | string): boolean => {
+  return allCardDataWithPath.some(card => card.routePath === path);
+};
 
 const getCardMethod = <T extends keyof CardRendererMethods>(
   cardMethods: LoadedMethods[],
@@ -138,7 +142,7 @@ const useGetUninstallType = (id: string) =>
 const duplicateCard = (id: string, defaultID?: string, defaultTitle?: string) => {
   let newId: string = '';
   let newTitle: string = '';
-  let routePath: AvailablePages = '/imageGenerationPage';
+  let routePath: AvailablePageIDs = 'imageGen_page';
 
   // Function to generate the next ID
   const generateNewId = (baseId: string): string => {
@@ -352,6 +356,7 @@ export {
   allModules,
   duplicateCard,
   getCardMethod,
+  hasCardsByPath,
   loadModules,
   removeDuplicatedCard,
   useAllCardArguments,
