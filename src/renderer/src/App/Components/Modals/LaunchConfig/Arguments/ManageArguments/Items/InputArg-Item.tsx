@@ -1,5 +1,5 @@
-import {Input} from 'antd';
-import {ChangeEvent, useCallback, useState} from 'react';
+import {Input} from '@heroui/react';
+import {useCallback, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
@@ -11,16 +11,17 @@ type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (val
 
 export default function InputArgItem({argument, changeValue, removeArg, id}: Props) {
   const cardArgument = useGetArgumentsByID(id);
+
   const [inputValue, setInputValue] = useState<string>(
     argument.value || getArgumentDefaultValue(argument.name, cardArgument) || '',
   );
 
   const onBlur = useCallback(() => {
     changeValue(inputValue);
-  }, [changeValue, inputValue]);
+  }, [inputValue]);
 
-  const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+  const onChange = useCallback((value: string) => {
+    setInputValue(value);
   }, []);
 
   return (
@@ -28,12 +29,9 @@ export default function InputArgItem({argument, changeValue, removeArg, id}: Pro
       <Input
         onBlur={onBlur}
         spellCheck="false"
-        onChange={onChange}
-        variant="borderless"
-        defaultValue={inputValue}
+        value={inputValue}
+        onValueChange={onChange}
         placeholder="Enter argument value here..."
-        classNames={{input: '!font-JetBrainsMono !text-xs'}}
-        allowClear
       />
     </ArgumentItemBase>
   );
