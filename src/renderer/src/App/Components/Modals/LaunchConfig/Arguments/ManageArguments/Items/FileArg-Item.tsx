@@ -4,7 +4,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
-import {Folder2_Icon, Refresh_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {Folder2_Icon, RefreshDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import {useCardsState} from '../../../../../../Redux/Reducer/CardsReducer';
 import rendererIpc from '../../../../../../RendererIpc';
@@ -61,8 +61,8 @@ export default function FileArgItem({argument, changeValue, removeArg, id}: Prop
     <ArgumentItemBase
       extra={
         <Tooltip color="#111111" title={`Change to ${isRelative ? 'Absolute' : 'Relative'}`}>
-          <Button size="sm" variant="light" onPress={changeType} className={`my-1 cursor-default`} isIconOnly>
-            <Refresh_Icon
+          <Button size="sm" variant="light" onPress={changeType} isIconOnly>
+            <RefreshDuo_Icon
               onAnimationEnd={() => setRotateEffect(false)}
               className={`${rotateEffect && 'animate-[spin_0.5s]'}`}
             />
