@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {Tooltip, Typography} from 'antd';
+import {Tooltip} from 'antd';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
@@ -80,7 +80,7 @@ export default function DirectoryArgItem({argument, changeValue, removeArg, id}:
       {isRelative ? (
         <AutoCompletePath type="folder" baseDir={baseDir!} defaultValue={selectedDir} onValueChange={changeValue} />
       ) : (
-        <Typography.Text className="mx-2 font-JetBrainsMono text-xs">{selectedDir}</Typography.Text>
+        <span className="text-xs bg-foreground-100 p-2 rounded-small">{selectedDir}</span>
       )}
     </ArgumentItemBase>
   );
