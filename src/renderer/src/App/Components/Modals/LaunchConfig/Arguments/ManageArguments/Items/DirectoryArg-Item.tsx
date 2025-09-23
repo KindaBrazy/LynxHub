@@ -4,7 +4,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
-import {Folder2_Icon, RefreshDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {FolderDuo_Icon, RefreshDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import {useCardsState} from '../../../../../../Redux/Reducer/CardsReducer';
 import rendererIpc from '../../../../../../RendererIpc';
@@ -75,7 +75,7 @@ export default function DirectoryArgItem({argument, changeValue, removeArg, id}:
       onClick={changeDir}
       name={argument.name}
       removeArg={removeArg}
-      icon={<Folder2_Icon />}
+      icon={<FolderDuo_Icon />}
       defaultCursor={isRelative}>
       {isRelative ? (
         <AutoCompletePath type="folder" baseDir={baseDir!} defaultValue={selectedDir} onValueChange={changeValue} />
