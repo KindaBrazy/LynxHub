@@ -63,6 +63,10 @@ export default function CustomRunCommands({id}: Props) {
     });
   };
 
+  const onDoneReorder = () => {
+    rendererIpc.storageUtils.customRun('set', {command: commands, id});
+  };
+
   return (
     <LaunchConfigSection
       customButton={
@@ -110,6 +114,7 @@ export default function CustomRunCommands({id}: Props) {
                   defaultText={command}
                   onRemove={removeCommand}
                   editCommand={editCommand}
+                  onDoneReorder={onDoneReorder}
                 />
               );
             })}
