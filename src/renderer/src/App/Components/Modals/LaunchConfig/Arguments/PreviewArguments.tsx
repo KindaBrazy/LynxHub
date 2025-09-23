@@ -29,7 +29,7 @@ export default function PreviewArguments({text}: Props) {
       ) : (
         <Card
           className={
-            'relative rounded-lg border border-foreground-100 bg-white dark:bg-[#171717]' +
+            'relative border border-foreground-100 bg-white dark:bg-[#171717]' +
             ' shadow hover:shadow-md transition-all duration-200 p-4'
           }
           as="div">
