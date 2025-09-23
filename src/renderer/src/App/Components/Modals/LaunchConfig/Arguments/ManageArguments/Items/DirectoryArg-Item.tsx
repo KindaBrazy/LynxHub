@@ -62,14 +62,16 @@ export default function DirectoryArgItem({argument, changeValue, removeArg, id}:
   return (
     <ArgumentItemBase
       extra={
-        <Tooltip color="#111111" title={`Change to ${isRelative ? 'Absolute' : 'Relative'}`}>
-          <Button size="sm" variant="light" onPress={changeType} isIconOnly>
-            <RefreshDuo_Icon
-              onAnimationEnd={() => setRotateEffect(false)}
-              className={`${rotateEffect && 'animate-[spin_0.5s]'}`}
-            />
-          </Button>
-        </Tooltip>
+        baseDir ? (
+          <Tooltip color="#111111" title={`Change to ${isRelative ? 'Absolute' : 'Relative'}`}>
+            <Button size="sm" variant="light" onPress={changeType} isIconOnly>
+              <RefreshDuo_Icon
+                onAnimationEnd={() => setRotateEffect(false)}
+                className={`${rotateEffect && 'animate-[spin_0.5s]'}`}
+              />
+            </Button>
+          </Tooltip>
+        ) : undefined
       }
       id={id}
       onClick={changeDir}
