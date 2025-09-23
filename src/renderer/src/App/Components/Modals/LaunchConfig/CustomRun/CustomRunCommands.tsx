@@ -104,20 +104,16 @@ export default function CustomRunCommands({id}: Props) {
       ) : (
         <AnimatePresence>
           <Reorder.Group axis="y" values={commands} onReorder={onReorder} className="space-y-2">
-            {commands.map((command, index) => {
-              const focus = isEmpty(command);
-              return (
-                <TerminalCommandItem
-                  index={index}
-                  focus={focus}
-                  key={command}
-                  defaultText={command}
-                  onRemove={removeCommand}
-                  editCommand={editCommand}
-                  onDoneReorder={onDoneReorder}
-                />
-              );
-            })}
+            {commands.map((command, index) => (
+              <TerminalCommandItem
+                index={index}
+                key={command}
+                defaultText={command}
+                onRemove={removeCommand}
+                editCommand={editCommand}
+                onDoneReorder={onDoneReorder}
+              />
+            ))}
           </Reorder.Group>
         </AnimatePresence>
       )}
