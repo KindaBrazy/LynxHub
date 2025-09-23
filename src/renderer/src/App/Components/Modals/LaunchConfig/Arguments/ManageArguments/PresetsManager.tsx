@@ -42,7 +42,7 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
     if (chosenArguments.data.some(data => data.preset === inputValue)) {
       setInputErrorMessage('The chosen name already exists!');
     } else if (isEmpty(inputValue)) {
-      setInputErrorMessage('Please enter a preset name!');
+      setInputErrorMessage('Please enter preset name!');
     } else {
       setInputErrorMessage('');
     }
@@ -142,30 +142,26 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
         title="New Preset"
         isOpen={createIsOpen}
         onOpenChange={setCreateIsOpen}
-        classNames={{content: 'border border-foreground/10'}}
+        classNames={{content: 'border border-foreground/5'}}
         showArrow>
         <PopoverTrigger>
-          <Button variant="flat">New Preset</Button>
+          <Button variant="flat">New</Button>
         </PopoverTrigger>
-        <PopoverContent className="space-y-1.5 p-3">
+        <PopoverContent className="gap-y-2 p-4 items-start">
           <Input
             onKeyUp={e => {
               if (e.key === 'Enter') createNew();
             }}
             size="sm"
             spellCheck="false"
-            placeholder="Name..."
+            label="Preset Name"
             isInvalid={!isInputValid}
             onValueChange={setInputValue}
             errorMessage={inputErrorMessage}
           />
-          <ButtonGroup isDisabled={!isInputValid}>
-            <Button size="sm" variant="flat" onPress={createNew} className="cursor-default">
-              Create New
-            </Button>
-            <Button size="sm" variant="flat" className="cursor-default" onPress={duplicateExisting}>
-              Duplicate Active
-            </Button>
+          <ButtonGroup size="sm" variant="flat" isDisabled={!isInputValid}>
+            <Button onPress={createNew}>Create</Button>
+            <Button onPress={duplicateExisting}>Duplicate Active</Button>
           </ButtonGroup>
         </PopoverContent>
       </Popover>
