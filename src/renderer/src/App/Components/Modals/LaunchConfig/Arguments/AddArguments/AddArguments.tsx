@@ -120,12 +120,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
           <div className="flex w-full flex-row space-x-2">
             <span className="font-bold">Add Argument</span>
             {!isEmpty(selectedArguments) && (
-              <Button
-                size="sm"
-                color="danger"
-                variant="light"
-                onPress={clearSelected}
-                className="animate-appearance-in cursor-default">
+              <Button size="sm" color="danger" variant="light" onPress={clearSelected}>
                 Clear All
               </Button>
             )}
@@ -136,11 +131,10 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
                 <Chip
                   size="sm"
                   key={value}
-                  variant="faded"
+                  variant="flat"
                   color="success"
                   onClick={() => removeSelected(value)}
-                  classNames={{closeButton: 'cursor-default'}}
-                  className="animate-appearance-in transition-colors duration-300 hover:border-default-500">
+                  className="transition-colors duration-300 hover:bg-success/10 cursor-pointer">
                   {value}
                 </Chip>
               ))}
