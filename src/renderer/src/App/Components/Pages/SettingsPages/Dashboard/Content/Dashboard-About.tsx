@@ -98,17 +98,20 @@ export default function DashboardAbout() {
         {/* App Header */}
         <div className="text-center space-y-6">
           <div className="flex items-center justify-center space-x-4">
-            <Avatar size="lg" radius="none" className="bg-transparent" src={APP_ICON_TRANSPARENT} />
+            <Avatar radius="none" src={APP_ICON_TRANSPARENT} className="bg-transparent size-20" />
             <div className="text-left">
               <Title level={2} className="!mb-1 !text-2xl font-bold">
                 {APP_NAME}
               </Title>
-              <div className="flex items-center gap-x-2">
+              <div className="w-52 overflow-hidden flex flex-row flex-wrap gap-2">
                 <Chip radius="sm" variant="flat" color="primary">
                   {APP_VERSION_FORMAT}
                 </Chip>
                 <Chip radius="sm" variant="flat" color="secondary">
                   Build {APP_BUILD_NUMBER}
+                </Chip>
+                <Chip radius="sm" variant="flat" color="warning">
+                  Chromium {window.electron.process.versions.chrome}
                 </Chip>
               </div>
             </div>
