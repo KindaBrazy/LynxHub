@@ -50,13 +50,15 @@ export default function CustomRunBehavior({id}: Props) {
         <div className="space-y-4">
           <div className="flex w-full flex-row items-center space-x-2">
             <Select
+              classNames={{
+                trigger: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack',
+              }}
               label="Terminal"
               selectionMode="single"
               labelPlacement="outside"
               selectedKeys={[terminalValue]}
               onSelectionChange={onTerminalChange}
               description="Configure how the terminal behaves when launching the AI."
-              classNames={{trigger: 'transition duration-300 data-[hover=true]:bg-foreground-300 bg-foreground-200'}}
               disallowEmptySelection>
               <SelectItem key="runScript" description="Execute the designated script (e.g., webui.bat).">
                 Run Script
@@ -73,8 +75,8 @@ export default function CustomRunBehavior({id}: Props) {
               labelPlacement="outside"
               selectedKeys={[browserValue]}
               onSelectionChange={onBrowserChange}
+              classNames={{trigger: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack'}}
               description="Define what happens when the application detects an address to launch."
-              classNames={{trigger: 'transition duration-300 data-[hover=true]:bg-foreground-300 bg-foreground-200'}}
               disallowEmptySelection>
               <SelectItem
                 key="appBrowser"

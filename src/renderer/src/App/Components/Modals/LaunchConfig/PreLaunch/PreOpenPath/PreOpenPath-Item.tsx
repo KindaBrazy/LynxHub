@@ -13,7 +13,7 @@ export default function PreOpenPathItem({defaultText, icon, index, onRemove}: Pr
   return (
     <Card shadow="none" className="flex flex-row items-center p-2 gap-x-2">
       {icon}
-      <span className="w-full truncate text-sm">{defaultText}</span>
+      <span className="w-full truncate text-xs">{defaultText}</span>
       <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>
         <TrashDuo_Icon className="size-4" />
       </Button>
