@@ -1,5 +1,5 @@
 import {Button, ButtonGroup, Chip, Link, Popover, PopoverContent, PopoverTrigger, Tooltip} from '@heroui/react';
-import {Avatar, Badge, List, Spin} from 'antd';
+import {Avatar, Badge, List, Modal, Spin} from 'antd';
 import {capitalize, isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -21,7 +21,7 @@ import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useCachedImageUrl} from '../../../../../Utils/LocalStorage';
-import {lynxTopToast} from '../../../../../Utils/UtilHooks';
+import {isLinuxPortable, lynxTopToast} from '../../../../../Utils/UtilHooks';
 import ModuleInfo from '../ModuleInfo';
 
 type Props = {
@@ -98,6 +98,37 @@ const RenderItem = memo(({itemData, updatingAll, removedModule, unloaded}: Props
     });
   }, [item, moduleUpdateAvailable, dispatch]);
 
+  const showRestartModal = useCallback((message: string) => {
+    const later = () => Modal.destroyAll();
+    const restart = () => {
+      Modal.destroyAll();
+      rendererIpc.win.changeWinState('restart');
+    };
+    const close = () => {
+      Modal.destroyAll();
+      rendererIpc.win.changeWinState('close');
+    };
+    Modal.warning({
+      title: 'Restart Required',
+      content: message,
+      footer: (
+        <div className="mt-6 flex w-full flex-row justify-between">
+          <Button size="sm" variant="flat" color="warning" onPress={later}>
+            Restart Later
+          </Button>
+          <Button size="sm" color="success" onPress={isLinuxPortable ? close : restart}>
+            {isLinuxPortable ? 'Exit Now' : 'Restart Now'}
+          </Button>
+        </div>
+      ),
+      centered: true,
+      maskClosable: false,
+      rootClassName: 'scrollbar-hide',
+      styles: {mask: {top: '2.5rem'}},
+      wrapClassName: 'mt-10',
+    });
+  }, []);
+
   const update = useCallback(() => {
     AddBreadcrumb_Renderer(`Update module: ${item.id}`);
     setUpdating(true);
@@ -113,6 +144,8 @@ const RenderItem = memo(({itemData, updatingAll, removedModule, unloaded}: Props
             value: moduleUpdateAvailable.filter(m => m !== item.title),
           }),
         );
+        showRestartModal('To correctly apply the update, please restart the app.');
+        setUpdateAvailable(false);
       } else {
         lynxTopToast(dispatch).error(`An error occurred while updating ${item.title}.`);
       }
