@@ -74,7 +74,13 @@ export default function ManageArgumentsItem({argument, setArguments, id}: Props)
       value={argument.name}
       dragControls={controls}
       className="flex flex-row items-center size-full">
-      <Grip_Icon onPointerDown={e => controls.start(e)} className="size-5 mr-1 active:cursor-grabbing cursor-grab" />
+      <Grip_Icon
+        className={
+          'size-5 mr-1 active:cursor-grabbing cursor-grab text-foreground hover:text-foreground-400 ' +
+          'transition-all duration-300'
+        }
+        onPointerDown={e => controls.start(e)}
+      />
       {resultItem}
     </Reorder.Item>
   );
