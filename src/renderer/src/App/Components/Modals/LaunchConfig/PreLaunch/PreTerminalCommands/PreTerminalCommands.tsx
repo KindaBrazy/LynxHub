@@ -50,6 +50,10 @@ export default function PreTerminalCommands({id}: Props) {
     setPreCommands(newOrder);
   };
 
+  const onDoneReorder = () => {
+    rendererIpc.storageUtils.preCommands('set', {command: preCommands, id});
+  };
+
   return (
     <LaunchConfigSection
       onAddPress={addCommand}
@@ -71,6 +75,7 @@ export default function PreTerminalCommands({id}: Props) {
                   defaultText={command}
                   onRemove={removeCommand}
                   editCommand={editCommand}
+                  onDoneReorder={onDoneReorder}
                 />
               );
             })}
