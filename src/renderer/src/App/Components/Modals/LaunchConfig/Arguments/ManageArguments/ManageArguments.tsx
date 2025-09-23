@@ -39,7 +39,7 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
     <LaunchConfigSection
       customButton={
         <Tooltip radius="sm" delay={500} content={'Add New Arguments'} showArrow>
-          <Button size="sm" variant="light" className="cursor-default" onPress={openAddArguments} isIconOnly>
+          <Button size="sm" variant="light" onPress={openAddArguments} isIconOnly>
             <Add_Icon />
           </Button>
         </Tooltip>
