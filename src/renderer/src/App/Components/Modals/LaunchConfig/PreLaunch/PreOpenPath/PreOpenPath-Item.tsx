@@ -1,10 +1,9 @@
 import {Card} from '@heroui/card';
-import {Button, Typography} from 'antd';
+import {Button} from '@heroui/react';
 import {ReactNode, useCallback} from 'react';
 
-import {Close_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {TrashDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 
-const {Text} = Typography;
 type Props = {icon: ReactNode; index: number; defaultText: string; onRemove?: (index: number) => void};
 
 /** Manage pre-opened items, display paths, and remove */
@@ -12,21 +11,12 @@ export default function PreOpenPathItem({defaultText, icon, index, onRemove}: Pr
   const remove = useCallback(() => onRemove?.(index), [onRemove, index]);
 
   return (
-    <Card
-      shadow="none"
-      className="relative flex h-[38px] flex-row items-center !transition-opacity !duration-300 hover:opacity-80">
+    <Card shadow="none" className="flex flex-row items-center p-2 gap-x-2">
       {icon}
-      <Text ellipsis={{tooltip: defaultText}} className="absolute inset-x-10 font-JetBrainsMono">
-        {defaultText}
-      </Text>
-      <Button
-        type="text"
-        size="small"
-        onClick={remove}
-        icon={<Close_Icon />}
-        className="absolute right-0 mx-2 cursor-default"
-        danger
-      />
+      <span className="w-full truncate text-sm">{defaultText}</span>
+      <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>
+        <TrashDuo_Icon className="size-4" />
+      </Button>
     </Card>
   );
 }
