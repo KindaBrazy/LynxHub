@@ -32,6 +32,7 @@ export default function InputArgItem({argument, changeValue, removeArg, id}: Pro
         value={inputValue}
         onValueChange={onChange}
         placeholder="Enter argument value here..."
+        classNames={{inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird'}}
       />
     </ArgumentItemBase>
   );

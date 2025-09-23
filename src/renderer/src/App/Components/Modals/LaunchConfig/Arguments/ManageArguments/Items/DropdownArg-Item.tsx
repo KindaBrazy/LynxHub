@@ -38,12 +38,11 @@ export default function DropdownArgItem({argument, changeValue, removeArg, id}: 
         aria-label="Select an item"
         onSelectionChange={onChange}
         placeholder="Select an item"
-        className="font-JetBrainsMono"
         defaultSelectedKeys={selectedKey}
-        classNames={{trigger: 'cursor-default', value: 'text-xs'}}
-        items={convertArrToObject(getArgumentValues(argument.name, cardArgument) || [])}>
+        items={convertArrToObject(getArgumentValues(argument.name, cardArgument) || [])}
+        classNames={{trigger: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird', value: 'text-xs'}}>
         {item => (
-          <SelectItem key={item.name} classNames={{title: 'text-xs'}} className="cursor-default font-JetBrainsMono">
+          <SelectItem key={item.name} classNames={{title: 'text-xs'}}>
             {item.name}
           </SelectItem>
         )}

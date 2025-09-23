@@ -78,7 +78,7 @@ export default function FileArgItem({argument, changeValue, removeArg, id}: Prop
       {isRelative ? (
         <AutoCompletePath type="file" baseDir={baseDir!} defaultValue={selectedFile} onValueChange={changeValue} />
       ) : (
-        <span className="text-xs bg-foreground-100 p-2 rounded-small">{selectedFile}</span>
+        <span className="text-xs dark:bg-LynxRaisinBlack bg-LynxWhiteThird p-3 rounded-medium">{selectedFile}</span>
       )}
     </ArgumentItemBase>
   );

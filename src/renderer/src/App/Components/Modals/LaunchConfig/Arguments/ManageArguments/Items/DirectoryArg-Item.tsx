@@ -80,7 +80,7 @@ export default function DirectoryArgItem({argument, changeValue, removeArg, id}:
       {isRelative ? (
         <AutoCompletePath type="folder" baseDir={baseDir!} defaultValue={selectedDir} onValueChange={changeValue} />
       ) : (
-        <span className="text-xs bg-foreground-100 p-2 rounded-small">{selectedDir}</span>
+        <span className="text-xs bg-LynxRaisinBlack p-3 rounded-medium">{selectedDir}</span>
       )}
     </ArgumentItemBase>
   );
