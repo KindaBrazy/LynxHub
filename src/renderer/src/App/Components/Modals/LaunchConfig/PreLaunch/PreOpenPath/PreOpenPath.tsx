@@ -4,7 +4,7 @@ import {filter, isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
 import {PreOpenData} from '../../../../../../../../cross/IpcChannelAndTypes';
-import {Add_Icon, File_Icon, Folder2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {Add_Icon, FileDuo_Icon, FolderDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../../../RendererIpc';
 import LynxTooltip from '../../../../Reusable/LynxTooltip';
 import LaunchConfigSection from '../../LaunchConfig-Section';
@@ -78,12 +78,7 @@ export default function PreOpenPath({id}: Props) {
       ) : (
         <div className="space-y-2">
           {toOpen.map((open, index) => {
-            const icon =
-              open.type === 'folder' ? (
-                <Folder2_Icon className="absolute left-3 size-4" />
-              ) : (
-                <File_Icon className="absolute left-3 size-4" />
-              );
+            const icon = open.type === 'folder' ? <FolderDuo_Icon /> : <FileDuo_Icon />;
             return (
               <PreOpenPathItem
                 icon={icon}
