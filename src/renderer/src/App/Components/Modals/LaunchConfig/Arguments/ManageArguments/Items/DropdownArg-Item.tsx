@@ -3,7 +3,7 @@ import {useCallback, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue, getArgumentValues} from '../../../../../../../../../cross/GetArgumentsData';
-import {ListCheck_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {ListCheckDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import {convertArrToObject} from '../../../../../../Utils/UtilFunctions';
 import ArgumentItemBase from './Argument-Item-Base';
@@ -28,7 +28,11 @@ export default function DropdownArgItem({argument, changeValue, removeArg, id}: 
   );
 
   return (
-    <ArgumentItemBase id={id} name={argument.name} removeArg={removeArg} icon={<ListCheck_Icon />}>
+    <ArgumentItemBase
+      id={id}
+      name={argument.name}
+      removeArg={removeArg}
+      icon={<ListCheckDuo_Icon className="size-[1.15rem]" />}>
       <Select
         variant="flat"
         aria-label="Select an item"
