@@ -45,7 +45,10 @@ const HomePage = memo(({show}: Props) => {
 
         {top && top.map((Top, index) => <Top key={index} />)}
 
-        <ScrollShadow size={20} offset={-1} className="size-full space-y-8 overflow-y-scroll py-4 scrollbar-hide">
+        <ScrollShadow
+          size={20}
+          offset={-1}
+          className="size-full space-y-8 overflow-y-scroll pb-4 pt-6 px-2 scrollbar-hide">
           {scrollTop && scrollTop.map((Top, index) => <Top key={index} />)}
 
           {Categories ? (

@@ -12,8 +12,8 @@ const ToolsPage = memo(({show}: Props) => {
   const {addComponent} = extensionsData.customizePages.tools;
 
   return (
-    <Page show={show} className="pt-6">
-      <ScrollShadow size={20} className="size-full overflow-y-scroll pb-4 scrollbar-hide">
+    <Page show={show}>
+      <ScrollShadow size={20} className="size-full overflow-y-scroll p-5 scrollbar-hide">
         <CardContainer
           title="Tools"
           extraClassNames="mr-3"

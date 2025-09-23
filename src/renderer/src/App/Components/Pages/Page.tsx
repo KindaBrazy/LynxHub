@@ -31,7 +31,7 @@ export default function Page({children, className, show}: Props) {
       variants={pageTransitionVariants}
       animate={show ? 'enter' : 'exit'}
       transition={{duration: 0.2, ease: [0.25, 0.1, 0.25, 1]}}
-      className={[`size-full py-2.5 ${showClassName}`, className].join(' ')}>
+      className={[`size-full ${showClassName}`, className].join(' ')}>
       {children}
     </motion.div>
   );
