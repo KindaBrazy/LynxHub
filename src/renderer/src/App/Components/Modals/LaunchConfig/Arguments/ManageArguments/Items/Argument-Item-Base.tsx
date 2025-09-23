@@ -4,7 +4,7 @@ import {Reorder, useDragControls} from 'framer-motion';
 import {ReactNode, useMemo} from 'react';
 
 import {getArgumentDescription} from '../../../../../../../../../cross/GetArgumentsData';
-import {Close_Icon, Grip_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {Grip_Icon, TrashDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 
 type Props = {
@@ -64,16 +64,10 @@ export default function ArgumentItemBase({
               <div className="flex items-center justify-center">{icon}</div>
               <span className="font-JetBrainsMono">{name}</span>
             </div>
-            <div className="flex flex-row gap-x-1">
+            <div className="flex flex-row items-center gap-x-1">
               {extra}
-              <Button
-                size="sm"
-                color="danger"
-                variant="light"
-                onPress={removeArg}
-                className="my-1 cursor-default"
-                isIconOnly>
-                <Close_Icon />
+              <Button size="sm" color="danger" variant="light" onPress={removeArg} isIconOnly>
+                <TrashDuo_Icon className="size-3.5" />
               </Button>
             </div>
           </CardHeader>
