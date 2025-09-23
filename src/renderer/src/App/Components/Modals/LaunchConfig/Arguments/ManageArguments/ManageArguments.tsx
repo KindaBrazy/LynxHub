@@ -52,7 +52,6 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
               size="sm"
               radius="full"
               variant="flat"
-              color="success"
               className="scale-85 hover:bg-success/10 transition-colors duration-300">
               {chosenArguments.arguments.length}
             </Chip>
@@ -61,7 +60,7 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
       }
       description="Arguments and flags to configure AI">
       {isEmpty(chosenArguments.arguments) ? (
-        <Empty className="m-0" image={Empty.PRESENTED_IMAGE_SIMPLE} description="No arguments available to display" />
+        <Empty className="m-" description="Nothing to display!" image={Empty.PRESENTED_IMAGE_SIMPLE} />
       ) : (
         <AnimatePresence>
           <Reorder.Group
