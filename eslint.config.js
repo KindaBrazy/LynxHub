@@ -54,6 +54,7 @@ export default [
       'react-hooks/exhaustive-deps': 'off',
       'react/display-name': 'off',
       'react/react-in-jsx-scope': 'off',
+      'react/no-unescaped-entities': 'off',
 
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
