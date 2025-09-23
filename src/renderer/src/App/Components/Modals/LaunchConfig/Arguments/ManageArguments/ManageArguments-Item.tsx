@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction, useCallback} from 'react';
+import {Dispatch, memo, SetStateAction, useCallback, useMemo} from 'react';
 
 import {ChosenArgument, ChosenArgumentsData} from '../../../../../../../../cross/CrossTypes';
 import {getArgumentType} from '../../../../../../../../cross/GetArgumentsData';
@@ -12,7 +12,8 @@ import InputArgItem from './Items/InputArg-Item';
 type Props = {argument: ChosenArgument; setArguments: Dispatch<SetStateAction<ChosenArgumentsData>>; id: string};
 
 /** Display the argument manager element based on the argument type: DropDown, Input, Directory, etc. */
-export default function ManageArgumentsItem({argument, setArguments, id}: Props) {
+const ManageArgumentsItem = memo(({argument, setArguments, id}: Props) => {
+  console.count(argument.name);
   const cardArgument = useGetArgumentsByID(id);
 
   const removeArg = useCallback(() => {
@@ -45,20 +46,26 @@ export default function ManageArgumentsItem({argument, setArguments, id}: Props)
     });
   }, []);
 
-  const Props = {argument, changeValue, removeArg};
+  const renderItem = useMemo(() => {
+    const Props = {argument, changeValue, removeArg};
 
-  switch (getArgumentType(argument.name, cardArgument)) {
-    case 'Directory':
-      return <DirectoryArgItem {...Props} id={id} />;
-    case 'File':
-      return <FileArgItem {...Props} id={id} />;
-    case 'Input':
-      return <InputArgItem {...Props} id={id} />;
-    case 'DropDown':
-      return <DropdownArgItem {...Props} id={id} />;
-    case 'CheckBox':
-      return <CheckBoxArgItem {...Props} id={id} />;
-    default:
-      return null;
-  }
-}
+    switch (getArgumentType(argument.name, cardArgument)) {
+      case 'Directory':
+        return <DirectoryArgItem {...Props} id={id} />;
+      case 'File':
+        return <FileArgItem {...Props} id={id} />;
+      case 'Input':
+        return <InputArgItem {...Props} id={id} />;
+      case 'DropDown':
+        return <DropdownArgItem {...Props} id={id} />;
+      case 'CheckBox':
+        return <CheckBoxArgItem {...Props} id={id} />;
+      default:
+        return null;
+    }
+  }, []);
+
+  return <>{renderItem}</>;
+});
+
+export default ManageArgumentsItem;
