@@ -11,8 +11,8 @@ const GamesPage = ({show}: Props) => {
   const {addComponent} = extensionsData.customizePages.games;
 
   return (
-    <Page show={show} className="pt-6">
-      <ScrollShadow size={20} className="size-full overflow-y-scroll pb-4 scrollbar-hide">
+    <Page show={show}>
+      <ScrollShadow size={20} className="size-full overflow-y-scroll p-5 scrollbar-hide">
         <CardContainer
           title="Games"
           extraClassNames="mr-3"

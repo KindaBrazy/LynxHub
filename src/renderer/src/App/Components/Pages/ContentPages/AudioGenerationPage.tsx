@@ -17,10 +17,10 @@ const AudioGenerationPage = memo(({show}: Props) => {
   );
 
   return (
-    <Page show={show} className="pt-6">
+    <Page show={show}>
       {top && top.map((Top, index) => <Top key={index} />)}
 
-      <ScrollShadow size={20} className="size-full overflow-y-scroll pb-4 scrollbar-hide">
+      <ScrollShadow size={20} className="size-full overflow-y-scroll p-5 scrollbar-hide">
         {scrollTop && scrollTop.map((ScrollTop, index) => <ScrollTop key={index} />)}
 
         <CardContainer
