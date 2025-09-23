@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {Tooltip, Typography} from 'antd';
+import {Tooltip} from 'antd';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
@@ -78,7 +78,7 @@ export default function FileArgItem({argument, changeValue, removeArg, id}: Prop
       {isRelative ? (
         <AutoCompletePath type="file" baseDir={baseDir!} defaultValue={selectedFile} onValueChange={changeValue} />
       ) : (
-        <Typography.Text className="mx-2 font-JetBrainsMono text-xs">{selectedFile}</Typography.Text>
+        <span className="mx-2 font-JetBrainsMono text-xs mb-2">{selectedFile}</span>
       )}
     </ArgumentItemBase>
   );
