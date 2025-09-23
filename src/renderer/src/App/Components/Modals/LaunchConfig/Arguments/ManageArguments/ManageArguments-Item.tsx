@@ -57,7 +57,7 @@ export default function ManageArgumentsItem({argument, setArguments, id}: Props)
     case 'DropDown':
       return <DropdownArgItem {...Props} id={id} />;
     case 'CheckBox':
-      return <CheckBoxArgItem {...Props} id="id" />;
+      return <CheckBoxArgItem {...Props} id={id} />;
     default:
       return null;
   }
