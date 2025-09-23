@@ -55,8 +55,8 @@ export default function ArgumentItemBase({
           as="div"
           key={name}
           shadow="none"
-          onPress={onClick}
-          isPressable={!!onClick}
+          isPressable={!!onClick && !defaultCursor}
+          onPress={defaultCursor ? undefined : onClick}
           className={`${defaultCursor && 'cursor-default'} rounded-l-none`}
           fullWidth>
           <CardHeader className={`justify-between ${children ? 'pb-1' : 'pb-2'} pt-2 text-sm`}>
