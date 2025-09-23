@@ -211,15 +211,10 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button
-            variant="light"
-            color="success"
-            onPress={onAdd}
-            className="cursor-default"
-            isDisabled={isEmpty(selectedArguments)}>
+          <Button variant="light" color="success" onPress={onAdd} isDisabled={isEmpty(selectedArguments)}>
             Add
           </Button>
-          <Button color="danger" variant="light" onPress={onClose} className="cursor-default">
+          <Button color="warning" variant="light" onPress={onClose}>
             Close
           </Button>
         </ModalFooter>
