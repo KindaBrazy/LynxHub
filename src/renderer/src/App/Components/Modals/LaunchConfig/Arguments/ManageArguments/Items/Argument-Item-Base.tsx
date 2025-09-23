@@ -1,4 +1,4 @@
-import {Button, Card, CardBody, CardHeader} from '@heroui/react';
+import {Button, Card, CardBody, CardHeader, Divider} from '@heroui/react';
 import {Tooltip} from 'antd';
 import {Reorder, useDragControls} from 'framer-motion';
 import {ReactNode, useMemo} from 'react';
@@ -43,10 +43,12 @@ export default function ArgumentItemBase({
       <div
         className={
           'w-7 active:cursor-grabbing cursor-grab text-foreground-500 hover:text-foreground-600 transition-all ' +
-          ' duration-300 flex items-center justify-center dark:bg-foreground-50 bg-foreground-50 rounded-l-medium'
+          ' duration-300 flex items-center justify-center dark:bg-foreground-50 bg-white rounded-l-medium' +
+          ' relative'
         }
         onPointerDown={e => controls.start(e)}>
         <Grip_Icon className="size-4" />
+        <Divider orientation="vertical" className="absolute right-0 opacity-70" />
       </div>
       <Tooltip title={tooltipText} mouseEnterDelay={0.8} rootClassName="max-w-[65%] whitespace-pre-line">
         <Card
