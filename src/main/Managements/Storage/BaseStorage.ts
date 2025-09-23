@@ -91,7 +91,7 @@ class BaseStorage {
       addBreadcrumbs: true,
     },
     terminal: {
-      outputColor: true,
+      outputColor: false,
       useConpty: 'auto',
       scrollBack: 10000,
       fontSize: 14,
