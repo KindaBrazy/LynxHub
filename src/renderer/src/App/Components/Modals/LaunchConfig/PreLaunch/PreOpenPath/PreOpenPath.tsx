@@ -53,7 +53,7 @@ export default function PreOpenPath({id}: Props) {
           <LynxTooltip content="Add New Path" isEssential>
             <div>
               <DropdownTrigger>
-                <Button size="sm" variant="light" className="cursor-default" isIconOnly>
+                <Button size="sm" variant="light" isIconOnly>
                   <Add_Icon />
                 </Button>
               </DropdownTrigger>
@@ -61,10 +61,10 @@ export default function PreOpenPath({id}: Props) {
           </LynxTooltip>
           <DropdownMenu aria-label="Open file or folder">
             <DropdownSection title="Select">
-              <DropdownItem key="add_folder" onPress={selectFolder} className="cursor-default">
+              <DropdownItem key="add_folder" onPress={selectFolder} startContent={<FolderDuo_Icon />}>
                 Folder
               </DropdownItem>
-              <DropdownItem key="add_file" onPress={selectFile} className="cursor-default">
+              <DropdownItem key="add_file" onPress={selectFile} startContent={<FileDuo_Icon />}>
                 File
               </DropdownItem>
             </DropdownSection>
