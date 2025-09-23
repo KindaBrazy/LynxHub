@@ -66,7 +66,7 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
           <Reorder.Group
             axis="y"
             onReorder={onReorder}
-            className="flex flex-col space-y-2"
+            className="flex flex-col space-y-2 overflow-hidden"
             values={chosenArguments.arguments.map(argument => argument.name)}>
             {chosenArguments.arguments.map(argument => (
               <ManageArgumentsItem id={id} key={argument.name} argument={argument} setArguments={setChosenArguments} />
