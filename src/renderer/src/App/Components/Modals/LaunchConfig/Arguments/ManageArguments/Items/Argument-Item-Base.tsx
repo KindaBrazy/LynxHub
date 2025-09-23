@@ -59,7 +59,7 @@ export default function ArgumentItemBase({
           isPressable={!!onClick}
           className={`${defaultCursor && 'cursor-default'} rounded-l-none`}
           fullWidth>
-          <CardHeader className={`justify-between ${children ? 'pb-0' : 'pb-1'} pt-1 text-sm`}>
+          <CardHeader className={`justify-between ${children ? 'pb-1' : 'pb-2'} pt-2 text-sm`}>
             <div className="flex gap-x-2 text-success">
               <div className="flex items-center justify-center">{icon}</div>
               <span className="font-JetBrainsMono">{name}</span>
