@@ -4,7 +4,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
 import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
-import {Folder2_Icon, RefreshDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {FileDuo_Icon, RefreshDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
 import {useCardsState} from '../../../../../../Redux/Reducer/CardsReducer';
 import rendererIpc from '../../../../../../RendererIpc';
@@ -73,7 +73,7 @@ export default function FileArgItem({argument, changeValue, removeArg, id}: Prop
       onClick={changeDir}
       name={argument.name}
       removeArg={removeArg}
-      icon={<Folder2_Icon />}
+      icon={<FileDuo_Icon />}
       defaultCursor={isRelative}>
       {isRelative ? (
         <AutoCompletePath type="file" baseDir={baseDir!} defaultValue={selectedFile} onValueChange={changeValue} />
