@@ -134,6 +134,24 @@ export const extensionsData: ExtensionData_Renderer = {
     games: {
       addComponent: [],
     },
+    agents: {
+      add: {
+        top: [],
+        bottom: [],
+        scrollTop: [],
+        scrollBottom: [],
+        cardsContainer: [],
+      },
+    },
+    others: {
+      add: {
+        top: [],
+        bottom: [],
+        scrollTop: [],
+        scrollBottom: [],
+        cardsContainer: [],
+      },
+    },
   },
   addReducer: [],
   cards: {
@@ -329,6 +347,24 @@ export const extensionRendererApi: ExtensionRendererApi = {
         scrollTop: comp => extensionsData.customizePages.text.add.scrollTop.push(comp),
         scrollBottom: comp => extensionsData.customizePages.text.add.scrollBottom.push(comp),
         cardsContainer: comp => extensionsData.customizePages.text.add.cardsContainer.push(comp),
+      },
+    },
+    agents: {
+      add: {
+        top: comp => extensionsData.customizePages.agents.add.top.push(comp),
+        bottom: comp => extensionsData.customizePages.agents.add.bottom.push(comp),
+        scrollTop: comp => extensionsData.customizePages.agents.add.scrollTop.push(comp),
+        scrollBottom: comp => extensionsData.customizePages.agents.add.scrollBottom.push(comp),
+        cardsContainer: comp => extensionsData.customizePages.agents.add.cardsContainer.push(comp),
+      },
+    },
+    others: {
+      add: {
+        top: comp => extensionsData.customizePages.others.add.top.push(comp),
+        bottom: comp => extensionsData.customizePages.others.add.bottom.push(comp),
+        scrollTop: comp => extensionsData.customizePages.others.add.scrollTop.push(comp),
+        scrollBottom: comp => extensionsData.customizePages.others.add.scrollBottom.push(comp),
+        cardsContainer: comp => extensionsData.customizePages.others.add.cardsContainer.push(comp),
       },
     },
     settings: {
