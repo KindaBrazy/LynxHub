@@ -1,4 +1,5 @@
 import {Empty} from 'antd';
+import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -45,6 +46,10 @@ export default function CustomRunCommands({id}: Props) {
     rendererIpc.storageUtils.customRun('add', {command: '', id});
   }, [id]);
 
+  const onReorder = (newOrder: string[]) => {
+    setCommands(newOrder);
+  };
+
   return (
     <LaunchConfigSection
       onAddPress={addCommand}
@@ -58,21 +63,23 @@ export default function CustomRunCommands({id}: Props) {
           description="No custom command available to execute"
         />
       ) : (
-        <div className="space-y-2">
-          {commands.map((command, index) => {
-            const focus = isEmpty(command);
-            return (
-              <TerminalCommandItem
-                index={index}
-                focus={focus}
-                defaultText={command}
-                onRemove={removeCommand}
-                editCommand={editCommand}
-                key={`${index}_${command}`}
-              />
-            );
-          })}
-        </div>
+        <AnimatePresence>
+          <Reorder.Group axis="y" values={commands} onReorder={onReorder} className="space-y-2">
+            {commands.map((command, index) => {
+              const focus = isEmpty(command);
+              return (
+                <TerminalCommandItem
+                  index={index}
+                  focus={focus}
+                  key={command}
+                  defaultText={command}
+                  onRemove={removeCommand}
+                  editCommand={editCommand}
+                />
+              );
+            })}
+          </Reorder.Group>
+        </AnimatePresence>
       )}
     </LaunchConfigSection>
   );
