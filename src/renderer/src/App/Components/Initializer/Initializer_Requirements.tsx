@@ -24,7 +24,7 @@ function statusColor(s: CheckResult) {
 function statusLabel(s: RowData) {
   switch (s.result) {
     case 'ok':
-      return s.label || 'OK';
+      return s.label || 'Done';
     case 'failed':
       return 'Missing';
     case 'checking':
