@@ -47,8 +47,6 @@ export const GITHUB_URL: string = 'https://github.com/KindaBrazy/LynxHub';
 export const REDDIT_URL: string = 'https://www.reddit.com/r/LynxHubAI';
 export const YOUTUBE_URL: string = 'https://www.youtube.com/@LynxHubAI';
 
-export const RecommendedExtensions: string[] = ['Python Toolkit'];
-
 export const PageID = {
   home: 'home_page',
   imageGen: 'imageGen_page',
