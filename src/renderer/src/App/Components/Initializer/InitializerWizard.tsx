@@ -1,6 +1,6 @@
 import {Button, Image} from '@heroui/react';
 import {AnimatePresence, motion} from 'framer-motion';
-import {useState} from 'react';
+import {useMemo, useState} from 'react';
 
 import {APP_ICON_TRANSPARENT, APP_NAME, APP_NAME_VERSION_V} from '../../../../../cross/CrossConstants';
 import Initializer_Extensions from './Initializer_Extensions';
@@ -23,9 +23,10 @@ export default function OnboardingWizard() {
   const [requirementsSatisfied, setRequirementsSatisfied] = useState<boolean>(false);
   const [installingExtensions, setInstallingExtensions] = useState<boolean>(false);
 
-  function allChecksOk() {
-    return false;
-  }
+  const canGoNext = useMemo(
+    () => requirementsSatisfied && !installingExtensions,
+    [requirementsSatisfied, installedExtensions],
+  );
 
   return (
     <div className="w-full max-w-4xl mx-auto mt-12 p-6">
@@ -128,11 +129,8 @@ export default function OnboardingWizard() {
                 </motion.div>
 
                 <motion.div variants={cardVariants} className="flex justify-end items-center">
-                  <Button
-                    className="light"
-                    onPress={() => setStep(2)}
-                    isDisabled={!allChecksOk() || installingExtensions}>
-                    {allChecksOk()
+                  <Button className="light" isDisabled={!canGoNext} onPress={() => setStep(2)}>
+                    {canGoNext
                       ? 'Continue'
                       : installingExtensions
                         ? 'Wait for Extensions Installation'
