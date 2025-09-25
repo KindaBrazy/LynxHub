@@ -75,6 +75,7 @@ import {
   updateAllExtensions,
 } from './Methods/IpcMethods-CardExtensions';
 import {cancelDownload, downloadFile} from './Methods/IpcMethods-Downloader';
+import {listenToInitChannels} from './Methods/IpcMethods-Initializer';
 import {getSystemInfo} from './Methods/IpcMethods-Platform';
 import {
   customPtyCommands,
@@ -469,6 +470,8 @@ export function listenToAllChannels() {
   modules();
   modulesApi();
   modulesIpc();
+
+  listenToInitChannels();
 
   extensions();
   extensionsIpc();
