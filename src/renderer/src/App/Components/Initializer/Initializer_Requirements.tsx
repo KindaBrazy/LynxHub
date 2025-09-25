@@ -1,94 +1,14 @@
-import {Alert, Button, Chip, Spinner} from '@heroui/react';
-import {motion} from 'framer-motion';
+import {Alert, Button} from '@heroui/react';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {MAIN_MODULE_URL} from '../../../../../cross/CrossConstants';
 import rendererIpc from '../../RendererIpc';
+import {ReqProps, RowData} from './InitTypes';
+import CheckRow from './Req_CheckRow';
 
-type CheckResult = 'unknown' | 'checking' | 'ok' | 'failed' | 'installing';
-type RowData = {result: CheckResult; label?: string};
+const isWin = window.osPlatform === 'win32';
 
-function statusColor(s: CheckResult) {
-  switch (s) {
-    case 'ok':
-      return 'success';
-    case 'failed':
-      return 'danger';
-    case 'installing':
-    case 'checking':
-    default:
-      return 'default';
-  }
-}
-
-function statusLabel(s: RowData) {
-  switch (s.result) {
-    case 'ok':
-      return s.label || 'Done';
-    case 'failed':
-      return 'Missing';
-    case 'checking':
-      return 'Checking';
-    case 'installing':
-      return 'Installing';
-    default:
-      return 'Unknown';
-  }
-}
-
-type CheckRowProps = {
-  label: string;
-  description?: string;
-  status: RowData;
-};
-
-type ReqStatus = {
-  git: string;
-  pwsh: string;
-  appModule: string;
-};
-
-function CheckRow({label, description, status}: CheckRowProps) {
-  const useBgWhite = useMemo(
-    () => status.result === 'unknown' || status.result === 'checking' || status.result === 'installing',
-    [status],
-  );
-  return (
-    <motion.div
-      whileTap={{scale: 0.98}}
-      whileHover={{scale: 1.02}}
-      transition={{duration: 0.2}}
-      className="flex items-center justify-between">
-      <div>
-        <div className="font-medium">{label}</div>
-        <div className="text-xs text-white/60">{description}</div>
-      </div>
-
-      <div className="flex items-center gap-3 light">
-        <Chip
-          startContent={
-            (status.result === 'checking' || status.result === 'installing') && (
-              <Spinner size="sm" className="mr-1" variant="gradient" />
-            )
-          }
-          variant="flat"
-          color={statusColor(status.result)}
-          classNames={{content: 'flex items-center'}}
-          className={`${useBgWhite && 'bg-white/10 text-white/70 '}` + ` text-xs`}>
-          {statusLabel(status)}
-        </Chip>
-      </div>
-    </motion.div>
-  );
-}
-
-type Props = {
-  setRequirementsSatisfied: (value: boolean) => void;
-  start: boolean;
-  setReqStatus: (value: ReqStatus) => void;
-};
-
-export function InitializerRequirements({setRequirementsSatisfied, start, setReqStatus}: Props) {
+export function InitializerRequirements({setRequirementsSatisfied, start, setReqStatus}: ReqProps) {
   const [git, setGit] = useState<RowData>({result: 'unknown'});
   const [pwsh, setPwsh] = useState<RowData>({result: 'unknown'});
   const [appModule, setAppModule] = useState<RowData>({result: 'failed'});
@@ -159,7 +79,7 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
     const appModuleFail = appModule.result === 'failed';
     const isFailed = gitFail || pwshFail || appModuleFail;
 
-    const isDone = git.result === 'ok' && pwsh.result === 'ok' && appModule.result === 'ok';
+    const isDone = git.result === 'ok' && (isWin ? pwsh.result === 'ok' : true) && appModule.result === 'ok';
 
     const AlertElement: ReactNode = getAlertElement(gitFail, pwshFail, appModuleFail);
 
@@ -247,9 +167,13 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
 
     if (start) {
       checkGit().then(() => {
-        checkPwsh().then(() => {
+        if (isWin) {
+          checkPwsh().then(() => {
+            installModule();
+          });
+        } else {
           installModule();
-        });
+        }
       });
     }
   }, [start]);
@@ -263,7 +187,7 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
 
         <div className="space-y-3">
           <CheckRow label="Git" status={git} description="Command line Git" />
-          <CheckRow status={pwsh} label="PowerShell 7+" description="pwsh (v7 or later)" />
+          {isWin && <CheckRow status={pwsh} label="PowerShell 7+" description="pwsh (v7 or later)" />}
           <CheckRow status={appModule} label="Official Module" description="Local Ai Container" />
         </div>
       </div>
