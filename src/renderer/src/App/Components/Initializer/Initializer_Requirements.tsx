@@ -42,6 +42,12 @@ type CheckRowProps = {
   status: RowData;
 };
 
+type ReqStatus = {
+  git: string;
+  pwsh: string;
+  appModule: string;
+};
+
 function CheckRow({label, description, status}: CheckRowProps) {
   const useBgWhite = useMemo(
     () => status.result === 'unknown' || status.result === 'checking' || status.result === 'installing',
@@ -79,40 +85,50 @@ function CheckRow({label, description, status}: CheckRowProps) {
 type Props = {
   setRequirementsSatisfied: (value: boolean) => void;
   start: boolean;
+  setReqStatus: (value: ReqStatus) => void;
 };
 
-export function InitializerRequirements({setRequirementsSatisfied, start}: Props) {
+export function InitializerRequirements({setRequirementsSatisfied, start, setReqStatus}: Props) {
   const [git, setGit] = useState<RowData>({result: 'unknown'});
   const [pwsh, setPwsh] = useState<RowData>({result: 'unknown'});
   const [appModule, setAppModule] = useState<RowData>({result: 'failed'});
 
-  const getAlertElement = useCallback((git: boolean, pwsh: boolean, appModule: boolean) => {
+  const setStat = useCallback(() => {
+    setReqStatus({
+      git: git.label || 'Ready',
+      pwsh: pwsh.label || 'Ready',
+      appModule: appModule.result === 'ok' ? 'Ready' : 'Not Installed',
+    });
+  }, [git, pwsh, appModule]);
+
+  const getAlertElement = (gitStat: boolean, pwshStat: boolean, appModuleStat: boolean) => {
     let title: string | null = null;
     let color: string | any | null = null;
     let description: string | null = null;
     let btnText: string | null = null;
     let btnPress: (() => void) | null = null;
 
-    if (git) {
+    if (gitStat) {
       title = 'Git is Missing';
       description = 'Git is required for core functionalities. Please install it to continue.';
       btnText = 'Website';
       btnPress = () => rendererIpc.win.openUrlDefaultBrowser('https://git-scm.com/downloads');
       color = 'danger';
-    } else if (pwsh) {
+    } else if (pwshStat) {
       title = 'PowerShell 7+ is Missing';
       description = 'PowerShell 7 or a later version is required. Please install it.';
       btnText = 'Website';
       btnPress = () =>
         rendererIpc.win.openUrlDefaultBrowser('https://github.com/PowerShell/PowerShell/releases/latest');
       color = 'warning';
-    } else if (appModule) {
+    } else if (appModuleStat) {
       title = 'Main Module Installation Failed';
       description = 'You can skip this and try to install it manually later from the settings.';
       btnText = 'Skip';
       btnPress = () => {
         setAppModule({result: 'unknown'});
         setRequirementsSatisfied(true);
+        setStat();
       };
       color = 'default';
     }
@@ -135,7 +151,7 @@ export function InitializerRequirements({setRequirementsSatisfied, start}: Props
         classNames={{title: 'text-[9pt]', description: 'text-[8pt]'}}
       />
     );
-  }, []);
+  };
 
   const {isFailed, isDone, AlertElement} = useMemo(() => {
     const gitFail = git.result === 'failed';
@@ -159,6 +175,7 @@ export function InitializerRequirements({setRequirementsSatisfied, start}: Props
       setRequirementsSatisfied(false);
     } else if (isDone) {
       setRequirementsSatisfied(true);
+      setStat();
     }
   }, [isFailed, isDone]);
 

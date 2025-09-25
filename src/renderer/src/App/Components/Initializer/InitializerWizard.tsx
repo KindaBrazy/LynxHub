@@ -1,8 +1,10 @@
 import {Button, Image} from '@heroui/react';
 import {AnimatePresence, motion} from 'framer-motion';
-import {useMemo, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 
 import {APP_ICON_TRANSPARENT, APP_NAME, APP_NAME_VERSION_V} from '../../../../../cross/CrossConstants';
+import {CheckDuo_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
+import rendererIpc from '../../RendererIpc';
 import Initializer_Extensions from './Initializer_Extensions';
 import {InitializerRequirements} from './Initializer_Requirements';
 
@@ -23,10 +25,14 @@ export default function OnboardingWizard() {
   const [requirementsSatisfied, setRequirementsSatisfied] = useState<boolean>(false);
   const [installingExtensions, setInstallingExtensions] = useState<boolean>(false);
 
+  const [reqStatus, setReqStatus] = useState({git: '', pwsh: '', appModule: ''});
+
   const canGoNext = useMemo(
     () => requirementsSatisfied && !installingExtensions,
     [requirementsSatisfied, installedExtensions],
   );
+
+  const restartApp = useCallback(() => rendererIpc.win.changeWinState('restart'), []);
 
   return (
     <div className="w-full max-w-4xl mx-auto mt-12 p-6">
@@ -119,7 +125,11 @@ export default function OnboardingWizard() {
 
                 <motion.div variants={cardVariants} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   {/* Requirements card */}
-                  <InitializerRequirements start={step === 1} setRequirementsSatisfied={setRequirementsSatisfied} />
+                  <InitializerRequirements
+                    start={step === 1}
+                    setReqStatus={setReqStatus}
+                    setRequirementsSatisfied={setRequirementsSatisfied}
+                  />
 
                   <Initializer_Extensions
                     requirementsSatisfied={requirementsSatisfied}
@@ -152,38 +162,31 @@ export default function OnboardingWizard() {
                   All done!
                 </motion.h2>
                 <motion.p variants={cardVariants} className="text-white/80 mb-6">
-                  You're ready to go. Restart {APP_NAME} to apply changes and start using the app with your selected
-                  tools and extensions.
+                  You're ready to go. Restart {APP_NAME} to apply changes and start using the app.
                 </motion.p>
 
                 <motion.div className="mb-4" variants={cardVariants}>
                   <div className="bg-white/6 p-4 rounded-lg">
                     <div className="font-medium mb-2">Summary</div>
                     <div className="text-sm text-white/70">
-                      Requirements: {`Git: ${'git'}`}, {`PowerShell: ${'pwsh'}`}, {`Module: ${'appModule'}`}
+                      Requirements: {`Git: ${reqStatus.git}`}, {`PowerShell: ${reqStatus.pwsh}`},{' '}
+                      {`Module: ${reqStatus.appModule}`}
                     </div>
                     <div className="text-sm text-white/70 mt-2">
-                      Extensions: {installedExtensions.join(', ') || 'None'}
+                      Extensions: {installedExtensions.join(', ') || 'None!'}
                     </div>
                   </div>
                 </motion.div>
 
                 <motion.div className="flex gap-3" variants={cardVariants}>
-                  <button
-                    onClick={() => {
-                      // TODO
-                    }}
-                    className="px-5 py-2 rounded-lg bg-emerald-400 text-slate-900 font-semibold shadow">
+                  <Button
+                    color="success"
+                    variant="shadow"
+                    onPress={restartApp}
+                    className="light font-semibold"
+                    startContent={<CheckDuo_Icon className="size-5" />}>
                     Restart {APP_NAME}
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      // TODO
-                    }}
-                    className="px-5 py-2 rounded-lg bg-white/10 border border-white/20">
-                    Finish without restart
-                  </button>
+                  </Button>
                 </motion.div>
               </motion.div>
             )}
