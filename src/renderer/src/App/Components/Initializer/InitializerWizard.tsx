@@ -31,7 +31,8 @@ export default function OnboardingWizard() {
     <div className="w-full max-w-4xl mx-auto mt-12 p-6">
       <div
         className={
-          'relative bg-gradient-to-br from-slate-900 via-indigo-900 to-sky-900 rounded-2xl shadow-2xl overflow-hidden'
+          'relative bg-gradient-to-br from-slate-900/95 via-indigo-900/95 to-sky-900/95' +
+          ' rounded-2xl shadow-2xl overflow-hidden'
         }>
         {/* Background animated shapes */}
         <motion.div
