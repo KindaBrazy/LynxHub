@@ -46,6 +46,7 @@ import {
   gitChannels,
   GitProgressCallback,
   HomeCategory,
+  initChannels,
   LynxInput,
   moduleApiChannels,
   modulesChannels,
@@ -1050,6 +1051,11 @@ const rendererIpc = {
 
     offOpen: () => ipc.removeAllListeners(customNotifChannels.onOpen),
     offClose: () => ipc.removeAllListeners(customNotifChannels.onClose),
+  },
+
+  init: {
+    checkGitInstalled: (): Promise<string | undefined> => ipc.invoke(initChannels.checkGitInstalled),
+    checkPwsh7Installed: (): Promise<string | undefined> => ipc.invoke(initChannels.checkPwsh7Installed),
   },
 };
 

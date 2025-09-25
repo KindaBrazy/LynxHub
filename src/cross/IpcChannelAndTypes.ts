@@ -420,6 +420,11 @@ export const staticsChannels = {
   getPatrons: 'statics:getPatrons',
 };
 
+export const initChannels = {
+  checkGitInstalled: 'init:checkGitInstalled',
+  checkPwsh7Installed: 'init:checkPwsh7Installed',
+};
+
 export const eventsChannels = {
   card_PreCommandUninstall: 'events:card_PreCommandUninstall',
 };

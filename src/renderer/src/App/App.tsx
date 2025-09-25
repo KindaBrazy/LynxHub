@@ -1,6 +1,7 @@
 import useAppEvents from './AppEvents/AppEvents';
 import useStateChange from './AppEvents/AppStates';
 import Background from './Components/Background';
+import Initializer from './Components/Initializer/Initializer';
 import MainContents from './Components/MainContents/MainContents';
 import Modals from './Components/Modals/Modals';
 import TitleBar from './Components/TitleBar/TitleBar';
@@ -17,6 +18,7 @@ export default function App() {
 
   return (
     <UIProviders>
+      <Initializer />
       <ExtensionHooks />
       <Background />
       <TitleBar />
