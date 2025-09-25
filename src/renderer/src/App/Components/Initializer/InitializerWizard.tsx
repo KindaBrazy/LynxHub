@@ -132,6 +132,7 @@ export default function OnboardingWizard() {
                   />
 
                   <Initializer_Extensions
+                    isInstalling={installingExtensions}
                     requirementsSatisfied={requirementsSatisfied}
                     setInstalledExtensions={setInstalledExtensions}
                     setInstallingExtensions={setInstallingExtensions}

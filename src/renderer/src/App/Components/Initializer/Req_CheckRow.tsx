@@ -1,6 +1,7 @@
 import {Chip, Spinner} from '@heroui/react';
 import {motion} from 'framer-motion';
 import {useMemo} from 'react';
+
 import {CheckResult, RowData} from './InitTypes';
 
 function statusColor(s: CheckResult) {

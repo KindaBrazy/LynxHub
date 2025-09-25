@@ -16,12 +16,14 @@ type Props = {
   setInstalledExtensions: (extensions: string[]) => void;
   requirementsSatisfied: boolean;
   setInstallingExtensions: (value: boolean) => void;
+  isInstalling: boolean;
 };
 
 export default function Initializer_Extensions({
   setInstalledExtensions,
   requirementsSatisfied,
   setInstallingExtensions,
+  isInstalling,
 }: Props) {
   const [extensions, setExtensions] = useState<ExtensionItem[]>([]);
   const [selectedExtensions, setSelectedExtensions] = useState<Set<string>>(new Set([]));
@@ -64,7 +66,7 @@ export default function Initializer_Extensions({
           console.log('Failed to install some extensions');
         }
       })
-      .finally(() => setInstallingExtensions(true));
+      .finally(() => setInstallingExtensions(false));
   };
 
   return (
@@ -109,7 +111,7 @@ export default function Initializer_Extensions({
         </div>
       </div>
 
-      <Button onPress={install} className="light" isDisabled={!requirementsSatisfied}>
+      <Button onPress={install} className="light" isLoading={isInstalling} isDisabled={!requirementsSatisfied}>
         {requirementsSatisfied ? 'Install selected' : 'Complete Requirements'}
       </Button>
     </div>
