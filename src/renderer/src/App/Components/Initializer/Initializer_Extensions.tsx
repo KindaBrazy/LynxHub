@@ -1,5 +1,5 @@
 import {Button, Checkbox, cn, User} from '@heroui/react';
-import {compact} from 'lodash';
+import {compact, isEmpty} from 'lodash';
 import {useEffect, useState} from 'react';
 
 import rendererIpc from '../../RendererIpc';
@@ -57,16 +57,20 @@ export default function Initializer_Extensions({
   const install = () => {
     setInstallingExtensions(true);
     const urlsToInstall = compact(Array.from(selectedExtensions).map(id => extensions.find(ext => ext.id === id)?.url));
-    Promise.all(urlsToInstall.map(item => rendererIpc.extension.installExtension(item)))
-      .then(result => {
-        const allInstalled = result.every(isSuccess => isSuccess === true);
-        if (allInstalled) {
-          setInstalledExtensions(Array.from(selectedExtensions));
-        } else {
-          console.log('Failed to install some extensions');
-        }
-      })
-      .finally(() => setInstallingExtensions(false));
+    if (isEmpty(urlsToInstall)) {
+      setInstallingExtensions(false);
+    } else {
+      Promise.all(urlsToInstall.map(item => rendererIpc.extension.installExtension(item)))
+        .then(result => {
+          const allInstalled = result.every(isSuccess => isSuccess === true);
+          if (allInstalled) {
+            setInstalledExtensions(Array.from(selectedExtensions));
+          } else {
+            console.log('Failed to install some extensions');
+          }
+        })
+        .finally(() => setInstallingExtensions(false));
+    }
   };
 
   return (
