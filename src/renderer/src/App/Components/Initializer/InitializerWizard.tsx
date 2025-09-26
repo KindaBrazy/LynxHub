@@ -35,7 +35,7 @@ export default function OnboardingWizard() {
   const restartApp = useCallback(() => rendererIpc.win.changeWinState('restart'), []);
 
   return (
-    <div className="w-full max-w-4xl mx-auto mt-12 p-6">
+    <div className="w-full max-w-5xl mx-auto mt-12 p-6">
       <div
         className={
           'relative bg-gradient-to-br from-slate-900/95 via-indigo-900/95 to-sky-900/95' +

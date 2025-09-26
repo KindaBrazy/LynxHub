@@ -8,6 +8,7 @@ export default function Initializer() {
       size="5xl"
       shadow="none"
       isOpen={true}
+      placement="center"
       scrollBehavior="inside"
       className="bg-foreground/0"
       classNames={{wrapper: 'overflow-hidden'}}

@@ -45,8 +45,8 @@ export default function CheckRow({label, description, status}: CheckRowProps) {
   );
   return (
     <motion.div
-      whileTap={{scale: 0.98}}
-      whileHover={{scale: 1.02}}
+      whileTap={{scale: 0.99}}
+      whileHover={{scale: 1.01}}
       transition={{duration: 0.2}}
       className="flex items-center justify-between">
       <div>
