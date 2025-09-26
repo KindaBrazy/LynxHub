@@ -43,7 +43,7 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
       color = 'warning';
     } else if (appModuleStat) {
       title = 'Main Module Installation Failed';
-      description = 'You can skip this and try to install it manually later from the settings.';
+      description = 'You can skip this and try to install it manually later from the modules page.';
       btnText = 'Skip';
       btnPress = () => {
         setAppModule({result: 'unknown'});
@@ -185,7 +185,7 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
           <div className="font-semibold">Requirements</div>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           <CheckRow label="Git" status={git} description="Command line Git" />
           {isWin && <CheckRow status={pwsh} label="PowerShell 7+" description="pwsh (v7 or later)" />}
           <CheckRow status={appModule} label="Official Module" description="Local Ai Container" />
