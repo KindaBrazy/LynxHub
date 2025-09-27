@@ -7,6 +7,7 @@ import {CheckDuo_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../RendererIpc';
 import Initializer_Extensions from './Initializer_Extensions';
 import {InitializerRequirements} from './Initializer_Requirements';
+import {WizardProps} from './InitTypes';
 
 const containerVariants = {
   hidden: {opacity: 0, y: 10},
@@ -19,7 +20,7 @@ const cardVariants = {
   enter: {opacity: 1, y: 0},
 };
 
-export default function OnboardingWizard() {
+export default function OnboardingWizard({isOldDone}: WizardProps) {
   const [step, setStep] = useState<number>(0);
   const [installedExtensions, setInstalledExtensions] = useState<string[]>([]);
   const [requirementsSatisfied, setRequirementsSatisfied] = useState<boolean>(false);
@@ -32,7 +33,10 @@ export default function OnboardingWizard() {
     [requirementsSatisfied, installedExtensions],
   );
 
-  const restartApp = useCallback(() => rendererIpc.win.changeWinState('restart'), []);
+  const onComplete = useCallback(() => {
+    rendererIpc.storage.update('app', {inited: true});
+    rendererIpc.win.changeWinState('restart');
+  }, []);
 
   return (
     <div className="w-full max-w-5xl mx-auto mt-12 p-6">
@@ -183,7 +187,7 @@ export default function OnboardingWizard() {
                   <Button
                     color="success"
                     variant="shadow"
-                    onPress={restartApp}
+                    onPress={onComplete}
                     className="light font-semibold"
                     startContent={<CheckDuo_Icon className="size-5" />}>
                     Restart {APP_NAME}

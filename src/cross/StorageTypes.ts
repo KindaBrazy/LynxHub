@@ -75,6 +75,7 @@ type StorageTypes = {
     discordRP: DiscordRPC;
     hotkeys: LynxHotkey[];
     initialized: boolean;
+    inited: boolean;
     appDataDir: string;
     disableLoadingAnimations: boolean;
     collectErrors: boolean;

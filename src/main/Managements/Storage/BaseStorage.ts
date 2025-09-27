@@ -27,11 +27,11 @@ import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
-  private readonly CURRENT_VERSION: number = 0.85;
+  private readonly CURRENT_VERSION: number = 0.86;
   private migratedTo: number = 0;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.85},
+    storage: {version: 0.86},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -83,6 +83,7 @@ class BaseStorage {
       },
       hotkeys: Get_Default_Hotkeys(platform()),
       initialized: false,
+      inited: false,
       appDataDir: isPortable() ? `./${APP_NAME}_Data` : join(app.getPath('documents'), APP_NAME),
       lastSize: undefined,
       hardwareAcceleration: true,
@@ -214,8 +215,13 @@ class BaseStorage {
 
       this.migratedTo = 0.84;
     };
+
     const v84to85 = () => {
       this.storage.data.app.addBreadcrumbs = true;
+    };
+
+    const v85to86 = () => {
+      this.storage.data.app.inited = false;
     };
 
     const updateVersion = () => {
@@ -236,6 +242,7 @@ class BaseStorage {
           v82to83();
           v83to84();
           v84to85();
+          v85to86();
           break;
         }
         case 0.5: {
@@ -246,6 +253,7 @@ class BaseStorage {
           v82to83();
           v83to84();
           v84to85();
+          v85to86();
           break;
         }
         case 0.6: {
@@ -255,6 +263,7 @@ class BaseStorage {
           v82to83();
           v83to84();
           v84to85();
+          v85to86();
           break;
         }
         case 0.7: {
@@ -263,6 +272,7 @@ class BaseStorage {
           v82to83();
           v83to84();
           v84to85();
+          v85to86();
           break;
         }
         case 0.8: {
@@ -270,21 +280,29 @@ class BaseStorage {
           v82to83();
           v83to84();
           v84to85();
+          v85to86();
           break;
         }
         case 0.82: {
           v82to83();
           v83to84();
           v84to85();
+          v85to86();
           break;
         }
         case 0.83: {
           v83to84();
           v84to85();
+          v85to86();
           break;
         }
         case 0.84: {
           v84to85();
+          v85to86();
+          break;
+        }
+        case 0.85: {
+          v85to86();
           break;
         }
         default:
