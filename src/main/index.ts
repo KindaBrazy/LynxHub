@@ -10,7 +10,6 @@ import darwinIcon from '../../resources/icon-darwin.png?asset';
 import {APP_NAME} from '../cross/CrossConstants';
 import {isDev, toMs} from '../cross/CrossUtils';
 import {checkAppDirectories} from './Managements/AppDataManager';
-import AppInitializer from './Managements/AppInitializer';
 import {checkForUpdate} from './Managements/AppUpdater';
 import ContextMenuManager from './Managements/ContextMenuManager';
 import {ValidateCards} from './Managements/DataValidator';
@@ -211,12 +210,4 @@ function setLoginItemSettings() {
   app.setLoginItemSettings({openAtLogin: systemStartup});
 }
 
-function initApp() {
-  if (!storageManager.getData('app').initialized) {
-    new AppInitializer().createInitializer();
-  } else {
-    setupApp();
-  }
-}
-
-initApp();
+setupApp();
