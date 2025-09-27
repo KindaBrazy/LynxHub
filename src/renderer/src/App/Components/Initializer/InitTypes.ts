@@ -12,3 +12,5 @@ export type ReqProps = {
   start: boolean;
   setReqStatus: (value: ReqStatus) => void;
 };
+
+export type WizardProps = {isOldDone: boolean};
