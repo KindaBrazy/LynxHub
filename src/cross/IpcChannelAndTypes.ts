@@ -222,18 +222,6 @@ export const ptyChannels = {
   onExit: 'pty-on-exit-code',
 };
 
-export const initializerChannels = {
-  minimize: 'minimize-initializer',
-  close: 'close-initializer',
-
-  gitAvailable: 'git-available-initializer',
-
-  installAIModule: 'install-ai-module-initializer',
-  onInstallAIModule: 'on-install--ai-module-initializer',
-
-  startApp: 'start-app-initializer',
-};
-
 export const appUpdateChannels = {
   statusError: 'appUpdate:statusError',
   status: 'appUpdate:status',

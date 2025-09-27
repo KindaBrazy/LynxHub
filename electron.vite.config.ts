@@ -69,7 +69,6 @@ export default defineConfig(({mode}) => {
         rollupOptions: {
           input: {
             index: resolve(__dirname, 'src/renderer/index.html'),
-            initializer: resolve(__dirname, 'src/renderer/initializer.html'),
             loading: resolve(__dirname, 'src/renderer/loading.html'),
             dialog: resolve(__dirname, 'src/renderer/dialog.html'),
             context_menu: resolve(__dirname, 'src/renderer/context_menu.html'),
