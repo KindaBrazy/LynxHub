@@ -130,7 +130,7 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
               </motion.p>
               <motion.div variants={cardVariants} className="bg-white/6 p-4 rounded-xl my-6">
                 <CheckRow status={pwsh} label="PowerShell 7+" description="pwsh (v7 or later)" />
-                {pwsh.result !== 'failed' && (
+                {pwsh.result === 'failed' && (
                   <Alert
                     endContent={
                       <Button
