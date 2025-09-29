@@ -135,4 +135,10 @@ export type PluginMetadata = {
    * This file should conform to the PluginVersioning type.
    */
   versioningUrl: string;
+
+  /**
+   * URL to an icon representing the plugin.
+   * This icon will be displayed in UI elements like plugin listings.
+   */
+  iconUrl?: string;
 };
