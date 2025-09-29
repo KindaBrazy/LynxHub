@@ -1,8 +1,8 @@
 {
   "$schema": "./releases_log_v2.schema.json",
-  "currentVersion": "3.1.4",
-  "currentBuild": 28,
-  "releaseDate": "2025-08-28",
+  "currentVersion": "3.2.0",
+  "currentBuild": 29,
+  "releaseDate": "2025-09-29",
   "earlyAccess": {
     "version": "3.2.0",
     "build": 29,
