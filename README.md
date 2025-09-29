@@ -12,21 +12,27 @@
 [![GitHub Release Date][github-release-date-shield]](https://github.com/KindaBrazy/LynxHub/releases)
 [![GitHub Downloads (all assets, all releases)][github-downloads-shield]](https://github.com/KindaBrazy/LynxHub/releases)
 
-![LynxHub Dashboard](/readme/screenshots/MainScreenshot.png)
+![LynxHub Dashboard](/readme/lynxhub_screenshot.png)
 
 #### Open-source, cross-platform terminal and browser, designed for managing AI. Highly modular and extensible, it's the all-in-one environment for AI power users.
 
 </div>
 
-## 🔗 Download
+## 📦 Installation
 
-Get started with LynxHub by downloading the latest version for your platform.
+1. **Install Prerequisites**
 
-| Channel      | Version                                                                 | Date       |
-| ------------ | ----------------------------------------------------------------------- | ---------- |
-| Insider      | [**V3.2.0**](https://www.patreon.com/collection/1557749)                | 2025-09-04 |
-| Early Access | [**V3.2.0**](https://www.patreon.com/collection/714004)                 | 2025-09-04 |
-| Release      | [**V3.1.4**](https://github.com/KindaBrazy/LynxHub/releases/tag/V3.1.4) | 2025-08-28 |
+   [Git](https://git-scm.com/downloads) | [Powershell 7+ (Windows Only)](https://github.com/PowerShell/PowerShell/releases/latest)
+
+2. **Download LynxHub**
+
+   | Channel      | Version                                                             | Date       |
+   | ------------ | ------------------------------------------------------------------- | ---------- |
+   | Insider      | [**V3.3.0 Insider 1**](https://www.patreon.com/collection/1557749)  | 2025-09-28 |
+   | Early Access | [**V3.2.0**](https://www.patreon.com/collection/714004)             | 2025-09-04 |
+   | Public       | [**V3.2.0**](https://github.com/KindaBrazy/LynxHub/releases/latest) | 2025-09-29 |
+
+3. **Install and Launch the Application**
 
 > [!NOTE]
 > **macOS Beta Release**
@@ -39,7 +45,6 @@ Get started with LynxHub by downloading the latest version for your platform.
 - ✨ [Feature Overview](#-feature-overview)
 - 🧩 [Extensions](#-extensions)
 - 📃 [Modules](#-extensions)
-- 📦 [Installation](#-installation)
 - 🔧 [Development](#-development)
 - 🤝 [Contributing](#-contributing)
 - ❤️‍🔥 [Support](#%EF%B8%8F-support)
@@ -107,19 +112,6 @@ Discover the core features that make LynxHub a powerful tool for your AI workflo
 ## 📃 Modules
 
 ### [WebUI Container Module](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container)
-
-## 📦 Installation
-
-1. **Install Prerequisites**
-   - [Git](https://git-scm.com/downloads)
-   - [Python](https://www.python.org/downloads) (required for AI interfaces; check "Add Python to PATH" during install)
-
-2. **Download LynxHub**
-   - Get the latest executable from the [Releases page](https://github.com/KindaBrazy/LynxHub/releases)
-     or [Patreon (Early-Access)](https://www.patreon.com/LynxHub).
-
-3. **Launch the Application**
-   - Updates are automatically checked and prompted during use.
 
 ## 🔧 Development
 
