@@ -1,3 +1,5 @@
+import {OsPlatforms} from '../CrossTypes';
+
 /**
  * Specifies the minimum required API versions for plugin compatibility.
  */
@@ -125,6 +127,12 @@ export type PluginMetadata = {
   description: string;
 
   /**
+   * URL to an icon representing the plugin.
+   * This icon will be displayed in UI elements like plugin listings.
+   */
+  iconUrl?: string;
+
+  /**
    * Public URL to the plugin's source code repository or distribution endpoint.
    * Should include compiled assets in main branch.
    */
@@ -137,8 +145,14 @@ export type PluginMetadata = {
   versioningUrl: string;
 
   /**
-   * URL to an icon representing the plugin.
-   * This icon will be displayed in UI elements like plugin listings.
+   * Specifies the platforms this plugin is compatible with.
+   * If omitted, the plugin is assumed to be cross-platform compatible.
+   * Examples: ['windows', 'linux']
    */
-  iconUrl?: string;
+  platforms?: OsPlatforms[];
+
+  /**
+   * Specifies the type of plugin.
+   */
+  type: 'module' | 'extension';
 };
