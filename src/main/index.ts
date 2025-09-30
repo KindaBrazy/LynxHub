@@ -21,6 +21,7 @@ import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
 import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
 import ModuleManager from './Managements/Plugin/Modules/ModuleManager';
 import ShareScreenManager from './Managements/ShareScreenManager';
+import StaticsManager from './Managements/StaticsManager';
 import StorageManager from './Managements/Storage/StorageManager';
 import ShowToastWindow from './Managements/ToastWindowManager';
 import TrayManager from './Managements/TrayManager';
@@ -36,14 +37,16 @@ app.commandLine.appendSwitch('disable-http-cache');
 
 export const storageManager = new StorageManager();
 
+export let staticManager: StaticsManager | undefined = undefined;
 export let appManager: ElectronAppManager | undefined = undefined;
 export let trayManager: TrayManager | undefined = undefined;
 export let discordRpcManager: DiscordRpcManager | undefined = undefined;
 export let cardsValidator: ValidateCards | undefined = undefined;
 export let moduleManager: ModuleManager | undefined = undefined;
-export const contextMenuManager: ContextMenuManager = new ContextMenuManager();
 
+export const contextMenuManager: ContextMenuManager = new ContextMenuManager();
 export const extensionManager: ExtensionManager = new ExtensionManager();
+
 export const appStartTime = Date.now();
 
 // Remove default menu
@@ -110,6 +113,8 @@ async function onAppReady() {
   }
 
   await extensionManager.onAppReady();
+  staticManager = new StaticsManager();
+  await staticManager.checkRequirements();
 
   electronApp.setAppUserModelId(APP_NAME);
 
