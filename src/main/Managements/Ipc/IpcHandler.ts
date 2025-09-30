@@ -37,6 +37,7 @@ import {
   discordRpcManager,
   extensionManager,
   moduleManager,
+  staticManager,
   storageManager,
 } from '../../index';
 import calcFolderSize from '../../Utilities/CalculateFolderSize/CalculateFolderSize';
@@ -52,7 +53,6 @@ import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from 
 import BrowserDownloadManager from '../BrowserDownloadManager';
 import BrowserManager from '../BrowserManager';
 import GitManager from '../GitManager';
-import StaticsManager from '../StaticsManager';
 import {
   changeWindowState,
   checkFilesExist,
@@ -442,9 +442,6 @@ export function browserIPC() {
 }
 
 function statics() {
-  const staticManager: StaticsManager = new StaticsManager();
-  staticManager.checkRequirements();
-
   ipcMain.handle(staticsChannels.pull, () => staticManager.pull());
   ipcMain.handle(staticsChannels.getReleases, () => staticManager.getReleases());
   ipcMain.handle(staticsChannels.getInsider, () => staticManager.getInsider());
