@@ -1,6 +1,7 @@
 import {readFileSync, rmSync} from 'node:fs';
 import {join} from 'node:path';
 
+import {STATICS_URL} from '../../cross/CrossConstants';
 import {
   AppUpdateData,
   AppUpdateInsiderData,
@@ -12,8 +13,6 @@ import {
 import {toMs} from '../../cross/CrossUtils';
 import {getAppDirectory} from './AppDataManager';
 import GitManager from './GitManager';
-
-const url: string = 'https://github.com/KindaBrazy/LynxHub-Statics';
 
 export default class StaticsManager {
   private gitManager: GitManager;
@@ -30,11 +29,11 @@ export default class StaticsManager {
     try {
       const dirUrl = await GitManager.remoteUrlFromDir(this.dir);
 
-      if (dirUrl && dirUrl === url) return;
+      if (dirUrl && dirUrl === STATICS_URL) return;
 
-      return this.gitManager.clone(url, this.dir);
+      return this.gitManager.clone(STATICS_URL, this.dir);
     } catch (_e) {
-      return this.gitManager.clone(url, this.dir);
+      return this.gitManager.clone(STATICS_URL, this.dir);
     }
   }
 
