@@ -127,24 +127,6 @@ export type PluginMetadata = {
   description: string;
 
   /**
-   * URL to an icon representing the plugin.
-   * This icon will be displayed in UI elements like plugin listings.
-   */
-  iconUrl?: string;
-
-  /**
-   * Public URL to the plugin's source code repository or distribution endpoint.
-   * Should include compiled assets in main branch.
-   */
-  repository: string;
-
-  /**
-   * Direct URL to the JSON file containing the plugin's versioning data.
-   * This file should conform to the PluginVersioning type.
-   */
-  versioningUrl: string;
-
-  /**
    * Specifies the platforms this plugin is compatible with.
    * If omitted, the plugin is assumed to be cross-platform compatible.
    * Examples: ['windows', 'linux']
