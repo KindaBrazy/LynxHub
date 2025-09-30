@@ -40,6 +40,7 @@ export const STATICS_FOLDER_NAME = 'Statics' as const;
 export const APP_ICON_TRANSPARENT: string = 'LynxHub.png';
 
 export const MAIN_MODULE_URL: string = 'https://github.com/KindaBrazy/LynxHub-Module-Offline-Container';
+export const STATICS_URL: string = 'https://github.com/KindaBrazy/LynxHub-Statics';
 export const DISCORD_SERVER: string = 'https://discord.gg/e8rBzhtcnK';
 export const X_URL: string = 'https://x.com/LynxHubAI';
 export const PATREON_URL: string = 'https://www.patreon.com/LynxHub';
