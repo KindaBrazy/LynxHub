@@ -41,6 +41,11 @@ export type PluginChangelog = {
   version: string;
 
   /**
+   * ISO 8601 formatted release date (e.g., "2023-10-05").
+   */
+  date: string;
+
+  /**
    * List of categorized changelog entries for this version.
    */
   items: ChangelogItem[];
@@ -73,11 +78,6 @@ export type VersionItem = {
    * - 'public': Generally available release
    */
   stage: ('insider' | 'early_access' | 'public')[];
-
-  /**
-   * ISO 8601 formatted release date (e.g., "2023-10-05").
-   */
-  date: string;
 
   /**
    * Required engine versions for compatibility with this plugin version.
