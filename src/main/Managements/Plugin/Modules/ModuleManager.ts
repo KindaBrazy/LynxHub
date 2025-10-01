@@ -27,7 +27,6 @@ export default class ModuleManager extends BasePluginManager {
   constructor() {
     super(
       5102,
-      'lynxModule.json',
       'scripts/main.mjs',
       'scripts/renderer.mjs',
       modulesChannels.onReload,

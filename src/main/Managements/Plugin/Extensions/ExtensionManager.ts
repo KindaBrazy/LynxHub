@@ -21,7 +21,6 @@ export default class ExtensionManager extends BasePluginManager {
   constructor() {
     super(
       5103,
-      'lynxExtension.json',
       'scripts/main/mainEntry.mjs',
       'scripts/renderer/rendererEntry.mjs',
       extensionsChannels.onReload,
