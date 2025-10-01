@@ -27,6 +27,7 @@ import ShowToastWindow from './Managements/ToastWindowManager';
 import TrayManager from './Managements/TrayManager';
 import downloadDU from './Utilities/CalculateFolderSize/DownloadDU';
 import {getPrivilegeText} from './Utilities/Utils';
+import {PluginMigrate} from './Managements/Plugin/PluginMigrate';
 
 if (!isDev()) {
   log.initialize();
@@ -63,14 +64,7 @@ checkAppDirectories().catch(() => {
   });
 });
 
-if (!storageManager.getData('plugin').migrated) {
-  await extensionManager.migrate();
-  await new ModuleManager().migrate();
-
-  storageManager.updateData('plugin', {migrated: true});
-  app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
-  app.quit();
-}
+await PluginMigrate(extensionManager);
 
 const {hardwareAcceleration} = storageManager.getData('app');
 if (!hardwareAcceleration) app.disableHardwareAcceleration();
