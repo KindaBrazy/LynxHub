@@ -15,7 +15,7 @@ import {extractGitUrl} from '../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
 import {PluginEngines, PluginMetadata, VersionItem} from '../../../cross/plugin/PluginTypes';
-import {appManager, staticManager, storageManager} from '../../index';
+import {appManager, staticManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
 import GitManager from '../GitManager';
@@ -479,9 +479,6 @@ export abstract class BasePluginManager {
 
       await this.installPlugin(url, targetCommit, false);
     }
-
-    // Set storage as migrated
-    storageManager.updateData('plugin', {migrated: true});
   }
 
   /**
