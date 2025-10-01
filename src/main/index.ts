@@ -37,13 +37,14 @@ app.commandLine.appendSwitch('disable-http-cache');
 
 export const storageManager = new StorageManager();
 
-export let staticManager: StaticsManager | undefined = undefined;
 export let appManager: ElectronAppManager | undefined = undefined;
 export let trayManager: TrayManager | undefined = undefined;
 export let discordRpcManager: DiscordRpcManager | undefined = undefined;
 export let cardsValidator: ValidateCards | undefined = undefined;
 export let moduleManager: ModuleManager | undefined = undefined;
 
+export const staticManager: StaticsManager = new StaticsManager();
+await staticManager.checkRequirements();
 export const contextMenuManager: ContextMenuManager = new ContextMenuManager();
 export const extensionManager: ExtensionManager = new ExtensionManager();
 
@@ -113,8 +114,6 @@ async function onAppReady() {
   }
 
   await extensionManager.onAppReady();
-  staticManager = new StaticsManager();
-  await staticManager.checkRequirements();
 
   electronApp.setAppUserModelId(APP_NAME);
 
