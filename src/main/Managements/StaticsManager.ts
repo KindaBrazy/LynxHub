@@ -1,7 +1,7 @@
 import {readdirSync, readFileSync, rmSync} from 'node:fs';
 import {join} from 'node:path';
 
-import {STATICS_URL} from '../../cross/CrossConstants';
+import {APP_BUILD_NUMBER, STATICS_URL} from '../../cross/CrossConstants';
 import {
   AppUpdateData,
   AppUpdateInsiderData,
@@ -9,6 +9,7 @@ import {
   ModulesInfo,
   Notification_Data,
   PatreonSupporter,
+  SubscribeStates,
 } from '../../cross/CrossTypes';
 import {toMs} from '../../cross/CrossUtils';
 import {PluginMetadata, PluginVersioning} from '../../cross/plugin/PluginTypes';
@@ -162,5 +163,20 @@ export default class StaticsManager {
     const entry = Object.entries(urlMap).find(([_id, url]) => url === repositoryUrl);
 
     return entry ? entry[0] : undefined;
+  }
+
+  public async getCurrentAppState(): Promise<SubscribeStates> {
+    const releases = await this.getReleases();
+    const insider = await this.getInsider();
+
+    if (APP_BUILD_NUMBER === releases.currentBuild) {
+      return 'public';
+    } else if (APP_BUILD_NUMBER === releases.earlyAccess.build) {
+      return 'early_access';
+    } else if (APP_BUILD_NUMBER === insider.currentBuild) {
+      return 'insider';
+    }
+
+    return 'public';
   }
 }
