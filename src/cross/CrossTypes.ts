@@ -346,3 +346,5 @@ export type CardState = {
   setMenuIsOpen: (isOpen: boolean) => void;
   setCheckingForUpdate: (isChecking: boolean) => void;
 };
+
+export type SubscribeStates = 'insider' | 'early_access' | 'public';
