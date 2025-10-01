@@ -99,7 +99,7 @@ export abstract class BasePluginManager {
     return new Promise<boolean>(resolve => {
       const gitManager = new GitManager(true);
       const directory = join(this.pluginPath, extractGitUrl(url).repo);
-      gitManager.cloneShallow(url, directory, true, 1, 'main');
+      gitManager.cloneShallow(url, directory, true, undefined, 'main');
 
       gitManager.onComplete = async () => {
         await this.reloadServer();
