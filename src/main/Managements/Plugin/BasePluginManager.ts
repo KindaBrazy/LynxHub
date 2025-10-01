@@ -1,6 +1,6 @@
 import {execSync} from 'node:child_process';
 import {createServer} from 'node:http';
-import {join} from 'node:path';
+import {join, resolve} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {constants, promises, readdirSync} from 'graceful-fs';
@@ -10,12 +10,12 @@ import {ltr, satisfies} from 'semver';
 import handler from 'serve-handler';
 
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
-import {FolderNames} from '../../../cross/CrossTypes';
+import {FolderNames, SubscribeStates} from '../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
-import {PluginEngines, PluginMetadata} from '../../../cross/plugin/PluginTypes';
-import {appManager, staticManager} from '../../index';
+import {PluginEngines, PluginMetadata, VersionItem} from '../../../cross/plugin/PluginTypes';
+import {appManager, staticManager, storageManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
 import GitManager from '../GitManager';
@@ -95,7 +95,7 @@ export abstract class BasePluginManager {
 
   protected abstract importPlugins(pluginFolders: string[]): Promise<void>;
 
-  public async installPlugin(url: string, commitHash: string) {
+  public async installPlugin(url: string, commitHash: string, reloadServer: boolean = true) {
     return new Promise<boolean>(resolve => {
       const gitManager = new GitManager(true);
       const directory = join(this.pluginPath, extractGitUrl(url).repo);
@@ -105,9 +105,13 @@ export abstract class BasePluginManager {
         gitManager
           .resetHard(directory, commitHash)
           .then(() => {
-            this.reloadServer().finally(() => {
+            if (reloadServer) {
+              this.reloadServer().finally(() => {
+                resolve(true);
+              });
+            } else {
               resolve(true);
-            });
+            }
           })
           .catch(() => {
             resolve(false);
@@ -387,6 +391,97 @@ export abstract class BasePluginManager {
     }
 
     return validatedFolders;
+  }
+
+  public async migrate() {
+    const targetDir = this.pluginPath;
+    const oldInstallations: string[] = [];
+
+    // Store already installed plugins
+    try {
+      const entries = await promises.readdir(targetDir, {withFileTypes: true});
+
+      for (const entry of entries) {
+        if (entry.isDirectory()) {
+          const subdirPath = resolve(targetDir, entry.name);
+          try {
+            const url = await GitManager.remoteUrlFromDir(subdirPath);
+            if (url) oldInstallations.push(url);
+          } catch (e) {
+            // Ignore subdirectories that are not Git repositories or where the remote cannot be determined
+            // console.warn(`Could not determine remote URL for ${subdirPath}:`, e);
+          }
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to read plugin directory ${targetDir}:`, error);
+    }
+
+    // Remove old installations
+    try {
+      await promises.rm(targetDir, {recursive: true, force: true});
+      await promises.mkdir(targetDir, {recursive: true});
+    } catch (error) {
+      console.error(`Failed to clean directory ${targetDir}:`, error);
+      throw error;
+    }
+
+    // Reinstall in the new way
+    for (const url of oldInstallations) {
+      let targetCommit: string;
+
+      const id = await staticManager.getPluginIdByRepositoryUrl(url);
+      if (!id) continue;
+
+      const {versions} = await staticManager.getPluginVersioningById(id);
+      const stage = await staticManager.getCurrentAppState();
+
+      const findVersionByStage = (requiredStage: SubscribeStates): VersionItem | undefined => {
+        return versions.find(v => v.stage.includes(requiredStage));
+      };
+
+      let versionItem: VersionItem | undefined = undefined;
+
+      switch (stage) {
+        case 'insider': {
+          versionItem = findVersionByStage('insider');
+
+          if (!versionItem) {
+            versionItem = findVersionByStage('early_access');
+          }
+
+          if (!versionItem) {
+            versionItem = findVersionByStage('public');
+          }
+          break;
+        }
+
+        case 'early_access': {
+          versionItem = findVersionByStage('early_access');
+
+          if (!versionItem) {
+            versionItem = findVersionByStage('public');
+          }
+          break;
+        }
+
+        case 'public': {
+          versionItem = findVersionByStage('public');
+          break;
+        }
+      }
+
+      if (versionItem) {
+        targetCommit = versionItem.commit;
+      } else {
+        targetCommit = versions[0].commit;
+      }
+
+      await this.installPlugin(url, targetCommit, false);
+    }
+
+    // Set storage as migrated
+    storageManager.updateData('plugin', {migrated: true});
   }
 
   /**

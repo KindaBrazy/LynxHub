@@ -103,6 +103,9 @@ type StorageTypes = {
   notification: {
     readNotifs: string[];
   };
+  plugin: {
+    migrated: boolean;
+  };
 };
 
 export default StorageTypes;
