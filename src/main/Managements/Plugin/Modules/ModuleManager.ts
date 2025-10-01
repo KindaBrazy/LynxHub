@@ -4,7 +4,6 @@ import {ipcMain} from 'electron';
 import {isEmpty} from 'lodash';
 import pty from 'node-pty';
 
-import {ModulesInfo} from '../../../../cross/CrossTypes';
 import {isDev, toMs} from '../../../../cross/CrossUtils';
 import {modulesChannels} from '../../../../cross/IpcChannelAndTypes';
 import {MainModuleUtils} from '../../../../cross/plugin/ModuleTypes';
@@ -17,7 +16,7 @@ import GitManager from '../../GitManager';
 import {removeDir, trashDir} from '../../Ipc/Methods/IpcMethods';
 import {BasePluginManager} from '../BasePluginManager';
 
-export default class ModuleManager extends BasePluginManager<ModulesInfo> {
+export default class ModuleManager extends BasePluginManager {
   private checkInterval?: NodeJS.Timeout = undefined;
   private availableUpdates: string[] = [];
 

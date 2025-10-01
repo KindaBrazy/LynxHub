@@ -2,7 +2,6 @@ import path from 'node:path';
 
 import {includes, isString} from 'lodash';
 
-import {ExtensionsInfo} from '../../../../cross/CrossTypes';
 import {isDev} from '../../../../cross/CrossUtils';
 import {extensionsChannels} from '../../../../cross/IpcChannelAndTypes';
 import DiscordRpcManager from '../../DiscordRpcManager';
@@ -15,7 +14,7 @@ import ExtensionApi from './ExtensionApi';
 import {EMenuItem, ExtensionImport_Main} from './ExtensionTypes_Main';
 import ExtensionUtils from './ExtensionUtils';
 
-export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> {
+export default class ExtensionManager extends BasePluginManager {
   private readonly extensionUtils: ExtensionUtils;
   private readonly extensionApi: ExtensionApi;
 
@@ -38,7 +37,7 @@ export default class ExtensionManager extends BasePluginManager<ExtensionsInfo> 
     try {
       const updateChecks = this.installedPluginInfo.map(async plugin => {
         const hasUpdate = await GitManager.isUpdateAvailable(path.join(this.pluginPath, plugin.dir));
-        return {id: plugin.info.id, hasUpdate};
+        return {id: plugin.metadata.id, hasUpdate};
       });
 
       const results = await Promise.all(updateChecks);
