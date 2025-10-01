@@ -1,4 +1,4 @@
-import {readFileSync, rmSync} from 'node:fs';
+import {readdirSync, readFileSync, rmSync} from 'node:fs';
 import {join} from 'node:path';
 
 import {STATICS_URL} from '../../cross/CrossConstants';
@@ -11,6 +11,7 @@ import {
   PatreonSupporter,
 } from '../../cross/CrossTypes';
 import {toMs} from '../../cross/CrossUtils';
+import {PluginMetadata, PluginVersioning} from '../../cross/plugin/PluginTypes';
 import {getAppDirectory} from './AppDataManager';
 import GitManager from './GitManager';
 
@@ -116,5 +117,50 @@ export default class StaticsManager {
   public async getPatrons() {
     await this.requirementsCheckPromise;
     return (await this.getDataAsJson('patrons.json')) as PatreonSupporter[];
+  }
+
+  public async listPluginIds(): Promise<string[]> {
+    await this.requirementsCheckPromise;
+
+    const pluginsPath = join(this.dir, 'plugins');
+    const entries = readdirSync(pluginsPath, {withFileTypes: true});
+
+    const pluginIds = entries.filter(dirent => dirent.isDirectory()).map(dirent => dirent.name);
+
+    return pluginIds;
+  }
+
+  public async getPluginMetadataById(pluginId: string): Promise<PluginMetadata> {
+    await this.requirementsCheckPromise;
+
+    const metadataPath = join('plugins', pluginId, 'metadata.json');
+    return this.getDataAsJson(metadataPath);
+  }
+
+  public async getPluginVersioningById(pluginId: string): Promise<PluginVersioning> {
+    await this.requirementsCheckPromise;
+    const versioningPath = join('plugins', pluginId, 'versioning.json');
+    return this.getDataAsJson(versioningPath);
+  }
+
+  public async getPluginIconAsDataUrl(pluginId: string): Promise<string> {
+    await this.requirementsCheckPromise;
+
+    const iconPath = join(this.dir, 'plugins', pluginId, 'icon.png');
+    const imageBuffer = readFileSync(iconPath);
+    const base64Image = imageBuffer.toString('base64');
+
+    return `data:image/png;base64,${base64Image}`;
+  }
+
+  public async getPluginIdByRepositoryUrl(repositoryUrl: string): Promise<string | undefined> {
+    await this.requirementsCheckPromise;
+
+    const targetPath = join('plugins', 'plugins_url.json');
+    const urlMap = (await this.getDataAsJson(targetPath)) as Record<string, string>;
+
+    const entry = Object.entries(urlMap).find(([_id, url]) => url === repositoryUrl);
+
+    return entry ? entry[0] : undefined;
   }
 }
