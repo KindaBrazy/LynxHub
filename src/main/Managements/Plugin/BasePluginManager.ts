@@ -1,40 +1,39 @@
 import {execSync} from 'node:child_process';
-import http from 'node:http';
-import path from 'node:path';
+import {createServer} from 'node:http';
+import {join} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import fs from 'graceful-fs';
+import {constants, promises, readdirSync} from 'graceful-fs';
 import {compact, includes, isString} from 'lodash';
 import portFinder from 'portfinder';
 import {ltr, satisfies} from 'semver';
 import handler from 'serve-handler';
 
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
-import {ExtensionsInfo, FolderNames, ModulesInfo} from '../../../cross/CrossTypes';
+import {FolderNames} from '../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
-import {PluginEngines} from '../../../cross/plugin/PluginTypes';
-import {appManager} from '../../index';
+import {PluginEngines, PluginMetadata} from '../../../cross/plugin/PluginTypes';
+import {appManager, staticManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
 import GitManager from '../GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
 import ShowToastWindow from '../ToastWindowManager';
 
-export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsInfo> {
+export abstract class BasePluginManager {
   protected readonly host: string = 'localhost';
   protected port: number;
-  protected server: ReturnType<typeof http.createServer> | undefined = undefined;
+  protected server: ReturnType<typeof createServer> | undefined = undefined;
   protected finalAddress: string = '';
 
   protected pluginData: string[] = [];
   protected skippedPlugins: SkippedPlugins[] = [];
   protected mainMethods: MainModules[] = [];
-  protected installedPluginInfo: {dir: string; info: TInfo}[] = [];
+  protected installedPluginInfo: {dir: string; metadata: PluginMetadata}[] = [];
 
   protected readonly pluginPath: string;
-  protected readonly configFileName: string;
   protected readonly mainScriptPath: string;
   protected readonly rendererScriptPath: string;
   protected readonly reloadChannel: string;
@@ -42,7 +41,6 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
 
   protected constructor(
     defaultPort: number,
-    configFileName: string,
     mainScriptPath: string,
     rendererScriptPath: string,
     reloadChannel: string,
@@ -50,7 +48,6 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     pluginDirName: FolderNames,
   ) {
     this.port = defaultPort;
-    this.configFileName = configFileName;
     this.mainScriptPath = mainScriptPath;
     this.rendererScriptPath = rendererScriptPath;
     this.reloadChannel = reloadChannel;
@@ -60,11 +57,15 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
 
   protected async setInstalledPlugins(folders: string[]) {
     for (const folder of folders) {
-      const filePath = path.join(this.pluginPath, folder, this.configFileName);
-      const content = fs.readFileSync(filePath, 'utf-8');
       try {
-        const jsonData = JSON.parse(content);
-        this.installedPluginInfo.push({dir: folder, info: jsonData});
+        const targetDir = join(this.pluginPath, folder);
+        const remoteUrl = await GitManager.remoteUrlFromDir(targetDir);
+        if (!remoteUrl) continue;
+        const id = await staticManager.getPluginIdByRepositoryUrl(remoteUrl);
+        if (!id) continue;
+        const metadata = await staticManager.getPluginMetadataById(id);
+
+        this.installedPluginInfo.push({dir: folder, metadata});
       } catch (error) {
         console.error(`Error parsing ${folder}: ${error}`);
       }
@@ -74,12 +75,12 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
   protected async readPlugin() {
     return new Promise<void>(async resolve => {
       try {
-        const files = fs.readdirSync(this.pluginPath, {withFileTypes: true});
+        const files = readdirSync(this.pluginPath, {withFileTypes: true});
         const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
         const validFolders = await this.validatePluginFolders(folders);
 
         this.pluginData = validFolders.map(folder => `${this.finalAddress}/${folder}`);
-        const pluginFolders = validFolders.map(folder => path.join(this.pluginPath, folder));
+        const pluginFolders = validFolders.map(folder => join(this.pluginPath, folder));
 
         await this.setInstalledPlugins(folders);
         await this.importPlugins(pluginFolders);
@@ -97,7 +98,8 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
   public async installPlugin(url: string) {
     return new Promise<boolean>(resolve => {
       const gitManager = new GitManager(true);
-      gitManager.cloneShallow(url, path.join(this.pluginPath, extractGitUrl(url).repo), false);
+      const directory = join(this.pluginPath, extractGitUrl(url).repo);
+      gitManager.cloneShallow(url, directory, true, 1, 'main');
 
       gitManager.onComplete = async () => {
         await this.reloadServer();
@@ -128,7 +130,7 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
   }
 
   public async checkEA(isEA: boolean, isInsider: boolean) {
-    const installFolders = this.installedPluginInfo.map(folder => path.join(this.pluginPath, folder.dir));
+    const installFolders = this.installedPluginInfo.map(folder => join(this.pluginPath, folder.dir));
     const targetBranch = isInsider ? 'compiled_insider' : isEA ? 'compiled_ea' : 'compiled';
     let isChangedBranch: boolean = false;
 
@@ -186,8 +188,8 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
   public async updateAvailableList(): Promise<string[]> {
     try {
       const updateChecks = this.installedPluginInfo.map(async plugin => {
-        const available = await GitManager.isUpdateAvailable(path.join(this.pluginPath, plugin.dir));
-        return {title: plugin.info.title, available};
+        const available = await GitManager.isUpdateAvailable(join(this.pluginPath, plugin.dir));
+        return {title: plugin.metadata.title, available};
       });
       const results = await Promise.all(updateChecks);
       return compact(results.map(result => (result.available ? result.title : null)));
@@ -204,6 +206,7 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
   public async updatePlugin(id: string) {
     const plugin = this.getDirById(id);
     if (!plugin) return false;
+
     return new Promise<boolean>(resolve => {
       const gitManager = new GitManager(true);
       gitManager.pull(plugin);
@@ -224,8 +227,8 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     await Promise.all(
       this.installedPluginInfo.map(async plugin => {
         const gitManager = new GitManager(false);
-        const updateResult = await gitManager.pullAsync(path.join(this.pluginPath, plugin.dir));
-        if (updateResult) updatedPlugins.push(plugin.info.id);
+        const updateResult = await gitManager.pullAsync(join(this.pluginPath, plugin.dir));
+        if (updateResult) updatedPlugins.push(plugin.metadata.id);
       }),
     );
 
@@ -239,10 +242,9 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     return new Promise<{port: number; hostName: string}>((resolve, reject) => {
       const startServer = async () => {
         try {
-          const port = await portFinder.getPortPromise({port: this.port});
-          this.port = port;
+          this.port = await portFinder.getPortPromise({port: this.port});
 
-          this.server = http.createServer((req, res) => {
+          this.server = createServer((req, res) => {
             try {
               const origin = is.dev ? '*' : 'file://';
               res.setHeader('Access-Control-Allow-Origin', origin);
@@ -334,14 +336,14 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
     return this.skippedPlugins;
   }
 
-  public getInstalledPluginInfo(): {dir: string; info: TInfo}[] {
+  public getInstalledPluginInfo(): {dir: string; metadata: PluginMetadata}[] {
     return this.installedPluginInfo;
   }
 
   public getDirById(id: string) {
-    const plugin = this.installedPluginInfo.find(installed => installed.info.id === id);
+    const plugin = this.installedPluginInfo.find(installed => installed.metadata.id === id);
     if (plugin) {
-      return path.join(this.pluginPath, plugin.dir);
+      return join(this.pluginPath, plugin.dir);
     }
     return undefined;
   }
@@ -353,20 +355,18 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
       if (folder.startsWith('.')) {
         console.log(`Skipping folder "${folder}" because it starts with '.'`);
       } else {
-        const dir = path.join(this.pluginPath, folder);
-        const configPath = path.join(dir, this.configFileName);
-        const scriptsFolder = path.join(dir, 'scripts');
+        const dir = join(this.pluginPath, folder);
+        const scriptsFolder = join(dir, 'scripts');
 
         try {
-          await fs.promises.access(configPath, fs.constants.F_OK);
-          await fs.promises.access(scriptsFolder, fs.constants.F_OK);
+          await promises.access(scriptsFolder, constants.F_OK);
 
           await Promise.all([
-            fs.promises.access(path.join(dir, this.mainScriptPath), fs.constants.F_OK),
-            fs.promises.access(path.join(dir, this.rendererScriptPath), fs.constants.F_OK),
+            promises.access(join(dir, this.mainScriptPath), constants.F_OK),
+            promises.access(join(dir, this.rendererScriptPath), constants.F_OK),
           ]);
 
-          const isCompatible = await this.compatibleCheck(folder, configPath);
+          const isCompatible = await this.compatibleCheck(folder);
           if (isCompatible) validatedFolders.push(folder);
         } catch (err) {
           this.skippedPlugins.push({
@@ -384,25 +384,38 @@ export abstract class BasePluginManager<TInfo extends ModulesInfo | ExtensionsIn
   /**
    * Checks if a plugin is compatible with the current application version.
    * @param folder The plugin's folder name, for logging purposes.
-   * @param configPath The full path to the plugin's config.json file.
    * @returns {Promise<boolean>} True if compatible, false otherwise.
    */
-  protected async compatibleCheck(folder: string, configPath: string): Promise<boolean> {
-    let config;
-    try {
-      const configData = await fs.promises.readFile(configPath, 'utf-8');
-      config = JSON.parse(configData);
-    } catch (error) {
-      // --- Message 1: Invalid Config ---
+  protected async compatibleCheck(folder: string): Promise<boolean> {
+    const skip = () => {
       this.skippedPlugins.push({
         folderName: folder,
         message: 'Configuration file is unreadable or corrupt.',
       });
       console.error(`Skipping plugin "${folder}" due to invalid configuration file.`);
+    };
+
+    const targetDir = join(this.pluginPath, folder);
+
+    const remoteUrl = await GitManager.remoteUrlFromDir(targetDir);
+    if (!remoteUrl) {
+      skip();
       return false;
     }
 
-    const engines: PluginEngines | undefined = config.engines;
+    const gitManager = new GitManager();
+    const currentCommitHash = await gitManager.getCurrentCommitHash(targetDir);
+    const itemId = await staticManager.getPluginIdByRepositoryUrl(remoteUrl);
+    if (!itemId) {
+      skip();
+      return false;
+    }
+
+    const versioning = await staticManager.getPluginVersioningById(itemId);
+
+    const engines: PluginEngines | undefined = versioning.versions.find(
+      item => item.commit === currentCommitHash,
+    )?.engines;
 
     if (engines && typeof engines === 'object') {
       const checks = [
