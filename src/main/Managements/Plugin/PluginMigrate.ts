@@ -4,6 +4,8 @@ import ExtensionManager from './Extensions/ExtensionManager';
 import ModuleManager from './Modules/ModuleManager';
 
 export async function PluginMigrate(storageManager) {
+  if (!app.isReady()) await app.whenReady();
+
   if (!storageManager.getData('plugin').migrated) {
     const migrationWindow = new BrowserWindow({
       width: 450,
