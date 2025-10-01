@@ -204,7 +204,9 @@ function modules() {
     moduleManager?.checkEA(isEA, isInsider),
   );
 
-  ipcMain.handle(modulesChannels.installModule, (_, url: string) => moduleManager?.installPlugin(url));
+  ipcMain.handle(modulesChannels.installModule, (_, url: string, commitHash: string) =>
+    moduleManager?.installPlugin(url, commitHash),
+  );
   ipcMain.handle(modulesChannels.uninstallModule, (_, id: string) => moduleManager?.uninstallPlugin(id));
   ipcMain.handle(modulesChannels.uninstallCardByID, (_, id: string) => moduleManager?.uninstallCardByID(id));
   ipcMain.handle(modulesChannels.isUpdateAvailable, (_, id: string) => moduleManager?.isUpdateAvailable(id));
@@ -232,7 +234,9 @@ function extensions() {
     extensionManager.checkEA(isEA, isInsider),
   );
 
-  ipcMain.handle(extensionsChannels.installExtension, (_, url: string) => extensionManager.installPlugin(url));
+  ipcMain.handle(extensionsChannels.installExtension, (_, url: string, commitHash: string) =>
+    extensionManager.installPlugin(url, commitHash),
+  );
   ipcMain.handle(extensionsChannels.uninstallExtension, (_, id: string) => extensionManager.uninstallPlugin(id));
   ipcMain.handle(extensionsChannels.isUpdateAvailable, (_, id: string) => extensionManager.isUpdateAvailable(id));
   ipcMain.handle(extensionsChannels.updateAvailableList, () => extensionManager.updateAvailableList());
