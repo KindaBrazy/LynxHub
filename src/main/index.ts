@@ -20,6 +20,7 @@ import {browserIPC, listenToAllChannels} from './Managements/Ipc/IpcHandler';
 import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
 import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
 import ModuleManager from './Managements/Plugin/Modules/ModuleManager';
+import {PluginMigrate} from './Managements/Plugin/PluginMigrate';
 import ShareScreenManager from './Managements/ShareScreenManager';
 import StaticsManager from './Managements/StaticsManager';
 import StorageManager from './Managements/Storage/StorageManager';
@@ -27,7 +28,6 @@ import ShowToastWindow from './Managements/ToastWindowManager';
 import TrayManager from './Managements/TrayManager';
 import downloadDU from './Utilities/CalculateFolderSize/DownloadDU';
 import {getPrivilegeText} from './Utilities/Utils';
-import {PluginMigrate} from './Managements/Plugin/PluginMigrate';
 
 if (!isDev()) {
   log.initialize();
@@ -45,7 +45,7 @@ export let cardsValidator: ValidateCards | undefined = undefined;
 export let moduleManager: ModuleManager | undefined = undefined;
 
 export const staticManager: StaticsManager = new StaticsManager();
-await staticManager.checkRequirements();
+staticManager.checkRequirements();
 export const contextMenuManager: ContextMenuManager = new ContextMenuManager();
 export const extensionManager: ExtensionManager = new ExtensionManager();
 
@@ -64,12 +64,12 @@ checkAppDirectories().catch(() => {
   });
 });
 
-await PluginMigrate(extensionManager);
-
 const {hardwareAcceleration} = storageManager.getData('app');
 if (!hardwareAcceleration) app.disableHardwareAcceleration();
 
 async function setupApp() {
+  await PluginMigrate(extensionManager);
+
   await extensionManager.createServer();
   extensionManager.setStorageManager(storageManager);
 
