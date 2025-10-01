@@ -268,9 +268,9 @@ const rendererIpc = {
       return ipc.invoke(modulesChannels.checkEa, isEA, isInsider);
     },
 
-    installModule: (url: string): Promise<boolean> => {
+    installModule: (url: string, commitHash: string): Promise<boolean> => {
       extensionRendererApi.events_ipc.emit('module_install_module', {url});
-      return ipc.invoke(modulesChannels.installModule, url);
+      return ipc.invoke(modulesChannels.installModule, url, commitHash);
     },
 
     uninstallModule: (id: string): Promise<boolean> => {
@@ -347,9 +347,9 @@ const rendererIpc = {
       return ipc.invoke(extensionsChannels.getSkipped);
     },
 
-    installExtension: (url: string): Promise<boolean> => {
+    installExtension: (url: string, commitHash: string): Promise<boolean> => {
       extensionRendererApi.events_ipc.emit('extension_install_extension', {url});
-      return ipc.invoke(extensionsChannels.installExtension, url);
+      return ipc.invoke(extensionsChannels.installExtension, url, commitHash);
     },
 
     uninstallExtension: (id: string): Promise<boolean> => {

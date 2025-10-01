@@ -95,15 +95,23 @@ export abstract class BasePluginManager {
 
   protected abstract importPlugins(pluginFolders: string[]): Promise<void>;
 
-  public async installPlugin(url: string) {
+  public async installPlugin(url: string, commitHash: string) {
     return new Promise<boolean>(resolve => {
       const gitManager = new GitManager(true);
       const directory = join(this.pluginPath, extractGitUrl(url).repo);
       gitManager.cloneShallow(url, directory, true, undefined, 'main');
 
       gitManager.onComplete = async () => {
-        await this.reloadServer();
-        resolve(true);
+        gitManager
+          .resetHard(directory, commitHash)
+          .then(() => {
+            this.reloadServer().finally(() => {
+              resolve(true);
+            });
+          })
+          .catch(() => {
+            resolve(false);
+          });
       };
       gitManager.onError = () => {
         resolve(false);
