@@ -5,6 +5,7 @@ import perfectionist from 'eslint-plugin-perfectionist';
 import react from 'eslint-plugin-react';
 import hooksPlugin from 'eslint-plugin-react-hooks';
 import simpleImportSort from 'eslint-plugin-simple-import-sort';
+import sonarjs from 'eslint-plugin-sonarjs';
 import globals from 'globals';
 import tsEslint from 'typescript-eslint';
 
@@ -13,6 +14,7 @@ const MAX_LINE_LENGTH = 120;
 export default [
   configPrettier,
 
+  sonarjs.configs.recommended,
   eslint.configs.recommended,
   react.configs.flat.recommended,
   ...tsEslint.configs.recommended,
