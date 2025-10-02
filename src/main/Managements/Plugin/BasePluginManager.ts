@@ -13,7 +13,7 @@ import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossCon
 import {SubscribeStages} from '../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
-import {PluginEngines, PluginMetadata, VersionItem} from '../../../cross/plugin/PluginTypes';
+import {PluginEngines, PluginMetadata, PluginVersions, VersionItem} from '../../../cross/plugin/PluginTypes';
 import {appManager, staticManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
@@ -388,6 +388,56 @@ export abstract class BasePluginManager {
     return validatedFolders;
   }
 
+  public getTargetCommit(versions: PluginVersions, stage: SubscribeStages) {
+    const findVersionByStage = (requiredStage: SubscribeStages): VersionItem | undefined => {
+      return versions.find(v => v.stage.includes(requiredStage));
+    };
+
+    let versionItem: VersionItem | undefined = undefined;
+
+    switch (stage) {
+      case 'insider': {
+        versionItem = findVersionByStage('insider');
+
+        if (!versionItem) {
+          versionItem = findVersionByStage('early_access');
+        }
+
+        if (!versionItem) {
+          versionItem = findVersionByStage('public');
+        }
+        break;
+      }
+
+      case 'early_access': {
+        versionItem = findVersionByStage('early_access');
+
+        if (!versionItem) {
+          versionItem = findVersionByStage('public');
+        }
+        break;
+      }
+
+      case 'public': {
+        versionItem = findVersionByStage('public');
+        break;
+      }
+    }
+
+    if (versionItem) {
+      return versionItem.commit;
+    } else {
+      return versions[0].commit;
+    }
+  }
+
+  public async getCommitByAppStage(id: string) {
+    const {versions} = await staticManager.getPluginVersioningById(id);
+    const stage = await staticManager.getCurrentAppState();
+
+    return this.getTargetCommit(versions, stage);
+  }
+
   public async migrate() {
     const targetDir = join(dirname(this.pluginPath), this.oldDirPath);
     const oldInstallations: string[] = [];
@@ -422,54 +472,10 @@ export abstract class BasePluginManager {
 
     // Reinstall in the new way
     for (const url of oldInstallations) {
-      let targetCommit: string;
-
       const id = await staticManager.getPluginIdByRepositoryUrl(url);
       if (!id) continue;
 
-      const {versions} = await staticManager.getPluginVersioningById(id);
-      const stage = await staticManager.getCurrentAppState();
-
-      const findVersionByStage = (requiredStage: SubscribeStages): VersionItem | undefined => {
-        return versions.find(v => v.stage.includes(requiredStage));
-      };
-
-      let versionItem: VersionItem | undefined = undefined;
-
-      switch (stage) {
-        case 'insider': {
-          versionItem = findVersionByStage('insider');
-
-          if (!versionItem) {
-            versionItem = findVersionByStage('early_access');
-          }
-
-          if (!versionItem) {
-            versionItem = findVersionByStage('public');
-          }
-          break;
-        }
-
-        case 'early_access': {
-          versionItem = findVersionByStage('early_access');
-
-          if (!versionItem) {
-            versionItem = findVersionByStage('public');
-          }
-          break;
-        }
-
-        case 'public': {
-          versionItem = findVersionByStage('public');
-          break;
-        }
-      }
-
-      if (versionItem) {
-        targetCommit = versionItem.commit;
-      } else {
-        targetCommit = versions[0].commit;
-      }
+      const targetCommit = await this.getCommitByAppStage(id);
 
       await this.installPlugin(url, targetCommit);
     }
