@@ -11,7 +11,6 @@ import handler from 'serve-handler';
 
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
 import {FolderNames, SubscribeStages} from '../../../cross/CrossTypes';
-import {extractGitUrl} from '../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
 import {PluginEngines, PluginMetadata, VersionItem} from '../../../cross/plugin/PluginTypes';
@@ -96,24 +95,24 @@ export abstract class BasePluginManager {
   protected abstract importPlugins(pluginFolders: string[]): Promise<void>;
 
   public async installPlugin(url: string, commitHash: string) {
-    return new Promise<boolean>(resolve => {
-      const gitManager = new GitManager(true);
-      const directory = join(this.pluginPath, extractGitUrl(url).repo);
-      gitManager.cloneShallow(url, directory, true, undefined, 'main');
+    return new Promise<boolean>(async resolve => {
+      const id = await staticManager.getPluginIdByRepositoryUrl(url);
+      if (id) {
+        const directory = join(this.pluginPath, id);
 
-      gitManager.onComplete = async () => {
-        gitManager
-          .resetHard(directory, commitHash)
-          .then(() => {
-            resolve(true);
-          })
-          .catch(() => {
-            resolve(false);
-          });
-      };
-      gitManager.onError = () => {
+        try {
+          const gitManager = new GitManager(true);
+          await gitManager.cloneShallow(url, directory, true, undefined, 'main');
+          await gitManager.resetHard(directory, commitHash);
+
+          resolve(true);
+        } catch (e) {
+          console.warn(e);
+          resolve(false);
+        }
+      } else {
         resolve(false);
-      };
+      }
     });
   }
 
