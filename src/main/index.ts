@@ -170,6 +170,7 @@ function handleTaskbarStatus() {
         app.dock?.show();
       }
       break;
+    case 'tray-minimized':
     case 'taskbar':
       trayManager?.destroyTrayIcon();
       if (platform() === 'win32') {
@@ -184,14 +185,6 @@ function handleTaskbarStatus() {
         mainWindow?.setSkipTaskbar(true);
       } else if (platform() === 'darwin' && app.dock?.isVisible()) {
         app.dock?.hide();
-      }
-      break;
-    case 'tray-minimized':
-      trayManager?.destroyTrayIcon();
-      if (platform() === 'win32') {
-        mainWindow?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
-        app.dock?.show();
       }
       break;
   }
