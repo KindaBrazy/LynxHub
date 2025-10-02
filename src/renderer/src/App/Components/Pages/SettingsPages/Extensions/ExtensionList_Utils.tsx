@@ -188,7 +188,7 @@ export function useRenderList(
   unloaded: SkippedPlugins[],
   updatingAll: boolean,
 ) {
-  const updateAvailable = useSettingsState('extensionsUpdateAvailable');
+  const updateAvailable = useSettingsState('pluginUpdateAvailableList');
 
   const manageSet = useExtensionPageStore(state => state.manageSet);
 
@@ -259,7 +259,7 @@ export function useRenderList(
       const isUpdating = updating.has(item.id);
       const isUnInstalling = unInstalling.has(item.id);
 
-      const isUpdateAvailable = updateAvailable.includes(item.id);
+      const isUpdateAvailable = updateAvailable.some(available => available.id === item.id);
 
       const {linux, win32, darwin} = {
         linux: item.platforms.includes('linux'),
@@ -307,7 +307,7 @@ export function useRenderList(
                     size="sm"
                     radius="sm"
                     variant="flat"
-                    className={`${updateAvailable.includes(item.id) && 'text-success'}`}>
+                    className={`${updateAvailable.some(available => available.id === item.id) && 'text-success'}`}>
                     v{item.version}
                   </Chip>
                 </div>
