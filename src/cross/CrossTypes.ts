@@ -2,8 +2,7 @@
 
 import {
   BINARIES_FOLDER_NAME,
-  EXTENSIONS_FOLDER_NAME,
-  MODULES_FOLDER_NAME,
+  PLUGINS_FOLDER_NAME,
   REPOSITORIES_FOLDER_NAME,
   STATICS_FOLDER_NAME,
 } from './CrossConstants';
@@ -256,8 +255,7 @@ export type AppUpdateData = AppUpdateInfo & {
 export type AppUpdateInsiderData = Omit<AppUpdateData, 'earlyAccess'>;
 
 export type FolderNames =
-  | typeof MODULES_FOLDER_NAME
-  | typeof EXTENSIONS_FOLDER_NAME
+  | typeof PLUGINS_FOLDER_NAME
   | typeof BINARIES_FOLDER_NAME
   | typeof REPOSITORIES_FOLDER_NAME
   | typeof STATICS_FOLDER_NAME;

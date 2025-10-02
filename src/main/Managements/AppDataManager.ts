@@ -7,8 +7,7 @@ import {resolve} from 'path';
 
 import {
   BINARIES_FOLDER_NAME,
-  EXTENSIONS_FOLDER_NAME,
-  MODULES_FOLDER_NAME,
+  PLUGINS_FOLDER_NAME,
   REPOSITORIES_FOLDER_NAME,
   STATICS_FOLDER_NAME,
 } from '../../cross/CrossConstants';
@@ -17,13 +16,7 @@ import {appManager, storageManager} from '../index';
 import {getExePath, getRelativePath, isPortable} from '../Utilities/Utils';
 import {changeWindowState} from './Ipc/Methods/IpcMethods';
 
-const DIRECTORIES = [
-  MODULES_FOLDER_NAME,
-  EXTENSIONS_FOLDER_NAME,
-  BINARIES_FOLDER_NAME,
-  REPOSITORIES_FOLDER_NAME,
-  STATICS_FOLDER_NAME,
-] as const;
+const DIRECTORIES = [PLUGINS_FOLDER_NAME, BINARIES_FOLDER_NAME, REPOSITORIES_FOLDER_NAME, STATICS_FOLDER_NAME] as const;
 
 /**
  * Creates application directories in the app data path.

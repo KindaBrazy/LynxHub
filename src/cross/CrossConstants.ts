@@ -30,8 +30,7 @@ export const APP_VERSION_FORMAT: string = APP_VERSION_V.split('-')
   .map(v => capitalize(v))
   .join(' ');
 
-export const MODULES_FOLDER_NAME = 'Modules' as const;
-export const EXTENSIONS_FOLDER_NAME = 'Extensions' as const;
+export const PLUGINS_FOLDER_NAME = 'Plugins' as const;
 export const BINARIES_FOLDER_NAME = 'Binaries' as const;
 export const REPOSITORIES_FOLDER_NAME = 'AIWorkspaces' as const;
 export const STATICS_FOLDER_NAME = 'Statics' as const;
