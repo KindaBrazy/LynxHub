@@ -143,3 +143,5 @@ export type PluginUpdateList = {
   id: string;
   targetCommit: string;
 };
+
+export type InstalledPlugin = {dir: string; metadata: PluginMetadata};

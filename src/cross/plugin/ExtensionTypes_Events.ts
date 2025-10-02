@@ -88,7 +88,6 @@ export type ExtensionEvents_IPC = {
   module_get_modules_data: Record<string, never>;
   module_get_installed_modules_info: Record<string, never>;
   module_get_skipped: Record<string, never>;
-  module_check_ea: {isEA: boolean; isInsider: boolean};
   module_install_module: {url: string};
   module_uninstall_module: {id: string};
   module_uninstall_card_by_id: {id: string};

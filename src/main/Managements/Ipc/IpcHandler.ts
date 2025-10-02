@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, shell} from 'electron';
 
-import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../../../cross/CrossTypes';
+import {ChosenArgumentsData, DiscordRPC, FolderNames, SubscribeStages} from '../../../cross/CrossTypes';
 import {toMs} from '../../../cross/CrossUtils';
 import {
   AgentTypes,
@@ -11,11 +11,11 @@ import {
   ChangeWindowState,
   DarkModeTypes,
   DiscordRunningAI,
-  extensionsChannels,
   fileChannels,
   gitChannels,
   moduleApiChannels,
   modulesChannels,
+  pluginChannels,
   PreCommands,
   PreOpen,
   ptyChannels,
@@ -37,6 +37,7 @@ import {
   discordRpcManager,
   extensionManager,
   moduleManager,
+  pluginManager,
   staticManager,
   storageManager,
 } from '../../index';
@@ -196,23 +197,7 @@ function modules() {
     (_, card: InstalledCard, updateType: 'git' | 'stepper' | undefined) =>
       moduleManager?.checkCardUpdate(card, updateType),
   );
-
-  ipcMain.handle(modulesChannels.getModulesData, () => moduleManager?.getPluginData());
-  ipcMain.handle(modulesChannels.getInstalledModulesInfo, () => moduleManager?.getInstalledPluginInfo());
-  ipcMain.handle(modulesChannels.getSkipped, () => moduleManager?.getSkipped());
-  ipcMain.handle(modulesChannels.checkEa, (_, isEA: boolean, isInsider: boolean) =>
-    moduleManager?.checkStage(isEA, isInsider),
-  );
-
-  ipcMain.handle(modulesChannels.installModule, (_, url: string, commitHash: string) =>
-    moduleManager?.installPlugin(url, commitHash),
-  );
-  ipcMain.handle(modulesChannels.uninstallModule, (_, id: string) => moduleManager?.uninstallPlugin(id));
   ipcMain.handle(modulesChannels.uninstallCardByID, (_, id: string) => moduleManager?.uninstallCardByID(id));
-  ipcMain.handle(modulesChannels.isUpdateAvailable, (_, id: string) => moduleManager?.isUpdateAvailable(id));
-  ipcMain.handle(modulesChannels.updateAvailableList, () => moduleManager?.checkForUpdates());
-  ipcMain.handle(modulesChannels.updateModule, (_, id: string) => moduleManager?.updatePlugin(id));
-  ipcMain.handle(modulesChannels.updateAllModules, () => moduleManager?.updatePlugins());
 
   ipcMain.on(
     modulesChannels.checkCardsUpdateInterval,
@@ -226,22 +211,21 @@ function modules() {
   );
 }
 
-function extensions() {
-  ipcMain.handle(extensionsChannels.getExtensionsData, () => extensionManager.getPluginData());
-  ipcMain.handle(extensionsChannels.getInstalledExtensionsInfo, () => extensionManager.getInstalledPluginInfo());
-  ipcMain.handle(extensionsChannels.getSkipped, () => extensionManager.getSkipped());
-  ipcMain.handle(extensionsChannels.checkEa, (_, isEA: boolean, isInsider: boolean) =>
-    extensionManager.checkStage(isEA, isInsider),
+function plugins() {
+  ipcMain.handle(pluginChannels.checkStage, (_, stage: SubscribeStages) => pluginManager.checkStage(stage));
+  ipcMain.handle(pluginChannels.getPluginsData, () => pluginManager.getPluginData());
+  ipcMain.handle(pluginChannels.getInstalledPlugins, () => pluginManager.getInstalledPluginInfo());
+  ipcMain.handle(pluginChannels.getSkippedPlugins, () => pluginManager.getSkipped());
+  ipcMain.handle(pluginChannels.installPlugin, (_, url: string, commitHash: string) =>
+    pluginManager.installPlugin(url, commitHash),
   );
-
-  ipcMain.handle(extensionsChannels.installExtension, (_, url: string, commitHash: string) =>
-    extensionManager.installPlugin(url, commitHash),
+  ipcMain.handle(pluginChannels.uninstallPlugin, (_, id: string) => pluginManager.uninstallPlugin(id));
+  ipcMain.handle(pluginChannels.isUpdateAvailable, (_, id: string, stage: SubscribeStages) =>
+    pluginManager.isUpdateAvailable(id, stage),
   );
-  ipcMain.handle(extensionsChannels.uninstallExtension, (_, id: string) => extensionManager.uninstallPlugin(id));
-  ipcMain.handle(extensionsChannels.isUpdateAvailable, (_, id: string) => extensionManager.isUpdateAvailable(id));
-  ipcMain.handle(extensionsChannels.updateAvailableList, () => extensionManager.checkForUpdates());
-  ipcMain.handle(extensionsChannels.updateExtension, (_, id: string) => extensionManager.updatePlugin(id));
-  ipcMain.handle(extensionsChannels.updateAllExtensions, () => extensionManager.updatePlugins());
+  ipcMain.handle(pluginChannels.updatePlugin, (_, id: string) => pluginManager.updatePlugin(id));
+  ipcMain.handle(pluginChannels.updatePlugins, () => pluginManager.updateAll());
+  ipcMain.handle(pluginChannels.checkForUpdates, (_, stage: SubscribeStages) => pluginManager.checkForUpdates(stage));
 }
 
 function pty() {
@@ -474,8 +458,9 @@ export function listenToAllChannels() {
 
   listenToInitChannels();
 
-  extensions();
   extensionsIpc();
+
+  plugins();
 
   contextMenuManager.listenForContextChannels();
 

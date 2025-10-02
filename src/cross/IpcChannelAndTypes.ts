@@ -166,50 +166,26 @@ export const utilsChannels = {
 
 export const modulesChannels = {
   cardUpdateAvailable: 'modules:card-update-available',
-
-  installModule: 'modules:install-module',
-  uninstallModule: 'modules:uninstall-module',
   uninstallCardByID: 'modules:uninstall-card-by-id',
-  isUpdateAvailable: 'modules:is-update-available',
-  updateAvailableList: 'modules:update-available-list',
-  updateModule: 'modules:update-module',
-  updateAllModules: 'modules:update-all-modules',
-
-  checkEa: 'modules:check-ea',
-
   checkCardsUpdateInterval: 'modules:cards_update_interval',
   onCardsUpdateAvailable: 'modules:on_cards_update_available',
-
-  onReload: 'modules:on-reload',
-  onUpdatedModules: 'modules:on-updated-modules',
-
-  getModulesData: 'modules:get-modules-data',
-  getInstalledModulesInfo: 'modules:get-installed-modules-info',
-
-  getSkipped: 'modules:get-skipped',
-};
-
-export const extensionsChannels = {
-  installExtension: 'extensions:install-extensions',
-  uninstallExtension: 'extensions:uninstall-extensions',
-  updateAvailableList: 'extensions:any-update-available',
-  updateExtension: 'extensions:update-extensions',
-  updateAllExtensions: 'extensions:update-all-extensions',
-
-  checkEa: 'extensions:check-ea',
-
-  onReload: 'extensions:on-reload',
-  onUpdatedExtensions: 'extensions:on-updated-extensions',
-
-  getExtensionsData: 'extensions:get-extensions-data',
-  getInstalledExtensionsInfo: 'extensions:get-installed-extensions-info',
-
-  getSkipped: 'extensions:get-skipped',
 };
 
 export const pluginChannels = {
-  updateList: 'plugins:update-list',
-  needRestart: 'plugins:need-restart',
+  onUpdateAvailableList: 'plugins:on-update-available-list',
+  onAppNeedRestart: 'plugins:app-need-restart',
+
+  checkStage: 'plugins:check-stage',
+  getPluginsData: 'plugins:get-plugins-data',
+  getInstalledPlugins: 'plugins:get-installed-plugins',
+  getSkippedPlugins: 'plugins:get-skipped-plugins',
+
+  installPlugin: 'plugins:install-plugin',
+  uninstallPlugin: 'plugins:uninstall-plugin',
+  isUpdateAvailable: 'plugins:is-update-available',
+  updatePlugin: 'plugins:update-plugin',
+  updatePlugins: 'plugins:update-plugins',
+  checkForUpdates: 'plugins:check-for-updates',
 };
 
 export const ptyChannels = {
