@@ -74,6 +74,7 @@ export default [
 
       'max-len': ['error', {code: MAX_LINE_LENGTH}],
 
+      'sonarjs/os-command': 'off',
       'prettier/prettier': [
         'error',
         {
