@@ -25,14 +25,7 @@ export default class ModuleManager extends BasePluginManager {
   }
 
   constructor() {
-    super(
-      5102,
-      'scripts/main.mjs',
-      'scripts/renderer.mjs',
-      modulesChannels.onReload,
-      modulesChannels.onUpdatedModules,
-      'Modules',
-    );
+    super(5102, 'scripts/main.mjs', 'scripts/renderer.mjs', 'Modules');
   }
 
   private getUtils() {

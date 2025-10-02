@@ -1,12 +1,8 @@
 import path from 'node:path';
 
-import {includes, isString} from 'lodash';
-
 import {isDev} from '../../../../cross/CrossUtils';
-import {extensionsChannels} from '../../../../cross/IpcChannelAndTypes';
 import DiscordRpcManager from '../../DiscordRpcManager';
 import ElectronAppManager from '../../ElectronAppManager';
-import GitManager from '../../GitManager';
 import StorageManager from '../../Storage/StorageManager';
 import {BasePluginManager} from '../BasePluginManager';
 import ModuleManager from '../Modules/ModuleManager';
@@ -19,36 +15,10 @@ export default class ExtensionManager extends BasePluginManager {
   private readonly extensionApi: ExtensionApi;
 
   constructor() {
-    super(
-      5103,
-      'scripts/main/mainEntry.mjs',
-      'scripts/renderer/rendererEntry.mjs',
-      extensionsChannels.onReload,
-      extensionsChannels.onUpdatedExtensions,
-      'Extensions',
-    );
+    super(5103, 'scripts/main/mainEntry.mjs', 'scripts/renderer/rendererEntry.mjs', 'Extensions');
 
     this.extensionUtils = new ExtensionUtils();
     this.extensionApi = new ExtensionApi();
-  }
-
-  public async checkForUpdates(): Promise<string[]> {
-    try {
-      const updateChecks = this.installedPluginInfo.map(async plugin => {
-        const hasUpdate = await GitManager.isUpdateAvailable(path.join(this.pluginPath, plugin.dir));
-        return {id: plugin.metadata.id, hasUpdate};
-      });
-
-      const results = await Promise.all(updateChecks);
-      return results.filter(result => result.hasUpdate).map(result => result.id);
-    } catch (error) {
-      console.error('Error checking for updates:', error);
-
-      const errorMessage = isString(error) ? error : error.message;
-      if (includes(errorMessage, 'detected dubious ownership')) this.showGitOwnershipToast();
-
-      return [];
-    }
   }
 
   // TODO: add try catch and show ui error message

@@ -11,7 +11,7 @@ import handler from 'serve-handler';
 
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
 import {SubscribeStages} from '../../../cross/CrossTypes';
-import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
+import {pluginChannels, SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
 import {PluginEngines, PluginMetadata, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
 import {appManager, staticManager} from '../../index';
@@ -38,22 +38,11 @@ export abstract class BasePluginManager {
   protected readonly pluginPath: string;
   protected readonly mainScriptPath: string;
   protected readonly rendererScriptPath: string;
-  protected readonly reloadChannel: string;
-  protected readonly updateChannel: string;
 
-  protected constructor(
-    defaultPort: number,
-    mainScriptPath: string,
-    rendererScriptPath: string,
-    reloadChannel: string,
-    updateChannel: string,
-    oldDirPath: string,
-  ) {
+  protected constructor(defaultPort: number, mainScriptPath: string, rendererScriptPath: string, oldDirPath: string) {
     this.port = defaultPort;
     this.mainScriptPath = mainScriptPath;
     this.rendererScriptPath = rendererScriptPath;
-    this.reloadChannel = reloadChannel;
-    this.updateChannel = updateChannel;
     this.pluginPath = getAppDirectory('Plugins');
     this.oldDirPath = oldDirPath;
   }
@@ -109,6 +98,7 @@ export abstract class BasePluginManager {
           await gitManager.cloneShallow(url, directory, true, undefined, 'main');
           await gitManager.resetHard(directory, commitHash);
 
+          this.onNeedRestart(id);
           resolve(true);
         } catch (e) {
           console.warn(`Failed to install plugin: ${url}`, e);
@@ -126,23 +116,31 @@ export abstract class BasePluginManager {
     try {
       await removeDir(plugin);
       this.updateList_Remove(id);
+      this.onNeedRestart(id);
       return true;
     } catch (e) {
       console.warn(`Failed to uninstall ${id}: `, e);
       return false;
     }
   }
+  private onNeedRestart(id: string) {
+    appManager?.getWebContent()?.send(pluginChannels.needRestart, id);
+  }
+
+  private updateList_NoticeRenderer() {
+    appManager?.getWebContent()?.send(pluginChannels.updateList, this.availableUpdates);
+  }
 
   private updateList_Remove(id: string) {
     this.availableUpdates = this.availableUpdates.filter(update => update.id !== id);
-    appManager?.getWebContent()?.send(this.updateChannel, this.availableUpdates);
+    this.updateList_NoticeRenderer();
   }
 
   private updateList_Add(item: PluginUpdateList) {
     if (this.availableUpdates.some(update => update.id === item.id)) return;
     this.availableUpdates.push(item);
 
-    appManager?.getWebContent()?.send(this.updateChannel, this.availableUpdates);
+    this.updateList_NoticeRenderer();
   }
 
   public async isUpdateAvailable(id: string, stage: SubscribeStages) {
@@ -176,14 +174,16 @@ export abstract class BasePluginManager {
     for (const plugin of this.installedPluginInfo) {
       try {
         const {dir, metadata} = plugin;
+        const id = metadata.id;
 
-        const targetCommit = await getCommitByStage(metadata.id, stage);
+        const targetCommit = await getCommitByStage(id, stage);
         const currentCommit = await gitManager.getCurrentCommitHash(dir, true);
 
         if (!currentCommit) continue;
 
         await gitManager.resetHard(dir, targetCommit);
-        this.updateList_Remove(metadata.id);
+        this.onNeedRestart(id);
+        this.updateList_Remove(id);
 
         isAnyStageChanged = true;
       } catch (e) {
@@ -247,6 +247,7 @@ export abstract class BasePluginManager {
 
       await gitManager.resetHard(targetDir, targetCommit);
       this.updateList_Remove(id);
+      this.onNeedRestart(id);
 
       return true;
     } catch (e) {
@@ -261,6 +262,7 @@ export abstract class BasePluginManager {
         const targetCommit = this.availableUpdates.find(update => update.id === id)?.targetCommit;
         if (!targetDir || !targetCommit) continue;
         await this.updatePlugin(id);
+        this.onNeedRestart(id);
       }
     } catch (e) {
       console.warn(`Failed to update plugins: ${e}`);
