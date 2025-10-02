@@ -95,7 +95,7 @@ export abstract class BasePluginManager {
 
   protected abstract importPlugins(pluginFolders: string[]): Promise<void>;
 
-  public async installPlugin(url: string, commitHash: string, reloadServer: boolean = true) {
+  public async installPlugin(url: string, commitHash: string) {
     return new Promise<boolean>(resolve => {
       const gitManager = new GitManager(true);
       const directory = join(this.pluginPath, extractGitUrl(url).repo);
@@ -105,13 +105,7 @@ export abstract class BasePluginManager {
         gitManager
           .resetHard(directory, commitHash)
           .then(() => {
-            if (reloadServer) {
-              this.reloadServer().finally(() => {
-                resolve(true);
-              });
-            } else {
-              resolve(true);
-            }
+            resolve(true);
           })
           .catch(() => {
             resolve(false);
@@ -477,7 +471,7 @@ export abstract class BasePluginManager {
         targetCommit = versions[0].commit;
       }
 
-      await this.installPlugin(url, targetCommit, false);
+      await this.installPlugin(url, targetCommit);
     }
   }
 
