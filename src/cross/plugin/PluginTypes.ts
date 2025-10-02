@@ -138,3 +138,8 @@ export type PluginMetadata = {
    */
   type: 'module' | 'extension';
 };
+
+export type PluginUpdateList = {
+  id: string;
+  targetCommit: string;
+};

@@ -4,7 +4,7 @@ import {dirname, join, resolve} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {constants, promises, readdirSync} from 'graceful-fs';
-import {includes, isString} from 'lodash';
+import {compact, includes, isString} from 'lodash';
 import portFinder from 'portfinder';
 import {ltr, satisfies} from 'semver';
 import handler from 'serve-handler';
@@ -13,7 +13,7 @@ import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossCon
 import {SubscribeStages} from '../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
-import {PluginEngines, PluginMetadata} from '../../../cross/plugin/PluginTypes';
+import {PluginEngines, PluginMetadata, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
 import {appManager, staticManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
@@ -135,17 +135,17 @@ export abstract class BasePluginManager {
   public async isUpdateAvailable(id: string, stage: SubscribeStages) {
     try {
       const targetDir = this.getDirById(id);
-      if (!targetDir) return false;
+      if (!targetDir) return undefined;
 
       const gitManager = new GitManager();
       const currentCommit = await gitManager.getCurrentCommitHash(targetDir, true);
 
-      if (!currentCommit) return false;
+      if (!currentCommit) return undefined;
 
       return await isUpdateAvailable(id, currentCommit, stage);
     } catch (e) {
       console.warn(`Failed to check for updates ${id}: `, e);
-      return false;
+      return undefined;
     }
   }
 
@@ -201,18 +201,19 @@ export abstract class BasePluginManager {
     );
   }
 
-  public async getUpdateAvailableList(stage: SubscribeStages): Promise<string[]> {
+  public async getUpdateAvailableList(stage: SubscribeStages): Promise<PluginUpdateList[]> {
     try {
       const list = await Promise.all(
-        this.installedPluginInfo.map(async plugin => {
-          const available = await this.isUpdateAvailable(plugin.metadata.id, stage);
-          const title = plugin.metadata.title;
+        this.installedPluginInfo.map(async (plugin): Promise<PluginUpdateList | null> => {
+          const targetCommit = await this.isUpdateAvailable(plugin.metadata.id, stage);
+          if (!targetCommit) return null;
 
-          return {title, available};
+          const id = plugin.metadata.id;
+          return {id, targetCommit};
         }),
       );
 
-      return list.filter(item => item.available).map(item => item.title);
+      return compact(list);
     } catch (error) {
       console.error('Error checking for all updates:', error);
 
