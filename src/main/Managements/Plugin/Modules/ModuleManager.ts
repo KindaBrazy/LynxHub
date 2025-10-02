@@ -21,7 +21,7 @@ export default class ModuleManager extends BasePluginManager {
   private availableUpdates: string[] = [];
 
   public static getModulesPath() {
-    return getAppDirectory('Modules');
+    return getAppDirectory('Plugins');
   }
 
   constructor() {

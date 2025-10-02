@@ -1,6 +1,6 @@
 import {execSync} from 'node:child_process';
 import {createServer} from 'node:http';
-import {join, resolve} from 'node:path';
+import {dirname, join, resolve} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {constants, promises, readdirSync} from 'graceful-fs';
@@ -27,6 +27,7 @@ export abstract class BasePluginManager {
   protected server: ReturnType<typeof createServer> | undefined = undefined;
   protected finalAddress: string = '';
 
+  protected oldDirPath: string;
   protected pluginData: string[] = [];
   protected skippedPlugins: SkippedPlugins[] = [];
   protected mainMethods: MainModules[] = [];
@@ -44,6 +45,7 @@ export abstract class BasePluginManager {
     rendererScriptPath: string,
     reloadChannel: string,
     updateChannel: string,
+    oldDirPath: string,
   ) {
     this.port = defaultPort;
     this.mainScriptPath = mainScriptPath;
@@ -51,6 +53,7 @@ export abstract class BasePluginManager {
     this.reloadChannel = reloadChannel;
     this.updateChannel = updateChannel;
     this.pluginPath = getAppDirectory('Plugins');
+    this.oldDirPath = oldDirPath;
   }
 
   protected async setInstalledPlugins(folders: string[]) {
@@ -386,7 +389,7 @@ export abstract class BasePluginManager {
   }
 
   public async migrate() {
-    const targetDir = this.pluginPath;
+    const targetDir = join(dirname(this.pluginPath), this.oldDirPath);
     const oldInstallations: string[] = [];
 
     // Store already installed plugins
@@ -412,7 +415,6 @@ export abstract class BasePluginManager {
     // Remove old installations
     try {
       await promises.rm(targetDir, {recursive: true, force: true});
-      await promises.mkdir(targetDir, {recursive: true});
     } catch (error) {
       console.error(`Failed to clean directory ${targetDir}:`, error);
       throw error;
