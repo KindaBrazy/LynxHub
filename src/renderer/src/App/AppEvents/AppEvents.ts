@@ -2,8 +2,7 @@ import {
   useAppTitleEvents,
   useBrowserEvents,
   useCheckCardsUpdate,
-  useCheckExtensionsUpdate,
-  useCheckModulesUpdate,
+  useCheckPluginsUpdate,
   useContextEvents,
   useHotkeyEvents,
   useIpcEvents,
@@ -18,8 +17,7 @@ import {
 /** Listening for various app events and modify redux states */
 export default function useAppEvents() {
   useCheckCardsUpdate();
-  useCheckModulesUpdate();
-  useCheckExtensionsUpdate();
+  useCheckPluginsUpdate();
   useOnlineEvents();
   useStorageData();
   usePatreon();
