@@ -14,6 +14,7 @@ import {
   Notification_Data,
   PatreonSupporter,
   RepositoryInfo,
+  SubscribeStages,
 } from '../../../cross/CrossTypes';
 import {
   browserDownloadChannels,
@@ -39,7 +40,6 @@ import {
   DiscordRunningAI,
   DownloadProgress,
   eventsChannels,
-  extensionsChannels,
   ExtensionsData,
   ExtensionsUpdateStatus,
   fileChannels,
@@ -52,6 +52,7 @@ import {
   modulesChannels,
   OnPreCommands,
   OnUpdatingExtensions,
+  pluginChannels,
   PreCommands,
   PreOpen,
   PreOpenData,
@@ -72,6 +73,7 @@ import {
   winChannels,
   WinStateChange,
 } from '../../../cross/IpcChannelAndTypes';
+import {InstalledPlugin} from '../../../cross/plugin/PluginTypes';
 import StorageTypes, {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
 import {extensionRendererApi} from './Extensions/ExtensionLoader';
 
@@ -248,70 +250,14 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('module_card_update_available', {card, updateType});
       return ipc.invoke(modulesChannels.cardUpdateAvailable, card, updateType);
     },
-
-    getModulesData: (): Promise<string[]> => {
-      extensionRendererApi.events_ipc.emit('module_get_modules_data', {});
-      return ipc.invoke(modulesChannels.getModulesData);
-    },
-
-    getInstalledModulesInfo: (): Promise<{dir: string; info: ModulesInfo}[]> => {
-      extensionRendererApi.events_ipc.emit('module_get_installed_modules_info', {});
-      return ipc.invoke(modulesChannels.getInstalledModulesInfo);
-    },
-
-    getSkipped: (): Promise<SkippedPlugins[]> => {
-      extensionRendererApi.events_ipc.emit('module_get_skipped', {});
-      return ipc.invoke(modulesChannels.getSkipped);
-    },
-    checkEa: (isEA: boolean, isInsider: boolean): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('module_check_ea', {isEA, isInsider});
-      return ipc.invoke(modulesChannels.checkEa, isEA, isInsider);
-    },
-
-    installModule: (url: string, commitHash: string): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('module_install_module', {url});
-      return ipc.invoke(modulesChannels.installModule, url, commitHash);
-    },
-
-    uninstallModule: (id: string): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('module_uninstall_module', {id});
-      return ipc.invoke(modulesChannels.uninstallModule, id);
-    },
-
     uninstallCardByID: (id: string): Promise<void> => {
       extensionRendererApi.events_ipc.emit('module_uninstall_card_by_id', {id});
       return ipc.invoke(modulesChannels.uninstallCardByID, id);
     },
-
-    isUpdateAvailable: (id: string): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('module_is_update_available', {id});
-      return ipc.invoke(modulesChannels.isUpdateAvailable, id);
-    },
-    updateAvailableList: (): Promise<string[]> => {
-      extensionRendererApi.events_ipc.emit('module_update_available_list', {});
-      return ipc.invoke(modulesChannels.updateAvailableList);
-    },
-
-    updateModule: (id: string): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('module_update_module', {id});
-      return ipc.invoke(modulesChannels.updateModule, id);
-    },
-
-    updateAllModules: (): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('module_update_all_modules', {});
-      return ipc.invoke(modulesChannels.updateAllModules);
-    },
-
-    onReload: (result: (event: IpcRendererEvent) => void) => ipc.on(modulesChannels.onReload, result),
-
-    onUpdatedModules: (result: (event: IpcRendererEvent, updated: string | string[]) => void) =>
-      ipc.on(modulesChannels.onUpdatedModules, result),
-
     checkCardsUpdateInterval: (updateType: {id: string; type: 'git' | 'stepper'}[]) => {
       extensionRendererApi.events_ipc.emit('module_check_cards_update_interval', {updateType});
       ipc.send(modulesChannels.checkCardsUpdateInterval, updateType);
     },
-
     onCardsUpdateAvailable: (result: (event: IpcRendererEvent, cards: string[]) => void) =>
       ipc.on(modulesChannels.onCardsUpdateAvailable, result),
   },
@@ -331,60 +277,19 @@ const rendererIpc = {
     },
   },
 
-  /** Managing app extensions */
-  extension: {
-    getExtensionsData: (): Promise<string[]> => {
-      extensionRendererApi.events_ipc.emit('extension_get_extensions_data', {});
-      return ipc.invoke(extensionsChannels.getExtensionsData);
-    },
-
-    getInstalledExtensionsInfo: (): Promise<{dir: string; info: ExtensionsInfo}[]> => {
-      extensionRendererApi.events_ipc.emit('extension_get_installed_extensions_info', {});
-      return ipc.invoke(extensionsChannels.getInstalledExtensionsInfo);
-    },
-    getSkipped: (): Promise<SkippedPlugins[]> => {
-      extensionRendererApi.events_ipc.emit('extension_get_skipped', {});
-      return ipc.invoke(extensionsChannels.getSkipped);
-    },
-
-    installExtension: (url: string, commitHash: string): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('extension_install_extension', {url});
-      return ipc.invoke(extensionsChannels.installExtension, url, commitHash);
-    },
-
-    uninstallExtension: (id: string): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('extension_uninstall_extension', {id});
-      return ipc.invoke(extensionsChannels.uninstallExtension, id);
-    },
-
-    isUpdateAvailable: (id: string): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('extension_is_update_available', {id});
-      return ipc.invoke(extensionsChannels.isUpdateAvailable, id);
-    },
-    updateAvailableList: (): Promise<string[]> => {
-      extensionRendererApi.events_ipc.emit('extension_update_available_list', {});
-      return ipc.invoke(extensionsChannels.updateAvailableList);
-    },
-
-    updateExtension: (id: string): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('extension_update_extension', {id});
-      return ipc.invoke(extensionsChannels.updateExtension, id);
-    },
-
-    checkEa: (isEA: boolean, isInsider: boolean): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('extension_check_ea', {isEA, isInsider});
-      return ipc.invoke(extensionsChannels.checkEa, isEA, isInsider);
-    },
-
-    updateAllExtensions: (): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('extension_update_all_extensions', {});
-      return ipc.invoke(extensionsChannels.updateAllExtensions);
-    },
-
-    onReload: (result: (event: IpcRendererEvent) => void) => ipc.on(extensionsChannels.onReload, result),
-
-    onUpdatedExtensions: (result: (event: IpcRendererEvent, updated: string | string[]) => void) =>
-      ipc.on(extensionsChannels.onUpdatedExtensions, result),
+  plugins: {
+    checkStage: (stage: SubscribeStages): Promise<boolean> => ipc.invoke(pluginChannels.checkStage, stage),
+    getPluginsData: (): Promise<string[]> => ipc.invoke(pluginChannels.getPluginsData),
+    getInstalledPlugins: (): Promise<InstalledPlugin[]> => ipc.invoke(pluginChannels.getInstalledPlugins),
+    getSkippedPlugins: (): Promise<SkippedPlugins[]> => ipc.invoke(pluginChannels.getSkippedPlugins),
+    installPlugin: (url: string, commitHash: string): Promise<boolean> =>
+      ipc.invoke(pluginChannels.installPlugin, url, commitHash),
+    uninstallPlugin: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.uninstallPlugin, id),
+    isUpdateAvailable: (id: string, stage: SubscribeStages): Promise<boolean> =>
+      ipc.invoke(pluginChannels.isUpdateAvailable, id, stage),
+    updatePlugin: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.updatePlugin, id),
+    updatePlugins: (): Promise<void> => ipc.invoke(pluginChannels.updatePlugins),
+    checkForUpdates: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.checkForUpdates, stage),
   },
 
   /** Utilities methods for working with app storage data */

@@ -5,7 +5,7 @@ import rendererIpc from '../RendererIpc';
 import {isLinuxPortable} from '../Utils/UtilHooks';
 
 export const checkEARepos = (isEA: boolean, isInsider: boolean) => {
-  Promise.all([rendererIpc.extension.checkEa(isEA, isInsider), rendererIpc.module.checkEa(isEA, isInsider)])
+  Promise.all([rendererIpc.extension.checkEa(isEA, isInsider), rendererIpc.module.checkStage(isEA, isInsider)])
     .then(([extension, module]) => {
       if (extension || module) {
         notification.info({

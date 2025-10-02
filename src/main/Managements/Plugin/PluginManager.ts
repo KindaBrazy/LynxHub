@@ -12,7 +12,7 @@ import handler from 'serve-handler';
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
 import {SubscribeStages} from '../../../cross/CrossTypes';
 import {pluginChannels, SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
-import {PluginEngines, PluginMetadata, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginEngines, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
 import {appManager, staticManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
@@ -31,7 +31,7 @@ export class PluginManager {
 
   protected pluginData: string[] = [];
   protected skippedPlugins: SkippedPlugins[] = [];
-  protected installedPluginInfo: {dir: string; metadata: PluginMetadata}[] = [];
+  protected installedPluginInfo: InstalledPlugin[] = [];
   protected availableUpdates: PluginUpdateList[] = [];
 
   protected readonly pluginPath: string;
@@ -106,12 +106,12 @@ export class PluginManager {
       return false;
     }
   }
-  private onNeedRestart(id: string) {
-    appManager?.getWebContent()?.send(pluginChannels.needRestart, id);
+  private onNeedRestart(id: 'all' | string) {
+    appManager?.getWebContent()?.send(pluginChannels.onAppNeedRestart, id);
   }
 
   private updateList_NoticeRenderer() {
-    appManager?.getWebContent()?.send(pluginChannels.updateList, this.availableUpdates);
+    appManager?.getWebContent()?.send(pluginChannels.onUpdateAvailableList, this.availableUpdates);
   }
 
   private updateList_Remove(id: string) {
@@ -238,15 +238,17 @@ export class PluginManager {
     }
   }
 
-  public async updatePlugins(list: string[]) {
+  public async updateAll() {
     try {
-      for (const id of list) {
+      for (const item of this.availableUpdates) {
+        const id = item.id;
         const targetDir = this.getDirById(id);
         const targetCommit = this.availableUpdates.find(update => update.id === id)?.targetCommit;
         if (!targetDir || !targetCommit) continue;
         await this.updatePlugin(id);
-        this.onNeedRestart(id);
       }
+
+      this.onNeedRestart('all');
     } catch (e) {
       console.warn(`Failed to update plugins: ${e}`);
     }
@@ -352,7 +354,7 @@ export class PluginManager {
     return this.skippedPlugins;
   }
 
-  public getInstalledPluginInfo(): {dir: string; metadata: PluginMetadata}[] {
+  public getInstalledPluginInfo(): InstalledPlugin[] {
     return this.installedPluginInfo;
   }
 
