@@ -10,7 +10,7 @@ import {ltr, satisfies} from 'semver';
 import handler from 'serve-handler';
 
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
-import {FolderNames, SubscribeStages} from '../../../cross/CrossTypes';
+import {SubscribeStages} from '../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
 import {PluginEngines, PluginMetadata, VersionItem} from '../../../cross/plugin/PluginTypes';
@@ -44,14 +44,13 @@ export abstract class BasePluginManager {
     rendererScriptPath: string,
     reloadChannel: string,
     updateChannel: string,
-    pluginDirName: FolderNames,
   ) {
     this.port = defaultPort;
     this.mainScriptPath = mainScriptPath;
     this.rendererScriptPath = rendererScriptPath;
     this.reloadChannel = reloadChannel;
     this.updateChannel = updateChannel;
-    this.pluginPath = getAppDirectory(pluginDirName);
+    this.pluginPath = getAppDirectory('Plugins');
   }
 
   protected async setInstalledPlugins(folders: string[]) {
