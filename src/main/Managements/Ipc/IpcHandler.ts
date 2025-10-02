@@ -210,9 +210,9 @@ function modules() {
   ipcMain.handle(modulesChannels.uninstallModule, (_, id: string) => moduleManager?.uninstallPlugin(id));
   ipcMain.handle(modulesChannels.uninstallCardByID, (_, id: string) => moduleManager?.uninstallCardByID(id));
   ipcMain.handle(modulesChannels.isUpdateAvailable, (_, id: string) => moduleManager?.isUpdateAvailable(id));
-  ipcMain.handle(modulesChannels.updateAvailableList, () => moduleManager?.getUpdateAvailableList());
+  ipcMain.handle(modulesChannels.updateAvailableList, () => moduleManager?.checkForUpdates());
   ipcMain.handle(modulesChannels.updateModule, (_, id: string) => moduleManager?.updatePlugin(id));
-  ipcMain.handle(modulesChannels.updateAllModules, () => moduleManager?.updateAllPlugins());
+  ipcMain.handle(modulesChannels.updateAllModules, () => moduleManager?.updatePlugins());
 
   ipcMain.on(
     modulesChannels.checkCardsUpdateInterval,
@@ -239,9 +239,9 @@ function extensions() {
   );
   ipcMain.handle(extensionsChannels.uninstallExtension, (_, id: string) => extensionManager.uninstallPlugin(id));
   ipcMain.handle(extensionsChannels.isUpdateAvailable, (_, id: string) => extensionManager.isUpdateAvailable(id));
-  ipcMain.handle(extensionsChannels.updateAvailableList, () => extensionManager.getUpdateAvailableList());
+  ipcMain.handle(extensionsChannels.updateAvailableList, () => extensionManager.checkForUpdates());
   ipcMain.handle(extensionsChannels.updateExtension, (_, id: string) => extensionManager.updatePlugin(id));
-  ipcMain.handle(extensionsChannels.updateAllExtensions, () => extensionManager.updateAllPlugins());
+  ipcMain.handle(extensionsChannels.updateAllExtensions, () => extensionManager.updatePlugins());
 }
 
 function pty() {

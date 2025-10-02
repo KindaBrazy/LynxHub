@@ -32,7 +32,7 @@ export default class ExtensionManager extends BasePluginManager {
     this.extensionApi = new ExtensionApi();
   }
 
-  public async getUpdateAvailableList(): Promise<string[]> {
+  public async checkForUpdates(): Promise<string[]> {
     try {
       const updateChecks = this.installedPluginInfo.map(async plugin => {
         const hasUpdate = await GitManager.isUpdateAvailable(path.join(this.pluginPath, plugin.dir));
