@@ -10,6 +10,7 @@ import {ltr, satisfies} from 'semver';
 import handler from 'serve-handler';
 
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
+import {SubscribeStages} from '../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
 import {PluginEngines, PluginMetadata} from '../../../cross/plugin/PluginTypes';
@@ -19,7 +20,7 @@ import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDat
 import GitManager from '../GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
 import ShowToastWindow from '../ToastWindowManager';
-import {getCommitByAppStage} from './PluginUtils';
+import {getCommitByAppStage, isUpdateAvailable} from './PluginUtils';
 
 export abstract class BasePluginManager {
   protected readonly host: string = 'localhost';
@@ -130,10 +131,21 @@ export abstract class BasePluginManager {
     }
   }
 
-  public async isUpdateAvailable(id: string) {
-    const plugin = this.getDirById(id);
-    if (!plugin) return false;
-    return await GitManager.isUpdateAvailable(plugin);
+  public async isUpdateAvailable(id: string, stage: SubscribeStages) {
+    try {
+      const targetDir = this.getDirById(id);
+      if (!targetDir) return false;
+
+      const gitManager = new GitManager();
+      const currentCommit = await gitManager.getCurrentCommitHash(targetDir, true);
+
+      if (!currentCommit) return false;
+
+      return await isUpdateAvailable(id, currentCommit, stage);
+    } catch (e) {
+      console.warn(`Failed to check for updates ${id}: `, e);
+      return false;
+    }
   }
 
   public async checkEA(isEA: boolean, isInsider: boolean) {
