@@ -20,6 +20,7 @@ import {browserIPC, listenToAllChannels} from './Managements/Ipc/IpcHandler';
 import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
 import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
 import ModuleManager from './Managements/Plugin/Modules/ModuleManager';
+import {PluginManager} from './Managements/Plugin/PluginManager';
 import {PluginMigrate} from './Managements/Plugin/PluginMigrate';
 import ShareScreenManager from './Managements/ShareScreenManager';
 import StaticsManager from './Managements/StaticsManager';
@@ -42,12 +43,14 @@ export let appManager: ElectronAppManager | undefined = undefined;
 export let trayManager: TrayManager | undefined = undefined;
 export let discordRpcManager: DiscordRpcManager | undefined = undefined;
 export let cardsValidator: ValidateCards | undefined = undefined;
-export let moduleManager: ModuleManager | undefined = undefined;
+
+export const moduleManager: ModuleManager = new ModuleManager();
+export const extensionManager: ExtensionManager = new ExtensionManager();
+export const pluginManager = new PluginManager(moduleManager, extensionManager);
 
 export const staticManager: StaticsManager = new StaticsManager();
 staticManager.checkRequirements();
 export const contextMenuManager: ContextMenuManager = new ContextMenuManager();
-export const extensionManager: ExtensionManager = new ExtensionManager();
 
 export const appStartTime = Date.now();
 
@@ -68,9 +71,9 @@ const {hardwareAcceleration} = storageManager.getData('app');
 if (!hardwareAcceleration) app.disableHardwareAcceleration();
 
 async function setupApp() {
-  await PluginMigrate(extensionManager);
+  await PluginMigrate(storageManager);
 
-  await extensionManager.createServer();
+  await pluginManager.createServer();
   extensionManager.setStorageManager(storageManager);
 
   appManager = new ElectronAppManager();
@@ -86,8 +89,7 @@ async function setupApp() {
     if (!isQuitting) {
       e.preventDefault();
       stopAllPty().then(() => {
-        moduleManager?.closeServer();
-        extensionManager?.closeServer();
+        pluginManager.closeServer();
 
         isQuitting = true;
         app.quit();
@@ -127,11 +129,8 @@ async function onAppReady() {
   trayManager = new TrayManager(trayIcon, trayIconMenu);
   discordRpcManager = new DiscordRpcManager();
   cardsValidator = new ValidateCards();
-  moduleManager = new ModuleManager();
 
   extensionManager.setDiscordRpcManager(discordRpcManager);
-
-  await moduleManager?.createServer();
   extensionManager.setModuleManager(moduleManager);
 
   listenToAllChannels();

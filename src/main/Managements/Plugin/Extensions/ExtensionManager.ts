@@ -4,25 +4,21 @@ import {isDev} from '../../../../cross/CrossUtils';
 import DiscordRpcManager from '../../DiscordRpcManager';
 import ElectronAppManager from '../../ElectronAppManager';
 import StorageManager from '../../Storage/StorageManager';
-import {BasePluginManager} from '../BasePluginManager';
 import ModuleManager from '../Modules/ModuleManager';
 import ExtensionApi from './ExtensionApi';
 import {EMenuItem, ExtensionImport_Main} from './ExtensionTypes_Main';
 import ExtensionUtils from './ExtensionUtils';
 
-export default class ExtensionManager extends BasePluginManager {
+export default class ExtensionManager {
   private readonly extensionUtils: ExtensionUtils;
   private readonly extensionApi: ExtensionApi;
 
   constructor() {
-    super(5103, 'scripts/main/mainEntry.mjs', 'scripts/renderer/rendererEntry.mjs', 'Extensions');
-
     this.extensionUtils = new ExtensionUtils();
     this.extensionApi = new ExtensionApi();
   }
 
-  // TODO: add try catch and show ui error message
-  protected async importPlugins(extensionFolders: string[]) {
+  public async importPlugins(extensionFolders: string[]) {
     if (isDev()) {
       const initial: ExtensionImport_Main = await import('../../../../../extension/src/main/lynxExtension');
       await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);

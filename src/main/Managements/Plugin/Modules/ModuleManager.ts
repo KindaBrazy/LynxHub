@@ -6,27 +6,19 @@ import pty from 'node-pty';
 
 import {isDev, toMs} from '../../../../cross/CrossUtils';
 import {modulesChannels} from '../../../../cross/IpcChannelAndTypes';
-import {MainModuleUtils} from '../../../../cross/plugin/ModuleTypes';
+import {MainModules, MainModuleUtils} from '../../../../cross/plugin/ModuleTypes';
 import {MainModuleImportType} from '../../../../cross/plugin/ModuleTypes';
 import {InstalledCard} from '../../../../cross/StorageTypes';
 import {appManager, storageManager} from '../../../index';
 import {getAbsolutePath, getExePath, isPortable} from '../../../Utilities/Utils';
-import {getAppDataPath, getAppDirectory} from '../../AppDataManager';
+import {getAppDataPath} from '../../AppDataManager';
 import GitManager from '../../GitManager';
 import {removeDir, trashDir} from '../../Ipc/Methods/IpcMethods';
-import {BasePluginManager} from '../BasePluginManager';
 
-export default class ModuleManager extends BasePluginManager {
+export default class ModuleManager {
   private checkInterval?: NodeJS.Timeout = undefined;
   private availableCardUpdates: string[] = [];
-
-  public static getModulesPath() {
-    return getAppDirectory('Plugins');
-  }
-
-  constructor() {
-    super(5102, 'scripts/main.mjs', 'scripts/renderer.mjs', 'Modules');
-  }
+  private mainMethods: MainModules[] = [];
 
   private getUtils() {
     const webContent = appManager?.getWebContent();
@@ -73,7 +65,7 @@ export default class ModuleManager extends BasePluginManager {
     return utils;
   }
 
-  protected async importPlugins(moduleFolders: string[]) {
+  public async importPlugins(moduleFolders: string[]) {
     try {
       const utils = this.getUtils();
 
@@ -132,6 +124,10 @@ export default class ModuleManager extends BasePluginManager {
     this.currentRetries = 0;
 
     this.mainMethods.forEach(({methods}) => methods().mainIpc?.());
+  }
+
+  public getMethodsById(id: string): MainModules['methods'] | undefined {
+    return this.mainMethods.find(plugin => plugin.id === id)?.methods;
   }
 
   public async checkCardUpdate(card: InstalledCard, updateType: 'git' | 'stepper' | undefined) {
