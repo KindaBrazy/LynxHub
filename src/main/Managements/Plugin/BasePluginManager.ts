@@ -20,7 +20,7 @@ import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDat
 import GitManager from '../GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
 import ShowToastWindow from '../ToastWindowManager';
-import {getCommitByAppStage, isUpdateAvailable} from './PluginUtils';
+import {getCommitByAppStage, getCommitByStage, isUpdateAvailable} from './PluginUtils';
 
 export abstract class BasePluginManager {
   protected readonly host: string = 'localhost';
@@ -149,32 +149,28 @@ export abstract class BasePluginManager {
     }
   }
 
-  public async checkEA(isEA: boolean, isInsider: boolean) {
-    const installFolders = this.installedPluginInfo.map(folder => join(this.pluginPath, folder.dir));
-    const targetBranch = isInsider ? 'compiled_insider' : isEA ? 'compiled_ea' : 'compiled';
-    let isChangedBranch: boolean = false;
+  public async checkStage(stage: SubscribeStages) {
+    let isAnyStageChanged: boolean = false;
+    const gitManager = new GitManager();
 
-    for (const folder of installFolders) {
+    for (const plugin of this.installedPluginInfo) {
       try {
-        const git = new GitManager();
+        const {dir, metadata} = plugin;
 
-        const url = await GitManager.remoteUrlFromDir(folder);
-        const currentBranch = await GitManager.getDirBranch(folder);
+        const targetCommit = await getCommitByStage(metadata.id, stage);
+        const currentCommit = await gitManager.getCurrentCommitHash(dir, true);
 
-        if (!url || currentBranch === targetBranch) continue;
+        if (!currentCommit) continue;
 
-        const branches = await git.getAvailableBranches(url);
+        await gitManager.resetHard(dir, targetCommit);
 
-        if (branches.includes(targetBranch)) {
-          await git.changeBranch(folder, targetBranch);
-          isChangedBranch = true;
-        }
+        isAnyStageChanged = true;
       } catch (e) {
         console.error('error changing ea branch: ', e);
       }
     }
 
-    return isChangedBranch;
+    return isAnyStageChanged;
   }
 
   public showGitOwnershipToast() {

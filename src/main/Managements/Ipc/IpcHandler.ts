@@ -201,7 +201,7 @@ function modules() {
   ipcMain.handle(modulesChannels.getInstalledModulesInfo, () => moduleManager?.getInstalledPluginInfo());
   ipcMain.handle(modulesChannels.getSkipped, () => moduleManager?.getSkipped());
   ipcMain.handle(modulesChannels.checkEa, (_, isEA: boolean, isInsider: boolean) =>
-    moduleManager?.checkEA(isEA, isInsider),
+    moduleManager?.checkStage(isEA, isInsider),
   );
 
   ipcMain.handle(modulesChannels.installModule, (_, url: string, commitHash: string) =>
@@ -231,7 +231,7 @@ function extensions() {
   ipcMain.handle(extensionsChannels.getInstalledExtensionsInfo, () => extensionManager.getInstalledPluginInfo());
   ipcMain.handle(extensionsChannels.getSkipped, () => extensionManager.getSkipped());
   ipcMain.handle(extensionsChannels.checkEa, (_, isEA: boolean, isInsider: boolean) =>
-    extensionManager.checkEA(isEA, isInsider),
+    extensionManager.checkStage(isEA, isInsider),
   );
 
   ipcMain.handle(extensionsChannels.installExtension, (_, url: string, commitHash: string) =>
