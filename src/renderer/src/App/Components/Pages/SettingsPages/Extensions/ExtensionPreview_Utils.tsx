@@ -184,7 +184,7 @@ function ActionButtons({
   selectedExt: Extension_ListData | undefined;
   setInstalled: Dispatch<SetStateAction<InstalledExt[]>>;
 }) {
-  const updateAvailable = useSettingsState('extensionsUpdateAvailable');
+  const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const dispatch = useDispatch<AppDispatch>();
 
   const manageSet = useExtensionPageStore(state => state.manageSet);
@@ -305,7 +305,7 @@ function ActionButtons({
         owner={selectedExt?.developer}
       />
       <div className="flex flex-row items-center gap-x-2">
-        {updateAvailable.includes(selectedExt?.id || '') && (
+        {updateAvailable.some(item => item.id === selectedExt?.id) && (
           <Button
             size="sm"
             color="success"

@@ -73,7 +73,7 @@ import {
   winChannels,
   WinStateChange,
 } from '../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin} from '../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
 import StorageTypes, {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
 import {extensionRendererApi} from './Extensions/ExtensionLoader';
 
@@ -290,6 +290,8 @@ const rendererIpc = {
     updatePlugin: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.updatePlugin, id),
     updatePlugins: (): Promise<void> => ipc.invoke(pluginChannels.updatePlugins),
     checkForUpdates: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.checkForUpdates, stage),
+    onUpdateAvailableList: (result: (event: IpcRendererEvent, cards: PluginUpdateList[]) => void) =>
+      ipc.on(pluginChannels.onUpdateAvailableList, result),
   },
 
   /** Utilities methods for working with app storage data */

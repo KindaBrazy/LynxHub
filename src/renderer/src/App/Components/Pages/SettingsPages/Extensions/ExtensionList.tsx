@@ -7,7 +7,7 @@ import {useDispatch} from 'react-redux';
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
 import {Circle_Icon, RefreshDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
-import {settingsActions, useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
+import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
@@ -26,7 +26,7 @@ type Props = {
 };
 
 export default function ExtensionList({selectedExt, setSelectedExt, installed, unloaded}: Props) {
-  const updateAvailable = useSettingsState('extensionsUpdateAvailable');
+  const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const [selectedFilters, setSelectedFilters] = useState<ExtFilter>('all');
   const [list, setList] = useState<Extension_ListData[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
@@ -83,17 +83,24 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
   }, [searchValue]);
 
   const updateAll = () => {
-    manageSet('updating', updateAvailable, 'add');
+    manageSet(
+      'updating',
+      updateAvailable.map(item => item.id),
+      'add',
+    );
     setUpdatingAll(true);
     rendererIpc.extension
       .updateAllExtensions()
       .then(() => {
         lynxTopToast(dispatch).success('Extensions updated successfully!');
-        dispatch(settingsActions.setSettingsState({key: 'extensionsUpdateAvailable', value: []}));
       })
       .catch(() => lynxTopToast(dispatch).error('Failed to update extensions. Please try again later.'))
       .finally(() => {
-        manageSet('updating', updateAvailable, 'remove');
+        manageSet(
+          'updating',
+          updateAvailable.map(item => item.id),
+          'remove',
+        );
         setUpdatingAll(false);
       });
   };

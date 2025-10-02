@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
 import {TooltipStatus} from '../../../../../cross/IpcChannelAndTypes';
+import {PluginUpdateList} from '../../../../../cross/plugin/PluginTypes';
 import rendererIpc from '../../RendererIpc';
 import {RootState} from '../Store';
 
@@ -25,9 +26,7 @@ type SettingState = {
 
   updatedModules: string[];
   newModules: string[];
-  moduleUpdateAvailable: string[];
-
-  extensionsUpdateAvailable: string[];
+  pluginUpdateAvailableList: PluginUpdateList[];
 
   updateAvailable: boolean;
   checkCustomUpdate: boolean;
@@ -65,9 +64,8 @@ const initialState: SettingState = {
   openLastSize,
   updatedModules: [],
   newModules: [],
-  moduleUpdateAvailable: [],
+  pluginUpdateAvailableList: [],
   updateAvailable: false,
-  extensionsUpdateAvailable: [],
   dynamicAppTitle,
   openLinkExternal,
   hardwareAcceleration,
@@ -88,18 +86,10 @@ const settingsSlice = createSlice({
     ) => {
       state[action.payload.key] = action.payload.value;
     },
-    removeExtUpdateAvailable: (state, action: PayloadAction<string>) => {
-      state.extensionsUpdateAvailable = state.extensionsUpdateAvailable.filter(item => item !== action.payload);
-    },
 
-    addUpdatedModule: (state, action: PayloadAction<string | string[]>) => {
-      const modulesToAdd = Array.isArray(action.payload) ? action.payload : [action.payload];
-      state.updatedModules = [...new Set([...state.updatedModules, ...modulesToAdd])];
-    },
     addNewModule: (state, action: PayloadAction<string>) => {
       state.newModules = [...new Set([...state.newModules, action.payload])];
     },
-
     removeUpdatedModule: (state, action: PayloadAction<string>) => {
       state.updatedModules = state.updatedModules.filter(module => module !== action.payload);
     },

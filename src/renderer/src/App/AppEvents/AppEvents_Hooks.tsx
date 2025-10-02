@@ -43,41 +43,25 @@ export const useCheckCardsUpdate = () => {
   }, [installedCards, allMethods]);
 };
 
-export const useCheckModulesUpdate = () => {
+export const useCheckPluginsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
   const moduleUpdateInterval = useRef<NodeJS.Timeout>(undefined);
+
   useEffect(() => {
     const checkForUpdate = () => {
-      rendererIpc.module.updateAvailableList().then(value => {
-        dispatch(settingsActions.setSettingsState({key: 'moduleUpdateAvailable', value}));
-      });
+      rendererIpc.plugins.checkForUpdates('insider');
     };
 
     checkForUpdate();
-
     clearInterval(moduleUpdateInterval.current);
     moduleUpdateInterval.current = undefined;
-
     moduleUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
-  }, [dispatch]);
-};
 
-export const useCheckExtensionsUpdate = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const extensionUpdateInterval = useRef<NodeJS.Timeout>(undefined);
-  useEffect(() => {
-    const checkForUpdate = () => {
-      rendererIpc.extension.updateAvailableList().then(value => {
-        dispatch(settingsActions.setSettingsState({key: 'extensionsUpdateAvailable', value}));
-      });
-    };
+    const removeListener = rendererIpc.plugins.onUpdateAvailableList((_, list) => {
+      dispatch(settingsActions.setSettingsState({key: 'pluginUpdateAvailableList', value: list}));
+    });
 
-    checkForUpdate();
-
-    clearInterval(extensionUpdateInterval.current);
-    extensionUpdateInterval.current = undefined;
-
-    extensionUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
+    return () => removeListener();
   }, [dispatch]);
 };
 
@@ -140,9 +124,6 @@ export const useIpcEvents = () => {
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    rendererIpc.module.onUpdatedModules((_, updated) => {
-      dispatch(settingsActions.addUpdatedModule(updated));
-    });
     rendererIpc.storageUtils.onInstalledCards((_, cards) => {
       dispatch(cardsActions.setInstalledCards(cards));
     });
