@@ -347,4 +347,4 @@ export type CardState = {
   setCheckingForUpdate: (isChecking: boolean) => void;
 };
 
-export type SubscribeStates = 'insider' | 'early_access' | 'public';
+export type SubscribeStages = 'insider' | 'early_access' | 'public';

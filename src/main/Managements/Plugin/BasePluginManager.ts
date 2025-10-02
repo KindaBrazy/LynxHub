@@ -10,7 +10,7 @@ import {ltr, satisfies} from 'semver';
 import handler from 'serve-handler';
 
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
-import {FolderNames, SubscribeStates} from '../../../cross/CrossTypes';
+import {FolderNames, SubscribeStages} from '../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
@@ -430,7 +430,7 @@ export abstract class BasePluginManager {
       const {versions} = await staticManager.getPluginVersioningById(id);
       const stage = await staticManager.getCurrentAppState();
 
-      const findVersionByStage = (requiredStage: SubscribeStates): VersionItem | undefined => {
+      const findVersionByStage = (requiredStage: SubscribeStages): VersionItem | undefined => {
         return versions.find(v => v.stage.includes(requiredStage));
       };
 

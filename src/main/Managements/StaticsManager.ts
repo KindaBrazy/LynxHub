@@ -9,7 +9,7 @@ import {
   ModulesInfo,
   Notification_Data,
   PatreonSupporter,
-  SubscribeStates,
+  SubscribeStages,
 } from '../../cross/CrossTypes';
 import {toMs} from '../../cross/CrossUtils';
 import {PluginMetadata, PluginVersioning} from '../../cross/plugin/PluginTypes';
@@ -165,7 +165,7 @@ export default class StaticsManager {
     return entry ? entry[0] : undefined;
   }
 
-  public async getCurrentAppState(): Promise<SubscribeStates> {
+  public async getCurrentAppState(): Promise<SubscribeStages> {
     const releases = await this.getReleases();
     const insider = await this.getInsider();
 
