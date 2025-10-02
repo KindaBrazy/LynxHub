@@ -14,7 +14,7 @@ import {SubscribeStages} from '../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
 import {PluginEngines, PluginMetadata, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
-import {staticManager} from '../../index';
+import {appManager, staticManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
 import GitManager from '../GitManager';
@@ -135,12 +135,14 @@ export abstract class BasePluginManager {
 
   private updateList_Remove(id: string) {
     this.availableUpdates = this.availableUpdates.filter(update => update.id !== id);
+    appManager?.getWebContent()?.send(this.updateChannel, this.availableUpdates);
   }
 
   private updateList_Add(item: PluginUpdateList) {
     if (this.availableUpdates.some(update => update.id === item.id)) return;
-
     this.availableUpdates.push(item);
+
+    appManager?.getWebContent()?.send(this.updateChannel, this.availableUpdates);
   }
 
   public async isUpdateAvailable(id: string, stage: SubscribeStages) {
