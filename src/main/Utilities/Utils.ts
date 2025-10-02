@@ -159,6 +159,7 @@ export function getExePath(): string {
 
     return app.getAppPath();
   } catch (e) {
+    console.error(e);
     return '';
   }
 }
