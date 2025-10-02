@@ -4,7 +4,7 @@ import {dirname, join, resolve} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {constants, promises, readdirSync} from 'graceful-fs';
-import {compact, includes, isString} from 'lodash';
+import {includes, isString} from 'lodash';
 import portFinder from 'portfinder';
 import {ltr, satisfies} from 'semver';
 import handler from 'serve-handler';
@@ -201,14 +201,18 @@ export abstract class BasePluginManager {
     );
   }
 
-  public async updateAvailableList(): Promise<string[]> {
+  public async getUpdateAvailableList(stage: SubscribeStages): Promise<string[]> {
     try {
-      const updateChecks = this.installedPluginInfo.map(async plugin => {
-        const available = await GitManager.isUpdateAvailable(join(this.pluginPath, plugin.dir));
-        return {title: plugin.metadata.title, available};
-      });
-      const results = await Promise.all(updateChecks);
-      return compact(results.map(result => (result.available ? result.title : null)));
+      const list = await Promise.all(
+        this.installedPluginInfo.map(async plugin => {
+          const available = await this.isUpdateAvailable(plugin.metadata.id, stage);
+          const title = plugin.metadata.title;
+
+          return {title, available};
+        }),
+      );
+
+      return list.filter(item => item.available).map(item => item.title);
     } catch (error) {
       console.error('Error checking for all updates:', error);
 
