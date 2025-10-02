@@ -4,7 +4,7 @@ import {dirname, join, resolve} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {constants, promises, readdirSync} from 'graceful-fs';
-import {compact, includes, isString} from 'lodash';
+import {includes, isString} from 'lodash';
 import portFinder from 'portfinder';
 import {ltr, satisfies} from 'semver';
 import handler from 'serve-handler';
@@ -14,7 +14,7 @@ import {SubscribeStages} from '../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
 import {MainModules} from '../../../cross/plugin/ModuleTypes';
 import {PluginEngines, PluginMetadata, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
-import {appManager, staticManager} from '../../index';
+import {staticManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
 import GitManager from '../GitManager';
@@ -33,6 +33,7 @@ export abstract class BasePluginManager {
   protected skippedPlugins: SkippedPlugins[] = [];
   protected mainMethods: MainModules[] = [];
   protected installedPluginInfo: {dir: string; metadata: PluginMetadata}[] = [];
+  protected availableUpdates: PluginUpdateList[] = [];
 
   protected readonly pluginPath: string;
   protected readonly mainScriptPath: string;
@@ -124,7 +125,7 @@ export abstract class BasePluginManager {
     if (!plugin) return false;
     try {
       await removeDir(plugin);
-      await this.reloadServer();
+      this.updateList_Remove(id);
       return true;
     } catch (e) {
       console.warn(`Failed to uninstall ${id}: `, e);
@@ -132,20 +133,37 @@ export abstract class BasePluginManager {
     }
   }
 
+  private updateList_Remove(id: string) {
+    this.availableUpdates = this.availableUpdates.filter(update => update.id !== id);
+  }
+
+  private updateList_Add(item: PluginUpdateList) {
+    if (this.availableUpdates.some(update => update.id === item.id)) return;
+
+    this.availableUpdates.push(item);
+  }
+
   public async isUpdateAvailable(id: string, stage: SubscribeStages) {
     try {
       const targetDir = this.getDirById(id);
-      if (!targetDir) return undefined;
+      if (!targetDir) return false;
 
       const gitManager = new GitManager();
+
       const currentCommit = await gitManager.getCurrentCommitHash(targetDir, true);
+      if (!currentCommit) return false;
 
-      if (!currentCommit) return undefined;
+      const targetCommit = await isUpdateAvailable(id, currentCommit, stage);
+      if (!targetCommit) {
+        this.updateList_Remove(id);
+        return false;
+      }
+      this.updateList_Add({id, targetCommit});
 
-      return await isUpdateAvailable(id, currentCommit, stage);
+      return true;
     } catch (e) {
       console.warn(`Failed to check for updates ${id}: `, e);
-      return undefined;
+      return false;
     }
   }
 
@@ -163,6 +181,7 @@ export abstract class BasePluginManager {
         if (!currentCommit) continue;
 
         await gitManager.resetHard(dir, targetCommit);
+        this.updateList_Remove(metadata.id);
 
         isAnyStageChanged = true;
       } catch (e) {
@@ -201,61 +220,48 @@ export abstract class BasePluginManager {
     );
   }
 
-  public async getUpdateAvailableList(stage: SubscribeStages): Promise<PluginUpdateList[]> {
+  public async checkForUpdates(stage: SubscribeStages): Promise<void> {
     try {
-      const list = await Promise.all(
-        this.installedPluginInfo.map(async (plugin): Promise<PluginUpdateList | null> => {
-          const targetCommit = await this.isUpdateAvailable(plugin.metadata.id, stage);
-          if (!targetCommit) return null;
-
-          const id = plugin.metadata.id;
-          return {id, targetCommit};
-        }),
-      );
-
-      return compact(list);
+      for (const plugin of this.installedPluginInfo) {
+        const id = plugin.metadata.id;
+        await this.isUpdateAvailable(id, stage);
+      }
     } catch (error) {
       console.error('Error checking for all updates:', error);
 
       const errorMessage = isString(error) ? error : error.message;
       if (includes(errorMessage, 'detected dubious ownership')) this.showGitOwnershipToast();
-
-      return [];
     }
   }
 
   public async updatePlugin(id: string) {
-    const plugin = this.getDirById(id);
-    if (!plugin) return false;
+    const targetDir = this.getDirById(id);
+    if (!targetDir) return false;
 
-    return new Promise<boolean>(resolve => {
+    try {
       const gitManager = new GitManager(true);
-      gitManager.pull(plugin);
+      const targetCommit = this.availableUpdates.find(update => update.id === id)?.targetCommit;
+      if (!targetCommit) return false;
 
-      gitManager.onComplete = async () => {
-        appManager?.getWebContent()?.send(this.updateChannel, id);
-        await this.reloadServer();
-        resolve(true);
-      };
-      gitManager.onError = () => {
-        resolve(false);
-      };
-    });
+      await gitManager.resetHard(targetDir, targetCommit);
+      this.updateList_Remove(id);
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
-  public async updateAllPlugins() {
-    const updatedPlugins: string[] = [];
-    await Promise.all(
-      this.installedPluginInfo.map(async plugin => {
-        const gitManager = new GitManager(false);
-        const updateResult = await gitManager.pullAsync(join(this.pluginPath, plugin.dir));
-        if (updateResult) updatedPlugins.push(plugin.metadata.id);
-      }),
-    );
-
-    if (updatedPlugins.length > 0) {
-      appManager?.getWebContent()?.send(this.updateChannel, updatedPlugins);
-      await this.reloadServer();
+  public async updatePlugins(list: string[]) {
+    try {
+      for (const id of list) {
+        const targetDir = this.getDirById(id);
+        const targetCommit = this.availableUpdates.find(update => update.id === id)?.targetCommit;
+        if (!targetDir || !targetCommit) continue;
+        await this.updatePlugin(id);
+      }
+    } catch (e) {
+      console.warn(`Failed to update plugins: ${e}`);
     }
   }
 
@@ -315,34 +321,6 @@ export abstract class BasePluginManager {
     if (this.server && this.server.listening) {
       this.server.close();
     }
-  }
-
-  public async reloadServer(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      if (this.server && this.server.listening) {
-        this.server?.close(async err => {
-          if (err) {
-            console.error('reloadServer: ', err);
-            reject(err);
-            return;
-          }
-
-          try {
-            this.pluginData = [];
-            this.mainMethods = [];
-            this.installedPluginInfo = [];
-
-            await this.createServer();
-            appManager?.getWebContent()?.send(this.reloadChannel);
-            resolve();
-          } catch (error) {
-            reject(error);
-          }
-        });
-      } else {
-        reject('Server is not running');
-      }
-    });
   }
 
   public getMethodsById(id: string): MainModules['methods'] | undefined {
