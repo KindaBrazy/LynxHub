@@ -1,4 +1,4 @@
-import {OsPlatforms, SubscribeStates} from '../CrossTypes';
+import {OsPlatforms, SubscribeStages} from '../CrossTypes';
 
 /**
  * Specifies the minimum required API versions for plugin compatibility.
@@ -77,7 +77,7 @@ export type VersionItem = {
    * - 'early_access': Pre-release builds for select users
    * - 'public': Generally available release
    */
-  stage: SubscribeStates[];
+  stage: SubscribeStages[];
 
   /**
    * Required engine versions for compatibility with this plugin version.
