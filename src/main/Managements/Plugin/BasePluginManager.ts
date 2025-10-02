@@ -475,36 +475,36 @@ export abstract class BasePluginManager {
     }
 
     const versioning = await staticManager.getPluginVersioningById(itemId);
+    const {type} = await staticManager.getPluginMetadataById(itemId);
 
     const engines: PluginEngines | undefined = versioning.versions.find(
       item => item.commit === currentCommitHash,
     )?.engines;
 
     if (engines && typeof engines === 'object') {
-      const checks = [
-        {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'},
-        {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'},
-      ];
+      const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
+      const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
 
-      for (const check of checks) {
-        const requiredRange = engines[check.api as keyof PluginEngines];
-        if (requiredRange && !satisfies(check.version, requiredRange)) {
-          // ltr(app_version, required_range) is true if the app version is lower.
-          const isAppTooOld = ltr(check.version, requiredRange);
+      const targetCheck = type === 'extension' ? extensionCheck : moduleCheck;
 
-          // --- Message 2 & 3: Version Mismatch ---
-          const message = isAppTooOld
-            ? `Requires a newer version of LynxHub to run.` // App is too old for the plugin.
-            : `This ${check.type} is too old for your version of LynxHub.`; // Plugin is too old for the app.
+      const requiredRange = engines[targetCheck.api as keyof PluginEngines];
+      if (requiredRange && !satisfies(targetCheck.version, requiredRange)) {
+        // ltr(app_version, required_range) is true if the app version is lower.
+        const isAppTooOld = ltr(targetCheck.version, requiredRange);
 
-          this.skippedPlugins.push({
-            folderName: folder,
-            message: message,
-          });
-          console.log(`Skipping plugin "${folder}": ${message}`);
-          return false;
-        }
+        // --- Message 2 & 3: Version Mismatch ---
+        const message = isAppTooOld
+          ? `Requires a newer version of LynxHub to run.` // App is too old for the plugin.
+          : `This ${type} is too old for your version of LynxHub.`; // Plugin is too old for the app.
+
+        this.skippedPlugins.push({
+          folderName: folder,
+          message: message,
+        });
+        console.log(`Skipping plugin "${folder}": ${message}`);
+        return false;
       }
+
       // If all engine checks pass, the plugin is compatible.
       return true;
     } else {
