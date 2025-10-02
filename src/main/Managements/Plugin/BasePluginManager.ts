@@ -110,7 +110,7 @@ export abstract class BasePluginManager {
 
           resolve(true);
         } catch (e) {
-          console.warn(e);
+          console.warn(`Failed to install plugin: ${url}`, e);
           resolve(false);
         }
       } else {
@@ -127,6 +127,7 @@ export abstract class BasePluginManager {
       await this.reloadServer();
       return true;
     } catch (e) {
+      console.warn(`Failed to uninstall ${id}: `, e);
       return false;
     }
   }
@@ -213,7 +214,7 @@ export abstract class BasePluginManager {
       const results = await Promise.all(updateChecks);
       return compact(results.map(result => (result.available ? result.title : null)));
     } catch (error) {
-      console.error('Error checking for updates:', error);
+      console.error('Error checking for all updates:', error);
 
       const errorMessage = isString(error) ? error : error.message;
       if (includes(errorMessage, 'detected dubious ownership')) this.showGitOwnershipToast();
@@ -416,7 +417,7 @@ export abstract class BasePluginManager {
             if (url) oldInstallations.push(url);
           } catch (e) {
             // Ignore subdirectories that are not Git repositories or where the remote cannot be determined
-            // console.warn(`Could not determine remote URL for ${subdirPath}:`, e);
+            console.warn(`Could not determine remote URL for ${subdirPath}:`, e);
           }
         }
       }
