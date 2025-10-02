@@ -12,7 +12,6 @@ import handler from 'serve-handler';
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
 import {SubscribeStages} from '../../../cross/CrossTypes';
 import {pluginChannels, SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
-import {MainModules} from '../../../cross/plugin/ModuleTypes';
 import {PluginEngines, PluginMetadata, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
 import {appManager, staticManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
@@ -20,31 +19,38 @@ import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDat
 import GitManager from '../GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
 import ShowToastWindow from '../ToastWindowManager';
+import ExtensionManager from './Extensions/ExtensionManager';
+import ModuleManager from './Modules/ModuleManager';
 import {getCommitByAppStage, getCommitByStage, isUpdateAvailable} from './PluginUtils';
 
-export abstract class BasePluginManager {
+export class PluginManager {
   protected readonly host: string = 'localhost';
-  protected port: number;
+  private port: number = 5103;
   protected server: ReturnType<typeof createServer> | undefined = undefined;
   protected finalAddress: string = '';
 
-  protected oldDirPath: string;
   protected pluginData: string[] = [];
   protected skippedPlugins: SkippedPlugins[] = [];
-  protected mainMethods: MainModules[] = [];
   protected installedPluginInfo: {dir: string; metadata: PluginMetadata}[] = [];
   protected availableUpdates: PluginUpdateList[] = [];
 
   protected readonly pluginPath: string;
-  protected readonly mainScriptPath: string;
-  protected readonly rendererScriptPath: string;
 
-  protected constructor(defaultPort: number, mainScriptPath: string, rendererScriptPath: string, oldDirPath: string) {
-    this.port = defaultPort;
-    this.mainScriptPath = mainScriptPath;
-    this.rendererScriptPath = rendererScriptPath;
+  private readonly moduleFolder: string = 'Modules';
+  private readonly moduleMainScriptPath: string = 'scripts/main.mjs';
+  private readonly moduleRendererScriptPath: string = 'scripts/renderer.mjs';
+
+  private readonly extensionFolder: string = 'Extensions';
+  private readonly extensionMainScriptPath: string = 'scripts/main/mainEntry.mjs';
+  private readonly extensionRendererScriptPath: string = 'scripts/renderer/rendererEntry.mjs';
+
+  private moduleManager: ModuleManager;
+  private extensionManager: ExtensionManager;
+
+  constructor(moduleManager: ModuleManager, extensionManager: ExtensionManager) {
+    this.moduleManager = moduleManager;
+    this.extensionManager = extensionManager;
     this.pluginPath = getAppDirectory('Plugins');
-    this.oldDirPath = oldDirPath;
   }
 
   protected async setInstalledPlugins(folders: string[]) {
@@ -63,29 +69,6 @@ export abstract class BasePluginManager {
       }
     }
   }
-
-  protected async readPlugin() {
-    return new Promise<void>(async resolve => {
-      try {
-        const files = readdirSync(this.pluginPath, {withFileTypes: true});
-        const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
-        const validFolders = await this.validatePluginFolders(folders);
-
-        this.pluginData = validFolders.map(folder => `${this.finalAddress}/${folder}`);
-        const pluginFolders = validFolders.map(folder => join(this.pluginPath, folder));
-
-        await this.setInstalledPlugins(folders);
-        await this.importPlugins(pluginFolders);
-
-        resolve();
-      } catch (error: any) {
-        console.error(`Loading Plugin Error: `, error);
-        resolve();
-      }
-    });
-  }
-
-  protected abstract importPlugins(pluginFolders: string[]): Promise<void>;
 
   public async installPlugin(url: string, commitHash: string) {
     return new Promise<boolean>(async resolve => {
@@ -269,6 +252,40 @@ export abstract class BasePluginManager {
     }
   }
 
+  protected async readPlugin() {
+    return new Promise<void>(async resolve => {
+      try {
+        const files = readdirSync(this.pluginPath, {withFileTypes: true});
+        const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
+        const validFolders = await this.validatePluginFolders(folders);
+
+        this.pluginData = validFolders.map(folder => `${this.finalAddress}/${folder}`);
+        const pluginFolders = validFolders.map(folder => join(this.pluginPath, folder));
+
+        await this.setInstalledPlugins(folders);
+
+        const moduleFolders: string[] = [];
+        const extensionFolder: string[] = [];
+
+        for (const folder of pluginFolders) {
+          const metadata = await staticManager.getPluginMetadataById(folder);
+          if (metadata.type === 'module') {
+            moduleFolders.push(folder);
+          } else if (metadata.type === 'extension') {
+            extensionFolder.push(folder);
+          }
+        }
+        await this.extensionManager.importPlugins(extensionFolder);
+        await this.moduleManager.importPlugins(moduleFolders);
+
+        resolve();
+      } catch (error: any) {
+        console.error(`Loading Plugin Error: `, error);
+        resolve();
+      }
+    });
+  }
+
   public async createServer() {
     return new Promise<{port: number; hostName: string}>((resolve, reject) => {
       const startServer = async () => {
@@ -327,10 +344,6 @@ export abstract class BasePluginManager {
     }
   }
 
-  public getMethodsById(id: string): MainModules['methods'] | undefined {
-    return this.mainMethods.find(plugin => plugin.id === id)?.methods;
-  }
-
   public getPluginData(): string[] {
     return this.pluginData;
   }
@@ -360,13 +373,18 @@ export abstract class BasePluginManager {
       } else {
         const dir = join(this.pluginPath, folder);
         const scriptsFolder = join(dir, 'scripts');
+        const metadata = await staticManager.getPluginMetadataById(folder);
+
+        const targetMainPath = metadata.type === 'module' ? this.moduleMainScriptPath : this.extensionMainScriptPath;
+        const targetRendererPath =
+          metadata.type === 'module' ? this.moduleRendererScriptPath : this.extensionRendererScriptPath;
 
         try {
           await promises.access(scriptsFolder, constants.F_OK);
 
           await Promise.all([
-            promises.access(join(dir, this.mainScriptPath), constants.F_OK),
-            promises.access(join(dir, this.rendererScriptPath), constants.F_OK),
+            promises.access(join(dir, targetMainPath), constants.F_OK),
+            promises.access(join(dir, targetRendererPath), constants.F_OK),
           ]);
 
           const isCompatible = await this.compatibleCheck(folder);
@@ -384,17 +402,16 @@ export abstract class BasePluginManager {
     return validatedFolders;
   }
 
-  public async migrate() {
-    const targetDir = join(dirname(this.pluginPath), this.oldDirPath);
+  private async migrateRemoveOld(folder: string) {
     const oldInstallations: string[] = [];
 
     // Store already installed plugins
     try {
-      const entries = await promises.readdir(targetDir, {withFileTypes: true});
+      const entries = await promises.readdir(folder, {withFileTypes: true});
 
       for (const entry of entries) {
         if (entry.isDirectory()) {
-          const subdirPath = resolve(targetDir, entry.name);
+          const subdirPath = resolve(folder, entry.name);
           try {
             const url = await GitManager.remoteUrlFromDir(subdirPath);
             if (url) oldInstallations.push(url);
@@ -405,16 +422,29 @@ export abstract class BasePluginManager {
         }
       }
     } catch (error) {
-      console.error(`Failed to read plugin directory ${targetDir}:`, error);
+      console.error(`Failed to read plugin directory ${folder}:`, error);
     }
 
     // Remove old installations
     try {
-      await promises.rm(targetDir, {recursive: true, force: true});
+      await promises.rm(folder, {recursive: true, force: true});
     } catch (error) {
-      console.error(`Failed to clean directory ${targetDir}:`, error);
+      console.error(`Failed to clean directory ${folder}:`, error);
       throw error;
     }
+
+    return oldInstallations;
+  }
+
+  public async migrate() {
+    const targetModuleDir = join(dirname(this.pluginPath), this.moduleFolder);
+    const targetExtensionDir = join(dirname(this.pluginPath), this.extensionFolder);
+    let oldInstallations: string[] = [];
+
+    const oldInstalledModules = await this.migrateRemoveOld(targetModuleDir);
+    const oldInstalledExtensions = await this.migrateRemoveOld(targetExtensionDir);
+
+    oldInstallations = [...oldInstalledModules, ...oldInstalledExtensions];
 
     // Reinstall in the new way
     for (const url of oldInstallations) {
