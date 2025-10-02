@@ -18,7 +18,7 @@ import {BasePluginManager} from '../BasePluginManager';
 
 export default class ModuleManager extends BasePluginManager {
   private checkInterval?: NodeJS.Timeout = undefined;
-  private availableUpdates: string[] = [];
+  private availableCardUpdates: string[] = [];
 
   public static getModulesPath() {
     return getAppDirectory('Plugins');
@@ -165,13 +165,13 @@ export default class ModuleManager extends BasePluginManager {
         return {id: card.id, dir: getAbsolutePath(getExePath(), card.dir || '')};
       });
     }
-    this.availableUpdates = [];
+    this.availableCardUpdates = [];
 
     for (const card of installedCards) {
       const updateType = updateTypes.find(update => update.id === card.id)?.type;
       const isAvailable = await this.checkCardUpdate(card, updateType);
-      if (isAvailable) this.availableUpdates.push(card.id);
-      appManager?.getWebContent()?.send(modulesChannels.onCardsUpdateAvailable, this.availableUpdates);
+      if (isAvailable) this.availableCardUpdates.push(card.id);
+      appManager?.getWebContent()?.send(modulesChannels.onCardsUpdateAvailable, this.availableCardUpdates);
     }
   }
 
