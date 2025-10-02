@@ -192,7 +192,6 @@ export const modulesChannels = {
 export const extensionsChannels = {
   installExtension: 'extensions:install-extensions',
   uninstallExtension: 'extensions:uninstall-extensions',
-  isUpdateAvailable: 'extensions:is-update-available',
   updateAvailableList: 'extensions:any-update-available',
   updateExtension: 'extensions:update-extensions',
   updateAllExtensions: 'extensions:update-all-extensions',
@@ -206,6 +205,11 @@ export const extensionsChannels = {
   getInstalledExtensionsInfo: 'extensions:get-installed-extensions-info',
 
   getSkipped: 'extensions:get-skipped',
+};
+
+export const pluginChannels = {
+  updateList: 'plugins:update-list',
+  needRestart: 'plugins:need-restart',
 };
 
 export const ptyChannels = {
