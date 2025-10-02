@@ -49,7 +49,7 @@ export async function isUpdateAvailable(id: string, currentCommit: string, stage
   const {versions} = await staticManager.getPluginVersioningById(id);
   const targetCommit = getTargetCommit(versions, stage);
 
-  return currentCommit !== targetCommit;
+  return currentCommit !== targetCommit ? targetCommit : undefined;
 }
 
 export async function getCommitByStage(id: string, stage: SubscribeStages) {
