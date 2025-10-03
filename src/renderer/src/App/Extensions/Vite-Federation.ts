@@ -19,36 +19,32 @@ const getRemote: GetRemoteModule = __federation_method_getRemote;
 
 export async function loadExtensions() {
   let importedExtensions: ExtensionImport_Renderer[];
-  let folderNames: string[];
+  let extensionIds: string[];
 
   if (isDev()) {
     const extension = await import('../../../../../extension/src/renderer/Extension');
     importedExtensions = [extension];
-    folderNames = ['dev-extension'];
+    extensionIds = ['dev-extension'];
   } else {
-    const extensionDataAddress: string[] = await rendererIpc.plugins.getPluginsData();
-    const finalAddress: string[] = extensionDataAddress.map(ext => `${ext}/scripts/renderer/rendererEntry.mjs`);
+    const pluginAddresses = await rendererIpc.plugins.getPluginAddresses();
+    const extensionAddresses = pluginAddresses
+      .filter(item => item.type === 'extension')
+      .map(({address}) => `${address}/scripts/renderer/rendererEntry.mjs`);
 
-    folderNames = compact(
-      finalAddress.map(url => {
+    extensionIds = compact(
+      extensionAddresses.map(url => {
         const match = url.match(/:\/\/[^/]+\/([^/]+)\/scripts/);
         return match ? match[1] : null;
       }),
     );
 
-    finalAddress.forEach((url, index) => {
-      setRemote(folderNames[index], {
-        format: 'esm',
-        from: 'vite',
-        url,
-      });
-    });
+    extensionAddresses.forEach((url, index) => setRemote(extensionIds[index], {format: 'esm', from: 'vite', url}));
 
-    importedExtensions = await Promise.all(folderNames.map(folderName => getRemote(folderName, 'Extension')));
+    importedExtensions = await Promise.all(extensionIds.map(folderName => getRemote(folderName, 'Extension')));
   }
 
   const extensionsWithIds = importedExtensions.map((module, index) => ({
-    id: folderNames[index],
+    id: extensionIds[index],
     module,
   }));
 

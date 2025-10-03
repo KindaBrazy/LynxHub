@@ -75,7 +75,12 @@ import {
   winChannels,
   WinStateChange,
 } from '../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginAvailableItem, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
+import {
+  InstalledPlugin,
+  PluginAddresses,
+  PluginAvailableItem,
+  PluginUpdateList,
+} from '../../../cross/plugin/PluginTypes';
 import StorageTypes, {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
 import {extensionRendererApi} from './Extensions/ExtensionLoader';
 
@@ -281,7 +286,7 @@ const rendererIpc = {
 
   plugins: {
     checkStage: (stage: SubscribeStages): Promise<boolean> => ipc.invoke(pluginChannels.checkStage, stage),
-    getPluginsData: (): Promise<string[]> => ipc.invoke(pluginChannels.getPluginsData),
+    getPluginAddresses: (): Promise<PluginAddresses> => ipc.invoke(pluginChannels.getPluginAddresses),
     getInstalledPlugins: (): Promise<InstalledPlugin[]> => ipc.invoke(pluginChannels.getInstalledPlugins),
     getSkippedPlugins: (): Promise<SkippedPlugins[]> => ipc.invoke(pluginChannels.getSkippedPlugins),
     installPlugin: (url: string, commitHash?: string): Promise<boolean> =>

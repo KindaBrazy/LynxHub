@@ -146,3 +146,6 @@ export type PluginUpdateList = {
 
 export type InstalledPlugin = {dir: string; url: string; version: VersionItem; metadata: PluginMetadata};
 export type PluginAvailableItem = {metadata: PluginMetadata; versioning: PluginVersioning; icon: string; url: string};
+
+export type PluginAddresses = {type: 'module' | 'extension'; address: string}[];
+export type ValidatedPlugins = {type: 'module' | 'extension'; folder: string}[];

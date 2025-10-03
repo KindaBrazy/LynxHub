@@ -12,7 +12,13 @@ import handler from 'serve-handler';
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
 import {SubscribeStages} from '../../../cross/CrossTypes';
 import {pluginChannels, SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginEngines, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
+import {
+  InstalledPlugin,
+  PluginAddresses,
+  PluginEngines,
+  PluginUpdateList,
+  ValidatedPlugins,
+} from '../../../cross/plugin/PluginTypes';
 import {appManager, staticManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
@@ -29,7 +35,7 @@ export class PluginManager {
   protected server: ReturnType<typeof createServer> | undefined = undefined;
   protected finalAddress: string = '';
 
-  protected pluginData: string[] = [];
+  protected pluginsAddresses: PluginAddresses = [];
   protected skippedPlugins: SkippedPlugins[] = [];
   protected installedPluginInfo: InstalledPlugin[] = [];
   protected availableUpdates: PluginUpdateList[] = [];
@@ -277,8 +283,11 @@ export class PluginManager {
         const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
         const validFolders = await this.validatePluginFolders(folders);
 
-        this.pluginData = validFolders.map(folder => `${this.finalAddress}/${folder}`);
-        const pluginFolders = validFolders.map(folder => join(this.pluginPath, folder));
+        this.pluginsAddresses = validFolders.map(({folder, type}) => ({
+          address: `${this.finalAddress}/${folder}`,
+          type,
+        }));
+        const pluginFolders = validFolders.map(valid => join(this.pluginPath, valid.folder));
 
         await this.setInstalledPlugins(folders);
 
@@ -362,8 +371,8 @@ export class PluginManager {
     }
   }
 
-  public getPluginData(): string[] {
-    return this.pluginData;
+  public getPluginAddresses(): PluginAddresses {
+    return this.pluginsAddresses;
   }
 
   public getSkipped(): SkippedPlugins[] {
@@ -382,8 +391,8 @@ export class PluginManager {
     return undefined;
   }
 
-  protected async validatePluginFolders(folderPaths: string[]): Promise<string[]> {
-    const validatedFolders: string[] = [];
+  protected async validatePluginFolders(folderPaths: string[]): Promise<ValidatedPlugins> {
+    const validatedFolders: ValidatedPlugins = [];
 
     for (const folder of folderPaths) {
       if (folder.startsWith('.')) {
@@ -391,11 +400,10 @@ export class PluginManager {
       } else {
         const dir = join(this.pluginPath, folder);
         const scriptsFolder = join(dir, 'scripts');
-        const metadata = await staticManager.getPluginMetadataById(folder);
+        const {type} = await staticManager.getPluginMetadataById(folder);
 
-        const targetMainPath = metadata.type === 'module' ? this.moduleMainScriptPath : this.extensionMainScriptPath;
-        const targetRendererPath =
-          metadata.type === 'module' ? this.moduleRendererScriptPath : this.extensionRendererScriptPath;
+        const targetMainPath = type === 'module' ? this.moduleMainScriptPath : this.extensionMainScriptPath;
+        const targetRendererPath = type === 'module' ? this.moduleRendererScriptPath : this.extensionRendererScriptPath;
 
         try {
           await promises.access(scriptsFolder, constants.F_OK);
@@ -406,7 +414,7 @@ export class PluginManager {
           ]);
 
           const isCompatible = await this.compatibleCheck(folder);
-          if (isCompatible) validatedFolders.push(folder);
+          if (isCompatible) validatedFolders.push({type, folder});
         } catch (err) {
           this.skippedPlugins.push({
             folderName: folder,
@@ -457,12 +465,11 @@ export class PluginManager {
   public async migrate() {
     const targetModuleDir = join(dirname(this.pluginPath), this.moduleFolder);
     const targetExtensionDir = join(dirname(this.pluginPath), this.extensionFolder);
-    let oldInstallations: string[] = [];
 
     const oldInstalledModules = await this.migrateRemoveOld(targetModuleDir);
     const oldInstalledExtensions = await this.migrateRemoveOld(targetExtensionDir);
 
-    oldInstallations = [...oldInstalledModules, ...oldInstalledExtensions];
+    const oldInstallations = [...oldInstalledModules, ...oldInstalledExtensions];
 
     // Reinstall in the new way
     for (const url of oldInstallations) {

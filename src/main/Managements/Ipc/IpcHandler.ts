@@ -213,7 +213,7 @@ function modules() {
 
 function plugins() {
   ipcMain.handle(pluginChannels.checkStage, (_, stage: SubscribeStages) => pluginManager.checkStage(stage));
-  ipcMain.handle(pluginChannels.getPluginsData, () => pluginManager.getPluginData());
+  ipcMain.handle(pluginChannels.getPluginAddresses, () => pluginManager.getPluginAddresses());
   ipcMain.handle(pluginChannels.getInstalledPlugins, () => pluginManager.getInstalledPluginInfo());
   ipcMain.handle(pluginChannels.getSkippedPlugins, () => pluginManager.getSkipped());
   ipcMain.handle(pluginChannels.installPlugin, (_, url: string, commitHash?: string) =>
