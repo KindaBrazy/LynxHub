@@ -59,8 +59,7 @@ export const PageID = {
   agents: 'agents_page',
 
   dashboard: 'dashboard_page',
-  extensions: 'extension_page',
-  modules: 'modules_page',
+  plugins: 'plugins_page',
   settings: 'settings_page',
 } as const;
 
@@ -78,8 +77,7 @@ export const PageTitles = {
   agents: 'Agents',
 
   dashboard: 'Dashboard',
-  extensions: 'Extensions',
-  modules: 'Modules',
+  plugins: 'Plugins',
   settings: 'Settings',
 };
 
@@ -95,7 +93,6 @@ export const PageTitleByPageId = {
   [PageID.agents]: 'Agents',
 
   [PageID.dashboard]: 'Dashboard',
-  [PageID.modules]: 'Extensions',
-  [PageID.extensions]: 'Modules',
+  [PageID.plugins]: 'Plugins',
   [PageID.settings]: 'Settings',
 };

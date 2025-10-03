@@ -132,7 +132,7 @@ export function Download2_Icon(props: SvgProps): ReactElement {
   );
 }
 
-export function Extensions_Icon(props: SvgProps): ReactElement {
+export function Plugins_Icon(props: SvgProps): ReactElement {
   return (
     <svg {...props} height="1em" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
       <path

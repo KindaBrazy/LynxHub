@@ -14,7 +14,6 @@ import TextGenerationPage from '../Components/Pages/ContentPages/TextGenerationP
 import ToolsPage from '../Components/Pages/ContentPages/ToolsPage';
 import DashboardPage from '../Components/Pages/SettingsPages/Dashboard/DashboardPage';
 import ExtensionsPage from '../Components/Pages/SettingsPages/Extensions/ExtensionsPage';
-import ModulesPage from '../Components/Pages/SettingsPages/Modules/ModulesPage';
 import SettingsPage from '../Components/Pages/SettingsPages/Settings/SettingsPage';
 
 export const PageComponents = {
@@ -29,8 +28,7 @@ export const PageComponents = {
   [PageID.agents]: AgentsPage,
 
   [PageID.dashboard]: DashboardPage,
-  [PageID.modules]: ModulesPage,
-  [PageID.extensions]: ExtensionsPage,
+  [PageID.plugins]: ExtensionsPage,
   [PageID.settings]: SettingsPage,
 };
 

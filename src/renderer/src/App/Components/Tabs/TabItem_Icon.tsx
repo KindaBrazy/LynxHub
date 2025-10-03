@@ -5,12 +5,11 @@ import {APP_ICON_TRANSPARENT, PageID} from '../../../../../cross/CrossConstants'
 import {TabInfo} from '../../../../../cross/CrossTypes';
 import {
   AudioGeneration_Icon,
-  Extensions_Icon,
-  Extensions2_Icon,
   GamePad_Icon,
   Home_Icon,
   ImageGeneration_Icon,
   Info_Icon,
+  Plugins_Icon,
   Rocket_Icon,
   Slider_Icon,
   Terminal_Icon,
@@ -45,8 +44,7 @@ const TabItem_Icon = memo(({tab, currentView}: Props) => {
       else if (pageID === PageID.games) setIcon(<GamePad_Icon className="size-full" />);
       else if (pageID === PageID.tools) setIcon(<Rocket_Icon className="size-full" />);
       else if (pageID === PageID.dashboard) setIcon(<Info_Icon className="size-full" />);
-      else if (pageID === PageID.modules) setIcon(<Extensions2_Icon className="size-full" />);
-      else if (pageID === PageID.extensions) setIcon(<Extensions_Icon className="size-full" />);
+      else if (pageID === PageID.plugins) setIcon(<Plugins_Icon className="size-full" />);
       else if (pageID === PageID.settings) setIcon(<Slider_Icon className="size-full" />);
       else setIcon(<Avatar radius="none" className="size-full" src={APP_ICON_TRANSPARENT} />);
     };
