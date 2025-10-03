@@ -89,8 +89,8 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
       'add',
     );
     setUpdatingAll(true);
-    rendererIpc.extension
-      .updateAllExtensions()
+    rendererIpc.plugins
+      .updatePlugins()
       .then(() => {
         lynxTopToast(dispatch).success('Extensions updated successfully!');
       })

@@ -1,10 +1,8 @@
 import {createContext, memo, useContext, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
-import {settingsActions} from '../../../../Redux/Reducer/SettingsReducer';
-import {AppDispatch} from '../../../../Redux/Store';
+import {useUserState} from '../../../../Redux/Reducer/UserReducer';
 import rendererIpc from '../../../../RendererIpc';
 import Page from '../../Page';
 import ExtensionList from './ExtensionList';
@@ -22,22 +20,22 @@ const ExtensionsPage = memo(({show}: Props) => {
   const [selectedExtension, setSelectedExtension] = useState<Extension_ListData | undefined>(undefined);
   const [installed, setInstalled] = useState<InstalledExt[]>([]);
   const [unloaded, setUnloaded] = useState<SkippedPlugins[]>([]);
-
-  const dispatch = useDispatch<AppDispatch>();
+  const updateChannel = useUserState('updateChannel');
 
   useEffect(() => {
-    rendererIpc.extension.getInstalledExtensionsInfo().then(result => {
+    rendererIpc.plugins.getInstalledPlugins().then(installedList => {
       setInstalled(
-        result.map(item => {
-          const {id, version} = item.info;
-          return {id, version, dir: item.dir};
-        }),
+        installedList
+          .filter(item => item.metadata.type === 'extension')
+          .map(item => {
+            const {id} = item.metadata;
+            const version = item.version.version;
+            return {id, version, dir: item.dir};
+          }),
       );
     });
-    rendererIpc.extension.updateAvailableList().then(value => {
-      dispatch(settingsActions.setSettingsState({key: 'extensionsUpdateAvailable', value}));
-    });
-    rendererIpc.extension.getSkipped().then(result => setUnloaded(result));
+    rendererIpc.plugins.checkForUpdates(updateChannel === 'ea' ? 'early_access' : updateChannel);
+    rendererIpc.plugins.getSkippedPlugins().then(result => setUnloaded(result));
   }, []);
 
   const storeValue = useMemo(() => createExtensionStore(), []);
