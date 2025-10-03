@@ -17,7 +17,7 @@ import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
 import {defaultTabItem} from '../Utils/Constants';
 import {lynxTopToast} from '../Utils/UtilHooks';
-import {checkEARepos} from './AppEvents_Utils';
+import {checkSubscribeStage} from './AppEvents_Utils';
 
 export const useCheckCardsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -108,11 +108,9 @@ export const usePatreon = () => {
         dispatch(userActions.setUserState({key: 'patreonUserData', value: result}));
         dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
 
-        checkEARepos(result.earlyAccess, result.insider);
+        checkSubscribeStage(result.earlyAccess, result.insider);
       })
-      .catch(() => {
-        if (isOnline) checkEARepos(false, false);
-      });
+      .catch(console.info);
 
     window.electron.ipcRenderer.on('release-channel-change', (_, result) => {
       dispatch(userActions.setUpdateChannel(result));
