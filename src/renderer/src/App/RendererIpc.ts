@@ -73,7 +73,7 @@ import {
   winChannels,
   WinStateChange,
 } from '../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginAvailableItem, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
 import StorageTypes, {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
 import {extensionRendererApi} from './Extensions/ExtensionLoader';
 
@@ -918,6 +918,7 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('statics_get_patrons', {});
       return ipc.invoke(staticsChannels.getPatrons);
     },
+    getPluginsList: (): Promise<PluginAvailableItem[]> => ipc.invoke(staticsChannels.getPluginsList),
   },
 
   events: {

@@ -386,6 +386,7 @@ export const staticsChannels = {
   getExtensions: 'statics:getExtensions',
   getExtensionsEA: 'statics:getExtensionsEA',
   getPatrons: 'statics:getPatrons',
+  getPluginsList: 'statics:getPluginsList',
 };
 
 export const initChannels = {
