@@ -32,7 +32,7 @@ import {
   ShieldWarning_Icon,
   Windows_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
-import {settingsActions, useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
+import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {useUserState} from '../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
@@ -238,9 +238,8 @@ export function useRenderList(
     (id: string, title: string) => {
       AddBreadcrumb_Renderer(`Extension update: id:${id}`);
       manageSet('updating', selectedExt?.id, 'add');
-      rendererIpc.extension.updateExtension(id).then(updated => {
+      rendererIpc.plugins.updatePlugin(id).then(updated => {
         if (updated) {
-          dispatch(settingsActions.removeExtUpdateAvailable(id));
           lynxTopToast(dispatch).success(`${title} updated Successfully`);
           showRestartModal('To apply the updates to the extension, please restart the app.');
         }

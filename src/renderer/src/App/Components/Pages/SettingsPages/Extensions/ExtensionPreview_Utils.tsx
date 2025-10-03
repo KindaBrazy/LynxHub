@@ -19,7 +19,7 @@ import {
   UserDuo_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
-import {settingsActions, useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
+import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
@@ -245,10 +245,9 @@ function ActionButtons({
     AddBreadcrumb_Renderer(`Extension update: id:${selectedExt?.id}`);
     manageSet('updating', selectedExt?.id, 'add');
     if (selectedExt?.id) {
-      rendererIpc.extension.updateExtension(selectedExt.id).then(updated => {
+      rendererIpc.plugins.updatePlugin(selectedExt.id).then(updated => {
         if (updated) {
           lynxTopToast(dispatch).success(`${selectedExt.title} updated successfully`);
-          dispatch(settingsActions.removeExtUpdateAvailable(selectedExt.id));
           showRestartModal('To apply the updates to the extension, please restart the app.');
         }
         manageSet('updating', selectedExt?.id, 'remove');
@@ -261,7 +260,7 @@ function ActionButtons({
     manageSet('installing', selectedExt?.id, 'add');
 
     if (selectedExt?.url) {
-      rendererIpc.extension.installExtension(selectedExt.url).then(result => {
+      rendererIpc.plugins.installPlugin(selectedExt.url).then(result => {
         manageSet('installing', selectedExt?.id, 'remove');
         if (result) {
           lynxTopToast(dispatch).success(`${selectedExt.title} installed successfully`);
@@ -277,11 +276,10 @@ function ActionButtons({
     manageSet('unInstalling', selectedExt?.id, 'add');
 
     if (selectedExt?.id) {
-      rendererIpc.extension.uninstallExtension(selectedExt.id).then(result => {
+      rendererIpc.plugins.uninstallPlugin(selectedExt.id).then(result => {
         manageSet('unInstalling', selectedExt?.id, 'remove');
         if (result) {
           lynxTopToast(dispatch).success(`${selectedExt.title} uninstalled successfully`);
-          dispatch(settingsActions.removeExtUpdateAvailable(selectedExt.id));
           showRestartModal('To complete the uninstallation of the extension, please restart the app.');
         }
         setInstalled(prevState => prevState.filter(item => item.id !== selectedExt.id));
