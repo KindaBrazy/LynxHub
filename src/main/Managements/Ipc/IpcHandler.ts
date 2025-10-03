@@ -216,7 +216,7 @@ function plugins() {
   ipcMain.handle(pluginChannels.getPluginsData, () => pluginManager.getPluginData());
   ipcMain.handle(pluginChannels.getInstalledPlugins, () => pluginManager.getInstalledPluginInfo());
   ipcMain.handle(pluginChannels.getSkippedPlugins, () => pluginManager.getSkipped());
-  ipcMain.handle(pluginChannels.installPlugin, (_, url: string, commitHash: string) =>
+  ipcMain.handle(pluginChannels.installPlugin, (_, url: string, commitHash?: string) =>
     pluginManager.installPlugin(url, commitHash),
   );
   ipcMain.handle(pluginChannels.uninstallPlugin, (_, id: string) => pluginManager.uninstallPlugin(id));

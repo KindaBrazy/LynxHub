@@ -70,16 +70,24 @@ export class PluginManager {
     }
   }
 
-  public async installPlugin(url: string, commitHash: string) {
+  public async installPlugin(url: string, commitHash?: string) {
     return new Promise<boolean>(async resolve => {
+      let targetCommit: string;
       const id = await staticManager.getPluginIdByRepositoryUrl(url);
+
       if (id) {
+        if (commitHash) {
+          targetCommit = commitHash;
+        } else {
+          targetCommit = await getCommitByAppStage(id);
+        }
+
         const directory = join(this.pluginPath, id);
 
         try {
           const gitManager = new GitManager(true);
           await gitManager.cloneShallow(url, directory, true, undefined, 'main');
-          await gitManager.resetHard(directory, commitHash);
+          await gitManager.resetHard(directory, targetCommit);
 
           this.onNeedRestart(id);
           resolve(true);
