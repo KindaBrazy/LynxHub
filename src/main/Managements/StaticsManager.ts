@@ -12,7 +12,7 @@ import {
   SubscribeStages,
 } from '../../cross/CrossTypes';
 import {toMs} from '../../cross/CrossUtils';
-import {PluginMetadata, PluginVersioning} from '../../cross/plugin/PluginTypes';
+import {PluginAvailableItem, PluginMetadata, PluginVersioning} from '../../cross/plugin/PluginTypes';
 import {getAppDirectory} from './AppDataManager';
 import GitManager from './GitManager';
 
@@ -120,17 +120,6 @@ export default class StaticsManager {
     return (await this.getDataAsJson('patrons.json')) as PatreonSupporter[];
   }
 
-  public async listPluginIds(): Promise<string[]> {
-    await this.requirementsCheckPromise;
-
-    const pluginsPath = join(this.dir, 'plugins');
-    const entries = readdirSync(pluginsPath, {withFileTypes: true});
-
-    const pluginIds = entries.filter(dirent => dirent.isDirectory()).map(dirent => dirent.name);
-
-    return pluginIds;
-  }
-
   public async getPluginMetadataById(pluginId: string): Promise<PluginMetadata> {
     await this.requirementsCheckPromise;
 
@@ -178,5 +167,34 @@ export default class StaticsManager {
     }
 
     return 'public';
+  }
+
+  public async getPluginsList(): Promise<PluginAvailableItem[]> {
+    await this.requirementsCheckPromise;
+
+    const pluginsUrlPath = join('plugins', 'plugins_url.json');
+    const urlMap = (await this.getDataAsJson(pluginsUrlPath)) as Record<string, string>;
+
+    const pluginsPath = join(this.dir, 'plugins');
+    const pluginIds = readdirSync(pluginsPath, {withFileTypes: true})
+      .filter(dirent => dirent.isDirectory())
+      .map(dirent => dirent.name);
+
+    const pluginPromises = pluginIds.map(async (id): Promise<PluginAvailableItem> => {
+      const [metadata, versioning, icon] = await Promise.all([
+        this.getPluginMetadataById(id),
+        this.getPluginVersioningById(id),
+        this.getPluginIconAsDataUrl(id),
+      ]);
+
+      return {
+        metadata,
+        versioning,
+        icon,
+        url: urlMap[id] || '',
+      };
+    });
+
+    return Promise.all(pluginPromises);
   }
 }
