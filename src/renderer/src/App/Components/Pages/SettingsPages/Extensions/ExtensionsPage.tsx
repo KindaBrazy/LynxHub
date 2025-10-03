@@ -1,7 +1,7 @@
 import {createContext, memo, useContext, useEffect, useMemo, useState} from 'react';
 
-import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
+import {InstalledPlugin, PluginAvailableItem} from '../../../../../../../cross/plugin/PluginTypes';
 import {useUserState} from '../../../../Redux/Reducer/UserReducer';
 import rendererIpc from '../../../../RendererIpc';
 import Page from '../../Page';
@@ -10,29 +10,18 @@ import {createExtensionStore, ExtensionPageStore} from './ExtensionPageStore';
 import {ExtensionPageState} from './ExtensionPageTypes';
 import ExtensionPreview from './ExtensionPreview';
 
-export type InstalledExt = {dir: string; id: string; version?: string};
-
-type Props = {show: boolean};
-
 const ExtensionPageContext = createContext<ExtensionPageStore | null>(null);
 
+type Props = {show: boolean};
 const ExtensionsPage = memo(({show}: Props) => {
-  const [selectedExtension, setSelectedExtension] = useState<Extension_ListData | undefined>(undefined);
-  const [installed, setInstalled] = useState<InstalledExt[]>([]);
+  const [selectedExtension, setSelectedExtension] = useState<PluginAvailableItem | undefined>(undefined);
+  const [installed, setInstalled] = useState<InstalledPlugin[]>([]);
   const [unloaded, setUnloaded] = useState<SkippedPlugins[]>([]);
   const updateChannel = useUserState('updateChannel');
 
   useEffect(() => {
     rendererIpc.plugins.getInstalledPlugins().then(installedList => {
-      setInstalled(
-        installedList
-          .filter(item => item.metadata.type === 'extension')
-          .map(item => {
-            const {id} = item.metadata;
-            const version = item.version.version;
-            return {id, version, dir: item.dir};
-          }),
-      );
+      setInstalled(installedList.filter(item => item.metadata.type === 'extension'));
     });
     rendererIpc.plugins.checkForUpdates(updateChannel === 'ea' ? 'early_access' : updateChannel);
     rendererIpc.plugins.getSkippedPlugins().then(result => setUnloaded(result));

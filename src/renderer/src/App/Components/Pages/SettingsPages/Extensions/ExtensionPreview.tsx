@@ -1,19 +1,21 @@
 import {isEmpty} from 'lodash';
 import {Dispatch, memo, SetStateAction, useMemo} from 'react';
 
-import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
+import {InstalledPlugin, PluginAvailableItem} from '../../../../../../../cross/plugin/PluginTypes';
 import {Plugins_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {PreviewBody, PreviewHeader} from './ExtensionPreview_Utils';
-import {InstalledExt} from './ExtensionsPage';
 
 type Props = {
-  selectedExt: Extension_ListData | undefined;
-  installed: InstalledExt[];
-  setInstalled: Dispatch<SetStateAction<InstalledExt[]>>;
+  selectedExt: PluginAvailableItem | undefined;
+  installed: InstalledPlugin[];
+  setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
 };
 
 const ExtensionPreview = memo(({selectedExt, installed, setInstalled}: Props) => {
-  const installedExt = useMemo(() => installed.find(item => item.id === selectedExt?.id), [installed, selectedExt]);
+  const installedExt = useMemo(
+    () => installed.find(item => item.metadata.id === selectedExt?.metadata.id),
+    [installed, selectedExt],
+  );
   return (
     <div
       className={

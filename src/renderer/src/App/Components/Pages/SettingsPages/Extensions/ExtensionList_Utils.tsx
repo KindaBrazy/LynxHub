@@ -19,9 +19,9 @@ import {isEmpty, isNil} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
+import {InstalledPlugin, PluginAvailableItem} from '../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {
   CheckDuo_Icon,
@@ -38,40 +38,20 @@ import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
 import {ExtFilter} from './ExtensionList';
-import {InstalledExt, useExtensionPageStore} from './ExtensionsPage';
+import {useExtensionPageStore} from './ExtensionsPage';
 
-export function useFetchExtensions(setList: Dispatch<SetStateAction<Extension_ListData[]>>) {
+export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginAvailableItem[]>>) {
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const userData = useUserState('patreonUserData');
+  const updateChannel = useUserState('updateChannel');
 
   useEffect(() => {
     async function fetchExtensionsList() {
       setLoading(true);
       try {
-        const ipc = userData.earlyAccess ? rendererIpc.statics.getExtensionsEA : rendererIpc.statics.getExtensions;
-        const extensions = await ipc();
+        const plugins = await rendererIpc.statics.getPluginsList();
 
-        const data: Extension_ListData[] = extensions.map(ext => {
-          const {id, repoUrl, title, description, avatarUrl, updateDate, version, changeLog, tag, platforms} = ext;
-          const {owner} = extractGitUrl(repoUrl);
-
-          return {
-            id,
-            url: repoUrl,
-            title,
-            description,
-            changeLog,
-            updateDate,
-            version,
-            avatarUrl,
-            developer: owner,
-            tag,
-            platforms,
-          };
-        });
-
-        if (!isEmpty(data)) setList(data);
+        if (!isEmpty(plugins)) setList(plugins);
       } catch (e) {
         console.error(e);
       } finally {
@@ -83,15 +63,15 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<Extension_Li
     rendererIpc.statics.pull().finally(() => fetchExtensionsList().finally(() => setRefreshing(false)));
 
     fetchExtensionsList();
-  }, [userData]);
+  }, [updateChannel]);
 
   return {loading, refreshing};
 }
 
 export function useFilteredList(
-  list: Extension_ListData[],
+  list: PluginAvailableItem[],
   selectedFilters: ExtFilter,
-  setSelectedExt: Dispatch<SetStateAction<Extension_ListData | undefined>>,
+  setSelectedExt: Dispatch<SetStateAction<PluginAvailableItem | undefined>>,
   installed: string[],
 ) {
   const filteredList = useMemo(() => {
@@ -99,14 +79,11 @@ export function useFilteredList(
 
     const isInstalledFilterActive = selectedFilters.has('installed');
     return list.filter(item => {
-      const isInstalled = installed.includes(item.id);
-      const matchesTag = selectedFilters.has(item.tag);
+      const isInstalled = installed.includes(item.metadata.id);
 
-      if (!isInstalledFilterActive) {
-        return !isInstalled && matchesTag;
-      }
+      if (!isInstalledFilterActive) return !isInstalled;
 
-      return isInstalled || matchesTag;
+      return isInstalled;
     });
   }, [list, selectedFilters, installed]);
 
@@ -118,7 +95,7 @@ export function useFilteredList(
       if (isNil(prevState)) {
         return filteredList[0];
       }
-      if (!filteredList.some(item => item.id === prevState.id)) {
+      if (!filteredList.some(item => item.metadata.id === prevState.metadata.id)) {
         return filteredList[0];
       }
       return prevState;
@@ -128,12 +105,12 @@ export function useFilteredList(
   return filteredList;
 }
 
-export function useSortedList(list: Extension_ListData[], installed: string[]) {
+export function useSortedList(list: PluginAvailableItem[], installed: string[]) {
   return useMemo(
     () =>
       [...list].sort((a, b) => {
-        const aInstalled = installed.includes(a.id);
-        const bInstalled = installed.includes(b.id);
+        const aInstalled = installed.includes(a.metadata.id);
+        const bInstalled = installed.includes(b.metadata.id);
 
         if (aInstalled && !bInstalled) return -1;
         if (!aInstalled && bInstalled) return 1;
@@ -181,14 +158,15 @@ export function useFilterMenu(selectedKeys: ExtFilter, setSelectedKeys: Dispatch
 }
 
 export function useRenderList(
-  selectedExt: Extension_ListData | undefined,
-  setSelectedExt: Dispatch<SetStateAction<Extension_ListData | undefined>>,
+  selectedExt: PluginAvailableItem | undefined,
+  setSelectedExt: Dispatch<SetStateAction<PluginAvailableItem | undefined>>,
   isLoaded: boolean,
-  installed: InstalledExt[],
+  installed: InstalledPlugin[],
   unloaded: SkippedPlugins[],
   updatingAll: boolean,
 ) {
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
+  const updateChannel = useUserState('updateChannel');
 
   const manageSet = useExtensionPageStore(state => state.manageSet);
 
@@ -237,44 +215,44 @@ export function useRenderList(
   const update = useCallback(
     (id: string, title: string) => {
       AddBreadcrumb_Renderer(`Extension update: id:${id}`);
-      manageSet('updating', selectedExt?.id, 'add');
+      manageSet('updating', selectedExt?.metadata.id, 'add');
       rendererIpc.plugins.updatePlugin(id).then(updated => {
         if (updated) {
           lynxTopToast(dispatch).success(`${title} updated Successfully`);
           showRestartModal('To apply the updates to the extension, please restart the app.');
         }
-        manageSet('updating', selectedExt?.id, 'remove');
+        manageSet('updating', selectedExt?.metadata.id, 'remove');
       });
     },
     [selectedExt],
   );
 
   return useCallback(
-    (item: Extension_ListData) => {
-      const foundInstalled = installed.find(i => i.id === item.id);
+    (item: PluginAvailableItem) => {
+      const foundInstalled = installed.find(i => i.metadata.id === item.metadata.id);
       const foundUnloaded = unloaded.find(u => foundInstalled?.dir === u.folderName);
 
-      const isInstalling = installing.has(item.id);
-      const isUpdating = updating.has(item.id);
-      const isUnInstalling = unInstalling.has(item.id);
+      const isInstalling = installing.has(item.metadata.id);
+      const isUpdating = updating.has(item.metadata.id);
+      const isUnInstalling = unInstalling.has(item.metadata.id);
 
-      const isUpdateAvailable = updateAvailable.some(available => available.id === item.id);
+      const isUpdateAvailable = updateAvailable.some(available => available.id === item.metadata.id);
 
       const {linux, win32, darwin} = {
-        linux: item.platforms.includes('linux'),
-        win32: item.platforms.includes('win32'),
-        darwin: item.platforms.includes('darwin'),
+        linux: item.metadata.platforms?.includes('linux'),
+        win32: item.metadata.platforms?.includes('win32'),
+        darwin: item.metadata.platforms?.includes('darwin'),
       };
 
       return (
         <Card
           onPress={() => {
-            AddBreadcrumb_Renderer(`Extension Select: id:${item.id}`);
+            AddBreadcrumb_Renderer(`Extension Select: id:${item.metadata.id}`);
             setSelectedExt(item);
           }}
           className={
             `hover:bg-foreground-100 hover:shadow-medium relative ` +
-            ` border-2 border-foreground-100 ${selectedExt?.id === item.id && '!border-primary'}` +
+            ` border-2 border-foreground-100 ${selectedExt?.metadata.id === item.metadata.id && '!border-primary'}` +
             ` rounded-xl !transition-all !duration-300 bg-foreground-50 cursor-default`
           }
           as="div"
@@ -284,13 +262,13 @@ export function useRenderList(
           <CardHeader className="pb-0">
             <User
               avatarProps={{
-                src: item.avatarUrl,
+                src: item.icon,
                 radius: 'none',
                 className: 'shrink-0 !bg-black/0',
               }}
               description={
                 <span className="text-foreground-500 text-small">
-                  By <span className="font-bold text-foreground-500">{item.developer}</span>
+                  By <span className="font-bold text-foreground-500">{extractGitUrl(item.url).owner}</span>
                 </span>
               }
               name={
@@ -300,14 +278,16 @@ export function useRenderList(
                     href={item.url}
                     className="text-primary-500 transition-colors duration-300 font-semibold"
                     isExternal>
-                    {item.title}
+                    {item.metadata.title}
                   </Link>
                   <Chip
+                    className={`${
+                      updateAvailable.some(available => available.id === item.metadata.id) && 'text-success'
+                    }`}
                     size="sm"
                     radius="sm"
-                    variant="flat"
-                    className={`${updateAvailable.some(available => available.id === item.id) && 'text-success'}`}>
-                    v{item.version}
+                    variant="flat">
+                    v{foundInstalled?.version.version}
                   </Chip>
                 </div>
               }
@@ -317,7 +297,7 @@ export function useRenderList(
 
           <CardBody className="pl-[3.7rem] py-0">
             <Typography.Paragraph className="mt-2" ellipsis={{rows: 2, tooltip: true}}>
-              {item.description}
+              {item.metadata.description}
             </Typography.Paragraph>
           </CardBody>
 
@@ -367,8 +347,8 @@ export function useRenderList(
                 isLoading={isUpdating}
                 isDisabled={updatingAll}
                 variant={isUpdating ? 'light' : 'flat'}
-                onPress={() => update(item.id, item.title)}
-                startContent={!isUpdating && <Download_Icon />}>
+                startContent={!isUpdating && <Download_Icon />}
+                onPress={() => update(item.metadata.id, item.metadata.title)}>
                 {isUpdating ? 'Updating...' : 'Update'}
               </Button>
             )}
@@ -387,6 +367,17 @@ export function useRenderList(
         </Card>
       );
     },
-    [installed, selectedExt, isLoaded, unloaded, updatingAll, updateAvailable, installing, updating, unInstalling],
+    [
+      installed,
+      selectedExt,
+      isLoaded,
+      unloaded,
+      updatingAll,
+      updateAvailable,
+      installing,
+      updating,
+      unInstalling,
+      updateChannel,
+    ],
   );
 }

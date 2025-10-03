@@ -6,6 +6,7 @@ import {useDispatch} from 'react-redux';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
+import {InstalledPlugin, PluginAvailableItem} from '../../../../../../../cross/plugin/PluginTypes';
 import {Circle_Icon, RefreshDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
@@ -14,26 +15,26 @@ import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import LynxScroll from '../../../Reusable/LynxScroll';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useRenderList, useSortedList} from './ExtensionList_Utils';
-import {InstalledExt, useExtensionPageStore} from './ExtensionsPage';
+import {useExtensionPageStore} from './ExtensionsPage';
 
 export type ExtFilter = Set<'installed' | Extension_ListData['tag']> | 'all';
 
 type Props = {
-  selectedExt: Extension_ListData | undefined;
-  setSelectedExt: Dispatch<SetStateAction<Extension_ListData | undefined>>;
-  installed: InstalledExt[];
+  selectedExt: PluginAvailableItem | undefined;
+  setSelectedExt: Dispatch<SetStateAction<PluginAvailableItem | undefined>>;
+  installed: InstalledPlugin[];
   unloaded: SkippedPlugins[];
 };
 
 export default function ExtensionList({selectedExt, setSelectedExt, installed, unloaded}: Props) {
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const [selectedFilters, setSelectedFilters] = useState<ExtFilter>('all');
-  const [list, setList] = useState<Extension_ListData[]>([]);
+  const [list, setList] = useState<PluginAvailableItem[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [updatingAll, setUpdatingAll] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
-  const installedID = useMemo(() => installed.map(item => item.id), [installed]);
+  const installedID = useMemo(() => installed.map(item => item.metadata.id), [installed]);
 
   const manageSet = useExtensionPageStore(state => state.manageSet);
 
@@ -44,7 +45,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
   const searchList = useMemo(
     () =>
       sortedList.filter(item =>
-        searchInStrings(searchValue, [item.title, item.description, item.url, item.tag, item.developer]),
+        searchInStrings(searchValue, [item.metadata.title, item.metadata.description, item.url]),
       ),
     [sortedList, searchValue],
   );
