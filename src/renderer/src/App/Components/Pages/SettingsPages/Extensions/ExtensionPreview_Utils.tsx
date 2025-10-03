@@ -160,6 +160,25 @@ export function PreviewBody({
 
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
 
+  const rawReadmeUrl = useMemo(() => {
+    const repoUrl = selectedExt?.url;
+    if (!repoUrl) {
+      return '';
+    }
+
+    try {
+      const {owner, repo} = extractGitUrl(repoUrl);
+
+      if (owner && repo) {
+        return `https://raw.githubusercontent.com/${owner}/${repo}/refs/heads/source/README.md`;
+      }
+    } catch (error) {
+      console.error('Failed to parse repository URL:', repoUrl, error);
+    }
+
+    return '';
+  }, [selectedExt?.url]);
+
   return (
     <div className="w-full flex flex-col overflow-hidden">
       <Tabs
@@ -189,7 +208,7 @@ export function PreviewBody({
       </Tabs>
       {currentTab === 'readme' &&
         (isNil(ReplaceMd) ? (
-          <MarkdownViewer repoUrl={selectedExt?.url || ''} />
+          <MarkdownViewer urlType="raw" url={rawReadmeUrl} />
         ) : (
           <ReplaceMd repoPath={selectedExt?.url || ''} />
         ))}
