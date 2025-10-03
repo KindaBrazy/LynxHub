@@ -31,24 +31,18 @@ type PagesType = {
 };
 
 const GetPages = ({Pages}: {Pages: PagesType[]}) => {
-  const moduleUpdateAvailable = useSettingsState('moduleUpdateAvailable');
-  const extensionsUpdateAvailable = useSettingsState('extensionsUpdateAvailable');
+  const updateAvailableList = useSettingsState('pluginUpdateAvailableList');
   const appUpdateAvailable = useSettingsState('updateAvailable');
 
   return Pages.map(page => {
     const {navButton, path} = page;
     const {icon, title} = navButton;
 
-    const moduleBadge = navButton.title === 'Modules' && !isEmpty(moduleUpdateAvailable);
-    const extensionBadge = navButton.title === 'Extensions' && !isEmpty(extensionsUpdateAvailable);
+    const extensionBadge = navButton.title === 'Extensions' && !isEmpty(updateAvailableList);
     const dashboardBadge = navButton.title === 'Dashboard' && appUpdateAvailable;
 
     return (
-      <NavButton
-        title={title}
-        pageId={path}
-        key={`navBtn-${path}`}
-        badge={moduleBadge || dashboardBadge || extensionBadge}>
+      <NavButton title={title} pageId={path} key={`navBtn-${path}`} badge={dashboardBadge || extensionBadge}>
         {icon}
       </NavButton>
     );
