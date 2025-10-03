@@ -1,7 +1,8 @@
 import {Button, Card, Chip, Select, Selection, SelectItem} from '@heroui/react';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {SubscribeStages} from '../../../../../../../../cross/CrossTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download2_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
@@ -54,10 +55,8 @@ export default function DashboardUpdate() {
   const onChange = useCallback((keys: Selection) => {
     AddBreadcrumb_Renderer(`Update Channel Changed: keys:${JSON.stringify(keys)}`);
     if (keys !== 'all') {
-      const value = keys.values().next().value?.toString();
-      if (value) {
-        window.electron.ipcRenderer.send('patreon-change-update-channel', value);
-      }
+      const value = keys.values().next().value?.toString() as SubscribeStages | undefined;
+      if (value) rendererIpc.patreon.updateChannel(value);
     }
   }, []);
 
@@ -66,8 +65,19 @@ export default function DashboardUpdate() {
     window.electron.ipcRenderer.on('updateChannel-change', (_, result) => {
       setSelection([result]);
     });
-    window.electron.ipcRenderer.send('patreon-change-update-channel', 'get');
+    rendererIpc.patreon.updateChannel('get');
   }, []);
+
+  const disabledKeys = useMemo(() => {
+    switch (patreonUserData.subscribeStage) {
+      case 'insider':
+        return [];
+      case 'early_access':
+        return ['early_access'];
+      case 'public':
+        return ['early_access', 'insider'];
+    }
+  }, [patreonUserData]);
 
   return (
     <SettingsSection title="Updates" id={DashboardUpdateId} icon={<Download2_Icon className="size-5" />} itemsCenter>
@@ -76,9 +86,9 @@ export default function DashboardUpdate() {
         label="Update Frequency"
         labelPlacement="outside"
         selectedKeys={selection}
+        disabledKeys={disabledKeys}
         onSelectionChange={onChange}
         description="Choose how often you want to receive updates."
-        disabledKeys={patreonUserData.earlyAccess ? undefined : ['ea']}
         classNames={{trigger: 'cursor-default !transition !duration-300', description: 'text-start'}}
         disallowEmptySelection>
         <SelectItem
@@ -88,7 +98,7 @@ export default function DashboardUpdate() {
           Standard Updates
         </SelectItem>
         <SelectItem
-          key="ea"
+          key="early_access"
           textValue="Early Access"
           className="cursor-default"
           classNames={{title: 'space-x-1'}}
@@ -96,7 +106,7 @@ export default function DashboardUpdate() {
           <span>Early Access</span>
           {patreonLoggedIn ? (
             <span className="text-warning">
-              {!patreonUserData.earlyAccess && '(Upgrade your Patreon tier to unlock)'}
+              {patreonUserData.subscribeStage !== 'early_access' && '(Upgrade your Patreon tier to unlock)'}
             </span>
           ) : (
             <span className="text-warning">(Login to Patreon to unlock)</span>
@@ -110,7 +120,9 @@ export default function DashboardUpdate() {
           description="Get immediate access to every new feature and fix for LynxHub Core, extensions and modules.">
           <span>Insider</span>
           {patreonLoggedIn ? (
-            <span className="text-warning">{!patreonUserData.insider && '(Upgrade your Patreon tier to unlock)'}</span>
+            <span className="text-warning">
+              {patreonUserData.subscribeStage !== 'insider' && '(Upgrade your Patreon tier to unlock)'}
+            </span>
           ) : (
             <span className="text-warning">(Login to Patreon to unlock)</span>
           )}
@@ -157,7 +169,8 @@ export default function DashboardUpdate() {
           {/* Early Access Card */}
           <Card
             className={
-              `p-4 bg-content2 shadow cursor-default ` + `${selection[0] === 'ea' && 'border-2'} border-warning/50`
+              `p-4 bg-content2 shadow cursor-default ` +
+              `${selection[0] === 'early_access' && 'border-2'} border-warning/50`
             }
             isPressable>
             <div className="flex justify-between items-center mb-2">

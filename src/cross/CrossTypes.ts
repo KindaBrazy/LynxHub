@@ -264,8 +264,7 @@ export type PatreonUserData = {
   tier: string;
   name: string;
   imageUrl: string;
-  earlyAccess: boolean;
-  insider: boolean;
+  subscribeStage: SubscribeStages;
 };
 
 export type FolderListData = {type: 'folder' | 'file'; name: string};

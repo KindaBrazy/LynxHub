@@ -1,13 +1,13 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {PatreonUserData} from '../../../../../cross/CrossTypes';
+import {PatreonUserData, SubscribeStages} from '../../../../../cross/CrossTypes';
 import {RootState} from '../Store';
 
 type UserState = {
   patreonUserData: PatreonUserData;
   patreonLoggedIn: boolean;
-  updateChannel: 'ea' | 'insider' | 'public';
+  updateChannel: SubscribeStages;
 };
 
 type UserStateTypes = {
@@ -19,8 +19,7 @@ const initialState: UserState = {
     tier: 'Not available',
     name: 'Guest',
     imageUrl: '',
-    earlyAccess: false,
-    insider: false,
+    subscribeStage: 'public',
   },
   patreonLoggedIn: false,
   updateChannel: 'public',
@@ -42,7 +41,7 @@ const userSlice = createSlice({
     resetUserState: <K extends keyof UserState>(state: UserState, action: PayloadAction<K>) => {
       state[action.payload] = initialState[action.payload];
     },
-    setUpdateChannel: (state: UserState, action: PayloadAction<UserState['updateChannel']>) => {
+    setUpdateChannel: (state: UserState, action: PayloadAction<SubscribeStages>) => {
       state.updateChannel = action.payload;
     },
   },

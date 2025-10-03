@@ -11,9 +11,7 @@ const stageDisplayNames: Record<SubscribeStages, string> = {
   public: 'Public',
 };
 
-export const checkSubscribeStage = (isEA: boolean, isInsider: boolean) => {
-  const stage: SubscribeStages = isInsider ? 'insider' : isEA ? 'early_access' : 'public';
-
+export const checkSubscribeStage = (stage: SubscribeStages) => {
   rendererIpc.plugins.checkStage(stage).then(isStageChanged => {
     if (isStageChanged) {
       const newStageName = stageDisplayNames[stage];

@@ -33,7 +33,6 @@ import {
   Windows_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
-import {useUserState} from '../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
@@ -43,7 +42,6 @@ import {useExtensionPageStore} from './ExtensionsPage';
 export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginAvailableItem[]>>) {
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const updateChannel = useUserState('updateChannel');
 
   useEffect(() => {
     async function fetchExtensionsList() {
@@ -63,7 +61,7 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginAvaila
     rendererIpc.statics.pull().finally(() => fetchExtensionsList().finally(() => setRefreshing(false)));
 
     fetchExtensionsList();
-  }, [updateChannel]);
+  }, []);
 
   return {loading, refreshing};
 }
@@ -166,7 +164,6 @@ export function useRenderList(
   updatingAll: boolean,
 ) {
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
-  const updateChannel = useUserState('updateChannel');
 
   const manageSet = useExtensionPageStore(state => state.manageSet);
 
@@ -367,17 +364,6 @@ export function useRenderList(
         </Card>
       );
     },
-    [
-      installed,
-      selectedExt,
-      isLoaded,
-      unloaded,
-      updatingAll,
-      updateAvailable,
-      installing,
-      updating,
-      unInstalling,
-      updateChannel,
-    ],
+    [installed, selectedExt, isLoaded, unloaded, updatingAll, updateAvailable, installing, updating, unInstalling],
   );
 }

@@ -23,9 +23,9 @@ const ExtensionsPage = memo(({show}: Props) => {
     rendererIpc.plugins.getInstalledPlugins().then(installedList => {
       setInstalled(installedList.filter(item => item.metadata.type === 'extension'));
     });
-    rendererIpc.plugins.checkForUpdates(updateChannel === 'ea' ? 'early_access' : updateChannel);
+    rendererIpc.plugins.checkForUpdates(updateChannel);
     rendererIpc.plugins.getSkippedPlugins().then(result => setUnloaded(result));
-  }, []);
+  }, [updateChannel]);
 
   const storeValue = useMemo(() => createExtensionStore(), []);
 

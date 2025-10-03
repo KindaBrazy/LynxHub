@@ -2,12 +2,12 @@ import {Button, Card, User} from '@heroui/react';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {PatreonUserData} from '../../../../../../../../../cross/CrossTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../../Breadcrumbs';
 import {Patreon_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {checkSubscribeStage} from '../../../../../../AppEvents/AppEvents_Utils';
 import {userActions, useUserState} from '../../../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
+import rendererIpc from '../../../../../../RendererIpc';
 
 export default function Profile_Patreon() {
   const patreonLoggedIn = useUserState('patreonLoggedIn');
@@ -21,12 +21,12 @@ export default function Profile_Patreon() {
     AddBreadcrumb_Renderer(`Patreon Login`);
     if (!patreonLoggedIn) {
       setIsLoading(true);
-      window.electron.ipcRenderer
-        .invoke('patreon-login')
-        .then((userData: PatreonUserData) => {
+      rendererIpc.patreon
+        .login()
+        .then(userData => {
           dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
           dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
-          checkSubscribeStage(userData.earlyAccess, userData.insider);
+          checkSubscribeStage(userData.subscribeStage);
         })
         .catch(e => {
           console.error(e);
@@ -40,12 +40,15 @@ export default function Profile_Patreon() {
   const logoutPatreon = useCallback(() => {
     AddBreadcrumb_Renderer(`Patreon Logout`);
     setIsLoading(true);
-    window.electron.ipcRenderer.invoke('patreon-logout').then(() => {
-      setIsLoading(false);
-      dispatch(userActions.resetUserState('patreonUserData'));
-      dispatch(userActions.resetUserState('patreonLoggedIn'));
-      checkSubscribeStage(false, false);
-    });
+    rendererIpc.patreon
+      .logout()
+      .then(() => {
+        dispatch(userActions.resetUserState('patreonUserData'));
+        dispatch(userActions.resetUserState('patreonLoggedIn'));
+        checkSubscribeStage('public');
+      })
+      .catch(console.warn)
+      .finally(() => setIsLoading(false));
   }, []);
 
   const cancelLoading = () => {
