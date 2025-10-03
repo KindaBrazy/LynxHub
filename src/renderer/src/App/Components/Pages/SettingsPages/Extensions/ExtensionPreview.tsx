@@ -2,7 +2,7 @@ import {isEmpty} from 'lodash';
 import {Dispatch, memo, SetStateAction, useMemo} from 'react';
 
 import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
-import {Extensions_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {Plugins_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {PreviewBody, PreviewHeader} from './ExtensionPreview_Utils';
 import {InstalledExt} from './ExtensionsPage';
 
@@ -27,7 +27,7 @@ const ExtensionPreview = memo(({selectedExt, installed, setInstalled}: Props) =>
             'bg-white dark:bg-LynxRaisinBlack size-full flex items-center' +
             ' justify-center gap-y-4 flex-col px-4 text-center'
           }>
-          <Extensions_Icon className="size-16" />
+          <Plugins_Icon className="size-16" />
           <span className="text-large">Select an extension from the list to begin your exploration.</span>
         </div>
       ) : (

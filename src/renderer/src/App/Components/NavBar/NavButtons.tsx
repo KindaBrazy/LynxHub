@@ -4,12 +4,11 @@ import {ReactNode, useMemo} from 'react';
 import {PageID, PageTitles} from '../../../../../cross/CrossConstants';
 import {
   AudioGeneration_Icon,
-  Extensions_Icon,
-  Extensions2_Icon,
   GamePad_Icon,
   Home_Icon,
   ImageGeneration_Icon,
   MagicStickDuo_Icon,
+  Plugins_Icon,
   Robot_Icon,
   Rocket_Icon,
   TextGeneration_Icon,
@@ -125,8 +124,7 @@ export const ContentPagesButtons = () => {
 
 const SettingsPages: PagesType[] = [
   {navButton: {icon: <UserDuo_Icon className="size-full" />, title: PageTitles.dashboard}, path: PageID.dashboard},
-  {navButton: {icon: <Extensions2_Icon className="size-full" />, title: PageTitles.modules}, path: PageID.modules},
-  {navButton: {icon: <Extensions_Icon className="size-full" />, title: PageTitles.extensions}, path: PageID.extensions},
+  {navButton: {icon: <Plugins_Icon className="size-full" />, title: PageTitles.plugins}, path: PageID.plugins},
   {navButton: {icon: <Tuning_Icon className="size-full" />, title: PageTitles.settings}, path: PageID.settings},
 ];
 
