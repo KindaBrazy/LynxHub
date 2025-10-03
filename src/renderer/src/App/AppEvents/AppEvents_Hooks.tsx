@@ -102,19 +102,17 @@ export const usePatreon = () => {
   const isOnline = useAppState('isOnline');
 
   useEffect(() => {
-    window.electron.ipcRenderer
-      .invoke('patreon-get-info')
-      .then(result => {
-        dispatch(userActions.setUserState({key: 'patreonUserData', value: result}));
+    rendererIpc.patreon
+      .getInfo()
+      .then(userData => {
+        dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
         dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
 
-        checkSubscribeStage(result.earlyAccess, result.insider);
+        checkSubscribeStage(userData.subscribeStage);
       })
       .catch(console.info);
 
-    window.electron.ipcRenderer.on('release-channel-change', (_, result) => {
-      dispatch(userActions.setUpdateChannel(result));
-    });
+    rendererIpc.patreon.onReleaseChannel((_, stage) => dispatch(userActions.setUpdateChannel(stage)));
   }, [dispatch, isOnline]);
 };
 

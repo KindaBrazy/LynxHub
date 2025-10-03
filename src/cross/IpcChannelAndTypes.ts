@@ -397,3 +397,12 @@ export const initChannels = {
 export const eventsChannels = {
   card_PreCommandUninstall: 'events:card_PreCommandUninstall',
 };
+
+export const patreonChannels = {
+  getInfo: 'patreon:getInfo',
+  login: 'patreon:login',
+  logout: 'patreon:logout',
+  updateChannel: 'patreon:updateChannel',
+
+  onReleaseChannel: 'patreon:onReleaseChannel',
+};

@@ -13,6 +13,7 @@ import {
   ModulesInfo,
   Notification_Data,
   PatreonSupporter,
+  PatreonUserData,
   RepositoryInfo,
   SubscribeStages,
 } from '../../../cross/CrossTypes';
@@ -52,6 +53,7 @@ import {
   modulesChannels,
   OnPreCommands,
   OnUpdatingExtensions,
+  patreonChannels,
   pluginChannels,
   PreCommands,
   PreOpen,
@@ -964,6 +966,16 @@ const rendererIpc = {
   init: {
     checkGitInstalled: (): Promise<string | undefined> => ipc.invoke(initChannels.checkGitInstalled),
     checkPwsh7Installed: (): Promise<string | undefined> => ipc.invoke(initChannels.checkPwsh7Installed),
+  },
+
+  patreon: {
+    getInfo: (): Promise<PatreonUserData> => ipc.invoke(patreonChannels.getInfo),
+    login: (): Promise<PatreonUserData> => ipc.invoke(patreonChannels.login),
+    logout: (): Promise<void> => ipc.invoke(patreonChannels.logout),
+    updateChannel: (channel: SubscribeStages | 'get'): void => ipc.send(patreonChannels.updateChannel, channel),
+
+    onReleaseChannel: (result: (event: IpcRendererEvent, stage: SubscribeStages) => void) =>
+      ipc.on(patreonChannels.onReleaseChannel, result),
   },
 };
 

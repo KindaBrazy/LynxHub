@@ -106,7 +106,7 @@ const UpdateApp = () => {
       const data = await rendererIpc.statics.getReleases();
       const insiderData = await rendererIpc.statics.getInsider();
 
-      const isEA = updateChannel === 'ea';
+      const isEA = updateChannel === 'early_access';
       const isInsider = updateChannel === 'insider';
 
       const latestBuild =
@@ -185,7 +185,7 @@ const UpdateApp = () => {
   };
 
   const openDownloadPage = useCallback(() => {
-    const isEA = updateChannel === 'ea';
+    const isEA = updateChannel === 'early_access';
     const isInsider = updateChannel === 'insider';
     window.open(isInsider ? INSIDER_RELEASES_PAGE : isEA ? EARLY_RELEASES_PAGE : RELEASES_PAGE);
     dispatch(modalActions.closeUpdateApp());
