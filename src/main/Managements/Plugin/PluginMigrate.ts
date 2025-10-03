@@ -3,10 +3,8 @@ import {app, BrowserWindow} from 'electron';
 import StorageManager from '../Storage/StorageManager';
 import {PluginManager} from './PluginManager';
 
-export async function PluginMigrate(storageManager: StorageManager, pluginManager: PluginManager) {
-  if (!app.isReady()) await app.whenReady();
-
-  if (!storageManager.getData('plugin').migrated) {
+export function PluginMigrate(storageManager: StorageManager, pluginManager: PluginManager) {
+  app.whenReady().then(async () => {
     const migrationWindow = new BrowserWindow({
       width: 450,
       height: 200,
@@ -70,35 +68,35 @@ export async function PluginMigrate(storageManager: StorageManager, pluginManage
 
     await migrationWindow.loadURL(`data:text/html;charset=UTF-8,${encodeURIComponent(htmlContent)}`);
 
-    migrationWindow.on('ready-to-show', () => {
+    migrationWindow.on('ready-to-show', async () => {
       migrationWindow.show();
-    });
 
-    const updateStatus = async (message: string) => {
-      const script = `document.getElementById('status').innerText = ${JSON.stringify(message)};`;
-      if (migrationWindow && !migrationWindow.isDestroyed()) {
-        await migrationWindow.webContents.executeJavaScript(script);
+      const updateStatus = async (message: string) => {
+        const script = `document.getElementById('status').innerText = ${JSON.stringify(message)};`;
+        if (migrationWindow && !migrationWindow.isDestroyed()) {
+          await migrationWindow.webContents.executeJavaScript(script);
+        }
+      };
+
+      try {
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        await updateStatus('Migrating extensions and modules...');
+        await pluginManager.migrate();
+
+        storageManager.updateData('plugin', {migrated: true});
+
+        await updateStatus('Done! Restarting the application...');
+
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
+        app.quit();
+      } catch (error) {
+        console.error('Migration failed:', error);
+
+        await updateStatus(`Error: Migration failed. Please restart the app. Details: ${error.message}`);
       }
-    };
-
-    try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      await updateStatus('Migrating extensions and modules...');
-      await pluginManager.migrate();
-
-      storageManager.updateData('plugin', {migrated: true});
-
-      await updateStatus('Done! Restarting the application...');
-
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
-      app.quit();
-    } catch (error) {
-      console.error('Migration failed:', error);
-
-      await updateStatus(`Error: Migration failed. Please restart the app. Details: ${error.message}`);
-    }
-  }
+    });
+  });
 }
