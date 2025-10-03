@@ -226,6 +226,9 @@ export function useRenderList(
 
   return useCallback(
     (item: PluginAvailableItem) => {
+      const isExtension = item.metadata.type === 'extension';
+      const isItemSelected = selectedExt?.metadata.id === item.metadata.id;
+
       const foundInstalled = installed.find(i => i.metadata.id === item.metadata.id);
       const foundUnloaded = unloaded.find(u => foundInstalled?.dir === u.folderName);
 
@@ -248,8 +251,8 @@ export function useRenderList(
             setSelectedExt(item);
           }}
           className={
-            `hover:bg-foreground-100 hover:shadow-medium relative ` +
-            ` border-2 border-foreground-100 ${selectedExt?.metadata.id === item.metadata.id && '!border-primary'}` +
+            `hover:bg-foreground-100 hover:shadow-medium relative border-2 ` +
+            ` border-foreground-100 ${isItemSelected && (isExtension ? '!border-primary' : '!border-secondary')}` +
             ` rounded-xl !transition-all !duration-300 bg-foreground-50 cursor-default`
           }
           as="div"
@@ -271,9 +274,12 @@ export function useRenderList(
               name={
                 <div className="space-x-2">
                   <Link
+                    className={
+                      `${isExtension ? 'text-primary-500' : 'text-secondary-500'}` +
+                      ` transition-colors duration-300 font-semibold`
+                    }
                     size="lg"
                     href={item.url}
-                    className="text-primary-500 transition-colors duration-300 font-semibold"
                     isExternal>
                     {item.metadata.title}
                   </Link>
@@ -284,7 +290,7 @@ export function useRenderList(
                     size="sm"
                     radius="sm"
                     variant="flat">
-                    v{foundInstalled?.version.version}
+                    v{foundInstalled?.version.version || item.versioning.versions[0].version}
                   </Chip>
                 </div>
               }

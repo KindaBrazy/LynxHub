@@ -20,7 +20,7 @@ export function PluginMigrate(storageManager: StorageManager, pluginManager: Plu
 
     const htmlContent = `
       <!DOCTYPE html>
-      <html>
+      <html lang="en">
       <head>
         <style>
           @keyframes spin {
