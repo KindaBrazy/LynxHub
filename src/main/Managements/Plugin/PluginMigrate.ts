@@ -1,9 +1,9 @@
 import {app, BrowserWindow} from 'electron';
 
-import ExtensionManager from './Extensions/ExtensionManager';
-import ModuleManager from './Modules/ModuleManager';
+import StorageManager from '../Storage/StorageManager';
+import {PluginManager} from './PluginManager';
 
-export async function PluginMigrate(storageManager) {
+export async function PluginMigrate(storageManager: StorageManager, pluginManager: PluginManager) {
   if (!app.isReady()) await app.whenReady();
 
   if (!storageManager.getData('plugin').migrated) {
@@ -84,11 +84,8 @@ export async function PluginMigrate(storageManager) {
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      await updateStatus('Migrating extensions...');
-      await new ExtensionManager().migrate();
-
-      await updateStatus('Migrating modules...');
-      await new ModuleManager().migrate();
+      await updateStatus('Migrating extensions and modules...');
+      await pluginManager.migrate();
 
       storageManager.updateData('plugin', {migrated: true});
 
