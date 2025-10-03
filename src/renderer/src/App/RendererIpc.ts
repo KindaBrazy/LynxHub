@@ -282,7 +282,7 @@ const rendererIpc = {
     getPluginsData: (): Promise<string[]> => ipc.invoke(pluginChannels.getPluginsData),
     getInstalledPlugins: (): Promise<InstalledPlugin[]> => ipc.invoke(pluginChannels.getInstalledPlugins),
     getSkippedPlugins: (): Promise<SkippedPlugins[]> => ipc.invoke(pluginChannels.getSkippedPlugins),
-    installPlugin: (url: string, commitHash: string): Promise<boolean> =>
+    installPlugin: (url: string, commitHash?: string): Promise<boolean> =>
       ipc.invoke(pluginChannels.installPlugin, url, commitHash),
     uninstallPlugin: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.uninstallPlugin, id),
     isUpdateAvailable: (id: string, stage: SubscribeStages): Promise<boolean> =>
