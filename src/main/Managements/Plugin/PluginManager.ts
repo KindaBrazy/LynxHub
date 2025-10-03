@@ -71,7 +71,7 @@ export class PluginManager {
         const version = await getVersionByCommit(id, currentCommit);
         if (!version) continue;
 
-        this.installedPluginInfo.push({dir: folder, version, metadata});
+        this.installedPluginInfo.push({dir: folder, url: remoteUrl, version, metadata});
       } catch (error) {
         console.error(`Error parsing ${folder}: ${error}`);
       }
