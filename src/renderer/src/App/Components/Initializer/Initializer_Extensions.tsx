@@ -60,7 +60,7 @@ export default function Initializer_Extensions({
     if (isEmpty(urlsToInstall)) {
       setInstallingExtensions(false);
     } else {
-      Promise.all(urlsToInstall.map(item => rendererIpc.extension.installExtension(item)))
+      Promise.all(urlsToInstall.map(item => rendererIpc.plugins.installPlugin(item)))
         .then(result => {
           const allInstalled = result.every(isSuccess => isSuccess === true);
           if (allInstalled) {
