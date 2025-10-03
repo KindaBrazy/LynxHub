@@ -257,6 +257,7 @@ export function useRenderList(
           }
           as="div"
           shadow="sm"
+          key={`${item.metadata.id}_plugin_list_item`}
           fullWidth
           isPressable>
           <CardHeader className="pb-0">
