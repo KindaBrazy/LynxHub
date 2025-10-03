@@ -270,11 +270,6 @@ async function emitLoaded(
  * and sets the `allModules` and `allCards` variables.
  */
 const loadModules = async () => {
-  // Set up the reload listener initially
-  rendererIpc.module.onReload(() => {
-    loadModules();
-  });
-
   try {
     let importedModules: {path: string; module: RendererModuleImportType}[];
 
@@ -282,7 +277,7 @@ const loadModules = async () => {
       const devImport = await import('../../../../../module/src/renderer');
       importedModules = [{path: 'dev', module: devImport}];
     } else {
-      const moduleData = await rendererIpc.module.getModulesData();
+      const moduleData = await rendererIpc.plugins.getPluginsData();
 
       // Use Promise.all for concurrent module imports
       importedModules = await Promise.all(
