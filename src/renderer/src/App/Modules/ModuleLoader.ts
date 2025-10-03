@@ -277,11 +277,12 @@ const loadModules = async () => {
       const devImport = await import('../../../../../module/src/renderer');
       importedModules = [{path: 'dev', module: devImport}];
     } else {
-      const moduleData = await rendererIpc.plugins.getPluginsData();
+      const pluginAddresses = await rendererIpc.plugins.getPluginAddresses();
+      const moduleAddresses = pluginAddresses.filter(item => item.type === 'module').map(item => item.address);
 
       // Use Promise.all for concurrent module imports
       importedModules = await Promise.all(
-        moduleData.map(async path => {
+        moduleAddresses.map(async path => {
           const module = await import(/* @vite-ignore */ `${path}/scripts/renderer.mjs?${Date.now()}`);
           return {path, module};
         }),

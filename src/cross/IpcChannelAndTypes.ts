@@ -176,7 +176,7 @@ export const pluginChannels = {
   onAppNeedRestart: 'plugins:app-need-restart',
 
   checkStage: 'plugins:check-stage',
-  getPluginsData: 'plugins:get-plugins-data',
+  getPluginAddresses: 'plugins:get-plugins-addresses',
   getInstalledPlugins: 'plugins:get-installed-plugins',
   getSkippedPlugins: 'plugins:get-skipped-plugins',
 
