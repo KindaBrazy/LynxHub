@@ -21,7 +21,7 @@ import {removeDir} from '../Ipc/Methods/IpcMethods';
 import ShowToastWindow from '../ToastWindowManager';
 import ExtensionManager from './Extensions/ExtensionManager';
 import ModuleManager from './Modules/ModuleManager';
-import {getCommitByAppStage, getCommitByStage, isUpdateAvailable} from './PluginUtils';
+import {getCommitByAppStage, getCommitByStage, getVersionByCommit, isUpdateAvailable} from './PluginUtils';
 
 export class PluginManager {
   protected readonly host: string = 'localhost';
@@ -59,11 +59,19 @@ export class PluginManager {
         const targetDir = join(this.pluginPath, folder);
         const remoteUrl = await GitManager.remoteUrlFromDir(targetDir);
         if (!remoteUrl) continue;
+
+        const gitManager = new GitManager();
+        const currentCommit = await gitManager.getCurrentCommitHash(targetDir);
+        if (!currentCommit) continue;
+
         const id = await staticManager.getPluginIdByRepositoryUrl(remoteUrl);
         if (!id) continue;
-        const metadata = await staticManager.getPluginMetadataById(id);
 
-        this.installedPluginInfo.push({dir: folder, metadata});
+        const metadata = await staticManager.getPluginMetadataById(id);
+        const version = await getVersionByCommit(id, currentCommit);
+        if (!version) continue;
+
+        this.installedPluginInfo.push({dir: folder, version, metadata});
       } catch (error) {
         console.error(`Error parsing ${folder}: ${error}`);
       }

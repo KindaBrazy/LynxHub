@@ -45,6 +45,11 @@ export function getTargetCommit(versions: PluginVersions, stage: SubscribeStages
   }
 }
 
+export async function getVersionByCommit(id: string, commit: string) {
+  const {versions} = await staticManager.getPluginVersioningById(id);
+  return versions.find(v => v.commit === commit);
+}
+
 export async function isUpdateAvailable(id: string, currentCommit: string, stage: SubscribeStages) {
   const {versions} = await staticManager.getPluginVersioningById(id);
   const targetCommit = getTargetCommit(versions, stage);
