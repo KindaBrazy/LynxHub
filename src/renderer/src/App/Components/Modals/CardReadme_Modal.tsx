@@ -53,7 +53,7 @@ const CardReadmeModal = ({isOpen, url, title, tabID}: Props) => {
         <ModalBody className="p-0">
           {!isEmpty(url) &&
             (isNil(ReplaceMd) ? (
-              <MarkdownViewer repoUrl={url} rounded={false} />
+              <MarkdownViewer url={url} rounded={false} />
             ) : (
               <ReplaceMd repoPath={url} rounded={false} />
             ))}

@@ -22,9 +22,10 @@ import {extractGitUrl} from '../../../../../cross/CrossUtils';
 import LynxScroll from './LynxScroll';
 
 type MarkdownViewerProps = {
-  repoUrl: string;
+  url: string;
   rounded?: boolean;
   showBackground?: boolean;
+  urlType?: 'repository' | 'raw';
 };
 
 type CustomDivProps = HTMLAttributes<HTMLDivElement> & {
@@ -35,49 +36,75 @@ type CustomCodeProps = HTMLAttributes<HTMLElement> & {
   'data-inline'?: boolean;
 };
 
-const MarkdownViewer = ({repoUrl, rounded = true, showBackground}: MarkdownViewerProps) => {
+const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: MarkdownViewerProps) => {
   const [content, setContent] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
 
   const repository = useMemo(() => {
-    if (!repoUrl) return '';
-    const {repo, owner} = extractGitUrl(repoUrl);
+    if (urlType === 'raw' || !url) return '';
+    const {repo, owner} = extractGitUrl(url);
     return `${owner}/${repo}`;
-  }, [repoUrl]);
+  }, [url, urlType]);
 
   useEffect(() => {
     setLoading(true);
     setError('');
     setContent('');
-    const fetchReadme = async () => {
+    const fetchContent = async () => {
       try {
-        const response = await fetch(`https://api.github.com/repos/${repository}/readme`, {
-          headers: {
+        let urlToFetch: string | undefined;
+        const fetchOptions: RequestInit = {};
+        let notFoundMessage = 'Content is not accessible.';
+
+        if (urlType === 'raw') {
+          urlToFetch = url;
+        } else if (!isEmpty(repository)) {
+          urlToFetch = `https://api.github.com/repos/${repository}/readme`;
+          fetchOptions.headers = {
             Accept: 'application/vnd.github.raw+json',
-          },
-        });
+          };
+          notFoundMessage = 'README is not accessible.';
+        }
+
+        if (!urlToFetch) {
+          setLoading(false);
+          return;
+        }
+
+        const response = await fetch(urlToFetch, fetchOptions);
 
         if (!response.ok) {
-          setError('README is not accessible.');
+          setError(notFoundMessage);
+          return;
         }
 
         const data = await response.text();
         setContent(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch README');
+        setError(err instanceof Error ? err.message : 'Failed to fetch content');
       } finally {
         setLoading(false);
       }
     };
 
-    if (!isEmpty(repository)) fetchReadme();
-  }, [repository]);
+    fetchContent();
+  }, [url, urlType, repository]);
 
   const transformImageUrl = useCallback(
     (src: string) => {
       if (src.startsWith('http')) {
         return src;
+      }
+
+      if (urlType === 'raw' && url) {
+        try {
+          // Resolve relative paths against the full URL of the markdown file
+          return new URL(src, url).href;
+        } catch (e) {
+          console.error('Failed to construct image URL', e);
+          return src; // Fallback to original src if URL parsing fails
+        }
       }
 
       if (repository) {
@@ -87,7 +114,7 @@ const MarkdownViewer = ({repoUrl, rounded = true, showBackground}: MarkdownViewe
 
       return src;
     },
-    [repository],
+    [repository, urlType, url],
   );
 
   const handleLinkClick = (e: MouseEvent<HTMLAnchorElement>) => {
