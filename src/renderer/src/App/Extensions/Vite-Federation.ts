@@ -26,7 +26,7 @@ export async function loadExtensions() {
     importedExtensions = [extension];
     folderNames = ['dev-extension'];
   } else {
-    const extensionDataAddress: string[] = await rendererIpc.extension.getExtensionsData();
+    const extensionDataAddress: string[] = await rendererIpc.plugins.getPluginsData();
     const finalAddress: string[] = extensionDataAddress.map(ext => `${ext}/scripts/renderer/rendererEntry.mjs`);
 
     folderNames = compact(
