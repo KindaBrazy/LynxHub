@@ -71,7 +71,7 @@ const {hardwareAcceleration} = storageManager.getData('app');
 if (!hardwareAcceleration) app.disableHardwareAcceleration();
 
 async function setupApp() {
-  await PluginMigrate(storageManager);
+  await PluginMigrate(storageManager, pluginManager);
 
   await pluginManager.createServer();
   extensionManager.setStorageManager(storageManager);
