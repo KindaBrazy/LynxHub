@@ -5,7 +5,7 @@ import {useDispatch} from 'react-redux';
 import {PatreonUserData} from '../../../../../../../../../cross/CrossTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../../Breadcrumbs';
 import {Patreon_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
-import {checkEARepos} from '../../../../../../AppEvents/AppEvents_Utils';
+import {checkSubscribeStage} from '../../../../../../AppEvents/AppEvents_Utils';
 import {userActions, useUserState} from '../../../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 
@@ -26,7 +26,7 @@ export default function Profile_Patreon() {
         .then((userData: PatreonUserData) => {
           dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
           dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
-          checkEARepos(userData.earlyAccess, userData.insider);
+          checkSubscribeStage(userData.earlyAccess, userData.insider);
         })
         .catch(e => {
           console.error(e);
@@ -44,7 +44,7 @@ export default function Profile_Patreon() {
       setIsLoading(false);
       dispatch(userActions.resetUserState('patreonUserData'));
       dispatch(userActions.resetUserState('patreonLoggedIn'));
-      checkEARepos(false, false);
+      checkSubscribeStage(false, false);
     });
   }, []);
 
