@@ -54,7 +54,7 @@ export function PreviewHeader({
                 variant="light"
                 className="text-foreground-600"
                 startContent={<BoxDuo_Icon className="size-3.5" />}>
-                {installedExt?.version || selectedExt?.versioning[0].version}
+                {installedExt?.version.version || selectedExt?.versioning.versions[0].version}
               </Chip>
               <Chip
                 size="sm"
