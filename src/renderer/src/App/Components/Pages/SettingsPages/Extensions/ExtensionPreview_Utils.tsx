@@ -14,6 +14,7 @@ import {
 import AddBreadcrumb_Renderer, {useDebounceBreadcrumb} from '../../../../../../Breadcrumbs';
 import {ExternalDuo_Icon} from '../../../../../../context_menu/Components/SvgIcons';
 import {
+  ArrowDuo_Icon,
   BoxDuo_Icon,
   CalendarDuo_Icon,
   Download2_Icon,
@@ -24,6 +25,7 @@ import {
   UserDuo_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
+import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
@@ -42,6 +44,17 @@ export function PreviewHeader({
   installedExt: InstalledPlugin | undefined;
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
 }) {
+  const updateAvailable = useSettingsState('pluginUpdateAvailableList');
+
+  const {currentVersion, targetUpdate, isUpgrade, targetVersion} = useMemo(() => {
+    const currentVersion = installedExt?.version.version || selectedExt?.versioning.versions[0].version;
+    const targetUpdate = updateAvailable.find(update => update.id === selectedExt?.metadata.id);
+    const isUpgrade = targetUpdate?.type === 'upgrade';
+    const targetVersion = targetUpdate?.version.version;
+
+    return {currentVersion, targetUpdate, isUpgrade, targetVersion};
+  }, [installedExt, selectedExt, updateAvailable]);
+
   return (
     <div className="w-full flex sm:flex-col lg:flex-row p-5 sm:gap-y-2 shrink-0">
       <div className="w-full flex flex-col">
@@ -52,8 +65,15 @@ export function PreviewHeader({
                 size="sm"
                 variant="light"
                 className="text-foreground-600"
-                startContent={<BoxDuo_Icon className="size-3.5" />}>
-                {installedExt?.version.version || selectedExt?.versioning.versions[0].version}
+                startContent={<BoxDuo_Icon className="size-3.5" />}
+                classNames={{content: 'flex flex-row items-center justify-center gap-x-1'}}>
+                <span>v{currentVersion}</span>
+                {targetUpdate && (
+                  <>
+                    <ArrowDuo_Icon className="size-3 rotate-180" />
+                    <span className={`${isUpgrade ? 'text-success' : 'text-warning'}`}>v{targetVersion}</span>
+                  </>
+                )}
               </Chip>
               <Chip
                 size="sm"
