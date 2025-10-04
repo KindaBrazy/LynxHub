@@ -4,9 +4,8 @@ import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Extension_ListData} from '../../../../../../../cross/CrossTypes';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginAvailableItem} from '../../../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginAvailableItem, PluginFilter} from '../../../../../../../cross/plugin/PluginTypes';
 import {Circle_Icon, RefreshDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
@@ -17,8 +16,6 @@ import LynxScroll from '../../../Reusable/LynxScroll';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useRenderList, useSortedList} from './ExtensionList_Utils';
 import {useExtensionPageStore} from './ExtensionsPage';
 
-export type ExtFilter = Set<'installed' | Extension_ListData['tag']> | 'all';
-
 type Props = {
   selectedExt: PluginAvailableItem | undefined;
   setSelectedExt: Dispatch<SetStateAction<PluginAvailableItem | undefined>>;
@@ -28,7 +25,7 @@ type Props = {
 
 export default function ExtensionList({selectedExt, setSelectedExt, installed, unloaded}: Props) {
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
-  const [selectedFilters, setSelectedFilters] = useState<ExtFilter>('all');
+  const [selectedFilters, setSelectedFilters] = useState<PluginFilter>('all');
   const [list, setList] = useState<PluginAvailableItem[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const dispatch = useDispatch<AppDispatch>();
