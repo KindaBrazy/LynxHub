@@ -142,7 +142,7 @@ export type PluginMetadata = {
 export type PluginUpdateList = {
   id: string;
   type: 'downgrade' | 'upgrade';
-  targetCommit: string;
+  version: VersionItem;
 };
 
 export type InstalledPlugin = {dir: string; url: string; version: VersionItem; metadata: PluginMetadata};

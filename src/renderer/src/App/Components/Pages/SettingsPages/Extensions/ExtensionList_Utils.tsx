@@ -23,6 +23,7 @@ import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
 import {InstalledPlugin, PluginAvailableItem} from '../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {
+  ArrowDuo_Icon,
   CheckDuo_Icon,
   FilterDuo_Icon,
   Linux_Icon,
@@ -177,6 +178,11 @@ export function useRenderList(
       const isInstalling = installing.has(item.metadata.id);
       const isUnInstalling = unInstalling.has(item.metadata.id);
 
+      const currentVersion = foundInstalled?.version.version || item.versioning.versions[0].version;
+      const targetUpdate = updateAvailable.find(update => update.id === item.metadata.id);
+      const isUpgrade = targetUpdate?.type === 'upgrade';
+      const targetVersion = targetUpdate?.version.version;
+
       const {linux, win32, darwin} = {
         linux: item.metadata.platforms?.includes('linux'),
         win32: item.metadata.platforms?.includes('win32'),
@@ -224,13 +230,17 @@ export function useRenderList(
                     {item.metadata.title}
                   </Link>
                   <Chip
-                    className={`${
-                      updateAvailable.some(available => available.id === item.metadata.id) && 'text-success'
-                    }`}
                     size="sm"
                     radius="sm"
-                    variant="flat">
-                    v{foundInstalled?.version.version || item.versioning.versions[0].version}
+                    variant="flat"
+                    classNames={{content: 'flex flex-row items-center justify-center gap-x-1'}}>
+                    <span>v{currentVersion}</span>
+                    {targetUpdate && (
+                      <>
+                        <ArrowDuo_Icon className="size-3 rotate-180" />
+                        <span className={`${isUpgrade ? 'text-success' : 'text-warning'}`}>v{targetVersion}</span>
+                      </>
+                    )}
                   </Chip>
                 </div>
               }

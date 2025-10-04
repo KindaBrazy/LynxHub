@@ -2,7 +2,7 @@ import {SubscribeStages} from '../../../cross/CrossTypes';
 import {PluginUpdateList, PluginVersions, VersionItem} from '../../../cross/plugin/PluginTypes';
 import {staticManager} from '../../index';
 
-export function getTargetCommit(versions: PluginVersions, stage: SubscribeStages) {
+export function getTargetVersion(versions: PluginVersions, stage: SubscribeStages) {
   const findVersionByStage = (requiredStage: SubscribeStages): VersionItem | undefined => {
     return versions.find(v => v.stage.includes(requiredStage));
   };
@@ -39,10 +39,14 @@ export function getTargetCommit(versions: PluginVersions, stage: SubscribeStages
   }
 
   if (versionItem) {
-    return versionItem.commit;
+    return versionItem;
   } else {
-    return versions[0].commit;
+    return versions[0];
   }
+}
+
+export function getTargetCommit(versions: PluginVersions, stage: SubscribeStages) {
+  return getTargetVersion(versions, stage).commit;
 }
 
 export async function getVersionByCommit(id: string, commit: string) {
@@ -63,7 +67,8 @@ export async function isUpdateAvailable(
   stage: SubscribeStages,
 ): Promise<PluginUpdateList | undefined> {
   const {versions} = await staticManager.getPluginVersioningById(id);
-  const targetCommit = getTargetCommit(versions, stage);
+  const targetVersion = getTargetVersion(versions, stage);
+  const targetCommit = targetVersion.commit;
 
   if (currentCommit === targetCommit) {
     return undefined;
@@ -94,7 +99,7 @@ export async function isUpdateAvailable(
   return {
     id,
     type,
-    targetCommit,
+    version: targetVersion,
   };
 }
 

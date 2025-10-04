@@ -248,7 +248,7 @@ export class PluginManager {
 
     try {
       const gitManager = new GitManager(true);
-      const targetCommit = this.availableUpdates.find(update => update.id === id)?.targetCommit;
+      const targetCommit = this.availableUpdates.find(update => update.id === id)?.version.commit;
       if (!targetCommit) return false;
 
       await gitManager.resetHard(targetDir, targetCommit);
@@ -266,7 +266,7 @@ export class PluginManager {
       for (const item of this.availableUpdates) {
         const id = item.id;
         const targetDir = this.getDirById(id);
-        const targetCommit = this.availableUpdates.find(update => update.id === id)?.targetCommit;
+        const targetCommit = this.availableUpdates.find(update => update.id === id)?.version.commit;
         if (!targetDir || !targetCommit) continue;
         await this.updatePlugin(id);
       }
