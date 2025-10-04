@@ -5,6 +5,7 @@ import {Dispatch, Key, SetStateAction, useCallback, useEffect, useMemo, useState
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
+import {getTargetVersion} from '../../../../../../../cross/plugin/CrossPluginUtils';
 import {
   ChangelogItem,
   ChangelogSubItem,
@@ -26,6 +27,7 @@ import {
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
+import {useUserState} from '../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {lynxTopToast} from '../../../../Utils/UtilHooks';
@@ -45,15 +47,20 @@ export function PreviewHeader({
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
 }) {
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
+  const updateChannel = useUserState('updateChannel');
 
   const {currentVersion, targetUpdate, isUpgrade, targetVersion} = useMemo(() => {
-    const currentVersion = installedExt?.version.version || selectedExt?.versioning.versions[0].version;
+    const targetInstallVersion = selectedExt
+      ? getTargetVersion(selectedExt?.versioning.versions, updateChannel)
+      : undefined;
+
+    const currentVersion = installedExt?.version.version || targetInstallVersion?.version || 'N/A';
     const targetUpdate = updateAvailable.find(update => update.id === selectedExt?.metadata.id);
     const isUpgrade = targetUpdate?.type === 'upgrade';
     const targetVersion = targetUpdate?.version.version;
 
     return {currentVersion, targetUpdate, isUpgrade, targetVersion};
-  }, [installedExt, selectedExt, updateAvailable]);
+  }, [installedExt, selectedExt, updateAvailable, updateChannel]);
 
   return (
     <div className="w-full flex sm:flex-col lg:flex-row p-5 sm:gap-y-2 shrink-0">
