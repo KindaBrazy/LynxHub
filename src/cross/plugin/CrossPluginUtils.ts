@@ -3,7 +3,7 @@ import {PluginVersions, VersionItem} from './PluginTypes';
 
 export function getTargetVersion(versions: PluginVersions, stage: SubscribeStages) {
   const findVersionByStage = (requiredStage: SubscribeStages): VersionItem | undefined => {
-    return versions.find(v => v.stage.includes(requiredStage));
+    return versions.find(v => v.stage === requiredStage);
   };
 
   let versionItem: VersionItem | undefined = undefined;
