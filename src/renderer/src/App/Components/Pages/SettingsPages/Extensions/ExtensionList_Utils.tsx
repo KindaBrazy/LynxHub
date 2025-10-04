@@ -20,6 +20,7 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} fro
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
+import {getTargetVersion} from '../../../../../../../cross/plugin/CrossPluginUtils';
 import {InstalledPlugin, PluginAvailableItem, PluginFilter} from '../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {
@@ -32,6 +33,7 @@ import {
   Windows_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
+import {useUserState} from '../../../../Redux/Reducer/UserReducer';
 import rendererIpc from '../../../../RendererIpc';
 import {useExtensionPageStore} from './ExtensionsPage';
 import {UpdateButton} from './PluginElements';
@@ -166,6 +168,8 @@ export function useRenderList(
   const updating = useExtensionPageStore(state => state.updating);
   const unInstalling = useExtensionPageStore(state => state.unInstalling);
 
+  const updateChannel = useUserState('updateChannel');
+
   return useCallback(
     (item: PluginAvailableItem) => {
       const isExtension = item.metadata.type === 'extension';
@@ -177,7 +181,9 @@ export function useRenderList(
       const isInstalling = installing.has(item.metadata.id);
       const isUnInstalling = unInstalling.has(item.metadata.id);
 
-      const currentVersion = foundInstalled?.version.version || item.versioning.versions[0].version;
+      const targetInstallVersion = getTargetVersion(item.versioning.versions, updateChannel);
+
+      const currentVersion = foundInstalled?.version.version || targetInstallVersion.version;
       const targetUpdate = updateAvailable.find(update => update.id === item.metadata.id);
       const isUpgrade = targetUpdate?.type === 'upgrade';
       const targetVersion = targetUpdate?.version.version;
@@ -307,6 +313,17 @@ export function useRenderList(
         </Card>
       );
     },
-    [installed, selectedExt, isLoaded, unloaded, updatingAll, updateAvailable, installing, updating, unInstalling],
+    [
+      installed,
+      selectedExt,
+      isLoaded,
+      unloaded,
+      updatingAll,
+      updateAvailable,
+      installing,
+      updating,
+      unInstalling,
+      updateChannel,
+    ],
   );
 }
