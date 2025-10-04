@@ -11,6 +11,7 @@ import {
   ChangelogSubItem,
   InstalledPlugin,
   PluginAvailableItem,
+  PluginUpdateList,
 } from '../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer, {useDebounceBreadcrumb} from '../../../../../../Breadcrumbs';
 import {ExternalDuo_Icon} from '../../../../../../context_menu/Components/SvgIcons';
@@ -36,6 +37,7 @@ import MarkdownViewer from '../../../Reusable/MarkdownViewer';
 import SecurityWarning from '../SecurityWarning';
 import {useExtensionPageStore} from './ExtensionsPage';
 import {ShowRestartModal, UpdateButton} from './PluginElements';
+import SelectVersion from './SelectVersion';
 
 export function PreviewHeader({
   selectedExt,
@@ -114,7 +116,13 @@ export function PreviewHeader({
         </div>
       </div>
 
-      <ActionButtons selectedExt={selectedExt} installed={!!installedExt} setInstalled={setInstalled} />
+      <ActionButtons
+        selectedExt={selectedExt}
+        installed={!!installedExt}
+        targetUpdate={targetUpdate}
+        setInstalled={setInstalled}
+        currentVersion={currentVersion}
+      />
     </div>
   );
 }
@@ -268,10 +276,14 @@ function ActionButtons({
   installed,
   selectedExt,
   setInstalled,
+  targetUpdate,
+  currentVersion,
 }: {
   installed: boolean;
   selectedExt: PluginAvailableItem | undefined;
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
+  targetUpdate: PluginUpdateList | undefined;
+  currentVersion: string;
 }) {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -343,7 +355,7 @@ function ActionButtons({
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-y-1 items-end">
       <SecurityWarning
         type="extension"
         isOpen={isSecOpen}
@@ -352,6 +364,7 @@ function ActionButtons({
         title={selectedExt?.metadata.title}
         owner={extractGitUrl(selectedExt?.url || '').owner}
       />
+      <SelectVersion selectedExt={selectedExt} targetUpdate={targetUpdate} currentVersion={currentVersion} />
       <div className="flex flex-row items-center gap-x-2">
         <UpdateButton item={selectedExt!} selectedItem={selectedExt} />
         {installed ? (
@@ -376,6 +389,6 @@ function ActionButtons({
           </Button>
         )}
       </div>
-    </>
+    </div>
   );
 }
