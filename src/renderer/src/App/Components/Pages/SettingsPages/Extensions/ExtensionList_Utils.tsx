@@ -20,7 +20,7 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} fro
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginAvailableItem} from '../../../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginAvailableItem, PluginFilter} from '../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {
   ArrowDuo_Icon,
@@ -33,7 +33,6 @@ import {
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import rendererIpc from '../../../../RendererIpc';
-import {ExtFilter} from './ExtensionList';
 import {useExtensionPageStore} from './ExtensionsPage';
 import {UpdateButton} from './PluginElements';
 
@@ -66,20 +65,23 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginAvaila
 
 export function useFilteredList(
   list: PluginAvailableItem[],
-  selectedFilters: ExtFilter,
+  selectedFilters: PluginFilter,
   setSelectedExt: Dispatch<SetStateAction<PluginAvailableItem | undefined>>,
   installed: string[],
 ) {
   const filteredList = useMemo(() => {
-    if (selectedFilters === 'all' || selectedFilters.size === 4) return list;
+    if (selectedFilters === 'all' || selectedFilters.size === 3) return list;
 
-    const isInstalledFilterActive = selectedFilters.has('installed');
+    const isInstalledActive = selectedFilters.has('installed');
+    const isModuleActive = selectedFilters.has('modules');
+    const isExtensionActive = selectedFilters.has('extensions');
+
     return list.filter(item => {
       const isInstalled = installed.includes(item.metadata.id);
+      const isModule = item.metadata.type === 'module';
+      const isExtension = item.metadata.type === 'extension';
 
-      if (!isInstalledFilterActive) return !isInstalled;
-
-      return isInstalled;
+      return (isInstalledActive && isInstalled) || (isModuleActive && isModule) || (isExtensionActive && isExtension);
     });
   }, [list, selectedFilters, installed]);
 
@@ -116,7 +118,7 @@ export function useSortedList(list: PluginAvailableItem[], installed: string[]) 
   );
 }
 
-export function useFilterMenu(selectedKeys: ExtFilter, setSelectedKeys: Dispatch<SetStateAction<ExtFilter>>) {
+export function useFilterMenu(selectedKeys: PluginFilter, setSelectedKeys: Dispatch<SetStateAction<PluginFilter>>) {
   return useCallback(() => {
     return (
       <>
@@ -136,14 +138,11 @@ export function useFilterMenu(selectedKeys: ExtFilter, setSelectedKeys: Dispatch
               <DropdownItem key="installed" className="cursor-default">
                 Installed
               </DropdownItem>
-              <DropdownItem key="feature" className="cursor-default">
-                Feature
+              <DropdownItem key="modules" className="cursor-default">
+                Modules
               </DropdownItem>
-              <DropdownItem key="tools" className="cursor-default">
-                Tools
-              </DropdownItem>
-              <DropdownItem key="games" className="cursor-default">
-                Games
+              <DropdownItem key="extensions" className="cursor-default">
+                Extensions
               </DropdownItem>
             </DropdownSection>
           </DropdownMenu>

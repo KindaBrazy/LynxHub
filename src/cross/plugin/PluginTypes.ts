@@ -150,3 +150,5 @@ export type PluginAvailableItem = {metadata: PluginMetadata; versioning: PluginV
 
 export type PluginAddresses = {type: 'module' | 'extension'; address: string}[];
 export type ValidatedPlugins = {type: 'module' | 'extension'; folder: string}[];
+
+export type PluginFilter = Set<'installed' | 'modules' | 'extensions'> | 'all';
