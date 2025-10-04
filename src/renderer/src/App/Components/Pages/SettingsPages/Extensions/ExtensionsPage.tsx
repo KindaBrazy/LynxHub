@@ -20,9 +20,7 @@ const ExtensionsPage = memo(({show}: Props) => {
   const updateChannel = useUserState('updateChannel');
 
   useEffect(() => {
-    rendererIpc.plugins.getInstalledPlugins().then(installedList => {
-      setInstalled(installedList.filter(item => item.metadata.type === 'extension'));
-    });
+    rendererIpc.plugins.getInstalledPlugins().then(setInstalled);
     rendererIpc.plugins.checkForUpdates(updateChannel);
     rendererIpc.plugins.getSkippedPlugins().then(result => setUnloaded(result));
   }, [updateChannel]);
