@@ -1,5 +1,6 @@
 import {execSync} from 'node:child_process';
 import {createServer} from 'node:http';
+import {platform} from 'node:os';
 import {dirname, join, resolve} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
@@ -515,10 +516,28 @@ export class PluginManager {
     const versioning = await staticManager.getPluginVersioningById(itemId);
     const {type} = await staticManager.getPluginMetadataById(itemId);
 
-    const engines: PluginEngines | undefined = versioning.versions.find(
-      item => item.commit === currentCommitHash,
-    )?.engines;
+    const currentVersion = versioning.versions.find(item => item.commit === currentCommitHash);
 
+    if (!currentVersion) {
+      this.skippedPlugins.push({
+        folderName: folder,
+        message: `Could not verify installed version. The ${type} may be outdated or invalid.`,
+      });
+      console.log(`Skipping ${type} "${folder}" because can't find installed commit hash in versions.`);
+      return false;
+    }
+
+    const platforms = currentVersion.platforms;
+    if (!platforms || !platforms.includes(platform())) {
+      this.skippedPlugins.push({
+        folderName: folder,
+        message: `Platform incompatibility detected. The ${type} may be outdated or invalid.`,
+      });
+      console.log(`Skipping ${type} "${folder}" due to unsupported platform.`);
+      return false;
+    }
+
+    const engines = currentVersion.engines;
     if (engines && typeof engines === 'object') {
       const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
       const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
@@ -549,7 +568,7 @@ export class PluginManager {
       // --- Message 4: Missing Compatibility Info ---
       this.skippedPlugins.push({
         folderName: folder,
-        message: 'Could not verify compatibility. The plugin may be outdated or invalid.',
+        message: `Could not verify compatibility. The ${type} may be outdated or invalid.`,
       });
       console.log(`Skipping plugin "${folder}" because it's missing compatibility information (engines field).`);
       return false;
