@@ -158,12 +158,13 @@ export class PluginManager {
       const currentCommit = await gitManager.getCurrentCommitHash(targetDir, true);
       if (!currentCommit) return false;
 
-      const targetCommit = await isUpdateAvailable(id, currentCommit, stage);
-      if (!targetCommit) {
+      const targetItem = await isUpdateAvailable(id, currentCommit, stage);
+      if (!targetItem) {
         this.updateList_Remove(id);
         return false;
       }
-      this.updateList_Add({id, targetCommit});
+
+      this.updateList_Add(targetItem);
 
       return true;
     } catch (e) {

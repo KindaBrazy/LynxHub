@@ -141,6 +141,7 @@ export type PluginMetadata = {
 
 export type PluginUpdateList = {
   id: string;
+  type: 'downgrade' | 'upgrade';
   targetCommit: string;
 };
 

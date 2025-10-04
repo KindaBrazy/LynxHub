@@ -7,5 +7,8 @@ export type ExtensionPageState = {
   updating: Set<string>;
   unInstalling: Set<string>;
 
+  updatingAll: boolean;
+  setUpdatingAll: (value: boolean) => void;
+
   manageSet: (key: SetKeys, id: IdType, operation: ManageOperation) => void;
 };
