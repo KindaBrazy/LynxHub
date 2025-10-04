@@ -83,6 +83,11 @@ export type VersionItem = {
    * Required engine versions for compatibility with this plugin version.
    */
   engines: PluginEngines;
+
+  /**
+   * Specifies the platforms this version is compatible with.
+   */
+  platforms: OsPlatforms[];
 };
 
 /**
@@ -125,13 +130,6 @@ export type PluginMetadata = {
    * Concise summary of the plugin's functionality and purpose.
    */
   description: string;
-
-  /**
-   * Specifies the platforms this plugin is compatible with.
-   * If omitted, the plugin is assumed to be cross-platform compatible.
-   * Examples: ['windows', 'linux']
-   */
-  platforms?: OsPlatforms[];
 
   /**
    * Specifies the type of plugin.
