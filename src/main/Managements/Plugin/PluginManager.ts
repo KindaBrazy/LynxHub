@@ -288,19 +288,18 @@ export class PluginManager {
           address: `${this.finalAddress}/${folder}`,
           type,
         }));
-        const pluginFolders = validFolders.map(valid => join(this.pluginPath, valid.folder));
 
         await this.setInstalledPlugins(folders);
 
         const moduleFolders: string[] = [];
         const extensionFolder: string[] = [];
 
-        for (const folder of pluginFolders) {
-          const metadata = await staticManager.getPluginMetadataById(folder);
+        for (const validItem of validFolders) {
+          const metadata = await staticManager.getPluginMetadataById(validItem.folder);
           if (metadata.type === 'module') {
-            moduleFolders.push(folder);
+            moduleFolders.push(join(this.pluginPath, validItem.folder));
           } else if (metadata.type === 'extension') {
-            extensionFolder.push(folder);
+            extensionFolder.push(join(this.pluginPath, validItem.folder));
           }
         }
         await this.extensionManager.importPlugins(extensionFolder);
