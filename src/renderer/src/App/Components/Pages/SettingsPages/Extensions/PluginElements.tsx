@@ -12,51 +12,48 @@ import rendererIpc from '../../../../RendererIpc';
 import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
 import {useExtensionPageStore} from './ExtensionsPage';
 
-type Props = {item: PluginAvailableItem; selectedItem: PluginAvailableItem | undefined};
+export function ShowRestartModal(message: string) {
+  const later = Modal.destroyAll;
 
-export function UpdateButton({item, selectedItem}: Props) {
+  const restart = () => {
+    Modal.destroyAll();
+    rendererIpc.win.changeWinState('restart');
+  };
+
+  const close = () => {
+    Modal.destroyAll();
+    rendererIpc.win.changeWinState('close');
+  };
+
+  Modal.warning({
+    title: 'Restart Required',
+    content: message,
+    footer: (
+      <div className="mt-6 flex w-full flex-row justify-between">
+        <Button size="sm" variant="flat" color="warning" onPress={later}>
+          Restart Later
+        </Button>
+        <Button size="sm" color="success" onPress={isLinuxPortable ? close : restart}>
+          {isLinuxPortable ? 'Exit Now' : 'Restart Now'}
+        </Button>
+      </div>
+    ),
+    centered: true,
+    maskClosable: false,
+    rootClassName: 'scrollbar-hide',
+    styles: {mask: {top: '2.5rem'}},
+    wrapClassName: 'mt-10',
+  });
+}
+
+type UpdateButtonProps = {item: PluginAvailableItem; selectedItem: PluginAvailableItem | undefined};
+export function UpdateButton({item, selectedItem}: UpdateButtonProps) {
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const updating = useExtensionPageStore(state => state.updating);
   const manageSet = useExtensionPageStore(state => state.manageSet);
   const dispatch = useDispatch<AppDispatch>();
 
   const updatingAll = useExtensionPageStore(state => state.updatingAll);
-
-  const later = useCallback(() => {
-    Modal.destroyAll();
-  }, []);
-
-  const restart = useCallback(() => {
-    Modal.destroyAll();
-    rendererIpc.win.changeWinState('restart');
-  }, []);
-
-  const close = useCallback(() => {
-    Modal.destroyAll();
-    rendererIpc.win.changeWinState('close');
-  }, []);
-
-  const showRestartModal = useCallback((message: string) => {
-    Modal.warning({
-      title: 'Restart Required',
-      content: message,
-      footer: (
-        <div className="mt-6 flex w-full flex-row justify-between">
-          <Button size="sm" variant="flat" color="warning" onPress={later}>
-            Restart Later
-          </Button>
-          <Button size="sm" color="success" onPress={isLinuxPortable ? close : restart}>
-            {isLinuxPortable ? 'Exit Now' : 'Restart Now'}
-          </Button>
-        </div>
-      ),
-      centered: true,
-      maskClosable: false,
-      rootClassName: 'scrollbar-hide',
-      styles: {mask: {top: '2.5rem'}},
-      wrapClassName: 'mt-10',
-    });
-  }, []);
 
   const update = useCallback(
     (id: string, title: string) => {
@@ -65,7 +62,7 @@ export function UpdateButton({item, selectedItem}: Props) {
       rendererIpc.plugins.updatePlugin(id).then(updated => {
         if (updated) {
           lynxTopToast(dispatch).success(`${title} updated Successfully`);
-          showRestartModal('To apply the updates to the extension, please restart the app.');
+          ShowRestartModal('To apply the updates to the extension, please restart the app.');
         }
         manageSet('updating', selectedItem?.metadata.id, 'remove');
       });

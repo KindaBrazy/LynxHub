@@ -1,5 +1,5 @@
 import {Button, Chip, Tab, Tabs, User} from '@heroui/react';
-import {Divider, Modal} from 'antd';
+import {Divider} from 'antd';
 import {isNil} from 'lodash';
 import {Dispatch, Key, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -28,12 +28,12 @@ import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
-import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
+import {lynxTopToast} from '../../../../Utils/UtilHooks';
 import LynxScroll from '../../../Reusable/LynxScroll';
 import MarkdownViewer from '../../../Reusable/MarkdownViewer';
 import SecurityWarning from '../SecurityWarning';
 import {useExtensionPageStore} from './ExtensionsPage';
-import {UpdateButton} from './PluginElements';
+import {ShowRestartModal, UpdateButton} from './PluginElements';
 
 export function PreviewHeader({
   selectedExt,
@@ -290,42 +290,6 @@ function ActionButtons({
     });
   }, [selectedExt]);
 
-  const later = useCallback(() => {
-    Modal.destroyAll();
-  }, []);
-
-  const restart = useCallback(() => {
-    Modal.destroyAll();
-    rendererIpc.win.changeWinState('restart');
-  }, []);
-
-  const close = useCallback(() => {
-    Modal.destroyAll();
-    rendererIpc.win.changeWinState('close');
-  }, []);
-
-  const showRestartModal = useCallback((message: string) => {
-    Modal.warning({
-      title: 'Restart Required',
-      content: message,
-      footer: (
-        <div className="mt-6 flex w-full flex-row justify-between">
-          <Button size="sm" variant="flat" color="warning" onPress={later}>
-            Restart Later
-          </Button>
-          <Button size="sm" color="success" onPress={isLinuxPortable ? close : restart}>
-            {isLinuxPortable ? 'Exit Now' : 'Restart Now'}
-          </Button>
-        </div>
-      ),
-      centered: true,
-      maskClosable: false,
-      rootClassName: 'scrollbar-hide',
-      styles: {mask: {top: '2.5rem'}},
-      wrapClassName: 'mt-10',
-    });
-  }, []);
-
   const installExtension = useCallback(() => {
     AddBreadcrumb_Renderer(`Extension install: id:${selectedExt?.metadata.id}`);
     manageSet('installing', selectedExt?.metadata.id, 'add');
@@ -335,7 +299,7 @@ function ActionButtons({
         manageSet('installing', selectedExt?.metadata.id, 'remove');
         if (result) {
           lynxTopToast(dispatch).success(`${selectedExt.metadata.title} installed successfully`);
-          showRestartModal('To apply the installed extension, please restart the app.');
+          ShowRestartModal('To apply the installed extension, please restart the app.');
           setInstalled(prevState => [
             ...prevState,
             {
@@ -348,7 +312,7 @@ function ActionButtons({
         }
       });
     }
-  }, [selectedExt, showRestartModal]);
+  }, [selectedExt]);
 
   const uninstallExtension = useCallback(() => {
     AddBreadcrumb_Renderer(`Extension uninstall: id:${selectedExt?.metadata.id}`);
@@ -359,12 +323,12 @@ function ActionButtons({
         manageSet('unInstalling', selectedExt?.metadata.id, 'remove');
         if (result) {
           lynxTopToast(dispatch).success(`${selectedExt.metadata.title} uninstalled successfully`);
-          showRestartModal('To complete the uninstallation of the extension, please restart the app.');
+          ShowRestartModal('To complete the uninstallation of the extension, please restart the app.');
         }
         setInstalled(prevState => prevState.filter(item => item.metadata.id !== selectedExt.metadata.id));
       });
     }
-  }, [selectedExt, showRestartModal]);
+  }, [selectedExt]);
 
   const handleInstall = () => {
     AddBreadcrumb_Renderer(`Extension handleInstall: id:${selectedExt?.metadata.id}`);
