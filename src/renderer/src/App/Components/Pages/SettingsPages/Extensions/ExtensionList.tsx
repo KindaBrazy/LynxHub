@@ -31,8 +31,10 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
   const [selectedFilters, setSelectedFilters] = useState<ExtFilter>('all');
   const [list, setList] = useState<PluginAvailableItem[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
-  const [updatingAll, setUpdatingAll] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
+
+  const updatingAll = useExtensionPageStore(state => state.updatingAll);
+  const setUpdatingAll = useExtensionPageStore(state => state.setUpdatingAll);
 
   const installedID = useMemo(() => installed.map(item => item.metadata.id), [installed]);
 
@@ -124,7 +126,7 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
               onPress={updateAll}
               isLoading={updatingAll}
               startContent={!updatingAll && <RefreshDuo_Icon />}>
-              {updatingAll ? 'Updating...' : `Update All (${updateAvailable.length})`}
+              {updatingAll ? 'Syncing...' : `Sync All (${updateAvailable.length})`}
             </Button>
           )}
         </div>

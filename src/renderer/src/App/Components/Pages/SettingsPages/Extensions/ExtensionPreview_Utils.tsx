@@ -20,12 +20,10 @@ import {
   HomeSmile_Icon,
   Info_Icon,
   ListCheck_Icon,
-  RefreshDuo_Icon,
   Trash_Icon,
   UserDuo_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
-import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
@@ -33,6 +31,7 @@ import LynxScroll from '../../../Reusable/LynxScroll';
 import MarkdownViewer from '../../../Reusable/MarkdownViewer';
 import SecurityWarning from '../SecurityWarning';
 import {useExtensionPageStore} from './ExtensionsPage';
+import {UpdateButton} from './PluginElements';
 
 export function PreviewHeader({
   selectedExt,
@@ -247,19 +246,16 @@ function ActionButtons({
   selectedExt: PluginAvailableItem | undefined;
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
 }) {
-  const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const dispatch = useDispatch<AppDispatch>();
 
   const manageSet = useExtensionPageStore(state => state.manageSet);
   const installing = useExtensionPageStore(state => state.installing);
-  const updating = useExtensionPageStore(state => state.updating);
   const unInstalling = useExtensionPageStore(state => state.unInstalling);
 
   const isInstalling = useMemo(
     () => installing.has(selectedExt?.metadata.id || ''),
     [installing, selectedExt?.metadata.id],
   );
-  const isUpdating = useMemo(() => updating.has(selectedExt?.metadata.id || ''), [updating, selectedExt?.metadata.id]);
   const isUnInstalling = useMemo(
     () => unInstalling.has(selectedExt?.metadata.id || ''),
     [unInstalling, selectedExt?.metadata.id],
@@ -309,20 +305,6 @@ function ActionButtons({
       wrapClassName: 'mt-10',
     });
   }, []);
-
-  const updateExtension = useCallback(() => {
-    AddBreadcrumb_Renderer(`Extension update: id:${selectedExt?.metadata.id}`);
-    manageSet('updating', selectedExt?.metadata.id, 'add');
-    if (selectedExt?.metadata.id) {
-      rendererIpc.plugins.updatePlugin(selectedExt.metadata.id).then(updated => {
-        if (updated) {
-          lynxTopToast(dispatch).success(`${selectedExt.metadata.title} updated successfully`);
-          showRestartModal('To apply the updates to the extension, please restart the app.');
-        }
-        manageSet('updating', selectedExt?.metadata.id, 'remove');
-      });
-    }
-  }, [selectedExt, showRestartModal]);
 
   const installExtension = useCallback(() => {
     AddBreadcrumb_Renderer(`Extension install: id:${selectedExt?.metadata.id}`);
@@ -380,16 +362,7 @@ function ActionButtons({
         owner={extractGitUrl(selectedExt?.url || '').owner}
       />
       <div className="flex flex-row items-center gap-x-2">
-        {updateAvailable.some(item => item.id === selectedExt?.metadata.id) && (
-          <Button
-            size="sm"
-            color="success"
-            isLoading={isUpdating}
-            onPress={updateExtension}
-            startContent={!isUpdating && <RefreshDuo_Icon />}>
-            {isUpdating ? 'Updating...' : 'Update'}
-          </Button>
-        )}
+        <UpdateButton item={selectedExt!} selectedItem={selectedExt} />
         {installed ? (
           <Button
             size="sm"

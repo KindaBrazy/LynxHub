@@ -14,10 +14,9 @@ import {
   Tooltip,
   User,
 } from '@heroui/react';
-import {Modal, Typography} from 'antd';
+import {Typography} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
@@ -25,7 +24,6 @@ import {InstalledPlugin, PluginAvailableItem} from '../../../../../../../cross/p
 import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {
   CheckDuo_Icon,
-  Download_Icon,
   FilterDuo_Icon,
   Linux_Icon,
   MacOS_Icon,
@@ -33,11 +31,10 @@ import {
   Windows_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
-import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
-import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
 import {ExtFilter} from './ExtensionList';
 import {useExtensionPageStore} from './ExtensionsPage';
+import {UpdateButton} from './PluginElements';
 
 export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginAvailableItem[]>>) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -165,64 +162,9 @@ export function useRenderList(
 ) {
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
 
-  const manageSet = useExtensionPageStore(state => state.manageSet);
-
   const installing = useExtensionPageStore(state => state.installing);
   const updating = useExtensionPageStore(state => state.updating);
   const unInstalling = useExtensionPageStore(state => state.unInstalling);
-
-  const dispatch = useDispatch<AppDispatch>();
-
-  const later = useCallback(() => {
-    Modal.destroyAll();
-  }, []);
-
-  const restart = useCallback(() => {
-    Modal.destroyAll();
-    rendererIpc.win.changeWinState('restart');
-  }, []);
-
-  const close = useCallback(() => {
-    Modal.destroyAll();
-    rendererIpc.win.changeWinState('close');
-  }, []);
-
-  const showRestartModal = useCallback((message: string) => {
-    Modal.warning({
-      title: 'Restart Required',
-      content: message,
-      footer: (
-        <div className="mt-6 flex w-full flex-row justify-between">
-          <Button size="sm" variant="flat" color="warning" onPress={later}>
-            Restart Later
-          </Button>
-          <Button size="sm" color="success" onPress={isLinuxPortable ? close : restart}>
-            {isLinuxPortable ? 'Exit Now' : 'Restart Now'}
-          </Button>
-        </div>
-      ),
-      centered: true,
-      maskClosable: false,
-      rootClassName: 'scrollbar-hide',
-      styles: {mask: {top: '2.5rem'}},
-      wrapClassName: 'mt-10',
-    });
-  }, []);
-
-  const update = useCallback(
-    (id: string, title: string) => {
-      AddBreadcrumb_Renderer(`Extension update: id:${id}`);
-      manageSet('updating', selectedExt?.metadata.id, 'add');
-      rendererIpc.plugins.updatePlugin(id).then(updated => {
-        if (updated) {
-          lynxTopToast(dispatch).success(`${title} updated Successfully`);
-          showRestartModal('To apply the updates to the extension, please restart the app.');
-        }
-        manageSet('updating', selectedExt?.metadata.id, 'remove');
-      });
-    },
-    [selectedExt],
-  );
 
   return useCallback(
     (item: PluginAvailableItem) => {
@@ -233,10 +175,7 @@ export function useRenderList(
       const foundUnloaded = unloaded.find(u => foundInstalled?.dir === u.folderName);
 
       const isInstalling = installing.has(item.metadata.id);
-      const isUpdating = updating.has(item.metadata.id);
       const isUnInstalling = unInstalling.has(item.metadata.id);
-
-      const isUpdateAvailable = updateAvailable.some(available => available.id === item.metadata.id);
 
       const {linux, win32, darwin} = {
         linux: item.metadata.platforms?.includes('linux'),
@@ -343,19 +282,7 @@ export function useRenderList(
               )}
             </div>
 
-            {isUpdateAvailable && (
-              <Button
-                size="sm"
-                color="success"
-                className="mr-4"
-                isLoading={isUpdating}
-                isDisabled={updatingAll}
-                variant={isUpdating ? 'light' : 'flat'}
-                startContent={!isUpdating && <Download_Icon />}
-                onPress={() => update(item.metadata.id, item.metadata.title)}>
-                {isUpdating ? 'Updating...' : 'Update'}
-              </Button>
-            )}
+            <UpdateButton item={item} selectedItem={selectedExt} />
 
             {isInstalling && (
               <Button size="sm" color="success" variant="light" className="mr-4" isLoading isDisabled>
