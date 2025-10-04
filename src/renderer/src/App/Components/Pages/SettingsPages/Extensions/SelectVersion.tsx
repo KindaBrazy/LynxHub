@@ -11,12 +11,12 @@ type Props = {
   currentVersion: string;
 };
 
-const getStageName = (stage: SubscribeStages[]) => {
-  return stage.includes('insider') ? 'Insider' : stage.includes('early_access') ? 'Early Access' : 'Public';
+const getStageName = (stage: SubscribeStages) => {
+  return stage === 'insider' ? 'Insider' : stage === 'early_access' ? 'Early Access' : 'Public';
 };
 
-const getColor = (stage: SubscribeStages[]) => {
-  return stage.includes('insider') ? 'secondary' : stage.includes('early_access') ? 'primary' : 'success';
+const getColor = (stage: SubscribeStages) => {
+  return stage === 'insider' ? 'secondary' : stage === 'early_access' ? 'primary' : 'success';
 };
 
 export default function SelectVersion({selectedExt, targetUpdate, currentVersion}: Props) {
