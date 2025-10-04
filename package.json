@@ -60,7 +60,7 @@
     "keytar": "^7.9.0",
     "lowdb": "^7.0.1",
     "mitt": "^3.0.1",
-    "node-pty": "^1.1.0-beta33",
+    "node-pty": "^1.1.0-beta35",
     "semver": "^7.7.2",
     "serve-handler": "^6.1.6",
     "tree-kill": "^1.2.2",
@@ -70,8 +70,8 @@
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@electron-toolkit/tsconfig": "^2.0.0",
-    "@eslint/js": "^9.36.0",
-    "@heroui/react": "^2.8.2",
+    "@eslint/js": "^9.37.0",
+    "@heroui/react": "^2.8.5",
     "@number-flow/react": "^0.5.10",
     "@reduxjs/toolkit": "^2.9.0",
     "@sentry/vite-plugin": "^4.3.0",
@@ -106,11 +106,11 @@
     "electron-log": "^5.4.3",
     "electron-updater": "^6.6.2",
     "electron-vite": "^4.0.1",
-    "eslint": "^9.36.0",
+    "eslint": "^9.37.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
-    "eslint-plugin-perfectionist": "^4.15.0",
+    "eslint-plugin-perfectionist": "^4.15.1",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^6.1.0",
+    "eslint-plugin-react-hooks": "^6.1.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-sonarjs": "^3.0.5",
     "eslint-plugin-tailwindcss": "^3.18.2",
@@ -138,6 +138,6 @@
     "tailwindcss": "^4.1.14",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.45.0",
-    "vite": "^7.1.8"
+    "vite": "^7.1.9"
   }
 }
