@@ -1,21 +1,22 @@
 import {isEmpty} from 'lodash';
 import {Dispatch, memo, SetStateAction, useMemo} from 'react';
 
-import {InstalledPlugin, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin} from '../../../../../../../../cross/plugin/PluginTypes';
 import {Plugins_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {useExtensionPageStore} from '../Page';
 import PreviewBody from './Body';
 import PreviewHeader from './Header';
 
 type Props = {
-  selectedExt: PluginItem | undefined;
   installed: InstalledPlugin[];
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
 };
 
-const Preview = memo(({selectedExt, installed, setInstalled}: Props) => {
+const Preview = memo(({installed, setInstalled}: Props) => {
+  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
   const installedExt = useMemo(
-    () => installed.find(item => item.metadata.id === selectedExt?.metadata.id),
-    [installed, selectedExt],
+    () => installed.find(item => item.metadata.id === selectedPlugin?.metadata.id),
+    [installed, selectedPlugin],
   );
   return (
     <div
@@ -24,7 +25,7 @@ const Preview = memo(({selectedExt, installed, setInstalled}: Props) => {
         ' transition-[left] duration-500 sm:left-[26rem] lg:left-[31rem] 2xl:left-[37rem] shadow-small' +
         'bg-white dark:bg-LynxRaisinBlack rounded-xl flex flex-col'
       }>
-      {isEmpty(selectedExt) ? (
+      {isEmpty(selectedPlugin) ? (
         <div
           className={
             'bg-white dark:bg-LynxRaisinBlack size-full flex items-center' +
@@ -35,8 +36,8 @@ const Preview = memo(({selectedExt, installed, setInstalled}: Props) => {
         </div>
       ) : (
         <>
-          <PreviewHeader selectedExt={selectedExt} installedExt={installedExt} setInstalled={setInstalled} />
-          <PreviewBody selectedExt={selectedExt} installed={!!installedExt} />
+          <PreviewHeader installedExt={installedExt} setInstalled={setInstalled} />
+          <PreviewBody installed={!!installedExt} />
         </>
       )}
     </div>

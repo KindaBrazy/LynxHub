@@ -1,3 +1,5 @@
+import {PluginItem} from '../../../../../../../cross/plugin/PluginTypes';
+
 type SetKeys = 'installing' | 'updating' | 'unInstalling';
 type ManageOperation = 'add' | 'remove';
 type IdType = string | string[] | undefined;
@@ -6,6 +8,9 @@ export type ExtensionPageState = {
   installing: Set<string>;
   updating: Set<string>;
   unInstalling: Set<string>;
+
+  selectedPlugin: PluginItem | undefined;
+  setSelectedPlugin: (value: PluginItem | undefined) => void;
 
   updatingAll: boolean;
   setUpdatingAll: (value: boolean) => void;

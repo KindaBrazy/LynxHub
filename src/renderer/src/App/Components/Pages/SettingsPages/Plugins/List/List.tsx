@@ -1,7 +1,7 @@
 import {Button, Divider, Input, Progress, Skeleton} from '@heroui/react';
 import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
-import {Dispatch, SetStateAction, useMemo, useState} from 'react';
+import {useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
@@ -17,14 +17,9 @@ import {useExtensionPageStore} from '../Page';
 import {List_Item} from './List_Item';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from './List_Utils';
 
-type Props = {
-  selectedExt: PluginItem | undefined;
-  setSelectedExt: Dispatch<SetStateAction<PluginItem | undefined>>;
-  installed: InstalledPlugin[];
-  unloaded: SkippedPlugins[];
-};
+type Props = {installed: InstalledPlugin[]; unloaded: SkippedPlugins[]};
 
-export default function List({selectedExt, setSelectedExt, installed, unloaded}: Props) {
+export default function List({installed, unloaded}: Props) {
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const [selectedFilters, setSelectedFilters] = useState<PluginFilter>('all');
   const [list, setList] = useState<PluginItem[]>([]);
@@ -41,7 +36,7 @@ export default function List({selectedExt, setSelectedExt, installed, unloaded}:
   const {loading, refreshing} = useFetchExtensions(setList);
 
   const sortedList = useSortedList(list, installedID);
-  const filteredList = useFilteredList(sortedList, selectedFilters, setSelectedExt, installedID);
+  const filteredList = useFilteredList(sortedList, selectedFilters, installedID);
   const searchList = useMemo(
     () =>
       sortedList.filter(item =>
@@ -160,14 +155,7 @@ export default function List({selectedExt, setSelectedExt, installed, unloaded}:
         ) : (
           <div className="flex flex-col gap-y-2 pb-4">
             {resultList.map(item => (
-              <List_Item
-                item={item}
-                unloaded={unloaded}
-                installed={installed}
-                selectedExt={selectedExt}
-                setSelectedExt={setSelectedExt}
-                key={`${item.metadata.id}_list_item`}
-              />
+              <List_Item item={item} unloaded={unloaded} installed={installed} key={`${item.metadata.id}_list_item`} />
             ))}
           </div>
         )}

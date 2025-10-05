@@ -6,6 +6,7 @@ import {PluginFilter, PluginItem} from '../../../../../../../../cross/plugin/Plu
 import {FilterDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import rendererIpc from '../../../../../RendererIpc';
+import {useExtensionPageStore} from '../Page';
 
 export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginItem[]>>) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -35,12 +36,10 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginItem[]
   return {loading, refreshing};
 }
 
-export function useFilteredList(
-  list: PluginItem[],
-  selectedFilters: PluginFilter,
-  setSelectedExt: Dispatch<SetStateAction<PluginItem | undefined>>,
-  installed: string[],
-) {
+export function useFilteredList(list: PluginItem[], selectedFilters: PluginFilter, installed: string[]) {
+  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
+  const setSelectedPlugin = useExtensionPageStore(state => state.setSelectedPlugin);
+
   const filteredList = useMemo(() => {
     if (selectedFilters === 'all' || selectedFilters.size === 3) return list;
 
@@ -58,19 +57,26 @@ export function useFilteredList(
   }, [list, selectedFilters, installed]);
 
   useEffect(() => {
-    setSelectedExt(prevState => {
+    const setSelected = () => {
+      if (!selectedPlugin) return;
+
+      let target: PluginItem | undefined = selectedPlugin;
+
       if (isEmpty(filteredList)) {
-        return undefined;
+        target = undefined;
       }
-      if (isNil(prevState)) {
-        return filteredList[0];
+      if (isNil(selectedPlugin)) {
+        target = filteredList[0];
       }
-      if (!filteredList.some(item => item.metadata.id === prevState.metadata.id)) {
-        return filteredList[0];
+      if (!filteredList.some(item => item.metadata.id === selectedPlugin.metadata.id)) {
+        target = filteredList[0];
       }
-      return prevState;
-    });
-  }, [filteredList]);
+
+      setSelectedPlugin(target);
+    };
+
+    setSelected();
+  }, [filteredList, selectedPlugin, setSelectedPlugin]);
 
   return filteredList;
 }

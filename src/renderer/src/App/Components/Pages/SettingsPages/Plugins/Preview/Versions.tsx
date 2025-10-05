@@ -2,14 +2,9 @@ import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} fro
 import {useEffect, useMemo, useState} from 'react';
 
 import {SubscribeStages} from '../../../../../../../../cross/CrossTypes';
-import {PluginItem, PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
+import {PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
 import {BoxDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
-
-type Props = {
-  selectedExt: PluginItem | undefined;
-  targetUpdate: PluginUpdateList | undefined;
-  currentVersion: string;
-};
+import {useExtensionPageStore} from '../Page';
 
 const getStageName = (stage: SubscribeStages) => {
   return stage === 'insider' ? 'Insider' : stage === 'early_access' ? 'Early Access' : 'Public';
@@ -19,16 +14,21 @@ const getColor = (stage: SubscribeStages) => {
   return stage === 'insider' ? 'secondary' : stage === 'early_access' ? 'primary' : 'success';
 };
 
-export default function Versions({selectedExt, targetUpdate, currentVersion}: Props) {
+type Props = {
+  targetUpdate: PluginUpdateList | undefined;
+  currentVersion: string;
+};
+export default function Versions({targetUpdate, currentVersion}: Props) {
+  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
   const [selectedVersion, setSelectedVersion] = useState<string>('');
 
   const {versions} = useMemo(() => {
-    const versions = selectedExt?.versions || [];
+    const versions = selectedPlugin?.versions || [];
     const version = versions.find(item => item.version === currentVersion);
     setSelectedVersion(version?.commit || '');
 
     return {versions};
-  }, [selectedExt, targetUpdate, currentVersion]);
+  }, [selectedPlugin, targetUpdate, currentVersion]);
 
   useEffect(() => {
     console.log(selectedVersion);
