@@ -52,7 +52,7 @@ export default function ActionButtons({
   }, [selectedExt]);
 
   const installExtension = useCallback(() => {
-    AddBreadcrumb_Renderer(`Extension install: id:${selectedExt?.metadata.id}`);
+    AddBreadcrumb_Renderer(`Plugin install: id:${selectedExt?.metadata.id}`);
     manageSet('installing', selectedExt?.metadata.id, 'add');
 
     if (selectedExt?.url) {
@@ -60,7 +60,7 @@ export default function ActionButtons({
         manageSet('installing', selectedExt?.metadata.id, 'remove');
         if (result) {
           lynxTopToast(dispatch).success(`${selectedExt.metadata.title} installed successfully`);
-          ShowRestartModal('To apply the installed extension, please restart the app.');
+          ShowRestartModal('To apply the installaion, please restart the app.');
           setInstalled(prevState => [
             ...prevState,
             {
@@ -76,7 +76,7 @@ export default function ActionButtons({
   }, [selectedExt]);
 
   const uninstallExtension = useCallback(() => {
-    AddBreadcrumb_Renderer(`Extension uninstall: id:${selectedExt?.metadata.id}`);
+    AddBreadcrumb_Renderer(`Plugin uninstall: id:${selectedExt?.metadata.id}`);
     manageSet('unInstalling', selectedExt?.metadata.id, 'add');
 
     if (selectedExt?.metadata.id) {
@@ -84,7 +84,7 @@ export default function ActionButtons({
         manageSet('unInstalling', selectedExt?.metadata.id, 'remove');
         if (result) {
           lynxTopToast(dispatch).success(`${selectedExt.metadata.title} uninstalled successfully`);
-          ShowRestartModal('To complete the uninstallation of the extension, please restart the app.');
+          ShowRestartModal('To complete the uninstallation, please restart the app.');
         }
         setInstalled(prevState => prevState.filter(item => item.metadata.id !== selectedExt.metadata.id));
       });
@@ -92,7 +92,7 @@ export default function ActionButtons({
   }, [selectedExt]);
 
   const handleInstall = () => {
-    AddBreadcrumb_Renderer(`Extension handleInstall: id:${selectedExt?.metadata.id}`);
+    AddBreadcrumb_Renderer(`Plugin handleInstall: id:${selectedExt?.metadata.id}`);
     setIsSecOpen(true);
   };
 

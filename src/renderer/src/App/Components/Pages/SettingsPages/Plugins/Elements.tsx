@@ -57,12 +57,12 @@ export function UpdateButton({item, selectedItem}: UpdateButtonProps) {
 
   const update = useCallback(
     (id: string, title: string) => {
-      AddBreadcrumb_Renderer(`Extension update: id:${id}`);
+      AddBreadcrumb_Renderer(`Plugin update: id:${id}`);
       manageSet('updating', selectedItem?.metadata.id, 'add');
       rendererIpc.plugins.updatePlugin(id).then(updated => {
         if (updated) {
           lynxTopToast(dispatch).success(`${title} updated Successfully`);
-          ShowRestartModal('To apply the updates to the extension, please restart the app.');
+          ShowRestartModal('To apply the updates, please restart the app.');
         }
         manageSet('updating', selectedItem?.metadata.id, 'remove');
       });

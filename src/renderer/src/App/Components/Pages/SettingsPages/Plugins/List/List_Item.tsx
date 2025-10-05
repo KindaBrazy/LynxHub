@@ -82,7 +82,7 @@ export function List_Item({item, selectedExt, setSelectedExt, installed, unloade
   return (
     <Card
       onPress={() => {
-        AddBreadcrumb_Renderer(`Extension Select: id:${item.metadata.id}`);
+        AddBreadcrumb_Renderer(`Plugin Select: id:${item.metadata.id}`);
         setSelectedExt(item);
       }}
       className={
