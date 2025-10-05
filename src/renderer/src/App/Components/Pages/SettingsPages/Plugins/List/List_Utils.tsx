@@ -2,19 +2,21 @@ import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownT
 import {isEmpty, isNil} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {PluginAvailableItem, PluginFilter} from '../../../../../../../../cross/plugin/PluginTypes';
+import {PluginFilter, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import {FilterDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import rendererIpc from '../../../../../RendererIpc';
 
-export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginAvailableItem[]>>) {
+export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginItem[]>>) {
   const [loading, setLoading] = useState<boolean>(true);
   const [refreshing, setRefreshing] = useState<boolean>(false);
+  const updateChannel = useUserState('updateChannel');
 
   useEffect(() => {
     async function fetchExtensionsList() {
       setLoading(true);
       try {
-        const plugins = await rendererIpc.statics.getPluginsList();
+        const plugins = await rendererIpc.plugins.getList(updateChannel);
 
         if (!isEmpty(plugins)) setList(plugins);
       } catch (e) {
@@ -34,9 +36,9 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginAvaila
 }
 
 export function useFilteredList(
-  list: PluginAvailableItem[],
+  list: PluginItem[],
   selectedFilters: PluginFilter,
-  setSelectedExt: Dispatch<SetStateAction<PluginAvailableItem | undefined>>,
+  setSelectedExt: Dispatch<SetStateAction<PluginItem | undefined>>,
   installed: string[],
 ) {
   const filteredList = useMemo(() => {
@@ -73,7 +75,7 @@ export function useFilteredList(
   return filteredList;
 }
 
-export function useSortedList(list: PluginAvailableItem[], installed: string[]) {
+export function useSortedList(list: PluginItem[], installed: string[]) {
   return useMemo(
     () =>
       [...list].sort((a, b) => {

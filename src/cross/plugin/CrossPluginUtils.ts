@@ -1,12 +1,12 @@
 import {SubscribeStages} from '../CrossTypes';
-import {PluginVersions, VersionItem} from './PluginTypes';
+import {VersionItemValidated} from './PluginTypes';
 
-export function getTargetVersion(versions: PluginVersions, stage: SubscribeStages) {
-  const findVersionByStage = (requiredStage: SubscribeStages): VersionItem | undefined => {
+export function getTargetVersion(versions: VersionItemValidated[], stage: SubscribeStages) {
+  const findVersionByStage = (requiredStage: SubscribeStages): VersionItemValidated | undefined => {
     return versions.find(v => v.stage === requiredStage);
   };
 
-  let versionItem: VersionItem | undefined = undefined;
+  let versionItem: VersionItemValidated | undefined = undefined;
 
   switch (stage) {
     case 'insider': {
@@ -44,6 +44,6 @@ export function getTargetVersion(versions: PluginVersions, stage: SubscribeStage
   }
 }
 
-export function getTargetCommit(versions: PluginVersions, stage: SubscribeStages) {
+export function getTargetCommit(versions: VersionItemValidated[], stage: SubscribeStages) {
   return getTargetVersion(versions, stage).commit;
 }

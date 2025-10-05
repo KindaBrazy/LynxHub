@@ -89,13 +89,12 @@ export type VersionItem = {
    */
   platforms: OsPlatforms[];
 };
-export type VersionItemValidated = Omit<VersionItem, 'platforms' | 'engines'> & {isCompatible: boolean};
+export type VersionItemValidated = Omit<VersionItem, 'engines'> & {isCompatible: boolean};
 
 /**
  * Ordered list of all released plugin versions, typically sorted from newest to oldest.
  */
 export type PluginVersions = VersionItem[];
-export type PluginVersionsValidated = {id: string; isAnyVersionAvailable: boolean; versions: VersionItemValidated[]};
 
 /**
  * Comprehensive versioning information for a plugin,
@@ -152,3 +151,12 @@ export type PluginAddresses = {type: 'module' | 'extension'; address: string}[];
 export type ValidatedPlugins = {type: 'module' | 'extension'; folder: string}[];
 
 export type PluginFilter = Set<'installed' | 'modules' | 'extensions'> | 'all';
+
+export type PluginItem = {
+  isAnyVersionCompatible: boolean;
+  icon: string;
+  url: string;
+  metadata: PluginMetadata;
+  versions: VersionItemValidated[];
+  changes: PluginChanges;
+};

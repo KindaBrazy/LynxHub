@@ -17,8 +17,8 @@ import {
   InstalledPlugin,
   PluginAddresses,
   PluginEngines,
+  PluginItem,
   PluginUpdateList,
-  PluginVersionsValidated,
   ValidatedPlugins,
   VersionItem,
   VersionItemValidated,
@@ -395,23 +395,23 @@ export class PluginManager {
     return undefined;
   }
 
-  public async getPluginVersions(currentStage: SubscribeStages): Promise<PluginVersionsValidated[]> {
+  public async getList(currentStage: SubscribeStages): Promise<PluginItem[]> {
     const list = await staticManager.getPluginsList();
-    const validated: PluginVersionsValidated[] = [];
+    const validated: PluginItem[] = [];
 
     for (const item of list) {
       const versions: VersionItemValidated[] = [];
 
       for (const v of item.versioning.versions) {
-        const {version, commit, stage} = v;
+        const {version, commit, stage, platforms} = v;
         const isCompatible: boolean = this.isCompatible(v, item.metadata.type, currentStage);
-        versions.push({version, commit, stage, isCompatible});
+        versions.push({version, commit, stage, platforms, isCompatible});
       }
 
-      const id = item.metadata.id;
-      const isAnyVersionAvailable: boolean = versions.some(v => v.isCompatible);
+      const isAnyVersionCompatible: boolean = versions.some(v => v.isCompatible);
+      const {metadata, url, icon, versioning} = item;
 
-      validated.push({id, isAnyVersionAvailable, versions});
+      validated.push({isAnyVersionCompatible, metadata, url, icon, versions, changes: versioning.changes});
     }
 
     return validated;

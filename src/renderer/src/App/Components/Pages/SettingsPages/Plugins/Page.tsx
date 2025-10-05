@@ -1,7 +1,7 @@
 import {createContext, memo, useContext, useEffect, useMemo, useState} from 'react';
 
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginAvailableItem} from '../../../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginItem} from '../../../../../../../cross/plugin/PluginTypes';
 import {useUserState} from '../../../../Redux/Reducer/UserReducer';
 import rendererIpc from '../../../../RendererIpc';
 import PageView from '../../Page';
@@ -14,7 +14,7 @@ const ExtensionPageContext = createContext<Store | null>(null);
 
 type Props = {show: boolean};
 const Page = memo(({show}: Props) => {
-  const [selectedExtension, setSelectedExtension] = useState<PluginAvailableItem | undefined>(undefined);
+  const [selectedExtension, setSelectedExtension] = useState<PluginItem | undefined>(undefined);
   const [installed, setInstalled] = useState<InstalledPlugin[]>([]);
   const [unloaded, setUnloaded] = useState<SkippedPlugins[]>([]);
   const updateChannel = useUserState('updateChannel');
