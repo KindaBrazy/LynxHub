@@ -4,17 +4,18 @@ import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginAvailableItem, PluginFilter} from '../../../../../../../cross/plugin/PluginTypes';
-import {Circle_Icon, RefreshDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
-import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
-import {AppDispatch} from '../../../../Redux/Store';
-import rendererIpc from '../../../../RendererIpc';
-import {searchInStrings} from '../../../../Utils/UtilFunctions';
-import {lynxTopToast} from '../../../../Utils/UtilHooks';
-import LynxScroll from '../../../Reusable/LynxScroll';
-import {useFetchExtensions, useFilteredList, useFilterMenu, useRenderList, useSortedList} from './ExtensionList_Utils';
-import {useExtensionPageStore} from './ExtensionsPage';
+import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
+import {InstalledPlugin, PluginAvailableItem, PluginFilter} from '../../../../../../../../cross/plugin/PluginTypes';
+import {Circle_Icon, RefreshDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
+import {AppDispatch} from '../../../../../Redux/Store';
+import rendererIpc from '../../../../../RendererIpc';
+import {searchInStrings} from '../../../../../Utils/UtilFunctions';
+import {lynxTopToast} from '../../../../../Utils/UtilHooks';
+import LynxScroll from '../../../../Reusable/LynxScroll';
+import {useExtensionPageStore} from '../Page';
+import {List_Item} from './List_Item';
+import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from './List_Utils';
 
 type Props = {
   selectedExt: PluginAvailableItem | undefined;
@@ -23,7 +24,7 @@ type Props = {
   unloaded: SkippedPlugins[];
 };
 
-export default function ExtensionList({selectedExt, setSelectedExt, installed, unloaded}: Props) {
+export default function List({selectedExt, setSelectedExt, installed, unloaded}: Props) {
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const [selectedFilters, setSelectedFilters] = useState<PluginFilter>('all');
   const [list, setList] = useState<PluginAvailableItem[]>([]);
@@ -55,7 +56,6 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
   );
 
   const filterMenu = useFilterMenu(selectedFilters, setSelectedFilters);
-  const renderList = useRenderList(selectedExt, setSelectedExt, loading, installed, unloaded, updatingAll);
 
   const emptyText = useMemo(() => {
     return (
@@ -159,9 +159,16 @@ export default function ExtensionList({selectedExt, setSelectedExt, installed, u
           emptyText
         ) : (
           <div className="flex flex-col gap-y-2 pb-4">
-            {resultList.map(item => {
-              return renderList(item);
-            })}
+            {resultList.map(item => (
+              <List_Item
+                item={item}
+                unloaded={unloaded}
+                installed={installed}
+                selectedExt={selectedExt}
+                setSelectedExt={setSelectedExt}
+                key={`${item.metadata.id}_list_item`}
+              />
+            ))}
           </div>
         )}
       </LynxScroll>

@@ -10,7 +10,7 @@ import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
-import {useExtensionPageStore} from './ExtensionsPage';
+import {useExtensionPageStore} from './Page';
 
 export function ShowRestartModal(message: string) {
   const later = Modal.destroyAll;

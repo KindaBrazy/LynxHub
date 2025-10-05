@@ -13,7 +13,7 @@ import OthersPage from '../Components/Pages/ContentPages/OthersPage';
 import TextGenerationPage from '../Components/Pages/ContentPages/TextGenerationPage';
 import ToolsPage from '../Components/Pages/ContentPages/ToolsPage';
 import DashboardPage from '../Components/Pages/SettingsPages/Dashboard/DashboardPage';
-import ExtensionsPage from '../Components/Pages/SettingsPages/Extensions/ExtensionsPage';
+import Page from '../Components/Pages/SettingsPages/Plugins/Page';
 import SettingsPage from '../Components/Pages/SettingsPages/Settings/SettingsPage';
 
 export const PageComponents = {
@@ -28,7 +28,7 @@ export const PageComponents = {
   [PageID.agents]: AgentsPage,
 
   [PageID.dashboard]: DashboardPage,
-  [PageID.plugins]: ExtensionsPage,
+  [PageID.plugins]: Page,
   [PageID.settings]: SettingsPage,
 };
 
