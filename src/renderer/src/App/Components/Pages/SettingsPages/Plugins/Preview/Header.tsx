@@ -81,7 +81,7 @@ export default function PreviewHeader({
           </Chip>
           <Button
             onPress={() => {
-              AddBreadcrumb_Renderer(`Extension homepage: id:${selectedExt?.metadata.id}`);
+              AddBreadcrumb_Renderer(`Plugin homepage: id:${selectedExt?.metadata.id}`);
               window.open(selectedExt?.url);
             }}
             size="sm"

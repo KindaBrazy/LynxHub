@@ -60,7 +60,7 @@ export default function PreviewBody({
 }) {
   const [currentTab, setCurrentTab] = useState<Key>('changelog');
 
-  useDebounceBreadcrumb('Extension tab', [currentTab]);
+  useDebounceBreadcrumb('Plugin tab', [currentTab]);
 
   useEffect(() => {
     setCurrentTab(installed ? 'changelog' : 'readme');

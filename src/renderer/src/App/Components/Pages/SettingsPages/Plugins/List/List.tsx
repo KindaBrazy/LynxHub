@@ -64,14 +64,14 @@ export default function List({selectedExt, setSelectedExt, installed, unloaded}:
           <div className="flex flex-col items-center justify-center text-center">
             {isEmpty(searchValue) ? (
               <>
-                <p className="text-gray-300 mb-2">It looks like there are no extensions available right now.</p>
+                <p className="text-gray-300 mb-2">It looks like there are no plugin available right now.</p>
                 <p className="text-gray-500">
                   This could be temporary. Please try again later or check your internet connection.
                 </p>
               </>
             ) : (
               <>
-                <p className="text-gray-300 mb-2">We couldn&#39;t find any extensions matching your search.</p>
+                <p className="text-gray-300 mb-2">We couldn't find any extensions matching your search.</p>
                 <p className="text-gray-500">Try refining your search terms or checking for typos.</p>
               </>
             )}

@@ -31,7 +31,7 @@ const Preview = memo(({selectedExt, installed, setInstalled}: Props) => {
             ' justify-center gap-y-4 flex-col px-4 text-center'
           }>
           <Plugins_Icon className="size-16" />
-          <span className="text-large">Select an extension from the list to begin your exploration.</span>
+          <span className="text-large">Select a plugin from the list to begin your exploration.</span>
         </div>
       ) : (
         <>
