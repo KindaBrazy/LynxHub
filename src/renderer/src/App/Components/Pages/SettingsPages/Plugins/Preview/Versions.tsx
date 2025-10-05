@@ -1,9 +1,9 @@
 import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {useEffect, useMemo, useState} from 'react';
 
-import {SubscribeStages} from '../../../../../../../cross/CrossTypes';
-import {PluginAvailableItem, PluginUpdateList} from '../../../../../../../cross/plugin/PluginTypes';
-import {BoxDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {SubscribeStages} from '../../../../../../../../cross/CrossTypes';
+import {PluginAvailableItem, PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
+import {BoxDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 
 type Props = {
   selectedExt: PluginAvailableItem | undefined;
@@ -19,7 +19,7 @@ const getColor = (stage: SubscribeStages) => {
   return stage === 'insider' ? 'secondary' : stage === 'early_access' ? 'primary' : 'success';
 };
 
-export default function SelectVersion({selectedExt, targetUpdate, currentVersion}: Props) {
+export default function Versions({selectedExt, targetUpdate, currentVersion}: Props) {
   const [selectedVersion, setSelectedVersion] = useState<string>('');
 
   const {versions} = useMemo(() => {

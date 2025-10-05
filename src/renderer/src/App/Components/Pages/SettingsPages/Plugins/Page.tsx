@@ -4,16 +4,16 @@ import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
 import {InstalledPlugin, PluginAvailableItem} from '../../../../../../../cross/plugin/PluginTypes';
 import {useUserState} from '../../../../Redux/Reducer/UserReducer';
 import rendererIpc from '../../../../RendererIpc';
-import Page from '../../Page';
-import ExtensionList from './ExtensionList';
-import {createExtensionStore, ExtensionPageStore} from './ExtensionPageStore';
-import {ExtensionPageState} from './ExtensionPageTypes';
-import ExtensionPreview from './ExtensionPreview';
+import PageView from '../../Page';
+import List from './List/List';
+import Preview from './Preview/Preview';
+import {createExtensionStore, Store} from './Store';
+import {ExtensionPageState} from './Types';
 
-const ExtensionPageContext = createContext<ExtensionPageStore | null>(null);
+const ExtensionPageContext = createContext<Store | null>(null);
 
 type Props = {show: boolean};
-const ExtensionsPage = memo(({show}: Props) => {
+const Page = memo(({show}: Props) => {
   const [selectedExtension, setSelectedExtension] = useState<PluginAvailableItem | undefined>(undefined);
   const [installed, setInstalled] = useState<InstalledPlugin[]>([]);
   const [unloaded, setUnloaded] = useState<SkippedPlugins[]>([]);
@@ -29,15 +29,15 @@ const ExtensionsPage = memo(({show}: Props) => {
 
   return (
     <ExtensionPageContext.Provider value={storeValue}>
-      <Page show={show} className="gap-x-6">
-        <ExtensionList
+      <PageView show={show} className="gap-x-6">
+        <List
           unloaded={unloaded}
           installed={installed}
           selectedExt={selectedExtension}
           setSelectedExt={setSelectedExtension}
         />
-        <ExtensionPreview installed={installed} setInstalled={setInstalled} selectedExt={selectedExtension} />
-      </Page>
+        <Preview installed={installed} setInstalled={setInstalled} selectedExt={selectedExtension} />
+      </PageView>
     </ExtensionPageContext.Provider>
   );
 });
@@ -48,4 +48,4 @@ export const useExtensionPageStore = <T,>(selector: (state: ExtensionPageState) 
   return store(selector);
 };
 
-export default ExtensionsPage;
+export default Page;

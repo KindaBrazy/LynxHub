@@ -1,7 +1,7 @@
 import {isArray} from 'lodash';
 import {create} from 'zustand';
 
-import {ExtensionPageState} from './ExtensionPageTypes';
+import {ExtensionPageState} from './Types';
 
 export const createExtensionStore = () => {
   return create<ExtensionPageState>(set => ({
@@ -38,4 +38,4 @@ export const createExtensionStore = () => {
 };
 
 // We will use this type for our React Context
-export type ExtensionPageStore = ReturnType<typeof createExtensionStore>;
+export type Store = ReturnType<typeof createExtensionStore>;
