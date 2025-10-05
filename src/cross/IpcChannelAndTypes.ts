@@ -186,6 +186,7 @@ export const pluginChannels = {
   updatePlugin: 'plugins:update-plugin',
   updatePlugins: 'plugins:update-plugins',
   checkForUpdates: 'plugins:check-for-updates',
+  getPluginVersions: 'plugins:get-plugin-versions',
 };
 
 export const ptyChannels = {

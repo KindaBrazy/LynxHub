@@ -18,7 +18,10 @@ import {
   PluginAddresses,
   PluginEngines,
   PluginUpdateList,
+  PluginVersionsValidated,
   ValidatedPlugins,
+  VersionItem,
+  VersionItemValidated,
 } from '../../../cross/plugin/PluginTypes';
 import {appManager, staticManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
@@ -390,6 +393,62 @@ export class PluginManager {
       return join(this.pluginPath, plugin.dir);
     }
     return undefined;
+  }
+
+  public async getPluginVersions(currentStage: SubscribeStages): Promise<PluginVersionsValidated[]> {
+    const list = await staticManager.getPluginsList();
+    const validated: PluginVersionsValidated[] = [];
+
+    for (const item of list) {
+      const versions: VersionItemValidated[] = [];
+
+      for (const v of item.versioning.versions) {
+        const {version, commit, stage} = v;
+        const isCompatible: boolean = this.isCompatible(v, item.metadata.type, currentStage);
+        versions.push({version, commit, stage, isCompatible});
+      }
+
+      validated.push({id: item.metadata.id, versions});
+    }
+
+    return validated;
+  }
+
+  private isCompatible(version: VersionItem, type: 'module' | 'extension', currentStage: SubscribeStages): boolean {
+    // Platform check
+    const platforms = version.platforms;
+    if (!platforms || !platforms.includes(platform())) return false;
+
+    // Engines api check
+    const engines = version.engines;
+    if (engines && typeof engines === 'object') {
+      const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
+      const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
+
+      const targetCheck = type === 'extension' ? extensionCheck : moduleCheck;
+
+      const requiredRange = engines[targetCheck.api as keyof PluginEngines];
+      if (requiredRange && !satisfies(targetCheck.version, requiredRange)) return false;
+    } else {
+      return false;
+    }
+
+    // Subscribe stage check
+    switch (currentStage) {
+      // Have access to all stages
+      case 'insider':
+        break;
+      // Have access to the public and early access stages
+      case 'early_access':
+        if (version.stage === 'insider') return false;
+        break;
+      // Have access to only the public stage
+      case 'public':
+        if (version.stage !== 'public') return false;
+        break;
+    }
+
+    return true;
   }
 
   protected async validatePluginFolders(folderPaths: string[]): Promise<ValidatedPlugins> {
