@@ -89,11 +89,13 @@ export type VersionItem = {
    */
   platforms: OsPlatforms[];
 };
+export type VersionItemValidated = Omit<VersionItem, 'platforms' | 'engines'> & {isCompatible: boolean};
 
 /**
  * Ordered list of all released plugin versions, typically sorted from newest to oldest.
  */
 export type PluginVersions = VersionItem[];
+export type PluginVersionsValidated = {id: string; versions: VersionItemValidated[]};
 
 /**
  * Comprehensive versioning information for a plugin,

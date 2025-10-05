@@ -297,6 +297,7 @@ const rendererIpc = {
     updatePlugin: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.updatePlugin, id),
     updatePlugins: (): Promise<void> => ipc.invoke(pluginChannels.updatePlugins),
     checkForUpdates: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.checkForUpdates, stage),
+    getPluginVersions: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.getPluginVersions, stage),
     onUpdateAvailableList: (result: (event: IpcRendererEvent, cards: PluginUpdateList[]) => void) =>
       ipc.on(pluginChannels.onUpdateAvailableList, result),
   },

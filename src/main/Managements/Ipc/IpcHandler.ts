@@ -226,6 +226,9 @@ function plugins() {
   ipcMain.handle(pluginChannels.updatePlugin, (_, id: string) => pluginManager.updatePlugin(id));
   ipcMain.handle(pluginChannels.updatePlugins, () => pluginManager.updateAll());
   ipcMain.handle(pluginChannels.checkForUpdates, (_, stage: SubscribeStages) => pluginManager.checkForUpdates(stage));
+  ipcMain.handle(pluginChannels.getPluginVersions, (_, stage: SubscribeStages) =>
+    pluginManager.getPluginVersions(stage),
+  );
 }
 
 function pty() {
