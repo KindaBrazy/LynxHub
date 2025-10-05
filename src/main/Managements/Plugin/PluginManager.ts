@@ -408,7 +408,10 @@ export class PluginManager {
         versions.push({version, commit, stage, isCompatible});
       }
 
-      validated.push({id: item.metadata.id, versions});
+      const id = item.metadata.id;
+      const isAnyVersionAvailable: boolean = versions.some(v => v.isCompatible);
+
+      validated.push({id, isAnyVersionAvailable, versions});
     }
 
     return validated;
