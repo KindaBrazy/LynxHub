@@ -5,7 +5,7 @@ import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginAvailableItem, PluginFilter} from '../../../../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginFilter, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import {Circle_Icon, RefreshDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
@@ -18,8 +18,8 @@ import {List_Item} from './List_Item';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from './List_Utils';
 
 type Props = {
-  selectedExt: PluginAvailableItem | undefined;
-  setSelectedExt: Dispatch<SetStateAction<PluginAvailableItem | undefined>>;
+  selectedExt: PluginItem | undefined;
+  setSelectedExt: Dispatch<SetStateAction<PluginItem | undefined>>;
   installed: InstalledPlugin[];
   unloaded: SkippedPlugins[];
 };
@@ -27,7 +27,7 @@ type Props = {
 export default function List({selectedExt, setSelectedExt, installed, unloaded}: Props) {
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const [selectedFilters, setSelectedFilters] = useState<PluginFilter>('all');
-  const [list, setList] = useState<PluginAvailableItem[]>([]);
+  const [list, setList] = useState<PluginItem[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const dispatch = useDispatch<AppDispatch>();
 

@@ -3,7 +3,7 @@ import {Modal} from 'antd';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {PluginAvailableItem} from '../../../../../../../cross/plugin/PluginTypes';
+import {PluginItem} from '../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {Download_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
@@ -46,7 +46,7 @@ export function ShowRestartModal(message: string) {
   });
 }
 
-type UpdateButtonProps = {item: PluginAvailableItem; selectedItem: PluginAvailableItem | undefined};
+type UpdateButtonProps = {item: PluginItem; selectedItem: PluginItem | undefined};
 export function UpdateButton({item, selectedItem}: UpdateButtonProps) {
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const updating = useExtensionPageStore(state => state.updating);

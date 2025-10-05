@@ -3,7 +3,7 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} fro
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {InstalledPlugin, PluginAvailableItem, PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginItem, PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download2_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {AppDispatch} from '../../../../../Redux/Store';
@@ -22,7 +22,7 @@ export default function ActionButtons({
   currentVersion,
 }: {
   installed: boolean;
-  selectedExt: PluginAvailableItem | undefined;
+  selectedExt: PluginItem | undefined;
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
   targetUpdate: PluginUpdateList | undefined;
   currentVersion: string;
@@ -47,7 +47,7 @@ export default function ActionButtons({
 
   useEffect(() => {
     rendererIpc.win.getSystemInfo().then(result => {
-      setIsCompatible(selectedExt?.versioning.versions.some(v => v.platforms.includes(result.os)) || false);
+      setIsCompatible(selectedExt?.versions.some(v => v.platforms.includes(result.os)) || false);
     });
   }, [selectedExt]);
 
@@ -64,7 +64,7 @@ export default function ActionButtons({
           setInstalled(prevState => [
             ...prevState,
             {
-              version: selectedExt.versioning.versions[0],
+              version: {...selectedExt.versions[0], engines: {extensionApi: ''}},
               metadata: selectedExt.metadata,
               url: selectedExt.url,
               dir: '',

@@ -5,7 +5,7 @@ import {Dispatch, SetStateAction, useMemo} from 'react';
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
 import {getTargetVersion} from '../../../../../../../../cross/plugin/CrossPluginUtils';
-import {InstalledPlugin, PluginAvailableItem} from '../../../../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {
   ArrowDuo_Icon,
@@ -21,9 +21,9 @@ import {UpdateButton} from '../Elements';
 import {useExtensionPageStore} from '../Page';
 
 type Props = {
-  item: PluginAvailableItem;
-  selectedExt: PluginAvailableItem | undefined;
-  setSelectedExt: Dispatch<SetStateAction<PluginAvailableItem | undefined>>;
+  item: PluginItem;
+  selectedExt: PluginItem | undefined;
+  setSelectedExt: Dispatch<SetStateAction<PluginItem | undefined>>;
   installed: InstalledPlugin[];
   unloaded: SkippedPlugins[];
 };
@@ -44,9 +44,9 @@ export function List_Item({item, selectedExt, setSelectedExt, installed, unloade
     const foundUnloaded = unloaded.find(u => foundInstalled?.dir === u.folderName);
 
     const {linux, win32, darwin} = {
-      linux: item.versioning.versions.some(v => v.platforms.includes('linux')),
-      win32: item.versioning.versions.some(v => v.platforms.includes('win32')),
-      darwin: item.versioning.versions.some(v => v.platforms.includes('darwin')),
+      linux: item.versions.some(v => v.platforms.includes('linux')),
+      win32: item.versions.some(v => v.platforms.includes('win32')),
+      darwin: item.versions.some(v => v.platforms.includes('darwin')),
     };
 
     return {
@@ -61,11 +61,11 @@ export function List_Item({item, selectedExt, setSelectedExt, installed, unloade
   }, [item, installed, unloaded]);
 
   const currentVersion = useMemo(() => {
-    const targetInstallVersion = getTargetVersion(item.versioning.versions, updateChannel);
+    const targetInstallVersion = getTargetVersion(item.versions, updateChannel);
     const currentVersion = foundInstalled?.version.version || targetInstallVersion.version;
 
     return currentVersion;
-  }, [item.versioning.versions, updateChannel, foundInstalled]);
+  }, [item.versions, updateChannel, foundInstalled]);
 
   const {targetUpdate, targetVersion, isUpgrade} = useMemo(() => {
     const targetUpdate = updateAvailable.find(update => update.id === item.metadata.id);

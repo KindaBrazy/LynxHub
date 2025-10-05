@@ -4,7 +4,7 @@ import {isNil} from 'lodash';
 import {Key, useEffect, useMemo, useState} from 'react';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {ChangelogItem, ChangelogSubItem, PluginAvailableItem} from '../../../../../../../../cross/plugin/PluginTypes';
+import {ChangelogItem, ChangelogSubItem, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import {useDebounceBreadcrumb} from '../../../../../../../Breadcrumbs';
 import {Info_Icon, ListCheck_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../../Extensions/ExtensionLoader';
@@ -55,7 +55,7 @@ export default function PreviewBody({
   selectedExt,
   installed,
 }: {
-  selectedExt: PluginAvailableItem | undefined;
+  selectedExt: PluginItem | undefined;
   installed: boolean;
 }) {
   const [currentTab, setCurrentTab] = useState<Key>('changelog');
@@ -122,7 +122,7 @@ export default function PreviewBody({
         ))}
       {currentTab === 'changelog' && (
         <LynxScroll className="gap-y-6 ml-6 py-2 flex flex-col mr-4">
-          {selectedExt?.versioning.changes.map((version, index) => (
+          {selectedExt?.changes.map((version, index) => (
             <div key={`${version}_${index}_changeItem`}>
               <div
                 className={

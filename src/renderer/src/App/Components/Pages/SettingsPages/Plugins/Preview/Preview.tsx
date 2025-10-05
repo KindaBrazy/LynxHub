@@ -1,13 +1,13 @@
 import {isEmpty} from 'lodash';
 import {Dispatch, memo, SetStateAction, useMemo} from 'react';
 
-import {InstalledPlugin, PluginAvailableItem} from '../../../../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import {Plugins_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import PreviewBody from './Body';
 import PreviewHeader from './Header';
 
 type Props = {
-  selectedExt: PluginAvailableItem | undefined;
+  selectedExt: PluginItem | undefined;
   installed: InstalledPlugin[];
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
 };

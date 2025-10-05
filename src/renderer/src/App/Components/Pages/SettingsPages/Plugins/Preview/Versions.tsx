@@ -2,11 +2,11 @@ import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} fro
 import {useEffect, useMemo, useState} from 'react';
 
 import {SubscribeStages} from '../../../../../../../../cross/CrossTypes';
-import {PluginAvailableItem, PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
+import {PluginItem, PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
 import {BoxDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 
 type Props = {
-  selectedExt: PluginAvailableItem | undefined;
+  selectedExt: PluginItem | undefined;
   targetUpdate: PluginUpdateList | undefined;
   currentVersion: string;
 };
@@ -23,7 +23,7 @@ export default function Versions({selectedExt, targetUpdate, currentVersion}: Pr
   const [selectedVersion, setSelectedVersion] = useState<string>('');
 
   const {versions} = useMemo(() => {
-    const versions = selectedExt?.versioning.versions || [];
+    const versions = selectedExt?.versions || [];
     const version = versions.find(item => item.version === currentVersion);
     setSelectedVersion(version?.commit || '');
 
