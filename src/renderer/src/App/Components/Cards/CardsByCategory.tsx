@@ -11,7 +11,7 @@ import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {CardContainerClasses} from '../Pages/CardContainer';
 import HomeCategory from '../Pages/ContentPages/Home/HomeCategory';
 import LynxCardLoading from './Card/LynxCard-Loading';
-import NavigateModulesPage from './NavigateModulesPage';
+import NavigatePluginsPage from './NavigatePluginsPage';
 
 /**
  * Custom hook that returns cards by their IDs
@@ -42,7 +42,7 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
         {isNil(ReplaceCards) ? (
           isEmpty(cards) ? (
             <Empty className="size-full" description="No Card to Display!">
-              <NavigateModulesPage />
+              <NavigatePluginsPage />
             </Empty>
           ) : (
             <LynxCardLoading sortedCards={cards} hasArguments={hasArguments} installedCards={installedCards} />
@@ -75,7 +75,7 @@ const AllCards = () => {
   if (isEmpty(sortedCards) && isEmpty(allCategory))
     return (
       <Empty className="size-full" description="No Card to Display!">
-        <NavigateModulesPage />
+        <NavigatePluginsPage />
       </Empty>
     );
 

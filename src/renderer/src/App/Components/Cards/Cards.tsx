@@ -9,7 +9,7 @@ import {useGetCardsByPath, useHasArguments} from '../../Modules/ModuleLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import Page from '../Pages/Page';
 import LynxCardLoading from './Card/LynxCard-Loading';
-import NavigateModulesPage from './NavigateModulesPage';
+import NavigatePluginsPage from './NavigatePluginsPage';
 
 export const GetComponentsByPath = memo(
   ({routePath, extensionsElements}: {routePath: AvailablePageIDs; extensionsElements?: FC[]}) => {
@@ -32,7 +32,7 @@ export const GetComponentsByPath = memo(
           <Page className="content-center">
             <Result
               status="info"
-              extra={<NavigateModulesPage size="md" />}
+              extra={<NavigatePluginsPage size="md" />}
               title="Oops! No cards to display right now"
               subTitle="Please install related modules to see cards"
             />

@@ -3,25 +3,25 @@ import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {PageID, PageTitles} from '../../../../../cross/CrossConstants';
-import {Extensions2_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
+import {Plugins_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import {tabsActions} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 
-export default function NavigateModulesPage({size}: {size?: 'sm' | 'md'}) {
+export default function NavigatePluginsPage({size}: {size?: 'sm' | 'md'}) {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleGoModules = useCallback(() => {
     dispatch(
       tabsActions.setActivePage({
-        pageID: PageID.modules,
-        title: PageTitles.modules,
+        pageID: PageID.plugins,
+        title: PageTitles.plugins,
       }),
     );
   }, [dispatch]);
 
   return (
-    <Button color="primary" size={size || 'sm'} onPress={handleGoModules} startContent={<Extensions2_Icon />}>
-      Modules Page
+    <Button color="primary" size={size || 'sm'} onPress={handleGoModules} startContent={<Plugins_Icon />}>
+      Plugins Page
     </Button>
   );
 }
