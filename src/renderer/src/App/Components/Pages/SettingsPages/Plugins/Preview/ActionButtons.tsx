@@ -3,7 +3,7 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} fro
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {InstalledPlugin, PluginItem, PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download2_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {AppDispatch} from '../../../../../Redux/Store';
@@ -16,30 +16,29 @@ import Versions from './Versions';
 
 export default function ActionButtons({
   installed,
-  selectedExt,
   setInstalled,
   targetUpdate,
   currentVersion,
 }: {
   installed: boolean;
-  selectedExt: PluginItem | undefined;
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
   targetUpdate: PluginUpdateList | undefined;
   currentVersion: string;
 }) {
   const dispatch = useDispatch<AppDispatch>();
 
+  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
   const manageSet = useExtensionPageStore(state => state.manageSet);
   const installing = useExtensionPageStore(state => state.installing);
   const unInstalling = useExtensionPageStore(state => state.unInstalling);
 
   const isInstalling = useMemo(
-    () => installing.has(selectedExt?.metadata.id || ''),
-    [installing, selectedExt?.metadata.id],
+    () => installing.has(selectedPlugin?.metadata.id || ''),
+    [installing, selectedPlugin?.metadata.id],
   );
   const isUnInstalling = useMemo(
-    () => unInstalling.has(selectedExt?.metadata.id || ''),
-    [unInstalling, selectedExt?.metadata.id],
+    () => unInstalling.has(selectedPlugin?.metadata.id || ''),
+    [unInstalling, selectedPlugin?.metadata.id],
   );
 
   const [isCompatible, setIsCompatible] = useState<boolean>(true);
@@ -47,52 +46,52 @@ export default function ActionButtons({
 
   useEffect(() => {
     rendererIpc.win.getSystemInfo().then(result => {
-      setIsCompatible(selectedExt?.versions.some(v => v.platforms.includes(result.os)) || false);
+      setIsCompatible(selectedPlugin?.versions.some(v => v.platforms.includes(result.os)) || false);
     });
-  }, [selectedExt]);
+  }, [selectedPlugin]);
 
   const installExtension = useCallback(() => {
-    AddBreadcrumb_Renderer(`Plugin install: id:${selectedExt?.metadata.id}`);
-    manageSet('installing', selectedExt?.metadata.id, 'add');
+    AddBreadcrumb_Renderer(`Plugin install: id:${selectedPlugin?.metadata.id}`);
+    manageSet('installing', selectedPlugin?.metadata.id, 'add');
 
-    if (selectedExt?.url) {
-      rendererIpc.plugins.installPlugin(selectedExt.url).then(result => {
-        manageSet('installing', selectedExt?.metadata.id, 'remove');
+    if (selectedPlugin?.url) {
+      rendererIpc.plugins.installPlugin(selectedPlugin.url).then(result => {
+        manageSet('installing', selectedPlugin?.metadata.id, 'remove');
         if (result) {
-          lynxTopToast(dispatch).success(`${selectedExt.metadata.title} installed successfully`);
+          lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} installed successfully`);
           ShowRestartModal('To apply the installaion, please restart the app.');
           setInstalled(prevState => [
             ...prevState,
             {
-              version: {...selectedExt.versions[0], engines: {extensionApi: ''}},
-              metadata: selectedExt.metadata,
-              url: selectedExt.url,
+              version: {...selectedPlugin.versions[0], engines: {extensionApi: ''}},
+              metadata: selectedPlugin.metadata,
+              url: selectedPlugin.url,
               dir: '',
             },
           ]);
         }
       });
     }
-  }, [selectedExt]);
+  }, [selectedPlugin]);
 
   const uninstallExtension = useCallback(() => {
-    AddBreadcrumb_Renderer(`Plugin uninstall: id:${selectedExt?.metadata.id}`);
-    manageSet('unInstalling', selectedExt?.metadata.id, 'add');
+    AddBreadcrumb_Renderer(`Plugin uninstall: id:${selectedPlugin?.metadata.id}`);
+    manageSet('unInstalling', selectedPlugin?.metadata.id, 'add');
 
-    if (selectedExt?.metadata.id) {
-      rendererIpc.plugins.uninstallPlugin(selectedExt.metadata.id).then(result => {
-        manageSet('unInstalling', selectedExt?.metadata.id, 'remove');
+    if (selectedPlugin?.metadata.id) {
+      rendererIpc.plugins.uninstallPlugin(selectedPlugin.metadata.id).then(result => {
+        manageSet('unInstalling', selectedPlugin?.metadata.id, 'remove');
         if (result) {
-          lynxTopToast(dispatch).success(`${selectedExt.metadata.title} uninstalled successfully`);
+          lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} uninstalled successfully`);
           ShowRestartModal('To complete the uninstallation, please restart the app.');
         }
-        setInstalled(prevState => prevState.filter(item => item.metadata.id !== selectedExt.metadata.id));
+        setInstalled(prevState => prevState.filter(item => item.metadata.id !== selectedPlugin.metadata.id));
       });
     }
-  }, [selectedExt]);
+  }, [selectedPlugin]);
 
   const handleInstall = () => {
-    AddBreadcrumb_Renderer(`Plugin handleInstall: id:${selectedExt?.metadata.id}`);
+    AddBreadcrumb_Renderer(`Plugin handleInstall: id:${selectedPlugin?.metadata.id}`);
     setIsSecOpen(true);
   };
 
@@ -103,12 +102,12 @@ export default function ActionButtons({
         isOpen={isSecOpen}
         setIsOpen={setIsSecOpen}
         onAgree={installExtension}
-        title={selectedExt?.metadata.title}
-        owner={extractGitUrl(selectedExt?.url || '').owner}
+        title={selectedPlugin?.metadata.title}
+        owner={extractGitUrl(selectedPlugin?.url || '').owner}
       />
-      <Versions selectedExt={selectedExt} targetUpdate={targetUpdate} currentVersion={currentVersion} />
+      <Versions targetUpdate={targetUpdate} currentVersion={currentVersion} />
       <div className="flex flex-row items-center gap-x-2">
-        <UpdateButton item={selectedExt!} selectedItem={selectedExt} />
+        <UpdateButton item={selectedPlugin!} />
         {installed ? (
           <Button
             size="sm"

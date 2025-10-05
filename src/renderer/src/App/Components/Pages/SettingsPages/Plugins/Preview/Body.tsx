@@ -4,12 +4,13 @@ import {isNil} from 'lodash';
 import {Key, useEffect, useMemo, useState} from 'react';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {ChangelogItem, ChangelogSubItem, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
+import {ChangelogItem, ChangelogSubItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import {useDebounceBreadcrumb} from '../../../../../../../Breadcrumbs';
 import {Info_Icon, ListCheck_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../../Extensions/ExtensionLoader';
 import LynxScroll from '../../../../Reusable/LynxScroll';
 import MarkdownViewer from '../../../../Reusable/MarkdownViewer';
+import {useExtensionPageStore} from '../Page';
 
 const renderChangelogEntry = (item: ChangelogSubItem, depth = 0, key: string | number) => {
   if (typeof item === 'string') {
@@ -51,13 +52,8 @@ const Changelog = ({items}: {items: ChangelogItem}) => (
   </div>
 );
 
-export default function PreviewBody({
-  selectedExt,
-  installed,
-}: {
-  selectedExt: PluginItem | undefined;
-  installed: boolean;
-}) {
+export default function PreviewBody({installed}: {installed: boolean}) {
+  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
   const [currentTab, setCurrentTab] = useState<Key>('changelog');
 
   useDebounceBreadcrumb('Plugin tab', [currentTab]);
@@ -69,7 +65,7 @@ export default function PreviewBody({
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
 
   const rawReadmeUrl = useMemo(() => {
-    const repoUrl = selectedExt?.url;
+    const repoUrl = selectedPlugin?.url;
     if (!repoUrl) {
       return '';
     }
@@ -85,7 +81,7 @@ export default function PreviewBody({
     }
 
     return '';
-  }, [selectedExt?.url]);
+  }, [selectedPlugin?.url]);
 
   return (
     <div className="w-full flex flex-col overflow-hidden">
@@ -118,11 +114,11 @@ export default function PreviewBody({
         (isNil(ReplaceMd) ? (
           <MarkdownViewer urlType="raw" url={rawReadmeUrl} />
         ) : (
-          <ReplaceMd repoPath={selectedExt?.url || ''} />
+          <ReplaceMd repoPath={selectedPlugin?.url || ''} />
         ))}
       {currentTab === 'changelog' && (
         <LynxScroll className="gap-y-6 ml-6 py-2 flex flex-col mr-4">
-          {selectedExt?.changes.map((version, index) => (
+          {selectedPlugin?.changes.map((version, index) => (
             <div key={`${version}_${index}_changeItem`}>
               <div
                 className={

@@ -1,7 +1,7 @@
 import {createContext, memo, useContext, useEffect, useMemo, useState} from 'react';
 
 import {SkippedPlugins} from '../../../../../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginItem} from '../../../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin} from '../../../../../../../cross/plugin/PluginTypes';
 import {useUserState} from '../../../../Redux/Reducer/UserReducer';
 import rendererIpc from '../../../../RendererIpc';
 import PageView from '../../Page';
@@ -14,7 +14,6 @@ const ExtensionPageContext = createContext<Store | null>(null);
 
 type Props = {show: boolean};
 const Page = memo(({show}: Props) => {
-  const [selectedExtension, setSelectedExtension] = useState<PluginItem | undefined>(undefined);
   const [installed, setInstalled] = useState<InstalledPlugin[]>([]);
   const [unloaded, setUnloaded] = useState<SkippedPlugins[]>([]);
   const updateChannel = useUserState('updateChannel');
@@ -30,13 +29,8 @@ const Page = memo(({show}: Props) => {
   return (
     <ExtensionPageContext.Provider value={storeValue}>
       <PageView show={show} className="gap-x-6">
-        <List
-          unloaded={unloaded}
-          installed={installed}
-          selectedExt={selectedExtension}
-          setSelectedExt={setSelectedExtension}
-        />
-        <Preview installed={installed} setInstalled={setInstalled} selectedExt={selectedExtension} />
+        <List unloaded={unloaded} installed={installed} />
+        <Preview installed={installed} setInstalled={setInstalled} />
       </PageView>
     </ExtensionPageContext.Provider>
   );

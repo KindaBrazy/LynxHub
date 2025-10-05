@@ -3,7 +3,7 @@ import {Dispatch, SetStateAction, useMemo} from 'react';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {getTargetVersion} from '../../../../../../../../cross/plugin/CrossPluginUtils';
-import {InstalledPlugin, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {ExternalDuo_Icon} from '../../../../../../../context_menu/Components/SvgIcons';
 import {
@@ -15,30 +15,30 @@ import {
 } from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
+import {useExtensionPageStore} from '../Page';
 import ActionButtons from './ActionButtons';
 
 export default function PreviewHeader({
-  selectedExt,
   installedExt,
   setInstalled,
 }: {
-  selectedExt: PluginItem | undefined;
   installedExt: InstalledPlugin | undefined;
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
 }) {
+  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const updateChannel = useUserState('updateChannel');
 
   const {currentVersion, targetUpdate, isUpgrade, targetVersion} = useMemo(() => {
-    const targetInstallVersion = selectedExt ? getTargetVersion(selectedExt?.versions, updateChannel) : undefined;
+    const targetInstallVersion = selectedPlugin ? getTargetVersion(selectedPlugin?.versions, updateChannel) : undefined;
 
     const currentVersion = installedExt?.version.version || targetInstallVersion?.version || 'N/A';
-    const targetUpdate = updateAvailable.find(update => update.id === selectedExt?.metadata.id);
+    const targetUpdate = updateAvailable.find(update => update.id === selectedPlugin?.metadata.id);
     const isUpgrade = targetUpdate?.type === 'upgrade';
     const targetVersion = targetUpdate?.version.version;
 
     return {currentVersion, targetUpdate, isUpgrade, targetVersion};
-  }, [installedExt, selectedExt, updateAvailable, updateChannel]);
+  }, [installedExt, selectedPlugin, updateAvailable, updateChannel]);
 
   return (
     <div className="w-full flex sm:flex-col lg:flex-row p-5 sm:gap-y-2 shrink-0">
@@ -65,22 +65,22 @@ export default function PreviewHeader({
                 variant="light"
                 className="text-foreground-600"
                 startContent={<CalendarDuo_Icon className="size-3.5" />}>
-                {selectedExt?.changes[0].date}
+                {selectedPlugin?.changes[0].date}
               </Chip>
             </div>
           }
           className="self-start"
-          avatarProps={{src: selectedExt?.icon, className: 'bg-black/0', radius: 'none'}}
-          name={<span className="font-semibold text-foreground text-xl">{selectedExt?.metadata.title}</span>}
+          avatarProps={{src: selectedPlugin?.icon, className: 'bg-black/0', radius: 'none'}}
+          name={<span className="font-semibold text-foreground text-xl">{selectedPlugin?.metadata.title}</span>}
         />
         <div className="flex flex-row items-center ml-12">
           <Chip variant="light" startContent={<UserDuo_Icon />}>
-            {extractGitUrl(selectedExt?.url || '').owner}
+            {extractGitUrl(selectedPlugin?.url || '').owner}
           </Chip>
           <Button
             onPress={() => {
-              AddBreadcrumb_Renderer(`Plugin homepage: id:${selectedExt?.metadata.id}`);
-              window.open(selectedExt?.url);
+              AddBreadcrumb_Renderer(`Plugin homepage: id:${selectedPlugin?.metadata.id}`);
+              window.open(selectedPlugin?.url);
             }}
             size="sm"
             variant="light"
@@ -93,7 +93,6 @@ export default function PreviewHeader({
       </div>
 
       <ActionButtons
-        selectedExt={selectedExt}
         installed={!!installedExt}
         targetUpdate={targetUpdate}
         setInstalled={setInstalled}

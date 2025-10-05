@@ -46,8 +46,9 @@ export function ShowRestartModal(message: string) {
   });
 }
 
-type UpdateButtonProps = {item: PluginItem; selectedItem: PluginItem | undefined};
-export function UpdateButton({item, selectedItem}: UpdateButtonProps) {
+type UpdateButtonProps = {item: PluginItem};
+export function UpdateButton({item}: UpdateButtonProps) {
+  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const updating = useExtensionPageStore(state => state.updating);
   const manageSet = useExtensionPageStore(state => state.manageSet);
@@ -58,16 +59,16 @@ export function UpdateButton({item, selectedItem}: UpdateButtonProps) {
   const update = useCallback(
     (id: string, title: string) => {
       AddBreadcrumb_Renderer(`Plugin update: id:${id}`);
-      manageSet('updating', selectedItem?.metadata.id, 'add');
+      manageSet('updating', selectedPlugin?.metadata.id, 'add');
       rendererIpc.plugins.updatePlugin(id).then(updated => {
         if (updated) {
           lynxTopToast(dispatch).success(`${title} updated Successfully`);
           ShowRestartModal('To apply the updates, please restart the app.');
         }
-        manageSet('updating', selectedItem?.metadata.id, 'remove');
+        manageSet('updating', selectedPlugin?.metadata.id, 'remove');
       });
     },
-    [selectedItem],
+    [selectedPlugin],
   );
 
   const isUpdating = updating.has(item.metadata.id);

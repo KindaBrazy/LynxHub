@@ -439,7 +439,6 @@ function statics() {
   ipcMain.handle(staticsChannels.getExtensions, () => staticManager.getExtensions());
   ipcMain.handle(staticsChannels.getExtensionsEA, () => staticManager.getExtensionsEA());
   ipcMain.handle(staticsChannels.getPatrons, () => staticManager.getPatrons());
-  ipcMain.handle(staticsChannels.getPluginsList, () => staticManager.getPluginsList());
 }
 
 export function listenToAllChannels() {

@@ -9,8 +9,11 @@ export const createExtensionStore = () => {
     updating: new Set<string>([]),
     installing: new Set<string>([]),
 
+    selectedPlugin: undefined,
+    setSelectedPlugin: selectedPlugin => set({selectedPlugin}),
+
     updatingAll: false,
-    setUpdatingAll: (value: boolean) => set({updatingAll: value}),
+    setUpdatingAll: updatingAll => set({updatingAll}),
 
     manageSet: (key, id, operation) => {
       if (!id) return;

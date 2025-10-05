@@ -1,6 +1,6 @@
 import {Button, Card, CardBody, CardFooter, CardHeader, Chip, Link, Tooltip, User} from '@heroui/react';
 import {Typography} from 'antd';
-import {Dispatch, SetStateAction, useMemo} from 'react';
+import {useMemo} from 'react';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
@@ -20,22 +20,20 @@ import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import {UpdateButton} from '../Elements';
 import {useExtensionPageStore} from '../Page';
 
-type Props = {
-  item: PluginItem;
-  selectedExt: PluginItem | undefined;
-  setSelectedExt: Dispatch<SetStateAction<PluginItem | undefined>>;
-  installed: InstalledPlugin[];
-  unloaded: SkippedPlugins[];
-};
-
-export function List_Item({item, selectedExt, setSelectedExt, installed, unloaded}: Props) {
+type Props = {item: PluginItem; installed: InstalledPlugin[]; unloaded: SkippedPlugins[]};
+export function List_Item({item, installed, unloaded}: Props) {
+  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
+  const setSelectedPlugin = useExtensionPageStore(state => state.setSelectedPlugin);
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const updateChannel = useUserState('updateChannel');
 
   const isInstalling = useExtensionPageStore(state => state.installing.has(item.metadata.id));
   const isUnInstalling = useExtensionPageStore(state => state.unInstalling.has(item.metadata.id));
 
-  const isSelected = useMemo(() => selectedExt?.metadata.id === item.metadata.id, [selectedExt, item.metadata.id]);
+  const isSelected = useMemo(
+    () => selectedPlugin?.metadata.id === item.metadata.id,
+    [selectedPlugin, item.metadata.id],
+  );
 
   const {isExtension, foundInstalled, foundUnloaded, win32, darwin, linux} = useMemo(() => {
     const isExtension = item.metadata.type === 'extension';
@@ -83,7 +81,7 @@ export function List_Item({item, selectedExt, setSelectedExt, installed, unloade
     <Card
       onPress={() => {
         AddBreadcrumb_Renderer(`Plugin Select: id:${item.metadata.id}`);
-        setSelectedExt(item);
+        setSelectedPlugin(item);
       }}
       className={
         `hover:bg-foreground-100 hover:shadow-medium relative border-2 ` +
@@ -182,7 +180,7 @@ export function List_Item({item, selectedExt, setSelectedExt, installed, unloade
           )}
         </div>
 
-        <UpdateButton item={item} selectedItem={selectedExt} />
+        <UpdateButton item={item} />
 
         {isInstalling && (
           <Button size="sm" color="success" variant="light" className="mr-4" isLoading isDisabled>
