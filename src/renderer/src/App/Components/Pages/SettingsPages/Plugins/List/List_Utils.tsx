@@ -1,12 +1,14 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {PluginFilter, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import {FilterDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {pluginsActions} from '../../../../../Redux/Reducer/PluginsReducer';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
+import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
-import {useExtensionPageStore} from '../Page';
 
 export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginItem[]>>) {
   const [loading, setLoading] = useState<boolean>(true);
@@ -37,8 +39,7 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginItem[]
 }
 
 export function useFilteredList(list: PluginItem[], selectedFilters: PluginFilter, installed: string[]) {
-  const setSelectedPlugin = useExtensionPageStore(state => state.setSelectedPlugin);
-
+  const dispatch = useDispatch<AppDispatch>();
   const filteredList = useMemo(() => {
     if (selectedFilters === 'all' || selectedFilters.size === 3) return list;
 
@@ -56,7 +57,8 @@ export function useFilteredList(list: PluginItem[], selectedFilters: PluginFilte
   }, [list, selectedFilters, installed]);
 
   useEffect(() => {
-    setSelectedPlugin(isEmpty(filteredList) ? undefined : filteredList.find(item => item.isCompatible));
+    const selected = isEmpty(filteredList) ? undefined : filteredList.find(item => item.isCompatible);
+    dispatch(pluginsActions.setSelectedPlugin(selected));
   }, [filteredList]);
 
   return filteredList;

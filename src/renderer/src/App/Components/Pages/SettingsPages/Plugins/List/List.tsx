@@ -7,13 +7,13 @@ import {useDispatch} from 'react-redux';
 import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
 import {InstalledPlugin, PluginFilter, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import {Circle_Icon, RefreshDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
 import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import LynxScroll from '../../../../Reusable/LynxScroll';
-import {useExtensionPageStore} from '../Page';
 import {List_Item} from './List_Item';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from './List_Utils';
 
@@ -26,12 +26,9 @@ export default function List({installed, unloaded}: Props) {
   const [searchValue, setSearchValue] = useState<string>('');
   const dispatch = useDispatch<AppDispatch>();
 
-  const updatingAll = useExtensionPageStore(state => state.updatingAll);
-  const setUpdatingAll = useExtensionPageStore(state => state.setUpdatingAll);
+  const updatingAll = usePluginsState('updatingAll');
 
   const installedID = useMemo(() => installed.map(item => item.metadata.id), [installed]);
-
-  const manageSet = useExtensionPageStore(state => state.manageSet);
 
   const {loading, refreshing} = useFetchExtensions(setList);
 
@@ -78,12 +75,8 @@ export default function List({installed, unloaded}: Props) {
   }, [searchValue]);
 
   const updateAll = () => {
-    manageSet(
-      'updating',
-      updateAvailable.map(item => item.id),
-      'add',
-    );
-    setUpdatingAll(true);
+    dispatch(pluginsActions.manageSet({key: 'updating', id: updateAvailable.map(item => item.id), operation: 'add'}));
+    dispatch(pluginsActions.setUpdatingAll(true));
     rendererIpc.plugins
       .updatePlugins()
       .then(() => {
@@ -91,12 +84,10 @@ export default function List({installed, unloaded}: Props) {
       })
       .catch(() => lynxTopToast(dispatch).error('Failed to update extensions. Please try again later.'))
       .finally(() => {
-        manageSet(
-          'updating',
-          updateAvailable.map(item => item.id),
-          'remove',
+        dispatch(
+          pluginsActions.manageSet({key: 'updating', id: updateAvailable.map(item => item.id), operation: 'remove'}),
         );
-        setUpdatingAll(false);
+        dispatch(pluginsActions.setUpdatingAll(true));
       });
   };
 

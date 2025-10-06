@@ -12,9 +12,9 @@ import {
   HomeSmile_Icon,
   UserDuo_Icon,
 } from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
 import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
-import {useExtensionPageStore} from '../Page';
 import ActionButtons from './ActionButtons';
 
 export default function PreviewHeader({
@@ -24,7 +24,7 @@ export default function PreviewHeader({
   installedExt: InstalledPlugin | undefined;
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
 }) {
-  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
+  const selectedPlugin = usePluginsState('selectedPlugin');
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const updateChannel = useUserState('updateChannel');
 

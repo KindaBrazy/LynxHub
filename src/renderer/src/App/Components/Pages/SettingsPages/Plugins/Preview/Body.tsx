@@ -8,9 +8,9 @@ import {ChangelogItem, ChangelogSubItem} from '../../../../../../../../cross/plu
 import {useDebounceBreadcrumb} from '../../../../../../../Breadcrumbs';
 import {Info_Icon, ListCheck_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../../Extensions/ExtensionLoader';
+import {usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
 import LynxScroll from '../../../../Reusable/LynxScroll';
 import MarkdownViewer from '../../../../Reusable/MarkdownViewer';
-import {useExtensionPageStore} from '../Page';
 
 const renderChangelogEntry = (item: ChangelogSubItem, depth = 0, key: string | number) => {
   if (typeof item === 'string') {
@@ -86,7 +86,7 @@ const Changelog = ({items}: {items: ChangelogItem}) => (
 );
 
 export default function PreviewBody({installed}: {installed: boolean}) {
-  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
+  const selectedPlugin = usePluginsState('selectedPlugin');
   const [currentTab, setCurrentTab] = useState<Key>('changelog');
 
   useDebounceBreadcrumb('Plugin tab', [currentTab]);
