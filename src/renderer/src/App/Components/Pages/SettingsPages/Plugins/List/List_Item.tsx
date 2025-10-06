@@ -99,7 +99,7 @@ export function List_Item({item, installed, unloaded}: Props) {
             delay={300}
             color="warning"
             content={item.incompatibleReason}
-            classNames={{content: 'max-w-80 p-2'}}
+            classNames={{content: 'p-2 whitespace-pre'}}
             showArrow>
             <QuestionCircle_Icon
               className={'size-8 text-warning/80 hover:text-warning transition-colors duration-200'}
