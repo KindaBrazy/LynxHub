@@ -29,11 +29,11 @@ export default function ActionButtons({installed, setInstalled, targetUpdate, cu
   const unInstalling = usePluginsState('unInstalling');
 
   const isInstalling = useMemo(
-    () => installing.has(selectedPlugin?.metadata.id || ''),
+    () => installing.includes(selectedPlugin?.metadata.id || ''),
     [installing, selectedPlugin?.metadata.id],
   );
   const isUnInstalling = useMemo(
-    () => unInstalling.has(selectedPlugin?.metadata.id || ''),
+    () => unInstalling.includes(selectedPlugin?.metadata.id || ''),
     [unInstalling, selectedPlugin?.metadata.id],
   );
 

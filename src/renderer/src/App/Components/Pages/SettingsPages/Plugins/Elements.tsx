@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 import {PluginItem} from '../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {Download_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
-import {pluginsActions, usePluginsState} from '../../../../Redux/Reducer/PluginsReducer';
+import {pluginsActions, useIsUpdatingPlugin, usePluginsState} from '../../../../Redux/Reducer/PluginsReducer';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
@@ -52,7 +52,7 @@ export function UpdateButton({item}: UpdateButtonProps) {
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
 
   const selectedPlugin = usePluginsState('selectedPlugin');
-  const updating = usePluginsState('updating');
+  const isUpdating = useIsUpdatingPlugin(item.metadata.id);
   const updatingAll = usePluginsState('updatingAll');
 
   const update = useCallback(
@@ -69,8 +69,6 @@ export function UpdateButton({item}: UpdateButtonProps) {
     },
     [selectedPlugin],
   );
-
-  const isUpdating = updating.has(item.metadata.id);
 
   const updateItem = useMemo(
     () => updateAvailable.find(available => available.id === item.metadata.id),
