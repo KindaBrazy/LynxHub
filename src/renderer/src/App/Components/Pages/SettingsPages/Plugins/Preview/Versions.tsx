@@ -4,7 +4,7 @@ import {useMemo, useState} from 'react';
 import {SubscribeStages} from '../../../../../../../../cross/CrossTypes';
 import {PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
 import {BoxDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
-import {useExtensionPageStore} from '../Page';
+import {usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
 
 const getStageName = (stage: SubscribeStages) => {
   return stage === 'insider' ? 'Insider' : stage === 'early_access' ? 'Early Access' : 'Public';
@@ -19,7 +19,7 @@ type Props = {
   currentVersion: string;
 };
 export default function Versions({targetUpdate, currentVersion}: Props) {
-  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
+  const selectedPlugin = usePluginsState('selectedPlugin');
   const [selectedVersion, setSelectedVersion] = useState<string>('');
 
   const {versions, disabledKeys} = useMemo(() => {

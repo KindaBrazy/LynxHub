@@ -6,6 +6,7 @@ import appReducer from './Reducer/AppReducer';
 import cardsReducer from './Reducer/CardsReducer';
 import hotkeysReducer from './Reducer/HotkeysReducer';
 import modalsReducer from './Reducer/ModalsReducer';
+import pluginsReducer from './Reducer/PluginsReducer';
 import settingsReducer from './Reducer/SettingsReducer';
 import tabsReducer from './Reducer/TabsReducer';
 import terminalReducer from './Reducer/TerminalReducer';
@@ -20,6 +21,7 @@ const staticReducers = {
   settings: settingsReducer,
   terminal: terminalReducer,
   hotkeys: hotkeysReducer,
+  plugins: pluginsReducer,
 };
 
 let store = configureStore({

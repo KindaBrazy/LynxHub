@@ -1,5 +1,6 @@
 import {Button, Card, CardBody, CardFooter, CardHeader, Chip, Link, Tooltip, User} from '@heroui/react';
 import {useMemo} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
@@ -15,20 +16,26 @@ import {
   ShieldWarning_Icon,
   Windows_Icon,
 } from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {
+  pluginsActions,
+  useIsInstallingPlugin,
+  useIsUninstallingPlugin,
+  usePluginsState,
+} from '../../../../../Redux/Reducer/PluginsReducer';
 import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
+import {AppDispatch} from '../../../../../Redux/Store';
 import {UpdateButton} from '../Elements';
-import {useExtensionPageStore} from '../Page';
 
 type Props = {item: PluginItem; installed: InstalledPlugin[]; unloaded: SkippedPlugins[]};
 export function List_Item({item, installed, unloaded}: Props) {
-  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
-  const setSelectedPlugin = useExtensionPageStore(state => state.setSelectedPlugin);
+  const dispatch = useDispatch<AppDispatch>();
+  const selectedPlugin = usePluginsState('selectedPlugin');
+  const isInstalling = useIsInstallingPlugin(item.metadata.id);
+  const isUnInstalling = useIsUninstallingPlugin(item.metadata.id);
+
   const updateAvailable = useSettingsState('pluginUpdateAvailableList');
   const updateChannel = useUserState('updateChannel');
-
-  const isInstalling = useExtensionPageStore(state => state.installing.has(item.metadata.id));
-  const isUnInstalling = useExtensionPageStore(state => state.unInstalling.has(item.metadata.id));
 
   const isSelected = useMemo(
     () => selectedPlugin?.metadata.id === item.metadata.id,
@@ -81,7 +88,7 @@ export function List_Item({item, installed, unloaded}: Props) {
     <Card
       onPress={() => {
         AddBreadcrumb_Renderer(`Plugin Select: id:${item.metadata.id}`);
-        setSelectedPlugin(item);
+        dispatch(pluginsActions.setSelectedPlugin(item));
       }}
       className={
         `hover:bg-foreground-100 hover:shadow-medium relative border-2 ` +

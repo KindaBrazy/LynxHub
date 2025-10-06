@@ -6,11 +6,11 @@ import {useDispatch} from 'react-redux';
 import {PluginItem} from '../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {Download_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {pluginsActions, usePluginsState} from '../../../../Redux/Reducer/PluginsReducer';
 import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
-import {useExtensionPageStore} from './Page';
 
 export function ShowRestartModal(message: string) {
   const later = Modal.destroyAll;
@@ -48,24 +48,23 @@ export function ShowRestartModal(message: string) {
 
 type UpdateButtonProps = {item: PluginItem};
 export function UpdateButton({item}: UpdateButtonProps) {
-  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
-  const updateAvailable = useSettingsState('pluginUpdateAvailableList');
-  const updating = useExtensionPageStore(state => state.updating);
-  const manageSet = useExtensionPageStore(state => state.manageSet);
   const dispatch = useDispatch<AppDispatch>();
+  const updateAvailable = useSettingsState('pluginUpdateAvailableList');
 
-  const updatingAll = useExtensionPageStore(state => state.updatingAll);
+  const selectedPlugin = usePluginsState('selectedPlugin');
+  const updating = usePluginsState('updating');
+  const updatingAll = usePluginsState('updatingAll');
 
   const update = useCallback(
     (id: string, title: string) => {
       AddBreadcrumb_Renderer(`Plugin update: id:${id}`);
-      manageSet('updating', selectedPlugin?.metadata.id, 'add');
+      dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'add'}));
       rendererIpc.plugins.updatePlugin(id).then(updated => {
         if (updated) {
           lynxTopToast(dispatch).success(`${title} updated Successfully`);
           ShowRestartModal('To apply the updates, please restart the app.');
         }
-        manageSet('updating', selectedPlugin?.metadata.id, 'remove');
+        dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'remove'}));
       });
     },
     [selectedPlugin],

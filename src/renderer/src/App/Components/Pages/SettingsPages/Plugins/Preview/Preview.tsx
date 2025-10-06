@@ -3,7 +3,7 @@ import {Dispatch, memo, SetStateAction, useMemo} from 'react';
 
 import {InstalledPlugin} from '../../../../../../../../cross/plugin/PluginTypes';
 import {Plugins_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
-import {useExtensionPageStore} from '../Page';
+import {usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
 import PreviewBody from './Body';
 import PreviewHeader from './Header';
 
@@ -13,7 +13,7 @@ type Props = {
 };
 
 const Preview = memo(({installed, setInstalled}: Props) => {
-  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
+  const selectedPlugin = usePluginsState('selectedPlugin');
   const installedExt = useMemo(
     () => installed.find(item => item.metadata.id === selectedPlugin?.metadata.id),
     [installed, selectedPlugin],

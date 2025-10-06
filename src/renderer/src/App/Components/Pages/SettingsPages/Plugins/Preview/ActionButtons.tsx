@@ -6,12 +6,12 @@ import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {InstalledPlugin, PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download2_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SecurityWarning from '../../SecurityWarning';
 import {ShowRestartModal, UpdateButton} from '../Elements';
-import {useExtensionPageStore} from '../Page';
 import Versions from './Versions';
 
 type Props = {
@@ -24,10 +24,9 @@ type Props = {
 export default function ActionButtons({installed, setInstalled, targetUpdate, currentVersion}: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
-  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
-  const manageSet = useExtensionPageStore(state => state.manageSet);
-  const installing = useExtensionPageStore(state => state.installing);
-  const unInstalling = useExtensionPageStore(state => state.unInstalling);
+  const selectedPlugin = usePluginsState('selectedPlugin');
+  const installing = usePluginsState('installing');
+  const unInstalling = usePluginsState('unInstalling');
 
   const isInstalling = useMemo(
     () => installing.has(selectedPlugin?.metadata.id || ''),
@@ -49,12 +48,12 @@ export default function ActionButtons({installed, setInstalled, targetUpdate, cu
 
   const installExtension = useCallback(() => {
     AddBreadcrumb_Renderer(`Plugin install: id:${selectedPlugin?.metadata.id}`);
-    manageSet('installing', selectedPlugin?.metadata.id, 'add');
+    dispatch(pluginsActions.manageSet({key: 'installing', id: selectedPlugin?.metadata.id, operation: 'add'}));
 
     if (selectedPlugin?.url) {
       const targetCommit = selectedPlugin.versions.find(v => v.version === currentVersion)?.commit;
       rendererIpc.plugins.installPlugin(selectedPlugin.url, targetCommit).then(result => {
-        manageSet('installing', selectedPlugin?.metadata.id, 'remove');
+        dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'remove'}));
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} installed successfully`);
           ShowRestartModal('To apply the installaion, please restart the app.');
@@ -74,11 +73,11 @@ export default function ActionButtons({installed, setInstalled, targetUpdate, cu
 
   const uninstallExtension = useCallback(() => {
     AddBreadcrumb_Renderer(`Plugin uninstall: id:${selectedPlugin?.metadata.id}`);
-    manageSet('unInstalling', selectedPlugin?.metadata.id, 'add');
+    dispatch(pluginsActions.manageSet({key: 'unInstalling', id: selectedPlugin?.metadata.id, operation: 'add'}));
 
     if (selectedPlugin?.metadata.id) {
       rendererIpc.plugins.uninstallPlugin(selectedPlugin.metadata.id).then(result => {
-        manageSet('unInstalling', selectedPlugin?.metadata.id, 'remove');
+        dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'remove'}));
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} uninstalled successfully`);
           ShowRestartModal('To complete the uninstallation, please restart the app.');
