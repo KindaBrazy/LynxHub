@@ -1,5 +1,4 @@
 import {Button, Card, CardBody, CardFooter, CardHeader, Chip, Link, Tooltip, User} from '@heroui/react';
-import {Typography} from 'antd';
 import {useMemo} from 'react';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
@@ -12,6 +11,7 @@ import {
   CheckDuo_Icon,
   Linux_Icon,
   MacOS_Icon,
+  QuestionCircle_Icon,
   ShieldWarning_Icon,
   Windows_Icon,
 } from '../../../../../../assets/icons/SvgIcons/SvgIcons';
@@ -35,8 +35,9 @@ export function List_Item({item, installed, unloaded}: Props) {
     [selectedPlugin, item.metadata.id],
   );
 
-  const {isExtension, foundInstalled, foundUnloaded, win32, darwin, linux} = useMemo(() => {
+  const {isExtension, foundInstalled, foundUnloaded, win32, darwin, linux, isCompatible} = useMemo(() => {
     const isExtension = item.metadata.type === 'extension';
+    const isCompatible = item.isCompatible;
 
     const foundInstalled = installed.find(i => i.metadata.id === item.metadata.id);
     const foundUnloaded = unloaded.find(u => foundInstalled?.dir === u.folderName);
@@ -55,14 +56,13 @@ export function List_Item({item, installed, unloaded}: Props) {
       linux,
       win32,
       darwin,
+      isCompatible,
     };
   }, [item, installed, unloaded]);
 
   const currentVersion = useMemo(() => {
     const targetInstallVersion = getTargetVersion(item.versions, updateChannel);
-    const currentVersion = foundInstalled?.version.version || targetInstallVersion.version;
-
-    return currentVersion;
+    return foundInstalled?.version.version || targetInstallVersion.version;
   }, [item.versions, updateChannel, foundInstalled]);
 
   const {targetUpdate, targetVersion, isUpgrade} = useMemo(() => {
@@ -90,9 +90,18 @@ export function List_Item({item, installed, unloaded}: Props) {
       }
       as="div"
       shadow="sm"
+      isPressable={isCompatible}
       key={`${item.metadata.id}_plugin_list_item`}
-      fullWidth
-      isPressable>
+      fullWidth>
+      {!isCompatible && (
+        <div className="absolute inset-0 z-20 bg-black/50 flex items-center justify-center">
+          <Tooltip color="warning" content={item.incompatibleReason} classNames={{content: 'max-w-80 p-2'}} showArrow>
+            <QuestionCircle_Icon
+              className={'size-8 text-warning/80 hover:text-warning transition-colors duration-200'}
+            />
+          </Tooltip>
+        </div>
+      )}
       <CardHeader className="pb-0">
         <User
           avatarProps={{
@@ -101,7 +110,7 @@ export function List_Item({item, installed, unloaded}: Props) {
             className: 'shrink-0 !bg-black/0',
           }}
           description={
-            <span className="text-foreground-500 text-small">
+            <span className="text-foreground-500 text-xs">
               By <span className="font-bold text-foreground-500">{extractGitUrl(item.url).owner}</span>
             </span>
           }
@@ -110,7 +119,7 @@ export function List_Item({item, installed, unloaded}: Props) {
               <Link
                 className={
                   `${isExtension ? 'text-primary-500' : 'text-secondary-500'}` +
-                  ` transition-colors duration-300 font-semibold`
+                  ` transition-colors duration-300 font-semibold `
                 }
                 size="lg"
                 href={item.url}
@@ -137,9 +146,7 @@ export function List_Item({item, installed, unloaded}: Props) {
       </CardHeader>
 
       <CardBody className="pl-[3.7rem] py-0">
-        <Typography.Paragraph className="mt-2" ellipsis={{rows: 2, tooltip: true}}>
-          {item.metadata.description}
-        </Typography.Paragraph>
+        <span className="mb-1.5 mt-1 text-xs text-foreground-700 line-clamp-3">{item.metadata.description}</span>
       </CardBody>
 
       <CardFooter className="flex flex-row items-center gap-x-2 pl-[3.7rem] pt-0 justify-between">

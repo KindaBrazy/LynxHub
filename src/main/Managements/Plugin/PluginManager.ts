@@ -412,10 +412,20 @@ export class PluginManager {
         versions.push({version, commit, stage, platforms, isCompatible, incompatibleReason});
       }
 
-      const isAnyVersionCompatible: boolean = versions.some(v => v.isCompatible);
+      const isCompatible: boolean = versions.some(v => v.isCompatible);
+      const incompatibleReason: string | undefined = versions.find(v => !v.isCompatible)?.incompatibleReason;
+
       const {metadata, url, icon, versioning} = item;
 
-      validated.push({isAnyVersionCompatible, metadata, url, icon, versions, changes: versioning.changes});
+      validated.push({
+        isCompatible,
+        metadata,
+        url,
+        icon,
+        versions,
+        incompatibleReason,
+        changes: versioning.changes,
+      });
     }
 
     return validated;
@@ -426,55 +436,7 @@ export class PluginManager {
     type: 'module' | 'extension',
     currentStage: SubscribeStages,
   ): {compatible: boolean; reason: string | undefined} {
-    const currentPlatform = platform();
-
-    // 1. Platform Check: Be more specific about which platform is unsupported.
-    const platforms = version.platforms;
-    if (!platforms || !platforms.includes(currentPlatform)) {
-      const supportedPlatforms = platforms?.join(', ') || 'none';
-      return {
-        compatible: false,
-        reason:
-          `This ${type} is not compatible with your operating system` +
-          ` (${currentPlatform}). It only supports: ${supportedPlatforms}.`,
-      };
-    }
-
-    // 2. Engines/API Check: Explain what "API" means in user terms (application version).
-    const engines = version.engines;
-    if (engines && typeof engines === 'object') {
-      const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
-      const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
-
-      const targetCheck = type === 'extension' ? extensionCheck : moduleCheck;
-      const requiredRange = engines[targetCheck.api as keyof PluginEngines];
-
-      if (requiredRange) {
-        if (!satisfies(targetCheck.version, requiredRange)) {
-          return {
-            compatible: false,
-            // This is much clearer than "api not satisfied".
-            reason:
-              `This ${type} requires a different application version.` +
-              ` It needs version(s) ${requiredRange}, but you are currently on ${targetCheck.version}.`,
-          };
-        }
-      } else {
-        // This suggests the package itself is malformed or invalid.
-        return {
-          compatible: false,
-          reason: `Could not verify compatibility for this ${type}. The package metadata may be missing or corrupted.`,
-        };
-      }
-    } else {
-      // A fallback for the same reason as above.
-      return {
-        compatible: false,
-        reason: `Could not find compatibility information for this ${type}.`,
-      };
-    }
-
-    // 3. Subscribe Stage Check: Give clear, actionable feedback about subscription levels.
+    // 1. Subscribe Stage Check
     switch (currentStage) {
       // Have access to all stages
       case 'insider':
@@ -493,7 +455,6 @@ export class PluginManager {
       // Have access to only the public stage
       case 'public':
         if (version.stage !== 'public') {
-          // Corrected the logic here from your original and made the message unified.
           const requiredStage = version.stage === 'insider' ? 'Insider' : 'Early Access';
           return {
             compatible: false,
@@ -503,6 +464,53 @@ export class PluginManager {
           };
         }
         break;
+    }
+
+    const currentPlatform = platform();
+
+    // 2. Platform Check
+    const platforms = version.platforms;
+    if (!platforms || !platforms.includes(currentPlatform)) {
+      const supportedPlatforms = platforms?.join(', ') || 'none';
+      return {
+        compatible: false,
+        reason:
+          `This ${type} is not compatible with your operating system` +
+          ` (${currentPlatform}). It only supports: ${supportedPlatforms}.`,
+      };
+    }
+
+    // 3. Engines/API Check
+    const engines = version.engines;
+    if (engines && typeof engines === 'object') {
+      const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
+      const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
+
+      const targetCheck = type === 'extension' ? extensionCheck : moduleCheck;
+      const requiredRange = engines[targetCheck.api as keyof PluginEngines];
+
+      if (requiredRange) {
+        if (!satisfies(targetCheck.version, requiredRange)) {
+          return {
+            compatible: false,
+            reason:
+              `This ${type} requires a different application version.` +
+              ` It needs version(s) ${requiredRange}, but you are currently on ${targetCheck.version}.`,
+          };
+        }
+      } else {
+        // This suggests the package itself is malformed or invalid.
+        return {
+          compatible: false,
+          reason: `Could not verify compatibility for this ${type}. The package metadata may be missing or corrupted.`,
+        };
+      }
+    } else {
+      // A fallback for the same reason as above.
+      return {
+        compatible: false,
+        reason: `Could not find compatibility information for this ${type}.`,
+      };
     }
 
     // If all checks pass, it's compatible.

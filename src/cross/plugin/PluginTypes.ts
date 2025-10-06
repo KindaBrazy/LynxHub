@@ -144,15 +144,17 @@ export type PluginAddresses = {type: 'module' | 'extension'; address: string}[];
 export type ValidatedPlugins = {type: 'module' | 'extension'; folder: string}[];
 export type PluginFilter = Set<'installed' | 'modules' | 'extensions'> | 'all';
 
-export type VersionItemValidated = Omit<VersionItem, 'engines'> & {
+type PluginCompatibility = {
   isCompatible: boolean;
-  incompatibleReason: string | undefined;
+  incompatibleReason?: string;
 };
+
+export type VersionItemValidated = Omit<VersionItem, 'engines'> & PluginCompatibility;
+
 export type PluginItem = {
-  isAnyVersionCompatible: boolean;
   icon: string;
   url: string;
   metadata: PluginMetadata;
   versions: VersionItemValidated[];
   changes: PluginChanges;
-};
+} & PluginCompatibility;

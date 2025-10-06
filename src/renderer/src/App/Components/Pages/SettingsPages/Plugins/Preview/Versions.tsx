@@ -1,5 +1,5 @@
 import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
-import {useEffect, useMemo, useState} from 'react';
+import {useMemo, useState} from 'react';
 
 import {SubscribeStages} from '../../../../../../../../cross/CrossTypes';
 import {PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
@@ -29,10 +29,6 @@ export default function Versions({targetUpdate, currentVersion}: Props) {
 
     return {versions};
   }, [selectedPlugin, targetUpdate, currentVersion]);
-
-  useEffect(() => {
-    console.log(selectedVersion);
-  }, [selectedVersion]);
 
   const onSelectionChange = value => {
     setSelectedVersion(Array.from(value)[0] as string);
