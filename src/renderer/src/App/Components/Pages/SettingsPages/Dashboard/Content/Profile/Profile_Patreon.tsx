@@ -25,7 +25,6 @@ export default function Profile_Patreon() {
         .then(userData => {
           dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
           dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
-          rendererIpc.plugins.checkForSync(userData.subscribeStage);
         })
         .catch(e => {
           console.error(e);

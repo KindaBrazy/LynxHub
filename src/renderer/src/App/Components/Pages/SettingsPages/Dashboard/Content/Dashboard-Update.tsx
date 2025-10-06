@@ -56,7 +56,10 @@ export default function DashboardUpdate() {
     AddBreadcrumb_Renderer(`Update Channel Changed: keys:${JSON.stringify(keys)}`);
     if (keys !== 'all') {
       const value = keys.values().next().value?.toString() as SubscribeStages | undefined;
-      if (value) rendererIpc.patreon.updateChannel(value);
+      if (value) {
+        rendererIpc.patreon.updateChannel(value);
+        rendererIpc.plugins.checkForSync(value);
+      }
     }
   }, []);
 
