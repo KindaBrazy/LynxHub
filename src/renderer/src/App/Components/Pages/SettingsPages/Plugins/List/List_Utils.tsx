@@ -1,5 +1,5 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
-import {isEmpty, isNil} from 'lodash';
+import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {PluginFilter, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
@@ -37,7 +37,6 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginItem[]
 }
 
 export function useFilteredList(list: PluginItem[], selectedFilters: PluginFilter, installed: string[]) {
-  const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
   const setSelectedPlugin = useExtensionPageStore(state => state.setSelectedPlugin);
 
   const filteredList = useMemo(() => {
@@ -57,26 +56,8 @@ export function useFilteredList(list: PluginItem[], selectedFilters: PluginFilte
   }, [list, selectedFilters, installed]);
 
   useEffect(() => {
-    const setSelected = () => {
-      if (!selectedPlugin) return;
-
-      let target: PluginItem | undefined = selectedPlugin;
-
-      if (isEmpty(filteredList)) {
-        target = undefined;
-      }
-      if (isNil(selectedPlugin)) {
-        target = filteredList[0];
-      }
-      if (!filteredList.some(item => item.metadata.id === selectedPlugin.metadata.id)) {
-        target = filteredList[0];
-      }
-
-      setSelectedPlugin(target);
-    };
-
-    setSelected();
-  }, [filteredList, selectedPlugin, setSelectedPlugin]);
+    setSelectedPlugin(isEmpty(filteredList) ? undefined : filteredList.find(item => item.isCompatible));
+  }, [filteredList]);
 
   return filteredList;
 }
