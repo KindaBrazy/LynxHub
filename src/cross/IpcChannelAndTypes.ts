@@ -175,18 +175,15 @@ export const pluginChannels = {
   onUpdateAvailableList: 'plugins:on-update-available-list',
   onAppNeedRestart: 'plugins:app-need-restart',
 
-  checkStage: 'plugins:check-stage',
   getPluginAddresses: 'plugins:get-plugins-addresses',
   getInstalledPlugins: 'plugins:get-installed-plugins',
   getSkippedPlugins: 'plugins:get-skipped-plugins',
 
   installPlugin: 'plugins:install-plugin',
   uninstallPlugin: 'plugins:uninstall-plugin',
-  isUpdateAvailable: 'plugins:is-update-available',
   updatePlugin: 'plugins:update-plugin',
   updatePlugins: 'plugins:update-plugins',
   checkForUpdates: 'plugins:check-for-updates',
-  getPluginVersions: 'plugins:get-plugin-versions',
 
   getList: 'plugins:get-list',
 };

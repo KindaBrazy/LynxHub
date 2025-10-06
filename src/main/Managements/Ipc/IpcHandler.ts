@@ -212,7 +212,6 @@ function modules() {
 }
 
 function plugins() {
-  ipcMain.handle(pluginChannels.checkStage, (_, stage: SubscribeStages) => pluginManager.checkStage(stage));
   ipcMain.handle(pluginChannels.getPluginAddresses, () => pluginManager.getPluginAddresses());
   ipcMain.handle(pluginChannels.getInstalledPlugins, () => pluginManager.getInstalledPluginInfo());
   ipcMain.handle(pluginChannels.getSkippedPlugins, () => pluginManager.getSkipped());
@@ -220,9 +219,6 @@ function plugins() {
     pluginManager.installPlugin(url, commitHash),
   );
   ipcMain.handle(pluginChannels.uninstallPlugin, (_, id: string) => pluginManager.uninstallPlugin(id));
-  ipcMain.handle(pluginChannels.isUpdateAvailable, (_, id: string, stage: SubscribeStages) =>
-    pluginManager.isUpdateAvailable(id, stage),
-  );
   ipcMain.handle(pluginChannels.updatePlugin, (_, id: string) => pluginManager.updatePlugin(id));
   ipcMain.handle(pluginChannels.updatePlugins, () => pluginManager.updateAll());
   ipcMain.handle(pluginChannels.checkForUpdates, (_, stage: SubscribeStages) => pluginManager.checkForUpdates(stage));

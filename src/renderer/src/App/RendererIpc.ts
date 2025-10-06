@@ -280,19 +280,15 @@ const rendererIpc = {
   },
 
   plugins: {
-    checkStage: (stage: SubscribeStages): Promise<boolean> => ipc.invoke(pluginChannels.checkStage, stage),
     getPluginAddresses: (): Promise<PluginAddresses> => ipc.invoke(pluginChannels.getPluginAddresses),
     getInstalledPlugins: (): Promise<InstalledPlugin[]> => ipc.invoke(pluginChannels.getInstalledPlugins),
     getSkippedPlugins: (): Promise<SkippedPlugins[]> => ipc.invoke(pluginChannels.getSkippedPlugins),
     installPlugin: (url: string, commitHash?: string): Promise<boolean> =>
       ipc.invoke(pluginChannels.installPlugin, url, commitHash),
     uninstallPlugin: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.uninstallPlugin, id),
-    isUpdateAvailable: (id: string, stage: SubscribeStages): Promise<boolean> =>
-      ipc.invoke(pluginChannels.isUpdateAvailable, id, stage),
     updatePlugin: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.updatePlugin, id),
     updatePlugins: (): Promise<void> => ipc.invoke(pluginChannels.updatePlugins),
     checkForUpdates: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.checkForUpdates, stage),
-    getPluginVersions: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.getPluginVersions, stage),
     onUpdateAvailableList: (result: (event: IpcRendererEvent, cards: PluginUpdateList[]) => void) =>
       ipc.on(pluginChannels.onUpdateAvailableList, result),
     getList: (stage: SubscribeStages): Promise<PluginItem[]> => ipc.invoke(pluginChannels.getList, stage),

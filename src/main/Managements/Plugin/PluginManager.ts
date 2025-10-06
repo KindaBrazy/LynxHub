@@ -31,7 +31,7 @@ import {removeDir} from '../Ipc/Methods/IpcMethods';
 import ShowToastWindow from '../ToastWindowManager';
 import ExtensionManager from './Extensions/ExtensionManager';
 import ModuleManager from './Modules/ModuleManager';
-import {getCommitByAppStage, getCommitByStage, getVersionByCommit, isUpdateAvailable} from './PluginUtils';
+import {getCommitByAppStage, getVersionByCommit, isUpdateAvailable} from './PluginUtils';
 
 export class PluginManager {
   protected readonly host: string = 'localhost';
@@ -161,7 +161,7 @@ export class PluginManager {
     this.updateList_NoticeRenderer();
   }
 
-  public async isUpdateAvailable(id: string, stage: SubscribeStages) {
+  private async isUpdateAvailable(id: string, stage: SubscribeStages) {
     try {
       const targetDir = this.getDirById(id);
       if (!targetDir) return false;
@@ -184,33 +184,6 @@ export class PluginManager {
       console.warn(`Failed to check for updates ${id}: `, e);
       return false;
     }
-  }
-
-  public async checkStage(stage: SubscribeStages) {
-    let isAnyStageChanged: boolean = false;
-    const gitManager = new GitManager();
-
-    for (const plugin of this.installedPluginInfo) {
-      try {
-        const {dir, metadata} = plugin;
-        const id = metadata.id;
-
-        const targetCommit = await getCommitByStage(id, stage);
-        const currentCommit = await gitManager.getCurrentCommitHash(dir, true);
-
-        if (!currentCommit) continue;
-
-        await gitManager.resetHard(dir, targetCommit);
-        this.onNeedRestart(id);
-        this.updateList_Remove(id);
-
-        isAnyStageChanged = true;
-      } catch (e) {
-        console.error('error changing ea branch: ', e);
-      }
-    }
-
-    return isAnyStageChanged;
   }
 
   public showGitOwnershipToast() {

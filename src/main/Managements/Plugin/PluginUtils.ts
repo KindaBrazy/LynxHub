@@ -57,11 +57,6 @@ export async function isUpdateAvailable(
   };
 }
 
-export async function getCommitByStage(id: string, stage: SubscribeStages) {
-  const {versions} = await staticManager.getPluginVersioningById(id);
-  return getTargetCommit(versions, stage);
-}
-
 export async function getCommitByAppStage(id: string) {
   const {versions} = await staticManager.getPluginVersioningById(id);
   const stage = await staticManager.getCurrentAppState();
