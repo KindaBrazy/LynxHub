@@ -57,7 +57,9 @@ export default function Versions({targetUpdate, currentVersion}: Props) {
                 {getStageName(v.stage)}
               </Chip>
             }
-            key={v.commit}>
+            key={v.commit}
+            description={v.incompatibleReason}
+            classNames={{description: 'whitespace-pre text-warning'}}>
             v{v.version}
           </DropdownItem>
         ))}

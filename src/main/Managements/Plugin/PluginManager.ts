@@ -448,8 +448,8 @@ export class PluginManager {
           return {
             compatible: false,
             reason:
-              `Version ${version.version} is only available for Insider subscribers.` +
-              ` Please upgrade your plan to get access.`,
+              `Version ${version.version} is only available for Insider subscribers.\n` +
+              `Please upgrade your plan to get access.`,
           };
         }
         break;
@@ -461,8 +461,8 @@ export class PluginManager {
           return {
             compatible: false,
             reason:
-              `Version ${version.version} requires an ${requiredStage} or higher subscription.` +
-              ` Please upgrade your plan to get access.`,
+              `Version ${version.version} requires an ${requiredStage} or higher subscription.\n` +
+              `Please upgrade your plan to get access.`,
           };
         }
         break;
@@ -477,8 +477,8 @@ export class PluginManager {
       return {
         compatible: false,
         reason:
-          `This ${type} is not compatible with your operating system` +
-          ` (${currentPlatform}). It only supports: ${supportedPlatforms}.`,
+          `Version ${version.version} is not compatible with your operating system\n` +
+          `(${currentPlatform}). It only supports: ${supportedPlatforms}.`,
       };
     }
 
@@ -496,22 +496,24 @@ export class PluginManager {
           return {
             compatible: false,
             reason:
-              `This ${type} requires a different application version.` +
-              ` It needs version(s) ${requiredRange}, but you are currently on ${targetCheck.version}.`,
+              `Version ${version.version} requires a different application version.\n` +
+              `It needs ${type} api version ${requiredRange}, but current version api is ${targetCheck.version}.`,
           };
         }
       } else {
         // This suggests the package itself is malformed or invalid.
         return {
           compatible: false,
-          reason: `Could not verify compatibility for this ${type}. The package metadata may be missing or corrupted.`,
+          reason:
+            `Could not verify compatibility for version ${version.version}.\n` +
+            `The package metadata may be missing or corrupted.`,
         };
       }
     } else {
       // A fallback for the same reason as above.
       return {
         compatible: false,
-        reason: `Could not find compatibility information for this ${type}.`,
+        reason: `Could not find compatibility information for version ${version.version}.`,
       };
     }
 
