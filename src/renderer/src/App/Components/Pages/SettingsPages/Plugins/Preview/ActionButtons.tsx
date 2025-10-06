@@ -14,17 +14,14 @@ import {ShowRestartModal, UpdateButton} from '../Elements';
 import {useExtensionPageStore} from '../Page';
 import Versions from './Versions';
 
-export default function ActionButtons({
-  installed,
-  setInstalled,
-  targetUpdate,
-  currentVersion,
-}: {
+type Props = {
   installed: boolean;
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
   targetUpdate: PluginUpdateList | undefined;
   currentVersion: string;
-}) {
+};
+
+export default function ActionButtons({installed, setInstalled, targetUpdate, currentVersion}: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
