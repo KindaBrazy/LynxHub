@@ -22,12 +22,14 @@ export default function Versions({targetUpdate, currentVersion}: Props) {
   const selectedPlugin = useExtensionPageStore(state => state.selectedPlugin);
   const [selectedVersion, setSelectedVersion] = useState<string>('');
 
-  const {versions} = useMemo(() => {
+  const {versions, disabledKeys} = useMemo(() => {
     const versions = selectedPlugin?.versions || [];
     const version = versions.find(item => item.version === currentVersion);
     setSelectedVersion(version?.commit || '');
 
-    return {versions};
+    const disabledKeys = versions.filter(item => !item.isCompatible).map(item => item.commit);
+
+    return {versions, disabledKeys};
   }, [selectedPlugin, targetUpdate, currentVersion]);
 
   const onSelectionChange = value => {
@@ -44,13 +46,14 @@ export default function Versions({targetUpdate, currentVersion}: Props) {
       <DropdownMenu
         variant="flat"
         selectionMode="single"
+        disabledKeys={disabledKeys}
         selectedKeys={[selectedVersion]}
         onSelectionChange={onSelectionChange}
         disallowEmptySelection>
         {versions.map(v => (
           <DropdownItem
             endContent={
-              <Chip size="sm" color={getColor(v.stage)}>
+              <Chip size="sm" className="scale-80" color={getColor(v.stage)}>
                 {getStageName(v.stage)}
               </Chip>
             }
