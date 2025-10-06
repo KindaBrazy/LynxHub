@@ -75,7 +75,7 @@ import {
   winChannels,
   WinStateChange,
 } from '../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginAddresses, PluginItem, PluginUpdateList} from '../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginAddresses, PluginItem, PluginSyncList} from '../../../cross/plugin/PluginTypes';
 import StorageTypes, {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
 import {extensionRendererApi} from './Extensions/ExtensionLoader';
 
@@ -290,9 +290,9 @@ const rendererIpc = {
     uninstall: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.uninstall, id),
     update: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.update, id),
     syncAll: (): Promise<void> => ipc.invoke(pluginChannels.syncAll),
-    checkForUpdates: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.checkForUpdates, stage),
+    checkForSync: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.checkForSync, stage),
 
-    onSyncAvailable: (result: (event: IpcRendererEvent, cards: PluginUpdateList[]) => void) =>
+    onSyncAvailable: (result: (event: IpcRendererEvent, cards: PluginSyncList[]) => void) =>
       ipc.on(pluginChannels.onSyncAvailable, result),
   },
 

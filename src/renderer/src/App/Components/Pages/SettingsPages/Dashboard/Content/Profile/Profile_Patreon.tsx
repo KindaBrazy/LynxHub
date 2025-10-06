@@ -25,7 +25,7 @@ export default function Profile_Patreon() {
         .then(userData => {
           dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
           dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
-          rendererIpc.plugins.checkForUpdates(userData.subscribeStage);
+          rendererIpc.plugins.checkForSync(userData.subscribeStage);
         })
         .catch(e => {
           console.error(e);
@@ -44,7 +44,7 @@ export default function Profile_Patreon() {
       .then(() => {
         dispatch(userActions.resetUserState('patreonUserData'));
         dispatch(userActions.resetUserState('patreonLoggedIn'));
-        rendererIpc.plugins.checkForUpdates('public');
+        rendererIpc.plugins.checkForSync('public');
       })
       .catch(console.warn)
       .finally(() => setIsLoading(false));

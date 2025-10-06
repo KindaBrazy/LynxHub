@@ -137,7 +137,7 @@ export type PluginMetadata = {
   type: 'module' | 'extension';
 };
 
-export type PluginUpdateList = {id: string; type: 'downgrade' | 'upgrade'; version: VersionItem | VersionItemValidated};
+export type PluginSyncList = {id: string; type: 'downgrade' | 'upgrade'; version: VersionItem | VersionItemValidated};
 export type InstalledPlugin = {dir: string; url: string; version: VersionItem; metadata: PluginMetadata};
 export type PluginAvailableItem = {metadata: PluginMetadata; versioning: PluginVersioning; icon: string; url: string};
 export type PluginAddresses = {type: 'module' | 'extension'; address: string}[];

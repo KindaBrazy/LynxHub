@@ -1,6 +1,6 @@
 import {SubscribeStages} from '../../../cross/CrossTypes';
 import {getTargetCommit, getTargetVersion} from '../../../cross/plugin/CrossPluginUtils';
-import {PluginUpdateList} from '../../../cross/plugin/PluginTypes';
+import {PluginSyncList} from '../../../cross/plugin/PluginTypes';
 import {staticManager} from '../../index';
 
 export async function getVersionByCommit(id: string, commit: string) {
@@ -15,11 +15,11 @@ export async function getVersionByCommit(id: string, commit: string) {
  * @param stage The target subscription stage.
  * @returns A PluginUpdateList item if an update is available, otherwise undefined.
  */
-export async function isUpdateAvailable(
+export async function isSyncRequired(
   id: string,
   currentCommit: string,
   stage: SubscribeStages,
-): Promise<PluginUpdateList | undefined> {
+): Promise<PluginSyncList | undefined> {
   const {versions} = await staticManager.getPluginVersioningById(id);
   const targetVersion = getTargetVersion(versions, stage);
   const targetCommit = targetVersion.commit;

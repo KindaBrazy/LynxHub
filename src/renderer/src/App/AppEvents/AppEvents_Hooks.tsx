@@ -48,7 +48,7 @@ export const useCheckPluginsUpdate = () => {
 
   useEffect(() => {
     const checkForUpdate = () => {
-      rendererIpc.plugins.checkForUpdates('insider');
+      rendererIpc.plugins.checkForSync('insider');
     };
 
     checkForUpdate();
@@ -107,7 +107,7 @@ export const usePatreon = () => {
         dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
         dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
 
-        rendererIpc.plugins.checkForUpdates(userData.subscribeStage);
+        rendererIpc.plugins.checkForSync(userData.subscribeStage);
       })
       .catch(console.info);
 
