@@ -27,7 +27,7 @@ export type ChangelogSubItem = string | Record<string, ChangelogSubItem[]>;
 /**
  * A collection of changelog entries grouped under semantic categories.
  * Each key represents a category (e.g., "Added", "Fixed", "Changed"),
- * and its value is an array of changes or nested sub-items.
+ * and its value is an array of changes or nested subitems.
  */
 export type ChangelogItem = Record<string, ChangelogSubItem[]>;
 
@@ -52,7 +52,7 @@ export type PluginChangelog = {
 };
 
 /**
- * Complete changelog history for a plugin, ordered chronologically (typically newest first).
+ * Complete changelog history for a plugin, ordered chronologically (typically the newest first).
  */
 export type PluginChanges = PluginChangelog[];
 
@@ -89,7 +89,6 @@ export type VersionItem = {
    */
   platforms: OsPlatforms[];
 };
-export type VersionItemValidated = Omit<VersionItem, 'engines'> & {isCompatible: boolean};
 
 /**
  * Ordered list of all released plugin versions, typically sorted from newest to oldest.
@@ -138,20 +137,17 @@ export type PluginMetadata = {
   type: 'module' | 'extension';
 };
 
-export type PluginUpdateList = {
-  id: string;
-  type: 'downgrade' | 'upgrade';
-  version: VersionItem;
-};
-
+export type PluginUpdateList = {id: string; type: 'downgrade' | 'upgrade'; version: VersionItem};
 export type InstalledPlugin = {dir: string; url: string; version: VersionItem; metadata: PluginMetadata};
 export type PluginAvailableItem = {metadata: PluginMetadata; versioning: PluginVersioning; icon: string; url: string};
-
 export type PluginAddresses = {type: 'module' | 'extension'; address: string}[];
 export type ValidatedPlugins = {type: 'module' | 'extension'; folder: string}[];
-
 export type PluginFilter = Set<'installed' | 'modules' | 'extensions'> | 'all';
 
+export type VersionItemValidated = Omit<VersionItem, 'engines'> & {
+  isCompatible: boolean;
+  incompatibleReason: string | undefined;
+};
 export type PluginItem = {
   isAnyVersionCompatible: boolean;
   icon: string;
