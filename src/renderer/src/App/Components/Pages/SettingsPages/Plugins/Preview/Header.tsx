@@ -2,7 +2,6 @@ import {Button, Chip, User} from '@heroui/react';
 import {Dispatch, SetStateAction, useMemo} from 'react';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {getTargetVersion} from '../../../../../../../../cross/plugin/CrossPluginUtils';
 import {InstalledPlugin} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {ExternalDuo_Icon} from '../../../../../../../context_menu/Components/SvgIcons';
@@ -30,7 +29,7 @@ export default function PreviewHeader({
   const updateChannel = useUserState('updateChannel');
 
   const {currentVersion, targetUpdate, isUpgrade, targetVersion} = useMemo(() => {
-    const targetInstallVersion = selectedPlugin ? getTargetVersion(selectedPlugin?.versions, updateChannel) : undefined;
+    const targetInstallVersion = selectedPlugin ? selectedPlugin.versions.find(item => item.isCompatible) : undefined;
 
     const currentVersion = installedExt?.version.version || targetInstallVersion?.version || 'N/A';
     const targetUpdate = updateAvailable.find(update => update.id === selectedPlugin?.metadata.id);
