@@ -10,9 +10,9 @@ type ManageOperation = 'add' | 'remove';
 type IdType = string | string[] | undefined;
 
 type PluginsState = {
-  installing: Set<string>;
-  updating: Set<string>;
-  unInstalling: Set<string>;
+  installing: string[];
+  updating: string[];
+  unInstalling: string[];
   selectedPlugin: PluginItem | undefined;
   updatingAll: boolean;
 };
@@ -22,9 +22,9 @@ type PluginsStateTypes = {
 };
 
 const initialState: PluginsState = {
-  installing: new Set([]),
-  updating: new Set([]),
-  unInstalling: new Set([]),
+  installing: [],
+  updating: [],
+  unInstalling: [],
   selectedPlugin: undefined,
   updatingAll: false,
 };
@@ -48,21 +48,18 @@ const appSlice = createSlice({
     manageSet: (state: PluginsState, action: PayloadAction<{key: SetKeys; id: IdType; operation: ManageOperation}>) => {
       const {key, id, operation} = action.payload;
       if (id) {
-        const newSet = new Set(state[key]);
+        const currentArray = state[key];
+
+        const idsToManage = isArray(id) ? id : [id];
+
         if (operation === 'add') {
-          if (isArray(id)) {
-            id.forEach(id => newSet.add(id));
-          } else {
-            newSet.add(id);
-          }
+          // Add only unique IDs
+          const newIds = idsToManage.filter(idToAdd => !currentArray.includes(idToAdd));
+          state[key] = [...currentArray, ...newIds];
         } else {
-          if (isArray(id)) {
-            id.forEach(id => newSet.delete(id));
-          } else {
-            newSet.delete(id);
-          }
+          // Remove IDs
+          state[key] = currentArray.filter(currentId => !idsToManage.includes(currentId));
         }
-        state[key] = newSet;
       }
     },
   },
@@ -72,9 +69,11 @@ export const usePluginsState = <K extends keyof PluginsState>(key: K): PluginsSt
   useSelector((state: RootState) => state.plugins[key]);
 
 export const useIsInstallingPlugin = (id: string): boolean =>
-  useSelector((state: RootState) => state.plugins.installing.has(id));
+  useSelector((state: RootState) => state.plugins.installing.includes(id));
 export const useIsUninstallingPlugin = (id: string): boolean =>
-  useSelector((state: RootState) => state.plugins.unInstalling.has(id));
+  useSelector((state: RootState) => state.plugins.unInstalling.includes(id));
+export const useIsUpdatingPlugin = (id: string): boolean =>
+  useSelector((state: RootState) => state.plugins.updating.includes(id));
 
 export const pluginsActions = appSlice.actions;
 
