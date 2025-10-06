@@ -1,5 +1,6 @@
 import {Badge} from 'antd';
 import {motion} from 'framer-motion';
+import {isBoolean, isNumber} from 'lodash';
 import {memo, ReactNode, useCallback, useEffect, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -24,7 +25,7 @@ const INDICATOR_STYLE = {
 type Props = {
   children?: ReactNode;
   title?: string;
-  badge?: boolean;
+  badge?: boolean | number;
   pageId: string;
 };
 
@@ -100,7 +101,12 @@ const NavButton = memo(({children, pageId, title, badge}: Props) => {
           onClick={handleClick}
           className="group mx-1.5 flex w-full rounded-xl p-2.5 outline-hidden"
           whileHover={{backgroundColor: getBackgroundColor('hover'), transition: {duration: 0.3}}}>
-          <Badge dot={badge} status="processing" color={getColor('success')} classNames={{root: 'size-full'}}>
+          <Badge
+            status="processing"
+            color={getColor('success')}
+            classNames={{root: 'size-full'}}
+            dot={isBoolean(badge) ? badge : false}
+            count={isNumber(badge) ? badge : undefined}>
             <div
               className={`transition duration-300 group-hover:scale-110 ${
                 isSelected ? 'opacity-100 group-hover:opacity-100' : 'opacity-40 group-hover:opacity-60'
