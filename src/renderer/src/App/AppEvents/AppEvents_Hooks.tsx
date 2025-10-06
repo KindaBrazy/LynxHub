@@ -17,7 +17,6 @@ import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
 import {defaultTabItem} from '../Utils/Constants';
 import {lynxTopToast} from '../Utils/UtilHooks';
-import {checkSubscribeStage} from './AppEvents_Utils';
 
 export const useCheckCardsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -108,7 +107,7 @@ export const usePatreon = () => {
         dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
         dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
 
-        checkSubscribeStage(userData.subscribeStage);
+        rendererIpc.plugins.checkForUpdates(userData.subscribeStage);
       })
       .catch(console.info);
 

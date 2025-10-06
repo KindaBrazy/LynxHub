@@ -4,7 +4,6 @@ import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../../../../../Breadcrumbs';
 import {Patreon_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
-import {checkSubscribeStage} from '../../../../../../AppEvents/AppEvents_Utils';
 import {userActions, useUserState} from '../../../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
@@ -26,7 +25,7 @@ export default function Profile_Patreon() {
         .then(userData => {
           dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
           dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
-          checkSubscribeStage(userData.subscribeStage);
+          rendererIpc.plugins.checkForUpdates(userData.subscribeStage);
         })
         .catch(e => {
           console.error(e);
@@ -45,7 +44,7 @@ export default function Profile_Patreon() {
       .then(() => {
         dispatch(userActions.resetUserState('patreonUserData'));
         dispatch(userActions.resetUserState('patreonLoggedIn'));
-        checkSubscribeStage('public');
+        rendererIpc.plugins.checkForUpdates('public');
       })
       .catch(console.warn)
       .finally(() => setIsLoading(false));
