@@ -56,7 +56,6 @@ export function List_Item({item, installed, unloaded}: Props) {
     };
 
     return {
-      isInstalling,
       isExtension,
       foundInstalled,
       foundUnloaded,

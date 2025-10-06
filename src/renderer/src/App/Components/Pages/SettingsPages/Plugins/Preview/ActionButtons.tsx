@@ -53,7 +53,7 @@ export default function ActionButtons({installed, setInstalled, targetUpdate, cu
     if (selectedPlugin?.url) {
       const targetCommit = selectedPlugin.versions.find(v => v.version === currentVersion)?.commit;
       rendererIpc.plugins.installPlugin(selectedPlugin.url, targetCommit).then(result => {
-        dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'remove'}));
+        dispatch(pluginsActions.manageSet({key: 'installing', id: selectedPlugin?.metadata.id, operation: 'remove'}));
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} installed successfully`);
           ShowRestartModal('To apply the installaion, please restart the app.');
@@ -77,7 +77,7 @@ export default function ActionButtons({installed, setInstalled, targetUpdate, cu
 
     if (selectedPlugin?.metadata.id) {
       rendererIpc.plugins.uninstallPlugin(selectedPlugin.metadata.id).then(result => {
-        dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'remove'}));
+        dispatch(pluginsActions.manageSet({key: 'unInstalling', id: selectedPlugin?.metadata.id, operation: 'remove'}));
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} uninstalled successfully`);
           ShowRestartModal('To complete the uninstallation, please restart the app.');
