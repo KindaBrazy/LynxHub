@@ -100,17 +100,25 @@ export class PluginManager {
           targetCommit = await getCommitByAppStage(id);
         }
 
-        const directory = join(this.pluginPath, id);
+        const metadata = await staticManager.getPluginMetadataById(id);
+        const version = await getVersionByCommit(id, targetCommit);
+        if (version) {
+          const directory = join(this.pluginPath, id);
 
-        try {
-          const gitManager = new GitManager(true);
-          await gitManager.cloneShallow(url, directory, true, undefined, 'main');
-          await gitManager.resetHard(directory, targetCommit);
+          try {
+            const gitManager = new GitManager(true);
+            await gitManager.cloneShallow(url, directory, true, undefined, 'main');
+            await gitManager.resetHard(directory, targetCommit);
 
-          this.onNeedRestart(id);
-          resolve(true);
-        } catch (e) {
-          console.warn(`Failed to install plugin: ${url}`, e);
+            this.installedPluginInfo.push({dir: directory, url, version, metadata});
+
+            this.onNeedRestart(id);
+            resolve(true);
+          } catch (e) {
+            console.warn(`Failed to install plugin: ${url}`, e);
+            resolve(false);
+          }
+        } else {
           resolve(false);
         }
       } else {
@@ -121,6 +129,7 @@ export class PluginManager {
 
   public async uninstallPlugin(id: string) {
     const plugin = this.getDirById(id);
+    console.log(id, plugin);
     if (!plugin) return false;
     try {
       await removeDir(plugin);
