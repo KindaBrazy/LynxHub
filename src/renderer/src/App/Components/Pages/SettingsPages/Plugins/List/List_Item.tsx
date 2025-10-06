@@ -95,7 +95,12 @@ export function List_Item({item, installed, unloaded}: Props) {
       fullWidth>
       {!isCompatible && (
         <div className="absolute inset-0 z-20 bg-black/50 flex items-center justify-center">
-          <Tooltip color="warning" content={item.incompatibleReason} classNames={{content: 'max-w-80 p-2'}} showArrow>
+          <Tooltip
+            delay={300}
+            color="warning"
+            content={item.incompatibleReason}
+            classNames={{content: 'max-w-80 p-2'}}
+            showArrow>
             <QuestionCircle_Icon
               className={'size-8 text-warning/80 hover:text-warning transition-colors duration-200'}
             />
