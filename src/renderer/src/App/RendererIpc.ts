@@ -280,18 +280,20 @@ const rendererIpc = {
   },
 
   plugins: {
-    getPluginAddresses: (): Promise<PluginAddresses> => ipc.invoke(pluginChannels.getPluginAddresses),
-    getInstalledPlugins: (): Promise<InstalledPlugin[]> => ipc.invoke(pluginChannels.getInstalledPlugins),
-    getSkippedPlugins: (): Promise<SkippedPlugins[]> => ipc.invoke(pluginChannels.getSkippedPlugins),
-    installPlugin: (url: string, commitHash?: string): Promise<boolean> =>
-      ipc.invoke(pluginChannels.installPlugin, url, commitHash),
-    uninstallPlugin: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.uninstallPlugin, id),
-    updatePlugin: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.updatePlugin, id),
-    updatePlugins: (): Promise<void> => ipc.invoke(pluginChannels.updatePlugins),
-    checkForUpdates: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.checkForUpdates, stage),
-    onUpdateAvailableList: (result: (event: IpcRendererEvent, cards: PluginUpdateList[]) => void) =>
-      ipc.on(pluginChannels.onUpdateAvailableList, result),
     getList: (stage: SubscribeStages): Promise<PluginItem[]> => ipc.invoke(pluginChannels.getList, stage),
+    getAddresses: (): Promise<PluginAddresses> => ipc.invoke(pluginChannels.getAddresses),
+    getInstalled: (): Promise<InstalledPlugin[]> => ipc.invoke(pluginChannels.getInstalled),
+    getSkipped: (): Promise<SkippedPlugins[]> => ipc.invoke(pluginChannels.getSkipped),
+
+    install: (url: string, commitHash?: string): Promise<boolean> =>
+      ipc.invoke(pluginChannels.install, url, commitHash),
+    uninstall: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.uninstall, id),
+    update: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.update, id),
+    syncAll: (): Promise<void> => ipc.invoke(pluginChannels.syncAll),
+    checkForUpdates: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.checkForUpdates, stage),
+
+    onSyncAvailable: (result: (event: IpcRendererEvent, cards: PluginUpdateList[]) => void) =>
+      ipc.on(pluginChannels.onSyncAvailable, result),
   },
 
   /** Utilities methods for working with app storage data */

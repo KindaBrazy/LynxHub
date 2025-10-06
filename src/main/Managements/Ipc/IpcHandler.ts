@@ -212,15 +212,15 @@ function modules() {
 }
 
 function plugins() {
-  ipcMain.handle(pluginChannels.getPluginAddresses, () => pluginManager.getPluginAddresses());
-  ipcMain.handle(pluginChannels.getInstalledPlugins, () => pluginManager.getInstalledPluginInfo());
-  ipcMain.handle(pluginChannels.getSkippedPlugins, () => pluginManager.getSkipped());
-  ipcMain.handle(pluginChannels.installPlugin, (_, url: string, commitHash?: string) =>
+  ipcMain.handle(pluginChannels.getAddresses, () => pluginManager.getAddresses());
+  ipcMain.handle(pluginChannels.getInstalled, () => pluginManager.getInstalled());
+  ipcMain.handle(pluginChannels.getSkipped, () => pluginManager.getSkipped());
+  ipcMain.handle(pluginChannels.install, (_, url: string, commitHash?: string) =>
     pluginManager.installPlugin(url, commitHash),
   );
-  ipcMain.handle(pluginChannels.uninstallPlugin, (_, id: string) => pluginManager.uninstallPlugin(id));
-  ipcMain.handle(pluginChannels.updatePlugin, (_, id: string) => pluginManager.updatePlugin(id));
-  ipcMain.handle(pluginChannels.updatePlugins, () => pluginManager.updateAll());
+  ipcMain.handle(pluginChannels.uninstall, (_, id: string) => pluginManager.uninstall(id));
+  ipcMain.handle(pluginChannels.update, (_, id: string) => pluginManager.update(id));
+  ipcMain.handle(pluginChannels.syncAll, () => pluginManager.syncAll());
   ipcMain.handle(pluginChannels.checkForUpdates, (_, stage: SubscribeStages) => pluginManager.checkForUpdates(stage));
   ipcMain.handle(pluginChannels.getList, (_, stage: SubscribeStages) => pluginManager.getList(stage));
 }
