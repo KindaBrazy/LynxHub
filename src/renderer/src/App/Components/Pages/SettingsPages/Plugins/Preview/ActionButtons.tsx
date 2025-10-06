@@ -52,7 +52,8 @@ export default function ActionButtons({installed, setInstalled, targetUpdate, cu
     manageSet('installing', selectedPlugin?.metadata.id, 'add');
 
     if (selectedPlugin?.url) {
-      rendererIpc.plugins.installPlugin(selectedPlugin.url).then(result => {
+      const targetCommit = selectedPlugin.versions.find(v => v.version === currentVersion)?.commit;
+      rendererIpc.plugins.installPlugin(selectedPlugin.url, targetCommit).then(result => {
         manageSet('installing', selectedPlugin?.metadata.id, 'remove');
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} installed successfully`);
