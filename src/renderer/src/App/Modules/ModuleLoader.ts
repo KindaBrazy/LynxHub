@@ -277,7 +277,7 @@ const loadModules = async () => {
       const devImport = await import('../../../../../module/src/renderer');
       importedModules = [{path: 'dev', module: devImport}];
     } else {
-      const pluginAddresses = await rendererIpc.plugins.getPluginAddresses();
+      const pluginAddresses = await rendererIpc.plugins.getAddresses();
       const moduleAddresses = pluginAddresses.filter(item => item.type === 'module').map(item => item.address);
 
       // Use Promise.all for concurrent module imports

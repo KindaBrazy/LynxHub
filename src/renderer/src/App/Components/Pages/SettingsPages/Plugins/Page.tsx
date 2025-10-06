@@ -15,9 +15,9 @@ const Page = memo(({show}: Props) => {
   const updateChannel = useUserState('updateChannel');
 
   useEffect(() => {
-    rendererIpc.plugins.getInstalledPlugins().then(setInstalled);
+    rendererIpc.plugins.getInstalled().then(setInstalled);
     rendererIpc.plugins.checkForUpdates(updateChannel);
-    rendererIpc.plugins.getSkippedPlugins().then(result => setUnloaded(result));
+    rendererIpc.plugins.getSkipped().then(result => setUnloaded(result));
   }, [updateChannel]);
 
   return (

@@ -78,7 +78,7 @@ export default function List({installed, unloaded}: Props) {
     dispatch(pluginsActions.manageSet({key: 'updating', id: updateAvailable.map(item => item.id), operation: 'add'}));
     dispatch(pluginsActions.setUpdatingAll(true));
     rendererIpc.plugins
-      .updatePlugins()
+      .syncAll()
       .then(() => {
         lynxTopToast(dispatch).success('Extensions updated successfully!');
       })

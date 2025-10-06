@@ -172,20 +172,19 @@ export const modulesChannels = {
 };
 
 export const pluginChannels = {
-  onUpdateAvailableList: 'plugins:on-update-available-list',
-  onAppNeedRestart: 'plugins:app-need-restart',
-
-  getPluginAddresses: 'plugins:get-plugins-addresses',
-  getInstalledPlugins: 'plugins:get-installed-plugins',
-  getSkippedPlugins: 'plugins:get-skipped-plugins',
-
-  installPlugin: 'plugins:install-plugin',
-  uninstallPlugin: 'plugins:uninstall-plugin',
-  updatePlugin: 'plugins:update-plugin',
-  updatePlugins: 'plugins:update-plugins',
-  checkForUpdates: 'plugins:check-for-updates',
+  onSyncAvailable: 'plugins:on-sync-available',
+  onNeedRestart: 'plugins:on-need-restart',
 
   getList: 'plugins:get-list',
+  getAddresses: 'plugins:get-addresses',
+  getInstalled: 'plugins:get-installed',
+  getSkipped: 'plugins:get-skipped',
+
+  install: 'plugins:install',
+  uninstall: 'plugins:uninstall',
+  update: 'plugins:update',
+  syncAll: 'plugins:sync-all',
+  checkForUpdates: 'plugins:check-for-updates',
 };
 
 export const ptyChannels = {

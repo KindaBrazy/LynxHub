@@ -52,7 +52,7 @@ export default function ActionButtons({installed, setInstalled, targetUpdate, cu
 
     if (selectedPlugin?.url) {
       const targetCommit = selectedPlugin.versions.find(v => v.version === currentVersion)?.commit;
-      rendererIpc.plugins.installPlugin(selectedPlugin.url, targetCommit).then(result => {
+      rendererIpc.plugins.install(selectedPlugin.url, targetCommit).then(result => {
         dispatch(pluginsActions.manageSet({key: 'installing', id: selectedPlugin?.metadata.id, operation: 'remove'}));
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} installed successfully`);
@@ -76,7 +76,7 @@ export default function ActionButtons({installed, setInstalled, targetUpdate, cu
     dispatch(pluginsActions.manageSet({key: 'unInstalling', id: selectedPlugin?.metadata.id, operation: 'add'}));
 
     if (selectedPlugin?.metadata.id) {
-      rendererIpc.plugins.uninstallPlugin(selectedPlugin.metadata.id).then(result => {
+      rendererIpc.plugins.uninstall(selectedPlugin.metadata.id).then(result => {
         dispatch(pluginsActions.manageSet({key: 'unInstalling', id: selectedPlugin?.metadata.id, operation: 'remove'}));
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} uninstalled successfully`);

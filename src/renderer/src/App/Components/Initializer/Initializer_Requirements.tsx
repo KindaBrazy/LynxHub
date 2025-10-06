@@ -144,13 +144,13 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
   const installModule = useCallback(() => {
     setAppModule({result: 'installing'});
     return new Promise<void>(resolve => {
-      rendererIpc.plugins.getInstalledPlugins().then(plugins => {
+      rendererIpc.plugins.getInstalled().then(plugins => {
         if (plugins.find(item => item.url === MAIN_MODULE_URL)) {
           setAppModule({result: 'ok'});
           resolve();
         } else {
           rendererIpc.plugins
-            .installPlugin(MAIN_MODULE_URL)
+            .install(MAIN_MODULE_URL)
             .then(result => {
               if (result) {
                 setAppModule({result: 'ok'});

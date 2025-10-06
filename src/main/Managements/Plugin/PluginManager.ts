@@ -34,17 +34,16 @@ import ModuleManager from './Modules/ModuleManager';
 import {getCommitByAppStage, getVersionByCommit, isUpdateAvailable} from './PluginUtils';
 
 export class PluginManager {
-  protected readonly host: string = 'localhost';
+  private readonly host: string = 'localhost';
   private port: number = 5103;
-  protected server: ReturnType<typeof createServer> | undefined = undefined;
-  protected finalAddress: string = '';
+  private server: ReturnType<typeof createServer> | undefined = undefined;
+  private finalAddress: string = '';
+  private readonly pluginPath: string;
 
-  protected pluginsAddresses: PluginAddresses = [];
-  protected skippedPlugins: SkippedPlugins[] = [];
-  protected installedPluginInfo: InstalledPlugin[] = [];
-  protected availableUpdates: PluginUpdateList[] = [];
-
-  protected readonly pluginPath: string;
+  private addresses: PluginAddresses = [];
+  private skipped: SkippedPlugins[] = [];
+  private installed: InstalledPlugin[] = [];
+  private syncAvailable: PluginUpdateList[] = [];
 
   private readonly moduleFolder: string = 'Modules';
   private readonly moduleMainScriptPath: string = 'scripts/main.mjs';
@@ -63,7 +62,7 @@ export class PluginManager {
     this.pluginPath = getAppDirectory('Plugins');
   }
 
-  protected async setInstalledPlugins(folders: string[]) {
+  private async setInstalledPlugins(folders: string[]) {
     for (const folder of folders) {
       try {
         const targetDir = join(this.pluginPath, folder);
@@ -81,7 +80,7 @@ export class PluginManager {
         const version = await getVersionByCommit(id, currentCommit);
         if (!version) continue;
 
-        this.installedPluginInfo.push({dir: folder, url: remoteUrl, version, metadata});
+        this.installed.push({dir: folder, url: remoteUrl, version, metadata});
       } catch (error) {
         console.error(`Error parsing ${folder}: ${error}`);
       }
@@ -110,7 +109,7 @@ export class PluginManager {
             await gitManager.cloneShallow(url, directory, true, undefined, 'main');
             await gitManager.resetHard(directory, targetCommit);
 
-            this.installedPluginInfo.push({dir: directory, url, version, metadata});
+            this.installed.push({dir: directory, url, version, metadata});
 
             this.onNeedRestart(id);
             resolve(true);
@@ -127,7 +126,7 @@ export class PluginManager {
     });
   }
 
-  public async uninstallPlugin(id: string) {
+  public async uninstall(id: string) {
     const plugin = this.getDirById(id);
     console.log(id, plugin);
     if (!plugin) return false;
@@ -142,21 +141,22 @@ export class PluginManager {
     }
   }
   private onNeedRestart(id: 'all' | string) {
-    appManager?.getWebContent()?.send(pluginChannels.onAppNeedRestart, id);
+    // TODO: in ui implement usage of this
+    appManager?.getWebContent()?.send(pluginChannels.onNeedRestart, id);
   }
 
   private updateList_NoticeRenderer() {
-    appManager?.getWebContent()?.send(pluginChannels.onUpdateAvailableList, this.availableUpdates);
+    appManager?.getWebContent()?.send(pluginChannels.onSyncAvailable, this.syncAvailable);
   }
 
   private updateList_Remove(id: string) {
-    this.availableUpdates = this.availableUpdates.filter(update => update.id !== id);
+    this.syncAvailable = this.syncAvailable.filter(update => update.id !== id);
     this.updateList_NoticeRenderer();
   }
 
   private updateList_Add(item: PluginUpdateList) {
-    if (this.availableUpdates.some(update => update.id === item.id)) return;
-    this.availableUpdates.push(item);
+    if (this.syncAvailable.some(update => update.id === item.id)) return;
+    this.syncAvailable.push(item);
 
     this.updateList_NoticeRenderer();
   }
@@ -216,7 +216,7 @@ export class PluginManager {
 
   public async checkForUpdates(stage: SubscribeStages): Promise<void> {
     try {
-      for (const plugin of this.installedPluginInfo) {
+      for (const plugin of this.installed) {
         const id = plugin.metadata.id;
         await this.isUpdateAvailable(id, stage);
       }
@@ -228,13 +228,13 @@ export class PluginManager {
     }
   }
 
-  public async updatePlugin(id: string) {
+  public async update(id: string) {
     const targetDir = this.getDirById(id);
     if (!targetDir) return false;
 
     try {
       const gitManager = new GitManager(true);
-      const targetCommit = this.availableUpdates.find(update => update.id === id)?.version.commit;
+      const targetCommit = this.syncAvailable.find(update => update.id === id)?.version.commit;
       if (!targetCommit) return false;
 
       await gitManager.resetHard(targetDir, targetCommit);
@@ -247,14 +247,14 @@ export class PluginManager {
     }
   }
 
-  public async updateAll() {
+  public async syncAll() {
     try {
-      for (const item of this.availableUpdates) {
+      for (const item of this.syncAvailable) {
         const id = item.id;
         const targetDir = this.getDirById(id);
-        const targetCommit = this.availableUpdates.find(update => update.id === id)?.version.commit;
+        const targetCommit = this.syncAvailable.find(update => update.id === id)?.version.commit;
         if (!targetDir || !targetCommit) continue;
-        await this.updatePlugin(id);
+        await this.update(id);
       }
 
       this.onNeedRestart('all');
@@ -263,14 +263,14 @@ export class PluginManager {
     }
   }
 
-  protected async readPlugin() {
+  private async readPlugin() {
     return new Promise<void>(async resolve => {
       try {
         const files = readdirSync(this.pluginPath, {withFileTypes: true});
         const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
         const validFolders = await this.validatePluginFolders(folders);
 
-        this.pluginsAddresses = validFolders.map(({folder, type}) => ({
+        this.addresses = validFolders.map(({folder, type}) => ({
           address: `${this.finalAddress}/${folder}`,
           type,
         }));
@@ -357,20 +357,20 @@ export class PluginManager {
     }
   }
 
-  public getPluginAddresses(): PluginAddresses {
-    return this.pluginsAddresses;
+  public getAddresses(): PluginAddresses {
+    return this.addresses;
   }
 
   public getSkipped(): SkippedPlugins[] {
-    return this.skippedPlugins;
+    return this.skipped;
   }
 
-  public getInstalledPluginInfo(): InstalledPlugin[] {
-    return this.installedPluginInfo;
+  public getInstalled(): InstalledPlugin[] {
+    return this.installed;
   }
 
   public getDirById(id: string) {
-    const plugin = this.installedPluginInfo.find(installed => installed.metadata.id === id);
+    const plugin = this.installed.find(installed => installed.metadata.id === id);
     if (plugin) {
       return join(this.pluginPath, plugin.dir);
     }
@@ -503,7 +503,7 @@ export class PluginManager {
     return {compatible: true, reason: undefined};
   }
 
-  protected async validatePluginFolders(folderPaths: string[]): Promise<ValidatedPlugins> {
+  private async validatePluginFolders(folderPaths: string[]): Promise<ValidatedPlugins> {
     const validatedFolders: ValidatedPlugins = [];
 
     for (const folder of folderPaths) {
@@ -528,7 +528,7 @@ export class PluginManager {
           const isCompatible = await this.compatibleCheck(folder);
           if (isCompatible) validatedFolders.push({type, folder});
         } catch (err) {
-          this.skippedPlugins.push({
+          this.skipped.push({
             folderName: folder,
             message: 'Unloaded due to incompatible structure.',
           });
@@ -599,9 +599,9 @@ export class PluginManager {
    * @param folder The plugin's folder name, for logging purposes.
    * @returns {Promise<boolean>} True if compatible, false otherwise.
    */
-  protected async compatibleCheck(folder: string): Promise<boolean> {
+  private async compatibleCheck(folder: string): Promise<boolean> {
     const skip = () => {
-      this.skippedPlugins.push({
+      this.skipped.push({
         folderName: folder,
         message: 'Configuration file is unreadable or corrupt.',
       });
@@ -630,7 +630,7 @@ export class PluginManager {
     const currentVersion = versioning.versions.find(item => item.commit === currentCommitHash);
 
     if (!currentVersion) {
-      this.skippedPlugins.push({
+      this.skipped.push({
         folderName: folder,
         message: `Could not verify installed version. The ${type} may be outdated or invalid.`,
       });
@@ -640,7 +640,7 @@ export class PluginManager {
 
     const platforms = currentVersion.platforms;
     if (!platforms || !platforms.includes(platform())) {
-      this.skippedPlugins.push({
+      this.skipped.push({
         folderName: folder,
         message: `Platform incompatibility detected. The ${type} may be outdated or invalid.`,
       });
@@ -665,7 +665,7 @@ export class PluginManager {
           ? `Requires a newer version of LynxHub to run.` // App is too old for the plugin.
           : `This ${type} is too old for your version of LynxHub.`; // Plugin is too old for the app.
 
-        this.skippedPlugins.push({
+        this.skipped.push({
           folderName: folder,
           message: message,
         });
@@ -677,7 +677,7 @@ export class PluginManager {
       return true;
     } else {
       // --- Message 4: Missing Compatibility Info ---
-      this.skippedPlugins.push({
+      this.skipped.push({
         folderName: folder,
         message: `Could not verify compatibility. The ${type} may be outdated or invalid.`,
       });

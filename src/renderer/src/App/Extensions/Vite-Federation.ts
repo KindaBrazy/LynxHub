@@ -26,7 +26,7 @@ export async function loadExtensions() {
     importedExtensions = [extension];
     extensionIds = ['dev-extension'];
   } else {
-    const pluginAddresses = await rendererIpc.plugins.getPluginAddresses();
+    const pluginAddresses = await rendererIpc.plugins.getAddresses();
     const extensionAddresses = pluginAddresses
       .filter(item => item.type === 'extension')
       .map(({address}) => `${address}/scripts/renderer/rendererEntry.mjs`);

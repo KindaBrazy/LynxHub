@@ -59,7 +59,7 @@ export function UpdateButton({item}: UpdateButtonProps) {
     (id: string, title: string) => {
       AddBreadcrumb_Renderer(`Plugin update: id:${id}`);
       dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'add'}));
-      rendererIpc.plugins.updatePlugin(id).then(updated => {
+      rendererIpc.plugins.update(id).then(updated => {
         if (updated) {
           lynxTopToast(dispatch).success(`${title} updated Successfully`);
           ShowRestartModal('To apply the updates, please restart the app.');
