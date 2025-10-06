@@ -404,8 +404,12 @@ export class PluginManager {
 
       for (const v of item.versioning.versions) {
         const {version, commit, stage, platforms} = v;
-        const isCompatible: boolean = this.isCompatible(v, item.metadata.type, currentStage);
-        versions.push({version, commit, stage, platforms, isCompatible});
+        const {compatible: isCompatible, reason: incompatibleReason} = this.isCompatible(
+          v,
+          item.metadata.type,
+          currentStage,
+        );
+        versions.push({version, commit, stage, platforms, isCompatible, incompatibleReason});
       }
 
       const isAnyVersionCompatible: boolean = versions.some(v => v.isCompatible);
@@ -417,41 +421,92 @@ export class PluginManager {
     return validated;
   }
 
-  private isCompatible(version: VersionItem, type: 'module' | 'extension', currentStage: SubscribeStages): boolean {
-    // Platform check
-    const platforms = version.platforms;
-    if (!platforms || !platforms.includes(platform())) return false;
+  private isCompatible(
+    version: VersionItem,
+    type: 'module' | 'extension',
+    currentStage: SubscribeStages,
+  ): {compatible: boolean; reason: string | undefined} {
+    const currentPlatform = platform();
 
-    // Engines api check
+    // 1. Platform Check: Be more specific about which platform is unsupported.
+    const platforms = version.platforms;
+    if (!platforms || !platforms.includes(currentPlatform)) {
+      const supportedPlatforms = platforms?.join(', ') || 'none';
+      return {
+        compatible: false,
+        reason:
+          `This ${type} is not compatible with your operating system` +
+          ` (${currentPlatform}). It only supports: ${supportedPlatforms}.`,
+      };
+    }
+
+    // 2. Engines/API Check: Explain what "API" means in user terms (application version).
     const engines = version.engines;
     if (engines && typeof engines === 'object') {
       const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
       const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
 
       const targetCheck = type === 'extension' ? extensionCheck : moduleCheck;
-
       const requiredRange = engines[targetCheck.api as keyof PluginEngines];
-      if (requiredRange && !satisfies(targetCheck.version, requiredRange)) return false;
+
+      if (requiredRange) {
+        if (!satisfies(targetCheck.version, requiredRange)) {
+          return {
+            compatible: false,
+            // This is much clearer than "api not satisfied".
+            reason:
+              `This ${type} requires a different application version.` +
+              ` It needs version(s) ${requiredRange}, but you are currently on ${targetCheck.version}.`,
+          };
+        }
+      } else {
+        // This suggests the package itself is malformed or invalid.
+        return {
+          compatible: false,
+          reason: `Could not verify compatibility for this ${type}. The package metadata may be missing or corrupted.`,
+        };
+      }
     } else {
-      return false;
+      // A fallback for the same reason as above.
+      return {
+        compatible: false,
+        reason: `Could not find compatibility information for this ${type}.`,
+      };
     }
 
-    // Subscribe stage check
+    // 3. Subscribe Stage Check: Give clear, actionable feedback about subscription levels.
     switch (currentStage) {
       // Have access to all stages
       case 'insider':
         break;
-      // Have access to the public and early access stages
+
+      // Have access to public and early access stages
       case 'early_access':
-        if (version.stage === 'insider') return false;
+        if (version.stage === 'insider') {
+          return {
+            compatible: false,
+            reason: 'This version is only available for Insider subscribers. Please upgrade your plan to get access.',
+          };
+        }
         break;
+
       // Have access to only the public stage
       case 'public':
-        if (version.stage !== 'public') return false;
+        if (version.stage !== 'public') {
+          // Corrected the logic here from your original and made the message unified.
+          const requiredStage = version.stage === 'insider' ? 'Insider' : 'Early Access';
+          return {
+            compatible: false,
+            reason:
+              `This version requires an ${requiredStage} or higher subscription.` +
+              ` Please upgrade your plan to get access.`,
+          };
+        }
         break;
     }
 
-    return true;
+    // If all checks pass, it's compatible.
+    return {compatible: true, reason: undefined};
   }
 
   protected async validatePluginFolders(folderPaths: string[]): Promise<ValidatedPlugins> {
