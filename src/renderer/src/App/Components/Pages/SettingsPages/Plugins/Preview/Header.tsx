@@ -27,7 +27,7 @@ export default function PreviewHeader({
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
 }) {
   const selectedPlugin = usePluginsState('selectedPlugin');
-  const updateAvailable = useSettingsState('pluginUpdateAvailableList');
+  const updateAvailable = useSettingsState('pluginSyncList');
   const updateChannel = useUserState('updateChannel');
 
   const {currentVersion, targetUpdate, isUpgrade, targetVersion} = useMemo(() => {

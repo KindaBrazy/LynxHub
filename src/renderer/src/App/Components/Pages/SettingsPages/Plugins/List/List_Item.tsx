@@ -34,7 +34,7 @@ export function List_Item({item, installed, unloaded}: Props) {
   const isInstalling = useIsInstallingPlugin(item.metadata.id);
   const isUnInstalling = useIsUninstallingPlugin(item.metadata.id);
 
-  const updateAvailable = useSettingsState('pluginUpdateAvailableList');
+  const updateAvailable = useSettingsState('pluginSyncList');
   const updateChannel = useUserState('updateChannel');
 
   const isSelected = useMemo(

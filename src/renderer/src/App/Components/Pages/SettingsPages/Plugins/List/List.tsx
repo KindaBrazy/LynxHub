@@ -20,7 +20,7 @@ import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from 
 type Props = {installed: InstalledPlugin[]; unloaded: SkippedPlugins[]};
 
 export default function List({installed, unloaded}: Props) {
-  const updateAvailable = useSettingsState('pluginUpdateAvailableList');
+  const updateAvailable = useSettingsState('pluginSyncList');
   const [selectedFilters, setSelectedFilters] = useState<PluginFilter>('all');
   const [list, setList] = useState<PluginItem[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');

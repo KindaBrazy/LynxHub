@@ -30,7 +30,7 @@ type PagesType = {
 };
 
 const GetPages = ({Pages}: {Pages: PagesType[]}) => {
-  const updateAvailableList = useSettingsState('pluginUpdateAvailableList');
+  const updateAvailableList = useSettingsState('pluginSyncList');
   const appUpdateAvailable = useSettingsState('updateAvailable');
 
   return Pages.map(page => {

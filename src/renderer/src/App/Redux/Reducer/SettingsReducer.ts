@@ -26,7 +26,7 @@ type SettingState = {
 
   updatedModules: string[];
   newModules: string[];
-  pluginUpdateAvailableList: PluginSyncList[];
+  pluginSyncList: PluginSyncList[];
 
   updateAvailable: boolean;
   checkCustomUpdate: boolean;
@@ -64,7 +64,7 @@ const initialState: SettingState = {
   openLastSize,
   updatedModules: [],
   newModules: [],
-  pluginUpdateAvailableList: [],
+  pluginSyncList: [],
   updateAvailable: false,
   dynamicAppTitle,
   openLinkExternal,

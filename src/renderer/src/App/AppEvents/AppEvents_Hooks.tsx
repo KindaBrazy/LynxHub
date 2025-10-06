@@ -57,7 +57,7 @@ export const useCheckPluginsUpdate = () => {
     moduleUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
 
     const removeListener = rendererIpc.plugins.onSyncAvailable((_, list) => {
-      dispatch(settingsActions.setSettingsState({key: 'pluginUpdateAvailableList', value: list}));
+      dispatch(settingsActions.setSettingsState({key: 'pluginSyncList', value: list}));
     });
 
     return () => removeListener();
