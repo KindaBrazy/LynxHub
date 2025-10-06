@@ -162,7 +162,7 @@ export function List_Item({item, installed, unloaded}: Props) {
         <span className="mb-1.5 mt-1 text-xs text-foreground-700 line-clamp-3">{item.metadata.description}</span>
       </CardBody>
 
-      <CardFooter className="flex flex-row items-center gap-x-2 pl-[3.7rem] pt-0 justify-between">
+      <CardFooter className="flex flex-row items-center gap-x-2 pt-0 justify-between">
         <div className="flex flex-row items-center px-0 gap-x-1">
           {linux && <Linux_Icon className="size-4" />}
           {win32 && <Windows_Icon className="size-4" />}
