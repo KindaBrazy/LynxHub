@@ -23,7 +23,7 @@ const Preview = memo(({installed, setInstalled}: Props) => {
       className={
         'absolute right-2 inset-y-2 rounded-xl border border-foreground-100 overflow-hidden' +
         ' transition-[left] duration-500 sm:left-[26rem] lg:left-[31rem] 2xl:left-[37rem] shadow-small' +
-        'bg-white dark:bg-LynxRaisinBlack rounded-xl flex flex-col'
+        ' bg-white dark:bg-LynxRaisinBlack rounded-xl flex flex-col'
       }>
       {isEmpty(selectedPlugin) ? (
         <div
