@@ -49,7 +49,7 @@ export function ShowRestartModal(message: string) {
 type UpdateButtonProps = {item: PluginItem};
 export function UpdateButton({item}: UpdateButtonProps) {
   const dispatch = useDispatch<AppDispatch>();
-  const updateAvailable = useSettingsState('pluginUpdateAvailableList');
+  const updateAvailable = useSettingsState('pluginSyncList');
 
   const selectedPlugin = usePluginsState('selectedPlugin');
   const isUpdating = useIsUpdatingPlugin(item.metadata.id);
