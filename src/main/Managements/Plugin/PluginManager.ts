@@ -447,7 +447,9 @@ export class PluginManager {
         if (version.stage === 'insider') {
           return {
             compatible: false,
-            reason: 'This version is only available for Insider subscribers. Please upgrade your plan to get access.',
+            reason:
+              `Version ${version.version} is only available for Insider subscribers.` +
+              ` Please upgrade your plan to get access.`,
           };
         }
         break;
@@ -459,7 +461,7 @@ export class PluginManager {
           return {
             compatible: false,
             reason:
-              `This version requires an ${requiredStage} or higher subscription.` +
+              `Version ${version.version} requires an ${requiredStage} or higher subscription.` +
               ` Please upgrade your plan to get access.`,
           };
         }
