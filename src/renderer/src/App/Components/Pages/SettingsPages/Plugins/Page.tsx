@@ -16,7 +16,7 @@ const Page = memo(({show}: Props) => {
 
   useEffect(() => {
     rendererIpc.plugins.getInstalled().then(setInstalled);
-    rendererIpc.plugins.checkForUpdates(updateChannel);
+    rendererIpc.plugins.checkForSync(updateChannel);
     rendererIpc.plugins.getSkipped().then(result => setUnloaded(result));
   }, [updateChannel]);
 

@@ -184,7 +184,7 @@ export const pluginChannels = {
   uninstall: 'plugins:uninstall',
   update: 'plugins:update',
   syncAll: 'plugins:sync-all',
-  checkForUpdates: 'plugins:check-for-updates',
+  checkForSync: 'plugins:check-for-sync',
 };
 
 export const ptyChannels = {

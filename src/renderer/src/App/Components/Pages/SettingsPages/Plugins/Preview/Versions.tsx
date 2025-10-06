@@ -2,7 +2,7 @@ import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} fro
 import {useMemo, useState} from 'react';
 
 import {SubscribeStages} from '../../../../../../../../cross/CrossTypes';
-import {PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
+import {PluginSyncList} from '../../../../../../../../cross/plugin/PluginTypes';
 import {BoxDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
 
@@ -15,7 +15,7 @@ const getColor = (stage: SubscribeStages) => {
 };
 
 type Props = {
-  targetUpdate: PluginUpdateList | undefined;
+  targetUpdate: PluginSyncList | undefined;
   currentVersion: string;
 };
 export default function Versions({targetUpdate, currentVersion}: Props) {

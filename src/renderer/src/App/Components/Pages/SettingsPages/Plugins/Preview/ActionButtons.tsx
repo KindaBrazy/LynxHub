@@ -3,7 +3,7 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} fro
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {InstalledPlugin, PluginUpdateList} from '../../../../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginSyncList} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download2_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
@@ -17,7 +17,7 @@ import Versions from './Versions';
 type Props = {
   installed: boolean;
   setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
-  targetUpdate: PluginUpdateList | undefined;
+  targetUpdate: PluginSyncList | undefined;
   currentVersion: string;
 };
 

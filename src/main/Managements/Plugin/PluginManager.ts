@@ -18,7 +18,7 @@ import {
   PluginAddresses,
   PluginEngines,
   PluginItem,
-  PluginUpdateList,
+  PluginSyncList,
   ValidatedPlugins,
   VersionItem,
   VersionItemValidated,
@@ -31,7 +31,7 @@ import {removeDir} from '../Ipc/Methods/IpcMethods';
 import ShowToastWindow from '../ToastWindowManager';
 import ExtensionManager from './Extensions/ExtensionManager';
 import ModuleManager from './Modules/ModuleManager';
-import {getCommitByAppStage, getVersionByCommit, isUpdateAvailable} from './PluginUtils';
+import {getCommitByAppStage, getVersionByCommit, isSyncRequired} from './PluginUtils';
 
 export class PluginManager {
   private readonly host: string = 'localhost';
@@ -43,7 +43,7 @@ export class PluginManager {
   private addresses: PluginAddresses = [];
   private skipped: SkippedPlugins[] = [];
   private installed: InstalledPlugin[] = [];
-  private syncAvailable: PluginUpdateList[] = [];
+  private syncAvailable: PluginSyncList[] = [];
 
   private readonly moduleFolder: string = 'Modules';
   private readonly moduleMainScriptPath: string = 'scripts/main.mjs';
@@ -154,14 +154,14 @@ export class PluginManager {
     this.updateList_NoticeRenderer();
   }
 
-  private updateList_Add(item: PluginUpdateList) {
+  private updateList_Add(item: PluginSyncList) {
     if (this.syncAvailable.some(update => update.id === item.id)) return;
     this.syncAvailable.push(item);
 
     this.updateList_NoticeRenderer();
   }
 
-  private async isUpdateAvailable(id: string, stage: SubscribeStages) {
+  private async isSyncRequired(id: string, stage: SubscribeStages) {
     try {
       const targetDir = this.getDirById(id);
       if (!targetDir) return false;
@@ -171,14 +171,13 @@ export class PluginManager {
       const currentCommit = await gitManager.getCurrentCommitHash(targetDir, true);
       if (!currentCommit) return false;
 
-      const targetItem = await isUpdateAvailable(id, currentCommit, stage);
+      const targetItem = await isSyncRequired(id, currentCommit, stage);
       if (!targetItem) {
         this.updateList_Remove(id);
         return false;
       }
 
       this.updateList_Add(targetItem);
-
       return true;
     } catch (e) {
       console.warn(`Failed to check for updates ${id}: `, e);
@@ -214,11 +213,11 @@ export class PluginManager {
     );
   }
 
-  public async checkForUpdates(stage: SubscribeStages): Promise<void> {
+  public async checkForSync(stage: SubscribeStages): Promise<void> {
     try {
       for (const plugin of this.installed) {
         const id = plugin.metadata.id;
-        await this.isUpdateAvailable(id, stage);
+        await this.isSyncRequired(id, stage);
       }
     } catch (error) {
       console.error('Error checking for all updates:', error);
@@ -413,96 +412,6 @@ export class PluginManager {
     return validated;
   }
 
-  private isCompatible(
-    version: VersionItem,
-    type: 'module' | 'extension',
-    currentStage: SubscribeStages,
-  ): {compatible: boolean; reason: string | undefined} {
-    // 1. Subscribe Stage Check
-    switch (currentStage) {
-      // Have access to all stages
-      case 'insider':
-        break;
-
-      // Have access to public and early access stages
-      case 'early_access':
-        if (version.stage === 'insider') {
-          return {
-            compatible: false,
-            reason:
-              `Version ${version.version} is only available for Insider subscribers.\n` +
-              `Please upgrade your plan to get access.`,
-          };
-        }
-        break;
-
-      // Have access to only the public stage
-      case 'public':
-        if (version.stage !== 'public') {
-          const requiredStage = version.stage === 'insider' ? 'Insider' : 'Early Access';
-          return {
-            compatible: false,
-            reason:
-              `Version ${version.version} requires an ${requiredStage} or higher subscription.\n` +
-              `Please upgrade your plan to get access.`,
-          };
-        }
-        break;
-    }
-
-    const currentPlatform = platform();
-
-    // 2. Platform Check
-    const platforms = version.platforms;
-    if (!platforms || !platforms.includes(currentPlatform)) {
-      const supportedPlatforms = platforms?.join(', ') || 'none';
-      return {
-        compatible: false,
-        reason:
-          `Version ${version.version} is not compatible with your operating system\n` +
-          `(${currentPlatform}). It only supports: ${supportedPlatforms}.`,
-      };
-    }
-
-    // 3. Engines/API Check
-    const engines = version.engines;
-    if (engines && typeof engines === 'object') {
-      const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
-      const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
-
-      const targetCheck = type === 'extension' ? extensionCheck : moduleCheck;
-      const requiredRange = engines[targetCheck.api as keyof PluginEngines];
-
-      if (requiredRange) {
-        if (!satisfies(targetCheck.version, requiredRange)) {
-          return {
-            compatible: false,
-            reason:
-              `Version ${version.version} requires a different application version.\n` +
-              `It needs ${type} api version ${requiredRange}, but current version api is ${targetCheck.version}.`,
-          };
-        }
-      } else {
-        // This suggests the package itself is malformed or invalid.
-        return {
-          compatible: false,
-          reason:
-            `Could not verify compatibility for version ${version.version}.\n` +
-            `The package metadata may be missing or corrupted.`,
-        };
-      }
-    } else {
-      // A fallback for the same reason as above.
-      return {
-        compatible: false,
-        reason: `Could not find compatibility information for version ${version.version}.`,
-      };
-    }
-
-    // If all checks pass, it's compatible.
-    return {compatible: true, reason: undefined};
-  }
-
   private async validatePluginFolders(folderPaths: string[]): Promise<ValidatedPlugins> {
     const validatedFolders: ValidatedPlugins = [];
 
@@ -592,6 +501,96 @@ export class PluginManager {
 
       await this.installPlugin(url, targetCommit);
     }
+  }
+
+  private isCompatible(
+    version: VersionItem,
+    type: 'module' | 'extension',
+    currentStage: SubscribeStages,
+  ): {compatible: boolean; reason: string | undefined} {
+    // 1. Subscribe Stage Check
+    switch (currentStage) {
+      // Have access to all stages
+      case 'insider':
+        break;
+
+      // Have access to public and early access stages
+      case 'early_access':
+        if (version.stage === 'insider') {
+          return {
+            compatible: false,
+            reason:
+              `Version ${version.version} is only available for Insider subscribers.\n` +
+              `Please upgrade your plan to get access.`,
+          };
+        }
+        break;
+
+      // Have access to only the public stage
+      case 'public':
+        if (version.stage !== 'public') {
+          const requiredStage = version.stage === 'insider' ? 'Insider' : 'Early Access';
+          return {
+            compatible: false,
+            reason:
+              `Version ${version.version} requires an ${requiredStage} or higher subscription.\n` +
+              `Please upgrade your plan to get access.`,
+          };
+        }
+        break;
+    }
+
+    const currentPlatform = platform();
+
+    // 2. Platform Check
+    const platforms = version.platforms;
+    if (!platforms || !platforms.includes(currentPlatform)) {
+      const supportedPlatforms = platforms?.join(', ') || 'none';
+      return {
+        compatible: false,
+        reason:
+          `Version ${version.version} is not compatible with your operating system\n` +
+          `(${currentPlatform}). It only supports: ${supportedPlatforms}.`,
+      };
+    }
+
+    // 3. Engines/API Check
+    const engines = version.engines;
+    if (engines && typeof engines === 'object') {
+      const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
+      const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
+
+      const targetCheck = type === 'extension' ? extensionCheck : moduleCheck;
+      const requiredRange = engines[targetCheck.api as keyof PluginEngines];
+
+      if (requiredRange) {
+        if (!satisfies(targetCheck.version, requiredRange)) {
+          return {
+            compatible: false,
+            reason:
+              `Version ${version.version} requires a different application version.\n` +
+              `It needs ${type} api version ${requiredRange}, but current version api is ${targetCheck.version}.`,
+          };
+        }
+      } else {
+        // This suggests the package itself is malformed or invalid.
+        return {
+          compatible: false,
+          reason:
+            `Could not verify compatibility for version ${version.version}.\n` +
+            `The package metadata may be missing or corrupted.`,
+        };
+      }
+    } else {
+      // A fallback for the same reason as above.
+      return {
+        compatible: false,
+        reason: `Could not find compatibility information for version ${version.version}.`,
+      };
+    }
+
+    // If all checks pass, it's compatible.
+    return {compatible: true, reason: undefined};
   }
 
   /**
