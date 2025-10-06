@@ -94,7 +94,7 @@ export function List_Item({item, installed, unloaded}: Props) {
       key={`${item.metadata.id}_plugin_list_item`}
       fullWidth>
       {!isCompatible && (
-        <div className="absolute inset-0 z-20 bg-black/50 flex items-center justify-center">
+        <div className="absolute inset-0 z-20 bg-black/50 flex flex-col items-center justify-center">
           <Tooltip
             delay={300}
             color="warning"
@@ -105,6 +105,7 @@ export function List_Item({item, installed, unloaded}: Props) {
               className={'size-8 text-warning/80 hover:text-warning transition-colors duration-200'}
             />
           </Tooltip>
+          <span className="text-sm">Incompatible</span>
         </div>
       )}
       <CardHeader className="pb-0">
