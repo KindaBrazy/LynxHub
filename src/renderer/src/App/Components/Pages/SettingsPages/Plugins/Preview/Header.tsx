@@ -9,7 +9,9 @@ import {
   ArrowDuo_Icon,
   BoxDuo_Icon,
   CalendarDuo_Icon,
+  Extensions2_Icon,
   HomeSmile_Icon,
+  Plugins_Icon,
   UserDuo_Icon,
 } from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
@@ -64,8 +66,26 @@ export default function PreviewHeader({
                 variant="light"
                 className="text-foreground-600"
                 startContent={<CalendarDuo_Icon className="size-3.5" />}>
+                {/* // TODO: use selected version date */}
                 {selectedPlugin?.changes[0].date}
               </Chip>
+              <div
+                className={
+                  `flex flex-row gap-x-1 items-center` +
+                  ` ${selectedPlugin?.metadata.type === 'extension' ? 'text-primary-500' : 'text-secondary'}`
+                }>
+                {selectedPlugin?.metadata.type === 'extension' ? (
+                  <>
+                    <Plugins_Icon />
+                    <span>Extension</span>
+                  </>
+                ) : (
+                  <>
+                    <Extensions2_Icon />
+                    <span>Module</span>
+                  </>
+                )}
+              </div>
             </div>
           }
           className="self-start"
@@ -83,8 +103,8 @@ export default function PreviewHeader({
             }}
             size="sm"
             variant="light"
+            className="text-small"
             startContent={<HomeSmile_Icon />}
-            className="text-small text-primary-500"
             endContent={<ExternalDuo_Icon className="size-3" />}>
             Home Page
           </Button>
