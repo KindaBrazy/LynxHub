@@ -106,7 +106,7 @@ export default function DashboardUpdate() {
           <span>Early Access</span>
           {patreonLoggedIn ? (
             <span className="text-warning">
-              {patreonUserData.subscribeStage !== 'early_access' && '(Upgrade your Patreon tier to unlock)'}
+              {patreonUserData.subscribeStage === 'public' && '(Upgrade your Patreon tier to unlock)'}
             </span>
           ) : (
             <span className="text-warning">(Login to Patreon to unlock)</span>
