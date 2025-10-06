@@ -37,7 +37,7 @@ const GetPages = ({Pages}: {Pages: PagesType[]}) => {
     const {navButton, path} = page;
     const {icon, title} = navButton;
 
-    const extensionBadge = navButton.title === 'Extensions' && !isEmpty(updateAvailableList);
+    const extensionBadge = navButton.title === 'Plugins' && !isEmpty(updateAvailableList);
     const dashboardBadge = navButton.title === 'Dashboard' && appUpdateAvailable;
 
     return (
