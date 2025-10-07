@@ -3,7 +3,7 @@ import {isArray} from 'lodash';
 import {useSelector} from 'react-redux';
 
 import {SkippedPlugins} from '../../../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginItem} from '../../../../../cross/plugin/PluginTypes';
+import {InstalledPlugin, PluginItem, PluginSyncList, VersionItem} from '../../../../../cross/plugin/PluginTypes';
 import {RootState} from '../Store';
 
 type SetKeys = 'installing' | 'updating' | 'unInstalling';
@@ -17,6 +17,8 @@ type PluginsState = {
 
   installed: InstalledPlugin[];
   skipped: SkippedPlugins[];
+
+  syncList: PluginSyncList[];
 
   selectedPlugin: PluginItem | undefined;
   updatingAll: boolean;
@@ -33,6 +35,8 @@ const initialState: PluginsState = {
 
   installed: [],
   skipped: [],
+
+  syncList: [],
 
   selectedPlugin: undefined,
   updatingAll: false,
@@ -59,6 +63,16 @@ const appSlice = createSlice({
     },
     removeInstalled: (state: PluginsState, action: PayloadAction<string>) => {
       state.installed = state.installed.filter(item => item.metadata.id !== action.payload);
+    },
+    itemUpdated: (state: PluginsState, action: PayloadAction<string | undefined>) => {
+      state.updating = state.updating.filter(id => id !== action.payload);
+      state.installed = state.installed.map(item => {
+        if (item.metadata.id === action.payload) {
+          const version = state.syncList.find(item => item.id === action.payload)?.version as VersionItem;
+          return {...item, version};
+        }
+        return item;
+      });
     },
     manageSet: (state: PluginsState, action: PayloadAction<{key: SetKeys; id: IdType; operation: ManageOperation}>) => {
       const {key, id, operation} = action.payload;
