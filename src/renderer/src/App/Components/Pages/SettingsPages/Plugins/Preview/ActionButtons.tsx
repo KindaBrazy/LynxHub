@@ -1,9 +1,9 @@
 import {Button} from '@heroui/react';
-import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {InstalledPlugin, PluginSyncList} from '../../../../../../../../cross/plugin/PluginTypes';
+import {PluginSyncList} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download2_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
@@ -16,12 +16,11 @@ import Versions from './Versions';
 
 type Props = {
   installed: boolean;
-  setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
   targetUpdate: PluginSyncList | undefined;
   currentVersion: string;
 };
 
-export default function ActionButtons({installed, setInstalled, targetUpdate, currentVersion}: Props) {
+export default function ActionButtons({installed, targetUpdate, currentVersion}: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   const selectedPlugin = usePluginsState('selectedPlugin');
@@ -57,15 +56,15 @@ export default function ActionButtons({installed, setInstalled, targetUpdate, cu
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} installed successfully`);
           ShowRestartModal('To apply the installaion, please restart the app.');
-          setInstalled(prevState => [
-            ...prevState,
-            {
+          // TODO: Get installation info from `rendererIpc.plugins.install` amd set installed
+          dispatch(
+            pluginsActions.addInstalled({
               version: {...selectedPlugin.versions[0], engines: {extensionApi: ''}},
               metadata: selectedPlugin.metadata,
               url: selectedPlugin.url,
               dir: '',
-            },
-          ]);
+            }),
+          );
         }
       });
     }
@@ -82,7 +81,7 @@ export default function ActionButtons({installed, setInstalled, targetUpdate, cu
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} uninstalled successfully`);
           ShowRestartModal('To complete the uninstallation, please restart the app.');
         }
-        setInstalled(prevState => prevState.filter(item => item.metadata.id !== selectedPlugin.metadata.id));
+        dispatch(pluginsActions.removeInstalled(selectedPlugin.metadata.id));
       });
     }
   }, [selectedPlugin]);

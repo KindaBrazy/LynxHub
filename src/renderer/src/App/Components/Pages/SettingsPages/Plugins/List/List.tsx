@@ -4,8 +4,7 @@ import {isEmpty} from 'lodash';
 import {useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginFilter, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
+import {PluginFilter, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import {Circle_Icon, RefreshDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
 import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
@@ -17,9 +16,7 @@ import LynxScroll from '../../../../Reusable/LynxScroll';
 import {List_Item} from './List_Item';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from './List_Utils';
 
-type Props = {installed: InstalledPlugin[]; unloaded: SkippedPlugins[]};
-
-export default function List({installed, unloaded}: Props) {
+export default function List() {
   const updateAvailable = useSettingsState('pluginSyncList');
   const [selectedFilters, setSelectedFilters] = useState<PluginFilter>('all');
   const [list, setList] = useState<PluginItem[]>([]);
@@ -27,6 +24,7 @@ export default function List({installed, unloaded}: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   const updatingAll = usePluginsState('updatingAll');
+  const installed = usePluginsState('installed');
 
   const installedID = useMemo(() => installed.map(item => item.metadata.id), [installed]);
 
@@ -146,7 +144,7 @@ export default function List({installed, unloaded}: Props) {
         ) : (
           <div className="flex flex-col gap-y-2 pb-4">
             {resultList.map(item => (
-              <List_Item item={item} unloaded={unloaded} installed={installed} key={`${item.metadata.id}_list_item`} />
+              <List_Item item={item} installed={installed} key={`${item.metadata.id}_list_item`} />
             ))}
           </div>
         )}
