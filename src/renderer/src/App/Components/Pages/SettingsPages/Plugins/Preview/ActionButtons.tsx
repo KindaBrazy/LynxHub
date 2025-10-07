@@ -62,7 +62,7 @@ export default function ActionButtons({installed, targetUpdate, currentVersion}:
                 version: targetVersion,
                 metadata: selectedPlugin.metadata,
                 url: selectedPlugin.url,
-                dir: '',
+                id: '',
               }),
             );
           }

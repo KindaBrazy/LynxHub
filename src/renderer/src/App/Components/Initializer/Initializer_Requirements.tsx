@@ -144,7 +144,7 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
   const installModule = useCallback(() => {
     setAppModule({result: 'installing'});
     return new Promise<void>(resolve => {
-      rendererIpc.plugins.getInstalled().then(plugins => {
+      rendererIpc.plugins.getInstalledList().then(plugins => {
         if (plugins.find(item => item.url === MAIN_MODULE_URL)) {
           setAppModule({result: 'ok'});
           resolve();

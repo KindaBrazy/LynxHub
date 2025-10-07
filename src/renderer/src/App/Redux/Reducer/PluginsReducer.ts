@@ -2,8 +2,13 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {isArray} from 'lodash';
 import {useSelector} from 'react-redux';
 
-import {SkippedPlugins} from '../../../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginItem, PluginSyncList, VersionItem} from '../../../../../cross/plugin/PluginTypes';
+import {
+  InstalledPlugin,
+  PluginItem,
+  PluginSyncList,
+  UnloadedPlugins,
+  VersionItem,
+} from '../../../../../cross/plugin/PluginTypes';
 import {RootState} from '../Store';
 
 type SetKeys = 'installing' | 'updating' | 'unInstalling';
@@ -16,8 +21,8 @@ type PluginsState = {
   unInstalling: string[];
   updatingAll: boolean;
 
-  installed: InstalledPlugin[];
-  skipped: SkippedPlugins[];
+  installedList: InstalledPlugin[];
+  unloadedList: UnloadedPlugins[];
   syncList: PluginSyncList[];
 
   selectedPlugin: PluginItem | undefined;
@@ -33,8 +38,8 @@ const initialState: PluginsState = {
   unInstalling: [],
   updatingAll: false,
 
-  installed: [],
-  skipped: [],
+  installedList: [],
+  unloadedList: [],
   syncList: [],
 
   selectedPlugin: undefined,
@@ -57,16 +62,16 @@ const appSlice = createSlice({
       state.updatingAll = action.payload;
     },
     addInstalled: (state: PluginsState, action: PayloadAction<InstalledPlugin>) => {
-      state.installed = [...state.installed, action.payload];
+      state.installedList = [...state.installedList, action.payload];
     },
     removeInstalled: (state: PluginsState, action: PayloadAction<string>) => {
-      state.installed = state.installed.filter(item => item.metadata.id !== action.payload);
+      state.installedList = state.installedList.filter(item => item.metadata.id !== action.payload);
     },
     removeUpdateItem: (state: PluginsState, action: PayloadAction<{id: string | undefined; isUpdated: boolean}>) => {
       const {id, isUpdated} = action.payload;
       state.updating = state.updating.filter(item => item !== id);
       if (isUpdated) {
-        state.installed = state.installed.map(item => {
+        state.installedList = state.installedList.map(item => {
           if (item.metadata.id === id) {
             const version = state.syncList.find(item => item.id === id)?.version as VersionItem;
             return {...item, version};

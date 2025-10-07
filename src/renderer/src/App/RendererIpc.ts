@@ -62,7 +62,6 @@ import {
   PtyProcessOpt,
   RecentlyOperation,
   ShowToastTypes,
-  SkippedPlugins,
   staticsChannels,
   storageChannels,
   StorageOperation,
@@ -75,7 +74,13 @@ import {
   winChannels,
   WinStateChange,
 } from '../../../cross/IpcChannelAndTypes';
-import {InstalledPlugin, PluginAddresses, PluginItem, PluginSyncList} from '../../../cross/plugin/PluginTypes';
+import {
+  InstalledPlugin,
+  PluginAddresses,
+  PluginItem,
+  PluginSyncList,
+  UnloadedPlugins,
+} from '../../../cross/plugin/PluginTypes';
 import StorageTypes, {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
 import {extensionRendererApi} from './Extensions/ExtensionLoader';
 
@@ -282,8 +287,8 @@ const rendererIpc = {
   plugins: {
     getList: (stage: SubscribeStages): Promise<PluginItem[]> => ipc.invoke(pluginChannels.getList, stage),
     getAddresses: (): Promise<PluginAddresses> => ipc.invoke(pluginChannels.getAddresses),
-    getInstalled: (): Promise<InstalledPlugin[]> => ipc.invoke(pluginChannels.getInstalled),
-    getSkipped: (): Promise<SkippedPlugins[]> => ipc.invoke(pluginChannels.getSkipped),
+    getInstalledList: (): Promise<InstalledPlugin[]> => ipc.invoke(pluginChannels.getInstalledList),
+    getUnloadedList: (): Promise<UnloadedPlugins[]> => ipc.invoke(pluginChannels.getUnloadedList),
 
     install: (url: string, commitHash?: string): Promise<boolean> =>
       ipc.invoke(pluginChannels.install, url, commitHash),

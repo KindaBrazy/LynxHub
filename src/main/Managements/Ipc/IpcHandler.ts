@@ -213,8 +213,8 @@ function modules() {
 
 function plugins() {
   ipcMain.handle(pluginChannels.getAddresses, () => pluginManager.getAddresses());
-  ipcMain.handle(pluginChannels.getInstalled, () => pluginManager.getInstalled());
-  ipcMain.handle(pluginChannels.getSkipped, () => pluginManager.getSkipped());
+  ipcMain.handle(pluginChannels.getInstalledList, () => pluginManager.getInstalledList());
+  ipcMain.handle(pluginChannels.getUnloadedList, () => pluginManager.getUnloadedList());
   ipcMain.handle(pluginChannels.install, (_, url: string, commitHash?: string) =>
     pluginManager.installPlugin(url, commitHash),
   );
