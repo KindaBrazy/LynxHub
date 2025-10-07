@@ -17,6 +17,7 @@ import {
 } from '../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {hasCardsByPath} from '../../Modules/ModuleLoader';
+import {usePluginsState} from '../../Redux/Reducer/PluginsReducer';
 import {useSettingsState} from '../../Redux/Reducer/SettingsReducer';
 import NavButton from './NavButton';
 
@@ -30,7 +31,7 @@ type PagesType = {
 };
 
 const GetPages = ({Pages}: {Pages: PagesType[]}) => {
-  const pluginSyncList = useSettingsState('pluginSyncList');
+  const syncList = usePluginsState('syncList');
   const appUpdateAvailable = useSettingsState('updateAvailable');
 
   return Pages.map(page => {
@@ -38,7 +39,7 @@ const GetPages = ({Pages}: {Pages: PagesType[]}) => {
     const {icon, title} = navButton;
 
     const dashboardBadge = navButton.title === 'Dashboard' && appUpdateAvailable;
-    const pluginsBadge = navButton.title === 'Plugins' && !isEmpty(pluginSyncList) ? pluginSyncList.length : false;
+    const pluginsBadge = navButton.title === 'Plugins' && !isEmpty(syncList) ? syncList.length : false;
 
     return (
       <NavButton title={title} pageId={path} key={`navBtn-${path}`} badge={dashboardBadge || pluginsBadge}>

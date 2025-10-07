@@ -7,7 +7,6 @@ import {useDispatch} from 'react-redux';
 import {PluginFilter, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import {Circle_Icon, RefreshDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
-import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
@@ -17,7 +16,7 @@ import {List_Item} from './List_Item';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from './List_Utils';
 
 export default function List() {
-  const updateAvailable = useSettingsState('pluginSyncList');
+  const syncList = usePluginsState('syncList');
   const [selectedFilters, setSelectedFilters] = useState<PluginFilter>('all');
   const [list, setList] = useState<PluginItem[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
@@ -73,7 +72,7 @@ export default function List() {
   }, [searchValue]);
 
   const updateAll = () => {
-    dispatch(pluginsActions.manageSet({key: 'updating', id: updateAvailable.map(item => item.id), operation: 'add'}));
+    dispatch(pluginsActions.manageSet({key: 'updating', id: syncList.map(item => item.id), operation: 'add'}));
     dispatch(pluginsActions.setUpdatingAll(true));
     rendererIpc.plugins
       .syncAll()
@@ -82,9 +81,7 @@ export default function List() {
       })
       .catch(() => lynxTopToast(dispatch).error('Failed to update extensions. Please try again later.'))
       .finally(() => {
-        dispatch(
-          pluginsActions.manageSet({key: 'updating', id: updateAvailable.map(item => item.id), operation: 'remove'}),
-        );
+        dispatch(pluginsActions.manageSet({key: 'updating', id: syncList.map(item => item.id), operation: 'remove'}));
         dispatch(pluginsActions.setUpdatingAll(true));
       });
   };
@@ -100,14 +97,14 @@ export default function List() {
       <div className="flex w-full flex-col p-4 gap-y-4 shadow-small">
         <div className="flex w-full justify-between flex-row items-center">
           <span className="font-semibold text-xl">Extensions</span>
-          {!isEmpty(updateAvailable) && (
+          {!isEmpty(syncList) && (
             <Button
               size="sm"
               color="success"
               onPress={updateAll}
               isLoading={updatingAll}
               startContent={!updatingAll && <RefreshDuo_Icon />}>
-              {updatingAll ? 'Syncing...' : `Sync All (${updateAvailable.length})`}
+              {updatingAll ? 'Syncing...' : `Sync All (${syncList.length})`}
             </Button>
           )}
         </div>

@@ -8,7 +8,6 @@ import {PluginItem} from '../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
 import {Download_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {pluginsActions, useIsUpdatingPlugin, usePluginsState} from '../../../../Redux/Reducer/PluginsReducer';
-import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
@@ -50,7 +49,7 @@ export function ShowRestartModal(message: string) {
 type UpdateButtonProps = {item: PluginItem};
 export function UpdateButton({item}: UpdateButtonProps) {
   const dispatch = useDispatch<AppDispatch>();
-  const updateAvailable = useSettingsState('pluginSyncList');
+  const syncList = usePluginsState('syncList');
 
   const selectedPlugin = usePluginsState('selectedPlugin');
   const isUpdating = useIsUpdatingPlugin(item.metadata.id);
@@ -69,12 +68,12 @@ export function UpdateButton({item}: UpdateButtonProps) {
   }, [selectedPlugin, item]);
 
   const {updateItem, isUpdate, color} = useMemo(() => {
-    const updateItem = updateAvailable.find(available => available.id === item.metadata.id);
+    const updateItem = syncList.find(available => available.id === item.metadata.id);
     const isUpdate = updateItem?.type === 'upgrade';
     const color: ButtonProps['color'] = isUpdate ? 'success' : 'warning';
 
     return {updateItem, isUpdate, color};
-  }, [updateAvailable, item]);
+  }, [syncList, item]);
 
   const {variant, text} = useMemo(() => {
     const variant: ButtonProps['variant'] = isUpdating ? 'light' : 'flat';
