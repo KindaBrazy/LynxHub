@@ -377,17 +377,18 @@ export class PluginManager {
 
     if (!version || !type) return;
 
+    let exist: boolean = false;
+    const target = {id, commit, version, type};
+
     this.syncAvailable = this.syncAvailable.map(item => {
       if (item.id === id) {
-        return {
-          id,
-          commit,
-          version,
-          type,
-        };
+        exist = true;
+        return target;
       }
       return item;
     });
+
+    if (!exist) this.syncAvailable = [...this.syncAvailable, target];
 
     this.updateList_NoticeRenderer();
   }
