@@ -75,10 +75,10 @@ import {
   WinStateChange,
 } from '../../../cross/IpcChannelAndTypes';
 import {
-  InstalledPlugin,
   PluginAddresses,
+  PluginInstalledItem,
   PluginItem,
-  PluginSyncList,
+  PluginSyncItem,
   UnloadedPlugins,
 } from '../../../cross/plugin/PluginTypes';
 import StorageTypes, {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
@@ -287,7 +287,7 @@ const rendererIpc = {
   plugins: {
     getList: (stage: SubscribeStages): Promise<PluginItem[]> => ipc.invoke(pluginChannels.getList, stage),
     getAddresses: (): Promise<PluginAddresses> => ipc.invoke(pluginChannels.getAddresses),
-    getInstalledList: (): Promise<InstalledPlugin[]> => ipc.invoke(pluginChannels.getInstalledList),
+    getInstalledList: (): Promise<PluginInstalledItem[]> => ipc.invoke(pluginChannels.getInstalledList),
     getUnloadedList: (): Promise<UnloadedPlugins[]> => ipc.invoke(pluginChannels.getUnloadedList),
 
     install: (url: string, commitHash?: string): Promise<boolean> =>
@@ -297,7 +297,7 @@ const rendererIpc = {
     syncAll: (): Promise<void> => ipc.invoke(pluginChannels.syncAll),
     checkForSync: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.checkForSync, stage),
 
-    onSyncAvailable: (result: (event: IpcRendererEvent, cards: PluginSyncList[]) => void) =>
+    onSyncAvailable: (result: (event: IpcRendererEvent, cards: PluginSyncItem[]) => void) =>
       ipc.on(pluginChannels.onSyncAvailable, result),
   },
 

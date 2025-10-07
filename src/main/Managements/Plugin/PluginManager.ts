@@ -14,11 +14,11 @@ import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossCon
 import {SubscribeStages} from '../../../cross/CrossTypes';
 import {pluginChannels} from '../../../cross/IpcChannelAndTypes';
 import {
-  InstalledPlugin,
   PluginAddresses,
   PluginEngines,
+  PluginInstalledItem,
   PluginItem,
-  PluginSyncList,
+  PluginSyncItem,
   UnloadedPlugins,
   ValidatedPlugins,
   VersionItem,
@@ -43,8 +43,8 @@ export class PluginManager {
 
   private addresses: PluginAddresses = [];
   private skipped: UnloadedPlugins[] = [];
-  private installed: InstalledPlugin[] = [];
-  private syncAvailable: PluginSyncList[] = [];
+  private installed: PluginInstalledItem[] = [];
+  private syncAvailable: PluginSyncItem[] = [];
 
   private readonly moduleFolder: string = 'Modules';
   private readonly moduleMainScriptPath: string = 'scripts/main.mjs';
@@ -63,31 +63,6 @@ export class PluginManager {
     this.pluginPath = getAppDirectory('Plugins');
   }
 
-  private async setInstalledPlugins(folders: string[]) {
-    for (const folder of folders) {
-      try {
-        const targetDir = join(this.pluginPath, folder);
-        const remoteUrl = await GitManager.remoteUrlFromDir(targetDir);
-        if (!remoteUrl) continue;
-
-        const gitManager = new GitManager();
-        const currentCommit = await gitManager.getCurrentCommitHash(targetDir);
-        if (!currentCommit) continue;
-
-        const id = await staticManager.getPluginIdByRepositoryUrl(remoteUrl);
-        if (!id) continue;
-
-        const metadata = await staticManager.getPluginMetadataById(id);
-        const version = await getVersionByCommit(id, currentCommit);
-        if (!version) continue;
-
-        this.installed.push({id: folder, url: remoteUrl, version, metadata});
-      } catch (error) {
-        console.error(`Error parsing ${folder}: ${error}`);
-      }
-    }
-  }
-
   public async installPlugin(url: string, commitHash?: string) {
     return new Promise<boolean>(async resolve => {
       let targetCommit: string;
@@ -100,7 +75,6 @@ export class PluginManager {
           targetCommit = await getCommitByAppStage(id);
         }
 
-        const metadata = await staticManager.getPluginMetadataById(id);
         const version = await getVersionByCommit(id, targetCommit);
         if (version) {
           const directory = join(this.pluginPath, id);
@@ -110,7 +84,7 @@ export class PluginManager {
             await gitManager.cloneShallow(url, directory, true, undefined, 'main');
             await gitManager.resetHard(directory, targetCommit);
 
-            this.installed.push({id: directory, url, version, metadata});
+            this.installed.push({id: directory, url, version});
 
             resolve(true);
           } catch (e) {
@@ -136,46 +110,6 @@ export class PluginManager {
       return true;
     } catch (e) {
       console.warn(`Failed to uninstall ${id}: `, e);
-      return false;
-    }
-  }
-
-  private updateList_NoticeRenderer() {
-    appManager?.getWebContent()?.send(pluginChannels.onSyncAvailable, this.syncAvailable);
-  }
-
-  private updateList_Remove(id: string) {
-    this.syncAvailable = this.syncAvailable.filter(update => update.id !== id);
-    this.updateList_NoticeRenderer();
-  }
-
-  private updateList_Add(item: PluginSyncList) {
-    if (this.syncAvailable.some(update => update.id === item.id)) return;
-    this.syncAvailable.push(item);
-
-    this.updateList_NoticeRenderer();
-  }
-
-  private async isSyncRequired(id: string, stage: SubscribeStages) {
-    try {
-      const targetDir = this.getDirById(id);
-      if (!targetDir) return false;
-
-      const gitManager = new GitManager();
-
-      const currentCommit = await gitManager.getCurrentCommitHash(targetDir, true);
-      if (!currentCommit) return false;
-
-      const targetItem = await isSyncRequired(id, currentCommit, stage);
-      if (!targetItem) {
-        this.updateList_Remove(id);
-        return false;
-      }
-
-      this.updateList_Add(targetItem);
-      return true;
-    } catch (e) {
-      console.warn(`Failed to check for updates ${id}: `, e);
       return false;
     }
   }
@@ -211,7 +145,7 @@ export class PluginManager {
   public async checkForSync(stage: SubscribeStages): Promise<void> {
     try {
       for (const plugin of this.installed) {
-        const id = plugin.metadata.id;
+        const id = plugin.id;
         await this.isSyncRequired(id, stage);
       }
     } catch (error) {
@@ -228,7 +162,7 @@ export class PluginManager {
 
     try {
       const gitManager = new GitManager(true);
-      const targetCommit = this.syncAvailable.find(update => update.id === id)?.version.commit;
+      const targetCommit = this.syncAvailable.find(update => update.id === id)?.commit;
       if (!targetCommit) return false;
 
       await gitManager.resetHard(targetDir, targetCommit);
@@ -245,49 +179,13 @@ export class PluginManager {
       for (const item of this.syncAvailable) {
         const id = item.id;
         const targetDir = this.getDirById(id);
-        const targetCommit = this.syncAvailable.find(update => update.id === id)?.version.commit;
+        const targetCommit = this.syncAvailable.find(update => update.id === id)?.commit;
         if (!targetDir || !targetCommit) continue;
         await this.update(id);
       }
     } catch (e) {
       console.warn(`Failed to update plugins: ${e}`);
     }
-  }
-
-  private async readPlugin() {
-    return new Promise<void>(async resolve => {
-      try {
-        const files = readdirSync(this.pluginPath, {withFileTypes: true});
-        const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
-        const validFolders = await this.validatePluginFolders(folders);
-
-        this.addresses = validFolders.map(({folder, type}) => ({
-          address: `${this.finalAddress}/${folder}`,
-          type,
-        }));
-
-        await this.setInstalledPlugins(folders);
-
-        const moduleFolders: string[] = [];
-        const extensionFolder: string[] = [];
-
-        for (const validItem of validFolders) {
-          const metadata = await staticManager.getPluginMetadataById(validItem.folder);
-          if (metadata.type === 'module') {
-            moduleFolders.push(join(this.pluginPath, validItem.folder));
-          } else if (metadata.type === 'extension') {
-            extensionFolder.push(join(this.pluginPath, validItem.folder));
-          }
-        }
-        await this.extensionManager.importPlugins(extensionFolder);
-        await this.moduleManager.importPlugins(moduleFolders);
-
-        resolve();
-      } catch (error: any) {
-        console.error(`Loading Plugin Error: `, error);
-        resolve();
-      }
-    });
   }
 
   public async createServer() {
@@ -356,12 +254,12 @@ export class PluginManager {
     return this.skipped;
   }
 
-  public getInstalledList(): InstalledPlugin[] {
+  public getInstalledList(): PluginInstalledItem[] {
     return this.installed;
   }
 
   public getDirById(id: string) {
-    const plugin = this.installed.find(installed => installed.metadata.id === id);
+    const plugin = this.installed.find(installed => installed.id === id);
     if (plugin) {
       return join(this.pluginPath, plugin.id);
     }
@@ -402,6 +300,126 @@ export class PluginManager {
     }
 
     return validated;
+  }
+
+  public async migrate() {
+    const targetModuleDir = join(dirname(this.pluginPath), this.moduleFolder);
+    const targetExtensionDir = join(dirname(this.pluginPath), this.extensionFolder);
+
+    const oldInstalledModules = await this.migrateRemoveOld(targetModuleDir);
+    const oldInstalledExtensions = await this.migrateRemoveOld(targetExtensionDir);
+
+    const oldInstallations = [...oldInstalledModules, ...oldInstalledExtensions];
+
+    // Reinstall in the new way
+    for (const url of oldInstallations) {
+      const id = await staticManager.getPluginIdByRepositoryUrl(url);
+      if (!id) continue;
+
+      const targetCommit = await getCommitByAppStage(id);
+
+      await this.installPlugin(url, targetCommit);
+    }
+  }
+
+  private async setInstalledPlugins(folders: string[]) {
+    for (const folder of folders) {
+      try {
+        const targetDir = join(this.pluginPath, folder);
+        const remoteUrl = await GitManager.remoteUrlFromDir(targetDir);
+        if (!remoteUrl) continue;
+
+        const gitManager = new GitManager();
+        const currentCommit = await gitManager.getCurrentCommitHash(targetDir);
+        if (!currentCommit) continue;
+
+        const id = await staticManager.getPluginIdByRepositoryUrl(remoteUrl);
+        if (!id) continue;
+
+        const version = await getVersionByCommit(id, currentCommit);
+        if (!version) continue;
+
+        this.installed.push({id: folder, url: remoteUrl, version});
+      } catch (error) {
+        console.error(`Error parsing ${folder}: ${error}`);
+      }
+    }
+  }
+
+  private updateList_NoticeRenderer() {
+    appManager?.getWebContent()?.send(pluginChannels.onSyncAvailable, this.syncAvailable);
+  }
+
+  private updateList_Remove(id: string) {
+    this.syncAvailable = this.syncAvailable.filter(update => update.id !== id);
+    this.updateList_NoticeRenderer();
+  }
+
+  private updateList_Add(item: PluginSyncItem) {
+    if (this.syncAvailable.some(update => update.id === item.id)) return;
+    this.syncAvailable.push(item);
+
+    this.updateList_NoticeRenderer();
+  }
+
+  private async isSyncRequired(id: string, stage: SubscribeStages) {
+    try {
+      const targetDir = this.getDirById(id);
+      if (!targetDir) return false;
+
+      const gitManager = new GitManager();
+
+      const currentCommit = await gitManager.getCurrentCommitHash(targetDir, true);
+      if (!currentCommit) return false;
+
+      const targetItem = await isSyncRequired(id, currentCommit, stage);
+      if (!targetItem) {
+        this.updateList_Remove(id);
+        return false;
+      }
+
+      this.updateList_Add(targetItem);
+      return true;
+    } catch (e) {
+      console.warn(`Failed to check for updates ${id}: `, e);
+      return false;
+    }
+  }
+
+  private async readPlugin() {
+    return new Promise<void>(async resolve => {
+      try {
+        const files = readdirSync(this.pluginPath, {withFileTypes: true});
+        const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
+        const validFolders = await this.validatePluginFolders(folders);
+
+        this.addresses = validFolders.map(({folder, type}) => ({
+          address: `${this.finalAddress}/${folder}`,
+          type,
+        }));
+
+        await this.setInstalledPlugins(folders);
+
+        const moduleFolders: string[] = [];
+        const extensionFolder: string[] = [];
+
+        for (const validItem of validFolders) {
+          const metadata = await staticManager.getPluginMetadataById(validItem.folder);
+          if (metadata.type === 'module') {
+            moduleFolders.push(join(this.pluginPath, validItem.folder));
+          } else if (metadata.type === 'extension') {
+            extensionFolder.push(join(this.pluginPath, validItem.folder));
+          }
+        }
+        await this.extensionManager.importPlugins(extensionFolder);
+        await this.moduleManager.importPlugins(moduleFolders);
+
+        resolve();
+      } catch (error: any) {
+        console.error(`Loading Plugin Error: `, error);
+        resolve();
+      }
+    });
   }
 
   private async validatePluginFolders(folderPaths: string[]): Promise<ValidatedPlugins> {
@@ -473,26 +491,6 @@ export class PluginManager {
     }
 
     return oldInstallations;
-  }
-
-  public async migrate() {
-    const targetModuleDir = join(dirname(this.pluginPath), this.moduleFolder);
-    const targetExtensionDir = join(dirname(this.pluginPath), this.extensionFolder);
-
-    const oldInstalledModules = await this.migrateRemoveOld(targetModuleDir);
-    const oldInstalledExtensions = await this.migrateRemoveOld(targetExtensionDir);
-
-    const oldInstallations = [...oldInstalledModules, ...oldInstalledExtensions];
-
-    // Reinstall in the new way
-    for (const url of oldInstallations) {
-      const id = await staticManager.getPluginIdByRepositoryUrl(url);
-      if (!id) continue;
-
-      const targetCommit = await getCommitByAppStage(id);
-
-      await this.installPlugin(url, targetCommit);
-    }
   }
 
   private isCompatible(
