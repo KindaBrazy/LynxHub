@@ -2,7 +2,6 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
 import {TooltipStatus} from '../../../../../cross/IpcChannelAndTypes';
-import {PluginSyncList} from '../../../../../cross/plugin/PluginTypes';
 import rendererIpc from '../../RendererIpc';
 import {RootState} from '../Store';
 
@@ -26,7 +25,6 @@ type SettingState = {
 
   updatedModules: string[];
   newModules: string[];
-  pluginSyncList: PluginSyncList[];
 
   updateAvailable: boolean;
   checkCustomUpdate: boolean;
@@ -64,7 +62,6 @@ const initialState: SettingState = {
   openLastSize,
   updatedModules: [],
   newModules: [],
-  pluginSyncList: [],
   updateAvailable: false,
   dynamicAppTitle,
   openLinkExternal,

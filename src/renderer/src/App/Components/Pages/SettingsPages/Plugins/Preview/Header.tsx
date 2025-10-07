@@ -15,25 +15,24 @@ import {
   UserDuo_Icon,
 } from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
-import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import ActionButtons from './ActionButtons';
 
 export default function PreviewHeader({installedExt}: {installedExt: InstalledPlugin | undefined}) {
   const selectedPlugin = usePluginsState('selectedPlugin');
-  const updateAvailable = useSettingsState('pluginSyncList');
+  const syncList = usePluginsState('syncList');
   const updateChannel = useUserState('updateChannel');
 
   const {currentVersion, targetUpdate, isUpgrade, targetVersion} = useMemo(() => {
     const targetInstallVersion = selectedPlugin ? selectedPlugin.versions.find(item => item.isCompatible) : undefined;
 
     const currentVersion = installedExt?.version.version || targetInstallVersion?.version || 'N/A';
-    const targetUpdate = updateAvailable.find(update => update.id === selectedPlugin?.metadata.id);
+    const targetUpdate = syncList.find(update => update.id === selectedPlugin?.metadata.id);
     const isUpgrade = targetUpdate?.type === 'upgrade';
     const targetVersion = targetUpdate?.version.version;
 
     return {currentVersion, targetUpdate, isUpgrade, targetVersion};
-  }, [installedExt, selectedPlugin, updateAvailable, updateChannel]);
+  }, [installedExt, selectedPlugin, syncList, updateChannel]);
 
   return (
     <div className="w-full flex sm:flex-col lg:flex-row p-5 sm:gap-y-2 shrink-0">

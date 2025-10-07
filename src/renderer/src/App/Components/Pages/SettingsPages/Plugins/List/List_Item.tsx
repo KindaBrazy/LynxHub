@@ -21,7 +21,6 @@ import {
   useIsUninstallingPlugin,
   usePluginsState,
 } from '../../../../../Redux/Reducer/PluginsReducer';
-import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {UpdateButton} from '../Elements';
@@ -34,7 +33,7 @@ export function List_Item({item, installed}: Props) {
   const isInstalling = useIsInstallingPlugin(item.metadata.id);
   const isUnInstalling = useIsUninstallingPlugin(item.metadata.id);
 
-  const updateAvailable = useSettingsState('pluginSyncList');
+  const syncList = usePluginsState('syncList');
   const updateChannel = useUserState('updateChannel');
 
   const isSelected = useMemo(
@@ -72,7 +71,7 @@ export function List_Item({item, installed}: Props) {
   }, [item.versions, updateChannel, foundInstalled]);
 
   const {targetUpdate, targetVersion, isUpgrade} = useMemo(() => {
-    const targetUpdate = updateAvailable.find(update => update.id === item.metadata.id);
+    const targetUpdate = syncList.find(update => update.id === item.metadata.id);
     const isUpgrade = targetUpdate?.type === 'upgrade';
     const targetVersion = targetUpdate?.version.version;
 
@@ -81,7 +80,7 @@ export function List_Item({item, installed}: Props) {
       isUpgrade,
       targetVersion,
     };
-  }, [updateAvailable, item.metadata.id]);
+  }, [syncList, item.metadata.id]);
 
   return (
     <Card

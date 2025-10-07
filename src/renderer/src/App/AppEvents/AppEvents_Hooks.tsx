@@ -10,6 +10,7 @@ import {appActions, useAppState} from '../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
 import {hotkeysActions} from '../Redux/Reducer/HotkeysReducer';
 import {modalActions} from '../Redux/Reducer/ModalsReducer';
+import {pluginsActions} from '../Redux/Reducer/PluginsReducer';
 import {settingsActions} from '../Redux/Reducer/SettingsReducer';
 import {tabsActions, useTabsState} from '../Redux/Reducer/TabsReducer';
 import {userActions} from '../Redux/Reducer/UserReducer';
@@ -57,7 +58,7 @@ export const useCheckPluginsUpdate = () => {
     moduleUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
 
     const removeListener = rendererIpc.plugins.onSyncAvailable((_, list) => {
-      dispatch(settingsActions.setSettingsState({key: 'pluginSyncList', value: list}));
+      dispatch(pluginsActions.setPluginsState({key: 'syncList', value: list}));
     });
 
     return () => removeListener();
