@@ -1,4 +1,4 @@
-import {Tab, Tabs} from '@heroui/react';
+import {Chip, Tab, Tabs} from '@heroui/react';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isNil} from 'lodash';
 import {Key, useEffect, useMemo, useState} from 'react';
@@ -71,12 +71,7 @@ const Changelog = ({items}: {items: ChangelogItem}) => (
         transition={{duration: 0.5, delay: idx * 0.1}}>
         <div className="flex items-center gap-3 mb-3">
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-foreground-200 to-transparent" />
-          <h3
-            className={
-              'font-bold text-sm text-foreground-900 uppercase tracking-wide px-3 py-2 bg-foreground-100 rounded-full'
-            }>
-            {category}
-          </h3>
+          <Chip variant="flat">{category}</Chip>
           <div className="h-px flex-1 bg-gradient-to-r from-transparent via-foreground-200 to-transparent" />
         </div>
         <div className="space-y-2">{entries.map((entry, index) => renderChangelogEntry(entry, 0, index))}</div>
@@ -180,7 +175,7 @@ export default function PreviewBody({installed}: {installed: boolean}) {
                   <div
                     className={`
                       relative overflow-hidden rounded-xl p-6 mb-6
-                      transition-all duration-300
+                      transition-all duration-200
                       ${
                         index === 0
                           ? 'bg-gradient-to-br from-secondary/10 via-secondary/5 to-transparent' +
@@ -189,52 +184,19 @@ export default function PreviewBody({installed}: {installed: boolean}) {
                             ' hover:border-foreground-300 hover:shadow-md'
                       }
                     `}>
-                    {/* Decorative corner accent */}
-                    {index === 0 && (
-                      <motion.div
-                        animate={{
-                          scale: [1, 1.1, 1],
-                          opacity: [0.3, 0.5, 0.3],
-                        }}
-                        transition={{
-                          duration: 3,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                        }}
-                        className={
-                          'absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ' +
-                          'from-secondary/20 to-transparent rounded-bl-full'
-                        }
-                      />
-                    )}
-
                     {/* Version badge */}
                     <div className="flex items-center gap-4 mb-6 relative z-10">
-                      <motion.div
-                        className={`
-                          px-2 py-1 rounded-lg font-bold text-sm
-                          ${
-                            index === 0
-                              ? 'bg-gradient-to-r from-secondary to-secondary/80 ' +
-                                'text-white shadow-lg shadow-secondary/30'
-                              : 'bg-foreground-200 text-foreground-900'
-                          }
-                        `}
-                        whileHover={{scale: 1.05}}>
+                      <Chip
+                        size="sm"
+                        variant={index === 0 ? 'shadow' : 'solid'}
+                        color={index === 0 ? 'secondary' : 'default'}>
                         {version.version}
-                      </motion.div>
+                      </Chip>
 
                       {index === 0 && (
-                        <motion.div
-                          className={
-                            'px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-600' +
-                            ' text-white text-xs font-semibold rounded-full shadow-md'
-                          }
-                          transition={{delay: 0.3}}
-                          animate={{opacity: 1, scale: 1}}
-                          initial={{opacity: 0, scale: 0.8}}>
+                        <Chip size="sm" color="primary">
                           Latest
-                        </motion.div>
+                        </Chip>
                       )}
                     </div>
 
