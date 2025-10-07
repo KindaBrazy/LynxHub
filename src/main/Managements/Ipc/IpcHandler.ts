@@ -223,6 +223,7 @@ function plugins() {
   ipcMain.handle(pluginChannels.syncAll, (_, items: {id: string; commit: string}[]) => pluginManager.syncAll(items));
   ipcMain.handle(pluginChannels.checkForSync, (_, stage: SubscribeStages) => pluginManager.checkForSync(stage));
   ipcMain.handle(pluginChannels.getList, (_, stage: SubscribeStages) => pluginManager.getList(stage));
+  ipcMain.handle(pluginChannels.updateSync, (_, id: string, commit: string) => pluginManager.updateSync(id, commit));
 }
 
 function pty() {

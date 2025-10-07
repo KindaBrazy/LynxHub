@@ -13,6 +13,7 @@ import handler from 'serve-handler';
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
 import {SubscribeStages} from '../../../cross/CrossTypes';
 import {pluginChannels} from '../../../cross/IpcChannelAndTypes';
+import {getUpdateType} from '../../../cross/plugin/CrossPluginUtils';
 import {
   PluginAddresses,
   PluginEngines,
@@ -357,6 +358,36 @@ export class PluginManager {
   private updateList_Add(item: PluginSyncItem) {
     if (this.syncAvailable.some(update => update.id === item.id)) return;
     this.syncAvailable.push(item);
+
+    this.updateList_NoticeRenderer();
+  }
+
+  public async updateSync(id: string, commit: string) {
+    const versioning = await staticManager.getPluginVersioningById(id);
+    const targetDir = this.getDirById(id);
+    if (!targetDir) return;
+
+    const gitManager = new GitManager();
+    const currentCommit = await gitManager.getCurrentCommitHash(targetDir, true);
+
+    if (!currentCommit) return;
+
+    const version = versioning.versions.find(v => v.commit === commit)?.version;
+    const type = getUpdateType(versioning.versions, currentCommit, commit);
+
+    if (!version || !type) return;
+
+    this.syncAvailable = this.syncAvailable.map(item => {
+      if (item.id === id) {
+        return {
+          id,
+          commit,
+          version,
+          type,
+        };
+      }
+      return item;
+    });
 
     this.updateList_NoticeRenderer();
   }

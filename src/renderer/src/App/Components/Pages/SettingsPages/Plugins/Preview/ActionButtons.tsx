@@ -3,7 +3,6 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {PluginSyncItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download2_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
@@ -14,13 +13,8 @@ import SecurityWarning from '../../SecurityWarning';
 import {ShowRestartModal, UpdateButton} from '../Elements';
 import Versions from './Versions';
 
-type Props = {
-  installed: boolean;
-  targetUpdate: PluginSyncItem | undefined;
-  currentVersion: string;
-};
-
-export default function ActionButtons({installed, targetUpdate, currentVersion}: Props) {
+type Props = {installed: boolean; currentVersion: string};
+export default function ActionButtons({installed, currentVersion}: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   const selectedPlugin = usePluginsState('selectedPlugin');
@@ -101,7 +95,7 @@ export default function ActionButtons({installed, targetUpdate, currentVersion}:
         title={selectedPlugin?.metadata.title}
         owner={extractGitUrl(selectedPlugin?.url || '').owner}
       />
-      <Versions targetUpdate={targetUpdate} currentVersion={currentVersion} />
+      <Versions currentVersion={currentVersion} />
       <div className="flex flex-row items-center gap-x-2">
         <UpdateButton item={selectedPlugin!} />
         {installed ? (
