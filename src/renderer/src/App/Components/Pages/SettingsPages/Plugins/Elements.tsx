@@ -55,13 +55,13 @@ export function UpdateButton({item}: UpdateButtonProps) {
   const isUpdating = useIsUpdatingPlugin(item.metadata.id);
   const updatingAll = usePluginsState('updatingAll');
 
-  const update = useCallback(() => {
-    AddBreadcrumb_Renderer(`Plugin update: id:${item.metadata.id}`);
+  const handleSync = useCallback(() => {
+    AddBreadcrumb_Renderer(`Plugin sync: id:${item.metadata.id}`);
     dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'add'}));
     rendererIpc.plugins.update(item.metadata.id).then(isUpdated => {
       if (isUpdated) {
-        lynxTopToast(dispatch).success(`${item.metadata.title} updated Successfully`);
-        ShowRestartModal('To apply the updates, please restart the app.');
+        lynxTopToast(dispatch).success(`${item.metadata.title} synced Successfully`);
+        ShowRestartModal('To apply the changes, please restart the app.');
       }
       dispatch(pluginsActions.removeUpdateItem({id: selectedPlugin?.metadata.id, isUpdated}));
     });
@@ -86,8 +86,8 @@ export function UpdateButton({item}: UpdateButtonProps) {
     <Button
       size="sm"
       color={color}
-      onPress={update}
       variant={variant}
+      onPress={handleSync}
       isLoading={isUpdating}
       isDisabled={updatingAll}
       startContent={!isUpdating && <Download_Icon />}>

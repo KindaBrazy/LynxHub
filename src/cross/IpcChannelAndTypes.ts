@@ -173,7 +173,6 @@ export const modulesChannels = {
 
 export const pluginChannels = {
   onSyncAvailable: 'plugins:on-sync-available',
-  onNeedRestart: 'plugins:on-need-restart',
 
   getList: 'plugins:get-list',
   getAddresses: 'plugins:get-addresses',

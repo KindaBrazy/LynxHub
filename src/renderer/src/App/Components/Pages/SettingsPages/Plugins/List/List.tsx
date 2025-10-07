@@ -12,6 +12,7 @@ import rendererIpc from '../../../../../RendererIpc';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import LynxScroll from '../../../../Reusable/LynxScroll';
+import {ShowRestartModal} from '../Elements';
 import {List_Item} from './List_Item';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from './List_Utils';
 
@@ -77,9 +78,10 @@ export default function List() {
     rendererIpc.plugins
       .syncAll()
       .then(() => {
-        lynxTopToast(dispatch).success('Extensions updated successfully!');
+        lynxTopToast(dispatch).success('Plugins synced successfully!');
+        ShowRestartModal('To apply the changes, please restart the app.');
       })
-      .catch(() => lynxTopToast(dispatch).error('Failed to update extensions. Please try again later.'))
+      .catch(() => lynxTopToast(dispatch).error('Failed to sync plugins. Please try again later.'))
       .finally(() => {
         dispatch(pluginsActions.manageSet({key: 'updating', id: syncList.map(item => item.id), operation: 'remove'}));
         dispatch(pluginsActions.setUpdatingAll(true));
