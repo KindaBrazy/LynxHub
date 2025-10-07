@@ -67,7 +67,7 @@ export function List_Item({item, installed}: Props) {
 
   const currentVersion = useMemo(() => {
     const targetInstallVersion = getTargetVersion(item.versions, updateChannel);
-    return foundInstalled?.version.version || targetInstallVersion.version;
+    return foundInstalled ? foundInstalled.version.version : targetInstallVersion.version;
   }, [item.versions, updateChannel, foundInstalled]);
 
   const {targetUpdate, targetVersion, isUpgrade} = useMemo(() => {
