@@ -50,21 +50,22 @@ export default function ActionButtons({installed, targetUpdate, currentVersion}:
     dispatch(pluginsActions.manageSet({key: 'installing', id: selectedPlugin?.metadata.id, operation: 'add'}));
 
     if (selectedPlugin?.url) {
-      const targetCommit = selectedPlugin.versions.find(v => v.version === currentVersion)?.commit;
-      rendererIpc.plugins.install(selectedPlugin.url, targetCommit).then(result => {
+      const targetVersion = selectedPlugin.versions.find(v => v.version === currentVersion);
+      rendererIpc.plugins.install(selectedPlugin.url, targetVersion?.commit).then(result => {
         dispatch(pluginsActions.manageSet({key: 'installing', id: selectedPlugin?.metadata.id, operation: 'remove'}));
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} installed successfully`);
-          ShowRestartModal('To apply the installaion, please restart the app.');
-          // TODO: Get installation info from `rendererIpc.plugins.install` amd set installed
-          dispatch(
-            pluginsActions.addInstalled({
-              version: {...selectedPlugin.versions[0], engines: {extensionApi: ''}},
-              metadata: selectedPlugin.metadata,
-              url: selectedPlugin.url,
-              dir: '',
-            }),
-          );
+          ShowRestartModal('To apply the installation, please restart the app.');
+          if (targetVersion) {
+            dispatch(
+              pluginsActions.addInstalled({
+                version: targetVersion,
+                metadata: selectedPlugin.metadata,
+                url: selectedPlugin.url,
+                dir: '',
+              }),
+            );
+          }
         }
       });
     }
