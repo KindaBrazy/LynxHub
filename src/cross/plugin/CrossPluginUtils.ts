@@ -44,6 +44,32 @@ export function getTargetVersion(versions: VersionItemValidated[] | PluginVersio
   }
 }
 
+export function getUpdateType(versions: PluginVersions, currentCommit: string, targetCommit: string) {
+  const currentCommitIndex = versions.findIndex(v => v.commit === currentCommit);
+  const targetCommitIndex = versions.findIndex(v => v.commit === targetCommit);
+
+  // If one of the commits isn't found, we treat it as an upgrade for safety,
+  // unless we can't find the target, in which case we return undefined.
+  if (targetCommitIndex === -1) {
+    return undefined;
+  }
+
+  let type: 'downgrade' | 'upgrade';
+
+  if (currentCommitIndex === -1) {
+    // The current commit is unknown, treat as upgrade.
+    type = 'upgrade';
+  } else if (targetCommitIndex < currentCommitIndex) {
+    // Target commit is closer to index 0 (newer) than the current commit.
+    type = 'upgrade';
+  } else {
+    // Target commit is further from index 0 (older) than the current commit.
+    type = 'downgrade';
+  }
+
+  return type;
+}
+
 export function getTargetCommit(versions: VersionItemValidated[] | PluginVersions, stage: SubscribeStages) {
   return getTargetVersion(versions, stage).commit;
 }
