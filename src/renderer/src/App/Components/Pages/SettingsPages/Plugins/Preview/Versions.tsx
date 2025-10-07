@@ -1,6 +1,6 @@
 import {ChipProps} from '@heroui/chip';
 import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
-import {useMemo, useState} from 'react';
+import {useMemo} from 'react';
 
 import {SubscribeStages} from '../../../../../../../../cross/CrossTypes';
 import {BoxDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
@@ -19,25 +19,21 @@ type Props = {currentVersion: string};
 export default function Versions({currentVersion}: Props) {
   const selectedPlugin = usePluginsState('selectedPlugin');
   const syncList = usePluginsState('syncList');
-  const [selectedVersion, setSelectedVersion] = useState<string>('');
 
-  const {versions, disabledKeys} = useMemo(() => {
+  const {versions, disabledKeys, selectedVersion} = useMemo(() => {
     const versions = selectedPlugin?.versions || [];
     const version = versions.find(item => item.version === currentVersion);
-
-    const sync = syncList.find(item => item.version === currentVersion);
-    setSelectedVersion(sync?.commit || version?.commit || '');
-
     const disabledKeys = versions.filter(item => !item.isCompatible).map(item => item.commit);
 
-    return {versions, disabledKeys};
+    const sync = syncList.find(item => item.id === selectedPlugin?.metadata.id);
+    const selectedVersion = sync?.commit || version?.commit || '';
+
+    return {versions, disabledKeys, selectedVersion};
   }, [selectedPlugin, syncList, currentVersion]);
 
   const onSelectionChange = value => {
     const commit = Array.from(value)[0] as string;
     const id = selectedPlugin?.metadata.id;
-
-    setSelectedVersion(commit);
     if (id) rendererIpc.plugins.updateSync(id, commit);
   };
 

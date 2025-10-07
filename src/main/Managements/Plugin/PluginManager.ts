@@ -58,10 +58,13 @@ export class PluginManager {
   private moduleManager: ModuleManager;
   private extensionManager: ExtensionManager;
 
+  private gitManager: GitManager;
+
   constructor(moduleManager: ModuleManager, extensionManager: ExtensionManager) {
     this.moduleManager = moduleManager;
     this.extensionManager = extensionManager;
     this.pluginPath = getAppDirectory('Plugins');
+    this.gitManager = new GitManager(true);
   }
 
   public async installPlugin(url: string, commitHash?: string) {
@@ -81,9 +84,8 @@ export class PluginManager {
           const directory = join(this.pluginPath, id);
 
           try {
-            const gitManager = new GitManager(true);
-            await gitManager.cloneShallow(url, directory, true, undefined, 'main');
-            await gitManager.resetHard(directory, targetCommit);
+            await this.gitManager.cloneShallow(url, directory, true, undefined, 'main');
+            await this.gitManager.resetHard(directory, targetCommit);
 
             this.installed.push({id: directory, url, version});
 
@@ -162,8 +164,7 @@ export class PluginManager {
     if (!targetDir) return false;
 
     try {
-      const gitManager = new GitManager(true);
-      await gitManager.resetHard(targetDir, commit);
+      await this.gitManager.resetHard(targetDir, commit);
 
       this.updateList_Remove(id);
 
@@ -329,8 +330,7 @@ export class PluginManager {
         const remoteUrl = await GitManager.remoteUrlFromDir(targetDir);
         if (!remoteUrl) continue;
 
-        const gitManager = new GitManager();
-        const currentCommit = await gitManager.getCurrentCommitHash(targetDir);
+        const currentCommit = await this.gitManager.getCurrentCommitHash(targetDir);
         if (!currentCommit) continue;
 
         const id = await staticManager.getPluginIdByRepositoryUrl(remoteUrl);
@@ -367,15 +367,19 @@ export class PluginManager {
     const targetDir = this.getDirById(id);
     if (!targetDir) return;
 
-    const gitManager = new GitManager();
-    const currentCommit = await gitManager.getCurrentCommitHash(targetDir, true);
-
+    const currentCommit = await this.gitManager.getCurrentCommitHash(targetDir, true);
     if (!currentCommit) return;
 
     const version = versioning.versions.find(v => v.commit === commit)?.version;
     const type = getUpdateType(versioning.versions, currentCommit, commit);
-
     if (!version || !type) return;
+
+    const installedVersion = this.installed.find(item => item.id === id)?.version;
+    if (installedVersion === version) {
+      this.syncAvailable = this.syncAvailable.filter(item => item.id !== id);
+      this.updateList_NoticeRenderer();
+      return;
+    }
 
     let exist: boolean = false;
     const target = {id, commit, version, type};
@@ -398,9 +402,7 @@ export class PluginManager {
       const targetDir = this.getDirById(id);
       if (!targetDir) return false;
 
-      const gitManager = new GitManager();
-
-      const currentCommit = await gitManager.getCurrentCommitHash(targetDir, true);
+      const currentCommit = await this.gitManager.getCurrentCommitHash(targetDir, true);
       if (!currentCommit) return false;
 
       const targetItem = await isSyncRequired(id, currentCommit, stage);
@@ -636,8 +638,7 @@ export class PluginManager {
       return false;
     }
 
-    const gitManager = new GitManager();
-    const currentCommitHash = await gitManager.getCurrentCommitHash(targetDir);
+    const currentCommitHash = await this.gitManager.getCurrentCommitHash(targetDir);
     const itemId = await staticManager.getPluginIdByRepositoryUrl(remoteUrl);
     if (!itemId) {
       skip();
