@@ -64,7 +64,7 @@ export function UpdateButton({item}: UpdateButtonProps) {
         lynxTopToast(dispatch).success(`${item.metadata.title} updated Successfully`);
         ShowRestartModal('To apply the updates, please restart the app.');
       }
-      dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'remove'}));
+      dispatch(pluginsActions.itemUpdated(selectedPlugin?.metadata.id));
     });
   }, [selectedPlugin, item]);
 
