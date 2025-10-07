@@ -179,7 +179,7 @@ export const pluginChannels = {
 
   install: 'plugins:install',
   uninstall: 'plugins:uninstall',
-  update: 'plugins:update',
+  sync: 'plugins:sync',
   syncAll: 'plugins:sync-all',
   checkForSync: 'plugins:check-for-sync',
 };

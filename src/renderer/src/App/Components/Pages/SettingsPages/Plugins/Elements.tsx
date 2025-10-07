@@ -55,18 +55,6 @@ export function UpdateButton({item}: UpdateButtonProps) {
   const isUpdating = useIsUpdatingPlugin(item.metadata.id);
   const updatingAll = usePluginsState('updatingAll');
 
-  const handleSync = useCallback(() => {
-    AddBreadcrumb_Renderer(`Plugin sync: id:${item.metadata.id}`);
-    dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'add'}));
-    rendererIpc.plugins.update(item.metadata.id).then(isUpdated => {
-      if (isUpdated) {
-        lynxTopToast(dispatch).success(`${item.metadata.title} synced Successfully`);
-        ShowRestartModal('To apply the changes, please restart the app.');
-      }
-      dispatch(pluginsActions.removeUpdateItem({id: selectedPlugin?.metadata.id, isUpdated}));
-    });
-  }, [selectedPlugin, item]);
-
   const {updateItem, isUpdate, color} = useMemo(() => {
     const updateItem = syncList.find(available => available.id === item.metadata.id);
     const isUpdate = updateItem?.type === 'upgrade';
@@ -81,6 +69,18 @@ export function UpdateButton({item}: UpdateButtonProps) {
 
     return {variant, text};
   }, [isUpdating, isUpdate]);
+
+  const handleSync = useCallback(() => {
+    AddBreadcrumb_Renderer(`Plugin sync: id:${item.metadata.id}`);
+    dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'add'}));
+    rendererIpc.plugins.sync(item.metadata.id, updateItem?.commit).then(isUpdated => {
+      if (isUpdated) {
+        lynxTopToast(dispatch).success(`${item.metadata.title} synced Successfully`);
+        ShowRestartModal('To apply the changes, please restart the app.');
+      }
+      dispatch(pluginsActions.removeUpdateItem({id: selectedPlugin?.metadata.id, isUpdated}));
+    });
+  }, [selectedPlugin, item, updateItem]);
 
   return updateItem ? (
     <Button
