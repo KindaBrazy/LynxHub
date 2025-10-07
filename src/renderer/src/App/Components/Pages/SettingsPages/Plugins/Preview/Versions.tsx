@@ -1,3 +1,4 @@
+import {ChipProps} from '@heroui/chip';
 import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {useMemo, useState} from 'react';
 
@@ -10,7 +11,7 @@ const getStageName = (stage: SubscribeStages) => {
   return stage === 'insider' ? 'Insider' : stage === 'early_access' ? 'Early Access' : 'Public';
 };
 
-const getColor = (stage: SubscribeStages) => {
+const getColor = (stage: SubscribeStages): ChipProps['color'] => {
   return stage === 'insider' ? 'secondary' : stage === 'early_access' ? 'primary' : 'success';
 };
 
