@@ -111,7 +111,6 @@ export class PluginManager {
 
             this.installed.push({dir: directory, url, version, metadata});
 
-            this.onNeedRestart(id);
             resolve(true);
           } catch (e) {
             console.warn(`Failed to install plugin: ${url}`, e);
@@ -133,16 +132,11 @@ export class PluginManager {
     try {
       await removeDir(plugin);
       this.updateList_Remove(id);
-      this.onNeedRestart(id);
       return true;
     } catch (e) {
       console.warn(`Failed to uninstall ${id}: `, e);
       return false;
     }
-  }
-  private onNeedRestart(id: 'all' | string) {
-    // TODO: in ui implement usage of this
-    appManager?.getWebContent()?.send(pluginChannels.onNeedRestart, id);
   }
 
   private updateList_NoticeRenderer() {
@@ -238,7 +232,6 @@ export class PluginManager {
 
       await gitManager.resetHard(targetDir, targetCommit);
       this.updateList_Remove(id);
-      this.onNeedRestart(id);
 
       return true;
     } catch (e) {
@@ -255,8 +248,6 @@ export class PluginManager {
         if (!targetDir || !targetCommit) continue;
         await this.update(id);
       }
-
-      this.onNeedRestart('all');
     } catch (e) {
       console.warn(`Failed to update plugins: ${e}`);
     }
