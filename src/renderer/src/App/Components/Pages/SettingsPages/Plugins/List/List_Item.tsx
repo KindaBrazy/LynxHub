@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {getTargetVersion} from '../../../../../../../../cross/plugin/CrossPluginUtils';
-import {InstalledPlugin, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
+import {PluginInstalledItem, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {
   ArrowDuo_Icon,
@@ -25,7 +25,7 @@ import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {UpdateButton} from '../Elements';
 
-type Props = {item: PluginItem; installed: InstalledPlugin[]};
+type Props = {item: PluginItem; installed: PluginInstalledItem[]};
 export function List_Item({item, installed}: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const selectedPlugin = usePluginsState('selectedPlugin');
@@ -45,7 +45,7 @@ export function List_Item({item, installed}: Props) {
     const isExtension = item.metadata.type === 'extension';
     const isCompatible = item.isCompatible;
 
-    const foundInstalled = installed.find(i => i.metadata.id === item.metadata.id);
+    const foundInstalled = installed.find(i => i.id === item.metadata.id);
     const foundUnloaded = skipped.find(u => foundInstalled?.id === u.id);
 
     const {linux, win32, darwin} = {
@@ -67,13 +67,13 @@ export function List_Item({item, installed}: Props) {
 
   const currentVersion = useMemo(() => {
     const targetInstallVersion = getTargetVersion(item.versions, updateChannel);
-    return foundInstalled ? foundInstalled.version.version : targetInstallVersion.version;
+    return foundInstalled ? foundInstalled.version : targetInstallVersion.version;
   }, [item.versions, updateChannel, foundInstalled]);
 
   const {targetUpdate, targetVersion, isUpgrade} = useMemo(() => {
     const targetUpdate = syncList.find(update => update.id === item.metadata.id);
     const isUpgrade = targetUpdate?.type === 'upgrade';
-    const targetVersion = targetUpdate?.version.version;
+    const targetVersion = targetUpdate?.version;
 
     return {
       targetUpdate,

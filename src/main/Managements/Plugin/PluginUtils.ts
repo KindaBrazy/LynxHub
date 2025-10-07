@@ -1,9 +1,13 @@
 import {SubscribeStages} from '../../../cross/CrossTypes';
 import {getTargetCommit, getTargetVersion, getUpdateType} from '../../../cross/plugin/CrossPluginUtils';
-import {PluginSyncList} from '../../../cross/plugin/PluginTypes';
+import {PluginSyncItem} from '../../../cross/plugin/PluginTypes';
 import {staticManager} from '../../index';
 
 export async function getVersionByCommit(id: string, commit: string) {
+  const {versions} = await staticManager.getPluginVersioningById(id);
+  return versions.find(v => v.commit === commit)?.version;
+}
+export async function getVersionItemByCommit(id: string, commit: string) {
   const {versions} = await staticManager.getPluginVersioningById(id);
   return versions.find(v => v.commit === commit);
 }
@@ -19,19 +23,22 @@ export async function isSyncRequired(
   id: string,
   currentCommit: string,
   stage: SubscribeStages,
-): Promise<PluginSyncList | undefined> {
+): Promise<PluginSyncItem | undefined> {
   const {versions} = await staticManager.getPluginVersioningById(id);
   const targetVersion = getTargetVersion(versions, stage);
-  const targetCommit = targetVersion.commit;
 
-  const type = getUpdateType(versions, currentCommit, targetCommit);
+  const version = targetVersion.version;
+  const commit = targetVersion.commit;
 
-  if (currentCommit === targetCommit || !type) return undefined;
+  const type = getUpdateType(versions, currentCommit, commit);
+
+  if (currentCommit === commit || !type) return undefined;
 
   return {
     id,
     type,
-    version: targetVersion,
+    version,
+    commit,
   };
 }
 

@@ -2,7 +2,7 @@ import {Button, Chip, User} from '@heroui/react';
 import {useMemo} from 'react';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {InstalledPlugin} from '../../../../../../../../cross/plugin/PluginTypes';
+import {PluginInstalledItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {ExternalDuo_Icon} from '../../../../../../../context_menu/Components/SvgIcons';
 import {
@@ -18,7 +18,7 @@ import {usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import ActionButtons from './ActionButtons';
 
-export default function PreviewHeader({installedExt}: {installedExt: InstalledPlugin | undefined}) {
+export default function PreviewHeader({installedExt}: {installedExt: PluginInstalledItem | undefined}) {
   const selectedPlugin = usePluginsState('selectedPlugin');
   const syncList = usePluginsState('syncList');
   const updateChannel = useUserState('updateChannel');
@@ -29,7 +29,7 @@ export default function PreviewHeader({installedExt}: {installedExt: InstalledPl
     const currentVersion = installedExt?.version.version || targetInstallVersion?.version || 'N/A';
     const targetUpdate = syncList.find(update => update.id === selectedPlugin?.metadata.id);
     const isUpgrade = targetUpdate?.type === 'upgrade';
-    const targetVersion = targetUpdate?.version.version;
+    const targetVersion = targetUpdate?.version;
     const currentDate = selectedPlugin?.changes.find(item => item.version === currentVersion)?.date || 'N/A';
 
     return {currentVersion, currentDate, targetUpdate, isUpgrade, targetVersion};

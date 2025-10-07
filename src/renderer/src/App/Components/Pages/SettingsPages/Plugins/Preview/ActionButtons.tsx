@@ -3,7 +3,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {PluginSyncList} from '../../../../../../../../cross/plugin/PluginTypes';
+import {PluginSyncItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download2_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
@@ -16,7 +16,7 @@ import Versions from './Versions';
 
 type Props = {
   installed: boolean;
-  targetUpdate: PluginSyncList | undefined;
+  targetUpdate: PluginSyncItem | undefined;
   currentVersion: string;
 };
 
@@ -59,8 +59,7 @@ export default function ActionButtons({installed, targetUpdate, currentVersion}:
           if (targetVersion) {
             dispatch(
               pluginsActions.addInstalled({
-                version: targetVersion,
-                metadata: selectedPlugin.metadata,
+                version: targetVersion.version,
                 url: selectedPlugin.url,
                 id: '',
               }),

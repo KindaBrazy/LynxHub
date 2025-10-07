@@ -26,7 +26,7 @@ export default function List() {
   const updatingAll = usePluginsState('updatingAll');
   const installed = usePluginsState('installedList');
 
-  const installedID = useMemo(() => installed.map(item => item.metadata.id), [installed]);
+  const installedID = useMemo(() => installed.map(item => item.id), [installed]);
 
   const {loading, refreshing} = useFetchExtensions(setList);
 

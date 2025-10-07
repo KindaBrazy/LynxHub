@@ -3,11 +3,10 @@ import {isArray} from 'lodash';
 import {useSelector} from 'react-redux';
 
 import {
-  InstalledPlugin,
+  PluginInstalledItem,
   PluginItem,
-  PluginSyncList,
+  PluginSyncItem,
   UnloadedPlugins,
-  VersionItem,
 } from '../../../../../cross/plugin/PluginTypes';
 import {RootState} from '../Store';
 
@@ -21,9 +20,9 @@ type PluginsState = {
   unInstalling: string[];
   updatingAll: boolean;
 
-  installedList: InstalledPlugin[];
+  installedList: PluginInstalledItem[];
   unloadedList: UnloadedPlugins[];
-  syncList: PluginSyncList[];
+  syncList: PluginSyncItem[];
 
   selectedPlugin: PluginItem | undefined;
 };
@@ -61,19 +60,20 @@ const appSlice = createSlice({
     setUpdatingAll: (state: PluginsState, action: PayloadAction<boolean>) => {
       state.updatingAll = action.payload;
     },
-    addInstalled: (state: PluginsState, action: PayloadAction<InstalledPlugin>) => {
+    addInstalled: (state: PluginsState, action: PayloadAction<PluginInstalledItem>) => {
       state.installedList = [...state.installedList, action.payload];
     },
     removeInstalled: (state: PluginsState, action: PayloadAction<string>) => {
-      state.installedList = state.installedList.filter(item => item.metadata.id !== action.payload);
+      state.installedList = state.installedList.filter(item => item.id !== action.payload);
     },
     removeUpdateItem: (state: PluginsState, action: PayloadAction<{id: string | undefined; isUpdated: boolean}>) => {
       const {id, isUpdated} = action.payload;
       state.updating = state.updating.filter(item => item !== id);
-      if (isUpdated) {
+      const version = state.syncList.find(item => item.id === id)?.version;
+
+      if (isUpdated && version) {
         state.installedList = state.installedList.map(item => {
-          if (item.metadata.id === id) {
-            const version = state.syncList.find(item => item.id === id)?.version as VersionItem;
+          if (item.id === id) {
             return {...item, version};
           }
           return item;
