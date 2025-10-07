@@ -1,3 +1,4 @@
+import {ButtonProps} from '@heroui/button';
 import {Button} from '@heroui/react';
 import {Modal} from 'antd';
 import {useCallback, useMemo} from 'react';
@@ -55,39 +56,39 @@ export function UpdateButton({item}: UpdateButtonProps) {
   const isUpdating = useIsUpdatingPlugin(item.metadata.id);
   const updatingAll = usePluginsState('updatingAll');
 
-  const update = useCallback(
-    (id: string, title: string) => {
-      AddBreadcrumb_Renderer(`Plugin update: id:${id}`);
-      dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'add'}));
-      rendererIpc.plugins.update(id).then(updated => {
-        if (updated) {
-          lynxTopToast(dispatch).success(`${title} updated Successfully`);
-          ShowRestartModal('To apply the updates, please restart the app.');
-        }
-        dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'remove'}));
-      });
-    },
-    [selectedPlugin],
-  );
+  const update = useCallback(() => {
+    AddBreadcrumb_Renderer(`Plugin update: id:${item.metadata.id}`);
+    dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'add'}));
+    rendererIpc.plugins.update(item.metadata.id).then(updated => {
+      if (updated) {
+        lynxTopToast(dispatch).success(`${item.metadata.title} updated Successfully`);
+        ShowRestartModal('To apply the updates, please restart the app.');
+      }
+      dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'remove'}));
+    });
+  }, [selectedPlugin, item]);
 
-  const updateItem = useMemo(
-    () => updateAvailable.find(available => available.id === item.metadata.id),
-    [updateAvailable, item],
-  );
+  const {updateItem, isUpdate, color} = useMemo(() => {
+    const updateItem = updateAvailable.find(available => available.id === item.metadata.id);
+    const isUpdate = updateItem?.type === 'upgrade';
+    const color: ButtonProps['color'] = isUpdate ? 'success' : 'warning';
 
-  const isUpdate = updateItem?.type === 'upgrade';
+    return {updateItem, isUpdate, color};
+  }, [updateAvailable, item]);
 
-  const variant = isUpdating ? 'light' : 'flat';
-  const color = isUpdate ? 'success' : 'warning';
-  const text = isUpdating ? (isUpdate ? 'Updating...' : 'Downgrading...') : isUpdate ? 'Update' : 'Downgrade';
-  const onPress = () => update(item.metadata.id, item.metadata.title);
+  const {variant, text} = useMemo(() => {
+    const variant: ButtonProps['variant'] = isUpdating ? 'light' : 'flat';
+    const text = isUpdating ? (isUpdate ? 'Updating...' : 'Downgrading...') : isUpdate ? 'Update' : 'Downgrade';
+
+    return {variant, text};
+  }, [isUpdating, isUpdate]);
 
   return updateItem ? (
     <Button
       size="sm"
       color={color}
+      onPress={update}
       variant={variant}
-      onPress={onPress}
       isLoading={isUpdating}
       isDisabled={updatingAll}
       startContent={!isUpdating && <Download_Icon />}>
