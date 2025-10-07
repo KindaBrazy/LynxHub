@@ -294,6 +294,7 @@ const rendererIpc = {
       ipc.invoke(pluginChannels.install, url, commitHash),
     uninstall: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.uninstall, id),
     sync: (id: string, commit: string): Promise<boolean> => ipc.invoke(pluginChannels.sync, id, commit),
+    updateSync: (id: string, commit: string): Promise<boolean> => ipc.invoke(pluginChannels.updateSync, id, commit),
     syncAll: (items: {id: string; commit: string}[]): Promise<void> => ipc.invoke(pluginChannels.syncAll, items),
     checkForSync: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.checkForSync, stage),
 

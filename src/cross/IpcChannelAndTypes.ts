@@ -182,6 +182,8 @@ export const pluginChannels = {
   sync: 'plugins:sync',
   syncAll: 'plugins:sync-all',
   checkForSync: 'plugins:check-for-sync',
+
+  updateSync: 'plugins:update-sync',
 };
 
 export const ptyChannels = {

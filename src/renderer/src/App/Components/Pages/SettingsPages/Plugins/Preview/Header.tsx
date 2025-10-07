@@ -23,16 +23,16 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
   const syncList = usePluginsState('syncList');
   const updateChannel = useUserState('updateChannel');
 
-  const {currentVersion, currentDate, targetUpdate, isUpgrade, targetVersion} = useMemo(() => {
+  const {currentVersion, currentDate, isUpgrade, targetVersion} = useMemo(() => {
     const targetInstallVersion = selectedPlugin ? selectedPlugin.versions.find(item => item.isCompatible) : undefined;
 
-    const currentVersion = installedExt?.version.version || targetInstallVersion?.version || 'N/A';
+    const currentVersion = installedExt?.version || targetInstallVersion?.version || 'N/A';
     const targetUpdate = syncList.find(update => update.id === selectedPlugin?.metadata.id);
     const isUpgrade = targetUpdate?.type === 'upgrade';
     const targetVersion = targetUpdate?.version;
     const currentDate = selectedPlugin?.changes.find(item => item.version === currentVersion)?.date || 'N/A';
 
-    return {currentVersion, currentDate, targetUpdate, isUpgrade, targetVersion};
+    return {currentVersion, currentDate, isUpgrade, targetVersion};
   }, [installedExt, selectedPlugin, syncList, updateChannel]);
 
   return (
@@ -48,7 +48,7 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
                 startContent={<BoxDuo_Icon className="size-3.5" />}
                 classNames={{content: 'flex flex-row items-center justify-center gap-x-1'}}>
                 <span>v{currentVersion}</span>
-                {targetUpdate && (
+                {targetVersion && (
                   <>
                     <ArrowDuo_Icon className="size-3 rotate-180" />
                     <span className={`${isUpgrade ? 'text-success' : 'text-warning'}`}>v{targetVersion}</span>
@@ -104,7 +104,7 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
         </div>
       </div>
 
-      <ActionButtons installed={!!installedExt} targetUpdate={targetUpdate} currentVersion={currentVersion} />
+      <ActionButtons installed={!!installedExt} currentVersion={currentVersion} />
     </div>
   );
 }
