@@ -23,15 +23,16 @@ export default function PreviewHeader({installedExt}: {installedExt: InstalledPl
   const syncList = usePluginsState('syncList');
   const updateChannel = useUserState('updateChannel');
 
-  const {currentVersion, targetUpdate, isUpgrade, targetVersion} = useMemo(() => {
+  const {currentVersion, currentDate, targetUpdate, isUpgrade, targetVersion} = useMemo(() => {
     const targetInstallVersion = selectedPlugin ? selectedPlugin.versions.find(item => item.isCompatible) : undefined;
 
     const currentVersion = installedExt?.version.version || targetInstallVersion?.version || 'N/A';
     const targetUpdate = syncList.find(update => update.id === selectedPlugin?.metadata.id);
     const isUpgrade = targetUpdate?.type === 'upgrade';
     const targetVersion = targetUpdate?.version.version;
+    const currentDate = selectedPlugin?.changes.find(item => item.version === currentVersion)?.date || 'N/A';
 
-    return {currentVersion, targetUpdate, isUpgrade, targetVersion};
+    return {currentVersion, currentDate, targetUpdate, isUpgrade, targetVersion};
   }, [installedExt, selectedPlugin, syncList, updateChannel]);
 
   return (
@@ -59,8 +60,7 @@ export default function PreviewHeader({installedExt}: {installedExt: InstalledPl
                 variant="light"
                 className="text-foreground-600"
                 startContent={<CalendarDuo_Icon className="size-3.5" />}>
-                {/* // TODO: use selected version date */}
-                {selectedPlugin?.changes[0].date}
+                {currentDate}
               </Chip>
               <div
                 className={
