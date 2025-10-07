@@ -1,10 +1,12 @@
 import {OsPlatforms, SubscribeStages} from '../CrossTypes';
 
 export type PluginEngines = {moduleApi?: string; extensionApi?: string};
+
 export type ChangelogSubItem = string | Record<string, ChangelogSubItem[]>;
 export type ChangelogItem = Record<string, ChangelogSubItem[]>;
 export type PluginChangelog = {version: string; date: string; items: ChangelogItem[]};
 export type PluginChanges = PluginChangelog[];
+
 export type VersionItem = {
   version: string;
   commit: string;
@@ -14,6 +16,7 @@ export type VersionItem = {
 };
 export type PluginVersions = VersionItem[];
 export type PluginVersioning = {versions: PluginVersions; changes: PluginChanges};
+
 export type PluginMetadata = {
   id: string;
   title: string;
@@ -21,10 +24,6 @@ export type PluginMetadata = {
   type: 'module' | 'extension';
 };
 
-export type PluginAvailableItem = {metadata: PluginMetadata; versioning: PluginVersioning; icon: string; url: string};
-export type PluginAddresses = {type: 'module' | 'extension'; address: string}[];
-export type ValidatedPlugins = {type: 'module' | 'extension'; folder: string}[];
-export type PluginFilter = Set<'installed' | 'modules' | 'extensions'> | 'all';
 type PluginCompatibility = {
   isCompatible: boolean;
   incompatibleReason?: string;
@@ -37,8 +36,10 @@ export type PluginItem = {
   versions: VersionItemValidated[];
   changes: PluginChanges;
 } & PluginCompatibility;
-export type UnloadedPlugins = {id: string; message: string};
 
-// Refreshed
 export type PluginSyncItem = {id: string; type: 'downgrade' | 'upgrade'; version: string; commit: string};
 export type PluginInstalledItem = {id: string; url: string; version: string};
+export type UnloadedPlugins = {id: string; message: string};
+export type PluginFilter = Set<'installed' | 'modules' | 'extensions'> | 'all';
+export type ValidatedPlugins = {type: 'module' | 'extension'; folder: string}[];
+export type PluginAddresses = {type: 'module' | 'extension'; address: string}[];

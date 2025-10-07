@@ -12,9 +12,11 @@ import {
   SubscribeStages,
 } from '../../cross/CrossTypes';
 import {toMs} from '../../cross/CrossUtils';
-import {PluginAvailableItem, PluginMetadata, PluginVersioning} from '../../cross/plugin/PluginTypes';
+import {PluginMetadata, PluginVersioning} from '../../cross/plugin/PluginTypes';
 import {getAppDirectory} from './AppDataManager';
 import GitManager from './GitManager';
+
+type PluginAvailableItem = {metadata: PluginMetadata; versioning: PluginVersioning; icon: string; url: string};
 
 export default class StaticsManager {
   private gitManager: GitManager;
@@ -25,30 +27,6 @@ export default class StaticsManager {
   constructor() {
     this.gitManager = new GitManager();
     this.dir = getAppDirectory('Statics');
-  }
-
-  private async clone() {
-    try {
-      const dirUrl = await GitManager.remoteUrlFromDir(this.dir);
-
-      if (dirUrl && dirUrl === STATICS_URL) return;
-
-      return this.gitManager.clone(STATICS_URL, this.dir);
-    } catch (_e) {
-      return this.gitManager.clone(STATICS_URL, this.dir);
-    }
-  }
-
-  private async getDataAsJson(fileName: string) {
-    if (!this.requirementsCheckCompleted && this.requirementsCheckPromise) {
-      await this.requirementsCheckPromise;
-    } else if (!this.requirementsCheckCompleted && !this.requirementsCheckPromise) {
-      console.warn('StaticsManager: Attempting to get data before checkRequirements was initiated.');
-    }
-
-    const filePath = join(this.dir, fileName);
-    const fileContent = readFileSync(filePath, 'utf8');
-    return JSON.parse(fileContent);
   }
 
   public async checkRequirements() {
@@ -196,5 +174,29 @@ export default class StaticsManager {
     });
 
     return Promise.all(pluginPromises);
+  }
+
+  private async clone() {
+    try {
+      const dirUrl = await GitManager.remoteUrlFromDir(this.dir);
+
+      if (dirUrl && dirUrl === STATICS_URL) return;
+
+      return this.gitManager.clone(STATICS_URL, this.dir);
+    } catch (_e) {
+      return this.gitManager.clone(STATICS_URL, this.dir);
+    }
+  }
+
+  private async getDataAsJson(fileName: string) {
+    if (!this.requirementsCheckCompleted && this.requirementsCheckPromise) {
+      await this.requirementsCheckPromise;
+    } else if (!this.requirementsCheckCompleted && !this.requirementsCheckPromise) {
+      console.warn('StaticsManager: Attempting to get data before checkRequirements was initiated.');
+    }
+
+    const filePath = join(this.dir, fileName);
+    const fileContent = readFileSync(filePath, 'utf8');
+    return JSON.parse(fileContent);
   }
 }
