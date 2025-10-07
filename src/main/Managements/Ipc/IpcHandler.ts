@@ -219,7 +219,7 @@ function plugins() {
     pluginManager.installPlugin(url, commitHash),
   );
   ipcMain.handle(pluginChannels.uninstall, (_, id: string) => pluginManager.uninstall(id));
-  ipcMain.handle(pluginChannels.update, (_, id: string) => pluginManager.update(id));
+  ipcMain.handle(pluginChannels.sync, (_, id: string, commit?: string) => pluginManager.sync(id, commit));
   ipcMain.handle(pluginChannels.syncAll, () => pluginManager.syncAll());
   ipcMain.handle(pluginChannels.checkForSync, (_, stage: SubscribeStages) => pluginManager.checkForSync(stage));
   ipcMain.handle(pluginChannels.getList, (_, stage: SubscribeStages) => pluginManager.getList(stage));
