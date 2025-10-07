@@ -64,15 +64,18 @@ const appSlice = createSlice({
     removeInstalled: (state: PluginsState, action: PayloadAction<string>) => {
       state.installed = state.installed.filter(item => item.metadata.id !== action.payload);
     },
-    itemUpdated: (state: PluginsState, action: PayloadAction<string | undefined>) => {
-      state.updating = state.updating.filter(id => id !== action.payload);
-      state.installed = state.installed.map(item => {
-        if (item.metadata.id === action.payload) {
-          const version = state.syncList.find(item => item.id === action.payload)?.version as VersionItem;
-          return {...item, version};
-        }
-        return item;
-      });
+    removeUpdateItem: (state: PluginsState, action: PayloadAction<{id: string | undefined; isUpdated: boolean}>) => {
+      const {id, isUpdated} = action.payload;
+      state.updating = state.updating.filter(item => item !== id);
+      if (isUpdated) {
+        state.installed = state.installed.map(item => {
+          if (item.metadata.id === id) {
+            const version = state.syncList.find(item => item.id === id)?.version as VersionItem;
+            return {...item, version};
+          }
+          return item;
+        });
+      }
     },
     manageSet: (state: PluginsState, action: PayloadAction<{key: SetKeys; id: IdType; operation: ManageOperation}>) => {
       const {key, id, operation} = action.payload;

@@ -58,12 +58,12 @@ export function UpdateButton({item}: UpdateButtonProps) {
   const update = useCallback(() => {
     AddBreadcrumb_Renderer(`Plugin update: id:${item.metadata.id}`);
     dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'add'}));
-    rendererIpc.plugins.update(item.metadata.id).then(updated => {
-      if (updated) {
+    rendererIpc.plugins.update(item.metadata.id).then(isUpdated => {
+      if (isUpdated) {
         lynxTopToast(dispatch).success(`${item.metadata.title} updated Successfully`);
         ShowRestartModal('To apply the updates, please restart the app.');
       }
-      dispatch(pluginsActions.itemUpdated(selectedPlugin?.metadata.id));
+      dispatch(pluginsActions.removeUpdateItem({id: selectedPlugin?.metadata.id, isUpdated}));
     });
   }, [selectedPlugin, item]);
 
