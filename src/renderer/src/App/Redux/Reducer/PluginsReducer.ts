@@ -14,14 +14,13 @@ type PluginsState = {
   installing: string[];
   updating: string[];
   unInstalling: string[];
+  updatingAll: boolean;
 
   installed: InstalledPlugin[];
   skipped: SkippedPlugins[];
-
   syncList: PluginSyncList[];
 
   selectedPlugin: PluginItem | undefined;
-  updatingAll: boolean;
 };
 
 type PluginsStateTypes = {
@@ -32,14 +31,13 @@ const initialState: PluginsState = {
   installing: [],
   updating: [],
   unInstalling: [],
+  updatingAll: false,
 
   installed: [],
   skipped: [],
-
   syncList: [],
 
   selectedPlugin: undefined,
-  updatingAll: false,
 };
 
 const appSlice = createSlice({
