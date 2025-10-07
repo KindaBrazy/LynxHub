@@ -1,19 +1,14 @@
 import {isEmpty} from 'lodash';
-import {Dispatch, memo, SetStateAction, useMemo} from 'react';
+import {memo, useMemo} from 'react';
 
-import {InstalledPlugin} from '../../../../../../../../cross/plugin/PluginTypes';
 import {Plugins_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
 import PreviewBody from './Body';
 import PreviewHeader from './Header';
 
-type Props = {
-  installed: InstalledPlugin[];
-  setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
-};
-
-const Preview = memo(({installed, setInstalled}: Props) => {
+const Preview = memo(() => {
   const selectedPlugin = usePluginsState('selectedPlugin');
+  const installed = usePluginsState('installed');
   const installedExt = useMemo(
     () => installed.find(item => item.metadata.id === selectedPlugin?.metadata.id),
     [installed, selectedPlugin],
@@ -36,7 +31,7 @@ const Preview = memo(({installed, setInstalled}: Props) => {
         </div>
       ) : (
         <>
-          <PreviewHeader installedExt={installedExt} setInstalled={setInstalled} />
+          <PreviewHeader installedExt={installedExt} />
           <PreviewBody installed={!!installedExt} />
         </>
       )}

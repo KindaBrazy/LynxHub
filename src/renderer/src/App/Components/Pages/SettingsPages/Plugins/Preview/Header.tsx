@@ -1,5 +1,5 @@
 import {Button, Chip, User} from '@heroui/react';
-import {Dispatch, SetStateAction, useMemo} from 'react';
+import {useMemo} from 'react';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {InstalledPlugin} from '../../../../../../../../cross/plugin/PluginTypes';
@@ -19,13 +19,7 @@ import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import ActionButtons from './ActionButtons';
 
-export default function PreviewHeader({
-  installedExt,
-  setInstalled,
-}: {
-  installedExt: InstalledPlugin | undefined;
-  setInstalled: Dispatch<SetStateAction<InstalledPlugin[]>>;
-}) {
+export default function PreviewHeader({installedExt}: {installedExt: InstalledPlugin | undefined}) {
   const selectedPlugin = usePluginsState('selectedPlugin');
   const updateAvailable = useSettingsState('pluginSyncList');
   const updateChannel = useUserState('updateChannel');
@@ -111,12 +105,7 @@ export default function PreviewHeader({
         </div>
       </div>
 
-      <ActionButtons
-        installed={!!installedExt}
-        targetUpdate={targetUpdate}
-        setInstalled={setInstalled}
-        currentVersion={currentVersion}
-      />
+      <ActionButtons installed={!!installedExt} targetUpdate={targetUpdate} currentVersion={currentVersion} />
     </div>
   );
 }

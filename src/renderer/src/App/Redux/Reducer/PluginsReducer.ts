@@ -2,7 +2,8 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {isArray} from 'lodash';
 import {useSelector} from 'react-redux';
 
-import {PluginItem} from '../../../../../cross/plugin/PluginTypes';
+import {SkippedPlugins} from '../../../../../cross/IpcChannelAndTypes';
+import {InstalledPlugin, PluginItem} from '../../../../../cross/plugin/PluginTypes';
 import {RootState} from '../Store';
 
 type SetKeys = 'installing' | 'updating' | 'unInstalling';
@@ -13,6 +14,10 @@ type PluginsState = {
   installing: string[];
   updating: string[];
   unInstalling: string[];
+
+  installed: InstalledPlugin[];
+  skipped: SkippedPlugins[];
+
   selectedPlugin: PluginItem | undefined;
   updatingAll: boolean;
 };
@@ -25,6 +30,10 @@ const initialState: PluginsState = {
   installing: [],
   updating: [],
   unInstalling: [],
+
+  installed: [],
+  skipped: [],
+
   selectedPlugin: undefined,
   updatingAll: false,
 };
@@ -44,6 +53,12 @@ const appSlice = createSlice({
     },
     setUpdatingAll: (state: PluginsState, action: PayloadAction<boolean>) => {
       state.updatingAll = action.payload;
+    },
+    addInstalled: (state: PluginsState, action: PayloadAction<InstalledPlugin>) => {
+      state.installed = [...state.installed, action.payload];
+    },
+    removeInstalled: (state: PluginsState, action: PayloadAction<string>) => {
+      state.installed = state.installed.filter(item => item.metadata.id !== action.payload);
     },
     manageSet: (state: PluginsState, action: PayloadAction<{key: SetKeys; id: IdType; operation: ManageOperation}>) => {
       const {key, id, operation} = action.payload;

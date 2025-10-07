@@ -3,7 +3,6 @@ import {useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {SkippedPlugins} from '../../../../../../../../cross/IpcChannelAndTypes';
 import {getTargetVersion} from '../../../../../../../../cross/plugin/CrossPluginUtils';
 import {InstalledPlugin, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
@@ -27,10 +26,11 @@ import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {UpdateButton} from '../Elements';
 
-type Props = {item: PluginItem; installed: InstalledPlugin[]; unloaded: SkippedPlugins[]};
-export function List_Item({item, installed, unloaded}: Props) {
+type Props = {item: PluginItem; installed: InstalledPlugin[]};
+export function List_Item({item, installed}: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const selectedPlugin = usePluginsState('selectedPlugin');
+  const skipped = usePluginsState('skipped');
   const isInstalling = useIsInstallingPlugin(item.metadata.id);
   const isUnInstalling = useIsUninstallingPlugin(item.metadata.id);
 
@@ -47,7 +47,7 @@ export function List_Item({item, installed, unloaded}: Props) {
     const isCompatible = item.isCompatible;
 
     const foundInstalled = installed.find(i => i.metadata.id === item.metadata.id);
-    const foundUnloaded = unloaded.find(u => foundInstalled?.dir === u.folderName);
+    const foundUnloaded = skipped.find(u => foundInstalled?.dir === u.folderName);
 
     const {linux, win32, darwin} = {
       linux: item.versions.some(v => v.platforms.includes('linux')),
@@ -64,7 +64,7 @@ export function List_Item({item, installed, unloaded}: Props) {
       darwin,
       isCompatible,
     };
-  }, [item, installed, unloaded]);
+  }, [item, installed, skipped]);
 
   const currentVersion = useMemo(() => {
     const targetInstallVersion = getTargetVersion(item.versions, updateChannel);
