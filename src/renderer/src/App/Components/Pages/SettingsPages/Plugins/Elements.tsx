@@ -73,7 +73,7 @@ export function UpdateButton({item}: UpdateButtonProps) {
   const handleSync = useCallback(() => {
     AddBreadcrumb_Renderer(`Plugin sync: id:${item.metadata.id}`);
     dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'add'}));
-    rendererIpc.plugins.sync(item.metadata.id, updateItem?.commit).then(isUpdated => {
+    rendererIpc.plugins.sync(item.metadata.id, updateItem!.commit).then(isUpdated => {
       if (isUpdated) {
         lynxTopToast(dispatch).success(`${item.metadata.title} synced Successfully`);
         ShowRestartModal('To apply the changes, please restart the app.');

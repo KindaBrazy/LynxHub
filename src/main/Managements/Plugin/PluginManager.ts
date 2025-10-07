@@ -156,16 +156,14 @@ export class PluginManager {
     }
   }
 
-  public async sync(id: string, commit?: string) {
+  public async sync(id: string, commit: string) {
     const targetDir = this.getDirById(id);
     if (!targetDir) return false;
 
     try {
       const gitManager = new GitManager(true);
-      const targetCommit = commit || this.syncAvailable.find(update => update.id === id)?.commit;
-      if (!targetCommit) return false;
+      await gitManager.resetHard(targetDir, commit);
 
-      await gitManager.resetHard(targetDir, targetCommit);
       this.updateList_Remove(id);
 
       return true;
@@ -174,14 +172,15 @@ export class PluginManager {
     }
   }
 
-  public async syncAll() {
+  public async syncAll(items: {id: string; commit: string}[]) {
     try {
-      for (const item of this.syncAvailable) {
-        const id = item.id;
+      for (const item of items) {
+        const {id, commit} = item;
+
         const targetDir = this.getDirById(id);
-        const targetCommit = this.syncAvailable.find(update => update.id === id)?.commit;
-        if (!targetDir || !targetCommit) continue;
-        await this.sync(id);
+        if (!targetDir) continue;
+
+        await this.sync(id, commit);
       }
     } catch (e) {
       console.warn(`Failed to update plugins: ${e}`);
