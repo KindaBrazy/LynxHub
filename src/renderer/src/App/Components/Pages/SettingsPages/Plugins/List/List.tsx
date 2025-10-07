@@ -76,7 +76,7 @@ export default function List() {
     dispatch(pluginsActions.manageSet({key: 'updating', id: syncList.map(item => item.id), operation: 'add'}));
     dispatch(pluginsActions.setUpdatingAll(true));
     rendererIpc.plugins
-      .syncAll()
+      .syncAll(syncList.map(item => ({id: item.id, commit: item.commit})))
       .then(() => {
         lynxTopToast(dispatch).success('Plugins synced successfully!');
         ShowRestartModal('To apply the changes, please restart the app.');
