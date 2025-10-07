@@ -24,7 +24,7 @@ export default function List() {
   const dispatch = useDispatch<AppDispatch>();
 
   const updatingAll = usePluginsState('updatingAll');
-  const installed = usePluginsState('installed');
+  const installed = usePluginsState('installedList');
 
   const installedID = useMemo(() => installed.map(item => item.metadata.id), [installed]);
 

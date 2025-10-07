@@ -15,12 +15,12 @@ const Page = memo(({show}: Props) => {
   const updateChannel = useUserState('updateChannel');
 
   useEffect(() => {
-    rendererIpc.plugins.getInstalled().then(items => {
-      dispatch(pluginsActions.setPluginsState({key: 'installed', value: items}));
+    rendererIpc.plugins.getInstalledList().then(items => {
+      dispatch(pluginsActions.setPluginsState({key: 'installedList', value: items}));
     });
     rendererIpc.plugins.checkForSync(updateChannel);
-    rendererIpc.plugins.getSkipped().then(items => {
-      dispatch(pluginsActions.setPluginsState({key: 'skipped', value: items}));
+    rendererIpc.plugins.getUnloadedList().then(items => {
+      dispatch(pluginsActions.setPluginsState({key: 'unloadedList', value: items}));
     });
   }, [updateChannel]);
 

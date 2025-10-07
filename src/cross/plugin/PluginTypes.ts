@@ -139,7 +139,7 @@ export type PluginMetadata = {
 
 export type PluginSyncList = {id: string; type: 'downgrade' | 'upgrade'; version: VersionItem | VersionItemValidated};
 export type InstalledPlugin = {
-  dir: string;
+  id: string;
   url: string;
   version: VersionItem | VersionItemValidated;
   metadata: PluginMetadata;
@@ -163,3 +163,5 @@ export type PluginItem = {
   versions: VersionItemValidated[];
   changes: PluginChanges;
 } & PluginCompatibility;
+
+export type UnloadedPlugins = {id: string; message: string};

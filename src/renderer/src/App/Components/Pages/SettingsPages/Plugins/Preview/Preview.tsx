@@ -8,7 +8,7 @@ import PreviewHeader from './Header';
 
 const Preview = memo(() => {
   const selectedPlugin = usePluginsState('selectedPlugin');
-  const installed = usePluginsState('installed');
+  const installed = usePluginsState('installedList');
   const installedExt = useMemo(
     () => installed.find(item => item.metadata.id === selectedPlugin?.metadata.id),
     [installed, selectedPlugin],

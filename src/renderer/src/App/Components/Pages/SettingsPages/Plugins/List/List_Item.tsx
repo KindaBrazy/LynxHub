@@ -29,7 +29,7 @@ type Props = {item: PluginItem; installed: InstalledPlugin[]};
 export function List_Item({item, installed}: Props) {
   const dispatch = useDispatch<AppDispatch>();
   const selectedPlugin = usePluginsState('selectedPlugin');
-  const skipped = usePluginsState('skipped');
+  const skipped = usePluginsState('unloadedList');
   const isInstalling = useIsInstallingPlugin(item.metadata.id);
   const isUnInstalling = useIsUninstallingPlugin(item.metadata.id);
 
@@ -46,7 +46,7 @@ export function List_Item({item, installed}: Props) {
     const isCompatible = item.isCompatible;
 
     const foundInstalled = installed.find(i => i.metadata.id === item.metadata.id);
-    const foundUnloaded = skipped.find(u => foundInstalled?.dir === u.folderName);
+    const foundUnloaded = skipped.find(u => foundInstalled?.id === u.id);
 
     const {linux, win32, darwin} = {
       linux: item.versions.some(v => v.platforms.includes('linux')),

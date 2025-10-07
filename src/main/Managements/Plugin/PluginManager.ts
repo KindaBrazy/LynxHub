@@ -12,13 +12,14 @@ import handler from 'serve-handler';
 
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
 import {SubscribeStages} from '../../../cross/CrossTypes';
-import {pluginChannels, SkippedPlugins} from '../../../cross/IpcChannelAndTypes';
+import {pluginChannels} from '../../../cross/IpcChannelAndTypes';
 import {
   InstalledPlugin,
   PluginAddresses,
   PluginEngines,
   PluginItem,
   PluginSyncList,
+  UnloadedPlugins,
   ValidatedPlugins,
   VersionItem,
   VersionItemValidated,
@@ -41,7 +42,7 @@ export class PluginManager {
   private readonly pluginPath: string;
 
   private addresses: PluginAddresses = [];
-  private skipped: SkippedPlugins[] = [];
+  private skipped: UnloadedPlugins[] = [];
   private installed: InstalledPlugin[] = [];
   private syncAvailable: PluginSyncList[] = [];
 
@@ -80,7 +81,7 @@ export class PluginManager {
         const version = await getVersionByCommit(id, currentCommit);
         if (!version) continue;
 
-        this.installed.push({dir: folder, url: remoteUrl, version, metadata});
+        this.installed.push({id: folder, url: remoteUrl, version, metadata});
       } catch (error) {
         console.error(`Error parsing ${folder}: ${error}`);
       }
@@ -109,7 +110,7 @@ export class PluginManager {
             await gitManager.cloneShallow(url, directory, true, undefined, 'main');
             await gitManager.resetHard(directory, targetCommit);
 
-            this.installed.push({dir: directory, url, version, metadata});
+            this.installed.push({id: directory, url, version, metadata});
 
             resolve(true);
           } catch (e) {
@@ -351,18 +352,18 @@ export class PluginManager {
     return this.addresses;
   }
 
-  public getSkipped(): SkippedPlugins[] {
+  public getUnloadedList(): UnloadedPlugins[] {
     return this.skipped;
   }
 
-  public getInstalled(): InstalledPlugin[] {
+  public getInstalledList(): InstalledPlugin[] {
     return this.installed;
   }
 
   public getDirById(id: string) {
     const plugin = this.installed.find(installed => installed.metadata.id === id);
     if (plugin) {
-      return join(this.pluginPath, plugin.dir);
+      return join(this.pluginPath, plugin.id);
     }
     return undefined;
   }
@@ -429,7 +430,7 @@ export class PluginManager {
           if (isCompatible) validatedFolders.push({type, folder});
         } catch (err) {
           this.skipped.push({
-            folderName: folder,
+            id: folder,
             message: 'Unloaded due to incompatible structure.',
           });
           console.log(`Skipping folder "${folder}" due to missing requirements.`);
@@ -592,7 +593,7 @@ export class PluginManager {
   private async compatibleCheck(folder: string): Promise<boolean> {
     const skip = () => {
       this.skipped.push({
-        folderName: folder,
+        id: folder,
         message: 'Configuration file is unreadable or corrupt.',
       });
       console.error(`Skipping plugin "${folder}" due to invalid configuration file.`);
@@ -621,7 +622,7 @@ export class PluginManager {
 
     if (!currentVersion) {
       this.skipped.push({
-        folderName: folder,
+        id: folder,
         message: `Could not verify installed version. The ${type} may be outdated or invalid.`,
       });
       console.log(`Skipping ${type} "${folder}" because can't find installed commit hash in versions.`);
@@ -631,7 +632,7 @@ export class PluginManager {
     const platforms = currentVersion.platforms;
     if (!platforms || !platforms.includes(platform())) {
       this.skipped.push({
-        folderName: folder,
+        id: folder,
         message: `Platform incompatibility detected. The ${type} may be outdated or invalid.`,
       });
       console.log(`Skipping ${type} "${folder}" due to unsupported platform.`);
@@ -656,7 +657,7 @@ export class PluginManager {
           : `This ${type} is too old for your version of LynxHub.`; // Plugin is too old for the app.
 
         this.skipped.push({
-          folderName: folder,
+          id: folder,
           message: message,
         });
         console.log(`Skipping plugin "${folder}": ${message}`);
@@ -668,7 +669,7 @@ export class PluginManager {
     } else {
       // --- Message 4: Missing Compatibility Info ---
       this.skipped.push({
-        folderName: folder,
+        id: folder,
         message: `Could not verify compatibility. The ${type} may be outdated or invalid.`,
       });
       console.log(`Skipping plugin "${folder}" because it's missing compatibility information (engines field).`);

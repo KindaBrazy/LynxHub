@@ -78,8 +78,6 @@ export type DownloadProgress = {
 
 export type CanGoType = {back: boolean; forward: boolean};
 
-export type SkippedPlugins = {folderName: string; message: string};
-
 export type FavIcons = {url: string; favIcon: string};
 export type BrowserHistoryData = {
   recentAddress: string[];
@@ -176,8 +174,8 @@ export const pluginChannels = {
 
   getList: 'plugins:get-list',
   getAddresses: 'plugins:get-addresses',
-  getInstalled: 'plugins:get-installed',
-  getSkipped: 'plugins:get-skipped',
+  getInstalledList: 'plugins:get-installed-list',
+  getUnloadedList: 'plugins:get-unloaded-list',
 
   install: 'plugins:install',
   uninstall: 'plugins:uninstall',
