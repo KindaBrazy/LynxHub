@@ -12,7 +12,7 @@ import {InstalledCard} from '../../../../cross/StorageTypes';
 import {appManager, storageManager} from '../../../index';
 import {getAbsolutePath, getExePath, isPortable} from '../../../Utilities/Utils';
 import {getAppDataPath} from '../../AppDataManager';
-import GitManager from '../../GitManager';
+import GitManager from '../../Git/GitManager';
 import {removeDir, trashDir} from '../../Ipc/Methods/IpcMethods';
 
 export default class ModuleManager {

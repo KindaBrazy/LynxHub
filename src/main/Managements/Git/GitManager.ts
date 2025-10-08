@@ -14,10 +14,10 @@ import {
   StatusResult,
 } from 'simple-git';
 
-import {RepositoryInfo} from '../../cross/CrossTypes';
-import {extractGitUrl, validateGitRepoUrl} from '../../cross/CrossUtils';
-import {appManager} from '../index';
-import {checkPathExists, openDialog} from '../Utilities/Utils';
+import {RepositoryInfo} from '../../../cross/CrossTypes';
+import {extractGitUrl, validateGitRepoUrl} from '../../../cross/CrossUtils';
+import {appManager} from '../../index';
+import {checkPathExists, openDialog} from '../../Utilities/Utils';
 
 /** Manages Git operations such as cloning, pulling, and status checking. */
 export default class GitManager {
