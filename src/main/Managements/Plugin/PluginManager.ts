@@ -378,7 +378,7 @@ export class PluginManager {
     this.syncList_noticeRenderer();
   }
 
-  public async updateSync(id: string, commit: string) {
+  public async updateSyncList(id: string, commit: string) {
     const versioning = await staticManager.getPluginVersioningById(id);
     const targetDir = this.getDirById(id);
     if (!targetDir) return;

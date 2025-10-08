@@ -34,7 +34,7 @@ export default function Versions({currentVersion}: Props) {
   const onSelectionChange = value => {
     const commit = Array.from(value)[0] as string;
     const id = selectedPlugin?.metadata.id;
-    if (id) rendererIpc.plugins.updateSync(id, commit);
+    if (id) rendererIpc.plugins.updateSyncList(id, commit);
   };
 
   return (
