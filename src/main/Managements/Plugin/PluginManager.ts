@@ -362,8 +362,17 @@ export class PluginManager {
   }
 
   private updateList_Add(item: PluginSyncItem) {
-    if (this.syncAvailable.some(update => update.id === item.id)) return;
-    this.syncAvailable.push(item);
+    let exist: boolean = false;
+
+    this.syncAvailable = this.syncAvailable.map(syncItem => {
+      if (syncItem.id === item.id) {
+        exist = true;
+        return item;
+      }
+      return syncItem;
+    });
+
+    if (!exist) this.syncAvailable.push(item);
 
     this.updateList_NoticeRenderer();
   }
