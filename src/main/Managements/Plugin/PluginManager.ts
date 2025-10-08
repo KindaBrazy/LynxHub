@@ -28,6 +28,7 @@ import {
 import {appManager, staticManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
+import {setupGitManagerListeners} from '../Git/GitHelper';
 import GitManager from '../Git/GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
 import ShowToastWindow from '../ToastWindowManager';
@@ -84,6 +85,7 @@ export class PluginManager {
           const directory = join(this.pluginPath, id);
 
           try {
+            setupGitManagerListeners(this.gitManager, url);
             await this.gitManager.cloneShallow(url, directory, true, undefined, 'main');
             await this.gitManager.resetHard(directory, targetCommit, true, 'main');
 
