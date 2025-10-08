@@ -1,7 +1,7 @@
 import {Button, Divider, Input, Progress, Skeleton} from '@heroui/react';
 import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
-import {useMemo, useState} from 'react';
+import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {PluginFilter, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
@@ -17,13 +17,9 @@ import {List_Item} from './List_Item';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from './List_Utils';
 
 export default function List() {
-  const syncList = usePluginsState('syncList');
   const [selectedFilters, setSelectedFilters] = useState<PluginFilter>('all');
   const [list, setList] = useState<PluginItem[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
-  const dispatch = useDispatch<AppDispatch>();
-
-  const updatingAll = usePluginsState('updatingAll');
   const installed = usePluginsState('installedList');
 
   const installedID = useMemo(() => installed.map(item => item.id), [installed]);
@@ -72,28 +68,6 @@ export default function List() {
     );
   }, [searchValue]);
 
-  const syncAll = () => {
-    dispatch(pluginsActions.manageSet({key: 'updating', id: syncList.map(item => item.id), operation: 'add'}));
-    dispatch(pluginsActions.setUpdatingAll(true));
-    rendererIpc.plugins
-      .syncAll(syncList.map(item => ({id: item.id, commit: item.commit})))
-      .then(synced => {
-        if (!isEmpty(synced)) {
-          lynxTopToast(dispatch).success(`${synced.length} of ${syncList.length} plugins synced successfully!`);
-          ShowRestartModal('To apply the changes, please restart the app.');
-          const updatedList = syncList
-            .filter(item => synced.includes(item.id))
-            .map(item => ({version: item.version, id: item.id}));
-          dispatch(pluginsActions.updateInstalledVersion(updatedList));
-        }
-      })
-      .catch(() => lynxTopToast(dispatch).error('Failed to sync plugins. Please try again later.'))
-      .finally(() => {
-        dispatch(pluginsActions.manageSet({key: 'updating', id: syncList.map(item => item.id), operation: 'remove'}));
-        dispatch(pluginsActions.setUpdatingAll(true));
-      });
-  };
-
   return (
     <div
       className={
@@ -105,16 +79,7 @@ export default function List() {
       <div className="flex w-full flex-col p-4 gap-y-4 shadow-small">
         <div className="flex w-full justify-between flex-row items-center">
           <span className="font-semibold text-xl">Extensions</span>
-          {!isEmpty(syncList) && (
-            <Button
-              size="sm"
-              color="success"
-              onPress={syncAll}
-              isLoading={updatingAll}
-              startContent={!updatingAll && <RefreshDuo_Icon />}>
-              {updatingAll ? 'Syncing...' : `Sync All (${syncList.length})`}
-            </Button>
-          )}
+          <SyncAllButton />
         </div>
         <div className="flex flex-row items-center gap-x-2">
           <Input
@@ -155,5 +120,47 @@ export default function List() {
         )}
       </LynxScroll>
     </div>
+  );
+}
+
+function SyncAllButton() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const syncList = usePluginsState('syncList');
+  const updatingAll = usePluginsState('updatingAll');
+
+  const syncAll = useCallback(() => {
+    dispatch(pluginsActions.manageSet({key: 'updating', id: syncList.map(item => item.id), operation: 'add'}));
+    dispatch(pluginsActions.setUpdatingAll(true));
+    rendererIpc.plugins
+      .syncAll(syncList.map(item => ({id: item.id, commit: item.commit})))
+      .then(synced => {
+        if (!isEmpty(synced)) {
+          lynxTopToast(dispatch).success(`${synced.length} of ${syncList.length} plugins synced successfully!`);
+          ShowRestartModal('To apply the changes, please restart the app.');
+          const updatedList = syncList
+            .filter(item => synced.includes(item.id))
+            .map(item => ({version: item.version, id: item.id}));
+          dispatch(pluginsActions.updateInstalledVersion(updatedList));
+        }
+      })
+      .catch(() => lynxTopToast(dispatch).error('Failed to sync plugins. Please try again later.'))
+      .finally(() => {
+        dispatch(pluginsActions.manageSet({key: 'updating', id: syncList.map(item => item.id), operation: 'remove'}));
+        dispatch(pluginsActions.setUpdatingAll(true));
+      });
+  }, [dispatch, syncList]);
+
+  if (isEmpty(syncList)) return null;
+
+  return (
+    <Button
+      size="sm"
+      color="success"
+      onPress={syncAll}
+      isLoading={updatingAll}
+      startContent={!updatingAll && <RefreshDuo_Icon />}>
+      {updatingAll ? 'Syncing...' : `Sync All (${syncList.length})`}
+    </Button>
   );
 }
