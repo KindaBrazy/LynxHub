@@ -295,7 +295,7 @@ const rendererIpc = {
     uninstall: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.uninstall, id),
     sync: (id: string, commit: string): Promise<boolean> => ipc.invoke(pluginChannels.sync, id, commit),
     updateSync: (id: string, commit: string): Promise<boolean> => ipc.invoke(pluginChannels.updateSync, id, commit),
-    syncAll: (items: {id: string; commit: string}[]): Promise<void> => ipc.invoke(pluginChannels.syncAll, items),
+    syncAll: (items: {id: string; commit: string}[]): Promise<string[]> => ipc.invoke(pluginChannels.syncAll, items),
     checkForSync: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.checkForSync, stage),
 
     onSyncAvailable: (result: (event: IpcRendererEvent, cards: PluginSyncItem[]) => void) =>

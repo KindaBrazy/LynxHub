@@ -72,14 +72,20 @@ export default function List() {
     );
   }, [searchValue]);
 
-  const updateAll = () => {
+  const syncAll = () => {
     dispatch(pluginsActions.manageSet({key: 'updating', id: syncList.map(item => item.id), operation: 'add'}));
     dispatch(pluginsActions.setUpdatingAll(true));
     rendererIpc.plugins
       .syncAll(syncList.map(item => ({id: item.id, commit: item.commit})))
-      .then(() => {
-        lynxTopToast(dispatch).success('Plugins synced successfully!');
-        ShowRestartModal('To apply the changes, please restart the app.');
+      .then(synced => {
+        if (!isEmpty(synced)) {
+          lynxTopToast(dispatch).success(`${synced.length} of ${syncList.length} plugins synced successfully!`);
+          ShowRestartModal('To apply the changes, please restart the app.');
+          const updatedList = syncList
+            .filter(item => synced.includes(item.id))
+            .map(item => ({version: item.version, id: item.id}));
+          dispatch(pluginsActions.updateInstalledVersion(updatedList));
+        }
       })
       .catch(() => lynxTopToast(dispatch).error('Failed to sync plugins. Please try again later.'))
       .finally(() => {
@@ -103,7 +109,7 @@ export default function List() {
             <Button
               size="sm"
               color="success"
-              onPress={updateAll}
+              onPress={syncAll}
               isLoading={updatingAll}
               startContent={!updatingAll && <RefreshDuo_Icon />}>
               {updatingAll ? 'Syncing...' : `Sync All (${syncList.length})`}
