@@ -66,6 +66,21 @@ const appSlice = createSlice({
     removeInstalled: (state: PluginsState, action: PayloadAction<string>) => {
       state.installedList = state.installedList.filter(item => item.id !== action.payload);
     },
+    updateInstalledVersion: (
+      state: PluginsState,
+      action: PayloadAction<{id: string; version: string} | {id: string; version: string}[]>,
+    ) => {
+      if (isArray(action.payload)) {
+        const items = action.payload;
+        state.installedList = state.installedList.map(item => {
+          const updatedItem = items.find(payloadItem => payloadItem.id === item.id);
+          return updatedItem ? {...item, version: updatedItem.version} : item;
+        });
+      } else {
+        const {id, version} = action.payload;
+        state.installedList = state.installedList.map(item => (item.id === id ? {...item, version} : item));
+      }
+    },
     removeUpdateItem: (state: PluginsState, action: PayloadAction<{id: string | undefined; isUpdated: boolean}>) => {
       const {id, isUpdated} = action.payload;
       state.updating = state.updating.filter(item => item !== id);

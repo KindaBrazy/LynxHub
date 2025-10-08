@@ -175,6 +175,8 @@ export class PluginManager {
   }
 
   public async syncAll(items: {id: string; commit: string}[]) {
+    const synced: string[] = [];
+
     try {
       for (const item of items) {
         const {id, commit} = item;
@@ -183,10 +185,14 @@ export class PluginManager {
         if (!targetDir) continue;
 
         await this.sync(id, commit);
+        synced.push(id);
       }
+      return synced;
     } catch (e) {
       console.warn(`Failed to update plugins: ${e}`);
     }
+
+    return [];
   }
 
   public async createServer() {

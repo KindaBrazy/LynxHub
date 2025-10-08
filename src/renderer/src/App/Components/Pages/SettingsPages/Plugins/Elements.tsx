@@ -50,18 +50,18 @@ type UpdateButtonProps = {item: PluginItem};
 export function UpdateButton({item}: UpdateButtonProps) {
   const dispatch = useDispatch<AppDispatch>();
   const syncList = usePluginsState('syncList');
-
-  const selectedPlugin = usePluginsState('selectedPlugin');
   const isUpdating = useIsUpdatingPlugin(item.metadata.id);
   const updatingAll = usePluginsState('updatingAll');
 
+  const {id, title} = useMemo(() => item.metadata, [item]);
+
   const {updateItem, isUpdate, color} = useMemo(() => {
-    const updateItem = syncList.find(available => available.id === item.metadata.id);
+    const updateItem = syncList.find(available => available.id === id);
     const isUpdate = updateItem?.type === 'upgrade';
     const color: ButtonProps['color'] = isUpdate ? 'success' : 'warning';
 
     return {updateItem, isUpdate, color};
-  }, [syncList, item]);
+  }, [syncList, id]);
 
   const {variant, text} = useMemo(() => {
     const variant: ButtonProps['variant'] = isUpdating ? 'light' : 'flat';
@@ -71,16 +71,19 @@ export function UpdateButton({item}: UpdateButtonProps) {
   }, [isUpdating, isUpdate]);
 
   const handleSync = useCallback(() => {
-    AddBreadcrumb_Renderer(`Plugin sync: id:${item.metadata.id}`);
-    dispatch(pluginsActions.manageSet({key: 'updating', id: selectedPlugin?.metadata.id, operation: 'add'}));
-    rendererIpc.plugins.sync(item.metadata.id, updateItem!.commit).then(isUpdated => {
+    AddBreadcrumb_Renderer(`Plugin sync: id:${id}`);
+    dispatch(pluginsActions.manageSet({key: 'updating', id, operation: 'add'}));
+    const {version, commit} = updateItem!;
+
+    rendererIpc.plugins.sync(id, commit).then(isUpdated => {
       if (isUpdated) {
-        lynxTopToast(dispatch).success(`${item.metadata.title} synced Successfully`);
+        lynxTopToast(dispatch).success(`${title} synced Successfully`);
         ShowRestartModal('To apply the changes, please restart the app.');
+        dispatch(pluginsActions.updateInstalledVersion({id, version}));
       }
-      dispatch(pluginsActions.removeUpdateItem({id: selectedPlugin?.metadata.id, isUpdated}));
+      dispatch(pluginsActions.removeUpdateItem({id, isUpdated}));
     });
-  }, [selectedPlugin, item, updateItem]);
+  }, [item, updateItem]);
 
   return updateItem ? (
     <Button
