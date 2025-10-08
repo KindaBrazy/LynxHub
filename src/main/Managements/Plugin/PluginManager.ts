@@ -85,7 +85,7 @@ export class PluginManager {
 
           try {
             await this.gitManager.cloneShallow(url, directory, true, undefined, 'main');
-            await this.gitManager.resetHard(directory, targetCommit);
+            await this.gitManager.resetHard(directory, targetCommit, true, 'main');
 
             this.installed.push({id: directory, url, version});
 
@@ -164,7 +164,7 @@ export class PluginManager {
     if (!targetDir) return false;
 
     try {
-      await this.gitManager.resetHard(targetDir, commit);
+      await this.gitManager.resetHard(targetDir, commit, true, 'main');
 
       this.updateList_Remove(id);
 

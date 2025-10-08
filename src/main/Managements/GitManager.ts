@@ -335,22 +335,6 @@ export default class GitManager {
     });
   }
 
-  public async resetHard(dir: string, commit: string = 'HEAD'): Promise<string> {
-    const targetDirectory = path.resolve(dir);
-
-    try {
-      this.git.cwd(targetDirectory);
-
-      // Perform the hard reset
-      const resetResult = await this.git.reset(['--hard', commit]);
-      console.log(`Hard reset successful in ${dir} to ${commit}. Output:\n${resetResult}`);
-      return resetResult;
-    } catch (error) {
-      console.error(`Error performing hard reset in ${dir}:`, error);
-      throw error; // Re-throw the error to be handled by the caller
-    }
-  }
-
   public async getRepositoryInfo(directory: string): Promise<RepositoryInfo> {
     const targetDirectory = path.resolve(directory);
     try {
@@ -396,6 +380,61 @@ export default class GitManager {
     } catch (error) {
       console.error(`Error getting last commit message for:`, error);
       return `Error: ${(error as Error).message}`;
+    }
+  }
+
+  public async resetHard(
+    dir: string,
+    commit: string = 'HEAD',
+    fetchBeforeReset: boolean = false,
+    branch?: string,
+    remote: string = 'origin',
+  ): Promise<string> {
+    const targetDirectory = path.resolve(dir);
+
+    try {
+      this.git.cwd(targetDirectory);
+
+      if (fetchBeforeReset) {
+        const fetchOptions: string[] = ['--prune'];
+
+        if (branch) {
+          fetchOptions.push(remote, branch);
+        } else {
+          fetchOptions.push('--all');
+        }
+
+        try {
+          await this.git.fetch(fetchOptions);
+          console.log('Fetch complete.');
+        } catch (fetchError) {
+          // Check if the error is due to a shallow clone that cannot fetch the target commit
+          const errorMessage = (fetchError as Error).message;
+          if (errorMessage.includes('shallow repository') || errorMessage.includes('pack-objects')) {
+            console.warn(
+              `Warning: Failed to fetch recent history in shallow clone ${dir}. ` +
+                `Attempting to unshallow using 'git fetch --unshallow'.`,
+            );
+
+            await this.git.fetch(['--unshallow', remote]);
+
+            if (branch) {
+              await this.git.fetch([remote, branch]);
+            }
+            console.log('Repository successfully unshallowed.');
+          } else {
+            throw fetchError;
+          }
+        }
+      }
+
+      const resetResult = await this.git.reset(['--hard', commit]);
+
+      console.log(`Hard reset successful in ${dir} to ${commit}. Output:\n${resetResult}`);
+      return resetResult;
+    } catch (error) {
+      console.error(`Error performing hard reset in ${dir}:`, error);
+      throw error;
     }
   }
 
