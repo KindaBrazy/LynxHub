@@ -293,13 +293,12 @@ export class PluginManager {
       const isCompatible: boolean = versions.some(v => v.isCompatible);
       const incompatibleReason: string | undefined = versions.find(v => !v.isCompatible)?.incompatibleReason;
 
-      const {metadata, url, icon, versioning} = item;
+      const {metadata, url, versioning} = item;
 
       validated.push({
         isCompatible,
         metadata,
         url,
-        icon,
         versions,
         incompatibleReason,
         changes: versioning.changes,

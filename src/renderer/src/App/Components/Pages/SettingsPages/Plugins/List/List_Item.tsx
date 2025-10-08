@@ -3,7 +3,7 @@ import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {getTargetVersion} from '../../../../../../../../cross/plugin/CrossPluginUtils';
+import {getPluginIconUrl, getTargetVersion} from '../../../../../../../../cross/plugin/CrossPluginUtils';
 import {PluginInstalledItem, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {
@@ -139,7 +139,7 @@ export function List_Item({item, installed}: Props) {
       <CardHeader className="pb-0">
         <User
           avatarProps={{
-            src: item.icon,
+            src: getPluginIconUrl(item.url),
             radius: 'none',
             className: 'shrink-0 !bg-black/0',
           }}

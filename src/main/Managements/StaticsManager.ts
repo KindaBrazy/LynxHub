@@ -16,7 +16,7 @@ import {PluginMetadata, PluginVersioning} from '../../cross/plugin/PluginTypes';
 import {getAppDirectory} from './AppDataManager';
 import GitManager from './GitManager';
 
-type PluginAvailableItem = {metadata: PluginMetadata; versioning: PluginVersioning; icon: string; url: string};
+type PluginAvailableItem = {metadata: PluginMetadata; versioning: PluginVersioning; url: string};
 
 export default class StaticsManager {
   private gitManager: GitManager;
@@ -111,16 +111,6 @@ export default class StaticsManager {
     return this.getDataAsJson(versioningPath);
   }
 
-  public async getPluginIconAsDataUrl(pluginId: string): Promise<string> {
-    await this.requirementsCheckPromise;
-
-    const iconPath = join(this.dir, 'plugins', pluginId, 'icon.png');
-    const imageBuffer = readFileSync(iconPath);
-    const base64Image = imageBuffer.toString('base64');
-
-    return `data:image/png;base64,${base64Image}`;
-  }
-
   public async getPluginIdByRepositoryUrl(repositoryUrl: string): Promise<string | undefined> {
     await this.requirementsCheckPromise;
 
@@ -159,18 +149,12 @@ export default class StaticsManager {
       .map(dirent => dirent.name);
 
     const pluginPromises = pluginIds.map(async (id): Promise<PluginAvailableItem> => {
-      const [metadata, versioning, icon] = await Promise.all([
+      const [metadata, versioning] = await Promise.all([
         this.getPluginMetadataById(id),
         this.getPluginVersioningById(id),
-        this.getPluginIconAsDataUrl(id),
       ]);
 
-      return {
-        metadata,
-        versioning,
-        icon,
-        url: urlMap[id] || '',
-      };
+      return {metadata, versioning, url: urlMap[id] || ''};
     });
 
     return Promise.all(pluginPromises);

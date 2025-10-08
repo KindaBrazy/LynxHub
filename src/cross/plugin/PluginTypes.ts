@@ -30,7 +30,6 @@ type PluginCompatibility = {
 };
 export type VersionItemValidated = Omit<VersionItem, 'engines'> & PluginCompatibility;
 export type PluginItem = {
-  icon: string;
   url: string;
   metadata: PluginMetadata;
   versions: VersionItemValidated[];

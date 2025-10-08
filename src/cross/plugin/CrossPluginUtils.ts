@@ -75,13 +75,34 @@ export function getTargetCommit(versions: VersionItemValidated[] | PluginVersion
   return getTargetVersion(versions, stage).commit;
 }
 
-export function getPluginReadme(repoUrl: string) {
+export function getPluginReadmeUrl(repoUrl: string | undefined) {
+  if (!repoUrl) return undefined;
+
   try {
     const {owner, repo} = extractGitUrl(repoUrl);
 
     if (owner && repo) {
       return `https://raw.githubusercontent.com/${owner}/${repo}/refs/heads/source/README.md`;
     }
+
+    return undefined;
+  } catch (error) {
+    console.error('Failed to parse repository URL:', repoUrl, error);
+    return undefined;
+  }
+}
+
+export function getPluginIconUrl(repoUrl: string | undefined) {
+  if (!repoUrl) return undefined;
+
+  try {
+    const {owner, repo} = extractGitUrl(repoUrl);
+
+    if (owner && repo) {
+      return `https://raw.githubusercontent.com/${owner}/${repo}/refs/heads/metadata/icon.png`;
+    }
+
+    return undefined;
   } catch (error) {
     console.error('Failed to parse repository URL:', repoUrl, error);
     return undefined;
