@@ -28,7 +28,7 @@ import {
 import {appManager, staticManager} from '../../index';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
-import GitManager from '../GitManager';
+import GitManager from '../Git/GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
 import ShowToastWindow from '../ToastWindowManager';
 import ExtensionManager from './Extensions/ExtensionManager';

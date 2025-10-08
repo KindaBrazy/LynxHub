@@ -1,10 +1,7 @@
 import path from 'node:path';
 
-import {SimpleGitProgressEvent} from 'simple-git';
-
-import {gitChannels} from '../../../../cross/IpcChannelAndTypes';
-import {appManager} from '../../../index';
-import GitManager from '../../GitManager';
+import {setupGitManagerListeners} from '../../Git/GitHelper';
+import GitManager from '../../Git/GitManager';
 
 let gitManager: GitManager | undefined;
 
@@ -63,25 +60,6 @@ export function pullRepo(dir: string, id: string): void {
   gitManager.pull(path.resolve(dir));
 
   setupGitManagerListeners(gitManager, id);
-}
-
-/**
- * Sets up listeners for GitManager instance.
- * @param manager - The GitManager instance.
- * @param id - Optional identifier for pull operations.
- */
-function setupGitManagerListeners(manager: GitManager, id?: string): void {
-  manager.onProgress = (progress: SimpleGitProgressEvent) => {
-    appManager?.getWebContent()?.send(gitChannels.onProgress, id, 'Progress', progress);
-  };
-
-  manager.onComplete = (result?: any) => {
-    appManager?.getWebContent()?.send(gitChannels.onProgress, id, 'Completed', result);
-  };
-
-  manager.onError = (reason: string) => {
-    appManager?.getWebContent()?.send(gitChannels.onProgress, id, 'Failed', reason);
-  };
 }
 
 export async function validateGitDir(dir: string, url: string): Promise<boolean> {

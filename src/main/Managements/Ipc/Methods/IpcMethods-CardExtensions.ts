@@ -6,7 +6,7 @@ import {compact} from 'lodash';
 import {ExtensionsData, ExtensionsUpdateStatus, utilsChannels} from '../../../../cross/IpcChannelAndTypes';
 import {appManager} from '../../../index';
 import {calculateFolderSize} from '../../../Utilities/Utils';
-import GitManager from '../../GitManager';
+import GitManager from '../../Git/GitManager';
 
 let loadingExtensions = false;
 

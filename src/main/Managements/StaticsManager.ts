@@ -14,7 +14,7 @@ import {
 import {toMs} from '../../cross/CrossUtils';
 import {PluginMetadata, PluginVersioning} from '../../cross/plugin/PluginTypes';
 import {getAppDirectory} from './AppDataManager';
-import GitManager from './GitManager';
+import GitManager from './Git/GitManager';
 
 type PluginAvailableItem = {metadata: PluginMetadata; versioning: PluginVersioning; url: string};
 

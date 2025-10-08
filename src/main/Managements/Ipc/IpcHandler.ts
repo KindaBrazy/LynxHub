@@ -53,7 +53,7 @@ import {
 import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../AppDataManager';
 import BrowserDownloadManager from '../BrowserDownloadManager';
 import BrowserManager from '../BrowserManager';
-import GitManager from '../GitManager';
+import GitManager from '../Git/GitManager';
 import {
   changeWindowState,
   checkFilesExist,
