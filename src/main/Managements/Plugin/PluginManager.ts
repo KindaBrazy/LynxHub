@@ -89,7 +89,7 @@ export class PluginManager {
             await this.gitManager.cloneShallow(url, directory, true, undefined, 'main');
             await this.gitManager.resetHard(directory, targetCommit, true, 'main');
 
-            this.installed.push({id: directory, url, version});
+            this.installed.push({id, url, version});
 
             resolve(true);
           } catch (e) {

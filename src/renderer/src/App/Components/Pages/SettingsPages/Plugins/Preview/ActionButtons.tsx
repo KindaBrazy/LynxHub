@@ -55,14 +55,14 @@ export default function ActionButtons({installed, currentVersion}: Props) {
               pluginsActions.addInstalled({
                 version: targetVersion.version,
                 url: selectedPlugin.url,
-                id: '',
+                id: selectedPlugin.metadata.id,
               }),
             );
           }
         }
       });
     }
-  }, [selectedPlugin]);
+  }, [selectedPlugin, currentVersion, dispatch]);
 
   const uninstallExtension = useCallback(() => {
     AddBreadcrumb_Renderer(`Plugin uninstall: id:${selectedPlugin?.metadata.id}`);
