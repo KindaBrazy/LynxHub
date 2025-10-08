@@ -3,7 +3,7 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {isNil} from 'lodash';
 import {Key, useEffect, useMemo, useState} from 'react';
 
-import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
+import {getPluginReadmeUrl} from '../../../../../../../../cross/plugin/CrossPluginUtils';
 import {ChangelogItem, ChangelogSubItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import {useDebounceBreadcrumb} from '../../../../../../../Breadcrumbs';
 import {Info_Icon, ListCheck_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
@@ -94,21 +94,7 @@ export default function PreviewBody({installed}: {installed: boolean}) {
 
   const rawReadmeUrl = useMemo(() => {
     const repoUrl = selectedPlugin?.url;
-    if (!repoUrl) {
-      return '';
-    }
-
-    try {
-      const {owner, repo} = extractGitUrl(repoUrl);
-
-      if (owner && repo) {
-        return `https://raw.githubusercontent.com/${owner}/${repo}/refs/heads/source/README.md`;
-      }
-    } catch (error) {
-      console.error('Failed to parse repository URL:', repoUrl, error);
-    }
-
-    return '';
+    return getPluginReadmeUrl(repoUrl) || '';
   }, [selectedPlugin?.url]);
 
   return (

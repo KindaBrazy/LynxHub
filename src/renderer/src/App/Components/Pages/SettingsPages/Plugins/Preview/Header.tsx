@@ -2,6 +2,7 @@ import {Button, Chip, User} from '@heroui/react';
 import {useMemo} from 'react';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
+import {getPluginIconUrl} from '../../../../../../../../cross/plugin/CrossPluginUtils';
 import {PluginInstalledItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {ExternalDuo_Icon} from '../../../../../../../context_menu/Components/SvgIcons';
@@ -82,7 +83,7 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
             </div>
           }
           className="self-start"
-          avatarProps={{src: selectedPlugin?.icon, className: 'bg-black/0', radius: 'none'}}
+          avatarProps={{src: getPluginIconUrl(selectedPlugin?.url), className: 'bg-black/0', radius: 'none'}}
           name={<span className="font-semibold text-foreground text-xl">{selectedPlugin?.metadata.title}</span>}
         />
         <div className="flex flex-row items-center ml-12">
