@@ -55,20 +55,20 @@ export function UpdateButton({item}: UpdateButtonProps) {
 
   const {id, title} = useMemo(() => item.metadata, [item]);
 
-  const {updateItem, isUpdate, color} = useMemo(() => {
+  const {updateItem, isUpgrade, color} = useMemo(() => {
     const updateItem = syncList.find(available => available.id === id);
-    const isUpdate = updateItem?.type === 'upgrade';
-    const color: ButtonProps['color'] = isUpdate ? 'success' : 'warning';
+    const isUpgrade = updateItem?.type === 'upgrade';
+    const color: ButtonProps['color'] = isUpgrade ? 'success' : 'warning';
 
-    return {updateItem, isUpdate, color};
+    return {updateItem, isUpgrade, color};
   }, [syncList, id]);
 
   const {variant, text} = useMemo(() => {
     const variant: ButtonProps['variant'] = isUpdating ? 'light' : 'flat';
-    const text = isUpdating ? (isUpdate ? 'Updating...' : 'Downgrading...') : isUpdate ? 'Update' : 'Downgrade';
+    const text = isUpdating ? (isUpgrade ? 'Upgrading...' : 'Downgrading...') : isUpgrade ? 'Upgrade' : 'Downgrade';
 
     return {variant, text};
-  }, [isUpdating, isUpdate]);
+  }, [isUpdating, isUpgrade]);
 
   const handleSync = useCallback(() => {
     AddBreadcrumb_Renderer(`Plugin sync: id:${id}`);
