@@ -1,4 +1,5 @@
 import {SubscribeStages} from '../CrossTypes';
+import {extractGitUrl} from '../CrossUtils';
 import {PluginVersions, VersionItem, VersionItemValidated} from './PluginTypes';
 
 export function getTargetVersion(versions: VersionItemValidated[] | PluginVersions, stage: SubscribeStages) {
@@ -72,4 +73,17 @@ export function getUpdateType(versions: PluginVersions, currentCommit: string, t
 
 export function getTargetCommit(versions: VersionItemValidated[] | PluginVersions, stage: SubscribeStages) {
   return getTargetVersion(versions, stage).commit;
+}
+
+export function getPluginReadme(repoUrl: string) {
+  try {
+    const {owner, repo} = extractGitUrl(repoUrl);
+
+    if (owner && repo) {
+      return `https://raw.githubusercontent.com/${owner}/${repo}/refs/heads/source/README.md`;
+    }
+  } catch (error) {
+    console.error('Failed to parse repository URL:', repoUrl, error);
+    return undefined;
+  }
 }
