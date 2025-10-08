@@ -74,8 +74,8 @@ export default function ActionButtons({installed, currentVersion}: Props) {
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} uninstalled successfully`);
           ShowRestartModal('To complete the uninstallation, please restart the app.');
+          dispatch(pluginsActions.removeInstalled(selectedPlugin.metadata.id));
         }
-        dispatch(pluginsActions.removeInstalled(selectedPlugin.metadata.id));
       });
     }
   }, [selectedPlugin]);
