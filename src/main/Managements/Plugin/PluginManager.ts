@@ -109,7 +109,7 @@ export class PluginManager {
     if (!plugin) return false;
     try {
       await removeDir(plugin);
-      this.updateList_Remove(id);
+      this.syncList_remove(id);
       return true;
     } catch (e) {
       console.warn(`Failed to uninstall ${id}: `, e);
@@ -166,7 +166,7 @@ export class PluginManager {
     try {
       await this.gitManager.resetHard(targetDir, commit, true, 'main');
 
-      this.updateList_Remove(id);
+      this.syncList_remove(id);
 
       return true;
     } catch (e) {
@@ -352,16 +352,16 @@ export class PluginManager {
     }
   }
 
-  private updateList_NoticeRenderer() {
+  private syncList_noticeRenderer() {
     appManager?.getWebContent()?.send(pluginChannels.onSyncAvailable, this.syncAvailable);
   }
 
-  private updateList_Remove(id: string) {
+  private syncList_remove(id: string) {
     this.syncAvailable = this.syncAvailable.filter(update => update.id !== id);
-    this.updateList_NoticeRenderer();
+    this.syncList_noticeRenderer();
   }
 
-  private updateList_Add(item: PluginSyncItem) {
+  private syncList_add(item: PluginSyncItem) {
     let exist: boolean = false;
 
     this.syncAvailable = this.syncAvailable.map(syncItem => {
@@ -374,7 +374,7 @@ export class PluginManager {
 
     if (!exist) this.syncAvailable.push(item);
 
-    this.updateList_NoticeRenderer();
+    this.syncList_noticeRenderer();
   }
 
   public async updateSync(id: string, commit: string) {
@@ -391,25 +391,12 @@ export class PluginManager {
 
     const installedVersion = this.installed.find(item => item.id === id)?.version;
     if (installedVersion === version) {
-      this.syncAvailable = this.syncAvailable.filter(item => item.id !== id);
-      this.updateList_NoticeRenderer();
+      this.syncList_remove(id);
       return;
     }
 
-    let exist: boolean = false;
     const target = {id, commit, version, type};
-
-    this.syncAvailable = this.syncAvailable.map(item => {
-      if (item.id === id) {
-        exist = true;
-        return target;
-      }
-      return item;
-    });
-
-    if (!exist) this.syncAvailable = [...this.syncAvailable, target];
-
-    this.updateList_NoticeRenderer();
+    this.syncList_add(target);
   }
 
   private async isSyncRequired(id: string, stage: SubscribeStages) {
@@ -422,11 +409,11 @@ export class PluginManager {
 
       const targetItem = await isSyncRequired(id, currentCommit, stage);
       if (!targetItem) {
-        this.updateList_Remove(id);
+        this.syncList_remove(id);
         return false;
       }
 
-      this.updateList_Add(targetItem);
+      this.syncList_add(targetItem);
       return true;
     } catch (e) {
       console.warn(`Failed to check for updates ${id}: `, e);
