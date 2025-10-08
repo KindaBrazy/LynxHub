@@ -183,7 +183,7 @@ export const pluginChannels = {
   syncAll: 'plugins:sync-all',
   checkForSync: 'plugins:check-for-sync',
 
-  updateSync: 'plugins:update-sync',
+  updateSyncList: 'plugins:update-sync-list',
 };
 
 export const ptyChannels = {
