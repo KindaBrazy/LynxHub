@@ -105,11 +105,11 @@ export class PluginManager {
 
   public async uninstall(id: string) {
     const plugin = this.getDirById(id);
-    console.log(id, plugin);
     if (!plugin) return false;
     try {
       await removeDir(plugin);
       this.syncList_remove(id);
+      this.installed = this.installed.filter(plugin => plugin.id !== id);
       return true;
     } catch (e) {
       console.warn(`Failed to uninstall ${id}: `, e);

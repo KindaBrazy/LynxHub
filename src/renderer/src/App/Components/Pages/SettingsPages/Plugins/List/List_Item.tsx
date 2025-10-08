@@ -1,5 +1,5 @@
 import {Button, Card, CardBody, CardFooter, CardHeader, Chip, Link, Tooltip, User} from '@heroui/react';
-import {useMemo} from 'react';
+import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
@@ -13,6 +13,7 @@ import {
   MacOS_Icon,
   QuestionCircle_Icon,
   ShieldWarning_Icon,
+  TrashDuo_Icon,
   Windows_Icon,
 } from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {
@@ -23,7 +24,9 @@ import {
 } from '../../../../../Redux/Reducer/PluginsReducer';
 import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
-import {UpdateButton} from '../Elements';
+import rendererIpc from '../../../../../RendererIpc';
+import {lynxTopToast} from '../../../../../Utils/UtilHooks';
+import {ShowRestartModal, UpdateButton} from '../Elements';
 
 type Props = {item: PluginItem; installed: PluginInstalledItem[]};
 export function List_Item({item, installed}: Props) {
@@ -82,6 +85,16 @@ export function List_Item({item, installed}: Props) {
     };
   }, [syncList, item.metadata.id]);
 
+  const uninstall = useCallback(() => {
+    rendererIpc.plugins.uninstall(item.metadata.id).then(result => {
+      if (result) {
+        lynxTopToast(dispatch).success(`${item.metadata.title} uninstalled successfully`);
+        ShowRestartModal('To complete the uninstallation, please restart the app.');
+        dispatch(pluginsActions.removeInstalled(item.metadata.id));
+      }
+    });
+  }, [item]);
+
   return (
     <Card
       onPress={() => {
@@ -99,7 +112,7 @@ export function List_Item({item, installed}: Props) {
       key={`${item.metadata.id}_plugin_list_item`}
       fullWidth>
       {!isCompatible && (
-        <div className="absolute inset-0 z-20 bg-black/50 flex flex-col items-center justify-center">
+        <div className="absolute inset-0 z-20 gap-y-1 bg-black/50 flex flex-col items-center justify-center">
           <Tooltip
             delay={300}
             color="warning"
@@ -107,10 +120,20 @@ export function List_Item({item, installed}: Props) {
             classNames={{content: 'p-2 whitespace-pre'}}
             showArrow>
             <QuestionCircle_Icon
-              className={'size-8 text-warning/80 hover:text-warning transition-colors duration-200'}
+              className={
+                'size-10 text-warning/80 hover:text-warning transition-colors' +
+                ' duration-200 p-1 bg-background/80 rounded-full'
+              }
             />
           </Tooltip>
-          <span className="text-sm">Incompatible</span>
+          <span className="text-sm px-2 py-1 bg-background/80 rounded-lg">Incompatible</span>
+          {foundInstalled && (
+            <div className="absolute top-2 right-2 p-1 bg-background/80 rounded-lg">
+              <Button size="sm" variant="flat" color="danger" onPress={uninstall} isIconOnly>
+                <TrashDuo_Icon className="size-4" />
+              </Button>
+            </div>
+          )}
         </div>
       )}
       <CardHeader className="pb-0">
