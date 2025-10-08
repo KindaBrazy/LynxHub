@@ -1,6 +1,7 @@
-import {Button, Card, CardBody, CardFooter, CardHeader, Chip, Link, Tooltip, User} from '@heroui/react';
-import {useCallback, useMemo} from 'react';
+import {Button, Card, CardBody, CardFooter, CardHeader, Chip, Link, Progress, Tooltip, User} from '@heroui/react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
+import {SimpleGitProgressEvent} from 'simple-git';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {getPluginIconUrl, getTargetVersion} from '../../../../../../../../cross/plugin/CrossPluginUtils';
@@ -233,7 +234,38 @@ export function List_Item({item, installed}: Props) {
             Uninstalling...
           </Button>
         )}
+
+        <InstallProgress pluginUrl={item.url} isInstalling={isInstalling} />
       </CardFooter>
     </Card>
   );
+}
+
+type InstallProps = {isInstalling: boolean; pluginUrl: string};
+function InstallProgress({isInstalling, pluginUrl}: InstallProps) {
+  const [installProgress, setInstallProgress] = useState<number>(0);
+
+  useEffect(() => {
+    const removeListener = rendererIpc.git.onProgress((_, url, state, result) => {
+      if (url === pluginUrl) {
+        switch (state) {
+          case 'Progress':
+            setInstallProgress((result as SimpleGitProgressEvent).progress);
+            break;
+          case 'Failed':
+            setInstallProgress(0);
+            break;
+          case 'Completed':
+            setInstallProgress(0);
+            break;
+        }
+      }
+    });
+
+    return () => removeListener();
+  }, [pluginUrl, setInstallProgress]);
+
+  if (!isInstalling) return null;
+
+  return <Progress size="sm" color="success" value={installProgress} className="absolute bottom-0 inset-x-0" />;
 }

@@ -1,3 +1,9 @@
+import {SimpleGitProgressEvent} from 'simple-git';
+
+import {gitChannels} from '../../../cross/IpcChannelAndTypes';
+import {appManager} from '../../index';
+import GitManager from './GitManager';
+
 /**
  * Sets up listeners for GitManager instance.
  * @param manager - The GitManager instance.
