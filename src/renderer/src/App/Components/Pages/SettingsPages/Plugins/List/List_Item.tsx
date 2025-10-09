@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
-import {getPluginIconUrl, getTargetVersion} from '../../../../../../../../cross/plugin/CrossPluginUtils';
+import {getPluginIconUrl} from '../../../../../../../../cross/plugin/CrossPluginUtils';
 import {PluginInstalledItem, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {
@@ -23,7 +23,6 @@ import {
   useIsUninstallingPlugin,
   usePluginsState,
 } from '../../../../../Redux/Reducer/PluginsReducer';
-import {useUserState} from '../../../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
@@ -38,7 +37,6 @@ export function List_Item({item, installed}: Props) {
   const isUnInstalling = useIsUninstallingPlugin(item.metadata.id);
 
   const syncList = usePluginsState('syncList');
-  const updateChannel = useUserState('updateChannel');
 
   const isSelected = useMemo(
     () => selectedPlugin?.metadata.id === item.metadata.id,
@@ -70,9 +68,18 @@ export function List_Item({item, installed}: Props) {
   }, [item, installed, skipped]);
 
   const currentVersion = useMemo(() => {
-    const targetInstallVersion = getTargetVersion(item.versions, updateChannel);
-    return foundInstalled ? foundInstalled.version : targetInstallVersion.version;
-  }, [item.versions, updateChannel, foundInstalled]);
+    const targetInstallVersion = item.versions.find(item => item.isCompatible);
+
+    let v: string = 'N/A';
+
+    if (foundInstalled) {
+      v = foundInstalled.version;
+    } else if (targetInstallVersion) {
+      v = targetInstallVersion.version;
+    }
+
+    return v;
+  }, [item.versions, foundInstalled]);
 
   const {targetUpdate, targetVersion, isUpgrade} = useMemo(() => {
     const targetUpdate = syncList.find(update => update.id === item.metadata.id);
