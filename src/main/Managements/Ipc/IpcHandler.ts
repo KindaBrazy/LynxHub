@@ -54,6 +54,7 @@ import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from 
 import BrowserDownloadManager from '../BrowserDownloadManager';
 import BrowserManager from '../BrowserManager';
 import GitManager from '../Git/GitManager';
+import {getList} from '../Plugin/PluginUtils';
 import {
   changeWindowState,
   checkFilesExist,
@@ -216,15 +217,15 @@ function plugins() {
   ipcMain.handle(pluginChannels.getInstalledList, () => pluginManager.getInstalledList());
   ipcMain.handle(pluginChannels.getUnloadedList, () => pluginManager.getUnloadedList());
   ipcMain.handle(pluginChannels.install, (_, url: string, commitHash?: string) =>
-    pluginManager.installPlugin(url, commitHash),
+    pluginManager.install(url, commitHash),
   );
   ipcMain.handle(pluginChannels.uninstall, (_, id: string) => pluginManager.uninstall(id));
-  ipcMain.handle(pluginChannels.sync, (_, id: string, commit: string) => pluginManager.sync(id, commit));
+  ipcMain.handle(pluginChannels.sync, (_, id: string, commit: string) => pluginManager.syncItem(id, commit));
   ipcMain.handle(pluginChannels.syncAll, (_, items: {id: string; commit: string}[]) => pluginManager.syncAll(items));
   ipcMain.handle(pluginChannels.checkForSync, (_, stage: SubscribeStages) => pluginManager.checkForSync(stage));
-  ipcMain.handle(pluginChannels.getList, (_, stage: SubscribeStages) => pluginManager.getList(stage));
+  ipcMain.handle(pluginChannels.getList, (_, stage: SubscribeStages) => getList(stage));
   ipcMain.handle(pluginChannels.updateSyncList, (_, id: string, commit: string) =>
-    pluginManager.updateSyncList(id, commit),
+    pluginManager.updateSyncItem(id, commit),
   );
 }
 
