@@ -194,7 +194,7 @@ export class PluginManager {
 
   public async install(url: string, commitHash?: string) {
     return new Promise<boolean>(async resolve => {
-      let targetCommit: string;
+      let targetCommit: string | undefined = undefined;
       const id = await staticManager.getPluginIdByRepositoryUrl(url);
 
       if (id) {
@@ -204,23 +204,29 @@ export class PluginManager {
           targetCommit = await getCommitByAppStage(id);
         }
 
+        if (!targetCommit) {
+          resolve(false);
+          return;
+        }
+
         const version = await getVersionByCommit(id, targetCommit);
-        if (version) {
-          const directory = join(this.pluginPath, id);
+        if (!version) {
+          resolve(false);
+          return;
+        }
 
-          try {
-            setupGitManagerListeners(this.gitManager, url);
-            await this.gitManager.cloneShallow(url, directory, true, undefined, 'main');
-            await this.gitManager.resetHard(directory, targetCommit, true, 'main');
+        const directory = join(this.pluginPath, id);
 
-            this.installed.push({id, url, version});
+        try {
+          setupGitManagerListeners(this.gitManager, url);
+          await this.gitManager.cloneShallow(url, directory, true, undefined, 'main');
+          await this.gitManager.resetHard(directory, targetCommit, true, 'main');
 
-            resolve(true);
-          } catch (e) {
-            console.warn(`Failed to install plugin: ${url}`, e);
-            resolve(false);
-          }
-        } else {
+          this.installed.push({id, url, version});
+
+          resolve(true);
+        } catch (e) {
+          console.warn(`Failed to install plugin: ${url}`, e);
           resolve(false);
         }
       } else {

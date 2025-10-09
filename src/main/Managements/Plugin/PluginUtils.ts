@@ -7,11 +7,12 @@ import {satisfies} from 'semver';
 
 import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
 import {SubscribeStages} from '../../../cross/CrossTypes';
-import {getTargetCommit, getTargetVersion, getUpdateType} from '../../../cross/plugin/CrossPluginUtils';
+import {getUpdateType} from '../../../cross/plugin/CrossPluginUtils';
 import {
   PluginEngines,
   PluginItem,
   PluginSyncItem,
+  PluginVersions,
   VersionItem,
   VersionItemValidated,
 } from '../../../cross/plugin/PluginTypes';
@@ -21,13 +22,13 @@ import {getAppDataPath, selectNewAppDataFolder} from '../AppDataManager';
 import GitManager from '../Git/GitManager';
 import ShowToastWindow from '../ToastWindowManager';
 
+export function getTargetVersion(versions: PluginVersions, type: 'module' | 'extension', stage: SubscribeStages) {
+  return versions.find(version => isVersionCompatible(version, type, stage).compatible);
+}
+
 export async function getVersionByCommit(id: string, commit: string) {
   const {versions} = await staticManager.getPluginVersioningById(id);
   return versions.find(v => v.commit === commit)?.version;
-}
-export async function getVersionItemByCommit(id: string, commit: string) {
-  const {versions} = await staticManager.getPluginVersioningById(id);
-  return versions.find(v => v.commit === commit);
 }
 
 /**
@@ -43,18 +44,22 @@ export async function isSyncRequired(
   stage: SubscribeStages,
 ): Promise<PluginSyncItem | undefined> {
   const {versions} = await staticManager.getPluginVersioningById(id);
-  const targetVersion = getTargetVersion(versions, stage);
+  const {type} = await staticManager.getPluginMetadataById(id);
+
+  const targetVersion = getTargetVersion(versions, type, stage);
+
+  if (!targetVersion) return undefined;
 
   const version = targetVersion.version;
   const commit = targetVersion.commit;
 
-  const type = getUpdateType(versions, currentCommit, commit);
+  const updateType = getUpdateType(versions, currentCommit, commit);
 
-  if (currentCommit === commit || !type) return undefined;
+  if (currentCommit === commit || !updateType) return undefined;
 
   return {
     id,
-    type,
+    type: updateType,
     version,
     commit,
   };
@@ -62,9 +67,10 @@ export async function isSyncRequired(
 
 export async function getCommitByAppStage(id: string) {
   const {versions} = await staticManager.getPluginVersioningById(id);
+  const {type} = await staticManager.getPluginMetadataById(id);
   const stage = await staticManager.getCurrentAppState();
 
-  return getTargetCommit(versions, stage);
+  return getTargetVersion(versions, type, stage)?.commit;
 }
 
 export function showGitOwnershipToast() {
@@ -129,7 +135,7 @@ export async function removeOldInstallations(folder: string) {
   return oldInstallations;
 }
 
-export function isItemCompatible(
+export function isVersionCompatible(
   version: VersionItem,
   type: 'module' | 'extension',
   currentStage: SubscribeStages,
@@ -228,7 +234,7 @@ export async function getList(currentStage: SubscribeStages): Promise<PluginItem
 
     for (const v of item.versioning.versions) {
       const {version, commit, stage, platforms} = v;
-      const {compatible: isCompatible, reason: incompatibleReason} = isItemCompatible(
+      const {compatible: isCompatible, reason: incompatibleReason} = isVersionCompatible(
         v,
         item.metadata.type,
         currentStage,
