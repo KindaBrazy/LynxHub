@@ -1,7 +1,6 @@
-import {execSync} from 'node:child_process';
 import {createServer} from 'node:http';
 import {platform} from 'node:os';
-import {dirname, join, resolve} from 'node:path';
+import {dirname, join} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {constants, promises, readdirSync} from 'graceful-fs';
@@ -18,48 +17,40 @@ import {
   PluginAddresses,
   PluginEngines,
   PluginInstalledItem,
-  PluginItem,
   PluginSyncItem,
   UnloadedPlugins,
   ValidatedPlugins,
-  VersionItem,
-  VersionItemValidated,
 } from '../../../cross/plugin/PluginTypes';
 import {appManager, staticManager} from '../../index';
-import {RelaunchApp} from '../../Utilities/Utils';
-import {getAppDataPath, getAppDirectory, selectNewAppDataFolder} from '../AppDataManager';
+import {getAppDirectory} from '../AppDataManager';
 import {setupGitManagerListeners} from '../Git/GitHelper';
 import GitManager from '../Git/GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
-import ShowToastWindow from '../ToastWindowManager';
 import ExtensionManager from './Extensions/ExtensionManager';
 import ModuleManager from './Modules/ModuleManager';
-import {getCommitByAppStage, getVersionByCommit, isSyncRequired} from './PluginUtils';
+import {hostName, oldFolders} from './PluginConstants';
+import {
+  getCommitByAppStage,
+  getVersionByCommit,
+  isSyncRequired,
+  removeOldInstallations,
+  showGitOwnershipToast,
+} from './PluginUtils';
 
 export class PluginManager {
-  private readonly host: string = 'localhost';
   private port: number = 5103;
   private server: ReturnType<typeof createServer> | undefined = undefined;
   private finalAddress: string = '';
-  private readonly pluginPath: string;
 
   private addresses: PluginAddresses = [];
   private skipped: UnloadedPlugins[] = [];
   private installed: PluginInstalledItem[] = [];
   private syncAvailable: PluginSyncItem[] = [];
 
-  private readonly moduleFolder: string = 'Modules';
-  private readonly moduleMainScriptPath: string = 'scripts/main.mjs';
-  private readonly moduleRendererScriptPath: string = 'scripts/renderer.mjs';
-
-  private readonly extensionFolder: string = 'Extensions';
-  private readonly extensionMainScriptPath: string = 'scripts/main/mainEntry.mjs';
-  private readonly extensionRendererScriptPath: string = 'scripts/renderer/rendererEntry.mjs';
-
-  private moduleManager: ModuleManager;
-  private extensionManager: ExtensionManager;
-
-  private gitManager: GitManager;
+  private readonly pluginPath: string;
+  private readonly moduleManager: ModuleManager;
+  private readonly extensionManager: ExtensionManager;
+  private readonly gitManager: GitManager;
 
   constructor(moduleManager: ModuleManager, extensionManager: ExtensionManager) {
     this.moduleManager = moduleManager;
@@ -68,7 +59,144 @@ export class PluginManager {
     this.gitManager = new GitManager(true);
   }
 
-  public async installPlugin(url: string, commitHash?: string) {
+  public async createServer() {
+    return new Promise<{port: number; hostName: string}>((resolve, reject) => {
+      const startServer = async () => {
+        try {
+          this.port = await portFinder.getPortPromise({port: this.port});
+
+          this.server = createServer((req, res) => {
+            try {
+              const origin = is.dev ? '*' : 'file://';
+              res.setHeader('Access-Control-Allow-Origin', origin);
+              return handler(req, res, {
+                public: this.pluginPath,
+              });
+            } catch (handlerError) {
+              console.error('Error in request handler:', handlerError);
+              res.statusCode = 500;
+              res.end('Internal Server Error');
+              return;
+            }
+          });
+
+          this.server.on('error', (serverError: NodeJS.ErrnoException) => {
+            if (serverError.code === 'EADDRINUSE') {
+              console.warn(`Port ${this.port} is still in use. Retrying with a new port...`);
+              this.closeServer();
+              startServer(); // Retry with a new port
+            } else {
+              console.error('Server error:', serverError);
+              reject(serverError);
+            }
+          });
+
+          this.server.listen(this.port, hostName, async () => {
+            try {
+              this.finalAddress = `http://${hostName}:${this.port}`;
+              await this.readPlugin();
+              resolve({hostName, port: this.port});
+            } catch (configError) {
+              console.error('Error writing config:', configError);
+              this.closeServer();
+              reject(configError);
+            }
+          });
+        } catch (error) {
+          console.error('Error finding or setting up server:', error);
+          reject(error);
+        }
+      };
+      startServer();
+    });
+  }
+
+  public closeServer(): void {
+    if (this.server && this.server.listening) {
+      this.server.close();
+    }
+  }
+
+  private async readPlugin() {
+    return new Promise<void>(async resolve => {
+      try {
+        const files = readdirSync(this.pluginPath, {withFileTypes: true});
+        const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
+        const validFolders = await this.validatePluginFolders(folders);
+
+        this.addresses = validFolders.map(({folder, type}) => ({
+          address: `${this.finalAddress}/${folder}`,
+          type,
+        }));
+
+        await this.setInstalledPlugins(folders);
+
+        const moduleFolders: string[] = [];
+        const extensionFolder: string[] = [];
+
+        for (const validItem of validFolders) {
+          const metadata = await staticManager.getPluginMetadataById(validItem.folder);
+          if (metadata.type === 'module') {
+            moduleFolders.push(join(this.pluginPath, validItem.folder));
+          } else if (metadata.type === 'extension') {
+            extensionFolder.push(join(this.pluginPath, validItem.folder));
+          }
+        }
+        await this.extensionManager.importPlugins(extensionFolder);
+        await this.moduleManager.importPlugins(moduleFolders);
+
+        resolve();
+      } catch (error: any) {
+        console.error(`Loading Plugin Error: `, error);
+        resolve();
+      }
+    });
+  }
+
+  private async setInstalledPlugins(folders: string[]) {
+    for (const folder of folders) {
+      try {
+        const targetDir = join(this.pluginPath, folder);
+        const remoteUrl = await GitManager.remoteUrlFromDir(targetDir);
+        if (!remoteUrl) continue;
+
+        const currentCommit = await this.gitManager.getCurrentCommitHash(targetDir);
+        if (!currentCommit) continue;
+
+        const id = await staticManager.getPluginIdByRepositoryUrl(remoteUrl);
+        if (!id) continue;
+
+        const version = await getVersionByCommit(id, currentCommit);
+        if (!version) continue;
+
+        this.installed.push({id: folder, url: remoteUrl, version});
+      } catch (error) {
+        console.error(`Error parsing ${folder}: ${error}`);
+      }
+    }
+  }
+
+  public getAddresses(): PluginAddresses {
+    return this.addresses;
+  }
+
+  public getUnloadedList(): UnloadedPlugins[] {
+    return this.skipped;
+  }
+
+  public getInstalledList(): PluginInstalledItem[] {
+    return this.installed;
+  }
+
+  public getDirById(id: string) {
+    const plugin = this.installed.find(installed => installed.id === id);
+
+    if (plugin) return join(this.pluginPath, plugin.id);
+
+    return undefined;
+  }
+
+  public async install(url: string, commitHash?: string) {
     return new Promise<boolean>(async resolve => {
       let targetCommit: string;
       const id = await staticManager.getPluginIdByRepositoryUrl(url);
@@ -119,32 +247,26 @@ export class PluginManager {
     }
   }
 
-  public showGitOwnershipToast() {
-    ShowToastWindow(
-      {
-        buttons: ['exit'],
-        customButtons: [
-          {id: 'add_safe', color: 'warning', label: 'Add to Safe Directories'},
-          {id: 'change_data_dir', color: 'success', label: 'Change Data Directory'},
-        ],
-        title: 'Git Ownership Warning',
-        message:
-          'Git has detected dubious ownership of the data directory. This can happen when the repository is owned by ' +
-          "a different user. You can either add data directory to Git's safe directories or choose a different " +
-          'location.',
-        type: 'warning',
-      },
-      (id, window) => {
-        if (id === 'add_safe') {
-          const DataDirectory = getAppDataPath();
-          execSync(`git config --global --add safe.directory '${DataDirectory}/*'`);
-        } else if (id === 'change_data_dir') {
-          selectNewAppDataFolder(window)
-            .then(() => RelaunchApp(false))
-            .catch(() => console.error('Error changing data directory'));
-        }
-      },
-    );
+  private async isSyncRequired(id: string, stage: SubscribeStages) {
+    try {
+      const targetDir = this.getDirById(id);
+      if (!targetDir) return false;
+
+      const currentCommit = await this.gitManager.getCurrentCommitHash(targetDir, true);
+      if (!currentCommit) return false;
+
+      const targetItem = await isSyncRequired(id, currentCommit, stage);
+      if (!targetItem) {
+        this.syncList_remove(id);
+        return false;
+      }
+
+      this.syncList_add(targetItem);
+      return true;
+    } catch (e) {
+      console.warn(`Failed to check for updates ${id}: `, e);
+      return false;
+    }
   }
 
   public async checkForSync(stage: SubscribeStages): Promise<void> {
@@ -157,11 +279,11 @@ export class PluginManager {
       console.error('Error checking for all updates:', error);
 
       const errorMessage = isString(error) ? error : error.message;
-      if (includes(errorMessage, 'detected dubious ownership')) this.showGitOwnershipToast();
+      if (includes(errorMessage, 'detected dubious ownership')) showGitOwnershipToast();
     }
   }
 
-  public async sync(id: string, commit: string) {
+  public async syncItem(id: string, commit: string) {
     const targetDir = this.getDirById(id);
     if (!targetDir) return false;
 
@@ -176,6 +298,28 @@ export class PluginManager {
     }
   }
 
+  public async updateSyncItem(id: string, commit: string) {
+    const versioning = await staticManager.getPluginVersioningById(id);
+    const targetDir = this.getDirById(id);
+    if (!targetDir) return;
+
+    const currentCommit = await this.gitManager.getCurrentCommitHash(targetDir, true);
+    if (!currentCommit) return;
+
+    const version = versioning.versions.find(v => v.commit === commit)?.version;
+    const type = getUpdateType(versioning.versions, currentCommit, commit);
+    if (!version || !type) return;
+
+    const installedVersion = this.installed.find(item => item.id === id)?.version;
+    if (installedVersion === version) {
+      this.syncList_remove(id);
+      return;
+    }
+
+    const target = {id, commit, version, type};
+    this.syncList_add(target);
+  }
+
   public async syncAll(items: {id: string; commit: string}[]) {
     const synced: string[] = [];
 
@@ -186,7 +330,7 @@ export class PluginManager {
         const targetDir = this.getDirById(id);
         if (!targetDir) continue;
 
-        await this.sync(id, commit);
+        await this.syncItem(id, commit);
         synced.push(id);
       }
       return synced;
@@ -195,162 +339,6 @@ export class PluginManager {
     }
 
     return [];
-  }
-
-  public async createServer() {
-    return new Promise<{port: number; hostName: string}>((resolve, reject) => {
-      const startServer = async () => {
-        try {
-          this.port = await portFinder.getPortPromise({port: this.port});
-
-          this.server = createServer((req, res) => {
-            try {
-              const origin = is.dev ? '*' : 'file://';
-              res.setHeader('Access-Control-Allow-Origin', origin);
-              return handler(req, res, {
-                public: this.pluginPath,
-              });
-            } catch (handlerError) {
-              console.error('Error in request handler:', handlerError);
-              res.statusCode = 500;
-              res.end('Internal Server Error');
-              return;
-            }
-          });
-
-          this.server.on('error', (serverError: NodeJS.ErrnoException) => {
-            if (serverError.code === 'EADDRINUSE') {
-              console.warn(`Port ${this.port} is still in use. Retrying with a new port...`);
-              this.closeServer();
-              startServer(); // Retry with a new port
-            } else {
-              console.error('Server error:', serverError);
-              reject(serverError);
-            }
-          });
-
-          this.server.listen(this.port, this.host, async () => {
-            try {
-              this.finalAddress = `http://${this.host}:${this.port}`;
-              await this.readPlugin();
-              resolve({hostName: this.host, port: this.port});
-            } catch (configError) {
-              console.error('Error writing config:', configError);
-              this.closeServer();
-              reject(configError);
-            }
-          });
-        } catch (error) {
-          console.error('Error finding or setting up server:', error);
-          reject(error);
-        }
-      };
-      startServer();
-    });
-  }
-
-  public closeServer(): void {
-    if (this.server && this.server.listening) {
-      this.server.close();
-    }
-  }
-
-  public getAddresses(): PluginAddresses {
-    return this.addresses;
-  }
-
-  public getUnloadedList(): UnloadedPlugins[] {
-    return this.skipped;
-  }
-
-  public getInstalledList(): PluginInstalledItem[] {
-    return this.installed;
-  }
-
-  public getDirById(id: string) {
-    const plugin = this.installed.find(installed => installed.id === id);
-    if (plugin) {
-      return join(this.pluginPath, plugin.id);
-    }
-    return undefined;
-  }
-
-  public async getList(currentStage: SubscribeStages): Promise<PluginItem[]> {
-    const list = await staticManager.getPluginsList();
-    const validated: PluginItem[] = [];
-
-    for (const item of list) {
-      const versions: VersionItemValidated[] = [];
-
-      for (const v of item.versioning.versions) {
-        const {version, commit, stage, platforms} = v;
-        const {compatible: isCompatible, reason: incompatibleReason} = this.isCompatible(
-          v,
-          item.metadata.type,
-          currentStage,
-        );
-        versions.push({version, commit, stage, platforms, isCompatible, incompatibleReason});
-      }
-
-      const isCompatible: boolean = versions.some(v => v.isCompatible);
-      const incompatibleReason: string | undefined = versions.find(v => !v.isCompatible)?.incompatibleReason;
-
-      const {metadata, url, versioning} = item;
-
-      validated.push({
-        isCompatible,
-        metadata,
-        url,
-        versions,
-        incompatibleReason,
-        changes: versioning.changes,
-      });
-    }
-
-    return validated;
-  }
-
-  public async migrate() {
-    const targetModuleDir = join(dirname(this.pluginPath), this.moduleFolder);
-    const targetExtensionDir = join(dirname(this.pluginPath), this.extensionFolder);
-
-    const oldInstalledModules = await this.migrateRemoveOld(targetModuleDir);
-    const oldInstalledExtensions = await this.migrateRemoveOld(targetExtensionDir);
-
-    const oldInstallations = [...oldInstalledModules, ...oldInstalledExtensions];
-
-    // Reinstall in the new way
-    for (const url of oldInstallations) {
-      const id = await staticManager.getPluginIdByRepositoryUrl(url);
-      if (!id) continue;
-
-      const targetCommit = await getCommitByAppStage(id);
-
-      await this.installPlugin(url, targetCommit);
-    }
-  }
-
-  private async setInstalledPlugins(folders: string[]) {
-    for (const folder of folders) {
-      try {
-        const targetDir = join(this.pluginPath, folder);
-        const remoteUrl = await GitManager.remoteUrlFromDir(targetDir);
-        if (!remoteUrl) continue;
-
-        const currentCommit = await this.gitManager.getCurrentCommitHash(targetDir);
-        if (!currentCommit) continue;
-
-        const id = await staticManager.getPluginIdByRepositoryUrl(remoteUrl);
-        if (!id) continue;
-
-        const version = await getVersionByCommit(id, currentCommit);
-        if (!version) continue;
-
-        this.installed.push({id: folder, url: remoteUrl, version});
-      } catch (error) {
-        console.error(`Error parsing ${folder}: ${error}`);
-      }
-    }
   }
 
   private syncList_noticeRenderer() {
@@ -378,86 +366,6 @@ export class PluginManager {
     this.syncList_noticeRenderer();
   }
 
-  public async updateSyncList(id: string, commit: string) {
-    const versioning = await staticManager.getPluginVersioningById(id);
-    const targetDir = this.getDirById(id);
-    if (!targetDir) return;
-
-    const currentCommit = await this.gitManager.getCurrentCommitHash(targetDir, true);
-    if (!currentCommit) return;
-
-    const version = versioning.versions.find(v => v.commit === commit)?.version;
-    const type = getUpdateType(versioning.versions, currentCommit, commit);
-    if (!version || !type) return;
-
-    const installedVersion = this.installed.find(item => item.id === id)?.version;
-    if (installedVersion === version) {
-      this.syncList_remove(id);
-      return;
-    }
-
-    const target = {id, commit, version, type};
-    this.syncList_add(target);
-  }
-
-  private async isSyncRequired(id: string, stage: SubscribeStages) {
-    try {
-      const targetDir = this.getDirById(id);
-      if (!targetDir) return false;
-
-      const currentCommit = await this.gitManager.getCurrentCommitHash(targetDir, true);
-      if (!currentCommit) return false;
-
-      const targetItem = await isSyncRequired(id, currentCommit, stage);
-      if (!targetItem) {
-        this.syncList_remove(id);
-        return false;
-      }
-
-      this.syncList_add(targetItem);
-      return true;
-    } catch (e) {
-      console.warn(`Failed to check for updates ${id}: `, e);
-      return false;
-    }
-  }
-
-  private async readPlugin() {
-    return new Promise<void>(async resolve => {
-      try {
-        const files = readdirSync(this.pluginPath, {withFileTypes: true});
-        const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
-        const validFolders = await this.validatePluginFolders(folders);
-
-        this.addresses = validFolders.map(({folder, type}) => ({
-          address: `${this.finalAddress}/${folder}`,
-          type,
-        }));
-
-        await this.setInstalledPlugins(folders);
-
-        const moduleFolders: string[] = [];
-        const extensionFolder: string[] = [];
-
-        for (const validItem of validFolders) {
-          const metadata = await staticManager.getPluginMetadataById(validItem.folder);
-          if (metadata.type === 'module') {
-            moduleFolders.push(join(this.pluginPath, validItem.folder));
-          } else if (metadata.type === 'extension') {
-            extensionFolder.push(join(this.pluginPath, validItem.folder));
-          }
-        }
-        await this.extensionManager.importPlugins(extensionFolder);
-        await this.moduleManager.importPlugins(moduleFolders);
-
-        resolve();
-      } catch (error: any) {
-        console.error(`Loading Plugin Error: `, error);
-        resolve();
-      }
-    });
-  }
-
   private async validatePluginFolders(folderPaths: string[]): Promise<ValidatedPlugins> {
     const validatedFolders: ValidatedPlugins = [];
 
@@ -469,8 +377,9 @@ export class PluginManager {
         const scriptsFolder = join(dir, 'scripts');
         const {type} = await staticManager.getPluginMetadataById(folder);
 
-        const targetMainPath = type === 'module' ? this.moduleMainScriptPath : this.extensionMainScriptPath;
-        const targetRendererPath = type === 'module' ? this.moduleRendererScriptPath : this.extensionRendererScriptPath;
+        const targetMainPath = type === 'module' ? oldFolders.module.mainScript : oldFolders.extension.mainScript;
+        const targetRendererPath =
+          type === 'module' ? oldFolders.module.rendererScript : oldFolders.extension.rendererScript;
 
         try {
           await promises.access(scriptsFolder, constants.F_OK);
@@ -493,130 +402,6 @@ export class PluginManager {
     }
 
     return validatedFolders;
-  }
-
-  private async migrateRemoveOld(folder: string) {
-    const oldInstallations: string[] = [];
-
-    // Store already installed plugins
-    try {
-      const entries = await promises.readdir(folder, {withFileTypes: true});
-
-      for (const entry of entries) {
-        if (entry.isDirectory()) {
-          const subdirPath = resolve(folder, entry.name);
-          try {
-            const url = await GitManager.remoteUrlFromDir(subdirPath);
-            if (url) oldInstallations.push(url);
-          } catch (e) {
-            // Ignore subdirectories that are not Git repositories or where the remote cannot be determined
-            console.warn(`Could not determine remote URL for ${subdirPath}:`, e);
-          }
-        }
-      }
-    } catch (error) {
-      console.error(`Failed to read plugin directory ${folder}:`, error);
-    }
-
-    // Remove old installations
-    try {
-      await promises.rm(folder, {recursive: true, force: true});
-    } catch (error) {
-      console.error(`Failed to clean directory ${folder}:`, error);
-      throw error;
-    }
-
-    return oldInstallations;
-  }
-
-  private isCompatible(
-    version: VersionItem,
-    type: 'module' | 'extension',
-    currentStage: SubscribeStages,
-  ): {compatible: boolean; reason: string | undefined} {
-    // 1. Subscribe Stage Check
-    switch (currentStage) {
-      // Have access to all stages
-      case 'insider':
-        break;
-
-      // Have access to public and early access stages
-      case 'early_access':
-        if (version.stage === 'insider') {
-          return {
-            compatible: false,
-            reason:
-              `Version ${version.version} is only available for Insider subscribers.\n` +
-              `Please upgrade your plan to get access.`,
-          };
-        }
-        break;
-
-      // Have access to only the public stage
-      case 'public':
-        if (version.stage !== 'public') {
-          const requiredStage = version.stage === 'insider' ? 'Insider' : 'Early Access';
-          return {
-            compatible: false,
-            reason:
-              `Version ${version.version} requires an ${requiredStage} or higher subscription.\n` +
-              `Please upgrade your plan to get access.`,
-          };
-        }
-        break;
-    }
-
-    const currentPlatform = platform();
-
-    // 2. Platform Check
-    const platforms = version.platforms;
-    if (!platforms || !platforms.includes(currentPlatform)) {
-      const supportedPlatforms = platforms?.join(', ') || 'none';
-      return {
-        compatible: false,
-        reason:
-          `Version ${version.version} is not compatible with your operating system\n` +
-          `(${currentPlatform}). It only supports: ${supportedPlatforms}.`,
-      };
-    }
-
-    // 3. Engines/API Check
-    const engines = version.engines;
-    if (engines && typeof engines === 'object') {
-      const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
-      const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
-
-      const targetCheck = type === 'extension' ? extensionCheck : moduleCheck;
-      const requiredRange = engines[targetCheck.api as keyof PluginEngines];
-
-      if (requiredRange) {
-        if (!satisfies(targetCheck.version, requiredRange)) {
-          return {
-            compatible: false,
-            reason:
-              `Version ${version.version} requires a different application version.\n` +
-              `It needs ${type} api version ${requiredRange}, but current version api is ${targetCheck.version}.`,
-          };
-        }
-      } else {
-        // This suggests the package itself is malformed or invalid.
-        return {
-          compatible: false,
-          reason:
-            `Could not verify compatibility for version ${version.version}.\n` +
-            `The package metadata may be missing or corrupted.`,
-        };
-      }
-    } else {
-      // A fallback for the same reason as above.
-      return {
-        compatible: false,
-        reason: `Could not find compatibility information for version ${version.version}.`,
-      };
-    }
-
-    // If all checks pass, it's compatible.
-    return {compatible: true, reason: undefined};
   }
 
   /**
@@ -707,6 +492,26 @@ export class PluginManager {
       });
       console.log(`Skipping plugin "${folder}" because it's missing compatibility information (engines field).`);
       return false;
+    }
+  }
+
+  public async migrate() {
+    const targetModuleDir = join(dirname(this.pluginPath), oldFolders.module.folder);
+    const targetExtensionDir = join(dirname(this.pluginPath), oldFolders.extension.folder);
+
+    const oldInstalledModules = await removeOldInstallations(targetModuleDir);
+    const oldInstalledExtensions = await removeOldInstallations(targetExtensionDir);
+
+    const oldInstallations = [...oldInstalledModules, ...oldInstalledExtensions];
+
+    // Reinstall in the new way
+    for (const url of oldInstallations) {
+      const id = await staticManager.getPluginIdByRepositoryUrl(url);
+      if (!id) continue;
+
+      const targetCommit = await getCommitByAppStage(id);
+
+      await this.install(url, targetCommit);
     }
   }
 }
