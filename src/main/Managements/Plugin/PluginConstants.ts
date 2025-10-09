@@ -1,13 +1,13 @@
 export const hostName: string = 'localhost';
 
-export const oldFolders = {
+export const pluginFolders = {
   module: {
-    folder: 'Modules',
+    oldFolder: 'Modules',
     mainScript: 'scripts/main.mjs',
     rendererScript: 'scripts/renderer.mjs',
   },
   extension: {
-    folder: 'Extensions',
+    oldFolder: 'Extensions',
     mainScript: 'scripts/main/mainEntry.mjs',
     rendererScript: 'scripts/renderer/rendererEntry.mjs',
   },

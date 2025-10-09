@@ -1,21 +1,17 @@
 import {createServer} from 'node:http';
-import {platform} from 'node:os';
 import {dirname, join} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {constants, promises, readdirSync} from 'graceful-fs';
 import {includes, isString} from 'lodash';
 import portFinder from 'portfinder';
-import {ltr, satisfies} from 'semver';
 import handler from 'serve-handler';
 
-import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../../cross/CrossConstants';
 import {SubscribeStages} from '../../../cross/CrossTypes';
 import {pluginChannels} from '../../../cross/IpcChannelAndTypes';
 import {getUpdateType} from '../../../cross/plugin/CrossPluginUtils';
 import {
   PluginAddresses,
-  PluginEngines,
   PluginInstalledItem,
   PluginSyncItem,
   UnloadedPlugins,
@@ -28,7 +24,7 @@ import GitManager from '../Git/GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
 import ExtensionManager from './Extensions/ExtensionManager';
 import ModuleManager from './Modules/ModuleManager';
-import {hostName, oldFolders} from './PluginConstants';
+import {hostName, pluginFolders} from './PluginConstants';
 import {
   getCommitByAppStage,
   getVersionByCommit,
@@ -371,15 +367,19 @@ export class PluginManager {
 
     for (const folder of folderPaths) {
       if (folder.startsWith('.')) {
+        this.skipped.push({
+          id: folder,
+          message: "Unloaded because folder starts with '.'.",
+        });
         console.log(`Skipping folder "${folder}" because it starts with '.'`);
       } else {
         const dir = join(this.pluginPath, folder);
         const scriptsFolder = join(dir, 'scripts');
         const {type} = await staticManager.getPluginMetadataById(folder);
 
-        const targetMainPath = type === 'module' ? oldFolders.module.mainScript : oldFolders.extension.mainScript;
+        const targetMainPath = type === 'module' ? pluginFolders.module.mainScript : pluginFolders.extension.mainScript;
         const targetRendererPath =
-          type === 'module' ? oldFolders.module.rendererScript : oldFolders.extension.rendererScript;
+          type === 'module' ? pluginFolders.module.rendererScript : pluginFolders.extension.rendererScript;
 
         try {
           await promises.access(scriptsFolder, constants.F_OK);
@@ -389,8 +389,7 @@ export class PluginManager {
             promises.access(join(dir, targetRendererPath), constants.F_OK),
           ]);
 
-          const isCompatible = await this.compatibleCheck(folder);
-          if (isCompatible) validatedFolders.push({type, folder});
+          validatedFolders.push({type, folder});
         } catch (err) {
           this.skipped.push({
             id: folder,
@@ -404,100 +403,9 @@ export class PluginManager {
     return validatedFolders;
   }
 
-  /**
-   * Checks if a plugin is compatible with the current application version.
-   * @param folder The plugin's folder name, for logging purposes.
-   * @returns {Promise<boolean>} True if compatible, false otherwise.
-   */
-  private async compatibleCheck(folder: string): Promise<boolean> {
-    const skip = () => {
-      this.skipped.push({
-        id: folder,
-        message: 'Configuration file is unreadable or corrupt.',
-      });
-      console.error(`Skipping plugin "${folder}" due to invalid configuration file.`);
-    };
-
-    const targetDir = join(this.pluginPath, folder);
-
-    const remoteUrl = await GitManager.remoteUrlFromDir(targetDir);
-    if (!remoteUrl) {
-      skip();
-      return false;
-    }
-
-    const currentCommitHash = await this.gitManager.getCurrentCommitHash(targetDir);
-    const itemId = await staticManager.getPluginIdByRepositoryUrl(remoteUrl);
-    if (!itemId) {
-      skip();
-      return false;
-    }
-
-    const versioning = await staticManager.getPluginVersioningById(itemId);
-    const {type} = await staticManager.getPluginMetadataById(itemId);
-
-    const currentVersion = versioning.versions.find(item => item.commit === currentCommitHash);
-
-    if (!currentVersion) {
-      this.skipped.push({
-        id: folder,
-        message: `Could not verify installed version. The ${type} may be outdated or invalid.`,
-      });
-      console.log(`Skipping ${type} "${folder}" because can't find installed commit hash in versions.`);
-      return false;
-    }
-
-    const platforms = currentVersion.platforms;
-    if (!platforms || !platforms.includes(platform())) {
-      this.skipped.push({
-        id: folder,
-        message: `Platform incompatibility detected. The ${type} may be outdated or invalid.`,
-      });
-      console.log(`Skipping ${type} "${folder}" due to unsupported platform.`);
-      return false;
-    }
-
-    const engines = currentVersion.engines;
-    if (engines && typeof engines === 'object') {
-      const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
-      const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
-
-      const targetCheck = type === 'extension' ? extensionCheck : moduleCheck;
-
-      const requiredRange = engines[targetCheck.api as keyof PluginEngines];
-      if (requiredRange && !satisfies(targetCheck.version, requiredRange)) {
-        // ltr(app_version, required_range) is true if the app version is lower.
-        const isAppTooOld = ltr(targetCheck.version, requiredRange);
-
-        // --- Message 2 & 3: Version Mismatch ---
-        const message = isAppTooOld
-          ? `Requires a newer version of LynxHub to run.` // App is too old for the plugin.
-          : `This ${type} is too old for your version of LynxHub.`; // Plugin is too old for the app.
-
-        this.skipped.push({
-          id: folder,
-          message: message,
-        });
-        console.log(`Skipping plugin "${folder}": ${message}`);
-        return false;
-      }
-
-      // If all engine checks pass, the plugin is compatible.
-      return true;
-    } else {
-      // --- Message 4: Missing Compatibility Info ---
-      this.skipped.push({
-        id: folder,
-        message: `Could not verify compatibility. The ${type} may be outdated or invalid.`,
-      });
-      console.log(`Skipping plugin "${folder}" because it's missing compatibility information (engines field).`);
-      return false;
-    }
-  }
-
   public async migrate() {
-    const targetModuleDir = join(dirname(this.pluginPath), oldFolders.module.folder);
-    const targetExtensionDir = join(dirname(this.pluginPath), oldFolders.extension.folder);
+    const targetModuleDir = join(dirname(this.pluginPath), pluginFolders.module.oldFolder);
+    const targetExtensionDir = join(dirname(this.pluginPath), pluginFolders.extension.oldFolder);
 
     const oldInstalledModules = await removeOldInstallations(targetModuleDir);
     const oldInstalledExtensions = await removeOldInstallations(targetExtensionDir);
