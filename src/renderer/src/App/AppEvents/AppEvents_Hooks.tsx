@@ -13,7 +13,7 @@ import {modalActions} from '../Redux/Reducer/ModalsReducer';
 import {pluginsActions} from '../Redux/Reducer/PluginsReducer';
 import {settingsActions} from '../Redux/Reducer/SettingsReducer';
 import {tabsActions, useTabsState} from '../Redux/Reducer/TabsReducer';
-import {userActions} from '../Redux/Reducer/UserReducer';
+import {userActions, useUserState} from '../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
 import {defaultTabItem} from '../Utils/Constants';
@@ -46,10 +46,11 @@ export const useCheckCardsUpdate = () => {
 export const useCheckPluginsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
   const moduleUpdateInterval = useRef<NodeJS.Timeout>(undefined);
+  const updateChannel = useUserState('updateChannel');
 
   useEffect(() => {
     const checkForUpdate = () => {
-      rendererIpc.plugins.checkForSync('insider');
+      rendererIpc.plugins.checkForSync(updateChannel);
     };
 
     checkForUpdate();
@@ -62,7 +63,7 @@ export const useCheckPluginsUpdate = () => {
     });
 
     return () => removeListener();
-  }, [dispatch]);
+  }, [dispatch, updateChannel, moduleUpdateInterval]);
 };
 
 export const useOnlineEvents = () => {
@@ -107,8 +108,6 @@ export const usePatreon = () => {
       .then(userData => {
         dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
         dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
-
-        rendererIpc.plugins.checkForSync(userData.subscribeStage);
       })
       .catch(console.info);
 
