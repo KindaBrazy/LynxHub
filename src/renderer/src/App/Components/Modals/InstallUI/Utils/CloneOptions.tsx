@@ -1,5 +1,4 @@
-import {Checkbox, CircularProgress, NumberInput, Select, SelectItem} from '@heroui/react';
-import {Card} from 'antd';
+import {Card, CardBody, CardHeader, Checkbox, CircularProgress, NumberInput, Select, SelectItem} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -73,80 +72,67 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
   }, [url]);
 
   return (
-    <Card
-      title={
-        <div className="flex flex-row items-center space-x-2">
-          <SettingsMinimal_Icon className="size-4" />
-          <span className="text-medium">Clone Options</span>
-        </div>
-      }
-      size="small"
-      variant="borderless"
-      className="!shadow-small dark:bg-foreground-100">
-      {loading ? (
-        <div className="w-full flex justify-center mb-2">
-          <CircularProgress size="lg" label="Fetching repository info..." />
-        </div>
-      ) : isEmpty(branches) ? (
-        <div className="flex flex-col items-center justify-center p-2 gap-y-1">
-          <ShieldWarning_Icon className="size-14 text-warning" />
-          <span className="text-lg font-medium">Unable to retrieve repository branches</span>
-          <p className="text-sm text-foreground-500">The default repository branch will be used for cloning.</p>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-y-4">
-          <div className="space-x-2 flex flex-row items-center">
-            <Select
-              size="sm"
-              label="Branch:"
-              items={branches}
-              selectionMode="single"
-              className="items-center"
-              labelPlacement="outside-left"
-              selectedKeys={selectedBranch}
-              // @ts-ignore-next-line
-              onSelectionChange={setSelectedBranch}
-              classNames={{trigger: 'transition duration-300 data-[hover=true]:bg-foreground-300 bg-foreground-200'}}>
-              {item => {
-                return <SelectItem key={item.key}>{item.value}</SelectItem>;
-              }}
-            </Select>
+    <Card className="dark:bg-foreground-100">
+      <CardHeader className="gap-x-2">
+        <SettingsMinimal_Icon />
+        <span>Clone Options</span>
+      </CardHeader>
+      <CardBody>
+        {loading ? (
+          <div className="w-full flex justify-center mb-2">
+            <CircularProgress size="lg" label="Fetching repository info..." />
           </div>
-          <Checkbox isSelected={enabledSingleBranch} onValueChange={setEnabledSingleBranch}>
-            Limit clone to a single branch
-          </Checkbox>
-          <div className="flex flex-row items-center justify-between">
-            <Checkbox isSelected={enabledDepth} onValueChange={setEnabledDepth}>
-              Perform a shallow clone
+        ) : isEmpty(branches) ? (
+          <div className="flex flex-col items-center justify-center p-2 gap-y-1">
+            <ShieldWarning_Icon className="size-14 text-warning" />
+            <span className="text-lg font-medium">Unable to retrieve repository branches</span>
+            <p className="text-sm text-foreground-500">The default repository branch will be used for cloning.</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-y-4">
+            <div className="space-x-2 flex flex-row items-center">
+              <Select
+                size="sm"
+                label="Branch:"
+                items={branches}
+                selectionMode="single"
+                className="items-center"
+                labelPlacement="outside-left"
+                selectedKeys={selectedBranch}
+                // @ts-ignore-next-line
+                onSelectionChange={setSelectedBranch}
+                classNames={{trigger: 'transition duration-300 data-[hover=true]:bg-foreground-300 bg-foreground-200'}}>
+                {item => {
+                  return <SelectItem key={item.key}>{item.value}</SelectItem>;
+                }}
+              </Select>
+            </div>
+            <Checkbox isSelected={enabledSingleBranch} onValueChange={setEnabledSingleBranch}>
+              Limit clone to a single branch
             </Checkbox>
+            <div className="flex flex-row items-center justify-between">
+              <Checkbox isSelected={enabledDepth} onValueChange={setEnabledDepth}>
+                Perform a shallow clone
+              </Checkbox>
 
-            <NumberInput
-              classNames={{
-                inputWrapper: 'bg-foreground-200 hover:!bg-foreground-300 group-data-[focus=true]:bg-foreground-200',
-                base: 'w-fit',
-              }}
-              size="sm"
-              minValue={1}
-              label="Depth:"
-              value={depthValue}
-              className="max-w-72"
-              isDisabled={!enabledDepth}
-              labelPlacement="outside-left"
-              onValueChange={setDepthValue}
-            />
-            {/*<InputNumber
-                min={1}
-                variant="filled"
+              <NumberInput
+                classNames={{
+                  inputWrapper: 'bg-foreground-200 hover:!bg-foreground-300 group-data-[focus=true]:bg-foreground-200',
+                  base: 'w-fit',
+                }}
+                size="sm"
+                minValue={1}
+                label="Depth:"
                 value={depthValue}
-                disabled={!enabledDepth}
-                addonAfter="Commits deep"
-                className="mx-1 z-20 max-w-60"
-                onChange={value => setDepthValue(value!)}
-                changeOnWheel
-              />*/}
+                className="max-w-72"
+                isDisabled={!enabledDepth}
+                labelPlacement="outside-left"
+                onValueChange={setDepthValue}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </CardBody>
     </Card>
   );
 }
