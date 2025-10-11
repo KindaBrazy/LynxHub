@@ -57,7 +57,7 @@ export default function List() {
               </>
             ) : (
               <>
-                <p className="text-gray-300 mb-2">We couldn't find any extensions matching your search.</p>
+                <p className="text-gray-300 mb-2">Couldn't find any plugins matching your search.</p>
                 <p className="text-gray-500">Try refining your search terms or checking for typos.</p>
               </>
             )}
@@ -78,7 +78,7 @@ export default function List() {
       {refreshing && <Progress size="sm" color="secondary" aria-label="Refreshing Item" isIndeterminate />}
       <div className="flex w-full flex-col p-4 gap-y-4 shadow-small">
         <div className="flex w-full justify-between flex-row items-center">
-          <span className="font-semibold text-xl">Extensions</span>
+          <span className="font-semibold text-xl">Plugins</span>
           <SyncAllButton />
         </div>
         <div className="flex flex-row items-center gap-x-2">
@@ -86,7 +86,7 @@ export default function List() {
             type="search"
             value={searchValue}
             onValueChange={setSearchValue}
-            placeholder="Search extensions..."
+            placeholder="Search for plguins..."
             startContent={<Circle_Icon className="size-4" />}
           />
           {filterMenu()}
