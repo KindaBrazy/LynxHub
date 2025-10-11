@@ -1,5 +1,5 @@
-import {Link, ModalBody, Progress} from '@heroui/react';
-import {Card, Descriptions} from 'antd';
+import {Card, CardBody, CardHeader, Link, ModalBody, Progress} from '@heroui/react';
+import {Descriptions} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
@@ -108,42 +108,35 @@ export default function CloneRepo({url, start, done, isOpen, cardId}: Props) {
         </>
       ) : (
         <div className="space-y-4">
-          <Card
-            title={
-              <div className="flex flex-row items-center space-x-2">
-                <GitHub_Icon className="size-4" />
-                <span className="text-medium">Clone Url</span>
-              </div>
-            }
-            size="small"
-            variant="borderless"
-            classNames={{header: ''}}
-            className="text-center !shadow-small dark:bg-foreground-100">
-            <Link
-              href={url}
-              color="foreground"
-              className="transition-colors duration-150 hover:text-primary"
-              isExternal
-              showAnchorIcon>
-              {url}
-            </Link>
+          <Card className="bg-foreground-100">
+            <CardHeader className="gap-x-2">
+              <GitHub_Icon />
+              <span>Clone Url</span>
+            </CardHeader>
+            <CardBody>
+              <Link
+                href={url}
+                color="foreground"
+                className="transition-colors duration-150 hover:text-primary"
+                isExternal
+                showAnchorIcon>
+                {url}
+              </Link>
+            </CardBody>
           </Card>
-          <Card
-            title={
-              <div className="flex flex-row items-center space-x-2">
-                <Folder2_Icon className="size-4" />
-                <span className="text-medium">Save to</span>
-              </div>
-            }
-            size="small"
-            variant="borderless"
-            className="text-center !shadow-small dark:bg-foreground-100">
-            <OpenDialog
-              directory={directory}
-              setDirectory={setDirectory}
-              extraFolder={extractGitUrl(url).repo}
-              dialogType={{properties: ['openDirectory']}}
-            />
+          <Card className="bg-foreground-100">
+            <CardHeader className="gap-x-2">
+              <Folder2_Icon />
+              <span>Save to</span>
+            </CardHeader>
+            <CardBody>
+              <OpenDialog
+                directory={directory}
+                setDirectory={setDirectory}
+                extraFolder={extractGitUrl(url).repo}
+                dialogType={{properties: ['openDirectory']}}
+              />
+            </CardBody>
           </Card>
           <CloneOptions url={url} setCloneOptionsResult={setCloneOptionsResult} />
         </div>
