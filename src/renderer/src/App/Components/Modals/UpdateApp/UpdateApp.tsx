@@ -1,7 +1,7 @@
 import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {CollapseProps, Divider, Typography} from 'antd';
 import {isEmpty} from 'lodash';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {
@@ -39,10 +39,10 @@ const UpdateApp = () => {
   const updateChannel = useUserState('updateChannel');
 
   const dispatch = useDispatch<AppDispatch>();
+  const removeListener = useRef<(() => void) | null>(null);
 
   const listenProgress = useCallback(() => {
-    rendererIpc.appUpdate.offStatus();
-    rendererIpc.appUpdate.status((_, type, status) => {
+    removeListener.current = rendererIpc.appUpdate.status((_, type, status) => {
       switch (type) {
         case 'update-available': {
           setDownloadProgress(undefined);
@@ -73,7 +73,7 @@ const UpdateApp = () => {
       }
     });
 
-    return () => rendererIpc.appUpdate.offStatus();
+    return () => removeListener.current?.();
   }, [dispatch, runningCard, activeTab]);
 
   const onClose = useCallback(() => {
@@ -92,7 +92,7 @@ const UpdateApp = () => {
   }, [listenProgress]);
 
   const cancelDownload = useCallback(() => {
-    rendererIpc.appUpdate.offStatus();
+    removeListener.current?.();
     rendererIpc.appUpdate.cancel();
     setDownloadState(undefined);
   }, []);

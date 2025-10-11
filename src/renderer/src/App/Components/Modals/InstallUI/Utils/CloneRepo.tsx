@@ -81,12 +81,9 @@ export default function CloneRepo({url, start, done, isOpen, cardId}: Props) {
     };
 
     // Update ui with progress
-    rendererIpc.git.offProgress();
-    rendererIpc.git.onProgress(onProgress);
+    const removeListener = rendererIpc.git.onProgress(onProgress);
 
-    return () => {
-      rendererIpc.git.offProgress();
-    };
+    return () => removeListener();
   }, [dispatch, url, directory, done, cardId, cloneOptionsResult]);
 
   return (

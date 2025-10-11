@@ -30,15 +30,13 @@ const Browser_ActionButtons = memo(({webuiAddress, tabID, id}: Props) => {
   useHotkeyPress([{name: Hotkey_Names.refreshTab, method: activeTab === tabID ? reload : null}]);
 
   useEffect(() => {
-    rendererIpc.browser.onCanGo((_, targetID, canGo) => {
+    const offCanGo = rendererIpc.browser.onCanGo((_, targetID, canGo) => {
       if (targetID == id) {
         setCanGoBack(canGo.back);
         setCanGoForward(canGo.forward);
       }
     });
-    return () => {
-      rendererIpc.browser.offCanGo();
-    };
+    return () => offCanGo();
   }, []);
 
   return (

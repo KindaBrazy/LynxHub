@@ -18,13 +18,11 @@ export default function CustomRunCommands({id}: Props) {
     rendererIpc.storageUtils.customRun('get', {id}).then(result => {
       setCommands(result);
     });
-    rendererIpc.storageUtils.onCustomRun((_, result) => {
+    const removeListener = rendererIpc.storageUtils.onCustomRun((_, result) => {
       if (result.id === id) setCommands(result.commands);
     });
 
-    return () => {
-      rendererIpc.storageUtils.offCustomRun();
-    };
+    return () => removeListener();
   }, []);
 
   const editCommand = useCallback(

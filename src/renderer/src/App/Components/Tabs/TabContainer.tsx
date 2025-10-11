@@ -36,12 +36,11 @@ const TabContainer = memo(() => {
   }, [containerRef]);
 
   useEffect(() => {
-    rendererIpc.contextMenu.offRemoveTab();
-    rendererIpc.contextMenu.onRemoveTab((_, tabID) => {
+    const offRemoveTab = rendererIpc.contextMenu.onRemoveTab((_, tabID) => {
       removeTab(tabID);
     });
 
-    return () => rendererIpc.contextMenu.offRemoveTab();
+    return () => offRemoveTab();
   }, [removeTab]);
 
   const onReorder = (reorderedIds: string[]) => {

@@ -8,7 +8,7 @@ export default function CustomNotification() {
   const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
-    rendererIpc.customNotification.onOpen((_, data) => {
+    const offOpen = rendererIpc.customNotification.onOpen((_, data) => {
       console.log('openeing this', data.key);
       api[data.type]({
         closeIcon: null,
@@ -45,11 +45,11 @@ export default function CustomNotification() {
         className: 'dark:bg-foreground-100 !shadow-medium !overflow-hidden rounded-xl',
       });
     });
-    rendererIpc.customNotification.onClose((_, key) => api.destroy(key));
+    const offClose = rendererIpc.customNotification.onClose((_, key) => api.destroy(key));
 
     return () => {
-      rendererIpc.customNotification.offOpen();
-      rendererIpc.customNotification.offClose();
+      offOpen();
+      offClose();
     };
   }, []);
 
