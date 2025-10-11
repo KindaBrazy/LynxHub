@@ -318,10 +318,8 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
       rendererIpc.contextMenu.showWindow();
     };
 
-    rendererIpc.contextMenu.onInitView(handleInitView);
+    const offInitView = rendererIpc.contextMenu.onInitView(handleInitView);
 
-    return () => {
-      rendererIpc.contextMenu.offInitView();
-    };
+    return () => offInitView;
   }, [setElements, setWidthSize]);
 }

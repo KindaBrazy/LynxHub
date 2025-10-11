@@ -8,11 +8,11 @@ export default function DownloadManager() {
   const [itemCount, setItemCount] = useState<number>(0);
 
   useEffect(() => {
-    rendererIpc.downloadManager.onDownloadCount((_, count) => {
+    const offDownloadCount = rendererIpc.downloadManager.onDownloadCount((_, count) => {
       setItemCount(count);
     });
 
-    return () => rendererIpc.downloadManager.offDownloadCount();
+    return () => offDownloadCount();
   }, []);
 
   const openDownloadsWindow = () => rendererIpc.downloadManager.openMenu();

@@ -24,7 +24,7 @@ export default function UIProviders({children}: {children: ReactNode}) {
         });
       }
     });
-    rendererIpc.win.onDarkMode((_, darkMode) => {
+    const removeOnDarkListener = rendererIpc.win.onDarkMode((_, darkMode) => {
       if (darkMode === 'dark') {
         setDarkMode(true);
       } else if (darkMode === 'light') {
@@ -35,6 +35,8 @@ export default function UIProviders({children}: {children: ReactNode}) {
         });
       }
     });
+
+    return () => removeOnDarkListener();
   }, []);
 
   useLayoutEffect(() => {

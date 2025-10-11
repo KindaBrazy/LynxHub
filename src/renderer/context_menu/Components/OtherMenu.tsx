@@ -59,7 +59,7 @@ export function useZoomMenu(setElements: SetElementsType, setWidthSize: SetWidth
   }, [id, value, toggle]);
 
   useEffect(() => {
-    rendererIpc.contextMenu.onZoom((_, webID, zoomFactor) => {
+    const offZoom = rendererIpc.contextMenu.onZoom((_, webID, zoomFactor) => {
       setId(webID);
 
       setValue(zoomFactor * 100);
@@ -71,9 +71,7 @@ export function useZoomMenu(setElements: SetElementsType, setWidthSize: SetWidth
       rendererIpc.contextMenu.showWindow();
     });
 
-    return () => {
-      rendererIpc.contextMenu.offZoom();
-    };
+    return () => offZoom();
   }, [setElements, setWidthSize]);
 }
 
@@ -124,7 +122,7 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
   }, [id, searchValue, toggle]);
 
   useEffect(() => {
-    rendererIpc.contextMenu.onFind((_, webID) => {
+    const offFind = rendererIpc.contextMenu.onFind((_, webID) => {
       setToggle(prevState => !prevState);
       setId(webID);
 
@@ -133,8 +131,6 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
       rendererIpc.contextMenu.showWindow();
     });
 
-    return () => {
-      rendererIpc.contextMenu.offFind();
-    };
+    return () => offFind();
   }, [setElements, setWidthSize]);
 }

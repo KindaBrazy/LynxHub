@@ -17,12 +17,11 @@ const Browser_TopBar = memo(({runningCard, setCustomAddress, tabID}: Props) => {
   const [isDomReady, setIsDomReady] = useState<boolean>(false);
 
   useEffect(() => {
-    rendererIpc.browser.offDomReady();
-    rendererIpc.browser.onDomReady((_, id, isReady) => {
+    const offDomReady = rendererIpc.browser.onDomReady((_, id, isReady) => {
       if (id === runningCard.id && isReady) setIsDomReady(true);
     });
 
-    return () => rendererIpc.browser.offDomReady();
+    return () => offDomReady();
   }, [runningCard]);
 
   return (
