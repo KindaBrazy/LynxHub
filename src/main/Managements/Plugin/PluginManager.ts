@@ -219,7 +219,7 @@ export class PluginManager {
 
         try {
           setupGitManagerListeners(this.gitManager, url);
-          await this.gitManager.cloneShallow(url, directory, true, undefined, 'main');
+          await this.gitManager.shallowClone({url, directory, singleBranch: true, branch: 'main'});
           await this.gitManager.resetHard(directory, targetCommit, true, 'main');
 
           this.installed.push({id, url, version});

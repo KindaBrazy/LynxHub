@@ -1,32 +1,21 @@
 import path from 'node:path';
 
+import {ShallowCloneOptions} from '../../../../cross/GitTypes';
 import {setupGitManagerListeners} from '../../Git/GitHelper';
 import GitManager from '../../Git/GitManager';
 
 let gitManager: GitManager | undefined;
 
-export function cloneShallow(
-  url: string,
-  directory: string,
-  singleBranch: boolean,
-  depth?: number,
-  branch?: string,
-): void {
+export function shallowClone(options: ShallowCloneOptions): void {
   gitManager = new GitManager(true);
 
-  gitManager.cloneShallow(url, directory, singleBranch, depth, branch);
+  gitManager.shallowClone(options);
 
   setupGitManagerListeners(gitManager);
 }
 
-export async function cloneShallowPromise(
-  url: string,
-  directory: string,
-  singleBranch: boolean,
-  depth?: number,
-  branch?: string,
-) {
-  return new GitManager(true).cloneShallow(url, directory, singleBranch, depth, branch);
+export async function shallowClonePromise(options: ShallowCloneOptions) {
+  return new GitManager(true).shallowClone(options);
 }
 
 export async function getRepositoryInfo(dir: string) {

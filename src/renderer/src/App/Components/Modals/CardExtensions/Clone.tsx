@@ -64,7 +64,12 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
   const clone = useCallback(() => {
     if (alreadyInstalled) return;
     setCloning(true);
-    rendererIpc.git.cloneShallow(`${downloadBox?.url}` || '', `${dir}/${downloadBox?.name || ''}`, true, 1);
+    rendererIpc.git.cloneShallow({
+      url: downloadBox?.url || '',
+      directory: `${dir}/${downloadBox?.name || ''}`,
+      singleBranch: true,
+      depth: 1,
+    });
   }, [downloadBox, dir, alreadyInstalled]);
 
   useEffect(() => {

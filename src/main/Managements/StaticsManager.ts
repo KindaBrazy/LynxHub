@@ -166,9 +166,9 @@ export default class StaticsManager {
 
       if (dirUrl && dirUrl === STATICS_URL) return;
 
-      return this.gitManager.clone(STATICS_URL, this.dir);
+      return this.gitManager.shallowClone({url: STATICS_URL, directory: this.dir, singleBranch: true, branch: 'main'});
     } catch (_e) {
-      return this.gitManager.clone(STATICS_URL, this.dir);
+      return this.gitManager.shallowClone({url: STATICS_URL, directory: this.dir, singleBranch: true, branch: 'main'});
     }
   }
 

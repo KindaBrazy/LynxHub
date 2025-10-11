@@ -125,8 +125,8 @@ export const fileChannels = {
 };
 
 export const gitChannels = {
-  cloneShallow: 'git:clone-shallow',
-  cloneShallowPromise: 'git:clone-shallow-promise',
+  shallowClone: 'git:clone-shallow',
+  shallowClonePromise: 'git:clone-shallow-promise',
 
   stashDrop: 'git:stash-drop',
 
