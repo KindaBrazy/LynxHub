@@ -69,11 +69,7 @@ const InstallFooter = memo(
       return (
         <>
           <LocateWarning isOpen={locateWarnIsOpen} setIsOpen={setLocateWarnIsOpen} />
-          <Button
-            variant="flat"
-            onPress={handleClose}
-            className="cursor-default"
-            color={state.body === 'done' ? 'success' : 'danger'}>
+          <Button variant="flat" onPress={handleClose} color={state.body === 'done' ? 'success' : 'danger'}>
             {state.body === 'done' ? 'OK' : 'Cancel'}
           </Button>
           {state.body === 'terminal' && (
@@ -82,25 +78,17 @@ const InstallFooter = memo(
           {state.body === 'starter' && (
             <>
               {!state.disableSelectDir && (
-                <Button variant="flat" onPress={locate} className="cursor-default">
+                <Button variant="flat" onPress={locate}>
                   Locate
                 </Button>
               )}
-              <Button
-                variant="flat"
-                color="success"
-                className="cursor-default"
-                onPress={() => starterResolver.current?.({chosen: 'install'})}>
+              <Button variant="flat" color="success" onPress={() => starterResolver.current?.({chosen: 'install'})}>
                 Start Installation
               </Button>
             </>
           )}
           {state.body === 'clone' && !state.startClone && (
-            <Button
-              variant="flat"
-              color="success"
-              className="cursor-default"
-              onPress={() => updateState({startClone: true})}>
+            <Button variant="flat" color="success" onPress={() => updateState({startClone: true})}>
               Download
             </Button>
           )}
@@ -111,18 +99,17 @@ const InstallFooter = memo(
               }}
               variant="flat"
               color="success"
-              isDisabled={!canContinue}
-              className="cursor-default">
+              isDisabled={!canContinue}>
               Next
             </Button>
           )}
           {state.body === 'extension-custom' && (
-            <Button variant="flat" color="success" onPress={nextStep} className="cursor-default">
+            <Button variant="flat" color="success" onPress={nextStep}>
               Next
             </Button>
           )}
           {progressInfo?.stage === 'failed' && urlToDownload && (
-            <Button variant="flat" className="cursor-default" onPress={() => downloadFileFromUrl(urlToDownload)}>
+            <Button variant="flat" onPress={() => downloadFileFromUrl(urlToDownload)}>
               Try Again
             </Button>
           )}
