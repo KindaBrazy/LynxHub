@@ -5,7 +5,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {APP_ICON_TRANSPARENT, APP_NAME, APP_NAME_VERSION_V} from '../../../../../cross/CrossConstants';
 import {CheckDuo_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../RendererIpc';
-import Initializer_Extensions from './Initializer_Extensions';
+import Initializer_Plugins from './Initializer_Plugins';
 import {InitializerRequirements} from './Initializer_Requirements';
 import {RowData, WizardProps} from './InitTypes';
 import CheckRow from './Req_CheckRow';
@@ -23,17 +23,17 @@ const cardVariants = {
 
 export default function OnboardingWizard({isOldDone}: WizardProps) {
   const [step, setStep] = useState<number>(0);
-  const [installedExtensions, setInstalledExtensions] = useState<string[]>([]);
+  const [installedPlugins, setInstalledPlugins] = useState<string[]>([]);
   const [requirementsSatisfied, setRequirementsSatisfied] = useState<boolean>(false);
-  const [installingExtensions, setInstallingExtensions] = useState<boolean>(false);
+  const [installingPlugins, setInstallingPlugins] = useState<boolean>(false);
   const [reqStatus, setReqStatus] = useState({git: '', pwsh: '', appModule: ''});
 
   const [pwsh, setPwsh] = useState<RowData>({result: 'unknown'});
   const [pwshSatisfied, setPwshSatisfied] = useState<boolean>(false);
 
   const canGoNext = useMemo(
-    () => requirementsSatisfied && !installingExtensions,
-    [requirementsSatisfied, installingExtensions],
+    () => requirementsSatisfied && !installingPlugins,
+    [requirementsSatisfied, installingPlugins],
   );
 
   const onComplete = useCallback(() => {
@@ -214,11 +214,11 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
                       setRequirementsSatisfied={setRequirementsSatisfied}
                     />
 
-                    <Initializer_Extensions
-                      isInstalling={installingExtensions}
+                    <Initializer_Plugins
+                      isInstalling={installingPlugins}
+                      setInstalledPlugins={setInstalledPlugins}
+                      setInstallingPlugins={setInstallingPlugins}
                       requirementsSatisfied={requirementsSatisfied}
-                      setInstalledExtensions={setInstalledExtensions}
-                      setInstallingExtensions={setInstallingExtensions}
                     />
                   </motion.div>
 
@@ -226,7 +226,7 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
                     <Button className="light" isDisabled={!canGoNext} onPress={() => setStep(2)}>
                       {canGoNext
                         ? 'Continue'
-                        : installingExtensions
+                        : installingPlugins
                           ? 'Wait for Extensions Installation'
                           : 'Complete Requirements to Continue'}
                     </Button>
@@ -257,7 +257,7 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
                         {`Module: ${reqStatus.appModule}`}
                       </div>
                       <div className="text-sm text-white/70 mt-2">
-                        Extensions: {installedExtensions.join(', ') || 'None!'}
+                        Extensions: {installedPlugins.join(', ') || 'None!'}
                       </div>
                     </div>
                   </motion.div>

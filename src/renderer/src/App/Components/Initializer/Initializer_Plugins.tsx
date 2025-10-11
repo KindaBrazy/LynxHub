@@ -2,6 +2,8 @@ import {Button, Checkbox, cn, User} from '@heroui/react';
 import {compact, isEmpty} from 'lodash';
 import {useEffect, useState} from 'react';
 
+import {MAIN_MODULE_URL} from '../../../../../cross/CrossConstants';
+import {getPluginIconUrl} from '../../../../../cross/plugin/CrossPluginUtils';
 import rendererIpc from '../../RendererIpc';
 
 type ExtensionItem = {
@@ -13,37 +15,40 @@ type ExtensionItem = {
 };
 
 type Props = {
-  setInstalledExtensions: (extensions: string[]) => void;
+  setInstalledPlugins: (extensions: string[]) => void;
   requirementsSatisfied: boolean;
-  setInstallingExtensions: (value: boolean) => void;
+  setInstallingPlugins: (value: boolean) => void;
   isInstalling: boolean;
 };
 
-export default function Initializer_Extensions({
-  setInstalledExtensions,
+export default function Initializer_Plugins({
+  setInstalledPlugins,
   requirementsSatisfied,
-  setInstallingExtensions,
+  setInstallingPlugins,
   isInstalling,
 }: Props) {
-  const [extensions, setExtensions] = useState<ExtensionItem[]>([]);
-  const [selectedExtensions, setSelectedExtensions] = useState<Set<string>>(new Set([]));
+  const [plugins, setPlugins] = useState<ExtensionItem[]>([]);
+  const [selectedPlugin, setSelectedPlugin] = useState<Set<string>>(new Set([]));
 
   useEffect(() => {
-    rendererIpc.statics.getExtensions().then(available => {
-      setExtensions(
-        available.map(item => ({
-          id: item.id,
-          name: item.title,
-          description: item.description,
-          icon: item.avatarUrl,
-          url: item.repoUrl,
-        })),
-      );
+    rendererIpc.plugins.getList('public').then(list => {
+      const compatibleList = list.filter(item => item.isCompatible || item.url !== MAIN_MODULE_URL);
+      const finalList: ExtensionItem[] = compatibleList.map(item => {
+        return {
+          id: item.metadata.id,
+          name: item.metadata.title,
+          description: item.metadata.description,
+          url: item.url,
+          icon: getPluginIconUrl(item.url),
+        };
+      });
+
+      setPlugins(finalList);
     });
   }, []);
 
   const onSelectionChange = (checked: boolean, id: string) => {
-    setSelectedExtensions(prevState => {
+    setSelectedPlugin(prevState => {
       const newSet = new Set(prevState);
       if (checked) {
         newSet.add(id);
@@ -55,21 +60,21 @@ export default function Initializer_Extensions({
   };
 
   const install = () => {
-    setInstallingExtensions(true);
-    const urlsToInstall = compact(Array.from(selectedExtensions).map(id => extensions.find(ext => ext.id === id)?.url));
+    setInstallingPlugins(true);
+    const urlsToInstall = compact(Array.from(selectedPlugin).map(id => plugins.find(ext => ext.id === id)?.url));
     if (isEmpty(urlsToInstall)) {
-      setInstallingExtensions(false);
+      setInstallingPlugins(false);
     } else {
       Promise.all(urlsToInstall.map(item => rendererIpc.plugins.install(item)))
         .then(result => {
           const allInstalled = result.every(isSuccess => isSuccess === true);
           if (allInstalled) {
-            setInstalledExtensions(Array.from(selectedExtensions));
+            setInstalledPlugins(Array.from(selectedPlugin));
           } else {
             console.log('Failed to install some extensions');
           }
         })
-        .finally(() => setInstallingExtensions(false));
+        .finally(() => setInstallingPlugins(false));
     }
   };
 
@@ -81,14 +86,14 @@ export default function Initializer_Extensions({
       </div>
 
       <div className="flex-1 overflow-hidden mb-4">
-        {extensions.length === 0 && (
+        {plugins.length === 0 && (
           <div className="text-white/60 text-sm">
             No extensions provided — pass an
             <code className="bg-white/6 px-1 rounded">extensions</code> prop.
           </div>
         )}
         <div className="light flex flex-col gap-y-6 overflow-hidden size-full p-2">
-          {extensions.map(ext => (
+          {plugins.map(ext => (
             <Checkbox
               classNames={{
                 base: cn(
@@ -103,7 +108,7 @@ export default function Initializer_Extensions({
               color="default"
               aria-label={ext.name}
               isDisabled={!requirementsSatisfied}
-              isSelected={selectedExtensions.has(ext.id)}
+              isSelected={selectedPlugin.has(ext.id)}
               onValueChange={checked => onSelectionChange(checked, ext.id)}>
               <User
                 name={ext.name}
