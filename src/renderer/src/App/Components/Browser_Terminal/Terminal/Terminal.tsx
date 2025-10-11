@@ -103,7 +103,7 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal}: Props) => {
   }, [darkMode]);
 
   useEffect(() => {
-    rendererIpc.pty.onData((_, dataID, data) => {
+    const removeListener = rendererIpc.pty.onData((_, dataID, data) => {
       if (dataID === id) {
         const xTerminal = terminal.current;
         if (!xTerminal) return;
@@ -125,7 +125,7 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal}: Props) => {
       }
     });
 
-    return () => rendererIpc.pty.offData();
+    return () => removeListener();
   }, [id, webUIAddress, terminal, browserBehavior, outputColor, dispatch, allMethods, activeTab]);
 
   const onRightClickRef = useRef<((e: MouseEvent) => void) | null>(null);

@@ -18,13 +18,11 @@ export default function PreTerminalCommands({id}: Props) {
     rendererIpc.storageUtils.preCommands('get', {id}).then(result => {
       setPreCommands(result);
     });
-    rendererIpc.storageUtils.onPreCommands((_, result) => {
+    const removeListener = rendererIpc.storageUtils.onPreCommands((_, result) => {
       if (result.id === id) setPreCommands(result.commands);
     });
 
-    return () => {
-      rendererIpc.storageUtils.offPreCommands();
-    };
+    return () => removeListener();
   }, []);
 
   const editCommand = useCallback(

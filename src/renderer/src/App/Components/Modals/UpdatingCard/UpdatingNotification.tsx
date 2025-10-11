@@ -105,12 +105,9 @@ const UpdatingNotification = () => {
       }
     };
 
-    rendererIpc.git.offProgress();
-    rendererIpc.git.onProgress(onProgress);
+    const removeListener = rendererIpc.git.onProgress(onProgress);
 
-    return () => {
-      rendererIpc.git.offProgress();
-    };
+    return () => removeListener();
   }, [updatingCards, dispatch, activeTab]);
 
   return (

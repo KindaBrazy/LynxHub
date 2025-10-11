@@ -135,12 +135,9 @@ const Installed = forwardRef(
             }
           };
 
-          rendererIpc.git.offProgress();
-          rendererIpc.git.onProgress(onProgress);
+          const removeListener = rendererIpc.git.onProgress(onProgress);
 
-          return () => {
-            rendererIpc.git.offProgress();
-          };
+          return () => removeListener();
         });
       },
       [dir],
