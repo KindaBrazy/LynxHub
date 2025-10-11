@@ -4,6 +4,7 @@ import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, shell} 
 
 import {ChosenArgumentsData, DiscordRPC, FolderNames, SubscribeStages} from '../../../cross/CrossTypes';
 import {toMs} from '../../../cross/CrossUtils';
+import {ShallowCloneOptions} from '../../../cross/GitTypes';
 import {
   AgentTypes,
   appDataChannels,
@@ -90,11 +91,11 @@ import {
 } from './Methods/IpcMethods-Pty';
 import {
   changeBranch,
-  cloneShallow,
-  cloneShallowPromise,
   getRepositoryInfo,
   pullRepo,
   resetHard,
+  shallowClone,
+  shallowClonePromise,
   stashDrop,
   unShallow,
   validateGitDir,
@@ -154,16 +155,8 @@ function file() {
 function git() {
   ipcMain.handle(gitChannels.validateGitDir, (_, dir: string, url: string) => validateGitDir(dir, url));
 
-  ipcMain.on(
-    gitChannels.cloneShallow,
-    (_, url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string) =>
-      cloneShallow(url, directory, singleBranch, depth, branch),
-  );
-  ipcMain.handle(
-    gitChannels.cloneShallowPromise,
-    (_, url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string) =>
-      cloneShallowPromise(url, directory, singleBranch, depth, branch),
-  );
+  ipcMain.on(gitChannels.shallowClone, (_, options: ShallowCloneOptions) => shallowClone(options));
+  ipcMain.handle(gitChannels.shallowClonePromise, (_, options: ShallowCloneOptions) => shallowClonePromise(options));
 
   ipcMain.handle(gitChannels.stashDrop, (_, dir: string) => stashDrop(dir));
   ipcMain.handle(gitChannels.getRepoInfo, (_, dir: string) => getRepositoryInfo(dir));

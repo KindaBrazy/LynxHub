@@ -59,7 +59,7 @@ export default function CloneRepo({url, start, done, isOpen, cardId}: Props) {
     setDownloading(true);
 
     const {singleBranch, branch, depth} = cloneOptionsResult;
-    rendererIpc.git.cloneShallow(url, directory, singleBranch, depth, branch);
+    rendererIpc.git.cloneShallow({url, directory, singleBranch, depth, branch});
 
     const onProgress: GitProgressCallback = (_e, id, state, result) => {
       if (id || !isOpen) return;

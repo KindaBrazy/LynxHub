@@ -24,6 +24,7 @@ import {
   DownloadManagerProgress,
   DownloadStartInfo,
 } from '../../../cross/DownloadManagerTypes';
+import {ShallowCloneOptions} from '../../../cross/GitTypes';
 import {
   AgentTypes,
   appDataChannels,
@@ -191,26 +192,9 @@ const rendererIpc = {
 
   /** Git operations */
   git: {
-    cloneShallow: (url: string, directory: string, singleBranch: boolean, depth?: number, branch?: string): void => {
-      extensionRendererApi.events_ipc.emit('git_clone_shallow', {url, directory, singleBranch, depth, branch});
-      ipc.send(gitChannels.cloneShallow, url, directory, singleBranch, depth, branch);
-    },
-    cloneShallowPromise: (
-      url: string,
-      directory: string,
-      singleBranch: boolean,
-      depth?: number,
-      branch?: string,
-    ): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('git_clone_shallow_promise', {
-        url,
-        directory,
-        singleBranch,
-        depth,
-        branch,
-      });
-      return ipc.invoke(gitChannels.cloneShallowPromise, url, directory, singleBranch, depth, branch);
-    },
+    cloneShallow: (options: ShallowCloneOptions): void => ipc.send(gitChannels.shallowClone, options),
+    cloneShallowPromise: (options: ShallowCloneOptions): Promise<void> =>
+      ipc.invoke(gitChannels.shallowClonePromise, options),
     getRepoInfo: (dir: string): Promise<RepositoryInfo> => {
       extensionRendererApi.events_ipc.emit('git_get_repo_info', {dir});
       return ipc.invoke(gitChannels.getRepoInfo, dir);

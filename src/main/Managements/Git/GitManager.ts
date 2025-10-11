@@ -16,6 +16,7 @@ import {
 
 import {RepositoryInfo} from '../../../cross/CrossTypes';
 import {extractGitUrl, validateGitRepoUrl} from '../../../cross/CrossUtils';
+import {ShallowCloneOptions} from '../../../cross/GitTypes';
 import {appManager} from '../../index';
 import {checkPathExists, openDialog} from '../../Utilities/Utils';
 
@@ -217,13 +218,9 @@ export default class GitManager {
     });
   }
 
-  public async cloneShallow(
-    url: string,
-    directory: string,
-    singleBranch: boolean,
-    depth?: number,
-    branch?: string,
-  ): Promise<void> {
+  public async shallowClone(options: ShallowCloneOptions): Promise<void> {
+    const {url, directory, branch, singleBranch, depth} = options;
+
     const targetDirectory = path.resolve(directory);
 
     const cloneOptions: string[] = [];

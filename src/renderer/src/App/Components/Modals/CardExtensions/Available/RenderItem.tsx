@@ -31,7 +31,12 @@ export default function RenderItem({item, updateTable, dir, searchValue}: Props)
   const install = useCallback(() => {
     setInstalling(true);
     rendererIpc.git
-      .cloneShallowPromise(`${item.url}` || '', `${dir}/${extractGitUrl(item.url).repo || ''}`, true, 1)
+      .cloneShallowPromise({
+        url: item.url || '',
+        directory: `${dir}/${extractGitUrl(item.url).repo || ''}`,
+        singleBranch: true,
+        depth: 1,
+      })
       .then(() => {
         lynxTopToast(dispatch).success('Extension installed successfully.');
         updateTable();
