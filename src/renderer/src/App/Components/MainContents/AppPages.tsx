@@ -43,14 +43,11 @@ export default function AppPages() {
       rendererIpc.win.setDiscordRpAiRunning({running: false});
     };
 
-    rendererIpc.pty.offExit();
-    rendererIpc.pty.onExit((_, id) => {
+    const removeListener = rendererIpc.pty.onExit((_, id) => {
       if (closeTabOnExit) stopAI(id);
     });
 
-    return () => {
-      rendererIpc.pty.offExit();
-    };
+    return () => removeListener();
   }, [dispatch, runningCards, closeTabOnExit]);
 
   return (

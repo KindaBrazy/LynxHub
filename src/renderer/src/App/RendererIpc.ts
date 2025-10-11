@@ -218,7 +218,6 @@ const rendererIpc = {
     },
 
     onProgress: (callback: GitProgressCallback) => ipc.on(gitChannels.onProgress, callback),
-    offProgress: () => ipc.removeAllListeners(gitChannels.onProgress),
 
     pull: (repoDir: string, id: string): void => {
       extensionRendererApi.events_ipc.emit('git_pull', {repoDir, id});
@@ -335,7 +334,6 @@ const rendererIpc = {
     },
     onPreCommands: (result: (event: IpcRendererEvent, preCommands: OnPreCommands) => void) =>
       ipc.on(storageUtilsChannels.onPreCommands, result),
-    offPreCommands: (): void => ipc.removeAllListeners(storageUtilsChannels.onPreCommands),
 
     customRun: (opt: StorageOperation, data: PreCommands): Promise<string[]> => {
       extensionRendererApi.events_ipc.emit('storage_utils_custom_run', {opt, data});
@@ -343,7 +341,6 @@ const rendererIpc = {
     },
     onCustomRun: (result: (event: IpcRendererEvent, preCommands: OnPreCommands) => void) =>
       ipc.on(storageUtilsChannels.onCustomRun, result),
-    offCustomRun: (): void => ipc.removeAllListeners(storageUtilsChannels.onCustomRun),
 
     updateCustomRunBehavior: (data: CustomRunBehaviorData) => {
       extensionRendererApi.events_ipc.emit('storage_utils_update_custom_run_behavior', {data});
@@ -456,8 +453,6 @@ const rendererIpc = {
     onUpdateAllExtensions: (result: (event: IpcRendererEvent, updateInfo: OnUpdatingExtensions) => void) =>
       ipc.on(utilsChannels.onUpdateAllExtensions, result),
 
-    offUpdateAllExtensions: () => ipc.removeAllListeners(utilsChannels.onUpdateAllExtensions),
-
     getExtensionsDetails: (dir: string): Promise<ExtensionsData> => {
       extensionRendererApi.events_ipc.emit('utils_get_extensions_details', {dir});
       return ipc.invoke(utilsChannels.extensionsDetails, dir);
@@ -488,7 +483,6 @@ const rendererIpc = {
     },
     onDownloadFile: (result: (event: IpcRendererEvent, progress: DownloadProgress) => void) =>
       ipc.on(utilsChannels.onDownloadFile, result),
-    offDownloadFile: (): void => ipc.removeAllListeners(utilsChannels.onDownloadFile),
 
     decompressFile: (filePath: string): Promise<string> => {
       extensionRendererApi.events_ipc.emit('utils_decompress_file', {filePath});
@@ -543,21 +537,14 @@ const rendererIpc = {
     onTitle: (result: (event: IpcRendererEvent, id: string, title: string) => void) =>
       ipc.on(ptyChannels.onTitle, result),
     onExit: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(ptyChannels.onExit, result),
-
-    offData: (): void => ipc.removeAllListeners(ptyChannels.onData),
-    offTitle: (): void => ipc.removeAllListeners(ptyChannels.onTitle),
-    offExit: (): void => ipc.removeAllListeners(ptyChannels.onExit),
   },
 
   /** Managing app automatic updates */
   appUpdate: {
     statusError: (result: (event: IpcRendererEvent) => void) => ipc.on(appUpdateChannels.statusError, result),
-    offStatusError: (): void => ipc.removeAllListeners(appUpdateChannels.statusError),
 
     status: (result: (event: IpcRendererEvent, type: AppUpdateEventTypes, status: AppUpdateStatus) => void) =>
       ipc.on(appUpdateChannels.status, result),
-
-    offStatus: (): void => ipc.removeAllListeners(appUpdateChannels.status),
 
     download: (): void => {
       extensionRendererApi.events_ipc.emit('app_update_download', {});
@@ -628,11 +615,9 @@ const rendererIpc = {
   appWindow: {
     onHotkeysChange: (result: (event: IpcRendererEvent, input: LynxInput) => void) =>
       ipc.on(appWindowChannels.hotkeysChange, result),
-    offHotkeysChange: () => ipc.removeAllListeners(appWindowChannels.hotkeysChange),
 
     onShowToast: (result: (event: IpcRendererEvent, message: string, type: ShowToastTypes) => void) =>
       ipc.on(appWindowChannels.showToast, result),
-    offShowToast: () => ipc.removeAllListeners(appWindowChannels.showToast),
   },
 
   contextMenu: {
@@ -660,7 +645,6 @@ const rendererIpc = {
         id: number,
       ) => void,
     ) => ipc.on(contextMenuChannels.onInitView, result),
-    offInitView: () => ipc.removeAllListeners(contextMenuChannels.onInitView),
 
     openTerminateAI: (id: string) => {
       extensionRendererApi.events_ipc.emit('context_menu_open_terminate_ai', {id});
@@ -676,22 +660,13 @@ const rendererIpc = {
     },
 
     onFind: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(contextMenuChannels.onFind, result),
-    offFind: () => ipc.removeAllListeners(contextMenuChannels.onFind),
-
     onTerminateAI: (result: (event: IpcRendererEvent, id: string) => void) =>
       ipc.on(contextMenuChannels.onTerminateAI, result),
-    offTerminateAI: () => ipc.removeAllListeners(contextMenuChannels.onTerminateAI),
-
     onTerminateTab: (result: (event: IpcRendererEvent, id: string) => void) =>
       ipc.on(contextMenuChannels.onTerminateTab, result),
-    offTerminateTab: () => ipc.removeAllListeners(contextMenuChannels.onTerminateTab),
-
     onCloseApp: (result: (event: IpcRendererEvent) => void) => ipc.on(contextMenuChannels.onCloseApp, result),
-    offCloseApp: () => ipc.removeAllListeners(contextMenuChannels.onCloseApp),
-
     onZoom: (result: (event: IpcRendererEvent, id: string, zoomFactor: number) => void) =>
       ipc.on(contextMenuChannels.onZoom, result),
-    offZoom: () => ipc.removeAllListeners(contextMenuChannels.onZoom),
 
     relaunchAI: (id: string) => {
       extensionRendererApi.events_ipc.emit('context_menu_relaunch_ai', {id});
@@ -699,14 +674,12 @@ const rendererIpc = {
     },
     onRelaunchAI: (result: (event: IpcRendererEvent, id: string) => void) =>
       ipc.on(contextMenuChannels.onRelaunchAI, result),
-    offRelaunchAI: () => ipc.removeAllListeners(contextMenuChannels.onRelaunchAI),
 
     stopAI: (id: string) => {
       extensionRendererApi.events_ipc.emit('context_menu_stop_ai', {id});
       ipc.send(contextMenuChannels.stopAI, id);
     },
     onStopAI: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(contextMenuChannels.onStopAI, result),
-    offStopAI: () => ipc.removeAllListeners(contextMenuChannels.onStopAI),
 
     removeTab: (tabID: string) => {
       extensionRendererApi.events_ipc.emit('context_menu_remove_tab', {tabID});
@@ -714,13 +687,10 @@ const rendererIpc = {
     },
     onRemoveTab: (result: (event: IpcRendererEvent, tabID: string) => void) =>
       ipc.on(contextMenuChannels.onRemoveTab, result),
-    offRemoveTab: () => ipc.removeAllListeners(contextMenuChannels.onRemoveTab),
   },
 
   tab: {
     onNewTab: (result: (event: IpcRendererEvent, url: string) => void) => ipc.on(tabsChannels.onNewTab, result),
-
-    offNewTab: () => ipc.removeAllListeners(tabsChannels.onNewTab),
   },
 
   contextItems: {
@@ -839,27 +809,21 @@ const rendererIpc = {
 
     onCanGo: (result: (event: IpcRendererEvent, id: string, canGo: CanGoType) => void) =>
       ipc.on(browserChannels.onCanGo, result),
-    offCanGo: () => ipc.removeAllListeners(browserChannels.onCanGo),
 
     onIsLoading: (result: (event: IpcRendererEvent, id: string, isLoading: boolean) => void) =>
       ipc.on(browserChannels.isLoading, result),
-    offIsLoading: () => ipc.removeAllListeners(browserChannels.isLoading),
 
     onTitleChange: (result: (event: IpcRendererEvent, id: string, title: string) => void) =>
       ipc.on(browserChannels.onTitleChange, result),
-    offTitleChange: () => ipc.removeAllListeners(browserChannels.onTitleChange),
 
     onFavIconChange: (result: (event: IpcRendererEvent, id: string, faviconUrl: string) => void) =>
       ipc.on(browserChannels.onFavIconChange, result),
-    offFavIconChange: () => ipc.removeAllListeners(browserChannels.onFavIconChange),
 
     onUrlChange: (result: (event: IpcRendererEvent, id: string, url: string) => void) =>
       ipc.on(browserChannels.onUrlChange, result),
-    offUrlChange: () => ipc.removeAllListeners(browserChannels.onUrlChange),
 
     onDomReady: (result: (event: IpcRendererEvent, id: string, isReady: boolean) => void) =>
       ipc.on(browserChannels.onDomReady, result),
-    offDomReady: () => ipc.removeAllListeners(browserChannels.onDomReady),
 
     getUserAgent: (type?: AgentTypes): Promise<string> => {
       extensionRendererApi.events_ipc.emit('browser_get_user_agent', {type});
@@ -920,19 +884,15 @@ const rendererIpc = {
   downloadManager: {
     onDownloadCount: (result: (event: IpcRendererEvent, count: number) => void) =>
       ipc.on(browserDownloadChannels.mainDownloadCount, result),
-    offDownloadCount: () => ipc.removeAllListeners(browserDownloadChannels.mainDownloadCount),
 
     onDlStart: (result: (event: IpcRendererEvent, info: DownloadStartInfo) => void) =>
       ipc.on(browserDownloadChannels.onDlStart, result),
-    offDlStart: () => ipc.removeAllListeners(browserDownloadChannels.onDlStart),
 
     onProgress: (result: (event: IpcRendererEvent, info: DownloadManagerProgress) => void) =>
       ipc.on(browserDownloadChannels.onProgress, result),
-    offProgress: () => ipc.removeAllListeners(browserDownloadChannels.onProgress),
 
     onDone: (result: (event: IpcRendererEvent, info: DownloadDoneInfo) => void) =>
       ipc.on(browserDownloadChannels.onDone, result),
-    offDone: () => ipc.removeAllListeners(browserDownloadChannels.onDone),
 
     openMenu: () => ipc.send(browserDownloadChannels.openDownloadsMenu),
     openItem: (name: string, action: 'open' | 'openFolder') => ipc.send(browserDownloadChannels.openItem, name, action),
@@ -948,9 +908,6 @@ const rendererIpc = {
     onClose: (result: (event: IpcRendererEvent, key: string) => void) => ipc.on(customNotifChannels.onClose, result),
 
     btnPress: (btnId: string, notifKey: string) => ipc.send(customNotifChannels.onBtnPress, btnId, notifKey),
-
-    offOpen: () => ipc.removeAllListeners(customNotifChannels.onOpen),
-    offClose: () => ipc.removeAllListeners(customNotifChannels.onClose),
   },
 
   init: {

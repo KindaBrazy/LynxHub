@@ -119,6 +119,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
   const extensionsResolver = useRef<(() => void) | null>(null);
 
   // -----------------------------------------------> Handlers
+  const removeProgressListener = useRef<(() => void) | null>(null);
 
   const downloadFileFromUrl = useCallback(
     async (url: string): ReturnType<InstallationStepper['downloadFileFromUrl']> => {
@@ -127,10 +128,10 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
         updateState({body: 'progress'});
         setUrlToDownload(url);
         rendererIpc.utils.downloadFile(url);
-        rendererIpc.utils.offDownloadFile();
-        rendererIpc.utils.onDownloadFile((_e, progress) => {
+        removeProgressListener.current = rendererIpc.utils.onDownloadFile((_e, progress) => {
           if (progress.stage === 'done') {
             setProgressInfo(undefined);
+            removeProgressListener.current?.();
             resolve(progress.finalPath);
           } else {
             setProgressInfo(progress);
@@ -173,8 +174,8 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
   const handleClose = useCallback(() => {
     if (state.body === 'terminal') rendererIpc.pty.customProcess(cardId, 'stop');
     if (state.body === 'progress') {
-      rendererIpc.utils.offDownloadFile();
       rendererIpc.utils.cancelDownload();
+      removeProgressListener.current?.();
     }
     updateState(initialState);
     setCurrentStep(0);

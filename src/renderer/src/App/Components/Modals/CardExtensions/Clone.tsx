@@ -134,12 +134,9 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
       }
     };
 
-    rendererIpc.git.offProgress();
-    rendererIpc.git.onProgress(onProgress);
+    const removeListener = rendererIpc.git.onProgress(onProgress);
 
-    return () => {
-      rendererIpc.git.offProgress();
-    };
+    return () => removeListener();
   }, [visible]);
 
   if (!visible) return null;

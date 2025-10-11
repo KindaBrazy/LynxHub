@@ -25,9 +25,11 @@ export const useCheckCardsUpdate = () => {
   const allMethods = useAllCardMethods();
 
   useEffect(() => {
-    rendererIpc.module.onCardsUpdateAvailable((_e, result) => {
+    const removeListener = rendererIpc.module.onCardsUpdateAvailable((_e, result) => {
       dispatch(cardsActions.setUpdateAvailable(result));
     });
+
+    return () => removeListener();
   }, [dispatch]);
 
   useEffect(() => {
@@ -111,7 +113,11 @@ export const usePatreon = () => {
       })
       .catch(console.info);
 
-    rendererIpc.patreon.onReleaseChannel((_, stage) => dispatch(userActions.setUpdateChannel(stage)));
+    const offReleaseChannel = rendererIpc.patreon.onReleaseChannel((_, stage) =>
+      dispatch(userActions.setUpdateChannel(stage)),
+    );
+
+    return () => offReleaseChannel();
   }, [dispatch, isOnline]);
 };
 
@@ -119,26 +125,26 @@ export const useIpcEvents = () => {
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    rendererIpc.storageUtils.onInstalledCards((_, cards) => {
+    const removeListener_onInstalledCards = rendererIpc.storageUtils.onInstalledCards((_, cards) => {
       dispatch(cardsActions.setInstalledCards(cards));
     });
-    rendererIpc.storageUtils.onAutoUpdateCards((_, cards) => {
+    const removeListener_onAutoUpdateCards = rendererIpc.storageUtils.onAutoUpdateCards((_, cards) => {
       dispatch(cardsActions.setAutoUpdate(cards));
     });
-    rendererIpc.storageUtils.onAutoUpdateExtensions((_, cards) => {
+    const removeListener_onAutoUpdateExtensions = rendererIpc.storageUtils.onAutoUpdateExtensions((_, cards) => {
       dispatch(cardsActions.setAutoUpdateExtensions(cards));
     });
-    rendererIpc.storageUtils.onPinnedCardsChange((_, cards) => {
+    const removeListener_onPinnedCardsChange = rendererIpc.storageUtils.onPinnedCardsChange((_, cards) => {
       dispatch(cardsActions.setPinnedCards(cards));
     });
-    rendererIpc.storageUtils.onRecentlyUsedCardsChange((_, cards) => {
+    const removeListener_onRecentlyUsedCardsChange = rendererIpc.storageUtils.onRecentlyUsedCardsChange((_, cards) => {
       dispatch(cardsActions.setRecentlyUsedCards(cards));
     });
-    rendererIpc.storageUtils.onHomeCategory((_, data) => {
+    const removeListener_onHomeCategory = rendererIpc.storageUtils.onHomeCategory((_, data) => {
       dispatch(cardsActions.setHomeCategory(data));
     });
 
-    rendererIpc.win.onDarkMode((_, result) => {
+    const removeListener_onDarkMode = rendererIpc.win.onDarkMode((_, result) => {
       if (result === 'dark') {
         dispatch(appActions.setAppState({key: 'darkMode', value: true}));
       } else if (result === 'light') {
@@ -146,7 +152,7 @@ export const useIpcEvents = () => {
       }
     });
 
-    rendererIpc.win.onChangeState((_e, result) => {
+    const removeListener_onChangeState = rendererIpc.win.onChangeState((_e, result) => {
       const {name, value} = result;
       switch (name) {
         case 'focus':
@@ -161,14 +167,25 @@ export const useIpcEvents = () => {
       }
     });
 
-    rendererIpc.storageUtils.onConfirmChange((_, type, enable) => {
+    const removeListener_onConfirmChange = rendererIpc.storageUtils.onConfirmChange((_, type, enable) => {
       dispatch(settingsActions.setSettingsState({key: type, value: enable}));
     });
+
+    return () => {
+      removeListener_onInstalledCards();
+      removeListener_onAutoUpdateCards();
+      removeListener_onAutoUpdateExtensions();
+      removeListener_onPinnedCardsChange();
+      removeListener_onRecentlyUsedCardsChange();
+      removeListener_onHomeCategory();
+      removeListener_onDarkMode();
+      removeListener_onChangeState();
+      removeListener_onConfirmChange();
+    };
   }, [dispatch]);
 
   useEffect(() => {
-    rendererIpc.utils.offUpdateAllExtensions();
-    rendererIpc.utils.onUpdateAllExtensions((_e, result) => {
+    const removeListener = rendererIpc.utils.onUpdateAllExtensions((_e, result) => {
       if (result.step === 'done') {
         rendererIpc.pty.process(result.id, 'start', result.id);
         rendererIpc.storageUtils.recentlyUsedCards('update', result.id);
@@ -177,6 +194,8 @@ export const useIpcEvents = () => {
       }
       dispatch(cardsActions.setUpdatingExtensions(result));
     });
+
+    return () => removeListener();
   }, [dispatch, activeTab]);
 };
 
@@ -198,13 +217,11 @@ export const useHotkeyEvents = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    rendererIpc.appWindow.onHotkeysChange((_, input) => {
+    const removeListener = rendererIpc.appWindow.onHotkeysChange((_, input) => {
       dispatch(hotkeysActions.setInput(input));
     });
 
-    return () => {
-      rendererIpc.appWindow.offHotkeysChange();
-    };
+    return () => removeListener();
   }, []);
 };
 
@@ -234,15 +251,13 @@ export const useNewTabEvents = () => {
   }, [activeTab]);
 
   useEffect(() => {
-    rendererIpc.tab.onNewTab((_, url) => {
+    const offNewTab = rendererIpc.tab.onNewTab((_, url) => {
       dispatch(tabsActions.addTab(defaultTabItem));
       setAddEmpty(true);
       setTargetUrl(url);
     });
 
-    return () => {
-      rendererIpc.tab.offNewTab();
-    };
+    return () => offNewTab();
   }, []);
 };
 
@@ -251,14 +266,12 @@ export const useBrowserEvents = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    rendererIpc.browser.offIsLoading();
-    rendererIpc.browser.onIsLoading((_, id, isLoading) => {
+    const offIsLoading = rendererIpc.browser.onIsLoading((_, id, isLoading) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) dispatch(tabsActions.setTabLoading({tabID, isLoading}));
     });
 
-    rendererIpc.browser.offTitleChange();
-    rendererIpc.browser.onTitleChange((_, id, title) => {
+    const offTitleChange = rendererIpc.browser.onTitleChange((_, id, title) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) {
         dispatch(tabsActions.setTabTitle({tabID, title}));
@@ -266,23 +279,21 @@ export const useBrowserEvents = () => {
       }
     });
 
-    rendererIpc.browser.offFavIconChange();
-    rendererIpc.browser.onFavIconChange((_, id, url) => {
+    const offFavIconChange = rendererIpc.browser.onFavIconChange((_, id, url) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) dispatch(tabsActions.setTabFavIcon({tabID, show: true, url}));
     });
 
-    rendererIpc.browser.offUrlChange();
-    rendererIpc.browser.onUrlChange((_, id, url) => {
+    const offUrlChange = rendererIpc.browser.onUrlChange((_, id, url) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) dispatch(cardsActions.setRunningCardCurrentAddress({tabId: tabID, address: url}));
     });
 
     return () => {
-      rendererIpc.browser.offIsLoading();
-      rendererIpc.browser.offTitleChange();
-      rendererIpc.browser.offFavIconChange();
-      rendererIpc.browser.offUrlChange();
+      offIsLoading();
+      offTitleChange();
+      offFavIconChange();
+      offUrlChange();
     };
   }, [runningCards]);
 };
@@ -310,11 +321,9 @@ export const useContextEvents = () => {
       rendererIpc.win.setDiscordRpAiRunning({running: false});
     };
 
-    rendererIpc.contextMenu.offStopAI();
-    rendererIpc.contextMenu.onStopAI((_, id) => stopAI(id));
+    const offStopAI = rendererIpc.contextMenu.onStopAI((_, id) => stopAI(id));
 
-    rendererIpc.contextMenu.offRelaunchAI();
-    rendererIpc.contextMenu.onRelaunchAI((_, id) => {
+    const offRelaunchAI = rendererIpc.contextMenu.onRelaunchAI((_, id) => {
       const runningCard = runningCards.find(card => card.id === id);
       if (!runningCard) return;
 
@@ -330,8 +339,8 @@ export const useContextEvents = () => {
     });
 
     return () => {
-      rendererIpc.contextMenu.offRelaunchAI();
-      rendererIpc.contextMenu.offStopAI();
+      offRelaunchAI();
+      offStopAI();
     };
   }, [runningCards, dispatch, activeTab]);
 };
@@ -340,12 +349,11 @@ export const useShowToast = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    rendererIpc.appWindow.offShowToast();
-    rendererIpc.appWindow.onShowToast((_, message, type) => {
+    const removeListener = rendererIpc.appWindow.onShowToast((_, message, type) => {
       lynxTopToast(dispatch, 'bottom-right')[type](message);
     });
 
-    return () => rendererIpc.appWindow.offShowToast();
+    return () => removeListener();
   }, [dispatch]);
 };
 
@@ -377,8 +385,8 @@ export const useListenForUpdateError = () => {
       }
     };
 
-    rendererIpc.appUpdate.statusError(() => statusError());
+    const offStatusError = rendererIpc.appUpdate.statusError(() => statusError());
 
-    return () => rendererIpc.appUpdate.offStatusError();
+    return () => offStatusError();
   }, [dispatch, activeTab, runningCard]);
 };

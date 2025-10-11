@@ -10,7 +10,7 @@ export default function DownloadMenu() {
   const [downloads, setDownloads] = useState<DownloadItemInfo[]>([]);
 
   useEffect(() => {
-    rendererIpc.downloadManager.onDlStart((_, info) => {
+    const offDlStart = rendererIpc.downloadManager.onDlStart((_, info) => {
       const newItem: DownloadItemInfo = {
         ...info,
         bytesPerSecond: 0,
@@ -21,7 +21,7 @@ export default function DownloadMenu() {
       };
       setDownloads(prevState => [newItem, ...prevState]);
     });
-    rendererIpc.downloadManager.onProgress((_, info) => {
+    const offProgress = rendererIpc.downloadManager.onProgress((_, info) => {
       setDownloads(prevState =>
         prevState.map(item =>
           item.name !== info.name
@@ -33,7 +33,7 @@ export default function DownloadMenu() {
         ),
       );
     });
-    rendererIpc.downloadManager.onDone((_, info) => {
+    const offDone = rendererIpc.downloadManager.onDone((_, info) => {
       setDownloads(prevState =>
         prevState.map(item =>
           item.name !== info.name
@@ -47,9 +47,9 @@ export default function DownloadMenu() {
     });
 
     return () => {
-      rendererIpc.downloadManager.offDlStart();
-      rendererIpc.downloadManager.offProgress();
-      rendererIpc.downloadManager.offDone();
+      offDlStart();
+      offProgress();
+      offDone();
     };
   }, []);
 

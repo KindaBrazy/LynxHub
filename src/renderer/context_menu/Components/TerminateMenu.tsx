@@ -52,7 +52,7 @@ export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetW
   }, [toggle, showConfirmValue]);
 
   useEffect(() => {
-    rendererIpc.contextMenu.onCloseApp(() => {
+    const offCloseApp = rendererIpc.contextMenu.onCloseApp(() => {
       setToggle(prevState => !prevState);
 
       setWidthSize('lg');
@@ -60,9 +60,7 @@ export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetW
       rendererIpc.contextMenu.showWindow();
     });
 
-    return () => {
-      rendererIpc.contextMenu.offCloseApp();
-    };
+    return () => offCloseApp();
   }, [setElements, setWidthSize]);
 }
 
@@ -111,7 +109,7 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
   }, [id, toggle, showConfirmValue]);
 
   useEffect(() => {
-    rendererIpc.contextMenu.onTerminateTab((_, webID) => {
+    const offTerminateTab = rendererIpc.contextMenu.onTerminateTab((_, webID) => {
       setToggle(prevState => !prevState);
       setId(webID);
 
@@ -120,9 +118,7 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
       rendererIpc.contextMenu.showWindow();
     });
 
-    return () => {
-      rendererIpc.contextMenu.offTerminateTab();
-    };
+    return () => offTerminateTab();
   }, [setElements, setWidthSize]);
 }
 
@@ -178,7 +174,7 @@ export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: S
   }, [id, toggle, showConfirmValue]);
 
   useEffect(() => {
-    rendererIpc.contextMenu.onTerminateAI((_, targetID) => {
+    const offTerminateAI = rendererIpc.contextMenu.onTerminateAI((_, targetID) => {
       setToggle(prevState => !prevState);
       setId(targetID);
 
@@ -187,8 +183,6 @@ export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: S
       rendererIpc.contextMenu.showWindow();
     });
 
-    return () => {
-      rendererIpc.contextMenu.offTerminateAI();
-    };
+    return () => offTerminateAI();
   }, [setElements, setWidthSize]);
 }
