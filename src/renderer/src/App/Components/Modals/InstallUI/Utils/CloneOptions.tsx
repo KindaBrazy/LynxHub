@@ -1,5 +1,5 @@
-import {Checkbox, CircularProgress, Select, SelectItem} from '@heroui/react';
-import {Card, InputNumber} from 'antd';
+import {Checkbox, CircularProgress, NumberInput, Select, SelectItem} from '@heroui/react';
+import {Card} from 'antd';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -19,7 +19,7 @@ type Props = {url: string; setCloneOptionsResult: Dispatch<SetStateAction<CloneO
 export default function CloneOptions({url, setCloneOptionsResult}: Props) {
   const [loading, setLoading] = useState<boolean>(true);
 
-  const [enabledDepth, setEnabledDepth] = useState<boolean>(true);
+  const [enabledDepth, setEnabledDepth] = useState<boolean>(false);
   const [depthValue, setDepthValue] = useState<number>(1);
 
   const [enabledSingleBranch, setEnabledSingleBranch] = useState<boolean>(true);
@@ -115,12 +115,26 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
           <Checkbox isSelected={enabledSingleBranch} onValueChange={setEnabledSingleBranch}>
             Limit clone to a single branch
           </Checkbox>
-          <div className="flex flex-row items-center">
+          <div className="flex flex-row items-center justify-between">
             <Checkbox isSelected={enabledDepth} onValueChange={setEnabledDepth}>
-              Perform a shallow clone (faster, less data)
+              Perform a shallow clone
             </Checkbox>
-            <span className="text-medium">
-              <InputNumber
+
+            <NumberInput
+              classNames={{
+                inputWrapper: 'bg-foreground-200 hover:!bg-foreground-300 group-data-[focus=true]:bg-foreground-200',
+                base: 'w-fit',
+              }}
+              size="sm"
+              minValue={1}
+              label="Depth:"
+              value={depthValue}
+              className="max-w-72"
+              isDisabled={!enabledDepth}
+              labelPlacement="outside-left"
+              onValueChange={setDepthValue}
+            />
+            {/*<InputNumber
                 min={1}
                 variant="filled"
                 value={depthValue}
@@ -129,8 +143,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
                 className="mx-1 z-20 max-w-60"
                 onChange={value => setDepthValue(value!)}
                 changeOnWheel
-              />
-            </span>
+              />*/}
           </div>
         </div>
       )}
