@@ -25,6 +25,8 @@ type CardsState = {
   duplicates: {ogID: string; id: string; title: string}[];
 
   activeTab: string;
+
+  browserDomReadyIds: string[];
 };
 
 type CardsStateTypes = {
@@ -57,6 +59,7 @@ const initialState: CardsState = {
   duplicates: duplicated,
   checkUpdateInterval,
   activeTab: '',
+  browserDomReadyIds: [],
 };
 
 const cardsSlice = createSlice({
@@ -112,6 +115,12 @@ const cardsSlice = createSlice({
     },
     setDuplicates: (state, action: PayloadAction<{ogID: string; id: string; title: string}[]>) => {
       state.duplicates = action.payload;
+    },
+
+    addDomReady: (state, action: PayloadAction<string>) => {
+      if (!state.browserDomReadyIds.includes(action.payload)) {
+        state.browserDomReadyIds = [...state.browserDomReadyIds, action.payload];
+      }
     },
 
     addRunningEmpty: (state, action: PayloadAction<{tabId: string; type: 'browser' | 'terminal' | 'both'}>) => {
@@ -211,7 +220,10 @@ const cardsSlice = createSlice({
     },
     stopRunningCard: (state, action: PayloadAction<{tabId: string}>) => {
       const id = state.runningCard.find(card => card.tabId === action.payload.tabId)?.id;
-      if (id) rendererIpc.browser.removeBrowser(id);
+      if (id) {
+        rendererIpc.browser.removeBrowser(id);
+        state.browserDomReadyIds = state.browserDomReadyIds.filter(item => item !== id);
+      }
 
       state.runningCard = state.runningCard.filter(card => card.tabId !== action.payload.tabId);
     },

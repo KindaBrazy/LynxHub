@@ -171,6 +171,10 @@ export const useIpcEvents = () => {
       dispatch(settingsActions.setSettingsState({key: type, value: enable}));
     });
 
+    const offDomReady = rendererIpc.browser.onDomReady((_, id, isReady) => {
+      if (isReady) dispatch(cardsActions.addDomReady(id));
+    });
+
     return () => {
       removeListener_onInstalledCards();
       removeListener_onAutoUpdateCards();
@@ -181,6 +185,7 @@ export const useIpcEvents = () => {
       removeListener_onDarkMode();
       removeListener_onChangeState();
       removeListener_onConfirmChange();
+      offDomReady();
     };
   }, [dispatch]);
 

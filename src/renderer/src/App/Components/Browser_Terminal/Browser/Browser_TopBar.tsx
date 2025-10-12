@@ -1,6 +1,6 @@
-import {memo, useEffect, useState} from 'react';
+import {memo, useMemo} from 'react';
 
-import rendererIpc from '../../../RendererIpc';
+import {useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {RunningCard} from '../../../Utils/Types';
 import Browser_ActionButtons from './Browser_ActionButtons';
 import Browser_AddressBar from './Browser_AddressBar';
@@ -14,15 +14,9 @@ type Props = {
 };
 
 const Browser_TopBar = memo(({runningCard, setCustomAddress, tabID}: Props) => {
-  const [isDomReady, setIsDomReady] = useState<boolean>(false);
+  const domReadyIds = useCardsState('browserDomReadyIds');
 
-  useEffect(() => {
-    const offDomReady = rendererIpc.browser.onDomReady((_, id, isReady) => {
-      if (id === runningCard.id && isReady) setIsDomReady(true);
-    });
-
-    return () => offDomReady();
-  }, [runningCard]);
+  const isDomReady = useMemo(() => domReadyIds.includes(runningCard.id), [domReadyIds, runningCard]);
 
   return (
     <>
