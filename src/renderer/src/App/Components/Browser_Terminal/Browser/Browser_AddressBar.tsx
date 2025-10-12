@@ -72,6 +72,8 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
     } else if (editableRef.current && inputValue !== editableRef.current.textContent) {
       editableRef.current.textContent = inputValue;
     }
+
+    if (isEmpty(inputValue)) handleFocus();
   }, [inputValue]);
 
   useEffect(() => {
@@ -100,13 +102,6 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
 
   const handleBlur = () => {
     setIsFocused(false);
-  };
-
-  const handleMouseDown = () => {
-    if (isFocused) {
-      isProgrammaticSelection.current = false;
-    }
-    return true;
   };
 
   const handleMouseUp = () => {
@@ -198,11 +193,10 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
         ref={editableRef}
         spellCheck="false"
         onBlur={handleBlur}
-        onFocus={handleFocus}
         onInput={handleInput}
         onMouseUp={handleMouseUp}
         onKeyDown={handleKeyDown}
-        onMouseDown={handleMouseDown}
+        onMouseDown={handleFocus}
         contentEditable
       />
     </div>
