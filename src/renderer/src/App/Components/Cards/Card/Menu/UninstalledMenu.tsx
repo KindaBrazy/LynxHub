@@ -3,7 +3,7 @@ import {memo} from 'react';
 
 import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useCardStore} from '../Wrapper';
-import {MenuDuplicate, MenuHomePage} from './Items/CardMenu-About';
+import {MenuDuplicate, MenuHomePage} from './Items/About';
 
 const UninstalledMenu = memo(() => {
   const menuIsOpen = useCardStore(state => state.menuIsOpen);

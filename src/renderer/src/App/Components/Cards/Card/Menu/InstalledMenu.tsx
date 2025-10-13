@@ -6,10 +6,10 @@ import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {useUpdatingCard} from '../../../../Utils/UtilHooks';
 import {useCardStore} from '../Wrapper';
-import {MenuDuplicate, MenuHomePage, MenuInfo} from './Items/CardMenu-About';
-import {MenuUnAssign, MenuUninstall} from './Items/CardMenu-Danger';
-import {MenuExtensions, MenuLaunchConfig, MenuRepoConfig} from './Items/CardMenu-Options';
-import {MenuAutoUpdate, MenuCheckForUpdate, MenuUpdate} from './Items/CardMenu-Update';
+import {MenuDuplicate, MenuHomePage, MenuInfo} from './Items/About';
+import {MenuUnAssign, MenuUninstall} from './Items/DangerZone';
+import {MenuExtensions, MenuLaunchConfig, MenuRepoConfig} from './Items/Options';
+import {MenuAutoUpdate, MenuCheckForUpdate, MenuUpdate} from './Items/Update';
 
 export const InstalledMenu = memo(() => {
   const id = useCardStore(state => state.id);
