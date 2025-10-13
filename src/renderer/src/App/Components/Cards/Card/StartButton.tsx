@@ -6,6 +6,7 @@ import AddBreadcrumb_Renderer from '../../../../../Breadcrumbs';
 import {Download2_Icon, Play_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionRendererApi} from '../../../Extensions/ExtensionLoader';
 import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
+import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../Redux/Reducer/ModalsReducer';
 import {useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
@@ -17,6 +18,10 @@ import ShinyText from '../../Reusable/ShinyText';
 import {useCardStore} from './LynxCard-Wrapper';
 
 const StartButton = memo(() => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const darkMode = useAppState('darkMode');
+
   const id = useCardStore(state => state.id);
   const installed = useCardStore(state => state.installed);
   const repoUrl = useCardStore(state => state.repoUrl);
@@ -40,8 +45,6 @@ const StartButton = memo(() => {
 
   const runningCard = useCardsState('runningCard');
   const isRunning = useMemo(() => runningCard.some(item => item.id === id), [runningCard, id]);
-
-  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (updatingExtensions && updatingExtensions.id === id) {
@@ -86,7 +89,7 @@ const StartButton = memo(() => {
           <span className="text-xs text-white">Updating...</span>
         ) : installed ? (
           isRunning ? (
-            <ShinyText speed={2} text="Running..." className="font-bold" />
+            <ShinyText speed={2} text="Running..." darkMode={darkMode} className="font-bold" />
           ) : (
             <Play_Icon className={compactMode ? `size-4` : 'size-5'} />
           )

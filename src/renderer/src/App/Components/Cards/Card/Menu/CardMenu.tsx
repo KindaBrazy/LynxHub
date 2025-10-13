@@ -4,7 +4,6 @@ import {memo, useMemo} from 'react';
 
 import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
-import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {useUpdatingCard} from '../../../../Utils/UtilHooks';
 import {useCardStore} from '../LynxCard-Wrapper';
 import {MenuDuplicate, MenuHomePage, MenuInfo} from './MenuItems/CardMenu-About';
@@ -17,7 +16,6 @@ export const CardMenu = memo(() => {
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
   const menuIsOpen = useCardStore(state => state.menuIsOpen);
 
-  const compactMode = useSettingsState('cardsCompactMode');
   const updating = useUpdatingCard(id);
 
   const {first, second, third, fourth} = useMemo(() => {
@@ -36,17 +34,13 @@ export const CardMenu = memo(() => {
       isOpen={menuIsOpen}
       closeOnSelect={false}
       onOpenChange={setMenuIsOpen}
-      className="border !border-foreground-200/70"
+      className="border !border-foreground-100"
       classNames={{base: 'before:bg-black/70', content: 'border-black/70'}}
       showArrow>
       <DropdownTrigger>
-        <Button
-          isLoading={updating}
-          size={compactMode ? 'sm' : 'md'}
-          className="cursor-default bg-foreground-200 dark:bg-foreground-100"
-          startContent={!updating && <MenuDots_Icon className="size-[1.3rem] m-2 rotate-90" />}
-          isIconOnly
-        />
+        <Button radius="lg" variant="flat" color="primary" isLoading={updating} isIconOnly>
+          {!updating && <MenuDots_Icon className="size-[1.3rem]" />}
+        </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Card Menu">
         {first.map((Comp, index) => {

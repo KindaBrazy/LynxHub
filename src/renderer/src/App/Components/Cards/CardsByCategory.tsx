@@ -10,7 +10,7 @@ import {useAllCardDataWithPath, useHasArguments, useSearchCards} from '../../Mod
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {CardContainerClasses} from '../Pages/CardContainer';
 import HomeCategory from '../Pages/ContentPages/Home/HomeCategory';
-import LynxCardLoading from './Card/LynxCard-Loading';
+import RenderCardList from './Card/RenderCardList';
 import NavigatePluginsPage from './NavigatePluginsPage';
 
 /**
@@ -45,7 +45,7 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
               <NavigatePluginsPage />
             </Empty>
           ) : (
-            <LynxCardLoading sortedCards={cards} hasArguments={hasArguments} installedCards={installedCards} />
+            <RenderCardList sortedCards={cards} hasArguments={hasArguments} installedCards={installedCards} />
           )
         ) : (
           <ReplaceCards cards={cards} />
@@ -83,7 +83,7 @@ const AllCards = () => {
     <LayoutGroup id="all_cards_category">
       <AnimatePresence>
         {isNil(ReplaceCards) ? (
-          <LynxCardLoading sortedCards={sortedCards} hasArguments={hasArguments} installedCards={installedCards} />
+          <RenderCardList sortedCards={sortedCards} hasArguments={hasArguments} installedCards={installedCards} />
         ) : (
           <ReplaceCards cards={sortedCards} />
         )}
@@ -167,7 +167,7 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
       {isEmpty(filteredCards) ? (
         <Empty className="w-full" description="No cards match your search." />
       ) : isNil(ReplaceCards) ? (
-        <LynxCardLoading
+        <RenderCardList
           batchSize={2}
           startDelay={0}
           batchDelay={50}

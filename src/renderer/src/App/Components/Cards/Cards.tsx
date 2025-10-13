@@ -8,7 +8,7 @@ import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useGetCardsByPath, useHasArguments} from '../../Modules/ModuleLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import Page from '../Pages/Page';
-import LynxCardLoading from './Card/LynxCard-Loading';
+import RenderCardList from './Card/RenderCardList';
 import NavigatePluginsPage from './NavigatePluginsPage';
 
 export const GetComponentsByPath = memo(
@@ -41,11 +41,7 @@ export const GetComponentsByPath = memo(
           <>
             <LayoutGroup id={`${routePath}_cards`}>
               {isNil(ReplaceCards) ? (
-                <LynxCardLoading
-                  sortedCards={sortedCards}
-                  hasArguments={hasArguments}
-                  installedCards={installedCards}
-                />
+                <RenderCardList sortedCards={sortedCards} hasArguments={hasArguments} installedCards={installedCards} />
               ) : (
                 <ReplaceCards cards={sortedCards} />
               )}
