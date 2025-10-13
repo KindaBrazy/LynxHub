@@ -56,7 +56,7 @@ export const MenuUpdate = () => {
       title="Update"
       color="success"
       onPress={onPress}
-      isDisabled={!!updating}
+      isDisabled={updating}
       startContent={<Download_Icon />}
       endContent={updating && <Spinner size="sm" color="primary" />}
       className={updateAvailable ? 'text-success' : 'cursor-default'}

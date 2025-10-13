@@ -41,7 +41,7 @@ export const CardMenu = memo(() => {
       showArrow>
       <DropdownTrigger>
         <Button
-          isLoading={!!updating}
+          isLoading={updating}
           size={compactMode ? 'sm' : 'md'}
           className="cursor-default bg-foreground-200 dark:bg-foreground-100"
           startContent={!updating && <MenuDots_Icon className="size-[1.3rem] m-2 rotate-90" />}
