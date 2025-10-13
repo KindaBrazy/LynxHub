@@ -9,7 +9,7 @@ import {appActions} from '../Redux/Reducer/AppReducer';
 import {useCardsState} from '../Redux/Reducer/CardsReducer';
 import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
 import rendererIpc from '../RendererIpc';
-import {HeroToastPlacement, UpdatingCard} from './Types';
+import {HeroToastPlacement} from './Types';
 
 /**
  * Hook to get an installed card by its ID.
@@ -26,9 +26,9 @@ export function useInstalledCard(cardId: string): InstalledCard | undefined {
  * @param cardId - The ID of the card to find
  * @returns The updating card or undefined if not found
  */
-export function useUpdatingCard(cardId: string): UpdatingCard | undefined {
+export function useUpdatingCard(cardId: string): boolean {
   const updatingCards = useCardsState('updatingCards');
-  return useMemo(() => updatingCards.find(card => card.id === cardId), [updatingCards, cardId]);
+  return useMemo(() => updatingCards.some(card => card.id === cardId), [updatingCards, cardId]);
 }
 
 /**
