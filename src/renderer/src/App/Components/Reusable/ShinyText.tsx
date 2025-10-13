@@ -1,17 +1,21 @@
 import {useMemo} from 'react';
 
-import {useAppState} from '../../Redux/Reducer/AppReducer';
-
 type ShinyTextProps = {
   text: string;
   disabled?: boolean;
   speed?: number;
   className?: string;
+  darkMode?: boolean;
 };
 
-export default function ShinyText({text, disabled = false, speed = 5, className = ''}: ShinyTextProps) {
+export default function ShinyText({
+  text,
+  disabled = false,
+  speed = 5,
+  className = '',
+  darkMode = true,
+}: ShinyTextProps) {
   const animationDuration = `${speed}s`;
-  const darkMode = useAppState('darkMode');
 
   const backgroundImage = useMemo(() => {
     const color = darkMode ? '255' : '70';
