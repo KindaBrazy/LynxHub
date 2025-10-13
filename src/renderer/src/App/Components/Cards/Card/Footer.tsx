@@ -9,9 +9,9 @@ import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import rendererIpc from '../../../RendererIpc';
 import {useIsPinnedCard} from '../../../Utils/UtilHooks';
 import ShinyText from '../../Reusable/ShinyText';
-import {useCardStore} from '../Card/LynxCard-Wrapper';
-import CardMenu from '../Card/Menu/CardMenu';
-import NotInstalled_Menu from '../Card/Menu/NotInstalled_Menu';
+import {useCardStore} from './LynxCard-Wrapper';
+import CardMenu from './Menu/CardMenu';
+import NotInstalled_Menu from './Menu/NotInstalled_Menu';
 
 type Props = {isRunning: boolean; updatingExtensions: boolean; updating: boolean; updateCount: string; id: string};
 const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}: Props) => {
