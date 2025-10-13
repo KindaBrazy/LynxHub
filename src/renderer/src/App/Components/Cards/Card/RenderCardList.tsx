@@ -2,7 +2,7 @@ import {motion, Variants} from 'framer-motion';
 
 import {LoadedCardData} from '../../../../../../cross/plugin/ModuleTypes';
 import {InstalledCards} from '../../../../../../cross/StorageTypes';
-import LynxCardWrapper from './LynxCard-Wrapper';
+import Wrapper from './Wrapper';
 
 const variants: Variants = {
   initial: {opacity: 0, translateY: 20},
@@ -28,7 +28,7 @@ export default function RenderCardList({sortedCards, installedCards, hasArgument
             variants={variants}
             key={`${card.id}_card`}
             layout>
-            <LynxCardWrapper cardData={card} isInstalled={isInstalled} hasArguments={hasArguments.has(card.id)} />
+            <Wrapper cardData={card} isInstalled={isInstalled} hasArguments={hasArguments.has(card.id)} />
           </motion.div>
         );
       })}

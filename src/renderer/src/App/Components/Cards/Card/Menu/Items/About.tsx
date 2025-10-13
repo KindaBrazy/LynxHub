@@ -19,7 +19,7 @@ import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../../../Utils/UtilHooks';
-import {useCardStore} from '../../LynxCard-Wrapper';
+import {useCardStore} from '../../Wrapper';
 
 export const MenuInfo = () => {
   const id = useCardStore(state => state.id);

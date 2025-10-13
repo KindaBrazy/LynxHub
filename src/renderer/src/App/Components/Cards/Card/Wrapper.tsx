@@ -10,7 +10,7 @@ const CardStoreContext = createContext<CardStore | null>(null);
 
 type Props = {cardData: LoadedCardData; isInstalled: boolean; hasArguments: boolean};
 
-const LynxCardWrapper = memo(({cardData, isInstalled, hasArguments}: Props) => {
+const Wrapper = memo(({cardData, isInstalled, hasArguments}: Props) => {
   const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
 
   const storeValue = useMemo(
@@ -29,7 +29,7 @@ const LynxCardWrapper = memo(({cardData, isInstalled, hasArguments}: Props) => {
   );
 });
 
-export default LynxCardWrapper;
+export default Wrapper;
 
 export const useCardStore = <T,>(selector: (state: CardState) => T): T => {
   const store = useContext(CardStoreContext);

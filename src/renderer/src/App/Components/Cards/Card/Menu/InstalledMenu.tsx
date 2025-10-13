@@ -5,13 +5,13 @@ import {memo, useMemo} from 'react';
 import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {useUpdatingCard} from '../../../../Utils/UtilHooks';
-import {useCardStore} from '../LynxCard-Wrapper';
-import {MenuDuplicate, MenuHomePage, MenuInfo} from './MenuItems/CardMenu-About';
-import {MenuUnAssign, MenuUninstall} from './MenuItems/CardMenu-Danger';
-import {MenuExtensions, MenuLaunchConfig, MenuRepoConfig} from './MenuItems/CardMenu-Options';
-import {MenuAutoUpdate, MenuCheckForUpdate, MenuUpdate} from './MenuItems/CardMenu-Update';
+import {useCardStore} from '../Wrapper';
+import {MenuDuplicate, MenuHomePage, MenuInfo} from './Items/CardMenu-About';
+import {MenuUnAssign, MenuUninstall} from './Items/CardMenu-Danger';
+import {MenuExtensions, MenuLaunchConfig, MenuRepoConfig} from './Items/CardMenu-Options';
+import {MenuAutoUpdate, MenuCheckForUpdate, MenuUpdate} from './Items/CardMenu-Update';
 
-export const CardMenu = memo(() => {
+export const InstalledMenu = memo(() => {
   const id = useCardStore(state => state.id);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
   const menuIsOpen = useCardStore(state => state.menuIsOpen);
@@ -80,4 +80,4 @@ export const CardMenu = memo(() => {
   );
 });
 
-export default CardMenu;
+export default InstalledMenu;

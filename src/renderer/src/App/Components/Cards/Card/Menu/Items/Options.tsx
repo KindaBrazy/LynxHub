@@ -9,7 +9,7 @@ import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import {useDevInfo} from '../../../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../../../Utils/UtilHooks';
-import {useCardStore} from '../../LynxCard-Wrapper';
+import {useCardStore} from '../../Wrapper';
 
 export const MenuLaunchConfig = () => {
   const dispatch = useDispatch<AppDispatch>();
