@@ -1,6 +1,6 @@
 import {Card, CardBody, CardHeader, Chip, User} from '@heroui/react';
 import {AnimatePresence, motion} from 'framer-motion';
-import {CSSProperties, memo, useCallback, useEffect, useMemo, useState} from 'react';
+import {CSSProperties, FormEvent, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {getAccentColorAsHex} from '../../../../../../cross/AccentColorGenerator';
@@ -48,6 +48,9 @@ const LynxCard = memo(() => {
   const updateAvailable = useUpdateAvailable(id);
   const autoUpdateExtensions = useIsAutoUpdateExtensions(id);
 
+  const modifiedTitle = useMemo(() => {
+    return window.localStorage.getItem(`${id}_title_edited`) || title;
+  }, [id, title]);
   const {developer, avatarSrc} = useMemo(() => {
     const developer = extractGitUrl(repoUrl).owner;
     return {developer, avatarSrc: `https://github.com/${developer}.png`};
@@ -96,6 +99,13 @@ const LynxCard = memo(() => {
     }
   }, [repoUrl, title, id, dispatch, allMethods, activeTab]);
 
+  const onTitleChange = useCallback(
+    (e: FormEvent<HTMLSpanElement>) => {
+      window.localStorage.setItem(`${id}_title_edited`, e.currentTarget.textContent || title);
+    },
+    [id],
+  );
+
   return (
     <Card
       as={motion.div}
@@ -119,10 +129,36 @@ const LynxCard = memo(() => {
         <User
           avatarProps={{
             src: avatarSrc,
-            name: title,
+            name: modifiedTitle,
             isBordered: true,
           }}
-          name={title}
+          name={
+            <span
+              onBlur={() => {
+                const selection = window.getSelection();
+                if (selection) {
+                  selection.removeAllRanges();
+                }
+              }}
+              className={
+                'cursor-text outline-none focus:border-2 border-transparent focus:border-foreground-200' +
+                ' focus:px-1 rounded-lg transition duration-300'
+              }
+              onKeyDown={e => {
+                e.stopPropagation();
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  e.currentTarget.blur();
+                }
+              }}
+              spellCheck="false"
+              onInput={onTitleChange}
+              onClick={e => e.stopPropagation()}
+              contentEditable
+              suppressContentEditableWarning>
+              {modifiedTitle}
+            </span>
+          }
           description={`By ${developer}`}
           className="scale-120 mx-3 mt-2"
           classNames={{description: 'text-[0.7rem]'}}
