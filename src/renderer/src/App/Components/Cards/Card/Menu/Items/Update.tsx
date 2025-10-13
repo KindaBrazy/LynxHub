@@ -17,7 +17,7 @@ import {
   useUpdateAvailable,
   useUpdatingCard,
 } from '../../../../../Utils/UtilHooks';
-import {useCardStore} from '../../LynxCard-Wrapper';
+import {useCardStore} from '../../Wrapper';
 
 export const MenuUpdate = () => {
   const id = useCardStore(state => state.id);

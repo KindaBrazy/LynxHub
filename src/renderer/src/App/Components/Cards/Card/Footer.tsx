@@ -9,9 +9,9 @@ import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import rendererIpc from '../../../RendererIpc';
 import {useIsPinnedCard} from '../../../Utils/UtilHooks';
 import ShinyText from '../../Reusable/ShinyText';
-import {useCardStore} from './LynxCard-Wrapper';
-import CardMenu from './Menu/CardMenu';
-import NotInstalled_Menu from './Menu/NotInstalled_Menu';
+import InstalledMenu from './Menu/InstalledMenu';
+import UninstalledMenu from './Menu/UninstalledMenu';
+import {useCardStore} from './Wrapper';
 
 type Props = {isRunning: boolean; updatingExtensions: boolean; updating: boolean; updateCount: string; id: string};
 const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}: Props) => {
@@ -30,7 +30,15 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
   return (
     <CardFooter className="justify-between">
       <div className="flex flex-row items-center gap-x-2">
-        {isInstalled ? ReplaceMenu ? <ReplaceMenu useCardStore={useCardStore} /> : <CardMenu /> : <NotInstalled_Menu />}
+        {isInstalled ? (
+          ReplaceMenu ? (
+            <ReplaceMenu useCardStore={useCardStore} />
+          ) : (
+            <InstalledMenu />
+          )
+        ) : (
+          <UninstalledMenu />
+        )}
         {isInstalled && (
           <Button
             className={

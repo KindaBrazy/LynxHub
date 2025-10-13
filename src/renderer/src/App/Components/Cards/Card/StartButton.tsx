@@ -15,7 +15,7 @@ import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {useInstalledCard, useIsAutoUpdateExtensions, useUpdatingCard} from '../../../Utils/UtilHooks';
 import ShinyText from '../../Reusable/ShinyText';
-import {useCardStore} from './LynxCard-Wrapper';
+import {useCardStore} from './Wrapper';
 
 const StartButton = memo(() => {
   const dispatch = useDispatch<AppDispatch>();

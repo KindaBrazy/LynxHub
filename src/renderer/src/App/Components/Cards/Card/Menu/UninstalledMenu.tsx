@@ -2,10 +2,10 @@ import {Button, Dropdown, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {memo} from 'react';
 
 import {MenuDots_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
-import {useCardStore} from '../LynxCard-Wrapper';
-import {MenuDuplicate, MenuHomePage} from './MenuItems/CardMenu-About';
+import {useCardStore} from '../Wrapper';
+import {MenuDuplicate, MenuHomePage} from './Items/CardMenu-About';
 
-const NotInstalled_Menu = memo(() => {
+const UninstalledMenu = memo(() => {
   const menuIsOpen = useCardStore(state => state.menuIsOpen);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
@@ -30,4 +30,4 @@ const NotInstalled_Menu = memo(() => {
   );
 });
 
-export default NotInstalled_Menu;
+export default UninstalledMenu;

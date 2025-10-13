@@ -21,8 +21,8 @@ import {
   useUpdatingCard,
 } from '../../../Utils/UtilHooks';
 import Footer from './Footer';
-import {useCardStore} from './LynxCard-Wrapper';
 import PulsingLine from './PulsingLine';
+import {useCardStore} from './Wrapper';
 
 type AccentStyle = CSSProperties & {'--accent-bg-color'?: string};
 

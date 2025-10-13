@@ -7,7 +7,7 @@ import {MinusSquareDuo_Icon, Trash_Icon} from '../../../../../../assets/icons/Sv
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
-import {useCardStore} from '../../LynxCard-Wrapper';
+import {useCardStore} from '../../Wrapper';
 
 export function MenuUnAssign() {
   const id = useCardStore(state => state.id);
