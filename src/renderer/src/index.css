@@ -71,12 +71,28 @@
   color-scheme: light dark;
   background-color: #212121;
   font-family: Nunito, sans-serif;
+
+  --uninstalled-card-bg-color: #ededed;
+  --accent-bg-color: #212121;
 }
 
 * {
   -webkit-user-select: none;
   -webkit-user-drag: none;
   font-family: Nunito, sans-serif;
+}
+
+.dark {
+  --uninstalled-card-bg-color: #303030;
+}
+
+.bg-uninstalled {
+  background: radial-gradient(circle at 50% 30%, var(--uninstalled-card-bg-color), transparent 70%);
+}
+
+.bg-installed {
+  /* This variable will be injected via React's style prop */
+  background: radial-gradient(circle at 50% 30%, var(--accent-bg-color), transparent 70%);
 }
 
 @media (prefers-color-scheme: dark) {

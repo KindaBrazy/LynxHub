@@ -1,0 +1,162 @@
+import {Card, CardBody, CardHeader, Chip, User} from '@heroui/react';
+import {AnimatePresence, motion} from 'framer-motion';
+import {CSSProperties, memo, useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
+
+import {getAccentColorAsHex} from '../../../../../../cross/AccentColorGenerator';
+import {extractGitUrl} from '../../../../../../cross/CrossUtils';
+import AddBreadcrumb_Renderer from '../../../../../Breadcrumbs';
+import {DownloadDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
+import {extensionRendererApi} from '../../../Extensions/ExtensionLoader';
+import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
+import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
+import {modalActions} from '../../../Redux/Reducer/ModalsReducer';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {AppDispatch} from '../../../Redux/Store';
+import rendererIpc from '../../../RendererIpc';
+import {
+  useInstalledCard,
+  useIsAutoUpdateExtensions,
+  useUpdateAvailable,
+  useUpdatingCard,
+} from '../../../Utils/UtilHooks';
+import {useCardStore} from '../Card/LynxCard-Wrapper';
+import Footer from './Footer';
+import PulsingLine from './PulsingLine';
+
+type AccentStyle = CSSProperties & {'--accent-bg-color'?: string};
+
+const LynxCard = memo(() => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const allMethods = useAllCardMethods();
+
+  const activeTab = useTabsState('activeTab');
+  const runningCard = useCardsState('runningCard');
+  const updatingExtensions = useCardsState('updatingExtensions');
+
+  const id = useCardStore(state => state.id);
+  const isInstalled = useCardStore(state => state.installed);
+  const title = useCardStore(state => state.title);
+  const type = useCardStore(state => state.type);
+  const repoUrl = useCardStore(state => state.repoUrl);
+  const description = useCardStore(state => state.description);
+  const extensionsDir = useCardStore(state => state.extensionsDir);
+
+  const card = useInstalledCard(id);
+  const updating = useUpdatingCard(id);
+  const updateAvailable = useUpdateAvailable(id);
+  const autoUpdateExtensions = useIsAutoUpdateExtensions(id);
+
+  const {developer, avatarSrc} = useMemo(() => {
+    const developer = extractGitUrl(repoUrl).owner;
+    return {developer, avatarSrc: `https://github.com/${developer}.png`};
+  }, [repoUrl]);
+  const isRunning = useMemo(() => runningCard.some(item => item.id === id), [runningCard, id]);
+  const accentColor = useMemo(() => getAccentColorAsHex(title, developer), [title, developer]);
+  const accentStyle: AccentStyle = useMemo(
+    () => (isInstalled ? {'--accent-bg-color': `${accentColor}30`} : {}),
+    [isInstalled, accentColor],
+  );
+
+  const [isUpdatingExtensions, setIsUpdatingExtensions] = useState<boolean>(false);
+  const [updateCount, setUpdateCount] = useState<string>('');
+
+  useEffect(() => {
+    if (updatingExtensions && updatingExtensions.id === id) {
+      if (updatingExtensions.step === 'done') {
+        setIsUpdatingExtensions(false);
+        rendererIpc.win.setDiscordRpAiRunning({running: true, name: title, type});
+      } else {
+        setUpdateCount(updatingExtensions.step);
+      }
+    }
+  }, [updatingExtensions]);
+
+  const startAi = useCallback(() => {
+    AddBreadcrumb_Renderer(`Starting AI: id:${id}`);
+    extensionRendererApi.events.emit('before_card_start', {id});
+    if (autoUpdateExtensions && card) {
+      AddBreadcrumb_Renderer(`Updating AI Extensions: id:${id}`);
+      rendererIpc.utils.updateAllExtensions({id, dir: card.dir! + extensionsDir!});
+      setIsUpdatingExtensions(true);
+    } else {
+      rendererIpc.pty.process(id, 'start', id);
+      rendererIpc.storageUtils.recentlyUsedCards('update', id);
+      rendererIpc.win.setDiscordRpAiRunning({running: true, name: title, type});
+      dispatch(cardsActions.addRunningCard({tabId: activeTab, id}));
+    }
+  }, [id, autoUpdateExtensions, activeTab, dispatch]);
+
+  const install = useCallback(() => {
+    AddBreadcrumb_Renderer(`Start Installing AI: id:${id}`);
+    if (getCardMethod(allMethods, id, 'manager')) {
+      extensionRendererApi.events.emit('before_card_install', {id});
+      dispatch(modalActions.openInstallUICard({cardId: id, tabID: activeTab, type: 'install', title}));
+    }
+  }, [repoUrl, title, id, dispatch, allMethods, activeTab]);
+
+  return (
+    <Card
+      as={motion.div}
+      whileHover="hover"
+      onPress={isInstalled ? startAi : install}
+      variants={{hover: {scale: 1.02}, initial: {scale: 1}}}
+      isPressable={!isRunning && !updating && !isUpdatingExtensions}
+      className="relative w-[300px] h-[210px] border border-foreground-100 px-2 group shadow-md">
+      <motion.div
+        variants={{
+          hover: {scale: 1.5, opacity: 0.6},
+          initial: {scale: 1, opacity: 0.4},
+        }}
+        style={accentStyle}
+        transition={{duration: 0.5}}
+        className={`absolute inset-0 z-0 ${isInstalled ? 'bg-installed' : 'bg-uninstalled'}`}
+      />
+      <PulsingLine accentColor={accentColor} isInstalled={isInstalled} />
+
+      <CardHeader className="justify-between">
+        <User
+          avatarProps={{
+            src: avatarSrc,
+            name: title,
+            isBordered: true,
+          }}
+          name={title}
+          description={`By ${developer}`}
+          className="scale-120 mx-3 mt-2"
+          classNames={{description: 'text-[0.7rem]'}}
+        />
+        <AnimatePresence>
+          {updateAvailable && (
+            <Chip
+              size="sm"
+              variant="flat"
+              as={motion.div}
+              color="success"
+              key="chip_update"
+              exit={{opacity: 0, translateY: 2}}
+              className="flex flex-row gap-x-0.5"
+              initial={{opacity: 0, translateY: 2}}
+              animate={{opacity: 1, translateY: 0}}
+              startContent={<DownloadDuo_Icon className="size-3" />}>
+              Update
+            </Chip>
+          )}
+        </AnimatePresence>
+      </CardHeader>
+      <CardBody className="py-2 justify-center">
+        <span className=" line-clamp-3 text-foreground-500">{description}</span>
+      </CardBody>
+      <Footer
+        id={id}
+        updating={updating}
+        isRunning={isRunning}
+        updateCount={updateCount}
+        updatingExtensions={isUpdatingExtensions}
+      />
+    </Card>
+  );
+});
+
+export default LynxCard;
