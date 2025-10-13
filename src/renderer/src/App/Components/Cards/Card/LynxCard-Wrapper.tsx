@@ -4,7 +4,7 @@ import {CardState} from '../../../../../../cross/CrossTypes';
 import {LoadedCardData} from '../../../../../../cross/plugin/ModuleTypes';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {CardStore, createCardStore} from '../CardStore';
-import LynxCard from '../LynxCard/Card';
+import LynxCard from './Card';
 
 const CardStoreContext = createContext<CardStore | null>(null);
 
