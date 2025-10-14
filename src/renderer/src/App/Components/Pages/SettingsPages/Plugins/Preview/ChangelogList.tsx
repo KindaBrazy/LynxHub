@@ -76,6 +76,7 @@ const Changelog = ({items}: {items: ChangelogItem}) => (
 
 const ChangelogList = memo(() => {
   const selectedPlugin = usePluginsState('selectedPlugin');
+  const installedList = usePluginsState('installedList');
 
   return (
     <motion.div
@@ -86,63 +87,69 @@ const ChangelogList = memo(() => {
       transition={{duration: 0.3}}
       className="size-full overflow-hidden">
       <LynxScroll className="gap-y-8 px-6 py-4 size-full">
-        {selectedPlugin?.changes.map((version, index) => (
-          <motion.div
-            className="relative"
-            animate={{opacity: 1, x: 0}}
-            initial={{opacity: 0, x: -30}}
-            key={`${version.version}_${index}`}
-            transition={{duration: 0.5, delay: index * 0.1}}>
-            <div
-              className={`
-                      relative overflow-hidden rounded-xl p-6 mb-6
-                      transition-all duration-200
-                      ${
-                        index === 0
-                          ? 'bg-gradient-to-br from-secondary/10 via-secondary/5 to-transparent' +
-                            ' border-2 border-secondary shadow-lg shadow-secondary/20'
-                          : 'bg-foreground-50/50 border border-foreground-200' +
-                            ' hover:border-foreground-300 hover:shadow-md'
-                      }
-                    `}>
-              {/* Version badge */}
-              <div className="flex items-center gap-4 mb-6 relative z-10">
-                <Chip
-                  size="sm"
-                  variant={index === 0 ? 'shadow' : 'solid'}
-                  color={index === 0 ? 'secondary' : 'default'}>
-                  {version.version}
-                </Chip>
-
-                {index === 0 && (
-                  <Chip size="sm" color="primary">
-                    Latest
+        {selectedPlugin?.changes.map((version, index) => {
+          const isCurrent =
+            version.version === installedList.find(item => item.id === selectedPlugin?.metadata.id)?.version;
+          return (
+            <motion.div
+              className="relative"
+              animate={{opacity: 1, x: 0}}
+              initial={{opacity: 0, x: -30}}
+              key={`${version.version}_${index}`}
+              transition={{duration: 0.5, delay: index * 0.1}}>
+              <div
+                className={`relative overflow-hidden rounded-xl px-4 py-4 mb-6 transition-all duration-200 ${
+                  index === 0
+                    ? 'bg-gradient-to-br from-secondary/10 via-secondary/5 to-transparent' +
+                      ' border-2 border-secondary shadow-lg shadow-secondary/20'
+                    : 'bg-foreground-50/50 border border-foreground-200' +
+                      ' hover:border-foreground-300 hover:shadow-md'
+                }`}>
+                {/* Version badge */}
+                <div className="flex items-center gap-x-2 relative">
+                  <Chip
+                    size="sm"
+                    variant={index === 0 ? 'shadow' : 'solid'}
+                    color={index === 0 ? 'secondary' : 'default'}>
+                    {version.version}
                   </Chip>
-                )}
+
+                  {isCurrent && (
+                    <Chip size="sm" color="success">
+                      Current
+                    </Chip>
+                  )}
+
+                  {index === 0 && (
+                    <Chip size="sm" color="primary">
+                      Latest
+                    </Chip>
+                  )}
+                </div>
+
+                {/* Changelog content */}
+                <div className="relative z-10">
+                  {version.items.map((item, itemIndex) => (
+                    <Changelog items={item} key={`${itemIndex}_changelog`} />
+                  ))}
+                </div>
               </div>
 
-              {/* Changelog content */}
-              <div className="relative z-10">
-                {version.items.map((item, itemIndex) => (
-                  <Changelog items={item} key={`${itemIndex}_changelog`} />
-                ))}
-              </div>
-            </div>
-
-            {/* Connecting line between versions */}
-            {index < (selectedPlugin?.changes.length || 0) - 1 && (
-              <motion.div
-                className={
-                  'absolute left-6 top-full w-0.5 h-6 bg-gradient-to-b ' +
-                  'from-foreground-300 to-transparent origin-top'
-                }
-                initial={{scaleY: 0}}
-                animate={{scaleY: 1}}
-                transition={{duration: 0.5, delay: index * 0.1 + 0.3}}
-              />
-            )}
-          </motion.div>
-        ))}
+              {/* Connecting line between versions */}
+              {index < (selectedPlugin?.changes.length || 0) - 1 && (
+                <motion.div
+                  className={
+                    'absolute left-6 top-full w-0.5 h-6 bg-gradient-to-b ' +
+                    'from-foreground-300 to-transparent origin-top'
+                  }
+                  initial={{scaleY: 0}}
+                  animate={{scaleY: 1}}
+                  transition={{duration: 0.5, delay: index * 0.1 + 0.3}}
+                />
+              )}
+            </motion.div>
+          );
+        })}
       </LynxScroll>
     </motion.div>
   );
