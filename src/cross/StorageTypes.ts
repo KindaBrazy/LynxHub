@@ -34,11 +34,6 @@ type StorageTypes = {
     checkUpdateInterval: number;
     pinnedCards: string[];
     recentlyUsedCards: string[];
-    cardCompactMode: boolean;
-    cardsDevImage: boolean;
-    cardsDevName: boolean;
-    cardsDesc: boolean;
-    cardsRepoInfo: boolean;
     zoomFactor: number;
     duplicated: {ogID: string; id: string; title: string}[];
     cardTerminalPreCommands: {id: string; commands: string[]}[];

@@ -1,10 +1,10 @@
 import {InputNumber} from 'antd';
 import {useDispatch} from 'react-redux';
 
-import {Clock_Icon} from '../../../../../../../../assets/icons/SvgIcons/SvgIcons';
-import {cardsActions, useCardsState} from '../../../../../../../Redux/Reducer/CardsReducer';
-import {AppDispatch} from '../../../../../../../Redux/Store';
-import rendererIpc from '../../../../../../../RendererIpc';
+import {Clock_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {cardsActions, useCardsState} from '../../../../../../Redux/Reducer/CardsReducer';
+import {AppDispatch} from '../../../../../../Redux/Store';
+import rendererIpc from '../../../../../../RendererIpc';
 
 export default function CheckUpdateInterval() {
   const updateInterval = useCardsState('checkUpdateInterval');
