@@ -8,12 +8,6 @@ import {RootState} from '../Store';
 type SettingState = {
   tooltipLevel: TooltipStatus;
 
-  cardsCompactMode: boolean;
-  cardsDevImage: boolean;
-  cardsDevName: boolean;
-  cardsDesc: boolean;
-  cardsRepoInfo: boolean;
-
   closeConfirm: boolean;
   closeTabConfirm: boolean;
   terminateAIConfirm: boolean;
@@ -36,7 +30,6 @@ type SettingStateTypes = {
 
 const storageData = await rendererIpc.storage.getAll();
 
-const {cardCompactMode, cardsDevImage, cardsDevName, cardsDesc, cardsRepoInfo} = storageData.cards;
 const {
   tooltipStatus,
   closeConfirm,
@@ -50,11 +43,6 @@ const {
 } = storageData.app;
 
 const initialState: SettingState = {
-  cardsCompactMode: cardCompactMode,
-  cardsDevImage,
-  cardsDevName,
-  cardsDesc,
-  cardsRepoInfo,
   tooltipLevel: tooltipStatus,
   closeConfirm,
   closeTabConfirm,
@@ -82,16 +70,6 @@ const settingsSlice = createSlice({
       }>,
     ) => {
       state[action.payload.key] = action.payload.value;
-    },
-
-    addNewModule: (state, action: PayloadAction<string>) => {
-      state.newModules = [...new Set([...state.newModules, action.payload])];
-    },
-    removeUpdatedModule: (state, action: PayloadAction<string>) => {
-      state.updatedModules = state.updatedModules.filter(module => module !== action.payload);
-    },
-    removeNewModule: (state, action: PayloadAction<string>) => {
-      state.newModules = state.updatedModules.filter(module => module !== action.payload);
     },
   },
 });
