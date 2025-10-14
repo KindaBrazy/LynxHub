@@ -320,6 +320,6 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
 
     const offInitView = rendererIpc.contextMenu.onInitView(handleInitView);
 
-    return () => offInitView;
+    return () => offInitView();
   }, [setElements, setWidthSize]);
 }
