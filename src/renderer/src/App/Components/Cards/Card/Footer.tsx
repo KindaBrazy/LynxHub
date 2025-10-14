@@ -29,15 +29,16 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
   return (
     <CardFooter className="justify-between">
       <div className="flex flex-row items-center gap-x-2">
-        {isInstalled ? (
-          ReplaceMenu ? (
-            <ReplaceMenu useCardStore={useCardStore} />
+        {!isRunning &&
+          (isInstalled ? (
+            ReplaceMenu ? (
+              <ReplaceMenu useCardStore={useCardStore} />
+            ) : (
+              <InstalledMenu />
+            )
           ) : (
-            <InstalledMenu />
-          )
-        ) : (
-          <UninstalledMenu />
-        )}
+            <UninstalledMenu />
+          ))}
         {isInstalled && (
           <Button
             className={
