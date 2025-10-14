@@ -133,6 +133,7 @@ const LynxCard = memo(() => {
             src: avatarSrc,
             name: modifiedTitle,
             isBordered: true,
+            showFallback: true,
           }}
           name={
             <span
