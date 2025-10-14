@@ -167,14 +167,7 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
       {isEmpty(filteredCards) ? (
         <Empty className="w-full" description="No cards match your search." />
       ) : isNil(ReplaceCards) ? (
-        <RenderCardList
-          batchSize={2}
-          startDelay={0}
-          batchDelay={50}
-          sortedCards={filteredCards}
-          hasArguments={hasArguments}
-          installedCards={installedCards}
-        />
+        <RenderCardList sortedCards={filteredCards} hasArguments={hasArguments} installedCards={installedCards} />
       ) : (
         <ReplaceCards cards={filteredCards} />
       )}
