@@ -9,7 +9,9 @@ import {
   Home_Icon,
   ImageGeneration_Icon,
   Info_Icon,
+  MagicStickDuo_Icon,
   Plugins_Icon,
+  Robot_Icon,
   Rocket_Icon,
   Slider_Icon,
   Terminal_Icon,
@@ -41,6 +43,8 @@ const TabItem_Icon = memo(({tab, currentView}: Props) => {
       else if (pageID === PageID.imageGen) setIcon(<ImageGeneration_Icon className="size-full" />);
       else if (pageID === PageID.textGen) setIcon(<TextGeneration_Icon className="size-full" />);
       else if (pageID === PageID.audioGen) setIcon(<AudioGeneration_Icon className="size-full" />);
+      else if (pageID === PageID.agents) setIcon(<Robot_Icon className="size-full" />);
+      else if (pageID === PageID.others) setIcon(<MagicStickDuo_Icon className="size-full" />);
       else if (pageID === PageID.games) setIcon(<GamePad_Icon className="size-full" />);
       else if (pageID === PageID.tools) setIcon(<Rocket_Icon className="size-full" />);
       else if (pageID === PageID.dashboard) setIcon(<Info_Icon className="size-full" />);
