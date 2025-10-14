@@ -1,9 +1,8 @@
 import {Button, CardFooter} from '@heroui/react';
-import {PlayDuo_Icon} from '@lynx_extension/renderer/Components/SvgIcons';
 import {memo, useCallback, useMemo} from 'react';
 
 import AddBreadcrumb_Renderer from '../../../../../Breadcrumbs';
-import {DownloadDuo_Icon, Pin_Icon, PinLine_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
+import {DownloadDuo_Icon, Pin_Icon, PinLine_Icon, PlayDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import rendererIpc from '../../../RendererIpc';
