@@ -1,5 +1,5 @@
-import {Button, ScrollShadow} from '@heroui/react';
-import {Card, Typography} from 'antd';
+import {Button, Card, CardBody, CardHeader, ScrollShadow} from '@heroui/react';
+import {Typography} from 'antd';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {
@@ -14,6 +14,7 @@ import {
   Web_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
+import {ContainersBg} from '../../../../Utils/CrossStyle';
 import {settingsSectionId} from './SettingsContainer';
 
 const {Text} = Typography;
@@ -153,20 +154,19 @@ const SettingsPageNav = () => {
   const buttons = useMemo(() => extensionsData.customizePages.settings.add.navButton, []);
 
   return (
-    <Card
-      className={
-        'w-48 shrink-0 border-2 border-foreground/10 text-center dark:border-foreground/5 dark:bg-LynxRaisinBlack'
-      }
-      title="Settings"
-      variant="borderless">
-      <ScrollShadow className="absolute inset-x-3 bottom-4 top-[3.8rem]" hideScrollBar>
+    <Card className={`h-full text-medium w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
+      <CardHeader className="justify-center gap-x-2 pt-5">
+        <Tuning_Icon className="size-5" />
+        <span>Settings</span>
+      </CardHeader>
+      <CardBody className="pt-0" as={ScrollShadow} hideScrollBar>
         {groupSections.map((section, index) => (
           <GroupSection key={index} {...section} />
         ))}
         {buttons.map((Btn, index) => (
           <Btn key={index} />
         ))}
-      </ScrollShadow>
+      </CardBody>
     </Card>
   );
 };

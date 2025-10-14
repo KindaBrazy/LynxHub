@@ -9,7 +9,7 @@ type Props = {show: boolean};
 const DashboardPage = memo(({show}: Props) => {
   return (
     <Page show={show}>
-      <div className="flex size-full flex-row space-x-1 relative">
+      <div className="flex size-full flex-row space-x-1 relative py-2">
         <DashboardPageNav />
         <DashboardPageContents />
       </div>

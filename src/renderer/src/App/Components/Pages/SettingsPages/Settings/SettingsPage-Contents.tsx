@@ -1,13 +1,14 @@
-import {ScrollShadow} from '@heroui/react';
-
+import LynxScroll from '../../../Reusable/LynxScroll';
 import {SettingsSections} from './SettingsContainer';
 
 /** Settings content */
 const SettingsPageContents = () => {
   return (
-    <ScrollShadow orientation="vertical" className="flex size-full flex-col space-y-8 pb-4 pl-1" hideScrollBar>
-      <SettingsSections />
-    </ScrollShadow>
+    <LynxScroll className="size-full pl-1 pr-4">
+      <div className=" flex flex-col gap-y-4">
+        <SettingsSections />
+      </div>
+    </LynxScroll>
   );
 };
 

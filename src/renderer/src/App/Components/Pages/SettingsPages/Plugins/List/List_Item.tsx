@@ -112,7 +112,7 @@ export function List_Item({item, installed}: Props) {
       className={
         `hover:bg-foreground-100 hover:shadow-medium relative border-2 ` +
         ` border-foreground-100 ${isSelected && (isExtension ? '!border-primary' : '!border-secondary')}` +
-        ` rounded-xl !transition-all !duration-300 bg-foreground-50 cursor-default`
+        ` rounded-xl !transition-all !duration-300 bg-foreground-50`
       }
       as="div"
       shadow="sm"
