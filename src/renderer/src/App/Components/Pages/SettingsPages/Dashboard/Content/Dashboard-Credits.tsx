@@ -63,7 +63,7 @@ export default function DashboardCredits() {
   };
 
   return (
-    <SettingsSection title="Credits" id={DashboardCreditsId} icon={<UserHeart_Icon className="size-4" />} itemsCenter>
+    <SettingsSection title="Credits" id={DashboardCreditsId} icon={<UserHeart_Icon className="size-5" />} itemsCenter>
       {/* Hero Section */}
       <div
         className={
