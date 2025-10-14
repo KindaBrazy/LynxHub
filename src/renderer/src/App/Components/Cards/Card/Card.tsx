@@ -9,6 +9,7 @@ import AddBreadcrumb_Renderer from '../../../../../Breadcrumbs';
 import {DownloadDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionRendererApi} from '../../../Extensions/ExtensionLoader';
 import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
+import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
@@ -57,9 +58,15 @@ const LynxCard = memo(() => {
   }, [repoUrl]);
   const isRunning = useMemo(() => runningCard.some(item => item.id === id), [runningCard, id]);
   const accentColor = useMemo(() => getAccentColorAsHex(title, developer), [title, developer]);
+
+  const isDarkMode = useAppState('darkMode');
+
   const accentStyle: AccentStyle = useMemo(
-    () => (isInstalled ? {'--accent-bg-color': `${accentColor}30`} : {}),
-    [isInstalled, accentColor],
+    () =>
+      isInstalled
+        ? {'--accent-bg-color': `${accentColor}${isDarkMode ? '25' : '15'}`} // Use 18% opacity for dark, 8% for light
+        : {},
+    [isInstalled, accentColor, isDarkMode],
   );
 
   const [isUpdatingExtensions, setIsUpdatingExtensions] = useState<boolean>(false);
@@ -114,14 +121,9 @@ const LynxCard = memo(() => {
       variants={{hover: {scale: 1.02}, initial: {scale: 1}}}
       isPressable={!isRunning && !updating && !isUpdatingExtensions}
       className="relative w-[300px] h-[210px] border border-foreground-100 px-2 group shadow-md">
-      <motion.div
-        variants={{
-          hover: {scale: 1.5, opacity: 0.6},
-          initial: {scale: 1, opacity: 0.4},
-        }}
+      <div
         style={accentStyle}
-        transition={{duration: 0.5}}
-        className={`absolute inset-0 z-0 ${isInstalled ? 'bg-installed' : 'bg-uninstalled'}`}
+        className={`absolute scale-150 opacity-50 inset-0 z-0 ${isInstalled ? 'bg-installed' : 'bg-uninstalled'}`}
       />
       <PulsingLine accentColor={accentColor} isInstalled={isInstalled} />
 
