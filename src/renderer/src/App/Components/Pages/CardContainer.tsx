@@ -1,6 +1,8 @@
 import {Card, CardBody, CardHeader} from '@heroui/react';
 import {ReactNode} from 'react';
 
+import {ContainersBg} from '../../Utils/CrossStyle';
+
 type Props = {
   children?: ReactNode;
   icon: ReactNode;
@@ -13,7 +15,7 @@ export const CardContainerClasses = 'size-6 mr-2 hover:transition hover:duration
 
 export default function CardContainer({children, icon, title, subTitle, extraClassNames}: Props) {
   return (
-    <Card className={['bg-white/20 dark:bg-black/20', extraClassNames].join(' ')}>
+    <Card className={[ContainersBg, extraClassNames].join(' ')}>
       <CardHeader className="flex-col items-start px-6 pt-5">
         <div className="flex flex-row items-center">
           {icon}

@@ -1,5 +1,4 @@
-import {ScrollShadow} from '@heroui/react';
-import {Card} from 'antd';
+import {Card, CardBody, CardHeader, ScrollShadow} from '@heroui/react';
 import {useMemo} from 'react';
 
 import {
@@ -7,9 +6,11 @@ import {
   Info_Icon,
   SmileCircleDuo_Icon,
   User_Icon,
+  UserDuo_Icon,
   UserHeart_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
+import {ContainersBg} from '../../../../Utils/CrossStyle';
 import {GroupProps, GroupSection} from '../Settings/SettingsPage-Nav';
 import {dashboardSectionId} from './DashboardContainer';
 
@@ -56,21 +57,19 @@ const DashboardPageNav = () => {
   const buttons = useMemo(() => extensionsData.customizePages.dashboard.add.navButton, []);
 
   return (
-    <Card
-      className={
-        'h-full w-48 shrink-0 border-2 border-foreground/10 text-center' +
-        ' dark:border-foreground/5 dark:bg-LynxRaisinBlack'
-      }
-      title="Dashboard"
-      variant="borderless">
-      <ScrollShadow className="absolute inset-x-3 bottom-4 top-[3.8rem]" hideScrollBar>
+    <Card className={`h-full w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
+      <CardHeader className="justify-center gap-x-2 pt-5">
+        <UserDuo_Icon className="size-5" />
+        <span>Dashboard</span>
+      </CardHeader>
+      <CardBody className="pt-0" as={ScrollShadow} hideScrollBar>
         {groupSections.map((section, index) => (
           <GroupSection key={index} {...section} />
         ))}
         {buttons.map((Btn, index) => (
           <Btn key={index} />
         ))}
-      </ScrollShadow>
+      </CardBody>
     </Card>
   );
 };

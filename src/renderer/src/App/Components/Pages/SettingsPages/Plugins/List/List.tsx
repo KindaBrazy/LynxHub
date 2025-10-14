@@ -9,6 +9,7 @@ import {Circle_Icon, RefreshDuo_Icon} from '../../../../../../assets/icons/SvgIc
 import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
+import {ContainersBg} from '../../../../../Utils/CrossStyle';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import LynxScroll from '../../../../Reusable/LynxScroll';
@@ -72,7 +73,7 @@ export default function List() {
     <div
       className={
         'absolute inset-y-2 border border-foreground-100 shadow-small sm:w-[19rem] lg:w-[24rem] 2xl:w-[30rem]' +
-        ' overflow-hidden shrink-0 transition-[width] duration-500 bg-white dark:bg-LynxRaisinBlack rounded-xl' +
+        ` overflow-hidden shrink-0 transition-[width] duration-500 ${ContainersBg} rounded-xl` +
         ' flex flex-col'
       }>
       {refreshing && <Progress size="sm" color="secondary" aria-label="Refreshing Item" isIndeterminate />}

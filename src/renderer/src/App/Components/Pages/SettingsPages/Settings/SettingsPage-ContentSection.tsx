@@ -1,5 +1,7 @@
-import {Card} from 'antd';
+import {Card, CardBody, CardHeader} from '@heroui/react';
 import {ReactNode} from 'react';
+
+import {ContainersBg} from '../../../../Utils/CrossStyle';
 
 type Props = {
   title: string;
@@ -13,21 +15,12 @@ type Props = {
 /** Render card for a specif settings */
 export default function SettingsSection({children, id, title, titleColor = '', itemsCenter = false, icon}: Props) {
   return (
-    <Card
-      title={
-        <div className="flex flex-row items-center justify-center space-x-2">
-          {icon}
-          <span>{title}</span>
-        </div>
-      }
-      className={
-        `w-full dark:bg-LynxRaisinBlack ${itemsCenter && 'text-center'} scroll-mt-8 ` +
-        `border-2 border-foreground/10 dark:border-foreground/5`
-      }
-      id={id}
-      variant="borderless"
-      classNames={{body: 'gap-y-4 !py-2 flex-col flex', title: `text-center ${titleColor}`}}>
-      {children}
+    <Card id={id} className={`w-full ${ContainersBg} border-1 border-foreground-100`}>
+      <CardHeader className={`flex flex-row items-center justify-center gap-x-2 ${titleColor}`}>
+        {icon}
+        {title}
+      </CardHeader>
+      <CardBody className={`${itemsCenter && 'justify-center'} flex flex-col gap-y-3`}>{children}</CardBody>
     </Card>
   );
 }
