@@ -13,7 +13,7 @@ export default function DashboardReportIssue() {
     <SettingsSection
       title="Help & Feedback"
       id={DashboardReportIssueId}
-      icon={<SmileCircleDuo_Icon className="size-6" />}
+      icon={<SmileCircleDuo_Icon className="size-5" />}
       itemsCenter>
       <div className="flex gap-y-2 flex-col text-center text-gray-600 dark:text-gray-300 leading-relaxed">
         <span>{"Found a bug or have feedback? I'd love to hear from you!"}</span>
