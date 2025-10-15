@@ -1,5 +1,6 @@
 import {Card, CardBody, CardHeader, ScrollShadow} from '@heroui/react';
-import {useMemo} from 'react';
+import {isEmpty} from 'lodash';
+import {useEffect, useMemo, useState} from 'react';
 
 import {
   Download2_Icon,
@@ -10,6 +11,7 @@ import {
   UserHeart_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
+import rendererIpc from '../../../../RendererIpc';
 import {ContainersBg} from '../../../../Utils/CrossStyle';
 import {GroupProps, GroupSection} from '../Settings/SettingsPage-Nav';
 import {dashboardSectionId} from './DashboardContainer';
@@ -27,11 +29,6 @@ const groupSections: GroupProps[] = [
         title: 'Updates',
         icon: <Download2_Icon className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardUpdateId,
-      },
-      {
-        title: 'Credits',
-        icon: <UserHeart_Icon className="size-4 shrink-0" />,
-        elementId: dashboardSectionId.DashboardCreditsId,
       },
     ],
   },
@@ -56,6 +53,21 @@ const groupSections: GroupProps[] = [
 const DashboardPageNav = () => {
   const buttons = useMemo(() => extensionsData.customizePages.dashboard.add.navButton, []);
 
+  const [sections, setSections] = useState<GroupProps[]>(groupSections);
+
+  useEffect(() => {
+    rendererIpc.statics.getPatrons().then(cr => {
+      if (!isEmpty(cr)) {
+        groupSections[0].items.push({
+          title: 'Credits',
+          icon: <UserHeart_Icon className="size-4 shrink-0" />,
+          elementId: dashboardSectionId.DashboardCreditsId,
+        });
+        setSections(groupSections);
+      }
+    });
+  }, []);
+
   return (
     <Card className={`h-full w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
       <CardHeader className="justify-center gap-x-2 pt-5">
@@ -63,7 +75,7 @@ const DashboardPageNav = () => {
         <span>Dashboard</span>
       </CardHeader>
       <CardBody className="pt-0" as={ScrollShadow} hideScrollBar>
-        {groupSections.map((section, index) => (
+        {sections.map((section, index) => (
           <GroupSection key={index} {...section} />
         ))}
         {buttons.map((Btn, index) => (
