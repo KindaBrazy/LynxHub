@@ -5,7 +5,7 @@ import Container from './Container';
 export default function ThreadsLoading() {
   return (
     <Container>
-      <ThreadsBG color={[1, 1, 1]} />
+      <ThreadsBG />
       <AppName className="absolute bottom-10" />
     </Container>
   );
