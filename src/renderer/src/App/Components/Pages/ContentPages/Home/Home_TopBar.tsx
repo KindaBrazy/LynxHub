@@ -1,4 +1,5 @@
 import {Button, ButtonGroup} from '@heroui/react';
+import {motion} from 'framer-motion';
 import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
@@ -36,7 +37,11 @@ export default function Home_TopBar() {
 
   return (
     <div className="w-full shrink-0 flex flex-row gap-x-2 px-4 justify-end">
-      <ButtonGroup size="sm">
+      <ButtonGroup
+        size="sm"
+        as={motion.div}
+        animate={{scale: 1, translateY: 0, opacity: 1}}
+        initial={{scale: 0.95, translateY: -8, opacity: 0}}>
         <Button onPress={newTerminal} startContent={<Terminal_Icon />}>
           Terminal
         </Button>
