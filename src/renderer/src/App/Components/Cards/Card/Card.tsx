@@ -185,7 +185,7 @@ const LynxCard = memo(() => {
         </AnimatePresence>
       </CardHeader>
       <CardBody className="py-2 justify-center">
-        <span className=" line-clamp-3 text-foreground-500">{description}</span>
+        <span className=" line-clamp-3 text-foreground-500 text-sm">{description}</span>
       </CardBody>
       <Footer
         id={id}
