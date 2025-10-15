@@ -1,4 +1,4 @@
-import {InputNumber} from 'antd';
+import {NumberInput} from '@heroui/react';
 import {useDispatch} from 'react-redux';
 
 import {Clock_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
@@ -10,7 +10,7 @@ export default function CheckUpdateInterval() {
   const updateInterval = useCardsState('checkUpdateInterval');
   const dispatch = useDispatch<AppDispatch>();
 
-  const onChange = (value: number | null) => {
+  const onChange = (value: number) => {
     if (value) {
       dispatch(cardsActions.setUpdateInterval(value));
       rendererIpc.storage.update('cards', {checkUpdateInterval: value});
@@ -20,15 +20,13 @@ export default function CheckUpdateInterval() {
   return (
     <div className="w-full text-start flex flex-col gap-y-1">
       <span>How often to check for AI updates:</span>
-      <InputNumber
-        min={2}
-        variant="filled"
-        className="w-full"
-        onChange={onChange}
-        addonAfter="Minutes"
+      <NumberInput
+        size="sm"
+        minValue={2}
+        endContent="Minutes"
         value={updateInterval}
-        addonBefore={<Clock_Icon className="size-5" />}
-        changeOnWheel
+        onValueChange={onChange}
+        startContent={<Clock_Icon className="size-5" />}
       />
     </div>
   );
