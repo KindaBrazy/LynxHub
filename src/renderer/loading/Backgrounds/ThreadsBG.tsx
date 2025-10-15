@@ -226,5 +226,5 @@ export default function ThreadsBG({
     };
   }, [color, amplitude, distance, enableMouseInteraction]);
 
-  return <div ref={containerRef} className="w-full h-full relative" {...rest} />;
+  return <div ref={containerRef} className="size-full absolute -translate-y-4" {...rest} />;
 }
