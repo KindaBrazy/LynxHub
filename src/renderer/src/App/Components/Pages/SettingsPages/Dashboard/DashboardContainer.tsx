@@ -1,6 +1,8 @@
-import {useMemo} from 'react';
+import {isEmpty} from 'lodash';
+import {useEffect, useMemo, useState} from 'react';
 
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
+import rendererIpc from '../../../../RendererIpc';
 import DashboardAbout, {DashboardAboutId} from './Content/Dashboard-About';
 import DashboardCredits, {DashboardCreditsId} from './Content/Dashboard-Credits';
 import DashboardReportIssue, {DashboardReportIssueId} from './Content/Dashboard-ReportIssue';
@@ -18,11 +20,18 @@ export const dashboardSectionId = {
 export const DashboardSections = () => {
   const content = useMemo(() => extensionsData.customizePages.dashboard.add.content, []);
 
+  const [creditsAvailable, setCreditsAvailable] = useState<boolean>(false);
+  useEffect(() => {
+    rendererIpc.statics.getPatrons().then(cr => {
+      setCreditsAvailable(!isEmpty(cr));
+    });
+  }, []);
+
   return (
     <>
       <DashboardProfile />
       <DashboardUpdate />
-      <DashboardCredits />
+      {creditsAvailable && <DashboardCredits />}
       <DashboardReportIssue />
       <DashboardAbout />
 
