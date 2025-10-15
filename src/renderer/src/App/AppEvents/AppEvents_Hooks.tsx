@@ -340,7 +340,7 @@ export const useContextEvents = () => {
           rendererIpc.pty.process(runningCard.id, 'start', runningCard.id);
           dispatch(cardsActions.addRunningCard({id: runningCard.id, tabId: activeTab}));
         }
-      }, 50);
+      }, 1000);
     });
 
     return () => {
