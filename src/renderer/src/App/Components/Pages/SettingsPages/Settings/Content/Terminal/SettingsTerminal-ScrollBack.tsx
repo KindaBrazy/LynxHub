@@ -1,6 +1,4 @@
-import {InputNumber} from 'antd';
-import {isNull} from 'lodash';
-import {useCallback} from 'react';
+import {NumberInput} from '@heroui/react';
 import {useDispatch} from 'react-redux';
 
 import {terminalActions, useTerminalState} from '../../../../../../Redux/Reducer/TerminalReducer';
@@ -10,21 +8,19 @@ export default function SettingsTerminalScrollBack() {
   const scrollBack = useTerminalState('scrollBack');
   const dispatch = useDispatch<AppDispatch>();
 
-  const onChange = useCallback((value: number | null) => {
-    if (!isNull(value)) {
-      dispatch(terminalActions.setTerminalState({key: 'scrollBack', value}));
-    }
-  }, []);
+  const onChange = (value: number) => {
+    dispatch(terminalActions.setTerminalState({key: 'scrollBack', value}));
+  };
 
   return (
-    <InputNumber
-      min={100}
+    <NumberInput
+      size="sm"
       step={1000}
-      max={999999}
-      className="w-full"
+      minValue={100}
+      maxValue={999999}
+      label="Scrollback"
       value={scrollBack}
-      onChange={onChange}
-      addonBefore="Scrollback"
+      onValueChange={onChange}
     />
   );
 }

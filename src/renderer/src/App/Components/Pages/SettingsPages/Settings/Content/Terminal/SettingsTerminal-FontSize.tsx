@@ -1,6 +1,4 @@
-import {InputNumber} from 'antd';
-import {isNull} from 'lodash';
-import {useCallback} from 'react';
+import {NumberInput} from '@heroui/react';
 import {useDispatch} from 'react-redux';
 
 import {terminalActions, useTerminalState} from '../../../../../../Redux/Reducer/TerminalReducer';
@@ -10,20 +8,11 @@ export default function SettingsTerminalFontSize() {
   const fontSize = useTerminalState('fontSize');
   const dispatch = useDispatch<AppDispatch>();
 
-  const onChange = useCallback((value: number | null) => {
-    if (!isNull(value)) {
-      dispatch(terminalActions.setTerminalState({key: 'fontSize', value}));
-    }
-  }, []);
+  const onChange = (value: number) => {
+    dispatch(terminalActions.setTerminalState({key: 'fontSize', value}));
+  };
+
   return (
-    <InputNumber
-      min={2}
-      max={100}
-      value={fontSize}
-      className="w-full"
-      onChange={onChange}
-      placeholder="aloooooo"
-      addonBefore="Font Size"
-    />
+    <NumberInput size="sm" minValue={2} maxValue={100} value={fontSize} label="Font Size" onValueChange={onChange} />
   );
 }

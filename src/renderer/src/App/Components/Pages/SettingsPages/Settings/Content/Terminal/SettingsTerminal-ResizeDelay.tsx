@@ -1,6 +1,4 @@
-import {InputNumber} from 'antd';
-import {isNull} from 'lodash';
-import {useCallback} from 'react';
+import {NumberInput} from '@heroui/react';
 import {useDispatch} from 'react-redux';
 
 import {terminalActions, useTerminalState} from '../../../../../../Redux/Reducer/TerminalReducer';
@@ -10,21 +8,19 @@ export default function SettingsTerminalResizeDelay() {
   const resizeDelay = useTerminalState('resizeDelay');
   const dispatch = useDispatch<AppDispatch>();
 
-  const onChange = useCallback((value: number | null) => {
-    if (!isNull(value)) {
-      dispatch(terminalActions.setTerminalState({key: 'resizeDelay', value}));
-    }
-  }, []);
+  const onChange = (value: number) => {
+    dispatch(terminalActions.setTerminalState({key: 'resizeDelay', value}));
+  };
 
   return (
-    <InputNumber
-      min={1}
+    <NumberInput
       step={1}
-      max={5000}
-      className="w-full"
+      size="sm"
+      minValue={1}
+      maxValue={5000}
       value={resizeDelay}
-      onChange={onChange}
-      addonBefore="Resize Delay"
+      label="Resize Delay"
+      onValueChange={onChange}
     />
   );
 }
