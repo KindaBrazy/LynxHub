@@ -255,7 +255,7 @@ async function emitLoaded(
   allCards = _newAllCards;
   allCardDataWithPath = _newCardDataWithPath;
   allCardArguments = _newCardArguments;
-  hasArguments = new Set(_newCardArguments.filter(arg => !!arg).map(item => item.id));
+  hasArguments = new Set(_newCardArguments.filter(arg => !!arg.arguments).map(item => item.id));
   allCardMethods = _newCardMethods;
   allCardSearchData = _newCardSearchData;
 
