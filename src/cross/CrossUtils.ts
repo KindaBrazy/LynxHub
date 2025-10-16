@@ -1,6 +1,8 @@
 import {isEqual} from 'lodash';
 import normalizeUrl, {Options} from 'normalize-url';
 
+import {SearchQuerySites} from './CrossTypes';
+
 /**
  * Extracts the owner and repository name from a given GitHub | GitLab URL.
  * @param {string} url - The GitHub repository URL.
@@ -268,4 +270,33 @@ export function formatTime(seconds: number): string {
   const remainingMinutes = minutes % 60;
 
   return `${hours}h:${remainingMinutes}m${remainingSeconds > 0 ? `:${remainingSeconds}s` : ''}`;
+}
+
+export function getSearchUrl(text: string, site: SearchQuerySites): string {
+  const encodedText = encodeURIComponent(text);
+  let urlTemplate: string;
+
+  switch (site) {
+    case 'Reddit':
+      urlTemplate = 'http://www.reddit.com/search?q=%s';
+      break;
+    case 'DuckDuckGo':
+      urlTemplate = 'https://duckduckgo.com/?q=%s';
+      break;
+    case 'Perplexity':
+      urlTemplate = 'https://www.perplexity.ai/?q=%s';
+      break;
+    case 'ChatGPT':
+      urlTemplate = 'https://chatgpt.com/?q=%s';
+      break;
+    case 'Claude':
+      urlTemplate = 'https://claude.ai/new?q=%s';
+      break;
+    case 'Google':
+    default:
+      urlTemplate = 'https://google.com/search?q=%s';
+      break;
+  }
+
+  return urlTemplate.replace('%s', encodedText);
 }

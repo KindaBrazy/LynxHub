@@ -56,14 +56,27 @@ const RunningCardView = ({runningCard}: Props) => {
   }, [isEmptyRunning, id, tabId, currentView, activeTab, terminalName, browserTitle]);
 
   const [serializeAddon] = useState<SerializeAddon>(new SerializeAddon());
+  const [selectedTerminalText, setSelectedTerminalText] = useState<string>('');
   const clearTerminal = useRef<(() => void) | undefined>(undefined);
 
   return (
     <>
-      <TopBar tabID={tabId} runningCard={runningCard} clearTerminal={clearTerminal} serializeAddon={serializeAddon} />
+      <TopBar
+        tabID={tabId}
+        runningCard={runningCard}
+        clearTerminal={clearTerminal}
+        serializeAddon={serializeAddon}
+        selectedTerminalText={selectedTerminalText}
+      />
       {runningCard.type !== 'browser' &&
         (isNil(ExtTerminal) ? (
-          <Terminal runningCard={runningCard} clearTerminal={clearTerminal} serializeAddon={serializeAddon} />
+          <Terminal
+            runningCard={runningCard}
+            clearTerminal={clearTerminal}
+            serializeAddon={serializeAddon}
+            selectedTerminalText={selectedTerminalText}
+            setSelectedTerminalText={setSelectedTerminalText}
+          />
         ) : (
           <ExtTerminal />
         ))}
