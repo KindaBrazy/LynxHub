@@ -9,7 +9,6 @@ import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
 import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../../Redux/Reducer/ModalsReducer';
-import {useSettingsState} from '../../../Redux/Reducer/SettingsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
@@ -29,7 +28,6 @@ const StartButton = memo(() => {
   const type = useCardStore(state => state.type);
   const extensionsDir = useCardStore(state => state.extensionsDir);
 
-  const compactMode = useSettingsState('cardsCompactMode');
   const autoUpdateExtensions = useIsAutoUpdateExtensions(id);
   const allMethods = useAllCardMethods();
   const activeTab = useTabsState('activeTab');
@@ -91,13 +89,12 @@ const StartButton = memo(() => {
           isRunning ? (
             <ShinyText speed={2} text="Running..." darkMode={darkMode} className="font-bold" />
           ) : (
-            <Play_Icon className={compactMode ? `size-4` : 'size-5'} />
+            <Play_Icon className="size-5" />
           )
         ) : (
-          <Download2_Icon className={compactMode ? 'size-5' : 'size-5'} />
+          <Download2_Icon className="size-5" />
         )
       }
-      size={compactMode ? 'sm' : 'md'}
       onPress={installed ? startAi : install}
       isDisabled={!!updating || isUpdatingExt || isRunning}
       color={installed ? (isRunning ? 'secondary' : 'primary') : 'default'}
