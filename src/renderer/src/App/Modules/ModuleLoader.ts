@@ -10,8 +10,8 @@ import {
   LoadedArguments,
   LoadedCardData,
   LoadedMethods,
+  RendererModuleImportType,
 } from '../../../../cross/plugin/ModuleTypes';
-import {RendererModuleImportType} from '../../../../cross/plugin/ModuleTypes';
 import rendererIpc from '../RendererIpc';
 import {searchInStrings} from '../Utils/UtilFunctions';
 
@@ -343,7 +343,6 @@ const loadModules = async () => {
     );
   } catch (error) {
     console.error('Error importing modules:', error);
-    throw error;
   }
 };
 
