@@ -7,7 +7,7 @@ import rendererIpc from '../../../../RendererIpc';
 
 type UrlCatchType = CustomRunBehaviorData['urlCatch'];
 
-const initalUrlCatch: UrlCatchType = {
+const initialUrlCatch: UrlCatchType = {
   type: 'module',
   delay: 5,
   customUrl: undefined,
@@ -16,7 +16,7 @@ const initalUrlCatch: UrlCatchType = {
 
 type Props = {id: string};
 export function UrlCatch({id}: Props) {
-  const [urlCatchValue, setUrlCatchValue] = useState<UrlCatchType>(initalUrlCatch);
+  const [urlCatchValue, setUrlCatchValue] = useState<UrlCatchType>(initialUrlCatch);
 
   const {type, findLine, customUrl, delay} = useMemo(() => {
     return urlCatchValue;

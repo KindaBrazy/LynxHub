@@ -11,7 +11,7 @@ import {isEmpty, isEqual} from 'lodash';
 import {Dispatch, memo, RefObject, SetStateAction, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {SystemInfo} from '../../../../../../cross/IpcChannelAndTypes';
+import {CustomRunBehaviorData, SystemInfo} from '../../../../../../cross/IpcChannelAndTypes';
 import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
 import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
@@ -22,7 +22,7 @@ import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
-import {getRendererMode, getTheme, getWindowPty} from './Terminal_Utils';
+import {catchTerminalAddress2, getRendererMode, getTheme, getWindowPty} from './Terminal_Utils';
 import parseTerminalColors from './TerminalColorHandler';
 
 const FONT_FAMILY = 'JetBrainsMono';
@@ -64,9 +64,8 @@ const Terminal = memo(
     const darkMode = useAppState('darkMode');
     const dispatch = useDispatch<AppDispatch>();
 
-    const [browserBehavior, setBrowserBehavior] = useState<'appBrowser' | 'defaultBrowser' | 'doNothing' | string>(
-      'appBrowser',
-    );
+    const [browserBehavior, setBrowserBehavior] = useState<CustomRunBehaviorData['browser']>('appBrowser');
+    const [urlCatchBehavior, setUrlCatchBehavior] = useState<CustomRunBehaviorData['urlCatch'] | undefined>(undefined);
 
     const copyText = useCallback(() => {
       if (!isEmpty(selectedTerminalText)) {
@@ -89,6 +88,7 @@ const Terminal = memo(
         const custom = result.customRunBehavior.find(customRun => customRun.cardID === id);
         if (custom) {
           setBrowserBehavior(custom.browser);
+          setUrlCatchBehavior(custom.urlCatch);
         }
       });
     }, [id]);
@@ -104,30 +104,46 @@ const Terminal = memo(
     }, [darkMode]);
 
     useEffect(() => {
-      const removeListener = rendererIpc.pty.onData((_, dataID, data) => {
-        if (dataID === id) {
-          const xTerminal = terminal.current;
-          if (!xTerminal) return;
+      const openUrl = (url: string | undefined) => {
+        if (url) {
+          if (browserBehavior === 'appBrowser') {
+            dispatch(cardsActions.setRunningCardAddress({address: url, tabId: activeTab}));
+            dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
+            rendererIpc.storageUtils.addBrowserRecent(url);
+          } else {
+            rendererIpc.win.openUrlDefaultBrowser(url);
+          }
+        }
+      };
 
-          if (isEmpty(webUIAddress) && browserBehavior !== 'doNothing') {
-            const catchAddress = getCardMethod(allMethods, id, 'catchAddress');
-            const url = catchAddress?.(data) || '';
-            if (!isEmpty(url)) {
-              if (browserBehavior === 'appBrowser') {
-                dispatch(cardsActions.setRunningCardAddress({address: url, tabId: activeTab}));
-                dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
-                rendererIpc.storageUtils.addBrowserRecent(url);
-              } else {
-                rendererIpc.win.openUrlDefaultBrowser(url);
-              }
+      const offData = rendererIpc.pty.onData((_, dataID, data) => {
+        if (dataID === id) {
+          const isAddressEmpty = isEmpty(webUIAddress);
+
+          if (isAddressEmpty) {
+            // Also catch url by module if urlCatchBehavior is undefined
+            const catchUrlByModule = urlCatchBehavior ? urlCatchBehavior.type === 'module' : true;
+            const catchLine = urlCatchBehavior ? urlCatchBehavior.type === 'findLine' : false;
+            const targetLine = urlCatchBehavior?.findLine;
+
+            if (catchUrlByModule) {
+              const catchAddress = getCardMethod(allMethods, id, 'catchAddress');
+              const url = catchAddress ? catchAddress(data) : undefined;
+
+              openUrl(url);
+            } else if (catchLine && targetLine) {
+              const url = catchTerminalAddress2(data, targetLine);
+              openUrl(url);
             }
           }
-          xTerminal.write(outputColor ? parseTerminalColors(data) : data);
+
+          const xTerminal = terminal.current;
+          if (xTerminal) xTerminal.write(outputColor ? parseTerminalColors(data) : data);
         }
       });
 
-      return () => removeListener();
-    }, [id, webUIAddress, terminal, browserBehavior, outputColor, dispatch, allMethods, activeTab]);
+      return () => offData();
+    }, [id, webUIAddress, terminal, browserBehavior, outputColor, dispatch, allMethods, activeTab, urlCatchBehavior]);
 
     const onRightClickRef = useRef<((e: MouseEvent) => void) | null>(null);
 
