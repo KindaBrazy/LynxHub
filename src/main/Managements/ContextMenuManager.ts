@@ -222,9 +222,24 @@ export default class ContextMenuManager {
 
     const {width, height} = dimensions;
 
-    if (typeof width === 'number' && typeof height === 'number' && Number.isFinite(width) && Number.isFinite(height)) {
-      window.setSize(width, height);
-      window.setContentSize(width, height);
+    const isValuesValid =
+      typeof width === 'number' &&
+      typeof height === 'number' &&
+      Number.isFinite(width) &&
+      Number.isFinite(height) &&
+      width > 0 &&
+      height > 0;
+
+    if (isValuesValid) {
+      try {
+        const w = Math.max(1, Math.round(width));
+        const h = Math.max(1, Math.round(height));
+        console.log('Setting size to:', w, h);
+        window.setSize(w, h);
+        window.setContentSize(w, h);
+      } catch (error) {
+        console.error('Failed to set window size:', {width, height, error});
+      }
     } else {
       console.error('Invalid dimensions received:', dimensions);
     }
