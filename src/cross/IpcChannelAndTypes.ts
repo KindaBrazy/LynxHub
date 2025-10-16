@@ -32,10 +32,22 @@ export type GitProgressCallback = <T extends GitProgressState>(
 export type StorageOperation = 'add' | 'remove' | 'get' | 'set';
 export type RecentlyOperation = 'update' | 'get';
 export type StoragePreOpenData = {cardId: string; data: PreOpenData}[];
-export type CustomRunBehaviorData = {
+
+export type CustomRunBehaviorData_Legacy = {
   cardID: string;
   terminal: 'runScript' | 'empty' | string;
   browser: 'appBrowser' | 'defaultBrowser' | 'doNothing' | string;
+};
+export type CustomRunBehaviorData = {
+  cardID: string;
+  terminal: 'runScript' | 'empty';
+  browser: 'appBrowser' | 'defaultBrowser';
+  urlCatch: {
+    type: 'findLine' | 'custom' | 'module' | 'nothing';
+    findLine: string | undefined;
+    delay: number;
+    customUrl: string | undefined;
+  };
 };
 export type CustomRunBehaviorStore = CustomRunBehaviorData[];
 

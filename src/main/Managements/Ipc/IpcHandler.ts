@@ -10,6 +10,7 @@ import {
   appDataChannels,
   browserChannels,
   ChangeWindowState,
+  CustomRunBehaviorData,
   DarkModeTypes,
   DiscordRunningAI,
   fileChannels,
@@ -312,7 +313,9 @@ function storageUtilsIpc() {
     storageManager.preOpenOpt(opt, data),
   );
 
-  ipcMain.on(storageUtilsChannels.customRunBehavior, (_, data) => storageManager.updateCustomRunBehavior(data));
+  ipcMain.on(storageUtilsChannels.customRunBehavior, (_, data: Partial<CustomRunBehaviorData>) =>
+    storageManager.updateCustomRunBehavior(data),
+  );
 
   ipcMain.handle(storageUtilsChannels.getCardArguments, (_, cardId: string) =>
     storageManager.getCardArgumentsById(cardId),

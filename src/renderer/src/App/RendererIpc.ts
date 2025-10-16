@@ -342,10 +342,8 @@ const rendererIpc = {
     onCustomRun: (result: (event: IpcRendererEvent, preCommands: OnPreCommands) => void) =>
       ipc.on(storageUtilsChannels.onCustomRun, result),
 
-    updateCustomRunBehavior: (data: CustomRunBehaviorData) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_update_custom_run_behavior', {data});
-      ipc.send(storageUtilsChannels.customRunBehavior, data);
-    },
+    updateCustomRunBehavior: (data: Partial<CustomRunBehaviorData>) =>
+      ipc.send(storageUtilsChannels.customRunBehavior, data),
 
     preOpen: (opt: StorageOperation, open: PreOpen): Promise<PreOpenData | undefined> => {
       extensionRendererApi.events_ipc.emit('storage_utils_pre_open', {opt, open});

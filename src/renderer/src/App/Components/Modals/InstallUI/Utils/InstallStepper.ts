@@ -114,11 +114,12 @@ export default class InstallStepper {
           });
         }
         if (launchBehavior !== undefined) {
-          const {browser, terminal} = launchBehavior;
+          const {browser, terminal, urlCatch} = launchBehavior;
           rendererIpc.storageUtils.updateCustomRunBehavior({
             cardID: data.cardId,
             terminal,
             browser,
+            urlCatch,
           });
         }
         if (customCommands !== undefined) {

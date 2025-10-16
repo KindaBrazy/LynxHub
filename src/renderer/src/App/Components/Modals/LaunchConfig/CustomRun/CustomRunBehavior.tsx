@@ -2,32 +2,37 @@ import {Select, Selection, SelectItem} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {Fragment, useEffect, useState} from 'react';
 
+import {CustomRunBehaviorData} from '../../../../../../../cross/IpcChannelAndTypes';
 import rendererIpc from '../../../../RendererIpc';
 import LaunchConfigSection from '../LaunchConfig-Section';
+import {UrlCatch} from './UrlCatch';
+
+type TerminalType = CustomRunBehaviorData['terminal'];
+type BrowserType = CustomRunBehaviorData['browser'];
 
 type Props = {id: string};
 export default function CustomRunBehavior({id}: Props) {
-  const [terminalValue, setTerminalValue] = useState<string>('runScript');
-  const [browserValue, setBrowserValue] = useState<string>('appBrowser');
+  const [terminalValue, setTerminalValue] = useState<TerminalType>('runScript');
+  const [browserValue, setBrowserValue] = useState<BrowserType>('appBrowser');
 
   const onTerminalChange = (value: Selection) => {
     if (value && value !== 'all') {
-      setTerminalValue(value.values().next().value as string);
+      const result = value.values().next().value as TerminalType;
+      setTerminalValue(result);
       rendererIpc.storageUtils.updateCustomRunBehavior({
         cardID: id,
-        terminal: value.values().next().value as string,
-        browser: browserValue,
+        terminal: result,
       });
     }
   };
 
   const onBrowserChange = (value: Selection) => {
     if (value && value !== 'all') {
-      setBrowserValue(value.values().next().value as string);
+      const result = value.values().next().value as BrowserType;
+      setBrowserValue(result);
       rendererIpc.storageUtils.updateCustomRunBehavior({
         cardID: id,
-        terminal: terminalValue,
-        browser: value.values().next().value as string,
+        browser: result,
       });
     }
   };
@@ -78,20 +83,16 @@ export default function CustomRunBehavior({id}: Props) {
               classNames={{trigger: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack'}}
               description="Define what happens when the application detects an address to launch."
               disallowEmptySelection>
-              <SelectItem
-                key="appBrowser"
-                description="Open the address in the integrated in-app browser (triggered from the terminal).">
-                Use In-App Browser
+              <SelectItem key="appBrowser" description="Open the address in the integrated in-app browser.">
+                In-App Browser
               </SelectItem>
-              <SelectItem
-                key="defaultBrowser"
-                description="Open the address in your default web browser (triggered from the terminal).">
-                Use Default Browser
-              </SelectItem>
-              <SelectItem key="doNothing" description="Take no action.">
-                Do Nothing
+              <SelectItem key="defaultBrowser" description="Open the address in your system default browser.">
+                Default Browser
               </SelectItem>
             </Select>
+          </div>
+          <div className="flex w-full flex-col items-center gap-y-2">
+            <UrlCatch id={id} />
           </div>
         </div>
       </LaunchConfigSection>
