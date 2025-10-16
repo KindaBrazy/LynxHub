@@ -34,3 +34,29 @@ export function getTheme(darkMode: boolean): ITheme {
     selectionBackground: darkMode ? getColor('white', 0.7) : getColor('black', 0.7),
   };
 }
+
+export function catchTerminalAddress(input: string, keyword: string): string | undefined {
+  const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+  // eslint-disable-next-line no-useless-escape
+  const dynamicPattern = new RegExp(`${escapedKeyword}\\s*:\\s*(https?:\/\/[^\s]+)`, 'i');
+
+  const match: RegExpMatchArray | null = input.match(dynamicPattern);
+
+  if (match) {
+    return match[1];
+  }
+
+  return undefined;
+}
+
+export function catchTerminalAddress2(input: string, keyword: string): string | undefined {
+  const pattern = new RegExp(`${keyword}\\s*:\\s*(https?:\\/\\/[^\\s]+)`, 'i');
+
+  const match: RegExpMatchArray | null = input.match(pattern);
+  if (match) {
+    return match[1];
+  }
+
+  return undefined;
+}
