@@ -1,6 +1,7 @@
 import {ElectronAPI} from '@electron-toolkit/preload';
 
 import {AvailablePageIDs} from '../CrossConstants';
+import {CustomRunBehaviorData} from '../IpcChannelAndTypes';
 import {InstalledCard} from '../StorageTypes';
 
 declare global {
@@ -200,12 +201,7 @@ export type InstallationStepper = {
       customCommands?: string[];
 
       /** Defines the behavior of the browser and terminal when launching */
-      launchBehavior?: {
-        /** Specifies how to open the browser */
-        browser: 'appBrowser' | 'defaultBrowser' | 'doNothing';
-        /** Specifies how to handle the terminal */
-        terminal: 'runScript' | 'empty';
-      };
+      launchBehavior?: Omit<CustomRunBehaviorData, 'cardID'>;
 
       /** Actions to perform before launching WebUI */
       preLaunch?: {

@@ -477,14 +477,32 @@ class StorageManager extends BaseStorage {
     return result;
   }
 
-  public updateCustomRunBehavior(data: CustomRunBehaviorData) {
+  public updateCustomRunBehavior(data: Partial<CustomRunBehaviorData>) {
+    if (!data.cardID) return;
+
     let customRunBehavior = this.getData('cardsConfig').customRunBehavior;
     const existCustom = customRunBehavior.findIndex(command => command.cardID === data.cardID);
 
     if (existCustom !== -1) {
-      customRunBehavior[existCustom] = data;
+      customRunBehavior[existCustom] = {...customRunBehavior[existCustom], ...data};
     } else {
-      customRunBehavior = [...customRunBehavior, data];
+      customRunBehavior = [
+        ...customRunBehavior,
+        {
+          ...{
+            cardID: data.cardID,
+            browser: 'appBrowser',
+            terminal: 'runScript',
+            urlCatch: {
+              type: 'module',
+              delay: 5,
+              customUrl: undefined,
+              findLine: undefined,
+            },
+          },
+          ...data,
+        },
+      ];
     }
 
     this.updateData('cardsConfig', {customRunBehavior});

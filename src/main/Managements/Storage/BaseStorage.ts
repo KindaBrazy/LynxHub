@@ -4,13 +4,13 @@ import {join} from 'node:path';
 import {is} from '@electron-toolkit/utils';
 import {app} from 'electron';
 import fs from 'graceful-fs';
-import lodash from 'lodash';
+import lodash, {isEmpty} from 'lodash';
 import {LowSync} from 'lowdb';
 import {JSONFileSyncPreset} from 'lowdb/node';
 
 import {APP_NAME} from '../../../cross/CrossConstants';
 import {Get_Default_Hotkeys} from '../../../cross/HotkeyConstants';
-import {FavIcons} from '../../../cross/IpcChannelAndTypes';
+import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '../../../cross/IpcChannelAndTypes';
 import StorageTypes from '../../../cross/StorageTypes';
 import {appManager} from '../../index';
 import {
@@ -27,11 +27,11 @@ import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
-  private readonly CURRENT_VERSION: number = 0.87;
+  private readonly CURRENT_VERSION: number = 0.88;
   private migratedTo: number = 0;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.87},
+    storage: {version: 0.88},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -224,6 +224,25 @@ class BaseStorage {
       this.storage.data.plugin = {migrated: false};
     };
 
+    const v87to88 = () => {
+      const behavior = this.storage.data.cardsConfig.customRunBehavior;
+      if (!isEmpty(behavior)) {
+        this.storage.data.cardsConfig.customRunBehavior = behavior.map((item: CustomRunBehaviorData_Legacy) => {
+          const cardID = item.cardID;
+          const urlCatch: CustomRunBehaviorData['urlCatch'] = {
+            delay: 10,
+            customUrl: undefined,
+            type: item.browser === 'doNothing' ? 'nothing' : 'module',
+            findLine: undefined,
+          };
+          const browser = item.browser === 'defaultBrowser' ? 'defaultBrowser' : 'appBrowser';
+          const terminal = item.terminal as CustomRunBehaviorData['terminal'];
+
+          return {cardID, browser, terminal, urlCatch};
+        });
+      }
+    };
+
     const updateVersion = () => {
       this.updateData('storage', {version: this.CURRENT_VERSION});
     };
@@ -244,6 +263,7 @@ class BaseStorage {
           v84to85();
           v85to86();
           v86to87();
+          v87to88();
           break;
         }
         case 0.5: {
@@ -256,6 +276,7 @@ class BaseStorage {
           v84to85();
           v85to86();
           v86to87();
+          v87to88();
           break;
         }
         case 0.6: {
@@ -267,6 +288,7 @@ class BaseStorage {
           v84to85();
           v85to86();
           v86to87();
+          v87to88();
           break;
         }
         case 0.7: {
@@ -277,6 +299,7 @@ class BaseStorage {
           v84to85();
           v85to86();
           v86to87();
+          v87to88();
           break;
         }
         case 0.8: {
@@ -286,6 +309,7 @@ class BaseStorage {
           v84to85();
           v85to86();
           v86to87();
+          v87to88();
           break;
         }
         case 0.82: {
@@ -294,6 +318,7 @@ class BaseStorage {
           v84to85();
           v85to86();
           v86to87();
+          v87to88();
           break;
         }
         case 0.83: {
@@ -301,21 +326,29 @@ class BaseStorage {
           v84to85();
           v85to86();
           v86to87();
+          v87to88();
           break;
         }
         case 0.84: {
           v84to85();
           v85to86();
           v86to87();
+          v87to88();
           break;
         }
         case 0.85: {
           v85to86();
           v86to87();
+          v87to88();
           break;
         }
         case 0.86: {
           v86to87();
+          v87to88();
+          break;
+        }
+        case 0.87: {
+          v87to88();
           break;
         }
         default:
