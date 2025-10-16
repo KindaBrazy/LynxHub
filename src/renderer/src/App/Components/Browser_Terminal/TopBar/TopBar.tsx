@@ -11,9 +11,10 @@ type Props = {
   serializeAddon?: SerializeAddon;
   tabID: string;
   clearTerminal: RefObject<(() => void) | undefined>;
+  selectedTerminalText: string;
 };
 
-const TopBar = memo(({runningCard, serializeAddon, tabID, clearTerminal}: Props) => {
+const TopBar = memo(({runningCard, serializeAddon, tabID, clearTerminal, selectedTerminalText}: Props) => {
   return (
     <div
       className={
@@ -25,6 +26,7 @@ const TopBar = memo(({runningCard, serializeAddon, tabID, clearTerminal}: Props)
           clearTerminal={clearTerminal}
           serializeAddon={serializeAddon}
           startTime={runningCard.startTime}
+          selectedTerminalText={selectedTerminalText}
         />
       ) : (
         <Browser_TopBar tabID={tabID} runningCard={runningCard} />
