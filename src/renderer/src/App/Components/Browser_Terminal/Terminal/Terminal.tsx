@@ -22,7 +22,7 @@ import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
-import {catchTerminalAddress2, getRendererMode, getTheme, getWindowPty} from './Terminal_Utils';
+import {catchTerminalAddress, getRendererMode, getTheme, getWindowPty} from './Terminal_Utils';
 import parseTerminalColors from './TerminalColorHandler';
 
 const FONT_FAMILY = 'JetBrainsMono';
@@ -132,7 +132,7 @@ const Terminal = memo(
 
               openUrl(url);
             } else if (catchLine && targetLine) {
-              const url = catchTerminalAddress2(data, targetLine);
+              const url = catchTerminalAddress(data, targetLine);
               openUrl(url);
             }
           }
