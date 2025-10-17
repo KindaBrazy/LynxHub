@@ -376,13 +376,17 @@ function modulesApi() {
   ipcMain.handle(moduleApiChannels.getCurrentReleaseTag, (_, dir: string) => GitManager.getCurrentReleaseTag(dir));
 }
 
+let browserTimeout: NodeJS.Timeout | undefined = undefined;
 export function browserIPC() {
   const mainWindow = appManager?.getMainWindow();
 
   if (!mainWindow) {
-    setTimeout(browserIPC, toMs(1, 'seconds'));
+    browserTimeout = setTimeout(browserIPC, toMs(1, 'seconds'));
     return;
   }
+
+  clearTimeout(browserTimeout);
+  browserTimeout = undefined;
 
   const browserManager: BrowserManager = new BrowserManager(mainWindow);
   new BrowserDownloadManager(browserManager.getSession(), mainWindow);
