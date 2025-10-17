@@ -35,23 +35,14 @@ export function getTheme(darkMode: boolean): ITheme {
   };
 }
 
-export function catchTerminalAddress(input: string, keyword: string): string | undefined {
-  const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-  // eslint-disable-next-line no-useless-escape
-  const dynamicPattern = new RegExp(`${escapedKeyword}\\s*:\\s*(https?:\/\/[^\s]+)`, 'i');
-
-  const match: RegExpMatchArray | null = input.match(dynamicPattern);
-
-  if (match) {
-    return match[1];
-  }
-
-  return undefined;
+function escapeRegExp(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-export function catchTerminalAddress2(input: string, keyword: string): string | undefined {
-  const pattern = new RegExp(`${keyword}\\s*:\\s*(https?:\\/\\/[^\\s]+)`, 'i');
+export function catchTerminalAddress(input: string, keyword: string): string | undefined {
+  const escapedKeyword = escapeRegExp(keyword);
+
+  const pattern = new RegExp(`${escapedKeyword}.*?:\\s*.*?(https?:\\/\\/.*?)(?=\\s|\\u001b|$)`, 'i');
 
   const match: RegExpMatchArray | null = input.match(pattern);
   if (match) {
