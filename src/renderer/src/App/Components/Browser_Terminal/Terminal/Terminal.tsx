@@ -74,6 +74,7 @@ const Terminal = memo(
           lynxTopToast(dispatch).success(`Copied to clipboard`);
           terminal.current?.clearSelection();
         } catch (e) {
+          console.log(e);
           lynxTopToast(dispatch).warning(`Failed to copy. Please try again.`);
         }
       }
