@@ -3,7 +3,7 @@ import {isArray, isEmpty} from 'lodash';
 import {useEffect, useState} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
-import {ArrowDuo_Icon, CloseSimple_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
+import {AltArrowLine_Icon, CloseSimple_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
 import {SetElementsType, SetWidthSizeType} from './ContextHooks';
 
 export function useZoomMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
@@ -107,10 +107,10 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
           <Input value={searchValue} placeholder="Type here..." onValueChange={setSearchValue} autoFocus />
           <div className="flex flex-row mb-1 gap-x-1">
             <Button size="sm" onPress={back} variant="light" isDisabled={isEmpty(searchValue)} isIconOnly>
-              <ArrowDuo_Icon className="size-4 rotate-90" />
+              <AltArrowLine_Icon className="size-4" />
             </Button>
             <Button size="sm" onPress={next} variant="light" isDisabled={isEmpty(searchValue)} isIconOnly>
-              <ArrowDuo_Icon className="size-4 -rotate-90" />
+              <AltArrowLine_Icon className="size-4 rotate-180" />
             </Button>
             <Button size="sm" variant="light" onPress={clear} isDisabled={isEmpty(searchValue)} isIconOnly>
               <CloseSimple_Icon className="size-3.5 rotate-90" />
