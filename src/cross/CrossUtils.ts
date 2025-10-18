@@ -73,6 +73,8 @@ export function toMs(value: number, from: 'seconds' | 'minutes'): number {
  * @returns Normalized GitHub repository URL or an empty string if invalid
  */
 export function validateGitRepoUrl(url: string): string {
+  if (!url) return '';
+
   const githubMatch = url
     .toLowerCase()
     .match(/^(?:https?:\/\/)?(?:www\.)?github\.com\/([^/]+)\/([^/]+?)(\.git)?(\/)?$/i);
