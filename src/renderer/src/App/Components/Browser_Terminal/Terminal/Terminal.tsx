@@ -59,7 +59,7 @@ const Terminal = memo(
     const cursorBlink = useTerminalState('blinkCursor');
     const resizeDelay = useTerminalState('resizeDelay');
 
-    const {webUIAddress, id, currentView} = useMemo(() => runningCard, [runningCard]);
+    const {webUIAddress, id, currentView, tabId} = useMemo(() => runningCard, [runningCard]);
 
     const darkMode = useAppState('darkMode');
     const dispatch = useDispatch<AppDispatch>();
@@ -107,8 +107,8 @@ const Terminal = memo(
       const openUrl = (url: string | undefined) => {
         if (url) {
           if (browserBehavior === 'appBrowser') {
-            dispatch(cardsActions.setRunningCardAddress({address: url, tabId: activeTab}));
-            dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
+            dispatch(cardsActions.setRunningCardAddress({address: url, tabId}));
+            dispatch(cardsActions.setRunningCardView({view: 'browser', tabId}));
             rendererIpc.storageUtils.addBrowserRecent(url);
           } else {
             rendererIpc.win.openUrlDefaultBrowser(url);
@@ -143,7 +143,7 @@ const Terminal = memo(
       });
 
       return () => offData();
-    }, [id, webUIAddress, terminal, browserBehavior, outputColor, dispatch, allMethods, activeTab, urlCatchBehavior]);
+    }, [id, webUIAddress, terminal, browserBehavior, outputColor, dispatch, allMethods, tabId, urlCatchBehavior]);
 
     const onRightClickRef = useRef<((e: MouseEvent) => void) | null>(null);
 
