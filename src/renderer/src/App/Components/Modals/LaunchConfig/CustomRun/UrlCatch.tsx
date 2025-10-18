@@ -69,25 +69,27 @@ export function UrlCatch({id}: Props) {
   return (
     <>
       <Select
-        label="Url Catch"
         selectedKeys={[type]}
         selectionMode="single"
         labelPlacement="outside"
+        label="URL Detection Method"
         onSelectionChange={onTypeChange}
-        description="Define how app detect the ui url from terminal."
         classNames={{trigger: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack'}}
+        description="Choose how the application will detect the user interface (UI) URL from the terminal output."
         disallowEmptySelection>
-        <SelectItem key="module" description="the default module implementation.">
-          Module Default
+        <SelectItem key="module" description="Uses the default, built-in method provided by the module.">
+          Module Default Detection
         </SelectItem>
-        <SelectItem key="findLine" description="find line include text and extract url.">
-          Find Line
+        <SelectItem
+          key="findLine"
+          description="Scans the terminal output for a specific line of text to locate and extract the URL.">
+          Scan for Specific Line
         </SelectItem>
-        <SelectItem key="custom" description="your custom url.">
-          Custom Url
+        <SelectItem key="custom" description="Define a fixed URL to be opened instead of relying on terminal output.">
+          Use Custom URL
         </SelectItem>
-        <SelectItem key="nothing" description="No ui needed.">
-          Do Nothing
+        <SelectItem key="nothing" description="No browser will be opened, as no UI URL is needed.">
+          Do Not Open UI
         </SelectItem>
       </Select>
       {type === 'findLine' && (
@@ -96,13 +98,16 @@ export function UrlCatch({id}: Props) {
             mainWrapper: 'w-full',
             inputWrapper: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack',
           }}
+          description={
+            'Enter the unique text snippet the application should look for in the terminal output' +
+            ' to identify the line containing the URL.'
+          }
           variant="flat"
           value={findLine}
           spellCheck="false"
-          label="Line that includes: "
+          label="Line Must Contain: "
           labelPlacement="outside-left"
           onValueChange={onFindLineChange}
-          description="Find the line printed in terminal that includes this text and extract url from it."
         />
       )}
       {type === 'custom' && (
@@ -115,22 +120,25 @@ export function UrlCatch({id}: Props) {
             variant="flat"
             value={customUrl}
             spellCheck="false"
-            label="Custom URL: "
+            label="Target URL: "
             labelPlacement="outside-left"
             onValueChange={onCustomUrlChange}
-            description="The target url to open in browser"
+            description="Specify the exact web address (URL) to be automatically opened in the browser."
           />
           <NumberInput
             classNames={{
               mainWrapper: 'w-full',
               inputWrapper: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack',
             }}
+            description={
+              'Set a delay before opening the custom URL. This can be useful for waiting' +
+              ' until the application is fully ready.'
+            }
             value={delay}
             spellCheck="false"
-            label="Open after: "
+            label="Open After Delay: "
             onValueChange={onDelayChange}
             labelPlacement="outside-left"
-            description="Open the custom url after delay."
             endContent={<span className="text-foreground-600 text-sm">Seconds</span>}
           />
         </>
