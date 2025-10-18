@@ -346,3 +346,5 @@ export type CardState = {
 
 export type SubscribeStages = 'insider' | 'early_access' | 'public';
 export type SearchQuerySites = 'Google' | 'DuckDuckGo' | 'Reddit' | 'ChatGPT' | 'Perplexity' | 'Claude';
+
+export type ContextResizeData = {width: number; height: number; dpr: number};

@@ -3,6 +3,7 @@ import path from 'node:path';
 import {is} from '@electron-toolkit/utils';
 import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain, screen, shell, WebContents} from 'electron';
 
+import {ContextResizeData} from '../../cross/CrossTypes';
 import {browserChannels, contextMenuChannels, tabsChannels} from '../../cross/IpcChannelAndTypes';
 import BrowserManager from './BrowserManager';
 
@@ -24,6 +25,7 @@ export default class ContextMenuManager {
     resizable: false,
     maximizable: false,
     skipTaskbar: true,
+    useContentSize: true,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
       sandbox: false,
@@ -98,9 +100,7 @@ export default class ContextMenuManager {
   }
 
   public listenForContextChannels() {
-    ipcMain.on(contextMenuChannels.resizeWindow, (_e, dimensions: {width: number | any; height: number | any}) =>
-      this.resizeContextMenu(dimensions),
-    );
+    ipcMain.on(contextMenuChannels.resizeWindow, (_e, data: ContextResizeData) => this.resizeContextMenu(data));
 
     ipcMain.on(contextMenuChannels.copy, (_, id: number) => this.getContentById(id)?.copy());
     ipcMain.on(contextMenuChannels.paste, (_, id: number) => this.getContentById(id)?.paste());
@@ -216,32 +216,44 @@ export default class ContextMenuManager {
     mainWebcontents.send(channel, ...args);
   }
 
-  private resizeContextMenu(dimensions: {width: number | any; height: number | any}) {
+  private resizeContextMenu(data: ContextResizeData) {
     const window = this.contextMenuWindow;
     if (!window || window.isDestroyed()) return;
 
-    const {width, height} = dimensions;
+    const {width: cssWidth, height: cssHeight, dpr = 1} = data;
 
-    const isValuesValid =
-      typeof width === 'number' &&
-      typeof height === 'number' &&
-      Number.isFinite(width) &&
-      Number.isFinite(height) &&
-      width > 0 &&
-      height > 0;
+    // noinspection SuspiciousTypeOfGuard
+    const isValid =
+      typeof cssWidth === 'number' &&
+      typeof cssHeight === 'number' &&
+      Number.isFinite(cssWidth) &&
+      Number.isFinite(cssHeight) &&
+      cssWidth > 0 &&
+      cssHeight > 0;
 
-    if (isValuesValid) {
-      try {
-        const w = Math.max(1, Math.round(width));
-        const h = Math.max(1, Math.round(height));
-        console.log('Setting size to:', w, h);
-        window.setSize(w, h);
-        window.setContentSize(w, h);
-      } catch (error) {
-        console.error('Failed to set window size:', {width, height, error});
-      }
-    } else {
-      console.error('Invalid dimensions received:', dimensions);
+    if (!isValid) {
+      console.error('Invalid dimensions received:', data);
+      return;
+    }
+
+    try {
+      // noinspection SuspiciousTypeOfGuard
+      const scale = typeof dpr === 'number' && dpr > 0 ? dpr : 1;
+
+      const contentW = Math.max(1, Math.ceil(cssWidth * scale));
+      const contentH = Math.max(1, Math.ceil(cssHeight * scale));
+
+      console.log('Resizing context menu (content area):', {
+        cssWidth,
+        cssHeight,
+        scale,
+        contentW,
+        contentH,
+      });
+
+      window.setContentSize(contentW, contentH);
+    } catch (error) {
+      console.error('Failed to set window size:', {data, error});
     }
   }
 

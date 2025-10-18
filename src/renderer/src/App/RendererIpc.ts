@@ -5,6 +5,7 @@ import {
   AppUpdateData,
   AppUpdateInsiderData,
   ChosenArgumentsData,
+  ContextResizeData,
   CustomNotificationInfo,
   DiscordRPC,
   ExtensionsInfo,
@@ -619,9 +620,9 @@ const rendererIpc = {
   },
 
   contextMenu: {
-    resizeWindow: (dimensions: {width: number; height: number}) => {
-      extensionRendererApi.events_ipc.emit('context_menu_resize_window', {dimensions});
-      ipc.send(contextMenuChannels.resizeWindow, dimensions);
+    resizeWindow: (data: ContextResizeData) => {
+      extensionRendererApi.events_ipc.emit('context_menu_resize_window', {data});
+      ipc.send(contextMenuChannels.resizeWindow, data);
     },
     showWindow: () => {
       extensionRendererApi.events_ipc.emit('context_menu_show_window', {});
