@@ -28,9 +28,14 @@ export default function CardArguments({chosenArguments, setChosenArguments, id, 
   const allMethods = useAllCardMethods();
 
   useEffect(() => {
-    rendererIpc.storageUtils.getCardArguments(id).then(result => {
-      setChosenArguments(result);
-    });
+    rendererIpc.storageUtils
+      .getCardArguments(id)
+      .then(result => {
+        setChosenArguments(result);
+      })
+      .catch(e => {
+        console.log(`Failed get card arguments for ${id}: `, e);
+      });
   }, []);
 
   useEffect(() => {
