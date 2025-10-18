@@ -10,8 +10,8 @@ export default function Initializer() {
 
   useEffect(() => {
     rendererIpc.storage.get('app').then(({initialized, inited}) => {
-      const oldDone = !!initialized;
-      const newDone = !!inited;
+      const oldDone = initialized;
+      const newDone = inited;
       const isWindows = window.osPlatform === 'win32';
 
       // If user completed old setup and is NOT on windows, skip the wizard.
