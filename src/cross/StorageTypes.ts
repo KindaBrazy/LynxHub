@@ -65,6 +65,7 @@ type StorageTypes = {
     tooltipStatus: TooltipStatus;
     systemStartup: boolean;
     startMinimized: boolean;
+    startMaximized: boolean;
     startupLastActivePage: boolean;
     lastPage: string;
     discordRP: DiscordRPC;

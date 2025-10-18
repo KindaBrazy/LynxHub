@@ -61,6 +61,7 @@ class BaseStorage {
       tooltipStatus: 'essential',
       systemStartup: false,
       startMinimized: false,
+      startMaximized: false,
       startupLastActivePage: false,
       dynamicAppTitle: true,
       openLinkExternal: false,
@@ -241,6 +242,8 @@ class BaseStorage {
           return {cardID, browser, terminal, urlCatch};
         });
       }
+
+      this.storage.data.app.startMaximized = false;
     };
 
     const updateVersion = () => {

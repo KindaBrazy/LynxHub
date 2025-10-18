@@ -188,17 +188,26 @@ function handleTaskbarStatus() {
 }
 
 function handleStartupBehavior() {
-  const {startMinimized, lastSize, openLastSize} = storageManager.getData('app');
+  const {startMinimized, startMaximized, lastSize, openLastSize} = storageManager.getData('app');
   const mainWindow = appManager?.getMainWindow();
 
+  if (!mainWindow) return;
+
+  if (openLastSize && lastSize) {
+    const {bounds, maximized} = lastSize;
+
+    if (bounds) mainWindow.setBounds(bounds, false);
+    if (maximized) mainWindow.maximize();
+  }
+
+  if (startMaximized) {
+    mainWindow.maximize();
+  }
+
   if (startMinimized) {
-    mainWindow?.minimize();
+    mainWindow.minimize();
   } else {
-    if (openLastSize) {
-      if (lastSize?.bounds) mainWindow?.setBounds(lastSize.bounds, false);
-      if (lastSize?.maximized) mainWindow?.maximize();
-    }
-    mainWindow?.show();
+    mainWindow.show();
   }
 }
 
