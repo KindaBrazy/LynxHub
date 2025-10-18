@@ -41,11 +41,11 @@ const RunningCardView = ({runningCard}: Props) => {
   }, [tabId, currentView]);
 
   useEffect(() => {
-    const removeListener = rendererIpc.pty.onTitle((_, targetID, title) => {
+    const offTitle = rendererIpc.pty.onTitle((_, targetID, title) => {
       if (targetID === id) setTerminalName(title);
     });
 
-    return () => removeListener();
+    return () => offTitle();
   }, []);
 
   useEffect(() => {

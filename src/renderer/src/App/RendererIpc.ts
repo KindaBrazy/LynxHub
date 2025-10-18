@@ -839,6 +839,18 @@ const rendererIpc = {
     },
 
     clearHistory: (selected: string[]) => ipc.send(browserChannels.clearHistory, selected),
+
+    onFailedLoadUrl: (
+      result: (
+        event: IpcRendererEvent,
+        id: string,
+        errorCode: number,
+        errorDescription: string,
+        validatedURL: string,
+      ) => void,
+    ) => ipc.on(browserChannels.onFailedLoadUrl, result),
+    onClearFailed: (result: (event: IpcRendererEvent, id: string) => void) =>
+      ipc.on(browserChannels.onClearFailed, result),
   },
 
   statics: {

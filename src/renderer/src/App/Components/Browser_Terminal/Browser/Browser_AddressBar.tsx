@@ -55,6 +55,21 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
     });
   };
 
+  const handleFocus = () => {
+    setIsFocused(true);
+    isProgrammaticSelection.current = true;
+
+    setTimeout(() => {
+      if (document.activeElement === editableRef.current) {
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(editableRef.current!);
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+    }, 0);
+  };
+
   useEffect(() => {
     getFavorites();
   }, []);
@@ -85,21 +100,6 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
     if (isEmpty(inputValue) && isEmpty(runningCard.currentAddress)) ref.focus();
   }, [activeTab, runningCard.currentView]);
 
-  const handleFocus = () => {
-    setIsFocused(true);
-    isProgrammaticSelection.current = true;
-
-    setTimeout(() => {
-      if (document.activeElement === editableRef.current) {
-        const selection = window.getSelection();
-        const range = document.createRange();
-        range.selectNodeContents(editableRef.current!);
-        selection?.removeAllRanges();
-        selection?.addRange(range);
-      }
-    }, 0);
-  };
-
   const handleBlur = () => {
     setIsFocused(false);
   };
@@ -127,6 +127,7 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
         rendererIpc.storageUtils.addBrowserRecent(url);
         rendererIpc.storageUtils.addBrowserHistory(url);
         editableRef.current?.blur();
+        rendererIpc.browser.reload(runningCard.id);
       } catch (err) {
         console.error(`Invalid URL: ${err}`);
       }

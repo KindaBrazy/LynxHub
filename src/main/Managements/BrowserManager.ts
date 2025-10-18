@@ -1,9 +1,5 @@
-import {join} from 'node:path';
-
-import {is} from '@electron-toolkit/utils';
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
 import {isEmpty, isNil} from 'lodash';
-import url from 'url';
 
 import icon from '../../../resources/icon.png?asset';
 import {formatWebAddress} from '../../cross/CrossUtils';
@@ -175,30 +171,21 @@ export default class BrowserManager {
     });
   }
 
-  private listenForFailLoad(view: WebContents) {
+  private listenForFailLoad(view: WebContents, id: string) {
     view.on('did-fail-load', (_, errorCode, errorDescription, validatedURL) => {
       // Ignore benign error codes like -3 (ABORTED), which happens on normal navigation.
       if (errorCode === -3) {
         return;
       }
 
+      this.setVisible(id, false);
+
+      const mainWebContents = this.getMainWebContents();
+      if (isNil(mainWebContents)) return;
+
+      mainWebContents.send(browserChannels.onFailedLoadUrl, id, errorCode, errorDescription, validatedURL);
+
       console.error('failed load:', errorCode, errorDescription, validatedURL);
-
-      const errorPageURL =
-        is.dev && process.env['ELECTRON_RENDERER_URL']
-          ? `${process.env['ELECTRON_RENDERER_URL']}/error_page.html`
-          : url.format({
-              pathname: join(__dirname, '../renderer/error_page.html'),
-              protocol: 'file:',
-              slashes: true,
-            });
-
-      const urlWithParams = new URL(errorPageURL);
-      urlWithParams.searchParams.append('errorCode', String(errorCode));
-      urlWithParams.searchParams.append('errorDescription', errorDescription);
-      urlWithParams.searchParams.append('url', validatedURL);
-
-      view.loadURL(urlWithParams.toString());
     });
   }
 
@@ -228,7 +215,7 @@ export default class BrowserManager {
     this.listenForFavIcon(id, webContents);
     this.listenForZoom(webContents);
     this.listenForFullScreen(newView);
-    this.listenForFailLoad(webContents);
+    this.listenForFailLoad(webContents, id);
 
     this.browsers.push({id, view: newView});
 
@@ -322,6 +309,11 @@ export default class BrowserManager {
   }
 
   public reload(id: string) {
+    const mainWebContents = this.getMainWebContents();
+    if (!isNil(mainWebContents)) {
+      mainWebContents.send(browserChannels.onClearFailed, id);
+    }
+    this.setVisible(id, true);
     this.getViewByID(id)?.webContents.reload();
   }
 
