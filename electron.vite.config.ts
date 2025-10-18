@@ -6,17 +6,25 @@ import {defineConfig, externalizeDepsPlugin} from 'electron-vite';
 import {resolve} from 'path';
 
 export default defineConfig(({mode}) => {
+  const isDev = mode === 'development';
   return {
     main: {
       plugins: [externalizeDepsPlugin()],
-      build: {rollupOptions: {output: {format: 'cjs'}}},
+      build: {
+        rollupOptions: {
+          external: isDev
+            ? undefined
+            : ['../../../../../extension/src/main/lynxExtension', '../../../../../module/src/main'],
+          output: {format: 'cjs'},
+        },
+      },
     },
     preload: {
       plugins: [
         sentryVitePlugin({
           org: 'lynxhub',
           project: 'lynxhub',
-          disable: mode === 'development',
+          disable: isDev,
           sourcemaps: {
             filesToDeleteAfterUpload: '**/*.map',
           },
@@ -42,7 +50,7 @@ export default defineConfig(({mode}) => {
         sentryVitePlugin({
           org: 'lynxhub',
           project: 'lynxhub',
-          disable: mode === 'development',
+          disable: isDev,
           sourcemaps: {
             filesToDeleteAfterUpload: '**/*.map',
           },
@@ -67,6 +75,9 @@ export default defineConfig(({mode}) => {
       },
       build: {
         rollupOptions: {
+          external: isDev
+            ? undefined
+            : ['../../../../../module/src/renderer', '../../../../../extension/src/renderer/Extension'],
           input: {
             index: resolve(__dirname, 'src/renderer/index.html'),
             loading: resolve(__dirname, 'src/renderer/loading.html'),
