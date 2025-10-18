@@ -2,7 +2,7 @@
 import {FindInPageOptions, OpenDialogOptions} from 'electron';
 import {FC} from 'react';
 
-import {ChosenArgumentsData, DiscordRPC, FolderNames} from '../CrossTypes';
+import {ChosenArgumentsData, ContextResizeData, DiscordRPC, FolderNames} from '../CrossTypes';
 import {
   AgentTypes,
   ChangeWindowState,
@@ -178,7 +178,7 @@ export type ExtensionEvents_IPC = {
   storage_clear: Record<string, never>;
 
   // contextMenu
-  context_menu_resize_window: {dimensions: {width: number; height: number}};
+  context_menu_resize_window: {data: ContextResizeData};
   context_menu_show_window: Record<string, never>;
   context_menu_hide_window: Record<string, never>;
   context_menu_open_terminate_ai: {id: string};

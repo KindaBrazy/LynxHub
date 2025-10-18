@@ -1,25 +1,53 @@
-import {Dispatch, ReactNode, RefObject, SetStateAction, useEffect} from 'react';
+import {Dispatch, ReactNode, RefObject, SetStateAction, useLayoutEffect, useRef} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
 import {useFindMenu, useZoomMenu} from './OtherMenu';
 import useRightClickMenu from './RightClickMenu';
 import {useCloseAppMenu, useTerminateAIMenu, useTerminateTabMenu} from './TerminateMenu';
 
+type DimensionsMsg = {width: number; height: number; dpr: number};
+
 export function useResize(divRef: RefObject<HTMLDivElement | null>) {
-  useEffect(() => {
-    const observer = new ResizeObserver(entries => {
-      if (entries[0]) {
-        const {width, height} = entries[0].contentRect;
-        rendererIpc.contextMenu.resizeWindow({width, height});
+  const rafRef = useRef<number | null>(null);
+  const lastSent = useRef<{w: number; h: number} | null>(null);
+
+  useLayoutEffect(() => {
+    const el = divRef.current;
+    if (!el) return;
+
+    const sendSize = () => {
+      const width = Math.max(Math.ceil(el.scrollWidth), Math.ceil(el.getBoundingClientRect().width));
+      const height = Math.max(Math.ceil(el.scrollHeight), Math.ceil(el.getBoundingClientRect().height));
+
+      const PADDING = 2;
+      const w = Math.max(1, Math.round(width + PADDING));
+      const h = Math.max(1, Math.round(height + PADDING));
+
+      if (lastSent.current && lastSent.current.w === w && lastSent.current.h === h) {
+        return;
       }
+      lastSent.current = {w, h};
+
+      const dpr = window.devicePixelRatio || 1;
+      const msg: DimensionsMsg = {width: w, height: h, dpr};
+      rendererIpc.contextMenu.resizeWindow(msg);
+    };
+
+    const ro = new ResizeObserver(() => {
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = null;
+        sendSize();
+      });
     });
 
-    if (divRef.current) {
-      observer.observe(divRef.current);
-    }
+    ro.observe(el);
+
+    sendSize();
 
     return () => {
-      observer.disconnect();
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+      ro.disconnect();
     };
   }, [divRef]);
 }
