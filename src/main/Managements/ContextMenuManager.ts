@@ -189,6 +189,13 @@ export default class ContextMenuManager {
     let opacity = 1;
     this.animationInterval = setInterval(() => {
       opacity -= 0.2;
+
+      if (!window || window.isDestroyed()) {
+        this.clearAnimation();
+        this.isHiding = false;
+        return;
+      }
+
       if (opacity <= 0) {
         this.clearAnimation();
         window.hide();
