@@ -7,6 +7,7 @@ import lodash from 'lodash';
 import {InstalledCard, InstalledCards} from '../../cross/StorageTypes';
 import {moduleManager, storageManager} from '../index';
 import {getAbsolutePath, getExePath, isPortable} from '../Utilities/Utils';
+import AddBreadcrumb_Main from './Breadcrumbs';
 
 type PathCards = {
   id: string;
@@ -29,17 +30,44 @@ export class ValidateCards {
    */
   private startWatching(): void {
     this.dirs.forEach(dir => {
-      const watcher = watch(dir, {
-        depth: 0,
-        persistent: true,
-        ignored: path => {
-          const isPageFile = path.includes('pagefile.sys');
-          const isSystemDir = path.includes('System Volume Information') || path.includes('Recovery');
-          return isPageFile || isSystemDir;
-        },
-      });
-      watcher.on('unlinkDir', this.handleUnlinkedDir);
-      this.watchers.push(watcher);
+      try {
+        const watcher = watch(dir, {
+          depth: 0,
+          persistent: true,
+          ignored: path => {
+            const isPageFile = path.includes('pagefile.sys');
+            const isSystemDir = path.includes('System Volume Information') || path.includes('Recovery');
+            return isPageFile || isSystemDir;
+          },
+        });
+
+        watcher.on('unlinkDir', this.handleUnlinkedDir);
+        this.watchers.push(watcher);
+      } catch (error) {
+        if (error && (error as NodeJS.ErrnoException).code === 'ENOSPC') {
+          console.warn(`[DataValidator] ENOSPC hit for directory: ${dir}. Falling back to polling.`);
+
+          const pollingWatcher = watch(dir, {
+            depth: 0,
+            persistent: true,
+            usePolling: true,
+            interval: 5000,
+            awaitWriteFinish: true,
+            ignored: path => {
+              const isPageFile = path.includes('pagefile.sys');
+              const isSystemDir = path.includes('System Volume Information') || path.includes('Recovery');
+              return isPageFile || isSystemDir;
+            },
+          });
+
+          pollingWatcher.on('unlinkDir', this.handleUnlinkedDir);
+          this.watchers.push(pollingWatcher);
+
+          AddBreadcrumb_Main('[DataValidator] ENOSPC hit for directory: ' + dir + '. Falling back to polling.');
+        } else {
+          console.error(`[DataValidator] Failed to start watcher for ${dir}:`, error);
+        }
+      }
     });
   }
 
