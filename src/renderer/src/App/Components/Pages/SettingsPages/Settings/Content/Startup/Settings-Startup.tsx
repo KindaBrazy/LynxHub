@@ -2,6 +2,7 @@ import {Rocket_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import SettingsSection from '../../SettingsPage-ContentSection';
 import SettingsStartupDisableLoadingAnim from './SettingsStartup-DisableLoadingAnim';
 import SettingsStartupLastSize from './SettingsStartup-LastSize';
+import SettingsStartupStartMaximized from './SettingsStartup-StartMaximized';
 import SettingsStartupStartMinimized from './SettingsStartup-StartMinimized';
 import SettingsStartupStartPage from './SettingsStartup-StartPage';
 import SettingsStartupSystem from './SettingsStartup-System';
@@ -13,6 +14,7 @@ export default function SettingsStartup() {
     <SettingsSection title="Startup" id={SettingsStartupId} icon={<Rocket_Icon className="size-5" />}>
       {window.osPlatform === 'win32' && <SettingsStartupSystem />}
       <SettingsStartupLastSize />
+      <SettingsStartupStartMaximized />
       <SettingsStartupStartMinimized />
       <SettingsStartupStartPage />
       <SettingsStartupDisableLoadingAnim />
