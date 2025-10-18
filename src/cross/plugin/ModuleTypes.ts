@@ -300,16 +300,6 @@ export type CardData = {
   /**  ID will be used to managing state of card */
   id: string;
 
-  /**  Card background
-   *
-   * **Acceptable sources: **
-   * - github.com
-   *    - api.github.com
-   *    - *.githubusercontent.com
-   * - image.civitai.com
-   */
-  bgUrl: string;
-
   /**  Url to repository (Using this url recognize, clone and update card) */
   repoUrl: string;
 
