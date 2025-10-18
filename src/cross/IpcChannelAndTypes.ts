@@ -385,6 +385,9 @@ export const browserChannels = {
 
   addOffset: 'browser:add-offset',
   clearHistory: 'browser:clear-history',
+
+  onFailedLoadUrl: 'browser:on-failed-load-url',
+  onClearFailed: 'browser:on-clear-failed',
 };
 
 export const staticsChannels = {

@@ -1,4 +1,3 @@
-import {isEmpty} from 'lodash';
 import {useEffect, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -57,11 +56,6 @@ export default function AppPages() {
         const foundRunningCard = runningCards.find(card => card.tabId === tab.id);
 
         if (foundRunningCard) {
-          const validAddress = !isEmpty(foundRunningCard.customAddress || foundRunningCard.webUIAddress);
-          rendererIpc.browser.setVisible(
-            foundRunningCard.id,
-            validAddress && foundRunningCard.tabId === activeTab && foundRunningCard.currentView === 'browser',
-          );
           return (
             <a
               key={`${foundRunningCard.id}_${foundRunningCard.tabId}`}
