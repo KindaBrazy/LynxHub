@@ -103,7 +103,7 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
   useEffect(() => {
     if (id) {
       setElements([
-        <div key={'find_in_page'} className="p-3 flex flex-row items-end gap-x-2 w-full">
+        <div key={`${id}_${toggle}`} className="p-3 flex flex-row items-end gap-x-2 w-full">
           <Input value={searchValue} placeholder="Type here..." onValueChange={setSearchValue} autoFocus />
           <div className="flex flex-row mb-1 gap-x-1">
             <Button size="sm" onPress={back} variant="light" isDisabled={isEmpty(searchValue)} isIconOnly>
