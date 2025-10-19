@@ -330,7 +330,6 @@ export type CardState = {
   id: string;
   description: string;
   repoUrl: string;
-  bgUrl: string;
   extensionsDir?: string;
   haveArguments: boolean;
   type: DiscordRunningAI['type'];
