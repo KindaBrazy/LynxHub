@@ -8,7 +8,7 @@ import {ContentPagesButtons, SettingsPagesButtons} from './NavButtons';
 const CONTAINER_WIDTH = 'w-[5.5rem]';
 
 const NAV_BAR_STYLE = {
-  bgColor: 'dark:bg-LynxRaisinBlack bg-white',
+  bgColor: 'dark:bg-LynxRaisinBlack/60 bg-white',
   gapY: 'gap-y-1',
   paddingY: 'py-3',
   shadow: 'shadow-xs',

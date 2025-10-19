@@ -276,7 +276,7 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal, setSelectedT
 
   return (
     <div className={`${currentView === 'terminal' ? 'block' : 'hidden'}`}>
-      <div className="absolute inset-0 !top-10 overflow-hidden bg-white pl-3 pr-1 shadow-md dark:bg-LynxRaisinBlack">
+      <div className="absolute inset-0 !top-10 overflow-hidden bg-white pl-3 pr-1 shadow-md dark:bg-LynxNearBlack">
         <div ref={terminalContainerRef} className="relative size-full" />
       </div>
     </div>

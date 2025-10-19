@@ -15,7 +15,7 @@ export function Browser_Error({error, onReload}: Props) {
   const details = `URL: ${error.validatedURL}\nError Code: ${error.errorCode}\nDescription: ${error.errorDescription}`;
 
   return (
-    <div className="flex h-full w-full select-none items-center justify-center bg-white p-8 dark:bg-LynxRaisinBlack">
+    <div className="flex h-full w-full select-none items-center justify-center bg-white p-8 dark:bg-LynxNearBlack">
       <motion.div
         initial={{opacity: 0, translateY: 5}}
         animate={{opacity: 1, translateY: 0, transition: {delay: 0.2}}}

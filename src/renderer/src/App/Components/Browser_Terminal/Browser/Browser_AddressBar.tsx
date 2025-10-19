@@ -156,7 +156,7 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
   return (
     <div
       className="relative flex items-center w-full h-8 mx-2 overflow-hidden rounded-full
-    bg-[#f1f3f4] dark:bg-[#181818] hover:dark:bg-[#151515] focus-within:dark:bg-[#121212] transition-colors">
+    bg-[#f1f3f4] dark:bg-[#101010] hover:dark:bg-[#151515] focus-within:dark:bg-[#121212] transition-colors">
       {isAddress && (
         <div onClick={updateFavorite} className="absolute right-3 z-10 cursor-pointer">
           <Star_Icon

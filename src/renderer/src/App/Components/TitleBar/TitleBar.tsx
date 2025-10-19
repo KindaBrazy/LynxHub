@@ -8,8 +8,8 @@ import WindowButtons from './WindowButtons';
 
 const TITLE_BAR_HEIGHT = 'h-10';
 const BACKGROUND_CLASSES = {
-  default: 'bg-LynxWhiteFifth/10 dark:bg-LynxRaisinBlack/10 border-b border-foreground/0',
-  focused: 'bg-LynxWhiteFifth/70 dark:bg-LynxRaisinBlack/70 border-b border-foreground-100',
+  default: 'bg-LynxWhiteFifth/10 dark:bg-LynxNearBlack/10 border-b border-foreground/0',
+  focused: 'bg-LynxWhiteFifth/70 dark:bg-LynxNearBlack/50 border-b border-foreground-100',
 };
 
 /**

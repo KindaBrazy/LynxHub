@@ -26,7 +26,7 @@ export function getRendererMode() {
 
 export function getTheme(darkMode: boolean): ITheme {
   return {
-    background: darkMode ? getColor('raisinBlack') : getColor('white'),
+    background: darkMode ? getColor('nearBlack') : getColor('white'),
     foreground: darkMode ? getColor('white') : getColor('black'),
     cursor: darkMode ? getColor('white') : getColor('black'),
     cursorAccent: darkMode ? getColor('white') : getColor('black'),
