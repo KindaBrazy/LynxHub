@@ -23,7 +23,7 @@ type AppStateTypes = {
 
 const storageData = await rendererIpc.storage.get('app');
 
-let darkMode: boolean = true;
+let darkMode: boolean;
 
 if (storageData.darkMode === 'dark') {
   darkMode = true;
