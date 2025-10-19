@@ -1,5 +1,5 @@
 import {addToast, Button} from '@heroui/react';
-import {Dispatch, UnknownAction} from '@reduxjs/toolkit';
+import {Dispatch} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -127,7 +127,7 @@ function topToast(options: {
   });
 }
 
-export const lynxTopToast = (dispatch: Dispatch<UnknownAction>, placement: HeroToastPlacement = 'top-center') => {
+export const lynxTopToast = (dispatch: Dispatch, placement: HeroToastPlacement = 'top-center') => {
   dispatch(appActions.setToastPlacement(placement));
   return {
     success: (title: string, timeout?: number) => topToast({title, color: 'success', timeout, placement}),

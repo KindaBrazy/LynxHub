@@ -10,7 +10,7 @@ import RegisterHotkeys from './HotkeysManager';
 
 export default class BrowserManager {
   private browsers: {id: string; view: WebContentsView}[] = [];
-  private mainWindow: BrowserWindow;
+  private readonly mainWindow: BrowserWindow;
   private extraOffset: {id: string; offset: WHType}[] = [];
 
   constructor(mainWindow: BrowserWindow) {
