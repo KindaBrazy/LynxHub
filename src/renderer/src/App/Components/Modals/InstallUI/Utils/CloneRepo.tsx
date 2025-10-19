@@ -2,7 +2,7 @@ import {Card, CardBody, CardHeader, Link, ModalBody, Progress} from '@heroui/rea
 import {Descriptions} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
-import {useCallback, useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
@@ -16,21 +16,19 @@ import {initGitProgress} from '../../../../Utils/Constants';
 import OpenDialog from '../../../Reusable/OpenDialog';
 import CloneOptions from './CloneOptions';
 
-type Props = {
-  url: string;
-  start: boolean;
-  done: (dir: string) => void;
-  isOpen: boolean;
-  cardId: string;
-};
-
 export type CloneOptionsResult = {
   branch: string;
   singleBranch: boolean;
   depth?: number;
 };
 
-export default function CloneRepo({url, start, done, isOpen, cardId}: Props) {
+type Props = {
+  url: string;
+  start: boolean;
+  done: (dir: string) => void;
+  isOpen: boolean;
+};
+export default function CloneRepo({url, start, done, isOpen}: Props) {
   const dispatch = useDispatch<AppDispatch>();
 
   const [cloneOptionsResult, setCloneOptionsResult] = useState<CloneOptionsResult>({
@@ -52,39 +50,39 @@ export default function CloneRepo({url, start, done, isOpen, cardId}: Props) {
   }, [url]);
 
   useEffect(() => {
-    if (start) install();
-  }, [start]);
+    if (start) {
+      setDownloading(true);
 
-  const install = useCallback(() => {
-    setDownloading(true);
+      const {singleBranch, branch, depth} = cloneOptionsResult;
+      rendererIpc.git.cloneShallow({url, directory, singleBranch, depth, branch});
 
-    const {singleBranch, branch, depth} = cloneOptionsResult;
-    rendererIpc.git.cloneShallow({url, directory, singleBranch, depth, branch});
+      const onProgress: GitProgressCallback = (_e, id, state, result) => {
+        if (id || !isOpen) return;
 
-    const onProgress: GitProgressCallback = (_e, id, state, result) => {
-      if (id || !isOpen) return;
+        switch (state) {
+          case 'Progress':
+            setDownloadProgress(result as SimpleGitProgressEvent);
+            break;
+          case 'Failed':
+            dispatch(modalActions.setWarningContentId('CLONE_REPO'));
+            dispatch(modalActions.openWarning());
+            setDownloading(false);
+            break;
+          case 'Completed':
+            setDownloading(false);
+            done(directory);
+            break;
+        }
+      };
 
-      switch (state) {
-        case 'Progress':
-          setDownloadProgress(result as SimpleGitProgressEvent);
-          break;
-        case 'Failed':
-          dispatch(modalActions.setWarningContentId('CLONE_REPO'));
-          dispatch(modalActions.openWarning());
-          setDownloading(false);
-          break;
-        case 'Completed':
-          setDownloading(false);
-          done(directory);
-          break;
-      }
-    };
+      // Update ui with progress
+      const removeListener = rendererIpc.git.onProgress(onProgress);
 
-    // Update ui with progress
-    const removeListener = rendererIpc.git.onProgress(onProgress);
-
-    return () => removeListener();
-  }, [dispatch, url, directory, done, cardId, cloneOptionsResult]);
+      return () => removeListener();
+    } else {
+      return () => {};
+    }
+  }, [start, cloneOptionsResult, url, directory, isOpen, dispatch, done]);
 
   return (
     <ModalBody className="overflow-visible px-0">
