@@ -90,7 +90,7 @@ class BaseStorage {
     terminal: {
       outputColor: false,
       useConpty: 'auto',
-      scrollBack: 10000,
+      scrollBack: 1000,
       fontSize: 14,
       cursorStyle: 'bar',
       cursorInactiveStyle: 'none',
@@ -244,6 +244,11 @@ class BaseStorage {
       }
 
       this.storage.data.app.startMaximized = false;
+
+      const scrollBack = this.storage.data.terminal.scrollBack;
+      if (scrollBack === 10000) {
+        this.storage.data.terminal.scrollBack = 1000;
+      }
     };
 
     const updateVersion = () => {
