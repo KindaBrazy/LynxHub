@@ -108,7 +108,7 @@ export default function RenderItem({item, updateTable, dir, searchValue}: Props)
               )}
             </div>
           }
-          avatar={<Avatar size={54} src={`https://github.com/${extractGitUrl(item.url).owner}.png`} />}
+          avatar={<Avatar size={54} src={extractGitUrl(item.url).avatarUrl} />}
         />
       </List.Item>
     </>

@@ -2,6 +2,7 @@ import {DropdownItem} from '@heroui/react';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {
   Copy_Icon,
@@ -17,7 +18,6 @@ import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
-import {useDevInfo} from '../../../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../../../Utils/UtilHooks';
 import {useCardStore} from '../../Wrapper';
 
@@ -30,7 +30,6 @@ export const MenuInfo = () => {
 
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const webUI = useInstalledCard(id);
-  const {name} = useDevInfo(repoUrl);
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
 
@@ -44,7 +43,14 @@ export const MenuInfo = () => {
       setMenuIsOpen(false);
     } else {
       dispatch(
-        modalActions.openCardInfo({cardId: id, devName: name, extensionsDir, title, url: repoUrl, tabID: activeTab}),
+        modalActions.openCardInfo({
+          cardId: id,
+          devName: extractGitUrl(repoUrl).owner,
+          extensionsDir,
+          title,
+          url: repoUrl,
+          tabID: activeTab,
+        }),
       );
       setMenuIsOpen(false);
     }

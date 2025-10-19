@@ -1,7 +1,8 @@
 import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download_Icon, Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {getCardMethod, useAllCardMethods} from '../../../../../Modules/ModuleLoader';
@@ -10,7 +11,6 @@ import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
-import {useDevInfo} from '../../../../../Utils/LocalStorage';
 import {
   useInstalledCard,
   useIsAutoUpdateCard,
@@ -25,7 +25,7 @@ export const MenuUpdate = () => {
   const repoUrl = useCardStore(state => state.repoUrl);
   const title = useCardStore(state => state.title);
 
-  const {name: devName} = useDevInfo(repoUrl);
+  const devName = useMemo(() => extractGitUrl(repoUrl).owner, [repoUrl]);
   const updating = useUpdatingCard(id);
   const autoUpdate = useIsAutoUpdateCard(id);
   const webUi = useInstalledCard(id);
@@ -109,7 +109,7 @@ export const MenuAutoUpdate = () => {
   const repoUrl = useCardStore(state => state.repoUrl);
   const title = useCardStore(state => state.title);
 
-  const {name: devName} = useDevInfo(repoUrl);
+  const devName = useMemo(() => extractGitUrl(repoUrl).owner, [repoUrl]);
   const autoUpdate = useIsAutoUpdateCard(id);
   const updateAvailable = useUpdateAvailable(id);
   const webUi = useInstalledCard(id);
