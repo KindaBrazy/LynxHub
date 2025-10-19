@@ -6,34 +6,68 @@ import {DarkModeTypes} from '../../../../../../../../../cross/IpcChannelAndTypes
 import {appActions, useAppState} from '../../../../../../Redux/Reducer/AppReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
+import useModeAnimation, {ThemeAnimationType} from './ThemeSwitchAnimationHook';
 
 /** Manage app theme (Dark, Light, System) */
 export default function SettingsGeneralTheme() {
   const dispatch = useDispatch<AppDispatch>();
+
   const darkMode = useAppState('darkMode');
 
-  const [selectedTheme, setSelectedTheme] = useState(darkMode ? 'dark' : 'light');
+  const {ref, toggleSwitchTheme} = useModeAnimation({
+    animationType: ThemeAnimationType.QR_SCAN,
+    isDarkMode: darkMode,
+    duration: 1000,
+    easing: 'cubic-bezier(0.17, 0.67, 0.83, 0.67)',
+  });
 
-  const onThemeChange = useCallback(
-    (keys: Selection) => {
-      if (keys !== 'all') {
-        const value = keys.values().next().value as DarkModeTypes;
-        dispatch(appActions.setAppState({key: 'darkMode', value: value !== 'light'}));
-        rendererIpc.win.setDarkMode(value);
-        setSelectedTheme(value);
-      }
-    },
-    [dispatch],
-  );
+  const [selectedTheme, setSelectedTheme] = useState<DarkModeTypes>('system');
 
   useEffect(() => {
     rendererIpc.storage.get('app').then(result => {
-      setSelectedTheme(result.darkMode);
+      if (result.darkMode) {
+        setSelectedTheme(result.darkMode);
+      }
     });
-  }, [darkMode]);
+  }, []);
+
+  const onThemeChange = useCallback(
+    async (keys: Selection) => {
+      if (keys === 'all') return;
+
+      const newSelectedTheme = keys.values().next().value as DarkModeTypes;
+
+      let nextEffectiveMode: 'dark' | 'light';
+      if (newSelectedTheme === 'system') {
+        nextEffectiveMode = await rendererIpc.win.getSystemDarkMode();
+      } else {
+        nextEffectiveMode = newSelectedTheme;
+      }
+
+      const newIsDarkMode = nextEffectiveMode === 'dark';
+
+      const themeIsChanging = newIsDarkMode !== darkMode;
+
+      const applyThemeChanges = () => {
+        dispatch(appActions.setAppState({key: 'darkMode', value: newIsDarkMode}));
+
+        rendererIpc.win.setDarkMode(newSelectedTheme);
+        setSelectedTheme(newSelectedTheme);
+      };
+
+      if (themeIsChanging) {
+        await toggleSwitchTheme();
+        applyThemeChanges();
+      } else {
+        applyThemeChanges();
+      }
+    },
+    [dispatch, darkMode, toggleSwitchTheme],
+  );
 
   return (
     <Select
+      ref={ref}
       label="Theme"
       labelPlacement="outside"
       selectedKeys={[selectedTheme]}
