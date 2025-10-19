@@ -17,7 +17,7 @@ import {userActions, useUserState} from '../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
 import {defaultTabItem} from '../Utils/Constants';
-import {lynxTopToast} from '../Utils/UtilHooks';
+import {lynxTopToast, useStopAI} from '../Utils/UtilHooks';
 
 export const useCheckCardsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -308,24 +308,9 @@ export const useContextEvents = () => {
   const activeTab = useTabsState('activeTab');
 
   const dispatch = useDispatch<AppDispatch>();
+  const stopAI = useStopAI();
 
   useEffect(() => {
-    const stopAI = (id: string) => {
-      const runningCard = runningCards.find(card => card.id === id);
-      if (!runningCard) return;
-
-      if (runningCard.isEmptyRunning) {
-        rendererIpc.pty.emptyProcess(runningCard.id, 'stop');
-      } else {
-        rendererIpc.pty.process(runningCard.id, 'stop', runningCard.id);
-      }
-
-      dispatch(tabsActions.setActiveTabLoading(false));
-      dispatch(tabsActions.setTabIsTerminal({tabID: activeTab, isTerminal: false}));
-      dispatch(cardsActions.stopRunningCard({tabId: activeTab}));
-      rendererIpc.win.setDiscordRpAiRunning({running: false});
-    };
-
     const offStopAI = rendererIpc.contextMenu.onStopAI((_, id) => stopAI(id));
 
     const offRelaunchAI = rendererIpc.contextMenu.onRelaunchAI((_, id) => {

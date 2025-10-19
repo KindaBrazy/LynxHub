@@ -1,13 +1,16 @@
 import {addToast, Button} from '@heroui/react';
 import {Dispatch, UnknownAction} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, useEffect, useMemo, useState} from 'react';
+import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {ChangelogItem} from '../../../../cross/CrossTypes';
 import {InstalledCard} from '../../../../cross/StorageTypes';
 import {appActions} from '../Redux/Reducer/AppReducer';
-import {useCardsState} from '../Redux/Reducer/CardsReducer';
+import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
 import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
+import {tabsActions, useTabsState} from '../Redux/Reducer/TabsReducer';
+import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
 import {HeroToastPlacement} from './Types';
 
@@ -54,6 +57,32 @@ export function useIsAutoUpdateCard(cardId: string): boolean {
 export function useIsAutoUpdateExtensions(cardId: string): boolean {
   const autoUpdate = useCardsState('autoUpdateExtensions');
   return useMemo(() => autoUpdate.includes(cardId), [autoUpdate, cardId]);
+}
+
+export function useStopAI() {
+  const runningCards = useCardsState('runningCard');
+  const activeTab = useTabsState('activeTab');
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  return useCallback(
+    (id: string) => {
+      const runningCard = runningCards.find(card => card.id === id);
+      if (!runningCard) return;
+
+      if (runningCard.isEmptyRunning) {
+        rendererIpc.pty.emptyProcess(runningCard.id, 'stop');
+      } else {
+        rendererIpc.pty.process(runningCard.id, 'stop', runningCard.id);
+      }
+
+      dispatch(tabsActions.setActiveTabLoading(false));
+      dispatch(tabsActions.setTabIsTerminal({tabID: activeTab, isTerminal: false}));
+      dispatch(cardsActions.stopRunningCard({tabId: activeTab}));
+      rendererIpc.win.setDiscordRpAiRunning({running: false});
+    },
+    [runningCards, activeTab, dispatch],
+  );
 }
 
 /**
