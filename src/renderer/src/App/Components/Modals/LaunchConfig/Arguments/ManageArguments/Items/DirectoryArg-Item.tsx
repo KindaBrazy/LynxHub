@@ -1,89 +1,19 @@
-import {Button} from '@heroui/react';
-import {Tooltip} from 'antd';
-import {useCallback, useEffect, useMemo, useState} from 'react';
-
 import {ChosenArgument} from '../../../../../../../../../cross/CrossTypes';
-import {getArgumentDefaultValue} from '../../../../../../../../../cross/GetArgumentsData';
-import {FolderDuo_Icon, RefreshDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
-import {useGetArgumentsByID} from '../../../../../../Modules/ModuleLoader';
-import {useCardsState} from '../../../../../../Redux/Reducer/CardsReducer';
-import rendererIpc from '../../../../../../RendererIpc';
-import ArgumentItemBase from './Argument-Item-Base';
-import AutoCompletePath from './AutoCompletePath';
+import {FolderDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
+import PathArgItem from './PathArgItem';
 
 type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void; id: string};
 
 export default function DirectoryArgItem({argument, changeValue, removeArg, id}: Props) {
-  const installedCards = useCardsState('installedCards');
-
-  const cardArgument = useGetArgumentsByID(id);
-
-  const [selectedDir, setSelectedDir] = useState<string>(
-    argument.value || getArgumentDefaultValue(argument.name, cardArgument) || 'Click to choose folder...',
-  );
-  const [isRelative, setIsRelative] = useState<boolean>(false);
-  const [rotateEffect, setRotateEffect] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (argument.value && !isRelative) {
-      const isDefaultRelative = argument.value.startsWith('.') || argument.value.startsWith('/');
-      setIsRelative(isDefaultRelative);
-    }
-  }, [argument]);
-
-  const baseDir = useMemo(() => {
-    return installedCards.find(card => card.id === id)?.dir;
-  }, [installedCards, id]);
-
-  const changeDir = useCallback(() => {
-    if (!isRelative) {
-      rendererIpc.file.openDlg({properties: ['openDirectory']}).then(result => {
-        if (result) {
-          setSelectedDir(result);
-          changeValue(result);
-        }
-      });
-    }
-  }, [changeValue, isRelative]);
-
-  const changeType = useCallback(() => {
-    setIsRelative(prevState => {
-      if (baseDir && selectedDir && selectedDir !== 'Click to choose file...') {
-        rendererIpc.file[prevState ? 'getAbsolutePath' : 'getRelativePath'](baseDir, selectedDir).then(result => {
-          setSelectedDir(result);
-          changeValue(result);
-        });
-      }
-      return !prevState;
-    });
-    setRotateEffect(true);
-  }, [setIsRelative, setRotateEffect, baseDir, selectedDir]);
-
   return (
-    <ArgumentItemBase
-      extra={
-        baseDir ? (
-          <Tooltip color="#111111" title={`Change to ${isRelative ? 'Absolute' : 'Relative'}`}>
-            <Button size="sm" variant="light" onPress={changeType} isIconOnly>
-              <RefreshDuo_Icon
-                onAnimationEnd={() => setRotateEffect(false)}
-                className={`${rotateEffect && 'animate-[spin_0.5s]'}`}
-              />
-            </Button>
-          </Tooltip>
-        ) : undefined
-      }
+    <PathArgItem
       id={id}
-      onClick={changeDir}
-      name={argument.name}
+      type="folder"
+      argument={argument}
       removeArg={removeArg}
       icon={<FolderDuo_Icon />}
-      defaultCursor={isRelative}>
-      {isRelative ? (
-        <AutoCompletePath type="folder" baseDir={baseDir!} defaultValue={selectedDir} onValueChange={changeValue} />
-      ) : (
-        <span className="text-xs bg-LynxRaisinBlack p-3 rounded-medium">{selectedDir}</span>
-      )}
-    </ArgumentItemBase>
+      changeValue={changeValue}
+      placeholder="Click to choose folder..."
+    />
   );
 }
