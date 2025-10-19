@@ -1,13 +1,12 @@
 import {useEffect, useMemo} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
-import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
+import {useCardsState} from '../../Redux/Reducer/CardsReducer';
+import {useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {useTerminalState} from '../../Redux/Reducer/TerminalReducer';
-import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {PageComponents} from '../../Utils/Constants';
+import {useStopAI} from '../../Utils/UtilHooks';
 import RunningCardView from '../Browser_Terminal/RunningCardView';
 import HomePage from '../Pages/ContentPages/Home/HomePage';
 
@@ -18,7 +17,7 @@ export default function AppPages() {
   const activePage = useTabsState('activePage');
   const activeTab = useTabsState('activeTab');
 
-  const dispatch = useDispatch<AppDispatch>();
+  const stopAI = useStopAI();
 
   const RunningView = useMemo(() => {
     const Container = extensionsData.runningAI.container;
@@ -26,28 +25,12 @@ export default function AppPages() {
   }, []);
 
   useEffect(() => {
-    const stopAI = (id: string) => {
-      const runningCard = runningCards.find(card => card.id === id);
-      if (!runningCard) return;
-
-      if (runningCard.isEmptyRunning) {
-        rendererIpc.pty.emptyProcess(runningCard.id, 'stop');
-      } else {
-        rendererIpc.pty.process(runningCard.id, 'stop', runningCard.id);
-      }
-
-      dispatch(tabsActions.setActiveTabLoading(false));
-      dispatch(tabsActions.setTabIsTerminal({tabID: activeTab, isTerminal: false}));
-      dispatch(cardsActions.stopRunningCard({tabId: activeTab}));
-      rendererIpc.win.setDiscordRpAiRunning({running: false});
-    };
-
     const removeListener = rendererIpc.pty.onExit((_, id) => {
       if (closeTabOnExit) stopAI(id);
     });
 
     return () => removeListener();
-  }, [dispatch, runningCards, closeTabOnExit]);
+  }, [closeTabOnExit]);
 
   return (
     <>
