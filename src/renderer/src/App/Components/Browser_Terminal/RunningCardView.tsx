@@ -104,7 +104,6 @@ const RunningCardView = ({runningCard}: Props) => {
             runningCard={runningCard}
             clearTerminal={clearTerminal}
             serializeAddon={serializeAddon}
-            selectedTerminalText={selectedTerminalText}
             setSelectedTerminalText={setSelectedTerminalText}
           />
         ) : (
