@@ -38,241 +38,249 @@ type Props = {
   serializeAddon?: SerializeAddon;
   clearTerminal: RefObject<(() => void) | undefined>;
   setSelectedTerminalText: Dispatch<SetStateAction<string>>;
-  selectedTerminalText: string;
 };
 
-const Terminal = memo(
-  ({runningCard, serializeAddon, clearTerminal, setSelectedTerminalText, selectedTerminalText}: Props) => {
-    const copyPressed = useHotkeysState('copyPressed');
-    const activeTab = useTabsState('activeTab');
-    const allMethods = useAllCardMethods();
+const Terminal = memo(({runningCard, serializeAddon, clearTerminal, setSelectedTerminalText}: Props) => {
+  const copyPressed = useHotkeysState('copyPressed');
+  const activeTab = useTabsState('activeTab');
+  const allMethods = useAllCardMethods();
 
-    const terminalContainerRef = useRef<HTMLDivElement | null>(null);
-    const terminal = useRef<XTerminal | null>(null);
-    const fitAddon = useRef<FitAddon | null>(null);
+  const terminalContainerRef = useRef<HTMLDivElement | null>(null);
+  const terminal = useRef<XTerminal | null>(null);
+  const fitAddon = useRef<FitAddon | null>(null);
 
-    const outputColor = useTerminalState('outputColor');
-    const useConpty = useTerminalState('useConpty');
-    const scrollback = useTerminalState('scrollBack');
-    const fontSize = useTerminalState('fontSize');
-    const cursorStyle = useTerminalState('cursorStyle');
-    const cursorInactiveStyle = useTerminalState('cursorInactiveStyle');
-    const cursorBlink = useTerminalState('blinkCursor');
-    const resizeDelay = useTerminalState('resizeDelay');
+  const outputColor = useTerminalState('outputColor');
+  const useConpty = useTerminalState('useConpty');
+  const scrollback = useTerminalState('scrollBack');
+  const fontSize = useTerminalState('fontSize');
+  const cursorStyle = useTerminalState('cursorStyle');
+  const cursorInactiveStyle = useTerminalState('cursorInactiveStyle');
+  const cursorBlink = useTerminalState('blinkCursor');
+  const resizeDelay = useTerminalState('resizeDelay');
 
-    const {webUIAddress, id, currentView, tabId} = useMemo(() => runningCard, [runningCard]);
+  const {webUIAddress, id, currentView, tabId} = useMemo(() => runningCard, [runningCard]);
 
-    const darkMode = useAppState('darkMode');
-    const dispatch = useDispatch<AppDispatch>();
+  const darkMode = useAppState('darkMode');
+  const dispatch = useDispatch<AppDispatch>();
 
-    const [browserBehavior, setBrowserBehavior] = useState<CustomRunBehaviorData['browser']>('appBrowser');
-    const [urlCatchBehavior, setUrlCatchBehavior] = useState<CustomRunBehaviorData['urlCatch'] | undefined>(undefined);
+  const [browserBehavior, setBrowserBehavior] = useState<CustomRunBehaviorData['browser']>('appBrowser');
+  const [urlCatchBehavior, setUrlCatchBehavior] = useState<CustomRunBehaviorData['urlCatch'] | undefined>(undefined);
 
-    const copyText = useCallback(() => {
-      if (!isEmpty(selectedTerminalText)) {
-        try {
-          navigator.clipboard.writeText(selectedTerminalText);
-          lynxTopToast(dispatch).success(`Copied to clipboard`);
-          terminal.current?.clearSelection();
-        } catch (e) {
-          console.log(e);
-          lynxTopToast(dispatch).warning(`Failed to copy. Please try again.`);
+  const copyText = useCallback(() => {
+    const selection = terminal.current?.getSelection();
+    if (selection) {
+      try {
+        navigator.clipboard.writeText(selection);
+        lynxTopToast(dispatch).success(`Copied to clipboard`);
+        terminal.current?.clearSelection();
+      } catch (e) {
+        console.log(e);
+        lynxTopToast(dispatch).warning(`Failed to copy. Please try again.`);
+      }
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (copyPressed) copyText();
+  }, [copyPressed, copyText]);
+
+  useEffect(() => {
+    rendererIpc.storage.get('cardsConfig').then(result => {
+      const custom = result.customRunBehavior.find(customRun => customRun.cardID === id);
+      if (custom) {
+        setBrowserBehavior(custom.browser);
+        setUrlCatchBehavior(custom.urlCatch);
+      }
+    });
+  }, [id]);
+
+  useEffect(() => {
+    const openUrl = (url: string | undefined) => {
+      if (url) {
+        if (browserBehavior === 'appBrowser') {
+          dispatch(cardsActions.setRunningCardAddress({address: url, tabId}));
+          dispatch(cardsActions.setRunningCardView({view: 'browser', tabId}));
+          rendererIpc.storageUtils.addBrowserRecent(url);
+        } else {
+          rendererIpc.win.openUrlDefaultBrowser(url);
         }
       }
-    }, [selectedTerminalText, dispatch]);
+    };
 
-    useEffect(() => {
-      if (copyPressed) copyText();
-    }, [copyPressed, copyText]);
+    const offData = rendererIpc.pty.onData((_, dataID, data) => {
+      if (dataID === id) {
+        const isAddressEmpty = isEmpty(webUIAddress);
 
-    useEffect(() => {
-      rendererIpc.storage.get('cardsConfig').then(result => {
-        const custom = result.customRunBehavior.find(customRun => customRun.cardID === id);
-        if (custom) {
-          setBrowserBehavior(custom.browser);
-          setUrlCatchBehavior(custom.urlCatch);
+        if (isAddressEmpty) {
+          const catchUrlByModule = urlCatchBehavior ? urlCatchBehavior.type === 'module' : true;
+          const catchLine = urlCatchBehavior ? urlCatchBehavior.type === 'findLine' : false;
+          const targetLine = urlCatchBehavior?.findLine;
+
+          if (catchUrlByModule) {
+            const catchAddress = getCardMethod(allMethods, id, 'catchAddress');
+            const url = catchAddress ? catchAddress(data) : undefined;
+            openUrl(url);
+          } else if (catchLine && targetLine) {
+            const url = catchTerminalAddress(data, targetLine);
+            openUrl(url);
+          }
         }
-      });
-    }, [id]);
 
-    const setTheme = useCallback(() => {
-      if (terminal.current) {
-        terminal.current.options.theme = getTheme(darkMode);
+        terminal.current?.write(outputColor ? parseTerminalColors(data) : data);
       }
-    }, [darkMode]);
+    });
 
-    useEffect(() => {
-      setTheme();
-    }, [setTheme]);
+    return () => offData();
+  }, [id, webUIAddress, browserBehavior, outputColor, dispatch, allMethods, tabId, urlCatchBehavior]);
 
-    useEffect(() => {
-      const openUrl = (url: string | undefined) => {
-        if (url) {
-          if (browserBehavior === 'appBrowser') {
-            dispatch(cardsActions.setRunningCardAddress({address: url, tabId}));
-            dispatch(cardsActions.setRunningCardView({view: 'browser', tabId}));
-            rendererIpc.storageUtils.addBrowserRecent(url);
-          } else {
-            rendererIpc.win.openUrlDefaultBrowser(url);
-          }
-        }
-      };
+  useEffect(() => {
+    const fit = fitAddon.current;
+    if (fit && currentView === 'terminal' && canResize(fit.proposeDimensions())) fit.fit();
+  }, [currentView, activeTab]);
 
-      const offData = rendererIpc.pty.onData((_, dataID, data) => {
-        if (dataID === id) {
-          const isAddressEmpty = isEmpty(webUIAddress);
+  useEffect(() => {
+    const terminalContainer = terminalContainerRef.current;
+    if (!terminalContainer || terminal.current) return;
 
-          if (isAddressEmpty) {
-            const catchUrlByModule = urlCatchBehavior ? urlCatchBehavior.type === 'module' : true;
-            const catchLine = urlCatchBehavior ? urlCatchBehavior.type === 'findLine' : false;
-            const targetLine = urlCatchBehavior?.findLine;
+    const JetBrainsMono = new FontFaceObserver(FONT_FAMILY);
 
-            if (catchUrlByModule) {
-              const catchAddress = getCardMethod(allMethods, id, 'catchAddress');
-              const url = catchAddress ? catchAddress(data) : undefined;
-              openUrl(url);
-            } else if (catchLine && targetLine) {
-              const url = catchTerminalAddress(data, targetLine);
-              openUrl(url);
-            }
-          }
+    let xTerm: XTerminal | null = null;
 
-          terminal.current?.write(outputColor ? parseTerminalColors(data) : data);
-        }
+    const loadTerminal = (sysInfo?: SystemInfo, fontFamily?: string) => {
+      const windowsPty = sysInfo ? getWindowPty(sysInfo, useConpty) : undefined;
+      const renderMode = getRendererMode();
+
+      xTerm = new XTerminal({
+        allowProposedApi: true,
+        fontFamily,
+        scrollOnUserInput: true,
+        scrollback,
+        cursorBlink,
+        fontSize,
+        cursorStyle,
+        cursorInactiveStyle,
+        windowsPty,
+        theme: getTheme(darkMode),
       });
 
-      return () => offData();
-    }, [id, webUIAddress, browserBehavior, outputColor, dispatch, allMethods, tabId, urlCatchBehavior]);
+      terminal.current = xTerm;
+      clearTerminal.current = () => {
+        rendererIpc.pty.clear(id);
+        xTerm?.clear();
+      };
 
-    useEffect(() => {
-      const fit = fitAddon.current;
-      if (fit && currentView === 'terminal' && canResize(fit.proposeDimensions())) fit.fit();
-    }, [currentView, activeTab]);
+      fitAddon.current = new FitAddon();
+      xTerm.loadAddon(fitAddon.current);
+      xTerm.loadAddon(new Unicode11Addon());
+      xTerm.unicode.activeVersion = '11';
+      xTerm.loadAddon(new ClipboardAddon());
+      xTerm.loadAddon(new WebLinksAddon((_, uri) => window.open(uri)));
+      if (serializeAddon) xTerm.loadAddon(serializeAddon);
 
-    useEffect(() => {
-      const terminalContainer = terminalContainerRef.current;
-      if (!terminalContainer || terminal.current) return;
+      xTerm.open(terminalContainer);
 
-      const JetBrainsMono = new FontFaceObserver(FONT_FAMILY);
+      if (renderMode === 'webgl') {
+        const webglAddon = new WebglAddon();
+        webglAddon.onContextLoss(() => webglAddon.dispose());
+        xTerm.loadAddon(webglAddon);
+      } else {
+        xTerm.loadAddon(new CanvasAddon());
+      }
 
-      let xTerm: XTerminal | null = null;
+      let prevSize: {cols: number; rows: number} | undefined;
+      xTerm.onResize(size => {
+        if (isEqual(prevSize, size)) return;
+        rendererIpc.pty.resize(id, size.cols, size.rows);
+        prevSize = size;
+      });
 
-      const loadTerminal = (sysInfo?: SystemInfo, fontFamily?: string) => {
-        const windowsPty = sysInfo ? getWindowPty(sysInfo, useConpty) : undefined;
-        const renderMode = getRendererMode();
+      fitAddon.current.fit();
 
-        xTerm = new XTerminal({
-          allowProposedApi: true,
-          fontFamily,
-          scrollOnUserInput: true,
-          scrollback,
-          cursorBlink,
-          fontSize,
-          cursorStyle,
-          cursorInactiveStyle,
-          windowsPty,
-        });
+      xTerm.onSelectionChange(() => setSelectedTerminalText(xTerm?.getSelection() || ''));
 
-        terminal.current = xTerm;
-        clearTerminal.current = () => {
-          rendererIpc.pty.clear(id);
-          xTerm?.clear();
-        };
+      xTerm.attachCustomKeyEventHandler(e => {
+        const selection = xTerm?.getSelection();
+        if (!selection) return true;
 
-        setTheme();
+        const hasSelection = !isEmpty(selection);
 
-        fitAddon.current = new FitAddon();
-        xTerm.loadAddon(fitAddon.current);
-        xTerm.loadAddon(new Unicode11Addon());
-        xTerm.unicode.activeVersion = '11';
-        xTerm.loadAddon(new ClipboardAddon());
-        xTerm.loadAddon(new WebLinksAddon((_, uri) => window.open(uri)));
-        if (serializeAddon) xTerm.loadAddon(serializeAddon);
-
-        xTerm.open(terminalContainer);
-
-        if (renderMode === 'webgl') {
-          const webglAddon = new WebglAddon();
-          webglAddon.onContextLoss(() => webglAddon.dispose());
-          xTerm.loadAddon(webglAddon);
-        } else {
-          xTerm.loadAddon(new CanvasAddon());
+        if (e.key === 'c' && e.ctrlKey && hasSelection) {
+          return false;
         }
 
-        let prevSize: {cols: number; rows: number} | undefined;
-        xTerm.onResize(size => {
-          if (isEqual(prevSize, size)) return;
-          rendererIpc.pty.resize(id, size.cols, size.rows);
-          prevSize = size;
-        });
-
-        fitAddon.current.fit();
-
-        xTerm.onSelectionChange(() => setSelectedTerminalText(xTerm?.getSelection() || ''));
-        xTerm.attachCustomKeyEventHandler(e => !(e.key === 'c' && e.ctrlKey && !isEmpty(xTerm?.getSelection())));
-        xTerm.onData(data => !isEmpty(data) && rendererIpc.pty.write(id, data));
-      };
-
-      Promise.all([rendererIpc.win.getSystemInfo(), JetBrainsMono.load()])
-        .then(([sysInfo]) => loadTerminal(sysInfo, 'JetBrainsMono'))
-        .catch(() => {
-          loadTerminal();
-          lynxTopToast(dispatch).warning('Failed to load terminal font!');
-        });
-
-      const handleResize = () => {
-        if (canResize(fitAddon.current?.proposeDimensions())) {
-          fitAddon.current?.fit();
+        if ((e.key === 'Backspace' || e.key === 'Delete') && hasSelection) {
+          const backspaces = '\b'.repeat(selection.length);
+          rendererIpc.pty.write(id, backspaces);
+          xTerm?.clearSelection();
+          return false;
         }
-      };
 
-      const handleContextMenu = (_e: MouseEvent) => {
-        if (!isEmpty(terminal.current?.getSelection())) {
-          copyText();
-        } else {
-          navigator.clipboard.readText().then(text => rendererIpc.pty.write(id, text));
-        }
-      };
+        return true;
+      });
 
-      let resizeTimeout: any;
-      const debouncedResize = () => {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(handleResize, resizeDelay);
-      };
+      xTerm.onData(data => !isEmpty(data) && rendererIpc.pty.write(id, data));
+    };
 
-      window.addEventListener('resize', debouncedResize);
-      terminalContainer.addEventListener('contextmenu', handleContextMenu);
+    Promise.all([rendererIpc.win.getSystemInfo(), JetBrainsMono.load()])
+      .then(([sysInfo]) => loadTerminal(sysInfo, 'JetBrainsMono'))
+      .catch(() => {
+        loadTerminal();
+        lynxTopToast(dispatch).warning('Failed to load terminal font!');
+      });
 
-      return () => {
-        window.removeEventListener('resize', debouncedResize);
-        terminalContainer?.removeEventListener('contextmenu', handleContextMenu);
-        terminal.current?.dispose();
-        terminal.current = null;
-      };
-    }, [
-      clearTerminal,
-      id,
-      serializeAddon,
-      setTheme,
-      scrollback,
-      cursorBlink,
-      fontSize,
-      cursorStyle,
-      cursorInactiveStyle,
-      useConpty,
-      setSelectedTerminalText,
-      dispatch,
-      resizeDelay,
-    ]);
+    const handleResize = () => {
+      if (canResize(fitAddon.current?.proposeDimensions())) {
+        fitAddon.current?.fit();
+      }
+    };
 
-    return (
-      <div className={`${currentView === 'terminal' ? 'block' : 'hidden'}`}>
-        <div className="absolute inset-0 !top-10 overflow-hidden bg-white pl-3 pr-1 shadow-md dark:bg-LynxRaisinBlack">
-          <div ref={terminalContainerRef} className="relative size-full" />
-        </div>
+    const handleContextMenu = (_e: MouseEvent) => {
+      if (!isEmpty(terminal.current?.getSelection())) {
+        copyText();
+      } else {
+        navigator.clipboard.readText().then(text => rendererIpc.pty.write(id, text));
+      }
+    };
+
+    let resizeTimeout: any;
+    const debouncedResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(handleResize, resizeDelay);
+    };
+
+    window.addEventListener('resize', debouncedResize);
+    terminalContainer.addEventListener('contextmenu', handleContextMenu);
+
+    return () => {
+      window.removeEventListener('resize', debouncedResize);
+      terminalContainer?.removeEventListener('contextmenu', handleContextMenu);
+      terminal.current?.dispose();
+      terminal.current = null;
+    };
+  }, [
+    clearTerminal,
+    id,
+    serializeAddon,
+    scrollback,
+    cursorBlink,
+    fontSize,
+    cursorStyle,
+    cursorInactiveStyle,
+    useConpty,
+    setSelectedTerminalText,
+    dispatch,
+    resizeDelay,
+    copyText,
+    darkMode,
+  ]);
+
+  return (
+    <div className={`${currentView === 'terminal' ? 'block' : 'hidden'}`}>
+      <div className="absolute inset-0 !top-10 overflow-hidden bg-white pl-3 pr-1 shadow-md dark:bg-LynxRaisinBlack">
+        <div ref={terminalContainerRef} className="relative size-full" />
       </div>
-    );
-  },
-);
+    </div>
+  );
+});
 
 export default Terminal;
