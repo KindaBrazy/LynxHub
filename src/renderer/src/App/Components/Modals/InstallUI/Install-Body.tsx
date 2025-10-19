@@ -60,9 +60,7 @@ const InstallBody = memo(
     const renderBody = () => {
       switch (state.body) {
         case 'clone':
-          return (
-            <CloneRepo isOpen={isOpen} cardId={cardId} done={doneClone} url={state.cloneUrl} start={state.startClone} />
-          );
+          return <CloneRepo isOpen={isOpen} done={doneClone} url={state.cloneUrl} start={state.startClone} />;
         case 'terminal':
           return <TerminalStep id={cardId} />;
         case 'progress-bar':
