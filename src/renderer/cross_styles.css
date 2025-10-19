@@ -41,38 +41,6 @@
       transform: translate(-50%, -50%) scale(0.9);
     }
   }
-
-  --backgroundImage-GradientDark: linear-gradient(
-    to right top,
-    #212121,
-    #202020,
-    #1f1f1f,
-    #1e1e1e,
-    #1d1d1d,
-    #1c1c1c,
-    #1b1b1b,
-    #1a1a1a,
-    #181818,
-    #161616,
-    #141414,
-    #121212
-  );
-
-  --backgroundImage-GradientLight: linear-gradient(
-    to right top,
-    #f3f3f3,
-    #f3f3f3,
-    #f3f3f3,
-    #f3f3f3,
-    #f3f3f3,
-    #f4f4f5,
-    #f4f4f6,
-    #f4f5f8,
-    #f3f7fc,
-    #f0fafe,
-    #eefdfe,
-    #eefffc
-  );
 }
 
 .animate-ripple {
@@ -82,6 +50,9 @@
 :root {
   color-scheme: light dark;
   font-family: Nunito, sans-serif;
+
+  --duration: 2s;
+  --i: 0;
 }
 
 * {

@@ -9,7 +9,12 @@ import {SearchQuerySites} from './CrossTypes';
  * @returns {{owner: string, repo: string}} An object containing the owner and repository name.
  * @throws {Error} If the provided URL is not a valid GitHub repository URL.
  */
-export function extractGitUrl(url: string): {owner: string; repo: string; platform: 'github' | 'gitlab'} {
+export function extractGitUrl(url: string): {
+  owner: string;
+  repo: string;
+  platform: 'github' | 'gitlab';
+  avatarUrl: string;
+} {
   // Regular expression to match GitHub and GitLab repository URLs with or without protocol
   const gitRepoRegex = /^(https?:\/\/)?(www\.)?(github|gitlab)\.com\/([^/]+)\/([^/]+?)(?:\.git)?$/;
   const match = url.match(gitRepoRegex);
@@ -19,7 +24,8 @@ export function extractGitUrl(url: string): {owner: string; repo: string; platfo
   }
 
   const [, , , platform, owner, repo] = match;
-  return {owner, repo, platform: platform as 'github' | 'gitlab'};
+  const avatarUrl = `https://github.com/${owner}.png`;
+  return {owner, repo, platform: platform as 'github' | 'gitlab', avatarUrl};
 }
 
 /**
