@@ -18,7 +18,7 @@ const TopBar = memo(({runningCard, serializeAddon, tabID, clearTerminal, selecte
   return (
     <div
       className={
-        'h-10 inset-x-0 top-0 absolute bg-white dark:bg-LynxRaisinBlack' +
+        'h-10 inset-x-0 top-0 absolute bg-white dark:bg-LynxNearBlack' +
         ' flex flex-row gap-x-1 px-2 py-1 items-center justify-between'
       }>
       {runningCard.currentView === 'terminal' ? (

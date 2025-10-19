@@ -40,6 +40,7 @@ const colors = {
   success: `rgba(23, 201, 100, 1)`,
 
   primary: `rgba(73, 66, 228, 1)`,
+  nearBlack: `rgba(25, 25, 25, 1)`,
   raisinBlack: `rgba(33, 33, 33, 1)`,
   secondary: `rgba(148, 0, 255, 1)`,
   secondaryWhite: `rgba(216, 0, 255, 1)`,

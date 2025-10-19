@@ -97,7 +97,7 @@ export default function Home_Notification() {
         <Button
           className={
             `cursor-default border border-foreground/10 bg-stone-50 shadow-md ` +
-            `dark:border-foreground/5 dark:bg-[#2a2a2a] dark:hover:bg-[#212121]`
+            `dark:border-foreground/5 dark:bg-[#202020] dark:hover:bg-LynxNearBlack`
           }
           radius="full"
           variant="light"
