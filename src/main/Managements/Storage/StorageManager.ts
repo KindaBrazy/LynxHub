@@ -434,15 +434,19 @@ class StorageManager extends BaseStorage {
     return result;
   }
 
-  // TODO: Support relative paths for pre open
   public addPreOpen(cardId: string, open: {type: 'folder' | 'file'; path: string}): void {
     const preOpen = this.getData('cardsConfig').preOpen;
     const existCustomRun = preOpen.findIndex(custom => custom.cardId === cardId);
 
+    let targetOpen = open;
+    if (targetOpen.path && isPortable()) {
+      targetOpen = {type: targetOpen.type, path: getRelativePath(getExePath(), open.path)};
+    }
+
     if (existCustomRun !== -1) {
-      preOpen[existCustomRun].data.push(open);
+      preOpen[existCustomRun].data.push(targetOpen);
     } else {
-      preOpen.push({cardId, data: [open]});
+      preOpen.push({cardId, data: [targetOpen]});
     }
     this.updateData('cardsConfig', {preOpen});
   }
