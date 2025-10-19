@@ -67,7 +67,7 @@ export default function Initializer_Plugins({
     } else {
       Promise.all(urlsToInstall.map(item => rendererIpc.plugins.install(item)))
         .then(result => {
-          const allInstalled = result.every(isSuccess => isSuccess === true);
+          const allInstalled = result.every(isSuccess => isSuccess);
           if (allInstalled) {
             setInstalledPlugins(Array.from(selectedPlugin));
           } else {
