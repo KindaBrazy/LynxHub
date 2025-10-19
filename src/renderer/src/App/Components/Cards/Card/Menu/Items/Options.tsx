@@ -1,13 +1,13 @@
 import {DropdownItem} from '@heroui/react';
-import {useCallback} from 'react';
+import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {Extensions2_Icon, GitHub_Icon, SettingsMinimal_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetInstallType} from '../../../../../Modules/ModuleLoader';
 import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
-import {useDevInfo} from '../../../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../../../Utils/UtilHooks';
 import {useCardStore} from '../../Wrapper';
 
@@ -48,7 +48,7 @@ export const MenuExtensions = () => {
   const extensionsDir = useCardStore(state => state.extensionsDir);
   const title = useCardStore(state => state.title);
 
-  const {name: devName} = useDevInfo(repoUrl);
+  const devName = useMemo(() => extractGitUrl(repoUrl).owner, [repoUrl]);
   const card = useInstalledCard(id);
 
   const onPress = useCallback(() => {

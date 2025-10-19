@@ -4,7 +4,7 @@ import {isEmpty, startCase} from 'lodash';
 import {Fragment, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
+import {extractGitUrl, validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {CardInfoDescriptions} from '../../../../../../cross/plugin/ModuleTypes';
 import {useDebounceBreadcrumb} from '../../../../../Breadcrumbs';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
@@ -12,7 +12,6 @@ import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
-import {useDevInfo} from '../../../Utils/LocalStorage';
 import {useInstalledCard} from '../../../Utils/UtilHooks';
 import CardInfoDescription from './CardInfo-Description';
 import useCardInfoApi from './UseCardInfoApi';
@@ -27,7 +26,7 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
   const [openFolders, setOpenFolders] = useState<string[] | undefined>(undefined);
   const [cardInfoDescriptions, setCardInfoDescriptions] = useState<CardInfoDescriptions>(undefined);
 
-  const {picUrl} = useDevInfo(url);
+  const avatarUrl = useMemo(() => extractGitUrl(url).avatarUrl, [url]);
 
   useDebounceBreadcrumb('Card Git Manager Modal: ', [isOpen, cardId]);
 
@@ -69,7 +68,7 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
       hideCloseButton>
       <ModalContent className="pb-4">
         <ModalHeader className="border-b border-foreground/20 bg-foreground-100 shadow-md">
-          {validateGitRepoUrl(url) && picUrl && (
+          {validateGitRepoUrl(url) && avatarUrl && (
             <User
               description={
                 <Link size="sm" href={url} isExternal>
@@ -77,7 +76,7 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
                 </Link>
               }
               name={startCase(devName)}
-              avatarProps={{src: picUrl}}
+              avatarProps={{src: avatarUrl}}
             />
           )}
         </ModalHeader>

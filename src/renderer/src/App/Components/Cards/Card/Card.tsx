@@ -53,8 +53,8 @@ const LynxCard = memo(() => {
     return window.localStorage.getItem(`${id}_title_edited`) || title;
   }, [id, title]);
   const {developer, avatarSrc} = useMemo(() => {
-    const developer = extractGitUrl(repoUrl).owner;
-    return {developer, avatarSrc: `https://github.com/${developer}.png`};
+    const {owner, avatarUrl} = extractGitUrl(repoUrl);
+    return {developer: owner, avatarSrc: avatarUrl};
   }, [repoUrl]);
   const isRunning = useMemo(() => runningCard.some(item => item.id === id), [runningCard, id]);
   const accentColor = useMemo(() => getAccentColorAsHex(title, developer), [title, developer]);
