@@ -103,7 +103,6 @@ function IconContainer({mouseY, title, icon, badge, size, path}: ContainerProp) 
         className="relative flex aspect-square items-center justify-center rounded-full">
         {isSelected && (
           <motion.div
-            style={{borderRadius: 9999}}
             layoutId="floating-nav-indicator"
             className="absolute inset-0 rounded-full bg-primary-200"
             transition={{type: 'spring', stiffness: 350, damping: 30}}
