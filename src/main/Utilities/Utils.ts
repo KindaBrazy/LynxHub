@@ -155,6 +155,10 @@ export function isDark(): boolean {
   }
 }
 
+export function getWindowColor() {
+  return isDark() ? '#212121' : '#ffffff';
+}
+
 export function isPortable(): 'win' | 'linux' | null {
   if (process.env.PORTABLE_EXECUTABLE_FILE) return 'win';
   if (process.env.APPIMAGE) return 'linux';

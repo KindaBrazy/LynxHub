@@ -5,7 +5,7 @@ import icon from '../../../resources/icon.png?asset';
 import {formatWebAddress} from '../../cross/CrossUtils';
 import {browserChannels, CanGoType, tabsChannels, WHType} from '../../cross/IpcChannelAndTypes';
 import {appManager, contextMenuManager, storageManager} from '../index';
-import {getUserAgent} from '../Utilities/Utils';
+import {getUserAgent, getWindowColor} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
 
 export default class BrowserManager {
@@ -198,6 +198,7 @@ export default class BrowserManager {
 
     const newView = new WebContentsView({webPreferences: {session: this.getSession()}});
     const webContents = newView.webContents;
+    newView.setBackgroundColor(getWindowColor());
 
     webContents.setUserAgent(getUserAgent());
 
