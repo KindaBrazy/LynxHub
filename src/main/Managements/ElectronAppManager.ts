@@ -7,7 +7,7 @@ import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents}
 import icon from '../../../resources/icon.png?asset';
 import {appWindowChannels, ShowToastTypes, tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
 import {contextMenuManager, storageManager, trayManager} from '../index';
-import {getUserAgent, RelaunchApp} from '../Utilities/Utils';
+import {getUserAgent, getWindowColor, RelaunchApp} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
 
 /**
@@ -77,6 +77,8 @@ export default class ElectronAppManager {
   /** Creates and configures the loading window. */
   private createLoadingWindow(): void {
     this.loadingWindow = new BrowserWindow(ElectronAppManager.LOADING_WINDOW_CONFIG);
+    this.loadingWindow.setBackgroundColor(getWindowColor());
+
     this.setupLoadingWindowEventListeners();
     this.loadAppropriateURL(this.loadingWindow, 'loading.html');
   }
@@ -96,6 +98,7 @@ export default class ElectronAppManager {
   /** Creates and configures the main application window. */
   private createMainWindow(): void {
     this.mainWindow = new BrowserWindow(ElectronAppManager.MAIN_WINDOW_CONFIG);
+    this.mainWindow.setBackgroundColor(getWindowColor());
 
     RegisterHotkeys(this.mainWindow.webContents);
 
