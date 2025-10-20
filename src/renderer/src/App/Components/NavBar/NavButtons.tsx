@@ -87,6 +87,7 @@ export const ContentsNav = () => {
     return result;
   }, []);
 
+  // TODO: maxItems based on height of the app
   return (
     <>
       <NavigationDock maxItems={6} items={contentItems} />
