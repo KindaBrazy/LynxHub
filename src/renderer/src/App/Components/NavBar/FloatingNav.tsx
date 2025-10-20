@@ -14,10 +14,10 @@ type Props = {
   size?: number;
 };
 
-export default function FloatingNav({items, className, size = 1}: Props) {
+export default function FloatingNav({items, className, size = 0.8}: Props) {
   const mouseY = useMotionValue(Infinity);
 
-  const dockWidth = 16 * 4 * size;
+  const dockWidth = 18 * 4 * size;
   const itemGap = 4 * size;
 
   return (
