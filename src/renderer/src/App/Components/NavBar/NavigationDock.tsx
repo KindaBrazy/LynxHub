@@ -72,7 +72,7 @@ export default function NavigationDock({items}: Props) {
               <motion.div
                 style={{
                   background:
-                    `radial-gradient(600px circle at ${mousePosition.y}px` +
+                    `radial-gradient(300px circle at ${mousePosition.y}px` +
                     ` ${mousePosition.x}px, ${primaryColor}40, transparent 40%)`,
                 }}
                 exit={{opacity: 0}}
@@ -91,8 +91,8 @@ export default function NavigationDock({items}: Props) {
                   inset: '-1px',
                   padding: '2px',
                   background:
-                    `radial-gradient(400px circle at ${mousePosition.y}px` +
-                    ` ${mousePosition.x}px, ${primaryColor}70, transparent 60%)`,
+                    `radial-gradient(100px circle at ${mousePosition.y}px` +
+                    ` ${mousePosition.x}px, ${primaryColor}, transparent 70%)`,
                   WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
                   WebkitMaskComposite: 'xor',
                   maskComposite: 'exclude',
