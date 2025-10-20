@@ -1,3 +1,5 @@
+import {ReactNode} from 'react';
+
 export type UpdatingCard = {id: string; devName: string; title: string};
 export type UpdatingCards = UpdatingCard[];
 
@@ -21,3 +23,10 @@ export type HeroToastPlacement =
   | 'top-right'
   | 'top-left'
   | 'top-center';
+
+export type NavItem = {
+  title: string;
+  icon: ReactNode;
+  onClick?: () => void;
+  badge?: ReactNode | boolean;
+};
