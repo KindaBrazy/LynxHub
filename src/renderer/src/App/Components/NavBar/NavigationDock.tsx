@@ -75,7 +75,7 @@ export default function NavigationDock({items}: Props) {
             style={{
               background:
                 `radial-gradient(300px circle at ${mousePosition.y}px` +
-                ` ${mousePosition.x}px, ${primaryColor}40, transparent 40%)`,
+                ` ${mousePosition.x}px, ${primaryColor}${isDark ? '40' : '25'}, transparent 40%)`,
             }}
             exit={{opacity: 0}}
             initial={{opacity: 0}}
@@ -94,7 +94,7 @@ export default function NavigationDock({items}: Props) {
               padding: '2px',
               background:
                 `radial-gradient(100px circle at ${mousePosition.y}px` +
-                ` ${mousePosition.x}px, ${primaryColor}, transparent 70%)`,
+                ` ${mousePosition.x}px, ${primaryColor}${isDark ? '' : '80'}, transparent 70%)`,
               WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
               WebkitMaskComposite: 'xor',
               maskComposite: 'exclude',
