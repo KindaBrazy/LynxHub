@@ -20,7 +20,7 @@ import {hasCardsByPath} from '../../Modules/ModuleLoader';
 import {usePluginsState} from '../../Redux/Reducer/PluginsReducer';
 import {useSettingsState} from '../../Redux/Reducer/SettingsReducer';
 import {NavItem} from '../../Utils/Types';
-import FloatingNav from './FloatingNav';
+import NavigationDock from './NavigationDock';
 
 export const ContentsNav = () => {
   const contentBar = useMemo(() => extensionsData.navBar.addButton.contentBar, []);
@@ -89,7 +89,7 @@ export const ContentsNav = () => {
 
   return (
     <>
-      <FloatingNav items={contentItems} />
+      <NavigationDock items={contentItems} />
       {!isEmpty(contentBar) && contentBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
@@ -124,7 +124,7 @@ export function SettingsNav() {
 
   return (
     <>
-      <FloatingNav items={settingsItems} />
+      <NavigationDock items={settingsItems} />
       {!isEmpty(settingsBar) && settingsBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
