@@ -1,5 +1,6 @@
 import isEmpty from 'lodash/isEmpty';
-import {memo, useMemo} from 'react';
+import {memo, useEffect, useMemo} from 'react';
+import {useInView} from 'react-intersection-observer';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useAppState} from '../../Redux/Reducer/AppReducer';
@@ -17,6 +18,20 @@ const BACKGROUND_CLASSES = {
  * Displays logo, theme toggle, running card manager, and window buttons.
  */
 const TitleBar = memo(() => {
+  const {ref, inView} = useInView({
+    threshold: 0,
+    triggerOnce: true,
+  });
+
+  useEffect(() => {
+    // Using the title bar for an app ready to show and is visible because it's available across all the app.
+    if (inView) {
+      setTimeout(() => {
+        window.electron.ipcRenderer.send('readyToShow');
+      }, 500);
+    }
+  }, [inView]);
+
   const titleBar = useMemo(() => extensionsData.titleBar, []);
 
   const fullscreen = useAppState('fullscreen');
@@ -31,7 +46,8 @@ const TitleBar = memo(() => {
       className={
         `draggable absolute inset-x-0 top-0 z-50 flex ${TITLE_BAR_HEIGHT} flex-row items-center ` +
         ` justify-between overflow-hidden transition-colors duration-500 ${backgroundClass} `
-      }>
+      }
+      ref={ref}>
       <TabContainer />
 
       {fullscreen ? (
