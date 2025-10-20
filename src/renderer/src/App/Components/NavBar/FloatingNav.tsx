@@ -1,16 +1,11 @@
 import {cn} from '@heroui/react';
 import {AnimatePresence, motion, MotionValue, useMotionValue, useSpring, useTransform} from 'framer-motion';
-import {ReactNode, useRef, useState} from 'react';
+import {useRef, useState} from 'react';
 
-type DockItem = {
-  title: string;
-  icon: ReactNode;
-  onClick?: () => void;
-  badge?: ReactNode | boolean;
-};
+import {NavItem} from '../../Utils/Types';
 
 type Props = {
-  items: DockItem[];
+  items: NavItem[];
   className?: string;
   size?: number;
   selectedItem?: string;
@@ -42,15 +37,8 @@ export default function FloatingNav({items, className, size = 1, selectedItem}: 
   );
 }
 
-function IconContainer({
-  mouseY,
-  title,
-  icon,
-  onClick,
-  badge,
-  size,
-  selectedItem,
-}: DockItem & {mouseY: MotionValue; size: number; selectedItem?: string}) {
+type ContainerProp = NavItem & {mouseY: MotionValue; size: number; selectedItem?: string};
+function IconContainer({mouseY, title, icon, onClick, badge, size, selectedItem}: ContainerProp) {
   const ref = useRef<HTMLDivElement>(null);
   const isSelected = title === selectedItem;
 
