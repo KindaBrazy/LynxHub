@@ -49,7 +49,7 @@ function IconContainer({mouseY, title, icon, badge, size, path}: ContainerProp) 
   const isSelected = useMemo(() => activePage === path, [activePage, path]);
 
   const baseSize = 52 * size;
-  const maxSize = 80 * size;
+  const maxSize = 70 * size;
   const effectDistance = 150 * size;
 
   const distance = useTransform(mouseY, val => {
@@ -122,7 +122,7 @@ function IconContainer({mouseY, title, icon, badge, size, path}: ContainerProp) 
             <motion.div
               className={
                 'absolute left-full top-1/2 z-20 ml-4 w-fit whitespace-pre rounded-md border ' +
-                'border-gray-200 bg-gray-100 px-2 py-0.5 text-xs text-neutral-700 ' +
+                'border-gray-200 bg-gray-100 px-2 py-0.5 text-sm text-neutral-700 ' +
                 'dark:border-neutral-900 dark:bg-neutral-800 dark:text-white'
               }
               exit={{opacity: 0, x: -5, y: '-50%'}}
@@ -134,7 +134,7 @@ function IconContainer({mouseY, title, icon, badge, size, path}: ContainerProp) 
         </AnimatePresence>
         <motion.div
           style={{width: widthIcon, height: heightIcon}}
-          className="relative z-10 flex items-center justify-center">
+          className="relative flex items-center justify-center">
           {icon}
         </motion.div>
       </motion.div>
