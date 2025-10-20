@@ -3,7 +3,7 @@ import {memo, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useAppState} from '../../Redux/Reducer/AppReducer';
-import {ContentPagesButtons, SettingsPagesButtons} from './NavButtons';
+import {ContentsNav, SettingsNav} from './NavButtons';
 
 const CONTAINER_WIDTH = 'w-[5.5rem]';
 
@@ -26,14 +26,14 @@ const NavBar = memo(() => {
     <div className={`flex h-full ${CONTAINER_WIDTH} shrink-0 flex-col items-center justify-between pb-4 pt-3`}>
       {isEmpty(ContentBar) ? (
         <div className="flex items-center justify-center">
-          <ContentPagesButtons />
+          <ContentsNav />
         </div>
       ) : (
         <ContentBar />
       )}
       {isEmpty(SettingsBar) ? (
         <div className="flex items-center justify-center">
-          <SettingsPagesButtons />
+          <SettingsNav />
         </div>
       ) : (
         <SettingsBar />

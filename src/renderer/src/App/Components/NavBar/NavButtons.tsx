@@ -17,13 +17,15 @@ import {
 } from '../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {hasCardsByPath} from '../../Modules/ModuleLoader';
+import {usePluginsState} from '../../Redux/Reducer/PluginsReducer';
+import {useSettingsState} from '../../Redux/Reducer/SettingsReducer';
 import {NavItem} from '../../Utils/Types';
 import FloatingNav from './FloatingNav';
 
-export const ContentPagesButtons = () => {
+export const ContentsNav = () => {
   const contentBar = useMemo(() => extensionsData.navBar.addButton.contentBar, []);
 
-  const pagesData: NavItem[] = useMemo(() => {
+  const contentItems: NavItem[] = useMemo(() => {
     const result: NavItem[] = [{icon: <Home_Icon className="size-full" />, title: PageTitles.home, path: PageID.home}];
 
     if (hasCardsByPath(PageID.imageGen) || hasCardsByPath('/imageGenerationPage')) {
@@ -87,24 +89,42 @@ export const ContentPagesButtons = () => {
 
   return (
     <>
-      <FloatingNav items={pagesData} />
+      <FloatingNav items={contentItems} />
       {!isEmpty(contentBar) && contentBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
 };
 
-const SettingsPages: NavItem[] = [
-  {icon: <UserDuo_Icon className="size-full" />, title: PageTitles.dashboard, path: PageID.dashboard},
-  {icon: <Plugins_Icon className="size-full" />, title: PageTitles.plugins, path: PageID.plugins},
-  {icon: <Tuning_Icon className="size-full" />, title: PageTitles.settings, path: PageID.settings},
-];
-
-export function SettingsPagesButtons() {
+export function SettingsNav() {
   const settingsBar = useMemo(() => extensionsData.navBar.addButton.settingsBar, []);
+
+  const syncList = usePluginsState('syncList');
+  const appUpdateAvailable = useSettingsState('updateAvailable');
+
+  const settingsItems: NavItem[] = useMemo(() => {
+    const dashboardBadge = appUpdateAvailable;
+    const pluginsBadge = !isEmpty(syncList) ? syncList.length : false;
+
+    return [
+      {
+        icon: <UserDuo_Icon className="size-full" />,
+        title: PageTitles.dashboard,
+        path: PageID.dashboard,
+        badge: dashboardBadge,
+      },
+      {
+        icon: <Plugins_Icon className="size-full" />,
+        title: PageTitles.plugins,
+        path: PageID.plugins,
+        badge: pluginsBadge,
+      },
+      {icon: <Tuning_Icon className="size-full" />, title: PageTitles.settings, path: PageID.settings},
+    ];
+  }, [syncList, appUpdateAvailable]);
 
   return (
     <>
-      <FloatingNav items={SettingsPages} />
+      <FloatingNav items={settingsItems} />
       {!isEmpty(settingsBar) && settingsBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
