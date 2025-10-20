@@ -3,6 +3,7 @@ import {memo, MouseEvent, ReactNode, useCallback, useRef, useState, WheelEvent} 
 import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../Breadcrumbs';
+import {AltArrowLine_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import {useAppState} from '../../Redux/Reducer/AppReducer';
 import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
@@ -32,27 +33,7 @@ const ScrollArrow = memo(
         style={{color: mutedText}}
         whileHover={{backgroundColor: hoverBg, color: isDark ? '#e5e7eb' : '#1f2937'}}
         className="flex items-center justify-center w-full py-2 rounded-xl cursor-pointer pointer-events-auto">
-        {direction === 'up' ? (
-          <svg
-            fill="none"
-            strokeWidth={2.5}
-            className="size-4"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
-          </svg>
-        ) : (
-          <svg
-            fill="none"
-            strokeWidth={2.5}
-            className="size-4"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-          </svg>
-        )}
+        {direction === 'up' ? <AltArrowLine_Icon /> : <AltArrowLine_Icon className="rotate-180" />}
       </motion.button>
     );
   },
@@ -76,9 +57,8 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
   const canScrollUp = startIndex > 0;
   const canScrollDown = startIndex + maxItems < totalItems;
 
-  // Constants for calculating scroll position
-  const ITEM_HEIGHT = 48; // from size-12 (3rem = 48px)
-  const GAP = 2; // from gap-y-0.5 (0.125rem = 2px)
+  const ITEM_HEIGHT = 48;
+  const GAP = 2;
   const ITEM_TOTAL_HEIGHT = ITEM_HEIGHT + GAP;
 
   const handleScrollUp = useCallback(() => {
@@ -147,7 +127,7 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
             style={{
               background:
                 `radial-gradient(300px circle at ${mousePosition.y}px` +
-                ` ${mousePosition.x}px, ${primaryColor}${isDark ? '40' : '25'}, transparent 40%)`,
+                ` ${mousePosition.x}px, ${primaryColor}${isDark ? '35' : '25'}, transparent 40%)`,
             }}
             exit={{opacity: 0}}
             initial={{opacity: 0}}
@@ -166,7 +146,7 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
               padding: '2px',
               background:
                 `radial-gradient(100px circle at ${mousePosition.y}px` +
-                ` ${mousePosition.x}px, ${primaryColor}${isDark ? '' : '80'}, transparent 70%)`,
+                ` ${mousePosition.x}px, ${primaryColor}${isDark ? 'CC' : '80'}, transparent 70%)`,
               WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
               WebkitMaskComposite: 'xor',
               maskComposite: 'exclude',
@@ -179,7 +159,6 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
         )}
       </AnimatePresence>
 
-      {/* --- MODIFICATION START --- */}
       <div className="relative">
         {/* Viewport for list items */}
         {showScrollControls ? (
@@ -229,7 +208,6 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
           )}
         </AnimatePresence>
       </div>
-      {/* --- MODIFICATION END --- */}
     </motion.div>
   );
 });
@@ -336,8 +314,6 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
             </motion.div>
           )}
         </motion.div>
-
-        {/* Tooltip is now handled by the Tooltip component */}
       </motion.button>
     </Tooltip>
   );
