@@ -95,7 +95,7 @@ export default function ActionButtons({installed, currentVersion}: Props) {
         title={selectedPlugin?.metadata.title}
         owner={extractGitUrl(selectedPlugin?.url || '').owner}
       />
-      <Versions currentVersion={currentVersion} />
+      {installed && <Versions currentVersion={currentVersion} />}
       <div className="flex flex-row items-center gap-x-2">
         <UpdateButton item={selectedPlugin!} />
         {installed ? (
