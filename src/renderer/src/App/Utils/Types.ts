@@ -29,4 +29,5 @@ export type NavItem = {
   icon: ReactNode;
   onClick?: () => void;
   badge?: ReactNode | boolean;
+  path: string;
 };
