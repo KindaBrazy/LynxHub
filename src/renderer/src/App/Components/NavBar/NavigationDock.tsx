@@ -127,7 +127,7 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
             style={{
               background:
                 `radial-gradient(300px circle at ${mousePosition.y}px` +
-                ` ${mousePosition.x}px, ${primaryColor}${isDark ? '35' : '25'}, transparent 40%)`,
+                ` ${mousePosition.x}px, ${primaryColor}25, transparent 40%)`,
             }}
             exit={{opacity: 0}}
             initial={{opacity: 0}}
@@ -146,7 +146,7 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
               padding: '2px',
               background:
                 `radial-gradient(100px circle at ${mousePosition.y}px` +
-                ` ${mousePosition.x}px, ${primaryColor}${isDark ? 'CC' : '80'}, transparent 70%)`,
+                ` ${mousePosition.x}px, ${primaryColor}80, transparent 70%)`,
               WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
               WebkitMaskComposite: 'xor',
               maskComposite: 'exclude',
