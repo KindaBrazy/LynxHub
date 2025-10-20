@@ -1,13 +1,12 @@
 import path from 'node:path';
 
 import {ipcMain} from 'electron';
-import {isEmpty} from 'lodash';
+import {compact, isEmpty} from 'lodash';
 import pty from 'node-pty';
 
 import {isDev, toMs} from '../../../../cross/CrossUtils';
 import {modulesChannels} from '../../../../cross/IpcChannelAndTypes';
-import {MainModules, MainModuleUtils} from '../../../../cross/plugin/ModuleTypes';
-import {MainModuleImportType} from '../../../../cross/plugin/ModuleTypes';
+import {MainModuleImportType, MainModules, MainModuleUtils} from '../../../../cross/plugin/ModuleTypes';
 import {InstalledCard} from '../../../../cross/StorageTypes';
 import {appManager, storageManager} from '../../../index';
 import {getAbsolutePath, getExePath, isPortable} from '../../../Utilities/Utils';
@@ -84,15 +83,22 @@ export default class ModuleManager {
         const method = await initialModule.default(utils);
         this.mainMethods.push(...method);
       } else {
-        const importedModules: MainModuleImportType[] = await Promise.all(
+        const importedModules: (MainModuleImportType | null)[] = await Promise.all(
           moduleFolders.map(async modulePath => {
-            const fullModulePath = path.join(modulePath, 'scripts', 'main.mjs');
-            const moduleUrl = `file://${fullModulePath}`;
-            return (await import(moduleUrl)) as MainModuleImportType;
+            try {
+              const fullModulePath = path.join(modulePath, 'scripts', 'main.mjs');
+              const moduleUrl = `file://${fullModulePath}`;
+              return (await import(moduleUrl)) as MainModuleImportType;
+            } catch (e) {
+              console.error('Failed to load module entry: ', modulePath, 'Error: ', e);
+              return null;
+            }
           }),
         );
 
-        for (const importedModule of importedModules) {
+        const loadedModules = compact(importedModules);
+
+        for (const importedModule of loadedModules) {
           const method = await importedModule.default(utils);
           this.mainMethods.push(...method);
         }
