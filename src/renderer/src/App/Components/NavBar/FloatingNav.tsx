@@ -1,17 +1,20 @@
 import {cn} from '@heroui/react';
 import {AnimatePresence, motion, MotionValue, useMotionValue, useSpring, useTransform} from 'framer-motion';
-import {useRef, useState} from 'react';
+import {useCallback, useMemo, useRef, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
+import AddBreadcrumb_Renderer from '../../../../Breadcrumbs';
+import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
+import {AppDispatch} from '../../Redux/Store';
 import {NavItem} from '../../Utils/Types';
 
 type Props = {
   items: NavItem[];
   className?: string;
   size?: number;
-  selectedItem?: string;
 };
 
-export default function FloatingNav({items, className, size = 1, selectedItem}: Props) {
+export default function FloatingNav({items, className, size = 1}: Props) {
   const mouseY = useMotionValue(Infinity);
 
   const dockWidth = 16 * 4 * size;
@@ -31,16 +34,19 @@ export default function FloatingNav({items, className, size = 1, selectedItem}: 
       onMouseMove={e => mouseY.set(e.pageY)}
       onMouseLeave={() => mouseY.set(Infinity)}>
       {items.map(item => (
-        <IconContainer size={size} mouseY={mouseY} key={item.title} selectedItem={selectedItem} {...item} />
+        <IconContainer size={size} mouseY={mouseY} key={item.title} {...item} />
       ))}
     </motion.div>
   );
 }
 
-type ContainerProp = NavItem & {mouseY: MotionValue; size: number; selectedItem?: string};
-function IconContainer({mouseY, title, icon, onClick, badge, size, selectedItem}: ContainerProp) {
+type ContainerProp = NavItem & {mouseY: MotionValue; size: number};
+function IconContainer({mouseY, title, icon, badge, size, path}: ContainerProp) {
+  const dispatch = useDispatch<AppDispatch>();
   const ref = useRef<HTMLDivElement>(null);
-  const isSelected = title === selectedItem;
+
+  const activePage = useTabsState('activePage');
+  const isSelected = useMemo(() => activePage === path, [activePage, path]);
 
   const baseSize = 52 * size;
   const maxSize = 80 * size;
@@ -73,11 +79,23 @@ function IconContainer({mouseY, title, icon, onClick, badge, size, selectedItem}
 
   const [hovered, setHovered] = useState(false);
 
+  const handleClick = useCallback(() => {
+    if (isSelected) return;
+    AddBreadcrumb_Renderer(`Nav Button: pageId:${path}, title:${title}`);
+    dispatch(
+      tabsActions.setActivePage({
+        pageID: path,
+        title: title || '',
+        isTerminal: false,
+      }),
+    );
+  }, [isSelected, path, dispatch]);
+
   return (
     <div className="relative cursor-pointer">
       <motion.div
         ref={ref}
-        onClick={onClick}
+        onClick={handleClick}
         style={{width, height}}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
