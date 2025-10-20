@@ -25,13 +25,19 @@ export default class ExtensionManager {
     } else {
       await Promise.all(
         extensionFolders.map(async extensionPath => {
-          const fullExtensionPath = path.join(extensionPath, 'scripts', 'main', 'mainEntry.mjs');
+          try {
+            const fullExtensionPath = path.join(extensionPath, 'scripts', 'main', 'mainEntry.mjs');
 
-          const extensionUrl = `file://${fullExtensionPath}`;
+            const extensionUrl = `file://${fullExtensionPath}`;
 
-          const initial: ExtensionImport_Main = await import(extensionUrl);
+            const initial: ExtensionImport_Main = await import(extensionUrl);
 
-          await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
+            await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
+          } catch (e) {
+            // TODO: show ui to user failed to load
+            console.error('Failed to load extension entry: ', extensionPath, 'Error: ', e);
+            return;
+          }
         }),
       );
     }
