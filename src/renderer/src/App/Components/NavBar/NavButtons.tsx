@@ -87,7 +87,7 @@ export const ContentPagesButtons = () => {
 
   return (
     <>
-      <FloatingNav size={0.8} items={pagesData} />
+      <FloatingNav items={pagesData} />
       {!isEmpty(contentBar) && contentBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
@@ -104,7 +104,7 @@ export function SettingsPagesButtons() {
 
   return (
     <>
-      <FloatingNav size={0.8} items={SettingsPages} />
+      <FloatingNav items={SettingsPages} />
       {!isEmpty(settingsBar) && settingsBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
