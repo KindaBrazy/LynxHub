@@ -71,7 +71,7 @@ function IconContainer({mouseY, title, icon, badge, size, path}: ContainerProp) 
     [baseSize * 0.5, maxSize * 0.5, baseSize * 0.5],
   );
 
-  const springConfig = {mass: 0.1, stiffness: 150, damping: 12};
+  const springConfig = {mass: 0.1, stiffness: 150, damping: 15};
   const width = useSpring(widthTransform, springConfig);
   const height = useSpring(heightTransform, springConfig);
   const widthIcon = useSpring(widthTransformIcon, springConfig);
@@ -100,7 +100,7 @@ function IconContainer({mouseY, title, icon, badge, size, path}: ContainerProp) 
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
         whileTap={{scale: 0.7, transition: {duration: 0.1}}}
-        className={cn('relative flex aspect-square items-center justify-center rounded-full ')}>
+        className="relative flex aspect-square items-center justify-center rounded-full">
         {isSelected && (
           <motion.div
             style={{borderRadius: 9999}}
