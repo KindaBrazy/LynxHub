@@ -143,6 +143,18 @@ export function getSystemDarkMode() {
   return nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
 }
 
+export function isDark(): boolean {
+  const darkMode = storageManager.getData('app').darkMode;
+  switch (darkMode) {
+    case 'dark':
+      return true;
+    case 'light':
+      return false;
+    case 'system':
+      return getSystemDarkMode() == 'dark';
+  }
+}
+
 export function isPortable(): 'win' | 'linux' | null {
   if (process.env.PORTABLE_EXECUTABLE_FILE) return 'win';
   if (process.env.APPIMAGE) return 'linux';
