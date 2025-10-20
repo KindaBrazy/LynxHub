@@ -89,7 +89,7 @@ export const ContentsNav = () => {
 
   return (
     <>
-      <NavigationDock items={contentItems} />
+      <NavigationDock maxItems={5} items={contentItems} />
       {!isEmpty(contentBar) && contentBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
