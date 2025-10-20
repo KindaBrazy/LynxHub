@@ -1,11 +1,12 @@
 import {AnimatePresence, motion} from 'framer-motion';
-import {ReactNode, useCallback, useRef, useState} from 'react';
+import {MouseEvent, ReactNode, useCallback, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../Breadcrumbs';
 import {useAppState} from '../../Redux/Reducer/AppReducer';
 import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
+import Tooltip from './NavTooltip';
 
 export type NavItem = {
   title: string;
@@ -29,9 +30,8 @@ export default function NavigationDock({items}: Props) {
   const primaryColor = isDark ? '#0050EF' : '#00A9FF';
   const textColor = isDark ? '#e5e7eb' : '#1f2937';
   const mutedText = isDark ? '#9ca3af' : '#6b7280';
-  const borderColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!dockRef.current) return;
     const rect = dockRef.current.getBoundingClientRect();
     setMousePosition({
@@ -53,173 +53,148 @@ export default function NavigationDock({items}: Props) {
         }),
       );
     },
-    [activePage],
+    [activePage, dispatch],
   );
 
   return (
-    <div className="flex items-center justify-center">
-      <motion.div className="relative" animate={{opacity: 1, x: 0}} initial={{opacity: 0, x: -50}}>
-        {/* Dock container */}
-        <div
-          ref={dockRef}
-          onMouseMove={handleMouseMove}
-          onMouseEnter={() => setIsHoveringDock(true)}
-          onMouseLeave={() => setIsHoveringDock(false)}
-          className="relative backdrop-blur-xl rounded-2xl p-1 shadow-2xl dark:bg-LynxRaisinBlack bg-white">
-          {/* Animated border gradient following cursor */}
-          <AnimatePresence>
-            {isHoveringDock && (
+    <motion.div
+      onMouseLeave={() => {
+        setIsHoveringDock(false);
+        setHoveredIndex(null);
+      }}
+      ref={dockRef}
+      animate={{opacity: 1, x: 0}}
+      onMouseMove={handleMouseMove}
+      initial={{opacity: 0, x: -50}}
+      onMouseEnter={() => setIsHoveringDock(true)}
+      className="relative backdrop-blur-xl rounded-2xl p-1 shadow-2xl dark:bg-LynxRaisinBlack bg-white">
+      {/* Animated border gradient following cursor */}
+      <AnimatePresence>
+        {isHoveringDock && (
+          <motion.div
+            style={{
+              background:
+                `radial-gradient(300px circle at ${mousePosition.y}px` +
+                ` ${mousePosition.x}px, ${primaryColor}40, transparent 40%)`,
+            }}
+            exit={{opacity: 0}}
+            initial={{opacity: 0}}
+            animate={{opacity: 1}}
+            className="absolute inset-0 rounded-2xl pointer-events-none"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Animated border line following cursor */}
+      <AnimatePresence>
+        {isHoveringDock && (
+          <motion.div
+            style={{
+              inset: '-1px',
+              padding: '2px',
+              background:
+                `radial-gradient(100px circle at ${mousePosition.y}px` +
+                ` ${mousePosition.x}px, ${primaryColor}, transparent 70%)`,
+              WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+              WebkitMaskComposite: 'xor',
+              maskComposite: 'exclude',
+            }}
+            exit={{opacity: 0}}
+            initial={{opacity: 0}}
+            animate={{opacity: 1}}
+            className="absolute rounded-2xl pointer-events-none"
+          />
+        )}
+      </AnimatePresence>
+
+      <div className="flex flex-col gap-y-0.5">
+        {items.map((item, index) => (
+          <Tooltip key={item.path} isDark={isDark} content={item.title}>
+            <motion.button
+              whileTap={{scale: 0.95}}
+              className="relative group"
+              onClick={() => handleClick(item)}
+              onHoverEnd={() => setHoveredIndex(null)}
+              onHoverStart={() => setHoveredIndex(index)}>
+              {/* Active indicator */}
+              <AnimatePresence>
+                {activePage === item.path && (
+                  <motion.div
+                    transition={{
+                      type: 'spring',
+                      stiffness: 500,
+                      damping: 30,
+                    }}
+                    initial={false}
+                    layoutId="activeIndicator"
+                    className="absolute inset-0 rounded-xl shadow-lg bg-primary"
+                  />
+                )}
+              </AnimatePresence>
+
+              {/* Icon container */}
               <motion.div
                 style={{
-                  background:
-                    `radial-gradient(300px circle at ${mousePosition.y}px` +
-                    ` ${mousePosition.x}px, ${primaryColor}40, transparent 40%)`,
+                  color: activePage === item.path ? '#ffffff' : mutedText,
                 }}
-                exit={{opacity: 0}}
-                initial={{opacity: 0}}
-                animate={{opacity: 1}}
-                className="absolute inset-0 rounded-2xl pointer-events-none"
-              />
-            )}
-          </AnimatePresence>
-
-          {/* Animated border line following cursor */}
-          <AnimatePresence>
-            {isHoveringDock && (
-              <motion.div
-                style={{
-                  inset: '-1px',
-                  padding: '2px',
-                  background:
-                    `radial-gradient(100px circle at ${mousePosition.y}px` +
-                    ` ${mousePosition.x}px, ${primaryColor}, transparent 70%)`,
-                  WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                  WebkitMaskComposite: 'xor',
-                  maskComposite: 'exclude',
+                animate={{
+                  scale: hoveredIndex === index ? 1.15 : 1,
+                  y: hoveredIndex === index ? -2 : 0,
                 }}
-                exit={{opacity: 0}}
-                initial={{opacity: 0}}
-                animate={{opacity: 1}}
-                className="absolute rounded-2xl pointer-events-none"
-              />
-            )}
-          </AnimatePresence>
-
-          <div className="flex flex-col gap-y-0.5 relative z-10">
-            {items.map((item, index) => (
-              <motion.button
-                key={item.path}
-                whileTap={{scale: 0.95}}
-                className="relative group"
-                onClick={() => handleClick(item)}
-                onHoverEnd={() => setHoveredIndex(null)}
-                onHoverStart={() => setHoveredIndex(index)}>
-                {/* Active indicator */}
+                whileHover={{color: textColor}}
+                transition={{type: 'spring', stiffness: 400, damping: 25}}
+                className="relative flex items-center justify-center size-12 rounded-xl">
+                {/* Hover background glow */}
                 <AnimatePresence>
-                  {activePage === item.path && (
+                  {hoveredIndex === index && activePage !== item.path && (
                     <motion.div
-                      transition={{
-                        type: 'spring',
-                        stiffness: 500,
-                        damping: 30,
+                      style={{
+                        backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
                       }}
-                      initial={false}
-                      layoutId="activeIndicator"
-                      className="absolute inset-0 rounded-xl shadow-lg bg-primary"
+                      transition={{duration: 0.2}}
+                      exit={{opacity: 0, scale: 0.8}}
+                      animate={{opacity: 1, scale: 0.9}}
+                      initial={{opacity: 0, scale: 0.8}}
+                      className="absolute inset-0 rounded-xl"
                     />
                   )}
                 </AnimatePresence>
 
-                {/* Icon container */}
                 <motion.div
-                  style={{
-                    color: activePage === item.path ? '#ffffff' : mutedText,
-                  }}
                   animate={{
-                    scale: hoveredIndex === index ? 1.15 : 1,
-                    y: hoveredIndex === index ? -2 : 0,
+                    scale: hoveredIndex === index ? [1, 1.1, 1] : 1,
                   }}
-                  whileHover={{color: textColor}}
-                  transition={{type: 'spring', stiffness: 400, damping: 25}}
-                  className="relative flex items-center justify-center size-12 rounded-xl">
-                  {/* Hover background glow */}
-                  <AnimatePresence>
-                    {hoveredIndex === index && activePage !== item.path && (
-                      <motion.div
-                        style={{
-                          backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
-                        }}
-                        transition={{duration: 0.2}}
-                        exit={{opacity: 0, scale: 0.8}}
-                        animate={{opacity: 1, scale: 0.9}}
-                        initial={{opacity: 0, scale: 0.8}}
-                        className="absolute inset-0 rounded-xl"
-                      />
-                    )}
-                  </AnimatePresence>
-
-                  <motion.div
-                    animate={{
-                      scale: hoveredIndex === index ? [1, 1.1, 1] : 1,
-                    }}
-                    className="size-5"
-                    transition={{duration: 0.3}}>
-                    {item.icon}
-                  </motion.div>
-
-                  {/* Badge */}
-                  {item.badge && (
-                    <motion.div
-                      initial={{scale: 0}}
-                      animate={{scale: 1}}
-                      className={`absolute ${typeof item.badge === 'boolean' ? 'top-1 right-1' : 'top-0 right-0'}`}>
-                      {typeof item.badge === 'boolean' ? (
-                        <div className="size-2 bg-success rounded-full" />
-                      ) : (
-                        <div
-                          className={
-                            'px-1.5 py-0.5 bg-success text-white text-xs font-bold rounded-full' +
-                            ' min-w-[1.25rem] flex items-center justify-center'
-                          }>
-                          {item.badge}
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
+                  className="size-5"
+                  transition={{duration: 0.3}}>
+                  {item.icon}
                 </motion.div>
 
-                {/* Tooltip */}
-                <AnimatePresence>
-                  {hoveredIndex === index && (
-                    <motion.div
-                      exit={{opacity: 0, x: -10}}
-                      animate={{opacity: 1, x: 0}}
-                      transition={{duration: 0.2}}
-                      initial={{opacity: 0, x: -10}}
-                      className="absolute left-full ml-3 top-1/2 -translate-y-1/2 pointer-events-none z-30">
+                {/* Badge */}
+                {item.badge && (
+                  <motion.div
+                    initial={{scale: 0}}
+                    animate={{scale: 1}}
+                    className={`absolute ${typeof item.badge === 'boolean' ? 'top-1 right-1' : 'top-0 right-0'}`}>
+                    {typeof item.badge === 'boolean' ? (
+                      <div className="size-2 bg-success rounded-full" />
+                    ) : (
                       <div
-                        style={{
-                          backgroundColor: isDark ? '#2d2d32' : '#ffffff',
-                          color: textColor,
-                          border: `1px solid ${borderColor}`,
-                        }}
-                        className="px-3 py-2 rounded-xl shadow-xl whitespace-nowrap text-sm font-medium">
-                        {item.title}
-                        <div
-                          style={{
-                            borderRightColor: isDark ? '#2d2d32' : '#ffffff',
-                          }}
-                          className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent"
-                        />
+                        className={
+                          'px-1.5 py-0.5 bg-success text-white text-xs font-bold rounded-full' +
+                          ' min-w-[1.25rem] flex items-center justify-center'
+                        }>
+                        {item.badge}
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.button>
-            ))}
-          </div>
-        </div>
-      </motion.div>
-    </div>
+                    )}
+                  </motion.div>
+                )}
+              </motion.div>
+
+              {/* Tooltip is now handled by the Tooltip component */}
+            </motion.button>
+          </Tooltip>
+        ))}
+      </div>
+    </motion.div>
   );
 }
