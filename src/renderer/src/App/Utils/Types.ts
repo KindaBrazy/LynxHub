@@ -27,7 +27,6 @@ export type HeroToastPlacement =
 export type NavItem = {
   title: string;
   icon: ReactNode;
-  onClick?: () => void;
   badge?: ReactNode | boolean;
   path: string;
 };
