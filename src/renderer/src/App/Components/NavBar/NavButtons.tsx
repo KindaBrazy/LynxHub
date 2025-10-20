@@ -89,7 +89,7 @@ export const ContentsNav = () => {
 
   return (
     <>
-      <NavigationDock maxItems={5} items={contentItems} />
+      <NavigationDock maxItems={6} items={contentItems} />
       {!isEmpty(contentBar) && contentBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
@@ -124,7 +124,7 @@ export function SettingsNav() {
 
   return (
     <>
-      <NavigationDock items={settingsItems} />
+      <NavigationDock maxItems={5} items={settingsItems} />
       {!isEmpty(settingsBar) && settingsBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );

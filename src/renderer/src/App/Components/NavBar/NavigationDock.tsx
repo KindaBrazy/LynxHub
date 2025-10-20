@@ -1,5 +1,5 @@
 import {AnimatePresence, motion} from 'framer-motion';
-import {memo, MouseEvent, ReactNode, useCallback, useRef, useState} from 'react';
+import {memo, MouseEvent, ReactNode, useCallback, useRef, useState, WheelEvent} from 'react';
 import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../Breadcrumbs';
@@ -15,8 +15,50 @@ export type NavItem = {
   path: string;
 };
 
-type Props = {items: NavItem[]};
-const NavigationDock = memo(({items}: Props) => {
+type Props = {
+  items: NavItem[];
+  /** Maximum number of items to display before scrolling is enabled. */
+  maxItems?: number;
+};
+
+const ScrollArrow = memo(
+  ({direction, onClick, isDark}: {direction: 'up' | 'down'; onClick: () => void; isDark: boolean}) => {
+    const mutedText = isDark ? '#9ca3af' : '#6b7280';
+    const hoverBg = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+
+    return (
+      <motion.button
+        onClick={onClick}
+        style={{color: mutedText}}
+        whileHover={{backgroundColor: hoverBg, color: isDark ? '#e5e7eb' : '#1f2937'}}
+        className="flex items-center justify-center w-full py-2 rounded-xl cursor-pointer pointer-events-auto">
+        {direction === 'up' ? (
+          <svg
+            fill="none"
+            strokeWidth={2.5}
+            className="size-4"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+          </svg>
+        ) : (
+          <svg
+            fill="none"
+            strokeWidth={2.5}
+            className="size-4"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+          </svg>
+        )}
+      </motion.button>
+    );
+  },
+);
+
+const NavigationDock = memo(({items, maxItems = 7}: Props) => {
   const isDark = useAppState('darkMode');
   const activePage = useTabsState('activePage');
 
@@ -24,7 +66,48 @@ const NavigationDock = memo(({items}: Props) => {
   const [isHoveringDock, setIsHoveringDock] = useState(false);
   const dockRef = useRef<HTMLDivElement>(null);
 
+  const [startIndex, setStartIndex] = useState(0);
+  const lastScrollTime = useRef(0);
+
   const primaryColor = isDark ? '#0050EF' : '#00A9FF';
+
+  const totalItems = items.length;
+  const showScrollControls = maxItems && totalItems > maxItems;
+  const canScrollUp = startIndex > 0;
+  const canScrollDown = startIndex + maxItems < totalItems;
+
+  // Constants for calculating scroll position
+  const ITEM_HEIGHT = 48; // from size-12 (3rem = 48px)
+  const GAP = 2; // from gap-y-0.5 (0.125rem = 2px)
+  const ITEM_TOTAL_HEIGHT = ITEM_HEIGHT + GAP;
+
+  const handleScrollUp = useCallback(() => {
+    setStartIndex(prev => Math.max(0, prev - 1));
+  }, []);
+
+  const handleScrollDown = useCallback(() => {
+    if (!maxItems) return;
+    setStartIndex(prev => Math.min(totalItems - maxItems, prev + 1));
+  }, [totalItems, maxItems]);
+
+  const handleWheel = useCallback(
+    (e: WheelEvent<HTMLDivElement>) => {
+      if (!showScrollControls) return;
+
+      const now = Date.now();
+      if (now - lastScrollTime.current < 150) {
+        return;
+      }
+      lastScrollTime.current = now;
+
+      if (e.deltaY > 0 && canScrollDown) {
+        handleScrollDown();
+      } else if (e.deltaY < 0 && canScrollUp) {
+        handleScrollUp();
+      }
+    },
+    [showScrollControls, canScrollUp, canScrollDown, handleScrollUp, handleScrollDown],
+  );
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!dockRef.current) return;
@@ -34,6 +117,17 @@ const NavigationDock = memo(({items}: Props) => {
       y: e.clientX - rect.left,
     });
   };
+
+  const listContent = (
+    <motion.div
+      className="flex flex-col gap-y-0.5"
+      transition={{type: 'spring', stiffness: 400, damping: 40}}
+      animate={{y: showScrollControls ? -startIndex * ITEM_TOTAL_HEIGHT : 0}}>
+      {items.map(item => (
+        <RenderItem item={item} isDark={isDark} activePage={activePage} key={`${item.title}_nav`} />
+      ))}
+    </motion.div>
+  );
 
   return (
     <motion.div
@@ -85,11 +179,57 @@ const NavigationDock = memo(({items}: Props) => {
         )}
       </AnimatePresence>
 
-      <div className="flex flex-col gap-y-0.5">
-        {items.map(item => (
-          <RenderItem item={item} isDark={isDark} activePage={activePage} key={`${item.title}_nav`} />
-        ))}
+      {/* --- MODIFICATION START --- */}
+      <div className="relative">
+        {/* Viewport for list items */}
+        {showScrollControls ? (
+          <div
+            style={{
+              height: maxItems * ITEM_TOTAL_HEIGHT - GAP,
+            }}
+            onWheel={handleWheel}
+            className="overflow-hidden">
+            {listContent}
+          </div>
+        ) : (
+          listContent
+        )}
+
+        {/* Scroll Up Arrow Overlay */}
+        <AnimatePresence>
+          {showScrollControls && canScrollUp && (
+            <motion.div
+              style={{
+                background: `linear-gradient(to bottom, ${isDark ? '#121217' : '#FFFFFF'} 20%, transparent)`,
+              }}
+              exit={{opacity: 0}}
+              initial={{opacity: 0}}
+              animate={{opacity: 1}}
+              transition={{duration: 0.2}}
+              className="absolute top-0 left-0 right-0 pointer-events-none rounded-xl">
+              <ScrollArrow direction="up" isDark={isDark} onClick={handleScrollUp} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Scroll Down Arrow Overlay */}
+        <AnimatePresence>
+          {showScrollControls && canScrollDown && (
+            <motion.div
+              style={{
+                background: `linear-gradient(to top, ${isDark ? '#121217' : '#FFFFFF'} 20%, transparent)`,
+              }}
+              exit={{opacity: 0}}
+              initial={{opacity: 0}}
+              animate={{opacity: 1}}
+              transition={{duration: 0.2}}
+              className="absolute bottom-0 left-0 right-0 pointer-events-none rounded-xl">
+              <ScrollArrow isDark={isDark} direction="down" onClick={handleScrollDown} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
+      {/* --- MODIFICATION END --- */}
     </motion.div>
   );
 });
