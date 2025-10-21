@@ -15,6 +15,14 @@ if (collectErrors) {
       integrations: [extraErrorDataIntegration()],
       beforeSend: event => {
         const exception = event.exception?.values?.[0];
+
+        const isIpcInvokeError = exception?.value?.includes('Error invoking remote method');
+
+        if (isIpcInvokeError) {
+          console.log('Sentry event from IPC invocation detected. Dropping.');
+          return null;
+        }
+
         if (!exception?.stacktrace?.frames) {
           return event;
         }
