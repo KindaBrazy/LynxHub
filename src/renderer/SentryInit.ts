@@ -16,11 +16,16 @@ if (collectErrors) {
       beforeSend: event => {
         const exception = event.exception?.values?.[0];
 
+        const exceptionValue = exception?.value;
         const isIpcInvokeError = exception?.value?.includes('Error invoking remote method');
 
         if (isIpcInvokeError) {
-          console.log('Sentry event from IPC invocation detected. Dropping.');
-          return null;
+          const isNoHandlerRegistered = exceptionValue?.includes("No handler registered for '");
+
+          if (!isNoHandlerRegistered) {
+            console.log('Sentry event from IPC invocation handler failure detected. Dropping.');
+            return null;
+          }
         }
 
         if (!exception?.stacktrace?.frames) {
