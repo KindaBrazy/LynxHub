@@ -57,7 +57,6 @@ if (collectErrors) {
         return event;
       },
     },
-    // @ts-ignore
     reactInit,
   );
 }
