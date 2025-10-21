@@ -18,7 +18,7 @@ const setRemote: SetRemoteModule = __federation_method_setRemote;
 const getRemote: GetRemoteModule = __federation_method_getRemote;
 
 export async function loadExtensions() {
-  let importedExtensions: ExtensionImport_Renderer[];
+  let importedExtensions: (ExtensionImport_Renderer | null)[];
   let extensionIds: string[];
 
   if (isDev()) {
@@ -40,10 +40,19 @@ export async function loadExtensions() {
 
     extensionAddresses.forEach((url, index) => setRemote(extensionIds[index], {format: 'esm', from: 'vite', url}));
 
-    importedExtensions = await Promise.all(extensionIds.map(folderName => getRemote(folderName, 'Extension')));
+    importedExtensions = await Promise.all(
+      extensionIds.map(folderName => {
+        try {
+          return getRemote(folderName, 'Extension');
+        } catch (e) {
+          console.error('Failed to load extension renderer entry: ', folderName, 'Error: ', e);
+          return null;
+        }
+      }),
+    );
   }
 
-  const extensionsWithIds = importedExtensions.map((module, index) => ({
+  const extensionsWithIds = compact(importedExtensions).map((module, index) => ({
     id: extensionIds[index],
     module,
   }));

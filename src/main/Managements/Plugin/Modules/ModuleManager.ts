@@ -90,7 +90,7 @@ export default class ModuleManager {
               const moduleUrl = `file://${fullModulePath}`;
               return (await import(moduleUrl)) as MainModuleImportType;
             } catch (e) {
-              console.error('Failed to load module entry: ', modulePath, 'Error: ', e);
+              console.error('Failed to load module main entry: ', modulePath, 'Error: ', e);
               return null;
             }
           }),

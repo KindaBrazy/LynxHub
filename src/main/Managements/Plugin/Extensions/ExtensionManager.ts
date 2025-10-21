@@ -35,7 +35,7 @@ export default class ExtensionManager {
             await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
           } catch (e) {
             // TODO: show ui to user failed to load
-            console.error('Failed to load extension entry: ', extensionPath, 'Error: ', e);
+            console.error('Failed to load extension main entry: ', extensionPath, 'Error: ', e);
             return;
           }
         }),

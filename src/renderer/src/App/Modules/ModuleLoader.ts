@@ -1,3 +1,4 @@
+import {compact} from 'lodash';
 import {useSyncExternalStore} from 'react';
 
 import {AvailablePageIDs} from '../../../../cross/CrossConstants';
@@ -271,7 +272,7 @@ async function emitLoaded(
  */
 const loadModules = async () => {
   try {
-    let importedModules: {path: string; module: RendererModuleImportType}[];
+    let importedModules: ({path: string; module: RendererModuleImportType} | null)[];
 
     if (isDev()) {
       const devImport = await import('../../../../../module/src/renderer');
@@ -283,8 +284,13 @@ const loadModules = async () => {
       // Use Promise.all for concurrent module imports
       importedModules = await Promise.all(
         moduleAddresses.map(async path => {
-          const module = await import(/* @vite-ignore */ `${path}/scripts/renderer.mjs?${Date.now()}`);
-          return {path, module};
+          try {
+            const module = await import(/* @vite-ignore */ `${path}/scripts/renderer.mjs?${Date.now()}`);
+            return {path, module};
+          } catch (e) {
+            console.error('Failed to load module renderer entry: ', path, 'Error: ', e);
+            return null;
+          }
         }),
       );
     }
@@ -298,7 +304,7 @@ const loadModules = async () => {
     const newCardSearchData: CardSearchData = [];
 
     // Optimize module and card aggregation using reduce for better performance
-    importedModules.reduce((acc, {module}) => {
+    compact(importedModules).reduce((acc, {module}) => {
       const importedModule = module as RendererModuleImportType;
 
       importedModule.default.forEach(mod => {
