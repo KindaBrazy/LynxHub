@@ -4,6 +4,7 @@ import {ExtensionEvents, ExtensionEvents_IPC} from '../../../../cross/plugin/Ext
 import {ExtensionData_Renderer, ExtensionImport_Renderer} from '../../../../cross/plugin/ExtensionTypes_Renderer';
 import {ExtensionRendererApi} from '../../../../cross/plugin/ExtensionTypes_Renderer_Api';
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../Modules/ModuleLoader';
+import {initPluginBrowserSentry} from '../PluginSentry';
 import rendererIpc from '../RendererIpc';
 
 type EmitterType = Emitter<ExtensionEvents> & {all: Map<string, unknown[]>};
@@ -435,6 +436,8 @@ export const extensionRendererApi: ExtensionRendererApi = {
   setCards_TerminalPreCommands: (id: string, preCommands: string[]) => {
     rendererIpc.storageUtils.setCardTerminalPreCommands(id, preCommands);
   },
+
+  initBrowserSentry: initPluginBrowserSentry,
 };
 
 export default function extensionLoader(extensions: {id: string; module: ExtensionImport_Renderer}[]) {
