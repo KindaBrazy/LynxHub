@@ -1,3 +1,4 @@
+import {Scope} from '@sentry/node';
 import {MenuItem, MenuItemConstructorOptions} from 'electron';
 
 import DiscordRpcManager from '../../DiscordRpcManager';
@@ -39,6 +40,8 @@ export type ExtensionMainApi = {
    * Corresponds to the `ready-to-show` event.
    */
   onReadyToShow: ApiFC;
+
+  initNodeSentry: (dsn: string) => Scope;
 
   /** Add a new item to the tray menu at a specific index. */
   trayMenu_AddItem: ApiFC_Tray;

@@ -1,3 +1,4 @@
+import {initPluginNodeSentry} from '../PluginSentry';
 import {EMenuItem, ExtensionData_Main, ExtensionMainApi} from './ExtensionTypes_Main';
 
 export default class ExtensionApi {
@@ -17,6 +18,7 @@ export default class ExtensionApi {
       onAppReady: fc => this.extensionsData.onAppReady.push(fc),
       onReadyToShow: fc => this.extensionsData.onReadyToShow.push(fc),
       trayMenu_AddItem: fc => this.extensionsData.trayMenu_AddItem.push(fc),
+      initNodeSentry: initPluginNodeSentry,
     };
   }
 

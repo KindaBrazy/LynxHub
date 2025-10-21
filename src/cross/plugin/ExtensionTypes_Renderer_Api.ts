@@ -1,4 +1,5 @@
 import {Reducer} from '@reduxjs/toolkit';
+import {Scope} from '@sentry/browser';
 import {Emitter} from 'mitt';
 import {FC} from 'react';
 
@@ -389,4 +390,6 @@ export type ExtensionRendererApi = {
   modulesData?: ModuleData;
 
   rendererIpc?: any;
+
+  initBrowserSentry: (dsn: string) => Scope;
 };
