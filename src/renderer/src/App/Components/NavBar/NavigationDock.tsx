@@ -1,5 +1,5 @@
 import {AnimatePresence, motion} from 'framer-motion';
-import {memo, MouseEvent, ReactNode, useCallback, useRef, useState, WheelEvent} from 'react';
+import {memo, MouseEvent, ReactNode, useCallback, useMemo, useRef, useState, WheelEvent} from 'react';
 import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../Breadcrumbs';
@@ -217,9 +217,13 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
+  const isActive = useMemo(() => activePage === item.path, [activePage, item.path]);
+
   const handleClick = useCallback(() => {
+    if (isActive) return;
+
     const {title, path} = item;
-    if (activePage === item.path) return;
+
     AddBreadcrumb_Renderer(`Nav Button: pageId:${path}, title:${title}`);
     dispatch(
       tabsActions.setActivePage({
@@ -228,7 +232,7 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
         isTerminal: false,
       }),
     );
-  }, [item, activePage, dispatch]);
+  }, [item, isActive, dispatch]);
 
   const textColor = isDark ? '#e5e7eb' : '#1f2937';
   const mutedText = isDark ? '#9ca3af' : '#6b7280';
@@ -243,7 +247,7 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
         onHoverStart={() => setIsHovered(true)}>
         {/* Active indicator */}
         <AnimatePresence>
-          {activePage === item.path && (
+          {isActive && (
             <motion.div
               transition={{
                 type: 'spring',
@@ -260,7 +264,7 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
         {/* Icon container */}
         <motion.div
           style={{
-            color: activePage === item.path ? '#ffffff' : mutedText,
+            color: isActive ? '#ffffff' : mutedText,
           }}
           animate={{
             scale: isHovered ? 1.15 : 1,
