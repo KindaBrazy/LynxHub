@@ -1,5 +1,6 @@
 import path from 'node:path';
 
+import {captureException} from '@sentry/electron/main';
 import {ipcMain} from 'electron';
 import {compact, isEmpty} from 'lodash';
 import pty from 'node-pty';
@@ -91,6 +92,7 @@ export default class ModuleManager {
               return (await import(moduleUrl)) as MainModuleImportType;
             } catch (e) {
               console.error('Failed to load module main entry: ', modulePath, 'Error: ', e);
+              captureException(e);
               return null;
             }
           }),

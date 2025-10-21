@@ -1,5 +1,7 @@
 import path from 'node:path';
 
+import {captureException} from '@sentry/electron/main';
+
 import {isDev} from '../../../../cross/CrossUtils';
 import DiscordRpcManager from '../../DiscordRpcManager';
 import ElectronAppManager from '../../ElectronAppManager';
@@ -36,6 +38,7 @@ export default class ExtensionManager {
           } catch (e) {
             // TODO: show ui to user failed to load
             console.error('Failed to load extension main entry: ', extensionPath, 'Error: ', e);
+            captureException(e);
             return;
           }
         }),
