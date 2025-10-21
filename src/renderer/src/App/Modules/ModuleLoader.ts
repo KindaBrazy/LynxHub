@@ -1,3 +1,4 @@
+import {captureException} from '@sentry/electron/renderer';
 import {compact} from 'lodash';
 import {useSyncExternalStore} from 'react';
 
@@ -289,6 +290,7 @@ const loadModules = async () => {
             return {path, module};
           } catch (e) {
             console.error('Failed to load module renderer entry: ', path, 'Error: ', e);
+            captureException(e);
             return null;
           }
         }),

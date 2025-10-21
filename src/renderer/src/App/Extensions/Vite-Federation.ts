@@ -1,4 +1,5 @@
 import {__federation_method_getRemote, __federation_method_setRemote} from '__federation__';
+import {captureException} from '@sentry/electron/renderer';
 import {compact} from 'lodash';
 
 import {isDev} from '../../../../cross/CrossUtils';
@@ -46,6 +47,7 @@ export async function loadExtensions() {
           return getRemote(folderName, 'Extension');
         } catch (e) {
           console.error('Failed to load extension renderer entry: ', folderName, 'Error: ', e);
+          captureException(e);
           return null;
         }
       }),

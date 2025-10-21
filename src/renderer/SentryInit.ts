@@ -14,10 +14,33 @@ if (collectErrors) {
       },
       integrations: [extraErrorDataIntegration()],
       beforeSend: event => {
+        const exception = event.exception?.values?.[0];
+        if (!exception?.stacktrace?.frames) {
+          return event;
+        }
+
+        const moduleLoadPattern = /\/scripts\/[^/]+\.(?:m?js|ts)/i;
+
+        const extensionLoadPattern = /\/([^/]+)\/scripts\//i;
+
+        const isFromPluginCode = exception.stacktrace.frames.some(frame => {
+          if (!frame.filename) return false;
+
+          if (extensionLoadPattern.test(frame.filename)) return true;
+
+          return moduleLoadPattern.test(frame.filename);
+        });
+
+        if (isFromPluginCode) {
+          console.log('Sentry event from dynamically loaded user code (module or extension) detected. Dropping.');
+          return null;
+        }
+
         event.extra = {
           ...event.extra,
           uptime: formatTime(Math.floor((Date.now() - window.appStartTime) / 1000)),
         };
+
         return event;
       },
     },

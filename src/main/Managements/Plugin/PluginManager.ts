@@ -2,6 +2,7 @@ import {createServer} from 'node:http';
 import {dirname, join} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {captureException} from '@sentry/electron/main';
 import {constants, promises, readdirSync} from 'graceful-fs';
 import {includes, isString} from 'lodash';
 import portFinder from 'portfinder';
@@ -144,6 +145,7 @@ export class PluginManager {
         resolve();
       } catch (error: any) {
         console.error(`Loading Plugin Error: `, error);
+        captureException(error);
         resolve();
       }
     });
