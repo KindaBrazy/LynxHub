@@ -36,9 +36,13 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
     [requirementsSatisfied, installingPlugins],
   );
 
+  const restart = () => {
+    rendererIpc.win.changeWinState('restart');
+  };
+
   const onComplete = useCallback(() => {
     rendererIpc.storage.update('app', {inited: true});
-    rendererIpc.win.changeWinState('restart');
+    restart();
   }, []);
 
   const checkPwsh = useCallback(() => {
@@ -202,7 +206,11 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
                     />
                   </motion.div>
 
-                  <motion.div variants={cardVariants} className="flex justify-end items-center">
+                  <motion.div variants={cardVariants} className="flex justify-between items-center">
+                    <Button variant="flat" color="warning" onPress={restart}>
+                      Restart App
+                    </Button>
+
                     <Button isDisabled={!canGoNext} onPress={() => setStep(2)}>
                       {canGoNext
                         ? 'Continue'
