@@ -8,21 +8,46 @@ export function listenToInitChannels() {
   ipcMain.handle(initChannels.checkGitInstalled, () => {
     return new Promise((resolve, reject) => {
       const commandProcess = spawn('git', ['--version']);
-      commandProcess.stdout.on('data', data => {
-        const versionParts = data.toString().trim().split(' ');
-        resolve(`V${versionParts.slice(2).join('.').trim()}`);
-      });
+
+      let stdoutData = '';
 
       commandProcess.on('error', err => {
-        console.error('Failed to check version: ', err);
-        reject(undefined);
+        console.error('Failed to start git process. Is Git installed and in your PATH?', err);
+
+        reject('Git is not installed or could not be found in the system PATH.');
       });
+
+      commandProcess.stdout.on('data', data => {
+        stdoutData += data.toString();
+      });
+
       commandProcess.stderr.on('data', data => {
-        console.error('Failed to check version: ', data);
-        reject(undefined);
+        console.error(`stderr: ${data}`);
+      });
+
+      commandProcess.on('close', code => {
+        if (code !== 0) {
+          console.error(`git process exited with error code ${code}`);
+          reject(`Git process exited with error code: ${code}`);
+          return;
+        }
+
+        if (stdoutData) {
+          const versionString = stdoutData.trim();
+          const versionParts = versionString.split(' ');
+
+          if (versionParts.length >= 3) {
+            resolve(versionParts[2]);
+          } else {
+            resolve(versionString);
+          }
+        } else {
+          reject('Git command ran successfully but produced no output.');
+        }
       });
     });
   });
+
   ipcMain.handle(initChannels.checkPwsh7Installed, () => {
     return new Promise((resolve, reject) => {
       // Use 'pwsh' to specifically target PowerShell 7+
