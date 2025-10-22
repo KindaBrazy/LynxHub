@@ -79,20 +79,20 @@ export default function Initializer_Plugins({
   };
 
   return (
-    <div className="bg-white/6 p-4 rounded-xl flex flex-col">
+    <div className="bg-foreground/4 p-4 rounded-xl flex flex-col">
       <div className="flex items-center justify-between mb-3">
         <div className="font-semibold">Extensions</div>
-        <div className="text-xs text-white/60">Choose which to install</div>
+        <div className="text-xs text-foreground/60">Choose which to install</div>
       </div>
 
       <div className="flex-1 overflow-hidden mb-4">
         {plugins.length === 0 && (
-          <div className="text-white/60 text-sm">
+          <div className="text-foreground/60 text-sm">
             No extensions provided — pass an
             <code className="bg-white/6 px-1 rounded">extensions</code> prop.
           </div>
         )}
-        <div className="light flex flex-col gap-y-6 overflow-hidden size-full p-2">
+        <div className="flex flex-col gap-y-6 overflow-hidden size-full p-2">
           {plugins.map(ext => (
             <Checkbox
               classNames={{
@@ -100,9 +100,9 @@ export default function Initializer_Plugins({
                   'inline-flex w-full max-w-md bg-foreground/0',
                   'hover:bg-foreground/10 items-center justify-start',
                   'cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent',
-                  'data-[selected=true]:bg-foreground/30 transition duration-300',
+                  'data-[selected=true]:bg-foreground-100 transition duration-300',
                 ),
-                label: 'w-full text-white',
+                label: 'w-full',
               }}
               key={ext.id}
               color="default"
@@ -120,7 +120,7 @@ export default function Initializer_Plugins({
         </div>
       </div>
 
-      <Button onPress={install} className="light" isLoading={isInstalling} isDisabled={!requirementsSatisfied}>
+      <Button onPress={install} isLoading={isInstalling} isDisabled={!requirementsSatisfied}>
         {requirementsSatisfied ? 'Install selected' : 'Complete Requirements'}
       </Button>
     </div>

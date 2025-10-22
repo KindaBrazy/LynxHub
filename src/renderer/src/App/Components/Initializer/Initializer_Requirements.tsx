@@ -60,7 +60,7 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
     return (
       <Alert
         endContent={
-          <Button size="sm" color={color} className="light" onPress={btnPress} variant={appModule ? 'solid' : 'flat'}>
+          <Button size="sm" color={color} onPress={btnPress} variant={appModule ? 'solid' : 'flat'}>
             {btnText}
           </Button>
         }
@@ -186,7 +186,7 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
   }, [start]);
 
   return (
-    <div className={`bg-white/6 p-4 rounded-xl ${isFailed && 'flex flex-col justify-between'}`}>
+    <div className={`bg-foreground/4 p-4 rounded-xl ${isFailed && 'flex flex-col justify-between'}`}>
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="font-semibold">Requirements</div>
