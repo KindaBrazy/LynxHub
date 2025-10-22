@@ -26,6 +26,7 @@ export default function CheckUpdateInterval() {
         endContent="Minutes"
         value={updateInterval}
         onValueChange={onChange}
+        aria-label="Card Update Interval"
         startContent={<Clock_Icon className="size-5" />}
       />
     </div>
