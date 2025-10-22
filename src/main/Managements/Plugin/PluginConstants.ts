@@ -8,7 +8,7 @@ export const pluginFolders = {
   },
   extension: {
     oldFolder: 'Extensions',
-    mainScript: 'scripts/main/mainEntry.mjs',
+    mainScript: 'scripts/main/mainEntry.cjs',
     rendererScript: 'scripts/renderer/rendererEntry.mjs',
   },
 };

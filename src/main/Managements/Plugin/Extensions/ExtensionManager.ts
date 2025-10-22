@@ -28,7 +28,7 @@ export default class ExtensionManager {
       await Promise.all(
         extensionFolders.map(async extensionPath => {
           try {
-            const fullExtensionPath = path.join(extensionPath, 'scripts', 'main', 'mainEntry.mjs');
+            const fullExtensionPath = path.join(extensionPath, 'scripts', 'main', 'mainEntry.cjs');
 
             const extensionUrl = `file://${fullExtensionPath}`;
 
