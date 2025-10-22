@@ -7,7 +7,7 @@ export const SettingsCardId = 'settings_card_elem';
 /** Reporting app issues on GitHub */
 export default function SettingsCard() {
   return (
-    <SettingsSection id={SettingsCardId} title="Customize Card" icon={<EditCard_Icon className="size-5" />} itemsCenter>
+    <SettingsSection title="Card" id={SettingsCardId} icon={<EditCard_Icon className="size-5" />} itemsCenter>
       <CheckUpdateInterval />
     </SettingsSection>
   );
