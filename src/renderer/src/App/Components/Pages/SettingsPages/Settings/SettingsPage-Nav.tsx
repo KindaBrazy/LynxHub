@@ -38,37 +38,37 @@ const groupSections: GroupProps[] = [
     items: [
       {
         title: 'General',
-        icon: <Tuning_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        icon: <Tuning_Icon className="size-4 shrink-0 " />,
         elementId: settingsSectionId.SettingsGeneralId,
       },
       {
         title: 'Startup',
-        icon: <Rocket_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        icon: <Rocket_Icon className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsStartupId,
       },
       {
-        title: 'Customize Card',
-        icon: <EditCard_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        title: 'Card',
+        icon: <EditCard_Icon className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsCardId,
       },
       {
         title: 'Terminal',
-        icon: <Terminal_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        icon: <Terminal_Icon className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsTerminalId,
       },
       {
         title: 'Browser',
-        icon: <Web_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        icon: <Web_Icon className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsBrowserId,
       },
       {
         title: 'Hotkeys',
-        icon: <Keyboard_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        icon: <Keyboard_Icon className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsHotkeysId,
       },
       {
         title: 'Discord Activity',
-        icon: <Discord_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        icon: <Discord_Icon className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsDiscordId,
       },
     ],
@@ -78,7 +78,7 @@ const groupSections: GroupProps[] = [
     items: [
       {
         title: 'Data',
-        icon: <Database_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+        icon: <Database_Icon className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsDataId,
       },
       {

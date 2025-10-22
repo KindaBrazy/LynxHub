@@ -1,7 +1,6 @@
 import {NumberInput} from '@heroui/react';
 import {useDispatch} from 'react-redux';
 
-import {Clock_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {cardsActions, useCardsState} from '../../../../../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
@@ -19,15 +18,14 @@ export default function CheckUpdateInterval() {
 
   return (
     <div className="w-full text-start flex flex-col gap-y-1">
-      <span>How often to check for AI updates:</span>
       <NumberInput
-        size="sm"
         minValue={2}
-        endContent="Minutes"
         value={updateInterval}
+        labelPlacement="outside"
         onValueChange={onChange}
+        label="Update check frequency:"
         aria-label="Card Update Interval"
-        startContent={<Clock_Icon className="size-5" />}
+        endContent={<span className="text-sm">Minutes</span>}
       />
     </div>
   );
