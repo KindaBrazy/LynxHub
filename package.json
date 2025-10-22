@@ -35,7 +35,7 @@
     "build": "electron-vite build",
     "rebuild": "electron-builder node-gyp-rebuild",
     "removeDotExtension": "node ./removeDotExtensions.js ./extension_out/renderer/rendererEntry.mjs",
-    "build:extension": "electron-vite build --config extension/electron.vite.config.ts && npm run removeDotExtension",
+    "build:extension": "rimraf extension_out && electron-vite build --config extension/electron.vite.config.ts && npm run removeDotExtension",
     "build:module": "rimraf module_out && rollup --config module/rollup.config.mjs",
     "build:unpack": "npm run build && electron-builder --dir --config electron-builder.config.cjs",
     "build:win": "npm run build && electron-builder --win --config electron-builder.config.cjs --publish never",
