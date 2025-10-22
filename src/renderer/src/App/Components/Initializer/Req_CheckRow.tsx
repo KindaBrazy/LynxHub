@@ -51,10 +51,10 @@ export default function CheckRow({label, description, status}: CheckRowProps) {
       className="flex items-center justify-between">
       <div>
         <div className="font-medium">{label}</div>
-        <div className="text-xs text-white/60">{description}</div>
+        <div className="text-xs text-foreground/60">{description}</div>
       </div>
 
-      <div className="flex items-center gap-3 light">
+      <div className="flex items-center gap-3">
         <Chip
           startContent={
             (status.result === 'checking' || status.result === 'installing') && (
@@ -64,7 +64,7 @@ export default function CheckRow({label, description, status}: CheckRowProps) {
           variant="flat"
           color={statusColor(status.result)}
           classNames={{content: 'flex items-center'}}
-          className={`${useBgWhite && 'bg-white/10 text-white/70 '}` + ` text-xs`}>
+          className={`${useBgWhite && 'bg-foreground/10 text-foreground/70 '}` + ` text-xs`}>
           {statusLabel(status)}
         </Chip>
       </div>

@@ -5,7 +5,7 @@ import rendererIpc from '../../RendererIpc';
 import OnboardingWizard from './InitializerWizard';
 
 export default function Initializer() {
-  const [isDone, setIsDone] = useState<boolean>(false);
+  const [isDone, setIsDone] = useState<boolean>(true);
   const [isOldDone, setIsOldDone] = useState<boolean>(false);
 
   useEffect(() => {
@@ -25,15 +25,17 @@ export default function Initializer() {
     });
   }, []);
 
+  if (isDone) return null;
+
   return (
     <Modal
       size="5xl"
       shadow="none"
-      isOpen={!isDone}
       placement="center"
       scrollBehavior="inside"
       className="bg-foreground/0"
       classNames={{wrapper: 'overflow-hidden'}}
+      isOpen
       hideCloseButton>
       <ModalContent>
         <OnboardingWizard isOldDone={isOldDone} />

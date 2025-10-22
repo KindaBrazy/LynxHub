@@ -68,11 +68,7 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
 
   return (
     <div className="w-full max-w-5xl mx-auto mt-12 p-6">
-      <div
-        className={
-          'relative bg-gradient-to-br from-slate-900/95 via-indigo-900/95 to-sky-900/95' +
-          ' rounded-2xl shadow-2xl overflow-hidden'
-        }>
+      <div className={'relative bg-white dark:bg-LynxRaisinBlack rounded-2xl shadow-2xl overflow-hidden'}>
         {/* Background animated shapes */}
         <motion.div
           initial={{opacity: 0}}
@@ -86,8 +82,8 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
             xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient x1="0" x2="1" y1="0" y2="1" id="g1">
-                <stop offset="0%" stopOpacity="0.35" stopColor="#4f46e5" />
-                <stop offset="100%" stopOpacity="0.22" stopColor="#06b6d4" />
+                <stop offset="0%" stopOpacity="0.1" stopColor="#0050EF" />
+                <stop offset="100%" stopOpacity="0.2" stopColor="#AA00FF" />
               </linearGradient>
             </defs>
             <motion.path
@@ -101,34 +97,31 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
         </motion.div>
 
         <div className="relative z-10 p-8 md:p-12">
-          <div className="flex items-center justify-between text-white mb-6">
+          <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <div className="rounded-full bg-white/10 p-1">
+              <div className="rounded-full bg-background/10 p-1">
                 <Image radius="full" className="size-10" src={APP_ICON_TRANSPARENT} />
               </div>
               <div>
                 <div className="text-lg font-semibold">{APP_NAME_VERSION_V}</div>
-                <div className="text-xs text-white/70">Let's get you setup</div>
+                <div className="text-xs text-foreground/70">Let's get you setup</div>
               </div>
             </div>
-            <div className="text-sm text-white/80">{isOldDone ? 'Updating Requirements' : `Step ${step + 1} of 3`}</div>
+            <div className="text-sm text-foreground/80">
+              {isOldDone ? 'Updating Requirements' : `Step ${step + 1} of 3`}
+            </div>
           </div>
 
           {isOldDone ? (
-            <motion.div
-              animate="enter"
-              initial="hidden"
-              key="welcome-back"
-              className="text-white"
-              variants={containerVariants}>
+            <motion.div animate="enter" initial="hidden" key="welcome-back" variants={containerVariants}>
               <motion.h1 variants={cardVariants} className="text-3xl md:text-4xl font-extrabold mb-3">
                 Welcome back to {APP_NAME}!
               </motion.h1>
-              <motion.p variants={cardVariants} className="max-w-2xl text-white/80 mb-6">
+              <motion.p variants={cardVariants} className="max-w-2xl text-foreground/80 mb-6">
                 Updated some requirements for newer versions. Just need to ensure you have PowerShell 7+ installed and
                 you'll be good to go.
               </motion.p>
-              <motion.div variants={cardVariants} className="bg-white/6 p-4 rounded-xl my-6">
+              <motion.div variants={cardVariants} className="bg-foreground/4 p-4 rounded-xl my-6">
                 <CheckRow status={pwsh} label="PowerShell 7+" description="pwsh (v7 or later)" />
                 {pwsh.result === 'failed' && (
                   <Alert
@@ -141,8 +134,7 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
                         }
                         size="sm"
                         variant="flat"
-                        color="warning"
-                        className="light">
+                        color="warning">
                         Website
                       </Button>
                     }
@@ -159,8 +151,8 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
                   color="success"
                   variant="shadow"
                   onPress={onComplete}
+                  className="font-semibold"
                   isDisabled={!pwshSatisfied}
-                  className="light font-semibold"
                   startContent={<CheckDuo_Icon className="size-5" />}>
                   {pwshSatisfied ? `Finish & Restart ${APP_NAME}` : 'Waiting for PowerShell...'}
                 </Button>
@@ -169,23 +161,17 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
           ) : (
             <AnimatePresence mode="popLayout">
               {step === 0 && (
-                <motion.div
-                  exit="exit"
-                  key="welcome"
-                  animate="enter"
-                  initial="hidden"
-                  className="text-white"
-                  variants={containerVariants}>
+                <motion.div exit="exit" key="welcome" animate="enter" initial="hidden" variants={containerVariants}>
                   <motion.h1 variants={cardVariants} className="text-3xl md:text-4xl font-extrabold mb-3">
                     Welcome to {APP_NAME}
                   </motion.h1>
-                  <motion.p variants={cardVariants} className="max-w-2xl text-white/80 mb-6">
+                  <motion.p variants={cardVariants} className="max-w-2xl text-foreground/80 mb-6">
                     Thanks for installing {APP_NAME}! I'll walk you through a quick setup to check requirements and get
                     the tools and extensions you need.
                   </motion.p>
 
                   <motion.div className="flex gap-3" variants={cardVariants}>
-                    <Button color="default" className="light" onPress={() => setStep(1)}>
+                    <Button color="default" onPress={() => setStep(1)}>
                       Start setup
                     </Button>
                   </motion.div>
@@ -193,17 +179,11 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
               )}
 
               {step === 1 && (
-                <motion.div
-                  exit="exit"
-                  key="checks"
-                  animate="enter"
-                  initial="hidden"
-                  className="text-white"
-                  variants={containerVariants}>
+                <motion.div exit="exit" key="checks" animate="enter" initial="hidden" variants={containerVariants}>
                   <motion.h2 variants={cardVariants} className="text-2xl font-bold mb-3">
                     System checks & extensions
                   </motion.h2>
-                  <motion.p variants={cardVariants} className="mb-6 text-white/80">
+                  <motion.p variants={cardVariants} className="mb-6 text-foreground/80">
                     Ensuring all requirements are satisfied and select extensions you are interested to use.
                   </motion.p>
 
@@ -223,7 +203,7 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
                   </motion.div>
 
                   <motion.div variants={cardVariants} className="flex justify-end items-center">
-                    <Button className="light" isDisabled={!canGoNext} onPress={() => setStep(2)}>
+                    <Button isDisabled={!canGoNext} onPress={() => setStep(2)}>
                       {canGoNext
                         ? 'Continue'
                         : installingPlugins
@@ -235,28 +215,22 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
               )}
 
               {step === 2 && (
-                <motion.div
-                  key="done"
-                  exit="exit"
-                  animate="enter"
-                  initial="hidden"
-                  className="text-white"
-                  variants={containerVariants}>
+                <motion.div key="done" exit="exit" animate="enter" initial="hidden" variants={containerVariants}>
                   <motion.h2 variants={cardVariants} className="text-3xl font-extrabold mb-3">
                     All done!
                   </motion.h2>
-                  <motion.p variants={cardVariants} className="text-white/80 mb-6">
+                  <motion.p variants={cardVariants} className="text-foreground/80 mb-6">
                     You're ready to go. Restart {APP_NAME} to apply changes and start using the app.
                   </motion.p>
 
                   <motion.div className="mb-4" variants={cardVariants}>
-                    <div className="bg-white/6 p-4 rounded-lg">
+                    <div className="bg-foreground/4 p-4 rounded-lg">
                       <div className="font-medium mb-2">Summary</div>
-                      <div className="text-sm text-white/70">
+                      <div className="text-sm text-foreground/70">
                         Requirements: {`Git: ${reqStatus.git}`}, {`PowerShell: ${reqStatus.pwsh}`},{' '}
                         {`Module: ${reqStatus.appModule}`}
                       </div>
-                      <div className="text-sm text-white/70 mt-2">
+                      <div className="text-sm text-foreground/70 mt-2">
                         Extensions: {installedPlugins.join(', ') || 'None!'}
                       </div>
                     </div>
@@ -267,7 +241,7 @@ export default function OnboardingWizard({isOldDone}: WizardProps) {
                       color="success"
                       variant="shadow"
                       onPress={onComplete}
-                      className="light font-semibold"
+                      className="font-semibold"
                       startContent={<CheckDuo_Icon className="size-5" />}>
                       Restart {APP_NAME}
                     </Button>
