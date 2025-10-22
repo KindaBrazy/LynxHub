@@ -11,7 +11,7 @@ const isWin = window.osPlatform === 'win32';
 export function InitializerRequirements({setRequirementsSatisfied, start, setReqStatus}: ReqProps) {
   const [git, setGit] = useState<RowData>({result: 'unknown'});
   const [pwsh, setPwsh] = useState<RowData>({result: 'unknown'});
-  const [appModule, setAppModule] = useState<RowData>({result: 'failed'});
+  const [appModule, setAppModule] = useState<RowData>({result: 'unknown'});
 
   const setStat = useCallback(() => {
     setReqStatus({
@@ -30,13 +30,13 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
 
     if (gitStat) {
       title = 'Git is Missing';
-      description = 'Git is required for core functionalities. Please install it to continue.';
+      description = 'Git is required for core functionalities. Please install it and restart.';
       btnText = 'Website';
       btnPress = () => rendererIpc.win.openUrlDefaultBrowser('https://git-scm.com/downloads');
       color = 'danger';
     } else if (pwshStat) {
       title = 'PowerShell 7+ is Missing';
-      description = 'PowerShell 7 or a later version is required. Please install it.';
+      description = 'PowerShell 7 or a later version is required. Please install it and restart.';
       btnText = 'Website';
       btnPress = () =>
         rendererIpc.win.openUrlDefaultBrowser('https://github.com/PowerShell/PowerShell/releases/latest');
@@ -101,21 +101,21 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
 
   const checkGit = useCallback(() => {
     setGit({result: 'checking'});
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve, reject) => {
       rendererIpc.init
         .checkGitInstalled()
         .then(result => {
           if (result) {
             setGit({result: 'ok', label: result});
+            resolve();
           } else {
             setGit({result: 'failed'});
+            reject();
           }
         })
         .catch(() => {
           setGit({result: 'failed'});
-        })
-        .finally(() => {
-          resolve();
+          reject();
         });
     });
   }, []);
@@ -173,20 +173,22 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
     setRequirementsSatisfied(false);
 
     if (start) {
-      checkGit().then(() => {
-        if (isWin) {
-          checkPwsh().then(() => {
+      checkGit()
+        .then(() => {
+          if (isWin) {
+            checkPwsh().then(() => {
+              installModule();
+            });
+          } else {
             installModule();
-          });
-        } else {
-          installModule();
-        }
-      });
+          }
+        })
+        .catch(console.log);
     }
   }, [start]);
 
   return (
-    <div className={`bg-foreground/4 p-4 rounded-xl ${isFailed && 'flex flex-col justify-between'}`}>
+    <div className={`bg-foreground/4 p-4 rounded-xl ${isFailed && 'flex flex-col justify-between gap-y-2'}`}>
       <div>
         <div className="flex items-center justify-between mb-3">
           <div className="font-semibold">Requirements</div>
