@@ -86,12 +86,7 @@ export default function Initializer_Plugins({
       </div>
 
       <div className="flex-1 overflow-hidden mb-4">
-        {plugins.length === 0 && (
-          <div className="text-foreground/60 text-sm">
-            No extensions provided — pass an
-            <code className="bg-white/6 px-1 rounded">extensions</code> prop.
-          </div>
-        )}
+        {plugins.length === 0 && <span className="text-foreground/60 text-sm">No extensions available</span>}
         <div className="flex flex-col gap-y-6 overflow-hidden size-full p-2">
           {plugins.map(ext => (
             <Checkbox
