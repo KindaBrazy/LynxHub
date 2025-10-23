@@ -33,6 +33,7 @@ export default function OnboardingWizard({isUpgradeFlow}: Props) {
         return (
           <StepSystemCheck
             onNext={handleNextStep}
+            installedPlugins={installedPlugins}
             setInstalledPlugins={setInstalledPlugins}
             setRequirementStatus={setRequirementStatus}
           />

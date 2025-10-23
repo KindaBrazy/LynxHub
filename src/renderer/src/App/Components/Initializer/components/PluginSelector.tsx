@@ -17,6 +17,7 @@ type Props = {
   isInstalling: boolean;
   setInstalling: (value: boolean) => void;
   setInstalledPlugins: Dispatch<SetStateAction<string[]>>;
+  installedPlugins: string[];
 };
 
 export default function PluginSelector({
@@ -24,6 +25,7 @@ export default function PluginSelector({
   isInstalling,
   setInstalling,
   setInstalledPlugins,
+  installedPlugins,
 }: Props) {
   const [plugins, setPlugins] = useState<ExtensionItem[]>([]);
   const [selectedPlugins, setSelectedPlugins] = useState<Set<string>>(new Set());
@@ -97,10 +99,18 @@ export default function PluginSelector({
       </div>
 
       <div className="flex-1 overflow-y-auto pr-2 -mr-2 mb-4">
-        {plugins.length === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <span className="text-gray-500 text-sm">No optional extensions available.</span>
-          </div>
+        {isEmpty(plugins) ? (
+          isEmpty(installedPlugins) ? (
+            <div className="flex items-center justify-center h-full">
+              <span className="text-gray-500 text-sm">No optional extensions available.</span>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center h-full">
+              <span className="text-gray-500 text-sm">
+                You're all set! All optional extensions are currently installed.
+              </span>
+            </div>
+          )
         ) : (
           <div className="flex flex-col p-2 gap-y-6 overflow-hidden size-full">
             {plugins.map(ext => (
