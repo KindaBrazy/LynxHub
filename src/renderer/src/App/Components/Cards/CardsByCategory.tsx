@@ -105,7 +105,11 @@ export const PinnedCars = memo(() => {
       icon={<Pin_Color_Icon id="home_category_pin" className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         {isEmpty(pinnedCards) && isEmpty(pinCategory) ? (
-          <Empty className="size-full" description="No Pinned Card to Display!" />
+          <Empty
+            className="size-full"
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description="Pin your favorite cards to easily access them here."
+          />
         ) : (
           <>
             <CardsById cat="pinned" cardIds={pinnedCards} />
