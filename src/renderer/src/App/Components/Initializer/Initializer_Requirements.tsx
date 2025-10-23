@@ -110,40 +110,40 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
             resolve();
           } else {
             setGit({result: 'failed'});
-            reject();
+            reject('Git is not installed.');
           }
         })
-        .catch(() => {
+        .catch(e => {
           setGit({result: 'failed'});
-          reject();
+          reject(`Git is not installed. ${e}`);
         });
     });
   }, []);
 
   const checkPwsh = useCallback(() => {
     setPwsh({result: 'checking'});
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve, reject) => {
       rendererIpc.init
         .checkPwsh7Installed()
         .then(result => {
           if (result) {
             setPwsh({result: 'ok', label: result});
+            resolve();
           } else {
             setPwsh({result: 'failed'});
+            reject('Pwsh 7 is not installed.');
           }
         })
-        .catch(() => {
+        .catch(e => {
           setPwsh({result: 'failed'});
-        })
-        .finally(() => {
-          resolve();
+          reject(`Pwsh 7 is not installed. ${e}`);
         });
     });
   }, []);
 
   const installModule = useCallback(() => {
     setAppModule({result: 'installing'});
-    return new Promise<void>(resolve => {
+    return new Promise<void>((resolve, reject) => {
       rendererIpc.plugins.getInstalledList().then(plugins => {
         if (plugins.find(item => item.url === MAIN_MODULE_URL)) {
           setAppModule({result: 'ok'});
@@ -154,15 +154,15 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
             .then(result => {
               if (result) {
                 setAppModule({result: 'ok'});
+                resolve();
               } else {
                 setAppModule({result: 'failed'});
+                reject('Failed installing module.');
               }
             })
-            .catch(() => {
+            .catch(e => {
               setAppModule({result: 'failed'});
-            })
-            .finally(() => {
-              resolve();
+              reject(`Failed installing module. ${e}`);
             });
         }
       });
@@ -172,19 +172,22 @@ export function InitializerRequirements({setRequirementsSatisfied, start, setReq
   useEffect(() => {
     setRequirementsSatisfied(false);
 
-    if (start) {
-      checkGit()
-        .then(() => {
-          if (isWin) {
-            checkPwsh().then(() => {
-              installModule();
-            });
-          } else {
-            installModule();
-          }
-        })
-        .catch(console.log);
-    }
+    const startCheck = async () => {
+      try {
+        await checkGit();
+
+        if (isWin) {
+          await checkPwsh();
+          await installModule();
+        } else {
+          await installModule();
+        }
+      } catch (e) {
+        console.info(e);
+      }
+    };
+
+    if (start) startCheck();
   }, [start]);
 
   return (
