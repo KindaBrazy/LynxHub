@@ -15,7 +15,7 @@ export default function SettingsTerminalScrollBack() {
   return (
     <NumberInput
       size="sm"
-      step={1000}
+      step={100}
       minValue={100}
       maxValue={999999}
       label="Scrollback"
