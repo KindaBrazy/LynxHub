@@ -118,7 +118,10 @@ export default function PluginSelector({
         )}
       </div>
 
-      <Button isLoading={isInstalling} onPress={installSelected} isDisabled={!requirementsSatisfied}>
+      <Button
+        isLoading={isInstalling}
+        onPress={installSelected}
+        isDisabled={!requirementsSatisfied || isEmpty(selectedPlugins)}>
         {requirementsSatisfied ? 'Install Selected' : 'Complete Requirements First'}
       </Button>
     </div>
