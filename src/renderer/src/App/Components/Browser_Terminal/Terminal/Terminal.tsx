@@ -1,6 +1,6 @@
 import {CanvasAddon} from '@xterm/addon-canvas';
 import {ClipboardAddon} from '@xterm/addon-clipboard';
-import {FitAddon, ITerminalDimensions} from '@xterm/addon-fit';
+import {FitAddon} from '@xterm/addon-fit';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {Unicode11Addon} from '@xterm/addon-unicode11';
 import {WebLinksAddon} from '@xterm/addon-web-links';
@@ -26,12 +26,8 @@ import {catchTerminalAddress, getRendererMode, getTheme, getWindowPty} from './T
 import parseTerminalColors from './TerminalColorHandler';
 
 const FONT_FAMILY = 'JetBrainsMono';
-
-const canResize = (size: ITerminalDimensions | undefined) => {
-  if (!size) return false;
-
-  return size.cols > 95 && size.rows > 22;
-};
+const MIN_RESIZE_COLS = 95;
+const MIN_RESIZE_ROWS = 22;
 
 type Props = {
   runningCard: RunningCard;
@@ -60,7 +56,13 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal, setSelectedT
   const [browserBehavior, setBrowserBehavior] = useState<CustomRunBehaviorData['browser']>('appBrowser');
   const [urlCatchBehavior, setUrlCatchBehavior] = useState<CustomRunBehaviorData['urlCatch'] | undefined>(undefined);
 
-  const copyText = useCallback(() => {
+  const canResize = useCallback(() => {
+    const dims = fitAddon.current?.proposeDimensions();
+    if (!dims) return false;
+    return dims.cols > MIN_RESIZE_COLS && dims.rows > MIN_RESIZE_ROWS;
+  }, []);
+
+  const copySelection = useCallback(() => {
     const selection = terminal.current?.getSelection();
     if (selection) {
       try {
@@ -75,8 +77,8 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal, setSelectedT
   }, [dispatch]);
 
   useEffect(() => {
-    if (copyPressed) copyText();
-  }, [copyPressed, copyText]);
+    if (copyPressed) copySelection();
+  }, [copyPressed, copySelection]);
 
   useEffect(() => {
     rendererIpc.storage.get('cardsConfig').then(result => {
@@ -128,19 +130,18 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal, setSelectedT
   }, [id, webUIAddress, browserBehavior, outputColor, dispatch, allMethods, tabId, urlCatchBehavior]);
 
   useEffect(() => {
-    const fit = fitAddon.current;
-    if (fit && currentView === 'terminal' && canResize(fit.proposeDimensions())) fit.fit();
-  }, [currentView, activeTab]);
+    if (currentView === 'terminal' && canResize()) {
+      fitAddon.current?.fit();
+    }
+  }, [currentView, activeTab, canResize]);
 
   useEffect(() => {
     const terminalContainer = terminalContainerRef.current;
     if (!terminalContainer || terminal.current) return;
 
-    const JetBrainsMono = new FontFaceObserver(FONT_FAMILY);
-
     let xTerm: XTerminal | null = null;
 
-    const loadTerminal = (sysInfo?: SystemInfo, fontFamily?: string) => {
+    const loadTerminal = (sysInfo?: SystemInfo, fontFamily: string = 'monospace') => {
       const windowsPty = sysInfo ? getWindowPty(sysInfo, useConpty) : undefined;
       const renderMode = getRendererMode();
 
@@ -148,8 +149,8 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal, setSelectedT
         allowProposedApi: true,
         fontFamily,
         scrollOnUserInput: true,
-        scrollback,
-        cursorBlink,
+        scrollback: scrollBack,
+        cursorBlink: blinkCursor,
         fontSize,
         cursorStyle,
         cursorInactiveStyle,
@@ -158,9 +159,10 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal, setSelectedT
       });
 
       terminal.current = xTerm;
+
       clearTerminal.current = () => {
-        rendererIpc.pty.clear(id);
         xTerm?.clear();
+        rendererIpc.pty.clear(id);
       };
 
       fitAddon.current = new FitAddon();
@@ -215,22 +217,25 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal, setSelectedT
       xTerm.onData(data => !isEmpty(data) && rendererIpc.pty.write(id, data));
     };
 
-    Promise.all([rendererIpc.win.getSystemInfo(), JetBrainsMono.load()])
-      .then(([sysInfo]) => loadTerminal(sysInfo, 'JetBrainsMono'))
+    const font = new FontFaceObserver(FONT_FAMILY);
+    Promise.all([rendererIpc.win.getSystemInfo(), font.load()])
+      .then(([sysInfo]) => loadTerminal(sysInfo, FONT_FAMILY))
       .catch(() => {
-        loadTerminal();
-        lynxTopToast(dispatch).warning('Failed to load terminal font!');
+        rendererIpc.win.getSystemInfo().then(sysInfo => loadTerminal(sysInfo));
+        lynxTopToast(dispatch).warning('Terminal font failed to load. Using fallback.');
       });
 
+    let resizeTimeoutId: NodeJS.Timeout;
     const handleResize = () => {
-      if (canResize(fitAddon.current?.proposeDimensions())) {
-        fitAddon.current?.fit();
-      }
+      clearTimeout(resizeTimeoutId);
+      resizeTimeoutId = setTimeout(() => {
+        if (canResize()) fitAddon.current?.fit();
+      }, resizeDelay);
     };
 
     const handleContextMenu = (_e: MouseEvent) => {
       if (!isEmpty(terminal.current?.getSelection())) {
-        copyText();
+        copySelection();
       } else {
         navigator.clipboard.readText().then(text => rendererIpc.pty.write(id, text));
       }
@@ -251,22 +256,33 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal, setSelectedT
       terminal.current?.dispose();
       terminal.current = null;
     };
-  }, [
-    clearTerminal,
-    id,
-    serializeAddon,
-    scrollback,
-    cursorBlink,
-    fontSize,
-    cursorStyle,
-    cursorInactiveStyle,
-    useConpty,
-    setSelectedTerminalText,
-    dispatch,
-    resizeDelay,
-    copyText,
-    darkMode,
-  ]);
+  }, [clearTerminal, id, serializeAddon, setSelectedTerminalText, dispatch, copySelection, canResize]);
+
+  useEffect(() => {
+    if (terminal.current) terminal.current.options.theme = getTheme(darkMode);
+  }, [darkMode]);
+
+  useEffect(() => {
+    if (terminal.current) {
+      terminal.current.options.fontSize = fontSize;
+      fitAddon.current?.fit();
+    }
+  }, [fontSize]);
+
+  useEffect(() => {
+    if (terminal.current) terminal.current.options.scrollback = scrollBack;
+  }, [scrollBack]);
+
+  useEffect(() => {
+    if (terminal.current) terminal.current.options.cursorBlink = blinkCursor;
+  }, [blinkCursor]);
+
+  useEffect(() => {
+    if (terminal.current) {
+      terminal.current.options.cursorStyle = cursorStyle;
+      terminal.current.options.cursorInactiveStyle = cursorInactiveStyle;
+    }
+  }, [cursorStyle, cursorInactiveStyle]);
 
   return (
     <div className={`${currentView === 'terminal' ? 'block' : 'hidden'}`}>
