@@ -63,7 +63,10 @@ export default function PluginSelector({
     try {
       const results = await Promise.all(urlsToInstall.map(url => rendererIpc.plugins.install(url)));
       if (results.every(Boolean)) {
-        setInstalledPlugins(Array.from(selectedPlugins));
+        setInstalledPlugins(
+          compact(Array.from(selectedPlugins).map(item => plugins.find(ext => ext.id === item)?.name)),
+        );
+        setPlugins(prevState => prevState.filter(item => !urlsToInstall.includes(item.url)));
       } else {
         console.error('Failed to install some extensions');
         // You could add some user-facing error handling here
