@@ -1,4 +1,5 @@
 import {cn} from '@heroui/react';
+import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -154,17 +155,21 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
     return favorites.some(fav => formatWebAddress(fav) === formattedCurrentAddress);
   }, [favorites, effectiveAddress]);
 
-  const handleFavoriteToggle = useCallback(() => {
-    const url = formatWebAddress(effectiveAddress || '');
-    if (!url) return;
+  const handleFavoriteToggle = useCallback(
+    e => {
+      e.stopPropagation();
+      const url = formatWebAddress(effectiveAddress || '');
+      if (!url) return;
 
-    const action = isFavorite
-      ? rendererIpc.storageUtils.removeBrowserFavorite
-      : rendererIpc.storageUtils.addBrowserFavorite;
+      const action = isFavorite
+        ? rendererIpc.storageUtils.removeBrowserFavorite
+        : rendererIpc.storageUtils.addBrowserFavorite;
 
-    action(url);
-    getFavorites();
-  }, [effectiveAddress, isFavorite, getFavorites]);
+      action(url);
+      getFavorites();
+    },
+    [effectiveAddress, isFavorite, getFavorites],
+  );
 
   const isAddress = !!effectiveAddress;
   const displayParts = parseAddressForDisplay(isFocused ? inputValue : effectiveAddress);
@@ -211,20 +216,6 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
         'transition-colors cursor-text',
       )}
       onClick={handleContainerClick}>
-      {/* Star Icon for Favorites */}
-      {isAddress && (
-        <div onClick={handleFavoriteToggle} className="absolute right-3 z-10 cursor-pointer p-1">
-          <Star_Icon
-            className={cn(
-              'transition-colors duration-300',
-              isFavorite
-                ? 'text-yellow-400'
-                : 'text-gray-400 hover:text-gray-500 dark:text-foreground-200 dark:hover:text-white',
-            )}
-          />
-        </div>
-      )}
-
       {/* Layer 1: Styled Display View (Visible when not focused) */}
       <div
         className={cn(
@@ -263,6 +254,26 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
         onMouseDown={handleMouseDown}
         contentEditable
       />
+
+      {isAddress && (
+        <div className="absolute right-2 top-1/2 -translate-y-1/2">
+          <motion.button
+            whileTap={{scale: 0.9}}
+            whileHover={{scale: 1.15}}
+            onClick={handleFavoriteToggle}
+            className="p-1 rounded-full cursor-pointer"
+            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}>
+            <Star_Icon
+              className={cn(
+                'transition-colors duration-200 size-5',
+                isFavorite
+                  ? 'text-yellow-500 fill-current'
+                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white',
+              )}
+            />
+          </motion.button>
+        </div>
+      )}
     </div>
   );
 });
