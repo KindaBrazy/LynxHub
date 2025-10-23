@@ -250,14 +250,6 @@ export default class ContextMenuManager {
       const contentW = Math.max(1, Math.ceil(cssWidth * scale));
       const contentH = Math.max(1, Math.ceil(cssHeight * scale));
 
-      console.log('Resizing context menu (content area):', {
-        cssWidth,
-        cssHeight,
-        scale,
-        contentW,
-        contentH,
-      });
-
       window.setContentSize(contentW, contentH);
     } catch (error) {
       console.error('Failed to set window size:', {data, error});
