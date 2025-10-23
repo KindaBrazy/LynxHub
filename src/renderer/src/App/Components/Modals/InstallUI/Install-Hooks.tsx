@@ -79,13 +79,13 @@ export function useStepper({
     async (dir: string, file: string): ReturnType<InstallationStepper['runTerminalScript']> => {
       return new Promise(resolve => {
         restartTerminal.current = () => {
-          rendererIpc.pty.customProcess(cardId, 'stop');
-          rendererIpc.pty.customProcess(cardId, 'start', dir, file);
+          rendererIpc.pty.stop(cardId);
+          rendererIpc.pty.customProcess(cardId, dir, file);
         };
 
         terminalResolver.current = resolve;
         updateState({body: 'terminal'});
-        rendererIpc.pty.customProcess(cardId, 'start', dir, file);
+        rendererIpc.pty.customProcess(cardId, dir, file);
       });
     },
     [],
@@ -95,13 +95,13 @@ export function useStepper({
     async (commands?: string | string[], dir?: string): ReturnType<InstallationStepper['executeTerminalCommands']> => {
       return new Promise(resolve => {
         restartTerminal.current = () => {
-          rendererIpc.pty.customCommands(cardId, 'stop');
-          rendererIpc.pty.customCommands(cardId, 'start', commands, dir);
+          rendererIpc.pty.stop(cardId);
+          rendererIpc.pty.customCommands(cardId, commands, dir);
         };
 
         terminalResolver.current = resolve;
         updateState({body: 'terminal'});
-        rendererIpc.pty.customCommands(cardId, 'start', commands, dir);
+        rendererIpc.pty.customCommands(cardId, commands, dir);
       });
     },
     [],

@@ -146,7 +146,7 @@ const cardsSlice = createSlice({
       ];
 
       if (type !== 'terminal') rendererIpc.browser.createBrowser(id);
-      if (type !== 'browser') rendererIpc.pty.emptyProcess(id, 'start');
+      if (type !== 'browser') rendererIpc.pty.emptyProcess(id);
     },
 
     addRunningCard: (state, action: PayloadAction<{tabId: string; id: string}>) => {

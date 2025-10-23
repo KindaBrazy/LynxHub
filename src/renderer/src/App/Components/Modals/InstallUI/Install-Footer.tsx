@@ -45,7 +45,7 @@ const InstallFooter = memo(
     const [locateWarnIsOpen, setLocateWarnIsOpen] = useState<boolean>(false);
     const onDoneTerminal = useCallback(() => {
       if (terminalResolver.current) {
-        rendererIpc.pty.customProcess(cardId, 'stop');
+        rendererIpc.pty.stop(cardId);
         terminalResolver.current();
         terminalResolver.current = null;
       }

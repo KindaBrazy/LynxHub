@@ -172,7 +172,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
 
   // -----------------------------------------------> Handle UI
   const handleClose = useCallback(() => {
-    if (state.body === 'terminal') rendererIpc.pty.customProcess(cardId, 'stop');
+    if (state.body === 'terminal') rendererIpc.pty.stop(cardId);
     if (state.body === 'progress') {
       rendererIpc.utils.cancelDownload();
       removeProgressListener.current?.();

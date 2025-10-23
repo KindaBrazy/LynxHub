@@ -70,11 +70,7 @@ export function useStopAI() {
       const runningCard = runningCards.find(card => card.id === id);
       if (!runningCard) return;
 
-      if (runningCard.isEmptyRunning) {
-        rendererIpc.pty.emptyProcess(runningCard.id, 'stop');
-      } else {
-        rendererIpc.pty.stop(runningCard.id);
-      }
+      rendererIpc.pty.stop(runningCard.id);
 
       dispatch(tabsActions.setActiveTabLoading(false));
       dispatch(tabsActions.setTabIsTerminal({tabID: activeTab, isTerminal: false}));
