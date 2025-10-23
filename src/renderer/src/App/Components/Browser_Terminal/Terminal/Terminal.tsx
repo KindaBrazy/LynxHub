@@ -17,7 +17,7 @@ import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useHotkeysState} from '../../../Redux/Reducer/HotkeysReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
-import {useTerminalState} from '../../../Redux/Reducer/TerminalReducer';
+import {useTerminalStat} from '../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
@@ -49,14 +49,8 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal, setSelectedT
   const terminal = useRef<XTerminal | null>(null);
   const fitAddon = useRef<FitAddon | null>(null);
 
-  const outputColor = useTerminalState('outputColor');
-  const useConpty = useTerminalState('useConpty');
-  const scrollback = useTerminalState('scrollBack');
-  const fontSize = useTerminalState('fontSize');
-  const cursorStyle = useTerminalState('cursorStyle');
-  const cursorInactiveStyle = useTerminalState('cursorInactiveStyle');
-  const cursorBlink = useTerminalState('blinkCursor');
-  const resizeDelay = useTerminalState('resizeDelay');
+  const {outputColor, useConpty, scrollBack, fontSize, cursorStyle, cursorInactiveStyle, blinkCursor, resizeDelay} =
+    useTerminalStat();
 
   const {webUIAddress, id, currentView, tabId} = useMemo(() => runningCard, [runningCard]);
 

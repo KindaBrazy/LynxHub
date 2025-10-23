@@ -43,6 +43,8 @@ const terminalSlice = createSlice({
 export const useTerminalState = <T extends keyof TerminalState>(name: T): TerminalStateTypes[T] =>
   useSelector((state: RootState) => state.terminal[name]);
 
+export const useTerminalStat = () => useSelector((state: RootState) => state.terminal);
+
 export const terminalActions = terminalSlice.actions;
 
 export default terminalSlice.reducer;
