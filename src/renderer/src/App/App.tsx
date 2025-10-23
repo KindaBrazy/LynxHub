@@ -1,5 +1,5 @@
 import Background from './Components/Background';
-import Initializer from './Components/Init/Initializer';
+import Initializer from './Components/Initializer/Initializer';
 import MainContents from './Components/MainContents/MainContents';
 import Modals from './Components/Modals/Modals';
 import TitleBar from './Components/TitleBar/TitleBar';
