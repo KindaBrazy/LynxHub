@@ -91,7 +91,7 @@ export default function CustomRunCommands({id}: Props) {
       }
       addTooltipTitle="Add New Command"
       title="AI Execution (Terminal Commands)"
-      description="Execute these commands when 'Run AI' is clicked, overriding default settings">
+      description="Execute these commands when launching AI, overriding default settings">
       {isEmpty(commands) ? (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No custom command available to execute" />
       ) : (

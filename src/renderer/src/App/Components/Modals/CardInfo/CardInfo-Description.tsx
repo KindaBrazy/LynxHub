@@ -5,7 +5,7 @@ import {useCallback} from 'react';
 
 import {isValidURL} from '../../../../../../cross/CrossUtils';
 import {CardInfoDescriptions, CardInfoDescriptions_Items} from '../../../../../../cross/plugin/ModuleTypes';
-import {ExternalLink_Icon, OpenFolder_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
+import {OpenFolder_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../../RendererIpc';
 
 type Props = {
@@ -70,11 +70,11 @@ export default function CardInfoDescription({folders, descriptions}: Props) {
       {folders?.map((folder, index) => {
         return (
           <Button
-            variant="faded"
+            variant="flat"
+            endContent={<div />}
             key={`openFolder_${index}`}
             onPress={() => openDir(folder)}
             startContent={<OpenFolder_Icon />}
-            endContent={<ExternalLink_Icon />}
             className="justify-between shrink-0"
             fullWidth>
             {folder}

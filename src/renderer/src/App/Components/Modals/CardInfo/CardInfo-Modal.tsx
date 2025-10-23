@@ -64,10 +64,10 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
       isDismissable={false}
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
-      className="overflow-hidden border-2 border-foreground/5 drop-shadow-lg"
+      className="overflow-hidden border-2 border-foreground-100 drop-shadow-lg"
       hideCloseButton>
       <ModalContent className="pb-4">
-        <ModalHeader className="border-b border-foreground/20 bg-foreground-100 shadow-md">
+        <ModalHeader className="bg-foreground-100 shadow-md">
           {validateGitRepoUrl(url) && avatarUrl && (
             <User
               description={
