@@ -12,30 +12,28 @@ const colors = {
   green: '\x1b[38;5;46m', // Success
   blue: '\x1b[38;5;39m', // Info
   cyan: '\x1b[36m', // Debug
-  magenta: '\x1b[35m', // Special messages
   reset: '\x1b[0m', // Reset color
 };
 
-const detectType = (text: string) => {
-  if (patterns.errors.some(pattern => text.includes(pattern))) {
-    return 'error';
-  }
-  if (patterns.warnings.some(pattern => text.includes(pattern))) {
-    return 'warning';
-  }
-  if (patterns.success.some(pattern => text.includes(pattern))) {
-    return 'success';
-  }
-  if (patterns.info.some(pattern => text.includes(pattern))) {
-    return 'info';
-  }
-  if (patterns.debug.some(pattern => text.includes(pattern))) {
-    return 'debug';
-  }
+// Pre-compile regexes for performance. This is done once when the module is loaded.
+const compiledPatterns = {
+  errors: new RegExp(patterns.errors.join('|'), 'i'),
+  warnings: new RegExp(patterns.warnings.join('|'), 'i'),
+  success: new RegExp(patterns.success.join('|'), 'i'),
+  info: new RegExp(patterns.info.join('|'), 'i'),
+  debug: new RegExp(patterns.debug.join('|'), 'i'),
+};
+
+const detectLineType = (line: string): string => {
+  if (compiledPatterns.errors.test(line)) return 'error';
+  if (compiledPatterns.warnings.test(line)) return 'warning';
+  if (compiledPatterns.success.test(line)) return 'success';
+  if (compiledPatterns.info.test(line)) return 'info';
+  if (compiledPatterns.debug.test(line)) return 'debug';
   return 'default';
 };
 
-const getColor = (type: string) => {
+const getColorCode = (type: string): string => {
   switch (type) {
     case 'error':
       return colors.red;
@@ -52,13 +50,22 @@ const getColor = (type: string) => {
   }
 };
 
-export default function parseTerminalColors(text: string) {
-  const type = detectType(text);
-  const color = getColor(type);
+/**
+ * Parses terminal output text and applies colors based on keywords found in each line.
+ * @param text - The raw string data from the terminal.
+ * @returns The colorized text with ANSI escape codes.
+ */
+export default function parseTerminalColors(text: string): string {
+  return text
+    .split('\n')
+    .map(line => {
+      const type = detectLineType(line);
+      const colorCode = getColorCode(type);
 
-  if (color) {
-    return `${color}${text}${colors.reset}`;
-  } else {
-    return text;
-  }
+      if (colorCode && line.trim() !== '') {
+        return `${colorCode}${line}${colors.reset}`;
+      }
+      return line;
+    })
+    .join('\n');
 }
