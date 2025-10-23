@@ -29,7 +29,7 @@ export default function CheckRow({label, description, status}: Props) {
     <motion.div
       className={
         'flex items-center justify-between p-3 bg-white dark:bg-gray-900/50' +
-        ' rounded-lg border border-gray-200 dark:border-gray-700/50'
+        ' rounded-lg border border-foreground-100'
       }>
       <div>
         <div className="font-medium text-gray-800 dark:text-gray-100">{label}</div>
