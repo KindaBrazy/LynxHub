@@ -17,7 +17,7 @@ export default function Initializer() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <motion.div
             className={
-              'relative w-[80vw] h-[85vh] min-w-[840px] min-h-[600px] max-w-[1200px]' +
+              `relative w-[80vw] ${!isUpgradeFlow && 'h-[85vh] min-h-[600px]'} min-w-[840px] max-w-[1200px]` +
               ' max-h-[800px] bg-white dark:bg-gray-900 rounded-2xl shadow-2xl overflow-hidden'
             }
             animate={{scale: 1, y: 0, opacity: 1}}
