@@ -90,7 +90,6 @@ export async function customPtyCommands(id: string, commands?: string | string[]
 /**
  * Manages the PTY process for a given card.
  * @param id - The unique id of process running
- * @param opt - The operation to perform ('start' or 'stop').
  * @param cardId - The ID of the card.
  */
 export async function ptyProcess(id: string, cardId: string) {
