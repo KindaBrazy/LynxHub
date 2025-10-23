@@ -1,7 +1,9 @@
+import {Button} from '@heroui/react';
 import isEmpty from 'lodash/isEmpty';
 import {memo, useEffect, useMemo} from 'react';
 import {useInView} from 'react-intersection-observer';
 
+import {Home_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useAppState} from '../../Redux/Reducer/AppReducer';
 import TabContainer from '../Tabs/TabContainer';
@@ -18,6 +20,8 @@ const BACKGROUND_CLASSES = {
  * Displays logo, theme toggle, running card manager, and window buttons.
  */
 const TitleBar = memo(() => {
+  const {showWizard} = useAppState('initializer');
+
   const {ref, inView} = useInView({
     threshold: 0,
     triggerOnce: true,
@@ -48,7 +52,21 @@ const TitleBar = memo(() => {
         ` justify-between overflow-hidden transition-colors duration-500 ${backgroundClass} `
       }
       ref={ref}>
-      <TabContainer />
+      {showWizard ? (
+        <Button
+          className={
+            'pr-2 notDraggable text-small pl-2 flex !rounded-t-lg !rounded-b-none flex-row cursor-default' +
+            ' gap-x-0 bg-white dark:bg-[#303033] ml-0.5 mt-1'
+          }
+          variant="light">
+          <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
+            <Home_Icon />
+            <span>Initializer</span>
+          </div>
+        </Button>
+      ) : (
+        <TabContainer />
+      )}
 
       {fullscreen ? (
         <div>{!isEmpty(titleBar.addEnd) && titleBar.addEnd.map((End, index) => <End key={index} />)}</div>
