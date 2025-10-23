@@ -5,6 +5,7 @@ import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain, screen, shell, 
 
 import {ContextResizeData} from '../../cross/CrossTypes';
 import {browserChannels, contextMenuChannels, tabsChannels} from '../../cross/IpcChannelAndTypes';
+import AddBreadcrumb_Main from './Breadcrumbs';
 import BrowserManager from './BrowserManager';
 
 export default class ContextMenuManager {
@@ -249,6 +250,16 @@ export default class ContextMenuManager {
 
       const contentW = Math.max(1, Math.ceil(cssWidth * scale));
       const contentH = Math.max(1, Math.ceil(cssHeight * scale));
+
+      AddBreadcrumb_Main(
+        `'Resizing context menu (content area):', ${{
+          cssWidth,
+          cssHeight,
+          scale,
+          contentW,
+          contentH,
+        }}`,
+      );
 
       window.setContentSize(contentW, contentH);
     } catch (error) {
