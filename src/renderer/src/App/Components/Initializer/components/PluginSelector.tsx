@@ -88,16 +88,15 @@ export default function PluginSelector({
             <span className="text-gray-500 text-sm">No optional extensions available.</span>
           </div>
         ) : (
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col p-2 gap-y-6 overflow-hidden size-full">
             {plugins.map(ext => (
               <Checkbox
                 classNames={{
                   base: cn(
                     'inline-flex w-full max-w-full bg-white dark:bg-gray-900/50',
                     'hover:bg-gray-100 dark:hover:bg-gray-900/80 items-center justify-start',
-                    'cursor-pointer rounded-lg gap-2 p-4 border border-gray-200 dark:border-gray-700',
-                    'data-[selected=true]:border-blue-500 data-[selected=true]:ring-2 ' +
-                      'data-[selected=true]:ring-blue-500/20',
+                    'cursor-pointer rounded-lg gap-2 p-4 border-2 border-foreground-100',
+                    'data-[selected=true]:border-primary data-[selected=true]:ring-blue-500/20',
                     'transition-all duration-200',
                   ),
                   label: 'w-full',
@@ -108,8 +107,8 @@ export default function PluginSelector({
                 isSelected={selectedPlugins.has(ext.id)}
                 onValueChange={() => handleSelectionChange(ext.id)}>
                 <User
-                  avatarProps={{size: 'md', radius: 'sm', className: 'shrink-0', src: ext.icon}}
                   name={<span className="font-medium text-gray-800 dark:text-gray-100">{ext.name}</span>}
+                  avatarProps={{size: 'md', radius: 'sm', className: 'shrink-0 bg-transparent', src: ext.icon}}
                   description={<span className="text-xs text-gray-500 dark:text-gray-400">{ext.description}</span>}
                 />
               </Checkbox>
