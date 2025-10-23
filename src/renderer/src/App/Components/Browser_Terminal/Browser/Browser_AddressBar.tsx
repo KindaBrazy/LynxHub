@@ -1,5 +1,6 @@
-import {isEmpty, isNil} from 'lodash';
-import React, {memo, useEffect, useMemo, useRef, useState} from 'react';
+import {cn} from '@heroui/react';
+import {isEmpty} from 'lodash';
+import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {formatWebAddress} from '../../../../../../cross/CrossUtils';
@@ -10,13 +11,15 @@ import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
 
-type Props = {runningCard: RunningCard; setCustomAddress?: (address: string) => void};
+type Props = {
+  runningCard: RunningCard;
+  setCustomAddress?: (address: string) => void;
+};
 
 const parseAddressForDisplay = (address: string) => {
   if (!address) {
     return {prefix: '', domain: '', rest: ''};
   }
-
   const addressRegex = /^(https?:\/\/)?(www\.)?([^/?#]+)(.*)/i;
   const matches = address.match(addressRegex);
 
@@ -28,148 +31,208 @@ const parseAddressForDisplay = (address: string) => {
     return {prefix: '', domain, rest};
   }
 
-  const protocol = matches[1] || '';
-  const www = matches[2] || '';
-  const domain = matches[3] || '';
-  const rest = matches[4] || '';
-
+  const [, protocol = '', www = '', domain = '', rest = ''] = matches;
   const prefix = `${protocol}${www}`;
 
   return {prefix, domain, rest};
 };
 
-const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
+const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
+  const {id: cardId, tabId, webUIAddress, customAddress, currentAddress, currentView} = runningCard;
+
   const [inputValue, setInputValue] = useState('');
-  const [isAddress, setIsAddress] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const editableRef = useRef<HTMLDivElement>(null);
-  const isProgrammaticSelection = useRef(false);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const editableRef = useRef<HTMLDivElement>(null);
 
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
 
-  const getFavorites = () => {
-    rendererIpc.storageUtils.getBrowserHistoryData().then(result => {
-      setFavorites(result.favoriteAddress);
-    });
-  };
-
-  const handleFocus = () => {
-    setIsFocused(true);
-    isProgrammaticSelection.current = true;
-
-    setTimeout(() => {
-      if (document.activeElement === editableRef.current) {
-        const selection = window.getSelection();
-        const range = document.createRange();
-        range.selectNodeContents(editableRef.current!);
-        selection?.removeAllRanges();
-        selection?.addRange(range);
-      }
-    }, 0);
-  };
+  const effectiveAddress = useMemo(
+    () => currentAddress || customAddress || webUIAddress || '',
+    [currentAddress, customAddress, webUIAddress],
+  );
 
   useEffect(() => {
-    getFavorites();
+    const fetchFavorites = async () => {
+      const {favoriteAddress} = await rendererIpc.storageUtils.getBrowserHistoryData();
+      setFavorites(favoriteAddress);
+    };
+    fetchFavorites();
   }, []);
 
   useEffect(() => {
-    const {webUIAddress, customAddress, currentAddress} = runningCard;
-    setIsAddress(!!webUIAddress || !!customAddress || !!currentAddress);
-    const address = currentAddress || customAddress || webUIAddress || '';
-    setInputValue(address);
-  }, [runningCard]);
+    let displayValue = effectiveAddress;
+    if (effectiveAddress.includes('error_page.html?errorCode')) {
+      displayValue = 'Error loading target address...';
+    }
+    setInputValue(displayValue);
+
+    if (editableRef.current && document.activeElement !== editableRef.current) {
+      editableRef.current.textContent = displayValue;
+    }
+  }, [effectiveAddress]);
 
   useEffect(() => {
-    if (inputValue.includes('error_page.html?errorCode')) {
-      setInputValue('Error loading target address...');
-    } else if (editableRef.current && inputValue !== editableRef.current.textContent) {
-      editableRef.current.textContent = inputValue;
+    if (tabId === activeTab && currentView === 'browser' && isEmpty(effectiveAddress)) {
+      editableRef.current?.focus();
     }
+  }, [activeTab, tabId, currentView, effectiveAddress]);
 
-    if (isEmpty(inputValue)) handleFocus();
-  }, [inputValue]);
+  const getFavorites = useCallback(async () => {
+    const {favoriteAddress} = await rendererIpc.storageUtils.getBrowserHistoryData();
+    setFavorites(favoriteAddress);
+  }, []);
 
-  useEffect(() => {
-    if (runningCard.tabId !== activeTab && runningCard.currentView !== 'browser') return;
-
-    const ref = editableRef.current;
-    if (isNil(ref)) return;
-
-    if (isEmpty(inputValue) && isEmpty(runningCard.currentAddress)) ref.focus();
-  }, [activeTab, runningCard.currentView]);
-
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
-
-  const handleMouseUp = () => {
-    if (isProgrammaticSelection.current) {
-      isProgrammaticSelection.current = false;
-    }
-  };
-
-  const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
-    setInputValue(e.currentTarget.textContent || '');
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter') {
+  const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (document.activeElement !== e.currentTarget) {
       e.preventDefault();
-      try {
-        const url = formatWebAddress(inputValue || '', true);
-        if (setCustomAddress) {
-          setCustomAddress(url);
-        } else {
-          dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
-        }
-        rendererIpc.storageUtils.addBrowserRecent(url);
-        rendererIpc.storageUtils.addBrowserHistory(url);
-        editableRef.current?.blur();
-        rendererIpc.browser.reload(runningCard.id);
-      } catch (err) {
-        console.error(`Invalid URL: ${err}`);
+    }
+  }, []);
+
+  const handleFocus = useCallback(() => {
+    setIsFocused(true);
+    requestAnimationFrame(() => {
+      const element = editableRef.current;
+      if (element) {
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        selection?.removeAllRanges();
+        selection?.addRange(range);
+      }
+    });
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    setIsFocused(false);
+    if (inputValue !== effectiveAddress) {
+      setInputValue(effectiveAddress);
+      if (editableRef.current) {
+        editableRef.current.textContent = effectiveAddress;
       }
     }
-  };
+  }, [inputValue, effectiveAddress]);
+
+  const handleInput = useCallback((e: React.FormEvent<HTMLDivElement>) => {
+    setInputValue(e.currentTarget.textContent || '');
+  }, []);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const textValue = e.currentTarget.textContent || '';
+        try {
+          const url = formatWebAddress(textValue, true);
+          if (setCustomAddress) {
+            setCustomAddress(url);
+          } else {
+            dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
+          }
+          rendererIpc.storageUtils.addBrowserRecent(url);
+          rendererIpc.storageUtils.addBrowserHistory(url);
+          editableRef.current?.blur();
+          rendererIpc.browser.reload(cardId);
+        } catch (err) {
+          console.error(`Invalid URL: ${err}`);
+        }
+      }
+    },
+    [setCustomAddress, dispatch, activeTab, cardId],
+  );
+
+  const handleContainerClick = useCallback(() => {
+    if (document.activeElement !== editableRef.current) {
+      editableRef.current?.focus();
+    }
+  }, []);
 
   const isFavorite = useMemo(() => {
-    const {webUIAddress, customAddress, currentAddress} = runningCard;
+    if (!effectiveAddress) return false;
+    const formattedCurrentAddress = formatWebAddress(effectiveAddress);
+    return favorites.some(fav => formatWebAddress(fav) === formattedCurrentAddress);
+  }, [favorites, effectiveAddress]);
 
-    const address = currentAddress || customAddress || webUIAddress || '';
-    return favorites.some(favorite => formatWebAddress(favorite) === formatWebAddress(address));
-  }, [favorites, runningCard]);
+  const handleFavoriteToggle = useCallback(() => {
+    const url = formatWebAddress(effectiveAddress || '');
+    if (!url) return;
 
-  const updateFavorite = () => {
-    const url = formatWebAddress(inputValue || '');
-    if (isFavorite) {
-      rendererIpc.storageUtils.removeBrowserFavorite(url);
-    } else {
-      rendererIpc.storageUtils.addBrowserFavorite(formatWebAddress(inputValue || ''));
-    }
+    const action = isFavorite
+      ? rendererIpc.storageUtils.removeBrowserFavorite
+      : rendererIpc.storageUtils.addBrowserFavorite;
+
+    action(url);
     getFavorites();
-  };
+  }, [effectiveAddress, isFavorite, getFavorites]);
 
-  const {prefix, domain, rest} = parseAddressForDisplay(inputValue);
+  const isAddress = !!effectiveAddress;
+  const displayParts = parseAddressForDisplay(isFocused ? inputValue : effectiveAddress);
+
+  return {
+    editableRef,
+    isAddress,
+    isFocused,
+    isFavorite,
+    displayParts,
+    handleMouseDown,
+    handleFocus,
+    handleBlur,
+    handleInput,
+    handleKeyDown,
+    handleFavoriteToggle,
+    handleContainerClick,
+  };
+};
+
+const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
+  const {
+    editableRef,
+    isAddress,
+    isFocused,
+    isFavorite,
+    displayParts,
+    handleMouseDown,
+    handleFocus,
+    handleBlur,
+    handleInput,
+    handleKeyDown,
+    handleFavoriteToggle,
+    handleContainerClick,
+  } = useAddressBar({runningCard, setCustomAddress});
+
+  const {prefix, domain, rest} = displayParts;
 
   return (
     <div
-      className="relative flex items-center w-full h-8 mx-2 overflow-hidden rounded-full
-    bg-[#f1f3f4] dark:bg-[#101010] hover:dark:bg-[#151515] focus-within:dark:bg-[#121212] transition-colors">
+      className={cn(
+        'relative flex items-center w-full h-8 mx-2 overflow-hidden rounded-full',
+        'bg-[#f1f3f4] dark:bg-[#101010] hover:dark:bg-[#151515] focus-within:dark:bg-[#121212]',
+        'transition-colors cursor-text',
+      )}
+      onClick={handleContainerClick}>
+      {/* Star Icon for Favorites */}
       {isAddress && (
-        <div onClick={updateFavorite} className="absolute right-3 z-10 cursor-pointer">
+        <div onClick={handleFavoriteToggle} className="absolute right-3 z-10 cursor-pointer p-1">
           <Star_Icon
-            className={`${isFavorite ? 'text-yellow-400' : 'text-foreground-200'} transition-colors duration-500`}
+            className={cn(
+              'transition-colors duration-300',
+              isFavorite
+                ? 'text-yellow-400'
+                : 'text-gray-400 hover:text-gray-500 dark:text-foreground-200 dark:hover:text-white',
+            )}
           />
         </div>
       )}
-      {/* Styled Display View: Fades out when the input is focused */}
+
+      {/* Layer 1: Styled Display View (Visible when not focused) */}
       <div
-        className={`absolute flex items-center px-4 pointer-events-none transition-opacity duration-200 ${
-          isFocused ? 'opacity-0' : 'opacity-100'
-        }  inset-0 !right-4`}>
-        {inputValue ? (
+        className={cn(
+          'absolute inset-0 flex items-center px-4 pointer-events-none transition-opacity duration-200',
+          '!right-10',
+          isFocused ? 'opacity-0' : 'opacity-100',
+        )}>
+        {isAddress ? (
           <p className="text-sm truncate">
             <span className="text-gray-500 dark:text-gray-400">{prefix}</span>
             <span className="text-black dark:text-white font-medium">{domain}</span>
@@ -180,24 +243,24 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
         )}
       </div>
 
-      {/* Editable Input Layer */}
+      {/* Layer 2: Editable Input (Visible when focused) */}
       <div
         style={{
           minHeight: '32px',
           lineHeight: '32px',
-          verticalAlign: 'middle',
         }}
-        className={
-          `size-full px-4 flex items-center text-sm truncate outline-hidden` +
-          ` bg-transparent ${isFocused ? 'opacity-100' : 'opacity-0'}`
-        }
+        className={cn(
+          'size-full px-4 text-sm truncate outline-none bg-transparent',
+          'text-black dark:text-white',
+          isFocused ? 'opacity-100' : 'opacity-0',
+        )}
         ref={editableRef}
         spellCheck="false"
         onBlur={handleBlur}
+        onFocus={handleFocus}
         onInput={handleInput}
-        onMouseUp={handleMouseUp}
         onKeyDown={handleKeyDown}
-        onMouseDown={handleFocus}
+        onMouseDown={handleMouseDown}
         contentEditable
       />
     </div>
