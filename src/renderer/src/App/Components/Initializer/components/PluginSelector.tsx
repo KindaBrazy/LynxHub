@@ -1,10 +1,14 @@
 import {Button, Checkbox, cn, User} from '@heroui/react';
 import {compact, isEmpty} from 'lodash';
-import {useEffect, useState} from 'react';
+import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {MAIN_MODULE_URL} from '../../../../../../cross/CrossConstants';
+import {extractGitUrl} from '../../../../../../cross/CrossUtils';
 import {getPluginIconUrl} from '../../../../../../cross/plugin/CrossPluginUtils';
+import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
+import {lynxTopToast} from '../../../Utils/UtilHooks';
 
 type ExtensionItem = {id: string; name: string; description?: string; icon?: string; url: string};
 
@@ -12,7 +16,7 @@ type Props = {
   requirementsSatisfied: boolean;
   isInstalling: boolean;
   setInstalling: (value: boolean) => void;
-  setInstalledPlugins: (extensions: string[]) => void;
+  setInstalledPlugins: Dispatch<SetStateAction<string[]>>;
 };
 
 export default function PluginSelector({
@@ -23,6 +27,8 @@ export default function PluginSelector({
 }: Props) {
   const [plugins, setPlugins] = useState<ExtensionItem[]>([]);
   const [selectedPlugins, setSelectedPlugins] = useState<Set<string>>(new Set());
+
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     rendererIpc.plugins.getList('public').then(list => {
@@ -60,22 +66,27 @@ export default function PluginSelector({
       return;
     }
 
-    try {
-      const results = await Promise.all(urlsToInstall.map(url => rendererIpc.plugins.install(url)));
-      if (results.every(Boolean)) {
-        setInstalledPlugins(
-          compact(Array.from(selectedPlugins).map(item => plugins.find(ext => ext.id === item)?.name)),
-        );
-        setPlugins(prevState => prevState.filter(item => !urlsToInstall.includes(item.url)));
-      } else {
-        console.error('Failed to install some extensions');
-        // You could add some user-facing error handling here
+    for (const extension of urlsToInstall) {
+      const pluginName = plugins.find(item => item.url === extension)?.name || extractGitUrl(extension).repo;
+
+      try {
+        const isInstalled = await rendererIpc.plugins.install(extension);
+
+        if (isInstalled) {
+          setInstalledPlugins(prevState => [...prevState, pluginName]);
+          setPlugins(prevState => prevState.filter(item => item.url !== extension));
+          lynxTopToast(dispatch).success(`${pluginName} extension installed successfully.`);
+        } else {
+          lynxTopToast(dispatch).error(`Failed to install ${pluginName} extension.`);
+        }
+      } catch (e) {
+        lynxTopToast(dispatch).error(`Failed to install ${pluginName} extension.`);
+        console.warn(e);
       }
-    } catch (error) {
-      console.error('An error occurred during plugin installation:', error);
-    } finally {
-      setInstalling(false);
     }
+
+    setInstalling(false);
+    setSelectedPlugins(new Set());
   };
 
   return (
