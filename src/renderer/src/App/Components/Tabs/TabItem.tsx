@@ -34,24 +34,27 @@ export default function TabItem({tab}: Props) {
   const removeTab = useRemoveTab();
 
   const handleRemove = (isHokey: boolean) => {
-    const running = runningCards.find(card => card.tabId === tab.id);
+    const tabId = tab.id;
+
+    const running = runningCards.find(card => card.tabId === tabId);
+
     if (running) {
       if (running.type === 'browser') {
-        removeTab(tab.id);
+        removeTab({tabId});
       } else {
         if (isCtrlPressed || !closeTabConfirm) {
-          removeTab(tab.id);
+          removeTab({tabId});
         } else {
           const bounds = closeBtnRef.current?.getBoundingClientRect();
           if (bounds && isHokey) {
-            rendererIpc.contextMenu.openTerminateTab(tab.id, {x: bounds.x, y: bounds.y});
+            rendererIpc.contextMenu.openTerminateTab(tabId, {x: bounds.x, y: bounds.y});
           } else {
-            rendererIpc.contextMenu.openTerminateTab(tab.id);
+            rendererIpc.contextMenu.openTerminateTab(tabId);
           }
         }
       }
     } else {
-      removeTab(tab.id);
+      removeTab({tabId});
     }
   };
 

@@ -36,8 +36,8 @@ const TabContainer = memo(() => {
   }, [containerRef]);
 
   useEffect(() => {
-    const offRemoveTab = rendererIpc.contextMenu.onRemoveTab((_, tabID) => {
-      removeTab(tabID);
+    const offRemoveTab = rendererIpc.contextMenu.onRemoveTab((_, tabId) => {
+      removeTab({tabId});
     });
 
     return () => offRemoveTab();

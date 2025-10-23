@@ -6,9 +6,9 @@ import {useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {useTerminalState} from '../../Redux/Reducer/TerminalReducer';
 import rendererIpc from '../../RendererIpc';
 import {PageComponents} from '../../Utils/Constants';
-import {useStopAI} from '../../Utils/UtilHooks';
 import RunningCardView from '../Browser_Terminal/RunningCardView';
 import HomePage from '../Pages/ContentPages/Home/HomePage';
+import {useRemoveTab} from '../Tabs/Tab_Utils';
 
 export default function AppPages() {
   const runningCards = useCardsState('runningCard');
@@ -17,7 +17,7 @@ export default function AppPages() {
   const activePage = useTabsState('activePage');
   const activeTab = useTabsState('activeTab');
 
-  const stopAI = useStopAI();
+  const removeTab = useRemoveTab();
 
   const RunningView = useMemo(() => {
     const Container = extensionsData.runningAI.container;
@@ -26,11 +26,11 @@ export default function AppPages() {
 
   useEffect(() => {
     const removeListener = rendererIpc.pty.onExit((_, id) => {
-      if (closeTabOnExit) stopAI(id);
+      if (closeTabOnExit) removeTab({id});
     });
 
     return () => removeListener();
-  }, [closeTabOnExit]);
+  }, [closeTabOnExit, removeTab]);
 
   return (
     <>

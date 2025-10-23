@@ -12,16 +12,19 @@ export function useRemoveTab() {
   const dispatch = useDispatch<AppDispatch>();
 
   return useCallback(
-    (tabID: string) => {
-      const running = runningCards.find(card => card.tabId === tabID);
-      if (running && running.type !== 'browser') {
-        rendererIpc.pty.stop(running.id);
-      }
+    ({tabId, id}: {tabId?: string; id?: string}) => {
+      const running = runningCards.find(card => card.tabId === tabId || card.id === id);
 
-      dispatch(tabsActions.removeTab(tabID));
-      dispatch(modalActions.removeAllModalsForTabId({tabId: tabID}));
-      dispatch(cardsActions.stopRunningCard({tabId: tabID}));
-      rendererIpc.win.setDiscordRpAiRunning({running: false});
+      if (running && running.type !== 'browser') rendererIpc.pty.stop(running.id);
+
+      const tId = tabId || running?.tabId;
+
+      if (tId) {
+        dispatch(tabsActions.removeTab(tId));
+        dispatch(modalActions.removeAllModalsForTabId({tabId: tId}));
+        dispatch(cardsActions.stopRunningCard({tabId: tId}));
+        rendererIpc.win.setDiscordRpAiRunning({running: false});
+      }
     },
     [runningCards, dispatch],
   );

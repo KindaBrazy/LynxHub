@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 import {APP_BUILD_NUMBER, PageTitleByPageId} from '../../../../cross/CrossConstants';
 import {toMs} from '../../../../cross/CrossUtils';
 import AddBreadcrumb_Renderer from '../../../Breadcrumbs';
+import {useRemoveTab} from '../Components/Tabs/Tab_Utils';
 import {useAllCardMethods} from '../Modules/ModuleLoader';
 import {appActions, useAppState} from '../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
@@ -17,7 +18,7 @@ import {userActions, useUserState} from '../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
 import {defaultTabItem} from '../Utils/Constants';
-import {lynxTopToast, useStopAI} from '../Utils/UtilHooks';
+import {lynxTopToast} from '../Utils/UtilHooks';
 
 export const useCheckCardsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -308,16 +309,16 @@ export const useContextEvents = () => {
   const activeTab = useTabsState('activeTab');
 
   const dispatch = useDispatch<AppDispatch>();
-  const stopAI = useStopAI();
+  const removeTab = useRemoveTab();
 
   useEffect(() => {
-    const offStopAI = rendererIpc.contextMenu.onStopAI((_, id) => stopAI(id));
+    const offStopAI = rendererIpc.contextMenu.onStopAI((_, id) => removeTab({id}));
 
     const offRelaunchAI = rendererIpc.contextMenu.onRelaunchAI((_, id) => {
       const runningCard = runningCards.find(card => card.id === id);
       if (!runningCard) return;
 
-      stopAI(id);
+      removeTab({id});
       setTimeout(() => {
         if (runningCard.isEmptyRunning) {
           dispatch(cardsActions.addRunningEmpty({tabId: activeTab, type: runningCard.type}));
@@ -332,7 +333,7 @@ export const useContextEvents = () => {
       offRelaunchAI();
       offStopAI();
     };
-  }, [runningCards, dispatch, activeTab]);
+  }, [runningCards, dispatch, activeTab, removeTab]);
 };
 
 export const useShowToast = () => {
