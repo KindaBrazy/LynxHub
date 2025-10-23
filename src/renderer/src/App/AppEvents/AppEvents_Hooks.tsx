@@ -192,7 +192,7 @@ export const useIpcEvents = () => {
   useEffect(() => {
     const removeListener = rendererIpc.utils.onUpdateAllExtensions((_e, result) => {
       if (result.step === 'done') {
-        rendererIpc.pty.process(result.id, 'start', result.id);
+        rendererIpc.pty.process(result.id, result.id);
         rendererIpc.storageUtils.recentlyUsedCards('update', result.id);
         dispatch(cardsActions.addRunningCard({id: result.id, tabId: activeTab}));
         dispatch(cardsActions.setUpdatingExtensions(undefined));
@@ -322,7 +322,7 @@ export const useContextEvents = () => {
         if (runningCard.isEmptyRunning) {
           dispatch(cardsActions.addRunningEmpty({tabId: activeTab, type: runningCard.type}));
         } else {
-          rendererIpc.pty.process(runningCard.id, 'start', runningCard.id);
+          rendererIpc.pty.process(runningCard.id, runningCard.id);
           dispatch(cardsActions.addRunningCard({id: runningCard.id, tabId: activeTab}));
         }
       }, 1000);

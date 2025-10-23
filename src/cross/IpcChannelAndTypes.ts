@@ -59,8 +59,6 @@ export type PreOpen = {id: string; open?: {type: 'folder' | 'file'; path: string
 export type PreOpenData = {type: 'folder' | 'file'; path: string}[];
 export type OnPreCommands = {id: string; commands: string[]};
 
-export type PtyProcessOpt = 'start' | 'stop';
-
 export type HomeCategory = ('Pin' | 'Recently' | 'All' | string)[];
 export type DiscordRunningAI = {running: boolean; name?: string; type?: 'image' | 'audio' | 'text' | 'unknown'};
 export type SystemInfo = {os: NodeJS.Platform; buildNumber: string | number};
@@ -202,6 +200,7 @@ export const ptyChannels = {
   process: 'pty-process',
   customProcess: 'pty-custom-process',
   emptyProcess: 'pty-custom-process',
+  stopProcess: 'pty-stop-process',
   customCommands: 'pty-custom-commands',
   write: 'pty-write',
   clear: 'pty-clear',

@@ -61,7 +61,6 @@ import {
   PreOpen,
   PreOpenData,
   ptyChannels,
-  PtyProcessOpt,
   RecentlyOperation,
   ShowToastTypes,
   staticsChannels,
@@ -500,21 +499,26 @@ const rendererIpc = {
 
   /** Managing and using node_pty(Pseudo Terminal ) */
   pty: {
-    process: (id: string, opt: PtyProcessOpt, cardId: string): void => {
-      extensionRendererApi.events_ipc.emit('terminal_process', {id, opt, cardId});
-      ipc.send(ptyChannels.process, id, opt, cardId);
+    process: (id: string, cardId: string): void => {
+      extensionRendererApi.events_ipc.emit('terminal_process', {id, cardId});
+      ipc.send(ptyChannels.process, id, cardId);
     },
-    customProcess: (id: string, opt: PtyProcessOpt, dir?: string, file?: string): void => {
-      extensionRendererApi.events_ipc.emit('terminal_process_custom', {id, opt, dir, file});
-      ipc.send(ptyChannels.customProcess, id, opt, dir, file);
+    customProcess: (id: string, dir?: string, file?: string): void => {
+      extensionRendererApi.events_ipc.emit('terminal_process_custom', {id, dir, file});
+      ipc.send(ptyChannels.customProcess, id, dir, file);
     },
-    emptyProcess: (id: string, opt: PtyProcessOpt, dir?: string): void => {
-      extensionRendererApi.events_ipc.emit('terminal_process_empty', {id, opt, dir});
-      ipc.send(ptyChannels.emptyProcess, id, opt, dir);
+    emptyProcess: (id: string, dir?: string): void => {
+      extensionRendererApi.events_ipc.emit('terminal_process_empty', {id, dir});
+      ipc.send(ptyChannels.emptyProcess, id, dir);
     },
-    customCommands: (id: string, opt: PtyProcessOpt, commands?: string | string[], dir?: string) => {
-      extensionRendererApi.events_ipc.emit('terminal_process_custom_command', {id, opt, commands, dir});
-      ipc.send(ptyChannels.customCommands, id, opt, commands, dir);
+    customCommands: (id: string, commands?: string | string[], dir?: string) => {
+      extensionRendererApi.events_ipc.emit('terminal_process_custom_command', {id, commands, dir});
+      ipc.send(ptyChannels.customCommands, id, commands, dir);
+    },
+
+    stop: (id: string) => {
+      extensionRendererApi.events_ipc.emit('terminal_process_stop', {id});
+      ipc.send(ptyChannels.stopProcess, id);
     },
 
     write: (id: string, data: string): void => {

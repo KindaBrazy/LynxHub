@@ -21,7 +21,6 @@ import {
   PreCommands,
   PreOpen,
   ptyChannels,
-  PtyProcessOpt,
   RecentlyOperation,
   staticsChannels,
   storageChannels,
@@ -89,6 +88,7 @@ import {
   ptyProcess,
   ptyResize,
   ptyWrite,
+  stopPty,
 } from './Methods/IpcMethods-Pty';
 import {
   changeBranch,
@@ -224,17 +224,14 @@ function plugins() {
 }
 
 function pty() {
-  ipcMain.on(ptyChannels.process, (_, id: string, opt: PtyProcessOpt, cardId: string) => ptyProcess(id, opt, cardId));
-  ipcMain.on(ptyChannels.customProcess, (_, id: string, opt: PtyProcessOpt, dir?: string, file?: string) =>
-    customPtyProcess(id, opt, dir, file),
+  ipcMain.on(ptyChannels.process, (_, id: string, cardId: string) => ptyProcess(id, cardId));
+  ipcMain.on(ptyChannels.customProcess, (_, id: string, dir?: string, file?: string) =>
+    customPtyProcess(id, dir, file),
   );
-  ipcMain.on(ptyChannels.emptyProcess, (_, id: string, opt: PtyProcessOpt, dir?: string) =>
-    emptyPtyProcess(id, opt, dir),
-  );
-  ipcMain.on(
-    ptyChannels.customCommands,
-    (_, id: string, opt: PtyProcessOpt, commands?: string | string[], dir?: string) =>
-      customPtyCommands(id, opt, commands, dir),
+  ipcMain.on(ptyChannels.emptyProcess, (_, id: string, dir?: string) => emptyPtyProcess(id, dir));
+  ipcMain.on(ptyChannels.stopProcess, (_, id: string) => stopPty(id));
+  ipcMain.on(ptyChannels.customCommands, (_, id: string, commands?: string | string[], dir?: string) =>
+    customPtyCommands(id, commands, dir),
   );
   ipcMain.on(ptyChannels.write, (_, id: string, data: string) => ptyWrite(id, data));
   ipcMain.on(ptyChannels.clear, (_, id: string) => ptyClear(id));

@@ -73,7 +73,7 @@ export function useStopAI() {
       if (runningCard.isEmptyRunning) {
         rendererIpc.pty.emptyProcess(runningCard.id, 'stop');
       } else {
-        rendererIpc.pty.process(runningCard.id, 'stop', runningCard.id);
+        rendererIpc.pty.stop(runningCard.id);
       }
 
       dispatch(tabsActions.setActiveTabLoading(false));
