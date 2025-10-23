@@ -15,9 +15,7 @@ export function useRemoveTab() {
     (tabID: string) => {
       const running = runningCards.find(card => card.tabId === tabID);
       if (running && running.type !== 'browser') {
-        rendererIpc.pty.process(running.id, 'stop', running.id);
-        rendererIpc.pty.customProcess(running.id, 'stop', running.id);
-        rendererIpc.pty.emptyProcess(running.id, 'stop', running.id);
+        rendererIpc.pty.stop(running.id);
       }
 
       dispatch(tabsActions.removeTab(tabID));

@@ -91,7 +91,7 @@ const LynxCard = memo(() => {
       rendererIpc.utils.updateAllExtensions({id, dir: card.dir! + extensionsDir!});
       setIsUpdatingExtensions(true);
     } else {
-      rendererIpc.pty.process(id, 'start', id);
+      rendererIpc.pty.process(id, id);
       rendererIpc.storageUtils.recentlyUsedCards('update', id);
       rendererIpc.win.setDiscordRpAiRunning({running: true, name: title, type});
       dispatch(cardsActions.addRunningCard({tabId: activeTab, id}));
