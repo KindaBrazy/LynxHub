@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import {motion} from 'framer-motion';
-import {useMemo, useState} from 'react';
+import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 
 import PluginSelector from '../components/PluginSelector';
 import RequirementsChecker from '../components/RequirementsChecker';
@@ -19,11 +19,12 @@ const itemVariants = {
 
 type Props = {
   onNext: () => void;
-  setInstalledPlugins: (plugins: string[]) => void;
+  setInstalledPlugins: Dispatch<SetStateAction<string[]>>;
   setRequirementStatus: (status: RequirementStatus) => void;
+  installedPlugins: string[];
 };
 
-export default function StepSystemCheck({onNext, setInstalledPlugins, setRequirementStatus}: Props) {
+export default function StepSystemCheck({onNext, setInstalledPlugins, setRequirementStatus, installedPlugins}: Props) {
   const [requirementsSatisfied, setRequirementsSatisfied] = useState(false);
   const [isInstallingPlugins, setIsInstallingPlugins] = useState(false);
 
@@ -60,6 +61,7 @@ export default function StepSystemCheck({onNext, setInstalledPlugins, setRequire
         <motion.div variants={itemVariants} className="overflow-y-auto">
           <PluginSelector
             isInstalling={isInstallingPlugins}
+            installedPlugins={installedPlugins}
             setInstalling={setIsInstallingPlugins}
             setInstalledPlugins={setInstalledPlugins}
             requirementsSatisfied={requirementsSatisfied}
