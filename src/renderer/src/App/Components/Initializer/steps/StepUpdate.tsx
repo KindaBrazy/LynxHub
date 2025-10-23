@@ -69,12 +69,12 @@ export default function StepUpdate({onComplete}: Props) {
 
       <motion.div className="flex gap-3" variants={itemVariants}>
         <Button
-          color="success"
           variant="shadow"
           onPress={onComplete}
           className="font-semibold"
           isDisabled={!pwshSatisfied}
-          startContent={<CheckDuo_Icon className="size-5" />}>
+          color={pwshSatisfied ? 'success' : 'default'}
+          startContent={pwshSatisfied && <CheckDuo_Icon className="size-5" />}>
           {pwshSatisfied ? `Finish & Restart ${APP_NAME}` : 'Waiting for PowerShell...'}
         </Button>
       </motion.div>
