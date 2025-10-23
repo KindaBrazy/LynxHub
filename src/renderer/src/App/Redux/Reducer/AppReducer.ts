@@ -15,6 +15,11 @@ type AppState = {
   navBar: boolean;
   appTitle: string | undefined;
   toastPlacement: HeroToastPlacement;
+
+  initializer: {
+    showWizard: boolean;
+    isUpgradeFlow: boolean;
+  };
 };
 
 type AppStateTypes = {
@@ -24,6 +29,8 @@ type AppStateTypes = {
 const storageData = await rendererIpc.storage.get('app');
 
 let darkMode: boolean;
+let showWizard: boolean;
+let isUpgradeFlow: boolean = false;
 
 if (storageData.darkMode === 'dark') {
   darkMode = true;
@@ -32,6 +39,27 @@ if (storageData.darkMode === 'dark') {
 } else {
   const systemDark = await rendererIpc.win.getSystemDarkMode();
   darkMode = systemDark === 'dark';
+}
+
+const oldSetupDone = storageData.initialized; // Legacy flag
+const newSetupDone = storageData.inited; // New flag
+const isWindows = window.osPlatform === 'win32';
+
+// If new setup is done, don't show the wizard.
+if (newSetupDone) {
+  showWizard = false;
+} else {
+  // If user completed the old setup and is NOT on Windows,
+  // mark the new setup as done and skip the wizard.
+  if (oldSetupDone && !isWindows) {
+    rendererIpc.storage.update('app', {inited: true});
+    showWizard = false;
+  } else {
+    // Otherwise, show the wizard.
+    // Determine if it's a fresh install or an upgrade flow for Windows users.
+    isUpgradeFlow = oldSetupDone;
+    showWizard = true;
+  }
 }
 
 const initialState: AppState = {
@@ -43,6 +71,8 @@ const initialState: AppState = {
   navBar: true,
   appTitle: undefined,
   toastPlacement: 'top-center',
+
+  initializer: {showWizard, isUpgradeFlow},
 };
 
 const appSlice = createSlice({

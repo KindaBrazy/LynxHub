@@ -1,38 +1,10 @@
 import {AnimatePresence, motion} from 'framer-motion';
-import {useEffect, useState} from 'react';
 
-import rendererIpc from '../../RendererIpc';
+import {useAppState} from '../../Redux/Reducer/AppReducer';
 import OnboardingWizard from './OnboardingWizard';
 
 export default function Initializer() {
-  const [showWizard, setShowWizard] = useState<boolean>(false);
-  const [isUpgradeFlow, setIsUpgradeFlow] = useState<boolean>(false);
-
-  useEffect(() => {
-    rendererIpc.storage.get('app').then(({initialized, inited}) => {
-      const oldSetupDone = initialized; // Legacy flag
-      const newSetupDone = inited; // New flag
-      const isWindows = window.osPlatform === 'win32';
-
-      // If new setup is done, don't show the wizard.
-      if (newSetupDone) {
-        setShowWizard(false);
-        return;
-      }
-
-      // If user completed the old setup and is NOT on Windows,
-      // mark the new setup as done and skip the wizard.
-      if (oldSetupDone && !isWindows) {
-        rendererIpc.storage.update('app', {inited: true});
-        setShowWizard(false);
-      } else {
-        // Otherwise, show the wizard.
-        // Determine if it's a fresh install or an upgrade flow for Windows users.
-        setIsUpgradeFlow(oldSetupDone);
-        setShowWizard(true);
-      }
-    });
-  }, []);
+  const {showWizard, isUpgradeFlow} = useAppState('initializer');
 
   return (
     <AnimatePresence>
