@@ -64,15 +64,15 @@ const TabContainer = memo(() => {
       className={
         'h-full items-center pt-1 notDraggable justify-between overflow-hidden flex flex-row pl-1 gap-x-1 relative'
       }>
-      <AnimatePresence>
-        <Reorder.Group
-          axis="x"
-          as="div"
-          ref={containerRef}
-          onReorder={onReorder}
-          onMouseUp={handleReorderEnd}
-          values={localTabs.map(tab => tab.id)}
-          className="items-center h-full w-full flex flex-row overflow-y-hidden overflow-x-scroll scrollbar-hide">
+      <Reorder.Group
+        axis="x"
+        as="div"
+        ref={containerRef}
+        onReorder={onReorder}
+        onMouseUp={handleReorderEnd}
+        values={localTabs.map(tab => tab.id)}
+        className="items-center h-full w-full flex flex-row overflow-y-hidden overflow-x-scroll scrollbar-hide">
+        <AnimatePresence>
           {localTabs.map((tab, index) => (
             <Reorder.Item
               transition={{
@@ -90,8 +90,8 @@ const TabContainer = memo(() => {
               {index < localTabs.length - 1 && <Divider type="vertical" className="mx-1" />}
             </Reorder.Item>
           ))}
-        </Reorder.Group>
-      </AnimatePresence>
+        </AnimatePresence>
+      </Reorder.Group>
 
       <NewTab />
     </div>
