@@ -3,7 +3,7 @@ import {motion} from 'framer-motion';
 import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../../../Breadcrumbs';
-import {Terminal_Icon, Web_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {Add_Icon, Terminal_Icon, Web_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {cardsActions} from '../../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
@@ -64,29 +64,24 @@ export default function Home_TopBar() {
             onPress={newBrowser}
             startContent={<Web_Icon />}
             className="hover:scale-105 shadow-sm bg-white dark:bg-foreground-200">
-            <motion.span whileHover={{x: 1}} transition={{duration: 0.2}}>
+            <motion.span whileHover={{x: 2}} transition={{duration: 0.2}}>
               Browser
             </motion.span>
           </Button>
         </motion.div>
 
         <motion.div transition={{delay: 0.3}} animate={{opacity: 1, y: 0}} initial={{opacity: 0, y: -10}}>
-          <Button
-            startContent={
-              <motion.div
-                whileTap={{scale: 0.9}}
-                whileHover={{scale: 1.1}}
-                transition={{duration: 0.2}}
-                className="flex items-center justify-center gap-0.5">
-                <Terminal_Icon />
-                <span className="text-xs opacity-60">+</span>
-                <Web_Icon />
-              </motion.div>
-            }
-            size="sm"
-            onPress={newTerminalBrowser}
-            className={'hover:scale-105 shadow-sm bg-primary'}
-          />
+          <Button size="sm" onPress={newTerminalBrowser} className={'hover:scale-105 shadow-sm bg-primary'}>
+            <motion.div
+              whileTap={{scale: 0.9}}
+              whileHover={{scale: 1.1}}
+              transition={{duration: 0.2}}
+              className="flex items-center justify-center gap-x-1">
+              <Terminal_Icon />
+              <Add_Icon className="size-2 opacity-60" />
+              <Web_Icon />
+            </motion.div>
+          </Button>
         </motion.div>
       </motion.div>
     </div>
