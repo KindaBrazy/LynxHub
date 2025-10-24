@@ -51,7 +51,7 @@ export default function Home_TopBar() {
             size="sm"
             onPress={newTerminal}
             startContent={<Terminal_Icon />}
-            className="hover:scale-105 bg-white shadow-sm dark:bg-foreground-200">
+            className="hover:scale-105 shadow-sm bg-white dark:bg-foreground-200">
             <motion.span whileHover={{x: 2}} transition={{duration: 0.2}}>
               Terminal
             </motion.span>
@@ -63,7 +63,7 @@ export default function Home_TopBar() {
             size="sm"
             onPress={newBrowser}
             startContent={<Web_Icon />}
-            className="hover:scale-105 bg-white shadow-sm dark:bg-foreground-200">
+            className="hover:scale-105 shadow-sm bg-white dark:bg-foreground-200">
             <motion.span whileHover={{x: 1}} transition={{duration: 0.2}}>
               Browser
             </motion.span>
@@ -85,7 +85,7 @@ export default function Home_TopBar() {
             }
             size="sm"
             onPress={newTerminalBrowser}
-            className={'bg-linear-to-br from-secondary to-primary hover:scale-105'}
+            className={'hover:scale-105 shadow-sm bg-primary'}
           />
         </motion.div>
       </motion.div>
