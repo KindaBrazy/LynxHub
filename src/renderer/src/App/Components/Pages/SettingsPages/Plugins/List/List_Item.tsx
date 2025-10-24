@@ -274,5 +274,13 @@ function InstallProgress({isInstalling, pluginUrl}: InstallProps) {
 
   if (!isInstalling) return null;
 
-  return <Progress size="sm" color="success" value={installProgress} className="absolute bottom-0 inset-x-0" />;
+  return (
+    <Progress
+      size="sm"
+      color="success"
+      value={installProgress}
+      aria-label="Installing progress"
+      className="absolute bottom-0 inset-x-0"
+    />
+  );
 }
