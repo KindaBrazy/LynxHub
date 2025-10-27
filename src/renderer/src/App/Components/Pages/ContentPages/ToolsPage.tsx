@@ -1,10 +1,20 @@
 import {ScrollShadow} from '@heroui/react';
+import {motion, Variants} from 'framer-motion';
 import {memo} from 'react';
 
 import {Rocket_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import CardContainer, {CardContainerClasses} from '../CardContainer';
 import Page from '../Page';
+
+const variants: Variants = {
+  initial: {opacity: 0, translateY: 20},
+  animate: (index: number) => ({
+    opacity: 1,
+    translateY: 0,
+    transition: {delay: index * 0.05},
+  }),
+};
 
 type Props = {show: boolean};
 
@@ -21,7 +31,15 @@ const ToolsPage = memo(({show}: Props) => {
           icon={<Rocket_Icon className={CardContainerClasses} />}>
           <div className="flex size-full flex-row flex-wrap gap-7 overflow-visible">
             {addComponent.map((Comp, index) => (
-              <Comp key={index} />
+              <motion.div
+                custom={index}
+                initial="initial"
+                animate="animate"
+                variants={variants}
+                key={`${index}_tools_card`}
+                layout>
+                <Comp key={index} />{' '}
+              </motion.div>
             ))}
           </div>
         </CardContainer>
