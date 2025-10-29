@@ -27,10 +27,11 @@
 2. **Download LynxHub**
 
    | Channel      | Version                                                             | Date       |
-                  | ------------ |---------------------------------------------------------------------|------------|
-   | Insider      | [**V3.3.0**](https://www.patreon.com/collection/1557749)            | 2025-10-24  |
+   |--------------|---------------------------------------------------------------------|------------|
+   | Insider      | [**V3.3.0**](https://www.patreon.com/collection/1557749)            | 2025-10-24 |
    | Early Access | [**V3.3.0**](https://www.patreon.com/collection/714004)             | 2025-10-24 |
    | Public       | [**V3.2.0**](https://github.com/KindaBrazy/LynxHub/releases/latest) | 2025-09-29 |
+
 
 3. **Install and Launch the Application**
 
@@ -111,8 +112,8 @@ environment, virtual environment, and package management .
 [**Hardware Monitor**](https://github.com/KindaBrazy/LynxHub-Hardware-Monitor): A configurable extension for real-time
 monitoring of CPU, GPU, and Memory usage, displayed conveniently in the status bar .
 
-[**Custom Actions**](https://github.com/KindaBrazy/LynxHub-Custom-Actions): Create, customize, and manage custom cards with
-powerful actions for personalized workflow shortcuts .
+[**Custom Actions**](https://github.com/KindaBrazy/LynxHub-Custom-Actions): Create, customize, and manage custom cards
+with powerful actions for personalized workflow shortcuts .
 
 ## 📃 Modules
 
