@@ -117,7 +117,8 @@ with powerful actions for personalized workflow shortcuts .
 
 ## 📃 Modules
 
-### [WebUI Container Module](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container)
+[Local AI Collection](https://github.com/KindaBrazy/LynxHub-Module-Offline-Container): A collection of local AI tools
+with full support for arguments, configurations, and extensions.
 
 ## 🔧 Development
 
