@@ -33,7 +33,7 @@ export function ToolsCard({title, description, icon, onPress, footer}: Props) {
             <User
               name={title}
               className="scale-120 ml-4 font-semibold"
-              avatarProps={{src: icon, className: '!bg-transparent', radius: 'none'}}
+              avatarProps={{src: icon, className: '!bg-transparent', radius: 'none', showFallback: true, name: title}}
             />
           </div>
 
