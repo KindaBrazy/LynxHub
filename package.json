@@ -87,7 +87,7 @@
     "@types/react-highlight-words": "^0.20.0",
     "@types/semver": "^7.7.1",
     "@types/serve-handler": "^6.1.4",
-    "@vitejs/plugin-react-swc": "^4.2.0",
+    "@vitejs/plugin-react": "^5.1.0",
     "@xterm/addon-canvas": "^0.7.0",
     "@xterm/addon-clipboard": "^0.1.0",
     "@xterm/addon-fit": "^0.10.0",
