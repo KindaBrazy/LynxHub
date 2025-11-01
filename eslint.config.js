@@ -1,5 +1,6 @@
 import configPrettier from '@electron-toolkit/eslint-config-prettier';
 import eslint from '@eslint/js';
+import {defineConfig} from 'eslint/config';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 import perfectionist from 'eslint-plugin-perfectionist';
 import react from 'eslint-plugin-react';
@@ -10,7 +11,7 @@ import tsEslint from 'typescript-eslint';
 
 const MAX_LINE_LENGTH = 120;
 
-export default [
+export default defineConfig([
   configPrettier,
 
   // sonarjs.configs.recommended,
@@ -61,6 +62,7 @@ export default [
       'simple-import-sort/exports': 'error',
 
       'no-async-promise-executor': 'off',
+      '@typescript-eslint/no-unused-expressions': 'off',
 
       'perfectionist/sort-jsx-props': [
         'error',
@@ -91,4 +93,4 @@ export default [
       'react-hooks/set-state-in-effect': 'off',
     },
   },
-];
+]);
