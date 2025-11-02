@@ -1,7 +1,7 @@
 import {isEqual} from 'lodash';
 import normalizeUrl, {Options} from 'normalize-url';
 
-import {SearchQuerySites} from './CrossTypes';
+import {SearchQuerySites, StorageUnit} from './CrossTypes';
 
 /**
  * Extracts the owner and repository name from a given GitHub | GitLab URL.
@@ -26,6 +26,73 @@ export function extractGitUrl(url: string): {
   const [, , , platform, owner, repo] = match;
   const avatarUrl = `https://github.com/${owner}.png`;
   return {owner, repo, platform: platform as 'github' | 'gitlab', avatarUrl};
+}
+
+/**
+ * Gets a numerical value from a string, converts it based on the initial unit,
+ * and then converts it to the specified target unit.
+ *
+ * @param valueString The string containing the value (e.g., "1024", "2.5").
+ * @param initialUnit The unit of the provided value (e.g., 'KB', 'MB', 'GB'). Must be a valid StorageUnit.
+ * @param targetUnit The unit to convert the final value to (e.g., 'GB', 'MB', 'TB'). Must be a valid StorageUnit.
+ * @returns The converted numerical value, or null if parsing fails.
+ */
+export function convertStorageUnit(
+  valueString: string,
+  initialUnit: StorageUnit,
+  targetUnit: StorageUnit,
+): number | null {
+  // 1. Define the conversion factor relative to the smallest common unit (Bytes)
+  // We use lowercase keys here for internal consistency, as we standardize user input.
+  const UNIT_FACTORS: {[key: string]: number} = {
+    // Standard Binary Prefixes (base 1024)
+    b: 1, // Bytes
+    kb: 1024, // Kilobytes
+    mb: 1024 * 1024, // Megabytes
+    gb: 1024 * 1024 * 1024, // Gigabytes
+    tb: 1024 * 1024 * 1024 * 1024, // Terabytes
+    pb: 1024 * 1024 * 1024 * 1024 * 1024, // Petabytes
+  };
+
+  // Helper function to standardize unit keys to lowercase for internal lookup
+  const standardizeUnit = (unit: string): string => unit.toLowerCase().trim();
+
+  // Standardize the units
+  const initialKey = standardizeUnit(initialUnit);
+  const targetKey = standardizeUnit(targetUnit);
+
+  // 2. Validate units (Though TypeScript enforces the type, we check the factor map just in case)
+  if (!UNIT_FACTORS[initialKey] || !UNIT_FACTORS[targetKey]) {
+    // This should theoretically not happen if the `StorageUnit` type is correct
+    console.error(`Internal error: Unit factor missing for Initial: ${initialUnit} or Target: ${targetUnit}`);
+    return null;
+  }
+
+  // 3. Extract the numerical value from the string
+  // We expect valueString to primarily contain the number, ignoring surrounding text/units
+  const match = valueString.match(/(\d+\.?\d*)/);
+  if (!match) {
+    console.error(`Could not parse numerical value from string: ${valueString}`);
+    return null;
+  }
+
+  const numericValue = parseFloat(match[0]);
+  if (isNaN(numericValue)) {
+    console.error(`Parsed value is not a number: ${match[0]}`);
+    return null;
+  }
+
+  // 4. Conversion Logic
+
+  // Step A: Convert the initial value to the base unit (Bytes)
+  const initialFactor = UNIT_FACTORS[initialKey];
+  const valueInBytes = numericValue * initialFactor;
+
+  // Step B: Convert the value in Bytes to the desired target unit
+  const targetFactor = UNIT_FACTORS[targetKey];
+  const convertedValue = valueInBytes / targetFactor;
+
+  return convertedValue;
 }
 
 /**
