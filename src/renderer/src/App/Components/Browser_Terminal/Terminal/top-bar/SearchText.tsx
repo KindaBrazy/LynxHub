@@ -2,7 +2,9 @@ import {Button, Input, Popover, PopoverContent, PopoverTrigger} from '@heroui/re
 import {SearchAddon} from '@xterm/addon-search';
 import {KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
 
+import {Hotkey_Names} from '../../../../../../../cross/HotkeyConstants';
 import {AltArrow_Icon, Magnifier_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import useHotkeyPress from '../../../../Utils/RegisterHotkeys';
 
 type Props = {searchAddon: SearchAddon};
 
@@ -28,6 +30,13 @@ const SearchText = memo(({searchAddon}: Props) => {
     [searchText],
   );
 
+  useHotkeyPress([
+    {
+      name: Hotkey_Names.findInPage,
+      method: () => setIsOpen(true),
+    },
+  ]);
+
   const onInputValueChange = useCallback((value: string) => {
     searchAddon.findNext(value);
     setSearchText(value);
@@ -35,6 +44,7 @@ const SearchText = memo(({searchAddon}: Props) => {
 
   return (
     <Popover
+      isOpen={isOpen}
       placement="bottom-start"
       onOpenChange={setIsOpen}
       classNames={{base: 'before:bg-foreground-100'}}

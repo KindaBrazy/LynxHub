@@ -198,6 +198,10 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
       xTerm.onSelectionChange(() => setSelectedTerminalText(xTerm?.getSelection() || ''));
 
       xTerm.attachCustomKeyEventHandler(e => {
+        if (e.key === 'f' && e.ctrlKey) {
+          return false;
+        }
+
         const selection = xTerm?.getSelection();
         if (!selection) return true;
 
