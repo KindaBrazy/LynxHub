@@ -1,3 +1,4 @@
+import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {isNil} from 'lodash';
 import {useEffect, useMemo, useRef, useState} from 'react';
@@ -86,6 +87,7 @@ const RunningCardView = ({runningCard}: Props) => {
   }, [id]);
 
   const [serializeAddon] = useState<SerializeAddon>(new SerializeAddon());
+  const [searchAddon] = useState<SearchAddon>(new SearchAddon());
   const [selectedTerminalText, setSelectedTerminalText] = useState<string>('');
   const clearTerminal = useRef<(() => void) | undefined>(undefined);
 
@@ -94,6 +96,7 @@ const RunningCardView = ({runningCard}: Props) => {
       <TopBar
         tabID={tabId}
         runningCard={runningCard}
+        searchAddon={searchAddon}
         clearTerminal={clearTerminal}
         serializeAddon={serializeAddon}
         selectedTerminalText={selectedTerminalText}
@@ -102,6 +105,7 @@ const RunningCardView = ({runningCard}: Props) => {
         (isNil(ExtTerminal) ? (
           <Terminal
             runningCard={runningCard}
+            searchAddon={searchAddon}
             clearTerminal={clearTerminal}
             serializeAddon={serializeAddon}
             setSelectedTerminalText={setSelectedTerminalText}

@@ -5,14 +5,14 @@ import {memo, useCallback, useState} from 'react';
 import {CheckDuo_Icon, CopyDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 
 type Props = {
-  serializeAddon?: SerializeAddon;
+  serializeAddon: SerializeAddon;
 };
 
 const CopyAll = memo(({serializeAddon}: Props) => {
   const [copied, setCopied] = useState<boolean>(false);
 
   const handleCopy = useCallback(() => {
-    const contentToCopy = serializeAddon?.serialize();
+    const contentToCopy = serializeAddon.serialize();
     if (!contentToCopy) return;
 
     navigator.clipboard.writeText(contentToCopy);
