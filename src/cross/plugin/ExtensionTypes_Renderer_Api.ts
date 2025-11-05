@@ -1,11 +1,12 @@
-import {Reducer} from '@reduxjs/toolkit';
-import {Scope} from '@sentry/browser';
-import {Emitter} from 'mitt';
-import {FC} from 'react';
+import type {Reducer} from '@reduxjs/toolkit';
+import type {Scope} from '@sentry/browser';
+import type {Emitter} from 'mitt';
+import type {FC} from 'react';
 
-import {AvailablePageIDs} from '../CrossConstants';
-import {ExtensionEvents, ExtensionEvents_IPC} from './ExtensionTypes_Events';
-import {
+import type rendererIpc from '../../renderer/src/App/RendererIpc';
+import type {AvailablePageIDs} from '../CrossConstants';
+import type {ExtensionEvents, ExtensionEvents_IPC} from './ExtensionTypes_Events';
+import type {
   AddMenuType,
   FcProp,
   FcPropCard,
@@ -14,7 +15,7 @@ import {
   FcPropReplaceMd,
   FcPropSearchResult,
 } from './ExtensionTypes_Renderer';
-import {ArgumentsData, CardData, CardModules, CardRendererMethods, LoadedCardData} from './ModuleTypes';
+import type {ArgumentsData, CardData, CardModules, CardRendererMethods, LoadedCardData} from './ModuleTypes';
 
 export type ModuleData = {
   allModules: CardModules;
@@ -389,7 +390,7 @@ export type ExtensionRendererApi = {
 
   modulesData?: ModuleData;
 
-  rendererIpc?: any;
+  rendererIpc?: typeof rendererIpc;
 
   initBrowserSentry: (dsn: string) => Scope;
 };
