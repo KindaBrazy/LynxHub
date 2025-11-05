@@ -1,6 +1,6 @@
 import {Empty} from 'antd';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
-import {compact, isEmpty, isNil} from 'lodash';
+import {isEmpty, isNil} from 'lodash';
 import {memo, useMemo} from 'react';
 
 import {LoadedCardData} from '../../../../../cross/plugin/ModuleTypes';
@@ -59,15 +59,8 @@ const AllCards = () => {
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
   const allCards = useAllCardDataWithPath();
-  const pinnedCards = useCardsState('pinnedCards');
 
-  const sortedCards = useMemo(() => {
-    const pin = compact(allCards?.filter(card => pinnedCards.includes(card.id)));
-    const rest = compact(allCards?.filter(card => !pinnedCards.includes(card.id)));
-    return [...pin, ...rest];
-  }, [pinnedCards, allCards]);
-
-  if (isEmpty(sortedCards) && isEmpty(allCategory))
+  if (isEmpty(allCards) && isEmpty(allCategory))
     return (
       <Empty className="size-full" description="No Card to Display!">
         <NavigatePluginsPage />
@@ -77,7 +70,7 @@ const AllCards = () => {
   return (
     <LayoutGroup id="all_cards_category">
       <AnimatePresence>
-        {isNil(ReplaceCards) ? <RenderCardList cards={sortedCards} /> : <ReplaceCards cards={sortedCards} />}
+        {isNil(ReplaceCards) ? <RenderCardList cards={allCards} /> : <ReplaceCards cards={allCards} />}
       </AnimatePresence>
     </LayoutGroup>
   );
