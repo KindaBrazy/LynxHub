@@ -1,15 +1,17 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {FolderDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
-import {useLynxToast} from '../../../../Utils/UtilHooks';
+import {lynxTopToast} from '../../../../Utils/UtilHooks';
 
 type Props = {id: string};
 const CDTo = memo(({id}: Props) => {
   const [history, setHistory] = useState<string[]>([]);
-  const toast = useLynxToast();
+  const dispatch = useDispatch<AppDispatch>();
 
   const cdTo = useCallback(
     (dir: string) => {
@@ -31,12 +33,12 @@ const CDTo = memo(({id}: Props) => {
         if (dir) {
           cdTo(dir);
         } else {
-          toast.warning('No directory selected');
+          lynxTopToast(dispatch).warning('No directory selected');
         }
       })
       .catch(e => {
         console.error(e);
-        toast.error('Error opening directory');
+        lynxTopToast(dispatch).error('Error opening directory');
       });
   }, [id, cdTo]);
 
