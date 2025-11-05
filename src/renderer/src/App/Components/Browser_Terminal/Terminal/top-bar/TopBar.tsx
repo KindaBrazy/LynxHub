@@ -1,8 +1,7 @@
-import {Button} from '@heroui/react';
 import {SerializeAddon} from '@xterm/addon-serialize';
-import {memo, RefObject, useCallback} from 'react';
+import {memo, RefObject} from 'react';
 
-import {BroomDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import ClearAll from './ClearAll';
 import CopyAll from './CopyAll';
 import SearchBy from './SearchBy';
 import Timer from './Timer';
@@ -15,12 +14,6 @@ type Props = {
 };
 
 const Terminal_TopBar = memo(({startTime, serializeAddon, clearTerminal, selectedTerminalText}: Props) => {
-  const clearTerm = useCallback(() => {
-    if (clearTerminal.current) {
-      clearTerminal.current();
-    }
-  }, [clearTerminal]);
-
   return (
     <>
       <div className="flex flex-row h-full items-center gap-x-1">
@@ -28,9 +21,7 @@ const Terminal_TopBar = memo(({startTime, serializeAddon, clearTerminal, selecte
 
         <CopyAll serializeAddon={serializeAddon} />
 
-        <Button size="sm" variant="light" onPress={clearTerm} isIconOnly>
-          <BroomDuo_Icon className="size-3.5" />
-        </Button>
+        <ClearAll clearTerminal={clearTerminal} />
 
         <SearchBy selectedTerminalText={selectedTerminalText} />
       </div>
