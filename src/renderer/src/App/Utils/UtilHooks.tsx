@@ -137,7 +137,7 @@ export const lynxTopToast = (dispatch: Dispatch, placement: HeroToastPlacement =
 
 export const useLynxToast = () => {
   const dispatch = useDispatch<AppDispatch>();
-  return lynxTopToast(dispatch);
+  return useMemo(() => lynxTopToast(dispatch), []);
 };
 
 export const useDisableTooltip = (isEssential: boolean = false): boolean => {
