@@ -270,55 +270,57 @@ export default class ContextMenuManager {
   private positionContextMenuAtCursor() {
     const window = this.contextMenuWindow;
     if (!window) return;
+
     const [menuWidth, menuHeight] = window.getContentSize();
 
-    const {x: cursorX, y: cursorY} = screen.getCursorScreenPoint();
-    const defaultDisplay = screen.getDisplayNearestPoint({x: cursorX, y: cursorY});
-    const defaultWorkArea = defaultDisplay.workArea;
-    let newX = cursorX;
-    let newY = cursorY;
+    // 1. Determine the initial click point on the screen
+    let clickPoint: {x: number; y: number};
 
-    if (newX + menuWidth > defaultWorkArea.x + defaultWorkArea.width) {
-      newX = defaultWorkArea.x + defaultWorkArea.width - menuWidth;
-    }
-    if (newY + menuHeight > defaultWorkArea.y + defaultWorkArea.height) {
-      newY = defaultWorkArea.y + defaultWorkArea.height - menuHeight;
-    }
-    if (newX < defaultWorkArea.x) {
-      newX = defaultWorkArea.x;
-    }
-    if (newY < defaultWorkArea.y) {
-      newY = defaultWorkArea.y;
+    if (this.customContextPosition) {
+      // Use the custom position relative to the main window
+      const parentBounds = this.mainWindow!.getBounds();
+      clickPoint = {
+        x: Math.floor(this.customContextPosition.x) + parentBounds.x + 1,
+        y: Math.floor(this.customContextPosition.y) + parentBounds.y + 1,
+      };
+    } else {
+      // Use the global cursor position
+      clickPoint = screen.getCursorScreenPoint();
     }
 
+    // 2. Determine the display and work area for that point
+    const display = screen.getDisplayNearestPoint(clickPoint);
+    const workArea = display.workArea;
+
+    // 3. Calculate the ideal menu position with "flipping" logic
+    let newX = clickPoint.x;
+    let newY = clickPoint.y;
+
+    // Adjust horizontal position: If it goes off the right, open to the left
+    if (newX + menuWidth > workArea.x + workArea.width) {
+      newX = clickPoint.x - menuWidth;
+    }
+
+    // Adjust vertical position: If it goes off the bottom, open to the top
+    if (newY + menuHeight > workArea.y + workArea.height) {
+      newY = clickPoint.y - menuHeight;
+    }
+
+    // Final boundary checks to ensure it never goes off the top/left
+    // (This is a failsafe for multi-monitor setups or unusual work areas)
+    if (newX < workArea.x) {
+      newX = workArea.x;
+    }
+    if (newY < workArea.y) {
+      newY = workArea.y;
+    }
+
+    // 4. Set the final position
     try {
-      if (this.customContextPosition) {
-        const parentBounds = this.mainWindow!.getBounds();
-        let absX = Math.floor(this.customContextPosition.x) + parentBounds.x + 10;
-        let absY = Math.floor(this.customContextPosition.y) + parentBounds.y + 10;
-
-        const disp = screen.getDisplayNearestPoint({x: absX, y: absY});
-        const workArea = disp.workArea;
-
-        if (absX + menuWidth > workArea.x + workArea.width) {
-          absX = workArea.x + workArea.width - menuWidth;
-        }
-        if (absY + menuHeight > workArea.y + workArea.height) {
-          absY = workArea.y + workArea.height - menuHeight;
-        }
-        if (absX < workArea.x) {
-          absX = workArea.x;
-        }
-        if (absY < workArea.y) {
-          absY = workArea.y;
-        }
-
-        window.setPosition(absX, absY, true);
-      } else {
-        window.setPosition(Math.floor(newX), Math.floor(newY), true);
-      }
+      // Use Math.floor to ensure integer coordinates
+      window.setPosition(Math.floor(newX), Math.floor(newY), true);
     } catch (e) {
-      console.error(e);
+      console.error('Failed to set context menu position:', e);
     }
   }
 }
