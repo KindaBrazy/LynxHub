@@ -25,6 +25,7 @@ const TopBar = memo(({runningCard, serializeAddon, searchAddon, tabID, clearTerm
       }>
       {runningCard.currentView === 'terminal' ? (
         <Terminal_TopBar
+          id={runningCard.id}
           searchAddon={searchAddon}
           clearTerminal={clearTerminal}
           serializeAddon={serializeAddon}
