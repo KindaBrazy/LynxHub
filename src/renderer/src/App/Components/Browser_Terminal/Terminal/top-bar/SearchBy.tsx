@@ -1,4 +1,4 @@
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image} from '@heroui/react';
+import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Tooltip} from '@heroui/react';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useCallback} from 'react';
 
@@ -29,11 +29,16 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
           animate={{translateY: 0, opacity: 1, scale: 1}}
           initial={{translateY: 5, opacity: 0, scale: 0.7}}>
           <Dropdown>
-            <DropdownTrigger>
-              <Button size="sm" variant="light" isIconOnly>
-                <Web_Icon className="size-3.5" />
-              </Button>
-            </DropdownTrigger>
+            <Tooltip delay={500} content="Search selected text by">
+              <div className="max-w-fit">
+                <DropdownTrigger>
+                  <Button size="sm" variant="light" isIconOnly>
+                    <Web_Icon className="size-3.5" />
+                  </Button>
+                </DropdownTrigger>
+              </div>
+            </Tooltip>
+
             <DropdownMenu
               topContent={<span className="tracking-tighter text-foreground-700">Search selected text by:</span>}>
               <DropdownItem
@@ -60,12 +65,10 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
                 Reddit
               </DropdownItem>
               <DropdownItem
+                startContent={<Image alt="ChatGPT icon" className="size-4" src="https://chat.openai.com/favicon.ico" />}
                 key="ChatGPT"
                 endContent={endContent}
-                onPress={() => searchSelectedText('ChatGPT')}
-                startContent={
-                  <Image alt="ChatGPT icon" className="size-4" src="https://chat.openai.com/favicon.ico" />
-                }>
+                onPress={() => searchSelectedText('ChatGPT')}>
                 ChatGPT
               </DropdownItem>
               <DropdownItem

@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button, Tooltip} from '@heroui/react';
 import {memo, RefObject, useCallback} from 'react';
 
 import {BroomDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
@@ -15,9 +15,11 @@ const ClearAll = memo(({clearTerminal}: Props) => {
   }, [clearTerminal]);
 
   return (
-    <Button size="sm" variant="light" onPress={clearTerm} isIconOnly>
-      <BroomDuo_Icon className="size-3.5" />
-    </Button>
+    <Tooltip delay={500} content="Clear all">
+      <Button size="sm" variant="light" onPress={clearTerm} isIconOnly>
+        <BroomDuo_Icon className="size-3.5" />
+      </Button>
+    </Tooltip>
   );
 });
 
