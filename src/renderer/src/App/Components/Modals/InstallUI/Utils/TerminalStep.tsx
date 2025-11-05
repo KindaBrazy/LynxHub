@@ -170,13 +170,13 @@ export default function TerminalStep({id}: Props) {
       }, RESIZE_DELAY);
     });
 
-    const removeListener = rendererIpc.pty.onData((_, dataID, data) => {
+    const offData = rendererIpc.pty.onData((_, dataID, data) => {
       if (dataID === id) writeData(data);
     });
 
     return () => {
       window.removeEventListener('resize', () => {});
-      removeListener();
+      offData();
     };
   }, [terminalRef]);
 
