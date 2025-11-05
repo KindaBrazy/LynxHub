@@ -29,9 +29,9 @@ const Terminal_TopBar = memo(
 
           <ClearAll clearTerminal={clearTerminal} />
 
-          <SearchText searchAddon={searchAddon} />
-
           <CDTo id={id} />
+
+          <SearchText searchAddon={searchAddon} />
 
           <SearchBy selectedTerminalText={selectedTerminalText} />
         </div>
