@@ -62,7 +62,7 @@ const CDTo = memo(({id}: Props) => {
   }, [history]);
 
   return (
-    <Dropdown>
+    <Dropdown className="bg-foreground-100" classNames={{base: 'before:bg-foreground-100'}} showArrow>
       <Tooltip delay={500} content="CD to...">
         <div className="max-w-fit">
           <DropdownTrigger>
