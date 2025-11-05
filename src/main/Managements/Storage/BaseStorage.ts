@@ -157,233 +157,155 @@ class BaseStorage {
   }
 
   private migration() {
-    const storeVersion = this.getData('storage').version;
+    try {
+      const storeVersion = this.getData('storage').version;
 
-    const v4to5 = () => {
-      this.storage.data.terminal = this.DEFAULT_DATA.terminal;
-    };
-
-    const v5to6 = () => {
-      this.storage.data.cards.duplicated = [];
-    };
-
-    const v6to7 = () => {
-      this.storage.data.app.openLastSize = false;
-      this.storage.data.app.dynamicAppTitle = true;
-      this.storage.data.app.lastSize = undefined;
-      this.storage.data.cards.checkUpdateInterval = 30;
-    };
-
-    const v7to8 = () => {
-      this.storage.data.browser = {
-        favoriteAddress: [],
-        historyAddress: [],
-        recentAddress: [],
-        favIcons: [],
-        userAgent: 'lynxhub',
-        customUserAgent: getUserAgent('lynxhub'),
-      };
-      this.storage.data.app.closeTabConfirm = true;
-      this.storage.data.app.hotkeys = Get_Default_Hotkeys(platform());
-      this.storage.data.app.openLinkExternal = false;
-      this.storage.data.cards.zoomFactor = 1;
-      this.storage.data.app.hardwareAcceleration = true;
-      this.storage.data.app.disableLoadingAnimations = false;
-      this.storage.data.notification = {readNotifs: []};
-      this.storage.data.app.collectErrors = true;
-    };
-
-    const v81to82 = () => {
-      this.storage.data.terminal.closeTabOnExit = true;
-    };
-
-    const v82to83 = () => {
-      const recents = this.storage.data.browser.recentAddress as unknown[] as FavIcons[];
-      const urls = recents.map(recent => recent.url);
-
-      this.storage.data.browser.favoriteAddress = [];
-      this.storage.data.browser.favIcons = recents;
-      this.storage.data.browser.historyAddress = urls;
-      this.storage.data.browser.recentAddress = urls;
-    };
-
-    const v83to84 = () => {
-      this.storage.data.cards.cardTerminalPreCommands = [];
-      this.storage.data.app.addBreadcrumbs = true;
-
-      this.migratedTo = 0.84;
-    };
-
-    const v84to85 = () => {
-      this.storage.data.app.addBreadcrumbs = true;
-    };
-
-    const v85to86 = () => {
-      this.storage.data.app.inited = false;
-    };
-
-    const v86to87 = () => {
-      this.storage.data.plugin = {migrated: false};
-    };
-
-    const v87to88 = () => {
-      const behavior = this.storage.data.cardsConfig.customRunBehavior;
-      if (!isEmpty(behavior)) {
-        this.storage.data.cardsConfig.customRunBehavior = behavior.map((item: CustomRunBehaviorData_Legacy) => {
-          const cardID = item.cardID;
-          const urlCatch: CustomRunBehaviorData['urlCatch'] = {
-            delay: 10,
-            customUrl: undefined,
-            type: item.browser === 'doNothing' ? 'nothing' : 'module',
-            findLine: undefined,
-          };
-          const browser = item.browser === 'defaultBrowser' ? 'defaultBrowser' : 'appBrowser';
-          const terminal = item.terminal as CustomRunBehaviorData['terminal'];
-
-          return {cardID, browser, terminal, urlCatch};
-        });
+      // If the store is too old, reset to default and exit.
+      if (storeVersion < 0.4) {
+        this.storage.data = {...this.DEFAULT_DATA};
+        this.write();
+        return;
       }
 
-      this.storage.data.app.startMaximized = false;
-
-      const scrollBack = this.storage.data.terminal.scrollBack;
-      if (scrollBack === 10000) {
-        this.storage.data.terminal.scrollBack = 1000;
+      // If the version is already current, do nothing.
+      if (storeVersion >= this.CURRENT_VERSION) {
+        return;
       }
-    };
 
-    const v88to89 = () => {
-      this.storage.data.terminal.cdHistory = [];
-    };
+      // A list of all migration functions, ordered by the version they migrate *from*.
+      // The key is the version that requires this migration.
+      const migrations = new Map<number, () => void>([
+        [
+          0.4,
+          () => {
+            this.storage.data.terminal = this.DEFAULT_DATA.terminal;
+          },
+        ],
+        [
+          0.5,
+          () => {
+            this.storage.data.cards.duplicated = [];
+          },
+        ],
+        [
+          0.6,
+          () => {
+            this.storage.data.app.openLastSize = false;
+            this.storage.data.app.dynamicAppTitle = true;
+            this.storage.data.app.lastSize = undefined;
+            this.storage.data.cards.checkUpdateInterval = 30;
+          },
+        ],
+        [
+          0.7,
+          () => {
+            this.storage.data.browser = {
+              favoriteAddress: [],
+              historyAddress: [],
+              recentAddress: [],
+              favIcons: [],
+              userAgent: 'lynxhub',
+              customUserAgent: getUserAgent('lynxhub'),
+            };
+            this.storage.data.app.closeTabConfirm = true;
+            this.storage.data.app.hotkeys = Get_Default_Hotkeys(platform());
+            this.storage.data.app.openLinkExternal = false;
+            this.storage.data.cards.zoomFactor = 1;
+            this.storage.data.app.hardwareAcceleration = true;
+            this.storage.data.app.disableLoadingAnimations = false;
+            this.storage.data.notification = {readNotifs: []};
+            this.storage.data.app.collectErrors = true;
+          },
+        ],
+        [
+          0.81,
+          () => {
+            this.storage.data.terminal.closeTabOnExit = true;
+          },
+        ],
+        [
+          0.82,
+          () => {
+            const recents = this.storage.data.browser.recentAddress as unknown[] as FavIcons[];
+            const urls = recents.map(recent => recent.url);
+            this.storage.data.browser.favoriteAddress = [];
+            this.storage.data.browser.favIcons = recents;
+            this.storage.data.browser.historyAddress = urls;
+            this.storage.data.browser.recentAddress = urls;
+          },
+        ],
+        [
+          0.83,
+          () => {
+            this.storage.data.cards.cardTerminalPreCommands = [];
+            this.storage.data.app.addBreadcrumbs = true;
+            this.migratedTo = 0.84;
+          },
+        ],
+        [
+          0.84,
+          () => {
+            this.storage.data.app.addBreadcrumbs = true;
+          },
+        ],
+        [
+          0.85,
+          () => {
+            this.storage.data.app.inited = false;
+          },
+        ],
+        [
+          0.86,
+          () => {
+            this.storage.data.plugin = {migrated: false};
+          },
+        ],
+        [
+          0.87,
+          () => {
+            const behavior = this.storage.data.cardsConfig.customRunBehavior;
+            if (!isEmpty(behavior)) {
+              this.storage.data.cardsConfig.customRunBehavior = behavior.map((item: CustomRunBehaviorData_Legacy) => {
+                return {
+                  cardID: item.cardID,
+                  browser: item.browser === 'defaultBrowser' ? 'defaultBrowser' : 'appBrowser',
+                  terminal: item.terminal as CustomRunBehaviorData['terminal'],
+                  urlCatch: {
+                    delay: 10,
+                    customUrl: undefined,
+                    type: item.browser === 'doNothing' ? 'nothing' : 'module',
+                    findLine: undefined,
+                  },
+                };
+              });
+            }
+            this.storage.data.app.startMaximized = false;
+            if (this.storage.data.terminal.scrollBack === 10000) {
+              this.storage.data.terminal.scrollBack = 1000;
+            }
+          },
+        ],
+        [
+          0.88,
+          () => {
+            this.storage.data.terminal.cdHistory = [];
+          },
+        ],
+      ]);
 
-    const updateVersion = () => {
+      // Apply all necessary migrations sequentially.
+      for (const [version, migrationFn] of migrations.entries()) {
+        if (storeVersion < version + 0.01) {
+          // Use a small tolerance for float comparison
+          console.log(`Applying migration for v${version}...`);
+          migrationFn();
+        }
+      }
+
+      // Finally, update the stored version to the current application version.
       this.updateData('storage', {version: this.CURRENT_VERSION});
-    };
-
-    if (storeVersion < 0.4) {
-      this.storage.data = {...this.DEFAULT_DATA};
-      this.write();
-    } else if (storeVersion < this.CURRENT_VERSION) {
-      switch (storeVersion) {
-        case 0.4: {
-          v4to5();
-          v5to6();
-          v6to7();
-          v7to8();
-          v81to82();
-          v82to83();
-          v83to84();
-          v84to85();
-          v85to86();
-          v86to87();
-          v87to88();
-          v88to89();
-          break;
-        }
-        case 0.5: {
-          v5to6();
-          v6to7();
-          v7to8();
-          v81to82();
-          v82to83();
-          v83to84();
-          v84to85();
-          v85to86();
-          v86to87();
-          v87to88();
-          v88to89();
-          break;
-        }
-        case 0.6: {
-          v6to7();
-          v7to8();
-          v81to82();
-          v82to83();
-          v83to84();
-          v84to85();
-          v85to86();
-          v86to87();
-          v87to88();
-          v88to89();
-          break;
-        }
-        case 0.7: {
-          v7to8();
-          v81to82();
-          v82to83();
-          v83to84();
-          v84to85();
-          v85to86();
-          v86to87();
-          v87to88();
-          v88to89();
-          break;
-        }
-        case 0.8: {
-          v81to82();
-          v82to83();
-          v83to84();
-          v84to85();
-          v85to86();
-          v86to87();
-          v87to88();
-          v88to89();
-          break;
-        }
-        case 0.82: {
-          v82to83();
-          v83to84();
-          v84to85();
-          v85to86();
-          v86to87();
-          v87to88();
-          v88to89();
-          break;
-        }
-        case 0.83: {
-          v83to84();
-          v84to85();
-          v85to86();
-          v86to87();
-          v87to88();
-          v88to89();
-          break;
-        }
-        case 0.84: {
-          v84to85();
-          v85to86();
-          v86to87();
-          v87to88();
-          v88to89();
-          break;
-        }
-        case 0.85: {
-          v85to86();
-          v86to87();
-          v87to88();
-          v88to89();
-          break;
-        }
-        case 0.86: {
-          v86to87();
-          v87to88();
-          v88to89();
-          break;
-        }
-        case 0.87: {
-          v87to88();
-          v88to89();
-          break;
-        }
-        case 0.88: {
-          v88to89();
-          break;
-        }
-        default:
-          break;
-      }
-
-      updateVersion();
+    } catch (e) {
+      console.error('Failed to migrate storage', e);
     }
   }
 
