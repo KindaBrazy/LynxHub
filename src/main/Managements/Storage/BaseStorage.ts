@@ -27,11 +27,11 @@ import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
-  private readonly CURRENT_VERSION: number = 0.88;
+  private readonly CURRENT_VERSION: number = 0.89;
   private migratedTo: number = 0;
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.88},
+    storage: {version: 0.89},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -97,6 +97,7 @@ class BaseStorage {
       blinkCursor: true,
       resizeDelay: 77,
       closeTabOnExit: true,
+      cdHistory: [],
     },
     browser: {
       recentAddress: [],
@@ -251,6 +252,10 @@ class BaseStorage {
       }
     };
 
+    const v88to89 = () => {
+      this.storage.data.terminal.cdHistory = [];
+    };
+
     const updateVersion = () => {
       this.updateData('storage', {version: this.CURRENT_VERSION});
     };
@@ -272,6 +277,7 @@ class BaseStorage {
           v85to86();
           v86to87();
           v87to88();
+          v88to89();
           break;
         }
         case 0.5: {
@@ -285,6 +291,7 @@ class BaseStorage {
           v85to86();
           v86to87();
           v87to88();
+          v88to89();
           break;
         }
         case 0.6: {
@@ -297,6 +304,7 @@ class BaseStorage {
           v85to86();
           v86to87();
           v87to88();
+          v88to89();
           break;
         }
         case 0.7: {
@@ -308,6 +316,7 @@ class BaseStorage {
           v85to86();
           v86to87();
           v87to88();
+          v88to89();
           break;
         }
         case 0.8: {
@@ -318,6 +327,7 @@ class BaseStorage {
           v85to86();
           v86to87();
           v87to88();
+          v88to89();
           break;
         }
         case 0.82: {
@@ -327,6 +337,7 @@ class BaseStorage {
           v85to86();
           v86to87();
           v87to88();
+          v88to89();
           break;
         }
         case 0.83: {
@@ -335,6 +346,7 @@ class BaseStorage {
           v85to86();
           v86to87();
           v87to88();
+          v88to89();
           break;
         }
         case 0.84: {
@@ -342,21 +354,29 @@ class BaseStorage {
           v85to86();
           v86to87();
           v87to88();
+          v88to89();
           break;
         }
         case 0.85: {
           v85to86();
           v86to87();
           v87to88();
+          v88to89();
           break;
         }
         case 0.86: {
           v86to87();
           v87to88();
+          v88to89();
           break;
         }
         case 0.87: {
           v87to88();
+          v88to89();
+          break;
+        }
+        case 0.88: {
+          v88to89();
           break;
         }
         default:
