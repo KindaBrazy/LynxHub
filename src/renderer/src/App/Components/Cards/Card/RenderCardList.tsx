@@ -1,7 +1,9 @@
 import {motion, Variants} from 'framer-motion';
+import {memo} from 'react';
 
 import {LoadedCardData} from '../../../../../../cross/plugin/ModuleTypes';
-import {InstalledCards} from '../../../../../../cross/StorageTypes';
+import {useHasArguments} from '../../../Modules/ModuleLoader';
+import {useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import Wrapper from './Wrapper';
 
 const variants: Variants = {
@@ -13,11 +15,15 @@ const variants: Variants = {
   }),
 };
 
-type Props = {sortedCards: LoadedCardData[]; installedCards: InstalledCards; hasArguments: Set<string>};
-export default function RenderCardList({sortedCards, installedCards, hasArguments}: Props) {
+type Props = {cards: LoadedCardData[]};
+
+const RenderCardList = memo(({cards}: Props) => {
+  const installedCards = useCardsState('installedCards');
+  const hasArguments = useHasArguments();
+
   return (
     <>
-      {sortedCards.map((card, index) => {
+      {cards.map((card, index) => {
         const isInstalled = installedCards.some(c => c.id === card.id);
 
         return (
@@ -34,4 +40,6 @@ export default function RenderCardList({sortedCards, installedCards, hasArgument
       })}
     </>
   );
-}
+});
+
+export default RenderCardList;
