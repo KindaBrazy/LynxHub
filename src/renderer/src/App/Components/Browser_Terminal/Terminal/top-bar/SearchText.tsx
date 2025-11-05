@@ -1,4 +1,4 @@
-import {Button, Input, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
+import {Button, Input, Popover, PopoverContent, PopoverTrigger, Tooltip} from '@heroui/react';
 import {SearchAddon} from '@xterm/addon-search';
 import {KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
 
@@ -49,11 +49,16 @@ const SearchText = memo(({searchAddon}: Props) => {
       onOpenChange={setIsOpen}
       classNames={{base: 'before:bg-foreground-100'}}
       showArrow>
-      <PopoverTrigger>
-        <Button size="sm" variant="light" isIconOnly>
-          <Magnifier_Icon className="size-3.5" />
-        </Button>
-      </PopoverTrigger>
+      <Tooltip delay={500} content="Search for text">
+        <div className="max-w-fit">
+          <PopoverTrigger>
+            <Button size="sm" variant="light" isIconOnly>
+              <Magnifier_Icon className="size-3.5" />
+            </Button>
+          </PopoverTrigger>
+        </div>
+      </Tooltip>
+
       <PopoverContent className="border border-foreground-100 bg-foreground-50/80">
         <div className="flex flex-row px-1 py-2 gap-x-1.5 items-center">
           <Input

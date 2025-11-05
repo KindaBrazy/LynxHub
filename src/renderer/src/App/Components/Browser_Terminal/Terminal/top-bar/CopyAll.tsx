@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button, Tooltip} from '@heroui/react';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {memo, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -46,17 +46,21 @@ const CopyAll = memo(({serializeAddon}: Props) => {
 
   return (
     <div className="flex flex-row items-center gap-x-1">
-      <Button size="sm" variant="light" onPress={handleCopy} isIconOnly>
-        {copied ? (
-          <CheckDuo_Icon className="size-5 animate-appearance-in" />
-        ) : (
-          <CopyDuo_Icon className="size-3.5 animate-appearance-in" />
-        )}
-      </Button>
+      <Tooltip delay={500} content="Copy all to clipboard">
+        <Button size="sm" variant="light" onPress={handleCopy} isIconOnly>
+          {copied ? (
+            <CheckDuo_Icon className="size-5 animate-appearance-in" />
+          ) : (
+            <CopyDuo_Icon className="size-3.5 animate-appearance-in" />
+          )}
+        </Button>
+      </Tooltip>
 
-      <Button size="sm" variant="light" onPress={saveFile} isIconOnly>
-        <FileDownDuo_Icon className="size-3.5" />
-      </Button>
+      <Tooltip delay={500} content="Export all to file">
+        <Button size="sm" variant="light" onPress={saveFile} isIconOnly>
+          <FileDownDuo_Icon className="size-3.5" />
+        </Button>
+      </Tooltip>
     </div>
   );
 });
