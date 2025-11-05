@@ -87,6 +87,7 @@ type StorageTypes = {
     blinkCursor: boolean;
     resizeDelay: number;
     closeTabOnExit: boolean;
+    cdHistory: string[];
   };
   browser: {
     recentAddress: string[];
