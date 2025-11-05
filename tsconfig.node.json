@@ -9,7 +9,6 @@
     "extension/src/main/**/*",
     "extension/src/cross/**/*",
     "module/src/**/*",
-    "src/renderer/src/App/RendererIpc.ts"
   ],
   "compilerOptions": {
     "moduleResolution": "bundler",

@@ -123,6 +123,7 @@ export const fileChannels = {
   dialog: 'app:openDialog',
   extensionsNames: 'app:extensionsFolder',
   openPath: 'app:openPath',
+  saveToFile: 'app:saveToFile',
   removeDir: 'app:removeDir',
   trashDir: 'app:trashDir',
   listDir: 'app:listDir',

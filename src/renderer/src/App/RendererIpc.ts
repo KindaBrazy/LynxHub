@@ -145,6 +145,7 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('file_open_path', {dir});
       ipc.send(fileChannels.openPath, dir);
     },
+    saveToFile: (content: string): Promise<string | null> => ipc.invoke(fileChannels.saveToFile, content),
 
     getAppDirectories: (name: FolderNames): Promise<string> => {
       extensionRendererApi.events_ipc.emit('file_get_app_directories', {name});

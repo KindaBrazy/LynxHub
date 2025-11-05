@@ -1,8 +1,9 @@
+import {writeFile} from 'node:fs/promises';
 import {platform} from 'node:os';
 import path from 'node:path';
 
 import decompress from 'decompress';
-import {app, shell} from 'electron';
+import {app, dialog, shell} from 'electron';
 import {promises, readdir} from 'graceful-fs';
 
 import {DiscordRPC, FolderListData} from '../../../../cross/CrossTypes';
@@ -119,6 +120,41 @@ export async function removeDir(dir: string): Promise<void> {
   }
 }
 
+/**
+ * Shows a save dialog and writes the provided content to the selected file.
+ * @param content The string content to write to the file.
+ * @returns The file path if saved successfully, otherwise null if cancelled.
+ * @throws An error if the file operation fails.
+ */
+export async function saveToFile(content: string): Promise<string | null> {
+  try {
+    const mainWindow = appManager?.getMainWindow();
+
+    // The dialog returns a promise that resolves with a SaveDialogReturnValue object
+    const {canceled, filePath} = await (mainWindow
+      ? dialog.showSaveDialog(mainWindow, {properties: ['createDirectory']})
+      : dialog.showSaveDialog({properties: ['createDirectory']}));
+
+    // 1. Check if the user cancelled the dialog
+    if (canceled || !filePath) {
+      console.log('User cancelled the save dialog.');
+      return null; // Return null to indicate cancellation
+    }
+
+    // 2. If a file path was chosen, write the content to it
+    // We use fs.writeFile which is asynchronous and returns a promise
+    await writeFile(filePath, content, 'utf8');
+
+    console.log(`File saved successfully to: ${filePath}`);
+
+    // 3. Return the path of the newly created file
+    return filePath;
+  } catch (error) {
+    // The error could be from the dialog or the file write operation
+    console.error('Error saving file:', error);
+    throw error; // Re-throw the error for the caller to handle
+  }
+}
 /**
  * Moves a directory to the trash.
  * @param dir - The directory path to trash.

@@ -65,6 +65,7 @@ import {
   isEmptyDir,
   isResponseValid,
   removeDir,
+  saveToFile,
   setDarkMode,
   setDiscordRP,
   setTaskbarStatus,
@@ -131,6 +132,7 @@ function file() {
   ipcMain.handle(fileChannels.dialog, (_, option: OpenDialogOptions) => openDialog(option));
 
   ipcMain.on(fileChannels.openPath, (_, dir: string) => shell.openPath(path.resolve(dir)));
+  ipcMain.handle(fileChannels.saveToFile, (_, content: string) => saveToFile(content));
 
   ipcMain.handle(fileChannels.removeDir, (_, dir: string) => removeDir(dir));
   ipcMain.handle(fileChannels.trashDir, (_, dir: string) => trashDir(dir));
