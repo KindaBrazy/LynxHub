@@ -5,7 +5,7 @@ import {FC, memo, useMemo} from 'react';
 
 import {AvailablePageIDs} from '../../../../../cross/CrossConstants';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {useGetCardsByPath, useHasArguments} from '../../Modules/ModuleLoader';
+import {useGetCardsByPath} from '../../Modules/ModuleLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import Page from '../Pages/Page';
 import RenderCardList from './Card/RenderCardList';
@@ -14,9 +14,7 @@ import NavigatePluginsPage from './NavigatePluginsPage';
 export const GetComponentsByPath = memo(
   ({routePath, extensionsElements}: {routePath: AvailablePageIDs; extensionsElements?: FC[]}) => {
     const cards = useGetCardsByPath(routePath);
-    const installedCards = useCardsState('installedCards');
     const pinnedCards = useCardsState('pinnedCards');
-    const hasArguments = useHasArguments();
 
     const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
@@ -40,11 +38,7 @@ export const GetComponentsByPath = memo(
         ) : (
           <>
             <LayoutGroup id={`${routePath}_cards`}>
-              {isNil(ReplaceCards) ? (
-                <RenderCardList sortedCards={sortedCards} hasArguments={hasArguments} installedCards={installedCards} />
-              ) : (
-                <ReplaceCards cards={sortedCards} />
-              )}
+              {isNil(ReplaceCards) ? <RenderCardList cards={sortedCards} /> : <ReplaceCards cards={sortedCards} />}
             </LayoutGroup>
             {extensionsElements?.map((Comp, index) => (
               <Comp key={index} />

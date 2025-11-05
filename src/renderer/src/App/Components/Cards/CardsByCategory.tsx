@@ -6,7 +6,7 @@ import {memo, useMemo} from 'react';
 import {LoadedCardData} from '../../../../../cross/plugin/ModuleTypes';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../assets/icons/SvgIcons/SvgIconsColor';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {useAllCardDataWithPath, useHasArguments, useSearchCards} from '../../Modules/ModuleLoader';
+import {useAllCardDataWithPath, useSearchCards} from '../../Modules/ModuleLoader';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {CardContainerClasses} from '../Pages/CardContainer';
 import HomeCategory from '../Pages/ContentPages/Home/HomeCategory';
@@ -30,9 +30,7 @@ const useCardsById = (cardIds: string[]): LoadedCardData[] => {
  * Renders a list of cards by their IDs
  */
 const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
-  const installedCards = useCardsState('installedCards');
   const cards = useCardsById(cardIds);
-  const hasArguments = useHasArguments();
 
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
@@ -45,7 +43,7 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
               <NavigatePluginsPage />
             </Empty>
           ) : (
-            <RenderCardList sortedCards={cards} hasArguments={hasArguments} installedCards={installedCards} />
+            <RenderCardList cards={cards} />
           )
         ) : (
           <ReplaceCards cards={cards} />
@@ -57,13 +55,10 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
 
 /** Renders all available cards */
 const AllCards = () => {
-  const installedCards = useCardsState('installedCards');
-
   const allCategory = useMemo(() => extensionsData.customizePages.home.add.allCategory, []);
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
   const allCards = useAllCardDataWithPath();
-  const hasArguments = useHasArguments();
   const pinnedCards = useCardsState('pinnedCards');
 
   const sortedCards = useMemo(() => {
@@ -82,11 +77,7 @@ const AllCards = () => {
   return (
     <LayoutGroup id="all_cards_category">
       <AnimatePresence>
-        {isNil(ReplaceCards) ? (
-          <RenderCardList sortedCards={sortedCards} hasArguments={hasArguments} installedCards={installedCards} />
-        ) : (
-          <ReplaceCards cards={sortedCards} />
-        )}
+        {isNil(ReplaceCards) ? <RenderCardList cards={sortedCards} /> : <ReplaceCards cards={sortedCards} />}
       </AnimatePresence>
     </LayoutGroup>
   );
@@ -161,9 +152,7 @@ export const AllCardsSection = memo(() => {
 });
 
 export function CardsBySearch({searchValue}: {searchValue: string}) {
-  const installedCards = useCardsState('installedCards');
   const filteredCards = useSearchCards(searchValue);
-  const hasArguments = useHasArguments();
   const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
   return (
@@ -171,7 +160,7 @@ export function CardsBySearch({searchValue}: {searchValue: string}) {
       {isEmpty(filteredCards) ? (
         <Empty className="w-full" description="No cards match your search." />
       ) : isNil(ReplaceCards) ? (
-        <RenderCardList sortedCards={filteredCards} hasArguments={hasArguments} installedCards={installedCards} />
+        <RenderCardList cards={filteredCards} />
       ) : (
         <ReplaceCards cards={filteredCards} />
       )}
