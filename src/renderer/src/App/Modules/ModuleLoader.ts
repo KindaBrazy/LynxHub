@@ -118,7 +118,7 @@ const useSearchCards = (searchValue: string) => {
  * @param path The path to filter cards by.
  * @returns An array of cards or undefined if no module matches the path.
  */
-const useGetCardsByPath = (path: AvailablePageIDs): LoadedCardData[] | undefined =>
+const useGetCardsByPath = (path: AvailablePageIDs): LoadedCardData[] =>
   useAllCardDataWithPath().filter(module => module.routePath === path);
 
 const hasCardsByPath = (path: AvailablePageIDs | string): boolean => {

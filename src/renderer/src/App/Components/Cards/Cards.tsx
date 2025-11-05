@@ -1,12 +1,11 @@
 import {Result} from 'antd';
 import {LayoutGroup} from 'framer-motion';
-import {compact, isEmpty, isNil} from 'lodash';
+import {isEmpty, isNil} from 'lodash';
 import {FC, memo, useMemo} from 'react';
 
 import {AvailablePageIDs} from '../../../../../cross/CrossConstants';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
 import {useGetCardsByPath} from '../../Modules/ModuleLoader';
-import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import Page from '../Pages/Page';
 import RenderCardList from './Card/RenderCardList';
 import NavigatePluginsPage from './NavigatePluginsPage';
@@ -14,19 +13,12 @@ import NavigatePluginsPage from './NavigatePluginsPage';
 export const GetComponentsByPath = memo(
   ({routePath, extensionsElements}: {routePath: AvailablePageIDs; extensionsElements?: FC[]}) => {
     const cards = useGetCardsByPath(routePath);
-    const pinnedCards = useCardsState('pinnedCards');
 
     const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
 
-    const sortedCards = useMemo(() => {
-      const pin = compact(cards?.filter(card => pinnedCards.includes(card.id)));
-      const rest = compact(cards?.filter(card => !pinnedCards.includes(card.id)));
-      return [...pin, ...rest];
-    }, [cards, pinnedCards]);
-
     return (
       <div className="flex size-full flex-row flex-wrap gap-7 overflow-visible">
-        {isEmpty(sortedCards) && isEmpty(extensionsElements) ? (
+        {isEmpty(cards) && isEmpty(extensionsElements) ? (
           <Page className="content-center">
             <Result
               status="info"
@@ -38,7 +30,7 @@ export const GetComponentsByPath = memo(
         ) : (
           <>
             <LayoutGroup id={`${routePath}_cards`}>
-              {isNil(ReplaceCards) ? <RenderCardList cards={sortedCards} /> : <ReplaceCards cards={sortedCards} />}
+              {isNil(ReplaceCards) ? <RenderCardList cards={cards} /> : <ReplaceCards cards={cards} />}
             </LayoutGroup>
             {extensionsElements?.map((Comp, index) => (
               <Comp key={index} />
