@@ -5,7 +5,7 @@ import {memo, useCallback} from 'react';
 import {SearchQuerySites} from '../../../../../../../cross/CrossTypes';
 import {getSearchUrl} from '../../../../../../../cross/CrossUtils';
 import {ExternalDuo_Icon} from '../../../../../../context_menu/Components/SvgIcons';
-import {Magnifier_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {Web_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 
 const endContent = <ExternalDuo_Icon className="size-3 group-hover:opacity-100 opacity-0 transition duration-300" />;
 
@@ -31,7 +31,7 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
           <Dropdown>
             <DropdownTrigger>
               <Button size="sm" variant="light" isIconOnly>
-                <Magnifier_Icon className="size-3.5" />
+                <Web_Icon className="size-3.5" />
               </Button>
             </DropdownTrigger>
             <DropdownMenu
