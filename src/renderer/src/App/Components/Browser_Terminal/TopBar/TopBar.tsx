@@ -1,3 +1,4 @@
+import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {memo, RefObject} from 'react';
 
@@ -8,13 +9,14 @@ import SharedTopBar from './SharedTopBar';
 
 type Props = {
   runningCard: RunningCard;
-  serializeAddon?: SerializeAddon;
+  serializeAddon: SerializeAddon;
+  searchAddon: SearchAddon;
   tabID: string;
   clearTerminal: RefObject<(() => void) | undefined>;
   selectedTerminalText: string;
 };
 
-const TopBar = memo(({runningCard, serializeAddon, tabID, clearTerminal, selectedTerminalText}: Props) => {
+const TopBar = memo(({runningCard, serializeAddon, searchAddon, tabID, clearTerminal, selectedTerminalText}: Props) => {
   return (
     <div
       className={
@@ -23,6 +25,7 @@ const TopBar = memo(({runningCard, serializeAddon, tabID, clearTerminal, selecte
       }>
       {runningCard.currentView === 'terminal' ? (
         <Terminal_TopBar
+          searchAddon={searchAddon}
           clearTerminal={clearTerminal}
           serializeAddon={serializeAddon}
           startTime={runningCard.startTime}

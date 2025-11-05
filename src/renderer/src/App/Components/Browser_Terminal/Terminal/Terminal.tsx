@@ -1,6 +1,7 @@
 import {CanvasAddon} from '@xterm/addon-canvas';
 import {ClipboardAddon} from '@xterm/addon-clipboard';
 import {FitAddon} from '@xterm/addon-fit';
+import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {Unicode11Addon} from '@xterm/addon-unicode11';
 import {WebLinksAddon} from '@xterm/addon-web-links';
@@ -31,12 +32,13 @@ const MIN_RESIZE_ROWS = 22;
 
 type Props = {
   runningCard: RunningCard;
-  serializeAddon?: SerializeAddon;
+  serializeAddon: SerializeAddon;
+  searchAddon: SearchAddon;
   clearTerminal: RefObject<(() => void) | undefined>;
   setSelectedTerminalText: Dispatch<SetStateAction<string>>;
 };
 
-const Terminal = memo(({runningCard, serializeAddon, clearTerminal, setSelectedTerminalText}: Props) => {
+const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal, setSelectedTerminalText}: Props) => {
   const copyPressed = useHotkeysState('copyPressed');
   const activeTab = useTabsState('activeTab');
   const allMethods = useAllCardMethods();
@@ -171,7 +173,8 @@ const Terminal = memo(({runningCard, serializeAddon, clearTerminal, setSelectedT
       xTerm.unicode.activeVersion = '11';
       xTerm.loadAddon(new ClipboardAddon());
       xTerm.loadAddon(new WebLinksAddon((_, uri) => window.open(uri)));
-      if (serializeAddon) xTerm.loadAddon(serializeAddon);
+      xTerm.loadAddon(serializeAddon);
+      xTerm.loadAddon(searchAddon);
 
       xTerm.open(terminalContainer);
 
