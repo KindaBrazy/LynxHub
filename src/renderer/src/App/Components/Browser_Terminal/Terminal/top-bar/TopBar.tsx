@@ -1,8 +1,9 @@
 import {Button} from '@heroui/react';
 import {SerializeAddon} from '@xterm/addon-serialize';
-import {memo, RefObject, useCallback, useState} from 'react';
+import {memo, RefObject, useCallback} from 'react';
 
-import {BroomDuo_Icon, CheckDuo_Icon, CopyDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {BroomDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import CopyAll from './CopyAll';
 import SearchBy from './SearchBy';
 import Timer from './Timer';
 
@@ -14,19 +15,6 @@ type Props = {
 };
 
 const Terminal_TopBar = memo(({startTime, serializeAddon, clearTerminal, selectedTerminalText}: Props) => {
-  const [copied, setCopied] = useState<boolean>(false);
-
-  const handleCopy = useCallback(() => {
-    const contentToCopy = serializeAddon?.serialize();
-    if (!contentToCopy) return;
-
-    navigator.clipboard.writeText(contentToCopy);
-    setCopied(true);
-    setTimeout(() => {
-      setCopied(false);
-    }, 1000);
-  }, [serializeAddon]);
-
   const clearTerm = useCallback(() => {
     if (clearTerminal.current) {
       clearTerminal.current();
@@ -38,13 +26,7 @@ const Terminal_TopBar = memo(({startTime, serializeAddon, clearTerminal, selecte
       <div className="flex flex-row h-full items-center gap-x-1">
         <Timer startTime={startTime} />
 
-        <Button size="sm" variant="light" onPress={handleCopy} isIconOnly>
-          {copied ? (
-            <CheckDuo_Icon className="size-5 animate-appearance-in" />
-          ) : (
-            <CopyDuo_Icon className="size-4 animate-appearance-in" />
-          )}
-        </Button>
+        <CopyAll serializeAddon={serializeAddon} />
 
         <Button size="sm" variant="light" onPress={clearTerm} isIconOnly>
           <BroomDuo_Icon className="size-3.5" />
