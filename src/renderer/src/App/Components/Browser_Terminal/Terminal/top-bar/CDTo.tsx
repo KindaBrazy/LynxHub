@@ -15,10 +15,10 @@ const CDTo = memo(({id}: Props) => {
 
   const cdTo = useCallback(
     (dir: string) => {
-      if (!history.includes(dir)) {
-        rendererIpc.storage.update('terminal', {cdHistory: [dir, ...history]});
-        setHistory(prevState => [dir, ...prevState]);
-      }
+      const newHistory = [dir, ...history.filter(item => item !== dir)];
+
+      rendererIpc.storage.update('terminal', {cdHistory: newHistory});
+      setHistory(newHistory);
 
       const LINE_ENDING = window.osPlatform === 'win32' ? '\r' : '\n';
       rendererIpc.pty.write(id, `cd "${dir}"${LINE_ENDING}`);
