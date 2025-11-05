@@ -3,7 +3,7 @@ import {memo, RefObject} from 'react';
 
 import {RunningCard} from '../../../Utils/Types';
 import Browser_TopBar from '../Browser/Browser_TopBar';
-import Terminal_TopBar from '../Terminal/Terminal_TopBar';
+import Terminal_TopBar from '../Terminal/top-bar/TopBar';
 import SharedTopBar from './SharedTopBar';
 
 type Props = {

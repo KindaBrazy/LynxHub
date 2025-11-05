@@ -2,9 +2,9 @@ import {Button} from '@heroui/react';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {memo, RefObject, useCallback, useState} from 'react';
 
-import {BroomDuo_Icon, CheckDuo_Icon, CopyDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
+import {BroomDuo_Icon, CheckDuo_Icon, CopyDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import SearchBy from './SearchBy';
-import Terminal_Timer from './Terminal_Timer';
+import Timer from './Timer';
 
 type Props = {
   startTime: string;
@@ -36,7 +36,7 @@ const Terminal_TopBar = memo(({startTime, serializeAddon, clearTerminal, selecte
   return (
     <>
       <div className="flex flex-row h-full items-center gap-x-1">
-        <Terminal_Timer startTime={startTime} />
+        <Timer startTime={startTime} />
 
         <Button size="sm" variant="light" onPress={handleCopy} isIconOnly>
           {copied ? (

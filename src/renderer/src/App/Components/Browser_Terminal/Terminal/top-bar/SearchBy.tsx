@@ -2,10 +2,10 @@ import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image} fr
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useCallback} from 'react';
 
-import {SearchQuerySites} from '../../../../../../cross/CrossTypes';
-import {getSearchUrl} from '../../../../../../cross/CrossUtils';
-import {ExternalDuo_Icon} from '../../../../../context_menu/Components/SvgIcons';
-import {Magnifier_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
+import {SearchQuerySites} from '../../../../../../../cross/CrossTypes';
+import {getSearchUrl} from '../../../../../../../cross/CrossUtils';
+import {ExternalDuo_Icon} from '../../../../../../context_menu/Components/SvgIcons';
+import {Magnifier_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 
 const endContent = <ExternalDuo_Icon className="size-3 group-hover:opacity-100 opacity-0 transition duration-300" />;
 
@@ -60,10 +60,12 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
                 Reddit
               </DropdownItem>
               <DropdownItem
-                startContent={<Image alt="ChatGPT icon" className="size-4" src="https://chat.openai.com/favicon.ico" />}
                 key="ChatGPT"
                 endContent={endContent}
-                onPress={() => searchSelectedText('ChatGPT')}>
+                onPress={() => searchSelectedText('ChatGPT')}
+                startContent={
+                  <Image alt="ChatGPT icon" className="size-4" src="https://chat.openai.com/favicon.ico" />
+                }>
                 ChatGPT
               </DropdownItem>
               <DropdownItem

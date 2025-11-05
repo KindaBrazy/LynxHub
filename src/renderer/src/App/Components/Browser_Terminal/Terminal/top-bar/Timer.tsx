@@ -1,8 +1,8 @@
 import NumberFlow, {NumberFlowGroup} from '@number-flow/react';
-import {useEffect, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 
-import {secondsElapsed} from '../../../../../../cross/CrossUtils';
-import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {secondsElapsed} from '../../../../../../../cross/CrossUtils';
+import {useTabsState} from '../../../../Redux/Reducer/TabsReducer';
 
 const calc = (startTime: string) => {
   const startDate = new Date(startTime);
@@ -18,7 +18,8 @@ const calc = (startTime: string) => {
 type TimeType = {hh: number; mm: number; ss: number};
 
 type Props = {startTime: string};
-export default function Terminal_Timer({startTime}: Props) {
+
+const Timer = memo(({startTime}: Props) => {
   const activeTab = useTabsState('activeTab');
   const [{ss, hh, mm}, setTime] = useState<TimeType>(calc(startTime));
 
@@ -47,4 +48,6 @@ export default function Terminal_Timer({startTime}: Props) {
       </div>
     </NumberFlowGroup>
   );
-}
+});
+
+export default Timer;
