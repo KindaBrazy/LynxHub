@@ -28,7 +28,7 @@ export default function DownloadManager() {
       placement="bottom-right"
       className="border-0 mr-1.5 mb-1.5 scale-75">
       <Button size="sm" variant="light" className="cursor-default" onPress={openDownloadsWindow} isIconOnly>
-        <DownloadDuo_Icon className="-rotate-901 size-4" />
+        <DownloadDuo_Icon className="size-4" />
       </Button>
     </Badge>
   );
