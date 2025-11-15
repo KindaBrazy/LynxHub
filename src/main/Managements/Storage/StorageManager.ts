@@ -1,7 +1,6 @@
 import {platform} from 'node:os';
 
 import lodash from 'lodash';
-import _ from 'lodash';
 
 import {ChosenArgumentsData} from '../../../cross/CrossTypes';
 import {compareUrls, isValidURL} from '../../../cross/CrossUtils';
@@ -30,6 +29,10 @@ import {
 } from '../../Utilities/Utils';
 import BaseStorage from './BaseStorage';
 
+/**
+ * Storage manager extending BaseStorage with high-level operations
+ * Handles card management, browser data encryption, and configuration operations
+ */
 class StorageManager extends BaseStorage {
   private decryptedBrowserData!: BrowserHistoryData;
 
@@ -37,6 +40,94 @@ class StorageManager extends BaseStorage {
     super();
   }
 
+  /**
+   * Helper: Adds an item to a string array if it doesn't exist, updates storage, and notifies renderer
+   */
+  private addToCardStringArray(
+    arrayKey: 'autoUpdateCards' | 'autoUpdateExtensions' | 'pinnedCards',
+    cardId: string,
+    channel: string,
+  ): void {
+    const currentArray = this.getData('cards')[arrayKey];
+    if (lodash.includes(currentArray, cardId)) return;
+
+    const updatedArray = [...currentArray, cardId];
+    this.updateData('cards', {[arrayKey]: updatedArray});
+    appManager?.getWebContent()?.send(channel, updatedArray);
+  }
+
+  /**
+   * Helper: Removes an item from a string array, updates storage, and notifies renderer
+   */
+  private removeFromCardStringArray(
+    arrayKey: 'autoUpdateCards' | 'autoUpdateExtensions' | 'pinnedCards',
+    cardId: string,
+    channel: string,
+  ): void {
+    const currentArray = this.getData('cards')[arrayKey];
+    const updatedArray = currentArray.filter(id => id !== cardId);
+    this.updateData('cards', {[arrayKey]: updatedArray});
+    appManager?.getWebContent()?.send(channel, updatedArray);
+  }
+
+  /**
+   * Helper: Finds or creates a card config entry and returns its index
+   */
+  private findOrCreateCardConfig<T extends {cardId: string; data: any}>(
+    configArray: T[],
+    cardId: string,
+    createDefault: () => T,
+  ): {index: number; item: T} {
+    const index = configArray.findIndex(item => item.cardId === cardId);
+    if (index !== -1) {
+      return {index, item: configArray[index]};
+    }
+    const newItem = createDefault();
+    configArray.push(newItem);
+    return {index: configArray.length - 1, item: newItem};
+  }
+
+  /**
+   * Helper: Adds a URL to a browser array, moving existing entry to front if found
+   */
+  private async addBrowserUrl(
+    arrayKey: 'recentAddress' | 'favoriteAddress' | 'historyAddress',
+    url: string,
+  ): Promise<void> {
+    let addressArray = this.getBrowserDataSecurely()[arrayKey];
+    let existUrlIndex = -1;
+
+    // Find existing URL by comparing normalized URLs
+    for (let i = 0; i < addressArray.length; i++) {
+      if (!isValidURL([addressArray[i], url])) continue;
+      if (await compareUrls(addressArray[i], url)) {
+        existUrlIndex = i;
+        break;
+      }
+    }
+
+    // Move to front if exists, otherwise prepend
+    if (existUrlIndex !== -1) {
+      addressArray = [url, ...addressArray.slice(0, existUrlIndex), ...addressArray.slice(existUrlIndex + 1)];
+    } else {
+      addressArray = [url, ...addressArray];
+    }
+
+    this.updateBrowserDataSecurely({[arrayKey]: addressArray});
+  }
+
+  /**
+   * Helper: Removes a URL from a browser array
+   */
+  private removeBrowserUrl(arrayKey: 'recentAddress' | 'favoriteAddress' | 'historyAddress', url: string): void {
+    const addressArray = this.getBrowserDataSecurely()[arrayKey];
+    this.updateBrowserDataSecurely({[arrayKey]: addressArray.filter(address => address !== url)});
+  }
+
+  /**
+   * Decrypts browser data and caches it for secure access
+   * Must be called before accessing browser data securely
+   */
   public decryptBrowserData() {
     const rawData = this.getData('browser');
     this.decryptedBrowserData = {
@@ -91,10 +182,14 @@ class StorageManager extends BaseStorage {
     return this.getData('cardsConfig').customRun.find(preOpen => preOpen.cardId === cardId);
   }
 
+  /**
+   * Gets card arguments, loading from module if not cached
+   */
   public async getCardArgumentsById(cardId: string) {
     const args = this.getArgs(cardId);
     if (args) return args;
 
+    // Load arguments from module if not in storage
     const returnArgs = await moduleManager?.getMethodsById(cardId)?.().readArgs?.();
     const result: ChosenArgumentsData = {
       activePreset: 'Default',
@@ -150,75 +245,27 @@ class StorageManager extends BaseStorage {
   }
 
   public addAutoUpdateCard(cardId: string) {
-    const storedAutoUpdateCards = this.getData('cards').autoUpdateCards;
-
-    const cardExists = lodash.includes(storedAutoUpdateCards, cardId);
-
-    if (!cardExists) {
-      const result: string[] = [...storedAutoUpdateCards, cardId];
-
-      this.updateData('cards', {autoUpdateCards: [...storedAutoUpdateCards, cardId]});
-
-      appManager?.getWebContent()?.send(storageUtilsChannels.onAutoUpdateCards, result);
-    }
+    this.addToCardStringArray('autoUpdateCards', cardId, storageUtilsChannels.onAutoUpdateCards);
   }
 
   public removeAutoUpdateCard(cardId: string) {
-    const storedAutoUpdateCards = this.getData('cards').autoUpdateCards;
-
-    const updatedAutoUpdateCards = lodash.filter(storedAutoUpdateCards, id => id !== cardId);
-
-    this.updateData('cards', {autoUpdateCards: updatedAutoUpdateCards});
-
-    appManager?.getWebContent()?.send(storageUtilsChannels.onAutoUpdateCards, updatedAutoUpdateCards);
+    this.removeFromCardStringArray('autoUpdateCards', cardId, storageUtilsChannels.onAutoUpdateCards);
   }
 
   public addAutoUpdateExtensions(cardId: string) {
-    const storedAutoUpdateExtensions = this.getData('cards').autoUpdateExtensions;
-
-    const extensionsExists = lodash.includes(storedAutoUpdateExtensions, cardId);
-
-    if (!extensionsExists) {
-      const result: string[] = [...storedAutoUpdateExtensions, cardId];
-
-      this.updateData('cards', {autoUpdateExtensions: [...storedAutoUpdateExtensions, cardId]});
-
-      appManager?.getWebContent()?.send(storageUtilsChannels.onAutoUpdateExtensions, result);
-    }
+    this.addToCardStringArray('autoUpdateExtensions', cardId, storageUtilsChannels.onAutoUpdateExtensions);
   }
 
   public removeAutoUpdateExtensions(cardId: string) {
-    const storedAutoUpdateExtensions = this.getData('cards').autoUpdateExtensions;
-
-    const updatedAutoUpdateExtensions = lodash.filter(storedAutoUpdateExtensions, id => id !== cardId);
-
-    this.updateData('cards', {autoUpdateExtensions: updatedAutoUpdateExtensions});
-
-    appManager?.getWebContent()?.send(storageUtilsChannels.onAutoUpdateExtensions, updatedAutoUpdateExtensions);
+    this.removeFromCardStringArray('autoUpdateExtensions', cardId, storageUtilsChannels.onAutoUpdateExtensions);
   }
 
   public addPinnedCard(cardId: string) {
-    const storedPinnedCards = this.getData('cards').pinnedCards;
-
-    const cardExists = lodash.includes(storedPinnedCards, cardId);
-
-    if (!cardExists) {
-      const result: string[] = [...storedPinnedCards, cardId];
-
-      this.updateData('cards', {pinnedCards: [...storedPinnedCards, cardId]});
-
-      appManager?.getWebContent()?.send(storageUtilsChannels.onPinnedCardsChange, result);
-    }
+    this.addToCardStringArray('pinnedCards', cardId, storageUtilsChannels.onPinnedCardsChange);
   }
 
   public removePinnedCard(cardId: string) {
-    const storedPinnedCards = this.getData('cards').pinnedCards;
-
-    const updatedPinnedCards = lodash.filter(storedPinnedCards, id => id !== cardId);
-
-    this.updateData('cards', {pinnedCards: updatedPinnedCards});
-
-    appManager?.getWebContent()?.send(storageUtilsChannels.onPinnedCardsChange, updatedPinnedCards);
+    this.removeFromCardStringArray('pinnedCards', cardId, storageUtilsChannels.onPinnedCardsChange);
   }
 
   public pinnedCardsOpt(opt: StorageOperation, id: string, pinnedCards?: string[]) {
@@ -247,11 +294,11 @@ class StorageManager extends BaseStorage {
   }
 
   public updateRecentlyUsedCards(id: string) {
-    const newArray = _.without(this.getData('cards').recentlyUsedCards, id);
+    const newArray = lodash.without(this.getData('cards').recentlyUsedCards, id);
     // Add the id to the beginning of the array
     newArray.unshift(id);
     // Keep only the last 5 elements
-    const result = _.take(newArray, 5);
+    const result = lodash.take(newArray, 5);
 
     this.updateData('cards', {recentlyUsedCards: result});
 
@@ -297,48 +344,33 @@ class StorageManager extends BaseStorage {
 
   public addPreCommand(cardId: string, command: string): void {
     const preCommands = this.getData('cardsConfig').preCommands;
-    const existCommand = preCommands.findIndex(command => command.cardId === cardId);
+    const {item} = this.findOrCreateCardConfig(preCommands, cardId, () => ({cardId, data: []}));
 
-    let commands: string[];
-
-    if (existCommand !== -1) {
-      preCommands[existCommand].data.push(command);
-      commands = preCommands[existCommand].data;
-    } else {
-      commands = [command];
-      preCommands.push({cardId, data: [command]});
-    }
-
-    appManager?.getWebContent()?.send(storageUtilsChannels.onPreCommands, {commands, id: cardId});
-
+    item.data.push(command);
+    appManager?.getWebContent()?.send(storageUtilsChannels.onPreCommands, {commands: item.data, id: cardId});
     this.updateData('cardsConfig', {preCommands});
   }
 
   public setPreCommand(cardId: string, commands: string[]): void {
     const preCommands = this.getData('cardsConfig').preCommands;
-    const existCommand = preCommands.findIndex(command => command.cardId === cardId);
+    const {item} = this.findOrCreateCardConfig(preCommands, cardId, () => ({cardId, data: []}));
 
-    if (existCommand !== -1) {
-      preCommands[existCommand].data = commands;
-    } else {
-      preCommands.push({cardId, data: commands});
-    }
+    item.data = commands;
     this.updateData('cardsConfig', {preCommands});
   }
 
   public removePreCommand(cardId: string, index: number): void {
     const preCommands = this.getData('cardsConfig').preCommands;
-    const existCommand = preCommands.findIndex(command => command.cardId === cardId);
+    const indexFound = preCommands.findIndex(item => item.cardId === cardId);
 
-    let commands: string[] = [];
-
-    if (existCommand !== -1) {
-      preCommands[existCommand].data.splice(index, 1);
-      commands = preCommands[existCommand].data;
+    if (indexFound !== -1) {
+      preCommands[indexFound].data.splice(index, 1);
+      appManager?.getWebContent()?.send(storageUtilsChannels.onPreCommands, {
+        commands: preCommands[indexFound].data,
+        id: cardId,
+      });
+      this.updateData('cardsConfig', {preCommands});
     }
-
-    appManager?.getWebContent()?.send(storageUtilsChannels.onPreCommands, {commands, id: cardId});
-    this.updateData('cardsConfig', {preCommands});
   }
 
   public preCommandOpt(opt: StorageOperation, data: PreCommands) {
@@ -367,47 +399,33 @@ class StorageManager extends BaseStorage {
 
   public addCustomRun(cardId: string, command: string): void {
     const customRun = this.getData('cardsConfig').customRun;
-    const existCustomRun = customRun.findIndex(custom => custom.cardId === cardId);
+    const {item} = this.findOrCreateCardConfig(customRun, cardId, () => ({cardId, data: []}));
 
-    let custom: string[];
-
-    if (existCustomRun !== -1) {
-      customRun[existCustomRun].data.push(command);
-      custom = customRun[existCustomRun].data;
-    } else {
-      custom = [command];
-      customRun.push({cardId, data: [command]});
-    }
-
-    appManager?.getWebContent()?.send(storageUtilsChannels.onCustomRun, {commands: custom, id: cardId});
+    item.data.push(command);
+    appManager?.getWebContent()?.send(storageUtilsChannels.onCustomRun, {commands: item.data, id: cardId});
     this.updateData('cardsConfig', {customRun});
   }
 
   public setCustomRun(cardId: string, commands: string[]): void {
     const customRun = this.getData('cardsConfig').customRun;
-    const existCommand = customRun.findIndex(command => command.cardId === cardId);
+    const {item} = this.findOrCreateCardConfig(customRun, cardId, () => ({cardId, data: []}));
 
-    if (existCommand !== -1) {
-      customRun[existCommand].data = commands;
-    } else {
-      customRun.push({cardId, data: commands});
-    }
+    item.data = commands;
     this.updateData('cardsConfig', {customRun});
   }
 
   public removeCustomRun(cardId: string, index: number): void {
     const customRun = this.getData('cardsConfig').customRun;
-    const existCommand = customRun.findIndex(command => command.cardId === cardId);
+    const indexFound = customRun.findIndex(item => item.cardId === cardId);
 
-    let commands: string[] = [];
-
-    if (existCommand !== -1) {
-      customRun[existCommand].data.splice(index, 1);
-      commands = customRun[existCommand].data;
+    if (indexFound !== -1) {
+      customRun[indexFound].data.splice(index, 1);
+      appManager?.getWebContent()?.send(storageUtilsChannels.onCustomRun, {
+        commands: customRun[indexFound].data,
+        id: cardId,
+      });
+      this.updateData('cardsConfig', {customRun});
     }
-
-    appManager?.getWebContent()?.send(storageUtilsChannels.onCustomRun, {commands, id: cardId});
-    this.updateData('cardsConfig', {customRun});
   }
 
   public customRunOpt(opt: StorageOperation, data: PreCommands) {
@@ -481,6 +499,9 @@ class StorageManager extends BaseStorage {
     return result;
   }
 
+  /**
+   * Updates custom run behavior for a card, merging with defaults if new
+   */
   public updateCustomRunBehavior(data: Partial<CustomRunBehaviorData>) {
     if (!data.cardID) return;
 
@@ -488,8 +509,10 @@ class StorageManager extends BaseStorage {
     const existCustom = customRunBehavior.findIndex(command => command.cardID === data.cardID);
 
     if (existCustom !== -1) {
+      // Merge with existing behavior
       customRunBehavior[existCustom] = {...customRunBehavior[existCustom], ...data};
     } else {
+      // Create new entry with defaults
       customRunBehavior = [
         ...customRunBehavior,
         {
@@ -512,6 +535,10 @@ class StorageManager extends BaseStorage {
     this.updateData('cardsConfig', {customRunBehavior});
   }
 
+  /**
+   * Updates the last window size/position
+   * Preserves previous bounds if window is maximized
+   */
   public updateLastSize() {
     const isMaximized = appManager?.getMainWindow()?.isMaximized() || false;
     const bounds = appManager?.getMainWindow()?.getBounds();
@@ -521,7 +548,7 @@ class StorageManager extends BaseStorage {
     this.updateData('app', {
       lastSize: {
         maximized: isMaximized,
-        bounds: isMaximized ? prevBounds : bounds,
+        bounds: isMaximized ? prevBounds : bounds, // Keep previous bounds when maximized
       },
     });
   }
@@ -530,14 +557,19 @@ class StorageManager extends BaseStorage {
     return this.decryptedBrowserData;
   }
 
+  /**
+   * Updates browser data: updates decrypted cache and encrypts before storing
+   */
   public updateBrowserDataSecurely(data: Partial<BrowserHistoryData>): void {
     const encryptedData: Partial<BrowserHistoryData> = JSON.parse(JSON.stringify(data));
 
+    // Update decrypted cache
     this.decryptedBrowserData = {
       ...this.decryptedBrowserData,
       ...encryptedData,
     };
 
+    // Encrypt data before storing
     if (encryptedData.recentAddress) {
       encryptedData.recentAddress = lynxEncryptStrings(encryptedData.recentAddress);
     }
@@ -558,35 +590,18 @@ class StorageManager extends BaseStorage {
   }
 
   public async addBrowserRecent(recentEntry: string) {
-    let recentAddress = this.getBrowserDataSecurely().recentAddress;
-    let existUrlIndex = -1;
-
-    for (let i = 0; i < recentAddress.length; i++) {
-      if (!isValidURL([recentAddress[i], recentEntry])) continue;
-
-      if (await compareUrls(recentAddress[i], recentEntry)) {
-        existUrlIndex = i;
-        break;
-      }
-    }
-
-    if (existUrlIndex !== -1) {
-      recentAddress = [
-        recentEntry,
-        ...recentAddress.slice(0, existUrlIndex),
-        ...recentAddress.slice(existUrlIndex + 1),
-      ];
-    } else {
-      recentAddress = [recentEntry, ...recentAddress];
-    }
-
-    this.updateBrowserDataSecurely({recentAddress});
+    await this.addBrowserUrl('recentAddress', recentEntry);
   }
 
+  /**
+   * Adds or updates a favicon for a URL
+   * Updates existing entry if URL matches, otherwise adds new entry
+   */
   public async addBrowserFavIcon(url: string, icon: string) {
     const favIcons = this.getBrowserDataSecurely().favIcons;
     let updatedExisting: boolean = false;
 
+    // Check if favicon for this URL already exists
     for (const favIcon of favIcons) {
       if (!isValidURL([favIcon.url, url])) continue;
 
@@ -598,79 +613,30 @@ class StorageManager extends BaseStorage {
       }
     }
 
+    // Add new entry if not found
     if (!updatedExisting) favIcons.push({url, favIcon: icon});
 
     this.updateBrowserDataSecurely({favIcons});
   }
 
   public async addBrowserFavorite(favoriteEntry: string) {
-    let favoriteAddress = this.getBrowserDataSecurely().favoriteAddress;
-    let existUrlIndex = -1;
-
-    for (let i = 0; i < favoriteAddress.length; i++) {
-      if (!isValidURL([favoriteAddress[i], favoriteEntry])) continue;
-
-      if (await compareUrls(favoriteAddress[i], favoriteEntry)) {
-        existUrlIndex = i;
-        break;
-      }
-    }
-
-    if (existUrlIndex !== -1) {
-      favoriteAddress = [
-        favoriteEntry,
-        ...favoriteAddress.slice(0, existUrlIndex),
-        ...favoriteAddress.slice(existUrlIndex + 1),
-      ];
-    } else {
-      favoriteAddress = [favoriteEntry, ...favoriteAddress];
-    }
-
-    this.updateBrowserDataSecurely({favoriteAddress});
+    await this.addBrowserUrl('favoriteAddress', favoriteEntry);
   }
 
   public async addBrowserHistory(historyEntry: string) {
-    let historyAddress = this.getBrowserDataSecurely().historyAddress;
-    let existUrlIndex = -1;
-
-    for (let i = 0; i < historyAddress.length; i++) {
-      if (!isValidURL([historyAddress[i], historyEntry])) continue;
-
-      if (await compareUrls(historyAddress[i], historyEntry)) {
-        existUrlIndex = i;
-        break;
-      }
-    }
-
-    if (existUrlIndex !== -1) {
-      historyAddress = [
-        historyEntry,
-        ...historyAddress.slice(0, existUrlIndex),
-        ...historyAddress.slice(existUrlIndex + 1),
-      ];
-    } else {
-      historyAddress = [historyEntry, ...historyAddress];
-    }
-
-    this.updateBrowserDataSecurely({historyAddress});
+    await this.addBrowserUrl('historyAddress', historyEntry);
   }
 
   public removeBrowserRecent(url: string) {
-    const recentAddress = this.getBrowserDataSecurely().recentAddress;
-
-    this.updateBrowserDataSecurely({recentAddress: recentAddress.filter(address => address !== url)});
+    this.removeBrowserUrl('recentAddress', url);
   }
 
   public removeBrowserFavorite(url: string) {
-    const favoriteAddress = this.getBrowserDataSecurely().favoriteAddress;
-
-    this.updateBrowserDataSecurely({favoriteAddress: favoriteAddress.filter(address => address !== url)});
+    this.removeBrowserUrl('favoriteAddress', url);
   }
 
   public removeBrowserHistory(url: string) {
-    const historyAddress = this.getBrowserDataSecurely().historyAddress;
-
-    this.updateBrowserDataSecurely({historyAddress: historyAddress.filter(address => address !== url)});
+    this.removeBrowserUrl('historyAddress', url);
   }
 
   public setShowConfirm(type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) {
@@ -690,6 +656,10 @@ class StorageManager extends BaseStorage {
     this.updateData('notification', {readNotifs: [...prevReadNotifs, id]});
   }
 
+  /**
+   * Sets terminal pre-commands for a card
+   * Adds platform-specific line endings (CRLF for Windows, LF for Unix)
+   */
   public setCardTerminalPreCommands(id: string, commands: string[]) {
     const LINE_ENDING = platform() === 'win32' ? '\r' : '\n';
     const commandLines = commands.map(command => `${command}${LINE_ENDING}`);
@@ -706,6 +676,9 @@ class StorageManager extends BaseStorage {
     this.updateData('cards', {cardTerminalPreCommands});
   }
 
+  /**
+   * Unassigns a card and optionally clears all its configurations
+   */
   public unassignCard(id: string, clearConfigs: boolean) {
     const cards = this.getData('cards');
     const cardsConfig = this.getData('cardsConfig');
@@ -713,11 +686,13 @@ class StorageManager extends BaseStorage {
     this.removeInstalledCard(id);
 
     if (clearConfigs) {
+      // Remove card from all card lists
       cards.autoUpdateCards = cards.autoUpdateCards.filter(card => card !== id);
       cards.autoUpdateExtensions = cards.autoUpdateExtensions.filter(card => card !== id);
       cards.pinnedCards = cards.pinnedCards.filter(card => card !== id);
       cards.recentlyUsedCards = cards.recentlyUsedCards.filter(card => card !== id);
 
+      // Remove all card configurations
       cardsConfig.customRun = cardsConfig.customRun.filter(card => card.cardId !== id);
       cardsConfig.preOpen = cardsConfig.preOpen.filter(card => card.cardId !== id);
       cardsConfig.preCommands = cardsConfig.preCommands.filter(card => card.cardId !== id);

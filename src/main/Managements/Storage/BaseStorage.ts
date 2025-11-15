@@ -24,11 +24,14 @@ import {
 import AddBreadcrumb_Main from '../Breadcrumbs';
 import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 
+/**
+ * Base storage class handling low-level storage operations, migrations, and data persistence
+ */
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
   private readonly CURRENT_VERSION: number = 0.89;
-  private migratedTo: number = 0;
+  private migratedTo: number = 0; // Tracks migration state for deferred operations
 
   private readonly DEFAULT_DATA: StorageTypes = {
     storage: {version: 0.89},
@@ -114,9 +117,11 @@ class BaseStorage {
   };
 
   constructor() {
+    // Determine storage file name based on environment
     const storageFile = is.dev ? `${APP_NAME}-Dev.config` : `${APP_NAME}.config`;
     let storagePath = join(app.getPath('userData'), storageFile);
 
+    // Handle portable mode: store data next to executable
     if (isPortable()) {
       storagePath = join(getExePath(), `${APP_NAME}_Data`, storageFile);
       const dataFolderPath = join(getExePath(), `${APP_NAME}_Data`);
@@ -138,7 +143,11 @@ class BaseStorage {
     this.migration();
   }
 
+  /**
+   * Called after app is ready to perform deferred migrations that require app initialization
+   */
   public onAppReady() {
+    // Deferred encryption migration: encrypt browser data after app is ready
     if (this.migratedTo === 0.84) {
       const {recentAddress, favoriteAddress, historyAddress, favIcons} = this.getData('browser');
 
@@ -156,24 +165,28 @@ class BaseStorage {
     }
   }
 
+  /**
+   * Migrates storage data from older versions to current version
+   * Migrations are applied sequentially based on stored version
+   */
   private migration() {
     try {
       const storeVersion = this.getData('storage').version;
 
-      // If the store is too old, reset to default and exit.
+      // If the store is too old, reset to default and exit
       if (storeVersion < 0.4) {
         this.storage.data = {...this.DEFAULT_DATA};
         this.write();
         return;
       }
 
-      // If the version is already current, do nothing.
+      // If the version is already current, do nothing
       if (storeVersion >= this.CURRENT_VERSION) {
         return;
       }
 
-      // A list of all migration functions, ordered by the version they migrate *from*.
-      // The key is the version that requires this migration.
+      // Migration functions ordered by the version they migrate *from*
+      // The key is the version that requires this migration
       const migrations = new Map<number, () => void>([
         [
           0.4,
@@ -293,7 +306,7 @@ class BaseStorage {
         ],
       ]);
 
-      // Apply all necessary migrations sequentially.
+      // Apply all necessary migrations sequentially
       for (const [version, migrationFn] of migrations.entries()) {
         if (storeVersion < version + 0.01) {
           // Use a small tolerance for float comparison
@@ -302,7 +315,7 @@ class BaseStorage {
         }
       }
 
-      // Finally, update the stored version to the current application version.
+      // Update the stored version to the current application version
       this.updateData('storage', {version: this.CURRENT_VERSION});
     } catch (e) {
       console.error('Failed to migrate storage', e);
@@ -322,10 +335,15 @@ class BaseStorage {
     this.write();
   }
 
+  /**
+   * Returns a deep clone of all storage data
+   * Converts relative paths to absolute paths in portable mode
+   */
   public getAll(): StorageTypes {
     const data = this.storage.data;
     const result = lodash.cloneDeep(data);
 
+    // Convert relative paths to absolute paths in portable mode
     if (isPortable()) {
       result.cards.installedCards = result.cards.installedCards.map(card => {
         return {id: card.id, dir: getAbsolutePath(getExePath(), card.dir || '')};
@@ -340,6 +358,10 @@ class BaseStorage {
     this.write();
   }
 
+  /**
+   * Clears all storage data and restarts the app
+   * On Linux portable mode, closes window instead of restarting
+   */
   public clearStorage(): void {
     this.storage.data = {...this.DEFAULT_DATA};
     this.write();
@@ -350,6 +372,9 @@ class BaseStorage {
     }
   }
 
+  /**
+   * Adds breadcrumb for storage updates (for debugging/monitoring)
+   */
   private addBreadcrumb() {
     AddBreadcrumb_Main(
       'Update Storage: ' +
@@ -378,6 +403,9 @@ class BaseStorage {
     );
   }
 
+  /**
+   * Writes storage data to disk and adds breadcrumb for tracking
+   */
   public write() {
     try {
       this.storage.write();
