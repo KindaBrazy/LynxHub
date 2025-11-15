@@ -45,6 +45,7 @@ export type CustomRunBehaviorData = {
   urlCatch: {
     type: 'findLine' | 'custom' | 'module' | 'nothing';
     findLine: string | undefined;
+    moduleDelay: number;
     delay: number;
     customUrl: string | undefined;
   };

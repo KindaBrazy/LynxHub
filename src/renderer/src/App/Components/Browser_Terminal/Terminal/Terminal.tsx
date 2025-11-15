@@ -12,6 +12,7 @@ import {isEmpty, isEqual} from 'lodash';
 import {Dispatch, memo, RefObject, SetStateAction, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {toMs} from '../../../../../../cross/CrossUtils';
 import {CustomRunBehaviorData, SystemInfo} from '../../../../../../cross/IpcChannelAndTypes';
 import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
 import {useAppState} from '../../../Redux/Reducer/AppReducer';
@@ -93,8 +94,13 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
   }, [id]);
 
   useEffect(() => {
-    const openUrl = (url: string | undefined) => {
-      if (url) {
+    const openUrl = (url: string | undefined, delaySeconds?: number) => {
+      if (!url) return;
+
+      const effectiveDelaySeconds = typeof delaySeconds === 'number' ? delaySeconds : 0;
+      const delayMs = effectiveDelaySeconds > 0 ? toMs(effectiveDelaySeconds, 'seconds') : 0;
+
+      const executeOpen = () => {
         if (browserBehavior === 'appBrowser') {
           dispatch(cardsActions.setRunningCardAddress({address: url, tabId}));
           dispatch(cardsActions.setRunningCardView({view: 'browser', tabId}));
@@ -102,6 +108,12 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
         } else {
           rendererIpc.win.openUrlDefaultBrowser(url);
         }
+      };
+
+      if (delayMs > 0) {
+        setTimeout(executeOpen, delayMs);
+      } else {
+        executeOpen();
       }
     };
 
@@ -117,7 +129,8 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
           if (catchUrlByModule) {
             const catchAddress = getCardMethod(allMethods, id, 'catchAddress');
             const url = catchAddress ? catchAddress(data) : undefined;
-            openUrl(url);
+            const moduleDelay = urlCatchBehavior?.moduleDelay ?? 0;
+            openUrl(url, moduleDelay);
           } else if (catchLine && targetLine) {
             const url = catchTerminalAddress(data, targetLine);
             openUrl(url);

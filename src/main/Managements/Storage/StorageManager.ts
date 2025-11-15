@@ -522,6 +522,7 @@ class StorageManager extends BaseStorage {
             terminal: 'runScript',
             urlCatch: {
               type: 'module',
+              moduleDelay: 0,
               delay: 5,
               customUrl: undefined,
               findLine: undefined,
