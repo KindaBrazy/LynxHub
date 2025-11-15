@@ -7,6 +7,8 @@ import {DiskDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons'
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../../Utils/UtilHooks';
+import SettingsFilterItem from '../../SettingsFilterItem';
+import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 export default function SettingsBrowser_UserAgent() {
   const [selectedAgent, setSelectedAgent] = useState<AgentTypes | undefined>('lynxhub');
@@ -62,36 +64,39 @@ export default function SettingsBrowser_UserAgent() {
   };
 
   return (
-    <div className="flex flex-col gap-y-2">
-      <Select
-        label="User Agent"
-        onSelectionChange={onSelectionChange}
-        selectedKeys={selectedAgent ? [selectedAgent] : []}>
-        <SelectItem
-          key="lynxhub"
-          variant="flat"
-          color="success"
-          description={desc.find(d => d.id === 'lynxhub')?.value || undefined}>
-          LynxHub (Default)
-        </SelectItem>
-        <SelectItem key="electron" variant="flat" description={desc.find(d => d.id === 'electron')?.value || undefined}>
-          Electron
-        </SelectItem>
-        <SelectItem key="chrome" variant="flat" description={desc.find(d => d.id === 'chrome')?.value || undefined}>
-          Chrome
-        </SelectItem>
-        <SelectItem key="custom" variant="flat" description={desc.find(d => d.id === 'custom')?.value || undefined}>
-          Custom
-        </SelectItem>
-      </Select>
-      {selectedAgent === 'custom' && (
-        <div className="flex gap-x-2 flex-row w-full items-center">
-          <Input value={customValue} onValueChange={setCustomValue} />
-          <Button variant="flat" color="success" onPress={saveCustom} isIconOnly>
-            <DiskDuo_Icon />
-          </Button>
-        </div>
-      )}
-    </div>
+    <SettingsFilterItem
+      searchTexts={['User Agent', 'browser', 'user agent', 'lynxhub', 'electron', 'chrome', 'custom', 'ua']}>
+      <div className="flex flex-col gap-y-2">
+        <Select
+          label={<SettingsSearchHighlight text="User Agent" />}
+          onSelectionChange={onSelectionChange}
+          selectedKeys={selectedAgent ? [selectedAgent] : []}>
+          <SelectItem
+            key="lynxhub"
+            variant="flat"
+            color="success"
+            description={desc.find(d => d.id === 'lynxhub')?.value || undefined}>
+            LynxHub (Default)
+          </SelectItem>
+          <SelectItem key="electron" variant="flat" description={desc.find(d => d.id === 'electron')?.value || undefined}>
+            Electron
+          </SelectItem>
+          <SelectItem key="chrome" variant="flat" description={desc.find(d => d.id === 'chrome')?.value || undefined}>
+            Chrome
+          </SelectItem>
+          <SelectItem key="custom" variant="flat" description={desc.find(d => d.id === 'custom')?.value || undefined}>
+            Custom
+          </SelectItem>
+        </Select>
+        {selectedAgent === 'custom' && (
+          <div className="flex gap-x-2 flex-row w-full items-center">
+            <Input value={customValue} onValueChange={setCustomValue} />
+            <Button variant="flat" color="success" onPress={saveCustom} isIconOnly>
+              <DiskDuo_Icon />
+            </Button>
+          </div>
+        )}
+      </div>
+    </SettingsFilterItem>
   );
 }

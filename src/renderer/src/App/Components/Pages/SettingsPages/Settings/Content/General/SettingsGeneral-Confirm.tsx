@@ -5,6 +5,7 @@ import {settingsActions, useSettingsState} from '../../../../../../Redux/Reducer
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
+import SettingsFilterItem from '../../SettingsFilterItem';
 
 /** Manage confirmation modals */
 export default function SettingsGeneralConfirm() {
@@ -40,27 +41,50 @@ export default function SettingsGeneralConfirm() {
 
   return (
     <>
-      <LynxSwitch
-        description="Show a confirmation window when closing the app.
+      <SettingsFilterItem
+        searchTexts={['Close Confirmation', 'close app', 'confirmation window', 'ctrl', 'bypass confirmation']}>
+        <LynxSwitch
+          description="Show a confirmation window when closing the app.
          (Hold CTRL and click on close to bypass this confirmation.)"
-        enabled={closeConfirm}
-        title="Close Confirmation"
-        onEnabledChange={onCloseConfirmChange}
-      />
-      <LynxSwitch
-        description="Show a confirmation window when closing tab with terminal open.
+          enabled={closeConfirm}
+          title="Close Confirmation"
+          onEnabledChange={onCloseConfirmChange}
+        />
+      </SettingsFilterItem>
+      <SettingsFilterItem
+        searchTexts={[
+          'Close Tab Confirmation',
+          'close tab',
+          'terminal tab',
+          'confirmation window',
+          'ctrl',
+          'bypass confirmation',
+        ]}>
+        <LynxSwitch
+          description="Show a confirmation window when closing tab with terminal open.
          (Hold CTRL and click on terminate to bypass this confirmation.)"
-        enabled={closeTabConfirm}
-        title="Close Tab Confirmation"
-        onEnabledChange={onCloseTabConfirmChange}
-      />
-      <LynxSwitch
-        description="Show a confirmation window when terminating running AI.
+          enabled={closeTabConfirm}
+          title="Close Tab Confirmation"
+          onEnabledChange={onCloseTabConfirmChange}
+        />
+      </SettingsFilterItem>
+      <SettingsFilterItem
+        searchTexts={[
+          'Terminate AI Confirmation',
+          'terminate ai',
+          'stop ai',
+          'confirmation window',
+          'ctrl',
+          'bypass confirmation',
+        ]}>
+        <LynxSwitch
+          description="Show a confirmation window when terminating running AI.
          (Hold CTRL and click on terminate to bypass this confirmation.)"
-        enabled={terminateAIConfirm}
-        title="Terminate AI Confirmation"
-        onEnabledChange={onTerminateAIConfirmChange}
-      />
+          enabled={terminateAIConfirm}
+          title="Terminate AI Confirmation"
+          onEnabledChange={onTerminateAIConfirmChange}
+        />
+      </SettingsFilterItem>
     </>
   );
 }

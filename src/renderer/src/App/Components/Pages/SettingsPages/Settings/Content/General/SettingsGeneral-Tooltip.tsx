@@ -6,6 +6,8 @@ import {TooltipStatus} from '../../../../../../../../../cross/IpcChannelAndTypes
 import {settingsActions, useSettingsState} from '../../../../../../Redux/Reducer/SettingsReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
+import SettingsFilterItem from '../../SettingsFilterItem';
+import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 /** Manage tooltip behavior */
 export default function SettingsGeneralTooltip() {
@@ -25,27 +27,33 @@ export default function SettingsGeneralTooltip() {
     [dispatch],
   );
 
+  const labelText = 'Tooltip Behavior';
+  const descriptionText = 'Select the level of tooltips when hovering over elements.';
+
   return (
-    <Select
-      label="Tooltip Behavior"
-      labelPlacement="outside"
-      selectedKeys={[selectedKey]}
-      onSelectionChange={onChange}
-      classNames={{trigger: 'cursor-default !transition !duration-300'}}
-      description="Select the level of tooltips when hovering over elements."
-      disallowEmptySelection>
-      <SelectItem key="essential" className="cursor-default" description="Show tooltips for essential elements only.">
-        Essential
-      </SelectItem>
-      <SelectItem
-        key="full"
-        className="cursor-default"
-        description="Show tooltips for all buttons, tabs, and elements.">
-        Full
-      </SelectItem>
-      <SelectItem key="none" className="cursor-default" description="Disable tooltips completely.">
-        None
-      </SelectItem>
-    </Select>
+    <SettingsFilterItem
+      searchTexts={[labelText, descriptionText, 'tooltip', 'tooltips', 'hover', 'help', 'hint', 'ui tips']}>
+      <Select
+        label={<SettingsSearchHighlight text={labelText} />}
+        labelPlacement="outside"
+        selectedKeys={[selectedKey]}
+        onSelectionChange={onChange}
+        classNames={{trigger: 'cursor-default !transition !duration-300'}}
+        description={<SettingsSearchHighlight text={descriptionText} />}
+        disallowEmptySelection>
+        <SelectItem key="essential" className="cursor-default" description="Show tooltips for essential elements only.">
+          Essential
+        </SelectItem>
+        <SelectItem
+          key="full"
+          className="cursor-default"
+          description="Show tooltips for all buttons, tabs, and elements.">
+          Full
+        </SelectItem>
+        <SelectItem key="none" className="cursor-default" description="Disable tooltips completely.">
+          None
+        </SelectItem>
+      </Select>
+    </SettingsFilterItem>
   );
 }

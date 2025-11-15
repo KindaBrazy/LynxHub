@@ -3,6 +3,7 @@ import {useDispatch} from 'react-redux';
 
 import {terminalActions, useTerminalState} from '../../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
+import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function SettingsTerminalResizeDelay() {
   const resizeDelay = useTerminalState('resizeDelay');
@@ -13,14 +14,16 @@ export default function SettingsTerminalResizeDelay() {
   };
 
   return (
-    <NumberInput
-      step={1}
-      size="sm"
-      minValue={1}
-      maxValue={5000}
-      value={resizeDelay}
-      label="Resize Delay"
-      onValueChange={onChange}
-    />
+    <SettingsFilterItem searchTexts={["Resize Delay", 'terminal', 'resize delay', 'resize', 'latency']}>
+      <NumberInput
+        step={1}
+        size="sm"
+        minValue={1}
+        maxValue={5000}
+        value={resizeDelay}
+        label="Resize Delay"
+        onValueChange={onChange}
+      />
+    </SettingsFilterItem>
   );
 }

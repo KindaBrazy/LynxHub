@@ -9,6 +9,7 @@ import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SettingsSection from '../SettingsPage-ContentSection';
+import SettingsFilterItem from '../SettingsFilterItem';
 
 export const SettingsDiscordId = 'settings_discord_elem';
 
@@ -61,39 +62,51 @@ export default function SettingsDiscord() {
         id={SettingsDiscordId}
         title="Discord Activity Status"
         icon={<Discord_Icon className="size-5" />}>
-        <CheckboxGroup
-          color="secondary"
-          value={selectedLynx}
-          orientation="horizontal"
-          onValueChange={setSelectedLynx}
-          description={`Display running ${APP_NAME} in Discord activity status`}>
-          <Checkbox value="Enabled" className="cursor-default">
-            {APP_NAME}
-          </Checkbox>
-          <Checkbox value="TimeElapsed" className="cursor-default" isDisabled={!selectedLynx.includes('Enabled')}>
-            Time Elapsed
-          </Checkbox>
-        </CheckboxGroup>
-        <CheckboxGroup
-          color="secondary"
-          value={selectedAI}
-          orientation="horizontal"
-          onValueChange={setSelectedAI}
-          description="Display running AI in Discord activity status">
-          <Checkbox value="Enabled" className="cursor-default">
-            Running AI
-          </Checkbox>
-          <Checkbox value="TimeElapsed" className="cursor-default" isDisabled={!selectedAI.includes('Enabled')}>
-            Time Elapsed
-          </Checkbox>
-          <Checkbox value="AIName" className="cursor-default" isDisabled={!selectedAI.includes('Enabled')}>
-            AI Name
-          </Checkbox>
-        </CheckboxGroup>
+        <SettingsFilterItem
+          searchTexts={[
+            'Discord Activity Status',
+            'discord',
+            'activity status',
+            APP_NAME,
+            'Running AI',
+            'AI Name',
+            'Time Elapsed',
+            'rpc',
+          ]}>
+          <CheckboxGroup
+            color="secondary"
+            value={selectedLynx}
+            orientation="horizontal"
+            onValueChange={setSelectedLynx}
+            description={`Display running ${APP_NAME} in Discord activity status`}>
+            <Checkbox value="Enabled" className="cursor-default">
+              {APP_NAME}
+            </Checkbox>
+            <Checkbox value="TimeElapsed" className="cursor-default" isDisabled={!selectedLynx.includes('Enabled')}>
+              Time Elapsed
+            </Checkbox>
+          </CheckboxGroup>
+          <CheckboxGroup
+            color="secondary"
+            value={selectedAI}
+            orientation="horizontal"
+            onValueChange={setSelectedAI}
+            description="Display running AI in Discord activity status">
+            <Checkbox value="Enabled" className="cursor-default">
+              Running AI
+            </Checkbox>
+            <Checkbox value="TimeElapsed" className="cursor-default" isDisabled={!selectedAI.includes('Enabled')}>
+              Time Elapsed
+            </Checkbox>
+            <Checkbox value="AIName" className="cursor-default" isDisabled={!selectedAI.includes('Enabled')}>
+              AI Name
+            </Checkbox>
+          </CheckboxGroup>
 
-        <Button onPress={onApply} isLoading={isSaving} startContent={<DiskDuo_Icon />}>
-          Apply
-        </Button>
+          <Button onPress={onApply} isLoading={isSaving} startContent={<DiskDuo_Icon />}>
+            Apply
+          </Button>
+        </SettingsFilterItem>
       </SettingsSection>
     </>
   );

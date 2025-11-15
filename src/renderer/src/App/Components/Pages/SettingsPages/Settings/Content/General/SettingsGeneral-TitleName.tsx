@@ -5,6 +5,7 @@ import {settingsActions, useSettingsState} from '../../../../../../Redux/Reducer
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
+import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function SettingsGeneralTitleName() {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,12 +19,19 @@ export default function SettingsGeneralTitleName() {
     [dispatch],
   );
 
+  const titleText = 'Dynamic App Title';
+  const descriptionText =
+    "Automatically update the app's title and taskbar name based on the active AI or tool.";
+
   return (
-    <LynxSwitch
-      enabled={dynamicAppTitle}
-      title="Dynamic App Title"
-      onEnabledChange={onAppTitleChange}
-      description="Automatically update the app's title and taskbar name based on the active AI or tool."
-    />
+    <SettingsFilterItem
+      searchTexts={[titleText, descriptionText, 'title', 'window title', 'taskbar name', 'active ai', 'dynamic name']}>
+      <LynxSwitch
+        enabled={dynamicAppTitle}
+        title={titleText}
+        onEnabledChange={onAppTitleChange}
+        description={descriptionText}
+      />
+    </SettingsFilterItem>
   );
 }

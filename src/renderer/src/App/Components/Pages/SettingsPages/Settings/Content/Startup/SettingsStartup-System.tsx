@@ -2,6 +2,7 @@ import {useCallback, useEffect, useState} from 'react';
 
 import rendererIpc from '../../../../../../RendererIpc';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
+import SettingsFilterItem from '../../SettingsFilterItem';
 
 /** Manage launch app on system startup */
 export default function SettingsStartupSystem() {
@@ -19,11 +20,21 @@ export default function SettingsStartupSystem() {
   }, []);
 
   return (
-    <LynxSwitch
-      enabled={isSelected}
-      title="Launch on System Startup"
-      onEnabledChange={onEnabledChange}
-      description="Automatically start the app when the system boots up."
-    />
+    <SettingsFilterItem
+      searchTexts={[
+        'Launch on System Startup',
+        'system startup',
+        'launch on startup',
+        'auto start',
+        'boot',
+        'startup',
+      ]}>
+      <LynxSwitch
+        enabled={isSelected}
+        title="Launch on System Startup"
+        onEnabledChange={onEnabledChange}
+        description="Automatically start the app when the system boots up."
+      />
+    </SettingsFilterItem>
   );
 }

@@ -11,6 +11,8 @@ import {hotkeysActions, useHotkeysState} from '../../../../../Redux/Reducer/Hotk
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import SettingsSection from '../SettingsPage-ContentSection';
+import SettingsFilterItem from '../SettingsFilterItem';
+import SettingsSearchHighlight from '../SettingsSearchHighlight';
 
 export const SettingsHotkeysId = 'settings_hotkeys_elem';
 
@@ -156,37 +158,42 @@ export const HotkeySettings = () => {
           const isRecording = recordingName === name;
 
           return (
-            <List.Item
-              extra={
-                <div className="flex flex-row gap-x-2 items-center">
-                  <Button
-                    size="sm"
-                    variant="flat"
-                    color="secondary"
-                    disabled={isRecording}
-                    isLoading={isRecording}
-                    onPress={() => handleRecordClick(name)}>
-                    <Keyboard_Icon className="size-4" />
-                  </Button>
-                  <Input
-                    ref={el => {
-                      inputRefs.current[name] = el;
-                    }}
-                    onBlur={() => handleBlur(name)}
-                    variant={isRecording ? 'bordered' : 'flat'}
-                    value={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
-                    onKeyDown={isRecording ? e => handleKeyDown(e, name) : undefined}
-                    placeholder={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
-                    classNames={{input: 'cursor-default', innerWrapper: 'cursor-default'}}
-                    readOnly
-                  />
-                </div>
-              }
-              title={label}
-              key={`${name}_hotkey`}
-              className="transition-colors duration-300 hover:bg-black/20">
-              <List.Item.Meta title={label} description={description} />
-            </List.Item>
+            <SettingsFilterItem searchTexts={[label, description, formatHotkey(hotkey)]}>
+              <List.Item
+                extra={
+                  <div className="flex flex-row gap-x-2 items-center">
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      color="secondary"
+                      disabled={isRecording}
+                      isLoading={isRecording}
+                      onPress={() => handleRecordClick(name)}>
+                      <Keyboard_Icon className="size-4" />
+                    </Button>
+                    <Input
+                      ref={el => {
+                        inputRefs.current[name] = el;
+                      }}
+                      onBlur={() => handleBlur(name)}
+                      variant={isRecording ? 'bordered' : 'flat'}
+                      value={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
+                      onKeyDown={isRecording ? e => handleKeyDown(e, name) : undefined}
+                      placeholder={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
+                      classNames={{input: 'cursor-default', innerWrapper: 'cursor-default'}}
+                      readOnly
+                    />
+                  </div>
+                }
+                title={label}
+                key={`${name}_hotkey`}
+                className="transition-colors duration-300 hover:bg-black/20">
+                <List.Item.Meta
+                  title={<SettingsSearchHighlight text={label} />}
+                  description={<SettingsSearchHighlight text={description} />}
+                />
+              </List.Item>
+            </SettingsFilterItem>
           );
         })}
       </List>
@@ -195,4 +202,4 @@ export const HotkeySettings = () => {
       </Button>
     </SettingsSection>
   );
-};
+}

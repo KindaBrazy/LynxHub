@@ -5,6 +5,7 @@ import {settingsActions, useSettingsState} from '../../../../../../Redux/Reducer
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
+import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function SettingsBrowser_Links() {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,12 +19,19 @@ export default function SettingsBrowser_Links() {
     [dispatch],
   );
 
+  const titleText = 'Open links externally';
+  const descriptionText =
+    'When enabled, links will open in your system’s default browser instead of inside the app.';
+
   return (
-    <LynxSwitch
-      enabled={openLinkExternal}
-      title="Open links externally"
-      onEnabledChange={onEnabledChange}
-      description="When enabled, links will open in your system’s default browser instead of inside the app."
-    />
+    <SettingsFilterItem
+      searchTexts={[titleText, descriptionText, 'links', 'browser', 'open externally', 'default browser']}>
+      <LynxSwitch
+        enabled={openLinkExternal}
+        title={titleText}
+        onEnabledChange={onEnabledChange}
+        description={descriptionText}
+      />
+    </SettingsFilterItem>
   );
 }

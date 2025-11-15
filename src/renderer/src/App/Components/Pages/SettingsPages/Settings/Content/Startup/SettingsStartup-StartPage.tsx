@@ -2,6 +2,7 @@ import {useCallback, useEffect, useState} from 'react';
 
 import rendererIpc from '../../../../../../RendererIpc';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
+import SettingsFilterItem from '../../SettingsFilterItem';
 
 /** Manage app reopen page */
 export default function SettingsStartupStartPage() {
@@ -19,11 +20,21 @@ export default function SettingsStartupStartPage() {
   }, []);
 
   return (
-    <LynxSwitch
-      enabled={isSelected}
-      title="Resume Last Session"
-      onEnabledChange={onEnabledChange}
-      description={'Resume the last active page when reopening the app.\nIf disabled, the Home page will be shown.'}
-    />
+    <SettingsFilterItem
+      searchTexts={[
+        'Resume Last Session',
+        'resume last session',
+        'last active page',
+        'startup page',
+        'home page',
+        'startup',
+      ]}>
+      <LynxSwitch
+        enabled={isSelected}
+        title="Resume Last Session"
+        onEnabledChange={onEnabledChange}
+        description={'Resume the last active page when reopening the app.\nIf disabled, the Home page will be shown.'}
+      />
+    </SettingsFilterItem>
   );
 }

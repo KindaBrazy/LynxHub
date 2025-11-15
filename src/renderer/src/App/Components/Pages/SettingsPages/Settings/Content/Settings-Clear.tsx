@@ -7,6 +7,7 @@ import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SettingsSection from '../SettingsPage-ContentSection';
+import SettingsSearchHighlight from '../SettingsSearchHighlight';
 
 export const SettingsClearId = 'settings_rmv_data_elem';
 
@@ -32,12 +33,16 @@ export default function SettingsClear() {
         showArrow>
         <PopoverTrigger>
           <Button variant="flat" color="danger" startContent={<RefreshDuo_Icon />} fullWidth>
-            Reset Settings (Restart Required)
+            <SettingsSearchHighlight text="Reset Settings (Restart Required)" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-4 gap-y-2 bg-foreground-100">
-          <span className="font-bold w-full text-sm">Reset Settings</span>
-          <span>Are you sure you want to reset all app settings and restart?</span>
+          <span className="font-bold w-full text-sm">
+            <SettingsSearchHighlight text="Reset Settings" />
+          </span>
+          <span>
+            <SettingsSearchHighlight text="Are you sure you want to reset all app settings and restart?" />
+          </span>
           <ButtonGroup className="flex flex-row w-full mt-2" fullWidth>
             <Button size="sm" color="danger" startContent={<RefreshDuo_Icon />} onPress={rendererIpc.storage.clear}>
               Reset & Restart
@@ -62,12 +67,16 @@ export default function SettingsClear() {
         showArrow>
         <PopoverTrigger>
           <Button variant="flat" color="warning" startContent={<BroomDuo_Icon />} fullWidth>
-            Clear Cache
+            <SettingsSearchHighlight text="Clear Cache" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="p-4 gap-y-2 bg-foreground-100">
-          <span className="font-bold w-full text-sm">Clear Cache</span>
-          <span>Are you sure you want to clear all cache?</span>
+          <span className="font-bold w-full text-sm">
+            <SettingsSearchHighlight text="Clear Cache" />
+          </span>
+          <span>
+            <SettingsSearchHighlight text="Are you sure you want to clear all cache?" />
+          </span>
           <ButtonGroup className="flex flex-row w-full mt-2" fullWidth>
             <Button size="sm" color="warning" onPress={clearCache} startContent={<BroomDuo_Icon />}>
               Clear
@@ -78,7 +87,9 @@ export default function SettingsClear() {
           </ButtonGroup>
         </PopoverContent>
       </Popover>
-      <span>Please note that some data may need to be redownloaded or reconfigured after clearing.</span>
+      <span>
+        <SettingsSearchHighlight text="Please note that some data may need to be redownloaded or reconfigured after clearing." />
+      </span>
     </SettingsSection>
   );
 }
