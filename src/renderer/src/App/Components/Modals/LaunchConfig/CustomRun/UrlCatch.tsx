@@ -9,6 +9,7 @@ type UrlCatchType = CustomRunBehaviorData['urlCatch'];
 
 const initialUrlCatch: UrlCatchType = {
   type: 'module',
+  moduleDelay: 0,
   delay: 5,
   customUrl: undefined,
   findLine: undefined,
@@ -18,7 +19,7 @@ type Props = {id: string};
 export function UrlCatch({id}: Props) {
   const [urlCatchValue, setUrlCatchValue] = useState<UrlCatchType>(initialUrlCatch);
 
-  const {type, findLine, customUrl, delay} = useMemo(() => {
+  const {type, findLine, customUrl, delay, moduleDelay} = useMemo(() => {
     return urlCatchValue;
   }, [urlCatchValue]);
 
@@ -57,6 +58,14 @@ export function UrlCatch({id}: Props) {
     });
   };
 
+  const onModuleDelayChange = (value: number) => {
+    setUrlCatchValue(prev => ({...prev, moduleDelay: value}));
+    rendererIpc.storageUtils.updateCustomRunBehavior({
+      cardID: id,
+      urlCatch: {...urlCatchValue, moduleDelay: value},
+    });
+  };
+
   useEffect(() => {
     rendererIpc.storage.get('cardsConfig').then(result => {
       if (!isEmpty(result.customRunBehavior)) {
@@ -92,6 +101,24 @@ export function UrlCatch({id}: Props) {
           Do Not Open UI
         </SelectItem>
       </Select>
+      {type === 'module' && (
+        <NumberInput
+          classNames={{
+            mainWrapper: 'w-full',
+            inputWrapper: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack',
+          }}
+          description={
+            'Set a delay before opening the URL detected by the module. This only affects Module Default Detection.'
+          }
+          minValue={0}
+          spellCheck="false"
+          value={moduleDelay}
+          labelPlacement="outside-left"
+          label="Module URL Open Delay: "
+          onValueChange={onModuleDelayChange}
+          endContent={<span className="text-foreground-600 text-sm">Seconds</span>}
+        />
+      )}
       {type === 'findLine' && (
         <Input
           classNames={{
