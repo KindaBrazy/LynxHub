@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux';
 import {terminalActions, useTerminalState} from '../../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
+import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function SettingsTerminalBlinkCursor() {
   const blinkCursor = useTerminalState('blinkCursor');
@@ -16,13 +17,18 @@ export default function SettingsTerminalBlinkCursor() {
     [dispatch],
   );
 
+  const titleText = 'Blink Cursor';
+  const descriptionText = 'Whether the cursor blinks.';
+
   return (
-    <LynxSwitch
-      size="default"
-      title="Blink Cursor"
-      enabled={blinkCursor}
-      onEnabledChange={onEnabledChange}
-      description="Whether the cursor blinks."
-    />
+    <SettingsFilterItem searchTexts={[titleText, descriptionText, 'terminal', 'cursor', 'blink']}>
+      <LynxSwitch
+        size="default"
+        title={titleText}
+        enabled={blinkCursor}
+        onEnabledChange={onEnabledChange}
+        description={descriptionText}
+      />
+    </SettingsFilterItem>
   );
 }

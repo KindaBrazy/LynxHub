@@ -4,8 +4,10 @@ import {useEffect, useState} from 'react';
 import LynxScroll from '../../../Reusable/LynxScroll';
 import {SettingsSections} from './SettingsContainer';
 
+type Props = {searchValue: string; sectionTexts: Map<string, string>};
+
 /** Settings content */
-const SettingsPageContents = () => {
+const SettingsPageContents = ({searchValue, sectionTexts}: Props) => {
   const [showSections, setShowSections] = useState(false);
 
   useEffect(() => {
@@ -31,7 +33,7 @@ const SettingsPageContents = () => {
             <Skeleton className="w-full h-64 rounded-xl" />
           </div>
         )}
-        {showSections && <SettingsSections />}
+        {showSections && <SettingsSections searchValue={searchValue} sectionTexts={sectionTexts} />}
       </div>
     </LynxScroll>
   );

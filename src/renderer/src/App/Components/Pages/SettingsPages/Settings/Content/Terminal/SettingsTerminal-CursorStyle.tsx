@@ -5,6 +5,8 @@ import {useDispatch} from 'react-redux';
 import {TerminalCursorStyle} from '../../../../../../../../../cross/IpcChannelAndTypes';
 import {terminalActions, useTerminalState} from '../../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
+import SettingsFilterItem from '../../SettingsFilterItem';
+import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 export default function SettingsTerminalCursorStyle() {
   const cursorStyle = useTerminalState('cursorStyle');
@@ -20,24 +22,29 @@ export default function SettingsTerminalCursorStyle() {
     [dispatch],
   );
 
+  const labelText = 'Cursor Style';
+  const descriptionText = 'Select the appearance of cursor.';
+
   return (
-    <Select
-      label="Cursor Style"
-      labelPlacement="outside"
-      selectedKeys={[cursorStyle]}
-      onSelectionChange={onChange}
-      description="Select the appearance of cursor."
-      classNames={{trigger: 'cursor-default !transition !duration-300', mainWrapper: 'mt-2'}}
-      disallowEmptySelection>
-      <SelectItem key="bar" className="cursor-default">
-        Bar
-      </SelectItem>
-      <SelectItem key="block" className="cursor-default">
-        Block
-      </SelectItem>
-      <SelectItem key="underline" className="cursor-default">
-        Underline
-      </SelectItem>
-    </Select>
+    <SettingsFilterItem searchTexts={[labelText, descriptionText, 'cursor', 'style', 'terminal']}>
+      <Select
+        labelPlacement="outside"
+        selectedKeys={[cursorStyle]}
+        onSelectionChange={onChange}
+        label={<SettingsSearchHighlight text={labelText} />}
+        description={<SettingsSearchHighlight text={descriptionText} />}
+        classNames={{trigger: 'cursor-default !transition !duration-300', mainWrapper: 'mt-2'}}
+        disallowEmptySelection>
+        <SelectItem key="bar" className="cursor-default">
+          Bar
+        </SelectItem>
+        <SelectItem key="block" className="cursor-default">
+          Block
+        </SelectItem>
+        <SelectItem key="underline" className="cursor-default">
+          Underline
+        </SelectItem>
+      </Select>
+    </SettingsFilterItem>
   );
 }

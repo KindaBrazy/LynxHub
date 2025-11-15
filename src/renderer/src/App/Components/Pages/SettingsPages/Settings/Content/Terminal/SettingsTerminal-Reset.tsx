@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 import {RefreshDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {terminalActions} from '../../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
+import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function SettingsTerminalReset() {
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -22,8 +23,10 @@ export default function SettingsTerminalReset() {
   }, []);
 
   return (
-    <Button onPress={onApply} isLoading={isSaving} startContent={<RefreshDuo_Icon />} fullWidth>
-      Reset to Defaults
-    </Button>
+    <SettingsFilterItem searchTexts={['Reset to Defaults', 'reset terminal', 'defaults', 'terminal settings']}>
+      <Button onPress={onApply} isLoading={isSaving} startContent={<RefreshDuo_Icon />} fullWidth>
+        Reset to Defaults
+      </Button>
+    </SettingsFilterItem>
   );
 }

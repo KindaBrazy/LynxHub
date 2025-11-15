@@ -1,8 +1,9 @@
-import {Button, Card, CardBody, CardHeader, ScrollShadow} from '@heroui/react';
+import {Button, Card, CardBody, CardHeader, Input, ScrollShadow} from '@heroui/react';
 import {Typography} from 'antd';
-import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
+import {Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {
+  Circle_Icon,
   Database_Icon,
   Discord_Icon,
   EditCard_Icon,
@@ -15,7 +16,9 @@ import {
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {ContainersBg} from '../../../../Utils/CrossStyle';
+import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import {settingsSectionId} from './SettingsContainer';
+import SettingsSearchHighlight from './SettingsSearchHighlight';
 
 const {Text} = Typography;
 
@@ -141,7 +144,9 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
             onPress={() => onPress(item.elementId)}
             fullWidth>
             {item.icon}
-            <Text>{item.title}</Text>
+            <Text>
+              <SettingsSearchHighlight text={item.title} />
+            </Text>
           </Button>
         ))}
       </div>
@@ -150,22 +155,63 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
 };
 
 /** Settings navigation bar */
-const SettingsPageNav = () => {
+type SettingsPageNavProps = {
+  searchValue: string;
+  setSearchValue: Dispatch<SetStateAction<string>>;
+  sectionTexts: Map<string, string>;
+};
+
+const SettingsPageNav = ({searchValue, setSearchValue, sectionTexts}: SettingsPageNavProps) => {
   const buttons = useMemo(() => extensionsData.customizePages.settings.add.navButton, []);
+  const normalizedSearch = searchValue.trim();
+
+  const filteredGroups = useMemo(() => {
+    if (!normalizedSearch) return groupSections;
+
+    return groupSections
+      .map(group => ({
+        ...group,
+        items: group.items.filter(item =>
+          searchInStrings(normalizedSearch, [item.title, group.title, sectionTexts.get(item.elementId) ?? '']),
+        ),
+      }))
+      .filter(group => group.items.length > 0);
+  }, [normalizedSearch, sectionTexts]);
+
+  const groupsToRender = normalizedSearch ? filteredGroups : groupSections;
 
   return (
     <Card className={`h-full text-medium w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
       <CardHeader className="justify-center gap-x-2 pt-5">
         <Tuning_Icon className="size-5" />
-        <span>Settings</span>
+        <span>
+          <SettingsSearchHighlight text="Settings" />
+        </span>
       </CardHeader>
-      <CardBody className="pt-0" as={ScrollShadow} hideScrollBar>
-        {groupSections.map((section, index) => (
-          <GroupSection key={index} {...section} />
-        ))}
-        {buttons.map((Btn, index) => (
-          <Btn key={index} />
-        ))}
+      <CardBody className="pt-0 flex flex-col">
+        <div className="pb-4 pt-3 border-b border-foreground-100/60">
+          <Input
+            type="search"
+            value={searchValue}
+            onValueChange={setSearchValue}
+            placeholder="Search settings..."
+            aria-label="Search settings sections"
+            startContent={<Circle_Icon className="size-4" />}
+          />
+        </div>
+
+        <ScrollShadow className="flex-1 pt-3" hideScrollBar>
+          {groupsToRender.length === 0 && normalizedSearch && (
+            <div className="px-3 text-xs text-foreground-500">No sections match “{searchValue}”.</div>
+          )}
+
+          {groupsToRender.map(section => (
+            <GroupSection key={section.title} {...section} />
+          ))}
+          {buttons.map((Btn, index) => (
+            <Btn key={index} />
+          ))}
+        </ScrollShadow>
       </CardBody>
     </Card>
   );

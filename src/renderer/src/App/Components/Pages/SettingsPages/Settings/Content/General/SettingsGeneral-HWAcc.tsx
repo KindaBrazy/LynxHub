@@ -5,6 +5,7 @@ import {settingsActions, useSettingsState} from '../../../../../../Redux/Reducer
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
+import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function SettingsGeneralHwAcc() {
   const dispatch = useDispatch<AppDispatch>();
@@ -18,18 +19,25 @@ export default function SettingsGeneralHwAcc() {
     [dispatch],
   );
 
+  const titleText = 'Use Hardware Acceleration';
+  const descriptionText =
+    'Enables hardware acceleration to potentially improve performance. If you experience lagging or freezing, try disabling this option.';
+
   return (
-    <LynxSwitch
-      description={
-        <>
-          Enables hardware acceleration to potentially improve performance.
-          <br />
-          If you experience lagging or freezing, try disabling this option.
-        </>
-      }
-      enabled={hardwareAcceleration}
-      onEnabledChange={onEnabledChange}
-      title="Use Hardware Acceleration"
-    />
+    <SettingsFilterItem
+      searchTexts={[titleText, descriptionText, 'hardware acceleration', 'gpu', 'performance', 'lag', 'freeze']}>
+      <LynxSwitch
+        description={
+          <>
+            Enables hardware acceleration to potentially improve performance.
+            <br />
+            If you experience lagging or freezing, try disabling this option.
+          </>
+        }
+        enabled={hardwareAcceleration}
+        onEnabledChange={onEnabledChange}
+        title={titleText}
+      />
+    </SettingsFilterItem>
   );
 }

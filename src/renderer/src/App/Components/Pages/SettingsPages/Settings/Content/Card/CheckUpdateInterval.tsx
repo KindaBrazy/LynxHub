@@ -4,6 +4,8 @@ import {useDispatch} from 'react-redux';
 import {cardsActions, useCardsState} from '../../../../../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
+import SettingsFilterItem from '../../SettingsFilterItem';
+import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 export default function CheckUpdateInterval() {
   const updateInterval = useCardsState('checkUpdateInterval');
@@ -17,16 +19,19 @@ export default function CheckUpdateInterval() {
   };
 
   return (
-    <div className="w-full text-start flex flex-col gap-y-1">
-      <NumberInput
-        minValue={2}
-        value={updateInterval}
-        labelPlacement="outside"
-        onValueChange={onChange}
-        label="Update check frequency:"
-        aria-label="Card Update Interval"
-        endContent={<span className="text-sm">Minutes</span>}
-      />
-    </div>
+    <SettingsFilterItem
+      searchTexts={['Update check frequency:', 'update interval', 'card update', 'check for updates', 'minutes']}>
+      <div className="w-full text-start flex flex-col gap-y-1">
+        <NumberInput
+          minValue={2}
+          value={updateInterval}
+          labelPlacement="outside"
+          onValueChange={onChange}
+          label={<SettingsSearchHighlight text="Update check frequency:" />}
+          aria-label="Card Update Interval"
+          endContent={<span className="text-sm">Minutes</span>}
+        />
+      </div>
+    </SettingsFilterItem>
   );
 }

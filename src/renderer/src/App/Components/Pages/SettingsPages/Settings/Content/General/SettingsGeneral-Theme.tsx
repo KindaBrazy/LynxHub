@@ -6,6 +6,8 @@ import {DarkModeTypes} from '../../../../../../../../../cross/IpcChannelAndTypes
 import {appActions, useAppState} from '../../../../../../Redux/Reducer/AppReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
+import SettingsFilterItem from '../../SettingsFilterItem';
+import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 import useModeAnimation, {ThemeAnimationType} from './ThemeSwitchAnimationHook';
 
 /** Manage app theme (Dark, Light, System) */
@@ -65,28 +67,33 @@ export default function SettingsGeneralTheme() {
     [dispatch, darkMode, toggleSwitchTheme],
   );
 
+  const labelText = 'Theme';
+  const descriptionText = 'Select the appearance theme.';
+
   return (
-    <Select
-      ref={ref}
-      label="Theme"
-      labelPlacement="outside"
-      selectedKeys={[selectedTheme]}
-      onSelectionChange={onThemeChange}
-      description="Select the appearance theme."
-      classNames={{trigger: 'cursor-default !transition !duration-300'}}
-      disallowEmptySelection>
-      <SelectItem key="dark" className="cursor-default">
-        Dark
-      </SelectItem>
-      <SelectItem key="light" className="cursor-default">
-        Light
-      </SelectItem>
-      <SelectItem
-        key="system"
-        className="cursor-default"
-        description="Automatically switch theme based on system settings.">
-        System Default
-      </SelectItem>
-    </Select>
+    <SettingsFilterItem searchTexts={[labelText, descriptionText, 'theme', 'dark', 'light', 'system']}>
+      <Select
+        ref={ref}
+        label={<SettingsSearchHighlight text={labelText} />}
+        labelPlacement="outside"
+        selectedKeys={[selectedTheme]}
+        onSelectionChange={onThemeChange}
+        description={<SettingsSearchHighlight text={descriptionText} />}
+        classNames={{trigger: 'cursor-default !transition !duration-300'}}
+        disallowEmptySelection>
+        <SelectItem key="dark" className="cursor-default">
+          Dark
+        </SelectItem>
+        <SelectItem key="light" className="cursor-default">
+          Light
+        </SelectItem>
+        <SelectItem
+          key="system"
+          className="cursor-default"
+          description="Automatically switch theme based on system settings.">
+          System Default
+        </SelectItem>
+      </Select>
+    </SettingsFilterItem>
   );
 }

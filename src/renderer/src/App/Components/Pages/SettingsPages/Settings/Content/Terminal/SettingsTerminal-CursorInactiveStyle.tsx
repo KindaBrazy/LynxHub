@@ -5,6 +5,8 @@ import {useDispatch} from 'react-redux';
 import {TerminalCursorInactiveStyle} from '../../../../../../../../../cross/IpcChannelAndTypes';
 import {terminalActions, useTerminalState} from '../../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
+import SettingsFilterItem from '../../SettingsFilterItem';
+import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 export default function SettingsTerminalCursorInactiveStyle() {
   const cursorInactiveStyle = useTerminalState('cursorInactiveStyle');
@@ -19,30 +21,35 @@ export default function SettingsTerminalCursorInactiveStyle() {
     },
     [dispatch],
   );
+  const labelText = 'Cursor Inactive Style';
+  const descriptionText = 'Select the appearance of cursor when inactive.';
+
   return (
-    <Select
-      labelPlacement="outside"
-      onSelectionChange={onChange}
-      label="Cursor Inactive Style"
-      selectedKeys={[cursorInactiveStyle]}
-      description="Select the appearance of cursor when inactive."
-      classNames={{trigger: 'cursor-default !transition !duration-300'}}
-      disallowEmptySelection>
-      <SelectItem key="bar" className="cursor-default">
-        Bar
-      </SelectItem>
-      <SelectItem key="block" className="cursor-default">
-        Block
-      </SelectItem>
-      <SelectItem key="underline" className="cursor-default">
-        Underline
-      </SelectItem>
-      <SelectItem key="outline" className="cursor-default">
-        Outline
-      </SelectItem>
-      <SelectItem key="none" className="cursor-default">
-        None
-      </SelectItem>
-    </Select>
+    <SettingsFilterItem searchTexts={[labelText, descriptionText, 'cursor', 'inactive', 'terminal']}>
+      <Select
+        labelPlacement="outside"
+        onSelectionChange={onChange}
+        label={<SettingsSearchHighlight text={labelText} />}
+        selectedKeys={[cursorInactiveStyle]}
+        description={<SettingsSearchHighlight text={descriptionText} />}
+        classNames={{trigger: 'cursor-default !transition !duration-300'}}
+        disallowEmptySelection>
+        <SelectItem key="bar" className="cursor-default">
+          Bar
+        </SelectItem>
+        <SelectItem key="block" className="cursor-default">
+          Block
+        </SelectItem>
+        <SelectItem key="underline" className="cursor-default">
+          Underline
+        </SelectItem>
+        <SelectItem key="outline" className="cursor-default">
+          Outline
+        </SelectItem>
+        <SelectItem key="none" className="cursor-default">
+          None
+        </SelectItem>
+      </Select>
+    </SettingsFilterItem>
   );
 }

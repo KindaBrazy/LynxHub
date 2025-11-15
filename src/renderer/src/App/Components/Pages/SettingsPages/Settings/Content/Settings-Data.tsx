@@ -7,6 +7,7 @@ import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SettingsSection from '../SettingsPage-ContentSection';
+import SettingsSearchHighlight from '../SettingsSearchHighlight';
 
 export const SettingsDataId = 'settings_data_elem';
 
@@ -38,14 +39,16 @@ export default function SettingsData() {
 
   return (
     <SettingsSection title="Data" id={SettingsDataId} icon={<Database_Icon className="size-5" />} itemsCenter>
-      <span>App data, including extensions, modules and binaries, will be saved here.</span>
+      <span>
+        <SettingsSearchHighlight text="App data, including extensions, modules and binaries, will be saved here." />
+      </span>
 
       <Button variant="flat" onPress={openFolder} startContent={<OpenFolder_Icon />}>
         {currentPath}
       </Button>
 
       <Button onPress={change} startContent={<Refresh_Icon />}>
-        Change (Restart Required)
+        <SettingsSearchHighlight text="Change (Restart Required)" />
       </Button>
     </SettingsSection>
   );

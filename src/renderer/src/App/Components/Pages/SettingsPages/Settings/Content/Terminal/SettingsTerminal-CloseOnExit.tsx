@@ -4,6 +4,7 @@ import {useDispatch} from 'react-redux';
 import {terminalActions, useTerminalState} from '../../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../../Redux/Store';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
+import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function SettingsTerminalCloseOnExit() {
   const closeTabOnExit = useTerminalState('closeTabOnExit');
@@ -16,13 +17,19 @@ export default function SettingsTerminalCloseOnExit() {
     [dispatch],
   );
 
+  const titleText = 'Close Tab on Terminal Exit';
+  const descriptionText = 'Automatically close tab contain terminal when the assigned process exits';
+
   return (
-    <LynxSwitch
-      size="default"
-      enabled={closeTabOnExit}
-      onEnabledChange={onEnabledChange}
-      title="Close Tab on Terminal Exit"
-      description="Automatically close tab contain terminal when the assigned process exits"
-    />
+    <SettingsFilterItem
+      searchTexts={[titleText, descriptionText, 'terminal', 'close tab', 'process exit', 'auto close']}>
+      <LynxSwitch
+        size="default"
+        enabled={closeTabOnExit}
+        onEnabledChange={onEnabledChange}
+        title={titleText}
+        description={descriptionText}
+      />
+    </SettingsFilterItem>
   );
 }

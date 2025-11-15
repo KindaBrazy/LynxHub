@@ -7,6 +7,8 @@ import {BroomDuo_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons
 import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../../Utils/UtilHooks';
+import SettingsFilterItem from '../../SettingsFilterItem';
+import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 export default function SettingsBrowser_ClearData() {
   const dispatch = useDispatch<AppDispatch>();
@@ -38,30 +40,53 @@ export default function SettingsBrowser_ClearData() {
   }, [selected, dispatch]);
 
   return (
-    <div className="flex flex-row justify-between items-center">
-      <CheckboxGroup
-        value={selected}
-        className="w-fit"
-        isDisabled={isLoading}
-        orientation="horizontal"
-        onValueChange={setSelected}
-        classNames={{label: 'text-warning'}}
-        label={'Select browser data to clear:'}>
-        <Checkbox value="cache">Cache</Checkbox>
-        <Checkbox value="cookies">Cookies</Checkbox>
-        <Checkbox value="favorites">Favorites</Checkbox>
-        <Checkbox value="history">History</Checkbox>
-        <Checkbox value="fav-icons">Fav Icons</Checkbox>
-      </CheckboxGroup>
-      <Button
-        variant="flat"
-        color="warning"
-        isLoading={isLoading}
-        onPress={clearSelections}
-        isDisabled={isEmpty(selected)}
-        startContent={<BroomDuo_Icon />}>
-        Clear
-      </Button>
-    </div>
+    <SettingsFilterItem
+      searchTexts={[
+        'Select browser data to clear:',
+        'Clear',
+        'browser data',
+        'cache',
+        'cookies',
+        'favorites',
+        'history',
+        'fav icons',
+        'clear data',
+      ]}>
+      <div className="flex flex-row justify-between items-center">
+        <CheckboxGroup
+          value={selected}
+          className="w-fit"
+          isDisabled={isLoading}
+          orientation="horizontal"
+          onValueChange={setSelected}
+          classNames={{label: 'text-warning'}}
+          label={<SettingsSearchHighlight text="Select browser data to clear:" />}>
+          <Checkbox value="cache">
+            <SettingsSearchHighlight text="Cache" />
+          </Checkbox>
+          <Checkbox value="cookies">
+            <SettingsSearchHighlight text="Cookies" />
+          </Checkbox>
+          <Checkbox value="favorites">
+            <SettingsSearchHighlight text="Favorites" />
+          </Checkbox>
+          <Checkbox value="history">
+            <SettingsSearchHighlight text="History" />
+          </Checkbox>
+          <Checkbox value="fav-icons">
+            <SettingsSearchHighlight text="Fav Icons" />
+          </Checkbox>
+        </CheckboxGroup>
+        <Button
+          variant="flat"
+          color="warning"
+          isLoading={isLoading}
+          onPress={clearSelections}
+          isDisabled={isEmpty(selected)}
+          startContent={<BroomDuo_Icon />}>
+          Clear
+        </Button>
+      </div>
+    </SettingsFilterItem>
   );
 }

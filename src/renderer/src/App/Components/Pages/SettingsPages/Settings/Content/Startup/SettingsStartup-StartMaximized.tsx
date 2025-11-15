@@ -2,6 +2,7 @@ import {useCallback, useEffect, useState} from 'react';
 
 import rendererIpc from '../../../../../../RendererIpc';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
+import SettingsFilterItem from '../../SettingsFilterItem';
 
 /** Manage app start minimized */
 export default function SettingsStartupStartMaximized() {
@@ -19,11 +20,14 @@ export default function SettingsStartupStartMaximized() {
   }, []);
 
   return (
-    <LynxSwitch
-      enabled={isSelected}
-      title="Start Maximized"
-      onEnabledChange={onEnabledChange}
-      description="Launch the app in a maximized state."
-    />
+    <SettingsFilterItem
+      searchTexts={["Start Maximized", 'startup', 'launch maximized', 'maximize window', 'window size']}>
+      <LynxSwitch
+        enabled={isSelected}
+        title="Start Maximized"
+        onEnabledChange={onEnabledChange}
+        description="Launch the app in a maximized state."
+      />
+    </SettingsFilterItem>
   );
 }

@@ -3,6 +3,8 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {TaskbarStatus} from '../../../../../../../../../cross/IpcChannelAndTypes';
 import rendererIpc from '../../../../../../RendererIpc';
+import SettingsFilterItem from '../../SettingsFilterItem';
+import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 /** App taskbar and tray behavior */
 export default function SettingsGeneralTaskbar() {
@@ -22,44 +24,49 @@ export default function SettingsGeneralTaskbar() {
     });
   }, []);
 
+  const isDarwin = window.osPlatform === 'darwin';
+  const isLinux = window.osPlatform === 'linux';
+  const labelText = isDarwin ? 'Dock Options' : 'Taskbar Options';
+  const descriptionText = isDarwin
+    ? 'Select how the app should appear in the dock and system tray.'
+    : 'Select how the app should appear in the taskbar and system tray.';
+
   return (
-    <Select
-      description={
-        window.osPlatform === 'darwin'
-          ? 'Select how the app should appear in the dock and system tray.'
-          : 'Select how the app should appear in the taskbar and system tray.'
-      }
-      labelPlacement="outside"
-      selectedKeys={[selectedKey]}
-      onSelectionChange={onChange}
-      classNames={{trigger: 'cursor-default !transition !duration-300'}}
-      label={window.osPlatform === 'darwin' ? 'Dock Options' : 'Taskbar Options'}
-      disallowEmptySelection>
-      <SelectItem key="taskbar-tray" className="cursor-default">
-        {window.osPlatform === 'darwin' ? 'Dock & Tray' : 'Taskbar & Tray'}
-      </SelectItem>
-      <SelectItem key="taskbar" className="cursor-default">
-        {window.osPlatform === 'darwin' ? 'Dock Only' : 'Taskbar Only'}
-      </SelectItem>
-      {window.osPlatform === 'linux' ? (
-        <SelectItem key="!" className="hidden" textValue="Nothing" />
-      ) : (
-        <SelectItem key="tray" className="cursor-default">
-          {window.osPlatform === 'darwin' ? 'Tray Only' : 'Tray Only'}
+    <SettingsFilterItem searchTexts={[labelText, descriptionText, 'taskbar', 'dock', 'tray']}>
+      <Select
+        description={<SettingsSearchHighlight text={descriptionText} />}
+        labelPlacement="outside"
+        selectedKeys={[selectedKey]}
+        onSelectionChange={onChange}
+        classNames={{trigger: 'cursor-default !transition !duration-300'}}
+        label={<SettingsSearchHighlight text={labelText} />}
+        disallowEmptySelection>
+        <SelectItem key="taskbar-tray" className="cursor-default">
+          {isDarwin ? 'Dock & Tray' : 'Taskbar & Tray'}
         </SelectItem>
-      )}
-      <SelectItem
-        description={
-          window.osPlatform === 'darwin'
-            ? 'Show in the dock when focused, move to tray when minimized.'
-            : 'Show in the taskbar when focused, move to tray when minimized.'
-        }
-        key="tray-minimized"
-        className="cursor-default">
-        {window.osPlatform === 'darwin'
-          ? 'Dock when focused, Tray when minimized'
-          : 'Taskbar when focused, Tray when minimized'}
-      </SelectItem>
-    </Select>
+        <SelectItem key="taskbar" className="cursor-default">
+          {isDarwin ? 'Dock Only' : 'Taskbar Only'}
+        </SelectItem>
+        {isLinux ? (
+          <SelectItem key="!" className="hidden" textValue="Nothing" />
+        ) : (
+          <SelectItem key="tray" className="cursor-default">
+            {isDarwin ? 'Tray Only' : 'Tray Only'}
+          </SelectItem>
+        )}
+        <SelectItem
+          description={
+            isDarwin
+              ? 'Show in the dock when focused, move to tray when minimized.'
+              : 'Show in the taskbar when focused, move to tray when minimized.'
+          }
+          key="tray-minimized"
+          className="cursor-default">
+          {isDarwin
+            ? 'Dock when focused, Tray when minimized'
+            : 'Taskbar when focused, Tray when minimized'}
+        </SelectItem>
+      </Select>
+    </SettingsFilterItem>
   );
 }

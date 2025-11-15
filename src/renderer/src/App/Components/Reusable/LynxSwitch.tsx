@@ -1,6 +1,8 @@
 import {cn, Switch} from '@heroui/react';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
+import SettingsSearchHighlight from '../Pages/SettingsPages/Settings/SettingsSearchHighlight';
+
 type Props = {
   enabled?: boolean;
   onEnabledChange?: (selected: boolean) => void;
@@ -72,8 +74,13 @@ export default function LynxSwitch({
       onValueChange={onChange}
       className={'cursor-default whitespace-pre-line ' + className}>
       <div className="flex flex-col gap-1">
-        <p className="text-sm">{title}</p>
-        {description && <p className="text-tiny text-default-400">{description}</p>}
+        <SettingsSearchHighlight className="text-sm" text={title} />
+        {description &&
+          (typeof description === 'string' ? (
+            <SettingsSearchHighlight className="text-tiny text-default-400" text={description} />
+          ) : (
+            <p className="text-tiny text-default-400">{description}</p>
+          ))}
       </div>
     </Switch>
   );
