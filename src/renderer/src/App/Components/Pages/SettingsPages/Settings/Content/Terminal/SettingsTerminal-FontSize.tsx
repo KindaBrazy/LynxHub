@@ -14,7 +14,7 @@ export default function SettingsTerminalFontSize() {
   };
 
   return (
-    <SettingsFilterItem searchTexts={["Font Size", 'terminal', 'font size', 'text size']}>
+    <SettingsFilterItem searchTexts={['Font Size', 'terminal', 'font size', 'text size']}>
       <NumberInput size="sm" minValue={2} maxValue={100} value={fontSize} label="Font Size" onValueChange={onChange} />
     </SettingsFilterItem>
   );

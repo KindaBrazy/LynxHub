@@ -21,7 +21,7 @@ export default function SettingsStartupStartMaximized() {
 
   return (
     <SettingsFilterItem
-      searchTexts={["Start Maximized", 'startup', 'launch maximized', 'maximize window', 'window size']}>
+      searchTexts={['Start Maximized', 'startup', 'launch maximized', 'maximize window', 'window size']}>
       <LynxSwitch
         enabled={isSelected}
         title="Start Maximized"

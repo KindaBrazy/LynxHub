@@ -34,9 +34,9 @@ export default function SettingsGeneralHwAcc() {
             If you experience lagging or freezing, try disabling this option.
           </>
         }
+        title={titleText}
         enabled={hardwareAcceleration}
         onEnabledChange={onEnabledChange}
-        title={titleText}
       />
     </SettingsFilterItem>
   );

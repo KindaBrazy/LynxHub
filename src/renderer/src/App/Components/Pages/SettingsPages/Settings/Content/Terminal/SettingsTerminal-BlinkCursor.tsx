@@ -26,8 +26,8 @@ export default function SettingsTerminalBlinkCursor() {
         size="default"
         title={titleText}
         enabled={blinkCursor}
-        onEnabledChange={onEnabledChange}
         description={descriptionText}
+        onEnabledChange={onEnabledChange}
       />
     </SettingsFilterItem>
   );

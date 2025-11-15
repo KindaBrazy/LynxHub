@@ -8,8 +8,8 @@ import {Discord_Icon, DiskDuo_Icon} from '../../../../../../assets/icons/SvgIcon
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
-import SettingsSection from '../SettingsPage-ContentSection';
 import SettingsFilterItem from '../SettingsFilterItem';
+import SettingsSection from '../SettingsPage-ContentSection';
 
 export const SettingsDiscordId = 'settings_discord_elem';
 

@@ -14,7 +14,7 @@ export default function SettingsTerminalResizeDelay() {
   };
 
   return (
-    <SettingsFilterItem searchTexts={["Resize Delay", 'terminal', 'resize delay', 'resize', 'latency']}>
+    <SettingsFilterItem searchTexts={['Resize Delay', 'terminal', 'resize delay', 'resize', 'latency']}>
       <NumberInput
         step={1}
         size="sm"
