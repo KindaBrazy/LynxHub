@@ -19,6 +19,7 @@ import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {useInstalledCard} from '../../../../../Utils/UtilHooks';
+import {useTabModalManager} from '../../../../Modals/useTabModalManager';
 import {useCardStore} from '../../Wrapper';
 
 export const MenuInfo = () => {
@@ -73,10 +74,7 @@ export const MenuHomePage = () => {
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
-
-  const activeTab = useTabsState('activeTab');
-
-  const dispatch = useDispatch<AppDispatch>();
+  const {openModal} = useTabModalManager();
 
   const onPress = useCallback(() => {
     AddBreadcrumb_Renderer(`Open AI HomePage: repoUrl:${repoUrl}, isCtrlPressed:${isCtrlPressed}`);
@@ -84,10 +82,10 @@ export const MenuHomePage = () => {
       window.open(repoUrl);
       setMenuIsOpen(false);
     } else {
-      dispatch(modalActions.openReadme({url: repoUrl, title, tabID: activeTab}));
+      openModal('readme', {url: repoUrl, title}, 'active');
       setMenuIsOpen(false);
     }
-  }, [dispatch, setMenuIsOpen, repoUrl, title, isCtrlPressed, activeTab]);
+  }, [setMenuIsOpen, repoUrl, title, isCtrlPressed, openModal]);
 
   return (
     <DropdownItem

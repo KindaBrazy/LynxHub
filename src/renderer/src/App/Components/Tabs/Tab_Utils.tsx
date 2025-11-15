@@ -1,11 +1,13 @@
-import {useCallback} from 'react';
+import type {ActionCreatorWithPayload} from '@reduxjs/toolkit';
+import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../Redux/Reducer/ModalsReducer';
-import {tabsActions} from '../../Redux/Reducer/TabsReducer';
+import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
+import {defaultTabItem, REMOVE_MODAL_DELAY} from '../../Utils/Constants';
 
 export function useRemoveTab() {
   const runningCards = useCardsState('runningCard');
@@ -28,4 +30,78 @@ export function useRemoveTab() {
     },
     [runningCards, dispatch],
   );
+}
+
+export function useTabVisibility(tabID: string) {
+  const activeTab = useTabsState('activeTab');
+
+  return useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
+}
+
+type TabIdPayload = {tabID: string};
+
+export function useTabModalOpen<P extends TabIdPayload>(openAction: ActionCreatorWithPayload<P>) {
+  const dispatch = useDispatch<AppDispatch>();
+  const activeTab = useTabsState('activeTab');
+  const tabs = useTabsState('tabs');
+
+  const getNewTabId = useCallback(() => {
+    let newID = defaultTabItem.id;
+    let idNumber = 1;
+
+    const exists = (id: string) => tabs.some(tab => tab.id === id);
+
+    while (exists(newID)) {
+      newID = `${defaultTabItem.id}_${idNumber}`;
+      idNumber++;
+    }
+
+    return newID;
+  }, [tabs]);
+
+  const openInActiveTab = useCallback(
+    (payload: Omit<P, 'tabID'>) => {
+      dispatch(openAction({...payload, tabID: activeTab} as P));
+    },
+    [dispatch, openAction, activeTab],
+  );
+
+  const openInNewTab = useCallback(
+    (payload: Omit<P, 'tabID'>) => {
+      const newID = getNewTabId();
+      dispatch(tabsActions.addTab({...defaultTabItem, id: newID}));
+      dispatch(openAction({...payload, tabID: newID} as P));
+    },
+    [dispatch, openAction, getNewTabId],
+  );
+
+  return {openInActiveTab, openInNewTab};
+}
+
+export function useTabModalClose(
+  closeAction: ActionCreatorWithPayload<{tabID: string}>,
+  removeAction?: ActionCreatorWithPayload<{tabID: string}>,
+  removeDelay: number = REMOVE_MODAL_DELAY,
+) {
+  const dispatch = useDispatch<AppDispatch>();
+  const activeTab = useTabsState('activeTab');
+
+  const close = useCallback(() => {
+    dispatch(closeAction({tabID: activeTab}));
+
+    if (removeAction) {
+      setTimeout(() => {
+        dispatch(removeAction({tabID: activeTab}));
+      }, removeDelay);
+    }
+  }, [dispatch, closeAction, removeAction, removeDelay, activeTab]);
+
+  const onOpenChange = useCallback(
+    (isOpen: boolean) => {
+      if (!isOpen) close();
+    },
+    [close],
+  );
+
+  return {onOpenChange, close};
 }
