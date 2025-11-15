@@ -66,8 +66,8 @@ export default function SettingsGeneralCollectErrors() {
         <LynxSwitch
           description={
             <span>
-              Collect minimal UI interactions and send them with error reports. This data is anonymous and only sent when
-              errors occur, helping to better trace what happened before the error.
+              Collect minimal UI interactions and send them with error reports. This data is anonymous and only sent
+              when errors occur, helping to better trace what happened before the error.
             </span>
           }
           enabled={addBreadcrumbs}

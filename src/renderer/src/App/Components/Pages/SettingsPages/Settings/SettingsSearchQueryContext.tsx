@@ -1,4 +1,4 @@
-import {PropsWithChildren, createContext, useContext, useMemo} from 'react';
+import {createContext, PropsWithChildren, useContext, useMemo} from 'react';
 
 const SettingsSearchQueryContext = createContext<string>('');
 

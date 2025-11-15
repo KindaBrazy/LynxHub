@@ -23,11 +23,11 @@ const SettingsSearchHighlight = ({text, children, className, highlightClassName}
 
   return (
     <Highlighter
-      autoEscape
       className={className}
-      highlightClassName={highlightClassName ?? 'bg-warning/40 rounded-sm px-0.5'}
       searchWords={searchWords}
       textToHighlight={content}
+      highlightClassName={highlightClassName ?? 'bg-warning/40 rounded-sm px-0.5'}
+      autoEscape
     />
   );
 };

@@ -68,9 +68,9 @@ export default function SettingsBrowser_UserAgent() {
       searchTexts={['User Agent', 'browser', 'user agent', 'lynxhub', 'electron', 'chrome', 'custom', 'ua']}>
       <div className="flex flex-col gap-y-2">
         <Select
-          label={<SettingsSearchHighlight text="User Agent" />}
           onSelectionChange={onSelectionChange}
-          selectedKeys={selectedAgent ? [selectedAgent] : []}>
+          selectedKeys={selectedAgent ? [selectedAgent] : []}
+          label={<SettingsSearchHighlight text="User Agent" />}>
           <SelectItem
             key="lynxhub"
             variant="flat"
@@ -78,7 +78,10 @@ export default function SettingsBrowser_UserAgent() {
             description={desc.find(d => d.id === 'lynxhub')?.value || undefined}>
             LynxHub (Default)
           </SelectItem>
-          <SelectItem key="electron" variant="flat" description={desc.find(d => d.id === 'electron')?.value || undefined}>
+          <SelectItem
+            key="electron"
+            variant="flat"
+            description={desc.find(d => d.id === 'electron')?.value || undefined}>
             Electron
           </SelectItem>
           <SelectItem key="chrome" variant="flat" description={desc.find(d => d.id === 'chrome')?.value || undefined}>

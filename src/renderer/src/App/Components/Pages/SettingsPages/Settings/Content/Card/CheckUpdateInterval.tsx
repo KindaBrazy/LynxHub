@@ -27,9 +27,9 @@ export default function CheckUpdateInterval() {
           value={updateInterval}
           labelPlacement="outside"
           onValueChange={onChange}
-          label={<SettingsSearchHighlight text="Update check frequency:" />}
           aria-label="Card Update Interval"
           endContent={<span className="text-sm">Minutes</span>}
+          label={<SettingsSearchHighlight text="Update check frequency:" />}
         />
       </div>
     </SettingsFilterItem>

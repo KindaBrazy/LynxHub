@@ -34,12 +34,12 @@ export default function SettingsGeneralTaskbar() {
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'taskbar', 'dock', 'tray']}>
       <Select
-        description={<SettingsSearchHighlight text={descriptionText} />}
         labelPlacement="outside"
         selectedKeys={[selectedKey]}
         onSelectionChange={onChange}
-        classNames={{trigger: 'cursor-default !transition !duration-300'}}
         label={<SettingsSearchHighlight text={labelText} />}
+        description={<SettingsSearchHighlight text={descriptionText} />}
+        classNames={{trigger: 'cursor-default !transition !duration-300'}}
         disallowEmptySelection>
         <SelectItem key="taskbar-tray" className="cursor-default">
           {isDarwin ? 'Dock & Tray' : 'Taskbar & Tray'}
@@ -62,9 +62,7 @@ export default function SettingsGeneralTaskbar() {
           }
           key="tray-minimized"
           className="cursor-default">
-          {isDarwin
-            ? 'Dock when focused, Tray when minimized'
-            : 'Taskbar when focused, Tray when minimized'}
+          {isDarwin ? 'Dock when focused, Tray when minimized' : 'Taskbar when focused, Tray when minimized'}
         </SelectItem>
       </Select>
     </SettingsFilterItem>

@@ -14,7 +14,7 @@ export default function SettingsTerminalScrollBack() {
   };
 
   return (
-    <SettingsFilterItem searchTexts={["Scrollback", 'terminal', 'scrollback', 'buffer', 'history']}>
+    <SettingsFilterItem searchTexts={['Scrollback', 'terminal', 'scrollback', 'buffer', 'history']}>
       <NumberInput
         size="sm"
         step={100}

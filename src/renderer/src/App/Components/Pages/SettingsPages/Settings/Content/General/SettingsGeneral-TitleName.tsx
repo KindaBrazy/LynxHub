@@ -20,17 +20,16 @@ export default function SettingsGeneralTitleName() {
   );
 
   const titleText = 'Dynamic App Title';
-  const descriptionText =
-    "Automatically update the app's title and taskbar name based on the active AI or tool.";
+  const descriptionText = "Automatically update the app's title and taskbar name based on the active AI or tool.";
 
   return (
     <SettingsFilterItem
       searchTexts={[titleText, descriptionText, 'title', 'window title', 'taskbar name', 'active ai', 'dynamic name']}>
       <LynxSwitch
-        enabled={dynamicAppTitle}
         title={titleText}
-        onEnabledChange={onAppTitleChange}
+        enabled={dynamicAppTitle}
         description={descriptionText}
+        onEnabledChange={onAppTitleChange}
       />
     </SettingsFilterItem>
   );

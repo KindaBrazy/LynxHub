@@ -34,12 +34,12 @@ export default function SettingsGeneralTooltip() {
     <SettingsFilterItem
       searchTexts={[labelText, descriptionText, 'tooltip', 'tooltips', 'hover', 'help', 'hint', 'ui tips']}>
       <Select
-        label={<SettingsSearchHighlight text={labelText} />}
         labelPlacement="outside"
         selectedKeys={[selectedKey]}
         onSelectionChange={onChange}
-        classNames={{trigger: 'cursor-default !transition !duration-300'}}
+        label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
+        classNames={{trigger: 'cursor-default !transition !duration-300'}}
         disallowEmptySelection>
         <SelectItem key="essential" className="cursor-default" description="Show tooltips for essential elements only.">
           Essential

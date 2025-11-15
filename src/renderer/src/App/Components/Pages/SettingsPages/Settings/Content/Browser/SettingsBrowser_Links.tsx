@@ -20,17 +20,16 @@ export default function SettingsBrowser_Links() {
   );
 
   const titleText = 'Open links externally';
-  const descriptionText =
-    'When enabled, links will open in your system’s default browser instead of inside the app.';
+  const descriptionText = 'When enabled, links will open in your system’s default browser instead of inside the app.';
 
   return (
     <SettingsFilterItem
       searchTexts={[titleText, descriptionText, 'links', 'browser', 'open externally', 'default browser']}>
       <LynxSwitch
-        enabled={openLinkExternal}
         title={titleText}
-        onEnabledChange={onEnabledChange}
+        enabled={openLinkExternal}
         description={descriptionText}
+        onEnabledChange={onEnabledChange}
       />
     </SettingsFilterItem>
   );

@@ -29,8 +29,8 @@ export default function SettingsTerminalCursorInactiveStyle() {
       <Select
         labelPlacement="outside"
         onSelectionChange={onChange}
-        label={<SettingsSearchHighlight text={labelText} />}
         selectedKeys={[cursorInactiveStyle]}
+        label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
         classNames={{trigger: 'cursor-default !transition !duration-300'}}
         disallowEmptySelection>

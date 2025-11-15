@@ -25,10 +25,10 @@ export default function SettingsTerminalCloseOnExit() {
       searchTexts={[titleText, descriptionText, 'terminal', 'close tab', 'process exit', 'auto close']}>
       <LynxSwitch
         size="default"
-        enabled={closeTabOnExit}
-        onEnabledChange={onEnabledChange}
         title={titleText}
+        enabled={closeTabOnExit}
         description={descriptionText}
+        onEnabledChange={onEnabledChange}
       />
     </SettingsFilterItem>
   );

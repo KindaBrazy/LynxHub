@@ -3,9 +3,9 @@ import {memo, useMemo, useState} from 'react';
 import Page from '../../Page';
 import SettingsPageContents from './SettingsPage-Contents';
 import SettingsPageNav from './SettingsPage-Nav';
-import {useSectionSearchSnapshot} from './SettingsSearchRegistry';
 import {SettingsSearchHighlightProvider} from './SettingsSearchHighlightContext';
 import {SettingsSearchQueryProvider} from './SettingsSearchQueryContext';
+import {useSectionSearchSnapshot} from './SettingsSearchRegistry';
 
 type Props = {show: boolean};
 

@@ -10,8 +10,8 @@ import {Keyboard_Icon, RefreshDuo_Icon} from '../../../../../../assets/icons/Svg
 import {hotkeysActions, useHotkeysState} from '../../../../../Redux/Reducer/HotkeysReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
-import SettingsSection from '../SettingsPage-ContentSection';
 import SettingsFilterItem from '../SettingsFilterItem';
+import SettingsSection from '../SettingsPage-ContentSection';
 import SettingsSearchHighlight from '../SettingsSearchHighlight';
 
 export const SettingsHotkeysId = 'settings_hotkeys_elem';
@@ -158,7 +158,7 @@ export const HotkeySettings = () => {
           const isRecording = recordingName === name;
 
           return (
-            <SettingsFilterItem searchTexts={[label, description, formatHotkey(hotkey)]}>
+            <SettingsFilterItem key={`${item.name}`} searchTexts={[label, description, formatHotkey(hotkey)]}>
               <List.Item
                 extra={
                   <div className="flex flex-row gap-x-2 items-center">
@@ -202,4 +202,4 @@ export const HotkeySettings = () => {
       </Button>
     </SettingsSection>
   );
-}
+};
