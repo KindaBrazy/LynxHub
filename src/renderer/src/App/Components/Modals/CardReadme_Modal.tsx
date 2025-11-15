@@ -1,36 +1,19 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, useCallback, useMemo} from 'react';
-import {useDispatch} from 'react-redux';
+import {Fragment, useMemo} from 'react';
 
 import {extensionsData} from '../../Extensions/ExtensionLoader';
-import {modalActions, useModalsState} from '../../Redux/Reducer/ModalsReducer';
-import {useTabsState} from '../../Redux/Reducer/TabsReducer';
-import {AppDispatch} from '../../Redux/Store';
-import {REMOVE_MODAL_DELAY} from '../../Utils/Constants';
+import {useModalsState} from '../../Redux/Reducer/ModalsReducer';
 import MarkdownViewer from '../Reusable/MarkdownViewer';
+import {useTabModalLifecycle} from './useTabModalManager';
 
 type Props = {isOpen: boolean; url: string; title: string; tabID: string};
 
 const CardReadmeModal = ({isOpen, url, title, tabID}: Props) => {
-  const activeTab = useTabsState('activeTab');
-
-  const dispatch = useDispatch<AppDispatch>();
-
-  const onOpenChange = useCallback(
-    (isOpen: boolean) => {
-      if (!isOpen) {
-        dispatch(modalActions.closeReadme({tabID: activeTab}));
-        setTimeout(() => {
-          dispatch(modalActions.removeReadme({tabID: activeTab}));
-        }, REMOVE_MODAL_DELAY);
-      }
-    },
-    [dispatch, activeTab],
-  );
+  const {onOpenChange, show} = useTabModalLifecycle('readme', tabID);
 
   const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
-  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
+
   return (
     <Modal
       size="2xl"
