@@ -1,3 +1,4 @@
+// Sends IPC messages from main process to renderer process (one-way communication)
 import {ipcMain, IpcMainEvent} from 'electron';
 
 import {CustomNotificationInfo} from '../../../cross/CrossTypes';

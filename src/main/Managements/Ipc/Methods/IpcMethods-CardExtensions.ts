@@ -1,3 +1,4 @@
+// Card extensions IPC methods - Manages extension details, updates, and enable/disable operations
 import path from 'node:path';
 
 import fs from 'graceful-fs';

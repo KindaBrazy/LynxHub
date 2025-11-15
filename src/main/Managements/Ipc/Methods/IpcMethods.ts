@@ -1,3 +1,4 @@
+// Utility IPC methods - Window state, file operations, Discord RP, and general utilities
 import {writeFile} from 'node:fs/promises';
 import {platform} from 'node:os';
 import path from 'node:path';

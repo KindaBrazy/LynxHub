@@ -1,3 +1,4 @@
+// PTY (Pseudo Terminal) IPC methods - Manages terminal processes for cards and custom commands
 import {platform} from 'node:os';
 
 import {app, shell} from 'electron';
