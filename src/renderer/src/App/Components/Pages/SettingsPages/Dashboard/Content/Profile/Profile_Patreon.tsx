@@ -1,4 +1,4 @@
-import {Button, Card, User} from '@heroui/react';
+import {Alert, Button, Card, User} from '@heroui/react';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -11,6 +11,7 @@ import rendererIpc from '../../../../../../RendererIpc';
 export default function Profile_Patreon() {
   const patreonLoggedIn = useUserState('patreonLoggedIn');
   const patreonUserData = useUserState('patreonUserData');
+  const [isNotMember, setIsNotMember] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -19,6 +20,7 @@ export default function Profile_Patreon() {
   const loginPatreon = useCallback(() => {
     AddBreadcrumb_Renderer(`Patreon Login`);
     if (!patreonLoggedIn) {
+      setIsNotMember(false);
       setIsLoading(true);
       rendererIpc.patreon
         .login()
@@ -28,12 +30,13 @@ export default function Profile_Patreon() {
         })
         .catch(e => {
           console.error(e);
+          if (e.message && e.message.includes('not member')) setIsNotMember(true);
         })
         .finally(() => {
           setIsLoading(false);
         });
     }
-  }, [patreonLoggedIn]);
+  }, [patreonLoggedIn, dispatch]);
 
   const logoutPatreon = useCallback(() => {
     AddBreadcrumb_Renderer(`Patreon Logout`);
@@ -47,12 +50,16 @@ export default function Profile_Patreon() {
       })
       .catch(console.warn)
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [dispatch]);
 
   const cancelLoading = () => {
     AddBreadcrumb_Renderer(`Patreon Cancel Loading`);
     setIsLoading(false);
     window.electron.ipcRenderer.send('patreon-cancel-process');
+  };
+
+  const openPatreonPage = () => {
+    window.open('https://www.patreon.com/lynxhub');
   };
 
   return (
@@ -70,22 +77,51 @@ export default function Profile_Patreon() {
           description={patreonUserData.tier}
           avatarProps={{src: patreonUserData.imageUrl}}
         />
-        <div className="flex flex-row space-x-2">
-          {patreonLoggedIn ? (
-            <Button size="sm" variant="light" color="warning" isLoading={isLoading} onPress={logoutPatreon}>
-              Logout
-            </Button>
-          ) : (
-            <Button size="sm" variant="flat" color="success" isLoading={isLoading} onPress={loginPatreon}>
-              Login
-            </Button>
-          )}
-          {isLoading && (
-            <Button size="sm" variant="flat" color="danger" onPress={cancelLoading}>
-              Cancel
-            </Button>
-          )}
-        </div>
+        {isNotMember ? (
+          <div className="flex flex-col items-end space-y-2 text-right">
+            <Alert
+              description={
+                <div className="flex flex-row items-center justify-between w-full">
+                  <Button size="sm" variant="flat" color="primary" onPress={openPatreonPage}>
+                    Become a Member
+                  </Button>
+                  <Button size="sm" variant="light" onPress={() => setIsNotMember(false)}>
+                    Close
+                  </Button>
+                </div>
+              }
+              color="default"
+              title="You are not a member of the Lynxhub Patreon."
+              classNames={{description: 'py-1 w-full', title: 'text-warning'}}
+            />
+            {/*<div className="flex flex-row space-x-2">
+              <Button size="sm" variant="flat" color="primary" onPress={openPatreonPage}>
+                Become a Member
+              </Button>
+              <Button size="sm" variant="light" onPress={() => setIsNotMember(false)}>
+                Close
+              </Button>
+            </div>
+            <p className="text-xs text-danger">You are not a member of the Lynxhub Patreon.</p>*/}
+          </div>
+        ) : (
+          <div className="flex flex-row space-x-2">
+            {patreonLoggedIn ? (
+              <Button size="sm" variant="light" color="warning" isLoading={isLoading} onPress={logoutPatreon}>
+                Logout
+              </Button>
+            ) : (
+              <Button size="sm" variant="flat" color="success" isLoading={isLoading} onPress={loginPatreon}>
+                Login
+              </Button>
+            )}
+            {isLoading && !patreonLoggedIn && (
+              <Button size="sm" variant="flat" color="danger" onPress={cancelLoading}>
+                Cancel
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </Card>
   );
