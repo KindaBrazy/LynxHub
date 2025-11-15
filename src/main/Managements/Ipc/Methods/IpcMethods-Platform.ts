@@ -1,3 +1,4 @@
+// Platform IPC methods - Retrieves system information (OS platform and build number)
 import os from 'node:os';
 
 import {SystemInfo} from '../../../../cross/IpcChannelAndTypes';

@@ -1,3 +1,4 @@
+// Initializer IPC methods - Checks if required tools (Git, PowerShell 7) are installed
 import {spawn} from 'node:child_process';
 
 import {ipcMain} from 'electron';
