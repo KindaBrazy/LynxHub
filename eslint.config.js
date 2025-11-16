@@ -12,6 +12,9 @@ import tsEslint from 'typescript-eslint';
 const MAX_LINE_LENGTH = 120;
 
 export default defineConfig([
+  {
+    ignores: ['node_modules', 'out', '.gitignore'],
+  },
   configPrettier,
 
   // sonarjs.configs.recommended,
@@ -39,6 +42,12 @@ export default defineConfig([
         ecmaFeatures: {
           jsx: true,
         },
+      },
+    },
+
+    settings: {
+      react: {
+        version: 'detect',
       },
     },
 
