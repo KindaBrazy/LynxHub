@@ -91,12 +91,12 @@ export default function ActionButtons({installed, currentVersion}: Props) {
     <div className="flex flex-col gap-y-1 items-end">
       <SecurityWarning
         type="extension"
+        tabId={activeTab}
         isOpen={isSecOpen}
         setIsOpen={setIsSecOpen}
         onAgree={installExtension}
         title={selectedPlugin?.metadata.title}
         owner={extractGitUrl(selectedPlugin?.url || '').owner}
-        tabId={activeTab}
       />
       {installed && <Versions currentVersion={currentVersion} />}
       <div className="flex flex-row items-center gap-x-2">

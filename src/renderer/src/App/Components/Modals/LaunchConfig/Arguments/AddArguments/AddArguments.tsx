@@ -21,8 +21,8 @@ import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '../../../..
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../../../../cross/GetArgumentsData';
 import {Circle_Icon, Filter_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../Modules/ModuleLoader';
-import {useTabVisibility} from '../../../../Tabs/Tab_Utils';
 import LynxScroll from '../../../../Reusable/LynxScroll';
+import {useTabVisibility} from '../../../../Tabs/Tab_Utils';
 import ArgumentCategory from './ArgumentCategory';
 
 type Props = {
