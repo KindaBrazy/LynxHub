@@ -23,9 +23,16 @@ export default function SettingsTerminalReset() {
   }, []);
 
   return (
-    <SettingsFilterItem searchTexts={['Reset to Defaults', 'reset terminal', 'defaults', 'terminal settings']}>
+    <SettingsFilterItem
+      searchTexts={[
+        'Reset all terminal settings',
+        'reset terminal',
+        'defaults',
+        'terminal settings',
+        'reset quick commands',
+      ]}>
       <Button onPress={onApply} isLoading={isSaving} startContent={<RefreshDuo_Icon />} fullWidth>
-        Reset to Defaults
+        Reset All Terminal Settings
       </Button>
     </SettingsFilterItem>
   );
