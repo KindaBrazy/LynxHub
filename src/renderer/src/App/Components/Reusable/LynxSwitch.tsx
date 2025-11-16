@@ -74,10 +74,10 @@ export default function LynxSwitch({
       onValueChange={onChange}
       className={'cursor-default whitespace-pre-line ' + className}>
       <div className="flex flex-col gap-1">
-        <SettingsSearchHighlight className="text-sm" text={title} />
+        <SettingsSearchHighlight text={title} className="text-sm" />
         {description &&
           (typeof description === 'string' ? (
-            <SettingsSearchHighlight className="text-tiny text-default-400" text={description} />
+            <SettingsSearchHighlight text={description} className="text-tiny text-default-400" />
           ) : (
             <p className="text-tiny text-default-400">{description}</p>
           ))}

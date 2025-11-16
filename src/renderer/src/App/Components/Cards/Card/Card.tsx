@@ -14,13 +14,13 @@ import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
-import {useTabModalManager} from '../../Modals/useTabModalManager';
 import {
   useInstalledCard,
   useIsAutoUpdateExtensions,
   useUpdateAvailable,
   useUpdatingCard,
 } from '../../../Utils/UtilHooks';
+import {useTabModalManager} from '../../Modals/useTabModalManager';
 import Footer from './Footer';
 import PulsingLine from './PulsingLine';
 import {useCardStore} from './Wrapper';
