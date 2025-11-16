@@ -3,7 +3,12 @@ import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {FolderDuo_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {
+  CloseSimple_Icon,
+  FolderDuo_Icon,
+  OpenFolder_Icon,
+  Trash_Icon,
+} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
 import {lynxTopToast} from '../../../../Utils/UtilHooks';
@@ -25,6 +30,21 @@ const CDTo = memo(({id}: Props) => {
     },
     [history],
   );
+
+  const removeFromHistory = useCallback(
+    (dir: string) => {
+      const newHistory = history.filter(item => item !== dir);
+
+      rendererIpc.storage.update('terminal', {cdHistory: newHistory});
+      setHistory(newHistory);
+    },
+    [history],
+  );
+
+  const clearHistory = useCallback(() => {
+    rendererIpc.storage.update('terminal', {cdHistory: []});
+    setHistory([]);
+  }, []);
 
   const selectDir = useCallback(() => {
     rendererIpc.file
@@ -49,20 +69,56 @@ const CDTo = memo(({id}: Props) => {
   }, []);
 
   const items = useMemo(() => {
-    return [
-      <DropdownItem key="select folder" onPress={selectDir}>
+    const baseItems = [
+      <DropdownItem key="select folder" onPress={selectDir} endContent={<OpenFolder_Icon />}>
         Select Folder
       </DropdownItem>,
+    ];
+
+    baseItems.push(
       ...history.map(item => (
-        <DropdownItem key={item} onPress={() => cdTo(item)}>
+        <DropdownItem
+          endContent={
+            <Button
+              onPress={() => {
+                removeFromHistory(item);
+              }}
+              size="sm"
+              color="danger"
+              variant="light"
+              isIconOnly>
+              <Trash_Icon className="size-3" />
+            </Button>
+          }
+          key={item}
+          onPress={() => cdTo(item)}>
           {item}
         </DropdownItem>
       )),
-    ];
-  }, [history]);
+    );
+
+    if (!isEmpty(history)) {
+      baseItems.push(
+        <DropdownItem
+          color="danger"
+          key="clear_history"
+          onPress={clearHistory}
+          className="text-danger"
+          endContent={<CloseSimple_Icon />}>
+          Clear All
+        </DropdownItem>,
+      );
+    }
+
+    return baseItems;
+  }, [history, selectDir, clearHistory, cdTo, removeFromHistory]);
 
   return (
-    <Dropdown className="bg-foreground-100" classNames={{base: 'before:bg-foreground-100'}} showArrow>
+    <Dropdown
+      closeOnSelect={false}
+      className="bg-foreground-100"
+      classNames={{base: 'before:bg-foreground-100'}}
+      showArrow>
       <Tooltip delay={500} content="CD to...">
         <div className="max-w-fit">
           <DropdownTrigger>
