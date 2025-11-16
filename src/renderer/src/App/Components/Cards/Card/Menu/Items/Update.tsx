@@ -9,13 +9,13 @@ import {getCardMethod, useAllCardMethods} from '../../../../../Modules/ModuleLoa
 import {cardsActions} from '../../../../../Redux/Reducer/CardsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
-import {useTabModalManager} from '../../../../Modals/useTabModalManager';
 import {
   useInstalledCard,
   useIsAutoUpdateCard,
   useUpdateAvailable,
   useUpdatingCard,
 } from '../../../../../Utils/UtilHooks';
+import {useTabModalManager} from '../../../../Modals/useTabModalManager';
 import {useCardStore} from '../../Wrapper';
 
 export const MenuUpdate = () => {

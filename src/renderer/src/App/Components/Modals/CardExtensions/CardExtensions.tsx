@@ -7,8 +7,8 @@ import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../RendererIpc';
 import {modalMotionProps} from '../../../Utils/Constants';
-import {useTabModalLifecycle} from '../useTabModalManager';
 import {useIsAutoUpdateExtensions} from '../../../Utils/UtilHooks';
+import {useTabModalLifecycle} from '../useTabModalManager';
 import Available from './Available/Available';
 import Clone from './Clone';
 import Installed from './Installed';
@@ -61,10 +61,10 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
   return (
     <Modal
       isOpen={isOpen}
-      onOpenChange={onOpenChange}
       placement="center"
       isDismissable={false}
       scrollBehavior="inside"
+      onOpenChange={onOpenChange}
       motionProps={modalMotionProps}
       classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 scrollbar-hide ${show}`}}
       className="max-w-[80%] border-2 border-foreground/10 dark:border-foreground/5 overflow-hidden"

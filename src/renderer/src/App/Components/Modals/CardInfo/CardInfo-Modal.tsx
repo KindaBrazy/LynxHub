@@ -11,8 +11,8 @@ import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
-import {useTabModalLifecycle} from '../useTabModalManager';
 import {useInstalledCard} from '../../../Utils/UtilHooks';
+import {useTabModalLifecycle} from '../useTabModalManager';
 import CardInfoDescription from './CardInfo-Description';
 import useCardInfoApi from './UseCardInfoApi';
 

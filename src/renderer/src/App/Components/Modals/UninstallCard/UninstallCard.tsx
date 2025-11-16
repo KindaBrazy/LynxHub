@@ -8,8 +8,8 @@ import {useGetUninstallType} from '../../../Modules/ModuleLoader';
 import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
-import {useTabModalLifecycle} from '../useTabModalManager';
 import {lynxTopToast, useDisableTooltip, useInstalledCard} from '../../../Utils/UtilHooks';
+import {useTabModalLifecycle} from '../useTabModalManager';
 
 type Props = {cardId: string; isOpen: boolean; tabID: string};
 
