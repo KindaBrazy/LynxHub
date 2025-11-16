@@ -4,12 +4,15 @@ import {useDispatch} from 'react-redux';
 
 import {Hotkey_Names} from '../../../../cross/HotkeyConstants';
 import {appActions} from '../Redux/Reducer/AppReducer';
-import {cardsActions} from '../Redux/Reducer/CardsReducer';
+import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
 import {useHotkeysState} from '../Redux/Reducer/HotkeysReducer';
 import {tabsActions, useTabsState} from '../Redux/Reducer/TabsReducer';
+import {useTerminalState} from '../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
 import {defaultTabItem} from './Constants';
+
+const LINE_ENDING = window.osPlatform === 'win32' ? '\r' : '\n';
 
 export default function useHotkeyPress(keys: {name: string; method: (() => void) | null}[]) {
   const hotkeys = useHotkeysState('hotkeys');
@@ -30,6 +33,8 @@ export default function useHotkeyPress(keys: {name: string; method: (() => void)
 /** Register application hotkeys */
 export function useRegisterHotkeys() {
   const activeTab = useTabsState('activeTab');
+  const runningCards = useCardsState('runningCard');
+  const quickCommands = useTerminalState('quickCommands');
   const dispatch = useDispatch<AppDispatch>();
   const [addEmpty, setAddEmpty] = useState<boolean>(false);
   const [emptyType, setEmptyType] = useState<'browser' | 'terminal' | 'both'>('both');
@@ -78,6 +83,19 @@ export function useRegisterHotkeys() {
 
   const newTerminalBrowserTab = () => addRunningEmpty('both');
 
+  const runQuickCommand = useCallback(
+    (index: number) => {
+      const quick = quickCommands[index];
+      if (!quick || !quick.command) return;
+
+      const card = runningCards.find(c => c.tabId === activeTab && (c.type === 'terminal' || c.type === 'both'));
+      if (!card) return;
+
+      rendererIpc.pty.write(card.id, quick.command + LINE_ENDING);
+    },
+    [activeTab, quickCommands, runningCards],
+  );
+
   useHotkeyPress([
     {name: Hotkey_Names.fullscreen, method: handleFullscreen},
     {
@@ -92,5 +110,11 @@ export function useRegisterHotkeys() {
     {name: Hotkey_Names.newBrowserTab, method: newBrowserTab},
     {name: Hotkey_Names.newTerminalTab, method: newTerminalTab},
     {name: Hotkey_Names.newBrowserTerminalTab, method: newTerminalBrowserTab},
+    {name: Hotkey_Names.terminalQuick1, method: () => runQuickCommand(0)},
+    {name: Hotkey_Names.terminalQuick2, method: () => runQuickCommand(1)},
+    {name: Hotkey_Names.terminalQuick3, method: () => runQuickCommand(2)},
+    {name: Hotkey_Names.terminalQuick4, method: () => runQuickCommand(3)},
+    {name: Hotkey_Names.terminalQuick5, method: () => runQuickCommand(4)},
+    {name: Hotkey_Names.terminalQuick6, method: () => runQuickCommand(5)},
   ]);
 }

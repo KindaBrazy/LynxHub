@@ -63,7 +63,7 @@ const SearchText = memo(({searchAddon, tabId}: Props) => {
           hasHotkey ? (
             <div className="flex flex-row items-center gap-x-1">
               <span>Search for text</span>
-              <Kbd keys={[]}>{hotkeyLabel}</Kbd>
+              <Kbd className="text-[10px]">{hotkeyLabel}</Kbd>
             </div>
           ) : (
             'Search for text'

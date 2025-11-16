@@ -12,6 +12,7 @@ import SettingsTerminalOutputColor from './SettingsTerminal-OutputColor';
 import SettingsTerminalReset from './SettingsTerminal-Reset';
 import SettingsTerminalResizeDelay from './SettingsTerminal-ResizeDelay';
 import SettingsTerminalScrollBack from './SettingsTerminal-ScrollBack';
+import SettingsTerminalQuickCommands from './SettingsTerminal-QuickCommands';
 
 export const SettingsTerminalId = 'settings_terminal_elem';
 
@@ -28,6 +29,7 @@ export default function SettingsTerminal() {
       <SettingsTerminalOutputColor />
       <SettingsTerminalCloseOnExit />
       <Spacer />
+      <SettingsTerminalQuickCommands />
       <SettingsTerminalReset />
     </SettingsSection>
   );

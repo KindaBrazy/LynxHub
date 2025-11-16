@@ -5,6 +5,7 @@ import {memo, RefObject} from 'react';
 import CDTo from './CDTo';
 import ClearAll from './ClearAll';
 import CopyAll from './CopyAll';
+import QuickCommands from './QuickCommands';
 import SearchBy from './SearchBy';
 import SearchText from './SearchText';
 import Timer from './Timer';
@@ -35,6 +36,8 @@ const Terminal_TopBar = memo(
           <SearchText tabId={tabId} searchAddon={searchAddon} />
 
           <SearchBy selectedTerminalText={selectedTerminalText} />
+
+          <QuickCommands id={id} />
         </div>
         <div className="flex flex-row h-full items-center gap-x-1"></div>
       </>
