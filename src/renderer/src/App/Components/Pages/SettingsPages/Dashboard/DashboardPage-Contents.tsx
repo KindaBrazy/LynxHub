@@ -10,9 +10,7 @@ const DashboardPageContents = () => {
   return (
     <LynxScroll className="size-full pl-1 pr-4">
       <div className=" flex flex-col gap-y-4">
-        {!showSections && (
-          <SettingsContentSkeleton />
-        )}
+        {!showSections && <SettingsContentSkeleton />}
         {showSections && <DashboardSections />}
       </div>
     </LynxScroll>

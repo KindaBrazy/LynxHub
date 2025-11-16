@@ -65,12 +65,10 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
                 Reddit
               </DropdownItem>
               <DropdownItem
+                startContent={<Image alt="ChatGPT icon" className="size-4" src="https://chat.openai.com/favicon.ico" />}
                 key="ChatGPT"
                 endContent={endContent}
-                onPress={() => searchSelectedText('ChatGPT')}
-                startContent={
-                  <Image alt="ChatGPT icon" className="size-4" src="https://chat.openai.com/favicon.ico" />
-                }>
+                onPress={() => searchSelectedText('ChatGPT')}>
                 ChatGPT
               </DropdownItem>
               <DropdownItem

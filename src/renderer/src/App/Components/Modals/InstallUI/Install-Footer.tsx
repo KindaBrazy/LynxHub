@@ -70,7 +70,7 @@ const InstallFooter = memo(
     const renderFooterButtons = () => {
       return (
         <>
-          <LocateWarning isOpen={locateWarnIsOpen} setIsOpen={setLocateWarnIsOpen} tabId={tabId} />
+          <LocateWarning tabId={tabId} isOpen={locateWarnIsOpen} setIsOpen={setLocateWarnIsOpen} />
           <Button variant="flat" onPress={handleClose} color={state.body === 'done' ? 'success' : 'danger'}>
             {state.body === 'done' ? 'OK' : 'Cancel'}
           </Button>
