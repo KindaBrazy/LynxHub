@@ -29,7 +29,9 @@ export default function SettingsTerminalQuickCommands() {
         {normalized.map((item, index) => {
           const slot = index + 1;
           return (
-            <div key={`terminal_quick_command_${slot}`} className="grid grid-cols-1 gap-2 md:grid-cols-2">
+            <div
+              key={`terminal_quick_command_${slot}`}
+              className="grid grid-cols-1 gap-2 md:grid-cols-[minmax(0,1.5fr)_minmax(0,2fr)_auto] items-center">
               <Input
                 size="sm"
                 label={`Quick Command ${slot} Label`}
@@ -42,6 +44,12 @@ export default function SettingsTerminalQuickCommands() {
                 value={item.command}
                 onValueChange={value => updateQuickCommands(index, {command: value})}
               />
+              <button
+                type="button"
+                className="text-xs text-danger-500 hover:text-danger-600 justify-self-start md:justify-self-end"
+                onClick={() => updateQuickCommands(index, {label: '', command: ''})}>
+                Clear
+              </button>
             </div>
           );
         })}
