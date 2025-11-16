@@ -1,4 +1,4 @@
-import {isEmpty} from 'lodash';
+import {capitalize, isEmpty} from 'lodash';
 
 /**
  * Formats a number with K, M, B, T suffixes for thousands, millions, billions, and trillions.
@@ -57,6 +57,54 @@ export function searchInStrings(searchText: string, targetTexts: (string | undef
   const lowerTargetTexts = (targetTexts.filter(Boolean) as string[]).map(text => text.toLowerCase());
 
   return searchWords.every(word => lowerTargetTexts.some(text => text.includes(word)));
+}
+
+export type HotkeyLike = {
+  key?: string;
+  control?: boolean;
+  shift?: boolean;
+  alt?: boolean;
+  meta?: boolean;
+};
+
+export function formatHotkey(hotkey: HotkeyLike | null): string {
+  if (!hotkey || !hotkey.key) {
+    return 'Not Set';
+  }
+
+  const parts: string[] = [];
+  if (hotkey.control) parts.push('Ctrl');
+  if (hotkey.alt) parts.push('Alt');
+  if (hotkey.shift) parts.push('Shift');
+  if (hotkey.meta) parts.push('Cmd/Super');
+
+  let displayKey: string;
+  switch (hotkey.key.toLowerCase()) {
+    case 'arrowup':
+      displayKey = 'Up';
+      break;
+    case 'arrowdown':
+      displayKey = 'Down';
+      break;
+    case 'arrowleft':
+      displayKey = 'Left';
+      break;
+    case 'arrowright':
+      displayKey = 'Right';
+      break;
+    case ' ':
+      displayKey = 'Space';
+      break;
+    case 'escape':
+      displayKey = 'Esc';
+      break;
+
+    default:
+      displayKey = capitalize(hotkey.key);
+  }
+
+  parts.push(displayKey);
+  return parts.join(' + ');
 }
 
 export function getUserAgent() {

@@ -1,16 +1,23 @@
-import {Button, Input, Popover, PopoverContent, PopoverTrigger, Tooltip} from '@heroui/react';
+import {Button, Input, Kbd, Popover, PopoverContent, PopoverTrigger, Tooltip} from '@heroui/react';
 import {SearchAddon} from '@xterm/addon-search';
 import {KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
 
 import {Hotkey_Names} from '../../../../../../../cross/HotkeyConstants';
 import {AltArrow_Icon, Magnifier_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {useHotkeysState} from '../../../../Redux/Reducer/HotkeysReducer';
 import useHotkeyPress from '../../../../Utils/RegisterHotkeys';
+import {formatHotkey} from '../../../../Utils/UtilFunctions';
 
 type Props = {searchAddon: SearchAddon};
 
 const SearchText = memo(({searchAddon}: Props) => {
   const [searchText, setSearchText] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const hotkeys = useHotkeysState('hotkeys');
+
+  const findInPageHotkey = hotkeys.find(item => item.name === Hotkey_Names.findInPage) ?? null;
+  const hotkeyLabel = formatHotkey(findInPageHotkey ?? null);
+  const hasHotkey = hotkeyLabel !== 'Not Set';
 
   useEffect(() => {
     return () => {
@@ -49,7 +56,18 @@ const SearchText = memo(({searchAddon}: Props) => {
       onOpenChange={setIsOpen}
       classNames={{base: 'before:bg-foreground-100'}}
       showArrow>
-      <Tooltip delay={500} content="Search for text">
+      <Tooltip
+        content={
+          hasHotkey ? (
+            <div className="flex flex-row items-center gap-x-1">
+              <span>Search for text</span>
+              <Kbd keys={[]}>{hotkeyLabel}</Kbd>
+            </div>
+          ) : (
+            'Search for text'
+          )
+        }
+        delay={500}>
         <div className="max-w-fit">
           <PopoverTrigger>
             <Button size="sm" variant="light" isIconOnly>

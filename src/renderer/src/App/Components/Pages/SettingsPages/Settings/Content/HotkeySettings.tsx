@@ -1,6 +1,6 @@
 import {Button, Input} from '@heroui/react';
 import {List} from 'antd';
-import {capitalize, compact} from 'lodash';
+import {compact} from 'lodash';
 import {KeyboardEvent, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -13,58 +13,11 @@ import rendererIpc from '../../../../../RendererIpc';
 import SettingsFilterItem from '../SettingsFilterItem';
 import SettingsSection from '../SettingsPage-ContentSection';
 import SettingsSearchHighlight from '../SettingsSearchHighlight';
+import {formatHotkey, HotkeyLike} from '../../../../../Utils/UtilFunctions';
 
 export const SettingsHotkeysId = 'settings_hotkeys_elem';
 
-type Hotkey = {
-  key: string;
-  control: boolean;
-  shift: boolean;
-  alt: boolean;
-  meta: boolean;
-};
-
-type HotkeyConfig = {name: string; label: string; description: string; hotkey: Hotkey | null}[];
-
-const formatHotkey = (hotkey: Hotkey | null): string => {
-  if (!hotkey || !hotkey.key) {
-    return 'Not Set';
-  }
-
-  const parts: string[] = [];
-  if (hotkey.control) parts.push('Ctrl');
-  if (hotkey.alt) parts.push('Alt');
-  if (hotkey.shift) parts.push('Shift');
-  if (hotkey.meta) parts.push('Cmd/Super');
-
-  let displayKey: string;
-  switch (hotkey.key.toLowerCase()) {
-    case 'arrowup':
-      displayKey = 'Up';
-      break;
-    case 'arrowdown':
-      displayKey = 'Down';
-      break;
-    case 'arrowleft':
-      displayKey = 'Left';
-      break;
-    case 'arrowright':
-      displayKey = 'Right';
-      break;
-    case ' ':
-      displayKey = 'Space';
-      break;
-    case 'escape':
-      displayKey = 'Esc';
-      break;
-
-    default:
-      displayKey = capitalize(hotkey.key);
-  }
-
-  parts.push(displayKey);
-  return parts.join(' + ');
-};
+type HotkeyConfig = {name: string; label: string; description: string; hotkey: HotkeyLike | null}[];
 
 const isModifierKey = (key: string): boolean => {
   return ['control', 'shift', 'alt', 'meta', 'os'].includes(key.toLowerCase());
@@ -111,7 +64,7 @@ export const HotkeySettings = () => {
       return;
     }
 
-    const newHotkey: Hotkey = {
+    const newHotkey: HotkeyLike = {
       key: lowerCaseKey,
       control: ctrlKey,
       shift: shiftKey,
@@ -122,10 +75,16 @@ export const HotkeySettings = () => {
     const data = config.map(item => (item.name === name ? {...item, hotkey: newHotkey} : item));
     const result: LynxHotkey[] = compact(
       data.map(item => {
-        if (!item.hotkey) return null;
+        const hotkey = item.hotkey;
+        if (!hotkey || !hotkey.key) return null;
+
         return {
           name: item.name,
-          ...item.hotkey,
+          key: hotkey.key,
+          control: !!hotkey.control,
+          shift: !!hotkey.shift,
+          alt: !!hotkey.alt,
+          meta: !!hotkey.meta,
         };
       }),
     );
