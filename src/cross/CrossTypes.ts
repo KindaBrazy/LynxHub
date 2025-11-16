@@ -1,6 +1,7 @@
 // Card Repository information type
 
 import {
+  AvailablePageIDs,
   BINARIES_FOLDER_NAME,
   PLUGINS_FOLDER_NAME,
   REPOSITORIES_FOLDER_NAME,
@@ -285,7 +286,7 @@ export type Notification_Data = {
   description: {text: string; color?: 'primary' | 'success' | 'secondary' | 'warning' | 'danger'}[];
   buttons?: {
     title: string;
-    destination: 'dashboard' | 'extensions' | 'modules' | 'settings' | string;
+    destination: AvailablePageIDs | string;
     color?: 'primary' | 'success' | 'secondary' | 'warning' | 'danger';
   }[];
   icon?: string;

@@ -5,7 +5,6 @@ import {
   CardBody,
   CardFooter,
   CardHeader,
-  Divider,
   Drawer,
   DrawerBody,
   DrawerContent,
@@ -21,7 +20,7 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {PageID, PageTitles} from '../../../../../../../../cross/CrossConstants';
+import {AvailablePageIDs, PageID, PageTitles} from '../../../../../../../../cross/CrossConstants';
 import {Notification_Data} from '../../../../../../../../cross/CrossTypes';
 import {isValidURL} from '../../../../../../../../cross/CrossUtils';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
@@ -70,7 +69,7 @@ export default function Home_Notification() {
     filterData(notifications);
   };
 
-  const openPage = (destination: 'modules' | 'extensions' | 'dashboard' | 'settings' | string) => {
+  const openPage = (destination: AvailablePageIDs | string) => {
     dispatch(
       tabsActions.setActivePage({
         pageID: PageID[destination],
@@ -119,7 +118,6 @@ export default function Home_Notification() {
             },
           },
         }}
-        size="sm"
         isOpen={isOpen}
         className="!mb-14"
         onOpenChange={onOpenChange}
@@ -147,20 +145,46 @@ export default function Home_Notification() {
                         exit={{x: 300, opacity: 0}}
                         animate={{x: 0, opacity: 1}}
                         initial={{x: 300, opacity: 0}}>
-                        <Card shadow="none" className="dark:bg-blck/40 bg-foreground-100">
-                          <CardHeader className="justify-between">
-                            {icon && isValidURL(icon) ? (
-                              <Image src={icon} height={20} radius="none" alt="Notification Icon" />
-                            ) : (
-                              <span>{icon}</span>
-                            )}
-                            <span className={titleColor ? `text-${titleColor}` : 'text-foreground'}>{title}</span>
-                            <Button size="sm" variant="light" onPress={() => handleRead(notif.id)} isIconOnly>
-                              <CheckDuo_Icon />
-                            </Button>
+                        <Card
+                          className={
+                            'bg-foreground-50/70 dark:bg-[#151515] border border-foreground/10' +
+                            ' dark:border-foreground/5 rounded-xl hover:border-primary/40' +
+                            ' transition-colors'
+                          }
+                          shadow="sm">
+                          <CardHeader className="flex items-center gap-3">
+                            <div
+                              className={
+                                'flex h-8 w-8 items-center justify-center rounded-full' +
+                                ' bg-foreground-200/80 dark:bg-[#202020] text-base'
+                              }>
+                              {icon && isValidURL(icon) ? (
+                                <Image src={icon} height={20} radius="none" alt="Notification Icon" />
+                              ) : (
+                                <span>{icon}</span>
+                              )}
+                            </div>
+                            <div className="flex flex-1 items-center justify-between gap-2">
+                              <span
+                                className={
+                                  titleColor
+                                    ? `text-${titleColor} text-sm font-semibold`
+                                    : 'text-foreground text-sm font-semibold'
+                                }>
+                                {title}
+                              </span>
+                              <Button
+                                size="sm"
+                                radius="full"
+                                variant="light"
+                                onPress={() => handleRead(notif.id)}
+                                className="h-7 min-w-0 px-2 text-xs text-foreground-500 hover:text-success"
+                                isIconOnly>
+                                <CheckDuo_Icon className="size-3.5" />
+                              </Button>
+                            </div>
                           </CardHeader>
-                          <Divider />
-                          <CardBody className="flex flex-col gap-y-2">
+                          <CardBody className="flex flex-col gap-y-1.5 text-xs leading-relaxed">
                             {description.map((desc, index) => {
                               return (
                                 <span
@@ -173,7 +197,7 @@ export default function Home_Notification() {
                           </CardBody>
 
                           {!isEmpty(buttons) && (
-                            <CardFooter className="justify-end">
+                            <CardFooter className="justify-end pt-1 gap-2">
                               {buttons!.map(btn => {
                                 const isUrl = isValidURL(btn.destination);
                                 return (
@@ -186,8 +210,11 @@ export default function Home_Notification() {
                                         openPage(btn.destination);
                                       }
                                     }}
+                                    size="sm"
                                     variant="flat"
                                     key={btn.title}
+                                    className="text-xs"
+                                    color={btn.color || 'default'}
                                     endContent={isUrl ? <ExternalDuo_Icon className="size-[0.85rem]" /> : undefined}>
                                     {btn.title}
                                   </Button>
