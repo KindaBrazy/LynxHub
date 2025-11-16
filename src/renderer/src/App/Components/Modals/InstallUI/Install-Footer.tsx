@@ -21,6 +21,7 @@ type Props = {
   urlToDownload: string | undefined;
   progressInfo: DownloadProgress | undefined;
   cardId: string;
+  tabId: string;
   canContinue: boolean;
   nextStep: () => void;
 };
@@ -39,6 +40,7 @@ const InstallFooter = memo(
     urlToDownload,
     progressInfo,
     cardId,
+    tabId,
     canContinue,
     nextStep,
   }: Props) => {
@@ -68,7 +70,7 @@ const InstallFooter = memo(
     const renderFooterButtons = () => {
       return (
         <>
-          <LocateWarning isOpen={locateWarnIsOpen} setIsOpen={setLocateWarnIsOpen} />
+          <LocateWarning isOpen={locateWarnIsOpen} setIsOpen={setLocateWarnIsOpen} tabId={tabId} />
           <Button variant="flat" onPress={handleClose} color={state.body === 'done' ? 'success' : 'danger'}>
             {state.body === 'done' ? 'OK' : 'Cancel'}
           </Button>

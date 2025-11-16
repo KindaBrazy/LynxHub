@@ -22,6 +22,7 @@ import {useDispatch} from 'react-redux';
 
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
+import {useTabVisibility} from '../../Tabs/Tab_Utils';
 
 const {Paragraph, Text} = Typography;
 
@@ -42,12 +43,14 @@ const columns: DetailsColumns = [
 
 /** Showing details and changes about updated card */
 export default function UpdateDetails() {
-  const {details, isOpen, title} = useModalsState('updateDetails');
+  const {details, isOpen, title, tabID} = useModalsState('updateDetails');
   const dispatch = useDispatch<AppDispatch>();
 
   const handleClose = useCallback(() => {
     dispatch(modalActions.closeUpdateDetails());
   }, [dispatch]);
+
+  const show = useTabVisibility(tabID);
 
   const rows = useMemo<DetailsRow>(() => {
     return details.files.map((file, index) => {
@@ -77,12 +80,13 @@ export default function UpdateDetails() {
   return (
     <Modal
       classNames={{
-        backdrop: `!top-10`,
+        backdrop: `!top-10 ${show}`,
         closeButton: 'cursor-default',
-        wrapper: `!top-10 scrollbar-hide`,
+        wrapper: `!top-10 scrollbar-hide ${show}`,
       }}
       isOpen={isOpen}
       placement="center"
+      isDismissable={false}
       scrollBehavior="inside"
       className="max-w-[70%] overflow-hidden"
       hideCloseButton>

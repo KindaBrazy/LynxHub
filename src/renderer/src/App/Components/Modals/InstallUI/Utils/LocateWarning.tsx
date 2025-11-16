@@ -2,16 +2,18 @@ import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '
 import {Dispatch, SetStateAction} from 'react';
 
 import {ShieldWarning_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
+import {useTabVisibility} from '../../../Tabs/Tab_Utils';
 
-type Props = {isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>};
-export default function LocateWarning({isOpen, setIsOpen}: Props) {
+type Props = {isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>; tabId: string};
+export default function LocateWarning({isOpen, setIsOpen, tabId}: Props) {
   const onClose = () => setIsOpen(false);
+  const show = useTabVisibility(tabId);
   return (
     <Modal
       isOpen={isOpen}
       placement="center"
       onOpenChange={setIsOpen}
-      classNames={{backdrop: '!top-10', wrapper: '!top-10'}}
+      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 ${show}`}}
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="text-warning items-center gap-x-2">

@@ -219,6 +219,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
         <InstallFooter
           state={state}
           cardId={cardId}
+          tabId={tabID}
           nextStep={nextStep}
           canContinue={canContinue}
           updateState={updateState}

@@ -40,6 +40,7 @@ type ModalsState = {
 
     title: string;
     details: PullResult;
+    tabID: string;
   };
   cardExtensions: {
     isOpen: boolean;
@@ -116,6 +117,7 @@ const initialState: ModalsState = {
     },
     isOpen: false,
     title: '',
+    tabID: '',
   },
   installUIModal: [],
   readmeModal: [],

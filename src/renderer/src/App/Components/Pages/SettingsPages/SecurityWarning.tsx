@@ -2,6 +2,7 @@ import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHead
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
 import {APP_AUTHOR_NAME} from '../../../../../../cross/CrossConstants';
+import {useTabVisibility} from '../../Tabs/Tab_Utils';
 import {ShieldWarning_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 
 type Props = {
@@ -11,9 +12,10 @@ type Props = {
   onAgree: () => void;
   title?: string;
   owner?: string;
+  tabId: string;
 };
 
-export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title, owner}: Props) {
+export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title, owner, tabId}: Props) {
   const storeKey = useMemo(() => `dont_show-${type}-security_notice`, [type]);
   const [dontShow, setDontShow] = useState<boolean>(false);
 
@@ -41,6 +43,8 @@ export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title
     setDontShow(false);
   };
 
+  const show = useTabVisibility(tabId);
+
   return (
     <Modal
       size="xl"
@@ -49,7 +53,7 @@ export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title
       placement="center"
       scrollBehavior="inside"
       onOpenChange={setIsOpen}
-      classNames={{backdrop: '!top-10', wrapper: '!top-10 '}}
+      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 ${show}`}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <ModalHeader className="bg-foreground-100 justify-center text-warning items-center gap-x-2">
