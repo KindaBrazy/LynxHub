@@ -1,12 +1,8 @@
-import {createServer} from 'node:http';
 import {dirname, join} from 'node:path';
 
-import {is} from '@electron-toolkit/utils';
 import {captureException} from '@sentry/electron/main';
 import {constants, promises, readdirSync} from 'graceful-fs';
 import {includes, isString} from 'lodash';
-import portFinder from 'portfinder';
-import handler from 'serve-handler';
 
 import {SubscribeStages} from '../../../cross/CrossTypes';
 import {pluginChannels} from '../../../cross/IpcChannelAndTypes';
@@ -25,7 +21,7 @@ import GitManager from '../Git/GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
 import ExtensionManager from './Extensions/ExtensionManager';
 import ModuleManager from './Modules/ModuleManager';
-import {hostName, pluginFolders} from './PluginConstants';
+import {pluginFolders} from './PluginConstants';
 import {
   getCommitByAppStage,
   getVersionByCommit,
@@ -35,10 +31,6 @@ import {
 } from './PluginUtils';
 
 export class PluginManager {
-  private port: number = 5103;
-  private server: ReturnType<typeof createServer> | undefined = undefined;
-  private finalAddress: string = '';
-
   private addresses: PluginAddresses = [];
   private skipped: UnloadedPlugins[] = [];
   private installed: PluginInstalledItem[] = [];
@@ -54,61 +46,12 @@ export class PluginManager {
     this.pluginPath = getAppDirectory('Plugins');
   }
 
-  public async createServer() {
-    return new Promise<{port: number; hostName: string}>((resolve, reject) => {
-      const startServer = async () => {
-        try {
-          this.port = await portFinder.getPortPromise({port: this.port});
-
-          this.server = createServer((req, res) => {
-            try {
-              const origin = is.dev ? '*' : 'file://';
-              res.setHeader('Access-Control-Allow-Origin', origin);
-              return handler(req, res, {
-                public: this.pluginPath,
-              });
-            } catch (handlerError) {
-              console.error('Error in request handler:', handlerError);
-              res.statusCode = 500;
-              res.end('Internal Server Error');
-              return;
-            }
-          });
-
-          this.server.on('error', (serverError: NodeJS.ErrnoException) => {
-            if (serverError.code === 'EADDRINUSE') {
-              console.warn(`Port ${this.port} is still in use. Retrying with a new port...`);
-              this.closeServer();
-              startServer(); // Retry with a new port
-            } else {
-              console.error('Server error:', serverError);
-              reject(serverError);
-            }
-          });
-
-          this.server.listen(this.port, hostName, async () => {
-            try {
-              this.finalAddress = `http://${hostName}:${this.port}`;
-              await this.readPlugin();
-              resolve({hostName, port: this.port});
-            } catch (configError) {
-              console.error('Error writing config:', configError);
-              this.closeServer();
-              reject(configError);
-            }
-          });
-        } catch (error) {
-          console.error('Error finding or setting up server:', error);
-          reject(error);
-        }
-      };
-      startServer();
-    });
-  }
-
-  public closeServer(): void {
-    if (this.server && this.server.listening) {
-      this.server.close();
+  public async initPlugins() {
+    try {
+      await this.readPlugin();
+    } catch (error) {
+      console.error('Error initializing plugins:', error);
+      captureException(error);
     }
   }
 
@@ -120,7 +63,7 @@ export class PluginManager {
         const validFolders = await this.validatePluginFolders(folders);
 
         this.addresses = validFolders.map(({folder, type}) => ({
-          address: `${this.finalAddress}/${folder}`,
+          address: `lynxplugin://${folder}`,
           type,
         }));
 

@@ -1,7 +1,9 @@
 import {platform} from 'node:os';
+import {join} from 'node:path';
+import {pathToFileURL} from 'node:url';
 
 import {electronApp, optimizer} from '@electron-toolkit/utils';
-import {app, BrowserWindow, Menu, nativeImage} from 'electron';
+import {app, BrowserWindow, Menu, nativeImage, net, protocol} from 'electron';
 import log from 'electron-log/main';
 
 import trayIconMenu from '../../resources/16x16.png?asset';
@@ -9,7 +11,7 @@ import trayIcon from '../../resources/icon.ico?asset';
 import darwinIcon from '../../resources/icon-darwin.png?asset';
 import {APP_NAME} from '../cross/CrossConstants';
 import {isDev, toMs} from '../cross/CrossUtils';
-import {checkAppDirectories} from './Managements/AppDataManager';
+import {checkAppDirectories, getAppDirectory} from './Managements/AppDataManager';
 import {checkForUpdate} from './Managements/AppUpdater';
 import ContextMenuManager from './Managements/ContextMenuManager';
 import {ValidateCards} from './Managements/DataValidator';
@@ -70,8 +72,18 @@ checkAppDirectories().catch(() => {
 const {hardwareAcceleration} = storageManager.getData('app');
 if (!hardwareAcceleration) app.disableHardwareAcceleration();
 
+protocol.registerSchemesAsPrivileged([
+  {
+    scheme: 'lynxplugin',
+    privileges: {
+      standard: true,
+      secure: true,
+      supportFetchAPI: true,
+    },
+  },
+]);
+
 async function setupApp() {
-  await pluginManager.createServer();
   extensionManager.setStorageManager(storageManager);
 
   appManager = new ElectronAppManager();
@@ -79,7 +91,27 @@ async function setupApp() {
 
   await downloadDU();
 
-  app.whenReady().then(onAppReady);
+  app.whenReady().then(async () => {
+    protocol.handle('lynxplugin', request => {
+      try {
+        const url = new URL(request.url);
+        const pluginId = url.hostname;
+        const pluginPath = getAppDirectory('Plugins');
+        const relativePath = url.pathname || '/';
+
+        const filePath = join(pluginPath, pluginId, relativePath);
+        const fileUrl = pathToFileURL(filePath).toString();
+
+        return net.fetch(fileUrl);
+      } catch (error) {
+        console.error('Failed to resolve lynxplugin protocol URL:', error);
+        return new Response('Not Found', {status: 404});
+      }
+    });
+
+    await pluginManager.initPlugins();
+    onAppReady();
+  });
 
   let isQuitting = false;
 
@@ -87,8 +119,6 @@ async function setupApp() {
     if (!isQuitting) {
       e.preventDefault();
       stopAllPty().then(() => {
-        pluginManager.closeServer();
-
         isQuitting = true;
         app.quit();
       });
