@@ -4,9 +4,9 @@ import {memo, useEffect, useState} from 'react';
 
 import {Hotkey_Names} from '../../../../../../cross/HotkeyConstants';
 import {ArrowDuo_Icon, HomeSmile_Icon, RefreshDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
-import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import rendererIpc from '../../../RendererIpc';
 import useHotkeyPress from '../../../Utils/RegisterHotkeys';
+import {useIsActiveTab} from '../../Tabs/Tab_Utils';
 
 const variants: Variants = {
   animate: {scale: 1, opacity: 1},
@@ -18,7 +18,7 @@ const transition: Transition = {duration: 0.3};
 type Props = {webuiAddress: string; tabID: string; id: string};
 
 const Browser_ActionButtons = memo(({webuiAddress, tabID, id}: Props) => {
-  const activeTab = useTabsState('activeTab');
+  const isActiveTab = useIsActiveTab(tabID);
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [canGoForward, setCanGoForward] = useState<boolean>(false);
 
@@ -27,7 +27,7 @@ const Browser_ActionButtons = memo(({webuiAddress, tabID, id}: Props) => {
   const reload = () => rendererIpc.browser.reload(id);
   const loadWebuiURL = () => rendererIpc.browser.loadURL(id, webuiAddress);
 
-  useHotkeyPress([{name: Hotkey_Names.refreshTab, method: activeTab === tabID ? reload : null}]);
+  useHotkeyPress([{name: Hotkey_Names.refreshTab, method: isActiveTab ? reload : null}]);
 
   useEffect(() => {
     const offCanGo = rendererIpc.browser.onCanGo((_, targetID, canGo) => {

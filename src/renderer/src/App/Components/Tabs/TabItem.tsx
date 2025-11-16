@@ -8,11 +8,11 @@ import {CloseSimple_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import {useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {useHotkeysState} from '../../Redux/Reducer/HotkeysReducer';
 import {useSettingsState} from '../../Redux/Reducer/SettingsReducer';
-import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
+import {tabsActions} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import useHotkeyPress from '../../Utils/RegisterHotkeys';
-import {useRemoveTab} from './Tab_Utils';
+import {useIsActiveTab, useRemoveTab} from './Tab_Utils';
 import TabItem_Icon from './TabItem_Icon';
 import TabTitle from './TabTitle';
 
@@ -22,7 +22,7 @@ type Props = {
 
 export default function TabItem({tab}: Props) {
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
-  const activeTab = useTabsState('activeTab');
+  const isActiveTab = useIsActiveTab(tab.id);
   const runningCards = useCardsState('runningCard');
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
@@ -65,7 +65,7 @@ export default function TabItem({tab}: Props) {
     }
   };
 
-  useHotkeyPress([{name: Hotkey_Names.closeTab, method: activeTab === tab.id ? () => handleRemove(true) : null}]);
+  useHotkeyPress([{name: Hotkey_Names.closeTab, method: isActiveTab ? () => handleRemove(true) : null}]);
 
   useEffect(() => {
     if (btnRef.current) {
@@ -96,7 +96,7 @@ export default function TabItem({tab}: Props) {
       <Button
         className={
           'pr-0 text-small pl-2 flex !rounded-t-lg data-[hover=true]:bg-foreground-100 flex-row ' +
-          `cursor-default gap-x-0 ${activeTab == tab.id && 'bg-white dark:bg-[#303033]'}`
+          `cursor-default gap-x-0 ${isActiveTab && 'bg-white dark:bg-[#303033]'}`
         }
         ref={btnRef}
         radius="none"
