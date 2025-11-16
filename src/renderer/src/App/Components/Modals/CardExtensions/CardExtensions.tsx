@@ -1,15 +1,13 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
 import {isEmpty} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {useDebounceBreadcrumb} from '../../../../../Breadcrumbs';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
-import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
-import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
-import {AppDispatch} from '../../../Redux/Store';
+import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import rendererIpc from '../../../RendererIpc';
-import {modalMotionProps, REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
+import {modalMotionProps} from '../../../Utils/Constants';
+import {useTabModalLifecycle} from '../useTabModalManager';
 import {useIsAutoUpdateExtensions} from '../../../Utils/UtilHooks';
 import Available from './Available/Available';
 import Clone from './Clone';
@@ -18,26 +16,18 @@ import Installed from './Installed';
 type Props = {isOpen: boolean; title: string; id: string; tabID: string; dir: string};
 
 const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
-  const activeTab = useTabsState('activeTab');
   const [installedExtensions, setInstalledExtensions] = useState<string[]>([]);
 
   const [currentTab, setCurrentTab] = useState<any>('installed');
   const [updatesAvailable, setUpdatesAvailable] = useState<string[]>([]);
   const [isUpdatingAll, setIsUpdatingAll] = useState<boolean>(false);
-
-  const dispatch = useDispatch<AppDispatch>();
   const installedRef = useRef<{updateAll: () => void; getExtensions: () => void}>(null);
   const autoUpdate = useIsAutoUpdateExtensions(id);
 
   useDebounceBreadcrumb('Card Extension Modal: ', [isOpen, title]);
   useDebounceBreadcrumb('Card Extension Modal Tabs: ', [currentTab]);
 
-  const onClose = useCallback(() => {
-    dispatch(modalActions.closeCardExtensions({tabID: activeTab}));
-    setTimeout(() => {
-      dispatch(modalActions.removeCardExtensions({tabID: activeTab}));
-    }, REMOVE_MODAL_DELAY);
-  }, [dispatch]);
+  const {onOpenChange, show} = useTabModalLifecycle('cardExtensions', tabID);
 
   const updateAll = useCallback(() => {
     installedRef.current?.updateAll();
@@ -68,12 +58,10 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
     return !isEmpty(installedExtensions);
   }, [installedExtensions, id]);
 
-  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
-
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onOpenChange={onOpenChange}
       placement="center"
       isDismissable={false}
       scrollBehavior="inside"
@@ -143,7 +131,7 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
                   {!isUpdateAvailable ? 'No Updates Available' : isUpdatingAll ? 'Updating...' : 'Update All'}
                 </Button>
               )}
-              <Button color="warning" variant="light" onPress={onClose}>
+              <Button color="warning" variant="light" onPress={() => onOpenChange(false)}>
                 Close
               </Button>
             </div>

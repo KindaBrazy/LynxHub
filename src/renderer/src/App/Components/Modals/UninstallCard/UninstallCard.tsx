@@ -5,35 +5,25 @@ import {useDispatch} from 'react-redux';
 import {ShieldCross_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {useGetUninstallType} from '../../../Modules/ModuleLoader';
-import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
-import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
-import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
+import {useTabModalLifecycle} from '../useTabModalManager';
 import {lynxTopToast, useDisableTooltip, useInstalledCard} from '../../../Utils/UtilHooks';
 
 type Props = {cardId: string; isOpen: boolean; tabID: string};
 
 const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
-  const activeTab = useTabsState('activeTab');
   const card = useInstalledCard(cardId);
   const dispatch = useDispatch<AppDispatch>();
   const disableTooltip = useDisableTooltip(true);
   const uninstallType = useGetUninstallType(cardId);
 
-  const closeHandle = useCallback(() => {
-    dispatch(modalActions.closeUninstallCard({tabID: activeTab}));
-    setTimeout(() => {
-      dispatch(modalActions.removeUninstallCard({tabID: activeTab}));
-    }, REMOVE_MODAL_DELAY);
-  }, [dispatch, activeTab]);
+  const {onOpenChange, show} = useTabModalLifecycle('cardUninstall', tabID);
 
-  const onOpenChange = useCallback(
-    (isOpen: boolean) => {
-      if (!isOpen) closeHandle();
-    },
-    [activeTab, closeHandle],
-  );
+  const closeHandle = useCallback(() => {
+    onOpenChange(false);
+  }, [onOpenChange]);
 
   const uninstallHandle = useCallback(
     (type: 'removeDir' | 'trashDir') => {
@@ -89,8 +79,6 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
 
     lynxTopToast(dispatch).loading('Uninstalling...', promise);
   }, [cardId, closeHandle]);
-
-  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
 
   return (
     <Modal

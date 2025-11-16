@@ -1,19 +1,15 @@
 import {DropdownItem} from '@heroui/react';
 import {useCallback, useMemo} from 'react';
-import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import {Extensions2_Icon, GitHub_Icon, SettingsMinimal_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetInstallType} from '../../../../../Modules/ModuleLoader';
-import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
-import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
-import {AppDispatch} from '../../../../../Redux/Store';
 import {useInstalledCard} from '../../../../../Utils/UtilHooks';
+import {useTabModalManager} from '../../../../Modals/useTabModalManager';
 import {useCardStore} from '../../Wrapper';
 
 export const MenuLaunchConfig = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const activeTab = useTabsState('activeTab');
+  const {openModal} = useTabModalManager();
 
   const id = useCardStore(state => state.id);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
@@ -21,11 +17,9 @@ export const MenuLaunchConfig = () => {
   const title = useCardStore(state => state.title);
 
   const onPress = useCallback(() => {
-    dispatch(
-      modalActions.openCardLaunchConfig({id: id, title: `${title} Launch Config`, haveArguments, tabID: activeTab}),
-    );
+    openModal('cardLaunchConfig', {id, title: `${title} Launch Config`, haveArguments}, 'active');
     setMenuIsOpen(false);
-  }, [dispatch, setMenuIsOpen, title, haveArguments, id, activeTab]);
+  }, [setMenuIsOpen, title, haveArguments, id, openModal]);
 
   return (
     <DropdownItem
@@ -39,9 +33,6 @@ export const MenuLaunchConfig = () => {
 };
 
 export const MenuExtensions = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const activeTab = useTabsState('activeTab');
-
   const id = useCardStore(state => state.id);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
   const repoUrl = useCardStore(state => state.repoUrl);
@@ -51,18 +42,21 @@ export const MenuExtensions = () => {
   const devName = useMemo(() => extractGitUrl(repoUrl).owner, [repoUrl]);
   const card = useInstalledCard(id);
 
+  const {openModal} = useTabModalManager();
+
   const onPress = useCallback(() => {
     if (card)
-      dispatch(
-        modalActions.openCardExtensions({
+      openModal(
+        'cardExtensions',
+        {
           dir: `${card.dir}${extensionsDir}`,
           title: `${title} (${devName}) Extensions`,
           id,
-          tabID: activeTab,
-        }),
+        },
+        'active',
       );
     setMenuIsOpen(false);
-  }, [dispatch, setMenuIsOpen, card, extensionsDir, title, devName, activeTab]);
+  }, [setMenuIsOpen, card, extensionsDir, title, devName, id, openModal]);
 
   return extensionsDir ? (
     <DropdownItem
@@ -83,16 +77,16 @@ export const MenuRepoConfig = () => {
   const title = useCardStore(state => state.title);
 
   const installType = useGetInstallType(id);
-  const dispatch = useDispatch<AppDispatch>();
-  const activeTab = useTabsState('activeTab');
   const dir = useInstalledCard(id)?.dir;
+
+  const {openModal} = useTabModalManager();
 
   const onPress = useCallback(() => {
     if (dir) {
-      dispatch(modalActions.openGitManager({dir, title: `${title} Repository Settings`, tabID: activeTab}));
+      openModal('gitManager', {dir, title: `${title} Repository Settings`}, 'active');
       setMenuIsOpen(false);
     }
-  }, [dispatch, setMenuIsOpen, dir, title]);
+  }, [setMenuIsOpen, dir, title, openModal]);
 
   if (installType === 'others')
     return <DropdownItem className="hidden" key="repoSetting-hidden" textValue="repoSetting_hidden" />;

@@ -6,12 +6,11 @@ import {useDispatch} from 'react-redux';
 import {RepositoryInfo} from '../../../../../../cross/CrossTypes';
 import {useDebounceBreadcrumb} from '../../../../../Breadcrumbs';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
-import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
-import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
-import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
+import {useTabModalLifecycle} from '../useTabModalManager';
 import Branches from './Branches';
 import CommitInfo from './CommitInfo';
 import Reset_Shallow from './Reset_Shallow';
@@ -19,7 +18,6 @@ import Reset_Shallow from './Reset_Shallow';
 type Props = {isOpen: boolean; tabID: string; title: string; dir: string};
 
 function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
-  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
 
   const [repoInfo, setRepoInfo] = useState<RepositoryInfo | undefined>(undefined);
@@ -51,14 +49,7 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
     if (dir) getRepoInfo();
   }, [isOpen, dir]);
 
-  const onOpenChange = useCallback(() => {
-    dispatch(modalActions.closeGitManager({tabID: activeTab}));
-    setTimeout(() => {
-      dispatch(modalActions.removeGitManager({tabID: activeTab}));
-    }, REMOVE_MODAL_DELAY);
-  }, [dispatch]);
-
-  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
+  const {onOpenChange, show} = useTabModalLifecycle('gitManager', tabID);
 
   return (
     <Modal
@@ -68,7 +59,7 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
       placement="center"
       isDismissable={false}
       scrollBehavior="inside"
-      onOpenChange={onOpenChange}
+      onOpenChange={() => onOpenChange(false)}
       classNames={{backdrop: `!top-10 ${show}`, closeButton: 'cursor-default', wrapper: `!top-10 ${show}`}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
@@ -109,7 +100,7 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
           )}
         </ModalBody>
         <ModalFooter>
-          <Button variant="light" color="warning" onPress={onOpenChange}>
+          <Button variant="light" color="warning" onPress={() => onOpenChange(false)}>
             <span className="font-semibold">Close</span>
           </Button>
         </ModalFooter>

@@ -4,32 +4,22 @@ import {useDispatch} from 'react-redux';
 
 import {ShieldCross_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
-import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
-import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
-import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
+import {useTabModalLifecycle} from '../useTabModalManager';
 
 type Props = {cardId: string; isOpen: boolean; tabID: string};
 
 const UnassignCard = ({cardId, isOpen, tabID}: Props) => {
-  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
 
-  const closeHandle = useCallback(() => {
-    dispatch(modalActions.closeUnassignCard({tabID: activeTab}));
-    setTimeout(() => {
-      dispatch(modalActions.removeUnassignCard({tabID: activeTab}));
-    }, REMOVE_MODAL_DELAY);
-  }, [dispatch, activeTab]);
+  const {onOpenChange, show} = useTabModalLifecycle('cardUnassign', tabID);
 
-  const onOpenChange = useCallback(
-    (isOpen: boolean) => {
-      if (!isOpen) closeHandle();
-    },
-    [activeTab, closeHandle],
-  );
+  const closeHandle = useCallback(() => {
+    onOpenChange(false);
+  }, [onOpenChange]);
 
   const unassign = useCallback(
     (clearConfig: boolean) => {
@@ -46,8 +36,6 @@ const UnassignCard = ({cardId, isOpen, tabID}: Props) => {
     },
     [cardId, closeHandle],
   );
-
-  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
 
   return (
     <Modal

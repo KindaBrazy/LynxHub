@@ -7,10 +7,9 @@ import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download_Icon, Refresh_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {getCardMethod, useAllCardMethods} from '../../../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../../../Redux/Reducer/CardsReducer';
-import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
-import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
+import {useTabModalManager} from '../../../../Modals/useTabModalManager';
 import {
   useInstalledCard,
   useIsAutoUpdateCard,
@@ -31,21 +30,22 @@ export const MenuUpdate = () => {
   const webUi = useInstalledCard(id);
   const updateAvailable = useUpdateAvailable(id);
   const allMethods = useAllCardMethods();
-  const activeTab = useTabsState('activeTab');
 
   const dispatch = useDispatch<AppDispatch>();
+
+  const {openModal} = useTabModalManager();
 
   const onPress = useCallback(() => {
     AddBreadcrumb_Renderer(`Start Update AI: id:${id}`);
     if (getCardMethod(allMethods, id, 'manager')?.updater.startUpdate) {
-      dispatch(modalActions.openInstallUICard({cardId: id, tabID: activeTab, type: 'update', title}));
+      openModal('installUI', {cardId: id, type: 'update', title}, 'active');
       setMenuIsOpen(false);
     } else if (webUi && webUi.dir) {
       dispatch(cardsActions.addUpdatingCard({devName, id, title}));
       setMenuIsOpen(false);
       rendererIpc.git.pull(webUi.dir, id);
     }
-  }, [dispatch, setMenuIsOpen, webUi, devName, id, title, activeTab]);
+  }, [dispatch, setMenuIsOpen, webUi, devName, id, title, openModal]);
 
   if (!updateAvailable || autoUpdate)
     return <DropdownItem className="hidden" key="update-hidden" textValue="update_hidden" />;
