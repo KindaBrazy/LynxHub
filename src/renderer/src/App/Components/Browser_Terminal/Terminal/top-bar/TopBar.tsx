@@ -16,10 +16,11 @@ type Props = {
   clearTerminal: RefObject<(() => void) | undefined>;
   selectedTerminalText: string;
   id: string;
+  tabId: string;
 };
 
 const Terminal_TopBar = memo(
-  ({startTime, serializeAddon, searchAddon, clearTerminal, id, selectedTerminalText}: Props) => {
+  ({startTime, serializeAddon, searchAddon, clearTerminal, id, selectedTerminalText, tabId}: Props) => {
     return (
       <>
         <div className="flex flex-row h-full items-center gap-x-1">
@@ -31,7 +32,7 @@ const Terminal_TopBar = memo(
 
           <CDTo id={id} />
 
-          <SearchText searchAddon={searchAddon} />
+          <SearchText tabId={tabId} searchAddon={searchAddon} />
 
           <SearchBy selectedTerminalText={selectedTerminalText} />
         </div>

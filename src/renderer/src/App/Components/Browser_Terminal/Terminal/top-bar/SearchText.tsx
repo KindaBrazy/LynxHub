@@ -5,15 +5,17 @@ import {KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
 import {Hotkey_Names} from '../../../../../../../cross/HotkeyConstants';
 import {AltArrow_Icon, Magnifier_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useHotkeysState} from '../../../../Redux/Reducer/HotkeysReducer';
+import {useTabsState} from '../../../../Redux/Reducer/TabsReducer';
 import useHotkeyPress from '../../../../Utils/RegisterHotkeys';
 import {formatHotkey} from '../../../../Utils/UtilFunctions';
 
-type Props = {searchAddon: SearchAddon};
+type Props = {searchAddon: SearchAddon; tabId: string};
 
-const SearchText = memo(({searchAddon}: Props) => {
+const SearchText = memo(({searchAddon, tabId}: Props) => {
   const [searchText, setSearchText] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const hotkeys = useHotkeysState('hotkeys');
+  const activeTab = useTabsState('activeTab');
 
   const findInPageHotkey = hotkeys.find(item => item.name === Hotkey_Names.findInPage) ?? null;
   const hotkeyLabel = formatHotkey(findInPageHotkey ?? null);
@@ -40,7 +42,7 @@ const SearchText = memo(({searchAddon}: Props) => {
   useHotkeyPress([
     {
       name: Hotkey_Names.findInPage,
-      method: () => setIsOpen(true),
+      method: activeTab === tabId ? () => setIsOpen(true) : null,
     },
   ]);
 
