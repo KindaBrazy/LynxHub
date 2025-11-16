@@ -278,6 +278,7 @@ class BaseStorage {
           () => {
             const behavior = this.storage.data.cardsConfig.customRunBehavior;
             if (!isEmpty(behavior)) {
+              // @ts-ignore-next-line
               this.storage.data.cardsConfig.customRunBehavior = behavior.map((item: CustomRunBehaviorData_Legacy) => {
                 return {
                   cardID: item.cardID,
