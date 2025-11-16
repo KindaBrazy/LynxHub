@@ -16,6 +16,12 @@ export const Hotkey_Names = {
   prevTab: 'prevTab',
 
   findInPage: 'findInPage',
+  terminalQuick1: 'terminalQuick1',
+  terminalQuick2: 'terminalQuick2',
+  terminalQuick3: 'terminalQuick3',
+  terminalQuick4: 'terminalQuick4',
+  terminalQuick5: 'terminalQuick5',
+  terminalQuick6: 'terminalQuick6',
 };
 
 export const Hotkey_Titles = {
@@ -34,6 +40,12 @@ export const Hotkey_Titles = {
   prevTab: 'Prevoius Tab',
 
   findInPage: 'Find in web page',
+  terminalQuick1: 'Terminal Quick Command 1',
+  terminalQuick2: 'Terminal Quick Command 2',
+  terminalQuick3: 'Terminal Quick Command 3',
+  terminalQuick4: 'Terminal Quick Command 4',
+  terminalQuick5: 'Terminal Quick Command 5',
+  terminalQuick6: 'Terminal Quick Command 6',
 };
 
 export const Hotkey_Desc = {
@@ -52,6 +64,12 @@ export const Hotkey_Desc = {
   prevTab: 'Use this hotkey to switch to the previous tabs.',
 
   findInPage: 'Use this hotkey to search for text within the current web page.',
+  terminalQuick1: 'Executes the first configured terminal quick command in the active terminal.',
+  terminalQuick2: 'Executes the second configured terminal quick command in the active terminal.',
+  terminalQuick3: 'Executes the third configured terminal quick command in the active terminal.',
+  terminalQuick4: 'Executes the fourth configured terminal quick command in the active terminal.',
+  terminalQuick5: 'Executes the fifth configured terminal quick command in the active terminal.',
+  terminalQuick6: 'Executes the sixth configured terminal quick command in the active terminal.',
 };
 
 export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | string): LynxHotkey[] => {
@@ -160,6 +178,54 @@ export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | str
       control: true,
       shift: false,
       key: 'f',
+    },
+    {
+      name: Hotkey_Names.terminalQuick1,
+      meta: false,
+      alt: false,
+      control: false,
+      shift: false,
+      key: '',
+    },
+    {
+      name: Hotkey_Names.terminalQuick2,
+      meta: false,
+      alt: false,
+      control: false,
+      shift: false,
+      key: '',
+    },
+    {
+      name: Hotkey_Names.terminalQuick3,
+      meta: false,
+      alt: false,
+      control: false,
+      shift: false,
+      key: '',
+    },
+    {
+      name: Hotkey_Names.terminalQuick4,
+      meta: false,
+      alt: false,
+      control: false,
+      shift: false,
+      key: '',
+    },
+    {
+      name: Hotkey_Names.terminalQuick5,
+      meta: false,
+      alt: false,
+      control: false,
+      shift: false,
+      key: '',
+    },
+    {
+      name: Hotkey_Names.terminalQuick6,
+      meta: false,
+      alt: false,
+      control: false,
+      shift: false,
+      key: '',
     },
   ];
 };

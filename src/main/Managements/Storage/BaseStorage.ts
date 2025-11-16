@@ -30,11 +30,11 @@ import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
-  private readonly CURRENT_VERSION: number = 0.89;
+  private readonly CURRENT_VERSION: number = 0.9;
   private migratedTo: number = 0; // Tracks migration state for deferred operations
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.89},
+    storage: {version: 0.9},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -101,6 +101,7 @@ class BaseStorage {
       resizeDelay: 77,
       closeTabOnExit: true,
       cdHistory: [],
+      quickCommands: [],
     },
     browser: {
       recentAddress: [],
@@ -303,6 +304,47 @@ class BaseStorage {
           0.88,
           () => {
             this.storage.data.terminal.cdHistory = [];
+          },
+        ],
+        [
+          0.89,
+          () => {
+            // Ensure quickCommands exists on terminal config
+            if (!this.storage.data.terminal.quickCommands) {
+              this.storage.data.terminal.quickCommands = [];
+            }
+
+            // Normalize customRunBehavior.urlCatch.moduleDelay
+            const behavior = this.storage.data.cardsConfig.customRunBehavior as CustomRunBehaviorData[];
+            if (!isEmpty(behavior)) {
+              this.storage.data.cardsConfig.customRunBehavior = behavior.map(item => {
+                const urlCatch = item.urlCatch || ({} as CustomRunBehaviorData['urlCatch']);
+
+                return {
+                  ...item,
+                  urlCatch: {
+                    ...urlCatch,
+                    moduleDelay:
+                      urlCatch.moduleDelay && Number.isFinite(urlCatch.moduleDelay) ? urlCatch.moduleDelay : 0,
+                  },
+                } as CustomRunBehaviorData;
+              });
+            }
+
+            // Ensure app.hotkeys contains all default hotkeys (including newly added ones)
+            const currentHotkeys = this.storage.data.app.hotkeys || [];
+            const defaultHotkeys = Get_Default_Hotkeys(platform());
+
+            const currentNames = currentHotkeys.map(h => h.name);
+            const mergedHotkeys = [...currentHotkeys];
+
+            defaultHotkeys.forEach(def => {
+              if (!currentNames.includes(def.name)) {
+                mergedHotkeys.push(def);
+              }
+            });
+
+            this.storage.data.app.hotkeys = mergedHotkeys;
           },
         ],
       ]);

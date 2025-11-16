@@ -88,6 +88,7 @@ type StorageTypes = {
     resizeDelay: number;
     closeTabOnExit: boolean;
     cdHistory: string[];
+    quickCommands: {label: string; command: string}[];
   };
   browser: {
     recentAddress: string[];

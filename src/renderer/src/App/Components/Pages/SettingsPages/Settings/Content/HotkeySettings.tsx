@@ -72,22 +72,19 @@ export const HotkeySettings = () => {
       meta: metaKey,
     };
 
-    const data = config.map(item => (item.name === name ? {...item, hotkey: newHotkey} : item));
-    const result: LynxHotkey[] = compact(
-      data.map(item => {
-        const hotkey = item.hotkey;
-        if (!hotkey || !hotkey.key) return null;
+    const result: LynxHotkey[] = hotkeys.map(item => {
+      if (item.name !== name) return item;
 
-        return {
-          name: item.name,
-          key: hotkey.key,
-          control: !!hotkey.control,
-          shift: !!hotkey.shift,
-          alt: !!hotkey.alt,
-          meta: !!hotkey.meta,
-        };
-      }),
-    );
+      return {
+        name: item.name,
+        key: newHotkey.key || '',
+        control: !!newHotkey.control,
+        shift: !!newHotkey.shift,
+        alt: !!newHotkey.alt,
+        meta: !!newHotkey.meta,
+      };
+    });
+
     dispatch(hotkeysActions.setHotkeys(result));
     rendererIpc.storage.update('app', {hotkeys: result});
 
