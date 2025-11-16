@@ -21,7 +21,7 @@ import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '../../../..
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../../../../cross/GetArgumentsData';
 import {Circle_Icon, Filter_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useGetArgumentsByID} from '../../../../../Modules/ModuleLoader';
-import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
+import {useTabVisibility} from '../../../../Tabs/Tab_Utils';
 import LynxScroll from '../../../../Reusable/LynxScroll';
 import ArgumentCategory from './ArgumentCategory';
 
@@ -48,7 +48,6 @@ const isEmptyData = (data): boolean => {
 
 /** Select and add arguments */
 export default function AddArguments({addArgumentsModal, chosenArguments, setChosenArguments, id, tabId}: Props) {
-  const activeTab = useTabsState('activeTab');
   const [filterArguments, setFilterArguments] = useState<Set<string>>(new Set(['all']));
   const [selectedArguments, setSelectedArguments] = useState<Set<string>>(new Set([]));
   const [searchValue, setSearchValue] = useState<string>('');
@@ -108,7 +107,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
     onClose();
   }, [selectedArguments, id, onClose, cardArgument]);
 
-  const show = useMemo(() => (activeTab === tabId ? 'flex' : 'hidden'), [activeTab, tabId]);
+  const show = useTabVisibility(tabId);
 
   return (
     <Modal

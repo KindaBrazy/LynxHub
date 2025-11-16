@@ -19,6 +19,7 @@ import {useUserState} from '../../../Redux/Reducer/UserReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {modalMotionProps} from '../../../Utils/Constants';
+import {useTabVisibility} from '../../Tabs/Tab_Utils';
 import {lynxTopToast, RenderSubItems} from '../../../Utils/UtilHooks';
 import Downloaded from './Downloaded';
 import Downloading from './Downloading';
@@ -40,6 +41,8 @@ const UpdateApp = () => {
 
   const dispatch = useDispatch<AppDispatch>();
   const removeListener = useRef<(() => void) | null>(null);
+
+  const show = useTabVisibility(activeTab);
 
   const listenProgress = useCallback(() => {
     removeListener.current = rendererIpc.appUpdate.status((_, type, status) => {
@@ -214,7 +217,7 @@ const UpdateApp = () => {
       isDismissable={false}
       scrollBehavior="inside"
       motionProps={modalMotionProps}
-      classNames={{backdrop: '!top-10', wrapper: '!top-10 scrollbar-hide'}}
+      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 scrollbar-hide ${show}`}}
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="text-success">{renderTitle}</ModalHeader>

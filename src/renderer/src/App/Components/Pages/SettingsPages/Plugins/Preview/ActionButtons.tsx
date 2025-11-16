@@ -6,6 +6,7 @@ import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {Download2_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
+import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
@@ -20,6 +21,7 @@ export default function ActionButtons({installed, currentVersion}: Props) {
   const selectedPlugin = usePluginsState('selectedPlugin');
   const installing = usePluginsState('installing');
   const unInstalling = usePluginsState('unInstalling');
+  const activeTab = useTabsState('activeTab');
 
   const isInstalling = useMemo(
     () => installing.includes(selectedPlugin?.metadata.id || ''),
@@ -94,6 +96,7 @@ export default function ActionButtons({installed, currentVersion}: Props) {
         onAgree={installExtension}
         title={selectedPlugin?.metadata.title}
         owner={extractGitUrl(selectedPlugin?.url || '').owner}
+        tabId={activeTab}
       />
       {installed && <Versions currentVersion={currentVersion} />}
       <div className="flex flex-row items-center gap-x-2">
