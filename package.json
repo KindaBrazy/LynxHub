@@ -114,7 +114,6 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-sonarjs": "^3.0.5",
     "fontfaceobserver": "^2.3.0",
     "framer-motion": "^12.23.24",
     "globals": "^16.5.0",
