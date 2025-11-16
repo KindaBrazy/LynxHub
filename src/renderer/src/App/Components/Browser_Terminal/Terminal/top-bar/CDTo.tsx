@@ -71,7 +71,7 @@ const CDTo = memo(({id}: Props) => {
   const items = useMemo(() => {
     const baseItems = [
       <DropdownItem key="select folder" onPress={selectDir} endContent={<OpenFolder_Icon />}>
-        Select Folder
+        Choose folder…
       </DropdownItem>,
     ];
 
@@ -105,7 +105,7 @@ const CDTo = memo(({id}: Props) => {
           onPress={clearHistory}
           className="text-danger"
           endContent={<CloseSimple_Icon />}>
-          Clear All
+          Clear folder history
         </DropdownItem>,
       );
     }
@@ -119,7 +119,7 @@ const CDTo = memo(({id}: Props) => {
       className="bg-foreground-100"
       classNames={{base: 'before:bg-foreground-100'}}
       showArrow>
-      <Tooltip delay={500} content="CD to...">
+      <Tooltip delay={500} content="Change terminal directory (cd)">
         <div className="max-w-fit">
           <DropdownTrigger>
             <Button size="sm" variant="light" isIconOnly>
@@ -128,7 +128,7 @@ const CDTo = memo(({id}: Props) => {
           </DropdownTrigger>
         </div>
       </Tooltip>
-      <DropdownMenu aria-label="cd history">{items}</DropdownMenu>
+      <DropdownMenu aria-label="Change directory history">{items}</DropdownMenu>
     </Dropdown>
   );
 });
