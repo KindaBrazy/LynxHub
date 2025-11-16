@@ -16,6 +16,12 @@ export default function SettingsGeneralCollectErrors() {
     });
   }, []);
 
+  const onBreadcrumbChange = useCallback((selected: boolean) => {
+    rendererIpc.storage.update('app', {addBreadcrumbs: selected});
+    setAddBreadcrumbs(selected);
+    onBreadcrumbStateChange(selected);
+  }, []);
+
   useEffect(() => {
     if (!collectErrors && addBreadcrumbs) {
       onBreadcrumbChange(false);
@@ -25,12 +31,6 @@ export default function SettingsGeneralCollectErrors() {
   const onErrorChange = useCallback((selected: boolean) => {
     rendererIpc.storage.update('app', {collectErrors: selected});
     setCollectErrors(selected);
-  }, []);
-
-  const onBreadcrumbChange = useCallback((selected: boolean) => {
-    rendererIpc.storage.update('app', {addBreadcrumbs: selected});
-    setAddBreadcrumbs(selected);
-    onBreadcrumbStateChange(selected);
   }, []);
 
   return (

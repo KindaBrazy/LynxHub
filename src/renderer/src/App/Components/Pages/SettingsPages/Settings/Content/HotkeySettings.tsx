@@ -10,10 +10,10 @@ import {Keyboard_Icon, RefreshDuo_Icon} from '../../../../../../assets/icons/Svg
 import {hotkeysActions, useHotkeysState} from '../../../../../Redux/Reducer/HotkeysReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
+import {formatHotkey, HotkeyLike} from '../../../../../Utils/UtilFunctions';
 import SettingsFilterItem from '../SettingsFilterItem';
 import SettingsSection from '../SettingsPage-ContentSection';
 import SettingsSearchHighlight from '../SettingsSearchHighlight';
-import {formatHotkey, HotkeyLike} from '../../../../../Utils/UtilFunctions';
 
 export const SettingsHotkeysId = 'settings_hotkeys_elem';
 

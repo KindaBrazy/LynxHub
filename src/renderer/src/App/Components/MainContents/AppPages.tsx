@@ -41,9 +41,7 @@ export default function AppPages() {
 
         if (foundRunningCard) {
           return (
-            <a
-              key={`${foundRunningCard.id}_${foundRunningCard.tabId}`}
-              className={isActiveTab ? 'block' : 'hidden'}>
+            <a className={isActiveTab ? 'block' : 'hidden'} key={`${foundRunningCard.id}_${foundRunningCard.tabId}`}>
               <RunningView runningCard={foundRunningCard} />
             </a>
           );

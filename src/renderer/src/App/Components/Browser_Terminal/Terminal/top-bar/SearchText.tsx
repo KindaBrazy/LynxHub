@@ -5,9 +5,9 @@ import {KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
 import {Hotkey_Names} from '../../../../../../../cross/HotkeyConstants';
 import {AltArrow_Icon, Magnifier_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {useHotkeysState} from '../../../../Redux/Reducer/HotkeysReducer';
-import {useIsActiveTab} from '../../../Tabs/Tab_Utils';
 import useHotkeyPress from '../../../../Utils/RegisterHotkeys';
 import {formatHotkey} from '../../../../Utils/UtilFunctions';
+import {useIsActiveTab} from '../../../Tabs/Tab_Utils';
 
 type Props = {searchAddon: SearchAddon; tabId: string};
 
