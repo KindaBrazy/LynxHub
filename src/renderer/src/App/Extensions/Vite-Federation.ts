@@ -34,7 +34,8 @@ export async function loadExtensions() {
 
     extensionIds = compact(
       extensionAddresses.map(url => {
-        const match = url.match(/:\/\/[^/]+\/([^/]+)\/scripts/);
+        const stripped = url.replace(/^[^:]+:\/\//, '');
+        const match = stripped.match(/^([^/]+)\/scripts/);
         return match ? match[1] : null;
       }),
     );
