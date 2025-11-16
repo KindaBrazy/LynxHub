@@ -1,13 +1,18 @@
 import {Button, Input} from '@heroui/react';
 import {List} from 'antd';
-import {compact} from 'lodash';
-import {KeyboardEvent, useEffect, useRef, useState} from 'react';
+import {KeyboardEvent, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Get_Default_Hotkeys, Hotkey_Desc, Hotkey_Titles} from '../../../../../../../../cross/HotkeyConstants';
+import {
+  Get_Default_Hotkeys,
+  Hotkey_Desc,
+  Hotkey_Names,
+  Hotkey_Titles,
+} from '../../../../../../../../cross/HotkeyConstants';
 import {LynxHotkey} from '../../../../../../../../cross/IpcChannelAndTypes';
 import {Keyboard_Icon, RefreshDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {hotkeysActions, useHotkeysState} from '../../../../../Redux/Reducer/HotkeysReducer';
+import {useTerminalState} from '../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {formatHotkey, HotkeyLike} from '../../../../../Utils/UtilFunctions';
@@ -25,19 +30,61 @@ const isModifierKey = (key: string): boolean => {
 
 export const HotkeySettings = () => {
   const hotkeys = useHotkeysState('hotkeys');
+  const quickCommands = useTerminalState('quickCommands');
   const [config, setConfig] = useState<HotkeyConfig>([]);
   const [recordingName, setRecordingName] = useState<string | null>(null);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const dispatch = useDispatch<AppDispatch>();
 
+  const quickCommandLabelMap = useMemo(() => {
+    const labels: Partial<Record<string, string>> = {};
+
+    const hotkeyToIndex: Record<string, number> = {
+      [Hotkey_Names.terminalQuick1]: 0,
+      [Hotkey_Names.terminalQuick2]: 1,
+      [Hotkey_Names.terminalQuick3]: 2,
+      [Hotkey_Names.terminalQuick4]: 3,
+      [Hotkey_Names.terminalQuick5]: 4,
+      [Hotkey_Names.terminalQuick6]: 5,
+    };
+
+    Object.entries(hotkeyToIndex).forEach(([name, index]) => {
+      const quick = quickCommands[index];
+      if (!quick) return;
+
+      const baseTitle = Hotkey_Titles[name as keyof typeof Hotkey_Titles];
+      const hasLabel = quick.label && quick.label.trim().length > 0;
+      const hasCommand = quick.command && quick.command.trim().length > 0;
+
+      if (!hasLabel && !hasCommand) return;
+
+      if (hasLabel) {
+        labels[name] = `${baseTitle} (${quick.label})`;
+      } else if (hasCommand) {
+        const preview = quick.command.length > 24 ? `${quick.command.slice(0, 24)}…` : quick.command;
+        labels[name] = `${baseTitle} (${preview})`;
+      }
+    });
+
+    return labels;
+  }, [quickCommands]);
+
   useEffect(() => {
     setConfig(
       hotkeys.map(hot => {
         const {name, ...hotkey} = hot;
-        return {hotkey, name, description: Hotkey_Desc[name], label: Hotkey_Titles[name]};
+        const baseLabel = Hotkey_Titles[name];
+        const dynamicLabel = quickCommandLabelMap[name];
+
+        return {
+          hotkey,
+          name,
+          description: Hotkey_Desc[name],
+          label: dynamicLabel || baseLabel,
+        };
       }),
     );
-  }, [hotkeys]);
+  }, [hotkeys, quickCommandLabelMap]);
 
   const handleRecordClick = (name: string) => {
     setRecordingName(name);
