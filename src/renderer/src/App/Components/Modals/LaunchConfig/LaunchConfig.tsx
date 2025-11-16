@@ -5,11 +5,11 @@ import {useDispatch} from 'react-redux';
 import {ChosenArgumentsData} from '../../../../../../cross/CrossTypes';
 import {useDebounceBreadcrumb} from '../../../../../Breadcrumbs';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
-import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
-import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
-import {modalMotionProps, REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
+import {modalMotionProps} from '../../../Utils/Constants';
+import {useTabModalLifecycle} from '../useTabModalManager';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
 import CardArguments from './Arguments/CardArguments';
 import CustomRun from './CustomRun/CustomRun';
@@ -30,7 +30,6 @@ type Props = {
 };
 
 const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => {
-  const activeTab = useTabsState('activeTab');
   const [isSavingArgs, setIsSavingArgs] = useState<boolean>(false);
   const [chosenArguments, setChosenArguments] = useState<ChosenArgumentsData>({activePreset: '', data: []});
   const [currentTab, setCurrentTab] = useState<Key>(haveArguments ? tabs.arguments : tabs.customRun);
@@ -44,12 +43,7 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
     setCurrentTab(haveArguments ? tabs.arguments : tabs.customRun);
   }, [isOpen]);
 
-  const onClose = useCallback(() => {
-    dispatch(modalActions.closeCardLaunchConfig({tabID: activeTab}));
-    setTimeout(() => {
-      dispatch(modalActions.removeCardLaunchConfig({tabID: activeTab}));
-    }, REMOVE_MODAL_DELAY);
-  }, [dispatch, activeTab]);
+  const {onOpenChange, show} = useTabModalLifecycle('cardLaunchConfig', tabID);
 
   const saveArguments = useCallback(() => {
     setIsSavingArgs(true);
@@ -73,12 +67,10 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
       });
   }, [id, chosenArguments]);
 
-  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
-
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onOpenChange={onOpenChange}
       placement="center"
       isDismissable={false}
       scrollBehavior="inside"
@@ -122,7 +114,7 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
               {!isSavingArgs && 'Save Arguments'}
             </Button>
           )}
-          <Button color="warning" variant="light" onPress={onClose}>
+          <Button color="warning" variant="light" onPress={() => onOpenChange(false)}>
             Close
           </Button>
         </ModalFooter>

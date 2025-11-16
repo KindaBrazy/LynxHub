@@ -11,10 +11,10 @@ import {extensionRendererApi} from '../../../Extensions/ExtensionLoader';
 import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
 import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../../../Redux/Reducer/CardsReducer';
-import {modalActions} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
+import {useTabModalManager} from '../../Modals/useTabModalManager';
 import {
   useInstalledCard,
   useIsAutoUpdateExtensions,
@@ -48,6 +48,8 @@ const LynxCard = memo(() => {
   const updating = useUpdatingCard(id);
   const updateAvailable = useUpdateAvailable(id);
   const autoUpdateExtensions = useIsAutoUpdateExtensions(id);
+
+  const {openModal} = useTabModalManager();
 
   const modifiedTitle = useMemo(() => {
     return window.localStorage.getItem(`${id}_title_edited`) || title;
@@ -102,9 +104,9 @@ const LynxCard = memo(() => {
     AddBreadcrumb_Renderer(`Start Installing AI: id:${id}`);
     if (getCardMethod(allMethods, id, 'manager')) {
       extensionRendererApi.events.emit('before_card_install', {id});
-      dispatch(modalActions.openInstallUICard({cardId: id, tabID: activeTab, type: 'install', title}));
+      openModal('installUI', {cardId: id, type: 'install', title}, 'active');
     }
-  }, [repoUrl, title, id, dispatch, allMethods, activeTab]);
+  }, [repoUrl, title, id, allMethods, openModal]);
 
   const onTitleChange = useCallback(
     (e: FormEvent<HTMLSpanElement>) => {

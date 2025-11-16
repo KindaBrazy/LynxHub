@@ -11,7 +11,7 @@ import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
-import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
+import {useTabModalLifecycle} from '../useTabModalManager';
 import {useInstalledCard} from '../../../Utils/UtilHooks';
 import CardInfoDescription from './CardInfo-Description';
 import useCardInfoApi from './UseCardInfoApi';
@@ -32,23 +32,11 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
 
   useCardInfoApi(cardId, setOpenFolders, setCardInfoDescriptions, webUI?.dir);
 
-  const onOpenChange = useCallback(
-    (isOpen: boolean) => {
-      if (!isOpen) {
-        dispatch(modalActions.closeCardInfo({tabID: activeTab}));
-        setTimeout(() => {
-          dispatch(modalActions.removeCardInfo({tabID: activeTab}));
-        }, REMOVE_MODAL_DELAY);
-      }
-    },
-    [dispatch, activeTab],
-  );
+  const {onOpenChange, show} = useTabModalLifecycle('cardInfo', tabID);
 
   const onClose = useCallback(() => {
     dispatch(modalActions.setInfoCardId({cardID: '', tabID: activeTab}));
   }, [dispatch]);
-
-  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
 
   return (
     <Modal

@@ -14,11 +14,10 @@ import {
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
 import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
-import {modalActions, useModalsState} from '../../../Redux/Reducer/ModalsReducer';
-import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {useModalsState} from '../../../Redux/Reducer/ModalsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
-import {REMOVE_MODAL_DELAY} from '../../../Utils/Constants';
+import {useTabModalLifecycle} from '../useTabModalManager';
 import {useInstalledCard} from '../../../Utils/UtilHooks';
 import InstallBody from './Install-Body';
 import InstallFooter from './Install-Footer';
@@ -43,7 +42,6 @@ const initialState: InstallState = {
 type Props = {isOpen: boolean; cardId: string; title: string; type: string; tabID: string};
 
 const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
-  const activeTab = useTabsState('activeTab');
   const installedCard = useInstalledCard(cardId);
   const allMethods = useAllCardMethods();
 
@@ -180,28 +178,11 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
     updateState(initialState);
     setCurrentStep(0);
     setSteps([]);
+  }, [updateState, state, cardId]);
 
-    dispatch(modalActions.closeInstallUICard({tabID: activeTab}));
-    setTimeout(() => {
-      dispatch(modalActions.removeInstallUICard({tabID: activeTab}));
-    }, REMOVE_MODAL_DELAY);
-  }, [updateState, state, activeTab, cardId]);
-
-  const onOpenChange = useCallback(
-    (isOpen: boolean) => {
-      if (!isOpen) {
-        dispatch(modalActions.closeInstallUICard({tabID: activeTab}));
-        setTimeout(() => {
-          dispatch(modalActions.removeInstallUICard({tabID: activeTab}));
-        }, REMOVE_MODAL_DELAY);
-      }
-    },
-    [dispatch],
-  );
+  const {onOpenChange, show} = useTabModalLifecycle('installUI', tabID);
 
   const nextStep = useCallback(() => stepper.nextStep(), [stepper]);
-
-  const show = useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
 
   return (
     <Modal

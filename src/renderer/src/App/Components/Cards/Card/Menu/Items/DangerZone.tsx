@@ -1,26 +1,22 @@
 import {DropdownItem} from '@heroui/react';
 import {useCallback} from 'react';
-import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
 import {MinusSquareDuo_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
-import {modalActions} from '../../../../../Redux/Reducer/ModalsReducer';
-import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
-import {AppDispatch} from '../../../../../Redux/Store';
+import {useTabModalManager} from '../../../../Modals/useTabModalManager';
 import {useCardStore} from '../../Wrapper';
 
 export function MenuUnAssign() {
   const id = useCardStore(state => state.id);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
-  const dispatch = useDispatch<AppDispatch>();
-  const activeTab = useTabsState('activeTab');
+  const {openModal} = useTabModalManager();
 
   const onPress = useCallback(() => {
     AddBreadcrumb_Renderer(`Unassign AI: id:${id}`);
-    dispatch(modalActions.openUnassignCard({cardId: id, tabID: activeTab}));
+    openModal('cardUnassign', {cardId: id}, 'active');
     setMenuIsOpen(false);
-  }, [dispatch, setMenuIsOpen, id, activeTab]);
+  }, [setMenuIsOpen, id, openModal]);
 
   return (
     <DropdownItem
@@ -38,14 +34,13 @@ export function MenuUninstall() {
   const id = useCardStore(state => state.id);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
-  const dispatch = useDispatch<AppDispatch>();
-  const activeTab = useTabsState('activeTab');
+  const {openModal} = useTabModalManager();
 
   const onPress = useCallback(() => {
     AddBreadcrumb_Renderer(`Uninstall AI: id:${id}`);
-    dispatch(modalActions.openUninstallCard({cardId: id, tabID: activeTab}));
+    openModal('cardUninstall', {cardId: id}, 'active');
     setMenuIsOpen(false);
-  }, [dispatch, setMenuIsOpen, id, activeTab]);
+  }, [setMenuIsOpen, id, openModal]);
 
   return (
     <DropdownItem
