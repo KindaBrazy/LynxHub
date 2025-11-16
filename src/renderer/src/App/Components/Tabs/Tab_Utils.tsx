@@ -32,10 +32,16 @@ export function useRemoveTab() {
   );
 }
 
-export function useTabVisibility(tabID: string) {
+export function useIsActiveTab(tabID: string) {
   const activeTab = useTabsState('activeTab');
 
-  return useMemo(() => (activeTab === tabID ? 'flex' : 'hidden'), [activeTab, tabID]);
+  return useMemo(() => activeTab === tabID, [activeTab, tabID]);
+}
+
+export function useTabVisibility(tabID: string) {
+  const isActiveTab = useIsActiveTab(tabID);
+
+  return useMemo(() => (isActiveTab ? 'flex' : 'hidden'), [isActiveTab]);
 }
 
 type TabIdPayload = {tabID: string};

@@ -35,6 +35,7 @@ export default function AppPages() {
   return (
     <>
       {tabs.map(tab => {
+        const isActiveTab = activeTab === tab.id;
         const show = activePage === tab.pageID && activeTab === tab.id;
         const foundRunningCard = runningCards.find(card => card.tabId === tab.id);
 
@@ -42,7 +43,7 @@ export default function AppPages() {
           return (
             <a
               key={`${foundRunningCard.id}_${foundRunningCard.tabId}`}
-              className={foundRunningCard.tabId === activeTab ? 'block' : 'hidden'}>
+              className={isActiveTab ? 'block' : 'hidden'}>
               <RunningView runningCard={foundRunningCard} />
             </a>
           );

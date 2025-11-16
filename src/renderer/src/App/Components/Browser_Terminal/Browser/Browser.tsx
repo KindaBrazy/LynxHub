@@ -1,9 +1,9 @@
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
+import {useIsActiveTab} from '../../Tabs/Tab_Utils';
 import {Browser_Error} from './Browser_Error';
 import EmptyPage from './EmptyPage';
 
@@ -11,8 +11,8 @@ type FailedLoad = {errorCode: number; errorDescription: string; validatedURL: st
 type Props = {runningCard: RunningCard};
 
 const Browser = memo(({runningCard}: Props) => {
-  const activeTab = useTabsState('activeTab');
   const {currentView, id, webUIAddress, customAddress, type, tabId} = runningCard;
+  const isActiveTab = useIsActiveTab(tabId);
 
   const [failedLoad, setFailedLoad] = useState<FailedLoad | undefined>(undefined);
 
@@ -23,8 +23,8 @@ const Browser = memo(({runningCard}: Props) => {
   }, [customAddress, webUIAddress]);
 
   useEffect(() => {
-    if (activeTab === tabId) rendererIpc.browser.focusWebView(id);
-  }, [activeTab, tabId]);
+    if (isActiveTab) rendererIpc.browser.focusWebView(id);
+  }, [isActiveTab]);
 
   useEffect(() => {
     const offFailed = rendererIpc.browser.onFailedLoadUrl((_, targetID, errorCode, errorDescription, validatedURL) => {
@@ -46,9 +46,9 @@ const Browser = memo(({runningCard}: Props) => {
     const validAddress = !isEmpty(runningCard.customAddress || runningCard.webUIAddress) && !failedLoad;
     rendererIpc.browser.setVisible(
       runningCard.id,
-      validAddress && runningCard.tabId === activeTab && runningCard.currentView === 'browser',
+      validAddress && isActiveTab && runningCard.currentView === 'browser',
     );
-  }, [runningCard, activeTab]);
+  }, [runningCard, isActiveTab]);
 
   const handleReload = useCallback(() => {
     rendererIpc.browser.reload(id);
