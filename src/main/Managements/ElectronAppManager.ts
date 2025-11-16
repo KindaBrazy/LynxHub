@@ -2,7 +2,7 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import {app, BrowserWindow, BrowserWindowConstructorOptions, ipcMain, shell, WebContents} from 'electron';
+import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
 import {appWindowChannels, ShowToastTypes, tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
@@ -110,10 +110,12 @@ export default class ElectronAppManager {
 
   /** Sets up event listeners for the main window. */
   private setupMainWindowEventListeners(): void {
-    ipcMain.on('readyToShow', () => {
+    this.getMainWindow()?.once('ready-to-show', () => {
       this.getWebContent()?.setUserAgent(getUserAgent());
-      this.loadingWindow?.close();
-      this.onReadyToShow?.();
+      setTimeout(() => {
+        this.loadingWindow?.close();
+        this.onReadyToShow?.();
+      }, 1500);
     });
 
     this.getWebContent()?.setWindowOpenHandler(({url}) => {

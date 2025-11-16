@@ -1,7 +1,6 @@
 import {Button} from '@heroui/react';
 import isEmpty from 'lodash/isEmpty';
 import {memo, useMemo} from 'react';
-import {useOnInView} from 'react-intersection-observer';
 
 import {Home_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../Extensions/ExtensionLoader';
@@ -22,20 +21,6 @@ const BACKGROUND_CLASSES = {
 const TitleBar = memo(() => {
   const {showWizard} = useAppState('initializer');
 
-  const inViewRef = useOnInView(
-    inView => {
-      if (inView) {
-        setTimeout(() => {
-          window.electron.ipcRenderer.send('readyToShow');
-        }, 500);
-      }
-    },
-    {
-      threshold: 0,
-      triggerOnce: true,
-    },
-  );
-
   const titleBar = useMemo(() => extensionsData.titleBar, []);
 
   const fullscreen = useAppState('fullscreen');
@@ -50,8 +35,7 @@ const TitleBar = memo(() => {
       className={
         `draggable absolute inset-x-0 top-0 z-50 flex ${TITLE_BAR_HEIGHT} flex-row items-center ` +
         ` justify-between overflow-hidden transition-colors duration-500 ${backgroundClass} `
-      }
-      ref={inViewRef}>
+      }>
       {showWizard ? (
         <Button
           className={
