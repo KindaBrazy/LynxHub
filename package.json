@@ -31,7 +31,7 @@
     "dev": "electron-vite dev --noSandbox",
     "prof": "electron-vite dev -w --noSandbox -- --js-flags=\"--prof\"",
     "dev:srouce": "electron-vite dev -w --noSandbox --sourcemap",
-    "fix-linter": "prettier --write src && eslint --fix src && npm run typecheck",
+    "fix-linter": "prettier --write src && eslint --fix src",
     "postinstall": "electron-builder install-app-deps",
     "build": "electron-vite build",
     "rebuild": "electron-builder node-gyp-rebuild",

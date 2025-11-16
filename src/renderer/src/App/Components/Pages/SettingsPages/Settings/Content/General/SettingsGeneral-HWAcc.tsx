@@ -21,7 +21,8 @@ export default function SettingsGeneralHwAcc() {
 
   const titleText = 'Use Hardware Acceleration';
   const descriptionText =
-    'Enables hardware acceleration to potentially improve performance. If you experience lagging or freezing, try disabling this option.';
+    'Enables hardware acceleration to potentially improve performance.' +
+    ' If you experience lagging or freezing, try disabling this option.';
 
   return (
     <SettingsFilterItem

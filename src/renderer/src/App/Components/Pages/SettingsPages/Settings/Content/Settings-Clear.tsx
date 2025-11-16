@@ -88,7 +88,9 @@ export default function SettingsClear() {
         </PopoverContent>
       </Popover>
       <span>
-        <SettingsSearchHighlight text="Please note that some data may need to be redownloaded or reconfigured after clearing." />
+        <SettingsSearchHighlight
+          text={'Please note that some data may need to be redownloaded or reconfigured after clearing.'}
+        />
       </span>
     </SettingsSection>
   );
