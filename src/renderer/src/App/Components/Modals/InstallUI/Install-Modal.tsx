@@ -169,6 +169,8 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
   }, [isOpen, methods, stepper]);
 
   // -----------------------------------------------> Handle UI
+  const {onOpenChange, show} = useTabModalLifecycle('installUI', tabID);
+
   const handleClose = useCallback(() => {
     if (state.body === 'terminal') rendererIpc.pty.stop(cardId);
     if (state.body === 'progress') {
@@ -178,9 +180,8 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
     updateState(initialState);
     setCurrentStep(0);
     setSteps([]);
-  }, [updateState, state, cardId]);
-
-  const {onOpenChange, show} = useTabModalLifecycle('installUI', tabID);
+    onOpenChange(false);
+  }, [updateState, state, cardId, onOpenChange]);
 
   const nextStep = useCallback(() => stepper.nextStep(), [stepper]);
 
