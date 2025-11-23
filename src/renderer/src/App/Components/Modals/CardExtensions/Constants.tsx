@@ -1,16 +1,8 @@
-import {Button, Chip, Link, Popover, PopoverContent, PopoverTrigger, Spinner} from '@heroui/react';
+import {Button, Link, Popover, PopoverContent, PopoverTrigger, Spinner} from '@heroui/react';
 import {Empty, Space, Spin} from 'antd';
 import {Variants} from 'framer-motion';
 
-import {RepoDetails} from '../../../../../../cross/CrossTypes';
-import {
-  CrossShield_Icon,
-  Lock_Icon,
-  Star_Icon,
-  Trash_Icon,
-  Unlock_Icon,
-} from '../../../../assets/icons/SvgIcons/SvgIcons';
-import {formatNumber} from '../../../Utils/UtilFunctions';
+import {CrossShield_Icon, Lock_Icon, Trash_Icon, Unlock_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 
 export const tabContentVariants: Variants = {
   animate: {opacity: 1, scale: 1, transition: {duration: 0.2}},
@@ -19,7 +11,6 @@ export const tabContentVariants: Variants = {
 
 export const extensionsColumns = [
   {key: 'name', label: 'Name'},
-  {key: 'stars', label: 'Stars'},
   {key: 'size', label: 'Size'},
   {key: 'update', label: 'Update Status'},
   {key: 'remove', label: 'Remove'},
@@ -90,24 +81,6 @@ export const useRowElements = {
       </Popover>
     ),
   },
-  stars: (details: RepoDetails | undefined) =>
-    details ? (
-      <Chip
-        size="sm"
-        variant="light"
-        startContent={<Star_Icon className="fill-yellow-400 mx-1" />}
-        className="transition duration-500 hover:bg-white dark:hover:bg-black">
-        {formatNumber(details?.stars || 0)}
-      </Chip>
-    ) : (
-      <Chip
-        size="sm"
-        variant="light"
-        startContent={<Star_Icon className="fill-yellow-400 mx-1" />}
-        className="transition duration-500 hover:bg-white dark:hover:bg-black">
-        N/A
-      </Chip>
-    ),
   updateBtn: {
     available: (onPress: () => void) => (
       <Button size="sm" variant="flat" color="success" onPress={onPress}>
