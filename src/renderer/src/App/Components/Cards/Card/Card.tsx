@@ -49,11 +49,18 @@ const LynxCard = memo(() => {
   const updateAvailable = useUpdateAvailable(id);
   const autoUpdateExtensions = useIsAutoUpdateExtensions(id);
 
+  const [customTitle, setCustomTitle] = useState<string | null>(null);
+
   const {openModal} = useTabModalManager();
 
-  const modifiedTitle = useMemo(() => {
-    return window.localStorage.getItem(`${id}_title_edited`) || title;
-  }, [id, title]);
+  useEffect(() => {
+    rendererIpc.storage.getCustom(`${id}_title_edited`).then(value => {
+      setCustomTitle(value || null);
+    });
+  }, [id]);
+
+  const modifiedTitle = customTitle ?? title;
+
   const {developer, avatarSrc} = useMemo(() => {
     const {owner, avatarUrl} = extractGitUrl(repoUrl);
     return {developer: owner, avatarSrc: avatarUrl};
@@ -110,9 +117,11 @@ const LynxCard = memo(() => {
 
   const onTitleChange = useCallback(
     (e: FormEvent<HTMLSpanElement>) => {
-      window.localStorage.setItem(`${id}_title_edited`, e.currentTarget.textContent || title);
+      const newTitle = e.currentTarget.textContent || title;
+      setCustomTitle(newTitle);
+      rendererIpc.storage.setCustom(`${id}_title_edited`, newTitle);
     },
-    [id],
+    [id, title],
   );
 
   return (
