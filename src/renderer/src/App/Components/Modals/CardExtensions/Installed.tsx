@@ -18,7 +18,6 @@ import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
-import {fetchRepoDetails} from '../../../Utils/LocalStorage';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
 import {
   emptyTableElement,
@@ -207,13 +206,11 @@ const Installed = forwardRef(
           setInstalledExtensions(data.map(ext => validateGitRepoUrl(ext.remoteUrl)));
           const resultRow = await Promise.all(
             data.map(async dataRow => {
-              const details = await fetchRepoDetails(dataRow.remoteUrl);
               return {
                 key: dataRow.name,
                 name: useRowElements.nameLink(dataRow.remoteUrl, startCase(dataRow.name)),
                 remove: useRowElements.removeBtn.disabled,
                 size: dataRow.size,
-                stars: useRowElements.stars(details),
                 update: useRowElements.updateBtn.initializing,
                 disable: useRowElements.disableBtn.disable,
               };
