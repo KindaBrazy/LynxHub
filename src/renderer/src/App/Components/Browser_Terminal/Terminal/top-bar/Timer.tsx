@@ -24,9 +24,11 @@ const Timer = memo(({startTime}: Props) => {
   const [{ss, hh, mm}, setTime] = useState<TimeType>(calc(startTime));
 
   useEffect(() => {
-    setInterval(() => {
+    const intervalId = setInterval(() => {
       setTime(calc(startTime));
     }, 1000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
