@@ -20,4 +20,5 @@ export type InstallState = {
   disableSelectDir: boolean;
   extensionCustomContent: FC | undefined;
   extensionUserInput: FC[] | undefined;
+  terminalKey: number;
 };
