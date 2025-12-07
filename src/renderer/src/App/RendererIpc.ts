@@ -953,12 +953,12 @@ const rendererIpc = {
     // Clears browser cache
     clearCache: () => {
       extensionRendererApi.events_ipc.emit('browser_clear_cache', {});
-      ipc.send(browserChannels.clearCache);
+      return ipc.invoke(browserChannels.clearCache);
     },
     // Clears browser cookies
     clearCookies: () => {
       extensionRendererApi.events_ipc.emit('browser_clear_cookies', {});
-      ipc.send(browserChannels.clearCookies);
+      return ipc.invoke(browserChannels.clearCookies);
     },
 
     // Sets zoom factor for browser webview
