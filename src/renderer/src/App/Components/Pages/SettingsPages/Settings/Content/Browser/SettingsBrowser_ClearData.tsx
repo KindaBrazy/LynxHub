@@ -15,28 +15,30 @@ export default function SettingsBrowser_ClearData() {
   const [selected, setSelected] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const clearCache = () => {
-    rendererIpc.browser.clearCache();
-  };
-
-  const clearCookies = () => {
-    rendererIpc.browser.clearCookies();
-  };
-
-  const clearSelections = useCallback(() => {
+  const clearSelections = useCallback(async () => {
     setIsLoading(true);
 
-    if (selected.includes('cache')) clearCache();
-    if (selected.includes('cookies')) clearCookies();
-    if (['favorites', 'history', 'fav-icons'].some(item => selected.includes(item))) {
-      rendererIpc.browser.clearHistory(selected);
-    }
+    try {
+      if (selected.includes('cache')) {
+        await rendererIpc.browser.clearCache();
+      }
+      if (selected.includes('cookies')) {
+        await rendererIpc.browser.clearCookies();
+      }
+      if (['favorites', 'history', 'fav-icons'].some(item => selected.includes(item))) {
+        rendererIpc.browser.clearHistory(selected);
+      }
 
-    setTimeout(() => {
+      setTimeout(() => {
+        setIsLoading(false);
+        lynxTopToast(dispatch).success('Selected data cleared successfully!');
+        setSelected([]);
+      }, 300);
+    } catch (e) {
       setIsLoading(false);
-      lynxTopToast(dispatch).success('Selected data cleared successfully!');
+      lynxTopToast(dispatch).warning('Failed to clear data, please try again later!');
       setSelected([]);
-    }, 300);
+    }
   }, [selected, dispatch]);
 
   return (

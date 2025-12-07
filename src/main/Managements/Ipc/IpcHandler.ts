@@ -531,9 +531,9 @@ export function browserIPC() {
   ipcMain.on(browserChannels.focusWebView, (_, id: string) => browserManager.focusWebView(id));
 
   // Clears browser cache
-  ipcMain.on(browserChannels.clearCache, () => browserManager.clearCache());
+  ipcMain.handle(browserChannels.clearCache, () => browserManager.clearCache());
   // Clears browser cookies
-  ipcMain.on(browserChannels.clearCookies, () => browserManager.clearCookies());
+  ipcMain.handle(browserChannels.clearCookies, () => browserManager.clearCookies());
 
   // Gets user agent string
   ipcMain.handle(browserChannels.getUserAgent, (_, type: AgentTypes) => getUserAgent(type));
