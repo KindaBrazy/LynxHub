@@ -234,12 +234,15 @@ export default class BrowserManager {
     this.getViewByID(id)?.webContents.focus();
   }
 
-  public clearCache() {
-    this.getSession().clearCache();
+  public async clearCache() {
+    return this.getSession().clearData({
+      dataTypes: ['backgroundFetch', 'cache', 'serviceWorkers'],
+      avoidClosingConnections: true,
+    });
   }
 
-  public clearCookies() {
-    this.getSession().clearData({dataTypes: ['cookies']});
+  public async clearCookies() {
+    return this.getSession().clearData({dataTypes: ['cookies', 'indexedDB', 'localStorage']});
   }
 
   public addOffset(id: string, offset: WHType) {
