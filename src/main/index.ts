@@ -39,6 +39,11 @@ if (!isDev()) {
 
 app.commandLine.appendSwitch('disable-http-cache');
 
+(async () => {
+  const {default: fixPath} = await import('fix-path');
+  fixPath();
+})();
+
 export const storageManager = new StorageManager();
 
 export let appManager: ElectronAppManager | undefined = undefined;
