@@ -1,6 +1,7 @@
-import {memo} from 'react';
+import {memo, useEffect} from 'react';
 
 import {PageID} from '../../../../../cross/CrossConstants';
+import {appWindowChannels} from '../../../../../cross/IpcChannelAndTypes';
 import {useAppState} from '../../Redux/Reducer/AppReducer';
 import {useTabsState} from '../../Redux/Reducer/TabsReducer';
 import NavBar from '../NavBar/NavBar';
@@ -11,6 +12,10 @@ import StatusBar from './StatusBar';
 const MainContents = memo(() => {
   const navBar = useAppState('navBar');
   const activePage = useTabsState('activePage');
+
+  useEffect(() => {
+    window.electron.ipcRenderer.send(appWindowChannels.appReady);
+  }, []);
 
   return (
     <div className="absolute inset-0 !top-10 flex flex-col transition duration-300">
