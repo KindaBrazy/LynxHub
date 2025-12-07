@@ -6,6 +6,7 @@ import SettingsBrowser, {SettingsBrowserId} from './Content/Browser/SettingsBrow
 import SettingsCard, {SettingsCardId} from './Content/Card/Settings-Card';
 import SettingsGeneral, {SettingsGeneralId} from './Content/General/Settings-General';
 import {HotkeySettings, SettingsHotkeysId} from './Content/HotkeySettings';
+import SettingsPerformance, {SettingsPerformanceId} from './Content/Performance/Settings-Performance';
 import SettingsClear, {SettingsClearId} from './Content/Settings-Clear';
 import SettingsData, {SettingsDataId} from './Content/Settings-Data';
 import SettingsDiscord, {SettingsDiscordId} from './Content/Settings-Discord';
@@ -22,6 +23,7 @@ export const settingsSectionId = {
   SettingsDataId,
   SettingsDiscordId,
   SettingsHotkeysId,
+  SettingsPerformanceId,
 };
 
 type SettingsSectionDefinition = {
@@ -50,6 +52,11 @@ export const SettingsSections = ({searchValue, sectionTexts}: SettingsSectionsPr
         title: 'Startup',
         elementId: settingsSectionId.SettingsStartupId,
         Component: SettingsStartup,
+      },
+      {
+        title: 'Performance',
+        elementId: settingsSectionId.SettingsPerformanceId,
+        Component: SettingsPerformance,
       },
       {title: 'Card', elementId: settingsSectionId.SettingsCardId, Component: SettingsCard},
       {title: 'Terminal', elementId: settingsSectionId.SettingsTerminalId, Component: SettingsTerminal},
