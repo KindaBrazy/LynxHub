@@ -22,7 +22,7 @@ type Props = {
   setSteps: Dispatch<SetStateAction<string[]>>;
   setCurrentStep: Dispatch<SetStateAction<number>>;
   setUserInputElements: Dispatch<SetStateAction<{elements: UserInputField[]; title?: string}>>;
-  updateState: (newState: Partial<InstallState>) => void;
+  updateState: (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => void;
   cloneResolver: RefObject<((dir: string) => void) | null>;
   terminalResolver: RefObject<(() => void) | null>;
   starterResolver: RefObject<((result: InstallationMethod) => void) | null>;
@@ -84,7 +84,7 @@ export function useStepper({
         };
 
         terminalResolver.current = resolve;
-        updateState({body: 'terminal'});
+        updateState(prev => ({body: 'terminal', terminalKey: prev.terminalKey + 1}));
         rendererIpc.pty.customProcess(cardId, dir, file);
       });
     },
@@ -100,7 +100,7 @@ export function useStepper({
         };
 
         terminalResolver.current = resolve;
-        updateState({body: 'terminal'});
+        updateState(prev => ({body: 'terminal', terminalKey: prev.terminalKey + 1}));
         rendererIpc.pty.customCommands(cardId, commands, dir);
       });
     },

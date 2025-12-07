@@ -37,6 +37,7 @@ const initialState: InstallState = {
   disableSelectDir: false,
   extensionCustomContent: undefined,
   extensionUserInput: undefined,
+  terminalKey: 0,
 };
 
 type Props = {isOpen: boolean; cardId: string; title: string; type: string; tabID: string};
@@ -104,9 +105,15 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
     description?: {label: string; value: string}[];
   }>({title: '', isIndeterminate: true});
 
-  const updateState = useCallback((newState: Partial<InstallState>) => {
-    setState(prevState => ({...prevState, ...newState}));
-  }, []);
+  const updateState = useCallback(
+    (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => {
+      setState(prevState => ({
+        ...prevState,
+        ...(typeof newState === 'function' ? newState(prevState) : newState),
+      }));
+    },
+    [],
+  );
 
   // -----------------------------------------------> Resolvers
   const cloneResolver = useRef<((dir: string) => void) | null>(null);

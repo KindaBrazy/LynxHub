@@ -14,7 +14,7 @@ type Props = {
   restartTerminal: RefObject<(() => void) | null>;
   starterResolver: RefObject<((result: InstallationMethod) => void) | null>;
   terminalResolver: RefObject<(() => void) | null>;
-  updateState: (newState: Partial<InstallState>) => void;
+  updateState: (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => void;
   userInputResolver: RefObject<((result: UserInputResult[]) => void) | null>;
   userElementsReturn: UserInputResult[];
   downloadFileFromUrl: (url: string) => Promise<string>;

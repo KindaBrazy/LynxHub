@@ -33,7 +33,7 @@ export default class InstallStepper {
     showToast: () => ReturnType<typeof lynxTopToast>;
 
     checkForUpdate: (dir: string | undefined) => void;
-    updateState: (newState: Partial<InstallState>) => void;
+    updateState: (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => void;
   }) {
     this.totalSteps = 0;
     this.customStepContents = [];

@@ -62,7 +62,7 @@ const InstallBody = memo(
         case 'clone':
           return <CloneRepo isOpen={isOpen} done={doneClone} url={state.cloneUrl} start={state.startClone} />;
         case 'terminal':
-          return <TerminalStep id={cardId} />;
+          return <TerminalStep id={cardId} key={state.terminalKey} />;
         case 'progress-bar':
           return (
             <div className="mb-8 mt-4 text-center">
