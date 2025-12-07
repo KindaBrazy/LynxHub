@@ -1,4 +1,5 @@
 import {Button, Card, CardBody, CardHeader, Input, ScrollShadow} from '@heroui/react';
+import {SpedometerMiddle} from '@solar-icons/react-perf/BoldDuotone';
 import {Typography} from 'antd';
 import {Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
@@ -48,6 +49,11 @@ const groupSections: GroupProps[] = [
         title: 'Startup',
         icon: <Rocket_Icon className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsStartupId,
+      },
+      {
+        title: 'Performance',
+        icon: <SpedometerMiddle className="size-4 shrink-0" />,
+        elementId: settingsSectionId.SettingsPerformanceId,
       },
       {
         title: 'Card',

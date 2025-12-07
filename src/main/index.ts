@@ -72,6 +72,46 @@ checkAppDirectories().catch(() => {
 const {hardwareAcceleration} = storageManager.getData('app');
 if (!hardwareAcceleration) app.disableHardwareAcceleration();
 
+// Apply performance settings as command-line switches
+const performanceSettings = storageManager.getData('performance');
+if (performanceSettings.forceColorProfile !== 'default') {
+  app.commandLine.appendSwitch('force-color-profile', performanceSettings.forceColorProfile);
+}
+if (performanceSettings.highDpiSupport) {
+  app.commandLine.appendSwitch('high-dpi-support', '1');
+}
+if (performanceSettings.autoplayPolicy !== 'default') {
+  app.commandLine.appendSwitch('autoplay-policy', performanceSettings.autoplayPolicy);
+}
+if (performanceSettings.enableAcceleratedVideoDecode) {
+  app.commandLine.appendSwitch('enable-accelerated-video-decode');
+}
+app.commandLine.appendSwitch('js-flags', `--max-old-space-size=${performanceSettings.jsMaxOldSpaceSize}`);
+if (performanceSettings.ignoreGpuBlacklist) {
+  app.commandLine.appendSwitch('ignore-gpu-blacklist');
+}
+if (performanceSettings.diskCacheSize > 0) {
+  app.commandLine.appendSwitch('disk-cache-size', String(performanceSettings.diskCacheSize));
+}
+if (performanceSettings.enableWebAssemblySimd) {
+  app.commandLine.appendSwitch('enable-features', 'WebAssemblySimd');
+}
+if (performanceSettings.forceHighPerformanceGpu) {
+  app.commandLine.appendSwitch('force_high_performance_gpu');
+}
+if (performanceSettings.disableGpuVsync) {
+  app.commandLine.appendSwitch('disable-gpu-vsync');
+}
+if (performanceSettings.disableFrameRateLimit) {
+  app.commandLine.appendSwitch('disable-frame-rate-limit');
+}
+if (performanceSettings.enableGpuRasterization) {
+  app.commandLine.appendSwitch('enable-gpu-rasterization');
+}
+if (performanceSettings.enableZeroCopy) {
+  app.commandLine.appendSwitch('enable-zero-copy');
+}
+
 protocol.registerSchemesAsPrivileged([
   {
     scheme: 'lynxplugin',
