@@ -9,10 +9,10 @@ import SettingsTerminalCursorInactiveStyle from './SettingsTerminal-CursorInacti
 import SettingsTerminalCursorStyle from './SettingsTerminal-CursorStyle';
 import SettingsTerminalFontSize from './SettingsTerminal-FontSize';
 import SettingsTerminalOutputColor from './SettingsTerminal-OutputColor';
+import SettingsTerminalQuickCommands from './SettingsTerminal-QuickCommands';
 import SettingsTerminalReset from './SettingsTerminal-Reset';
 import SettingsTerminalResizeDelay from './SettingsTerminal-ResizeDelay';
 import SettingsTerminalScrollBack from './SettingsTerminal-ScrollBack';
-import SettingsTerminalQuickCommands from './SettingsTerminal-QuickCommands';
 
 export const SettingsTerminalId = 'settings_terminal_elem';
 

@@ -1,4 +1,4 @@
-import { Tuning_Icon } from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {Tuning_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import SettingsSection from '../../SettingsPage-ContentSection';
 import SettingsGeneralCollectErrors from './SettingsGeneral-CollectErrors';
 import SettingsGeneralConfirm from './SettingsGeneral-Confirm';
