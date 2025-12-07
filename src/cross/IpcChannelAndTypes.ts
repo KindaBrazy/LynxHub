@@ -309,6 +309,7 @@ export const appWindowChannels = {
   hotkeysChange: 'window:hotkeys-change',
   showToast: 'window:show-toast',
   toastBtnPress: 'window-toast-btn-press',
+  appReady: 'window:app-ready',
 };
 
 export const contextMenuChannels = {
