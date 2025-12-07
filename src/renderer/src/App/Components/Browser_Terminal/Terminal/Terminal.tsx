@@ -1,35 +1,21 @@
-import {CanvasAddon} from '@xterm/addon-canvas';
-import {ClipboardAddon} from '@xterm/addon-clipboard';
-import {FitAddon} from '@xterm/addon-fit';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
-import {Unicode11Addon} from '@xterm/addon-unicode11';
-import {WebLinksAddon} from '@xterm/addon-web-links';
-import {WebglAddon} from '@xterm/addon-webgl';
-import {Terminal as XTerminal} from '@xterm/xterm';
-import FontFaceObserver from 'fontfaceobserver';
-import {isEmpty, isEqual} from 'lodash';
+import {isEmpty} from 'lodash';
 import {Dispatch, memo, RefObject, SetStateAction, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {toMs} from '../../../../../../cross/CrossUtils';
-import {CustomRunBehaviorData, SystemInfo} from '../../../../../../cross/IpcChannelAndTypes';
+import {CustomRunBehaviorData} from '../../../../../../cross/IpcChannelAndTypes';
 import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
-import {useAppState} from '../../../Redux/Reducer/AppReducer';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useHotkeysState} from '../../../Redux/Reducer/HotkeysReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
-import {useTerminalStat} from '../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
-import {catchTerminalAddress, getRendererMode, getTheme, getWindowPty} from './Terminal_Utils';
-import parseTerminalColors from './TerminalColorHandler';
-
-const FONT_FAMILY = 'JetBrainsMono';
-const MIN_RESIZE_COLS = 95;
-const MIN_RESIZE_ROWS = 22;
+import XTermCore, {XTermAPI} from '../../Reusable/XTermCore';
+import {catchTerminalAddress} from './Terminal_Utils';
 
 type Props = {
   runningCard: RunningCard;
@@ -43,35 +29,22 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
   const copyPressed = useHotkeysState('copyPressed');
   const activeTab = useTabsState('activeTab');
   const allMethods = useAllCardMethods();
-
-  const terminalContainerRef = useRef<HTMLDivElement | null>(null);
-  const terminal = useRef<XTerminal | null>(null);
-  const fitAddon = useRef<FitAddon | null>(null);
-
-  const {outputColor, useConpty, scrollBack, fontSize, cursorStyle, cursorInactiveStyle, blinkCursor, resizeDelay} =
-    useTerminalStat();
+  const dispatch = useDispatch<AppDispatch>();
 
   const {webUIAddress, id, currentView, tabId} = useMemo(() => runningCard, [runningCard]);
 
-  const darkMode = useAppState('darkMode');
-  const dispatch = useDispatch<AppDispatch>();
+  const xtermRef = useRef<XTermAPI | null>(null);
 
   const [browserBehavior, setBrowserBehavior] = useState<CustomRunBehaviorData['browser']>('appBrowser');
   const [urlCatchBehavior, setUrlCatchBehavior] = useState<CustomRunBehaviorData['urlCatch'] | undefined>(undefined);
 
-  const canResize = useCallback(() => {
-    const dims = fitAddon.current?.proposeDimensions();
-    if (!dims) return false;
-    return dims.cols > MIN_RESIZE_COLS && dims.rows > MIN_RESIZE_ROWS;
-  }, []);
-
   const copySelection = useCallback(() => {
-    const selection = terminal.current?.getSelection();
+    const selection = xtermRef.current?.getSelection();
     if (selection) {
       try {
         navigator.clipboard.writeText(selection);
         lynxTopToast(dispatch).success(`Copied to clipboard`);
-        terminal.current?.clearSelection();
+        xtermRef.current?.clearSelection();
       } catch (e) {
         console.log(e);
         lynxTopToast(dispatch).warning(`Failed to copy. Please try again.`);
@@ -93,6 +66,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
     });
   }, [id]);
 
+  // URL catching and browser behavior
   useEffect(() => {
     const openUrl = (url: string | undefined, delaySeconds?: number) => {
       if (!url) return;
@@ -136,86 +110,37 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
             openUrl(url);
           }
         }
-
-        terminal.current?.write(outputColor ? parseTerminalColors(data) : data);
       }
     });
 
     return () => offData();
-  }, [id, webUIAddress, browserBehavior, outputColor, dispatch, allMethods, tabId, urlCatchBehavior]);
+  }, [id, webUIAddress, browserBehavior, dispatch, allMethods, tabId, urlCatchBehavior]);
 
+  // Fit terminal when view changes
   useEffect(() => {
-    if (currentView === 'terminal' && canResize()) {
-      fitAddon.current?.fit();
+    if (currentView === 'terminal') {
+      xtermRef.current?.fit();
     }
-  }, [currentView, activeTab, canResize]);
+  }, [currentView, activeTab]);
 
-  useEffect(() => {
-    const terminalContainer = terminalContainerRef.current;
-    if (!terminalContainer || terminal.current) return;
+  // Handle terminal ready callback
+  const handleTerminalReady = useCallback(
+    (api: XTermAPI) => {
+      xtermRef.current = api;
 
-    let xTerm: XTerminal | null = null;
+      // Setup clear terminal ref
+      clearTerminal.current = () => api.clear();
 
-    const loadTerminal = (sysInfo?: SystemInfo, fontFamily: string = 'monospace') => {
-      const windowsPty = sysInfo ? getWindowPty(sysInfo, useConpty) : undefined;
-      const renderMode = getRendererMode();
+      // Setup selection change handler
+      api.terminal.onSelectionChange(() => setSelectedTerminalText(api.getSelection()));
 
-      xTerm = new XTerminal({
-        allowProposedApi: true,
-        fontFamily,
-        scrollOnUserInput: true,
-        scrollback: scrollBack,
-        cursorBlink: blinkCursor,
-        fontSize,
-        cursorStyle,
-        cursorInactiveStyle,
-        windowsPty,
-        theme: getTheme(darkMode),
-      });
-
-      terminal.current = xTerm;
-
-      clearTerminal.current = () => {
-        xTerm?.clear();
-        rendererIpc.pty.clear(id);
-      };
-
-      fitAddon.current = new FitAddon();
-      xTerm.loadAddon(fitAddon.current);
-      xTerm.loadAddon(new Unicode11Addon());
-      xTerm.unicode.activeVersion = '11';
-      xTerm.loadAddon(new ClipboardAddon());
-      xTerm.loadAddon(new WebLinksAddon((_, uri) => window.open(uri)));
-      xTerm.loadAddon(serializeAddon);
-      xTerm.loadAddon(searchAddon);
-
-      xTerm.open(terminalContainer);
-
-      if (renderMode === 'webgl') {
-        const webglAddon = new WebglAddon();
-        webglAddon.onContextLoss(() => webglAddon.dispose());
-        xTerm.loadAddon(webglAddon);
-      } else {
-        xTerm.loadAddon(new CanvasAddon());
-      }
-
-      let prevSize: {cols: number; rows: number} | undefined;
-      xTerm.onResize(size => {
-        if (isEqual(prevSize, size)) return;
-        rendererIpc.pty.resize(id, size.cols, size.rows);
-        prevSize = size;
-      });
-
-      fitAddon.current.fit();
-
-      xTerm.onSelectionChange(() => setSelectedTerminalText(xTerm?.getSelection() || ''));
-
-      xTerm.attachCustomKeyEventHandler(e => {
+      // Setup custom key handler
+      api.terminal.attachCustomKeyEventHandler(e => {
         if (e.key === 'f' && e.ctrlKey) {
           return false;
         }
 
-        const selection = xTerm?.getSelection();
+        const selection = api.getSelection();
         if (!selection) return true;
 
         const hasSelection = !isEmpty(selection);
@@ -227,87 +152,43 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
         if ((e.key === 'Backspace' || e.key === 'Delete') && hasSelection) {
           const backspaces = '\b'.repeat(selection.length);
           rendererIpc.pty.write(id, backspaces);
-          xTerm?.clearSelection();
+          api.clearSelection();
           return false;
         }
 
         return true;
       });
 
-      xTerm.onData(data => !isEmpty(data) && rendererIpc.pty.write(id, data));
-    };
+      // Setup context menu handler
+      const terminalContainer = api.terminal.element?.parentElement;
+      const handleContextMenu = () => {
+        if (!isEmpty(api.getSelection())) {
+          copySelection();
+        } else {
+          navigator.clipboard.readText().then(text => rendererIpc.pty.write(id, text));
+        }
+      };
 
-    const font = new FontFaceObserver(FONT_FAMILY);
-    Promise.all([rendererIpc.win.getSystemInfo(), font.load()])
-      .then(([sysInfo]) => loadTerminal(sysInfo, FONT_FAMILY))
-      .catch(() => {
-        rendererIpc.win.getSystemInfo().then(sysInfo => loadTerminal(sysInfo));
-        lynxTopToast(dispatch).warning('Terminal font failed to load. Using fallback.');
-      });
+      terminalContainer?.addEventListener('contextmenu', handleContextMenu);
 
-    let resizeTimeoutId: NodeJS.Timeout;
-    const handleResize = () => {
-      clearTimeout(resizeTimeoutId);
-      resizeTimeoutId = setTimeout(() => {
-        if (canResize()) fitAddon.current?.fit();
-      }, resizeDelay);
-    };
-
-    const handleContextMenu = (_e: MouseEvent) => {
-      if (!isEmpty(terminal.current?.getSelection())) {
-        copySelection();
-      } else {
-        navigator.clipboard.readText().then(text => rendererIpc.pty.write(id, text));
-      }
-    };
-
-    let resizeTimeout: any;
-    const debouncedResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(handleResize, resizeDelay);
-    };
-
-    window.addEventListener('resize', debouncedResize);
-    terminalContainer.addEventListener('contextmenu', handleContextMenu);
-
-    return () => {
-      window.removeEventListener('resize', debouncedResize);
-      terminalContainer?.removeEventListener('contextmenu', handleContextMenu);
-      terminal.current?.dispose();
-      terminal.current = null;
-    };
-  }, [clearTerminal, id, serializeAddon, setSelectedTerminalText, dispatch, copySelection, canResize]);
-
-  useEffect(() => {
-    if (terminal.current) terminal.current.options.theme = getTheme(darkMode);
-  }, [darkMode]);
-
-  useEffect(() => {
-    if (terminal.current) {
-      terminal.current.options.fontSize = fontSize;
-      fitAddon.current?.fit();
-    }
-  }, [fontSize]);
-
-  useEffect(() => {
-    if (terminal.current) terminal.current.options.scrollback = scrollBack;
-  }, [scrollBack]);
-
-  useEffect(() => {
-    if (terminal.current) terminal.current.options.cursorBlink = blinkCursor;
-  }, [blinkCursor]);
-
-  useEffect(() => {
-    if (terminal.current) {
-      terminal.current.options.cursorStyle = cursorStyle;
-      terminal.current.options.cursorInactiveStyle = cursorInactiveStyle;
-    }
-  }, [cursorStyle, cursorInactiveStyle]);
+      // Return cleanup for context menu (the terminal dispose is handled by XTermCore)
+      return () => {
+        terminalContainer?.removeEventListener('contextmenu', handleContextMenu);
+      };
+    },
+    [clearTerminal, setSelectedTerminalText, id, copySelection],
+  );
 
   return (
     <div className={`${currentView === 'terminal' ? 'block' : 'hidden'}`}>
       <div className="absolute inset-0 !top-10 overflow-hidden bg-white pl-3 pr-1 shadow-md dark:bg-LynxNearBlack">
-        <div ref={terminalContainerRef} className="relative size-full" />
+        <XTermCore
+          id={id}
+          ref={xtermRef}
+          searchAddon={searchAddon}
+          onReady={handleTerminalReady}
+          serializeAddon={serializeAddon}
+        />
       </div>
     </div>
   );
