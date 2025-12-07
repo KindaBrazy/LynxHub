@@ -1,6 +1,6 @@
-import { Rectangle } from 'electron';
+import {Rectangle} from 'electron';
 
-import { DiscordRPC, StorageChosenArgumentsData } from './CrossTypes';
+import {DiscordRPC, StorageChosenArgumentsData} from './CrossTypes';
 import {
   AgentTypes,
   CustomRunBehaviorStore,
@@ -35,12 +35,12 @@ type StorageTypes = {
     pinnedCards: string[];
     recentlyUsedCards: string[];
     zoomFactor: number;
-    duplicated: { ogID: string; id: string; title: string }[];
-    cardTerminalPreCommands: { id: string; commands: string[] }[];
+    duplicated: {ogID: string; id: string; title: string}[];
+    cardTerminalPreCommands: {id: string; commands: string[]}[];
   };
   cardsConfig: {
-    preCommands: { cardId: string; data: string[] }[];
-    customRun: { cardId: string; data: string[] }[];
+    preCommands: {cardId: string; data: string[]}[];
+    customRun: {cardId: string; data: string[]}[];
     customRunBehavior: CustomRunBehaviorStore;
     preOpen: StoragePreOpenData;
     args: StorageChosenArgumentsData;
@@ -54,11 +54,11 @@ type StorageTypes = {
     openLinkExternal: boolean;
     hardwareAcceleration: boolean;
     lastSize:
-    | {
-      maximized: boolean;
-      bounds: Rectangle | undefined;
-    }
-    | undefined;
+      | {
+          maximized: boolean;
+          bounds: Rectangle | undefined;
+        }
+      | undefined;
     homeCategory: HomeCategory;
     darkMode: DarkModeTypes;
     taskbarStatus: TaskbarStatus;
@@ -88,7 +88,7 @@ type StorageTypes = {
     resizeDelay: number;
     closeTabOnExit: boolean;
     cdHistory: string[];
-    quickCommands: { label: string; command: string }[];
+    quickCommands: {label: string; command: string}[];
   };
   browser: {
     recentAddress: string[];
@@ -107,7 +107,11 @@ type StorageTypes = {
   performance: {
     forceColorProfile: 'default' | 'srgb' | 'display-p3' | 'color-spin-gamma24';
     highDpiSupport: boolean;
-    autoplayPolicy: 'default' | 'no-user-gesture-required' | 'user-gesture-required' | 'document-user-activation-required';
+    autoplayPolicy:
+      | 'default'
+      | 'no-user-gesture-required'
+      | 'user-gesture-required'
+      | 'document-user-activation-required';
     enableAcceleratedVideoDecode: boolean;
     jsMaxOldSpaceSize: 2048 | 4096 | 8192;
     ignoreGpuBlacklist: boolean;

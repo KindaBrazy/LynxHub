@@ -1,18 +1,18 @@
-import { platform } from 'node:os';
-import { join } from 'node:path';
+import {platform} from 'node:os';
+import {join} from 'node:path';
 
-import { is } from '@electron-toolkit/utils';
-import { app } from 'electron';
+import {is} from '@electron-toolkit/utils';
+import {app} from 'electron';
 import fs from 'graceful-fs';
-import lodash, { isEmpty } from 'lodash';
-import { LowSync } from 'lowdb';
-import { JSONFileSyncPreset } from 'lowdb/node';
+import lodash, {isEmpty} from 'lodash';
+import {LowSync} from 'lowdb';
+import {JSONFileSyncPreset} from 'lowdb/node';
 
-import { APP_NAME } from '../../../cross/CrossConstants';
-import { Get_Default_Hotkeys } from '../../../cross/HotkeyConstants';
-import { CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons } from '../../../cross/IpcChannelAndTypes';
+import {APP_NAME} from '../../../cross/CrossConstants';
+import {Get_Default_Hotkeys} from '../../../cross/HotkeyConstants';
+import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '../../../cross/IpcChannelAndTypes';
 import StorageTypes from '../../../cross/StorageTypes';
-import { appManager } from '../../index';
+import {appManager} from '../../index';
 import {
   getAbsolutePath,
   getExePath,
@@ -22,7 +22,7 @@ import {
   lynxEncryptStrings,
 } from '../../Utilities/Utils';
 import AddBreadcrumb_Main from '../Breadcrumbs';
-import { changeWindowState } from '../Ipc/Methods/IpcMethods';
+import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 
 /**
  * Base storage class handling low-level storage operations, migrations, and data persistence
@@ -34,7 +34,7 @@ class BaseStorage {
   private migratedTo: number = 0; // Tracks migration state for deferred operations
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: { version: 0.91 },
+    storage: {version: 0.91},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -114,7 +114,7 @@ class BaseStorage {
     notification: {
       readNotifs: [],
     },
-    plugin: { migrated: true },
+    plugin: {migrated: true},
     performance: {
       forceColorProfile: 'default',
       highDpiSupport: false,
@@ -143,7 +143,7 @@ class BaseStorage {
       const dataFolderPath = join(getExePath(), `${APP_NAME}_Data`);
       if (!fs.existsSync(dataFolderPath)) {
         try {
-          fs.mkdirSync(dataFolderPath, { recursive: true });
+          fs.mkdirSync(dataFolderPath, {recursive: true});
           console.log(`Created data folder: ${dataFolderPath}`);
         } catch (error) {
           console.error(`Error creating data folder: ${dataFolderPath}`, error);
@@ -165,7 +165,7 @@ class BaseStorage {
   public onAppReady() {
     // Deferred encryption migration: encrypt browser data after app is ready
     if (this.migratedTo === 0.84) {
-      const { recentAddress, favoriteAddress, historyAddress, favIcons } = this.getData('browser');
+      const {recentAddress, favoriteAddress, historyAddress, favIcons} = this.getData('browser');
 
       this.updateData('browser', {
         recentAddress: lynxEncryptStrings(recentAddress),
@@ -191,7 +191,7 @@ class BaseStorage {
 
       // If the store is too old, reset to default and exit
       if (storeVersion < 0.4) {
-        this.storage.data = { ...this.DEFAULT_DATA };
+        this.storage.data = {...this.DEFAULT_DATA};
         this.write();
         return;
       }
@@ -242,7 +242,7 @@ class BaseStorage {
             this.storage.data.cards.zoomFactor = 1;
             this.storage.data.app.hardwareAcceleration = true;
             this.storage.data.app.disableLoadingAnimations = false;
-            this.storage.data.notification = { readNotifs: [] };
+            this.storage.data.notification = {readNotifs: []};
             this.storage.data.app.collectErrors = true;
           },
         ],
@@ -286,7 +286,7 @@ class BaseStorage {
         [
           0.86,
           () => {
-            this.storage.data.plugin = { migrated: false };
+            this.storage.data.plugin = {migrated: false};
           },
         ],
         [
@@ -380,7 +380,7 @@ class BaseStorage {
       }
 
       // Update the stored version to the current application version
-      this.updateData('storage', { version: this.CURRENT_VERSION });
+      this.updateData('storage', {version: this.CURRENT_VERSION});
     } catch (e) {
       console.error('Failed to migrate storage', e);
     }
@@ -410,7 +410,7 @@ class BaseStorage {
     // Convert relative paths to absolute paths in portable mode
     if (isPortable()) {
       result.cards.installedCards = result.cards.installedCards.map(card => {
-        return { id: card.id, dir: getAbsolutePath(getExePath(), card.dir || '') };
+        return {id: card.id, dir: getAbsolutePath(getExePath(), card.dir || '')};
       });
     }
 
@@ -418,7 +418,7 @@ class BaseStorage {
   }
 
   public updateData<K extends keyof StorageTypes>(key: K, updateData: Partial<StorageTypes[K]>) {
-    this.storage.data[key] = { ...this.storage.data[key], ...updateData };
+    this.storage.data[key] = {...this.storage.data[key], ...updateData};
     this.write();
   }
 
@@ -427,7 +427,7 @@ class BaseStorage {
    * On Linux portable mode, closes window instead of restarting
    */
   public clearStorage(): void {
-    this.storage.data = { ...this.DEFAULT_DATA };
+    this.storage.data = {...this.DEFAULT_DATA};
     this.write();
     if (isPortable() === 'linux') {
       changeWindowState('close');
@@ -442,28 +442,28 @@ class BaseStorage {
   private addBreadcrumb() {
     AddBreadcrumb_Main(
       'Update Storage: ' +
-      JSON.stringify({
-        installedCards: this.storage.data.cards.installedCards,
-        checkUpdateInterval: this.storage.data.cards.checkUpdateInterval,
-        pinnedCards: this.storage.data.cards.pinnedCards,
-        recentlyUsedCards: this.storage.data.cards.recentlyUsedCards,
-        closeConfirm: this.storage.data.app.closeConfirm,
-        terminateAIConfirm: this.storage.data.app.terminateAIConfirm,
-        closeTabConfirm: this.storage.data.app.closeTabConfirm,
-        openLastSize: this.storage.data.app.openLastSize,
-        dynamicAppTitle: this.storage.data.app.dynamicAppTitle,
-        openLinkExternal: this.storage.data.app.openLinkExternal,
-        hardwareAcceleration: this.storage.data.app.hardwareAcceleration,
-        darkMode: this.storage.data.app.darkMode,
-        systemStartup: this.storage.data.app.systemStartup,
-        startMinimized: this.storage.data.app.startMinimized,
-        startupLastActivePage: this.storage.data.app.startupLastActivePage,
-        outputColor: this.storage.data.terminal.outputColor,
-        fontSize: this.storage.data.terminal.fontSize,
-        cursorStyle: this.storage.data.terminal.cursorStyle,
-        cursorInactiveStyle: this.storage.data.terminal.cursorInactiveStyle,
-        closeTabOnExit: this.storage.data.terminal.closeTabOnExit,
-      }),
+        JSON.stringify({
+          installedCards: this.storage.data.cards.installedCards,
+          checkUpdateInterval: this.storage.data.cards.checkUpdateInterval,
+          pinnedCards: this.storage.data.cards.pinnedCards,
+          recentlyUsedCards: this.storage.data.cards.recentlyUsedCards,
+          closeConfirm: this.storage.data.app.closeConfirm,
+          terminateAIConfirm: this.storage.data.app.terminateAIConfirm,
+          closeTabConfirm: this.storage.data.app.closeTabConfirm,
+          openLastSize: this.storage.data.app.openLastSize,
+          dynamicAppTitle: this.storage.data.app.dynamicAppTitle,
+          openLinkExternal: this.storage.data.app.openLinkExternal,
+          hardwareAcceleration: this.storage.data.app.hardwareAcceleration,
+          darkMode: this.storage.data.app.darkMode,
+          systemStartup: this.storage.data.app.systemStartup,
+          startMinimized: this.storage.data.app.startMinimized,
+          startupLastActivePage: this.storage.data.app.startupLastActivePage,
+          outputColor: this.storage.data.terminal.outputColor,
+          fontSize: this.storage.data.terminal.fontSize,
+          cursorStyle: this.storage.data.terminal.cursorStyle,
+          cursorInactiveStyle: this.storage.data.terminal.cursorInactiveStyle,
+          closeTabOnExit: this.storage.data.terminal.closeTabOnExit,
+        }),
     );
   }
 
