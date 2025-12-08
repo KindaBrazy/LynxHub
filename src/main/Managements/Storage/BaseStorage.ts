@@ -32,6 +32,7 @@ class BaseStorage {
 
   private readonly CURRENT_VERSION: number = 0.92;
   private migratedTo: number = 0; // Tracks migration state for deferred operations
+  private isInitializing: boolean = true; // Flag to skip breadcrumbs during initialization
 
   private readonly DEFAULT_DATA: StorageTypes = {
     storage: {version: 0.92},
@@ -160,6 +161,7 @@ class BaseStorage {
     this.storage = JSONFileSyncPreset<StorageTypes>(storagePath, this.DEFAULT_DATA);
     this.storage.read();
     this.migration();
+    this.isInitializing = false; // Initialization complete
   }
 
   /**
@@ -460,6 +462,9 @@ class BaseStorage {
    * Adds breadcrumb for storage updates (for debugging/monitoring)
    */
   private addBreadcrumb() {
+    // Skip breadcrumbs during initialization to avoid circular dependency
+    if (this.isInitializing) return;
+
     AddBreadcrumb_Main(
       'Update Storage: ' +
         JSON.stringify({
