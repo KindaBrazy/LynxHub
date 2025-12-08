@@ -1118,6 +1118,24 @@ const rendererIpc = {
     resume: (name: string) => ipc.send(browserDownloadChannels.resume, name),
     // Clears completed download from list
     clear: (name: string) => ipc.send(browserDownloadChannels.clear, name),
+    // Clears all downloads from list
+    clearAll: () => ipc.send(browserDownloadChannels.clearAll),
+
+    // Gets current download location
+    getDownloadLocation: (): Promise<{success: boolean; path?: string; error?: string}> =>
+      ipc.invoke(browserDownloadChannels.getDownloadLocation),
+    // Sets download location
+    setDownloadLocation: (path: string): Promise<{success: boolean; error?: string}> =>
+      ipc.invoke(browserDownloadChannels.setDownloadLocation, path),
+    // Opens location selection dialog
+    openLocationDialog: (): Promise<{success: boolean; path?: string; error?: string}> =>
+      ipc.invoke(browserDownloadChannels.openLocationDialog),
+    // Gets download behavior setting
+    getDownloadBehavior: (): Promise<{success: boolean; behavior?: 'ask' | 'default'; error?: string}> =>
+      ipc.invoke(browserDownloadChannels.getDownloadBehavior),
+    // Sets download behavior
+    setDownloadBehavior: (behavior: 'ask' | 'default'): Promise<{success: boolean; error?: string}> =>
+      ipc.invoke(browserDownloadChannels.setDownloadBehavior, behavior),
   },
 
   customNotification: {

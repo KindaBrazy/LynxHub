@@ -10,6 +10,7 @@ import {
   OpenFolder_Icon,
   Pause_Icon,
   Play_Icon,
+  Trash_Icon,
 } from '../src/assets/icons/SvgIcons/SvgIcons';
 import {formatBytes, formatETA, formatSpeed, getProgress, getStatusColor, getStatusIcon} from './UtilMethods';
 
@@ -114,6 +115,16 @@ export default function DownloadItem({item, setItems}: Props) {
                 fullWidth>
                 Open Path
               </Button>
+
+              <Button
+                onPress={() => {
+                  handleAction(item.name, 'clear');
+                }}
+                color="default"
+                startContent={<Trash_Icon className="size-3" />}
+                fullWidth>
+                Clear
+              </Button>
             </>
           ) : (
             <>
@@ -137,12 +148,37 @@ export default function DownloadItem({item, setItems}: Props) {
                 </Button>
               ) : null}
 
-              {item.status === 'cancelled' ? (
+              {item.status === 'cancelled' && item.receivedBytes > 0 ? (
+                // Show both clear and retry for cancelled downloads with partial progress
+                <>
+                  <Button
+                    onPress={() => {
+                      handleAction(item.name, 'resume');
+                    }}
+                    color="primary"
+                    startContent={<Play_Icon className="size-3" />}
+                    fullWidth>
+                    Retry
+                  </Button>
+                  <Button
+                    onPress={() => {
+                      handleAction(item.name, 'clear');
+                    }}
+                    color="default"
+                    startContent={<Trash_Icon className="size-3" />}
+                    fullWidth>
+                    Clear
+                  </Button>
+                </>
+              ) : item.status === 'cancelled' ? (
                 <Button
                   onPress={() => {
                     handleAction(item.name, 'clear');
-                  }}>
-                  Remove from list
+                  }}
+                  color="default"
+                  startContent={<Trash_Icon className="size-3" />}
+                  fullWidth>
+                  Clear
                 </Button>
               ) : (
                 <Button

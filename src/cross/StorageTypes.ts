@@ -97,6 +97,9 @@ type StorageTypes = {
     favIcons: FavIcons[];
     userAgent: AgentTypes;
     customUserAgent: string;
+    downloadLocation: string;
+    downloadBehavior: 'ask' | 'default';
+    clearedDownloads: string[];
   };
   notification: {
     readNotifs: string[];
