@@ -115,7 +115,7 @@ export default function SettingsBrowser_Downloads() {
           downloadLocation,
         ]}>
         <div
-          className="flex flex-col gap-2 dark:bg-default-100 bg-default-200 rounded-lg px-4 py-2.5 border-2
+          className="flex flex-col gap-2 bg-default-100 rounded-lg px-4 py-2.5 border-2
            border-transparent">
           <div className="flex flex-col gap-1">
             <SettingsSearchHighlight text={locationTitle} className="text-sm font-medium" />
@@ -124,10 +124,10 @@ export default function SettingsBrowser_Downloads() {
           <div className="flex flex-col gap-2 mt-1">
             <div className="flex flex-row items-center gap-2">
               <div
-                className={`flex-1 text-xs font-mono rounded px-2 py-1.5 truncate ${
+                className={`flex-1 text-xs font-mono rounded-lg px-2 py-1.5 truncate ${
                   locationError
                     ? 'bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400'
-                    : 'text-default-500 bg-default-300/50'
+                    : 'text-default-500 bg-default-200'
                 }`}>
                 {downloadLocation || 'Loading...'}
               </div>
@@ -160,7 +160,7 @@ export default function SettingsBrowser_Downloads() {
           'automatic',
         ]}>
         <div
-          className="flex flex-col gap-2 dark:bg-default-100 bg-default-200 rounded-lg px-4 py-2.5 border-2
+          className="flex flex-col gap-2 bg-default-100 rounded-lg px-4 py-2.5 border-2
            border-transparent">
           <div className="flex flex-col gap-1">
             <SettingsSearchHighlight text={behaviorTitle} className="text-sm font-medium" />
