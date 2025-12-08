@@ -28,7 +28,7 @@ export function useZoomMenu(setElements: SetElementsType, setWidthSize: SetWidth
   useEffect(() => {
     if (id) {
       setElements([
-        <div key="zoom_page" className="p-3 pr-6 flex flex-row gap-x-2 gap-y-4 border-2 border-foreground/10">
+        <div key="zoom_page" className="p-3 pr-6 flex flex-row gap-x-2 gap-y-4">
           <Button size="sm" variant="light" onPress={handleReset} className="h-14 cursor-default">
             Reset
           </Button>
