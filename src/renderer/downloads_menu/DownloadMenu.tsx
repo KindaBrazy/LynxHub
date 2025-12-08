@@ -1,3 +1,4 @@
+import {Button} from '@heroui/react';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useEffect, useState} from 'react';
 
@@ -8,6 +9,11 @@ import DownloadItem from './DownloadItem';
 
 export default function DownloadMenu() {
   const [downloads, setDownloads] = useState<DownloadItemInfo[]>([]);
+
+  const handleClearAll = () => {
+    setDownloads([]);
+    rendererIpc.downloadManager.clearAll();
+  };
 
   useEffect(() => {
     const offDlStart = rendererIpc.downloadManager.onDlStart((_, info) => {
@@ -61,7 +67,14 @@ export default function DownloadMenu() {
           <DownloadDuo_Icon className="size-5" />
           Downloads
         </h2>
-        <p className="text-sm">{downloads.length} items</p>
+        <div className="flex items-center gap-3">
+          <p className="text-sm">{downloads.length} items</p>
+          {downloads.length > 0 && (
+            <Button size="sm" color="danger" variant="flat" onPress={handleClearAll}>
+              Clear All
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Download List */}

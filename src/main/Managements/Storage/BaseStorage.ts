@@ -30,11 +30,11 @@ import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
-  private readonly CURRENT_VERSION: number = 0.91;
+  private readonly CURRENT_VERSION: number = 0.92;
   private migratedTo: number = 0; // Tracks migration state for deferred operations
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.91},
+    storage: {version: 0.92},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -110,6 +110,9 @@ class BaseStorage {
       favoriteAddress: [],
       historyAddress: [],
       favIcons: [],
+      downloadLocation: join(app.getPath('downloads'), APP_NAME),
+      downloadBehavior: 'default',
+      clearedDownloads: [],
     },
     notification: {
       readNotifs: [],
@@ -228,6 +231,7 @@ class BaseStorage {
         [
           0.7,
           () => {
+            // @ts-expect-error: in old versions, there isn't download things
             this.storage.data.browser = {
               favoriteAddress: [],
               historyAddress: [],
@@ -366,6 +370,22 @@ class BaseStorage {
           0.9,
           () => {
             this.storage.data.performance = this.DEFAULT_DATA.performance;
+          },
+        ],
+        [
+          0.91,
+          () => {
+            // Add download location and behavior settings if they don't exist
+            if (!this.storage.data.browser.downloadLocation) {
+              this.storage.data.browser.downloadLocation = join(app.getPath('downloads'), APP_NAME);
+            }
+            if (!this.storage.data.browser.downloadBehavior) {
+              this.storage.data.browser.downloadBehavior = 'default';
+            }
+            // Add cleared downloads tracking if it doesn't exist
+            if (!this.storage.data.browser.clearedDownloads) {
+              this.storage.data.browser.clearedDownloads = [];
+            }
           },
         ],
       ]);
