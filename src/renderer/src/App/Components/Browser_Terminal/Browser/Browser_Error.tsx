@@ -19,11 +19,11 @@ export function Browser_Error({error, onReload}: Props) {
       <motion.div
         initial={{opacity: 0, translateY: 5}}
         animate={{opacity: 1, translateY: 0, transition: {delay: 0.2}}}
-        className="flex max-w-lg flex-col items-center gap-6 text-center">
+        className="flex w-full max-w-[50%] flex-col items-center gap-6 text-center">
         <Web_Icon className="size-20 text-warning" />
-        <div className="flex flex-col gap-2">
+        <div className="flex w-full flex-col gap-2">
           <h1 className="text-2xl font-bold text-foreground-800">This page isn't available</h1>
-          <p title={error.validatedURL} className="w-full truncate text-sm text-foreground-500">
+          <p title={error.validatedURL} className="w-full line-clamp-2 text-sm text-foreground-500">
             Could not load <span className="font-medium">{error.validatedURL}</span>
           </p>
         </div>
