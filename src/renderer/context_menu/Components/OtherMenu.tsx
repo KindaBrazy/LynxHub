@@ -78,6 +78,7 @@ export function useZoomMenu(setElements: SetElementsType, setWidthSize: SetWidth
 export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
   const [searchValue, setSearchValue] = useState<string>('');
   const [id, setId] = useState<string>('');
+  const [inputRef, setInputRef] = useState<HTMLInputElement | null>(null);
 
   const [toggle, setToggle] = useState<boolean>(false);
 
@@ -98,13 +99,51 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
   const clear = () => {
     setSearchValue('');
     rendererIpc.browser.stopFindInPage(id, 'clearSelection');
+    // Refocus input after clearing
+    setTimeout(() => inputRef?.focus(), 0);
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (isEmpty(searchValue)) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      next();
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      back();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      clear();
+      rendererIpc.contextMenu.hideWindow();
+    }
+  };
+
+  // Clear search when window closes
+  useEffect(() => {
+    const handleWindowBlur = () => {
+      if (searchValue) {
+        setSearchValue('');
+        rendererIpc.browser.stopFindInPage(id, 'clearSelection');
+      }
+    };
+
+    window.addEventListener('blur', handleWindowBlur);
+    return () => window.removeEventListener('blur', handleWindowBlur);
+  }, [id, searchValue]);
 
   useEffect(() => {
     if (id) {
       setElements([
         <div key={`${id}_${toggle}`} className="p-3 flex flex-row items-end gap-x-2 w-full">
-          <Input value={searchValue} placeholder="Type here..." onValueChange={setSearchValue} autoFocus />
+          <Input
+            ref={setInputRef}
+            value={searchValue}
+            onKeyDown={handleKeyDown}
+            placeholder="Type here..."
+            onValueChange={setSearchValue}
+            autoFocus
+          />
           <div className="flex flex-row mb-1 gap-x-1">
             <Button size="sm" onPress={back} variant="light" isDisabled={isEmpty(searchValue)} isIconOnly>
               <AltArrowLine_Icon className="size-4" />
@@ -119,7 +158,7 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
         </div>,
       ]);
     }
-  }, [id, searchValue, toggle]);
+  }, [id, searchValue, toggle, inputRef]);
 
   useEffect(() => {
     const offFind = rendererIpc.contextMenu.onFind((_, webID) => {
