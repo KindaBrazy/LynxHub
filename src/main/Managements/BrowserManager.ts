@@ -172,9 +172,9 @@ export default class BrowserManager {
   }
 
   private listenForFailLoad(view: WebContents, id: string) {
-    view.on('did-fail-load', (_, errorCode, errorDescription, validatedURL) => {
+    view.on('did-fail-load', (_, errorCode, errorDescription, validatedURL, isMainFrame) => {
       // Ignore benign error codes like -3 (ABORTED), which happens on normal navigation.
-      if (errorCode === -3) {
+      if (errorCode === -3 || !isMainFrame) {
         return;
       }
 
