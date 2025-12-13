@@ -61,17 +61,30 @@ export function useZoomMenu(setElements: SetElementsType, setWidthSize: SetWidth
   useEffect(() => {
     const offZoom = rendererIpc.contextMenu.onZoom((_, webID, zoomFactor) => {
       setId(webID);
-
       setValue(zoomFactor * 100);
-
       setWidthSize('md');
-
       setToggle(prevState => !prevState);
-
       rendererIpc.contextMenu.showWindow();
     });
 
-    return () => offZoom();
+    // Clear state when other menus open
+    const clearState = () => setId('');
+    const offInitView = rendererIpc.contextMenu.onInitView(clearState);
+    const offFind = rendererIpc.contextMenu.onFind(clearState);
+    const offVolume = rendererIpc.contextMenu.onVolume(clearState);
+    const offTerminateAI = rendererIpc.contextMenu.onTerminateAI(clearState);
+    const offTerminateTab = rendererIpc.contextMenu.onTerminateTab(clearState);
+    const offCloseApp = rendererIpc.contextMenu.onCloseApp(clearState);
+
+    return () => {
+      offZoom();
+      offInitView();
+      offFind();
+      offVolume();
+      offTerminateAI();
+      offTerminateTab();
+      offCloseApp();
+    };
   }, [setElements, setWidthSize]);
 }
 
@@ -135,7 +148,7 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
   useEffect(() => {
     if (id) {
       setElements([
-        <div key={`${id}_${toggle}`} className="p-3 flex flex-row items-end gap-x-2 w-full">
+        <div key={`${id}_${toggle}`} className="flex w-full flex-row items-end gap-x-2 p-3">
           <Input
             ref={setInputRef}
             value={searchValue}
@@ -144,7 +157,7 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
             onValueChange={setSearchValue}
             autoFocus
           />
-          <div className="flex flex-row mb-1 gap-x-1">
+          <div className="mb-1 flex flex-row gap-x-1">
             <Button size="sm" onPress={back} variant="light" isDisabled={isEmpty(searchValue)} isIconOnly>
               <AltArrowLine_Icon className="size-4" />
             </Button>
@@ -164,12 +177,30 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
     const offFind = rendererIpc.contextMenu.onFind((_, webID) => {
       setToggle(prevState => !prevState);
       setId(webID);
-
       setWidthSize('md');
-
       rendererIpc.contextMenu.showWindow();
     });
 
-    return () => offFind();
+    // Clear state when other menus open
+    const clearState = () => {
+      setId('');
+      setSearchValue('');
+    };
+    const offInitView = rendererIpc.contextMenu.onInitView(clearState);
+    const offZoom = rendererIpc.contextMenu.onZoom(clearState);
+    const offVolume = rendererIpc.contextMenu.onVolume(clearState);
+    const offTerminateAI = rendererIpc.contextMenu.onTerminateAI(clearState);
+    const offTerminateTab = rendererIpc.contextMenu.onTerminateTab(clearState);
+    const offCloseApp = rendererIpc.contextMenu.onCloseApp(clearState);
+
+    return () => {
+      offFind();
+      offInitView();
+      offZoom();
+      offVolume();
+      offTerminateAI();
+      offTerminateTab();
+      offCloseApp();
+    };
   }, [setElements, setWidthSize]);
 }
