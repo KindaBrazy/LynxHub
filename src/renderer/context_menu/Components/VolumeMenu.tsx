@@ -10,12 +10,14 @@ type VolumeData = {
   tabId: string;
   volume: number;
   muted: boolean;
+  globalMuted: boolean;
 };
 
 export function useVolumeMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
   const [data, setData] = useState<VolumeData | null>(null);
   const [volume, setVolume] = useState<number>(100);
   const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isGlobalMuted, setIsGlobalMuted] = useState<boolean>(false);
   const [toggle, setToggle] = useState<boolean>(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -59,6 +61,7 @@ export function useVolumeMenu(setElements: SetElementsType, setWidthSize: SetWid
 
   useEffect(() => {
     if (data) {
+      const effectiveMuted = isMuted || isGlobalMuted;
       setElements([
         <div key={`volume_${data.tabId}_${toggle}`} className="flex w-52 flex-col gap-4 p-4">
           <div className="flex items-center justify-between">
@@ -70,7 +73,7 @@ export function useVolumeMenu(setElements: SetElementsType, setWidthSize: SetWid
               className="cursor-default"
               aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
               isIconOnly>
-              {isMuted ? <VolumeCross className="size-4" /> : <VolumeLoud className="size-4" />}
+              {effectiveMuted ? <VolumeCross className="size-4" /> : <VolumeLoud className="size-4" />}
             </Button>
           </div>
 
@@ -94,13 +97,14 @@ export function useVolumeMenu(setElements: SetElementsType, setWidthSize: SetWid
         </div>,
       ]);
     }
-  }, [data, volume, isMuted, toggle, handleVolumeChange, handleMuteToggle]);
+  }, [data, volume, isMuted, isGlobalMuted, toggle, handleVolumeChange, handleMuteToggle]);
 
   useEffect(() => {
     const offVolume = rendererIpc.contextMenu.onVolume((_, volumeData) => {
       setData(volumeData);
       setVolume(volumeData.volume);
       setIsMuted(volumeData.muted);
+      setIsGlobalMuted(volumeData.globalMuted);
       setWidthSize('sm');
       setToggle(prev => !prev);
       rendererIpc.contextMenu.showWindow();

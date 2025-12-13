@@ -96,7 +96,7 @@ export default function TabItem({tab}: Props) {
       showArrow>
       <Button
         className={
-          'pr-0 text-small pl-2 flex !rounded-t-lg data-[hover=true]:bg-foreground-100 flex-row ' +
+          'pr-0 text-small pl-2 flex rounded-t-lg! data-[hover=true]:bg-foreground-100 flex-row ' +
           `cursor-default gap-x-0 ${isActiveTab && 'bg-white dark:bg-[#303033]'}`
         }
         ref={btnRef}
@@ -105,10 +105,12 @@ export default function TabItem({tab}: Props) {
         onPress={onPress}>
         <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
           <TabItem_Icon tab={tab} currentView={runningCards.find(card => card.tabId === tab.id)?.currentView} />
-          <TabTitle title={tab.title} setIsTruncated={setIsTruncated} />
+
           {runningCards.find(card => card.tabId === tab.id) && (
             <AudioIndicator tabId={tab.id} id={runningCards.find(card => card.tabId === tab.id)!.id} />
           )}
+
+          <TabTitle title={tab.title} setIsTruncated={setIsTruncated} />
         </div>
 
         <Button
