@@ -1,5 +1,5 @@
-import {Button, Tooltip} from '@heroui/react';
-import {Soundwave, VolumeCross} from '@solar-icons/react-perf/BoldDuotone';
+import {Button} from '@heroui/react';
+import {VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -35,10 +35,9 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
   }, [dispatch, id, tabId, isMuted, globalMuted]);
 
   const icon = useMemo(
-    () => (isMuted ? <VolumeCross className="size-3.5" /> : <Soundwave className="size-3.5" />),
+    () => (isMuted ? <VolumeCross className="size-4 shrink-0" /> : <VolumeLoud className="size-4 shrink-0" />),
     [isMuted],
   );
-  const tooltipText = useMemo(() => (isMuted ? 'Unmute tab audio' : 'Mute tab audio'), [isMuted]);
   const ariaLabel = useMemo(() => (isMuted ? 'Unmute tab audio' : 'Mute tab audio'), [isMuted]);
   const ariaDescription = useMemo(() => (isPlaying ? 'Audio is currently playing' : 'Audio indicator'), [isPlaying]);
 
@@ -48,19 +47,17 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
   }
 
   return (
-    <Tooltip delay={300} radius="sm" offset={-2} placement="bottom" content={tooltipText} showArrow>
-      <Button
-        size="sm"
-        variant="light"
-        aria-label={ariaLabel}
-        aria-pressed={isMuted}
-        onPress={handleMuteToggle}
-        aria-description={ariaDescription}
-        className="cursor-default scale-75 min-w-0 p-1"
-        isIconOnly>
-        {icon}
-      </Button>
-    </Tooltip>
+    <Button
+      size="sm"
+      variant="light"
+      aria-label={ariaLabel}
+      aria-pressed={isMuted}
+      onPress={handleMuteToggle}
+      aria-description={ariaDescription}
+      className="cursor-default scale-75 min-w-0 p-1 shrink-0"
+      isIconOnly>
+      {icon}
+    </Button>
   );
 });
 
