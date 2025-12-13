@@ -2,35 +2,39 @@ import federation from '@originjs/vite-plugin-federation';
 import {sentryVitePlugin} from '@sentry/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
-import {defineConfig, externalizeDepsPlugin} from 'electron-vite';
+import {defineConfig} from 'electron-vite';
 import {resolve} from 'path';
 
 export default defineConfig(({mode}) => {
   const isDev = mode === 'development';
+
+  const disableSentrySourceUpload: boolean = false;
+
   return {
     main: {
-      plugins: [externalizeDepsPlugin()],
-      build: {
-        rollupOptions: {
-          external: isDev
-            ? undefined
-            : ['../../../../../extension/src/main/lynxExtension', '../../../../../module/src/main'],
-          output: {format: 'cjs'},
-        },
-      },
-    },
-    preload: {
       plugins: [
         sentryVitePlugin({
+          authToken: process.env.SENTRY_AUTH_TOKEN,
           org: 'lynxhub',
           project: 'lynxhub',
           disable: isDev,
           sourcemaps: {
+            disable: disableSentrySourceUpload,
             filesToDeleteAfterUpload: '**/*.map',
           },
         }),
-        externalizeDepsPlugin(),
       ],
+      build: {
+        sourcemap: true,
+        rollupOptions: {
+          external: isDev
+            ? undefined
+            : ['../../../../../extension/src/main/lynxExtension', '../../../../../module/src/main'],
+        },
+      },
+    },
+
+    preload: {
       build: {
         rollupOptions: {
           output: {
@@ -45,22 +49,25 @@ export default defineConfig(({mode}) => {
         },
       },
     },
+
     renderer: {
       plugins: [
         sentryVitePlugin({
+          authToken: process.env.SENTRY_AUTH_TOKEN,
           org: 'lynxhub',
           project: 'lynxhub',
           disable: isDev,
           sourcemaps: {
+            disable: disableSentrySourceUpload,
             filesToDeleteAfterUpload: '**/*.map',
           },
         }),
-        react(),
         tailwindcss(),
+        react(),
         federation({
           name: 'host-app',
           remotes: {nothing: 'nothing.js'},
-          shared: ['antd', 'react', 'lodash', 'react-dom', 'react-redux', 'zustand', '@heroui/react'],
+          shared: ['antd', 'react', 'lodash', 'react-dom', 'react-redux', '@heroui/react'],
         }),
       ],
       resolve: {
@@ -74,6 +81,7 @@ export default defineConfig(({mode}) => {
         'process.env': {},
       },
       build: {
+        sourcemap: true,
         rollupOptions: {
           external: isDev
             ? undefined
