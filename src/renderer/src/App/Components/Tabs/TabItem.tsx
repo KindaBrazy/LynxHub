@@ -103,7 +103,7 @@ export default function TabItem({tab}: Props) {
         radius="none"
         variant="light"
         onPress={onPress}>
-        <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
+        <div className="flex gap-x-0.5 flex-row items-center min-w-0 flex-1">
           <TabItem_Icon tab={tab} currentView={runningCards.find(card => card.tabId === tab.id)?.currentView} />
 
           {runningCards.find(card => card.tabId === tab.id) && (

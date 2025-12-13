@@ -35,7 +35,7 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
   }, [dispatch, id, tabId, isMuted, globalMuted]);
 
   const icon = useMemo(
-    () => (isMuted ? <VolumeCross className="size-4 shrink-0" /> : <VolumeLoud className="size-4 shrink-0" />),
+    () => (isMuted ? <VolumeCross className="size-3.5 shrink-0" /> : <VolumeLoud className="size-3.5 shrink-0" />),
     [isMuted],
   );
   const ariaLabel = useMemo(() => (isMuted ? 'Unmute tab audio' : 'Mute tab audio'), [isMuted]);
@@ -54,7 +54,7 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
       aria-pressed={isMuted}
       onPress={handleMuteToggle}
       aria-description={ariaDescription}
-      className="cursor-default scale-75 min-w-0 p-1 shrink-0"
+      className="cursor-default scale-90 min-w-0 p-1 shrink-0"
       isIconOnly>
       {icon}
     </Button>
