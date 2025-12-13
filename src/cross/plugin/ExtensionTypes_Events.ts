@@ -206,6 +206,7 @@ export type ExtensionEvents_IPC = {
   browser_set_visible: {id: string; visible: boolean};
   browser_open_find_in_page: {id: string; customPosition?: {x: number; y: number}};
   browser_open_zoom: {id: string};
+  browser_open_volume: {id: string};
   browser_find_in_page: {id: string; value: string; options: FindInPageOptions};
   browser_stop_find_in_page: {id: string; action: 'clearSelection' | 'keepSelection' | 'activateSelection'};
   browser_focus_web_view: {id: string};

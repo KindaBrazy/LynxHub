@@ -21,8 +21,8 @@ const Browser_Volume = memo(({id, tabId}: Props) => {
   const volume = tabVolumes[tabId] ?? 100;
 
   const openVolumeMenu = useCallback(() => {
-    rendererIpc.browser.openVolume({id, tabId, volume, muted: isMuted});
-  }, [id, tabId, volume, isMuted]);
+    rendererIpc.browser.openVolume({id, tabId, volume, muted: isMuted, globalMuted});
+  }, [id, tabId, volume, isMuted, globalMuted]);
 
   const icon = useMemo(() => {
     if (isMuted || globalMuted) {

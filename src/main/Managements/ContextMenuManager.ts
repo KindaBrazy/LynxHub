@@ -86,10 +86,13 @@ export default class ContextMenuManager {
       this.setCustomContextPosition(undefined);
       this.contextMenuWindow?.webContents.send(contextMenuChannels.onZoom, id, browserManager.getCurrentZoom(id));
     });
-    ipcMain.on(browserChannels.openVolume, (_, data: {id: string; tabId: string; volume: number; muted: boolean}) => {
-      this.setCustomContextPosition(undefined);
-      this.contextMenuWindow?.webContents.send(contextMenuChannels.onVolume, data);
-    });
+    ipcMain.on(
+      browserChannels.openVolume,
+      (_, data: {id: string; tabId: string; volume: number; muted: boolean; globalMuted: boolean}) => {
+        this.setCustomContextPosition(undefined);
+        this.contextMenuWindow?.webContents.send(contextMenuChannels.onVolume, data);
+      },
+    );
     ipcMain.on(contextMenuChannels.openTerminateAI, (_, id: string) => {
       this.setCustomContextPosition(undefined);
       this.contextMenuWindow?.webContents.send(contextMenuChannels.onTerminateAI, id);

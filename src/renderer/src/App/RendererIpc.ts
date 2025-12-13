@@ -814,7 +814,10 @@ const rendererIpc = {
       ipc.on(contextMenuChannels.onZoom, result),
     // Listens for volume control events
     onVolume: (
-      result: (event: IpcRendererEvent, data: {id: string; tabId: string; volume: number; muted: boolean}) => void,
+      result: (
+        event: IpcRendererEvent,
+        data: {id: string; tabId: string; volume: number; muted: boolean; globalMuted: boolean},
+      ) => void,
     ) => ipc.on(contextMenuChannels.onVolume, result),
 
     // Relaunches AI process
@@ -939,10 +942,8 @@ const rendererIpc = {
       ipc.send(browserChannels.openZoom, id);
     },
     // Opens volume control dialog
-    openVolume: (data: {id: string; tabId: string; volume: number; muted: boolean}) => {
-      extensionRendererApi.events_ipc.emit('browser_open_volume', {data});
-      ipc.send(browserChannels.openVolume, data);
-    },
+    openVolume: (data: {id: string; tabId: string; volume: number; muted: boolean; globalMuted: boolean}) =>
+      ipc.send(browserChannels.openVolume, data),
 
     // Finds text in page
     findInPage: (id: string, value: string, options: FindInPageOptions) => {
@@ -1110,9 +1111,7 @@ const rendererIpc = {
           console.error('Error in audio state change callback:', error);
         }
       };
-      ipc.on(volumeChannels.onAudioStateChange, handler);
-      // Return cleanup function to remove listener
-      return () => ipc.removeListener(volumeChannels.onAudioStateChange, handler);
+      return ipc.on(volumeChannels.onAudioStateChange, handler);
     },
 
     // Updates tab volume from context menu (sends to main window)
