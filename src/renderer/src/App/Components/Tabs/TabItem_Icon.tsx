@@ -33,7 +33,7 @@ const TabItem_Icon = memo(({tab, currentView}: Props) => {
       if (favIcon.show && isValidFavIcon) {
         setIcon(
           favIcon ? (
-            <Avatar name={title} src={favIcon.url} className="size-full" />
+            <Avatar name={title} radius="none" src={favIcon.url} className="size-full bg-transparent" />
           ) : (
             <Web_Icon className="size-full" />
           ),
