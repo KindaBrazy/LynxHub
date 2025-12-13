@@ -114,6 +114,10 @@ class BaseStorage {
       downloadLocation: join(app.getPath('downloads'), APP_NAME),
       downloadBehavior: 'default',
       clearedDownloads: [],
+      volumeSettings: {
+        globalMuted: false,
+        tabVolumes: {},
+      },
     },
     notification: {
       readNotifs: [],
@@ -387,6 +391,18 @@ class BaseStorage {
             // Add cleared downloads tracking if it doesn't exist
             if (!this.storage.data.browser.clearedDownloads) {
               this.storage.data.browser.clearedDownloads = [];
+            }
+          },
+        ],
+        [
+          0.92,
+          () => {
+            // Add volume settings if they don't exist
+            if (!this.storage.data.browser.volumeSettings) {
+              this.storage.data.browser.volumeSettings = {
+                globalMuted: false,
+                tabVolumes: {},
+              };
             }
           },
         ],

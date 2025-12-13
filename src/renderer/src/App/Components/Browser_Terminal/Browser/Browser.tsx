@@ -1,6 +1,8 @@
 import {isEmpty} from 'lodash';
-import {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
+import {useCardsState} from '../../../Redux/Reducer/CardsReducer';
+import {useVolumeState} from '../../../Redux/Reducer/VolumeReducer';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
 import {useIsActiveTab} from '../../Tabs/Tab_Utils';
@@ -13,8 +15,15 @@ type Props = {runningCard: RunningCard};
 const Browser = memo(({runningCard}: Props) => {
   const {currentView, id, webUIAddress, customAddress, type, tabId} = runningCard;
   const isActiveTab = useIsActiveTab(tabId);
+  const browserDomReadyIds = useCardsState('browserDomReadyIds');
+  const tabVolumes = useVolumeState('tabVolumes');
+  const tabMuted = useVolumeState('tabMuted');
+  const globalMuted = useVolumeState('globalMuted');
+  const volumeAppliedRef = useRef(false);
 
   const [failedLoad, setFailedLoad] = useState<FailedLoad | undefined>(undefined);
+
+  const isDomReady = useMemo(() => browserDomReadyIds.includes(id), [browserDomReadyIds, id]);
 
   const finalAddress = useMemo(() => {
     const result = customAddress || webUIAddress;
@@ -25,6 +34,34 @@ const Browser = memo(({runningCard}: Props) => {
   useEffect(() => {
     if (isActiveTab) rendererIpc.browser.focusWebView(id);
   }, [isActiveTab]);
+
+  // Apply volume settings when browser becomes dom-ready
+  useEffect(() => {
+    if (isDomReady && !volumeAppliedRef.current) {
+      volumeAppliedRef.current = true;
+
+      const applyVolumeSettings = async () => {
+        const tabVolume = tabVolumes[tabId] ?? 100;
+        const isTabMuted = tabMuted[tabId] || false;
+
+        try {
+          await rendererIpc.volume.setVolume(id, tabVolume);
+        } catch (error) {
+          console.error('Failed to set initial volume:', error);
+        }
+
+        // Apply effective mute (tab muted OR global muted)
+        const effectiveMute = isTabMuted || globalMuted;
+        try {
+          await rendererIpc.volume.setMuted(id, effectiveMute);
+        } catch (error) {
+          console.error('Failed to set initial mute:', error);
+        }
+      };
+
+      applyVolumeSettings();
+    }
+  }, [isDomReady, id, tabId, tabVolumes, tabMuted, globalMuted]);
 
   useEffect(() => {
     const offFailed = rendererIpc.browser.onFailedLoadUrl((_, targetID, errorCode, errorDescription, validatedURL) => {

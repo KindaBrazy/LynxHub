@@ -319,6 +319,7 @@ export const contextMenuChannels = {
   onTerminateTab: 'context:on-terminate-tab',
   onCloseApp: 'context:on-close-app',
   onZoom: 'context:zoom-page',
+  onVolume: 'context:volume-control',
 
   relaunchAI: 'context:relaunch-ai',
   onRelaunchAI: 'context:on-relaunch-ai',
@@ -361,6 +362,7 @@ export const browserChannels = {
 
   openFindInPage: 'browser:openFindInPage',
   openZoom: 'browser:openZoom',
+  openVolume: 'browser:openVolume',
 
   findInPage: 'browser:findInPage',
   stopFindInPage: 'browser:stopFindInPage',
@@ -419,4 +421,25 @@ export const patreonChannels = {
   updateChannel: 'patreon:updateChannel',
 
   onReleaseChannel: 'patreon:onReleaseChannel',
+};
+
+export const volumeChannels = {
+  // Renderer -> Main
+  setVolume: 'volume:set',
+  setMuted: 'volume:setMuted',
+  getState: 'volume:getState',
+
+  // Context menu -> Main -> Main renderer (for Redux sync)
+  updateTabVolume: 'volume:updateTabVolume',
+  updateTabMuted: 'volume:updateTabMuted',
+  onTabVolumeUpdate: 'volume:onTabVolumeUpdate',
+  onTabMutedUpdate: 'volume:onTabMutedUpdate',
+
+  // Main -> Renderer
+  onAudioStateChange: 'volume:onAudioStateChange',
+} as const;
+
+export type AudioState = {
+  playing: boolean;
+  muted: boolean;
 };

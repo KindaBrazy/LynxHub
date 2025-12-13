@@ -29,6 +29,7 @@ import {
   storageUtilsChannels,
   TaskbarStatus,
   utilsChannels,
+  volumeChannels,
   WHType,
   winChannels,
 } from '../../../cross/IpcChannelAndTypes';
@@ -103,6 +104,7 @@ import {
   unShallow,
   validateGitDir,
 } from './Methods/IpcMethods-Repository';
+import {handleGetAudioState, handleSetMuted, handleSetVolume} from './Methods/IpcMethods-Volume';
 
 function win() {
   // Changes window state (maximize, minimize, close, fullscreen, restart)
@@ -547,6 +549,24 @@ export function browserIPC() {
   ipcMain.on(browserChannels.addOffset, (_, id: string, offset: WHType) => browserManager.addOffset(id, offset));
   // Clears browser history for selected URLs
   ipcMain.on(browserChannels.clearHistory, (_, selected: string[]) => browserManager.clearHistory(selected));
+
+  // Volume control handlers
+  // Sets volume level for browser webview (0-100)
+  ipcMain.handle(volumeChannels.setVolume, (_, id: string, volume: number) =>
+    handleSetVolume(browserManager, id, volume),
+  );
+  // Sets mute state for browser webview
+  ipcMain.handle(volumeChannels.setMuted, (_, id: string, muted: boolean) => handleSetMuted(browserManager, id, muted));
+  // Gets current audio state (playing, muted) for browser webview
+  ipcMain.handle(volumeChannels.getState, (_, id: string) => handleGetAudioState(browserManager, id));
+
+  // Forward volume updates from context menu to main window
+  ipcMain.on(volumeChannels.updateTabVolume, (_, tabId: string, volume: number) => {
+    mainWindow.webContents.send(volumeChannels.onTabVolumeUpdate, tabId, volume);
+  });
+  ipcMain.on(volumeChannels.updateTabMuted, (_, tabId: string, muted: boolean) => {
+    mainWindow.webContents.send(volumeChannels.onTabMutedUpdate, tabId, muted);
+  });
 }
 
 function statics() {

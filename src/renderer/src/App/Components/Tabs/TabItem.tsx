@@ -12,6 +12,7 @@ import {tabsActions} from '../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import useHotkeyPress from '../../Utils/RegisterHotkeys';
+import AudioIndicator from './AudioIndicator';
 import {useIsActiveTab, useRemoveTab} from './Tab_Utils';
 import TabItem_Icon from './TabItem_Icon';
 import TabTitle from './TabTitle';
@@ -105,6 +106,9 @@ export default function TabItem({tab}: Props) {
         <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
           <TabItem_Icon tab={tab} currentView={runningCards.find(card => card.tabId === tab.id)?.currentView} />
           <TabTitle title={tab.title} setIsTruncated={setIsTruncated} />
+          {runningCards.find(card => card.tabId === tab.id) && (
+            <AudioIndicator tabId={tab.id} id={runningCards.find(card => card.tabId === tab.id)!.id} />
+          )}
         </div>
 
         <Button

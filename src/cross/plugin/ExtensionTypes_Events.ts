@@ -219,6 +219,11 @@ export type ExtensionEvents_IPC = {
   browser_update_user_agent: Record<string, never>;
   browser_add_offset: {id: string; offset: WHType};
 
+  // volume
+  volume_set_volume: {id: string; volume: number};
+  volume_set_muted: {id: string; muted: boolean};
+  volume_get_state: {id: string};
+
   // statics
   statics_pull: Record<string, never>;
   statics_get_releases: Record<string, never>;

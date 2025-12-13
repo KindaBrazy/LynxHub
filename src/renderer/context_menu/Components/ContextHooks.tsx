@@ -4,6 +4,7 @@ import rendererIpc from '../../src/App/RendererIpc';
 import {useFindMenu, useZoomMenu} from './OtherMenu';
 import useRightClickMenu from './RightClickMenu';
 import {useCloseAppMenu, useTerminateAIMenu, useTerminateTabMenu} from './TerminateMenu';
+import {useVolumeMenu} from './VolumeMenu';
 
 type DimensionsMsg = {width: number; height: number; dpr: number};
 
@@ -59,6 +60,7 @@ export function useContextMenuSetup(setElements: SetElementsType, setWidthSize: 
   useRightClickMenu(setElements, setWidthSize);
   useZoomMenu(setElements, setWidthSize);
   useFindMenu(setElements, setWidthSize);
+  useVolumeMenu(setElements, setWidthSize);
 
   useTerminateAIMenu(setElements, setWidthSize);
   useTerminateTabMenu(setElements, setWidthSize);

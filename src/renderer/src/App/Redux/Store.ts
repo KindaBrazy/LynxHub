@@ -11,6 +11,7 @@ import settingsReducer from './Reducer/SettingsReducer';
 import tabsReducer from './Reducer/TabsReducer';
 import terminalReducer from './Reducer/TerminalReducer';
 import userReducer from './Reducer/UserReducer';
+import volumeReducer from './Reducer/VolumeReducer';
 
 const staticReducers = {
   app: appReducer,
@@ -22,6 +23,7 @@ const staticReducers = {
   terminal: terminalReducer,
   hotkeys: hotkeysReducer,
   plugins: pluginsReducer,
+  volume: volumeReducer,
 };
 
 let store = configureStore({
