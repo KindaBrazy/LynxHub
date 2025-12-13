@@ -3,7 +3,14 @@ import {isEmpty, isNil} from 'lodash';
 
 import icon from '../../../resources/icon.png?asset';
 import {formatWebAddress} from '../../cross/CrossUtils';
-import {browserChannels, CanGoType, tabsChannels, WHType} from '../../cross/IpcChannelAndTypes';
+import {
+  AudioState,
+  browserChannels,
+  CanGoType,
+  tabsChannels,
+  volumeChannels,
+  WHType,
+} from '../../cross/IpcChannelAndTypes';
 import {appManager, contextMenuManager, storageManager} from '../index';
 import {getUserAgent, getWindowColor} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
@@ -189,6 +196,33 @@ export default class BrowserManager {
     });
   }
 
+  private listenForAudioEvents(id: string, webContents: WebContents) {
+    webContents.on('media-started-playing', () => {
+      this.sendAudioStateChange(id, true);
+    });
+
+    webContents.on('media-paused', () => {
+      this.sendAudioStateChange(id, false);
+    });
+  }
+
+  private sendAudioStateChange(id: string, playing: boolean): void {
+    const mainWebContents = this.getMainWebContents();
+    if (!mainWebContents) return;
+
+    const webContents = this.getViewByID(id)?.webContents;
+    if (!webContents) return;
+
+    try {
+      mainWebContents.send(volumeChannels.onAudioStateChange, id, {
+        playing,
+        muted: webContents.audioMuted,
+      });
+    } catch (error) {
+      console.error('Error sending audio state change:', error);
+    }
+  }
+
   public getSession() {
     return session.fromPartition('persist:lynxhub_browser');
   }
@@ -217,6 +251,7 @@ export default class BrowserManager {
     this.listenForZoom(webContents);
     this.listenForFullScreen(newView);
     this.listenForFailLoad(webContents, id);
+    this.listenForAudioEvents(id, webContents);
 
     this.browsers.push({id, view: newView});
 
@@ -331,5 +366,91 @@ export default class BrowserManager {
 
   public goForward(id: string) {
     this.getViewByID(id)?.webContents.navigationHistory.goForward();
+  }
+
+  public setMuted(id: string, muted: boolean): void {
+    try {
+      const webContents = this.getViewByID(id)?.webContents;
+      if (!webContents || webContents.isDestroyed()) {
+        console.warn(`WebContents not found or destroyed for id: ${id}`);
+        return;
+      }
+
+      if (typeof webContents.setAudioMuted === 'function') {
+        webContents.setAudioMuted(muted);
+      } else {
+        console.warn('setAudioMuted API not available');
+      }
+    } catch (error) {
+      console.error('Error setting mute state:', error);
+    }
+  }
+
+  public async setVolume(id: string, volume: number): Promise<void> {
+    try {
+      const webContents = this.getViewByID(id)?.webContents;
+      if (!webContents || webContents.isDestroyed()) {
+        console.warn(`WebContents not found or destroyed for id: ${id}`);
+        return;
+      }
+
+      const volumeDecimal = Math.max(0, Math.min(100, volume)) / 100;
+
+      await webContents.executeJavaScript(`
+        (function() {
+          // Set volume on all existing audio/video elements
+          document.querySelectorAll('audio, video').forEach(el => {
+            el.volume = ${volumeDecimal};
+          });
+          
+          // Set up mutation observer to catch dynamically added elements
+          if (!window.__lynxVolumeObserver) {
+            window.__lynxVolumeObserver = new MutationObserver(mutations => {
+              mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                  if (node.nodeName === 'AUDIO' || node.nodeName === 'VIDEO') {
+                    node.volume = ${volumeDecimal};
+                  }
+                  // Also check children of added nodes
+                  if (node.querySelectorAll) {
+                    node.querySelectorAll('audio, video').forEach(el => {
+                      el.volume = ${volumeDecimal};
+                    });
+                  }
+                });
+              });
+            });
+            
+            window.__lynxVolumeObserver.observe(document.body, {
+              childList: true,
+              subtree: true
+            });
+          }
+          
+          // Store volume for new elements
+          window.__lynxVolume = ${volumeDecimal};
+        })();
+      `);
+    } catch (error) {
+      console.error('Error setting volume:', error);
+    }
+  }
+
+  public getAudioState(id: string): AudioState | null {
+    try {
+      const webContents = this.getViewByID(id)?.webContents;
+      if (!webContents || webContents.isDestroyed()) {
+        console.warn(`WebContents not found or destroyed for id: ${id}`);
+        return null;
+      }
+
+      return {
+        playing: !webContents.audioMuted && webContents.isCurrentlyAudible(),
+        muted: webContents.audioMuted,
+      };
+    } catch (error) {
+      console.error('Error getting audio state:', error);
+      return null;
+    }
   }
 }

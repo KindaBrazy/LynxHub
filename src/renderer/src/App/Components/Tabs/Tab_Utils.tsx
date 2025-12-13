@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux';
 import {cardsActions, useCardsState} from '../../Redux/Reducer/CardsReducer';
 import {modalActions} from '../../Redux/Reducer/ModalsReducer';
 import {tabsActions, useTabsState} from '../../Redux/Reducer/TabsReducer';
+import {volumeActions} from '../../Redux/Reducer/VolumeReducer';
 import {AppDispatch} from '../../Redux/Store';
 import rendererIpc from '../../RendererIpc';
 import {defaultTabItem, REMOVE_MODAL_DELAY} from '../../Utils/Constants';
@@ -25,6 +26,7 @@ export function useRemoveTab() {
         dispatch(tabsActions.removeTab(tId));
         dispatch(modalActions.removeAllModalsForTabId({tabId: tId}));
         dispatch(cardsActions.stopRunningCard({tabId: tId}));
+        dispatch(volumeActions.removeTab(tId));
         rendererIpc.win.setDiscordRpAiRunning({running: false});
       }
     },

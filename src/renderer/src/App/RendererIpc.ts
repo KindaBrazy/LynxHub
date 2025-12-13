@@ -33,6 +33,7 @@ import {
   AppUpdateEventTypes,
   AppUpdateStatus,
   appWindowChannels,
+  AudioState,
   browserChannels,
   BrowserHistoryData,
   CanGoType,
@@ -71,6 +72,7 @@ import {
   tabsChannels,
   TaskbarStatus,
   utilsChannels,
+  volumeChannels,
   WHType,
   winChannels,
   WinStateChange,
@@ -810,6 +812,10 @@ const rendererIpc = {
     // Listens for zoom events
     onZoom: (result: (event: IpcRendererEvent, id: string, zoomFactor: number) => void) =>
       ipc.on(contextMenuChannels.onZoom, result),
+    // Listens for volume control events
+    onVolume: (
+      result: (event: IpcRendererEvent, data: {id: string; tabId: string; volume: number; muted: boolean}) => void,
+    ) => ipc.on(contextMenuChannels.onVolume, result),
 
     // Relaunches AI process
     relaunchAI: (id: string) => {
@@ -932,6 +938,11 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('browser_open_zoom', {id});
       ipc.send(browserChannels.openZoom, id);
     },
+    // Opens volume control dialog
+    openVolume: (data: {id: string; tabId: string; volume: number; muted: boolean}) => {
+      extensionRendererApi.events_ipc.emit('browser_open_volume', {data});
+      ipc.send(browserChannels.openVolume, data);
+    },
 
     // Finds text in page
     findInPage: (id: string, value: string, options: FindInPageOptions) => {
@@ -1039,6 +1050,94 @@ const rendererIpc = {
     // Listens for cleared failed URL events
     onClearFailed: (result: (event: IpcRendererEvent, id: string) => void) =>
       ipc.on(browserChannels.onClearFailed, result),
+  },
+
+  /** Managing browser volume and audio */
+  volume: {
+    // Sets volume level for browser webview (0-100)
+    setVolume: async (id: string, volume: number): Promise<void> => {
+      extensionRendererApi.events_ipc.emit('volume_set_volume', {id, volume});
+      try {
+        // Add timeout to IPC call (5 seconds)
+        await Promise.race([
+          ipc.invoke(volumeChannels.setVolume, id, volume),
+          new Promise<void>((_, reject) => setTimeout(() => reject(new Error('Volume set operation timed out')), 5000)),
+        ]);
+      } catch (error) {
+        console.error('Failed to set volume:', error);
+        throw error;
+      }
+    },
+
+    // Sets mute state for browser webview
+    setMuted: async (id: string, muted: boolean): Promise<void> => {
+      extensionRendererApi.events_ipc.emit('volume_set_muted', {id, muted});
+      try {
+        // Add timeout to IPC call (5 seconds)
+        await Promise.race([
+          ipc.invoke(volumeChannels.setMuted, id, muted),
+          new Promise<void>((_, reject) => setTimeout(() => reject(new Error('Mute set operation timed out')), 5000)),
+        ]);
+      } catch (error) {
+        console.error('Failed to set mute state:', error);
+        throw error;
+      }
+    },
+
+    // Gets current audio state (playing, muted) for browser webview
+    getState: async (id: string): Promise<AudioState | null> => {
+      extensionRendererApi.events_ipc.emit('volume_get_state', {id});
+      try {
+        // Add timeout to IPC call (3 seconds)
+        return await Promise.race([
+          ipc.invoke(volumeChannels.getState, id),
+          new Promise<AudioState | null>((_, reject) =>
+            setTimeout(() => reject(new Error('Get audio state operation timed out')), 3000),
+          ),
+        ]);
+      } catch (error) {
+        console.error('Failed to get audio state:', error);
+        return null;
+      }
+    },
+
+    // Listens for audio state changes (media started/paused, mute state)
+    onAudioStateChange: (callback: (id: string, state: AudioState) => void) => {
+      const handler = (_: IpcRendererEvent, id: string, state: AudioState) => {
+        try {
+          callback(id, state);
+        } catch (error) {
+          console.error('Error in audio state change callback:', error);
+        }
+      };
+      ipc.on(volumeChannels.onAudioStateChange, handler);
+      // Return cleanup function to remove listener
+      return () => ipc.removeListener(volumeChannels.onAudioStateChange, handler);
+    },
+
+    // Updates tab volume from context menu (sends to main window)
+    updateTabVolume: (tabId: string, volume: number) => {
+      ipc.send(volumeChannels.updateTabVolume, tabId, volume);
+    },
+
+    // Updates tab muted state from context menu (sends to main window)
+    updateTabMuted: (tabId: string, muted: boolean) => {
+      ipc.send(volumeChannels.updateTabMuted, tabId, muted);
+    },
+
+    // Listens for tab volume updates from context menu
+    onTabVolumeUpdate: (callback: (tabId: string, volume: number) => void) => {
+      const handler = (_: IpcRendererEvent, tabId: string, volume: number) => callback(tabId, volume);
+      ipc.on(volumeChannels.onTabVolumeUpdate, handler);
+      return () => ipc.removeListener(volumeChannels.onTabVolumeUpdate, handler);
+    },
+
+    // Listens for tab muted updates from context menu
+    onTabMutedUpdate: (callback: (tabId: string, muted: boolean) => void) => {
+      const handler = (_: IpcRendererEvent, tabId: string, muted: boolean) => callback(tabId, muted);
+      ipc.on(volumeChannels.onTabMutedUpdate, handler);
+      return () => ipc.removeListener(volumeChannels.onTabMutedUpdate, handler);
+    },
   },
 
   statics: {

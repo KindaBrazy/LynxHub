@@ -5,6 +5,7 @@ import {RunningCard} from '../../../Utils/Types';
 import Browser_ActionButtons from './Browser_ActionButtons';
 import Browser_AddressBar from './Browser_AddressBar';
 import Browser_Search from './Browser_Search';
+import Browser_Volume from './Browser_Volume';
 import Browser_Zoom from './Browser_Zoom';
 
 type Props = {
@@ -27,6 +28,7 @@ const Browser_TopBar = memo(({runningCard, setCustomAddress, tabID}: Props) => {
         <>
           <Browser_Search id={runningCard.id} tabID={runningCard.tabId} />
           <Browser_Zoom id={runningCard.id} />
+          <Browser_Volume id={runningCard.id} tabId={runningCard.tabId} />
         </>
       )}
     </>

@@ -100,6 +100,10 @@ type StorageTypes = {
     downloadLocation: string;
     downloadBehavior: 'ask' | 'default';
     clearedDownloads: string[];
+    volumeSettings: {
+      globalMuted: boolean;
+      tabVolumes: {[cardId: string]: number};
+    };
   };
   notification: {
     readNotifs: string[];
