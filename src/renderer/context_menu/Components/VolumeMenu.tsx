@@ -109,6 +109,23 @@ export function useVolumeMenu(setElements: SetElementsType, setWidthSize: SetWid
       rendererIpc.contextMenu.showWindow();
     });
 
-    return () => offVolume();
+    // Clear state when other menus open
+    const clearState = () => setData(null);
+    const offInitView = rendererIpc.contextMenu.onInitView(clearState);
+    const offZoom = rendererIpc.contextMenu.onZoom(clearState);
+    const offFind = rendererIpc.contextMenu.onFind(clearState);
+    const offTerminateAI = rendererIpc.contextMenu.onTerminateAI(clearState);
+    const offTerminateTab = rendererIpc.contextMenu.onTerminateTab(clearState);
+    const offCloseApp = rendererIpc.contextMenu.onCloseApp(clearState);
+
+    return () => {
+      offVolume();
+      offInitView();
+      offZoom();
+      offFind();
+      offTerminateAI();
+      offTerminateTab();
+      offCloseApp();
+    };
   }, [setElements, setWidthSize]);
 }
