@@ -28,19 +28,18 @@ export function useVolumeMenu(setElements: SetElementsType, setWidthSize: SetWid
       const clampedVolume = Math.max(0, Math.min(100, newVolume));
       setVolume(clampedVolume);
 
+      // Apply volume immediately for real-time feedback
+      rendererIpc.volume.setVolume(data.id, clampedVolume).catch(error => {
+        console.error('Failed to set volume:', error);
+      });
+
+      // Debounce Redux state update to avoid excessive updates
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
       }
-
-      debounceTimerRef.current = setTimeout(async () => {
-        try {
-          await rendererIpc.volume.setVolume(data.id, clampedVolume);
-          // Notify main window to update Redux state
-          rendererIpc.volume.updateTabVolume(data.tabId, clampedVolume);
-        } catch (error) {
-          console.error('Failed to set volume:', error);
-        }
-      }, 100);
+      debounceTimerRef.current = setTimeout(() => {
+        rendererIpc.volume.updateTabVolume(data.tabId, clampedVolume);
+      }, 150);
     },
     [data],
   );
