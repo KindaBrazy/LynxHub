@@ -27,7 +27,6 @@ export async function checkAppDirectories(): Promise<void> {
 
   try {
     await Promise.all(DIRECTORIES.map(dir => fs.promises.mkdir(join(appDataPath, dir), {recursive: true})));
-    console.log('Directories created successfully');
   } catch (error) {
     console.error('Error creating directories:', error);
     throw error;
