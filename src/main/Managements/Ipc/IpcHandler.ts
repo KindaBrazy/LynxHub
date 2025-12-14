@@ -37,6 +37,7 @@ import {
   appManager,
   contextMenuManager,
   extensionManager,
+  linkPreviewManager,
   moduleManager,
   pluginManager,
   staticManager,
@@ -602,6 +603,7 @@ export function listenToAllChannels() {
   plugins();
 
   contextMenuManager.listenForContextChannels();
+  linkPreviewManager.listenForChannels();
 
   statics();
 }

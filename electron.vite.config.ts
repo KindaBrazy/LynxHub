@@ -94,6 +94,7 @@ export default defineConfig(({mode}) => {
             toast_window: resolve(__dirname, 'src/renderer/toast_window.html'),
             downloads_menu: resolve(__dirname, 'src/renderer/downloads_menu.html'),
             share_screen: resolve(__dirname, 'src/renderer/share_screen.html'),
+            link_preview: resolve(__dirname, 'src/renderer/link_preview.html'),
           },
         },
         target: 'esnext',

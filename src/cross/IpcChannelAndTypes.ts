@@ -358,6 +358,9 @@ export const browserChannels = {
   openZoom: 'browser:openZoom',
   openVolume: 'browser:openVolume',
 
+  onLinkHover: 'browser:on-link-hover',
+  resizeLinkPreview: 'browser:resize-link-preview',
+
   findInPage: 'browser:findInPage',
   stopFindInPage: 'browser:stopFindInPage',
   setZoomFactor: 'browser:setZoomFactor',

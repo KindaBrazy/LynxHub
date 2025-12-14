@@ -19,6 +19,7 @@ import DialogManager from './Managements/DialogManager';
 import ElectronAppManager from './Managements/ElectronAppManager';
 import {browserIPC, listenToAllChannels} from './Managements/Ipc/IpcHandler';
 import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
+import LinkPreviewManager from './Managements/LinkPreviewManager';
 import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
 import ModuleManager from './Managements/Plugin/Modules/ModuleManager';
 import {PluginManager} from './Managements/Plugin/PluginManager';
@@ -56,6 +57,7 @@ export const pluginManager = new PluginManager(moduleManager, extensionManager);
 export const staticManager: StaticsManager = new StaticsManager();
 staticManager.checkRequirements();
 export const contextMenuManager: ContextMenuManager = new ContextMenuManager();
+export const linkPreviewManager: LinkPreviewManager = new LinkPreviewManager();
 
 export const appStartTime = Date.now();
 
