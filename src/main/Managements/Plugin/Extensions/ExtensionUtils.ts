@@ -1,6 +1,5 @@
 import pty from 'node-pty';
 
-import DiscordRpcManager from '../../DiscordRpcManager';
 import ElectronAppManager from '../../ElectronAppManager';
 import StorageManager from '../../Storage/StorageManager';
 import ModuleManager from '../Modules/ModuleManager';
@@ -12,7 +11,7 @@ export default class ExtensionUtils implements MainExtensionUtils {
   public nodePty = pty;
 
   constructor() {
-    const managers = ['storage', 'app', 'discordRpc', 'module'];
+    const managers = ['storage', 'app', 'module'];
     managers.forEach(manager => {
       this.managerPromises.set(
         manager,
@@ -31,10 +30,6 @@ export default class ExtensionUtils implements MainExtensionUtils {
     return this.managerPromises.get('app')!;
   }
 
-  getDiscordRpcManager() {
-    return this.managerPromises.get('discordRpc')!;
-  }
-
   getModuleManager() {
     return this.managerPromises.get('module')!;
   }
@@ -45,10 +40,6 @@ export default class ExtensionUtils implements MainExtensionUtils {
 
   setAppManager(manager: ElectronAppManager) {
     this.resolvers.get('app')!(manager);
-  }
-
-  setDiscordRpcManager(manager: DiscordRpcManager) {
-    this.resolvers.get('discordRpc')!(manager);
   }
 
   setModuleManager(manager: ModuleManager) {

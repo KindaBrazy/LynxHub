@@ -1,6 +1,6 @@
 import {Rectangle} from 'electron';
 
-import {DiscordRPC, StorageChosenArgumentsData} from './CrossTypes';
+import {StorageChosenArgumentsData} from './CrossTypes';
 import {
   AgentTypes,
   CustomRunBehaviorStore,
@@ -68,7 +68,6 @@ type StorageTypes = {
     startMaximized: boolean;
     startupLastActivePage: boolean;
     lastPage: string;
-    discordRP: DiscordRPC;
     hotkeys: LynxHotkey[];
     initialized: boolean;
     inited: boolean;

@@ -16,7 +16,6 @@ import {checkForUpdate} from './Managements/AppUpdater';
 import ContextMenuManager from './Managements/ContextMenuManager';
 import {ValidateCards} from './Managements/DataValidator';
 import DialogManager from './Managements/DialogManager';
-import DiscordRpcManager from './Managements/DiscordRpcManager';
 import ElectronAppManager from './Managements/ElectronAppManager';
 import {browserIPC, listenToAllChannels} from './Managements/Ipc/IpcHandler';
 import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
@@ -48,7 +47,6 @@ export const storageManager = new StorageManager();
 
 export let appManager: ElectronAppManager | undefined = undefined;
 export let trayManager: TrayManager | undefined = undefined;
-export let discordRpcManager: DiscordRpcManager | undefined = undefined;
 export let cardsValidator: ValidateCards | undefined = undefined;
 
 export const moduleManager: ModuleManager = new ModuleManager();
@@ -200,10 +198,8 @@ async function onAppReady() {
   appManager.startLoading();
 
   trayManager = new TrayManager(trayIcon, trayIconMenu);
-  discordRpcManager = new DiscordRpcManager();
   cardsValidator = new ValidateCards();
 
-  extensionManager.setDiscordRpcManager(discordRpcManager);
   extensionManager.setModuleManager(moduleManager);
 
   listenToAllChannels();
@@ -222,7 +218,6 @@ function handleAppReadyToShow() {
   extensionManager.onReadyToShow();
   handleTaskbarStatus();
   handleStartupBehavior();
-  discordRpcManager?.start();
   if (platform() === 'win32') setLoginItemSettings();
   cardsValidator?.checkAndWatch();
 

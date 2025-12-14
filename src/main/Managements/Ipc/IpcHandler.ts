@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, shell} from 'electron';
 
-import {ChosenArgumentsData, DiscordRPC, FolderNames, SubscribeStages} from '../../../cross/CrossTypes';
+import {ChosenArgumentsData, FolderNames, SubscribeStages} from '../../../cross/CrossTypes';
 import {toMs} from '../../../cross/CrossUtils';
 import {ShallowCloneOptions} from '../../../cross/GitTypes';
 import {
@@ -13,7 +13,6 @@ import {
   ChangeWindowState,
   CustomRunBehaviorData,
   DarkModeTypes,
-  DiscordRunningAI,
   fileChannels,
   gitChannels,
   moduleApiChannels,
@@ -37,7 +36,6 @@ import StorageTypes, {InstalledCard} from '../../../cross/StorageTypes';
 import {
   appManager,
   contextMenuManager,
-  discordRpcManager,
   extensionManager,
   moduleManager,
   pluginManager,
@@ -69,7 +67,6 @@ import {
   removeDir,
   saveToFile,
   setDarkMode,
-  setDiscordRP,
   setTaskbarStatus,
   trashDir,
 } from './Methods/IpcMethods';
@@ -124,12 +121,6 @@ function win() {
 
   // Sets taskbar visibility status (taskbar, tray, taskbar-tray, tray-minimized)
   ipcMain.on(winChannels.setTaskBarStatus, (_, status: TaskbarStatus) => setTaskbarStatus(status));
-
-  // Sets Discord Rich Presence configuration
-  ipcMain.on(winChannels.setDiscordRP, (_, discordRp: DiscordRPC) => setDiscordRP(discordRp));
-
-  // Updates Discord RP status when AI is running
-  ipcMain.on(winChannels.setDiscordRpAiRunning, (_, status: DiscordRunningAI) => discordRpcManager?.runningAI(status));
 
   // Gets system information (OS platform and build number)
   ipcMain.handle(winChannels.getSystemInfo, () => getSystemInfo());

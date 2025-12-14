@@ -1,4 +1,4 @@
-// Utility IPC methods - Window state, file operations, Discord RP, and general utilities
+// Utility IPC methods - Window state, file operations, and general utilities
 import {writeFile} from 'node:fs/promises';
 import {platform} from 'node:os';
 import path from 'node:path';
@@ -7,9 +7,9 @@ import decompress from 'decompress';
 import {app, dialog, shell} from 'electron';
 import {promises, readdir} from 'graceful-fs';
 
-import {DiscordRPC, FolderListData} from '../../../../cross/CrossTypes';
+import {FolderListData} from '../../../../cross/CrossTypes';
 import {ChangeWindowState, DarkModeTypes, TaskbarStatus, winChannels} from '../../../../cross/IpcChannelAndTypes';
-import {appManager, contextMenuManager, discordRpcManager, storageManager, trayManager} from '../../../index';
+import {appManager, contextMenuManager, storageManager, trayManager} from '../../../index';
 import {getSystemDarkMode} from '../../../Utilities/Utils';
 
 /**
@@ -183,15 +183,6 @@ export async function isEmptyDir(dir: string): Promise<boolean> {
   } catch (e) {
     return true;
   }
-}
-
-/**
- * Sets the Discord Rich Presence status.
- * @param discordRP - The Discord Rich Presence configuration.
- */
-export function setDiscordRP(discordRP: DiscordRPC): void {
-  storageManager.updateData('app', {discordRP});
-  discordRpcManager?.updateDiscordRP();
 }
 
 export function listDirectory(path: string): Promise<FolderListData[]> {

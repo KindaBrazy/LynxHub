@@ -61,7 +61,6 @@ export type PreOpenData = {type: 'folder' | 'file'; path: string}[];
 export type OnPreCommands = {id: string; commands: string[]};
 
 export type HomeCategory = ('Pin' | 'Recently' | 'All' | string)[];
-export type DiscordRunningAI = {running: boolean; name?: string; type?: 'image' | 'audio' | 'text' | 'unknown'};
 export type SystemInfo = {os: NodeJS.Platform; buildNumber: string | number};
 export type LynxInput = {
   type: 'keyUp' | 'keyDown' | string;
@@ -110,10 +109,6 @@ export const winChannels = {
   onDarkMode: 'win:on-darkMode',
 
   setTaskBarStatus: 'win:set-taskbar-status',
-
-  setDiscordRP: 'win:set-discord-rp',
-
-  setDiscordRpAiRunning: 'win:set-discord-rp-ai-running',
 
   getSystemInfo: 'win:get-system-info',
   openUrlDefaultBrowser: 'win:open-url-default-browser',

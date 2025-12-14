@@ -75,7 +75,6 @@ export function useStopAI() {
       dispatch(tabsActions.setActiveTabLoading(false));
       dispatch(tabsActions.setTabIsTerminal({tabID: activeTab, isTerminal: false}));
       dispatch(cardsActions.stopRunningCard({tabId: activeTab}));
-      rendererIpc.win.setDiscordRpAiRunning({running: false});
     },
     [runningCards, activeTab, dispatch],
   );

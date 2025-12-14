@@ -27,7 +27,6 @@ export function useRemoveTab() {
         dispatch(modalActions.removeAllModalsForTabId({tabId: tId}));
         dispatch(cardsActions.stopRunningCard({tabId: tId}));
         dispatch(volumeActions.removeTab(tId));
-        rendererIpc.win.setDiscordRpAiRunning({running: false});
       }
     },
     [runningCards, dispatch],

@@ -6,7 +6,6 @@ import {Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useMemo, us
 import {
   Circle_Icon,
   Database_Icon,
-  Discord_Icon,
   EditCard_Icon,
   Keyboard_Icon,
   Rocket_Icon,
@@ -74,11 +73,6 @@ const groupSections: GroupProps[] = [
         title: 'Hotkeys',
         icon: <Keyboard_Icon className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsHotkeysId,
-      },
-      {
-        title: 'Discord Activity',
-        icon: <Discord_Icon className="size-4 shrink-0" />,
-        elementId: settingsSectionId.SettingsDiscordId,
       },
     ],
   },

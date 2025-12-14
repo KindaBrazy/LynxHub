@@ -1,7 +1,6 @@
 import {Scope} from '@sentry/node';
 import {MenuItem, MenuItemConstructorOptions} from 'electron';
 
-import DiscordRpcManager from '../../DiscordRpcManager';
 import ElectronAppManager from '../../ElectronAppManager';
 import StorageManager from '../../Storage/StorageManager';
 import ModuleManager from '../Modules/ModuleManager';
@@ -59,12 +58,6 @@ export type MainExtensionUtils = {
    * @returns A promise that resolves to the `ElectronAppManager`.
    */
   getAppManager: () => Promise<ElectronAppManager>;
-
-  /**
-   * Retrieves the `DiscordRpcManager` instance when it is ready.
-   * @returns A promise that resolves to the `DiscordRpcManager`.
-   */
-  getDiscordRpcManager: () => Promise<DiscordRpcManager>;
 
   /**
    * Retrieves the `ModuleManager` instance when it is ready.
