@@ -11,7 +11,7 @@ import {
   volumeChannels,
   WHType,
 } from '../../cross/IpcChannelAndTypes';
-import {appManager, contextMenuManager, storageManager} from '../index';
+import {appManager, contextMenuManager, linkPreviewManager, storageManager} from '../index';
 import {getUserAgent, getWindowColor} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
 
@@ -206,6 +206,12 @@ export default class BrowserManager {
     });
   }
 
+  private listenForLinkHover(id: string, webContents: WebContents) {
+    webContents.on('update-target-url', (_, url) => {
+      linkPreviewManager.updateUrl(url);
+    });
+  }
+
   private sendAudioStateChange(id: string, playing: boolean): void {
     const mainWebContents = this.getMainWebContents();
     if (!mainWebContents) return;
@@ -252,6 +258,7 @@ export default class BrowserManager {
     this.listenForFullScreen(newView);
     this.listenForFailLoad(webContents, id);
     this.listenForAudioEvents(id, webContents);
+    this.listenForLinkHover(id, webContents);
 
     this.browsers.push({id, view: newView});
 

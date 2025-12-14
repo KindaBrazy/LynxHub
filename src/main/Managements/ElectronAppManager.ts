@@ -6,7 +6,7 @@ import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents}
 
 import icon from '../../../resources/icon.png?asset';
 import {appWindowChannels, ShowToastTypes, tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
-import {contextMenuManager, storageManager, trayManager} from '../index';
+import {contextMenuManager, linkPreviewManager, storageManager, trayManager} from '../index';
 import {getUserAgent, getWindowColor, RelaunchApp} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
 
@@ -106,6 +106,7 @@ export default class ElectronAppManager {
     this.loadAppropriateURL(this.mainWindow, 'index.html');
     this.onCreateWindow?.();
     contextMenuManager.createWindow(this.mainWindow);
+    linkPreviewManager.createWindow(this.mainWindow);
   }
 
   /** Sets up event listeners for the main window. */
