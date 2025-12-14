@@ -2,13 +2,12 @@
 import {FindInPageOptions, OpenDialogOptions} from 'electron';
 import {FC} from 'react';
 
-import {ChosenArgumentsData, ContextResizeData, DiscordRPC, FolderNames} from '../CrossTypes';
+import {ChosenArgumentsData, ContextResizeData, FolderNames} from '../CrossTypes';
 import {
   AgentTypes,
   ChangeWindowState,
   CustomRunBehaviorData,
   DarkModeTypes,
-  DiscordRunningAI,
   HomeCategory,
   PreCommands,
   PreOpen,
@@ -47,8 +46,6 @@ export type ExtensionEvents_IPC = {
   win_set_dark_mode: {darkMode: DarkModeTypes};
   win_get_system_dark_mode: Record<string, never>;
   win_set_taskbar_status: {status: TaskbarStatus};
-  win_set_discord_rp: {discordRp: DiscordRPC};
-  win_set_discord_rp_ai_running: {status: DiscordRunningAI};
   win_get_system_info: Record<string, never>;
   win_open_url_default_browser: {url: string};
 

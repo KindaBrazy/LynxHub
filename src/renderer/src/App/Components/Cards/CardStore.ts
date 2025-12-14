@@ -14,7 +14,7 @@ export const createCardStore = (initialData: LoadedCardData & {isInstalled: bool
     repoUrl: validateGitRepoUrl(initialData.repoUrl),
     extensionsDir: initialData.extensionsDir,
     haveArguments: initialData.hasArguments,
-    type: initialData.type,
+    type: initialData.type || 'unknown',
 
     // Component State
     menuIsOpen: false,

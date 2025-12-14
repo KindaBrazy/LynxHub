@@ -9,7 +9,6 @@ import {HotkeySettings, SettingsHotkeysId} from './Content/HotkeySettings';
 import SettingsPerformance, {SettingsPerformanceId} from './Content/Performance/Settings-Performance';
 import SettingsClear, {SettingsClearId} from './Content/Settings-Clear';
 import SettingsData, {SettingsDataId} from './Content/Settings-Data';
-import SettingsDiscord, {SettingsDiscordId} from './Content/Settings-Discord';
 import SettingsStartup, {SettingsStartupId} from './Content/Startup/Settings-Startup';
 import SettingsTerminal, {SettingsTerminalId} from './Content/Terminal/Settings-Terminal';
 
@@ -21,7 +20,6 @@ export const settingsSectionId = {
   SettingsStartupId,
   SettingsClearId,
   SettingsDataId,
-  SettingsDiscordId,
   SettingsHotkeysId,
   SettingsPerformanceId,
 };
@@ -70,7 +68,6 @@ export const SettingsSections = ({searchValue, sectionTexts}: SettingsSectionsPr
         elementId: settingsSectionId.SettingsHotkeysId,
         Component: HotkeySettings,
       },
-      {title: 'Discord Activity', elementId: settingsSectionId.SettingsDiscordId, Component: SettingsDiscord},
       {title: 'Data', elementId: settingsSectionId.SettingsDataId, Component: SettingsData},
       {title: 'Clear', elementId: settingsSectionId.SettingsClearId, Component: SettingsClear},
     ],

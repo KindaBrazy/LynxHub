@@ -70,17 +70,6 @@ class BaseStorage {
       dynamicAppTitle: true,
       openLinkExternal: false,
       lastPage: '/homePage',
-      discordRP: {
-        LynxHub: {
-          Enabled: true,
-          TimeElapsed: true,
-        },
-        RunningAI: {
-          Enabled: true,
-          TimeElapsed: true,
-          AIName: true,
-        },
-      },
       hotkeys: Get_Default_Hotkeys(platform()),
       initialized: false,
       inited: false,

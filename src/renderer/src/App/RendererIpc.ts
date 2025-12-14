@@ -7,7 +7,6 @@ import {
   ChosenArgumentsData,
   ContextResizeData,
   CustomNotificationInfo,
-  DiscordRPC,
   ExtensionsInfo,
   FolderListData,
   FolderNames,
@@ -41,7 +40,6 @@ import {
   contextMenuChannels,
   CustomRunBehaviorData,
   DarkModeTypes,
-  DiscordRunningAI,
   DownloadProgress,
   eventsChannels,
   ExtensionsData,
@@ -119,18 +117,6 @@ const rendererIpc = {
     setTaskBarStatus: (status: TaskbarStatus): void => {
       extensionRendererApi.events_ipc.emit('win_set_taskbar_status', {status});
       ipc.send(winChannels.setTaskBarStatus, status);
-    },
-
-    // Sets Discord Rich Presence configuration
-    setDiscordRP: (discordRp: DiscordRPC): void => {
-      extensionRendererApi.events_ipc.emit('win_set_discord_rp', {discordRp});
-      ipc.send(winChannels.setDiscordRP, discordRp);
-    },
-
-    // Updates Discord RP status when AI is running
-    setDiscordRpAiRunning: (status: DiscordRunningAI): void => {
-      extensionRendererApi.events_ipc.emit('win_set_discord_rp_ai_running', {status});
-      ipc.send(winChannels.setDiscordRpAiRunning, status);
     },
 
     // Gets system information (OS platform and build number)

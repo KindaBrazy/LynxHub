@@ -7,7 +7,6 @@ import {
   REPOSITORIES_FOLDER_NAME,
   STATICS_FOLDER_NAME,
 } from './CrossConstants';
-import {DiscordRunningAI} from './IpcChannelAndTypes';
 import {MainModuleUtils} from './plugin/ModuleTypes';
 
 export type RepoDetails = {
@@ -49,18 +48,6 @@ export type ChosenArgument = {name: string; value: string};
 export type ArgumentsPresets = {preset: string; arguments: ChosenArgument[]};
 export type ChosenArgumentsData = {activePreset: string; data: ArgumentsPresets[]};
 export type StorageChosenArgumentsData = {cardId: string; activePreset: string; data: ArgumentsPresets[]}[];
-
-export type DiscordRPC = {
-  LynxHub: {
-    Enabled: boolean;
-    TimeElapsed: boolean;
-  };
-  RunningAI: {
-    Enabled: boolean;
-    TimeElapsed: boolean;
-    AIName: boolean;
-  };
-};
 
 export type UpdateDownloadProgress = {
   total: number;
@@ -333,7 +320,7 @@ export type CardState = {
   repoUrl: string;
   extensionsDir?: string;
   haveArguments: boolean;
-  type: DiscordRunningAI['type'];
+  type: 'image' | 'audio' | 'text' | 'unknown';
 
   installed: boolean;
   menuIsOpen: boolean;

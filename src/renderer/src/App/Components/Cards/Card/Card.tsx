@@ -39,7 +39,6 @@ const LynxCard = memo(() => {
   const id = useCardStore(state => state.id);
   const isInstalled = useCardStore(state => state.installed);
   const title = useCardStore(state => state.title);
-  const type = useCardStore(state => state.type);
   const repoUrl = useCardStore(state => state.repoUrl);
   const description = useCardStore(state => state.description);
   const extensionsDir = useCardStore(state => state.extensionsDir);
@@ -85,7 +84,6 @@ const LynxCard = memo(() => {
     if (updatingExtensions && updatingExtensions.id === id) {
       if (updatingExtensions.step === 'done') {
         setIsUpdatingExtensions(false);
-        rendererIpc.win.setDiscordRpAiRunning({running: true, name: title, type});
       } else {
         setUpdateCount(updatingExtensions.step);
       }
@@ -102,7 +100,6 @@ const LynxCard = memo(() => {
     } else {
       rendererIpc.pty.process(id, id);
       rendererIpc.storageUtils.recentlyUsedCards('update', id);
-      rendererIpc.win.setDiscordRpAiRunning({running: true, name: title, type});
       dispatch(cardsActions.addRunningCard({tabId: activeTab, id}));
     }
   }, [id, autoUpdateExtensions, activeTab, dispatch]);

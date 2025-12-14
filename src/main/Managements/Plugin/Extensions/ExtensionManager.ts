@@ -3,7 +3,6 @@ import path from 'node:path';
 import {captureException} from '@sentry/electron/main';
 
 import {isDev} from '../../../../cross/CrossUtils';
-import DiscordRpcManager from '../../DiscordRpcManager';
 import ElectronAppManager from '../../ElectronAppManager';
 import StorageManager from '../../Storage/StorageManager';
 import ModuleManager from '../Modules/ModuleManager';
@@ -52,10 +51,6 @@ export default class ExtensionManager {
 
   public setAppManager(manager: ElectronAppManager) {
     this.extensionUtils.setAppManager(manager);
-  }
-
-  public setDiscordRpcManager(manager: DiscordRpcManager) {
-    this.extensionUtils.setDiscordRpcManager(manager);
   }
 
   public setModuleManager(manager: ModuleManager) {
