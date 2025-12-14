@@ -17,6 +17,42 @@ type Props = {
   setCustomAddress?: (address: string) => void;
 };
 
+const findAutocomplete = (input: string, historyUrls: string[]): string => {
+  if (!input || input.length < 2) return '';
+
+  const lowerInput = input.toLowerCase();
+
+  // Find the first URL that starts with the input (case-insensitive)
+  for (const url of historyUrls) {
+    const lowerUrl = url.toLowerCase();
+
+    // Check if URL starts with input
+    if (lowerUrl.startsWith(lowerInput)) {
+      return url.slice(input.length);
+    }
+
+    // Check without protocol (http://, https://)
+    const withoutProtocol = lowerUrl.replace(/^https?:\/\//, '');
+    const inputWithoutProtocol = lowerInput.replace(/^https?:\/\//, '');
+
+    if (withoutProtocol.startsWith(inputWithoutProtocol)) {
+      const originalWithoutProtocol = url.replace(/^https?:\/\//, '');
+      return originalWithoutProtocol.slice(inputWithoutProtocol.length);
+    }
+
+    // Check without www.
+    const withoutWww = withoutProtocol.replace(/^www\./, '');
+    const inputWithoutWww = inputWithoutProtocol.replace(/^www\./, '');
+
+    if (withoutWww.startsWith(inputWithoutWww)) {
+      const originalWithoutWww = url.replace(/^https?:\/\//, '').replace(/^www\./, '');
+      return originalWithoutWww.slice(inputWithoutWww.length);
+    }
+  }
+
+  return '';
+};
+
 const parseAddressForDisplay = (address: string) => {
   if (!address) {
     return {prefix: '', domain: '', rest: ''};
@@ -44,6 +80,8 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
   const [inputValue, setInputValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [historyUrls, setHistoryUrls] = useState<string[]>([]);
+  const [autocomplete, setAutocomplete] = useState('');
   const editableRef = useRef<HTMLDivElement>(null);
 
   const activeTab = useTabsState('activeTab');
@@ -55,11 +93,14 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
   );
 
   useEffect(() => {
-    const fetchFavorites = async () => {
-      const {favoriteAddress} = await rendererIpc.storageUtils.getBrowserHistoryData();
+    const fetchBrowserData = async () => {
+      const {favoriteAddress, historyAddress, recentAddress} = await rendererIpc.storageUtils.getBrowserHistoryData();
       setFavorites(favoriteAddress);
+      // Combine and dedupe: recent first, then history, then favorites
+      const combined = [...new Set([...recentAddress, ...historyAddress, ...favoriteAddress])];
+      setHistoryUrls(combined);
     };
-    fetchFavorites();
+    fetchBrowserData();
   }, []);
 
   useEffect(() => {
@@ -107,6 +148,7 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
 
   const handleBlur = useCallback(() => {
     setIsFocused(false);
+    setAutocomplete('');
     if (inputValue !== effectiveAddress) {
       setInputValue(effectiveAddress);
       if (editableRef.current) {
@@ -115,15 +157,55 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
     }
   }, [inputValue, effectiveAddress]);
 
-  const handleInput = useCallback((e: React.FormEvent<HTMLDivElement>) => {
-    setInputValue(e.currentTarget.textContent || '');
-  }, []);
+  const handleInput = useCallback(
+    (e: React.FormEvent<HTMLDivElement>) => {
+      const text = e.currentTarget.textContent || '';
+      setInputValue(text);
+      setAutocomplete(findAutocomplete(text, historyUrls));
+    },
+    [historyUrls],
+  );
+
+  const acceptAutocomplete = useCallback(() => {
+    if (autocomplete && editableRef.current) {
+      const newValue = inputValue + autocomplete;
+      editableRef.current.textContent = newValue;
+      setInputValue(newValue);
+      setAutocomplete('');
+
+      // Move cursor to end
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(editableRef.current);
+      range.collapse(false);
+      selection?.removeAllRanges();
+      selection?.addRange(range);
+    }
+  }, [autocomplete, inputValue]);
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
+      // Accept autocomplete with Tab or Right Arrow (when at end of input)
+      if (autocomplete && (e.key === 'Tab' || e.key === 'ArrowRight')) {
+        const selection = window.getSelection();
+        const isAtEnd = selection?.focusOffset === inputValue.length;
+
+        if (e.key === 'Tab' || isAtEnd) {
+          e.preventDefault();
+          acceptAutocomplete();
+          return;
+        }
+      }
+
+      if (e.key === 'Escape') {
+        setAutocomplete('');
+        return;
+      }
+
       if (e.key === 'Enter') {
         e.preventDefault();
-        const textValue = e.currentTarget.textContent || '';
+        const textValue = autocomplete ? inputValue + autocomplete : e.currentTarget.textContent || '';
+        setAutocomplete('');
         try {
           const url = formatWebAddress(textValue, true);
           if (setCustomAddress) {
@@ -140,7 +222,7 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
         }
       }
     },
-    [setCustomAddress, dispatch, activeTab, cardId],
+    [setCustomAddress, dispatch, activeTab, cardId, autocomplete, inputValue, acceptAutocomplete],
   );
 
   const handleContainerClick = useCallback(() => {
@@ -180,6 +262,8 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
     isFocused,
     isFavorite,
     displayParts,
+    autocomplete,
+    inputValue,
     handleMouseDown,
     handleFocus,
     handleBlur,
@@ -197,6 +281,8 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
     isFocused,
     isFavorite,
     displayParts,
+    autocomplete,
+    inputValue,
     handleMouseDown,
     handleFocus,
     handleBlur,
@@ -234,26 +320,34 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
         )}
       </div>
 
-      {/* Layer 2: Editable Input (Visible when focused) */}
-      <div
-        style={{
-          minHeight: '32px',
-          lineHeight: '32px',
-        }}
-        className={cn(
-          'size-full px-4 text-sm truncate outline-none bg-transparent',
-          'text-black dark:text-white',
-          isFocused ? 'opacity-100' : 'opacity-0',
+      {/* Layer 2: Editable Input with Autocomplete */}
+      <div className="relative size-full">
+        <div
+          className={cn(
+            'size-full px-4 text-sm truncate outline-none bg-transparent',
+            'text-black dark:text-white',
+            isFocused ? 'opacity-100' : 'opacity-0',
+          )}
+          ref={editableRef}
+          spellCheck="false"
+          onBlur={handleBlur}
+          onFocus={handleFocus}
+          onInput={handleInput}
+          onKeyDown={handleKeyDown}
+          onMouseDown={handleMouseDown}
+          style={{minHeight: '32px', lineHeight: '32px'}}
+          contentEditable
+        />
+        {/* Autocomplete suggestion overlay */}
+        {isFocused && autocomplete && (
+          <div
+            style={{minHeight: '32px', lineHeight: '32px'}}
+            className="absolute inset-0 px-4 text-sm pointer-events-none truncate">
+            <span className="invisible">{inputValue}</span>
+            <span className="text-gray-400 dark:text-gray-500">{autocomplete}</span>
+          </div>
         )}
-        ref={editableRef}
-        spellCheck="false"
-        onBlur={handleBlur}
-        onFocus={handleFocus}
-        onInput={handleInput}
-        onKeyDown={handleKeyDown}
-        onMouseDown={handleMouseDown}
-        contentEditable
-      />
+      </div>
 
       {isAddress && (
         <div className="absolute right-2 top-1/2 -translate-y-1/2">
