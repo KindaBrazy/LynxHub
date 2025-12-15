@@ -42,7 +42,7 @@ export default function DialogManager() {
       promptWindow.loadFile(path.join(__dirname, `../renderer/dialog.html`));
     }
 
-    ipcMain.on('show-prompt', function (_event, arg) {
+    const handleShowPrompt = (_event: any, arg: any) => {
       promptResponse = null;
 
       promptWindow.show();
@@ -51,14 +51,25 @@ export default function DialogManager() {
       promptWindow.on('hide', () => {
         _event.returnValue = promptResponse;
       });
-    });
+    };
 
-    ipcMain.on('dlg-result', (_e, value) => {
+    const handleDlgResult = (_e: any, value: any) => {
       promptResponse = value === '' ? null : value;
-    });
+    };
 
-    ipcMain.on('dlg-hide', () => {
+    const handleDlgHide = () => {
       promptWindow.hide();
+    };
+
+    ipcMain.on('show-prompt', handleShowPrompt);
+    ipcMain.on('dlg-result', handleDlgResult);
+    ipcMain.on('dlg-hide', handleDlgHide);
+
+    // Clean up listeners when dialog window is closed
+    promptWindow.on('closed', () => {
+      ipcMain.removeListener('show-prompt', handleShowPrompt);
+      ipcMain.removeListener('dlg-result', handleDlgResult);
+      ipcMain.removeListener('dlg-hide', handleDlgHide);
     });
   };
 }

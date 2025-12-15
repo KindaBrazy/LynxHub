@@ -38,19 +38,32 @@ export default function ShowToastWindow(
       window.webContents.send('show_message', message);
     });
 
-    window.on('closed', () => {
-      window.destroy();
-    });
-
-    ipcMain.on('close_toast', () => {
+    const handleCloseToast = () => {
       window.close();
-    });
-    ipcMain.on('exit_app', () => {
+    };
+
+    const handleExitApp = () => {
       app.exit();
-    });
-    ipcMain.on('restart_app', () => RelaunchApp(false));
-    ipcMain.on(appWindowChannels.toastBtnPress, (_, id: string) => {
+    };
+
+    const handleRestartApp = () => RelaunchApp(false);
+
+    const handleToastBtnPress = (_: any, id: string) => {
       if (onBtnPress) onBtnPress(id, window);
+    };
+
+    ipcMain.on('close_toast', handleCloseToast);
+    ipcMain.on('exit_app', handleExitApp);
+    ipcMain.on('restart_app', handleRestartApp);
+    ipcMain.on(appWindowChannels.toastBtnPress, handleToastBtnPress);
+
+    window.on('closed', () => {
+      // Clean up listeners when toast window is closed
+      ipcMain.removeListener('close_toast', handleCloseToast);
+      ipcMain.removeListener('exit_app', handleExitApp);
+      ipcMain.removeListener('restart_app', handleRestartApp);
+      ipcMain.removeListener(appWindowChannels.toastBtnPress, handleToastBtnPress);
+      window.destroy();
     });
   };
 
