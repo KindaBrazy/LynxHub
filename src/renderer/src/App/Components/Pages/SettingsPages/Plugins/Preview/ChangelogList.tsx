@@ -98,12 +98,12 @@ const ChangelogList = memo(() => {
               key={`${version.version}_${index}`}
               transition={{duration: 0.5, delay: index * 0.1}}>
               <div
-                className={`relative overflow-hidden rounded-xl px-4 py-4 mb-6 transition-all duration-200 ${
+                className={`relative overflow-hidden rounded-xl px-4 py-4 mb-6 transition-all duration-300 ${
                   index === 0
-                    ? 'bg-gradient-to-br from-secondary/10 via-secondary/5 to-transparent' +
-                      ' border-2 border-secondary shadow-lg shadow-secondary/20'
-                    : 'bg-foreground-50/50 border border-foreground-200' +
-                      ' hover:border-foreground-300 hover:shadow-md'
+                    ? 'bg-linear-to-br from-secondary/10 via-secondary/5 to-transparent' +
+                      ' border border-secondary-200 shadow-md hover:shadow-lg shadow-secondary/20'
+                    : 'bg-foreground-50/50 border border-foreground-100' +
+                      ' hover:border-foreground-200 shadow-small hover:shadow-medium'
                 }`}>
                 {/* Version badge */}
                 <div className="flex items-center gap-x-2 relative">
