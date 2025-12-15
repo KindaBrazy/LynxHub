@@ -72,11 +72,21 @@ export function formatHotkey(hotkey: HotkeyLike | null): string {
     return 'Not Set';
   }
 
+  const isMac = window.osPlatform === 'darwin';
   const parts: string[] = [];
-  if (hotkey.control) parts.push('Ctrl');
-  if (hotkey.alt) parts.push('Alt');
-  if (hotkey.shift) parts.push('Shift');
-  if (hotkey.meta) parts.push('Cmd/Super');
+
+  // On macOS, show Cmd for meta, Ctrl for control
+  // On Windows/Linux, show Ctrl for both control and meta (for compatibility)
+  if (isMac) {
+    if (hotkey.control) parts.push('Ctrl');
+    if (hotkey.alt) parts.push('Alt');
+    if (hotkey.shift) parts.push('Shift');
+    if (hotkey.meta) parts.push('Cmd');
+  } else {
+    if (hotkey.control || hotkey.meta) parts.push('Ctrl');
+    if (hotkey.alt) parts.push('Alt');
+    if (hotkey.shift) parts.push('Shift');
+  }
 
   let displayKey: string;
   switch (hotkey.key.toLowerCase()) {

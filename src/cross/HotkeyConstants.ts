@@ -73,6 +73,8 @@ export const Hotkey_Desc = {
 };
 
 export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | string): LynxHotkey[] => {
+  const isMac = platform === 'darwin';
+
   return [
     {
       name: Hotkey_Names.fullscreen,
@@ -80,7 +82,7 @@ export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | str
       alt: false,
       control: false,
       shift: false,
-      key: platform === 'darwin' ? 'f12' : 'f11',
+      key: isMac ? 'f12' : 'f11',
     },
     {
       name: Hotkey_Names.toggleNav,
@@ -101,9 +103,9 @@ export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | str
 
     {
       name: Hotkey_Names.closeTab,
-      meta: false,
+      meta: isMac,
       alt: false,
-      control: true,
+      control: !isMac,
       shift: false,
       key: 'w',
     },
@@ -117,9 +119,9 @@ export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | str
     },
     {
       name: Hotkey_Names.switchTab,
-      meta: false,
+      meta: isMac,
       alt: false,
-      control: true,
+      control: !isMac,
       shift: false,
       key: 'tab',
     },
@@ -141,17 +143,17 @@ export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | str
     },
     {
       name: Hotkey_Names.newTab,
-      meta: false,
+      meta: isMac,
       alt: false,
-      control: true,
+      control: !isMac,
       shift: false,
       key: 't',
     },
     {
       name: Hotkey_Names.newBrowserTab,
-      meta: false,
+      meta: isMac,
       alt: false,
-      control: true,
+      control: !isMac,
       shift: true,
       key: 't',
     },
@@ -159,23 +161,23 @@ export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | str
       name: Hotkey_Names.newTerminalTab,
       meta: false,
       alt: true,
-      control: true,
+      control: isMac,
       shift: false,
       key: 't',
     },
     {
       name: Hotkey_Names.newBrowserTerminalTab,
-      meta: false,
+      meta: isMac,
       alt: false,
-      control: true,
+      control: !isMac,
       shift: false,
       key: 'e',
     },
     {
       name: Hotkey_Names.findInPage,
-      meta: false,
+      meta: isMac,
       alt: false,
-      control: true,
+      control: !isMac,
       shift: false,
       key: 'f',
     },
