@@ -40,10 +40,10 @@ export default function LynxSwitch({
   const baseClassName = useMemo(() => {
     return cn(
       'inline-flex flex-row-reverse w-full max-w-full items-center',
-      'dark:bg-default-100 bg-default-200 dark:hover:bg-default-200 hover:bg-default-100',
+      'dark:bg-foreground-100 bg-foreground-100 dark:hover:bg-foreground-50 hover:bg-foreground-50',
       'justify-between cursor-pointer rounded-lg gap-2 transition duration-300',
       size === 'sm' ? 'px-2 py-1' : 'px-4 py-2.5',
-      'border-2 border-transparent data-[selected=true]:border-secondary/40',
+      'border-2 border-transparent data-[selected=true]:border-secondary/30',
     );
   }, [size]);
 
