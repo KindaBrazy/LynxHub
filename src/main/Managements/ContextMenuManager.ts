@@ -57,6 +57,15 @@ export default class ContextMenuManager {
     }
 
     this.contextMenuWindow.on('blur', () => this.hideContextMenu(false));
+
+    this.contextMenuWindow.on('closed', () => {
+      this.contextMenuWindow = undefined;
+    });
+
+    mainWindow.on('close', () => {
+      this.mainWindow = undefined;
+      this.webContents = [];
+    });
   }
 
   public setCustomContextPosition(customPosition?: {x: number; y: number}): void {

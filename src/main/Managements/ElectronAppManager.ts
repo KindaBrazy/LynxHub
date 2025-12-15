@@ -131,6 +131,10 @@ export default class ElectronAppManager {
       return {action: 'deny'};
     });
 
+    this.getMainWindow()?.on('close', () => {
+      this.mainWindow = undefined;
+    });
+
     this.getMainWindow()?.on('minimize', this.handleMinimize);
     this.getMainWindow()?.on('focus', this.handleFocus);
 

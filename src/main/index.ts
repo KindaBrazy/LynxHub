@@ -3,7 +3,7 @@ import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 
 import {electronApp, optimizer} from '@electron-toolkit/utils';
-import {app, BrowserWindow, Menu, nativeImage, net, protocol} from 'electron';
+import {app, Menu, nativeImage, net, protocol} from 'electron';
 import log from 'electron-log/main';
 
 import trayIconMenu from '../../resources/16x16.png?asset';
@@ -175,9 +175,12 @@ async function setupApp() {
   });
 
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
+    const mainWindow = appManager?.getMainWindow();
+    if (!mainWindow || mainWindow.isDestroyed()) {
       appManager?.startLoading();
       appManager?.startApp();
+    } else {
+      mainWindow.show();
     }
   });
 }
