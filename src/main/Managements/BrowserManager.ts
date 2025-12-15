@@ -206,7 +206,7 @@ export default class BrowserManager {
     });
   }
 
-  private listenForLinkHover(id: string, webContents: WebContents) {
+  private listenForLinkHover(webContents: WebContents) {
     webContents.on('update-target-url', (_, url) => {
       linkPreviewManager.updateUrl(url);
     });
@@ -258,7 +258,7 @@ export default class BrowserManager {
     this.listenForFullScreen(newView);
     this.listenForFailLoad(webContents, id);
     this.listenForAudioEvents(id, webContents);
-    this.listenForLinkHover(id, webContents);
+    this.listenForLinkHover(webContents);
 
     this.browsers.push({id, view: newView});
 
