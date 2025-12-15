@@ -136,7 +136,9 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
 
       // Setup custom key handler
       api.terminal.attachCustomKeyEventHandler(e => {
-        if (e.key === 'f' && e.ctrlKey) {
+        const isCmdOrCtrl = e.ctrlKey || e.metaKey;
+
+        if (e.key === 'f' && isCmdOrCtrl) {
           return false;
         }
 
@@ -145,7 +147,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
 
         const hasSelection = !isEmpty(selection);
 
-        if (e.key === 'c' && e.ctrlKey && hasSelection) {
+        if (e.key === 'c' && isCmdOrCtrl && hasSelection) {
           return false;
         }
 
