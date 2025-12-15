@@ -1,14 +1,17 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
-import {ShowRestartModal} from '../../../Plugins/Elements';
+import {showRestartModal} from '../../../../../../Utils/RestartModalUtils';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 type DiskCacheSize = 0 | 268435456 | 536870912 | 1073741824;
 
 export default function SettingsPerformanceDiskCache() {
+  const dispatch = useDispatch<AppDispatch>();
   const [selectedKey, setSelectedKey] = useState<string>('0');
 
   useEffect(() => {
@@ -17,14 +20,17 @@ export default function SettingsPerformanceDiskCache() {
     });
   }, []);
 
-  const onChange = useCallback((keys: Selection) => {
-    if (keys !== 'all') {
-      const value = Number(keys.values().next().value) as DiskCacheSize;
-      rendererIpc.storage.update('performance', {diskCacheSize: value});
-      setSelectedKey(String(value));
-      ShowRestartModal('To apply performance changes, please restart the app.');
-    }
-  }, []);
+  const onChange = useCallback(
+    (keys: Selection) => {
+      if (keys !== 'all') {
+        const value = Number(keys.values().next().value) as DiskCacheSize;
+        rendererIpc.storage.update('performance', {diskCacheSize: value});
+        setSelectedKey(String(value));
+        showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
+      }
+    },
+    [dispatch],
+  );
 
   const labelText = 'Disk Cache Size';
   const descriptionText = 'Amount of disk space for caching web content. Larger cache may improve loading times.';

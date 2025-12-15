@@ -9,9 +9,10 @@ import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/Plug
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
+import {showRestartModal} from '../../../../../Utils/RestartModalUtils';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SecurityWarning from '../../SecurityWarning';
-import {ShowRestartModal, UpdateButton} from '../Elements';
+import {UpdateButton} from '../Elements';
 import ModuleConfigModal from '../ModuleConfigModal';
 import Versions from './Versions';
 
@@ -56,7 +57,7 @@ export default function ActionButtons({installed, currentVersion}: Props) {
         dispatch(pluginsActions.manageSet({key: 'installing', id: selectedPlugin?.metadata.id, operation: 'remove'}));
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} installed successfully`);
-          ShowRestartModal('To apply the installation, please restart the app.');
+          showRestartModal(dispatch, 'To apply the installation, please restart the app.');
           if (targetVersion) {
             dispatch(
               pluginsActions.addInstalled({
@@ -80,7 +81,7 @@ export default function ActionButtons({installed, currentVersion}: Props) {
         dispatch(pluginsActions.manageSet({key: 'unInstalling', id: selectedPlugin?.metadata.id, operation: 'remove'}));
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} uninstalled successfully`);
-          ShowRestartModal('To complete the uninstallation, please restart the app.');
+          showRestartModal(dispatch, 'To complete the uninstallation, please restart the app.');
           dispatch(pluginsActions.removeInstalled(selectedPlugin.metadata.id));
         }
       });

@@ -1,11 +1,14 @@
 import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
+import {showRestartModal} from '../../../../../../Utils/RestartModalUtils';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
-import {ShowRestartModal} from '../../../Plugins/Elements';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function SettingsPerformanceGpuRasterization() {
+  const dispatch = useDispatch<AppDispatch>();
   const [enabled, setEnabled] = useState<boolean>(true);
 
   useEffect(() => {
@@ -14,11 +17,14 @@ export default function SettingsPerformanceGpuRasterization() {
     });
   }, []);
 
-  const onEnabledChange = useCallback((selected: boolean) => {
-    rendererIpc.storage.update('performance', {enableGpuRasterization: selected});
-    setEnabled(selected);
-    ShowRestartModal('To apply performance changes, please restart the app.');
-  }, []);
+  const onEnabledChange = useCallback(
+    (selected: boolean) => {
+      rendererIpc.storage.update('performance', {enableGpuRasterization: selected});
+      setEnabled(selected);
+      showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
+    },
+    [dispatch],
+  );
 
   const titleText = 'GPU Rasterization';
   const descriptionText = 'Uses GPU for page rendering. Improves scrolling and animation performance.';

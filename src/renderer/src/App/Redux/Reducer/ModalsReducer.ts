@@ -79,6 +79,10 @@ type ModalsState = {
     isOpen: boolean;
     contentId: 'LOCATE_REPO' | 'CLONE_REPO';
   };
+  restartModal: {
+    isOpen: boolean;
+    message: string;
+  };
 };
 
 type ModalsStateTypes = {
@@ -130,6 +134,10 @@ const initialState: ModalsState = {
     isOpen: false,
   },
   cardUnassignModal: [],
+  restartModal: {
+    isOpen: false,
+    message: '',
+  },
 };
 
 const modalSlice = createSlice({
@@ -330,6 +338,15 @@ const modalSlice = createSlice({
 
     setWarningContentId: (state, action: PayloadAction<ModalsState['warningModal']['contentId']>) => {
       state.warningModal.contentId = action.payload;
+    },
+
+    openRestartModal: (state, action: PayloadAction<{message: string}>) => {
+      state.restartModal.isOpen = true;
+      state.restartModal.message = action.payload.message;
+    },
+    closeRestartModal: state => {
+      state.restartModal.isOpen = false;
+      state.restartModal.message = '';
     },
 
     removeAllModalsForTabId: (state, action: PayloadAction<{tabId: string}>) => {

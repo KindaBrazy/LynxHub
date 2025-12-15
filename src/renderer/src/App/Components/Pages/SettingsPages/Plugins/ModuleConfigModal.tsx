@@ -8,8 +8,8 @@ import {CardModules, RendererModuleImportType} from '../../../../../../../cross/
 import {SettingsMinimal_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
+import {showRestartModal} from '../../../../Utils/RestartModalUtils';
 import {lynxTopToast} from '../../../../Utils/UtilHooks';
-import {ShowRestartModal} from './Elements';
 
 type CardItem = {id: string; title: string; type: string; enabled: boolean};
 type CategoryCards = {category: string; cards: CardItem[]};
@@ -137,7 +137,7 @@ export default function ModuleConfigModal({isOpen, onClose}: Props) {
       await rendererIpc.storage.update('plugin', {disabledCards});
       lynxTopToast(dispatch).success('Module configuration saved');
       onClose();
-      ShowRestartModal('To apply the changes, please restart the app.');
+      showRestartModal(dispatch, 'To apply the changes, please restart the app.');
     } catch (e) {
       lynxTopToast(dispatch).error('Failed to save configuration');
     } finally {
