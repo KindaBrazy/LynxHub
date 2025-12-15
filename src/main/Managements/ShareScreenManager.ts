@@ -28,7 +28,17 @@ export default class ShareScreenManager {
     session.defaultSession.setDisplayMediaRequestHandler(this.requestHandler);
 
     const mainWindow = appManager?.getMainWindow();
-    if (mainWindow && !mainWindow.isDestroyed()) this.mainWindow = mainWindow;
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      this.mainWindow = mainWindow;
+
+      mainWindow.on('close', () => {
+        this.mainWindow = undefined;
+        this.availableSources = [];
+        if (this.selectorWindow && !this.selectorWindow.isDestroyed()) {
+          this.selectorWindow.close();
+        }
+      });
+    }
   }
 
   private requestHandler(_: DisplayMediaRequestHandlerHandlerRequest, callback: (streams: Streams) => void) {

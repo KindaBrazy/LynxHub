@@ -436,6 +436,25 @@ export default class BrowserDownloadManager {
     }
 
     this.menuWindow.on('blur', () => this.menuWindow.hide());
+
+    this.menuWindow.on('closed', () => {
+      this.downloadingItems = [];
+      this.downloadIdentifiers.clear();
+      this.clearFilenameCache();
+    });
+
+    this.mainWindow.on('close', () => {
+      this.downloadingItems.forEach(item => {
+        try {
+          item.removeAllListeners();
+        } catch (error) {
+          console.error('Error cleaning up download item:', error);
+        }
+      });
+      this.downloadingItems = [];
+      this.downloadIdentifiers.clear();
+      this.clearFilenameCache();
+    });
   }
 
   private getItemByName(name: string) {

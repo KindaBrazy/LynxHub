@@ -52,6 +52,18 @@ export default class LinkPreviewManager {
     mainWindow.on('minimize', () => this.hide());
     mainWindow.on('move', () => this.updatePosition());
     mainWindow.on('resize', () => this.updatePosition());
+
+    this.linkPreviewWindow.on('closed', () => {
+      this.linkPreviewWindow = undefined;
+      if (this.hideTimeout) {
+        clearTimeout(this.hideTimeout);
+        this.hideTimeout = undefined;
+      }
+    });
+
+    mainWindow.on('close', () => {
+      this.mainWindow = undefined;
+    });
   }
 
   public listenForChannels() {
