@@ -38,8 +38,9 @@ import {
 } from '../../../../../Redux/Reducer/PluginsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
+import {showRestartModal} from '../../../../../Utils/RestartModalUtils';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
-import {ShowRestartModal, UpdateButton} from '../Elements';
+import {UpdateButton} from '../Elements';
 import ModuleConfigModal from '../ModuleConfigModal';
 
 type Props = {item: PluginItem; installed: PluginInstalledItem[]};
@@ -112,11 +113,11 @@ export function List_Item({item, installed}: Props) {
     rendererIpc.plugins.uninstall(item.metadata.id).then(result => {
       if (result) {
         lynxTopToast(dispatch).success(`${item.metadata.title} uninstalled successfully`);
-        ShowRestartModal('To complete the uninstallation, please restart the app.');
+        showRestartModal(dispatch, 'To complete the uninstallation, please restart the app.');
         dispatch(pluginsActions.removeInstalled(item.metadata.id));
       }
     });
-  }, [item]);
+  }, [item, dispatch]);
 
   return (
     <Card

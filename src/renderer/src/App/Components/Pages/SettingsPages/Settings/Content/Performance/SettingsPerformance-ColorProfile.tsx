@@ -1,14 +1,17 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
-import {ShowRestartModal} from '../../../Plugins/Elements';
+import {showRestartModal} from '../../../../../../Utils/RestartModalUtils';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 type ColorProfile = 'default' | 'srgb' | 'display-p3' | 'color-spin-gamma24';
 
 export default function SettingsPerformanceColorProfile() {
+  const dispatch = useDispatch<AppDispatch>();
   const [selectedKey, setSelectedKey] = useState<string>('default');
 
   useEffect(() => {
@@ -17,14 +20,17 @@ export default function SettingsPerformanceColorProfile() {
     });
   }, []);
 
-  const onChange = useCallback((keys: Selection) => {
-    if (keys !== 'all') {
-      const value = keys.values().next().value as ColorProfile;
-      rendererIpc.storage.update('performance', {forceColorProfile: value});
-      setSelectedKey(value);
-      ShowRestartModal('To apply performance changes, please restart the app.');
-    }
-  }, []);
+  const onChange = useCallback(
+    (keys: Selection) => {
+      if (keys !== 'all') {
+        const value = keys.values().next().value as ColorProfile;
+        rendererIpc.storage.update('performance', {forceColorProfile: value});
+        setSelectedKey(value);
+        showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
+      }
+    },
+    [dispatch],
+  );
 
   const labelText = 'Force Color Profile';
   const descriptionText = 'Forces a specific color output profile. Use sRGB for standard displays.';

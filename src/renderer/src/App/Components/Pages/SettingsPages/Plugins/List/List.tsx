@@ -11,9 +11,9 @@ import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {ContainersBg} from '../../../../../Utils/CrossStyle';
 import {searchInStrings} from '../../../../../Utils/UtilFunctions';
+import {showRestartModal} from '../../../../../Utils/RestartModalUtils';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import LynxScroll from '../../../../Reusable/LynxScroll';
-import {ShowRestartModal} from '../Elements';
 import {List_Item} from './List_Item';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from './List_Utils';
 
@@ -138,7 +138,7 @@ function SyncAllButton() {
       .then(synced => {
         if (!isEmpty(synced)) {
           lynxTopToast(dispatch).success(`${synced.length} of ${syncList.length} plugins synced successfully!`);
-          ShowRestartModal('To apply the changes, please restart the app.');
+          showRestartModal(dispatch, 'To apply the changes, please restart the app.');
           const updatedList = syncList
             .filter(item => synced.includes(item.id))
             .map(item => ({version: item.version, id: item.id}));

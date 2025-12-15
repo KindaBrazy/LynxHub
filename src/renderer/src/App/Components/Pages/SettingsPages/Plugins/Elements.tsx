@@ -1,6 +1,5 @@
 import {ButtonProps} from '@heroui/button';
 import {Button} from '@heroui/react';
-import {Modal} from 'antd';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -10,41 +9,8 @@ import {Download_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {pluginsActions, useIsUpdatingPlugin, usePluginsState} from '../../../../Redux/Reducer/PluginsReducer';
 import {AppDispatch} from '../../../../Redux/Store';
 import rendererIpc from '../../../../RendererIpc';
-import {isLinuxPortable, lynxTopToast} from '../../../../Utils/UtilHooks';
-
-export function ShowRestartModal(message: string) {
-  const later = Modal.destroyAll;
-
-  const restart = () => {
-    Modal.destroyAll();
-    rendererIpc.win.changeWinState('restart');
-  };
-
-  const close = () => {
-    Modal.destroyAll();
-    rendererIpc.win.changeWinState('close');
-  };
-
-  Modal.warning({
-    title: 'Restart Required',
-    content: message,
-    footer: (
-      <div className="mt-6 flex w-full flex-row justify-between">
-        <Button size="sm" variant="flat" color="warning" onPress={later}>
-          Restart Later
-        </Button>
-        <Button size="sm" color="success" onPress={isLinuxPortable ? close : restart}>
-          {isLinuxPortable ? 'Exit Now' : 'Restart Now'}
-        </Button>
-      </div>
-    ),
-    centered: true,
-    maskClosable: false,
-    rootClassName: 'scrollbar-hide',
-    styles: {mask: {top: '2.5rem'}},
-    wrapClassName: 'mt-10',
-  });
-}
+import {showRestartModal} from '../../../../Utils/RestartModalUtils';
+import {lynxTopToast} from '../../../../Utils/UtilHooks';
 
 type UpdateButtonProps = {item: PluginItem};
 export function UpdateButton({item}: UpdateButtonProps) {
@@ -78,12 +44,12 @@ export function UpdateButton({item}: UpdateButtonProps) {
     rendererIpc.plugins.sync(id, commit).then(isUpdated => {
       if (isUpdated) {
         lynxTopToast(dispatch).success(`${title} synced Successfully`);
-        ShowRestartModal('To apply the changes, please restart the app.');
+        showRestartModal(dispatch, 'To apply the changes, please restart the app.');
         dispatch(pluginsActions.updateInstalledVersion({id, version}));
       }
       dispatch(pluginsActions.removeUpdateItem({id, isUpdated}));
     });
-  }, [item, updateItem]);
+  }, [dispatch, id, title, updateItem]);
 
   return updateItem ? (
     <Button

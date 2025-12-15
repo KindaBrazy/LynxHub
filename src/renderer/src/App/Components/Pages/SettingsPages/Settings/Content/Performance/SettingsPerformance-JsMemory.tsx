@@ -1,14 +1,17 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
-import {ShowRestartModal} from '../../../Plugins/Elements';
+import {showRestartModal} from '../../../../../../Utils/RestartModalUtils';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 type JsMemorySize = 2048 | 4096 | 8192;
 
 export default function SettingsPerformanceJsMemory() {
+  const dispatch = useDispatch<AppDispatch>();
   const [selectedKey, setSelectedKey] = useState<string>('4096');
 
   useEffect(() => {
@@ -17,14 +20,17 @@ export default function SettingsPerformanceJsMemory() {
     });
   }, []);
 
-  const onChange = useCallback((keys: Selection) => {
-    if (keys !== 'all') {
-      const value = Number(keys.values().next().value) as JsMemorySize;
-      rendererIpc.storage.update('performance', {jsMaxOldSpaceSize: value});
-      setSelectedKey(String(value));
-      ShowRestartModal('To apply performance changes, please restart the app.');
-    }
-  }, []);
+  const onChange = useCallback(
+    (keys: Selection) => {
+      if (keys !== 'all') {
+        const value = Number(keys.values().next().value) as JsMemorySize;
+        rendererIpc.storage.update('performance', {jsMaxOldSpaceSize: value});
+        setSelectedKey(String(value));
+        showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
+      }
+    },
+    [dispatch],
+  );
 
   const labelText = 'JavaScript Memory Limit';
   const descriptionText =

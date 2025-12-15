@@ -1,8 +1,10 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
-import {ShowRestartModal} from '../../../Plugins/Elements';
+import {showRestartModal} from '../../../../../../Utils/RestartModalUtils';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
@@ -13,6 +15,7 @@ type AutoplayPolicy =
   | 'document-user-activation-required';
 
 export default function SettingsPerformanceAutoplay() {
+  const dispatch = useDispatch<AppDispatch>();
   const [selectedKey, setSelectedKey] = useState<string>('default');
 
   useEffect(() => {
@@ -21,14 +24,17 @@ export default function SettingsPerformanceAutoplay() {
     });
   }, []);
 
-  const onChange = useCallback((keys: Selection) => {
-    if (keys !== 'all') {
-      const value = keys.values().next().value as AutoplayPolicy;
-      rendererIpc.storage.update('performance', {autoplayPolicy: value});
-      setSelectedKey(value);
-      ShowRestartModal('To apply performance changes, please restart the app.');
-    }
-  }, []);
+  const onChange = useCallback(
+    (keys: Selection) => {
+      if (keys !== 'all') {
+        const value = keys.values().next().value as AutoplayPolicy;
+        rendererIpc.storage.update('performance', {autoplayPolicy: value});
+        setSelectedKey(value);
+        showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
+      }
+    },
+    [dispatch],
+  );
 
   const labelText = 'Media Autoplay Policy';
   const descriptionText = 'Controls autoplay behavior for audio and video elements in web pages.';

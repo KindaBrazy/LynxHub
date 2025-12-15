@@ -5,6 +5,7 @@ import CardExtensionsModal from './CardExtensions/CardExtensions';
 import GitManagerModal from './CardGitManager/CardGitManager_Modal';
 import CardInfoModal from './CardInfo/CardInfo-Modal';
 import ReadMeModal from './CardReadme_Modal';
+import {RestartModal} from './RestartModal';
 import CustomNotification from './CustomNotification/CustomNotification';
 import InstallCardModal from './InstallUI/Install-Modal';
 import LaunchConfigModal from './LaunchConfig/LaunchConfig';
@@ -29,6 +30,7 @@ const Modals = memo(() => {
       <CardExtensionsModal />
       <LaunchConfigModal />
       <GitManagerModal />
+      <RestartModal />
 
       <UpdatingNotification />
       <CustomNotification />

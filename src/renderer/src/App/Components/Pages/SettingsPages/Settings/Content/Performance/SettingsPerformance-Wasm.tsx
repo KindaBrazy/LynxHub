@@ -1,11 +1,15 @@
 import {useCallback, useEffect, useState} from 'react';
 
+import {useDispatch} from 'react-redux';
+
+import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
+import {showRestartModal} from '../../../../../../Utils/RestartModalUtils';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
-import {ShowRestartModal} from '../../../Plugins/Elements';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function SettingsPerformanceWasm() {
+  const dispatch = useDispatch<AppDispatch>();
   const [enabled, setEnabled] = useState<boolean>(true);
 
   useEffect(() => {
@@ -14,11 +18,14 @@ export default function SettingsPerformanceWasm() {
     });
   }, []);
 
-  const onEnabledChange = useCallback((selected: boolean) => {
-    rendererIpc.storage.update('performance', {enableWebAssemblySimd: selected});
-    setEnabled(selected);
-    ShowRestartModal('To apply performance changes, please restart the app.');
-  }, []);
+  const onEnabledChange = useCallback(
+    (selected: boolean) => {
+      rendererIpc.storage.update('performance', {enableWebAssemblySimd: selected});
+      setEnabled(selected);
+      showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
+    },
+    [dispatch],
+  );
 
   const titleText = 'WebAssembly SIMD';
   const descriptionText = 'Enables SIMD optimizations for WebAssembly applications. Improves WASM performance.';

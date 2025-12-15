@@ -1,11 +1,14 @@
 import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {AppDispatch} from '../../../../../../Redux/Store';
 import rendererIpc from '../../../../../../RendererIpc';
+import {showRestartModal} from '../../../../../../Utils/RestartModalUtils';
 import LynxSwitch from '../../../../../Reusable/LynxSwitch';
-import {ShowRestartModal} from '../../../Plugins/Elements';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function SettingsPerformanceVideoDecoding() {
+  const dispatch = useDispatch<AppDispatch>();
   const [enabled, setEnabled] = useState<boolean>(true);
 
   useEffect(() => {
@@ -14,11 +17,14 @@ export default function SettingsPerformanceVideoDecoding() {
     });
   }, []);
 
-  const onEnabledChange = useCallback((selected: boolean) => {
-    rendererIpc.storage.update('performance', {enableAcceleratedVideoDecode: selected});
-    setEnabled(selected);
-    ShowRestartModal('To apply performance changes, please restart the app.');
-  }, []);
+  const onEnabledChange = useCallback(
+    (selected: boolean) => {
+      rendererIpc.storage.update('performance', {enableAcceleratedVideoDecode: selected});
+      setEnabled(selected);
+      showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
+    },
+    [dispatch],
+  );
 
   const titleText = 'Hardware Video Decoding';
   const descriptionText = 'Uses GPU for video decoding. Disable if experiencing video playback issues or crashes.';
