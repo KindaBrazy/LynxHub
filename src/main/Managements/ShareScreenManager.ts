@@ -131,6 +131,8 @@ export default class ShareScreenManager {
       height: 480,
       resizable: false,
       maximizable: false,
+      minimizable: false,
+      titleBarStyle: process.platform === 'darwin' ? 'customButtonsOnHover' : 'default',
       skipTaskbar: true,
       parent: this.mainWindow,
       modal: true,

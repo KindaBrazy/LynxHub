@@ -72,6 +72,8 @@ export default class BrowserDownloadManager {
     skipTaskbar: true,
     resizable: false,
     maximizable: false,
+    minimizable: false,
+    titleBarStyle: process.platform === 'darwin' ? 'customButtonsOnHover' : 'default',
     icon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs'),

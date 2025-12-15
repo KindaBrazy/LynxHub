@@ -42,6 +42,8 @@ export default class ElectronAppManager {
     height: 350,
     resizable: false,
     maximizable: false,
+    minimizable: false,
+    titleBarStyle: process.platform === 'darwin' ? 'customButtonsOnHover' : 'default',
     icon,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
