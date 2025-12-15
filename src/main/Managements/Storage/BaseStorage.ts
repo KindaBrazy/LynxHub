@@ -32,7 +32,7 @@ class BaseStorage {
 
   private readonly CURRENT_VERSION: number = 0.92;
   private migratedTo: number = 0; // Tracks migration state for deferred operations
-  private isInitializing: boolean = true; // Flag to skip breadcrumbs during initialization
+  private readonly isInitializing: boolean = true; // Flag to skip breadcrumbs during initialization
 
   private readonly DEFAULT_DATA: StorageTypes = {
     storage: {version: 0.92},

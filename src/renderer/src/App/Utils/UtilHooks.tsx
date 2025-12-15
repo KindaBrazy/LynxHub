@@ -1,16 +1,13 @@
 import {addToast, Button} from '@heroui/react';
 import {Dispatch} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {Fragment, useEffect, useMemo, useState} from 'react';
 
 import {ChangelogItem} from '../../../../cross/CrossTypes';
 import {InstalledCard} from '../../../../cross/StorageTypes';
 import {appActions} from '../Redux/Reducer/AppReducer';
-import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
+import {useCardsState} from '../Redux/Reducer/CardsReducer';
 import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
-import {tabsActions, useTabsState} from '../Redux/Reducer/TabsReducer';
-import {AppDispatch} from '../Redux/Store';
 import rendererIpc from '../RendererIpc';
 import {HeroToastPlacement} from './Types';
 
@@ -57,27 +54,6 @@ export function useIsAutoUpdateCard(cardId: string): boolean {
 export function useIsAutoUpdateExtensions(cardId: string): boolean {
   const autoUpdate = useCardsState('autoUpdateExtensions');
   return useMemo(() => autoUpdate.includes(cardId), [autoUpdate, cardId]);
-}
-
-export function useStopAI() {
-  const runningCards = useCardsState('runningCard');
-  const activeTab = useTabsState('activeTab');
-
-  const dispatch = useDispatch<AppDispatch>();
-
-  return useCallback(
-    (id: string) => {
-      const runningCard = runningCards.find(card => card.id === id);
-      if (!runningCard) return;
-
-      rendererIpc.pty.stop(runningCard.id);
-
-      dispatch(tabsActions.setActiveTabLoading(false));
-      dispatch(tabsActions.setTabIsTerminal({tabID: activeTab, isTerminal: false}));
-      dispatch(cardsActions.stopRunningCard({tabId: activeTab}));
-    },
-    [runningCards, activeTab, dispatch],
-  );
 }
 
 /**

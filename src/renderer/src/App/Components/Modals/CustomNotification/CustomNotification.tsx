@@ -38,7 +38,7 @@ export default function CustomNotification() {
             )}
           </div>
         ),
-        message: <span className="font-semibold">{data.message}</span>,
+        title: <span className="font-semibold">{data.message}</span>,
         description: data.description,
         duration: 0,
         key: data.key,

@@ -1111,18 +1111,16 @@ const rendererIpc = {
     },
 
     // Listens for tab volume updates from context menu
-    onTabVolumeUpdate: (callback: (tabId: string, volume: number) => void) => {
-      const handler = (_: IpcRendererEvent, tabId: string, volume: number) => callback(tabId, volume);
-      ipc.on(volumeChannels.onTabVolumeUpdate, handler);
-      return () => ipc.removeListener(volumeChannels.onTabVolumeUpdate, handler);
-    },
+    onTabVolumeUpdate: (callback: (tabId: string, volume: number) => void) =>
+      ipc.on(volumeChannels.onTabVolumeUpdate, (_: IpcRendererEvent, tabId: string, volume: number) =>
+        callback(tabId, volume),
+      ),
 
     // Listens for tab muted updates from context menu
-    onTabMutedUpdate: (callback: (tabId: string, muted: boolean) => void) => {
-      const handler = (_: IpcRendererEvent, tabId: string, muted: boolean) => callback(tabId, muted);
-      ipc.on(volumeChannels.onTabMutedUpdate, handler);
-      return () => ipc.removeListener(volumeChannels.onTabMutedUpdate, handler);
-    },
+    onTabMutedUpdate: (callback: (tabId: string, muted: boolean) => void) =>
+      ipc.on(volumeChannels.onTabMutedUpdate, (_: IpcRendererEvent, tabId: string, muted: boolean) =>
+        callback(tabId, muted),
+      ),
   },
 
   statics: {

@@ -99,9 +99,9 @@ export default function RenderItem({item, updateTable, dir, searchValue}: Props)
                   searchWords={searchValue.split(' ')}
                 />
               </Typography.Link>
-              <Tag bordered={false}>{capitalize(extractGitUrl(item.url).owner)}</Tag>
+              <Tag variant="filled">{capitalize(extractGitUrl(item.url).owner)}</Tag>
               {item.stars && (
-                <Tag bordered={false} className="flex flex-row items-center justify-center gap-x-1">
+                <Tag variant="filled" className="flex flex-row items-center justify-center gap-x-1">
                   <Star_Icon className={item.stars >= 1000 ? 'fill-yellow-400' : 'fill-yellow-200'} />
                   {formatNumber(item.stars)}
                 </Tag>

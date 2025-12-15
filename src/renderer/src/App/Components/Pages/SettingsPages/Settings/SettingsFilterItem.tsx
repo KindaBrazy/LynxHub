@@ -23,12 +23,3 @@ const SettingsFilterItem = ({searchTexts, children}: Props) => {
 };
 
 export default SettingsFilterItem;
-
-export const useSettingsItemVisible = (searchTexts: (string | undefined)[]): boolean => {
-  const searchValue = useSettingsSearchQuery();
-
-  return useMemo(() => {
-    if (!searchValue) return true;
-    return searchInStrings(searchValue, searchTexts);
-  }, [searchTexts, searchValue]);
-};

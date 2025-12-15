@@ -38,8 +38,8 @@ const volumeSlice = createSlice({
   reducers: {
     setTabVolume: (state: VolumeState, action: PayloadAction<{tabId: string; volume: number}>) => {
       const {tabId, volume} = action.payload;
-      const clampedVolume = Math.max(0, Math.min(100, volume));
-      state.tabVolumes[tabId] = clampedVolume;
+
+      state.tabVolumes[tabId] = Math.max(0, Math.min(100, volume));
     },
     setTabMuted: (state: VolumeState, action: PayloadAction<{tabId: string; muted: boolean}>) => {
       const {tabId, muted} = action.payload;

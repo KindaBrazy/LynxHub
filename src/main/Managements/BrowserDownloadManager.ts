@@ -671,8 +671,7 @@ export default class BrowserDownloadManager {
 
     ipcMain.handle(browserDownloadChannels.setDownloadLocation, (_, path: string) => {
       try {
-        const result = this.setDownloadLocation(path);
-        return result;
+        return this.setDownloadLocation(path);
       } catch (error: any) {
         const fsError = this.handleFileSystemError(error);
         return {success: false, error: fsError.userMessage};

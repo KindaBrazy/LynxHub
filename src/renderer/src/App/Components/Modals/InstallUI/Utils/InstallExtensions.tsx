@@ -1,5 +1,6 @@
 import {Spinner} from '@heroui/react';
-import {StepProps, Steps} from 'antd';
+import {Steps} from 'antd';
+import {BaseStepsProps} from 'antd/es/steps';
 import {startCase} from 'lodash';
 import {RefObject, useEffect, useState} from 'react';
 
@@ -13,11 +14,11 @@ type Props = {
 
 export default function InstallExtensions({extensionsURLs, extensionsResolver}: Props) {
   const [current, setCurrent] = useState<number>(0);
-  const [steps, setSteps] = useState<StepProps[]>([]);
+  const [steps, setSteps] = useState<BaseStepsProps['items']>([]);
 
   useEffect(() => {
     setSteps(prevState =>
-      prevState.map((step, index) => {
+      (prevState || []).map((step, index) => {
         if (index === current) {
           return {...step, icon: <Spinner />};
         } else {
@@ -67,7 +68,7 @@ export default function InstallExtensions({extensionsURLs, extensionsResolver}: 
   return (
     <div className="flex flex-col items-center justify-center space-y-8">
       <span className="mt-4 text-xl font-semibold">Installing extensions, Please wait...</span>
-      <Steps items={steps} current={current} direction="vertical" className="ml-10 w-fit" />
+      <Steps items={steps} current={current} orientation="vertical" className="ml-10 w-fit" />
     </div>
   );
 }

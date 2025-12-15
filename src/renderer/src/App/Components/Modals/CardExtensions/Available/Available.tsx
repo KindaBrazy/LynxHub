@@ -91,6 +91,15 @@ export default function Available({visible, updateTable, installedExtensions, id
         </div>
       ) : (
         <List
+          pagination={
+            searchedData.length <= pageSize
+              ? false
+              : {
+                  onShowSizeChange: onPageSizeChange,
+                  align: 'center',
+                  pageSize: pageSize,
+                }
+          }
           locale={{
             emptyText: (
               <Empty
@@ -100,16 +109,6 @@ export default function Available({visible, updateTable, installedExtensions, id
               />
             ),
           }}
-          pagination={
-            searchedData.length <= pageSize
-              ? false
-              : {
-                  onShowSizeChange: onPageSizeChange,
-                  align: 'center',
-                  pageSize: pageSize,
-                  showTotal: total => `Extensions Available: ${total}`,
-                }
-          }
           split={false}
           itemLayout="vertical"
           dataSource={searchedData}
