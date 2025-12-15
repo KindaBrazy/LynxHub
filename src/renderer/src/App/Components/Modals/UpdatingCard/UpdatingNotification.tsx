@@ -34,7 +34,7 @@ const UpdatingNotification = () => {
         notification.error({
           key: `${card.devName}-update-error`,
           description: <div className="whitespace-pre-line">{typeof result === 'string' && result}</div>,
-          message: (
+          title: (
             <div className="whitespace-pre-line">
               Failed to Update {card.title} ({card.devName})
             </div>
@@ -94,7 +94,7 @@ const UpdatingNotification = () => {
           duration: 0,
           key: `${card.devName}-updateDetails`,
           className: '!top-10 dark:bg-foreground-100 !shadow-medium !overflow-hidden rounded-xl',
-          message: (
+          title: (
             <span className="font-semibold">
               {card.title} ({card.devName}) Updated Successfully
             </span>

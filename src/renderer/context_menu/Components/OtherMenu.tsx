@@ -1,5 +1,6 @@
 import {Button, Input, Slider} from '@heroui/react';
 import {isArray, isEmpty} from 'lodash';
+import type {KeyboardEvent} from 'react';
 import {useEffect, useState} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
@@ -116,7 +117,7 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
     setTimeout(() => inputRef?.focus(), 0);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (isEmpty(searchValue)) return;
 
     if (e.key === 'ArrowDown') {

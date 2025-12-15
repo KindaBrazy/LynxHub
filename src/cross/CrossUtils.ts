@@ -90,9 +90,8 @@ export function convertStorageUnit(
 
   // Step B: Convert the value in Bytes to the desired target unit
   const targetFactor = UNIT_FACTORS[targetKey];
-  const convertedValue = valueInBytes / targetFactor;
 
-  return convertedValue;
+  return valueInBytes / targetFactor;
 }
 
 /**

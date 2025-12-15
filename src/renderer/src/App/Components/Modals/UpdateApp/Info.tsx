@@ -48,7 +48,7 @@ export default function Info({updateInfo, items}: Props) {
                 window.open(RELEASES_PAGE);
               }}
               type="link"
-              iconPosition="end"
+              iconPlacement="end"
               icon={<ExternalLink_Icon />}
               block>
               Releases Page

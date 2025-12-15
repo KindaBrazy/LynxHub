@@ -20,7 +20,7 @@ const renderChangelogEntry = (item: ChangelogSubItem, depth = 0, key: string | n
             className={`w-2 h-2 rounded-full mt-1.5 shrink-0 transition-colors duration-200 ${
               depth > 0
                 ? 'bg-foreground-400 group-hover:bg-foreground-500'
-                : 'bg-gradient-to-br from-blue-500 to-blue-600 group-hover:shadow-lg group-hover:shadow-blue-500/50'
+                : 'bg-linear-to-br from-blue-500 to-blue-600 group-hover:shadow-lg group-hover:shadow-blue-500/50'
             }`}
             whileHover={{scale: 1.3}}
           />
@@ -64,9 +64,9 @@ const Changelog = ({items}: {items: ChangelogItem}) => (
         initial={{opacity: 0, y: 20}}
         transition={{duration: 0.5, delay: idx * 0.1}}>
         <div className="flex items-center gap-3 mb-3">
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-foreground-200 to-transparent" />
+          <div className="h-px flex-1 bg-linear-to-r from-transparent via-foreground-200 to-transparent" />
           <Chip variant="flat">{category}</Chip>
-          <div className="h-px flex-1 bg-gradient-to-r from-transparent via-foreground-200 to-transparent" />
+          <div className="h-px flex-1 bg-linear-to-r from-transparent via-foreground-200 to-transparent" />
         </div>
         <div className="space-y-2">{entries.map((entry, index) => renderChangelogEntry(entry, 0, index))}</div>
       </motion.div>
@@ -139,7 +139,7 @@ const ChangelogList = memo(() => {
               {index < (selectedPlugin?.changes.length || 0) - 1 && (
                 <motion.div
                   className={
-                    'absolute left-6 top-full w-0.5 h-6 bg-gradient-to-b ' +
+                    'absolute left-6 top-full w-0.5 h-6 bg-linear-to-b ' +
                     'from-foreground-300 to-transparent origin-top'
                   }
                   initial={{scaleY: 0}}

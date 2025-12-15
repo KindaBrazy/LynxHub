@@ -83,11 +83,11 @@ const TabContainer = memo(() => {
               value={tab.id}
               layout="position"
               initial={{scale: 0.8, y: 10, x: 20, opacity: 0}}
-              className="h-full flex items-center max-w-60 min-w-[6rem]"
+              className="h-full flex items-center max-w-60 min-w-24"
               exit={{scale: 0.5, y: 10, x: 20, transition: {duration: 0.07, ease: 'backIn'}}}
               animate={{scale: 1, y: 0, x: 0, opacity: 1, transition: {duration: 0.25, ease: 'backOut'}}}>
               <TabItem tab={tab} key={tab.id} />
-              {index < localTabs.length - 1 && <Divider type="vertical" className="mx-1" />}
+              {index < localTabs.length - 1 && <Divider className="mx-1" orientation="vertical" />}
             </Reorder.Item>
           ))}
         </AnimatePresence>
