@@ -1,4 +1,16 @@
-import {Button, Card, CardBody, CardFooter, CardHeader, Chip, Link, Progress, Tooltip, User} from '@heroui/react';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Chip,
+  Link,
+  Progress,
+  Tooltip,
+  useDisclosure,
+  User,
+} from '@heroui/react';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
@@ -13,6 +25,7 @@ import {
   Linux_Icon,
   MacOS_Icon,
   QuestionCircle_Icon,
+  SettingsMinimal_Icon,
   ShieldWarning_Icon,
   TrashDuo_Icon,
   Windows_Icon,
@@ -27,6 +40,7 @@ import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import {ShowRestartModal, UpdateButton} from '../Elements';
+import ModuleConfigModal from '../ModuleConfigModal';
 
 type Props = {item: PluginItem; installed: PluginInstalledItem[]};
 export function List_Item({item, installed}: Props) {
@@ -35,6 +49,7 @@ export function List_Item({item, installed}: Props) {
   const skipped = usePluginsState('unloadedList');
   const isInstalling = useIsInstallingPlugin(item.metadata.id);
   const isUnInstalling = useIsUninstallingPlugin(item.metadata.id);
+  const configModal = useDisclosure();
 
   const syncList = usePluginsState('syncList');
 
@@ -198,15 +213,33 @@ export function List_Item({item, installed}: Props) {
           {darwin && <MacOS_Icon className="size-4" />}
 
           {foundInstalled && (
-            <Chip
-              size="sm"
-              radius="sm"
-              variant="flat"
-              color="primary"
-              className="ml-2"
-              startContent={<CheckDuo_Icon />}>
-              Installed
-            </Chip>
+            <>
+              <Chip
+                size="sm"
+                radius="sm"
+                variant="flat"
+                color="primary"
+                className="ml-2"
+                startContent={<CheckDuo_Icon />}>
+                Installed
+              </Chip>
+              {!isExtension && (
+                <>
+                  <ModuleConfigModal isOpen={configModal.isOpen} onClose={configModal.onClose} />
+                  <Tooltip delay={500} content="Configure Tools">
+                    <Button
+                      size="sm"
+                      variant="flat"
+                      color="secondary"
+                      onPress={configModal.onOpen}
+                      className="ml-1 min-w-0 px-2"
+                      isIconOnly>
+                      <SettingsMinimal_Icon className="size-4" />
+                    </Button>
+                  </Tooltip>
+                </>
+              )}
+            </>
           )}
 
           {foundUnloaded && (
