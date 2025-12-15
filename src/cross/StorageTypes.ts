@@ -109,6 +109,7 @@ type StorageTypes = {
   };
   plugin: {
     migrated: boolean;
+    disabledCards: string[];
   };
   performance: {
     forceColorProfile: 'default' | 'srgb' | 'display-p3' | 'color-spin-gamma24';

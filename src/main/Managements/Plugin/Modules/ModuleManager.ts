@@ -79,10 +79,15 @@ export default class ModuleManager {
         return;
       }
 
+      // Get disabled cards from storage
+      const disabledCards = new Set(storageManager.getData('plugin').disabledCards || []);
+
       if (isDev()) {
         const initialModule: MainModuleImportType = await import('../../../../../module/src/main');
-        const method = await initialModule.default(utils);
-        this.mainMethods.push(...method);
+        const allMethods = await initialModule.default(utils);
+        // Filter out disabled cards
+        const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
+        this.mainMethods.push(...enabledMethods);
       } else {
         const importedModules: (MainModuleImportType | null)[] = await Promise.all(
           moduleFolders.map(async modulePath => {
@@ -101,8 +106,10 @@ export default class ModuleManager {
         const loadedModules = compact(importedModules);
 
         for (const importedModule of loadedModules) {
-          const method = await importedModule.default(utils);
-          this.mainMethods.push(...method);
+          const allMethods = await importedModule.default(utils);
+          // Filter out disabled cards
+          const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
+          this.mainMethods.push(...enabledMethods);
         }
       }
     } catch (e) {
