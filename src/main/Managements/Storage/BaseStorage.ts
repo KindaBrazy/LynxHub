@@ -30,12 +30,12 @@ import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
-  private readonly CURRENT_VERSION: number = 0.92;
+  private readonly CURRENT_VERSION: number = 0.93;
   private migratedTo: number = 0; // Tracks migration state for deferred operations
   private readonly isInitializing: boolean = true; // Flag to skip breadcrumbs during initialization
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.92},
+    storage: {version: 0.93},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -111,7 +111,7 @@ class BaseStorage {
     notification: {
       readNotifs: [],
     },
-    plugin: {migrated: true},
+    plugin: {migrated: true, disabledCards: []},
     performance: {
       forceColorProfile: 'default',
       highDpiSupport: false,
@@ -285,6 +285,7 @@ class BaseStorage {
         [
           0.86,
           () => {
+            // @ts-expect-error: in old versions, there isn't disable cards
             this.storage.data.plugin = {migrated: false};
           },
         ],
@@ -392,6 +393,15 @@ class BaseStorage {
                 globalMuted: false,
                 tabVolumes: {},
               };
+            }
+          },
+        ],
+        [
+          0.93,
+          () => {
+            // Add disabledCards for module card filtering
+            if (!this.storage.data.plugin.disabledCards) {
+              this.storage.data.plugin.disabledCards = [];
             }
           },
         ],

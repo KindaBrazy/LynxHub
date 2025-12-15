@@ -270,10 +270,15 @@ async function emitLoaded(
  * Loads all modules and their associated cards.
  * This function fetches module data, imports the corresponding modules,
  * and sets the `allModules` and `allCards` variables.
+ * Disabled cards are filtered out based on user configuration.
  */
 const loadModules = async () => {
   try {
     let importedModules: ({path: string; module: RendererModuleImportType} | null)[];
+
+    // Get disabled cards from storage
+    const pluginStorage = await rendererIpc.storage.get('plugin');
+    const disabledCards = new Set(pluginStorage.disabledCards || []);
 
     if (isDev()) {
       const devImport = await import('../../../../../module/src/renderer');
@@ -310,22 +315,26 @@ const loadModules = async () => {
       const importedModule = module as RendererModuleImportType;
 
       importedModule.default.forEach(mod => {
+        // Filter out disabled cards
+        const enabledCards = mod.cards.filter(card => !disabledCards.has(card.id));
+        if (enabledCards.length === 0) return;
+
         const existingModuleIndex = newAllModules.findIndex(m => m.routePath === mod.routePath);
 
         if (existingModuleIndex !== -1) {
           // Add new cards to existing module, avoiding duplicates
           const existingModule = newAllModules[existingModuleIndex];
-          mod.cards.forEach(card => {
+          enabledCards.forEach(card => {
             if (!existingModule.cards.some(c => c.id === card.id)) {
               existingModule.cards.push(card);
               newAllCards.push(card);
             }
           });
         } else {
-          newAllModules.push(mod);
-          newAllCards.push(...mod.cards);
+          newAllModules.push({...mod, cards: enabledCards});
+          newAllCards.push(...enabledCards);
 
-          mod.cards.forEach(card => {
+          enabledCards.forEach(card => {
             const {arguments: args, methods, ...restOfCard} = card;
             newCardDataWithPath.push({...restOfCard, routePath: mod.routePath});
             newCardArguments.push({id: card.id, arguments: args});

@@ -1,10 +1,10 @@
-import {Button} from '@heroui/react';
+import {Button, useDisclosure} from '@heroui/react';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
-import {Download2_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
+import {Download2_Icon, SettingsMinimal_Icon, Trash_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/PluginsReducer';
 import {useTabsState} from '../../../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
@@ -12,6 +12,7 @@ import rendererIpc from '../../../../../RendererIpc';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import SecurityWarning from '../../SecurityWarning';
 import {ShowRestartModal, UpdateButton} from '../Elements';
+import ModuleConfigModal from '../ModuleConfigModal';
 import Versions from './Versions';
 
 type Props = {installed: boolean; currentVersion: string};
@@ -22,6 +23,10 @@ export default function ActionButtons({installed, currentVersion}: Props) {
   const installing = usePluginsState('installing');
   const unInstalling = usePluginsState('unInstalling');
   const activeTab = useTabsState('activeTab');
+
+  const configModal = useDisclosure();
+
+  const isModule = useMemo(() => selectedPlugin?.metadata.type === 'module', [selectedPlugin]);
 
   const isInstalling = useMemo(
     () => installing.includes(selectedPlugin?.metadata.id || ''),
@@ -98,8 +103,19 @@ export default function ActionButtons({installed, currentVersion}: Props) {
         title={selectedPlugin?.metadata.title}
         owner={extractGitUrl(selectedPlugin?.url || '').owner}
       />
+      {isModule && installed && <ModuleConfigModal isOpen={configModal.isOpen} onClose={configModal.onClose} />}
       {installed && <Versions currentVersion={currentVersion} />}
       <div className="flex flex-row items-center gap-x-2">
+        {isModule && installed && (
+          <Button
+            size="sm"
+            variant="flat"
+            color="secondary"
+            onPress={configModal.onOpen}
+            startContent={<SettingsMinimal_Icon />}>
+            Configure
+          </Button>
+        )}
         <UpdateButton item={selectedPlugin!} />
         {installed ? (
           <Button
