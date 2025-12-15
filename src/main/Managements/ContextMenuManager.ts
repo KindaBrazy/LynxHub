@@ -27,6 +27,8 @@ export default class ContextMenuManager {
     maximizable: false,
     skipTaskbar: true,
     useContentSize: true,
+    minimizable: false,
+    titleBarStyle: process.platform === 'darwin' ? 'customButtonsOnHover' : 'default',
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
       sandbox: false,
