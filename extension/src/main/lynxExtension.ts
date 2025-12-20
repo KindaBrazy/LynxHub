@@ -22,9 +22,6 @@ export async function initialExtension(lynxApi: ExtensionMainApi, utils: MainExt
   utils.getStorageManager().then(storageManager => {
     storeManager = storageManager;
   });
-  utils.getModuleManager().then(moduleManager => {
-    console.log('Extension moduleManager: ', moduleManager.getInstalledPluginInfo());
-  });
 
   lynxApi.trayMenu_AddItem(trayMenu_AddItem);
   lynxApi.listenForChannels(listenForChannels);
