@@ -77,7 +77,7 @@ export default defineConfig([
         {
           type: 'line-length',
           order: 'asc',
-          groups: ['multiline', 'unknown', 'shorthand'],
+          groups: ['multiline-prop', 'unknown', 'shorthand-prop'],
         },
       ],
 
