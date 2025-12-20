@@ -5,8 +5,6 @@ import {Button} from '@heroui/react';
 import {ExtensionRendererApi} from '../../../src/cross/plugin/ExtensionTypes_Renderer_Api';
 import CardsAddMenu from './Components/Cards_AddMenu';
 import {
-  AddContentButton,
-  AddSettingsButton,
   Background,
   CustomHook,
   HomePage_ReplaceCategories,
@@ -65,10 +63,6 @@ export function InitialExtensions(lynxAPI: ExtensionRendererApi, extensionId: st
   // Add custom reducer to app
   lynxAPI.addReducer([{name: 'extension', reducer: extensionReducer}]);
   lynxAPI.customizePages.audio.add.scrollBottom(ReducerTester);
-
-  // Add new pages
-  lynxAPI.navBar.addButton.contentBar(AddContentButton);
-  lynxAPI.navBar.addButton.settingsBar(AddSettingsButton);
 
   // Customize existing pages
   lynxAPI.customizePages.settings.add.navButton(SettingsNavButton);

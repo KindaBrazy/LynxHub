@@ -3,31 +3,13 @@ import {Fragment, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {CardElementProps} from '../../../../src/cross/plugin/ExtensionTypes_Renderer';
-import NavButton from '../../../../src/renderer/src/App/Components/NavBar/NavButton';
 import {useAppState} from '../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
-import {Reddit_Icon, XSite_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 import {extensionActions, useExtensionState} from '../reducer';
 
 // @ts-ignore
 export function StatusBarEnd({className, ...props}: ElementProps) {
   const darkMode = useAppState('darkMode');
   return <span className={darkMode ? 'text-danger' : 'text-success'}>Hello End</span>;
-}
-
-export function AddContentButton() {
-  return (
-    <NavButton badge={false} pageId="extContentPath" title="Ext Content Btn" key={'ext-content-btn'}>
-      <Reddit_Icon className="size-full" />
-    </NavButton>
-  );
-}
-
-export function AddSettingsButton() {
-  return (
-    <NavButton badge={false} pageId="extSettingPath" title="Ext Setting Btn" key={'ext-setting-btn'}>
-      <XSite_Icon className="size-full" />
-    </NavButton>
-  );
 }
 
 export function CustomHook() {
