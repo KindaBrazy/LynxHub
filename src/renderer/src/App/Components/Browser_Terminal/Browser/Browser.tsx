@@ -44,19 +44,12 @@ const Browser = memo(({runningCard}: Props) => {
         const tabVolume = tabVolumes[tabId] ?? 100;
         const isTabMuted = tabMuted[tabId] || false;
 
-        try {
-          await rendererIpc.volume.setVolume(id, tabVolume);
-        } catch (error) {
-          console.error('Failed to set initial volume:', error);
-        }
+        // These calls may silently fail during page load - that's expected
+        await rendererIpc.volume.setVolume(id, tabVolume);
 
         // Apply effective mute (tab muted OR global muted)
         const effectiveMute = isTabMuted || globalMuted;
-        try {
-          await rendererIpc.volume.setMuted(id, effectiveMute);
-        } catch (error) {
-          console.error('Failed to set initial mute:', error);
-        }
+        await rendererIpc.volume.setMuted(id, effectiveMute);
       };
 
       applyVolumeSettings();

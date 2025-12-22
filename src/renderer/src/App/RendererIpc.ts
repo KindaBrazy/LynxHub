@@ -1045,14 +1045,13 @@ const rendererIpc = {
     setVolume: async (id: string, volume: number): Promise<void> => {
       extensionRendererApi.events_ipc.emit('volume_set_volume', {id, volume});
       try {
-        // Add timeout to IPC call (5 seconds)
+        // Add timeout to IPC call (8 seconds - allows main process to handle its own timeout first)
         await Promise.race([
           ipc.invoke(volumeChannels.setVolume, id, volume),
-          new Promise<void>((_, reject) => setTimeout(() => reject(new Error('Volume set operation timed out')), 5000)),
+          new Promise<void>((_, reject) => setTimeout(() => reject(new Error('Volume set operation timed out')), 8000)),
         ]);
-      } catch (error) {
-        console.error('Failed to set volume:', error);
-        throw error;
+      } catch {
+        // Volume setting can fail during page load - this is expected and handled by main process
       }
     },
 
@@ -1060,14 +1059,13 @@ const rendererIpc = {
     setMuted: async (id: string, muted: boolean): Promise<void> => {
       extensionRendererApi.events_ipc.emit('volume_set_muted', {id, muted});
       try {
-        // Add timeout to IPC call (5 seconds)
+        // Add timeout to IPC call (8 seconds)
         await Promise.race([
           ipc.invoke(volumeChannels.setMuted, id, muted),
-          new Promise<void>((_, reject) => setTimeout(() => reject(new Error('Mute set operation timed out')), 5000)),
+          new Promise<void>((_, reject) => setTimeout(() => reject(new Error('Mute set operation timed out')), 8000)),
         ]);
-      } catch (error) {
-        console.error('Failed to set mute state:', error);
-        throw error;
+      } catch {
+        // Mute setting can fail during page load - this is expected
       }
     },
 
