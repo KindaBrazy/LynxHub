@@ -48,6 +48,7 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
 
   return (
     <Button
+      as="div"
       size="sm"
       variant="light"
       aria-label={ariaLabel}
