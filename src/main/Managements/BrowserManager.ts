@@ -401,9 +401,27 @@ export default class BrowserManager {
         return;
       }
 
+      // Wait for page to be ready for script execution
+      if (webContents.isLoading()) {
+        await new Promise<void>(resolve => {
+          const onFinish = () => {
+            webContents.off('did-finish-load', onFinish);
+            webContents.off('did-fail-load', onFinish);
+            resolve();
+          };
+          webContents.once('did-finish-load', onFinish);
+          webContents.once('did-fail-load', onFinish);
+          // Timeout fallback in case events don't fire
+          setTimeout(resolve, 2000);
+        });
+      }
+
+      // Re-check after waiting
+      if (webContents.isDestroyed()) return;
+
       const volumeDecimal = Math.max(0, Math.min(100, volume)) / 100;
 
-      await webContents.executeJavaScript(`
+      const script = `
         (function() {
           // Set volume on all existing audio/video elements
           document.querySelectorAll('audio, video').forEach(el => {
@@ -437,9 +455,16 @@ export default class BrowserManager {
           // Store volume for new elements
           window.__lynxVolume = ${volumeDecimal};
         })();
-      `);
+      `;
+
+      // Execute with timeout to prevent hanging
+      await Promise.race([
+        webContents.executeJavaScript(script, true),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Script execution timeout')), 3000)),
+      ]);
     } catch (error) {
-      console.error('Error setting volume:', error);
+      // Silently handle timeout/execution errors - volume will be applied when user interacts with media
+      console.warn('Volume set skipped:', error instanceof Error ? error.message : error);
     }
   }
 
