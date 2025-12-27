@@ -20,6 +20,7 @@ export function useVolumeMenu(setElements: SetElementsType, setWidthSize: SetWid
   const [isGlobalMuted, setIsGlobalMuted] = useState<boolean>(false);
   const [toggle, setToggle] = useState<boolean>(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const volumeIpcTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleVolumeChange = useCallback(
     (value: number | number[]) => {
@@ -28,10 +29,15 @@ export function useVolumeMenu(setElements: SetElementsType, setWidthSize: SetWid
       const clampedVolume = Math.max(0, Math.min(100, newVolume));
       setVolume(clampedVolume);
 
-      // Apply volume immediately for real-time feedback
-      rendererIpc.volume.setVolume(data.id, clampedVolume).catch(error => {
-        console.error('Failed to set volume:', error);
-      });
+      // Debounce the IPC call to avoid flooding main process
+      if (volumeIpcTimerRef.current) {
+        clearTimeout(volumeIpcTimerRef.current);
+      }
+      volumeIpcTimerRef.current = setTimeout(() => {
+        rendererIpc.volume.setVolume(data.id, clampedVolume).catch(error => {
+          console.error('Failed to set volume:', error);
+        });
+      }, 50);
 
       // Debounce Redux state update to avoid excessive updates
       if (debounceTimerRef.current) {
