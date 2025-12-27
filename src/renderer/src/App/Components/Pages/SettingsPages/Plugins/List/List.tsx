@@ -10,8 +10,8 @@ import {pluginsActions, usePluginsState} from '../../../../../Redux/Reducer/Plug
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {ContainersBg} from '../../../../../Utils/CrossStyle';
-import {searchInStrings} from '../../../../../Utils/UtilFunctions';
 import {showRestartModal} from '../../../../../Utils/RestartModalUtils';
+import {searchInStrings} from '../../../../../Utils/UtilFunctions';
 import {lynxTopToast} from '../../../../../Utils/UtilHooks';
 import LynxScroll from '../../../../Reusable/LynxScroll';
 import {List_Item} from './List_Item';
