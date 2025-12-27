@@ -68,6 +68,7 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
                 key="ChatGPT"
                 endContent={endContent}
                 onPress={() => searchSelectedText('ChatGPT')}
+                // eslint-disable-next-line perfectionist/sort-jsx-props
                 startContent={
                   <Image alt="ChatGPT icon" className="size-4" src="https://chat.openai.com/favicon.ico" />
                 }>
