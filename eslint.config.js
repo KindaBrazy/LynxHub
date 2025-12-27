@@ -65,6 +65,7 @@ export default defineConfig([
       'react/display-name': 'off',
       'react/react-in-jsx-scope': 'off',
       'react/no-unescaped-entities': 'off',
+      'react-hooks/immutability': 'off',
 
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',

@@ -40,7 +40,12 @@ const SettingsSectionSkeleton = ({itemCount}: {itemCount: number}) => {
 /** Skeleton for a single setting item with title, description, and toggle */
 const SettingItemSkeleton = () => {
   return (
-    <div className="inline-flex w-full max-w-full flex-row-reverse items-center justify-between gap-2 rounded-lg border-2 border-transparent bg-foreground-100 px-4 py-2.5 transition duration-300 hover:bg-foreground-50">
+    <div
+      className={
+        'inline-flex w-full max-w-full flex-row-reverse items-center justify-between' +
+        ' gap-2 rounded-lg border-2 border-transparent bg-foreground-100' +
+        ' px-4 py-2.5 transition duration-300 hover:bg-foreground-50'
+      }>
       {/* Right side: Toggle Switch */}
       <Skeleton className="h-3.5 w-10 shrink-0 rounded-full" />
 
