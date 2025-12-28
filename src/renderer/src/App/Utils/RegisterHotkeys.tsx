@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Hotkey_Names} from '../../../../cross/HotkeyConstants';
@@ -37,8 +37,10 @@ export default function useHotkeyPress(keys: {name: string; method: (() => void)
   const lastExecutedTimeRef = useRef<number>(0);
   const keysRef = useRef(keys);
 
-  // Update ref on each render (no re-render triggered)
-  keysRef.current = keys;
+  // Update ref in useLayoutEffect (runs synchronously after render, before effects)
+  useLayoutEffect(() => {
+    keysRef.current = keys;
+  });
 
   // Memoize the hotkey lookup map - only rebuilds when hotkeys change
   const hotkeyMap = useMemo(() => buildHotkeyMap(hotkeys), [hotkeys]);
