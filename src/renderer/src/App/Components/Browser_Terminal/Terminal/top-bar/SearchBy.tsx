@@ -45,12 +45,22 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
                 key="Google"
                 endContent={endContent}
                 onPress={() => searchSelectedText('Google')}
-                startContent={<Image alt="Google icon" className="size-4" src="https://www.google.com/favicon.ico" />}>
+                startContent={
+                  <Image
+                    alt="Google icon"
+                    className="size-4"
+                    src={`lynxcache://fetch/${encodeURIComponent('https://www.google.com/favicon.ico')}`}
+                  />
+                }>
                 Google
               </DropdownItem>
               <DropdownItem
                 startContent={
-                  <Image className="size-4" alt="DuckDuckGo icon" src="https://duckduckgo.com/favicon.ico" />
+                  <Image
+                    className="size-4"
+                    alt="DuckDuckGo icon"
+                    src={`lynxcache://fetch/${encodeURIComponent('https://duckduckgo.com/favicon.ico')}`}
+                  />
                 }
                 key="DuckDuckGo"
                 endContent={endContent}
@@ -61,7 +71,13 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
                 key="Reddit"
                 endContent={endContent}
                 onPress={() => searchSelectedText('Reddit')}
-                startContent={<Image alt="Reddit icon" className="size-4" src="https://www.reddit.com/favicon.ico" />}>
+                startContent={
+                  <Image
+                    alt="Reddit icon"
+                    className="size-4"
+                    src={`lynxcache://fetch/${encodeURIComponent('https://www.reddit.com/favicon.ico')}`}
+                  />
+                }>
                 Reddit
               </DropdownItem>
               <DropdownItem
@@ -70,17 +86,18 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
                 onPress={() => searchSelectedText('ChatGPT')}
                 // eslint-disable-next-line perfectionist/sort-jsx-props
                 startContent={
-                  <Image alt="ChatGPT icon" className="size-4" src="https://chat.openai.com/favicon.ico" />
+                  <Image
+                    alt="ChatGPT icon"
+                    className="size-4"
+                    src={`lynxcache://fetch/${encodeURIComponent('https://chat.openai.com/favicon.ico')}`}
+                  />
                 }>
                 ChatGPT
               </DropdownItem>
               <DropdownItem
                 startContent={
                   <Image
-                    src={
-                      'https://registry.npmmirror.com/@lobehub/icons-static-png/1.74.0/files' +
-                      '/dark/perplexity-color.png'
-                    }
+                    src={`lynxcache://fetch/${encodeURIComponent('https://registry.npmmirror.com/@lobehub/icons-static-png/1.74.0/files/dark/perplexity-color.png')}`}
                     className="size-4"
                     alt="Perplexity icon"
                   />
@@ -92,7 +109,11 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
               </DropdownItem>
               <DropdownItem
                 startContent={
-                  <Image alt="Claude icon" className="size-4" src="https://www.anthropic.com/favicon.ico" />
+                  <Image
+                    alt="Claude icon"
+                    className="size-4"
+                    src={`lynxcache://fetch/${encodeURIComponent('https://www.anthropic.com/favicon.ico')}`}
+                  />
                 }
                 key="Claude"
                 endContent={endContent}
