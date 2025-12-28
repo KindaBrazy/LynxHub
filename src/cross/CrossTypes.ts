@@ -150,6 +150,8 @@ export type TabInfo = {
   isTerminal: boolean;
   pageID: string;
   favIcon: {show: boolean; url: string};
+  // Terminal progress state (ConEmu OSC 9;4 sequence)
+  progress?: {state: 0 | 1 | 2 | 3 | 4; value: number};
 };
 
 export type Notification_Data = {

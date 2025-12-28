@@ -130,6 +130,15 @@ function win() {
 
   // Opens URL in default system browser
   ipcMain.on(winChannels.openUrlDefaultBrowser, (_, url: string) => shell.openExternal(url));
+
+  // Sets window progress bar (taskbar/dock) - value: 0-1 for progress, -1 to remove, >1 for indeterminate
+  // mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused' (Windows only)
+  ipcMain.on(
+    winChannels.setProgressBar,
+    (_, progress: number, options?: {mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused'}) => {
+      appManager?.getMainWindow()?.setProgressBar(progress, options);
+    },
+  );
 }
 
 function file() {

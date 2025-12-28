@@ -127,6 +127,13 @@ const tabsSlice = createSlice({
       const {tabID, ...favIcon} = action.payload;
       state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, favIcon} : tab));
     },
+    setTabProgress: (
+      state: TabState,
+      action: PayloadAction<{tabID: string; progress: {state: 0 | 1 | 2 | 3 | 4; value: number} | undefined}>,
+    ) => {
+      const {tabID, progress} = action.payload;
+      state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, progress} : tab));
+    },
     setActivePage: (
       state: TabState,
       action: PayloadAction<{
