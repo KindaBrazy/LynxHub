@@ -163,7 +163,7 @@ export default function ModuleConfigModal({isOpen, onClose}: Props) {
             <span>Module Configuration</span>
           </div>
           <span className="text-small font-normal text-foreground-500">
-            Enable or disable individual AI tools. Disabled tools won't be loaded, making the app lighter.
+            Enable or disable individual AI tools. Disabled tools won't be loaded.
           </span>
         </ModalHeader>
         <ModalBody>
