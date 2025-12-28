@@ -119,6 +119,9 @@ export const winChannels = {
 
   getSystemInfo: 'win:get-system-info',
   openUrlDefaultBrowser: 'win:open-url-default-browser',
+
+  // Window progress bar (taskbar/dock)
+  setProgressBar: 'win:set-progress-bar',
 };
 
 export const fileChannels = {
@@ -213,7 +216,15 @@ export const ptyChannels = {
   onTitle: 'pty-on-title',
 
   onExit: 'pty-on-exit-code',
+
+  // Terminal progress (ConEmu OSC 9;4 sequence)
+  onProgress: 'pty-on-progress',
 };
+
+// Terminal progress state from ConEmu OSC 9;4 sequence
+// 0: Remove progress, 1: Normal, 2: Error, 3: Indeterminate, 4: Paused/Warning
+export type TerminalProgressState = 0 | 1 | 2 | 3 | 4;
+export type TerminalProgress = {state: TerminalProgressState; value: number};
 
 export const appUpdateChannels = {
   statusError: 'appUpdate:statusError',

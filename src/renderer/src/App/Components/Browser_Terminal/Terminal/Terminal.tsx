@@ -1,3 +1,4 @@
+import {IProgressState} from '@xterm/addon-progress';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {isEmpty} from 'lodash';
@@ -9,7 +10,7 @@ import {CustomRunBehaviorData} from '../../../../../../cross/IpcChannelAndTypes'
 import {getCardMethod, useAllCardMethods} from '../../../Modules/ModuleLoader';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useHotkeysState} from '../../../Redux/Reducer/HotkeysReducer';
-import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
+import {tabsActions, useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {RunningCard} from '../../../Utils/Types';
@@ -28,6 +29,7 @@ type Props = {
 const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal, setSelectedTerminalText}: Props) => {
   const copyPressed = useHotkeysState('copyPressed');
   const activeTab = useTabsState('activeTab');
+  const tabs = useTabsState('tabs');
   const allMethods = useAllCardMethods();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -123,6 +125,65 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
     }
   }, [currentView, activeTab]);
 
+  // Handle terminal progress (ConEmu OSC 9;4 sequence)
+  const handleProgress = useCallback(
+    (progress: IProgressState) => {
+      const {state, value} = progress;
+
+      // Update tab progress state in Redux
+      dispatch(
+        tabsActions.setTabProgress({
+          tabID: tabId,
+          progress: state === 0 ? undefined : {state: state as 0 | 1 | 2 | 3 | 4, value},
+        }),
+      );
+
+      // Update Electron window progress bar (only for active tab)
+      if (tabId === activeTab) {
+        if (state === 0) {
+          // Remove progress bar
+          rendererIpc.win.setProgressBar(-1);
+        } else if (state === 1) {
+          // Normal progress
+          rendererIpc.win.setProgressBar(value / 100, {mode: 'normal'});
+        } else if (state === 2) {
+          // Error state
+          rendererIpc.win.setProgressBar(value / 100, {mode: 'error'});
+        } else if (state === 3) {
+          // Indeterminate
+          rendererIpc.win.setProgressBar(2, {mode: 'indeterminate'});
+        } else if (state === 4) {
+          // Paused/Warning
+          rendererIpc.win.setProgressBar(value / 100, {mode: 'paused'});
+        }
+      }
+    },
+    [dispatch, tabId, activeTab],
+  );
+
+  // Sync window progress bar when this tab becomes active
+  useEffect(() => {
+    if (tabId !== activeTab) return;
+
+    // Get current tab's progress from tabs state
+    const currentTab = tabs.find(t => t.id === tabId);
+    const currentProgress = currentTab?.progress;
+    if (!currentProgress || currentProgress.state === 0) {
+      rendererIpc.win.setProgressBar(-1);
+    } else {
+      const {state, value} = currentProgress;
+      if (state === 1) {
+        rendererIpc.win.setProgressBar(value / 100, {mode: 'normal'});
+      } else if (state === 2) {
+        rendererIpc.win.setProgressBar(value / 100, {mode: 'error'});
+      } else if (state === 3) {
+        rendererIpc.win.setProgressBar(2, {mode: 'indeterminate'});
+      } else if (state === 4) {
+        rendererIpc.win.setProgressBar(value / 100, {mode: 'paused'});
+      }
+    }
+  }, [activeTab, tabId, tabs]);
+
   // Handle terminal ready callback
   const handleTerminalReady = useCallback(
     (api: XTermAPI) => {
@@ -188,6 +249,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
           id={id}
           ref={xtermRef}
           searchAddon={searchAddon}
+          onProgress={handleProgress}
           onReady={handleTerminalReady}
           serializeAddon={serializeAddon}
         />

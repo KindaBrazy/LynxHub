@@ -2,6 +2,7 @@ import {CanvasAddon} from '@xterm/addon-canvas';
 import {ClipboardAddon} from '@xterm/addon-clipboard';
 import {FitAddon} from '@xterm/addon-fit';
 import {LigaturesAddon} from '@xterm/addon-ligatures';
+import {IProgressState, ProgressAddon} from '@xterm/addon-progress';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {Unicode11Addon} from '@xterm/addon-unicode11';
@@ -62,6 +63,9 @@ export interface XTermCoreProps {
   // Minimum resize constraints (set to 0 to disable)
   minResizeCols?: number;
   minResizeRows?: number;
+
+  // Terminal progress callback (ConEmu OSC 9;4 sequence)
+  onProgress?: (progress: IProgressState) => void;
 }
 
 const XTermCore = memo(
@@ -84,6 +88,7 @@ const XTermCore = memo(
         enableResizeNotify = true,
         minResizeCols = MIN_RESIZE_COLS,
         minResizeRows = MIN_RESIZE_ROWS,
+        onProgress,
       },
       ref,
     ) => {
@@ -184,6 +189,13 @@ const XTermCore = memo(
             } catch (e) {
               console.warn('Failed to load ligatures addon:', e);
             }
+          }
+
+          // Load progress addon for ConEmu OSC 9;4 sequence support
+          if (onProgress) {
+            const progressAddon = new ProgressAddon();
+            xTerm.loadAddon(progressAddon);
+            progressAddon.onChange(onProgress);
           }
 
           // Resize notification

@@ -132,6 +132,16 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('win_open_url_default_browser', {url});
       ipc.send(winChannels.openUrlDefaultBrowser, url);
     },
+
+    // Sets window progress bar (taskbar/dock)
+    // progress: 0-1 for progress, -1 to remove, >1 for indeterminate
+    // mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused' (Windows only)
+    setProgressBar: (
+      progress: number,
+      options?: {mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused'},
+    ): void => {
+      ipc.send(winChannels.setProgressBar, progress, options);
+    },
   },
 
   /** Managing files and directories */

@@ -15,6 +15,7 @@ import useHotkeyPress from '../../Utils/RegisterHotkeys';
 import AudioIndicator from './AudioIndicator';
 import {useIsActiveTab, useRemoveTab} from './Tab_Utils';
 import TabItem_Icon from './TabItem_Icon';
+import TabProgress from './TabProgress';
 import TabTitle from './TabTitle';
 
 type Props = {
@@ -96,7 +97,7 @@ export default function TabItem({tab}: Props) {
       showArrow>
       <Button
         className={
-          'pr-0 text-small pl-2 flex rounded-t-lg! data-[hover=true]:bg-foreground-100 flex-row ' +
+          'pr-0 text-small pl-2 flex rounded-t-lg! data-[hover=true]:bg-foreground-100 flex-row relative ' +
           `cursor-default gap-x-0 ${isActiveTab && 'bg-white dark:bg-[#303033]'}`
         }
         ref={btnRef}
@@ -123,6 +124,8 @@ export default function TabItem({tab}: Props) {
           isIconOnly>
           <CloseSimple_Icon className="size-4" />
         </Button>
+
+        <TabProgress progress={tab.progress} />
       </Button>
     </Tooltip>
   );

@@ -60,6 +60,7 @@
     "@originjs/vite-plugin-federation": "^1.4.1",
     "@sentry/electron": "^7.5.0",
     "@sentry/react": "^10.29.0",
+    "@xterm/addon-progress": "^0.2.0",
     "axios": "^1.13.2",
     "fix-path": "^5.0.0",
     "graceful-fs": "^4.2.11",
