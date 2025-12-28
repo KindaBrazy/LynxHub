@@ -9,7 +9,9 @@ import {
   GalleryDownload,
   GalleryWide,
   Link,
+  MagniferBug,
   Refresh,
+  Scissors,
   SquareTopDown,
   TextSelection,
   UndoLeftRound,
@@ -222,6 +224,18 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
           />,
         );
       }
+      if (flags.canCut && !isEmpty(selection)) {
+        items.push(
+          <ActionButton
+            onPress={createActionHandler(() => {
+              rendererIpc.contextItems.cut(contextId);
+            })}
+            title="Cut"
+            key="context_cut"
+            icon={<Scissors className="size-4" />}
+          />,
+        );
+      }
       if (flags.canCopy && !isEmpty(selection)) {
         items.push(
           <ActionButton
@@ -261,6 +275,21 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
       return items;
     };
 
+    const buildTextSelectionItems = (selection: string): ReactNode[] => {
+      if (isEmpty(selection)) return [];
+
+      return [
+        <ActionButton
+          onPress={createActionHandler(() => {
+            rendererIpc.contextItems.searchWithGoogle(selection);
+          })}
+          title={`Search with Google`}
+          key="context_searchGoogle"
+          icon={<MagniferBug className="size-4" />}
+        />,
+      ];
+    };
+
     const handleInitView = (
       _event: any,
       params: ContextMenuParams,
@@ -291,9 +320,10 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
 
       const hasLinkItems = !isEmpty(linkURL);
       const hasImageItems = mediaType === 'image';
+      const hasTextSelection = !isEmpty(selectionText);
       const hasEditItems =
-        editFlags.canUndo || editFlags.canRedo || editFlags.canCopy || editFlags.canPaste || editFlags.canSelectAll;
-      const needsActionsTitle = hasLinkItems || hasEditItems || hasImageItems;
+        editFlags.canUndo || editFlags.canRedo || editFlags.canCut || editFlags.canCopy || editFlags.canPaste || editFlags.canSelectAll;
+      const needsActionsTitle = hasLinkItems || hasEditItems || hasImageItems || hasTextSelection;
 
       if (needsActionsTitle) {
         collectedElements.push(
@@ -322,9 +352,19 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
         previousActionSectionAdded = true;
       }
 
+      if (hasTextSelection) {
+        if (previousActionSectionAdded) {
+          collectedElements.push(<Divider className="my-2" key="sep_image_text" />);
+        }
+        const textSelectionItems = buildTextSelectionItems(selectionText);
+        collectedElements.push(...textSelectionItems);
+        setWidthSize('md');
+        previousActionSectionAdded = true;
+      }
+
       if (hasEditItems) {
         if (previousActionSectionAdded) {
-          collectedElements.push(<Divider className="my-2" key="sep_image_edit" />);
+          collectedElements.push(<Divider className="my-2" key="sep_text_edit" />);
         }
         const editItems = buildEditItems(editFlags, selectionText, contextId);
         collectedElements.push(...editItems);

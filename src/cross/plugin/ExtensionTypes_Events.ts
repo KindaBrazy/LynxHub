@@ -186,6 +186,7 @@ export type ExtensionEvents_IPC = {
 
   // contextItems
   context_items_copy: {id: number};
+  context_items_cut: {id: number};
   context_items_paste: {id: number};
   context_items_replace_misspelling: {id: number; text: string};
   context_items_select_all: {id: number};
@@ -195,6 +196,7 @@ export type ExtensionEvents_IPC = {
   context_items_open_external: {url: string};
   context_items_download_image: {id: number; url: string};
   context_items_copy_image: {url: string};
+  context_items_search_google: {text: string};
   context_items_navigate: {id: number; action: 'back' | 'forward' | 'refresh'};
 
   // browser
