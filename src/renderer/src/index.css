@@ -65,15 +65,6 @@
   background: radial-gradient(circle at 50% 30%, var(--accent-bg-color), transparent 70%);
 }
 
-.xterm-viewport::-webkit-scrollbar {
-  width: 5px;
-}
-
-.xterm-viewport::-webkit-scrollbar-thumb {
-  background: var(--xterm-scrollbar-thumb-color);
-  border-radius: 10px;
-}
-
 .draggable {
   -webkit-user-select: none;
   -webkit-app-region: drag;
