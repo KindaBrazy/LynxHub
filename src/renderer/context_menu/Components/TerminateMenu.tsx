@@ -1,6 +1,6 @@
 import {Button, Checkbox} from '@heroui/react';
 import {Typography} from 'antd';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
 import {isLinuxPortable} from '../../src/App/Utils/UtilHooks';
@@ -68,6 +68,7 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
   const [id, setId] = useState<string>('');
   const [toggle, setToggle] = useState<boolean>(false);
   const [showConfirmValue, setShowConfirmValue] = useState<boolean>(false);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const onShowConfirm = (enabled: boolean) => {
     rendererIpc.storageUtils.setShowConfirm('closeTabConfirm', !enabled);
@@ -99,13 +100,18 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
             Cancel
           </Button>
           <div className="space-x-2">
-            <Button size="sm" color="danger" onPress={removeTab}>
+            <Button ref={closeButtonRef} size="sm" color="danger" onPress={removeTab}>
               Close Tab
             </Button>
           </div>
         </div>
       </div>,
     ]);
+
+    // Auto-focus the close button when dialog appears
+    setTimeout(() => {
+      closeButtonRef.current?.focus();
+    }, 100);
   }, [id, toggle, showConfirmValue]);
 
   useEffect(() => {
