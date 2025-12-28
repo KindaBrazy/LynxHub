@@ -162,6 +162,11 @@ export function List_Item({item, installed}: Props) {
       )}
       <CardHeader className="pb-0">
         <User
+          description={
+            <span className="text-foreground-500 text-xs">
+              By <span className="font-bold text-foreground-500">{extractGitUrl(item.url).owner}</span>
+            </span>
+          }
           avatarProps={{
             src: (() => {
               const iconUrl = getPluginIconUrl(item.url);
@@ -170,11 +175,6 @@ export function List_Item({item, installed}: Props) {
             radius: 'none',
             className: 'shrink-0 !bg-black/0',
           }}
-          description={
-            <span className="text-foreground-500 text-xs">
-              By <span className="font-bold text-foreground-500">{extractGitUrl(item.url).owner}</span>
-            </span>
-          }
           name={
             <div className="space-x-2">
               <Link
