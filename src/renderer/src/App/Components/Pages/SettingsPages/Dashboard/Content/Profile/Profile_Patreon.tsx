@@ -75,7 +75,11 @@ export default function Profile_Patreon() {
         <User
           name={patreonUserData.name}
           description={patreonUserData.tier}
-          avatarProps={{src: patreonUserData.imageUrl}}
+          avatarProps={{
+            src: patreonUserData.imageUrl
+              ? `lynxcache://fetch/${encodeURIComponent(patreonUserData.imageUrl)}`
+              : patreonUserData.imageUrl,
+          }}
         />
         {isNotMember ? (
           <div className="flex flex-col items-end space-y-2 text-right">
