@@ -137,6 +137,7 @@ class StorageManager extends BaseStorage {
       favIcons: rawData.favIcons.map(item => ({
         url: lynxDecryptString(item.url),
         favIcon: lynxDecryptString(item.favIcon),
+        title: item.title ? lynxDecryptString(item.title) : undefined,
       })),
     };
   }
@@ -584,6 +585,7 @@ class StorageManager extends BaseStorage {
       encryptedData.favIcons = encryptedData.favIcons.map(item => ({
         url: lynxEncryptString(item.url),
         favIcon: lynxEncryptString(item.favIcon),
+        title: item.title ? lynxEncryptString(item.title) : undefined,
       }));
     }
 
@@ -598,7 +600,7 @@ class StorageManager extends BaseStorage {
    * Adds or updates a favicon for a URL
    * Updates existing entry if URL matches, otherwise adds new entry
    */
-  public async addBrowserFavIcon(url: string, icon: string) {
+  public async addBrowserFavIcon(url: string, icon: string, title?: string) {
     const favIcons = this.getBrowserDataSecurely().favIcons;
     let updatedExisting: boolean = false;
 
@@ -609,15 +611,34 @@ class StorageManager extends BaseStorage {
       const isSame = await compareUrls(favIcon.url, url);
       if (isSame) {
         favIcon.favIcon = icon;
+        if (title) favIcon.title = title;
         updatedExisting = true;
         break;
       }
     }
 
     // Add new entry if not found
-    if (!updatedExisting) favIcons.push({url, favIcon: icon});
+    if (!updatedExisting) favIcons.push({url, favIcon: icon, title});
 
     this.updateBrowserDataSecurely({favIcons});
+  }
+
+  /**
+   * Updates the title for an existing favicon entry
+   */
+  public async updateBrowserFavIconTitle(url: string, title: string) {
+    const favIcons = this.getBrowserDataSecurely().favIcons;
+
+    for (const favIcon of favIcons) {
+      if (!isValidURL([favIcon.url, url])) continue;
+
+      const isSame = await compareUrls(favIcon.url, url);
+      if (isSame) {
+        favIcon.title = title;
+        this.updateBrowserDataSecurely({favIcons});
+        break;
+      }
+    }
   }
 
   public async addBrowserFavorite(favoriteEntry: string) {

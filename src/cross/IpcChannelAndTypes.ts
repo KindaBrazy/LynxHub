@@ -88,7 +88,7 @@ export type DownloadProgress = {
 
 export type CanGoType = {back: boolean; forward: boolean};
 
-export type FavIcons = {url: string; favIcon: string};
+export type FavIcons = {url: string; favIcon: string; title?: string};
 export type BrowserHistoryData = {
   recentAddress: string[];
   favoriteAddress: string[];

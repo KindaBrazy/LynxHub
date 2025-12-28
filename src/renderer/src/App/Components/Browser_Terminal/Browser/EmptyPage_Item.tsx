@@ -1,5 +1,4 @@
 import {Button, Card, CardBody, Image, Tooltip} from '@heroui/react';
-import {capitalize} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -23,6 +22,7 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
   const [favItem, setFavItem] = useState<FavIcons | undefined>(undefined);
 
   const favIcon = useCachedImage(`${type}_favicon`, favItem?.favIcon || '');
+  const displayName = favItem?.title || getUrlName(recent);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -59,8 +59,8 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
             'flex-col gap-2 items-center text-center justify-center transition-colors duration-300' +
             ' group dark:bg-foreground-100 hover:dark:bg-foreground-100/50 shrink-0 hover:bg-foreground-100/50'
           }>
-          {favIcon ? <Image radius="full" src={favIcon} className="size-8" /> : <Web_Icon className="size-8" />}
-          <span className="truncate text-wrap w-full line-clamp-2 text-sm">{capitalize(getUrlName(recent))}</span>
+          {favIcon ? <Image radius="full" src={favIcon} className="size-8" alt="" /> : <Web_Icon className="size-8" />}
+          <span className="truncate text-wrap w-full line-clamp-2 text-sm">{displayName}</span>
           <Button
             size="sm"
             color="danger"

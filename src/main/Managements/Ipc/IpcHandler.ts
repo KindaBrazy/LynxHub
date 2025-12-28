@@ -423,8 +423,8 @@ function storageUtilsIpc() {
   );
 
   // Adds favicon for browser recent URL
-  ipcMain.on(storageUtilsChannels.addBrowserRecentFavIcon, (_, url: string, favIcon: string) =>
-    storageManager.addBrowserFavIcon(url, favIcon),
+  ipcMain.on(storageUtilsChannels.addBrowserRecentFavIcon, (_, url: string, favIcon: string, title?: string) =>
+    storageManager.addBrowserFavIcon(url, favIcon, title),
   );
   // Removes URL from browser recent list
   ipcMain.on(storageUtilsChannels.removeBrowserRecent, (_, url: string) => storageManager.removeBrowserRecent(url));
