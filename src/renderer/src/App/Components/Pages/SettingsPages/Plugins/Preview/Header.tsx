@@ -40,6 +40,14 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
     <div className="w-full flex sm:flex-col lg:flex-row p-5 sm:gap-y-2 shrink-0">
       <div className="w-full flex flex-col">
         <User
+          avatarProps={{
+            src: (() => {
+              const iconUrl = getPluginIconUrl(selectedPlugin?.url);
+              return iconUrl ? `lynxcache://fetch/${encodeURIComponent(iconUrl)}` : iconUrl;
+            })(),
+            className: 'bg-black/0',
+            radius: 'none',
+          }}
           description={
             <div className="flex flex-row gap-x-2 items-center">
               <Chip
@@ -83,14 +91,6 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
             </div>
           }
           className="self-start"
-          avatarProps={{
-            src: (() => {
-              const iconUrl = getPluginIconUrl(selectedPlugin?.url);
-              return iconUrl ? `lynxcache://fetch/${encodeURIComponent(iconUrl)}` : iconUrl;
-            })(),
-            className: 'bg-black/0',
-            radius: 'none',
-          }}
           name={<span className="font-semibold text-foreground text-xl">{selectedPlugin?.metadata.title}</span>}
         />
         <div className="flex flex-row items-center ml-12">
