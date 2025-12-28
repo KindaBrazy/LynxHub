@@ -132,7 +132,13 @@ export default class BrowserManager {
       const mainWebContents = this.getMainWebContents();
       if (isNil(webContents) || isNil(mainWebContents) || webContents.isDestroyed()) return;
 
-      const url = favicons.find(icon => icon.includes('.ico')) || favicons[0] || '';
+      // Prefer higher quality formats: SVG > PNG > other > ICO
+      const url =
+        favicons.find(icon => icon.includes('.svg')) ||
+        favicons.find(icon => icon.includes('.png')) ||
+        favicons.find(icon => !icon.includes('.ico')) ||
+        favicons[0] ||
+        '';
       mainWebContents.send(browserChannels.onFavIconChange, id, url);
 
       storageManager.addBrowserFavIcon(formatWebAddress(webContents.getURL()), url, webContents.getTitle());
