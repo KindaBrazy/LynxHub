@@ -123,6 +123,7 @@ export default class ContextMenuManager {
     ipcMain.on(contextMenuChannels.resizeWindow, (_e, data: ContextResizeData) => this.resizeContextMenu(data));
 
     ipcMain.on(contextMenuChannels.copy, (_, id: number) => this.getContentById(id)?.copy());
+    ipcMain.on(contextMenuChannels.cut, (_, id: number) => this.getContentById(id)?.cut());
     ipcMain.on(contextMenuChannels.paste, (_, id: number) => this.getContentById(id)?.paste());
     ipcMain.on(contextMenuChannels.selectAll, (_, id: number) => this.getContentById(id)?.selectAll());
     ipcMain.on(contextMenuChannels.undo, (_, id: number) => this.getContentById(id)?.undo());
@@ -147,6 +148,10 @@ export default class ContextMenuManager {
         console.error('Failed to copy image:', error);
         appManager?.showToast('Failed to copy image', 'error', 'top-center');
       }
+    });
+    ipcMain.on(contextMenuChannels.searchWithGoogle, (_, text: string) => {
+      const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(text)}`;
+      this.sendMainMessage(tabsChannels.onNewTab, searchUrl);
     });
 
     ipcMain.on(contextMenuChannels.showWindow, () => this.showContextMenu());

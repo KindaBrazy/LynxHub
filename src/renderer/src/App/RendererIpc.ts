@@ -848,6 +848,11 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('context_items_copy', {id});
       ipc.send(contextMenuChannels.copy, id);
     },
+    // Cuts selected text in browser
+    cut: (id: number) => {
+      extensionRendererApi.events_ipc.emit('context_items_cut', {id});
+      ipc.send(contextMenuChannels.cut, id);
+    },
     // Pastes clipboard content in browser
     paste: (id: number) => {
       extensionRendererApi.events_ipc.emit('context_items_paste', {id});
@@ -896,6 +901,12 @@ const rendererIpc = {
     copyImage: (url: string) => {
       extensionRendererApi.events_ipc.emit('context_items_copy_image', {url});
       ipc.send(contextMenuChannels.copyImage, url);
+    },
+
+    // Searches selected text with Google
+    searchWithGoogle: (text: string) => {
+      extensionRendererApi.events_ipc.emit('context_items_search_google', {text});
+      ipc.send(contextMenuChannels.searchWithGoogle, text);
     },
 
     // Navigates browser (back, forward, or refresh)

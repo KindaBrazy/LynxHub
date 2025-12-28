@@ -334,6 +334,7 @@ export const contextMenuChannels = {
   showWindow: 'context:show-window',
   hideWindow: 'context:hide-window',
   copy: 'context:copy',
+  cut: 'context:cut',
   paste: 'context:paste',
   replaceMisspelling: 'context:replaceMisspelling',
   selectAll: 'context:selectAll',
@@ -345,6 +346,7 @@ export const contextMenuChannels = {
 
   downloadImage: 'context:download-image',
   copyImage: 'context:copy-image',
+  searchWithGoogle: 'context:search-google',
   navigate: 'context:navigate',
 
   openTerminateAI: 'context:open-terminate-ai',
