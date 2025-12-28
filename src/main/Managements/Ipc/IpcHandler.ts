@@ -516,6 +516,8 @@ export function browserIPC() {
 
   // Reloads current page
   ipcMain.on(browserChannels.reload, (_, id: string) => browserManager.reload(id));
+  // Stops loading current page
+  ipcMain.on(browserChannels.stop, (_, id: string) => browserManager.stop(id));
   // Navigates browser back
   ipcMain.on(browserChannels.goBack, (_, id: string) => browserManager.goBack(id));
   // Navigates browser forward
