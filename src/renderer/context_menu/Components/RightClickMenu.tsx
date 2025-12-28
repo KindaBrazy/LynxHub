@@ -161,8 +161,8 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
           onPress={createActionHandler(() => {
             rendererIpc.contextItems.copyImage(srcURL);
           })}
-          key="context_copyImage"
           title="Copy Image"
+          key="context_copyImage"
           icon={<CopyDuo_Icon className="size-4" />}
         />,
         <ActionButton

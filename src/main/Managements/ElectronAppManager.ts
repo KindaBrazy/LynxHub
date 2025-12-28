@@ -5,7 +5,13 @@ import {is} from '@electron-toolkit/utils';
 import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
-import {appWindowChannels, ShowToastTypes, tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
+import {
+  appWindowChannels,
+  HeroToastPlacement,
+  ShowToastTypes,
+  tabsChannels,
+  winChannels,
+} from '../../cross/IpcChannelAndTypes';
 import {contextMenuManager, linkPreviewManager, storageManager, trayManager} from '../index';
 import {getUserAgent, getWindowColor, RelaunchApp} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
@@ -72,8 +78,8 @@ export default class ElectronAppManager {
     return webContent;
   }
 
-  public showToast(message: string, type: ShowToastTypes) {
-    this.getWebContent()?.send(appWindowChannels.showToast, message, type);
+  public showToast(message: string, type: ShowToastTypes, placement: HeroToastPlacement = 'bottom-right') {
+    this.getWebContent()?.send(appWindowChannels.showToast, message, type, placement);
   }
 
   /** Creates and configures the loading window. */

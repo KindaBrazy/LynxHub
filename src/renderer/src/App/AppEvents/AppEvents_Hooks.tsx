@@ -345,8 +345,8 @@ export const useShowToast = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const removeListener = rendererIpc.appWindow.onShowToast((_, message, type) => {
-      lynxTopToast(dispatch, 'bottom-right')[type](message);
+    const removeListener = rendererIpc.appWindow.onShowToast((_, message, type, placement) => {
+      lynxTopToast(dispatch, placement || 'bottom-right')[type](message);
     });
 
     return () => removeListener();
