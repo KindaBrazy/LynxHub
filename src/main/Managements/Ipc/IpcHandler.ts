@@ -15,6 +15,7 @@ import {
   DarkModeTypes,
   fileChannels,
   gitChannels,
+  imageCacheChannels,
   moduleApiChannels,
   modulesChannels,
   pluginChannels,
@@ -56,6 +57,7 @@ import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from 
 import BrowserDownloadManager from '../BrowserDownloadManager';
 import BrowserManager from '../BrowserManager';
 import GitManager from '../Git/GitManager';
+import {getImageCacheManager, ImageCacheManager} from '../ImageCacheManager';
 import {getList} from '../Plugin/PluginUtils';
 import {
   changeWindowState,
@@ -585,6 +587,48 @@ function statics() {
   ipcMain.handle(staticsChannels.getPatrons, () => staticManager.getPatrons());
 }
 
+function imageCache() {
+  const cacheManager = getImageCacheManager();
+
+  // Gets cache statistics (entry count, total size, last cleanup)
+  ipcMain.handle(imageCacheChannels.getStats, () => {
+    const stats = cacheManager.getStats();
+    return {
+      entryCount: stats.entryCount,
+      totalSize: stats.totalSize,
+      totalSizeFormatted: formatBytes(stats.totalSize),
+      lastCleanup: stats.lastCleanup,
+      lastCleanupFormatted: new Date(stats.lastCleanup).toISOString(),
+    };
+  });
+
+  // Clears all cached images
+  ipcMain.handle(imageCacheChannels.clearCache, async () => {
+    const clearedCount = await cacheManager.clearCache();
+    return {success: true, clearedEntries: clearedCount};
+  });
+
+  // Triggers manual cache cleanup (removes expired entries)
+  ipcMain.handle(imageCacheChannels.triggerCleanup, async () => {
+    await cacheManager.triggerCleanup();
+    return {success: true};
+  });
+
+  // Converts a URL to a cache URL (lynxcache://fetch/...)
+  ipcMain.handle(imageCacheChannels.getCacheUrl, (_, url: string) => {
+    return ImageCacheManager.getCacheUrl(url);
+  });
+}
+
+/** Formats bytes to human readable string */
+function formatBytes(bytes: number): string {
+  if (bytes === 0) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+}
+
 export function listenToAllChannels() {
   appData();
   storage();
@@ -611,4 +655,5 @@ export function listenToAllChannels() {
   linkPreviewManager.listenForChannels();
 
   statics();
+  imageCache();
 }

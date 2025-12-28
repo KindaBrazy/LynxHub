@@ -21,7 +21,12 @@ const Browser_TopBar = memo(({runningCard, setCustomAddress, tabID}: Props) => {
 
   return (
     <>
-      <Browser_ActionButtons tabID={tabID} id={runningCard.id} webuiAddress={runningCard.webUIAddress} isDomReady={isDomReady} />
+      <Browser_ActionButtons
+        tabID={tabID}
+        id={runningCard.id}
+        isDomReady={isDomReady}
+        webuiAddress={runningCard.webUIAddress}
+      />
       <Browser_AddressBar runningCard={runningCard} setCustomAddress={setCustomAddress} />
 
       {isDomReady && (

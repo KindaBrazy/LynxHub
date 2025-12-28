@@ -73,7 +73,7 @@ const Browser_ActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props
       </AnimatePresence>
 
       {isLoading ? (
-        <Button size="sm" variant="light" onPress={stop} className="cursor-default" isIconOnly>
+        <Button size="sm" onPress={stop} variant="light" className="cursor-default" isIconOnly>
           <Close_Icon className="size-4" />
         </Button>
       ) : (

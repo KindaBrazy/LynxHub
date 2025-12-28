@@ -341,9 +341,9 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
           onBlur={handleBlur}
           onFocus={handleFocus}
           onInput={handleInput}
+          onPaste={handlePaste}
           onKeyDown={handleKeyDown}
           onMouseDown={handleMouseDown}
-          onPaste={handlePaste}
           style={{minHeight: '32px', lineHeight: '32px'}}
           contentEditable
         />

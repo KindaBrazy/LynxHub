@@ -448,3 +448,18 @@ export type AudioState = {
   playing: boolean;
   muted: boolean;
 };
+
+export const imageCacheChannels = {
+  getStats: 'imageCache:getStats',
+  clearCache: 'imageCache:clearCache',
+  triggerCleanup: 'imageCache:triggerCleanup',
+  getCacheUrl: 'imageCache:getCacheUrl',
+} as const;
+
+export type ImageCacheStats = {
+  entryCount: number;
+  totalSize: number;
+  totalSizeFormatted: string;
+  lastCleanup: number;
+  lastCleanupFormatted: string;
+};
