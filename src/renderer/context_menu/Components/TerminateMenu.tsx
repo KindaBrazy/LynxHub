@@ -100,7 +100,7 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
             Cancel
           </Button>
           <div className="space-x-2">
-            <Button ref={closeButtonRef} size="sm" color="danger" onPress={removeTab}>
+            <Button size="sm" color="danger" onPress={removeTab} ref={closeButtonRef}>
               Close Tab
             </Button>
           </div>
