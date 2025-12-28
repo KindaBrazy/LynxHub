@@ -28,6 +28,7 @@ export default function SettingsTerminalCursorStyle() {
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'cursor', 'style', 'terminal']}>
       <Select
+        className="my-0!"
         labelPlacement="outside"
         selectedKeys={[cursorStyle]}
         onSelectionChange={onChange}

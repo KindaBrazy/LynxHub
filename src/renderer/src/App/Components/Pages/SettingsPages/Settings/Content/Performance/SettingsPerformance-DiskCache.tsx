@@ -38,6 +38,7 @@ export default function SettingsPerformanceDiskCache() {
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'cache', 'disk', 'storage']}>
       <Select
+        className="my-0!"
         labelPlacement="outside"
         selectedKeys={[selectedKey]}
         onSelectionChange={onChange}

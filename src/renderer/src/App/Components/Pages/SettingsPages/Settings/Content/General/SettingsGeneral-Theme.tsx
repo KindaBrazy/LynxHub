@@ -74,12 +74,13 @@ export default function SettingsGeneralTheme() {
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'theme', 'dark', 'light', 'system']}>
       <Select
         ref={ref}
+        className="my-0!"
         labelPlacement="outside"
         selectedKeys={[selectedTheme]}
         onSelectionChange={onThemeChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default !transition !duration-300'}}
+        classNames={{trigger: 'cursor-default transition! duration-300!'}}
         disallowEmptySelection>
         <SelectItem key="dark" className="cursor-default">
           Dark

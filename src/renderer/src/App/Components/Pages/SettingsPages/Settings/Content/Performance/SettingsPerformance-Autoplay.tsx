@@ -42,6 +42,7 @@ export default function SettingsPerformanceAutoplay() {
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'autoplay', 'media', 'video', 'audio']}>
       <Select
+        className="my-0!"
         labelPlacement="outside"
         selectedKeys={[selectedKey]}
         onSelectionChange={onChange}

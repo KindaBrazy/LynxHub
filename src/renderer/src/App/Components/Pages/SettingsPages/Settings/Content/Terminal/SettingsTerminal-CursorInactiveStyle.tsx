@@ -27,6 +27,7 @@ export default function SettingsTerminalCursorInactiveStyle() {
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'cursor', 'inactive', 'terminal']}>
       <Select
+        className="my-0!"
         labelPlacement="outside"
         onSelectionChange={onChange}
         selectedKeys={[cursorInactiveStyle]}

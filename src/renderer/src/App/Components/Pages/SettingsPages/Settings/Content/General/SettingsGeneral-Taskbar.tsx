@@ -34,6 +34,7 @@ export default function SettingsGeneralTaskbar() {
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'taskbar', 'dock', 'tray']}>
       <Select
+        className="my-0!"
         labelPlacement="outside"
         selectedKeys={[selectedKey]}
         onSelectionChange={onChange}
