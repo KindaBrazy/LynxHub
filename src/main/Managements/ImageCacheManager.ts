@@ -8,7 +8,7 @@ import {net, protocol} from 'electron';
 import {getAppDataPath} from './AppDataManager';
 
 /** Cache folder name inside LynxHub documents folder */
-const CACHE_FOLDER_NAME = 'Cache';
+const CACHE_FOLDER_NAME = '.cache';
 
 /** Cache metadata file name */
 const CACHE_METADATA_FILE = 'cache-metadata.json';
