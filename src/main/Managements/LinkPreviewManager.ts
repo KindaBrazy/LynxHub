@@ -47,9 +47,10 @@ export default class LinkPreviewManager {
       this.linkPreviewWindow.loadFile(path.join(__dirname, '../renderer/link_preview.html'));
     }
 
-    // Hide when main window is hidden/minimized
+    // Hide when main window is hidden/minimized/loses focus
     mainWindow.on('hide', () => this.hide());
     mainWindow.on('minimize', () => this.hide());
+    mainWindow.on('blur', () => this.hide());
     mainWindow.on('move', () => this.updatePosition());
     mainWindow.on('resize', () => this.updatePosition());
 
