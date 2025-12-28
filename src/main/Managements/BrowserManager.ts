@@ -389,6 +389,17 @@ export default class BrowserManager {
     this.getViewByID(id)?.webContents.navigationHistory.goForward();
   }
 
+  public toggleDevTools(id: string) {
+    const webContents = this.getViewByID(id)?.webContents;
+    if (!webContents || webContents.isDestroyed()) return;
+
+    if (webContents.isDevToolsOpened()) {
+      webContents.closeDevTools();
+    } else {
+      webContents.openDevTools({mode: 'detach'});
+    }
+  }
+
   public setMuted(id: string, muted: boolean): void {
     try {
       const webContents = this.getViewByID(id)?.webContents;

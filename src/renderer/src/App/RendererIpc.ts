@@ -985,6 +985,12 @@ const rendererIpc = {
       ipc.send(browserChannels.goForward, id);
     },
 
+    // Toggles DevTools for browser webview
+    toggleDevTools: (id: string) => {
+      extensionRendererApi.events_ipc.emit('browser_toggle_devtools', {id});
+      ipc.send(browserChannels.toggleDevTools, id);
+    },
+
     // Listens for browser navigation availability (can go back/forward)
     onCanGo: (result: (event: IpcRendererEvent, id: string, canGo: CanGoType) => void) =>
       ipc.on(browserChannels.onCanGo, result),

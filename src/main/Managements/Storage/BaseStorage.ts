@@ -30,12 +30,12 @@ import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
-  private readonly CURRENT_VERSION: number = 0.93;
+  private readonly CURRENT_VERSION: number = 0.94;
   private migratedTo: number = 0; // Tracks migration state for deferred operations
   private readonly isInitializing: boolean = true; // Flag to skip breadcrumbs during initialization
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.93},
+    storage: {version: 0.94},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -403,6 +403,25 @@ class BaseStorage {
             if (!this.storage.data.plugin.disabledCards) {
               this.storage.data.plugin.disabledCards = [];
             }
+          },
+        ],
+        [
+          0.94,
+          () => {
+            // Ensure app.hotkeys contains all default hotkeys (including toggleDevTools)
+            const currentHotkeys = this.storage.data.app.hotkeys || [];
+            const defaultHotkeys = Get_Default_Hotkeys(platform());
+
+            const currentNames = currentHotkeys.map(h => h.name);
+            const mergedHotkeys = [...currentHotkeys];
+
+            defaultHotkeys.forEach(def => {
+              if (!currentNames.includes(def.name)) {
+                mergedHotkeys.push(def);
+              }
+            });
+
+            this.storage.data.app.hotkeys = mergedHotkeys;
           },
         ],
       ]);

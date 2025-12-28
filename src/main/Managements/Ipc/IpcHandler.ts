@@ -523,6 +523,9 @@ export function browserIPC() {
   // Navigates browser forward
   ipcMain.on(browserChannels.goForward, (_, id: string) => browserManager.goForward(id));
 
+  // Toggles DevTools for browser webview
+  ipcMain.on(browserChannels.toggleDevTools, (_, id: string) => browserManager.toggleDevTools(id));
+
   // Focuses browser webview
   ipcMain.on(browserChannels.focusWebView, (_, id: string) => browserManager.focusWebView(id));
 
