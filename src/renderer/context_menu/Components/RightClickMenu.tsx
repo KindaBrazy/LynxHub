@@ -1,23 +1,25 @@
 import {Divider} from '@heroui/react';
-import {Copy, Link} from '@solar-icons/react-perf/BoldDuotone';
+import {
+  ArrowLeft,
+  ArrowRight,
+  ClipboardText,
+  Copy,
+  Export,
+  GalleryCircle,
+  GalleryDownload,
+  GalleryWide,
+  Link,
+  Refresh,
+  SquareTopDown,
+  TextSelection,
+  UndoLeftRound,
+} from '@solar-icons/react-perf/BoldDuotone';
 import {ContextMenuParams, EditFlags} from 'electron';
 import {isEmpty} from 'lodash';
 import {ReactNode, useEffect} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
-import {ArrowDuo_Icon, RefreshDuo_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
 import {SetElementsType, SetWidthSizeType} from './ContextHooks';
-import {
-  CopyDuo_Icon,
-  DocumentTextDuo_Icon,
-  ExternalDuo_Icon,
-  GalleryCircleDuo_Icon,
-  GalleryDownloadDuo_Icon,
-  GalleryWideDuo_Icon,
-  LibraryDuo_Icon,
-  TextSelectionDuo_Icon,
-  UndoDuo_Icon,
-} from './SvgIcons';
 
 type ActionProps = {icon?: ReactNode; title: string; onPress: () => void; className?: string};
 
@@ -76,20 +78,20 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
               rendererIpc.contextItems.navigate(contextId, 'back');
             })}
             isDisabled={!navHistory.canGoBack}
-            icon={<ArrowDuo_Icon className="size-5" />}
+            icon={<ArrowLeft className="size-5" />}
           />
           <NavButton
             onPress={createActionHandler(() => {
               rendererIpc.contextItems.navigate(contextId, 'forward');
             })}
             isDisabled={!navHistory.canGoForward}
-            icon={<ArrowDuo_Icon className="size-5 rotate-180" />}
+            icon={<ArrowRight className="size-5" />}
           />
           <NavButton
             onPress={createActionHandler(() => {
               rendererIpc.contextItems.navigate(contextId, 'refresh');
             })}
-            icon={<RefreshDuo_Icon className="size-4" />}
+            icon={<Refresh className="size-4" />}
           />
         </div>,
       ];
@@ -125,7 +127,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
           })}
           key="context_newTab"
           title="Open link in new tab"
-          icon={<LibraryDuo_Icon className="size-4" />}
+          icon={<SquareTopDown className="size-4" />}
         />,
         <ActionButton
           onPress={createActionHandler(() => {
@@ -133,7 +135,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
           })}
           key="context_openExternal"
           title="Open link in default browser"
-          icon={<ExternalDuo_Icon className="size-4" />}
+          icon={<Export className="size-4" />}
         />,
         <ActionButton
           onPress={createActionHandler(() => {
@@ -156,7 +158,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
           })}
           key="context_openImageTab"
           title="Open Image in New Tab"
-          icon={<GalleryWideDuo_Icon className="size-4" />}
+          icon={<GalleryWide className="size-4" />}
         />,
         <ActionButton
           onPress={createActionHandler(() => {
@@ -172,7 +174,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
           })}
           title="Save Image"
           key="context_saveImage"
-          icon={<GalleryDownloadDuo_Icon className="size-4" />}
+          icon={<GalleryDownload className="size-4" />}
         />,
         <ActionButton
           onPress={createActionHandler(() => {
@@ -188,7 +190,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
           })}
           key="context_searchImage"
           title="Search Web for Image"
-          icon={<GalleryCircleDuo_Icon className="size-4" />}
+          icon={<GalleryCircle className="size-4" />}
         />,
       ];
     };
@@ -204,7 +206,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
             })}
             title="Undo"
             key="context_undo"
-            icon={<UndoDuo_Icon className="size-4" />}
+            icon={<UndoLeftRound className="size-4" />}
           />,
         );
       }
@@ -216,7 +218,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
             })}
             title="Redo"
             key="context_redo"
-            icon={<UndoDuo_Icon className="size-4 rotate-180" />}
+            icon={<UndoLeftRound className="size-4 scale-x-[-1]" />}
           />,
         );
       }
@@ -228,7 +230,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
             })}
             title="Copy"
             key="context_copy"
-            icon={<CopyDuo_Icon className="size-4" />}
+            icon={<Copy className="size-4" />}
           />,
         );
       }
@@ -240,7 +242,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
             })}
             title="Paste"
             key="context_paste"
-            icon={<DocumentTextDuo_Icon className="size-4" />}
+            icon={<ClipboardText className="size-4" />}
           />,
         );
       }
@@ -252,7 +254,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
             })}
             title="Select All"
             key="context_selectAll"
-            icon={<TextSelectionDuo_Icon className="size-4" />}
+            icon={<TextSelection className="size-4" />}
           />,
         );
       }
