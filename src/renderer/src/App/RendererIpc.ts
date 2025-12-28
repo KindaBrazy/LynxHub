@@ -909,6 +909,12 @@ const rendererIpc = {
       ipc.send(contextMenuChannels.searchWithGoogle, text);
     },
 
+    // Opens DevTools and inspects element at coordinates
+    inspectElement: (id: number, x: number, y: number) => {
+      extensionRendererApi.events_ipc.emit('context_items_inspect_element', {id, x, y});
+      ipc.send(contextMenuChannels.inspectElement, id, x, y);
+    },
+
     // Navigates browser (back, forward, or refresh)
     navigate: (id: number, action: 'back' | 'forward' | 'refresh') => {
       extensionRendererApi.events_ipc.emit('context_items_navigate', {id, action});

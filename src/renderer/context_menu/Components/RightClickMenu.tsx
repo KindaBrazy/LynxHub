@@ -3,6 +3,7 @@ import {
   ArrowLeft,
   ArrowRight,
   ClipboardText,
+  Code,
   Copy,
   Export,
   GalleryCircle,
@@ -290,6 +291,19 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
       ];
     };
 
+    const buildPageActionItems = (contextId: number, x: number, y: number): ReactNode[] => {
+      return [
+        <ActionButton
+          onPress={createActionHandler(() => {
+            rendererIpc.contextItems.inspectElement(contextId, x, y);
+          })}
+          title="Inspect Element"
+          key="context_inspectElement"
+          icon={<Code className="size-4" />}
+        />,
+      ];
+    };
+
     const handleInitView = (
       _event: any,
       params: ContextMenuParams,
@@ -368,7 +382,20 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
         }
         const editItems = buildEditItems(editFlags, selectionText, contextId);
         collectedElements.push(...editItems);
+        previousActionSectionAdded = true;
       }
+
+      // Page Actions section (always shown)
+      if (previousActionSectionAdded) {
+        collectedElements.push(<Divider className="my-2" key="sep_edit_page" />);
+      }
+      collectedElements.push(
+        <span key="page_actions_title" className="ml-2 text-sm mb-1 font-semibold text-gray-600 dark:text-gray-400 px-2">
+          Page
+        </span>,
+      );
+      const pageActionItems = buildPageActionItems(contextId, params.x, params.y);
+      collectedElements.push(...pageActionItems);
 
       collectedElements.push(<div key="space_end" className="w-full h-2" />);
 

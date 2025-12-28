@@ -153,6 +153,12 @@ export default class ContextMenuManager {
       const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(text)}`;
       this.sendMainMessage(tabsChannels.onNewTab, searchUrl);
     });
+    ipcMain.on(contextMenuChannels.inspectElement, (_, id: number, x: number, y: number) => {
+      const webContents = this.getContentById(id);
+      if (webContents) {
+        webContents.inspectElement(x, y);
+      }
+    });
 
     ipcMain.on(contextMenuChannels.showWindow, () => this.showContextMenu());
     ipcMain.on(contextMenuChannels.hideWindow, () => this.hideContextMenu());
