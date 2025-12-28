@@ -1,4 +1,5 @@
 import {Divider} from '@heroui/react';
+import {Copy, Link} from '@solar-icons/react-perf/BoldDuotone';
 import {ContextMenuParams, EditFlags} from 'electron';
 import {isEmpty} from 'lodash';
 import {ReactNode, useEffect} from 'react';
@@ -140,7 +141,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
           })}
           key="context_copyLink"
           title="Copy Link Address"
-          icon={<CopyDuo_Icon className="size-4" />}
+          icon={<Link className="size-4" />}
         />,
       ];
     };
@@ -163,7 +164,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
           })}
           title="Copy Image"
           key="context_copyImage"
-          icon={<CopyDuo_Icon className="size-4" />}
+          icon={<Copy className="size-4" />}
         />,
         <ActionButton
           onPress={createActionHandler(() => {
@@ -179,7 +180,7 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
           })}
           title="Copy Image Address"
           key="context_copyImageAddress"
-          icon={<CopyDuo_Icon className="size-4" />}
+          icon={<Link className="size-4" />}
         />,
         <ActionButton
           onPress={createActionHandler(() => {
