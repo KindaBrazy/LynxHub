@@ -890,6 +890,12 @@ const rendererIpc = {
       ipc.send(contextMenuChannels.downloadImage, id, url);
     },
 
+    // Copies image to clipboard
+    copyImage: (url: string) => {
+      extensionRendererApi.events_ipc.emit('context_items_copy_image', {url});
+      ipc.send(contextMenuChannels.copyImage, url);
+    },
+
     // Navigates browser (back, forward, or refresh)
     navigate: (id: number, action: 'back' | 'forward' | 'refresh') => {
       extensionRendererApi.events_ipc.emit('context_items_navigate', {id, action});
