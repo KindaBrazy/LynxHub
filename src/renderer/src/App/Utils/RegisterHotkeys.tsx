@@ -1,8 +1,8 @@
-import {isEqual} from 'lodash';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Hotkey_Names} from '../../../../cross/HotkeyConstants';
+import {LynxHotkey} from '../../../../cross/IpcChannelAndTypes';
 import {appActions} from '../Redux/Reducer/AppReducer';
 import {cardsActions, useCardsState} from '../Redux/Reducer/CardsReducer';
 import {useHotkeysState} from '../Redux/Reducer/HotkeysReducer';
@@ -14,20 +14,56 @@ import {defaultTabItem} from './Constants';
 
 const LINE_ENDING = window.osPlatform === 'win32' ? '\r' : '\n';
 
+// Create a fast lookup key from hotkey properties
+function createHotkeyKey(key: string, control: boolean, shift: boolean, alt: boolean, meta: boolean): string {
+  return `${key}|${control ? 1 : 0}${shift ? 1 : 0}${alt ? 1 : 0}${meta ? 1 : 0}`;
+}
+
+// Build a Map for O(1) hotkey lookup instead of O(n) array iteration
+function buildHotkeyMap(hotkeys: LynxHotkey[]): Map<string, string> {
+  const map = new Map<string, string>();
+  for (const {name, key, control, shift, alt, meta} of hotkeys) {
+    if (!key) continue; // Skip hotkeys without a key assigned
+    const lookupKey = createHotkeyKey(key, control, shift, alt, meta);
+    map.set(lookupKey, name);
+  }
+  return map;
+}
+
 export default function useHotkeyPress(keys: {name: string; method: (() => void) | null}[]) {
   const hotkeys = useHotkeysState('hotkeys');
   const input = useHotkeysState('input');
+  const lastExecutedRef = useRef<string>('');
+  const lastExecutedTimeRef = useRef<number>(0);
+  const keysRef = useRef(keys);
+
+  // Update ref on each render (no re-render triggered)
+  keysRef.current = keys;
+
+  // Memoize the hotkey lookup map - only rebuilds when hotkeys change
+  const hotkeyMap = useMemo(() => buildHotkeyMap(hotkeys), [hotkeys]);
 
   useEffect(() => {
-    hotkeys.forEach(item => {
-      const {name, ...hotkey} = item;
-      const {type, ...current} = input;
+    // Only process keyUp events
+    if (input.type !== 'keyUp' || !input.key) return;
 
-      if (type !== 'keyUp' || !isEqual(current, hotkey)) return;
+    const lookupKey = createHotkeyKey(input.key, input.control, input.shift, input.alt, input.meta);
+    const hotkeyName = hotkeyMap.get(lookupKey);
 
-      keys.find(key => key.name === name)?.method?.();
-    });
-  }, [input, hotkeys]);
+    if (!hotkeyName) return;
+
+    // Debounce: prevent duplicate executions within 50ms
+    const now = Date.now();
+    if (lookupKey === lastExecutedRef.current && now - lastExecutedTimeRef.current < 50) return;
+
+    // Find method from current keys ref
+    const keyConfig = keysRef.current.find(k => k.name === hotkeyName);
+    if (keyConfig?.method) {
+      lastExecutedRef.current = lookupKey;
+      lastExecutedTimeRef.current = now;
+      keyConfig.method();
+    }
+  }, [input, hotkeyMap]);
 }
 
 /** Register application hotkeys */
