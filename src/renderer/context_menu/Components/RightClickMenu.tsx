@@ -167,6 +167,14 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
         />,
         <ActionButton
           onPress={createActionHandler(() => {
+            navigator.clipboard.writeText(srcURL);
+          })}
+          title="Copy Image Address"
+          key="context_copyImageAddress"
+          icon={<CopyDuo_Icon className="size-4" />}
+        />,
+        <ActionButton
+          onPress={createActionHandler(() => {
             rendererIpc.contextItems.newTab(`https://lens.google.com/uploadbyurl?url=${encodeURIComponent(srcURL)}`);
           })}
           key="context_searchImage"
