@@ -19,7 +19,7 @@ export default function SettingsSection({children, id, title, titleColor = '', i
   useRegisterSectionSearch(id, title);
 
   return (
-    <Card id={id} className={`w-full ${ContainersBg} border-1 border-foreground-100`}>
+    <Card id={id} shadow="sm" className={`w-full ${ContainersBg} border-1 border-foreground-100`}>
       <CardHeader className={`flex flex-row items-center justify-center gap-x-2 ${titleColor}`}>
         {icon}
         <SettingsSearchHighlight text={title} />
