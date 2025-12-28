@@ -163,7 +163,10 @@ export function List_Item({item, installed}: Props) {
       <CardHeader className="pb-0">
         <User
           avatarProps={{
-            src: getPluginIconUrl(item.url),
+            src: (() => {
+              const iconUrl = getPluginIconUrl(item.url);
+              return iconUrl ? `lynxcache://fetch/${encodeURIComponent(iconUrl)}` : iconUrl;
+            })(),
             radius: 'none',
             className: 'shrink-0 !bg-black/0',
           }}
