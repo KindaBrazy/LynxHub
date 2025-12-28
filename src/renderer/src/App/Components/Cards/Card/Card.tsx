@@ -62,7 +62,9 @@ const LynxCard = memo(() => {
 
   const {developer, avatarSrc} = useMemo(() => {
     const {owner, avatarUrl} = extractGitUrl(repoUrl);
-    return {developer: owner, avatarSrc: avatarUrl};
+    // Use image cache for remote avatar URLs
+    const cachedAvatarUrl = avatarUrl ? `lynxcache://fetch/${encodeURIComponent(avatarUrl)}` : avatarUrl;
+    return {developer: owner, avatarSrc: cachedAvatarUrl};
   }, [repoUrl]);
   const isRunning = useMemo(() => runningCard.some(item => item.id === id), [runningCard, id]);
   const accentColor = useMemo(() => getAccentColorAsHex(title, developer), [title, developer]);
