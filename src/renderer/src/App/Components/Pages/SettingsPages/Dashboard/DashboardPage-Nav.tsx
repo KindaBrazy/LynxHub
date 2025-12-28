@@ -77,12 +77,12 @@ const DashboardGroupSection = ({title, items, danger = false, activeSection}: Gr
       <div className="space-y-2">
         {items.map(item => (
           <Button
-            className={`flex cursor-default justify-start ${activeSection === item.elementId && 'bg-default-200'}`}
             size="sm"
             variant="light"
             color={item.color || 'default'}
             key={`${item.title}_dashboard_section`}
             onPress={() => onPress(item.elementId)}
+            className={`flex cursor-default justify-start ${activeSection === item.elementId && 'bg-default-200'}`}
             fullWidth>
             {item.icon}
             <Text>{item.title}</Text>
@@ -119,7 +119,7 @@ const DashboardPageNav = () => {
 
   // Set up intersection observers for all sections globally
   useEffect(() => {
-    let observers: IntersectionObserver[] = [];
+    const observers: IntersectionObserver[] = [];
     let timeoutId: NodeJS.Timeout;
 
     const setupObservers = () => {

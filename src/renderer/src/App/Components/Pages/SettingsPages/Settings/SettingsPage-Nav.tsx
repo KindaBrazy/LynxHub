@@ -95,12 +95,7 @@ const groupSections: GroupProps[] = [
 ];
 
 /** Navigation bar group and items */
-export const GroupSection = ({
-  title,
-  items,
-  danger = false,
-  activeSection,
-}: GroupProps & {activeSection: string}) => {
+export const GroupSection = ({title, items, danger = false, activeSection}: GroupProps & {activeSection: string}) => {
   const onPress = useCallback((id: string) => {
     document.getElementById(id)?.scrollIntoView({behavior: 'smooth', block: 'start'});
   }, []);
@@ -111,12 +106,12 @@ export const GroupSection = ({
       <div className="space-y-2">
         {items.map(item => (
           <Button
-            className={`flex cursor-default justify-start ${activeSection === item.elementId && 'bg-default-200'}`}
             size="sm"
             variant="light"
             color={item.color || 'default'}
             key={`${item.title}_settings_section`}
             onPress={() => onPress(item.elementId)}
+            className={`flex cursor-default justify-start ${activeSection === item.elementId && 'bg-default-200'}`}
             fullWidth>
             {item.icon}
             <Text>
@@ -163,7 +158,7 @@ const SettingsPageNav = ({searchValue, setSearchValue, sectionTexts}: SettingsPa
 
   // Set up intersection observers for all sections globally
   useEffect(() => {
-    let observers: IntersectionObserver[] = [];
+    const observers: IntersectionObserver[] = [];
     let timeoutId: NodeJS.Timeout;
 
     const setupObservers = () => {
