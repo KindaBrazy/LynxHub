@@ -28,20 +28,20 @@ type SectionConfig = {
 
 const fadeIn = {
   hidden: {opacity: 0},
-  visible: {opacity: 1, transition: {duration: 0.4}},
+  visible: {opacity: 1, transition: {duration: 0.2}},
 };
 
 const staggerContainer = {
   hidden: {opacity: 0},
   visible: {
     opacity: 1,
-    transition: {staggerChildren: 0.05, delayChildren: 0.1},
+    transition: {staggerChildren: 0.03, delayChildren: 0.05},
   },
 };
 
 const itemFade = {
-  hidden: {opacity: 0, y: 8},
-  visible: {opacity: 1, y: 0, transition: {duration: 0.3}},
+  hidden: {opacity: 0, y: 6},
+  visible: {opacity: 1, y: 0, transition: {duration: 0.15}},
 };
 
 export default function EmptyPage({type}: Props) {
