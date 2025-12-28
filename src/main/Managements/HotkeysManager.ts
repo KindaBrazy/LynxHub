@@ -1,5 +1,4 @@
 import {Event, Input, WebContents} from 'electron';
-import {isEqual} from 'lodash';
 
 import {appWindowChannels, LynxInput} from '../../cross/IpcChannelAndTypes';
 import {appManager} from '../index';
@@ -13,27 +12,49 @@ const initialKeys: LynxInput = {
   type: '',
 };
 
-let prevKeys: LynxInput = initialKeys;
-let currentKeys: LynxInput = initialKeys;
+let prevKey = '';
+let prevType = '';
+let prevModifiers = '';
 
 const registeredHotkeys: number[] = [];
 
-function sendToRenderer() {
-  if (isEqual(prevKeys, currentKeys)) return;
-  prevKeys = currentKeys;
-  appManager?.getWebContent()?.send(appWindowChannels.hotkeysChange, currentKeys);
+// Fast string-based comparison instead of deep object comparison
+function getModifierString(control: boolean, shift: boolean, alt: boolean, meta: boolean): string {
+  return `${control ? 'c' : ''}${shift ? 's' : ''}${alt ? 'a' : ''}${meta ? 'm' : ''}`;
+}
+
+function sendToRenderer(input: LynxInput) {
+  const {key, type, control, shift, alt, meta} = input;
+  const modifiers = getModifierString(control, shift, alt, meta);
+
+  // Fast string comparison instead of lodash isEqual
+  if (key === prevKey && type === prevType && modifiers === prevModifiers) return;
+
+  prevKey = key;
+  prevType = type;
+  prevModifiers = modifiers;
+
+  appManager?.getWebContent()?.send(appWindowChannels.hotkeysChange, input);
 }
 
 function onBlur() {
-  currentKeys = initialKeys;
-  sendToRenderer();
+  prevKey = '';
+  prevType = '';
+  prevModifiers = '';
+  appManager?.getWebContent()?.send(appWindowChannels.hotkeysChange, initialKeys);
 }
 
 function onInput(_event: Event, input: Input) {
   const {control, key, shift, alt, meta, type} = input;
-  currentKeys = {control, key: key.toLowerCase(), shift, alt, meta, type};
+  const lowerKey = key.toLowerCase();
 
-  sendToRenderer();
+  // Skip pure modifier key events (no actual key pressed) for keyDown
+  // This reduces unnecessary IPC calls when user is just pressing modifiers
+  const isModifierOnly = lowerKey === 'control' || lowerKey === 'shift' || lowerKey === 'alt' || lowerKey === 'meta';
+  if (type === 'keyDown' && isModifierOnly) return;
+
+  const currentKeys: LynxInput = {control, key: lowerKey, shift, alt, meta, type};
+  sendToRenderer(currentKeys);
 }
 
 export default function RegisterHotkeys(contents: WebContents) {
