@@ -121,12 +121,14 @@ export default class ElectronAppManager {
       }, 2000);
     });
 
-    this.getWebContent()?.setWindowOpenHandler(({url}) => {
+    this.getWebContent()?.setWindowOpenHandler(({url, disposition}) => {
       const openExternal = storageManager.getData('app').openLinkExternal;
       if (openExternal) {
         shell.openExternal(url);
       } else {
-        this.getWebContent()?.send(tabsChannels.onNewTab, url);
+        // background-tab = middle-click = open in background (don't switch)
+        const openInBackground = disposition === 'background-tab';
+        this.getWebContent()?.send(tabsChannels.onNewTab, url, openInBackground);
       }
       return {action: 'deny'};
     });

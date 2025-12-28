@@ -161,7 +161,10 @@ export default class BrowserManager {
       } else if (storageManager.getData('app').openLinkExternal) {
         shell.openExternal(url);
       } else {
-        appManager?.getWebContent()?.send(tabsChannels.onNewTab, url);
+        // background-tab = middle-click = open in background (don't switch)
+        // foreground-tab = Shift+middle-click = switch to new tab
+        const openInBackground = disposition === 'background-tab';
+        appManager?.getWebContent()?.send(tabsChannels.onNewTab, url, openInBackground);
       }
 
       return {action: 'deny'};
