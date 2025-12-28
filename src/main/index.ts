@@ -17,6 +17,7 @@ import ContextMenuManager from './Managements/ContextMenuManager';
 import {ValidateCards} from './Managements/DataValidator';
 import DialogManager from './Managements/DialogManager';
 import ElectronAppManager from './Managements/ElectronAppManager';
+import {getImageCacheManager, registerImageCacheScheme} from './Managements/ImageCacheManager';
 import {browserIPC, listenToAllChannels} from './Managements/Ipc/IpcHandler';
 import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
 import LinkPreviewManager from './Managements/LinkPreviewManager';
@@ -128,6 +129,9 @@ protocol.registerSchemesAsPrivileged([
   },
 ]);
 
+// Register image cache protocol scheme (must be before app.ready)
+registerImageCacheScheme();
+
 async function setupApp() {
   extensionManager.setStorageManager(storageManager);
 
@@ -137,6 +141,9 @@ async function setupApp() {
   await downloadDU();
 
   app.whenReady().then(async () => {
+    // Initialize image cache manager
+    await getImageCacheManager().initialize();
+
     protocol.handle('lynxplugin', request => {
       try {
         const url = new URL(request.url);
@@ -163,6 +170,8 @@ async function setupApp() {
   app.on('before-quit', e => {
     if (!isQuitting) {
       e.preventDefault();
+      // Stop image cache manager
+      getImageCacheManager().stop();
       stopAllPty().then(() => {
         isQuitting = true;
         app.quit();

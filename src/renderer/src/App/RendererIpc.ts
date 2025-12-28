@@ -48,6 +48,7 @@ import {
   gitChannels,
   GitProgressCallback,
   HomeCategory,
+  imageCacheChannels,
   initChannels,
   LynxInput,
   moduleApiChannels,
@@ -1261,6 +1262,42 @@ const rendererIpc = {
     // Listens for Patreon release channel changes
     onReleaseChannel: (result: (event: IpcRendererEvent, stage: SubscribeStages) => void) =>
       ipc.on(patreonChannels.onReleaseChannel, result),
+  },
+
+  /** Image caching system using lynxcache:// protocol */
+  imageCache: {
+    // Gets cache statistics (entry count, total size, last cleanup)
+    getStats: (): Promise<{
+      entryCount: number;
+      totalSize: number;
+      totalSizeFormatted: string;
+      lastCleanup: number;
+      lastCleanupFormatted: string;
+    }> => ipc.invoke(imageCacheChannels.getStats),
+
+    // Clears all cached images
+    clearCache: (): Promise<{success: boolean; clearedEntries: number}> => ipc.invoke(imageCacheChannels.clearCache),
+
+    // Triggers manual cache cleanup (removes expired entries)
+    triggerCleanup: (): Promise<{success: boolean}> => ipc.invoke(imageCacheChannels.triggerCleanup),
+
+    // Converts a URL to a cache URL (lynxcache://fetch/...)
+    getCacheUrl: (url: string): Promise<string> => ipc.invoke(imageCacheChannels.getCacheUrl),
+
+    /**
+     * Generates a cache URL for a given image URL (sync, no IPC).
+     * Use this URL in img src to load images through the cache.
+     * @param url - The original image URL
+     * @returns The cache protocol URL
+     */
+    toCacheUrl: (url: string): string => `lynxcache://fetch/${encodeURIComponent(url)}`,
+
+    /**
+     * Checks if a URL is already a cache URL
+     * @param url - The URL to check
+     * @returns True if the URL is a cache URL
+     */
+    isCacheUrl: (url: string): boolean => url.startsWith('lynxcache://'),
   },
 };
 
