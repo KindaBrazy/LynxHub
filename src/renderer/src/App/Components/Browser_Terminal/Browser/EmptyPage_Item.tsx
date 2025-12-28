@@ -52,7 +52,7 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
   }, [recent]);
 
   return (
-    <Tooltip radius="sm" delay={300} content={recent} showArrow>
+    <Tooltip radius="sm" delay={300} content={favItem?.title || recent} showArrow>
       <Card as="div" shadow="sm" onPress={openRecent} className="w-36 h-32" isPressable>
         <CardBody
           className={
