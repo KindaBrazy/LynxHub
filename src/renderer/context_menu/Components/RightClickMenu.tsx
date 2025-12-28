@@ -284,8 +284,8 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
           onPress={createActionHandler(() => {
             rendererIpc.contextItems.searchWithGoogle(selection);
           })}
-          title={`Search with Google`}
           key="context_searchGoogle"
+          title={`Search with Google`}
           icon={<MagniferBug className="size-4" />}
         />,
       ];
@@ -336,7 +336,12 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
       const hasImageItems = mediaType === 'image';
       const hasTextSelection = !isEmpty(selectionText);
       const hasEditItems =
-        editFlags.canUndo || editFlags.canRedo || editFlags.canCut || editFlags.canCopy || editFlags.canPaste || editFlags.canSelectAll;
+        editFlags.canUndo ||
+        editFlags.canRedo ||
+        editFlags.canCut ||
+        editFlags.canCopy ||
+        editFlags.canPaste ||
+        editFlags.canSelectAll;
       const needsActionsTitle = hasLinkItems || hasEditItems || hasImageItems || hasTextSelection;
 
       if (needsActionsTitle) {
@@ -390,7 +395,9 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
         collectedElements.push(<Divider className="my-2" key="sep_edit_page" />);
       }
       collectedElements.push(
-        <span key="page_actions_title" className="ml-2 text-sm mb-1 font-semibold text-gray-600 dark:text-gray-400 px-2">
+        <span
+          key="page_actions_title"
+          className="ml-2 text-sm mb-1 font-semibold text-gray-600 dark:text-gray-400 px-2">
           Page
         </span>,
       );

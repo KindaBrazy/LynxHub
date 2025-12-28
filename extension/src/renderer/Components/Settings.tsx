@@ -15,6 +15,7 @@ export function SettingsNavButton() {
           elementId: sectionId,
         },
       ]}
+      activeSection=""
       title="My Extension"
     />
   );
