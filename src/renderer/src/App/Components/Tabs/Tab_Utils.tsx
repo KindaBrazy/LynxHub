@@ -12,6 +12,8 @@ import {defaultTabItem, REMOVE_MODAL_DELAY} from '../../Utils/Constants';
 
 export function useRemoveTab() {
   const runningCards = useCardsState('runningCard');
+  const tabs = useTabsState('tabs');
+  const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
 
   return useCallback(
@@ -23,13 +25,19 @@ export function useRemoveTab() {
       const tId = tabId || running?.tabId;
 
       if (tId) {
+        // Clear window progress bar if the removed tab had progress and was active
+        const removedTab = tabs.find(tab => tab.id === tId);
+        if (removedTab?.progress && tId === activeTab) {
+          rendererIpc.win.setProgressBar(-1);
+        }
+
         dispatch(tabsActions.removeTab(tId));
         dispatch(modalActions.removeAllModalsForTabId({tabId: tId}));
         dispatch(cardsActions.stopRunningCard({tabId: tId}));
         dispatch(volumeActions.removeTab(tId));
       }
     },
-    [runningCards, dispatch],
+    [runningCards, tabs, activeTab, dispatch],
   );
 }
 
