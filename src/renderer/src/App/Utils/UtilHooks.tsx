@@ -84,7 +84,7 @@ function topToast(options: {
     promise,
     classNames: {
       base: placement.includes('top')
-        ? 'top-10'
+        ? 'top-6'
         : `right-6 bottom-8 flex flex-col gap-y-2 cursor-default ${color === 'danger' && 'pt-6'}`,
     },
     endContent:

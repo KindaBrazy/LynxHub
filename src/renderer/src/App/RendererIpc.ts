@@ -47,6 +47,7 @@ import {
   fileChannels,
   gitChannels,
   GitProgressCallback,
+  HeroToastPlacement,
   HomeCategory,
   imageCacheChannels,
   initChannels,
@@ -736,8 +737,9 @@ const rendererIpc = {
       ipc.on(appWindowChannels.hotkeysChange, result),
 
     // Listens for toast notification events
-    onShowToast: (result: (event: IpcRendererEvent, message: string, type: ShowToastTypes) => void) =>
-      ipc.on(appWindowChannels.showToast, result),
+    onShowToast: (
+      result: (event: IpcRendererEvent, message: string, type: ShowToastTypes, placement?: HeroToastPlacement) => void,
+    ) => ipc.on(appWindowChannels.showToast, result),
   },
 
   contextMenu: {
