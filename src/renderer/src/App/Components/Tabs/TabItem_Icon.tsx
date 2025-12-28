@@ -61,7 +61,7 @@ const TabItem_Icon = memo(({tab, currentView}: Props) => {
       {tab.isTerminal && currentView === 'terminal' ? (
         <Terminal_Icon className="shrink-0 mb-0.5" />
       ) : tab.isLoading ? (
-        <Spinner size="sm" color="primary" variant="simple" className="scale-80 mb-0.5" />
+        <Spinner size="sm" color="primary" variant="gradient" className="scale-80 mb-0.5" />
       ) : (
         <div className="shrink-0 size-4 content-center mb-0.5">{icon}</div>
       )}
