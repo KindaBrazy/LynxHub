@@ -42,16 +42,16 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
             <DropdownMenu
               topContent={<span className="tracking-tighter text-foreground-700">Search selected text by:</span>}>
               <DropdownItem
-                key="Google"
-                endContent={endContent}
-                onPress={() => searchSelectedText('Google')}
                 startContent={
                   <Image
                     alt="Google icon"
                     className="size-4"
                     src={`lynxcache://fetch/${encodeURIComponent('https://www.google.com/favicon.ico')}`}
                   />
-                }>
+                }
+                key="Google"
+                endContent={endContent}
+                onPress={() => searchSelectedText('Google')}>
                 Google
               </DropdownItem>
               <DropdownItem
@@ -68,38 +68,37 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
                 DuckDuckGo
               </DropdownItem>
               <DropdownItem
-                key="Reddit"
-                endContent={endContent}
-                onPress={() => searchSelectedText('Reddit')}
                 startContent={
                   <Image
                     alt="Reddit icon"
                     className="size-4"
                     src={`lynxcache://fetch/${encodeURIComponent('https://www.reddit.com/favicon.ico')}`}
                   />
-                }>
+                }
+                key="Reddit"
+                endContent={endContent}
+                onPress={() => searchSelectedText('Reddit')}>
                 Reddit
               </DropdownItem>
               <DropdownItem
-                key="ChatGPT"
-                endContent={endContent}
-                onPress={() => searchSelectedText('ChatGPT')}
-                // eslint-disable-next-line perfectionist/sort-jsx-props
                 startContent={
                   <Image
                     alt="ChatGPT icon"
                     className="size-4"
                     src={`lynxcache://fetch/${encodeURIComponent('https://chat.openai.com/favicon.ico')}`}
                   />
-                }>
+                }
+                key="ChatGPT"
+                endContent={endContent}
+                onPress={() => searchSelectedText('ChatGPT')}>
                 ChatGPT
               </DropdownItem>
               <DropdownItem
                 startContent={
                   <Image
-                    src={`lynxcache://fetch/${encodeURIComponent('https://registry.npmmirror.com/@lobehub/icons-static-png/1.74.0/files/dark/perplexity-color.png')}`}
                     className="size-4"
                     alt="Perplexity icon"
+                    src={`lynxcache://fetch/${encodeURIComponent('https://www.perplexity.ai/favicon.ico')}`}
                   />
                 }
                 key="Perplexity"
