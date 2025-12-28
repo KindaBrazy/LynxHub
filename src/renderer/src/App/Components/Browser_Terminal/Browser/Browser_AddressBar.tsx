@@ -166,6 +166,12 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
     [historyUrls],
   );
 
+  const handlePaste = useCallback((e: React.ClipboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const plainText = e.clipboardData.getData('text/plain');
+    document.execCommand('insertText', false, plainText);
+  }, []);
+
   const acceptAutocomplete = useCallback(() => {
     if (autocomplete && editableRef.current) {
       const newValue = inputValue + autocomplete;
@@ -269,6 +275,7 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
     handleBlur,
     handleInput,
     handleKeyDown,
+    handlePaste,
     handleFavoriteToggle,
     handleContainerClick,
   };
@@ -288,6 +295,7 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
     handleBlur,
     handleInput,
     handleKeyDown,
+    handlePaste,
     handleFavoriteToggle,
     handleContainerClick,
   } = useAddressBar({runningCard, setCustomAddress});
@@ -335,6 +343,7 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
           onInput={handleInput}
           onKeyDown={handleKeyDown}
           onMouseDown={handleMouseDown}
+          onPaste={handlePaste}
           style={{minHeight: '32px', lineHeight: '32px'}}
           contentEditable
         />
