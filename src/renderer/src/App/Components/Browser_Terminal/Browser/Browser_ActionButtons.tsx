@@ -16,9 +16,9 @@ const variants: Variants = {
 
 const transition: Transition = {duration: 0.3};
 
-type Props = {webuiAddress: string; tabID: string; id: string};
+type Props = {webuiAddress: string; tabID: string; id: string; isDomReady: boolean};
 
-const Browser_ActionButtons = memo(({webuiAddress, tabID, id}: Props) => {
+const Browser_ActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props) => {
   const isActiveTab = useIsActiveTab(tabID);
   const tabs = useTabsState('tabs');
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
@@ -33,9 +33,11 @@ const Browser_ActionButtons = memo(({webuiAddress, tabID, id}: Props) => {
   const loadWebuiURL = () => rendererIpc.browser.loadURL(id, webuiAddress);
   const toggleDevTools = () => rendererIpc.browser.toggleDevTools(id);
 
+  const canToggleDevTools = isActiveTab && isDomReady;
+
   useHotkeyPress([
     {name: Hotkey_Names.refreshTab, method: isActiveTab ? reload : null},
-    {name: Hotkey_Names.toggleDevTools, method: isActiveTab ? toggleDevTools : null},
+    {name: Hotkey_Names.toggleDevTools, method: canToggleDevTools ? toggleDevTools : null},
   ]);
 
   useEffect(() => {
