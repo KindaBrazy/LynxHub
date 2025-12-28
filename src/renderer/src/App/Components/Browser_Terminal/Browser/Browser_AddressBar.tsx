@@ -220,7 +220,7 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
             dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
           }
           rendererIpc.storageUtils.addBrowserRecent(url);
-          rendererIpc.storageUtils.addBrowserHistory(url);
+          // History is now tracked in main process on navigation events
           editableRef.current?.blur();
           rendererIpc.browser.reload(cardId);
         } catch (err) {

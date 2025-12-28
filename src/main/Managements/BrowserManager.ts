@@ -91,8 +91,27 @@ export default class BrowserManager {
 
     sendToRenderer();
 
-    webContents.on('did-navigate', sendToRenderer);
-    webContents.on('did-navigate-in-page', sendToRenderer);
+    // Track history on actual navigation (like real browsers do)
+    webContents.on('did-navigate', (_, url) => {
+      sendToRenderer();
+      // Add to recent/history when page actually navigates (clicking links, redirects, etc.)
+      if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
+        const formattedUrl = formatWebAddress(url);
+        storageManager.addBrowserRecent(formattedUrl);
+        storageManager.addBrowserHistory(formattedUrl);
+      }
+    });
+
+    webContents.on('did-navigate-in-page', (_, url) => {
+      sendToRenderer();
+      // Also track in-page navigation (SPA hash/pushState changes)
+      if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
+        const formattedUrl = formatWebAddress(url);
+        storageManager.addBrowserRecent(formattedUrl);
+        storageManager.addBrowserHistory(formattedUrl);
+      }
+    });
+
     webContents.on('did-finish-load', sendToRenderer);
     webContents.on('did-stop-loading', sendToRenderer);
 
@@ -165,6 +184,12 @@ export default class BrowserManager {
         // foreground-tab = Shift+middle-click = switch to new tab
         const openInBackground = disposition === 'background-tab';
         appManager?.getWebContent()?.send(tabsChannels.onNewTab, url, openInBackground);
+        // Track URLs opened in new tabs (like real browsers)
+        if (url && !url.startsWith('about:')) {
+          const formattedUrl = formatWebAddress(url);
+          storageManager.addBrowserRecent(formattedUrl);
+          storageManager.addBrowserHistory(formattedUrl);
+        }
       }
 
       return {action: 'deny'};
@@ -340,7 +365,16 @@ export default class BrowserManager {
   }
 
   public loadURL(id: string, url: string) {
-    this.getViewByID(id)?.webContents.loadURL(url);
+    const view = this.getViewByID(id);
+    if (view) {
+      view.webContents.loadURL(url);
+      // Track programmatic URL loads (like real browsers)
+      if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
+        const formattedUrl = formatWebAddress(url);
+        storageManager.addBrowserRecent(formattedUrl);
+        storageManager.addBrowserHistory(formattedUrl);
+      }
+    }
   }
 
   public setVisible(id: string, visible: boolean) {
