@@ -26,7 +26,10 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
   const [openFolders, setOpenFolders] = useState<string[] | undefined>(undefined);
   const [cardInfoDescriptions, setCardInfoDescriptions] = useState<CardInfoDescriptions>(undefined);
 
-  const avatarUrl = useMemo(() => extractGitUrl(url).avatarUrl, [url]);
+  const avatarUrl = useMemo(() => {
+    const avatarUrlFromGit = extractGitUrl(url).avatarUrl;
+    return avatarUrlFromGit ? `lynxcache://fetch/${encodeURIComponent(avatarUrlFromGit)}` : avatarUrlFromGit;
+  }, [url]);
 
   useDebounceBreadcrumb('Card Git Manager Modal: ', [isOpen, cardId]);
 
