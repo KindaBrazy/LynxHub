@@ -438,8 +438,7 @@ class BaseStorage {
 
       // Apply all necessary migrations sequentially
       for (const [version, migrationFn] of migrations.entries()) {
-        if (storeVersion < version + 0.01) {
-          // Use a small tolerance for float comparison
+        if (storeVersion < version) {
           console.log(`Applying migration for v${version}...`);
           migrationFn();
         }
