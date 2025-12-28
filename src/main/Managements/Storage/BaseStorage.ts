@@ -30,12 +30,12 @@ import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
 
-  private readonly CURRENT_VERSION: number = 0.94;
+  private readonly CURRENT_VERSION: number = 0.95;
   private migratedTo: number = 0; // Tracks migration state for deferred operations
   private readonly isInitializing: boolean = true; // Flag to skip breadcrumbs during initialization
 
   private readonly DEFAULT_DATA: StorageTypes = {
-    storage: {version: 0.94},
+    storage: {version: 0.95},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -90,6 +90,7 @@ class BaseStorage {
       blinkCursor: true,
       resizeDelay: 77,
       closeTabOnExit: true,
+      enableLigatures: true,
       cdHistory: [],
       quickCommands: [],
     },
@@ -422,6 +423,15 @@ class BaseStorage {
             });
 
             this.storage.data.app.hotkeys = mergedHotkeys;
+          },
+        ],
+        [
+          0.95,
+          () => {
+            // Add enableLigatures setting for terminal font ligatures
+            if (this.storage.data.terminal.enableLigatures === undefined) {
+              this.storage.data.terminal.enableLigatures = true;
+            }
           },
         ],
       ]);

@@ -1,6 +1,7 @@
 import {CanvasAddon} from '@xterm/addon-canvas';
 import {ClipboardAddon} from '@xterm/addon-clipboard';
 import {FitAddon} from '@xterm/addon-fit';
+import {LigaturesAddon} from '@xterm/addon-ligatures';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {Unicode11Addon} from '@xterm/addon-unicode11';
@@ -103,6 +104,7 @@ const XTermCore = memo(
       const blinkCursor = blinkCursorOverride ?? terminalSettings.blinkCursor;
       const resizeDelay = resizeDelayOverride ?? terminalSettings.resizeDelay;
       const useConpty = terminalSettings.useConpty;
+      const enableLigatures = terminalSettings.enableLigatures;
 
       const canResize = useCallback(() => {
         if (minResizeCols === 0 && minResizeRows === 0) return true;
@@ -173,6 +175,15 @@ const XTermCore = memo(
             xTerm.loadAddon(webglAddon);
           } else {
             xTerm.loadAddon(new CanvasAddon());
+          }
+
+          // Load ligatures addon if enabled
+          if (enableLigatures) {
+            try {
+              xTerm.loadAddon(new LigaturesAddon());
+            } catch (e) {
+              console.warn('Failed to load ligatures addon:', e);
+            }
           }
 
           // Resize notification

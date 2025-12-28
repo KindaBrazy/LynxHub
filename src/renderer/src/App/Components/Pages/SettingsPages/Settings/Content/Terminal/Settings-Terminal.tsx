@@ -8,6 +8,7 @@ import SettingsTerminalConpty from './SettingsTerminal-Conpty';
 import SettingsTerminalCursorInactiveStyle from './SettingsTerminal-CursorInactiveStyle';
 import SettingsTerminalCursorStyle from './SettingsTerminal-CursorStyle';
 import SettingsTerminalFontSize from './SettingsTerminal-FontSize';
+import SettingsTerminalLigatures from './SettingsTerminal-Ligatures';
 import SettingsTerminalOutputColor from './SettingsTerminal-OutputColor';
 import SettingsTerminalQuickCommands from './SettingsTerminal-QuickCommands';
 import SettingsTerminalReset from './SettingsTerminal-Reset';
@@ -23,6 +24,7 @@ export default function SettingsTerminal() {
       <SettingsTerminalScrollBack />
       <SettingsTerminalResizeDelay />
       <SettingsTerminalFontSize />
+      <SettingsTerminalLigatures />
       <SettingsTerminalCursorStyle />
       <SettingsTerminalCursorInactiveStyle />
       <SettingsTerminalBlinkCursor />
