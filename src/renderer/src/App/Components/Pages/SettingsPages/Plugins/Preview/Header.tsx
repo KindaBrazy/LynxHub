@@ -83,7 +83,14 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
             </div>
           }
           className="self-start"
-          avatarProps={{src: getPluginIconUrl(selectedPlugin?.url), className: 'bg-black/0', radius: 'none'}}
+          avatarProps={{
+            src: (() => {
+              const iconUrl = getPluginIconUrl(selectedPlugin?.url);
+              return iconUrl ? `lynxcache://fetch/${encodeURIComponent(iconUrl)}` : iconUrl;
+            })(),
+            className: 'bg-black/0',
+            radius: 'none',
+          }}
           name={<span className="font-semibold text-foreground text-xl">{selectedPlugin?.metadata.title}</span>}
         />
         <div className="flex flex-row items-center ml-12">
