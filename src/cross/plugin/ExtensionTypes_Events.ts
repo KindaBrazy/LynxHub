@@ -197,6 +197,7 @@ export type ExtensionEvents_IPC = {
   context_items_download_image: {id: number; url: string};
   context_items_copy_image: {url: string};
   context_items_search_google: {text: string};
+  context_items_inspect_element: {id: number; x: number; y: number};
   context_items_navigate: {id: number; action: 'back' | 'forward' | 'refresh'};
 
   // browser

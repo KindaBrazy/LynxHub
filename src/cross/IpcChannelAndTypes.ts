@@ -347,6 +347,7 @@ export const contextMenuChannels = {
   downloadImage: 'context:download-image',
   copyImage: 'context:copy-image',
   searchWithGoogle: 'context:search-google',
+  inspectElement: 'context:inspect-element',
   navigate: 'context:navigate',
 
   openTerminateAI: 'context:open-terminate-ai',
