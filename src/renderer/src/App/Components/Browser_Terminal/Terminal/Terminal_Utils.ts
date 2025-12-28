@@ -38,13 +38,42 @@ export function getRendererMode(): 'webgl' | 'canvas' {
  * @returns The ITheme object for xterm.js.
  */
 export function getTheme(darkMode: boolean): ITheme {
+  if (darkMode) {
+    return {
+      background: getColor('nearBlack'),
+      foreground: getColor('white'),
+      cursor: getColor('white'),
+      cursorAccent: getColor('white'),
+      selectionForeground: getColor('black'),
+      selectionBackground: getColor('white', 0.7),
+    };
+  }
+
+  // Light mode with adjusted ANSI colors for better visibility
   return {
-    background: darkMode ? getColor('nearBlack') : getColor('white'),
-    foreground: darkMode ? getColor('white') : getColor('black'),
-    cursor: darkMode ? getColor('white') : getColor('black'),
-    cursorAccent: darkMode ? getColor('white') : getColor('black'),
-    selectionForeground: darkMode ? getColor('black') : getColor('white'),
-    selectionBackground: darkMode ? getColor('white', 0.7) : getColor('black', 0.7),
+    background: getColor('white'),
+    foreground: getColor('black'),
+    cursor: getColor('black'),
+    cursorAccent: getColor('black'),
+    selectionForeground: getColor('white'),
+    selectionBackground: getColor('black', 0.7),
+    // ANSI colors adjusted for light backgrounds
+    black: '#1a1a1a',
+    red: '#c41a16',
+    green: '#007400',
+    yellow: '#a06000',
+    blue: '#0451a5',
+    magenta: '#bc05bc',
+    cyan: '#0598bc',
+    white: '#767676',
+    brightBlack: '#5c5c5c',
+    brightRed: '#c41a16',
+    brightGreen: '#007400',
+    brightYellow: '#a06000',
+    brightBlue: '#0451a5',
+    brightMagenta: '#bc05bc',
+    brightCyan: '#0598bc',
+    brightWhite: '#1a1a1a',
   };
 }
 
