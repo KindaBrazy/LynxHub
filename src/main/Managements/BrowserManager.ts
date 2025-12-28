@@ -377,6 +377,10 @@ export default class BrowserManager {
     this.getViewByID(id)?.webContents.reload();
   }
 
+  public stop(id: string) {
+    this.getViewByID(id)?.webContents.stop();
+  }
+
   public goBack(id: string) {
     this.getViewByID(id)?.webContents.navigationHistory.goBack();
   }

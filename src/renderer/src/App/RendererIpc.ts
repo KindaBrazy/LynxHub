@@ -969,6 +969,11 @@ const rendererIpc = {
       extensionRendererApi.events_ipc.emit('browser_reload', {id});
       ipc.send(browserChannels.reload, id);
     },
+    // Stops loading current page
+    stop: (id: string) => {
+      extensionRendererApi.events_ipc.emit('browser_stop', {id});
+      ipc.send(browserChannels.stop, id);
+    },
     // Navigates browser back
     goBack: (id: string) => {
       extensionRendererApi.events_ipc.emit('browser_go_back', {id});

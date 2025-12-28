@@ -1,9 +1,10 @@
 import {Button} from '@heroui/react';
 import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
-import {memo, useEffect, useState} from 'react';
+import {memo, useEffect, useMemo, useState} from 'react';
 
 import {Hotkey_Names} from '../../../../../../cross/HotkeyConstants';
-import {ArrowDuo_Icon, HomeSmile_Icon, RefreshDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
+import {ArrowDuo_Icon, Close_Icon, HomeSmile_Icon, RefreshDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
+import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import rendererIpc from '../../../RendererIpc';
 import useHotkeyPress from '../../../Utils/RegisterHotkeys';
 import {useIsActiveTab} from '../../Tabs/Tab_Utils';
@@ -19,12 +20,16 @@ type Props = {webuiAddress: string; tabID: string; id: string};
 
 const Browser_ActionButtons = memo(({webuiAddress, tabID, id}: Props) => {
   const isActiveTab = useIsActiveTab(tabID);
+  const tabs = useTabsState('tabs');
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [canGoForward, setCanGoForward] = useState<boolean>(false);
+
+  const isLoading = useMemo(() => tabs.find(tab => tab.id === tabID)?.isLoading ?? false, [tabs, tabID]);
 
   const goBack = () => rendererIpc.browser.goBack(id);
   const goForward = () => rendererIpc.browser.goForward(id);
   const reload = () => rendererIpc.browser.reload(id);
+  const stop = () => rendererIpc.browser.stop(id);
   const loadWebuiURL = () => rendererIpc.browser.loadURL(id, webuiAddress);
 
   useHotkeyPress([{name: Hotkey_Names.refreshTab, method: isActiveTab ? reload : null}]);
@@ -61,9 +66,15 @@ const Browser_ActionButtons = memo(({webuiAddress, tabID, id}: Props) => {
         )}
       </AnimatePresence>
 
-      <Button size="sm" variant="light" onPress={reload} className="cursor-default" isIconOnly>
-        <RefreshDuo_Icon className="size-4" />
-      </Button>
+      {isLoading ? (
+        <Button size="sm" variant="light" onPress={stop} className="cursor-default" isIconOnly>
+          <Close_Icon className="size-4" />
+        </Button>
+      ) : (
+        <Button size="sm" variant="light" onPress={reload} className="cursor-default" isIconOnly>
+          <RefreshDuo_Icon className="size-4" />
+        </Button>
+      )}
 
       {webuiAddress && (
         <Button size="sm" variant="light" onPress={loadWebuiURL} className="cursor-default" isIconOnly>
