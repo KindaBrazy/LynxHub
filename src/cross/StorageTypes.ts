@@ -86,6 +86,7 @@ type StorageTypes = {
     blinkCursor: boolean;
     resizeDelay: number;
     closeTabOnExit: boolean;
+    enableLigatures: boolean;
     cdHistory: string[];
     quickCommands: {label: string; command: string}[];
   };
