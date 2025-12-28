@@ -5,6 +5,7 @@ import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain, screen, shell, 
 
 import {ContextResizeData} from '../../cross/CrossTypes';
 import {browserChannels, contextMenuChannels, tabsChannels} from '../../cross/IpcChannelAndTypes';
+import {appManager} from '../index';
 import AddBreadcrumb_Main from './Breadcrumbs';
 import BrowserManager from './BrowserManager';
 
@@ -138,9 +139,13 @@ export default class ContextMenuManager {
         const image = nativeImage.createFromBuffer(buffer);
         if (!image.isEmpty()) {
           clipboard.writeImage(image);
+          appManager?.showToast('Image copied to clipboard', 'success', 'top-center');
+        } else {
+          appManager?.showToast('Failed to copy image', 'error', 'top-center');
         }
       } catch (error) {
         console.error('Failed to copy image:', error);
+        appManager?.showToast('Failed to copy image', 'error', 'top-center');
       }
     });
 
