@@ -462,9 +462,9 @@ const rendererIpc = {
       ipc.send(storageUtilsChannels.addBrowserHistory, historyEntry);
     },
     // Adds favicon for browser recent URL
-    addBrowserRecentFavIcon: (url: string, favIcon: string) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_add_browser_recent_favicon', {url, favIcon});
-      ipc.send(storageUtilsChannels.addBrowserRecentFavIcon, url, favIcon);
+    addBrowserRecentFavIcon: (url: string, favIcon: string, title?: string) => {
+      extensionRendererApi.events_ipc.emit('storage_utils_add_browser_recent_favicon', {url, favIcon, title});
+      ipc.send(storageUtilsChannels.addBrowserRecentFavIcon, url, favIcon, title);
     },
     // Removes URL from browser recent list
     removeBrowserRecent: (url: string) => {

@@ -119,7 +119,11 @@ export default class BrowserManager {
       const mainWebContents = this.getMainWebContents();
       if (isNil(webContents) || isNil(mainWebContents) || webContents.isDestroyed()) return;
 
-      mainWebContents.send(browserChannels.onTitleChange, id, webContents.getTitle());
+      const title = webContents.getTitle();
+      mainWebContents.send(browserChannels.onTitleChange, id, title);
+
+      // Update title in storage for existing favicon entries
+      storageManager.updateBrowserFavIconTitle(formatWebAddress(webContents.getURL()), title);
     });
   }
 
@@ -131,7 +135,7 @@ export default class BrowserManager {
       const url = favicons.find(icon => icon.includes('.ico')) || favicons[0] || '';
       mainWebContents.send(browserChannels.onFavIconChange, id, url);
 
-      storageManager.addBrowserFavIcon(formatWebAddress(webContents.getURL()), url);
+      storageManager.addBrowserFavIcon(formatWebAddress(webContents.getURL()), url, webContents.getTitle());
     });
   }
 
