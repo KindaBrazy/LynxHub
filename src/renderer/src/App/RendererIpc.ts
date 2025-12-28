@@ -835,7 +835,8 @@ const rendererIpc = {
 
   tab: {
     // Listens for new tab events
-    onNewTab: (result: (event: IpcRendererEvent, url: string) => void) => ipc.on(tabsChannels.onNewTab, result),
+    onNewTab: (result: (event: IpcRendererEvent, url: string, background?: boolean) => void) =>
+      ipc.on(tabsChannels.onNewTab, result),
   },
 
   contextItems: {

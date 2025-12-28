@@ -233,34 +233,39 @@ export const useHotkeyEvents = () => {
 
 export const useNewTabEvents = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const activeTab = useTabsState('activeTab');
+  const tabs = useTabsState('tabs');
 
-  const [addEmpty, setAddEmpty] = useState<boolean>(false);
-  const [targetUrl, setTargetUrl] = useState<string>('');
+  const [pendingTab, setPendingTab] = useState<{url: string; background: boolean} | null>(null);
+  const prevTabsLength = useRef(tabs.length);
 
+  // When tabs array grows, find the new tab and set up the running card
   useEffect(() => {
-    if (addEmpty) {
-      dispatch(
-        cardsActions.addRunningEmpty({
-          tabId: activeTab,
-          type: 'browser',
-        }),
-      );
-      dispatch(
-        cardsActions.setRunningCardCustomAddress({
-          tabId: activeTab,
-          address: targetUrl,
-        }),
-      );
-      setAddEmpty(false);
+    if (pendingTab && tabs.length > prevTabsLength.current) {
+      // Find the newly added tab (last one in the array)
+      const newTab = tabs[tabs.length - 1];
+      if (newTab) {
+        dispatch(
+          cardsActions.addRunningEmpty({
+            tabId: newTab.id,
+            type: 'browser',
+          }),
+        );
+        dispatch(
+          cardsActions.setRunningCardCustomAddress({
+            tabId: newTab.id,
+            address: pendingTab.url,
+          }),
+        );
+      }
+      setPendingTab(null);
     }
-  }, [activeTab]);
+    prevTabsLength.current = tabs.length;
+  }, [tabs.length]);
 
   useEffect(() => {
-    const offNewTab = rendererIpc.tab.onNewTab((_, url) => {
-      dispatch(tabsActions.addTab(defaultTabItem));
-      setAddEmpty(true);
-      setTargetUrl(url);
+    const offNewTab = rendererIpc.tab.onNewTab((_, url, background = false) => {
+      setPendingTab({url, background});
+      dispatch(tabsActions.addTab({...defaultTabItem, background}));
     });
 
     return () => offNewTab();

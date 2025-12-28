@@ -348,6 +348,11 @@ export const tabsChannels = {
   onNewTab: 'tabs:new-tab',
 };
 
+export type NewTabOptions = {
+  url: string;
+  background?: boolean;
+};
+
 export const browserChannels = {
   createBrowser: 'browser:create-browser',
   removeBrowser: 'browser:remove-browser',

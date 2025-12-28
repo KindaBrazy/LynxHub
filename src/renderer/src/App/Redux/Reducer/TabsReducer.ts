@@ -30,7 +30,7 @@ const tabsSlice = createSlice({
     setTabState: <K extends keyof TabState>(state: TabState, action: PayloadAction<{key: K; value: TabState[K]}>) => {
       state[action.payload.key] = action.payload.value;
     },
-    addTab: (state: TabState, action: PayloadAction<TabInfo>) => {
+    addTab: (state: TabState, action: PayloadAction<TabInfo & {background?: boolean}>) => {
       let newID = action.payload.id;
       let idNumber = 1;
 
@@ -46,8 +46,12 @@ const tabsSlice = createSlice({
       checkDuplicateId();
 
       state.tabs.push({...action.payload, id: newID});
-      state.activeTab = newID;
-      state.activePage = action.payload.pageID;
+
+      // Only switch to new tab if not opening in background
+      if (!action.payload.background) {
+        state.activeTab = newID;
+        state.activePage = action.payload.pageID;
+      }
     },
     removeTab: (state: TabState, action: PayloadAction<string>) => {
       const tabIdToRemove = action.payload;
