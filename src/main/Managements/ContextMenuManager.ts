@@ -130,6 +130,19 @@ export default class ContextMenuManager {
     ipcMain.on(contextMenuChannels.downloadImage, (_, id: number, url: string) =>
       this.getContentById(id)?.downloadURL(url),
     );
+    ipcMain.on(contextMenuChannels.copyImage, async (_, url: string) => {
+      try {
+        const {net, clipboard, nativeImage} = await import('electron');
+        const response = await net.fetch(url);
+        const buffer = Buffer.from(await response.arrayBuffer());
+        const image = nativeImage.createFromBuffer(buffer);
+        if (!image.isEmpty()) {
+          clipboard.writeImage(image);
+        }
+      } catch (error) {
+        console.error('Failed to copy image:', error);
+      }
+    });
 
     ipcMain.on(contextMenuChannels.showWindow, () => this.showContextMenu());
     ipcMain.on(contextMenuChannels.hideWindow, () => this.hideContextMenu());

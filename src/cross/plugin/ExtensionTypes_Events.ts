@@ -194,6 +194,7 @@ export type ExtensionEvents_IPC = {
   context_items_new_tab: {url: string};
   context_items_open_external: {url: string};
   context_items_download_image: {id: number; url: string};
+  context_items_copy_image: {url: string};
   context_items_navigate: {id: number; action: 'back' | 'forward' | 'refresh'};
 
   // browser

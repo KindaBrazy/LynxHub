@@ -337,6 +337,7 @@ export const contextMenuChannels = {
   openExternal: 'context:openExternal',
 
   downloadImage: 'context:download-image',
+  copyImage: 'context:copy-image',
   navigate: 'context:navigate',
 
   openTerminateAI: 'context:open-terminate-ai',

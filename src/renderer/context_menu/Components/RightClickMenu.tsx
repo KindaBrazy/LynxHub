@@ -159,6 +159,14 @@ export default function useRightClickMenu(setElements: SetElementsType, setWidth
         />,
         <ActionButton
           onPress={createActionHandler(() => {
+            rendererIpc.contextItems.copyImage(srcURL);
+          })}
+          key="context_copyImage"
+          title="Copy Image"
+          icon={<CopyDuo_Icon className="size-4" />}
+        />,
+        <ActionButton
+          onPress={createActionHandler(() => {
             rendererIpc.contextItems.downloadImage(id, srcURL);
           })}
           title="Save Image"
