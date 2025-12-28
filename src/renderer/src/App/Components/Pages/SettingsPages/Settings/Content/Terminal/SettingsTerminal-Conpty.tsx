@@ -28,6 +28,7 @@ export default function SettingsTerminalConpty() {
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'terminal', 'conpty', 'windows', 'pty']}>
       <Select
+        className="my-0!"
         labelPlacement="outside"
         selectedKeys={[useConpty]}
         onSelectionChange={onChange}

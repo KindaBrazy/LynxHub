@@ -38,6 +38,7 @@ export default function SettingsPerformanceColorProfile() {
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'color', 'profile', 'srgb', 'display']}>
       <Select
+        className="my-0!"
         labelPlacement="outside"
         selectedKeys={[selectedKey]}
         onSelectionChange={onChange}

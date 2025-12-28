@@ -39,6 +39,7 @@ export default function SettingsPerformanceJsMemory() {
   return (
     <SettingsFilterItem searchTexts={[labelText, descriptionText, 'js', 'memory', 'heap', 'ram']}>
       <Select
+        className="my-0!"
         labelPlacement="outside"
         selectedKeys={[selectedKey]}
         onSelectionChange={onChange}

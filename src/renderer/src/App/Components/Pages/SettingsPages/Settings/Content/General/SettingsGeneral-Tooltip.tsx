@@ -34,6 +34,7 @@ export default function SettingsGeneralTooltip() {
     <SettingsFilterItem
       searchTexts={[labelText, descriptionText, 'tooltip', 'tooltips', 'hover', 'help', 'hint', 'ui tips']}>
       <Select
+        className="my-0!"
         labelPlacement="outside"
         selectedKeys={[selectedKey]}
         onSelectionChange={onChange}
