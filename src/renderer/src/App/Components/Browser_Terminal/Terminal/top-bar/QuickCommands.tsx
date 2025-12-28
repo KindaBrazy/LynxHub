@@ -48,7 +48,9 @@ export default function QuickCommands({id}: Props) {
             onPress={() => rendererIpc.pty.write(id, command)}>
             <span className="flex flex-row items-center gap-x-1">
               <span>{label}</span>
-              {hasHotkey && <Kbd className="text-[10px] bg-foreground-200">{displayHotkey}</Kbd>}
+              {hasHotkey && (
+                <Kbd className="text-[10px] rounded-sm! shadow-none! bg-foreground-200">{displayHotkey}</Kbd>
+              )}
             </span>
           </Button>
         );
