@@ -464,7 +464,7 @@ const rendererIpc = {
     },
     // Adds favicon for browser recent URL
     addBrowserRecentFavIcon: (url: string, favIcon: string, title?: string) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_add_browser_recent_favicon', {url, favIcon, title});
+      extensionRendererApi.events_ipc.emit('storage_utils_add_browser_recent_favicon', {url, favIcon});
       ipc.send(storageUtilsChannels.addBrowserRecentFavIcon, url, favIcon, title);
     },
     // Removes URL from browser recent list
@@ -973,7 +973,6 @@ const rendererIpc = {
     },
     // Stops loading current page
     stop: (id: string) => {
-      extensionRendererApi.events_ipc.emit('browser_stop', {id});
       ipc.send(browserChannels.stop, id);
     },
     // Navigates browser back
@@ -989,7 +988,6 @@ const rendererIpc = {
 
     // Toggles DevTools for browser webview
     toggleDevTools: (id: string) => {
-      extensionRendererApi.events_ipc.emit('browser_toggle_devtools', {id});
       ipc.send(browserChannels.toggleDevTools, id);
     },
 
@@ -1282,7 +1280,7 @@ const rendererIpc = {
     triggerCleanup: (): Promise<{success: boolean}> => ipc.invoke(imageCacheChannels.triggerCleanup),
 
     // Converts a URL to a cache URL (lynxcache://fetch/...)
-    getCacheUrl: (url: string): Promise<string> => ipc.invoke(imageCacheChannels.getCacheUrl),
+    getCacheUrl: (url: string): Promise<string> => ipc.invoke(imageCacheChannels.getCacheUrl, url),
 
     /**
      * Generates a cache URL for a given image URL (sync, no IPC).
