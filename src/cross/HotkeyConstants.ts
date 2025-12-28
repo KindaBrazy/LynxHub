@@ -16,6 +16,7 @@ export const Hotkey_Names = {
   prevTab: 'prevTab',
 
   findInPage: 'findInPage',
+  toggleDevTools: 'toggleDevTools',
   terminalQuick1: 'terminalQuick1',
   terminalQuick2: 'terminalQuick2',
   terminalQuick3: 'terminalQuick3',
@@ -40,6 +41,7 @@ export const Hotkey_Titles = {
   prevTab: 'Prevoius Tab',
 
   findInPage: 'Find in web page',
+  toggleDevTools: 'Toggle DevTools',
   terminalQuick1: 'Terminal Quick Command 1',
   terminalQuick2: 'Terminal Quick Command 2',
   terminalQuick3: 'Terminal Quick Command 3',
@@ -64,6 +66,7 @@ export const Hotkey_Desc = {
   prevTab: 'Use this hotkey to switch to the previous tabs.',
 
   findInPage: 'Use this hotkey to search for text within the current web page.',
+  toggleDevTools: 'Use this hotkey to open or close DevTools for the current browser tab.',
   terminalQuick1: 'Executes the first configured terminal quick command in the active terminal.',
   terminalQuick2: 'Executes the second configured terminal quick command in the active terminal.',
   terminalQuick3: 'Executes the third configured terminal quick command in the active terminal.',
@@ -180,6 +183,14 @@ export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | str
       control: !isMac,
       shift: false,
       key: 'f',
+    },
+    {
+      name: Hotkey_Names.toggleDevTools,
+      meta: isMac,
+      alt: isMac,
+      control: !isMac,
+      shift: !isMac,
+      key: 'i',
     },
     {
       name: Hotkey_Names.terminalQuick1,

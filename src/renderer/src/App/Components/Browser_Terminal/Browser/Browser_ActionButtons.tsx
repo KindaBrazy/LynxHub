@@ -31,8 +31,12 @@ const Browser_ActionButtons = memo(({webuiAddress, tabID, id}: Props) => {
   const reload = () => rendererIpc.browser.reload(id);
   const stop = () => rendererIpc.browser.stop(id);
   const loadWebuiURL = () => rendererIpc.browser.loadURL(id, webuiAddress);
+  const toggleDevTools = () => rendererIpc.browser.toggleDevTools(id);
 
-  useHotkeyPress([{name: Hotkey_Names.refreshTab, method: isActiveTab ? reload : null}]);
+  useHotkeyPress([
+    {name: Hotkey_Names.refreshTab, method: isActiveTab ? reload : null},
+    {name: Hotkey_Names.toggleDevTools, method: isActiveTab ? toggleDevTools : null},
+  ]);
 
   useEffect(() => {
     const offCanGo = rendererIpc.browser.onCanGo((_, targetID, canGo) => {

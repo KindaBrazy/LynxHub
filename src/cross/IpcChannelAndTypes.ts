@@ -375,6 +375,8 @@ export const browserChannels = {
   goBack: 'browser:goBack',
   goForward: 'browser:goForward',
 
+  toggleDevTools: 'browser:toggle-devtools',
+
   onCanGo: 'browser:on-can-go',
   isLoading: 'browser:is-loading',
   onTitleChange: 'browser:on-title-change',
