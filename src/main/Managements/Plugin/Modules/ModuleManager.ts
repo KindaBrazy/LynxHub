@@ -20,6 +20,9 @@ export default class ModuleManager {
   private availableCardUpdates: string[] = [];
   private mainMethods: MainModules[] = [];
 
+  private readonly maxImportRetries = 15;
+  private importRetryCount = 0;
+
   private getUtils() {
     const webContent = appManager?.getWebContent();
 
@@ -70,14 +73,22 @@ export default class ModuleManager {
       const utils = this.getUtils();
 
       if (!utils) {
-        setTimeout(
-          () => {
-            this.importPlugins(moduleFolders);
-          },
-          toMs(1, 'seconds'),
-        );
+        if (this.importRetryCount < this.maxImportRetries) {
+          this.importRetryCount++;
+          setTimeout(
+            () => {
+              this.importPlugins(moduleFolders);
+            },
+            toMs(1, 'seconds'),
+          );
+        } else {
+          console.error('Max retries reached for importPlugins - utils unavailable');
+          this.importRetryCount = 0;
+        }
         return;
       }
+
+      this.importRetryCount = 0;
 
       // Get disabled cards from storage
       const disabledCards = new Set(storageManager.getData('plugin').disabledCards || []);
