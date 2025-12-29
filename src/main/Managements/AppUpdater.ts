@@ -39,6 +39,8 @@ function isNetworkError(error: Error | any): boolean {
     /502 Bad Gateway/i,
     /503 Service/i,
     /HttpError: 5\d\d/i,
+    /Cannot parse releases feed/i,
+    /Unable to find latest version/i,
   ];
   return networkErrorPatterns.some(pattern => pattern.test(message));
 }
