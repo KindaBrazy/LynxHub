@@ -55,7 +55,8 @@ export async function stopAllPty(): Promise<void> {
 }
 
 export async function emptyPtyProcess(id: string, dir?: string) {
-  const targetDir = dir || app.getPath('home');
+  // Ensure we have a valid directory - empty string is not valid
+  const targetDir = dir && dir.trim().length > 0 ? dir : app.getPath('home');
   ptyManager.push(new PtyManager(id, targetDir, true));
 }
 
