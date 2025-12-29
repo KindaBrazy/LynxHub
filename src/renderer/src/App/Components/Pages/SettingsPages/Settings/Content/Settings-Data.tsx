@@ -23,7 +23,8 @@ export default function SettingsData() {
         lynxTopToast(dispatch).success(result);
       })
       .catch(reason => {
-        lynxTopToast(dispatch).error(reason);
+        const errorMessage = reason instanceof Error ? reason.message : String(reason);
+        lynxTopToast(dispatch).error(errorMessage);
       });
   };
 
