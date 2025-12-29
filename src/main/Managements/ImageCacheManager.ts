@@ -171,7 +171,9 @@ export class ImageCacheManager {
     try {
       await writeFile(this.metadataPath, JSON.stringify(this.metadata, null, 2), 'utf-8');
     } catch (error) {
-      console.error('[ImageCache] Failed to save metadata:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('[ImageCache] Failed to save metadata:', errorMessage);
+      // Don't crash on OOM, just log and continue
     }
   }
 
@@ -180,7 +182,9 @@ export class ImageCacheManager {
     try {
       writeFileSync(this.metadataPath, JSON.stringify(this.metadata, null, 2), 'utf-8');
     } catch (error) {
-      console.error('[ImageCache] Failed to save metadata sync:', error);
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      console.error('[ImageCache] Failed to save metadata sync:', errorMessage);
+      // Don't crash on OOM, just log and continue
     }
   }
 
