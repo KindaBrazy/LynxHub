@@ -383,9 +383,26 @@ export default class BrowserManager {
 
     const webContents = browser.view.webContents;
     if (webContents && !webContents.isDestroyed()) {
-      webContents.removeAllListeners();
-      webContents.close();
+      // Navigate to blank page to stop any running scripts/workers before closing
+      webContents.loadURL('about:blank').finally(() => {
+        if (!webContents.isDestroyed()) {
+          webContents.removeAllListeners();
+          webContents.close();
+        }
+      });
     }
+
+    // Cleanup orphaned service workers when all browsers are closed
+    if (this.browsers.length === 0) {
+      this.cleanupAllServiceWorkers();
+    }
+  }
+
+  /** Clear all service workers when no browsers are open */
+  private cleanupAllServiceWorkers() {
+    this.getSession()
+      .clearData({dataTypes: ['serviceWorkers']})
+      .catch(error => console.warn('Service worker cleanup failed:', error));
   }
 
   public loadURL(id: string, url: string) {
