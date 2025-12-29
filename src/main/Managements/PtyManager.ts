@@ -61,13 +61,21 @@ export default class PtyManager {
   public async stopAsync(): Promise<void> {
     return new Promise<void>(resolve => {
       if (this.isRunning && this.process) {
-        this.process.kill();
-        treeKill(this.process.pid);
-        this.isRunning = false;
+        // Register exit handler BEFORE killing to avoid race condition
         this.process.onExit(() => {
           this.process = undefined;
           resolve();
         });
+
+        this.process.kill();
+        treeKill(this.process.pid);
+        this.isRunning = false;
+
+        // Safety timeout in case onExit never fires
+        setTimeout(() => {
+          this.process = undefined;
+          resolve();
+        }, 5000);
       } else {
         resolve();
       }
@@ -79,12 +87,14 @@ export default class PtyManager {
    */
   public stop(): void {
     if (this.isRunning && this.process) {
-      this.process.kill();
-      treeKill(this.process.pid);
-      this.isRunning = false;
+      // Register exit handler BEFORE killing to avoid race condition
       this.process.onExit(() => {
         this.process = undefined;
       });
+
+      this.process.kill();
+      treeKill(this.process.pid);
+      this.isRunning = false;
     }
   }
 
