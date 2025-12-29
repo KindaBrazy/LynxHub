@@ -84,6 +84,7 @@ export class PluginManager {
 
         for (const validItem of validFolders) {
           const metadata = await staticManager.getPluginMetadataById(validItem.folder);
+          if (!metadata) continue;
           if (metadata.type === 'module') {
             moduleFolders.push(join(this.pluginPath, validItem.folder));
           } else if (metadata.type === 'extension') {
@@ -260,6 +261,8 @@ export class PluginManager {
 
   public async updateSyncItem(id: string, commit: string) {
     const versioning = await staticManager.getPluginVersioningById(id);
+    if (!versioning) return;
+
     const targetDir = this.getDirById(id);
     if (!targetDir) return;
 
@@ -340,7 +343,18 @@ export class PluginManager {
       } else {
         const dir = join(this.pluginPath, folder);
         const scriptsFolder = join(dir, 'scripts');
-        const {type} = await staticManager.getPluginMetadataById(folder);
+        const metadata = await staticManager.getPluginMetadataById(folder);
+
+        if (!metadata) {
+          this.skipped.push({
+            id: folder,
+            message: 'Unloaded because metadata could not be retrieved.',
+          });
+          console.log(`Skipping folder "${folder}" because metadata is unavailable.`);
+          continue;
+        }
+
+        const {type} = metadata;
 
         const targetMainPath = type === 'module' ? pluginFolders.module.mainScript : pluginFolders.extension.mainScript;
         const targetRendererPath =
