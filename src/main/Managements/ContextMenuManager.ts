@@ -16,6 +16,8 @@ export default class ContextMenuManager {
   private animationInterval?: NodeJS.Timeout;
   private isHiding = false;
   private webContents: WebContents[] = [];
+  private browserChannelsRegistered = false;
+  private contextChannelsRegistered = false;
 
   private static readonly CONTEXT_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
     frame: false,
@@ -96,6 +98,10 @@ export default class ContextMenuManager {
   }
 
   public listenForBrowserChannels(browserManager: BrowserManager) {
+    // Prevent duplicate listener registration
+    if (this.browserChannelsRegistered) return;
+    this.browserChannelsRegistered = true;
+
     ipcMain.on(browserChannels.openFindInPage, (_, id: string, customPosition?: {x: number; y: number}) => {
       this.setCustomContextPosition(customPosition);
       this.sendContextMenuMessage(contextMenuChannels.onFind, id);
@@ -126,6 +132,10 @@ export default class ContextMenuManager {
   }
 
   public listenForContextChannels() {
+    // Prevent duplicate listener registration
+    if (this.contextChannelsRegistered) return;
+    this.contextChannelsRegistered = true;
+
     ipcMain.on(contextMenuChannels.resizeWindow, (_e, data: ContextResizeData) => this.resizeContextMenu(data));
 
     ipcMain.on(contextMenuChannels.copy, (_, id: number) => this.getContentById(id)?.copy());
