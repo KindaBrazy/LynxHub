@@ -56,7 +56,10 @@ export const extensionManager: ExtensionManager = new ExtensionManager();
 export const pluginManager = new PluginManager(moduleManager, extensionManager);
 
 export const staticManager: StaticsManager = new StaticsManager();
-staticManager.checkRequirements();
+staticManager.checkRequirements().catch(err => {
+  // Silently handle - StaticsManager already logs warnings internally
+  console.warn('StaticsManager initialization failed:', err?.message || err);
+});
 export const contextMenuManager: ContextMenuManager = new ContextMenuManager();
 export const linkPreviewManager: LinkPreviewManager = new LinkPreviewManager();
 
