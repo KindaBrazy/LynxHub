@@ -1,3 +1,4 @@
+import {app} from 'electron';
 import fs from 'node:fs';
 import {platform} from 'node:os';
 import path from 'node:path';
@@ -22,13 +23,13 @@ export default class PtyManager {
 
     const {useConpty} = storageManager.getData('terminal');
 
-    let validatedDir: string | undefined = dir;
-    if (dir && dir.length > 0) {
+    // Validate directory - fall back to home if invalid or inaccessible
+    let validatedDir: string = app.getPath('home');
+    if (dir && dir.trim().length > 0) {
       try {
         fs.accessSync(dir, fs.constants.R_OK);
         validatedDir = path.resolve(dir);
-      } catch (error) {
-        validatedDir = undefined;
+      } catch {
         console.warn(`Directory ${dir} is not accessible, falling back to home directory`);
       }
     }
