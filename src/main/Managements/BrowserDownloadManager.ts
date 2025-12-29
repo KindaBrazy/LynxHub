@@ -50,6 +50,8 @@ const FILE_SYSTEM_ERROR_MESSAGES: Record<string, string> = {
 };
 
 export default class BrowserDownloadManager {
+  private static ipcHandlersRegistered: boolean = false;
+
   private menuWindow: BrowserWindow;
   private downloadingItems: DownloadItem[];
 
@@ -668,6 +670,13 @@ export default class BrowserDownloadManager {
   }
 
   private listenForMainChannels() {
+    // Prevent registering handlers multiple times
+    if (BrowserDownloadManager.ipcHandlersRegistered) {
+      console.warn('BrowserDownloadManager IPC handlers already registered, skipping...');
+      return;
+    }
+    BrowserDownloadManager.ipcHandlersRegistered = true;
+
     ipcMain.on(browserDownloadChannels.cancel, (_, name: string) => this.cancelItem(name));
     ipcMain.on(browserDownloadChannels.pause, (_, name: string) => this.pauseItem(name));
     ipcMain.on(browserDownloadChannels.resume, (_, name: string) => this.resumeItem(name));
