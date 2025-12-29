@@ -63,4 +63,14 @@ export default function RegisterHotkeys(contents: WebContents) {
 
   contents.on('blur', onBlur);
   contents.on('before-input-event', onInput);
+
+  // Clean up listeners when WebContents is destroyed to prevent memory leak
+  contents.on('destroyed', () => {
+    const index = registeredHotkeys.indexOf(contents.id);
+    if (index !== -1) {
+      registeredHotkeys.splice(index, 1);
+    }
+    // Listeners are automatically removed when WebContents is destroyed,
+    // but we need to clean up our tracking array
+  });
 }
