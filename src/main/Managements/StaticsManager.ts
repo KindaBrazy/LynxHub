@@ -182,6 +182,17 @@ export default class StaticsManager {
       const fileContent = readFileSync(filePath, 'utf8');
       return JSON.parse(fileContent) as T;
     } catch (error) {
+      const errCode = (error as NodeJS.ErrnoException).code;
+      // Handle transient file system errors (UNKNOWN, EIO, etc.) by retrying once after a short delay
+      if (errCode === 'UNKNOWN' || errCode === 'EIO' || errCode === 'EBUSY') {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        try {
+          const fileContent = readFileSync(filePath, 'utf8');
+          return JSON.parse(fileContent) as T;
+        } catch (retryError) {
+          throw new Error(`StaticsManager: Failed to read ${fileName} after retry: ${retryError}`);
+        }
+      }
       throw new Error(`StaticsManager: Failed to read/parse ${fileName}: ${error}`);
     }
   }
