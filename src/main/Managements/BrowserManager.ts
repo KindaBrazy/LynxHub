@@ -394,7 +394,10 @@ export default class BrowserManager {
   }
 
   public stopFindInPage(id: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') {
-    this.getViewByID(id)?.webContents.stopFindInPage(action);
+    const view = this.getViewByID(id);
+    if (view?.webContents && !view.webContents.isDestroyed()) {
+      view.webContents.stopFindInPage(action);
+    }
   }
 
   public getCurrentZoom(id: string) {
