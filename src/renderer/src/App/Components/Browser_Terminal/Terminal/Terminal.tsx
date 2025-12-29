@@ -228,7 +228,15 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
         if (!isEmpty(api.getSelection())) {
           copySelection();
         } else {
-          navigator.clipboard.readText().then(text => rendererIpc.pty.write(id, text));
+          // Clipboard readText requires document focus - wrap in try-catch to handle NotAllowedError
+          navigator.clipboard
+            .readText()
+            .then(text => {
+              if (text) rendererIpc.pty.write(id, text);
+            })
+            .catch(() => {
+              // Silently ignore - document may not be focused or clipboard permission denied
+            });
         }
       };
 
