@@ -31,16 +31,21 @@ export default function DashboardUpdate() {
     async function fetchStatus() {
       const data = await rendererIpc.statics.getReleases();
       const insider = await rendererIpc.statics.getInsider();
-      setStatusPublic({version: data.currentVersion, build: data.currentBuild, date: data.releaseDate});
-      if (data.earlyAccess) {
-        setStatusEarly({
-          version: data.earlyAccess.version,
-          build: data.earlyAccess.build,
-          date: data.earlyAccess.releaseDate,
-        });
+
+      if (data) {
+        setStatusPublic({version: data.currentVersion, build: data.currentBuild, date: data.releaseDate});
+        if (data.earlyAccess) {
+          setStatusEarly({
+            version: data.earlyAccess.version,
+            build: data.earlyAccess.build,
+            date: data.earlyAccess.releaseDate,
+          });
+        }
       }
 
-      setStatusInsider({version: insider.currentVersion, build: insider.currentBuild, date: insider.releaseDate});
+      if (insider) {
+        setStatusInsider({version: insider.currentVersion, build: insider.currentBuild, date: insider.releaseDate});
+      }
     }
 
     fetchStatus();

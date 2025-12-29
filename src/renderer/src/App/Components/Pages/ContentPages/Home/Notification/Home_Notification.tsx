@@ -53,13 +53,15 @@ export default function Home_Notification() {
 
   useEffect(() => {
     rendererIpc.statics.getNotification().then(data => {
-      filterData(data);
+      if (data) filterData(data);
     });
     setRefreshing(true);
     rendererIpc.statics.pull().finally(() =>
       rendererIpc.statics
         .getNotification()
-        .then(data => filterData(data))
+        .then(data => {
+          if (data) filterData(data);
+        })
         .finally(() => setRefreshing(false)),
     );
   }, []);

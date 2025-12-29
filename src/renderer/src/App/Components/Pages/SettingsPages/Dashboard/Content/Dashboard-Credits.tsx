@@ -35,7 +35,9 @@ export default function DashboardCredits() {
   const [supporters, setSupporters] = useState<PatreonSupporter[]>([]);
 
   useEffect(() => {
-    rendererIpc.statics.getPatrons().then(setSupporters);
+    rendererIpc.statics.getPatrons().then(data => {
+      if (data) setSupporters(data);
+    });
   }, []);
 
   const groupedSupporters = useMemo(

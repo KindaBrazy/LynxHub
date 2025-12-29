@@ -366,6 +366,8 @@ export const useListenForUpdateError = () => {
       const insider = await rendererIpc.statics.getInsider();
       const releases = await rendererIpc.statics.getReleases();
 
+      if (!insider || !releases) return;
+
       if (
         insider.currentBuild > APP_BUILD_NUMBER ||
         releases.earlyAccess.build > APP_BUILD_NUMBER ||
