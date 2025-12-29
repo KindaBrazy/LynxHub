@@ -24,10 +24,16 @@ export default class StaticsManager {
   private requirementsCheckPromise: Promise<void> | null = null;
   private requirementsCheckCompleted: boolean = false;
   private pullIntervalId: NodeJS.Timeout | null = null;
+  private gitAvailable: boolean = true;
 
   constructor() {
     this.gitManager = new GitManager();
     this.dir = getAppDirectory('Statics');
+  }
+
+  /** Returns true if statics are available (git installed and clone succeeded) */
+  public isAvailable(): boolean {
+    return this.requirementsCheckCompleted && this.gitAvailable;
   }
 
   public async checkRequirements() {
@@ -45,8 +51,13 @@ export default class StaticsManager {
         }
         this.requirementsCheckCompleted = true;
       } catch (error) {
-        console.warn('StaticsManager: Failed to check requirements:', error);
-        // Don't reset promise - keep it resolved but mark as incomplete
+        const message = (error as Error)?.message || '';
+        if (/Git is not available/i.test(message)) {
+          this.gitAvailable = false;
+          console.warn('StaticsManager: Git not available. App will run with limited functionality.');
+        } else {
+          console.warn('StaticsManager: Failed to check requirements:', error);
+        }
         this.requirementsCheckCompleted = false;
       }
     })();
@@ -55,6 +66,7 @@ export default class StaticsManager {
   }
 
   public async pull() {
+    if (!this.gitAvailable) return;
     try {
       await this.gitManager.pull(this.dir);
     } catch {
@@ -63,40 +75,40 @@ export default class StaticsManager {
     }
   }
 
-  public async getReleases() {
+  public async getReleases(): Promise<AppUpdateData | undefined> {
     return this.getDataAsJson<AppUpdateData>('releases.json');
   }
 
-  public async getInsider() {
+  public async getInsider(): Promise<AppUpdateInsiderData | undefined> {
     return this.getDataAsJson<AppUpdateInsiderData>('insider.json');
   }
 
-  public async getNotification() {
+  public async getNotification(): Promise<Notification_Data[] | undefined> {
     return this.getDataAsJson<Notification_Data[]>('notifications.json');
   }
 
-  public async getModules() {
+  public async getModules(): Promise<ModulesInfo[] | undefined> {
     return this.getDataAsJson<ModulesInfo[]>('modules.json');
   }
 
-  public async getExtensions() {
+  public async getExtensions(): Promise<ExtensionsInfo[] | undefined> {
     return this.getDataAsJson<ExtensionsInfo[]>('extensions.json');
   }
 
-  public async getExtensionsEA() {
+  public async getExtensionsEA(): Promise<ExtensionsInfo[] | undefined> {
     return this.getDataAsJson<ExtensionsInfo[]>('extensions_ea.json');
   }
 
-  public async getPatrons() {
+  public async getPatrons(): Promise<PatreonSupporter[] | undefined> {
     return this.getDataAsJson<PatreonSupporter[]>('patrons.json');
   }
 
-  public async getPluginMetadataById(pluginId: string): Promise<PluginMetadata> {
+  public async getPluginMetadataById(pluginId: string): Promise<PluginMetadata | undefined> {
     const metadataPath = join('plugins', pluginId, 'metadata.json');
     return this.getDataAsJson<PluginMetadata>(metadataPath);
   }
 
-  public async getPluginVersioningById(pluginId: string): Promise<PluginVersioning> {
+  public async getPluginVersioningById(pluginId: string): Promise<PluginVersioning | undefined> {
     const versioningPath = join('plugins', pluginId, 'versioning.json');
     return this.getDataAsJson<PluginVersioning>(versioningPath);
   }
@@ -104,6 +116,7 @@ export default class StaticsManager {
   public async getPluginIdByRepositoryUrl(repositoryUrl: string): Promise<string | undefined> {
     const targetPath = join('plugins', 'plugins_url.json');
     const urlMap = await this.getDataAsJson<Record<string, string>>(targetPath);
+    if (!urlMap) return undefined;
 
     const entry = Object.entries(urlMap).find(([_id, url]) => url === repositoryUrl);
 
@@ -113,6 +126,8 @@ export default class StaticsManager {
   public async getCurrentAppState(): Promise<SubscribeStages> {
     const releases = await this.getReleases();
     const insider = await this.getInsider();
+
+    if (!releases || !insider) return 'public';
 
     if (APP_BUILD_NUMBER === releases.currentBuild) {
       return 'public';
@@ -126,8 +141,11 @@ export default class StaticsManager {
   }
 
   public async getPluginsList(): Promise<PluginAvailableItem[]> {
+    if (!this.isAvailable()) return [];
+
     const pluginsUrlPath = join('plugins', 'plugins_url.json');
     const urlMap = await this.getDataAsJson<Record<string, string>>(pluginsUrlPath);
+    if (!urlMap) return [];
 
     const pluginsPath = join(this.dir, 'plugins');
 
@@ -139,16 +157,19 @@ export default class StaticsManager {
       .filter(dirent => dirent.isDirectory())
       .map(dirent => dirent.name);
 
-    const pluginPromises = pluginIds.map(async (id): Promise<PluginAvailableItem> => {
+    const pluginPromises = pluginIds.map(async (id): Promise<PluginAvailableItem | null> => {
       const [metadata, versioning] = await Promise.all([
         this.getPluginMetadataById(id),
         this.getPluginVersioningById(id),
       ]);
 
+      if (!metadata || !versioning) return null;
+
       return {metadata, versioning, url: urlMap[id] || ''};
     });
 
-    return Promise.all(pluginPromises);
+    const results = await Promise.all(pluginPromises);
+    return results.filter((item): item is PluginAvailableItem => item !== null);
   }
 
   private async clone() {
@@ -158,24 +179,32 @@ export default class StaticsManager {
       if (dirUrl && dirUrl === STATICS_URL) return;
 
       return this.gitManager.shallowClone({url: STATICS_URL, directory: this.dir, singleBranch: true, branch: 'main'});
-    } catch {
+    } catch (error) {
+      // Check if git is not available (ENOENT = not found)
+      const message = (error as Error)?.message || '';
+      if (/spawn (git )?ENOENT/i.test(message) || /git.*not found/i.test(message)) {
+        console.warn('StaticsManager: Git is not installed or not in PATH. Statics will not be available.');
+        throw new Error('Git is not available');
+      }
+      // For other errors, try cloning again
       return this.gitManager.shallowClone({url: STATICS_URL, directory: this.dir, singleBranch: true, branch: 'main'});
     }
   }
 
-  private async getDataAsJson<T>(fileName: string): Promise<T> {
+  private async getDataAsJson<T>(fileName: string): Promise<T | undefined> {
     if (this.requirementsCheckPromise) {
       await this.requirementsCheckPromise;
     }
 
     if (!this.requirementsCheckCompleted) {
-      throw new Error('StaticsManager: Statics not available - checkRequirements failed or not called');
+      // Statics not available - return undefined instead of throwing
+      return undefined;
     }
 
     const filePath = join(this.dir, fileName);
 
     if (!existsSync(filePath)) {
-      throw new Error(`StaticsManager: File not found: ${fileName}`);
+      return undefined;
     }
 
     try {
@@ -189,11 +218,11 @@ export default class StaticsManager {
         try {
           const fileContent = readFileSync(filePath, 'utf8');
           return JSON.parse(fileContent) as T;
-        } catch (retryError) {
-          throw new Error(`StaticsManager: Failed to read ${fileName} after retry: ${retryError}`);
+        } catch {
+          return undefined;
         }
       }
-      throw new Error(`StaticsManager: Failed to read/parse ${fileName}: ${error}`);
+      return undefined;
     }
   }
 }

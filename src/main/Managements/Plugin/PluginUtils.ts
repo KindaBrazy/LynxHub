@@ -27,8 +27,9 @@ export function getTargetVersion(versions: PluginVersions, type: 'module' | 'ext
 }
 
 export async function getVersionByCommit(id: string, commit: string) {
-  const {versions} = await staticManager.getPluginVersioningById(id);
-  return versions.find(v => v.commit === commit)?.version;
+  const versioning = await staticManager.getPluginVersioningById(id);
+  if (!versioning) return undefined;
+  return versioning.versions.find(v => v.commit === commit)?.version;
 }
 
 /**
@@ -43,17 +44,19 @@ export async function isSyncRequired(
   currentCommit: string,
   stage: SubscribeStages,
 ): Promise<PluginSyncItem | undefined> {
-  const {versions} = await staticManager.getPluginVersioningById(id);
-  const {type} = await staticManager.getPluginMetadataById(id);
+  const versioning = await staticManager.getPluginVersioningById(id);
+  const metadata = await staticManager.getPluginMetadataById(id);
 
-  const targetVersion = getTargetVersion(versions, type, stage);
+  if (!versioning || !metadata) return undefined;
+
+  const targetVersion = getTargetVersion(versioning.versions, metadata.type, stage);
 
   if (!targetVersion) return undefined;
 
   const version = targetVersion.version;
   const commit = targetVersion.commit;
 
-  const updateType = getUpdateType(versions, currentCommit, commit);
+  const updateType = getUpdateType(versioning.versions, currentCommit, commit);
 
   if (currentCommit === commit || !updateType) return undefined;
 
@@ -66,11 +69,14 @@ export async function isSyncRequired(
 }
 
 export async function getCommitByAppStage(id: string) {
-  const {versions} = await staticManager.getPluginVersioningById(id);
-  const {type} = await staticManager.getPluginMetadataById(id);
+  const versioning = await staticManager.getPluginVersioningById(id);
+  const metadata = await staticManager.getPluginMetadataById(id);
+
+  if (!versioning || !metadata) return undefined;
+
   const stage = await staticManager.getCurrentAppState();
 
-  return getTargetVersion(versions, type, stage)?.commit;
+  return getTargetVersion(versioning.versions, metadata.type, stage)?.commit;
 }
 
 export function showGitOwnershipToast() {
