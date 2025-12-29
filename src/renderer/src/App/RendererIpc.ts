@@ -1174,37 +1174,37 @@ const rendererIpc = {
       return ipc.invoke(staticsChannels.pull);
     },
     // Gets app release information
-    getReleases: (): Promise<AppUpdateData> => {
+    getReleases: (): Promise<AppUpdateData | undefined> => {
       extensionRendererApi.events_ipc.emit('statics_get_releases', {});
       return ipc.invoke(staticsChannels.getReleases);
     },
     // Gets insider build information
-    getInsider: (): Promise<AppUpdateInsiderData> => {
+    getInsider: (): Promise<AppUpdateInsiderData | undefined> => {
       extensionRendererApi.events_ipc.emit('statics_get_insider', {});
       return ipc.invoke(staticsChannels.getInsider);
     },
     // Gets notification data
-    getNotification: (): Promise<Notification_Data[]> => {
+    getNotification: (): Promise<Notification_Data[] | undefined> => {
       extensionRendererApi.events_ipc.emit('statics_get_notification', {});
       return ipc.invoke(staticsChannels.getNotification);
     },
     // Gets available modules list
-    getModules: (): Promise<ModulesInfo[]> => {
+    getModules: (): Promise<ModulesInfo[] | undefined> => {
       extensionRendererApi.events_ipc.emit('statics_get_modules', {});
       return ipc.invoke(staticsChannels.getModules);
     },
     // Gets available extensions list
-    getExtensions: (): Promise<ExtensionsInfo[]> => {
+    getExtensions: (): Promise<ExtensionsInfo[] | undefined> => {
       extensionRendererApi.events_ipc.emit('statics_get_extensions', {});
       return ipc.invoke(staticsChannels.getExtensions);
     },
     // Gets early access extensions list
-    getExtensionsEA: (): Promise<ExtensionsInfo[]> => {
+    getExtensionsEA: (): Promise<ExtensionsInfo[] | undefined> => {
       extensionRendererApi.events_ipc.emit('statics_get_extensions_ea', {});
       return ipc.invoke(staticsChannels.getExtensionsEA);
     },
     // Gets Patreon supporters list
-    getPatrons: (): Promise<PatreonSupporter[]> => {
+    getPatrons: (): Promise<PatreonSupporter[] | undefined> => {
       extensionRendererApi.events_ipc.emit('statics_get_patrons', {});
       return ipc.invoke(staticsChannels.getPatrons);
     },

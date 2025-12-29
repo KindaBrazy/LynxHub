@@ -109,6 +109,8 @@ const UpdateApp = () => {
       const data = await rendererIpc.statics.getReleases();
       const insiderData = await rendererIpc.statics.getInsider();
 
+      if (!data || !insiderData) return;
+
       const isEA = updateChannel === 'early_access';
       const isInsider = updateChannel === 'insider';
 
