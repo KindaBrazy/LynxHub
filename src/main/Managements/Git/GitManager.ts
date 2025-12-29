@@ -160,8 +160,19 @@ export default class GitManager {
    * @returns A promise that resolves to the formatted remote URL or undefined.
    */
   public static async remoteUrlFromDir(dir: string): Promise<string | undefined> {
-    const result: RemoteWithRefs[] = await simpleGit(dir).getRemotes(true);
-    return GitManager.formatGitUrl(result[0]?.refs.fetch);
+    try {
+      const result: RemoteWithRefs[] = await simpleGit(dir).getRemotes(true);
+      return GitManager.formatGitUrl(result[0]?.refs.fetch);
+    } catch (error) {
+      // Handle spawn errors gracefully - git may not be installed
+      const message = (error as Error)?.message || '';
+      if (/spawn (UNKNOWN|ENOENT|EACCES|EPERM)/i.test(message)) {
+        console.warn('Git is not available:', message);
+        return undefined;
+      }
+      console.error('Error getting remote URL from dir:', error);
+      return undefined;
+    }
   }
 
   private handleProgressUpdate = (progress: SimpleGitProgressEvent): void => {
@@ -206,7 +217,32 @@ export default class GitManager {
     return progressPatterns.some(pattern => pattern.test(message));
   }
 
+  /**
+   * Checks if an error is a spawn-related error (git not found or permission issues).
+   */
+  private isSpawnError(error: any): boolean {
+    const message = error?.message || error?.toString() || '';
+    const spawnPatterns = [
+      /spawn UNKNOWN/i,
+      /spawn ENOENT/i,
+      /spawn EACCES/i,
+      /spawn EPERM/i,
+      /ENOENT.*git/i,
+      /git.*not found/i,
+      /command not found.*git/i,
+    ];
+    return spawnPatterns.some(pattern => pattern.test(message));
+  }
+
   private handleError(error: any): void {
+    // Handle spawn errors with a more user-friendly message
+    if (this.isSpawnError(error)) {
+      const friendlyMessage = 'Git is not available. Please ensure Git is installed and accessible in your PATH.';
+      console.error(`Git Spawn Error: ${error.message || error}`);
+      this.onFailedProgress(friendlyMessage);
+      return;
+    }
+
     if (error instanceof GitResponseError) {
       console.error(`Git Error: ${error.message}\n\tStack: ${error.stack}\n\tGit: ${error.git}`);
       this.onFailedProgress(error.message);
