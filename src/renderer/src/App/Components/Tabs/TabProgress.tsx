@@ -26,11 +26,11 @@ const TabProgress = memo(({progress}: Props) => {
   const isIndeterminate = state === 3;
 
   return (
-    <div className="absolute bottom-1 inset-x-0">
+    <div className="absolute bottom-[3px] inset-x-0">
       <Progress
         classNames={{
           base: 'h-0.5 max-h-0.5',
-          track: 'h-0.5 bg-transparent',
+          track: 'h-0.5',
           indicator: 'h-0.5',
         }}
         size="sm"
