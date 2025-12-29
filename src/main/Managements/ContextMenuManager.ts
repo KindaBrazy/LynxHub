@@ -326,16 +326,16 @@ export default class ContextMenuManager {
 
   private positionContextMenuAtCursor() {
     const window = this.contextMenuWindow;
-    if (!window) return;
+    if (!window || window.isDestroyed()) return;
 
     const [menuWidth, menuHeight] = window.getContentSize();
 
     // 1. Determine the initial click point on the screen
     let clickPoint: {x: number; y: number};
 
-    if (this.customContextPosition) {
+    if (this.customContextPosition && this.mainWindow && !this.mainWindow.isDestroyed()) {
       // Use the custom position relative to the main window
-      const parentBounds = this.mainWindow!.getBounds();
+      const parentBounds = this.mainWindow.getBounds();
       clickPoint = {
         x: Math.floor(this.customContextPosition.x) + parentBounds.x + 1,
         y: Math.floor(this.customContextPosition.y) + parentBounds.y + 1,
