@@ -75,6 +75,12 @@ export default class ContextMenuManager {
 
   public listenForMenu(contents: WebContents) {
     this.webContents.push(contents);
+
+    // Clean up reference when WebContents is destroyed to prevent memory leak
+    contents.on('destroyed', () => {
+      this.webContents = this.webContents.filter(wc => wc !== contents);
+    });
+
     contents.on('context-menu', (_e, params) => {
       const window = this.contextMenuWindow;
       if (!window || window.isDestroyed()) return;
