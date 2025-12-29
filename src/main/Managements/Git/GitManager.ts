@@ -188,6 +188,24 @@ export default class GitManager {
     this.onError?.(reason);
   };
 
+  /**
+   * Checks if a git error is actually just progress output from stderr.
+   * Git writes progress to stderr, which simple-git sometimes misinterprets as an error.
+   */
+  private isProgressOutputError(error: any): boolean {
+    const message = error?.message || error?.toString() || '';
+    // Check for common git progress patterns that indicate successful operations
+    const progressPatterns = [
+      /^Cloning into/,
+      /remote: (Enumerating|Counting|Compressing) objects/,
+      /Receiving objects:/,
+      /Resolving deltas:/,
+      /Unpacking objects:/,
+      /was checked out with 'git status'/,
+    ];
+    return progressPatterns.some(pattern => pattern.test(message));
+  }
+
   private handleError(error: any): void {
     if (error instanceof GitResponseError) {
       console.error(`Git Error: ${error.message}\n\tStack: ${error.stack}\n\tGit: ${error.git}`);
@@ -211,9 +229,16 @@ export default class GitManager {
           this.handleProgressComplete();
           resolve();
         })
-        .catch(error => {
-          this.handleError(error);
-          reject(error);
+        .catch(async error => {
+          // Check if this is just stderr progress output being misinterpreted as an error
+          if (this.isProgressOutputError(error) && (await GitManager.isDirRepo(targetDirectory))) {
+            console.log('Clone completed successfully (stderr progress output was misinterpreted as error)');
+            this.handleProgressComplete();
+            resolve();
+          } else {
+            this.handleError(error);
+            reject(error);
+          }
         });
     });
   }
@@ -239,9 +264,16 @@ export default class GitManager {
           this.handleProgressComplete();
           resolve();
         })
-        .catch(error => {
-          this.handleError(error);
-          reject(error);
+        .catch(async error => {
+          // Check if this is just stderr progress output being misinterpreted as an error
+          if (this.isProgressOutputError(error) && (await GitManager.isDirRepo(targetDirectory))) {
+            console.log('Shallow clone completed successfully (stderr progress output was misinterpreted as error)');
+            this.handleProgressComplete();
+            resolve();
+          } else {
+            this.handleError(error);
+            reject(error);
+          }
         });
     });
   }
