@@ -549,12 +549,15 @@ export function browserIPC() {
   // Focuses browser webview
   ipcMain.on(browserChannels.focusWebView, (_, id: string) => browserManager.focusWebView(id));
 
-  // Clears browser cache
+  // Clears browser cache - remove existing handler first to prevent duplicate registration
+  ipcMain.removeHandler(browserChannels.clearCache);
   ipcMain.handle(browserChannels.clearCache, () => browserManager.clearCache());
-  // Clears browser cookies
+  // Clears browser cookies - remove existing handler first to prevent duplicate registration
+  ipcMain.removeHandler(browserChannels.clearCookies);
   ipcMain.handle(browserChannels.clearCookies, () => browserManager.clearCookies());
 
-  // Gets user agent string
+  // Gets user agent string - remove existing handler first to prevent duplicate registration
+  ipcMain.removeHandler(browserChannels.getUserAgent);
   ipcMain.handle(browserChannels.getUserAgent, (_, type: AgentTypes) => getUserAgent(type));
   // Updates user agent for all browsers
   ipcMain.on(browserChannels.updateUserAgent, () => {
@@ -568,13 +571,16 @@ export function browserIPC() {
   ipcMain.on(browserChannels.clearHistory, (_, selected: string[]) => browserManager.clearHistory(selected));
 
   // Volume control handlers
-  // Sets volume level for browser webview (0-100)
+  // Sets volume level for browser webview (0-100) - remove existing handler first to prevent duplicate registration
+  ipcMain.removeHandler(volumeChannels.setVolume);
   ipcMain.handle(volumeChannels.setVolume, (_, id: string, volume: number) =>
     handleSetVolume(browserManager, id, volume),
   );
-  // Sets mute state for browser webview
+  // Sets mute state for browser webview - remove existing handler first to prevent duplicate registration
+  ipcMain.removeHandler(volumeChannels.setMuted);
   ipcMain.handle(volumeChannels.setMuted, (_, id: string, muted: boolean) => handleSetMuted(browserManager, id, muted));
-  // Gets current audio state (playing, muted) for browser webview
+  // Gets current audio state (playing, muted) for browser webview - remove existing handler first
+  ipcMain.removeHandler(volumeChannels.getState);
   ipcMain.handle(volumeChannels.getState, (_, id: string) => handleGetAudioState(browserManager, id));
 
   // Forward volume updates from context menu to main window
