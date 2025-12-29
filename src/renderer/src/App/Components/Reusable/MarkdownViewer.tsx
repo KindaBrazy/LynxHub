@@ -51,10 +51,13 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
     setLoading(true);
     setError('');
     setContent('');
+
+    const controller = new AbortController();
+
     const fetchContent = async () => {
       try {
         let urlToFetch: string | undefined;
-        const fetchOptions: RequestInit = {};
+        const fetchOptions: RequestInit = {signal: controller.signal};
         let notFoundMessage = 'Content is not accessible.';
 
         if (urlType === 'raw') {
@@ -82,6 +85,15 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
         const data = await response.text();
         setContent(data);
       } catch (err) {
+        // Ignore abort errors when component unmounts
+        if (err instanceof Error && err.name === 'AbortError') {
+          return;
+        }
+        // Handle network errors gracefully
+        if (err instanceof TypeError && err.message.includes('Failed to fetch')) {
+          setError('Unable to connect. Please check your internet connection.');
+          return;
+        }
         setError(err instanceof Error ? err.message : 'Failed to fetch content');
       } finally {
         setLoading(false);
@@ -89,6 +101,8 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
     };
 
     fetchContent();
+
+    return () => controller.abort();
   }, [url, urlType, repository]);
 
   const transformImageUrl = useCallback(
