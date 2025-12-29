@@ -4,9 +4,34 @@ import {platform} from 'node:os';
 import {app, shell} from 'electron';
 import {isArray, isEmpty, isNil} from 'lodash';
 
-import {moduleManager, storageManager} from '../../../index';
+import {appManager, moduleManager, storageManager} from '../../../index';
 import {getAbsolutePath, getExePath, isPortable} from '../../../Utilities/Utils';
 import PtyManager from '../../PtyManager';
+
+/**
+ * Creates a PTY manager with error handling.
+ * Shows user-friendly error message if terminal creation fails.
+ */
+function createPtyManager(id: string, dir: string, useConpty: boolean): PtyManager | null {
+  try {
+    return new PtyManager(id, dir, useConpty);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`Failed to create terminal process [${id}]:`, error);
+
+    let userMessage = 'Failed to start terminal.';
+    if (errorMessage.includes('ENOENT') || errorMessage.includes('not found')) {
+      userMessage = 'Terminal shell not found. Please check your system shell configuration.';
+    } else if (errorMessage.includes('EACCES') || errorMessage.includes('permission')) {
+      userMessage = 'Permission denied when starting terminal. Try running as administrator.';
+    } else if (errorMessage.includes('spawn')) {
+      userMessage = 'Failed to spawn terminal process. Your shell may be misconfigured.';
+    }
+
+    appManager?.showToast(userMessage, 'error');
+    return null;
+  }
+}
 
 let ptyManager: PtyManager[] = [];
 
@@ -62,13 +87,17 @@ export async function stopAllPty(): Promise<void> {
 }
 
 export async function emptyPtyProcess(id: string, dir?: string) {
-  ptyManager.push(new PtyManager(id, getValidDir(dir), true));
+  const pty = createPtyManager(id, getValidDir(dir), true);
+  if (pty) ptyManager.push(pty);
 }
 
 export async function customPtyProcess(id: string, dir?: string, file?: string) {
   if (!file) return;
 
-  ptyManager.push(new PtyManager(id, getValidDir(dir), true));
+  const pty = createPtyManager(id, getValidDir(dir), true);
+  if (!pty) return;
+
+  ptyManager.push(pty);
 
   const extensionPreCommands = getExtPreCommands(id);
   executeCommands(id, extensionPreCommands);
@@ -79,7 +108,10 @@ export async function customPtyProcess(id: string, dir?: string, file?: string) 
 export async function customPtyCommands(id: string, commands?: string | string[], dir?: string) {
   if (isEmpty(commands)) return;
 
-  ptyManager.push(new PtyManager(id, getValidDir(dir), true));
+  const pty = createPtyManager(id, getValidDir(dir), true);
+  if (!pty) return;
+
+  ptyManager.push(pty);
 
   const extensionPreCommands = getExtPreCommands(id);
   let finalCommands = [...extensionPreCommands];
@@ -105,7 +137,10 @@ export async function ptyProcess(id: string, cardId: string) {
   if (!card) return;
 
   const cardDir = isPortable() ? getAbsolutePath(getExePath(), card.dir || '') : card.dir;
-  ptyManager.push(new PtyManager(id, getValidDir(cardDir), true));
+  const pty = createPtyManager(id, getValidDir(cardDir), true);
+  if (!pty) return;
+
+  ptyManager.push(pty);
 
   const preCommands = storageManager.getPreCommandById(cardId);
 
