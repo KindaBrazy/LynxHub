@@ -158,23 +158,30 @@ export class ValidateCards {
    * @returns {Promise<void>}
    */
   public async checkAndWatch(): Promise<void> {
-    let installedCards: InstalledCards = storageManager.getData('cards').installedCards;
-    if (isPortable()) {
-      installedCards = installedCards.map(card => {
-        return {id: card.id, dir: getAbsolutePath(getExePath(), card.dir || '')};
-      });
-    }
+    try {
+      let installedCards: InstalledCards = storageManager.getData('cards').installedCards;
+      if (isPortable()) {
+        installedCards = installedCards.map(card => {
+          return {id: card.id, dir: getAbsolutePath(getExePath(), card.dir || '')};
+        });
+      }
 
-    const validCards = await this.validateCards(installedCards);
+      const validCards = await this.validateCards(installedCards);
 
-    if (!lodash.isEqual(installedCards, validCards)) {
-      storageManager.updateData('cards', {installedCards: validCards});
+      if (!lodash.isEqual(installedCards, validCards)) {
+        storageManager.updateData('cards', {installedCards: validCards});
+      }
+    } catch (error) {
+      console.error('[DataValidator - checkAndWatch]: Failed to validate cards:', error);
+      AddBreadcrumb_Main(`[DataValidator] checkAndWatch error: ${error}`);
     }
   }
 
   /** Restarts the watching process when cards have changed. */
   public changedCards(): void {
     this.stopWatching();
-    this.checkAndWatch();
+    this.checkAndWatch().catch(error => {
+      console.error('[DataValidator - changedCards]: Failed to restart watching:', error);
+    });
   }
 }
