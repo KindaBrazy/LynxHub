@@ -505,8 +505,14 @@ class BaseStorage {
     try {
       this.storage.write();
     } catch (e) {
-      console.error(e);
-      appManager?.showToast(`Failed to save app configs: ${e.message}`, 'error');
+      console.error('Storage write failed:', e);
+      const errorMessage = e instanceof Error ? e.message : String(e);
+      // Check for OOM-related errors
+      if (errorMessage.includes('memory') || errorMessage.includes('heap') || errorMessage.includes('allocation')) {
+        appManager?.showToast('Failed to save configs: Out of memory. Try restarting the app.', 'error');
+      } else {
+        appManager?.showToast(`Failed to save app configs: ${errorMessage}`, 'error');
+      }
     }
   }
 }
