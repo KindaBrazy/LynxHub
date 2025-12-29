@@ -59,9 +59,10 @@ export class ValidateCards {
         const errCode = (error as NodeJS.ErrnoException).code;
         console.warn(`[DataValidator] Watcher error for ${dir}:`, errCode || error);
 
-        // Handle permission errors gracefully - don't crash, just log and skip
-        if (errCode === 'EPERM' || errCode === 'EACCES' || errCode === 'ENOENT') {
-          AddBreadcrumb_Main(`[DataValidator] Watcher permission/access error for ${dir}: ${errCode}`);
+        // Handle permission/access errors gracefully - don't crash, just log and skip
+        // EINVAL can occur when trying to lstat system files like pagefile.sys
+        if (errCode === 'EPERM' || errCode === 'EACCES' || errCode === 'ENOENT' || errCode === 'EINVAL') {
+          AddBreadcrumb_Main(`[DataValidator] Watcher error for ${dir}: ${errCode}`);
         }
       });
 
