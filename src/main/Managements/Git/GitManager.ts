@@ -676,5 +676,11 @@ export default class GitManager {
   /** Aborts the current Git operation. */
   public abort(): void {
     this.abortController.abort();
+    // Reset AbortController so subsequent operations can proceed
+    this.abortController = new AbortController();
+    this.git = simpleGit({
+      abort: this.abortController.signal,
+      progress: this.handleProgressUpdate,
+    });
   }
 }
