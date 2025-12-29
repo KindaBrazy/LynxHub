@@ -1,5 +1,5 @@
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
-import {isEmpty, isNil} from 'lodash';
+import {debounce, isEmpty, isNil} from 'lodash';
 
 import icon from '../../../resources/icon.png?asset';
 import {formatWebAddress} from '../../cross/CrossUtils';
@@ -15,16 +15,23 @@ import {appManager, contextMenuManager, linkPreviewManager, storageManager} from
 import {getUserAgent, getWindowColor} from '../Utilities/Utils';
 import RegisterHotkeys from './HotkeysManager';
 
+// Constants
+const BROWSER_SESSION_PARTITION = 'persist:lynxhub_browser';
+const NAVBAR_HEIGHT = 80;
+const DEBOUNCE_DELAY_MS = 50;
+const PAGE_LOAD_TIMEOUT_MS = 2000;
+const SCRIPT_EXECUTION_TIMEOUT_MS = 3000;
+
 export default class BrowserManager {
   private browsers: {id: string; view: WebContentsView}[] = [];
   private readonly mainWindow: BrowserWindow;
   private extraOffset: {id: string; offset: WHType}[] = [];
-  private boundsTimeout: ReturnType<typeof setTimeout> | null = null;
+  private cachedOffset: WHType | null = null;
 
   constructor(mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
 
-    const debouncedSetBounds = () => this.debouncedSetBounds();
+    const debouncedSetBounds = debounce(() => this.setBounds(), DEBOUNCE_DELAY_MS);
     this.mainWindow.on('maximize', debouncedSetBounds);
     this.mainWindow.on('unmaximize', debouncedSetBounds);
     this.mainWindow.on('enter-full-screen', debouncedSetBounds);
@@ -78,22 +85,21 @@ export default class BrowserManager {
   }
 
   private getOffsetResult() {
-    let width: number = 0;
-    let height: number = 0;
-    this.extraOffset.forEach(offset => {
-      width += offset.offset.width;
-      height += offset.offset.height;
-    });
-    return {width, height};
+    if (this.cachedOffset) return this.cachedOffset;
+
+    let width = 0;
+    let height = 0;
+    for (const {offset} of this.extraOffset) {
+      width += offset.width;
+      height += offset.height;
+    }
+    this.cachedOffset = {width, height};
+    return this.cachedOffset;
   }
 
-  /** Debounced version of setBounds to prevent rapid successive calls */
-  private debouncedSetBounds() {
-    if (this.boundsTimeout) clearTimeout(this.boundsTimeout);
-    this.boundsTimeout = setTimeout(() => {
-      this.setBounds();
-      this.boundsTimeout = null;
-    }, 50);
+  /** Invalidate cached offset when offsets change */
+  private invalidateOffsetCache() {
+    this.cachedOffset = null;
   }
 
   private setBounds() {
@@ -105,7 +111,7 @@ export default class BrowserManager {
     const [width, height] = window.getContentSize();
     const offset = this.getOffsetResult();
     const calculatedWidth = width - offset.width;
-    const calculatedHeight = height - 80 - offset.height;
+    const calculatedHeight = height - NAVBAR_HEIGHT - offset.height;
 
     // Validate bounds are positive
     if (calculatedWidth <= 0 || calculatedHeight <= 0) return;
@@ -113,7 +119,7 @@ export default class BrowserManager {
     this.browsers.forEach(browser => {
       browser.view.setBounds({
         x: 0,
-        y: 80,
+        y: NAVBAR_HEIGHT,
         width: calculatedWidth,
         height: calculatedHeight,
       });
@@ -131,24 +137,16 @@ export default class BrowserManager {
       });
     };
 
-    const trackUrl = (url: string) => {
-      if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
-        const formattedUrl = formatWebAddress(url);
-        storageManager.addBrowserRecent(formattedUrl);
-        storageManager.addBrowserHistory(formattedUrl);
-      }
-    };
-
     sendToRenderer();
 
     webContents.on('did-navigate', (_, url) => {
       sendToRenderer();
-      trackUrl(url);
+      this.trackUrl(url);
     });
 
     webContents.on('did-navigate-in-page', (_, url) => {
       sendToRenderer();
-      trackUrl(url);
+      this.trackUrl(url);
     });
 
     webContents.on('did-finish-load', sendToRenderer);
@@ -159,6 +157,15 @@ export default class BrowserManager {
         this.getMainWebContents()?.send(browserChannels.onUrlChange, id, e.url);
       }
     });
+  }
+
+  /** Track URL in browser history (shared helper to avoid duplication) */
+  private trackUrl(url: string) {
+    if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
+      const formattedUrl = formatWebAddress(url);
+      storageManager.addBrowserRecent(formattedUrl);
+      storageManager.addBrowserHistory(formattedUrl);
+    }
   }
 
   private listenForLoading(id: string, webContents: WebContents) {
@@ -217,11 +224,7 @@ export default class BrowserManager {
         const openInBackground = disposition === 'background-tab';
         appManager?.getWebContent()?.send(tabsChannels.onNewTab, url, openInBackground);
         // Track URLs opened in new tabs (like real browsers)
-        if (url && !url.startsWith('about:')) {
-          const formattedUrl = formatWebAddress(url);
-          storageManager.addBrowserRecent(formattedUrl);
-          storageManager.addBrowserHistory(formattedUrl);
-        }
+        this.trackUrl(url);
       }
 
       return {action: 'deny'};
@@ -280,7 +283,7 @@ export default class BrowserManager {
   }
 
   public getSession() {
-    return session.fromPartition('persist:lynxhub_browser');
+    return session.fromPartition(BROWSER_SESSION_PARTITION);
   }
 
   public createBrowser(id: string) {
@@ -343,6 +346,7 @@ export default class BrowserManager {
     } else {
       this.extraOffset.push({id, offset});
     }
+    this.invalidateOffsetCache();
   }
 
   public clearHistory(selected: string[]) {
@@ -389,11 +393,7 @@ export default class BrowserManager {
       wc.loadURL(url).catch(error => {
         console.error(`Failed to load URL ${url}:`, error);
       });
-      if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
-        const formattedUrl = formatWebAddress(url);
-        storageManager.addBrowserRecent(formattedUrl);
-        storageManager.addBrowserHistory(formattedUrl);
-      }
+      // URL tracking is handled by listenForNavigate's did-navigate event
     });
   }
 
@@ -475,7 +475,7 @@ export default class BrowserManager {
           };
           webContents.once('did-finish-load', onFinish);
           webContents.once('did-fail-load', onFinish);
-          setTimeout(resolve, 2000);
+          setTimeout(resolve, PAGE_LOAD_TIMEOUT_MS);
         });
       }
 
@@ -506,10 +506,10 @@ export default class BrowserManager {
 
       await Promise.race([
         currentWebContents.executeJavaScript(script, true),
-        new Promise((_, reject) => setTimeout(() => reject(new Error('Script execution timeout')), 3000)),
+        new Promise<void>((_, reject) => setTimeout(() => reject(new Error('Script execution timeout')), SCRIPT_EXECUTION_TIMEOUT_MS)),
       ]);
     } catch (error) {
-      console.warn('Volume set skipped:', error instanceof Error ? error.message : error);
+      console.warn('Volume set skipped:', error instanceof Error ? error.message : String(error));
     }
   }
 
