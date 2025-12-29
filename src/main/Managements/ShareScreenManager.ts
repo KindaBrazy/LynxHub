@@ -20,6 +20,7 @@ export default class ShareScreenManager {
   private selectorWindow?: BrowserWindow;
   private mainWindow?: BrowserWindow;
   private availableSources: DesktopCapturerSource[] = [];
+  private handlersRegistered = false;
 
   public start() {
     this.requestHandler = this.requestHandler.bind(this);
@@ -49,14 +50,14 @@ export default class ShareScreenManager {
 
   private onDone() {
     this.availableSources = [];
+    this.handlersRegistered = false;
     this.selectorWindow?.close();
     this.selectorWindow?.on('closed', () => {
       this.selectorWindow = undefined;
 
-      ipcMain.removeAllListeners(screenShareChannels.getScreenSources);
-      ipcMain.removeAllListeners(screenShareChannels.getWindowSources);
-
-      this.start();
+      // Use removeHandler for channels registered with ipcMain.handle()
+      ipcMain.removeHandler(screenShareChannels.getScreenSources);
+      ipcMain.removeHandler(screenShareChannels.getWindowSources);
     });
   }
 
@@ -98,6 +99,10 @@ export default class ShareScreenManager {
   }
 
   private getSources() {
+    // Prevent double-registration of handlers
+    if (this.handlersRegistered) return;
+    this.handlersRegistered = true;
+
     const resolveSources = (sources: DesktopCapturerSource[], resolve: (result: ScreenShareSources[]) => void) => {
       const result: ScreenShareSources[] = sources.map(source => {
         const thumbnail = source.thumbnail ? source.thumbnail.toDataURL() : undefined;
