@@ -92,30 +92,30 @@ export default class ContextMenuManager {
   public listenForBrowserChannels(browserManager: BrowserManager) {
     ipcMain.on(browserChannels.openFindInPage, (_, id: string, customPosition?: {x: number; y: number}) => {
       this.setCustomContextPosition(customPosition);
-      this.contextMenuWindow?.webContents.send(contextMenuChannels.onFind, id);
+      this.sendContextMenuMessage(contextMenuChannels.onFind, id);
     });
     ipcMain.on(browserChannels.openZoom, (_, id: string) => {
       this.setCustomContextPosition(undefined);
-      this.contextMenuWindow?.webContents.send(contextMenuChannels.onZoom, id, browserManager.getCurrentZoom(id));
+      this.sendContextMenuMessage(contextMenuChannels.onZoom, id, browserManager.getCurrentZoom(id));
     });
     ipcMain.on(
       browserChannels.openVolume,
       (_, data: {id: string; tabId: string; volume: number; muted: boolean; globalMuted: boolean}) => {
         this.setCustomContextPosition(undefined);
-        this.contextMenuWindow?.webContents.send(contextMenuChannels.onVolume, data);
+        this.sendContextMenuMessage(contextMenuChannels.onVolume, data);
       },
     );
     ipcMain.on(contextMenuChannels.openTerminateAI, (_, id: string) => {
       this.setCustomContextPosition(undefined);
-      this.contextMenuWindow?.webContents.send(contextMenuChannels.onTerminateAI, id);
+      this.sendContextMenuMessage(contextMenuChannels.onTerminateAI, id);
     });
     ipcMain.on(contextMenuChannels.openTerminateTab, (_, id: string, customPosition?: {x: number; y: number}) => {
       this.setCustomContextPosition(customPosition);
-      this.contextMenuWindow?.webContents.send(contextMenuChannels.onTerminateTab, id);
+      this.sendContextMenuMessage(contextMenuChannels.onTerminateTab, id);
     });
     ipcMain.on(contextMenuChannels.openCloseApp, () => {
       this.setCustomContextPosition(undefined);
-      this.contextMenuWindow?.webContents.send(contextMenuChannels.onCloseApp);
+      this.sendContextMenuMessage(contextMenuChannels.onCloseApp);
     });
   }
 
@@ -269,6 +269,16 @@ export default class ContextMenuManager {
     if (!mainWebcontents || mainWebcontents.isDestroyed()) return;
 
     mainWebcontents.send(channel, ...args);
+  }
+
+  private sendContextMenuMessage(channel: string, ...args: any[]) {
+    const window = this.contextMenuWindow;
+    if (!window || window.isDestroyed()) return;
+
+    const webContents = window.webContents;
+    if (!webContents || webContents.isDestroyed()) return;
+
+    webContents.send(channel, ...args);
   }
 
   private resizeContextMenu(data: ContextResizeData) {
