@@ -506,7 +506,9 @@ export default class BrowserManager {
 
       await Promise.race([
         currentWebContents.executeJavaScript(script, true),
-        new Promise<void>((_, reject) => setTimeout(() => reject(new Error('Script execution timeout')), SCRIPT_EXECUTION_TIMEOUT_MS)),
+        new Promise<void>((_, reject) =>
+          setTimeout(() => reject(new Error('Script execution timeout')), SCRIPT_EXECUTION_TIMEOUT_MS),
+        ),
       ]);
     } catch (error) {
       console.warn('Volume set skipped:', error instanceof Error ? error.message : String(error));
