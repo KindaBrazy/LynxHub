@@ -484,7 +484,15 @@ function modulesApi() {
 }
 
 let browserTimeout: NodeJS.Timeout | undefined = undefined;
+let browserIPCInitialized = false;
+
 export function browserIPC() {
+  // Prevent registering handlers multiple times
+  if (browserIPCInitialized) {
+    console.warn('browserIPC already initialized, skipping...');
+    return;
+  }
+
   const mainWindow = appManager?.getMainWindow();
 
   if (!mainWindow) {
@@ -494,6 +502,7 @@ export function browserIPC() {
 
   clearTimeout(browserTimeout);
   browserTimeout = undefined;
+  browserIPCInitialized = true;
 
   const browserManager: BrowserManager = new BrowserManager(mainWindow);
   new BrowserDownloadManager(browserManager.getSession(), mainWindow);
