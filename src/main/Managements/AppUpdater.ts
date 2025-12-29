@@ -16,6 +16,13 @@ function sendToRenderer(type: AppUpdateEventTypes, status?: AppUpdateStatus) {
  */
 function isNetworkError(error: Error | any): boolean {
   const message = error?.message || error?.toString() || '';
+  const statusCode = error?.statusCode;
+
+  // HTTP 5xx errors (server-side issues) should be silently ignored
+  if (statusCode && statusCode >= 500 && statusCode < 600) {
+    return true;
+  }
+
   const networkErrorPatterns = [
     /ERR_NETWORK_CHANGED/i,
     /ERR_INTERNET_DISCONNECTED/i,
@@ -28,6 +35,10 @@ function isNetworkError(error: Error | any): boolean {
     /ETIMEDOUT/i,
     /ENETUNREACH/i,
     /net::ERR_/i,
+    /504 Gateway/i,
+    /502 Bad Gateway/i,
+    /503 Service/i,
+    /HttpError: 5\d\d/i,
   ];
   return networkErrorPatterns.some(pattern => pattern.test(message));
 }
