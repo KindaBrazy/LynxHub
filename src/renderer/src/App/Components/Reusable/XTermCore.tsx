@@ -174,64 +174,87 @@ const XTermCore = memo(
 
           xTerm.open(terminalContainer);
 
-          if (renderMode === 'webgl') {
-            const webglAddon = new WebglAddon();
-            webglAddon.onContextLoss(() => webglAddon.dispose());
-            xTerm.loadAddon(webglAddon);
-          } else {
-            xTerm.loadAddon(new CanvasAddon());
-          }
+          // Store reference for use in requestAnimationFrame callback
+          const termRef = xTerm;
+          const fitRef = fitAddon.current;
 
-          // Load ligatures addon if enabled
-          if (enableLigatures) {
-            try {
-              xTerm.loadAddon(new LigaturesAddon());
-            } catch (e) {
-              console.warn('Failed to load ligatures addon:', e);
+          // Wait for next frame to ensure renderer is initialized before fitting
+          requestAnimationFrame(() => {
+            if (!termRef) return;
+
+            if (renderMode === 'webgl') {
+              try {
+                const webglAddon = new WebglAddon();
+                webglAddon.onContextLoss(() => webglAddon.dispose());
+                termRef.loadAddon(webglAddon);
+              } catch (e) {
+                console.warn('Failed to load WebGL addon, falling back to canvas:', e);
+                termRef.loadAddon(new CanvasAddon());
+              }
+            } else {
+              termRef.loadAddon(new CanvasAddon());
             }
-          }
 
-          // Load progress addon for ConEmu OSC 9;4 sequence support
-          if (onProgress) {
-            const progressAddon = new ProgressAddon();
-            xTerm.loadAddon(progressAddon);
-            progressAddon.onChange(onProgress);
-          }
+            // Load ligatures addon if enabled
+            if (enableLigatures) {
+              try {
+                termRef.loadAddon(new LigaturesAddon());
+              } catch (e) {
+                console.warn('Failed to load ligatures addon:', e);
+              }
+            }
 
-          // Resize notification
-          if (enableResizeNotify) {
-            let prevSize: {cols: number; rows: number} | undefined;
-            xTerm.onResize(size => {
-              if (isEqual(prevSize, size)) return;
-              rendererIpc.pty.resize(id, size.cols, size.rows);
-              prevSize = size;
-            });
-          }
+            // Load progress addon for ConEmu OSC 9;4 sequence support
+            if (onProgress) {
+              const progressAddon = new ProgressAddon();
+              termRef.loadAddon(progressAddon);
+              progressAddon.onChange(onProgress);
+            }
 
-          fitAddon.current.fit();
+            // Resize notification
+            if (enableResizeNotify) {
+              let prevSize: {cols: number; rows: number} | undefined;
+              termRef.onResize(size => {
+                if (isEqual(prevSize, size)) return;
+                rendererIpc.pty.resize(id, size.cols, size.rows);
+                prevSize = size;
+              });
+            }
 
-          // PTY write
-          if (enablePtyWrite) {
-            xTerm.onData(data => !isEmpty(data) && rendererIpc.pty.write(id, data));
-          }
+            // Fit after renderer is ready
+            try {
+              fitRef?.fit();
+            } catch (e) {
+              console.warn('Failed to fit terminal:', e);
+            }
 
-          // Create API
-          apiRef.current = {
-            terminal: xTerm,
-            fitAddon: fitAddon.current,
-            clear: () => {
-              xTerm?.clear();
-              rendererIpc.pty.clear(id);
-            },
-            getSelection: () => xTerm?.getSelection() || '',
-            clearSelection: () => xTerm?.clearSelection(),
-            write: (data: string) => xTerm?.write(outputColor ? parseTerminalColors(data) : data),
-            fit: () => {
-              if (canResize()) fitAddon.current?.fit();
-            },
-          };
+            // PTY write
+            if (enablePtyWrite) {
+              termRef.onData(data => !isEmpty(data) && rendererIpc.pty.write(id, data));
+            }
 
-          onReady?.(apiRef.current);
+            // Create API
+            apiRef.current = {
+              terminal: termRef,
+              fitAddon: fitRef,
+              clear: () => {
+                termRef?.clear();
+                rendererIpc.pty.clear(id);
+              },
+              getSelection: () => termRef?.getSelection() || '',
+              clearSelection: () => termRef?.clearSelection(),
+              write: (data: string) => termRef?.write(outputColor ? parseTerminalColors(data) : data),
+              fit: () => {
+                try {
+                  if (canResize()) fitRef?.fit();
+                } catch (e) {
+                  console.warn('Failed to fit terminal:', e);
+                }
+              },
+            };
+
+            onReady?.(apiRef.current);
+          });
         };
 
         const font = new FontFaceObserver(FONT_FAMILY);
