@@ -183,7 +183,12 @@ async function setupApp() {
     optimizer.watchWindowShortcuts(window);
   });
 
-  app.on('activate', () => {
+  app.on('activate', async () => {
+    // Ensure app is ready before creating windows
+    if (!app.isReady()) {
+      await app.whenReady();
+    }
+
     const mainWindow = appManager?.getMainWindow();
     if (!mainWindow || mainWindow.isDestroyed()) {
       appManager?.startLoading();
