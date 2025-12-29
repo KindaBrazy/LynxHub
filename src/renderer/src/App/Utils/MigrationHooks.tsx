@@ -34,3 +34,36 @@ export const useMigrateCardTitles = () => {
     checkAndMigrate();
   }, []);
 };
+
+/**
+ * Clears old favicon cache from localStorage.
+ * Previously, favicons were cached as base64 data URLs in localStorage.
+ * Now they use the lynxcache:// protocol with disk-based caching.
+ */
+export const useClearOldFaviconCache = () => {
+  useEffect(() => {
+    const migrationKey = 'migration_favicon_cache_cleared';
+
+    // Check if already migrated
+    if (window.localStorage.getItem(migrationKey)) return;
+
+    const keysToRemove: string[] = [];
+
+    // Find all old favicon cache entries (pattern: *_favicon_http* or *_favicon_https*)
+    for (let i = 0; i < window.localStorage.length; i++) {
+      const key = window.localStorage.key(i);
+      if (key && key.includes('_favicon_http')) {
+        keysToRemove.push(key);
+      }
+    }
+
+    // Remove old cache entries
+    if (keysToRemove.length > 0) {
+      keysToRemove.forEach(key => window.localStorage.removeItem(key));
+      console.log(`[Migration] Cleared ${keysToRemove.length} old favicon cache entries from localStorage`);
+    }
+
+    // Mark migration as done
+    window.localStorage.setItem(migrationKey, 'true');
+  }, []);
+};
