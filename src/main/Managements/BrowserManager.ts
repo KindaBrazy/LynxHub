@@ -19,15 +19,17 @@ export default class BrowserManager {
   private browsers: {id: string; view: WebContentsView}[] = [];
   private readonly mainWindow: BrowserWindow;
   private extraOffset: {id: string; offset: WHType}[] = [];
+  private boundsTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
 
-    this.mainWindow.on('maximize', () => this.setBounds());
-    this.mainWindow.on('unmaximize', () => this.setBounds());
-    this.mainWindow.on('enter-full-screen', () => this.setBounds());
-    this.mainWindow.on('leave-full-screen', () => this.setBounds());
-    this.mainWindow.on('resize', () => this.setBounds());
+    const debouncedSetBounds = () => this.debouncedSetBounds();
+    this.mainWindow.on('maximize', debouncedSetBounds);
+    this.mainWindow.on('unmaximize', debouncedSetBounds);
+    this.mainWindow.on('enter-full-screen', debouncedSetBounds);
+    this.mainWindow.on('leave-full-screen', debouncedSetBounds);
+    this.mainWindow.on('resize', debouncedSetBounds);
   }
 
   private getMainWindow() {
@@ -85,22 +87,37 @@ export default class BrowserManager {
     return {width, height};
   }
 
+  /** Debounced version of setBounds to prevent rapid successive calls */
+  private debouncedSetBounds() {
+    if (this.boundsTimeout) clearTimeout(this.boundsTimeout);
+    this.boundsTimeout = setTimeout(() => {
+      this.setBounds();
+      this.boundsTimeout = null;
+    }, 50);
+  }
+
   private setBounds() {
-    if (!isEmpty(this.browsers)) {
-      this.browsers.forEach(browser => {
-        setTimeout(() => {
-          const window = this.getMainWindow();
-          if (!window) return;
-          const [width, height] = window.getContentSize();
-          browser.view.setBounds({
-            x: 0,
-            y: 80,
-            width: width - this.getOffsetResult().width,
-            height: height - 80 - this.getOffsetResult().height,
-          });
-        }, 50);
+    if (isEmpty(this.browsers)) return;
+
+    const window = this.getMainWindow();
+    if (!window) return;
+
+    const [width, height] = window.getContentSize();
+    const offset = this.getOffsetResult();
+    const calculatedWidth = width - offset.width;
+    const calculatedHeight = height - 80 - offset.height;
+
+    // Validate bounds are positive
+    if (calculatedWidth <= 0 || calculatedHeight <= 0) return;
+
+    this.browsers.forEach(browser => {
+      browser.view.setBounds({
+        x: 0,
+        y: 80,
+        width: calculatedWidth,
+        height: calculatedHeight,
       });
-    }
+    });
   }
 
   private listenForNavigate(id: string, webContents: WebContents) {
@@ -269,6 +286,9 @@ export default class BrowserManager {
   public createBrowser(id: string) {
     if (this.browsers.some(view => view.id === id)) return;
 
+    const mainWindow = this.getMainWindow();
+    if (!mainWindow) return;
+
     const newView = new WebContentsView({webPreferences: {session: this.getSession()}});
     const webContents = newView.webContents;
     newView.setBackgroundColor(getWindowColor());
@@ -292,9 +312,7 @@ export default class BrowserManager {
     this.listenForLinkHover(webContents);
 
     this.browsers.push({id, view: newView});
-
-    const mainWindow = this.getMainWindow();
-    if (!isNil(mainWindow)) mainWindow.contentView.addChildView(newView);
+    mainWindow.contentView.addChildView(newView);
 
     this.setBounds();
 
@@ -346,22 +364,31 @@ export default class BrowserManager {
   }
 
   public removeBrowser(id: string) {
-    const browser = this.browsers.find(view => view.id === id);
+    const browserIndex = this.browsers.findIndex(view => view.id === id);
+    if (browserIndex === -1) return;
+
+    const browser = this.browsers[browserIndex];
     const mainWindow = this.getMainWindow();
 
-    if (browser && mainWindow) {
+    // Remove from array first to prevent any callbacks from accessing stale data
+    this.browsers.splice(browserIndex, 1);
+
+    if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.contentView.removeChildView(browser.view);
+    }
 
-      browser.view.webContents.removeAllListeners();
-      browser.view.webContents.close();
-
-      this.browsers = this.browsers.filter(view => view.id !== id);
+    const webContents = browser.view.webContents;
+    if (webContents && !webContents.isDestroyed()) {
+      webContents.removeAllListeners();
+      webContents.close();
     }
   }
 
   public loadURL(id: string, url: string) {
     this.withWebContents(id, wc => {
-      wc.loadURL(url);
+      wc.loadURL(url).catch(error => {
+        console.error(`Failed to load URL ${url}:`, error);
+      });
       if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
         const formattedUrl = formatWebAddress(url);
         storageManager.addBrowserRecent(formattedUrl);
@@ -434,6 +461,9 @@ export default class BrowserManager {
     const webContents = this.getWebContents(id);
     if (!webContents) return;
 
+    // Store browser id to verify it still exists after async operations
+    const browserId = id;
+
     try {
       // Wait for page to be ready for script execution
       if (webContents.isLoading()) {
@@ -449,7 +479,9 @@ export default class BrowserManager {
         });
       }
 
-      if (webContents.isDestroyed()) return;
+      // Re-verify webContents is still valid after async wait
+      const currentWebContents = this.getWebContents(browserId);
+      if (!currentWebContents || currentWebContents.isDestroyed()) return;
 
       const volumeDecimal = Math.max(0, Math.min(100, volume)) / 100;
       const script = `
@@ -473,7 +505,7 @@ export default class BrowserManager {
       `;
 
       await Promise.race([
-        webContents.executeJavaScript(script, true),
+        currentWebContents.executeJavaScript(script, true),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Script execution timeout')), 3000)),
       ]);
     } catch (error) {
