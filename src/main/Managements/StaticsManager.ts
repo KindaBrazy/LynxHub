@@ -42,9 +42,11 @@ export default class StaticsManager {
         setInterval(() => this.pull(), toMs(10, 'minutes'));
         this.requirementsCheckCompleted = true;
       } catch (error) {
+        // Log the error but don't throw - git may not be available or network may be down
+        console.warn('StaticsManager: Failed to check requirements:', error);
         this.requirementsCheckPromise = null;
         this.requirementsCheckCompleted = false;
-        throw error;
+        // Don't throw - allow app to continue without statics
       }
     })();
 
