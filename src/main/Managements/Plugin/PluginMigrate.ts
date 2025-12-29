@@ -1,4 +1,4 @@
-import {app, BrowserWindow} from 'electron';
+import {app, BrowserWindow, dialog} from 'electron';
 
 import StorageManager from '../Storage/StorageManager';
 import {PluginManager} from './PluginManager';
@@ -95,7 +95,41 @@ export function PluginMigrate(storageManager: StorageManager, pluginManager: Plu
       } catch (error) {
         console.error('Migration failed:', error);
 
-        await updateStatus(`Error: Migration failed. Please restart the app. Details: ${error.message}`);
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        await updateStatus(`Error: Migration failed.`);
+
+        // Close migration window before showing dialog
+        if (migrationWindow && !migrationWindow.isDestroyed()) {
+          migrationWindow.hide();
+        }
+
+        const result = await dialog.showMessageBox({
+          type: 'error',
+          title: 'Migration Failed',
+          message: 'Plugin migration failed',
+          detail: `${errorMessage}\n\nWould you like to retry or skip migration and continue?`,
+          buttons: ['Retry', 'Skip & Continue', 'Quit'],
+          defaultId: 0,
+          cancelId: 2,
+        });
+
+        if (migrationWindow && !migrationWindow.isDestroyed()) {
+          migrationWindow.close();
+        }
+
+        if (result.response === 0) {
+          // Retry - relaunch the app
+          app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
+          app.quit();
+        } else if (result.response === 1) {
+          // Skip - mark as migrated to prevent retry loop, then relaunch
+          storageManager.updateData('plugin', {migrated: true});
+          app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
+          app.quit();
+        } else {
+          // Quit
+          app.quit();
+        }
       }
     });
   });
