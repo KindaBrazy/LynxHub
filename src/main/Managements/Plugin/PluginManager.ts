@@ -58,6 +58,16 @@ export class PluginManager {
   private async readPlugin() {
     return new Promise<void>(async resolve => {
       try {
+        // Ensure plugin directory exists before reading
+        try {
+          await promises.access(this.pluginPath, constants.F_OK);
+        } catch {
+          // Directory doesn't exist - create it and return early (no plugins to load)
+          await promises.mkdir(this.pluginPath, {recursive: true});
+          resolve();
+          return;
+        }
+
         const files = readdirSync(this.pluginPath, {withFileTypes: true});
         const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
         const validFolders = await this.validatePluginFolders(folders);
