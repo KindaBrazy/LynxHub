@@ -30,45 +30,60 @@ export class ValidateCards {
    */
   private startWatching(): void {
     this.dirs.forEach(dir => {
-      try {
-        const watcher = watch(dir, {
-          depth: 0,
-          persistent: true,
-          ignored: path => {
-            const isPageFile = path.includes('pagefile.sys');
-            const isSystemDir = path.includes('System Volume Information') || path.includes('Recovery');
-            return isPageFile || isSystemDir;
-          },
-        });
-
-        watcher.on('unlinkDir', this.handleUnlinkedDir);
-        this.watchers.push(watcher);
-      } catch (error) {
-        if (error && (error as NodeJS.ErrnoException).code === 'ENOSPC') {
-          console.warn(`[DataValidator] ENOSPC hit for directory: ${dir}. Falling back to polling.`);
-
-          const pollingWatcher = watch(dir, {
-            depth: 0,
-            persistent: true,
-            usePolling: true,
-            interval: 5000,
-            awaitWriteFinish: true,
-            ignored: path => {
-              const isPageFile = path.includes('pagefile.sys');
-              const isSystemDir = path.includes('System Volume Information') || path.includes('Recovery');
-              return isPageFile || isSystemDir;
-            },
-          });
-
-          pollingWatcher.on('unlinkDir', this.handleUnlinkedDir);
-          this.watchers.push(pollingWatcher);
-
-          AddBreadcrumb_Main('[DataValidator] ENOSPC hit for directory: ' + dir + '. Falling back to polling.');
-        } else {
-          console.error(`[DataValidator] Failed to start watcher for ${dir}:`, error);
-        }
-      }
+      this.startWatcherForDir(dir);
     });
+  }
+
+  /**
+   * Starts a watcher for a single directory with error handling.
+   */
+  private startWatcherForDir(dir: string, usePolling: boolean = false): void {
+    try {
+      const watchOptions = {
+        depth: 0,
+        persistent: true,
+        usePolling,
+        interval: usePolling ? 5000 : undefined,
+        awaitWriteFinish: usePolling ? true : undefined,
+        ignored: (watchPath: string) => {
+          const isPageFile = watchPath.includes('pagefile.sys');
+          const isSystemDir = watchPath.includes('System Volume Information') || watchPath.includes('Recovery');
+          return isPageFile || isSystemDir;
+        },
+      };
+
+      const watcher = watch(dir, watchOptions);
+
+      watcher.on('unlinkDir', this.handleUnlinkedDir);
+      watcher.on('error', error => {
+        const errCode = (error as NodeJS.ErrnoException).code;
+        console.warn(`[DataValidator] Watcher error for ${dir}:`, errCode || error);
+
+        // Handle permission errors gracefully - don't crash, just log and skip
+        if (errCode === 'EPERM' || errCode === 'EACCES' || errCode === 'ENOENT') {
+          AddBreadcrumb_Main(`[DataValidator] Watcher permission/access error for ${dir}: ${errCode}`);
+        }
+      });
+
+      this.watchers.push(watcher);
+    } catch (error) {
+      const errCode = (error as NodeJS.ErrnoException).code;
+
+      if (errCode === 'ENOSPC') {
+        console.warn(`[DataValidator] ENOSPC hit for directory: ${dir}. Falling back to polling.`);
+        AddBreadcrumb_Main('[DataValidator] ENOSPC hit for directory: ' + dir + '. Falling back to polling.');
+
+        if (!usePolling) {
+          this.startWatcherForDir(dir, true);
+        }
+      } else if (errCode === 'EPERM' || errCode === 'EACCES') {
+        // Permission denied - skip this directory silently
+        console.warn(`[DataValidator] Permission denied for ${dir}, skipping watcher.`);
+        AddBreadcrumb_Main(`[DataValidator] Permission denied for ${dir}, skipping watcher.`);
+      } else {
+        console.error(`[DataValidator] Failed to start watcher for ${dir}:`, error);
+      }
+    }
   }
 
   /**
