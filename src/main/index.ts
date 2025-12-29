@@ -183,6 +183,16 @@ async function setupApp() {
     optimizer.watchWindowShortcuts(window);
   });
 
+  // Handle child process crashes (GPU, utility processes, etc.)
+  // These are Chromium internal issues, not app bugs - log and ignore
+  app.on('child-process-gone', (_event, details) => {
+    const {type, reason, exitCode} = details;
+    // Only log non-normal exits for debugging, don't report to Sentry
+    if (reason !== 'clean-exit' && reason !== 'killed') {
+      console.warn(`Child process (${type}) exited: reason=${reason}, exitCode=${exitCode}`);
+    }
+  });
+
   app.on('activate', async () => {
     // Ensure app is ready before creating windows
     if (!app.isReady()) {
