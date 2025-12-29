@@ -563,7 +563,7 @@ class StorageManager extends BaseStorage {
    * Updates browser data: updates decrypted cache and encrypts before storing
    */
   public updateBrowserDataSecurely(data: Partial<BrowserHistoryData>): void {
-    const encryptedData: Partial<BrowserHistoryData> = JSON.parse(JSON.stringify(data));
+    const encryptedData: Partial<BrowserHistoryData> = structuredClone(data);
 
     // Update decrypted cache
     this.decryptedBrowserData = {
