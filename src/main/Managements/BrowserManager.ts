@@ -32,19 +32,47 @@ export default class BrowserManager {
 
   private getMainWindow() {
     if (isNil(this.mainWindow) || this.mainWindow.isDestroyed()) return undefined;
-
     return this.mainWindow;
   }
 
   private getMainWebContents() {
     const window = this.getMainWindow();
     if (isNil(window) || window.webContents.isDestroyed()) return undefined;
-
     return window.webContents;
   }
 
   private getViewByID(id: string) {
     return this.browsers.find(view => view.id === id)?.view;
+  }
+
+  /** Get valid WebContents by ID, returns undefined if not found or destroyed */
+  private getWebContents(id: string): WebContents | undefined {
+    const view = this.getViewByID(id);
+    if (!view?.webContents || view.webContents.isDestroyed()) return undefined;
+    return view.webContents;
+  }
+
+  /** Execute action on WebContents if valid, with optional error handling */
+  private withWebContents<T>(id: string, action: (wc: WebContents) => T, fallback?: T): T | undefined {
+    try {
+      const wc = this.getWebContents(id);
+      if (!wc) return fallback;
+      return action(wc);
+    } catch (error) {
+      console.error(`WebContents action failed for ${id}:`, error);
+      return fallback;
+    }
+  }
+
+  /** Execute action requiring both main and view WebContents */
+  private withBothContents(id: string, action: (main: WebContents, view: WebContents) => void): void {
+    try {
+      const mainWc = this.getMainWebContents();
+      const viewWc = this.getWebContents(id);
+      if (mainWc && viewWc) action(mainWc, viewWc);
+    } catch (error) {
+      console.error(`Dual WebContents action failed for ${id}:`, error);
+    }
   }
 
   private getOffsetResult() {
@@ -77,56 +105,48 @@ export default class BrowserManager {
 
   private listenForNavigate(id: string, webContents: WebContents) {
     const sendToRenderer = () => {
-      const mainWebContents = this.getMainWebContents();
-      if (!mainWebContents) return;
-      if (isNil(webContents) || isNil(mainWebContents) || webContents.isDestroyed()) return;
+      this.withBothContents(id, (mainWc, viewWc) => {
+        const canGo: CanGoType = {
+          back: viewWc.navigationHistory.canGoBack(),
+          forward: viewWc.navigationHistory.canGoForward(),
+        };
+        mainWc.send(browserChannels.onCanGo, id, canGo);
+      });
+    };
 
-      const canGo: CanGoType = {
-        back: webContents.navigationHistory.canGoBack(),
-        forward: webContents.navigationHistory.canGoForward(),
-      };
-
-      mainWebContents.send(browserChannels.onCanGo, id, canGo);
+    const trackUrl = (url: string) => {
+      if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
+        const formattedUrl = formatWebAddress(url);
+        storageManager.addBrowserRecent(formattedUrl);
+        storageManager.addBrowserHistory(formattedUrl);
+      }
     };
 
     sendToRenderer();
 
-    // Track history on actual navigation (like real browsers do)
     webContents.on('did-navigate', (_, url) => {
       sendToRenderer();
-      // Add to recent/history when page actually navigates (clicking links, redirects, etc.)
-      if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
-        const formattedUrl = formatWebAddress(url);
-        storageManager.addBrowserRecent(formattedUrl);
-        storageManager.addBrowserHistory(formattedUrl);
-      }
+      trackUrl(url);
     });
 
     webContents.on('did-navigate-in-page', (_, url) => {
       sendToRenderer();
-      // Also track in-page navigation (SPA hash/pushState changes)
-      if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
-        const formattedUrl = formatWebAddress(url);
-        storageManager.addBrowserRecent(formattedUrl);
-        storageManager.addBrowserHistory(formattedUrl);
-      }
+      trackUrl(url);
     });
 
     webContents.on('did-finish-load', sendToRenderer);
     webContents.on('did-stop-loading', sendToRenderer);
 
     webContents.on('did-start-navigation', e => {
-      const mainWebContents = this.getMainWebContents();
-      if (e.isMainFrame && !isNil(mainWebContents)) mainWebContents.send(browserChannels.onUrlChange, id, e.url);
+      if (e.isMainFrame) {
+        this.getMainWebContents()?.send(browserChannels.onUrlChange, id, e.url);
+      }
     });
   }
 
   private listenForLoading(id: string, webContents: WebContents) {
     const onLoading = (isLoading: boolean) => {
-      const mainWebContents = this.getMainWebContents();
-      if (isNil(mainWebContents)) return;
-
-      mainWebContents.send(browserChannels.isLoading, id, isLoading);
+      this.getMainWebContents()?.send(browserChannels.isLoading, id, isLoading);
     };
 
     webContents.on('did-start-loading', () => onLoading(true));
@@ -135,32 +155,27 @@ export default class BrowserManager {
 
   private listenForTitle(id: string, webContents: WebContents) {
     webContents.on('page-title-updated', () => {
-      const mainWebContents = this.getMainWebContents();
-      if (isNil(webContents) || isNil(mainWebContents) || webContents.isDestroyed()) return;
-
-      const title = webContents.getTitle();
-      mainWebContents.send(browserChannels.onTitleChange, id, title);
-
-      // Update title in storage for existing favicon entries
-      storageManager.updateBrowserFavIconTitle(formatWebAddress(webContents.getURL()), title);
+      this.withBothContents(id, (mainWc, viewWc) => {
+        const title = viewWc.getTitle();
+        mainWc.send(browserChannels.onTitleChange, id, title);
+        storageManager.updateBrowserFavIconTitle(formatWebAddress(viewWc.getURL()), title);
+      });
     });
   }
 
   private listenForFavIcon(id: string, webContents: WebContents) {
     webContents.on('page-favicon-updated', (_, favicons) => {
-      const mainWebContents = this.getMainWebContents();
-      if (isNil(webContents) || isNil(mainWebContents) || webContents.isDestroyed()) return;
-
-      // Prefer higher quality formats: SVG > PNG > other > ICO
-      const url =
-        favicons.find(icon => icon.includes('.svg')) ||
-        favicons.find(icon => icon.includes('.png')) ||
-        favicons.find(icon => !icon.includes('.ico')) ||
-        favicons[0] ||
-        '';
-      mainWebContents.send(browserChannels.onFavIconChange, id, url);
-
-      storageManager.addBrowserFavIcon(formatWebAddress(webContents.getURL()), url, webContents.getTitle());
+      this.withBothContents(id, (mainWc, viewWc) => {
+        // Prefer higher quality formats: SVG > PNG > other > ICO
+        const url =
+          favicons.find(icon => icon.includes('.svg')) ||
+          favicons.find(icon => icon.includes('.png')) ||
+          favicons.find(icon => !icon.includes('.ico')) ||
+          favicons[0] ||
+          '';
+        mainWc.send(browserChannels.onFavIconChange, id, url);
+        storageManager.addBrowserFavIcon(formatWebAddress(viewWc.getURL()), url, viewWc.getTitle());
+      });
     });
   }
 
@@ -198,8 +213,7 @@ export default class BrowserManager {
 
   private listenForZoom(webContents: WebContents) {
     webContents.on('zoom-changed', (_, zoomDirection) => {
-      if (isNil(webContents) || webContents.isDestroyed()) return;
-
+      if (webContents.isDestroyed()) return;
       let resultFactor = webContents.getZoomFactor();
       resultFactor = zoomDirection === 'in' ? resultFactor + 0.1 : resultFactor - 0.1;
       if (resultFactor > 0.1 && resultFactor < 5) webContents.setZoomFactor(resultFactor);
@@ -218,18 +232,10 @@ export default class BrowserManager {
 
   private listenForFailLoad(view: WebContents, id: string) {
     view.on('did-fail-load', (_, errorCode, errorDescription, validatedURL, isMainFrame) => {
-      // Ignore benign error codes like -3 (ABORTED), which happens on normal navigation.
-      if (errorCode === -3 || !isMainFrame) {
-        return;
-      }
+      if (errorCode === -3 || !isMainFrame) return;
 
       this.setVisible(id, false);
-
-      const mainWebContents = this.getMainWebContents();
-      if (isNil(mainWebContents)) return;
-
-      mainWebContents.send(browserChannels.onFailedLoadUrl, id, errorCode, errorDescription, validatedURL);
-
+      this.getMainWebContents()?.send(browserChannels.onFailedLoadUrl, id, errorCode, errorDescription, validatedURL);
       console.error('failed load:', errorCode, errorDescription, validatedURL);
     });
   }
@@ -251,20 +257,9 @@ export default class BrowserManager {
   }
 
   private sendAudioStateChange(id: string, playing: boolean): void {
-    const mainWebContents = this.getMainWebContents();
-    if (!mainWebContents) return;
-
-    const webContents = this.getViewByID(id)?.webContents;
-    if (!webContents) return;
-
-    try {
-      mainWebContents.send(volumeChannels.onAudioStateChange, id, {
-        playing,
-        muted: webContents.audioMuted,
-      });
-    } catch (error) {
-      console.error('Error sending audio state change:', error);
-    }
+    this.withBothContents(id, (mainWc, viewWc) => {
+      mainWc.send(volumeChannels.onAudioStateChange, id, {playing, muted: viewWc.audioMuted});
+    });
   }
 
   public getSession() {
@@ -283,9 +278,7 @@ export default class BrowserManager {
     webContents.setZoomFactor(storageManager.getData('cards').zoomFactor);
 
     webContents.on('dom-ready', () => {
-      const mainWebContents = this.getMainWebContents();
-      if (isNil(mainWebContents)) return;
-      mainWebContents.send(browserChannels.onDomReady, id, true);
+      this.getMainWebContents()?.send(browserChannels.onDomReady, id, true);
     });
 
     this.listenForNavigate(id, webContents);
@@ -311,7 +304,7 @@ export default class BrowserManager {
   }
 
   public focusWebView(id: string) {
-    this.getViewByID(id)?.webContents.focus();
+    this.withWebContents(id, wc => wc.focus());
   }
 
   public async clearCache() {
@@ -347,7 +340,9 @@ export default class BrowserManager {
   }
 
   public updateUserAgent() {
-    this.browsers.forEach(view => view.view.webContents.setUserAgent(getUserAgent()));
+    this.browsers.forEach(({view}) => {
+      if (!view.webContents.isDestroyed()) view.webContents.setUserAgent(getUserAgent());
+    });
   }
 
   public removeBrowser(id: string) {
@@ -365,16 +360,14 @@ export default class BrowserManager {
   }
 
   public loadURL(id: string, url: string) {
-    const view = this.getViewByID(id);
-    if (view) {
-      view.webContents.loadURL(url);
-      // Track programmatic URL loads (like real browsers)
+    this.withWebContents(id, wc => {
+      wc.loadURL(url);
       if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
         const formattedUrl = formatWebAddress(url);
         storageManager.addBrowserRecent(formattedUrl);
         storageManager.addBrowserHistory(formattedUrl);
       }
-    }
+    });
   }
 
   public setVisible(id: string, visible: boolean) {
@@ -390,82 +383,58 @@ export default class BrowserManager {
   }
 
   public findInPage(id: string, value: string, options: FindInPageOptions) {
-    this.getViewByID(id)?.webContents.findInPage(value, options);
+    this.withWebContents(id, wc => wc.findInPage(value, options));
   }
 
   public stopFindInPage(id: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') {
-    const view = this.getViewByID(id);
-    if (view?.webContents && !view.webContents.isDestroyed()) {
-      view.webContents.stopFindInPage(action);
-    }
+    this.withWebContents(id, wc => wc.stopFindInPage(action));
   }
 
   public getCurrentZoom(id: string) {
-    return this.getViewByID(id)?.webContents.getZoomFactor();
+    return this.withWebContents(id, wc => wc.getZoomFactor());
   }
 
   public setZoomFactor(id: string, factor: number) {
-    this.getViewByID(id)?.webContents.setZoomFactor(factor);
+    this.withWebContents(id, wc => wc.setZoomFactor(factor));
   }
 
   public reload(id: string) {
-    const mainWebContents = this.getMainWebContents();
-    if (!isNil(mainWebContents)) {
-      mainWebContents.send(browserChannels.onClearFailed, id);
-    }
+    this.getMainWebContents()?.send(browserChannels.onClearFailed, id);
     this.setVisible(id, true);
-    this.getViewByID(id)?.webContents.reload();
+    this.withWebContents(id, wc => wc.reload());
   }
 
   public stop(id: string) {
-    this.getViewByID(id)?.webContents.stop();
+    this.withWebContents(id, wc => wc.stop());
   }
 
   public goBack(id: string) {
-    this.getViewByID(id)?.webContents.navigationHistory.goBack();
+    this.withWebContents(id, wc => wc.navigationHistory.goBack());
   }
 
   public goForward(id: string) {
-    this.getViewByID(id)?.webContents.navigationHistory.goForward();
+    this.withWebContents(id, wc => wc.navigationHistory.goForward());
   }
 
   public toggleDevTools(id: string) {
-    const webContents = this.getViewByID(id)?.webContents;
-    if (!webContents || webContents.isDestroyed()) return;
-
-    if (webContents.isDevToolsOpened()) {
-      webContents.closeDevTools();
-    } else {
-      webContents.openDevTools({mode: 'detach'});
-    }
+    this.withWebContents(id, wc => {
+      if (wc.isDevToolsOpened()) {
+        wc.closeDevTools();
+      } else {
+        wc.openDevTools({mode: 'detach'});
+      }
+    });
   }
 
   public setMuted(id: string, muted: boolean): void {
-    try {
-      const webContents = this.getViewByID(id)?.webContents;
-      if (!webContents || webContents.isDestroyed()) {
-        console.warn(`WebContents not found or destroyed for id: ${id}`);
-        return;
-      }
-
-      if (typeof webContents.setAudioMuted === 'function') {
-        webContents.setAudioMuted(muted);
-      } else {
-        console.warn('setAudioMuted API not available');
-      }
-    } catch (error) {
-      console.error('Error setting mute state:', error);
-    }
+    this.withWebContents(id, wc => wc.setAudioMuted(muted));
   }
 
   public async setVolume(id: string, volume: number): Promise<void> {
-    try {
-      const webContents = this.getViewByID(id)?.webContents;
-      if (!webContents || webContents.isDestroyed()) {
-        console.warn(`WebContents not found or destroyed for id: ${id}`);
-        return;
-      }
+    const webContents = this.getWebContents(id);
+    if (!webContents) return;
 
+    try {
       // Wait for page to be ready for script execution
       if (webContents.isLoading()) {
         await new Promise<void>(resolve => {
@@ -476,78 +445,52 @@ export default class BrowserManager {
           };
           webContents.once('did-finish-load', onFinish);
           webContents.once('did-fail-load', onFinish);
-          // Timeout fallback in case events don't fire
           setTimeout(resolve, 2000);
         });
       }
 
-      // Re-check after waiting
       if (webContents.isDestroyed()) return;
 
       const volumeDecimal = Math.max(0, Math.min(100, volume)) / 100;
-
       const script = `
         (function() {
-          // Set volume on all existing audio/video elements
-          document.querySelectorAll('audio, video').forEach(el => {
-            el.volume = ${volumeDecimal};
-          });
-          
-          // Set up mutation observer to catch dynamically added elements
+          document.querySelectorAll('audio, video').forEach(el => { el.volume = ${volumeDecimal}; });
           if (!window.__lynxVolumeObserver) {
             window.__lynxVolumeObserver = new MutationObserver(mutations => {
               mutations.forEach(mutation => {
                 mutation.addedNodes.forEach(node => {
-                  if (node.nodeName === 'AUDIO' || node.nodeName === 'VIDEO') {
-                    node.volume = ${volumeDecimal};
-                  }
-                  // Also check children of added nodes
+                  if (node.nodeName === 'AUDIO' || node.nodeName === 'VIDEO') node.volume = ${volumeDecimal};
                   if (node.querySelectorAll) {
-                    node.querySelectorAll('audio, video').forEach(el => {
-                      el.volume = ${volumeDecimal};
-                    });
+                    node.querySelectorAll('audio, video').forEach(el => { el.volume = ${volumeDecimal}; });
                   }
                 });
               });
             });
-            
-            window.__lynxVolumeObserver.observe(document.body, {
-              childList: true,
-              subtree: true
-            });
+            window.__lynxVolumeObserver.observe(document.body, {childList: true, subtree: true});
           }
-          
-          // Store volume for new elements
           window.__lynxVolume = ${volumeDecimal};
         })();
       `;
 
-      // Execute with timeout to prevent hanging
       await Promise.race([
         webContents.executeJavaScript(script, true),
         new Promise((_, reject) => setTimeout(() => reject(new Error('Script execution timeout')), 3000)),
       ]);
     } catch (error) {
-      // Silently handle timeout/execution errors - volume will be applied when user interacts with media
       console.warn('Volume set skipped:', error instanceof Error ? error.message : error);
     }
   }
 
   public getAudioState(id: string): AudioState | null {
-    try {
-      const webContents = this.getViewByID(id)?.webContents;
-      if (!webContents || webContents.isDestroyed()) {
-        console.warn(`WebContents not found or destroyed for id: ${id}`);
-        return null;
-      }
-
-      return {
-        playing: !webContents.audioMuted && webContents.isCurrentlyAudible(),
-        muted: webContents.audioMuted,
-      };
-    } catch (error) {
-      console.error('Error getting audio state:', error);
-      return null;
-    }
+    return (
+      this.withWebContents(
+        id,
+        wc => ({
+          playing: !wc.audioMuted && wc.isCurrentlyAudible(),
+          muted: wc.audioMuted,
+        }),
+        null,
+      ) ?? null
+    );
   }
 }
