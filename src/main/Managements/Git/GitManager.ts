@@ -213,8 +213,17 @@ export default class GitManager {
       /Resolving deltas:/,
       /Unpacking objects:/,
       /was checked out with 'git status'/,
+      /remote:.*done/i,
     ];
     return progressPatterns.some(pattern => pattern.test(message));
+  }
+
+  /**
+   * Checks if the error indicates the destination directory already exists.
+   */
+  private isDestinationExistsError(error: any): boolean {
+    const message = error?.message || error?.toString() || '';
+    return /already exists and is not an empty directory/i.test(message);
   }
 
   /**
@@ -271,6 +280,11 @@ export default class GitManager {
             console.log('Clone completed successfully (stderr progress output was misinterpreted as error)');
             this.handleProgressComplete();
             resolve();
+          } else if (this.isDestinationExistsError(error) && (await GitManager.isDirRepo(targetDirectory))) {
+            // Directory already exists and is a valid repo - treat as success
+            console.log('Clone skipped: destination already exists and is a valid git repository');
+            this.handleProgressComplete();
+            resolve();
           } else {
             this.handleError(error);
             reject(error);
@@ -304,6 +318,11 @@ export default class GitManager {
           // Check if this is just stderr progress output being misinterpreted as an error
           if (this.isProgressOutputError(error) && (await GitManager.isDirRepo(targetDirectory))) {
             console.log('Shallow clone completed successfully (stderr progress output was misinterpreted as error)');
+            this.handleProgressComplete();
+            resolve();
+          } else if (this.isDestinationExistsError(error) && (await GitManager.isDirRepo(targetDirectory))) {
+            // Directory already exists and is a valid repo - treat as success
+            console.log('Clone skipped: destination already exists and is a valid git repository');
             this.handleProgressComplete();
             resolve();
           } else {
