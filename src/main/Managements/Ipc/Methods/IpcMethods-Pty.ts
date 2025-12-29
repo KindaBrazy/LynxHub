@@ -13,6 +13,13 @@ let ptyManager: PtyManager[] = [];
 const LINE_ENDING = platform() === 'win32' ? '\r' : '\n';
 
 /**
+ * Validates and returns a valid directory path, falling back to home if invalid.
+ */
+function getValidDir(dir?: string): string {
+  return dir && dir.trim().length > 0 ? dir : app.getPath('home');
+}
+
+/**
  * Runs multiple commands in the PTY.
  * @param id - The unique id of process running
  * @param commands - An array of commands to run.
@@ -55,15 +62,13 @@ export async function stopAllPty(): Promise<void> {
 }
 
 export async function emptyPtyProcess(id: string, dir?: string) {
-  // Ensure we have a valid directory - empty string is not valid
-  const targetDir = dir && dir.trim().length > 0 ? dir : app.getPath('home');
-  ptyManager.push(new PtyManager(id, targetDir, true));
+  ptyManager.push(new PtyManager(id, getValidDir(dir), true));
 }
 
 export async function customPtyProcess(id: string, dir?: string, file?: string) {
-  if (!dir || !file) return;
+  if (!file) return;
 
-  ptyManager.push(new PtyManager(id, dir, true));
+  ptyManager.push(new PtyManager(id, getValidDir(dir), true));
 
   const extensionPreCommands = getExtPreCommands(id);
   executeCommands(id, extensionPreCommands);
@@ -73,7 +78,8 @@ export async function customPtyProcess(id: string, dir?: string, file?: string) 
 
 export async function customPtyCommands(id: string, commands?: string | string[], dir?: string) {
   if (isEmpty(commands)) return;
-  ptyManager.push(new PtyManager(id, dir, true));
+
+  ptyManager.push(new PtyManager(id, getValidDir(dir), true));
 
   const extensionPreCommands = getExtPreCommands(id);
   let finalCommands = [...extensionPreCommands];
@@ -97,9 +103,9 @@ export async function customPtyCommands(id: string, commands?: string | string[]
 export async function ptyProcess(id: string, cardId: string) {
   const card = storageManager.getData('cards').installedCards.find(card => card.id === cardId);
   if (!card) return;
-  const dir = isPortable() ? getAbsolutePath(getExePath(), card.dir || '') : card.dir;
 
-  ptyManager.push(new PtyManager(id, dir, true));
+  const cardDir = isPortable() ? getAbsolutePath(getExePath(), card.dir || '') : card.dir;
+  ptyManager.push(new PtyManager(id, getValidDir(cardDir), true));
 
   const preCommands = storageManager.getPreCommandById(cardId);
 
