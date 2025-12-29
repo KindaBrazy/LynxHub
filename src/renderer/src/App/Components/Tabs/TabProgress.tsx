@@ -30,7 +30,7 @@ const TabProgress = memo(({progress}: Props) => {
       <Progress
         classNames={{
           base: 'h-0.5 max-h-0.5',
-          track: 'h-0.5',
+          track: 'h-0.5 bg-foreground-900/30',
           indicator: 'h-0.5',
         }}
         size="sm"
