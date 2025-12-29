@@ -319,10 +319,26 @@ export class ImageCacheManager {
   /** Fetches image from network and caches it */
   private async fetchAndCache(url: string, hash: string): Promise<Response> {
     try {
+      // Extract origin for Referer header to avoid 403 errors
+      let referer = '';
+      try {
+        const urlObj = new URL(url);
+        referer = urlObj.origin;
+      } catch {
+        // Invalid URL, skip referer
+      }
+
+      // Use browser-like User-Agent to avoid 403 blocks
+      const userAgent =
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+        '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+
       const response = await net.fetch(url, {
         headers: {
-          'User-Agent': 'LynxHub Image Cache',
-          Accept: 'image/*',
+          'User-Agent': userAgent,
+          Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.9',
+          ...(referer && {Referer: referer}),
         },
       });
 
@@ -417,10 +433,27 @@ export class ImageCacheManager {
   /** Revalidates a cached entry with the server */
   private async revalidateEntry(entry: CacheEntry): Promise<Response> {
     try {
+      // Extract origin for Referer header
+      let referer = '';
+      try {
+        const urlObj = new URL(entry.url);
+        referer = urlObj.origin;
+      } catch {
+        // Invalid URL, skip referer
+      }
+
+      // Use browser-like User-Agent
+      const userAgent =
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ' +
+        '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+
       const headers: Record<string, string> = {
-        'User-Agent': 'LynxHub Image Cache',
-        Accept: 'image/*',
+        'User-Agent': userAgent,
+        Accept: 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.9',
       };
+
+      if (referer) headers['Referer'] = referer;
 
       // Add conditional headers for revalidation
       if (entry.etag) {

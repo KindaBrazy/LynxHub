@@ -1,14 +1,13 @@
 import {addToast, Button} from '@heroui/react';
 import {Dispatch} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, useEffect, useMemo, useState} from 'react';
+import {Fragment, useMemo} from 'react';
 
 import {ChangelogItem} from '../../../../cross/CrossTypes';
 import {InstalledCard} from '../../../../cross/StorageTypes';
 import {appActions} from '../Redux/Reducer/AppReducer';
 import {useCardsState} from '../Redux/Reducer/CardsReducer';
 import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
-import rendererIpc from '../RendererIpc';
 import {HeroToastPlacement} from './Types';
 
 /**
@@ -143,46 +142,14 @@ export function RenderSubItems(items?: ChangelogItem[], parentKey: string = '') 
 
 export const isLinuxPortable = window.isPortable === 'linux';
 
-export function useCachedImage(id: string, url: string, refresh: boolean = true) {
-  const [cachedImage, setCachedImage] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    if (!url) return;
-
-    const setRawUrl = () => {
-      setCachedImage(url);
-    };
-
-    const cachedImg = localStorage.getItem(`${id}_${url}`);
-
-    if (cachedImg) {
-      setCachedImage(cachedImg);
-    }
-
-    if (refresh || !cachedImg) {
-      rendererIpc.utils.isResponseValid(url).then(isValid => {
-        if (isValid) {
-          rendererIpc.utils
-            .getImageAsDataURL(url)
-            .then(result => {
-              if (result) {
-                if (result !== cachedImg) {
-                  localStorage.setItem(`${id}_${url}`, result);
-                  setCachedImage(result);
-                }
-              } else {
-                setRawUrl();
-              }
-            })
-            .catch(() => {
-              setRawUrl();
-            });
-        } else {
-          setCachedImage(undefined);
-        }
-      });
-    }
-  }, [id, url, refresh]);
-
-  return cachedImage;
+/**
+ * Returns a cached image URL using the lynxcache:// protocol.
+ * Images are cached on disk by ImageCacheManager in the main process.
+ * @param url - The original image URL to cache
+ * @returns The lynxcache:// URL for the cached image, or undefined if no URL provided
+ */
+export function useCachedImage(url: string) {
+  if (!url) return undefined;
+  // Use the lynxcache:// protocol which handles caching automatically
+  return `lynxcache://fetch/${encodeURIComponent(url)}`;
 }

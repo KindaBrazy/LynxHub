@@ -20,8 +20,9 @@ type Props = {
 export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) {
   const activeTab = useTabsState('activeTab');
   const [favItem, setFavItem] = useState<FavIcons | undefined>(undefined);
+  const [imgError, setImgError] = useState(false);
 
-  const favIcon = useCachedImage(`${type}_favicon`, favItem?.favIcon || '');
+  const favIcon = useCachedImage(favItem?.favIcon || '');
   const displayName = favItem?.title || getUrlName(recent);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -48,6 +49,7 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
     rendererIpc.storageUtils.getBrowserHistoryData().then(result => {
       const favItem = result.favIcons.find(fav => fav.url === formatWebAddress(recent));
       setFavItem(favItem);
+      setImgError(false); // Reset error when favicon changes
     });
   }, [recent]);
 
@@ -59,7 +61,11 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
             'flex-col gap-2 items-center text-center justify-center transition-colors duration-300' +
             ' group dark:bg-foreground-100 hover:dark:bg-foreground-100/50 shrink-0 hover:bg-foreground-100/50'
           }>
-          {favIcon ? <Image alt="" radius="full" src={favIcon} className="size-8" /> : <Web_Icon className="size-8" />}
+          {favIcon && !imgError ? (
+            <Image alt="" radius="full" src={favIcon} className="size-8" onError={() => setImgError(true)} />
+          ) : (
+            <Web_Icon className="size-8" />
+          )}
           <span className="truncate text-wrap w-full line-clamp-2 text-sm">{displayName}</span>
           <Button
             size="sm"

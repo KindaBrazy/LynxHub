@@ -1,7 +1,7 @@
 import {TRANSITION_EASINGS} from '@heroui/framer-utils';
 import {Avatar, Spinner} from '@heroui/react';
 import {AnimatePresence, motion} from 'framer-motion';
-import {memo, ReactNode, useEffect, useMemo, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {APP_ICON_TRANSPARENT, PageID} from '../../../../../cross/CrossConstants';
 import {TabInfo} from '../../../../../cross/CrossTypes';
@@ -20,7 +20,6 @@ import {
   TextGeneration_Icon,
   Web_Icon,
 } from '../../../assets/icons/SvgIcons/SvgIcons';
-import rendererIpc from '../../RendererIpc';
 
 type Props = {tab: TabInfo; currentView: 'browser' | 'terminal' | undefined};
 
@@ -31,39 +30,49 @@ const iconTransition = {
   transition: {duration: 0.15, ease: TRANSITION_EASINGS.easeOut},
 };
 
+/** Returns the cached favicon URL using lynxcache:// protocol */
+const getCachedFavIconUrl = (url: string) => (url ? `lynxcache://fetch/${encodeURIComponent(url)}` : '');
+
 const TabItem_Icon = memo(({tab, currentView}: Props) => {
-  const [icon, setIcon] = useState<ReactNode>();
+  const [imgError, setImgError] = useState(false);
+  const favIconUrl = tab.favIcon.url;
 
+  // Reset error state when favicon URL changes
   useEffect(() => {
-    const setFavIcon = async () => {
-      const {favIcon, pageID, title} = tab;
-      const isValidFavIcon = await rendererIpc.utils.isResponseValid(favIcon.url);
+    setImgError(false);
+  }, [favIconUrl]);
 
-      if (favIcon.show && isValidFavIcon) {
-        setIcon(
-          favIcon ? (
-            <Avatar name={title} radius="none" src={favIcon.url} className="size-full bg-transparent" />
-          ) : (
-            <Web_Icon className="size-full" />
-          ),
-        );
-      } else if (currentView === 'browser') setIcon(<Web_Icon className="size-full" />);
-      else if (pageID === PageID.home) setIcon(<Home_Icon className="size-full" />);
-      else if (pageID === PageID.imageGen) setIcon(<ImageGeneration_Icon className="size-full" />);
-      else if (pageID === PageID.textGen) setIcon(<TextGeneration_Icon className="size-full" />);
-      else if (pageID === PageID.audioGen) setIcon(<AudioGeneration_Icon className="size-full" />);
-      else if (pageID === PageID.agents) setIcon(<Robot_Icon className="size-full" />);
-      else if (pageID === PageID.others) setIcon(<MagicStickDuo_Icon className="size-full" />);
-      else if (pageID === PageID.games) setIcon(<GamePad_Icon className="size-full" />);
-      else if (pageID === PageID.tools) setIcon(<Rocket_Icon className="size-full" />);
-      else if (pageID === PageID.dashboard) setIcon(<Info_Icon className="size-full" />);
-      else if (pageID === PageID.plugins) setIcon(<Plugins_Icon className="size-full" />);
-      else if (pageID === PageID.settings) setIcon(<Slider_Icon className="size-full" />);
-      else setIcon(<Avatar radius="none" className="size-full" src={APP_ICON_TRANSPARENT} />);
-    };
+  const handleImgError = useCallback(() => setImgError(true), []);
 
-    setFavIcon();
-  }, [tab]);
+  const icon = useMemo(() => {
+    const {favIcon, pageID, title} = tab;
+
+    // Use lynxcache:// protocol for favicon caching, fallback to Web_Icon on error
+    if (favIcon.show && favIcon.url && !imgError) {
+      return (
+        <Avatar
+          name={title}
+          radius="none"
+          className="size-full bg-transparent"
+          src={getCachedFavIconUrl(favIcon.url)}
+          ImgComponent={props => <img alt="" {...props} onError={handleImgError} />}
+        />
+      );
+    }
+    if (currentView === 'browser') return <Web_Icon className="size-full" />;
+    if (pageID === PageID.home) return <Home_Icon className="size-full" />;
+    if (pageID === PageID.imageGen) return <ImageGeneration_Icon className="size-full" />;
+    if (pageID === PageID.textGen) return <TextGeneration_Icon className="size-full" />;
+    if (pageID === PageID.audioGen) return <AudioGeneration_Icon className="size-full" />;
+    if (pageID === PageID.agents) return <Robot_Icon className="size-full" />;
+    if (pageID === PageID.others) return <MagicStickDuo_Icon className="size-full" />;
+    if (pageID === PageID.games) return <GamePad_Icon className="size-full" />;
+    if (pageID === PageID.tools) return <Rocket_Icon className="size-full" />;
+    if (pageID === PageID.dashboard) return <Info_Icon className="size-full" />;
+    if (pageID === PageID.plugins) return <Plugins_Icon className="size-full" />;
+    if (pageID === PageID.settings) return <Slider_Icon className="size-full" />;
+    return <Avatar radius="none" className="size-full" src={APP_ICON_TRANSPARENT} />;
+  }, [tab, currentView, imgError, handleImgError]);
 
   const iconState = useMemo(() => {
     if (tab.isTerminal && currentView === 'terminal') return 'terminal';
