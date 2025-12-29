@@ -11,6 +11,27 @@ function sendToRenderer(type: AppUpdateEventTypes, status?: AppUpdateStatus) {
   appManager?.getWebContent()?.send(appUpdateChannels.status, type, status);
 }
 
+/**
+ * Checks if an error is a network-related error that should be silently ignored.
+ */
+function isNetworkError(error: Error | any): boolean {
+  const message = error?.message || error?.toString() || '';
+  const networkErrorPatterns = [
+    /ERR_NETWORK_CHANGED/i,
+    /ERR_INTERNET_DISCONNECTED/i,
+    /ERR_CONNECTION_RESET/i,
+    /ERR_CONNECTION_REFUSED/i,
+    /ERR_NAME_NOT_RESOLVED/i,
+    /ERR_TIMED_OUT/i,
+    /ENOTFOUND/i,
+    /ECONNREFUSED/i,
+    /ETIMEDOUT/i,
+    /ENETUNREACH/i,
+    /net::ERR_/i,
+  ];
+  return networkErrorPatterns.some(pattern => pattern.test(message));
+}
+
 export function checkForUpdate() {
   autoUpdater.autoDownload = false;
   autoUpdater.allowPrerelease = false;
@@ -53,6 +74,12 @@ export function checkForUpdate() {
   });
 
   autoUpdater.on('error', (e: Error | any, message?: string) => {
+    // Silently ignore network errors - user may be offline or have unstable connection
+    if (isNetworkError(e)) {
+      console.warn('Update check failed due to network error:', e.message || e);
+      return;
+    }
+
     if (e.statusCode === 403) {
       appManager?.getWebContent()?.send(appUpdateChannels.statusError);
     } else {
