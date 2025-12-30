@@ -58,15 +58,18 @@ export const useCheckPluginsUpdate = () => {
 
     checkForUpdate();
     clearInterval(moduleUpdateInterval.current);
-    moduleUpdateInterval.current = undefined;
     moduleUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
 
     const removeListener = rendererIpc.plugins.onSyncAvailable((_, list) => {
       dispatch(pluginsActions.setPluginsState({key: 'syncList', value: list}));
     });
 
-    return () => removeListener();
-  }, [dispatch, updateChannel, moduleUpdateInterval]);
+    return () => {
+      clearInterval(moduleUpdateInterval.current);
+      moduleUpdateInterval.current = undefined;
+      removeListener();
+    };
+  }, [dispatch, updateChannel]);
 };
 
 export const useOnlineEvents = () => {
