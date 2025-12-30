@@ -103,7 +103,7 @@ export default function CloneRepo({url, start, done, isOpen}: Props) {
         </>
       ) : (
         <div className="space-y-4">
-          <Card className="bg-foreground-100">
+          <Card className="dark:bg-foreground-100">
             <CardHeader className="gap-x-2">
               <GitHub_Icon />
               <span>Clone Url</span>
@@ -119,7 +119,7 @@ export default function CloneRepo({url, start, done, isOpen}: Props) {
               </Link>
             </CardBody>
           </Card>
-          <Card className="bg-foreground-100">
+          <Card className="dark:bg-foreground-100">
             <CardHeader className="gap-x-2">
               <Folder2_Icon />
               <span>Save to</span>
