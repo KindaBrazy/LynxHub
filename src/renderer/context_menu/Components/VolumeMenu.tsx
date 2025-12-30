@@ -125,6 +125,8 @@ export function useVolumeMenu(setElements: SetElementsType, setWidthSize: SetWid
     const offCloseApp = rendererIpc.contextMenu.onCloseApp(clearState);
 
     return () => {
+      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
+      if (volumeIpcTimerRef.current) clearTimeout(volumeIpcTimerRef.current);
       offVolume();
       offInitView();
       offZoom();
