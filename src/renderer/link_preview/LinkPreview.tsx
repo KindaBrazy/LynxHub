@@ -14,14 +14,17 @@ export default function LinkPreview() {
       setUrl(newUrl || '');
     });
 
-    rendererIpc.win.onDarkMode((_, darkMode) => {
+    const offDarkMode = rendererIpc.win.onDarkMode((_, darkMode) => {
       document.documentElement.className = `${darkMode === 'dark' ? 'dark' : 'light'} bg-transparent`;
     });
     rendererIpc.storage.get('app').then(({darkMode}) => {
       document.documentElement.className = `${darkMode === 'dark' ? 'dark' : 'light'} bg-transparent`;
     });
 
-    return () => offHover();
+    return () => {
+      offHover();
+      offDarkMode();
+    };
   }, []);
 
   // Send resize when URL changes

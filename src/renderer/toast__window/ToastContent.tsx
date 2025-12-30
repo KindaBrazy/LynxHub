@@ -47,11 +47,14 @@ export default function ToastContent() {
   const [toastMessage, setToastMessage] = useState<ToastWindow_MessageType | null>(null);
 
   useEffect(() => {
-    window.ipc.on('show_message', (_, result: ToastWindow_MessageType) => {
+    const offMessage = window.ipc.on('show_message', (_, result: ToastWindow_MessageType) => {
       setToastMessage(result);
       document.title = result.title;
       document.body.className = 'overflow-hidden dark bg-background scrollbar-hide';
     });
+    return () => {
+      offMessage();
+    };
   }, []);
 
   const handleClose = () => {
