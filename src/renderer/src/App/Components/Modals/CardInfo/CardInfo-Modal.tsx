@@ -1,7 +1,7 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
 import {Result} from 'antd';
 import {isEmpty, startCase} from 'lodash';
-import {Fragment, useCallback, useMemo, useState} from 'react';
+import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extractGitUrl, validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
