@@ -14,8 +14,8 @@ import {onBreadcrumbStateChange} from '../Breadcrumbs';
 import App from './App/App';
 import {loadExtensions} from './App/Extensions/Vite-Federation';
 import loadModules from './App/Modules/ModuleLoader';
-import {createStore} from './App/Redux/Store';
 import {getStorageData, initializeStorage} from './App/Redux/StorageInit';
+import {createStore} from './App/Redux/Store';
 import ErrorComponent from './ErrorComponent';
 
 // Initialize storage first (single IPC call for all data)

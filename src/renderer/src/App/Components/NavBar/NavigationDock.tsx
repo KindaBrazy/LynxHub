@@ -106,8 +106,8 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
 
   const listContent = (
     <motion.div
-      className="flex flex-col gap-y-0.5"
       transition={springTransition}
+      className="flex flex-col gap-y-0.5"
       animate={{y: showScrollControls ? -startIndex * ITEM_TOTAL_HEIGHT : 0}}>
       {items.map(item => (
         <RenderItem item={item} isDark={isDark} activePage={activePage} key={`${item.title}_nav`} />
@@ -255,9 +255,9 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
         <AnimatePresence>
           {isActive && (
             <motion.div
-              transition={springTransitionSnappy}
               initial={false}
               layoutId="activeIndicator"
+              transition={springTransitionSnappy}
               className="absolute inset-0 rounded-xl shadow-lg bg-primary"
             />
           )}

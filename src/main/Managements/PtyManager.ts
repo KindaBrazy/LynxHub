@@ -1,8 +1,8 @@
-import {app} from 'electron';
 import fs from 'node:fs';
 import {platform} from 'node:os';
 import path from 'node:path';
 
+import {app} from 'electron';
 import pty from 'node-pty';
 import treeKill from 'tree-kill';
 
