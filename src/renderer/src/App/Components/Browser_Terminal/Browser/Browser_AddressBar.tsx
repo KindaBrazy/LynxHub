@@ -260,7 +260,10 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
   );
 
   const isAddress = !!effectiveAddress;
-  const displayParts = parseAddressForDisplay(isFocused ? inputValue : effectiveAddress);
+  const displayParts = useMemo(
+    () => parseAddressForDisplay(isFocused ? inputValue : effectiveAddress),
+    [isFocused, inputValue, effectiveAddress],
+  );
 
   return {
     editableRef,
