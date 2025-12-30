@@ -468,6 +468,10 @@ export default class BrowserDownloadManager {
       this.menuWindow.webContents.send(channel, ...data);
   }
 
+  private sendToMain(channel: string, ...data: any) {
+    if (!this.mainWebContents.isDestroyed()) this.mainWebContents.send(channel, ...data);
+  }
+
   private onDlStart(info: DownloadStartInfo) {
     this.sendToRenderer(browserDownloadChannels.onDlStart, info);
   }
@@ -508,7 +512,7 @@ export default class BrowserDownloadManager {
       }
     });
 
-    this.mainWebContents.send(browserDownloadChannels.mainDownloadCount, this.downloadingItems.length);
+    this.sendToMain(browserDownloadChannels.mainDownloadCount, this.downloadingItems.length);
   }
 
   /**
@@ -819,7 +823,7 @@ export default class BrowserDownloadManager {
       this.downloadingItems = this.downloadingItems.filter(item => basename(item.getSavePath()) !== name);
 
       // Update the download count in the main window
-      this.mainWebContents.send(browserDownloadChannels.mainDownloadCount, this.downloadingItems.length);
+      this.sendToMain(browserDownloadChannels.mainDownloadCount, this.downloadingItems.length);
 
       // Hide the download menu window if no items remain
       if (this.downloadingItems.length === 0) {
@@ -868,7 +872,7 @@ export default class BrowserDownloadManager {
       this.downloadIdentifiers.clear();
 
       // Update the download count in the main window to zero
-      this.mainWebContents.send(browserDownloadChannels.mainDownloadCount, 0);
+      this.sendToMain(browserDownloadChannels.mainDownloadCount, 0);
 
       // Hide the download menu window since there are no items
       this.menuWindow.hide();
