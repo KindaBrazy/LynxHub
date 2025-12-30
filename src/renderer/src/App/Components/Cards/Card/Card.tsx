@@ -53,9 +53,13 @@ const LynxCard = memo(() => {
   const {openModal} = useTabModalManager();
 
   useEffect(() => {
+    let isMounted = true;
     rendererIpc.storage.getCustom(`${id}_title_edited`).then(value => {
-      setCustomTitle(value || null);
+      if (isMounted) setCustomTitle(value || null);
     });
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   const modifiedTitle = customTitle ?? title;
