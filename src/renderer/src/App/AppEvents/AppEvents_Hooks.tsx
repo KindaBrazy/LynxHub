@@ -366,23 +366,27 @@ export const useListenForUpdateError = () => {
       AddBreadcrumb_Renderer(`Update error 403`);
       dispatch(settingsActions.setSettingsState({key: 'checkCustomUpdate', value: true}));
 
-      const insider = await rendererIpc.statics.getInsider();
-      const releases = await rendererIpc.statics.getReleases();
+      try {
+        const insider = await rendererIpc.statics.getInsider();
+        const releases = await rendererIpc.statics.getReleases();
 
-      if (!insider || !releases) return;
+        if (!insider || !releases) return;
 
-      if (
-        insider.currentBuild > APP_BUILD_NUMBER ||
-        releases.earlyAccess.build > APP_BUILD_NUMBER ||
-        releases.currentBuild > APP_BUILD_NUMBER
-      ) {
-        dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: true}));
-        lynxTopToast(dispatch).info('New Update Available!');
+        if (
+          insider.currentBuild > APP_BUILD_NUMBER ||
+          releases.earlyAccess.build > APP_BUILD_NUMBER ||
+          releases.currentBuild > APP_BUILD_NUMBER
+        ) {
+          dispatch(settingsActions.setSettingsState({key: 'updateAvailable', value: true}));
+          lynxTopToast(dispatch).info('New Update Available!');
 
-        const isRunningAI = runningCard.some(card => card.tabId === activeTab);
-        if (!isRunningAI) {
-          dispatch(modalActions.openUpdateApp());
+          const isRunningAI = runningCard.some(card => card.tabId === activeTab);
+          if (!isRunningAI) {
+            dispatch(modalActions.openUpdateApp());
+          }
         }
+      } catch (error) {
+        console.error('Failed to check for updates:', error);
       }
     };
 
