@@ -69,6 +69,7 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
   const [toggle, setToggle] = useState<boolean>(false);
   const [showConfirmValue, setShowConfirmValue] = useState<boolean>(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onShowConfirm = (enabled: boolean) => {
     rendererIpc.storageUtils.setShowConfirm('closeTabConfirm', !enabled);
@@ -78,6 +79,12 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
     rendererIpc.contextMenu.removeTab(id);
     hideWindow();
   };
+
+  useEffect(() => {
+    return () => {
+      if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     rendererIpc.storage.get('app').then(({closeTabConfirm}) => {
@@ -109,7 +116,8 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
     ]);
 
     // Auto-focus the close button when dialog appears
-    setTimeout(() => {
+    if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
+    focusTimeoutRef.current = setTimeout(() => {
       closeButtonRef.current?.focus();
     }, 100);
   }, [id, toggle, showConfirmValue]);
