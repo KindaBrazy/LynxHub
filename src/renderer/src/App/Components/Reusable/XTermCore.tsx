@@ -140,6 +140,8 @@ const XTermCore = memo(
         if (!terminalContainer || terminal.current) return;
 
         let xTerm: XTerminal | null = null;
+        let onResizeDisposable: {dispose: () => void} | null = null;
+        let onDataDisposable: {dispose: () => void} | null = null;
 
         const loadTerminal = async (fontFamily: string = 'monospace') => {
           const sysInfo = await rendererIpc.win.getSystemInfo();
@@ -214,7 +216,7 @@ const XTermCore = memo(
             // Resize notification
             if (enableResizeNotify) {
               let prevSize: {cols: number; rows: number} | undefined;
-              termRef.onResize(size => {
+              onResizeDisposable = termRef.onResize(size => {
                 if (isEqual(prevSize, size)) return;
                 rendererIpc.pty.resize(id, size.cols, size.rows);
                 prevSize = size;
@@ -230,7 +232,7 @@ const XTermCore = memo(
 
             // PTY write
             if (enablePtyWrite) {
-              termRef.onData(data => !isEmpty(data) && rendererIpc.pty.write(id, data));
+              onDataDisposable = termRef.onData(data => !isEmpty(data) && rendererIpc.pty.write(id, data));
             }
 
             // Create API
@@ -280,6 +282,8 @@ const XTermCore = memo(
         return () => {
           window.removeEventListener('resize', handleResize);
           clearTimeout(resizeTimeoutId);
+          onResizeDisposable?.dispose();
+          onDataDisposable?.dispose();
           terminal.current?.dispose();
           terminal.current = null;
           apiRef.current = null;
