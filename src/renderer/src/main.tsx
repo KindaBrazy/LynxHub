@@ -15,13 +15,20 @@ import App from './App/App';
 import {loadExtensions} from './App/Extensions/Vite-Federation';
 import loadModules from './App/Modules/ModuleLoader';
 import {createStore} from './App/Redux/Store';
-import rendererIpc from './App/RendererIpc';
+import {getStorageData, initializeStorage} from './App/Redux/StorageInit';
 import ErrorComponent from './ErrorComponent';
 
+// Initialize storage first (single IPC call for all data)
+await initializeStorage();
+
+// Now load modules and extensions
 await loadModules();
 await loadExtensions();
 
-const {darkMode, collectErrors, addBreadcrumbs} = await rendererIpc.storage.get('app');
+// Get app settings from cached storage
+const storage = getStorageData()!;
+const {darkMode, collectErrors, addBreadcrumbs} = storage.app;
+
 onBreadcrumbStateChange(addBreadcrumbs);
 document.documentElement.className = darkMode ? 'dark' : 'light';
 

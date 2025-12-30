@@ -1,7 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import rendererIpc from '../../RendererIpc';
 import {RootState} from '../Store';
 
 type VolumeState = {
@@ -22,14 +21,12 @@ type VolumeStateTypes = {
   [K in keyof VolumeState]: VolumeState[K];
 };
 
-const storageData = await rendererIpc.storage.getAll();
-const {volumeSettings} = storageData.browser;
-
+// Default initial state - actual values come from preloadedState in Store.ts
 const initialState: VolumeState = {
-  tabVolumes: volumeSettings?.tabVolumes || {},
+  tabVolumes: {},
   tabMuted: {},
   tabAudioPlaying: {},
-  globalMuted: volumeSettings?.globalMuted ?? false,
+  globalMuted: false,
 };
 
 const volumeSlice = createSlice({
