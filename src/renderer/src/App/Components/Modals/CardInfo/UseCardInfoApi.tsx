@@ -40,7 +40,11 @@ export default function useCardInfoApi(
 
       const callBack: CardInfoCallback = {setOpenFolders, setDescription: setCardInfoDescriptions};
 
-      getCardMethod(allMethods, cardId, 'cardInfo')?.(api, callBack);
+      try {
+        getCardMethod(allMethods, cardId, 'cardInfo')?.(api, callBack);
+      } catch (error) {
+        console.error('Failed to execute cardInfo method:', error);
+      }
     }
   }, [cardId, dir, allMethods]);
 }

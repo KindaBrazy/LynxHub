@@ -34,11 +34,11 @@ export default function ScreenShare({isDarkMode}: Props) {
         setMockScreens(screens);
         setMockWindows(windows);
       })
-      .finally(() => {
-        setIsLoadingSources(false);
-      })
       .catch(() => {
         ipc.send(screenShareChannels.cancel);
+      })
+      .finally(() => {
+        setIsLoadingSources(false);
       });
   }, []);
 
