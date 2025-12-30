@@ -9,6 +9,11 @@ export default class LinkPreviewManager {
   private linkPreviewWindow?: BrowserWindow;
   private mainWindow?: BrowserWindow;
   private hideTimeout?: NodeJS.Timeout;
+  private channelsRegistered = false;
+
+  // Store bound handlers for cleanup
+  private boundHide = () => this.hide();
+  private boundUpdatePosition = () => this.updatePosition();
 
   private static readonly WINDOW_CONFIG: BrowserWindowConstructorOptions = {
     frame: false,
@@ -48,11 +53,11 @@ export default class LinkPreviewManager {
     }
 
     // Hide when main window is hidden/minimized/loses focus
-    mainWindow.on('hide', () => this.hide());
-    mainWindow.on('minimize', () => this.hide());
-    mainWindow.on('blur', () => this.hide());
-    mainWindow.on('move', () => this.updatePosition());
-    mainWindow.on('resize', () => this.updatePosition());
+    mainWindow.on('hide', this.boundHide);
+    mainWindow.on('minimize', this.boundHide);
+    mainWindow.on('blur', this.boundHide);
+    mainWindow.on('move', this.boundUpdatePosition);
+    mainWindow.on('resize', this.boundUpdatePosition);
 
     this.linkPreviewWindow.on('closed', () => {
       this.linkPreviewWindow = undefined;
@@ -63,11 +68,26 @@ export default class LinkPreviewManager {
     });
 
     mainWindow.on('close', () => {
+      // Remove listeners before clearing reference
+      this.removeMainWindowListeners();
       this.mainWindow = undefined;
     });
   }
 
+  private removeMainWindowListeners() {
+    if (!this.mainWindow || this.mainWindow.isDestroyed()) return;
+    this.mainWindow.off('hide', this.boundHide);
+    this.mainWindow.off('minimize', this.boundHide);
+    this.mainWindow.off('blur', this.boundHide);
+    this.mainWindow.off('move', this.boundUpdatePosition);
+    this.mainWindow.off('resize', this.boundUpdatePosition);
+  }
+
   public listenForChannels() {
+    // Prevent duplicate listener registration
+    if (this.channelsRegistered) return;
+    this.channelsRegistered = true;
+
     ipcMain.on(browserChannels.resizeLinkPreview, (_, width: number) => {
       this.resizeWindow(width);
     });
