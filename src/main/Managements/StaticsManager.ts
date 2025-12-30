@@ -172,6 +172,14 @@ export default class StaticsManager {
     return results.filter((item): item is PluginAvailableItem => item !== null);
   }
 
+  /** Stops the manager and clears the pull interval */
+  public stop(): void {
+    if (this.pullIntervalId) {
+      clearInterval(this.pullIntervalId);
+      this.pullIntervalId = null;
+    }
+  }
+
   private async clone() {
     try {
       const dirUrl = await GitManager.remoteUrlFromDir(this.dir);
