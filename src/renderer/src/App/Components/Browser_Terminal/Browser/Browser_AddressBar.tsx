@@ -169,7 +169,18 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
   const handlePaste = useCallback((e: React.ClipboardEvent<HTMLDivElement>) => {
     e.preventDefault();
     const plainText = e.clipboardData.getData('text/plain');
-    document.execCommand('insertText', false, plainText);
+    const selection = window.getSelection();
+    if (!selection?.rangeCount) return;
+
+    const range = selection.getRangeAt(0);
+    range.deleteContents();
+    range.insertNode(document.createTextNode(plainText));
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    // Trigger input event to update state
+    editableRef.current?.dispatchEvent(new Event('input', {bubbles: true}));
   }, []);
 
   const acceptAutocomplete = useCallback(() => {
