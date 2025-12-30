@@ -33,31 +33,20 @@ type CardsStateTypes = {
   [K in keyof CardsState]: CardsState[K];
 };
 
-const {
-  installedCards,
-  autoUpdateCards,
-  pinnedCards,
-  recentlyUsedCards,
-  autoUpdateExtensions,
-  duplicated,
-  checkUpdateInterval,
-} = await rendererIpc.storage.get('cards');
-
-const {homeCategory} = await rendererIpc.storage.get('app');
-
+// Default initial state - actual values come from preloadedState in Store.ts
 const initialState: CardsState = {
-  autoUpdate: autoUpdateCards,
-  installedCards,
-  pinnedCards,
+  autoUpdate: [],
+  installedCards: [],
+  pinnedCards: [],
   updateAvailable: [],
   updatingCards: [],
   runningCard: [],
-  recentlyUsedCards,
-  homeCategory,
-  autoUpdateExtensions,
+  recentlyUsedCards: [],
+  homeCategory: [],
+  autoUpdateExtensions: [],
   updatingExtensions: undefined,
-  duplicates: duplicated,
-  checkUpdateInterval,
+  duplicates: [],
+  checkUpdateInterval: 0,
   activeTab: '',
   browserDomReadyIds: [],
 };

@@ -2,7 +2,6 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import isBoolean from 'lodash/isBoolean';
 import {useSelector} from 'react-redux';
 
-import rendererIpc from '../../RendererIpc';
 import {HeroToastPlacement} from '../../Utils/Types';
 import {RootState} from '../Store';
 
@@ -26,44 +25,9 @@ type AppStateTypes = {
   [K in keyof AppState]: AppState[K];
 };
 
-const storageData = await rendererIpc.storage.get('app');
-
-let darkMode: boolean;
-let showWizard: boolean;
-let isUpgradeFlow: boolean = false;
-
-if (storageData.darkMode === 'dark') {
-  darkMode = true;
-} else if (storageData.darkMode === 'light') {
-  darkMode = false;
-} else {
-  const systemDark = await rendererIpc.win.getSystemDarkMode();
-  darkMode = systemDark === 'dark';
-}
-
-const oldSetupDone = storageData.initialized; // Legacy flag
-const newSetupDone = storageData.inited; // New flag
-const isWindows = window.osPlatform === 'win32';
-
-// If new setup is done, don't show the wizard.
-if (newSetupDone) {
-  showWizard = false;
-} else {
-  // If user completed the old setup and is NOT on Windows,
-  // mark the new setup as done and skip the wizard.
-  if (oldSetupDone && !isWindows) {
-    rendererIpc.storage.update('app', {inited: true});
-    showWizard = false;
-  } else {
-    // Otherwise, show the wizard.
-    // Determine if it's a fresh install or an upgrade flow for Windows users.
-    isUpgradeFlow = oldSetupDone;
-    showWizard = true;
-  }
-}
-
+// Default initial state - actual values come from preloadedState in Store.ts
 const initialState: AppState = {
-  darkMode,
+  darkMode: true,
   fullscreen: false,
   isOnline: false,
   maximized: false,
@@ -71,8 +35,7 @@ const initialState: AppState = {
   navBar: true,
   appTitle: undefined,
   toastPlacement: 'top-center',
-
-  initializer: {showWizard, isUpgradeFlow},
+  initializer: {showWizard: false, isUpgradeFlow: false},
 };
 
 const appSlice = createSlice({

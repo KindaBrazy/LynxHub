@@ -11,7 +11,21 @@ type TerminalStateTypes = {
   [K in keyof TerminalState]: TerminalState[K];
 };
 
-const initialState: TerminalState = await rendererIpc.storage.get('terminal');
+// Default initial state - actual values come from preloadedState in Store.ts
+const initialState: TerminalState = {
+  outputColor: true,
+  useConpty: 'auto',
+  scrollBack: 5000,
+  fontSize: 14,
+  cursorStyle: 'bar',
+  cursorInactiveStyle: 'outline',
+  blinkCursor: true,
+  resizeDelay: 100,
+  closeTabOnExit: false,
+  enableLigatures: false,
+  cdHistory: [],
+  quickCommands: [],
+};
 
 const terminalSlice = createSlice({
   initialState,

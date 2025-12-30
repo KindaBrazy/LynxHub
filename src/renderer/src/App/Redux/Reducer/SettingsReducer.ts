@@ -2,7 +2,6 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
 import {TooltipStatus} from '../../../../../cross/IpcChannelAndTypes';
-import rendererIpc from '../../RendererIpc';
 import {RootState} from '../Store';
 
 type SettingState = {
@@ -28,33 +27,20 @@ type SettingStateTypes = {
   [K in keyof SettingState]: SettingState[K];
 };
 
-const storageData = await rendererIpc.storage.getAll();
-
-const {
-  tooltipStatus,
-  closeConfirm,
-  closeTabConfirm,
-  terminateAIConfirm,
-  openLastSize,
-  dynamicAppTitle,
-  openLinkExternal,
-  hardwareAcceleration,
-  disableLoadingAnimations,
-} = storageData.app;
-
+// Default initial state - actual values come from preloadedState in Store.ts
 const initialState: SettingState = {
-  tooltipLevel: tooltipStatus,
-  closeConfirm,
-  closeTabConfirm,
-  terminateAIConfirm,
-  openLastSize,
+  tooltipLevel: 'essential',
+  closeConfirm: true,
+  closeTabConfirm: true,
+  terminateAIConfirm: true,
+  openLastSize: false,
   updatedModules: [],
   newModules: [],
   updateAvailable: false,
-  dynamicAppTitle,
-  openLinkExternal,
-  hardwareAcceleration,
-  disableLoadingAnimations,
+  dynamicAppTitle: false,
+  openLinkExternal: false,
+  hardwareAcceleration: true,
+  disableLoadingAnimations: false,
   checkCustomUpdate: false,
 };
 
