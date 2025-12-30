@@ -16,39 +16,36 @@ type Props = {
 const progressElem = <Spinner size="sm" className="flex-row space-x-1" classNames={{label: 'text-foreground/70'}} />;
 
 export default function CardInfoDescription({folders, descriptions}: Props) {
-  const getItems = useCallback(
-    (items: CardInfoDescriptions_Items) => {
-      const result: DescriptionsProps['items'] = [];
+  const getItems = useCallback((items: CardInfoDescriptions_Items) => {
+    const result: DescriptionsProps['items'] = [];
 
-      items.forEach((item, index) => {
-        if (isNil(item.result)) {
-          return;
-        } else if (item.result === 'loading') {
-          result.push({key: index, label: item.label, children: progressElem});
-        } else if (isValidURL(item.result)) {
-          result.push({
-            key: index,
-            label: item.label,
-            children: (
-              <Link
-                size="sm"
-                href={item.result}
-                color="foreground"
-                className="transition-colors duration-300 hover:text-primary"
-                isExternal>
-                {item.result}
-              </Link>
-            ),
-          });
-        } else {
-          result.push({key: index, label: item.label, children: item.result});
-        }
-      });
+    items.forEach((item, index) => {
+      if (isNil(item.result)) {
+        return;
+      } else if (item.result === 'loading') {
+        result.push({key: index, label: item.label, children: progressElem});
+      } else if (isValidURL(item.result)) {
+        result.push({
+          key: index,
+          label: item.label,
+          children: (
+            <Link
+              size="sm"
+              href={item.result}
+              color="foreground"
+              className="transition-colors duration-300 hover:text-primary"
+              isExternal>
+              {item.result}
+            </Link>
+          ),
+        });
+      } else {
+        result.push({key: index, label: item.label, children: item.result});
+      }
+    });
 
-      return result;
-    },
-    [descriptions],
-  );
+    return result;
+  }, []);
 
   const openDir = useCallback((dir: string) => {
     rendererIpc.file.openPath(dir);
