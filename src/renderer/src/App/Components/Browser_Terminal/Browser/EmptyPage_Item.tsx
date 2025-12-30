@@ -1,10 +1,11 @@
 import {Button, Card, CardBody, Image, Tooltip} from '@heroui/react';
+import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {formatWebAddress, getUrlName} from '../../../../../../cross/CrossUtils';
 import {FavIcons} from '../../../../../../cross/IpcChannelAndTypes';
-import {Trash_Icon, Web_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
+import {Web_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
@@ -74,7 +75,7 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
             onPress={handleRemove}
             className="absolute top-1 right-1 cursor-default group-hover:opacity-100 opacity-0"
             isIconOnly>
-            <Trash_Icon className="size-3.5" />
+            <TrashBin2 className="size-3.5" />
           </Button>
         </CardBody>
       </Card>
