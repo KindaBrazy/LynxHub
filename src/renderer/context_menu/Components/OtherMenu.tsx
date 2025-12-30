@@ -1,7 +1,7 @@
 import {Button, Input, Slider} from '@heroui/react';
 import {isArray, isEmpty} from 'lodash';
 import type {KeyboardEvent} from 'react';
-import {useEffect, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
 import {AltArrowLine_Icon, CloseSimple_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
@@ -93,6 +93,7 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
   const [searchValue, setSearchValue] = useState<string>('');
   const [id, setId] = useState<string>('');
   const [inputRef, setInputRef] = useState<HTMLInputElement | null>(null);
+  const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [toggle, setToggle] = useState<boolean>(false);
 
@@ -114,7 +115,8 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
     setSearchValue('');
     rendererIpc.browser.stopFindInPage(id, 'clearSelection');
     // Refocus input after clearing
-    setTimeout(() => inputRef?.focus(), 0);
+    if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
+    focusTimeoutRef.current = setTimeout(() => inputRef?.focus(), 0);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -197,6 +199,7 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
     const offCloseApp = rendererIpc.contextMenu.onCloseApp(clearState);
 
     return () => {
+      if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
       offFind();
       offInitView();
       offZoom();
