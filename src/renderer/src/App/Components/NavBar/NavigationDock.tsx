@@ -1,4 +1,4 @@
-import {AnimatePresence, motion} from 'framer-motion';
+import {AnimatePresence, motion, Transition} from 'framer-motion';
 import {memo, MouseEvent, ReactNode, useCallback, useMemo, useRef, useState, WheelEvent} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -22,11 +22,11 @@ type Props = {
   maxItems?: number;
 };
 
-const springTransition = {type: 'spring', stiffness: 400, damping: 40};
-const springTransitionFast = {type: 'spring', stiffness: 400, damping: 25};
-const springTransitionSnappy = {type: 'spring', stiffness: 500, damping: 30};
-const fadeTransition = {duration: 0.2};
-const scaleTransition = {duration: 0.3};
+const springTransition: Transition = {type: 'spring', stiffness: 400, damping: 40};
+const springTransitionFast: Transition = {type: 'spring', stiffness: 400, damping: 25};
+const springTransitionSnappy: Transition = {type: 'spring', stiffness: 500, damping: 30};
+const fadeTransition: Transition = {duration: 0.2};
+const scaleTransition: Transition = {duration: 0.3};
 
 const ScrollArrow = memo(
   ({direction, onClick, isDark}: {direction: 'up' | 'down'; onClick: () => void; isDark: boolean}) => {
