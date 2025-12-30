@@ -575,13 +575,23 @@ export class ImageCacheManager {
     }
   }
 
+  /** Allowed URL schemes for fetching images */
+  private static readonly ALLOWED_SCHEMES = new Set(['http:', 'https:']);
+
   /** Handles fetch requests for images */
   private async handleFetchRequest(url: string): Promise<Response> {
     // Validate URL
+    let parsedUrl: URL;
     try {
-      new URL(url);
+      parsedUrl = new URL(url);
     } catch {
       return new Response('Invalid URL', {status: 400});
+    }
+
+    // Block dangerous schemes (file://, javascript:, data:, etc.)
+    if (!ImageCacheManager.ALLOWED_SCHEMES.has(parsedUrl.protocol)) {
+      console.warn(`[ImageCache] Blocked request with dangerous scheme: ${parsedUrl.protocol}`);
+      return new Response('URL scheme not allowed', {status: 403});
     }
 
     const hash = this.hashUrl(url);
