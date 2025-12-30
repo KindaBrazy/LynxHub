@@ -44,8 +44,8 @@ const initialState: PluginsState = {
   selectedPlugin: undefined,
 };
 
-const appSlice = createSlice({
-  name: 'app',
+const pluginsSlice = createSlice({
+  name: 'plugins',
   initialState,
   reducers: {
     setPluginsState: <K extends keyof PluginsState>(
@@ -125,6 +125,6 @@ export const useIsUninstallingPlugin = (id: string): boolean =>
 export const useIsUpdatingPlugin = (id: string): boolean =>
   useSelector((state: RootState) => state.plugins.updating.includes(id));
 
-export const pluginsActions = appSlice.actions;
+export const pluginsActions = pluginsSlice.actions;
 
-export default appSlice.reducer;
+export default pluginsSlice.reducer;
