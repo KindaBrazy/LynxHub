@@ -301,29 +301,31 @@ export default class ContextMenuManager {
     const window = this.contextMenuWindow;
     if (!window || window.isDestroyed()) return;
 
-    const {width: cssWidth, height: cssHeight, dpr = 1} = data;
-
-    // noinspection SuspiciousTypeOfGuard
-    const isValid =
-      typeof cssWidth === 'number' &&
-      typeof cssHeight === 'number' &&
-      Number.isFinite(cssWidth) &&
-      Number.isFinite(cssHeight) &&
-      cssWidth > 0 &&
-      cssHeight > 0;
-
-    if (!isValid) {
-      console.error('Invalid dimensions received:', data);
+    // Validate data object exists
+    if (!data || typeof data !== 'object') {
+      console.error('Invalid resize data: expected object, received:', typeof data);
       return;
     }
 
+    const {width: cssWidth, height: cssHeight, dpr} = data;
+
+    // Validate width and height are positive finite numbers
+    const isValidDimension = (val: unknown): val is number =>
+      typeof val === 'number' && Number.isFinite(val) && val > 0;
+
+    if (!isValidDimension(cssWidth) || !isValidDimension(cssHeight)) {
+      console.error('Invalid dimensions received:', {width: cssWidth, height: cssHeight});
+      return;
+    }
+
+    // Validate and normalize dpr (device pixel ratio)
+    const scale = isValidDimension(dpr) ? dpr : 1;
+
+    // Calculate content size with bounds checking
+    const contentW = Math.max(1, Math.min(Math.ceil(cssWidth * scale), 4096));
+    const contentH = Math.max(1, Math.min(Math.ceil(cssHeight * scale), 4096));
+
     try {
-      // noinspection SuspiciousTypeOfGuard
-      const scale = typeof dpr === 'number' && dpr > 0 ? dpr : 1;
-
-      const contentW = Math.max(1, Math.ceil(cssWidth * scale));
-      const contentH = Math.max(1, Math.ceil(cssHeight * scale));
-
       AddBreadcrumb_Main(
         `'Resizing context menu (content area):', ${{
           cssWidth,
