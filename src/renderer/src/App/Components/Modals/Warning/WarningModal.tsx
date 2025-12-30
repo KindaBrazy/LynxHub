@@ -50,8 +50,8 @@ const WarningModal = () => {
               <Button
                 color="danger"
                 variant="light"
-                onPress={() => handleCloseRef.current()}
-                className="cursor-default">
+                className="cursor-default"
+                onPress={() => handleCloseRef.current()}>
                 Close
               </Button>
             </Space>
