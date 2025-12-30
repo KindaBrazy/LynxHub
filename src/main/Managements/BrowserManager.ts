@@ -408,6 +408,8 @@ export default class BrowserManager {
   public loadURL(id: string, url: string) {
     this.withWebContents(id, wc => {
       wc.loadURL(url).catch(error => {
+        // ERR_ABORTED (-3) happens on redirects - not a real error
+        if (error?.errno === -3 || error?.code === 'ERR_ABORTED') return;
         console.error(`Failed to load URL ${url}:`, error);
       });
       // URL tracking is handled by listenForNavigate's did-navigate event
