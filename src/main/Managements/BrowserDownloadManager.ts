@@ -761,7 +761,7 @@ export default class BrowserDownloadManager {
   private pauseItem(name: string) {
     try {
       const item = this.getItemByName(name);
-      if (item && item.canResume()) {
+      if (item && !item.isPaused()) {
         item.pause();
       }
     } catch (error: any) {
