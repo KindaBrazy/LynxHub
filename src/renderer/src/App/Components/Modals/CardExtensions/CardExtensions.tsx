@@ -31,11 +31,11 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
 
   const updateAll = useCallback(() => {
     installedRef.current?.updateAll();
-  }, [installedRef.current]);
+  }, []);
 
   const updateTable = useCallback(() => {
     installedRef.current?.getExtensions();
-  }, [installedRef.current]);
+  }, []);
 
   useEffect(() => {
     setUpdatesAvailable([]);
