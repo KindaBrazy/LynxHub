@@ -1,6 +1,6 @@
 import {Button, Card, CardBody, Image, Tooltip} from '@heroui/react';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
-import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {formatWebAddress, getUrlName} from '../../../../../../cross/CrossUtils';
@@ -14,14 +14,17 @@ import {useCachedImage} from '../../../Utils/UtilHooks';
 
 type Props = {
   recent: string;
-  setRecentAddress: Dispatch<SetStateAction<string[]>>;
   type: 'recent' | 'favorite';
+  favIconMap: Map<string, FavIcons>;
+  onDataChange: () => void;
 };
 
-export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) {
+export default function EmptyPage_Item({recent, type, favIconMap, onDataChange}: Props) {
   const activeTab = useTabsState('activeTab');
-  const [favItem, setFavItem] = useState<FavIcons | undefined>(undefined);
   const [imgError, setImgError] = useState(false);
+
+  // Get favicon from the map passed by parent (no IPC call needed)
+  const favItem = useMemo(() => favIconMap.get(formatWebAddress(recent)), [favIconMap, recent]);
 
   const favIcon = useCachedImage(favItem?.favIcon || '');
   const displayName = favItem?.title || getUrlName(recent);
@@ -35,24 +38,12 @@ export default function EmptyPage_Item({recent, setRecentAddress, type}: Props) 
   const handleRemove = () => {
     if (type === 'recent') {
       rendererIpc.storageUtils.removeBrowserRecent(recent);
-      rendererIpc.storageUtils.getBrowserHistoryData().then(result => {
-        setRecentAddress(result.recentAddress);
-      });
     } else {
       rendererIpc.storageUtils.removeBrowserFavorite(recent);
-      rendererIpc.storageUtils.getBrowserHistoryData().then(result => {
-        setRecentAddress(result.favoriteAddress);
-      });
     }
+    // Notify parent to refresh data (single IPC call for all items)
+    onDataChange();
   };
-
-  useEffect(() => {
-    rendererIpc.storageUtils.getBrowserHistoryData().then(result => {
-      const favItem = result.favIcons.find(fav => fav.url === formatWebAddress(recent));
-      setFavItem(favItem);
-      setImgError(false); // Reset error when favicon changes
-    });
-  }, [recent]);
 
   return (
     <Tooltip radius="sm" delay={300} content={favItem?.title || recent} showArrow>

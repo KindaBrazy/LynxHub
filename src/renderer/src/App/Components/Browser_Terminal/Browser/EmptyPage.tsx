@@ -1,9 +1,10 @@
 import {Button, Spinner} from '@heroui/react';
 import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
-import {Dispatch, ReactNode, SetStateAction, useEffect, useState} from 'react';
+import {ReactNode, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {FavIcons} from '../../../../../../cross/IpcChannelAndTypes';
 import {Star_Icon, Terminal_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {History_Color_Icon} from '../../../../assets/icons/SvgIcons/SvgIconsColor';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
@@ -22,7 +23,6 @@ type SectionConfig = {
   emptyTitle: string;
   emptyDescription: string;
   data: string[];
-  setData: Dispatch<SetStateAction<string[]>>;
   itemType: 'favorite' | 'recent';
 };
 
@@ -41,39 +41,72 @@ const staggerContainer = {
 
 const itemFade = {
   hidden: {opacity: 0, y: 6},
-  visible: {opacity: 1, y: 0, transition: {duration: 0.15}},
+  visible: {opacity: 1, y: 0, transition: {duration: 0.2}},
 };
+
+// Cache for browser history data to avoid repeated IPC calls
+let cachedHistoryData: {favoriteAddress: string[]; recentAddress: string[]; favIcons: FavIcons[]} | null = null;
+let cacheTimestamp = 0;
+const CACHE_TTL = 5000; // 5 seconds cache
+
+async function getCachedHistoryData() {
+  const now = Date.now();
+  if (cachedHistoryData && now - cacheTimestamp < CACHE_TTL) {
+    return cachedHistoryData;
+  }
+  cachedHistoryData = await rendererIpc.storageUtils.getBrowserHistoryData();
+  cacheTimestamp = now;
+  return cachedHistoryData;
+}
+
+// Export for EmptyPage_Item to use
+export function invalidateHistoryCache() {
+  cachedHistoryData = null;
+  cacheTimestamp = 0;
+}
+
+export {getCachedHistoryData};
 
 export default function EmptyPage({type}: Props) {
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
   const [recentAddress, setRecentAddress] = useState<string[]>([]);
   const [favoriteAddress, setFavoriteAddress] = useState<string[]>([]);
+  const [favIcons, setFavIcons] = useState<FavIcons[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const mountedRef = useRef(true);
 
   const switchToTerminal = () => {
     dispatch(cardsActions.setRunningCardView({tabId: activeTab, view: 'terminal'}));
   };
 
   useEffect(() => {
+    mountedRef.current = true;
     setIsLoading(true);
-    rendererIpc.storageUtils.getBrowserHistoryData().then(result => {
+
+    getCachedHistoryData().then(result => {
+      if (!mountedRef.current) return;
       setFavoriteAddress(result.favoriteAddress);
       setRecentAddress(result.recentAddress);
+      setFavIcons(result.favIcons);
       setIsLoading(false);
     });
+
+    return () => {
+      mountedRef.current = false;
+    };
   }, []);
 
-  const renderSection = ({
-    title,
-    subtitle,
-    icon,
-    emptyTitle,
-    emptyDescription,
-    data,
-    setData,
-    itemType,
-  }: SectionConfig) => {
+  // Create a map for quick favicon lookup
+  const favIconMap = useMemo(() => {
+    const map = new Map<string, FavIcons>();
+    for (const fav of favIcons) {
+      map.set(fav.url, fav);
+    }
+    return map;
+  }, [favIcons]);
+
+  const renderSection = ({title, subtitle, icon, emptyTitle, emptyDescription, data, itemType}: SectionConfig) => {
     if (data.length > 0) {
       return (
         <motion.section variants={fadeIn} className="w-full">
@@ -88,7 +121,19 @@ export default function EmptyPage({type}: Props) {
           <motion.div initial="hidden" animate="visible" variants={staggerContainer} className="flex flex-wrap gap-4">
             {data.slice(0, 12).map((item, index) => (
               <motion.div variants={itemFade} key={`${itemType}-${index}`}>
-                <EmptyPage_Item recent={item} type={itemType} setRecentAddress={setData} />
+                <EmptyPage_Item
+                  onDataChange={() => {
+                    invalidateHistoryCache();
+                    getCachedHistoryData().then(result => {
+                      setFavoriteAddress(result.favoriteAddress);
+                      setRecentAddress(result.recentAddress);
+                      setFavIcons(result.favIcons);
+                    });
+                  }}
+                  recent={item}
+                  type={itemType}
+                  favIconMap={favIconMap}
+                />
               </motion.div>
             ))}
           </motion.div>
@@ -123,7 +168,6 @@ export default function EmptyPage({type}: Props) {
       emptyTitle: 'No favorites yet',
       emptyDescription: 'Star sites to add them here',
       data: favoriteAddress,
-      setData: setFavoriteAddress,
       itemType: 'favorite',
     },
     {
@@ -133,7 +177,6 @@ export default function EmptyPage({type}: Props) {
       emptyTitle: 'No recent visits',
       emptyDescription: 'Your history will appear here',
       data: recentAddress,
-      setData: setRecentAddress,
       itemType: 'recent',
     },
   ];
