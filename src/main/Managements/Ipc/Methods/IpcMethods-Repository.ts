@@ -5,14 +5,10 @@ import {ShallowCloneOptions} from '../../../../cross/GitTypes';
 import {setupGitManagerListeners} from '../../Git/GitHelper';
 import GitManager from '../../Git/GitManager';
 
-let gitManager: GitManager | undefined;
-
 export function shallowClone(options: ShallowCloneOptions): void {
-  gitManager = new GitManager(true);
-
-  gitManager.shallowClone(options);
-
-  setupGitManagerListeners(gitManager);
+  const manager = new GitManager(true);
+  manager.shallowClone(options);
+  setupGitManagerListeners(manager);
 }
 
 export async function shallowClonePromise(options: ShallowCloneOptions) {
@@ -45,11 +41,9 @@ export async function resetHard(dir: string) {
  * @param id - The unique identifier for the repository.
  */
 export function pullRepo(dir: string, id: string): void {
-  gitManager = new GitManager();
-
-  gitManager.pull(path.resolve(dir));
-
-  setupGitManagerListeners(gitManager, id);
+  const manager = new GitManager();
+  manager.pull(path.resolve(dir));
+  setupGitManagerListeners(manager, id);
 }
 
 export async function validateGitDir(dir: string, url: string): Promise<boolean> {
