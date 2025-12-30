@@ -15,7 +15,6 @@ import {
 import {useDispatch} from 'react-redux';
 
 import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
-import {GitProgressCallback} from '../../../../../../cross/IpcChannelAndTypes';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
 import {lynxTopToast} from '../../../Utils/UtilHooks';
@@ -113,17 +112,19 @@ const Installed = forwardRef(
         );
 
         return new Promise((resolve, reject) => {
-          rendererIpc.git.pull(extDir, pullId);
+          const removeListener = rendererIpc.git.onProgress(onProgress);
 
-          const onProgress: GitProgressCallback = (_e, id, state) => {
+          function onProgress(_e: unknown, id: string, state: string) {
             if (id !== pullId) return;
 
             switch (state) {
               case 'Failed':
+                removeListener();
                 lynxTopToast(dispatch).error(`Error: Unable to update ${name}.`);
                 reject(`Error: Unable to update ${name}.`);
                 break;
               case 'Completed':
+                removeListener();
                 lynxTopToast(dispatch).success(`${name} updated successfully!`);
                 setRows(prevState =>
                   prevState.map(row => (row.key === name ? {...row, update: useRowElements.updateBtn.updated} : row)),
@@ -132,11 +133,9 @@ const Installed = forwardRef(
                 resolve();
                 break;
             }
-          };
+          }
 
-          const removeListener = rendererIpc.git.onProgress(onProgress);
-
-          return () => removeListener();
+          rendererIpc.git.pull(extDir, pullId);
         });
       },
       [dir],
