@@ -136,15 +136,17 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
   // Clear search when window closes
   useEffect(() => {
     const handleWindowBlur = () => {
-      if (searchValue) {
-        setSearchValue('');
-        rendererIpc.browser.stopFindInPage(id, 'clearSelection');
-      }
+      setSearchValue(currentValue => {
+        if (currentValue) {
+          rendererIpc.browser.stopFindInPage(id, 'clearSelection');
+        }
+        return '';
+      });
     };
 
     window.addEventListener('blur', handleWindowBlur);
     return () => window.removeEventListener('blur', handleWindowBlur);
-  }, [id, searchValue]);
+  }, [id]);
 
   useEffect(() => {
     if (id) {
