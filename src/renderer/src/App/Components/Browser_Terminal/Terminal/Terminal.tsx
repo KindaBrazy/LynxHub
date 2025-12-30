@@ -68,6 +68,18 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
     });
   }, [id]);
 
+  // Store refs for values needed in setTimeout
+  const browserBehaviorRef = useRef(browserBehavior);
+  const tabIdRef = useRef(tabId);
+
+  useEffect(() => {
+    browserBehaviorRef.current = browserBehavior;
+  }, [browserBehavior]);
+
+  useEffect(() => {
+    tabIdRef.current = tabId;
+  }, [tabId]);
+
   // URL catching and browser behavior
   useEffect(() => {
     const openUrl = (url: string | undefined, delaySeconds?: number) => {
@@ -77,9 +89,9 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
       const delayMs = effectiveDelaySeconds > 0 ? toMs(effectiveDelaySeconds, 'seconds') : 0;
 
       const executeOpen = () => {
-        if (browserBehavior === 'appBrowser') {
-          dispatch(cardsActions.setRunningCardAddress({address: url, tabId}));
-          dispatch(cardsActions.setRunningCardView({view: 'browser', tabId}));
+        if (browserBehaviorRef.current === 'appBrowser') {
+          dispatch(cardsActions.setRunningCardAddress({address: url, tabId: tabIdRef.current}));
+          dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: tabIdRef.current}));
           rendererIpc.storageUtils.addBrowserRecent(url);
         } else {
           rendererIpc.win.openUrlDefaultBrowser(url);
