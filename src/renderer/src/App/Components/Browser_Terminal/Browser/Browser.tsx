@@ -25,11 +25,11 @@ const Browser = memo(({runningCard}: Props) => {
 
   const isDomReady = useMemo(() => browserDomReadyIds.includes(id), [browserDomReadyIds, id]);
 
-  const finalAddress = useMemo(() => {
-    const result = customAddress || webUIAddress;
-    if (result) rendererIpc.browser.loadURL(id, result);
-    return result;
-  }, [customAddress, webUIAddress]);
+  const finalAddress = useMemo(() => customAddress || webUIAddress, [customAddress, webUIAddress]);
+
+  useEffect(() => {
+    if (finalAddress) rendererIpc.browser.loadURL(id, finalAddress);
+  }, [id, finalAddress]);
 
   useEffect(() => {
     if (isActiveTab) rendererIpc.browser.focusWebView(id);
