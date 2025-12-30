@@ -101,6 +101,12 @@ const UpdateApp = () => {
   }, []);
 
   useEffect(() => {
+    return () => {
+      removeListener.current?.();
+    };
+  }, []);
+
+  useEffect(() => {
     listenProgress();
 
     async function fetchData() {
