@@ -25,7 +25,7 @@ const useSortedCards = (cards: LoadedCardData[]): LoadedCardData[] => {
   return useMemo(() => {
     const cardsToSort = cards?.filter(Boolean) ?? [];
 
-    return cardsToSort.sort((a, b) => {
+    return [...cardsToSort].sort((a, b) => {
       const aHasUpdate = updateAvailableIds.has(a.id);
       const bHasUpdate = updateAvailableIds.has(b.id);
       const aIsPinned = pinnedCardIds.has(a.id);
