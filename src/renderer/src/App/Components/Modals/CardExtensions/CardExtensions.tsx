@@ -40,6 +40,7 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
   useEffect(() => {
     setUpdatesAvailable([]);
     setCurrentTab('installed');
+    setInstalledExtensions([]);
   }, [isOpen]);
 
   const onPress = useCallback(
