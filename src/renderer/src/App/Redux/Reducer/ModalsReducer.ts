@@ -267,7 +267,7 @@ const modalSlice = createSlice({
       state.cardInfoModal = state.cardInfoModal.filter(modal => modal.tabID !== tabID);
     },
     setInfoCardId: (state, action: PayloadAction<{cardID: string; tabID: string}>) => {
-      state.cardInfoModal.map(modal =>
+      state.cardInfoModal = state.cardInfoModal.map(modal =>
         modal.tabID === action.payload.tabID
           ? {
               ...modal,
