@@ -343,7 +343,6 @@ export class ImageCacheManager {
       });
 
       if (!response.ok) {
-        console.error(`[ImageCache] Failed to fetch ${url}: ${response.status}`);
         return new Response('Failed to fetch image', {status: response.status});
       }
 
@@ -352,8 +351,7 @@ export class ImageCacheManager {
       // Validate content type
       const mimeType = contentType.split(';')[0].trim();
       if (!SUPPORTED_MIME_TYPES.has(mimeType)) {
-        console.warn(`[ImageCache] Unsupported content type: ${mimeType}`);
-        // Still return the response, just don't cache it
+        // Unsupported content type, return without caching
         return response;
       }
 
