@@ -22,6 +22,12 @@ type Props = {
   maxItems?: number;
 };
 
+const springTransition = {type: 'spring', stiffness: 400, damping: 40};
+const springTransitionFast = {type: 'spring', stiffness: 400, damping: 25};
+const springTransitionSnappy = {type: 'spring', stiffness: 500, damping: 30};
+const fadeTransition = {duration: 0.2};
+const scaleTransition = {duration: 0.3};
+
 const ScrollArrow = memo(
   ({direction, onClick, isDark}: {direction: 'up' | 'down'; onClick: () => void; isDark: boolean}) => {
     const mutedText = isDark ? '#9ca3af' : '#6b7280';
@@ -101,7 +107,7 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
   const listContent = (
     <motion.div
       className="flex flex-col gap-y-0.5"
-      transition={{type: 'spring', stiffness: 400, damping: 40}}
+      transition={springTransition}
       animate={{y: showScrollControls ? -startIndex * ITEM_TOTAL_HEIGHT : 0}}>
       {items.map(item => (
         <RenderItem item={item} isDark={isDark} activePage={activePage} key={`${item.title}_nav`} />
@@ -184,7 +190,7 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
               exit={{opacity: 0}}
               initial={{opacity: 0}}
               animate={{opacity: 1}}
-              transition={{duration: 0.2}}
+              transition={fadeTransition}
               className="absolute top-0 left-0 right-0 pointer-events-none rounded-xl">
               <ScrollArrow direction="up" isDark={isDark} onClick={handleScrollUp} />
             </motion.div>
@@ -201,7 +207,7 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
               exit={{opacity: 0}}
               initial={{opacity: 0}}
               animate={{opacity: 1}}
-              transition={{duration: 0.2}}
+              transition={fadeTransition}
               className="absolute bottom-0 left-0 right-0 pointer-events-none rounded-xl">
               <ScrollArrow isDark={isDark} direction="down" onClick={handleScrollDown} />
             </motion.div>
@@ -249,11 +255,7 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
         <AnimatePresence>
           {isActive && (
             <motion.div
-              transition={{
-                type: 'spring',
-                stiffness: 500,
-                damping: 30,
-              }}
+              transition={springTransitionSnappy}
               initial={false}
               layoutId="activeIndicator"
               className="absolute inset-0 rounded-xl shadow-lg bg-primary"
@@ -271,7 +273,7 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
             y: isHovered ? -2 : 0,
           }}
           whileHover={{color: textColor}}
-          transition={{type: 'spring', stiffness: 400, damping: 25}}
+          transition={springTransitionFast}
           className="relative flex items-center justify-center size-12 rounded-xl">
           {/* Hover background glow */}
           <AnimatePresence>
@@ -280,7 +282,7 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
                 style={{
                   backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)',
                 }}
-                transition={{duration: 0.2}}
+                transition={fadeTransition}
                 exit={{opacity: 0, scale: 0.8}}
                 animate={{opacity: 1, scale: 0.9}}
                 initial={{opacity: 0, scale: 0.8}}
@@ -294,7 +296,7 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
               scale: isHovered ? [1, 1.1, 1] : 1,
             }}
             className="size-5"
-            transition={{duration: 0.3}}>
+            transition={scaleTransition}>
             {item.icon}
           </motion.div>
 
