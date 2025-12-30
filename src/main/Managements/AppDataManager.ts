@@ -120,6 +120,5 @@ export async function selectNewAppDataFolder(targetWindow?: BrowserWindow): Prom
 export async function isAppDir(dir: string) {
   const appPath = resolve(dirname(app.getPath('exe')));
   const target = resolve(dir);
-  console.log(appPath, target, target.startsWith(appPath));
   return target.startsWith(appPath);
 }
