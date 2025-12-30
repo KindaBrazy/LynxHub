@@ -8,9 +8,9 @@ const patterns = {
 
 const colors = {
   red: '\x1b[31m', // Errors
-  orange: '\x1b[38;5;214m', // Warnings
-  green: '\x1b[38;5;46m', // Success
-  blue: '\x1b[38;5;39m', // Info
+  orange: '\x1b[38;5;208m', // Warnings (darker orange for light theme)
+  green: '\x1b[32m', // Success (uses theme's green color)
+  blue: '\x1b[34m', // Info (uses theme's blue color)
   cyan: '\x1b[36m', // Debug
   reset: '\x1b[0m', // Reset color
 };
