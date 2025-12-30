@@ -70,10 +70,14 @@ export default function DashboardUpdate() {
 
   useEffect(() => {
     window.electron.ipcRenderer.removeAllListeners('updateChannel-change');
-    window.electron.ipcRenderer.on('updateChannel-change', (_, result) => {
+    const offChannel = window.electron.ipcRenderer.on('updateChannel-change', (_, result) => {
       setSelection([result]);
     });
     rendererIpc.patreon.updateChannel('get');
+
+    return () => {
+      offChannel();
+    };
   }, []);
 
   const disabledKeys = useMemo(() => {
