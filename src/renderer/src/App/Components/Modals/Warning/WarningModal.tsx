@@ -1,6 +1,6 @@
 import {Button, Link} from '@heroui/react';
 import {Modal, Space} from 'antd';
-import {Fragment, useCallback, useEffect} from 'react';
+import {Fragment, useCallback, useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ISSUE_PAGE} from '../../../../../../cross/CrossConstants';
@@ -13,6 +13,7 @@ import {warnContent, warnTitle} from './WarningContent';
 const WarningModal = () => {
   const {contentId, isOpen} = useModalsState('warningModal');
   const dispatch = useDispatch<AppDispatch>();
+  const handleCloseRef = useRef<() => void>(() => {});
 
   useDebounceBreadcrumb('Warning Modal: ', [isOpen, contentId]);
 
@@ -20,6 +21,10 @@ const WarningModal = () => {
     dispatch(modalActions.closeWarning());
     Modal.destroyAll();
   }, [dispatch]);
+
+  useEffect(() => {
+    handleCloseRef.current = handleClose;
+  }, [handleClose]);
 
   useEffect(() => {
     if (isOpen) {
@@ -42,7 +47,11 @@ const WarningModal = () => {
                 showAnchorIcon>
                 Report
               </Button>
-              <Button color="danger" variant="light" onPress={handleClose} className="cursor-default">
+              <Button
+                color="danger"
+                variant="light"
+                onPress={() => handleCloseRef.current()}
+                className="cursor-default">
                 Close
               </Button>
             </Space>
@@ -56,7 +65,7 @@ const WarningModal = () => {
         wrapClassName: 'mt-10',
       });
     }
-  }, [isOpen, contentId, handleClose, dispatch]);
+  }, [isOpen, contentId, dispatch]);
 
   return <Fragment />;
 };
