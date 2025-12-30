@@ -36,6 +36,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
   const {webUIAddress, id, currentView, tabId} = useMemo(() => runningCard, [runningCard]);
 
   const xtermRef = useRef<XTermAPI | null>(null);
+  const contextMenuCleanupRef = useRef<(() => void) | null>(null);
 
   const [browserBehavior, setBrowserBehavior] = useState<CustomRunBehaviorData['browser']>('appBrowser');
   const [urlCatchBehavior, setUrlCatchBehavior] = useState<CustomRunBehaviorData['urlCatch'] | undefined>(undefined);
@@ -196,6 +197,13 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
     }
   }, [activeTab, tabId, tabs]);
 
+  // Cleanup context menu listener on unmount
+  useEffect(() => {
+    return () => {
+      contextMenuCleanupRef.current?.();
+    };
+  }, []);
+
   // Handle terminal ready callback
   const handleTerminalReady = useCallback(
     (api: XTermAPI) => {
@@ -254,8 +262,8 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
 
       terminalContainer?.addEventListener('contextmenu', handleContextMenu);
 
-      // Return cleanup for context menu (the terminal dispose is handled by XTermCore)
-      return () => {
+      // Store cleanup function in ref
+      contextMenuCleanupRef.current = () => {
         terminalContainer?.removeEventListener('contextmenu', handleContextMenu);
       };
     },
