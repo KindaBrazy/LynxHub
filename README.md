@@ -29,12 +29,11 @@
 > [!TIP]
 > **New Year Promo:** Use code **`LYNX26`** for **26% OFF** your first month of Early Access (v3.4.0).
 
-   | Channel      | Version                                                             | Date       |
-      |--------------|---------------------------------------------------------------------|------------|
-   | Insider      | [**V3.4.0**](https://www.patreon.com/collection/1557749)            | 2025-12-31 |
-   | Early Access | [**V3.4.0**](https://www.patreon.com/collection/714004)             | 2025-12-31 |
-   | Public       | [**V3.3.0**](https://github.com/KindaBrazy/LynxHub/releases/latest) | 2025-11-30 |
-
+| Channel      | Version                                                             | Date       |
+|--------------|---------------------------------------------------------------------|------------|
+| Insider      | [**V3.4.0**](https://www.patreon.com/collection/1557749)            | 2025-12-31 |
+| Early Access | [**V3.4.0**](https://www.patreon.com/collection/714004)             | 2025-12-31 |
+| Public       | [**V3.3.0**](https://github.com/KindaBrazy/LynxHub/releases/latest) | 2025-11-30 |
 
 3. **Install and Launch the Application**
 
