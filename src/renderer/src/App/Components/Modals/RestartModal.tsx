@@ -33,7 +33,7 @@ export function RestartModal() {
       isDismissable={false}
       onOpenChange={handleClose}
       isKeyboardDismissDisabled={true}
-      classNames={{wrapper: 'top-10', backdrop: 'top-10'}}
+      classNames={{wrapper: 'top-10!', backdrop: 'top-10!'}}
       hideCloseButton>
       <ModalContent>
         {() => (
