@@ -486,6 +486,16 @@ function modulesApi() {
 let browserTimeout: NodeJS.Timeout | undefined = undefined;
 let browserIPCInitialized = false;
 
+/** Resets the browserIPC initialization state. Call this before recreating
+ *  the main window (e.g., on macOS activate). */
+export function resetBrowserIPC() {
+  browserIPCInitialized = false;
+  if (browserTimeout) {
+    clearTimeout(browserTimeout);
+    browserTimeout = undefined;
+  }
+}
+
 export function browserIPC() {
   // Prevent registering handlers multiple times
   if (browserIPCInitialized) {
