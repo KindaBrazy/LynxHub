@@ -26,6 +26,9 @@
 
 2. **Download LynxHub**
 
+> [!TIP]
+> **New Year Promo:** Use code **`LYNX26`** for **26% OFF** your first month of Early Access (v3.4.0).
+
    | Channel      | Version                                                             | Date       |
       |--------------|---------------------------------------------------------------------|------------|
    | Insider      | [**V3.4.0**](https://www.patreon.com/collection/1557749)            | 2025-12-31 |
