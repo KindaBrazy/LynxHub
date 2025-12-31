@@ -27,19 +27,25 @@
 2. **Download LynxHub**
 
    | Channel      | Version                                                             | Date       |
-   |--------------|---------------------------------------------------------------------|------------|
-   | Insider      | [**V3.4.0 Insider 2**](https://www.patreon.com/collection/1557749)  | 2025-12-13  |
-   | Early Access | [**V3.3.0**](https://www.patreon.com/collection/714004)             | 2025-10-24 |
+      |--------------|---------------------------------------------------------------------|------------|
+   | Insider      | [**V3.4.0**](https://www.patreon.com/collection/1557749)            | 2025-12-31 |
+   | Early Access | [**V3.4.0**](https://www.patreon.com/collection/714004)             | 2025-12-31 |
    | Public       | [**V3.3.0**](https://github.com/KindaBrazy/LynxHub/releases/latest) | 2025-11-30 |
 
 
 3. **Install and Launch the Application**
 
 > [!NOTE]
-> **macOS Beta Release**
+> **macOS Users: App Not Signed**
 >
-> The macOS version is currently in **beta**. I have limited access to physical macOS hardware for thorough testing, so
-> issues are possible. Your feedback would be really helpful.
+> LynxHub is not code-signed with an Apple Developer certificate. macOS will show a security warning when you first try
+> to open it. To bypass this:
+>
+> 1. **Right-click** (or Control-click) on the app and select **Open**
+> 2. Click **Open** in the dialog that appears
+> 3. Alternatively, go to **System Settings → Privacy & Security**, scroll down and click **Open Anyway**
+>
+> You only need to do this once. The app is safe to use, it's just not signed.
 
 ## 🗂️ Table of Contents
 
