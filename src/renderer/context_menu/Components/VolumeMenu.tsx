@@ -68,7 +68,7 @@ export function useVolumeMenu(setElements: SetElementsType, setWidthSize: SetWid
     if (data) {
       const effectiveMuted = isMuted || isGlobalMuted;
       setElements([
-        <div key={`volume_${data.tabId}_${toggle}`} className="flex w-52 flex-col gap-4 p-4">
+        <div key={`volume_${data.tabId}_${toggle}`} className="flex w-full flex-col gap-4 p-4">
           <div className="flex items-center justify-between">
             <span className="text-small font-medium">Volume Control</span>
             <Button
@@ -110,7 +110,7 @@ export function useVolumeMenu(setElements: SetElementsType, setWidthSize: SetWid
       setVolume(volumeData.volume);
       setIsMuted(volumeData.muted);
       setIsGlobalMuted(volumeData.globalMuted);
-      setWidthSize('sm');
+      setWidthSize('md');
       setToggle(prev => !prev);
       rendererIpc.contextMenu.showWindow();
     });
