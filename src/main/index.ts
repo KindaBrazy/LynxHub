@@ -18,7 +18,7 @@ import {ValidateCards} from './Managements/DataValidator';
 import DialogManager from './Managements/DialogManager';
 import ElectronAppManager from './Managements/ElectronAppManager';
 import {getImageCacheManager, registerImageCacheScheme} from './Managements/ImageCacheManager';
-import {browserIPC, listenToAllChannels} from './Managements/Ipc/IpcHandler';
+import {browserIPC, listenToAllChannels, resetBrowserIPC} from './Managements/Ipc/IpcHandler';
 import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
 import LinkPreviewManager from './Managements/LinkPreviewManager';
 import ExtensionManager from './Managements/Plugin/Extensions/ExtensionManager';
@@ -204,6 +204,8 @@ async function setupApp() {
 
     const mainWindow = appManager?.getMainWindow();
     if (!mainWindow || mainWindow.isDestroyed()) {
+      // Reset browserIPC state so it reinitializes with the new window
+      resetBrowserIPC();
       appManager?.startLoading();
       appManager?.startApp();
     } else {
