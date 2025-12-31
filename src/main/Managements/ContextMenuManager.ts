@@ -46,6 +46,14 @@ export default class ContextMenuManager {
   }
 
   public createWindow(mainWindow: BrowserWindow) {
+    // Close existing context menu window if it exists (e.g., on macOS reactivation)
+    if (this.contextMenuWindow && !this.contextMenuWindow.isDestroyed()) {
+      this.contextMenuWindow.close();
+    }
+
+    // Reset browser channels flag so listenForBrowserChannels can re-register with new BrowserManager
+    this.browserChannelsRegistered = false;
+
     this.contextMenuWindow = new BrowserWindow({...ContextMenuManager.CONTEXT_WINDOW_CONFIG, parent: mainWindow});
     this.mainWindow = mainWindow;
 

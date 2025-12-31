@@ -37,6 +37,14 @@ export default class LinkPreviewManager {
   };
 
   public createWindow(mainWindow: BrowserWindow) {
+    // Close existing link preview window if it exists (e.g., on macOS reactivation)
+    if (this.linkPreviewWindow && !this.linkPreviewWindow.isDestroyed()) {
+      this.linkPreviewWindow.close();
+    }
+
+    // Remove listeners from old mainWindow if it exists
+    this.removeMainWindowListeners();
+
     this.mainWindow = mainWindow;
     this.linkPreviewWindow = new BrowserWindow({
       ...LinkPreviewManager.WINDOW_CONFIG,
