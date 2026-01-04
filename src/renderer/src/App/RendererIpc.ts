@@ -1,7 +1,7 @@
 // Renderer IPC client - Provides methods for renderer process to communicate with main process
-import {ContextMenuParams, FindInPageOptions, IpcRendererEvent, OpenDialogOptions} from 'electron';
+import type {ContextMenuParams, FindInPageOptions, IpcRendererEvent, OpenDialogOptions} from 'electron';
 
-import {
+import type {
   AppUpdateData,
   AppUpdateInsiderData,
   ChosenArgumentsData,
@@ -17,74 +17,72 @@ import {
   RepositoryInfo,
   SubscribeStages,
 } from '../../../cross/CrossTypes';
-import {
-  browserDownloadChannels,
-  customNotifChannels,
-  DownloadDoneInfo,
-  DownloadManagerProgress,
-  DownloadStartInfo,
-} from '../../../cross/DownloadManagerTypes';
-import {ShallowCloneOptions} from '../../../cross/GitTypes';
-import {
+import type {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '../../../cross/DownloadManagerTypes';
+import {browserDownloadChannels, customNotifChannels} from '../../../cross/DownloadManagerTypes';
+import type {ShallowCloneOptions} from '../../../cross/GitTypes';
+import type {
   AgentTypes,
-  appDataChannels,
-  appUpdateChannels,
   AppUpdateEventTypes,
   AppUpdateStatus,
-  appWindowChannels,
   AudioState,
-  browserChannels,
   BrowserHistoryData,
   CanGoType,
   ChangeWindowState,
-  contextMenuChannels,
   CustomRunBehaviorData,
   DarkModeTypes,
   DownloadProgress,
-  eventsChannels,
   ExtensionsData,
   ExtensionsUpdateStatus,
-  fileChannels,
-  gitChannels,
   GitProgressCallback,
   HeroToastPlacement,
   HomeCategory,
-  imageCacheChannels,
-  initChannels,
   LynxInput,
-  moduleApiChannels,
-  modulesChannels,
   OnPreCommands,
   OnUpdatingExtensions,
-  patreonChannels,
-  pluginChannels,
   PreCommands,
   PreOpen,
   PreOpenData,
-  ptyChannels,
   RecentlyOperation,
   ShowToastTypes,
-  staticsChannels,
-  storageChannels,
   StorageOperation,
-  storageUtilsChannels,
   SystemInfo,
-  tabsChannels,
   TaskbarStatus,
-  utilsChannels,
-  volumeChannels,
   WHType,
-  winChannels,
   WinStateChange,
 } from '../../../cross/IpcChannelAndTypes';
 import {
+  appDataChannels,
+  appUpdateChannels,
+  appWindowChannels,
+  browserChannels,
+  contextMenuChannels,
+  eventsChannels,
+  fileChannels,
+  gitChannels,
+  imageCacheChannels,
+  initChannels,
+  moduleApiChannels,
+  modulesChannels,
+  patreonChannels,
+  pluginChannels,
+  ptyChannels,
+  staticsChannels,
+  storageChannels,
+  storageUtilsChannels,
+  tabsChannels,
+  utilsChannels,
+  volumeChannels,
+  winChannels,
+} from '../../../cross/IpcChannelAndTypes';
+import type {
   PluginAddresses,
   PluginInstalledItem,
   PluginItem,
   PluginSyncItem,
   UnloadedPlugins,
 } from '../../../cross/plugin/PluginTypes';
-import StorageTypes, {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
+import type StorageTypes from '../../../cross/StorageTypes';
+import type {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
 import {extensionRendererApi} from './Extensions/ExtensionLoader';
 
 const ipc = window.electron.ipcRenderer;
