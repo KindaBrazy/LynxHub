@@ -107,13 +107,12 @@ export const usePatreon = () => {
   const isOnline = useAppState('isOnline');
 
   useEffect(() => {
-    rendererIpc.patreon
-      .getInfo()
-      .then(userData => {
+    rendererIpc.patreon.getInfo().then(userData => {
+      if (userData) {
         dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
         dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
-      })
-      .catch(() => {});
+      }
+    });
 
     const offReleaseChannel = rendererIpc.patreon.onReleaseChannel((_, stage) =>
       dispatch(userActions.setUpdateChannel(stage)),
