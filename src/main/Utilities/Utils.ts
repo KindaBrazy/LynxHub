@@ -155,8 +155,14 @@ export function isDark(): boolean {
   }
 }
 
-export function getWindowColor() {
-  return isDark() ? '#212121' : '#ffffff';
+function getWindowBgColor(isDark: boolean) {
+  return isDark ? '#212121' : '#ffffff';
+}
+
+export function getWindowColor(preferred?: 'dark' | 'light') {
+  if (preferred) return getWindowBgColor(preferred === 'dark');
+
+  return getWindowBgColor(isDark());
 }
 
 export function isPortable(): 'win' | 'linux' | null {
