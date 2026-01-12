@@ -2,54 +2,47 @@ import os from 'node:os';
 
 import {Menu, Tray} from 'electron';
 
+import trayIconMenu from '../../../resources/16x16.png?asset';
+import trayIcon from '../../../resources/icon.ico?asset';
 import {APP_NAME, APP_NAME_VERSION} from '../../cross/CrossConstants';
-import {appManager, extensionManager, storageManager} from '../index';
+import getClassHolder from './ClassHolder';
 import {EMenuItem} from './Plugin/Extensions/ExtensionTypes_Main';
 
 /** Manages the system tray icon and its context menu for the application. */
 export default class TrayManager {
   private tray?: Tray;
-  private readonly trayIcon: string;
-  private readonly trayIconMenu: string;
-
-  /**
-   * Creates a new TrayManager instance.
-   * @param trayIcon - Path to the tray icon image.
-   * @param trayIconMenu - Path to the icon used in the context menu.
-   */
-  constructor(trayIcon: string, trayIconMenu: string) {
-    this.trayIcon = trayIcon;
-    this.trayIconMenu = trayIconMenu;
-  }
 
   /** Closes the main application window. */
   private closeMainWindow = (): void => {
+    const {storageManager, appManager} = getClassHolder();
     storageManager.updateLastSize();
     appManager?.getMainWindow()?.close();
   };
 
   /** Shows the main application window. */
   private showMainWindow = (): void => {
+    const {appManager} = getClassHolder();
     appManager?.getMainWindow()?.show();
   };
 
   /** Creates and sets up the tray icon with its context menu. */
   public createTrayIcon(): void {
     if (this.tray) return;
+    const {extensionManager} = getClassHolder();
 
-    const icon = os.platform() === 'win32' ? this.trayIcon : this.trayIconMenu;
+    const icon = os.platform() === 'win32' ? trayIcon : trayIconMenu;
 
     this.tray = new Tray(icon);
     this.tray.setToolTip(APP_NAME);
 
     const staticItems: EMenuItem[] = [
-      {enabled: false, icon: this.trayIconMenu, label: APP_NAME_VERSION},
+      {enabled: false, icon: trayIconMenu, label: APP_NAME_VERSION},
       {type: 'separator'},
       {label: 'Show', type: 'normal', click: this.showMainWindow},
       {label: 'Quit', type: 'normal', click: this.closeMainWindow},
     ];
 
-    const resultItems = extensionManager.getTrayItems(staticItems);
+    const resultItems = extensionManager!.getTrayItems(staticItems);
     const contextMenu = Menu.buildFromTemplate(resultItems);
 
     this.tray.setContextMenu(contextMenu);

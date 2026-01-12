@@ -7,7 +7,7 @@ import fs from 'graceful-fs';
 
 import {formatSize} from '../../cross/CrossUtils';
 import {AgentTypes} from '../../cross/IpcChannelAndTypes';
-import {appManager, storageManager} from '../index';
+import getClassHolder from '../Managements/ClassHolder';
 import calcFolderSize from './CalculateFolderSize/CalculateFolderSize';
 
 /**
@@ -17,6 +17,7 @@ import calcFolderSize from './CalculateFolderSize/CalculateFolderSize';
  * @returns {string | undefined} The selected file/folder path, or undefined if cancelled.
  */
 export async function openDialog(options: OpenDialogOptions): Promise<string | undefined> {
+  const {appManager} = getClassHolder();
   try {
     const mainWindow = appManager?.getMainWindow();
     const result: OpenDialogReturnValue = await (mainWindow
@@ -144,6 +145,7 @@ export function getSystemDarkMode() {
 }
 
 export function isDark(): boolean {
+  const {storageManager} = getClassHolder();
   const darkMode = storageManager.getData('app').darkMode;
   switch (darkMode) {
     case 'dark':
@@ -211,6 +213,7 @@ export function getAbsolutePath(basePath: string, targetPath: string): string {
 }
 
 export function RelaunchApp(saveLastSize: boolean = true) {
+  const {storageManager} = getClassHolder();
   if (saveLastSize) storageManager.updateLastSize();
   app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
   app.quit();
@@ -218,7 +221,7 @@ export function RelaunchApp(saveLastSize: boolean = true) {
 
 export function getUserAgent(type?: AgentTypes) {
   // Determine the user agent type (parameter or from storage)
-  const targetType: AgentTypes = type || storageManager.getData('browser').userAgent || 'lynxhub';
+  const targetType: AgentTypes = type || getClassHolder().storageManager.getData('browser').userAgent || 'lynxhub';
 
   // Get OS string based on the platform
   const osMap = {
@@ -239,7 +242,7 @@ export function getUserAgent(type?: AgentTypes) {
     lynxhub: () => `${baseUA} ${lynxHubString} ${chromeString} ${electronString} Safari/537.36`,
     electron: () => `${baseUA} ${chromeString} ${electronString} Safari/537.36`,
     chrome: () => `${baseUA} ${chromeString} Safari/537.36`,
-    custom: () => storageManager.getData('browser').customUserAgent,
+    custom: () => getClassHolder().storageManager.getData('browser').customUserAgent,
   };
 
   return templates[targetType]() || templates.lynxhub();

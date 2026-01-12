@@ -8,7 +8,7 @@ import RippleLoading from './Loadings/RippleLoading';
 import SimpleLoading from './Loadings/SimpleLoading';
 import ThreadsLoading from './Loadings/ThreadsLoading';
 
-rendererIpc.storage.get('app').then(({disableLoadingAnimations}) => {
+rendererIpc.others.disableLoadingAnimations().then(disableLoadingAnimations => {
   let TargetComponent = SimpleLoading;
 
   if (!disableLoadingAnimations) {

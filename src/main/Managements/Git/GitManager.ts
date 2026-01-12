@@ -17,8 +17,8 @@ import {
 import {RepositoryInfo} from '../../../cross/CrossTypes';
 import {extractGitUrl, validateGitRepoUrl} from '../../../cross/CrossUtils';
 import {ShallowCloneOptions} from '../../../cross/GitTypes';
-import {appManager} from '../../index';
 import {checkPathExists, openDialog} from '../../Utilities/Utils';
+import getClassHolder from '../ClassHolder';
 
 /** Manages Git operations such as cloning, pulling, and status checking. */
 export default class GitManager {
@@ -176,6 +176,8 @@ export default class GitManager {
   }
 
   private handleProgressUpdate = (progress: SimpleGitProgressEvent): void => {
+    const {appManager} = getClassHolder();
+
     if (this.abortController.signal.aborted) return;
     if (this.showTaskbarProgress) {
       appManager?.getMainWindow()?.setProgressBar(progress.progress / 100);
@@ -184,6 +186,8 @@ export default class GitManager {
   };
 
   private handleProgressComplete = (result?: PullResult): void => {
+    const {appManager} = getClassHolder();
+
     if (this.showTaskbarProgress) {
       appManager?.getMainWindow()?.setProgressBar(-1);
     }
@@ -192,6 +196,8 @@ export default class GitManager {
   };
 
   private onFailedProgress = (reason: string): void => {
+    const {appManager} = getClassHolder();
+
     if (this.showTaskbarProgress) {
       appManager?.getMainWindow()?.setProgressBar(-1);
     }

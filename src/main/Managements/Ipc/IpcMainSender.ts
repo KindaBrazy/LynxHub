@@ -3,9 +3,10 @@ import {ipcMain, IpcMainEvent} from 'electron';
 
 import {CustomNotificationInfo} from '../../../cross/CrossTypes';
 import {customNotifChannels} from '../../../cross/DownloadManagerTypes';
-import {appManager} from '../../index';
+import getClassHolder from '../ClassHolder';
 
 const sendIt = (channel: string, data: any) => {
+  const {appManager} = getClassHolder();
   const webContent = appManager?.getWebContent();
   if (webContent) {
     webContent.send(channel, data);

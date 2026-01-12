@@ -12,7 +12,6 @@ import {APP_NAME} from '../../../cross/CrossConstants';
 import {Get_Default_Hotkeys} from '../../../cross/HotkeyConstants';
 import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '../../../cross/IpcChannelAndTypes';
 import StorageTypes from '../../../cross/StorageTypes';
-import {appManager} from '../../index';
 import {
   getAbsolutePath,
   getExePath,
@@ -21,6 +20,7 @@ import {
   lynxEncryptString,
   lynxEncryptStrings,
 } from '../../Utilities/Utils';
+import getClassHolder from '../ClassHolder';
 import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 
 /**
@@ -489,6 +489,7 @@ class BaseStorage {
    * On Linux portable mode, closes window instead of restarting
    */
   public clearStorage(): void {
+    const {appManager} = getClassHolder();
     this.storage.data = {...this.DEFAULT_DATA};
     this.write();
     if (isPortable() === 'linux') {
@@ -502,6 +503,7 @@ class BaseStorage {
    * Writes storage data to disk and adds breadcrumb for tracking
    */
   public write() {
+    const {appManager} = getClassHolder();
     try {
       this.storage.write();
     } catch (e) {

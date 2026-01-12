@@ -485,3 +485,7 @@ export type ImageCacheStats = {
   lastCleanup: number;
   lastCleanupFormatted: string;
 };
+
+export const otherChannels = {
+  disableLoadingAnimations: 'others:disableLoadingAnimations',
+};

@@ -12,8 +12,8 @@ import {
   STATICS_FOLDER_NAME,
 } from '../../cross/CrossConstants';
 import {FolderNames} from '../../cross/CrossTypes';
-import {appManager, storageManager} from '../index';
 import {getExePath, getRelativePath, isPortable} from '../Utilities/Utils';
+import getClassHolder from './ClassHolder';
 import {changeWindowState} from './Ipc/Methods/IpcMethods';
 
 const DIRECTORIES = [PLUGINS_FOLDER_NAME, BINARIES_FOLDER_NAME, REPOSITORIES_FOLDER_NAME, STATICS_FOLDER_NAME] as const;
@@ -44,6 +44,7 @@ export function getAppDirectory(name: FolderNames): string {
 
 /** Retrieves the app data path from storage. */
 export function getAppDataPath(): string {
+  const {storageManager} = getClassHolder();
   const dataDir = storageManager.getData('app').appDataDir;
 
   if (isAbsolute(dataDir)) return dataDir;
@@ -56,6 +57,7 @@ export function getAppDataPath(): string {
  * @param targetDir - The new destination folder
  */
 function setAppDataFolder(targetDir: string): void {
+  const {storageManager, appManager} = getClassHolder();
   storageManager.updateData('app', {appDataDir: targetDir});
   if (isPortable() === 'linux') {
     changeWindowState('close');
@@ -70,6 +72,7 @@ function setAppDataFolder(targetDir: string): void {
  */
 
 export async function selectNewAppDataFolder(targetWindow?: BrowserWindow): Promise<string> {
+  const {appManager} = getClassHolder();
   const window = targetWindow || appManager?.getMainWindow();
   if (!window) {
     throw new Error('Main window is not available. Please ensure the application is properly initialized.');

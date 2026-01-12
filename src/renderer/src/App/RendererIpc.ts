@@ -20,7 +20,7 @@ import type {
 import type {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '../../../cross/DownloadManagerTypes';
 import {browserDownloadChannels, customNotifChannels} from '../../../cross/DownloadManagerTypes';
 import type {ShallowCloneOptions} from '../../../cross/GitTypes';
-import type {
+import {
   AgentTypes,
   AppUpdateEventTypes,
   AppUpdateStatus,
@@ -39,6 +39,7 @@ import type {
   LynxInput,
   OnPreCommands,
   OnUpdatingExtensions,
+  otherChannels,
   PreCommands,
   PreOpen,
   PreOpenData,
@@ -1329,6 +1330,10 @@ const rendererIpc = {
      * @returns True if the URL is a cache URL
      */
     isCacheUrl: (url: string): boolean => url.startsWith('lynxcache://'),
+  },
+
+  others: {
+    disableLoadingAnimations: (): Promise<boolean> => ipc.invoke(otherChannels.disableLoadingAnimations),
   },
 };
 

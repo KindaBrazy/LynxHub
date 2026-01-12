@@ -5,11 +5,12 @@ import {app, DownloadItem} from 'electron';
 import {download} from 'electron-dl';
 
 import {utilsChannels} from '../../../../cross/IpcChannelAndTypes';
-import {appManager} from '../../../index';
+import getClassHolder from '../../ClassHolder';
 
 let downloadingItem: DownloadItem | undefined;
 
 export function downloadFile(url: string) {
+  const {appManager} = getClassHolder();
   const window = appManager?.getMainWindow();
 
   if (!window) {

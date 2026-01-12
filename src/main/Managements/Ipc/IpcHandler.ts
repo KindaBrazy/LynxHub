@@ -34,16 +34,6 @@ import {
   winChannels,
 } from '../../../cross/IpcChannelAndTypes';
 import StorageTypes, {InstalledCard} from '../../../cross/StorageTypes';
-import {
-  appManager,
-  contextMenuManager,
-  extensionManager,
-  linkPreviewManager,
-  moduleManager,
-  pluginManager,
-  staticManager,
-  storageManager,
-} from '../../index';
 import calcFolderSize from '../../Utilities/CalculateFolderSize/CalculateFolderSize';
 import {
   getAbsolutePath,
@@ -56,6 +46,7 @@ import {
 import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../AppDataManager';
 import BrowserDownloadManager from '../BrowserDownloadManager';
 import BrowserManager from '../BrowserManager';
+import getClassHolder from '../ClassHolder';
 import GitManager from '../Git/GitManager';
 import {getImageCacheManager, ImageCacheManager} from '../ImageCacheManager';
 import {getList} from '../Plugin/PluginUtils';
@@ -107,6 +98,7 @@ import {
 import {handleGetAudioState, handleSetMuted, handleSetVolume} from './Methods/IpcMethods-Volume';
 
 function win() {
+  const {appManager, storageManager, contextMenuManager} = getClassHolder();
   // Changes window state (maximize, minimize, close, fullscreen, restart)
   ipcMain.on(winChannels.changeState, (_, state: ChangeWindowState) => changeWindowState(state));
   // Gets system dark mode preference (light/dark)
@@ -118,7 +110,7 @@ function win() {
   nativeTheme.on('updated', () => {
     if (storageManager.getData('app').darkMode === 'system') {
       appManager?.getWebContent()?.send(winChannels.onDarkMode, getSystemDarkMode());
-      contextMenuManager.getWindow()?.webContents.send(winChannels.onDarkMode, getSystemDarkMode());
+      contextMenuManager?.getWindow()?.webContents.send(winChannels.onDarkMode, getSystemDarkMode());
     }
   });
 
@@ -235,6 +227,7 @@ function utils() {
 }
 
 function modules() {
+  const {moduleManager} = getClassHolder();
   // Checks if card has available updates
   ipcMain.handle(
     modulesChannels.cardUpdateAvailable,
@@ -258,29 +251,30 @@ function modules() {
 }
 
 function plugins() {
+  const {pluginManager} = getClassHolder();
   // Gets plugin server addresses
-  ipcMain.handle(pluginChannels.getAddresses, () => pluginManager.getAddresses());
+  ipcMain.handle(pluginChannels.getAddresses, () => pluginManager?.getAddresses());
   // Gets list of installed plugins
-  ipcMain.handle(pluginChannels.getInstalledList, () => pluginManager.getInstalledList());
+  ipcMain.handle(pluginChannels.getInstalledList, () => pluginManager?.getInstalledList());
   // Gets list of unloaded plugins
-  ipcMain.handle(pluginChannels.getUnloadedList, () => pluginManager.getUnloadedList());
+  ipcMain.handle(pluginChannels.getUnloadedList, () => pluginManager?.getUnloadedList());
   // Installs plugin from URL
   ipcMain.handle(pluginChannels.install, (_, url: string, commitHash?: string) =>
-    pluginManager.install(url, commitHash),
+    pluginManager?.install(url, commitHash),
   );
   // Uninstalls plugin by ID
-  ipcMain.handle(pluginChannels.uninstall, (_, id: string) => pluginManager.uninstall(id));
+  ipcMain.handle(pluginChannels.uninstall, (_, id: string) => pluginManager?.uninstall(id));
   // Syncs plugin to specific commit
-  ipcMain.handle(pluginChannels.sync, (_, id: string, commit: string) => pluginManager.syncItem(id, commit));
+  ipcMain.handle(pluginChannels.sync, (_, id: string, commit: string) => pluginManager?.syncItem(id, commit));
   // Syncs multiple plugins to their commits
-  ipcMain.handle(pluginChannels.syncAll, (_, items: {id: string; commit: string}[]) => pluginManager.syncAll(items));
+  ipcMain.handle(pluginChannels.syncAll, (_, items: {id: string; commit: string}[]) => pluginManager?.syncAll(items));
   // Checks for available sync updates based on subscription stage
-  ipcMain.handle(pluginChannels.checkForSync, (_, stage: SubscribeStages) => pluginManager.checkForSync(stage));
+  ipcMain.handle(pluginChannels.checkForSync, (_, stage: SubscribeStages) => pluginManager?.checkForSync(stage));
   // Gets list of available plugins for subscription stage
   ipcMain.handle(pluginChannels.getList, (_, stage: SubscribeStages) => getList(stage));
   // Updates sync list entry for plugin
   ipcMain.handle(pluginChannels.updateSyncList, (_, id: string, commit: string) =>
-    pluginManager.updateSyncItem(id, commit),
+    pluginManager?.updateSyncItem(id, commit),
   );
 }
 
@@ -317,6 +311,7 @@ function appData() {
 }
 
 function storage() {
+  const {storageManager} = getClassHolder();
   // Gets custom storage data by key
   ipcMain.handle(storageChannels.getCustom, (_, key: string) => storageManager.getCustomData(key));
   // Sets custom storage data by key
@@ -340,6 +335,7 @@ function storage() {
 }
 
 function storageUtilsIpc() {
+  const {storageManager} = getClassHolder();
   // Sets app to start with system startup
   ipcMain.on(storageUtilsChannels.setSystemStartup, (_, startup: boolean) => {
     app.setLoginItemSettings({openAtLogin: startup});
@@ -467,11 +463,12 @@ function storageUtilsIpc() {
 }
 
 function modulesIpc() {
+  const {moduleManager} = getClassHolder();
   moduleManager?.listenForChannels();
 }
 
 function extensionsIpc() {
-  extensionManager.listenForChannels();
+  getClassHolder().extensionManager?.listenForChannels();
 }
 
 function modulesApi() {
@@ -497,6 +494,8 @@ export function resetBrowserIPC() {
 }
 
 export function browserIPC() {
+  const {appManager, contextMenuManager} = getClassHolder();
+
   // Prevent registering handlers multiple times
   if (browserIPCInitialized) {
     console.warn('browserIPC already initialized, skipping...');
@@ -517,7 +516,7 @@ export function browserIPC() {
   const browserManager: BrowserManager = new BrowserManager(mainWindow);
   new BrowserDownloadManager(browserManager.getSession(), mainWindow);
 
-  contextMenuManager.listenForBrowserChannels(browserManager);
+  contextMenuManager?.listenForBrowserChannels(browserManager);
 
   // Creates new browser webview instance
   ipcMain.on(browserChannels.createBrowser, (_, id: string) => browserManager.createBrowser(id));
@@ -603,22 +602,24 @@ export function browserIPC() {
 }
 
 function statics() {
+  const {staticManager} = getClassHolder();
+
   // Pulls latest static data from server
-  ipcMain.handle(staticsChannels.pull, () => staticManager.pull());
+  ipcMain.handle(staticsChannels.pull, () => staticManager?.pull());
   // Gets app release information
-  ipcMain.handle(staticsChannels.getReleases, () => staticManager.getReleases());
+  ipcMain.handle(staticsChannels.getReleases, () => staticManager?.getReleases());
   // Gets insider build information
-  ipcMain.handle(staticsChannels.getInsider, () => staticManager.getInsider());
+  ipcMain.handle(staticsChannels.getInsider, () => staticManager?.getInsider());
   // Gets notification data
-  ipcMain.handle(staticsChannels.getNotification, () => staticManager.getNotification());
+  ipcMain.handle(staticsChannels.getNotification, () => staticManager?.getNotification());
   // Gets available modules list
-  ipcMain.handle(staticsChannels.getModules, () => staticManager.getModules());
+  ipcMain.handle(staticsChannels.getModules, () => staticManager?.getModules());
   // Gets available extensions list
-  ipcMain.handle(staticsChannels.getExtensions, () => staticManager.getExtensions());
+  ipcMain.handle(staticsChannels.getExtensions, () => staticManager?.getExtensions());
   // Gets early access extensions list
-  ipcMain.handle(staticsChannels.getExtensionsEA, () => staticManager.getExtensionsEA());
+  ipcMain.handle(staticsChannels.getExtensionsEA, () => staticManager?.getExtensionsEA());
   // Gets Patreon supporters list
-  ipcMain.handle(staticsChannels.getPatrons, () => staticManager.getPatrons());
+  ipcMain.handle(staticsChannels.getPatrons, () => staticManager?.getPatrons());
 }
 
 function imageCache() {
@@ -663,7 +664,7 @@ function formatBytes(bytes: number): string {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
 }
 
-export function listenToAllChannels() {
+export function listenToIpcChannels() {
   appData();
   storage();
   storageUtilsIpc();
@@ -685,8 +686,9 @@ export function listenToAllChannels() {
 
   plugins();
 
-  contextMenuManager.listenForContextChannels();
-  linkPreviewManager.listenForChannels();
+  const {contextMenuManager, linkPreviewManager} = getClassHolder();
+  contextMenuManager?.listenForContextChannels();
+  linkPreviewManager?.listenForChannels();
 
   statics();
   imageCache();
