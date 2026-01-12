@@ -14,8 +14,8 @@ import {
   UnloadedPlugins,
   ValidatedPlugins,
 } from '../../../cross/plugin/PluginTypes';
-import {appManager, staticManager} from '../../index';
 import {getAppDirectory} from '../AppDataManager';
+import getClassHolder from '../ClassHolder';
 import {setupGitManagerListeners} from '../Git/GitHelper';
 import GitManager from '../Git/GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
@@ -56,6 +56,7 @@ export class PluginManager {
   }
 
   private async readPlugin() {
+    const {staticManager} = getClassHolder();
     return new Promise<void>(async resolve => {
       try {
         // Ensure plugin directory exists before reading
@@ -83,7 +84,7 @@ export class PluginManager {
         const extensionFolder: string[] = [];
 
         for (const validItem of validFolders) {
-          const metadata = await staticManager.getPluginMetadataById(validItem.folder);
+          const metadata = await staticManager?.getPluginMetadataById(validItem.folder);
           if (!metadata) continue;
           if (metadata.type === 'module') {
             moduleFolders.push(join(this.pluginPath, validItem.folder));
@@ -104,6 +105,7 @@ export class PluginManager {
   }
 
   private async setInstalledPlugins(folders: string[]) {
+    const {staticManager} = getClassHolder();
     for (const folder of folders) {
       try {
         const targetDir = join(this.pluginPath, folder);
@@ -114,7 +116,7 @@ export class PluginManager {
         const currentCommit = await gitManager.getCurrentCommitHash(targetDir);
         if (!currentCommit) continue;
 
-        const id = await staticManager.getPluginIdByRepositoryUrl(remoteUrl);
+        const id = await staticManager?.getPluginIdByRepositoryUrl(remoteUrl);
         if (!id) continue;
 
         const version = await getVersionByCommit(id, currentCommit);
@@ -148,9 +150,10 @@ export class PluginManager {
   }
 
   public async install(url: string, commitHash?: string) {
+    const {staticManager} = getClassHolder();
     return new Promise<boolean>(async resolve => {
       let targetCommit: string | undefined = undefined;
-      const id = await staticManager.getPluginIdByRepositoryUrl(url);
+      const id = await staticManager?.getPluginIdByRepositoryUrl(url);
 
       if (id) {
         if (commitHash) {
@@ -260,7 +263,8 @@ export class PluginManager {
   }
 
   public async updateSyncItem(id: string, commit: string) {
-    const versioning = await staticManager.getPluginVersioningById(id);
+    const {staticManager} = getClassHolder();
+    const versioning = await staticManager?.getPluginVersioningById(id);
     if (!versioning) return;
 
     const targetDir = this.getDirById(id);
@@ -306,6 +310,7 @@ export class PluginManager {
   }
 
   private syncList_noticeRenderer() {
+    const {appManager} = getClassHolder();
     appManager?.getWebContent()?.send(pluginChannels.onSyncAvailable, this.syncAvailable);
   }
 
@@ -331,6 +336,7 @@ export class PluginManager {
   }
 
   private async validatePluginFolders(folderPaths: string[]): Promise<ValidatedPlugins> {
+    const {staticManager} = getClassHolder();
     const validatedFolders: ValidatedPlugins = [];
 
     for (const folder of folderPaths) {
@@ -343,7 +349,7 @@ export class PluginManager {
       } else {
         const dir = join(this.pluginPath, folder);
         const scriptsFolder = join(dir, 'scripts');
-        const metadata = await staticManager.getPluginMetadataById(folder);
+        const metadata = await staticManager?.getPluginMetadataById(folder);
 
         if (!metadata) {
           this.skipped.push({
@@ -383,6 +389,7 @@ export class PluginManager {
   }
 
   public async migrate() {
+    const {staticManager} = getClassHolder();
     const targetModuleDir = join(dirname(this.pluginPath), pluginFolders.module.oldFolder);
     const targetExtensionDir = join(dirname(this.pluginPath), pluginFolders.extension.oldFolder);
 
@@ -393,7 +400,7 @@ export class PluginManager {
 
     // Reinstall in the new way
     for (const url of oldInstallations) {
-      const id = await staticManager.getPluginIdByRepositoryUrl(url);
+      const id = await staticManager?.getPluginIdByRepositoryUrl(url);
       if (!id) continue;
 
       const targetCommit = await getCommitByAppStage(id);

@@ -9,14 +9,16 @@ import {promises, readdir} from 'graceful-fs';
 
 import {FolderListData} from '../../../../cross/CrossTypes';
 import {ChangeWindowState, DarkModeTypes, TaskbarStatus, winChannels} from '../../../../cross/IpcChannelAndTypes';
-import {appManager, contextMenuManager, storageManager, trayManager} from '../../../index';
 import {getSystemDarkMode} from '../../../Utilities/Utils';
+import getClassHolder from '../../ClassHolder';
 
 /**
  * Changes the state of the main window based on the provided action.
  * @param state - The desired window state change.
  */
 export function changeWindowState(state: ChangeWindowState): void {
+  const {appManager, storageManager, trayManager} = getClassHolder();
+
   const mainWindow = appManager?.getMainWindow();
   if (!mainWindow) return;
 
@@ -45,11 +47,13 @@ export function changeWindowState(state: ChangeWindowState): void {
  * @param darkMode - The dark mode setting to apply.
  */
 export function setDarkMode(darkMode: DarkModeTypes): void {
+  const {appManager, storageManager, contextMenuManager} = getClassHolder();
+
   if (darkMode === 'system') {
     appManager?.getWebContent()?.send(winChannels.onDarkMode, getSystemDarkMode());
-    contextMenuManager.getWindow()?.webContents?.send(winChannels.onDarkMode, getSystemDarkMode());
+    contextMenuManager?.getWindow()?.webContents?.send(winChannels.onDarkMode, getSystemDarkMode());
   } else {
-    contextMenuManager.getWindow()?.webContents?.send(winChannels.onDarkMode, darkMode);
+    contextMenuManager?.getWindow()?.webContents?.send(winChannels.onDarkMode, darkMode);
   }
   storageManager.updateData('app', {darkMode});
 }
@@ -59,6 +63,8 @@ export function setDarkMode(darkMode: DarkModeTypes): void {
  * @param status - The desired taskbar status.
  */
 export function setTaskbarStatus(status: TaskbarStatus): void {
+  const {appManager, trayManager, storageManager} = getClassHolder();
+
   const mainWindow = appManager?.getMainWindow();
   if (!mainWindow) return;
 
@@ -128,6 +134,8 @@ export async function removeDir(dir: string): Promise<void> {
  * @throws An error if the file operation fails.
  */
 export async function saveToFile(content: string): Promise<string | null> {
+  const {appManager} = getClassHolder();
+
   try {
     const mainWindow = appManager?.getMainWindow();
 

@@ -5,8 +5,8 @@ import {promisify} from 'node:util';
 
 import path from 'path';
 
-import {appManager} from '../../index';
 import {getAppDirectory} from '../../Managements/AppDataManager';
+import getClassHolder from '../../Managements/ClassHolder';
 
 const execPromise = promisify(exec);
 
@@ -36,6 +36,7 @@ function processDuOutput(stdout: string): number {
  * @throws Will throw an error if the command execution fails.
  */
 export default async function calcFolderSize(target: string): Promise<number> {
+  const {appManager} = getClassHolder();
   // Check if the target path exists and is a directory
   try {
     const stats = await stat(target);

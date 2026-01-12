@@ -12,8 +12,8 @@ import {
   tabsChannels,
   winChannels,
 } from '../../cross/IpcChannelAndTypes';
-import {contextMenuManager, linkPreviewManager, storageManager, trayManager} from '../index';
 import {getUserAgent, getWindowColor, RelaunchApp} from '../Utilities/Utils';
+import getClassHolder from './ClassHolder';
 import RegisterHotkeys from './HotkeysManager';
 
 /**
@@ -24,8 +24,6 @@ export default class ElectronAppManager {
   public onReadyToShow?: () => void;
 
   private mainWindow?: BrowserWindow;
-  private loadingWindow?: BrowserWindow;
-  private isLoading?: boolean;
 
   private static readonly MAIN_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
     frame: false,
@@ -34,22 +32,6 @@ export default class ElectronAppManager {
     height: 768,
     minWidth: 800,
     minHeight: 560,
-    icon,
-    webPreferences: {
-      preload: path.join(__dirname, '../preload/index.cjs'),
-      sandbox: false,
-    },
-  };
-
-  private static readonly LOADING_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
-    frame: false,
-    show: false,
-    width: 307,
-    height: 350,
-    resizable: false,
-    maximizable: false,
-    minimizable: false,
-    titleBarStyle: process.platform === 'darwin' ? 'customButtonsOnHover' : 'default',
     icon,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
@@ -82,29 +64,9 @@ export default class ElectronAppManager {
     this.getWebContent()?.send(appWindowChannels.showToast, message, type, placement);
   }
 
-  /** Creates and configures the loading window. */
-  private createLoadingWindow(): void {
-    this.loadingWindow = new BrowserWindow(ElectronAppManager.LOADING_WINDOW_CONFIG);
-    this.loadingWindow.setBackgroundColor(getWindowColor());
-
-    this.setupLoadingWindowEventListeners();
-    this.loadAppropriateURL(this.loadingWindow, 'loading.html');
-  }
-
-  /** Sets up event listeners for the loading window. */
-  private setupLoadingWindowEventListeners(): void {
-    this.loadingWindow?.on('close', () => {
-      this.loadingWindow = undefined;
-    });
-
-    this.loadingWindow?.on('ready-to-show', () => {
-      this.loadingWindow?.show();
-      this.isLoading = true;
-    });
-  }
-
   /** Creates and configures the main application window. */
   private createMainWindow(): void {
+    const {contextMenuManager, linkPreviewManager} = getClassHolder();
     this.mainWindow = new BrowserWindow(ElectronAppManager.MAIN_WINDOW_CONFIG);
     this.mainWindow.setBackgroundColor(getWindowColor());
 
@@ -113,8 +75,8 @@ export default class ElectronAppManager {
     this.setupMainWindowEventListeners();
     this.loadAppropriateURL(this.mainWindow, 'index.html');
     this.onCreateWindow?.();
-    contextMenuManager.createWindow(this.mainWindow);
-    linkPreviewManager.createWindow(this.mainWindow);
+    contextMenuManager?.createWindow(this.mainWindow);
+    linkPreviewManager?.createWindow(this.mainWindow);
   }
 
   /** Sets up event listeners for the main window. */
@@ -122,12 +84,12 @@ export default class ElectronAppManager {
     this.getMainWindow()?.once('ready-to-show', () => {
       this.getWebContent()?.setUserAgent(getUserAgent());
       setTimeout(() => {
-        this.loadingWindow?.close();
         this.onReadyToShow?.();
       }, 2000);
     });
 
     this.getWebContent()?.setWindowOpenHandler(({url, disposition}) => {
+      const {storageManager} = getClassHolder();
       const openExternal = storageManager.getData('app').openLinkExternal;
       if (openExternal) {
         shell.openExternal(url);
@@ -191,6 +153,7 @@ export default class ElectronAppManager {
 
   /** Handles the minimized event for the main window. */
   private handleMinimize = (): void => {
+    const {storageManager, trayManager} = getClassHolder();
     if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
       trayManager?.createTrayIcon();
       if (platform() === 'linux') {
@@ -205,6 +168,7 @@ export default class ElectronAppManager {
 
   /** Handles the focus event for the main window. */
   private handleFocus = (): void => {
+    const {storageManager, trayManager} = getClassHolder();
     if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
       trayManager?.destroyTrayIcon();
       if (platform() === 'win32') {
@@ -228,33 +192,12 @@ export default class ElectronAppManager {
     }
   }
 
-  /** Sets up global application event listeners. */
-  private setupAppEventListeners(): void {
-    app.on('window-all-closed', () => {
-      if (process.platform !== 'darwin') {
-        app.quit();
-      }
-    });
-  }
-
   /** Restarts the application. */
   public restart(): void {
     RelaunchApp();
   }
 
-  /** Creates and initializes the application windows. */
-  public startLoading(): void {
-    this.createLoadingWindow();
-    this.setupAppEventListeners();
-  }
-
   public startApp(): void {
-    if (this.isLoading) {
-      this.createMainWindow();
-    } else {
-      setTimeout(() => {
-        this.startApp();
-      }, 300);
-    }
+    this.createMainWindow();
   }
 }

@@ -16,7 +16,6 @@ import {
   storageUtilsChannels,
 } from '../../../cross/IpcChannelAndTypes';
 import {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
-import {appManager, cardsValidator, moduleManager} from '../../index';
 import {
   getAbsolutePath,
   getExePath,
@@ -27,6 +26,7 @@ import {
   lynxEncryptString,
   lynxEncryptStrings,
 } from '../../Utilities/Utils';
+import getClassHolder from '../ClassHolder';
 import BaseStorage from './BaseStorage';
 
 /**
@@ -48,6 +48,7 @@ class StorageManager extends BaseStorage {
     cardId: string,
     channel: string,
   ): void {
+    const {appManager} = getClassHolder();
     const currentArray = this.getData('cards')[arrayKey];
     if (lodash.includes(currentArray, cardId)) return;
 
@@ -64,6 +65,7 @@ class StorageManager extends BaseStorage {
     cardId: string,
     channel: string,
   ): void {
+    const {appManager} = getClassHolder();
     const currentArray = this.getData('cards')[arrayKey];
     const updatedArray = currentArray.filter(id => id !== cardId);
     this.updateData('cards', {[arrayKey]: updatedArray});
@@ -187,6 +189,7 @@ class StorageManager extends BaseStorage {
    * Gets card arguments, loading from module if not cached
    */
   public async getCardArgumentsById(cardId: string) {
+    const {moduleManager} = getClassHolder();
     const args = this.getArgs(cardId);
     if (args) return args;
 
@@ -201,6 +204,7 @@ class StorageManager extends BaseStorage {
   }
 
   public async setCardArguments(cardId: string, args: ChosenArgumentsData) {
+    const {moduleManager} = getClassHolder();
     this.setArgs(cardId, args);
 
     const result = args.data.find(arg => arg.preset === args.activePreset)?.arguments || [];
@@ -209,6 +213,7 @@ class StorageManager extends BaseStorage {
   }
 
   public addInstalledCard(card: InstalledCard) {
+    const {appManager, cardsValidator} = getClassHolder();
     const storedCards = this.getData('cards').installedCards;
 
     const cardExists = storedCards.some(c => c.id === card.id);
@@ -227,6 +232,7 @@ class StorageManager extends BaseStorage {
   }
 
   public removeInstalledCard(id: string) {
+    const {appManager, cardsValidator} = getClassHolder();
     const storedCards = this.getData('cards').installedCards;
 
     const installedCards = storedCards.filter(card => card.id !== id);
@@ -238,6 +244,7 @@ class StorageManager extends BaseStorage {
   }
 
   public removeInstalledCardByPath(dir: string) {
+    const {appManager} = getClassHolder();
     const installedCards = this.getData('cards').installedCards.filter(
       card => getAbsolutePath(getExePath(), card.dir || '') !== getAbsolutePath(getExePath(), dir),
     );
@@ -270,6 +277,7 @@ class StorageManager extends BaseStorage {
   }
 
   public pinnedCardsOpt(opt: StorageOperation, id: string, pinnedCards?: string[]) {
+    const {appManager} = getClassHolder();
     let result: string[] = [];
 
     switch (opt) {
@@ -295,6 +303,7 @@ class StorageManager extends BaseStorage {
   }
 
   public updateRecentlyUsedCards(id: string) {
+    const {appManager} = getClassHolder();
     const newArray = lodash.without(this.getData('cards').recentlyUsedCards, id);
     // Add the id to the beginning of the array
     newArray.unshift(id);
@@ -323,6 +332,7 @@ class StorageManager extends BaseStorage {
   }
 
   public setHomeCategory(data: string[]) {
+    const {appManager} = getClassHolder();
     this.updateData('app', {homeCategory: data});
     appManager?.getWebContent()?.send(storageUtilsChannels.onHomeCategory, data);
   }
@@ -344,6 +354,7 @@ class StorageManager extends BaseStorage {
   }
 
   public addPreCommand(cardId: string, command: string): void {
+    const {appManager} = getClassHolder();
     const preCommands = this.getData('cardsConfig').preCommands;
     const {item} = this.findOrCreateCardConfig(preCommands, cardId, () => ({cardId, data: []}));
 
@@ -361,6 +372,7 @@ class StorageManager extends BaseStorage {
   }
 
   public removePreCommand(cardId: string, index: number): void {
+    const {appManager} = getClassHolder();
     const preCommands = this.getData('cardsConfig').preCommands;
     const indexFound = preCommands.findIndex(item => item.cardId === cardId);
 
@@ -399,6 +411,7 @@ class StorageManager extends BaseStorage {
   }
 
   public addCustomRun(cardId: string, command: string): void {
+    const {appManager} = getClassHolder();
     const customRun = this.getData('cardsConfig').customRun;
     const {item} = this.findOrCreateCardConfig(customRun, cardId, () => ({cardId, data: []}));
 
@@ -416,6 +429,7 @@ class StorageManager extends BaseStorage {
   }
 
   public removeCustomRun(cardId: string, index: number): void {
+    const {appManager} = getClassHolder();
     const customRun = this.getData('cardsConfig').customRun;
     const indexFound = customRun.findIndex(item => item.cardId === cardId);
 
@@ -542,6 +556,7 @@ class StorageManager extends BaseStorage {
    * Preserves previous bounds if window is maximized
    */
   public updateLastSize() {
+    const {appManager} = getClassHolder();
     const isMaximized = appManager?.getMainWindow()?.isMaximized() || false;
     const bounds = appManager?.getMainWindow()?.getBounds();
 
@@ -662,6 +677,7 @@ class StorageManager extends BaseStorage {
   }
 
   public setShowConfirm(type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) {
+    const {appManager} = getClassHolder();
     const prevState = this.getData('app');
     prevState[type] = enable;
 

@@ -115,7 +115,7 @@ export const usePatreon = () => {
         dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
         dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
       })
-      .catch(console.info);
+      .catch(() => {});
 
     const offReleaseChannel = rendererIpc.patreon.onReleaseChannel((_, stage) =>
       dispatch(userActions.setUpdateChannel(stage)),
