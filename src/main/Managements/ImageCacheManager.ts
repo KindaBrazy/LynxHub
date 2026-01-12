@@ -6,6 +6,7 @@ import {join} from 'node:path';
 import {net, protocol} from 'electron';
 
 import {getAppDataPath} from './AppDataManager';
+import classHolder from './ClassHolder';
 
 /** Cache folder name inside LynxHub documents folder */
 const CACHE_FOLDER_NAME = '.cache';
@@ -613,8 +614,12 @@ export class ImageCacheManager {
       await this.saveMetadata();
     }
 
-    // Fetch and cache
-    return this.fetchAndCache(url, hash);
+    if (classHolder.isOnline) {
+      // Fetch and cache
+      return this.fetchAndCache(url, hash);
+    } else {
+      return new Response('Connection is offline', {status: 403});
+    }
   }
 
   /** Returns cache statistics */
