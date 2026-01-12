@@ -1,3 +1,8 @@
+import axios from 'axios';
+import {app} from 'electron';
+
+import {toMs} from '../../cross/CrossUtils';
+import {otherChannels} from '../../cross/IpcChannelAndTypes';
 import ContextMenuManager from './ContextMenuManager';
 import {ValidateCards} from './DataValidator';
 import ElectronAppManager from './ElectronAppManager';
@@ -24,10 +29,41 @@ class ClassHolder {
   private _linkPreviewManager?: LinkPreviewManager;
 
   private readonly _appStartTime: number;
+  private _isOnline: boolean = true;
+  private isOnlineInterval: NodeJS.Timeout | undefined = undefined;
 
   constructor() {
     this._storageManager = new StorageManager();
     this._appStartTime = Date.now();
+    this.checkOnline();
+  }
+
+  private async checkOnline() {
+    const setResult = isOnline => {
+      this.isOnline = isOnline;
+      if (this.appManager) {
+        const webContent = this.appManager.getWebContent();
+        if (webContent && !webContent.isDestroyed()) webContent.send(otherChannels.onOnline, isOnline);
+      }
+    };
+    const checkStatus = () => {
+      axios
+        .request({url: 'https://google.com', timeout: 4000})
+        .then(response => {
+          setResult(response.statusText.toLowerCase() === 'ok');
+        })
+        .catch(_ => {
+          setResult(false);
+        });
+    };
+
+    checkStatus();
+    this.isOnlineInterval = setInterval(checkStatus, toMs(5, 'seconds'));
+
+    app.on('before-quit', () => {
+      clearInterval(this.isOnlineInterval);
+      this.isOnlineInterval = undefined;
+    });
   }
 
   public async initializeManagers() {
@@ -57,11 +93,11 @@ class ClassHolder {
   }
 
   // ----------------> Setters
-  private set appManager(appManager: ClassHolder['_appManager']) {
-    this._appManager = appManager;
+  private set appManager(value: ClassHolder['_appManager']) {
+    this._appManager = value;
   }
-  private set trayManager(trayManager: ClassHolder['_trayManager']) {
-    this._trayManager = trayManager;
+  private set trayManager(value: ClassHolder['_trayManager']) {
+    this._trayManager = value;
   }
   private set cardsValidator(value: ClassHolder['_cardsValidator']) {
     this._cardsValidator = value;
@@ -72,17 +108,20 @@ class ClassHolder {
   private set linkPreviewManager(value: ClassHolder['_linkPreviewManager']) {
     this._linkPreviewManager = value;
   }
-  private set moduleManager(moduleManager: ClassHolder['_moduleManager']) {
-    this._moduleManager = moduleManager;
+  private set moduleManager(value: ClassHolder['_moduleManager']) {
+    this._moduleManager = value;
   }
-  private set extensionManager(extensionManager: ClassHolder['_extensionManager']) {
-    this._extensionManager = extensionManager;
+  private set extensionManager(value: ClassHolder['_extensionManager']) {
+    this._extensionManager = value;
   }
-  private set pluginManager(pluginManager: ClassHolder['_pluginManager']) {
-    this._pluginManager = pluginManager;
+  private set pluginManager(value: ClassHolder['_pluginManager']) {
+    this._pluginManager = value;
   }
-  private set staticManager(pluginManager: ClassHolder['_staticManager']) {
-    this._staticManager = pluginManager;
+  private set staticManager(value: ClassHolder['_staticManager']) {
+    this._staticManager = value;
+  }
+  private set isOnline(value: ClassHolder['_isOnline']) {
+    this._isOnline = value;
   }
 
   // ----------------> Getters
@@ -118,6 +157,9 @@ class ClassHolder {
   }
   get linkPreviewManager() {
     return this._linkPreviewManager;
+  }
+  get isOnline(): boolean {
+    return this._isOnline;
   }
 }
 

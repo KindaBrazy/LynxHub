@@ -488,4 +488,5 @@ export type ImageCacheStats = {
 
 export const otherChannels = {
   disableLoadingAnimations: 'others:disableLoadingAnimations',
+  onOnline: 'others:onOnline',
 };
