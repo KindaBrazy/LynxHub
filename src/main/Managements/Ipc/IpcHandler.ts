@@ -48,7 +48,7 @@ import BrowserDownloadManager from '../BrowserDownloadManager';
 import BrowserManager from '../BrowserManager';
 import classHolder from '../ClassHolder';
 import GitManager from '../Git/GitManager';
-import {getImageCacheManager, ImageCacheManager} from '../ImageCacheManager';
+import {getImageCacheManager} from '../ImageCacheManager';
 import {getList} from '../Plugin/PluginUtils';
 import {
   changeWindowState,
@@ -647,11 +647,6 @@ function imageCache() {
   ipcMain.handle(imageCacheChannels.triggerCleanup, async () => {
     await cacheManager.triggerCleanup();
     return {success: true};
-  });
-
-  // Converts a URL to a cache URL (lynxcache://fetch/...)
-  ipcMain.handle(imageCacheChannels.getCacheUrl, (_, url: string) => {
-    return ImageCacheManager.getCacheUrl(url);
   });
 }
 

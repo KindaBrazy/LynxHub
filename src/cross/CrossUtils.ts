@@ -396,3 +396,14 @@ export function isWin() {
   // Fallback (shouldn't happen in Electron)
   return true;
 }
+
+/**
+ * Generates a cache URL for a given image URL.
+ * Use this URL in img src to load images through the cache.
+ * @param url - The original image URL
+ * @returns The cache protocol URL
+ */
+export function getCacheUrl(url: string | undefined): string | undefined {
+  if (!url) return undefined;
+  return `lynxcache://fetch/${encodeURIComponent(url)}`;
+}
