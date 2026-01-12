@@ -1,10 +1,9 @@
 import {useCallback, useMemo, useState} from 'react';
 
 import {MAIN_MODULE_URL} from '../../../../../../cross/CrossConstants';
+import {isWin} from '../../../../../../cross/CrossUtils';
 import rendererIpc from '../../../RendererIpc';
 import {RowData} from '../types';
-
-const isWin = window.osPlatform === 'win32';
 
 type Statuses = {
   git: RowData;
@@ -15,7 +14,7 @@ type Statuses = {
 export default function useRequirementChecks() {
   const [statuses, setStatuses] = useState<Statuses>({
     git: {result: 'unknown'},
-    pwsh: {result: isWin ? 'unknown' : 'ok'}, // Skip on non-windows
+    pwsh: {result: isWin() ? 'unknown' : 'ok'}, // Skip on non-windows
     appModule: {result: 'unknown'},
   });
 
@@ -40,7 +39,7 @@ export default function useRequirementChecks() {
   }, []);
 
   const checkPwsh = useCallback(async () => {
-    if (!isWin) return true;
+    if (!isWin()) return true;
     updateStatus('pwsh', {result: 'checking'});
     try {
       const result = await rendererIpc.init.checkPwsh7Installed();

@@ -2,6 +2,7 @@ import {Button, ButtonGroup, Input} from '@heroui/react';
 import {OpenDialogOptions} from 'electron';
 import {useCallback, useEffect, useRef, useState} from 'react';
 
+import {isWin} from '../../../../../cross/CrossUtils';
 import {Folder_Icon} from '../../../assets/icons/SvgIcons/SvgIcons';
 import rendererIpc from '../../RendererIpc';
 
@@ -45,8 +46,7 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
   const chooseDirectory = useCallback(() => {
     rendererIpc.file.openDlg(dialogType).then(result => {
       if (result && inputRef.current) {
-        const isWin = window.osPlatform === 'win32';
-        const resultDir = extraFolder ? `${result}${isWin ? '\\' : '/'}${extraFolder}` : result;
+        const resultDir = extraFolder ? `${result}${isWin() ? '\\' : '/'}${extraFolder}` : result;
         setDirectory(resultDir);
         inputRef.current.value = resultDir;
       }
