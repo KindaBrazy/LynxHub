@@ -115,7 +115,8 @@ export default class GitManager {
    * @returns A promise that resolves to true if updates are available, false otherwise.
    */
   public static async isUpdateAvailable(repoDir: string | undefined): Promise<boolean> {
-    if (!repoDir) return false;
+    if (!repoDir || !classHolder.isOnline) return false;
+
     try {
       const status: StatusResult = await simpleGit(path.resolve(repoDir)).remote(['update']).status();
       return status.behind > 0;
