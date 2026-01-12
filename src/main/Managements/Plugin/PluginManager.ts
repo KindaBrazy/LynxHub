@@ -15,7 +15,7 @@ import {
   ValidatedPlugins,
 } from '../../../cross/plugin/PluginTypes';
 import {getAppDirectory} from '../AppDataManager';
-import getClassHolder from '../ClassHolder';
+import classHolder from '../ClassHolder';
 import {setupGitManagerListeners} from '../Git/GitHelper';
 import GitManager from '../Git/GitManager';
 import {removeDir} from '../Ipc/Methods/IpcMethods';
@@ -56,7 +56,7 @@ export class PluginManager {
   }
 
   private async readPlugin() {
-    const {staticManager} = getClassHolder();
+    const {staticManager} = classHolder;
     return new Promise<void>(async resolve => {
       try {
         // Ensure plugin directory exists before reading
@@ -105,7 +105,7 @@ export class PluginManager {
   }
 
   private async setInstalledPlugins(folders: string[]) {
-    const {staticManager} = getClassHolder();
+    const {staticManager} = classHolder;
     for (const folder of folders) {
       try {
         const targetDir = join(this.pluginPath, folder);
@@ -150,7 +150,7 @@ export class PluginManager {
   }
 
   public async install(url: string, commitHash?: string) {
-    const {staticManager} = getClassHolder();
+    const {staticManager} = classHolder;
     return new Promise<boolean>(async resolve => {
       let targetCommit: string | undefined = undefined;
       const id = await staticManager?.getPluginIdByRepositoryUrl(url);
@@ -263,7 +263,7 @@ export class PluginManager {
   }
 
   public async updateSyncItem(id: string, commit: string) {
-    const {staticManager} = getClassHolder();
+    const {staticManager} = classHolder;
     const versioning = await staticManager?.getPluginVersioningById(id);
     if (!versioning) return;
 
@@ -310,7 +310,7 @@ export class PluginManager {
   }
 
   private syncList_noticeRenderer() {
-    const {appManager} = getClassHolder();
+    const {appManager} = classHolder;
     appManager?.getWebContent()?.send(pluginChannels.onSyncAvailable, this.syncAvailable);
   }
 
@@ -336,7 +336,7 @@ export class PluginManager {
   }
 
   private async validatePluginFolders(folderPaths: string[]): Promise<ValidatedPlugins> {
-    const {staticManager} = getClassHolder();
+    const {staticManager} = classHolder;
     const validatedFolders: ValidatedPlugins = [];
 
     for (const folder of folderPaths) {
@@ -389,7 +389,7 @@ export class PluginManager {
   }
 
   public async migrate() {
-    const {staticManager} = getClassHolder();
+    const {staticManager} = classHolder;
     const targetModuleDir = join(dirname(this.pluginPath), pluginFolders.module.oldFolder);
     const targetExtensionDir = join(dirname(this.pluginPath), pluginFolders.extension.oldFolder);
 

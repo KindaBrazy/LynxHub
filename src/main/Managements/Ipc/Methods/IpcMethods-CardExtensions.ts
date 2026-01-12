@@ -6,7 +6,7 @@ import {compact} from 'lodash';
 
 import {ExtensionsData, ExtensionsUpdateStatus, utilsChannels} from '../../../../cross/IpcChannelAndTypes';
 import {calculateFolderSize} from '../../../Utilities/Utils';
-import getClassHolder from '../../ClassHolder';
+import classHolder from '../../ClassHolder';
 import GitManager from '../../Git/GitManager';
 
 let loadingExtensions = false;
@@ -145,7 +145,7 @@ export async function disableExtension(disable: boolean, dir: string): Promise<s
 }
 
 export async function updateAllExtensions(data: {id: string; dir: string}) {
-  const {appManager} = getClassHolder();
+  const {appManager} = classHolder;
 
   const directories = await getRepoDirectories(path.resolve(data.dir));
 

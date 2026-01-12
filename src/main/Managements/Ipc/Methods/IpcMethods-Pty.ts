@@ -5,7 +5,7 @@ import {app, shell} from 'electron';
 import {isArray, isEmpty, isNil} from 'lodash';
 
 import {getAbsolutePath, getExePath, isPortable} from '../../../Utilities/Utils';
-import getClassHolder from '../../ClassHolder';
+import classHolder from '../../ClassHolder';
 import PtyManager from '../../PtyManager';
 
 /**
@@ -13,7 +13,7 @@ import PtyManager from '../../PtyManager';
  * Shows user-friendly error message if terminal creation fails.
  */
 function createPtyManager(id: string, dir: string, useConpty: boolean): PtyManager | null {
-  const {appManager} = getClassHolder();
+  const {appManager} = classHolder;
   try {
     return new PtyManager(id, dir, useConpty);
   } catch (error) {
@@ -57,7 +57,7 @@ function runMultiCommand(id: string, commands: string[]): void {
 }
 
 function getExtPreCommands(id: string) {
-  const {storageManager} = getClassHolder();
+  const {storageManager} = classHolder;
   return storageManager.getData('cards').cardTerminalPreCommands.find(command => command.id === id)?.commands || [];
 }
 
@@ -66,7 +66,7 @@ function getExtPreCommands(id: string) {
  * @param cardId - The ID of the card.
  */
 function runPreOpen(cardId: string): void {
-  const {storageManager} = getClassHolder();
+  const {storageManager} = classHolder;
   const preOpens = storageManager.getPreOpenById(cardId);
   if (preOpens) {
     preOpens.data.forEach(toOpen => shell.openPath(toOpen.path));
@@ -136,7 +136,7 @@ export async function customPtyCommands(id: string, commands?: string | string[]
  * @param cardId - The ID of the card.
  */
 export async function ptyProcess(id: string, cardId: string) {
-  const {storageManager, moduleManager} = getClassHolder();
+  const {storageManager, moduleManager} = classHolder;
   const card = storageManager.getData('cards').installedCards.find(card => card.id === cardId);
   if (!card) return;
 

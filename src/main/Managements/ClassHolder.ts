@@ -121,15 +121,4 @@ class ClassHolder {
   }
 }
 
-let classHolder: ClassHolder | undefined = undefined;
-let initialized = false;
-export let isStorageReady = false;
-
-export default function getClassHolder() {
-  if (initialized) return classHolder!;
-
-  initialized = true;
-  classHolder = new ClassHolder();
-  isStorageReady = true;
-  return classHolder;
-}
+export default new ClassHolder();

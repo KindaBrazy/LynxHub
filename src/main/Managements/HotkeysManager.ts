@@ -1,7 +1,7 @@
 import {Event, Input, WebContents} from 'electron';
 
 import {appWindowChannels, LynxInput} from '../../cross/IpcChannelAndTypes';
-import getClassHolder from './ClassHolder';
+import classHolder from './ClassHolder';
 
 const initialKeys: LynxInput = {
   control: false,
@@ -34,7 +34,7 @@ function sendToRenderer(input: LynxInput) {
   prevType = type;
   prevModifiers = modifiers;
 
-  const {appManager} = getClassHolder();
+  const {appManager} = classHolder;
   appManager?.getWebContent()?.send(appWindowChannels.hotkeysChange, input);
 }
 
@@ -42,7 +42,7 @@ function onBlur() {
   prevKey = '';
   prevType = '';
   prevModifiers = '';
-  const {appManager} = getClassHolder();
+  const {appManager} = classHolder;
   appManager?.getWebContent()?.send(appWindowChannels.hotkeysChange, initialKeys);
 }
 

@@ -5,7 +5,7 @@ import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain} from 'electron'
 
 import icon from '../../../resources/icon.png?asset';
 import {otherChannels} from '../../cross/IpcChannelAndTypes';
-import getClassHolder from '../Managements/ClassHolder';
+import classHolder from '../Managements/ClassHolder';
 import {getWindowColor} from '../Utilities/Utils';
 
 export default class LoadingWindow {
@@ -30,7 +30,7 @@ export default class LoadingWindow {
   public async startLoading() {
     ipcMain.handle(
       otherChannels.disableLoadingAnimations,
-      () => getClassHolder().storageManager.getData('app').disableLoadingAnimations,
+      () => classHolder.storageManager.getData('app').disableLoadingAnimations,
     );
 
     return new Promise<void>(resolve => {

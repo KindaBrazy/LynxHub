@@ -4,10 +4,10 @@ import {is} from '@electron-toolkit/utils';
 import {app, BrowserWindow, ipcMain} from 'electron';
 
 import {toMs} from '../../cross/CrossUtils';
-import getClassHolder from './ClassHolder';
+import classHolder from './ClassHolder';
 
 export default function DialogManager() {
-  const {appManager} = getClassHolder();
+  const {appManager} = classHolder;
 
   if (!appManager) {
     setTimeout(DialogManager, toMs(1, 'seconds'));

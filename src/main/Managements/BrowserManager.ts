@@ -12,7 +12,7 @@ import {
   WHType,
 } from '../../cross/IpcChannelAndTypes';
 import {getUserAgent, getWindowColor} from '../Utilities/Utils';
-import getClassHolder from './ClassHolder';
+import classHolder from './ClassHolder';
 import RegisterHotkeys from './HotkeysManager';
 
 // Constants
@@ -161,7 +161,7 @@ export default class BrowserManager {
 
   /** Track URL in browser history (shared helper to avoid duplication) */
   private trackUrl(url: string) {
-    const {storageManager} = getClassHolder();
+    const {storageManager} = classHolder;
     if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
       const formattedUrl = formatWebAddress(url);
       storageManager.addBrowserRecent(formattedUrl);
@@ -181,7 +181,7 @@ export default class BrowserManager {
   private listenForTitle(id: string, webContents: WebContents) {
     webContents.on('page-title-updated', () => {
       this.withBothContents(id, (mainWc, viewWc) => {
-        const {storageManager} = getClassHolder();
+        const {storageManager} = classHolder;
         const title = viewWc.getTitle();
         mainWc.send(browserChannels.onTitleChange, id, title);
         storageManager.updateBrowserFavIconTitle(formatWebAddress(viewWc.getURL()), title);
@@ -192,7 +192,7 @@ export default class BrowserManager {
   private listenForFavIcon(id: string, webContents: WebContents) {
     webContents.on('page-favicon-updated', (_, favicons) => {
       this.withBothContents(id, (mainWc, viewWc) => {
-        const {storageManager} = getClassHolder();
+        const {storageManager} = classHolder;
         // Prefer higher quality formats: SVG > PNG > other > ICO
         const url =
           favicons.find(icon => icon.includes('.svg')) ||
@@ -208,7 +208,7 @@ export default class BrowserManager {
 
   private setupWindowOpenHandler(webContents: WebContents) {
     webContents.setWindowOpenHandler(({url, disposition}) => {
-      const {storageManager, appManager} = getClassHolder();
+      const {storageManager, appManager} = classHolder;
       if (disposition === 'new-window') {
         return {
           action: 'allow',
@@ -247,7 +247,7 @@ export default class BrowserManager {
   private listenForFullScreen(view: WebContentsView) {
     const webContents = view.webContents;
     webContents.on('enter-html-full-screen', () => {
-      const {appManager} = getClassHolder();
+      const {appManager} = classHolder;
       const mainBounds = appManager?.getMainWindow()?.getBounds();
       if (mainBounds) {
         view.setBounds({x: 0, y: 0, width: mainBounds.width, height: mainBounds.height});
@@ -277,7 +277,7 @@ export default class BrowserManager {
 
   private listenForLinkHover(webContents: WebContents) {
     webContents.on('update-target-url', (_, url) => {
-      const {linkPreviewManager} = getClassHolder();
+      const {linkPreviewManager} = classHolder;
       linkPreviewManager?.updateUrl(url);
     });
   }
@@ -298,7 +298,7 @@ export default class BrowserManager {
     const mainWindow = this.getMainWindow();
     if (!mainWindow) return;
 
-    const {storageManager, contextMenuManager} = getClassHolder();
+    const {storageManager, contextMenuManager} = classHolder;
     const newView = new WebContentsView({webPreferences: {session: this.getSession()}});
     const webContents = newView.webContents;
     newView.setBackgroundColor(getWindowColor());
@@ -357,7 +357,7 @@ export default class BrowserManager {
   }
 
   public clearHistory(selected: string[]) {
-    const {storageManager} = getClassHolder();
+    const {storageManager} = classHolder;
     if (selected.includes('favorites')) {
       storageManager.updateBrowserDataSecurely({favoriteAddress: []});
     }

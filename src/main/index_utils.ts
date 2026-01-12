@@ -6,13 +6,13 @@ import {app, net, protocol} from 'electron';
 
 import {APP_BUILD_NUMBER, APP_VERSION} from '../cross/CrossConstants';
 import {getAppDirectory} from './Managements/AppDataManager';
-import getClassHolder from './Managements/ClassHolder';
+import classHolder from './Managements/ClassHolder';
 import {getImageCacheManager, registerImageCacheScheme} from './Managements/ImageCacheManager';
 import ShareScreenManager from './Managements/ShareScreenManager';
 import {initSentry} from './Secure/SentryInit';
 
 export async function beforeAppReady() {
-  const {storageManager, appStartTime} = getClassHolder();
+  const {storageManager, appStartTime} = classHolder;
 
   const {hardwareAcceleration, collectErrors} = storageManager.getData('app');
   const performanceSettings = storageManager.getData('performance');
@@ -99,7 +99,7 @@ export async function handleProtocols() {
 }
 
 export function handleAppReadyToShow() {
-  const {extensionManager, cardsValidator} = getClassHolder();
+  const {extensionManager, cardsValidator} = classHolder;
   extensionManager?.onReadyToShow();
   handleTaskbarStatus();
   handleStartupBehavior();
@@ -110,7 +110,7 @@ export function handleAppReadyToShow() {
 }
 
 function handleTaskbarStatus() {
-  const {storageManager, appManager, trayManager} = getClassHolder();
+  const {storageManager, appManager, trayManager} = classHolder;
 
   const {taskbarStatus} = storageManager.getData('app');
   const mainWindow = appManager?.getMainWindow();
@@ -145,7 +145,7 @@ function handleTaskbarStatus() {
 }
 
 function handleStartupBehavior() {
-  const {storageManager, appManager} = getClassHolder();
+  const {storageManager, appManager} = classHolder;
 
   const {startMinimized, startMaximized, lastSize, openLastSize} = storageManager.getData('app');
   const mainWindow = appManager?.getMainWindow();
@@ -171,7 +171,7 @@ function handleStartupBehavior() {
 }
 
 function setLoginItemSettings() {
-  const {storageManager} = getClassHolder();
+  const {storageManager} = classHolder;
 
   const {systemStartup} = storageManager.getData('app');
   app.setLoginItemSettings({openAtLogin: systemStartup});

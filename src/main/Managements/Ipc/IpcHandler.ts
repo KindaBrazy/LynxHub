@@ -46,7 +46,7 @@ import {
 import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../AppDataManager';
 import BrowserDownloadManager from '../BrowserDownloadManager';
 import BrowserManager from '../BrowserManager';
-import getClassHolder from '../ClassHolder';
+import classHolder from '../ClassHolder';
 import GitManager from '../Git/GitManager';
 import {getImageCacheManager, ImageCacheManager} from '../ImageCacheManager';
 import {getList} from '../Plugin/PluginUtils';
@@ -98,7 +98,7 @@ import {
 import {handleGetAudioState, handleSetMuted, handleSetVolume} from './Methods/IpcMethods-Volume';
 
 function win() {
-  const {appManager, storageManager, contextMenuManager} = getClassHolder();
+  const {appManager, storageManager, contextMenuManager} = classHolder;
   // Changes window state (maximize, minimize, close, fullscreen, restart)
   ipcMain.on(winChannels.changeState, (_, state: ChangeWindowState) => changeWindowState(state));
   // Gets system dark mode preference (light/dark)
@@ -227,7 +227,7 @@ function utils() {
 }
 
 function modules() {
-  const {moduleManager} = getClassHolder();
+  const {moduleManager} = classHolder;
   // Checks if card has available updates
   ipcMain.handle(
     modulesChannels.cardUpdateAvailable,
@@ -251,7 +251,7 @@ function modules() {
 }
 
 function plugins() {
-  const {pluginManager} = getClassHolder();
+  const {pluginManager} = classHolder;
   // Gets plugin server addresses
   ipcMain.handle(pluginChannels.getAddresses, () => pluginManager?.getAddresses());
   // Gets list of installed plugins
@@ -311,7 +311,7 @@ function appData() {
 }
 
 function storage() {
-  const {storageManager} = getClassHolder();
+  const {storageManager} = classHolder;
   // Gets custom storage data by key
   ipcMain.handle(storageChannels.getCustom, (_, key: string) => storageManager.getCustomData(key));
   // Sets custom storage data by key
@@ -335,7 +335,7 @@ function storage() {
 }
 
 function storageUtilsIpc() {
-  const {storageManager} = getClassHolder();
+  const {storageManager} = classHolder;
   // Sets app to start with system startup
   ipcMain.on(storageUtilsChannels.setSystemStartup, (_, startup: boolean) => {
     app.setLoginItemSettings({openAtLogin: startup});
@@ -463,12 +463,12 @@ function storageUtilsIpc() {
 }
 
 function modulesIpc() {
-  const {moduleManager} = getClassHolder();
+  const {moduleManager} = classHolder;
   moduleManager?.listenForChannels();
 }
 
 function extensionsIpc() {
-  getClassHolder().extensionManager?.listenForChannels();
+  classHolder.extensionManager?.listenForChannels();
 }
 
 function modulesApi() {
@@ -494,7 +494,7 @@ export function resetBrowserIPC() {
 }
 
 export function browserIPC() {
-  const {appManager, contextMenuManager} = getClassHolder();
+  const {appManager, contextMenuManager} = classHolder;
 
   // Prevent registering handlers multiple times
   if (browserIPCInitialized) {
@@ -602,7 +602,7 @@ export function browserIPC() {
 }
 
 function statics() {
-  const {staticManager} = getClassHolder();
+  const {staticManager} = classHolder;
 
   // Pulls latest static data from server
   ipcMain.handle(staticsChannels.pull, () => staticManager?.pull());
@@ -686,7 +686,7 @@ export function listenToIpcChannels() {
 
   plugins();
 
-  const {contextMenuManager, linkPreviewManager} = getClassHolder();
+  const {contextMenuManager, linkPreviewManager} = classHolder;
   contextMenuManager?.listenForContextChannels();
   linkPreviewManager?.listenForChannels();
 

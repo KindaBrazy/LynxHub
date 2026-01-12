@@ -1,7 +1,7 @@
 import {SimpleGitProgressEvent} from 'simple-git';
 
 import {gitChannels} from '../../../cross/IpcChannelAndTypes';
-import getClassHolder from '../ClassHolder';
+import classHolder from '../ClassHolder';
 import GitManager from './GitManager';
 
 /**
@@ -10,7 +10,7 @@ import GitManager from './GitManager';
  * @param id - Optional identifier for pull operations.
  */
 export function setupGitManagerListeners(manager: GitManager, id?: string): void {
-  const {appManager} = getClassHolder();
+  const {appManager} = classHolder;
 
   manager.onProgress = (progress: SimpleGitProgressEvent) => {
     appManager?.getWebContent()?.send(gitChannels.onProgress, id, 'Progress', progress);

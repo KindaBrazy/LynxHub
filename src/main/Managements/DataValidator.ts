@@ -7,7 +7,7 @@ import lodash from 'lodash';
 import {InstalledCard, InstalledCards} from '../../cross/StorageTypes';
 import {getAbsolutePath, getExePath, isPortable} from '../Utilities/Utils';
 import AddBreadcrumb_Main from './Breadcrumbs';
-import getClassHolder from './ClassHolder';
+import classHolder from './ClassHolder';
 
 type PathCards = {
   id: string;
@@ -92,7 +92,7 @@ export class ValidateCards {
    * @param {string} unlinkedPath - The path of the unlinked directory
    */
   private handleUnlinkedDir = (unlinkedPath: string): void => {
-    const {storageManager} = getClassHolder();
+    const {storageManager} = classHolder;
     storageManager.removeInstalledCardByPath(unlinkedPath);
   };
 
@@ -132,7 +132,7 @@ export class ValidateCards {
       return false;
     };
 
-    const {moduleManager} = getClassHolder();
+    const {moduleManager} = classHolder;
 
     for (const card of cards) {
       const isInstalledMethod = moduleManager?.getMethodsById(card.id)?.().isInstalled;
@@ -161,7 +161,7 @@ export class ValidateCards {
    * @returns {Promise<void>}
    */
   public async checkAndWatch(): Promise<void> {
-    const {storageManager} = getClassHolder();
+    const {storageManager} = classHolder;
     try {
       let installedCards: InstalledCards = storageManager.getData('cards').installedCards;
       if (isPortable()) {

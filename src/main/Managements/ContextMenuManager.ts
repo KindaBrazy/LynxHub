@@ -7,7 +7,7 @@ import {ContextResizeData} from '../../cross/CrossTypes';
 import {browserChannels, contextMenuChannels, tabsChannels} from '../../cross/IpcChannelAndTypes';
 import AddBreadcrumb_Main from './Breadcrumbs';
 import BrowserManager from './BrowserManager';
-import getClassHolder from './ClassHolder';
+import classHolder from './ClassHolder';
 
 export default class ContextMenuManager {
   private contextMenuWindow?: BrowserWindow;
@@ -157,7 +157,7 @@ export default class ContextMenuManager {
       this.getContentById(id)?.downloadURL(url),
     );
     ipcMain.on(contextMenuChannels.copyImage, async (_, url: string) => {
-      const {appManager} = getClassHolder();
+      const {appManager} = classHolder;
       try {
         const {net, clipboard, nativeImage} = await import('electron');
         const response = await net.fetch(url);
