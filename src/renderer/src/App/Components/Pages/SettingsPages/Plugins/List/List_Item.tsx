@@ -162,16 +162,18 @@ export function List_Item({item, installed}: Props) {
       )}
       <CardHeader className="pb-0">
         <User
-          avatarProps={{
-            src: getCacheUrl(getPluginIconUrl(item.url)),
-            radius: 'none',
-            className: 'shrink-0 !bg-black/0',
-          }}
           description={
             <span className="text-foreground-500 text-xs">
               By <span className="font-bold text-foreground-500">{extractGitUrl(item.url).owner}</span>
             </span>
           }
+          avatarProps={{
+            src: getCacheUrl(getPluginIconUrl(item.url)),
+            radius: 'none',
+            name: item.metadata.title,
+            showFallback: true,
+            className: 'shrink-0 !bg-black/0',
+          }}
           name={
             <div className="space-x-2">
               <Link
