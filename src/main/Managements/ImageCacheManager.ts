@@ -769,16 +769,6 @@ export class ImageCacheManager {
   }
 
   /**
-   * Generates a cache URL for a given image URL.
-   * Use this URL in img src to load images through the cache.
-   * @param url - The original image URL
-   * @returns The cache protocol URL
-   */
-  public static getCacheUrl(url: string): string {
-    return `lynxcache://fetch/${encodeURIComponent(url)}`;
-  }
-
-  /**
    * Checks if a URL is already a cache URL
    * @param url - The URL to check
    * @returns True if the URL is a cache URL

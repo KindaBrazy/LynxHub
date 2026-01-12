@@ -1313,9 +1313,6 @@ const rendererIpc = {
     // Triggers manual cache cleanup (removes expired entries)
     triggerCleanup: (): Promise<{success: boolean}> => ipc.invoke(imageCacheChannels.triggerCleanup),
 
-    // Converts a URL to a cache URL (lynxcache://fetch/...)
-    getCacheUrl: (url: string): Promise<string> => ipc.invoke(imageCacheChannels.getCacheUrl, url),
-
     /**
      * Generates a cache URL for a given image URL (sync, no IPC).
      * Use this URL in img src to load images through the cache.

@@ -475,7 +475,6 @@ export const imageCacheChannels = {
   getStats: 'imageCache:getStats',
   clearCache: 'imageCache:clearCache',
   triggerCleanup: 'imageCache:triggerCleanup',
-  getCacheUrl: 'imageCache:getCacheUrl',
 } as const;
 
 export type ImageCacheStats = {

@@ -15,7 +15,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
+import {extractGitUrl, getCacheUrl} from '../../../../../../../../cross/CrossUtils';
 import {getPluginIconUrl} from '../../../../../../../../cross/plugin/CrossPluginUtils';
 import {PluginInstalledItem, PluginItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
@@ -127,8 +127,8 @@ export function List_Item({item, installed}: Props) {
       }}
       className={
         `hover:bg-foreground-100 hover:shadow-medium relative border-2 ` +
-        ` border-foreground-100 ${isSelected && (isExtension ? '!border-primary' : '!border-secondary')}` +
-        ` rounded-xl !transition-all !duration-300 bg-foreground-50`
+        ` border-foreground-100 ${isSelected && (isExtension ? 'border-primary!' : 'border-secondary!')}` +
+        ` rounded-xl transition-all! duration-300! bg-foreground-50`
       }
       as="div"
       shadow="sm"
@@ -162,19 +162,16 @@ export function List_Item({item, installed}: Props) {
       )}
       <CardHeader className="pb-0">
         <User
+          avatarProps={{
+            src: getCacheUrl(getPluginIconUrl(item.url)),
+            radius: 'none',
+            className: 'shrink-0 !bg-black/0',
+          }}
           description={
             <span className="text-foreground-500 text-xs">
               By <span className="font-bold text-foreground-500">{extractGitUrl(item.url).owner}</span>
             </span>
           }
-          avatarProps={{
-            src: (() => {
-              const iconUrl = getPluginIconUrl(item.url);
-              return iconUrl ? `lynxcache://fetch/${encodeURIComponent(iconUrl)}` : iconUrl;
-            })(),
-            radius: 'none',
-            className: 'shrink-0 !bg-black/0',
-          }}
           name={
             <div className="space-x-2">
               <Link
