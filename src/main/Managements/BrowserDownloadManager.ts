@@ -22,7 +22,7 @@ import {
   DownloadManagerProgress,
   DownloadStartInfo,
 } from '../../cross/DownloadManagerTypes';
-import getClassHolder from './ClassHolder';
+import classHolder from './ClassHolder';
 
 /**
  * Error types for file system operations
@@ -189,7 +189,7 @@ export default class BrowserDownloadManager {
    * @returns True if the download was cleared, false otherwise
    */
   private isDownloadCleared(identifier: string): boolean {
-    const {storageManager} = getClassHolder();
+    const {storageManager} = classHolder;
     const clearedDownloads = storageManager.getData('browser').clearedDownloads || [];
     return clearedDownloads.includes(identifier);
   }
@@ -199,7 +199,7 @@ export default class BrowserDownloadManager {
    * @param identifier - The download identifier to mark as cleared
    */
   private markDownloadAsCleared(identifier: string): void {
-    const {storageManager} = getClassHolder();
+    const {storageManager} = classHolder;
     try {
       const clearedDownloads = storageManager.getData('browser').clearedDownloads || [];
 
@@ -220,7 +220,7 @@ export default class BrowserDownloadManager {
    * @param identifier - The download identifier to unmark
    */
   private unmarkDownloadAsCleared(identifier: string): void {
-    const {storageManager} = getClassHolder();
+    const {storageManager} = classHolder;
     try {
       const clearedDownloads = storageManager.getData('browser').clearedDownloads || [];
       const updatedClearedDownloads = clearedDownloads.filter(id => id !== identifier);
@@ -523,7 +523,7 @@ export default class BrowserDownloadManager {
    * @returns The download directory path
    */
   private getDownloadLocation(): string {
-    const {storageManager} = getClassHolder();
+    const {storageManager} = classHolder;
     const location = storageManager.getData('browser').downloadLocation;
     // Fallback to default if not set
     return location || join(app.getPath('downloads'), 'LynxHub');
@@ -535,7 +535,7 @@ export default class BrowserDownloadManager {
    * @returns Object with success status and optional error message
    */
   private setDownloadLocation(path: string): {success: boolean; error?: string} {
-    const {storageManager} = getClassHolder();
+    const {storageManager} = classHolder;
     try {
       // Validate path
       const pathValidation = this.validatePath(path);
@@ -586,7 +586,7 @@ export default class BrowserDownloadManager {
    * @returns The download behavior ('ask' or 'default')
    */
   private getDownloadBehavior(): 'ask' | 'default' {
-    const {storageManager} = getClassHolder();
+    const {storageManager} = classHolder;
     return storageManager.getData('browser').downloadBehavior || 'default';
   }
 
@@ -595,7 +595,7 @@ export default class BrowserDownloadManager {
    * @param behavior - The download behavior to set
    */
   private setDownloadBehavior(behavior: 'ask' | 'default'): void {
-    const {storageManager} = getClassHolder();
+    const {storageManager} = classHolder;
     storageManager.updateData('browser', {downloadBehavior: behavior});
   }
 

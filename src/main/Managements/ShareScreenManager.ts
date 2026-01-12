@@ -14,7 +14,7 @@ import {
 
 import {screenShareChannels} from '../../cross/ScreenShareConsts';
 import {ScreenShareSources, ScreenShareStart} from '../../cross/ScreenShareTypes';
-import getClassHolder from './ClassHolder';
+import classHolder from './ClassHolder';
 
 export default class ShareScreenManager {
   private selectorWindow?: BrowserWindow;
@@ -23,7 +23,7 @@ export default class ShareScreenManager {
   private handlersRegistered = false;
 
   public start() {
-    const {appManager} = getClassHolder();
+    const {appManager} = classHolder;
     this.requestHandler = this.requestHandler.bind(this);
 
     session.fromPartition('persist:lynxhub_browser').setDisplayMediaRequestHandler(this.requestHandler);

@@ -11,7 +11,7 @@ import {MainModuleImportType, MainModules, MainModuleUtils} from '../../../../cr
 import {InstalledCard} from '../../../../cross/StorageTypes';
 import {getAbsolutePath, getExePath, isPortable} from '../../../Utilities/Utils';
 import {getAppDataPath} from '../../AppDataManager';
-import getClassHolder from '../../ClassHolder';
+import classHolder from '../../ClassHolder';
 import GitManager from '../../Git/GitManager';
 import {removeDir, trashDir} from '../../Ipc/Methods/IpcMethods';
 
@@ -24,13 +24,13 @@ export default class ModuleManager {
   private importRetryCount = 0;
 
   private getUtils() {
-    const webContent = getClassHolder().appManager?.getWebContent();
+    const webContent = classHolder.appManager?.getWebContent();
     if (!webContent) return undefined;
 
     const utils: MainModuleUtils = {
       storage: {
-        get: key => getClassHolder().storageManager.getCustomData(key),
-        set: (key, data) => getClassHolder().storageManager.setCustomData(key, data),
+        get: key => classHolder.storageManager.getCustomData(key),
+        set: (key, data) => classHolder.storageManager.setCustomData(key, data),
       },
       ipc: {
         on(channel: string, listener: (event: any, ...args: any[]) => void) {
@@ -53,9 +53,7 @@ export default class ModuleManager {
       },
       getConfigDir: () => getAppDataPath(),
       getInstallDir: id => {
-        let dir = getClassHolder()
-          .storageManager.getData('cards')
-          .installedCards.find(card => card.id === id)?.dir;
+        let dir = classHolder.storageManager.getData('cards').installedCards.find(card => card.id === id)?.dir;
         if (isPortable()) {
           dir = getAbsolutePath(getExePath(), dir || '');
         }
@@ -63,9 +61,8 @@ export default class ModuleManager {
         return dir;
       },
       getExtensions_TerminalPreCommands: (id: string) =>
-        getClassHolder()
-          .storageManager.getData('cards')
-          .cardTerminalPreCommands.find(commands => commands.id === id)?.commands || [],
+        classHolder.storageManager.getData('cards').cardTerminalPreCommands.find(commands => commands.id === id)
+          ?.commands || [],
     };
 
     return utils;
@@ -94,7 +91,7 @@ export default class ModuleManager {
       this.importRetryCount = 0;
 
       // Get disabled cards from storage
-      const disabledCards = new Set(getClassHolder().storageManager.getData('plugin').disabledCards || []);
+      const disabledCards = new Set(classHolder.storageManager.getData('plugin').disabledCards || []);
 
       if (isDev()) {
         const initialModule: MainModuleImportType = await import('../../../../../module/src/main');
@@ -135,7 +132,7 @@ export default class ModuleManager {
   private currentRetries = 0;
 
   public listenForChannels() {
-    const {appManager} = getClassHolder();
+    const {appManager} = classHolder;
     const webContent = appManager?.getWebContent();
 
     if (!webContent || isEmpty(this.mainMethods)) {
@@ -178,7 +175,7 @@ export default class ModuleManager {
   }
 
   private async checkAllCardsUpdate(updateTypes: {id: string; type: 'git' | 'stepper'}[]) {
-    const {appManager, storageManager} = getClassHolder();
+    const {appManager, storageManager} = classHolder;
     let installedCards = storageManager.getData('cards').installedCards;
     if (isPortable()) {
       installedCards = installedCards.map(card => {
@@ -196,7 +193,7 @@ export default class ModuleManager {
   }
 
   public async cardsUpdateInterval(updateType: {id: string; type: 'git' | 'stepper'}[]) {
-    const {storageManager} = getClassHolder();
+    const {storageManager} = classHolder;
     if (!this.checkInterval && !isEmpty(updateType)) {
       await this.checkAllCardsUpdate(updateType);
 

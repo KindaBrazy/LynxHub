@@ -10,14 +10,14 @@ import {promises, readdir} from 'graceful-fs';
 import {FolderListData} from '../../../../cross/CrossTypes';
 import {ChangeWindowState, DarkModeTypes, TaskbarStatus, winChannels} from '../../../../cross/IpcChannelAndTypes';
 import {getSystemDarkMode} from '../../../Utilities/Utils';
-import getClassHolder from '../../ClassHolder';
+import classHolder from '../../ClassHolder';
 
 /**
  * Changes the state of the main window based on the provided action.
  * @param state - The desired window state change.
  */
 export function changeWindowState(state: ChangeWindowState): void {
-  const {appManager, storageManager, trayManager} = getClassHolder();
+  const {appManager, storageManager, trayManager} = classHolder;
 
   const mainWindow = appManager?.getMainWindow();
   if (!mainWindow) return;
@@ -47,7 +47,7 @@ export function changeWindowState(state: ChangeWindowState): void {
  * @param darkMode - The dark mode setting to apply.
  */
 export function setDarkMode(darkMode: DarkModeTypes): void {
-  const {appManager, storageManager, contextMenuManager} = getClassHolder();
+  const {appManager, storageManager, contextMenuManager} = classHolder;
 
   if (darkMode === 'system') {
     appManager?.getWebContent()?.send(winChannels.onDarkMode, getSystemDarkMode());
@@ -63,7 +63,7 @@ export function setDarkMode(darkMode: DarkModeTypes): void {
  * @param status - The desired taskbar status.
  */
 export function setTaskbarStatus(status: TaskbarStatus): void {
-  const {appManager, trayManager, storageManager} = getClassHolder();
+  const {appManager, trayManager, storageManager} = classHolder;
 
   const mainWindow = appManager?.getMainWindow();
   if (!mainWindow) return;
@@ -134,7 +134,7 @@ export async function removeDir(dir: string): Promise<void> {
  * @throws An error if the file operation fails.
  */
 export async function saveToFile(content: string): Promise<string | null> {
-  const {appManager} = getClassHolder();
+  const {appManager} = classHolder;
 
   try {
     const mainWindow = appManager?.getMainWindow();

@@ -13,7 +13,7 @@ import {
   winChannels,
 } from '../../cross/IpcChannelAndTypes';
 import {getUserAgent, getWindowColor, RelaunchApp} from '../Utilities/Utils';
-import getClassHolder from './ClassHolder';
+import classHolder from './ClassHolder';
 import RegisterHotkeys from './HotkeysManager';
 
 /**
@@ -66,7 +66,7 @@ export default class ElectronAppManager {
 
   /** Creates and configures the main application window. */
   private createMainWindow(): void {
-    const {contextMenuManager, linkPreviewManager} = getClassHolder();
+    const {contextMenuManager, linkPreviewManager} = classHolder;
     this.mainWindow = new BrowserWindow(ElectronAppManager.MAIN_WINDOW_CONFIG);
     this.mainWindow.setBackgroundColor(getWindowColor());
 
@@ -89,7 +89,7 @@ export default class ElectronAppManager {
     });
 
     this.getWebContent()?.setWindowOpenHandler(({url, disposition}) => {
-      const {storageManager} = getClassHolder();
+      const {storageManager} = classHolder;
       const openExternal = storageManager.getData('app').openLinkExternal;
       if (openExternal) {
         shell.openExternal(url);
@@ -153,7 +153,7 @@ export default class ElectronAppManager {
 
   /** Handles the minimized event for the main window. */
   private handleMinimize = (): void => {
-    const {storageManager, trayManager} = getClassHolder();
+    const {storageManager, trayManager} = classHolder;
     if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
       trayManager?.createTrayIcon();
       if (platform() === 'linux') {
@@ -168,7 +168,7 @@ export default class ElectronAppManager {
 
   /** Handles the focus event for the main window. */
   private handleFocus = (): void => {
-    const {storageManager, trayManager} = getClassHolder();
+    const {storageManager, trayManager} = classHolder;
     if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
       trayManager?.destroyTrayIcon();
       if (platform() === 'win32') {

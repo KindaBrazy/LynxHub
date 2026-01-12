@@ -8,7 +8,7 @@ import treeKill from 'tree-kill';
 
 import {ptyChannels} from '../../cross/IpcChannelAndTypes';
 import {determineShell} from '../Utilities/Utils';
-import getClassHolder from './ClassHolder';
+import classHolder from './ClassHolder';
 
 /** Manages pseudo-terminal (PTY) processes for different shells. */
 export default class PtyManager {
@@ -19,7 +19,7 @@ export default class PtyManager {
   public id: string;
 
   constructor(id: string, dir?: string, sendDataToRenderer = false) {
-    const {storageManager, appManager} = getClassHolder();
+    const {storageManager, appManager} = classHolder;
     this.id = id;
 
     const {useConpty} = storageManager.getData('terminal');

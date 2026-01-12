@@ -3,12 +3,12 @@ import electron_log from 'electron-log';
 import updater from 'electron-updater';
 
 import {appUpdateChannels, AppUpdateEventTypes, AppUpdateStatus} from '../../cross/IpcChannelAndTypes';
-import getClassHolder from './ClassHolder';
+import classHolder from './ClassHolder';
 
 const {autoUpdater, CancellationToken} = updater;
 
 function sendToRenderer(type: AppUpdateEventTypes, status?: AppUpdateStatus) {
-  const {appManager} = getClassHolder();
+  const {appManager} = classHolder;
   appManager?.getWebContent()?.send(appUpdateChannels.status, type, status);
 }
 
@@ -68,7 +68,7 @@ export function checkForUpdate() {
   });
 
   ipcMain.on(appUpdateChannels.cancel, () => {
-    const {appManager} = getClassHolder();
+    const {appManager} = classHolder;
     appManager?.getMainWindow()?.setProgressBar(-1);
     cancelToken.cancel();
     cancelToken = new CancellationToken();
@@ -79,19 +79,19 @@ export function checkForUpdate() {
   });
 
   autoUpdater.on('download-progress', (info: updater.ProgressInfo) => {
-    const {appManager} = getClassHolder();
+    const {appManager} = classHolder;
     sendToRenderer('download-progress', info);
     appManager?.getMainWindow()?.setProgressBar(info.percent / 100);
   });
 
   autoUpdater.on('update-downloaded', () => {
-    const {appManager} = getClassHolder();
+    const {appManager} = classHolder;
     sendToRenderer('update-downloaded');
     appManager?.getMainWindow()?.setProgressBar(-1);
   });
 
   autoUpdater.on('error', (e: Error | any, message?: string) => {
-    const {appManager} = getClassHolder();
+    const {appManager} = classHolder;
     // Silently ignore network errors - user may be offline or have unstable connection
     if (isNetworkError(e)) {
       console.warn('Update check failed due to network error:', e.message || e);

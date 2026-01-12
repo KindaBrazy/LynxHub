@@ -20,7 +20,7 @@ import {
   lynxEncryptString,
   lynxEncryptStrings,
 } from '../../Utilities/Utils';
-import getClassHolder from '../ClassHolder';
+import classHolder from '../ClassHolder';
 import {changeWindowState} from '../Ipc/Methods/IpcMethods';
 
 /**
@@ -489,7 +489,7 @@ class BaseStorage {
    * On Linux portable mode, closes window instead of restarting
    */
   public clearStorage(): void {
-    const {appManager} = getClassHolder();
+    const {appManager} = classHolder;
     this.storage.data = {...this.DEFAULT_DATA};
     this.write();
     if (isPortable() === 'linux') {
@@ -503,7 +503,7 @@ class BaseStorage {
    * Writes storage data to disk and adds breadcrumb for tracking
    */
   public write() {
-    const {appManager} = getClassHolder();
+    const {appManager} = classHolder;
     try {
       this.storage.write();
     } catch (e) {

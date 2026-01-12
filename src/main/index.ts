@@ -10,7 +10,7 @@ import {isDev} from '../cross/CrossUtils';
 import {beforeAppReady, handleAppReadyToShow, handleProtocols} from './index_utils';
 import {checkAppDirectories} from './Managements/AppDataManager';
 import {checkForUpdate} from './Managements/AppUpdater';
-import getClassHolder from './Managements/ClassHolder';
+import classHolder from './Managements/ClassHolder';
 import DialogManager from './Managements/DialogManager';
 import {getImageCacheManager} from './Managements/ImageCacheManager';
 import {browserIPC, listenToIpcChannels, resetBrowserIPC} from './Managements/Ipc/IpcHandler';
@@ -62,20 +62,20 @@ async function startLynxHub() {
   }
 
   // Initialize and hold classes
-  const {storageManager} = getClassHolder();
+  const {storageManager} = classHolder;
 
   storageManager.onAppReady();
   storageManager.decryptBrowserData();
 
-  await getClassHolder().initializeManagers();
-  await getClassHolder().checkStaticsRequirements();
+  await classHolder.initializeManagers();
+  await classHolder.checkStaticsRequirements();
 
   await downloadDU();
 
   await handleProtocols();
 
-  await getClassHolder().pluginManager!.initPlugins();
-  await getClassHolder().extensionManager!.onAppReady();
+  await classHolder.pluginManager!.initPlugins();
+  await classHolder.extensionManager!.onAppReady();
 
   electronApp.setAppUserModelId(APP_NAME);
 
@@ -86,7 +86,7 @@ async function startLynxHub() {
   PatreonAuth();
   DialogManager();
 
-  const appManager = getClassHolder().appManager!;
+  const appManager = classHolder.appManager!;
   appManager.startApp();
   appManager.onReadyToShow = () => {
     loadingWindow.closeWindow();
@@ -139,7 +139,7 @@ app.on('activate', async () => {
     await app.whenReady();
   }
 
-  const appManager = getClassHolder().appManager;
+  const appManager = classHolder.appManager;
   const mainWindow = appManager?.getMainWindow();
   if (!mainWindow || mainWindow.isDestroyed()) {
     // Reset browserIPC state so it reinitializes with the new window

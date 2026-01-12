@@ -18,7 +18,7 @@ import {
 } from '../../../cross/plugin/PluginTypes';
 import {RelaunchApp} from '../../Utilities/Utils';
 import {getAppDataPath, selectNewAppDataFolder} from '../AppDataManager';
-import getClassHolder from '../ClassHolder';
+import classHolder from '../ClassHolder';
 import GitManager from '../Git/GitManager';
 import ShowToastWindow from '../ToastWindowManager';
 
@@ -27,7 +27,7 @@ export function getTargetVersion(versions: PluginVersions, type: 'module' | 'ext
 }
 
 export async function getVersionByCommit(id: string, commit: string) {
-  const {staticManager} = getClassHolder();
+  const {staticManager} = classHolder;
   const versioning = await staticManager?.getPluginVersioningById(id);
   if (!versioning) return undefined;
   return versioning.versions.find(v => v.commit === commit)?.version;
@@ -45,7 +45,7 @@ export async function isSyncRequired(
   currentCommit: string,
   stage: SubscribeStages,
 ): Promise<PluginSyncItem | undefined> {
-  const {staticManager} = getClassHolder();
+  const {staticManager} = classHolder;
   const versioning = await staticManager?.getPluginVersioningById(id);
   const metadata = await staticManager?.getPluginMetadataById(id);
 
@@ -71,7 +71,7 @@ export async function isSyncRequired(
 }
 
 export async function getCommitByAppStage(id: string) {
-  const {staticManager} = getClassHolder();
+  const {staticManager} = classHolder;
   const versioning = await staticManager!.getPluginVersioningById(id);
   const metadata = await staticManager!.getPluginMetadataById(id);
 
@@ -235,7 +235,7 @@ export function isVersionCompatible(
 }
 
 export async function getList(currentStage: SubscribeStages): Promise<PluginItem[]> {
-  const {staticManager} = getClassHolder();
+  const {staticManager} = classHolder;
 
   const list = await staticManager!.getPluginsList();
   const validated: PluginItem[] = [];

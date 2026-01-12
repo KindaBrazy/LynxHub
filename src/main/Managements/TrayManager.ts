@@ -5,7 +5,7 @@ import {Menu, Tray} from 'electron';
 import trayIconMenu from '../../../resources/16x16.png?asset';
 import trayIcon from '../../../resources/icon.ico?asset';
 import {APP_NAME, APP_NAME_VERSION} from '../../cross/CrossConstants';
-import getClassHolder from './ClassHolder';
+import classHolder from './ClassHolder';
 import {EMenuItem} from './Plugin/Extensions/ExtensionTypes_Main';
 
 /** Manages the system tray icon and its context menu for the application. */
@@ -14,21 +14,21 @@ export default class TrayManager {
 
   /** Closes the main application window. */
   private closeMainWindow = (): void => {
-    const {storageManager, appManager} = getClassHolder();
+    const {storageManager, appManager} = classHolder;
     storageManager.updateLastSize();
     appManager?.getMainWindow()?.close();
   };
 
   /** Shows the main application window. */
   private showMainWindow = (): void => {
-    const {appManager} = getClassHolder();
+    const {appManager} = classHolder;
     appManager?.getMainWindow()?.show();
   };
 
   /** Creates and sets up the tray icon with its context menu. */
   public createTrayIcon(): void {
     if (this.tray) return;
-    const {extensionManager} = getClassHolder();
+    const {extensionManager} = classHolder;
 
     const icon = os.platform() === 'win32' ? trayIcon : trayIconMenu;
 
