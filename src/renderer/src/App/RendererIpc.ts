@@ -1283,7 +1283,7 @@ const rendererIpc = {
 
   patreon: {
     // Gets Patreon user information
-    getInfo: (): Promise<PatreonUserData> => ipc.invoke(patreonChannels.getInfo),
+    getInfo: (): Promise<PatreonUserData | undefined> => ipc.invoke(patreonChannels.getInfo),
     // Logs in to Patreon
     login: (): Promise<PatreonUserData> => ipc.invoke(patreonChannels.login),
     // Logs out from Patreon
