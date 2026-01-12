@@ -6,7 +6,7 @@ import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {extractGitUrl} from '../../../../../../../cross/CrossUtils';
+import {extractGitUrl, isWin} from '../../../../../../../cross/CrossUtils';
 import {GitProgressCallback} from '../../../../../../../cross/IpcChannelAndTypes';
 import {Folder2_Icon, GitHub_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {modalActions} from '../../../../Redux/Reducer/ModalsReducer';
@@ -43,8 +43,7 @@ export default function CloneRepo({url, start, done, isOpen}: Props) {
 
   useEffect(() => {
     rendererIpc.file.getAppDirectories('AIWorkspaces').then(dir => {
-      const isWin = window.osPlatform === 'win32';
-      const directory = `${dir}${isWin ? '\\' : '/'}${extractGitUrl(url).repo}`;
+      const directory = `${dir}${isWin() ? '\\' : '/'}${extractGitUrl(url).repo}`;
       setDirectory(directory);
     });
   }, [url]);
