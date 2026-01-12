@@ -388,3 +388,11 @@ export function isRenderer(): boolean | undefined {
 
   return undefined;
 }
+
+export function isWin() {
+  if (isRenderer() === true && window.osPlatform) return window.osPlatform === 'win32';
+  if (isRenderer() === false && process.platform) return process.platform === 'win32';
+
+  // Fallback (shouldn't happen in Electron)
+  return true;
+}
