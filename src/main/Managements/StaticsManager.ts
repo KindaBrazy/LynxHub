@@ -79,7 +79,7 @@ export default class StaticsManager {
   }
 
   public async pull() {
-    if (!this.gitAvailable) return;
+    if (!this.gitAvailable || !classHolder.isOnline) return;
     try {
       await this.gitManager.pull(this.dir);
     } catch {
