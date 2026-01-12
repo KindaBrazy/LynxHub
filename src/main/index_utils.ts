@@ -176,3 +176,12 @@ function setLoginItemSettings() {
   const {systemStartup} = storageManager.getData('app');
   app.setLoginItemSettings({openAtLogin: systemStartup});
 }
+
+export async function onlineCheck() {
+  try {
+    const response = await fetch('https://google.com');
+    console.log('is user online? ', response.ok);
+  } catch (e) {
+    console.log('is user online? ', false);
+  }
+}

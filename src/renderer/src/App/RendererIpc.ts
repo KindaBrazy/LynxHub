@@ -1334,6 +1334,7 @@ const rendererIpc = {
 
   others: {
     disableLoadingAnimations: (): Promise<boolean> => ipc.invoke(otherChannels.disableLoadingAnimations),
+    onOnline: (result: (event: IpcRendererEvent, isOnline: boolean) => void) => ipc.on(otherChannels.onOnline, result),
   },
 };
 

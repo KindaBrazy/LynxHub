@@ -76,13 +76,11 @@ export const useOnlineEvents = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const updateOnlineStatus = () => {
-      dispatch(appActions.setAppState({key: 'isOnline', value: navigator.onLine}));
-    };
+    const offOnline = rendererIpc.others.onOnline((_, isOnline) => {
+      dispatch(appActions.setAppState({key: 'isOnline', value: isOnline}));
+    });
 
-    window.addEventListener('online', updateOnlineStatus);
-    window.addEventListener('offline', updateOnlineStatus);
-    updateOnlineStatus();
+    return () => offOnline();
   }, [dispatch]);
 };
 
