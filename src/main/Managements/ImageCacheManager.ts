@@ -713,7 +713,6 @@ export class ImageCacheManager {
     protocol.handle('lynxcache', request => this.handleRequest(request));
 
     this.initialized = true;
-    console.log(`[ImageCache] Initialized with ${Object.keys(this.metadata.entries).length} cached entries`);
   }
 
   /** Stops the cache manager and cleans up resources */
