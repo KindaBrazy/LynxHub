@@ -1,6 +1,8 @@
 import {existsSync, readdirSync, readFileSync, rmSync} from 'node:fs';
 import {join} from 'node:path';
 
+import {promises} from 'graceful-fs';
+
 import {APP_BUILD_NUMBER, STATICS_URL} from '../../cross/CrossConstants';
 import {
   AppUpdateData,
@@ -14,6 +16,7 @@ import {
 import {toMs} from '../../cross/CrossUtils';
 import {PluginMetadata, PluginVersioning} from '../../cross/plugin/PluginTypes';
 import {getAppDirectory} from './AppDataManager';
+import classHolder from './ClassHolder';
 import GitManager from './Git/GitManager';
 
 type PluginAvailableItem = {metadata: PluginMetadata; versioning: PluginVersioning; url: string};
@@ -42,23 +45,33 @@ export default class StaticsManager {
     }
 
     this.requirementsCheckPromise = (async () => {
-      try {
-        await this.clone();
-        await this.pull();
+      if (classHolder.isOnline) {
+        try {
+          await this.clone();
+          await this.pull();
 
-        if (!this.pullIntervalId) {
-          this.pullIntervalId = setInterval(() => this.pull(), toMs(10, 'minutes'));
+          if (!this.pullIntervalId) {
+            this.pullIntervalId = setInterval(() => this.pull(), toMs(10, 'minutes'));
+          }
+          this.requirementsCheckCompleted = true;
+        } catch (error) {
+          const message = (error as Error)?.message || '';
+          if (/Git is not available/i.test(message)) {
+            this.gitAvailable = false;
+            console.warn('StaticsManager: Git not available. App will run with limited functionality.');
+          } else {
+            console.warn('StaticsManager: Failed to check requirements:', error);
+          }
+          this.requirementsCheckCompleted = false;
         }
-        this.requirementsCheckCompleted = true;
-      } catch (error) {
-        const message = (error as Error)?.message || '';
-        if (/Git is not available/i.test(message)) {
-          this.gitAvailable = false;
-          console.warn('StaticsManager: Git not available. App will run with limited functionality.');
-        } else {
-          console.warn('StaticsManager: Failed to check requirements:', error);
+      } else {
+        try {
+          await promises.access(this.dir);
+          this.requirementsCheckCompleted = true;
+        } catch (e) {
+          console.log('not available statics');
+          this.requirementsCheckCompleted = false;
         }
-        this.requirementsCheckCompleted = false;
       }
     })();
 
