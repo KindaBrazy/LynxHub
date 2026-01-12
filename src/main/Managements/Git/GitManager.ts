@@ -301,20 +301,22 @@ export default class GitManager {
   }
 
   public async shallowClone(options: ShallowCloneOptions): Promise<void> {
-    const {url, directory, branch, singleBranch, depth} = options;
-
-    const targetDirectory = path.resolve(directory);
-
-    const cloneOptions: string[] = [];
-
-    if (depth) cloneOptions.push(`--depth=${depth}`);
-    if (singleBranch) cloneOptions.push('--single-branch');
-    if (branch) {
-      cloneOptions.push('--branch');
-      cloneOptions.push(branch);
-    }
-
     return new Promise((resolve, reject) => {
+      if (!classHolder.isOnline) reject('User is offline!');
+
+      const {url, directory, branch, singleBranch, depth} = options;
+
+      const targetDirectory = path.resolve(directory);
+
+      const cloneOptions: string[] = [];
+
+      if (depth) cloneOptions.push(`--depth=${depth}`);
+      if (singleBranch) cloneOptions.push('--single-branch');
+      if (branch) {
+        cloneOptions.push('--branch');
+        cloneOptions.push(branch);
+      }
+
       this.git
         .clone(url, targetDirectory, isEmpty(cloneOptions) ? undefined : cloneOptions)
         .then(() => {
@@ -589,6 +591,8 @@ export default class GitManager {
   }
 
   public async getAvailableBranches(url: string): Promise<string[]> {
+    if (!classHolder.isOnline) return [];
+
     try {
       const {owner, repo} = extractGitUrl(url);
       const branchesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/branches`);
@@ -657,6 +661,8 @@ export default class GitManager {
    * @param dir - The directory of the local repository.
    */
   public async pull(dir: string): Promise<void> {
+    if (!classHolder.isOnline) this.handleError('Network is not accessible!');
+
     try {
       const result = await simpleGit(dir, {progress: this.handleProgressUpdate}).pull();
       this.handleProgressComplete(result);
@@ -671,6 +677,8 @@ export default class GitManager {
    * @returns A promise that resolves to true if updates were received false otherwise.
    */
   public async pullAsync(dir: string): Promise<boolean> {
+    if (!classHolder.isOnline) return false;
+
     try {
       const result = await simpleGit(dir, {progress: this.handleProgressUpdate}).pull();
       const {changes, insertions, deletions} = result.summary;
