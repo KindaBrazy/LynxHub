@@ -374,3 +374,17 @@ export function getSearchUrl(text: string, site: SearchQuerySites): string {
 
   return urlTemplate.replace('%s', encodedText);
 }
+
+/** Detect if file called this method is in renderer or main process
+ * @returns
+ * - **True**: renderer process
+ * - **False**: main process
+ * - **Undefined**: Can't detect
+ * */
+export function isRenderer(): boolean | undefined {
+  if (typeof window !== 'undefined') return true;
+
+  if (typeof process !== 'undefined') return false;
+
+  return undefined;
+}
