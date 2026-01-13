@@ -1,7 +1,7 @@
 import {Button, Chip, User} from '@heroui/react';
 import {useMemo} from 'react';
 
-import {extractGitUrl} from '../../../../../../../../cross/CrossUtils';
+import {extractGitUrl, getCacheUrl} from '../../../../../../../../cross/CrossUtils';
 import {getPluginIconUrl} from '../../../../../../../../cross/plugin/CrossPluginUtils';
 import {PluginInstalledItem} from '../../../../../../../../cross/plugin/PluginTypes';
 import AddBreadcrumb_Renderer from '../../../../../../../Breadcrumbs';
@@ -41,11 +41,10 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
       <div className="w-full flex flex-col">
         <User
           avatarProps={{
-            src: (() => {
-              const iconUrl = getPluginIconUrl(selectedPlugin?.url);
-              return iconUrl ? `lynxcache://fetch/${encodeURIComponent(iconUrl)}` : iconUrl;
-            })(),
+            src: getCacheUrl(getPluginIconUrl(selectedPlugin?.url)),
             className: 'bg-black/0',
+            showFallback: true,
+            name: selectedPlugin?.metadata.title,
             radius: 'none',
           }}
           description={
