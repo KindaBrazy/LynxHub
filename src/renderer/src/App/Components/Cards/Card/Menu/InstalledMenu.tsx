@@ -34,8 +34,8 @@ export const InstalledMenu = memo(() => {
       isOpen={menuIsOpen}
       closeOnSelect={false}
       onOpenChange={setMenuIsOpen}
-      className="border !border-foreground-100"
-      classNames={{base: 'before:bg-black/70', content: 'border-black/70'}}
+      className="border border-foreground-100!"
+      classNames={{base: 'before:bg-foreground-100', content: 'border-foreground-100'}}
       showArrow>
       <DropdownTrigger>
         <Button radius="lg" variant="flat" color="primary" isLoading={updating} isIconOnly>
