@@ -53,8 +53,8 @@ export default function LynxSwitch({
 
   const thumbClassName = useMemo(() => {
     return cn(
-      size === 'sm' ? 'w-4 h-4' : 'w-5 h-5',
-      'shadow-md bg-white dark:bg-white',
+      size === 'sm' ? 'size-4' : 'size-5.5',
+      'shadow-md bg-white',
       `group-data-[selected=true]:${size === 'sm' ? 'ml-4' : 'ml-5'}`,
       'group-data-[pressed=true]:w-7 shrink-0',
       'group-data-[selected]:group-data-[pressed]:ml-4',
