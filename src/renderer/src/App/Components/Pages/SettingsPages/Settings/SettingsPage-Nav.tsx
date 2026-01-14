@@ -106,8 +106,8 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
   const targetSection = selectedSection || SettingsGeneralId;
 
   return (
-    <div className="mt-3 flex flex-col space-y-3 text-start">
-      <span className={`font-semibold ${danger ? 'text-danger' : ''}`}>{title}</span>
+    <div className="mt-3 flex flex-col gap-y-2 text-start">
+      <span className={`font-semibold text-sm uppercase tracking-tight ${danger ? 'text-danger' : ''}`}>{title}</span>
       <div className="flex flex-col gap-y-1">
         <AnimatePresence>
           {items.map(item => (
