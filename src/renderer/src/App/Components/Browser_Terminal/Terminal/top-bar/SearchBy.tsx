@@ -3,7 +3,7 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useCallback} from 'react';
 
 import {SearchQuerySites} from '../../../../../../../cross/CrossTypes';
-import {getSearchUrl} from '../../../../../../../cross/CrossUtils';
+import {getCacheUrl, getSearchUrl} from '../../../../../../../cross/CrossUtils';
 import {ExternalDuo_Icon} from '../../../../../../context_menu/Components/SvgIcons';
 import {Web_Icon} from '../../../../../assets/icons/SvgIcons/SvgIcons';
 
@@ -43,11 +43,7 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
               topContent={<span className="tracking-tighter text-foreground-700">Search selected text by:</span>}>
               <DropdownItem
                 startContent={
-                  <Image
-                    alt="Google icon"
-                    className="size-4"
-                    src={`lynxcache://fetch/${encodeURIComponent('https://www.google.com/favicon.ico')}`}
-                  />
+                  <Image alt="Google icon" className="size-4" src={getCacheUrl('https://www.google.com/favicon.ico')} />
                 }
                 key="Google"
                 endContent={endContent}
@@ -59,7 +55,7 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
                   <Image
                     className="size-4"
                     alt="DuckDuckGo icon"
-                    src={`lynxcache://fetch/${encodeURIComponent('https://duckduckgo.com/favicon.ico')}`}
+                    src={getCacheUrl('https://duckduckgo.com/favicon.ico')}
                   />
                 }
                 key="DuckDuckGo"
@@ -69,11 +65,7 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
               </DropdownItem>
               <DropdownItem
                 startContent={
-                  <Image
-                    alt="Reddit icon"
-                    className="size-4"
-                    src={`lynxcache://fetch/${encodeURIComponent('https://www.reddit.com/favicon.ico')}`}
-                  />
+                  <Image alt="Reddit icon" className="size-4" src={getCacheUrl('https://www.reddit.com/favicon.ico')} />
                 }
                 key="Reddit"
                 endContent={endContent}
@@ -85,7 +77,7 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
                   <Image
                     alt="ChatGPT icon"
                     className="size-4"
-                    src={`lynxcache://fetch/${encodeURIComponent('https://chat.openai.com/favicon.ico')}`}
+                    src={getCacheUrl('https://chat.openai.com/favicon.ico')}
                   />
                 }
                 key="ChatGPT"
@@ -98,7 +90,7 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
                   <Image
                     className="size-4"
                     alt="Perplexity icon"
-                    src={`lynxcache://fetch/${encodeURIComponent('https://www.perplexity.ai/favicon.ico')}`}
+                    src={getCacheUrl('https://www.perplexity.ai/favicon.ico')}
                   />
                 }
                 key="Perplexity"
@@ -111,7 +103,7 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
                   <Image
                     alt="Claude icon"
                     className="size-4"
-                    src={`lynxcache://fetch/${encodeURIComponent('https://www.anthropic.com/favicon.ico')}`}
+                    src={getCacheUrl('https://www.anthropic.com/favicon.ico')}
                   />
                 }
                 key="Claude"

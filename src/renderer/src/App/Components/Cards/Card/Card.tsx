@@ -4,7 +4,7 @@ import {CSSProperties, FormEvent, memo, useCallback, useEffect, useMemo, useStat
 import {useDispatch} from 'react-redux';
 
 import {getAccentColorAsHex} from '../../../../../../cross/AccentColorGenerator';
-import {extractGitUrl} from '../../../../../../cross/CrossUtils';
+import {extractGitUrl, getCacheUrl} from '../../../../../../cross/CrossUtils';
 import AddBreadcrumb_Renderer from '../../../../../Breadcrumbs';
 import {DownloadDuo_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionRendererApi} from '../../../Extensions/ExtensionLoader';
@@ -66,9 +66,7 @@ const LynxCard = memo(() => {
 
   const {developer, avatarSrc} = useMemo(() => {
     const {owner, avatarUrl} = extractGitUrl(repoUrl);
-    // Use image cache for remote avatar URLs
-    const cachedAvatarUrl = avatarUrl ? `lynxcache://fetch/${encodeURIComponent(avatarUrl)}` : avatarUrl;
-    return {developer: owner, avatarSrc: cachedAvatarUrl};
+    return {developer: owner, avatarSrc: getCacheUrl(avatarUrl)};
   }, [repoUrl]);
   const isRunning = useMemo(() => runningCard.some(item => item.id === id), [runningCard, id]);
   const accentColor = useMemo(() => getAccentColorAsHex(title, developer), [title, developer]);

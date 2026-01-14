@@ -5,6 +5,7 @@ import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {APP_ICON_TRANSPARENT, PageID} from '../../../../../cross/CrossConstants';
 import {TabInfo} from '../../../../../cross/CrossTypes';
+import {getCacheUrl} from '../../../../../cross/CrossUtils';
 import {
   AudioGeneration_Icon,
   GamePad_Icon,
@@ -30,9 +31,6 @@ const iconTransition = {
   transition: {duration: 0.15, ease: TRANSITION_EASINGS.easeOut},
 };
 
-/** Returns the cached favicon URL using lynxcache:// protocol */
-const getCachedFavIconUrl = (url: string) => (url ? `lynxcache://fetch/${encodeURIComponent(url)}` : '');
-
 const TabItem_Icon = memo(({tab, currentView}: Props) => {
   const [imgError, setImgError] = useState(false);
   const favIconUrl = tab.favIcon.url;
@@ -53,8 +51,8 @@ const TabItem_Icon = memo(({tab, currentView}: Props) => {
         <Avatar
           name={title}
           radius="none"
+          src={getCacheUrl(favIcon.url)}
           className="size-full bg-transparent"
-          src={getCachedFavIconUrl(favIcon.url)}
           ImgComponent={props => <img alt="" {...props} onError={handleImgError} />}
         />
       );

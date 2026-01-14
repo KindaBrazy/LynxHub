@@ -4,7 +4,7 @@ import {isEmpty, startCase} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extractGitUrl, validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
+import {extractGitUrl, getCacheUrl, validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {CardInfoDescriptions} from '../../../../../../cross/plugin/ModuleTypes';
 import {useDebounceBreadcrumb} from '../../../../../Breadcrumbs';
 import {extensionsData} from '../../../Extensions/ExtensionLoader';
@@ -33,10 +33,7 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
     }
   }, [isOpen]);
 
-  const avatarUrl = useMemo(() => {
-    const avatarUrlFromGit = extractGitUrl(url).avatarUrl;
-    return avatarUrlFromGit ? `lynxcache://fetch/${encodeURIComponent(avatarUrlFromGit)}` : avatarUrlFromGit;
-  }, [url]);
+  const avatarUrl = useMemo(() => getCacheUrl(extractGitUrl(url).avatarUrl), [url]);
 
   useDebounceBreadcrumb('Card Git Manager Modal: ', [isOpen, cardId]);
 
