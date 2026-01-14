@@ -1,3 +1,4 @@
+import {compact} from 'lodash';
 import {type ComponentType, useMemo} from 'react';
 
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
@@ -38,6 +39,7 @@ type SettingsSectionsProps = {
 export const SettingsSections = ({sectionTexts}: SettingsSectionsProps) => {
   const content = useMemo(() => extensionsData.customizePages.settings.add.content, []);
   const searchValue = useSettingsState('searchValue');
+  const selectedSection = useSettingsState('selectedSection');
 
   const builtInSections = useMemo<SettingsSectionDefinition[]>(
     () => [
@@ -88,7 +90,9 @@ export const SettingsSections = ({sectionTexts}: SettingsSectionsProps) => {
     const allSections = [...builtInSections, ...extensionSections];
 
     if (!searchValue) {
-      return allSections.map(section => ({...section, visible: true}));
+      return compact(
+        allSections.map(section => (section.elementId === selectedSection ? {...section, visible: true} : null)),
+      );
     }
 
     return allSections.map(section => {
@@ -96,7 +100,7 @@ export const SettingsSections = ({sectionTexts}: SettingsSectionsProps) => {
       const visible = searchInStrings(searchValue, [dynamicText, section.title]);
       return {...section, visible};
     });
-  }, [builtInSections, extensionSections, searchValue, sectionTexts]);
+  }, [builtInSections, extensionSections, searchValue, sectionTexts, selectedSection]);
 
   const hasVisibleSection = sectionsWithVisibility.some(section => section.visible);
 
