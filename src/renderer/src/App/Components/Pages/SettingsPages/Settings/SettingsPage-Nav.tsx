@@ -1,5 +1,6 @@
 import {Button, Card, CardBody, CardHeader, Input, ScrollShadow} from '@heroui/react';
 import {SpedometerMiddle} from '@solar-icons/react-perf/BoldDuotone';
+import {AnimatePresence, motion} from 'framer-motion';
 import {ReactNode, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -108,22 +109,31 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
     <div className="mt-3 flex flex-col space-y-3 text-start">
       <span className={`font-semibold ${danger ? 'text-danger' : ''}`}>{title}</span>
       <div className="flex flex-col gap-y-1">
-        {items.map(item => (
-          <Button
-            className={
-              `flex justify-start duration-100 text-[0.82rem] ` +
-              `${targetSection === item.elementId && 'bg-default-200 cursor-default shadow-sm'}`
-            }
-            size="sm"
-            variant="light"
-            color={item.color || 'default'}
-            key={`${item.title}_settings_section`}
-            onPress={() => setSelectedSection(item.elementId)}
-            fullWidth>
-            {item.icon}
-            <SettingsSearchHighlight text={item.title} />
-          </Button>
-        ))}
+        <AnimatePresence>
+          {items.map(item => (
+            <Button
+              size="sm"
+              variant="light"
+              color={item.color || 'default'}
+              key={`${item.title}_settings_section`}
+              onPress={() => setSelectedSection(item.elementId)}
+              className={`duration-100 overflow-visible ${targetSection === item.elementId && 'cursor-default'}`}
+              fullWidth
+              disableRipple>
+              <div className="z-10 flex justify-start w-full items-center gap-x-1.5 text-[0.82rem] font-medium">
+                {item.icon}
+                <SettingsSearchHighlight text={item.title} />
+              </div>
+              {targetSection === item.elementId && (
+                <motion.div
+                  layoutId="setting_nav_indicator"
+                  transition={{duration: 0.4, type: 'spring'}}
+                  className="absolute inset-0 z-0 bg-primary/50 rounded-lg"
+                />
+              )}
+            </Button>
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   );
@@ -158,7 +168,7 @@ const SettingsPageNav = ({sectionTexts}: SettingsPageNavProps) => {
   const groupsToRender = searchValue ? filteredGroups : groupSections;
 
   return (
-    <Card className={`h-full text-medium w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
+    <Card className={`h-full my-2 text-medium w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
       <CardHeader className="justify-center gap-x-2 pt-4">
         <Tuning_Icon className="size-5" />
         <span>
