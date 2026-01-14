@@ -31,43 +31,49 @@ export default function ErrorComponent({error, resetErrorBoundary}: Props) {
   }, [error]);
 
   return (
-    <div className="absolute inset-2 rounded-lg bg-black flex items-center justify-center draggable overflow-hidden">
-      <Result
-        subTitle={
-          <div className="text-danger flex items-center justify-center gap-2">
-            {error.message}
-            <CopyClipboard
-              className="notDraggable"
-              contentToCopy={`Message:\n${error.message}\n\n\nStack:\n${error.stack}`}
-            />
-          </div>
-        }
-        extra={
-          <ButtonGroup fullWidth>
-            <Button size="sm" key="retry" className="notDraggable" onPress={resetErrorBoundary}>
-              Retry
-            </Button>
-            <Button size="sm" key="reload" color="warning" onPress={handleReload} className="notDraggable">
-              Reload
-            </Button>
-            <Button
-              size="sm"
-              key="restart"
-              color="danger"
-              className="notDraggable"
-              onPress={isLinuxPortable ? handleClose : handleRestart}>
-              {isLinuxPortable ? 'Exit' : 'Restart'}
-            </Button>
-          </ButtonGroup>
-        }
-        status="403"
-        className="text-center"
-        title={<span className="text-white">Oops! Something went wrong.</span>}>
-        <div className="flex flex-col gap-y-4 w-full bottom-0 absolute inset-x-0">
+    <div className="bg-foreground-100 absolute inset-0">
+      <div
+        className={
+          'absolute inset-2 rounded-lg bg-background flex items-center justify-center draggable overflow-hidden'
+        }>
+        <Result
+          subTitle={
+            <div className="text-danger flex items-center justify-center gap-2">
+              {error.message}
+              <CopyClipboard
+                className="notDraggable"
+                tooltipTitle="Copy full error message"
+                contentToCopy={`Message:\n${error.message}\n\n\nStack:\n${error.stack}`}
+              />
+            </div>
+          }
+          extra={
+            <ButtonGroup fullWidth>
+              <Button size="sm" key="retry" className="notDraggable" onPress={resetErrorBoundary}>
+                Retry
+              </Button>
+              <Button size="sm" key="reload" color="warning" onPress={handleReload} className="notDraggable">
+                Reload
+              </Button>
+              <Button
+                size="sm"
+                key="restart"
+                color="danger"
+                className="notDraggable"
+                onPress={isLinuxPortable ? handleClose : handleRestart}>
+                {isLinuxPortable ? 'Exit' : 'Restart'}
+              </Button>
+            </ButtonGroup>
+          }
+          status="403"
+          className="text-center"
+          title="Oops! Something went wrong."
+        />
+        <div className="flex flex-col gap-y-4 w-full bottom-0 absolute inset-x-0 text-center">
           <span className="text-warning">If the issue persists, please consider reporting it on GitHub issues.</span>
           <Button
             radius="none"
-            variant="light"
+            variant="flat"
             color="warning"
             onPress={openIssues}
             className="notDraggable"
@@ -75,7 +81,7 @@ export default function ErrorComponent({error, resetErrorBoundary}: Props) {
             GtiHub Issues
           </Button>
         </div>
-      </Result>
+      </div>
     </div>
   );
 }
