@@ -117,7 +117,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
       className="z-50 max-w-[75%]"
       isOpen={addArgumentsModal.isOpen}
       onOpenChange={addArgumentsModal.onOpenChange}
-      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 scrollbar-hide ${show}`}}
+      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! scrollbar-hide ${show}`}}
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="flex flex-col space-y-2">

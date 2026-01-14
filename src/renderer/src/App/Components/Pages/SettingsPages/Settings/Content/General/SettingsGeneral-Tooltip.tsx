@@ -40,7 +40,7 @@ export default function SettingsGeneralTooltip() {
         onSelectionChange={onChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default !transition !duration-300'}}
+        classNames={{trigger: 'cursor-default transition! duration-300!'}}
         disallowEmptySelection>
         <SelectItem key="essential" className="cursor-default" description="Show tooltips for essential elements only.">
           Essential

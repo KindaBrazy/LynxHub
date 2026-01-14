@@ -57,7 +57,7 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
     <ButtonGroup className="items-start" fullWidth>
       <Input
         classNames={{
-          inputWrapper: 'rounded-r-none !transition !duration-150',
+          inputWrapper: 'rounded-r-none transition! duration-150!',
         }}
         ref={inputRef}
         color="primary"
@@ -72,7 +72,7 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
       />
 
       <Button variant="solid" onPress={chooseDirectory} aria-label="Choose directory" isIconOnly>
-        {<Folder_Icon className="size-[20px]" />}
+        {<Folder_Icon className="size-5" />}
       </Button>
     </ButtonGroup>
   );

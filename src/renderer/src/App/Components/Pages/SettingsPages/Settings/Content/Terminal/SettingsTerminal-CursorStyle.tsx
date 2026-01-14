@@ -34,7 +34,7 @@ export default function SettingsTerminalCursorStyle() {
         onSelectionChange={onChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default !transition !duration-300', mainWrapper: 'mt-2'}}
+        classNames={{trigger: 'cursor-default transition! duration-300!', mainWrapper: 'mt-2'}}
         disallowEmptySelection>
         <SelectItem key="bar" className="cursor-default">
           Bar

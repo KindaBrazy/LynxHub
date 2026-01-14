@@ -10,7 +10,7 @@ export default function CommitInfo({repoInfo}: Props) {
       </div>
       <div className="flex flex-col overflow-hidden ">
         <span className="font-semibold">Last Commit Hash: </span>
-        <span className="text-foreground-500 break-words">{repoInfo.lastCommitHash}</span>
+        <span className="text-foreground-500 wrap-break-word">{repoInfo.lastCommitHash}</span>
       </div>
       <div className="flex flex-col">
         <span className="font-semibold">Last Commit Message: </span>

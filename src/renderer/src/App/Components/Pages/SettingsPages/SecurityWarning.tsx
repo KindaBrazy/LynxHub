@@ -53,7 +53,7 @@ export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title
       placement="center"
       scrollBehavior="inside"
       onOpenChange={setIsOpen}
-      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 ${show}`}}
+      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! ${show}`}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <ModalHeader className="bg-foreground-100 justify-center text-warning items-center gap-x-2">

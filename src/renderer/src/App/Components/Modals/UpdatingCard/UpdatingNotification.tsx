@@ -93,7 +93,7 @@ const UpdatingNotification = () => {
           ),
           duration: 0,
           key: `${card.devName}-updateDetails`,
-          className: '!top-10 dark:bg-foreground-100 !shadow-medium !overflow-hidden rounded-xl',
+          className: 'top-10! dark:bg-foreground-100 !shadow-medium !overflow-hidden rounded-xl',
           title: (
             <span className="font-semibold">
               {card.title} ({card.devName}) Updated Successfully

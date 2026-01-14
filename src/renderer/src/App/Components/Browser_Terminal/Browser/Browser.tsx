@@ -87,7 +87,7 @@ const Browser = memo(({runningCard}: Props) => {
   return (
     <div
       className={
-        `absolute inset-0 !top-10 bg-white shadow-md overflow-hidden ` +
+        `absolute inset-0 top-10! bg-white shadow-md overflow-hidden ` +
         `dark:bg-LynxNearBlack ${currentView === 'browser' ? 'block' : 'hidden'}`
       }>
       {isEmpty(finalAddress) ? (

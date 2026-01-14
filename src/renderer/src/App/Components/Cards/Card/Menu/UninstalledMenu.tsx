@@ -14,7 +14,7 @@ const UninstalledMenu = memo(() => {
       isOpen={menuIsOpen}
       closeOnSelect={false}
       onOpenChange={setMenuIsOpen}
-      className="border !border-foreground-200/70"
+      className="border border-foreground-200/70!"
       classNames={{base: 'before:bg-black/70', content: 'border-black/70'}}
       showArrow>
       <DropdownTrigger>

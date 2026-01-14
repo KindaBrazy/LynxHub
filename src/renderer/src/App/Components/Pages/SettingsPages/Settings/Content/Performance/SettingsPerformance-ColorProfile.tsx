@@ -44,7 +44,7 @@ export default function SettingsPerformanceColorProfile() {
         onSelectionChange={onChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default !transition !duration-300'}}
+        classNames={{trigger: 'cursor-default transition! duration-300!'}}
         disallowEmptySelection>
         <SelectItem key="default" className="cursor-default" description="Use system default color profile.">
           Default

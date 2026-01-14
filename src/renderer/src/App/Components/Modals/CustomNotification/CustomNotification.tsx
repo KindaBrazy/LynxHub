@@ -9,7 +9,6 @@ export default function CustomNotification() {
 
   useEffect(() => {
     const offOpen = rendererIpc.customNotification.onOpen((_, data) => {
-      console.log('openeing this', data.key);
       api[data.type]({
         closeIcon: null,
         placement: 'bottomRight',

@@ -155,7 +155,7 @@ export default function ModuleConfigModal({isOpen, onClose}: Props) {
       isOpen={isOpen}
       onClose={onClose}
       scrollBehavior="inside"
-      classNames={{backdrop: '!top-10', wrapper: '!top-10'}}>
+      classNames={{backdrop: 'top-10!', wrapper: 'top-10!'}}>
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1">
           <div className="flex items-center gap-2">

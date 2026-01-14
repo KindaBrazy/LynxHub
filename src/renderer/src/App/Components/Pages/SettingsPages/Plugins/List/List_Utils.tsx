@@ -83,7 +83,7 @@ export function useFilterMenu(selectedKeys: PluginFilter, setSelectedKeys: Dispa
   return useCallback(() => {
     return (
       <>
-        <Dropdown size="sm" closeOnSelect={false} className="border !border-foreground/15">
+        <Dropdown size="sm" closeOnSelect={false} className="border border-foreground/15!">
           <DropdownTrigger>
             <Button variant="flat" isIconOnly>
               <FilterDuo_Icon className="size-4" />

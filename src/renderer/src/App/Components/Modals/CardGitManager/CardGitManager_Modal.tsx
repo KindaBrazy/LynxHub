@@ -60,7 +60,7 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
       isDismissable={false}
       scrollBehavior="inside"
       onOpenChange={() => onOpenChange(false)}
-      classNames={{backdrop: `!top-10 ${show}`, closeButton: 'cursor-default', wrapper: `!top-10 ${show}`}}
+      classNames={{backdrop: `top-10! ${show}`, closeButton: 'cursor-default', wrapper: `top-10! ${show}`}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <ModalHeader

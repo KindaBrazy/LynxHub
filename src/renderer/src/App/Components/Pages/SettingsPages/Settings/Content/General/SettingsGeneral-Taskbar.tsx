@@ -40,7 +40,7 @@ export default function SettingsGeneralTaskbar() {
         onSelectionChange={onChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default !transition !duration-300'}}
+        classNames={{trigger: 'cursor-default transition! duration-300!'}}
         disallowEmptySelection>
         <SelectItem key="taskbar-tray" className="cursor-default">
           {isDarwin ? 'Dock & Tray' : 'Taskbar & Tray'}

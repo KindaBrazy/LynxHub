@@ -40,8 +40,8 @@ const UnassignCard = ({cardId, isOpen, tabID}: Props) => {
   return (
     <Modal
       classNames={{
-        backdrop: `!top-10 !z-10 ${show}`,
-        wrapper: `!top-10 scrollbar-hide ${show}`,
+        backdrop: `top-10! z-10! ${show}`,
+        wrapper: `top-10! scrollbar-hide ${show}`,
       }}
       size="xl"
       isOpen={isOpen}

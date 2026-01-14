@@ -50,7 +50,7 @@ export function Browser_Error({error, onReload}: Props) {
             }}
             title="Show details">
             <Card className="gap-y-2 pt-3 text-start">
-              <pre className="whitespace-pre-wrap break-all px-3 !font-JetBrainsMono text-xs text-foreground-600">
+              <pre className="whitespace-pre-wrap break-all px-3 font-JetBrainsMono! text-xs text-foreground-600">
                 <code>
                   {`URL: ${error.validatedURL}\nError Code: ${error.errorCode}\nDescription: ${error.errorDescription}`}
                 </code>

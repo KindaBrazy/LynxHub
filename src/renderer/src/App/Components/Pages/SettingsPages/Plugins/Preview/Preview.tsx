@@ -18,7 +18,7 @@ const Preview = memo(() => {
     <div
       className={
         'absolute right-2 inset-y-2 rounded-xl border border-foreground-100 overflow-hidden' +
-        ' transition-[left] duration-500 sm:left-[26rem] lg:left-[31rem] 2xl:left-[37rem] shadow-small' +
+        ' transition-[left] duration-500 sm:left-104 lg:left-124 2xl:left-148 shadow-small' +
         ` ${ContainersBg} rounded-xl flex flex-col`
       }>
       {isEmpty(selectedPlugin) ? (

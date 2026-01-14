@@ -48,9 +48,9 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
   return (
     <Modal
       classNames={{
-        backdrop: `!top-10 ${show}`,
-        wrapper: `!top-10 scrollbar-hide ${show}`,
-        base: '!pb-0',
+        backdrop: `top-10! ${show}`,
+        wrapper: `top-10! scrollbar-hide ${show}`,
+        base: 'pb-0!',
       }}
       size="xl"
       isOpen={isOpen}

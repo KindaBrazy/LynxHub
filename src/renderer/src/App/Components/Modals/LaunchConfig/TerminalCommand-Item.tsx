@@ -53,7 +53,7 @@ export default function TerminalCommandItem({defaultText, editCommand, index, on
         onValueChange={onChange}
         defaultValue={defaultText}
         autoFocus={isEmpty(defaultText)}
-        classNames={{input: `!font-JetBrainsMono !text-xs`, inputWrapper: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack'}}
+        classNames={{input: `font-JetBrainsMono! text-xs!`, inputWrapper: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack'}}
       />
       <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>
         <TrashDuo_Icon className="size-4" />

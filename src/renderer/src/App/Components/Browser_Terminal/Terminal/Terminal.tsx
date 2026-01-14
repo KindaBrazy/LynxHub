@@ -272,7 +272,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
 
   return (
     <div className={`${currentView === 'terminal' ? 'block' : 'hidden'}`}>
-      <div className="absolute inset-0 !top-10 overflow-hidden bg-white pl-3 pr-1 shadow-md dark:bg-LynxNearBlack">
+      <div className="absolute inset-0 top-10! overflow-hidden bg-white pl-3 pr-1 shadow-md dark:bg-LynxNearBlack">
         <XTermCore
           id={id}
           ref={xtermRef}

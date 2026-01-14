@@ -13,7 +13,7 @@ export default function LocateWarning({isOpen, setIsOpen, tabId}: Props) {
       isOpen={isOpen}
       placement="center"
       onOpenChange={setIsOpen}
-      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 ${show}`}}
+      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! ${show}`}}
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="text-warning items-center gap-x-2">
