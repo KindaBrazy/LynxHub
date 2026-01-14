@@ -1,1 +1,1 @@
-export const ContainersBg = ' bg-white/10 dark:bg-LynxRaisinBlack/20 ';
+export const ContainersBg = ' bg-white dark:bg-LynxRaisinBlack shadow-md ';
