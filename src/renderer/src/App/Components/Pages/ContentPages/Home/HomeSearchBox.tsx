@@ -19,7 +19,7 @@ const HomeSearchBox = memo(({searchValue, setSearchValue}: Props) => {
       spellCheck="false"
       value={searchValue}
       onValueChange={setSearchValue}
-      placeholder="Type to find AI..."
+      placeholder="Search interfaces..."
       startContent={<Circle_Icon className="size-5" />}
       fullWidth
     />
