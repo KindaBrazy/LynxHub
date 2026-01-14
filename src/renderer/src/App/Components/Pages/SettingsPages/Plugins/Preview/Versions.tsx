@@ -54,7 +54,7 @@ export default function Versions({currentVersion}: Props) {
         {versions.map(v => (
           <DropdownItem
             endContent={
-              <Chip size="sm" className="scale-80" color={getColor(v.stage)}>
+              <Chip size="sm" variant="flat" className="scale-80" color={getColor(v.stage)}>
                 {getStageName(v.stage)}
               </Chip>
             }
