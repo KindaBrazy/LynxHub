@@ -1,12 +1,13 @@
-import {Button, Input, Listbox, ListboxItem} from '@heroui/react';
+import {Button, Input, Listbox, ListboxItem, ListboxSection} from '@heroui/react';
 import {compact} from 'lodash';
-import {KeyboardEvent, useEffect, useMemo, useRef, useState} from 'react';
+import {KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {
   Get_Default_Hotkeys,
   Hotkey_Desc,
   Hotkey_Names,
+  Hotkey_Sections,
   Hotkey_Titles,
 } from '../../../../../../../../cross/HotkeyConstants';
 import {LynxHotkey} from '../../../../../../../../cross/IpcChannelAndTypes';
@@ -156,58 +157,71 @@ export const HotkeySettings = () => {
   };
   const searchValue = useSettingsState('searchValue');
 
+  const renderItems = useCallback(
+    (include: string[]) => {
+      return compact(
+        config.map(item => {
+          const {label, hotkey, description, name} = item;
+          const isRecording = recordingName === name;
+          const canShow = canSettingItemShow(searchValue, [label, description, formatHotkey(hotkey)]);
+
+          if (!canShow || !include.includes(name)) return null;
+
+          return (
+            <ListboxItem
+              classNames={{
+                description: 'transition-colors duration-200',
+                title: 'transition-colors duration-200',
+              }}
+              endContent={
+                <div className="flex flex-row gap-x-2 items-center">
+                  <Button
+                    size="sm"
+                    variant="flat"
+                    color="secondary"
+                    disabled={isRecording}
+                    isLoading={isRecording}
+                    onPress={() => handleRecordClick(name)}>
+                    <Keyboard_Icon className="size-4" />
+                  </Button>
+                  <Input
+                    ref={el => {
+                      inputRefs.current[name] = el;
+                    }}
+                    size="sm"
+                    onBlur={() => handleBlur(name)}
+                    variant={isRecording ? 'bordered' : 'flat'}
+                    color={isRecording ? 'secondary' : 'default'}
+                    value={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
+                    onKeyDown={isRecording ? e => handleKeyDown(e, name) : undefined}
+                    placeholder={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
+                    classNames={{input: 'cursor-default', innerWrapper: 'cursor-default'}}
+                    isReadOnly
+                  />
+                </div>
+              }
+              key={`${name}_hotkey`}
+              title={<SettingsSearchHighlight text={label} />}
+              description={<SettingsSearchHighlight text={description} />}
+              className="transition-background duration-200 cursor-default"
+            />
+          );
+        }),
+      );
+    },
+    [config],
+  );
+
   return (
     <SettingsSection title="Hotkeys" id={SettingsHotkeysId} icon={<Keyboard_Icon className="size-5" />}>
       <Listbox variant="flat">
-        {compact(
-          config.map(item => {
-            const {label, hotkey, description, name} = item;
-            const isRecording = recordingName === name;
-            const canShow = canSettingItemShow(searchValue, [label, description, formatHotkey(hotkey)]);
-
-            if (!canShow) return null;
-
-            return (
-              <ListboxItem
-                classNames={{
-                  description: 'transition-colors duration-200',
-                  title: 'transition-colors duration-200',
-                }}
-                endContent={
-                  <div className="flex flex-row gap-x-2 items-center">
-                    <Button
-                      size="sm"
-                      variant="flat"
-                      color="secondary"
-                      disabled={isRecording}
-                      isLoading={isRecording}
-                      onPress={() => handleRecordClick(name)}>
-                      <Keyboard_Icon className="size-4" />
-                    </Button>
-                    <Input
-                      ref={el => {
-                        inputRefs.current[name] = el;
-                      }}
-                      size="sm"
-                      onBlur={() => handleBlur(name)}
-                      variant={isRecording ? 'bordered' : 'flat'}
-                      color={isRecording ? 'secondary' : 'default'}
-                      value={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
-                      onKeyDown={isRecording ? e => handleKeyDown(e, name) : undefined}
-                      placeholder={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
-                      classNames={{input: 'cursor-default', innerWrapper: 'cursor-default'}}
-                      isReadOnly
-                    />
-                  </div>
-                }
-                key={`${name}_hotkey`}
-                title={<SettingsSearchHighlight text={label} />}
-                description={<SettingsSearchHighlight text={description} />}
-                className="transition-background duration-200 cursor-default"
-              />
-            );
-          }),
-        )}
+        {Hotkey_Sections.map(section => {
+          return (
+            <ListboxSection key={section.kind} title={section.title}>
+              {renderItems(section.includes)}
+            </ListboxSection>
+          );
+        })}
       </Listbox>
       <Button onPress={resetToDefault} startContent={<RefreshDuo_Icon />}>
         Reset to Defaults

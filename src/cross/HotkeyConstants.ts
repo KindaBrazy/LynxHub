@@ -25,20 +25,56 @@ export const Hotkey_Names = {
   terminalQuick6: 'terminalQuick6',
 };
 
+export const Hotkey_Sections: {kind: string; title: string; includes: string[]}[] = [
+  {kind: 'app', title: 'Application', includes: [Hotkey_Names.fullscreen, Hotkey_Names.toggleNav]},
+  {
+    kind: 'tab',
+    title: 'Tab',
+    includes: [
+      Hotkey_Names.newTab,
+      Hotkey_Names.newBrowserTab,
+      Hotkey_Names.newTerminalTab,
+      Hotkey_Names.newBrowserTerminalTab,
+      Hotkey_Names.toggleAiView,
+      Hotkey_Names.switchTab,
+      Hotkey_Names.nextTab,
+      Hotkey_Names.prevTab,
+      Hotkey_Names.closeTab,
+    ],
+  },
+  {
+    kind: 'browser',
+    title: 'Browser',
+    includes: [Hotkey_Names.toggleDevTools, Hotkey_Names.findInPage, Hotkey_Names.refreshTab],
+  },
+  {
+    kind: 'terminal',
+    title: 'Terminal',
+    includes: [
+      Hotkey_Names.terminalQuick1,
+      Hotkey_Names.terminalQuick2,
+      Hotkey_Names.terminalQuick3,
+      Hotkey_Names.terminalQuick4,
+      Hotkey_Names.terminalQuick5,
+      Hotkey_Names.terminalQuick6,
+    ],
+  },
+];
+
 export const Hotkey_Titles = {
-  fullscreen: 'Fullscreen',
-  toggleNav: 'Nav Bar',
+  fullscreen: 'Toggle Fullscreen',
+  toggleNav: 'Toggle Navigation Bar',
   toggleAiView: 'Toggle View',
 
-  closeTab: 'Close Tab',
+  closeTab: 'Close Active Tab',
   newTab: 'New Tab',
-  newBrowserTab: 'Browser Tab',
-  newTerminalTab: 'Terminal Tab',
-  newBrowserTerminalTab: 'Combo Tab',
-  refreshTab: 'Refresh Tab',
+  newBrowserTab: 'New Browser Tab',
+  newTerminalTab: 'New Terminal Tab',
+  newBrowserTerminalTab: 'New Combination Tab',
+  refreshTab: 'Refresh Active Tab',
   switchTab: 'Switch Tab',
   nextTab: 'Next Tab',
-  prevTab: 'Prevoius Tab',
+  prevTab: 'Previous Tab',
 
   findInPage: 'Find in web page',
   toggleDevTools: 'Toggle DevTools',
