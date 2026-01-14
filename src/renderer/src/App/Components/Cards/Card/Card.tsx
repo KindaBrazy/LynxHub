@@ -22,7 +22,6 @@ import {
 } from '../../../Utils/UtilHooks';
 import {useTabModalManager} from '../../Modals/useTabModalManager';
 import Footer from './Footer';
-import PulsingLine from './PulsingLine';
 import {useCardStore} from './Wrapper';
 
 type AccentStyle = CSSProperties & {'--accent-bg-color'?: string};
@@ -131,7 +130,7 @@ const LynxCard = memo(() => {
   return (
     <Card
       className={
-        'relative w-[300px] h-[210px] border border-foreground-100 px-2 group ' +
+        'relative w-75 h-52.5 border border-foreground-100 px-2 group ' +
         'hover:scale-[1.02] shadow-md transition-all hover:shadow-lg duration-300'
       }
       as={motion.div}
@@ -143,7 +142,6 @@ const LynxCard = memo(() => {
         style={accentStyle}
         className={`absolute scale-150 opacity-50 inset-0 z-0 ${isInstalled ? 'bg-installed' : 'bg-uninstalled'}`}
       />
-      <PulsingLine accentColor={accentColor} isInstalled={isInstalled} />
 
       <CardHeader className="justify-between">
         <User
@@ -152,6 +150,7 @@ const LynxCard = memo(() => {
             name: modifiedTitle,
             isBordered: true,
             showFallback: true,
+            classNames: {base: isInstalled && 'ring-primary-200'},
           }}
           name={
             <span
