@@ -31,7 +31,7 @@ const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, cl
       isDisabled={!showTooltip}
       content={copied ? 'Copied!' : tooltipTitle || 'Copy to clipboard'}
       showArrow>
-      <Button size="sm" variant="light" onPress={handleCopy} className={`cursor-default ${className}`} isIconOnly>
+      <Button size="sm" variant="light" onPress={handleCopy} className={className} isIconOnly>
         {copied ? (
           <CheckDuo_Icon className="size-5 animate-appearance-in" />
         ) : (
