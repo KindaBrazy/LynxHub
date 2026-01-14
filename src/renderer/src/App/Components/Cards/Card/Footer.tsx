@@ -42,7 +42,7 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
         {isInstalled && (
           <Button
             className={
-              `shrink-0 transition duration-500 group-hover:opacity-100 opacity-0 ` +
+              `shrink-0 transition duration-400 group-hover:opacity-100 opacity-0 ` +
               `group-hover:translate-x-0 -translate-x-2`
             }
             size="sm"
@@ -68,7 +68,7 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
       ) : (
         <div
           className={
-            'group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 opacity-0 transition duration-500'
+            'group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 opacity-0 transition duration-400'
           }>
           {isInstalled ? <PlayDuo_Icon className="size-4 text-primary" /> : <DownloadDuo_Icon className="size-4" />}
         </div>
