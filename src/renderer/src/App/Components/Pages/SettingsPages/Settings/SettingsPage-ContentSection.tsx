@@ -1,4 +1,5 @@
 import {Card, CardBody, CardHeader} from '@heroui/react';
+import {motion} from 'framer-motion';
 import {ReactNode} from 'react';
 
 import {ContainersBg} from '../../../../Utils/CrossStyle';
@@ -19,12 +20,17 @@ export default function SettingsSection({children, id, title, titleColor = '', i
   useRegisterSectionSearch(id, title);
 
   return (
-    <Card id={id} shadow="sm" className={`w-full ${ContainersBg} border-1 border-foreground-100`}>
-      <CardHeader className={`flex flex-row items-center justify-center gap-x-2 ${titleColor}`}>
-        {icon}
-        <SettingsSearchHighlight text={title} />
-      </CardHeader>
-      <CardBody className={`${itemsCenter && 'justify-center'} flex flex-col gap-y-3`}>{children}</CardBody>
-    </Card>
+    <motion.div
+      transition={{duration: 0.2}}
+      animate={{translateX: 0, opacity: 1}}
+      initial={{translateX: -50, opacity: 0}}>
+      <Card id={id} shadow="sm" className={`w-full ${ContainersBg} border-1 border-foreground-100`}>
+        <CardHeader className={`flex flex-row items-center justify-center gap-x-2 ${titleColor}`}>
+          {icon}
+          <SettingsSearchHighlight text={title} />
+        </CardHeader>
+        <CardBody className={`${itemsCenter && 'justify-center'} flex flex-col gap-y-3`}>{children}</CardBody>
+      </Card>
+    </motion.div>
   );
 }
