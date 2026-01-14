@@ -58,7 +58,7 @@ export default function UpdateDetails() {
         deletions: details.deletions[file] || 0,
         insertions: details.insertions[file] || 0,
         key: index,
-        name: <p className="md:!max-w-72 lg:!max-w-full truncate overflow-hidden">{file}</p>,
+        name: <p className="md:max-w-72! lg:max-w-full! truncate overflow-hidden">{file}</p>,
       };
     });
   }, [details]);
@@ -80,9 +80,9 @@ export default function UpdateDetails() {
   return (
     <Modal
       classNames={{
-        backdrop: `!top-10 ${show}`,
+        backdrop: `top-10! ${show}`,
         closeButton: 'cursor-default',
-        wrapper: `!top-10 scrollbar-hide ${show}`,
+        wrapper: `top-10! scrollbar-hide ${show}`,
       }}
       isOpen={isOpen}
       placement="center"

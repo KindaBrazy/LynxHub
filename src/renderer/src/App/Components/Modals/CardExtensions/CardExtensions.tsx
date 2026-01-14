@@ -67,7 +67,7 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
       scrollBehavior="inside"
       onOpenChange={onOpenChange}
       motionProps={modalMotionProps}
-      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 scrollbar-hide ${show}`}}
+      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! scrollbar-hide ${show}`}}
       className="max-w-[80%] border-2 border-foreground/10 dark:border-foreground/5 overflow-hidden"
       hideCloseButton>
       <ModalContent>

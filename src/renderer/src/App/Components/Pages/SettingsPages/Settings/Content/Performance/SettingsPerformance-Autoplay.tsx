@@ -48,7 +48,7 @@ export default function SettingsPerformanceAutoplay() {
         onSelectionChange={onChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default !transition !duration-300'}}
+        classNames={{trigger: 'cursor-default transition! duration-300!'}}
         disallowEmptySelection>
         <SelectItem key="default" className="cursor-default" description="Use browser default autoplay behavior.">
           Default

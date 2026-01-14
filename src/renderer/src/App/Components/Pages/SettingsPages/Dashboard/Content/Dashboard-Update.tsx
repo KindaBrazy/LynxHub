@@ -101,7 +101,7 @@ export default function DashboardUpdate() {
         disabledKeys={disabledKeys}
         onSelectionChange={onChange}
         description="Choose how often you want to receive updates."
-        classNames={{trigger: 'cursor-default !transition !duration-300', description: 'text-start'}}
+        classNames={{trigger: 'cursor-default transition! duration-300!', description: 'text-start'}}
         disallowEmptySelection>
         <SelectItem
           key="public"

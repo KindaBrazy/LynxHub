@@ -312,7 +312,7 @@ const RenderItem = memo(function RenderItem({item, activePage, isDark}: ItemProp
                 <div
                   className={
                     'px-1.5 py-0.5 bg-success text-white text-xs font-bold rounded-full' +
-                    ' min-w-[1.25rem] flex items-center justify-center'
+                    ' min-w-5 flex items-center justify-center'
                   }>
                   {item.badge}
                 </div>

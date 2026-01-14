@@ -121,7 +121,7 @@ export default function Home_Notification() {
           },
         }}
         isOpen={isOpen}
-        className="!mb-14"
+        className="mb-14!"
         onOpenChange={onOpenChange}
         classNames={{backdrop: 'mt-10', wrapper: 'mt-12'}}
         hideCloseButton>

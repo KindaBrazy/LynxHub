@@ -8,7 +8,7 @@ import App from './ScreenShare';
 const {darkMode} = await rendererIpc.storage.get('app');
 const systemDarkMode = await rendererIpc.win.getSystemDarkMode();
 
-let isDarkMode;
+let isDarkMode: boolean;
 
 if (darkMode === 'system') {
   isDarkMode = systemDarkMode === 'dark';

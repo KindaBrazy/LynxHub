@@ -72,7 +72,7 @@ export default function List() {
   return (
     <div
       className={
-        'absolute inset-y-2 border border-foreground-100 shadow-small sm:w-[19rem] lg:w-[24rem] 2xl:w-[30rem]' +
+        'absolute inset-y-2 border border-foreground-100 shadow-small sm:w-76 lg:w-[24rem] 2xl:w-120' +
         ` overflow-hidden shrink-0 transition-[width] duration-500 ${ContainersBg} rounded-xl` +
         ' flex flex-col'
       }>

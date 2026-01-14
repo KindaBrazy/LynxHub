@@ -57,7 +57,7 @@ export default function RenderItem({item, updateTable, dir, searchValue}: Props)
     <>
       <List.Item
         className={
-          'mb-2 h-20 rounded-lg border-2 bg-gray-50 !px-2 transition duration-300 hover:bg-gray-200 ' +
+          'mb-2 h-20 rounded-lg border-2 bg-gray-50 px-2! transition duration-300 hover:bg-gray-200 ' +
           'border-transparent hover:border-white hover:shadow-lg dark:bg-black/15' +
           ' dark:hover:border-black dark:hover:bg-black/25'
         }

@@ -328,7 +328,7 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
       <div
         className={cn(
           'absolute inset-0 flex items-center px-4 pointer-events-none transition-opacity duration-200',
-          '!right-10',
+          'right-10!',
           isFocused ? 'opacity-0' : 'opacity-100',
         )}>
         {isAddress ? (

@@ -24,7 +24,7 @@ const CardReadmeModal = ({isOpen, url, title, tabID}: Props) => {
       scrollBehavior="inside"
       className="max-w-[95%]"
       onOpenChange={onOpenChange}
-      classNames={{backdrop: `!top-10 ${show}`, closeButton: 'cursor-default', wrapper: `!top-10 ${show}`}}
+      classNames={{backdrop: `top-10! ${show}`, closeButton: 'cursor-default', wrapper: `top-10! ${show}`}}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <ModalHeader

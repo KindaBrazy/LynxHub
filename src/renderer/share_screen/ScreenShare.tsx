@@ -85,7 +85,7 @@ export default function ScreenShare({isDarkMode}: Props) {
   return (
     <StyleProvider layer>
       <main className={`${isDarkMode && 'dark'} text-foreground`}>
-        <div className={'w-[620px] h-[480px] dark:bg-LynxRaisinBlack flex flex-col scrollbar-hide overflow-hidden'}>
+        <div className={'w-155 h-120 dark:bg-LynxRaisinBlack flex flex-col scrollbar-hide overflow-hidden'}>
           {/* Header */}
           <div className="px-4 py-2 border-b border-foreground-200">
             <div className="flex items-center justify-between">

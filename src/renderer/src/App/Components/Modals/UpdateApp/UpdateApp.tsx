@@ -225,7 +225,7 @@ const UpdateApp = () => {
       isDismissable={false}
       scrollBehavior="inside"
       motionProps={modalMotionProps}
-      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 scrollbar-hide ${show}`}}
+      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! scrollbar-hide ${show}`}}
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="text-success">{renderTitle}</ModalHeader>

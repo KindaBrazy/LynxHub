@@ -29,7 +29,7 @@ const InstallHeader = ({steps, currentStep}: Props) => {
         size="small"
         type="default"
         current={currentStep}
-        className="!w-full items-center justify-center bg-foreground-200 dark:bg-foreground-100"
+        className="w-full! items-center justify-center bg-foreground-200 dark:bg-foreground-100"
       />
     </ModalHeader>
   );

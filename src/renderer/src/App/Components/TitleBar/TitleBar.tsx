@@ -39,7 +39,7 @@ const TitleBar = memo(() => {
       {showWizard ? (
         <Button
           className={
-            'pr-2 notDraggable text-small pl-2 flex !rounded-t-lg !rounded-b-none flex-row cursor-default' +
+            'pr-2 notDraggable text-small pl-2 flex rounded-t-lg! rounded-b-none! flex-row cursor-default' +
             ' gap-x-0 bg-white dark:bg-[#303033] ml-0.5 mt-1'
           }
           variant="light">

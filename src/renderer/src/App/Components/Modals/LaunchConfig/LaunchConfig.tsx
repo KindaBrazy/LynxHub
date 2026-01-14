@@ -76,7 +76,7 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
       onOpenChange={onOpenChange}
       motionProps={modalMotionProps}
       className="z-40 max-w-[80%] border-2 border-foreground/10 dark:border-foreground/5"
-      classNames={{backdrop: `!top-10 ${show}`, wrapper: `!top-10 scrollbar-hide ${show}`}}
+      classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! scrollbar-hide ${show}`}}
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="flex-col gap-y-2 pb-0 text-center">

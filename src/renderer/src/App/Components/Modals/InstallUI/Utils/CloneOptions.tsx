@@ -117,7 +117,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
 
               <NumberInput
                 classNames={{
-                  inputWrapper: 'bg-foreground-200 hover:!bg-foreground-300 group-data-[focus=true]:bg-foreground-200',
+                  inputWrapper: 'bg-foreground-200 hover:bg-foreground-300! group-data-[focus=true]:bg-foreground-200',
                   base: 'w-fit',
                 }}
                 size="sm"

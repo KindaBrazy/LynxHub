@@ -201,9 +201,9 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
   return (
     <Modal
       classNames={{
-        backdrop: `!top-10 ${show}`,
+        backdrop: `top-10! ${show}`,
         closeButton: 'cursor-default',
-        wrapper: `!top-10 ${show}`,
+        wrapper: `top-10! ${show}`,
       }}
       size="2xl"
       shadow="lg"

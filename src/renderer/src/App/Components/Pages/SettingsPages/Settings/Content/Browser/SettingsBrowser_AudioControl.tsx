@@ -111,9 +111,9 @@ export default function SettingsBrowser_AudioControl() {
         </div>
         <div className="mt-1 flex flex-row items-center gap-3">
           {globalMuted ? (
-            <VolumeCross aria-hidden="true" className="size-5 flex-shrink-0 text-danger-500" />
+            <VolumeCross aria-hidden="true" className="size-5 shrink-0 text-danger-500" />
           ) : (
-            <Volume aria-hidden="true" className="size-5 flex-shrink-0 text-default-500" />
+            <Volume aria-hidden="true" className="size-5 shrink-0 text-default-500" />
           )}
           <Switch
             size="sm"
