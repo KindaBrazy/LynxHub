@@ -1,6 +1,6 @@
 import {Button, Input, Listbox, ListboxItem, ListboxSection} from '@heroui/react';
 import {compact} from 'lodash';
-import {KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {KeyboardEvent, useCallback, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {
@@ -24,9 +24,6 @@ import SettingsSearchHighlight from '../SettingsSearchHighlight';
 
 export const SettingsHotkeysId = 'settings_hotkeys_elem';
 
-type HotkeyItem = {name: string; label: string; description: string; hotkey: HotkeyLike | null};
-type HotkeyConfig = HotkeyItem[];
-
 const isModifierKey = (key: string): boolean => {
   return ['control', 'shift', 'alt', 'meta', 'os'].includes(key.toLowerCase());
 };
@@ -34,10 +31,10 @@ const isModifierKey = (key: string): boolean => {
 export const HotkeySettings = () => {
   const hotkeys = useHotkeysState('hotkeys');
   const quickCommands = useTerminalState('quickCommands');
-  const [config, setConfig] = useState<HotkeyConfig>([]);
   const [recordingName, setRecordingName] = useState<string | null>(null);
   const inputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const dispatch = useDispatch<AppDispatch>();
+  const searchValue = useSettingsState('searchValue');
 
   const quickCommandLabelMap = useMemo(() => {
     const labels: Partial<Record<string, string>> = {};
@@ -72,30 +69,12 @@ export const HotkeySettings = () => {
     return labels;
   }, [quickCommands]);
 
-  useEffect(() => {
-    setConfig(
-      hotkeys.map(hot => {
-        const {name, ...hotkey} = hot;
-        const baseLabel = Hotkey_Titles[name];
-        const dynamicLabel = quickCommandLabelMap[name];
-
-        return {
-          hotkey,
-          name,
-          description: Hotkey_Desc[name],
-          label: dynamicLabel || baseLabel,
-        };
-      }),
-    );
-  }, [hotkeys, quickCommandLabelMap]);
-
-  const handleRecordClick = (name: string) => {
+  const handleRecordClick = useCallback((name: string) => {
     setRecordingName(name);
-
     inputRefs.current[name]?.focus();
-  };
+  }, []);
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>, name: string) => {
+  const handleKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement>, name: string) => {
     event.preventDefault();
 
     const {key, ctrlKey, shiftKey, altKey, metaKey} = event;
@@ -140,25 +119,37 @@ export const HotkeySettings = () => {
 
     setRecordingName(null);
     inputRefs.current[name]?.blur();
-  };
+  }, []);
 
-  const handleBlur = (name: string) => {
+  const handleBlur = useCallback((name: string) => {
     setTimeout(() => {
       if (recordingName === name) {
         setRecordingName(null);
       }
     }, 100);
-  };
+  }, []);
 
-  const resetToDefault = () => {
+  const resetToDefault = useCallback(() => {
     const result = Get_Default_Hotkeys(window.osPlatform);
     dispatch(hotkeysActions.setHotkeys(result));
     rendererIpc.storage.update('app', {hotkeys: result});
-  };
-  const searchValue = useSettingsState('searchValue');
+  }, []);
 
   const renderItems = useCallback(
     (include: string[]) => {
+      const config = hotkeys.map(hot => {
+        const {name, ...hotkey} = hot;
+        const baseLabel = Hotkey_Titles[name];
+        const dynamicLabel = quickCommandLabelMap[name];
+
+        return {
+          hotkey,
+          name,
+          description: Hotkey_Desc[name],
+          label: dynamicLabel || baseLabel,
+        };
+      });
+
       return compact(
         config.map(item => {
           const {label, hotkey, description, name} = item;
@@ -209,7 +200,7 @@ export const HotkeySettings = () => {
         }),
       );
     },
-    [config],
+    [hotkeys, quickCommandLabelMap, recordingName],
   );
 
   return (
