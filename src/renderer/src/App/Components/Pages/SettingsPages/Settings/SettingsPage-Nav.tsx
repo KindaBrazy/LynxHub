@@ -235,13 +235,13 @@ const SettingsPageNav = ({sectionTexts}: SettingsPageNavProps) => {
       <CardBody className="pt-0 flex flex-col">
         <Input
           size="sm"
-          type="search"
           className="py-1"
           value={searchValue}
           onValueChange={setSearchValue}
           placeholder="Search settings..."
           aria-label="Search settings sections"
           startContent={<Circle_Icon className="size-4" />}
+          isClearable
         />
 
         <ScrollShadow className="flex-1" hideScrollBar>
