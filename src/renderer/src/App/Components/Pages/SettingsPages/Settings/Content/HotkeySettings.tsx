@@ -1,5 +1,5 @@
-import {Button, Input} from '@heroui/react';
-import {List} from 'antd';
+import {Button, Input, Listbox, ListboxItem} from '@heroui/react';
+import {compact} from 'lodash';
 import {KeyboardEvent, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -12,17 +12,19 @@ import {
 import {LynxHotkey} from '../../../../../../../../cross/IpcChannelAndTypes';
 import {Keyboard_Icon, RefreshDuo_Icon} from '../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {hotkeysActions, useHotkeysState} from '../../../../../Redux/Reducer/HotkeysReducer';
+import {useSettingsState} from '../../../../../Redux/Reducer/SettingsReducer';
 import {useTerminalState} from '../../../../../Redux/Reducer/TerminalReducer';
 import {AppDispatch} from '../../../../../Redux/Store';
 import rendererIpc from '../../../../../RendererIpc';
 import {formatHotkey, HotkeyLike} from '../../../../../Utils/UtilFunctions';
-import SettingsFilterItem from '../SettingsFilterItem';
+import {canSettingItemShow} from '../SettingsFilterItem';
 import SettingsSection from '../SettingsPage-ContentSection';
 import SettingsSearchHighlight from '../SettingsSearchHighlight';
 
 export const SettingsHotkeysId = 'settings_hotkeys_elem';
 
-type HotkeyConfig = {name: string; label: string; description: string; hotkey: HotkeyLike | null}[];
+type HotkeyItem = {name: string; label: string; description: string; hotkey: HotkeyLike | null};
+type HotkeyConfig = HotkeyItem[];
 
 const isModifierKey = (key: string): boolean => {
   return ['control', 'shift', 'alt', 'meta', 'os'].includes(key.toLowerCase());
@@ -152,18 +154,26 @@ export const HotkeySettings = () => {
     dispatch(hotkeysActions.setHotkeys(result));
     rendererIpc.storage.update('app', {hotkeys: result});
   };
+  const searchValue = useSettingsState('searchValue');
 
   return (
     <SettingsSection title="Hotkeys" id={SettingsHotkeysId} icon={<Keyboard_Icon className="size-5" />}>
-      <List className="w-full overflow-hidden" bordered>
-        {config.map(item => {
-          const {label, hotkey, description, name} = item;
-          const isRecording = recordingName === name;
+      <Listbox variant="flat">
+        {compact(
+          config.map(item => {
+            const {label, hotkey, description, name} = item;
+            const isRecording = recordingName === name;
+            const canShow = canSettingItemShow(searchValue, [label, description, formatHotkey(hotkey)]);
 
-          return (
-            <SettingsFilterItem key={`${item.name}`} searchTexts={[label, description, formatHotkey(hotkey)]}>
-              <List.Item
-                extra={
+            if (!canShow) return null;
+
+            return (
+              <ListboxItem
+                classNames={{
+                  description: 'transition-colors duration-200',
+                  title: 'transition-colors duration-200',
+                }}
+                endContent={
                   <div className="flex flex-row gap-x-2 items-center">
                     <Button
                       size="sm"
@@ -178,6 +188,7 @@ export const HotkeySettings = () => {
                       ref={el => {
                         inputRefs.current[name] = el;
                       }}
+                      size="sm"
                       onBlur={() => handleBlur(name)}
                       variant={isRecording ? 'bordered' : 'flat'}
                       color={isRecording ? 'secondary' : 'default'}
@@ -189,18 +200,15 @@ export const HotkeySettings = () => {
                     />
                   </div>
                 }
-                title={label}
                 key={`${name}_hotkey`}
-                className="transition-background duration-200 hover:bg-foreground-100">
-                <List.Item.Meta
-                  title={<SettingsSearchHighlight text={label} />}
-                  description={<SettingsSearchHighlight text={description} />}
-                />
-              </List.Item>
-            </SettingsFilterItem>
-          );
-        })}
-      </List>
+                title={<SettingsSearchHighlight text={label} />}
+                description={<SettingsSearchHighlight text={description} />}
+                className="transition-background duration-200 cursor-default"
+              />
+            );
+          }),
+        )}
+      </Listbox>
       <Button onPress={resetToDefault} startContent={<RefreshDuo_Icon />}>
         Reset to Defaults
       </Button>
