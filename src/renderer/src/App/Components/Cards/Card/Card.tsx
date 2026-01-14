@@ -42,6 +42,7 @@ const LynxCard = memo(() => {
   const repoUrl = useCardStore(state => state.repoUrl);
   const description = useCardStore(state => state.description);
   const extensionsDir = useCardStore(state => state.extensionsDir);
+  const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
   const card = useInstalledCard(id);
   const updating = useUpdatingCard(id);
@@ -129,12 +130,15 @@ const LynxCard = memo(() => {
 
   return (
     <Card
+      className={
+        'relative w-[300px] h-[210px] border border-foreground-100 px-2 group ' +
+        'hover:scale-[1.02] shadow-md transition-all hover:shadow-lg duration-300'
+      }
       as={motion.div}
       whileHover="hover"
+      onContextMenu={() => setMenuIsOpen(true)}
       onPress={isInstalled ? startAi : install}
-      variants={{hover: {scale: 1.02}, initial: {scale: 1}}}
-      isPressable={!isRunning && !updating && !isUpdatingExtensions}
-      className="relative w-[300px] h-[210px] border border-foreground-100 px-2 group shadow-md">
+      isPressable={!isRunning && !updating && !isUpdatingExtensions}>
       <div
         style={accentStyle}
         className={`absolute scale-150 opacity-50 inset-0 z-0 ${isInstalled ? 'bg-installed' : 'bg-uninstalled'}`}
