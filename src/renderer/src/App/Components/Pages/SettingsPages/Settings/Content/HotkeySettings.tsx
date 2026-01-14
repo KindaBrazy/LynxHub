@@ -180,17 +180,18 @@ export const HotkeySettings = () => {
                       }}
                       onBlur={() => handleBlur(name)}
                       variant={isRecording ? 'bordered' : 'flat'}
+                      color={isRecording ? 'secondary' : 'default'}
                       value={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
                       onKeyDown={isRecording ? e => handleKeyDown(e, name) : undefined}
                       placeholder={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
                       classNames={{input: 'cursor-default', innerWrapper: 'cursor-default'}}
-                      readOnly
+                      isReadOnly
                     />
                   </div>
                 }
                 title={label}
                 key={`${name}_hotkey`}
-                className="transition-colors duration-300 hover:bg-black/20">
+                className="transition-background duration-200 hover:bg-foreground-100">
                 <List.Item.Meta
                   title={<SettingsSearchHighlight text={label} />}
                   description={<SettingsSearchHighlight text={description} />}
