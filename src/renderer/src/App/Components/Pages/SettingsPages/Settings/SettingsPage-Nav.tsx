@@ -1,6 +1,5 @@
 import {Button, Card, CardBody, CardHeader, Input, ScrollShadow} from '@heroui/react';
 import {SpedometerMiddle} from '@solar-icons/react-perf/BoldDuotone';
-import {Typography} from 'antd';
 import {Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {
@@ -19,8 +18,6 @@ import {ContainersBg} from '../../../../Utils/CrossStyle';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import {settingsSectionId} from './SettingsContainer';
 import SettingsSearchHighlight from './SettingsSearchHighlight';
-
-const {Text} = Typography;
 
 export type GroupItem = {
   icon: ReactNode;
@@ -102,21 +99,22 @@ export const GroupSection = ({title, items, danger = false, activeSection}: Grou
 
   return (
     <div className="mt-3 flex flex-col space-y-3 text-start">
-      <Text className={`text-medium font-bold ${danger ? 'text-danger' : ''}`}>{title}</Text>
-      <div className="space-y-2">
+      <span className={`font-semibold ${danger ? 'text-danger' : ''}`}>{title}</span>
+      <div className="flex flex-col gap-y-1">
         {items.map(item => (
           <Button
+            className={
+              `flex justify-start duration-100 text-[0.82rem] ` +
+              `${activeSection === item.elementId && 'bg-default-200 cursor-default shadow-sm'}`
+            }
             size="sm"
             variant="light"
             color={item.color || 'default'}
             key={`${item.title}_settings_section`}
             onPress={() => onPress(item.elementId)}
-            className={`flex cursor-default justify-start ${activeSection === item.elementId && 'bg-default-200'}`}
             fullWidth>
             {item.icon}
-            <Text>
-              <SettingsSearchHighlight text={item.title} />
-            </Text>
+            <SettingsSearchHighlight text={item.title} />
           </Button>
         ))}
       </div>
@@ -222,25 +220,25 @@ const SettingsPageNav = ({searchValue, setSearchValue, sectionTexts}: SettingsPa
 
   return (
     <Card className={`h-full text-medium w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
-      <CardHeader className="justify-center gap-x-2 pt-5">
+      <CardHeader className="justify-center gap-x-2 pt-4">
         <Tuning_Icon className="size-5" />
         <span>
           <SettingsSearchHighlight text="Settings" />
         </span>
       </CardHeader>
       <CardBody className="pt-0 flex flex-col">
-        <div className="pb-4 pt-3 border-b border-foreground-100/60">
-          <Input
-            type="search"
-            value={searchValue}
-            onValueChange={setSearchValue}
-            placeholder="Search settings..."
-            aria-label="Search settings sections"
-            startContent={<Circle_Icon className="size-4" />}
-          />
-        </div>
+        <Input
+          size="sm"
+          type="search"
+          className="py-1"
+          value={searchValue}
+          onValueChange={setSearchValue}
+          placeholder="Search settings..."
+          aria-label="Search settings sections"
+          startContent={<Circle_Icon className="size-4" />}
+        />
 
-        <ScrollShadow className="flex-1 pt-3" hideScrollBar>
+        <ScrollShadow className="flex-1" hideScrollBar>
           {groupsToRender.length === 0 && normalizedSearch && (
             <div className="px-3 text-xs text-foreground-500">No sections match "{searchValue}".</div>
           )}
