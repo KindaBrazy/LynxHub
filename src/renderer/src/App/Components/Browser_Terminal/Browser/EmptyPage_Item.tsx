@@ -3,14 +3,13 @@ import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {formatWebAddress, getUrlName} from '../../../../../../cross/CrossUtils';
+import {formatWebAddress, getCacheUrl, getUrlName} from '../../../../../../cross/CrossUtils';
 import {FavIcons} from '../../../../../../cross/IpcChannelAndTypes';
 import {Web_Icon} from '../../../../assets/icons/SvgIcons/SvgIcons';
 import {cardsActions} from '../../../Redux/Reducer/CardsReducer';
 import {useTabsState} from '../../../Redux/Reducer/TabsReducer';
 import {AppDispatch} from '../../../Redux/Store';
 import rendererIpc from '../../../RendererIpc';
-import {useCachedImage} from '../../../Utils/UtilHooks';
 
 type Props = {
   recent: string;
@@ -26,7 +25,7 @@ export default function EmptyPage_Item({recent, type, favIconMap, onDataChange}:
   // Get favicon from the map passed by parent (no IPC call needed)
   const favItem = useMemo(() => favIconMap.get(formatWebAddress(recent)), [favIconMap, recent]);
 
-  const favIcon = useCachedImage(favItem?.favIcon || '');
+  const favIcon = getCacheUrl(favItem?.favIcon);
   const displayName = favItem?.title || getUrlName(recent);
 
   const dispatch = useDispatch<AppDispatch>();

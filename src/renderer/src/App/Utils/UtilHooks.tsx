@@ -141,15 +141,3 @@ export function RenderSubItems(items?: ChangelogItem[], parentKey: string = '') 
 }
 
 export const isLinuxPortable = window.isPortable === 'linux';
-
-/**
- * Returns a cached image URL using the lynxcache:// protocol.
- * Images are cached on disk by ImageCacheManager in the main process.
- * @param url - The original image URL to cache
- * @returns The lynxcache:// URL for the cached image, or undefined if no URL provided
- */
-export function useCachedImage(url: string) {
-  if (!url) return undefined;
-  // Use the lynxcache:// protocol which handles caching automatically
-  return `lynxcache://fetch/${encodeURIComponent(url)}`;
-}

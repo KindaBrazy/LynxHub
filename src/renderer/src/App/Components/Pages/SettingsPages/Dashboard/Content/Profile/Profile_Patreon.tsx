@@ -2,6 +2,7 @@ import {Alert, Button, Card, User} from '@heroui/react';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {getCacheUrl} from '../../../../../../../../../cross/CrossUtils';
 import AddBreadcrumb_Renderer from '../../../../../../../../Breadcrumbs';
 import {Patreon_Icon} from '../../../../../../../assets/icons/SvgIcons/SvgIcons';
 import {userActions, useUserState} from '../../../../../../Redux/Reducer/UserReducer';
@@ -74,9 +75,7 @@ export default function Profile_Patreon() {
       <div className="space-between flex flex-row justify-between items-center">
         <User
           avatarProps={{
-            src: patreonUserData.imageUrl
-              ? `lynxcache://fetch/${encodeURIComponent(patreonUserData.imageUrl)}`
-              : patreonUserData.imageUrl,
+            src: getCacheUrl(patreonUserData.imageUrl),
           }}
           name={patreonUserData.name}
           description={patreonUserData.tier}
