@@ -3,17 +3,17 @@ import SettingsContentSkeleton from '../SettingsContentSkeleton';
 import {useDelayedShow} from '../useDelayedShow';
 import {SettingsSections} from './SettingsContainer';
 
-type Props = {searchValue: string; sectionTexts: Map<string, string>};
+type Props = {sectionTexts: Map<string, string>};
 
 /** Settings content */
-const SettingsPageContents = ({searchValue, sectionTexts}: Props) => {
+const SettingsPageContents = ({sectionTexts}: Props) => {
   const showSections = useDelayedShow(500);
 
   return (
     <LynxScroll className="size-full pl-1 pr-4 py-2">
       <div className="flex flex-col gap-y-4">
         {!showSections && <SettingsContentSkeleton />}
-        {showSections && <SettingsSections searchValue={searchValue} sectionTexts={sectionTexts} />}
+        {showSections && <SettingsSections sectionTexts={sectionTexts} />}
       </div>
     </LynxScroll>
   );

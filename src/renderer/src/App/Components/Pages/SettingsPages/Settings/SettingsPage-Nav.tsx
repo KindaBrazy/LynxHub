@@ -1,6 +1,7 @@
 import {Button, Card, CardBody, CardHeader, Input, ScrollShadow} from '@heroui/react';
 import {SpedometerMiddle} from '@solar-icons/react-perf/BoldDuotone';
-import {Dispatch, ReactNode, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
+import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {
   Circle_Icon,
@@ -14,6 +15,7 @@ import {
   Web_Icon,
 } from '../../../../../assets/icons/SvgIcons/SvgIcons';
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
+import {settingsActions, useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {ContainersBg} from '../../../../Utils/CrossStyle';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import {settingsSectionId} from './SettingsContainer';
@@ -91,10 +93,13 @@ const groupSections: GroupProps[] = [
   },
 ];
 
+type GroupSectionProps = GroupProps & {activeSection: string};
+
 /** Navigation bar group and items */
-export const GroupSection = ({title, items, danger = false, activeSection}: GroupProps & {activeSection: string}) => {
-  const onPress = useCallback((id: string) => {
-    document.getElementById(id)?.scrollIntoView({behavior: 'smooth', block: 'start'});
+export const GroupSection = ({title, items, danger = false, activeSection}: GroupSectionProps) => {
+  const dispatch = useDispatch();
+  const setSelectedSection = useCallback((value: string) => {
+    dispatch(settingsActions.setSettingsState({key: 'selectedSection', value}));
   }, []);
 
   return (
@@ -111,7 +116,7 @@ export const GroupSection = ({title, items, danger = false, activeSection}: Grou
             variant="light"
             color={item.color || 'default'}
             key={`${item.title}_settings_section`}
-            onPress={() => onPress(item.elementId)}
+            onPress={() => setSelectedSection(item.elementId)}
             fullWidth>
             {item.icon}
             <SettingsSearchHighlight text={item.title} />
@@ -123,31 +128,27 @@ export const GroupSection = ({title, items, danger = false, activeSection}: Grou
 };
 
 /** Settings navigation bar */
-type SettingsPageNavProps = {
-  searchValue: string;
-  setSearchValue: Dispatch<SetStateAction<string>>;
-  sectionTexts: Map<string, string>;
-};
+type SettingsPageNavProps = {sectionTexts: Map<string, string>};
 
-const SettingsPageNav = ({searchValue, setSearchValue, sectionTexts}: SettingsPageNavProps) => {
+const SettingsPageNav = ({sectionTexts}: SettingsPageNavProps) => {
   const buttons = useMemo(() => extensionsData.customizePages.settings.add.navButton, []);
-  const normalizedSearch = searchValue.trim();
+  const searchValue = useSettingsState('searchValue');
   const [activeSection, setActiveSection] = useState<string>('');
 
   const filteredGroups = useMemo(() => {
-    if (!normalizedSearch) return groupSections;
+    if (!searchValue) return groupSections;
 
     return groupSections
       .map(group => ({
         ...group,
         items: group.items.filter(item =>
-          searchInStrings(normalizedSearch, [item.title, group.title, sectionTexts.get(item.elementId) ?? '']),
+          searchInStrings(searchValue, [item.title, group.title, sectionTexts.get(item.elementId) ?? '']),
         ),
       }))
       .filter(group => group.items.length > 0);
-  }, [normalizedSearch, sectionTexts]);
+  }, [searchValue, sectionTexts]);
 
-  const groupsToRender = normalizedSearch ? filteredGroups : groupSections;
+  const groupsToRender = searchValue ? filteredGroups : groupSections;
 
   // Collect all item IDs across all groups
   const allItemIds = useMemo(() => {
@@ -218,6 +219,11 @@ const SettingsPageNav = ({searchValue, setSearchValue, sectionTexts}: SettingsPa
     };
   }, [allItemIds]);
 
+  const dispatch = useDispatch();
+  const setSearchValue = useCallback((value: string) => {
+    dispatch(settingsActions.setSearchValue(value));
+  }, []);
+
   return (
     <Card className={`h-full text-medium w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
       <CardHeader className="justify-center gap-x-2 pt-4">
@@ -239,7 +245,7 @@ const SettingsPageNav = ({searchValue, setSearchValue, sectionTexts}: SettingsPa
         />
 
         <ScrollShadow className="flex-1" hideScrollBar>
-          {groupsToRender.length === 0 && normalizedSearch && (
+          {groupsToRender.length === 0 && searchValue && (
             <div className="px-3 text-xs text-foreground-500">No sections match "{searchValue}".</div>
           )}
 

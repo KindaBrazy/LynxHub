@@ -2,6 +2,7 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
 import {TooltipStatus} from '../../../../../cross/IpcChannelAndTypes';
+import {SettingsGeneralId} from '../../Components/Pages/SettingsPages/Settings/Content/General/Settings-General';
 import {RootState} from '../Store';
 
 type SettingState = {
@@ -21,6 +22,10 @@ type SettingState = {
 
   updateAvailable: boolean;
   checkCustomUpdate: boolean;
+
+  searchValue: string;
+  searchWords: string[];
+  selectedSection: string;
 };
 
 type SettingStateTypes = {
@@ -42,6 +47,10 @@ const initialState: SettingState = {
   hardwareAcceleration: true,
   disableLoadingAnimations: false,
   checkCustomUpdate: false,
+
+  searchValue: '',
+  searchWords: [],
+  selectedSection: SettingsGeneralId,
 };
 
 const settingsSlice = createSlice({
@@ -56,6 +65,10 @@ const settingsSlice = createSlice({
       }>,
     ) => {
       state[action.payload.key] = action.payload.value;
+    },
+    setSearchValue: (state: SettingState, action: PayloadAction<string>) => {
+      state.searchValue = action.payload.trim();
+      state.searchWords = action.payload.trim().split(/\s+/).filter(Boolean);
     },
   },
 });
