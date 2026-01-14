@@ -2,7 +2,6 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
 import {TooltipStatus} from '../../../../../cross/IpcChannelAndTypes';
-import {SettingsGeneralId} from '../../Components/Pages/SettingsPages/Settings/Content/General/Settings-General';
 import {RootState} from '../Store';
 
 type SettingState = {
@@ -50,7 +49,7 @@ const initialState: SettingState = {
 
   searchValue: '',
   searchWords: [],
-  selectedSection: SettingsGeneralId,
+  selectedSection: '',
 };
 
 const settingsSlice = createSlice({

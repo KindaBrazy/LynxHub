@@ -90,8 +90,10 @@ export const SettingsSections = ({sectionTexts}: SettingsSectionsProps) => {
     const allSections = [...builtInSections, ...extensionSections];
 
     if (!searchValue) {
+      const targetSection = selectedSection || SettingsGeneralId;
+
       return compact(
-        allSections.map(section => (section.elementId === selectedSection ? {...section, visible: true} : null)),
+        allSections.map(section => (section.elementId === targetSection ? {...section, visible: true} : null)),
       );
     }
 

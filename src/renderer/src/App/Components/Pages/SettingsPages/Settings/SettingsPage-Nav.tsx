@@ -18,6 +18,7 @@ import {extensionsData} from '../../../../Extensions/ExtensionLoader';
 import {settingsActions, useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {ContainersBg} from '../../../../Utils/CrossStyle';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
+import {SettingsGeneralId} from './Content/General/Settings-General';
 import {settingsSectionId} from './SettingsContainer';
 import SettingsSearchHighlight from './SettingsSearchHighlight';
 
@@ -101,6 +102,8 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
     dispatch(settingsActions.setSettingsState({key: 'selectedSection', value}));
   }, []);
 
+  const targetSection = selectedSection || SettingsGeneralId;
+
   return (
     <div className="mt-3 flex flex-col space-y-3 text-start">
       <span className={`font-semibold ${danger ? 'text-danger' : ''}`}>{title}</span>
@@ -109,7 +112,7 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
           <Button
             className={
               `flex justify-start duration-100 text-[0.82rem] ` +
-              `${selectedSection === item.elementId && 'bg-default-200 cursor-default shadow-sm'}`
+              `${targetSection === item.elementId && 'bg-default-200 cursor-default shadow-sm'}`
             }
             size="sm"
             variant="light"
