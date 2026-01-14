@@ -1,14 +1,14 @@
 import {PropsWithChildren, useMemo} from 'react';
 
+import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
-import {useSettingsSearchQuery} from './SettingsSearchQueryContext';
 
 type Props = PropsWithChildren<{
   searchTexts: (string | undefined)[];
 }>;
 
 const SettingsFilterItem = ({searchTexts, children}: Props) => {
-  const searchValue = useSettingsSearchQuery();
+  const searchValue = useSettingsState('searchValue');
 
   const visible = useMemo(() => {
     if (!searchValue) return true;

@@ -1,6 +1,6 @@
 import Highlighter from 'react-highlight-words';
 
-import {useSettingsSearchHighlightWords} from './SettingsSearchHighlightContext';
+import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 
 type Props = {
   text?: string;
@@ -10,14 +10,14 @@ type Props = {
 };
 
 const SettingsSearchHighlight = ({text, children, className, highlightClassName}: Props) => {
-  const searchWords = useSettingsSearchHighlightWords();
+  const searchWords = useSettingsState('searchWords');
   const content = text ?? children ?? '';
 
   if (!content) {
     return null;
   }
 
-  if (!searchWords.length) {
+  if (!searchWords || !searchWords.length) {
     return <span className={className}>{content}</span>;
   }
 

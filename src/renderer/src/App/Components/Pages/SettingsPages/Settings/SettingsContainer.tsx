@@ -1,6 +1,7 @@
 import {type ComponentType, useMemo} from 'react';
 
 import {extensionsData} from '../../../../Extensions/ExtensionLoader';
+import {useSettingsState} from '../../../../Redux/Reducer/SettingsReducer';
 import {searchInStrings} from '../../../../Utils/UtilFunctions';
 import SettingsBrowser, {SettingsBrowserId} from './Content/Browser/SettingsBrowser';
 import SettingsCard, {SettingsCardId} from './Content/Card/Settings-Card';
@@ -31,13 +32,12 @@ type SettingsSectionDefinition = {
 };
 
 type SettingsSectionsProps = {
-  searchValue: string;
   sectionTexts: Map<string, string>;
 };
 
-export const SettingsSections = ({searchValue, sectionTexts}: SettingsSectionsProps) => {
+export const SettingsSections = ({sectionTexts}: SettingsSectionsProps) => {
   const content = useMemo(() => extensionsData.customizePages.settings.add.content, []);
-  const normalizedSearch = searchValue.trim();
+  const searchValue = useSettingsState('searchValue');
 
   const builtInSections = useMemo<SettingsSectionDefinition[]>(
     () => [
@@ -87,22 +87,22 @@ export const SettingsSections = ({searchValue, sectionTexts}: SettingsSectionsPr
   const sectionsWithVisibility = useMemo(() => {
     const allSections = [...builtInSections, ...extensionSections];
 
-    if (!normalizedSearch) {
+    if (!searchValue) {
       return allSections.map(section => ({...section, visible: true}));
     }
 
     return allSections.map(section => {
       const dynamicText = section.elementId ? sectionTexts.get(section.elementId) : undefined;
-      const visible = searchInStrings(normalizedSearch, [dynamicText, section.title]);
+      const visible = searchInStrings(searchValue, [dynamicText, section.title]);
       return {...section, visible};
     });
-  }, [builtInSections, extensionSections, normalizedSearch, sectionTexts]);
+  }, [builtInSections, extensionSections, searchValue, sectionTexts]);
 
   const hasVisibleSection = sectionsWithVisibility.some(section => section.visible);
 
   return (
     <>
-      {!hasVisibleSection && normalizedSearch && (
+      {!hasVisibleSection && searchValue && (
         <div className="py-10 text-center text-sm text-foreground-500">No settings match “{searchValue}”.</div>
       )}
       {sectionsWithVisibility.map(({Component, elementId, title, visible}, index) => (
