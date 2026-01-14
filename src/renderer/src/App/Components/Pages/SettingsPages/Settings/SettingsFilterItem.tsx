@@ -22,4 +22,9 @@ const SettingsFilterItem = ({searchTexts, children}: Props) => {
   return <div className="contents">{children}</div>;
 };
 
+export function canSettingItemShow(searchValue: string, searchTexts: (string | undefined)[]) {
+  if (!searchValue) return true;
+  return searchInStrings(searchValue, searchTexts);
+}
+
 export default SettingsFilterItem;
