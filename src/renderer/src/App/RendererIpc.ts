@@ -111,8 +111,8 @@ const rendererIpc = {
       return ipc.invoke(winChannels.getSystemDarkMode);
     },
     // Listens for dark mode change events
-    onDarkMode: (result: (event: IpcRendererEvent, darkMode: DarkModeTypes) => void) =>
-      ipc.on(winChannels.onDarkMode, result),
+    onDarkMode: (result: (event: IpcRendererEvent, isDark: boolean) => void) => ipc.on(winChannels.onDarkMode, result),
+    isDarkMode: (): Promise<boolean> => ipc.invoke(winChannels.isDarkMode),
 
     // Sets taskbar visibility status (taskbar, tray, taskbar-tray, tray-minimized)
     setTaskBarStatus: (status: TaskbarStatus): void => {

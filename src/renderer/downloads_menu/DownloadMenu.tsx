@@ -60,7 +60,7 @@ export default function DownloadMenu() {
   }, []);
 
   return (
-    <div className="bg-LynxRaisinBlack absolute inset-0 flex flex-col overflow-hidden">
+    <div className="dark:bg-LynxRaisinBlack bg-white absolute inset-0 flex flex-col overflow-hidden">
       {/* Header */}
       <div className="relative px-4 py-4 flex flex-row items-center justify-between">
         <h2 className="text-lg font-semibold flex items-center gap-2">

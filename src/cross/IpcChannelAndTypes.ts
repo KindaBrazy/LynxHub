@@ -114,6 +114,7 @@ export const winChannels = {
   setDarkMode: 'win:set-darkMode',
   getSystemDarkMode: 'win:get-system-darkMode',
   onDarkMode: 'win:on-darkMode',
+  isDarkMode: 'win:isDarkMode',
 
   setTaskBarStatus: 'win:set-taskbar-status',
 

@@ -52,7 +52,7 @@ const FILE_SYSTEM_ERROR_MESSAGES: Record<string, string> = {
 export default class BrowserDownloadManager {
   private static ipcHandlersRegistered: boolean = false;
 
-  private menuWindow: BrowserWindow;
+  private readonly _menuWindow: BrowserWindow;
   private downloadingItems: DownloadItem[];
 
   private readonly mainWebContents: WebContents;
@@ -92,7 +92,7 @@ export default class BrowserDownloadManager {
     this.filenameExistenceCache = new Map();
     this.cacheTimestamps = new Map();
 
-    this.menuWindow = new BrowserWindow(this.DOWNLOAD_MENU_WINDOW_CONFIG);
+    this._menuWindow = new BrowserWindow(this.DOWNLOAD_MENU_WINDOW_CONFIG);
     this.initialWindow();
 
     session.on('will-download', (_, item) => {
@@ -403,7 +403,7 @@ export default class BrowserDownloadManager {
   }
 
   private positionWindow() {
-    const [menuWidth, menuHeight] = this.menuWindow.getSize();
+    const [menuWidth, menuHeight] = this._menuWindow.getSize();
 
     const {x: cursorX, y: cursorY} = screen.getCursorScreenPoint();
     const defaultDisplay = screen.getDisplayNearestPoint({x: cursorX, y: cursorY});
@@ -425,24 +425,24 @@ export default class BrowserDownloadManager {
     }
 
     try {
-      this.menuWindow.setPosition(Math.floor(newX), Math.floor(newY), true);
+      this._menuWindow.setPosition(Math.floor(newX), Math.floor(newY), true);
     } catch (e) {
       console.error(e);
     }
   }
 
   private initialWindow() {
-    this.menuWindow.setParentWindow(this.mainWindow);
+    this._menuWindow.setParentWindow(this.mainWindow);
 
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-      this.menuWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/downloads_menu.html`);
+      this._menuWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/downloads_menu.html`);
     } else {
-      this.menuWindow.loadFile(join(__dirname, `../renderer/downloads_menu.html`));
+      this._menuWindow.loadFile(join(__dirname, `../renderer/downloads_menu.html`));
     }
 
-    this.menuWindow.on('blur', () => this.menuWindow.hide());
+    this._menuWindow.on('blur', () => this._menuWindow.hide());
 
-    this.menuWindow.on('closed', () => {
+    this._menuWindow.on('closed', () => {
       this.downloadingItems = [];
       this.downloadIdentifiers.clear();
       this.clearFilenameCache();
@@ -467,8 +467,8 @@ export default class BrowserDownloadManager {
   }
 
   private sendToRenderer(channel: string, ...data: any) {
-    if (!this.menuWindow.isDestroyed() && !this.menuWindow.webContents.isDestroyed())
-      this.menuWindow.webContents.send(channel, ...data);
+    if (!this._menuWindow.isDestroyed() && !this._menuWindow.webContents.isDestroyed())
+      this._menuWindow.webContents.send(channel, ...data);
   }
 
   private sendToMain(channel: string, ...data: any) {
@@ -834,7 +834,7 @@ export default class BrowserDownloadManager {
 
       // Hide the download menu window if no items remain
       if (this.downloadingItems.length === 0) {
-        this.menuWindow.hide();
+        this._menuWindow.hide();
       }
     } catch (error: any) {
       const fsError = this.handleFileSystemError(error);
@@ -882,7 +882,7 @@ export default class BrowserDownloadManager {
       this.sendToMain(browserDownloadChannels.mainDownloadCount, 0);
 
       // Hide the download menu window since there are no items
-      this.menuWindow.hide();
+      this._menuWindow.hide();
     } catch (error: any) {
       const fsError = this.handleFileSystemError(error);
       console.error('Failed to clear all downloads:', fsError.userMessage);
@@ -912,6 +912,10 @@ export default class BrowserDownloadManager {
 
   private openDownloadsMenu() {
     this.positionWindow();
-    this.menuWindow.show();
+    this._menuWindow.show();
+  }
+
+  get menuWindow(): BrowserWindow {
+    return this._menuWindow;
   }
 }

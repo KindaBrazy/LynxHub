@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from 'react';
 
 import {browserChannels} from '../../cross/IpcChannelAndTypes';
-import rendererIpc from '../src/App/RendererIpc';
+import {useDocumentDarkMode} from '../CrossHooks';
 
 const ipc = window.electron.ipcRenderer;
 
@@ -9,22 +9,14 @@ export default function LinkPreview() {
   const [url, setUrl] = useState('');
   const containerRef = useRef<HTMLDivElement>(null);
 
+  useDocumentDarkMode('bg-transparent');
+
   useEffect(() => {
     const offHover = ipc.on(browserChannels.onLinkHover, (_: any, newUrl: string) => {
       setUrl(newUrl || '');
     });
 
-    const offDarkMode = rendererIpc.win.onDarkMode((_, darkMode) => {
-      document.documentElement.className = `${darkMode === 'dark' ? 'dark' : 'light'} bg-transparent`;
-    });
-    rendererIpc.storage.get('app').then(({darkMode}) => {
-      document.documentElement.className = `${darkMode === 'dark' ? 'dark' : 'light'} bg-transparent`;
-    });
-
-    return () => {
-      offHover();
-      offDarkMode();
-    };
+    return () => offHover();
   }, []);
 
   // Send resize when URL changes

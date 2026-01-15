@@ -3,10 +3,11 @@ import 'overlayscrollbars/overlayscrollbars.css';
 
 import {createRoot} from 'react-dom/client';
 
-import rendererIpc from '../src/App/RendererIpc';
+import HeroProvider from '../HeroProvider';
 import DownloadMenu from './DownloadMenu';
 
-const {darkMode} = await rendererIpc.storage.get('app');
-document.documentElement.className = darkMode ? 'dark' : 'light';
-
-createRoot(document.getElementById('root') as HTMLElement).render(<DownloadMenu />);
+createRoot(document.getElementById('root') as HTMLElement).render(
+  <HeroProvider>
+    <DownloadMenu />
+  </HeroProvider>,
+);
