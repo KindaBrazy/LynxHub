@@ -1,10 +1,11 @@
 import {Button, Input, Slider} from '@heroui/react';
+import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {isArray, isEmpty} from 'lodash';
+import {X} from 'lucide-react';
 import type {KeyboardEvent} from 'react';
 import {useEffect, useRef, useState} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
-import {AltArrowLine_Icon, CloseSimple_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
 import {SetElementsType, SetWidthSizeType} from './ContextHooks';
 
 export function useZoomMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
@@ -158,19 +159,19 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
             ref={setInputRef}
             value={searchValue}
             onKeyDown={handleKeyDown}
-            placeholder="Type here..."
+            placeholder="Type to find..."
             onValueChange={setSearchValue}
             autoFocus
           />
           <div className="mb-1 flex flex-row gap-x-1">
             <Button size="sm" onPress={back} variant="light" isDisabled={isEmpty(searchValue)} isIconOnly>
-              <AltArrowLine_Icon className="size-4" />
+              <AltArrowUp className="size-4" />
             </Button>
             <Button size="sm" onPress={next} variant="light" isDisabled={isEmpty(searchValue)} isIconOnly>
-              <AltArrowLine_Icon className="size-4 rotate-180" />
+              <AltArrowDown className="size-4" />
             </Button>
             <Button size="sm" variant="light" onPress={clear} isDisabled={isEmpty(searchValue)} isIconOnly>
-              <CloseSimple_Icon className="size-3.5 rotate-90" />
+              <X className="size-4" />
             </Button>
           </div>
         </div>,

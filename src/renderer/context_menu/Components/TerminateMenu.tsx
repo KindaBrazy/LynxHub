@@ -1,9 +1,12 @@
 import {Button, Checkbox} from '@heroui/react';
+import {Forward2, Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {Typography} from 'antd';
+import {X} from 'lucide-react';
 import {useEffect, useRef, useState} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
 import {isLinuxPortable} from '../../src/App/Utils/UtilHooks';
+import {Power_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
 import {SetElementsType, SetWidthSizeType} from './ContextHooks';
 
 const hideWindow = () => rendererIpc.contextMenu.hideWindow();
@@ -33,16 +36,16 @@ export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetW
           </Checkbox>
         </div>
         <div className="mt-2 flex w-full flex-row justify-between">
-          <Button size="sm" color="success" onPress={hideWindow}>
+          <Button size="sm" color="success" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
             Stay
           </Button>
           <div className="space-x-2">
             {!isLinuxPortable && (
-              <Button size="sm" color="warning" onPress={onRestart}>
+              <Button size="sm" color="warning" onPress={onRestart} startContent={<Restart />}>
                 Restart
               </Button>
             )}
-            <Button size="sm" color="danger" onPress={onClose}>
+            <Button size="sm" color="danger" onPress={onClose} startContent={<Power_Icon />}>
               Exit
             </Button>
           </div>
@@ -103,14 +106,17 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
         </div>
 
         <div className="mt-2 flex w-full flex-row justify-between">
-          <Button size="sm" onPress={hideWindow}>
+          <Button size="sm" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
             Cancel
           </Button>
-          <div className="space-x-2">
-            <Button size="sm" color="danger" onPress={removeTab} ref={closeButtonRef}>
-              Close Tab
-            </Button>
-          </div>
+          <Button
+            size="sm"
+            color="danger"
+            onPress={removeTab}
+            ref={closeButtonRef}
+            startContent={<X className="size-3.5" />}>
+            Close Tab
+          </Button>
         </div>
       </div>,
     ]);
@@ -171,14 +177,14 @@ export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: S
           </Checkbox>
         </div>
         <div className="mt-2 flex w-full flex-row justify-between">
-          <Button size="sm" color="success" onPress={hideWindow}>
+          <Button size="sm" color="success" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
             Keep Running
           </Button>
           <div className="space-x-2">
-            <Button size="sm" color="warning" onPress={onRelaunch}>
+            <Button size="sm" color="warning" onPress={onRelaunch} startContent={<Restart />}>
               Relaunch
             </Button>
-            <Button size="sm" color="danger" onPress={onStop}>
+            <Button size="sm" color="danger" onPress={onStop} startContent={<Power_Icon />}>
               Terminate
             </Button>
           </div>
