@@ -13,9 +13,7 @@ type TabType = 'windows' | 'screens';
 
 const ipc = window.electron.ipcRenderer;
 
-type Props = {isDarkMode: boolean};
-
-export default function ScreenShare({isDarkMode}: Props) {
+export default function ScreenShare() {
   const [activeTab, setActiveTab] = useState<TabType>('windows');
   const [selectedItem, setSelectedItem] = useState<string | undefined>(undefined);
   const [shareAudio, setShareAudio] = useState<boolean>(false);
@@ -84,7 +82,7 @@ export default function ScreenShare({isDarkMode}: Props) {
 
   return (
     <StyleProvider layer>
-      <main className={`${isDarkMode && 'dark'} text-foreground`}>
+      <main>
         <div className={'w-155 h-120 dark:bg-LynxRaisinBlack flex flex-col scrollbar-hide overflow-hidden'}>
           {/* Header */}
           <div className="px-4 py-2 border-b border-foreground-200">

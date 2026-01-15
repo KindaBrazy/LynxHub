@@ -106,7 +106,8 @@ export function handleAppReadyToShow() {
   if (platform() === 'win32') setLoginItemSettings();
   cardsValidator?.checkAndWatch();
 
-  new ShareScreenManager().start();
+  classHolder.shareScreenManager = new ShareScreenManager();
+  classHolder.shareScreenManager.start();
 }
 
 function handleTaskbarStatus() {

@@ -45,7 +45,7 @@ export default function DownloadItem({item, setItems}: Props) {
   };
 
   return (
-    <Card as="div" className="cursor-default mb-3 bg-foreground-100" fullWidth isPressable>
+    <Card as="div" className="cursor-default mb-3 bg-foreground-100 shadow-sm" fullWidth isPressable>
       <CardHeader className={'pb-1'}>
         {/* Item Header */}
         <div className="flex items-start justify-between w-full">

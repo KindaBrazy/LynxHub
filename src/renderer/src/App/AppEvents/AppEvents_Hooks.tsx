@@ -145,12 +145,8 @@ export const useIpcEvents = () => {
       dispatch(cardsActions.setHomeCategory(data));
     });
 
-    const removeListener_onDarkMode = rendererIpc.win.onDarkMode((_, result) => {
-      if (result === 'dark') {
-        dispatch(appActions.setAppState({key: 'darkMode', value: true}));
-      } else if (result === 'light') {
-        dispatch(appActions.setAppState({key: 'darkMode', value: false}));
-      }
+    const removeListener_onDarkMode = rendererIpc.win.onDarkMode((_, isDark) => {
+      dispatch(appActions.setAppState({key: 'darkMode', value: isDark}));
     });
 
     const removeListener_onChangeState = rendererIpc.win.onChangeState((_e, result) => {

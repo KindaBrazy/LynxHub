@@ -41,6 +41,7 @@ import {
   getRelativePath,
   getSystemDarkMode,
   getUserAgent,
+  isDark,
   openDialog,
 } from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../AppDataManager';
@@ -105,6 +106,7 @@ function win() {
   ipcMain.handle(winChannels.getSystemDarkMode, () => getSystemDarkMode());
   // Sets app theme (light, dark, or system)
   ipcMain.on(winChannels.setDarkMode, (_, darkMode: DarkModeTypes) => setDarkMode(darkMode));
+  ipcMain.handle(winChannels.isDarkMode, () => isDark());
 
   // Listens for system theme changes and updates app if set to 'system' mode
   nativeTheme.on('updated', () => {
@@ -514,7 +516,7 @@ export function browserIPC() {
   browserIPCInitialized = true;
 
   const browserManager: BrowserManager = new BrowserManager(mainWindow);
-  new BrowserDownloadManager(browserManager.getSession(), mainWindow);
+  classHolder.browserDownloadManager = new BrowserDownloadManager(browserManager.getSession(), mainWindow);
 
   contextMenuManager?.listenForBrowserChannels(browserManager);
 

@@ -17,7 +17,7 @@ import {ScreenShareSources, ScreenShareStart} from '../../cross/ScreenShareTypes
 import classHolder from './ClassHolder';
 
 export default class ShareScreenManager {
-  private selectorWindow?: BrowserWindow;
+  private _selectorWindow?: BrowserWindow;
   private mainWindow?: BrowserWindow;
   private availableSources: DesktopCapturerSource[] = [];
   private handlersRegistered = false;
@@ -36,8 +36,8 @@ export default class ShareScreenManager {
       mainWindow.on('close', () => {
         this.mainWindow = undefined;
         this.availableSources = [];
-        if (this.selectorWindow && !this.selectorWindow.isDestroyed()) {
-          this.selectorWindow.close();
+        if (this._selectorWindow && !this._selectorWindow.isDestroyed()) {
+          this._selectorWindow.close();
         }
       });
     }
@@ -52,9 +52,9 @@ export default class ShareScreenManager {
   private onDone() {
     this.availableSources = [];
     this.handlersRegistered = false;
-    this.selectorWindow?.close();
-    this.selectorWindow?.on('closed', () => {
-      this.selectorWindow = undefined;
+    this._selectorWindow?.close();
+    this._selectorWindow?.on('closed', () => {
+      this._selectorWindow = undefined;
 
       // Use removeHandler for channels registered with ipcMain.handle()
       ipcMain.removeHandler(screenShareChannels.getScreenSources);
@@ -140,7 +140,7 @@ export default class ShareScreenManager {
   }
 
   private showSelector() {
-    this.selectorWindow = new BrowserWindow({
+    this._selectorWindow = new BrowserWindow({
       frame: false,
       show: false,
       width: 620,
@@ -158,15 +158,15 @@ export default class ShareScreenManager {
       },
     });
 
-    this.selectorWindow.on('ready-to-show', () => {
-      this.selectorWindow?.show();
+    this._selectorWindow.on('ready-to-show', () => {
+      this._selectorWindow?.show();
     });
 
     if (this.mainWindow) {
       const mainBounds = this.mainWindow.getBounds();
       const x = mainBounds.x + (mainBounds.width - 620) / 2;
       const y = mainBounds.y + 10;
-      this.selectorWindow.setBounds({
+      this._selectorWindow.setBounds({
         x: Math.floor(x),
         y: Math.floor(y),
         width: 620,
@@ -175,9 +175,13 @@ export default class ShareScreenManager {
     }
 
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-      this.selectorWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/share_screen.html`);
+      this._selectorWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/share_screen.html`);
     } else {
-      this.selectorWindow.loadFile(path.join(__dirname, `../renderer/share_screen.html`));
+      this._selectorWindow.loadFile(path.join(__dirname, `../renderer/share_screen.html`));
     }
+  }
+
+  get selectorWindow(): BrowserWindow | undefined {
+    return this._selectorWindow;
   }
 }

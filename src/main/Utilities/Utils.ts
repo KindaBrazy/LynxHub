@@ -2,11 +2,11 @@ import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
 import {dirname, isAbsolute, relative, resolve} from 'node:path';
 
-import {app, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue, safeStorage} from 'electron';
+import {app, BrowserWindow, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue, safeStorage} from 'electron';
 import fs from 'graceful-fs';
 
 import {formatSize} from '../../cross/CrossUtils';
-import {AgentTypes} from '../../cross/IpcChannelAndTypes';
+import {AgentTypes, DarkModeTypes, winChannels} from '../../cross/IpcChannelAndTypes';
 import classHolder from '../Managements/ClassHolder';
 import calcFolderSize from './CalculateFolderSize/CalculateFolderSize';
 
@@ -155,6 +155,33 @@ export function isDark(): boolean {
     case 'system':
       return getSystemDarkMode() == 'dark';
   }
+}
+
+export function getWebContentsIfAvailable(window: BrowserWindow | undefined) {
+  if (window && !window.isDestroyed() && !window.webContents.isDestroyed()) return window.webContents;
+
+  return undefined;
+}
+
+export function noticeAllWindowsDarkMode(darkMode: DarkModeTypes) {
+  const {appManager, contextMenuManager, browserDownloadManager, linkPreviewManager, shareScreenManager} = classHolder;
+
+  const value = darkMode === 'system' ? getSystemDarkMode() : darkMode;
+
+  const app = getWebContentsIfAvailable(appManager?.getMainWindow());
+  if (app) app.send(winChannels.onDarkMode, value);
+
+  const contextMenu = getWebContentsIfAvailable(contextMenuManager?.getWindow());
+  if (contextMenu) contextMenu.send(winChannels.onDarkMode, value);
+
+  const browserDownload = getWebContentsIfAvailable(browserDownloadManager?.menuWindow);
+  if (browserDownload) browserDownload.send(winChannels.onDarkMode, value);
+
+  const linkPreview = getWebContentsIfAvailable(linkPreviewManager?.getWindow());
+  if (linkPreview) linkPreview.send(winChannels.onDarkMode, value);
+
+  const shareScreen = getWebContentsIfAvailable(shareScreenManager?.selectorWindow);
+  if (shareScreen) shareScreen.send(winChannels.onDarkMode, value);
 }
 
 function getWindowBgColor(isDark: boolean) {

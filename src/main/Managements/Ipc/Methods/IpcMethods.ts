@@ -8,8 +8,8 @@ import {app, dialog, shell} from 'electron';
 import {promises, readdir} from 'graceful-fs';
 
 import {FolderListData} from '../../../../cross/CrossTypes';
-import {ChangeWindowState, DarkModeTypes, TaskbarStatus, winChannels} from '../../../../cross/IpcChannelAndTypes';
-import {getSystemDarkMode} from '../../../Utilities/Utils';
+import {ChangeWindowState, DarkModeTypes, TaskbarStatus} from '../../../../cross/IpcChannelAndTypes';
+import {noticeAllWindowsDarkMode} from '../../../Utilities/Utils';
 import classHolder from '../../ClassHolder';
 
 /**
@@ -47,14 +47,10 @@ export function changeWindowState(state: ChangeWindowState): void {
  * @param darkMode - The dark mode setting to apply.
  */
 export function setDarkMode(darkMode: DarkModeTypes): void {
-  const {appManager, storageManager, contextMenuManager} = classHolder;
+  const {storageManager} = classHolder;
 
-  if (darkMode === 'system') {
-    appManager?.getWebContent()?.send(winChannels.onDarkMode, getSystemDarkMode());
-    contextMenuManager?.getWindow()?.webContents?.send(winChannels.onDarkMode, getSystemDarkMode());
-  } else {
-    contextMenuManager?.getWindow()?.webContents?.send(winChannels.onDarkMode, darkMode);
-  }
+  noticeAllWindowsDarkMode(darkMode);
+
   storageManager.updateData('app', {darkMode});
 }
 
