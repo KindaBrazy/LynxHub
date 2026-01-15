@@ -6,7 +6,7 @@ import {useSettingsState} from '../Redux/Reducer/SettingsReducer';
 
 /** HTML attributes and document title */
 export default function useHtmlAttributes() {
-  const darkMode = useAppState('darkMode');
+  const isDarkMode = useAppState('darkMode');
   const appTitle = useAppState('appTitle');
   const dynamicAppTitle = useSettingsState('dynamicAppTitle');
 
@@ -19,7 +19,18 @@ export default function useHtmlAttributes() {
   }, [appTitle, dynamicAppTitle]);
 
   useEffect(() => {
-    document.documentElement.className =
-      `select-none text-foreground bg-background ` + `overflow-hidden ${darkMode ? 'dark' : 'light'}`;
-  }, [darkMode]);
+    document.documentElement.className = `select-none text-foreground bg-background overflow-hidden `;
+  }, []);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+      localStorage.theme = 'dark';
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
+      localStorage.theme = 'light';
+    }
+  }, [isDarkMode]);
 }

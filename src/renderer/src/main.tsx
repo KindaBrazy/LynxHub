@@ -27,10 +27,9 @@ await loadExtensions();
 
 // Get app settings from cached storage
 const storage = getStorageData()!;
-const {darkMode, collectErrors, addBreadcrumbs} = storage.app;
+const {collectErrors, addBreadcrumbs} = storage.app;
 
 onBreadcrumbStateChange(addBreadcrumbs);
-document.documentElement.className = darkMode ? 'dark' : 'light';
 
 if (!isDev()) {
   Object.assign(console, log.functions);
