@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
 import {debounce, isEmpty, isNil} from 'lodash';
 
@@ -299,7 +301,9 @@ export default class BrowserManager {
     if (!mainWindow) return;
 
     const {storageManager, contextMenuManager} = classHolder;
-    const newView = new WebContentsView({webPreferences: {session: this.getSession()}});
+    const newView = new WebContentsView({
+      webPreferences: {session: this.getSession(), preload: path.join(__dirname, '../preload/webview.cjs')},
+    });
     const webContents = newView.webContents;
     newView.setBackgroundColor(getWindowColor());
 
