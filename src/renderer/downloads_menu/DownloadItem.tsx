@@ -1,18 +1,12 @@
 import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Progress} from '@heroui/react';
+import {Pause, Play, Restart} from '@solar-icons/react-perf/Bold';
+import {ClockCircle, FileDownload, FolderOpen, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {X} from 'lucide-react';
 import {Dispatch, SetStateAction} from 'react';
 
 import {DownloadItemInfo} from '../../cross/DownloadManagerTypes';
 import rendererIpc from '../src/App/RendererIpc';
-import {
-  Clock_Icon,
-  CloseSimple_Icon,
-  File_Icon,
-  OpenFolder_Icon,
-  Pause_Icon,
-  Play_Icon,
-  Trash_Icon,
-} from '../src/assets/icons/SvgIcons/SvgIcons';
-import {formatBytes, formatETA, formatSpeed, getProgress, getStatusColor, getStatusIcon} from './UtilMethods';
+import {formatBytes, formatETA, formatSpeed, getProgress, getStatusColor} from './UtilMethods';
 
 type Props = {
   item: DownloadItemInfo;
@@ -56,9 +50,8 @@ export default function DownloadItem({item, setItems}: Props) {
         {/* Item Header */}
         <div className="flex items-start justify-between w-full">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1 justify-between">
+            <div className="flex items-center mb-1">
               <h3 className="font-medium text-gray-900 dark:text-white text-sm truncate">{item.name}</h3>
-              {getStatusIcon(item.status)}
             </div>
             <div className="flex items-center gap-3 text-xs text-gray-400">
               <span>
@@ -66,9 +59,9 @@ export default function DownloadItem({item, setItems}: Props) {
               </span>
               {item.status === 'downloading' && (
                 <>
-                  <span>•</span>
+                  <span>|</span>
                   <span className="flex items-center gap-1">
-                    <Clock_Icon className="w-3 h-3" />
+                    <ClockCircle className="size-3.5" />
                     {formatETA(item.totalBytes, item.receivedBytes, item.bytesPerSecond)}
                   </span>
                 </>
@@ -101,7 +94,7 @@ export default function DownloadItem({item, setItems}: Props) {
                   handleAction(item.name, 'open');
                 }}
                 color="success"
-                startContent={<File_Icon className="size-3" />}
+                startContent={<FileDownload className="size-3.5" />}
                 fullWidth>
                 Open File
               </Button>
@@ -111,7 +104,7 @@ export default function DownloadItem({item, setItems}: Props) {
                   handleAction(item.name, 'openFolder');
                 }}
                 color="success"
-                startContent={<OpenFolder_Icon className="size-3" />}
+                startContent={<FolderOpen className="size-3.5" />}
                 fullWidth>
                 Open Path
               </Button>
@@ -121,7 +114,7 @@ export default function DownloadItem({item, setItems}: Props) {
                   handleAction(item.name, 'clear');
                 }}
                 color="default"
-                startContent={<Trash_Icon className="size-3" />}
+                startContent={<TrashBin2 className="size-3.5" />}
                 fullWidth>
                 Clear
               </Button>
@@ -134,7 +127,7 @@ export default function DownloadItem({item, setItems}: Props) {
                     handleAction(item.name, 'pause');
                   }}
                   color="warning"
-                  startContent={<Pause_Icon className="size-3" />}>
+                  startContent={<Pause className="size-3.5" />}>
                   Pause
                 </Button>
               ) : item.status === 'paused' ? (
@@ -143,7 +136,7 @@ export default function DownloadItem({item, setItems}: Props) {
                     handleAction(item.name, 'resume');
                   }}
                   color="primary"
-                  startContent={<Play_Icon className="size-3" />}>
+                  startContent={<Play className="size-3.5" />}>
                   Resume
                 </Button>
               ) : null}
@@ -156,7 +149,7 @@ export default function DownloadItem({item, setItems}: Props) {
                       handleAction(item.name, 'resume');
                     }}
                     color="primary"
-                    startContent={<Play_Icon className="size-3" />}
+                    startContent={<Restart className="size-3.5" />}
                     fullWidth>
                     Retry
                   </Button>
@@ -165,7 +158,7 @@ export default function DownloadItem({item, setItems}: Props) {
                       handleAction(item.name, 'clear');
                     }}
                     color="default"
-                    startContent={<Trash_Icon className="size-3" />}
+                    startContent={<TrashBin2 className="size-3.5" />}
                     fullWidth>
                     Clear
                   </Button>
@@ -176,7 +169,7 @@ export default function DownloadItem({item, setItems}: Props) {
                     handleAction(item.name, 'clear');
                   }}
                   color="default"
-                  startContent={<Trash_Icon className="size-3" />}
+                  startContent={<TrashBin2 className="size-3.5" />}
                   fullWidth>
                   Clear
                 </Button>
@@ -186,7 +179,7 @@ export default function DownloadItem({item, setItems}: Props) {
                     handleAction(item.name, 'cancel');
                   }}
                   color="danger"
-                  startContent={<CloseSimple_Icon className="size-3" />}
+                  startContent={<X className="size-3.5" />}
                   className={`${(item.status === 'downloading' || item.status === 'paused') && 'max-w-24'}`}>
                   Cancel
                 </Button>

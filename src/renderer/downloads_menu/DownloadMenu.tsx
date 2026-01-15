@@ -1,10 +1,10 @@
-import {Button} from '@heroui/react';
+import {Button, Chip} from '@heroui/react';
+import {Broom, DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useEffect, useState} from 'react';
 
 import {DownloadItemInfo} from '../../cross/DownloadManagerTypes';
 import rendererIpc from '../src/App/RendererIpc';
-import {DownloadDuo_Icon} from '../src/assets/icons/SvgIcons/SvgIcons';
 import DownloadItem from './DownloadItem';
 
 export default function DownloadMenu() {
@@ -64,13 +64,15 @@ export default function DownloadMenu() {
       {/* Header */}
       <div className="relative px-4 py-4 flex flex-row items-center justify-between">
         <h2 className="text-lg font-semibold flex items-center gap-2">
-          <DownloadDuo_Icon className="size-5" />
+          <DownloadMinimalistic className="size-5" />
           Downloads
         </h2>
         <div className="flex items-center gap-3">
-          <p className="text-sm">{downloads.length} items</p>
+          <Chip size="sm" variant="flat">
+            {downloads.length} items
+          </Chip>
           {downloads.length > 0 && (
-            <Button size="sm" color="danger" variant="flat" onPress={handleClearAll}>
+            <Button size="sm" color="danger" variant="flat" startContent={<Broom />} onPress={handleClearAll}>
               Clear All
             </Button>
           )}

@@ -1,5 +1,3 @@
-import {CheckDuo_Icon, CloseSimple_Icon, DownloadDuo_Icon, Pause_Icon} from '../src/assets/icons/SvgIcons/SvgIcons';
-
 export const getStatusColor = (status: string) => {
   switch (status) {
     case 'downloading':
@@ -12,21 +10,6 @@ export const getStatusColor = (status: string) => {
       return 'danger';
     default:
       return 'default';
-  }
-};
-
-export const getStatusIcon = (status: string) => {
-  switch (status) {
-    case 'downloading':
-      return <DownloadDuo_Icon className="size-4 text-blue-500" />;
-    case 'paused':
-      return <Pause_Icon className="size-3.5 text-warning" />;
-    case 'completed':
-      return <CheckDuo_Icon className="size-5 text-success" />;
-    case 'cancelled':
-      return <CloseSimple_Icon className="size-4 text-danger/70" />;
-    default:
-      return null;
   }
 };
 
