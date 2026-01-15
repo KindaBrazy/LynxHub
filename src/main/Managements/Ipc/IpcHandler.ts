@@ -42,6 +42,7 @@ import {
   getSystemDarkMode,
   getUserAgent,
   isDark,
+  noticeAllWindowsDarkMode,
   openDialog,
 } from '../../Utilities/Utils';
 import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../AppDataManager';
@@ -99,7 +100,7 @@ import {
 import {handleGetAudioState, handleSetMuted, handleSetVolume} from './Methods/IpcMethods-Volume';
 
 function win() {
-  const {appManager, storageManager, contextMenuManager} = classHolder;
+  const {appManager, storageManager} = classHolder;
   // Changes window state (maximize, minimize, close, fullscreen, restart)
   ipcMain.on(winChannels.changeState, (_, state: ChangeWindowState) => changeWindowState(state));
   // Gets system dark mode preference (light/dark)
@@ -110,10 +111,7 @@ function win() {
 
   // Listens for system theme changes and updates app if set to 'system' mode
   nativeTheme.on('updated', () => {
-    if (storageManager.getData('app').darkMode === 'system') {
-      appManager?.getWebContent()?.send(winChannels.onDarkMode, getSystemDarkMode());
-      contextMenuManager?.getWindow()?.webContents.send(winChannels.onDarkMode, getSystemDarkMode());
-    }
+    if (storageManager.getData('app').darkMode === 'system') noticeAllWindowsDarkMode('system');
   });
 
   // Sets taskbar visibility status (taskbar, tray, taskbar-tray, tray-minimized)

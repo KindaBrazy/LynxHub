@@ -26,10 +26,8 @@ export default function SettingsGeneralTheme() {
   const [selectedTheme, setSelectedTheme] = useState<DarkModeTypes>('system');
 
   useEffect(() => {
-    rendererIpc.storage.get('app').then(result => {
-      if (result.darkMode) {
-        setSelectedTheme(result.darkMode);
-      }
+    rendererIpc.storage.get('app').then(({darkMode}) => {
+      setSelectedTheme(darkMode);
     });
   }, []);
 
