@@ -16,12 +16,14 @@ import {getUserAgent, getWindowColor, RelaunchApp} from '../Utilities/Utils';
 import classHolder from './ClassHolder';
 import RegisterHotkeys from './HotkeysManager';
 
+type Listener = () => void;
+
 /**
  * Manages the main application window and loading window for an Electron app.
  */
 export default class ElectronAppManager {
-  public onCreateWindow?: () => void;
-  public onReadyToShow?: () => void;
+  private createWindowListeners: Listener[] = [];
+  private readyToShowListeners: Listener[] = [];
 
   private mainWindow?: BrowserWindow;
 
@@ -38,6 +40,13 @@ export default class ElectronAppManager {
       sandbox: false,
     },
   };
+
+  public onCreateWindow(callback: Listener) {
+    this.createWindowListeners.push(callback);
+  }
+  public onReadyToShow(callback: Listener) {
+    this.readyToShowListeners.push(callback);
+  }
 
   public getMainWindow(): BrowserWindow | undefined {
     if (!this.mainWindow) return undefined;
@@ -74,7 +83,7 @@ export default class ElectronAppManager {
 
     this.setupMainWindowEventListeners();
     this.loadAppropriateURL(this.mainWindow, 'index.html');
-    this.onCreateWindow?.();
+    this.createWindowListeners.forEach(listener => listener());
     contextMenuManager?.createWindow(this.mainWindow);
     linkPreviewManager?.createWindow(this.mainWindow);
   }
@@ -84,7 +93,7 @@ export default class ElectronAppManager {
     this.getMainWindow()?.once('ready-to-show', () => {
       this.getWebContent()?.setUserAgent(getUserAgent());
       setTimeout(() => {
-        this.onReadyToShow?.();
+        this.readyToShowListeners.forEach(listener => listener());
       }, 2000);
     });
 

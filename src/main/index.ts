@@ -87,11 +87,11 @@ async function startLynxHub() {
   DialogManager();
 
   const appManager = classHolder.appManager!;
-  appManager.onCreateWindow = () => browserIPC();
-  appManager.onReadyToShow = () => {
+  appManager.onCreateWindow(() => browserIPC());
+  appManager.onReadyToShow(() => {
     loadingWindow.closeWindow();
     handleAppReadyToShow();
-  };
+  });
 
   appManager.startApp();
 
