@@ -1,8 +1,11 @@
+import {clearInterval} from 'node:timers';
+
 import axios from 'axios';
 import {app} from 'electron';
 
 import {toMs} from '../../cross/CrossUtils';
 import {otherChannels} from '../../cross/IpcChannelAndTypes';
+import BrowserDownloadManager from './BrowserDownloadManager';
 import ContextMenuManager from './ContextMenuManager';
 import {ValidateCards} from './DataValidator';
 import ElectronAppManager from './ElectronAppManager';
@@ -10,6 +13,7 @@ import LinkPreviewManager from './LinkPreviewManager';
 import ExtensionManager from './Plugin/Extensions/ExtensionManager';
 import ModuleManager from './Plugin/Modules/ModuleManager';
 import {PluginManager} from './Plugin/PluginManager';
+import ShareScreenManager from './ShareScreenManager';
 import StaticsManager from './StaticsManager';
 import StorageManager from './Storage/StorageManager';
 import TrayManager from './TrayManager';
@@ -27,6 +31,8 @@ class ClassHolder {
   private _cardsValidator?: ValidateCards;
   private _contextMenuManager?: ContextMenuManager;
   private _linkPreviewManager?: LinkPreviewManager;
+  private _browserDownloadManager?: BrowserDownloadManager;
+  private _shareScreenManager?: ShareScreenManager;
 
   private readonly _appStartTime: number;
   private _isOnline: boolean = true;
@@ -123,6 +129,12 @@ class ClassHolder {
   private set isOnline(value: ClassHolder['_isOnline']) {
     this._isOnline = value;
   }
+  set browserDownloadManager(value: ClassHolder['_browserDownloadManager']) {
+    this._browserDownloadManager = value;
+  }
+  set shareScreenManager(value: ClassHolder['_shareScreenManager']) {
+    this._shareScreenManager = value;
+  }
 
   // ----------------> Getters
   get appStartTime(): number {
@@ -160,6 +172,12 @@ class ClassHolder {
   }
   get isOnline(): boolean {
     return this._isOnline;
+  }
+  get browserDownloadManager() {
+    return this._browserDownloadManager;
+  }
+  get shareScreenManager() {
+    return this._shareScreenManager;
   }
 }
 
