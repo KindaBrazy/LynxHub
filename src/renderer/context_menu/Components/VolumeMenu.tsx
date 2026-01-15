@@ -1,5 +1,5 @@
 import {Button, Slider} from '@heroui/react';
-import {VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
+import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useRef, useState} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
@@ -90,6 +90,8 @@ export function useVolumeMenu(setElements: SetElementsType, setWidthSize: SetWid
               maxValue={100}
               value={volume}
               className="max-w-full"
+              startContent={<Volume />}
+              endContent={<VolumeLoud />}
               onChange={handleVolumeChange}
               aria-label="Volume level slider"
             />
