@@ -1,4 +1,5 @@
 import {Button, Input, Slider} from '@heroui/react';
+import {Magnifer, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {isArray, isEmpty} from 'lodash';
 import {X} from 'lucide-react';
@@ -6,6 +7,7 @@ import type {KeyboardEvent} from 'react';
 import {useEffect, useRef, useState} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
+import {Circle_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
 import {SetElementsType, SetWidthSizeType} from './ContextHooks';
 
 export function useZoomMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
@@ -31,10 +33,16 @@ export function useZoomMenu(setElements: SetElementsType, setWidthSize: SetWidth
     if (id) {
       setElements([
         <div key="zoom_page" className="p-3 pr-6 flex flex-row gap-x-2 gap-y-4">
-          <Button size="sm" variant="light" onPress={handleReset} className="h-14 cursor-default">
-            Reset
+          <Button size="sm" variant="flat" className="h-17" onPress={handleReset} isDisabled={value === 100}>
+            <Refresh className="size-5" />
           </Button>
           <Slider
+            label={
+              <div className="flex flex-row items-center gap-x-2">
+                <Magnifer />
+                <span>Browser Scale</span>
+              </div>
+            }
             marks={[
               {value: 10, label: '10'},
               {value: 100, label: '100'},
@@ -50,7 +58,6 @@ export function useZoomMenu(setElements: SetElementsType, setWidthSize: SetWidth
             fillOffset={100}
             className="w-52"
             onChange={onChange}
-            label="Browser Scale"
             aria-label="Zoom Factor"
             getValue={value => `${value}%`}
             classNames={{thumb: 'cursor-default'}}
@@ -160,6 +167,7 @@ export function useFindMenu(setElements: SetElementsType, setWidthSize: SetWidth
             value={searchValue}
             onKeyDown={handleKeyDown}
             placeholder="Type to find..."
+            startContent={<Circle_Icon />}
             onValueChange={setSearchValue}
             autoFocus
           />
