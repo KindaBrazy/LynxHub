@@ -71,7 +71,6 @@ export default function useModeAnimation(props?: ReactThemeSwitchAnimationProps)
     duration: propsDuration = 750,
     easing = 'ease-in-out',
     pseudoElement = '::view-transition-new(root)',
-    globalClassName = 'dark',
     animationType = ThemeAnimationType.CIRCLE,
     blurAmount = 2,
     styleId = 'theme-switch-style',
@@ -93,6 +92,7 @@ export default function useModeAnimation(props?: ReactThemeSwitchAnimationProps)
   );
 
   const isDarkMode = externalDarkMode ?? internalDarkMode;
+
   const setIsDarkMode = (value: boolean | ((prev: boolean) => boolean)) => {
     const newValue = typeof value === 'function' ? value(isDarkMode) : value;
     if (onDarkModeChange) {
@@ -256,16 +256,6 @@ export default function useModeAnimation(props?: ReactThemeSwitchAnimationProps)
       }, duration);
     }
   };
-
-  useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add(globalClassName);
-      localStorage.theme = 'dark';
-    } else {
-      document.documentElement.classList.remove(globalClassName);
-      localStorage.theme = 'light';
-    }
-  }, [isDarkMode, globalClassName]);
 
   return {
     ref,
