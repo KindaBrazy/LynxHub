@@ -8,7 +8,7 @@ import {Power_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
 import {SetElementsType, SetWidthSizeType} from './ContextHooks';
 
 const hideWindow = () => rendererIpc.contextMenu.hideWindow();
-const setBtnFocus = (node: HTMLButtonElement | null) => {
+const setElementFocus = (node: HTMLElement | null) => {
   if (node) {
     setTimeout(() => {
       node?.focus();
@@ -38,13 +38,10 @@ export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetW
           <ShieldWarning className="text-warning size-7" />
           <span className="text-medium font-semibold">Confirm Exit</span>
         </div>
-        <div className="mb-1 mt-2 flex flex-col space-y-1">
-          <p className="text-sm font-semibold">Are you sure you want to exit the application?</p>
-          <Checkbox size="sm" isSelected={showConfirmValue} onValueChange={onShowConfirm}>
-            Always exit without confirmation
-          </Checkbox>
-        </div>
-        <div className="mt-4 flex w-full flex-row justify-between">
+        <Checkbox size="sm" className="my-1" isSelected={showConfirmValue} onValueChange={onShowConfirm}>
+          Always exit without confirmation
+        </Checkbox>
+        <div className="flex w-full flex-row justify-between">
           <Button size="sm" color="success" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
             Stay
           </Button>
@@ -57,8 +54,8 @@ export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetW
             <Button
               size="sm"
               color="danger"
-              ref={setBtnFocus}
               onPress={onClose}
+              ref={setElementFocus}
               startContent={<Power_Icon />}
               autoFocus>
               Exit
@@ -114,22 +111,19 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
           <span className="text-medium font-semibold">Confirm Terminate Process</span>
         </div>
 
-        <div className="mb-1 mt-2 flex flex-col space-y-1">
-          <p className="text-sm font-semibold">Are you sure you want to terminate running terminal process?</p>
-          <Checkbox size="sm" isSelected={showConfirmValue} onValueChange={onShowConfirm}>
-            Always close terminal tabs without confirmation
-          </Checkbox>
-        </div>
+        <Checkbox size="sm" className="my-1" isSelected={showConfirmValue} onValueChange={onShowConfirm}>
+          Always terminate without confirmation
+        </Checkbox>
 
-        <div className="mt-4 flex w-full flex-row justify-between">
+        <div className="flex w-full flex-row justify-between">
           <Button size="sm" color="success" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
             Cancel
           </Button>
           <Button
             size="sm"
             color="danger"
-            ref={setBtnFocus}
             onPress={removeTab}
+            ref={setElementFocus}
             startContent={<Power_Icon />}
             autoFocus>
             Terminate
@@ -182,16 +176,11 @@ export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: S
           <span className="text-medium font-semibold">Confirm Terminate Process</span>
         </div>
 
-        <div className="mb-1 mt-2 flex flex-col space-y-1">
-          <p className="text-sm font-semibold">
-            Stopping the process will end its execution immediately. Any unsaved data will be lost. Continue?
-          </p>
-          <Checkbox size="sm" isSelected={showConfirmValue} onValueChange={onShowConfirm}>
-            Always terminate without confirmation
-          </Checkbox>
-        </div>
+        <Checkbox size="sm" className="my-1" isSelected={showConfirmValue} onValueChange={onShowConfirm}>
+          Always terminate without confirmation
+        </Checkbox>
 
-        <div className="mt-4 flex w-full flex-row justify-between">
+        <div className="flex w-full flex-row justify-between">
           <Button size="sm" color="success" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
             Cancel
           </Button>
@@ -199,7 +188,13 @@ export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: S
             <Button size="sm" color="warning" onPress={onRelaunch} startContent={<Restart />}>
               Relaunch
             </Button>
-            <Button size="sm" color="danger" onPress={onStop} ref={setBtnFocus} startContent={<Power_Icon />} autoFocus>
+            <Button
+              size="sm"
+              color="danger"
+              onPress={onStop}
+              ref={setElementFocus}
+              startContent={<Power_Icon />}
+              autoFocus>
               Terminate
             </Button>
           </div>
