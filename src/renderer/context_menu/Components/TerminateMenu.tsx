@@ -1,7 +1,5 @@
 import {Button, Checkbox} from '@heroui/react';
-import {Forward2, Restart} from '@solar-icons/react-perf/BoldDuotone';
-import {Typography} from 'antd';
-import {X} from 'lucide-react';
+import {Forward2, Restart, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useRef, useState} from 'react';
 
 import rendererIpc from '../../src/App/RendererIpc';
@@ -10,6 +8,13 @@ import {Power_Icon} from '../../src/assets/icons/SvgIcons/SvgIcons';
 import {SetElementsType, SetWidthSizeType} from './ContextHooks';
 
 const hideWindow = () => rendererIpc.contextMenu.hideWindow();
+const setBtnFocus = (node: HTMLButtonElement | null) => {
+  if (node) {
+    setTimeout(() => {
+      node?.focus();
+    }, 100);
+  }
+};
 
 export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
   const [toggle, setToggle] = useState<boolean>(false);
@@ -26,16 +31,20 @@ export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetW
     rendererIpc.storage.get('app').then(({closeConfirm}) => {
       setShowConfirmValue(!closeConfirm);
     });
+
     setElements([
-      <div className="py-4 px-8" key="close_app_confirm">
-        <span className="self-start text-medium font-semibold">Confirm Exit</span>
-        <div className="mt-2 flex flex-col space-y-1">
-          <Typography.Text>Are you sure you want to exit the application?</Typography.Text>
+      <div className="py-4 px-8" key={`close_app_confirm_${toggle}`}>
+        <div className="flex flex-row items-center justify-start gap-x-2">
+          <ShieldWarning className="text-warning size-7" />
+          <span className="text-medium font-semibold">Confirm Exit</span>
+        </div>
+        <div className="mb-1 mt-2 flex flex-col space-y-1">
+          <p className="text-sm font-semibold">Are you sure you want to exit the application?</p>
           <Checkbox size="sm" isSelected={showConfirmValue} onValueChange={onShowConfirm}>
             Always exit without confirmation
           </Checkbox>
         </div>
-        <div className="mt-2 flex w-full flex-row justify-between">
+        <div className="mt-4 flex w-full flex-row justify-between">
           <Button size="sm" color="success" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
             Stay
           </Button>
@@ -45,7 +54,13 @@ export function useCloseAppMenu(setElements: SetElementsType, setWidthSize: SetW
                 Restart
               </Button>
             )}
-            <Button size="sm" color="danger" onPress={onClose} startContent={<Power_Icon />}>
+            <Button
+              size="sm"
+              color="danger"
+              ref={setBtnFocus}
+              onPress={onClose}
+              startContent={<Power_Icon />}
+              autoFocus>
               Exit
             </Button>
           </div>
@@ -71,7 +86,6 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
   const [id, setId] = useState<string>('');
   const [toggle, setToggle] = useState<boolean>(false);
   const [showConfirmValue, setShowConfirmValue] = useState<boolean>(false);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onShowConfirm = (enabled: boolean) => {
@@ -94,38 +108,35 @@ export function useTerminateTabMenu(setElements: SetElementsType, setWidthSize: 
       setShowConfirmValue(!closeTabConfirm);
     });
     setElements([
-      <div key="terminate_tab" className="py-4 px-5">
-        <span className="self-start text-medium font-semibold">Close Terminal Tab?</span>
+      <div key={'terminate_tab'} className="py-4 px-5">
+        <div className="flex flex-row items-center justify-start gap-x-2">
+          <ShieldWarning className="text-warning size-7" />
+          <span className="text-medium font-semibold">Confirm Terminate Process</span>
+        </div>
 
-        <div className="mt-2 flex flex-col space-y-1">
-          <Typography.Text>This will terminate running processes.</Typography.Text>
-
+        <div className="mb-1 mt-2 flex flex-col space-y-1">
+          <p className="text-sm font-semibold">Are you sure you want to terminate running terminal process?</p>
           <Checkbox size="sm" isSelected={showConfirmValue} onValueChange={onShowConfirm}>
             Always close terminal tabs without confirmation
           </Checkbox>
         </div>
 
-        <div className="mt-2 flex w-full flex-row justify-between">
-          <Button size="sm" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
+        <div className="mt-4 flex w-full flex-row justify-between">
+          <Button size="sm" color="success" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
             Cancel
           </Button>
           <Button
             size="sm"
             color="danger"
+            ref={setBtnFocus}
             onPress={removeTab}
-            ref={closeButtonRef}
-            startContent={<X className="size-3.5" />}>
-            Close Tab
+            startContent={<Power_Icon />}
+            autoFocus>
+            Terminate
           </Button>
         </div>
       </div>,
     ]);
-
-    // Auto-focus the close button when dialog appears
-    if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
-    focusTimeoutRef.current = setTimeout(() => {
-      closeButtonRef.current?.focus();
-    }, 100);
   }, [id, toggle, showConfirmValue]);
 
   useEffect(() => {
@@ -166,25 +177,29 @@ export function useTerminateAIMenu(setElements: SetElementsType, setWidthSize: S
     });
     setElements([
       <div className="py-4 px-5" key="terminate_ai_confirm">
-        <span className="self-start text-medium font-semibold">Terminate AI Execution</span>
-        <div className="mt-2 flex flex-col space-y-1">
-          <Typography.Text>
-            Stopping the AI will end its execution immediately.
-            <br /> Unsaved data will be lost. Continue?
-          </Typography.Text>
+        <div className="flex flex-row items-center justify-start gap-x-2">
+          <ShieldWarning className="text-warning size-7" />
+          <span className="text-medium font-semibold">Confirm Terminate Process</span>
+        </div>
+
+        <div className="mb-1 mt-2 flex flex-col space-y-1">
+          <p className="text-sm font-semibold">
+            Stopping the process will end its execution immediately. Any unsaved data will be lost. Continue?
+          </p>
           <Checkbox size="sm" isSelected={showConfirmValue} onValueChange={onShowConfirm}>
             Always terminate without confirmation
           </Checkbox>
         </div>
-        <div className="mt-2 flex w-full flex-row justify-between">
+
+        <div className="mt-4 flex w-full flex-row justify-between">
           <Button size="sm" color="success" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
-            Keep Running
+            Cancel
           </Button>
           <div className="space-x-2">
             <Button size="sm" color="warning" onPress={onRelaunch} startContent={<Restart />}>
               Relaunch
             </Button>
-            <Button size="sm" color="danger" onPress={onStop} startContent={<Power_Icon />}>
+            <Button size="sm" color="danger" onPress={onStop} ref={setBtnFocus} startContent={<Power_Icon />} autoFocus>
               Terminate
             </Button>
           </div>
