@@ -3,7 +3,8 @@ import type {Scope} from '@sentry/browser';
 import type {Emitter} from 'mitt';
 import type {FC} from 'react';
 
-import type rendererIpc from '../../renderer/src/App/RendererIpc';
+// @ts-ignore-next-line
+import type rendererIpc from '../../renderer/main_window/services/RendererIpc';
 import type {AvailablePageIDs} from '../CrossConstants';
 import type {ExtensionEvents, ExtensionEvents_IPC} from './ExtensionTypes_Events';
 import type {

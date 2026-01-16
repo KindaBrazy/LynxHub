@@ -102,7 +102,7 @@ export default defineConfig(({mode}) => {
         cssCodeSplit: false,
         modulePreload: false,
       },
-      publicDir: resolve(__dirname, 'src/renderer/public'),
+      publicDir: resolve(__dirname, 'src/renderer/shared/public'),
     },
   };
 });

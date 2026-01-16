@@ -1,0 +1,29 @@
+import {Button} from '@heroui/react';
+
+import {Stop_Icon} from '../../../../shared/assets/icons';
+import {useHotkeysState} from '../../../redux/reducers/hotkeys';
+import {useSettingsState} from '../../../redux/reducers/settings';
+import rendererIpc from '../../../services/RendererIpc';
+
+type Props = {id: string};
+
+export default function Terminate_AI({id}: Props) {
+  const isCtrlPressed = useHotkeysState('isCtrlPressed');
+  const showTerminateConfirm = useSettingsState('terminateAIConfirm');
+
+  const stopAi = () => {
+    if (id) {
+      if (isCtrlPressed || !showTerminateConfirm) {
+        rendererIpc.contextMenu.stopAI(id);
+      } else {
+        rendererIpc.contextMenu.openTerminateAI(id);
+      }
+    }
+  };
+
+  return (
+    <Button size="sm" variant="light" onPress={stopAi} className="cursor-default" isIconOnly>
+      <Stop_Icon className="size-4 text-danger" />
+    </Button>
+  );
+}

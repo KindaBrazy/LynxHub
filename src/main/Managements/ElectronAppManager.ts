@@ -5,13 +5,8 @@ import {is} from '@electron-toolkit/utils';
 import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
-import {
-  appWindowChannels,
-  HeroToastPlacement,
-  ShowToastTypes,
-  tabsChannels,
-  winChannels,
-} from '../../cross/IpcChannelAndTypes';
+import {HeroToastPlacement} from '../../cross/CrossTypes';
+import {appWindowChannels, ShowToastTypes, tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
 import {getUserAgent, getWindowColor, RelaunchApp} from '../Utilities/Utils';
 import classHolder from './ClassHolder';
 import RegisterHotkeys from './HotkeysManager';

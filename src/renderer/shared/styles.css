@@ -1,0 +1,70 @@
+@import './assets/fonts/fonts.css';
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/typography';
+@plugin './heroUIConfig.ts';
+
+@source '../../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-JetBrainsMono: JetBrainsMono, sans-serif;
+  --font-Nunito: Nunito, sans-serif;
+
+  --color-LynxOrange: #ff5f00;
+  --color-LynxRaisinBlack: #212121;
+
+  --color-LynxWhiteSecond: #f6f6f6;
+  --color-LynxWhiteThird: #ececec;
+  --color-LynxWhiteFourth: #e1e1e1;
+  --color-LynxWhiteFifth: #d0d0d0;
+
+  --color-DarkGray: #424242;
+
+  --animate-shine: shine 5s linear infinite;
+
+  @keyframes shine {
+    0% {
+      background-position: 100%;
+    }
+    100% {
+      background-position: -100%;
+    }
+  }
+
+  @keyframes ripple {
+    0%,
+    100% {
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(0.9);
+    }
+  }
+}
+
+.animate-ripple {
+  animation: ripple var(--duration, 2s) ease calc(var(--i, 0) * 0.2s) infinite;
+}
+
+:root {
+  color-scheme: light dark;
+  font-family: Nunito, sans-serif;
+
+  --duration: 2s;
+  --i: 0;
+}
+
+* {
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+
+.draggable {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
+.notDraggable {
+  -webkit-app-region: no-drag;
+}

@@ -2,7 +2,7 @@
 
 <br/>
 
-<img height="120" alt="Application Icon" src="src/renderer/public/LynxHub.png">
+<img height="120" alt="Application Icon" src="src/renderer/shared/public/LynxHub.png">
 
 # LynxHub
 
