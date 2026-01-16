@@ -1,0 +1,38 @@
+import {Spacer} from '@heroui/react';
+
+import {Terminal_Icon} from '../../../../../shared/assets/icons';
+import SettingsSection from '../../../../components/ContentSection';
+import BlinkCursor from './BlinkCursor';
+import CloseOnExit from './CloseOnExit';
+import Conpty from './Conpty';
+import CursorInactiveStyle from './CursorInactiveStyle';
+import CursorStyle from './CursorStyle';
+import FontSize from './FontSize';
+import Ligatures from './Ligatures';
+import OutputColor from './OutputColor';
+import QuickCommands from './QuickCommands';
+import Reset from './Reset';
+import ResizeDelay from './ResizeDelay';
+import ScrollBack from './ScrollBack';
+
+export const SettingsTerminalId = 'settings_terminal_elem';
+
+export default function SettingsTerminal() {
+  return (
+    <SettingsSection title="Terminal" id={SettingsTerminalId} icon={<Terminal_Icon className="size-5" />}>
+      <Conpty />
+      <ScrollBack />
+      <ResizeDelay />
+      <FontSize />
+      <Ligatures />
+      <CursorStyle />
+      <CursorInactiveStyle />
+      <BlinkCursor />
+      <OutputColor />
+      <CloseOnExit />
+      <Spacer />
+      <QuickCommands />
+      <Reset />
+    </SettingsSection>
+  );
+}

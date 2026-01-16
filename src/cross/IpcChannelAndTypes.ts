@@ -99,13 +99,6 @@ export type AgentTypes = 'lynxhub' | 'electron' | 'chrome' | 'custom';
 export type XYType = {x: number; y: number};
 export type WHType = {width: number; height: number};
 export type ShowToastTypes = 'success' | 'error' | 'warning' | 'info';
-export type HeroToastPlacement =
-  | 'bottom-right'
-  | 'bottom-left'
-  | 'bottom-center'
-  | 'top-right'
-  | 'top-left'
-  | 'top-center';
 
 export const winChannels = {
   changeState: 'win:state-change',

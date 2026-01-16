@@ -1,0 +1,120 @@
+import {Input, Spinner} from '@heroui/react';
+import {Empty, List, PaginationProps} from 'antd';
+import {useEffect, useState} from 'react';
+
+import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
+import {Circle_Icon} from '../../../../../shared/assets/icons';
+import {getCardMethod, useAllCardMethods} from '../../../../plugins/modules';
+import {searchInStrings} from '../../../../utils';
+import RenderItem from './RenderItem';
+
+type Props = {
+  visible: boolean;
+  updateTable: () => void;
+  installedExtensions: string[];
+  id: string;
+  dir: string;
+};
+export type ExtensionsInfo = {
+  title: string;
+  description: string;
+  url: string;
+  stars?: number;
+};
+
+export default function Available({visible, updateTable, installedExtensions, id, dir}: Props) {
+  const [pageSize, setPageSize] = useState<number>(10);
+  const [data, setData] = useState<ExtensionsInfo[]>([]);
+  const [list, setList] = useState<ExtensionsInfo[]>([]);
+  const [searchedData, setSearchedData] = useState<ExtensionsInfo[]>([]);
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
+  const allMethods = useAllCardMethods();
+
+  useEffect(() => {
+    setSearchedData(
+      data.filter(extension => searchInStrings(searchValue, [extension.title, extension.description, extension.url])),
+    );
+  }, [searchValue, data]);
+
+  useEffect(() => {
+    // Remove installed extensions from the list
+    const filterInstalled = list.filter(ext => !installedExtensions.includes(ext.url));
+    setData(filterInstalled);
+  }, [installedExtensions, list]);
+
+  useEffect(() => {
+    async function fetchModules() {
+      setIsLoading(true);
+      try {
+        const fetchExtensionList = getCardMethod(allMethods, id, 'fetchExtensionList');
+        if (fetchExtensionList) {
+          const extensions: ExtensionsInfo[] = await fetchExtensionList();
+          const filterData = extensions.filter(ext => !!validateGitRepoUrl(ext.url));
+          setList(filterData.map(ext => ({...ext, url: validateGitRepoUrl(ext.url)})));
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    if (visible) fetchModules();
+  }, [visible, allMethods]);
+
+  const onPageSizeChange: PaginationProps['onShowSizeChange'] = (_, pageSize) => {
+    setPageSize(pageSize);
+  };
+
+  if (!visible) return null;
+  return (
+    <>
+      <div className="mb-4 flex w-full justify-center">
+        <Input
+          classNames={{
+            inputWrapper: 'dark:bg-black/20 dark:hover:bg-white/5 bg-stone-50 shadow-md overflow-hidden',
+          }}
+          type="search"
+          spellCheck="false"
+          className="w-full"
+          value={searchValue}
+          onValueChange={setSearchValue}
+          startContent={<Circle_Icon className="size-5" />}
+          placeholder="Search by title, description or url..."
+          autoFocus
+        />
+      </div>
+      {isLoading ? (
+        <div className="size-full text-center">
+          <Spinner label="Loading extensions list..." />
+        </div>
+      ) : (
+        <List
+          pagination={
+            searchedData.length <= pageSize
+              ? false
+              : {
+                  onShowSizeChange: onPageSizeChange,
+                  align: 'center',
+                  pageSize: pageSize,
+                }
+          }
+          locale={{
+            emptyText: (
+              <Empty
+                description="There are no extensions available at the moment,
+                 but be sure to check back later for new additions!"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            ),
+          }}
+          split={false}
+          itemLayout="vertical"
+          dataSource={searchedData}
+          renderItem={item => <RenderItem dir={dir} item={item} updateTable={updateTable} searchValue={searchValue} />}
+        />
+      )}
+    </>
+  );
+}
