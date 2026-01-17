@@ -1,6 +1,4 @@
-// Renderer IPC client - Provides methods for renderer process to communicate with main process
-import type {ContextMenuParams, FindInPageOptions, IpcRendererEvent, OpenDialogOptions} from 'electron';
-
+import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
 import type {
   AppUpdateData,
   AppUpdateInsiderData,
@@ -17,10 +15,10 @@ import type {
   PatreonUserData,
   RepositoryInfo,
   SubscribeStages,
-} from '../../../cross/CrossTypes';
-import type {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '../../../cross/DownloadManagerTypes';
-import {browserDownloadChannels, customNotifChannels} from '../../../cross/DownloadManagerTypes';
-import type {ShallowCloneOptions} from '../../../cross/GitTypes';
+} from '@lynx_cross/CrossTypes';
+import type {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '@lynx_cross/DownloadManagerTypes';
+import {browserDownloadChannels, customNotifChannels} from '@lynx_cross/DownloadManagerTypes';
+import type {ShallowCloneOptions} from '@lynx_cross/GitTypes';
 import {
   AgentTypes,
   AppUpdateEventTypes,
@@ -50,7 +48,7 @@ import {
   TaskbarStatus,
   WHType,
   WinStateChange,
-} from '../../../cross/IpcChannelAndTypes';
+} from '@lynx_cross/IpcChannelAndTypes';
 import {
   appDataChannels,
   appUpdateChannels,
@@ -74,17 +72,17 @@ import {
   utilsChannels,
   volumeChannels,
   winChannels,
-} from '../../../cross/IpcChannelAndTypes';
+} from '@lynx_cross/IpcChannelAndTypes';
 import type {
   PluginAddresses,
   PluginInstalledItem,
   PluginItem,
   PluginSyncItem,
   UnloadedPlugins,
-} from '../../../cross/plugin/PluginTypes';
-import type StorageTypes from '../../../cross/StorageTypes';
-import type {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
-import {extensionRendererApi} from '../plugins/extensions/loader';
+} from '@lynx_cross/plugin/PluginTypes';
+import type StorageTypes from '@lynx_cross/StorageTypes';
+import type {InstalledCard, InstalledCards} from '@lynx_cross/StorageTypes';
+import type {ContextMenuParams, FindInPageOptions, IpcRendererEvent, OpenDialogOptions} from 'electron';
 
 const ipc = window.electron.ipcRenderer;
 

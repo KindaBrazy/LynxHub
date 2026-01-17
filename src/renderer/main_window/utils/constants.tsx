@@ -1,9 +1,9 @@
 import {TRANSITION_EASINGS} from '@heroui/framer-utils';
+import {PageID} from '@lynx_cross/CrossConstants';
+import {TabInfo} from '@lynx_cross/CrossTypes';
 import {HTMLMotionProps} from 'framer-motion';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {PageID} from '../../../cross/CrossConstants';
-import {TabInfo} from '../../../cross/CrossTypes';
 import AgentsPage from '../pages/agents/AgentsPage';
 import AudioGenerationPage from '../pages/audio';
 import DashboardPage from '../pages/dashboard';

@@ -1,11 +1,12 @@
-import Background from './components/Background';
+import Background from '@lynx/components/Background';
+import AppHooks from '@lynx/hooks/index';
+import Hooks from '@lynx/hooks/index';
+import MainContents from '@lynx/layouts/MainContents';
+import Modals from '@lynx/layouts/modals';
+import Initializer from '@lynx/layouts/modals/app_welcome';
+import TitleBar from '@lynx/layouts/title_bar';
+
 import UIProviders from './contexts/UIProviders';
-import AppHooks from './hooks';
-import MainContents from './layouts/MainContents';
-import Modals from './layouts/modals';
-import Initializer from './layouts/modals/app_welcome';
-import TitleBar from './layouts/title_bar';
-import Hooks from './plugins/extensions/Hooks';
 
 export default function App() {
   return (
