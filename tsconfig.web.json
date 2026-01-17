@@ -36,8 +36,8 @@
       "@lynx/redux/*": [
         "src/renderer/main_window/redux/*"
       ],
-      "@lynx/services/*": [
-        "src/renderer/main_window/services/*"
+      "@lynx/ipc/*": [
+        "src/renderer/main_window/ipc/*"
       ],
       "@lynx/types/*": [
         "src/renderer/main_window/types/*"

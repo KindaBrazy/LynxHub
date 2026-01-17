@@ -1,4 +1,4 @@
-import {LynxHotkey} from './IpcChannelAndTypes';
+import {LynxHotkey} from '../types/ipc';
 
 export const Hotkey_Names = {
   fullscreen: 'fullscreen',

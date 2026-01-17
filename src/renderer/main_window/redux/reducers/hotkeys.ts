@@ -1,7 +1,7 @@
+import {LynxHotkey, LynxInput} from '@lynx_cross/types/ipc';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {LynxHotkey, LynxInput} from '../../../../cross/IpcChannelAndTypes';
 import {HotkeysState} from '../../types/reducers';
 import {RootState} from '../store';
 

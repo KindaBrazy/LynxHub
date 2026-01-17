@@ -1,6 +1,6 @@
+import {SystemInfo, TerminalUseConpty} from '@lynx_cross/types/ipc';
 import {ITheme, IWindowsPty} from '@xterm/xterm';
 
-import {SystemInfo, TerminalUseConpty} from '../../../../../cross/IpcChannelAndTypes';
 import {isWebgl2Supported} from '../../../utils';
 import {getColor} from '../../../utils/constants';
 

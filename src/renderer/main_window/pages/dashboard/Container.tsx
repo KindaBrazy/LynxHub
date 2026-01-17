@@ -1,8 +1,8 @@
 import {isEmpty} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 
+import rendererIpc from '../../ipc';
 import {extensionsData} from '../../plugins/extensions/loader';
-import rendererIpc from '../../services/RendererIpc';
 import DashboardAbout, {DashboardAboutId} from './content/About';
 import DashboardCredits, {DashboardCreditsId} from './content/Credits';
 import DashboardProfile, {DashboardProfileId} from './content/profile';

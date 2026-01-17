@@ -1,9 +1,9 @@
+import {LoadedCardData} from '@lynx_cross/types/plugins/module';
 import {Empty} from 'antd';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
 import {memo, useMemo} from 'react';
 
-import {LoadedCardData} from '../../../cross/plugin/ModuleTypes';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../shared/assets/icons/Icons_Colorful';
 import RenderCardList from '../components/card/RenderList';
 import NavigatePluginsPage from '../components/NavigatePluginsPage';

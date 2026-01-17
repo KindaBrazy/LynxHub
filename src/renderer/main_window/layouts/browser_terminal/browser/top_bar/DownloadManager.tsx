@@ -2,7 +2,7 @@ import {Badge, Button} from '@heroui/react';
 import {useEffect, useState} from 'react';
 
 import {DownloadDuo_Icon} from '../../../../../shared/assets/icons';
-import rendererIpc from '../../../../services/RendererIpc';
+import rendererIpc from '../../../../ipc';
 
 export default function DownloadManager() {
   const [itemCount, setItemCount] = useState<number>(0);

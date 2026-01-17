@@ -1,8 +1,8 @@
+import {APP_ICON_TRANSPARENT, APP_NAME} from '@lynx_cross/consts';
 import {AnimatePresence} from 'framer-motion';
 import {useCallback, useState} from 'react';
 
-import {APP_ICON_TRANSPARENT, APP_NAME} from '../../../../../cross/CrossConstants';
-import rendererIpc from '../../../services/RendererIpc';
+import rendererIpc from '../../../ipc';
 import StepComplete from './steps/Completed';
 import StepSystemCheck from './steps/SystemCheck';
 import StepUpdate from './steps/Update';

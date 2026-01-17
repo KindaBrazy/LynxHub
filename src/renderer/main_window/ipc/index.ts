@@ -1,54 +1,5 @@
 import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
-import type {
-  AppUpdateData,
-  AppUpdateInsiderData,
-  ChosenArgumentsData,
-  ContextResizeData,
-  CustomNotificationInfo,
-  ExtensionsInfo,
-  FolderListData,
-  FolderNames,
-  HeroToastPlacement,
-  ModulesInfo,
-  Notification_Data,
-  PatreonSupporter,
-  PatreonUserData,
-  RepositoryInfo,
-  SubscribeStages,
-} from '@lynx_cross/CrossTypes';
-import type {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '@lynx_cross/DownloadManagerTypes';
-import {browserDownloadChannels, customNotifChannels} from '@lynx_cross/DownloadManagerTypes';
-import type {ShallowCloneOptions} from '@lynx_cross/GitTypes';
-import {
-  AgentTypes,
-  AppUpdateEventTypes,
-  AppUpdateStatus,
-  AudioState,
-  BrowserHistoryData,
-  CanGoType,
-  ChangeWindowState,
-  CustomRunBehaviorData,
-  DarkModeTypes,
-  DownloadProgress,
-  ExtensionsData,
-  ExtensionsUpdateStatus,
-  GitProgressCallback,
-  HomeCategory,
-  LynxInput,
-  OnPreCommands,
-  OnUpdatingExtensions,
-  otherChannels,
-  PreCommands,
-  PreOpen,
-  PreOpenData,
-  RecentlyOperation,
-  ShowToastTypes,
-  StorageOperation,
-  SystemInfo,
-  TaskbarStatus,
-  WHType,
-  WinStateChange,
-} from '@lynx_cross/IpcChannelAndTypes';
+import {browserDownloadChannels, customNotifChannels} from '@lynx_cross/consts/donwload_manager';
 import {
   appDataChannels,
   appUpdateChannels,
@@ -72,16 +23,65 @@ import {
   utilsChannels,
   volumeChannels,
   winChannels,
-} from '@lynx_cross/IpcChannelAndTypes';
+} from '@lynx_cross/consts/ipc';
+import {otherChannels} from '@lynx_cross/consts/ipc';
+import type {
+  AppUpdateData,
+  AppUpdateInsiderData,
+  ChosenArgumentsData,
+  ContextResizeData,
+  CustomNotificationInfo,
+  ExtensionsInfo,
+  FolderListData,
+  FolderNames,
+  HeroToastPlacement,
+  ModulesInfo,
+  Notification_Data,
+  PatreonSupporter,
+  PatreonUserData,
+  RepositoryInfo,
+  SubscribeStages,
+} from '@lynx_cross/types';
+import type {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '@lynx_cross/types/download_manager';
+import type {ShallowCloneOptions} from '@lynx_cross/types/git';
+import {
+  AgentTypes,
+  AppUpdateEventTypes,
+  AppUpdateStatus,
+  AudioState,
+  BrowserHistoryData,
+  CanGoType,
+  ChangeWindowState,
+  CustomRunBehaviorData,
+  DarkModeTypes,
+  DownloadProgress,
+  ExtensionsData,
+  ExtensionsUpdateStatus,
+  GitProgressCallback,
+  HomeCategory,
+  LynxInput,
+  OnPreCommands,
+  OnUpdatingExtensions,
+  PreCommands,
+  PreOpen,
+  PreOpenData,
+  RecentlyOperation,
+  ShowToastTypes,
+  StorageOperation,
+  SystemInfo,
+  TaskbarStatus,
+  WHType,
+  WinStateChange,
+} from '@lynx_cross/types/ipc';
 import type {
   PluginAddresses,
   PluginInstalledItem,
   PluginItem,
   PluginSyncItem,
   UnloadedPlugins,
-} from '@lynx_cross/plugin/PluginTypes';
-import type StorageTypes from '@lynx_cross/StorageTypes';
-import type {InstalledCard, InstalledCards} from '@lynx_cross/StorageTypes';
+} from '@lynx_cross/types/plugins';
+import type {InstalledCard, InstalledCards} from '@lynx_cross/types/storage';
+import type StorageTypes from '@lynx_cross/types/storage';
 import type {ContextMenuParams, FindInPageOptions, IpcRendererEvent, OpenDialogOptions} from 'electron';
 
 const ipc = window.electron.ipcRenderer;

@@ -1,18 +1,12 @@
 import path from 'node:path';
 
+import {browserChannels, tabsChannels, volumeChannels} from '@lynx_cross/consts/ipc';
+import {AudioState, CanGoType, WHType} from '@lynx_cross/types/ipc';
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
 import {debounce, isEmpty, isNil} from 'lodash';
 
 import icon from '../../../resources/icon.png?asset';
-import {formatWebAddress} from '../../cross/CrossUtils';
-import {
-  AudioState,
-  browserChannels,
-  CanGoType,
-  tabsChannels,
-  volumeChannels,
-  WHType,
-} from '../../cross/IpcChannelAndTypes';
+import {formatWebAddress} from '../../cross/utils';
 import {getUserAgent, getWindowColor} from '../utils';
 import classHolder from './class_holder';
 import RegisterHotkeys from './hotkeys';

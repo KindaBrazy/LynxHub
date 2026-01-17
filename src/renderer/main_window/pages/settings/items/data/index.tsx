@@ -5,8 +5,8 @@ import {useDispatch} from 'react-redux';
 import {Database_Icon, OpenFolder_Icon, Refresh_Icon} from '../../../../../shared/assets/icons';
 import SettingsSection from '../../../../components/ContentSection';
 import {lynxTopToast} from '../../../../hooks/utils';
+import rendererIpc from '../../../../ipc';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 export const SettingsDataId = 'settings_data_elem';

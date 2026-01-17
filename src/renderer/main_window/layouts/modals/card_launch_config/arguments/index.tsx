@@ -1,10 +1,10 @@
 import {useDisclosure} from '@heroui/react';
+import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_cross/types';
 import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {ArgumentsPresets, ChosenArgumentsData} from '../../../../../../cross/CrossTypes';
+import rendererIpc from '../../../../ipc';
 import {getCardMethod, useAllCardMethods} from '../../../../plugins/modules';
-import rendererIpc from '../../../../services/RendererIpc';
 import {tabContentVariants} from '../../card_extensions/Constants';
 import AddArguments from './add';
 import ManageArguments from './manage';

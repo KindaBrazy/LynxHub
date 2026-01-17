@@ -1,8 +1,8 @@
 import {Chip} from '@heroui/react';
+import {ChangelogItem, ChangelogSubItem} from '@lynx_cross/types/plugins';
 import {motion} from 'framer-motion';
 import {memo} from 'react';
 
-import {ChangelogItem, ChangelogSubItem} from '../../../../../cross/plugin/PluginTypes';
 import LynxScroll from '../../../components/LynxScroll';
 import {usePluginsState} from '../../../redux/reducers/plugins';
 

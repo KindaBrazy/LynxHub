@@ -4,7 +4,7 @@ import {Menu, Tray} from 'electron';
 
 import trayIconMenu from '../../../resources/16x16.png?asset';
 import trayIcon from '../../../resources/icon.ico?asset';
-import {APP_NAME, APP_NAME_VERSION} from '../../cross/CrossConstants';
+import {APP_NAME, APP_NAME_VERSION} from '../../cross/consts';
 import {EMenuItem} from '../plugins/extensions/types';
 import classHolder from './class_holder';
 

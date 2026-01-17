@@ -1,12 +1,12 @@
 import {Button, Link, Spinner} from '@heroui/react';
+import {CardInfoDescriptions, CardInfoDescriptions_Items} from '@lynx_cross/types/plugins/module';
+import {isValidURL} from '@lynx_cross/utils';
 import {Descriptions, DescriptionsProps, Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {useCallback} from 'react';
 
-import {isValidURL} from '../../../../../cross/CrossUtils';
-import {CardInfoDescriptions, CardInfoDescriptions_Items} from '../../../../../cross/plugin/ModuleTypes';
 import {OpenFolder_Icon} from '../../../../shared/assets/icons';
-import rendererIpc from '../../../services/RendererIpc';
+import rendererIpc from '../../../ipc';
 
 type Props = {
   folders: string[] | undefined;

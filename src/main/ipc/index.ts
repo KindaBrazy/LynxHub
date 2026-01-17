@@ -1,39 +1,41 @@
 // Main IPC handler - Registers all IPC channels for communication between renderer and main process
 import path from 'node:path';
 
-import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, shell} from 'electron';
-
-import {ChosenArgumentsData, FolderNames, SubscribeStages} from '../../cross/CrossTypes';
-import {toMs} from '../../cross/CrossUtils';
-import {ShallowCloneOptions} from '../../cross/GitTypes';
 import {
-  AgentTypes,
   appDataChannels,
   browserChannels,
-  ChangeWindowState,
-  CustomRunBehaviorData,
-  DarkModeTypes,
   fileChannels,
   gitChannels,
   imageCacheChannels,
   moduleApiChannels,
   modulesChannels,
   pluginChannels,
-  PreCommands,
-  PreOpen,
   ptyChannels,
-  RecentlyOperation,
   staticsChannels,
   storageChannels,
-  StorageOperation,
   storageUtilsChannels,
-  TaskbarStatus,
   utilsChannels,
   volumeChannels,
-  WHType,
   winChannels,
-} from '../../cross/IpcChannelAndTypes';
-import StorageTypes, {InstalledCard} from '../../cross/StorageTypes';
+} from '@lynx_cross/consts/ipc';
+import {
+  AgentTypes,
+  ChangeWindowState,
+  CustomRunBehaviorData,
+  DarkModeTypes,
+  PreCommands,
+  PreOpen,
+  RecentlyOperation,
+  StorageOperation,
+  TaskbarStatus,
+  WHType,
+} from '@lynx_cross/types/ipc';
+import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, shell} from 'electron';
+
+import {ChosenArgumentsData, FolderNames, SubscribeStages} from '../../cross/types';
+import {ShallowCloneOptions} from '../../cross/types/git';
+import StorageTypes, {InstalledCard} from '../../cross/types/storage';
+import {toMs} from '../../cross/utils';
 import BrowserDownloadManager from '../child_windows/browser_download_manager';
 import BrowserManager from '../core/browser';
 import classHolder from '../core/class_holder';

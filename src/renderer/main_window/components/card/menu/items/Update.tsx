@@ -1,16 +1,16 @@
 import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
+import {extractGitUrl} from '@lynx_cross/utils';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extractGitUrl} from '../../../../../../cross/CrossUtils';
 import {Download_Icon, Refresh_Icon} from '../../../../../shared/assets/icons';
 import AddBreadcrumb_Renderer from '../../../../../shared/sentry/Breadcrumbs';
 import {useInstalledCard, useIsAutoUpdateCard, useUpdateAvailable, useUpdatingCard} from '../../../../hooks/utils';
+import rendererIpc from '../../../../ipc';
 import {useTabModalManager} from '../../../../layouts/modals/useTabModalManager';
 import {getCardMethod, useAllCardMethods} from '../../../../plugins/modules';
 import {cardsActions} from '../../../../redux/reducers/cards';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 import {useCardStore} from '../../Wrapper';
 
 export const MenuUpdate = () => {

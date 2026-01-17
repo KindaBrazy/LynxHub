@@ -3,8 +3,8 @@ import {clearInterval} from 'node:timers';
 import axios from 'axios';
 import {app} from 'electron';
 
-import {toMs} from '../../cross/CrossUtils';
-import {otherChannels} from '../../cross/IpcChannelAndTypes';
+import {otherChannels} from '../../cross/consts/ipc';
+import {toMs} from '../../cross/utils';
 import BrowserDownloadManager from '../child_windows/browser_download_manager';
 import ContextMenuManager from '../child_windows/context_menu';
 import LinkPreviewManager from '../child_windows/link_preview';

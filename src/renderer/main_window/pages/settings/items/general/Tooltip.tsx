@@ -1,11 +1,11 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
+import {TooltipStatus} from '@lynx_cross/types/ipc';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {TooltipStatus} from '../../../../../../cross/IpcChannelAndTypes';
+import rendererIpc from '../../../../ipc';
 import {settingsActions, useSettingsState} from '../../../../redux/reducers/settings';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 

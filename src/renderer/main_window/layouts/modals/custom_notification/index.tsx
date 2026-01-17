@@ -2,7 +2,7 @@ import {Button} from '@heroui/react';
 import {notification} from 'antd';
 import {useEffect} from 'react';
 
-import rendererIpc from '../../../services/RendererIpc';
+import rendererIpc from '../../../ipc';
 
 export default function CustomNotification() {
   const [api, contextHolder] = notification.useNotification();

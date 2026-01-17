@@ -1,6 +1,6 @@
 import {Dispatch, ReactNode, RefObject, SetStateAction, useLayoutEffect, useRef} from 'react';
 
-import rendererIpc from '../../main_window/services/RendererIpc';
+import rendererIpc from '../../main_window/ipc';
 import {useFindMenu, useZoomMenu} from './layouts/Others';
 import useRightClickMenu from './layouts/RightClick';
 import {useCloseAppMenu, useTerminateAIMenu, useTerminateTabMenu} from './layouts/Terminate';

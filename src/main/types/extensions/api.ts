@@ -3,10 +3,15 @@ import type {Scope} from '@sentry/browser';
 import type {Emitter} from 'mitt';
 import type {FC} from 'react';
 
-// @ts-ignore-next-line
-import type rendererIpc from '../../renderer/main_window/services/RendererIpc';
-import type {AvailablePageIDs} from '../CrossConstants';
-import type {ExtensionEvents, ExtensionEvents_IPC} from './ExtensionTypes_Events';
+import type {AvailablePageIDs} from '../../../cross/consts';
+import type {
+  ArgumentsData,
+  CardData,
+  CardModules,
+  CardRendererMethods,
+  LoadedCardData,
+} from '../../../cross/types/plugins/module';
+import type {ExtensionEvents, ExtensionEvents_IPC} from './events';
 import type {
   AddMenuType,
   FcProp,
@@ -15,8 +20,7 @@ import type {
   FcPropRef,
   FcPropReplaceMd,
   FcPropSearchResult,
-} from './ExtensionTypes_Renderer';
-import type {ArgumentsData, CardData, CardModules, CardRendererMethods, LoadedCardData} from './ModuleTypes';
+} from './index';
 
 export type ModuleData = {
   allModules: CardModules;
@@ -391,7 +395,7 @@ export type ExtensionRendererApi = {
 
   modulesData?: ModuleData;
 
-  rendererIpc?: typeof rendererIpc;
+  rendererIpc?: any;
 
   initBrowserSentry: (dsn: string) => Scope;
 };

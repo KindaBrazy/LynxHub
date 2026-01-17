@@ -2,9 +2,9 @@ import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import LynxSwitch from '../../../../components/LynxSwitch';
+import rendererIpc from '../../../../ipc';
 import {settingsActions, useSettingsState} from '../../../../redux/reducers/settings';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function DisableLoadingAnim() {

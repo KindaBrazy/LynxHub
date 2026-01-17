@@ -2,7 +2,7 @@ import '../../shared/styles.css';
 
 import {createRoot} from 'react-dom/client';
 
-import rendererIpc from '../../main_window/services/RendererIpc';
+import rendererIpc from '../../main_window/ipc';
 import LiquidChromeLoading from './loadings/LiquidChrome';
 import RippleLoading from './loadings/Ripple';
 import SimpleLoading from './loadings/Simple';

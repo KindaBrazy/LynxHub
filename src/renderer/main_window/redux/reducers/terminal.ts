@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import rendererIpc from '../../services/RendererIpc';
+import rendererIpc from '../../ipc';
 import {TerminalState} from '../../types/reducers';
 import {RootState} from '../store';
 

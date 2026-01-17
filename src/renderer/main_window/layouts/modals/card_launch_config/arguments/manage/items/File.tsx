@@ -1,4 +1,5 @@
-import {ChosenArgument} from '../../../../../../../../cross/CrossTypes';
+import {ChosenArgument} from '@lynx_cross/types';
+
 import {FileDuo_Icon} from '../../../../../../../shared/assets/icons';
 import PathArgItem from './Path';
 

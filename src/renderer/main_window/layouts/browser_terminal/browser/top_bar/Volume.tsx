@@ -2,8 +2,8 @@ import {Button} from '@heroui/react';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useMemo} from 'react';
 
+import rendererIpc from '../../../../ipc';
 import {useVolumeState} from '../../../../redux/reducers/volume';
-import rendererIpc from '../../../../services/RendererIpc';
 
 type Props = {
   id: string;

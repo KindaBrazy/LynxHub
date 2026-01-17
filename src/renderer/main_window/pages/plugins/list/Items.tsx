@@ -11,13 +11,13 @@ import {
   useDisclosure,
   User,
 } from '@heroui/react';
+import {PluginInstalledItem, PluginItem} from '@lynx_cross/types/plugins';
+import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
+import {getPluginIconUrl} from '@lynx_cross/utils/plugins';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {extractGitUrl, getCacheUrl} from '../../../../../cross/CrossUtils';
-import {getPluginIconUrl} from '../../../../../cross/plugin/CrossPluginUtils';
-import {PluginInstalledItem, PluginItem} from '../../../../../cross/plugin/PluginTypes';
 import {
   ArrowDuo_Icon,
   CheckDuo_Icon,
@@ -31,6 +31,7 @@ import {
 } from '../../../../shared/assets/icons';
 import AddBreadcrumb_Renderer from '../../../../shared/sentry/Breadcrumbs';
 import {lynxTopToast} from '../../../hooks/utils';
+import rendererIpc from '../../../ipc';
 import {
   pluginsActions,
   useIsInstallingPlugin,
@@ -38,7 +39,6 @@ import {
   usePluginsState,
 } from '../../../redux/reducers/plugins';
 import {AppDispatch} from '../../../redux/store';
-import rendererIpc from '../../../services/RendererIpc';
 import {showRestartModal} from '../../../utils';
 import {UpdateButton} from '../Elements';
 import ModuleConfigModal from '../ModuleConfigModal';

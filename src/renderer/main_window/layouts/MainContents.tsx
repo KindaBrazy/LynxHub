@@ -1,6 +1,6 @@
+import {PageID} from '@lynx_cross/consts';
 import {memo} from 'react';
 
-import {PageID} from '../../../cross/CrossConstants';
 import {useAppState} from '../redux/reducers/app';
 import {useTabsState} from '../redux/reducers/tabs';
 import AppPages from './AppPages';

@@ -3,7 +3,7 @@ import path from 'node:path';
 import {is} from '@electron-toolkit/utils';
 import {BrowserWindow, ipcMain} from 'electron';
 
-import {toMs} from '../../cross/CrossUtils';
+import {toMs} from '../../cross/utils';
 import classHolder from '../core/class_holder';
 
 export default function DialogManager() {

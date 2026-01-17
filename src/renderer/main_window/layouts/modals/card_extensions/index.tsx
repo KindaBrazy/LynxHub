@@ -4,9 +4,9 @@ import {Fragment, useCallback, useEffect, useMemo, useRef, useState} from 'react
 
 import {useDebounceBreadcrumb} from '../../../../shared/sentry/Breadcrumbs';
 import {useIsAutoUpdateExtensions} from '../../../hooks/utils';
+import rendererIpc from '../../../ipc';
 import {extensionsData} from '../../../plugins/extensions/loader';
 import {useModalsState} from '../../../redux/reducers/modals';
-import rendererIpc from '../../../services/RendererIpc';
 import {modalMotionProps} from '../../../utils/constants';
 import {useTabModalLifecycle} from '../useTabModalManager';
 import Available from './available';

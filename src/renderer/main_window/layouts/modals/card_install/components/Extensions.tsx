@@ -1,11 +1,11 @@
 import {Spinner} from '@heroui/react';
+import {extractGitUrl, validateGitRepoUrl} from '@lynx_cross/utils';
 import {Steps} from 'antd';
 import {BaseStepsProps} from 'antd/es/steps';
 import {startCase} from 'lodash';
 import {RefObject, useEffect, useState} from 'react';
 
-import {extractGitUrl, validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
-import rendererIpc from '../../../../services/RendererIpc';
+import rendererIpc from '../../../../ipc';
 
 type Props = {
   extensionsURLs: {urls: string[]; dir: string} | undefined;

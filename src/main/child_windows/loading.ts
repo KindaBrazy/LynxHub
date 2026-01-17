@@ -4,7 +4,7 @@ import {is} from '@electron-toolkit/utils';
 import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
-import {otherChannels} from '../../cross/IpcChannelAndTypes';
+import {otherChannels} from '../../cross/consts/ipc';
 import classHolder from '../core/class_holder';
 import {getWindowColor} from '../utils';
 

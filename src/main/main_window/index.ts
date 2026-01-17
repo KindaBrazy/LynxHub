@@ -2,11 +2,12 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {appWindowChannels, tabsChannels, winChannels} from '@lynx_cross/consts/ipc';
+import {ShowToastTypes} from '@lynx_cross/types/ipc';
 import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
-import {HeroToastPlacement} from '../../cross/CrossTypes';
-import {appWindowChannels, ShowToastTypes, tabsChannels, winChannels} from '../../cross/IpcChannelAndTypes';
+import {HeroToastPlacement} from '../../cross/types';
 import classHolder from '../core/class_holder';
 import RegisterHotkeys from '../core/hotkeys';
 import {getUserAgent, getWindowColor, RelaunchApp} from '../utils';

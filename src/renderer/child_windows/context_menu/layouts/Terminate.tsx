@@ -3,7 +3,7 @@ import {Forward2, Restart, ShieldWarning} from '@solar-icons/react-perf/BoldDuot
 import {useEffect, useRef, useState} from 'react';
 
 import {isLinuxPortable} from '../../../main_window/hooks/utils';
-import rendererIpc from '../../../main_window/services/RendererIpc';
+import rendererIpc from '../../../main_window/ipc';
 import {Power_Icon} from '../../../shared/assets/icons';
 import {SetElementsType, SetWidthSizeType} from '../hooks';
 

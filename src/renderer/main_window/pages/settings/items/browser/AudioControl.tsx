@@ -4,10 +4,10 @@ import {useCallback, useEffect, useMemo, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../../../../hooks/utils';
+import rendererIpc from '../../../../ipc';
 import {useCardsState} from '../../../../redux/reducers/cards';
 import {useVolumeState, volumeActions} from '../../../../redux/reducers/volume';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 

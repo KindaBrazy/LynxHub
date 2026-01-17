@@ -2,8 +2,8 @@ import {Select, Selection, SelectItem} from '@heroui/react';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import rendererIpc from '../../../../ipc';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 import {showRestartModal} from '../../../../utils';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';

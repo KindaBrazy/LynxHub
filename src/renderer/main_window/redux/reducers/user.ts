@@ -1,7 +1,7 @@
+import {PatreonUserData, SubscribeStages} from '@lynx_cross/types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {PatreonUserData, SubscribeStages} from '../../../../cross/CrossTypes';
 import {RootState} from '../store';
 
 type UserState = {

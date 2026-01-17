@@ -1,11 +1,11 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
+import {DarkModeTypes} from '@lynx_cross/types/ipc';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {DarkModeTypes} from '../../../../../../cross/IpcChannelAndTypes';
+import rendererIpc from '../../../../ipc';
 import {appActions, useAppState} from '../../../../redux/reducers/app';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 import useModeAnimation, {ThemeAnimationType} from './theme_switch';

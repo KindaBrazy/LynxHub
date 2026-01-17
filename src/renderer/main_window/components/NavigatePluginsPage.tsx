@@ -1,8 +1,8 @@
 import {Button} from '@heroui/react';
+import {PageID, PageTitles} from '@lynx_cross/consts';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {PageID, PageTitles} from '../../../cross/CrossConstants';
 import {Plugins_Icon} from '../../shared/assets/icons';
 import {tabsActions} from '../redux/reducers/tabs';
 import {AppDispatch} from '../redux/store';

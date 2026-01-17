@@ -1,11 +1,11 @@
 import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Progress} from '@heroui/react';
+import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import {Pause, Play, Restart} from '@solar-icons/react-perf/Bold';
 import {ClockCircle, FileDownload, FolderOpen, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {X} from 'lucide-react';
 import {Dispatch, SetStateAction} from 'react';
 
-import {DownloadItemInfo} from '../../../cross/DownloadManagerTypes';
-import rendererIpc from '../../main_window/services/RendererIpc';
+import rendererIpc from '../../main_window/ipc';
 import {formatBytes, formatETA, formatSpeed, getProgress, getStatusColor} from './utils';
 
 type Props = {

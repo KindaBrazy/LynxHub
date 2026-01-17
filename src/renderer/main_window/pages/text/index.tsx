@@ -1,7 +1,7 @@
 import {ScrollShadow} from '@heroui/react';
+import {PageID} from '@lynx_cross/consts';
 import {memo, useMemo} from 'react';
 
-import {PageID} from '../../../../cross/CrossConstants';
 import {TextGeneration_Icon} from '../../../shared/assets/icons';
 import {GetComponentsByPath} from '../../components/card';
 import {extensionsData} from '../../plugins/extensions/loader';

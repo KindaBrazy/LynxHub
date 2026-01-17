@@ -1,11 +1,11 @@
 import {Button, Card, User} from '@heroui/react';
+import {PATREON_URL} from '@lynx_cross/consts';
+import {PatreonSupporter, PatreonSupporterTier} from '@lynx_cross/types';
 import {useEffect, useMemo, useState} from 'react';
 
-import {PATREON_URL} from '../../../../../cross/CrossConstants';
-import {PatreonSupporter, PatreonSupporterTier} from '../../../../../cross/CrossTypes';
 import {ExternalDuo_Icon, Heart_Icon, Patreon_Icon, UserHeart_Icon} from '../../../../shared/assets/icons';
 import SettingsSection from '../../../components/ContentSection';
-import rendererIpc from '../../../services/RendererIpc';
+import rendererIpc from '../../../ipc';
 
 export const DashboardCreditsId = 'settings_credits_elem';
 

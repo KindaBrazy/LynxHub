@@ -1,8 +1,8 @@
 import {configureStore} from '@reduxjs/toolkit';
 import {createReduxEnhancer} from '@sentry/react';
 
+import rendererIpc from '../ipc';
 import {extensionsData} from '../plugins/extensions/loader';
-import rendererIpc from '../services/RendererIpc';
 import {PreloadState} from '../types/reducers';
 import app from './reducers/app';
 import cards from './reducers/cards';

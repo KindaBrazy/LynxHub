@@ -1,9 +1,9 @@
 import {Input, NumberInput, Select, Selection, SelectItem} from '@heroui/react';
+import {CustomRunBehaviorData} from '@lynx_cross/types/ipc';
 import {isEmpty} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 
-import {CustomRunBehaviorData} from '../../../../../../cross/IpcChannelAndTypes';
-import rendererIpc from '../../../../services/RendererIpc';
+import rendererIpc from '../../../../ipc';
 
 type UrlCatchType = CustomRunBehaviorData['urlCatch'];
 

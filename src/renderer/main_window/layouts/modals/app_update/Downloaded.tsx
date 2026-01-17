@@ -4,9 +4,9 @@ import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../../../hooks/utils';
+import rendererIpc from '../../../ipc';
 import {settingsActions} from '../../../redux/reducers/settings';
 import {AppDispatch} from '../../../redux/store';
-import rendererIpc from '../../../services/RendererIpc';
 
 type Props = {errMsg?: string; success: boolean; tryAgain: () => void; cancel: () => void; onClose: () => void};
 

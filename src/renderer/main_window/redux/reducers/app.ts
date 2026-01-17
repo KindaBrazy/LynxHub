@@ -1,8 +1,8 @@
+import {HeroToastPlacement} from '@lynx_cross/types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import isBoolean from 'lodash/isBoolean';
 import {useSelector} from 'react-redux';
 
-import {HeroToastPlacement} from '../../../../cross/CrossTypes';
 import {AppState} from '../../types/reducers';
 import {RootState} from '../store';
 

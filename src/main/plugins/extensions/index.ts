@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {captureException} from '@sentry/electron/main';
 
-import {isDev} from '../../../cross/CrossUtils';
+import {isDev} from '../../../cross/utils';
 import ElectronAppManager from '../../main_window';
 import StorageManager from '../../storage/helper';
 import ModuleManager from '../modules';

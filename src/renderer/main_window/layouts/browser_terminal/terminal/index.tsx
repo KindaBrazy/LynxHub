@@ -1,3 +1,5 @@
+import {CustomRunBehaviorData} from '@lynx_cross/types/ipc';
+import {toMs} from '@lynx_cross/utils';
 import {IProgressState} from '@xterm/addon-progress';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
@@ -5,16 +7,14 @@ import {isEmpty} from 'lodash';
 import {Dispatch, memo, RefObject, SetStateAction, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {toMs} from '../../../../../cross/CrossUtils';
-import {CustomRunBehaviorData} from '../../../../../cross/IpcChannelAndTypes';
 import XTermCore, {XTermAPI} from '../../../components/XTermCore';
 import {lynxTopToast} from '../../../hooks/utils';
+import rendererIpc from '../../../ipc';
 import {getCardMethod, useAllCardMethods} from '../../../plugins/modules';
 import {cardsActions} from '../../../redux/reducers/cards';
 import {useHotkeysState} from '../../../redux/reducers/hotkeys';
 import {tabsActions, useTabsState} from '../../../redux/reducers/tabs';
 import {AppDispatch} from '../../../redux/store';
-import rendererIpc from '../../../services/RendererIpc';
 import {RunningCard} from '../../../types';
 import {catchTerminalAddress} from './utils';
 

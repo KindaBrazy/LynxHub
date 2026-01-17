@@ -4,9 +4,9 @@ import {isEqual} from 'lodash';
 import {memo, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import rendererIpc from '../../ipc';
 import {tabsActions, useTabsState} from '../../redux/reducers/tabs';
 import {AppDispatch} from '../../redux/store';
-import rendererIpc from '../../services/RendererIpc';
 import TabItem from './Item';
 import NewTab from './New';
 import {useRemoveTab} from './utils';

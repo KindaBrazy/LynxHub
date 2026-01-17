@@ -4,8 +4,8 @@ import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../shared/sentry/Breadcrumbs';
 import {lynxTopToast} from '../../../hooks/utils';
+import rendererIpc from '../../../ipc';
 import {AppDispatch} from '../../../redux/store';
-import rendererIpc from '../../../services/RendererIpc';
 
 type Props = {isShallow: boolean; dir: string; refreshData: () => void; title: string};
 export default function Reset_Shallow({isShallow, dir, refreshData, title}: Props) {

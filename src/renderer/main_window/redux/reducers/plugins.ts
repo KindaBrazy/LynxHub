@@ -1,8 +1,8 @@
+import {PluginInstalledItem, PluginItem, PluginSyncItem, UnloadedPlugins} from '@lynx_cross/types/plugins';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {isArray} from 'lodash';
 import {useSelector} from 'react-redux';
 
-import {PluginInstalledItem, PluginItem, PluginSyncItem, UnloadedPlugins} from '../../../../cross/plugin/PluginTypes';
 import {RootState} from '../store';
 
 type SetKeys = 'installing' | 'updating' | 'unInstalling';

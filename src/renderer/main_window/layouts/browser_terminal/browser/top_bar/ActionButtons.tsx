@@ -1,12 +1,12 @@
 import {Button} from '@heroui/react';
+import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
 import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
 import {memo, useEffect, useMemo, useState} from 'react';
 
-import {Hotkey_Names} from '../../../../../../cross/HotkeyConstants';
 import {ArrowDuo_Icon, Close_Icon, HomeSmile_Icon, RefreshDuo_Icon} from '../../../../../shared/assets/icons';
 import useHotkeyPress from '../../../../hooks/hotkeys';
+import rendererIpc from '../../../../ipc';
 import {useTabsState} from '../../../../redux/reducers/tabs';
-import rendererIpc from '../../../../services/RendererIpc';
 import {useIsActiveTab} from '../../../tabs/utils';
 
 const variants: Variants = {

@@ -1,20 +1,20 @@
-import {isNil} from 'lodash';
-import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
-import {useDispatch} from 'react-redux';
-
 import {
   InstallationMethod,
   InstallationStepper,
   StarterStepOptions,
   UserInputField,
   UserInputResult,
-} from '../../../../../cross/plugin/ModuleTypes';
+} from '@lynx_cross/types/plugins/module';
+import {isNil} from 'lodash';
+import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
+import {useDispatch} from 'react-redux';
+
 import {lynxTopToast} from '../../../hooks/utils';
+import rendererIpc from '../../../ipc';
 import {eventUtil_CollectUserInputs} from '../../../plugins/extensions/utils';
 import {useAllCardMethods} from '../../../plugins/modules';
 import {cardsActions} from '../../../redux/reducers/cards';
 import {AppDispatch} from '../../../redux/store';
-import rendererIpc from '../../../services/RendererIpc';
 import InstallStepper from './Stepper';
 import {InstallState} from './types';
 

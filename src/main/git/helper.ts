@@ -1,6 +1,6 @@
+import {gitChannels} from '@lynx_cross/consts/ipc';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {gitChannels} from '../../cross/IpcChannelAndTypes';
 import classHolder from '../core/class_holder';
 import GitManager from './index';
 

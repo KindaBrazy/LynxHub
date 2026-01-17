@@ -1,9 +1,9 @@
 import {NumberInput} from '@heroui/react';
 import {useDispatch} from 'react-redux';
 
+import rendererIpc from '../../../../ipc';
 import {cardsActions, useCardsState} from '../../../../redux/reducers/cards';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 

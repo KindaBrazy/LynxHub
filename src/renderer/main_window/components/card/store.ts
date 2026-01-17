@@ -1,8 +1,7 @@
+import {CardState} from '@lynx_cross/types';
+import {LoadedCardData} from '@lynx_cross/types/plugins/module';
+import {validateGitRepoUrl} from '@lynx_cross/utils';
 import {create} from 'zustand';
-
-import {CardState} from '../../../../cross/CrossTypes';
-import {validateGitRepoUrl} from '../../../../cross/CrossUtils';
-import {LoadedCardData} from '../../../../cross/plugin/ModuleTypes';
 
 // Create a reusable function to generate a store
 export const createCardStore = (initialData: LoadedCardData & {isInstalled: boolean; hasArguments: boolean}) => {

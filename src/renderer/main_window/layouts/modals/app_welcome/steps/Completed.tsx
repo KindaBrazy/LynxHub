@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
+import {APP_NAME} from '@lynx_cross/consts';
 import {motion} from 'framer-motion';
 
-import {APP_NAME} from '../../../../../../cross/CrossConstants';
 import {CheckDuo_Icon} from '../../../../../shared/assets/icons';
 import {RequirementStatus} from '../types';
 

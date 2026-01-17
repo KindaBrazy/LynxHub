@@ -1,17 +1,17 @@
 import {Button, Tooltip} from '@heroui/react';
+import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
+import {TabInfo} from '@lynx_cross/types';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {TabInfo} from '../../../../cross/CrossTypes';
-import {Hotkey_Names} from '../../../../cross/HotkeyConstants';
 import {CloseSimple_Icon} from '../../../shared/assets/icons';
 import useHotkeyPress from '../../hooks/hotkeys';
+import rendererIpc from '../../ipc';
 import {useCardsState} from '../../redux/reducers/cards';
 import {useHotkeysState} from '../../redux/reducers/hotkeys';
 import {useSettingsState} from '../../redux/reducers/settings';
 import {tabsActions} from '../../redux/reducers/tabs';
 import {AppDispatch} from '../../redux/store';
-import rendererIpc from '../../services/RendererIpc';
 import AudioIndicator from './AudioIndicator';
 import TabItem_Icon from './Icon';
 import ProgressBar from './ProgressBar';

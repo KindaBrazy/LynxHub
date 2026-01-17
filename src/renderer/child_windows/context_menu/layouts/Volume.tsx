@@ -2,7 +2,7 @@ import {Button, Slider} from '@heroui/react';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useRef, useState} from 'react';
 
-import rendererIpc from '../../../main_window/services/RendererIpc';
+import rendererIpc from '../../../main_window/ipc';
 import {SetElementsType, SetWidthSizeType} from '../hooks';
 
 type VolumeData = {

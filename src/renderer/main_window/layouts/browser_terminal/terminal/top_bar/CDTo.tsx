@@ -5,8 +5,8 @@ import {useDispatch} from 'react-redux';
 
 import {CloseSimple_Icon, FolderDuo_Icon, OpenFolder_Icon, Trash_Icon} from '../../../../../shared/assets/icons';
 import {lynxTopToast} from '../../../../hooks/utils';
+import rendererIpc from '../../../../ipc';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 
 type Props = {id: string};
 const CDTo = memo(({id}: Props) => {

@@ -1,6 +1,6 @@
 import {Rectangle} from 'electron';
 
-import {StorageChosenArgumentsData} from './CrossTypes';
+import {StorageChosenArgumentsData} from './index';
 import {
   AgentTypes,
   CustomRunBehaviorStore,
@@ -14,7 +14,7 @@ import {
   TerminalCursorStyle,
   TerminalUseConpty,
   TooltipStatus,
-} from './IpcChannelAndTypes';
+} from './ipc';
 
 export type InstalledCard = {
   id: string;

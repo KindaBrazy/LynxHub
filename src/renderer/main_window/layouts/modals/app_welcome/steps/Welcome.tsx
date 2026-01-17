@@ -1,7 +1,6 @@
 import {Button} from '@heroui/react';
+import {APP_NAME} from '@lynx_cross/consts';
 import {motion, Variants} from 'framer-motion';
-
-import {APP_NAME} from '../../../../../../cross/CrossConstants';
 
 const containerVariants: Variants = {
   hidden: {opacity: 0, y: 20},

@@ -1,17 +1,17 @@
 import {Button} from '@heroui/react';
+import {extractGitUrl} from '@lynx_cross/utils';
 import {Avatar, List, Tag, Typography} from 'antd';
 import {capitalize} from 'lodash';
 import {useCallback, useState} from 'react';
 import Highlighter from 'react-highlight-words';
 import {useDispatch} from 'react-redux';
 
-import {extractGitUrl} from '../../../../../../cross/CrossUtils';
 import {Home_Icon, Star_Icon} from '../../../../../shared/assets/icons';
 import {lynxTopToast} from '../../../../hooks/utils';
+import rendererIpc from '../../../../ipc';
 import {modalActions} from '../../../../redux/reducers/modals';
 import {useTabsState} from '../../../../redux/reducers/tabs';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 import {formatNumber} from '../../../../utils';
 import {ExtensionsInfo} from './index';
 

@@ -1,6 +1,6 @@
-import {HeroToastPlacement} from '@lynx_cross/CrossTypes';
-import {LynxHotkey, LynxInput, OnUpdatingExtensions, TooltipStatus} from '@lynx_cross/IpcChannelAndTypes';
-import StorageTypes, {InstalledCards} from '@lynx_cross/StorageTypes';
+import {HeroToastPlacement} from '@lynx_cross/types';
+import {LynxHotkey, LynxInput, OnUpdatingExtensions, TooltipStatus} from '@lynx_cross/types/ipc';
+import StorageTypes, {InstalledCards} from '@lynx_cross/types/storage';
 
 import {RunningCard, UpdatingCards} from './index';
 

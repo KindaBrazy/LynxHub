@@ -1,8 +1,8 @@
 import {Input, Spinner} from '@heroui/react';
+import {validateGitRepoUrl} from '@lynx_cross/utils';
 import {Empty, List, PaginationProps} from 'antd';
 import {useEffect, useState} from 'react';
 
-import {validateGitRepoUrl} from '../../../../../../cross/CrossUtils';
 import {Circle_Icon} from '../../../../../shared/assets/icons';
 import {getCardMethod, useAllCardMethods} from '../../../../plugins/modules';
 import {searchInStrings} from '../../../../utils';

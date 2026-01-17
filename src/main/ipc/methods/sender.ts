@@ -1,8 +1,8 @@
 // Sends IPC messages from main process to renderer process (one-way communication)
 import {ipcMain, IpcMainEvent} from 'electron';
 
-import {CustomNotificationInfo} from '../../../cross/CrossTypes';
-import {customNotifChannels} from '../../../cross/DownloadManagerTypes';
+import {customNotifChannels} from '../../../cross/consts/donwload_manager';
+import {CustomNotificationInfo} from '../../../cross/types';
 import classHolder from '../../core/class_holder';
 
 const sendIt = (channel: string, data: any) => {

@@ -1,23 +1,23 @@
 import {Modal, ModalContent} from '@heroui/react';
-import {isEmpty, isNil} from 'lodash';
-import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {useDispatch} from 'react-redux';
-
-import {DownloadProgress} from '../../../../../cross/IpcChannelAndTypes';
+import {DownloadProgress} from '@lynx_cross/types/ipc';
 import {
   CardRendererMethods,
   InstallationMethod,
   InstallationStepper,
   UserInputField,
   UserInputResult,
-} from '../../../../../cross/plugin/ModuleTypes';
+} from '@lynx_cross/types/plugins/module';
+import {isEmpty, isNil} from 'lodash';
+import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useDispatch} from 'react-redux';
+
 import {useInstalledCard} from '../../../hooks/utils';
+import rendererIpc from '../../../ipc';
 import {extensionsData} from '../../../plugins/extensions/loader';
 import {getCardMethod, useAllCardMethods} from '../../../plugins/modules';
 import {cardsActions} from '../../../redux/reducers/cards';
 import {useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';
-import rendererIpc from '../../../services/RendererIpc';
 import {useTabModalLifecycle} from '../useTabModalManager';
 import InstallBody from './Body';
 import InstallFooter from './Footer';

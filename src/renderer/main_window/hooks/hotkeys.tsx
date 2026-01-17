@@ -1,15 +1,15 @@
+import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
+import {LynxHotkey} from '@lynx_cross/types/ipc';
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Hotkey_Names} from '../../../cross/HotkeyConstants';
-import {LynxHotkey} from '../../../cross/IpcChannelAndTypes';
+import rendererIpc from '../ipc';
 import {appActions} from '../redux/reducers/app';
 import {cardsActions, useCardsState} from '../redux/reducers/cards';
 import {useHotkeysState} from '../redux/reducers/hotkeys';
 import {tabsActions, useTabsState} from '../redux/reducers/tabs';
 import {useTerminalState} from '../redux/reducers/terminal';
 import {AppDispatch} from '../redux/store';
-import rendererIpc from '../services/RendererIpc';
 import {defaultTabItem} from '../utils/constants';
 
 const LINE_ENDING = window.osPlatform === 'win32' ? '\r' : '\n';

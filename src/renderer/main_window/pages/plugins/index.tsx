@@ -1,10 +1,10 @@
 import {memo, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
+import rendererIpc from '../../ipc';
 import {pluginsActions} from '../../redux/reducers/plugins';
 import {useUserState} from '../../redux/reducers/user';
 import {AppDispatch} from '../../redux/store';
-import rendererIpc from '../../services/RendererIpc';
 import PageView from '../Page';
 import List from './list';
 import Preview from './preview';

@@ -1,9 +1,9 @@
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
+import rendererIpc from '../../../ipc';
 import {useCardsState} from '../../../redux/reducers/cards';
 import {useVolumeState} from '../../../redux/reducers/volume';
-import rendererIpc from '../../../services/RendererIpc';
 import {RunningCard} from '../../../types';
 import {useIsActiveTab} from '../../tabs/utils';
 import EmptyPage from './EmptyPage';

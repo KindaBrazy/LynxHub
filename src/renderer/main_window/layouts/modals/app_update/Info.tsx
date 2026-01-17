@@ -1,9 +1,9 @@
+import {APP_BUILD_NUMBER, APP_VERSION, RELEASES_PAGE} from '@lynx_cross/consts';
+import {AppUpdateInfo} from '@lynx_cross/types';
 import {Button, Card, Collapse, CollapseProps, Descriptions, Empty, Typography} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {isEmpty} from 'lodash';
 
-import {APP_BUILD_NUMBER, APP_VERSION, RELEASES_PAGE} from '../../../../../cross/CrossConstants';
-import {AppUpdateInfo} from '../../../../../cross/CrossTypes';
 import {ExternalLink_Icon} from '../../../../shared/assets/icons';
 
 type Props = {items: CollapseProps['items']; updateInfo: Omit<AppUpdateInfo, 'earlyAccess'> | undefined};

@@ -2,7 +2,7 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {onBreadcrumbStateChange} from '../../../../../shared/sentry/Breadcrumbs';
 import LynxSwitch from '../../../../components/LynxSwitch';
-import rendererIpc from '../../../../services/RendererIpc';
+import rendererIpc from '../../../../ipc';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function CollectErrors() {

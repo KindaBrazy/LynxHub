@@ -1,7 +1,7 @@
+import {TabInfo} from '@lynx_cross/types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {TabInfo} from '../../../../cross/CrossTypes';
 import {defaultTabItem} from '../../utils/constants';
 import {RootState} from '../store';
 

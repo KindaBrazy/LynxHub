@@ -1,7 +1,7 @@
+import {getArgumentType} from '@lynx/utils/module_arguments';
+import {ChosenArgument, ChosenArgumentsData} from '@lynx_cross/types';
 import {Dispatch, memo, SetStateAction, useCallback, useMemo} from 'react';
 
-import {ChosenArgument, ChosenArgumentsData} from '../../../../../../../cross/CrossTypes';
-import {getArgumentType} from '../../../../../../../cross/GetArgumentsData';
 import {useGetArgumentsByID} from '../../../../../plugins/modules';
 import CheckBoxArgItem from './items/CheckBox';
 import DirectoryArgItem from './items/Directory';

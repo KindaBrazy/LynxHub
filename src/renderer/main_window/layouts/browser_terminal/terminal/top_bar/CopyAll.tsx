@@ -5,8 +5,8 @@ import {useDispatch} from 'react-redux';
 
 import {CheckDuo_Icon, CopyDuo_Icon, FileDownDuo_Icon} from '../../../../../shared/assets/icons';
 import {lynxTopToast} from '../../../../hooks/utils';
+import rendererIpc from '../../../../ipc';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 
 type Props = {
   serializeAddon: SerializeAddon;

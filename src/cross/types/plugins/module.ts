@@ -1,8 +1,8 @@
 import {ElectronAPI} from '@electron-toolkit/preload';
 
-import {AvailablePageIDs} from '../CrossConstants';
-import {CustomRunBehaviorData} from '../IpcChannelAndTypes';
-import {InstalledCard} from '../StorageTypes';
+import {AvailablePageIDs} from '../../consts';
+import {CustomRunBehaviorData} from '../ipc';
+import {InstalledCard} from '../storage';
 
 declare global {
   interface Window {
