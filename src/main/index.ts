@@ -7,19 +7,19 @@ import log from 'electron-log/main';
 import darwinIcon from '../../resources/icon-darwin.png?asset';
 import {APP_NAME} from '../cross/CrossConstants';
 import {isDev} from '../cross/CrossUtils';
-import {beforeAppReady, handleAppReadyToShow, handleProtocols} from './index_utils';
-import {checkAppDirectories} from './Managements/AppDataManager';
-import {checkForUpdate} from './Managements/AppUpdater';
-import classHolder from './Managements/ClassHolder';
-import DialogManager from './Managements/DialogManager';
-import {getImageCacheManager} from './Managements/ImageCacheManager';
-import {browserIPC, listenToIpcChannels, resetBrowserIPC} from './Managements/Ipc/IpcHandler';
-import {stopAllPty} from './Managements/Ipc/Methods/IpcMethods-Pty';
-import ShowToastWindow from './Managements/ToastWindowManager';
-import PatreonAuth from './Secure/PatreonAuth';
-import downloadDU from './Utilities/CalculateFolderSize/DownloadDU';
-import {getPrivilegeText} from './Utilities/Utils';
-import LoadingWindow from './Window/Loading';
+import LoadingWindow from './child_windows/loading';
+import DialogManager from './child_windows/prompt_dialog';
+import ShowToastWindow from './child_windows/toast';
+import classHolder from './core/class_holder';
+import {checkAppDirectories} from './core/data_folder';
+import {getImageCacheManager} from './core/image_cache';
+import {checkForUpdate} from './core/updater';
+import {beforeAppReady, handleAppReadyToShow, handleProtocols} from './index_methods';
+import {browserIPC, listenToIpcChannels, resetBrowserIPC} from './ipc';
+import {stopAllPty} from './ipc/methods/pty';
+import PatreonAuth from './secure/patreon_auth';
+import {getPrivilegeText} from './utils';
+import downloadDU from './utils/calc_folder_size/download_du';
 
 // In production save logs to file for reporting
 if (!isDev()) {

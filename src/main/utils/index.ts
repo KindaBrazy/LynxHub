@@ -1,0 +1,335 @@
+import {execSync} from 'node:child_process';
+import {platform} from 'node:os';
+import {dirname, isAbsolute, relative, resolve} from 'node:path';
+
+import {app, BrowserWindow, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue, safeStorage} from 'electron';
+import fs from 'graceful-fs';
+
+import {formatSize} from '../../cross/CrossUtils';
+import {AgentTypes, DarkModeTypes, winChannels} from '../../cross/IpcChannelAndTypes';
+import classHolder from '../core/class_holder';
+import calcFolderSize from './calc_folder_size';
+
+/**
+ * Opens a system file/folder dialog and returns the selected path.
+ *
+ * @param {'openDirectory' | 'openFile'} options - Select folder or file
+ * @returns {string | undefined} The selected file/folder path, or undefined if cancelled.
+ */
+export async function openDialog(options: OpenDialogOptions): Promise<string | undefined> {
+  const {appManager} = classHolder;
+  try {
+    const mainWindow = appManager?.getMainWindow();
+    const result: OpenDialogReturnValue = await (mainWindow
+      ? dialog.showOpenDialog(mainWindow, options)
+      : dialog.showOpenDialog(options));
+    if (result.filePaths) return result.filePaths[0];
+    return undefined;
+  } catch (error) {
+    console.log('util:openDialog -> No valid directory or file selected');
+    throw error;
+  }
+}
+
+/**
+ * Check if a given path exists and is accessible.
+ *
+ * @param {string} path - The path to check.
+ * @returns {Promise<boolean>} A promise that resolves with a boolean value
+ * indicating whether the path exists and is accessible.
+ */
+export const checkPathExists = async (path: string): Promise<boolean> => {
+  try {
+    // Use the promises.access function to check if the path exists and is accessible
+    await fs.promises.access(path, fs.constants.R_OK);
+    return true;
+  } catch (error: any) {
+    // If the path doesn't exist or is not accessible, the error code will be 'ENOENT'
+    if (error.code === 'ENOENT') {
+      return false;
+    }
+    // If there's any other error, re-throw it
+    throw error;
+  }
+};
+
+/**
+ * Calculates the total size of a folder and its contents recursively.
+ *
+ * @param {string} folderPath - The path of the folder to calculate the size for.
+ * @returns {Promise<number>} A promise that resolves with the total size of the folder in bytes.
+ */
+export async function calculateFolderSize(folderPath: string): Promise<string> {
+  try {
+    const result = await calcFolderSize(folderPath);
+
+    return result ? formatSize(result) : '0';
+  } catch (error) {
+    console.error('Error calculating folder size:', error);
+    return '0';
+  }
+}
+
+export async function getDirCreationDate(dir: string): Promise<string> {
+  const dirPath = resolve(dir);
+
+  try {
+    const stats = await fs.promises.stat(dirPath);
+
+    if (stats.isDirectory()) {
+      return stats.birthtime.toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    }
+    return '';
+  } catch (error: any) {
+    if (error.code === 'ENOENT') {
+      // Directory doesn't exist
+      return '';
+    }
+
+    // Re-throw any other error
+    throw error;
+  }
+}
+
+/**
+ * Gets the highest available PowerShell version on the system.
+ * @returns The major version number of PowerShell, or 0 if PowerShell is not found.
+ */
+export function getPowerShellVersion(): number {
+  const command = '$PSVersionTable.PSVersion.Major';
+
+  try {
+    // Try PowerShell Core (pwsh.exe) first
+    const pwshVersion = parseInt(
+      execSync(`pwsh.exe -NoProfile -Command "${command}"`, {
+        encoding: 'utf8' as const,
+        stdio: ['pipe', 'pipe', 'ignore'],
+      }).trim(),
+      10,
+    );
+    if (pwshVersion >= 7) return pwshVersion;
+
+    // Fall back to Windows PowerShell (powershell.exe)
+    const psVersion = parseInt(
+      execSync(`powershell.exe -NoProfile -Command "${command}"`, {
+        encoding: 'utf8' as const,
+        stdio: ['pipe', 'pipe', 'ignore'],
+      }).trim(),
+      10,
+    );
+    return psVersion >= 5 ? psVersion : 0;
+  } catch (err) {
+    console.error('Error determining PowerShell version:', err);
+    return 0;
+  }
+}
+
+/**
+ * Determines the appropriate shell based on the operating system and PowerShell version.
+ * @returns The shell command to use.
+ */
+export function determineShell(): string {
+  switch (platform()) {
+    case 'darwin':
+      return 'zsh';
+    case 'linux':
+      return 'bash';
+    case 'win32':
+    default:
+      return getPowerShellVersion() >= 5 ? 'pwsh.exe' : 'powershell.exe';
+  }
+}
+
+export function getSystemDarkMode() {
+  return nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
+}
+
+export function isDark(): boolean {
+  const {storageManager} = classHolder;
+  const darkMode = storageManager.getData('app').darkMode;
+  switch (darkMode) {
+    case 'dark':
+      return true;
+    case 'light':
+      return false;
+    case 'system':
+      return getSystemDarkMode() == 'dark';
+  }
+}
+
+export function getWebContentsIfAvailable(window: BrowserWindow | undefined) {
+  if (window && !window.isDestroyed() && !window.webContents.isDestroyed()) return window.webContents;
+
+  return undefined;
+}
+
+export function noticeAllWindowsDarkMode(darkMode: DarkModeTypes) {
+  const {appManager, contextMenuManager, browserDownloadManager, linkPreviewManager, shareScreenManager} = classHolder;
+
+  const value = darkMode === 'system' ? getSystemDarkMode() : darkMode;
+  const isDark = value === 'dark';
+
+  const app = getWebContentsIfAvailable(appManager?.getMainWindow());
+  if (app) app.send(winChannels.onDarkMode, isDark);
+
+  const contextMenu = getWebContentsIfAvailable(contextMenuManager?.getWindow());
+  if (contextMenu) contextMenu.send(winChannels.onDarkMode, isDark);
+
+  const browserDownload = getWebContentsIfAvailable(browserDownloadManager?.menuWindow);
+  if (browserDownload) browserDownload.send(winChannels.onDarkMode, isDark);
+
+  const linkPreview = getWebContentsIfAvailable(linkPreviewManager?.getWindow());
+  if (linkPreview) linkPreview.send(winChannels.onDarkMode, isDark);
+
+  const shareScreen = getWebContentsIfAvailable(shareScreenManager?.selectorWindow);
+  if (shareScreen) shareScreen.send(winChannels.onDarkMode, isDark);
+}
+
+function getWindowBgColor(isDark: boolean) {
+  return isDark ? '#212121' : '#ffffff';
+}
+
+export function getWindowColor(preferred?: 'dark' | 'light') {
+  if (preferred) return getWindowBgColor(preferred === 'dark');
+
+  return getWindowBgColor(isDark());
+}
+
+export function isPortable(): 'win' | 'linux' | null {
+  if (process.env.PORTABLE_EXECUTABLE_FILE) return 'win';
+  if (process.env.APPIMAGE) return 'linux';
+  return null;
+}
+
+export function getExePath(): string {
+  try {
+    const winPortablePath = process.env.PORTABLE_EXECUTABLE_FILE && dirname(process.env.PORTABLE_EXECUTABLE_FILE);
+    const linuxPortablePath = process.env.APPIMAGE && dirname(process.env.APPIMAGE);
+
+    if (winPortablePath) return winPortablePath;
+    if (linuxPortablePath) return linuxPortablePath;
+
+    return app.getAppPath();
+  } catch (e) {
+    console.error(e);
+    return '';
+  }
+}
+
+export function getRelativePath(basePath: string, targetPath: string): string {
+  try {
+    if (!isAbsolute(targetPath)) {
+      return targetPath;
+    }
+    return relative(basePath, targetPath);
+  } catch (error) {
+    console.error('Error calculating relative path:', error);
+    return resolve(targetPath);
+  }
+}
+
+export function getAbsolutePath(basePath: string, targetPath: string): string {
+  try {
+    if (isAbsolute(targetPath)) {
+      return targetPath;
+    }
+    return resolve(basePath, targetPath);
+  } catch (error) {
+    console.error('Error calculating absolute path:', error);
+    return targetPath;
+  }
+}
+
+export function RelaunchApp(saveLastSize: boolean = true) {
+  const {storageManager} = classHolder;
+  if (saveLastSize) storageManager.updateLastSize();
+  app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
+  app.quit();
+}
+
+export function getUserAgent(type?: AgentTypes) {
+  // Determine the user agent type (parameter or from storage)
+  const targetType: AgentTypes = type || classHolder.storageManager.getData('browser').userAgent || 'lynxhub';
+
+  // Get OS string based on the platform
+  const osMap = {
+    darwin: '(Macintosh; Intel Mac OS X 10_15_7)',
+    linux: '(X11; Linux x86_64)',
+    win32: '(Windows NT 10.0; Win64; x64)',
+  };
+  const osString = osMap[platform()] || osMap.win32;
+
+  // Define version strings
+  const baseUA = `Mozilla/5.0 ${osString} AppleWebKit/537.36 (KHTML, like Gecko)`;
+  const lynxHubString = `LynxHub/${app.getVersion()}`;
+  const electronString = `Electron/${process.versions.electron}`;
+  const chromeString = `Chrome/${process.versions.chrome}`;
+
+  // User agent templates
+  const templates = {
+    lynxhub: () => `${baseUA} ${lynxHubString} ${chromeString} ${electronString} Safari/537.36`,
+    electron: () => `${baseUA} ${chromeString} ${electronString} Safari/537.36`,
+    chrome: () => `${baseUA} ${chromeString} Safari/537.36`,
+    custom: () => classHolder.storageManager.getData('browser').customUserAgent,
+  };
+
+  return templates[targetType]() || templates.lynxhub();
+}
+
+/**
+ * Helper function to encrypt a string using Electron's safeStorage.
+ * Returns the encrypted data as a hexadecimal string.
+ * Provides a warning if encryption is not available.
+ */
+export function lynxEncryptString(data: string): string {
+  if (safeStorage.isEncryptionAvailable()) {
+    return safeStorage.encryptString(data).toString('hex');
+  }
+  console.warn('safeStorage encryption not available. Data will not be encrypted.');
+  return data; // Fallback: return original data if encryption isn't available
+}
+export function lynxEncryptStrings(data: string[]): string[] {
+  if (safeStorage.isEncryptionAvailable()) {
+    return data.map(item => safeStorage.encryptString(item).toString('hex'));
+  }
+  console.warn('safeStorage encryption not available. Data will not be encrypted.');
+  return data; // Fallback: return original data if encryption isn't available
+}
+
+/**
+ * Helper function to decrypt a string using Electron's safeStorage.
+ * Expects the input to be a hexadecimal string.
+ * Provides a warning and returns the original string if decryption fails or isn't available.
+ */
+export function lynxDecryptString(encryptedData: string): string {
+  if (safeStorage.isEncryptionAvailable()) {
+    try {
+      return safeStorage.decryptString(Buffer.from(encryptedData, 'hex'));
+    } catch (e) {
+      console.error('Failed to decrypt data:', e);
+      return encryptedData; // Return original if decryption fails (e.g., malformed data)
+    }
+  }
+  return encryptedData; // Fallback: return original data if encryption isn't available
+}
+export function lynxDecryptStrings(encryptedData: string[]): string[] {
+  if (safeStorage.isEncryptionAvailable()) {
+    try {
+      return encryptedData.map(item => safeStorage.decryptString(Buffer.from(item, 'hex')));
+    } catch (e) {
+      console.error('Failed to decrypt data:', e);
+      return encryptedData; // Return original if decryption fails (e.g., malformed data)
+    }
+  }
+  return encryptedData; // Fallback: return original data if encryption isn't available
+}
+
+export const getPrivilegeText = () => {
+  const platform = process.platform;
+  if (platform === 'win32') {
+    return 'administrator';
+  } else if (platform === 'darwin' || platform === 'linux') {
+    return 'sudo';
+  }
+  return 'elevated privileges';
+};

@@ -1,0 +1,411 @@
+import {dirname, join} from 'node:path';
+
+import {captureException} from '@sentry/electron/main';
+import {constants, promises, readdirSync} from 'graceful-fs';
+import {includes, isString} from 'lodash';
+
+import {SubscribeStages} from '../../cross/CrossTypes';
+import {pluginChannels} from '../../cross/IpcChannelAndTypes';
+import {getUpdateType} from '../../cross/plugin/CrossPluginUtils';
+import {
+  PluginAddresses,
+  PluginInstalledItem,
+  PluginSyncItem,
+  UnloadedPlugins,
+  ValidatedPlugins,
+} from '../../cross/plugin/PluginTypes';
+import classHolder from '../core/class_holder';
+import {getAppDirectory} from '../core/data_folder';
+import GitManager from '../git';
+import {setupGitManagerListeners} from '../git/helper';
+import {removeDir} from '../ipc/methods';
+import {pluginFolders} from './constants';
+import ExtensionManager from './extensions';
+import ModuleManager from './modules';
+import {
+  getCommitByAppStage,
+  getVersionByCommit,
+  isSyncRequired,
+  removeOldInstallations,
+  showGitOwnershipToast,
+} from './utils';
+
+export class PluginManager {
+  private addresses: PluginAddresses = [];
+  private skipped: UnloadedPlugins[] = [];
+  private installed: PluginInstalledItem[] = [];
+  private syncAvailable: PluginSyncItem[] = [];
+
+  private readonly pluginPath: string;
+  private readonly moduleManager: ModuleManager;
+  private readonly extensionManager: ExtensionManager;
+
+  constructor(moduleManager: ModuleManager, extensionManager: ExtensionManager) {
+    this.moduleManager = moduleManager;
+    this.extensionManager = extensionManager;
+    this.pluginPath = getAppDirectory('Plugins');
+  }
+
+  public async initPlugins() {
+    try {
+      await this.readPlugin();
+    } catch (error) {
+      console.error('Error initializing plugins:', error);
+      captureException(error);
+    }
+  }
+
+  private async readPlugin() {
+    const {staticManager} = classHolder;
+    return new Promise<void>(async resolve => {
+      try {
+        // Ensure plugin directory exists before reading
+        try {
+          await promises.access(this.pluginPath, constants.F_OK);
+        } catch {
+          // Directory doesn't exist - create it and return early (no plugins to load)
+          await promises.mkdir(this.pluginPath, {recursive: true});
+          resolve();
+          return;
+        }
+
+        const files = readdirSync(this.pluginPath, {withFileTypes: true});
+        const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
+        const validFolders = await this.validatePluginFolders(folders);
+
+        this.addresses = validFolders.map(({folder, type}) => ({
+          address: `lynxplugin://${folder}`,
+          type,
+        }));
+
+        await this.setInstalledPlugins(folders);
+
+        const moduleFolders: string[] = [];
+        const extensionFolder: string[] = [];
+
+        for (const validItem of validFolders) {
+          const metadata = await staticManager?.getPluginMetadataById(validItem.folder);
+          if (!metadata) continue;
+          if (metadata.type === 'module') {
+            moduleFolders.push(join(this.pluginPath, validItem.folder));
+          } else if (metadata.type === 'extension') {
+            extensionFolder.push(join(this.pluginPath, validItem.folder));
+          }
+        }
+        await this.extensionManager.importPlugins(extensionFolder);
+        await this.moduleManager.importPlugins(moduleFolders);
+
+        resolve();
+      } catch (error: any) {
+        console.error(`Loading Plugin Error: `, error);
+        captureException(error);
+        resolve();
+      }
+    });
+  }
+
+  private async setInstalledPlugins(folders: string[]) {
+    const {staticManager} = classHolder;
+    for (const folder of folders) {
+      try {
+        const targetDir = join(this.pluginPath, folder);
+        const remoteUrl = await GitManager.remoteUrlFromDir(targetDir);
+        if (!remoteUrl) continue;
+
+        const gitManager = new GitManager(true);
+        const currentCommit = await gitManager.getCurrentCommitHash(targetDir);
+        if (!currentCommit) continue;
+
+        const id = await staticManager?.getPluginIdByRepositoryUrl(remoteUrl);
+        if (!id) continue;
+
+        const version = await getVersionByCommit(id, currentCommit);
+        if (!version) continue;
+
+        this.installed.push({id: folder, url: remoteUrl, version});
+      } catch (error) {
+        console.error(`Error parsing ${folder}: ${error}`);
+      }
+    }
+  }
+
+  public getAddresses(): PluginAddresses {
+    return this.addresses;
+  }
+
+  public getUnloadedList(): UnloadedPlugins[] {
+    return this.skipped;
+  }
+
+  public getInstalledList(): PluginInstalledItem[] {
+    return this.installed;
+  }
+
+  public getDirById(id: string) {
+    const plugin = this.installed.find(installed => installed.id === id);
+
+    if (plugin) return join(this.pluginPath, plugin.id);
+
+    return undefined;
+  }
+
+  public async install(url: string, commitHash?: string) {
+    const {staticManager} = classHolder;
+    return new Promise<boolean>(async resolve => {
+      let targetCommit: string | undefined = undefined;
+      const id = await staticManager?.getPluginIdByRepositoryUrl(url);
+
+      if (id) {
+        if (commitHash) {
+          targetCommit = commitHash;
+        } else {
+          targetCommit = await getCommitByAppStage(id);
+        }
+
+        if (!targetCommit) {
+          resolve(false);
+          return;
+        }
+
+        const version = await getVersionByCommit(id, targetCommit);
+        if (!version) {
+          resolve(false);
+          return;
+        }
+
+        const directory = join(this.pluginPath, id);
+
+        try {
+          const gitManager = new GitManager(true);
+
+          setupGitManagerListeners(gitManager, url);
+          await gitManager.shallowClone({url, directory, singleBranch: true, branch: 'main'});
+          await gitManager.resetHard(directory, targetCommit, true, 'main');
+
+          this.installed.push({id, url, version});
+
+          resolve(true);
+        } catch (e) {
+          console.warn(`Failed to install plugin: ${url}`, e);
+          resolve(false);
+        }
+      } else {
+        resolve(false);
+      }
+    });
+  }
+
+  public async uninstall(id: string) {
+    const plugin = this.getDirById(id);
+    if (!plugin) return false;
+    try {
+      await removeDir(plugin);
+      this.syncList_remove(id);
+      this.installed = this.installed.filter(plugin => plugin.id !== id);
+      return true;
+    } catch (e) {
+      console.warn(`Failed to uninstall ${id}: `, e);
+      return false;
+    }
+  }
+
+  private async isSyncRequired(id: string, stage: SubscribeStages) {
+    try {
+      const targetDir = this.getDirById(id);
+      if (!targetDir) return false;
+
+      const gitManager = new GitManager(true);
+      const currentCommit = await gitManager.getCurrentCommitHash(targetDir, true);
+      if (!currentCommit) return false;
+
+      const targetItem = await isSyncRequired(id, currentCommit, stage);
+      if (!targetItem) {
+        this.syncList_remove(id);
+        return false;
+      }
+
+      this.syncList_add(targetItem);
+      return true;
+    } catch (e) {
+      console.warn(`Failed to check for updates ${id}: `, e);
+      return false;
+    }
+  }
+
+  public async checkForSync(stage: SubscribeStages): Promise<void> {
+    try {
+      for (const plugin of this.installed) {
+        const id = plugin.id;
+        await this.isSyncRequired(id, stage);
+      }
+    } catch (error) {
+      console.error('Error checking for all updates:', error);
+
+      const errorMessage = isString(error) ? error : error.message;
+      if (includes(errorMessage, 'detected dubious ownership')) showGitOwnershipToast();
+    }
+  }
+
+  public async syncItem(id: string, commit: string) {
+    const targetDir = this.getDirById(id);
+    if (!targetDir) return false;
+
+    try {
+      const gitManager = new GitManager(true);
+      await gitManager.resetHard(targetDir, commit, true, 'main');
+
+      this.syncList_remove(id);
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  public async updateSyncItem(id: string, commit: string) {
+    const {staticManager} = classHolder;
+    const versioning = await staticManager?.getPluginVersioningById(id);
+    if (!versioning) return;
+
+    const targetDir = this.getDirById(id);
+    if (!targetDir) return;
+
+    const gitManager = new GitManager(true);
+    const currentCommit = await gitManager.getCurrentCommitHash(targetDir, true);
+    if (!currentCommit) return;
+
+    const version = versioning.versions.find(v => v.commit === commit)?.version;
+    const type = getUpdateType(versioning.versions, currentCommit, commit);
+    if (!version || !type) return;
+
+    const installedVersion = this.installed.find(item => item.id === id)?.version;
+    if (installedVersion === version) {
+      this.syncList_remove(id);
+      return;
+    }
+
+    const target = {id, commit, version, type};
+    this.syncList_add(target);
+  }
+
+  public async syncAll(items: {id: string; commit: string}[]) {
+    const synced: string[] = [];
+
+    try {
+      for (const item of items) {
+        const {id, commit} = item;
+
+        const targetDir = this.getDirById(id);
+        if (!targetDir) continue;
+
+        await this.syncItem(id, commit);
+        synced.push(id);
+      }
+      return synced;
+    } catch (e) {
+      console.warn(`Failed to update plugins: ${e}`);
+    }
+
+    return [];
+  }
+
+  private syncList_noticeRenderer() {
+    const {appManager} = classHolder;
+    appManager?.getWebContent()?.send(pluginChannels.onSyncAvailable, this.syncAvailable);
+  }
+
+  private syncList_remove(id: string) {
+    this.syncAvailable = this.syncAvailable.filter(update => update.id !== id);
+    this.syncList_noticeRenderer();
+  }
+
+  private syncList_add(item: PluginSyncItem) {
+    let exist: boolean = false;
+
+    this.syncAvailable = this.syncAvailable.map(syncItem => {
+      if (syncItem.id === item.id) {
+        exist = true;
+        return item;
+      }
+      return syncItem;
+    });
+
+    if (!exist) this.syncAvailable.push(item);
+
+    this.syncList_noticeRenderer();
+  }
+
+  private async validatePluginFolders(folderPaths: string[]): Promise<ValidatedPlugins> {
+    const {staticManager} = classHolder;
+    const validatedFolders: ValidatedPlugins = [];
+
+    for (const folder of folderPaths) {
+      if (folder.startsWith('.')) {
+        this.skipped.push({
+          id: folder,
+          message: "Unloaded because folder starts with '.'.",
+        });
+        console.log(`Skipping folder "${folder}" because it starts with '.'`);
+      } else {
+        const dir = join(this.pluginPath, folder);
+        const scriptsFolder = join(dir, 'scripts');
+        const metadata = await staticManager?.getPluginMetadataById(folder);
+
+        if (!metadata) {
+          this.skipped.push({
+            id: folder,
+            message: 'Unloaded because metadata could not be retrieved.',
+          });
+          console.log(`Skipping folder "${folder}" because metadata is unavailable.`);
+          continue;
+        }
+
+        const {type} = metadata;
+
+        const targetMainPath = type === 'module' ? pluginFolders.module.mainScript : pluginFolders.extension.mainScript;
+        const targetRendererPath =
+          type === 'module' ? pluginFolders.module.rendererScript : pluginFolders.extension.rendererScript;
+
+        try {
+          await promises.access(scriptsFolder, constants.F_OK);
+
+          await Promise.all([
+            promises.access(join(dir, targetMainPath), constants.F_OK),
+            promises.access(join(dir, targetRendererPath), constants.F_OK),
+          ]);
+
+          validatedFolders.push({type, folder});
+        } catch (err) {
+          this.skipped.push({
+            id: folder,
+            message: 'Unloaded due to incompatible structure.',
+          });
+          console.log(`Skipping folder "${folder}" due to missing requirements.`);
+        }
+      }
+    }
+
+    return validatedFolders;
+  }
+
+  public async migrate() {
+    const {staticManager} = classHolder;
+    const targetModuleDir = join(dirname(this.pluginPath), pluginFolders.module.oldFolder);
+    const targetExtensionDir = join(dirname(this.pluginPath), pluginFolders.extension.oldFolder);
+
+    const oldInstalledModules = await removeOldInstallations(targetModuleDir);
+    const oldInstalledExtensions = await removeOldInstallations(targetExtensionDir);
+
+    const oldInstallations = [...oldInstalledModules, ...oldInstalledExtensions];
+
+    // Reinstall in the new way
+    for (const url of oldInstallations) {
+      const id = await staticManager?.getPluginIdByRepositoryUrl(url);
+      if (!id) continue;
+
+      const targetCommit = await getCommitByAppStage(id);
+
+      await this.install(url, targetCommit);
+    }
+  }
+}
