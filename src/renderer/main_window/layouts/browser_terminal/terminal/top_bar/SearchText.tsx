@@ -1,8 +1,8 @@
 import {Button, Input, Kbd, Popover, PopoverContent, PopoverTrigger, Tooltip} from '@heroui/react';
+import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
 import {SearchAddon} from '@xterm/addon-search';
 import {KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
 
-import {Hotkey_Names} from '../../../../../../cross/HotkeyConstants';
 import {AltArrow_Icon, Magnifier_Icon} from '../../../../../shared/assets/icons';
 import useHotkeyPress from '../../../../hooks/hotkeys';
 import {useHotkeysState} from '../../../../redux/reducers/hotkeys';

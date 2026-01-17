@@ -1,9 +1,9 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Tooltip} from '@heroui/react';
+import {SearchQuerySites} from '@lynx_cross/types';
+import {getCacheUrl, getSearchUrl} from '@lynx_cross/utils';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useCallback} from 'react';
 
-import {SearchQuerySites} from '../../../../../../cross/CrossTypes';
-import {getCacheUrl, getSearchUrl} from '../../../../../../cross/CrossUtils';
 import {ExternalDuo_Icon, Web_Icon} from '../../../../../shared/assets/icons';
 
 const endContent = <ExternalDuo_Icon className="size-3 group-hover:opacity-100 opacity-0 transition duration-300" />;

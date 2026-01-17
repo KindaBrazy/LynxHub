@@ -1,4 +1,4 @@
-import {OsPlatforms, SubscribeStages} from '../CrossTypes';
+import {OsPlatforms, SubscribeStages} from '../index';
 
 export type PluginEngines = {moduleApi?: string; extensionApi?: string};
 

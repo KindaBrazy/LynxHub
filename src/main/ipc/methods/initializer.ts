@@ -1,9 +1,8 @@
 // Initializer IPC methods - Checks if required tools (Git, PowerShell 7) are installed
 import {spawn} from 'node:child_process';
 
+import {initChannels} from '@lynx_cross/consts/ipc';
 import {ipcMain} from 'electron';
-
-import {initChannels} from '../../../cross/IpcChannelAndTypes';
 
 export function listenToInitChannels() {
   ipcMain.handle(initChannels.checkGitInstalled, () => {

@@ -6,7 +6,7 @@ import {useCallback, useEffect, useState} from 'react';
 
 import {Add_Icon, FolderDuo_Icon, Terminal_Icon} from '../../../../../shared/assets/icons';
 import LynxTooltip from '../../../../components/LynxTooltip';
-import rendererIpc from '../../../../services/RendererIpc';
+import rendererIpc from '../../../../ipc';
 import LaunchConfigSection from '../Section';
 import TerminalCommandItem from '../TerminalCommand-Item';
 

@@ -1,11 +1,11 @@
 import {useEffect, useMemo} from 'react';
 
+import rendererIpc from '../ipc';
 import HomePage from '../pages/home';
 import {extensionsData} from '../plugins/extensions/loader';
 import {useCardsState} from '../redux/reducers/cards';
 import {useTabsState} from '../redux/reducers/tabs';
 import {useTerminalState} from '../redux/reducers/terminal';
-import rendererIpc from '../services/RendererIpc';
 import {PageComponents} from '../utils/constants';
 import RunningCardView from './browser_terminal';
 import {useRemoveTab} from './tabs/utils';

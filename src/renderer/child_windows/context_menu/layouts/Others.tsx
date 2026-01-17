@@ -6,7 +6,7 @@ import {X} from 'lucide-react';
 import type {KeyboardEvent} from 'react';
 import {useEffect, useRef, useState} from 'react';
 
-import rendererIpc from '../../../main_window/services/RendererIpc';
+import rendererIpc from '../../../main_window/ipc';
 import {Circle_Icon} from '../../../shared/assets/icons';
 import {SetElementsType, SetWidthSizeType} from '../hooks';
 

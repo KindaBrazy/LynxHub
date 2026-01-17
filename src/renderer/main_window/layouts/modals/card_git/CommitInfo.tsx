@@ -1,4 +1,4 @@
-import {RepositoryInfo} from '../../../../../cross/CrossTypes';
+import {RepositoryInfo} from '@lynx_cross/types';
 
 type Props = {repoInfo: RepositoryInfo};
 export default function CommitInfo({repoInfo}: Props) {

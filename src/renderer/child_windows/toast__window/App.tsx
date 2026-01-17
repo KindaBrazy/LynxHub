@@ -1,8 +1,8 @@
 import {Button} from '@heroui/react';
+import {appWindowChannels} from '@lynx_cross/consts/ipc';
+import {ToastWindow_MessageType} from '@lynx_cross/types';
 import {useEffect, useState} from 'react';
 
-import {ToastWindow_MessageType} from '../../../cross/CrossTypes';
-import {appWindowChannels} from '../../../cross/IpcChannelAndTypes';
 import {
   AlertCircle_Icon,
   AlertTriangle_Icon,

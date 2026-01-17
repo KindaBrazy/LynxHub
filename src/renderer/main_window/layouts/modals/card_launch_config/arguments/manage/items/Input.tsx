@@ -1,8 +1,8 @@
 import {Input} from '@heroui/react';
+import {getArgumentDefaultValue} from '@lynx/utils/module_arguments';
+import {ChosenArgument} from '@lynx_cross/types';
 import {useCallback, useState} from 'react';
 
-import {ChosenArgument} from '../../../../../../../../cross/CrossTypes';
-import {getArgumentDefaultValue} from '../../../../../../../../cross/GetArgumentsData';
 import {TextDuo_Icon} from '../../../../../../../shared/assets/icons';
 import {useGetArgumentsByID} from '../../../../../../plugins/modules';
 import ArgumentItemBase from './Base';

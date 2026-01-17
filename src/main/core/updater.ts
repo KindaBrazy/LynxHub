@@ -1,8 +1,9 @@
+import {appUpdateChannels} from '@lynx_cross/consts/ipc';
+import {AppUpdateEventTypes, AppUpdateStatus} from '@lynx_cross/types/ipc';
 import {ipcMain} from 'electron';
 import electron_log from 'electron-log';
 import updater from 'electron-updater';
 
-import {appUpdateChannels, AppUpdateEventTypes, AppUpdateStatus} from '../../cross/IpcChannelAndTypes';
 import classHolder from './class_holder';
 
 const {autoUpdater, CancellationToken} = updater;

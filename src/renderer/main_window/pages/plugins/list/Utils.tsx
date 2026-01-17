@@ -1,14 +1,14 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import {PluginFilter, PluginItem} from '@lynx_cross/types/plugins';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {PluginFilter, PluginItem} from '../../../../../cross/plugin/PluginTypes';
 import {FilterDuo_Icon} from '../../../../shared/assets/icons';
+import rendererIpc from '../../../ipc';
 import {pluginsActions} from '../../../redux/reducers/plugins';
 import {useUserState} from '../../../redux/reducers/user';
 import {AppDispatch} from '../../../redux/store';
-import rendererIpc from '../../../services/RendererIpc';
 
 export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginItem[]>>) {
   const [loading, setLoading] = useState<boolean>(true);

@@ -2,8 +2,8 @@ import {motion} from 'framer-motion';
 import {ReactNode, useCallback, useMemo} from 'react';
 
 import {Maximize_Icon, Minimize_Icon, UnMaximize_Icon} from '../../../shared/assets/icons';
+import rendererIpc from '../../ipc';
 import {useAppState} from '../../redux/reducers/app';
-import rendererIpc from '../../services/RendererIpc';
 import WindowButtons_Close from './WindowButtons_Close';
 
 const BUTTONS_COMMON_STYLE: string = 'notDraggable cursor-default transition-colors duration-300 ease-out';

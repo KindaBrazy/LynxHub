@@ -1,9 +1,9 @@
+import {AvailablePageIDs} from '@lynx_cross/consts';
 import {Result} from 'antd';
 import {LayoutGroup} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
 import {FC, memo, useMemo} from 'react';
 
-import {AvailablePageIDs} from '../../../../cross/CrossConstants';
 import Page from '../../pages/Page';
 import {extensionsData} from '../../plugins/extensions/loader';
 import {useGetCardsByPath} from '../../plugins/modules';

@@ -8,10 +8,10 @@ import lodash, {isEmpty} from 'lodash';
 import {LowSync} from 'lowdb';
 import {JSONFileSyncPreset} from 'lowdb/node';
 
-import {APP_NAME} from '../../cross/CrossConstants';
-import {Get_Default_Hotkeys} from '../../cross/HotkeyConstants';
-import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '../../cross/IpcChannelAndTypes';
-import StorageTypes from '../../cross/StorageTypes';
+import {APP_NAME} from '../../cross/consts';
+import {Get_Default_Hotkeys} from '../../cross/consts/hotkeys';
+import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '../../cross/types/ipc';
+import StorageTypes from '../../cross/types/storage';
 import classHolder from '../core/class_holder';
 import {changeWindowState} from '../ipc/methods';
 import {getAbsolutePath, getExePath, getUserAgent, isPortable, lynxEncryptString, lynxEncryptStrings} from '../utils';

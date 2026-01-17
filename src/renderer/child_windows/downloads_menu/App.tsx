@@ -1,10 +1,10 @@
 import {Button, Chip} from '@heroui/react';
+import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import {Broom, DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useEffect, useState} from 'react';
 
-import {DownloadItemInfo} from '../../../cross/DownloadManagerTypes';
-import rendererIpc from '../../main_window/services/RendererIpc';
+import rendererIpc from '../../main_window/ipc';
 import DownloadItem from './Item';
 
 export default function DownloadMenu() {

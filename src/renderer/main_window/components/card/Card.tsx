@@ -1,13 +1,14 @@
 import {Card, CardBody, CardHeader, Chip, User} from '@heroui/react';
+import {getAccentColorAsHex} from '@lynx/utils/accent_color_generator';
+import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
 import {AnimatePresence, motion} from 'framer-motion';
 import {CSSProperties, FormEvent, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {getAccentColorAsHex} from '../../../../cross/AccentColorGenerator';
-import {extractGitUrl, getCacheUrl} from '../../../../cross/CrossUtils';
 import {DownloadDuo_Icon} from '../../../shared/assets/icons';
 import AddBreadcrumb_Renderer from '../../../shared/sentry/Breadcrumbs';
 import {useInstalledCard, useIsAutoUpdateExtensions, useUpdateAvailable, useUpdatingCard} from '../../hooks/utils';
+import rendererIpc from '../../ipc';
 import {useTabModalManager} from '../../layouts/modals/useTabModalManager';
 import {extensionRendererApi} from '../../plugins/extensions/loader';
 import {getCardMethod, useAllCardMethods} from '../../plugins/modules';
@@ -15,7 +16,6 @@ import {useAppState} from '../../redux/reducers/app';
 import {cardsActions, useCardsState} from '../../redux/reducers/cards';
 import {useTabsState} from '../../redux/reducers/tabs';
 import {AppDispatch} from '../../redux/store';
-import rendererIpc from '../../services/RendererIpc';
 import Footer from './Footer';
 import {useCardStore} from './Wrapper';
 

@@ -9,11 +9,11 @@ import {
   Selection,
   SelectItem,
 } from '@heroui/react';
+import {ChosenArgumentsData} from '@lynx_cross/types';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {ChosenArgumentsData} from '../../../../../../../cross/CrossTypes';
 import {TrashDuo_Icon} from '../../../../../../shared/assets/icons';
 import {convertArrToObject} from '../../../../../utils';
 

@@ -32,6 +32,11 @@ export default defineConfig(({mode}) => {
             : ['../../../../../extension/src/main/lynxExtension', '../../../../../module/src/main'],
         },
       },
+      resolve: {
+        alias: {
+          '@lynx_cross': resolve(__dirname, 'src/cross'),
+        },
+      },
     },
 
     preload: {

@@ -1,5 +1,5 @@
-import {extractGitUrl} from '../CrossUtils';
-import {PluginVersions} from './PluginTypes';
+import {PluginVersions} from '../types/plugins';
+import {extractGitUrl} from './index';
 
 export function getUpdateType(versions: PluginVersions, currentCommit: string, targetCommit: string) {
   const currentCommitIndex = versions.findIndex(v => v.commit === currentCommit);

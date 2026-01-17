@@ -1,4 +1,5 @@
 import {getKeyValue, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@heroui/react';
+import {validateGitRepoUrl} from '@lynx_cross/utils';
 import {motion} from 'framer-motion';
 import {filter, find, isEmpty, startCase} from 'lodash';
 import {
@@ -14,10 +15,9 @@ import {
 } from 'react';
 import {useDispatch} from 'react-redux';
 
-import {validateGitRepoUrl} from '../../../../../cross/CrossUtils';
 import {lynxTopToast} from '../../../hooks/utils';
+import rendererIpc from '../../../ipc';
 import {AppDispatch} from '../../../redux/store';
-import rendererIpc from '../../../services/RendererIpc';
 import {
   emptyTableElement,
   extensionsColumns,

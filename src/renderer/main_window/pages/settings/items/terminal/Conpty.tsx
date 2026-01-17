@@ -1,8 +1,8 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
+import {TerminalUseConpty} from '@lynx_cross/types/ipc';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {TerminalUseConpty} from '../../../../../../cross/IpcChannelAndTypes';
 import {terminalActions, useTerminalState} from '../../../../redux/reducers/terminal';
 import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';

@@ -1,10 +1,10 @@
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
+import rendererIpc from '../ipc';
 import {useCardsState} from '../redux/reducers/cards';
 import {volumeActions} from '../redux/reducers/volume';
 import {AppDispatch} from '../redux/store';
-import rendererIpc from '../services/RendererIpc';
 
 /** Syncs volume state updates from context menu window and audio events to Redux */
 export default function useVolumeSync() {

@@ -1,17 +1,17 @@
 import {Button, Spinner} from '@heroui/react';
+import {FavIcons} from '@lynx_cross/types/ipc';
 import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
 import {ReactNode, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {FavIcons} from '../../../../../cross/IpcChannelAndTypes';
 import {Star_Icon, Terminal_Icon} from '../../../../shared/assets/icons';
 import {History_Color_Icon} from '../../../../shared/assets/icons/Icons_Colorful';
 import LynxScroll from '../../../components/LynxScroll';
+import rendererIpc from '../../../ipc';
 import {cardsActions} from '../../../redux/reducers/cards';
 import {useTabsState} from '../../../redux/reducers/tabs';
 import {AppDispatch} from '../../../redux/store';
-import rendererIpc from '../../../services/RendererIpc';
 import EmptyPage_Item from './EmptyPage_Item';
 
 type Props = {type: 'browser' | 'terminal' | 'both'};

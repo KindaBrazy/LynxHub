@@ -1,7 +1,7 @@
 import {isEqual} from 'lodash';
 import normalizeUrl, {Options} from 'normalize-url';
 
-import {SearchQuerySites, StorageUnit} from './CrossTypes';
+import {SearchQuerySites, StorageUnit} from '../types';
 
 /**
  * Extracts the owner and repository name from a given GitHub | GitLab URL.

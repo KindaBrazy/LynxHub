@@ -1,11 +1,11 @@
 import {StyleProvider} from '@ant-design/cssinjs';
 import {Button, Card, CardBody, CardHeader, Image, Spinner, Switch, Tab, Tabs} from '@heroui/react';
+import {screenShareChannels} from '@lynx_cross/consts/share_screen';
+import {ScreenShareSources, ScreenShareStart} from '@lynx_cross/types/share_screen';
 import {Result} from 'antd';
 import isEmpty from 'lodash/isEmpty';
 import {useEffect, useState} from 'react';
 
-import {screenShareChannels} from '../../../cross/ScreenShareConsts';
-import {ScreenShareSources, ScreenShareStart} from '../../../cross/ScreenShareTypes';
 import {
   CloseSimple_Icon,
   MonitorDuo_Icon,

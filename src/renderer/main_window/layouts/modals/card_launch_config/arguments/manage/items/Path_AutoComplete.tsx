@@ -1,9 +1,9 @@
 import {Autocomplete, AutocompleteItem} from '@heroui/react';
+import {FolderListData} from '@lynx_cross/types';
 import {Key, useEffect, useState} from 'react';
 
-import {FolderListData} from '../../../../../../../../cross/CrossTypes';
 import {File_Icon, Folder2_Icon} from '../../../../../../../shared/assets/icons';
-import rendererIpc from '../../../../../../services/RendererIpc';
+import rendererIpc from '../../../../../../ipc';
 import {searchInStrings} from '../../../../../../utils';
 
 type Props = {

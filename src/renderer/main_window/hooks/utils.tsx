@@ -1,10 +1,10 @@
 import {addToast, Button} from '@heroui/react';
+import {ChangelogItem, HeroToastPlacement} from '@lynx_cross/types';
+import {InstalledCard} from '@lynx_cross/types/storage';
 import {Dispatch} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, useMemo} from 'react';
 
-import {ChangelogItem, HeroToastPlacement} from '../../../cross/CrossTypes';
-import {InstalledCard} from '../../../cross/StorageTypes';
 import {appActions} from '../redux/reducers/app';
 import {useCardsState} from '../redux/reducers/cards';
 import {useSettingsState} from '../redux/reducers/settings';

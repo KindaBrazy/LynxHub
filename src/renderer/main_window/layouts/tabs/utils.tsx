@@ -2,12 +2,12 @@ import type {ActionCreatorWithPayload} from '@reduxjs/toolkit';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
+import rendererIpc from '../../ipc';
 import {cardsActions, useCardsState} from '../../redux/reducers/cards';
 import {modalActions} from '../../redux/reducers/modals';
 import {tabsActions, useTabsState} from '../../redux/reducers/tabs';
 import {volumeActions} from '../../redux/reducers/volume';
 import {AppDispatch} from '../../redux/store';
-import rendererIpc from '../../services/RendererIpc';
 import {defaultTabItem, REMOVE_MODAL_DELAY} from '../../utils/constants';
 
 export function useRemoveTab() {

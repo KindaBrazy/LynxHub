@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from 'react';
 
 import LynxSwitch from '../../../../components/LynxSwitch';
-import rendererIpc from '../../../../services/RendererIpc';
+import rendererIpc from '../../../../ipc';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 /** Manage launch app on system startup */

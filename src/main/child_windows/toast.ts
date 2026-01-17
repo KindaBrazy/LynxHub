@@ -1,11 +1,11 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {appWindowChannels} from '@lynx_cross/consts/ipc';
 import {app, BrowserWindow, ipcMain} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
-import {ToastWindow_MessageType} from '../../cross/CrossTypes';
-import {appWindowChannels} from '../../cross/IpcChannelAndTypes';
+import {ToastWindow_MessageType} from '../../cross/types';
 import {RelaunchApp} from '../utils';
 
 export default function ShowToastWindow(

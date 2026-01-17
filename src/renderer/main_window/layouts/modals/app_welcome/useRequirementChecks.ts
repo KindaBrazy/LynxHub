@@ -1,8 +1,8 @@
+import {MAIN_MODULE_URL} from '@lynx_cross/consts';
+import {isWin} from '@lynx_cross/utils';
 import {useCallback, useMemo, useState} from 'react';
 
-import {MAIN_MODULE_URL} from '../../../../../cross/CrossConstants';
-import {isWin} from '../../../../../cross/CrossUtils';
-import rendererIpc from '../../../services/RendererIpc';
+import rendererIpc from '../../../ipc';
 import {RowData} from './types';
 
 type Statuses = {

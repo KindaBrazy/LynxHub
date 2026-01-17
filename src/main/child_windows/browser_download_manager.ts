@@ -16,12 +16,8 @@ import {
 } from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
-import {
-  browserDownloadChannels,
-  DownloadDoneInfo,
-  DownloadManagerProgress,
-  DownloadStartInfo,
-} from '../../cross/DownloadManagerTypes';
+import {browserDownloadChannels} from '../../cross/consts/donwload_manager';
+import {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '../../cross/types/download_manager';
 import classHolder from '../core/class_holder';
 
 /**

@@ -1,9 +1,9 @@
 import {Button, Card, CardBody, CardHeader, Divider} from '@heroui/react';
+import {getArgumentDescription} from '@lynx/utils/module_arguments';
 import {Tooltip} from 'antd';
 import {Reorder, useDragControls} from 'framer-motion';
 import {ReactNode, useMemo} from 'react';
 
-import {getArgumentDescription} from '../../../../../../../../cross/GetArgumentsData';
 import {Grip_Icon, TrashDuo_Icon} from '../../../../../../../shared/assets/icons';
 import {useGetArgumentsByID} from '../../../../../../plugins/modules';
 

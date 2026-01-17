@@ -1,23 +1,23 @@
 import {Button, Input, Listbox, ListboxItem, ListboxSection} from '@heroui/react';
-import {compact} from 'lodash';
-import {KeyboardEvent, useCallback, useMemo, useRef, useState} from 'react';
-import {useDispatch} from 'react-redux';
-
 import {
   Get_Default_Hotkeys,
   Hotkey_Desc,
   Hotkey_Names,
   Hotkey_Sections,
   Hotkey_Titles,
-} from '../../../../../../cross/HotkeyConstants';
-import {LynxHotkey} from '../../../../../../cross/IpcChannelAndTypes';
+} from '@lynx_cross/consts/hotkeys';
+import {LynxHotkey} from '@lynx_cross/types/ipc';
+import {compact} from 'lodash';
+import {KeyboardEvent, useCallback, useMemo, useRef, useState} from 'react';
+import {useDispatch} from 'react-redux';
+
 import {Keyboard_Icon, RefreshDuo_Icon} from '../../../../../shared/assets/icons';
 import SettingsSection from '../../../../components/ContentSection';
+import rendererIpc from '../../../../ipc';
 import {hotkeysActions, useHotkeysState} from '../../../../redux/reducers/hotkeys';
 import {useSettingsState} from '../../../../redux/reducers/settings';
 import {useTerminalState} from '../../../../redux/reducers/terminal';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 import {formatHotkey, HotkeyLike} from '../../../../utils';
 import {canSettingItemShow} from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';

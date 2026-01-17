@@ -1,9 +1,9 @@
 import {Card, CardBody, CardHeader, Listbox, ListboxItem, ListboxSection, Selection} from '@heroui/react';
+import {ArgumentItem, ArgumentSection} from '@lynx_cross/types/plugins/module';
 import {cloneDeep, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import Highlighter from 'react-highlight-words';
 
-import {ArgumentItem, ArgumentSection} from '../../../../../../../cross/plugin/ModuleTypes';
 import {searchInStrings} from '../../../../../utils';
 
 type Props = {

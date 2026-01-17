@@ -1,9 +1,9 @@
 import {Button, Chip, User} from '@heroui/react';
+import {PluginInstalledItem} from '@lynx_cross/types/plugins';
+import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
+import {getPluginIconUrl} from '@lynx_cross/utils/plugins';
 import {useMemo} from 'react';
 
-import {extractGitUrl, getCacheUrl} from '../../../../../cross/CrossUtils';
-import {getPluginIconUrl} from '../../../../../cross/plugin/CrossPluginUtils';
-import {PluginInstalledItem} from '../../../../../cross/plugin/PluginTypes';
 import {
   ArrowDuo_Icon,
   BoxDuo_Icon,

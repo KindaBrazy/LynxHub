@@ -14,9 +14,9 @@ import {
   StatusResult,
 } from 'simple-git';
 
-import {RepositoryInfo} from '../../cross/CrossTypes';
-import {extractGitUrl, validateGitRepoUrl} from '../../cross/CrossUtils';
-import {ShallowCloneOptions} from '../../cross/GitTypes';
+import {RepositoryInfo} from '../../cross/types';
+import {ShallowCloneOptions} from '../../cross/types/git';
+import {extractGitUrl, validateGitRepoUrl} from '../../cross/utils';
 import classHolder from '../core/class_holder';
 import {checkPathExists, openDialog} from '../utils';
 

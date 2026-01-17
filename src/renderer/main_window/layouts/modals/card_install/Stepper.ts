@@ -1,9 +1,9 @@
+import {InstallationStepper} from '@lynx_cross/types/plugins/module';
 import {Dispatch, FC, SetStateAction} from 'react';
 
-import {InstallationStepper} from '../../../../../cross/plugin/ModuleTypes';
 import {lynxTopToast} from '../../../hooks/utils';
+import rendererIpc from '../../../ipc';
 import {extensionRendererApi} from '../../../plugins/extensions/loader';
-import rendererIpc from '../../../services/RendererIpc';
 import {InstallState} from './types';
 
 export default class InstallStepper {

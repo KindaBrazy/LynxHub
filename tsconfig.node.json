@@ -25,6 +25,9 @@
       ],
       "@lynx_extension/*": [
         "./extension/src/*"
+      ],
+      "@lynx_cross/*": [
+        "./src/cross/*"
       ]
     }
   }

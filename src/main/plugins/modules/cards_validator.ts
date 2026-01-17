@@ -4,7 +4,7 @@ import {FSWatcher, watch} from 'chokidar';
 import {promises} from 'graceful-fs';
 import lodash from 'lodash';
 
-import {InstalledCard, InstalledCards} from '../../../cross/StorageTypes';
+import {InstalledCard, InstalledCards} from '../../../cross/types/storage';
 import classHolder from '../../core/class_holder';
 import {getAbsolutePath, getExePath, isPortable} from '../../utils';
 import AddBreadcrumb_Main from '../../utils/breadcrumbs';

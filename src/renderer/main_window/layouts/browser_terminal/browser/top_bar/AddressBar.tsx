@@ -1,15 +1,15 @@
 import {cn} from '@heroui/react';
+import {formatWebAddress} from '@lynx_cross/utils';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {formatWebAddress} from '../../../../../../cross/CrossUtils';
 import {Star_Icon} from '../../../../../shared/assets/icons';
+import rendererIpc from '../../../../ipc';
 import {cardsActions} from '../../../../redux/reducers/cards';
 import {useTabsState} from '../../../../redux/reducers/tabs';
 import {AppDispatch} from '../../../../redux/store';
-import rendererIpc from '../../../../services/RendererIpc';
 import {RunningCard} from '../../../../types';
 
 type Props = {

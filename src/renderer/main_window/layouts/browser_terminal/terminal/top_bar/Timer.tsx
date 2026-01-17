@@ -1,7 +1,7 @@
+import {secondsElapsed} from '@lynx_cross/utils';
 import NumberFlow, {NumberFlowGroup} from '@number-flow/react';
 import {memo, useEffect, useState} from 'react';
 
-import {secondsElapsed} from '../../../../../../cross/CrossUtils';
 import {useTabsState} from '../../../../redux/reducers/tabs';
 
 const calc = (startTime: string) => {

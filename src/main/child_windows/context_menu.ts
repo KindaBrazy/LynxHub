@@ -1,10 +1,10 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {browserChannels, contextMenuChannels, tabsChannels} from '@lynx_cross/consts/ipc';
 import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain, screen, shell, WebContents} from 'electron';
 
-import {ContextResizeData} from '../../cross/CrossTypes';
-import {browserChannels, contextMenuChannels, tabsChannels} from '../../cross/IpcChannelAndTypes';
+import {ContextResizeData} from '../../cross/types';
 import BrowserManager from '../core/browser';
 import classHolder from '../core/class_holder';
 import AddBreadcrumb_Main from '../utils/breadcrumbs';

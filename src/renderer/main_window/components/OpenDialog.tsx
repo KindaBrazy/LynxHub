@@ -1,10 +1,10 @@
 import {Button, ButtonGroup, Input} from '@heroui/react';
+import {isWin} from '@lynx_cross/utils';
 import {OpenDialogOptions} from 'electron';
 import {useCallback, useEffect, useRef, useState} from 'react';
 
-import {isWin} from '../../../cross/CrossUtils';
 import {Folder_Icon} from '../../shared/assets/icons';
-import rendererIpc from '../services/RendererIpc';
+import rendererIpc from '../ipc';
 
 type Props = {
   dialogType: OpenDialogOptions;

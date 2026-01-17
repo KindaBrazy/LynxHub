@@ -1,7 +1,7 @@
+import {LoadedCardData} from '@lynx_cross/types/plugins/module';
 import {motion, Variants} from 'framer-motion';
 import {memo, useMemo} from 'react';
 
-import {LoadedCardData} from '../../../../cross/plugin/ModuleTypes';
 import {useHasArguments} from '../../plugins/modules';
 import {useCardsState} from '../../redux/reducers/cards';
 import Wrapper from './Wrapper';

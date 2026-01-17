@@ -4,7 +4,7 @@ import {memo, useCallback} from 'react';
 import {FilterDuo_Icon} from '../../../shared/assets/icons';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../../shared/assets/icons/Icons_Colorful';
 import AddBreadcrumb_Renderer from '../../../shared/sentry/Breadcrumbs';
-import rendererIpc from '../../services/RendererIpc';
+import rendererIpc from '../../ipc';
 
 type Props = {
   selectedCategories: string[];

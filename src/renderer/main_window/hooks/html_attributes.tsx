@@ -1,6 +1,6 @@
+import {APP_NAME} from '@lynx_cross/consts';
 import {useEffect} from 'react';
 
-import {APP_NAME} from '../../../cross/CrossConstants';
 import {useAppState} from '../redux/reducers/app';
 import {useSettingsState} from '../redux/reducers/settings';
 

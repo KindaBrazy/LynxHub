@@ -1,16 +1,16 @@
+import {toMs} from '@lynx_cross/utils';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {isNil} from 'lodash';
 import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {toMs} from '../../../../cross/CrossUtils';
+import rendererIpc from '../../ipc';
 import {extensionsData} from '../../plugins/extensions/loader';
 import {useAllCardDataWithPath} from '../../plugins/modules';
 import {cardsActions} from '../../redux/reducers/cards';
 import {tabsActions, useTabsState} from '../../redux/reducers/tabs';
 import {AppDispatch} from '../../redux/store';
-import rendererIpc from '../../services/RendererIpc';
 import {RunningCard} from '../../types';
 import Browser from './browser';
 import Terminal from './terminal';

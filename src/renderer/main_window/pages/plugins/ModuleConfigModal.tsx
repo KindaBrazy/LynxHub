@@ -1,14 +1,14 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {CardModules, RendererModuleImportType} from '@lynx_cross/types/plugins/module';
+import {isDev} from '@lynx_cross/utils';
 import {compact} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {isDev} from '../../../../cross/CrossUtils';
-import {CardModules, RendererModuleImportType} from '../../../../cross/plugin/ModuleTypes';
 import {SettingsMinimal_Icon} from '../../../shared/assets/icons';
 import {lynxTopToast} from '../../hooks/utils';
+import rendererIpc from '../../ipc';
 import {AppDispatch} from '../../redux/store';
-import rendererIpc from '../../services/RendererIpc';
 import {showRestartModal} from '../../utils';
 
 type CardItem = {id: string; title: string; type: string; enabled: boolean};

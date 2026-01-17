@@ -1,8 +1,8 @@
+import {formatTime} from '@lynx_cross/utils';
 import {extraErrorDataIntegration, init as electronInit} from '@sentry/electron/renderer';
 import {init as reactInit} from '@sentry/react';
 
-import {formatTime} from '../../../cross/CrossUtils';
-import rendererIpc from '../../main_window/services/RendererIpc';
+import rendererIpc from '../../main_window/ipc';
 
 const {collectErrors} = await rendererIpc.storage.get('app');
 

@@ -1,9 +1,9 @@
 import {Button} from '@heroui/react';
 
 import {Stop_Icon} from '../../../../shared/assets/icons';
+import rendererIpc from '../../../ipc';
 import {useHotkeysState} from '../../../redux/reducers/hotkeys';
 import {useSettingsState} from '../../../redux/reducers/settings';
-import rendererIpc from '../../../services/RendererIpc';
 
 type Props = {id: string};
 

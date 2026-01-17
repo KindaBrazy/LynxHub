@@ -21,7 +21,7 @@ import {ContextMenuParams, EditFlags} from 'electron';
 import {isEmpty} from 'lodash';
 import {ReactNode, useEffect} from 'react';
 
-import rendererIpc from '../../../main_window/services/RendererIpc';
+import rendererIpc from '../../../main_window/ipc';
 import {SetElementsType, SetWidthSizeType} from '../hooks';
 
 type ActionProps = {icon?: ReactNode; title: string; onPress: () => void; className?: string};

@@ -1,4 +1,5 @@
-import {APP_NAME} from '../../../cross/CrossConstants';
+import {APP_NAME} from '@lynx_cross/consts';
+
 import ShinyText from '../../main_window/components/ShinyText';
 
 export function AppName({className, textClassName}: {className?: string; textClassName?: string}) {

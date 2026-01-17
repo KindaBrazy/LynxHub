@@ -2,10 +2,10 @@ import {motion} from 'framer-motion';
 import {useCallback} from 'react';
 
 import {Power_Icon} from '../../../shared/assets/icons';
+import rendererIpc from '../../ipc';
 import {useHotkeysState} from '../../redux/reducers/hotkeys';
 import {useSettingsState} from '../../redux/reducers/settings';
 import {useTabsState} from '../../redux/reducers/tabs';
-import rendererIpc from '../../services/RendererIpc';
 
 type Props = {
   buttonProps: any;

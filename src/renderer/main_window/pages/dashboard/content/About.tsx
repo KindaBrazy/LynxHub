@@ -1,7 +1,4 @@
 import {Avatar, Card, Chip} from '@heroui/react';
-import {useCallback} from 'react';
-import {useDispatch} from 'react-redux';
-
 import {
   APP_BUILD_NUMBER,
   APP_DETAILED_DESCRIPTION,
@@ -16,7 +13,10 @@ import {
   REDDIT_URL,
   X_URL,
   YOUTUBE_URL,
-} from '../../../../../cross/CrossConstants';
+} from '@lynx_cross/consts';
+import {useCallback} from 'react';
+import {useDispatch} from 'react-redux';
+
 import {
   Copy_Icon,
   DiscordColor_Icon,

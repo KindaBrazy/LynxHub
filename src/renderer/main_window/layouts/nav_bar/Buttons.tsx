@@ -1,7 +1,7 @@
+import {PageID, PageTitles} from '@lynx_cross/consts';
 import {isEmpty} from 'lodash';
 import {useMemo} from 'react';
 
-import {PageID, PageTitles} from '../../../../cross/CrossConstants';
 import {
   AudioGeneration_Icon,
   GamePad_Icon,

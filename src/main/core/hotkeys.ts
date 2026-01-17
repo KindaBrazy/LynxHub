@@ -1,6 +1,7 @@
+import {appWindowChannels} from '@lynx_cross/consts/ipc';
+import {LynxInput} from '@lynx_cross/types/ipc';
 import {Event, Input, WebContents} from 'electron';
 
-import {appWindowChannels, LynxInput} from '../../cross/IpcChannelAndTypes';
 import classHolder from './class_holder';
 
 const initialKeys: LynxInput = {

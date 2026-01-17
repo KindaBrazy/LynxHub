@@ -1,9 +1,9 @@
 import {Button, Divider, Kbd} from '@heroui/react';
+import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
 
-import {Hotkey_Names} from '../../../../../../cross/HotkeyConstants';
+import rendererIpc from '../../../../ipc';
 import {useHotkeysState} from '../../../../redux/reducers/hotkeys';
 import {useTerminalState} from '../../../../redux/reducers/terminal';
-import rendererIpc from '../../../../services/RendererIpc';
 import {formatHotkey} from '../../../../utils';
 
 type Props = {id: string};

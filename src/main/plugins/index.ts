@@ -1,19 +1,19 @@
 import {dirname, join} from 'node:path';
 
+import {pluginChannels} from '@lynx_cross/consts/ipc';
 import {captureException} from '@sentry/electron/main';
 import {constants, promises, readdirSync} from 'graceful-fs';
 import {includes, isString} from 'lodash';
 
-import {SubscribeStages} from '../../cross/CrossTypes';
-import {pluginChannels} from '../../cross/IpcChannelAndTypes';
-import {getUpdateType} from '../../cross/plugin/CrossPluginUtils';
+import {SubscribeStages} from '../../cross/types';
 import {
   PluginAddresses,
   PluginInstalledItem,
   PluginSyncItem,
   UnloadedPlugins,
   ValidatedPlugins,
-} from '../../cross/plugin/PluginTypes';
+} from '../../cross/types/plugins';
+import {getUpdateType} from '../../cross/utils/plugins';
 import classHolder from '../core/class_holder';
 import {getAppDirectory} from '../core/data_folder';
 import GitManager from '../git';

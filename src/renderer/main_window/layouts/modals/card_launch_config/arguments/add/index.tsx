@@ -14,11 +14,11 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@heroui/react';
+import {getArgumentDefaultValue, getFilteredArguments} from '@lynx/utils/module_arguments';
+import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '@lynx_cross/types';
 import {isEmpty, some} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 
-import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '../../../../../../../cross/CrossTypes';
-import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../../../cross/GetArgumentsData';
 import {Circle_Icon, Filter_Icon} from '../../../../../../shared/assets/icons';
 import LynxScroll from '../../../../../components/LynxScroll';
 import {useGetArgumentsByID} from '../../../../../plugins/modules';

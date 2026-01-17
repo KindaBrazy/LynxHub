@@ -1,9 +1,9 @@
 import mitt, {Emitter} from 'mitt';
 
-import {ExtensionEvents, ExtensionEvents_IPC} from '../../../../cross/plugin/ExtensionTypes_Events';
-import {ExtensionData_Renderer, ExtensionImport_Renderer} from '../../../../cross/plugin/ExtensionTypes_Renderer';
-import {ExtensionRendererApi} from '../../../../cross/plugin/ExtensionTypes_Renderer_Api';
-import rendererIpc from '../../services/RendererIpc';
+import {ExtensionData_Renderer, ExtensionImport_Renderer} from '../../../../main/types/extensions';
+import {ExtensionRendererApi} from '../../../../main/types/extensions/api';
+import {ExtensionEvents, ExtensionEvents_IPC} from '../../../../main/types/extensions/events';
+import rendererIpc from '../../ipc';
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../modules';
 import {initPluginBrowserSentry} from '../sentry';
 

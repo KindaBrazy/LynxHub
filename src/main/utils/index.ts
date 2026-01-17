@@ -2,11 +2,12 @@ import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
 import {dirname, isAbsolute, relative, resolve} from 'node:path';
 
+import {winChannels} from '@lynx_cross/consts/ipc';
+import {AgentTypes, DarkModeTypes} from '@lynx_cross/types/ipc';
 import {app, BrowserWindow, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue, safeStorage} from 'electron';
 import fs from 'graceful-fs';
 
-import {formatSize} from '../../cross/CrossUtils';
-import {AgentTypes, DarkModeTypes, winChannels} from '../../cross/IpcChannelAndTypes';
+import {formatSize} from '../../cross/utils';
 import classHolder from '../core/class_holder';
 import calcFolderSize from './calc_folder_size';
 

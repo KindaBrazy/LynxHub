@@ -1,4 +1,5 @@
 import {Kbd, Spinner} from '@heroui/react';
+import {extractGitUrl} from '@lynx_cross/utils';
 import {Result} from 'antd';
 import {isEmpty} from 'lodash';
 import {
@@ -18,7 +19,6 @@ import rehypeRaw from 'rehype-raw';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 
-import {extractGitUrl} from '../../../cross/CrossUtils';
 import LynxScroll from './LynxScroll';
 
 type MarkdownViewerProps = {

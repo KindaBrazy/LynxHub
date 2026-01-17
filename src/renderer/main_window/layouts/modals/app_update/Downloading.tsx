@@ -1,9 +1,8 @@
 import {Progress} from '@heroui/react';
+import {UpdateDownloadProgress} from '@lynx_cross/types';
+import {formatSize} from '@lynx_cross/utils';
 import {Descriptions} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
-
-import {UpdateDownloadProgress} from '../../../../../cross/CrossTypes';
-import {formatSize} from '../../../../../cross/CrossUtils';
 
 type Props = {progress: UpdateDownloadProgress | undefined};
 

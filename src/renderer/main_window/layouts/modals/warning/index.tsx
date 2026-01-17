@@ -1,9 +1,9 @@
 import {Button, Link} from '@heroui/react';
+import {ISSUE_PAGE} from '@lynx_cross/consts';
 import {Modal, Space} from 'antd';
 import {Fragment, useCallback, useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {ISSUE_PAGE} from '../../../../../cross/CrossConstants';
 import {useDebounceBreadcrumb} from '../../../../shared/sentry/Breadcrumbs';
 import {modalActions, useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';

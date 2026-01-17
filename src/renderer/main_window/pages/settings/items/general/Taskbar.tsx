@@ -1,8 +1,8 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
+import {TaskbarStatus} from '@lynx_cross/types/ipc';
 import {useCallback, useEffect, useState} from 'react';
 
-import {TaskbarStatus} from '../../../../../../cross/IpcChannelAndTypes';
-import rendererIpc from '../../../../services/RendererIpc';
+import rendererIpc from '../../../../ipc';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 

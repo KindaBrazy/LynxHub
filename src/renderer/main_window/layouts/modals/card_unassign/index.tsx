@@ -4,10 +4,10 @@ import {useDispatch} from 'react-redux';
 
 import {ShieldCross_Icon} from '../../../../shared/assets/icons';
 import {lynxTopToast} from '../../../hooks/utils';
+import rendererIpc from '../../../ipc';
 import {extensionsData} from '../../../plugins/extensions/loader';
 import {useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';
-import rendererIpc from '../../../services/RendererIpc';
 import {useTabModalLifecycle} from '../useTabModalManager';
 
 type Props = {cardId: string; isOpen: boolean; tabID: string};

@@ -1,6 +1,6 @@
 import {TRANSITION_EASINGS} from '@heroui/framer-utils';
-import {PageID} from '@lynx_cross/CrossConstants';
-import {TabInfo} from '@lynx_cross/CrossTypes';
+import {PageID} from '@lynx_cross/consts';
+import {TabInfo} from '@lynx_cross/types';
 import {HTMLMotionProps} from 'framer-motion';
 import {SimpleGitProgressEvent} from 'simple-git';
 

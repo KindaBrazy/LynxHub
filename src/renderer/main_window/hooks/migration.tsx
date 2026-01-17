@@ -1,6 +1,6 @@
 import {useEffect} from 'react';
 
-import rendererIpc from '../services/RendererIpc';
+import rendererIpc from '../ipc';
 
 export const useMigrateCardTitles = () => {
   useEffect(() => {

@@ -1,12 +1,12 @@
 // Card Repository information type
 
-import {
+import type {
   AvailablePageIDs,
   BINARIES_FOLDER_NAME,
   PLUGINS_FOLDER_NAME,
   REPOSITORIES_FOLDER_NAME,
   STATICS_FOLDER_NAME,
-} from './CrossConstants';
+} from '../consts';
 
 export type RepositoryInfo = {
   currentBranch: string;

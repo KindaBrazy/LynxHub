@@ -15,12 +15,12 @@ import {forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef} f
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../hooks/utils';
+import rendererIpc from '../ipc';
 import parseTerminalColors from '../layouts/browser_terminal/terminal/colorHandler';
 import {getRendererMode, getTheme, getWindowPty} from '../layouts/browser_terminal/terminal/utils';
 import {useAppState} from '../redux/reducers/app';
 import {useTerminalStat} from '../redux/reducers/terminal';
 import {AppDispatch} from '../redux/store';
-import rendererIpc from '../services/RendererIpc';
 
 const FONT_FAMILY = 'JetBrainsMono';
 const MIN_RESIZE_COLS = 95;

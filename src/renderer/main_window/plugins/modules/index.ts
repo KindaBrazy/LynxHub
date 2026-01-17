@@ -1,9 +1,4 @@
-import {captureException} from '@sentry/electron/renderer';
-import {compact} from 'lodash';
-import {useSyncExternalStore} from 'react';
-
-import {AvailablePageIDs} from '../../../../cross/CrossConstants';
-import {extractGitUrl, isDev} from '../../../../cross/CrossUtils';
+import {AvailablePageIDs} from '@lynx_cross/consts';
 import {
   ArgumentsData,
   CardData,
@@ -13,8 +8,13 @@ import {
   LoadedCardData,
   LoadedMethods,
   RendererModuleImportType,
-} from '../../../../cross/plugin/ModuleTypes';
-import rendererIpc from '../../services/RendererIpc';
+} from '@lynx_cross/types/plugins/module';
+import {extractGitUrl, isDev} from '@lynx_cross/utils';
+import {captureException} from '@sentry/electron/renderer';
+import {compact} from 'lodash';
+import {useSyncExternalStore} from 'react';
+
+import rendererIpc from '../../ipc';
 import {searchInStrings} from '../../utils';
 
 type CardSearchData = {id: string; data: string[]}[];

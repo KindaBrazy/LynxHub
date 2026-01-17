@@ -1,10 +1,11 @@
+import {APP_BUILD_NUMBER, PageTitleByPageId} from '@lynx_cross/consts';
+import {toMs} from '@lynx_cross/utils';
 import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {APP_BUILD_NUMBER, PageTitleByPageId} from '../../../cross/CrossConstants';
-import {toMs} from '../../../cross/CrossUtils';
 import AddBreadcrumb_Renderer from '../../shared/sentry/Breadcrumbs';
+import rendererIpc from '../ipc';
 import {useRemoveTab} from '../layouts/tabs/utils';
 import {useAllCardMethods} from '../plugins/modules';
 import {appActions, useAppState} from '../redux/reducers/app';
@@ -16,7 +17,6 @@ import {settingsActions} from '../redux/reducers/settings';
 import {tabsActions, useTabsState} from '../redux/reducers/tabs';
 import {userActions, useUserState} from '../redux/reducers/user';
 import {AppDispatch} from '../redux/store';
-import rendererIpc from '../services/RendererIpc';
 import {defaultTabItem} from '../utils/constants';
 import {lynxTopToast} from './utils';
 

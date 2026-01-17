@@ -1,8 +1,8 @@
 import {isEmpty, isEqual} from 'lodash';
 import {useEffect} from 'react';
 
+import rendererIpc from '../ipc';
 import {useCardsState} from '../redux/reducers/cards';
-import rendererIpc from '../services/RendererIpc';
 
 // Remove not installed cards from pinned cards
 export function useFilterPinnedCards() {

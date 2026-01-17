@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 
 import {Magnifier_Icon} from '../../../../../shared/assets/icons';
-import rendererIpc from '../../../../services/RendererIpc';
+import rendererIpc from '../../../../ipc';
 
 type Props = {id: string};
 export default function Browser_Zoom({id}: Props) {

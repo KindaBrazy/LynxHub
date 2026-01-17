@@ -12,8 +12,8 @@ import {
   Streams,
 } from 'electron';
 
-import {screenShareChannels} from '../../cross/ScreenShareConsts';
-import {ScreenShareSources, ScreenShareStart} from '../../cross/ScreenShareTypes';
+import {screenShareChannels} from '../../cross/consts/share_screen';
+import {ScreenShareSources, ScreenShareStart} from '../../cross/types/share_screen';
 import classHolder from '../core/class_holder';
 
 export default class ShareScreenManager {

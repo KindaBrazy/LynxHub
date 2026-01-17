@@ -11,8 +11,8 @@ import {
   UserDuo_Icon,
   UserHeart_Icon,
 } from '../../../shared/assets/icons';
+import rendererIpc from '../../ipc';
 import {extensionsData} from '../../plugins/extensions/loader';
-import rendererIpc from '../../services/RendererIpc';
 import {ContainersBg} from '../../utils/common_styles';
 import SettingsSearchHighlight from '../settings/SettingsSearchHighlight';
 import {dashboardSectionId} from './Container';

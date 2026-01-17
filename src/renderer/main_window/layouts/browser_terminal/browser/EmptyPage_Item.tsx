@@ -1,15 +1,15 @@
 import {Button, Card, CardBody, Image, Tooltip} from '@heroui/react';
+import {FavIcons} from '@lynx_cross/types/ipc';
+import {formatWebAddress, getCacheUrl, getUrlName} from '@lynx_cross/utils';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {formatWebAddress, getCacheUrl, getUrlName} from '../../../../../cross/CrossUtils';
-import {FavIcons} from '../../../../../cross/IpcChannelAndTypes';
 import {Web_Icon} from '../../../../shared/assets/icons';
+import rendererIpc from '../../../ipc';
 import {cardsActions} from '../../../redux/reducers/cards';
 import {useTabsState} from '../../../redux/reducers/tabs';
 import {AppDispatch} from '../../../redux/store';
-import rendererIpc from '../../../services/RendererIpc';
 
 type Props = {
   recent: string;

@@ -1,14 +1,14 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
+import {ChosenArgumentsData} from '@lynx_cross/types';
 import {Fragment, Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {ChosenArgumentsData} from '../../../../../cross/CrossTypes';
 import {useDebounceBreadcrumb} from '../../../../shared/sentry/Breadcrumbs';
 import {lynxTopToast} from '../../../hooks/utils';
+import rendererIpc from '../../../ipc';
 import {extensionsData} from '../../../plugins/extensions/loader';
 import {useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';
-import rendererIpc from '../../../services/RendererIpc';
 import {modalMotionProps} from '../../../utils/constants';
 import {useTabModalLifecycle} from '../useTabModalManager';
 import CardArguments from './arguments';

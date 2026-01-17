@@ -1,12 +1,12 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import {PreOpenData} from '@lynx_cross/types/ipc';
 import {Empty} from 'antd';
 import {filter, isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
-import {PreOpenData} from '../../../../../../../cross/IpcChannelAndTypes';
 import {Add_Icon, FileDuo_Icon, FolderDuo_Icon} from '../../../../../../shared/assets/icons';
 import LynxTooltip from '../../../../../components/LynxTooltip';
-import rendererIpc from '../../../../../services/RendererIpc';
+import rendererIpc from '../../../../../ipc';
 import LaunchConfigSection from '../../Section';
 import PreOpenPathItem from './Item';
 

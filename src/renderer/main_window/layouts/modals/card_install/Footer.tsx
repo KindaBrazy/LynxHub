@@ -1,9 +1,9 @@
 import {Button, ButtonGroup, ModalFooter} from '@heroui/react';
+import {DownloadProgress} from '@lynx_cross/types/ipc';
+import {InstallationMethod, UserInputResult} from '@lynx_cross/types/plugins/module';
 import {memo, RefObject, useCallback, useState} from 'react';
 
-import {DownloadProgress} from '../../../../../cross/IpcChannelAndTypes';
-import {InstallationMethod, UserInputResult} from '../../../../../cross/plugin/ModuleTypes';
-import rendererIpc from '../../../services/RendererIpc';
+import rendererIpc from '../../../ipc';
 import LocateWarning from './components/LocateWarning';
 import FooterTerminal from './components/TerminalStep_Footer';
 import {InstallState} from './types';
