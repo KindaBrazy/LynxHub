@@ -1,9 +1,23 @@
+import '@sentry/electron/preload';
+
 import os from 'node:os';
 
 import {electronAPI} from '@electron-toolkit/preload';
 import {contextBridge} from 'electron';
 
-import {isPortable} from './utils.js';
+import {APP_BUILD_NUMBER, APP_NAME, APP_VERSION} from '../cross/consts';
+
+function isPortable() {
+  if (process.env.PORTABLE_EXECUTABLE_FILE) return 'win';
+  if (process.env.APPIMAGE) return 'linux';
+  return null;
+}
+
+const lynxHub = {
+  name: APP_NAME,
+  version: APP_VERSION,
+  buildNumber: APP_BUILD_NUMBER,
+};
 
 if (process.contextIsolated) {
   try {
@@ -11,6 +25,7 @@ if (process.contextIsolated) {
     contextBridge.exposeInMainWorld('osPlatform', os.platform());
     contextBridge.exposeInMainWorld('isPortable', isPortable());
     contextBridge.exposeInMainWorld('appStartTime', Date.now());
+    contextBridge.exposeInMainWorld('LynxHub', lynxHub);
   } catch (error) {
     console.error(error);
   }
@@ -19,4 +34,5 @@ if (process.contextIsolated) {
   window.osPlatform = os.platform();
   window.isPortable = isPortable();
   window.appStartTime = Date.now();
+  window.LynxHub = lynxHub;
 }

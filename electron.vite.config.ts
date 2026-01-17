@@ -47,9 +47,7 @@ export default defineConfig(({mode}) => {
           },
           input: {
             index: resolve(__dirname, 'src/preload/index.js'),
-            dialog: resolve(__dirname, 'src/preload/dialog.js'),
             webview: resolve(__dirname, 'src/preload/webview.js'),
-            only_ipc: resolve(__dirname, 'src/preload/only_ipc.js'),
           },
         },
       },
@@ -104,9 +102,9 @@ export default defineConfig(({mode}) => {
           input: {
             index: resolve(__dirname, 'src/renderer/index.html'),
             loading: resolve(__dirname, 'src/renderer/loading.html'),
-            dialog: resolve(__dirname, 'src/renderer/dialog.html'),
+            prompt_dialog: resolve(__dirname, 'src/renderer/prompt_dialog.html'),
             context_menu: resolve(__dirname, 'src/renderer/context_menu.html'),
-            toast_window: resolve(__dirname, 'src/renderer/toast_window.html'),
+            toast: resolve(__dirname, 'src/renderer/toast.html'),
             downloads_menu: resolve(__dirname, 'src/renderer/downloads_menu.html'),
             share_screen: resolve(__dirname, 'src/renderer/share_screen.html'),
             link_preview: resolve(__dirname, 'src/renderer/link_preview.html'),

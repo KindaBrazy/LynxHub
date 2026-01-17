@@ -28,14 +28,14 @@ export default function DialogManager() {
         frame: false,
         modal: true,
         webPreferences: {
-          preload: path.join(__dirname, '../preload/dialog.cjs'),
+          preload: path.join(__dirname, '../preload/index.cjs'),
         },
       });
 
       if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-        promptWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/dialog.html`);
+        promptWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/prompt_dialog.html`);
       } else {
-        promptWindow.loadFile(path.join(__dirname, `../renderer/dialog.html`));
+        promptWindow.loadFile(path.join(__dirname, `../renderer/prompt_dialog.html`));
       }
 
       promptWindow.webContents.send('dlg-title', arg);
