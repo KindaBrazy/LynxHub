@@ -1,10 +1,5 @@
-import {Dispatch, ReactNode, RefObject, SetStateAction, useLayoutEffect, useRef} from 'react';
-
-import rendererIpc from '../../main_window/ipc';
-import {useFindMenu, useZoomMenu} from './layouts/Others';
-import useRightClickMenu from './layouts/RightClick';
-import {useCloseAppMenu, useTerminateAIMenu, useTerminateTabMenu} from './layouts/Terminate';
-import {useVolumeMenu} from './layouts/Volume';
+import rendererIpc from '@lynx/ipc';
+import {RefObject, useLayoutEffect, useRef} from 'react';
 
 type DimensionsMsg = {width: number; height: number; dpr: number};
 
@@ -51,18 +46,4 @@ export function useResize(divRef: RefObject<HTMLDivElement | null>) {
       ro.disconnect();
     };
   }, [divRef]);
-}
-
-export type SetElementsType = Dispatch<SetStateAction<ReactNode[]>>;
-export type SetWidthSizeType = Dispatch<SetStateAction<'sm' | 'md' | 'lg'>>;
-
-export function useContextMenuSetup(setElements: SetElementsType, setWidthSize: SetWidthSizeType) {
-  useRightClickMenu(setElements, setWidthSize);
-  useZoomMenu(setElements, setWidthSize);
-  useFindMenu(setElements, setWidthSize);
-  useVolumeMenu(setElements, setWidthSize);
-
-  useTerminateAIMenu(setElements, setWidthSize);
-  useTerminateTabMenu(setElements, setWidthSize);
-  useCloseAppMenu(setElements, setWidthSize);
 }
