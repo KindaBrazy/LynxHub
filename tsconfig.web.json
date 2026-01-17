@@ -27,6 +27,12 @@
       "@lynx/*": [
         "src/renderer/main_window/*"
       ],
+      "@lynx_shared/*": [
+        "src/renderer/shared/*"
+      ],
+      "@lynx_assets/*": [
+        "src/renderer/shared/assets/*"
+      ],
     }
   }
 }

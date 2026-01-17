@@ -79,6 +79,8 @@ export default defineConfig(({mode}) => {
           '@lynx_extension': resolve(__dirname, 'extension/src'),
           '@lynx_cross': resolve(__dirname, 'src/cross'),
           '@lynx': resolve(__dirname, 'src/renderer/main_window'),
+          '@lynx_shared': resolve(__dirname, 'src/renderer/shared'),
+          '@lynx_assets': resolve(__dirname, 'src/renderer/shared/assets'),
         },
       },
       base: '',
