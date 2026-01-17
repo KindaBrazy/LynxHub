@@ -80,7 +80,7 @@ export default function DownloadMenu({setSelectedLayout, setWidthSize, show}: Co
         </h2>
         <div className="flex items-center gap-3">
           <Chip size="sm" variant="flat">
-            {downloads.length} items
+            {downloads.length} {downloads.length > 1 ? 'items' : 'item'}
           </Chip>
           {downloads.length > 0 && (
             <Button size="sm" color="danger" variant="flat" startContent={<Broom />} onPress={handleClearAll}>

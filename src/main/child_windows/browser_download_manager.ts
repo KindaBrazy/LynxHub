@@ -728,11 +728,7 @@ export default class BrowserDownloadManager {
 
       if (itemToRemove) {
         try {
-          // If the item is still downloading or paused, cancel it first
-          if (itemToRemove.isPaused() || itemToRemove.canResume()) {
-            itemToRemove.cancel();
-          }
-
+          this.cancelItem(name);
           // Remove all event listeners to prevent memory leaks
           itemToRemove.removeAllListeners();
         } catch (error: any) {
@@ -778,9 +774,8 @@ export default class BrowserDownloadManager {
       this.downloadingItems.forEach(item => {
         try {
           // If the item is still downloading or paused, cancel it first
-          if (item.isPaused() || item.canResume()) {
-            item.cancel();
-          }
+
+          this.cancelItem(basename(item.getSavePath()));
 
           // Remove all event listeners to prevent memory leaks
           item.removeAllListeners();
