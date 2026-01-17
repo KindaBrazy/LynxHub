@@ -1,7 +1,6 @@
+import {modalActions} from '@lynx/redux/reducers/modals';
+import {AppDispatch} from '@lynx/redux/store';
 import {capitalize, isEmpty} from 'lodash';
-
-import {modalActions} from '../redux/reducers/modals';
-import {AppDispatch} from '../redux/store';
 
 /**
  * Formats a number with K, M, B, T suffixes for thousands, millions, billions, and trillions.

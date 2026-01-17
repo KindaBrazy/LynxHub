@@ -1,6 +1,7 @@
-import {HeroToastPlacement} from '../../../cross/CrossTypes';
-import {LynxHotkey, LynxInput, OnUpdatingExtensions, TooltipStatus} from '../../../cross/IpcChannelAndTypes';
-import StorageTypes, {InstalledCards} from '../../../cross/StorageTypes';
+import {HeroToastPlacement} from '@lynx_cross/CrossTypes';
+import {LynxHotkey, LynxInput, OnUpdatingExtensions, TooltipStatus} from '@lynx_cross/IpcChannelAndTypes';
+import StorageTypes, {InstalledCards} from '@lynx_cross/StorageTypes';
+
 import {RunningCard, UpdatingCards} from './index';
 
 export type AppState = {
