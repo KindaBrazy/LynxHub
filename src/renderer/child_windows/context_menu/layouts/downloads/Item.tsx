@@ -1,4 +1,4 @@
-import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Progress} from '@heroui/react';
+import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Progress, Tooltip} from '@heroui/react';
 import rendererIpc from '@lynx/ipc';
 import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import {Pause, Play, Restart} from '@solar-icons/react-perf/Bold';
@@ -51,7 +51,15 @@ export default function DownloadItem({item, setItems}: Props) {
         <div className="flex items-start justify-between w-full">
           <div className="flex-1 min-w-0">
             <div className="flex items-center mb-1">
-              <h3 className="font-medium text-gray-900 dark:text-white text-sm truncate">{item.name}</h3>
+              <Tooltip
+                size="sm"
+                delay={300}
+                content={item.name}
+                className="max-w-[90%]"
+                classNames={{content: 'whitespace-break-spaces'}}
+                showArrow>
+                <h3 className="font-medium text-gray-900 dark:text-white text-sm truncate">{item.name}</h3>
+              </Tooltip>
             </div>
             <div className="flex items-center gap-3 text-xs text-gray-400">
               <span>
