@@ -47,7 +47,7 @@ export default function ToastContent() {
   const [toastMessage, setToastMessage] = useState<ToastWindow_MessageType | null>(null);
 
   useEffect(() => {
-    const offMessage = window.ipc.on('show_message', (_, result: ToastWindow_MessageType) => {
+    const offMessage = window.electron.ipcRenderer.on('show_message', (_, result: ToastWindow_MessageType) => {
       setToastMessage(result);
       document.title = result.title;
       document.body.className = 'overflow-hidden dark bg-background scrollbar-hide';
@@ -58,15 +58,15 @@ export default function ToastContent() {
   }, []);
 
   const handleClose = () => {
-    window.ipc.send('close_toast');
+    window.electron.ipcRenderer.send('close_toast');
   };
 
   const handleExitApp = () => {
-    window.ipc.send('exit_app');
+    window.electron.ipcRenderer.send('exit_app');
   };
 
   const handleRestart = () => {
-    window.ipc.send('restart_app');
+    window.electron.ipcRenderer.send('restart_app');
   };
 
   if (!toastMessage) {
@@ -143,8 +143,8 @@ export default function ToastContent() {
                   size="sm"
                   key={btn.id}
                   color={btn.color}
-                  onPress={() => window.ipc.send(appWindowChannels.toastBtnPress, btn.id)}
-                  className={`notDraggable ${btn.cursor === 'default' && 'cursor-default'}`}>
+                  className={`notDraggable ${btn.cursor === 'default' && 'cursor-default'}`}
+                  onPress={() => window.electron.ipcRenderer.send(appWindowChannels.toastBtnPress, btn.id)}>
                   {btn.label}
                 </Button>
               ))}

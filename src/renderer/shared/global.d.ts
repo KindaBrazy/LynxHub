@@ -8,5 +8,10 @@ declare global {
     osPlatform: NodeJS.Platform;
     isPortable: 'win' | 'linux' | null;
     appStartTime: number;
+    LynxHub: {
+      name: string;
+      version: string;
+      buildNumber: number;
+    };
   }
 }

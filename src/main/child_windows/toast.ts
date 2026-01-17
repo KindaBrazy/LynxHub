@@ -22,15 +22,15 @@ export default function ShowToastWindow(
       maximizable: false,
       icon,
       webPreferences: {
-        preload: path.join(__dirname, '../preload/only_ipc.cjs'),
+        preload: path.join(__dirname, '../preload/index.cjs'),
         sandbox: false,
       },
     });
 
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-      window.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/toast_window.html`);
+      window.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/toast.html`);
     } else {
-      window.loadFile(path.join(__dirname, `../renderer/toast_window.html`));
+      window.loadFile(path.join(__dirname, `../renderer/toast.html`));
     }
 
     window.on('ready-to-show', () => {
