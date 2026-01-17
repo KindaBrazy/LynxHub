@@ -21,36 +21,12 @@
       "@lynx_extension/*": [
         "extension/src/*"
       ],
-      "@lynx/components/*": [
-        "src/renderer/main_window/components/*"
-      ],
-      "@lynx/hooks/*": [
-        "src/renderer/main_window/hooks/*"
-      ],
-      "@lynx/layouts/*": [
-        "src/renderer/main_window/layouts/*"
-      ],
-      "@lynx/plugins/*": [
-        "src/renderer/main_window/plugins/*"
-      ],
-      "@lynx/redux/*": [
-        "src/renderer/main_window/redux/*"
-      ],
-      "@lynx/ipc/*": [
-        "src/renderer/main_window/ipc/*"
-      ],
-      "@lynx/types/*": [
-        "src/renderer/main_window/types/*"
-      ],
-      "@lynx/utils/*": [
-        "src/renderer/main_window/utils/*"
-      ],
-      "@lynx/icons/*": [
-        "src/renderer/shared/assets/icons/*"
-      ],
       "@lynx_cross/*": [
         "src/cross/*"
-      ]
+      ],
+      "@lynx/*": [
+        "src/renderer/main_window/*"
+      ],
     }
   }
 }
