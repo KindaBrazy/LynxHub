@@ -1,21 +1,8 @@
 import {accessSync, constants as fsConstants, existsSync, mkdirSync} from 'node:fs';
 import {basename, join, parse} from 'node:path';
 
-import {is} from '@electron-toolkit/utils';
-import {
-  app,
-  BrowserWindow,
-  BrowserWindowConstructorOptions,
-  dialog,
-  DownloadItem,
-  ipcMain,
-  screen,
-  Session,
-  shell,
-  WebContents,
-} from 'electron';
+import {app, BrowserWindow, dialog, DownloadItem, ipcMain, Session, shell, WebContents} from 'electron';
 
-import icon from '../../../resources/icon.png?asset';
 import {browserDownloadChannels} from '../../cross/consts/donwload_manager';
 import {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '../../cross/types/download_manager';
 import classHolder from '../core/class_holder';
@@ -48,7 +35,6 @@ const FILE_SYSTEM_ERROR_MESSAGES: Record<string, string> = {
 export default class BrowserDownloadManager {
   private static ipcHandlersRegistered: boolean = false;
 
-  private readonly _menuWindow: BrowserWindow;
   private downloadingItems: DownloadItem[];
 
   private readonly mainWebContents: WebContents;
@@ -62,23 +48,6 @@ export default class BrowserDownloadManager {
   private cacheExpirationTime: number = 5000; // 5 seconds
   private cacheTimestamps: Map<string, number>;
 
-  private DOWNLOAD_MENU_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
-    width: 377,
-    height: 517,
-    frame: false,
-    show: false,
-    skipTaskbar: true,
-    resizable: false,
-    maximizable: false,
-    minimizable: false,
-    titleBarStyle: process.platform === 'darwin' ? 'customButtonsOnHover' : 'default',
-    icon,
-    webPreferences: {
-      preload: join(__dirname, '../preload/index.cjs'),
-      sandbox: false,
-    },
-  };
-
   constructor(session: Session, mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
     this.mainWebContents = mainWindow.webContents;
@@ -88,7 +57,6 @@ export default class BrowserDownloadManager {
     this.filenameExistenceCache = new Map();
     this.cacheTimestamps = new Map();
 
-    this._menuWindow = new BrowserWindow(this.DOWNLOAD_MENU_WINDOW_CONFIG);
     this.initialWindow();
 
     session.on('will-download', (_, item) => {
@@ -398,52 +366,7 @@ export default class BrowserDownloadManager {
     }
   }
 
-  private positionWindow() {
-    const [menuWidth, menuHeight] = this._menuWindow.getSize();
-
-    const {x: cursorX, y: cursorY} = screen.getCursorScreenPoint();
-    const defaultDisplay = screen.getDisplayNearestPoint({x: cursorX, y: cursorY});
-    const defaultWorkArea = defaultDisplay.workArea;
-    let newX = cursorX;
-    let newY = cursorY;
-
-    if (newX + menuWidth > defaultWorkArea.x + defaultWorkArea.width) {
-      newX = defaultWorkArea.x + defaultWorkArea.width - menuWidth - 10;
-    }
-    if (newY + menuHeight > defaultWorkArea.y + defaultWorkArea.height) {
-      newY = defaultWorkArea.y + defaultWorkArea.height - menuHeight;
-    }
-    if (newX < defaultWorkArea.x) {
-      newX = defaultWorkArea.x;
-    }
-    if (newY < defaultWorkArea.y) {
-      newY = defaultWorkArea.y;
-    }
-
-    try {
-      this._menuWindow.setPosition(Math.floor(newX), Math.floor(newY), true);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   private initialWindow() {
-    this._menuWindow.setParentWindow(this.mainWindow);
-
-    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-      this._menuWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/downloads_menu.html`);
-    } else {
-      this._menuWindow.loadFile(join(__dirname, `../renderer/downloads_menu.html`));
-    }
-
-    this._menuWindow.on('blur', () => this._menuWindow.hide());
-
-    this._menuWindow.on('closed', () => {
-      this.downloadingItems = [];
-      this.downloadIdentifiers.clear();
-      this.clearFilenameCache();
-    });
-
     this.mainWindow.on('close', () => {
       this.downloadingItems.forEach(item => {
         try {
@@ -458,13 +381,19 @@ export default class BrowserDownloadManager {
     });
   }
 
+  public onContextClose() {
+    this.downloadingItems = [];
+    this.downloadIdentifiers.clear();
+    this.clearFilenameCache();
+  }
+
   private getItemByName(name: string) {
     return this.downloadingItems.find(item => basename(item.getSavePath()) === name);
   }
 
   private sendToRenderer(channel: string, ...data: any) {
-    if (!this._menuWindow.isDestroyed() && !this._menuWindow.webContents.isDestroyed())
-      this._menuWindow.webContents.send(channel, ...data);
+    const {contextMenuManager} = classHolder;
+    if (contextMenuManager) contextMenuManager.sendToRenderer(channel, ...data);
   }
 
   private sendToMain(channel: string, ...data: any) {
@@ -693,8 +622,6 @@ export default class BrowserDownloadManager {
       this.openItem(name, action),
     );
 
-    ipcMain.on(browserDownloadChannels.openDownloadsMenu, () => this.openDownloadsMenu());
-
     // Download location and behavior IPC handlers
     ipcMain.handle(browserDownloadChannels.getDownloadLocation, () => {
       try {
@@ -830,7 +757,8 @@ export default class BrowserDownloadManager {
 
       // Hide the download menu window if no items remain
       if (this.downloadingItems.length === 0) {
-        this._menuWindow.hide();
+        const {contextMenuManager} = classHolder;
+        if (contextMenuManager) contextMenuManager.hideContextMenu();
       }
     } catch (error: any) {
       const fsError = this.handleFileSystemError(error);
@@ -878,7 +806,8 @@ export default class BrowserDownloadManager {
       this.sendToMain(browserDownloadChannels.mainDownloadCount, 0);
 
       // Hide the download menu window since there are no items
-      this._menuWindow.hide();
+      const {contextMenuManager} = classHolder;
+      if (contextMenuManager) contextMenuManager.hideContextMenu();
     } catch (error: any) {
       const fsError = this.handleFileSystemError(error);
       console.error('Failed to clear all downloads:', fsError.userMessage);
@@ -904,14 +833,5 @@ export default class BrowserDownloadManager {
       console.error(`Failed to ${action} item ${name}:`, fsError.userMessage);
       dialog.showErrorBox('File Operation Error', `Failed to ${action} file: ${fsError.userMessage}`);
     }
-  }
-
-  private openDownloadsMenu() {
-    this.positionWindow();
-    this._menuWindow.show();
-  }
-
-  get menuWindow(): BrowserWindow {
-    return this._menuWindow;
   }
 }

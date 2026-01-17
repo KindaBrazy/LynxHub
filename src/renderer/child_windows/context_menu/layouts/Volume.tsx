@@ -14,7 +14,7 @@ type VolumeData = {
   globalMuted: boolean;
 };
 
-export function VolumeMenu({setWidthSize, show, setSelectedLayout}: CommonProps) {
+export default function VolumeMenu({setWidthSize, show, setSelectedLayout}: CommonProps) {
   const [data, setData] = useState<VolumeData | null>(null);
   const [volume, setVolume] = useState<number>(100);
   const [isMuted, setIsMuted] = useState<boolean>(false);

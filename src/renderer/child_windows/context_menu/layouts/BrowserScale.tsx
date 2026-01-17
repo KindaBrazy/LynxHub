@@ -7,7 +7,7 @@ import {useEffect, useState} from 'react';
 import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
 
-export function BrowserScale({setSelectedLayout, setWidthSize, show}: CommonProps) {
+export default function BrowserScale({setSelectedLayout, setWidthSize, show}: CommonProps) {
   const [id, setId] = useState<string>('');
   const [value, setValue] = useState<number>(100);
 
@@ -40,7 +40,7 @@ export function BrowserScale({setSelectedLayout, setWidthSize, show}: CommonProp
       setId('');
       offZoom();
     };
-  }, [setWidthSize]);
+  }, []);
 
   if (!show) return null;
 

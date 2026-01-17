@@ -206,6 +206,7 @@ export const contextMenuChannels = {
   onCloseApp: 'context:on-close-app',
   onZoom: 'context:zoom-page',
   onVolume: 'context:volume-control',
+  onDownloads: 'context:downloads',
 
   relaunchAI: 'context:relaunch-ai',
   onRelaunchAI: 'context:on-relaunch-ai',

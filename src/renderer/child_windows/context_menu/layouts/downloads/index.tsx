@@ -1,13 +1,14 @@
 import {Button, Chip} from '@heroui/react';
+import rendererIpc from '@lynx/ipc';
 import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import {Broom, DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
-import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {useEffect, useState} from 'react';
 
-import rendererIpc from '../../main_window/ipc';
+import {MenuTypes} from '../../consts';
+import {CommonProps} from '../../types';
 import DownloadItem from './Item';
 
-export default function DownloadMenu() {
+export default function DownloadMenu({setSelectedLayout, setWidthSize, show}: CommonProps) {
   const [downloads, setDownloads] = useState<DownloadItemInfo[]>([]);
 
   const handleClearAll = () => {
@@ -16,6 +17,13 @@ export default function DownloadMenu() {
   };
 
   useEffect(() => {
+    const OffDownloads = rendererIpc.contextMenu.onDownloads(() => {
+      setWidthSize('lg');
+      setSelectedLayout(MenuTypes.Downloads);
+
+      rendererIpc.contextMenu.showWindow();
+    });
+
     const offDlStart = rendererIpc.downloadManager.onDlStart((_, info) => {
       const newItem: DownloadItemInfo = {
         ...info,
@@ -53,16 +61,19 @@ export default function DownloadMenu() {
     });
 
     return () => {
+      OffDownloads();
       offDlStart();
       offProgress();
       offDone();
     };
   }, []);
 
+  if (!show) return null;
+
   return (
-    <div className="dark:bg-LynxRaisinBlack bg-white absolute inset-0 flex flex-col overflow-hidden">
+    <div className="flex flex-col">
       {/* Header */}
-      <div className="relative px-4 py-4 flex flex-row items-center justify-between">
+      <div className="px-4 py-4 flex flex-row items-center justify-between">
         <h2 className="text-lg font-semibold flex items-center gap-2">
           <DownloadMinimalistic className="size-5" />
           Downloads
@@ -80,19 +91,11 @@ export default function DownloadMenu() {
       </div>
 
       {/* Download List */}
-      <OverlayScrollbarsComponent
-        options={{
-          overflow: {x: 'hidden', y: 'scroll'},
-          scrollbars: {
-            autoHide: 'leave',
-            theme: 'os-theme-light',
-          },
-        }}
-        className="px-4 py-1 gap-y-2 flex flex-col">
+      <div className={'px-3 py-1 gap-y-2 flex flex-col justify-start max-h-200 overflow-y-auto overflow-x-hidden'}>
         {downloads.map(item => (
           <DownloadItem item={item} key={item.name} setItems={setDownloads} />
         ))}
-      </OverlayScrollbarsComponent>
+      </div>
     </div>
   );
 }

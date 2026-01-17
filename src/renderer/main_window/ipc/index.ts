@@ -808,6 +808,8 @@ const rendererIpc = {
     // Listens for zoom events
     onZoom: (result: (event: IpcRendererEvent, id: string, zoomFactor: number) => void) =>
       ipc.on(contextMenuChannels.onZoom, result),
+    // Listens for zoom events
+    onDownloads: (result: (event: IpcRendererEvent) => void) => ipc.on(contextMenuChannels.onDownloads, result),
     // Listens for volume control events
     onVolume: (
       result: (

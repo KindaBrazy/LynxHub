@@ -6,4 +6,5 @@ export enum MenuTypes {
   CloseAppConfirm,
   TerminateProcessConfirm,
   TerminateTabConfirm,
+  Downloads,
 }

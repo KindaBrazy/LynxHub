@@ -1,13 +1,14 @@
 import {useRef, useState} from 'react';
 
 import {MenuTypes} from './consts';
-import {BrowserScale} from './layouts/BrowserScale';
-import {CloseAppConfirm} from './layouts/CloseAppConfirm';
-import {FindInPage} from './layouts/FindInPage';
-import RightClick from './layouts/RightClick';
-import {TerminateProcessConfirm} from './layouts/TerminateProcessConfirm';
-import {TerminateTabConfirm} from './layouts/TerminateTabConfirm';
-import {VolumeMenu} from './layouts/Volume';
+import BrowserScale from './layouts/BrowserScale';
+import CloseAppConfirm from './layouts/CloseAppConfirm';
+import DownloadMenu from './layouts/downloads';
+import FindInPage from './layouts/FindInPage';
+import RightClick from './layouts/right_click';
+import TerminateProcessConfirm from './layouts/TerminateProcessConfirm';
+import TerminateTabConfirm from './layouts/TerminateTabConfirm';
+import VolumeMenu from './layouts/Volume';
 import {useResize} from './useResize';
 
 export default function ContextMenu() {
@@ -59,6 +60,11 @@ export default function ContextMenu() {
         setWidthSize={setWidthSize}
         setSelectedLayout={setSelectedLayout}
         show={selectedLayout === MenuTypes.Volume}
+      />
+      <DownloadMenu
+        setWidthSize={setWidthSize}
+        setSelectedLayout={setSelectedLayout}
+        show={selectedLayout === MenuTypes.Downloads}
       />
     </div>
   );

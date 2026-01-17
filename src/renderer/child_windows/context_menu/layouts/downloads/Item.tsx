@@ -1,11 +1,11 @@
 import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Progress} from '@heroui/react';
+import rendererIpc from '@lynx/ipc';
 import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import {Pause, Play, Restart} from '@solar-icons/react-perf/Bold';
 import {ClockCircle, FileDownload, FolderOpen, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {X} from 'lucide-react';
 import {Dispatch, SetStateAction} from 'react';
 
-import rendererIpc from '../../main_window/ipc';
 import {formatBytes, formatETA, formatSpeed, getProgress, getStatusColor} from './utils';
 
 type Props = {
@@ -45,7 +45,7 @@ export default function DownloadItem({item, setItems}: Props) {
   };
 
   return (
-    <Card as="div" className="cursor-default mb-3 bg-foreground-100 shadow-sm" fullWidth isPressable>
+    <Card as="div" className="cursor-default mb-3 bg-foreground-100 shadow-sm shrink-0" fullWidth isPressable>
       <CardHeader className={'pb-1'}>
         {/* Item Header */}
         <div className="flex items-start justify-between w-full">
