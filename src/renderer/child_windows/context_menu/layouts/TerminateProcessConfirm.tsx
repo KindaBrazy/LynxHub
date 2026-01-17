@@ -8,7 +8,7 @@ import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
 import {hideWindow, setElementFocus} from './Shared';
 
-export function TerminateProcessConfirm({setWidthSize, show, setSelectedLayout}: CommonProps) {
+export default function TerminateProcessConfirm({setWidthSize, show, setSelectedLayout}: CommonProps) {
   const [id, setId] = useState<string>('');
   const [showConfirmValue, setShowConfirmValue] = useState<boolean>(false);
 

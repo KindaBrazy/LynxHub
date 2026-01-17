@@ -8,7 +8,7 @@ import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
 import {hideWindow, setElementFocus} from './Shared';
 
-export function TerminateTabConfirm({setWidthSize, show, setSelectedLayout}: CommonProps) {
+export default function TerminateTabConfirm({setWidthSize, show, setSelectedLayout}: CommonProps) {
   const [id, setId] = useState<string>('');
   const [showConfirmValue, setShowConfirmValue] = useState<boolean>(false);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);

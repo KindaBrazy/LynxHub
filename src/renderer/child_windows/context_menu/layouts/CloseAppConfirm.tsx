@@ -9,7 +9,7 @@ import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
 import {hideWindow, setElementFocus} from './Shared';
 
-export function CloseAppConfirm({setSelectedLayout, setWidthSize, show}: CommonProps) {
+export default function CloseAppConfirm({setSelectedLayout, setWidthSize, show}: CommonProps) {
   const [showConfirmValue, setShowConfirmValue] = useState<boolean>(false);
 
   const onShowConfirm = (enabled: boolean) => {

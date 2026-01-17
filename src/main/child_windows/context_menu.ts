@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {browserDownloadChannels} from '@lynx_cross/consts/donwload_manager';
 import {browserChannels, contextMenuChannels, tabsChannels} from '@lynx_cross/consts/ipc';
 import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain, screen, shell, WebContents} from 'electron';
 
@@ -71,6 +72,10 @@ export default class ContextMenuManager {
 
     this.contextMenuWindow.on('closed', () => {
       this.contextMenuWindow = undefined;
+      const {browserDownloadManager} = classHolder;
+      if (browserDownloadManager) {
+        browserDownloadManager.onContextClose();
+      }
     });
 
     mainWindow.on('close', () => {
@@ -81,6 +86,15 @@ export default class ContextMenuManager {
 
   public setCustomContextPosition(customPosition?: {x: number; y: number}): void {
     this.customContextPosition = customPosition;
+  }
+
+  public sendToRenderer(channel: string, ...data: any) {
+    if (
+      this.contextMenuWindow &&
+      !this.contextMenuWindow.isDestroyed() &&
+      !this.contextMenuWindow.webContents.isDestroyed()
+    )
+      this.contextMenuWindow.webContents.send(channel, ...data);
   }
 
   public listenForMenu(contents: WebContents) {
@@ -136,6 +150,10 @@ export default class ContextMenuManager {
     ipcMain.on(contextMenuChannels.openCloseApp, () => {
       this.setCustomContextPosition(undefined);
       this.sendContextMenuMessage(contextMenuChannels.onCloseApp);
+    });
+    ipcMain.on(browserDownloadChannels.openDownloadsMenu, () => {
+      this.setCustomContextPosition(undefined);
+      this.sendContextMenuMessage(contextMenuChannels.onDownloads);
     });
   }
 
@@ -248,7 +266,7 @@ export default class ContextMenuManager {
     }, 10);
   }
 
-  private hideContextMenu(focusMainWindow: boolean = true) {
+  public hideContextMenu(focusMainWindow: boolean = true) {
     const window = this.contextMenuWindow;
 
     if (!window || window.isDestroyed() || !window.isVisible() || this.isHiding) {

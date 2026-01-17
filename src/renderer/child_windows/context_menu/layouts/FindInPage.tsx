@@ -9,7 +9,7 @@ import {type KeyboardEvent, useEffect, useRef, useState} from 'react';
 import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
 
-export function FindInPage({setSelectedLayout, setWidthSize, show}: CommonProps) {
+export default function FindInPage({setSelectedLayout, setWidthSize, show}: CommonProps) {
   const [searchValue, setSearchValue] = useState<string>('');
   const [id, setId] = useState<string>('');
   const [inputRef, setInputRef] = useState<HTMLInputElement | null>(null);
