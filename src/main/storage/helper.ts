@@ -13,7 +13,7 @@ import {
 } from '@lynx_cross/types/ipc';
 import lodash from 'lodash';
 
-import {ChosenArgumentsData} from '../../cross/types';
+import {ChosenArgumentsData, ConfirmMenuTypes} from '../../cross/types';
 import {InstalledCard, InstalledCards} from '../../cross/types/storage';
 import {compareUrls, isValidURL} from '../../cross/utils';
 import classHolder from '../core/class_holder';
@@ -676,7 +676,7 @@ class StorageManager extends BaseStorage {
     this.removeBrowserUrl('historyAddress', url);
   }
 
-  public setShowConfirm(type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) {
+  public setShowConfirm(type: ConfirmMenuTypes, enable: boolean) {
     const {appManager} = classHolder;
     const prevState = this.getData('app');
     prevState[type] = enable;

@@ -32,7 +32,7 @@ import {
 } from '@lynx_cross/types/ipc';
 import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, shell} from 'electron';
 
-import {ChosenArgumentsData, FolderNames, SubscribeStages} from '../../cross/types';
+import {ChosenArgumentsData, ConfirmMenuTypes, FolderNames, SubscribeStages} from '../../cross/types';
 import {ShallowCloneOptions} from '../../cross/types/git';
 import StorageTypes, {InstalledCard} from '../../cross/types/storage';
 import {toMs} from '../../cross/utils';
@@ -443,10 +443,8 @@ function storageUtilsIpc() {
   ipcMain.on(storageUtilsChannels.removeBrowserHistory, (_, url: string) => storageManager.removeBrowserHistory(url));
 
   // Sets confirmation dialog visibility (close, terminate AI, close tab)
-  ipcMain.on(
-    storageUtilsChannels.setShowConfirm,
-    (_, type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) =>
-      storageManager.setShowConfirm(type, enable),
+  ipcMain.on(storageUtilsChannels.setShowConfirm, (_, type: ConfirmMenuTypes, enable: boolean) =>
+    storageManager.setShowConfirm(type, enable),
   );
 
   // Marks notification as read

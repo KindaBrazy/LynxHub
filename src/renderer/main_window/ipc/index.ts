@@ -25,10 +25,11 @@ import {
   winChannels,
 } from '@lynx_cross/consts/ipc';
 import {otherChannels} from '@lynx_cross/consts/ipc';
-import type {
+import {
   AppUpdateData,
   AppUpdateInsiderData,
   ChosenArgumentsData,
+  ConfirmMenuTypes,
   ContextResizeData,
   CustomNotificationInfo,
   ExtensionsInfo,
@@ -492,19 +493,14 @@ const rendererIpc = {
     },
 
     // Sets confirmation dialog visibility (close, terminate AI, close tab)
-    setShowConfirm: (type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm', enable: boolean) => {
+    setShowConfirm: (type: ConfirmMenuTypes, enable: boolean) => {
       extensionRendererApi.events_ipc.emit('storage_utils_set_show_confirm', {type, enable});
       ipc.send(storageUtilsChannels.setShowConfirm, type, enable);
     },
 
     // Listens for confirmation dialog setting changes
-    onConfirmChange: (
-      result: (
-        event: IpcRendererEvent,
-        type: 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm',
-        enable: boolean,
-      ) => void,
-    ) => ipc.on(storageUtilsChannels.onConfirmChange, result),
+    onConfirmChange: (result: (event: IpcRendererEvent, type: ConfirmMenuTypes, enable: boolean) => void) =>
+      ipc.on(storageUtilsChannels.onConfirmChange, result),
 
     // Marks notification as read
     addReadNotif: (id: string) => {
