@@ -3,13 +3,13 @@ import {isLinuxPortable} from '@lynx/hooks/utils';
 import rendererIpc from '@lynx/ipc';
 import {Power_Icon} from '@lynx_assets/icons';
 import {Forward2, Restart, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
-import {useEffect, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 
 import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
 import {hideWindow, setElementFocus} from './Shared';
 
-export default function CloseAppConfirm({setSelectedLayout, setWidthSize, show}: CommonProps) {
+const CloseAppConfirm = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
   const [showConfirmValue, setShowConfirmValue] = useState<boolean>(false);
 
   const onShowConfirm = (enabled: boolean) => {
@@ -66,4 +66,6 @@ export default function CloseAppConfirm({setSelectedLayout, setWidthSize, show}:
       </div>
     </div>
   );
-}
+});
+
+export default CloseAppConfirm;

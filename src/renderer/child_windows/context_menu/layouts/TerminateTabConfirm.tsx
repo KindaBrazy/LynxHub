@@ -2,13 +2,13 @@ import {Button, Checkbox} from '@heroui/react';
 import rendererIpc from '@lynx/ipc';
 import {Power_Icon} from '@lynx_assets/icons';
 import {Forward2, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
-import {useEffect, useRef, useState} from 'react';
+import {memo, useEffect, useRef, useState} from 'react';
 
 import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
 import {hideWindow, setElementFocus} from './Shared';
 
-export default function TerminateTabConfirm({setWidthSize, show, setSelectedLayout}: CommonProps) {
+const TerminateTabConfirm = memo(({setWidthSize, show, setSelectedLayout}: CommonProps) => {
   const [id, setId] = useState<string>('');
   const [showConfirmValue, setShowConfirmValue] = useState<boolean>(false);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -73,4 +73,6 @@ export default function TerminateTabConfirm({setWidthSize, show, setSelectedLayo
       </div>
     </div>
   );
-}
+});
+
+export default TerminateTabConfirm;

@@ -1,8 +1,8 @@
 import {Button, Slider} from '@heroui/react';
+import rendererIpc from '@lynx/ipc';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import rendererIpc from '../../../main_window/ipc';
 import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
 
@@ -14,7 +14,7 @@ type VolumeData = {
   globalMuted: boolean;
 };
 
-export default function VolumeMenu({setWidthSize, show, setSelectedLayout}: CommonProps) {
+const VolumeMenu = memo(({setWidthSize, show, setSelectedLayout}: CommonProps) => {
   const [data, setData] = useState<VolumeData | null>(null);
   const [volume, setVolume] = useState<number>(100);
   const [isMuted, setIsMuted] = useState<boolean>(false);
@@ -124,4 +124,6 @@ export default function VolumeMenu({setWidthSize, show, setSelectedLayout}: Comm
       </div>
     </div>
   );
-}
+});
+
+export default VolumeMenu;

@@ -2,7 +2,7 @@ import {Divider} from '@heroui/react';
 import rendererIpc from '@lynx/ipc';
 import type {ContextMenuParams} from 'electron';
 import {isEmpty} from 'lodash';
-import {useEffect, useMemo, useState} from 'react';
+import {memo, useEffect, useMemo, useState} from 'react';
 
 import {MenuTypes} from '../../consts';
 import {CommonProps, NavHistory} from '../../types';
@@ -14,7 +14,7 @@ import PageActions from './PageActions';
 import {Suggestions} from './Suggestions';
 import TextSelection from './TextSelection';
 
-export default function RightClick({setSelectedLayout, setWidthSize, show}: CommonProps) {
+const RightClick = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
   const [contextMenuParams, setContextMenuParams] = useState<ContextMenuParams | undefined>(undefined);
   const [navigationHistory, setNavigationHistory] = useState<NavHistory>({canGoBack: false, canGoForward: false});
   const [id, setId] = useState<number>(0);
@@ -99,4 +99,6 @@ export default function RightClick({setSelectedLayout, setWidthSize, show}: Comm
       <div key="space_end" className="w-full h-2" />
     </>
   );
-}
+});
+
+export default RightClick;
