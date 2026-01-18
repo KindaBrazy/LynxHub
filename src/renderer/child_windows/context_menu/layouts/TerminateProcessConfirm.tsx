@@ -2,13 +2,13 @@ import {Button, Checkbox} from '@heroui/react';
 import rendererIpc from '@lynx/ipc';
 import {Power_Icon} from '@lynx_assets/icons';
 import {Forward2, Restart, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
-import {useEffect, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 
 import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
 import {hideWindow, setElementFocus} from './Shared';
 
-export default function TerminateProcessConfirm({setWidthSize, show, setSelectedLayout}: CommonProps) {
+const TerminateProcessConfirm = memo(({setWidthSize, show, setSelectedLayout}: CommonProps) => {
   const [id, setId] = useState<string>('');
   const [showConfirmValue, setShowConfirmValue] = useState<boolean>(false);
 
@@ -77,4 +77,6 @@ export default function TerminateProcessConfirm({setWidthSize, show, setSelected
       </div>
     </>
   );
-}
+});
+
+export default TerminateProcessConfirm;

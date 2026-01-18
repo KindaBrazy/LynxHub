@@ -2,12 +2,12 @@ import {Button, Slider} from '@heroui/react';
 import rendererIpc from '@lynx/ipc';
 import {Magnifer, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {isArray} from 'lodash';
-import {useEffect, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 
 import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
 
-export default function BrowserScale({setSelectedLayout, setWidthSize, show}: CommonProps) {
+const BrowserScale = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
   const [id, setId] = useState<string>('');
   const [value, setValue] = useState<number>(100);
 
@@ -77,4 +77,6 @@ export default function BrowserScale({setSelectedLayout, setWidthSize, show}: Co
       />
     </div>
   );
-}
+});
+
+export default BrowserScale;

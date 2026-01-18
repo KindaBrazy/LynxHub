@@ -4,12 +4,12 @@ import {Circle_Icon} from '@lynx_assets/icons';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {isEmpty} from 'lodash';
 import {X} from 'lucide-react';
-import {type KeyboardEvent, useEffect, useRef, useState} from 'react';
+import {type KeyboardEvent, memo, useEffect, useRef, useState} from 'react';
 
 import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
 
-export default function FindInPage({setSelectedLayout, setWidthSize, show}: CommonProps) {
+const FindInPage = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
   const [searchValue, setSearchValue] = useState<string>('');
   const [id, setId] = useState<string>('');
   const [inputRef, setInputRef] = useState<HTMLInputElement | null>(null);
@@ -110,4 +110,6 @@ export default function FindInPage({setSelectedLayout, setWidthSize, show}: Comm
       </div>
     </div>
   );
-}
+});
+
+export default FindInPage;

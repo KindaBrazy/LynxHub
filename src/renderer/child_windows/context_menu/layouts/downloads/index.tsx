@@ -2,13 +2,13 @@ import {Button, Chip} from '@heroui/react';
 import rendererIpc from '@lynx/ipc';
 import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import {Broom, DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
-import {useEffect, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 
 import {MenuTypes} from '../../consts';
 import {CommonProps} from '../../types';
 import DownloadItem from './Item';
 
-export default function DownloadMenu({setSelectedLayout, setWidthSize, show}: CommonProps) {
+const DownloadMenu = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
   const [downloads, setDownloads] = useState<DownloadItemInfo[]>([]);
 
   const handleClearAll = () => {
@@ -98,4 +98,6 @@ export default function DownloadMenu({setSelectedLayout, setWidthSize, show}: Co
       </div>
     </div>
   );
-}
+});
+
+export default DownloadMenu;
