@@ -1,11 +1,11 @@
 import {toMs} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {isNil} from 'lodash';
 import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../ipc';
 import {extensionsData} from '../../plugins/extensions/loader';
 import {useAllCardDataWithPath} from '../../plugins/modules';
 import {cardsActions} from '../../redux/reducers/cards';

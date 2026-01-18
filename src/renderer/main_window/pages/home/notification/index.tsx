@@ -17,6 +17,7 @@ import {
 import {AvailablePageIDs, PageID, PageTitles} from '@lynx_cross/consts';
 import {Notification_Data} from '@lynx_cross/types';
 import {isValidURL} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
@@ -26,7 +27,6 @@ import {useDispatch} from 'react-redux';
 import {BellDuo_Icon, CheckDuo_Icon, ExternalDuo_Icon} from '../../../../shared/assets/icons';
 import AddBreadcrumb_Renderer from '../../../../shared/sentry/Breadcrumbs';
 import LynxScroll from '../../../components/LynxScroll';
-import rendererIpc from '../../../ipc';
 import {tabsActions} from '../../../redux/reducers/tabs';
 import {AppDispatch} from '../../../redux/store';
 import useStaticNotifications from './StaticNotifications';

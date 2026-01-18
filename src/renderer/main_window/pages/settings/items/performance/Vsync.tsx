@@ -1,8 +1,8 @@
+import rendererIpc from '@lynx_shared/ipc';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import LynxSwitch from '../../../../components/LynxSwitch';
-import rendererIpc from '../../../../ipc';
 import {AppDispatch} from '../../../../redux/store';
 import {showRestartModal} from '../../../../utils';
 import SettingsFilterItem from '../../SettingsFilterItem';

@@ -1,10 +1,10 @@
 import {Button} from '@heroui/react';
 import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
+import rendererIpc from '@lynx_shared/ipc';
 import {memo, useRef} from 'react';
 
 import {Circle_Icon} from '../../../../../shared/assets/icons';
 import useHotkeyPress from '../../../../hooks/hotkeys';
-import rendererIpc from '../../../../ipc';
 import {useTabsState} from '../../../../redux/reducers/tabs';
 
 type Props = {id: string; tabID: string};

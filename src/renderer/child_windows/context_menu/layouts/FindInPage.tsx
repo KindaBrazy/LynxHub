@@ -1,7 +1,7 @@
 import {Button, Input} from '@heroui/react';
-import rendererIpc from '@lynx/ipc';
-import contextMenuIpc from '@lynx/ipc/context_menu';
 import {Circle_Icon} from '@lynx_assets/icons';
+import rendererIpc from '@lynx_shared/ipc';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {isEmpty} from 'lodash';
 import {X} from 'lucide-react';

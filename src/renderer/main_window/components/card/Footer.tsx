@@ -1,10 +1,10 @@
 import {Button, CardFooter} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {memo, useCallback, useMemo} from 'react';
 
 import {DownloadDuo_Icon, Pin_Icon, PinLine_Icon, PlayDuo_Icon} from '../../../shared/assets/icons';
 import AddBreadcrumb_Renderer from '../../../shared/sentry/Breadcrumbs';
 import {useIsPinnedCard} from '../../hooks/utils';
-import rendererIpc from '../../ipc';
 import {extensionsData} from '../../plugins/extensions/loader';
 import {useAppState} from '../../redux/reducers/app';
 import ShinyText from '../ShinyText';

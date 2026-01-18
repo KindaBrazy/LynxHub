@@ -1,10 +1,10 @@
 import {Button, Radio, RadioGroup} from '@heroui/react';
+import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {FolderDuo_Icon} from '../../../../../shared/assets/icons';
 import {lynxTopToast} from '../../../../hooks/utils';
-import downloadManagerIpc from '../../../../ipc/download_manager';
 import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';

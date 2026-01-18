@@ -7,13 +7,13 @@ import {
   Hotkey_Titles,
 } from '@lynx_cross/consts/hotkeys';
 import {LynxHotkey} from '@lynx_cross/types/ipc';
+import rendererIpc from '@lynx_shared/ipc';
 import {compact} from 'lodash';
 import {KeyboardEvent, useCallback, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Keyboard_Icon, RefreshDuo_Icon} from '../../../../../shared/assets/icons';
 import SettingsSection from '../../../../components/ContentSection';
-import rendererIpc from '../../../../ipc';
 import {hotkeysActions, useHotkeysState} from '../../../../redux/reducers/hotkeys';
 import {useSettingsState} from '../../../../redux/reducers/settings';
 import {useTerminalState} from '../../../../redux/reducers/terminal';

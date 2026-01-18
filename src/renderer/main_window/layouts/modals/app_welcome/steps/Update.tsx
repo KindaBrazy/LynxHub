@@ -1,10 +1,10 @@
 import {Alert, Button} from '@heroui/react';
 import {APP_NAME} from '@lynx_cross/consts';
+import rendererIpc from '@lynx_shared/ipc';
 import {motion} from 'framer-motion';
 import {useCallback, useEffect, useState} from 'react';
 
 import {CheckDuo_Icon} from '../../../../../shared/assets/icons';
-import rendererIpc from '../../../../ipc';
 import CheckRow from '../components/CheckRow';
 import {RowData} from '../types';
 

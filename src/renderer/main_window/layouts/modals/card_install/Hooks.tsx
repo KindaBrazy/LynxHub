@@ -5,12 +5,12 @@ import {
   UserInputField,
   UserInputResult,
 } from '@lynx_cross/types/plugins/module';
+import rendererIpc from '@lynx_shared/ipc';
 import {isNil} from 'lodash';
 import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {eventUtil_CollectUserInputs} from '../../../plugins/extensions/utils';
 import {useAllCardMethods} from '../../../plugins/modules';
 import {cardsActions} from '../../../redux/reducers/cards';

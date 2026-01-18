@@ -1,11 +1,11 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {PluginFilter, PluginItem} from '@lynx_cross/types/plugins';
+import rendererIpc from '@lynx_shared/ipc';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {FilterDuo_Icon} from '../../../../shared/assets/icons';
-import rendererIpc from '../../../ipc';
 import {pluginsActions} from '../../../redux/reducers/plugins';
 import {useUserState} from '../../../redux/reducers/user';
 import {AppDispatch} from '../../../redux/store';

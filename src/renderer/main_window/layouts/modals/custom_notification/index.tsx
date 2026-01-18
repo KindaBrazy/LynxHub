@@ -1,8 +1,7 @@
 import {Button} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {notification} from 'antd';
 import {useEffect} from 'react';
-
-import rendererIpc from '../../../ipc';
 
 export default function CustomNotification() {
   const [api, contextHolder] = notification.useNotification();

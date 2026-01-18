@@ -1,4 +1,4 @@
-import contextMenuIpc from '@lynx/ipc/context_menu';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {RefObject, useLayoutEffect, useRef} from 'react';
 
 type DimensionsMsg = {width: number; height: number; dpr: number};

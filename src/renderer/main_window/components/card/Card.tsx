@@ -1,6 +1,7 @@
 import {Card, CardBody, CardHeader, Chip, User} from '@heroui/react';
 import {getAccentColorAsHex} from '@lynx/utils/accent_color_generator';
 import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {AnimatePresence, motion} from 'framer-motion';
 import {CSSProperties, FormEvent, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -8,7 +9,6 @@ import {useDispatch} from 'react-redux';
 import {DownloadDuo_Icon} from '../../../shared/assets/icons';
 import AddBreadcrumb_Renderer from '../../../shared/sentry/Breadcrumbs';
 import {useInstalledCard, useIsAutoUpdateExtensions, useUpdateAvailable, useUpdatingCard} from '../../hooks/utils';
-import rendererIpc from '../../ipc';
 import {useTabModalManager} from '../../layouts/modals/useTabModalManager';
 import {extensionRendererApi} from '../../plugins/extensions/loader';
 import {getCardMethod, useAllCardMethods} from '../../plugins/modules';

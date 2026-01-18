@@ -1,9 +1,9 @@
+import rendererIpc from '@lynx_shared/ipc';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {motion} from 'framer-motion';
 import {useCallback} from 'react';
 
 import {Power_Icon} from '../../../shared/assets/icons';
-import rendererIpc from '../../ipc';
-import contextMenuIpc from '../../ipc/context_menu';
 import {useHotkeysState} from '../../redux/reducers/hotkeys';
 import {useSettingsState} from '../../redux/reducers/settings';
 import {useTabsState} from '../../redux/reducers/tabs';

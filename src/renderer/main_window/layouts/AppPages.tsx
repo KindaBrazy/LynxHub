@@ -1,6 +1,6 @@
+import rendererIpc from '@lynx_shared/ipc';
 import {useEffect, useMemo} from 'react';
 
-import rendererIpc from '../ipc';
 import HomePage from '../pages/home';
 import {extensionsData} from '../plugins/extensions/loader';
 import {useCardsState} from '../redux/reducers/cards';

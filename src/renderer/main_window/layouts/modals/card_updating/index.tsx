@@ -1,12 +1,12 @@
 import {Button} from '@heroui/react';
 import {GitProgressCallback} from '@lynx_cross/types/ipc';
+import rendererIpc from '@lynx_shared/ipc';
 import {Descriptions, notification} from 'antd';
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {PullResult} from 'simple-git';
 
-import rendererIpc from '../../../ipc';
 import {cardsActions, useCardsState} from '../../../redux/reducers/cards';
 import {modalActions} from '../../../redux/reducers/modals';
 import {useTabsState} from '../../../redux/reducers/tabs';

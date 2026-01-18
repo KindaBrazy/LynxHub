@@ -1,10 +1,10 @@
 import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../../../shared/sentry/Breadcrumbs';
 import {lynxTopToast} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {AppDispatch} from '../../../redux/store';
 
 type Props = {isShallow: boolean; dir: string; refreshData: () => void; title: string};

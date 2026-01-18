@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
   Spinner,
 } from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {Database} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -16,7 +17,6 @@ import {useDispatch} from 'react-redux';
 import {BroomDuo_Icon, RefreshDuo_Icon, Trash_Icon} from '../../../../../shared/assets/icons';
 import SettingsSection from '../../../../components/ContentSection';
 import {lynxTopToast} from '../../../../hooks/utils';
-import rendererIpc from '../../../../ipc';
 import {AppDispatch} from '../../../../redux/store';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 

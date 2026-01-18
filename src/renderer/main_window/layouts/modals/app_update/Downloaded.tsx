@@ -1,10 +1,10 @@
 import {Button} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {Result} from 'antd';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {settingsActions} from '../../../redux/reducers/settings';
 import {AppDispatch} from '../../../redux/store';
 

@@ -1,10 +1,10 @@
 import {__federation_method_getRemote, __federation_method_setRemote} from '__federation__';
 import {isDev} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {captureException} from '@sentry/electron/renderer';
 import {compact} from 'lodash';
 
 import {ExtensionImport_Renderer} from '../../../../main/types/extensions';
-import rendererIpc from '../../ipc';
 import loader from './loader';
 
 type RemotesConfig = {

@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
-import contextMenuIpc from '@lynx/ipc/context_menu';
-import windowDialogsIpc from '@lynx/ipc/window_dialogs';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
+import windowDialogsIpc from '@lynx_shared/ipc/window_dialogs';
 import {Check, ShieldAlert} from 'lucide-react';
 import {memo, useEffect, useState} from 'react';
 

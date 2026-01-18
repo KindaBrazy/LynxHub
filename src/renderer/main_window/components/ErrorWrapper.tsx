@@ -1,12 +1,12 @@
 import {Button, ButtonGroup} from '@heroui/react';
 import {ISSUE_PAGE} from '@lynx_cross/consts';
 import {isDev} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {Result} from 'antd';
 import {useCallback, useEffect} from 'react';
 
 import {GitHub_Icon} from '../../shared/assets/icons';
 import {isLinuxPortable} from '../hooks/utils';
-import rendererIpc from '../ipc';
 import CopyClipboard from './CopyClipboard';
 
 type Props = {error: Error; resetErrorBoundary: () => void};

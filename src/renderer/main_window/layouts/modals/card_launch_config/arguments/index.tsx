@@ -1,9 +1,9 @@
 import {useDisclosure} from '@heroui/react';
 import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_cross/types';
+import rendererIpc from '@lynx_shared/ipc';
 import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import rendererIpc from '../../../../ipc';
 import {getCardMethod, useAllCardMethods} from '../../../../plugins/modules';
 import {tabContentVariants} from '../../card_extensions/Constants';
 import AddArguments from './add';

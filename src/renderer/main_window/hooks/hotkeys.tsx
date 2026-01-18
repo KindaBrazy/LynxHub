@@ -1,9 +1,9 @@
 import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
 import {LynxHotkey} from '@lynx_cross/types/ipc';
+import rendererIpc from '@lynx_shared/ipc';
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../ipc';
 import {appActions} from '../redux/reducers/app';
 import {cardsActions, useCardsState} from '../redux/reducers/cards';
 import {useHotkeysState} from '../redux/reducers/hotkeys';

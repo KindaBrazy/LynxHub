@@ -1,6 +1,6 @@
 import {Button, Slider} from '@heroui/react';
-import rendererIpc from '@lynx/ipc';
-import contextMenuIpc from '@lynx/ipc/context_menu';
+import rendererIpc from '@lynx_shared/ipc';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 

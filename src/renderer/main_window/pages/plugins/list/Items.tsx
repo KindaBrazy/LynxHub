@@ -14,6 +14,7 @@ import {
 import {PluginInstalledItem, PluginItem} from '@lynx_cross/types/plugins';
 import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
 import {getPluginIconUrl} from '@lynx_cross/utils/plugins';
+import rendererIpc from '@lynx_shared/ipc';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
@@ -31,7 +32,6 @@ import {
 } from '../../../../shared/assets/icons';
 import AddBreadcrumb_Renderer from '../../../../shared/sentry/Breadcrumbs';
 import {lynxTopToast} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {
   pluginsActions,
   useIsInstallingPlugin,

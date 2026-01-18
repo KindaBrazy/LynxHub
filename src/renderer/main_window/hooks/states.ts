@@ -1,7 +1,7 @@
+import rendererIpc from '@lynx_shared/ipc';
 import {isEmpty, isEqual} from 'lodash';
 import {useEffect} from 'react';
 
-import rendererIpc from '../ipc';
 import {useCardsState} from '../redux/reducers/cards';
 
 // Remove not installed cards from pinned cards

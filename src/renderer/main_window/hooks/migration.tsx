@@ -1,6 +1,5 @@
+import rendererIpc from '@lynx_shared/ipc';
 import {useEffect} from 'react';
-
-import rendererIpc from '../ipc';
 
 export const useMigrateCardTitles = () => {
   useEffect(() => {

@@ -1,7 +1,7 @@
+import rendererIpc from '@lynx_shared/ipc';
 import {isEmpty} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 
-import rendererIpc from '../../ipc';
 import {extensionsData} from '../../plugins/extensions/loader';
 import DashboardAbout, {DashboardAboutId} from './content/About';
 import DashboardCredits, {DashboardCreditsId} from './content/Credits';

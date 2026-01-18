@@ -1,5 +1,5 @@
 import {Divider} from '@heroui/react';
-import contextItemsIpc from '@lynx/ipc/context_items';
+import contextItemsIpc from '@lynx_shared/ipc/context_items';
 import {ClipboardText, Copy, Scissors, TextSelection, UndoLeftRound} from '@solar-icons/react-perf/BoldDuotone';
 import type {EditFlags} from 'electron';
 import {isEmpty} from 'lodash';

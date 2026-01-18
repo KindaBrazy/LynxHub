@@ -1,12 +1,12 @@
 import {Button, Card, Chip, Select, Selection, SelectItem} from '@heroui/react';
 import {SubscribeStages} from '@lynx_cross/types';
+import rendererIpc from '@lynx_shared/ipc';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Download2_Icon} from '../../../../shared/assets/icons';
 import AddBreadcrumb_Renderer from '../../../../shared/sentry/Breadcrumbs';
 import SettingsSection from '../../../components/ContentSection';
-import rendererIpc from '../../../ipc';
 import {modalActions} from '../../../redux/reducers/modals';
 import {useSettingsState} from '../../../redux/reducers/settings';
 import {useUserState} from '../../../redux/reducers/user';

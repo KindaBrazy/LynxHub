@@ -1,10 +1,10 @@
 import {ChipProps} from '@heroui/chip';
 import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {SubscribeStages} from '@lynx_cross/types';
+import rendererIpc from '@lynx_shared/ipc';
 import {useMemo} from 'react';
 
 import {BoxDuo_Icon} from '../../../../shared/assets/icons';
-import rendererIpc from '../../../ipc';
 import {usePluginsState} from '../../../redux/reducers/plugins';
 
 const getStageName = (stage: SubscribeStages) => {

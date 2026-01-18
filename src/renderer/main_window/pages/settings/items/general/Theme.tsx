@@ -1,9 +1,9 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {DarkModeTypes} from '@lynx_cross/types/ipc';
+import rendererIpc from '@lynx_shared/ipc';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../../../ipc';
 import {appActions, useAppState} from '../../../../redux/reducers/app';
 import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';

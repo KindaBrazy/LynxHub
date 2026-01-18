@@ -1,7 +1,7 @@
 import {Button, Chip} from '@heroui/react';
-import contextMenuIpc from '@lynx/ipc/context_menu';
-import downloadManagerIpc from '@lynx/ipc/download_manager';
 import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
+import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
 import {Broom, DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useState} from 'react';
 

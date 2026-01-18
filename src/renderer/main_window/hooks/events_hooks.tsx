@@ -1,12 +1,12 @@
 import {APP_BUILD_NUMBER, PageTitleByPageId} from '@lynx_cross/consts';
 import {toMs} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../shared/sentry/Breadcrumbs';
-import rendererIpc from '../ipc';
-import contextMenuIpc from '../ipc/context_menu';
 import {useRemoveTab} from '../layouts/tabs/utils';
 import {useAllCardMethods} from '../plugins/modules';
 import {appActions, useAppState} from '../redux/reducers/app';

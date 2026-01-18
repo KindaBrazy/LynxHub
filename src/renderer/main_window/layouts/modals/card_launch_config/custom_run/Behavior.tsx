@@ -1,9 +1,9 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {CustomRunBehaviorData} from '@lynx_cross/types/ipc';
+import rendererIpc from '@lynx_shared/ipc';
 import {isEmpty} from 'lodash';
 import {Fragment, useEffect, useState} from 'react';
 
-import rendererIpc from '../../../../ipc';
 import LaunchConfigSection from '../Section';
 import {UrlCatch} from './UrlCatch';
 

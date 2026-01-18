@@ -1,4 +1,5 @@
 import {Button, Card, CardBody, CardHeader, ScrollShadow} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
@@ -11,7 +12,6 @@ import {
   UserDuo_Icon,
   UserHeart_Icon,
 } from '../../../shared/assets/icons';
-import rendererIpc from '../../ipc';
 import {extensionsData} from '../../plugins/extensions/loader';
 import {ContainersBg} from '../../utils/common_styles';
 import SettingsSearchHighlight from '../settings/SettingsSearchHighlight';

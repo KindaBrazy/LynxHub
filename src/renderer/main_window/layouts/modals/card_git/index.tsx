@@ -1,12 +1,12 @@
 import {Button, CircularProgress, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {RepositoryInfo} from '@lynx_cross/types';
+import rendererIpc from '@lynx_shared/ipc';
 import {Divider} from 'antd';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {useDebounceBreadcrumb} from '../../../../shared/sentry/Breadcrumbs';
 import {lynxTopToast} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {extensionsData} from '../../../plugins/extensions/loader';
 import {useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';

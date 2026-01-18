@@ -1,8 +1,8 @@
 import {Badge, Button} from '@heroui/react';
+import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
 import {useEffect, useState} from 'react';
 
 import {DownloadDuo_Icon} from '../../../../../shared/assets/icons';
-import downloadManagerIpc from '../../../../ipc/download_manager';
 
 export default function DownloadManager() {
   const [itemCount, setItemCount] = useState<number>(0);

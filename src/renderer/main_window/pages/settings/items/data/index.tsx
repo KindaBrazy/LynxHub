@@ -1,11 +1,11 @@
 import {Button} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Database_Icon, OpenFolder_Icon, Refresh_Icon} from '../../../../../shared/assets/icons';
 import SettingsSection from '../../../../components/ContentSection';
 import {lynxTopToast} from '../../../../hooks/utils';
-import rendererIpc from '../../../../ipc';
 import {AppDispatch} from '../../../../redux/store';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 

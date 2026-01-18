@@ -1,4 +1,4 @@
-import contextMenuIpc from '@lynx/ipc/context_menu';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 
 export const hideContextWindow = () => contextMenuIpc.send.hideWindow();
 export const showContextWindow = () => contextMenuIpc.send.showWindow();

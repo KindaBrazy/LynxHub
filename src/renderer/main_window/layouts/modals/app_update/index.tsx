@@ -1,13 +1,13 @@
 import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {APP_BUILD_NUMBER, EARLY_RELEASES_PAGE, INSIDER_RELEASES_PAGE, RELEASES_PAGE} from '@lynx_cross/consts';
 import {AppUpdateInfo, UpdateDownloadProgress} from '@lynx_cross/types';
+import rendererIpc from '@lynx_shared/ipc';
 import {CollapseProps, Divider, Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast, RenderSubItems} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {useCardsState} from '../../../redux/reducers/cards';
 import {modalActions, useModalsState} from '../../../redux/reducers/modals';
 import {settingsActions, useSettingsState} from '../../../redux/reducers/settings';

@@ -1,9 +1,9 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {useDispatch} from 'react-redux';
 
 import {isLinuxPortable} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {modalActions, useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';
 

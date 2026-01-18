@@ -1,5 +1,6 @@
 import {DropdownItem} from '@heroui/react';
 import {extractGitUrl} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -12,7 +13,6 @@ import {
 } from '../../../../../shared/assets/icons';
 import AddBreadcrumb_Renderer from '../../../../../shared/sentry/Breadcrumbs';
 import {useInstalledCard} from '../../../../hooks/utils';
-import rendererIpc from '../../../../ipc';
 import {useTabModalManager} from '../../../../layouts/modals/useTabModalManager';
 import {duplicateCard, removeDuplicatedCard} from '../../../../plugins/modules';
 import {cardsActions, useCardsState} from '../../../../redux/reducers/cards';

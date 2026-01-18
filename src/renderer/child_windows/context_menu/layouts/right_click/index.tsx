@@ -1,5 +1,5 @@
 import {Divider} from '@heroui/react';
-import contextMenuIpc from '@lynx/ipc/context_menu';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import type {ContextMenuParams} from 'electron';
 import {isEmpty} from 'lodash';
 import {memo, useEffect, useMemo, useState} from 'react';
