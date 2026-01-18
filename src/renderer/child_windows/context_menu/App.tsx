@@ -9,6 +9,8 @@ import DownloadMenu from './layouts/downloads';
 import FindInPage from './layouts/FindInPage';
 import RightClick from './layouts/right_click';
 import VolumeMenu from './layouts/Volume';
+import AlertWindow from './layouts/window_dialogs/Alert';
+import ConfirmWindow from './layouts/window_dialogs/Confirm';
 import PromptWindow from './layouts/window_dialogs/Prompt';
 import {useResize} from './useResize';
 
@@ -71,6 +73,16 @@ export default function ContextMenu() {
         setWidthSize={setWidthSize}
         setSelectedLayout={setSelectedLayout}
         show={selectedLayout === MenuTypes.Prompt}
+      />
+      <AlertWindow
+        setWidthSize={setWidthSize}
+        setSelectedLayout={setSelectedLayout}
+        show={selectedLayout === MenuTypes.Alert}
+      />
+      <ConfirmWindow
+        setWidthSize={setWidthSize}
+        setSelectedLayout={setSelectedLayout}
+        show={selectedLayout === MenuTypes.Confirm}
       />
     </div>
   );
