@@ -1,8 +1,8 @@
-import '../../shared/styles.css';
+import '@lynx_shared/styles.css';
 
+import HeroUIProvider from '@lynx_shared/HeroUIProvider';
 import {createRoot} from 'react-dom/client';
 
-import HeroUIProvider from '../../shared/HeroUIProvider';
 import App from './App';
 
 createRoot(document.getElementById('root') as HTMLElement).render(

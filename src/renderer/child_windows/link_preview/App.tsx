@@ -1,7 +1,6 @@
 import {browserChannels} from '@lynx_cross/consts/ipc';
+import {useDocumentDarkMode} from '@lynx_shared/hooks';
 import {useEffect, useRef, useState} from 'react';
-
-import {useDocumentDarkMode} from '../../shared/hooks';
 
 const ipc = window.electron.ipcRenderer;
 
