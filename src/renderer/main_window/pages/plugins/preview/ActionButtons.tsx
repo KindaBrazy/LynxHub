@@ -1,12 +1,12 @@
 import {Button, useDisclosure} from '@heroui/react';
 import {extractGitUrl} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Download2_Icon, SettingsMinimal_Icon, Trash_Icon} from '../../../../shared/assets/icons';
 import AddBreadcrumb_Renderer from '../../../../shared/sentry/Breadcrumbs';
 import {lynxTopToast} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {pluginsActions, usePluginsState} from '../../../redux/reducers/plugins';
 import {useTabsState} from '../../../redux/reducers/tabs';
 import {AppDispatch} from '../../../redux/store';

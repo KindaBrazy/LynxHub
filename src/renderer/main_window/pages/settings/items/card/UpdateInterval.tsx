@@ -1,7 +1,7 @@
 import {NumberInput} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../../../ipc';
 import {cardsActions, useCardsState} from '../../../../redux/reducers/cards';
 import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';

@@ -2,7 +2,7 @@ import {formatTime} from '@lynx_cross/utils';
 import {extraErrorDataIntegration, init as electronInit} from '@sentry/electron/renderer';
 import {init as reactInit} from '@sentry/react';
 
-import rendererIpc from '../../main_window/ipc';
+import rendererIpc from '../ipc';
 
 const {collectErrors} = await rendererIpc.storage.get('app');
 

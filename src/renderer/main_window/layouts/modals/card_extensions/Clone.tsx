@@ -1,6 +1,7 @@
 import {Input, Progress} from '@heroui/react';
 import {GitProgressCallback} from '@lynx_cross/types/ipc';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {Card} from 'antd';
 import {motion} from 'framer-motion';
 import {capitalize, startCase} from 'lodash';
@@ -10,7 +11,6 @@ import {SimpleGitProgressEvent} from 'simple-git';
 
 import {Download2_Icon, GitHub_Icon} from '../../../../shared/assets/icons';
 import {lynxTopToast} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {useAppState} from '../../../redux/reducers/app';
 import {AppDispatch} from '../../../redux/store';
 import {initGitProgress} from '../../../utils/constants';

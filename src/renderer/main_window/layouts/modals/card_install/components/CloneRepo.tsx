@@ -1,6 +1,7 @@
 import {Card, CardBody, CardHeader, Link, ModalBody, Progress} from '@heroui/react';
 import {GitProgressCallback} from '@lynx_cross/types/ipc';
 import {extractGitUrl, isWin} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {Descriptions} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
@@ -10,7 +11,6 @@ import {SimpleGitProgressEvent} from 'simple-git';
 
 import {Folder2_Icon, GitHub_Icon} from '../../../../../shared/assets/icons';
 import OpenDialog from '../../../../components/OpenDialog';
-import rendererIpc from '../../../../ipc';
 import {modalActions} from '../../../../redux/reducers/modals';
 import {AppDispatch} from '../../../../redux/store';
 import {initGitProgress} from '../../../../utils/constants';

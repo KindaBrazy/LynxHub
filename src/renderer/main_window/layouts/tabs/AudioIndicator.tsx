@@ -1,9 +1,9 @@
 import {Button} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../ipc';
 import {useVolumeState, volumeActions} from '../../redux/reducers/volume';
 import {AppDispatch} from '../../redux/store';
 

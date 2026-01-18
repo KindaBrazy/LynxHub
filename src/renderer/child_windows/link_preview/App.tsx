@@ -1,5 +1,5 @@
-import browserIpc from '@lynx/ipc/browser';
 import {useDocumentDarkMode} from '@lynx_shared/hooks';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {useEffect, useRef, useState} from 'react';
 
 export default function LinkPreview() {

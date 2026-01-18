@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 
 import {Stop_Icon} from '../../../../shared/assets/icons';
-import contextMenuIpc from '../../../ipc/context_menu';
 import {useHotkeysState} from '../../../redux/reducers/hotkeys';
 import {useSettingsState} from '../../../redux/reducers/settings';
 

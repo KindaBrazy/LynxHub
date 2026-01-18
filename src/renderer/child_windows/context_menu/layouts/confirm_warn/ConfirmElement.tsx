@@ -1,6 +1,6 @@
 import {Checkbox} from '@heroui/react';
-import rendererIpc from '@lynx/ipc';
 import {ConfirmMenuTypes} from '@lynx_cross/types';
+import rendererIpc from '@lynx_shared/ipc';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, ReactNode, useEffect, useState} from 'react';
 

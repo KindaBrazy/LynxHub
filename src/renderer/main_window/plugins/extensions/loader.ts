@@ -1,9 +1,9 @@
+import rendererIpc from '@lynx_shared/ipc';
 import mitt, {Emitter} from 'mitt';
 
 import {ExtensionData_Renderer, ExtensionImport_Renderer} from '../../../../main/types/extensions';
 import {ExtensionRendererApi} from '../../../../main/types/extensions/api';
 import {ExtensionEvents, ExtensionEvents_IPC} from '../../../../main/types/extensions/events';
-import rendererIpc from '../../ipc';
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../modules';
 import {initPluginBrowserSentry} from '../sentry';
 

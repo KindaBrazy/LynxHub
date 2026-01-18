@@ -1,11 +1,11 @@
 import {Button, Input, Select, Selection, SelectItem} from '@heroui/react';
 import {AgentTypes} from '@lynx_cross/types/ipc';
+import rendererIpc from '@lynx_shared/ipc';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {DiskDuo_Icon} from '../../../../../shared/assets/icons';
 import {lynxTopToast} from '../../../../hooks/utils';
-import rendererIpc from '../../../../ipc';
 import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';

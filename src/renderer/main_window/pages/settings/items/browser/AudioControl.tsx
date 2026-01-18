@@ -1,10 +1,10 @@
 import {Switch} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {Volume, VolumeCross} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../../../../hooks/utils';
-import rendererIpc from '../../../../ipc';
 import {useCardsState} from '../../../../redux/reducers/cards';
 import {useVolumeState, volumeActions} from '../../../../redux/reducers/volume';
 import {AppDispatch} from '../../../../redux/store';

@@ -1,6 +1,5 @@
 import StorageTypes from '@lynx_cross/types/storage';
-
-import rendererIpc from '../ipc';
+import rendererIpc from '@lynx_shared/ipc';
 
 type AllStorageData = {
   [K in keyof StorageTypes]: StorageTypes[K];

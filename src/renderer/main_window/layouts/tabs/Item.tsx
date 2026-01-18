@@ -1,12 +1,12 @@
 import {Button, Tooltip} from '@heroui/react';
 import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
 import {TabInfo} from '@lynx_cross/types';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {CloseSimple_Icon} from '../../../shared/assets/icons';
 import useHotkeyPress from '../../hooks/hotkeys';
-import contextMenuIpc from '../../ipc/context_menu';
 import {useCardsState} from '../../redux/reducers/cards';
 import {useHotkeysState} from '../../redux/reducers/hotkeys';
 import {useSettingsState} from '../../redux/reducers/settings';

@@ -1,7 +1,7 @@
+import rendererIpc from '@lynx_shared/ipc';
 import {memo, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../ipc';
 import {pluginsActions} from '../../redux/reducers/plugins';
 import {useUserState} from '../../redux/reducers/user';
 import {AppDispatch} from '../../redux/store';

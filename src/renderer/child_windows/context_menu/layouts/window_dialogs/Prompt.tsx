@@ -1,5 +1,5 @@
 import {Button, Input} from '@heroui/react';
-import windowDialogsIpc from '@lynx/ipc/window_dialogs';
+import windowDialogsIpc from '@lynx_shared/ipc/window_dialogs';
 import {Check, TextCursorInput, X} from 'lucide-react';
 import {memo, useEffect, useState} from 'react';
 

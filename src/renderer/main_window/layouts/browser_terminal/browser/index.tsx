@@ -1,7 +1,7 @@
+import rendererIpc from '@lynx_shared/ipc';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import rendererIpc from '../../../ipc';
 import {useCardsState} from '../../../redux/reducers/cards';
 import {useVolumeState} from '../../../redux/reducers/volume';
 import {RunningCard} from '../../../types';

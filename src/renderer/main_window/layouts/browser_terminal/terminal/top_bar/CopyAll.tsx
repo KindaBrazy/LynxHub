@@ -1,11 +1,11 @@
 import {Button, Tooltip} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {memo, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {CheckDuo_Icon, CopyDuo_Icon, FileDownDuo_Icon} from '../../../../../shared/assets/icons';
 import {lynxTopToast} from '../../../../hooks/utils';
-import rendererIpc from '../../../../ipc';
 import {AppDispatch} from '../../../../redux/store';
 
 type Props = {

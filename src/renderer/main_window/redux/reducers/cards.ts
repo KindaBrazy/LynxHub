@@ -1,10 +1,10 @@
 import {OnUpdatingExtensions} from '@lynx_cross/types/ipc';
 import {InstalledCards} from '@lynx_cross/types/storage';
+import rendererIpc from '@lynx_shared/ipc';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {includes} from 'lodash';
 import {useSelector} from 'react-redux';
 
-import rendererIpc from '../../ipc';
 import {UpdatingCard} from '../../types';
 import {CardsState} from '../../types/reducers';
 import {RootState} from '../store';

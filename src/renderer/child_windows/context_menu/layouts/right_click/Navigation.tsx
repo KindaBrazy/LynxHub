@@ -1,4 +1,4 @@
-import contextItemsIpc from '@lynx/ipc/context_items';
+import contextItemsIpc from '@lynx_shared/ipc/context_items';
 import {ArrowLeft, ArrowRight, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 
 import {NavBtnProps, NavHistory} from '../../types';

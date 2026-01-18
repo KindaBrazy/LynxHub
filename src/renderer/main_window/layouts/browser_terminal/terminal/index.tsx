@@ -1,5 +1,6 @@
 import {CustomRunBehaviorData} from '@lynx_cross/types/ipc';
 import {toMs} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {IProgressState} from '@xterm/addon-progress';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
@@ -9,7 +10,6 @@ import {useDispatch} from 'react-redux';
 
 import XTermCore, {XTermAPI} from '../../../components/XTermCore';
 import {lynxTopToast} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {getCardMethod, useAllCardMethods} from '../../../plugins/modules';
 import {cardsActions} from '../../../redux/reducers/cards';
 import {useHotkeysState} from '../../../redux/reducers/hotkeys';

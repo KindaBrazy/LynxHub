@@ -1,11 +1,11 @@
 import {Button, Input, Select, SelectItem} from '@heroui/react';
 import {UserInputField, UserInputResult} from '@lynx_cross/types/plugins/module';
+import rendererIpc from '@lynx_shared/ipc';
 import {isNil} from 'lodash';
 import {Dispatch, FC, SetStateAction, useCallback, useEffect, useState} from 'react';
 
 import {File_Icon, Folder2_Icon} from '../../../../../shared/assets/icons';
 import LynxSwitch from '../../../../components/LynxSwitch';
-import rendererIpc from '../../../../ipc';
 
 type Props = {
   inputElements: {elements: UserInputField[]; title?: string};

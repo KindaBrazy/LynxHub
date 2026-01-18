@@ -1,11 +1,11 @@
 import {Alert, Button, Card, User} from '@heroui/react';
 import {getCacheUrl} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {Patreon_Icon} from '../../../../../shared/assets/icons';
 import AddBreadcrumb_Renderer from '../../../../../shared/sentry/Breadcrumbs';
-import rendererIpc from '../../../../ipc';
 import {userActions, useUserState} from '../../../../redux/reducers/user';
 import {AppDispatch} from '../../../../redux/store';
 

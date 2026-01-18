@@ -1,10 +1,10 @@
 import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {Fragment, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {ShieldCross_Icon} from '../../../../shared/assets/icons';
 import {lynxTopToast} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {extensionsData} from '../../../plugins/extensions/loader';
 import {useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';

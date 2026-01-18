@@ -10,11 +10,11 @@ import {
   RendererModuleImportType,
 } from '@lynx_cross/types/plugins/module';
 import {extractGitUrl, isDev} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {captureException} from '@sentry/electron/renderer';
 import {compact} from 'lodash';
 import {useSyncExternalStore} from 'react';
 
-import rendererIpc from '../../ipc';
 import {searchInStrings} from '../../utils';
 
 type CardSearchData = {id: string; data: string[]}[];

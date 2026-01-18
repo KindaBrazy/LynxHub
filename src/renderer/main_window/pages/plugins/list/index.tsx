@@ -1,5 +1,6 @@
 import {Button, Divider, Input, Progress, Skeleton} from '@heroui/react';
 import {PluginFilter, PluginItem} from '@lynx_cross/types/plugins';
+import rendererIpc from '@lynx_shared/ipc';
 import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';
@@ -8,7 +9,6 @@ import {useDispatch} from 'react-redux';
 import {Circle_Icon, RefreshDuo_Icon} from '../../../../shared/assets/icons';
 import LynxScroll from '../../../components/LynxScroll';
 import {lynxTopToast} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {pluginsActions, usePluginsState} from '../../../redux/reducers/plugins';
 import {AppDispatch} from '../../../redux/store';
 import {searchInStrings, showRestartModal} from '../../../utils';

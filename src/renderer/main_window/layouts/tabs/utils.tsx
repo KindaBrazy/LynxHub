@@ -1,8 +1,8 @@
+import rendererIpc from '@lynx_shared/ipc';
 import type {ActionCreatorWithPayload} from '@reduxjs/toolkit';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../ipc';
 import {cardsActions, useCardsState} from '../../redux/reducers/cards';
 import {modalActions} from '../../redux/reducers/modals';
 import {tabsActions, useTabsState} from '../../redux/reducers/tabs';

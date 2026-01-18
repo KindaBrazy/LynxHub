@@ -1,4 +1,4 @@
-import contextMenuIpc from '@lynx/ipc/context_menu';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {ReactNode} from 'react';
 
 export const createActionHandler = (actionFn: () => void): (() => void) => {

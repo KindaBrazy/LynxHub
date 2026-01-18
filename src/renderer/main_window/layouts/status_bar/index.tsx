@@ -1,7 +1,7 @@
+import rendererIpc from '@lynx_shared/ipc';
 import {isEmpty, isNil} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
-import rendererIpc from '../../ipc';
 import {extensionsData} from '../../plugins/extensions/loader';
 
 const classNames = 'flex size-full items-center overflow-x-scroll scrollbar-hide';

@@ -1,3 +1,4 @@
+import rendererIpc from '@lynx_shared/ipc';
 import {CanvasAddon} from '@xterm/addon-canvas';
 import {ClipboardAddon} from '@xterm/addon-clipboard';
 import {FitAddon} from '@xterm/addon-fit';
@@ -15,7 +16,6 @@ import {forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef} f
 import {useDispatch} from 'react-redux';
 
 import {lynxTopToast} from '../hooks/utils';
-import rendererIpc from '../ipc';
 import parseTerminalColors from '../layouts/browser_terminal/terminal/colorHandler';
 import {getRendererMode, getTheme, getWindowPty} from '../layouts/browser_terminal/terminal/utils';
 import {useAppState} from '../redux/reducers/app';

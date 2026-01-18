@@ -1,7 +1,7 @@
+import rendererIpc from '@lynx_shared/ipc';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../ipc';
 import {useCardsState} from '../redux/reducers/cards';
 import {volumeActions} from '../redux/reducers/volume';
 import {AppDispatch} from '../redux/store';

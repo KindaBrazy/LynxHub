@@ -1,6 +1,6 @@
 import '@lynx_shared/styles.css';
 
-import rendererIpc from '@lynx/ipc';
+import rendererIpc from '@lynx_shared/ipc';
 import {createRoot} from 'react-dom/client';
 
 import LiquidChromeLoading from './loadings/LiquidChrome';

@@ -1,8 +1,8 @@
 import {Button} from '@heroui/react';
 import {isLinuxPortable} from '@lynx/hooks/utils';
-import rendererIpc from '@lynx/ipc';
-import contextMenuIpc from '@lynx/ipc/context_menu';
 import {Power_Icon} from '@lynx_assets/icons';
+import rendererIpc from '@lynx_shared/ipc';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {Forward2, Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect} from 'react';
 

@@ -7,12 +7,12 @@ import {
   UserInputField,
   UserInputResult,
 } from '@lynx_cross/types/plugins/module';
+import rendererIpc from '@lynx_shared/ipc';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {useInstalledCard} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {extensionsData} from '../../../plugins/extensions/loader';
 import {getCardMethod, useAllCardMethods} from '../../../plugins/modules';
 import {cardsActions} from '../../../redux/reducers/cards';

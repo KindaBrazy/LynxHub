@@ -1,5 +1,5 @@
 import {Divider} from '@heroui/react';
-import contextItemsIpc from '@lynx/ipc/context_items';
+import contextItemsIpc from '@lynx_shared/ipc/context_items';
 import {isEmpty} from 'lodash';
 
 import {ActionButton, createActionHandler} from './Utils';

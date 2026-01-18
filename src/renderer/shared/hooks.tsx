@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react';
 
-import rendererIpc from '../main_window/ipc';
+import rendererIpc from './ipc';
 
 export function useDocumentDarkMode(className?: string) {
   const [isDarkMode, setIsDarkMode] = useState<boolean>(true);

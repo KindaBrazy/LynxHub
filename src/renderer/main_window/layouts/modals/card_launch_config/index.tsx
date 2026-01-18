@@ -1,11 +1,11 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
 import {ChosenArgumentsData} from '@lynx_cross/types';
+import rendererIpc from '@lynx_shared/ipc';
 import {Fragment, Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {useDebounceBreadcrumb} from '../../../../shared/sentry/Breadcrumbs';
 import {lynxTopToast} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {extensionsData} from '../../../plugins/extensions/loader';
 import {useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';

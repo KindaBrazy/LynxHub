@@ -1,8 +1,8 @@
 import {Alert, Button} from '@heroui/react';
 import {isWin} from '@lynx_cross/utils';
+import rendererIpc from '@lynx_shared/ipc';
 import {ReactNode, useEffect, useMemo} from 'react';
 
-import rendererIpc from '../../../../ipc';
 import useRequirementChecks from '../useRequirementChecks';
 import CheckRow from './CheckRow';
 

@@ -1,7 +1,7 @@
+import rendererIpc from '@lynx_shared/ipc';
 import {configureStore} from '@reduxjs/toolkit';
 import {createReduxEnhancer} from '@sentry/react';
 
-import rendererIpc from '../ipc';
 import {extensionsData} from '../plugins/extensions/loader';
 import {PreloadState} from '../types/reducers';
 import app from './reducers/app';

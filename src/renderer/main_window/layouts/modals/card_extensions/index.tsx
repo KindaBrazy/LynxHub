@@ -1,10 +1,10 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
+import rendererIpc from '@lynx_shared/ipc';
 import {isEmpty} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {useDebounceBreadcrumb} from '../../../../shared/sentry/Breadcrumbs';
 import {useIsAutoUpdateExtensions} from '../../../hooks/utils';
-import rendererIpc from '../../../ipc';
 import {extensionsData} from '../../../plugins/extensions/loader';
 import {useModalsState} from '../../../redux/reducers/modals';
 import {modalMotionProps} from '../../../utils/constants';

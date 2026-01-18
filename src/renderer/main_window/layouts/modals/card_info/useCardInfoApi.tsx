@@ -1,8 +1,8 @@
 import {CardInfoApi, CardInfoCallback, CardInfoDescriptions} from '@lynx_cross/types/plugins/module';
+import rendererIpc from '@lynx_shared/ipc';
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
 
-import rendererIpc from '../../../ipc';
 import {getCardMethod, useAllCardMethods} from '../../../plugins/modules';
 
 export default function useCardInfoApi(
