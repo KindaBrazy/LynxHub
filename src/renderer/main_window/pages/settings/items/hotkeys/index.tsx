@@ -191,6 +191,7 @@ export const HotkeySettings = () => {
                   />
                 </div>
               }
+              textValue={label}
               key={`${name}_hotkey`}
               title={<SettingsSearchHighlight text={label} />}
               description={<SettingsSearchHighlight text={description} />}
@@ -205,7 +206,7 @@ export const HotkeySettings = () => {
 
   return (
     <SettingsSection title="Hotkeys" id={SettingsHotkeysId} icon={<Keyboard_Icon className="size-5" />}>
-      <Listbox variant="flat">
+      <Listbox variant="flat" aria-label="hotkeys_list">
         {Hotkey_Sections.map(section => {
           return (
             <ListboxSection key={section.kind} title={section.title}>
