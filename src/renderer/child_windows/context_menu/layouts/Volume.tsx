@@ -1,10 +1,12 @@
 import {Button, Slider} from '@heroui/react';
 import rendererIpc from '@lynx/ipc';
+import contextMenuIpc from '@lynx/ipc/context_menu';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
+import {showContextWindow} from './Shared';
 
 type VolumeData = {
   id: string;
@@ -67,16 +69,16 @@ const VolumeMenu = memo(({setWidthSize, show, setSelectedLayout}: CommonProps) =
   const effectiveMuted = useMemo(() => isMuted || isGlobalMuted, [isMuted, isGlobalMuted]);
 
   useEffect(() => {
-    const offVolume = rendererIpc.contextMenu.onVolume((_, volumeData) => {
-      setData(volumeData);
-      setVolume(volumeData.volume);
-      setIsMuted(volumeData.muted);
-      setIsGlobalMuted(volumeData.globalMuted);
+    const offVolume = contextMenuIpc.on.volume(_data => {
+      setData(_data);
+      setVolume(_data.volume);
+      setIsMuted(_data.muted);
+      setIsGlobalMuted(_data.globalMuted);
 
       setWidthSize('md');
       setSelectedLayout(MenuTypes.Volume);
 
-      rendererIpc.contextMenu.showWindow();
+      showContextWindow();
     });
 
     return () => {

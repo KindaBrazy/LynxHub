@@ -1,11 +1,10 @@
 import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
-import {browserDownloadChannels, customNotifChannels} from '@lynx_cross/consts/donwload_manager';
+import {customNotifChannels} from '@lynx_cross/consts/donwload_manager';
 import {
   appDataChannels,
   appUpdateChannels,
   appWindowChannels,
   browserChannels,
-  contextMenuChannels,
   eventsChannels,
   fileChannels,
   gitChannels,
@@ -30,7 +29,6 @@ import {
   AppUpdateInsiderData,
   ChosenArgumentsData,
   ConfirmMenuTypes,
-  ContextResizeData,
   CustomNotificationInfo,
   ExtensionsInfo,
   FolderListData,
@@ -43,7 +41,6 @@ import {
   RepositoryInfo,
   SubscribeStages,
 } from '@lynx_cross/types';
-import type {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '@lynx_cross/types/download_manager';
 import type {ShallowCloneOptions} from '@lynx_cross/types/git';
 import {
   AgentTypes,
@@ -83,7 +80,7 @@ import type {
 } from '@lynx_cross/types/plugins';
 import type {InstalledCard, InstalledCards} from '@lynx_cross/types/storage';
 import type StorageTypes from '@lynx_cross/types/storage';
-import type {ContextMenuParams, FindInPageOptions, IpcRendererEvent, OpenDialogOptions} from 'electron';
+import type {FindInPageOptions, IpcRendererEvent, OpenDialogOptions} from 'electron';
 
 const ipc = window.electron.ipcRenderer;
 
@@ -745,188 +742,10 @@ const rendererIpc = {
     ) => ipc.on(appWindowChannels.showToast, result),
   },
 
-  contextMenu: {
-    // Resizes context menu window
-    resizeWindow: (data: ContextResizeData) => {
-      extensionRendererApi.events_ipc.emit('context_menu_resize_window', {data});
-      ipc.send(contextMenuChannels.resizeWindow, data);
-    },
-    // Shows context menu window
-    showWindow: () => {
-      extensionRendererApi.events_ipc.emit('context_menu_show_window', {});
-      ipc.send(contextMenuChannels.showWindow);
-    },
-    // Hides context menu window
-    hideWindow: () => {
-      extensionRendererApi.events_ipc.emit('context_menu_hide_window', {});
-      ipc.send(contextMenuChannels.hideWindow);
-    },
-
-    // Listens for context menu view initialization events
-    onInitView: (
-      result: (
-        event: IpcRendererEvent,
-        params: ContextMenuParams,
-        navHistory: {
-          canGoBack: boolean;
-          canGoForward: boolean;
-        },
-        id: number,
-      ) => void,
-    ) => ipc.on(contextMenuChannels.onInitView, result),
-
-    // Opens terminate AI dialog
-    openTerminateAI: (id: string) => {
-      extensionRendererApi.events_ipc.emit('context_menu_open_terminate_ai', {id});
-      ipc.send(contextMenuChannels.openTerminateAI, id);
-    },
-    // Opens terminate tab dialog
-    openTerminateTab: (id: string, customPosition?: {x: number; y: number}) => {
-      extensionRendererApi.events_ipc.emit('context_menu_open_terminate_tab', {id, customPosition});
-      ipc.send(contextMenuChannels.openTerminateTab, id, customPosition);
-    },
-    // Opens close app dialog
-    openCloseApp: () => {
-      extensionRendererApi.events_ipc.emit('context_menu_open_close_app', {});
-      ipc.send(contextMenuChannels.openCloseApp);
-    },
-
-    // Listens for find in page events
-    onFind: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(contextMenuChannels.onFind, result),
-    // Listens for terminate AI events
-    onTerminateAI: (result: (event: IpcRendererEvent, id: string) => void) =>
-      ipc.on(contextMenuChannels.onTerminateAI, result),
-    // Listens for terminate tab events
-    onTerminateTab: (result: (event: IpcRendererEvent, id: string) => void) =>
-      ipc.on(contextMenuChannels.onTerminateTab, result),
-    // Listens for close app events
-    onCloseApp: (result: (event: IpcRendererEvent) => void) => ipc.on(contextMenuChannels.onCloseApp, result),
-    // Listens for zoom events
-    onZoom: (result: (event: IpcRendererEvent, id: string, zoomFactor: number) => void) =>
-      ipc.on(contextMenuChannels.onZoom, result),
-    onPrompt: (result: (event: IpcRendererEvent, message: string, defaultValue?: string) => void) =>
-      ipc.on(contextMenuChannels.onPrompt, result),
-    // Listens for zoom events
-    onDownloads: (result: (event: IpcRendererEvent) => void) => ipc.on(contextMenuChannels.onDownloads, result),
-    // Listens for volume control events
-    onVolume: (
-      result: (
-        event: IpcRendererEvent,
-        data: {id: string; tabId: string; volume: number; muted: boolean; globalMuted: boolean},
-      ) => void,
-    ) => ipc.on(contextMenuChannels.onVolume, result),
-
-    // Relaunches AI process
-    relaunchAI: (id: string) => {
-      extensionRendererApi.events_ipc.emit('context_menu_relaunch_ai', {id});
-      ipc.send(contextMenuChannels.relaunchAI, id);
-    },
-    // Listens for AI relaunch events
-    onRelaunchAI: (result: (event: IpcRendererEvent, id: string) => void) =>
-      ipc.on(contextMenuChannels.onRelaunchAI, result),
-
-    // Stops AI process
-    stopAI: (id: string) => {
-      extensionRendererApi.events_ipc.emit('context_menu_stop_ai', {id});
-      ipc.send(contextMenuChannels.stopAI, id);
-    },
-    // Listens for AI stop events
-    onStopAI: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(contextMenuChannels.onStopAI, result),
-
-    // Removes browser tab
-    removeTab: (tabID: string) => {
-      extensionRendererApi.events_ipc.emit('context_menu_remove_tab', {tabID});
-      ipc.send(contextMenuChannels.removeTab, tabID);
-    },
-    // Listens for tab removal events
-    onRemoveTab: (result: (event: IpcRendererEvent, tabID: string) => void) =>
-      ipc.on(contextMenuChannels.onRemoveTab, result),
-  },
-
   tab: {
     // Listens for new tab events
     onNewTab: (result: (event: IpcRendererEvent, url: string, background?: boolean) => void) =>
       ipc.on(tabsChannels.onNewTab, result),
-  },
-
-  contextItems: {
-    // Copies selected text in browser
-    copy: (id: number) => {
-      extensionRendererApi.events_ipc.emit('context_items_copy', {id});
-      ipc.send(contextMenuChannels.copy, id);
-    },
-    // Cuts selected text in browser
-    cut: (id: number) => {
-      extensionRendererApi.events_ipc.emit('context_items_cut', {id});
-      ipc.send(contextMenuChannels.cut, id);
-    },
-    // Pastes clipboard content in browser
-    paste: (id: number) => {
-      extensionRendererApi.events_ipc.emit('context_items_paste', {id});
-      ipc.send(contextMenuChannels.paste, id);
-    },
-    // Replaces misspelled word in browser
-    replaceMisspelling: (id: number, text: string) => {
-      extensionRendererApi.events_ipc.emit('context_items_replace_misspelling', {id, text});
-      ipc.send(contextMenuChannels.replaceMisspelling, id, text);
-    },
-    // Selects all text in browser
-    selectAll: (id: number) => {
-      extensionRendererApi.events_ipc.emit('context_items_select_all', {id});
-      ipc.send(contextMenuChannels.selectAll, id);
-    },
-
-    // Undoes last action in browser
-    undo: (id: number) => {
-      extensionRendererApi.events_ipc.emit('context_items_undo', {id});
-      ipc.send(contextMenuChannels.undo, id);
-    },
-    // Redoes last undone action in browser
-    redo: (id: number) => {
-      extensionRendererApi.events_ipc.emit('context_items_redo', {id});
-      ipc.send(contextMenuChannels.redo, id);
-    },
-
-    // Opens new tab with URL
-    newTab: (url: string) => {
-      extensionRendererApi.events_ipc.emit('context_items_new_tab', {url});
-      ipc.send(contextMenuChannels.newTab, url);
-    },
-    // Opens URL in default system browser
-    openExternal: (url: string) => {
-      extensionRendererApi.events_ipc.emit('context_items_open_external', {url});
-      ipc.send(contextMenuChannels.openExternal, url);
-    },
-
-    // Downloads image from URL
-    downloadImage: (id: number, url: string) => {
-      extensionRendererApi.events_ipc.emit('context_items_download_image', {id, url});
-      ipc.send(contextMenuChannels.downloadImage, id, url);
-    },
-
-    // Copies image to clipboard
-    copyImage: (url: string) => {
-      extensionRendererApi.events_ipc.emit('context_items_copy_image', {url});
-      ipc.send(contextMenuChannels.copyImage, url);
-    },
-
-    // Searches selected text with Google
-    searchWithGoogle: (text: string) => {
-      extensionRendererApi.events_ipc.emit('context_items_search_google', {text});
-      ipc.send(contextMenuChannels.searchWithGoogle, text);
-    },
-
-    // Opens DevTools and inspects element at coordinates
-    inspectElement: (id: number, x: number, y: number) => {
-      extensionRendererApi.events_ipc.emit('context_items_inspect_element', {id, x, y});
-      ipc.send(contextMenuChannels.inspectElement, id, x, y);
-    },
-
-    // Navigates browser (back, forward, or refresh)
-    navigate: (id: number, action: 'back' | 'forward' | 'refresh') => {
-      extensionRendererApi.events_ipc.emit('context_items_navigate', {id, action});
-      ipc.send(contextMenuChannels.navigate, id, action);
-    },
   },
 
   browser: {
@@ -1212,55 +1031,6 @@ const rendererIpc = {
   events: {
     // Sends event for card pre-command uninstall
     card_PreCommandUninstall: (preCommands: string[]) => ipc.send(eventsChannels.card_PreCommandUninstall, preCommands),
-  },
-
-  downloadManager: {
-    // Listens for download count changes
-    onDownloadCount: (result: (event: IpcRendererEvent, count: number) => void) =>
-      ipc.on(browserDownloadChannels.mainDownloadCount, result),
-
-    // Listens for download start events
-    onDlStart: (result: (event: IpcRendererEvent, info: DownloadStartInfo) => void) =>
-      ipc.on(browserDownloadChannels.onDlStart, result),
-
-    // Listens for download progress events
-    onProgress: (result: (event: IpcRendererEvent, info: DownloadManagerProgress) => void) =>
-      ipc.on(browserDownloadChannels.onProgress, result),
-
-    // Listens for download completion events
-    onDone: (result: (event: IpcRendererEvent, info: DownloadDoneInfo) => void) =>
-      ipc.on(browserDownloadChannels.onDone, result),
-
-    // Opens downloads menu window
-    openMenu: () => ipc.send(browserDownloadChannels.openDownloadsMenu),
-    // Opens downloaded item or its folder
-    openItem: (name: string, action: 'open' | 'openFolder') => ipc.send(browserDownloadChannels.openItem, name, action),
-    // Cancels download
-    cancel: (name: string) => ipc.send(browserDownloadChannels.cancel, name),
-    // Pauses download
-    pause: (name: string) => ipc.send(browserDownloadChannels.pause, name),
-    // Resumes paused download
-    resume: (name: string) => ipc.send(browserDownloadChannels.resume, name),
-    // Clears completed download from list
-    clear: (name: string) => ipc.send(browserDownloadChannels.clear, name),
-    // Clears all downloads from list
-    clearAll: () => ipc.send(browserDownloadChannels.clearAll),
-
-    // Gets current download location
-    getDownloadLocation: (): Promise<{success: boolean; path?: string; error?: string}> =>
-      ipc.invoke(browserDownloadChannels.getDownloadLocation),
-    // Sets download location
-    setDownloadLocation: (path: string): Promise<{success: boolean; error?: string}> =>
-      ipc.invoke(browserDownloadChannels.setDownloadLocation, path),
-    // Opens location selection dialog
-    openLocationDialog: (): Promise<{success: boolean; path?: string; error?: string}> =>
-      ipc.invoke(browserDownloadChannels.openLocationDialog),
-    // Gets download behavior setting
-    getDownloadBehavior: (): Promise<{success: boolean; behavior?: 'ask' | 'default'; error?: string}> =>
-      ipc.invoke(browserDownloadChannels.getDownloadBehavior),
-    // Sets download behavior
-    setDownloadBehavior: (behavior: 'ask' | 'default'): Promise<{success: boolean; error?: string}> =>
-      ipc.invoke(browserDownloadChannels.setDownloadBehavior, behavior),
   },
 
   customNotification: {

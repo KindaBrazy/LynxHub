@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 
 import {Stop_Icon} from '../../../../shared/assets/icons';
-import rendererIpc from '../../../ipc';
+import contextMenuIpc from '../../../ipc/context_menu';
 import {useHotkeysState} from '../../../redux/reducers/hotkeys';
 import {useSettingsState} from '../../../redux/reducers/settings';
 
@@ -14,9 +14,9 @@ export default function Terminate_AI({id}: Props) {
   const stopAi = () => {
     if (id) {
       if (isCtrlPressed || !showTerminateConfirm) {
-        rendererIpc.contextMenu.stopAI(id);
+        contextMenuIpc.send.stopAI(id);
       } else {
-        rendererIpc.contextMenu.openTerminateAI(id);
+        contextMenuIpc.send.openTerminateProcess(id);
       }
     }
   };

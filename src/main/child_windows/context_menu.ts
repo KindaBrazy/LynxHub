@@ -2,7 +2,8 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {browserDownloadChannels} from '@lynx_cross/consts/donwload_manager';
-import {browserChannels, contextMenuChannels, tabsChannels} from '@lynx_cross/consts/ipc';
+import {browserChannels, tabsChannels} from '@lynx_cross/consts/ipc';
+import contextMenuChannels from '@lynx_cross/consts/ipc_channels/context_menu';
 import windowDialogsChannels from '@lynx_cross/consts/ipc_channels/window_dialogs';
 import {
   BrowserWindow,

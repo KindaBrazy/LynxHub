@@ -2,20 +2,20 @@ import {Badge, Button} from '@heroui/react';
 import {useEffect, useState} from 'react';
 
 import {DownloadDuo_Icon} from '../../../../../shared/assets/icons';
-import rendererIpc from '../../../../ipc';
+import downloadManagerIpc from '../../../../ipc/download_manager';
 
 export default function DownloadManager() {
   const [itemCount, setItemCount] = useState<number>(0);
 
   useEffect(() => {
-    const offDownloadCount = rendererIpc.downloadManager.onDownloadCount((_, count) => {
+    const offDownloadCount = downloadManagerIpc.on.downloadCount(count => {
       setItemCount(count);
     });
 
     return () => offDownloadCount();
   }, []);
 
-  const openDownloadsWindow = () => rendererIpc.downloadManager.openMenu();
+  const openDownloadsWindow = () => downloadManagerIpc.send.openMenu();
 
   if (itemCount === 0) return null;
 

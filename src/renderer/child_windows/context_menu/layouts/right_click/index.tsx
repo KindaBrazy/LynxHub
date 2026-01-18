@@ -1,5 +1,5 @@
 import {Divider} from '@heroui/react';
-import rendererIpc from '@lynx/ipc';
+import contextMenuIpc from '@lynx/ipc/context_menu';
 import type {ContextMenuParams} from 'electron';
 import {isEmpty} from 'lodash';
 import {memo, useEffect, useMemo, useState} from 'react';
@@ -49,7 +49,7 @@ const RightClick = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) =
   }, [hasLinkItems, hasImageItems, hasTextSelection, contextMenuParams]);
 
   useEffect(() => {
-    const offInitView = rendererIpc.contextMenu.onInitView((_, params, navHistory, contextId) => {
+    const offInitView = contextMenuIpc.on.initView((params, navHistory, contextId) => {
       setContextMenuParams(params);
       setNavigationHistory(navHistory);
       setId(contextId);
@@ -57,7 +57,7 @@ const RightClick = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) =
       setWidthSize('sm');
       setSelectedLayout(MenuTypes.RightClick);
 
-      rendererIpc.contextMenu.showWindow();
+      contextMenuIpc.send.showWindow();
     });
 
     return () => offInitView();

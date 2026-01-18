@@ -1,9 +1,9 @@
-import rendererIpc from '@lynx/ipc';
+import contextMenuIpc from '@lynx/ipc/context_menu';
 import {ReactNode} from 'react';
 
 export const createActionHandler = (actionFn: () => void): (() => void) => {
   return () => {
-    rendererIpc.contextMenu.hideWindow();
+    contextMenuIpc.send.hideWindow();
     actionFn();
   };
 };

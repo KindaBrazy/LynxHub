@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx/ipc';
+import contextMenuIpc from '@lynx/ipc/context_menu';
 import {RefObject, useLayoutEffect, useRef} from 'react';
 
 type DimensionsMsg = {width: number; height: number; dpr: number};
@@ -26,7 +26,7 @@ export function useResize(divRef: RefObject<HTMLDivElement | null>) {
 
       const dpr = window.devicePixelRatio || 1;
       const msg: DimensionsMsg = {width: w, height: h, dpr};
-      rendererIpc.contextMenu.resizeWindow(msg);
+      contextMenuIpc.send.resizeWindow(msg);
     };
 
     const ro = new ResizeObserver(() => {

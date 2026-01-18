@@ -1,6 +1,7 @@
-import rendererIpc from '@lynx/ipc';
+import contextMenuIpc from '@lynx/ipc/context_menu';
 
-export const hideWindow = () => rendererIpc.contextMenu.hideWindow();
+export const hideContextWindow = () => contextMenuIpc.send.hideWindow();
+export const showContextWindow = () => contextMenuIpc.send.showWindow();
 
 export const setElementFocus = (node: HTMLElement | null) => {
   if (node) {

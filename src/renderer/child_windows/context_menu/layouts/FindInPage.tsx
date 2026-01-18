@@ -1,5 +1,6 @@
 import {Button, Input} from '@heroui/react';
 import rendererIpc from '@lynx/ipc';
+import contextMenuIpc from '@lynx/ipc/context_menu';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {isEmpty} from 'lodash';
@@ -8,6 +9,7 @@ import {type KeyboardEvent, memo, useEffect, useRef, useState} from 'react';
 
 import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
+import {hideContextWindow, showContextWindow} from './Shared';
 
 const FindInPage = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
   const [searchValue, setSearchValue] = useState<string>('');
@@ -49,7 +51,7 @@ const FindInPage = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) =
     } else if (e.key === 'Escape') {
       e.preventDefault();
       clear();
-      rendererIpc.contextMenu.hideWindow();
+      hideContextWindow();
     }
   };
 
@@ -69,13 +71,13 @@ const FindInPage = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) =
   }, [id]);
 
   useEffect(() => {
-    const offFind = rendererIpc.contextMenu.onFind((_, webID) => {
-      setId(webID);
+    const offFind = contextMenuIpc.on.find(_id => {
+      setId(_id);
 
       setWidthSize('md');
       setSelectedLayout(MenuTypes.FindInPage);
 
-      rendererIpc.contextMenu.showWindow();
+      showContextWindow();
     });
 
     return () => {

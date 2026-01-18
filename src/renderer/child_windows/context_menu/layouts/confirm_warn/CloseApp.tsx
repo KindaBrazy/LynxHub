@@ -1,13 +1,14 @@
 import {Button} from '@heroui/react';
 import {isLinuxPortable} from '@lynx/hooks/utils';
 import rendererIpc from '@lynx/ipc';
+import contextMenuIpc from '@lynx/ipc/context_menu';
 import {Power_Icon} from '@lynx_assets/icons';
 import {Forward2, Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect} from 'react';
 
 import {MenuTypes} from '../../consts';
 import {CommonProps} from '../../types';
-import {hideWindow, setElementFocus} from '../Shared';
+import {hideContextWindow, setElementFocus} from '../Shared';
 import ConfirmElement from './ConfirmElement';
 
 const CloseApp = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
@@ -15,10 +16,10 @@ const CloseApp = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => 
   const onClose = () => rendererIpc.win.changeWinState('close');
 
   useEffect(() => {
-    const offCloseApp = rendererIpc.contextMenu.onCloseApp(() => {
+    const offCloseApp = contextMenuIpc.on.closeApp(() => {
       setWidthSize('lg');
       setSelectedLayout(MenuTypes.CloseAppConfirm);
-      rendererIpc.contextMenu.showWindow();
+      contextMenuIpc.send.showWindow();
     });
 
     return () => offCloseApp();
@@ -30,7 +31,11 @@ const CloseApp = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => 
     <ConfirmElement
       buttons={
         <>
-          <Button size="sm" color="success" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
+          <Button
+            size="sm"
+            color="success"
+            onPress={hideContextWindow}
+            startContent={<Forward2 className="rotate-180" />}>
             Stay
           </Button>
           <div className="space-x-2">

@@ -165,7 +165,7 @@ export function getWebContentsIfAvailable(window: BrowserWindow | undefined) {
 }
 
 export function noticeAllWindowsDarkMode(darkMode: DarkModeTypes) {
-  const {appManager, contextMenuManager, browserDownloadManager, linkPreviewManager, shareScreenManager} = classHolder;
+  const {appManager, contextMenuManager, linkPreviewManager, shareScreenManager} = classHolder;
 
   const value = darkMode === 'system' ? getSystemDarkMode() : darkMode;
   const isDark = value === 'dark';
@@ -175,9 +175,6 @@ export function noticeAllWindowsDarkMode(darkMode: DarkModeTypes) {
 
   const contextMenu = getWebContentsIfAvailable(contextMenuManager?.getWindow());
   if (contextMenu) contextMenu.send(winChannels.onDarkMode, isDark);
-
-  const browserDownload = getWebContentsIfAvailable(browserDownloadManager?.menuWindow);
-  if (browserDownload) browserDownload.send(winChannels.onDarkMode, isDark);
 
   const linkPreview = getWebContentsIfAvailable(linkPreviewManager?.getWindow());
   if (linkPreview) linkPreview.send(winChannels.onDarkMode, isDark);

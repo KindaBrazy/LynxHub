@@ -1,12 +1,11 @@
 import {Button} from '@heroui/react';
-import rendererIpc from '@lynx/ipc';
 import windowDialogsIpc from '@lynx/ipc/window_dialogs';
 import {Check, ShieldCheck, X} from 'lucide-react';
 import {memo, useEffect, useState} from 'react';
 
 import {MenuTypes} from '../../consts';
 import {CommonProps} from '../../types';
-import {hideWindow, setElementFocus} from '../Shared';
+import {hideContextWindow, setElementFocus, showContextWindow} from '../Shared';
 
 const ConfirmWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
   const [message, setMessage] = useState<string | undefined>(undefined);
@@ -18,7 +17,7 @@ const ConfirmWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps
       setWidthSize('lg');
       setSelectedLayout(MenuTypes.Confirm);
 
-      rendererIpc.contextMenu.showWindow();
+      showContextWindow();
     });
 
     return () => offPrompt();
@@ -26,7 +25,7 @@ const ConfirmWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps
 
   const handleResult = (result: boolean) => {
     windowDialogsIpc.confirmResult(result);
-    hideWindow();
+    hideContextWindow();
   };
 
   if (!show) return null;

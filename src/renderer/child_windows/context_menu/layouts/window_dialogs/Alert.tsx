@@ -1,12 +1,12 @@
 import {Button} from '@heroui/react';
-import rendererIpc from '@lynx/ipc';
+import contextMenuIpc from '@lynx/ipc/context_menu';
 import windowDialogsIpc from '@lynx/ipc/window_dialogs';
 import {Check, ShieldAlert} from 'lucide-react';
 import {memo, useEffect, useState} from 'react';
 
 import {MenuTypes} from '../../consts';
 import {CommonProps} from '../../types';
-import {hideWindow} from '../Shared';
+import {hideContextWindow} from '../Shared';
 
 const AlertWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
   const [message, setMessage] = useState<string | undefined>(undefined);
@@ -18,7 +18,7 @@ const AlertWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) 
       setWidthSize('lg');
       setSelectedLayout(MenuTypes.Alert);
 
-      rendererIpc.contextMenu.showWindow();
+      contextMenuIpc.send.showWindow();
     });
 
     return () => offPrompt();
@@ -34,7 +34,7 @@ const AlertWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) 
       </div>
 
       <div className="flex justify-end">
-        <Button variant="flat" color="success" onPress={hideWindow} startContent={<Check className="size-4" />}>
+        <Button variant="flat" color="success" onPress={hideContextWindow} startContent={<Check className="size-4" />}>
           OK
         </Button>
       </div>

@@ -1,5 +1,5 @@
 import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Progress, Tooltip} from '@heroui/react';
-import rendererIpc from '@lynx/ipc';
+import downloadManagerIpc from '@lynx/ipc/download_manager';
 import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import {Pause, Play, Restart} from '@solar-icons/react-perf/Bold';
 import {FileDownload, FolderOpen, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
@@ -16,23 +16,23 @@ type Props = {
 export default function DownloadItem({item, setItems}: Props) {
   const handleAction = (name: string, action: 'pause' | 'resume' | 'cancel' | 'open' | 'openFolder' | 'clear') => {
     if (action === 'open' || action === 'openFolder') {
-      rendererIpc.downloadManager.openItem(name, action);
+      downloadManagerIpc.send.openItem(name, action);
     } else if (action === 'clear') {
       setItems(prev => prev.filter(download => download.name !== name));
-      rendererIpc.downloadManager.clear(name);
+      downloadManagerIpc.send.clear(name);
     } else {
       setItems(prev =>
         prev.map(download => {
           if (download.name === name) {
             switch (action) {
               case 'pause':
-                rendererIpc.downloadManager.pause(name);
+                downloadManagerIpc.send.pause(name);
                 return {...download, status: 'paused' as const, bytesPerSecond: 0};
               case 'resume':
-                rendererIpc.downloadManager.resume(name);
+                downloadManagerIpc.send.resume(name);
                 return {...download, status: 'downloading' as const, bytesPerSecond: 524288};
               case 'cancel':
-                rendererIpc.downloadManager.cancel(name);
+                downloadManagerIpc.send.cancel(name);
                 return {...download, status: 'cancelled' as const, bytesPerSecond: 0};
               default:
                 return download;

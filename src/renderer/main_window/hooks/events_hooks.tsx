@@ -6,6 +6,7 @@ import {useDispatch} from 'react-redux';
 
 import AddBreadcrumb_Renderer from '../../shared/sentry/Breadcrumbs';
 import rendererIpc from '../ipc';
+import contextMenuIpc from '../ipc/context_menu';
 import {useRemoveTab} from '../layouts/tabs/utils';
 import {useAllCardMethods} from '../plugins/modules';
 import {appActions, useAppState} from '../redux/reducers/app';
@@ -313,9 +314,9 @@ export const useContextEvents = () => {
   const removeTab = useRemoveTab();
 
   useEffect(() => {
-    const offStopAI = rendererIpc.contextMenu.onStopAI((_, id) => removeTab({id}));
+    const offStopAI = contextMenuIpc.on.stopProcess(id => removeTab({id}));
 
-    const offRelaunchAI = rendererIpc.contextMenu.onRelaunchAI((_, id) => {
+    const offRelaunchAI = contextMenuIpc.on.relaunchProcess(id => {
       const runningCard = runningCards.find(card => card.id === id);
       if (!runningCard) return;
 

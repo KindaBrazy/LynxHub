@@ -6,7 +6,7 @@ import {useDispatch} from 'react-redux';
 
 import {CloseSimple_Icon} from '../../../shared/assets/icons';
 import useHotkeyPress from '../../hooks/hotkeys';
-import rendererIpc from '../../ipc';
+import contextMenuIpc from '../../ipc/context_menu';
 import {useCardsState} from '../../redux/reducers/cards';
 import {useHotkeysState} from '../../redux/reducers/hotkeys';
 import {useSettingsState} from '../../redux/reducers/settings';
@@ -49,9 +49,9 @@ export default function TabItem({tab}: Props) {
         } else {
           const bounds = closeBtnRef.current?.getBoundingClientRect();
           if (bounds && isHokey) {
-            rendererIpc.contextMenu.openTerminateTab(tabId, {x: bounds.x, y: bounds.y});
+            contextMenuIpc.send.openTerminateTab(tabId, {x: bounds.x, y: bounds.y});
           } else {
-            rendererIpc.contextMenu.openTerminateTab(tabId);
+            contextMenuIpc.send.openTerminateTab(tabId);
           }
         }
       }
