@@ -16,7 +16,7 @@ const Browser_Search = memo(({id, tabID}: Props) => {
     const bounds = btnRef.current?.getBoundingClientRect();
     if (bounds) {
       const {x, y} = bounds;
-      rendererIpc.browser.openFindInPage(id, {x: x - 125, y: y + 17});
+      rendererIpc.browser.openFindInPage(id, {x: x - 125, y: y + 30});
     } else {
       rendererIpc.browser.openFindInPage(id);
     }
