@@ -2,12 +2,12 @@ import {useRef, useState} from 'react';
 
 import {MenuTypes} from './consts';
 import BrowserScale from './layouts/BrowserScale';
-import CloseAppConfirm from './layouts/CloseAppConfirm';
+import CloseApp from './layouts/confirm/CloseApp';
+import TerminateProcess from './layouts/confirm/TerminateProcess';
+import TerminateTab from './layouts/confirm/TerminateTab';
 import DownloadMenu from './layouts/downloads';
 import FindInPage from './layouts/FindInPage';
 import RightClick from './layouts/right_click';
-import TerminateProcessConfirm from './layouts/TerminateProcessConfirm';
-import TerminateTabConfirm from './layouts/TerminateTabConfirm';
 import VolumeMenu from './layouts/Volume';
 import {useResize} from './useResize';
 
@@ -41,17 +41,17 @@ export default function ContextMenu() {
         setSelectedLayout={setSelectedLayout}
         show={selectedLayout === MenuTypes.RightClick}
       />
-      <CloseAppConfirm
+      <CloseApp
         setWidthSize={setWidthSize}
         setSelectedLayout={setSelectedLayout}
         show={selectedLayout === MenuTypes.CloseAppConfirm}
       />
-      <TerminateProcessConfirm
+      <TerminateProcess
         setWidthSize={setWidthSize}
         setSelectedLayout={setSelectedLayout}
         show={selectedLayout === MenuTypes.TerminateProcessConfirm}
       />
-      <TerminateTabConfirm
+      <TerminateTab
         setWidthSize={setWidthSize}
         setSelectedLayout={setSelectedLayout}
         show={selectedLayout === MenuTypes.TerminateTabConfirm}
