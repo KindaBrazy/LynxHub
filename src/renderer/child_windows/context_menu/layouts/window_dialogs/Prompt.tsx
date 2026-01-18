@@ -1,6 +1,6 @@
 import {Button, Input} from '@heroui/react';
 import rendererIpc from '@lynx/ipc';
-import promptIpc from '@lynx/ipc/prompt_window';
+import windowDialogsIpc from '@lynx/ipc/window_dialogs';
 import {Check, TextCursorInput, X} from 'lucide-react';
 import {memo, useEffect, useState} from 'react';
 
@@ -15,19 +15,13 @@ const PromptWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
   const done = () => {
     const result: string | null = inputValue === '' || inputValue === undefined ? null : inputValue;
 
-    promptIpc.result(result);
-
-    hideWindow();
-  };
-
-  const cancel = () => {
-    promptIpc.cancel();
+    windowDialogsIpc.promptResult(result);
 
     hideWindow();
   };
 
   useEffect(() => {
-    const offPrompt = promptIpc.onShow((_message: string, _defaultValue?: string) => {
+    const offPrompt = windowDialogsIpc.promptShow((_message: string, _defaultValue?: string) => {
       setMessage(_message);
       setInputValue(_defaultValue);
 
@@ -54,7 +48,7 @@ const PromptWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
           if (event.key === 'Enter') {
             done();
           } else if (event.key === 'Escape') {
-            cancel();
+            hideWindow();
           }
         }}
         value={inputValue}
@@ -64,7 +58,7 @@ const PromptWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
       />
 
       <div className="flex justify-between">
-        <Button variant="light" color="warning" onPress={cancel} startContent={<X className="size-4" />}>
+        <Button variant="light" color="warning" onPress={hideWindow} startContent={<X className="size-4" />}>
           Cancel
         </Button>
 

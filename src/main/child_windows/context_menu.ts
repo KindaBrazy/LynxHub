@@ -3,7 +3,7 @@ import path from 'node:path';
 import {is} from '@electron-toolkit/utils';
 import {browserDownloadChannels} from '@lynx_cross/consts/donwload_manager';
 import {browserChannels, contextMenuChannels, tabsChannels} from '@lynx_cross/consts/ipc';
-import promptChannels from '@lynx_cross/consts/ipc_channels/prompt_window';
+import windowDialogsChannels from '@lynx_cross/consts/ipc_channels/window_dialogs';
 import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
@@ -28,7 +28,9 @@ export default class ContextMenuManager {
   private webContents: WebContents[] = [];
   private browserChannelsRegistered = false;
   private contextChannelsRegistered = false;
-  private promptEvent?: IpcMainEvent;
+
+  private dialogEvent?: IpcMainEvent;
+  private dialogDefaultResult: boolean | null | string = null;
 
   private static readonly CONTEXT_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
     frame: false,
@@ -170,28 +172,57 @@ export default class ContextMenuManager {
       this.sendContextMenuMessage(contextMenuChannels.onDownloads);
     });
 
-    ipcMain.on(promptChannels.onPrompt, (event, message: string, defaultValue?: string) => {
+    this.listenForDialogWindows();
+  }
+
+  private listenForDialogWindows() {
+    ipcMain.on(windowDialogsChannels.onPrompt, (event, message: string, defaultValue?: string) => {
       if (this.mainWindow && !this.mainWindow.isDestroyed()) {
         const {width, height} = this.mainWindow.getBounds();
         this.setCustomContextPosition({x: width / 2 - 150, y: height / 2 - 60});
       }
 
-      this.sendContextMenuMessage(promptChannels.onShow, message, defaultValue);
+      this.sendContextMenuMessage(windowDialogsChannels.promptShow, message, defaultValue);
 
-      this.promptEvent = event;
+      this.dialogEvent = event;
+      this.dialogDefaultResult = null;
     });
 
-    ipcMain.on(promptChannels.cancel, () => {
-      if (this.promptEvent) {
-        this.promptEvent.returnValue = null;
-        this.promptEvent = undefined;
+    ipcMain.on(windowDialogsChannels.onConfirm, (event, message: string) => {
+      if (this.mainWindow && !this.mainWindow.isDestroyed()) {
+        const {width, height} = this.mainWindow.getBounds();
+        this.setCustomContextPosition({x: width / 2 - 150, y: height / 2 - 60});
+      }
+
+      this.sendContextMenuMessage(windowDialogsChannels.confirmShow, message);
+
+      this.dialogEvent = event;
+      this.dialogDefaultResult = false;
+    });
+
+    ipcMain.on(windowDialogsChannels.onAlert, (event, message: string) => {
+      if (this.mainWindow && !this.mainWindow.isDestroyed()) {
+        const {width, height} = this.mainWindow.getBounds();
+        this.setCustomContextPosition({x: width / 2 - 150, y: height / 2 - 60});
+      }
+
+      this.sendContextMenuMessage(windowDialogsChannels.alertShow, message);
+
+      this.dialogEvent = event;
+      this.dialogDefaultResult = null;
+    });
+
+    ipcMain.on(windowDialogsChannels.promptResult, (_e: any, result: string | null) => {
+      if (this.dialogEvent) {
+        this.dialogEvent.returnValue = result;
+        this.dialogEvent = undefined;
       }
     });
 
-    ipcMain.on(promptChannels.result, (_e: any, result: string | null) => {
-      if (this.promptEvent) {
-        this.promptEvent.returnValue = result;
-        this.promptEvent = undefined;
+    ipcMain.on(windowDialogsChannels.confirmResult, (_e: any, result: boolean) => {
+      if (this.dialogEvent) {
+        this.dialogEvent.returnValue = result;
+        this.dialogEvent = undefined;
       }
     });
   }
@@ -312,9 +343,9 @@ export default class ContextMenuManager {
       return;
     }
 
-    if (this.promptEvent) {
-      this.promptEvent.returnValue = null;
-      this.promptEvent = undefined;
+    if (this.dialogEvent) {
+      this.dialogEvent.returnValue = this.dialogDefaultResult;
+      this.dialogEvent = undefined;
     }
 
     this.isHiding = true;
