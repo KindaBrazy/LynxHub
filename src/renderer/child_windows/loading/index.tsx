@@ -1,8 +1,8 @@
-import '../../shared/styles.css';
+import '@lynx_shared/styles.css';
 
+import rendererIpc from '@lynx/ipc';
 import {createRoot} from 'react-dom/client';
 
-import rendererIpc from '../../main_window/ipc';
 import LiquidChromeLoading from './loadings/LiquidChrome';
 import RippleLoading from './loadings/Ripple';
 import SimpleLoading from './loadings/Simple';

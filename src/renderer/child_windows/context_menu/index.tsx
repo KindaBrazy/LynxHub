@@ -1,4 +1,4 @@
-import '../../shared/styles.css';
+import '@lynx_shared/styles.css';
 
 import HeroUIProvider from '@lynx_shared/HeroUIProvider';
 import {createRoot} from 'react-dom/client';
