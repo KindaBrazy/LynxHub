@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
-import {memo, useCallback, useMemo} from 'react';
+import {memo, useCallback, useMemo, useRef} from 'react';
 
 import rendererIpc from '../../../../ipc';
 import {useVolumeState} from '../../../../redux/reducers/volume';
@@ -11,6 +11,8 @@ type Props = {
 };
 
 const Browser_Volume = memo(({id, tabId}: Props) => {
+  const btnRef = useRef<HTMLButtonElement | null>(null);
+
   const tabAudioPlaying = useVolumeState('tabAudioPlaying');
   const tabMuted = useVolumeState('tabMuted');
   const tabVolumes = useVolumeState('tabVolumes');
@@ -21,7 +23,13 @@ const Browser_Volume = memo(({id, tabId}: Props) => {
   const volume = tabVolumes[tabId] ?? 100;
 
   const openVolumeMenu = useCallback(() => {
-    rendererIpc.browser.openVolume({id, tabId, volume, muted: isMuted, globalMuted});
+    const bounds = btnRef.current?.getBoundingClientRect();
+    if (bounds) {
+      const {x, y} = bounds;
+      rendererIpc.browser.openVolume({id, tabId, volume, muted: isMuted, globalMuted}, {x: x - 125, y: y + 30});
+    } else {
+      rendererIpc.browser.openVolume({id, tabId, volume, muted: isMuted, globalMuted});
+    }
   }, [id, tabId, volume, isMuted, globalMuted]);
 
   const icon = useMemo(() => {
@@ -59,6 +67,7 @@ const Browser_Volume = memo(({id, tabId}: Props) => {
   return (
     <Button
       size="sm"
+      ref={btnRef}
       variant="light"
       aria-label={ariaLabel}
       onPress={openVolumeMenu}

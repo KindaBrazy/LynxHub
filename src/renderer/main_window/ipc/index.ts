@@ -959,13 +959,15 @@ const rendererIpc = {
       ipc.send(browserChannels.openFindInPage, id, customPosition);
     },
     // Opens zoom dialog
-    openZoom: (id: string) => {
+    openZoom: (id: string, customPosition?: {x: number; y: number}) => {
       extensionRendererApi.events_ipc.emit('browser_open_zoom', {id});
-      ipc.send(browserChannels.openZoom, id);
+      ipc.send(browserChannels.openZoom, id, customPosition);
     },
     // Opens volume control dialog
-    openVolume: (data: {id: string; tabId: string; volume: number; muted: boolean; globalMuted: boolean}) =>
-      ipc.send(browserChannels.openVolume, data),
+    openVolume: (
+      data: {id: string; tabId: string; volume: number; muted: boolean; globalMuted: boolean},
+      customPosition?: {x: number; y: number},
+    ) => ipc.send(browserChannels.openVolume, data, customPosition),
 
     // Finds text in page
     findInPage: (id: string, value: string, options: FindInPageOptions) => {
