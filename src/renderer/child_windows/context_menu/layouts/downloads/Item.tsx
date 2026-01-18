@@ -2,7 +2,7 @@ import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Progress, T
 import rendererIpc from '@lynx/ipc';
 import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import {Pause, Play, Restart} from '@solar-icons/react-perf/Bold';
-import {ClockCircle, FileDownload, FolderOpen, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {FileDownload, FolderOpen, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {X} from 'lucide-react';
 import {Dispatch, SetStateAction} from 'react';
 
@@ -45,54 +45,54 @@ export default function DownloadItem({item, setItems}: Props) {
   };
 
   return (
-    <Card as="div" className="cursor-default mb-3 bg-foreground-100 shadow-sm shrink-0" fullWidth isPressable>
+    <Card as="div" className="cursor-default bg-foreground-100 shadow-sm shrink-0" fullWidth isPressable>
       <CardHeader className={'pb-1'}>
         {/* Item Header */}
         <div className="flex items-start justify-between w-full">
           <div className="flex-1 min-w-0">
-            <div className="flex items-center mb-1">
-              <Tooltip
-                size="sm"
-                delay={300}
-                content={item.name}
-                className="max-w-[90%]"
-                classNames={{content: 'whitespace-break-spaces'}}
-                showArrow>
-                <h3 className="font-medium text-gray-900 dark:text-white text-sm truncate">{item.name}</h3>
+            <div className="flex items-center justify-between mb-1">
+              <Tooltip size="sm" delay={300} content={item.name} className="max-w-[90%]" showArrow>
+                <span className="font-medium text-sm truncate">{item.name}</span>
               </Tooltip>
-            </div>
-            <div className="flex items-center gap-3 text-xs text-gray-400">
-              <span>
-                {formatBytes(item.receivedBytes)} / {formatBytes(item.totalBytes)}
-              </span>
-              {item.status === 'downloading' && (
-                <>
-                  <span>|</span>
-                  <span className="flex items-center gap-1">
-                    <ClockCircle className="size-3.5" />
-                    {formatETA(item.totalBytes, item.receivedBytes, item.bytesPerSecond)}
-                  </span>
-                </>
+              {item.status === 'completed' && (
+                <span className="font-medium text-xs truncate shrink-0 ml-2">{formatBytes(item.totalBytes)}</span>
               )}
             </div>
           </div>
         </div>
       </CardHeader>
 
-      <CardBody className="py-1">
-        {/* Progress Bar */}
-        <Progress
-          size="sm"
-          aria-label={'Downloading...'}
-          color={getStatusColor(item.status)}
-          classNames={{label: 'text-xs', value: 'text-xs'}}
-          value={getProgress(item.receivedBytes, item.totalBytes)}
-          label={item.status === 'downloading' && formatSpeed(item.bytesPerSecond)}
-          showValueLabel
-        />
-      </CardBody>
+      {item.status !== 'completed' && (
+        <CardBody className="py-1">
+          {/* Progress Bar */}
+          <Progress
+            label={
+              <div className="flex flex-row gap-x-2 items-center">
+                <span>
+                  {formatBytes(item.receivedBytes)} / {formatBytes(item.totalBytes)}
+                </span>
+                {item.status === 'downloading' && (
+                  <>
+                    <span>|</span>
+                    {formatSpeed(item.bytesPerSecond)}
 
-      <CardFooter className="py-2">
+                    <span>|</span>
+                    {formatETA(item.totalBytes, item.receivedBytes, item.bytesPerSecond)}
+                  </>
+                )}
+              </div>
+            }
+            size="sm"
+            aria-label={'Downloading...'}
+            color={getStatusColor(item.status)}
+            classNames={{label: 'text-xs', value: 'text-xs'}}
+            value={getProgress(item.receivedBytes, item.totalBytes)}
+            showValueLabel
+          />
+        </CardBody>
+      )}
+
+      <CardFooter className="pt-1 pb-2">
         {/* Action Buttons */}
         <ButtonGroup size="sm" variant="flat" className="flex" fullWidth>
           {item.status === 'completed' ? (

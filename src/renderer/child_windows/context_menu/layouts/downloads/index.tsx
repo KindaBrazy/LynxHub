@@ -84,14 +84,14 @@ export default function DownloadMenu({setSelectedLayout, setWidthSize, show}: Co
           </Chip>
           {downloads.length > 0 && (
             <Button size="sm" color="danger" variant="flat" startContent={<Broom />} onPress={handleClearAll}>
-              Clear All
+              Cancel & Clear All
             </Button>
           )}
         </div>
       </div>
 
       {/* Download List */}
-      <div className={'px-3 py-1 gap-y-2 flex flex-col justify-start max-h-200 overflow-y-auto overflow-x-hidden'}>
+      <div className={'px-3 py-1 pb-4 gap-y-2 flex flex-col justify-start max-h-200 overflow-y-auto overflow-x-hidden'}>
         {downloads.map(item => (
           <DownloadItem item={item} key={item.name} setItems={setDownloads} />
         ))}
