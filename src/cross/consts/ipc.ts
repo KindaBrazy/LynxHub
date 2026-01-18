@@ -205,6 +205,7 @@ export const contextMenuChannels = {
   onTerminateTab: 'context:on-terminate-tab',
   onCloseApp: 'context:on-close-app',
   onZoom: 'context:zoom-page',
+  onPrompt: 'context:prompt',
   onVolume: 'context:volume-control',
   onDownloads: 'context:downloads',
 

@@ -1,14 +1,22 @@
-import '@sentry/electron/preload';
-
 import {contextBridge, ipcRenderer, webFrame} from 'electron';
 
-contextBridge.exposeInMainWorld('electron', {
+const electronApi = {
   ipcRenderer: {
-    promptDialog: message => {
-      return ipcRenderer.sendSync('show-prompt', message);
+    promptDialog: (message, defaultValue) => {
+      return ipcRenderer.sendSync('prompt_dialog:on-prompt', message, defaultValue);
     },
   },
-});
+};
+
+if (process.contextIsolated) {
+  try {
+    contextBridge.exposeInMainWorld('electron', electronApi);
+  } catch (error) {
+    console.error(error);
+  }
+} else {
+  window.electron = electronApi;
+}
 
 window.addEventListener('DOMContentLoaded', () => {
   webFrame.executeJavaScript(`window.prompt = window.electron.ipcRenderer.promptDialog`);

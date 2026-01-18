@@ -7,4 +7,5 @@ export enum MenuTypes {
   TerminateProcessConfirm,
   TerminateTabConfirm,
   Downloads,
+  Prompt,
 }

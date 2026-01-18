@@ -25,7 +25,7 @@ const ConfirmElement = memo(({title, enabledTitle, confirmName, buttons}: Props)
   }, []);
 
   return (
-    <div className="py-4 px-5" key="terminate_ai_confirm">
+    <div className="py-4 px-5">
       <div className="flex flex-row items-center justify-start gap-x-2">
         <ShieldWarning className="text-warning size-7" />
         <span className="text-medium font-semibold">{title}</span>

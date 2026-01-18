@@ -8,7 +8,6 @@ import darwinIcon from '../../resources/icon-darwin.png?asset';
 import {APP_NAME} from '../cross/consts';
 import {isDev} from '../cross/utils';
 import LoadingWindow from './child_windows/loading';
-import DialogManager from './child_windows/prompt_dialog';
 import ShowToastWindow from './child_windows/toast';
 import classHolder from './core/class_holder';
 import {checkAppDirectories} from './core/data_folder';
@@ -84,7 +83,6 @@ async function startLynxHub() {
   listenToIpcChannels();
 
   PatreonAuth();
-  DialogManager();
 
   const appManager = classHolder.appManager!;
   appManager.onCreateWindow(() => browserIPC());

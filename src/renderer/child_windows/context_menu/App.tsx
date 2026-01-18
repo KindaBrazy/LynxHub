@@ -2,13 +2,14 @@ import {useRef, useState} from 'react';
 
 import {MenuTypes} from './consts';
 import BrowserScale from './layouts/BrowserScale';
-import CloseApp from './layouts/confirm/CloseApp';
-import TerminateProcess from './layouts/confirm/TerminateProcess';
-import TerminateTab from './layouts/confirm/TerminateTab';
+import CloseApp from './layouts/confirm_warn/CloseApp';
+import TerminateProcess from './layouts/confirm_warn/TerminateProcess';
+import TerminateTab from './layouts/confirm_warn/TerminateTab';
 import DownloadMenu from './layouts/downloads';
 import FindInPage from './layouts/FindInPage';
 import RightClick from './layouts/right_click';
 import VolumeMenu from './layouts/Volume';
+import PromptWindow from './layouts/window_dialogs/Prompt';
 import {useResize} from './useResize';
 
 export default function ContextMenu() {
@@ -65,6 +66,11 @@ export default function ContextMenu() {
         setWidthSize={setWidthSize}
         setSelectedLayout={setSelectedLayout}
         show={selectedLayout === MenuTypes.Downloads}
+      />
+      <PromptWindow
+        setWidthSize={setWidthSize}
+        setSelectedLayout={setSelectedLayout}
+        show={selectedLayout === MenuTypes.Prompt}
       />
     </div>
   );
