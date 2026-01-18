@@ -1,6 +1,7 @@
 import {Button, Input} from '@heroui/react';
 import rendererIpc from '@lynx/ipc';
 import promptIpc from '@lynx/ipc/prompt_window';
+import {Check, TextCursorInput, X} from 'lucide-react';
 import {memo, useEffect, useState} from 'react';
 
 import {MenuTypes} from '../../consts';
@@ -42,34 +43,34 @@ const PromptWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
   if (!show) return null;
 
   return (
-    <div className="py-4 px-5">
-      <div className="size-full flex-row space-y-4 px-4 pt-4 text-center">
-        <span className="dl-title w-full">{message}</span>
+    <div className="py-4 px-5 flex flex-col gap-y-3">
+      <div className="flex gap-x-2 items-center">
+        <TextCursorInput className="size-6" />
+        <span className="w-full line-clamp-2">{message}</span>
+      </div>
 
-        <Input
-          onKeyDown={event => {
-            if (event.key === 'Enter') {
-              done();
-            } else if (event.key === 'Escape') {
-              cancel();
-            }
-          }}
-          size="sm"
-          value={inputValue}
-          className="notDraggable"
-          onValueChange={setInputValue}
-          autoFocus
-        />
+      <Input
+        onKeyDown={event => {
+          if (event.key === 'Enter') {
+            done();
+          } else if (event.key === 'Escape') {
+            cancel();
+          }
+        }}
+        value={inputValue}
+        className="notDraggable"
+        onValueChange={setInputValue}
+        autoFocus
+      />
 
-        <div className="space-x-3 text-end">
-          <Button size="sm" color="warning" onPress={cancel} className="notDraggable">
-            Cancel
-          </Button>
+      <div className="flex justify-between">
+        <Button variant="light" color="warning" onPress={cancel} startContent={<X className="size-4" />}>
+          Cancel
+        </Button>
 
-          <Button size="sm" onPress={done} color="success" className="notDraggable">
-            OK
-          </Button>
-        </div>
+        <Button onPress={done} variant="flat" color="success" startContent={<Check className="size-4" />}>
+          OK
+        </Button>
       </div>
     </div>
   );
