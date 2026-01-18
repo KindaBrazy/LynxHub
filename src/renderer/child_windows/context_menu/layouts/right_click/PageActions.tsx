@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx/ipc';
+import contextItemsIpc from '@lynx/ipc/context_items';
 import {Code} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
@@ -9,7 +9,7 @@ const PageActions = memo(({id, x, y}: Props) => {
   return (
     <ActionButton
       onPress={createActionHandler(() => {
-        rendererIpc.contextItems.inspectElement(id, x, y);
+        contextItemsIpc.inspectElement(id, x, y);
       })}
       title="Inspect Element"
       key="context_inspectElement"

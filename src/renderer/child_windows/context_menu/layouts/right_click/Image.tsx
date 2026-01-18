@@ -1,5 +1,5 @@
 import {Divider} from '@heroui/react';
-import rendererIpc from '@lynx/ipc';
+import contextItemsIpc from '@lynx/ipc/context_items';
 import {Copy, GalleryCircle, GalleryDownload, GalleryWide, Link} from '@solar-icons/react-perf/BoldDuotone';
 
 import {ActionButton, createActionHandler} from './Utils';
@@ -12,7 +12,7 @@ export function Image({id, url}: Props) {
     <>
       <ActionButton
         onPress={createActionHandler(() => {
-          rendererIpc.contextItems.newTab(url);
+          contextItemsIpc.newTab(url);
         })}
         key="context_openImageTab"
         title="Open Image in New Tab"
@@ -20,7 +20,7 @@ export function Image({id, url}: Props) {
       />
       <ActionButton
         onPress={createActionHandler(() => {
-          rendererIpc.contextItems.copyImage(url);
+          contextItemsIpc.copyImage(url);
         })}
         title="Copy Image"
         key="context_copyImage"
@@ -28,7 +28,7 @@ export function Image({id, url}: Props) {
       />
       <ActionButton
         onPress={createActionHandler(() => {
-          rendererIpc.contextItems.downloadImage(id, url);
+          contextItemsIpc.downloadImage(id, url);
         })}
         title="Save Image"
         key="context_saveImage"
@@ -44,7 +44,7 @@ export function Image({id, url}: Props) {
       />
       <ActionButton
         onPress={createActionHandler(() => {
-          rendererIpc.contextItems.newTab(`https://lens.google.com/uploadbyurl?url=${encodeURIComponent(url)}`);
+          contextItemsIpc.newTab(`https://lens.google.com/uploadbyurl?url=${encodeURIComponent(url)}`);
         })}
         key="context_searchImage"
         title="Search Web for Image"

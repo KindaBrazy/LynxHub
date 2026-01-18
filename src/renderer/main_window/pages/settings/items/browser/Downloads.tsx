@@ -4,7 +4,7 @@ import {useDispatch} from 'react-redux';
 
 import {FolderDuo_Icon} from '../../../../../shared/assets/icons';
 import {lynxTopToast} from '../../../../hooks/utils';
-import rendererIpc from '../../../../ipc';
+import downloadManagerIpc from '../../../../ipc/download_manager';
 import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
@@ -22,7 +22,7 @@ export default function Downloads() {
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const locationResult = await rendererIpc.downloadManager.getDownloadLocation();
+        const locationResult = await downloadManagerIpc.invoke.getDownloadLocation();
         if (locationResult.success && locationResult.path) {
           setDownloadLocation(locationResult.path);
           setLocationError('');
@@ -31,7 +31,7 @@ export default function Downloads() {
           lynxTopToast(dispatch).warning(`Failed to load download location: ${locationResult.error}`);
         }
 
-        const behaviorResult = await rendererIpc.downloadManager.getDownloadBehavior();
+        const behaviorResult = await downloadManagerIpc.invoke.getDownloadBehavior();
         if (behaviorResult.success && behaviorResult.behavior) {
           setDownloadBehavior(behaviorResult.behavior);
           setBehaviorError('');
@@ -52,7 +52,7 @@ export default function Downloads() {
     setIsLoadingLocation(true);
     setLocationError('');
     try {
-      const result = await rendererIpc.downloadManager.openLocationDialog();
+      const result = await downloadManagerIpc.invoke.openLocationDialog();
       if (result.success && result.path) {
         setDownloadLocation(result.path);
         setLocationError('');
@@ -76,7 +76,7 @@ export default function Downloads() {
       setIsLoadingBehavior(true);
       setBehaviorError('');
       try {
-        const result = await rendererIpc.downloadManager.setDownloadBehavior(behavior);
+        const result = await downloadManagerIpc.invoke.setDownloadBehavior(behavior);
         if (result.success) {
           setDownloadBehavior(behavior);
           setBehaviorError('');

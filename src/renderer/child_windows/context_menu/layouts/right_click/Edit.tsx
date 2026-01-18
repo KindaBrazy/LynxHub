@@ -1,5 +1,5 @@
 import {Divider} from '@heroui/react';
-import rendererIpc from '@lynx/ipc';
+import contextItemsIpc from '@lynx/ipc/context_items';
 import {ClipboardText, Copy, Scissors, TextSelection, UndoLeftRound} from '@solar-icons/react-perf/BoldDuotone';
 import type {EditFlags} from 'electron';
 import {isEmpty} from 'lodash';
@@ -15,7 +15,7 @@ export function Edit({flags, selection, id}: Props) {
       {canUndo && (
         <ActionButton
           onPress={createActionHandler(() => {
-            rendererIpc.contextItems.undo(id);
+            contextItemsIpc.undo(id);
           })}
           title="Undo"
           key="context_undo"
@@ -25,7 +25,7 @@ export function Edit({flags, selection, id}: Props) {
       {canRedo && (
         <ActionButton
           onPress={createActionHandler(() => {
-            rendererIpc.contextItems.redo(id);
+            contextItemsIpc.redo(id);
           })}
           title="Redo"
           key="context_redo"
@@ -35,7 +35,7 @@ export function Edit({flags, selection, id}: Props) {
       {canCut && !isEmpty(selection) && (
         <ActionButton
           onPress={createActionHandler(() => {
-            rendererIpc.contextItems.cut(id);
+            contextItemsIpc.cut(id);
           })}
           title="Cut"
           key="context_cut"
@@ -45,7 +45,7 @@ export function Edit({flags, selection, id}: Props) {
       {canCopy && !isEmpty(selection) && (
         <ActionButton
           onPress={createActionHandler(() => {
-            rendererIpc.contextItems.copy(id);
+            contextItemsIpc.copy(id);
           })}
           title="Copy"
           key="context_copy"
@@ -55,7 +55,7 @@ export function Edit({flags, selection, id}: Props) {
       {canPaste && (
         <ActionButton
           onPress={createActionHandler(() => {
-            rendererIpc.contextItems.paste(id);
+            contextItemsIpc.paste(id);
           })}
           title="Paste"
           key="context_paste"
@@ -65,7 +65,7 @@ export function Edit({flags, selection, id}: Props) {
       {canSelectAll && (
         <ActionButton
           onPress={createActionHandler(() => {
-            rendererIpc.contextItems.selectAll(id);
+            contextItemsIpc.selectAll(id);
           })}
           title="Select All"
           key="context_selectAll"

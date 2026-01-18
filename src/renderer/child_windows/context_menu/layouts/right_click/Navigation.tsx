@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx/ipc';
+import contextItemsIpc from '@lynx/ipc/context_items';
 import {ArrowLeft, ArrowRight, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 
 import {NavBtnProps, NavHistory} from '../../types';
@@ -23,21 +23,21 @@ export default function Navigation({id, navHistory}: Props) {
     <div key="navItems" className="w-full flex flex-row items-center justify-center h-8 px-2 overflow-hidden gap-x-1">
       <NavButton
         onPress={createActionHandler(() => {
-          rendererIpc.contextItems.navigate(id, 'back');
+          contextItemsIpc.navigate(id, 'back');
         })}
         isDisabled={!navHistory.canGoBack}
         icon={<ArrowLeft className="size-5" />}
       />
       <NavButton
         onPress={createActionHandler(() => {
-          rendererIpc.contextItems.navigate(id, 'forward');
+          contextItemsIpc.navigate(id, 'forward');
         })}
         isDisabled={!navHistory.canGoForward}
         icon={<ArrowRight className="size-5" />}
       />
       <NavButton
         onPress={createActionHandler(() => {
-          rendererIpc.contextItems.navigate(id, 'refresh');
+          contextItemsIpc.navigate(id, 'refresh');
         })}
         icon={<Refresh className="size-4" />}
       />

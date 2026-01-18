@@ -1,34 +1,34 @@
 import {Button} from '@heroui/react';
-import rendererIpc from '@lynx/ipc';
+import contextMenuIpc from '@lynx/ipc/context_menu';
 import {Power_Icon} from '@lynx_assets/icons';
 import {Forward2, Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useState} from 'react';
 
 import {MenuTypes} from '../../consts';
 import {CommonProps} from '../../types';
-import {hideWindow, setElementFocus} from '../Shared';
+import {hideContextWindow, setElementFocus} from '../Shared';
 import ConfirmElement from './ConfirmElement';
 
 const TerminateProcess = memo(({setWidthSize, show, setSelectedLayout}: CommonProps) => {
   const [id, setId] = useState<string>('');
 
   const onStop = () => {
-    rendererIpc.contextMenu.stopAI(id);
-    hideWindow();
+    contextMenuIpc.send.stopAI(id);
+    hideContextWindow();
   };
   const onRelaunch = () => {
-    rendererIpc.contextMenu.relaunchAI(id);
-    hideWindow();
+    contextMenuIpc.send.relaunchAI(id);
+    hideContextWindow();
   };
 
   useEffect(() => {
-    const offTerminateAI = rendererIpc.contextMenu.onTerminateAI((_, targetID) => {
-      setId(targetID);
+    const offTerminateAI = contextMenuIpc.on.terminateProcess(_id => {
+      setId(_id);
 
       setWidthSize('lg');
       setSelectedLayout(MenuTypes.TerminateProcessConfirm);
 
-      rendererIpc.contextMenu.showWindow();
+      contextMenuIpc.send.showWindow();
     });
 
     return () => offTerminateAI();
@@ -40,7 +40,11 @@ const TerminateProcess = memo(({setWidthSize, show, setSelectedLayout}: CommonPr
     <ConfirmElement
       buttons={
         <>
-          <Button size="sm" color="success" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
+          <Button
+            size="sm"
+            color="success"
+            onPress={hideContextWindow}
+            startContent={<Forward2 className="rotate-180" />}>
             Cancel
           </Button>
           <div className="space-x-2">

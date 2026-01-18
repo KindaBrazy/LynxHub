@@ -1,5 +1,6 @@
 import {Button, Chip} from '@heroui/react';
-import rendererIpc from '@lynx/ipc';
+import contextMenuIpc from '@lynx/ipc/context_menu';
+import downloadManagerIpc from '@lynx/ipc/download_manager';
 import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import {Broom, DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useState} from 'react';
@@ -13,18 +14,18 @@ const DownloadMenu = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
 
   const handleClearAll = () => {
     setDownloads([]);
-    rendererIpc.downloadManager.clearAll();
+    downloadManagerIpc.send.clearAll();
   };
 
   useEffect(() => {
-    const OffDownloads = rendererIpc.contextMenu.onDownloads(() => {
+    const OffDownloads = contextMenuIpc.on.downloads(() => {
       setWidthSize('lg');
       setSelectedLayout(MenuTypes.Downloads);
 
-      rendererIpc.contextMenu.showWindow();
+      contextMenuIpc.send.showWindow();
     });
 
-    const offDlStart = rendererIpc.downloadManager.onDlStart((_, info) => {
+    const offDlStart = downloadManagerIpc.on.dlStart(info => {
       const newItem: DownloadItemInfo = {
         ...info,
         bytesPerSecond: 0,
@@ -35,7 +36,7 @@ const DownloadMenu = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
       };
       setDownloads(prevState => [newItem, ...prevState]);
     });
-    const offProgress = rendererIpc.downloadManager.onProgress((_, info) => {
+    const offProgress = downloadManagerIpc.on.progress(info => {
       setDownloads(prevState =>
         prevState.map(item =>
           item.name !== info.name
@@ -47,7 +48,7 @@ const DownloadMenu = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
         ),
       );
     });
-    const offDone = rendererIpc.downloadManager.onDone((_, info) => {
+    const offDone = downloadManagerIpc.on.done(info => {
       setDownloads(prevState =>
         prevState.map(item =>
           item.name !== info.name

@@ -3,6 +3,7 @@ import {useCallback} from 'react';
 
 import {Power_Icon} from '../../../shared/assets/icons';
 import rendererIpc from '../../ipc';
+import contextMenuIpc from '../../ipc/context_menu';
 import {useHotkeysState} from '../../redux/reducers/hotkeys';
 import {useSettingsState} from '../../redux/reducers/settings';
 import {useTabsState} from '../../redux/reducers/tabs';
@@ -23,7 +24,7 @@ export default function WindowButtons_Close({buttonProps, commonStyles}: Props) 
     if (isCtrlPressed || !showCloseConfirm) {
       close();
     } else {
-      rendererIpc.contextMenu.openCloseApp();
+      contextMenuIpc.send.openCloseApp();
     }
   };
 

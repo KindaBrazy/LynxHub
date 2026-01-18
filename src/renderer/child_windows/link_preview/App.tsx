@@ -1,8 +1,6 @@
-import {browserChannels} from '@lynx_cross/consts/ipc';
+import browserIpc from '@lynx/ipc/browser';
 import {useDocumentDarkMode} from '@lynx_shared/hooks';
 import {useEffect, useRef, useState} from 'react';
-
-const ipc = window.electron.ipcRenderer;
 
 export default function LinkPreview() {
   const [url, setUrl] = useState('');
@@ -11,10 +9,7 @@ export default function LinkPreview() {
   useDocumentDarkMode('bg-transparent');
 
   useEffect(() => {
-    const offHover = ipc.on(browserChannels.onLinkHover, (_: any, newUrl: string) => {
-      setUrl(newUrl || '');
-    });
-
+    const offHover = browserIpc.onLinkHover(setUrl);
     return () => offHover();
   }, []);
 
@@ -22,7 +17,7 @@ export default function LinkPreview() {
   useEffect(() => {
     if (containerRef.current && url) {
       const width = Math.min(containerRef.current.scrollWidth + 20, 800);
-      ipc.send(browserChannels.resizeLinkPreview, width);
+      browserIpc.resizeLinkPreview(width);
     }
   }, [url]);
 

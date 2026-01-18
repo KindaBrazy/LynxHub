@@ -4,7 +4,7 @@ import {isEqual} from 'lodash';
 import {memo, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import rendererIpc from '../../ipc';
+import contextMenuIpc from '../../ipc/context_menu';
 import {tabsActions, useTabsState} from '../../redux/reducers/tabs';
 import {AppDispatch} from '../../redux/store';
 import TabItem from './Item';
@@ -36,7 +36,7 @@ const TabContainer = memo(() => {
   }, [containerRef]);
 
   useEffect(() => {
-    const offRemoveTab = rendererIpc.contextMenu.onRemoveTab((_, tabId) => {
+    const offRemoveTab = contextMenuIpc.on.removeTab(tabId => {
       removeTab({tabId});
     });
 

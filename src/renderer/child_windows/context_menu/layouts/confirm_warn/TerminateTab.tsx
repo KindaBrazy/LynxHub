@@ -1,30 +1,30 @@
 import {Button} from '@heroui/react';
-import rendererIpc from '@lynx/ipc';
+import contextMenuIpc from '@lynx/ipc/context_menu';
 import {Power_Icon} from '@lynx_assets/icons';
 import {Forward2} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useState} from 'react';
 
 import {MenuTypes} from '../../consts';
 import {CommonProps} from '../../types';
-import {hideWindow, setElementFocus} from '../Shared';
+import {hideContextWindow, setElementFocus} from '../Shared';
 import ConfirmElement from './ConfirmElement';
 
 const TerminateTab = memo(({setWidthSize, show, setSelectedLayout}: CommonProps) => {
   const [id, setId] = useState<string>('');
 
   const removeTab = () => {
-    rendererIpc.contextMenu.removeTab(id);
-    hideWindow();
+    contextMenuIpc.send.removeTab(id);
+    hideContextWindow();
   };
 
   useEffect(() => {
-    const offTerminateTab = rendererIpc.contextMenu.onTerminateTab((_, webID) => {
-      setId(webID);
+    const offTerminateTab = contextMenuIpc.on.terminateTab(_id => {
+      setId(_id);
 
       setWidthSize('lg');
       setSelectedLayout(MenuTypes.TerminateTabConfirm);
 
-      rendererIpc.contextMenu.showWindow();
+      contextMenuIpc.send.showWindow();
     });
 
     return () => offTerminateTab();
@@ -36,7 +36,11 @@ const TerminateTab = memo(({setWidthSize, show, setSelectedLayout}: CommonProps)
     <ConfirmElement
       buttons={
         <>
-          <Button size="sm" color="success" onPress={hideWindow} startContent={<Forward2 className="rotate-180" />}>
+          <Button
+            size="sm"
+            color="success"
+            onPress={hideContextWindow}
+            startContent={<Forward2 className="rotate-180" />}>
             Cancel
           </Button>
           <Button

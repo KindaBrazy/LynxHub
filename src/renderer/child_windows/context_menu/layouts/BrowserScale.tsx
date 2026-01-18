@@ -1,11 +1,13 @@
 import {Button, Slider} from '@heroui/react';
 import rendererIpc from '@lynx/ipc';
+import contextMenuIpc from '@lynx/ipc/context_menu';
 import {Magnifer, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {isArray} from 'lodash';
 import {memo, useEffect, useState} from 'react';
 
 import {MenuTypes} from '../consts';
 import {CommonProps} from '../types';
+import {showContextWindow} from './Shared';
 
 const BrowserScale = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
   const [id, setId] = useState<string>('');
@@ -26,14 +28,14 @@ const BrowserScale = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
   };
 
   useEffect(() => {
-    const offZoom = rendererIpc.contextMenu.onZoom((_, webID, zoomFactor) => {
-      setId(webID);
+    const offZoom = contextMenuIpc.on.zoom((_id, zoomFactor) => {
+      setId(_id);
       setValue(zoomFactor * 100);
 
       setWidthSize('md');
       setSelectedLayout(MenuTypes.BrowserScale);
 
-      rendererIpc.contextMenu.showWindow();
+      showContextWindow();
     });
 
     return () => {
