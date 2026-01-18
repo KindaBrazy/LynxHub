@@ -1,10 +1,10 @@
 import Background from '@lynx/components/Background';
 import AppHooks from '@lynx/hooks/index';
-import Hooks from '@lynx/hooks/index';
 import MainContents from '@lynx/layouts/MainContents';
 import Modals from '@lynx/layouts/modals';
 import Initializer from '@lynx/layouts/modals/app_welcome';
 import TitleBar from '@lynx/layouts/title_bar';
+import ExtensionHooks from '@lynx/plugins/extensions/Hooks';
 
 import UIProviders from './contexts/UIProviders';
 
@@ -13,7 +13,7 @@ export default function App() {
     <UIProviders>
       <AppHooks />
       <Initializer />
-      <Hooks />
+      <ExtensionHooks />
       <Background />
       <TitleBar />
       <MainContents />
