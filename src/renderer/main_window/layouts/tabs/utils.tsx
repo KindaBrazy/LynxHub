@@ -1,4 +1,5 @@
 import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import type {ActionCreatorWithPayload} from '@reduxjs/toolkit';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
@@ -28,7 +29,7 @@ export function useRemoveTab() {
         // Clear window progress bar if the removed tab had progress and was active
         const removedTab = tabs.find(tab => tab.id === tId);
         if (removedTab?.progress && tId === activeTab) {
-          rendererIpc.win.setProgressBar(-1);
+          applicationIpc.send.setProgressBar(-1);
         }
 
         dispatch(tabsActions.removeTab(tId));

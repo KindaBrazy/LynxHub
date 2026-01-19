@@ -1,4 +1,5 @@
 import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {CanvasAddon} from '@xterm/addon-canvas';
 import {ClipboardAddon} from '@xterm/addon-clipboard';
 import {FitAddon} from '@xterm/addon-fit';
@@ -144,7 +145,7 @@ const XTermCore = memo(
         let onDataDisposable: {dispose: () => void} | null = null;
 
         const loadTerminal = async (fontFamily: string = 'monospace') => {
-          const sysInfo = await rendererIpc.win.getSystemInfo();
+          const sysInfo = await applicationIpc.invoke.getSystemInfo();
           const windowsPty = getWindowPty(sysInfo, useConpty);
           const renderMode = getRendererMode();
 

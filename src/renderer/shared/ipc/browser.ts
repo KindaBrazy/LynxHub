@@ -74,40 +74,40 @@ const browserIpc = {
     linkHover: (callback: (url: string) => void) => lynxIpc.on(browserChannels.onLinkHover, callback),
 
     // Listens for browser navigation availability (can go back/forward)
-    onCanGo: (result: (id: string, canGo: CanGoType) => void) => lynxIpc.on(browserChannels.onCanGo, result),
+    canGoBackForward: (result: (id: string, canGo: CanGoType) => void) => lynxIpc.on(browserChannels.onCanGo, result),
 
     // Listens for browser loading state changes
-    onIsLoading: (result: (id: string, isLoading: boolean) => void) => lynxIpc.on(browserChannels.isLoading, result),
+    loading: (result: (id: string, isLoading: boolean) => void) => lynxIpc.on(browserChannels.isLoading, result),
 
     // Listens for browser page title changes
-    onTitleChange: (result: (id: string, title: string) => void) => lynxIpc.on(browserChannels.onTitleChange, result),
+    titleChanged: (result: (id: string, title: string) => void) => lynxIpc.on(browserChannels.onTitleChange, result),
 
     // Listens for browser favicon changes
-    onFavIconChange: (result: (id: string, faviconUrl: string) => void) =>
+    favIconChanged: (result: (id: string, faviconUrl: string) => void) =>
       lynxIpc.on(browserChannels.onFavIconChange, result),
 
     // Listens for browser URL changes
-    onUrlChange: (result: (id: string, url: string) => void) => lynxIpc.on(browserChannels.onUrlChange, result),
+    urlChanged: (result: (id: string, url: string) => void) => lynxIpc.on(browserChannels.onUrlChange, result),
 
     // Listens for browser DOM ready state
-    onDomReady: (result: (id: string, isReady: boolean) => void) => lynxIpc.on(browserChannels.onDomReady, result),
+    domReady: (result: (id: string, isReady: boolean) => void) => lynxIpc.on(browserChannels.onDomReady, result),
 
     // Listens for failed URL load events
-    onFailedLoadUrl: (
-      result: (id: string, errorCode: number, errorDescription: string, validatedURL: string) => void,
-    ) => lynxIpc.on(browserChannels.onFailedLoadUrl, result),
+    failedLoadUrl: (result: (id: string, errorCode: number, errorDescription: string, validatedURL: string) => void) =>
+      lynxIpc.on(browserChannels.onFailedLoadUrl, result),
+
     // Listens for cleared failed URL events
-    onClearFailed: (result: (id: string) => void) => lynxIpc.on(browserChannels.onClearFailed, result),
+    clearFailed: (result: (id: string) => void) => lynxIpc.on(browserChannels.onClearFailed, result),
   },
   invoke: {
     // Clears browser cache
-    clearCache: () => lynxIpc.invoke(browserChannels.clearCache),
+    clearCache: () => lynxIpc.invoke<void>(browserChannels.clearCache),
 
     // Clears browser cookies
-    clearCookies: () => lynxIpc.invoke(browserChannels.clearCookies),
+    clearCookies: () => lynxIpc.invoke<void>(browserChannels.clearCookies),
 
     // Gets user agent string
-    getUserAgent: (type?: AgentTypes): Promise<string> => lynxIpc.invoke(browserChannels.getUserAgent, type),
+    getUserAgent: (type?: AgentTypes) => lynxIpc.invoke<string>(browserChannels.getUserAgent, type),
   },
 };
 

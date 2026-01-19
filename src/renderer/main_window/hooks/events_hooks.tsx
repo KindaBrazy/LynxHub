@@ -1,6 +1,7 @@
 import {APP_BUILD_NUMBER, PageTitleByPageId} from '@lynx_cross/consts';
 import {toMs} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import browserIpc from '@lynx_shared/ipc/browser';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {capitalize, compact, isNil} from 'lodash';
@@ -147,12 +148,12 @@ export const useIpcEvents = () => {
       dispatch(cardsActions.setHomeCategory(data));
     });
 
-    const removeListener_onDarkMode = rendererIpc.win.onDarkMode((_, isDark) => {
+    const removeListener_onDarkMode = applicationIpc.on.darkMode(isDark => {
       dispatch(appActions.setAppState({key: 'darkMode', value: isDark}));
     });
 
-    const removeListener_onChangeState = rendererIpc.win.onChangeState((_e, result) => {
-      const {name, value} = result;
+    const removeListener_onChangeState = applicationIpc.on.windowStateChange(state => {
+      const {name, value} = state;
       switch (name) {
         case 'focus':
           dispatch(appActions.setAppState({key: 'onFocus', value}));
@@ -170,7 +171,7 @@ export const useIpcEvents = () => {
       dispatch(settingsActions.setSettingsState({key: type, value: enable}));
     });
 
-    const offDomReady = browserIpc.on.onDomReady((id, isReady) => {
+    const offDomReady = browserIpc.on.domReady((id, isReady) => {
       if (isReady) dispatch(cardsActions.addDomReady(id));
     });
 
@@ -275,12 +276,12 @@ export const useBrowserEvents = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const offIsLoading = browserIpc.on.onIsLoading((id, isLoading) => {
+    const offIsLoading = browserIpc.on.loading((id, isLoading) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
-      if (tabID) dispatch(tabsActions.setTabLoading({tabID, isLoading}));
+      if (tabID) dispatch(tabsActions.setTabLoading({tabID, loading: isLoading}));
     });
 
-    const offTitleChange = browserIpc.on.onTitleChange((id, title) => {
+    const offTitleChange = browserIpc.on.titleChanged((id, title) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) {
         dispatch(tabsActions.setTabTitle({tabID, title}));
@@ -288,12 +289,12 @@ export const useBrowserEvents = () => {
       }
     });
 
-    const offFavIconChange = browserIpc.on.onFavIconChange((id, url) => {
+    const offFavIconChange = browserIpc.on.favIconChanged((id, url) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) dispatch(tabsActions.setTabFavIcon({tabID, show: true, url}));
     });
 
-    const offUrlChange = browserIpc.on.onUrlChange((id, url) => {
+    const offUrlChange = browserIpc.on.urlChanged((id, url) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) dispatch(cardsActions.setRunningCardCurrentAddress({tabId: tabID, address: url}));
     });

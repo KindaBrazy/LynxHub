@@ -1,6 +1,7 @@
 import {Alert, Button} from '@heroui/react';
 import {APP_NAME} from '@lynx_cross/consts';
 import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {motion} from 'framer-motion';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -51,7 +52,7 @@ export default function StepUpdate({onComplete}: Props) {
             endContent={
               <Button
                 onPress={() =>
-                  rendererIpc.win.openUrlDefaultBrowser('https://github.com/PowerShell/PowerShell/releases/latest')
+                  applicationIpc.send.openUrlDefaultBrowser('https://github.com/PowerShell/PowerShell/releases/latest')
                 }
                 size="sm"
                 variant="flat"

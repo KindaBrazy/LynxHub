@@ -1,7 +1,7 @@
 import {Button, ButtonGroup} from '@heroui/react';
 import {ISSUE_PAGE} from '@lynx_cross/consts';
 import {isDev} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {Result} from 'antd';
 import {useCallback, useEffect} from 'react';
 
@@ -17,14 +17,14 @@ export default function ErrorWrapper({error, resetErrorBoundary}: Props) {
   }, []);
 
   const handleRestart = useCallback(() => {
-    rendererIpc.win.changeWinState('restart');
+    applicationIpc.send.changeWinState('restart');
   }, []);
 
   const handleClose = useCallback(() => {
-    rendererIpc.win.changeWinState('close');
+    applicationIpc.send.changeWinState('close');
   }, []);
 
-  const openIssues = () => rendererIpc.win.openUrlDefaultBrowser(ISSUE_PAGE);
+  const openIssues = () => applicationIpc.send.openUrlDefaultBrowser(ISSUE_PAGE);
 
   useEffect(() => {
     if (isDev()) console.error(error);

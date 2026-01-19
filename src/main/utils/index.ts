@@ -2,7 +2,7 @@ import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
 import {dirname, isAbsolute, relative, resolve} from 'node:path';
 
-import {winChannels} from '@lynx_cross/consts/ipc';
+import winChannels from '@lynx_cross/consts/ipc_channels/application';
 import {AgentTypes, DarkModeTypes} from '@lynx_cross/types/ipc';
 import {app, BrowserWindow, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue, safeStorage} from 'electron';
 import fs from 'graceful-fs';

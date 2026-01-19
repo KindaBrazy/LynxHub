@@ -1,5 +1,6 @@
 import {APP_ICON_TRANSPARENT, APP_NAME} from '@lynx_cross/consts';
 import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {AnimatePresence} from 'framer-motion';
 import {useCallback, useState} from 'react';
 
@@ -20,7 +21,7 @@ export default function OnboardingWizard({isUpgradeFlow}: Props) {
 
   const completeOnboarding = useCallback(() => {
     rendererIpc.storage.update('app', {inited: true});
-    rendererIpc.win.changeWinState('restart');
+    applicationIpc.send.changeWinState('restart');
   }, []);
 
   const handleNextStep = () => setStep(prev => prev + 1);

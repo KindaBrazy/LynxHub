@@ -41,7 +41,7 @@ const Browser_ActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props
   ]);
 
   useEffect(() => {
-    const offCanGo = browserIpc.on.onCanGo((targetID, canGo) => {
+    const offCanGo = browserIpc.on.canGoBackForward((targetID, canGo) => {
       if (targetID == id) {
         setCanGoBack(canGo.back);
         setCanGoForward(canGo.forward);

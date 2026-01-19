@@ -1,6 +1,7 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {TaskbarStatus} from '@lynx_cross/types/ipc';
 import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {useCallback, useEffect, useState} from 'react';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
@@ -13,7 +14,7 @@ export default function Taskbar() {
   const onChange = useCallback((keys: Selection) => {
     if (keys !== 'all') {
       const value = keys.values().next().value as TaskbarStatus;
-      rendererIpc.win.setTaskBarStatus(value);
+      applicationIpc.send.setTaskBarStatus(value);
       setSelectedKey(value);
     }
   }, []);

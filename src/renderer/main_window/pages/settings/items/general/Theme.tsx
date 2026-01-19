@@ -1,6 +1,7 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {DarkModeTypes} from '@lynx_cross/types/ipc';
 import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -39,7 +40,7 @@ export default function Theme() {
 
       let nextEffectiveMode: 'dark' | 'light';
       if (newSelectedTheme === 'system') {
-        nextEffectiveMode = await rendererIpc.win.getSystemDarkMode();
+        nextEffectiveMode = await applicationIpc.invoke.getSystemDarkMode();
       } else {
         nextEffectiveMode = newSelectedTheme;
       }
@@ -51,7 +52,7 @@ export default function Theme() {
       const applyThemeChanges = () => {
         dispatch(appActions.setAppState({key: 'darkMode', value: newIsDarkMode}));
 
-        rendererIpc.win.setDarkMode(newSelectedTheme);
+        applicationIpc.send.setDarkMode(newSelectedTheme);
         setSelectedTheme(newSelectedTheme);
       };
 

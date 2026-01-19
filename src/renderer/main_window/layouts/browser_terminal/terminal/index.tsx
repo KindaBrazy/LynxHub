@@ -1,6 +1,7 @@
 import {CustomRunBehaviorData} from '@lynx_cross/types/ipc';
 import {toMs} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {IProgressState} from '@xterm/addon-progress';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
@@ -95,7 +96,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
           dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: tabIdRef.current}));
           rendererIpc.storageUtils.addBrowserRecent(url);
         } else {
-          rendererIpc.win.openUrlDefaultBrowser(url);
+          applicationIpc.send.openUrlDefaultBrowser(url);
         }
       };
 
@@ -155,19 +156,19 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
       if (tabId === activeTab) {
         if (state === 0) {
           // Remove progress bar
-          rendererIpc.win.setProgressBar(-1);
+          applicationIpc.send.setProgressBar(-1);
         } else if (state === 1) {
           // Normal progress
-          rendererIpc.win.setProgressBar(value / 100, {mode: 'normal'});
+          applicationIpc.send.setProgressBar(value / 100, {mode: 'normal'});
         } else if (state === 2) {
           // Error state
-          rendererIpc.win.setProgressBar(value / 100, {mode: 'error'});
+          applicationIpc.send.setProgressBar(value / 100, {mode: 'error'});
         } else if (state === 3) {
           // Indeterminate
-          rendererIpc.win.setProgressBar(2, {mode: 'indeterminate'});
+          applicationIpc.send.setProgressBar(2, {mode: 'indeterminate'});
         } else if (state === 4) {
           // Paused/Warning
-          rendererIpc.win.setProgressBar(value / 100, {mode: 'paused'});
+          applicationIpc.send.setProgressBar(value / 100, {mode: 'paused'});
         }
       }
     },
@@ -182,17 +183,17 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
     const currentTab = tabs.find(t => t.id === tabId);
     const currentProgress = currentTab?.progress;
     if (!currentProgress || currentProgress.state === 0) {
-      rendererIpc.win.setProgressBar(-1);
+      applicationIpc.send.setProgressBar(-1);
     } else {
       const {state, value} = currentProgress;
       if (state === 1) {
-        rendererIpc.win.setProgressBar(value / 100, {mode: 'normal'});
+        applicationIpc.send.setProgressBar(value / 100, {mode: 'normal'});
       } else if (state === 2) {
-        rendererIpc.win.setProgressBar(value / 100, {mode: 'error'});
+        applicationIpc.send.setProgressBar(value / 100, {mode: 'error'});
       } else if (state === 3) {
-        rendererIpc.win.setProgressBar(2, {mode: 'indeterminate'});
+        applicationIpc.send.setProgressBar(2, {mode: 'indeterminate'});
       } else if (state === 4) {
-        rendererIpc.win.setProgressBar(value / 100, {mode: 'paused'});
+        applicationIpc.send.setProgressBar(value / 100, {mode: 'paused'});
       }
     }
   }, [activeTab, tabId, tabs]);

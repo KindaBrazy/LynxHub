@@ -1,5 +1,5 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {useDispatch} from 'react-redux';
 
@@ -17,12 +17,12 @@ export function RestartModal() {
 
   const handleRestart = () => {
     handleClose();
-    rendererIpc.win.changeWinState('restart');
+    applicationIpc.send.changeWinState('restart');
   };
 
   const handleExit = () => {
     handleClose();
-    rendererIpc.win.changeWinState('close');
+    applicationIpc.send.changeWinState('close');
   };
 
   return (

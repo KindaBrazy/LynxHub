@@ -1,6 +1,7 @@
 import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
 import {LynxHotkey} from '@lynx_cross/types/ipc';
 import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -78,7 +79,7 @@ export function useRegisterHotkeys() {
   const [emptyType, setEmptyType] = useState<'browser' | 'terminal' | 'both'>('both');
 
   const handleFullscreen = useCallback(() => {
-    rendererIpc.win.changeWinState('fullscreen');
+    applicationIpc.send.changeWinState('fullscreen');
   }, []);
 
   const handleToggleNav = useCallback(() => {
