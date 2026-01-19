@@ -39,8 +39,8 @@ const contextMenuIpc = {
 
   on: {
     // Listens for context menu view initialization events
-    initView: (callback: (params: ContextMenuParams, navHistory: NavHistory, id: number) => void) =>
-      lynxIpc.on(contextMenuChannels.onInitView, callback),
+    rightClick: (callback: (params: ContextMenuParams, navHistory: NavHistory, id: number) => void) =>
+      lynxIpc.on(contextMenuChannels.rightClick, callback),
 
     // Listens for find in page events
     find: (callback: (id: string) => void) => lynxIpc.on(contextMenuChannels.onFind, callback),

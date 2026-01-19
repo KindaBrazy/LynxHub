@@ -1,5 +1,5 @@
 const contextMenuChannels = {
-  onInitView: 'context:init-view',
+  rightClick: 'context:rightClick',
   onFind: 'context:find-in-page',
   onTerminateAI: 'context:on-terminate-ai',
   onTerminateTab: 'context:on-terminate-tab',
