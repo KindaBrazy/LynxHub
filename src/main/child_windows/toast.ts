@@ -1,11 +1,11 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import {appWindowChannels} from '@lynx_cross/consts/ipc';
+import toastWindowChannels from '@lynx_cross/consts/ipc_channels/toast_window';
+import {ToastWindow_MessageType} from '@lynx_cross/types';
 import {app, BrowserWindow, ipcMain} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
-import {ToastWindow_MessageType} from '../../cross/types';
 import classHolder from '../core/class_holder';
 import {RelaunchApp} from '../utils';
 
@@ -38,7 +38,7 @@ export default function ShowToastWindow(
 
     window.on('ready-to-show', () => {
       window.show();
-      window.webContents.send('show_message', message);
+      window.webContents.send(toastWindowChannels.onShowMessage, message);
     });
 
     const handleCloseToast = () => {
@@ -55,17 +55,18 @@ export default function ShowToastWindow(
       if (onBtnPress) onBtnPress(id, window);
     };
 
-    ipcMain.on('close_toast', handleCloseToast);
-    ipcMain.on('exit_app', handleExitApp);
-    ipcMain.on('restart_app', handleRestartApp);
-    ipcMain.on(appWindowChannels.toastBtnPress, handleToastBtnPress);
+    ipcMain.on(toastWindowChannels.closeToast, handleCloseToast);
+    ipcMain.on(toastWindowChannels.exitApp, handleExitApp);
+    ipcMain.on(toastWindowChannels.restartApp, handleRestartApp);
+    ipcMain.on(toastWindowChannels.customBtnPressed, handleToastBtnPress);
 
     window.on('closed', () => {
       // Clean up listeners when toast window is closed
-      ipcMain.removeListener('close_toast', handleCloseToast);
-      ipcMain.removeListener('exit_app', handleExitApp);
-      ipcMain.removeListener('restart_app', handleRestartApp);
-      ipcMain.removeListener(appWindowChannels.toastBtnPress, handleToastBtnPress);
+      ipcMain.removeListener(toastWindowChannels.closeToast, handleCloseToast);
+      ipcMain.removeListener(toastWindowChannels.exitApp, handleExitApp);
+      ipcMain.removeListener(toastWindowChannels.restartApp, handleRestartApp);
+      ipcMain.removeListener(toastWindowChannels.customBtnPressed, handleToastBtnPress);
+
       window.destroy();
       classHolder.toastWindow = undefined;
     });
