@@ -1,6 +1,7 @@
 import {Button, useDisclosure} from '@heroui/react';
 import {extractGitUrl} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -42,7 +43,7 @@ export default function ActionButtons({installed, currentVersion}: Props) {
   const [isSecOpen, setIsSecOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    rendererIpc.win.getSystemInfo().then(result => {
+    applicationIpc.invoke.getSystemInfo().then(result => {
       setIsCompatible(selectedPlugin?.versions.some(v => v.platforms.includes(result.os)) || false);
     });
   }, [selectedPlugin]);

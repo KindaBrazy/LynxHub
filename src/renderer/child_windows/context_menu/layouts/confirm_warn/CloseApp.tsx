@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 import {isLinuxPortable} from '@lynx/hooks/utils';
 import {Power_Icon} from '@lynx_assets/icons';
-import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {Forward2, Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
@@ -9,8 +9,8 @@ import {hideContextWindow, setElementFocus} from '../Shared';
 import ConfirmElement from './ConfirmElement';
 
 const CloseApp = memo(() => {
-  const onRestart = () => rendererIpc.win.changeWinState('restart');
-  const onClose = () => rendererIpc.win.changeWinState('close');
+  const onRestart = () => applicationIpc.send.changeWinState('restart');
+  const onClose = () => applicationIpc.send.changeWinState('close');
 
   return (
     <ConfirmElement

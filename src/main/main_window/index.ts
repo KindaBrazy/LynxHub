@@ -2,7 +2,8 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import {appWindowChannels, tabsChannels, winChannels} from '@lynx_cross/consts/ipc';
+import {appWindowChannels, tabsChannels} from '@lynx_cross/consts/ipc';
+import winChannels from '@lynx_cross/consts/ipc_channels/application';
 import {ShowToastTypes} from '@lynx_cross/types/ipc';
 import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents} from 'electron';
 

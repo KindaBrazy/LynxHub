@@ -1,5 +1,6 @@
 import {toMs} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {isNil} from 'lodash';
@@ -72,7 +73,7 @@ const RunningCardView = ({runningCard}: Props) => {
               dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
               rendererIpc.storageUtils.addBrowserRecent(url);
             } else {
-              rendererIpc.win.openUrlDefaultBrowser(url);
+              applicationIpc.send.openUrlDefaultBrowser(url);
             }
           },
           toMs(custom.urlCatch.delay, 'seconds'),

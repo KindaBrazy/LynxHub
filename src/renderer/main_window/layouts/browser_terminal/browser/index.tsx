@@ -58,12 +58,12 @@ const Browser = memo(({runningCard}: Props) => {
   }, [isDomReady, id, tabId, tabVolumes, tabMuted, globalMuted]);
 
   useEffect(() => {
-    const offFailed = browserIpc.on.onFailedLoadUrl((targetID, errorCode, errorDescription, validatedURL) => {
+    const offFailed = browserIpc.on.failedLoadUrl((targetID, errorCode, errorDescription, validatedURL) => {
       if (targetID === id) {
         setFailedLoad({errorCode, errorDescription, validatedURL});
       }
     });
-    const offClearFailed = browserIpc.on.onClearFailed(targetID => {
+    const offClearFailed = browserIpc.on.clearFailed(targetID => {
       if (targetID === id) setFailedLoad(undefined);
     });
 

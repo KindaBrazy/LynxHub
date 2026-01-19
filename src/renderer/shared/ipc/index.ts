@@ -20,7 +20,6 @@ import {
   tabsChannels,
   utilsChannels,
   volumeChannels,
-  winChannels,
 } from '@lynx_cross/consts/ipc';
 import {otherChannels} from '@lynx_cross/consts/ipc';
 import {
@@ -46,9 +45,7 @@ import {
   AppUpdateStatus,
   AudioState,
   BrowserHistoryData,
-  ChangeWindowState,
   CustomRunBehaviorData,
-  DarkModeTypes,
   DownloadProgress,
   ExtensionsData,
   ExtensionsUpdateStatus,
@@ -63,9 +60,6 @@ import {
   RecentlyOperation,
   ShowToastTypes,
   StorageOperation,
-  SystemInfo,
-  TaskbarStatus,
-  WinStateChange,
 } from '@lynx_cross/types/ipc';
 import type {
   PluginAddresses,
@@ -81,60 +75,6 @@ import type {IpcRendererEvent, OpenDialogOptions} from 'electron';
 const ipc = window.electron.ipcRenderer;
 
 const rendererIpc = {
-  /** Managing app window states */
-  win: {
-    // Changes window state (maximize, minimize, close, fullscreen, restart)
-    changeWinState: (state: ChangeWindowState): void => {
-      extensionRendererApi.events_ipc.emit('win_change_state', {state});
-      ipc.send(winChannels.changeState, state);
-    },
-    // Listens for window state change events
-    onChangeState: (result: (event: IpcRendererEvent, result: WinStateChange) => void) =>
-      ipc.on(winChannels.onChangeState, result),
-
-    // Sets app theme (light, dark, or system)
-    setDarkMode: (darkMode: DarkModeTypes): void => {
-      extensionRendererApi.events_ipc.emit('win_set_dark_mode', {darkMode});
-      ipc.send(winChannels.setDarkMode, darkMode);
-    },
-    // Gets system dark mode preference (light/dark)
-    getSystemDarkMode: (): Promise<'light' | 'dark'> => {
-      extensionRendererApi.events_ipc.emit('win_get_system_dark_mode', {});
-      return ipc.invoke(winChannels.getSystemDarkMode);
-    },
-    // Listens for dark mode change events
-    onDarkMode: (result: (event: IpcRendererEvent, isDark: boolean) => void) => ipc.on(winChannels.onDarkMode, result),
-    isDarkMode: (): Promise<boolean> => ipc.invoke(winChannels.isDarkMode),
-
-    // Sets taskbar visibility status (taskbar, tray, taskbar-tray, tray-minimized)
-    setTaskBarStatus: (status: TaskbarStatus): void => {
-      extensionRendererApi.events_ipc.emit('win_set_taskbar_status', {status});
-      ipc.send(winChannels.setTaskBarStatus, status);
-    },
-
-    // Gets system information (OS platform and build number)
-    getSystemInfo: (): Promise<SystemInfo> => {
-      extensionRendererApi.events_ipc.emit('win_get_system_info', {});
-      return ipc.invoke(winChannels.getSystemInfo);
-    },
-
-    // Opens URL in default system browser
-    openUrlDefaultBrowser: (url: string): void => {
-      extensionRendererApi.events_ipc.emit('win_open_url_default_browser', {url});
-      ipc.send(winChannels.openUrlDefaultBrowser, url);
-    },
-
-    // Sets window progress bar (taskbar/dock)
-    // progress: 0-1 for progress, -1 to remove, >1 for indeterminate
-    // mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused' (Windows only)
-    setProgressBar: (
-      progress: number,
-      options?: {mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused'},
-    ): void => {
-      ipc.send(winChannels.setProgressBar, progress, options);
-    },
-  },
-
   /** Managing files and directories */
   file: {
     // Opens file/folder selection dialog

@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {motion} from 'framer-motion';
 import {ReactNode, useCallback, useMemo} from 'react';
 
@@ -14,7 +14,10 @@ const WindowButtons = () => {
   const onFocus = useAppState('onFocus');
   const maximized = useAppState('maximized');
 
-  const changeWindowState = useCallback((operation: WindowOperation) => rendererIpc.win.changeWinState(operation), []);
+  const changeWindowState = useCallback(
+    (operation: WindowOperation) => applicationIpc.send.changeWinState(operation),
+    [],
+  );
 
   const buttonProps = useMemo(
     () => ({

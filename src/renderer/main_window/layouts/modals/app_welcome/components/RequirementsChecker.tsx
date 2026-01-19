@@ -1,6 +1,6 @@
 import {Alert, Button} from '@heroui/react';
 import {isWin} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {ReactNode, useEffect, useMemo} from 'react';
 
 import useRequirementChecks from '../useRequirementChecks';
@@ -44,7 +44,7 @@ export default function RequirementsChecker({onStatusChange, onReport}: Props) {
                 size="sm"
                 variant="flat"
                 color="danger"
-                onPress={() => rendererIpc.win.openUrlDefaultBrowser('https://git-scm.com/downloads')}>
+                onPress={() => applicationIpc.send.openUrlDefaultBrowser('https://git-scm.com/downloads')}>
                 Download Git
               </Button>
             }
@@ -60,7 +60,7 @@ export default function RequirementsChecker({onStatusChange, onReport}: Props) {
             endContent={
               <Button
                 onPress={() =>
-                  rendererIpc.win.openUrlDefaultBrowser('https://github.com/PowerShell/PowerShell/releases/latest')
+                  applicationIpc.send.openUrlDefaultBrowser('https://github.com/PowerShell/PowerShell/releases/latest')
                 }
                 size="sm"
                 variant="flat"

@@ -15,8 +15,8 @@ import {
   storageUtilsChannels,
   utilsChannels,
   volumeChannels,
-  winChannels,
 } from '@lynx_cross/consts/ipc';
+import winChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import {
   AgentTypes,
