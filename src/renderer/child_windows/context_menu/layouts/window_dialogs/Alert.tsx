@@ -27,14 +27,19 @@ const AlertWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) 
   if (!show) return null;
 
   return (
-    <div className="py-4 px-5 flex flex-col gap-y-3">
-      <div className="flex gap-x-2 items-start">
-        <ShieldAlert className="size-6 text-danger" />
+    <div className="py-4 px-5 flex flex-col gap-y-3 draggable">
+      <div className="flex gap-x-2 mt-2 items-start">
+        <ShieldAlert className="size-8 text-danger" />
         <span className="w-full">{message}</span>
       </div>
 
       <div className="flex justify-end">
-        <Button variant="flat" color="success" onPress={hideContextWindow} startContent={<Check className="size-4" />}>
+        <Button
+          variant="flat"
+          color="success"
+          className="notDraggable"
+          onPress={hideContextWindow}
+          startContent={<Check className="size-4" />}>
           OK
         </Button>
       </div>
