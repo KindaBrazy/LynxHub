@@ -2,18 +2,11 @@ import {StyleProvider} from '@ant-design/cssinjs';
 import {Button, Card, CardBody, CardHeader, Image, Spinner, Switch, Tab, Tabs} from '@heroui/react';
 import {screenShareChannels} from '@lynx_cross/consts/share_screen';
 import {ScreenShareSources, ScreenShareStart} from '@lynx_cross/types/share_screen';
+import {Monitor, Record, Screencast, VolumeLoud, WindowFrame} from '@solar-icons/react-perf/BoldDuotone';
 import {Result} from 'antd';
 import isEmpty from 'lodash/isEmpty';
+import {X} from 'lucide-react';
 import {useEffect, useState} from 'react';
-
-import {
-  CloseSimple_Icon,
-  MonitorDuo_Icon,
-  RecordDuo_Icon,
-  Share_Icon,
-  VolumeDuo_Icon,
-  WindowFrameDuo_Icon,
-} from '../../shared/assets/icons';
 
 type TabType = 'windows' | 'screens';
 
@@ -70,7 +63,7 @@ export default function ScreenShare() {
         <img alt={item.name} src={item.thumbnail} className="size-full object-cover" />
         {selectedItem === (activeTab === 'windows' ? item.id : item.display_id) && (
           <div className="absolute inset-0 flex items-center justify-center bg-primary/70 animate-appearance-in z-10">
-            <RecordDuo_Icon className="size-4 animate-appearance-in" />
+            <Record className="size-4 animate-appearance-in" />
           </div>
         )}
       </CardHeader>
@@ -103,7 +96,7 @@ export default function ScreenShare() {
               <Tab
                 title={
                   <div className="flex items-center space-x-2">
-                    <WindowFrameDuo_Icon className="size-4" />
+                    <WindowFrame className="size-4" />
                     <span>Application Window</span>
                   </div>
                 }
@@ -112,7 +105,7 @@ export default function ScreenShare() {
               <Tab
                 title={
                   <div className="flex items-center space-x-2">
-                    <MonitorDuo_Icon className="size-4" />
+                    <Monitor className="size-4" />
                     <span>Entire Screen</span>
                   </div>
                 }
@@ -152,14 +145,14 @@ export default function ScreenShare() {
                   endContent: 'size-[0.65rem]',
                 }}
                 size="sm"
+                endContent={<X />}
                 isSelected={shareAudio}
-                onValueChange={setShareAudio}
-                startContent={<VolumeDuo_Icon />}
-                endContent={<CloseSimple_Icon />}>
+                startContent={<VolumeLoud />}
+                onValueChange={setShareAudio}>
                 Share audio
               </Switch>
               <div className="flex justify-between gap-x-3">
-                <Button size="sm" variant="flat" color="warning" onPress={handleCancel}>
+                <Button size="sm" variant="light" color="warning" onPress={handleCancel}>
                   Cancel
                 </Button>
                 <Button
@@ -168,7 +161,7 @@ export default function ScreenShare() {
                   color="primary"
                   onPress={handleShare}
                   isDisabled={!selectedItem}
-                  startContent={<Share_Icon className="size-4" />}>
+                  startContent={<Screencast className="size-4" />}>
                   Share
                 </Button>
               </div>
