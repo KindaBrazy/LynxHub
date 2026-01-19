@@ -7,7 +7,7 @@ export function useDocumentDarkMode(className?: string) {
 
   const setDark = useCallback((isDark: boolean) => {
     document.documentElement.className = `${isDark ? 'dark' : 'light'} ${className}`;
-    setIsDarkMode(true);
+    setIsDarkMode(isDark);
   }, []);
 
   useEffect(() => {
