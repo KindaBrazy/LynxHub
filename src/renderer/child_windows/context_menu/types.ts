@@ -1,14 +1,4 @@
-import {Dispatch, ReactNode, SetStateAction} from 'react';
-
-import {MenuTypes} from './consts';
-
-export type SetWidthSize = Dispatch<SetStateAction<'sm' | 'md' | 'lg'>>;
-
-export type CommonProps = {
-  setWidthSize: SetWidthSize;
-  setSelectedLayout: Dispatch<SetStateAction<MenuTypes>>;
-  show: boolean;
-};
+import {ReactNode} from 'react';
 
 export type NavHistory = {
   canGoBack: boolean;

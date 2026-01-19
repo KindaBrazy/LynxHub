@@ -1,5 +1,6 @@
 import contextMenuChannels from '@lynx_cross/consts/ipc_channels/context_menu';
 import {ContextResizeData} from '@lynx_cross/types';
+import {ContextMenuVolumeData} from '@lynx_cross/types/ipc';
 import type {ContextMenuParams} from 'electron';
 
 import {NavHistory} from '../../child_windows/context_menu/types';
@@ -63,9 +64,7 @@ const contextMenuIpc = {
     downloads: (callback: () => void) => lynxIpc.on(contextMenuChannels.onDownloads, callback),
 
     // Listens for volume control events
-    volume: (
-      callback: (data: {id: string; tabId: string; volume: number; muted: boolean; globalMuted: boolean}) => void,
-    ) => lynxIpc.on(contextMenuChannels.onVolume, callback),
+    volume: (callback: (data: ContextMenuVolumeData) => void) => lynxIpc.on(contextMenuChannels.onVolume, callback),
 
     // Listens for AI relaunch events
     relaunchProcess: (callback: (id: string) => void) => lynxIpc.on(contextMenuChannels.onRelaunchAI, callback),

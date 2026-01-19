@@ -2,35 +2,19 @@ import {Button} from '@heroui/react';
 import {Power_Icon} from '@lynx_assets/icons';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {Forward2} from '@solar-icons/react-perf/BoldDuotone';
-import {memo, useEffect, useState} from 'react';
+import {memo} from 'react';
 
-import {MenuTypes} from '../../consts';
-import {CommonProps} from '../../types';
+import {useContextState} from '../../redux/reducer';
 import {hideContextWindow, setElementFocus} from '../Shared';
 import ConfirmElement from './ConfirmElement';
 
-const TerminateTab = memo(({setWidthSize, show, setSelectedLayout}: CommonProps) => {
-  const [id, setId] = useState<string>('');
+const TerminateTab = memo(() => {
+  const id = useContextState('targetID');
 
   const removeTab = () => {
     contextMenuIpc.send.removeTab(id);
     hideContextWindow();
   };
-
-  useEffect(() => {
-    const offTerminateTab = contextMenuIpc.on.terminateTab(_id => {
-      setId(_id);
-
-      setWidthSize('lg');
-      setSelectedLayout(MenuTypes.TerminateTabConfirm);
-
-      contextMenuIpc.send.showWindow();
-    });
-
-    return () => offTerminateTab();
-  }, []);
-
-  if (!show) return null;
 
   return (
     <ConfirmElement

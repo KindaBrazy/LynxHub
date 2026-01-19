@@ -1,5 +1,5 @@
 export enum MenuTypes {
-  BrowserScale,
+  BrowserScale = 1,
   FindInPage,
   RightClick,
   Volume,

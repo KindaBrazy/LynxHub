@@ -1,42 +1,32 @@
 import {Button, Slider} from '@heroui/react';
 import rendererIpc from '@lynx_shared/ipc';
-import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useRef} from 'react';
+import {useDispatch} from 'react-redux';
 
-import {MenuTypes} from '../consts';
-import {CommonProps} from '../types';
-import {showContextWindow} from './Shared';
+import {contextActions, useContextState} from '../redux/reducer';
+import {ContextDispatch} from '../redux/store';
 
-type VolumeData = {
-  id: string;
-  tabId: string;
-  volume: number;
-  muted: boolean;
-  globalMuted: boolean;
-};
+const VolumeMenu = memo(() => {
+  const {id, tabId, volume, muted, globalMuted} = useContextState('browserVolume');
 
-const VolumeMenu = memo(({setWidthSize, show, setSelectedLayout}: CommonProps) => {
-  const [data, setData] = useState<VolumeData | null>(null);
-  const [volume, setVolume] = useState<number>(100);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
-  const [isGlobalMuted, setIsGlobalMuted] = useState<boolean>(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const volumeIpcTimerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const dispatch = useDispatch<ContextDispatch>();
+
   const handleVolumeChange = useCallback(
     (value: number | number[]) => {
-      if (!data) return;
       const newVolume = Array.isArray(value) ? value[0] : value;
       const clampedVolume = Math.max(0, Math.min(100, newVolume));
-      setVolume(clampedVolume);
+      dispatch(contextActions.updateVolume(clampedVolume));
 
       // Debounce the IPC call to avoid flooding main process
       if (volumeIpcTimerRef.current) {
         clearTimeout(volumeIpcTimerRef.current);
       }
       volumeIpcTimerRef.current = setTimeout(() => {
-        rendererIpc.volume.setVolume(data.id, clampedVolume).catch(error => {
+        rendererIpc.volume.setVolume(id, clampedVolume).catch(error => {
           console.error('Failed to set volume:', error);
         });
       }, 50);
@@ -46,49 +36,33 @@ const VolumeMenu = memo(({setWidthSize, show, setSelectedLayout}: CommonProps) =
         clearTimeout(debounceTimerRef.current);
       }
       debounceTimerRef.current = setTimeout(() => {
-        rendererIpc.volume.updateTabVolume(data.tabId, clampedVolume);
+        rendererIpc.volume.updateTabVolume(tabId, clampedVolume);
       }, 150);
     },
-    [data],
+    [id, tabId],
   );
 
   const handleMuteToggle = useCallback(async () => {
-    if (!data) return;
-    const newMutedState = !isMuted;
-    setIsMuted(newMutedState);
+    const newMutedState = !muted;
+    dispatch(contextActions.updateMuted(newMutedState));
 
     try {
-      await rendererIpc.volume.setMuted(data.id, newMutedState);
+      await rendererIpc.volume.setMuted(id, newMutedState);
       // Notify main window to update Redux state
-      rendererIpc.volume.updateTabMuted(data.tabId, newMutedState);
+      rendererIpc.volume.updateTabMuted(tabId, newMutedState);
     } catch (error) {
       console.error('Failed to set mute state:', error);
     }
-  }, [data, isMuted]);
+  }, [id, tabId, muted]);
 
-  const effectiveMuted = useMemo(() => isMuted || isGlobalMuted, [isMuted, isGlobalMuted]);
+  const effectiveMuted = useMemo(() => muted || globalMuted, [muted, globalMuted]);
 
   useEffect(() => {
-    const offVolume = contextMenuIpc.on.volume(_data => {
-      setData(_data);
-      setVolume(_data.volume);
-      setIsMuted(_data.muted);
-      setIsGlobalMuted(_data.globalMuted);
-
-      setWidthSize('md');
-      setSelectedLayout(MenuTypes.Volume);
-
-      showContextWindow();
-    });
-
     return () => {
       if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
       if (volumeIpcTimerRef.current) clearTimeout(volumeIpcTimerRef.current);
-      offVolume();
     };
   }, []);
-
-  if (!show || !data) return null;
 
   return (
     <div className="flex w-full flex-col gap-4 p-4">
@@ -99,7 +73,7 @@ const VolumeMenu = memo(({setWidthSize, show, setSelectedLayout}: CommonProps) =
           variant="light"
           onPress={handleMuteToggle}
           className="cursor-default"
-          aria-label={isMuted ? 'Unmute audio' : 'Mute audio'}
+          aria-label={muted ? 'Unmute audio' : 'Mute audio'}
           isIconOnly>
           {effectiveMuted ? <VolumeCross className="size-4" /> : <VolumeLoud className="size-4" />}
         </Button>
