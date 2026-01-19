@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useMemo, useRef} from 'react';
 
@@ -26,9 +26,9 @@ const Browser_Volume = memo(({id, tabId}: Props) => {
     const bounds = btnRef.current?.getBoundingClientRect();
     if (bounds) {
       const {x, y} = bounds;
-      rendererIpc.browser.openVolume({id, tabId, volume, muted: isMuted, globalMuted}, {x: x - 125, y: y + 30});
+      browserIpc.send.openVolume({id, tabId, volume, muted: isMuted, globalMuted}, {x: x - 125, y: y + 30});
     } else {
-      rendererIpc.browser.openVolume({id, tabId, volume, muted: isMuted, globalMuted});
+      browserIpc.send.openVolume({id, tabId, volume, muted: isMuted, globalMuted});
     }
   }, [id, tabId, volume, isMuted, globalMuted]);
 

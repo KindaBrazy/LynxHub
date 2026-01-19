@@ -9,7 +9,7 @@ export default function LinkPreview() {
   useDocumentDarkMode('bg-transparent');
 
   useEffect(() => {
-    const offHover = browserIpc.onLinkHover(setUrl);
+    const offHover = browserIpc.on.linkHover(setUrl);
     return () => offHover();
   }, []);
 
@@ -17,7 +17,7 @@ export default function LinkPreview() {
   useEffect(() => {
     if (containerRef.current && url) {
       const width = Math.min(containerRef.current.scrollWidth + 20, 800);
-      browserIpc.resizeLinkPreview(width);
+      browserIpc.send.resizeLinkPreview(width);
     }
   }, [url]);
 

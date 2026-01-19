@@ -4,7 +4,6 @@ import {
   appDataChannels,
   appUpdateChannels,
   appWindowChannels,
-  browserChannels,
   eventsChannels,
   fileChannels,
   gitChannels,
@@ -43,14 +42,11 @@ import {
 } from '@lynx_cross/types';
 import type {ShallowCloneOptions} from '@lynx_cross/types/git';
 import {
-  AgentTypes,
   AppUpdateEventTypes,
   AppUpdateStatus,
   AudioState,
   BrowserHistoryData,
-  CanGoType,
   ChangeWindowState,
-  ContextMenuVolumeData,
   CustomRunBehaviorData,
   DarkModeTypes,
   DownloadProgress,
@@ -69,7 +65,6 @@ import {
   StorageOperation,
   SystemInfo,
   TaskbarStatus,
-  WHType,
   WinStateChange,
 } from '@lynx_cross/types/ipc';
 import type {
@@ -81,7 +76,7 @@ import type {
 } from '@lynx_cross/types/plugins';
 import type {InstalledCard, InstalledCards} from '@lynx_cross/types/storage';
 import type StorageTypes from '@lynx_cross/types/storage';
-import type {FindInPageOptions, IpcRendererEvent, OpenDialogOptions} from 'electron';
+import type {IpcRendererEvent, OpenDialogOptions} from 'electron';
 
 const ipc = window.electron.ipcRenderer;
 
@@ -747,159 +742,6 @@ const rendererIpc = {
     // Listens for new tab events
     onNewTab: (result: (event: IpcRendererEvent, url: string, background?: boolean) => void) =>
       ipc.on(tabsChannels.onNewTab, result),
-  },
-
-  browser: {
-    // Creates new browser webview instance
-    createBrowser: (id: string) => {
-      extensionRendererApi.events_ipc.emit('browser_create', {id});
-      ipc.send(browserChannels.createBrowser, id);
-    },
-    // Removes browser webview instance
-    removeBrowser: (id: string) => {
-      extensionRendererApi.events_ipc.emit('browser_remove', {id});
-      ipc.send(browserChannels.removeBrowser, id);
-    },
-    // Loads URL in browser webview
-    loadURL: (id: string, url: string) => {
-      extensionRendererApi.events_ipc.emit('browser_load_url', {id, url});
-      ipc.send(browserChannels.loadURL, id, url);
-    },
-    // Sets browser webview visibility
-    setVisible: (id: string, visible: boolean) => {
-      extensionRendererApi.events_ipc.emit('browser_set_visible', {id, visible});
-      ipc.send(browserChannels.setVisible, id, visible);
-    },
-
-    // Opens find in page dialog
-    openFindInPage: (id: string, customPosition?: {x: number; y: number}) => {
-      extensionRendererApi.events_ipc.emit('browser_open_find_in_page', {id, customPosition});
-      ipc.send(browserChannels.openFindInPage, id, customPosition);
-    },
-    // Opens zoom dialog
-    openZoom: (id: string, customPosition?: {x: number; y: number}) => {
-      extensionRendererApi.events_ipc.emit('browser_open_zoom', {id});
-      ipc.send(browserChannels.openZoom, id, customPosition);
-    },
-    // Opens volume control dialog
-    openVolume: (data: ContextMenuVolumeData, customPosition?: {x: number; y: number}) =>
-      ipc.send(browserChannels.openVolume, data, customPosition),
-
-    // Finds text in page
-    findInPage: (id: string, value: string, options: FindInPageOptions) => {
-      extensionRendererApi.events_ipc.emit('browser_find_in_page', {id, value, options});
-      ipc.send(browserChannels.findInPage, id, value, options);
-    },
-    // Stops find in page operation
-    stopFindInPage: (id: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') => {
-      extensionRendererApi.events_ipc.emit('browser_stop_find_in_page', {id, action});
-      ipc.send(browserChannels.stopFindInPage, id, action);
-    },
-
-    // Focuses browser webview
-    focusWebView: (id: string) => {
-      extensionRendererApi.events_ipc.emit('browser_focus_web_view', {id});
-      ipc.send(browserChannels.focusWebView, id);
-    },
-
-    // Clears browser cache
-    clearCache: () => {
-      extensionRendererApi.events_ipc.emit('browser_clear_cache', {});
-      return ipc.invoke(browserChannels.clearCache);
-    },
-    // Clears browser cookies
-    clearCookies: () => {
-      extensionRendererApi.events_ipc.emit('browser_clear_cookies', {});
-      return ipc.invoke(browserChannels.clearCookies);
-    },
-
-    // Sets zoom factor for browser webview
-    setZoomFactor: (id: string, factor: number) => {
-      extensionRendererApi.events_ipc.emit('browser_set_zoom_factor', {id, factor});
-      ipc.send(browserChannels.setZoomFactor, id, factor);
-    },
-    // Reloads current page
-    reload: (id: string) => {
-      extensionRendererApi.events_ipc.emit('browser_reload', {id});
-      ipc.send(browserChannels.reload, id);
-    },
-    // Stops loading current page
-    stop: (id: string) => {
-      ipc.send(browserChannels.stop, id);
-    },
-    // Navigates browser back
-    goBack: (id: string) => {
-      extensionRendererApi.events_ipc.emit('browser_go_back', {id});
-      ipc.send(browserChannels.goBack, id);
-    },
-    // Navigates browser forward
-    goForward: (id: string) => {
-      extensionRendererApi.events_ipc.emit('browser_go_forward', {id});
-      ipc.send(browserChannels.goForward, id);
-    },
-
-    // Toggles DevTools for browser webview
-    toggleDevTools: (id: string) => {
-      ipc.send(browserChannels.toggleDevTools, id);
-    },
-
-    // Listens for browser navigation availability (can go back/forward)
-    onCanGo: (result: (event: IpcRendererEvent, id: string, canGo: CanGoType) => void) =>
-      ipc.on(browserChannels.onCanGo, result),
-
-    // Listens for browser loading state changes
-    onIsLoading: (result: (event: IpcRendererEvent, id: string, isLoading: boolean) => void) =>
-      ipc.on(browserChannels.isLoading, result),
-
-    // Listens for browser page title changes
-    onTitleChange: (result: (event: IpcRendererEvent, id: string, title: string) => void) =>
-      ipc.on(browserChannels.onTitleChange, result),
-
-    // Listens for browser favicon changes
-    onFavIconChange: (result: (event: IpcRendererEvent, id: string, faviconUrl: string) => void) =>
-      ipc.on(browserChannels.onFavIconChange, result),
-
-    // Listens for browser URL changes
-    onUrlChange: (result: (event: IpcRendererEvent, id: string, url: string) => void) =>
-      ipc.on(browserChannels.onUrlChange, result),
-
-    // Listens for browser DOM ready state
-    onDomReady: (result: (event: IpcRendererEvent, id: string, isReady: boolean) => void) =>
-      ipc.on(browserChannels.onDomReady, result),
-
-    // Gets user agent string
-    getUserAgent: (type?: AgentTypes): Promise<string> => {
-      extensionRendererApi.events_ipc.emit('browser_get_user_agent', {type});
-      return ipc.invoke(browserChannels.getUserAgent, type);
-    },
-    // Updates user agent for all browsers
-    updateUserAgent: () => {
-      extensionRendererApi.events_ipc.emit('browser_update_user_agent', {});
-      ipc.send(browserChannels.updateUserAgent);
-    },
-
-    // Adds offset to browser webview position
-    addOffset: (id: string, offset: WHType) => {
-      extensionRendererApi.events_ipc.emit('browser_add_offset', {id, offset});
-      ipc.send(browserChannels.addOffset, id, offset);
-    },
-
-    // Clears browser history for selected URLs
-    clearHistory: (selected: string[]) => ipc.send(browserChannels.clearHistory, selected),
-
-    // Listens for failed URL load events
-    onFailedLoadUrl: (
-      result: (
-        event: IpcRendererEvent,
-        id: string,
-        errorCode: number,
-        errorDescription: string,
-        validatedURL: string,
-      ) => void,
-    ) => ipc.on(browserChannels.onFailedLoadUrl, result),
-    // Listens for cleared failed URL events
-    onClearFailed: (result: (event: IpcRendererEvent, id: string) => void) =>
-      ipc.on(browserChannels.onClearFailed, result),
   },
 
   /** Managing browser volume and audio */

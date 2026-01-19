@@ -1,5 +1,5 @@
 import {Button, Checkbox, CheckboxGroup} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import isEmpty from 'lodash/isEmpty';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -20,13 +20,13 @@ export default function ClearData() {
 
     try {
       if (selected.includes('cache')) {
-        await rendererIpc.browser.clearCache();
+        await browserIpc.invoke.clearCache();
       }
       if (selected.includes('cookies')) {
-        await rendererIpc.browser.clearCookies();
+        await browserIpc.invoke.clearCookies();
       }
       if (['favorites', 'history', 'fav-icons'].some(item => selected.includes(item))) {
-        rendererIpc.browser.clearHistory(selected);
+        browserIpc.send.clearHistory(selected);
       }
 
       setTimeout(() => {

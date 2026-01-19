@@ -1,6 +1,7 @@
 import {OnUpdatingExtensions} from '@lynx_cross/types/ipc';
 import {InstalledCards} from '@lynx_cross/types/storage';
 import rendererIpc from '@lynx_shared/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {includes} from 'lodash';
 import {useSelector} from 'react-redux';
@@ -114,7 +115,7 @@ const cardsSlice = createSlice({
         },
       ];
 
-      if (type !== 'terminal') rendererIpc.browser.createBrowser(id);
+      if (type !== 'terminal') browserIpc.send.createBrowser(id);
       if (type !== 'browser') rendererIpc.pty.emptyProcess(id);
     },
 
@@ -135,7 +136,7 @@ const cardsSlice = createSlice({
           isEmptyRunning: false,
         },
       ];
-      rendererIpc.browser.createBrowser(id);
+      browserIpc.send.createBrowser(id);
     },
     setRunningCardAddress: (state, action: PayloadAction<{tabId: string; address: string}>) => {
       const {tabId, address} = action.payload;
@@ -190,7 +191,7 @@ const cardsSlice = createSlice({
     stopRunningCard: (state, action: PayloadAction<{tabId: string}>) => {
       const id = state.runningCard.find(card => card.tabId === action.payload.tabId)?.id;
       if (id) {
-        rendererIpc.browser.removeBrowser(id);
+        browserIpc.send.removeBrowser(id);
         state.browserDomReadyIds = state.browserDomReadyIds.filter(item => item !== id);
       }
 
