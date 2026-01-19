@@ -1,11 +1,7 @@
 import {Divider} from '@heroui/react';
-import contextMenuIpc from '@lynx_shared/ipc/context_menu';
-import type {ContextMenuParams} from 'electron';
-import {isEmpty} from 'lodash';
-import {memo, useEffect, useMemo, useState} from 'react';
+import {memo} from 'react';
 
-import {MenuTypes} from '../../consts';
-import {CommonProps, NavHistory} from '../../types';
+import {useContextState} from '../../redux/reducer';
 import {Edit} from './Edit';
 import {Image} from './Image';
 import {Links} from './Links';
@@ -14,56 +10,10 @@ import PageActions from './PageActions';
 import {Suggestions} from './Suggestions';
 import TextSelection from './TextSelection';
 
-const RightClick = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
-  const [contextMenuParams, setContextMenuParams] = useState<ContextMenuParams | undefined>(undefined);
-  const [navigationHistory, setNavigationHistory] = useState<NavHistory>({canGoBack: false, canGoForward: false});
-  const [id, setId] = useState<number>(0);
-
-  const {hasLinkItems, hasImageItems, hasEditItems, hasTextSelection, isActionsAvailable} = useMemo(() => {
-    const hasLinkItems = !isEmpty(contextMenuParams?.linkURL);
-    const hasImageItems = contextMenuParams?.mediaType === 'image';
-    const hasTextSelection = !isEmpty(contextMenuParams?.selectionText);
-    const hasEditItems =
-      contextMenuParams?.editFlags.canUndo ||
-      contextMenuParams?.editFlags.canRedo ||
-      contextMenuParams?.editFlags.canCut ||
-      contextMenuParams?.editFlags.canCopy ||
-      contextMenuParams?.editFlags.canPaste ||
-      contextMenuParams?.editFlags.canSelectAll;
-
-    const isActionsAvailable = hasLinkItems || hasEditItems || hasImageItems || hasTextSelection;
-
-    return {
-      hasLinkItems,
-      hasImageItems,
-      hasTextSelection,
-      hasEditItems,
-      isActionsAvailable,
-    };
-  }, [contextMenuParams]);
-
-  useEffect(() => {
-    if (hasLinkItems || hasImageItems || hasTextSelection) {
-      setWidthSize('md');
-    }
-  }, [hasLinkItems, hasImageItems, hasTextSelection, contextMenuParams]);
-
-  useEffect(() => {
-    const offInitView = contextMenuIpc.on.initView((params, navHistory, contextId) => {
-      setContextMenuParams(params);
-      setNavigationHistory(navHistory);
-      setId(contextId);
-
-      setWidthSize('sm');
-      setSelectedLayout(MenuTypes.RightClick);
-
-      contextMenuIpc.send.showWindow();
-    });
-
-    return () => offInitView();
-  }, []);
-
-  if (!show) return null;
+const RightClick = memo(() => {
+  const {id, navigationHistory, contextMenuParams} = useContextState('rightClick');
+  const {hasLinkItems, hasImageItems, hasTextSelection, hasEditItems, isActionsAvailable} =
+    useContextState('rightClickParams');
 
   return (
     <>

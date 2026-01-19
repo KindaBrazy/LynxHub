@@ -1,19 +1,17 @@
 import {Button, Input} from '@heroui/react';
 import {Circle_Icon} from '@lynx_assets/icons';
 import rendererIpc from '@lynx_shared/ipc';
-import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {isEmpty} from 'lodash';
 import {X} from 'lucide-react';
 import {type KeyboardEvent, memo, useEffect, useRef, useState} from 'react';
 
-import {MenuTypes} from '../consts';
-import {CommonProps} from '../types';
-import {hideContextWindow, showContextWindow} from './Shared';
+import {useContextState} from '../redux/reducer';
+import {hideContextWindow} from './Shared';
 
-const FindInPage = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
+const FindInPage = memo(() => {
+  const id = useContextState('targetID');
   const [searchValue, setSearchValue] = useState<string>('');
-  const [id, setId] = useState<string>('');
   const [inputRef, setInputRef] = useState<HTMLInputElement | null>(null);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -71,22 +69,10 @@ const FindInPage = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) =
   }, [id]);
 
   useEffect(() => {
-    const offFind = contextMenuIpc.on.find(_id => {
-      setId(_id);
-
-      setWidthSize('md');
-      setSelectedLayout(MenuTypes.FindInPage);
-
-      showContextWindow();
-    });
-
     return () => {
       if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
-      offFind();
     };
   }, []);
-
-  if (!show) return null;
 
   return (
     <div className="flex w-full flex-row items-end gap-x-2 p-3">

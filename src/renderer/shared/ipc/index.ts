@@ -50,6 +50,7 @@ import {
   BrowserHistoryData,
   CanGoType,
   ChangeWindowState,
+  ContextMenuVolumeData,
   CustomRunBehaviorData,
   DarkModeTypes,
   DownloadProgress,
@@ -781,10 +782,8 @@ const rendererIpc = {
       ipc.send(browserChannels.openZoom, id, customPosition);
     },
     // Opens volume control dialog
-    openVolume: (
-      data: {id: string; tabId: string; volume: number; muted: boolean; globalMuted: boolean},
-      customPosition?: {x: number; y: number},
-    ) => ipc.send(browserChannels.openVolume, data, customPosition),
+    openVolume: (data: ContextMenuVolumeData, customPosition?: {x: number; y: number}) =>
+      ipc.send(browserChannels.openVolume, data, customPosition),
 
     // Finds text in page
     findInPage: (id: string, value: string, options: FindInPageOptions) => {

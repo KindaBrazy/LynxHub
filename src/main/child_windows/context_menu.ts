@@ -5,6 +5,7 @@ import {browserDownloadChannels} from '@lynx_cross/consts/donwload_manager';
 import {browserChannels, tabsChannels} from '@lynx_cross/consts/ipc';
 import contextMenuChannels from '@lynx_cross/consts/ipc_channels/context_menu';
 import windowDialogsChannels from '@lynx_cross/consts/ipc_channels/window_dialogs';
+import {ContextMenuVolumeData} from '@lynx_cross/types/ipc';
 import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
@@ -147,11 +148,7 @@ export default class ContextMenuManager {
     });
     ipcMain.on(
       browserChannels.openVolume,
-      (
-        _,
-        data: {id: string; tabId: string; volume: number; muted: boolean; globalMuted: boolean},
-        customPosition?: {x: number; y: number},
-      ) => {
+      (_, data: ContextMenuVolumeData, customPosition?: {x: number; y: number}) => {
         this.setCustomContextPosition(customPosition);
         this.sendContextMenuMessage(contextMenuChannels.onVolume, data);
       },

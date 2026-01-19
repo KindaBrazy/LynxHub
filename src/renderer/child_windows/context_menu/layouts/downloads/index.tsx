@@ -1,15 +1,12 @@
 import {Button, Chip} from '@heroui/react';
 import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
-import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
 import {Broom, DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useState} from 'react';
 
-import {MenuTypes} from '../../consts';
-import {CommonProps} from '../../types';
 import DownloadItem from './Item';
 
-const DownloadMenu = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
+const DownloadMenu = memo(() => {
   const [downloads, setDownloads] = useState<DownloadItemInfo[]>([]);
 
   const handleClearAll = () => {
@@ -18,13 +15,6 @@ const DownloadMenu = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
   };
 
   useEffect(() => {
-    const OffDownloads = contextMenuIpc.on.downloads(() => {
-      setWidthSize('lg');
-      setSelectedLayout(MenuTypes.Downloads);
-
-      contextMenuIpc.send.showWindow();
-    });
-
     const offDlStart = downloadManagerIpc.on.dlStart(info => {
       const newItem: DownloadItemInfo = {
         ...info,
@@ -62,14 +52,11 @@ const DownloadMenu = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
     });
 
     return () => {
-      OffDownloads();
       offDlStart();
       offProgress();
       offDone();
     };
   }, []);
-
-  if (!show) return null;
 
   return (
     <div className="flex flex-col">

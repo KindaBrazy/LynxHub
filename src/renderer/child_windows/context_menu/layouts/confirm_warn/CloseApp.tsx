@@ -2,30 +2,15 @@ import {Button} from '@heroui/react';
 import {isLinuxPortable} from '@lynx/hooks/utils';
 import {Power_Icon} from '@lynx_assets/icons';
 import rendererIpc from '@lynx_shared/ipc';
-import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {Forward2, Restart} from '@solar-icons/react-perf/BoldDuotone';
-import {memo, useEffect} from 'react';
+import {memo} from 'react';
 
-import {MenuTypes} from '../../consts';
-import {CommonProps} from '../../types';
 import {hideContextWindow, setElementFocus} from '../Shared';
 import ConfirmElement from './ConfirmElement';
 
-const CloseApp = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
+const CloseApp = memo(() => {
   const onRestart = () => rendererIpc.win.changeWinState('restart');
   const onClose = () => rendererIpc.win.changeWinState('close');
-
-  useEffect(() => {
-    const offCloseApp = contextMenuIpc.on.closeApp(() => {
-      setWidthSize('lg');
-      setSelectedLayout(MenuTypes.CloseAppConfirm);
-      contextMenuIpc.send.showWindow();
-    });
-
-    return () => offCloseApp();
-  }, []);
-
-  if (!show) return null;
 
   return (
     <ConfirmElement

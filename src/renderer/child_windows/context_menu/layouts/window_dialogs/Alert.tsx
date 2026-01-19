@@ -1,30 +1,12 @@
 import {Button} from '@heroui/react';
-import contextMenuIpc from '@lynx_shared/ipc/context_menu';
-import windowDialogsIpc from '@lynx_shared/ipc/window_dialogs';
 import {Check, ShieldAlert} from 'lucide-react';
-import {memo, useEffect, useState} from 'react';
+import {memo} from 'react';
 
-import {MenuTypes} from '../../consts';
-import {CommonProps} from '../../types';
+import {useContextState} from '../../redux/reducer';
 import {hideContextWindow} from '../Shared';
 
-const AlertWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
-  const [message, setMessage] = useState<string | undefined>(undefined);
-
-  useEffect(() => {
-    const offPrompt = windowDialogsIpc.alertShow((_message: string) => {
-      setMessage(_message);
-
-      setWidthSize('lg');
-      setSelectedLayout(MenuTypes.Alert);
-
-      contextMenuIpc.send.showWindow();
-    });
-
-    return () => offPrompt();
-  }, []);
-
-  if (!show) return null;
+const AlertWindow = memo(() => {
+  const {message} = useContextState('alertWindow');
 
   return (
     <div className="py-4 px-5 flex flex-col gap-y-3 draggable">

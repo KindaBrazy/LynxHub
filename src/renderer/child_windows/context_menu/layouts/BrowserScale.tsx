@@ -1,20 +1,20 @@
 import {Button, Slider} from '@heroui/react';
 import rendererIpc from '@lynx_shared/ipc';
-import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {Magnifer, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {isArray} from 'lodash';
-import {memo, useEffect, useState} from 'react';
+import {memo} from 'react';
+import {useDispatch} from 'react-redux';
 
-import {MenuTypes} from '../consts';
-import {CommonProps} from '../types';
-import {showContextWindow} from './Shared';
+import {contextActions, useContextState} from '../redux/reducer';
+import {ContextDispatch} from '../redux/store';
 
-const BrowserScale = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
-  const [id, setId] = useState<string>('');
-  const [value, setValue] = useState<number>(100);
+const BrowserScale = memo(() => {
+  const {id, factor} = useContextState('browserScale');
+
+  const dispatch = useDispatch<ContextDispatch>();
 
   const updateZoom = (zoom: number) => {
-    setValue(zoom);
+    dispatch(contextActions.updateZoomFactor(zoom));
     rendererIpc.browser.setZoomFactor(id, zoom / 100);
     rendererIpc.storageUtils.updateZoomFactor(zoom / 100);
   };
@@ -27,28 +27,9 @@ const BrowserScale = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
     updateZoom(100);
   };
 
-  useEffect(() => {
-    const offZoom = contextMenuIpc.on.zoom((_id, zoomFactor) => {
-      setId(_id);
-      setValue(zoomFactor * 100);
-
-      setWidthSize('md');
-      setSelectedLayout(MenuTypes.BrowserScale);
-
-      showContextWindow();
-    });
-
-    return () => {
-      setId('');
-      offZoom();
-    };
-  }, []);
-
-  if (!show) return null;
-
   return (
-    <div key="zoom_page" className="p-3 pr-6 flex flex-row gap-x-2 gap-y-4">
-      <Button size="sm" variant="flat" className="h-17" onPress={handleReset} isDisabled={value === 100}>
+    <div className="p-3 pr-6 flex flex-row gap-x-2 gap-y-4">
+      <Button size="sm" variant="flat" className="h-17" onPress={handleReset} isDisabled={factor === 100}>
         <Refresh className="size-5" />
       </Button>
       <Slider
@@ -67,7 +48,7 @@ const BrowserScale = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
         step={5}
         size="sm"
         minValue={10}
-        value={value}
+        value={factor}
         maxValue={300}
         color="primary"
         fillOffset={100}

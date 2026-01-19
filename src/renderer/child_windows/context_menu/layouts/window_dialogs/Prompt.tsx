@@ -3,13 +3,17 @@ import windowDialogsIpc from '@lynx_shared/ipc/window_dialogs';
 import {Check, TextCursorInput, X} from 'lucide-react';
 import {memo, useEffect, useState} from 'react';
 
-import {MenuTypes} from '../../consts';
-import {CommonProps} from '../../types';
-import {hideContextWindow, showContextWindow} from '../Shared';
+import {useContextState} from '../../redux/reducer';
+import {hideContextWindow} from '../Shared';
 
-const PromptWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps) => {
-  const [message, setMessage] = useState<string | undefined>(undefined);
+const PromptWindow = memo(() => {
   const [inputValue, setInputValue] = useState<string | undefined>(undefined);
+
+  const {message, defaultValue} = useContextState('promptWindow');
+
+  useEffect(() => {
+    setInputValue(defaultValue);
+  }, [defaultValue]);
 
   const done = () => {
     const result: string | null = inputValue === '' || inputValue === undefined ? null : inputValue;
@@ -18,22 +22,6 @@ const PromptWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps)
 
     hideContextWindow();
   };
-
-  useEffect(() => {
-    const offPrompt = windowDialogsIpc.promptShow((_message: string, _defaultValue?: string) => {
-      setMessage(_message);
-      setInputValue(_defaultValue);
-
-      setWidthSize('lg');
-      setSelectedLayout(MenuTypes.Prompt);
-
-      showContextWindow();
-    });
-
-    return () => offPrompt();
-  }, []);
-
-  if (!show) return null;
 
   return (
     <div className="py-4 px-5 flex flex-col gap-y-3">
