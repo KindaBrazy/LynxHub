@@ -1,6 +1,7 @@
 import {Button, Input, Select, Selection, SelectItem} from '@heroui/react';
 import {AgentTypes} from '@lynx_cross/types/ipc';
 import rendererIpc from '@lynx_shared/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -28,10 +29,10 @@ export default function UserAgent() {
         });
       }
 
-      const lynxhubValue = await rendererIpc.browser.getUserAgent('lynxhub');
-      const electronValue = await rendererIpc.browser.getUserAgent('electron');
-      const chromeValue = await rendererIpc.browser.getUserAgent('chrome');
-      const customValue = await rendererIpc.browser.getUserAgent('custom');
+      const lynxhubValue = await browserIpc.invoke.getUserAgent('lynxhub');
+      const electronValue = await browserIpc.invoke.getUserAgent('electron');
+      const chromeValue = await browserIpc.invoke.getUserAgent('chrome');
+      const customValue = await browserIpc.invoke.getUserAgent('custom');
 
       setDesc([
         {id: 'lynxhub', value: lynxhubValue},
@@ -54,7 +55,7 @@ export default function UserAgent() {
         });
       }
       rendererIpc.storage.update('browser', {userAgent: value});
-      rendererIpc.browser.updateUserAgent();
+      browserIpc.send.updateUserAgent();
     }
   }, []);
 

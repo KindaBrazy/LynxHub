@@ -1,6 +1,6 @@
 import {Button, Input} from '@heroui/react';
 import {Circle_Icon} from '@lynx_assets/icons';
-import rendererIpc from '@lynx_shared/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {isEmpty} from 'lodash';
 import {X} from 'lucide-react';
@@ -17,21 +17,21 @@ const FindInPage = memo(() => {
 
   useEffect(() => {
     if (searchValue) {
-      rendererIpc.browser.findInPage(id, searchValue, {findNext: true});
+      browserIpc.send.findInPage(id, searchValue, {findNext: true});
     } else {
-      rendererIpc.browser.stopFindInPage(id, 'clearSelection');
+      browserIpc.send.stopFindInPage(id, 'clearSelection');
     }
   }, [searchValue]);
 
   const next = () => {
-    rendererIpc.browser.findInPage(id, searchValue, {findNext: false, forward: true});
+    browserIpc.send.findInPage(id, searchValue, {findNext: false, forward: true});
   };
   const back = () => {
-    rendererIpc.browser.findInPage(id, searchValue, {findNext: false, forward: false});
+    browserIpc.send.findInPage(id, searchValue, {findNext: false, forward: false});
   };
   const clear = () => {
     setSearchValue('');
-    rendererIpc.browser.stopFindInPage(id, 'clearSelection');
+    browserIpc.send.stopFindInPage(id, 'clearSelection');
     // Refocus input after clearing
     if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
     focusTimeoutRef.current = setTimeout(() => inputRef?.focus(), 0);
@@ -58,7 +58,7 @@ const FindInPage = memo(() => {
     const handleWindowBlur = () => {
       setSearchValue(currentValue => {
         if (currentValue) {
-          rendererIpc.browser.stopFindInPage(id, 'clearSelection');
+          browserIpc.send.stopFindInPage(id, 'clearSelection');
         }
         return '';
       });

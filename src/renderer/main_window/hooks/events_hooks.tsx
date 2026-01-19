@@ -1,6 +1,7 @@
 import {APP_BUILD_NUMBER, PageTitleByPageId} from '@lynx_cross/consts';
 import {toMs} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
@@ -169,7 +170,7 @@ export const useIpcEvents = () => {
       dispatch(settingsActions.setSettingsState({key: type, value: enable}));
     });
 
-    const offDomReady = rendererIpc.browser.onDomReady((_, id, isReady) => {
+    const offDomReady = browserIpc.on.onDomReady((id, isReady) => {
       if (isReady) dispatch(cardsActions.addDomReady(id));
     });
 
@@ -274,12 +275,12 @@ export const useBrowserEvents = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const offIsLoading = rendererIpc.browser.onIsLoading((_, id, isLoading) => {
+    const offIsLoading = browserIpc.on.onIsLoading((id, isLoading) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) dispatch(tabsActions.setTabLoading({tabID, isLoading}));
     });
 
-    const offTitleChange = rendererIpc.browser.onTitleChange((_, id, title) => {
+    const offTitleChange = browserIpc.on.onTitleChange((id, title) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) {
         dispatch(tabsActions.setTabTitle({tabID, title}));
@@ -287,12 +288,12 @@ export const useBrowserEvents = () => {
       }
     });
 
-    const offFavIconChange = rendererIpc.browser.onFavIconChange((_, id, url) => {
+    const offFavIconChange = browserIpc.on.onFavIconChange((id, url) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) dispatch(tabsActions.setTabFavIcon({tabID, show: true, url}));
     });
 
-    const offUrlChange = rendererIpc.browser.onUrlChange((_, id, url) => {
+    const offUrlChange = browserIpc.on.onUrlChange((id, url) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) dispatch(cardsActions.setRunningCardCurrentAddress({tabId: tabID, address: url}));
     });

@@ -1,5 +1,6 @@
 import {Button, Slider} from '@heroui/react';
 import rendererIpc from '@lynx_shared/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {Magnifer, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {isArray} from 'lodash';
 import {memo} from 'react';
@@ -15,7 +16,7 @@ const BrowserScale = memo(() => {
 
   const updateZoom = (zoom: number) => {
     dispatch(contextActions.updateZoomFactor(zoom));
-    rendererIpc.browser.setZoomFactor(id, zoom / 100);
+    browserIpc.send.setZoomFactor(id, zoom / 100);
     rendererIpc.storageUtils.updateZoomFactor(zoom / 100);
   };
 

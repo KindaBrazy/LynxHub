@@ -1,6 +1,7 @@
 import {cn} from '@heroui/react';
 import {formatWebAddress} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -233,7 +234,7 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
           rendererIpc.storageUtils.addBrowserRecent(url);
           // History is now tracked in main process on navigation events
           editableRef.current?.blur();
-          rendererIpc.browser.reload(cardId);
+          browserIpc.send.reload(cardId);
         } catch (err) {
           console.error(`Invalid URL: ${err}`);
         }

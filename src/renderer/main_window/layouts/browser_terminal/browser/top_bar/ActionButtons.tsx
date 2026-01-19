@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
-import rendererIpc from '@lynx_shared/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
 import {memo, useEffect, useMemo, useState} from 'react';
 
@@ -26,12 +26,12 @@ const Browser_ActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props
 
   const isLoading = useMemo(() => tabs.find(tab => tab.id === tabID)?.isLoading ?? false, [tabs, tabID]);
 
-  const goBack = () => rendererIpc.browser.goBack(id);
-  const goForward = () => rendererIpc.browser.goForward(id);
-  const reload = () => rendererIpc.browser.reload(id);
-  const stop = () => rendererIpc.browser.stop(id);
-  const loadWebuiURL = () => rendererIpc.browser.loadURL(id, webuiAddress);
-  const toggleDevTools = () => rendererIpc.browser.toggleDevTools(id);
+  const goBack = () => browserIpc.send.goBack(id);
+  const goForward = () => browserIpc.send.goForward(id);
+  const reload = () => browserIpc.send.reload(id);
+  const stop = () => browserIpc.send.stop(id);
+  const loadWebuiURL = () => browserIpc.send.loadURL(id, webuiAddress);
+  const toggleDevTools = () => browserIpc.send.toggleDevTools(id);
 
   const canToggleDevTools = isActiveTab && isDomReady;
 
@@ -41,7 +41,7 @@ const Browser_ActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props
   ]);
 
   useEffect(() => {
-    const offCanGo = rendererIpc.browser.onCanGo((_, targetID, canGo) => {
+    const offCanGo = browserIpc.on.onCanGo((targetID, canGo) => {
       if (targetID == id) {
         setCanGoBack(canGo.back);
         setCanGoForward(canGo.forward);

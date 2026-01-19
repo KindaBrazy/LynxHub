@@ -1,6 +1,7 @@
 import path from 'node:path';
 
-import {browserChannels, tabsChannels, volumeChannels} from '@lynx_cross/consts/ipc';
+import {tabsChannels, volumeChannels} from '@lynx_cross/consts/ipc';
+import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import {AudioState, CanGoType, WHType} from '@lynx_cross/types/ipc';
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
 import {debounce, isEmpty, isNil} from 'lodash';

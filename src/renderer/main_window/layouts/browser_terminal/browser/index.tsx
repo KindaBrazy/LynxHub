@@ -1,4 +1,5 @@
 import rendererIpc from '@lynx_shared/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
@@ -28,11 +29,11 @@ const Browser = memo(({runningCard}: Props) => {
   const finalAddress = useMemo(() => customAddress || webUIAddress, [customAddress, webUIAddress]);
 
   useEffect(() => {
-    if (finalAddress) rendererIpc.browser.loadURL(id, finalAddress);
+    if (finalAddress) browserIpc.send.loadURL(id, finalAddress);
   }, [id, finalAddress]);
 
   useEffect(() => {
-    if (isActiveTab) rendererIpc.browser.focusWebView(id);
+    if (isActiveTab) browserIpc.send.focusWebView(id);
   }, [isActiveTab]);
 
   // Apply volume settings when browser becomes dom-ready
@@ -57,12 +58,12 @@ const Browser = memo(({runningCard}: Props) => {
   }, [isDomReady, id, tabId, tabVolumes, tabMuted, globalMuted]);
 
   useEffect(() => {
-    const offFailed = rendererIpc.browser.onFailedLoadUrl((_, targetID, errorCode, errorDescription, validatedURL) => {
+    const offFailed = browserIpc.on.onFailedLoadUrl((targetID, errorCode, errorDescription, validatedURL) => {
       if (targetID === id) {
         setFailedLoad({errorCode, errorDescription, validatedURL});
       }
     });
-    const offClearFailed = rendererIpc.browser.onClearFailed((_, targetID) => {
+    const offClearFailed = browserIpc.on.onClearFailed(targetID => {
       if (targetID === id) setFailedLoad(undefined);
     });
 
@@ -74,14 +75,11 @@ const Browser = memo(({runningCard}: Props) => {
 
   useEffect(() => {
     const validAddress = !isEmpty(runningCard.customAddress || runningCard.webUIAddress) && !failedLoad;
-    rendererIpc.browser.setVisible(
-      runningCard.id,
-      validAddress && isActiveTab && runningCard.currentView === 'browser',
-    );
+    browserIpc.send.setVisible(runningCard.id, validAddress && isActiveTab && runningCard.currentView === 'browser');
   }, [runningCard, isActiveTab]);
 
   const handleReload = useCallback(() => {
-    rendererIpc.browser.reload(id);
+    browserIpc.send.reload(id);
   }, [id]);
 
   return (

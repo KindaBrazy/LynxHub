@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import {browserChannels} from '@lynx_cross/consts/ipc';
+import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain} from 'electron';
 
 export default class LinkPreviewManager {

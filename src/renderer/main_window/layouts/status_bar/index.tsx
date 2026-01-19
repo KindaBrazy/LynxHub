@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {isEmpty, isNil} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
@@ -26,14 +26,14 @@ const StatusBar = memo(() => {
     const observer = new ResizeObserver(entries => {
       if (entries[0]) {
         const {height} = entries[0].contentRect;
-        rendererIpc.browser.addOffset('statusBar', {width: 0, height});
+        browserIpc.send.addOffset('statusBar', {width: 0, height});
       }
     });
 
     if (containerRef) {
       observer.observe(containerRef);
     } else {
-      rendererIpc.browser.addOffset('statusBar', {width: 0, height: 0});
+      browserIpc.send.addOffset('statusBar', {width: 0, height: 0});
     }
 
     return () => observer.disconnect();

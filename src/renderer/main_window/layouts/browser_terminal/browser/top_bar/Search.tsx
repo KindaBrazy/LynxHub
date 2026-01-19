@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
-import rendererIpc from '@lynx_shared/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {memo, useRef} from 'react';
 
 import {Circle_Icon} from '../../../../../shared/assets/icons';
@@ -16,9 +16,9 @@ const Browser_Search = memo(({id, tabID}: Props) => {
     const bounds = btnRef.current?.getBoundingClientRect();
     if (bounds) {
       const {x, y} = bounds;
-      rendererIpc.browser.openFindInPage(id, {x: x - 125, y: y + 30});
+      browserIpc.send.openFindInPage(id, {x: x - 125, y: y + 30});
     } else {
-      rendererIpc.browser.openFindInPage(id);
+      browserIpc.send.openFindInPage(id);
     }
   };
 
