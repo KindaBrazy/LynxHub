@@ -31,9 +31,9 @@ const ConfirmWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps
   if (!show) return null;
 
   return (
-    <div className="py-5 px-5 flex flex-col gap-y-5">
+    <div className="py-5 px-5 flex flex-col gap-y-5 draggable">
       <div className="flex gap-x-2 items-center">
-        <ShieldCheck className="size-6 text-warning" />
+        <ShieldCheck className="size-8 text-warning" />
         <span className="w-full">{message}</span>
       </div>
 
@@ -41,6 +41,7 @@ const ConfirmWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps
         <Button
           variant="light"
           color="warning"
+          className="notDraggable"
           onPress={() => handleResult(false)}
           startContent={<X className="size-4" />}>
           Cancel
@@ -50,6 +51,7 @@ const ConfirmWindow = memo(({setSelectedLayout, setWidthSize, show}: CommonProps
           variant="flat"
           color="success"
           ref={setElementFocus}
+          className="notDraggable"
           onPress={() => handleResult(true)}
           startContent={<Check className="size-4" />}
           autoFocus>
