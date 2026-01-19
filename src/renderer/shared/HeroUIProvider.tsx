@@ -5,13 +5,13 @@ import {useDocumentDarkMode} from './hooks';
 
 /** Config HeroUI and AntD and return providers */
 export default function HeroUIProvider({children}: {children: ReactNode}) {
-  useDocumentDarkMode();
+  const isDark = useDocumentDarkMode();
 
   return (
     <div>
       <HeroProvider>
         <ToastProvider />
-        <div className="bg-background text-foreground">{children}</div>
+        <div className={`bg-background text-foreground ${isDark ? 'dark' : 'light'}`}>{children}</div>
       </HeroProvider>
     </div>
   );
