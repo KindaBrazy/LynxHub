@@ -1,7 +1,7 @@
 import {clearInterval} from 'node:timers';
 
 import axios from 'axios';
-import {app} from 'electron';
+import {app, BrowserWindow} from 'electron';
 
 import {otherChannels} from '../../cross/consts/ipc';
 import {toMs} from '../../cross/utils';
@@ -33,6 +33,8 @@ class ClassHolder {
   private _linkPreviewManager?: LinkPreviewManager;
   private _browserDownloadManager?: BrowserDownloadManager;
   private _shareScreenManager?: ShareScreenManager;
+
+  private _toastWindow?: BrowserWindow;
 
   private readonly _appStartTime: number;
   private _isOnline: boolean = true;
@@ -135,6 +137,9 @@ class ClassHolder {
   set shareScreenManager(value: ClassHolder['_shareScreenManager']) {
     this._shareScreenManager = value;
   }
+  set toastWindow(value: ClassHolder['_toastWindow']) {
+    this._toastWindow = value;
+  }
 
   // ----------------> Getters
   get appStartTime(): number {
@@ -178,6 +183,9 @@ class ClassHolder {
   }
   get shareScreenManager() {
     return this._shareScreenManager;
+  }
+  get toastWindow() {
+    return this._toastWindow;
   }
 }
 
