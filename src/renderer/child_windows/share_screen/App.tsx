@@ -1,7 +1,7 @@
 import {StyleProvider} from '@ant-design/cssinjs';
 import {Button, Card, CardBody, CardHeader, Image, Spinner, Switch, Tab, Tabs} from '@heroui/react';
-import {screenShareChannels} from '@lynx_cross/consts/share_screen';
 import {ScreenShareSources, ScreenShareStart} from '@lynx_cross/types/share_screen';
+import shareScreenIpc from '@lynx_shared/ipc/share_screen';
 import {Monitor, Record, Screencast, VolumeLoud, WindowFrame} from '@solar-icons/react-perf/BoldDuotone';
 import {Result} from 'antd';
 import isEmpty from 'lodash/isEmpty';
@@ -9,8 +9,6 @@ import {X} from 'lucide-react';
 import {useEffect, useState} from 'react';
 
 type TabType = 'windows' | 'screens';
-
-const ipc = window.electron.ipcRenderer;
 
 export default function ScreenShare() {
   const [activeTab, setActiveTab] = useState<TabType>('windows');
@@ -26,13 +24,13 @@ export default function ScreenShare() {
   useEffect(() => {
     setIsLoadingSources(true);
 
-    Promise.all([ipc.invoke(screenShareChannels.getScreenSources), ipc.invoke(screenShareChannels.getWindowSources)])
+    Promise.all([shareScreenIpc.getScreenSources(), shareScreenIpc.getWindowSources()])
       .then(([screens, windows]) => {
         setMockScreens(screens);
         setMockWindows(windows);
       })
       .catch(() => {
-        ipc.send(screenShareChannels.cancel);
+        shareScreenIpc.cancel();
       })
       .finally(() => {
         setIsLoadingSources(false);
@@ -42,12 +40,12 @@ export default function ScreenShare() {
   const handleShare = (): void => {
     if (selectedItem) {
       const result: ScreenShareStart = {id: selectedItem, shareAudio: shareAudio, type: activeTab};
-      ipc.send(screenShareChannels.startShare, result);
+      shareScreenIpc.startShare(result);
     }
   };
 
   const handleCancel = (): void => {
-    ipc.send(screenShareChannels.cancel);
+    shareScreenIpc.cancel();
   };
 
   const renderThumbnail = (item: ScreenShareSources) => (
