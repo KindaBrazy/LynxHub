@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 import {Power_Icon} from '@lynx_assets/icons';
-import {appWindowChannels} from '@lynx_cross/consts/ipc';
 import {ToastWindow_MessageType} from '@lynx_cross/types';
+import toastWindowIpc from '@lynx_shared/ipc/taost_window';
 import {CheckCircle, DangerCircle, InfoCircle, Refresh, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {X} from 'lucide-react';
 import {useEffect, useState} from 'react';
@@ -40,26 +40,18 @@ export default function ToastContent() {
   const [toastMessage, setToastMessage] = useState<ToastWindow_MessageType | null>(null);
 
   useEffect(() => {
-    const offMessage = window.electron.ipcRenderer.on('show_message', (_, result: ToastWindow_MessageType) => {
-      setToastMessage(result);
-      document.title = result.title;
+    const offMessage = toastWindowIpc.onShowMessage(data => {
+      setToastMessage(data);
+      document.title = data.title;
     });
-    return () => {
-      offMessage();
-    };
+
+    return () => offMessage();
   }, []);
 
-  const handleClose = () => {
-    window.electron.ipcRenderer.send('close_toast');
-  };
-
-  const handleExitApp = () => {
-    window.electron.ipcRenderer.send('exit_app');
-  };
-
-  const handleRestart = () => {
-    window.electron.ipcRenderer.send('restart_app');
-  };
+  const handleClose = () => toastWindowIpc.closeToast();
+  const handleExitApp = () => toastWindowIpc.exitApp();
+  const handleRestart = () => toastWindowIpc.restartApp();
+  const handleCustomBtnClick = toastWindowIpc.customBtnPressed;
 
   if (!toastMessage) return null;
 
@@ -131,8 +123,8 @@ export default function ToastContent() {
                 size="sm"
                 key={btn.id}
                 color={btn.color}
-                className={`notDraggable ${btn.cursor === 'default' && 'cursor-default'}`}
-                onPress={() => window.electron.ipcRenderer.send(appWindowChannels.toastBtnPress, btn.id)}>
+                onPress={() => handleCustomBtnClick(btn.id)}
+                className={`notDraggable ${btn.cursor === 'default' && 'cursor-default'}`}>
                 {btn.label}
               </Button>
             ))}
