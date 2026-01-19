@@ -165,7 +165,7 @@ export function getWebContentsIfAvailable(window: BrowserWindow | undefined) {
 }
 
 export function noticeAllWindowsDarkMode(darkMode: DarkModeTypes) {
-  const {appManager, contextMenuManager, linkPreviewManager, shareScreenManager} = classHolder;
+  const {appManager, contextMenuManager, linkPreviewManager, shareScreenManager, toastWindow} = classHolder;
 
   const value = darkMode === 'system' ? getSystemDarkMode() : darkMode;
   const isDark = value === 'dark';
@@ -181,6 +181,9 @@ export function noticeAllWindowsDarkMode(darkMode: DarkModeTypes) {
 
   const shareScreen = getWebContentsIfAvailable(shareScreenManager?.selectorWindow);
   if (shareScreen) shareScreen.send(winChannels.onDarkMode, isDark);
+
+  const toast = getWebContentsIfAvailable(toastWindow);
+  if (toast) toast.send(winChannels.onDarkMode, isDark);
 }
 
 function getWindowBgColor(isDark: boolean) {
