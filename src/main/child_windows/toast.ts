@@ -6,6 +6,7 @@ import {app, BrowserWindow, ipcMain} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
 import {ToastWindow_MessageType} from '../../cross/types';
+import classHolder from '../core/class_holder';
 import {RelaunchApp} from '../utils';
 
 export default function ShowToastWindow(
@@ -26,6 +27,8 @@ export default function ShowToastWindow(
         sandbox: false,
       },
     });
+
+    classHolder.toastWindow = window;
 
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
       window.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/toast.html`);
@@ -64,6 +67,7 @@ export default function ShowToastWindow(
       ipcMain.removeListener('restart_app', handleRestartApp);
       ipcMain.removeListener(appWindowChannels.toastBtnPress, handleToastBtnPress);
       window.destroy();
+      classHolder.toastWindow = undefined;
     });
   };
 
