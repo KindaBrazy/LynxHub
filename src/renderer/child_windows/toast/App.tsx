@@ -1,30 +1,23 @@
 import {Button} from '@heroui/react';
+import {Power_Icon} from '@lynx_assets/icons';
 import {appWindowChannels} from '@lynx_cross/consts/ipc';
 import {ToastWindow_MessageType} from '@lynx_cross/types';
+import {CheckCircle, DangerCircle, InfoCircle, Refresh, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
+import {X} from 'lucide-react';
 import {useEffect, useState} from 'react';
-
-import {
-  AlertCircle_Icon,
-  AlertTriangle_Icon,
-  CheckCircle_Icon,
-  CloseSimple_Icon,
-  Info_Icon,
-  Power_Icon,
-  RefreshDuo_Icon,
-} from '../../shared/assets/icons';
 
 const getIcon = (type: string) => {
   switch (type) {
     case 'success':
-      return <CheckCircle_Icon className="w-6 h-6 text-emerald-500" />;
+      return <CheckCircle className="size-7 text-emerald-500" />;
     case 'warning':
-      return <AlertTriangle_Icon className="w-6 h-6 text-amber-500" />;
+      return <DangerCircle className="size-7 text-amber-500" />;
     case 'error':
-      return <AlertCircle_Icon className="w-6 h-6 text-red-500" />;
+      return <ShieldCross className="size-7 text-red-500" />;
     case 'info':
-      return <Info_Icon className="w-6 h-6 text-blue-500" />;
+      return <InfoCircle className="size-7 text-blue-500" />;
     default:
-      return <Info_Icon className="w-6 h-6 text-gray-500" />;
+      return <InfoCircle className="size-7 text-foreground" />;
   }
 };
 
@@ -103,7 +96,7 @@ export default function ToastContent() {
               size={'sm'}
               onPress={handleClose}
               className={'notDraggable'}
-              startContent={<CloseSimple_Icon className={'size-3.5'} />}>
+              startContent={<X className={'size-3.5'} />}>
               Close Toast
             </Button>
           )}
@@ -117,7 +110,7 @@ export default function ToastContent() {
               color={'primary'}
               onPress={handleRestart}
               className={'notDraggable'}
-              startContent={<RefreshDuo_Icon className={'size-3.5'} />}>
+              startContent={<Refresh className={'size-3.5'} />}>
               Restart LynxHub
             </Button>
           )}
