@@ -12,7 +12,7 @@ import {ContextDispatch} from '../redux/store';
 export default function useShowEvents() {
   const dispatch = useDispatch<ContextDispatch>();
 
-  const offInitView = contextMenuIpc.on.initView((params, navHistory, contextId) => {
+  const offInitView = contextMenuIpc.on.rightClick((params, navHistory, contextId) => {
     const hasLinkItems = !isEmpty(params.linkURL);
     const hasImageItems = params.mediaType === 'image';
     const hasTextSelection = !isEmpty(params.selectionText);

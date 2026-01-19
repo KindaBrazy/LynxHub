@@ -125,7 +125,7 @@ export default class ContextMenuManager {
 
       this.setCustomContextPosition(undefined);
       window.webContents?.send(
-        contextMenuChannels.onInitView,
+        contextMenuChannels.rightClick,
         params,
         {canGoBack: contents.navigationHistory.canGoBack(), canGoForward: contents.navigationHistory.canGoForward()},
         contents.id,
