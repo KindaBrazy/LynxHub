@@ -2,6 +2,7 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {screenShareChannels} from '@lynx_cross/consts/ipc_channels/share_screen';
 import {
   BrowserWindow,
   desktopCapturer,
@@ -12,7 +13,6 @@ import {
   Streams,
 } from 'electron';
 
-import {screenShareChannels} from '../../cross/consts/share_screen';
 import {ScreenShareSources, ScreenShareStart} from '../../cross/types/share_screen';
 import classHolder from '../core/class_holder';
 
