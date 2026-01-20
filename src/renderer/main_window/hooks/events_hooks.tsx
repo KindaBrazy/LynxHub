@@ -1,6 +1,5 @@
 import {APP_BUILD_NUMBER, PageTitleByPageId} from '@lynx_cross/consts';
 import {toMs} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
 import browserIpc from '@lynx_shared/ipc/browser';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
@@ -9,6 +8,7 @@ import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import userIpc from '@lynx_shared/ipc/user';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
@@ -116,16 +116,14 @@ export const usePatreon = () => {
   const isOnline = useAppState('isOnline');
 
   useEffect(() => {
-    rendererIpc.patreon.getInfo().then(userData => {
+    userIpc.patreon.getInfo().then(userData => {
       if (userData) {
         dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
         dispatch(userActions.setUserState({key: 'patreonLoggedIn', value: true}));
       }
     });
 
-    const offReleaseChannel = rendererIpc.patreon.onReleaseChannel((_, stage) =>
-      dispatch(userActions.setUpdateChannel(stage)),
-    );
+    const offReleaseChannel = userIpc.patreon.onReleaseChannel(stage => dispatch(userActions.setUpdateChannel(stage)));
 
     return () => offReleaseChannel();
   }, [dispatch, isOnline]);

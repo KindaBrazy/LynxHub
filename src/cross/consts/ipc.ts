@@ -1,12 +1,3 @@
-export const patreonChannels = {
-  getInfo: 'patreon:getInfo',
-  login: 'patreon:login',
-  logout: 'patreon:logout',
-  updateChannel: 'patreon:updateChannel',
-
-  onReleaseChannel: 'patreon:onReleaseChannel',
-} as const;
-
 export const volumeChannels = {
   // Renderer -> Main
   setVolume: 'volume:set',
