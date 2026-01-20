@@ -5,8 +5,8 @@ import {
   UserInputField,
   UserInputResult,
 } from '@lynx_cross/types/plugins/modules';
-import rendererIpc from '@lynx_shared/ipc';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import {isNil} from 'lodash';
 import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
@@ -80,13 +80,13 @@ export function useStepper({
     async (dir: string, file: string): ReturnType<InstallationStepper['runTerminalScript']> => {
       return new Promise(resolve => {
         restartTerminal.current = () => {
-          rendererIpc.pty.stop(cardId);
-          rendererIpc.pty.customProcess(cardId, dir, file);
+          ptyIpc.stop(cardId);
+          ptyIpc.customProcess(cardId, dir, file);
         };
 
         terminalResolver.current = resolve;
         updateState(prev => ({body: 'terminal', terminalKey: prev.terminalKey + 1}));
-        rendererIpc.pty.customProcess(cardId, dir, file);
+        ptyIpc.customProcess(cardId, dir, file);
       });
     },
     [],
@@ -96,13 +96,13 @@ export function useStepper({
     async (commands?: string | string[], dir?: string): ReturnType<InstallationStepper['executeTerminalCommands']> => {
       return new Promise(resolve => {
         restartTerminal.current = () => {
-          rendererIpc.pty.stop(cardId);
-          rendererIpc.pty.customCommands(cardId, commands, dir);
+          ptyIpc.stop(cardId);
+          ptyIpc.customCommands(cardId, commands, dir);
         };
 
         terminalResolver.current = resolve;
         updateState(prev => ({body: 'terminal', terminalKey: prev.terminalKey + 1}));
-        rendererIpc.pty.customCommands(cardId, commands, dir);
+        ptyIpc.customCommands(cardId, commands, dir);
       });
     },
     [],

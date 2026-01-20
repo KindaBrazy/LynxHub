@@ -1,6 +1,6 @@
 import {toMs} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
@@ -44,7 +44,7 @@ const RunningCardView = ({runningCard}: Props) => {
   }, [tabId, currentView]);
 
   useEffect(() => {
-    const offTitle = rendererIpc.pty.onTitle((_, targetID, title) => {
+    const offTitle = ptyIpc.onTitle((targetID, title) => {
       if (targetID === id) setTerminalName(title);
     });
 

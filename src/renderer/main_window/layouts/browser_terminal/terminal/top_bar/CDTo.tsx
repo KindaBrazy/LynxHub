@@ -1,6 +1,6 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
@@ -23,7 +23,7 @@ const CDTo = memo(({id}: Props) => {
       setHistory(newHistory);
 
       const LINE_ENDING = window.osPlatform === 'win32' ? '\r' : '\n';
-      rendererIpc.pty.write(id, `cd "${dir}"${LINE_ENDING}`);
+      ptyIpc.write(id, `cd "${dir}"${LINE_ENDING}`);
     },
     [history],
   );

@@ -1,5 +1,5 @@
-import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import type {ActionCreatorWithPayload} from '@reduxjs/toolkit';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
@@ -21,7 +21,7 @@ export function useRemoveTab() {
     ({tabId, id}: {tabId?: string; id?: string}) => {
       const running = runningCards.find(card => card.tabId === tabId || card.id === id);
 
-      if (running && running.type !== 'browser') rendererIpc.pty.stop(running.id);
+      if (running && running.type !== 'browser') ptyIpc.stop(running.id);
 
       const tId = tabId || running?.tabId;
 

@@ -8,7 +8,6 @@ import {
   imageCacheChannels,
   initChannels,
   patreonChannels,
-  ptyChannels,
   staticsChannels,
   tabsChannels,
   volumeChannels,
@@ -32,62 +31,6 @@ import type {IpcRendererEvent} from 'electron';
 const ipc = window.electron.ipcRenderer;
 
 const rendererIpc = {
-  /** Managing and using node_pty(Pseudo Terminal ) */
-  pty: {
-    // Starts PTY process for card with pre-commands and run commands
-    process: (id: string, cardId: string): void => {
-      extensionRendererApi.events_ipc.emit('terminal_process', {id, cardId});
-      ipc.send(ptyChannels.process, id, cardId);
-    },
-    // Starts custom PTY process with specific file to execute
-    customProcess: (id: string, dir?: string, file?: string): void => {
-      extensionRendererApi.events_ipc.emit('terminal_process_custom', {id, dir, file});
-      ipc.send(ptyChannels.customProcess, id, dir, file);
-    },
-    // Starts empty PTY process (no commands executed)
-    emptyProcess: (id: string, dir?: string): void => {
-      extensionRendererApi.events_ipc.emit('terminal_process_empty', {id, dir});
-      ipc.send(ptyChannels.emptyProcess, id, dir);
-    },
-    // Executes custom commands in PTY
-    customCommands: (id: string, commands?: string | string[], dir?: string) => {
-      extensionRendererApi.events_ipc.emit('terminal_process_custom_command', {id, commands, dir});
-      ipc.send(ptyChannels.customCommands, id, commands, dir);
-    },
-
-    // Stops PTY process by ID
-    stop: (id: string) => {
-      extensionRendererApi.events_ipc.emit('terminal_process_stop', {id});
-      ipc.send(ptyChannels.stopProcess, id);
-    },
-
-    // Writes data to PTY input
-    write: (id: string, data: string): void => {
-      extensionRendererApi.events_ipc.emit('terminal_write', {id, data});
-      ipc.send(ptyChannels.write, id, data);
-    },
-
-    // Clears PTY terminal screen
-    clear: (id: string): void => {
-      extensionRendererApi.events_ipc.emit('terminal_clear', {id});
-      ipc.send(ptyChannels.clear, id);
-    },
-
-    // Resizes PTY terminal dimensions
-    resize: (id: string, cols: number, rows: number): void => {
-      extensionRendererApi.events_ipc.emit('terminal_resize', {id, cols, rows});
-      ipc.send(ptyChannels.resize, id, cols, rows);
-    },
-
-    // Listens for PTY output data
-    onData: (result: (event: IpcRendererEvent, id: string, data: string) => void) => ipc.on(ptyChannels.onData, result),
-    // Listens for PTY title changes
-    onTitle: (result: (event: IpcRendererEvent, id: string, title: string) => void) =>
-      ipc.on(ptyChannels.onTitle, result),
-    // Listens for PTY process exit
-    onExit: (result: (event: IpcRendererEvent, id: string) => void) => ipc.on(ptyChannels.onExit, result),
-  },
-
   /** Managing app automatic updates */
   appUpdate: {
     // Listens for app update error events

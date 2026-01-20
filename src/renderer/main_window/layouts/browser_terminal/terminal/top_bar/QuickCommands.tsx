@@ -1,6 +1,6 @@
 import {Button, Divider, Kbd} from '@heroui/react';
 import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
-import rendererIpc from '@lynx_shared/ipc';
+import ptyIpc from '@lynx_shared/ipc/pty';
 
 import {useHotkeysState} from '../../../../redux/reducers/hotkeys';
 import {useTerminalState} from '../../../../redux/reducers/terminal';
@@ -45,7 +45,7 @@ export default function QuickCommands({id}: Props) {
             size="sm"
             variant="flat"
             key={`terminal_quick_btn_${index}`}
-            onPress={() => rendererIpc.pty.write(id, command)}>
+            onPress={() => ptyIpc.write(id, command)}>
             <span className="flex flex-row items-center gap-x-1">
               <span>{label}</span>
               {hasHotkey && (

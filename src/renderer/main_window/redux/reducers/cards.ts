@@ -1,7 +1,7 @@
 import {OnUpdatingExtensions} from '@lynx_cross/types/ipc';
 import {InstalledCards} from '@lynx_cross/types/storage';
-import rendererIpc from '@lynx_shared/ipc';
 import browserIpc from '@lynx_shared/ipc/browser';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {includes} from 'lodash';
 import {useSelector} from 'react-redux';
@@ -116,7 +116,7 @@ const cardsSlice = createSlice({
       ];
 
       if (type !== 'terminal') browserIpc.send.createBrowser(id);
-      if (type !== 'browser') rendererIpc.pty.emptyProcess(id);
+      if (type !== 'browser') ptyIpc.emptyProcess(id);
     },
 
     addRunningCard: (state, action: PayloadAction<{tabId: string; id: string}>) => {

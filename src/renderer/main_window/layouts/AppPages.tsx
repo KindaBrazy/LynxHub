@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import {useEffect, useMemo} from 'react';
 
 import HomePage from '../pages/home';
@@ -25,7 +25,7 @@ export default function AppPages() {
   }, []);
 
   useEffect(() => {
-    const removeListener = rendererIpc.pty.onExit((_, id) => {
+    const removeListener = ptyIpc.onExit(id => {
       if (closeTabOnExit) removeTab({id});
     });
 
