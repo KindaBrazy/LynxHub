@@ -1,12 +1,12 @@
 import path from 'node:path';
 
 import modulesChannels from '@lynx_cross/consts/ipc_channels/module';
+import {MainModuleImportType, MainModules, MainModuleUtils} from '@lynx_cross/types/plugins/modules';
 import {captureException} from '@sentry/electron/main';
 import {ipcMain} from 'electron';
 import {compact, isEmpty} from 'lodash';
 import pty from 'node-pty';
 
-import {MainModuleImportType, MainModules, MainModuleUtils} from '../../../cross/types/plugins/module';
 import {InstalledCard} from '../../../cross/types/storage';
 import {isDev, toMs} from '../../../cross/utils';
 import classHolder from '../../core/class_holder';

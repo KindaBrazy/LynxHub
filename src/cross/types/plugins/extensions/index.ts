@@ -1,8 +1,8 @@
 import {Reducer} from '@reduxjs/toolkit';
 import {ComponentProps, FC} from 'react';
 
-import {CardState} from '../../../cross/types';
-import {LoadedCardData} from '../../../cross/types/plugins/module';
+import {CardState} from '../../index';
+import {LoadedCardData} from '../modules';
 import {ExtensionRendererApi} from './api';
 
 export type UseCardStoreType = <T>(selector: (state: CardState) => T) => T;

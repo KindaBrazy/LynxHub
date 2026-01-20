@@ -1,5 +1,5 @@
 import {CardState} from '@lynx_cross/types';
-import {LoadedCardData} from '@lynx_cross/types/plugins/module';
+import {LoadedCardData} from '@lynx_cross/types/plugins/modules';
 import {validateGitRepoUrl} from '@lynx_cross/utils';
 import {create} from 'zustand';
 

@@ -1,4 +1,4 @@
-import {LoadedCardData} from '@lynx_cross/types/plugins/module';
+import {LoadedCardData} from '@lynx_cross/types/plugins/modules';
 import {Empty} from 'antd';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';

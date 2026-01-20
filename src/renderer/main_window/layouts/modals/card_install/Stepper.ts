@@ -1,4 +1,4 @@
-import {InstallationStepper} from '@lynx_cross/types/plugins/module';
+import {InstallationStepper} from '@lynx_cross/types/plugins/modules';
 import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';

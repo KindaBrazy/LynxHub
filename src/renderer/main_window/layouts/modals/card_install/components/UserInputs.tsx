@@ -1,5 +1,5 @@
 import {Button, Input, Select, SelectItem} from '@heroui/react';
-import {UserInputField, UserInputResult} from '@lynx_cross/types/plugins/module';
+import {UserInputField, UserInputResult} from '@lynx_cross/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
 import {isNil} from 'lodash';
 import {Dispatch, FC, SetStateAction, useCallback, useEffect, useState} from 'react';
