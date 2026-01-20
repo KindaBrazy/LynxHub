@@ -7,6 +7,7 @@ import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import utilsIpc from '@lynx_shared/ipc/utils';
 import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -193,14 +194,14 @@ export const useIpcEvents = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    const removeListener = rendererIpc.utils.onUpdateAllExtensions((_e, result) => {
-      if (result.step === 'done') {
-        rendererIpc.pty.process(result.id, result.id);
-        storageUtilsIpc.invoke.recentlyUsedCards('update', result.id);
-        dispatch(cardsActions.addRunningCard({id: result.id, tabId: activeTab}));
+    const removeListener = utilsIpc.onUpdateAllExtensions(updateInfo => {
+      if (updateInfo.step === 'done') {
+        rendererIpc.pty.process(updateInfo.id, updateInfo.id);
+        storageUtilsIpc.invoke.recentlyUsedCards('update', updateInfo.id);
+        dispatch(cardsActions.addRunningCard({id: updateInfo.id, tabId: activeTab}));
         dispatch(cardsActions.setUpdatingExtensions(undefined));
       }
-      dispatch(cardsActions.setUpdatingExtensions(result));
+      dispatch(cardsActions.setUpdatingExtensions(updateInfo));
     });
 
     return () => removeListener();

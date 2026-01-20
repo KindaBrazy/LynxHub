@@ -8,6 +8,7 @@ import {
   UserInputResult,
 } from '@lynx_cross/types/plugins/modules';
 import rendererIpc from '@lynx_shared/ipc';
+import utilsIpc from '@lynx_shared/ipc/utils';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -132,8 +133,8 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
         setProgressInfo(undefined);
         updateState({body: 'progress'});
         setUrlToDownload(url);
-        rendererIpc.utils.downloadFile(url);
-        removeProgressListener.current = rendererIpc.utils.onDownloadFile((_e, progress) => {
+        utilsIpc.downloadFile(url);
+        removeProgressListener.current = utilsIpc.onDownloadFile(progress => {
           if (progress.stage === 'done') {
             setProgressInfo(undefined);
             removeProgressListener.current?.();
@@ -187,7 +188,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
   const handleClose = useCallback(() => {
     if (state.body === 'terminal') rendererIpc.pty.stop(cardId);
     if (state.body === 'progress') {
-      rendererIpc.utils.cancelDownload();
+      utilsIpc.cancelDownload();
       removeProgressListener.current?.();
     }
     updateState(initialState);

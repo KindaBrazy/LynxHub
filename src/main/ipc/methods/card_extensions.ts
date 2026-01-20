@@ -1,7 +1,7 @@
 // Card extensions IPC methods - Manages extension details, updates, and enable/disable operations
 import path from 'node:path';
 
-import {utilsChannels} from '@lynx_cross/consts/ipc';
+import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
 import {ExtensionsData, ExtensionsUpdateStatus} from '@lynx_cross/types/ipc';
 import fs from 'graceful-fs';
 import {compact} from 'lodash';

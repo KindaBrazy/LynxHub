@@ -1,8 +1,8 @@
 import {getKeyValue, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@heroui/react';
 import {validateGitRepoUrl} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';
+import utilsIpc from '@lynx_shared/ipc/utils';
 import {motion} from 'framer-motion';
 import {filter, find, isEmpty, startCase} from 'lodash';
 import {
@@ -82,7 +82,7 @@ const Installed = forwardRef(
       setRows(prevState =>
         prevState.map(row => (row.key === name ? {...row, disable: useRowElements.disableBtn.disable} : row)),
       );
-      rendererIpc.utils
+      utilsIpc
         .disableExtension(!disable, targetDir)
         .then(resultDir => {
           setRows(prevState =>
@@ -154,7 +154,7 @@ const Installed = forwardRef(
     const getUpdateStatus = useCallback(() => {
       if (isEmpty(rows)) return;
 
-      rendererIpc.utils.getExtensionsUpdateStatus(dir).then(updateStatus => {
+      utilsIpc.getExtensionsUpdateStatus(dir).then(updateStatus => {
         if (isEmpty(updateStatus)) return;
         setRows(prevState =>
           prevState.map((row, index) => {
@@ -199,7 +199,7 @@ const Installed = forwardRef(
 
     // Fetches installed extensions
     const getExtensions = useCallback(() => {
-      rendererIpc.utils.getExtensionsDetails(dir).then(async data => {
+      utilsIpc.getExtensionsDetails(dir).then(async data => {
         if (data === 'empty') {
           setIsTableEmpty(true);
           setInstalledExtensions([]);
@@ -251,7 +251,7 @@ const Installed = forwardRef(
         setIsTableEmpty(false);
         setRows([]);
         setEmptyContent(loadingTableElement);
-        rendererIpc.utils.cancelExtensionsData();
+        utilsIpc.cancelExtensionsData();
       }
     }, [isOpen, getExtensions]);
 
