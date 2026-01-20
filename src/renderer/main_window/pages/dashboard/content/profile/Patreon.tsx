@@ -1,7 +1,7 @@
 import {Alert, Button, Card, User} from '@heroui/react';
 import {getCacheUrl} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
+import userIpc from '@lynx_shared/ipc/user';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -24,7 +24,7 @@ export default function Profile_Patreon() {
     if (!patreonLoggedIn) {
       setIsNotMember(false);
       setIsLoading(true);
-      rendererIpc.patreon
+      userIpc.patreon
         .login()
         .then(userData => {
           dispatch(userActions.setUserState({key: 'patreonUserData', value: userData}));
@@ -43,7 +43,7 @@ export default function Profile_Patreon() {
   const logoutPatreon = useCallback(() => {
     AddBreadcrumb_Renderer(`Patreon Logout`);
     setIsLoading(true);
-    rendererIpc.patreon
+    userIpc.patreon
       .logout()
       .then(() => {
         dispatch(userActions.resetUserState('patreonUserData'));

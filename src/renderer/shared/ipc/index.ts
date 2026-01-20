@@ -1,6 +1,5 @@
 import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
-import {patreonChannels, volumeChannels} from '@lynx_cross/consts/ipc';
-import {PatreonUserData, SubscribeStages} from '@lynx_cross/types';
+import {volumeChannels} from '@lynx_cross/consts/ipc';
 import {AudioState} from '@lynx_cross/types/ipc';
 import type {IpcRendererEvent} from 'electron';
 
@@ -87,21 +86,6 @@ const rendererIpc = {
       ipc.on(volumeChannels.onTabMutedUpdate, (_: IpcRendererEvent, tabId: string, muted: boolean) =>
         callback(tabId, muted),
       ),
-  },
-
-  patreon: {
-    // Gets Patreon user information
-    getInfo: (): Promise<PatreonUserData | undefined> => ipc.invoke(patreonChannels.getInfo),
-    // Logs in to Patreon
-    login: (): Promise<PatreonUserData> => ipc.invoke(patreonChannels.login),
-    // Logs out from Patreon
-    logout: (): Promise<void> => ipc.invoke(patreonChannels.logout),
-    // Updates Patreon subscription channel
-    updateChannel: (channel: SubscribeStages | 'get'): void => ipc.send(patreonChannels.updateChannel, channel),
-
-    // Listens for Patreon release channel changes
-    onReleaseChannel: (result: (event: IpcRendererEvent, stage: SubscribeStages) => void) =>
-      ipc.on(patreonChannels.onReleaseChannel, result),
   },
 };
 

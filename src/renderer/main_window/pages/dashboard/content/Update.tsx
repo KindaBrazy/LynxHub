@@ -1,8 +1,8 @@
 import {Button, Card, Chip, Select, Selection, SelectItem} from '@heroui/react';
 import {SubscribeStages} from '@lynx_cross/types';
-import rendererIpc from '@lynx_shared/ipc';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import staticsIpc from '@lynx_shared/ipc/statics';
+import userIpc from '@lynx_shared/ipc/user';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -64,7 +64,7 @@ export default function DashboardUpdate() {
     if (keys !== 'all') {
       const value = keys.values().next().value?.toString() as SubscribeStages | undefined;
       if (value) {
-        rendererIpc.patreon.updateChannel(value);
+        userIpc.patreon.updateChannel(value);
         pluginsIpc.checkForSync(value);
       }
     }
@@ -75,7 +75,7 @@ export default function DashboardUpdate() {
     const offChannel = window.electron.ipcRenderer.on('updateChannel-change', (_, result) => {
       setSelection([result]);
     });
-    rendererIpc.patreon.updateChannel('get');
+    userIpc.patreon.updateChannel('get');
 
     return () => {
       offChannel();
