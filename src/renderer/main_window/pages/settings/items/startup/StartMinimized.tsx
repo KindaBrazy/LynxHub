@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 
 import LynxSwitch from '../../../../components/LynxSwitch';
@@ -9,13 +9,13 @@ export default function StartMinimized() {
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
   useEffect(() => {
-    rendererIpc.storage.get('app').then(app => {
+    storageIpc.get('app').then(app => {
       setIsSelected(app.startMinimized);
     });
   }, []);
 
   const onEnabledChange = useCallback((selected: boolean) => {
-    rendererIpc.storage.update('app', {startMinimized: selected});
+    storageIpc.update('app', {startMinimized: selected});
     setIsSelected(selected);
   }, []);
 

@@ -1,6 +1,7 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip} from '@heroui/react';
 import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -18,7 +19,7 @@ const CDTo = memo(({id}: Props) => {
     (dir: string) => {
       const newHistory = [dir, ...history.filter(item => item !== dir)];
 
-      rendererIpc.storage.update('terminal', {cdHistory: newHistory});
+      storageIpc.update('terminal', {cdHistory: newHistory});
       setHistory(newHistory);
 
       const LINE_ENDING = window.osPlatform === 'win32' ? '\r' : '\n';
@@ -31,14 +32,14 @@ const CDTo = memo(({id}: Props) => {
     (dir: string) => {
       const newHistory = history.filter(item => item !== dir);
 
-      rendererIpc.storage.update('terminal', {cdHistory: newHistory});
+      storageIpc.update('terminal', {cdHistory: newHistory});
       setHistory(newHistory);
     },
     [history],
   );
 
   const clearHistory = useCallback(() => {
-    rendererIpc.storage.update('terminal', {cdHistory: []});
+    storageIpc.update('terminal', {cdHistory: []});
     setHistory([]);
   }, []);
 
@@ -59,7 +60,7 @@ const CDTo = memo(({id}: Props) => {
   }, [id, cdTo]);
 
   useEffect(() => {
-    rendererIpc.storage.get('terminal').then(({cdHistory}) => {
+    storageIpc.get('terminal').then(({cdHistory}) => {
       if (!isEmpty(cdHistory)) setHistory(cdHistory);
     });
   }, []);

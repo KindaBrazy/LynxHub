@@ -1,6 +1,6 @@
 import {platform} from 'node:os';
 
-import {storageUtilsChannels} from '@lynx_cross/consts/ipc';
+import {storageUtilsChannels} from '@lynx_cross/consts/ipc_channels/storage';
 import {
   BrowserHistoryData,
   CustomRunBehaviorData,

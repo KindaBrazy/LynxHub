@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {isEmpty, isEqual} from 'lodash';
 import {useEffect} from 'react';
 
@@ -20,7 +20,7 @@ export function useFilterPinnedCards() {
     const filteredPins = pinnedCards.filter(pCard => installedCardIds.has(pCard));
 
     if (!isEqual(filteredPins, pinnedCards)) {
-      rendererIpc.storageUtils.pinnedCards('set', '', filteredPins);
+      storageUtilsIpc.invoke.pinnedCards('set', '', filteredPins);
     }
   }, [installedCards, pinnedCards]);
 }

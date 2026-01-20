@@ -1,7 +1,7 @@
 import {Button, Card, CardBody, Image, Tooltip} from '@heroui/react';
 import {FavIcons} from '@lynx_cross/types/ipc';
 import {formatWebAddress, getCacheUrl, getUrlName} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -36,9 +36,9 @@ export default function EmptyPage_Item({recent, type, favIconMap, onDataChange}:
 
   const handleRemove = () => {
     if (type === 'recent') {
-      rendererIpc.storageUtils.removeBrowserRecent(recent);
+      storageUtilsIpc.send.removeBrowserRecent(recent);
     } else {
-      rendererIpc.storageUtils.removeBrowserFavorite(recent);
+      storageUtilsIpc.send.removeBrowserFavorite(recent);
     }
     // Notify parent to refresh data (single IPC call for all items)
     onDataChange();

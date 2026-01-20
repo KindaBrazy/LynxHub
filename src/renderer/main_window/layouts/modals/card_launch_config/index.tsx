@@ -1,6 +1,6 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
 import {ChosenArgumentsData} from '@lynx_cross/types';
-import rendererIpc from '@lynx_shared/ipc';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Fragment, Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -48,7 +48,7 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
   const saveArguments = useCallback(() => {
     setIsSavingArgs(true);
     const fakeDelay = 300;
-    rendererIpc.storageUtils
+    storageUtilsIpc.invoke
       .setCardArguments(id, chosenArguments)
       .then(() => {
         setTimeout(() => {

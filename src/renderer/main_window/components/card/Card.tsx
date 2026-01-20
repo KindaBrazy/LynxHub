@@ -2,6 +2,7 @@ import {Card, CardBody, CardHeader, Chip, User} from '@heroui/react';
 import {getAccentColorAsHex} from '@lynx/utils/accent_color_generator';
 import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {AnimatePresence, motion} from 'framer-motion';
 import {CSSProperties, FormEvent, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -49,7 +50,7 @@ const LynxCard = memo(() => {
 
   useEffect(() => {
     let isMounted = true;
-    rendererIpc.storage.getCustom(`${id}_title_edited`).then(value => {
+    storageIpc.getCustom(`${id}_title_edited`).then(value => {
       if (isMounted) setCustomTitle(value || null);
     });
     return () => {
@@ -98,7 +99,7 @@ const LynxCard = memo(() => {
       setIsUpdatingExtensions(true);
     } else {
       rendererIpc.pty.process(id, id);
-      rendererIpc.storageUtils.recentlyUsedCards('update', id);
+      storageUtilsIpc.invoke.recentlyUsedCards('update', id);
       dispatch(cardsActions.addRunningCard({tabId: activeTab, id}));
     }
   }, [id, autoUpdateExtensions, activeTab, dispatch]);
@@ -115,7 +116,7 @@ const LynxCard = memo(() => {
     (e: FormEvent<HTMLSpanElement>) => {
       const newTitle = e.currentTarget.textContent || title;
       setCustomTitle(newTitle);
-      rendererIpc.storage.setCustom(`${id}_title_edited`, newTitle);
+      storageIpc.setCustom(`${id}_title_edited`, newTitle);
     },
     [id, title],
   );

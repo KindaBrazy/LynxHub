@@ -6,6 +6,7 @@ import browserIpc from '@lynx_shared/ipc/browser';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
+import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -92,7 +93,7 @@ export const useOnlineEvents = () => {
 export const useStorageData = () => {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    rendererIpc.storage.get('app').then(app => {
+    storageIpc.get('app').then(app => {
       if (app.startupLastActivePage) {
         const lastPage = app.lastPage;
         dispatch(
@@ -131,22 +132,22 @@ export const useIpcEvents = () => {
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    const removeListener_onInstalledCards = rendererIpc.storageUtils.onInstalledCards((_, cards) => {
+    const removeListener_onInstalledCards = storageUtilsIpc.on.onInstalledCards(cards => {
       dispatch(cardsActions.setInstalledCards(cards));
     });
-    const removeListener_onAutoUpdateCards = rendererIpc.storageUtils.onAutoUpdateCards((_, cards) => {
+    const removeListener_onAutoUpdateCards = storageUtilsIpc.on.onAutoUpdateCards(cards => {
       dispatch(cardsActions.setAutoUpdate(cards));
     });
-    const removeListener_onAutoUpdateExtensions = rendererIpc.storageUtils.onAutoUpdateExtensions((_, cards) => {
+    const removeListener_onAutoUpdateExtensions = storageUtilsIpc.on.onAutoUpdateExtensions(cards => {
       dispatch(cardsActions.setAutoUpdateExtensions(cards));
     });
-    const removeListener_onPinnedCardsChange = rendererIpc.storageUtils.onPinnedCardsChange((_, cards) => {
+    const removeListener_onPinnedCardsChange = storageUtilsIpc.on.onPinnedCardsChange(cards => {
       dispatch(cardsActions.setPinnedCards(cards));
     });
-    const removeListener_onRecentlyUsedCardsChange = rendererIpc.storageUtils.onRecentlyUsedCardsChange((_, cards) => {
+    const removeListener_onRecentlyUsedCardsChange = storageUtilsIpc.on.onRecentlyUsedCardsChange(cards => {
       dispatch(cardsActions.setRecentlyUsedCards(cards));
     });
-    const removeListener_onHomeCategory = rendererIpc.storageUtils.onHomeCategory((_, data) => {
+    const removeListener_onHomeCategory = storageUtilsIpc.on.onHomeCategory(data => {
       dispatch(cardsActions.setHomeCategory(data));
     });
 
@@ -169,7 +170,7 @@ export const useIpcEvents = () => {
       }
     });
 
-    const removeListener_onConfirmChange = rendererIpc.storageUtils.onConfirmChange((_, type, enable) => {
+    const removeListener_onConfirmChange = storageUtilsIpc.on.onConfirmChange((type, enable) => {
       dispatch(settingsActions.setSettingsState({key: type, value: enable}));
     });
 
@@ -195,7 +196,7 @@ export const useIpcEvents = () => {
     const removeListener = rendererIpc.utils.onUpdateAllExtensions((_e, result) => {
       if (result.step === 'done') {
         rendererIpc.pty.process(result.id, result.id);
-        rendererIpc.storageUtils.recentlyUsedCards('update', result.id);
+        storageUtilsIpc.invoke.recentlyUsedCards('update', result.id);
         dispatch(cardsActions.addRunningCard({id: result.id, tabId: activeTab}));
         dispatch(cardsActions.setUpdatingExtensions(undefined));
       }

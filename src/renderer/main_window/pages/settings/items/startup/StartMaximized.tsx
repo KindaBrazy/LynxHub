@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 
 import LynxSwitch from '../../../../components/LynxSwitch';
@@ -9,13 +9,13 @@ export default function StartMaximized() {
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
   useEffect(() => {
-    rendererIpc.storage.get('app').then(app => {
+    storageIpc.get('app').then(app => {
       setIsSelected(app.startMaximized);
     });
   }, []);
 
   const onEnabledChange = useCallback((selected: boolean) => {
-    rendererIpc.storage.update('app', {startMaximized: selected});
+    storageIpc.update('app', {startMaximized: selected});
     setIsSelected(selected);
   }, []);
 

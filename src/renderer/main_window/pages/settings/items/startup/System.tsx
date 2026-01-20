@@ -1,4 +1,5 @@
-import rendererIpc from '@lynx_shared/ipc';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 
 import LynxSwitch from '../../../../components/LynxSwitch';
@@ -9,13 +10,13 @@ export default function System() {
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
   useEffect(() => {
-    rendererIpc.storage.get('app').then(app => {
+    storageIpc.get('app').then(app => {
       setIsSelected(app.systemStartup);
     });
   }, []);
 
   const onEnabledChange = useCallback((selected: boolean) => {
-    rendererIpc.storageUtils.setSystemStartup(selected);
+    storageUtilsIpc.send.setSystemStartup(selected);
     setIsSelected(selected);
   }, []);
 

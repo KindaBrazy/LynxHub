@@ -1,5 +1,5 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -15,7 +15,7 @@ export default function JsMemory() {
   const [selectedKey, setSelectedKey] = useState<string>('4096');
 
   useEffect(() => {
-    rendererIpc.storage.get('performance').then(data => {
+    storageIpc.get('performance').then(data => {
       setSelectedKey(String(data.jsMaxOldSpaceSize));
     });
   }, []);
@@ -24,7 +24,7 @@ export default function JsMemory() {
     (keys: Selection) => {
       if (keys !== 'all') {
         const value = Number(keys.values().next().value) as JsMemorySize;
-        rendererIpc.storage.update('performance', {jsMaxOldSpaceSize: value});
+        storageIpc.update('performance', {jsMaxOldSpaceSize: value});
         setSelectedKey(String(value));
         showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
       }

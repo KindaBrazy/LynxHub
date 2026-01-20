@@ -2,6 +2,7 @@ import {InstallationStepper} from '@lynx_cross/types/plugins/module';
 import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';
+import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Dispatch, FC, SetStateAction} from 'react';
 
 import {lynxTopToast} from '../../../hooks/utils';
@@ -55,7 +56,7 @@ export default class InstallStepper {
     this.progressBar = data.progressBar;
 
     this.setInstalled = dir => {
-      rendererIpc.storageUtils.addInstalledCard({dir, id: data.cardId});
+      storageUtilsIpc.send.addInstalledCard({dir, id: data.cardId});
       data.checkForUpdate(dir);
     };
 
@@ -73,7 +74,7 @@ export default class InstallStepper {
       },
     };
 
-    this.storage = {set: rendererIpc.storage.setCustom, get: rendererIpc.storage.getCustom};
+    this.storage = {set: storageIpc.setCustom, get: storageIpc.getCustom};
 
     this.utils = {
       decompressFile: rendererIpc.utils.decompressFile,
@@ -89,35 +90,35 @@ export default class InstallStepper {
           config;
         if (autoUpdateCard !== undefined) {
           if (autoUpdateCard) {
-            rendererIpc.storageUtils.addAutoUpdateCard(data.cardId);
+            storageUtilsIpc.send.addAutoUpdateCard(data.cardId);
           } else {
-            rendererIpc.storageUtils.removeAutoUpdateCard(data.cardId);
+            storageUtilsIpc.send.removeAutoUpdateCard(data.cardId);
           }
         }
         if (autoUpdateExtensions !== undefined) {
           if (autoUpdateExtensions) {
-            rendererIpc.storageUtils.addAutoUpdateExtensions(data.cardId);
+            storageUtilsIpc.send.addAutoUpdateExtensions(data.cardId);
           } else {
-            rendererIpc.storageUtils.removeAutoUpdateExtensions(data.cardId);
+            storageUtilsIpc.send.removeAutoUpdateExtensions(data.cardId);
           }
         }
         if (customArguments !== undefined) {
-          rendererIpc.storageUtils.getCardArguments(data.cardId).then(result => {
-            rendererIpc.storageUtils.setCardArguments(data.cardId, {
+          storageUtilsIpc.invoke.getCardArguments(data.cardId).then(result => {
+            storageUtilsIpc.invoke.setCardArguments(data.cardId, {
               activePreset: customArguments.presetName,
               data: [...result.data, {preset: customArguments.presetName, arguments: customArguments.customArguments}],
             });
           });
         }
         if (preLaunch !== undefined) {
-          rendererIpc.storageUtils.preCommands('set', {command: preLaunch.preCommands, id: data.cardId});
+          storageUtilsIpc.invoke.preCommands('set', {command: preLaunch.preCommands, id: data.cardId});
           preLaunch.openPath.forEach(({path, type}) => {
-            rendererIpc.storageUtils.preOpen('add', {id: data.cardId, open: {path, type}});
+            storageUtilsIpc.invoke.preOpen('add', {id: data.cardId, open: {path, type}});
           });
         }
         if (launchBehavior !== undefined) {
           const {browser, terminal, urlCatch} = launchBehavior;
-          rendererIpc.storageUtils.updateCustomRunBehavior({
+          storageUtilsIpc.send.updateCustomRunBehavior({
             cardID: data.cardId,
             terminal,
             browser,
@@ -125,7 +126,7 @@ export default class InstallStepper {
           });
         }
         if (customCommands !== undefined) {
-          rendererIpc.storageUtils.customRun('set', {command: customCommands, id: data.cardId});
+          storageUtilsIpc.invoke.customRun('set', {command: customCommands, id: data.cardId});
         }
       },
     };

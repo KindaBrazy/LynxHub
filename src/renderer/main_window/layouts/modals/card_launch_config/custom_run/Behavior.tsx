@@ -1,6 +1,6 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {CustomRunBehaviorData} from '@lynx_cross/types/ipc';
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {isEmpty} from 'lodash';
 import {Fragment, useEffect, useState} from 'react';
 
@@ -19,7 +19,7 @@ export default function CustomRunBehavior({id}: Props) {
     if (value && value !== 'all') {
       const result = value.values().next().value as TerminalType;
       setTerminalValue(result);
-      rendererIpc.storageUtils.updateCustomRunBehavior({
+      storageUtilsIpc.send.updateCustomRunBehavior({
         cardID: id,
         terminal: result,
       });
@@ -30,7 +30,7 @@ export default function CustomRunBehavior({id}: Props) {
     if (value && value !== 'all') {
       const result = value.values().next().value as BrowserType;
       setBrowserValue(result);
-      rendererIpc.storageUtils.updateCustomRunBehavior({
+      storageUtilsIpc.send.updateCustomRunBehavior({
         cardID: id,
         browser: result,
       });
@@ -38,7 +38,7 @@ export default function CustomRunBehavior({id}: Props) {
   };
 
   useEffect(() => {
-    rendererIpc.storage.get('cardsConfig').then(result => {
+    storageIpc.get('cardsConfig').then(result => {
       if (!isEmpty(result.customRunBehavior)) {
         const data = result.customRunBehavior.find(customRun => customRun.cardID === id);
         if (data) {

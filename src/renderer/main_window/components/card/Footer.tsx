@@ -1,5 +1,5 @@
 import {Button, CardFooter} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {memo, useCallback, useMemo} from 'react';
 
 import {DownloadDuo_Icon, Pin_Icon, PinLine_Icon, PlayDuo_Icon} from '../../../shared/assets/icons';
@@ -21,7 +21,7 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
 
   const onPress = useCallback(() => {
     AddBreadcrumb_Renderer(`Pin AI: id:${id} , ${isPinned ? 'remove' : 'add'}`);
-    rendererIpc.storageUtils.pinnedCards(isPinned ? 'remove' : 'add', id);
+    storageUtilsIpc.invoke.pinnedCards(isPinned ? 'remove' : 'add', id);
   }, [isPinned, id]);
 
   const ReplaceMenu = useMemo(() => extensionsData.cards.customize.menu.replace, []);

@@ -10,6 +10,7 @@ import {
   Spinner,
 } from '@heroui/react';
 import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {Database} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -96,7 +97,7 @@ export default function SettingsClear() {
             <SettingsSearchHighlight text="Are you sure you want to reset all app settings and restart?" />
           </span>
           <ButtonGroup className="flex flex-row w-full mt-2" fullWidth>
-            <Button size="sm" color="danger" startContent={<RefreshDuo_Icon />} onPress={rendererIpc.storage.clear}>
+            <Button size="sm" color="danger" onPress={storageIpc.clear} startContent={<RefreshDuo_Icon />}>
               Reset & Restart
             </Button>
             <Button size="sm" className="cursor-default" onPress={() => setIsClearSettingsOpen(false)}>

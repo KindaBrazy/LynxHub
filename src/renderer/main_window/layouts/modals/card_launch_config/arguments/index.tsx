@@ -1,6 +1,6 @@
 import {useDisclosure} from '@heroui/react';
 import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_cross/types';
-import rendererIpc from '@lynx_shared/ipc';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
@@ -28,7 +28,7 @@ export default function CardArguments({chosenArguments, setChosenArguments, id, 
   const allMethods = useAllCardMethods();
 
   useEffect(() => {
-    rendererIpc.storageUtils
+    storageUtilsIpc.invoke
       .getCardArguments(id)
       .then(result => {
         setChosenArguments(result);

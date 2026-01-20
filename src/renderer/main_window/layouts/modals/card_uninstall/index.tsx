@@ -1,7 +1,7 @@
 import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Fragment, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -35,7 +35,7 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
         const promise = new Promise<void>(resolve => {
           filesIpc[type](card.dir!)
             .then(() => {
-              rendererIpc.storageUtils.removeInstalledCard(cardId);
+              storageUtilsIpc.send.removeInstalledCard(cardId);
               resolve();
               lynxTopToast(dispatch).success(
                 type === 'removeDir' ? 'Uninstalled successfully.' : 'Moved to trash successfully.',
@@ -68,7 +68,7 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
       moduleIpc
         .uninstallCardByID(cardId)
         .then(() => {
-          rendererIpc.storageUtils.removeInstalledCard(cardId);
+          storageUtilsIpc.send.removeInstalledCard(cardId);
           lynxTopToast(dispatch).success('Uninstalled successfully.');
         })
         .catch(() => {

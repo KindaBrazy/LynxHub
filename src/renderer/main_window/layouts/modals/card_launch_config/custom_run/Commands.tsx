@@ -1,6 +1,6 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Empty} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
@@ -16,11 +16,11 @@ export default function CustomRunCommands({id}: Props) {
   const [commands, setCommands] = useState<string[]>([]);
 
   useEffect(() => {
-    rendererIpc.storageUtils.customRun('get', {id}).then(result => {
+    storageUtilsIpc.invoke.customRun('get', {id}).then(result => {
       setCommands(result);
     });
-    const removeListener = rendererIpc.storageUtils.onCustomRun((_, result) => {
-      if (result.id === id) setCommands(result.commands);
+    const removeListener = storageUtilsIpc.on.onCustomRun(preCommands => {
+      if (preCommands.id === id) setCommands(preCommands.commands);
     });
 
     return () => removeListener();
@@ -30,7 +30,7 @@ export default function CustomRunCommands({id}: Props) {
     (index: number, value: string) => {
       setCommands(prevState => {
         const result = prevState.map((command, i) => (i === index ? value : command));
-        rendererIpc.storageUtils.customRun('set', {command: result, id});
+        storageUtilsIpc.invoke.customRun('set', {command: result, id});
         return result;
       });
     },
@@ -39,13 +39,13 @@ export default function CustomRunCommands({id}: Props) {
 
   const removeCommand = useCallback(
     (index: number) => {
-      rendererIpc.storageUtils.customRun('remove', {command: index, id});
+      storageUtilsIpc.invoke.customRun('remove', {command: index, id});
     },
     [id],
   );
 
   const addCommand = useCallback(() => {
-    rendererIpc.storageUtils.customRun('add', {command: '', id});
+    storageUtilsIpc.invoke.customRun('add', {command: '', id});
   }, [id]);
 
   const onReorder = (newOrder: string[]) => {
@@ -56,13 +56,13 @@ export default function CustomRunCommands({id}: Props) {
     filesIpc.openDlg({properties: ['openDirectory']}).then(result => {
       if (result) {
         const command = `cd "${result}"`;
-        rendererIpc.storageUtils.customRun('add', {command, id});
+        storageUtilsIpc.invoke.customRun('add', {command, id});
       }
     });
   };
 
   const onDoneReorder = () => {
-    rendererIpc.storageUtils.customRun('set', {command: commands, id});
+    storageUtilsIpc.invoke.customRun('set', {command: commands, id});
   };
 
   return (

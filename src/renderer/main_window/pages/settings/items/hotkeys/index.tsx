@@ -7,7 +7,7 @@ import {
   Hotkey_Titles,
 } from '@lynx_cross/consts/hotkeys';
 import {LynxHotkey} from '@lynx_cross/types/ipc';
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {compact} from 'lodash';
 import {KeyboardEvent, useCallback, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -115,7 +115,7 @@ export const HotkeySettings = () => {
     });
 
     dispatch(hotkeysActions.setHotkeys(result));
-    rendererIpc.storage.update('app', {hotkeys: result});
+    storageIpc.update('app', {hotkeys: result});
 
     setRecordingName(null);
     inputRefs.current[name]?.blur();
@@ -132,7 +132,7 @@ export const HotkeySettings = () => {
   const resetToDefault = useCallback(() => {
     const result = Get_Default_Hotkeys(window.osPlatform);
     dispatch(hotkeysActions.setHotkeys(result));
-    rendererIpc.storage.update('app', {hotkeys: result});
+    storageIpc.update('app', {hotkeys: result});
   }, []);
 
   const renderItems = useCallback(

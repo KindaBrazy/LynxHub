@@ -1,6 +1,6 @@
 import {Checkbox} from '@heroui/react';
 import {ConfirmMenuTypes} from '@lynx_cross/types';
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, ReactNode, useEffect, useState} from 'react';
 
@@ -14,12 +14,12 @@ const ConfirmElement = memo(({title, enabledTitle, confirmName, buttons}: Props)
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
 
   const onShowConfirm = (enabled: boolean) => {
-    rendererIpc.storageUtils.setShowConfirm(confirmName, !enabled);
+    storageUtilsIpc.send.setShowConfirm(confirmName, !enabled);
     setShowConfirm(enabled);
   };
 
   useEffect(() => {
-    rendererIpc.storage.get('app').then(appConfig => {
+    storageIpc.get('app').then(appConfig => {
       setShowConfirm(!appConfig[confirmName]);
     });
   }, []);

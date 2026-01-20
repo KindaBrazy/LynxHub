@@ -1,4 +1,5 @@
 import rendererIpc from '@lynx_shared/ipc';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import mitt, {Emitter} from 'mitt';
 
 import {ExtensionData_Renderer, ExtensionImport_Renderer} from '../../../../main/types/extensions';
@@ -434,7 +435,7 @@ export const extensionRendererApi: ExtensionRendererApi = {
     },
   },
   setCards_TerminalPreCommands: (id: string, preCommands: string[]) => {
-    rendererIpc.storageUtils.setCardTerminalPreCommands(id, preCommands);
+    storageUtilsIpc.send.setCardTerminalPreCommands(id, preCommands);
   },
 
   initBrowserSentry: initPluginBrowserSentry,

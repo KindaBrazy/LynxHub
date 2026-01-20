@@ -1,7 +1,7 @@
 import {DropdownItem} from '@heroui/react';
 import {extractGitUrl} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -112,14 +112,14 @@ export const MenuDuplicate = () => {
     AddBreadcrumb_Renderer(`Duplicate AI: id:${id}, isDuplicated:${isDuplicated}`);
     if (isDuplicated) {
       const removedDuplicate = duplicates.filter(d => d.id !== id);
-      rendererIpc.storage.update('cards', {duplicated: removedDuplicate});
+      storageIpc.update('cards', {duplicated: removedDuplicate});
       dispatch(cardsActions.setDuplicates(removedDuplicate));
       removeDuplicatedCard(id);
     } else {
       const duplicatedCard = duplicateCard(id);
       if (duplicatedCard) {
         const addedDuplicate = [...duplicates, {...duplicatedCard, ogID: id}];
-        rendererIpc.storage.update('cards', {duplicated: addedDuplicate});
+        storageIpc.update('cards', {duplicated: addedDuplicate});
         dispatch(cardsActions.setDuplicates(addedDuplicate));
       }
     }

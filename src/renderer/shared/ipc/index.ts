@@ -10,8 +10,6 @@ import {
   patreonChannels,
   ptyChannels,
   staticsChannels,
-  storageChannels,
-  storageUtilsChannels,
   tabsChannels,
   utilsChannels,
   volumeChannels,
@@ -20,8 +18,6 @@ import {otherChannels} from '@lynx_cross/consts/ipc';
 import {
   AppUpdateData,
   AppUpdateInsiderData,
-  ChosenArgumentsData,
-  ConfirmMenuTypes,
   CustomNotificationInfo,
   ExtensionsInfo,
   HeroToastPlacement,
@@ -35,218 +31,18 @@ import {
   AppUpdateEventTypes,
   AppUpdateStatus,
   AudioState,
-  BrowserHistoryData,
-  CustomRunBehaviorData,
   DownloadProgress,
   ExtensionsData,
   ExtensionsUpdateStatus,
-  HomeCategory,
   LynxInput,
-  OnPreCommands,
   OnUpdatingExtensions,
-  PreCommands,
-  PreOpen,
-  PreOpenData,
-  RecentlyOperation,
   ShowToastTypes,
-  StorageOperation,
 } from '@lynx_cross/types/ipc';
-import type {InstalledCard, InstalledCards} from '@lynx_cross/types/storage';
-import type StorageTypes from '@lynx_cross/types/storage';
 import type {IpcRendererEvent} from 'electron';
 
 const ipc = window.electron.ipcRenderer;
 
 const rendererIpc = {
-  /** Utilities methods for working with app storage data */
-  storageUtils: {
-    // Adds installed card to storage
-    addInstalledCard: (cardData: InstalledCard): void => {
-      extensionRendererApi.events_ipc.emit('storage_utils_add_installed_card', {cardData});
-      ipc.send(storageUtilsChannels.addInstalledCard, cardData);
-    },
-    // Removes installed card from storage
-    removeInstalledCard: (cardId: string): void => {
-      extensionRendererApi.events_ipc.emit('storage_utils_remove_installed_card', {cardId});
-      ipc.send(storageUtilsChannels.removeInstalledCard, cardId);
-    },
-    // Listens for installed cards change events
-    onInstalledCards: (result: (event: IpcRendererEvent, cards: InstalledCards) => void) =>
-      ipc.on(storageUtilsChannels.onInstalledCards, result),
-
-    // Adds card to auto-update list
-    addAutoUpdateCard: (cardId: string): void => {
-      extensionRendererApi.events_ipc.emit('storage_utils_add_auto_update_card', {cardId});
-      ipc.send(storageUtilsChannels.addAutoUpdateCard, cardId);
-    },
-    // Removes card from auto-update list
-    removeAutoUpdateCard: (cardId: string): void => {
-      extensionRendererApi.events_ipc.emit('storage_utils_remove_auto_update_card', {cardId});
-      ipc.send(storageUtilsChannels.removeAutoUpdateCard, cardId);
-    },
-    // Listens for auto-update cards change events
-    onAutoUpdateCards: (result: (event: IpcRendererEvent, cards: string[]) => void) =>
-      ipc.on(storageUtilsChannels.onAutoUpdateCards, result),
-
-    // Adds card extensions to auto-update list
-    addAutoUpdateExtensions: (cardId: string): void => {
-      extensionRendererApi.events_ipc.emit('storage_utils_add_auto_update_extensions', {cardId});
-      ipc.send(storageUtilsChannels.addAutoUpdateExtensions, cardId);
-    },
-    // Removes card extensions from auto-update list
-    removeAutoUpdateExtensions: (cardId: string): void => {
-      extensionRendererApi.events_ipc.emit('storage_utils_remove_auto_update_extensions', {cardId});
-      ipc.send(storageUtilsChannels.removeAutoUpdateExtensions, cardId);
-    },
-    // Listens for auto-update extensions change events
-    onAutoUpdateExtensions: (result: (event: IpcRendererEvent, cards: string[]) => void) =>
-      ipc.on(storageUtilsChannels.onAutoUpdateExtensions, result),
-
-    // Manages pinned cards (add, remove, get)
-    pinnedCards: (opt: StorageOperation, id: string, pinnedCards?: string[]): Promise<string[]> => {
-      extensionRendererApi.events_ipc.emit('storage_utils_pinned_cards', {opt, id, pinnedCards});
-      return ipc.invoke(storageUtilsChannels.pinnedCards, opt, id, pinnedCards);
-    },
-    // Listens for pinned cards change events
-    onPinnedCardsChange: (result: (event: IpcRendererEvent, cards: string[]) => void) =>
-      ipc.on(storageUtilsChannels.onPinnedCardsChange, result),
-
-    // Manages pre-commands for cards (commands run before card starts)
-    preCommands: (opt: StorageOperation, data: PreCommands): Promise<string[]> => {
-      extensionRendererApi.events_ipc.emit('storage_utils_pre_commands', {opt, data});
-      return ipc.invoke(storageUtilsChannels.preCommands, opt, data);
-    },
-    // Listens for pre-commands change events
-    onPreCommands: (result: (event: IpcRendererEvent, preCommands: OnPreCommands) => void) =>
-      ipc.on(storageUtilsChannels.onPreCommands, result),
-
-    // Manages custom run commands for cards
-    customRun: (opt: StorageOperation, data: PreCommands): Promise<string[]> => {
-      extensionRendererApi.events_ipc.emit('storage_utils_custom_run', {opt, data});
-      return ipc.invoke(storageUtilsChannels.customRun, opt, data);
-    },
-    // Listens for custom run commands change events
-    onCustomRun: (result: (event: IpcRendererEvent, preCommands: OnPreCommands) => void) =>
-      ipc.on(storageUtilsChannels.onCustomRun, result),
-
-    // Updates custom run behavior settings
-    updateCustomRunBehavior: (data: Partial<CustomRunBehaviorData>) =>
-      ipc.send(storageUtilsChannels.customRunBehavior, data),
-
-    // Manages pre-open items (files/folders opened before card starts)
-    preOpen: (opt: StorageOperation, open: PreOpen): Promise<PreOpenData | undefined> => {
-      extensionRendererApi.events_ipc.emit('storage_utils_pre_open', {opt, open});
-      return ipc.invoke(storageUtilsChannels.preOpen, opt, open);
-    },
-
-    // Gets card arguments by card ID
-    getCardArguments: (cardId: string): Promise<ChosenArgumentsData> => {
-      extensionRendererApi.events_ipc.emit('storage_utils_get_card_arguments', {cardId});
-      return ipc.invoke(storageUtilsChannels.getCardArguments, cardId);
-    },
-    // Sets card arguments by card ID
-    setCardArguments: (cardId: string, args: ChosenArgumentsData): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('storage_utils_set_card_arguments', {cardId, args});
-      return ipc.invoke(storageUtilsChannels.setCardArguments, cardId, args);
-    },
-
-    // Manages recently used cards (add, remove, get)
-    recentlyUsedCards: (opt: RecentlyOperation, id: string): Promise<string[]> => {
-      extensionRendererApi.events_ipc.emit('storage_utils_recently_used_cards', {opt, id});
-      return ipc.invoke(storageUtilsChannels.recentlyUsedCards, opt, id);
-    },
-    // Listens for recently used cards change events
-    onRecentlyUsedCardsChange: (result: (event: IpcRendererEvent, cards: string[]) => void) =>
-      ipc.on(storageUtilsChannels.onRecentlyUsedCardsChange, result),
-
-    // Manages home category organization
-    homeCategory: (opt: StorageOperation, data: HomeCategory): Promise<HomeCategory> => {
-      extensionRendererApi.events_ipc.emit('storage_utils_home_category', {opt, data});
-      return ipc.invoke(storageUtilsChannels.homeCategory, opt, data);
-    },
-    // Listens for home category change events
-    onHomeCategory: (result: (event: IpcRendererEvent, data: HomeCategory) => void) =>
-      ipc.on(storageUtilsChannels.onHomeCategory, result),
-    // Sets app to start with system startup
-    setSystemStartup: (startup: boolean) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_set_system_startup', {startup});
-      ipc.send(storageUtilsChannels.setSystemStartup, startup);
-    },
-
-    // Updates zoom factor for cards
-    updateZoomFactor: (zoomFactor: number) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_update_zoom_factor', {zoomFactor});
-      ipc.send(storageUtilsChannels.updateZoomFactor, zoomFactor);
-    },
-
-    // Adds URL to browser recent list
-    addBrowserRecent: (recentEntry: string) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_add_browser_recent', {recentEntry});
-      ipc.send(storageUtilsChannels.addBrowserRecent, recentEntry);
-    },
-    // Adds URL to browser favorites
-    addBrowserFavorite: (favoriteEntry: string) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_add_browser_favorite', {favoriteEntry});
-      ipc.send(storageUtilsChannels.addBrowserFavorite, favoriteEntry);
-    },
-    // Adds URL to browser history
-    addBrowserHistory: (historyEntry: string) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_add_browser_history', {historyEntry});
-      ipc.send(storageUtilsChannels.addBrowserHistory, historyEntry);
-    },
-    // Adds favicon for browser recent URL
-    addBrowserRecentFavIcon: (url: string, favIcon: string, title?: string) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_add_browser_recent_favicon', {url, favIcon});
-      ipc.send(storageUtilsChannels.addBrowserRecentFavIcon, url, favIcon, title);
-    },
-    // Removes URL from browser recent list
-    removeBrowserRecent: (url: string) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_remove_browser_recent', {url});
-      ipc.send(storageUtilsChannels.removeBrowserRecent, url);
-    },
-    // Removes URL from browser favorites
-    removeBrowserFavorite: (url: string) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_remove_browser_favorite', {url});
-      ipc.send(storageUtilsChannels.removeBrowserFavorite, url);
-    },
-    // Removes URL from browser history
-    removeBrowserHistory: (url: string) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_remove_browser_history', {url});
-      ipc.send(storageUtilsChannels.removeBrowserHistory, url);
-    },
-
-    // Sets confirmation dialog visibility (close, terminate AI, close tab)
-    setShowConfirm: (type: ConfirmMenuTypes, enable: boolean) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_set_show_confirm', {type, enable});
-      ipc.send(storageUtilsChannels.setShowConfirm, type, enable);
-    },
-
-    // Listens for confirmation dialog setting changes
-    onConfirmChange: (result: (event: IpcRendererEvent, type: ConfirmMenuTypes, enable: boolean) => void) =>
-      ipc.on(storageUtilsChannels.onConfirmChange, result),
-
-    // Marks notification as read
-    addReadNotif: (id: string) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_add_read_notif', {id});
-      ipc.send(storageUtilsChannels.addReadNotif, id);
-    },
-
-    // Sets terminal pre-commands for card
-    setCardTerminalPreCommands: (id: string, commands: string[]) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_setCardTerminalPreCommands', {id, commands});
-      ipc.send(storageUtilsChannels.setCardTerminalPreCommands, id, commands);
-    },
-
-    // Unassigns card and optionally clears its configurations
-    unassignCard: (id: string, clearConfigs: boolean) => {
-      extensionRendererApi.events_ipc.emit('storage_utils_unassignCard', {id, clearConfigs});
-      return ipc.invoke(storageUtilsChannels.unassignCard, id, clearConfigs);
-    },
-
-    // Gets browser history data securely
-    getBrowserHistoryData: (): Promise<BrowserHistoryData> => ipc.invoke(storageUtilsChannels.getBrowserHistoryData),
-  },
-
   /** Utilities methods */
   utils: {
     // Updates all extensions in directory sequentially
@@ -416,44 +212,6 @@ const rendererIpc = {
     isAppDir: (dir: string): Promise<boolean> => {
       extensionRendererApi.events_ipc.emit('app_data_is_app_dir', {dir});
       return ipc.invoke(appDataChannels.isAppDir, dir);
-    },
-  },
-
-  /** Managing app storage data */
-  storage: {
-    // Gets custom storage data by key
-    getCustom: (key: string): Promise<any> => {
-      extensionRendererApi.events_ipc.emit('storage_get_custom', {key});
-      return ipc.invoke(storageChannels.getCustom, key);
-    },
-    // Sets custom storage data by key
-    setCustom: (key: string, data: any): void => {
-      extensionRendererApi.events_ipc.emit('storage_set_custom', {key, data});
-      ipc.send(storageChannels.setCustom, key, data);
-    },
-
-    // Gets typed storage data by key
-    get: <K extends keyof StorageTypes>(key: K): Promise<StorageTypes[K]> => {
-      extensionRendererApi.events_ipc.emit('storage_get', {key});
-      return ipc.invoke(storageChannels.get, key);
-    },
-
-    // Gets all storage data
-    getAll: (): Promise<StorageTypes> => {
-      extensionRendererApi.events_ipc.emit('storage_get_all', {});
-      return ipc.invoke(storageChannels.getAll);
-    },
-
-    // Updates storage data partially
-    update: <K extends keyof StorageTypes>(key: K, updateData: Partial<StorageTypes[K]>): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('storage_update', {key, updateData});
-      return ipc.invoke(storageChannels.update, key, updateData);
-    },
-
-    // Clears all storage data
-    clear: (): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('storage_clear', {});
-      return ipc.invoke(storageChannels.clear);
     },
   },
 
