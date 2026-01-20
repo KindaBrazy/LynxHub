@@ -92,6 +92,7 @@ const applicationIpc = {
 
     // Listens for app update error events
     updateError: (result: () => void) => lynxIpc.on(appChannels.updateError, result),
+    updateChannelChange: (result: (channel: string) => void) => lynxIpc.on(appChannels.updateChannelChange, result),
 
     // Listens for app update status events
     updateStatus: (result: (type: AppUpdateEventTypes, status: AppUpdateStatus) => void) =>

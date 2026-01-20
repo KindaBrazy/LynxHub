@@ -1,5 +1,6 @@
 import {Button, Card, Chip, Select, Selection, SelectItem} from '@heroui/react';
 import {SubscribeStages} from '@lynx_cross/types';
+import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import userIpc from '@lynx_shared/ipc/user';
@@ -71,9 +72,8 @@ export default function DashboardUpdate() {
   }, []);
 
   useEffect(() => {
-    window.electron.ipcRenderer.removeAllListeners('updateChannel-change');
-    const offChannel = window.electron.ipcRenderer.on('updateChannel-change', (_, result) => {
-      setSelection([result]);
+    const offChannel = applicationIpc.on.updateChannelChange(channel => {
+      setSelection([channel]);
     });
     userIpc.patreon.updateChannel('get');
 
