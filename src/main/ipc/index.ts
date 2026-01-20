@@ -1,8 +1,8 @@
 import path from 'node:path';
 
-import {volumeChannels} from '@lynx_cross/consts/ipc';
 import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
+import browserVolumeChannels from '@lynx_cross/consts/ipc_channels/browser_volume';
 import fileChannels from '@lynx_cross/consts/ipc_channels/files';
 import gitChannels from '@lynx_cross/consts/ipc_channels/git';
 import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
@@ -574,23 +574,25 @@ export function browserIPC() {
 
   // Volume control handlers
   // Sets volume level for browser webview (0-100) - remove existing handler first to prevent duplicate registration
-  ipcMain.removeHandler(volumeChannels.setVolume);
-  ipcMain.handle(volumeChannels.setVolume, (_, id: string, volume: number) =>
+  ipcMain.removeHandler(browserVolumeChannels.setVolume);
+  ipcMain.handle(browserVolumeChannels.setVolume, (_, id: string, volume: number) =>
     handleSetVolume(browserManager, id, volume),
   );
   // Sets mute state for browser webview - remove existing handler first to prevent duplicate registration
-  ipcMain.removeHandler(volumeChannels.setMuted);
-  ipcMain.handle(volumeChannels.setMuted, (_, id: string, muted: boolean) => handleSetMuted(browserManager, id, muted));
+  ipcMain.removeHandler(browserVolumeChannels.setMuted);
+  ipcMain.handle(browserVolumeChannels.setMuted, (_, id: string, muted: boolean) =>
+    handleSetMuted(browserManager, id, muted),
+  );
   // Gets current audio state (playing, muted) for browser webview - remove existing handler first
-  ipcMain.removeHandler(volumeChannels.getState);
-  ipcMain.handle(volumeChannels.getState, (_, id: string) => handleGetAudioState(browserManager, id));
+  ipcMain.removeHandler(browserVolumeChannels.getState);
+  ipcMain.handle(browserVolumeChannels.getState, (_, id: string) => handleGetAudioState(browserManager, id));
 
   // Forward volume updates from context menu to main window
-  ipcMain.on(volumeChannels.updateTabVolume, (_, tabId: string, volume: number) => {
-    mainWindow.webContents.send(volumeChannels.onTabVolumeUpdate, tabId, volume);
+  ipcMain.on(browserVolumeChannels.updateTabVolume, (_, tabId: string, volume: number) => {
+    mainWindow.webContents.send(browserVolumeChannels.onTabVolumeUpdate, tabId, volume);
   });
-  ipcMain.on(volumeChannels.updateTabMuted, (_, tabId: string, muted: boolean) => {
-    mainWindow.webContents.send(volumeChannels.onTabMutedUpdate, tabId, muted);
+  ipcMain.on(browserVolumeChannels.updateTabMuted, (_, tabId: string, muted: boolean) => {
+    mainWindow.webContents.send(browserVolumeChannels.onTabMutedUpdate, tabId, muted);
   });
 }
 

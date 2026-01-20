@@ -1,4 +1,4 @@
-export const volumeChannels = {
+const browserVolumeChannels = {
   // Renderer -> Main
   setVolume: 'volume:set',
   setMuted: 'volume:setMuted',
@@ -12,4 +12,6 @@ export const volumeChannels = {
 
   // Main -> Renderer
   onAudioStateChange: 'volume:onAudioStateChange',
-} as const;
+};
+
+export default browserVolumeChannels;

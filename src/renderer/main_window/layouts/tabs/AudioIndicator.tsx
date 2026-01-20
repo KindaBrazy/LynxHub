@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import browserVolume from '@lynx_shared/ipc/browser_volume';
 import {VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
@@ -28,7 +28,7 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
     try {
       // Apply effective mute: tab is muted if either tab mute OR global mute is enabled
       const effectiveMute = newMutedState || globalMuted;
-      await rendererIpc.volume.setMuted(id, effectiveMute);
+      await browserVolume.setMuted(id, effectiveMute);
     } catch (error) {
       console.error('Failed to toggle mute state:', error);
     }
