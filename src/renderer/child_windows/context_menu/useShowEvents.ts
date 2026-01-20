@@ -5,48 +5,48 @@ import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {MenuTypes} from '../consts';
-import {contextActions} from '../redux/reducer';
-import {ContextDispatch} from '../redux/store';
+import {MenuTypes} from './consts';
+import {contextActions} from './redux/reducer';
+import {ContextDispatch} from './redux/store';
 
 export default function useShowEvents() {
   const dispatch = useDispatch<ContextDispatch>();
 
-  const offInitView = contextMenuIpc.on.rightClick((params, navHistory, contextId) => {
-    const hasLinkItems = !isEmpty(params.linkURL);
-    const hasImageItems = params.mediaType === 'image';
-    const hasTextSelection = !isEmpty(params.selectionText);
-    const hasEditItems =
-      params.editFlags.canUndo ||
-      params.editFlags.canRedo ||
-      params.editFlags.canCut ||
-      params.editFlags.canCopy ||
-      params.editFlags.canPaste ||
-      params.editFlags.canSelectAll;
-    const isActionsAvailable = hasLinkItems || hasEditItems || hasImageItems || hasTextSelection;
-
-    const widthSize: ContextWindowWidthSizes = hasLinkItems || hasImageItems || hasTextSelection ? 'md' : 'sm';
-
-    dispatch(
-      contextActions.showLayout({
-        key: 'rightClick',
-        value: {id: contextId, contextMenuParams: params, navigationHistory: navHistory},
-        layout: MenuTypes.RightClick,
-        widthSize,
-      }),
-    );
-    dispatch(
-      contextActions.updateRightClickParams({
-        hasEditItems,
-        hasImageItems,
-        hasLinkItems,
-        hasTextSelection,
-        isActionsAvailable,
-      }),
-    );
-  });
-
   useEffect(() => {
+    const offInitView = contextMenuIpc.on.rightClick((params, navHistory, contextId) => {
+      const hasLinkItems = !isEmpty(params.linkURL);
+      const hasImageItems = params.mediaType === 'image';
+      const hasTextSelection = !isEmpty(params.selectionText);
+      const hasEditItems =
+        params.editFlags.canUndo ||
+        params.editFlags.canRedo ||
+        params.editFlags.canCut ||
+        params.editFlags.canCopy ||
+        params.editFlags.canPaste ||
+        params.editFlags.canSelectAll;
+      const isActionsAvailable = hasLinkItems || hasEditItems || hasImageItems || hasTextSelection;
+
+      const widthSize: ContextWindowWidthSizes = hasLinkItems || hasImageItems || hasTextSelection ? 'md' : 'sm';
+
+      dispatch(
+        contextActions.showLayout({
+          key: 'rightClick',
+          value: {id: contextId, contextMenuParams: params, navigationHistory: navHistory},
+          layout: MenuTypes.RightClick,
+          widthSize,
+        }),
+      );
+      dispatch(
+        contextActions.updateRightClickParams({
+          hasEditItems,
+          hasImageItems,
+          hasLinkItems,
+          hasTextSelection,
+          isActionsAvailable,
+        }),
+      );
+    });
+
     const offZoom = contextMenuIpc.on.zoom((id, zoomFactor) => {
       dispatch(
         contextActions.showLayout({
