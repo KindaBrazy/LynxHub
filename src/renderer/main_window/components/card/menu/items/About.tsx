@@ -1,6 +1,7 @@
 import {DropdownItem} from '@heroui/react';
 import {extractGitUrl} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -40,7 +41,7 @@ export const MenuInfo = () => {
 
   const onPress = () => {
     if (showOpenFolder) {
-      rendererIpc.file.openPath(webUI!.dir!);
+      filesIpc.openPath(webUI!.dir!);
       setMenuIsOpen(false);
     } else {
       dispatch(

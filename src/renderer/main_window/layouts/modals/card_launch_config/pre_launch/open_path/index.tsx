@@ -1,6 +1,7 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {PreOpenData} from '@lynx_cross/types/ipc';
 import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Empty} from 'antd';
 import {filter, isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
@@ -29,7 +30,7 @@ export default function PreOpenPath({id}: Props) {
   );
 
   const selectFolder = useCallback(() => {
-    rendererIpc.file.openDlg({properties: ['openDirectory']}).then(result => {
+    filesIpc.openDlg({properties: ['openDirectory']}).then(result => {
       if (result) {
         setToOpen(prevState => [...prevState, {path: result, type: 'folder'}]);
         rendererIpc.storageUtils.preOpen('add', {id, open: {path: result, type: 'folder'}});
@@ -38,7 +39,7 @@ export default function PreOpenPath({id}: Props) {
   }, [id]);
 
   const selectFile = useCallback(() => {
-    rendererIpc.file.openDlg({properties: ['openFile']}).then(result => {
+    filesIpc.openDlg({properties: ['openFile']}).then(result => {
       if (result) {
         setToOpen(prevState => [...prevState, {path: result, type: 'file'}]);
         rendererIpc.storageUtils.preOpen('add', {id, open: {path: result, type: 'file'}});

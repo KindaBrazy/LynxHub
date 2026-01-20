@@ -1,5 +1,6 @@
 import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip} from '@heroui/react';
 import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Fragment, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -31,7 +32,7 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
         closeHandle();
 
         const promise = new Promise<void>(resolve => {
-          rendererIpc.file[type](card.dir!)
+          filesIpc[type](card.dir!)
             .then(() => {
               rendererIpc.storageUtils.removeInstalledCard(cardId);
               resolve();

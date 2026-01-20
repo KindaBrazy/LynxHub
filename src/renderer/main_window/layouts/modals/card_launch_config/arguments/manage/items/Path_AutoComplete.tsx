@@ -1,6 +1,6 @@
 import {Autocomplete, AutocompleteItem} from '@heroui/react';
 import {FolderListData} from '@lynx_cross/types';
-import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Key, useEffect, useState} from 'react';
 
 import {File_Icon, Folder2_Icon} from '../../../../../../../shared/assets/icons';
@@ -24,7 +24,7 @@ export default function AutoCompletePath({baseDir, onValueChange, defaultValue, 
       setInputValue(defaultValue);
       const relatives = defaultValue?.split('/') || [];
       relatives.pop();
-      rendererIpc.file
+      filesIpc
         .listDir(baseDir, relatives)
         .then((result: FolderListData[]) => {
           let filteredResult = result;
@@ -43,7 +43,7 @@ export default function AutoCompletePath({baseDir, onValueChange, defaultValue, 
   useEffect(() => {
     if (inputValue.startsWith('.') || inputValue.startsWith('/')) {
       const relatives = inputValue ? inputValue.split('/') : [];
-      rendererIpc.file
+      filesIpc
         .listDir(baseDir, relatives)
         .then((result: FolderListData[]) => {
           let filteredResult = result;

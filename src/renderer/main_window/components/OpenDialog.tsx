@@ -1,6 +1,7 @@
 import {Button, ButtonGroup, Input} from '@heroui/react';
 import {isWin} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {OpenDialogOptions} from 'electron';
 import {useCallback, useEffect, useRef, useState} from 'react';
 
@@ -20,7 +21,7 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
-    rendererIpc.file.isEmptyDir(directory).then(isEmpty => {
+    filesIpc.isEmptyDir(directory).then(isEmpty => {
       if (!isEmpty) {
         setIsInvalid(true);
         setErrorMessage('Selected directory is not empty. Please choose an empty directory.');
@@ -44,7 +45,7 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
   );
 
   const chooseDirectory = useCallback(() => {
-    rendererIpc.file.openDlg(dialogType).then(result => {
+    filesIpc.openDlg(dialogType).then(result => {
       if (result && inputRef.current) {
         const resultDir = extraFolder ? `${result}${isWin() ? '\\' : '/'}${extraFolder}` : result;
         setDirectory(resultDir);

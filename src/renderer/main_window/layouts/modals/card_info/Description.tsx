@@ -1,7 +1,7 @@
 import {Button, Link, Spinner} from '@heroui/react';
 import {CardInfoDescriptions, CardInfoDescriptions_Items} from '@lynx_cross/types/plugins/module';
 import {isValidURL} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Descriptions, DescriptionsProps, Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {useCallback} from 'react';
@@ -48,7 +48,7 @@ export default function CardInfoDescription({folders, descriptions}: Props) {
   }, []);
 
   const openDir = useCallback((dir: string) => {
-    rendererIpc.file.openPath(dir);
+    filesIpc.openPath(dir);
   }, []);
 
   return (
