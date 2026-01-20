@@ -2,8 +2,7 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import {appWindowChannels, tabsChannels} from '@lynx_cross/consts/ipc';
-import winChannels from '@lynx_cross/consts/ipc_channels/application';
+import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import {ShowToastTypes} from '@lynx_cross/types/ipc';
 import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents} from 'electron';
 
@@ -67,7 +66,7 @@ export default class ElectronAppManager {
   }
 
   public showToast(message: string, type: ShowToastTypes, placement: HeroToastPlacement = 'bottom-right') {
-    this.getWebContent()?.send(appWindowChannels.showToast, message, type, placement);
+    this.getWebContent()?.send(appChannels.showToast, message, type, placement);
   }
 
   /** Creates and configures the main application window. */
@@ -102,7 +101,7 @@ export default class ElectronAppManager {
       } else {
         // background-tab = middle-click = open in background (don't switch)
         const openInBackground = disposition === 'background-tab';
-        this.getWebContent()?.send(tabsChannels.onNewTab, url, openInBackground);
+        this.getWebContent()?.send(appChannels.onNewTab, url, openInBackground);
       }
       return {action: 'deny'};
     });
@@ -118,39 +117,39 @@ export default class ElectronAppManager {
     if (!webContent) return;
 
     this.getMainWindow()?.on('focus', (): void =>
-      webContent.send(winChannels.onChangeState, {
+      webContent.send(appChannels.onChangeState, {
         name: 'focus',
         value: true,
       }),
     );
     this.getMainWindow()?.on('blur', (): void =>
-      webContent.send(winChannels.onChangeState, {
+      webContent.send(appChannels.onChangeState, {
         name: 'focus',
         value: false,
       }),
     );
 
     this.getMainWindow()?.on('maximize', (): void =>
-      webContent.send(winChannels.onChangeState, {
+      webContent.send(appChannels.onChangeState, {
         name: 'maximize',
         value: true,
       }),
     );
     this.getMainWindow()?.on('unmaximize', (): void =>
-      webContent.send(winChannels.onChangeState, {
+      webContent.send(appChannels.onChangeState, {
         name: 'maximize',
         value: false,
       }),
     );
 
     this.getMainWindow()?.on('enter-full-screen', (): void =>
-      webContent.send(winChannels.onChangeState, {
+      webContent.send(appChannels.onChangeState, {
         name: 'full-screen',
         value: true,
       }),
     );
     this.getMainWindow()?.on('leave-full-screen', (): void =>
-      webContent.send(winChannels.onChangeState, {
+      webContent.send(appChannels.onChangeState, {
         name: 'full-screen',
         value: false,
       }),

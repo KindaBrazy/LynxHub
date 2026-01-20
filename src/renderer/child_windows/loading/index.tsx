@@ -1,6 +1,6 @@
 import '@lynx_shared/styles.css';
 
-import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {createRoot} from 'react-dom/client';
 
 import LiquidChromeLoading from './loadings/LiquidChrome';
@@ -8,10 +8,10 @@ import RippleLoading from './loadings/Ripple';
 import SimpleLoading from './loadings/Simple';
 import ThreadsLoading from './loadings/Threads';
 
-rendererIpc.others.disableLoadingAnimations().then(disableLoadingAnimations => {
+applicationIpc.invoke.disableLoadingAnimations().then(isDisabled => {
   let TargetComponent = SimpleLoading;
 
-  if (!disableLoadingAnimations) {
+  if (!isDisabled) {
     const components = [ThreadsLoading, LiquidChromeLoading, RippleLoading];
     const randomIndex = Math.floor(Math.random() * components.length);
     TargetComponent = components[randomIndex];

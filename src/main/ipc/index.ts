@@ -1,7 +1,7 @@
 import path from 'node:path';
 
-import {appDataChannels, imageCacheChannels, staticsChannels, volumeChannels} from '@lynx_cross/consts/ipc';
-import winChannels from '@lynx_cross/consts/ipc_channels/application';
+import {imageCacheChannels, staticsChannels, volumeChannels} from '@lynx_cross/consts/ipc';
+import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import fileChannels from '@lynx_cross/consts/ipc_channels/files';
 import gitChannels from '@lynx_cross/consts/ipc_channels/git';
@@ -96,12 +96,12 @@ import {handleGetAudioState, handleSetMuted, handleSetVolume} from './methods/vo
 function win() {
   const {appManager, storageManager} = classHolder;
   // Changes window state (maximize, minimize, close, fullscreen, restart)
-  ipcMain.on(winChannels.changeState, (_, state: ChangeWindowState) => changeWindowState(state));
+  ipcMain.on(appChannels.changeState, (_, state: ChangeWindowState) => changeWindowState(state));
   // Gets system dark mode preference (light/dark)
-  ipcMain.handle(winChannels.getSystemDarkMode, () => getSystemDarkMode());
+  ipcMain.handle(appChannels.getSystemDarkMode, () => getSystemDarkMode());
   // Sets app theme (light, dark, or system)
-  ipcMain.on(winChannels.setDarkMode, (_, darkMode: DarkModeTypes) => setDarkMode(darkMode));
-  ipcMain.handle(winChannels.isDarkMode, () => isDark());
+  ipcMain.on(appChannels.setDarkMode, (_, darkMode: DarkModeTypes) => setDarkMode(darkMode));
+  ipcMain.handle(appChannels.isDarkMode, () => isDark());
 
   // Listens for system theme changes and updates app if set to 'system' mode
   nativeTheme.on('updated', () => {
@@ -109,18 +109,18 @@ function win() {
   });
 
   // Sets taskbar visibility status (taskbar, tray, taskbar-tray, tray-minimized)
-  ipcMain.on(winChannels.setTaskBarStatus, (_, status: TaskbarStatus) => setTaskbarStatus(status));
+  ipcMain.on(appChannels.setTaskBarStatus, (_, status: TaskbarStatus) => setTaskbarStatus(status));
 
   // Gets system information (OS platform and build number)
-  ipcMain.handle(winChannels.getSystemInfo, () => getSystemInfo());
+  ipcMain.handle(appChannels.getSystemInfo, () => getSystemInfo());
 
   // Opens URL in default system browser
-  ipcMain.on(winChannels.openUrlDefaultBrowser, (_, url: string) => shell.openExternal(url));
+  ipcMain.on(appChannels.openUrlDefaultBrowser, (_, url: string) => shell.openExternal(url));
 
   // Sets window progress bar (taskbar/dock) - value: 0-1 for progress, -1 to remove, >1 for indeterminate
   // mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused' (Windows only)
   ipcMain.on(
-    winChannels.setProgressBar,
+    appChannels.setProgressBar,
     (_, progress: number, options?: {mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused'}) => {
       appManager?.getMainWindow()?.setProgressBar(progress, options);
     },
@@ -297,11 +297,11 @@ function pty() {
 
 function appData() {
   // Gets current app data directory path
-  ipcMain.handle(appDataChannels.getCurrentPath, () => getAppDataPath());
+  ipcMain.handle(appChannels.getCurrentDataPath, () => getAppDataPath());
   // Opens dialog to select new app data folder
-  ipcMain.handle(appDataChannels.selectAnother, () => selectNewAppDataFolder());
+  ipcMain.handle(appChannels.selectAnotherDataPath, () => selectNewAppDataFolder());
   // Checks if directory is valid app data directory
-  ipcMain.handle(appDataChannels.isAppDir, (_, dir: string) => isAppDir(dir));
+  ipcMain.handle(appChannels.isValidDataPath, (_, dir: string) => isAppDir(dir));
 }
 
 function storage() {

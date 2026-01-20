@@ -1,7 +1,7 @@
 import {Button, ButtonGroup, ModalFooter} from '@heroui/react';
 import {DownloadProgress} from '@lynx_cross/types/ipc';
 import {InstallationMethod, UserInputResult} from '@lynx_cross/types/plugins/modules';
-import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {memo, RefObject, useCallback, useState} from 'react';
@@ -58,7 +58,7 @@ const InstallFooter = memo(
     const locate = useCallback(() => {
       filesIpc.openDlg({properties: ['openDirectory']}).then(targetDirectory => {
         if (targetDirectory) {
-          rendererIpc.appData.isAppDir(targetDirectory).then(isAppDir => {
+          applicationIpc.invoke.isValidDataPath(targetDirectory).then(isAppDir => {
             if (isAppDir) {
               setLocateWarnIsOpen(true);
             } else {

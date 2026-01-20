@@ -1,6 +1,6 @@
 import {Button, ButtonGroup, Input} from '@heroui/react';
 import {isWin} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
 import {OpenDialogOptions} from 'electron';
 import {useCallback, useEffect, useRef, useState} from 'react';
@@ -26,7 +26,7 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
         setIsInvalid(true);
         setErrorMessage('Selected directory is not empty. Please choose an empty directory.');
       } else {
-        rendererIpc.appData.isAppDir(directory).then(isAppDir => {
+        applicationIpc.invoke.isValidDataPath(directory).then(isAppDir => {
           setIsInvalid(isAppDir);
           setErrorMessage('Selecting the app folder can be dangerous and may lead to data loss.');
         });

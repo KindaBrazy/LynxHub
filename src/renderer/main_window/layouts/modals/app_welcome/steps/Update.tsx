@@ -1,6 +1,5 @@
 import {Alert, Button} from '@heroui/react';
 import {APP_NAME} from '@lynx_cross/consts';
-import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {motion} from 'framer-motion';
 import {useCallback, useEffect, useState} from 'react';
@@ -25,7 +24,7 @@ export default function StepUpdate({onComplete}: Props) {
 
   const checkPwsh = useCallback(() => {
     setPwsh({result: 'checking'});
-    rendererIpc.init
+    applicationIpc.invoke
       .checkPwsh7Installed()
       .then(result => setPwsh(result ? {result: 'ok', label: result} : {result: 'failed'}))
       .catch(() => setPwsh({result: 'failed'}));

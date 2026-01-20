@@ -2,7 +2,7 @@ import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
 import {dirname, isAbsolute, relative, resolve} from 'node:path';
 
-import winChannels from '@lynx_cross/consts/ipc_channels/application';
+import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import {AgentTypes, DarkModeTypes} from '@lynx_cross/types/ipc';
 import {app, BrowserWindow, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue, safeStorage} from 'electron';
 import fs from 'graceful-fs';
@@ -171,19 +171,19 @@ export function noticeAllWindowsDarkMode(darkMode: DarkModeTypes) {
   const isDark = value === 'dark';
 
   const app = getWebContentsIfAvailable(appManager?.getMainWindow());
-  if (app) app.send(winChannels.onDarkMode, isDark);
+  if (app) app.send(appChannels.onDarkMode, isDark);
 
   const contextMenu = getWebContentsIfAvailable(contextMenuManager?.getWindow());
-  if (contextMenu) contextMenu.send(winChannels.onDarkMode, isDark);
+  if (contextMenu) contextMenu.send(appChannels.onDarkMode, isDark);
 
   const linkPreview = getWebContentsIfAvailable(linkPreviewManager?.getWindow());
-  if (linkPreview) linkPreview.send(winChannels.onDarkMode, isDark);
+  if (linkPreview) linkPreview.send(appChannels.onDarkMode, isDark);
 
   const shareScreen = getWebContentsIfAvailable(shareScreenManager?.selectorWindow);
-  if (shareScreen) shareScreen.send(winChannels.onDarkMode, isDark);
+  if (shareScreen) shareScreen.send(appChannels.onDarkMode, isDark);
 
   const toast = getWebContentsIfAvailable(toastWindow);
-  if (toast) toast.send(winChannels.onDarkMode, isDark);
+  if (toast) toast.send(appChannels.onDarkMode, isDark);
 }
 
 function getWindowBgColor(isDark: boolean) {
