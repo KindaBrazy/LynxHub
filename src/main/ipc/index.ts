@@ -1,4 +1,3 @@
-// Main IPC handler - Registers all IPC channels for communication between renderer and main process
 import path from 'node:path';
 
 import {
@@ -6,7 +5,6 @@ import {
   imageCacheChannels,
   ptyChannels,
   staticsChannels,
-  utilsChannels,
   volumeChannels,
 } from '@lynx_cross/consts/ipc';
 import winChannels from '@lynx_cross/consts/ipc_channels/application';
@@ -16,6 +14,7 @@ import gitChannels from '@lynx_cross/consts/ipc_channels/git';
 import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
 import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
 import storageChannels, {storageUtilsChannels} from '@lynx_cross/consts/ipc_channels/storage';
+import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
 import {
   AgentTypes,
   ChangeWindowState,
@@ -334,7 +333,7 @@ function storage() {
   ipcMain.handle(storageChannels.clear, () => storageManager.clearStorage());
 }
 
-function storageUtilsIpc.send() {
+function storageUtilsIpc() {
   const {storageManager} = classHolder;
   // Sets app to start with system startup
   ipcMain.on(storageUtilsChannels.setSystemStartup, (_, startup: boolean) => {
@@ -660,7 +659,7 @@ function formatBytes(bytes: number): string {
 export function listenToIpcChannels() {
   appData();
   storage();
-  storageUtilsIpc.send();
+  storageUtilsIpc();
 
   win();
   file();

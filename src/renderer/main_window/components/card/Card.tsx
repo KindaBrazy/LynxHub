@@ -3,6 +3,7 @@ import {getAccentColorAsHex} from '@lynx/utils/accent_color_generator';
 import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import utilsIpc from '@lynx_shared/ipc/utils';
 import {AnimatePresence, motion} from 'framer-motion';
 import {CSSProperties, FormEvent, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -95,7 +96,7 @@ const LynxCard = memo(() => {
     extensionRendererApi.events.emit('before_card_start', {id});
     if (autoUpdateExtensions && card) {
       AddBreadcrumb_Renderer(`Updating AI Extensions: id:${id}`);
-      rendererIpc.utils.updateAllExtensions({id, dir: card.dir! + extensionsDir!});
+      utilsIpc.updateAllExtensions({id, dir: card.dir! + extensionsDir!});
       setIsUpdatingExtensions(true);
     } else {
       rendererIpc.pty.process(id, id);

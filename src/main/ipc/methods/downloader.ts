@@ -1,7 +1,7 @@
 // Downloader IPC methods - Handles file downloads with progress tracking
 import path from 'node:path';
 
-import {utilsChannels} from '@lynx_cross/consts/ipc';
+import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
 import {app, DownloadItem} from 'electron';
 import {download} from 'electron-dl';
 

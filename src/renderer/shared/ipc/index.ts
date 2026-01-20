@@ -11,7 +11,6 @@ import {
   ptyChannels,
   staticsChannels,
   tabsChannels,
-  utilsChannels,
   volumeChannels,
 } from '@lynx_cross/consts/ipc';
 import {otherChannels} from '@lynx_cross/consts/ipc';
@@ -27,89 +26,12 @@ import {
   PatreonUserData,
   SubscribeStages,
 } from '@lynx_cross/types';
-import {
-  AppUpdateEventTypes,
-  AppUpdateStatus,
-  AudioState,
-  DownloadProgress,
-  ExtensionsData,
-  ExtensionsUpdateStatus,
-  LynxInput,
-  OnUpdatingExtensions,
-  ShowToastTypes,
-} from '@lynx_cross/types/ipc';
+import {AppUpdateEventTypes, AppUpdateStatus, AudioState, LynxInput, ShowToastTypes} from '@lynx_cross/types/ipc';
 import type {IpcRendererEvent} from 'electron';
 
 const ipc = window.electron.ipcRenderer;
 
 const rendererIpc = {
-  /** Utilities methods */
-  utils: {
-    // Updates all extensions in directory sequentially
-    updateAllExtensions: (data: {id: string; dir: string}): void => {
-      extensionRendererApi.events_ipc.emit('utils_update_all_extensions', {data});
-      ipc.send(utilsChannels.updateAllExtensions, data);
-    },
-    // Listens for extension update progress
-    onUpdateAllExtensions: (result: (event: IpcRendererEvent, updateInfo: OnUpdatingExtensions) => void) =>
-      ipc.on(utilsChannels.onUpdateAllExtensions, result),
-
-    // Gets detailed information about extensions in directory
-    getExtensionsDetails: (dir: string): Promise<ExtensionsData> => {
-      extensionRendererApi.events_ipc.emit('utils_get_extensions_details', {dir});
-      return ipc.invoke(utilsChannels.extensionsDetails, dir);
-    },
-
-    // Gets update status for all extensions in directory
-    getExtensionsUpdateStatus: (dir: string): Promise<ExtensionsUpdateStatus> => {
-      extensionRendererApi.events_ipc.emit('utils_get_extensions_update_status', {dir});
-      return ipc.invoke(utilsChannels.updateStatus, dir);
-    },
-
-    // Enables or disables extension by renaming folder (add/remove . prefix)
-    disableExtension: (disable: boolean, dir: string): Promise<string> => {
-      extensionRendererApi.events_ipc.emit('utils_disable_extension', {disable, dir});
-      return ipc.invoke(utilsChannels.disableExtension, disable, dir);
-    },
-
-    // Cancels loading extension data operation
-    cancelExtensionsData: (): void => {
-      extensionRendererApi.events_ipc.emit('utils_cancel_extensions_data', {});
-      ipc.send(utilsChannels.cancelExtensionsData);
-    },
-
-    // Downloads file from URL with progress tracking
-    downloadFile: (url: string): void => {
-      extensionRendererApi.events_ipc.emit('utils_download_file', {url});
-      ipc.send(utilsChannels.downloadFile, url);
-    },
-    // Cancels ongoing file download
-    cancelDownload: (): void => {
-      extensionRendererApi.events_ipc.emit('utils_cancel_download', {});
-      ipc.send(utilsChannels.cancelDownload);
-    },
-    // Listens for file download progress updates
-    onDownloadFile: (result: (event: IpcRendererEvent, progress: DownloadProgress) => void) =>
-      ipc.on(utilsChannels.onDownloadFile, result),
-
-    // Decompresses archive file (zip, tar, etc.)
-    decompressFile: (filePath: string): Promise<string> => {
-      extensionRendererApi.events_ipc.emit('utils_decompress_file', {filePath});
-      return ipc.invoke(utilsChannels.decompressFile, filePath);
-    },
-
-    // Validates if URL returns valid HTTP response
-    isResponseValid: (url: string): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('utils_is_response_valid', {url});
-      return ipc.invoke(utilsChannels.isResponseValid, url);
-    },
-    // Fetches image from URL and converts to data URL (base64)
-    getImageAsDataURL: (url: string): Promise<string | null> => {
-      extensionRendererApi.events_ipc.emit('utils_get_image_as_data_url', {url});
-      return ipc.invoke(utilsChannels.getImageAsDataURL, url);
-    },
-  },
-
   /** Managing and using node_pty(Pseudo Terminal ) */
   pty: {
     // Starts PTY process for card with pre-commands and run commands
