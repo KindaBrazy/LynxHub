@@ -27,6 +27,7 @@ export const appChannels = {
   updateCancel: 'app:updateCancel',
   updateInstall: 'app:updateInstall',
   updateInstallLater: 'app:updateInstallLater',
+  updateChannelChange: 'app:updateChannelChange',
 
   getCurrentDataPath: 'app:getCurrentDataPath',
   selectAnotherDataPath: 'app:selectAnotherDataPath',

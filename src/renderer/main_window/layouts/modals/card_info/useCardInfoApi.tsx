@@ -1,5 +1,6 @@
 import {CardInfoApi, CardInfoCallback, CardInfoDescriptions} from '@lynx_cross/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
+import lynxIpc from '@lynx_shared/ipc/lynxIpc';
 import {moduleApiIpc} from '@lynx_shared/ipc/plugins/module';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {isEmpty} from 'lodash';
@@ -21,13 +22,13 @@ export default function useCardInfoApi(
         installationFolder: dir,
         ipc: {
           on(channel: string, listener: any): () => void {
-            return window.electron.ipcRenderer.on(channel, listener);
+            return lynxIpc.on(channel, listener);
           },
           send(channel: string, ...args: any[]) {
-            return window.electron.ipcRenderer.send(channel, ...args);
+            return lynxIpc.send(channel, ...args);
           },
           invoke(channel: string, ...args: any[]): Promise<any> {
-            return window.electron.ipcRenderer.invoke(channel, ...args);
+            return lynxIpc.invoke(channel, ...args);
           },
         },
         storage: {
