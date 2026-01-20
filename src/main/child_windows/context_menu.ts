@@ -426,6 +426,11 @@ export default class ContextMenuManager {
     const contentW = Math.max(1, Math.min(Math.ceil(cssWidth * scale), 4096));
     const contentH = Math.max(1, Math.min(Math.ceil(cssHeight * scale), 4096));
 
+    if (!isValidDimension(contentW) || !isValidDimension(contentH) || contentW < 20 || contentH < 20) {
+      console.error('Invalid dimensions received:', {width: cssWidth, height: cssHeight});
+      return;
+    }
+
     try {
       AddBreadcrumb_Main(
         `'Resizing context menu (content area):', ${{
