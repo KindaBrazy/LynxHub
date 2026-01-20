@@ -2,6 +2,7 @@ import {Button, Card, Chip, Select, Selection, SelectItem} from '@heroui/react';
 import {SubscribeStages} from '@lynx_cross/types';
 import rendererIpc from '@lynx_shared/ipc';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
+import staticsIpc from '@lynx_shared/ipc/statics';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -30,8 +31,8 @@ export default function DashboardUpdate() {
 
   useEffect(() => {
     async function fetchStatus() {
-      const data = await rendererIpc.statics.getReleases();
-      const insider = await rendererIpc.statics.getInsider();
+      const data = await staticsIpc.getReleases();
+      const insider = await staticsIpc.getInsider();
 
       if (data) {
         setStatusPublic({version: data.currentVersion, build: data.currentBuild, date: data.releaseDate});

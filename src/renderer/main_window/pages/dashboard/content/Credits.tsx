@@ -1,7 +1,7 @@
 import {Button, Card, User} from '@heroui/react';
 import {PATREON_URL} from '@lynx_cross/consts';
 import {PatreonSupporter, PatreonSupporterTier} from '@lynx_cross/types';
-import rendererIpc from '@lynx_shared/ipc';
+import staticsIpc from '@lynx_shared/ipc/statics';
 import {useEffect, useMemo, useState} from 'react';
 
 import {ExternalDuo_Icon, Heart_Icon, Patreon_Icon, UserHeart_Icon} from '../../../../shared/assets/icons';
@@ -34,7 +34,7 @@ export default function DashboardCredits() {
   const [supporters, setSupporters] = useState<PatreonSupporter[]>([]);
 
   useEffect(() => {
-    rendererIpc.statics.getPatrons().then(data => {
+    staticsIpc.getPatrons().then(data => {
       if (data) setSupporters(data);
     });
   }, []);

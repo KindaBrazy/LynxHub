@@ -1,7 +1,7 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {PluginFilter, PluginItem} from '@lynx_cross/types/plugins';
-import rendererIpc from '@lynx_shared/ipc';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
+import staticsIpc from '@lynx_shared/ipc/statics';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -31,7 +31,7 @@ export function useFetchExtensions(setList: Dispatch<SetStateAction<PluginItem[]
     }
 
     setRefreshing(true);
-    rendererIpc.statics.pull().finally(() => fetchExtensionsList().finally(() => setRefreshing(false)));
+    staticsIpc.pull().finally(() => fetchExtensionsList().finally(() => setRefreshing(false)));
 
     fetchExtensionsList();
   }, []);
