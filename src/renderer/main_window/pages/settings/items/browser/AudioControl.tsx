@@ -1,5 +1,5 @@
 import {Switch} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import browserVolume from '@lynx_shared/ipc/browser_volume';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {Volume, VolumeCross} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useRef} from 'react';
@@ -31,7 +31,7 @@ export default function AudioControl() {
         const effectiveMute = isTabMuted || muted;
 
         try {
-          await rendererIpc.volume.setMuted(card.id, effectiveMute);
+          await browserVolume.setMuted(card.id, effectiveMute);
         } catch (error) {
           console.error(`Failed to apply mute to tab ${card.tabId}:`, error);
         }

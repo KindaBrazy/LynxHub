@@ -1,8 +1,8 @@
 import path from 'node:path';
 
-import {volumeChannels} from '@lynx_cross/consts/ipc';
 import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
+import browserVolumeChannels from '@lynx_cross/consts/ipc_channels/browser_volume';
 import {AudioState, CanGoType, WHType} from '@lynx_cross/types/ipc';
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
 import {debounce, isEmpty, isNil} from 'lodash';
@@ -282,7 +282,7 @@ export default class BrowserManager {
 
   private sendAudioStateChange(id: string, playing: boolean): void {
     this.withBothContents(id, (mainWc, viewWc) => {
-      mainWc.send(volumeChannels.onAudioStateChange, id, {playing, muted: viewWc.audioMuted});
+      mainWc.send(browserVolumeChannels.onAudioStateChange, id, {playing, muted: viewWc.audioMuted});
     });
   }
 

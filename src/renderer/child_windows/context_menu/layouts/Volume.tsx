@@ -1,5 +1,5 @@
 import {Button, Slider} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import browserVolume from '@lynx_shared/ipc/browser_volume';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useEffect, useMemo, useRef} from 'react';
 import {useDispatch} from 'react-redux';
@@ -26,7 +26,7 @@ const VolumeMenu = memo(() => {
         clearTimeout(volumeIpcTimerRef.current);
       }
       volumeIpcTimerRef.current = setTimeout(() => {
-        rendererIpc.volume.setVolume(id, clampedVolume).catch(error => {
+        browserVolume.setVolume(id, clampedVolume).catch(error => {
           console.error('Failed to set volume:', error);
         });
       }, 50);
@@ -36,7 +36,7 @@ const VolumeMenu = memo(() => {
         clearTimeout(debounceTimerRef.current);
       }
       debounceTimerRef.current = setTimeout(() => {
-        rendererIpc.volume.updateTabVolume(tabId, clampedVolume);
+        browserVolume.updateTabVolume(tabId, clampedVolume);
       }, 150);
     },
     [id, tabId],
@@ -47,9 +47,9 @@ const VolumeMenu = memo(() => {
     dispatch(contextActions.updateMuted(newMutedState));
 
     try {
-      await rendererIpc.volume.setMuted(id, newMutedState);
+      await browserVolume.setMuted(id, newMutedState);
       // Notify main window to update Redux state
-      rendererIpc.volume.updateTabMuted(tabId, newMutedState);
+      browserVolume.updateTabMuted(tabId, newMutedState);
     } catch (error) {
       console.error('Failed to set mute state:', error);
     }
