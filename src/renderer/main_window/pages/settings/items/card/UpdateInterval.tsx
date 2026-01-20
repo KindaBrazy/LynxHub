@@ -1,5 +1,5 @@
 import {NumberInput} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useDispatch} from 'react-redux';
 
 import {cardsActions, useCardsState} from '../../../../redux/reducers/cards';
@@ -14,7 +14,7 @@ export default function CheckUpdateInterval() {
   const onChange = (value: number) => {
     if (value) {
       dispatch(cardsActions.setUpdateInterval(value));
-      rendererIpc.storage.update('cards', {checkUpdateInterval: value});
+      storageIpc.update('cards', {checkUpdateInterval: value});
     }
   };
 

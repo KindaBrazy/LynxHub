@@ -1,5 +1,5 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -19,7 +19,7 @@ export default function Autoplay() {
   const [selectedKey, setSelectedKey] = useState<string>('default');
 
   useEffect(() => {
-    rendererIpc.storage.get('performance').then(data => {
+    storageIpc.get('performance').then(data => {
       setSelectedKey(data.autoplayPolicy);
     });
   }, []);
@@ -28,7 +28,7 @@ export default function Autoplay() {
     (keys: Selection) => {
       if (keys !== 'all') {
         const value = keys.values().next().value as AutoplayPolicy;
-        rendererIpc.storage.update('performance', {autoplayPolicy: value});
+        storageIpc.update('performance', {autoplayPolicy: value});
         setSelectedKey(value);
         showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
       }

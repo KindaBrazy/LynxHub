@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
@@ -41,12 +41,12 @@ const terminalSlice = createSlice({
       }>,
     ) => {
       state[action.payload.key] = action.payload.value;
-      rendererIpc.storage.update('terminal', {[action.payload.key]: action.payload.value});
+      storageIpc.update('terminal', {[action.payload.key]: action.payload.value});
     },
 
     resetToDefaults: (state: TerminalState) => {
       state = initialState;
-      rendererIpc.storage.update('terminal', initialState);
+      storageIpc.update('terminal', initialState);
       return state;
     },
   },

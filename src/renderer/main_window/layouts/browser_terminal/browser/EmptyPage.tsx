@@ -1,6 +1,6 @@
 import {Button, Spinner} from '@heroui/react';
 import {FavIcons} from '@lynx_cross/types/ipc';
-import rendererIpc from '@lynx_shared/ipc';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
 import {ReactNode, useEffect, useMemo, useRef, useState} from 'react';
@@ -54,7 +54,7 @@ async function getCachedHistoryData() {
   if (cachedHistoryData && now - cacheTimestamp < CACHE_TTL) {
     return cachedHistoryData;
   }
-  cachedHistoryData = await rendererIpc.storageUtils.getBrowserHistoryData();
+  cachedHistoryData = await storageUtilsIpc.invoke.getBrowserHistoryData();
   cacheTimestamp = now;
   return cachedHistoryData;
 }

@@ -1,6 +1,6 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {TooltipStatus} from '@lynx_cross/types/ipc';
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -20,7 +20,7 @@ export default function Tooltip() {
       if (keys !== 'all') {
         const value = keys.values().next().value as TooltipStatus;
         dispatch(settingsActions.setSettingsState({key: 'tooltipLevel', value}));
-        rendererIpc.storage.update('app', {tooltipStatus: value});
+        storageIpc.update('app', {tooltipStatus: value});
         setSelectedKey(value);
       }
     },

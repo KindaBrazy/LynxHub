@@ -10,8 +10,8 @@ import {
   RendererModuleImportType,
 } from '@lynx_cross/types/plugins/module';
 import {extractGitUrl, isDev} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {captureException} from '@sentry/electron/renderer';
 import {compact} from 'lodash';
 import {useSyncExternalStore} from 'react';
@@ -252,7 +252,7 @@ async function emitLoaded(
   _newCardMethods: LoadedMethods[],
   _newCardSearchData: CardSearchData,
 ) {
-  const {duplicated} = await rendererIpc.storage.get('cards');
+  const {duplicated} = await storageIpc.get('cards');
 
   allModules = _newAllModules;
   allCards = _newAllCards;
@@ -278,7 +278,7 @@ const loadModules = async () => {
     let importedModules: ({path: string; module: RendererModuleImportType} | null)[];
 
     // Get disabled cards from storage
-    const pluginStorage = await rendererIpc.storage.get('plugin');
+    const pluginStorage = await storageIpc.get('plugin');
     const disabledCards = new Set(pluginStorage.disabledCards || []);
 
     if (isDev()) {

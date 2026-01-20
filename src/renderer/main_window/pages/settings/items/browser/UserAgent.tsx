@@ -1,7 +1,7 @@
 import {Button, Input, Select, Selection, SelectItem} from '@heroui/react';
 import {AgentTypes} from '@lynx_cross/types/ipc';
-import rendererIpc from '@lynx_shared/ipc';
 import browserIpc from '@lynx_shared/ipc/browser';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -20,11 +20,11 @@ export default function UserAgent() {
 
   useEffect(() => {
     const agents = async () => {
-      const {userAgent} = await rendererIpc.storage.get('browser');
+      const {userAgent} = await storageIpc.get('browser');
       setSelectedAgent(userAgent);
 
       if (userAgent === 'custom') {
-        rendererIpc.storage.get('browser').then(result => {
+        storageIpc.get('browser').then(result => {
           setCustomValue(result.customUserAgent);
         });
       }
@@ -50,17 +50,17 @@ export default function UserAgent() {
       const value = keys.values().next().value?.toString() as AgentTypes;
       setSelectedAgent(value);
       if (value === 'custom') {
-        rendererIpc.storage.get('browser').then(result => {
+        storageIpc.get('browser').then(result => {
           setCustomValue(result.customUserAgent);
         });
       }
-      rendererIpc.storage.update('browser', {userAgent: value});
+      storageIpc.update('browser', {userAgent: value});
       browserIpc.send.updateUserAgent();
     }
   }, []);
 
   const saveCustom = () => {
-    rendererIpc.storage.update('browser', {customUserAgent: customValue, userAgent: 'custom'});
+    storageIpc.update('browser', {customUserAgent: customValue, userAgent: 'custom'});
     lynxTopToast(dispatch).success('Custom user agent saved successfully!');
   };
 

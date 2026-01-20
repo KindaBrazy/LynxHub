@@ -6,8 +6,6 @@ import {
   imageCacheChannels,
   ptyChannels,
   staticsChannels,
-  storageChannels,
-  storageUtilsChannels,
   utilsChannels,
   volumeChannels,
 } from '@lynx_cross/consts/ipc';
@@ -17,6 +15,7 @@ import fileChannels from '@lynx_cross/consts/ipc_channels/files';
 import gitChannels from '@lynx_cross/consts/ipc_channels/git';
 import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
 import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
+import storageChannels, {storageUtilsChannels} from '@lynx_cross/consts/ipc_channels/storage';
 import {
   AgentTypes,
   ChangeWindowState,
@@ -335,7 +334,7 @@ function storage() {
   ipcMain.handle(storageChannels.clear, () => storageManager.clearStorage());
 }
 
-function storageUtilsIpc() {
+function storageUtilsIpc.send() {
   const {storageManager} = classHolder;
   // Sets app to start with system startup
   ipcMain.on(storageUtilsChannels.setSystemStartup, (_, startup: boolean) => {
@@ -661,7 +660,7 @@ function formatBytes(bytes: number): string {
 export function listenToIpcChannels() {
   appData();
   storage();
-  storageUtilsIpc();
+  storageUtilsIpc.send();
 
   win();
   file();

@@ -1,5 +1,5 @@
 import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Fragment, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -25,7 +25,7 @@ const UnassignCard = ({cardId, isOpen, tabID}: Props) => {
     (clearConfig: boolean) => {
       closeHandle();
 
-      rendererIpc.storageUtils
+      storageUtilsIpc.invoke
         .unassignCard(cardId, clearConfig)
         .then(() => {
           lynxTopToast(dispatch).success('Unassigned successfully.');

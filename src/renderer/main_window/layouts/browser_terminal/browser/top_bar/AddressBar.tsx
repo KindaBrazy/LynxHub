@@ -1,7 +1,7 @@
 import {cn} from '@heroui/react';
 import {formatWebAddress} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
 import browserIpc from '@lynx_shared/ipc/browser';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -95,7 +95,7 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
 
   useEffect(() => {
     const fetchBrowserData = async () => {
-      const {favoriteAddress, historyAddress, recentAddress} = await rendererIpc.storageUtils.getBrowserHistoryData();
+      const {favoriteAddress, historyAddress, recentAddress} = await storageUtilsIpc.invoke.getBrowserHistoryData();
       setFavorites(favoriteAddress);
       // Combine and dedupe: recent first, then history, then favorites
       const combined = [...new Set([...recentAddress, ...historyAddress, ...favoriteAddress])];
@@ -123,7 +123,7 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
   }, [activeTab, tabId, currentView, effectiveAddress]);
 
   const getFavorites = useCallback(async () => {
-    const {favoriteAddress} = await rendererIpc.storageUtils.getBrowserHistoryData();
+    const {favoriteAddress} = await storageUtilsIpc.invoke.getBrowserHistoryData();
     setFavorites(favoriteAddress);
   }, []);
 
@@ -231,7 +231,7 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
           } else {
             dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: url}));
           }
-          rendererIpc.storageUtils.addBrowserRecent(url);
+          storageUtilsIpc.send.addBrowserRecent(url);
           // History is now tracked in main process on navigation events
           editableRef.current?.blur();
           browserIpc.send.reload(cardId);
@@ -261,9 +261,7 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
       const url = formatWebAddress(effectiveAddress || '');
       if (!url) return;
 
-      const action = isFavorite
-        ? rendererIpc.storageUtils.removeBrowserFavorite
-        : rendererIpc.storageUtils.addBrowserFavorite;
+      const action = isFavorite ? storageUtilsIpc.send.removeBrowserFavorite : storageUtilsIpc.send.addBrowserFavorite;
 
       action(url);
       getFavorites();

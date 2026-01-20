@@ -1,6 +1,6 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Empty} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
@@ -16,10 +16,10 @@ export default function PreTerminalCommands({id}: Props) {
   const [preCommands, setPreCommands] = useState<string[]>([]);
 
   useEffect(() => {
-    rendererIpc.storageUtils.preCommands('get', {id}).then(result => {
+    storageUtilsIpc.invoke.preCommands('get', {id}).then(result => {
       setPreCommands(result);
     });
-    const removeListener = rendererIpc.storageUtils.onPreCommands((_, result) => {
+    const removeListener = storageUtilsIpc.on.onPreCommands(result => {
       if (result.id === id) setPreCommands(result.commands);
     });
 
@@ -30,7 +30,7 @@ export default function PreTerminalCommands({id}: Props) {
     (index: number, value: string) => {
       setPreCommands(prevState => {
         const result = prevState.map((command, i) => (i === index ? value : command));
-        rendererIpc.storageUtils.preCommands('set', {command: result, id});
+        storageUtilsIpc.invoke.preCommands('set', {command: result, id});
         return result;
       });
     },
@@ -39,13 +39,13 @@ export default function PreTerminalCommands({id}: Props) {
 
   const removeCommand = useCallback(
     (index: number) => {
-      rendererIpc.storageUtils.preCommands('remove', {command: index, id});
+      storageUtilsIpc.invoke.preCommands('remove', {command: index, id});
     },
     [id],
   );
 
   const addCommand = useCallback(() => {
-    rendererIpc.storageUtils.preCommands('add', {command: '', id});
+    storageUtilsIpc.invoke.preCommands('add', {command: '', id});
   }, [id]);
 
   const onReorder = (newOrder: string[]) => {
@@ -53,14 +53,14 @@ export default function PreTerminalCommands({id}: Props) {
   };
 
   const onDoneReorder = () => {
-    rendererIpc.storageUtils.preCommands('set', {command: preCommands, id});
+    storageUtilsIpc.invoke.preCommands('set', {command: preCommands, id});
   };
 
   const cdFolder = () => {
     filesIpc.openDlg({properties: ['openDirectory']}).then(result => {
       if (result) {
         const command = `cd "${result}"`;
-        rendererIpc.storageUtils.preCommands('add', {command, id});
+        storageUtilsIpc.invoke.preCommands('add', {command, id});
       }
     });
   };

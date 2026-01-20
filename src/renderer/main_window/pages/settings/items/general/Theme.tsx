@@ -1,7 +1,7 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {DarkModeTypes} from '@lynx_cross/types/ipc';
-import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -27,7 +27,7 @@ export default function Theme() {
   const [selectedTheme, setSelectedTheme] = useState<DarkModeTypes>('system');
 
   useEffect(() => {
-    rendererIpc.storage.get('app').then(({darkMode}) => {
+    storageIpc.get('app').then(({darkMode}) => {
       setSelectedTheme(darkMode);
     });
   }, []);

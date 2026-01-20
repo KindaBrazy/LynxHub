@@ -1,8 +1,8 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {CardModules, RendererModuleImportType} from '@lynx_cross/types/plugins/module';
 import {isDev} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {compact} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -77,7 +77,7 @@ export default function ModuleConfigModal({isOpen, onClose}: Props) {
 
           setAllAvailableCards(cards);
 
-          const pluginData = await rendererIpc.storage.get('plugin');
+          const pluginData = await storageIpc.get('plugin');
           setDisabledCards(pluginData.disabledCards || []);
         } catch (e) {
           console.error('Failed to load full card list:', e);
@@ -135,7 +135,7 @@ export default function ModuleConfigModal({isOpen, onClose}: Props) {
   const handleSave = useCallback(async () => {
     setSaving(true);
     try {
-      await rendererIpc.storage.update('plugin', {disabledCards});
+      await storageIpc.update('plugin', {disabledCards});
       lynxTopToast(dispatch).success('Module configuration saved');
       onClose();
       showRestartModal(dispatch, 'To apply the changes, please restart the app.');

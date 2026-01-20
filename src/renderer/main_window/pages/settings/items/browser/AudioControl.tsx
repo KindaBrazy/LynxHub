@@ -1,5 +1,6 @@
 import {Switch} from '@heroui/react';
 import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {Volume, VolumeCross} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useRef} from 'react';
 import {useDispatch} from 'react-redux';
@@ -48,13 +49,13 @@ export default function AudioControl() {
 
       saveTimeoutRef.current = setTimeout(async () => {
         try {
-          const currentData = await rendererIpc.storage.get('browser');
+          const currentData = await storageIpc.get('browser');
           const currentSettings = currentData.volumeSettings || {
             globalMuted: false,
             tabVolumes: {},
           };
 
-          await rendererIpc.storage.update('browser', {
+          await storageIpc.update('browser', {
             volumeSettings: {
               ...currentSettings,
               globalMuted: muted,

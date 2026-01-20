@@ -18,6 +18,7 @@ import {AvailablePageIDs, PageID, PageTitles} from '@lynx_cross/consts';
 import {Notification_Data} from '@lynx_cross/types';
 import {isValidURL} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
@@ -45,7 +46,7 @@ export default function Home_Notification() {
   }, []);
 
   const filterData = (data: Notification_Data[]) => {
-    rendererIpc.storage.get('notification').then(({readNotifs}) => {
+    storageIpc.get('notification').then(({readNotifs}) => {
       setNotifications(data.filter(notif => !readNotifs.includes(notif.id)));
     });
   };
@@ -66,7 +67,7 @@ export default function Home_Notification() {
   }, []);
 
   const handleRead = (id: string) => {
-    rendererIpc.storageUtils.addReadNotif(id);
+    storageUtilsIpc.send.addReadNotif(id);
     filterData(notifications);
   };
 

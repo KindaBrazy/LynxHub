@@ -1,7 +1,7 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {TaskbarStatus} from '@lynx_cross/types/ipc';
-import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
@@ -20,7 +20,7 @@ export default function Taskbar() {
   }, []);
 
   useEffect(() => {
-    rendererIpc.storage.get('app').then(result => {
+    storageIpc.get('app').then(result => {
       setSelectedKey(result.taskbarStatus);
     });
   }, []);

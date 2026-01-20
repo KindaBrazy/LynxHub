@@ -2,6 +2,7 @@ import {CustomRunBehaviorData} from '@lynx_cross/types/ipc';
 import {toMs} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
+import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {IProgressState} from '@xterm/addon-progress';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
@@ -61,7 +62,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
   }, [copyPressed, copySelection]);
 
   useEffect(() => {
-    rendererIpc.storage.get('cardsConfig').then(result => {
+    storageIpc.get('cardsConfig').then(result => {
       const custom = result.customRunBehavior.find(customRun => customRun.cardID === id);
       if (custom) {
         setBrowserBehavior(custom.browser);
@@ -94,7 +95,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
         if (browserBehaviorRef.current === 'appBrowser') {
           dispatch(cardsActions.setRunningCardAddress({address: url, tabId: tabIdRef.current}));
           dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: tabIdRef.current}));
-          rendererIpc.storageUtils.addBrowserRecent(url);
+          storageUtilsIpc.send.addBrowserRecent(url);
         } else {
           applicationIpc.send.openUrlDefaultBrowser(url);
         }

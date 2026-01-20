@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 
 import {onBreadcrumbStateChange} from '../../../../../shared/sentry/Breadcrumbs';
@@ -10,14 +10,14 @@ export default function CollectErrors() {
   const [addBreadcrumbs, setAddBreadcrumbs] = useState<boolean>(true);
 
   useEffect(() => {
-    rendererIpc.storage.get('app').then(result => {
+    storageIpc.get('app').then(result => {
       setCollectErrors(result.collectErrors);
       setAddBreadcrumbs(result.addBreadcrumbs);
     });
   }, []);
 
   const onBreadcrumbChange = useCallback((selected: boolean) => {
-    rendererIpc.storage.update('app', {addBreadcrumbs: selected});
+    storageIpc.update('app', {addBreadcrumbs: selected});
     setAddBreadcrumbs(selected);
     onBreadcrumbStateChange(selected);
   }, []);
@@ -29,7 +29,7 @@ export default function CollectErrors() {
   }, [addBreadcrumbs, collectErrors]);
 
   const onErrorChange = useCallback((selected: boolean) => {
-    rendererIpc.storage.update('app', {collectErrors: selected});
+    storageIpc.update('app', {collectErrors: selected});
     setCollectErrors(selected);
   }, []);
 

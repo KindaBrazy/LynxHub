@@ -1,5 +1,5 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {isEmpty} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
@@ -46,8 +46,8 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
   const onPress = useCallback(
     () =>
       autoUpdate
-        ? rendererIpc.storageUtils.removeAutoUpdateExtensions(id)
-        : rendererIpc.storageUtils.addAutoUpdateExtensions(id),
+        ? storageUtilsIpc.send.removeAutoUpdateExtensions(id)
+        : storageUtilsIpc.send.addAutoUpdateExtensions(id),
     [autoUpdate, id],
   );
 

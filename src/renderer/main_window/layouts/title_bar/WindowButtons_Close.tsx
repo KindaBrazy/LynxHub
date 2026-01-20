@@ -1,6 +1,6 @@
-import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {motion} from 'framer-motion';
 import {useCallback} from 'react';
 
@@ -21,7 +21,7 @@ export default function WindowButtons_Close({buttonProps, commonStyles}: Props) 
   const close = useCallback(() => applicationIpc.send.changeWinState('close'), []);
 
   const onClick = () => {
-    rendererIpc.storage.update('app', {lastPage: activePage});
+    storageIpc.update('app', {lastPage: activePage});
     if (isCtrlPressed || !showCloseConfirm) {
       close();
     } else {

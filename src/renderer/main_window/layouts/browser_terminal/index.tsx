@@ -1,6 +1,7 @@
 import {toMs} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
+import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {isNil} from 'lodash';
@@ -62,7 +63,7 @@ const RunningCardView = ({runningCard}: Props) => {
   }, [isEmptyRunning, id, tabId, currentView, activeTab, terminalName, browserTitle]);
 
   useEffect(() => {
-    rendererIpc.storage.get('cardsConfig').then(result => {
+    storageIpc.get('cardsConfig').then(result => {
       const custom = result.customRunBehavior.find(customRun => customRun.cardID === id);
       if (custom && custom.urlCatch.type === 'custom' && custom.urlCatch.customUrl) {
         const url = custom.urlCatch.customUrl;
@@ -71,7 +72,7 @@ const RunningCardView = ({runningCard}: Props) => {
             if (custom.browser === 'appBrowser') {
               dispatch(cardsActions.setRunningCardAddress({address: url, tabId: activeTab}));
               dispatch(cardsActions.setRunningCardView({view: 'browser', tabId: activeTab}));
-              rendererIpc.storageUtils.addBrowserRecent(url);
+              storageUtilsIpc.send.addBrowserRecent(url);
             } else {
               applicationIpc.send.openUrlDefaultBrowser(url);
             }

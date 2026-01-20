@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -13,7 +13,7 @@ export default function HWAcc() {
 
   const onEnabledChange = useCallback(
     (selected: boolean) => {
-      rendererIpc.storage.update('app', {hardwareAcceleration: selected});
+      storageIpc.update('app', {hardwareAcceleration: selected});
       dispatch(settingsActions.setSettingsState({key: 'hardwareAcceleration', value: selected}));
     },
     [dispatch],

@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -17,7 +17,7 @@ export default function Confirm() {
 
   const onCloseConfirmChange = useCallback(
     (selected: boolean) => {
-      rendererIpc.storage.update('app', {closeConfirm: selected});
+      storageIpc.update('app', {closeConfirm: selected});
       dispatch(settingsActions.setSettingsState({key: 'closeConfirm', value: selected}));
     },
     [dispatch],
@@ -25,7 +25,7 @@ export default function Confirm() {
 
   const onCloseTabConfirmChange = useCallback(
     (selected: boolean) => {
-      rendererIpc.storage.update('app', {closeTabConfirm: selected});
+      storageIpc.update('app', {closeTabConfirm: selected});
       dispatch(settingsActions.setSettingsState({key: 'closeTabConfirm', value: selected}));
     },
     [dispatch],
@@ -33,7 +33,7 @@ export default function Confirm() {
 
   const onTerminateAIConfirmChange = useCallback(
     (selected: boolean) => {
-      rendererIpc.storage.update('app', {terminateAIConfirm: selected});
+      storageIpc.update('app', {terminateAIConfirm: selected});
       dispatch(settingsActions.setSettingsState({key: 'terminateAIConfirm', value: selected}));
     },
     [dispatch],

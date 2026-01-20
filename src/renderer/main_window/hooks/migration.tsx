@@ -1,10 +1,10 @@
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useEffect} from 'react';
 
 export const useMigrateCardTitles = () => {
   useEffect(() => {
     const checkAndMigrate = async () => {
-      const isMigrated = await rendererIpc.storage.getCustom('migration_titles_done');
+      const isMigrated = await storageIpc.getCustom('migration_titles_done');
       if (isMigrated) return;
 
       const keysToMigrate: string[] = [];
@@ -21,13 +21,13 @@ export const useMigrateCardTitles = () => {
       keysToMigrate.forEach(key => {
         const value = window.localStorage.getItem(key);
         if (value) {
-          rendererIpc.storage.setCustom(key, value);
+          storageIpc.setCustom(key, value);
           window.localStorage.removeItem(key);
           console.log(`Migrated ${key} to rendererIpc storage`);
         }
       });
 
-      rendererIpc.storage.setCustom('migration_titles_done', true);
+      storageIpc.setCustom('migration_titles_done', true);
     };
 
     checkAndMigrate();

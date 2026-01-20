@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {configureStore} from '@reduxjs/toolkit';
 import {createReduxEnhancer} from '@sentry/react';
 
@@ -56,7 +56,7 @@ const buildPreloadedState = (): PreloadState | undefined => {
     showWizard = false;
   } else {
     if (oldSetupDone && !isWindows) {
-      rendererIpc.storage.update('app', {inited: true});
+      storageIpc.update('app', {inited: true});
       showWizard = false;
     } else {
       isUpgradeFlow = oldSetupDone;

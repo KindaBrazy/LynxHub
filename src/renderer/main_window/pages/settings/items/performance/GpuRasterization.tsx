@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -12,14 +12,14 @@ export default function GpuRasterization() {
   const [enabled, setEnabled] = useState<boolean>(true);
 
   useEffect(() => {
-    rendererIpc.storage.get('performance').then(data => {
+    storageIpc.get('performance').then(data => {
       setEnabled(data.enableGpuRasterization);
     });
   }, []);
 
   const onEnabledChange = useCallback(
     (selected: boolean) => {
-      rendererIpc.storage.update('performance', {enableGpuRasterization: selected});
+      storageIpc.update('performance', {enableGpuRasterization: selected});
       setEnabled(selected);
       showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
     },

@@ -1,7 +1,7 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {PreOpenData} from '@lynx_cross/types/ipc';
-import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Empty} from 'antd';
 import {filter, isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
@@ -16,7 +16,7 @@ export default function PreOpenPath({id}: Props) {
   const [toOpen, setToOpen] = useState<PreOpenData>([]);
 
   useEffect(() => {
-    rendererIpc.storageUtils.preOpen('get', {id}).then(result => {
+    storageUtilsIpc.invoke.preOpen('get', {id}).then(result => {
       setToOpen(result || []);
     });
   }, []);
@@ -24,7 +24,7 @@ export default function PreOpenPath({id}: Props) {
   const onRemove = useCallback(
     (index: number) => {
       setToOpen(prevState => [...filter(prevState, (_, i) => i !== index)]);
-      rendererIpc.storageUtils.preOpen('remove', {id, open: index});
+      storageUtilsIpc.invoke.preOpen('remove', {id, open: index});
     },
     [id],
   );
@@ -33,7 +33,7 @@ export default function PreOpenPath({id}: Props) {
     filesIpc.openDlg({properties: ['openDirectory']}).then(result => {
       if (result) {
         setToOpen(prevState => [...prevState, {path: result, type: 'folder'}]);
-        rendererIpc.storageUtils.preOpen('add', {id, open: {path: result, type: 'folder'}});
+        storageUtilsIpc.invoke.preOpen('add', {id, open: {path: result, type: 'folder'}});
       }
     });
   }, [id]);
@@ -42,7 +42,7 @@ export default function PreOpenPath({id}: Props) {
     filesIpc.openDlg({properties: ['openFile']}).then(result => {
       if (result) {
         setToOpen(prevState => [...prevState, {path: result, type: 'file'}]);
-        rendererIpc.storageUtils.preOpen('add', {id, open: {path: result, type: 'file'}});
+        storageUtilsIpc.invoke.preOpen('add', {id, open: {path: result, type: 'file'}});
       }
     });
   }, [id]);

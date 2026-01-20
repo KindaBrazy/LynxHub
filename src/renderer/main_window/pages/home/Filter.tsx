@@ -1,5 +1,5 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Selection} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {memo, useCallback} from 'react';
 
 import {FilterDuo_Icon} from '../../../shared/assets/icons';
@@ -13,9 +13,9 @@ const HomeFilter = memo(({selectedCategories}: Props) => {
   const onChange = useCallback((keys: Selection) => {
     AddBreadcrumb_Renderer(`Home Filter: keys:${JSON.stringify(keys)}`);
     if (keys === 'all') {
-      rendererIpc.storageUtils.homeCategory('set', ['Pin', 'Recently', 'All']);
+      storageUtilsIpc.invoke.homeCategory('set', ['Pin', 'Recently', 'All']);
     } else {
-      rendererIpc.storageUtils.homeCategory('set', Array.from(keys).map(String));
+      storageUtilsIpc.invoke.homeCategory('set', Array.from(keys).map(String));
     }
   }, []);
 

@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -13,7 +13,7 @@ export default function LastSize() {
 
   const onOpenLastSizeChange = useCallback(
     (selected: boolean) => {
-      rendererIpc.storage.update('app', {openLastSize: selected});
+      storageIpc.update('app', {openLastSize: selected});
       dispatch(settingsActions.setSettingsState({key: 'openLastSize', value: selected}));
     },
     [dispatch],

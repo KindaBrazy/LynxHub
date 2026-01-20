@@ -1,6 +1,6 @@
 import {Input, NumberInput, Select, Selection, SelectItem} from '@heroui/react';
 import {CustomRunBehaviorData} from '@lynx_cross/types/ipc';
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {isEmpty} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 
@@ -26,7 +26,7 @@ export function UrlCatch({id}: Props) {
     if (value && value !== 'all') {
       const result = value.values().next().value as UrlCatchType['type'];
       setUrlCatchValue(prev => ({...prev, type: result}));
-      rendererIpc.storageUtils.updateCustomRunBehavior({
+      storageUtilsIpc.send.updateCustomRunBehavior({
         cardID: id,
         urlCatch: {...urlCatchValue, type: result},
       });
@@ -35,7 +35,7 @@ export function UrlCatch({id}: Props) {
 
   const onFindLineChange = (value: string) => {
     setUrlCatchValue(prev => ({...prev, findLine: value}));
-    rendererIpc.storageUtils.updateCustomRunBehavior({
+    storageUtilsIpc.send.updateCustomRunBehavior({
       cardID: id,
       urlCatch: {...urlCatchValue, findLine: value},
     });
@@ -43,7 +43,7 @@ export function UrlCatch({id}: Props) {
 
   const onCustomUrlChange = (value: string) => {
     setUrlCatchValue(prev => ({...prev, customUrl: value}));
-    rendererIpc.storageUtils.updateCustomRunBehavior({
+    storageUtilsIpc.send.updateCustomRunBehavior({
       cardID: id,
       urlCatch: {...urlCatchValue, customUrl: value},
     });
@@ -51,7 +51,7 @@ export function UrlCatch({id}: Props) {
 
   const onDelayChange = (value: number) => {
     setUrlCatchValue(prev => ({...prev, delay: value}));
-    rendererIpc.storageUtils.updateCustomRunBehavior({
+    storageUtilsIpc.send.updateCustomRunBehavior({
       cardID: id,
       urlCatch: {...urlCatchValue, delay: value},
     });
@@ -59,14 +59,14 @@ export function UrlCatch({id}: Props) {
 
   const onModuleDelayChange = (value: number) => {
     setUrlCatchValue(prev => ({...prev, moduleDelay: value}));
-    rendererIpc.storageUtils.updateCustomRunBehavior({
+    storageUtilsIpc.send.updateCustomRunBehavior({
       cardID: id,
       urlCatch: {...urlCatchValue, moduleDelay: value},
     });
   };
 
   useEffect(() => {
-    rendererIpc.storage.get('cardsConfig').then(result => {
+    storageIpc.get('cardsConfig').then(result => {
       if (!isEmpty(result.customRunBehavior)) {
         const data = result.customRunBehavior.find(customRun => customRun.cardID === id);
         if (data) setUrlCatchValue(data.urlCatch);

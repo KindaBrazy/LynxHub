@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -12,14 +12,14 @@ export default function GpuSelection() {
   const [enabled, setEnabled] = useState<boolean>(false);
 
   useEffect(() => {
-    rendererIpc.storage.get('performance').then(data => {
+    storageIpc.get('performance').then(data => {
       setEnabled(data.forceHighPerformanceGpu);
     });
   }, []);
 
   const onEnabledChange = useCallback(
     (selected: boolean) => {
-      rendererIpc.storage.update('performance', {forceHighPerformanceGpu: selected});
+      storageIpc.update('performance', {forceHighPerformanceGpu: selected});
       setEnabled(selected);
       showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
     },
