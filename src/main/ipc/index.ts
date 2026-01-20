@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import {imageCacheChannels, volumeChannels} from '@lynx_cross/consts/ipc';
+import {volumeChannels} from '@lynx_cross/consts/ipc';
 import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import fileChannels from '@lynx_cross/consts/ipc_channels/files';
@@ -619,7 +619,7 @@ function imageCache() {
   const cacheManager = getImageCacheManager();
 
   // Gets cache statistics (entry count, total size, last cleanup)
-  ipcMain.handle(imageCacheChannels.getStats, () => {
+  ipcMain.handle(utilsChannels.getImageCacheStats, () => {
     const stats = cacheManager.getStats();
     return {
       entryCount: stats.entryCount,
@@ -631,13 +631,13 @@ function imageCache() {
   });
 
   // Clears all cached images
-  ipcMain.handle(imageCacheChannels.clearCache, async () => {
+  ipcMain.handle(utilsChannels.clearImageCache, async () => {
     const clearedCount = await cacheManager.clearCache();
     return {success: true, clearedEntries: clearedCount};
   });
 
   // Triggers manual cache cleanup (removes expired entries)
-  ipcMain.handle(imageCacheChannels.triggerCleanup, async () => {
+  ipcMain.handle(utilsChannels.triggerImageCacheCleanup, async () => {
     await cacheManager.triggerCleanup();
     return {success: true};
   });

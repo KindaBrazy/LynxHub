@@ -9,8 +9,8 @@ import {
   PopoverTrigger,
   Spinner,
 } from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
 import storageIpc from '@lynx_shared/ipc/storage';
+import utilsIpc from '@lynx_shared/ipc/utils';
 import {Database} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -48,7 +48,7 @@ export default function SettingsClear() {
   const loadCacheStats = async () => {
     try {
       setIsLoadingStats(true);
-      const stats = await rendererIpc.imageCache.getStats();
+      const stats = await utilsIpc.getImageCacheStats();
       setCacheStats(stats);
     } catch (error) {
       console.error('Failed to load cache stats:', error);
@@ -61,7 +61,7 @@ export default function SettingsClear() {
   const clearImageCache = async () => {
     try {
       setIsClearing(true);
-      const result = await rendererIpc.imageCache.clearCache();
+      const result = await utilsIpc.clearImageCache();
       if (result.success) {
         lynxTopToast(dispatch).success(`Cleared ${result.clearedEntries} cached images`);
         await loadCacheStats();

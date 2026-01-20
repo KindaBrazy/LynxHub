@@ -1,6 +1,6 @@
 import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
 import {customNotifChannels} from '@lynx_cross/consts/donwload_manager';
-import {imageCacheChannels, patreonChannels, volumeChannels} from '@lynx_cross/consts/ipc';
+import {patreonChannels, volumeChannels} from '@lynx_cross/consts/ipc';
 import {CustomNotificationInfo, PatreonUserData, SubscribeStages} from '@lynx_cross/types';
 import {AudioState} from '@lynx_cross/types/ipc';
 import type {IpcRendererEvent} from 'electron';
@@ -114,24 +114,6 @@ const rendererIpc = {
     // Listens for Patreon release channel changes
     onReleaseChannel: (result: (event: IpcRendererEvent, stage: SubscribeStages) => void) =>
       ipc.on(patreonChannels.onReleaseChannel, result),
-  },
-
-  /** Image caching system using lynxcache:// protocol */
-  imageCache: {
-    // Gets cache statistics (entry count, total size, last cleanup)
-    getStats: (): Promise<{
-      entryCount: number;
-      totalSize: number;
-      totalSizeFormatted: string;
-      lastCleanup: number;
-      lastCleanupFormatted: string;
-    }> => ipc.invoke(imageCacheChannels.getStats),
-
-    // Clears all cached images
-    clearCache: (): Promise<{success: boolean; clearedEntries: number}> => ipc.invoke(imageCacheChannels.clearCache),
-
-    // Triggers manual cache cleanup (removes expired entries)
-    triggerCleanup: (): Promise<{success: boolean}> => ipc.invoke(imageCacheChannels.triggerCleanup),
   },
 };
 

@@ -41,6 +41,22 @@ const utilsIpc = {
 
   // Fetches image from URL and converts to data URL (base64)
   getImageAsDataURL: (url: string) => lynxIpc.invoke<string | null>(utilsChannels.getImageAsDataURL, url),
+
+  // Gets cache statistics (entry count, total size, last cleanup)
+  getImageCacheStats: () =>
+    lynxIpc.invoke<{
+      entryCount: number;
+      totalSize: number;
+      totalSizeFormatted: string;
+      lastCleanup: number;
+      lastCleanupFormatted: string;
+    }>(utilsChannels.getImageCacheStats),
+
+  // Clears all cached images
+  clearImageCache: () => lynxIpc.invoke<{success: boolean; clearedEntries: number}>(utilsChannels.clearImageCache),
+
+  // Triggers manual cache cleanup (removes expired entries)
+  triggerImageCacheCleanup: () => lynxIpc.invoke<{success: boolean}>(utilsChannels.triggerImageCacheCleanup),
 };
 
 export default utilsIpc;

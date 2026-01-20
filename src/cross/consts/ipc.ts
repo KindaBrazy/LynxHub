@@ -1,9 +1,3 @@
-export const imageCacheChannels = {
-  getStats: 'imageCache:getStats',
-  clearCache: 'imageCache:clearCache',
-  triggerCleanup: 'imageCache:triggerCleanup',
-} as const;
-
 export const patreonChannels = {
   getInfo: 'patreon:getInfo',
   login: 'patreon:login',
