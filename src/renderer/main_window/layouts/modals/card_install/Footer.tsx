@@ -1,6 +1,6 @@
 import {Button, ButtonGroup, ModalFooter} from '@heroui/react';
 import {DownloadProgress} from '@lynx_cross/types/ipc';
-import {InstallationMethod, UserInputResult} from '@lynx_cross/types/plugins/module';
+import {InstallationMethod, UserInputResult} from '@lynx_cross/types/plugins/modules';
 import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
 import {memo, RefObject, useCallback, useState} from 'react';

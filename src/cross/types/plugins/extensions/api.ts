@@ -3,14 +3,8 @@ import type {Scope} from '@sentry/browser';
 import type {Emitter} from 'mitt';
 import type {FC} from 'react';
 
-import type {AvailablePageIDs} from '../../../cross/consts';
-import type {
-  ArgumentsData,
-  CardData,
-  CardModules,
-  CardRendererMethods,
-  LoadedCardData,
-} from '../../../cross/types/plugins/module';
+import type {AvailablePageIDs} from '../../../consts';
+import type {ArgumentsData, CardData, CardModules, CardRendererMethods, LoadedCardData} from '../modules';
 import type {ExtensionEvents, ExtensionEvents_IPC} from './events';
 import type {
   AddMenuType,

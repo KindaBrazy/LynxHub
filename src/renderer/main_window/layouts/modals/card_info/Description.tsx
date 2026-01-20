@@ -1,5 +1,5 @@
 import {Button, Link, Spinner} from '@heroui/react';
-import {CardInfoDescriptions, CardInfoDescriptions_Items} from '@lynx_cross/types/plugins/module';
+import {CardInfoDescriptions, CardInfoDescriptions_Items} from '@lynx_cross/types/plugins/modules';
 import {isValidURL} from '@lynx_cross/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Descriptions, DescriptionsProps, Divider} from 'antd';

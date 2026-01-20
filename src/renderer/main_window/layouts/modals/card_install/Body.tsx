@@ -1,6 +1,6 @@
 import {ModalBody, Progress} from '@heroui/react';
 import {DownloadProgress} from '@lynx_cross/types/ipc';
-import {UserInputField, UserInputResult} from '@lynx_cross/types/plugins/module';
+import {UserInputField, UserInputResult} from '@lynx_cross/types/plugins/modules';
 import {formatSize} from '@lynx_cross/utils';
 import {Descriptions, Result} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';

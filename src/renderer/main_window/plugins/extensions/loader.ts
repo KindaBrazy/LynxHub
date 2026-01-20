@@ -1,10 +1,10 @@
+import {ExtensionData_Renderer, ExtensionImport_Renderer} from '@lynx_cross/types/plugins/extensions';
+import {ExtensionRendererApi} from '@lynx_cross/types/plugins/extensions/api';
+import {ExtensionEvents, ExtensionEvents_IPC} from '@lynx_cross/types/plugins/extensions/events';
 import rendererIpc from '@lynx_shared/ipc';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import mitt, {Emitter} from 'mitt';
 
-import {ExtensionData_Renderer, ExtensionImport_Renderer} from '../../../../main/types/extensions';
-import {ExtensionRendererApi} from '../../../../main/types/extensions/api';
-import {ExtensionEvents, ExtensionEvents_IPC} from '../../../../main/types/extensions/events';
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../modules';
 import {initPluginBrowserSentry} from '../sentry';
 

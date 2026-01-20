@@ -6,7 +6,7 @@ import {
   InstallationStepper,
   UserInputField,
   UserInputResult,
-} from '@lynx_cross/types/plugins/module';
+} from '@lynx_cross/types/plugins/modules';
 import rendererIpc from '@lynx_shared/ipc';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';

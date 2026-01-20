@@ -1,4 +1,4 @@
-import {CardInfoApi, CardInfoCallback, CardInfoDescriptions} from '@lynx_cross/types/plugins/module';
+import {CardInfoApi, CardInfoCallback, CardInfoDescriptions} from '@lynx_cross/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
 import {moduleApiIpc} from '@lynx_shared/ipc/plugins/module';
 import storageIpc from '@lynx_shared/ipc/storage';
