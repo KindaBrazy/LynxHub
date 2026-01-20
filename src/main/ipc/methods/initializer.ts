@@ -1,11 +1,11 @@
 // Initializer IPC methods - Checks if required tools (Git, PowerShell 7) are installed
 import {spawn} from 'node:child_process';
 
-import {initChannels} from '@lynx_cross/consts/ipc';
+import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import {ipcMain} from 'electron';
 
 export function listenToInitChannels() {
-  ipcMain.handle(initChannels.checkGitInstalled, () => {
+  ipcMain.handle(appChannels.checkGitInstalled, () => {
     return new Promise((resolve, reject) => {
       const commandProcess = spawn('git', ['--version']);
 
@@ -48,7 +48,7 @@ export function listenToInitChannels() {
     });
   });
 
-  ipcMain.handle(initChannels.checkPwsh7Installed, () => {
+  ipcMain.handle(appChannels.checkPwsh7Installed, () => {
     return new Promise((resolve, reject) => {
       // Flag to ensure the promise is only settled once.
       let isSettled = false;

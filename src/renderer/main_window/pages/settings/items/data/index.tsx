@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -18,8 +18,8 @@ export default function SettingsData() {
   const dispatch = useDispatch<AppDispatch>();
 
   const change = () => {
-    rendererIpc.appData
-      .selectAnother()
+    applicationIpc.invoke
+      .selectAnotherDataPath()
       .then(result => {
         lynxTopToast(dispatch).success(result);
       })
@@ -34,7 +34,7 @@ export default function SettingsData() {
   }, [currentPath]);
 
   useEffect(() => {
-    rendererIpc.appData.getCurrentPath().then(result => {
+    applicationIpc.invoke.getCurrentDataPath().then(result => {
       setCurrentPath(result);
     });
   }, []);

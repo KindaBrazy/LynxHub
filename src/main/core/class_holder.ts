@@ -1,9 +1,9 @@
 import {clearInterval} from 'node:timers';
 
+import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import axios from 'axios';
 import {app, BrowserWindow} from 'electron';
 
-import {otherChannels} from '../../cross/consts/ipc';
 import {toMs} from '../../cross/utils';
 import BrowserDownloadManager from '../child_windows/browser_download_manager';
 import ContextMenuManager from '../child_windows/context_menu';
@@ -51,7 +51,7 @@ class ClassHolder {
       this.isOnline = isOnline;
       if (this.appManager) {
         const webContent = this.appManager.getWebContent();
-        if (webContent && !webContent.isDestroyed()) webContent.send(otherChannels.onOnline, isOnline);
+        if (webContent && !webContent.isDestroyed()) webContent.send(appChannels.onOnline, isOnline);
       }
     };
     const checkStatus = () => {

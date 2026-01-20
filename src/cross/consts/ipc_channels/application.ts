@@ -1,19 +1,42 @@
-export const winChannels = {
-  changeState: 'win:state-change',
-  onChangeState: 'win:on-state-change',
+export const appChannels = {
+  changeState: 'app:changeState',
+  onChangeState: 'app:onChangeState',
 
-  setDarkMode: 'win:set-darkMode',
-  getSystemDarkMode: 'win:get-system-darkMode',
-  onDarkMode: 'win:on-darkMode',
-  isDarkMode: 'win:isDarkMode',
+  setDarkMode: 'app:setDarkMode',
+  getSystemDarkMode: 'app:getSystemDarkMode',
+  onDarkMode: 'app:onDarkMode',
+  isDarkMode: 'app:isDarkMode',
 
-  setTaskBarStatus: 'win:set-taskbar-status',
+  setTaskBarStatus: 'app:setTaskBarStatus',
 
-  getSystemInfo: 'win:get-system-info',
-  openUrlDefaultBrowser: 'win:open-url-default-browser',
+  getSystemInfo: 'app:getSystemInfo',
+  openUrlDefaultBrowser: 'app:openUrlDefaultBrowser',
 
   // Window progress bar (taskbar/dock)
-  setProgressBar: 'win:set-progress-bar',
+  setProgressBar: 'app:setProgressBar',
+
+  hotkeysChange: 'app:hotkeysChange',
+  showToast: 'app:showToast',
+  toastBtnPress: 'app:toastBtnPress',
+
+  onNewTab: 'app:new-tab',
+
+  updateError: 'app:updateError',
+  updateStatus: 'app:updateStatus',
+  updateDownload: 'app:updateDownload',
+  updateCancel: 'app:updateCancel',
+  updateInstall: 'app:updateInstall',
+  updateInstallLater: 'app:updateInstallLater',
+
+  getCurrentDataPath: 'app:getCurrentDataPath',
+  selectAnotherDataPath: 'app:selectAnotherDataPath',
+  isValidDataPath: 'app:isValidDataPath',
+
+  checkGitInstalled: 'app:checkGitInstalled',
+  checkPwsh7Installed: 'app:checkPwsh7Installed',
+
+  disableLoadingAnimations: 'app:disableLoadingAnimations',
+  onOnline: 'app:onOnline',
 };
 
-export default winChannels;
+export default appChannels;

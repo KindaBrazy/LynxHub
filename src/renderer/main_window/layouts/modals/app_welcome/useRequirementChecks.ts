@@ -1,6 +1,6 @@
 import {MAIN_MODULE_URL} from '@lynx_cross/consts';
 import {isWin} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useCallback, useMemo, useState} from 'react';
 
@@ -26,7 +26,7 @@ export default function useRequirementChecks() {
   const checkGit = useCallback(async () => {
     updateStatus('git', {result: 'checking'});
     try {
-      const result = await rendererIpc.init.checkGitInstalled();
+      const result = await applicationIpc.invoke.checkGitInstalled();
       if (result) {
         updateStatus('git', {result: 'ok', label: result});
         return true;
@@ -43,7 +43,7 @@ export default function useRequirementChecks() {
     if (!isWin()) return true;
     updateStatus('pwsh', {result: 'checking'});
     try {
-      const result = await rendererIpc.init.checkPwsh7Installed();
+      const result = await applicationIpc.invoke.checkPwsh7Installed();
       if (result) {
         updateStatus('pwsh', {result: 'ok', label: result});
         return true;

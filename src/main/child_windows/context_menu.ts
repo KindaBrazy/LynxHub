@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {browserDownloadChannels} from '@lynx_cross/consts/donwload_manager';
-import {tabsChannels} from '@lynx_cross/consts/ipc';
+import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import contextMenuChannels from '@lynx_cross/consts/ipc_channels/context_menu';
 import windowDialogsChannels from '@lynx_cross/consts/ipc_channels/window_dialogs';
@@ -263,7 +263,7 @@ export default class ContextMenuManager {
     });
     ipcMain.on(contextMenuChannels.searchWithGoogle, (_, text: string) => {
       const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(text)}`;
-      this.sendMainMessage(tabsChannels.onNewTab, searchUrl);
+      this.sendMainMessage(appChannels.onNewTab, searchUrl);
     });
     ipcMain.on(contextMenuChannels.inspectElement, (_, id: number, x: number, y: number) => {
       const webContents = this.getContentById(id);
@@ -278,7 +278,7 @@ export default class ContextMenuManager {
     ipcMain.on(contextMenuChannels.replaceMisspelling, (_, id: number, text: string) =>
       this.getContentById(id)?.replaceMisspelling(text),
     );
-    ipcMain.on(contextMenuChannels.newTab, (_, url: string) => this.sendMainMessage(tabsChannels.onNewTab, url));
+    ipcMain.on(contextMenuChannels.newTab, (_, url: string) => this.sendMainMessage(appChannels.onNewTab, url));
     ipcMain.on(contextMenuChannels.navigate, (_, id: number, action: 'back' | 'forward' | 'refresh') => {
       switch (action) {
         case 'back':

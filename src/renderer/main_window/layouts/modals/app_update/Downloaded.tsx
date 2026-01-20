@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {Result} from 'antd';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
@@ -21,7 +21,7 @@ export default function Downloaded({errMsg, success, tryAgain, cancel, onClose}:
   }, [onClose, dispatch]);
 
   const install = useCallback(() => {
-    rendererIpc.appUpdate.install();
+    applicationIpc.send.updateInstall();
     onClose();
   }, [onClose]);
 

@@ -84,7 +84,7 @@ export const useOnlineEvents = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const offOnline = rendererIpc.others.onOnline((_, isOnline) => {
+    const offOnline = applicationIpc.on.onOnline(isOnline => {
       dispatch(appActions.setAppState({key: 'isOnline', value: isOnline}));
     });
 
@@ -227,7 +227,7 @@ export const useHotkeyEvents = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const removeListener = rendererIpc.appWindow.onHotkeysChange((_, input) => {
+    const removeListener = applicationIpc.on.onHotkeysChange(input => {
       dispatch(hotkeysActions.setInput(input));
     });
 
@@ -267,7 +267,7 @@ export const useNewTabEvents = () => {
   }, [tabs.length]);
 
   useEffect(() => {
-    const offNewTab = rendererIpc.tab.onNewTab((_, url, background = false) => {
+    const offNewTab = applicationIpc.on.onNewTab((url, background = false) => {
       setPendingTab({url, background});
       dispatch(tabsActions.addTab({...defaultTabItem, background}));
     });
@@ -349,7 +349,7 @@ export const useShowToast = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const removeListener = rendererIpc.appWindow.onShowToast((_, message, type, placement) => {
+    const removeListener = applicationIpc.on.onShowToast((message, type, placement) => {
       lynxTopToast(dispatch, placement || 'bottom-right')[type](message);
     });
 
@@ -391,7 +391,7 @@ export const useListenForUpdateError = () => {
       }
     };
 
-    const offStatusError = rendererIpc.appUpdate.statusError(() => statusError());
+    const offStatusError = applicationIpc.on.updateError(() => statusError());
 
     return () => offStatusError();
   }, [dispatch, activeTab, runningCard]);

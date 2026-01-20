@@ -2,6 +2,7 @@ import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, M
 import {APP_BUILD_NUMBER, EARLY_RELEASES_PAGE, INSIDER_RELEASES_PAGE, RELEASES_PAGE} from '@lynx_cross/consts';
 import {AppUpdateInfo, UpdateDownloadProgress} from '@lynx_cross/types';
 import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {CollapseProps, Divider, Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -40,7 +41,7 @@ const UpdateApp = () => {
   const show = useTabVisibility(activeTab);
 
   const listenProgress = useCallback(() => {
-    removeListener.current = rendererIpc.appUpdate.status((_, type, status) => {
+    removeListener.current = applicationIpc.on.updateStatus((type, status) => {
       switch (type) {
         case 'update-available': {
           setDownloadProgress(undefined);
@@ -84,14 +85,14 @@ const UpdateApp = () => {
 
   const startDownload = useCallback(() => {
     listenProgress();
-    rendererIpc.appUpdate.download();
+    applicationIpc.send.updateDownload();
     setDownloadProgress(undefined);
     setDownloadState('progress');
   }, [listenProgress]);
 
   const cancelDownload = useCallback(() => {
     removeListener.current?.();
-    rendererIpc.appUpdate.cancel();
+    applicationIpc.send.updateCancel();
     setDownloadState(undefined);
   }, []);
 

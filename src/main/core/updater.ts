@@ -1,4 +1,4 @@
-import {appUpdateChannels} from '@lynx_cross/consts/ipc';
+import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import {AppUpdateEventTypes, AppUpdateStatus} from '@lynx_cross/types/ipc';
 import {ipcMain} from 'electron';
 import electron_log from 'electron-log';
@@ -10,7 +10,7 @@ const {autoUpdater, CancellationToken} = updater;
 
 function sendToRenderer(type: AppUpdateEventTypes, status?: AppUpdateStatus) {
   const {appManager} = classHolder;
-  appManager?.getWebContent()?.send(appUpdateChannels.status, type, status);
+  appManager?.getWebContent()?.send(appChannels.updateStatus, type, status);
 }
 
 /**
@@ -58,17 +58,17 @@ export function checkForUpdate() {
 
   let cancelToken = new CancellationToken();
 
-  ipcMain.on(appUpdateChannels.download, () => {
+  ipcMain.on(appChannels.updateDownload, () => {
     autoUpdater.downloadUpdate(cancelToken).catch(e => {
       console.error('autoUpdater.downloadUpdate: ', e);
     });
   });
 
-  ipcMain.on(appUpdateChannels.install, () => {
+  ipcMain.on(appChannels.updateInstall, () => {
     autoUpdater.quitAndInstall();
   });
 
-  ipcMain.on(appUpdateChannels.cancel, () => {
+  ipcMain.on(appChannels.updateCancel, () => {
     const {appManager} = classHolder;
     appManager?.getMainWindow()?.setProgressBar(-1);
     cancelToken.cancel();
@@ -100,7 +100,7 @@ export function checkForUpdate() {
     }
 
     if (e.statusCode === 403) {
-      appManager?.getWebContent()?.send(appUpdateChannels.statusError);
+      appManager?.getWebContent()?.send(appChannels.updateError);
     } else {
       sendToRenderer('error', message);
       appManager?.getMainWindow()?.setProgressBar(-1);

@@ -1,102 +1,23 @@
 import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
 import {customNotifChannels} from '@lynx_cross/consts/donwload_manager';
-import {
-  appDataChannels,
-  appUpdateChannels,
-  appWindowChannels,
-  eventsChannels,
-  imageCacheChannels,
-  initChannels,
-  patreonChannels,
-  staticsChannels,
-  tabsChannels,
-  volumeChannels,
-} from '@lynx_cross/consts/ipc';
-import {otherChannels} from '@lynx_cross/consts/ipc';
+import {imageCacheChannels, patreonChannels, staticsChannels, volumeChannels} from '@lynx_cross/consts/ipc';
 import {
   AppUpdateData,
   AppUpdateInsiderData,
   CustomNotificationInfo,
   ExtensionsInfo,
-  HeroToastPlacement,
   ModulesInfo,
   Notification_Data,
   PatreonSupporter,
   PatreonUserData,
   SubscribeStages,
 } from '@lynx_cross/types';
-import {AppUpdateEventTypes, AppUpdateStatus, AudioState, LynxInput, ShowToastTypes} from '@lynx_cross/types/ipc';
+import {AudioState} from '@lynx_cross/types/ipc';
 import type {IpcRendererEvent} from 'electron';
 
 const ipc = window.electron.ipcRenderer;
 
 const rendererIpc = {
-  /** Managing app automatic updates */
-  appUpdate: {
-    // Listens for app update error events
-    statusError: (result: (event: IpcRendererEvent) => void) => ipc.on(appUpdateChannels.statusError, result),
-
-    // Listens for app update status events
-    status: (result: (event: IpcRendererEvent, type: AppUpdateEventTypes, status: AppUpdateStatus) => void) =>
-      ipc.on(appUpdateChannels.status, result),
-
-    // Downloads app update
-    download: (): void => {
-      extensionRendererApi.events_ipc.emit('app_update_download', {});
-      ipc.send(appUpdateChannels.download);
-    },
-
-    // Cancels app update download
-    cancel: (): void => {
-      extensionRendererApi.events_ipc.emit('app_update_cancel', {});
-      ipc.send(appUpdateChannels.cancel);
-    },
-
-    // Installs downloaded app update
-    install: (): void => {
-      extensionRendererApi.events_ipc.emit('app_update_install', {});
-      ipc.send(appUpdateChannels.install);
-    },
-  },
-
-  /** Managing app data directories */
-  appData: {
-    // Gets current app data directory path
-    getCurrentPath: (): Promise<string> => {
-      extensionRendererApi.events_ipc.emit('app_data_get_current_path', {});
-      return ipc.invoke(appDataChannels.getCurrentPath);
-    },
-
-    // Opens dialog to select new app data folder
-    selectAnother: (): Promise<string> => {
-      extensionRendererApi.events_ipc.emit('app_data_select_another', {});
-      return ipc.invoke(appDataChannels.selectAnother);
-    },
-
-    // Checks if directory is valid app data directory
-    isAppDir: (dir: string): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('app_data_is_app_dir', {dir});
-      return ipc.invoke(appDataChannels.isAppDir, dir);
-    },
-  },
-
-  appWindow: {
-    // Listens for hotkey change events
-    onHotkeysChange: (result: (event: IpcRendererEvent, input: LynxInput) => void) =>
-      ipc.on(appWindowChannels.hotkeysChange, result),
-
-    // Listens for toast notification events
-    onShowToast: (
-      result: (event: IpcRendererEvent, message: string, type: ShowToastTypes, placement?: HeroToastPlacement) => void,
-    ) => ipc.on(appWindowChannels.showToast, result),
-  },
-
-  tab: {
-    // Listens for new tab events
-    onNewTab: (result: (event: IpcRendererEvent, url: string, background?: boolean) => void) =>
-      ipc.on(tabsChannels.onNewTab, result),
-  },
-
   /** Managing browser volume and audio */
   volume: {
     // Sets volume level for browser webview (0-100)
@@ -222,11 +143,6 @@ const rendererIpc = {
     },
   },
 
-  events: {
-    // Sends event for card pre-command uninstall
-    card_PreCommandUninstall: (preCommands: string[]) => ipc.send(eventsChannels.card_PreCommandUninstall, preCommands),
-  },
-
   customNotification: {
     // Listens for custom notification open events
     onOpen: (result: (event: IpcRendererEvent, info: CustomNotificationInfo) => void) =>
@@ -236,13 +152,6 @@ const rendererIpc = {
 
     // Sends button press event for custom notification
     btnPress: (btnId: string, notifKey: string) => ipc.send(customNotifChannels.onBtnPress, btnId, notifKey),
-  },
-
-  init: {
-    // Checks if Git is installed and returns version
-    checkGitInstalled: (): Promise<string | undefined> => ipc.invoke(initChannels.checkGitInstalled),
-    // Checks if PowerShell 7 is installed and returns version
-    checkPwsh7Installed: (): Promise<string | undefined> => ipc.invoke(initChannels.checkPwsh7Installed),
   },
 
   patreon: {
@@ -276,11 +185,6 @@ const rendererIpc = {
 
     // Triggers manual cache cleanup (removes expired entries)
     triggerCleanup: (): Promise<{success: boolean}> => ipc.invoke(imageCacheChannels.triggerCleanup),
-  },
-
-  others: {
-    disableLoadingAnimations: (): Promise<boolean> => ipc.invoke(otherChannels.disableLoadingAnimations),
-    onOnline: (result: (event: IpcRendererEvent, isOnline: boolean) => void) => ipc.on(otherChannels.onOnline, result),
   },
 };
 

@@ -1,6 +1,7 @@
 import path from 'node:path';
 
-import {tabsChannels, volumeChannels} from '@lynx_cross/consts/ipc';
+import {volumeChannels} from '@lynx_cross/consts/ipc';
+import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import {AudioState, CanGoType, WHType} from '@lynx_cross/types/ipc';
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
@@ -223,7 +224,7 @@ export default class BrowserManager {
         // background-tab = middle-click = open in background (don't switch)
         // foreground-tab = Shift+middle-click = switch to new tab
         const openInBackground = disposition === 'background-tab';
-        appManager?.getWebContent()?.send(tabsChannels.onNewTab, url, openInBackground);
+        appManager?.getWebContent()?.send(appChannels.onNewTab, url, openInBackground);
         // Track URLs opened in new tabs (like real browsers)
         this.trackUrl(url);
       }
