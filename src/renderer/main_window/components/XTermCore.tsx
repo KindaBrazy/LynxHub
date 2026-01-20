@@ -1,5 +1,5 @@
-import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import {CanvasAddon} from '@xterm/addon-canvas';
 import {ClipboardAddon} from '@xterm/addon-clipboard';
 import {FitAddon} from '@xterm/addon-fit';
@@ -219,7 +219,7 @@ const XTermCore = memo(
               let prevSize: {cols: number; rows: number} | undefined;
               onResizeDisposable = termRef.onResize(size => {
                 if (isEqual(prevSize, size)) return;
-                rendererIpc.pty.resize(id, size.cols, size.rows);
+                ptyIpc.resize(id, size.cols, size.rows);
                 prevSize = size;
               });
             }
@@ -233,7 +233,7 @@ const XTermCore = memo(
 
             // PTY write
             if (enablePtyWrite) {
-              onDataDisposable = termRef.onData(data => !isEmpty(data) && rendererIpc.pty.write(id, data));
+              onDataDisposable = termRef.onData(data => !isEmpty(data) && ptyIpc.write(id, data));
             }
 
             // Create API
@@ -242,7 +242,7 @@ const XTermCore = memo(
               fitAddon: fitRef,
               clear: () => {
                 termRef?.clear();
-                rendererIpc.pty.clear(id);
+                ptyIpc.clear(id);
               },
               getSelection: () => termRef?.getSelection() || '',
               clearSelection: () => termRef?.clearSelection(),
@@ -293,7 +293,7 @@ const XTermCore = memo(
 
       // Handle PTY data
       useEffect(() => {
-        const offData = rendererIpc.pty.onData((_, dataID, data) => {
+        const offData = ptyIpc.onData((dataID, data) => {
           if (dataID === id) {
             apiRef.current?.write(data);
           }

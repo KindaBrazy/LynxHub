@@ -3,6 +3,7 @@ import {DownloadProgress} from '@lynx_cross/types/ipc';
 import {InstallationMethod, UserInputResult} from '@lynx_cross/types/plugins/modules';
 import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import {memo, RefObject, useCallback, useState} from 'react';
 
 import LocateWarning from './components/LocateWarning';
@@ -48,7 +49,7 @@ const InstallFooter = memo(
     const [locateWarnIsOpen, setLocateWarnIsOpen] = useState<boolean>(false);
     const onDoneTerminal = useCallback(() => {
       if (terminalResolver.current) {
-        rendererIpc.pty.stop(cardId);
+        ptyIpc.stop(cardId);
         terminalResolver.current();
         terminalResolver.current = null;
       }

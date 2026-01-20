@@ -7,7 +7,7 @@ import {
   UserInputField,
   UserInputResult,
 } from '@lynx_cross/types/plugins/modules';
-import rendererIpc from '@lynx_shared/ipc';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -186,7 +186,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
   }, []);
 
   const handleClose = useCallback(() => {
-    if (state.body === 'terminal') rendererIpc.pty.stop(cardId);
+    if (state.body === 'terminal') ptyIpc.stop(cardId);
     if (state.body === 'progress') {
       utilsIpc.cancelDownload();
       removeProgressListener.current?.();

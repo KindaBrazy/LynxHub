@@ -6,6 +6,7 @@ import browserIpc from '@lynx_shared/ipc/browser';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {capitalize, compact, isNil} from 'lodash';
@@ -196,7 +197,7 @@ export const useIpcEvents = () => {
   useEffect(() => {
     const removeListener = utilsIpc.onUpdateAllExtensions(updateInfo => {
       if (updateInfo.step === 'done') {
-        rendererIpc.pty.process(updateInfo.id, updateInfo.id);
+        ptyIpc.process(updateInfo.id, updateInfo.id);
         storageUtilsIpc.invoke.recentlyUsedCards('update', updateInfo.id);
         dispatch(cardsActions.addRunningCard({id: updateInfo.id, tabId: activeTab}));
         dispatch(cardsActions.setUpdatingExtensions(undefined));
@@ -331,7 +332,7 @@ export const useContextEvents = () => {
         if (runningCard.isEmptyRunning) {
           dispatch(cardsActions.addRunningEmpty({tabId: activeTab, type: runningCard.type}));
         } else {
-          rendererIpc.pty.process(runningCard.id, runningCard.id);
+          ptyIpc.process(runningCard.id, runningCard.id);
           dispatch(cardsActions.addRunningCard({id: runningCard.id, tabId: activeTab}));
         }
       }, 1000);

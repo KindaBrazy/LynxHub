@@ -1,7 +1,7 @@
 import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
 import {LynxHotkey} from '@lynx_cross/types/ipc';
-import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -130,7 +130,7 @@ export function useRegisterHotkeys() {
       const card = runningCards.find(c => c.tabId === activeTab && (c.type === 'terminal' || c.type === 'both'));
       if (!card) return;
 
-      rendererIpc.pty.write(card.id, quick.command + LINE_ENDING);
+      ptyIpc.write(card.id, quick.command + LINE_ENDING);
     },
     [activeTab, quickCommands, runningCards],
   );

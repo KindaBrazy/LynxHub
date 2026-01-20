@@ -1,7 +1,7 @@
 import {Card, CardBody, CardHeader, Chip, User} from '@heroui/react';
 import {getAccentColorAsHex} from '@lynx/utils/accent_color_generator';
 import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {AnimatePresence, motion} from 'framer-motion';
@@ -99,7 +99,7 @@ const LynxCard = memo(() => {
       utilsIpc.updateAllExtensions({id, dir: card.dir! + extensionsDir!});
       setIsUpdatingExtensions(true);
     } else {
-      rendererIpc.pty.process(id, id);
+      ptyIpc.process(id, id);
       storageUtilsIpc.invoke.recentlyUsedCards('update', id);
       dispatch(cardsActions.addRunningCard({tabId: activeTab, id}));
     }

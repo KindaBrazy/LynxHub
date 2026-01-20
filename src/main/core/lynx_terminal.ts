@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import {platform} from 'node:os';
 import path from 'node:path';
 
-import {ptyChannels} from '@lynx_cross/consts/ipc';
+import ptyChannels from '@lynx_cross/consts/ipc_channels/pty';
 import {app} from 'electron';
 import pty from 'node-pty';
 import treeKill from 'tree-kill';

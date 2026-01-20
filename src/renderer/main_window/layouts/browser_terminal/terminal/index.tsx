@@ -1,7 +1,7 @@
 import {CustomRunBehaviorData} from '@lynx_cross/types/ipc';
 import {toMs} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
+import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {IProgressState} from '@xterm/addon-progress';
 import {SearchAddon} from '@xterm/addon-search';
@@ -108,7 +108,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
       }
     };
 
-    const offData = rendererIpc.pty.onData((_, dataID, data) => {
+    const offData = ptyIpc.onData((dataID, data) => {
       if (dataID === id) {
         const isAddressEmpty = isEmpty(webUIAddress);
 
@@ -236,7 +236,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
 
         if ((e.key === 'Backspace' || e.key === 'Delete') && hasSelection) {
           const backspaces = '\b'.repeat(selection.length);
-          rendererIpc.pty.write(id, backspaces);
+          ptyIpc.write(id, backspaces);
           api.clearSelection();
           return false;
         }
@@ -254,7 +254,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
           navigator.clipboard
             .readText()
             .then(text => {
-              if (text) rendererIpc.pty.write(id, text);
+              if (text) ptyIpc.write(id, text);
             })
             .catch(() => {
               // Silently ignore - document may not be focused or clipboard permission denied
