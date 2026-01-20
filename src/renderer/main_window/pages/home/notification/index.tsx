@@ -17,7 +17,7 @@ import {
 import {AvailablePageIDs, PageID, PageTitles} from '@lynx_cross/consts';
 import {Notification_Data} from '@lynx_cross/types';
 import {isValidURL} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
+import staticsIpc from '@lynx_shared/ipc/statics';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
@@ -52,12 +52,12 @@ export default function Home_Notification() {
   };
 
   useEffect(() => {
-    rendererIpc.statics.getNotification().then(data => {
+    staticsIpc.getNotification().then(data => {
       if (data) filterData(data);
     });
     setRefreshing(true);
-    rendererIpc.statics.pull().finally(() =>
-      rendererIpc.statics
+    staticsIpc.pull().finally(() =>
+      staticsIpc
         .getNotification()
         .then(data => {
           if (data) filterData(data);

@@ -1,8 +1,8 @@
 import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {APP_BUILD_NUMBER, EARLY_RELEASES_PAGE, INSIDER_RELEASES_PAGE, RELEASES_PAGE} from '@lynx_cross/consts';
 import {AppUpdateInfo, UpdateDownloadProgress} from '@lynx_cross/types';
-import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
+import staticsIpc from '@lynx_shared/ipc/statics';
 import {CollapseProps, Divider, Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -108,8 +108,8 @@ const UpdateApp = () => {
     async function fetchData() {
       const result: CollapseProps['items'] = [];
 
-      const data = await rendererIpc.statics.getReleases();
-      const insiderData = await rendererIpc.statics.getInsider();
+      const data = await staticsIpc.getReleases();
+      const insiderData = await staticsIpc.getInsider();
 
       if (!data || !insiderData) return;
 

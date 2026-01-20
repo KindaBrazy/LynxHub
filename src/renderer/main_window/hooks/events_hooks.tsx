@@ -7,6 +7,7 @@ import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import ptyIpc from '@lynx_shared/ipc/pty';
+import staticsIpc from '@lynx_shared/ipc/statics';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {capitalize, compact, isNil} from 'lodash';
@@ -368,8 +369,8 @@ export const useListenForUpdateError = () => {
       dispatch(settingsActions.setSettingsState({key: 'checkCustomUpdate', value: true}));
 
       try {
-        const insider = await rendererIpc.statics.getInsider();
-        const releases = await rendererIpc.statics.getReleases();
+        const insider = await staticsIpc.getInsider();
+        const releases = await staticsIpc.getReleases();
 
         if (!insider || !releases) return;
 

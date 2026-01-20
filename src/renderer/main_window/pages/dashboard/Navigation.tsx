@@ -1,5 +1,5 @@
 import {Button, Card, CardBody, CardHeader, ScrollShadow} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import staticsIpc from '@lynx_shared/ipc/statics';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
@@ -107,7 +107,7 @@ const DashboardPageNav = () => {
   const [activeSection, setActiveSection] = useState<string>('');
 
   useEffect(() => {
-    rendererIpc.statics.getPatrons().then(cr => {
+    staticsIpc.getPatrons().then(cr => {
       if (!isEmpty(cr)) {
         const updatedSections = JSON.parse(JSON.stringify(initialGroupSections));
         updatedSections[0].items.push({

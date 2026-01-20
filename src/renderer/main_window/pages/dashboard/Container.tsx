@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import staticsIpc from '@lynx_shared/ipc/statics';
 import {isEmpty} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 
@@ -22,7 +22,7 @@ export const DashboardSections = () => {
 
   const [creditsAvailable, setCreditsAvailable] = useState<boolean>(false);
   useEffect(() => {
-    rendererIpc.statics.getPatrons().then(cr => {
+    staticsIpc.getPatrons().then(cr => {
       setCreditsAvailable(!isEmpty(cr));
     });
   }, []);

@@ -4,17 +4,6 @@ export const imageCacheChannels = {
   triggerCleanup: 'imageCache:triggerCleanup',
 } as const;
 
-export const staticsChannels = {
-  pull: 'statics:pull',
-  getReleases: 'statics:getReleases',
-  getInsider: 'statics:getInsider',
-  getNotification: 'statics:getNotification',
-  getModules: 'statics:getModules',
-  getExtensions: 'statics:getExtensions',
-  getExtensionsEA: 'statics:getExtensionsEA',
-  getPatrons: 'statics:getPatrons',
-} as const;
-
 export const patreonChannels = {
   getInfo: 'patreon:getInfo',
   login: 'patreon:login',

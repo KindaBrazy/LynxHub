@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import {imageCacheChannels, staticsChannels, volumeChannels} from '@lynx_cross/consts/ipc';
+import {imageCacheChannels, volumeChannels} from '@lynx_cross/consts/ipc';
 import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import fileChannels from '@lynx_cross/consts/ipc_channels/files';
@@ -8,6 +8,7 @@ import gitChannels from '@lynx_cross/consts/ipc_channels/git';
 import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
 import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
 import ptyChannels from '@lynx_cross/consts/ipc_channels/pty';
+import staticsChannels from '@lynx_cross/consts/ipc_channels/statics';
 import storageChannels, {storageUtilsChannels} from '@lynx_cross/consts/ipc_channels/storage';
 import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
 import {
