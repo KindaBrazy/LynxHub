@@ -1,4 +1,4 @@
-import {gitChannels} from '@lynx_cross/consts/ipc';
+import gitChannels from '@lynx_cross/consts/ipc_channels/git';
 import {SimpleGitProgressEvent} from 'simple-git';
 
 import classHolder from '../core/class_holder';

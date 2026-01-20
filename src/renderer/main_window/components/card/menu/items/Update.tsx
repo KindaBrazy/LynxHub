@@ -1,6 +1,7 @@
 import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
 import {extractGitUrl} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import gitIpc from '@lynx_shared/ipc/git';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -38,7 +39,7 @@ export const MenuUpdate = () => {
     } else if (webUi && webUi.dir) {
       dispatch(cardsActions.addUpdatingCard({devName, id, title}));
       setMenuIsOpen(false);
-      rendererIpc.git.pull(webUi.dir, id);
+      gitIpc.pull(webUi.dir, id);
     }
   }, [dispatch, setMenuIsOpen, webUi, devName, id, title, openModal]);
 
@@ -131,7 +132,7 @@ export const MenuAutoUpdate = () => {
   useEffect(() => {
     if (autoUpdate && updateAvailable && webUi && webUi.dir) {
       dispatch(cardsActions.addUpdatingCard({devName, id, title}));
-      rendererIpc.git.pull(webUi.dir, id);
+      gitIpc.pull(webUi.dir, id);
     }
   }, [dispatch, autoUpdate, updateAvailable, webUi, devName, id, title]);
 

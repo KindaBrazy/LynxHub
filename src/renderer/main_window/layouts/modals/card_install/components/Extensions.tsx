@@ -1,6 +1,6 @@
 import {Spinner} from '@heroui/react';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
+import gitIpc from '@lynx_shared/ipc/git';
 import {Steps} from 'antd';
 import {BaseStepsProps} from 'antd/es/steps';
 import {startCase} from 'lodash';
@@ -46,7 +46,7 @@ export default function InstallExtensions({extensionsURLs, extensionsResolver}: 
       for (const extensionsURL of extensionsURLs?.urls || []) {
         try {
           const validUrl = validateGitRepoUrl(extensionsURL);
-          await rendererIpc.git.cloneShallowPromise({
+          await gitIpc.cloneShallowPromise({
             url: validUrl,
             directory: `${extensionsURLs?.dir}/${extractGitUrl(validUrl).repo}`,
             singleBranch: true,

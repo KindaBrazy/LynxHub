@@ -1,4 +1,3 @@
-import {IpcRendererEvent} from 'electron';
 import {PullResult, SimpleGitProgressEvent} from 'simple-git';
 
 import {UpdateDownloadProgress} from './index';
@@ -23,7 +22,6 @@ export type GitProgressResult<T extends GitProgressState> = T extends 'Progress'
       ? string
       : never;
 export type GitProgressCallback = <T extends GitProgressState>(
-  event: IpcRendererEvent,
   id: string,
   state: T,
   result: GitProgressResult<T>,

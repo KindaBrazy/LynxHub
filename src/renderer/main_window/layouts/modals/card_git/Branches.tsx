@@ -1,5 +1,5 @@
 import {Button, Select, Selection, SelectItem} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import gitIpc from '@lynx_shared/ipc/git';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -32,7 +32,7 @@ export default function Branches({dir, availableBranches, currentBranch, refresh
   const handleBranchChange = () => {
     if (dir && selectedBranch) {
       setLoading(true);
-      rendererIpc.git
+      gitIpc
         .changeBranch(dir, selectedBranch)
         .then(() => {
           lynxTopToast(dispatch).success(`Successfully switched to branch: ${selectedBranch}`);

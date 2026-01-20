@@ -1,8 +1,8 @@
 import {Card, CardBody, CardHeader, Link, ModalBody, Progress} from '@heroui/react';
 import {GitProgressCallback} from '@lynx_cross/types/ipc';
 import {extractGitUrl, isWin} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
+import gitIpc from '@lynx_shared/ipc/git';
 import {Descriptions} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
@@ -54,9 +54,9 @@ export default function CloneRepo({url, start, done, isOpen}: Props) {
       setDownloading(true);
 
       const {singleBranch, branch, depth} = cloneOptionsResult;
-      rendererIpc.git.cloneShallow({url, directory, singleBranch, depth, branch});
+      gitIpc.cloneShallow({url, directory, singleBranch, depth, branch});
 
-      const onProgress: GitProgressCallback = (_e, id, state, result) => {
+      const onProgress: GitProgressCallback = (id, state, result) => {
         if (id || !isOpen) return;
 
         switch (state) {
@@ -76,7 +76,7 @@ export default function CloneRepo({url, start, done, isOpen}: Props) {
       };
 
       // Update ui with progress
-      const removeListener = rendererIpc.git.onProgress(onProgress);
+      const removeListener = gitIpc.onProgress(onProgress);
 
       return () => removeListener();
     } else {

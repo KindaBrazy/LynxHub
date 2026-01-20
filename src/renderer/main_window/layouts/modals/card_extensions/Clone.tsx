@@ -1,7 +1,7 @@
 import {Input, Progress} from '@heroui/react';
 import {GitProgressCallback} from '@lynx_cross/types/ipc';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
+import gitIpc from '@lynx_shared/ipc/git';
 import {Card} from 'antd';
 import {motion} from 'framer-motion';
 import {capitalize, startCase} from 'lodash';
@@ -64,7 +64,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
   const clone = useCallback(() => {
     if (alreadyInstalled) return;
     setCloning(true);
-    rendererIpc.git.cloneShallow({
+    gitIpc.cloneShallow({
       url: downloadBox?.url || '',
       directory: `${dir}/${downloadBox?.name || ''}`,
       singleBranch: true,
@@ -109,7 +109,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
   }, []);
 
   useEffect(() => {
-    const onProgress: GitProgressCallback = (_e, id, state, result) => {
+    const onProgress: GitProgressCallback = (id, state, result) => {
       // If id have string its pull progress, so return early
       if (id) return;
       switch (state) {
@@ -134,7 +134,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
       }
     };
 
-    const removeListener = rendererIpc.git.onProgress(onProgress);
+    const removeListener = gitIpc.onProgress(onProgress);
 
     return () => removeListener();
   }, [visible]);

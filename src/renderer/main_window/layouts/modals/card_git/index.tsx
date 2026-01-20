@@ -1,6 +1,6 @@
 import {Button, CircularProgress, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {RepositoryInfo} from '@lynx_cross/types';
-import rendererIpc from '@lynx_shared/ipc';
+import gitIpc from '@lynx_shared/ipc/git';
 import {Divider} from 'antd';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -33,7 +33,7 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
 
   const getRepoInfo = useCallback(() => {
     setLoading(true);
-    rendererIpc.git
+    gitIpc
       .getRepoInfo(dir)
       .then(repositoryInfo => {
         setRepoInfo(repositoryInfo);

@@ -1,5 +1,5 @@
 import {Button, ButtonGroup, Popover, PopoverContent, PopoverTrigger} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import gitIpc from '@lynx_shared/ipc/git';
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -22,7 +22,7 @@ export default function Reset_Shallow({isShallow, dir, refreshData, title}: Prop
     AddBreadcrumb_Renderer(`unShallow: ${title}`);
     setIsShallowConfirmOpen(false);
     setIsLoadingShallow(true);
-    rendererIpc.git
+    gitIpc
       .unShallow(dir)
       .then(() => {
         lynxTopToast(dispatch).success('Successfully unshallowed the repository.');
@@ -36,7 +36,7 @@ export default function Reset_Shallow({isShallow, dir, refreshData, title}: Prop
     AddBreadcrumb_Renderer(`Reset Hard: ${title}`);
     setIsResetConfirmOpen(false);
     setIsResetting(true);
-    rendererIpc.git
+    gitIpc
       .resetHard(dir)
       .then(() => {
         lynxTopToast(dispatch).success('Successfully reset the repository to its last committed state.');
@@ -49,7 +49,7 @@ export default function Reset_Shallow({isShallow, dir, refreshData, title}: Prop
   const stashDrop = () => {
     AddBreadcrumb_Renderer(`Stash Drop: ${title}`);
     setIsStashingDrop(true);
-    rendererIpc.git
+    gitIpc
       .stashDrop(dir)
       .then(result => {
         console.log(result);
