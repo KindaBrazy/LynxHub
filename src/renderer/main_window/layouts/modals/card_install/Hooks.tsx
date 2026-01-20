@@ -6,6 +6,7 @@ import {
   UserInputResult,
 } from '@lynx_cross/types/plugins/module';
 import rendererIpc from '@lynx_shared/ipc';
+import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import {isNil} from 'lodash';
 import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
@@ -161,7 +162,7 @@ export function useStepper({
 
   const checkForUpdate = useCallback(
     (dir: string | undefined) => {
-      rendererIpc.module.cardUpdateAvailable({dir, id: cardId}, updateType).then((isAvailable: boolean) => {
+      moduleIpc.cardUpdateAvailable({dir, id: cardId}, updateType).then((isAvailable: boolean) => {
         if (isAvailable) dispatch(cardsActions.addUpdateAvailable(cardId));
       });
     },

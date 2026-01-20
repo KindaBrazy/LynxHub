@@ -4,9 +4,6 @@ import path from 'node:path';
 import {
   appDataChannels,
   imageCacheChannels,
-  moduleApiChannels,
-  modulesChannels,
-  pluginChannels,
   ptyChannels,
   staticsChannels,
   storageChannels,
@@ -18,6 +15,8 @@ import winChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import fileChannels from '@lynx_cross/consts/ipc_channels/files';
 import gitChannels from '@lynx_cross/consts/ipc_channels/git';
+import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
+import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
 import {
   AgentTypes,
   ChangeWindowState,

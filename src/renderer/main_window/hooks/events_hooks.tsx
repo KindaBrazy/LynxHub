@@ -4,6 +4,8 @@ import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
 import browserIpc from '@lynx_shared/ipc/browser';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
+import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -29,8 +31,8 @@ export const useCheckCardsUpdate = () => {
   const allMethods = useAllCardMethods();
 
   useEffect(() => {
-    const removeListener = rendererIpc.module.onCardsUpdateAvailable((_e, result) => {
-      dispatch(cardsActions.setUpdateAvailable(result));
+    const removeListener = moduleIpc.onCardsUpdateAvailable(cards => {
+      dispatch(cardsActions.setUpdateAvailable(cards));
     });
 
     return () => removeListener();
@@ -45,7 +47,7 @@ export const useCheckCardsUpdate = () => {
         type,
       };
     });
-    rendererIpc.module.checkCardsUpdateInterval(compact(updateMethod));
+    moduleIpc.checkCardsUpdateInterval(compact(updateMethod));
   }, [installedCards, allMethods]);
 };
 
@@ -56,14 +58,14 @@ export const useCheckPluginsUpdate = () => {
 
   useEffect(() => {
     const checkForUpdate = () => {
-      rendererIpc.plugins.checkForSync(updateChannel);
+      pluginsIpc.checkForSync(updateChannel);
     };
 
     checkForUpdate();
     clearInterval(moduleUpdateInterval.current);
     moduleUpdateInterval.current = setInterval(checkForUpdate, toMs(30, 'minutes'));
 
-    const removeListener = rendererIpc.plugins.onSyncAvailable((_, list) => {
+    const removeListener = pluginsIpc.onSyncAvailable(list => {
       dispatch(pluginsActions.setPluginsState({key: 'syncList', value: list}));
     });
 
@@ -278,7 +280,7 @@ export const useBrowserEvents = () => {
   useEffect(() => {
     const offIsLoading = browserIpc.on.loading((id, isLoading) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
-      if (tabID) dispatch(tabsActions.setTabLoading({tabID, loading: isLoading}));
+      if (tabID) dispatch(tabsActions.setTabLoading({tabID, isLoading}));
     });
 
     const offTitleChange = browserIpc.on.titleChanged((id, title) => {

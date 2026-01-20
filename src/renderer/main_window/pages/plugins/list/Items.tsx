@@ -14,8 +14,8 @@ import {
 import {PluginInstalledItem, PluginItem} from '@lynx_cross/types/plugins';
 import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
 import {getPluginIconUrl} from '@lynx_cross/utils/plugins';
-import rendererIpc from '@lynx_shared/ipc';
 import gitIpc from '@lynx_shared/ipc/git';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
@@ -111,7 +111,7 @@ export function List_Item({item, installed}: Props) {
   }, [syncList, item.metadata.id]);
 
   const uninstall = useCallback(() => {
-    rendererIpc.plugins.uninstall(item.metadata.id).then(result => {
+    pluginsIpc.uninstall(item.metadata.id).then(result => {
       if (result) {
         lynxTopToast(dispatch).success(`${item.metadata.title} uninstalled successfully`);
         showRestartModal(dispatch, 'To complete the uninstallation, please restart the app.');

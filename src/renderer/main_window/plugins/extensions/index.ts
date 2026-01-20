@@ -1,6 +1,6 @@
 import {__federation_method_getRemote, __federation_method_setRemote} from '__federation__';
 import {isDev} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {captureException} from '@sentry/electron/renderer';
 import {compact} from 'lodash';
 
@@ -27,7 +27,7 @@ export async function loadExtensions() {
     importedExtensions = [extension];
     extensionIds = ['dev-extension'];
   } else {
-    const pluginAddresses = await rendererIpc.plugins.getAddresses();
+    const pluginAddresses = await pluginsIpc.getAddresses();
     const extensionAddresses = pluginAddresses
       .filter(item => item.type === 'extension')
       .map(({address}) => `${address}/scripts/renderer/rendererEntry.mjs`);

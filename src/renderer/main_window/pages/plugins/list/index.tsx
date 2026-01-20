@@ -1,6 +1,6 @@
 import {Button, Divider, Input, Progress, Skeleton} from '@heroui/react';
 import {PluginFilter, PluginItem} from '@lynx_cross/types/plugins';
-import rendererIpc from '@lynx_shared/ipc';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';
@@ -132,7 +132,7 @@ function SyncAllButton() {
   const syncAll = useCallback(() => {
     dispatch(pluginsActions.manageSet({key: 'updating', id: syncList.map(item => item.id), operation: 'add'}));
     dispatch(pluginsActions.setUpdatingAll(true));
-    rendererIpc.plugins
+    pluginsIpc
       .syncAll(syncList.map(item => ({id: item.id, commit: item.commit})))
       .then(synced => {
         if (!isEmpty(synced)) {

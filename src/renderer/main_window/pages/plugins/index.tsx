@@ -1,4 +1,4 @@
-import rendererIpc from '@lynx_shared/ipc';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {memo, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -15,11 +15,11 @@ const Index = memo(({show}: Props) => {
   const updateChannel = useUserState('updateChannel');
 
   useEffect(() => {
-    rendererIpc.plugins.getInstalledList().then(items => {
+    pluginsIpc.getInstalledList().then(items => {
       dispatch(pluginsActions.setPluginsState({key: 'installedList', value: items}));
     });
-    rendererIpc.plugins.checkForSync(updateChannel);
-    rendererIpc.plugins.getUnloadedList().then(items => {
+    pluginsIpc.checkForSync(updateChannel);
+    pluginsIpc.getUnloadedList().then(items => {
       dispatch(pluginsActions.setPluginsState({key: 'unloadedList', value: items}));
     });
   }, [updateChannel]);

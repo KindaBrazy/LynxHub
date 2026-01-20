@@ -1,7 +1,7 @@
 import {ButtonProps} from '@heroui/button';
 import {Button} from '@heroui/react';
 import {PluginItem} from '@lynx_cross/types/plugins';
-import rendererIpc from '@lynx_shared/ipc';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -42,7 +42,7 @@ export function UpdateButton({item}: UpdateButtonProps) {
     dispatch(pluginsActions.manageSet({key: 'updating', id, operation: 'add'}));
     const {version, commit} = updateItem!;
 
-    rendererIpc.plugins.sync(id, commit).then(isUpdated => {
+    pluginsIpc.sync(id, commit).then(isUpdated => {
       if (isUpdated) {
         lynxTopToast(dispatch).success(`${title} synced Successfully`);
         showRestartModal(dispatch, 'To apply the changes, please restart the app.');
