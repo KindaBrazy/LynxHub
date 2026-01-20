@@ -1,10 +1,10 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import {browserDownloadChannels} from '@lynx_cross/consts/donwload_manager';
 import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import contextMenuChannels from '@lynx_cross/consts/ipc_channels/context_menu';
+import {browserDownloadChannels} from '@lynx_cross/consts/ipc_channels/donwload_manager';
 import windowDialogsChannels from '@lynx_cross/consts/ipc_channels/window_dialogs';
 import {ContextMenuVolumeData} from '@lynx_cross/types/ipc';
 import {

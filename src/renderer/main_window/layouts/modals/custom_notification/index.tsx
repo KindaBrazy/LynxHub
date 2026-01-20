@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import applicationIpc from '@lynx_shared/ipc/application';
 import {notification} from 'antd';
 import {useEffect} from 'react';
 
@@ -7,7 +7,7 @@ export default function CustomNotification() {
   const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
-    const offOpen = rendererIpc.customNotification.onOpen((_, data) => {
+    const offOpen = applicationIpc.on.onCustomNotifOpen(data => {
       api[data.type]({
         closeIcon: null,
         placement: 'bottomRight',
@@ -20,7 +20,7 @@ export default function CustomNotification() {
                 variant="light"
                 color={btn.color}
                 className={btn.cursor === 'default' ? 'cursor-default' : ''}
-                onPress={() => rendererIpc.customNotification.btnPress(btn.id, data.key)}>
+                onPress={() => applicationIpc.send.onCustomNotifBtnPress(btn.id, data.key)}>
                 {btn.label}
               </Button>
             ))}
@@ -43,7 +43,7 @@ export default function CustomNotification() {
         className: 'dark:bg-foreground-100 !shadow-medium !overflow-hidden rounded-xl',
       });
     });
-    const offClose = rendererIpc.customNotification.onClose((_, key) => api.destroy(key));
+    const offClose = applicationIpc.on.onCustomNotifClose(key => api.destroy(key));
 
     return () => {
       offOpen();

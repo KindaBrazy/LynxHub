@@ -1,7 +1,7 @@
 // Sends IPC messages from main process to renderer process (one-way communication)
+import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import {ipcMain, IpcMainEvent} from 'electron';
 
-import {customNotifChannels} from '../../../cross/consts/donwload_manager';
 import {CustomNotificationInfo} from '../../../cross/types';
 import classHolder from '../../core/class_holder';
 
@@ -17,9 +17,9 @@ const sendIt = (channel: string, data: any) => {
 
 export const ipcMainSender = {
   customNotification: {
-    open: (data: CustomNotificationInfo) => sendIt(customNotifChannels.onOpen, data),
-    close: (key: string) => sendIt(customNotifChannels.onClose, key),
+    open: (data: CustomNotificationInfo) => sendIt(appChannels.onCustomNotifOpen, data),
+    close: (key: string) => sendIt(appChannels.onCustomNotifClose, key),
     onBtnPress: (result: (event: IpcMainEvent, btnId: string, notifKey: string) => void) =>
-      ipcMain.on(customNotifChannels.onBtnPress, result),
+      ipcMain.on(appChannels.onCustomNotifBtnPress, result),
   },
 };

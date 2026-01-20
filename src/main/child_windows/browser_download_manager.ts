@@ -1,9 +1,9 @@
 import {accessSync, constants as fsConstants, existsSync, mkdirSync} from 'node:fs';
 import {basename, join, parse} from 'node:path';
 
+import {browserDownloadChannels} from '@lynx_cross/consts/ipc_channels/donwload_manager';
 import {app, BrowserWindow, dialog, DownloadItem, ipcMain, Session, shell, WebContents} from 'electron';
 
-import {browserDownloadChannels} from '../../cross/consts/donwload_manager';
 import {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '../../cross/types/download_manager';
 import classHolder from '../core/class_holder';
 

@@ -37,6 +37,10 @@ export const appChannels = {
 
   disableLoadingAnimations: 'app:disableLoadingAnimations',
   onOnline: 'app:onOnline',
+
+  onCustomNotifOpen: 'app:onCustomNotifOpen',
+  onCustomNotifClose: 'app:onCustomNotifClose',
+  onCustomNotifBtnPress: 'app:onCustomNotifBtnPress',
 };
 
 export default appChannels;
