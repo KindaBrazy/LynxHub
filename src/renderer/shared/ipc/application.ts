@@ -1,5 +1,5 @@
 import appChannels from '@lynx_cross/consts/ipc_channels/application';
-import {HeroToastPlacement} from '@lynx_cross/types';
+import {CustomNotificationInfo, HeroToastPlacement} from '@lynx_cross/types';
 import {
   AppUpdateEventTypes,
   AppUpdateStatus,
@@ -41,6 +41,10 @@ const applicationIpc = {
 
     // Installs downloaded app update
     updateInstall: () => lynxIpc.send(appChannels.updateInstall),
+
+    // Sends button press event for custom notification
+    onCustomNotifBtnPress: (btnId: string, notifKey: string) =>
+      lynxIpc.send(appChannels.onCustomNotifBtnPress, btnId, notifKey),
   },
   invoke: {
     // Gets system dark mode preference (light/dark)
@@ -94,6 +98,13 @@ const applicationIpc = {
       lynxIpc.on(appChannels.updateStatus, result),
 
     onOnline: (result: (isOnline: boolean) => void) => lynxIpc.on(appChannels.onOnline, result),
+
+    // Listens for custom notification open events
+    onCustomNotifOpen: (result: (info: CustomNotificationInfo) => void) =>
+      lynxIpc.on(appChannels.onCustomNotifOpen, result),
+
+    // Listens for custom notification close events
+    onCustomNotifClose: (result: (key: string) => void) => lynxIpc.on(appChannels.onCustomNotifClose, result),
   },
 };
 

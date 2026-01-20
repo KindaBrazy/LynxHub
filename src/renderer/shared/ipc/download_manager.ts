@@ -1,4 +1,4 @@
-import {browserDownloadChannels} from '@lynx_cross/consts/donwload_manager';
+import {browserDownloadChannels} from '@lynx_cross/consts/ipc_channels/donwload_manager';
 import type {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '@lynx_cross/types/download_manager';
 
 import lynxIpc from './lynxIpc';

@@ -1,7 +1,6 @@
 import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
-import {customNotifChannels} from '@lynx_cross/consts/donwload_manager';
 import {patreonChannels, volumeChannels} from '@lynx_cross/consts/ipc';
-import {CustomNotificationInfo, PatreonUserData, SubscribeStages} from '@lynx_cross/types';
+import {PatreonUserData, SubscribeStages} from '@lynx_cross/types';
 import {AudioState} from '@lynx_cross/types/ipc';
 import type {IpcRendererEvent} from 'electron';
 
@@ -88,17 +87,6 @@ const rendererIpc = {
       ipc.on(volumeChannels.onTabMutedUpdate, (_: IpcRendererEvent, tabId: string, muted: boolean) =>
         callback(tabId, muted),
       ),
-  },
-
-  customNotification: {
-    // Listens for custom notification open events
-    onOpen: (result: (event: IpcRendererEvent, info: CustomNotificationInfo) => void) =>
-      ipc.on(customNotifChannels.onOpen, result),
-    // Listens for custom notification close events
-    onClose: (result: (event: IpcRendererEvent, key: string) => void) => ipc.on(customNotifChannels.onClose, result),
-
-    // Sends button press event for custom notification
-    btnPress: (btnId: string, notifKey: string) => ipc.send(customNotifChannels.onBtnPress, btnId, notifKey),
   },
 
   patreon: {
