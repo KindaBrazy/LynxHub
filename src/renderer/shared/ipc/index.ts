@@ -7,10 +7,7 @@ import {
   eventsChannels,
   imageCacheChannels,
   initChannels,
-  moduleApiChannels,
-  modulesChannels,
   patreonChannels,
-  pluginChannels,
   ptyChannels,
   staticsChannels,
   storageChannels,
@@ -54,13 +51,6 @@ import {
   ShowToastTypes,
   StorageOperation,
 } from '@lynx_cross/types/ipc';
-import type {
-  PluginAddresses,
-  PluginInstalledItem,
-  PluginItem,
-  PluginSyncItem,
-  UnloadedPlugins,
-} from '@lynx_cross/types/plugins';
 import type {InstalledCard, InstalledCards} from '@lynx_cross/types/storage';
 import type StorageTypes from '@lynx_cross/types/storage';
 import type {IpcRendererEvent} from 'electron';
@@ -68,76 +58,6 @@ import type {IpcRendererEvent} from 'electron';
 const ipc = window.electron.ipcRenderer;
 
 const rendererIpc = {
-  /** Managing app modules */
-  module: {
-    // Checks if card has available updates
-    cardUpdateAvailable: (card: InstalledCard, updateType: 'git' | 'stepper' | undefined): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('module_card_update_available', {card, updateType});
-      return ipc.invoke(modulesChannels.cardUpdateAvailable, card, updateType);
-    },
-    // Uninstalls card by ID
-    uninstallCardByID: (id: string): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('module_uninstall_card_by_id', {id});
-      return ipc.invoke(modulesChannels.uninstallCardByID, id);
-    },
-    // Checks for updates on multiple cards at intervals
-    checkCardsUpdateInterval: (updateType: {id: string; type: 'git' | 'stepper'}[]) => {
-      extensionRendererApi.events_ipc.emit('module_check_cards_update_interval', {updateType});
-      ipc.send(modulesChannels.checkCardsUpdateInterval, updateType);
-    },
-    // Listens for card update availability events
-    onCardsUpdateAvailable: (result: (event: IpcRendererEvent, cards: string[]) => void) =>
-      ipc.on(modulesChannels.onCardsUpdateAvailable, result),
-  },
-
-  moduleApi: {
-    // Gets folder creation date
-    getFolderCreationTime: (dir: string): Promise<string> => {
-      extensionRendererApi.events_ipc.emit('module_api_get_folder_creation_time', {dir});
-      return ipc.invoke(moduleApiChannels.getFolderCreationTime, dir);
-    },
-    // Gets last Git pull date for repository
-    getLastPulledDate: (dir: string): Promise<string> => {
-      extensionRendererApi.events_ipc.emit('module_api_get_last_pulled_date', {dir});
-      return ipc.invoke(moduleApiChannels.getLastPulledDate, dir);
-    },
-    // Gets current Git release tag
-    getCurrentReleaseTag: (dir: string): Promise<string> => {
-      extensionRendererApi.events_ipc.emit('module_api_get_current_release_tag', {dir});
-      return ipc.invoke(moduleApiChannels.getCurrentReleaseTag, dir);
-    },
-  },
-
-  plugins: {
-    // Gets list of available plugins for subscription stage
-    getList: (stage: SubscribeStages): Promise<PluginItem[]> => ipc.invoke(pluginChannels.getList, stage),
-    // Gets plugin server addresses
-    getAddresses: (): Promise<PluginAddresses> => ipc.invoke(pluginChannels.getAddresses),
-    // Gets list of installed plugins
-    getInstalledList: (): Promise<PluginInstalledItem[]> => ipc.invoke(pluginChannels.getInstalledList),
-    // Gets list of unloaded plugins
-    getUnloadedList: (): Promise<UnloadedPlugins[]> => ipc.invoke(pluginChannels.getUnloadedList),
-
-    // Installs plugin from URL
-    install: (url: string, commitHash?: string): Promise<boolean> =>
-      ipc.invoke(pluginChannels.install, url, commitHash),
-    // Uninstalls plugin by ID
-    uninstall: (id: string): Promise<boolean> => ipc.invoke(pluginChannels.uninstall, id),
-    // Syncs plugin to specific commit
-    sync: (id: string, commit: string): Promise<boolean> => ipc.invoke(pluginChannels.sync, id, commit),
-    // Updates sync list entry for plugin
-    updateSyncList: (id: string, commit: string): Promise<boolean> =>
-      ipc.invoke(pluginChannels.updateSyncList, id, commit),
-    // Syncs multiple plugins to their commits
-    syncAll: (items: {id: string; commit: string}[]): Promise<string[]> => ipc.invoke(pluginChannels.syncAll, items),
-    // Checks for available sync updates based on subscription stage
-    checkForSync: (stage: SubscribeStages): Promise<void> => ipc.invoke(pluginChannels.checkForSync, stage),
-
-    // Listens for plugin sync availability events
-    onSyncAvailable: (result: (event: IpcRendererEvent, cards: PluginSyncItem[]) => void) =>
-      ipc.on(pluginChannels.onSyncAvailable, result),
-  },
-
   /** Utilities methods for working with app storage data */
   storageUtils: {
     // Adds installed card to storage

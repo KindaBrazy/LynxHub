@@ -11,6 +11,7 @@ import {
 } from '@lynx_cross/types/plugins/module';
 import {extractGitUrl, isDev} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {captureException} from '@sentry/electron/renderer';
 import {compact} from 'lodash';
 import {useSyncExternalStore} from 'react';
@@ -284,7 +285,7 @@ const loadModules = async () => {
       const devImport = await import('@lynx_module/renderer');
       importedModules = [{path: 'dev', module: devImport}];
     } else {
-      const pluginAddresses = await rendererIpc.plugins.getAddresses();
+      const pluginAddresses = await pluginsIpc.getAddresses();
       const moduleAddresses = pluginAddresses.filter(item => item.type === 'module').map(item => item.address);
 
       // Use Promise.all for concurrent module imports

@@ -193,13 +193,6 @@ export const utilsChannels = {
   getImageAsDataURL: 'utils:get-image-as-data-url',
 } as const;
 
-export const modulesChannels = {
-  cardUpdateAvailable: 'modules:card-update-available',
-  uninstallCardByID: 'modules:uninstall-card-by-id',
-  checkCardsUpdateInterval: 'modules:cards_update_interval',
-  onCardsUpdateAvailable: 'modules:on_cards_update_available',
-} as const;
-
 export const pluginChannels = {
   onSyncAvailable: 'plugins:on-sync-available',
 

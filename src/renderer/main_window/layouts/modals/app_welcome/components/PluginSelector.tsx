@@ -2,7 +2,7 @@ import {Button, Checkbox, cn, User} from '@heroui/react';
 import {MAIN_MODULE_URL} from '@lynx_cross/consts';
 import {extractGitUrl} from '@lynx_cross/utils';
 import {getPluginIconUrl} from '@lynx_cross/utils/plugins';
-import rendererIpc from '@lynx_shared/ipc';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -33,7 +33,7 @@ export default function PluginSelector({
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    rendererIpc.plugins.getList('public').then(list => {
+    pluginsIpc.getList('public').then(list => {
       const compatibleList = list.filter(item => item.isCompatible && item.url !== MAIN_MODULE_URL);
       const finalList: ExtensionItem[] = compatibleList.map(item => ({
         id: item.metadata.id,
@@ -72,7 +72,7 @@ export default function PluginSelector({
       const pluginName = plugins.find(item => item.url === extension)?.name || extractGitUrl(extension).repo;
 
       try {
-        const isInstalled = await rendererIpc.plugins.install(extension);
+        const isInstalled = await pluginsIpc.install(extension);
 
         if (isInstalled) {
           setInstalledPlugins(prevState => [...prevState, pluginName]);

@@ -2,6 +2,7 @@ import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHead
 import {CardModules, RendererModuleImportType} from '@lynx_cross/types/plugins/module';
 import {isDev} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {compact} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -37,7 +38,7 @@ export default function ModuleConfigModal({isOpen, onClose}: Props) {
             const devImport = await import('@lynx_module/renderer');
             modules = devImport.default;
           } else {
-            const pluginAddresses = await rendererIpc.plugins.getAddresses();
+            const pluginAddresses = await pluginsIpc.getAddresses();
             const moduleAddresses = pluginAddresses.filter(item => item.type === 'module').map(item => item.address);
 
             const importedModules = await Promise.all(

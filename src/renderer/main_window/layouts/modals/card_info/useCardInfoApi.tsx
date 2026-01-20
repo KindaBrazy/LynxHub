@@ -1,6 +1,7 @@
 import {CardInfoApi, CardInfoCallback, CardInfoDescriptions} from '@lynx_cross/types/plugins/module';
 import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
+import {moduleApiIpc} from '@lynx_shared/ipc/plugins/module';
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
 
@@ -34,9 +35,9 @@ export default function useCardInfoApi(
           set: (key: string, data: any) => rendererIpc.storage.setCustom(key, data),
         },
         getFolderSize: (dir: string) => filesIpc.calcFolderSize(dir),
-        getFolderCreationTime: (dir: string) => rendererIpc.moduleApi.getFolderCreationTime(dir),
-        getLastPulledDate: (dir: string) => rendererIpc.moduleApi.getLastPulledDate(dir),
-        getCurrentReleaseTag: (dir: string) => rendererIpc.moduleApi.getCurrentReleaseTag(dir),
+        getFolderCreationTime: (dir: string) => moduleApiIpc.getFolderCreationTime(dir),
+        getLastPulledDate: (dir: string) => moduleApiIpc.getLastPulledDate(dir),
+        getCurrentReleaseTag: (dir: string) => moduleApiIpc.getCurrentReleaseTag(dir),
       };
 
       const callBack: CardInfoCallback = {setOpenFolders, setDescription: setCardInfoDescriptions};

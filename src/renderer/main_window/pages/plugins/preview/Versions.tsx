@@ -1,7 +1,7 @@
 import {ChipProps} from '@heroui/chip';
 import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {SubscribeStages} from '@lynx_cross/types';
-import rendererIpc from '@lynx_shared/ipc';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useMemo} from 'react';
 
 import {BoxDuo_Icon} from '../../../../shared/assets/icons';
@@ -34,7 +34,7 @@ export default function Versions({currentVersion}: Props) {
   const onSelectionChange = value => {
     const commit = Array.from(value)[0] as string;
     const id = selectedPlugin?.metadata.id;
-    if (id) rendererIpc.plugins.updateSyncList(id, commit);
+    if (id) pluginsIpc.updateSyncList(id, commit);
   };
 
   return (

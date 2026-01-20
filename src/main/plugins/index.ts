@@ -1,6 +1,6 @@
 import {dirname, join} from 'node:path';
 
-import {pluginChannels} from '@lynx_cross/consts/ipc';
+import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
 import {captureException} from '@sentry/electron/main';
 import {constants, promises, readdirSync} from 'graceful-fs';
 import {includes, isString} from 'lodash';

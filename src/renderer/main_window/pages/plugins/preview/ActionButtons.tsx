@@ -1,7 +1,7 @@
 import {Button, useDisclosure} from '@heroui/react';
 import {extractGitUrl} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -54,7 +54,7 @@ export default function ActionButtons({installed, currentVersion}: Props) {
 
     if (selectedPlugin?.url) {
       const targetVersion = selectedPlugin.versions.find(v => v.version === currentVersion);
-      rendererIpc.plugins.install(selectedPlugin.url, targetVersion?.commit).then(result => {
+      pluginsIpc.install(selectedPlugin.url, targetVersion?.commit).then(result => {
         dispatch(pluginsActions.manageSet({key: 'installing', id: selectedPlugin?.metadata.id, operation: 'remove'}));
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} installed successfully`);
@@ -78,7 +78,7 @@ export default function ActionButtons({installed, currentVersion}: Props) {
     dispatch(pluginsActions.manageSet({key: 'unInstalling', id: selectedPlugin?.metadata.id, operation: 'add'}));
 
     if (selectedPlugin?.metadata.id) {
-      rendererIpc.plugins.uninstall(selectedPlugin.metadata.id).then(result => {
+      pluginsIpc.uninstall(selectedPlugin.metadata.id).then(result => {
         dispatch(pluginsActions.manageSet({key: 'unInstalling', id: selectedPlugin?.metadata.id, operation: 'remove'}));
         if (result) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} uninstalled successfully`);

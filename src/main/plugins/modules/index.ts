@@ -1,6 +1,6 @@
 import path from 'node:path';
 
-import {modulesChannels} from '@lynx_cross/consts/ipc';
+import modulesChannels from '@lynx_cross/consts/ipc_channels/module';
 import {captureException} from '@sentry/electron/main';
 import {ipcMain} from 'electron';
 import {compact, isEmpty} from 'lodash';

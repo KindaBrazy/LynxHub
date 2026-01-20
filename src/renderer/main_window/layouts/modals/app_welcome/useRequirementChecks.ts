@@ -1,6 +1,7 @@
 import {MAIN_MODULE_URL} from '@lynx_cross/consts';
 import {isWin} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useCallback, useMemo, useState} from 'react';
 
 import {RowData} from './types';
@@ -57,7 +58,7 @@ export default function useRequirementChecks() {
 
   const installModule = useCallback(async () => {
     updateStatus('appModule', {result: 'checking'});
-    const installedList = await rendererIpc.plugins.getInstalledList();
+    const installedList = await pluginsIpc.getInstalledList();
     if (installedList.some(p => p.url === MAIN_MODULE_URL)) {
       updateStatus('appModule', {result: 'ok'});
       return true;
@@ -65,7 +66,7 @@ export default function useRequirementChecks() {
 
     updateStatus('appModule', {result: 'installing'});
     try {
-      const result = await rendererIpc.plugins.install(MAIN_MODULE_URL);
+      const result = await pluginsIpc.install(MAIN_MODULE_URL);
       if (result) {
         updateStatus('appModule', {result: 'ok'});
         return true;

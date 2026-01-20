@@ -1,6 +1,7 @@
 import {Button, Card, Chip, Select, Selection, SelectItem} from '@heroui/react';
 import {SubscribeStages} from '@lynx_cross/types';
 import rendererIpc from '@lynx_shared/ipc';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -63,7 +64,7 @@ export default function DashboardUpdate() {
       const value = keys.values().next().value?.toString() as SubscribeStages | undefined;
       if (value) {
         rendererIpc.patreon.updateChannel(value);
-        rendererIpc.plugins.checkForSync(value);
+        pluginsIpc.checkForSync(value);
       }
     }
   }, []);

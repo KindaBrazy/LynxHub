@@ -2,6 +2,7 @@ import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
 import {extractGitUrl} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
 import gitIpc from '@lynx_shared/ipc/git';
+import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -77,7 +78,7 @@ export const MenuCheckForUpdate = () => {
     setCheckingForUpdate(true);
     if (card) {
       const updateType = allMethods.find(c => c.id === id)?.methods?.['manager']?.updater.updateType;
-      rendererIpc.module.cardUpdateAvailable(card, updateType).then((isAvailable: boolean) => {
+      moduleIpc.cardUpdateAvailable(card, updateType).then(isAvailable => {
         if (isAvailable) dispatch(cardsActions.addUpdateAvailable(id));
         setCheckingForUpdate(false);
       });
