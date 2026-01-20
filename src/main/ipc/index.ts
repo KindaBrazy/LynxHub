@@ -3,7 +3,6 @@ import path from 'node:path';
 
 import {
   appDataChannels,
-  gitChannels,
   imageCacheChannels,
   moduleApiChannels,
   modulesChannels,
@@ -18,6 +17,7 @@ import {
 import winChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import fileChannels from '@lynx_cross/consts/ipc_channels/files';
+import gitChannels from '@lynx_cross/consts/ipc_channels/git';
 import {
   AgentTypes,
   ChangeWindowState,

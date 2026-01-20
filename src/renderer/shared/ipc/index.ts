@@ -5,7 +5,6 @@ import {
   appUpdateChannels,
   appWindowChannels,
   eventsChannels,
-  gitChannels,
   imageCacheChannels,
   initChannels,
   moduleApiChannels,
@@ -33,10 +32,8 @@ import {
   Notification_Data,
   PatreonSupporter,
   PatreonUserData,
-  RepositoryInfo,
   SubscribeStages,
 } from '@lynx_cross/types';
-import type {ShallowCloneOptions} from '@lynx_cross/types/git';
 import {
   AppUpdateEventTypes,
   AppUpdateStatus,
@@ -46,7 +43,6 @@ import {
   DownloadProgress,
   ExtensionsData,
   ExtensionsUpdateStatus,
-  GitProgressCallback,
   HomeCategory,
   LynxInput,
   OnPreCommands,
@@ -72,60 +68,6 @@ import type {IpcRendererEvent} from 'electron';
 const ipc = window.electron.ipcRenderer;
 
 const rendererIpc = {
-  /** Git operations */
-  git: {
-    // Performs shallow clone of Git repository (non-blocking)
-    cloneShallow: (options: ShallowCloneOptions): void => ipc.send(gitChannels.shallowClone, options),
-    // Performs shallow clone and returns promise
-    cloneShallowPromise: (options: ShallowCloneOptions): Promise<void> =>
-      ipc.invoke(gitChannels.shallowClonePromise, options),
-    // Gets repository information (branch, remote, etc.)
-    getRepoInfo: (dir: string): Promise<RepositoryInfo> => {
-      extensionRendererApi.events_ipc.emit('git_get_repo_info', {dir});
-      return ipc.invoke(gitChannels.getRepoInfo, dir);
-    },
-    // Changes Git branch
-    changeBranch: (dir: string, branchName: string): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('git_change_branch', {dir, branchName});
-      return ipc.invoke(gitChannels.changeBranch, dir, branchName);
-    },
-    // Converts shallow clone to full clone
-    unShallow: (dir: string): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('git_unshallow', {dir});
-      return ipc.invoke(gitChannels.unShallow, dir);
-    },
-    // Performs hard reset to HEAD
-    resetHard: (dir: string): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('git_reset_hard', {dir});
-      return ipc.invoke(gitChannels.resetHard, dir);
-    },
-
-    // Validates if directory is a valid Git repository matching the URL
-    validateGitDir: (dir: string, url: string): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('git_validate_git_dir', {dir, url});
-      return ipc.invoke(gitChannels.validateGitDir, dir, url);
-    },
-
-    // Listens for Git operation progress updates
-    onProgress: (callback: GitProgressCallback) => ipc.on(gitChannels.onProgress, callback),
-
-    // Pulls latest changes from remote repository
-    pull: (repoDir: string, id: string): void => {
-      extensionRendererApi.events_ipc.emit('git_pull', {repoDir, id});
-      ipc.send(gitChannels.pull, repoDir, id);
-    },
-    // Drops Git stash entries
-    stashDrop: (
-      dir: string,
-    ): Promise<{
-      message: string;
-      type: 'error' | 'success' | 'info';
-    }> => {
-      extensionRendererApi.events_ipc.emit('git_stash_drop', {dir});
-      return ipc.invoke(gitChannels.stashDrop, dir);
-    },
-  },
-
   /** Managing app modules */
   module: {
     // Checks if card has available updates

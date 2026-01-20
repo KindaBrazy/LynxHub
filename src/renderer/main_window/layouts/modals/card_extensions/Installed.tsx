@@ -2,6 +2,7 @@ import {getKeyValue, Table, TableBody, TableCell, TableColumn, TableHeader, Tabl
 import {validateGitRepoUrl} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
+import gitIpc from '@lynx_shared/ipc/git';
 import {motion} from 'framer-motion';
 import {filter, find, isEmpty, startCase} from 'lodash';
 import {
@@ -113,9 +114,9 @@ const Installed = forwardRef(
         );
 
         return new Promise((resolve, reject) => {
-          const removeListener = rendererIpc.git.onProgress(onProgress);
+          const removeListener = gitIpc.onProgress(onProgress);
 
-          function onProgress(_e: unknown, id: string, state: string) {
+          function onProgress(id: string, state: string) {
             if (id !== pullId) return;
 
             switch (state) {
@@ -136,7 +137,7 @@ const Installed = forwardRef(
             }
           }
 
-          rendererIpc.git.pull(extDir, pullId);
+          gitIpc.pull(extDir, pullId);
         });
       },
       [dir],

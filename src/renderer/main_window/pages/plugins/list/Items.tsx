@@ -15,6 +15,7 @@ import {PluginInstalledItem, PluginItem} from '@lynx_cross/types/plugins';
 import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
 import {getPluginIconUrl} from '@lynx_cross/utils/plugins';
 import rendererIpc from '@lynx_shared/ipc';
+import gitIpc from '@lynx_shared/ipc/git';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
@@ -289,7 +290,7 @@ function InstallProgress({isInstalling, pluginUrl}: InstallProps) {
   const [installProgress, setInstallProgress] = useState<number>(0);
 
   useEffect(() => {
-    const removeListener = rendererIpc.git.onProgress((_, url, state, result) => {
+    const removeListener = gitIpc.onProgress((url, state, result) => {
       if (url === pluginUrl) {
         switch (state) {
           case 'Progress':

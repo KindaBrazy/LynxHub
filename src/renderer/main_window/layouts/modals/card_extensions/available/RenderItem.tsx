@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import {extractGitUrl} from '@lynx_cross/utils';
-import rendererIpc from '@lynx_shared/ipc';
+import gitIpc from '@lynx_shared/ipc/git';
 import {Avatar, List, Tag, Typography} from 'antd';
 import {capitalize} from 'lodash';
 import {useCallback, useState} from 'react';
@@ -30,7 +30,7 @@ export default function RenderItem({item, updateTable, dir, searchValue}: Props)
 
   const install = useCallback(() => {
     setInstalling(true);
-    rendererIpc.git
+    gitIpc
       .cloneShallowPromise({
         url: item.url || '',
         directory: `${dir}/${extractGitUrl(item.url).repo || ''}`,

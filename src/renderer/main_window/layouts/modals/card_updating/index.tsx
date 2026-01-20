@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import {GitProgressCallback} from '@lynx_cross/types/ipc';
-import rendererIpc from '@lynx_shared/ipc';
+import gitIpc from '@lynx_shared/ipc/git';
 import {Descriptions, notification} from 'antd';
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
@@ -22,7 +22,7 @@ const UpdatingNotification = () => {
   useEffect(() => {
     if (isEmpty(updatingCards)) return;
 
-    const onProgress: GitProgressCallback = (_, id, state, result) => {
+    const onProgress: GitProgressCallback = (id, state, result) => {
       if (!id) return;
 
       const card = updatingCards.find(value => value.id === id);
@@ -105,7 +105,7 @@ const UpdatingNotification = () => {
       }
     };
 
-    const removeListener = rendererIpc.git.onProgress(onProgress);
+    const removeListener = gitIpc.onProgress(onProgress);
 
     return () => removeListener();
   }, [updatingCards, dispatch, activeTab]);
