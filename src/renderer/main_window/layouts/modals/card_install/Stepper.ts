@@ -1,5 +1,6 @@
 import {InstallationStepper} from '@lynx_cross/types/plugins/module';
 import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Dispatch, FC, SetStateAction} from 'react';
 
 import {lynxTopToast} from '../../../hooks/utils';
@@ -76,8 +77,8 @@ export default class InstallStepper {
     this.utils = {
       decompressFile: rendererIpc.utils.decompressFile,
       validateGitRepository: rendererIpc.git.validateGitDir,
-      verifyFilesExist: rendererIpc.file.checkFilesExist,
-      openFileOrFolder: rendererIpc.file.openPath,
+      verifyFilesExist: filesIpc.checkFilesExist,
+      openFileOrFolder: filesIpc.openPath,
     };
 
     this.postInstall = {

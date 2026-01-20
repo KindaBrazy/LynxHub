@@ -1,5 +1,6 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip} from '@heroui/react';
 import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -42,7 +43,7 @@ const CDTo = memo(({id}: Props) => {
   }, []);
 
   const selectDir = useCallback(() => {
-    rendererIpc.file
+    filesIpc
       .openDlg({properties: ['openDirectory']})
       .then(dir => {
         if (dir) {

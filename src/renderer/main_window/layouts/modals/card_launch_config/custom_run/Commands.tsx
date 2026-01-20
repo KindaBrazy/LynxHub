@@ -1,5 +1,6 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Empty} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
@@ -52,7 +53,7 @@ export default function CustomRunCommands({id}: Props) {
   };
 
   const cdFolder = () => {
-    rendererIpc.file.openDlg({properties: ['openDirectory']}).then(result => {
+    filesIpc.openDlg({properties: ['openDirectory']}).then(result => {
       if (result) {
         const command = `cd "${result}"`;
         rendererIpc.storageUtils.customRun('add', {command, id});

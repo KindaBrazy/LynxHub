@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 import {getArgumentDefaultValue} from '@lynx/utils/module_arguments';
 import {ChosenArgument} from '@lynx_cross/types';
-import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Tooltip} from 'antd';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
@@ -45,7 +45,7 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
   const openDialog = useCallback(() => {
     if (!isRelative) {
       const properties: ('openFile' | 'openDirectory')[] = type === 'file' ? ['openFile'] : ['openDirectory'];
-      rendererIpc.file.openDlg({properties}).then(result => {
+      filesIpc.openDlg({properties}).then(result => {
         if (result) {
           setSelectedValue(result);
           changeValue(result);
@@ -57,7 +57,7 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
   const changePathType = useCallback(() => {
     setIsRelative(prevState => {
       if (baseDir && selectedValue && selectedValue !== placeholder) {
-        rendererIpc.file[prevState ? 'getAbsolutePath' : 'getRelativePath'](baseDir, selectedValue).then(result => {
+        filesIpc[prevState ? 'getAbsolutePath' : 'getRelativePath'](baseDir, selectedValue).then(result => {
           setSelectedValue(result);
           changeValue(result);
         });

@@ -1,5 +1,6 @@
 import {CardInfoApi, CardInfoCallback, CardInfoDescriptions} from '@lynx_cross/types/plugins/module';
 import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
 
@@ -32,7 +33,7 @@ export default function useCardInfoApi(
           get: (key: string) => rendererIpc.storage.getCustom(key),
           set: (key: string, data: any) => rendererIpc.storage.setCustom(key, data),
         },
-        getFolderSize: (dir: string) => rendererIpc.file.calcFolderSize(dir),
+        getFolderSize: (dir: string) => filesIpc.calcFolderSize(dir),
         getFolderCreationTime: (dir: string) => rendererIpc.moduleApi.getFolderCreationTime(dir),
         getLastPulledDate: (dir: string) => rendererIpc.moduleApi.getLastPulledDate(dir),
         getCurrentReleaseTag: (dir: string) => rendererIpc.moduleApi.getCurrentReleaseTag(dir),

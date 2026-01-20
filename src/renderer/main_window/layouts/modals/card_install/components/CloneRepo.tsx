@@ -2,6 +2,7 @@ import {Card, CardBody, CardHeader, Link, ModalBody, Progress} from '@heroui/rea
 import {GitProgressCallback} from '@lynx_cross/types/ipc';
 import {extractGitUrl, isWin} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {Descriptions} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
@@ -42,7 +43,7 @@ export default function CloneRepo({url, start, done, isOpen}: Props) {
   const [directory, setDirectory] = useState<string>('');
 
   useEffect(() => {
-    rendererIpc.file.getAppDirectories('AIWorkspaces').then(dir => {
+    filesIpc.getAppDirectories('AIWorkspaces').then(dir => {
       const directory = `${dir}${isWin() ? '\\' : '/'}${extractGitUrl(url).repo}`;
       setDirectory(directory);
     });

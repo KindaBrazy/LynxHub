@@ -2,6 +2,7 @@ import {Button, ButtonGroup, ModalFooter} from '@heroui/react';
 import {DownloadProgress} from '@lynx_cross/types/ipc';
 import {InstallationMethod, UserInputResult} from '@lynx_cross/types/plugins/module';
 import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {memo, RefObject, useCallback, useState} from 'react';
 
 import LocateWarning from './components/LocateWarning';
@@ -54,7 +55,7 @@ const InstallFooter = memo(
     }, [terminalResolver]);
 
     const locate = useCallback(() => {
-      rendererIpc.file.openDlg({properties: ['openDirectory']}).then(targetDirectory => {
+      filesIpc.openDlg({properties: ['openDirectory']}).then(targetDirectory => {
         if (targetDirectory) {
           rendererIpc.appData.isAppDir(targetDirectory).then(isAppDir => {
             if (isAppDir) {

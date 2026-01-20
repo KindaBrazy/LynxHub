@@ -1,6 +1,7 @@
 import {getKeyValue, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@heroui/react';
 import {validateGitRepoUrl} from '@lynx_cross/utils';
 import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {motion} from 'framer-motion';
 import {filter, find, isEmpty, startCase} from 'lodash';
 import {
@@ -60,7 +61,7 @@ const Installed = forwardRef(
       (name: string, type: 'removeDir' | 'trashDir', index: number) => {
         setIsDeleteModalOpen(prevState => prevState.map((value, i) => (i === index ? false : value)));
 
-        rendererIpc.file[type](`${dir}/${name}`)
+        filesIpc[type](`${dir}/${name}`)
           .then(() => {
             lynxTopToast(dispatch).success(
               `${name} extension ${type === 'removeDir' ? 'removed' : 'moved to trash'} successfully.`,
@@ -255,7 +256,7 @@ const Installed = forwardRef(
 
     // Open selected extension folder
     const onDoubleClick = (name: Key) => {
-      rendererIpc.file.openPath(`${dir}/${name}`);
+      filesIpc.openPath(`${dir}/${name}`);
     };
 
     if (!visible) return null;

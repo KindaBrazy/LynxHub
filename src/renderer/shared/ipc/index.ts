@@ -5,7 +5,6 @@ import {
   appUpdateChannels,
   appWindowChannels,
   eventsChannels,
-  fileChannels,
   gitChannels,
   imageCacheChannels,
   initChannels,
@@ -29,8 +28,6 @@ import {
   ConfirmMenuTypes,
   CustomNotificationInfo,
   ExtensionsInfo,
-  FolderListData,
-  FolderNames,
   HeroToastPlacement,
   ModulesInfo,
   Notification_Data,
@@ -70,80 +67,11 @@ import type {
 } from '@lynx_cross/types/plugins';
 import type {InstalledCard, InstalledCards} from '@lynx_cross/types/storage';
 import type StorageTypes from '@lynx_cross/types/storage';
-import type {IpcRendererEvent, OpenDialogOptions} from 'electron';
+import type {IpcRendererEvent} from 'electron';
 
 const ipc = window.electron.ipcRenderer;
 
 const rendererIpc = {
-  /** Managing files and directories */
-  file: {
-    // Opens file/folder selection dialog
-    openDlg: (option: OpenDialogOptions): Promise<string | undefined> => {
-      extensionRendererApi.events_ipc.emit('file_open_dialog', {option});
-      return ipc.invoke(fileChannels.dialog, option);
-    },
-
-    // Opens directory in system file manager
-    openPath: (dir: string): void => {
-      extensionRendererApi.events_ipc.emit('file_open_path', {dir});
-      ipc.send(fileChannels.openPath, dir);
-    },
-    // Shows save dialog and saves content to file
-    saveToFile: (content: string): Promise<string | null> => ipc.invoke(fileChannels.saveToFile, content),
-
-    // Gets app directory path by folder name (cards, extensions, etc.)
-    getAppDirectories: (name: FolderNames): Promise<string> => {
-      extensionRendererApi.events_ipc.emit('file_get_app_directories', {name});
-      return ipc.invoke(fileChannels.getAppDirectories, name);
-    },
-
-    // Permanently removes directory and all contents
-    removeDir: (dir: string): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('file_remove_dir', {dir});
-      return ipc.invoke(fileChannels.removeDir, dir);
-    },
-
-    // Moves directory to system trash
-    trashDir: (dir: string): Promise<void> => {
-      extensionRendererApi.events_ipc.emit('file_trash_dir', {dir});
-      return ipc.invoke(fileChannels.trashDir, dir);
-    },
-
-    // Lists directory contents with relative path support
-    listDir: (dirPath: string, relatives: string[]): Promise<FolderListData[]> => {
-      extensionRendererApi.events_ipc.emit('file_list_dir', {dirPath, relatives});
-      return ipc.invoke(fileChannels.listDir, dirPath, relatives);
-    },
-
-    // Checks if specified files exist in directory
-    checkFilesExist: (dir: string, fileNames: string[]) => {
-      extensionRendererApi.events_ipc.emit('file_check_files_exist', {dir, fileNames});
-      return ipc.invoke(fileChannels.checkFilesExist, dir, fileNames);
-    },
-
-    // Calculates total size of folder and all contents
-    calcFolderSize: (dir: string) => {
-      extensionRendererApi.events_ipc.emit('file_calc_folder_size', {dir});
-      return ipc.invoke(fileChannels.calcFolderSize, dir);
-    },
-    // Converts absolute path to relative path
-    getRelativePath: (basePath: string, targetPath: string): Promise<string> => {
-      extensionRendererApi.events_ipc.emit('file_get_relative_path', {basePath, targetPath});
-      return ipc.invoke(fileChannels.getRelativePath, basePath, targetPath);
-    },
-    // Converts relative path to absolute path
-    getAbsolutePath: (basePath: string, targetPath: string): Promise<string> => {
-      extensionRendererApi.events_ipc.emit('file_get_absolute_path', {basePath, targetPath});
-      return ipc.invoke(fileChannels.getAbsolutePath, basePath, targetPath);
-    },
-
-    // Checks if directory is empty
-    isEmptyDir: (dir: string): Promise<boolean> => {
-      extensionRendererApi.events_ipc.emit('file_is_empty_dir', {dir});
-      return ipc.invoke(fileChannels.isEmptyDir, dir);
-    },
-  },
-
   /** Git operations */
   git: {
     // Performs shallow clone of Git repository (non-blocking)

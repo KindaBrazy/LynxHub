@@ -1,6 +1,6 @@
 import {Button, Input, Select, SelectItem} from '@heroui/react';
 import {UserInputField, UserInputResult} from '@lynx_cross/types/plugins/module';
-import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {isNil} from 'lodash';
 import {Dispatch, FC, SetStateAction, useCallback, useEffect, useState} from 'react';
 
@@ -47,7 +47,7 @@ export default function UserInputs({inputElements, setResult, extensionElements}
     (type: 'folder' | 'file', id: string, isRequired?: boolean) => {
       switch (type) {
         case 'folder':
-          rendererIpc.file.openDlg({properties: ['openDirectory']}).then(result => {
+          filesIpc.openDlg({properties: ['openDirectory']}).then(result => {
             const folderPath = result || 'Click here to select folder';
             setSelectedFolder(folderPath);
             updateResult(id, result || '');
@@ -59,7 +59,7 @@ export default function UserInputs({inputElements, setResult, extensionElements}
           });
           break;
         case 'file':
-          rendererIpc.file.openDlg({properties: ['openFile']}).then(result => {
+          filesIpc.openDlg({properties: ['openFile']}).then(result => {
             const filePath = result || 'Click here to select file';
             setSelectedFile(filePath);
             updateResult(id, result || '');

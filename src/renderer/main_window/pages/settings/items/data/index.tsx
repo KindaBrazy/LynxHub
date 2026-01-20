@@ -1,5 +1,6 @@
 import {Button} from '@heroui/react';
 import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -29,7 +30,7 @@ export default function SettingsData() {
   };
 
   const openFolder = useCallback(() => {
-    rendererIpc.file.openPath(currentPath);
+    filesIpc.openPath(currentPath);
   }, [currentPath]);
 
   useEffect(() => {

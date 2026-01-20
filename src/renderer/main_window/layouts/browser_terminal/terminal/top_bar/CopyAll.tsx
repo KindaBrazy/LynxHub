@@ -1,5 +1,5 @@
 import {Button, Tooltip} from '@heroui/react';
-import rendererIpc from '@lynx_shared/ipc';
+import filesIpc from '@lynx_shared/ipc/files';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {memo, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -32,7 +32,7 @@ const CopyAll = memo(({serializeAddon}: Props) => {
       lynxTopToast(dispatch).warning('Failed get terminal text to save!');
     }
 
-    rendererIpc.file
+    filesIpc
       .saveToFile(contentToSave)
       .then(result => {
         if (result) {
