@@ -16,6 +16,10 @@ const utilsChannels = {
 
   isResponseValid: 'utils:is-response-valid',
   getImageAsDataURL: 'utils:get-image-as-data-url',
+
+  getImageCacheStats: 'utils:getImageCacheStats',
+  clearImageCache: 'utils:clearImageCache',
+  triggerImageCacheCleanup: 'utils:triggerImageCacheCleanup',
 };
 
 export default utilsChannels;
