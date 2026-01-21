@@ -8,6 +8,7 @@ import BrowserManager from '../core/browser';
 import classHolder from '../core/class_holder';
 import {applicationIpc} from './application';
 import {browserIpc} from './browser';
+import listenDialogsWindow from './dialogs_window';
 import lynxIpc from './lynxIpc';
 import {downloadImageToClipboard} from './methods';
 import {sendToCM, sendToMain} from './sender';
@@ -112,8 +113,7 @@ export function listenForBrowserChannels(browserManager: BrowserManager) {
     contextMenuIpc.send.onDownloads();
   });
 
-  // TODO
-  contextMenuManager.listenForDialogWindows();
+  listenDialogsWindow();
 }
 
 export const contextMenuIpc = {
