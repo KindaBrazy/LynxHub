@@ -8,7 +8,6 @@ import icon from '../../../resources/icon.png?asset';
 import {formatWebAddress} from '../../cross/utils';
 import {applicationIpc} from '../ipc/application';
 import {browserIpc} from '../ipc/browser';
-import {browserVolumeIpc} from '../ipc/browser_volume';
 import {getUserAgent, getWindowColor} from '../utils';
 import classHolder from './class_holder';
 import RegisterHotkeys from './hotkeys';
@@ -270,7 +269,7 @@ export default class BrowserManager {
     const viewWc = this.getWebContents(id);
     if (!viewWc) return;
 
-    browserVolumeIpc.send.onAudioStateChange(id, {playing, muted: viewWc.audioMuted});
+    browserIpc.send.onAudioStateChange(id, {playing, muted: viewWc.audioMuted});
   }
 
   public getSession() {

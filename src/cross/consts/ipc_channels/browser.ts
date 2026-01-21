@@ -42,6 +42,17 @@ const browserChannels = {
 
   onFailedLoadUrl: 'browser:on-failed-load-url',
   onClearFailed: 'browser:on-clear-failed',
+
+  setVolume: 'volume:set',
+  setMuted: 'volume:setMuted',
+  getState: 'volume:getState',
+
+  updateTabVolume: 'volume:updateTabVolume',
+  updateTabMuted: 'volume:updateTabMuted',
+  onTabVolumeUpdate: 'volume:onTabVolumeUpdate',
+  onTabMutedUpdate: 'volume:onTabMutedUpdate',
+
+  onAudioStateChange: 'volume:onAudioStateChange',
 };
 
 export default browserChannels;
