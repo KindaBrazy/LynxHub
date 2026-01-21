@@ -1,6 +1,3 @@
-import path from 'node:path';
-
-import fileChannels from '@lynx_cross/consts/ipc_channels/files';
 import gitChannels from '@lynx_cross/consts/ipc_channels/git';
 import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
 import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
@@ -9,30 +6,19 @@ import staticsChannels from '@lynx_cross/consts/ipc_channels/statics';
 import storageChannels, {storageUtilsChannels} from '@lynx_cross/consts/ipc_channels/storage';
 import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
 import {CustomRunBehaviorData, PreCommands, PreOpen, RecentlyOperation, StorageOperation} from '@lynx_cross/types/ipc';
-import {app, ipcMain, OpenDialogOptions, shell} from 'electron';
+import {app, ipcMain} from 'electron';
 
-import {ChosenArgumentsData, ConfirmMenuTypes, FolderNames, SubscribeStages} from '../../cross/types';
+import {ChosenArgumentsData, ConfirmMenuTypes, SubscribeStages} from '../../cross/types';
 import {ShallowCloneOptions} from '../../cross/types/git';
 import StorageTypes, {InstalledCard} from '../../cross/types/storage';
 import classHolder from '../core/class_holder';
-import {getAppDirectory} from '../core/data_folder';
 import {getImageCacheManager} from '../core/image_cache';
 import GitManager from '../git';
 import {getList} from '../plugins/utils';
-import {getAbsolutePath, getDirCreationDate, getRelativePath, openDialog} from '../utils';
-import calcFolderSize from '../utils/calc_folder_size';
+import {getDirCreationDate} from '../utils';
 import listenApplication from './application';
-import {
-  checkFilesExist,
-  decompressFile,
-  getImageAsDataURL,
-  getRelativeList,
-  isEmptyDir,
-  isResponseValid,
-  removeDir,
-  saveToFile,
-  trashDir,
-} from './methods';
+import listenFiles from './files';
+import {decompressFile, getImageAsDataURL, isResponseValid} from './methods';
 import {
   disableExtension,
   disableLoadingExtensions,
@@ -62,47 +48,6 @@ import {
   unShallow,
   validateGitDir,
 } from './methods/repository';
-
-function file() {
-  // Gets app directory path by folder name (cards, extensions, etc.)
-  ipcMain.handle(fileChannels.getAppDirectories, (_, name: FolderNames) => getAppDirectory(name));
-
-  // Opens file/folder selection dialog
-  ipcMain.handle(fileChannels.dialog, (_, option: OpenDialogOptions) => openDialog(option));
-
-  // Opens directory in system file manager
-  ipcMain.on(fileChannels.openPath, (_, dir: string) => shell.openPath(path.resolve(dir)));
-  // Shows save dialog and saves content to file
-  ipcMain.handle(fileChannels.saveToFile, (_, content: string) => saveToFile(content));
-
-  // Permanently removes directory and all contents
-  ipcMain.handle(fileChannels.removeDir, (_, dir: string) => removeDir(dir));
-  // Moves directory to system trash
-  ipcMain.handle(fileChannels.trashDir, (_, dir: string) => trashDir(dir));
-  // Checks if directory is empty
-  ipcMain.handle(fileChannels.isEmptyDir, (_, dir: string) => isEmptyDir(dir));
-
-  // Lists directory contents with relative path support
-  ipcMain.handle(fileChannels.listDir, async (_e, dirPath: string, relatives: string[]) =>
-    getRelativeList(dirPath, relatives),
-  );
-
-  // Checks if specified files exist in directory
-  ipcMain.handle(fileChannels.checkFilesExist, (_, dir: string, fileNames: string[]) =>
-    checkFilesExist(dir, fileNames),
-  );
-
-  // Calculates total size of folder and all contents
-  ipcMain.handle(fileChannels.calcFolderSize, (_, dir) => calcFolderSize(dir));
-  // Converts absolute path to relative path
-  ipcMain.handle(fileChannels.getRelativePath, (_, basePath: string, targetPath: string) =>
-    getRelativePath(basePath, targetPath),
-  );
-  // Converts relative path to absolute path
-  ipcMain.handle(fileChannels.getAbsolutePath, (_, basePath: string, targetPath: string) =>
-    getAbsolutePath(basePath, targetPath),
-  );
-}
 
 function git() {
   // Validates if directory is a valid Git repository matching the URL
@@ -462,7 +407,7 @@ export function listenToIpcChannels() {
   storageUtilsIpc();
 
   listenApplication();
-  file();
+  listenFiles();
 
   git();
   utils();
