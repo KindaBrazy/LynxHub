@@ -1,11 +1,10 @@
 import {accessSync, constants as fsConstants, existsSync, mkdirSync} from 'node:fs';
 import {basename, join, parse} from 'node:path';
 
-import {browserDownloadChannels} from '@lynx_cross/consts/ipc_channels/donwload_manager';
-import {app, BrowserWindow, dialog, DownloadItem, ipcMain, Session, shell, WebContents} from 'electron';
+import {app, BrowserWindow, dialog, DownloadItem, Session, shell} from 'electron';
 
-import {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '../../cross/types/download_manager';
 import classHolder from '../core/class_holder';
+import listenDownloadManager, {downloadManagerIpc} from '../ipc/download_manager';
 
 /**
  * Error types for file system operations
@@ -33,11 +32,8 @@ const FILE_SYSTEM_ERROR_MESSAGES: Record<string, string> = {
 };
 
 export default class BrowserDownloadManager {
-  private static ipcHandlersRegistered: boolean = false;
-
   private downloadingItems: DownloadItem[];
 
-  private readonly mainWebContents: WebContents;
   private readonly mainWindow: BrowserWindow;
 
   // Map to track download identifiers (URL + filename) for persistence
@@ -50,7 +46,6 @@ export default class BrowserDownloadManager {
 
   constructor(session: Session, mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
-    this.mainWebContents = mainWindow.webContents;
 
     this.downloadingItems = [];
     this.downloadIdentifiers = new Map();
@@ -131,7 +126,7 @@ export default class BrowserDownloadManager {
       }
     });
 
-    this.listenForMainChannels();
+    listenDownloadManager();
   }
 
   /**
@@ -200,7 +195,7 @@ export default class BrowserDownloadManager {
    * @param error - The error object
    * @returns FileSystemError with code, technical message, and user-friendly message
    */
-  private handleFileSystemError(error: any): FileSystemError {
+  public handleFileSystemError(error: any): FileSystemError {
     const code = error.code || 'UNKNOWN';
     const message = error.message || 'Unknown error occurred';
     const userMessage = FILE_SYSTEM_ERROR_MESSAGES[code] || 'An unexpected error occurred with the file system.';
@@ -391,31 +386,10 @@ export default class BrowserDownloadManager {
     return this.downloadingItems.find(item => basename(item.getSavePath()) === name);
   }
 
-  private sendToRenderer(channel: string, ...data: any) {
-    const {contextMenuManager} = classHolder;
-    if (contextMenuManager) contextMenuManager.sendToRenderer(channel, ...data);
-  }
-
-  private sendToMain(channel: string, ...data: any) {
-    if (!this.mainWebContents.isDestroyed()) this.mainWebContents.send(channel, ...data);
-  }
-
-  private onDlStart(info: DownloadStartInfo) {
-    this.sendToRenderer(browserDownloadChannels.onDlStart, info);
-  }
-
-  private onProgress(info: DownloadManagerProgress) {
-    this.sendToRenderer(browserDownloadChannels.onProgress, info);
-  }
-
-  private onDone(info: DownloadDoneInfo) {
-    this.sendToRenderer(browserDownloadChannels.onDone, info);
-  }
-
   private notifyRenderer(item: DownloadItem) {
     const itemName = basename(item.getSavePath());
 
-    this.onDlStart({
+    downloadManagerIpc.send.onDlStart({
       name: itemName,
       startTime: item.getStartTime(),
       url: item.getURL(),
@@ -423,7 +397,7 @@ export default class BrowserDownloadManager {
     });
 
     item.on('done', (_, state) => {
-      this.onDone({name: itemName, state});
+      downloadManagerIpc.send.onDone({name: itemName, state});
       // Clear filename cache when download completes to ensure fresh checks for next download
       this.clearFilenameCache();
     });
@@ -436,18 +410,25 @@ export default class BrowserDownloadManager {
         const bytesPerSecond = item.getCurrentBytesPerSecond();
         const etaSecond = bytesPerSecond > 0 ? Math.floor((totalBytes - receivedBytes) / bytesPerSecond) : 0;
 
-        this.onProgress({name: itemName, totalBytes, receivedBytes, percent, bytesPerSecond, etaSecond});
+        downloadManagerIpc.send.onProgress({
+          name: itemName,
+          totalBytes,
+          receivedBytes,
+          percent,
+          bytesPerSecond,
+          etaSecond,
+        });
       }
     });
 
-    this.sendToMain(browserDownloadChannels.mainDownloadCount, this.downloadingItems.length);
+    downloadManagerIpc.send.dlCount(this.downloadingItems.length);
   }
 
   /**
    * Gets the download location from storage with default fallback
    * @returns The download directory path
    */
-  private getDownloadLocation(): string {
+  public getDownloadLocation(): string {
     const {storageManager} = classHolder;
     const location = storageManager.getData('browser').downloadLocation;
     // Fallback to default if not set
@@ -459,7 +440,7 @@ export default class BrowserDownloadManager {
    * @param path - The new download directory path
    * @returns Object with success status and optional error message
    */
-  private setDownloadLocation(path: string): {success: boolean; error?: string} {
+  public setDownloadLocation(path: string): {success: boolean; error?: string} {
     const {storageManager} = classHolder;
     try {
       // Validate path
@@ -487,7 +468,7 @@ export default class BrowserDownloadManager {
    * Opens a directory selection dialog for choosing download location
    * @returns The selected path or null if cancelled
    */
-  private async openLocationDialog(): Promise<string | null> {
+  public async openLocationDialog(): Promise<string | null> {
     try {
       const result = await dialog.showOpenDialog(this.mainWindow, {
         title: 'Select Download Location',
@@ -510,7 +491,7 @@ export default class BrowserDownloadManager {
    * Gets the download behavior setting from storage
    * @returns The download behavior ('ask' or 'default')
    */
-  private getDownloadBehavior(): 'ask' | 'default' {
+  public getDownloadBehavior(): 'ask' | 'default' {
     const {storageManager} = classHolder;
     return storageManager.getData('browser').downloadBehavior || 'default';
   }
@@ -519,7 +500,7 @@ export default class BrowserDownloadManager {
    * Sets the download behavior in storage
    * @param behavior - The download behavior to set
    */
-  private setDownloadBehavior(behavior: 'ask' | 'default'): void {
+  public setDownloadBehavior(behavior: 'ask' | 'default'): void {
     const {storageManager} = classHolder;
     storageManager.updateData('browser', {downloadBehavior: behavior});
   }
@@ -605,78 +586,7 @@ export default class BrowserDownloadManager {
     }
   }
 
-  private listenForMainChannels() {
-    // Prevent registering handlers multiple times
-    if (BrowserDownloadManager.ipcHandlersRegistered) {
-      console.warn('BrowserDownloadManager IPC handlers already registered, skipping...');
-      return;
-    }
-    BrowserDownloadManager.ipcHandlersRegistered = true;
-
-    ipcMain.on(browserDownloadChannels.cancel, (_, name: string) => this.cancelItem(name));
-    ipcMain.on(browserDownloadChannels.pause, (_, name: string) => this.pauseItem(name));
-    ipcMain.on(browserDownloadChannels.resume, (_, name: string) => this.resumeItem(name));
-    ipcMain.on(browserDownloadChannels.clear, (_, name: string) => this.clearItem(name));
-    ipcMain.on(browserDownloadChannels.clearAll, () => this.clearAllItems());
-    ipcMain.on(browserDownloadChannels.openItem, (_, name: string, action: 'open' | 'openFolder') =>
-      this.openItem(name, action),
-    );
-
-    // Download location and behavior IPC handlers
-    ipcMain.handle(browserDownloadChannels.getDownloadLocation, () => {
-      try {
-        return {success: true, path: this.getDownloadLocation()};
-      } catch (error) {
-        return {success: false, error: error.message};
-      }
-    });
-
-    ipcMain.handle(browserDownloadChannels.setDownloadLocation, (_, path: string) => {
-      try {
-        return this.setDownloadLocation(path);
-      } catch (error: any) {
-        const fsError = this.handleFileSystemError(error);
-        return {success: false, error: fsError.userMessage};
-      }
-    });
-
-    ipcMain.handle(browserDownloadChannels.openLocationDialog, async () => {
-      try {
-        const path = await this.openLocationDialog();
-        if (!path) {
-          return {success: false, error: 'Cancelled'};
-        }
-
-        const result = this.setDownloadLocation(path);
-        if (result.success) {
-          return {success: true, path};
-        }
-        return {success: false, error: result.error};
-      } catch (error: any) {
-        const fsError = this.handleFileSystemError(error);
-        return {success: false, error: fsError.userMessage};
-      }
-    });
-
-    ipcMain.handle(browserDownloadChannels.getDownloadBehavior, () => {
-      try {
-        return {success: true, behavior: this.getDownloadBehavior()};
-      } catch (error) {
-        return {success: false, error: error.message};
-      }
-    });
-
-    ipcMain.handle(browserDownloadChannels.setDownloadBehavior, (_, behavior: 'ask' | 'default') => {
-      try {
-        this.setDownloadBehavior(behavior);
-        return {success: true};
-      } catch (error) {
-        return {success: false, error: error.message};
-      }
-    });
-  }
-
-  private cancelItem(name: string) {
+  public cancelItem(name: string) {
     try {
       const item = this.getItemByName(name);
       if (item && (!item.getState || item.getState() !== 'cancelled')) {
@@ -688,7 +598,7 @@ export default class BrowserDownloadManager {
     }
   }
 
-  private pauseItem(name: string) {
+  public pauseItem(name: string) {
     try {
       const item = this.getItemByName(name);
       if (item && !item.isPaused()) {
@@ -700,7 +610,7 @@ export default class BrowserDownloadManager {
     }
   }
 
-  private resumeItem(name: string) {
+  public resumeItem(name: string) {
     try {
       const item = this.getItemByName(name);
       if (item && item.canResume()) {
@@ -721,7 +631,7 @@ export default class BrowserDownloadManager {
    *
    * @param name - The filename of the download item to clear
    */
-  private clearItem(name: string) {
+  public clearItem(name: string) {
     try {
       // Find the item to clear
       const itemToRemove = this.getItemByName(name);
@@ -749,7 +659,7 @@ export default class BrowserDownloadManager {
       this.downloadingItems = this.downloadingItems.filter(item => basename(item.getSavePath()) !== name);
 
       // Update the download count in the main window
-      this.sendToMain(browserDownloadChannels.mainDownloadCount, this.downloadingItems.length);
+      downloadManagerIpc.send.dlCount(this.downloadingItems.length);
 
       // Hide the download menu window if no items remain
       if (this.downloadingItems.length === 0) {
@@ -768,7 +678,7 @@ export default class BrowserDownloadManager {
    * Sends count update to main window and hides the download menu window.
    * Marks all downloads as cleared in storage to prevent reappearance on restart.
    */
-  private clearAllItems() {
+  public clearAllItems() {
     try {
       // Cancel all active or paused downloads and clean up listeners
       this.downloadingItems.forEach(item => {
@@ -798,7 +708,7 @@ export default class BrowserDownloadManager {
       this.downloadIdentifiers.clear();
 
       // Update the download count in the main window to zero
-      this.sendToMain(browserDownloadChannels.mainDownloadCount, 0);
+      downloadManagerIpc.send.dlCount(0);
 
       // Hide the download menu window since there are no items
       const {contextMenuManager} = classHolder;
@@ -809,7 +719,7 @@ export default class BrowserDownloadManager {
     }
   }
 
-  private openItem(name: string, action: 'open' | 'openFolder') {
+  public openItem(name: string, action: 'open' | 'openFolder') {
     try {
       const savePath = this.getItemByName(name)?.getSavePath();
       if (savePath) {

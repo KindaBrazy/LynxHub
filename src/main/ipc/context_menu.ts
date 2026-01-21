@@ -1,14 +1,14 @@
 import contextMenuChannels from '@lynx_cross/consts/ipc_channels/context_menu';
-import {browserDownloadChannels} from '@lynx_cross/consts/ipc_channels/donwload_manager';
 import {ContextResizeData} from '@lynx_cross/types';
 import {ContextMenuVolumeData, NavHistory} from '@lynx_cross/types/ipc';
-import {ContextMenuParams, ipcMain} from 'electron';
+import {ContextMenuParams} from 'electron';
 
 import BrowserManager from '../core/browser';
 import classHolder from '../core/class_holder';
 import {applicationIpc} from './application';
 import {browserIpc} from './browser';
 import listenDialogsWindow from './dialogs_window';
+import {downloadManagerIpc} from './download_manager';
 import lynxIpc from './lynxIpc';
 import {downloadImageToClipboard} from './methods';
 import {sendToCM, sendToMain} from './sender';
@@ -107,8 +107,7 @@ export function listenForBrowserChannels(browserManager: BrowserManager) {
     contextMenuIpc.send.onCloseApp();
   });
 
-  // TODO
-  ipcMain.on(browserDownloadChannels.openDownloadsMenu, () => {
+  downloadManagerIpc.on.openDownloadsMenu(() => {
     setPosition(undefined);
     contextMenuIpc.send.onDownloads();
   });
