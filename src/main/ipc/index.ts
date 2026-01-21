@@ -17,6 +17,7 @@ import GitManager from '../git';
 import {getList} from '../plugins/utils';
 import {getDirCreationDate} from '../utils';
 import listenApplication from './application';
+import listenContextMenu from './context_menu';
 import listenFiles from './files';
 import {decompressFile, getImageAsDataURL, isResponseValid} from './methods';
 import {
@@ -421,8 +422,8 @@ export function listenToIpcChannels() {
 
   plugins();
 
-  const {contextMenuManager, linkPreviewManager} = classHolder;
-  if (contextMenuManager) contextMenuManager.listenForContextChannels();
+  const {linkPreviewManager} = classHolder;
+  listenContextMenu();
   if (linkPreviewManager) linkPreviewManager.listenForChannels();
 
   statics();

@@ -29,7 +29,6 @@ const contextMenuChannels = {
   redo: 'context:redo',
 
   newTab: 'context:newTab',
-  openExternal: 'context:openExternal',
 
   downloadImage: 'context:download-image',
   copyImage: 'context:copy-image',

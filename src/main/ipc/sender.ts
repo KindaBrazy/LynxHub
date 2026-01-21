@@ -18,4 +18,13 @@ const sendToLP = (channel: string, ...args: any[]) => {
   }
 };
 
-export {sendToLP, sendToMain};
+const sendToCM = (channel: string, ...args: any[]) => {
+  const {contextMenuManager} = classHolder;
+  if (contextMenuManager) {
+    contextMenuManager.sendMessage(channel, ...args);
+  } else {
+    console.error('Failed to send message: appManager is undefined');
+  }
+};
+
+export {sendToCM, sendToLP, sendToMain};

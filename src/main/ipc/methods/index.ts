@@ -4,13 +4,14 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import decompress from 'decompress';
-import {app, dialog, shell} from 'electron';
+import {app, clipboard, dialog, nativeImage, net, shell} from 'electron';
 import {promises, readdir} from 'graceful-fs';
 
 import {FolderListData} from '../../../cross/types';
 import {ChangeWindowState, DarkModeTypes, TaskbarStatus} from '../../../cross/types/ipc';
 import classHolder from '../../core/class_holder';
 import {noticeAllWindowsDarkMode} from '../../utils';
+import {applicationIpc} from '../application';
 
 /**
  * Changes the state of the main window based on the provided action.
@@ -294,5 +295,22 @@ export async function getImageAsDataURL(imageUrl: string) {
   } catch (error: any) {
     console.error(`Error processing image from ${imageUrl}:`, error.message);
     return null;
+  }
+}
+
+export async function downloadImageToClipboard(url: string): Promise<void> {
+  try {
+    const response = await net.fetch(url);
+    const buffer = Buffer.from(await response.arrayBuffer());
+    const image = nativeImage.createFromBuffer(buffer);
+    if (!image.isEmpty()) {
+      clipboard.writeImage(image);
+      applicationIpc.send.showToast('Image copied to clipboard', 'success', 'top-center');
+    } else {
+      applicationIpc.send.showToast('Failed to copy image', 'error', 'top-center');
+    }
+  } catch (error) {
+    console.error('Failed to copy image:', error);
+    applicationIpc.send.showToast('Failed to copy image', 'error', 'top-center');
   }
 }

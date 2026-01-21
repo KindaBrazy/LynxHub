@@ -106,3 +106,8 @@ export type ContextMenuVolumeData = {id: string; tabId: string; volume: number; 
 export type ContextWindowWidthSizes = 'sm' | 'md' | 'lg';
 
 export type MainHT<T> = Promise<T> | T;
+
+export type NavHistory = {
+  canGoBack: boolean;
+  canGoForward: boolean;
+};

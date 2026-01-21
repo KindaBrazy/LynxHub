@@ -1,4 +1,5 @@
 import {Divider} from '@heroui/react';
+import applicationIpc from '@lynx_shared/ipc/application';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {Export, Link, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 
@@ -20,7 +21,7 @@ export function Links({url}: Props) {
       />
       <ActionButton
         onPress={createActionHandler(() => {
-          contextMenuIpc.send.rightClickItems.openExternal(url);
+          applicationIpc.send.openUrlDefaultBrowser(url);
         })}
         key="context_openExternal"
         title="Open link in default browser"

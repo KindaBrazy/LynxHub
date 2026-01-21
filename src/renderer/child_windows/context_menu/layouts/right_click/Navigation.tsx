@@ -1,7 +1,8 @@
+import {NavHistory} from '@lynx_cross/types/ipc';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {ArrowLeft, ArrowRight, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 
-import {NavBtnProps, NavHistory} from '../../types';
+import {NavBtnProps} from '../../types';
 import {createActionHandler} from './Utils';
 
 function NavButton({icon, onPress, className, isDisabled}: NavBtnProps) {
