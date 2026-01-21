@@ -1,6 +1,5 @@
 import path from 'node:path';
 
-import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import browserVolumeChannels from '@lynx_cross/consts/ipc_channels/browser_volume';
 import fileChannels from '@lynx_cross/consts/ipc_channels/files';
@@ -13,17 +12,14 @@ import storageChannels, {storageUtilsChannels} from '@lynx_cross/consts/ipc_chan
 import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
 import {
   AgentTypes,
-  ChangeWindowState,
   CustomRunBehaviorData,
-  DarkModeTypes,
   PreCommands,
   PreOpen,
   RecentlyOperation,
   StorageOperation,
-  TaskbarStatus,
   WHType,
 } from '@lynx_cross/types/ipc';
-import {app, FindInPageOptions, ipcMain, nativeTheme, OpenDialogOptions, shell} from 'electron';
+import {app, FindInPageOptions, ipcMain, OpenDialogOptions, shell} from 'electron';
 
 import {ChosenArgumentsData, ConfirmMenuTypes, FolderNames, SubscribeStages} from '../../cross/types';
 import {ShallowCloneOptions} from '../../cross/types/git';
@@ -32,23 +28,14 @@ import {toMs} from '../../cross/utils';
 import BrowserDownloadManager from '../child_windows/browser_download_manager';
 import BrowserManager from '../core/browser';
 import classHolder from '../core/class_holder';
-import {getAppDataPath, getAppDirectory, isAppDir, selectNewAppDataFolder} from '../core/data_folder';
+import {getAppDirectory} from '../core/data_folder';
 import {getImageCacheManager} from '../core/image_cache';
 import GitManager from '../git';
 import {getList} from '../plugins/utils';
-import {
-  getAbsolutePath,
-  getDirCreationDate,
-  getRelativePath,
-  getSystemDarkMode,
-  getUserAgent,
-  isDark,
-  noticeAllWindowsDarkMode,
-  openDialog,
-} from '../utils';
+import {getAbsolutePath, getDirCreationDate, getRelativePath, getUserAgent, openDialog} from '../utils';
 import calcFolderSize from '../utils/calc_folder_size';
+import listenApplication from './application';
 import {
-  changeWindowState,
   checkFilesExist,
   decompressFile,
   getImageAsDataURL,
@@ -57,8 +44,6 @@ import {
   isResponseValid,
   removeDir,
   saveToFile,
-  setDarkMode,
-  setTaskbarStatus,
   trashDir,
 } from './methods';
 import {
@@ -69,8 +54,6 @@ import {
   updateAllExtensions,
 } from './methods/card_extensions';
 import {cancelDownload, downloadFile} from './methods/downloader';
-import {listenToInitChannels} from './methods/initializer';
-import {getSystemInfo} from './methods/platform';
 import {
   customPtyCommands,
   customPtyProcess,
@@ -93,40 +76,6 @@ import {
   validateGitDir,
 } from './methods/repository';
 import {handleGetAudioState, handleSetMuted, handleSetVolume} from './methods/volume';
-
-function win() {
-  const {appManager, storageManager} = classHolder;
-  // Changes window state (maximize, minimize, close, fullscreen, restart)
-  ipcMain.on(appChannels.changeState, (_, state: ChangeWindowState) => changeWindowState(state));
-  // Gets system dark mode preference (light/dark)
-  ipcMain.handle(appChannels.getSystemDarkMode, () => getSystemDarkMode());
-  // Sets app theme (light, dark, or system)
-  ipcMain.on(appChannels.setDarkMode, (_, darkMode: DarkModeTypes) => setDarkMode(darkMode));
-  ipcMain.handle(appChannels.isDarkMode, () => isDark());
-
-  // Listens for system theme changes and updates app if set to 'system' mode
-  nativeTheme.on('updated', () => {
-    if (storageManager.getData('app').darkMode === 'system') noticeAllWindowsDarkMode('system');
-  });
-
-  // Sets taskbar visibility status (taskbar, tray, taskbar-tray, tray-minimized)
-  ipcMain.on(appChannels.setTaskBarStatus, (_, status: TaskbarStatus) => setTaskbarStatus(status));
-
-  // Gets system information (OS platform and build number)
-  ipcMain.handle(appChannels.getSystemInfo, () => getSystemInfo());
-
-  // Opens URL in default system browser
-  ipcMain.on(appChannels.openUrlDefaultBrowser, (_, url: string) => shell.openExternal(url));
-
-  // Sets window progress bar (taskbar/dock) - value: 0-1 for progress, -1 to remove, >1 for indeterminate
-  // mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused' (Windows only)
-  ipcMain.on(
-    appChannels.setProgressBar,
-    (_, progress: number, options?: {mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused'}) => {
-      appManager?.getMainWindow()?.setProgressBar(progress, options);
-    },
-  );
-}
 
 function file() {
   // Gets app directory path by folder name (cards, extensions, etc.)
@@ -294,15 +243,6 @@ function pty() {
   ipcMain.on(ptyChannels.clear, (_, id: string) => ptyClear(id));
   // Resizes PTY terminal dimensions
   ipcMain.on(ptyChannels.resize, (_, id: string, cols: number, rows: number) => ptyResize(id, cols, rows));
-}
-
-function appData() {
-  // Gets current app data directory path
-  ipcMain.handle(appChannels.getCurrentDataPath, () => getAppDataPath());
-  // Opens dialog to select new app data folder
-  ipcMain.handle(appChannels.selectAnotherDataPath, () => selectNewAppDataFolder());
-  // Checks if directory is valid app data directory
-  ipcMain.handle(appChannels.isValidDataPath, (_, dir: string) => isAppDir(dir));
 }
 
 function storage() {
@@ -655,11 +595,10 @@ function formatBytes(bytes: number): string {
 }
 
 export function listenToIpcChannels() {
-  appData();
   storage();
   storageUtilsIpc();
 
-  win();
+  listenApplication();
   file();
 
   git();
@@ -669,8 +608,6 @@ export function listenToIpcChannels() {
   modules();
   modulesApi();
   modulesIpc();
-
-  listenToInitChannels();
 
   extensionsIpc();
 

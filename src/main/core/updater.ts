@@ -1,17 +1,10 @@
-import appChannels from '@lynx_cross/consts/ipc_channels/application';
-import {AppUpdateEventTypes, AppUpdateStatus} from '@lynx_cross/types/ipc';
-import {ipcMain} from 'electron';
 import electron_log from 'electron-log';
 import updater from 'electron-updater';
 
+import {applicationIpc} from '../ipc/application';
 import classHolder from './class_holder';
 
 const {autoUpdater, CancellationToken} = updater;
-
-function sendToRenderer(type: AppUpdateEventTypes, status?: AppUpdateStatus) {
-  const {appManager} = classHolder;
-  appManager?.getWebContent()?.send(appChannels.updateStatus, type, status);
-}
 
 /**
  * Checks if an error is a network-related error that should be silently ignored.
@@ -58,17 +51,17 @@ export function checkForUpdate() {
 
   let cancelToken = new CancellationToken();
 
-  ipcMain.on(appChannels.updateDownload, () => {
+  applicationIpc.on.updateDownload(() => {
     autoUpdater.downloadUpdate(cancelToken).catch(e => {
       console.error('autoUpdater.downloadUpdate: ', e);
     });
   });
 
-  ipcMain.on(appChannels.updateInstall, () => {
+  applicationIpc.on.updateInstall(() => {
     autoUpdater.quitAndInstall();
   });
 
-  ipcMain.on(appChannels.updateCancel, () => {
+  applicationIpc.on.updateCancel(() => {
     const {appManager} = classHolder;
     appManager?.getMainWindow()?.setProgressBar(-1);
     cancelToken.cancel();
@@ -76,18 +69,18 @@ export function checkForUpdate() {
   });
 
   autoUpdater.on('update-available', () => {
-    sendToRenderer('update-available');
+    applicationIpc.send.updateStatus('update-available');
   });
 
   autoUpdater.on('download-progress', (info: updater.ProgressInfo) => {
     const {appManager} = classHolder;
-    sendToRenderer('download-progress', info);
+    applicationIpc.send.updateStatus('download-progress', info);
     appManager?.getMainWindow()?.setProgressBar(info.percent / 100);
   });
 
   autoUpdater.on('update-downloaded', () => {
     const {appManager} = classHolder;
-    sendToRenderer('update-downloaded');
+    applicationIpc.send.updateStatus('update-downloaded');
     appManager?.getMainWindow()?.setProgressBar(-1);
   });
 
@@ -100,9 +93,9 @@ export function checkForUpdate() {
     }
 
     if (e.statusCode === 403) {
-      appManager?.getWebContent()?.send(appChannels.updateError);
+      applicationIpc.send.updateError();
     } else {
-      sendToRenderer('error', message);
+      applicationIpc.send.updateStatus('error', message);
       appManager?.getMainWindow()?.setProgressBar(-1);
     }
   });

@@ -1,6 +1,5 @@
 import path from 'node:path';
 
-import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import browserVolumeChannels from '@lynx_cross/consts/ipc_channels/browser_volume';
 import {AudioState, CanGoType, WHType} from '@lynx_cross/types/ipc';
@@ -9,6 +8,7 @@ import {debounce, isEmpty, isNil} from 'lodash';
 
 import icon from '../../../resources/icon.png?asset';
 import {formatWebAddress} from '../../cross/utils';
+import {applicationIpc} from '../ipc/application';
 import {getUserAgent, getWindowColor} from '../utils';
 import classHolder from './class_holder';
 import RegisterHotkeys from './hotkeys';
@@ -224,7 +224,7 @@ export default class BrowserManager {
         // background-tab = middle-click = open in background (don't switch)
         // foreground-tab = Shift+middle-click = switch to new tab
         const openInBackground = disposition === 'background-tab';
-        appManager?.getWebContent()?.send(appChannels.onNewTab, url, openInBackground);
+        applicationIpc.send.onNewTab(url, openInBackground);
         // Track URLs opened in new tabs (like real browsers)
         this.trackUrl(url);
       }

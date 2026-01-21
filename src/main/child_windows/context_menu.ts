@@ -1,7 +1,6 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import contextMenuChannels from '@lynx_cross/consts/ipc_channels/context_menu';
 import {browserDownloadChannels} from '@lynx_cross/consts/ipc_channels/donwload_manager';
@@ -20,6 +19,7 @@ import {
 import {ContextResizeData} from '../../cross/types';
 import BrowserManager from '../core/browser';
 import classHolder from '../core/class_holder';
+import {applicationIpc} from '../ipc/application';
 import AddBreadcrumb_Main from '../utils/breadcrumbs';
 
 export default class ContextMenuManager {
@@ -244,7 +244,6 @@ export default class ContextMenuManager {
       this.getContentById(id)?.downloadURL(url),
     );
     ipcMain.on(contextMenuChannels.copyImage, async (_, url: string) => {
-      const {appManager} = classHolder;
       try {
         const {net, clipboard, nativeImage} = await import('electron');
         const response = await net.fetch(url);
@@ -252,18 +251,18 @@ export default class ContextMenuManager {
         const image = nativeImage.createFromBuffer(buffer);
         if (!image.isEmpty()) {
           clipboard.writeImage(image);
-          appManager?.showToast('Image copied to clipboard', 'success', 'top-center');
+          applicationIpc.send.showToast('Image copied to clipboard', 'success', 'top-center');
         } else {
-          appManager?.showToast('Failed to copy image', 'error', 'top-center');
+          applicationIpc.send.showToast('Failed to copy image', 'error', 'top-center');
         }
       } catch (error) {
         console.error('Failed to copy image:', error);
-        appManager?.showToast('Failed to copy image', 'error', 'top-center');
+        applicationIpc.send.showToast('Failed to copy image', 'error', 'top-center');
       }
     });
     ipcMain.on(contextMenuChannels.searchWithGoogle, (_, text: string) => {
       const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(text)}`;
-      this.sendMainMessage(appChannels.onNewTab, searchUrl);
+      applicationIpc.send.onNewTab(searchUrl);
     });
     ipcMain.on(contextMenuChannels.inspectElement, (_, id: number, x: number, y: number) => {
       const webContents = this.getContentById(id);
@@ -278,7 +277,7 @@ export default class ContextMenuManager {
     ipcMain.on(contextMenuChannels.replaceMisspelling, (_, id: number, text: string) =>
       this.getContentById(id)?.replaceMisspelling(text),
     );
-    ipcMain.on(contextMenuChannels.newTab, (_, url: string) => this.sendMainMessage(appChannels.onNewTab, url));
+    ipcMain.on(contextMenuChannels.newTab, (_, url: string) => applicationIpc.send.onNewTab(url));
     ipcMain.on(contextMenuChannels.navigate, (_, id: number, action: 'back' | 'forward' | 'refresh') => {
       switch (action) {
         case 'back':

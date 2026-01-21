@@ -5,8 +5,8 @@ import {promisify} from 'node:util';
 
 import path from 'path';
 
-import classHolder from '../../core/class_holder';
 import {getAppDirectory} from '../../core/data_folder';
+import {applicationIpc} from '../../ipc/application';
 
 const execPromise = promisify(exec);
 
@@ -36,14 +36,13 @@ function processDuOutput(stdout: string): number {
  * @throws Will throw an error if the command execution fails.
  */
 export default async function calcFolderSize(target: string): Promise<number> {
-  const {appManager} = classHolder;
   // Check if the target path exists and is a directory
   try {
     const stats = await stat(target);
     if (!stats.isDirectory()) {
       const message = `The provided path is not a directory: ${target}`;
       console.error(message);
-      appManager?.showToast(message, 'error');
+      applicationIpc.send.showToast(message, 'error');
       return 0;
     }
   } catch (err: any) {
@@ -51,11 +50,11 @@ export default async function calcFolderSize(target: string): Promise<number> {
     if (err.code === 'ENOENT') {
       message = `The specified path does not exist: ${target}`;
       console.error(message);
-      appManager?.showToast(message, 'error');
+      applicationIpc.send.showToast(message, 'error');
     } else {
       message = `Error accessing the path: ${target}. Details: ${err.message}`;
       console.error(message);
-      appManager?.showToast(message, 'error');
+      applicationIpc.send.showToast(message, 'error');
     }
     return 0;
   }
@@ -78,7 +77,7 @@ export default async function calcFolderSize(target: string): Promise<number> {
     default: {
       const message = `Unsupported operating system: ${platform()}`;
       console.error(message);
-      appManager?.showToast(message, 'error');
+      applicationIpc.send.showToast(message, 'error');
       return 0;
     }
   }
@@ -89,7 +88,7 @@ export default async function calcFolderSize(target: string): Promise<number> {
   } catch (err) {
     const message = `Failed to calculate folder size for '${target}'. Please check the folder and try again.`;
     console.error('Error calculating folder size:', err);
-    appManager?.showToast(message, 'error');
+    applicationIpc.send.showToast(message, 'error');
     return 0;
   }
 }

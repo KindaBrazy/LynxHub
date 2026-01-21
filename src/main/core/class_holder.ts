@@ -1,6 +1,5 @@
 import {clearInterval} from 'node:timers';
 
-import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import axios from 'axios';
 import {app, BrowserWindow} from 'electron';
 
@@ -9,6 +8,7 @@ import BrowserDownloadManager from '../child_windows/browser_download_manager';
 import ContextMenuManager from '../child_windows/context_menu';
 import LinkPreviewManager from '../child_windows/link_preview';
 import ShareScreenManager from '../child_windows/share_screen';
+import {applicationIpc} from '../ipc/application';
 import ElectronAppManager from '../main_window';
 import {PluginManager} from '../plugins';
 import ExtensionManager from '../plugins/extensions';
@@ -49,10 +49,7 @@ class ClassHolder {
   private async checkOnline() {
     const setResult = isOnline => {
       this.isOnline = isOnline;
-      if (this.appManager) {
-        const webContent = this.appManager.getWebContent();
-        if (webContent && !webContent.isDestroyed()) webContent.send(appChannels.onOnline, isOnline);
-      }
+      applicationIpc.send.onOnline(isOnline);
     };
     const checkStatus = () => {
       axios

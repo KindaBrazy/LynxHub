@@ -1,11 +1,11 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import appChannels from '@lynx_cross/consts/ipc_channels/application';
-import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain} from 'electron';
+import {BrowserWindow, BrowserWindowConstructorOptions} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
 import classHolder from '../core/class_holder';
+import {applicationIpc} from '../ipc/application';
 import {getWindowColor} from '../utils';
 
 export default class LoadingWindow {
@@ -28,8 +28,7 @@ export default class LoadingWindow {
   };
 
   public async startLoading() {
-    ipcMain.handle(
-      appChannels.disableLoadingAnimations,
+    applicationIpc.handle.disableLoadingAnimations(
       () => classHolder.storageManager.getData('app').disableLoadingAnimations,
     );
 

@@ -7,13 +7,13 @@ import {isArray, isEmpty, isNil} from 'lodash';
 import classHolder from '../../core/class_holder';
 import LynxTerminal from '../../core/lynx_terminal';
 import {getAbsolutePath, getExePath, isPortable} from '../../utils';
+import {applicationIpc} from '../application';
 
 /**
  * Creates a PTY manager with error handling.
  * Shows user-friendly error message if terminal creation fails.
  */
 function createPtyManager(id: string, dir: string, useConpty: boolean): LynxTerminal | null {
-  const {appManager} = classHolder;
   try {
     return new LynxTerminal(id, dir, useConpty);
   } catch (error) {
@@ -29,7 +29,7 @@ function createPtyManager(id: string, dir: string, useConpty: boolean): LynxTerm
       userMessage = 'Failed to spawn terminal process. Your shell may be misconfigured.';
     }
 
-    appManager?.showToast(userMessage, 'error');
+    applicationIpc.send.showToast(userMessage, 'error');
     return null;
   }
 }

@@ -2,14 +2,13 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import appChannels from '@lynx_cross/consts/ipc_channels/application';
-import {ShowToastTypes} from '@lynx_cross/types/ipc';
 import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
-import {HeroToastPlacement} from '../../cross/types';
 import classHolder from '../core/class_holder';
 import RegisterHotkeys from '../core/hotkeys';
+import {applicationIpc} from '../ipc/application';
+import lynxIpc from '../ipc/lynxIpc';
 import {getUserAgent, getWindowColor, RelaunchApp} from '../utils';
 
 type Listener = () => void;
@@ -58,15 +57,19 @@ export default class ElectronAppManager {
   public getWebContent(): WebContents | undefined {
     const webContent = this.getMainWindow()?.webContents;
 
-    if (!webContent) return undefined;
-
-    if (webContent.isDestroyed()) return undefined;
+    if (!webContent || webContent.isDestroyed()) return undefined;
 
     return webContent;
   }
 
-  public showToast(message: string, type: ShowToastTypes, placement: HeroToastPlacement = 'bottom-right') {
-    this.getWebContent()?.send(appChannels.showToast, message, type, placement);
+  public sendMessage(channel: string, ...args: any[]): void {
+    const webContents = this.getWebContent();
+    if (!webContents) {
+      console.error('Failed to send message: appManager or webContents is not available.');
+      return;
+    }
+
+    lynxIpc.send(webContents, channel, ...args);
   }
 
   /** Creates and configures the main application window. */
@@ -101,7 +104,7 @@ export default class ElectronAppManager {
       } else {
         // background-tab = middle-click = open in background (don't switch)
         const openInBackground = disposition === 'background-tab';
-        this.getWebContent()?.send(appChannels.onNewTab, url, openInBackground);
+        applicationIpc.send.onNewTab(url, openInBackground);
       }
       return {action: 'deny'};
     });
@@ -116,43 +119,21 @@ export default class ElectronAppManager {
     const webContent = this.getWebContent();
     if (!webContent) return;
 
-    this.getMainWindow()?.on('focus', (): void =>
-      webContent.send(appChannels.onChangeState, {
-        name: 'focus',
-        value: true,
-      }),
-    );
-    this.getMainWindow()?.on('blur', (): void =>
-      webContent.send(appChannels.onChangeState, {
-        name: 'focus',
-        value: false,
-      }),
-    );
+    this.getMainWindow()?.on('focus', (): void => applicationIpc.send.changeWinState({name: 'focus', value: true}));
+    this.getMainWindow()?.on('blur', (): void => applicationIpc.send.changeWinState({name: 'focus', value: false}));
 
     this.getMainWindow()?.on('maximize', (): void =>
-      webContent.send(appChannels.onChangeState, {
-        name: 'maximize',
-        value: true,
-      }),
+      applicationIpc.send.changeWinState({name: 'maximize', value: true}),
     );
     this.getMainWindow()?.on('unmaximize', (): void =>
-      webContent.send(appChannels.onChangeState, {
-        name: 'maximize',
-        value: false,
-      }),
+      applicationIpc.send.changeWinState({name: 'maximize', value: false}),
     );
 
     this.getMainWindow()?.on('enter-full-screen', (): void =>
-      webContent.send(appChannels.onChangeState, {
-        name: 'full-screen',
-        value: true,
-      }),
+      applicationIpc.send.changeWinState({name: 'full-screen', value: true}),
     );
     this.getMainWindow()?.on('leave-full-screen', (): void =>
-      webContent.send(appChannels.onChangeState, {
-        name: 'full-screen',
-        value: false,
-      }),
+      applicationIpc.send.changeWinState({name: 'full-screen', value: false}),
     );
   }
 
