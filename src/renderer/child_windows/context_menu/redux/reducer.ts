@@ -1,4 +1,5 @@
 import {ContextMenuVolumeData, ContextWindowWidthSizes} from '@lynx_cross/types/ipc';
+import {NavHistory} from '@lynx_cross/types/ipc';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import type {ContextMenuParams} from 'electron';
 import {cloneDeep} from 'lodash';
@@ -6,7 +7,6 @@ import {useSelector} from 'react-redux';
 
 import {MenuTypes} from '../consts';
 import {showContextWindow} from '../layouts/Shared';
-import {NavHistory} from '../types';
 import {RootState} from './store';
 
 type ZoomLayout = {id: string; factor: number};

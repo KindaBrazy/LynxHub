@@ -1,9 +1,9 @@
 import contextMenuChannels from '@lynx_cross/consts/ipc_channels/context_menu';
 import {ContextResizeData} from '@lynx_cross/types';
 import {ContextMenuVolumeData} from '@lynx_cross/types/ipc';
+import {NavHistory} from '@lynx_cross/types/ipc';
 import type {ContextMenuParams} from 'electron';
 
-import {NavHistory} from '../../child_windows/context_menu/types';
 import lynxIpc from './lynxIpc';
 
 const contextMenuIpc = {
@@ -59,9 +59,6 @@ const contextMenuIpc = {
 
       // Opens new tab with URL
       newTab: (url: string) => lynxIpc.send(contextMenuChannels.newTab, url),
-
-      // Opens URL in default system browser
-      openExternal: (url: string) => lynxIpc.send(contextMenuChannels.openExternal, url),
 
       // Downloads image from URL
       downloadImage: (id: number, url: string) => lynxIpc.send(contextMenuChannels.downloadImage, id, url),

@@ -1,24 +1,13 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import contextMenuChannels from '@lynx_cross/consts/ipc_channels/context_menu';
-import {browserDownloadChannels} from '@lynx_cross/consts/ipc_channels/donwload_manager';
 import windowDialogsChannels from '@lynx_cross/consts/ipc_channels/window_dialogs';
-import {
-  BrowserWindow,
-  BrowserWindowConstructorOptions,
-  ipcMain,
-  IpcMainEvent,
-  screen,
-  shell,
-  WebContents,
-} from 'electron';
+import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain, IpcMainEvent, screen, WebContents} from 'electron';
 
 import {ContextResizeData} from '../../cross/types';
-import BrowserManager from '../core/browser';
 import classHolder from '../core/class_holder';
-import {applicationIpc} from '../ipc/application';
-import {browserIpc} from '../ipc/browser';
+import {contextMenuIpc} from '../ipc/context_menu';
+import lynxIpc from '../ipc/lynxIpc';
 import AddBreadcrumb_Main from '../utils/breadcrumbs';
 
 export default class ContextMenuManager {
@@ -28,8 +17,6 @@ export default class ContextMenuManager {
   private animationInterval?: NodeJS.Timeout;
   private isHiding = false;
   private webContents: WebContents[] = [];
-  private browserChannelsRegistered = false;
-  private contextChannelsRegistered = false;
 
   private dialogEvent?: IpcMainEvent;
   private dialogDefaultResult: boolean | null | string = null;
@@ -65,9 +52,6 @@ export default class ContextMenuManager {
     if (this.contextMenuWindow && !this.contextMenuWindow.isDestroyed()) {
       this.contextMenuWindow.close();
     }
-
-    // Reset browser channels flag so listenForBrowserChannels can re-register with new BrowserManager
-    this.browserChannelsRegistered = false;
 
     this.contextMenuWindow = new BrowserWindow({...ContextMenuManager.CONTEXT_WINDOW_CONFIG, parent: mainWindow});
     this.mainWindow = mainWindow;
@@ -124,8 +108,7 @@ export default class ContextMenuManager {
       if (!window || window.isDestroyed()) return;
 
       this.setCustomContextPosition(undefined);
-      window.webContents?.send(
-        contextMenuChannels.rightClick,
+      contextMenuIpc.send.rightClick(
         params,
         {canGoBack: contents.navigationHistory.canGoBack(), canGoForward: contents.navigationHistory.canGoForward()},
         contents.id,
@@ -133,46 +116,36 @@ export default class ContextMenuManager {
     });
   }
 
-  public listenForBrowserChannels(browserManager: BrowserManager) {
-    // Prevent duplicate listener registration
-    if (this.browserChannelsRegistered) return;
-    this.browserChannelsRegistered = true;
+  public getWindow(): BrowserWindow | undefined {
+    if (!this.contextMenuWindow) return undefined;
 
-    browserIpc.on.openFindInPage((id, customPosition) => {
-      this.setCustomContextPosition(customPosition);
-      this.sendContextMenuMessage(contextMenuChannels.onFind, id);
-    });
-    browserIpc.on.openZoom((id, customPosition) => {
-      this.setCustomContextPosition(customPosition);
-      this.sendContextMenuMessage(contextMenuChannels.onZoom, id, browserManager.getCurrentZoom(id));
-    });
+    if (this.contextMenuWindow.isDestroyed()) {
+      this.contextMenuWindow = undefined;
+      return undefined;
+    }
 
-    browserIpc.on.openVolume((data, customPosition) => {
-      this.setCustomContextPosition(customPosition);
-      this.sendContextMenuMessage(contextMenuChannels.onVolume, data);
-    });
-
-    ipcMain.on(contextMenuChannels.openTerminateAI, (_, id: string) => {
-      this.setCustomContextPosition(undefined);
-      this.sendContextMenuMessage(contextMenuChannels.onTerminateAI, id);
-    });
-    ipcMain.on(contextMenuChannels.openTerminateTab, (_, id: string, customPosition?: {x: number; y: number}) => {
-      this.setCustomContextPosition(customPosition);
-      this.sendContextMenuMessage(contextMenuChannels.onTerminateTab, id);
-    });
-    ipcMain.on(contextMenuChannels.openCloseApp, () => {
-      this.setCustomContextPosition(undefined);
-      this.sendContextMenuMessage(contextMenuChannels.onCloseApp);
-    });
-    ipcMain.on(browserDownloadChannels.openDownloadsMenu, () => {
-      this.setCustomContextPosition(undefined);
-      this.sendContextMenuMessage(contextMenuChannels.onDownloads);
-    });
-
-    this.listenForDialogWindows();
+    return this.contextMenuWindow;
   }
 
-  private listenForDialogWindows() {
+  public getWebContent(): WebContents | undefined {
+    const webContent = this.getWindow()?.webContents;
+
+    if (!webContent || webContent.isDestroyed()) return undefined;
+
+    return webContent;
+  }
+
+  public sendMessage(channel: string, ...args: any[]): void {
+    const webContents = this.getWebContent();
+    if (!webContents) {
+      console.error('Failed to send message: linkPreview or webContents is not available.');
+      return;
+    }
+
+    lynxIpc.send(webContents, channel, ...args);
+  }
+
+  public listenForDialogWindows() {
     ipcMain.on(windowDialogsChannels.onPrompt, (event, message: string, defaultValue?: string) => {
       if (this.mainWindow && !this.mainWindow.isDestroyed()) {
         const {width, height} = this.mainWindow.getBounds();
@@ -224,86 +197,7 @@ export default class ContextMenuManager {
     });
   }
 
-  public listenForContextChannels() {
-    // Prevent duplicate listener registration
-    if (this.contextChannelsRegistered) return;
-    this.contextChannelsRegistered = true;
-
-    ipcMain.on(contextMenuChannels.resizeWindow, (_e, data: ContextResizeData) => this.resizeContextMenu(data));
-
-    ipcMain.on(contextMenuChannels.copy, (_, id: number) => this.getContentById(id)?.copy());
-    ipcMain.on(contextMenuChannels.cut, (_, id: number) => this.getContentById(id)?.cut());
-    ipcMain.on(contextMenuChannels.paste, (_, id: number) => this.getContentById(id)?.paste());
-    ipcMain.on(contextMenuChannels.selectAll, (_, id: number) => this.getContentById(id)?.selectAll());
-    ipcMain.on(contextMenuChannels.undo, (_, id: number) => this.getContentById(id)?.undo());
-    ipcMain.on(contextMenuChannels.redo, (_, id: number) => this.getContentById(id)?.redo());
-    ipcMain.on(contextMenuChannels.openExternal, (_, url: string) => shell.openExternal(url));
-    ipcMain.on(contextMenuChannels.downloadImage, (_, id: number, url: string) =>
-      this.getContentById(id)?.downloadURL(url),
-    );
-    ipcMain.on(contextMenuChannels.copyImage, async (_, url: string) => {
-      try {
-        const {net, clipboard, nativeImage} = await import('electron');
-        const response = await net.fetch(url);
-        const buffer = Buffer.from(await response.arrayBuffer());
-        const image = nativeImage.createFromBuffer(buffer);
-        if (!image.isEmpty()) {
-          clipboard.writeImage(image);
-          applicationIpc.send.showToast('Image copied to clipboard', 'success', 'top-center');
-        } else {
-          applicationIpc.send.showToast('Failed to copy image', 'error', 'top-center');
-        }
-      } catch (error) {
-        console.error('Failed to copy image:', error);
-        applicationIpc.send.showToast('Failed to copy image', 'error', 'top-center');
-      }
-    });
-    ipcMain.on(contextMenuChannels.searchWithGoogle, (_, text: string) => {
-      const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(text)}`;
-      applicationIpc.send.onNewTab(searchUrl);
-    });
-    ipcMain.on(contextMenuChannels.inspectElement, (_, id: number, x: number, y: number) => {
-      const webContents = this.getContentById(id);
-      if (webContents) {
-        webContents.inspectElement(x, y);
-      }
-    });
-
-    ipcMain.on(contextMenuChannels.showWindow, () => this.showContextMenu());
-    ipcMain.on(contextMenuChannels.hideWindow, () => this.hideContextMenu());
-
-    ipcMain.on(contextMenuChannels.replaceMisspelling, (_, id: number, text: string) =>
-      this.getContentById(id)?.replaceMisspelling(text),
-    );
-    ipcMain.on(contextMenuChannels.newTab, (_, url: string) => applicationIpc.send.onNewTab(url));
-    ipcMain.on(contextMenuChannels.navigate, (_, id: number, action: 'back' | 'forward' | 'refresh') => {
-      switch (action) {
-        case 'back':
-          this.getContentById(id)?.navigationHistory.goBack();
-          break;
-        case 'forward':
-          this.getContentById(id)?.navigationHistory.goForward();
-          break;
-        case 'refresh':
-          this.getContentById(id)?.reload();
-          break;
-      }
-    });
-
-    ipcMain.on(contextMenuChannels.relaunchAI, (_, id: string) =>
-      this.sendMainMessage(contextMenuChannels.onRelaunchAI, id),
-    );
-    ipcMain.on(contextMenuChannels.stopAI, (_, id: string) => this.sendMainMessage(contextMenuChannels.onStopAI, id));
-    ipcMain.on(contextMenuChannels.removeTab, (_, tabID: string) =>
-      this.sendMainMessage(contextMenuChannels.onRemoveTab, tabID),
-    );
-  }
-
-  public getWindow() {
-    return this.contextMenuWindow;
-  }
-
-  private showContextMenu() {
+  public showContextMenu() {
     if (!this.contextMenuWindow || this.contextMenuWindow.isDestroyed()) return;
 
     this.isHiding = false;
@@ -374,15 +268,8 @@ export default class ContextMenuManager {
     }, 10);
   }
 
-  private getContentById(id: number) {
+  public getContentById(id: number) {
     return this.webContents.find(content => content.id === id);
-  }
-
-  private sendMainMessage(channel: string, ...args: any[]) {
-    const mainWebcontents = this.mainWindow?.webContents;
-    if (!mainWebcontents || mainWebcontents.isDestroyed()) return;
-
-    mainWebcontents.send(channel, ...args);
   }
 
   private sendContextMenuMessage(channel: string, ...args: any[]) {
@@ -395,7 +282,7 @@ export default class ContextMenuManager {
     webContents.send(channel, ...args);
   }
 
-  private resizeContextMenu(data: ContextResizeData) {
+  public resizeContextMenu(data: ContextResizeData) {
     const window = this.contextMenuWindow;
     if (!window || window.isDestroyed()) return;
 

@@ -7,6 +7,7 @@ import BrowserDownloadManager from '../child_windows/browser_download_manager';
 import BrowserManager from '../core/browser';
 import classHolder from '../core/class_holder';
 import {getUserAgent} from '../utils';
+import {listenForBrowserChannels} from './context_menu';
 import lynxIpc from './lynxIpc';
 import {handleGetAudioState, handleSetMuted, handleSetVolume} from './methods/volume';
 import {sendToLP, sendToMain} from './sender';
@@ -25,7 +26,7 @@ export function resetBrowserIPC() {
 }
 
 export function listenBrowser() {
-  const {appManager, contextMenuManager} = classHolder;
+  const {appManager} = classHolder;
 
   // Prevent registering handlers multiple times
   if (browserIPCInitialized) {
@@ -47,7 +48,7 @@ export function listenBrowser() {
   const browserManager: BrowserManager = new BrowserManager(mainWindow);
   classHolder.browserDownloadManager = new BrowserDownloadManager(browserManager.getSession(), mainWindow);
 
-  contextMenuManager?.listenForBrowserChannels(browserManager);
+  listenForBrowserChannels(browserManager);
 
   // Creates new browser webview instance
   browserIpc.on.createBrowser(id => browserManager.createBrowser(id));
