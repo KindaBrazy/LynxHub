@@ -83,15 +83,6 @@ export default class ContextMenuManager {
     this.customContextPosition = customPosition;
   }
 
-  public sendToRenderer(channel: string, ...data: any) {
-    if (
-      this.contextMenuWindow &&
-      !this.contextMenuWindow.isDestroyed() &&
-      !this.contextMenuWindow.webContents.isDestroyed()
-    )
-      this.contextMenuWindow.webContents.send(channel, ...data);
-  }
-
   public listenForMenu(contents: WebContents) {
     this.webContents.push(contents);
 
