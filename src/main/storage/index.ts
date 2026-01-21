@@ -13,6 +13,7 @@ import {Get_Default_Hotkeys} from '../../cross/consts/hotkeys';
 import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '../../cross/types/ipc';
 import StorageTypes from '../../cross/types/storage';
 import classHolder from '../core/class_holder';
+import {applicationIpc} from '../ipc/application';
 import {changeWindowState} from '../ipc/methods';
 import {getAbsolutePath, getExePath, getUserAgent, isPortable, lynxEncryptString, lynxEncryptStrings} from '../utils';
 
@@ -496,7 +497,6 @@ class BaseStorage {
    * Writes storage data to disk and adds breadcrumb for tracking
    */
   public write() {
-    const {appManager} = classHolder;
     try {
       this.storage.write();
     } catch (e) {
@@ -504,9 +504,9 @@ class BaseStorage {
       const errorMessage = e instanceof Error ? e.message : String(e);
       // Check for OOM-related errors
       if (errorMessage.includes('memory') || errorMessage.includes('heap') || errorMessage.includes('allocation')) {
-        appManager?.showToast('Failed to save configs: Out of memory. Try restarting the app.', 'error');
+        applicationIpc.send.showToast('Failed to save configs: Out of memory. Try restarting the app.', 'error');
       } else {
-        appManager?.showToast(`Failed to save app configs: ${errorMessage}`, 'error');
+        applicationIpc.send.showToast(`Failed to save app configs: ${errorMessage}`, 'error');
       }
     }
   }

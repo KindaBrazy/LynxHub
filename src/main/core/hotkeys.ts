@@ -1,8 +1,7 @@
-import appChannels from '@lynx_cross/consts/ipc_channels/application';
 import {LynxInput} from '@lynx_cross/types/ipc';
 import {Event, Input, WebContents} from 'electron';
 
-import classHolder from './class_holder';
+import {applicationIpc} from '../ipc/application';
 
 const initialKeys: LynxInput = {
   control: false,
@@ -35,16 +34,14 @@ function sendToRenderer(input: LynxInput) {
   prevType = type;
   prevModifiers = modifiers;
 
-  const {appManager} = classHolder;
-  appManager?.getWebContent()?.send(appChannels.hotkeysChange, input);
+  applicationIpc.send.onHotkeysChange(input);
 }
 
 function onBlur() {
   prevKey = '';
   prevType = '';
   prevModifiers = '';
-  const {appManager} = classHolder;
-  appManager?.getWebContent()?.send(appChannels.hotkeysChange, initialKeys);
+  applicationIpc.send.onHotkeysChange(initialKeys);
 }
 
 function onInput(_event: Event, input: Input) {
