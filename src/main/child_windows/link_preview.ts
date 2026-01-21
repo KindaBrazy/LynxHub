@@ -1,8 +1,10 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
-import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain} from 'electron';
+import {BrowserWindow, BrowserWindowConstructorOptions, WebContents} from 'electron';
+
+import {browserIpc} from '../ipc/browser';
+import lynxIpc from '../ipc/lynxIpc';
 
 export default class LinkPreviewManager {
   private linkPreviewWindow?: BrowserWindow;
@@ -95,9 +97,7 @@ export default class LinkPreviewManager {
     if (this.channelsRegistered) return;
     this.channelsRegistered = true;
 
-    ipcMain.on(browserChannels.resizeLinkPreview, (_, width: number) => {
-      this.resizeWindow(width);
-    });
+    browserIpc.on.resizeLinkPreview(width => this.resizeWindow(width));
   }
 
   public updateUrl(url: string) {
@@ -106,6 +106,35 @@ export default class LinkPreviewManager {
     } else {
       this.hide();
     }
+  }
+
+  public getWindow(): BrowserWindow | undefined {
+    if (!this.linkPreviewWindow) return undefined;
+
+    if (this.linkPreviewWindow.isDestroyed()) {
+      this.linkPreviewWindow = undefined;
+      return undefined;
+    }
+
+    return this.linkPreviewWindow;
+  }
+
+  public getWebContent(): WebContents | undefined {
+    const webContent = this.getWindow()?.webContents;
+
+    if (!webContent || webContent.isDestroyed()) return undefined;
+
+    return webContent;
+  }
+
+  public sendMessage(channel: string, ...args: any[]): void {
+    const webContents = this.getWebContent();
+    if (!webContents) {
+      console.error('Failed to send message: linkPreview or webContents is not available.');
+      return;
+    }
+
+    lynxIpc.send(webContents, channel, ...args);
   }
 
   private show(url: string) {
@@ -119,7 +148,7 @@ export default class LinkPreviewManager {
     }
 
     // Send URL to the preview window
-    this.linkPreviewWindow.webContents.send(browserChannels.onLinkHover, url);
+    browserIpc.send.onLinkHover(url);
 
     // Update position and show
     this.updatePosition();
@@ -159,9 +188,5 @@ export default class LinkPreviewManager {
     const clampedWidth = Math.min(Math.max(width, 100), 800);
     this.linkPreviewWindow.setSize(clampedWidth, 24);
     this.updatePosition();
-  }
-
-  public getWindow() {
-    return this.linkPreviewWindow;
   }
 }

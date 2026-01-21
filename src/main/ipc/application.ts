@@ -26,6 +26,7 @@ import {
 import lynxIpc from './lynxIpc';
 import {changeWindowState, setDarkMode, setTaskbarStatus} from './methods';
 import {getSystemInfo} from './methods/platform';
+import {sendToMain} from './sender';
 
 export default function listenApplication() {
   const {appManager, storageManager} = classHolder;
@@ -72,20 +73,10 @@ export default function listenApplication() {
   applicationIpc.handle.isValidDataPath(dir => isAppDir(dir));
 }
 
-const send = (channel: string, ...args: any[]) => {
-  const {appManager} = classHolder;
-  if (appManager) {
-    appManager.sendMessage(channel, ...args);
-  } else {
-    console.error('Failed to send message: appManager is undefined');
-  }
-};
-
 const sendIsDarkToAllWindows = (isDark: boolean) => {
-  const {appManager, contextMenuManager, linkPreviewManager, shareScreenManager, toastWindow} = classHolder;
+  const {contextMenuManager, linkPreviewManager, shareScreenManager, toastWindow} = classHolder;
 
-  const app = getWebContentsIfAvailable(appManager?.getMainWindow());
-  if (app) app.send(appChannels.onDarkMode, isDark);
+  sendToMain(appChannels.onDarkMode, isDark);
 
   const contextMenu = getWebContentsIfAvailable(contextMenuManager?.getWindow());
   if (contextMenu) contextMenu.send(appChannels.onDarkMode, isDark);
@@ -102,19 +93,20 @@ const sendIsDarkToAllWindows = (isDark: boolean) => {
 
 export const applicationIpc = {
   send: {
-    onNewTab: (url: string, background?: boolean) => send(appChannels.onNewTab, url, background),
-    onOnline: (isOnline: boolean) => send(appChannels.onOnline, isOnline),
-    onHotkeysChange: (input: LynxInput) => send(appChannels.hotkeysChange, input),
-    updateStatus: (type: AppUpdateEventTypes, status?: AppUpdateStatus) => send(appChannels.updateStatus, type, status),
-    updateError: () => send(appChannels.updateError),
+    onNewTab: (url: string, background?: boolean) => sendToMain(appChannels.onNewTab, url, background),
+    onOnline: (isOnline: boolean) => sendToMain(appChannels.onOnline, isOnline),
+    onHotkeysChange: (input: LynxInput) => sendToMain(appChannels.hotkeysChange, input),
+    updateStatus: (type: AppUpdateEventTypes, status?: AppUpdateStatus) =>
+      sendToMain(appChannels.updateStatus, type, status),
+    updateError: () => sendToMain(appChannels.updateError),
 
-    onCustomNotifOpen: (data: CustomNotificationInfo) => send(appChannels.onCustomNotifOpen, data),
+    onCustomNotifOpen: (data: CustomNotificationInfo) => sendToMain(appChannels.onCustomNotifOpen, data),
+    onCustomNotifClose: (key: string) => sendToMain(appChannels.onCustomNotifClose, key),
 
-    onCustomNotifClose: (key: string) => send(appChannels.onCustomNotifClose, key),
     showToast: (message: string, type: ShowToastTypes, placement: HeroToastPlacement = 'bottom-right') =>
-      send(appChannels.showToast, message, type, placement),
-    changeWinState: (state: WinStateChange) => send(appChannels.onChangeState, state),
-    updateChannelChange: (channel: string) => send(appChannels.updateChannelChange, channel),
+      sendToMain(appChannels.showToast, message, type, placement),
+    changeWinState: (state: WinStateChange) => sendToMain(appChannels.onChangeState, state),
+    updateChannelChange: (channel: string) => sendToMain(appChannels.updateChannelChange, channel),
     onDarkMode: (isDark: boolean) => sendIsDarkToAllWindows(isDark),
   },
   on: {
@@ -128,6 +120,7 @@ export const applicationIpc = {
     updateDownload: (callback: () => void) => lynxIpc.on(appChannels.updateDownload, callback),
     updateInstall: (callback: () => void) => lynxIpc.on(appChannels.updateInstall, callback),
     updateCancel: (callback: () => void) => lynxIpc.on(appChannels.updateCancel, callback),
+
     onCustomNotifBtnPress: (callback: (btnId: string, notifKey: string) => void) =>
       lynxIpc.on(appChannels.onCustomNotifBtnPress, callback),
   },

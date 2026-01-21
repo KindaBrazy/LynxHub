@@ -14,7 +14,8 @@ import {checkAppDirectories} from './core/data_folder';
 import {getImageCacheManager} from './core/image_cache';
 import {checkForUpdate} from './core/updater';
 import {beforeAppReady, handleAppReadyToShow, handleProtocols} from './index_methods';
-import {browserIPC, listenToIpcChannels, resetBrowserIPC} from './ipc';
+import {listenToIpcChannels} from './ipc';
+import {listenBrowser, resetBrowserIPC} from './ipc/browser';
 import {stopAllPty} from './ipc/methods/pty';
 import PatreonAuth from './secure/patreon_auth';
 import {getPrivilegeText} from './utils';
@@ -85,7 +86,7 @@ async function startLynxHub() {
   PatreonAuth();
 
   const appManager = classHolder.appManager!;
-  appManager.onCreateWindow(() => browserIPC());
+  appManager.onCreateWindow(() => listenBrowser());
   appManager.onReadyToShow(() => {
     loadingWindow.closeWindow();
     handleAppReadyToShow();
