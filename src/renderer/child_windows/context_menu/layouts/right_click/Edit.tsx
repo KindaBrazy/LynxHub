@@ -1,5 +1,5 @@
 import {Divider} from '@heroui/react';
-import contextItemsIpc from '@lynx_shared/ipc/context_items';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {ClipboardText, Copy, Scissors, TextSelection, UndoLeftRound} from '@solar-icons/react-perf/BoldDuotone';
 import type {EditFlags} from 'electron';
 import {isEmpty} from 'lodash';
@@ -15,7 +15,7 @@ export function Edit({flags, selection, id}: Props) {
       {canUndo && (
         <ActionButton
           onPress={createActionHandler(() => {
-            contextItemsIpc.undo(id);
+            contextMenuIpc.send.rightClickItems.undo(id);
           })}
           title="Undo"
           key="context_undo"
@@ -25,7 +25,7 @@ export function Edit({flags, selection, id}: Props) {
       {canRedo && (
         <ActionButton
           onPress={createActionHandler(() => {
-            contextItemsIpc.redo(id);
+            contextMenuIpc.send.rightClickItems.redo(id);
           })}
           title="Redo"
           key="context_redo"
@@ -35,7 +35,7 @@ export function Edit({flags, selection, id}: Props) {
       {canCut && !isEmpty(selection) && (
         <ActionButton
           onPress={createActionHandler(() => {
-            contextItemsIpc.cut(id);
+            contextMenuIpc.send.rightClickItems.cut(id);
           })}
           title="Cut"
           key="context_cut"
@@ -45,7 +45,7 @@ export function Edit({flags, selection, id}: Props) {
       {canCopy && !isEmpty(selection) && (
         <ActionButton
           onPress={createActionHandler(() => {
-            contextItemsIpc.copy(id);
+            contextMenuIpc.send.rightClickItems.copy(id);
           })}
           title="Copy"
           key="context_copy"
@@ -55,7 +55,7 @@ export function Edit({flags, selection, id}: Props) {
       {canPaste && (
         <ActionButton
           onPress={createActionHandler(() => {
-            contextItemsIpc.paste(id);
+            contextMenuIpc.send.rightClickItems.paste(id);
           })}
           title="Paste"
           key="context_paste"
@@ -65,7 +65,7 @@ export function Edit({flags, selection, id}: Props) {
       {canSelectAll && (
         <ActionButton
           onPress={createActionHandler(() => {
-            contextItemsIpc.selectAll(id);
+            contextMenuIpc.send.rightClickItems.selectAll(id);
           })}
           title="Select All"
           key="context_selectAll"

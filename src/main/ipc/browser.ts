@@ -1,5 +1,5 @@
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
-import {AgentTypes, CanGoType, ContextMenuVolumeData, MainHT, WHType} from '@lynx_cross/types/ipc';
+import {AgentTypes, AudioState, CanGoType, ContextMenuVolumeData, MainHT, WHType} from '@lynx_cross/types/ipc';
 import {toMs} from '@lynx_cross/utils';
 import {FindInPageOptions} from 'electron';
 
@@ -7,8 +7,8 @@ import BrowserDownloadManager from '../child_windows/browser_download_manager';
 import BrowserManager from '../core/browser';
 import classHolder from '../core/class_holder';
 import {getUserAgent} from '../utils';
-import {listenBrowserVolume} from './browser_volume';
 import lynxIpc from './lynxIpc';
+import {handleGetAudioState, handleSetMuted, handleSetVolume} from './methods/volume';
 import {sendToLP, sendToMain} from './sender';
 
 let browserTimeout: NodeJS.Timeout | undefined = undefined;
@@ -100,6 +100,10 @@ export function listenBrowser() {
   // Clears browser history for selected URLs
   browserIpc.on.clearHistory(selected => browserManager.clearHistory(selected));
 
+  // Forward volume updates from context menu to main window
+  browserIpc.on.updateTabVolume((tabId, volume) => browserIpc.send.onTabVolumeUpdate(tabId, volume));
+  browserIpc.on.updateTabMuted((tabId, muted) => browserIpc.send.onTabMutedUpdate(tabId, muted));
+
   // Clears browser cache - remove existing handler first to prevent duplicate registration
   browserIpc.handle.clearCache(() => browserManager.clearCache());
 
@@ -109,7 +113,14 @@ export function listenBrowser() {
   // Gets user agent string - remove existing handler first to prevent duplicate registration
   browserIpc.handle.getUserAgent(type => getUserAgent(type));
 
-  listenBrowserVolume(browserManager);
+  // Sets volume level for browser webview (0-100)
+  browserIpc.handle.setVolume((id, volume) => handleSetVolume(browserManager, id, volume));
+
+  // Sets mute state for browser webview
+  browserIpc.handle.setMuted((id, muted) => handleSetMuted(browserManager, id, muted));
+
+  // Gets current audio state (playing, muted) for browser webview
+  browserIpc.handle.getState(id => handleGetAudioState(browserManager, id));
 }
 
 export const browserIpc = {
@@ -124,6 +135,9 @@ export const browserIpc = {
       sendToMain(browserChannels.onFailedLoadUrl, id, errorCode, errorDescription, validatedURL),
     onDomReady: (id: string, isReady: boolean) => sendToMain(browserChannels.onDomReady, id, isReady),
     onClearFailed: (id: string) => sendToMain(browserChannels.onClearFailed, id),
+    onTabVolumeUpdate: (tabId: string, volume: number) => sendToMain(browserChannels.onTabVolumeUpdate, tabId, volume),
+    onTabMutedUpdate: (tabId: string, muted: boolean) => sendToMain(browserChannels.onTabMutedUpdate, tabId, muted),
+    onAudioStateChange: (id: string, state: AudioState) => sendToMain(browserChannels.onAudioStateChange, id, state),
   },
   on: {
     createBrowser: (callback: (id: string) => void) => lynxIpc.on(browserChannels.createBrowser, callback),
@@ -154,11 +168,22 @@ export const browserIpc = {
     openVolume: (callback: (data: ContextMenuVolumeData, customPosition?: {x: number; y: number}) => void) =>
       lynxIpc.on(browserChannels.openVolume, callback),
     resizeLinkPreview: (callback: (width: number) => void) => lynxIpc.on(browserChannels.resizeLinkPreview, callback),
+
+    updateTabVolume: (callback: (tabId: string, volume: number) => void) =>
+      lynxIpc.on(browserChannels.updateTabVolume, callback),
+    updateTabMuted: (callback: (tabId: string, muted: boolean) => void) =>
+      lynxIpc.on(browserChannels.updateTabMuted, callback),
   },
   handle: {
     clearCache: (callback: () => MainHT<void>) => lynxIpc.handle(browserChannels.clearCache, callback),
     clearCookies: (callback: () => MainHT<void>) => lynxIpc.handle(browserChannels.clearCookies, callback),
     getUserAgent: (callback: (type: AgentTypes) => MainHT<string>) =>
       lynxIpc.handle(browserChannels.getUserAgent, callback),
+    setVolume: (callback: (id: string, volume: number) => MainHT<void>) =>
+      lynxIpc.handle(browserChannels.setVolume, callback),
+    setMuted: (callback: (id: string, muted: boolean) => MainHT<void>) =>
+      lynxIpc.handle(browserChannels.setMuted, callback),
+    getState: (callback: (id: string) => MainHT<AudioState | null>) =>
+      lynxIpc.handle(browserChannels.getState, callback),
   },
 };

@@ -1,4 +1,4 @@
-import browserVolume from '@lynx_shared/ipc/browser_volume';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -13,11 +13,11 @@ export default function useVolumeSync() {
 
   // Listen for volume/mute updates from context menu
   useEffect(() => {
-    const removeVolumeListener = browserVolume.onTabVolumeUpdate((tabId, volume) => {
+    const removeVolumeListener = browserIpc.on.onTabVolumeUpdate((tabId, volume) => {
       dispatch(volumeActions.setTabVolume({tabId, volume}));
     });
 
-    const removeMutedListener = browserVolume.onTabMutedUpdate((tabId, muted) => {
+    const removeMutedListener = browserIpc.on.onTabMutedUpdate((tabId, muted) => {
       dispatch(volumeActions.setTabMuted({tabId, muted}));
     });
 
@@ -29,7 +29,7 @@ export default function useVolumeSync() {
 
   // Listen for audio state changes from browser
   useEffect(() => {
-    const removeAudioListener = browserVolume.onAudioStateChange((id, state) => {
+    const removeAudioListener = browserIpc.on.onAudioStateChange((id, state) => {
       const card = runningCards.find(c => c.id === id);
       if (card) {
         dispatch(volumeActions.setTabAudioPlaying({tabId: card.tabId, playing: state.playing}));

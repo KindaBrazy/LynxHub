@@ -1,5 +1,5 @@
 import {Divider} from '@heroui/react';
-import contextItemsIpc from '@lynx_shared/ipc/context_items';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {MagniferBug} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
@@ -14,7 +14,7 @@ const TextSelection = memo(({selection}: Props) => {
     <>
       <ActionButton
         onPress={createActionHandler(() => {
-          contextItemsIpc.searchWithGoogle(selection);
+          contextMenuIpc.send.rightClickItems.searchWithGoogle(selection);
         })}
         key="context_searchGoogle"
         title={`Search with Google`}

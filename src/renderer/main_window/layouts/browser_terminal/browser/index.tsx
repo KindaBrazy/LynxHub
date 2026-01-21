@@ -1,5 +1,4 @@
 import browserIpc from '@lynx_shared/ipc/browser';
-import browserVolume from '@lynx_shared/ipc/browser_volume';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
@@ -46,11 +45,11 @@ const Browser = memo(({runningCard}: Props) => {
         const isTabMuted = tabMuted[tabId] || false;
 
         // These calls may silently fail during page load - that's expected
-        await browserVolume.setVolume(id, tabVolume);
+        await browserIpc.invoke.setVolume(id, tabVolume);
 
         // Apply effective mute (tab muted OR global muted)
         const effectiveMute = isTabMuted || globalMuted;
-        await browserVolume.setMuted(id, effectiveMute);
+        await browserIpc.invoke.setMuted(id, effectiveMute);
       };
 
       applyVolumeSettings();

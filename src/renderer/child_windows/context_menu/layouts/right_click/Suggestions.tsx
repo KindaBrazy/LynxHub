@@ -1,5 +1,5 @@
 import {Divider} from '@heroui/react';
-import contextItemsIpc from '@lynx_shared/ipc/context_items';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {isEmpty} from 'lodash';
 
 import {ActionButton, createActionHandler} from './Utils';
@@ -16,7 +16,7 @@ export function Suggestions({suggestions, id}: Props) {
       {...suggestions.map((text, index) => (
         <ActionButton
           onPress={createActionHandler(() => {
-            contextItemsIpc.replaceMisspelling(id, text);
+            contextMenuIpc.send.rightClickItems.replaceMisspelling(id, text);
           })}
           title={text}
           className="text-sm"

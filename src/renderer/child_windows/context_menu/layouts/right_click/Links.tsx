@@ -1,5 +1,5 @@
 import {Divider} from '@heroui/react';
-import contextItemsIpc from '@lynx_shared/ipc/context_items';
+import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {Export, Link, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 
 import {ActionButton, createActionHandler} from './Utils';
@@ -12,7 +12,7 @@ export function Links({url}: Props) {
     <>
       <ActionButton
         onPress={createActionHandler(() => {
-          contextItemsIpc.newTab(url);
+          contextMenuIpc.send.rightClickItems.newTab(url);
         })}
         key="context_newTab"
         title="Open link in new tab"
@@ -20,7 +20,7 @@ export function Links({url}: Props) {
       />
       <ActionButton
         onPress={createActionHandler(() => {
-          contextItemsIpc.openExternal(url);
+          contextMenuIpc.send.rightClickItems.openExternal(url);
         })}
         key="context_openExternal"
         title="Open link in default browser"
