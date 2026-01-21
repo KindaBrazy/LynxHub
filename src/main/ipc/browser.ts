@@ -1,5 +1,5 @@
 import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
-import {AgentTypes, CanGoType, ContextMenuVolumeData, WHType} from '@lynx_cross/types/ipc';
+import {AgentTypes, CanGoType, ContextMenuVolumeData, MainHT, WHType} from '@lynx_cross/types/ipc';
 import {toMs} from '@lynx_cross/utils';
 import {FindInPageOptions} from 'electron';
 
@@ -156,9 +156,9 @@ export const browserIpc = {
     resizeLinkPreview: (callback: (width: number) => void) => lynxIpc.on(browserChannels.resizeLinkPreview, callback),
   },
   handle: {
-    clearCache: (callback: () => Promise<void>) => lynxIpc.handle<void>(browserChannels.clearCache, callback),
-    clearCookies: (callback: () => Promise<void>) => lynxIpc.handle<void>(browserChannels.clearCookies, callback),
-    getUserAgent: (callback: (type: AgentTypes) => string) =>
-      lynxIpc.handle<string>(browserChannels.getUserAgent, callback),
+    clearCache: (callback: () => MainHT<void>) => lynxIpc.handle(browserChannels.clearCache, callback),
+    clearCookies: (callback: () => MainHT<void>) => lynxIpc.handle(browserChannels.clearCookies, callback),
+    getUserAgent: (callback: (type: AgentTypes) => MainHT<string>) =>
+      lynxIpc.handle(browserChannels.getUserAgent, callback),
   },
 };

@@ -1,5 +1,5 @@
 import browserVolumeChannels from '@lynx_cross/consts/ipc_channels/browser_volume';
-import {AudioState} from '@lynx_cross/types/ipc';
+import {AudioState, MainHT} from '@lynx_cross/types/ipc';
 
 import BrowserManager from '../core/browser';
 import lynxIpc from './lynxIpc';
@@ -37,11 +37,11 @@ export const browserVolumeIpc = {
       lynxIpc.on(browserVolumeChannels.updateTabMuted, callback),
   },
   handle: {
-    setVolume: (callback: (id: string, volume: number) => Promise<void>) =>
-      lynxIpc.handle<void>(browserVolumeChannels.setVolume, callback),
-    setMuted: (callback: (id: string, muted: boolean) => void) =>
-      lynxIpc.handle<void>(browserVolumeChannels.setMuted, callback),
-    getState: (callback: (id: string) => AudioState | null) =>
-      lynxIpc.handle<AudioState | null>(browserVolumeChannels.getState, callback),
+    setVolume: (callback: (id: string, volume: number) => MainHT<void>) =>
+      lynxIpc.handle(browserVolumeChannels.setVolume, callback),
+    setMuted: (callback: (id: string, muted: boolean) => MainHT<void>) =>
+      lynxIpc.handle(browserVolumeChannels.setMuted, callback),
+    getState: (callback: (id: string) => MainHT<AudioState | null>) =>
+      lynxIpc.handle(browserVolumeChannels.getState, callback),
   },
 };

@@ -6,6 +6,7 @@ import {
   ChangeWindowState,
   DarkModeTypes,
   LynxInput,
+  MainHT,
   ShowToastTypes,
   SystemInfo,
   TaskbarStatus,
@@ -125,21 +126,19 @@ export const applicationIpc = {
       lynxIpc.on(appChannels.onCustomNotifBtnPress, callback),
   },
   handle: {
-    getSystemDarkMode: (callback: () => 'dark' | 'light') =>
-      lynxIpc.handle<'dark' | 'light'>(appChannels.getSystemDarkMode, callback),
-    isDarkMode: (callback: () => boolean) => lynxIpc.handle<boolean>(appChannels.isDarkMode, callback),
-    getSystemInfo: (callback: () => SystemInfo) => lynxIpc.handle<SystemInfo>(appChannels.getSystemInfo, callback),
-    disableLoadingAnimations: (callback: () => boolean) =>
-      lynxIpc.handle<boolean>(appChannels.disableLoadingAnimations, callback),
-    checkGitInstalled: (callback: () => Promise<string>) =>
-      lynxIpc.handle<string>(appChannels.checkGitInstalled, callback),
-    checkPwsh7Installed: (callback: () => Promise<string>) =>
-      lynxIpc.handle<string>(appChannels.checkPwsh7Installed, callback),
+    getSystemDarkMode: (callback: () => MainHT<'dark' | 'light'>) =>
+      lynxIpc.handle(appChannels.getSystemDarkMode, callback),
+    isDarkMode: (callback: () => MainHT<boolean>) => lynxIpc.handle(appChannels.isDarkMode, callback),
+    getSystemInfo: (callback: () => MainHT<SystemInfo>) => lynxIpc.handle(appChannels.getSystemInfo, callback),
+    disableLoadingAnimations: (callback: () => MainHT<boolean>) =>
+      lynxIpc.handle(appChannels.disableLoadingAnimations, callback),
+    checkGitInstalled: (callback: () => MainHT<string>) => lynxIpc.handle(appChannels.checkGitInstalled, callback),
+    checkPwsh7Installed: (callback: () => MainHT<string>) => lynxIpc.handle(appChannels.checkPwsh7Installed, callback),
 
-    getCurrentDataPath: (callback: () => string) => lynxIpc.handle<string>(appChannels.getCurrentDataPath, callback),
-    selectAnotherDataPath: (callback: () => Promise<string>) =>
-      lynxIpc.handle<string>(appChannels.selectAnotherDataPath, callback),
-    isValidDataPath: (callback: (dir: string) => Promise<boolean>) =>
-      lynxIpc.handle<boolean>(appChannels.isValidDataPath, callback),
+    getCurrentDataPath: (callback: () => MainHT<string>) => lynxIpc.handle(appChannels.getCurrentDataPath, callback),
+    selectAnotherDataPath: (callback: () => MainHT<string>) =>
+      lynxIpc.handle(appChannels.selectAnotherDataPath, callback),
+    isValidDataPath: (callback: (dir: string) => MainHT<boolean>) =>
+      lynxIpc.handle(appChannels.isValidDataPath, callback),
   },
 };
