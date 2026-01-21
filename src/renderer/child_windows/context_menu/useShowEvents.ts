@@ -1,6 +1,6 @@
 import {ContextWindowWidthSizes} from '@lynx_cross/types/ipc';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
-import windowDialogsIpc from '@lynx_shared/ipc/window_dialogs';
+import windowDialogsIpc from '@lynx_shared/ipc/dialogs_window';
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
