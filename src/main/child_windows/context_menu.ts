@@ -1,11 +1,9 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
 import contextMenuChannels from '@lynx_cross/consts/ipc_channels/context_menu';
 import {browserDownloadChannels} from '@lynx_cross/consts/ipc_channels/donwload_manager';
 import windowDialogsChannels from '@lynx_cross/consts/ipc_channels/window_dialogs';
-import {ContextMenuVolumeData} from '@lynx_cross/types/ipc';
 import {
   BrowserWindow,
   BrowserWindowConstructorOptions,
@@ -20,6 +18,7 @@ import {ContextResizeData} from '../../cross/types';
 import BrowserManager from '../core/browser';
 import classHolder from '../core/class_holder';
 import {applicationIpc} from '../ipc/application';
+import {browserIpc} from '../ipc/browser';
 import AddBreadcrumb_Main from '../utils/breadcrumbs';
 
 export default class ContextMenuManager {
@@ -139,21 +138,20 @@ export default class ContextMenuManager {
     if (this.browserChannelsRegistered) return;
     this.browserChannelsRegistered = true;
 
-    ipcMain.on(browserChannels.openFindInPage, (_, id: string, customPosition?: {x: number; y: number}) => {
+    browserIpc.on.openFindInPage((id, customPosition) => {
       this.setCustomContextPosition(customPosition);
       this.sendContextMenuMessage(contextMenuChannels.onFind, id);
     });
-    ipcMain.on(browserChannels.openZoom, (_, id: string, customPosition?: {x: number; y: number}) => {
+    browserIpc.on.openZoom((id, customPosition) => {
       this.setCustomContextPosition(customPosition);
       this.sendContextMenuMessage(contextMenuChannels.onZoom, id, browserManager.getCurrentZoom(id));
     });
-    ipcMain.on(
-      browserChannels.openVolume,
-      (_, data: ContextMenuVolumeData, customPosition?: {x: number; y: number}) => {
-        this.setCustomContextPosition(customPosition);
-        this.sendContextMenuMessage(contextMenuChannels.onVolume, data);
-      },
-    );
+
+    browserIpc.on.openVolume((data, customPosition) => {
+      this.setCustomContextPosition(customPosition);
+      this.sendContextMenuMessage(contextMenuChannels.onVolume, data);
+    });
+
     ipcMain.on(contextMenuChannels.openTerminateAI, (_, id: string) => {
       this.setCustomContextPosition(undefined);
       this.sendContextMenuMessage(contextMenuChannels.onTerminateAI, id);

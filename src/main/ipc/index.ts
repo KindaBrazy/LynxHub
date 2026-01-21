@@ -1,7 +1,5 @@
 import path from 'node:path';
 
-import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
-import browserVolumeChannels from '@lynx_cross/consts/ipc_channels/browser_volume';
 import fileChannels from '@lynx_cross/consts/ipc_channels/files';
 import gitChannels from '@lynx_cross/consts/ipc_channels/git';
 import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
@@ -10,29 +8,18 @@ import ptyChannels from '@lynx_cross/consts/ipc_channels/pty';
 import staticsChannels from '@lynx_cross/consts/ipc_channels/statics';
 import storageChannels, {storageUtilsChannels} from '@lynx_cross/consts/ipc_channels/storage';
 import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
-import {
-  AgentTypes,
-  CustomRunBehaviorData,
-  PreCommands,
-  PreOpen,
-  RecentlyOperation,
-  StorageOperation,
-  WHType,
-} from '@lynx_cross/types/ipc';
-import {app, FindInPageOptions, ipcMain, OpenDialogOptions, shell} from 'electron';
+import {CustomRunBehaviorData, PreCommands, PreOpen, RecentlyOperation, StorageOperation} from '@lynx_cross/types/ipc';
+import {app, ipcMain, OpenDialogOptions, shell} from 'electron';
 
 import {ChosenArgumentsData, ConfirmMenuTypes, FolderNames, SubscribeStages} from '../../cross/types';
 import {ShallowCloneOptions} from '../../cross/types/git';
 import StorageTypes, {InstalledCard} from '../../cross/types/storage';
-import {toMs} from '../../cross/utils';
-import BrowserDownloadManager from '../child_windows/browser_download_manager';
-import BrowserManager from '../core/browser';
 import classHolder from '../core/class_holder';
 import {getAppDirectory} from '../core/data_folder';
 import {getImageCacheManager} from '../core/image_cache';
 import GitManager from '../git';
 import {getList} from '../plugins/utils';
-import {getAbsolutePath, getDirCreationDate, getRelativePath, getUserAgent, openDialog} from '../utils';
+import {getAbsolutePath, getDirCreationDate, getRelativePath, openDialog} from '../utils';
 import calcFolderSize from '../utils/calc_folder_size';
 import listenApplication from './application';
 import {
@@ -75,7 +62,6 @@ import {
   unShallow,
   validateGitDir,
 } from './methods/repository';
-import {handleGetAudioState, handleSetMuted, handleSetVolume} from './methods/volume';
 
 function file() {
   // Gets app directory path by folder name (cards, extensions, etc.)
@@ -413,129 +399,6 @@ function modulesApi() {
   ipcMain.handle(moduleApiChannels.getCurrentReleaseTag, (_, dir: string) => GitManager.getCurrentReleaseTag(dir));
 }
 
-let browserTimeout: NodeJS.Timeout | undefined = undefined;
-let browserIPCInitialized = false;
-
-/** Resets the browserIPC initialization state. Call this before recreating
- *  the main window (e.g., on macOS activate). */
-export function resetBrowserIPC() {
-  browserIPCInitialized = false;
-  if (browserTimeout) {
-    clearTimeout(browserTimeout);
-    browserTimeout = undefined;
-  }
-}
-
-export function browserIPC() {
-  const {appManager, contextMenuManager} = classHolder;
-
-  // Prevent registering handlers multiple times
-  if (browserIPCInitialized) {
-    console.warn('browserIPC already initialized, skipping...');
-    return;
-  }
-
-  const mainWindow = appManager?.getMainWindow();
-
-  if (!mainWindow) {
-    browserTimeout = setTimeout(browserIPC, toMs(1, 'seconds'));
-    return;
-  }
-
-  clearTimeout(browserTimeout);
-  browserTimeout = undefined;
-  browserIPCInitialized = true;
-
-  const browserManager: BrowserManager = new BrowserManager(mainWindow);
-  classHolder.browserDownloadManager = new BrowserDownloadManager(browserManager.getSession(), mainWindow);
-
-  contextMenuManager?.listenForBrowserChannels(browserManager);
-
-  // Creates new browser webview instance
-  ipcMain.on(browserChannels.createBrowser, (_, id: string) => browserManager.createBrowser(id));
-  // Removes browser webview instance
-  ipcMain.on(browserChannels.removeBrowser, (_, id: string) => browserManager.removeBrowser(id));
-  // Loads URL in browser webview
-  ipcMain.on(browserChannels.loadURL, (_, id: string, url: string) => browserManager.loadURL(id, url));
-  // Sets browser webview visibility
-  ipcMain.on(browserChannels.setVisible, (_, id: string, visible: boolean) => browserManager.setVisible(id, visible));
-
-  // Finds text in page
-  ipcMain.on(browserChannels.findInPage, (_, id: string, value: string, options: FindInPageOptions) =>
-    browserManager.findInPage(id, value, options),
-  );
-  // Stops find in page operation
-  ipcMain.on(
-    browserChannels.stopFindInPage,
-    (_, id: string, action: 'clearSelection' | 'keepSelection' | 'activateSelection') =>
-      browserManager.stopFindInPage(id, action),
-  );
-
-  // Sets zoom factor for browser webview
-  ipcMain.on(browserChannels.setZoomFactor, (_, id: string, factor: number) =>
-    browserManager.setZoomFactor(id, factor),
-  );
-
-  // Reloads current page
-  ipcMain.on(browserChannels.reload, (_, id: string) => browserManager.reload(id));
-  // Stops loading current page
-  ipcMain.on(browserChannels.stop, (_, id: string) => browserManager.stop(id));
-  // Navigates browser back
-  ipcMain.on(browserChannels.goBack, (_, id: string) => browserManager.goBack(id));
-  // Navigates browser forward
-  ipcMain.on(browserChannels.goForward, (_, id: string) => browserManager.goForward(id));
-
-  // Toggles DevTools for browser webview
-  ipcMain.on(browserChannels.toggleDevTools, (_, id: string) => browserManager.toggleDevTools(id));
-
-  // Focuses browser webview
-  ipcMain.on(browserChannels.focusWebView, (_, id: string) => browserManager.focusWebView(id));
-
-  // Clears browser cache - remove existing handler first to prevent duplicate registration
-  ipcMain.removeHandler(browserChannels.clearCache);
-  ipcMain.handle(browserChannels.clearCache, () => browserManager.clearCache());
-  // Clears browser cookies - remove existing handler first to prevent duplicate registration
-  ipcMain.removeHandler(browserChannels.clearCookies);
-  ipcMain.handle(browserChannels.clearCookies, () => browserManager.clearCookies());
-
-  // Gets user agent string - remove existing handler first to prevent duplicate registration
-  ipcMain.removeHandler(browserChannels.getUserAgent);
-  ipcMain.handle(browserChannels.getUserAgent, (_, type: AgentTypes) => getUserAgent(type));
-  // Updates user agent for all browsers
-  ipcMain.on(browserChannels.updateUserAgent, () => {
-    browserManager.updateUserAgent();
-    appManager?.getMainWindow()?.webContents.setUserAgent(getUserAgent());
-  });
-
-  // Adds offset to browser webview position
-  ipcMain.on(browserChannels.addOffset, (_, id: string, offset: WHType) => browserManager.addOffset(id, offset));
-  // Clears browser history for selected URLs
-  ipcMain.on(browserChannels.clearHistory, (_, selected: string[]) => browserManager.clearHistory(selected));
-
-  // Volume control handlers
-  // Sets volume level for browser webview (0-100) - remove existing handler first to prevent duplicate registration
-  ipcMain.removeHandler(browserVolumeChannels.setVolume);
-  ipcMain.handle(browserVolumeChannels.setVolume, (_, id: string, volume: number) =>
-    handleSetVolume(browserManager, id, volume),
-  );
-  // Sets mute state for browser webview - remove existing handler first to prevent duplicate registration
-  ipcMain.removeHandler(browserVolumeChannels.setMuted);
-  ipcMain.handle(browserVolumeChannels.setMuted, (_, id: string, muted: boolean) =>
-    handleSetMuted(browserManager, id, muted),
-  );
-  // Gets current audio state (playing, muted) for browser webview - remove existing handler first
-  ipcMain.removeHandler(browserVolumeChannels.getState);
-  ipcMain.handle(browserVolumeChannels.getState, (_, id: string) => handleGetAudioState(browserManager, id));
-
-  // Forward volume updates from context menu to main window
-  ipcMain.on(browserVolumeChannels.updateTabVolume, (_, tabId: string, volume: number) => {
-    mainWindow.webContents.send(browserVolumeChannels.onTabVolumeUpdate, tabId, volume);
-  });
-  ipcMain.on(browserVolumeChannels.updateTabMuted, (_, tabId: string, muted: boolean) => {
-    mainWindow.webContents.send(browserVolumeChannels.onTabMutedUpdate, tabId, muted);
-  });
-}
-
 function statics() {
   const {staticManager} = classHolder;
 
@@ -614,8 +477,8 @@ export function listenToIpcChannels() {
   plugins();
 
   const {contextMenuManager, linkPreviewManager} = classHolder;
-  contextMenuManager?.listenForContextChannels();
-  linkPreviewManager?.listenForChannels();
+  if (contextMenuManager) contextMenuManager.listenForContextChannels();
+  if (linkPreviewManager) linkPreviewManager.listenForChannels();
 
   statics();
   imageCache();
