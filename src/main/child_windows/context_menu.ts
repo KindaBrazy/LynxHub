@@ -1,12 +1,12 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import windowDialogsChannels from '@lynx_cross/consts/ipc_channels/window_dialogs';
-import {BrowserWindow, BrowserWindowConstructorOptions, ipcMain, IpcMainEvent, screen, WebContents} from 'electron';
+import {BrowserWindow, BrowserWindowConstructorOptions, screen, WebContents} from 'electron';
 
 import {ContextResizeData} from '../../cross/types';
 import classHolder from '../core/class_holder';
 import {contextMenuIpc} from '../ipc/context_menu';
+import {dialogBlured} from '../ipc/dialogs_window';
 import lynxIpc from '../ipc/lynxIpc';
 import AddBreadcrumb_Main from '../utils/breadcrumbs';
 
@@ -17,9 +17,6 @@ export default class ContextMenuManager {
   private animationInterval?: NodeJS.Timeout;
   private isHiding = false;
   private webContents: WebContents[] = [];
-
-  private dialogEvent?: IpcMainEvent;
-  private dialogDefaultResult: boolean | null | string = null;
 
   private static readonly CONTEXT_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
     frame: false,
@@ -145,58 +142,6 @@ export default class ContextMenuManager {
     lynxIpc.send(webContents, channel, ...args);
   }
 
-  public listenForDialogWindows() {
-    ipcMain.on(windowDialogsChannels.onPrompt, (event, message: string, defaultValue?: string) => {
-      if (this.mainWindow && !this.mainWindow.isDestroyed()) {
-        const {width, height} = this.mainWindow.getBounds();
-        this.setCustomContextPosition({x: width / 2 - 150, y: height / 2 - 60});
-      }
-
-      this.sendContextMenuMessage(windowDialogsChannels.promptShow, message, defaultValue);
-
-      this.dialogEvent = event;
-      this.dialogDefaultResult = null;
-    });
-
-    ipcMain.on(windowDialogsChannels.onConfirm, (event, message: string) => {
-      if (this.mainWindow && !this.mainWindow.isDestroyed()) {
-        const {width, height} = this.mainWindow.getBounds();
-        this.setCustomContextPosition({x: width / 2 - 150, y: height / 2 - 60});
-      }
-
-      this.sendContextMenuMessage(windowDialogsChannels.confirmShow, message);
-
-      this.dialogEvent = event;
-      this.dialogDefaultResult = false;
-    });
-
-    ipcMain.on(windowDialogsChannels.onAlert, (event, message: string) => {
-      if (this.mainWindow && !this.mainWindow.isDestroyed()) {
-        const {width, height} = this.mainWindow.getBounds();
-        this.setCustomContextPosition({x: width / 2 - 150, y: height / 2 - 60});
-      }
-
-      this.sendContextMenuMessage(windowDialogsChannels.alertShow, message);
-
-      this.dialogEvent = event;
-      this.dialogDefaultResult = null;
-    });
-
-    ipcMain.on(windowDialogsChannels.promptResult, (_e: any, result: string | null) => {
-      if (this.dialogEvent) {
-        this.dialogEvent.returnValue = result;
-        this.dialogEvent = undefined;
-      }
-    });
-
-    ipcMain.on(windowDialogsChannels.confirmResult, (_e: any, result: boolean) => {
-      if (this.dialogEvent) {
-        this.dialogEvent.returnValue = result;
-        this.dialogEvent = undefined;
-      }
-    });
-  }
-
   public showContextMenu() {
     if (!this.contextMenuWindow || this.contextMenuWindow.isDestroyed()) return;
 
@@ -233,10 +178,7 @@ export default class ContextMenuManager {
       return;
     }
 
-    if (this.dialogEvent) {
-      this.dialogEvent.returnValue = this.dialogDefaultResult;
-      this.dialogEvent = undefined;
-    }
+    dialogBlured();
 
     this.isHiding = true;
 
@@ -270,16 +212,6 @@ export default class ContextMenuManager {
 
   public getContentById(id: number) {
     return this.webContents.find(content => content.id === id);
-  }
-
-  private sendContextMenuMessage(channel: string, ...args: any[]) {
-    const window = this.contextMenuWindow;
-    if (!window || window.isDestroyed()) return;
-
-    const webContents = window.webContents;
-    if (!webContents || webContents.isDestroyed()) return;
-
-    webContents.send(channel, ...args);
   }
 
   public resizeContextMenu(data: ContextResizeData) {
