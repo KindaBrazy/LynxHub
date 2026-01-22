@@ -3,10 +3,11 @@ import path from 'node:path';
 import {is} from '@electron-toolkit/utils';
 import toastWindowChannels from '@lynx_cross/consts/ipc_channels/toast_window';
 import {ToastWindow_MessageType} from '@lynx_cross/types';
-import {app, BrowserWindow, ipcMain} from 'electron';
+import {app, BrowserWindow} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
 import classHolder from '../core/class_holder';
+import lynxIpc from '../ipc/lynxIpc';
 import {RelaunchApp} from '../utils';
 
 export default function ShowToastWindow(
@@ -41,31 +42,19 @@ export default function ShowToastWindow(
       window.webContents.send(toastWindowChannels.onShowMessage, message);
     });
 
-    const handleCloseToast = () => {
-      window.close();
-    };
-
-    const handleExitApp = () => {
-      app.exit();
-    };
-
-    const handleRestartApp = () => RelaunchApp(false);
-
-    const handleToastBtnPress = (_: any, id: string) => {
+    const offCloseToast = lynxIpc.on(toastWindowChannels.closeToast, () => window.close());
+    const offExitApp = lynxIpc.on(toastWindowChannels.exitApp, () => app.exit());
+    const offRestartApp = lynxIpc.on(toastWindowChannels.restartApp, () => RelaunchApp(false));
+    const offCustomBtnPressed = lynxIpc.on(toastWindowChannels.customBtnPressed, (_: any, id: string) => {
       if (onBtnPress) onBtnPress(id, window);
-    };
-
-    ipcMain.on(toastWindowChannels.closeToast, handleCloseToast);
-    ipcMain.on(toastWindowChannels.exitApp, handleExitApp);
-    ipcMain.on(toastWindowChannels.restartApp, handleRestartApp);
-    ipcMain.on(toastWindowChannels.customBtnPressed, handleToastBtnPress);
+    });
 
     window.on('closed', () => {
       // Clean up listeners when toast window is closed
-      ipcMain.removeListener(toastWindowChannels.closeToast, handleCloseToast);
-      ipcMain.removeListener(toastWindowChannels.exitApp, handleExitApp);
-      ipcMain.removeListener(toastWindowChannels.restartApp, handleRestartApp);
-      ipcMain.removeListener(toastWindowChannels.customBtnPressed, handleToastBtnPress);
+      offCloseToast();
+      offExitApp();
+      offRestartApp();
+      offCustomBtnPressed();
 
       window.destroy();
       classHolder.toastWindow = undefined;
