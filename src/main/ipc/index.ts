@@ -1,4 +1,3 @@
-import gitChannels from '@lynx_cross/consts/ipc_channels/git';
 import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
 import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
 import ptyChannels from '@lynx_cross/consts/ipc_channels/pty';
@@ -9,7 +8,6 @@ import {CustomRunBehaviorData, PreCommands, PreOpen, RecentlyOperation, StorageO
 import {app, ipcMain} from 'electron';
 
 import {ChosenArgumentsData, ConfirmMenuTypes, SubscribeStages} from '../../cross/types';
-import {ShallowCloneOptions} from '../../cross/types/git';
 import StorageTypes, {InstalledCard} from '../../cross/types/storage';
 import classHolder from '../core/class_holder';
 import {getImageCacheManager} from '../core/image_cache';
@@ -19,6 +17,7 @@ import {getDirCreationDate} from '../utils';
 import listenApplication from './application';
 import listenContextMenu from './context_menu';
 import listenFiles from './files';
+import listenGit from './git';
 import {decompressFile, getImageAsDataURL, isResponseValid} from './methods';
 import {
   disableExtension,
@@ -38,41 +37,6 @@ import {
   ptyWrite,
   stopPty,
 } from './methods/pty';
-import {
-  changeBranch,
-  getRepositoryInfo,
-  pullRepo,
-  resetHard,
-  shallowClone,
-  shallowClonePromise,
-  stashDrop,
-  unShallow,
-  validateGitDir,
-} from './methods/repository';
-
-function git() {
-  // Validates if directory is a valid Git repository matching the URL
-  ipcMain.handle(gitChannels.validateGitDir, (_, dir: string, url: string) => validateGitDir(dir, url));
-
-  // Performs shallow clone of Git repository (non-blocking)
-  ipcMain.on(gitChannels.shallowClone, (_, options: ShallowCloneOptions) => shallowClone(options));
-  // Performs shallow clone and returns promise
-  ipcMain.handle(gitChannels.shallowClonePromise, (_, options: ShallowCloneOptions) => shallowClonePromise(options));
-
-  // Drops Git stash entries
-  ipcMain.handle(gitChannels.stashDrop, (_, dir: string) => stashDrop(dir));
-  // Gets repository information (branch, remote, etc.)
-  ipcMain.handle(gitChannels.getRepoInfo, (_, dir: string) => getRepositoryInfo(dir));
-  // Changes Git branch
-  ipcMain.handle(gitChannels.changeBranch, (_, dir: string, branchName: string) => changeBranch(dir, branchName));
-  // Converts shallow clone to full clone
-  ipcMain.handle(gitChannels.unShallow, (_, dir: string) => unShallow(dir));
-  // Performs hard reset to HEAD
-  ipcMain.handle(gitChannels.resetHard, (_, dir: string) => resetHard(dir));
-
-  // Pulls latest changes from remote repository
-  ipcMain.on(gitChannels.pull, (_, dir: string, id: string) => pullRepo(dir, id));
-}
 
 function utils() {
   // Gets detailed information about extensions in directory
@@ -410,7 +374,7 @@ export function listenToIpcChannels() {
   listenApplication();
   listenFiles();
 
-  git();
+  listenGit();
   utils();
   pty();
 

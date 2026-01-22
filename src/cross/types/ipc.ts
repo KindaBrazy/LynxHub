@@ -24,7 +24,7 @@ export type GitProgressResult<T extends GitProgressState> = T extends 'Progress'
 export type GitProgressCallback = <T extends GitProgressState>(
   id: string,
   state: T,
-  result: GitProgressResult<T>,
+  progress: GitProgressResult<T>,
 ) => void;
 
 export type StorageOperation = 'add' | 'remove' | 'get' | 'set';
