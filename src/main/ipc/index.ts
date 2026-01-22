@@ -1,6 +1,5 @@
 import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
 import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
-import ptyChannels from '@lynx_cross/consts/ipc_channels/pty';
 import staticsChannels from '@lynx_cross/consts/ipc_channels/statics';
 import storageChannels, {storageUtilsChannels} from '@lynx_cross/consts/ipc_channels/storage';
 import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
@@ -27,16 +26,7 @@ import {
   updateAllExtensions,
 } from './methods/card_extensions';
 import {cancelDownload, downloadFile} from './methods/downloader';
-import {
-  customPtyCommands,
-  customPtyProcess,
-  emptyPtyProcess,
-  ptyClear,
-  ptyProcess,
-  ptyResize,
-  ptyWrite,
-  stopPty,
-} from './methods/pty';
+import listenPty from './pty';
 
 function utils() {
   // Gets detailed information about extensions in directory
@@ -116,29 +106,6 @@ function plugins() {
   ipcMain.handle(pluginChannels.updateSyncList, (_, id: string, commit: string) =>
     pluginManager?.updateSyncItem(id, commit),
   );
-}
-
-function pty() {
-  // Starts PTY process for card with pre-commands and run commands
-  ipcMain.on(ptyChannels.process, (_, id: string, cardId: string) => ptyProcess(id, cardId));
-  // Starts custom PTY process with specific file to execute
-  ipcMain.on(ptyChannels.customProcess, (_, id: string, dir?: string, file?: string) =>
-    customPtyProcess(id, dir, file),
-  );
-  // Starts empty PTY process (no commands executed)
-  ipcMain.on(ptyChannels.emptyProcess, (_, id: string, dir?: string) => emptyPtyProcess(id, dir));
-  // Stops PTY process by ID
-  ipcMain.on(ptyChannels.stopProcess, (_, id: string) => stopPty(id));
-  // Executes custom commands in PTY
-  ipcMain.on(ptyChannels.customCommands, (_, id: string, commands?: string | string[], dir?: string) =>
-    customPtyCommands(id, commands, dir),
-  );
-  // Writes data to PTY input
-  ipcMain.on(ptyChannels.write, (_, id: string, data: string) => ptyWrite(id, data));
-  // Clears PTY terminal screen
-  ipcMain.on(ptyChannels.clear, (_, id: string) => ptyClear(id));
-  // Resizes PTY terminal dimensions
-  ipcMain.on(ptyChannels.resize, (_, id: string, cols: number, rows: number) => ptyResize(id, cols, rows));
 }
 
 function storage() {
@@ -376,7 +343,7 @@ export function listenToIpcChannels() {
 
   listenGit();
   utils();
-  pty();
+  listenPty();
 
   modules();
   modulesApi();

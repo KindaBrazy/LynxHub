@@ -2,11 +2,11 @@ import fs from 'node:fs';
 import {platform} from 'node:os';
 import path from 'node:path';
 
-import ptyChannels from '@lynx_cross/consts/ipc_channels/pty';
 import {app} from 'electron';
 import pty from 'node-pty';
 import treeKill from 'tree-kill';
 
+import {ptyIpc} from '../ipc/pty';
 import {determineShell} from '../utils';
 import classHolder from './class_holder';
 
@@ -19,7 +19,7 @@ export default class LynxTerminal {
   public id: string;
 
   constructor(id: string, dir?: string, sendDataToRenderer = false) {
-    const {storageManager, appManager} = classHolder;
+    const {storageManager} = classHolder;
     this.id = id;
 
     const {useConpty} = storageManager.getData('terminal');
@@ -49,14 +49,12 @@ export default class LynxTerminal {
       if (this.onData) {
         this.onData(data);
       } else if (sendDataToRenderer) {
-        appManager?.getWebContent()?.send(ptyChannels.onData, this.id, data);
-        appManager?.getWebContent()?.send(ptyChannels.onTitle, this.id, this.process?.process);
+        ptyIpc.send.onData(this.id, data);
+        if (this.process) ptyIpc.send.onTitle(this.id, this.process.process);
       }
     });
 
-    this.process.onExit(() => {
-      appManager?.getWebContent()?.send(ptyChannels.onExit, this.id);
-    });
+    this.process.onExit(() => ptyIpc.send.onExit(this.id));
   }
 
   public async stopAsync(): Promise<void> {
