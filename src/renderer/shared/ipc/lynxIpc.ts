@@ -6,11 +6,15 @@ const invoke = <T>(channel: string, ...args: any[]): Promise<T> => ipc.invoke(ch
 const on = (channel: string, callback: (...args: any[]) => void): (() => void) => {
   return ipc.on(channel, (_, ...args: any[]) => callback(...args));
 };
+const once = (channel: string, callback: (...args: any[]) => void): (() => void) => {
+  return ipc.once(channel, (_, ...args: any[]) => callback(...args));
+};
 
 const lynxIpc = {
   send,
   sendSync,
   on,
+  once,
   invoke,
 };
 
