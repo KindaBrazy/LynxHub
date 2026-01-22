@@ -1,6 +1,5 @@
 import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
 import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
-import staticsChannels from '@lynx_cross/consts/ipc_channels/statics';
 import storageChannels, {storageUtilsChannels} from '@lynx_cross/consts/ipc_channels/storage';
 import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
 import {CustomRunBehaviorData, PreCommands, PreOpen, RecentlyOperation, StorageOperation} from '@lynx_cross/types/ipc';
@@ -27,6 +26,7 @@ import {
 } from './methods/card_extensions';
 import {cancelDownload, downloadFile} from './methods/downloader';
 import listenPty from './pty';
+import listenStatics from './statics';
 
 function utils() {
   // Gets detailed information about extensions in directory
@@ -276,27 +276,6 @@ function modulesApi() {
   ipcMain.handle(moduleApiChannels.getCurrentReleaseTag, (_, dir: string) => GitManager.getCurrentReleaseTag(dir));
 }
 
-function statics() {
-  const {staticManager} = classHolder;
-
-  // Pulls latest static data from server
-  ipcMain.handle(staticsChannels.pull, () => staticManager?.pull());
-  // Gets app release information
-  ipcMain.handle(staticsChannels.getReleases, () => staticManager?.getReleases());
-  // Gets insider build information
-  ipcMain.handle(staticsChannels.getInsider, () => staticManager?.getInsider());
-  // Gets notification data
-  ipcMain.handle(staticsChannels.getNotification, () => staticManager?.getNotification());
-  // Gets available modules list
-  ipcMain.handle(staticsChannels.getModules, () => staticManager?.getModules());
-  // Gets available extensions list
-  ipcMain.handle(staticsChannels.getExtensions, () => staticManager?.getExtensions());
-  // Gets early access extensions list
-  ipcMain.handle(staticsChannels.getExtensionsEA, () => staticManager?.getExtensionsEA());
-  // Gets Patreon supporters list
-  ipcMain.handle(staticsChannels.getPatrons, () => staticManager?.getPatrons());
-}
-
 function imageCache() {
   const cacheManager = getImageCacheManager();
 
@@ -357,6 +336,6 @@ export function listenToIpcChannels() {
   listenContextMenu();
   if (linkPreviewManager) linkPreviewManager.listenForChannels();
 
-  statics();
+  listenStatics();
   imageCache();
 }
