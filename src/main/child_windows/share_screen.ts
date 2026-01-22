@@ -2,19 +2,18 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import {screenShareChannels} from '@lynx_cross/consts/ipc_channels/share_screen';
 import {
   BrowserWindow,
   desktopCapturer,
   DesktopCapturerSource,
   DisplayMediaRequestHandlerHandlerRequest,
-  ipcMain,
   session,
   Streams,
 } from 'electron';
 
-import {ScreenShareSources, ScreenShareStart} from '../../cross/types/share_screen';
+import {ScreenShareSources} from '../../cross/types/share_screen';
 import classHolder from '../core/class_holder';
+import {shareScreenIpc} from '../ipc/share_screen';
 
 export default class ShareScreenManager {
   private _selectorWindow?: BrowserWindow;
@@ -57,14 +56,20 @@ export default class ShareScreenManager {
       this._selectorWindow = undefined;
 
       // Use removeHandler for channels registered with ipcMain.handle()
-      ipcMain.removeHandler(screenShareChannels.getScreenSources);
-      ipcMain.removeHandler(screenShareChannels.getWindowSources);
+      shareScreenIpc.removeHandler.getScreenSources();
+      shareScreenIpc.removeHandler.getWindowSources();
     });
   }
 
   private startShare(callback: (streams: Streams) => void) {
-    const handleStart = (_, data: ScreenShareStart) => {
-      ipcMain.removeListener(screenShareChannels.cancel, handleCancel);
+    let offStartShare: (() => void) | undefined = undefined;
+    let offCancel: (() => void) | undefined = undefined;
+
+    offStartShare = shareScreenIpc.once.startShare(data => {
+      if (offCancel) {
+        offCancel();
+        offCancel = undefined;
+      }
 
       const target = this.availableSources.find(
         item => (data.type === 'windows' ? item.id : item.display_id) === data.id,
@@ -83,20 +88,22 @@ export default class ShareScreenManager {
       }
 
       this.onDone();
-    };
+    });
 
-    const handleCancel = () => {
-      ipcMain.removeListener(screenShareChannels.startShare, handleStart);
+    offCancel = shareScreenIpc.once.cancel(() => {
+      if (offStartShare) {
+        offStartShare();
+        offStartShare = undefined;
+      }
+
       try {
         callback({});
       } catch (e) {
         console.log(e);
       }
-      this.onDone();
-    };
 
-    ipcMain.once(screenShareChannels.startShare, handleStart);
-    ipcMain.once(screenShareChannels.cancel, handleCancel);
+      this.onDone();
+    });
   }
 
   private getSources() {
@@ -121,7 +128,7 @@ export default class ShareScreenManager {
       resolve(result);
     };
 
-    ipcMain.handle(screenShareChannels.getScreenSources, () => {
+    shareScreenIpc.handle.getScreenSources(() => {
       return new Promise((resolve, reject) => {
         desktopCapturer
           .getSources({types: ['screen'], fetchWindowIcons: true, thumbnailSize: {width: 400, height: 300}})
@@ -129,7 +136,7 @@ export default class ShareScreenManager {
           .catch(reject);
       });
     });
-    ipcMain.handle(screenShareChannels.getWindowSources, () => {
+    shareScreenIpc.handle.getWindowSources(() => {
       return new Promise((resolve, reject) => {
         desktopCapturer
           .getSources({types: ['window'], fetchWindowIcons: true, thumbnailSize: {width: 400, height: 300}})
