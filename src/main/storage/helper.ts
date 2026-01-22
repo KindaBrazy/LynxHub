@@ -17,6 +17,7 @@ import {ChosenArgumentsData, ConfirmMenuTypes} from '../../cross/types';
 import {InstalledCard, InstalledCards} from '../../cross/types/storage';
 import {compareUrls, isValidURL} from '../../cross/utils';
 import classHolder from '../core/class_holder';
+import {storageUtilsIpc} from '../ipc/storage';
 import {
   getAbsolutePath,
   getExePath,
@@ -48,13 +49,13 @@ class StorageManager extends BaseStorage {
     cardId: string,
     channel: string,
   ): void {
-    const {appManager} = classHolder;
     const currentArray = this.getData('cards')[arrayKey];
     if (lodash.includes(currentArray, cardId)) return;
 
     const updatedArray = [...currentArray, cardId];
+
     this.updateData('cards', {[arrayKey]: updatedArray});
-    appManager?.getWebContent()?.send(channel, updatedArray);
+    storageUtilsIpc.send.onArrayUpdate(channel, updatedArray);
   }
 
   /**
@@ -65,11 +66,11 @@ class StorageManager extends BaseStorage {
     cardId: string,
     channel: string,
   ): void {
-    const {appManager} = classHolder;
     const currentArray = this.getData('cards')[arrayKey];
     const updatedArray = currentArray.filter(id => id !== cardId);
+
     this.updateData('cards', {[arrayKey]: updatedArray});
-    appManager?.getWebContent()?.send(channel, updatedArray);
+    storageUtilsIpc.send.onArrayUpdate(channel, updatedArray);
   }
 
   /**
@@ -213,7 +214,7 @@ class StorageManager extends BaseStorage {
   }
 
   public addInstalledCard(card: InstalledCard) {
-    const {appManager, cardsValidator} = classHolder;
+    const {cardsValidator} = classHolder;
     const storedCards = this.getData('cards').installedCards;
 
     const cardExists = storedCards.some(c => c.id === card.id);
@@ -226,30 +227,29 @@ class StorageManager extends BaseStorage {
 
       this.updateData('cards', {installedCards});
 
-      appManager?.getWebContent()?.send(storageUtilsChannels.onInstalledCards, installedCards);
+      storageUtilsIpc.send.onInstalledCards(installedCards);
     }
     cardsValidator?.changedCards();
   }
 
   public removeInstalledCard(id: string) {
-    const {appManager, cardsValidator} = classHolder;
+    const {cardsValidator} = classHolder;
     const storedCards = this.getData('cards').installedCards;
 
     const installedCards = storedCards.filter(card => card.id !== id);
 
     this.updateData('cards', {installedCards});
 
-    appManager?.getWebContent()?.send(storageUtilsChannels.onInstalledCards, installedCards);
+    storageUtilsIpc.send.onInstalledCards(installedCards);
     cardsValidator?.changedCards();
   }
 
   public removeInstalledCardByPath(dir: string) {
-    const {appManager} = classHolder;
     const installedCards = this.getData('cards').installedCards.filter(
       card => getAbsolutePath(getExePath(), card.dir || '') !== getAbsolutePath(getExePath(), dir),
     );
     this.updateData('cards', {installedCards});
-    appManager?.getWebContent()?.send(storageUtilsChannels.onInstalledCards, installedCards);
+    storageUtilsIpc.send.onInstalledCards(installedCards);
   }
 
   public addAutoUpdateCard(cardId: string) {
@@ -277,7 +277,6 @@ class StorageManager extends BaseStorage {
   }
 
   public pinnedCardsOpt(opt: StorageOperation, id: string, pinnedCards?: string[]) {
-    const {appManager} = classHolder;
     let result: string[] = [];
 
     switch (opt) {
@@ -295,7 +294,7 @@ class StorageManager extends BaseStorage {
 
       case 'set':
         this.updateData('cards', {pinnedCards});
-        appManager?.getWebContent()?.send(storageUtilsChannels.onPinnedCardsChange, pinnedCards);
+        storageUtilsIpc.send.onPinnedCardsChange(pinnedCards || []);
         break;
     }
 
@@ -303,7 +302,6 @@ class StorageManager extends BaseStorage {
   }
 
   public updateRecentlyUsedCards(id: string) {
-    const {appManager} = classHolder;
     const newArray = lodash.without(this.getData('cards').recentlyUsedCards, id);
     // Add the id to the beginning of the array
     newArray.unshift(id);
@@ -312,7 +310,7 @@ class StorageManager extends BaseStorage {
 
     this.updateData('cards', {recentlyUsedCards: result});
 
-    appManager?.getWebContent()?.send(storageUtilsChannels.onRecentlyUsedCardsChange, result);
+    storageUtilsIpc.send.onRecentlyUsedCardsChange(result);
   }
 
   public recentlyUsedCardsOpt(opt: RecentlyOperation, id: string) {
@@ -332,9 +330,8 @@ class StorageManager extends BaseStorage {
   }
 
   public setHomeCategory(data: string[]) {
-    const {appManager} = classHolder;
     this.updateData('app', {homeCategory: data});
-    appManager?.getWebContent()?.send(storageUtilsChannels.onHomeCategory, data);
+    storageUtilsIpc.send.onHomeCategory(data);
   }
 
   public homeCategoryOpt(opt: StorageOperation, data: string[]) {
@@ -354,12 +351,11 @@ class StorageManager extends BaseStorage {
   }
 
   public addPreCommand(cardId: string, command: string): void {
-    const {appManager} = classHolder;
     const preCommands = this.getData('cardsConfig').preCommands;
     const {item} = this.findOrCreateCardConfig(preCommands, cardId, () => ({cardId, data: []}));
 
     item.data.push(command);
-    appManager?.getWebContent()?.send(storageUtilsChannels.onPreCommands, {commands: item.data, id: cardId});
+    storageUtilsIpc.send.onPreCommands({commands: item.data, id: cardId});
     this.updateData('cardsConfig', {preCommands});
   }
 
@@ -372,16 +368,12 @@ class StorageManager extends BaseStorage {
   }
 
   public removePreCommand(cardId: string, index: number): void {
-    const {appManager} = classHolder;
     const preCommands = this.getData('cardsConfig').preCommands;
     const indexFound = preCommands.findIndex(item => item.cardId === cardId);
 
     if (indexFound !== -1) {
       preCommands[indexFound].data.splice(index, 1);
-      appManager?.getWebContent()?.send(storageUtilsChannels.onPreCommands, {
-        commands: preCommands[indexFound].data,
-        id: cardId,
-      });
+      storageUtilsIpc.send.onPreCommands({commands: preCommands[indexFound].data, id: cardId});
       this.updateData('cardsConfig', {preCommands});
     }
   }
@@ -411,12 +403,11 @@ class StorageManager extends BaseStorage {
   }
 
   public addCustomRun(cardId: string, command: string): void {
-    const {appManager} = classHolder;
     const customRun = this.getData('cardsConfig').customRun;
     const {item} = this.findOrCreateCardConfig(customRun, cardId, () => ({cardId, data: []}));
 
     item.data.push(command);
-    appManager?.getWebContent()?.send(storageUtilsChannels.onCustomRun, {commands: item.data, id: cardId});
+    storageUtilsIpc.send.onCustomRun({commands: item.data, id: cardId});
     this.updateData('cardsConfig', {customRun});
   }
 
@@ -429,16 +420,14 @@ class StorageManager extends BaseStorage {
   }
 
   public removeCustomRun(cardId: string, index: number): void {
-    const {appManager} = classHolder;
     const customRun = this.getData('cardsConfig').customRun;
     const indexFound = customRun.findIndex(item => item.cardId === cardId);
 
     if (indexFound !== -1) {
       customRun[indexFound].data.splice(index, 1);
-      appManager?.getWebContent()?.send(storageUtilsChannels.onCustomRun, {
-        commands: customRun[indexFound].data,
-        id: cardId,
-      });
+
+      storageUtilsIpc.send.onCustomRun({commands: customRun[indexFound].data, id: cardId});
+
       this.updateData('cardsConfig', {customRun});
     }
   }
@@ -677,11 +666,10 @@ class StorageManager extends BaseStorage {
   }
 
   public setShowConfirm(type: ConfirmMenuTypes, enable: boolean) {
-    const {appManager} = classHolder;
     const prevState = this.getData('app');
     prevState[type] = enable;
 
-    appManager?.getWebContent()?.send(storageUtilsChannels.onConfirmChange, type, enable);
+    storageUtilsIpc.send.onConfirmChange(type, enable);
 
     this.write();
   }
