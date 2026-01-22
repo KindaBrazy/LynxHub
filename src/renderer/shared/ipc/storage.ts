@@ -61,9 +61,6 @@ export const storageUtilsIpc = {
     // Sets app to start with system startup
     setSystemStartup: (startup: boolean) => lynxIpc.send(storageUtilsChannels.setSystemStartup, startup),
 
-    // Updates zoom factor for cards
-    updateZoomFactor: (zoomFactor: number) => lynxIpc.send(storageUtilsChannels.updateZoomFactor, zoomFactor),
-
     // Adds URL to browser recent list
     addBrowserRecent: (recentEntry: string) => lynxIpc.send(storageUtilsChannels.addBrowserRecent, recentEntry),
     // Adds URL to browser favorites

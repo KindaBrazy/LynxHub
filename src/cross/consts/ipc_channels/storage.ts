@@ -48,8 +48,6 @@ export const storageUtilsChannels = {
   getCardArguments: 'storageUtils:get-card-arguments',
   setCardArguments: 'storageUtils:set-card-arguments',
 
-  updateZoomFactor: 'storageUtils:update-zoom-factor',
-
   addBrowserRecent: 'storageUtils:add-browser-recent',
   addBrowserFavorite: 'storageUtils:add-browser-favorite',
   addBrowserHistory: 'storageUtils:add-browser-history',
