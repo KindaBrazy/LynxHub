@@ -1,6 +1,8 @@
+import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import {ContextWindowWidthSizes} from '@lynx_cross/types/ipc';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import windowDialogsIpc from '@lynx_shared/ipc/dialogs_window';
+import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
@@ -155,6 +157,32 @@ export default function useShowEvents() {
       );
     });
 
+    // Download manager IPC listeners
+    const offDlStart = downloadManagerIpc.on.dlStart(info => {
+      const newItem: DownloadItemInfo = {
+        ...info,
+        bytesPerSecond: 0,
+        etaSecond: 0,
+        percent: 0,
+        receivedBytes: 0,
+        status: 'downloading',
+      };
+      dispatch(contextActions.addDownload(newItem));
+    });
+
+    const offProgress = downloadManagerIpc.on.progress(info => {
+      dispatch(contextActions.updateDownloadProgress(info));
+    });
+
+    const offDone = downloadManagerIpc.on.done(info => {
+      dispatch(
+        contextActions.updateDownloadStatus({
+          name: info.name,
+          status: info.state === 'interrupted' ? 'cancelled' : info.state,
+        }),
+      );
+    });
+
     return () => {
       offZoom();
       offFind();
@@ -167,6 +195,9 @@ export default function useShowEvents() {
       offPrompt();
       offAlert();
       offConfirm();
+      offDlStart();
+      offProgress();
+      offDone();
     };
   }, []);
 }

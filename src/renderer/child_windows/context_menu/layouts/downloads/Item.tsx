@@ -4,43 +4,39 @@ import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
 import {Pause, Play, Restart} from '@solar-icons/react-perf/Bold';
 import {FileDownload, FolderOpen, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {X} from 'lucide-react';
-import {Dispatch, SetStateAction} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {contextActions} from '../../redux/reducer';
 import {formatBytes, formatETA, formatSpeed, getProgress, getStatusColor} from './utils';
 
 type Props = {
   item: DownloadItemInfo;
-  setItems: Dispatch<SetStateAction<DownloadItemInfo[]>>;
 };
 
-export default function DownloadItem({item, setItems}: Props) {
+export default function DownloadItem({item}: Props) {
+  const dispatch = useDispatch();
+
   const handleAction = (name: string, action: 'pause' | 'resume' | 'cancel' | 'open' | 'openFolder' | 'clear') => {
     if (action === 'open' || action === 'openFolder') {
       downloadManagerIpc.send.openItem(name, action);
     } else if (action === 'clear') {
-      setItems(prev => prev.filter(download => download.name !== name));
+      dispatch(contextActions.removeDownload(name));
       downloadManagerIpc.send.clear(name);
     } else {
-      setItems(prev =>
-        prev.map(download => {
-          if (download.name === name) {
-            switch (action) {
-              case 'pause':
-                downloadManagerIpc.send.pause(name);
-                return {...download, status: 'paused' as const, bytesPerSecond: 0};
-              case 'resume':
-                downloadManagerIpc.send.resume(name);
-                return {...download, status: 'downloading' as const, bytesPerSecond: 524288};
-              case 'cancel':
-                downloadManagerIpc.send.cancel(name);
-                return {...download, status: 'cancelled' as const, bytesPerSecond: 0};
-              default:
-                return download;
-            }
-          }
-          return download;
-        }),
-      );
+      switch (action) {
+        case 'pause':
+          downloadManagerIpc.send.pause(name);
+          dispatch(contextActions.updateDownloadProgress({name, status: 'paused', bytesPerSecond: 0}));
+          break;
+        case 'resume':
+          downloadManagerIpc.send.resume(name);
+          dispatch(contextActions.updateDownloadProgress({name, status: 'downloading', bytesPerSecond: 524288}));
+          break;
+        case 'cancel':
+          downloadManagerIpc.send.cancel(name);
+          dispatch(contextActions.updateDownloadProgress({name, status: 'cancelled', bytesPerSecond: 0}));
+          break;
+      }
     }
   };
 
