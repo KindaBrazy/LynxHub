@@ -1,13 +1,13 @@
 import {Button, Input, Kbd, Popover, PopoverContent, PopoverTrigger, Tooltip} from '@heroui/react';
+import {AltArrow_Icon, Magnifier_Icon} from '@lynx_assets/icons';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {SearchAddon} from '@xterm/addon-search';
 import {KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
 
-import {AltArrow_Icon, Magnifier_Icon} from '../../../../../shared/assets/icons';
 import useHotkeyPress from '../../../../hooks/hotkeys';
+import {useIsActiveTab} from '../../../../layouts/tabs/utils';
 import {useHotkeysState} from '../../../../redux/reducers/hotkeys';
 import {formatHotkey} from '../../../../utils';
-import {useIsActiveTab} from '../../../tabs/utils';
 
 type Props = {searchAddon: SearchAddon; tabId: string};
 

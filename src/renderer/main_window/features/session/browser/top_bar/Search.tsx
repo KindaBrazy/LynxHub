@@ -1,9 +1,9 @@
 import {Button} from '@heroui/react';
+import {Circle_Icon} from '@lynx_assets/icons';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {memo, useRef} from 'react';
 
-import {Circle_Icon} from '../../../../../shared/assets/icons';
 import useHotkeyPress from '../../../../hooks/hotkeys';
 import {useTabsState} from '../../../../redux/reducers/tabs';
 

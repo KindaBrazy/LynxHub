@@ -1,13 +1,13 @@
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {useEffect, useMemo} from 'react';
 
+import SessionView from '../features/session';
 import HomePage from '../pages/home';
 import {extensionsData} from '../plugins/extensions/loader';
 import {useCardsState} from '../redux/reducers/cards';
 import {useTabsState} from '../redux/reducers/tabs';
 import {useTerminalState} from '../redux/reducers/terminal';
 import {PageComponents} from '../utils/constants';
-import RunningCardView from './browser_terminal';
 import {useRemoveTab} from './tabs/utils';
 
 export default function AppPages() {
@@ -21,7 +21,7 @@ export default function AppPages() {
 
   const RunningView = useMemo(() => {
     const Container = extensionsData.runningAI.container;
-    return Container ? Container : RunningCardView;
+    return Container ? Container : SessionView;
   }, []);
 
   useEffect(() => {

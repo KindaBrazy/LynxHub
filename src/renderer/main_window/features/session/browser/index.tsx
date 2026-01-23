@@ -2,10 +2,10 @@ import browserIpc from '@lynx_shared/ipc/browser';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
+import {useIsActiveTab} from '../../../layouts/tabs/utils';
 import {useCardsState} from '../../../redux/reducers/cards';
 import {useVolumeState} from '../../../redux/reducers/volume';
 import {RunningCard} from '../../../types';
-import {useIsActiveTab} from '../../tabs/utils';
 import EmptyPage from './EmptyPage';
 import {Browser_Error} from './Error';
 

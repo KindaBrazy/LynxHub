@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
+import {Terminal_Icon, Web_Icon} from '@lynx_assets/icons';
 import {useDispatch} from 'react-redux';
 
-import {Terminal_Icon, Web_Icon} from '../../../../shared/assets/icons';
 import {cardsActions} from '../../../redux/reducers/cards';
 import {useTabsState} from '../../../redux/reducers/tabs';
 import {AppDispatch} from '../../../redux/store';

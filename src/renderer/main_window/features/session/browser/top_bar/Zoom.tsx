@@ -1,8 +1,7 @@
 import {Button} from '@heroui/react';
+import {Magnifier_Icon} from '@lynx_assets/icons';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {useRef} from 'react';
-
-import {Magnifier_Icon} from '../../../../../shared/assets/icons';
 
 type Props = {id: string};
 export default function Browser_Zoom({id}: Props) {

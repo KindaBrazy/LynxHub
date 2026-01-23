@@ -16,9 +16,9 @@ import {isEmpty, isEqual} from 'lodash';
 import {forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
+import parseTerminalColors from '../features/session/terminal/colorHandler';
+import {getRendererMode, getTheme, getWindowPty} from '../features/session/terminal/utils';
 import {lynxTopToast} from '../hooks/utils';
-import parseTerminalColors from '../layouts/browser_terminal/terminal/colorHandler';
-import {getRendererMode, getTheme, getWindowPty} from '../layouts/browser_terminal/terminal/utils';
 import {useAppState} from '../redux/reducers/app';
 import {useTerminalStat} from '../redux/reducers/terminal';
 import {AppDispatch} from '../redux/store';

@@ -1,4 +1,5 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip} from '@heroui/react';
+import {CloseSimple_Icon, FolderDuo_Icon, OpenFolder_Icon, Trash_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc from '@lynx_shared/ipc/storage';
@@ -6,7 +7,6 @@ import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {CloseSimple_Icon, FolderDuo_Icon, OpenFolder_Icon, Trash_Icon} from '../../../../../shared/assets/icons';
 import {lynxTopToast} from '../../../../hooks/utils';
 import {AppDispatch} from '../../../../redux/store';
 

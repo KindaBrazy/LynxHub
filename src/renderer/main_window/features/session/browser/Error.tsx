@@ -1,7 +1,7 @@
 import {Accordion, AccordionItem, Button, Card} from '@heroui/react';
+import {Web_Icon} from '@lynx_assets/icons';
 import {motion} from 'framer-motion';
 
-import {Web_Icon} from '../../../../shared/assets/icons';
 import CopyClipboard from '../../../components/CopyClipboard';
 
 type FailedLoad = {errorCode: number; errorDescription: string; validatedURL: string};

@@ -1,10 +1,9 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Tooltip} from '@heroui/react';
+import {ExternalDuo_Icon, Web_Icon} from '@lynx_assets/icons';
 import {SearchQuerySites} from '@lynx_common/types';
 import {getCacheUrl, getSearchUrl} from '@lynx_common/utils';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useCallback} from 'react';
-
-import {ExternalDuo_Icon, Web_Icon} from '../../../../../shared/assets/icons';
 
 const endContent = <ExternalDuo_Icon className="size-3 group-hover:opacity-100 opacity-0 transition duration-300" />;
 
