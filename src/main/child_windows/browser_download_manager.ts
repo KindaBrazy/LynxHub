@@ -663,8 +663,14 @@ export default class BrowserDownloadManager {
 
       // Hide the download menu window if no items remain
       if (this.downloadingItems.length === 0) {
-        const {contextMenuManager} = classHolder;
-        if (contextMenuManager) contextMenuManager.hideContextMenu();
+        const contextMenuManager = classHolder.contextMenuManager;
+        if (contextMenuManager) {
+          contextMenuManager.hideContextMenu();
+        } else {
+          classHolder.waitForClass('contextMenuManager').then(contextMenuManager => {
+            contextMenuManager.hideContextMenu();
+          });
+        }
       }
     } catch (error: any) {
       const fsError = this.handleFileSystemError(error);
@@ -711,8 +717,14 @@ export default class BrowserDownloadManager {
       downloadManagerIpc.send.dlCount(0);
 
       // Hide the download menu window since there are no items
-      const {contextMenuManager} = classHolder;
-      if (contextMenuManager) contextMenuManager.hideContextMenu();
+      const contextMenuManager = classHolder.contextMenuManager;
+      if (contextMenuManager) {
+        contextMenuManager.hideContextMenu();
+      } else {
+        classHolder.waitForClass('contextMenuManager').then(contextMenuManager => {
+          contextMenuManager.hideContextMenu();
+        });
+      }
     } catch (error: any) {
       const fsError = this.handleFileSystemError(error);
       console.error('Failed to clear all downloads:', fsError.userMessage);

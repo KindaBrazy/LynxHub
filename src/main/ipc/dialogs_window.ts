@@ -15,13 +15,11 @@ export const dialogBlured = () => {
   }
 };
 
-export default function listenDialogsWindow() {
-  const {contextMenuManager, appManager} = classHolder;
-
-  if (!contextMenuManager || !appManager) {
-    console.error('No contextMenuManager or appManager found.');
-    return;
-  }
+export default async function listenDialogsWindow() {
+  const [contextMenuManager, appManager] = await Promise.all([
+    classHolder.waitForClass('contextMenuManager'),
+    classHolder.waitForClass('appManager'),
+  ]);
 
   const setCenterPosition = () => {
     const window = appManager.getMainWindow();

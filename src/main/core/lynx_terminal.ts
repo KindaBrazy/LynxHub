@@ -19,7 +19,7 @@ export default class LynxTerminal {
   public id: string;
 
   constructor(id: string, dir?: string, sendDataToRenderer = false) {
-    const {storageManager} = classHolder;
+    const storageManager = classHolder.storageManager;
     this.id = id;
 
     const {useConpty} = storageManager.getData('terminal');

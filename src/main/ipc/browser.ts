@@ -25,16 +25,16 @@ export function resetBrowserIPC() {
   }
 }
 
-export function listenBrowser() {
-  const {appManager} = classHolder;
-
+export async function listenBrowser() {
   // Prevent registering handlers multiple times
   if (browserIPCInitialized) {
-    console.warn('browserIPC already initialized, skipping...');
+    console.warn('listenBrowser already initialized, skipping...');
     return;
   }
 
-  const mainWindow = appManager?.getMainWindow();
+  const appManager = await classHolder.waitForClass('appManager');
+
+  const mainWindow = appManager.getMainWindow();
 
   if (!mainWindow) {
     browserTimeout = setTimeout(listenBrowser, toMs(1, 'seconds'));
@@ -48,7 +48,7 @@ export function listenBrowser() {
   const browserManager: BrowserManager = new BrowserManager(mainWindow);
   classHolder.browserDownloadManager = new BrowserDownloadManager(browserManager.getSession(), mainWindow);
 
-  listenForBrowserChannels(browserManager);
+  await listenForBrowserChannels(browserManager);
 
   // Creates new browser webview instance
   browserIpc.on.createBrowser(id => browserManager.createBrowser(id));
@@ -92,7 +92,8 @@ export function listenBrowser() {
   // Updates user agent for all browsers
   browserIpc.on.updateUserAgent(() => {
     browserManager.updateUserAgent();
-    if (appManager && appManager.getWebContent()) appManager.getWebContent()!.setUserAgent(getUserAgent());
+    const webContents = appManager.getWebContent();
+    if (webContents) webContents.setUserAgent(getUserAgent());
   });
 
   // Adds offset to browser webview position
