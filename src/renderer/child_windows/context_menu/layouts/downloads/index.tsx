@@ -1,62 +1,20 @@
 import {Button, Chip} from '@heroui/react';
-import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
 import {Broom, DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
-import {memo, useEffect, useState} from 'react';
+import {memo} from 'react';
+import {useDispatch} from 'react-redux';
 
+import {contextActions, useContextState} from '../../redux/reducer';
 import DownloadItem from './Item';
 
 const DownloadMenu = memo(() => {
-  const [downloads, setDownloads] = useState<DownloadItemInfo[]>([]);
+  const downloads = useContextState('downloads');
+  const dispatch = useDispatch();
 
   const handleClearAll = () => {
-    setDownloads([]);
+    dispatch(contextActions.clearAllDownloads());
     downloadManagerIpc.send.clearAll();
   };
-
-  useEffect(() => {
-    const offDlStart = downloadManagerIpc.on.dlStart(info => {
-      const newItem: DownloadItemInfo = {
-        ...info,
-        bytesPerSecond: 0,
-        etaSecond: 0,
-        percent: 0,
-        receivedBytes: 0,
-        status: 'downloading',
-      };
-      setDownloads(prevState => [newItem, ...prevState]);
-    });
-    const offProgress = downloadManagerIpc.on.progress(info => {
-      setDownloads(prevState =>
-        prevState.map(item =>
-          item.name !== info.name
-            ? item
-            : {
-                ...item,
-                ...info,
-              },
-        ),
-      );
-    });
-    const offDone = downloadManagerIpc.on.done(info => {
-      setDownloads(prevState =>
-        prevState.map(item =>
-          item.name !== info.name
-            ? item
-            : {
-                ...item,
-                status: info.state === 'interrupted' ? 'cancelled' : info.state,
-              },
-        ),
-      );
-    });
-
-    return () => {
-      offDlStart();
-      offProgress();
-      offDone();
-    };
-  }, []);
 
   return (
     <div className="flex flex-col">
@@ -81,7 +39,7 @@ const DownloadMenu = memo(() => {
       {/* Download List */}
       <div className={'px-3 py-1 pb-4 gap-y-2 flex flex-col justify-start max-h-200 overflow-y-auto overflow-x-hidden'}>
         {downloads.map(item => (
-          <DownloadItem item={item} key={item.name} setItems={setDownloads} />
+          <DownloadItem item={item} key={item.name} />
         ))}
       </div>
     </div>

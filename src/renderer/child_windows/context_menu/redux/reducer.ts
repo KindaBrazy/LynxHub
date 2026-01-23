@@ -1,3 +1,4 @@
+import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import {ContextMenuVolumeData, ContextWindowWidthSizes} from '@lynx_cross/types/ipc';
 import {NavHistory} from '@lynx_cross/types/ipc';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
@@ -36,6 +37,7 @@ type ContextState = {
   rightClickParams: RightClickParams;
   alertWindow: AlertWindow;
   confirmWindow: ConfirmWindow;
+  downloads: DownloadItemInfo[];
 };
 
 type ContextStateTypes = {
@@ -81,6 +83,7 @@ const initialState: ContextState = {
   confirmWindow: {
     message: '',
   },
+  downloads: [],
 };
 
 const getWidth = (state: ContextWindowWidthSizes) => {
@@ -135,6 +138,35 @@ const appSlice = createSlice({
     },
     updateMuted: (state: ContextState, action: PayloadAction<boolean>) => {
       state.browserVolume.muted = action.payload;
+    },
+
+    // Download actions
+    addDownload: (state: ContextState, action: PayloadAction<DownloadItemInfo>) => {
+      state.downloads = [action.payload, ...state.downloads];
+    },
+    updateDownloadProgress: (
+      state: ContextState,
+      action: PayloadAction<Partial<DownloadItemInfo> & {name: string}>,
+    ) => {
+      const index = state.downloads.findIndex(item => item.name === action.payload.name);
+      if (index !== -1) {
+        state.downloads[index] = {...state.downloads[index], ...action.payload};
+      }
+    },
+    updateDownloadStatus: (
+      state: ContextState,
+      action: PayloadAction<{name: string; status: DownloadItemInfo['status']}>,
+    ) => {
+      const index = state.downloads.findIndex(item => item.name === action.payload.name);
+      if (index !== -1) {
+        state.downloads[index].status = action.payload.status;
+      }
+    },
+    removeDownload: (state: ContextState, action: PayloadAction<string>) => {
+      state.downloads = state.downloads.filter(item => item.name !== action.payload);
+    },
+    clearAllDownloads: (state: ContextState) => {
+      state.downloads = [];
     },
   },
 });
