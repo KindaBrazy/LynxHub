@@ -1,6 +1,5 @@
 import path from 'node:path';
 
-import modulesChannels from '@lynx_cross/consts/ipc_channels/module';
 import {MainModuleImportType, MainModules, MainModuleUtils} from '@lynx_cross/types/plugins/modules';
 import {captureException} from '@sentry/electron/main';
 import {ipcMain} from 'electron';
@@ -13,6 +12,7 @@ import classHolder from '../../core/class_holder';
 import {getAppDataPath} from '../../core/data_folder';
 import GitManager from '../../git';
 import {removeDir, trashDir} from '../../ipc/methods';
+import {modulesIpc} from '../../ipc/plugins/modules';
 import {getAbsolutePath, getExePath, isPortable} from '../../utils';
 
 export default class ModuleManager {
@@ -175,7 +175,7 @@ export default class ModuleManager {
   }
 
   private async checkAllCardsUpdate(updateTypes: {id: string; type: 'git' | 'stepper'}[]) {
-    const {appManager, storageManager} = classHolder;
+    const {storageManager} = classHolder;
     let installedCards = storageManager.getData('cards').installedCards;
     if (isPortable()) {
       installedCards = installedCards.map(card => {
@@ -188,7 +188,7 @@ export default class ModuleManager {
       const updateType = updateTypes.find(update => update.id === card.id)?.type;
       const isAvailable = await this.checkCardUpdate(card, updateType);
       if (isAvailable) this.availableCardUpdates.push(card.id);
-      appManager?.getWebContent()?.send(modulesChannels.onCardsUpdateAvailable, this.availableCardUpdates);
+      modulesIpc.send.onCardsUpdateAvailable(this.availableCardUpdates);
     }
   }
 
