@@ -67,9 +67,14 @@ export default class ContextMenuManager {
 
     this.contextMenuWindow.on('closed', () => {
       this.contextMenuWindow = undefined;
-      const {browserDownloadManager} = classHolder;
+
+      const browserDownloadManager = classHolder.browserDownloadManager;
       if (browserDownloadManager) {
         browserDownloadManager.onContextClose();
+      } else {
+        classHolder.waitForClass('browserDownloadManager').then(browserDownloadManager => {
+          browserDownloadManager.onContextClose();
+        });
       }
     });
 

@@ -141,7 +141,7 @@ export default class BrowserManager {
 
   /** Track URL in browser history (shared helper to avoid duplication) */
   private trackUrl(url: string) {
-    const {storageManager} = classHolder;
+    const storageManager = classHolder.storageManager;
     if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
       const formattedUrl = formatWebAddress(url);
       storageManager.addBrowserRecent(formattedUrl);
@@ -161,7 +161,7 @@ export default class BrowserManager {
       const viewWc = this.getWebContents(id);
       if (!viewWc) return;
 
-      const {storageManager} = classHolder;
+      const storageManager = classHolder.storageManager;
 
       const title = viewWc.getTitle();
       browserIpc.send.onTitleChange(id, title);
@@ -174,7 +174,7 @@ export default class BrowserManager {
       const viewWc = this.getWebContents(id);
       if (!viewWc) return;
 
-      const {storageManager} = classHolder;
+      const storageManager = classHolder.storageManager;
 
       // Prefer higher quality formats: SVG > PNG > other > ICO
       const url =
@@ -230,7 +230,7 @@ export default class BrowserManager {
   private listenForFullScreen(view: WebContentsView) {
     const webContents = view.webContents;
     webContents.on('enter-html-full-screen', () => {
-      const {appManager} = classHolder;
+      const appManager = classHolder.appManager;
       const mainBounds = appManager?.getMainWindow()?.getBounds();
       if (mainBounds) {
         view.setBounds({x: 0, y: 0, width: mainBounds.width, height: mainBounds.height});
@@ -260,7 +260,7 @@ export default class BrowserManager {
 
   private listenForLinkHover(webContents: WebContents) {
     webContents.on('update-target-url', (_, url) => {
-      const {linkPreviewManager} = classHolder;
+      const linkPreviewManager = classHolder.linkPreviewManager;
       linkPreviewManager?.updateUrl(url);
     });
   }
@@ -341,7 +341,7 @@ export default class BrowserManager {
   }
 
   public clearHistory(selected: string[]) {
-    const {storageManager} = classHolder;
+    const storageManager = classHolder.storageManager;
     if (selected.includes('favorites')) {
       storageManager.updateBrowserDataSecurely({favoriteAddress: []});
     }

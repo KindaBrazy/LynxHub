@@ -7,18 +7,13 @@ import BrowserManager from '../core/browser';
 import classHolder from '../core/class_holder';
 import {applicationIpc} from './application';
 import {browserIpc} from './browser';
-import listenDialogsWindow from './dialogs_window';
 import {downloadManagerIpc} from './download_manager';
 import lynxIpc from './lynxIpc';
 import {downloadImageToClipboard} from './methods';
 import {sendToCM, sendToMain} from './sender';
 
-export default function listenContextMenu() {
-  const {contextMenuManager} = classHolder;
-  if (!contextMenuManager) {
-    console.error("contextMenuManager is undefined and can't listen to ipc channels");
-    return;
-  }
+export default async function listenContextMenu() {
+  const contextMenuManager = await classHolder.waitForClass('contextMenuManager');
 
   const getWebContent = (id: number) => contextMenuManager.getContentById(id);
 
@@ -67,12 +62,8 @@ export default function listenContextMenu() {
   contextMenuIpc.on.removeTab(tabID => contextMenuIpc.send.onRemoveTab(tabID));
 }
 
-export function listenForBrowserChannels(browserManager: BrowserManager) {
-  const {contextMenuManager} = classHolder;
-  if (!contextMenuManager) {
-    console.error("contextMenuManager is undefined and can't listen to forBrowserChannels");
-    return;
-  }
+export async function listenForBrowserChannels(browserManager: BrowserManager) {
+  const contextMenuManager = await classHolder.waitForClass('contextMenuManager');
 
   const setPosition = (customPosition?: {x: number; y: number}) =>
     contextMenuManager.setCustomContextPosition(customPosition);
@@ -111,8 +102,6 @@ export function listenForBrowserChannels(browserManager: BrowserManager) {
     setPosition(undefined);
     contextMenuIpc.send.onDownloads();
   });
-
-  listenDialogsWindow();
 }
 
 export const contextMenuIpc = {

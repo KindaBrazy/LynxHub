@@ -2,17 +2,12 @@ import {browserDownloadChannels} from '@lynx_cross/consts/ipc_channels/donwload_
 import {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '@lynx_cross/types/download_manager';
 import {MainHT} from '@lynx_cross/types/ipc';
 
-import class_holder from '../core/class_holder';
+import classHolder from '../core/class_holder';
 import lynxIpc from './lynxIpc';
 import {sendToCM, sendToMain} from './sender';
 
-export default function listenDownloadManager() {
-  const {browserDownloadManager} = class_holder;
-
-  if (!browserDownloadManager) {
-    console.error("browserDownloadManager not found, can't listen to ipc events");
-    return;
-  }
+export default async function listenDownloadManager() {
+  const browserDownloadManager = await classHolder.waitForClass('browserDownloadManager');
 
   downloadManagerIpc.on.cancel(name => browserDownloadManager.cancelItem(name));
   downloadManagerIpc.on.pause(name => browserDownloadManager.pauseItem(name));

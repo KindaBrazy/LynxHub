@@ -20,7 +20,7 @@ import lynxIpc from './lynxIpc';
 import {sendToMain} from './sender';
 
 export default function listenStorage() {
-  const {storageManager} = classHolder;
+  const storageManager = classHolder.storageManager;
 
   // Sets custom storage data by key
   storageIpc.on.setCustom((key, data) => storageManager.setCustomData(key, data));
@@ -42,7 +42,7 @@ export default function listenStorage() {
 }
 
 export function listenStorageUtils() {
-  const {storageManager} = classHolder;
+  const storageManager = classHolder.storageManager;
 
   // Sets app to start with system startup
   storageUtilsIpc.on.setSystemStartup(systemStartup => {

@@ -12,12 +12,8 @@ import {MainHT} from '@lynx_cross/types/ipc';
 import classHolder from '../core/class_holder';
 import lynxIpc from './lynxIpc';
 
-export default function listenStatics() {
-  const {staticManager} = classHolder;
-  if (!staticManager) {
-    console.error("staticManager is undefined, can't listen to ipc's");
-    return;
-  }
+export default async function listenStatics() {
+  const staticManager = await classHolder.waitForClass('staticManager');
 
   // Pulls latest static data from server
   staticsIpc.handle.pull(() => staticManager.pull());

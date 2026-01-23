@@ -29,8 +29,9 @@ import {changeWindowState, setDarkMode, setTaskbarStatus} from './methods';
 import {getSystemInfo} from './methods/platform';
 import {sendToMain} from './sender';
 
-export default function listenApplication() {
-  const {appManager, storageManager} = classHolder;
+export default async function listenApplication() {
+  const storageManager = classHolder.storageManager;
+  const appManager = await classHolder.waitForClass('appManager');
 
   // Listens for system theme changes and updates app if set to 'system' mode
   nativeTheme.on('updated', () => {
@@ -53,7 +54,7 @@ export default function listenApplication() {
   // Sets window progress bar (taskbar/dock) - value: 0-1 for progress, -1 to remove, >1 for indeterminate
   // mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused' (Windows only)
   applicationIpc.on.setProgressBar((progress, options) => {
-    const window = appManager?.getMainWindow();
+    const window = appManager.getMainWindow();
     if (window) window.setProgressBar(progress, options);
   });
 

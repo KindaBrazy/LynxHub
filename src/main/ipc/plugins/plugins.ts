@@ -14,13 +14,8 @@ import {getList} from '../../plugins/utils';
 import lynxIpc from '../lynxIpc';
 import {sendToMain} from '../sender';
 
-export default function listenPlugins() {
-  const {pluginManager} = classHolder;
-
-  if (!pluginManager) {
-    console.error("pluginManager is undefined, can't listen to ipc's");
-    return;
-  }
+export default async function listenPlugins() {
+  const pluginManager = await classHolder.waitForClass('pluginManager');
 
   // Gets plugin server addresses
   pluginsIpc.handle.getAddresses(() => pluginManager.getAddresses());

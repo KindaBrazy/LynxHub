@@ -8,8 +8,8 @@ import {getDirCreationDate} from '../../utils';
 import lynxIpc from '../lynxIpc';
 import {sendToMain} from '../sender';
 
-export default function listenModules() {
-  const {moduleManager} = classHolder;
+export default async function listenModules() {
+  const moduleManager = await classHolder.waitForClass('moduleManager');
 
   // Checks if card has available updates
   modulesIpc.handle.cardUpdateAvailable((card, updateType) => moduleManager?.checkCardUpdate(card, updateType));

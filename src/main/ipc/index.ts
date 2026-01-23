@@ -10,41 +10,40 @@ import listenStatics from './statics';
 import listenStorage, {listenStorageUtils} from './storage';
 import listenUtils from './utils';
 
-function listenManagers() {
-  const {linkPreviewManager, moduleManager, extensionManager} = classHolder;
+async function listenManagers() {
+  try {
+    const [moduleManager, extensionManager, linkPreviewManager] = await Promise.all([
+      classHolder.waitForClass('moduleManager'),
+      classHolder.waitForClass('extensionManager'),
+      classHolder.waitForClass('linkPreviewManager'),
+    ]);
 
-  const managers = [
-    {name: 'moduleManager', instance: moduleManager},
-    {name: 'extensionManager', instance: extensionManager},
-    {name: 'linkPreviewManager', instance: linkPreviewManager},
-  ];
-
-  const missing = managers.filter(m => !m.instance).map(m => m.name);
-  if (missing.length > 0) {
-    console.error(`Can't listen to ipc channels, undefined managers: ${missing.join(', ')}`);
+    moduleManager.listenForChannels();
+    extensionManager.listenForChannels();
+    linkPreviewManager.listenForChannels();
+  } catch (err) {
+    console.error('Failed to initialize managers for IPC channels:', err?.message || err);
   }
-
-  managers.forEach(m => m.instance?.listenForChannels());
 }
 
-export function listenToIpcChannels() {
+export async function listenToIpcChannels() {
   listenStorage();
   listenStorageUtils();
 
-  listenApplication();
+  await listenApplication();
   listenFiles();
 
   listenGit();
   listenUtils();
   listenPty();
 
-  listenModules();
+  await listenModules();
   listenModuleApi();
 
-  listenManagers();
+  await listenManagers();
 
-  listenPlugins();
-  listenContextMenu();
+  await listenPlugins();
+  await listenContextMenu();
 
-  listenStatics();
+  await listenStatics();
 }

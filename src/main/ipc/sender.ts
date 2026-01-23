@@ -1,30 +1,22 @@
 import classHolder from '../core/class_holder';
 
-const sendToMain = (channel: string, ...args: any[]) => {
-  const {appManager} = classHolder;
-  if (appManager) {
-    appManager.sendMessage(channel, ...args);
-  } else {
-    console.error('Failed to send message: appManager is undefined');
-  }
+const createSender = <K extends keyof typeof classHolder>(managerKey: K) => {
+  return (channel: string, ...args: any[]) => {
+    const manager = classHolder[managerKey];
+    if (manager && typeof manager === 'object' && 'sendMessage' in manager) {
+      (manager as any).sendMessage(channel, ...args);
+    } else {
+      classHolder.waitForClass(managerKey).then(manager => {
+        if (manager && typeof manager === 'object' && 'sendMessage' in manager) {
+          (manager as any).sendMessage(channel, ...args);
+        }
+      });
+    }
+  };
 };
 
-const sendToLP = (channel: string, ...args: any[]) => {
-  const {linkPreviewManager} = classHolder;
-  if (linkPreviewManager) {
-    linkPreviewManager.sendMessage(channel, ...args);
-  } else {
-    console.error('Failed to send message: appManager is undefined');
-  }
-};
-
-const sendToCM = (channel: string, ...args: any[]) => {
-  const {contextMenuManager} = classHolder;
-  if (contextMenuManager) {
-    contextMenuManager.sendMessage(channel, ...args);
-  } else {
-    console.error('Failed to send message: appManager is undefined');
-  }
-};
+const sendToMain = createSender('appManager');
+const sendToLP = createSender('linkPreviewManager');
+const sendToCM = createSender('contextMenuManager');
 
 export {sendToCM, sendToLP, sendToMain};
