@@ -48,11 +48,6 @@ function onInput(_event: Event, input: Input) {
   const {control, key, shift, alt, meta, type} = input;
   const lowerKey = key.toLowerCase();
 
-  // Skip pure modifier key events (no actual key pressed) for keyDown
-  // This reduces unnecessary IPC calls when user is just pressing modifiers
-  const isModifierOnly = lowerKey === 'control' || lowerKey === 'shift' || lowerKey === 'alt' || lowerKey === 'meta';
-  if (type === 'keyDown' && isModifierOnly) return;
-
   const currentKeys: LynxInput = {control, key: lowerKey, shift, alt, meta, type};
   sendToRenderer(currentKeys);
 }

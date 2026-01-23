@@ -38,10 +38,10 @@ const hotkeysSlice = createSlice({
 
       const {control, key, shift, alt, meta, type} = action.payload;
 
-      state.isCtrlPressed = control && key === 'control';
-      state.isShiftPressed = shift && key === 'shift';
-      state.isAltPressed = alt && key === 'alt';
-      state.isMetaPressed = meta && key === 'meta';
+      state.isCtrlPressed = key === 'control' ? type === 'keyDown' : control;
+      state.isShiftPressed = key === 'shift' ? type === 'keyDown' : shift;
+      state.isAltPressed = key === 'alt' ? type === 'keyDown' : alt;
+      state.isMetaPressed = key === 'meta' ? type === 'keyDown' : meta;
       state.key = key;
       state.type = type;
 
