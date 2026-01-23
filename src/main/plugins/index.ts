@@ -1,6 +1,5 @@
 import {dirname, join} from 'node:path';
 
-import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
 import {captureException} from '@sentry/electron/main';
 import {constants, promises, readdirSync} from 'graceful-fs';
 import {includes, isString} from 'lodash';
@@ -19,6 +18,7 @@ import {getAppDirectory} from '../core/data_folder';
 import GitManager from '../git';
 import {setupGitManagerListeners} from '../git/helper';
 import {removeDir} from '../ipc/methods';
+import {pluginsIpc} from '../ipc/plugins/plugins';
 import {pluginFolders} from './constants';
 import ExtensionManager from './extensions';
 import ModuleManager from './modules';
@@ -310,8 +310,7 @@ export class PluginManager {
   }
 
   private syncList_noticeRenderer() {
-    const {appManager} = classHolder;
-    appManager?.getWebContent()?.send(pluginChannels.onSyncAvailable, this.syncAvailable);
+    pluginsIpc.send.onSyncAvailable(this.syncAvailable);
   }
 
   private syncList_remove(id: string) {
