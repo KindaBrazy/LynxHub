@@ -88,10 +88,11 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
 
-  const effectiveAddress = useMemo(
-    () => currentAddress || customAddress || webUIAddress || '',
-    [currentAddress, customAddress, webUIAddress],
-  );
+  const effectiveAddress = useMemo(() => {
+    const addr = currentAddress || customAddress || webUIAddress || '';
+    // Don't show "about:blank" in the address bar
+    return addr === 'about:blank' ? '' : addr;
+  }, [currentAddress, customAddress, webUIAddress]);
 
   useEffect(() => {
     const fetchBrowserData = async () => {
