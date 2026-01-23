@@ -288,8 +288,10 @@ export const useBrowserEvents = () => {
     const offTitleChange = browserIpc.on.titleChanged((id, title) => {
       const tabID = runningCards.find(card => card.id === id)?.tabId;
       if (tabID) {
-        dispatch(tabsActions.setTabTitle({tabID, title}));
-        dispatch(cardsActions.setRunningCardBrowserTitle({tabId: tabID, title}));
+        // Replace "about:blank" with a friendly name
+        const displayTitle = title === 'about:blank' ? 'Browser' : title;
+        dispatch(tabsActions.setTabTitle({tabID, title: displayTitle}));
+        dispatch(cardsActions.setRunningCardBrowserTitle({tabId: tabID, title: displayTitle}));
       }
     });
 

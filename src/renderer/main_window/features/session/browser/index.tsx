@@ -1,10 +1,12 @@
 import browserIpc from '@lynx_shared/ipc/browser';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import {useIsActiveTab} from '../../../layouts/tabs/utils';
-import {useCardsState} from '../../../redux/reducers/cards';
+import {cardsActions, useCardsState} from '../../../redux/reducers/cards';
 import {useVolumeState} from '../../../redux/reducers/volume';
+import {AppDispatch} from '../../../redux/store';
 import {RunningCard} from '../../../types';
 import EmptyPage from './EmptyPage';
 import {Browser_Error} from './Error';
@@ -14,6 +16,7 @@ type Props = {runningCard: RunningCard};
 
 const Browser = memo(({runningCard}: Props) => {
   const {currentView, id, webUIAddress, customAddress, type, tabId} = runningCard;
+  const dispatch = useDispatch<AppDispatch>();
   const isActiveTab = useIsActiveTab(tabId);
   const browserDomReadyIds = useCardsState('browserDomReadyIds');
   const tabVolumes = useVolumeState('tabVolumes');
@@ -22,13 +25,21 @@ const Browser = memo(({runningCard}: Props) => {
   const volumeAppliedRef = useRef(false);
 
   const [failedLoad, setFailedLoad] = useState<FailedLoad | undefined>(undefined);
+  const [currentUrl, setCurrentUrl] = useState<string>('');
 
   const isDomReady = useMemo(() => browserDomReadyIds.includes(id), [browserDomReadyIds, id]);
 
   const finalAddress = useMemo(() => customAddress || webUIAddress, [customAddress, webUIAddress]);
 
   useEffect(() => {
-    if (finalAddress) browserIpc.send.loadURL(id, finalAddress);
+    if (finalAddress) {
+      // Always load the URL when finalAddress changes, even if it's in history
+      // This ensures clicking favorites/recents works even after navigating back
+      browserIpc.send.loadURL(id, finalAddress);
+    } else {
+      // Load about:blank to establish navigation history entry for empty page
+      browserIpc.send.loadURL(id, 'about:blank');
+    }
   }, [id, finalAddress]);
 
   useEffect(() => {
@@ -65,21 +76,39 @@ const Browser = memo(({runningCard}: Props) => {
     const offClearFailed = browserIpc.on.clearFailed(targetID => {
       if (targetID === id) setFailedLoad(undefined);
     });
+    const offUrlChange = browserIpc.on.urlChanged((targetID, url) => {
+      if (targetID === id) {
+        setCurrentUrl(url);
+        // Sync customAddress with actual browser URL for back/forward navigation
+        if (url === 'about:blank' && customAddress) {
+          // Clear customAddress when navigating back to blank page
+          dispatch(cardsActions.setRunningCardCustomAddress({tabId, address: ''}));
+        } else if (url !== 'about:blank' && customAddress !== url) {
+          // Update customAddress when navigating forward/back to match actual URL
+          dispatch(cardsActions.setRunningCardCustomAddress({tabId, address: url}));
+        }
+      }
+    });
 
     return () => {
       offFailed();
       offClearFailed();
+      offUrlChange();
     };
-  }, []);
+  }, [id, customAddress, tabId, dispatch]);
 
   useEffect(() => {
     const validAddress = !isEmpty(runningCard.customAddress || runningCard.webUIAddress) && !failedLoad;
-    browserIpc.send.setVisible(runningCard.id, validAddress && isActiveTab && runningCard.currentView === 'browser');
-  }, [runningCard, isActiveTab]);
+    const isOnBlankPage = currentUrl === 'about:blank';
+    const shouldShowWebview = validAddress && !isOnBlankPage && isActiveTab && runningCard.currentView === 'browser';
+    browserIpc.send.setVisible(runningCard.id, shouldShowWebview);
+  }, [runningCard, isActiveTab, failedLoad, currentUrl]);
 
   const handleReload = useCallback(() => {
     browserIpc.send.reload(id);
   }, [id]);
+
+  const showEmptyPage = isEmpty(finalAddress) || currentUrl === 'about:blank';
 
   return (
     <div
@@ -87,7 +116,7 @@ const Browser = memo(({runningCard}: Props) => {
         `absolute inset-0 top-10! bg-white shadow-md overflow-hidden ` +
         `dark:bg-LynxNearBlack ${currentView === 'browser' ? 'block' : 'hidden'}`
       }>
-      {isEmpty(finalAddress) ? (
+      {showEmptyPage ? (
         <EmptyPage type={type} />
       ) : failedLoad ? (
         <Browser_Error error={failedLoad} onReload={handleReload} />
