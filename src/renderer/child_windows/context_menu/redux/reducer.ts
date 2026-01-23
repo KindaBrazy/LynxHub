@@ -1,7 +1,7 @@
 import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
 import {ContextMenuVolumeData, ContextWindowWidthSizes} from '@lynx_cross/types/ipc';
 import {NavHistory} from '@lynx_cross/types/ipc';
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {createSlice, current, PayloadAction} from '@reduxjs/toolkit';
 import type {ContextMenuParams} from 'electron';
 import {cloneDeep} from 'lodash';
 import {useSelector} from 'react-redux';
@@ -109,12 +109,19 @@ const appSlice = createSlice({
       state[action.payload.key] = action.payload.value;
     },
     showLayout: <K extends keyof ContextState>(
-      _,
-      action: PayloadAction<{key: K; value: ContextState[K]; layout?: MenuTypes; widthSize: ContextWindowWidthSizes}>,
+      state: ContextState,
+      action: PayloadAction<{
+        key: K;
+        value: ContextState[K];
+        layout?: MenuTypes;
+        widthSize: ContextWindowWidthSizes;
+      }>,
     ) => {
       const {layout, widthSize, key, value} = action.payload;
 
       const result = cloneDeep(initialState);
+      result.downloads = current(state).downloads;
+
       result.windowWidth = getWidth(widthSize);
 
       if (layout) result.activeLayout = layout;
