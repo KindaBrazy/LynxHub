@@ -101,7 +101,7 @@ class ClassHolder {
     className: K,
     options: {timeout?: number; checkInterval?: number} = {},
   ): Promise<NonNullable<this[K]>> {
-    const {timeout = 30000, checkInterval = 100} = options;
+    const {timeout = 10000, checkInterval = 100} = options;
     const startTime = Date.now();
 
     return new Promise((resolve, reject) => {
@@ -214,4 +214,6 @@ class ClassHolder {
   }
 }
 
-export default new ClassHolder();
+const classHolder = new ClassHolder();
+
+export default classHolder;
