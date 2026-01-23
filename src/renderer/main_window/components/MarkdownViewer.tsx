@@ -1,5 +1,5 @@
 import {Kbd, Spinner} from '@heroui/react';
-import {extractGitUrl} from '@lynx_cross/utils';
+import {extractGitUrl} from '@lynx_common/utils';
 import {Result} from 'antd';
 import {isEmpty} from 'lodash';
 import {

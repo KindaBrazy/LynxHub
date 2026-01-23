@@ -1,5 +1,5 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
-import {PreOpenData} from '@lynx_cross/types/ipc';
+import {PreOpenData} from '@lynx_common/types/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Empty} from 'antd';

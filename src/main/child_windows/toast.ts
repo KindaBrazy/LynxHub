@@ -1,8 +1,8 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import toastWindowChannels from '@lynx_cross/consts/ipc_channels/toast_window';
-import {ToastWindow_MessageType} from '@lynx_cross/types';
+import toastWindowChannels from '@lynx_common/consts/ipc_channels/toast_window';
+import {ToastWindow_MessageType} from '@lynx_common/types';
 import {app, BrowserWindow} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';

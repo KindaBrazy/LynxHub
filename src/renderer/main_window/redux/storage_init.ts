@@ -1,4 +1,4 @@
-import StorageTypes from '@lynx_cross/types/storage';
+import StorageTypes from '@lynx_common/types/storage';
 import applicationIpc from '@lynx_shared/ipc/application';
 import storageIpc from '@lynx_shared/ipc/storage';
 

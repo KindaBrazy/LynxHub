@@ -1,4 +1,4 @@
-import {formatTime} from '@lynx_cross/utils';
+import {formatTime} from '@lynx_common/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {extraErrorDataIntegration, init as electronInit} from '@sentry/electron/renderer';
 import {init as reactInit} from '@sentry/react';

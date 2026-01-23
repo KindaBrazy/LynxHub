@@ -1,4 +1,4 @@
-import {LoadedCardData} from '@lynx_cross/types/plugins/modules';
+import {LoadedCardData} from '@lynx_common/types/plugins/modules';
 import {motion, Variants} from 'framer-motion';
 import {memo, useMemo} from 'react';
 

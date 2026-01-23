@@ -1,7 +1,7 @@
-import gitChannels from '@lynx_cross/consts/ipc_channels/git';
-import {RepositoryInfo} from '@lynx_cross/types';
-import {ShallowCloneOptions} from '@lynx_cross/types/git';
-import {GitProgressCallback} from '@lynx_cross/types/ipc';
+import gitChannels from '@lynx_common/consts/ipc_channels/git';
+import {RepositoryInfo} from '@lynx_common/types';
+import {ShallowCloneOptions} from '@lynx_common/types/git';
+import {GitProgressCallback} from '@lynx_common/types/ipc';
 
 import lynxIpc from './lynxIpc';
 

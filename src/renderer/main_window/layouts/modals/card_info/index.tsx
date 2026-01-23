@@ -1,6 +1,6 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
-import {CardInfoDescriptions} from '@lynx_cross/types/plugins/modules';
-import {extractGitUrl, getCacheUrl, validateGitRepoUrl} from '@lynx_cross/utils';
+import {CardInfoDescriptions} from '@lynx_common/types/plugins/modules';
+import {extractGitUrl, getCacheUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import {Result} from 'antd';
 import {isEmpty, startCase} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';

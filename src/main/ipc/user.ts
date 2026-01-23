@@ -1,6 +1,6 @@
-import userChannels from '@lynx_cross/consts/ipc_channels/user';
-import {PatreonUserData, SubscribeStages} from '@lynx_cross/types';
-import {MainHT} from '@lynx_cross/types/ipc';
+import userChannels from '@lynx_common/consts/ipc_channels/user';
+import {PatreonUserData, SubscribeStages} from '@lynx_common/types';
+import {MainHT} from '@lynx_common/types/ipc';
 
 import lynxIpc from './lynxIpc';
 import {sendToMain} from './sender';

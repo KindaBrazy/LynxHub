@@ -13,7 +13,7 @@ import {
   REDDIT_URL,
   X_URL,
   YOUTUBE_URL,
-} from '@lynx_cross/consts';
+} from '@lynx_common/consts';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 

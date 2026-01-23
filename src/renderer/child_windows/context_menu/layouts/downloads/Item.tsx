@@ -1,5 +1,5 @@
 import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Progress, Tooltip} from '@heroui/react';
-import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
+import {DownloadItemInfo} from '@lynx_common/types/download_manager';
 import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
 import {Pause, Play, Restart} from '@solar-icons/react-perf/Bold';
 import {FileDownload, FolderOpen, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';

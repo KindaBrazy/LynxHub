@@ -1,4 +1,4 @@
-import staticsChannels from '@lynx_cross/consts/ipc_channels/statics';
+import staticsChannels from '@lynx_common/consts/ipc_channels/statics';
 import {
   AppUpdateData,
   AppUpdateInsiderData,
@@ -6,8 +6,8 @@ import {
   ModulesInfo,
   Notification_Data,
   PatreonSupporter,
-} from '@lynx_cross/types';
-import {MainHT} from '@lynx_cross/types/ipc';
+} from '@lynx_common/types';
+import {MainHT} from '@lynx_common/types/ipc';
 
 import classHolder from '../core/class_holder';
 import lynxIpc from './lynxIpc';

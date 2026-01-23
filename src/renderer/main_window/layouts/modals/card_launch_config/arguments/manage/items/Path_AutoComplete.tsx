@@ -1,5 +1,5 @@
 import {Autocomplete, AutocompleteItem} from '@heroui/react';
-import {FolderListData} from '@lynx_cross/types';
+import {FolderListData} from '@lynx_common/types';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Key, useEffect, useState} from 'react';
 

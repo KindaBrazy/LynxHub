@@ -1,6 +1,6 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Tooltip} from '@heroui/react';
-import {SearchQuerySites} from '@lynx_cross/types';
-import {getCacheUrl, getSearchUrl} from '@lynx_cross/utils';
+import {SearchQuerySites} from '@lynx_common/types';
+import {getCacheUrl, getSearchUrl} from '@lynx_common/utils';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useCallback} from 'react';
 

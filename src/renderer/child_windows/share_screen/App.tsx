@@ -1,6 +1,6 @@
 import {StyleProvider} from '@ant-design/cssinjs';
 import {Button, Card, CardBody, CardHeader, Image, Spinner, Switch, Tab, Tabs} from '@heroui/react';
-import {ScreenShareSources, ScreenShareStart} from '@lynx_cross/types/share_screen';
+import {ScreenShareSources, ScreenShareStart} from '@lynx_common/types/share_screen';
 import shareScreenIpc from '@lynx_shared/ipc/share_screen';
 import {Monitor, Record, Screencast, VolumeLoud, WindowFrame} from '@solar-icons/react-perf/BoldDuotone';
 import {Result} from 'antd';

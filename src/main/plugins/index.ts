@@ -4,15 +4,15 @@ import {captureException} from '@sentry/electron/main';
 import {constants, promises, readdirSync} from 'graceful-fs';
 import {includes, isString} from 'lodash';
 
-import {SubscribeStages} from '../../cross/types';
+import {SubscribeStages} from '../../common/types';
 import {
   PluginAddresses,
   PluginInstalledItem,
   PluginSyncItem,
   UnloadedPlugins,
   ValidatedPlugins,
-} from '../../cross/types/plugins';
-import {getUpdateType} from '../../cross/utils/plugins';
+} from '../../common/types/plugins';
+import {getUpdateType} from '../../common/utils/plugins';
 import classHolder from '../core/class_holder';
 import {getAppDirectory} from '../core/data_folder';
 import GitManager from '../git';

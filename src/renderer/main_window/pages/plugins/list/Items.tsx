@@ -11,9 +11,9 @@ import {
   useDisclosure,
   User,
 } from '@heroui/react';
-import {PluginInstalledItem, PluginItem} from '@lynx_cross/types/plugins';
-import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
-import {getPluginIconUrl} from '@lynx_cross/utils/plugins';
+import {PluginInstalledItem, PluginItem} from '@lynx_common/types/plugins';
+import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
+import {getPluginIconUrl} from '@lynx_common/utils/plugins';
 import gitIpc from '@lynx_shared/ipc/git';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useCallback, useEffect, useMemo, useState} from 'react';

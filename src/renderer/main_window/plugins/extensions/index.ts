@@ -1,6 +1,6 @@
 import {__federation_method_getRemote, __federation_method_setRemote} from '__federation__';
-import {ExtensionImport_Renderer} from '@lynx_cross/types/plugins/extensions';
-import {isDev} from '@lynx_cross/utils';
+import {ExtensionImport_Renderer} from '@lynx_common/types/plugins/extensions';
+import {isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {captureException} from '@sentry/electron/renderer';
 import {compact} from 'lodash';

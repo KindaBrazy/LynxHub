@@ -1,5 +1,5 @@
 import {Alert, Button, Card, User} from '@heroui/react';
-import {getCacheUrl} from '@lynx_cross/utils';
+import {getCacheUrl} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import userIpc from '@lynx_shared/ipc/user';
 import {useCallback, useState} from 'react';

@@ -15,7 +15,7 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import {getArgumentDefaultValue, getFilteredArguments} from '@lynx/utils/module_arguments';
-import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '@lynx_cross/types';
+import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
 import {isEmpty, some} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 

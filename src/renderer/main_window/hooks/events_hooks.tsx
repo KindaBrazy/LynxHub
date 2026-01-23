@@ -1,5 +1,5 @@
-import {APP_BUILD_NUMBER, PageTitleByPageId} from '@lynx_cross/consts';
-import {toMs} from '@lynx_cross/utils';
+import {APP_BUILD_NUMBER, PageTitleByPageId} from '@lynx_common/consts';
+import {toMs} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import browserIpc from '@lynx_shared/ipc/browser';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';

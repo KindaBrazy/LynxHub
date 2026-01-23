@@ -1,5 +1,5 @@
 import {Button, useDisclosure} from '@heroui/react';
-import {extractGitUrl} from '@lynx_cross/utils';
+import {extractGitUrl} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useCallback, useEffect, useMemo, useState} from 'react';

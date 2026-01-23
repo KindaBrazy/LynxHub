@@ -1,6 +1,6 @@
-import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
-import {ContextMenuVolumeData, ContextWindowWidthSizes} from '@lynx_cross/types/ipc';
-import {NavHistory} from '@lynx_cross/types/ipc';
+import {DownloadItemInfo} from '@lynx_common/types/download_manager';
+import {ContextMenuVolumeData, ContextWindowWidthSizes} from '@lynx_common/types/ipc';
+import {NavHistory} from '@lynx_common/types/ipc';
 import {createSlice, current, PayloadAction} from '@reduxjs/toolkit';
 import type {ContextMenuParams} from 'electron';
 import {cloneDeep} from 'lodash';

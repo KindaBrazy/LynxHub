@@ -1,5 +1,5 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {APP_AUTHOR_NAME} from '@lynx_cross/consts';
+import {APP_AUTHOR_NAME} from '@lynx_common/consts';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
 import {ShieldWarning_Icon} from '../../../shared/assets/icons';

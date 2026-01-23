@@ -1,7 +1,7 @@
 import {Button, Chip, User} from '@heroui/react';
-import {PluginInstalledItem} from '@lynx_cross/types/plugins';
-import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
-import {getPluginIconUrl} from '@lynx_cross/utils/plugins';
+import {PluginInstalledItem} from '@lynx_common/types/plugins';
+import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
+import {getPluginIconUrl} from '@lynx_common/utils/plugins';
 import {useMemo} from 'react';
 
 import {

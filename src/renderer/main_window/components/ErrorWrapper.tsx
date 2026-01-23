@@ -1,17 +1,17 @@
 import {Button, ButtonGroup} from '@heroui/react';
-import {ISSUE_PAGE} from '@lynx_cross/consts';
-import {isDev} from '@lynx_cross/utils';
+import {ISSUE_PAGE} from '@lynx_common/consts';
+import {isDev} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {Result} from 'antd';
 import {useCallback, useEffect} from 'react';
+import {FallbackProps} from 'react-error-boundary';
 
 import {GitHub_Icon} from '../../shared/assets/icons';
 import {isLinuxPortable} from '../hooks/utils';
 import CopyClipboard from './CopyClipboard';
 
-type Props = {error: Error; resetErrorBoundary: () => void};
-
-export default function ErrorWrapper({error, resetErrorBoundary}: Props) {
+export default function ErrorWrapper({error, resetErrorBoundary}: FallbackProps) {
+  const errorObj = error instanceof Error ? error : new Error(String(error));
   const handleReload = useCallback(() => {
     window.location.reload();
   }, []);
@@ -27,8 +27,8 @@ export default function ErrorWrapper({error, resetErrorBoundary}: Props) {
   const openIssues = () => applicationIpc.send.openUrlDefaultBrowser(ISSUE_PAGE);
 
   useEffect(() => {
-    if (isDev()) console.error(error);
-  }, [error]);
+    if (isDev()) console.error(errorObj);
+  }, [errorObj]);
 
   return (
     <div className="bg-foreground-100 absolute inset-0">
@@ -39,11 +39,11 @@ export default function ErrorWrapper({error, resetErrorBoundary}: Props) {
         <Result
           subTitle={
             <div className="text-danger flex items-center justify-center gap-2">
-              {error.message}
+              {errorObj.message}
               <CopyClipboard
                 className="notDraggable"
                 tooltipTitle="Copy full error message"
-                contentToCopy={`Message:\n${error.message}\n\n\nStack:\n${error.stack}`}
+                contentToCopy={`Message:\n${errorObj.message}\n\n\nStack:\n${errorObj.stack}`}
               />
             </div>
           }

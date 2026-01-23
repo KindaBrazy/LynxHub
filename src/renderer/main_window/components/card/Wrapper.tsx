@@ -1,5 +1,5 @@
-import {CardState} from '@lynx_cross/types';
-import {LoadedCardData} from '@lynx_cross/types/plugins/modules';
+import {CardState} from '@lynx_common/types';
+import {LoadedCardData} from '@lynx_common/types/plugins/modules';
 import {createContext, memo, useContext, useMemo} from 'react';
 
 import {extensionsData} from '../../plugins/extensions/loader';

@@ -1,5 +1,5 @@
 import {Button, Link} from '@heroui/react';
-import {ISSUE_PAGE} from '@lynx_cross/consts';
+import {ISSUE_PAGE} from '@lynx_common/consts';
 import {Modal, Space} from 'antd';
 import {Fragment, useCallback, useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';

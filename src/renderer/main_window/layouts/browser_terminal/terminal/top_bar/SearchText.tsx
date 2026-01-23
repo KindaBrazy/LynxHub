@@ -1,5 +1,5 @@
 import {Button, Input, Kbd, Popover, PopoverContent, PopoverTrigger, Tooltip} from '@heroui/react';
-import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
+import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {SearchAddon} from '@xterm/addon-search';
 import {KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
 

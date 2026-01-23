@@ -5,8 +5,8 @@ import {
   Hotkey_Names,
   Hotkey_Sections,
   Hotkey_Titles,
-} from '@lynx_cross/consts/hotkeys';
-import {LynxHotkey} from '@lynx_cross/types/ipc';
+} from '@lynx_common/consts/hotkeys';
+import {LynxHotkey} from '@lynx_common/types/ipc';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {compact} from 'lodash';
 import {KeyboardEvent, useCallback, useMemo, useRef, useState} from 'react';

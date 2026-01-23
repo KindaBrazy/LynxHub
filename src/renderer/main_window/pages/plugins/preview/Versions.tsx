@@ -1,6 +1,6 @@
 import {ChipProps} from '@heroui/chip';
 import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
-import {SubscribeStages} from '@lynx_cross/types';
+import {SubscribeStages} from '@lynx_common/types';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useMemo} from 'react';
 

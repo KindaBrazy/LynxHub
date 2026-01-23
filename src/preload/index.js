@@ -5,7 +5,7 @@ import os from 'node:os';
 import {electronAPI} from '@electron-toolkit/preload';
 import {contextBridge} from 'electron';
 
-import {APP_BUILD_NUMBER, APP_NAME, APP_VERSION} from '../cross/consts';
+import {APP_BUILD_NUMBER, APP_NAME, APP_VERSION} from '../common/consts';
 
 function isPortable() {
   if (process.env.PORTABLE_EXECUTABLE_FILE) return 'win';

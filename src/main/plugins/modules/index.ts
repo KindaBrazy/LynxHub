@@ -1,13 +1,13 @@
 import path from 'node:path';
 
-import {MainModuleImportType, MainModules, MainModuleUtils} from '@lynx_cross/types/plugins/modules';
+import {MainModuleImportType, MainModules, MainModuleUtils} from '@lynx_common/types/plugins/modules';
 import {captureException} from '@sentry/electron/main';
 import {ipcMain} from 'electron';
 import {compact, isEmpty} from 'lodash';
 import pty from 'node-pty';
 
-import {InstalledCard} from '../../../cross/types/storage';
-import {isDev, toMs} from '../../../cross/utils';
+import {InstalledCard} from '../../../common/types/storage';
+import {isDev, toMs} from '../../../common/utils';
 import classHolder from '../../core/class_holder';
 import {getAppDataPath} from '../../core/data_folder';
 import GitManager from '../../git';

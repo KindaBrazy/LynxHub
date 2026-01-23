@@ -1,5 +1,5 @@
-import {DownloadItemInfo} from '@lynx_cross/types/download_manager';
-import {ContextWindowWidthSizes} from '@lynx_cross/types/ipc';
+import {DownloadItemInfo} from '@lynx_common/types/download_manager';
+import {ContextWindowWidthSizes} from '@lynx_common/types/ipc';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import windowDialogsIpc from '@lynx_shared/ipc/dialogs_window';
 import downloadManagerIpc from '@lynx_shared/ipc/download_manager';

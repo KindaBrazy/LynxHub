@@ -1,5 +1,5 @@
 import {ScrollShadow} from '@heroui/react';
-import {PageID} from '@lynx_cross/consts';
+import {PageID} from '@lynx_common/consts';
 import {memo, useMemo} from 'react';
 
 import {Robot_Icon} from '../../../shared/assets/icons';

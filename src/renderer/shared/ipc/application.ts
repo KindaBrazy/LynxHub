@@ -1,5 +1,5 @@
-import appChannels from '@lynx_cross/consts/ipc_channels/application';
-import {CustomNotificationInfo, HeroToastPlacement} from '@lynx_cross/types';
+import appChannels from '@lynx_common/consts/ipc_channels/application';
+import {CustomNotificationInfo, HeroToastPlacement} from '@lynx_common/types';
 import {
   AppUpdateEventTypes,
   AppUpdateStatus,
@@ -10,7 +10,7 @@ import {
   SystemInfo,
   TaskbarStatus,
   WinStateChange,
-} from '@lynx_cross/types/ipc';
+} from '@lynx_common/types/ipc';
 
 import lynxIpc from './lynxIpc';
 

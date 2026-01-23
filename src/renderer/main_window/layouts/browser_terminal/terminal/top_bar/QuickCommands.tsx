@@ -1,5 +1,5 @@
 import {Button, Divider, Kbd} from '@heroui/react';
-import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
+import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import ptyIpc from '@lynx_shared/ipc/pty';
 
 import {useHotkeysState} from '../../../../redux/reducers/hotkeys';

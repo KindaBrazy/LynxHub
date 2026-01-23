@@ -1,5 +1,5 @@
 import {Tab, Tabs} from '@heroui/react';
-import {getPluginReadmeUrl} from '@lynx_cross/utils/plugins';
+import {getPluginReadmeUrl} from '@lynx_common/utils/plugins';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isNil} from 'lodash';
 import {Key, useEffect, useMemo, useState} from 'react';

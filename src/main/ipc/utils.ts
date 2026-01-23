@@ -1,11 +1,11 @@
-import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
+import utilsChannels from '@lynx_common/consts/ipc_channels/utils';
 import {
   DownloadProgress,
   ExtensionsData,
   ExtensionsUpdateStatus,
   MainHT,
   OnUpdatingExtensions,
-} from '@lynx_cross/types/ipc';
+} from '@lynx_common/types/ipc';
 
 import {getImageCacheManager} from '../core/image_cache';
 import lynxIpc from './lynxIpc';

@@ -1,4 +1,4 @@
-import {SystemInfo, TerminalUseConpty} from '@lynx_cross/types/ipc';
+import {SystemInfo, TerminalUseConpty} from '@lynx_common/types/ipc';
 import {ITheme, IWindowsPty} from '@xterm/xterm';
 
 import {isWebgl2Supported} from '../../../utils';

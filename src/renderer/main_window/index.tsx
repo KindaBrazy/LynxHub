@@ -8,7 +8,7 @@ import {loadExtensions} from '@lynx/plugins/extensions';
 import loadModules from '@lynx/plugins/modules';
 import {getStorageData, initializeStorage} from '@lynx/redux/storage_init';
 import {createStore} from '@lynx/redux/store';
-import {isDev} from '@lynx_cross/utils';
+import {isDev} from '@lynx_common/utils';
 import {reactErrorHandler} from '@sentry/react';
 import log from 'electron-log/renderer';
 import {createRoot, RootOptions} from 'react-dom/client';

@@ -33,9 +33,7 @@ export default defineConfig(({mode}) => {
         },
       },
       resolve: {
-        alias: {
-          '@lynx_cross': resolve(__dirname, 'src/cross'),
-        },
+        alias: {'@lynx_common': resolve(__dirname, 'src/common')},
       },
     },
 
@@ -77,7 +75,7 @@ export default defineConfig(({mode}) => {
         alias: {
           '@lynx_module': resolve(__dirname, 'module/src'),
           '@lynx_extension': resolve(__dirname, 'extension/src'),
-          '@lynx_cross': resolve(__dirname, 'src/cross'),
+          '@lynx_common': resolve(__dirname, 'src/common'),
           '@lynx': resolve(__dirname, 'src/renderer/main_window'),
           '@lynx_shared': resolve(__dirname, 'src/renderer/shared'),
           '@lynx_assets': resolve(__dirname, 'src/renderer/shared/assets'),

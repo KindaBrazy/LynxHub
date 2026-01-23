@@ -1,6 +1,6 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {CardModules, RendererModuleImportType} from '@lynx_cross/types/plugins/modules';
-import {isDev} from '@lynx_cross/utils';
+import {CardModules, RendererModuleImportType} from '@lynx_common/types/plugins/modules';
+import {isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {compact} from 'lodash';

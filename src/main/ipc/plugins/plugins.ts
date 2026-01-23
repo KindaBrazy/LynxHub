@@ -1,13 +1,13 @@
-import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
-import {SubscribeStages} from '@lynx_cross/types';
-import {MainHT} from '@lynx_cross/types/ipc';
+import pluginChannels from '@lynx_common/consts/ipc_channels/plugins';
+import {SubscribeStages} from '@lynx_common/types';
+import {MainHT} from '@lynx_common/types/ipc';
 import {
   PluginAddresses,
   PluginInstalledItem,
   PluginItem,
   PluginSyncItem,
   UnloadedPlugins,
-} from '@lynx_cross/types/plugins';
+} from '@lynx_common/types/plugins';
 
 import classHolder from '../../core/class_holder';
 import {getList} from '../../plugins/utils';

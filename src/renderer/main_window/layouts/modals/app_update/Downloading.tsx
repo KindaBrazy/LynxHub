@@ -1,6 +1,6 @@
 import {Progress} from '@heroui/react';
-import {UpdateDownloadProgress} from '@lynx_cross/types';
-import {formatSize} from '@lynx_cross/utils';
+import {UpdateDownloadProgress} from '@lynx_common/types';
+import {formatSize} from '@lynx_common/utils';
 import {Descriptions} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 

@@ -5,8 +5,8 @@ import {resolve} from 'node:path';
 import {promises} from 'graceful-fs';
 import {satisfies} from 'semver';
 
-import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../cross/consts';
-import {SubscribeStages} from '../../cross/types';
+import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../common/consts';
+import {SubscribeStages} from '../../common/types';
 import {
   PluginEngines,
   PluginItem,
@@ -14,8 +14,8 @@ import {
   PluginVersions,
   VersionItem,
   VersionItemValidated,
-} from '../../cross/types/plugins';
-import {getUpdateType} from '../../cross/utils/plugins';
+} from '../../common/types/plugins';
+import {getUpdateType} from '../../common/utils/plugins';
 import ShowToastWindow from '../child_windows/toast';
 import classHolder from '../core/class_holder';
 import {getAppDataPath, selectNewAppDataFolder} from '../core/data_folder';

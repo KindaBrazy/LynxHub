@@ -1,6 +1,6 @@
 import {platform} from 'node:os';
 
-import {storageUtilsChannels} from '@lynx_cross/consts/ipc_channels/storage';
+import {storageUtilsChannels} from '@lynx_common/consts/ipc_channels/storage';
 import {
   BrowserHistoryData,
   CustomRunBehaviorData,
@@ -10,12 +10,12 @@ import {
   PreOpenData,
   RecentlyOperation,
   StorageOperation,
-} from '@lynx_cross/types/ipc';
+} from '@lynx_common/types/ipc';
 import lodash from 'lodash';
 
-import {ChosenArgumentsData, ConfirmMenuTypes} from '../../cross/types';
-import {InstalledCard, InstalledCards} from '../../cross/types/storage';
-import {compareUrls, isValidURL} from '../../cross/utils';
+import {ChosenArgumentsData, ConfirmMenuTypes} from '../../common/types';
+import {InstalledCard, InstalledCards} from '../../common/types/storage';
+import {compareUrls, isValidURL} from '../../common/utils';
 import classHolder from '../core/class_holder';
 import {storageUtilsIpc} from '../ipc/storage';
 import {

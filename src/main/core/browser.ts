@@ -1,11 +1,11 @@
 import path from 'node:path';
 
-import {AudioState, CanGoType, WHType} from '@lynx_cross/types/ipc';
+import {AudioState, CanGoType, WHType} from '@lynx_common/types/ipc';
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
 import {debounce, isEmpty, isNil} from 'lodash';
 
 import icon from '../../../resources/icon.png?asset';
-import {formatWebAddress} from '../../cross/utils';
+import {formatWebAddress} from '../../common/utils';
 import {applicationIpc} from '../ipc/application';
 import {browserIpc} from '../ipc/browser';
 import {getUserAgent, getWindowColor} from '../utils';

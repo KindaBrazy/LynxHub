@@ -1,6 +1,6 @@
 import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {APP_BUILD_NUMBER, EARLY_RELEASES_PAGE, INSIDER_RELEASES_PAGE, RELEASES_PAGE} from '@lynx_cross/consts';
-import {AppUpdateInfo, UpdateDownloadProgress} from '@lynx_cross/types';
+import {APP_BUILD_NUMBER, EARLY_RELEASES_PAGE, INSIDER_RELEASES_PAGE, RELEASES_PAGE} from '@lynx_common/consts';
+import {AppUpdateInfo, UpdateDownloadProgress} from '@lynx_common/types';
 import applicationIpc from '@lynx_shared/ipc/application';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import {CollapseProps, Divider, Typography} from 'antd';

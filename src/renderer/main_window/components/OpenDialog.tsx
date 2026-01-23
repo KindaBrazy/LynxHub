@@ -1,5 +1,5 @@
 import {Button, ButtonGroup, Input} from '@heroui/react';
-import {isWin} from '@lynx_cross/utils';
+import {isWin} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
 import {OpenDialogOptions} from 'electron';

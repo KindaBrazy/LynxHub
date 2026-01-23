@@ -1,5 +1,5 @@
 import {Button, CircularProgress, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {RepositoryInfo} from '@lynx_cross/types';
+import {RepositoryInfo} from '@lynx_common/types';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Divider} from 'antd';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';

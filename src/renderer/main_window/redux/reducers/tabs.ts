@@ -1,4 +1,4 @@
-import {TabInfo} from '@lynx_cross/types';
+import {TabInfo} from '@lynx_common/types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 

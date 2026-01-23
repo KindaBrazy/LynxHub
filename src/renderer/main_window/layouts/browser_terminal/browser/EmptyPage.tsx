@@ -1,5 +1,5 @@
 import {Button, Spinner} from '@heroui/react';
-import {FavIcons} from '@lynx_cross/types/ipc';
+import {FavIcons} from '@lynx_common/types/ipc';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';

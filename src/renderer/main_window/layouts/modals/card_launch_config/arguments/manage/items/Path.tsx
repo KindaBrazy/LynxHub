@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import {getArgumentDefaultValue} from '@lynx/utils/module_arguments';
-import {ChosenArgument} from '@lynx_cross/types';
+import {ChosenArgument} from '@lynx_common/types';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Tooltip} from 'antd';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';

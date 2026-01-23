@@ -1,4 +1,4 @@
-import {RepositoryInfo} from '@lynx_cross/types';
+import {RepositoryInfo} from '@lynx_common/types';
 
 type Props = {repoInfo: RepositoryInfo};
 export default function CommitInfo({repoInfo}: Props) {

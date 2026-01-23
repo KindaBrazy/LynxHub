@@ -1,4 +1,4 @@
-import {AudioState} from '../../../cross/types/ipc';
+import {AudioState} from '../../../common/types/ipc';
 import BrowserManager from '../../core/browser';
 
 export async function handleSetVolume(browserManager: BrowserManager, id: string, volume: number): Promise<void> {

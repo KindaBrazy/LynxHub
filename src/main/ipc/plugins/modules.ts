@@ -1,6 +1,6 @@
-import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
-import {MainHT} from '@lynx_cross/types/ipc';
-import {InstalledCard} from '@lynx_cross/types/storage';
+import modulesChannels, {moduleApiChannels} from '@lynx_common/consts/ipc_channels/module';
+import {MainHT} from '@lynx_common/types/ipc';
+import {InstalledCard} from '@lynx_common/types/storage';
 
 import classHolder from '../../core/class_holder';
 import GitManager from '../../git';
