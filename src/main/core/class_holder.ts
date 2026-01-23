@@ -97,6 +97,34 @@ class ClassHolder {
     }
   }
 
+  public async waitForClass<K extends keyof this>(
+    className: K,
+    options: {timeout?: number; checkInterval?: number} = {},
+  ): Promise<NonNullable<this[K]>> {
+    const {timeout = 30000, checkInterval = 100} = options;
+    const startTime = Date.now();
+
+    return new Promise((resolve, reject) => {
+      const check = () => {
+        const instance = this[className];
+
+        if (instance !== undefined && instance !== null) {
+          resolve(instance as NonNullable<this[K]>);
+          return;
+        }
+
+        if (Date.now() - startTime >= timeout) {
+          reject(new Error(`Timeout waiting for ${String(className)} to be available`));
+          return;
+        }
+
+        setTimeout(check, checkInterval);
+      };
+
+      check();
+    });
+  }
+
   // ----------------> Setters
   private set appManager(value: ClassHolder['_appManager']) {
     this._appManager = value;
