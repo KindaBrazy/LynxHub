@@ -10,6 +10,23 @@ import listenStatics from './statics';
 import listenStorage, {listenStorageUtils} from './storage';
 import listenUtils from './utils';
 
+function listenManagers() {
+  const {linkPreviewManager, moduleManager, extensionManager} = classHolder;
+
+  const managers = [
+    {name: 'moduleManager', instance: moduleManager},
+    {name: 'extensionManager', instance: extensionManager},
+    {name: 'linkPreviewManager', instance: linkPreviewManager},
+  ];
+
+  const missing = managers.filter(m => !m.instance).map(m => m.name);
+  if (missing.length > 0) {
+    console.error(`Can't listen to ipc channels, undefined managers: ${missing.join(', ')}`);
+  }
+
+  managers.forEach(m => m.instance?.listenForChannels());
+}
+
 export function listenToIpcChannels() {
   listenStorage();
   listenStorageUtils();
@@ -24,15 +41,10 @@ export function listenToIpcChannels() {
   listenModules();
   listenModuleApi();
 
-  const {linkPreviewManager, moduleManager, extensionManager} = classHolder;
-
-  moduleManager?.listenForChannels();
-  extensionManager?.listenForChannels();
+  listenManagers();
 
   listenPlugins();
-
   listenContextMenu();
-  if (linkPreviewManager) linkPreviewManager.listenForChannels();
 
   listenStatics();
 }
