@@ -1,14 +1,13 @@
 // Card extensions IPC methods - Manages extension details, updates, and enable/disable operations
 import path from 'node:path';
 
-import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
 import {ExtensionsData, ExtensionsUpdateStatus} from '@lynx_cross/types/ipc';
 import fs from 'graceful-fs';
 import {compact} from 'lodash';
 
-import classHolder from '../../core/class_holder';
 import GitManager from '../../git';
 import {calculateFolderSize} from '../../utils';
+import {utilsIpc} from '../utils';
 
 let loadingExtensions = false;
 
@@ -146,8 +145,6 @@ export async function disableExtension(disable: boolean, dir: string): Promise<s
 }
 
 export async function updateAllExtensions(data: {id: string; dir: string}) {
-  const {appManager} = classHolder;
-
   const directories = await getRepoDirectories(path.resolve(data.dir));
 
   if (directories) {
@@ -156,7 +153,7 @@ export async function updateAllExtensions(data: {id: string; dir: string}) {
     for (const dir of directories) {
       const gitManager = new GitManager(false);
 
-      appManager?.getWebContent()?.send(utilsChannels.onUpdateAllExtensions, {
+      utilsIpc.send.onUpdateAllExtensions({
         id: data.id,
         step: `${currentState}/${extensionsCount}`,
       });
@@ -167,7 +164,7 @@ export async function updateAllExtensions(data: {id: string; dir: string}) {
     }
   }
 
-  appManager?.getWebContent()?.send(utilsChannels.onUpdateAllExtensions, {
+  utilsIpc.send.onUpdateAllExtensions({
     id: data.id,
     step: 'done',
   });
