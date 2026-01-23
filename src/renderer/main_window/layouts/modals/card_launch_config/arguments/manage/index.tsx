@@ -1,5 +1,5 @@
 import {Button, Chip, Tooltip, useDisclosure} from '@heroui/react';
-import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_cross/types';
+import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_common/types';
 import {Empty} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';

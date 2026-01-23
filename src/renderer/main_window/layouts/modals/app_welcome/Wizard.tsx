@@ -1,4 +1,4 @@
-import {APP_ICON_TRANSPARENT, APP_NAME} from '@lynx_cross/consts';
+import {APP_ICON_TRANSPARENT, APP_NAME} from '@lynx_common/consts';
 import applicationIpc from '@lynx_shared/ipc/application';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {AnimatePresence} from 'framer-motion';

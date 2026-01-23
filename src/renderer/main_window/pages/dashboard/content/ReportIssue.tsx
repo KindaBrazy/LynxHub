@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {ISSUE_PAGE} from '@lynx_cross/consts';
+import {ISSUE_PAGE} from '@lynx_common/consts';
 
 import {ExternalDuo_Icon, GitHub_Icon, SmileCircleDuo_Icon} from '../../../../shared/assets/icons';
 import SettingsSection from '../../../components/ContentSection';

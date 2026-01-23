@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {GitProgressCallback} from '@lynx_cross/types/ipc';
+import {GitProgressCallback} from '@lynx_common/types/ipc';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Descriptions, notification} from 'antd';
 import {isEmpty} from 'lodash';

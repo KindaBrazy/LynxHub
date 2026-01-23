@@ -1,5 +1,5 @@
 import {Button, Input, Select, Selection, SelectItem} from '@heroui/react';
-import {AgentTypes} from '@lynx_cross/types/ipc';
+import {AgentTypes} from '@lynx_common/types/ipc';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';

@@ -1,5 +1,5 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
-import {PluginFilter, PluginItem} from '@lynx_cross/types/plugins';
+import {PluginFilter, PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import {isEmpty} from 'lodash';

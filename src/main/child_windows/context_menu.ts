@@ -3,7 +3,7 @@ import path from 'node:path';
 import {is} from '@electron-toolkit/utils';
 import {BrowserWindow, BrowserWindowConstructorOptions, screen, WebContents} from 'electron';
 
-import {ContextResizeData} from '../../cross/types';
+import {ContextResizeData} from '../../common/types';
 import classHolder from '../core/class_holder';
 import {contextMenuIpc} from '../ipc/context_menu';
 import {dialogBlured} from '../ipc/dialogs_window';

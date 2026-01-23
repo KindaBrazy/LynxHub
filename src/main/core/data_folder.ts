@@ -10,8 +10,8 @@ import {
   PLUGINS_FOLDER_NAME,
   REPOSITORIES_FOLDER_NAME,
   STATICS_FOLDER_NAME,
-} from '../../cross/consts';
-import {FolderNames} from '../../cross/types';
+} from '../../common/consts';
+import {FolderNames} from '../../common/types';
 import {changeWindowState} from '../ipc/methods';
 import {getExePath, getRelativePath, isPortable} from '../utils';
 import classHolder from './class_holder';

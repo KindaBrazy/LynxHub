@@ -1,8 +1,8 @@
 import {resolve} from 'node:path';
 
-import fileChannels from '@lynx_cross/consts/ipc_channels/files';
-import {FolderListData, FolderNames} from '@lynx_cross/types';
-import {MainHT} from '@lynx_cross/types/ipc';
+import fileChannels from '@lynx_common/consts/ipc_channels/files';
+import {FolderListData, FolderNames} from '@lynx_common/types';
+import {MainHT} from '@lynx_common/types/ipc';
 import {OpenDialogOptions, shell} from 'electron';
 
 import {getAppDirectory} from '../core/data_folder';

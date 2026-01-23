@@ -1,6 +1,6 @@
 import {addToast, Button} from '@heroui/react';
-import {ChangelogItem, HeroToastPlacement} from '@lynx_cross/types';
-import {InstalledCard} from '@lynx_cross/types/storage';
+import {ChangelogItem, HeroToastPlacement} from '@lynx_common/types';
+import {InstalledCard} from '@lynx_common/types/storage';
 import {Dispatch} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, useMemo} from 'react';

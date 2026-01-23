@@ -1,6 +1,6 @@
 import {Input, Progress} from '@heroui/react';
-import {GitProgressCallback} from '@lynx_cross/types/ipc';
-import {extractGitUrl, validateGitRepoUrl} from '@lynx_cross/utils';
+import {GitProgressCallback} from '@lynx_common/types/ipc';
+import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Card} from 'antd';
 import {motion} from 'framer-motion';

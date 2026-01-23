@@ -1,5 +1,5 @@
 import ShinyText from '@lynx/components/ShinyText';
-import {APP_NAME} from '@lynx_cross/consts';
+import {APP_NAME} from '@lynx_common/consts';
 
 export function AppName({className, textClassName}: {className?: string; textClassName?: string}) {
   return (

@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {APP_NAME} from '@lynx_cross/consts';
+import {APP_NAME} from '@lynx_common/consts';
 import {motion, Variants} from 'framer-motion';
 
 const containerVariants: Variants = {

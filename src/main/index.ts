@@ -5,8 +5,8 @@ import {app, Menu, nativeImage} from 'electron';
 import log from 'electron-log/main';
 
 import darwinIcon from '../../resources/icon-darwin.png?asset';
-import {APP_NAME} from '../cross/consts';
-import {isDev} from '../cross/utils';
+import {APP_NAME} from '../common/consts';
+import {isDev} from '../common/utils';
 import LoadingWindow from './child_windows/loading';
 import ShowToastWindow from './child_windows/toast';
 import classHolder from './core/class_holder';

@@ -1,5 +1,5 @@
-import {MAIN_MODULE_URL} from '@lynx_cross/consts';
-import {isWin} from '@lynx_cross/utils';
+import {MAIN_MODULE_URL} from '@lynx_common/consts';
+import {isWin} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useCallback, useMemo, useState} from 'react';

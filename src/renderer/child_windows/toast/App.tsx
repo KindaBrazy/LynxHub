@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 import {Power_Icon} from '@lynx_assets/icons';
-import {ToastWindow_MessageType} from '@lynx_cross/types';
-import toastWindowIpc from '@lynx_shared/ipc/taost_window';
+import {ToastWindow_MessageType} from '@lynx_common/types';
+import toastWindowIpc from '@lynx_shared/ipc/toast_window';
 import {CheckCircle, DangerCircle, InfoCircle, Refresh, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {X} from 'lucide-react';
 import {useEffect, useState} from 'react';

@@ -1,5 +1,5 @@
 import {useDisclosure} from '@heroui/react';
-import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_cross/types';
+import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_common/types';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';

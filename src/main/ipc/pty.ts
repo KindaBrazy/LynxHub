@@ -1,4 +1,4 @@
-import ptyChannels from '@lynx_cross/consts/ipc_channels/pty';
+import ptyChannels from '@lynx_common/consts/ipc_channels/pty';
 
 import lynxIpc from './lynxIpc';
 import {

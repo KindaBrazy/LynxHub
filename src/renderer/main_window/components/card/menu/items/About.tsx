@@ -1,5 +1,5 @@
 import {DropdownItem} from '@heroui/react';
-import {extractGitUrl} from '@lynx_cross/utils';
+import {extractGitUrl} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useMemo} from 'react';

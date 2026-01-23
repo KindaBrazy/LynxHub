@@ -1,5 +1,5 @@
 import {cn} from '@heroui/react';
-import {formatWebAddress} from '@lynx_cross/utils';
+import {formatWebAddress} from '@lynx_common/utils';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {motion} from 'framer-motion';

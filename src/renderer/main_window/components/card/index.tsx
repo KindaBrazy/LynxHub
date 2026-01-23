@@ -1,4 +1,4 @@
-import {AvailablePageIDs} from '@lynx_cross/consts';
+import {AvailablePageIDs} from '@lynx_common/consts';
 import {Result} from 'antd';
 import {LayoutGroup} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';

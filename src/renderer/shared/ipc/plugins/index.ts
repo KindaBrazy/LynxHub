@@ -1,12 +1,12 @@
-import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
-import {SubscribeStages} from '@lynx_cross/types';
+import pluginChannels from '@lynx_common/consts/ipc_channels/plugins';
+import {SubscribeStages} from '@lynx_common/types';
 import {
   PluginAddresses,
   PluginInstalledItem,
   PluginItem,
   PluginSyncItem,
   UnloadedPlugins,
-} from '@lynx_cross/types/plugins';
+} from '@lynx_common/types/plugins';
 
 import lynxIpc from '../lynxIpc';
 

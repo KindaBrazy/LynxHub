@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {APP_NAME} from '@lynx_cross/consts';
+import {APP_NAME} from '@lynx_common/consts';
 import {motion} from 'framer-motion';
 
 import {CheckDuo_Icon} from '../../../../../shared/assets/icons';

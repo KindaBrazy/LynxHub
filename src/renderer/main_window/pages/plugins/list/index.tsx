@@ -1,5 +1,5 @@
 import {Button, Divider, Input, Progress, Skeleton} from '@heroui/react';
-import {PluginFilter, PluginItem} from '@lynx_cross/types/plugins';
+import {PluginFilter, PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {Empty} from 'antd';
 import {isEmpty} from 'lodash';

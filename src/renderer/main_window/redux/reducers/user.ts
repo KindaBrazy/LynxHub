@@ -1,4 +1,4 @@
-import {PatreonUserData, SubscribeStages} from '@lynx_cross/types';
+import {PatreonUserData, SubscribeStages} from '@lynx_common/types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 

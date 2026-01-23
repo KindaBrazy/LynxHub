@@ -1,5 +1,5 @@
-import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
-import {LynxHotkey} from '@lynx_cross/types/ipc';
+import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
+import {LynxHotkey} from '@lynx_common/types/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';

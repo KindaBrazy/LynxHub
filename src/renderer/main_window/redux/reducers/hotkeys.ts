@@ -1,4 +1,4 @@
-import {LynxHotkey, LynxInput} from '@lynx_cross/types/ipc';
+import {LynxHotkey, LynxInput} from '@lynx_common/types/ipc';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 

@@ -3,7 +3,7 @@ import {join} from 'node:path';
 
 import {promises} from 'graceful-fs';
 
-import {APP_BUILD_NUMBER, STATICS_URL} from '../../cross/consts';
+import {APP_BUILD_NUMBER, STATICS_URL} from '../../common/consts';
 import {
   AppUpdateData,
   AppUpdateInsiderData,
@@ -12,9 +12,9 @@ import {
   Notification_Data,
   PatreonSupporter,
   SubscribeStages,
-} from '../../cross/types';
-import {PluginMetadata, PluginVersioning} from '../../cross/types/plugins';
-import {toMs} from '../../cross/utils';
+} from '../../common/types';
+import {PluginMetadata, PluginVersioning} from '../../common/types/plugins';
+import {toMs} from '../../common/utils';
 import GitManager from '../git';
 import classHolder from './class_holder';
 import {getAppDirectory} from './data_folder';

@@ -1,4 +1,4 @@
-import {AvailablePageIDs} from '@lynx_cross/consts';
+import {AvailablePageIDs} from '@lynx_common/consts';
 import {
   ArgumentsData,
   CardData,
@@ -8,8 +8,8 @@ import {
   LoadedCardData,
   LoadedMethods,
   RendererModuleImportType,
-} from '@lynx_cross/types/plugins/modules';
-import {extractGitUrl, isDev} from '@lynx_cross/utils';
+} from '@lynx_common/types/plugins/modules';
+import {extractGitUrl, isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {captureException} from '@sentry/electron/renderer';

@@ -1,4 +1,4 @@
-import {NavHistory} from '@lynx_cross/types/ipc';
+import {NavHistory} from '@lynx_common/types/ipc';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {ArrowLeft, ArrowRight, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 

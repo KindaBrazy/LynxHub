@@ -1,4 +1,4 @@
-import {PluginInstalledItem, PluginItem, PluginSyncItem, UnloadedPlugins} from '@lynx_cross/types/plugins';
+import {PluginInstalledItem, PluginItem, PluginSyncItem, UnloadedPlugins} from '@lynx_common/types/plugins';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {isArray} from 'lodash';
 import {useSelector} from 'react-redux';

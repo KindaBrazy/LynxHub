@@ -1,5 +1,5 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
-import {DarkModeTypes} from '@lynx_cross/types/ipc';
+import {DarkModeTypes} from '@lynx_common/types/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';

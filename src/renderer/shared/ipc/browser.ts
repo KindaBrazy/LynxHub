@@ -1,5 +1,5 @@
-import browserChannels from '@lynx_cross/consts/ipc_channels/browser';
-import {AgentTypes, AudioState, CanGoType, ContextMenuVolumeData, WHType} from '@lynx_cross/types/ipc';
+import browserChannels from '@lynx_common/consts/ipc_channels/browser';
+import {AgentTypes, AudioState, CanGoType, ContextMenuVolumeData, WHType} from '@lynx_common/types/ipc';
 import type {FindInPageOptions} from 'electron';
 
 import lynxIpc from './lynxIpc';

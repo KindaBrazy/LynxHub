@@ -9,7 +9,7 @@ import {
   Selection,
   SelectItem,
 } from '@heroui/react';
-import {ChosenArgumentsData} from '@lynx_cross/types';
+import {ChosenArgumentsData} from '@lynx_common/types';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';

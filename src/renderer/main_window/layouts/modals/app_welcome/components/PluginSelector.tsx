@@ -1,7 +1,7 @@
 import {Button, Checkbox, cn, User} from '@heroui/react';
-import {MAIN_MODULE_URL} from '@lynx_cross/consts';
-import {extractGitUrl} from '@lynx_cross/utils';
-import {getPluginIconUrl} from '@lynx_cross/utils/plugins';
+import {MAIN_MODULE_URL} from '@lynx_common/consts';
+import {extractGitUrl} from '@lynx_common/utils';
+import {getPluginIconUrl} from '@lynx_common/utils/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';

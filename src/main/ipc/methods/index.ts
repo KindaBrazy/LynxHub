@@ -7,8 +7,8 @@ import decompress from 'decompress';
 import {app, clipboard, dialog, nativeImage, net, shell} from 'electron';
 import {promises, readdir} from 'graceful-fs';
 
-import {FolderListData} from '../../../cross/types';
-import {ChangeWindowState, DarkModeTypes, TaskbarStatus} from '../../../cross/types/ipc';
+import {FolderListData} from '../../../common/types';
+import {ChangeWindowState, DarkModeTypes, TaskbarStatus} from '../../../common/types/ipc';
 import classHolder from '../../core/class_holder';
 import {noticeAllWindowsDarkMode} from '../../utils';
 import {applicationIpc} from '../application';

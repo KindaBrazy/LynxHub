@@ -1,5 +1,5 @@
 import {Input, Spinner} from '@heroui/react';
-import {validateGitRepoUrl} from '@lynx_cross/utils';
+import {validateGitRepoUrl} from '@lynx_common/utils';
 import {Empty, List, PaginationProps} from 'antd';
 import {useEffect, useState} from 'react';
 

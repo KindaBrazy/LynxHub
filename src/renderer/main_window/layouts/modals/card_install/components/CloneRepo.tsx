@@ -1,6 +1,6 @@
 import {Card, CardBody, CardHeader, Link, ModalBody, Progress} from '@heroui/react';
-import {GitProgressCallback} from '@lynx_cross/types/ipc';
-import {extractGitUrl, isWin} from '@lynx_cross/utils';
+import {GitProgressCallback} from '@lynx_common/types/ipc';
+import {extractGitUrl, isWin} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Descriptions} from 'antd';

@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
+import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {memo, useRef} from 'react';
 

@@ -1,5 +1,5 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
-import {CustomRunBehaviorData} from '@lynx_cross/types/ipc';
+import {CustomRunBehaviorData} from '@lynx_common/types/ipc';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {isEmpty} from 'lodash';
 import {Fragment, useEffect, useState} from 'react';

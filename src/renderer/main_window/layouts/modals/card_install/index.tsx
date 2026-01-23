@@ -1,12 +1,12 @@
 import {Modal, ModalContent} from '@heroui/react';
-import {DownloadProgress} from '@lynx_cross/types/ipc';
+import {DownloadProgress} from '@lynx_common/types/ipc';
 import {
   CardRendererMethods,
   InstallationMethod,
   InstallationStepper,
   UserInputField,
   UserInputResult,
-} from '@lynx_cross/types/plugins/modules';
+} from '@lynx_common/types/plugins/modules';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {isEmpty, isNil} from 'lodash';

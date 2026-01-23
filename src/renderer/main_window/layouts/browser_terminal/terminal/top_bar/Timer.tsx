@@ -1,4 +1,4 @@
-import {secondsElapsed} from '@lynx_cross/utils';
+import {secondsElapsed} from '@lynx_common/utils';
 import NumberFlow, {NumberFlowGroup} from '@number-flow/react';
 import {memo, useEffect, useState} from 'react';
 

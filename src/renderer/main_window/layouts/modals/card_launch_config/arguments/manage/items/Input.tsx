@@ -1,6 +1,6 @@
 import {Input} from '@heroui/react';
 import {getArgumentDefaultValue} from '@lynx/utils/module_arguments';
-import {ChosenArgument} from '@lynx_cross/types';
+import {ChosenArgument} from '@lynx_common/types';
 import {useCallback, useState} from 'react';
 
 import {TextDuo_Icon} from '../../../../../../../shared/assets/icons';

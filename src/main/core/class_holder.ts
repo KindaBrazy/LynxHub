@@ -3,7 +3,7 @@ import {clearInterval} from 'node:timers';
 import axios from 'axios';
 import {app, BrowserWindow} from 'electron';
 
-import {toMs} from '../../cross/utils';
+import {toMs} from '../../common/utils';
 import BrowserDownloadManager from '../child_windows/browser_download_manager';
 import ContextMenuManager from '../child_windows/context_menu';
 import LinkPreviewManager from '../child_windows/link_preview';
@@ -101,7 +101,7 @@ class ClassHolder {
     className: K,
     options: {timeout?: number; checkInterval?: number} = {},
   ): Promise<NonNullable<this[K]>> {
-    const {timeout = 10000, checkInterval = 100} = options;
+    const {timeout = 30000, checkInterval = 100} = options;
     const startTime = Date.now();
 
     return new Promise((resolve, reject) => {

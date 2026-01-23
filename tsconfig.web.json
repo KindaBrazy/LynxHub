@@ -2,7 +2,7 @@
   "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
   "include": [
     "src/renderer/**/*",
-    "src/cross/**/*",
+    "src/common/**/*",
     "extension/src/renderer/**/*",
     "extension/src/cross/**/*",
     "module/src/**/*"
@@ -21,8 +21,8 @@
       "@lynx_extension/*": [
         "extension/src/*"
       ],
-      "@lynx_cross/*": [
-        "src/cross/*"
+      "@lynx_common/*": [
+        "src/common/*"
       ],
       "@lynx/*": [
         "src/renderer/main_window/*"

@@ -1,6 +1,6 @@
 import {ButtonProps} from '@heroui/button';
 import {Button} from '@heroui/react';
-import {PluginItem} from '@lynx_cross/types/plugins';
+import {PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';

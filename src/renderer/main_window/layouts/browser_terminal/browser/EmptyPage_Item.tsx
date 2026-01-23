@@ -1,6 +1,6 @@
 import {Button, Card, CardBody, Image, Tooltip} from '@heroui/react';
-import {FavIcons} from '@lynx_cross/types/ipc';
-import {formatWebAddress, getCacheUrl, getUrlName} from '@lynx_cross/utils';
+import {FavIcons} from '@lynx_common/types/ipc';
+import {formatWebAddress, getCacheUrl, getUrlName} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useMemo, useState} from 'react';

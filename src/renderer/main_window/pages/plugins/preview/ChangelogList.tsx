@@ -1,5 +1,5 @@
 import {Chip} from '@heroui/react';
-import {ChangelogItem, ChangelogSubItem} from '@lynx_cross/types/plugins';
+import {ChangelogItem, ChangelogSubItem} from '@lynx_common/types/plugins';
 import {motion} from 'framer-motion';
 import {memo} from 'react';
 

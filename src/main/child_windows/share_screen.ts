@@ -11,7 +11,7 @@ import {
   Streams,
 } from 'electron';
 
-import {ScreenShareSources} from '../../cross/types/share_screen';
+import {ScreenShareSources} from '../../common/types/share_screen';
 import classHolder from '../core/class_holder';
 import {shareScreenIpc} from '../ipc/share_screen';
 

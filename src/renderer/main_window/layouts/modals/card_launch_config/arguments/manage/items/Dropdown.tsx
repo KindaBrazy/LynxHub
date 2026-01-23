@@ -1,6 +1,6 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {getArgumentDefaultValue, getArgumentValues} from '@lynx/utils/module_arguments';
-import {ChosenArgument} from '@lynx_cross/types';
+import {ChosenArgument} from '@lynx_common/types';
 import {useCallback, useState} from 'react';
 
 import {ListCheckDuo_Icon} from '../../../../../../../shared/assets/icons';

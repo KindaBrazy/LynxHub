@@ -1,6 +1,6 @@
 import {Button, Card, User} from '@heroui/react';
-import {PATREON_URL} from '@lynx_cross/consts';
-import {PatreonSupporter, PatreonSupporterTier} from '@lynx_cross/types';
+import {PATREON_URL} from '@lynx_common/consts';
+import {PatreonSupporter, PatreonSupporterTier} from '@lynx_common/types';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import {useEffect, useMemo, useState} from 'react';
 

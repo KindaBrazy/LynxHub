@@ -1,5 +1,5 @@
 import {Card, CardBody, CardHeader, Checkbox, CircularProgress, NumberInput, Select, SelectItem} from '@heroui/react';
-import {extractGitUrl} from '@lynx_cross/utils';
+import {extractGitUrl} from '@lynx_common/utils';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';

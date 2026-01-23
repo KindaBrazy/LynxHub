@@ -8,10 +8,10 @@ import lodash, {isEmpty} from 'lodash';
 import {LowSync} from 'lowdb';
 import {JSONFileSyncPreset} from 'lowdb/node';
 
-import {APP_NAME} from '../../cross/consts';
-import {Get_Default_Hotkeys} from '../../cross/consts/hotkeys';
-import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '../../cross/types/ipc';
-import StorageTypes from '../../cross/types/storage';
+import {APP_NAME} from '../../common/consts';
+import {Get_Default_Hotkeys} from '../../common/consts/hotkeys';
+import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '../../common/types/ipc';
+import StorageTypes from '../../common/types/storage';
 import classHolder from '../core/class_holder';
 import {applicationIpc} from '../ipc/application';
 import {changeWindowState} from '../ipc/methods';

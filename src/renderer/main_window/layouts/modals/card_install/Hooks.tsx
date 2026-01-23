@@ -4,7 +4,7 @@ import {
   StarterStepOptions,
   UserInputField,
   UserInputResult,
-} from '@lynx_cross/types/plugins/modules';
+} from '@lynx_common/types/plugins/modules';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {isNil} from 'lodash';

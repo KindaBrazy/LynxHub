@@ -1,4 +1,4 @@
-import {ChosenArgument} from '@lynx_cross/types';
+import {ChosenArgument} from '@lynx_common/types';
 
 import {CheckSquareDuo_Icon} from '../../../../../../../shared/assets/icons';
 import ArgumentItemBase from './Base';

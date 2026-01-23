@@ -1,5 +1,5 @@
 import {Button, Card, Chip, Select, Selection, SelectItem} from '@heroui/react';
-import {SubscribeStages} from '@lynx_cross/types';
+import {SubscribeStages} from '@lynx_common/types';
 import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import staticsIpc from '@lynx_shared/ipc/statics';

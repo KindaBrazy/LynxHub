@@ -1,6 +1,6 @@
 import {Button, Tooltip} from '@heroui/react';
-import {Hotkey_Names} from '@lynx_cross/consts/hotkeys';
-import {TabInfo} from '@lynx_cross/types';
+import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
+import {TabInfo} from '@lynx_common/types';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';

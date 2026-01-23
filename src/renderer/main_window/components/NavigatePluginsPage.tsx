@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {PageID, PageTitles} from '@lynx_cross/consts';
+import {PageID, PageTitles} from '@lynx_common/consts';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 

@@ -1,8 +1,8 @@
 import {TRANSITION_EASINGS} from '@heroui/framer-utils';
 import {Avatar, Spinner} from '@heroui/react';
-import {APP_ICON_TRANSPARENT, PageID} from '@lynx_cross/consts';
-import {TabInfo} from '@lynx_cross/types';
-import {getCacheUrl} from '@lynx_cross/utils';
+import {APP_ICON_TRANSPARENT, PageID} from '@lynx_common/consts';
+import {TabInfo} from '@lynx_common/types';
+import {getCacheUrl} from '@lynx_common/utils';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 

@@ -1,5 +1,5 @@
 import {Spinner} from '@heroui/react';
-import {extractGitUrl, validateGitRepoUrl} from '@lynx_cross/utils';
+import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Steps} from 'antd';
 import {BaseStepsProps} from 'antd/es/steps';

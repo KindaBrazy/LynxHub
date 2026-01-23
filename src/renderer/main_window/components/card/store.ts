@@ -1,6 +1,6 @@
-import {CardState} from '@lynx_cross/types';
-import {LoadedCardData} from '@lynx_cross/types/plugins/modules';
-import {validateGitRepoUrl} from '@lynx_cross/utils';
+import {CardState} from '@lynx_common/types';
+import {LoadedCardData} from '@lynx_common/types/plugins/modules';
+import {validateGitRepoUrl} from '@lynx_common/utils';
 import {create} from 'zustand';
 
 // Create a reusable function to generate a store

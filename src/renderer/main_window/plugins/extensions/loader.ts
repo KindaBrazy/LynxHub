@@ -1,6 +1,6 @@
-import {ExtensionData_Renderer, ExtensionImport_Renderer} from '@lynx_cross/types/plugins/extensions';
-import {ExtensionRendererApi} from '@lynx_cross/types/plugins/extensions/api';
-import {ExtensionEvents, ExtensionEvents_IPC} from '@lynx_cross/types/plugins/extensions/events';
+import {ExtensionData_Renderer, ExtensionImport_Renderer} from '@lynx_common/types/plugins/extensions';
+import {ExtensionRendererApi} from '@lynx_common/types/plugins/extensions/api';
+import {ExtensionEvents, ExtensionEvents_IPC} from '@lynx_common/types/plugins/extensions/events';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import mitt, {Emitter} from 'mitt';
 

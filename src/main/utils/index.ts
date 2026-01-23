@@ -2,11 +2,11 @@ import {execSync, spawn} from 'node:child_process';
 import {platform} from 'node:os';
 import {dirname, isAbsolute, relative, resolve} from 'node:path';
 
-import {AgentTypes, DarkModeTypes} from '@lynx_cross/types/ipc';
+import {AgentTypes, DarkModeTypes} from '@lynx_common/types/ipc';
 import {app, BrowserWindow, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue, safeStorage} from 'electron';
 import fs from 'graceful-fs';
 
-import {formatSize} from '../../cross/utils';
+import {formatSize} from '../../common/utils';
 import classHolder from '../core/class_holder';
 import {applicationIpc} from '../ipc/application';
 import calcFolderSize from './calc_folder_size';

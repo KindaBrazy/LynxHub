@@ -1,5 +1,5 @@
 import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
-import {extractGitUrl} from '@lynx_cross/utils';
+import {extractGitUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';

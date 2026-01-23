@@ -1,6 +1,6 @@
-import contextMenuChannels from '@lynx_cross/consts/ipc_channels/context_menu';
-import {ContextResizeData} from '@lynx_cross/types';
-import {ContextMenuVolumeData, NavHistory} from '@lynx_cross/types/ipc';
+import contextMenuChannels from '@lynx_common/consts/ipc_channels/context_menu';
+import {ContextResizeData} from '@lynx_common/types';
+import {ContextMenuVolumeData, NavHistory} from '@lynx_common/types/ipc';
 import {ContextMenuParams} from 'electron';
 
 import BrowserManager from '../core/browser';

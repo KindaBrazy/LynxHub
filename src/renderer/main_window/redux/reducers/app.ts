@@ -1,4 +1,4 @@
-import {HeroToastPlacement} from '@lynx_cross/types';
+import {HeroToastPlacement} from '@lynx_common/types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import isBoolean from 'lodash/isBoolean';
 import {useSelector} from 'react-redux';

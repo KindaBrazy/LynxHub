@@ -1,5 +1,5 @@
 import {DropdownItem} from '@heroui/react';
-import {extractGitUrl} from '@lynx_cross/utils';
+import {extractGitUrl} from '@lynx_common/utils';
 import {useCallback, useMemo} from 'react';
 
 import {Extensions2_Icon, GitHub_Icon, SettingsMinimal_Icon} from '../../../../../shared/assets/icons';

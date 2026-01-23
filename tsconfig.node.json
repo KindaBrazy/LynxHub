@@ -5,7 +5,7 @@
     "extension/electron.vite.config.*",
     "src/main/**/*",
     "src/preload/**/*",
-    "src/cross/**/*",
+    "src/common/**/*",
     "extension/src/main/**/*",
     "extension/src/cross/**/*",
     "module/src/**/*"
@@ -26,8 +26,8 @@
       "@lynx_extension/*": [
         "./extension/src/*"
       ],
-      "@lynx_cross/*": [
-        "./src/cross/*"
+      "@lynx_common/*": [
+        "./src/common/*"
       ]
     }
   }

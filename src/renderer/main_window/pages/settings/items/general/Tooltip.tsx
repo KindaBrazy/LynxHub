@@ -1,5 +1,5 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
-import {TooltipStatus} from '@lynx_cross/types/ipc';
+import {TooltipStatus} from '@lynx_common/types/ipc';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';

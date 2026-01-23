@@ -14,9 +14,9 @@ import {
   Progress,
   useDisclosure,
 } from '@heroui/react';
-import {AvailablePageIDs, PageID, PageTitles} from '@lynx_cross/consts';
-import {Notification_Data} from '@lynx_cross/types';
-import {isValidURL} from '@lynx_cross/utils';
+import {AvailablePageIDs, PageID, PageTitles} from '@lynx_common/consts';
+import {Notification_Data} from '@lynx_common/types';
+import {isValidURL} from '@lynx_common/utils';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Empty} from 'antd';

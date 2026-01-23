@@ -1,5 +1,5 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
-import {TerminalCursorStyle} from '@lynx_cross/types/ipc';
+import {TerminalCursorStyle} from '@lynx_common/types/ipc';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 

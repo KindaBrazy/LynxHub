@@ -1,5 +1,5 @@
 import {Alert, Button} from '@heroui/react';
-import {APP_NAME} from '@lynx_cross/consts';
+import {APP_NAME} from '@lynx_common/consts';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {motion} from 'framer-motion';
 import {useCallback, useEffect, useState} from 'react';

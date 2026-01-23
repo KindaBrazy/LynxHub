@@ -1,4 +1,4 @@
-import {PageID, PageTitles} from '@lynx_cross/consts';
+import {PageID, PageTitles} from '@lynx_common/consts';
 import {isEmpty} from 'lodash';
 import {useMemo} from 'react';
 

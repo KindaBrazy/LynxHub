@@ -1,6 +1,6 @@
 import {Card, CardBody, CardHeader, Chip, User} from '@heroui/react';
 import {getAccentColorAsHex} from '@lynx/utils/accent_color_generator';
-import {extractGitUrl, getCacheUrl} from '@lynx_cross/utils';
+import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';

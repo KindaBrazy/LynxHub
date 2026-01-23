@@ -1,5 +1,5 @@
-import {screenShareChannels} from '@lynx_cross/consts/ipc_channels/share_screen';
-import {ScreenShareSources, ScreenShareStart} from '@lynx_cross/types/share_screen';
+import {screenShareChannels} from '@lynx_common/consts/ipc_channels/share_screen';
+import {ScreenShareSources, ScreenShareStart} from '@lynx_common/types/share_screen';
 
 import lynxIpc from './lynxIpc';
 

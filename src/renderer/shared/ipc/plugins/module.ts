@@ -1,5 +1,5 @@
-import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
-import {InstalledCard} from '@lynx_cross/types/storage';
+import modulesChannels, {moduleApiChannels} from '@lynx_common/consts/ipc_channels/module';
+import {InstalledCard} from '@lynx_common/types/storage';
 
 import lynxIpc from '../lynxIpc';
 

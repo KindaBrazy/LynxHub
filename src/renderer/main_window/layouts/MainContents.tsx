@@ -1,4 +1,4 @@
-import {PageID} from '@lynx_cross/consts';
+import {PageID} from '@lynx_common/consts';
 import {memo} from 'react';
 
 import {useAppState} from '../redux/reducers/app';

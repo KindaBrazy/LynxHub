@@ -1,4 +1,4 @@
-import {LynxInput} from '@lynx_cross/types/ipc';
+import {LynxInput} from '@lynx_common/types/ipc';
 import {Event, Input, WebContents} from 'electron';
 
 import {applicationIpc} from '../ipc/application';

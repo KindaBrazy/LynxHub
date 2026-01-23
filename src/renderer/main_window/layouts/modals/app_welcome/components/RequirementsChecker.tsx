@@ -1,5 +1,5 @@
 import {Alert, Button} from '@heroui/react';
-import {isWin} from '@lynx_cross/utils';
+import {isWin} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {ReactNode, useEffect, useMemo} from 'react';
 

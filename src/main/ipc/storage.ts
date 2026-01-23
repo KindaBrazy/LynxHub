@@ -1,5 +1,5 @@
-import storageChannels, {storageUtilsChannels} from '@lynx_cross/consts/ipc_channels/storage';
-import {ChosenArgumentsData, ConfirmMenuTypes} from '@lynx_cross/types';
+import storageChannels, {storageUtilsChannels} from '@lynx_common/consts/ipc_channels/storage';
+import {ChosenArgumentsData, ConfirmMenuTypes} from '@lynx_common/types';
 import {
   BrowserHistoryData,
   CustomRunBehaviorData,
@@ -11,8 +11,8 @@ import {
   PreOpenData,
   RecentlyOperation,
   StorageOperation,
-} from '@lynx_cross/types/ipc';
-import StorageTypes, {InstalledCard, InstalledCards} from '@lynx_cross/types/storage';
+} from '@lynx_common/types/ipc';
+import StorageTypes, {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
 import {app} from 'electron';
 
 import classHolder from '../core/class_holder';
