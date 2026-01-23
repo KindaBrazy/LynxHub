@@ -1,4 +1,5 @@
 import {cn} from '@heroui/react';
+import {Star_Icon} from '@lynx_assets/icons';
 import {formatWebAddress} from '@lynx_common/utils';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
@@ -7,7 +8,6 @@ import {isEmpty} from 'lodash';
 import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Star_Icon} from '../../../../../shared/assets/icons';
 import {cardsActions} from '../../../../redux/reducers/cards';
 import {useTabsState} from '../../../../redux/reducers/tabs';
 import {AppDispatch} from '../../../../redux/store';

@@ -1,7 +1,6 @@
 import {Button, Tooltip} from '@heroui/react';
+import {BroomDuo_Icon} from '@lynx_assets/icons';
 import {memo, RefObject, useCallback} from 'react';
-
-import {BroomDuo_Icon} from '../../../../../shared/assets/icons';
 
 type Props = {
   clearTerminal: RefObject<(() => void) | undefined>;

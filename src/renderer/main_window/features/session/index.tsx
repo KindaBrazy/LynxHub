@@ -20,7 +20,7 @@ import TopBar from './top_bar';
 
 type Props = {runningCard: RunningCard};
 
-const RunningCardView = ({runningCard}: Props) => {
+const SessionView = ({runningCard}: Props) => {
   const {currentView, id, tabId, isEmptyRunning, browserTitle} = runningCard;
 
   const ExtTerminal = useMemo(() => extensionsData.runningAI.terminal, []);
@@ -120,4 +120,4 @@ const RunningCardView = ({runningCard}: Props) => {
   );
 };
 
-export default RunningCardView;
+export default SessionView;

@@ -1,4 +1,6 @@
 import {Button, Spinner} from '@heroui/react';
+import {Star_Icon, Terminal_Icon} from '@lynx_assets/icons';
+import {History_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
 import {FavIcons} from '@lynx_common/types/ipc';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Empty} from 'antd';
@@ -6,8 +8,6 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {ReactNode, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Star_Icon, Terminal_Icon} from '../../../../shared/assets/icons';
-import {History_Color_Icon} from '../../../../shared/assets/icons/Icons_Colorful';
 import LynxScroll from '../../../components/LynxScroll';
 import {cardsActions} from '../../../redux/reducers/cards';
 import {useTabsState} from '../../../redux/reducers/tabs';

@@ -1,10 +1,10 @@
 import {Button, Tooltip} from '@heroui/react';
+import {CheckDuo_Icon, CopyDuo_Icon, FileDownDuo_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {memo, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {CheckDuo_Icon, CopyDuo_Icon, FileDownDuo_Icon} from '../../../../../shared/assets/icons';
 import {lynxTopToast} from '../../../../hooks/utils';
 import {AppDispatch} from '../../../../redux/store';
 
