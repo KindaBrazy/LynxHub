@@ -87,7 +87,7 @@ export function listenStorageUtils() {
   storageUtilsIpc.handle.preOpen((opt, data) => storageManager.preOpenOpt(opt, data));
 
   // Updates custom run behavior settings
-  storageUtilsIpc.handle.customRunBehavior(data => storageManager.updateCustomRunBehavior(data));
+  storageUtilsIpc.on.customRunBehavior(data => storageManager.updateCustomRunBehavior(data));
 
   // Gets card arguments by card ID
   storageUtilsIpc.handle.getCardArguments(cardId => storageManager.getCardArgumentsById(cardId));
@@ -96,13 +96,13 @@ export function listenStorageUtils() {
   storageUtilsIpc.handle.setCardArguments((cardId, args) => storageManager.setCardArguments(cardId, args));
 
   // Adds URL to browser recent list
-  storageUtilsIpc.handle.addBrowserRecent(recentEntry => storageManager.addBrowserRecent(recentEntry));
+  storageUtilsIpc.on.addBrowserRecent(recentEntry => storageManager.addBrowserRecent(recentEntry));
 
   // Adds URL to browser favorites
-  storageUtilsIpc.handle.addBrowserFavorite(favoriteEntry => storageManager.addBrowserFavorite(favoriteEntry));
+  storageUtilsIpc.on.addBrowserFavorite(favoriteEntry => storageManager.addBrowserFavorite(favoriteEntry));
 
   // Adds URL to browser history
-  storageUtilsIpc.handle.addBrowserHistory(historyEntry => storageManager.addBrowserHistory(historyEntry));
+  storageUtilsIpc.on.addBrowserHistory(historyEntry => storageManager.addBrowserHistory(historyEntry));
 
   // Adds favicon for browser recent URL
   storageUtilsIpc.on.addBrowserRecentFavIcon((url, favIcon, title) =>
@@ -192,6 +192,14 @@ export const storageUtilsIpc = {
     addReadNotif: (callback: (id: string) => void) => lynxIpc.on(storageUtilsChannels.addReadNotif, callback),
     setCardTerminalPreCommands: (callback: (id: string, commands: string[]) => void) =>
       lynxIpc.on(storageUtilsChannels.setCardTerminalPreCommands, callback),
+    addBrowserFavorite: (callback: (favoriteEntry: string) => MainHT<void>) =>
+      lynxIpc.on(storageUtilsChannels.addBrowserFavorite, callback),
+    customRunBehavior: (callback: (data: Partial<CustomRunBehaviorData>) => MainHT<void>) =>
+      lynxIpc.on(storageUtilsChannels.customRunBehavior, callback),
+    addBrowserRecent: (callback: (recentEntry: string) => MainHT<void>) =>
+      lynxIpc.on(storageUtilsChannels.addBrowserRecent, callback),
+    addBrowserHistory: (callback: (historyEntry: string) => MainHT<void>) =>
+      lynxIpc.on(storageUtilsChannels.addBrowserHistory, callback),
   },
   handle: {
     pinnedCards: (callback: (opt: StorageOperation, id: string, pinnedCards?: string[]) => MainHT<string[]>) =>
@@ -206,18 +214,10 @@ export const storageUtilsIpc = {
       lynxIpc.handle(storageUtilsChannels.customRun, callback),
     preOpen: (callback: (opt: StorageOperation, data: PreOpen) => MainHT<PreOpenData>) =>
       lynxIpc.handle(storageUtilsChannels.preOpen, callback),
-    customRunBehavior: (callback: (data: Partial<CustomRunBehaviorData>) => MainHT<void>) =>
-      lynxIpc.handle(storageUtilsChannels.customRunBehavior, callback),
     getCardArguments: (callback: (cardId: string) => MainHT<ChosenArgumentsData>) =>
       lynxIpc.handle(storageUtilsChannels.getCardArguments, callback),
     setCardArguments: (callback: (cardId: string, args: ChosenArgumentsData) => MainHT<void>) =>
       lynxIpc.handle(storageUtilsChannels.setCardArguments, callback),
-    addBrowserRecent: (callback: (recentEntry: string) => MainHT<void>) =>
-      lynxIpc.handle(storageUtilsChannels.addBrowserRecent, callback),
-    addBrowserFavorite: (callback: (favoriteEntry: string) => MainHT<void>) =>
-      lynxIpc.handle(storageUtilsChannels.addBrowserFavorite, callback),
-    addBrowserHistory: (callback: (historyEntry: string) => MainHT<void>) =>
-      lynxIpc.handle(storageUtilsChannels.addBrowserHistory, callback),
     unassignCard: (callback: (id: string, clearConfigs: boolean) => MainHT<void>) =>
       lynxIpc.handle(storageUtilsChannels.unassignCard, callback),
     getBrowserHistoryData: (callback: () => MainHT<BrowserHistoryData>) =>
