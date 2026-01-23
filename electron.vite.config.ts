@@ -96,7 +96,6 @@ export default defineConfig(({mode}) => {
           input: {
             index: resolve(__dirname, 'src/renderer/index.html'),
             loading: resolve(__dirname, 'src/renderer/loading.html'),
-            prompt_dialog: resolve(__dirname, 'src/renderer/prompt_dialog.html'),
             context_menu: resolve(__dirname, 'src/renderer/context_menu.html'),
             toast: resolve(__dirname, 'src/renderer/toast.html'),
             share_screen: resolve(__dirname, 'src/renderer/share_screen.html'),
