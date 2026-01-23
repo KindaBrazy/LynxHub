@@ -1,11 +1,11 @@
 // Downloader IPC methods - Handles file downloads with progress tracking
 import path from 'node:path';
 
-import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
 import {app, DownloadItem} from 'electron';
 import {download} from 'electron-dl';
 
 import classHolder from '../../core/class_holder';
+import {utilsIpc} from '../utils';
 
 let downloadingItem: DownloadItem | undefined;
 
@@ -25,7 +25,7 @@ export function downloadFile(url: string) {
       downloadingItem = item;
     },
     onProgress: progress => {
-      window.webContents.send(utilsChannels.onDownloadFile, {
+      utilsIpc.send.onDownloadFile({
         stage: 'progress',
         percentage: progress.percent,
         downloaded: progress.transferredBytes,
@@ -35,13 +35,13 @@ export function downloadFile(url: string) {
     },
   })
     .then(item => {
-      window.webContents.send(utilsChannels.onDownloadFile, {
+      utilsIpc.send.onDownloadFile({
         stage: 'done',
         finalPath: item.savePath,
       });
     })
     .catch(e => {
-      window.webContents.send(utilsChannels.onDownloadFile, {
+      utilsIpc.send.onDownloadFile({
         stage: 'failed',
       });
       console.error('Failed to download file: ', e);

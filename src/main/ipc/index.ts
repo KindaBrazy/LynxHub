@@ -1,12 +1,10 @@
 import modulesChannels, {moduleApiChannels} from '@lynx_cross/consts/ipc_channels/module';
 import pluginChannels from '@lynx_cross/consts/ipc_channels/plugins';
-import utilsChannels from '@lynx_cross/consts/ipc_channels/utils';
 import {ipcMain} from 'electron';
 
 import {SubscribeStages} from '../../cross/types';
 import {InstalledCard} from '../../cross/types/storage';
 import classHolder from '../core/class_holder';
-import {getImageCacheManager} from '../core/image_cache';
 import GitManager from '../git';
 import {getList} from '../plugins/utils';
 import {getDirCreationDate} from '../utils';
@@ -14,46 +12,10 @@ import listenApplication from './application';
 import listenContextMenu from './context_menu';
 import listenFiles from './files';
 import listenGit from './git';
-import {decompressFile, getImageAsDataURL, isResponseValid} from './methods';
-import {
-  disableExtension,
-  disableLoadingExtensions,
-  getExtensionsDetails,
-  getExtensionsUpdate,
-  updateAllExtensions,
-} from './methods/card_extensions';
-import {cancelDownload, downloadFile} from './methods/downloader';
 import listenPty from './pty';
 import listenStatics from './statics';
 import listenStorage, {listenStorageUtils} from './storage';
-
-function utils() {
-  // Gets detailed information about extensions in directory
-  ipcMain.handle(utilsChannels.extensionsDetails, (_, dir: string) => getExtensionsDetails(dir));
-  // Gets update status for all extensions in directory
-  ipcMain.handle(utilsChannels.updateStatus, (_, dir: string) => getExtensionsUpdate(dir));
-
-  // Updates all extensions in directory sequentially
-  ipcMain.on(utilsChannels.updateAllExtensions, (_, data: {id: string; dir: string}) => updateAllExtensions(data));
-  // Enables or disables extension by renaming folder (add/remove . prefix)
-  ipcMain.handle(utilsChannels.disableExtension, (_, disable: boolean, dir: string) => disableExtension(disable, dir));
-
-  // Cancels loading extension data operation
-  ipcMain.on(utilsChannels.cancelExtensionsData, () => disableLoadingExtensions());
-
-  // Downloads file from URL with progress tracking
-  ipcMain.on(utilsChannels.downloadFile, (_, url: string) => downloadFile(url));
-  // Cancels ongoing file download
-  ipcMain.on(utilsChannels.cancelDownload, () => cancelDownload());
-
-  // Decompresses archive file (zip, tar, etc.)
-  ipcMain.handle(utilsChannels.decompressFile, (_, filePath: string) => decompressFile(filePath));
-
-  // Validates if URL returns valid HTTP response
-  ipcMain.handle(utilsChannels.isResponseValid, (_, url: string) => isResponseValid(url));
-  // Fetches image from URL and converts to data URL (base64)
-  ipcMain.handle(utilsChannels.getImageAsDataURL, (_, url: string) => getImageAsDataURL(url));
-}
+import listenUtils from './utils';
 
 function modules() {
   const {moduleManager} = classHolder;
@@ -125,43 +87,6 @@ function modulesApi() {
   ipcMain.handle(moduleApiChannels.getCurrentReleaseTag, (_, dir: string) => GitManager.getCurrentReleaseTag(dir));
 }
 
-function imageCache() {
-  const cacheManager = getImageCacheManager();
-
-  // Gets cache statistics (entry count, total size, last cleanup)
-  ipcMain.handle(utilsChannels.getImageCacheStats, () => {
-    const stats = cacheManager.getStats();
-    return {
-      entryCount: stats.entryCount,
-      totalSize: stats.totalSize,
-      totalSizeFormatted: formatBytes(stats.totalSize),
-      lastCleanup: stats.lastCleanup,
-      lastCleanupFormatted: new Date(stats.lastCleanup).toISOString(),
-    };
-  });
-
-  // Clears all cached images
-  ipcMain.handle(utilsChannels.clearImageCache, async () => {
-    const clearedCount = await cacheManager.clearCache();
-    return {success: true, clearedEntries: clearedCount};
-  });
-
-  // Triggers manual cache cleanup (removes expired entries)
-  ipcMain.handle(utilsChannels.triggerImageCacheCleanup, async () => {
-    await cacheManager.triggerCleanup();
-    return {success: true};
-  });
-}
-
-/** Formats bytes to human readable string */
-function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 B';
-  const k = 1024;
-  const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
-}
-
 export function listenToIpcChannels() {
   listenStorage();
   listenStorageUtils();
@@ -170,7 +95,7 @@ export function listenToIpcChannels() {
   listenFiles();
 
   listenGit();
-  utils();
+  listenUtils();
   listenPty();
 
   modules();
@@ -186,5 +111,4 @@ export function listenToIpcChannels() {
   if (linkPreviewManager) linkPreviewManager.listenForChannels();
 
   listenStatics();
-  imageCache();
 }
