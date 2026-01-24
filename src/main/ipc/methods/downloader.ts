@@ -2,7 +2,7 @@
 import path from 'node:path';
 
 import classHolder from '@lynx_main/core/class_holder';
-import {utilsIpc} from '@lynx_main/utils';
+import {utilsIpc} from '@lynx_main/ipc/utils';
 import {app, DownloadItem} from 'electron';
 import {download} from 'electron-dl';
 

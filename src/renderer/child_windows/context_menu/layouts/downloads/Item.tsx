@@ -1,5 +1,4 @@
 import {Button, ButtonGroup, Card, CardBody, CardFooter, CardHeader, Progress, Tooltip} from '@heroui/react';
-import {contextActions} from '@lynx/redux/reducer';
 import {DownloadItemInfo} from '@lynx_common/types/download_manager';
 import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
 import {Pause, Play, Restart} from '@solar-icons/react-perf/Bold';
@@ -7,6 +6,7 @@ import {FileDownload, FolderOpen, TrashBin2} from '@solar-icons/react-perf/BoldD
 import {X} from 'lucide-react';
 import {useDispatch} from 'react-redux';
 
+import {contextActions} from '../../redux/reducer';
 import {formatBytes, formatETA, formatSpeed, getProgress, getStatusColor} from './utils';
 
 type Props = {

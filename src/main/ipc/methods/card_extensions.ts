@@ -3,8 +3,8 @@ import path from 'node:path';
 
 import {ExtensionsData, ExtensionsUpdateStatus} from '@lynx_common/types/ipc';
 import GitManager from '@lynx_main/git';
+import {utilsIpc} from '@lynx_main/ipc/utils';
 import {calculateFolderSize} from '@lynx_main/utils';
-import {utilsIpc} from '@lynx_main/utils';
 import fs from 'graceful-fs';
 import {compact} from 'lodash';
 

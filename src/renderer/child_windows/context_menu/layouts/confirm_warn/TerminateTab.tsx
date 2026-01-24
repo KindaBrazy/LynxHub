@@ -1,10 +1,10 @@
 import {Button} from '@heroui/react';
-import {useContextState} from '@lynx/redux/reducer';
 import {Power_Icon} from '@lynx_assets/icons';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {Forward2} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
+import {useContextState} from '../../redux/reducer';
 import {hideContextWindow, setElementFocus} from '../Shared';
 import ConfirmElement from './ConfirmElement';
 

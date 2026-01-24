@@ -1,8 +1,9 @@
 import {Button} from '@heroui/react';
-import {RequirementStatus} from '@lynx/types';
 import {CheckDuo_Icon} from '@lynx_assets/icons';
 import {APP_NAME} from '@lynx_common/consts';
 import {motion} from 'framer-motion';
+
+import {RequirementStatus} from '../types';
 
 const containerVariants = {
   hidden: {opacity: 0, y: 20},
