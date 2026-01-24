@@ -1,11 +1,12 @@
 import {DropdownItem} from '@heroui/react';
+import {useInstalledCard} from '@lynx/hooks/utils';
+import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
+import {useGetInstallType} from '@lynx/plugins/modules';
+import {Extensions2_Icon, GitHub_Icon} from '@lynx_assets/icons';
 import {extractGitUrl} from '@lynx_common/utils';
+import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useMemo} from 'react';
 
-import {Extensions2_Icon, GitHub_Icon, SettingsMinimal_Icon} from '../../../../../shared/assets/icons';
-import {useInstalledCard} from '../../../../hooks/utils';
-import {useTabModalManager} from '../../../../layouts/modals/useTabModalManager';
-import {useGetInstallType} from '../../../../plugins/modules';
 import {useCardStore} from '../../Wrapper';
 
 export const MenuLaunchConfig = () => {
@@ -27,7 +28,7 @@ export const MenuLaunchConfig = () => {
       key="launch-config"
       title="Launch Config"
       className="cursor-default"
-      startContent={<SettingsMinimal_Icon />}
+      startContent={<SettingsMinimalistic className="size-4" />}
     />
   );
 };
@@ -64,7 +65,7 @@ export const MenuExtensions = () => {
       onPress={onPress}
       title="Extensions"
       className="cursor-default"
-      startContent={<Extensions2_Icon />}
+      startContent={<Extensions2_Icon className="size-4" />}
     />
   ) : (
     <DropdownItem className="hidden" key="extensions-hidden" textValue="extensions_hidden" />
@@ -97,7 +98,7 @@ export const MenuRepoConfig = () => {
       onPress={onPress}
       title="Repository"
       className="cursor-default"
-      startContent={<GitHub_Icon className="size-[0.77rem]" />}
+      startContent={<GitHub_Icon className="ml-0.5 size-3.5" />}
     />
   );
 };

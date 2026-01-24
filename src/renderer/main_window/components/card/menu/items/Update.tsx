@@ -1,18 +1,18 @@
 import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
+import {useInstalledCard, useIsAutoUpdateCard, useUpdateAvailable, useUpdatingCard} from '@lynx/hooks/utils';
+import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
+import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
+import {cardsActions} from '@lynx/redux/reducers/cards';
+import {AppDispatch} from '@lynx/redux/store';
 import {extractGitUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {DownloadMinimalistic, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Download_Icon, Refresh_Icon} from '../../../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../../../shared/sentry/Breadcrumbs';
-import {useInstalledCard, useIsAutoUpdateCard, useUpdateAvailable, useUpdatingCard} from '../../../../hooks/utils';
-import {useTabModalManager} from '../../../../layouts/modals/useTabModalManager';
-import {getCardMethod, useAllCardMethods} from '../../../../plugins/modules';
-import {cardsActions} from '../../../../redux/reducers/cards';
-import {AppDispatch} from '../../../../redux/store';
 import {useCardStore} from '../../Wrapper';
 
 export const MenuUpdate = () => {
@@ -54,7 +54,7 @@ export const MenuUpdate = () => {
       color="success"
       onPress={onPress}
       isDisabled={updating}
-      startContent={<Download_Icon />}
+      startContent={<DownloadMinimalistic className="size-4" />}
       endContent={updating && <Spinner size="sm" color="primary" />}
       className={updateAvailable ? 'text-success' : 'cursor-default'}
     />
@@ -95,7 +95,7 @@ export const MenuCheckForUpdate = () => {
       title="Check For Updates"
       className="cursor-default"
       isDisabled={checkingForUpdate}
-      startContent={<Refresh_Icon className="size-[0.77rem]" />}
+      startContent={<Refresh className="size-4" />}
       endContent={checkingForUpdate && <Spinner size="sm" color="primary" />}
     />
   );

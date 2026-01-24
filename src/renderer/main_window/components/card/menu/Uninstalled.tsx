@@ -1,7 +1,7 @@
 import {Button, Dropdown, DropdownMenu, DropdownTrigger} from '@heroui/react';
+import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
-import {MenuDots_Icon} from '../../../../shared/assets/icons';
 import {useCardStore} from '../Wrapper';
 import {MenuDuplicate, MenuHomePage} from './items/About';
 
@@ -19,7 +19,7 @@ const UninstalledMenu = memo(() => {
       showArrow>
       <DropdownTrigger>
         <Button radius="lg" variant="flat" isIconOnly>
-          <MenuDots_Icon className="size-[1.3rem]" />
+          <MenuDots className="size-[1.3rem]" />
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Card Menu">

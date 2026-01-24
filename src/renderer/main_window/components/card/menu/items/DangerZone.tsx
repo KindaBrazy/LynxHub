@@ -1,9 +1,9 @@
 import {DropdownItem} from '@heroui/react';
+import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {MinusSquare, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';
 
-import {MinusSquareDuo_Icon, Trash_Icon} from '../../../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../../../shared/sentry/Breadcrumbs';
-import {useTabModalManager} from '../../../../layouts/modals/useTabModalManager';
 import {useCardStore} from '../../Wrapper';
 
 export function MenuUnAssign() {
@@ -24,8 +24,8 @@ export function MenuUnAssign() {
       color="warning"
       title="Unassign"
       onPress={onPress}
-      startContent={<MinusSquareDuo_Icon />}
       className="cursor-default text-warning"
+      startContent={<MinusSquare className="size-4" />}
     />
   );
 }
@@ -48,8 +48,8 @@ export function MenuUninstall() {
       key="uninstall"
       title="Uninstall"
       onPress={onPress}
-      startContent={<Trash_Icon />}
       className="cursor-default text-danger"
+      startContent={<TrashBin2 className="size-4" />}
     />
   );
 }
