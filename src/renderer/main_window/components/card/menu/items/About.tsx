@@ -1,26 +1,20 @@
 import {DropdownItem} from '@heroui/react';
+import {useInstalledCard} from '@lynx/hooks/utils';
+import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
+import {duplicateCard, removeDuplicatedCard} from '@lynx/plugins/modules';
+import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
+import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
+import {modalActions} from '@lynx/redux/reducers/modals';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
 import {extractGitUrl} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import storageIpc from '@lynx_shared/ipc/storage';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {Copy, FolderOpen, HomeAngle2, InfoCircle, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {
-  Copy_Icon,
-  ExternalLink_Icon,
-  HomeSmile_Icon,
-  Info_Icon,
-  OpenFolder_Icon,
-} from '../../../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../../../shared/sentry/Breadcrumbs';
-import {useInstalledCard} from '../../../../hooks/utils';
-import {useTabModalManager} from '../../../../layouts/modals/useTabModalManager';
-import {duplicateCard, removeDuplicatedCard} from '../../../../plugins/modules';
-import {cardsActions, useCardsState} from '../../../../redux/reducers/cards';
-import {useHotkeysState} from '../../../../redux/reducers/hotkeys';
-import {modalActions} from '../../../../redux/reducers/modals';
-import {useTabsState} from '../../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../../redux/store';
 import {useCardStore} from '../../Wrapper';
 
 export const MenuInfo = () => {
@@ -64,7 +58,7 @@ export const MenuInfo = () => {
       onPress={onPress}
       className={`${!showOpenFolder && 'cursor-default'}`}
       title={showOpenFolder ? 'Open Folder' : 'Information'}
-      startContent={showOpenFolder ? <OpenFolder_Icon /> : <Info_Icon />}
+      startContent={showOpenFolder ? <FolderOpen className="size-4" /> : <InfoCircle className="size-4" />}
     />
   );
 };
@@ -93,9 +87,9 @@ export const MenuHomePage = () => {
       key="homepage"
       title="HomePage"
       onPress={onPress}
+      startContent={<HomeAngle2 className="size-4" />}
       className={`${!isCtrlPressed && 'cursor-default'}`}
-      endContent={isCtrlPressed && <ExternalLink_Icon />}
-      startContent={<HomeSmile_Icon className="size-3.5" />}
+      endContent={isCtrlPressed && <SquareTopDown className="size-3.5" />}
     />
   );
 };
@@ -126,7 +120,11 @@ export const MenuDuplicate = () => {
   }, [dispatch, isDuplicated, duplicates, id]);
 
   return (
-    <DropdownItem onPress={onPress} key="duplicate_card" className="cursor-default" startContent={<Copy_Icon />}>
+    <DropdownItem
+      onPress={onPress}
+      key="duplicate_card"
+      className="cursor-default"
+      startContent={<Copy className="size-4" />}>
       {isDuplicated ? 'Remove Duplicate' : 'Duplicate'}
     </DropdownItem>
   );

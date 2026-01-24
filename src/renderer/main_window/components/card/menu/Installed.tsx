@@ -1,10 +1,10 @@
 // @ts-nocheck
 import {Button, Dropdown, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import {useUpdatingCard} from '@lynx/hooks/utils';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useMemo} from 'react';
 
-import {MenuDots_Icon} from '../../../../shared/assets/icons';
-import {useUpdatingCard} from '../../../hooks/utils';
-import {extensionsData} from '../../../plugins/extensions/loader';
 import {useCardStore} from '../Wrapper';
 import {MenuDuplicate, MenuHomePage, MenuInfo} from './items/About';
 import {MenuUnAssign, MenuUninstall} from './items/DangerZone';
@@ -39,7 +39,7 @@ export const InstalledMenu = memo(() => {
       showArrow>
       <DropdownTrigger>
         <Button radius="lg" variant="flat" color="primary" isLoading={updating} isIconOnly>
-          {!updating && <MenuDots_Icon className="size-[1.3rem]" />}
+          {!updating && <MenuDots className="size-[1.3rem]" />}
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Card Menu">
