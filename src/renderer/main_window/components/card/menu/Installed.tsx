@@ -39,7 +39,11 @@ export const InstalledMenu = memo(() => {
       showArrow>
       <DropdownTrigger>
         <Button radius="lg" variant="flat" color="primary" isLoading={updating} isIconOnly>
-          {!updating && <MenuDots className="size-[1.3rem]" />}
+          {!updating && (
+            <MenuDots
+              className={`size-[1.3rem] ${menuIsOpen ? 'rotate-90' : 'rotate-0'} transition-all duration-500`}
+            />
+          )}
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Card Menu">
