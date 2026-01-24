@@ -1,11 +1,10 @@
 import {Button} from '@heroui/react';
 import {tabsActions} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
-import {Plugins_Icon} from '@lynx_assets/icons';
 import {PageID, PageTitles} from '@lynx_common/consts';
+import {WidgetAdd} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
-
 export default function NavigatePluginsPage({size}: {size?: 'sm' | 'md'}) {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -19,7 +18,7 @@ export default function NavigatePluginsPage({size}: {size?: 'sm' | 'md'}) {
   }, [dispatch]);
 
   return (
-    <Button color="primary" size={size || 'sm'} onPress={handleGoModules} startContent={<Plugins_Icon />}>
+    <Button color="primary" size={size || 'sm'} onPress={handleGoModules} startContent={<WidgetAdd />}>
       Plugins Page
     </Button>
   );

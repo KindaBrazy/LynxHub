@@ -1,11 +1,10 @@
 import {Button, ButtonGroup, Input} from '@heroui/react';
-import {Folder_Icon} from '@lynx_assets/icons';
 import {isWin} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
+import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
 import {OpenDialogOptions} from 'electron';
 import {useCallback, useEffect, useRef, useState} from 'react';
-
 type Props = {
   dialogType: OpenDialogOptions;
   directory: string;
@@ -72,7 +71,7 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
       />
 
       <Button variant="solid" onPress={chooseDirectory} aria-label="Choose directory" isIconOnly>
-        {<Folder_Icon className="size-5" />}
+        {<MoveToFolder className="size-4.5" />}
       </Button>
     </ButtonGroup>
   );

@@ -1,7 +1,7 @@
 import {Button, Tooltip} from '@heroui/react';
-import {CheckDuo_Icon, CopyDuo_Icon} from '@lynx_assets/icons';
+import {Copy} from '@solar-icons/react-perf/BoldDuotone';
+import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
-
 type Props = {tooltipTitle?: string; showTooltip?: boolean; contentToCopy: string; className?: string};
 
 const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, className}: Props) => {
@@ -32,9 +32,9 @@ const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, cl
       showArrow>
       <Button size="sm" variant="light" onPress={handleCopy} className={className} isIconOnly>
         {copied ? (
-          <CheckDuo_Icon className="size-5 animate-appearance-in" />
+          <CheckRead className="size-5 animate-appearance-in" />
         ) : (
-          <CopyDuo_Icon className="size-4 animate-appearance-in" />
+          <Copy className="size-4 animate-appearance-in" />
         )}
       </Button>
     </Tooltip>
