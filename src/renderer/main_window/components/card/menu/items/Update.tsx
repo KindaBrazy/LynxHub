@@ -90,13 +90,18 @@ export const MenuCheckForUpdate = () => {
 
   return (
     <DropdownItem
+      startContent={
+        checkingForUpdate ? (
+          <Spinner size="sm" color="primary" variant="gradient" className="scale-95" />
+        ) : (
+          <Refresh className="size-4" />
+        )
+      }
       onPress={onPress}
       key="check-update"
       title="Check For Updates"
       className="cursor-default"
       isDisabled={checkingForUpdate}
-      startContent={<Refresh className="size-4" />}
-      endContent={checkingForUpdate && <Spinner size="sm" color="primary" />}
     />
   );
 };
