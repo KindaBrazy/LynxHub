@@ -1,13 +1,12 @@
 import {Button} from '@heroui/react';
+import useHotkeyPress from '@lynx/hooks/hotkeys';
+import {useIsActiveTab} from '@lynx/layouts/tabs/utils';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {ArrowDuo_Icon, Close_Icon, HomeSmile_Icon, RefreshDuo_Icon} from '@lynx_assets/icons';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
 import {memo, useEffect, useMemo, useState} from 'react';
-
-import useHotkeyPress from '../../../../hooks/hotkeys';
-import {useIsActiveTab} from '../../../../layouts/tabs/utils';
-import {useTabsState} from '../../../../redux/reducers/tabs';
 
 const variants: Variants = {
   animate: {scale: 1, opacity: 1},

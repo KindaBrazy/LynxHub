@@ -1,4 +1,6 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {AppDispatch} from '@lynx/redux/store';
 import {CloseSimple_Icon, FolderDuo_Icon, OpenFolder_Icon, Trash_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
 import ptyIpc from '@lynx_shared/ipc/pty';
@@ -6,9 +8,6 @@ import storageIpc from '@lynx_shared/ipc/storage';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {lynxTopToast} from '../../../../hooks/utils';
-import {AppDispatch} from '../../../../redux/store';
 
 type Props = {id: string};
 const CDTo = memo(({id}: Props) => {

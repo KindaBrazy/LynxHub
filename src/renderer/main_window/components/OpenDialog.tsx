@@ -1,11 +1,10 @@
 import {Button, ButtonGroup, Input} from '@heroui/react';
+import {Folder_Icon} from '@lynx_assets/icons';
 import {isWin} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
 import {OpenDialogOptions} from 'electron';
 import {useCallback, useEffect, useRef, useState} from 'react';
-
-import {Folder_Icon} from '../../shared/assets/icons';
 
 type Props = {
   dialogType: OpenDialogOptions;

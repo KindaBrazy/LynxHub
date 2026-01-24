@@ -1,12 +1,12 @@
+import {useAppState} from '@lynx/redux/reducers/app';
+import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {AltArrowLine_Icon} from '@lynx_assets/icons';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {AnimatePresence, motion, Transition} from 'framer-motion';
 import {memo, MouseEvent, ReactNode, useCallback, useMemo, useRef, useState, WheelEvent} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {AltArrowLine_Icon} from '../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../shared/sentry/Breadcrumbs';
-import {useAppState} from '../../redux/reducers/app';
-import {tabsActions, useTabsState} from '../../redux/reducers/tabs';
-import {AppDispatch} from '../../redux/store';
 import Tooltip from './Tooltip';
 
 export type NavItem = {

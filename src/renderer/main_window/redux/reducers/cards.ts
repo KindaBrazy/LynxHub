@@ -1,3 +1,5 @@
+import {UpdatingCard} from '@lynx/types';
+import {CardsState} from '@lynx/types/reducers';
 import {OnUpdatingExtensions} from '@lynx_common/types/ipc';
 import {InstalledCards} from '@lynx_common/types/storage';
 import browserIpc from '@lynx_shared/ipc/browser';
@@ -6,8 +8,6 @@ import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {includes} from 'lodash';
 import {useSelector} from 'react-redux';
 
-import {UpdatingCard} from '../../types';
-import {CardsState} from '../../types/reducers';
 import {RootState} from '../store';
 
 type CardsStateTypes = {

@@ -1,19 +1,18 @@
 import {Button, Card, Chip, Select, Selection, SelectItem} from '@heroui/react';
+import SettingsSection from '@lynx/components/ContentSection';
+import {modalActions} from '@lynx/redux/reducers/modals';
+import {useSettingsState} from '@lynx/redux/reducers/settings';
+import {useUserState} from '@lynx/redux/reducers/user';
+import {AppDispatch} from '@lynx/redux/store';
+import {Download2_Icon} from '@lynx_assets/icons';
 import {SubscribeStages} from '@lynx_common/types';
 import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import userIpc from '@lynx_shared/ipc/user';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {Download2_Icon} from '../../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../../shared/sentry/Breadcrumbs';
-import SettingsSection from '../../../components/ContentSection';
-import {modalActions} from '../../../redux/reducers/modals';
-import {useSettingsState} from '../../../redux/reducers/settings';
-import {useUserState} from '../../../redux/reducers/user';
-import {AppDispatch} from '../../../redux/store';
 
 export const DashboardUpdateId = 'settings_update_elem';
 

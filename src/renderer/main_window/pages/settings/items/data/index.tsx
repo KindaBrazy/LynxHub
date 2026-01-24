@@ -1,13 +1,13 @@
 import {Button} from '@heroui/react';
+import SettingsSection from '@lynx/components/ContentSection';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {AppDispatch} from '@lynx/redux/store';
+import {Database_Icon, OpenFolder_Icon, Refresh_Icon} from '@lynx_assets/icons';
 import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Database_Icon, OpenFolder_Icon, Refresh_Icon} from '../../../../../shared/assets/icons';
-import SettingsSection from '../../../../components/ContentSection';
-import {lynxTopToast} from '../../../../hooks/utils';
-import {AppDispatch} from '../../../../redux/store';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 export const SettingsDataId = 'settings_data_elem';

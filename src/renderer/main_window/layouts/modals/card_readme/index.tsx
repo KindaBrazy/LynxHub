@@ -1,10 +1,10 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import MarkdownViewer from '@lynx/components/MarkdownViewer';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useModalsState} from '@lynx/redux/reducers/modals';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, useMemo} from 'react';
 
-import MarkdownViewer from '../../../components/MarkdownViewer';
-import {extensionsData} from '../../../plugins/extensions/loader';
-import {useModalsState} from '../../../redux/reducers/modals';
 import {useTabModalLifecycle} from '../useTabModalManager';
 
 type Props = {isOpen: boolean; url: string; title: string; tabID: string};

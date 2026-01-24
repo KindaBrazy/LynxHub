@@ -1,13 +1,13 @@
+import NavigatePluginsPage from '@lynx/components/NavigatePluginsPage';
+import Page from '@lynx/pages/Page';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useGetCardsByPath} from '@lynx/plugins/modules';
 import {AvailablePageIDs} from '@lynx_common/consts';
 import {Result} from 'antd';
 import {LayoutGroup} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
 import {FC, memo, useMemo} from 'react';
 
-import Page from '../../pages/Page';
-import {extensionsData} from '../../plugins/extensions/loader';
-import {useGetCardsByPath} from '../../plugins/modules';
-import NavigatePluginsPage from '../NavigatePluginsPage';
 import RenderCardList from './RenderList';
 
 export const GetComponentsByPath = memo(

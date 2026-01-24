@@ -1,11 +1,10 @@
 import {Button} from '@heroui/react';
+import {tabsActions} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {Plugins_Icon} from '@lynx_assets/icons';
 import {PageID, PageTitles} from '@lynx_common/consts';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {Plugins_Icon} from '../../shared/assets/icons';
-import {tabsActions} from '../redux/reducers/tabs';
-import {AppDispatch} from '../redux/store';
 
 export default function NavigatePluginsPage({size}: {size?: 'sm' | 'md'}) {
   const dispatch = useDispatch<AppDispatch>();

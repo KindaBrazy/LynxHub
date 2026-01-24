@@ -1,7 +1,6 @@
 import {Button, Tooltip} from '@heroui/react';
+import {CheckDuo_Icon, CopyDuo_Icon} from '@lynx_assets/icons';
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
-
-import {CheckDuo_Icon, CopyDuo_Icon} from '../../shared/assets/icons';
 
 type Props = {tooltipTitle?: string; showTooltip?: boolean; contentToCopy: string; className?: string};
 

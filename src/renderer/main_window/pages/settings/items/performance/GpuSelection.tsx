@@ -1,10 +1,10 @@
+import LynxSwitch from '@lynx/components/LynxSwitch';
+import {AppDispatch} from '@lynx/redux/store';
+import {showRestartModal} from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import LynxSwitch from '../../../../components/LynxSwitch';
-import {AppDispatch} from '../../../../redux/store';
-import {showRestartModal} from '../../../../utils';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function GpuSelection() {

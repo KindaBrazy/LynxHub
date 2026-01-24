@@ -1,10 +1,10 @@
 import {Button} from '@heroui/react';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useAppState} from '@lynx/redux/reducers/app';
+import {Home_Icon} from '@lynx_assets/icons';
 import isEmpty from 'lodash/isEmpty';
 import {memo, useMemo} from 'react';
 
-import {Home_Icon} from '../../../shared/assets/icons';
-import {extensionsData} from '../../plugins/extensions/loader';
-import {useAppState} from '../../redux/reducers/app';
 import TabContainer from '../tabs';
 import WindowButtons from './WindowButtons';
 

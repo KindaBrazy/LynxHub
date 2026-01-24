@@ -1,3 +1,4 @@
+import {searchInStrings} from '@lynx/utils';
 import {AvailablePageIDs} from '@lynx_common/consts';
 import {
   ArgumentsData,
@@ -15,8 +16,6 @@ import storageIpc from '@lynx_shared/ipc/storage';
 import {captureException} from '@sentry/electron/renderer';
 import {compact} from 'lodash';
 import {useSyncExternalStore} from 'react';
-
-import {searchInStrings} from '../../utils';
 
 type CardSearchData = {id: string; data: string[]}[];
 

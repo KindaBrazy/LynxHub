@@ -1,7 +1,6 @@
 import {Chip, Spinner} from '@heroui/react';
+import {CheckResult, RowData} from '@lynx/types';
 import {motion} from 'framer-motion';
-
-import {CheckResult, RowData} from '../types';
 
 function getStatusProps(status: CheckResult): {color: 'success' | 'danger' | 'default'; label: string} {
   switch (status) {

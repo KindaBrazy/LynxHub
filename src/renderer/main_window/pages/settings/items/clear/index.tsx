@@ -9,16 +9,16 @@ import {
   PopoverTrigger,
   Spinner,
 } from '@heroui/react';
+import SettingsSection from '@lynx/components/ContentSection';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {AppDispatch} from '@lynx/redux/store';
+import {BroomDuo_Icon, RefreshDuo_Icon, Trash_Icon} from '@lynx_assets/icons';
 import storageIpc from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {Database} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {BroomDuo_Icon, RefreshDuo_Icon, Trash_Icon} from '../../../../../shared/assets/icons';
-import SettingsSection from '../../../../components/ContentSection';
-import {lynxTopToast} from '../../../../hooks/utils';
-import {AppDispatch} from '../../../../redux/store';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 export const SettingsClearId = 'settings_rmv_data_elem';

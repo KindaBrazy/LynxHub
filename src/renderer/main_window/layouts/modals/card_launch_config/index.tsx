@@ -1,15 +1,15 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useModalsState} from '@lynx/redux/reducers/modals';
+import {AppDispatch} from '@lynx/redux/store';
+import {modalMotionProps} from '@lynx/utils/constants';
 import {ChosenArgumentsData} from '@lynx_common/types';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Fragment, Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useDebounceBreadcrumb} from '../../../../shared/sentry/Breadcrumbs';
-import {lynxTopToast} from '../../../hooks/utils';
-import {extensionsData} from '../../../plugins/extensions/loader';
-import {useModalsState} from '../../../redux/reducers/modals';
-import {AppDispatch} from '../../../redux/store';
-import {modalMotionProps} from '../../../utils/constants';
 import {useTabModalLifecycle} from '../useTabModalManager';
 import CardArguments from './arguments';
 import CustomRun from './custom_run';

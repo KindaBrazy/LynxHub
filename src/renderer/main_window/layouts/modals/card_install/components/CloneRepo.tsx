@@ -1,4 +1,9 @@
 import {Card, CardBody, CardHeader, Link, ModalBody, Progress} from '@heroui/react';
+import OpenDialog from '@lynx/components/OpenDialog';
+import {modalActions} from '@lynx/redux/reducers/modals';
+import {AppDispatch} from '@lynx/redux/store';
+import {initGitProgress} from '@lynx/utils/constants';
+import {Folder2_Icon, GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {extractGitUrl, isWin} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
@@ -10,11 +15,6 @@ import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {Folder2_Icon, GitHub_Icon} from '../../../../../shared/assets/icons';
-import OpenDialog from '../../../../components/OpenDialog';
-import {modalActions} from '../../../../redux/reducers/modals';
-import {AppDispatch} from '../../../../redux/store';
-import {initGitProgress} from '../../../../utils/constants';
 import CloneOptions from './CloneOptions';
 
 export type CloneOptionsResult = {

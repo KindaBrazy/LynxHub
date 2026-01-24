@@ -1,17 +1,16 @@
+import {appActions} from '@lynx/redux/reducers/app';
+import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
+import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
+import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
+import {useTerminalState} from '@lynx/redux/reducers/terminal';
+import {AppDispatch} from '@lynx/redux/store';
+import {defaultTabItem} from '@lynx/utils/constants';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {LynxHotkey} from '@lynx_common/types/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {appActions} from '../redux/reducers/app';
-import {cardsActions, useCardsState} from '../redux/reducers/cards';
-import {useHotkeysState} from '../redux/reducers/hotkeys';
-import {tabsActions, useTabsState} from '../redux/reducers/tabs';
-import {useTerminalState} from '../redux/reducers/terminal';
-import {AppDispatch} from '../redux/store';
-import {defaultTabItem} from '../utils/constants';
 
 const LINE_ENDING = window.osPlatform === 'win32' ? '\r' : '\n';
 

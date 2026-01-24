@@ -1,9 +1,8 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {useTabVisibility} from '@lynx/layouts/tabs/utils';
+import {ShieldWarning_Icon} from '@lynx_assets/icons';
 import {APP_AUTHOR_NAME} from '@lynx_common/consts';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
-
-import {ShieldWarning_Icon} from '../../../shared/assets/icons';
-import {useTabVisibility} from '../../layouts/tabs/utils';
 
 type Props = {
   isOpen: boolean;

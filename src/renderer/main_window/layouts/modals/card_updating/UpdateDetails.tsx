@@ -15,13 +15,13 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
+import {modalActions, useModalsState} from '@lynx/redux/reducers/modals';
+import {AppDispatch} from '@lynx/redux/store';
 import {Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {ReactNode, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {modalActions, useModalsState} from '../../../redux/reducers/modals';
-import {AppDispatch} from '../../../redux/store';
 import {useTabVisibility} from '../../tabs/utils';
 
 const {Paragraph, Text} = Typography;

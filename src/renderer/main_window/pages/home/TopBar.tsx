@@ -1,12 +1,11 @@
 import {Button} from '@heroui/react';
+import {cardsActions} from '@lynx/redux/reducers/cards';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {Add_Icon, Terminal_Icon, Web_Icon} from '@lynx_assets/icons';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {motion} from 'framer-motion';
 import {useDispatch} from 'react-redux';
-
-import {Add_Icon, Terminal_Icon, Web_Icon} from '../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../shared/sentry/Breadcrumbs';
-import {cardsActions} from '../../redux/reducers/cards';
-import {useTabsState} from '../../redux/reducers/tabs';
-import {AppDispatch} from '../../redux/store';
 
 export default function Home_TopBar() {
   const activeTab = useTabsState('activeTab');

@@ -1,4 +1,8 @@
 import {cn} from '@heroui/react';
+import {cardsActions} from '@lynx/redux/reducers/cards';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {RunningCard} from '@lynx/types';
 import {Star_Icon} from '@lynx_assets/icons';
 import {formatWebAddress} from '@lynx_common/utils';
 import browserIpc from '@lynx_shared/ipc/browser';
@@ -7,11 +11,6 @@ import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {cardsActions} from '../../../../redux/reducers/cards';
-import {useTabsState} from '../../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../../redux/store';
-import {RunningCard} from '../../../../types';
 
 type Props = {
   runningCard: RunningCard;

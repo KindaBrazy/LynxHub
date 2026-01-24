@@ -1,10 +1,10 @@
 import {Button} from '@heroui/react';
+import {terminalActions} from '@lynx/redux/reducers/terminal';
+import {AppDispatch} from '@lynx/redux/store';
+import {RefreshDuo_Icon} from '@lynx_assets/icons';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {RefreshDuo_Icon} from '../../../../../shared/assets/icons';
-import {terminalActions} from '../../../../redux/reducers/terminal';
-import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function Reset() {

@@ -1,12 +1,11 @@
 import {Button} from '@heroui/react';
+import {tabsActions} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {defaultTabItem} from '@lynx/utils/constants';
+import {Add_Icon} from '@lynx_assets/icons';
 import {motion} from 'framer-motion';
 import {memo} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {Add_Icon} from '../../../shared/assets/icons';
-import {tabsActions} from '../../redux/reducers/tabs';
-import {AppDispatch} from '../../redux/store';
-import {defaultTabItem} from '../../utils/constants';
 
 const NewTab = memo(() => {
   const dispatch = useDispatch<AppDispatch>();

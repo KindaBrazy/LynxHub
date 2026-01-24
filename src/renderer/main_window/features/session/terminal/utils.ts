@@ -1,8 +1,7 @@
+import {isWebgl2Supported} from '@lynx/utils';
+import {getColor} from '@lynx/utils/constants';
 import {SystemInfo, TerminalUseConpty} from '@lynx_common/types/ipc';
 import {ITheme, IWindowsPty} from '@xterm/xterm';
-
-import {isWebgl2Supported} from '../../../utils';
-import {getColor} from '../../../utils/constants';
 
 /**
  * Determines the Windows PTY backend based on system info and user settings.

@@ -1,6 +1,6 @@
+import {CheckSquareDuo_Icon} from '@lynx_assets/icons';
 import {ChosenArgument} from '@lynx_common/types';
 
-import {CheckSquareDuo_Icon} from '../../../../../../../shared/assets/icons';
 import ArgumentItemBase from './Base';
 
 type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void; id: string};

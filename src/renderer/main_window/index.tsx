@@ -1,7 +1,7 @@
 import './index.css';
 import '@xterm/xterm/css/xterm.css';
 import 'overlayscrollbars/overlayscrollbars.css';
-import '../shared/sentry/init';
+import '@lynx_shared/sentry/init';
 
 import ErrorWrapper from '@lynx/components/ErrorWrapper';
 import {loadExtensions} from '@lynx/plugins/extensions';
@@ -9,13 +9,13 @@ import loadModules from '@lynx/plugins/modules';
 import {getStorageData, initializeStorage} from '@lynx/redux/storage_init';
 import {createStore} from '@lynx/redux/store';
 import {isDev} from '@lynx_common/utils';
+import {onBreadcrumbStateChange} from '@lynx_shared/sentry/Breadcrumbs';
 import {reactErrorHandler} from '@sentry/react';
 import log from 'electron-log/renderer';
 import {createRoot, RootOptions} from 'react-dom/client';
 import {ErrorBoundary} from 'react-error-boundary';
 import {Provider as ReduxProvider} from 'react-redux';
 
-import {onBreadcrumbStateChange} from '../shared/sentry/Breadcrumbs';
 import App from './App';
 
 // Initialize storage first (single IPC call for all data)

@@ -1,11 +1,10 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {isLinuxPortable} from '@lynx/hooks/utils';
+import {modalActions, useModalsState} from '@lynx/redux/reducers/modals';
+import {AppDispatch} from '@lynx/redux/store';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {useDispatch} from 'react-redux';
-
-import {isLinuxPortable} from '../../../hooks/utils';
-import {modalActions, useModalsState} from '../../../redux/reducers/modals';
-import {AppDispatch} from '../../../redux/store';
 
 export function RestartModal() {
   const dispatch = useDispatch<AppDispatch>();

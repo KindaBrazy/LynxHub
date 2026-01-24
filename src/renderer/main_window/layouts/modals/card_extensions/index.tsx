@@ -1,13 +1,13 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
+import {useIsAutoUpdateExtensions} from '@lynx/hooks/utils';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useModalsState} from '@lynx/redux/reducers/modals';
+import {modalMotionProps} from '@lynx/utils/constants';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {isEmpty} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
-import {useDebounceBreadcrumb} from '../../../../shared/sentry/Breadcrumbs';
-import {useIsAutoUpdateExtensions} from '../../../hooks/utils';
-import {extensionsData} from '../../../plugins/extensions/loader';
-import {useModalsState} from '../../../redux/reducers/modals';
-import {modalMotionProps} from '../../../utils/constants';
 import {useTabModalLifecycle} from '../useTabModalManager';
 import Available from './available';
 import Clone from './Clone';

@@ -1,4 +1,5 @@
-import LynxScroll from '../../components/LynxScroll';
+import LynxScroll from '@lynx/components/LynxScroll';
+
 import {SettingsSections} from './Container';
 
 type Props = {sectionTexts: Map<string, string>};

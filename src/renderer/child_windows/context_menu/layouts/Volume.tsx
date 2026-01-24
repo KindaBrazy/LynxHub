@@ -1,11 +1,10 @@
 import {Button, Slider} from '@heroui/react';
+import {contextActions, useContextState} from '@lynx/redux/reducer';
+import {ContextDispatch} from '@lynx/redux/store';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useEffect, useMemo, useRef} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {contextActions, useContextState} from '../redux/reducer';
-import {ContextDispatch} from '../redux/store';
 
 const VolumeMenu = memo(() => {
   const {id, tabId, volume, muted, globalMuted} = useContextState('browserVolume');

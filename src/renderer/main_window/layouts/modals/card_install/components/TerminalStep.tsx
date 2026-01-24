@@ -1,4 +1,4 @@
-import XTermCore from '../../../../components/XTermCore';
+import XTermCore from '@lynx/components/XTermCore';
 
 type Props = {id: string};
 

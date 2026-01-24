@@ -1,7 +1,7 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {ShieldWarning_Icon} from '@lynx_assets/icons';
 import {Dispatch, SetStateAction} from 'react';
 
-import {ShieldWarning_Icon} from '../../../../../shared/assets/icons';
 import {useTabVisibility} from '../../../tabs/utils';
 
 type Props = {isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>; tabId: string};

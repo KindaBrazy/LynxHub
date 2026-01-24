@@ -1,6 +1,5 @@
 import {Card, CardBody, CardHeader, Skeleton} from '@heroui/react';
-
-import {ContainersBg} from '../../utils/common_styles';
+import {ContainersBg} from '@lynx/utils/common_styles';
 
 const SettingsContentSkeleton = () => {
   return (

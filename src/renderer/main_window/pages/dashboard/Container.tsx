@@ -1,8 +1,8 @@
+import {extensionsData} from '@lynx/plugins/extensions/loader';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import {isEmpty} from 'lodash';
 import {useEffect, useMemo, useState} from 'react';
 
-import {extensionsData} from '../../plugins/extensions/loader';
 import DashboardAbout, {DashboardAboutId} from './content/About';
 import DashboardCredits, {DashboardCreditsId} from './content/Credits';
 import DashboardProfile, {DashboardProfileId} from './content/profile';

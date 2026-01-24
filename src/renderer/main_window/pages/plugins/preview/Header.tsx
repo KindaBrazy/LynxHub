@@ -1,9 +1,6 @@
 import {Button, Chip, User} from '@heroui/react';
-import {PluginInstalledItem} from '@lynx_common/types/plugins';
-import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
-import {getPluginIconUrl} from '@lynx_common/utils/plugins';
-import {useMemo} from 'react';
-
+import {usePluginsState} from '@lynx/redux/reducers/plugins';
+import {useUserState} from '@lynx/redux/reducers/user';
 import {
   ArrowDuo_Icon,
   BoxDuo_Icon,
@@ -13,10 +10,13 @@ import {
   HomeSmile_Icon,
   Plugins_Icon,
   UserDuo_Icon,
-} from '../../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../../shared/sentry/Breadcrumbs';
-import {usePluginsState} from '../../../redux/reducers/plugins';
-import {useUserState} from '../../../redux/reducers/user';
+} from '@lynx_assets/icons';
+import {PluginInstalledItem} from '@lynx_common/types/plugins';
+import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
+import {getPluginIconUrl} from '@lynx_common/utils/plugins';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {useMemo} from 'react';
+
 import ActionButtons from './ActionButtons';
 
 export default function PreviewHeader({installedExt}: {installedExt: PluginInstalledItem | undefined}) {

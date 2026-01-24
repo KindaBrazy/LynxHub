@@ -1,9 +1,6 @@
 import {Button, Card, CardBody, CardHeader, ScrollShadow} from '@heroui/react';
-import staticsIpc from '@lynx_shared/ipc/statics';
-import {motion} from 'framer-motion';
-import {isEmpty} from 'lodash';
-import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
-
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {ContainersBg} from '@lynx/utils/common_styles';
 import {
   Download2_Icon,
   Info_Icon,
@@ -11,9 +8,12 @@ import {
   User_Icon,
   UserDuo_Icon,
   UserHeart_Icon,
-} from '../../../shared/assets/icons';
-import {extensionsData} from '../../plugins/extensions/loader';
-import {ContainersBg} from '../../utils/common_styles';
+} from '@lynx_assets/icons';
+import staticsIpc from '@lynx_shared/ipc/statics';
+import {motion} from 'framer-motion';
+import {isEmpty} from 'lodash';
+import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
+
 import SettingsSearchHighlight from '../settings/SettingsSearchHighlight';
 import {dashboardSectionId} from './Container';
 

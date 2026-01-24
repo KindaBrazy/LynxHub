@@ -1,13 +1,13 @@
+import SessionView from '@lynx/features/session';
+import HomePage from '@lynx/pages/home';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useCardsState} from '@lynx/redux/reducers/cards';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {useTerminalState} from '@lynx/redux/reducers/terminal';
+import {PageComponents} from '@lynx/utils/constants';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {useEffect, useMemo} from 'react';
 
-import SessionView from '../features/session';
-import HomePage from '../pages/home';
-import {extensionsData} from '../plugins/extensions/loader';
-import {useCardsState} from '../redux/reducers/cards';
-import {useTabsState} from '../redux/reducers/tabs';
-import {useTerminalState} from '../redux/reducers/terminal';
-import {PageComponents} from '../utils/constants';
 import {useRemoveTab} from './tabs/utils';
 
 export default function AppPages() {

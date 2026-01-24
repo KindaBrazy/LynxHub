@@ -1,8 +1,7 @@
+import {extensionsData} from '@lynx/plugins/extensions/loader';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {isEmpty, isNil} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
-
-import {extensionsData} from '../../plugins/extensions/loader';
 
 const classNames = 'flex size-full items-center overflow-x-scroll scrollbar-hide';
 

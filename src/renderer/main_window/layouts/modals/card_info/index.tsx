@@ -1,17 +1,17 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
+import {useInstalledCard} from '@lynx/hooks/utils';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {modalActions, useModalsState} from '@lynx/redux/reducers/modals';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
 import {CardInfoDescriptions} from '@lynx_common/types/plugins/modules';
 import {extractGitUrl, getCacheUrl, validateGitRepoUrl} from '@lynx_common/utils';
+import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Result} from 'antd';
 import {isEmpty, startCase} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useDebounceBreadcrumb} from '../../../../shared/sentry/Breadcrumbs';
-import {useInstalledCard} from '../../../hooks/utils';
-import {extensionsData} from '../../../plugins/extensions/loader';
-import {modalActions, useModalsState} from '../../../redux/reducers/modals';
-import {useTabsState} from '../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../redux/store';
 import {useTabModalLifecycle} from '../useTabModalManager';
 import CardInfoDescription from './Description';
 import useCardInfoApi from './useCardInfoApi';

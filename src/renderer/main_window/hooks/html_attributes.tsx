@@ -1,8 +1,7 @@
+import {useAppState} from '@lynx/redux/reducers/app';
+import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {APP_NAME} from '@lynx_common/consts';
 import {useEffect} from 'react';
-
-import {useAppState} from '../redux/reducers/app';
-import {useSettingsState} from '../redux/reducers/settings';
 
 /** HTML attributes and document title */
 export default function useHtmlAttributes() {

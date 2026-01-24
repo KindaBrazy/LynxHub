@@ -1,17 +1,17 @@
 import {Button, useDisclosure} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {showRestartModal} from '@lynx/utils';
+import {Download2_Icon, SettingsMinimal_Icon, Trash_Icon} from '@lynx_assets/icons';
 import {extractGitUrl} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Download2_Icon, SettingsMinimal_Icon, Trash_Icon} from '../../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../../shared/sentry/Breadcrumbs';
-import {lynxTopToast} from '../../../hooks/utils';
-import {pluginsActions, usePluginsState} from '../../../redux/reducers/plugins';
-import {useTabsState} from '../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../redux/store';
-import {showRestartModal} from '../../../utils';
 import {UpdateButton} from '../Elements';
 import ModuleConfigModal from '../ModuleConfigModal';
 import SecurityWarning from '../SecurityWarning';

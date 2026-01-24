@@ -1,11 +1,11 @@
 import {Input, Spinner} from '@heroui/react';
+import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
+import {searchInStrings} from '@lynx/utils';
+import {Circle_Icon} from '@lynx_assets/icons';
 import {validateGitRepoUrl} from '@lynx_common/utils';
 import {Empty, List, PaginationProps} from 'antd';
 import {useEffect, useState} from 'react';
 
-import {Circle_Icon} from '../../../../../shared/assets/icons';
-import {getCardMethod, useAllCardMethods} from '../../../../plugins/modules';
-import {searchInStrings} from '../../../../utils';
 import RenderItem from './RenderItem';
 
 type Props = {

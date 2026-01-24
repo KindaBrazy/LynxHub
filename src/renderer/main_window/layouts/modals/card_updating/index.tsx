@@ -1,4 +1,8 @@
 import {Button} from '@heroui/react';
+import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
+import {modalActions} from '@lynx/redux/reducers/modals';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Descriptions, notification} from 'antd';
@@ -7,10 +11,6 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {PullResult} from 'simple-git';
 
-import {cardsActions, useCardsState} from '../../../redux/reducers/cards';
-import {modalActions} from '../../../redux/reducers/modals';
-import {useTabsState} from '../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../redux/store';
 import UpdateDetails from './UpdateDetails';
 
 /** Modal to display the updated card result and info */

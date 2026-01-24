@@ -1,9 +1,9 @@
+import LynxSwitch from '@lynx/components/LynxSwitch';
+import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
+import {AppDispatch} from '@lynx/redux/store';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import LynxSwitch from '../../../../components/LynxSwitch';
-import {terminalActions, useTerminalState} from '../../../../redux/reducers/terminal';
-import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function OutputColor() {

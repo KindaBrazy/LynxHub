@@ -1,7 +1,6 @@
 import {Input} from '@heroui/react';
+import {Circle_Icon} from '@lynx_assets/icons';
 import {Dispatch, memo, SetStateAction} from 'react';
-
-import {Circle_Icon} from '../../../shared/assets/icons';
 
 type Props = {searchValue: string; setSearchValue: Dispatch<SetStateAction<string>>};
 

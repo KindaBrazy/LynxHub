@@ -1,9 +1,8 @@
 import {Button, Card, CardBody, CardHeader, Input, ScrollShadow} from '@heroui/react';
-import {SpedometerMiddle} from '@solar-icons/react-perf/BoldDuotone';
-import {AnimatePresence, motion} from 'framer-motion';
-import {ReactNode, useCallback, useMemo} from 'react';
-import {useDispatch} from 'react-redux';
-
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
+import {searchInStrings} from '@lynx/utils';
+import {ContainersBg} from '@lynx/utils/common_styles';
 import {
   Circle_Icon,
   Database_Icon,
@@ -14,11 +13,12 @@ import {
   Trash_Icon,
   Tuning_Icon,
   Web_Icon,
-} from '../../../shared/assets/icons';
-import {extensionsData} from '../../plugins/extensions/loader';
-import {settingsActions, useSettingsState} from '../../redux/reducers/settings';
-import {searchInStrings} from '../../utils';
-import {ContainersBg} from '../../utils/common_styles';
+} from '@lynx_assets/icons';
+import {SpedometerMiddle} from '@solar-icons/react-perf/BoldDuotone';
+import {AnimatePresence, motion} from 'framer-motion';
+import {ReactNode, useCallback, useMemo} from 'react';
+import {useDispatch} from 'react-redux';
+
 import {settingsSectionId} from './Container';
 import {SettingsGeneralId} from './items/general';
 import SettingsSearchHighlight from './SettingsSearchHighlight';

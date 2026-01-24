@@ -14,22 +14,22 @@ import {
   Progress,
   useDisclosure,
 } from '@heroui/react';
+import LynxScroll from '@lynx/components/LynxScroll';
+import {tabsActions} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {BellDuo_Icon, CheckDuo_Icon, ExternalDuo_Icon} from '@lynx_assets/icons';
 import {AvailablePageIDs, PageID, PageTitles} from '@lynx_common/consts';
 import {Notification_Data} from '@lynx_common/types';
 import {isValidURL} from '@lynx_common/utils';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {BellDuo_Icon, CheckDuo_Icon, ExternalDuo_Icon} from '../../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../../shared/sentry/Breadcrumbs';
-import LynxScroll from '../../../components/LynxScroll';
-import {tabsActions} from '../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../redux/store';
 import useStaticNotifications from './StaticNotifications';
 
 export default function Home_Notification() {

@@ -1,13 +1,13 @@
 import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useModalsState} from '@lynx/redux/reducers/modals';
+import {AppDispatch} from '@lynx/redux/store';
+import {ShieldCross_Icon} from '@lynx_assets/icons';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Fragment, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {ShieldCross_Icon} from '../../../../shared/assets/icons';
-import {lynxTopToast} from '../../../hooks/utils';
-import {extensionsData} from '../../../plugins/extensions/loader';
-import {useModalsState} from '../../../redux/reducers/modals';
-import {AppDispatch} from '../../../redux/store';
 import {useTabModalLifecycle} from '../useTabModalManager';
 
 type Props = {cardId: string; isOpen: boolean; tabID: string};

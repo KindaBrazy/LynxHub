@@ -1,9 +1,9 @@
 import {ScrollShadow} from '@heroui/react';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {Rocket_Icon} from '@lynx_assets/icons';
 import {motion, Variants} from 'framer-motion';
 import {memo} from 'react';
 
-import {Rocket_Icon} from '../../../shared/assets/icons';
-import {extensionsData} from '../../plugins/extensions/loader';
 import CardsContainer, {CardContainerClasses} from '../CardsContainer';
 import Page from '../Page';
 

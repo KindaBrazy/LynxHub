@@ -11,15 +11,15 @@ import {
   useDisclosure,
   User,
 } from '@heroui/react';
-import {PluginInstalledItem, PluginItem} from '@lynx_common/types/plugins';
-import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
-import {getPluginIconUrl} from '@lynx_common/utils/plugins';
-import gitIpc from '@lynx_shared/ipc/git';
-import pluginsIpc from '@lynx_shared/ipc/plugins';
-import {useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
-import {SimpleGitProgressEvent} from 'simple-git';
-
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {
+  pluginsActions,
+  useIsInstallingPlugin,
+  useIsUninstallingPlugin,
+  usePluginsState,
+} from '@lynx/redux/reducers/plugins';
+import {AppDispatch} from '@lynx/redux/store';
+import {showRestartModal} from '@lynx/utils';
 import {
   ArrowDuo_Icon,
   CheckDuo_Icon,
@@ -30,17 +30,17 @@ import {
   ShieldWarning_Icon,
   TrashDuo_Icon,
   Windows_Icon,
-} from '../../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../../shared/sentry/Breadcrumbs';
-import {lynxTopToast} from '../../../hooks/utils';
-import {
-  pluginsActions,
-  useIsInstallingPlugin,
-  useIsUninstallingPlugin,
-  usePluginsState,
-} from '../../../redux/reducers/plugins';
-import {AppDispatch} from '../../../redux/store';
-import {showRestartModal} from '../../../utils';
+} from '@lynx_assets/icons';
+import {PluginInstalledItem, PluginItem} from '@lynx_common/types/plugins';
+import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
+import {getPluginIconUrl} from '@lynx_common/utils/plugins';
+import gitIpc from '@lynx_shared/ipc/git';
+import pluginsIpc from '@lynx_shared/ipc/plugins';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {SimpleGitProgressEvent} from 'simple-git';
+
 import {UpdateButton} from '../Elements';
 import ModuleConfigModal from '../ModuleConfigModal';
 

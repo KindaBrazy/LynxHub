@@ -1,9 +1,8 @@
 import {Button, Card, CardBody, CardHeader} from '@heroui/react';
+import LynxTooltip from '@lynx/components/LynxTooltip';
+import {Add_Icon} from '@lynx_assets/icons';
 import {isEmpty, isString} from 'lodash';
 import {ReactNode} from 'react';
-
-import {Add_Icon} from '../../../../shared/assets/icons';
-import LynxTooltip from '../../../components/LynxTooltip';
 
 type Props = {
   children: ReactNode;

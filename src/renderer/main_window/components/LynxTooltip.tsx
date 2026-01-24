@@ -1,6 +1,5 @@
 import {Tooltip, TooltipProps} from '@heroui/react';
-
-import {useDisableTooltip} from '../hooks/utils';
+import {useDisableTooltip} from '@lynx/hooks/utils';
 
 type Props = TooltipProps & {
   isEssential?: boolean;

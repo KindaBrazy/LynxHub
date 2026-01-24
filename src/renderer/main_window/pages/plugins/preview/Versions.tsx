@@ -1,11 +1,10 @@
 import {ChipProps} from '@heroui/chip';
 import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
+import {usePluginsState} from '@lynx/redux/reducers/plugins';
+import {BoxDuo_Icon} from '@lynx_assets/icons';
 import {SubscribeStages} from '@lynx_common/types';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useMemo} from 'react';
-
-import {BoxDuo_Icon} from '../../../../shared/assets/icons';
-import {usePluginsState} from '../../../redux/reducers/plugins';
 
 const getStageName = (stage: SubscribeStages) => {
   return stage === 'insider' ? 'Insider' : stage === 'early_access' ? 'Early Access' : 'Public';

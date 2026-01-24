@@ -1,7 +1,8 @@
-import {PageID, PageTitles} from '@lynx_common/consts';
-import {isEmpty} from 'lodash';
-import {useMemo} from 'react';
-
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {hasCardsByPath} from '@lynx/plugins/modules';
+import {usePluginsState} from '@lynx/redux/reducers/plugins';
+import {useSettingsState} from '@lynx/redux/reducers/settings';
+import {NavItem} from '@lynx/types';
 import {
   AudioGeneration_Icon,
   GamePad_Icon,
@@ -14,12 +15,11 @@ import {
   TextGeneration_Icon,
   Tuning_Icon,
   UserDuo_Icon,
-} from '../../../shared/assets/icons';
-import {extensionsData} from '../../plugins/extensions/loader';
-import {hasCardsByPath} from '../../plugins/modules';
-import {usePluginsState} from '../../redux/reducers/plugins';
-import {useSettingsState} from '../../redux/reducers/settings';
-import {NavItem} from '../../types';
+} from '@lynx_assets/icons';
+import {PageID, PageTitles} from '@lynx_common/consts';
+import {isEmpty} from 'lodash';
+import {useMemo} from 'react';
+
 import NavigationDock from './Dock';
 
 export const ContentsNav = () => {

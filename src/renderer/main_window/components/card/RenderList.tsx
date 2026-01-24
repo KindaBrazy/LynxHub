@@ -1,9 +1,9 @@
+import {useHasArguments} from '@lynx/plugins/modules';
+import {useCardsState} from '@lynx/redux/reducers/cards';
 import {LoadedCardData} from '@lynx_common/types/plugins/modules';
 import {motion, Variants} from 'framer-motion';
 import {memo, useMemo} from 'react';
 
-import {useHasArguments} from '../../plugins/modules';
-import {useCardsState} from '../../redux/reducers/cards';
 import Wrapper from './Wrapper';
 
 const variants: Variants = {

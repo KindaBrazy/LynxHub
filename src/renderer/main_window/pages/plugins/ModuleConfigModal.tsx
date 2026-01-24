@@ -1,4 +1,8 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {AppDispatch} from '@lynx/redux/store';
+import {showRestartModal} from '@lynx/utils';
+import {SettingsMinimal_Icon} from '@lynx_assets/icons';
 import {CardModules, RendererModuleImportType} from '@lynx_common/types/plugins/modules';
 import {isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
@@ -6,11 +10,6 @@ import storageIpc from '@lynx_shared/ipc/storage';
 import {compact} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {SettingsMinimal_Icon} from '../../../shared/assets/icons';
-import {lynxTopToast} from '../../hooks/utils';
-import {AppDispatch} from '../../redux/store';
-import {showRestartModal} from '../../utils';
 
 type CardItem = {id: string; title: string; type: string; enabled: boolean};
 type CategoryCards = {category: string; cards: CardItem[]};

@@ -1,14 +1,13 @@
 import {Alert, Button, Card, User} from '@heroui/react';
+import {userActions, useUserState} from '@lynx/redux/reducers/user';
+import {AppDispatch} from '@lynx/redux/store';
+import {Patreon_Icon} from '@lynx_assets/icons';
 import {getCacheUrl} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import userIpc from '@lynx_shared/ipc/user';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {Patreon_Icon} from '../../../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../../../shared/sentry/Breadcrumbs';
-import {userActions, useUserState} from '../../../../redux/reducers/user';
-import {AppDispatch} from '../../../../redux/store';
 
 export default function Profile_Patreon() {
   const patreonLoggedIn = useUserState('patreonLoggedIn');

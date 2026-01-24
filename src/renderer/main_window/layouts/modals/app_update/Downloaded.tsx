@@ -1,12 +1,11 @@
 import {Button} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {settingsActions} from '@lynx/redux/reducers/settings';
+import {AppDispatch} from '@lynx/redux/store';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {Result} from 'antd';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {lynxTopToast} from '../../../hooks/utils';
-import {settingsActions} from '../../../redux/reducers/settings';
-import {AppDispatch} from '../../../redux/store';
 
 type Props = {errMsg?: string; success: boolean; tryAgain: () => void; cancel: () => void; onClose: () => void};
 

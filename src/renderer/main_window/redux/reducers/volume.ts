@@ -1,7 +1,7 @@
+import {VolumeState} from '@lynx/types/reducers';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {VolumeState} from '../../types/reducers';
 import {RootState} from '../store';
 
 type VolumeStateTypes = {

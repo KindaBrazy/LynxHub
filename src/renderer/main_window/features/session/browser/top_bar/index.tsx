@@ -1,7 +1,7 @@
+import {useCardsState} from '@lynx/redux/reducers/cards';
+import {RunningCard} from '@lynx/types';
 import {memo, useMemo} from 'react';
 
-import {useCardsState} from '../../../../redux/reducers/cards';
-import {RunningCard} from '../../../../types';
 import Browser_ActionButtons from './ActionButtons';
 import Browser_AddressBar from './AddressBar';
 import Browser_Search from './Search';

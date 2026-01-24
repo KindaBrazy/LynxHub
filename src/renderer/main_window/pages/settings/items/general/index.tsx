@@ -1,5 +1,6 @@
-import {Tuning_Icon} from '../../../../../shared/assets/icons';
-import SettingsSection from '../../../../components/ContentSection';
+import SettingsSection from '@lynx/components/ContentSection';
+import {Tuning_Icon} from '@lynx_assets/icons';
+
 import CollectErrors from './CollectErrors';
 import Confirm from './Confirm';
 import Taskbar from './Taskbar';

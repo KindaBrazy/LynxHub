@@ -1,6 +1,6 @@
+import {FolderDuo_Icon} from '@lynx_assets/icons';
 import {ChosenArgument} from '@lynx_common/types';
 
-import {FolderDuo_Icon} from '../../../../../../../shared/assets/icons';
 import PathArgItem from './Path';
 
 type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void; id: string};

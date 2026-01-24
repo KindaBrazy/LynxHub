@@ -1,12 +1,12 @@
 import {Button, Checkbox, CheckboxGroup} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {AppDispatch} from '@lynx/redux/store';
+import {BroomDuo_Icon} from '@lynx_assets/icons';
 import browserIpc from '@lynx_shared/ipc/browser';
 import isEmpty from 'lodash/isEmpty';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {BroomDuo_Icon} from '../../../../../shared/assets/icons';
-import {lynxTopToast} from '../../../../hooks/utils';
-import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 

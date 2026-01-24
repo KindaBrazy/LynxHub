@@ -1,8 +1,7 @@
 import {Button} from '@heroui/react';
+import SettingsSection from '@lynx/components/ContentSection';
+import {ExternalDuo_Icon, GitHub_Icon, SmileCircleDuo_Icon} from '@lynx_assets/icons';
 import {ISSUE_PAGE} from '@lynx_common/consts';
-
-import {ExternalDuo_Icon, GitHub_Icon, SmileCircleDuo_Icon} from '../../../../shared/assets/icons';
-import SettingsSection from '../../../components/ContentSection';
 
 export const DashboardReportIssueId = 'settings_report_issue_elem';
 

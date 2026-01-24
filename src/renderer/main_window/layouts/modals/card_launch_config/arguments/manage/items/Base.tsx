@@ -1,11 +1,10 @@
 import {Button, Card, CardBody, CardHeader, Divider} from '@heroui/react';
+import {useGetArgumentsByID} from '@lynx/plugins/modules';
 import {getArgumentDescription} from '@lynx/utils/module_arguments';
+import {Grip_Icon, TrashDuo_Icon} from '@lynx_assets/icons';
 import {Tooltip} from 'antd';
 import {Reorder, useDragControls} from 'framer-motion';
 import {ReactNode, useMemo} from 'react';
-
-import {Grip_Icon, TrashDuo_Icon} from '../../../../../../../shared/assets/icons';
-import {useGetArgumentsByID} from '../../../../../../plugins/modules';
 
 type Props = {
   onClick?: () => void;

@@ -1,4 +1,7 @@
 import {Button, Card, CardBody, Image, Tooltip} from '@heroui/react';
+import {cardsActions} from '@lynx/redux/reducers/cards';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
 import {Web_Icon} from '@lynx_assets/icons';
 import {FavIcons} from '@lynx_common/types/ipc';
 import {formatWebAddress, getCacheUrl, getUrlName} from '@lynx_common/utils';
@@ -6,10 +9,6 @@ import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {cardsActions} from '../../../redux/reducers/cards';
-import {useTabsState} from '../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../redux/store';
 
 type Props = {
   recent: string;

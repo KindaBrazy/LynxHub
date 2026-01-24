@@ -1,9 +1,9 @@
 import {Button, Input} from '@heroui/react';
+import {useContextState} from '@lynx/redux/reducer';
 import windowDialogsIpc from '@lynx_shared/ipc/dialogs_window';
 import {Check, TextCursorInput, X} from 'lucide-react';
 import {memo, useEffect, useState} from 'react';
 
-import {useContextState} from '../../redux/reducer';
 import {hideContextWindow} from '../Shared';
 
 const PromptWindow = memo(() => {

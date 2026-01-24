@@ -1,8 +1,8 @@
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useAppState} from '@lynx/redux/reducers/app';
 import {isEmpty} from 'lodash';
 import {memo, useMemo} from 'react';
 
-import {extensionsData} from '../../plugins/extensions/loader';
-import {useAppState} from '../../redux/reducers/app';
 import {ContentsNav, SettingsNav} from './Buttons';
 
 const CONTAINER_WIDTH = 'w-[5.5rem]';

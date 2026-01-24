@@ -1,8 +1,8 @@
+import {defaultTabItem} from '@lynx/utils/constants';
 import {TabInfo} from '@lynx_common/types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {defaultTabItem} from '../../utils/constants';
 import {RootState} from '../store';
 
 type TabState = {

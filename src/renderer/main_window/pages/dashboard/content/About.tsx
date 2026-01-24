@@ -1,4 +1,19 @@
 import {Avatar, Card, Chip} from '@heroui/react';
+import SettingsSection from '@lynx/components/ContentSection';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {AppDispatch} from '@lynx/redux/store';
+import {
+  Copy_Icon,
+  DiscordColor_Icon,
+  ExternalDuo_Icon,
+  GitHub_Icon,
+  Gmail_Icon,
+  Info_Icon,
+  Reddit_Icon,
+  Scales_Icon,
+  XSite_Icon,
+} from '@lynx_assets/icons';
+import {Youtube_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
 import {
   APP_BUILD_NUMBER,
   APP_DETAILED_DESCRIPTION,
@@ -16,22 +31,6 @@ import {
 } from '@lynx_common/consts';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {
-  Copy_Icon,
-  DiscordColor_Icon,
-  ExternalDuo_Icon,
-  GitHub_Icon,
-  Gmail_Icon,
-  Info_Icon,
-  Reddit_Icon,
-  Scales_Icon,
-  XSite_Icon,
-} from '../../../../shared/assets/icons';
-import {Youtube_Color_Icon} from '../../../../shared/assets/icons/Icons_Colorful';
-import SettingsSection from '../../../components/ContentSection';
-import {lynxTopToast} from '../../../hooks/utils';
-import {AppDispatch} from '../../../redux/store';
 
 export const DashboardAboutId = 'settings_about_elem';
 

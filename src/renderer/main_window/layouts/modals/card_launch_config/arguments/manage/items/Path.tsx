@@ -1,13 +1,13 @@
 import {Button} from '@heroui/react';
+import {useGetArgumentsByID} from '@lynx/plugins/modules';
+import {useCardsState} from '@lynx/redux/reducers/cards';
 import {getArgumentDefaultValue} from '@lynx/utils/module_arguments';
+import {RefreshDuo_Icon} from '@lynx_assets/icons';
 import {ChosenArgument} from '@lynx_common/types';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Tooltip} from 'antd';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {RefreshDuo_Icon} from '../../../../../../../shared/assets/icons';
-import {useGetArgumentsByID} from '../../../../../../plugins/modules';
-import {useCardsState} from '../../../../../../redux/reducers/cards';
 import ArgumentItemBase from './Base';
 import AutoCompletePath from './Path_AutoComplete';
 

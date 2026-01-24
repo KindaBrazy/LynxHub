@@ -1,9 +1,8 @@
 import {Button, Input} from '@heroui/react';
+import {Grip_Icon, TrashDuo_Icon} from '@lynx_assets/icons';
 import {Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {KeyboardEvent, useCallback, useState} from 'react';
-
-import {Grip_Icon, TrashDuo_Icon} from '../../../../shared/assets/icons';
 
 type Props = {
   index: number;

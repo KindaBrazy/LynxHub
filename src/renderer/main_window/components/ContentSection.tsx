@@ -1,10 +1,9 @@
 import {Card, CardBody, CardHeader} from '@heroui/react';
+import SettingsSearchHighlight from '@lynx/pages/settings/SettingsSearchHighlight';
+import {useRegisterSectionSearch} from '@lynx/pages/settings/SettingsSearchRegistry';
+import {ContainersBg} from '@lynx/utils/common_styles';
 import {motion} from 'framer-motion';
 import {ReactNode} from 'react';
-
-import SettingsSearchHighlight from '../pages/settings/SettingsSearchHighlight';
-import {useRegisterSectionSearch} from '../pages/settings/SettingsSearchRegistry';
-import {ContainersBg} from '../utils/common_styles';
 
 type Props = {
   title: string;

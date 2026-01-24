@@ -1,11 +1,10 @@
 import {Button} from '@heroui/react';
+import {useVolumeState, volumeActions} from '@lynx/redux/reducers/volume';
+import {AppDispatch} from '@lynx/redux/store';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {useVolumeState, volumeActions} from '../../redux/reducers/volume';
-import {AppDispatch} from '../../redux/store';
 
 type Props = {
   tabId: string;

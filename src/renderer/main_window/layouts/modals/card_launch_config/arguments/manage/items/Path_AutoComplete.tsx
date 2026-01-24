@@ -1,10 +1,9 @@
 import {Autocomplete, AutocompleteItem} from '@heroui/react';
+import {searchInStrings} from '@lynx/utils';
+import {File_Icon, Folder2_Icon} from '@lynx_assets/icons';
 import {FolderListData} from '@lynx_common/types';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Key, useEffect, useState} from 'react';
-
-import {File_Icon, Folder2_Icon} from '../../../../../../../shared/assets/icons';
-import {searchInStrings} from '../../../../../../utils';
 
 type Props = {
   baseDir: string;

@@ -1,4 +1,5 @@
 import {Button, Input} from '@heroui/react';
+import {useContextState} from '@lynx/redux/reducer';
 import {Circle_Icon} from '@lynx_assets/icons';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
@@ -6,7 +7,6 @@ import {isEmpty} from 'lodash';
 import {X} from 'lucide-react';
 import {type KeyboardEvent, memo, useEffect, useRef, useState} from 'react';
 
-import {useContextState} from '../redux/reducer';
 import {hideContextWindow} from './Shared';
 
 const FindInPage = memo(() => {
