@@ -1,8 +1,8 @@
 import {browserDownloadChannels} from '@lynx_common/consts/ipc_channels/download_manager';
 import {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '@lynx_common/types/download_manager';
 import {MainHT} from '@lynx_common/types/ipc';
+import classHolder from '@lynx_main/core/class_holder';
 
-import classHolder from '../core/class_holder';
 import lynxIpc from './lynxIpc';
 import {sendToCM, sendToMain} from './sender';
 

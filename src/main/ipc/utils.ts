@@ -6,8 +6,8 @@ import {
   MainHT,
   OnUpdatingExtensions,
 } from '@lynx_common/types/ipc';
+import {getImageCacheManager} from '@lynx_main/core/image_cache';
 
-import {getImageCacheManager} from '../core/image_cache';
 import lynxIpc from './lynxIpc';
 import {decompressFile, getImageAsDataURL, isResponseValid} from './methods';
 import {

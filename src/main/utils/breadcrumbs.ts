@@ -1,6 +1,5 @@
+import classHolder from '@lynx_main/core/class_holder';
 import {addBreadcrumb} from '@sentry/electron/main';
-
-import classHolder from '../core/class_holder';
 
 export default function AddBreadcrumb_Main(message: string) {
   const {storageManager} = classHolder;

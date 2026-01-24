@@ -8,9 +8,9 @@ import {
   PluginSyncItem,
   UnloadedPlugins,
 } from '@lynx_common/types/plugins';
+import classHolder from '@lynx_main/core/class_holder';
+import {getList} from '@lynx_main/plugins/utils';
 
-import classHolder from '../../core/class_holder';
-import {getList} from '../../plugins/utils';
 import lynxIpc from '../lynxIpc';
 import {sendToMain} from '../sender';
 

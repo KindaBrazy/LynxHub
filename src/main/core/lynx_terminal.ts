@@ -2,12 +2,12 @@ import fs from 'node:fs';
 import {platform} from 'node:os';
 import path from 'node:path';
 
+import {ptyIpc} from '@lynx_main/ipc/pty';
+import {determineShell} from '@lynx_main/utils';
 import {app} from 'electron';
 import pty from 'node-pty';
 import treeKill from 'tree-kill';
 
-import {ptyIpc} from '../ipc/pty';
-import {determineShell} from '../utils';
 import classHolder from './class_holder';
 
 /** Manages pseudo-terminal (PTY) processes for different shells. */

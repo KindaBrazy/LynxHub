@@ -1,11 +1,11 @@
 import os from 'node:os';
 
+import {APP_NAME, APP_NAME_VERSION} from '@lynx_common/consts';
+import {EMenuItem} from '@lynx_main/plugins/extensions/types';
 import {Menu, Tray} from 'electron';
 
 import trayIconMenu from '../../../resources/16x16.png?asset';
 import trayIcon from '../../../resources/icon.ico?asset';
-import {APP_NAME, APP_NAME_VERSION} from '../../common/consts';
-import {EMenuItem} from '../plugins/extensions/types';
 import classHolder from './class_holder';
 
 /** Manages the system tray icon and its context menu for the application. */

@@ -3,14 +3,14 @@ import {writeFile} from 'node:fs/promises';
 import {platform} from 'node:os';
 import path from 'node:path';
 
+import {FolderListData} from '@lynx_common/types';
+import {ChangeWindowState, DarkModeTypes, TaskbarStatus} from '@lynx_common/types/ipc';
+import classHolder from '@lynx_main/core/class_holder';
+import {noticeAllWindowsDarkMode} from '@lynx_main/utils';
 import decompress from 'decompress';
 import {app, clipboard, dialog, nativeImage, net, shell} from 'electron';
 import {promises, readdir} from 'graceful-fs';
 
-import {FolderListData} from '../../../common/types';
-import {ChangeWindowState, DarkModeTypes, TaskbarStatus} from '../../../common/types/ipc';
-import classHolder from '../../core/class_holder';
-import {noticeAllWindowsDarkMode} from '../../utils';
 import {applicationIpc} from '../application';
 
 /**

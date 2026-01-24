@@ -1,6 +1,6 @@
+import {gitIpc} from '@lynx_main/ipc/git';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {gitIpc} from '../ipc/git';
 import GitManager from './index';
 
 /**

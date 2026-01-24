@@ -1,7 +1,7 @@
 import windowDialogsChannels from '@lynx_common/consts/ipc_channels/dialogs_window';
+import classHolder from '@lynx_main/core/class_holder';
 import {IpcMainEvent} from 'electron';
 
-import classHolder from '../core/class_holder';
 import lynxIpc from './lynxIpc';
 import {sendToCM} from './sender';
 

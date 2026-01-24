@@ -3,12 +3,12 @@ import path from 'node:path';
 import {is} from '@electron-toolkit/utils';
 import toastWindowChannels from '@lynx_common/consts/ipc_channels/toast_window';
 import {ToastWindow_MessageType} from '@lynx_common/types';
+import classHolder from '@lynx_main/core/class_holder';
+import lynxIpc from '@lynx_main/ipc/lynxIpc';
+import {RelaunchApp} from '@lynx_main/utils';
 import {app, BrowserWindow} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
-import classHolder from '../core/class_holder';
-import lynxIpc from '../ipc/lynxIpc';
-import {RelaunchApp} from '../utils';
 
 export default function ShowToastWindow(
   message: ToastWindow_MessageType,

@@ -1,24 +1,24 @@
 import {dirname, join} from 'node:path';
 
-import {captureException} from '@sentry/electron/main';
-import {constants, promises, readdirSync} from 'graceful-fs';
-import {includes, isString} from 'lodash';
-
-import {SubscribeStages} from '../../common/types';
+import {SubscribeStages} from '@lynx_common/types';
 import {
   PluginAddresses,
   PluginInstalledItem,
   PluginSyncItem,
   UnloadedPlugins,
   ValidatedPlugins,
-} from '../../common/types/plugins';
-import {getUpdateType} from '../../common/utils/plugins';
-import classHolder from '../core/class_holder';
-import {getAppDirectory} from '../core/data_folder';
-import GitManager from '../git';
-import {setupGitManagerListeners} from '../git/helper';
-import {removeDir} from '../ipc/methods';
-import {pluginsIpc} from '../ipc/plugins/plugins';
+} from '@lynx_common/types/plugins';
+import {getUpdateType} from '@lynx_common/utils/plugins';
+import classHolder from '@lynx_main/core/class_holder';
+import {getAppDirectory} from '@lynx_main/core/data_folder';
+import GitManager from '@lynx_main/git';
+import {setupGitManagerListeners} from '@lynx_main/git/helper';
+import {removeDir} from '@lynx_main/ipc/methods';
+import {pluginsIpc} from '@lynx_main/ipc/plugins/plugins';
+import {captureException} from '@sentry/electron/main';
+import {constants, promises, readdirSync} from 'graceful-fs';
+import {includes, isString} from 'lodash';
+
 import {pluginFolders} from './constants';
 import ExtensionManager from './extensions';
 import ModuleManager from './modules';

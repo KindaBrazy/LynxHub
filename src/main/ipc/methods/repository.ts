@@ -1,9 +1,9 @@
 // Git repository IPC methods - Handles Git operations (clone, pull, branch changes, etc.)
 import path from 'node:path';
 
-import {ShallowCloneOptions} from '../../../common/types/git';
-import GitManager from '../../git';
-import {setupGitManagerListeners} from '../../git/helper';
+import {ShallowCloneOptions} from '@lynx_common/types/git';
+import GitManager from '@lynx_main/git';
+import {setupGitManagerListeners} from '@lynx_main/git/helper';
 
 export function shallowClone(options: ShallowCloneOptions): void {
   const manager = new GitManager(true);

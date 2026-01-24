@@ -1,10 +1,9 @@
 import {accessSync, constants as fsConstants, existsSync, mkdirSync} from 'node:fs';
 import {basename, join, parse} from 'node:path';
 
+import classHolder from '@lynx_main/core/class_holder';
+import listenDownloadManager, {downloadManagerIpc} from '@lynx_main/ipc/download_manager';
 import {app, BrowserWindow, dialog, DownloadItem, Session, shell} from 'electron';
-
-import classHolder from '../core/class_holder';
-import listenDownloadManager, {downloadManagerIpc} from '../ipc/download_manager';
 
 /**
  * Error types for file system operations

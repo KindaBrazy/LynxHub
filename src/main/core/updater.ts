@@ -1,7 +1,7 @@
+import {applicationIpc} from '@lynx_main/ipc/application';
 import electron_log from 'electron-log';
 import updater from 'electron-updater';
 
-import {applicationIpc} from '../ipc/application';
 import classHolder from './class_holder';
 
 const {autoUpdater, CancellationToken} = updater;

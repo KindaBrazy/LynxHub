@@ -1,20 +1,20 @@
 import {clearInterval} from 'node:timers';
 
+import {toMs} from '@lynx_common/utils';
+import BrowserDownloadManager from '@lynx_main/child_windows/browser_download_manager';
+import ContextMenuManager from '@lynx_main/child_windows/context_menu';
+import LinkPreviewManager from '@lynx_main/child_windows/link_preview';
+import ShareScreenManager from '@lynx_main/child_windows/share_screen';
+import {applicationIpc} from '@lynx_main/ipc/application';
+import ElectronAppManager from '@lynx_main/main_window';
+import {PluginManager} from '@lynx_main/plugins';
+import ExtensionManager from '@lynx_main/plugins/extensions';
+import ModuleManager from '@lynx_main/plugins/modules';
+import {ValidateCards} from '@lynx_main/plugins/modules/cards_validator';
+import StorageManager from '@lynx_main/storage/helper';
 import axios from 'axios';
 import {app, BrowserWindow} from 'electron';
 
-import {toMs} from '../../common/utils';
-import BrowserDownloadManager from '../child_windows/browser_download_manager';
-import ContextMenuManager from '../child_windows/context_menu';
-import LinkPreviewManager from '../child_windows/link_preview';
-import ShareScreenManager from '../child_windows/share_screen';
-import {applicationIpc} from '../ipc/application';
-import ElectronAppManager from '../main_window';
-import {PluginManager} from '../plugins';
-import ExtensionManager from '../plugins/extensions';
-import ModuleManager from '../plugins/modules';
-import {ValidateCards} from '../plugins/modules/cards_validator';
-import StorageManager from '../storage/helper';
 import StaticsManager from './statics';
 import TrayManager from './tray';
 

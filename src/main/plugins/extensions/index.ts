@@ -1,10 +1,10 @@
 import path from 'node:path';
 
+import {isDev} from '@lynx_common/utils';
+import ElectronAppManager from '@lynx_main/main_window';
+import StorageManager from '@lynx_main/storage/helper';
 import {captureException} from '@sentry/electron/main';
 
-import {isDev} from '../../../common/utils';
-import ElectronAppManager from '../../main_window';
-import StorageManager from '../../storage/helper';
 import ModuleManager from '../modules';
 import ExtensionApi from './api';
 import {EMenuItem, ExtensionImport_Main} from './types';

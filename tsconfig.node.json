@@ -28,6 +28,9 @@
       ],
       "@lynx_common/*": [
         "./src/common/*"
+      ],
+      "@lynx_main/*": [
+        "./src/main/*"
       ]
     }
   }
