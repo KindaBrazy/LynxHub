@@ -3,10 +3,9 @@ import {stat} from 'node:fs/promises';
 import {platform} from 'node:os';
 import {promisify} from 'node:util';
 
+import {getAppDirectory} from '@lynx_main/core/data_folder';
+import {applicationIpc} from '@lynx_main/ipc/application';
 import path from 'path';
-
-import {getAppDirectory} from '../../core/data_folder';
-import {applicationIpc} from '../../ipc/application';
 
 const execPromise = promisify(exec);
 

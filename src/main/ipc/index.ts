@@ -1,4 +1,5 @@
-import classHolder from '../core/class_holder';
+import classHolder from '@lynx_main/core/class_holder';
+
 import listenApplication from './application';
 import listenContextMenu from './context_menu';
 import listenFiles from './files';

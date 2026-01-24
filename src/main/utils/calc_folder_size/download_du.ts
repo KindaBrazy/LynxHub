@@ -2,13 +2,12 @@ import * as https from 'node:https';
 import os from 'node:os';
 import path from 'node:path';
 
+import ShowToastWindow from '@lynx_main/child_windows/toast';
+import {getAppDirectory} from '@lynx_main/core/data_folder';
 import decompress from 'decompress';
 import {createWriteStream} from 'fs';
 import fs from 'graceful-fs';
 import {pipeline} from 'stream/promises';
-
-import ShowToastWindow from '../../child_windows/toast';
-import {getAppDirectory} from '../../core/data_folder';
 
 const DU_ZIP_URL = 'https://download.sysinternals.com/files/DU.zip';
 const DU_BINARY_NAME = 'du64.exe';

@@ -1,8 +1,8 @@
+import ElectronAppManager from '@lynx_main/main_window';
+import StorageManager from '@lynx_main/storage/helper';
 import {Scope} from '@sentry/node';
 import {MenuItem, MenuItemConstructorOptions} from 'electron';
 
-import ElectronAppManager from '../../main_window';
-import StorageManager from '../../storage/helper';
 import ModuleManager from '../modules';
 
 export type EMenuItem = MenuItemConstructorOptions | MenuItem;

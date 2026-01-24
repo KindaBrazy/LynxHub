@@ -2,20 +2,26 @@ import {platform} from 'node:os';
 import {join} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {APP_NAME} from '@lynx_common/consts';
+import {Get_Default_Hotkeys} from '@lynx_common/consts/hotkeys';
+import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '@lynx_common/types/ipc';
+import StorageTypes from '@lynx_common/types/storage';
+import classHolder from '@lynx_main/core/class_holder';
+import {applicationIpc} from '@lynx_main/ipc/application';
+import {changeWindowState} from '@lynx_main/ipc/methods';
+import {
+  getAbsolutePath,
+  getExePath,
+  getUserAgent,
+  isPortable,
+  lynxEncryptString,
+  lynxEncryptStrings,
+} from '@lynx_main/utils';
 import {app} from 'electron';
 import fs from 'graceful-fs';
 import lodash, {isEmpty} from 'lodash';
 import {LowSync} from 'lowdb';
 import {JSONFileSyncPreset} from 'lowdb/node';
-
-import {APP_NAME} from '../../common/consts';
-import {Get_Default_Hotkeys} from '../../common/consts/hotkeys';
-import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '../../common/types/ipc';
-import StorageTypes from '../../common/types/storage';
-import classHolder from '../core/class_holder';
-import {applicationIpc} from '../ipc/application';
-import {changeWindowState} from '../ipc/methods';
-import {getAbsolutePath, getExePath, getUserAgent, isPortable, lynxEncryptString, lynxEncryptStrings} from '../utils';
 
 /**
  * Base storage class handling low-level storage operations, migrations, and data persistence

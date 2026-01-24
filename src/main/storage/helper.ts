@@ -1,6 +1,7 @@
 import {platform} from 'node:os';
 
 import {storageUtilsChannels} from '@lynx_common/consts/ipc_channels/storage';
+import {ChosenArgumentsData, ConfirmMenuTypes} from '@lynx_common/types';
 import {
   BrowserHistoryData,
   CustomRunBehaviorData,
@@ -11,13 +12,10 @@ import {
   RecentlyOperation,
   StorageOperation,
 } from '@lynx_common/types/ipc';
-import lodash from 'lodash';
-
-import {ChosenArgumentsData, ConfirmMenuTypes} from '../../common/types';
-import {InstalledCard, InstalledCards} from '../../common/types/storage';
-import {compareUrls, isValidURL} from '../../common/utils';
-import classHolder from '../core/class_holder';
-import {storageUtilsIpc} from '../ipc/storage';
+import {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
+import {compareUrls, isValidURL} from '@lynx_common/utils';
+import classHolder from '@lynx_main/core/class_holder';
+import {storageUtilsIpc} from '@lynx_main/ipc/storage';
 import {
   getAbsolutePath,
   getExePath,
@@ -27,7 +25,9 @@ import {
   lynxDecryptStrings,
   lynxEncryptString,
   lynxEncryptStrings,
-} from '../utils';
+} from '@lynx_main/utils';
+import lodash from 'lodash';
+
 import BaseStorage from './index';
 
 /**

@@ -1,19 +1,18 @@
 import path from 'node:path';
 
 import {MainModuleImportType, MainModules, MainModuleUtils} from '@lynx_common/types/plugins/modules';
+import {InstalledCard} from '@lynx_common/types/storage';
+import {isDev, toMs} from '@lynx_common/utils';
+import classHolder from '@lynx_main/core/class_holder';
+import {getAppDataPath} from '@lynx_main/core/data_folder';
+import GitManager from '@lynx_main/git';
+import {removeDir, trashDir} from '@lynx_main/ipc/methods';
+import {modulesIpc} from '@lynx_main/ipc/plugins/modules';
+import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
 import {captureException} from '@sentry/electron/main';
 import {ipcMain} from 'electron';
 import {compact, isEmpty} from 'lodash';
 import pty from 'node-pty';
-
-import {InstalledCard} from '../../../common/types/storage';
-import {isDev, toMs} from '../../../common/utils';
-import classHolder from '../../core/class_holder';
-import {getAppDataPath} from '../../core/data_folder';
-import GitManager from '../../git';
-import {removeDir, trashDir} from '../../ipc/methods';
-import {modulesIpc} from '../../ipc/plugins/modules';
-import {getAbsolutePath, getExePath, isPortable} from '../../utils';
 
 export default class ModuleManager {
   private checkInterval?: NodeJS.Timeout = undefined;

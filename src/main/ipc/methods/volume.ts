@@ -1,5 +1,5 @@
-import {AudioState} from '../../../common/types/ipc';
-import BrowserManager from '../../core/browser';
+import {AudioState} from '@lynx_common/types/ipc';
+import BrowserManager from '@lynx_main/core/browser';
 
 export async function handleSetVolume(browserManager: BrowserManager, id: string, volume: number): Promise<void> {
   try {

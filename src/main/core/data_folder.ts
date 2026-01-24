@@ -1,19 +1,19 @@
 import {platform} from 'node:os';
 import {dirname, isAbsolute, join} from 'node:path';
 
-import {app, BrowserWindow, dialog} from 'electron';
-import fs from 'graceful-fs';
-import {resolve} from 'path';
-
 import {
   BINARIES_FOLDER_NAME,
   PLUGINS_FOLDER_NAME,
   REPOSITORIES_FOLDER_NAME,
   STATICS_FOLDER_NAME,
-} from '../../common/consts';
-import {FolderNames} from '../../common/types';
-import {changeWindowState} from '../ipc/methods';
-import {getExePath, getRelativePath, isPortable} from '../utils';
+} from '@lynx_common/consts';
+import {FolderNames} from '@lynx_common/types';
+import {changeWindowState} from '@lynx_main/ipc/methods';
+import {getExePath, getRelativePath, isPortable} from '@lynx_main/utils';
+import {app, BrowserWindow, dialog} from 'electron';
+import fs from 'graceful-fs';
+import {resolve} from 'path';
+
 import classHolder from './class_holder';
 
 const DIRECTORIES = [PLUGINS_FOLDER_NAME, BINARIES_FOLDER_NAME, REPOSITORIES_FOLDER_NAME, STATICS_FOLDER_NAME] as const;

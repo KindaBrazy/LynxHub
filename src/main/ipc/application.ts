@@ -12,10 +12,8 @@ import {
   TaskbarStatus,
   WinStateChange,
 } from '@lynx_common/types/ipc';
-import {nativeTheme, shell} from 'electron';
-
-import classHolder from '../core/class_holder';
-import {getAppDataPath, isAppDir, selectNewAppDataFolder} from '../core/data_folder';
+import classHolder from '@lynx_main/core/class_holder';
+import {getAppDataPath, isAppDir, selectNewAppDataFolder} from '@lynx_main/core/data_folder';
 import {
   getSystemDarkMode,
   getWebContentsIfAvailable,
@@ -23,7 +21,9 @@ import {
   isGitInstalled,
   isPwsh7Installed,
   noticeAllWindowsDarkMode,
-} from '../utils';
+} from '@lynx_main/utils';
+import {nativeTheme, shell} from 'electron';
+
 import lynxIpc from './lynxIpc';
 import {changeWindowState, setDarkMode, setTaskbarStatus} from './methods';
 import {getSystemInfo} from './methods/platform';

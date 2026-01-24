@@ -1,6 +1,6 @@
+import StorageManager from '@lynx_main/storage/helper';
 import {app, BrowserWindow, dialog} from 'electron';
 
-import StorageManager from '../storage/helper';
 import {PluginManager} from './index';
 
 export function PluginMigrate(storageManager: StorageManager, pluginManager: PluginManager) {

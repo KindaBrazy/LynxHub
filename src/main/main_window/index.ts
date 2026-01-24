@@ -2,14 +2,14 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import classHolder from '@lynx_main/core/class_holder';
+import RegisterHotkeys from '@lynx_main/core/hotkeys';
+import {applicationIpc} from '@lynx_main/ipc/application';
+import lynxIpc from '@lynx_main/ipc/lynxIpc';
+import {getUserAgent, getWindowColor, RelaunchApp} from '@lynx_main/utils';
 import {app, BrowserWindow, BrowserWindowConstructorOptions, shell, WebContents} from 'electron';
 
 import icon from '../../../resources/icon.png?asset';
-import classHolder from '../core/class_holder';
-import RegisterHotkeys from '../core/hotkeys';
-import {applicationIpc} from '../ipc/application';
-import lynxIpc from '../ipc/lynxIpc';
-import {getUserAgent, getWindowColor, RelaunchApp} from '../utils';
 
 type Listener = () => void;
 

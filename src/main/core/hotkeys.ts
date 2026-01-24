@@ -1,7 +1,6 @@
 import {LynxInput} from '@lynx_common/types/ipc';
+import {applicationIpc} from '@lynx_main/ipc/application';
 import {Event, Input, WebContents} from 'electron';
-
-import {applicationIpc} from '../ipc/application';
 
 const initialKeys: LynxInput = {
   control: false,

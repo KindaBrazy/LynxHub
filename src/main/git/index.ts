@@ -2,6 +2,11 @@
 
 import path from 'node:path';
 
+import {RepositoryInfo} from '@lynx_common/types';
+import {ShallowCloneOptions} from '@lynx_common/types/git';
+import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
+import classHolder from '@lynx_main/core/class_holder';
+import {checkPathExists, openDialog} from '@lynx_main/utils';
 import {isEmpty} from 'lodash';
 import {
   CheckRepoActions,
@@ -13,12 +18,6 @@ import {
   SimpleGitProgressEvent,
   StatusResult,
 } from 'simple-git';
-
-import {RepositoryInfo} from '../../common/types';
-import {ShallowCloneOptions} from '../../common/types/git';
-import {extractGitUrl, validateGitRepoUrl} from '../../common/utils';
-import classHolder from '../core/class_holder';
-import {checkPathExists, openDialog} from '../utils';
 
 /** Manages Git operations such as cloning, pulling, and status checking. */
 export default class GitManager {

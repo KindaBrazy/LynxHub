@@ -1,10 +1,10 @@
 import contextMenuChannels from '@lynx_common/consts/ipc_channels/context_menu';
 import {ContextResizeData} from '@lynx_common/types';
 import {ContextMenuVolumeData, NavHistory} from '@lynx_common/types/ipc';
+import BrowserManager from '@lynx_main/core/browser';
+import classHolder from '@lynx_main/core/class_holder';
 import {ContextMenuParams} from 'electron';
 
-import BrowserManager from '../core/browser';
-import classHolder from '../core/class_holder';
 import {applicationIpc} from './application';
 import {browserIpc} from './browser';
 import {downloadManagerIpc} from './download_manager';

@@ -2,11 +2,8 @@ import {execSync} from 'node:child_process';
 import {platform} from 'node:os';
 import {resolve} from 'node:path';
 
-import {promises} from 'graceful-fs';
-import {satisfies} from 'semver';
-
-import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '../../common/consts';
-import {SubscribeStages} from '../../common/types';
+import {EXTENSION_API_VERSION, MODULE_API_VERSION} from '@lynx_common/consts';
+import {SubscribeStages} from '@lynx_common/types';
 import {
   PluginEngines,
   PluginItem,
@@ -14,13 +11,15 @@ import {
   PluginVersions,
   VersionItem,
   VersionItemValidated,
-} from '../../common/types/plugins';
-import {getUpdateType} from '../../common/utils/plugins';
-import ShowToastWindow from '../child_windows/toast';
-import classHolder from '../core/class_holder';
-import {getAppDataPath, selectNewAppDataFolder} from '../core/data_folder';
-import GitManager from '../git';
-import {RelaunchApp} from '../utils';
+} from '@lynx_common/types/plugins';
+import {getUpdateType} from '@lynx_common/utils/plugins';
+import ShowToastWindow from '@lynx_main/child_windows/toast';
+import classHolder from '@lynx_main/core/class_holder';
+import {getAppDataPath, selectNewAppDataFolder} from '@lynx_main/core/data_folder';
+import GitManager from '@lynx_main/git';
+import {RelaunchApp} from '@lynx_main/utils';
+import {promises} from 'graceful-fs';
+import {satisfies} from 'semver';
 
 export function getTargetVersion(versions: PluginVersions, type: 'module' | 'extension', stage: SubscribeStages) {
   return versions.find(version => isVersionCompatible(version, type, stage).compatible);

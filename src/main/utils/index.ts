@@ -3,12 +3,12 @@ import {platform} from 'node:os';
 import {dirname, isAbsolute, relative, resolve} from 'node:path';
 
 import {AgentTypes, DarkModeTypes} from '@lynx_common/types/ipc';
+import {formatSize} from '@lynx_common/utils';
+import classHolder from '@lynx_main/core/class_holder';
+import {applicationIpc} from '@lynx_main/ipc/application';
 import {app, BrowserWindow, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue, safeStorage} from 'electron';
 import fs from 'graceful-fs';
 
-import {formatSize} from '../../common/utils';
-import classHolder from '../core/class_holder';
-import {applicationIpc} from '../ipc/application';
 import calcFolderSize from './calc_folder_size';
 
 /**

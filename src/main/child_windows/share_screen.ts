@@ -2,6 +2,9 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {ScreenShareSources} from '@lynx_common/types/share_screen';
+import classHolder from '@lynx_main/core/class_holder';
+import {shareScreenIpc} from '@lynx_main/ipc/share_screen';
 import {
   BrowserWindow,
   desktopCapturer,
@@ -10,10 +13,6 @@ import {
   session,
   Streams,
 } from 'electron';
-
-import {ScreenShareSources} from '../../common/types/share_screen';
-import classHolder from '../core/class_holder';
-import {shareScreenIpc} from '../ipc/share_screen';
 
 export default class ShareScreenManager {
   private _selectorWindow?: BrowserWindow;

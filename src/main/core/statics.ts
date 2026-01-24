@@ -1,9 +1,7 @@
 import {existsSync, readdirSync, readFileSync, rmSync} from 'node:fs';
 import {join} from 'node:path';
 
-import {promises} from 'graceful-fs';
-
-import {APP_BUILD_NUMBER, STATICS_URL} from '../../common/consts';
+import {APP_BUILD_NUMBER, STATICS_URL} from '@lynx_common/consts';
 import {
   AppUpdateData,
   AppUpdateInsiderData,
@@ -12,10 +10,12 @@ import {
   Notification_Data,
   PatreonSupporter,
   SubscribeStages,
-} from '../../common/types';
-import {PluginMetadata, PluginVersioning} from '../../common/types/plugins';
-import {toMs} from '../../common/utils';
-import GitManager from '../git';
+} from '@lynx_common/types';
+import {PluginMetadata, PluginVersioning} from '@lynx_common/types/plugins';
+import {toMs} from '@lynx_common/utils';
+import GitManager from '@lynx_main/git';
+import {promises} from 'graceful-fs';
+
 import classHolder from './class_holder';
 import {getAppDirectory} from './data_folder';
 

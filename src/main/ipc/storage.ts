@@ -13,9 +13,9 @@ import {
   StorageOperation,
 } from '@lynx_common/types/ipc';
 import StorageTypes, {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
+import classHolder from '@lynx_main/core/class_holder';
 import {app} from 'electron';
 
-import classHolder from '../core/class_holder';
 import lynxIpc from './lynxIpc';
 import {sendToMain} from './sender';
 

@@ -1,14 +1,13 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {ContextResizeData} from '@lynx_common/types';
+import classHolder from '@lynx_main/core/class_holder';
+import {contextMenuIpc} from '@lynx_main/ipc/context_menu';
+import {dialogBlured} from '@lynx_main/ipc/dialogs_window';
+import lynxIpc from '@lynx_main/ipc/lynxIpc';
+import AddBreadcrumb_Main from '@lynx_main/utils/breadcrumbs';
 import {BrowserWindow, BrowserWindowConstructorOptions, screen, WebContents} from 'electron';
-
-import {ContextResizeData} from '../../common/types';
-import classHolder from '../core/class_holder';
-import {contextMenuIpc} from '../ipc/context_menu';
-import {dialogBlured} from '../ipc/dialogs_window';
-import lynxIpc from '../ipc/lynxIpc';
-import AddBreadcrumb_Main from '../utils/breadcrumbs';
 
 export default class ContextMenuManager {
   private contextMenuWindow?: BrowserWindow;

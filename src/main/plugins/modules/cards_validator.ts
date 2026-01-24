@@ -1,13 +1,12 @@
 import path from 'node:path';
 
+import {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
+import classHolder from '@lynx_main/core/class_holder';
+import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
+import AddBreadcrumb_Main from '@lynx_main/utils/breadcrumbs';
 import {FSWatcher, watch} from 'chokidar';
 import {promises} from 'graceful-fs';
 import lodash from 'lodash';
-
-import {InstalledCard, InstalledCards} from '../../../common/types/storage';
-import classHolder from '../../core/class_holder';
-import {getAbsolutePath, getExePath, isPortable} from '../../utils';
-import AddBreadcrumb_Main from '../../utils/breadcrumbs';
 
 type PathCards = {
   id: string;

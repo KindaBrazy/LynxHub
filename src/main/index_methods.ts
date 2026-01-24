@@ -2,9 +2,9 @@ import {platform} from 'node:os';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 
+import {APP_BUILD_NUMBER, APP_VERSION} from '@lynx_common/consts';
 import {app, net, protocol} from 'electron';
 
-import {APP_BUILD_NUMBER, APP_VERSION} from '../common/consts';
 import ShareScreenManager from './child_windows/share_screen';
 import classHolder from './core/class_holder';
 import {getAppDirectory} from './core/data_folder';

@@ -1,12 +1,12 @@
 import {platform} from 'node:os';
 
 import {electronApp, optimizer} from '@electron-toolkit/utils';
+import {APP_NAME} from '@lynx_common/consts';
+import {isDev} from '@lynx_common/utils';
 import {app, Menu, nativeImage} from 'electron';
 import log from 'electron-log/main';
 
 import darwinIcon from '../../resources/icon-darwin.png?asset';
-import {APP_NAME} from '../common/consts';
-import {isDev} from '../common/utils';
 import LoadingWindow from './child_windows/loading';
 import ShowToastWindow from './child_windows/toast';
 import classHolder from './core/class_holder';

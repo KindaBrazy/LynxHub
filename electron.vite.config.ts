@@ -33,7 +33,10 @@ export default defineConfig(({mode}) => {
         },
       },
       resolve: {
-        alias: {'@lynx_common': resolve(__dirname, 'src/common')},
+        alias: {
+          '@lynx_common': resolve(__dirname, 'src/common'),
+          '@lynx_main': resolve(__dirname, 'src/main'),
+        },
       },
     },
 

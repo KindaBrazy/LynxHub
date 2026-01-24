@@ -8,8 +8,8 @@ import {
   PatreonSupporter,
 } from '@lynx_common/types';
 import {MainHT} from '@lynx_common/types/ipc';
+import classHolder from '@lynx_main/core/class_holder';
 
-import classHolder from '../core/class_holder';
 import lynxIpc from './lynxIpc';
 
 export default async function listenStatics() {
