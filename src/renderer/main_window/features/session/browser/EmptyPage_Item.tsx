@@ -2,11 +2,10 @@ import {Button, Card, CardBody, Image, Tooltip} from '@heroui/react';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
-import {Web_Icon} from '@lynx_assets/icons';
 import {FavIcons} from '@lynx_common/types/ipc';
 import {formatWebAddress, getCacheUrl, getUrlName} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {Earth, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -54,7 +53,7 @@ export default function EmptyPage_Item({recent, type, favIconMap, onDataChange}:
           {favIcon && !imgError ? (
             <Image alt="" radius="full" src={favIcon} className="size-8" onError={() => setImgError(true)} />
           ) : (
-            <Web_Icon className="size-8" />
+            <Earth className="size-8" />
           )}
           <span className="truncate text-wrap w-full line-clamp-2 text-sm">{displayName}</span>
           <Button

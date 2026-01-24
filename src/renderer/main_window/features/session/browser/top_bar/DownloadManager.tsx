@@ -1,6 +1,6 @@
 import {Badge, Button} from '@heroui/react';
-import {DownloadDuo_Icon} from '@lynx_assets/icons';
 import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
+import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useState} from 'react';
 
 export default function DownloadManager() {
@@ -27,7 +27,7 @@ export default function DownloadManager() {
       placement="bottom-right"
       className="border-0 mr-1.5 mb-1.5 scale-75 pointer-events-none">
       <Button size="sm" variant="light" className="cursor-default" onPress={openDownloadsWindow} isIconOnly>
-        <DownloadDuo_Icon className="size-4" />
+        <DownloadMinimalistic className="size-4" />
       </Button>
     </Badge>
   );
