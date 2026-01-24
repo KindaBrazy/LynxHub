@@ -1,9 +1,10 @@
 import {Button} from '@heroui/react';
-import PluginSelector from '@lynx/components/PluginSelector';
-import RequirementsChecker from '@lynx/components/RequirementsChecker';
-import {RequirementStatus} from '@lynx/types';
 import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
+
+import PluginSelector from '../components/PluginSelector';
+import RequirementsChecker from '../components/RequirementsChecker';
+import {RequirementStatus} from '../types';
 
 const containerVariants = {
   hidden: {opacity: 0, y: 20},

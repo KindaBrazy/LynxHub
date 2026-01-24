@@ -1,10 +1,10 @@
 import {Button, Chip} from '@heroui/react';
-import {contextActions, useContextState} from '@lynx/redux/reducer';
 import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
 import {Broom, DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {contextActions, useContextState} from '../../redux/reducer';
 import DownloadItem from './Item';
 
 const DownloadMenu = memo(() => {

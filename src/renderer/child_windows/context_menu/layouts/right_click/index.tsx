@@ -1,7 +1,7 @@
 import {Divider} from '@heroui/react';
-import {useContextState} from '@lynx/redux/reducer';
 import {memo} from 'react';
 
+import {useContextState} from '../../redux/reducer';
 import {Edit} from './Edit';
 import {Image} from './Image';
 import {Links} from './Links';
