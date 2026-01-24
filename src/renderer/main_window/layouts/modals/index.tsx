@@ -1,6 +1,6 @@
+import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {memo, useMemo} from 'react';
 
-import {extensionsData} from '../../plugins/extensions/loader';
 import {RestartModal} from './app_restart';
 import UpdateApp from './app_update';
 import CardExtensionsModal from './card_extensions';

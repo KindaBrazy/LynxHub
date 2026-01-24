@@ -1,10 +1,10 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
+import {AppDispatch} from '@lynx/redux/store';
+import {showRestartModal} from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../../../redux/store';
-import {showRestartModal} from '../../../../utils';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 

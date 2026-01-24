@@ -1,8 +1,7 @@
 import {Button, Link, Popover, PopoverContent, PopoverTrigger, Spinner} from '@heroui/react';
+import {CrossShield_Icon, Lock_Icon, Trash_Icon, Unlock_Icon} from '@lynx_assets/icons';
 import {Empty, Space, Spin} from 'antd';
 import {Variants} from 'framer-motion';
-
-import {CrossShield_Icon, Lock_Icon, Trash_Icon, Unlock_Icon} from '../../../../shared/assets/icons';
 
 export const tabContentVariants: Variants = {
   animate: {opacity: 1, scale: 1, transition: {duration: 0.2}},

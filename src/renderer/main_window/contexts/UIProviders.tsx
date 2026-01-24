@@ -1,9 +1,8 @@
 import {StyleProvider} from '@ant-design/cssinjs';
 import {HeroUIProvider, ToastProvider} from '@heroui/react';
+import {useAppState} from '@lynx/redux/reducers/app';
 import {ConfigProvider as AntDProvider, message, notification, theme} from 'antd';
 import {ReactNode, useLayoutEffect, useMemo} from 'react';
-
-import {useAppState} from '../redux/reducers/app';
 
 /** Config HeroUI and AntD and return providers */
 export default function UIProviders({children}: {children: ReactNode}) {

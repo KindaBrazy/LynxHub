@@ -1,8 +1,8 @@
+import LynxSwitch from '@lynx/components/LynxSwitch';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
 
-import LynxSwitch from '../../../../components/LynxSwitch';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 /** Manage launch app on system startup */

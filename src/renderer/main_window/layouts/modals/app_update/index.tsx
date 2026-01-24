@@ -1,4 +1,12 @@
 import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {lynxTopToast, RenderSubItems} from '@lynx/hooks/utils';
+import {useCardsState} from '@lynx/redux/reducers/cards';
+import {modalActions, useModalsState} from '@lynx/redux/reducers/modals';
+import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {useUserState} from '@lynx/redux/reducers/user';
+import {AppDispatch} from '@lynx/redux/store';
+import {modalMotionProps} from '@lynx/utils/constants';
 import {APP_BUILD_NUMBER, EARLY_RELEASES_PAGE, INSIDER_RELEASES_PAGE, RELEASES_PAGE} from '@lynx_common/consts';
 import {AppUpdateInfo, UpdateDownloadProgress} from '@lynx_common/types';
 import applicationIpc from '@lynx_shared/ipc/application';
@@ -8,14 +16,6 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast, RenderSubItems} from '../../../hooks/utils';
-import {useCardsState} from '../../../redux/reducers/cards';
-import {modalActions, useModalsState} from '../../../redux/reducers/modals';
-import {settingsActions, useSettingsState} from '../../../redux/reducers/settings';
-import {useTabsState} from '../../../redux/reducers/tabs';
-import {useUserState} from '../../../redux/reducers/user';
-import {AppDispatch} from '../../../redux/store';
-import {modalMotionProps} from '../../../utils/constants';
 import {useTabVisibility} from '../../tabs/utils';
 import Downloaded from './Downloaded';
 import Downloading from './Downloading';

@@ -1,10 +1,9 @@
 import {Button} from '@heroui/react';
+import {cardsActions} from '@lynx/redux/reducers/cards';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
 import {Terminal_Icon, Web_Icon} from '@lynx_assets/icons';
 import {useDispatch} from 'react-redux';
-
-import {cardsActions} from '../../../redux/reducers/cards';
-import {useTabsState} from '../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../redux/store';
 
 type Props = {currentView: 'browser' | 'terminal'};
 export default function Switch({currentView}: Props) {

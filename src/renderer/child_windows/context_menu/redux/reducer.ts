@@ -1,3 +1,4 @@
+import {showContextWindow} from '@lynx/layouts/Shared';
 import {DownloadItemInfo} from '@lynx_common/types/download_manager';
 import {ContextMenuVolumeData, ContextWindowWidthSizes} from '@lynx_common/types/ipc';
 import {NavHistory} from '@lynx_common/types/ipc';
@@ -7,7 +8,6 @@ import {cloneDeep} from 'lodash';
 import {useSelector} from 'react-redux';
 
 import {MenuTypes} from '../consts';
-import {showContextWindow} from '../layouts/Shared';
 import {RootState} from './store';
 
 type ZoomLayout = {id: string; factor: number};

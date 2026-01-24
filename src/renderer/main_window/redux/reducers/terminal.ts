@@ -1,8 +1,8 @@
+import {TerminalState} from '@lynx/types/reducers';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {TerminalState} from '../../types/reducers';
 import {RootState} from '../store';
 
 type TerminalStateTypes = {

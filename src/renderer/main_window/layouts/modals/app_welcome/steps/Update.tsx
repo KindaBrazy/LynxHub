@@ -1,12 +1,11 @@
 import {Alert, Button} from '@heroui/react';
+import CheckRow from '@lynx/components/CheckRow';
+import {RowData} from '@lynx/types';
+import {CheckDuo_Icon} from '@lynx_assets/icons';
 import {APP_NAME} from '@lynx_common/consts';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {motion} from 'framer-motion';
 import {useCallback, useEffect, useState} from 'react';
-
-import {CheckDuo_Icon} from '../../../../../shared/assets/icons';
-import CheckRow from '../components/CheckRow';
-import {RowData} from '../types';
 
 const containerVariants = {
   hidden: {opacity: 0, y: 20},

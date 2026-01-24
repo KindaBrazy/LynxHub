@@ -1,8 +1,8 @@
+import {useAppState} from '@lynx/redux/reducers/app';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {PageID} from '@lynx_common/consts';
 import {memo} from 'react';
 
-import {useAppState} from '../redux/reducers/app';
-import {useTabsState} from '../redux/reducers/tabs';
 import AppPages from './AppPages';
 import NavBar from './nav_bar';
 import StatusBar from './status_bar';

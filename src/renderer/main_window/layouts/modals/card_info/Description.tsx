@@ -1,12 +1,11 @@
 import {Button, Link, Spinner} from '@heroui/react';
+import {OpenFolder_Icon} from '@lynx_assets/icons';
 import {CardInfoDescriptions, CardInfoDescriptions_Items} from '@lynx_common/types/plugins/modules';
 import {isValidURL} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Descriptions, DescriptionsProps, Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {useCallback} from 'react';
-
-import {OpenFolder_Icon} from '../../../../shared/assets/icons';
 
 type Props = {
   folders: string[] | undefined;

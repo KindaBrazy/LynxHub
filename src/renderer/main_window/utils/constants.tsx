@@ -1,20 +1,19 @@
 import {TRANSITION_EASINGS} from '@heroui/framer-utils';
+import AgentsPage from '@lynx/pages/agents/AgentsPage';
+import AudioGenerationPage from '@lynx/pages/audio';
+import DashboardPage from '@lynx/pages/dashboard';
+import GamesPage from '@lynx/pages/games';
+import HomePage from '@lynx/pages/home';
+import ImageGenerationPage from '@lynx/pages/image';
+import OthersPage from '@lynx/pages/others';
+import Index from '@lynx/pages/plugins';
+import SettingsPage from '@lynx/pages/settings';
+import TextGenerationPage from '@lynx/pages/text';
+import ToolsPage from '@lynx/pages/tools';
 import {PageID} from '@lynx_common/consts';
 import {TabInfo} from '@lynx_common/types';
 import {HTMLMotionProps} from 'framer-motion';
 import {SimpleGitProgressEvent} from 'simple-git';
-
-import AgentsPage from '../pages/agents/AgentsPage';
-import AudioGenerationPage from '../pages/audio';
-import DashboardPage from '../pages/dashboard';
-import GamesPage from '../pages/games';
-import HomePage from '../pages/home';
-import ImageGenerationPage from '../pages/image';
-import OthersPage from '../pages/others';
-import Index from '../pages/plugins';
-import SettingsPage from '../pages/settings';
-import TextGenerationPage from '../pages/text';
-import ToolsPage from '../pages/tools';
 
 export const PageComponents = {
   [PageID.home]: HomePage,

@@ -1,8 +1,8 @@
 import {Input} from '@heroui/react';
+import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
+import {AppDispatch} from '@lynx/redux/store';
 import {useDispatch} from 'react-redux';
 
-import {terminalActions, useTerminalState} from '../../../../redux/reducers/terminal';
-import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 type QuickCommand = {label: string; command: string};

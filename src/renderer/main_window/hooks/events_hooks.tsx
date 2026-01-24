@@ -1,3 +1,15 @@
+import {useRemoveTab} from '@lynx/layouts/tabs/utils';
+import {useAllCardMethods} from '@lynx/plugins/modules';
+import {appActions, useAppState} from '@lynx/redux/reducers/app';
+import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
+import {hotkeysActions} from '@lynx/redux/reducers/hotkeys';
+import {modalActions} from '@lynx/redux/reducers/modals';
+import {pluginsActions} from '@lynx/redux/reducers/plugins';
+import {settingsActions} from '@lynx/redux/reducers/settings';
+import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
+import {userActions, useUserState} from '@lynx/redux/reducers/user';
+import {AppDispatch} from '@lynx/redux/store';
+import {defaultTabItem} from '@lynx/utils/constants';
 import {APP_BUILD_NUMBER, PageTitleByPageId} from '@lynx_common/consts';
 import {toMs} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
@@ -10,23 +22,11 @@ import staticsIpc from '@lynx_shared/ipc/statics';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import userIpc from '@lynx_shared/ipc/user';
 import utilsIpc from '@lynx_shared/ipc/utils';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import AddBreadcrumb_Renderer from '../../shared/sentry/Breadcrumbs';
-import {useRemoveTab} from '../layouts/tabs/utils';
-import {useAllCardMethods} from '../plugins/modules';
-import {appActions, useAppState} from '../redux/reducers/app';
-import {cardsActions, useCardsState} from '../redux/reducers/cards';
-import {hotkeysActions} from '../redux/reducers/hotkeys';
-import {modalActions} from '../redux/reducers/modals';
-import {pluginsActions} from '../redux/reducers/plugins';
-import {settingsActions} from '../redux/reducers/settings';
-import {tabsActions, useTabsState} from '../redux/reducers/tabs';
-import {userActions, useUserState} from '../redux/reducers/user';
-import {AppDispatch} from '../redux/store';
-import {defaultTabItem} from '../utils/constants';
 import {lynxTopToast} from './utils';
 
 export const useCheckCardsUpdate = () => {

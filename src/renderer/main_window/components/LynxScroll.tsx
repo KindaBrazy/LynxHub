@@ -1,8 +1,7 @@
+import {useAppState} from '@lynx/redux/reducers/app';
 import {OverflowBehavior} from 'overlayscrollbars';
 import {OverlayScrollbarsComponent} from 'overlayscrollbars-react';
 import {ReactNode} from 'react';
-
-import {useAppState} from '../redux/reducers/app';
 
 type Props = {
   children?: ReactNode;

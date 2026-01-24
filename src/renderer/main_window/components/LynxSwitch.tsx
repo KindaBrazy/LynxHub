@@ -1,7 +1,6 @@
 import {cn, Switch} from '@heroui/react';
+import SettingsSearchHighlight from '@lynx/pages/settings/SettingsSearchHighlight';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
-
-import SettingsSearchHighlight from '../pages/settings/SettingsSearchHighlight';
 
 type Props = {
   enabled?: boolean;

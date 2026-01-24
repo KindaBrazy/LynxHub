@@ -14,14 +14,14 @@ import {
   ModalHeader,
   useDisclosure,
 } from '@heroui/react';
+import LynxScroll from '@lynx/components/LynxScroll';
+import {useGetArgumentsByID} from '@lynx/plugins/modules';
 import {getArgumentDefaultValue, getFilteredArguments} from '@lynx/utils/module_arguments';
+import {Circle_Icon, Filter_Icon} from '@lynx_assets/icons';
 import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
 import {isEmpty, some} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 
-import {Circle_Icon, Filter_Icon} from '../../../../../../shared/assets/icons';
-import LynxScroll from '../../../../../components/LynxScroll';
-import {useGetArgumentsByID} from '../../../../../plugins/modules';
 import {useTabVisibility} from '../../../../tabs/utils';
 import ArgumentCategory from './Category';
 

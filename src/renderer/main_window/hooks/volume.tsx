@@ -1,10 +1,9 @@
+import {useCardsState} from '@lynx/redux/reducers/cards';
+import {volumeActions} from '@lynx/redux/reducers/volume';
+import {AppDispatch} from '@lynx/redux/store';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {useCardsState} from '../redux/reducers/cards';
-import {volumeActions} from '../redux/reducers/volume';
-import {AppDispatch} from '../redux/store';
 
 /** Syncs volume state updates from context menu window and audio events to Redux */
 export default function useVolumeSync() {

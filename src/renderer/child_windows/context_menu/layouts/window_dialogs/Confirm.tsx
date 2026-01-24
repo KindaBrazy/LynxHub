@@ -1,9 +1,9 @@
 import {Button} from '@heroui/react';
+import {useContextState} from '@lynx/redux/reducer';
 import windowDialogsIpc from '@lynx_shared/ipc/dialogs_window';
 import {Check, ShieldCheck, X} from 'lucide-react';
 import {memo} from 'react';
 
-import {useContextState} from '../../redux/reducer';
 import {hideContextWindow, setElementFocus} from '../Shared';
 
 const ConfirmWindow = memo(() => {

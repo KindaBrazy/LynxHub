@@ -1,6 +1,6 @@
+import {useAppState} from '@lynx/redux/reducers/app';
 import {AnimatePresence, motion} from 'framer-motion';
 
-import {useAppState} from '../../../redux/reducers/app';
 import OnboardingWizard from './Wizard';
 
 export default function Initializer() {

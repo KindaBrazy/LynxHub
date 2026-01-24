@@ -1,8 +1,8 @@
 import {Button} from '@heroui/react';
+import {useContextState} from '@lynx/redux/reducer';
 import {Check, ShieldAlert} from 'lucide-react';
 import {memo} from 'react';
 
-import {useContextState} from '../../redux/reducer';
 import {hideContextWindow} from '../Shared';
 
 const AlertWindow = memo(() => {

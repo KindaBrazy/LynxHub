@@ -1,16 +1,15 @@
 import {ButtonProps} from '@heroui/button';
 import {Button} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {pluginsActions, useIsUpdatingPlugin, usePluginsState} from '@lynx/redux/reducers/plugins';
+import {AppDispatch} from '@lynx/redux/store';
+import {showRestartModal} from '@lynx/utils';
+import {Download_Icon} from '@lynx_assets/icons';
 import {PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {Download_Icon} from '../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../shared/sentry/Breadcrumbs';
-import {lynxTopToast} from '../../hooks/utils';
-import {pluginsActions, useIsUpdatingPlugin, usePluginsState} from '../../redux/reducers/plugins';
-import {AppDispatch} from '../../redux/store';
-import {showRestartModal} from '../../utils';
 
 type UpdateButtonProps = {item: PluginItem};
 

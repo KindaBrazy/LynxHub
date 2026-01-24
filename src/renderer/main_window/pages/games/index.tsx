@@ -1,7 +1,7 @@
 import {ScrollShadow} from '@heroui/react';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {GamePad_Icon} from '@lynx_assets/icons';
 
-import {GamePad_Icon} from '../../../shared/assets/icons';
-import {extensionsData} from '../../plugins/extensions/loader';
 import CardsContainer, {CardContainerClasses} from '../CardsContainer';
 import Page from '../Page';
 

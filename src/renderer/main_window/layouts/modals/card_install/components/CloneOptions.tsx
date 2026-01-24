@@ -1,12 +1,12 @@
 import {Card, CardBody, CardHeader, Checkbox, CircularProgress, NumberInput, Select, SelectItem} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {AppDispatch} from '@lynx/redux/store';
+import {SettingsMinimal_Icon, ShieldWarning_Icon} from '@lynx_assets/icons';
 import {extractGitUrl} from '@lynx_common/utils';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {SettingsMinimal_Icon, ShieldWarning_Icon} from '../../../../../shared/assets/icons';
-import {lynxTopToast} from '../../../../hooks/utils';
-import {AppDispatch} from '../../../../redux/store';
 import {CloneOptionsResult} from './CloneRepo';
 
 type Branch = {

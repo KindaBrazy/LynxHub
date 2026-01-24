@@ -1,5 +1,6 @@
-import {Rocket_Icon} from '../../../../../shared/assets/icons';
-import SettingsSection from '../../../../components/ContentSection';
+import SettingsSection from '@lynx/components/ContentSection';
+import {Rocket_Icon} from '@lynx_assets/icons';
+
 import DisableLoadingAnim from './DisableLoadingAnim';
 import LastSize from './LastSize';
 import StartMaximized from './StartMaximized';

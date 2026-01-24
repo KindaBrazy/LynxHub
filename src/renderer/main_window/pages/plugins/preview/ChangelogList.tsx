@@ -1,10 +1,9 @@
 import {Chip} from '@heroui/react';
+import LynxScroll from '@lynx/components/LynxScroll';
+import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {ChangelogItem, ChangelogSubItem} from '@lynx_common/types/plugins';
 import {motion} from 'framer-motion';
 import {memo} from 'react';
-
-import LynxScroll from '../../../components/LynxScroll';
-import {usePluginsState} from '../../../redux/reducers/plugins';
 
 const renderChangelogEntry = (item: ChangelogSubItem, depth = 0, key: string | number) => {
   if (typeof item === 'string') {

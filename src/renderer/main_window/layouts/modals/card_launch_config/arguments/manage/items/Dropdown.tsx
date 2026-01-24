@@ -1,11 +1,11 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
+import {useGetArgumentsByID} from '@lynx/plugins/modules';
+import {convertArrToObject} from '@lynx/utils';
 import {getArgumentDefaultValue, getArgumentValues} from '@lynx/utils/module_arguments';
+import {ListCheckDuo_Icon} from '@lynx_assets/icons';
 import {ChosenArgument} from '@lynx_common/types';
 import {useCallback, useState} from 'react';
 
-import {ListCheckDuo_Icon} from '../../../../../../../shared/assets/icons';
-import {useGetArgumentsByID} from '../../../../../../plugins/modules';
-import {convertArrToObject} from '../../../../../../utils';
 import ArgumentItemBase from './Base';
 
 type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void; id: string};

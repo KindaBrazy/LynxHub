@@ -1,9 +1,9 @@
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useSettingsState} from '@lynx/redux/reducers/settings';
+import {searchInStrings} from '@lynx/utils';
 import {compact} from 'lodash';
 import {type ComponentType, useMemo} from 'react';
 
-import {extensionsData} from '../../plugins/extensions/loader';
-import {useSettingsState} from '../../redux/reducers/settings';
-import {searchInStrings} from '../../utils';
 import SettingsBrowser, {SettingsBrowserId} from './items/browser';
 import SettingsCard, {SettingsCardId} from './items/card';
 import SettingsClear, {SettingsClearId} from './items/clear';

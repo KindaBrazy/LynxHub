@@ -1,12 +1,12 @@
 import {Button, Link} from '@heroui/react';
+import {modalActions, useModalsState} from '@lynx/redux/reducers/modals';
+import {AppDispatch} from '@lynx/redux/store';
 import {ISSUE_PAGE} from '@lynx_common/consts';
+import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Modal, Space} from 'antd';
 import {Fragment, useCallback, useEffect, useRef} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useDebounceBreadcrumb} from '../../../../shared/sentry/Breadcrumbs';
-import {modalActions, useModalsState} from '../../../redux/reducers/modals';
-import {AppDispatch} from '../../../redux/store';
 import {warnContent, warnTitle} from './WarningContent';
 
 /** Hook to display a warning */

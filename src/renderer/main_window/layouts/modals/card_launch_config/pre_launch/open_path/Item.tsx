@@ -1,8 +1,7 @@
 import {Card} from '@heroui/card';
 import {Button} from '@heroui/react';
+import {TrashDuo_Icon} from '@lynx_assets/icons';
 import {ReactNode, useCallback} from 'react';
-
-import {TrashDuo_Icon} from '../../../../../../shared/assets/icons';
 
 type Props = {icon: ReactNode; index: number; defaultText: string; onRemove?: (index: number) => void};
 

@@ -1,7 +1,7 @@
 import {Spacer} from '@heroui/react';
+import SettingsSection from '@lynx/components/ContentSection';
+import {Terminal_Icon} from '@lynx_assets/icons';
 
-import {Terminal_Icon} from '../../../../../shared/assets/icons';
-import SettingsSection from '../../../../components/ContentSection';
 import BlinkCursor from './BlinkCursor';
 import CloseOnExit from './CloseOnExit';
 import Conpty from './Conpty';

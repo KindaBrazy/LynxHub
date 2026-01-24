@@ -1,11 +1,10 @@
 import {Button, Card, User} from '@heroui/react';
+import SettingsSection from '@lynx/components/ContentSection';
+import {ExternalDuo_Icon, Heart_Icon, Patreon_Icon, UserHeart_Icon} from '@lynx_assets/icons';
 import {PATREON_URL} from '@lynx_common/consts';
 import {PatreonSupporter, PatreonSupporterTier} from '@lynx_common/types';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import {useEffect, useMemo, useState} from 'react';
-
-import {ExternalDuo_Icon, Heart_Icon, Patreon_Icon, UserHeart_Icon} from '../../../../shared/assets/icons';
-import SettingsSection from '../../../components/ContentSection';
 
 export const DashboardCreditsId = 'settings_credits_elem';
 

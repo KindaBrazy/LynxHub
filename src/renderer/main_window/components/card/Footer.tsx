@@ -1,13 +1,16 @@
 import {Button, CardFooter} from '@heroui/react';
+import ShinyText from '@lynx/components/ShinyText';
+import {useIsPinnedCard} from '@lynx/hooks/utils';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useAppState} from '@lynx/redux/reducers/app';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {Pin} from '@solar-icons/react-perf/Bold';
+import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
+import {Play} from '@solar-icons/react-perf/BoldDuotone';
+import {Pin as PinLine} from '@solar-icons/react-perf/LineDuotone';
 import {memo, useCallback, useMemo} from 'react';
 
-import {DownloadDuo_Icon, Pin_Icon, PinLine_Icon, PlayDuo_Icon} from '../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../shared/sentry/Breadcrumbs';
-import {useIsPinnedCard} from '../../hooks/utils';
-import {extensionsData} from '../../plugins/extensions/loader';
-import {useAppState} from '../../redux/reducers/app';
-import ShinyText from '../ShinyText';
 import InstalledMenu from './menu/Installed';
 import UninstalledMenu from './menu/Uninstalled';
 import {useCardStore} from './Wrapper';
@@ -50,7 +53,7 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
             variant="light"
             onPress={onPress}
             isIconOnly>
-            {isPinned ? <Pin_Icon className="size-3" /> : <PinLine_Icon className="size-3" />}
+            {isPinned ? <Pin className="size-3" /> : <PinLine className="size-3" />}
           </Button>
         )}
       </div>
@@ -70,7 +73,7 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
           className={
             'group-hover:opacity-100 group-hover:translate-y-0 translate-y-2 opacity-0 transition duration-400'
           }>
-          {isInstalled ? <PlayDuo_Icon className="size-4 text-primary" /> : <DownloadDuo_Icon className="size-4" />}
+          {isInstalled ? <Play className="size-4 text-primary" /> : <DownloadMinimalistic className="size-4" />}
         </div>
       )}
     </CardFooter>

@@ -1,8 +1,8 @@
+import {useGetArgumentsByID} from '@lynx/plugins/modules';
 import {getArgumentType} from '@lynx/utils/module_arguments';
 import {ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
 import {Dispatch, memo, SetStateAction, useCallback, useMemo} from 'react';
 
-import {useGetArgumentsByID} from '../../../../../plugins/modules';
 import CheckBoxArgItem from './items/CheckBox';
 import DirectoryArgItem from './items/Directory';
 import DropdownArgItem from './items/Dropdown';

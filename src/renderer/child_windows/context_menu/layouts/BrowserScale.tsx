@@ -1,13 +1,12 @@
 import {Button, Slider} from '@heroui/react';
+import {contextActions, useContextState} from '@lynx/redux/reducer';
+import {ContextDispatch} from '@lynx/redux/store';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {Magnifer, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {isArray} from 'lodash';
 import {memo} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {contextActions, useContextState} from '../redux/reducer';
-import {ContextDispatch} from '../redux/store';
 
 const BrowserScale = memo(() => {
   const {id, factor} = useContextState('browserScale');

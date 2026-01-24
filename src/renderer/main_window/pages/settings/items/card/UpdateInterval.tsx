@@ -1,9 +1,9 @@
 import {NumberInput} from '@heroui/react';
+import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
+import {AppDispatch} from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {useDispatch} from 'react-redux';
 
-import {cardsActions, useCardsState} from '../../../../redux/reducers/cards';
-import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 

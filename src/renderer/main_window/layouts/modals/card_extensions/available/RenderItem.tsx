@@ -1,4 +1,10 @@
 import {Button} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {modalActions} from '@lynx/redux/reducers/modals';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {formatNumber} from '@lynx/utils';
+import {Home_Icon, Star_Icon} from '@lynx_assets/icons';
 import {extractGitUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Avatar, List, Tag, Typography} from 'antd';
@@ -7,12 +13,6 @@ import {useCallback, useState} from 'react';
 import Highlighter from 'react-highlight-words';
 import {useDispatch} from 'react-redux';
 
-import {Home_Icon, Star_Icon} from '../../../../../shared/assets/icons';
-import {lynxTopToast} from '../../../../hooks/utils';
-import {modalActions} from '../../../../redux/reducers/modals';
-import {useTabsState} from '../../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../../redux/store';
-import {formatNumber} from '../../../../utils';
 import {ExtensionsInfo} from './index';
 
 type Props = {

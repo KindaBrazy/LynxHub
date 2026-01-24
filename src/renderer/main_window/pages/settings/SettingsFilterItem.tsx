@@ -1,7 +1,6 @@
+import {useSettingsState} from '@lynx/redux/reducers/settings';
+import {searchInStrings} from '@lynx/utils';
 import {PropsWithChildren, useMemo} from 'react';
-
-import {useSettingsState} from '../../redux/reducers/settings';
-import {searchInStrings} from '../../utils';
 
 type Props = PropsWithChildren<{
   searchTexts: (string | undefined)[];

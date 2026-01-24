@@ -1,8 +1,8 @@
+import LynxSwitch from '@lynx/components/LynxSwitch';
 import storageIpc from '@lynx_shared/ipc/storage';
+import {onBreadcrumbStateChange} from '@lynx_shared/sentry/Breadcrumbs';
 import {useCallback, useEffect, useState} from 'react';
 
-import {onBreadcrumbStateChange} from '../../../../../shared/sentry/Breadcrumbs';
-import LynxSwitch from '../../../../components/LynxSwitch';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function CollectErrors() {

@@ -1,17 +1,17 @@
 import {Button, Tooltip} from '@heroui/react';
+import useHotkeyPress from '@lynx/hooks/hotkeys';
+import {useCardsState} from '@lynx/redux/reducers/cards';
+import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
+import {useSettingsState} from '@lynx/redux/reducers/settings';
+import {tabsActions} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {CloseSimple_Icon} from '@lynx_assets/icons';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {TabInfo} from '@lynx_common/types';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {CloseSimple_Icon} from '../../../shared/assets/icons';
-import useHotkeyPress from '../../hooks/hotkeys';
-import {useCardsState} from '../../redux/reducers/cards';
-import {useHotkeysState} from '../../redux/reducers/hotkeys';
-import {useSettingsState} from '../../redux/reducers/settings';
-import {tabsActions} from '../../redux/reducers/tabs';
-import {AppDispatch} from '../../redux/store';
 import AudioIndicator from './AudioIndicator';
 import TabItem_Icon from './Icon';
 import ProgressBar from './ProgressBar';

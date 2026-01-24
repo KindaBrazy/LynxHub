@@ -1,10 +1,10 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
+import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
+import {AppDispatch} from '@lynx/redux/store';
 import {TerminalUseConpty} from '@lynx_common/types/ipc';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {terminalActions, useTerminalState} from '../../../../redux/reducers/terminal';
-import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 

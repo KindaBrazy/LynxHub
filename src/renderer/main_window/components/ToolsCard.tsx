@@ -1,7 +1,7 @@
 import {Card, User} from '@heroui/react';
+import {useAppState} from '@lynx/redux/reducers/app';
 import {ReactNode} from 'react';
 
-import {useAppState} from '../redux/reducers/app';
 import SpotlightCard from './SpotlightCard';
 
 type Props = {title: string; description: string; icon: string; onPress: () => void; footer?: ReactNode};

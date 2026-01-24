@@ -1,9 +1,9 @@
+import {AppState} from '@lynx/types/reducers';
 import {HeroToastPlacement} from '@lynx_common/types';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import isBoolean from 'lodash/isBoolean';
 import {useSelector} from 'react-redux';
 
-import {AppState} from '../../types/reducers';
 import {RootState} from '../store';
 
 type AppStateTypes = {

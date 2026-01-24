@@ -1,14 +1,14 @@
 import {Tab, Tabs} from '@heroui/react';
+import MarkdownViewer from '@lynx/components/MarkdownViewer';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {usePluginsState} from '@lynx/redux/reducers/plugins';
+import {Info_Icon, ListCheck_Icon} from '@lynx_assets/icons';
 import {getPluginReadmeUrl} from '@lynx_common/utils/plugins';
+import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isNil} from 'lodash';
 import {Key, useEffect, useMemo, useState} from 'react';
 
-import {Info_Icon, ListCheck_Icon} from '../../../../shared/assets/icons';
-import {useDebounceBreadcrumb} from '../../../../shared/sentry/Breadcrumbs';
-import MarkdownViewer from '../../../components/MarkdownViewer';
-import {extensionsData} from '../../../plugins/extensions/loader';
-import {usePluginsState} from '../../../redux/reducers/plugins';
 import ChangelogList from './ChangelogList';
 
 export default function PreviewBody({installed}: {installed: boolean}) {

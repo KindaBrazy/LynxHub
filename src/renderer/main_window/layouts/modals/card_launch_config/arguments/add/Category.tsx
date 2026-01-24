@@ -1,10 +1,9 @@
 import {Card, CardBody, CardHeader, Listbox, ListboxItem, ListboxSection, Selection} from '@heroui/react';
+import {searchInStrings} from '@lynx/utils';
 import {ArgumentItem, ArgumentSection} from '@lynx_common/types/plugins/modules';
 import {cloneDeep, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import Highlighter from 'react-highlight-words';
-
-import {searchInStrings} from '../../../../../utils';
 
 type Props = {
   listData: ArgumentSection[] | ArgumentItem[];

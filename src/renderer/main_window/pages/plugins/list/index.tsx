@@ -1,4 +1,11 @@
 import {Button, Divider, Input, Progress, Skeleton} from '@heroui/react';
+import LynxScroll from '@lynx/components/LynxScroll';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
+import {AppDispatch} from '@lynx/redux/store';
+import {searchInStrings, showRestartModal} from '@lynx/utils';
+import {ContainersBg} from '@lynx/utils/common_styles';
+import {Circle_Icon, RefreshDuo_Icon} from '@lynx_assets/icons';
 import {PluginFilter, PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {Empty} from 'antd';
@@ -6,13 +13,6 @@ import {isEmpty} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {Circle_Icon, RefreshDuo_Icon} from '../../../../shared/assets/icons';
-import LynxScroll from '../../../components/LynxScroll';
-import {lynxTopToast} from '../../../hooks/utils';
-import {pluginsActions, usePluginsState} from '../../../redux/reducers/plugins';
-import {AppDispatch} from '../../../redux/store';
-import {searchInStrings, showRestartModal} from '../../../utils';
-import {ContainersBg} from '../../../utils/common_styles';
 import {List_Item} from './Items';
 import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from './Utils';
 

@@ -1,11 +1,11 @@
 import {Button, Chip, Tooltip, useDisclosure} from '@heroui/react';
+import {Add_Icon} from '@lynx_assets/icons';
 import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_common/types';
 import {Empty} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction} from 'react';
 
-import {Add_Icon} from '../../../../../../shared/assets/icons';
 import LaunchConfigSection from '../../Section';
 import ManageArgumentsItem from './Item';
 

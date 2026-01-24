@@ -1,15 +1,15 @@
+import RenderCardList from '@lynx/components/card/RenderList';
+import NavigatePluginsPage from '@lynx/components/NavigatePluginsPage';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useAllCardDataWithPath, useSearchCards} from '@lynx/plugins/modules';
+import {useCardsState} from '@lynx/redux/reducers/cards';
+import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
 import {LoadedCardData} from '@lynx_common/types/plugins/modules';
 import {Empty} from 'antd';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
 import {memo, useMemo} from 'react';
 
-import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '../../shared/assets/icons/Icons_Colorful';
-import RenderCardList from '../components/card/RenderList';
-import NavigatePluginsPage from '../components/NavigatePluginsPage';
-import {extensionsData} from '../plugins/extensions/loader';
-import {useAllCardDataWithPath, useSearchCards} from '../plugins/modules';
-import {useCardsState} from '../redux/reducers/cards';
 import {CardContainerClasses} from './CardsContainer';
 import HomeCategory from './home/Category';
 

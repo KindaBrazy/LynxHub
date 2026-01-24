@@ -1,8 +1,7 @@
+import {useCardsState} from '@lynx/redux/reducers/cards';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {isEmpty, isEqual} from 'lodash';
 import {useEffect} from 'react';
-
-import {useCardsState} from '../redux/reducers/cards';
 
 // Remove not installed cards from pinned cards
 export function useFilterPinnedCards() {

@@ -1,23 +1,23 @@
 import {Card, CardBody, CardHeader, Chip, User} from '@heroui/react';
+import {useInstalledCard, useIsAutoUpdateExtensions, useUpdateAvailable, useUpdatingCard} from '@lynx/hooks/utils';
+import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
+import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
+import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
+import {useAppState} from '@lynx/redux/reducers/app';
+import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
 import {getAccentColorAsHex} from '@lynx/utils/accent_color_generator';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
+import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {CSSProperties, FormEvent, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {DownloadDuo_Icon} from '../../../shared/assets/icons';
-import AddBreadcrumb_Renderer from '../../../shared/sentry/Breadcrumbs';
-import {useInstalledCard, useIsAutoUpdateExtensions, useUpdateAvailable, useUpdatingCard} from '../../hooks/utils';
-import {useTabModalManager} from '../../layouts/modals/useTabModalManager';
-import {extensionRendererApi} from '../../plugins/extensions/loader';
-import {getCardMethod, useAllCardMethods} from '../../plugins/modules';
-import {useAppState} from '../../redux/reducers/app';
-import {cardsActions, useCardsState} from '../../redux/reducers/cards';
-import {useTabsState} from '../../redux/reducers/tabs';
-import {AppDispatch} from '../../redux/store';
 import Footer from './Footer';
 import {useCardStore} from './Wrapper';
 
@@ -190,7 +190,7 @@ const LynxCard = memo(() => {
               className="flex flex-row gap-x-0.5"
               initial={{opacity: 0, translateY: 2}}
               animate={{opacity: 1, translateY: 0}}
-              startContent={<DownloadDuo_Icon className="size-3" />}>
+              startContent={<DownloadMinimalistic className="size-3" />}>
               Update
             </Chip>
           )}

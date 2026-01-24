@@ -1,4 +1,5 @@
-import LynxScroll from '../../components/LynxScroll';
+import LynxScroll from '@lynx/components/LynxScroll';
+
 import {DashboardSections} from './Container';
 import SettingsContentSkeleton from './SettingsContentSkeleton';
 import {useDelayedShow} from './useDelayedShow';

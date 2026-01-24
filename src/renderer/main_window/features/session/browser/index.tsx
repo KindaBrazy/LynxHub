@@ -1,13 +1,13 @@
+import {useIsActiveTab} from '@lynx/layouts/tabs/utils';
+import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
+import {useVolumeState} from '@lynx/redux/reducers/volume';
+import {AppDispatch} from '@lynx/redux/store';
+import {RunningCard} from '@lynx/types';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useIsActiveTab} from '../../../layouts/tabs/utils';
-import {cardsActions, useCardsState} from '../../../redux/reducers/cards';
-import {useVolumeState} from '../../../redux/reducers/volume';
-import {AppDispatch} from '../../../redux/store';
-import {RunningCard} from '../../../types';
 import EmptyPage from './EmptyPage';
 import {Browser_Error} from './Error';
 

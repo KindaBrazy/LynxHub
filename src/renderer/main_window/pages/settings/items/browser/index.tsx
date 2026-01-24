@@ -1,5 +1,6 @@
-import {Web_Icon} from '../../../../../shared/assets/icons';
-import SettingsSection from '../../../../components/ContentSection';
+import SettingsSection from '@lynx/components/ContentSection';
+import {Web_Icon} from '@lynx_assets/icons';
+
 import AudioControl from './AudioControl';
 import ClearData from './ClearData';
 import Downloads from './Downloads';

@@ -1,4 +1,6 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import LynxTooltip from '@lynx/components/LynxTooltip';
+import {Add_Icon, FolderDuo_Icon, Terminal_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Empty} from 'antd';
@@ -6,8 +8,6 @@ import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
 
-import {Add_Icon, FolderDuo_Icon, Terminal_Icon} from '../../../../../shared/assets/icons';
-import LynxTooltip from '../../../../components/LynxTooltip';
 import LaunchConfigSection from '../Section';
 import TerminalCommandItem from '../TerminalCommand-Item';
 

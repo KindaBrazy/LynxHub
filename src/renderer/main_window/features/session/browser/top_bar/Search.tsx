@@ -1,11 +1,10 @@
 import {Button} from '@heroui/react';
+import useHotkeyPress from '@lynx/hooks/hotkeys';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {memo, useRef} from 'react';
-
-import useHotkeyPress from '../../../../hooks/hotkeys';
-import {useTabsState} from '../../../../redux/reducers/tabs';
 
 type Props = {id: string; tabID: string};
 

@@ -1,10 +1,10 @@
 import {ScrollShadow} from '@heroui/react';
+import {GetComponentsByPath} from '@lynx/components/card';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {ImageGeneration_Icon} from '@lynx_assets/icons';
 import {PageID} from '@lynx_common/consts';
 import {memo, useMemo} from 'react';
 
-import {ImageGeneration_Icon} from '../../../shared/assets/icons';
-import {GetComponentsByPath} from '../../components/card';
-import {extensionsData} from '../../plugins/extensions/loader';
 import CardsContainer, {CardContainerClasses} from '../CardsContainer';
 import Page from '../Page';
 

@@ -1,3 +1,5 @@
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
 import {InstallationStepper} from '@lynx_common/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';
@@ -6,8 +8,6 @@ import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {Dispatch, FC, SetStateAction} from 'react';
 
-import {lynxTopToast} from '../../../hooks/utils';
-import {extensionRendererApi} from '../../../plugins/extensions/loader';
 import {InstallState} from './types';
 
 export default class InstallStepper {

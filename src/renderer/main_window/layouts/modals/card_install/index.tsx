@@ -1,4 +1,10 @@
 import {Modal, ModalContent} from '@heroui/react';
+import {useInstalledCard} from '@lynx/hooks/utils';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
+import {cardsActions} from '@lynx/redux/reducers/cards';
+import {useModalsState} from '@lynx/redux/reducers/modals';
+import {AppDispatch} from '@lynx/redux/store';
 import {DownloadProgress} from '@lynx_common/types/ipc';
 import {
   CardRendererMethods,
@@ -13,12 +19,6 @@ import {isEmpty, isNil} from 'lodash';
 import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useInstalledCard} from '../../../hooks/utils';
-import {extensionsData} from '../../../plugins/extensions/loader';
-import {getCardMethod, useAllCardMethods} from '../../../plugins/modules';
-import {cardsActions} from '../../../redux/reducers/cards';
-import {useModalsState} from '../../../redux/reducers/modals';
-import {AppDispatch} from '../../../redux/store';
 import {useTabModalLifecycle} from '../useTabModalManager';
 import InstallBody from './Body';
 import InstallFooter from './Footer';

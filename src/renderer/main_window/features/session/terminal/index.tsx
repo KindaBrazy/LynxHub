@@ -1,3 +1,11 @@
+import XTermCore, {XTermAPI} from '@lynx/components/XTermCore';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
+import {cardsActions} from '@lynx/redux/reducers/cards';
+import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
+import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {RunningCard} from '@lynx/types';
 import {CustomRunBehaviorData} from '@lynx_common/types/ipc';
 import {toMs} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
@@ -10,14 +18,6 @@ import {isEmpty} from 'lodash';
 import {Dispatch, memo, RefObject, SetStateAction, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import XTermCore, {XTermAPI} from '../../../components/XTermCore';
-import {lynxTopToast} from '../../../hooks/utils';
-import {getCardMethod, useAllCardMethods} from '../../../plugins/modules';
-import {cardsActions} from '../../../redux/reducers/cards';
-import {useHotkeysState} from '../../../redux/reducers/hotkeys';
-import {tabsActions, useTabsState} from '../../../redux/reducers/tabs';
-import {AppDispatch} from '../../../redux/store';
-import {RunningCard} from '../../../types';
 import {catchTerminalAddress} from './utils';
 
 type Props = {

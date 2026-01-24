@@ -1,9 +1,9 @@
 import {Card} from '@heroui/react';
+import CopyClipboard from '@lynx/components/CopyClipboard';
 import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {useMemo, useState} from 'react';
 
-import CopyClipboard from '../../../../components/CopyClipboard';
 import LaunchConfigSection from '../Section';
 
 type Props = {text: string};

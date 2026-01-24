@@ -1,8 +1,8 @@
+import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {CardState} from '@lynx_common/types';
 import {LoadedCardData} from '@lynx_common/types/plugins/modules';
 import {createContext, memo, useContext, useMemo} from 'react';
 
-import {extensionsData} from '../../plugins/extensions/loader';
 import LynxCard from './Card';
 import {CardStore, createCardStore} from './store';
 

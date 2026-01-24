@@ -1,10 +1,9 @@
 import {Button, Select, Selection, SelectItem} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {AppDispatch} from '@lynx/redux/store';
 import gitIpc from '@lynx_shared/ipc/git';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {lynxTopToast} from '../../../hooks/utils';
-import {AppDispatch} from '../../../redux/store';
 
 type Props = {
   dir: string;

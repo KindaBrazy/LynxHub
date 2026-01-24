@@ -1,4 +1,6 @@
 import {Button, ButtonGroup} from '@heroui/react';
+import {isLinuxPortable} from '@lynx/hooks/utils';
+import {GitHub_Icon} from '@lynx_assets/icons';
 import {ISSUE_PAGE} from '@lynx_common/consts';
 import {isDev} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
@@ -6,8 +8,6 @@ import {Result} from 'antd';
 import {useCallback, useEffect} from 'react';
 import {FallbackProps} from 'react-error-boundary';
 
-import {GitHub_Icon} from '../../shared/assets/icons';
-import {isLinuxPortable} from '../hooks/utils';
 import CopyClipboard from './CopyClipboard';
 
 export default function ErrorWrapper({error, resetErrorBoundary}: FallbackProps) {

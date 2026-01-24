@@ -1,4 +1,4 @@
-import {modalActions} from '../../redux/reducers/modals';
+import {modalActions} from '@lynx/redux/reducers/modals';
 
 export const tabModalRegistry = {
   readme: {

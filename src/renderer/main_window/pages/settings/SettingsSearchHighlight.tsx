@@ -1,6 +1,5 @@
+import {useSettingsState} from '@lynx/redux/reducers/settings';
 import Highlighter from 'react-highlight-words';
-
-import {useSettingsState} from '../../redux/reducers/settings';
 
 type Props = {
   text?: string;

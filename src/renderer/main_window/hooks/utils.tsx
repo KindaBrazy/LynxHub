@@ -1,13 +1,12 @@
 import {addToast, Button} from '@heroui/react';
+import {appActions} from '@lynx/redux/reducers/app';
+import {useCardsState} from '@lynx/redux/reducers/cards';
+import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {ChangelogItem, HeroToastPlacement} from '@lynx_common/types';
 import {InstalledCard} from '@lynx_common/types/storage';
 import {Dispatch} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, useMemo} from 'react';
-
-import {appActions} from '../redux/reducers/app';
-import {useCardsState} from '../redux/reducers/cards';
-import {useSettingsState} from '../redux/reducers/settings';
 
 /**
  * Hook to get an installed card by its ID.

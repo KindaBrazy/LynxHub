@@ -1,10 +1,10 @@
+import LynxSwitch from '@lynx/components/LynxSwitch';
+import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
+import {AppDispatch} from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
-import LynxSwitch from '../../../../components/LynxSwitch';
-import {settingsActions, useSettingsState} from '../../../../redux/reducers/settings';
-import {AppDispatch} from '../../../../redux/store';
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 export default function TitleName() {

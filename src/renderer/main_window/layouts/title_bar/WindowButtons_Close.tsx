@@ -1,13 +1,12 @@
+import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
+import {useSettingsState} from '@lynx/redux/reducers/settings';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {Power_Icon} from '@lynx_assets/icons';
 import applicationIpc from '@lynx_shared/ipc/application';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {motion} from 'framer-motion';
 import {useCallback} from 'react';
-
-import {Power_Icon} from '../../../shared/assets/icons';
-import {useHotkeysState} from '../../redux/reducers/hotkeys';
-import {useSettingsState} from '../../redux/reducers/settings';
-import {useTabsState} from '../../redux/reducers/tabs';
 
 type Props = {
   buttonProps: any;

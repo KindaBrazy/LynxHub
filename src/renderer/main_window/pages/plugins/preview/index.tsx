@@ -1,9 +1,9 @@
+import {usePluginsState} from '@lynx/redux/reducers/plugins';
+import {ContainersBg} from '@lynx/utils/common_styles';
+import {Plugins_Icon} from '@lynx_assets/icons';
 import {isEmpty} from 'lodash';
 import {memo, useMemo} from 'react';
 
-import {Plugins_Icon} from '../../../../shared/assets/icons';
-import {usePluginsState} from '../../../redux/reducers/plugins';
-import {ContainersBg} from '../../../utils/common_styles';
 import PreviewBody from './Body';
 import PreviewHeader from './Header';
 

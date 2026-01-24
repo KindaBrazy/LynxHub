@@ -1,7 +1,6 @@
 import {Card, CardBody, CardHeader} from '@heroui/react';
+import {ContainersBg} from '@lynx/utils/common_styles';
 import {ReactNode} from 'react';
-
-import {ContainersBg} from '../utils/common_styles';
 
 type Props = {
   children?: ReactNode;

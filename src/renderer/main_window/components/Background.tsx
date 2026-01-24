@@ -1,7 +1,6 @@
+import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {isNil} from 'lodash';
 import {memo, useMemo} from 'react';
-
-import {extensionsData} from '../plugins/extensions/loader';
 
 const Background = memo(() => {
   const BG = useMemo(() => extensionsData.replaceBackground, []);

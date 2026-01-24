@@ -1,3 +1,9 @@
+import parseTerminalColors from '@lynx/features/session/terminal/colorHandler';
+import {getRendererMode, getTheme, getWindowPty} from '@lynx/features/session/terminal/utils';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {useAppState} from '@lynx/redux/reducers/app';
+import {useTerminalStat} from '@lynx/redux/reducers/terminal';
+import {AppDispatch} from '@lynx/redux/store';
 import applicationIpc from '@lynx_shared/ipc/application';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {CanvasAddon} from '@xterm/addon-canvas';
@@ -15,13 +21,6 @@ import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty, isEqual} from 'lodash';
 import {forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef} from 'react';
 import {useDispatch} from 'react-redux';
-
-import parseTerminalColors from '../features/session/terminal/colorHandler';
-import {getRendererMode, getTheme, getWindowPty} from '../features/session/terminal/utils';
-import {lynxTopToast} from '../hooks/utils';
-import {useAppState} from '../redux/reducers/app';
-import {useTerminalStat} from '../redux/reducers/terminal';
-import {AppDispatch} from '../redux/store';
 
 const FONT_FAMILY = 'JetBrainsMono';
 const MIN_RESIZE_COLS = 95;

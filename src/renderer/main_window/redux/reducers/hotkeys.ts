@@ -1,8 +1,8 @@
+import {HotkeysState} from '@lynx/types/reducers';
 import {LynxHotkey, LynxInput} from '@lynx_common/types/ipc';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {useSelector} from 'react-redux';
 
-import {HotkeysState} from '../../types/reducers';
 import {RootState} from '../store';
 
 type HotkeysStateTypes = {

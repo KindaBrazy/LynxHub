@@ -1,4 +1,6 @@
 import {Button, Checkbox, cn, User} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {AppDispatch} from '@lynx/redux/store';
 import {MAIN_MODULE_URL} from '@lynx_common/consts';
 import {extractGitUrl} from '@lynx_common/utils';
 import {getPluginIconUrl} from '@lynx_common/utils/plugins';
@@ -6,9 +8,6 @@ import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {compact, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {lynxTopToast} from '../../../../hooks/utils';
-import {AppDispatch} from '../../../../redux/store';
 
 type ExtensionItem = {id: string; name: string; description?: string; icon?: string; url: string};
 

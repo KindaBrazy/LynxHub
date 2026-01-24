@@ -1,4 +1,9 @@
 import {Input, Progress} from '@heroui/react';
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {useAppState} from '@lynx/redux/reducers/app';
+import {AppDispatch} from '@lynx/redux/store';
+import {initGitProgress} from '@lynx/utils/constants';
+import {Download2_Icon, GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
@@ -9,11 +14,6 @@ import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
 
-import {Download2_Icon, GitHub_Icon} from '../../../../shared/assets/icons';
-import {lynxTopToast} from '../../../hooks/utils';
-import {useAppState} from '../../../redux/reducers/app';
-import {AppDispatch} from '../../../redux/store';
-import {initGitProgress} from '../../../utils/constants';
 import {tabContentVariants} from './Constants';
 
 type Props = {

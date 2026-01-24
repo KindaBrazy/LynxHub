@@ -1,3 +1,8 @@
+import {lynxTopToast} from '@lynx/hooks/utils';
+import {eventUtil_CollectUserInputs} from '@lynx/plugins/extensions/utils';
+import {useAllCardMethods} from '@lynx/plugins/modules';
+import {cardsActions} from '@lynx/redux/reducers/cards';
+import {AppDispatch} from '@lynx/redux/store';
 import {
   InstallationMethod,
   InstallationStepper,
@@ -11,11 +16,6 @@ import {isNil} from 'lodash';
 import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {lynxTopToast} from '../../../hooks/utils';
-import {eventUtil_CollectUserInputs} from '../../../plugins/extensions/utils';
-import {useAllCardMethods} from '../../../plugins/modules';
-import {cardsActions} from '../../../redux/reducers/cards';
-import {AppDispatch} from '../../../redux/store';
 import InstallStepper from './Stepper';
 import {InstallState} from './types';
 

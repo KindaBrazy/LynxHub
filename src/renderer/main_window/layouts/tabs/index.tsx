@@ -1,3 +1,5 @@
+import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import {Divider} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
@@ -5,8 +7,6 @@ import {isEqual} from 'lodash';
 import {memo, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {tabsActions, useTabsState} from '../../redux/reducers/tabs';
-import {AppDispatch} from '../../redux/store';
 import TabItem from './Item';
 import NewTab from './New';
 import {useRemoveTab} from './utils';

@@ -1,3 +1,9 @@
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useAllCardDataWithPath} from '@lynx/plugins/modules';
+import {cardsActions} from '@lynx/redux/reducers/cards';
+import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {RunningCard} from '@lynx/types';
 import {toMs} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import ptyIpc from '@lynx_shared/ipc/pty';
@@ -8,12 +14,6 @@ import {isNil} from 'lodash';
 import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {extensionsData} from '../../plugins/extensions/loader';
-import {useAllCardDataWithPath} from '../../plugins/modules';
-import {cardsActions} from '../../redux/reducers/cards';
-import {tabsActions, useTabsState} from '../../redux/reducers/tabs';
-import {AppDispatch} from '../../redux/store';
-import {RunningCard} from '../../types';
 import Browser from './browser';
 import Terminal from './terminal';
 import TopBar from './top_bar';

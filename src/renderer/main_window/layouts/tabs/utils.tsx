@@ -1,15 +1,14 @@
+import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
+import {modalActions} from '@lynx/redux/reducers/modals';
+import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
+import {volumeActions} from '@lynx/redux/reducers/volume';
+import {AppDispatch} from '@lynx/redux/store';
+import {defaultTabItem, REMOVE_MODAL_DELAY} from '@lynx/utils/constants';
 import applicationIpc from '@lynx_shared/ipc/application';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import type {ActionCreatorWithPayload} from '@reduxjs/toolkit';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {cardsActions, useCardsState} from '../../redux/reducers/cards';
-import {modalActions} from '../../redux/reducers/modals';
-import {tabsActions, useTabsState} from '../../redux/reducers/tabs';
-import {volumeActions} from '../../redux/reducers/volume';
-import {AppDispatch} from '../../redux/store';
-import {defaultTabItem, REMOVE_MODAL_DELAY} from '../../utils/constants';
 
 export function useRemoveTab() {
   const runningCards = useCardsState('runningCard');
