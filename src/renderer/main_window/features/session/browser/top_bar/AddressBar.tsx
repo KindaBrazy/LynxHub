@@ -3,10 +3,10 @@ import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {RunningCard} from '@lynx/types';
-import {Star_Icon} from '@lynx_assets/icons';
 import {formatWebAddress} from '@lynx_common/utils';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import {Star} from '@solar-icons/react-perf/Bold';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import React, {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
@@ -379,7 +379,7 @@ const Browser_AddressBar = memo(({runningCard, setCustomAddress}: Props) => {
             onClick={handleFavoriteToggle}
             className="p-1 rounded-full cursor-pointer"
             aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}>
-            <Star_Icon
+            <Star
               className={cn(
                 'transition-colors duration-200 size-5',
                 isFavorite

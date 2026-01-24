@@ -1,6 +1,6 @@
 import {Accordion, AccordionItem, Button, Card} from '@heroui/react';
 import CopyClipboard from '@lynx/components/CopyClipboard';
-import {Web_Icon} from '@lynx_assets/icons';
+import {Earth} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
 
 type FailedLoad = {errorCode: number; errorDescription: string; validatedURL: string};
@@ -19,7 +19,7 @@ export function Browser_Error({error, onReload}: Props) {
         initial={{opacity: 0, translateY: 5}}
         animate={{opacity: 1, translateY: 0, transition: {delay: 0.2}}}
         className="flex w-full max-w-[50%] flex-col items-center gap-6 text-center">
-        <Web_Icon className="size-20 text-warning" />
+        <Earth className="size-20 text-warning" />
         <div className="flex w-full flex-col gap-2">
           <h1 className="text-2xl font-bold text-foreground-800">This page isn't available</h1>
           <p title={error.validatedURL} className="w-full line-clamp-2 text-sm text-foreground-500">

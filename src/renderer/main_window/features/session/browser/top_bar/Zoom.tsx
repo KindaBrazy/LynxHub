@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
-import {Magnifier_Icon} from '@lynx_assets/icons';
 import browserIpc from '@lynx_shared/ipc/browser';
+import {Magnifer} from '@solar-icons/react-perf/BoldDuotone';
 import {useRef} from 'react';
 
 type Props = {id: string};
@@ -19,7 +19,7 @@ export default function Browser_Zoom({id}: Props) {
 
   return (
     <Button size="sm" ref={btnRef} variant="light" onPress={openZoomMenu} className="cursor-default" isIconOnly>
-      <Magnifier_Icon className="size-4" />
+      <Magnifer className="size-4" />
     </Button>
   );
 }

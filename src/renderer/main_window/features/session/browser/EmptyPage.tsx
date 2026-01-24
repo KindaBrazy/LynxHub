@@ -3,10 +3,11 @@ import LynxScroll from '@lynx/components/LynxScroll';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
-import {Star_Icon, Terminal_Icon} from '@lynx_assets/icons';
+import {Terminal_Icon} from '@lynx_assets/icons';
 import {History_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
 import {FavIcons} from '@lynx_common/types/ipc';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import {Star} from '@solar-icons/react-perf/Bold';
 import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
 import {ReactNode, useEffect, useMemo, useRef, useState} from 'react';
@@ -164,7 +165,7 @@ export default function EmptyPage({type}: Props) {
     {
       title: 'Favorites',
       subtitle: 'Quick access to your bookmarked sites',
-      icon: <Star_Icon className="text-amber-500 size-6" />,
+      icon: <Star className="text-amber-500 size-6" />,
       emptyTitle: 'No favorites yet',
       emptyDescription: 'Star sites to add them here',
       data: favoriteAddress,
