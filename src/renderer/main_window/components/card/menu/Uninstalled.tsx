@@ -19,7 +19,7 @@ const UninstalledMenu = memo(() => {
       showArrow>
       <DropdownTrigger>
         <Button radius="lg" variant="flat" isIconOnly>
-          <MenuDots className="size-[1.3rem]" />
+          <MenuDots className={`size-[1.3rem] ${menuIsOpen ? 'rotate-90' : 'rotate-0'} transition-all duration-500`} />
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Card Menu">
