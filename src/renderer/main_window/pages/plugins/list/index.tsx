@@ -5,9 +5,10 @@ import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {searchInStrings, showRestartModal} from '@lynx/utils';
 import {ContainersBg} from '@lynx/utils/common_styles';
-import {Circle_Icon, RefreshDuo_Icon} from '@lynx_assets/icons';
+import {Circle_Icon} from '@lynx_assets/icons';
 import {PluginFilter, PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
+import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';
@@ -159,7 +160,7 @@ function SyncAllButton() {
       color="success"
       onPress={syncAll}
       isLoading={updatingAll}
-      startContent={!updatingAll && <RefreshDuo_Icon />}>
+      startContent={!updatingAll && <Refresh />}>
       {updatingAll ? 'Syncing...' : `Sync All (${syncList.length})`}
     </Button>
   );

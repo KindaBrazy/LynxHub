@@ -4,10 +4,10 @@ import {lynxTopToast} from '@lynx/hooks/utils';
 import {pluginsActions, useIsUpdatingPlugin, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
-import {Download_Icon} from '@lynx_assets/icons';
 import {PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -59,7 +59,7 @@ export function UpdateButton({item}: UpdateButtonProps) {
       onPress={handleSync}
       isLoading={isUpdating}
       isDisabled={updatingAll}
-      startContent={!isUpdating && <Download_Icon />}>
+      startContent={!isUpdating && <DownloadMinimalistic />}>
       {text}
     </Button>
   ) : null;

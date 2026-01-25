@@ -4,11 +4,11 @@ import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
-import {Download2_Icon, SettingsMinimal_Icon, Trash_Icon} from '@lynx_assets/icons';
 import {extractGitUrl} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {DownloadMinimalistic, SettingsMinimalistic, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -114,7 +114,7 @@ export default function ActionButtons({installed, currentVersion}: Props) {
             variant="flat"
             color="secondary"
             onPress={configModal.onOpen}
-            startContent={<SettingsMinimal_Icon />}>
+            startContent={<SettingsMinimalistic />}>
             Configure
           </Button>
         )}
@@ -126,7 +126,7 @@ export default function ActionButtons({installed, currentVersion}: Props) {
             variant="flat"
             isLoading={isUnInstalling}
             onPress={uninstallExtension}
-            startContent={!isUnInstalling && <Trash_Icon />}>
+            startContent={!isUnInstalling && <TrashBin2 />}>
             {isUnInstalling ? 'Uninstalling...' : 'Uninstall'}
           </Button>
         ) : (
@@ -136,7 +136,7 @@ export default function ActionButtons({installed, currentVersion}: Props) {
             isLoading={isInstalling}
             isDisabled={!isCompatible}
             color={isCompatible ? 'success' : 'warning'}
-            startContent={!isInstalling && <Download2_Icon />}>
+            startContent={!isInstalling && <DownloadMinimalistic />}>
             {!isCompatible ? 'Not Compatible' : isInstalling ? 'Installing...' : 'Install'}
           </Button>
         )}

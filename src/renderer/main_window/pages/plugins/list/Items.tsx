@@ -20,23 +20,16 @@ import {
 } from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
-import {
-  ArrowDuo_Icon,
-  CheckDuo_Icon,
-  Linux_Icon,
-  MacOS_Icon,
-  QuestionCircle_Icon,
-  SettingsMinimal_Icon,
-  ShieldWarning_Icon,
-  TrashDuo_Icon,
-  Windows_Icon,
-} from '@lynx_assets/icons';
+import {Linux_Icon, MacOS_Icon, Windows_Icon} from '@lynx_assets/icons';
 import {PluginInstalledItem, PluginItem} from '@lynx_common/types/plugins';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import {getPluginIconUrl} from '@lynx_common/utils/plugins';
 import gitIpc from '@lynx_shared/ipc/git';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {QuestionCircle} from '@solar-icons/react-perf/Bold';
+import {SettingsMinimalistic, ShieldWarning, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {ArrowRight, Unread} from '@solar-icons/react-perf/LineDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {SimpleGitProgressEvent} from 'simple-git';
@@ -144,7 +137,7 @@ export function List_Item({item, installed}: Props) {
             content={item.incompatibleReason}
             classNames={{content: 'p-2 whitespace-pre'}}
             showArrow>
-            <QuestionCircle_Icon
+            <QuestionCircle
               className={
                 'size-10 text-warning/80 hover:text-warning transition-colors' +
                 ' duration-200 p-1 bg-background/80 rounded-full'
@@ -155,7 +148,7 @@ export function List_Item({item, installed}: Props) {
           {foundInstalled && (
             <div className="absolute top-2 right-2 p-1 bg-background/80 rounded-lg">
               <Button size="sm" variant="flat" color="danger" onPress={uninstall} isIconOnly>
-                <TrashDuo_Icon className="size-4" />
+                <TrashBin2 className="size-4" />
               </Button>
             </div>
           )}
@@ -195,7 +188,7 @@ export function List_Item({item, installed}: Props) {
                 <span>v{currentVersion}</span>
                 {targetUpdate && (
                   <>
-                    <ArrowDuo_Icon className="size-3 rotate-180" />
+                    <ArrowRight className="size-3" />
                     <span className={`${isUpgrade ? 'text-success' : 'text-warning'}`}>v{targetVersion}</span>
                   </>
                 )}
@@ -224,7 +217,7 @@ export function List_Item({item, installed}: Props) {
                 variant="flat"
                 color="primary"
                 className="ml-2"
-                startContent={<CheckDuo_Icon />}>
+                startContent={<Unread className="size-4" />}>
                 Installed
               </Chip>
               {!isExtension && (
@@ -238,7 +231,7 @@ export function List_Item({item, installed}: Props) {
                       onPress={configModal.onOpen}
                       className="ml-1 min-w-0 px-2"
                       isIconOnly>
-                      <SettingsMinimal_Icon className="size-4" />
+                      <SettingsMinimalistic className="size-4" />
                     </Button>
                   </Tooltip>
                 </>
@@ -259,7 +252,7 @@ export function List_Item({item, installed}: Props) {
                 radius="sm"
                 variant="flat"
                 color="warning"
-                startContent={<ShieldWarning_Icon className="size-3.5" />}>
+                startContent={<ShieldWarning className="size-3.5" />}>
                 Unloaded
               </Chip>
             </Tooltip>

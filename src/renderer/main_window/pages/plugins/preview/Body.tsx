@@ -2,9 +2,10 @@ import {Tab, Tabs} from '@heroui/react';
 import MarkdownViewer from '@lynx/components/MarkdownViewer';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
-import {Info_Icon, ListCheck_Icon} from '@lynx_assets/icons';
 import {getPluginReadmeUrl} from '@lynx_common/utils/plugins';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
+import {HomeAngle2} from '@solar-icons/react-perf/BoldDuotone';
+import {Checklist} from '@solar-icons/react-perf/LineDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isNil} from 'lodash';
 import {Key, useEffect, useMemo, useState} from 'react';
@@ -39,7 +40,7 @@ export default function PreviewBody({installed}: {installed: boolean}) {
         <Tab
           title={
             <div className="flex flex-row items-center gap-x-2">
-              <Info_Icon />
+              <HomeAngle2 />
               <span>Readme</span>
             </div>
           }
@@ -48,7 +49,7 @@ export default function PreviewBody({installed}: {installed: boolean}) {
         <Tab
           title={
             <div className="flex flex-row items-center gap-x-2">
-              <ListCheck_Icon />
+              <Checklist />
               <span>Changelog</span>
             </div>
           }

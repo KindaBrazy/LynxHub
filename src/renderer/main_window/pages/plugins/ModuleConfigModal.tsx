@@ -2,15 +2,14 @@ import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHead
 import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
-import {SettingsMinimal_Icon} from '@lynx_assets/icons';
 import {CardModules, RendererModuleImportType} from '@lynx_common/types/plugins/modules';
 import {isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import storageIpc from '@lynx_shared/ipc/storage';
+import {Diskette, SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {compact} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
-
 type CardItem = {id: string; title: string; type: string; enabled: boolean};
 type CategoryCards = {category: string; cards: CardItem[]};
 type FullCardData = {id: string; title: string; type: string; routePath: string};
@@ -159,7 +158,7 @@ export default function ModuleConfigModal({isOpen, onClose}: Props) {
       <ModalContent>
         <ModalHeader className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
-            <SettingsMinimal_Icon className="size-5" />
+            <SettingsMinimalistic className="size-5" />
             <span>Module Configuration</span>
           </div>
           <span className="text-small font-normal text-foreground-500">
@@ -204,10 +203,10 @@ export default function ModuleConfigModal({isOpen, onClose}: Props) {
           )}
         </ModalBody>
         <ModalFooter>
-          <Button variant="flat" onPress={onClose}>
+          <Button variant="light" color="warning" onPress={onClose}>
             Cancel
           </Button>
-          <Button color="primary" isLoading={saving} onPress={handleSave}>
+          <Button variant="flat" color="success" isLoading={saving} onPress={handleSave} startContent={<Diskette />}>
             Save & Restart
           </Button>
         </ModalFooter>
