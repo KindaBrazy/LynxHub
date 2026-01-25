@@ -1,7 +1,7 @@
 import {ScrollShadow} from '@heroui/react';
 import {GetComponentsByPath} from '@lynx/components/card';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {ImageGeneration_Icon} from '@lynx_assets/icons';
+import {ImagePage_Icon} from '@lynx_assets/icons/pages';
 import {PageID} from '@lynx_common/consts';
 import {memo, useMemo} from 'react';
 
@@ -27,7 +27,7 @@ const ImageGenerationPage = memo(({show}: Props) => {
           extraClassNames="mr-3"
           title="Image Generation"
           subTitle="Create Stunning Visuals with AI-Powered Tools"
-          icon={<ImageGeneration_Icon className={CardContainerClasses} />}>
+          icon={<ImagePage_Icon className={CardContainerClasses} />}>
           <GetComponentsByPath routePath={PageID.imageGen} extensionsElements={cardsContainer} />
         </CardsContainer>
 

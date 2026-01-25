@@ -1,7 +1,7 @@
 import {ScrollShadow} from '@heroui/react';
 import {GetComponentsByPath} from '@lynx/components/card';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {Robot_Icon} from '@lynx_assets/icons';
+import {AgentPage_Icon} from '@lynx_assets/icons/pages';
 import {PageID} from '@lynx_common/consts';
 import {memo, useMemo} from 'react';
 
@@ -10,7 +10,7 @@ import Page from '../Page';
 
 type Props = {show: boolean};
 
-const AgentsPage = memo(({show}: Props) => {
+const Index = memo(({show}: Props) => {
   const {top, scrollTop, scrollBottom, bottom, cardsContainer} = useMemo(
     () => extensionsData.customizePages.agents.add,
     [],
@@ -27,7 +27,7 @@ const AgentsPage = memo(({show}: Props) => {
           title="Agents"
           extraClassNames="mr-3"
           subTitle="Work smarter with specialized AI agents."
-          icon={<Robot_Icon className={CardContainerClasses} />}>
+          icon={<AgentPage_Icon className={CardContainerClasses} />}>
           <GetComponentsByPath routePath={PageID.agents} extensionsElements={cardsContainer} />
         </CardsContainer>
 
@@ -39,4 +39,4 @@ const AgentsPage = memo(({show}: Props) => {
   );
 });
 
-export default AgentsPage;
+export default Index;

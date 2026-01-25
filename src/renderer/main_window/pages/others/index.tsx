@@ -1,7 +1,7 @@
 import {ScrollShadow} from '@heroui/react';
 import {GetComponentsByPath} from '@lynx/components/card';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {MagicStickDuo_Icon} from '@lynx_assets/icons';
+import {OthersPage_Icon} from '@lynx_assets/icons/pages';
 import {PageID} from '@lynx_common/consts';
 import {memo, useMemo} from 'react';
 
@@ -26,8 +26,8 @@ const OthersPage = memo(({show}: Props) => {
         <CardsContainer
           title="Others"
           extraClassNames="mr-3"
-          subTitle="Explore miscellaneous tools and other AI features."
-          icon={<MagicStickDuo_Icon className={CardContainerClasses} />}>
+          icon={<OthersPage_Icon className={CardContainerClasses} />}
+          subTitle="Explore miscellaneous tools and other AI features.">
           <GetComponentsByPath routePath={PageID.agents} extensionsElements={cardsContainer} />
         </CardsContainer>
 

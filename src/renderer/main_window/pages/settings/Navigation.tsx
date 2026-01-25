@@ -11,9 +11,9 @@ import {
   Rocket_Icon,
   Terminal_Icon,
   Trash_Icon,
-  Tuning_Icon,
   Web_Icon,
 } from '@lynx_assets/icons';
+import {SettingPage_Icon} from '@lynx_assets/icons/pages';
 import {SpedometerMiddle} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {ReactNode, useCallback, useMemo} from 'react';
@@ -42,7 +42,7 @@ const groupSections: GroupProps[] = [
     items: [
       {
         title: 'General',
-        icon: <Tuning_Icon className="size-4 shrink-0 " />,
+        icon: <SettingPage_Icon className="size-4 shrink-0 " />,
         elementId: settingsSectionId.SettingsGeneralId,
       },
       {
@@ -170,7 +170,7 @@ const SettingsPageNav = ({sectionTexts}: SettingsPageNavProps) => {
   return (
     <Card className={`h-full my-2 text-medium w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
       <CardHeader className="justify-center gap-x-2 pt-4">
-        <Tuning_Icon className="size-5" />
+        <SettingPage_Icon className="size-5" />
         <span>
           <SettingsSearchHighlight text="Settings" />
         </span>

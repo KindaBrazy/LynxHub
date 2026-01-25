@@ -1,7 +1,7 @@
 import {ScrollShadow} from '@heroui/react';
 import {GetComponentsByPath} from '@lynx/components/card';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {AudioGeneration_Icon} from '@lynx_assets/icons';
+import {AudioPage_Icon} from '@lynx_assets/icons/pages';
 import {PageID} from '@lynx_common/consts';
 import {memo, useMemo} from 'react';
 
@@ -26,8 +26,8 @@ const AudioGenerationPage = memo(({show}: Props) => {
         <CardsContainer
           extraClassNames="mr-3"
           title="Audio Generation"
-          subTitle="Compose and Manipulate Audio Effortlessly with AI"
-          icon={<AudioGeneration_Icon className={CardContainerClasses} />}>
+          icon={<AudioPage_Icon className={CardContainerClasses} />}
+          subTitle="Compose and Manipulate Audio Effortlessly with AI">
           <GetComponentsByPath routePath={PageID.audioGen} extensionsElements={cardsContainer} />
         </CardsContainer>
 

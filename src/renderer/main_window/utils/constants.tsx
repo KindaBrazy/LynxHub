@@ -1,5 +1,5 @@
 import {TRANSITION_EASINGS} from '@heroui/framer-utils';
-import AgentsPage from '@lynx/pages/agents/AgentsPage';
+import Agents from '@lynx/pages/agents';
 import AudioGenerationPage from '@lynx/pages/audio';
 import DashboardPage from '@lynx/pages/dashboard';
 import GamesPage from '@lynx/pages/games';
@@ -24,7 +24,7 @@ export const PageComponents = {
   [PageID.tools]: ToolsPage,
   [PageID.games]: GamesPage,
   [PageID.others]: OthersPage,
-  [PageID.agents]: AgentsPage,
+  [PageID.agents]: Agents,
 
   [PageID.dashboard]: DashboardPage,
   [PageID.plugins]: Index,
