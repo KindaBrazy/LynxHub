@@ -10,8 +10,8 @@ import {
   SelectItem,
 } from '@heroui/react';
 import {convertArrToObject} from '@lynx/utils';
-import {TrashDuo_Icon} from '@lynx_assets/icons';
 import {ChosenArgumentsData} from '@lynx_common/types';
+import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
@@ -125,7 +125,7 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
                       'items-center justify-center cursor-pointer'
                     }
                     onClick={() => deletePreset(item.name)}>
-                    <TrashDuo_Icon className="text-danger" />
+                    <TrashBin2 className="text-danger" />
                   </button>
                 )
               }

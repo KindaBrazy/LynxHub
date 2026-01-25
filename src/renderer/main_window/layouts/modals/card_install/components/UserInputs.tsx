@@ -1,8 +1,8 @@
 import {Button, Input, Select, SelectItem} from '@heroui/react';
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import {File_Icon, Folder2_Icon} from '@lynx_assets/icons';
 import {UserInputField, UserInputResult} from '@lynx_common/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
+import {File, FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {isNil} from 'lodash';
 import {Dispatch, FC, SetStateAction, useCallback, useEffect, useState} from 'react';
 
@@ -178,7 +178,7 @@ export default function UserInputs({inputElements, setResult, extensionElements}
                   key={label}
                   variant="flat"
                   endContent={<div />}
-                  startContent={<Folder2_Icon />}
+                  startContent={<FolderOpen />}
                   onPress={() => selectPath('folder', id, isRequired)}
                   className={`justify-between ${hasError ? 'border-red-500 border-2' : ''}`}
                   fullWidth>
@@ -201,7 +201,7 @@ export default function UserInputs({inputElements, setResult, extensionElements}
                   key={label}
                   variant="flat"
                   endContent={<div />}
-                  startContent={<File_Icon />}
+                  startContent={<File />}
                   onPress={() => selectPath('file', id, isRequired)}
                   className={`justify-between ${hasError ? 'border-red-500 border-2' : ''}`}
                   fullWidth>

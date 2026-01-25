@@ -17,9 +17,11 @@ import {
 import LynxScroll from '@lynx/components/LynxScroll';
 import {useGetArgumentsByID} from '@lynx/plugins/modules';
 import {getArgumentDefaultValue, getFilteredArguments} from '@lynx/utils/module_arguments';
-import {Circle_Icon, Filter_Icon} from '@lynx_assets/icons';
+import {Circle_Icon} from '@lynx_assets/icons';
 import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
+import {Filter} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, some} from 'lodash';
+import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 
 import {useTabVisibility} from '../../../../tabs/utils';
@@ -149,14 +151,14 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
               spellCheck="false"
               onValueChange={setSearchValue}
               placeholder="Search by name or description..."
-              startContent={<Circle_Icon className="size-3.5" />}
+              startContent={<Circle_Icon className="size-4" />}
               autoFocus
               isClearable
             />
             <Dropdown>
               <DropdownTrigger>
-                <Button variant="flat" className="cursor-default" isIconOnly>
-                  <Filter_Icon />
+                <Button variant="flat" isIconOnly>
+                  <Filter />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
@@ -209,7 +211,12 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button variant="light" color="success" onPress={onAdd} isDisabled={isEmpty(selectedArguments)}>
+          <Button
+            variant="flat"
+            color="success"
+            onPress={onAdd}
+            isDisabled={isEmpty(selectedArguments)}
+            startContent={<Plus className="size-4" />}>
             Add
           </Button>
           <Button color="warning" variant="light" onPress={onClose}>

@@ -4,6 +4,9 @@ import {InstallationMethod, UserInputResult} from '@lynx_common/types/plugins/mo
 import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
 import ptyIpc from '@lynx_shared/ipc/pty';
+import {ArrowRight, Download, FolderOpen, Restart} from '@solar-icons/react-perf/BoldDuotone';
+import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
+import {X} from 'lucide-react';
 import {memo, RefObject, useCallback, useState} from 'react';
 
 import LocateWarning from './components/LocateWarning';
@@ -73,7 +76,11 @@ const InstallFooter = memo(
       return (
         <>
           <LocateWarning tabId={tabId} isOpen={locateWarnIsOpen} setIsOpen={setLocateWarnIsOpen} />
-          <Button variant="flat" onPress={handleClose} color={state.body === 'done' ? 'success' : 'danger'}>
+          <Button
+            variant="flat"
+            onPress={handleClose}
+            color={state.body === 'done' ? 'success' : 'danger'}
+            startContent={state.body === 'done' ? <CheckRead className="size-4" /> : <X className="size-3.5" />}>
             {state.body === 'done' ? 'OK' : 'Cancel'}
           </Button>
           {state.body === 'terminal' && (
@@ -82,17 +89,25 @@ const InstallFooter = memo(
           {state.body === 'starter' && (
             <>
               {!state.disableSelectDir && (
-                <Button variant="flat" onPress={locate}>
+                <Button variant="flat" onPress={locate} startContent={<FolderOpen />}>
                   Locate
                 </Button>
               )}
-              <Button variant="flat" color="success" onPress={() => starterResolver.current?.({chosen: 'install'})}>
+              <Button
+                variant="flat"
+                color="success"
+                endContent={<ArrowRight className="size-4" />}
+                onPress={() => starterResolver.current?.({chosen: 'install'})}>
                 Start Installation
               </Button>
             </>
           )}
           {state.body === 'clone' && !state.startClone && (
-            <Button variant="flat" color="success" onPress={() => updateState({startClone: true})}>
+            <Button
+              variant="flat"
+              color="success"
+              startContent={<Download className="size-4" />}
+              onPress={() => updateState({startClone: true})}>
               Download
             </Button>
           )}
@@ -103,17 +118,21 @@ const InstallFooter = memo(
               }}
               variant="flat"
               color="success"
-              isDisabled={!canContinue}>
+              isDisabled={!canContinue}
+              endContent={<ArrowRight className="size-4" />}>
               Next
             </Button>
           )}
           {state.body === 'extension-custom' && (
-            <Button variant="flat" color="success" onPress={nextStep}>
+            <Button variant="flat" color="success" onPress={nextStep} endContent={<ArrowRight className="size-4" />}>
               Next
             </Button>
           )}
           {progressInfo?.stage === 'failed' && urlToDownload && (
-            <Button variant="flat" onPress={() => downloadFileFromUrl(urlToDownload)}>
+            <Button
+              variant="flat"
+              startContent={<Restart className="size-4" />}
+              onPress={() => downloadFileFromUrl(urlToDownload)}>
               Try Again
             </Button>
           )}
@@ -122,7 +141,7 @@ const InstallFooter = memo(
     };
 
     return (
-      <ModalFooter className="shrink-0 justify-between overflow-hidden bg-foreground-200 dark:bg-foreground-100">
+      <ModalFooter className="shrink-0 justify-between overflow-hidden bg-foreground-100">
         <ButtonGroup fullWidth>{renderFooterButtons()}</ButtonGroup>
       </ModalFooter>
     );

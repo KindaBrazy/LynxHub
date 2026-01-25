@@ -1,7 +1,8 @@
 import {Button, Input} from '@heroui/react';
-import {Grip_Icon, TrashDuo_Icon} from '@lynx_assets/icons';
+import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
+import {GripVertical} from 'lucide-react';
 import {KeyboardEvent, useCallback, useState} from 'react';
 
 type Props = {
@@ -41,7 +42,7 @@ export default function TerminalCommandItem({defaultText, editCommand, index, on
       initial={{opacity: 0}}
       onPointerUp={onDoneReorder}
       className={'rounded-medium bg-foreground-50 cursor-grab active:cursor-grabbing flex items-center gap-x-2 p-2'}>
-      <Grip_Icon className="text-foreground-500" />
+      <GripVertical className="text-foreground-500 size-4" />
       <span className="text-sm">{index + 1}</span>
       <Input
         size="sm"
@@ -55,7 +56,7 @@ export default function TerminalCommandItem({defaultText, editCommand, index, on
         classNames={{input: `font-JetBrainsMono! text-xs!`, inputWrapper: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack'}}
       />
       <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>
-        <TrashDuo_Icon className="size-4" />
+        <TrashBin2 className="size-3.5" />
       </Button>
     </Reorder.Item>
   );

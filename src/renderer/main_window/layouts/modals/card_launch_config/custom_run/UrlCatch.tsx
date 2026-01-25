@@ -112,7 +112,6 @@ export function UrlCatch({id}: Props) {
           minValue={0}
           spellCheck="false"
           value={moduleDelay}
-          labelPlacement="outside-left"
           label="Module URL Open Delay: "
           onValueChange={onModuleDelayChange}
           endContent={<span className="text-foreground-600 text-sm">Seconds</span>}
@@ -132,7 +131,6 @@ export function UrlCatch({id}: Props) {
           value={findLine}
           spellCheck="false"
           label="Line Must Contain: "
-          labelPlacement="outside-left"
           onValueChange={onFindLineChange}
         />
       )}
@@ -147,7 +145,6 @@ export function UrlCatch({id}: Props) {
             value={customUrl}
             spellCheck="false"
             label="Target URL: "
-            labelPlacement="outside-left"
             onValueChange={onCustomUrlChange}
             description="Specify the exact web address (URL) to be automatically opened in the browser."
           />
@@ -164,7 +161,6 @@ export function UrlCatch({id}: Props) {
             spellCheck="false"
             label="Open After Delay: "
             onValueChange={onDelayChange}
-            labelPlacement="outside-left"
             endContent={<span className="text-foreground-600 text-sm">Seconds</span>}
           />
         </>

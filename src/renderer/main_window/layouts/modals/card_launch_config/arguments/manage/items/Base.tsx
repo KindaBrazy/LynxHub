@@ -1,9 +1,10 @@
 import {Button, Card, CardBody, CardHeader, Divider} from '@heroui/react';
 import {useGetArgumentsByID} from '@lynx/plugins/modules';
 import {getArgumentDescription} from '@lynx/utils/module_arguments';
-import {Grip_Icon, TrashDuo_Icon} from '@lynx_assets/icons';
+import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Tooltip} from 'antd';
 import {Reorder, useDragControls} from 'framer-motion';
+import {GripVertical} from 'lucide-react';
 import {ReactNode, useMemo} from 'react';
 
 type Props = {
@@ -46,7 +47,7 @@ export default function ArgumentItemBase({
           ' relative'
         }
         onPointerDown={e => controls.start(e)}>
-        <Grip_Icon className="size-4" />
+        <GripVertical className="size-4" />
         <Divider orientation="vertical" className="absolute right-0 bg-LynxWhiteSecond dark:bg-LynxRaisinBlack" />
       </div>
       <Tooltip title={tooltipText} mouseEnterDelay={0.8} rootClassName="max-w-[65%] whitespace-pre-line">
@@ -66,7 +67,7 @@ export default function ArgumentItemBase({
             <div className="flex flex-row items-center gap-x-1">
               {extra}
               <Button size="sm" color="danger" variant="light" onPress={removeArg} isIconOnly>
-                <TrashDuo_Icon className="size-3.5" />
+                <TrashBin2 className="size-3.5" />
               </Button>
             </div>
           </CardHeader>

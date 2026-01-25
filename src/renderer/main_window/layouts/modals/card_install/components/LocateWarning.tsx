@@ -1,5 +1,5 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {ShieldWarning_Icon} from '@lynx_assets/icons';
+import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction} from 'react';
 
 import {useTabVisibility} from '../../../tabs/utils';
@@ -17,7 +17,7 @@ export default function LocateWarning({isOpen, setIsOpen, tabId}: Props) {
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="text-warning items-center gap-x-2">
-          <ShieldWarning_Icon className="size-8" />
+          <ShieldWarning className="size-8" />
           <span className="font-bold">Installation Directory</span>
         </ModalHeader>
         <ModalBody>

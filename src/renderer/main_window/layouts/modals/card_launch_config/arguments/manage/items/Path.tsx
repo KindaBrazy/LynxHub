@@ -2,9 +2,9 @@ import {Button} from '@heroui/react';
 import {useGetArgumentsByID} from '@lynx/plugins/modules';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {getArgumentDefaultValue} from '@lynx/utils/module_arguments';
-import {RefreshDuo_Icon} from '@lynx_assets/icons';
 import {ChosenArgument} from '@lynx_common/types';
 import filesIpc from '@lynx_shared/ipc/files';
+import {Repeat} from '@solar-icons/react-perf/BoldDuotone';
 import {Tooltip} from 'antd';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
@@ -73,7 +73,7 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
         baseDir ? (
           <Tooltip color="#111111" title={`Change to ${isRelative ? 'Absolute' : 'Relative'}`}>
             <Button size="sm" variant="light" onPress={changePathType} isIconOnly>
-              <RefreshDuo_Icon
+              <Repeat
                 onAnimationEnd={() => setRotateEffect(false)}
                 className={`${rotateEffect && 'animate-[spin_0.5s]'}`}
               />

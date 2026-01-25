@@ -1,7 +1,7 @@
 import {Button, Card, CardBody, CardHeader} from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
-import {Add_Icon} from '@lynx_assets/icons';
 import {isEmpty, isString} from 'lodash';
+import {Plus} from 'lucide-react';
 import {ReactNode} from 'react';
 
 type Props = {
@@ -30,7 +30,7 @@ export default function LaunchConfigSection({
           {customButton || (
             <LynxTooltip content={addTooltipTitle} isEssential>
               <Button size="sm" variant="light" onPress={onAddPress} isIconOnly>
-                <Add_Icon />
+                <Plus className="size-4" />
               </Button>
             </LynxTooltip>
           )}

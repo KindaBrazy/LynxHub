@@ -1,5 +1,5 @@
-import {CheckSquareDuo_Icon} from '@lynx_assets/icons';
 import {ChosenArgument} from '@lynx_common/types';
+import {CheckSquare} from '@solar-icons/react-perf/BoldDuotone';
 
 import ArgumentItemBase from './Base';
 
@@ -7,11 +7,6 @@ type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (val
 
 export default function CheckBoxArgItem({argument, removeArg, id}: Props) {
   return (
-    <ArgumentItemBase
-      id={id}
-      name={argument.name}
-      removeArg={removeArg}
-      icon={<CheckSquareDuo_Icon className="size-4" />}
-    />
+    <ArgumentItemBase id={id} name={argument.name} removeArg={removeArg} icon={<CheckSquare className="size-4" />} />
   );
 }

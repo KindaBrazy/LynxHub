@@ -1,11 +1,13 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
-import {Add_Icon, FolderDuo_Icon, Terminal_Icon} from '@lynx_assets/icons';
+import {Terminal_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
 import {Empty} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
+import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 
 import LaunchConfigSection from '../Section';
@@ -73,7 +75,7 @@ export default function PreTerminalCommands({id}: Props) {
             <div>
               <DropdownTrigger>
                 <Button size="sm" variant="light" isIconOnly>
-                  <Add_Icon />
+                  <Plus className="size-4" />
                 </Button>
               </DropdownTrigger>
             </div>
@@ -83,7 +85,7 @@ export default function PreTerminalCommands({id}: Props) {
               <DropdownItem key="add_folder" onPress={addCommand} startContent={<Terminal_Icon />}>
                 Command
               </DropdownItem>
-              <DropdownItem key="add_file" onPress={cdFolder} startContent={<FolderDuo_Icon />}>
+              <DropdownItem key="add_file" onPress={cdFolder} startContent={<MoveToFolder className="size-3.5" />}>
                 Cd Folder
               </DropdownItem>
             </DropdownSection>

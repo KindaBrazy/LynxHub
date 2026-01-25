@@ -1,8 +1,8 @@
 import {Card, CardBody, CardHeader, Checkbox, CircularProgress, NumberInput, Select, SelectItem} from '@heroui/react';
 import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
-import {SettingsMinimal_Icon, ShieldWarning_Icon} from '@lynx_assets/icons';
 import {extractGitUrl} from '@lynx_common/utils';
+import {SettingsMinimalistic, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -74,7 +74,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
   return (
     <Card className="dark:bg-foreground-100">
       <CardHeader className="gap-x-2">
-        <SettingsMinimal_Icon />
+        <SettingsMinimalistic />
         <span>Clone Options</span>
       </CardHeader>
       <CardBody>
@@ -84,7 +84,7 @@ export default function CloneOptions({url, setCloneOptionsResult}: Props) {
           </div>
         ) : isEmpty(branches) ? (
           <div className="flex flex-col items-center justify-center p-2 gap-y-1">
-            <ShieldWarning_Icon className="size-14 text-warning" />
+            <ShieldWarning className="size-14 text-warning" />
             <span className="text-lg font-medium">Unable to retrieve repository branches</span>
             <p className="text-sm text-foreground-500">The default repository branch will be used for cloning.</p>
           </div>

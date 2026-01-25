@@ -2,8 +2,8 @@ import {Select, Selection, SelectItem} from '@heroui/react';
 import {useGetArgumentsByID} from '@lynx/plugins/modules';
 import {convertArrToObject} from '@lynx/utils';
 import {getArgumentDefaultValue, getArgumentValues} from '@lynx/utils/module_arguments';
-import {ListCheckDuo_Icon} from '@lynx_assets/icons';
 import {ChosenArgument} from '@lynx_common/types';
+import {ListDownMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useState} from 'react';
 
 import ArgumentItemBase from './Base';
@@ -32,7 +32,7 @@ export default function DropdownArgItem({argument, changeValue, removeArg, id}: 
       id={id}
       name={argument.name}
       removeArg={removeArg}
-      icon={<ListCheckDuo_Icon className="size-[1.15rem]" />}>
+      icon={<ListDownMinimalistic className="size-4.5" />}>
       <Select
         variant="flat"
         aria-label="Select an item"

@@ -1,5 +1,5 @@
-import {FileDuo_Icon} from '@lynx_assets/icons';
 import {ChosenArgument} from '@lynx_common/types';
+import {File} from '@solar-icons/react-perf/BoldDuotone';
 
 import PathArgItem from './Path';
 
@@ -12,8 +12,8 @@ export default function FileArgItem({argument, changeValue, removeArg, id}: Prop
       type="file"
       argument={argument}
       removeArg={removeArg}
-      icon={<FileDuo_Icon />}
       changeValue={changeValue}
+      icon={<File className="size-4" />}
       placeholder="Click to choose file..."
     />
   );

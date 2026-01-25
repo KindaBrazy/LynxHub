@@ -1,6 +1,6 @@
 import {Card} from '@heroui/card';
 import {Button} from '@heroui/react';
-import {TrashDuo_Icon} from '@lynx_assets/icons';
+import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {ReactNode, useCallback} from 'react';
 
 type Props = {icon: ReactNode; index: number; defaultText: string; onRemove?: (index: number) => void};
@@ -14,7 +14,7 @@ export default function PreOpenPathItem({defaultText, icon, index, onRemove}: Pr
       {icon}
       <span className="w-full truncate text-xs">{defaultText}</span>
       <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>
-        <TrashDuo_Icon className="size-4" />
+        <TrashBin2 className="size-4" />
       </Button>
     </Card>
   );
