@@ -1,13 +1,13 @@
 import {Button, Link, Popover, PopoverContent, PopoverTrigger, Spinner} from '@heroui/react';
-import {CrossShield_Icon, Lock_Icon, Trash_Icon, Unlock_Icon} from '@lynx_assets/icons';
-import {Empty, Space, Spin} from 'antd';
+import {DownloadMinimalistic, Lock, LockUnlocked, ShieldWarning, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {Empty} from 'antd';
 import {Variants} from 'framer-motion';
+import {X} from 'lucide-react';
 
 export const tabContentVariants: Variants = {
   animate: {opacity: 1, scale: 1, transition: {duration: 0.2}},
   init: {opacity: 0, scale: 0.97},
 };
-
 export const extensionsColumns = [
   {key: 'name', label: 'Name'},
   {key: 'size', label: 'Size'},
@@ -32,8 +32,7 @@ export const useRowElements = {
         color="danger"
         variant="light"
         isDisabled={true}
-        className="cursor-default"
-        startContent={<Trash_Icon className="size-4" />}
+        startContent={<TrashBin2 className="size-4" />}
         isIconOnly
       />
     ),
@@ -44,36 +43,27 @@ export const useRowElements = {
       onDeletePerman: () => void,
       onMoveToTrash: () => void,
     ) => (
-      <Popover size="sm" isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Popover size="md" isOpen={isOpen} onOpenChange={onOpenChange}>
         <PopoverTrigger>
-          <Button
-            size="sm"
-            color="danger"
-            variant="light"
-            className="cursor-default"
-            startContent={<Trash_Icon className="size-4" />}
-            isIconOnly
-          />
+          <Button size="sm" color="danger" variant="light" startContent={<TrashBin2 className="size-4" />} isIconOnly />
         </PopoverTrigger>
         <PopoverContent>
           <div className="p-2">
-            <h2 className="mb-4 mt-2 flex flex-row items-center font-bold">
-              <CrossShield_Icon className="fill-danger size-5 mr-1 mb-0.5" /> Delete {name}
-            </h2>
-            <p>
-              <span>This action will remove the extension and all its associated data from your device.</span>
-              <br />
-              <span>Are you sure you want to proceed?</span>
-            </p>
-            <div className="mt-4 flex items-end justify-end">
-              <Space>
-                <Button size="sm" color="danger" variant="light" onPress={onDeletePerman} className="cursor-default">
-                  Delete permanently
-                </Button>
-                <Button size="sm" variant="light" color="warning" onPress={onMoveToTrash} className="cursor-default">
-                  Move to trash
-                </Button>
-              </Space>
+            <span className="mb-2 flex flex-row items-center font-bold">
+              <ShieldWarning className="text-warning size-5 mr-1 mb-0.5" /> Delete {name}
+            </span>
+            <div className="mt-2 flex items-end justify-between gap-x-1">
+              <Button size="sm" variant="light" color="warning" onPress={onMoveToTrash} startContent={<TrashBin2 />}>
+                Move to trash
+              </Button>
+              <Button
+                size="sm"
+                color="danger"
+                variant="flat"
+                onPress={onDeletePerman}
+                startContent={<X className="size-3.5" />}>
+                Delete permanently
+              </Button>
             </div>
           </div>
         </PopoverContent>
@@ -82,29 +72,23 @@ export const useRowElements = {
   },
   updateBtn: {
     available: (onPress: () => void) => (
-      <Button size="sm" variant="flat" color="success" onPress={onPress}>
-        Update
+      <Button size="sm" variant="flat" color="success" onPress={onPress} startContent={<DownloadMinimalistic />}>
+        Available
       </Button>
     ),
-    initializing: <Spin size="small" />,
+    initializing: <Spinner size="sm" />,
     updated: (
-      <Button size="sm" variant="light" color="default" className="cursor-default" isDisabled>
+      <Button size="sm" variant="light" color="default" isDisabled>
         Updated
       </Button>
     ),
-    updating: <Button size="sm" variant="flat" color="success" className="cursor-default" isLoading />,
+    updating: <Button size="sm" variant="flat" color="success" isLoading />,
   },
   disableBtn: {
     disable: <Button size="sm" variant="light" isDisabled={true} isLoading isIconOnly />,
     enabled: (isDisabled: boolean, onPress: () => void) => (
-      <Button
-        size="sm"
-        variant="light"
-        onPress={onPress}
-        className="cursor-default"
-        color={isDisabled ? 'warning' : 'default'}
-        isIconOnly>
-        {isDisabled ? <Lock_Icon className="size-4" /> : <Unlock_Icon className="size-4" />}
+      <Button size="sm" variant="light" onPress={onPress} color={isDisabled ? 'warning' : 'default'} isIconOnly>
+        {isDisabled ? <Lock className="size-4" /> : <LockUnlocked className="size-4" />}
       </Button>
     ),
   },

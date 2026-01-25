@@ -5,6 +5,7 @@ import {useModalsState} from '@lynx/redux/reducers/modals';
 import {modalMotionProps} from '@lynx/utils/constants';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
+import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
@@ -128,7 +129,8 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
                   variant={isUpdateAvailable ? 'flat' : 'light'}
                   isDisabled={!isUpdateAvailable || isUpdatingAll}
                   color={isUpdateAvailable ? 'success' : 'default'}
-                  className={`${!isUpdateAvailable && 'cursor-default'}`}>
+                  className={`${!isUpdateAvailable && 'cursor-default'}`}
+                  startContent={isUpdateAvailable && !isUpdatingAll && <Download />}>
                   {!isUpdateAvailable ? 'No Updates Available' : isUpdatingAll ? 'Updating...' : 'Update All'}
                 </Button>
               )}

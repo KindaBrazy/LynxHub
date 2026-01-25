@@ -4,9 +4,10 @@ import {modalActions} from '@lynx/redux/reducers/modals';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {formatNumber} from '@lynx/utils';
-import {Home_Icon, Star_Icon} from '@lynx_assets/icons';
 import {extractGitUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
+import {Star} from '@solar-icons/react-perf/Bold';
+import {Home2} from '@solar-icons/react-perf/BoldDuotone';
 import {Avatar, List, Tag, Typography} from 'antd';
 import {capitalize} from 'lodash';
 import {useCallback, useState} from 'react';
@@ -67,7 +68,7 @@ export default function RenderItem({item, updateTable, dir, searchValue}: Props)
               {!installing && 'Install'}
             </Button>
             <Button size="sm" variant="light" onPress={homePage} isIconOnly>
-              <Home_Icon />
+              <Home2 className="size-4" />
             </Button>
           </div>
         }
@@ -102,7 +103,7 @@ export default function RenderItem({item, updateTable, dir, searchValue}: Props)
               <Tag variant="filled">{capitalize(extractGitUrl(item.url).owner)}</Tag>
               {item.stars && (
                 <Tag variant="filled" className="flex flex-row items-center justify-center gap-x-1">
-                  <Star_Icon className={item.stars >= 1000 ? 'fill-yellow-400' : 'fill-yellow-200'} />
+                  <Star className={item.stars >= 1000 ? 'fill-yellow-400' : 'fill-yellow-200'} />
                   {formatNumber(item.stars)}
                 </Tag>
               )}

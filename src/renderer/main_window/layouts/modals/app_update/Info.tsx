@@ -1,6 +1,6 @@
-import {ExternalLink_Icon} from '@lynx_assets/icons';
 import {APP_BUILD_NUMBER, APP_VERSION, RELEASES_PAGE} from '@lynx_common/consts';
 import {AppUpdateInfo} from '@lynx_common/types';
+import {SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {Button, Card, Collapse, CollapseProps, Descriptions, Empty, Typography} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {isEmpty} from 'lodash';
@@ -48,7 +48,7 @@ export default function Info({updateInfo, items}: Props) {
               }}
               type="link"
               iconPlacement="end"
-              icon={<ExternalLink_Icon />}
+              icon={<SquareTopDown />}
               block>
               Releases Page
             </Button>

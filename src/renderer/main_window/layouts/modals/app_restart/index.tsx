@@ -2,10 +2,10 @@ import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '
 import {isLinuxPortable} from '@lynx/hooks/utils';
 import {modalActions, useModalsState} from '@lynx/redux/reducers/modals';
 import {AppDispatch} from '@lynx/redux/store';
+import {Power_Icon} from '@lynx_assets/icons';
 import applicationIpc from '@lynx_shared/ipc/application';
-import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
+import {Forward2, Restart, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {useDispatch} from 'react-redux';
-
 export function RestartModal() {
   const dispatch = useDispatch<AppDispatch>();
   const {isOpen, message} = useModalsState('restartModal');
@@ -42,11 +42,18 @@ export function RestartModal() {
               <span>Restart Required</span>
             </ModalHeader>
             <ModalBody>{message}</ModalBody>
-            <ModalFooter>
-              <Button variant="light" color="warning" onPress={handleClose}>
+            <ModalFooter className="justify-between">
+              <Button
+                variant="light"
+                color="warning"
+                onPress={handleClose}
+                startContent={<Forward2 className="rotate-180 size-4" />}>
                 Restart Later
               </Button>
-              <Button color="success" onPress={isLinuxPortable ? handleExit : handleRestart}>
+              <Button
+                color="success"
+                onPress={isLinuxPortable ? handleExit : handleRestart}
+                startContent={isLinuxPortable ? <Power_Icon className="size-3.5" /> : <Restart className="size-4" />}>
                 {isLinuxPortable ? 'Exit Now' : 'Restart Now'}
               </Button>
             </ModalFooter>

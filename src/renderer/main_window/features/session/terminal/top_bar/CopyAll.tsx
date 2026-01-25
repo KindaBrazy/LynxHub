@@ -1,28 +1,26 @@
 import {Button, Tooltip} from '@heroui/react';
 import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
-import {CheckDuo_Icon, CopyDuo_Icon, FileDownDuo_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
+import {FileText} from '@solar-icons/react-perf/BoldDuotone';
 import {SerializeAddon} from '@xterm/addon-serialize';
-import {memo, useCallback, useState} from 'react';
+import {memo, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
+
+import CopyClipboard from '../../../../components/CopyClipboard';
 
 type Props = {
   serializeAddon: SerializeAddon;
 };
 
 const CopyAll = memo(({serializeAddon}: Props) => {
-  const [copied, setCopied] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
+
   const handleCopy = useCallback(() => {
     const contentToCopy = serializeAddon.serialize();
     if (!contentToCopy) return;
 
     navigator.clipboard.writeText(contentToCopy);
-    setCopied(true);
-    setTimeout(() => {
-      setCopied(false);
-    }, 1000);
   }, []);
 
   const saveFile = useCallback(() => {
@@ -45,19 +43,11 @@ const CopyAll = memo(({serializeAddon}: Props) => {
 
   return (
     <div className="flex flex-row items-center gap-x-1">
-      <Tooltip delay={500} content="Copy all to clipboard">
-        <Button size="sm" variant="light" onPress={handleCopy} isIconOnly>
-          {copied ? (
-            <CheckDuo_Icon className="size-5 animate-appearance-in" />
-          ) : (
-            <CopyDuo_Icon className="size-3.5 animate-appearance-in" />
-          )}
-        </Button>
-      </Tooltip>
+      <CopyClipboard onCopy={handleCopy} tooltipTitle="Copy all to clipboard" />
 
       <Tooltip delay={500} content="Export all to file">
         <Button size="sm" variant="light" onPress={saveFile} isIconOnly>
-          <FileDownDuo_Icon className="size-3.5" />
+          <FileText className="size-3.5" />
         </Button>
       </Tooltip>
     </div>
