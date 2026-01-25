@@ -1,11 +1,11 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Image, Tooltip} from '@heroui/react';
-import {ExternalDuo_Icon, Web_Icon} from '@lynx_assets/icons';
 import {SearchQuerySites} from '@lynx_common/types';
 import {getCacheUrl, getSearchUrl} from '@lynx_common/utils';
+import {Earth, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useCallback} from 'react';
 
-const endContent = <ExternalDuo_Icon className="size-3 group-hover:opacity-100 opacity-0 transition duration-300" />;
+const endContent = <SquareTopDown className="size-3 group-hover:opacity-100 opacity-0 transition duration-300" />;
 
 type Props = {
   selectedTerminalText: string;
@@ -31,7 +31,7 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
               <div className="max-w-fit">
                 <DropdownTrigger>
                   <Button size="sm" variant="light" isIconOnly>
-                    <Web_Icon className="size-3.5" />
+                    <Earth className="size-3.5" />
                   </Button>
                 </DropdownTrigger>
               </div>

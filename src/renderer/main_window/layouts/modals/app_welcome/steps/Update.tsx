@@ -1,7 +1,7 @@
 import {Alert, Button} from '@heroui/react';
-import {CheckDuo_Icon} from '@lynx_assets/icons';
 import {APP_NAME} from '@lynx_common/consts';
 import applicationIpc from '@lynx_shared/ipc/application';
+import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {motion} from 'framer-motion';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -74,7 +74,7 @@ export default function StepUpdate({onComplete}: Props) {
           className="font-semibold"
           isDisabled={!pwshSatisfied}
           color={pwshSatisfied ? 'success' : 'default'}
-          startContent={pwshSatisfied && <CheckDuo_Icon className="size-5" />}>
+          startContent={pwshSatisfied && <CheckRead className="size-5" />}>
           {pwshSatisfied ? `Finish & Restart ${APP_NAME}` : 'Waiting for PowerShell...'}
         </Button>
       </motion.div>

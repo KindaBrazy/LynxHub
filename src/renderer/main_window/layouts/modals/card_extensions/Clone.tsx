@@ -3,10 +3,11 @@ import {lynxTopToast} from '@lynx/hooks/utils';
 import {useAppState} from '@lynx/redux/reducers/app';
 import {AppDispatch} from '@lynx/redux/store';
 import {initGitProgress} from '@lynx/utils/constants';
-import {Download2_Icon, GitHub_Icon} from '@lynx_assets/icons';
+import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
+import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {Card} from 'antd';
 import {motion} from 'framer-motion';
 import {capitalize, startCase} from 'lodash';
@@ -169,7 +170,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
                 <Card.Meta title={<span className="text-success">This extension has already been installed.</span>} />
               ) : (
                 <>
-                  <Download2_Icon
+                  <Download
                     className={'size-10 group-hover:opacity-100 left-7 opacity-50 absolute transition duration-300'}
                   />
                   <Card.Meta

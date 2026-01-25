@@ -3,11 +3,11 @@ import useHotkeyPress from '@lynx/hooks/hotkeys';
 import {useIsActiveTab} from '@lynx/layouts/tabs/utils';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {formatHotkey} from '@lynx/utils';
-import {AltArrow_Icon, Magnifier_Icon} from '@lynx_assets/icons';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
+import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
+import {Magnifer} from '@solar-icons/react-perf/BoldDuotone';
 import {SearchAddon} from '@xterm/addon-search';
 import {KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
-
 type Props = {searchAddon: SearchAddon; tabId: string};
 
 const SearchText = memo(({searchAddon, tabId}: Props) => {
@@ -72,7 +72,7 @@ const SearchText = memo(({searchAddon, tabId}: Props) => {
         <div className="max-w-fit">
           <PopoverTrigger>
             <Button size="sm" variant="light" isIconOnly>
-              <Magnifier_Icon className="size-3.5" />
+              <Magnifer className="size-3.5" />
             </Button>
           </PopoverTrigger>
         </div>
@@ -89,10 +89,10 @@ const SearchText = memo(({searchAddon, tabId}: Props) => {
             autoFocus
           />
           <Button size="sm" variant="light" isIconOnly>
-            <AltArrow_Icon className="size-3.5" />
+            <AltArrowDown className="size-3.5" />
           </Button>
           <Button size="sm" variant="light" isIconOnly>
-            <AltArrow_Icon className="size-3.5 rotate-180" />
+            <AltArrowUp className="size-3.5" />
           </Button>
         </div>
       </PopoverContent>

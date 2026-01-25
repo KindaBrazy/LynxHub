@@ -275,9 +275,7 @@ const Installed = forwardRef(
           </TableHeader>
           <TableBody items={rows} emptyContent={emptyContent}>
             {row => (
-              <TableRow key={row.key} className="hover:bg-black/15">
-                {columnKey => <TableCell>{getKeyValue(row, columnKey)}</TableCell>}
-              </TableRow>
+              <TableRow key={row.key}>{columnKey => <TableCell>{getKeyValue(row, columnKey)}</TableCell>}</TableRow>
             )}
           </TableBody>
         </Table>
