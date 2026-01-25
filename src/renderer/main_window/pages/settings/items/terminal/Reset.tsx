@@ -31,7 +31,13 @@ export default function Reset() {
         'terminal settings',
         'reset quick commands',
       ]}>
-      <Button onPress={onApply} isLoading={isSaving} startContent={<RefreshDuo_Icon />} fullWidth>
+      <Button
+        variant="flat"
+        color="warning"
+        onPress={onApply}
+        isLoading={isSaving}
+        startContent={<RefreshDuo_Icon />}
+        fullWidth>
         Reset All Terminal Settings
       </Button>
     </SettingsFilterItem>

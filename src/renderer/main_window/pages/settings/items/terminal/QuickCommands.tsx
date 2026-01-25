@@ -1,6 +1,7 @@
-import {Input} from '@heroui/react';
+import {Button, Input} from '@heroui/react';
 import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
+import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
@@ -44,12 +45,13 @@ export default function QuickCommands() {
                 label={`Quick Command ${slot}`}
                 onValueChange={value => updateQuickCommands(index, {command: value})}
               />
-              <button
-                type="button"
-                onClick={() => updateQuickCommands(index, {label: '', command: ''})}
-                className="text-xs text-danger-500 hover:text-danger-600 justify-self-start md:justify-self-end">
-                Clear
-              </button>
+              <Button
+                variant="light"
+                color="warning"
+                onPress={() => updateQuickCommands(index, {label: '', command: ''})}
+                isIconOnly>
+                <Broom />
+              </Button>
             </div>
           );
         })}

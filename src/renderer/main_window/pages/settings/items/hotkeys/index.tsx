@@ -5,7 +5,6 @@ import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
 import {formatHotkey, HotkeyLike} from '@lynx/utils';
-import {Keyboard_Icon, RefreshDuo_Icon} from '@lynx_assets/icons';
 import {
   Get_Default_Hotkeys,
   Hotkey_Desc,
@@ -15,6 +14,7 @@ import {
 } from '@lynx_common/consts/hotkeys';
 import {LynxHotkey} from '@lynx_common/types/ipc';
 import storageIpc from '@lynx_shared/ipc/storage';
+import {Keyboard, Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {compact} from 'lodash';
 import {KeyboardEvent, useCallback, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -173,7 +173,7 @@ export const HotkeySettings = () => {
                     disabled={isRecording}
                     isLoading={isRecording}
                     onPress={() => handleRecordClick(name)}>
-                    <Keyboard_Icon className="size-4" />
+                    <Keyboard className="size-4" />
                   </Button>
                   <Input
                     ref={el => {
@@ -205,7 +205,7 @@ export const HotkeySettings = () => {
   );
 
   return (
-    <SettingsSection title="Hotkeys" id={SettingsHotkeysId} icon={<Keyboard_Icon className="size-5" />}>
+    <SettingsSection title="Hotkeys" id={SettingsHotkeysId} icon={<Keyboard className="size-5" />}>
       <Listbox variant="flat" aria-label="hotkeys_list">
         {Hotkey_Sections.map(section => {
           return (
@@ -215,7 +215,7 @@ export const HotkeySettings = () => {
           );
         })}
       </Listbox>
-      <Button onPress={resetToDefault} startContent={<RefreshDuo_Icon />}>
+      <Button variant="flat" color="warning" onPress={resetToDefault} startContent={<Refresh />}>
         Reset to Defaults
       </Button>
     </SettingsSection>

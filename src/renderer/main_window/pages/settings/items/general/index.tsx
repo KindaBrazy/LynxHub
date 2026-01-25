@@ -1,5 +1,5 @@
 import SettingsSection from '@lynx/components/ContentSection';
-import {Tuning_Icon} from '@lynx_assets/icons';
+import {SettingPage_Icon} from '@lynx_assets/icons/pages';
 
 import CollectErrors from './CollectErrors';
 import Confirm from './Confirm';
@@ -12,7 +12,7 @@ export const SettingsGeneralId = 'settings_app_elem';
 
 export default function SettingsGeneral() {
   return (
-    <SettingsSection title="General" id={SettingsGeneralId} icon={<Tuning_Icon className="size-5" />}>
+    <SettingsSection title="General" id={SettingsGeneralId} icon={<SettingPage_Icon className="size-5" />}>
       <Theme />
       <Taskbar />
       <Tooltip />

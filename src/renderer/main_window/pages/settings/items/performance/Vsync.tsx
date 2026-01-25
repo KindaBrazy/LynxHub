@@ -2,6 +2,7 @@ import LynxSwitch from '@lynx/components/LynxSwitch';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
+import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -27,12 +28,18 @@ export default function Vsync() {
   );
 
   const titleText = 'Disable GPU VSync';
-  const descriptionText = '⚠️ May cause screen tearing but reduces input latency.';
+  const descriptionText = 'May cause screen tearing but reduces input latency.';
 
   return (
     <SettingsFilterItem
       searchTexts={[titleText, descriptionText, 'vsync', 'tearing', 'latency', 'input lag', 'gaming']}>
-      <LynxSwitch title={titleText} enabled={enabled} description={descriptionText} onEnabledChange={onEnabledChange} />
+      <LynxSwitch
+        title={titleText}
+        enabled={enabled}
+        description={descriptionText}
+        onEnabledChange={onEnabledChange}
+        icon={<ShieldWarning className="text-warning" />}
+      />
     </SettingsFilterItem>
   );
 }

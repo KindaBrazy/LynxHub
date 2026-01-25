@@ -10,6 +10,8 @@ type Props = {
   isDisabled?: boolean;
   className?: string;
   size?: 'sm' | 'default';
+  icon?: ReactNode;
+  thumbIcon?: ReactNode;
 };
 
 /** Customizable switch with title and description. */
@@ -21,6 +23,8 @@ export default function LynxSwitch({
   isDisabled,
   className,
   size = 'default',
+  icon,
+  thumbIcon,
 }: Props) {
   const [isSelected, setIsSelected] = useState<boolean>(enabled);
 
@@ -41,7 +45,7 @@ export default function LynxSwitch({
       'inline-flex flex-row-reverse w-full max-w-full items-center',
       'dark:bg-foreground-100 bg-foreground-100 dark:hover:bg-foreground-50 hover:bg-foreground-50',
       'justify-between cursor-pointer rounded-lg gap-2 transition duration-300',
-      size === 'sm' ? 'px-2 py-1' : 'px-4 py-2.5',
+      size === 'sm' ? 'px-2 py-1' : `px-4 ${icon && 'pl-1!'} py-2.5`,
       'border-2 border-transparent data-[selected=true]:border-secondary/30',
     );
   }, [size]);
@@ -68,18 +72,22 @@ export default function LynxSwitch({
         thumb: thumbClassName,
       }}
       color="secondary"
+      thumbIcon={thumbIcon}
       isSelected={isSelected}
       isDisabled={isDisabled}
       onValueChange={onChange}
       className={'cursor-default whitespace-pre-line ' + className}>
-      <div className="flex flex-col gap-1">
-        <SettingsSearchHighlight text={title} className="text-sm" />
-        {description &&
-          (typeof description === 'string' ? (
-            <SettingsSearchHighlight text={description} className="text-tiny text-default-400" />
-          ) : (
-            <p className="text-tiny text-default-400">{description}</p>
-          ))}
+      <div className="flex flex-raw gap-x-2 items-center">
+        {icon}
+        <div className="flex flex-col gap-y-1">
+          <SettingsSearchHighlight text={title} className="text-sm" />
+          {description &&
+            (typeof description === 'string' ? (
+              <SettingsSearchHighlight text={description} className="text-tiny text-default-400" />
+            ) : (
+              <p className="text-tiny text-default-400">{description}</p>
+            ))}
+        </div>
       </div>
     </Switch>
   );

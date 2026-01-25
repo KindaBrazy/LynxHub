@@ -1,5 +1,5 @@
 import SettingsSection from '@lynx/components/ContentSection';
-import {Web_Icon} from '@lynx_assets/icons';
+import {Earth} from '@solar-icons/react-perf/BoldDuotone';
 
 import AudioControl from './AudioControl';
 import ClearData from './ClearData';
@@ -11,7 +11,7 @@ export const SettingsBrowserId = 'settings_browser_elem';
 
 export default function SettingsBrowser() {
   return (
-    <SettingsSection title="Browser" id={SettingsBrowserId} icon={<Web_Icon className="size-5" />}>
+    <SettingsSection title="Browser" id={SettingsBrowserId} icon={<Earth className="size-5" />}>
       <Links />
       <UserAgent />
       <Downloads />

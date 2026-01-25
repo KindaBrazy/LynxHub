@@ -1,8 +1,8 @@
 import {Button, Radio, RadioGroup} from '@heroui/react';
 import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
-import {FolderDuo_Icon} from '@lynx_assets/icons';
 import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
+import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -137,7 +137,7 @@ export default function Downloads() {
                 color="secondary"
                 isLoading={isLoadingLocation}
                 onPress={handleChangeLocation}
-                startContent={!isLoadingLocation && <FolderDuo_Icon className="size-4" />}>
+                startContent={!isLoadingLocation && <MoveToFolder className="size-4" />}>
                 Change Location
               </Button>
             </div>

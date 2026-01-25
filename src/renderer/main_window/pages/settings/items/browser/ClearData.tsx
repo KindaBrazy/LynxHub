@@ -1,8 +1,8 @@
 import {Button, Checkbox, CheckboxGroup} from '@heroui/react';
 import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
-import {BroomDuo_Icon} from '@lynx_assets/icons';
 import browserIpc from '@lynx_shared/ipc/browser';
+import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import isEmpty from 'lodash/isEmpty';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -83,9 +83,9 @@ export default function ClearData() {
           variant="flat"
           color="warning"
           isLoading={isLoading}
+          startContent={<Broom />}
           onPress={clearSelections}
-          isDisabled={isEmpty(selected)}
-          startContent={<BroomDuo_Icon />}>
+          isDisabled={isEmpty(selected)}>
           Clear
         </Button>
       </div>

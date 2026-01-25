@@ -4,6 +4,7 @@ import {AppDispatch} from '@lynx/redux/store';
 import {DarkModeTypes} from '@lynx_common/types/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
 import storageIpc from '@lynx_shared/ipc/storage';
+import {Display, Moon, Sun2} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -80,15 +81,17 @@ export default function Theme() {
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
         classNames={{trigger: 'cursor-default transition! duration-300!'}}
+        startContent={selectedTheme === 'system' ? <Display /> : selectedTheme === 'dark' ? <Moon /> : <Sun2 />}
         disallowEmptySelection>
-        <SelectItem key="dark" className="cursor-default">
+        <SelectItem key="dark" startContent={<Moon />} className="cursor-default">
           Dark
         </SelectItem>
-        <SelectItem key="light" className="cursor-default">
+        <SelectItem key="light" startContent={<Sun2 />} className="cursor-default">
           Light
         </SelectItem>
         <SelectItem
           key="system"
+          startContent={<Display />}
           className="cursor-default"
           description="Automatically switch theme based on system settings.">
           System Default
