@@ -2,9 +2,16 @@ import {Button, Tooltip} from '@heroui/react';
 import {Copy} from '@solar-icons/react-perf/BoldDuotone';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
-type Props = {tooltipTitle?: string; showTooltip?: boolean; contentToCopy: string; className?: string};
 
-const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, className}: Props) => {
+type Props = {
+  tooltipTitle?: string;
+  showTooltip?: boolean;
+  contentToCopy?: string;
+  className?: string;
+  onCopy?: () => void;
+};
+
+const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, className, onCopy}: Props) => {
   const [copied, setCopied] = useState<boolean>(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -15,7 +22,12 @@ const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, cl
   }, []);
 
   const handleCopy = useCallback(() => {
-    navigator.clipboard.writeText(contentToCopy);
+    if (onCopy) {
+      onCopy();
+    } else {
+      if (contentToCopy) navigator.clipboard.writeText(contentToCopy);
+    }
+
     setCopied(true);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
