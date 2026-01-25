@@ -3,18 +3,17 @@ import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
 import {searchInStrings} from '@lynx/utils';
 import {ContainersBg} from '@lynx/utils/common_styles';
-import {
-  Circle_Icon,
-  Database_Icon,
-  EditCard_Icon,
-  Keyboard_Icon,
-  Rocket_Icon,
-  Terminal_Icon,
-  Trash_Icon,
-  Web_Icon,
-} from '@lynx_assets/icons';
+import {Circle_Icon, Terminal_Icon} from '@lynx_assets/icons';
 import {SettingPage_Icon} from '@lynx_assets/icons/pages';
-import {SpedometerMiddle} from '@solar-icons/react-perf/BoldDuotone';
+import {
+  Card as CardIcon,
+  Database,
+  Earth,
+  Keyboard,
+  SpedometerMiddle,
+  TrashBin2,
+} from '@solar-icons/react-perf/BoldDuotone';
+import {Rocket} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {ReactNode, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
@@ -47,7 +46,7 @@ const groupSections: GroupProps[] = [
       },
       {
         title: 'Startup',
-        icon: <Rocket_Icon className="size-4 shrink-0" />,
+        icon: <Rocket className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsStartupId,
       },
       {
@@ -57,7 +56,7 @@ const groupSections: GroupProps[] = [
       },
       {
         title: 'Card',
-        icon: <EditCard_Icon className="size-4 shrink-0" />,
+        icon: <CardIcon className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsCardId,
       },
       {
@@ -67,12 +66,12 @@ const groupSections: GroupProps[] = [
       },
       {
         title: 'Browser',
-        icon: <Web_Icon className="size-4 shrink-0" />,
+        icon: <Earth className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsBrowserId,
       },
       {
         title: 'Hotkeys',
-        icon: <Keyboard_Icon className="size-4 shrink-0" />,
+        icon: <Keyboard className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsHotkeysId,
       },
     ],
@@ -82,12 +81,12 @@ const groupSections: GroupProps[] = [
     items: [
       {
         title: 'Data',
-        icon: <Database_Icon className="size-4 shrink-0" />,
+        icon: <Database className="size-4 shrink-0" />,
         elementId: settingsSectionId.SettingsDataId,
       },
       {
         title: 'Clear',
-        icon: <Trash_Icon className="size-4 shrink-0" />,
+        icon: <TrashBin2 className="size-4 shrink-0" />,
         color: 'danger',
         elementId: settingsSectionId.SettingsClearId,
       },

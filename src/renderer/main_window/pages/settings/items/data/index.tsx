@@ -2,9 +2,9 @@ import {Button} from '@heroui/react';
 import SettingsSection from '@lynx/components/ContentSection';
 import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
-import {Database_Icon, OpenFolder_Icon, Refresh_Icon} from '@lynx_assets/icons';
 import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
+import {Database, MoveToFolder, Repeat} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -40,16 +40,16 @@ export default function SettingsData() {
   }, []);
 
   return (
-    <SettingsSection title="Data" id={SettingsDataId} icon={<Database_Icon className="size-5" />} itemsCenter>
+    <SettingsSection title="Data" id={SettingsDataId} icon={<Database className="size-5" />} itemsCenter>
       <span>
         <SettingsSearchHighlight text="App data, including extensions, modules and binaries, will be saved here." />
       </span>
 
-      <Button variant="flat" onPress={openFolder} startContent={<OpenFolder_Icon />}>
+      <Button variant="flat" onPress={openFolder} startContent={<MoveToFolder />}>
         {currentPath}
       </Button>
 
-      <Button onPress={change} startContent={<Refresh_Icon />}>
+      <Button variant="flat" color="warning" onPress={change} startContent={<Repeat />}>
         <SettingsSearchHighlight text="Change (Restart Required)" />
       </Button>
     </SettingsSection>

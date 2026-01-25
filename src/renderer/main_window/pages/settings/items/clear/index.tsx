@@ -12,10 +12,9 @@ import {
 import SettingsSection from '@lynx/components/ContentSection';
 import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
-import {BroomDuo_Icon, RefreshDuo_Icon, Trash_Icon} from '@lynx_assets/icons';
 import storageIpc from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
-import {Database} from '@solar-icons/react-perf/BoldDuotone';
+import {Broom, Database, Refresh, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -76,7 +75,7 @@ export default function SettingsClear() {
   };
 
   return (
-    <SettingsSection title="Clear" id={SettingsClearId} icon={<Trash_Icon className="size-5" />} itemsCenter>
+    <SettingsSection title="Clear" id={SettingsClearId} icon={<TrashBin2 className="size-5" />} itemsCenter>
       <Popover
         size="sm"
         shadow="sm"
@@ -85,7 +84,7 @@ export default function SettingsClear() {
         classNames={{base: 'before:bg-foreground-100'}}
         showArrow>
         <PopoverTrigger>
-          <Button variant="flat" color="danger" startContent={<RefreshDuo_Icon />} fullWidth>
+          <Button variant="flat" color="danger" startContent={<Refresh />} fullWidth>
             <SettingsSearchHighlight text="Reset Settings (Restart Required)" />
           </Button>
         </PopoverTrigger>
@@ -97,7 +96,7 @@ export default function SettingsClear() {
             <SettingsSearchHighlight text="Are you sure you want to reset all app settings and restart?" />
           </span>
           <ButtonGroup className="flex flex-row w-full mt-2" fullWidth>
-            <Button size="sm" color="danger" onPress={storageIpc.clear} startContent={<RefreshDuo_Icon />}>
+            <Button size="sm" color="danger" onPress={storageIpc.clear} startContent={<Refresh />}>
               Reset & Restart
             </Button>
             <Button size="sm" className="cursor-default" onPress={() => setIsClearSettingsOpen(false)}>
@@ -162,7 +161,7 @@ export default function SettingsClear() {
                     variant="flat"
                     color="warning"
                     isLoading={isClearing}
-                    startContent={<BroomDuo_Icon />}
+                    startContent={<Broom />}
                     isDisabled={cacheStats.entryCount === 0 || isClearing}
                     fullWidth>
                     <SettingsSearchHighlight text="Clear Image Cache" />
@@ -178,7 +177,7 @@ export default function SettingsClear() {
                     />
                   </span>
                   <ButtonGroup className="flex flex-row w-full mt-2" fullWidth>
-                    <Button size="sm" color="warning" onPress={clearImageCache} startContent={<BroomDuo_Icon />}>
+                    <Button size="sm" color="warning" startContent={<Broom />} onPress={clearImageCache}>
                       Clear
                     </Button>
                     <Button size="sm" className="cursor-default" onPress={() => setIsClearCacheOpen(false)}>

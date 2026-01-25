@@ -2,6 +2,7 @@ import LynxSwitch from '@lynx/components/LynxSwitch';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
+import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -28,13 +29,19 @@ export default function GpuBlacklist() {
 
   const titleText = 'Ignore GPU Blacklist';
   const descriptionText =
-    '⚠️ Overrides GPU driver compatibility checks. May cause crashes or visual' +
+    'Overrides GPU driver compatibility checks. May cause crashes or visual' +
     ' artifacts on older or unsupported hardware.';
 
   return (
     <SettingsFilterItem
       searchTexts={[titleText, descriptionText, 'gpu', 'blacklist', 'driver', 'compatibility', 'crash']}>
-      <LynxSwitch title={titleText} enabled={enabled} description={descriptionText} onEnabledChange={onEnabledChange} />
+      <LynxSwitch
+        title={titleText}
+        enabled={enabled}
+        description={descriptionText}
+        onEnabledChange={onEnabledChange}
+        icon={<ShieldWarning className="text-warning" />}
+      />
     </SettingsFilterItem>
   );
 }

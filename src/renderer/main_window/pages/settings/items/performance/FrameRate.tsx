@@ -2,6 +2,7 @@ import LynxSwitch from '@lynx/components/LynxSwitch';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
+import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -28,11 +29,17 @@ export default function FrameRate() {
 
   const titleText = 'Disable Frame Rate Limit';
   const descriptionText =
-    '⚠️ Removes FPS cap. May increase power consumption and heat generation on less powerful devices.';
+    'Removes FPS cap. May increase power consumption and heat generation on less powerful devices.';
 
   return (
     <SettingsFilterItem searchTexts={[titleText, descriptionText, 'fps', 'frame rate', 'limit', 'power', 'heat']}>
-      <LynxSwitch title={titleText} enabled={enabled} description={descriptionText} onEnabledChange={onEnabledChange} />
+      <LynxSwitch
+        title={titleText}
+        enabled={enabled}
+        description={descriptionText}
+        onEnabledChange={onEnabledChange}
+        icon={<ShieldWarning className="text-warning" />}
+      />
     </SettingsFilterItem>
   );
 }
