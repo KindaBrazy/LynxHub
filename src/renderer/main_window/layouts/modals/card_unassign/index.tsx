@@ -62,7 +62,7 @@ const UnassignCard = ({cardId, isOpen, tabID}: Props) => {
         </ModalBody>
         <ModalFooter>
           <ButtonGroup size="sm" variant="flat" fullWidth>
-            <Button color="success" onPress={closeHandle} className="cursor-default">
+            <Button color="success" onPress={closeHandle}>
               Cancel
             </Button>
             <Button color="warning" onPress={() => unassign(false)}>

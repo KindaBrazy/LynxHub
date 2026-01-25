@@ -1,7 +1,8 @@
-import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
 import MarkdownViewer from '@lynx/components/MarkdownViewer';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useModalsState} from '@lynx/redux/reducers/modals';
+import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import {isEmpty, isNil} from 'lodash';
 import {Fragment, useMemo} from 'react';
 
@@ -29,9 +30,15 @@ const CardReadmeModal = ({isOpen, url, title, tabID}: Props) => {
       <ModalContent className="overflow-hidden">
         <ModalHeader
           className={'shrink-0 justify-center overflow-hidden bg-foreground-200 shadow-md dark:bg-foreground-100'}>
-          <Link href={url} className="text-large" isExternal>
-            {title}
-          </Link>
+          <User
+            description={
+              <Link size="sm" href={url} isExternal>
+                {url}
+              </Link>
+            }
+            name={title}
+            avatarProps={{src: getCacheUrl(extractGitUrl(url).avatarUrl)}}
+          />
         </ModalHeader>
         <ModalBody className="p-0">
           {!isEmpty(url) &&

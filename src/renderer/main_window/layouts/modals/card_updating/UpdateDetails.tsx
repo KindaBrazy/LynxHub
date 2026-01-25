@@ -17,6 +17,7 @@ import {
 } from '@heroui/react';
 import {modalActions, useModalsState} from '@lynx/redux/reducers/modals';
 import {AppDispatch} from '@lynx/redux/store';
+import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {ReactNode, useCallback, useMemo} from 'react';
@@ -136,8 +137,8 @@ export default function UpdateDetails() {
           </Accordion>
         </ModalBody>
         <ModalFooter>
-          <Button variant="light" color="success" onPress={handleClose} className="cursor-default">
-            Alright
+          <Button variant="flat" color="success" onPress={handleClose}>
+            <CheckRead className="size-5" />
           </Button>
         </ModalFooter>
       </ModalContent>
