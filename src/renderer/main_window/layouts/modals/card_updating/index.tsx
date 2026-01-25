@@ -5,6 +5,7 @@ import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import gitIpc from '@lynx_shared/ipc/git';
+import {List} from '@solar-icons/react-perf/BoldDuotone';
 import {Descriptions, notification} from 'antd';
 import {isEmpty} from 'lodash';
 import {useEffect} from 'react';
@@ -64,8 +65,9 @@ const UpdatingNotification = () => {
                   notification.destroy(`${card.devName}-updateDetails`);
                 }}
                 size="sm"
-                variant="light"
-                color="success">
+                variant="flat"
+                color="success"
+                startContent={<List />}>
                 Details
               </Button>
               <Button
@@ -73,9 +75,8 @@ const UpdatingNotification = () => {
                   notification.destroy(`${card.devName}-updateDetails`);
                 }}
                 size="sm"
-                color="danger"
-                variant="light"
-                className="cursor-default">
+                color="warning"
+                variant="light">
                 Close
               </Button>
             </div>

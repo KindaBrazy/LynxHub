@@ -88,6 +88,7 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
         backdrop: `top-10! z-10! ${show}`,
         wrapper: `top-10! scrollbar-hide ${show}`,
       }}
+      size="xl"
       isOpen={isOpen}
       placement="center"
       onClose={closeHandle}
@@ -106,7 +107,7 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
         </ModalBody>
         <ModalFooter>
           <ButtonGroup size="sm" variant="flat" fullWidth>
-            <Button color="success" onPress={closeHandle} className="cursor-default">
+            <Button color="success" onPress={closeHandle}>
               Cancel
             </Button>
             {uninstallType === 'removeFolder' ? (
