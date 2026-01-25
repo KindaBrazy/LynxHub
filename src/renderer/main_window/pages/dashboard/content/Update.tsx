@@ -4,13 +4,13 @@ import {modalActions} from '@lynx/redux/reducers/modals';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
-import {Download2_Icon} from '@lynx_assets/icons';
 import {SubscribeStages} from '@lynx_common/types';
 import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import userIpc from '@lynx_shared/ipc/user';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -93,7 +93,7 @@ export default function DashboardUpdate() {
   }, [patreonUserData]);
 
   return (
-    <SettingsSection title="Updates" id={DashboardUpdateId} icon={<Download2_Icon className="size-5" />} itemsCenter>
+    <SettingsSection title="Updates" id={DashboardUpdateId} icon={<Download className="size-5" />} itemsCenter>
       <Select
         radius="sm"
         label="Update Frequency"

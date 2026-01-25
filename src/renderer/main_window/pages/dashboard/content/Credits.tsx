@@ -1,11 +1,11 @@
 import {Button, Card, User} from '@heroui/react';
 import SettingsSection from '@lynx/components/ContentSection';
-import {ExternalDuo_Icon, Heart_Icon, Patreon_Icon, UserHeart_Icon} from '@lynx_assets/icons';
+import {Patreon_Icon} from '@lynx_assets/icons';
 import {PATREON_URL} from '@lynx_common/consts';
 import {PatreonSupporter, PatreonSupporterTier} from '@lynx_common/types';
 import staticsIpc from '@lynx_shared/ipc/statics';
+import {HeartAngle, HeartPulse2, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect, useMemo, useState} from 'react';
-
 export const DashboardCreditsId = 'settings_credits_elem';
 
 const TIER_EMOJI: Record<PatreonSupporterTier, string> = {
@@ -58,7 +58,7 @@ export default function DashboardCredits() {
   };
 
   return (
-    <SettingsSection title="Credits" id={DashboardCreditsId} icon={<UserHeart_Icon className="size-5" />} itemsCenter>
+    <SettingsSection title="Credits" id={DashboardCreditsId} icon={<HeartPulse2 className="size-5" />} itemsCenter>
       {/* Hero Section */}
       <div
         className={
@@ -69,7 +69,7 @@ export default function DashboardCredits() {
         <div className="relative z-10 text-center">
           <div className="mb-3 flex items-center justify-center">
             <div className="animate-pulse rounded-full bg-linear-to-r from-blue-500 to-indigo-500 p-2">
-              <Heart_Icon className="size-5 text-white" />
+              <HeartAngle className="size-5 text-white" />
             </div>
           </div>
           <h2
@@ -166,7 +166,7 @@ export default function DashboardCredits() {
                     'mx-auto mb-3 flex size-12 items-center justify-center rounded-full' +
                     ' bg-gray-200 dark:bg-gray-700'
                   }>
-                  <UserHeart_Icon className="size-6 text-gray-400" />
+                  <HeartPulse2 className="size-6 text-gray-400" />
                 </div>
                 <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-white">No {tier}s Yet</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Be the first to support us at this tier!</p>
@@ -177,7 +177,7 @@ export default function DashboardCredits() {
       </div>
 
       {/* Call to Action */}
-      <div className="mt-12 text-center">
+      <div className="mt-12 mb-4 text-center">
         <div className="mx-auto max-w-xs">
           <Card
             as="div"
@@ -194,7 +194,7 @@ export default function DashboardCredits() {
               </div>
               <div className="flex items-center space-x-1 font-medium text-blue-600 dark:text-blue-400">
                 <span className="text-sm">Join now</span>
-                <ExternalDuo_Icon className="size-3" />
+                <SquareTopDown className="size-3" />
               </div>
             </div>
           </Card>

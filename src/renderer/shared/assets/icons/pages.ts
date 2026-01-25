@@ -1,13 +1,14 @@
-import {ChatRoundLine, Gallery} from '@solar-icons/react-perf/Bold';
+import {HomeSmile} from '@solar-icons/react-perf/Bold';
 import {
+  ChatRound,
   Gamepad,
-  HomeSmile,
   Layers,
   MagicStick3,
   MusicNote,
   Stars,
   Tuning2,
   User,
+  Wallpaper,
   WidgetAdd,
 } from '@solar-icons/react-perf/BoldDuotone';
 
@@ -17,10 +18,10 @@ export {
   User as DashboardPage_Icon,
   Gamepad as GamePage_Icon,
   HomeSmile as HomePage_Icon,
-  Gallery as ImagePage_Icon,
+  Wallpaper as ImagePage_Icon,
   Layers as OthersPage_Icon,
   WidgetAdd as PluginPage_Icon,
   Tuning2 as SettingPage_Icon,
-  ChatRoundLine as TextPage_Icon,
+  ChatRound as TextPage_Icon,
   MagicStick3 as ToolsPage_Icon,
 };

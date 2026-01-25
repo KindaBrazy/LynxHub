@@ -3,12 +3,10 @@ import SettingsSection from '@lynx/components/ContentSection';
 import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
 import {
-  Copy_Icon,
   DiscordColor_Icon,
   ExternalDuo_Icon,
   GitHub_Icon,
   Gmail_Icon,
-  Info_Icon,
   Reddit_Icon,
   Scales_Icon,
   XSite_Icon,
@@ -29,6 +27,7 @@ import {
   X_URL,
   YOUTUBE_URL,
 } from '@lynx_common/consts';
+import {Copy, InfoSquare} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -48,7 +47,7 @@ export default function DashboardAbout() {
       name: 'Email',
       icon: <Gmail_Icon className="size-5" />,
       action: () => copyText(EMAIL),
-      actionIcon: <Copy_Icon className="size-3.5" />,
+      actionIcon: <Copy className="size-3.5" />,
     },
     {
       name: 'GitHub',
@@ -83,7 +82,7 @@ export default function DashboardAbout() {
   ];
 
   return (
-    <SettingsSection title="About" id={DashboardAboutId} icon={<Info_Icon className="size-5" />} itemsCenter>
+    <SettingsSection title="About" id={DashboardAboutId} icon={<InfoSquare className="size-5" />} itemsCenter>
       <div className="w-full max-w-2xl mx-auto space-y-6">
         {/* App Info Card */}
         <Card className="overflow-hidden border-none bg-transparent shadow-none">
@@ -120,6 +119,7 @@ export default function DashboardAbout() {
                   'group flex flex-row items-center gap-2 px-4 py-2.5 bg-foreground-100/50' +
                   ' hover:bg-foreground-200 transition-colors cursor-pointer'
                 }
+                shadow="none"
                 key={link.name}
                 onPress={link.action}
                 isPressable>
@@ -139,6 +139,7 @@ export default function DashboardAbout() {
               'group flex flex-row items-center justify-center gap-3 px-6 py-4 mx-auto w-fit' +
               ' bg-foreground-100/50 hover:bg-foreground-200 transition-colors cursor-pointer'
             }
+            shadow="none"
             onPress={() => window.open(LICENSE_PAGE)}
             isPressable>
             <Scales_Icon className="size-5 text-success" />

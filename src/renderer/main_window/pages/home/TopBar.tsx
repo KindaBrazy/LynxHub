@@ -2,9 +2,11 @@ import {Button} from '@heroui/react';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
-import {Add_Icon, Terminal_Icon, Web_Icon} from '@lynx_assets/icons';
+import {Terminal_Icon} from '@lynx_assets/icons';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {Earth} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
+import {Plus} from 'lucide-react';
 import {useDispatch} from 'react-redux';
 
 export default function Home_TopBar() {
@@ -61,7 +63,7 @@ export default function Home_TopBar() {
           <Button
             size="sm"
             onPress={newBrowser}
-            startContent={<Web_Icon />}
+            startContent={<Earth />}
             className="hover:scale-105 shadow-sm bg-white dark:bg-foreground-200">
             <motion.span whileHover={{x: 2}} transition={{duration: 0.2}}>
               Browser
@@ -77,8 +79,8 @@ export default function Home_TopBar() {
               transition={{duration: 0.2}}
               className="flex items-center justify-center gap-x-1">
               <Terminal_Icon />
-              <Add_Icon className="size-2 opacity-60" />
-              <Web_Icon />
+              <Plus className="size-2 opacity-60" />
+              <Earth />
             </motion.div>
           </Button>
         </motion.div>
