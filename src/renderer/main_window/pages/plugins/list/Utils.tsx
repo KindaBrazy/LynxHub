@@ -2,10 +2,10 @@ import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownT
 import {pluginsActions} from '@lynx/redux/reducers/plugins';
 import {useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
-import {FilterDuo_Icon} from '@lynx_assets/icons';
 import {PluginFilter, PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import staticsIpc from '@lynx_shared/ipc/statics';
+import {Filter} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -86,7 +86,7 @@ export function useFilterMenu(selectedKeys: PluginFilter, setSelectedKeys: Dispa
         <Dropdown size="sm" closeOnSelect={false} className="border border-foreground/15!">
           <DropdownTrigger>
             <Button variant="flat" isIconOnly>
-              <FilterDuo_Icon className="size-4" />
+              <Filter className="size-4" />
             </Button>
           </DropdownTrigger>
           <DropdownMenu

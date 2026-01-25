@@ -1,7 +1,7 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {useTabVisibility} from '@lynx/layouts/tabs/utils';
-import {ShieldWarning_Icon} from '@lynx_assets/icons';
 import {APP_AUTHOR_NAME} from '@lynx_common/consts';
+import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
 type Props = {
@@ -56,7 +56,7 @@ export default function SecurityWarning({isOpen, onAgree, setIsOpen, type, title
       hideCloseButton>
       <ModalContent className="overflow-hidden">
         <ModalHeader className="bg-foreground-100 justify-center text-warning items-center gap-x-2">
-          <ShieldWarning_Icon className="size-7" />
+          <ShieldWarning className="size-7" />
           <span>Security Notice</span>
         </ModalHeader>
         <ModalBody className="py-6 scrollbar-hide">

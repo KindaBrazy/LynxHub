@@ -1,20 +1,19 @@
 import {Button, Chip, User} from '@heroui/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {useUserState} from '@lynx/redux/reducers/user';
-import {
-  ArrowDuo_Icon,
-  BoxDuo_Icon,
-  CalendarDuo_Icon,
-  Extensions2_Icon,
-  ExternalDuo_Icon,
-  HomeSmile_Icon,
-  Plugins_Icon,
-  UserDuo_Icon,
-} from '@lynx_assets/icons';
 import {PluginInstalledItem} from '@lynx_common/types/plugins';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import {getPluginIconUrl} from '@lynx_common/utils/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {
+  BoxMinimalistic,
+  CalendarMinimalistic,
+  HomeAngle2,
+  SquareTopDown,
+  User as UserIcon,
+  WidgetAdd,
+} from '@solar-icons/react-perf/BoldDuotone';
+import {ArrowRight} from '@solar-icons/react-perf/LineDuotone';
 import {useMemo} from 'react';
 
 import ActionButtons from './ActionButtons';
@@ -53,12 +52,12 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
                 size="sm"
                 variant="light"
                 className="text-foreground-600"
-                startContent={<BoxDuo_Icon className="size-3.5" />}
+                startContent={<BoxMinimalistic className="size-3.5" />}
                 classNames={{content: 'flex flex-row items-center justify-center gap-x-1'}}>
                 <span>v{currentVersion}</span>
                 {targetVersion && (
                   <>
-                    <ArrowDuo_Icon className="size-3 rotate-180" />
+                    <ArrowRight className="size-3" />
                     <span className={`${isUpgrade ? 'text-success' : 'text-warning'}`}>v{targetVersion}</span>
                   </>
                 )}
@@ -67,7 +66,7 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
                 size="sm"
                 variant="light"
                 className="text-foreground-600"
-                startContent={<CalendarDuo_Icon className="size-3.5" />}>
+                startContent={<CalendarMinimalistic className="size-3.5" />}>
                 {currentDate}
               </Chip>
               <div
@@ -75,17 +74,8 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
                   `flex flex-row gap-x-1 items-center` +
                   ` ${selectedPlugin?.metadata.type === 'extension' ? 'text-primary-500' : 'text-secondary'}`
                 }>
-                {selectedPlugin?.metadata.type === 'extension' ? (
-                  <>
-                    <Plugins_Icon />
-                    <span>Extension</span>
-                  </>
-                ) : (
-                  <>
-                    <Extensions2_Icon />
-                    <span>Module</span>
-                  </>
-                )}
+                <WidgetAdd />
+                {selectedPlugin?.metadata.type === 'extension' ? <span>Extension</span> : <span>Module</span>}
               </div>
             </div>
           }
@@ -93,7 +83,7 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
           name={<span className="font-semibold text-foreground text-xl">{selectedPlugin?.metadata.title}</span>}
         />
         <div className="flex flex-row items-center ml-12">
-          <Chip variant="light" startContent={<UserDuo_Icon />}>
+          <Chip variant="light" startContent={<UserIcon />}>
             {extractGitUrl(selectedPlugin?.url || '').owner}
           </Chip>
           <Button
@@ -104,8 +94,8 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
             size="sm"
             variant="light"
             className="text-small"
-            startContent={<HomeSmile_Icon />}
-            endContent={<ExternalDuo_Icon className="size-3" />}>
+            startContent={<HomeAngle2 />}
+            endContent={<SquareTopDown className="size-3" />}>
             Home Page
           </Button>
         </div>

@@ -1,6 +1,6 @@
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {ContainersBg} from '@lynx/utils/common_styles';
-import {Plugins_Icon} from '@lynx_assets/icons';
+import {WidgetAdd} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {memo, useMemo} from 'react';
 
@@ -27,7 +27,7 @@ const Preview = memo(() => {
             'bg-white dark:bg-LynxRaisinBlack size-full flex items-center' +
             ' justify-center gap-y-4 flex-col px-4 text-center'
           }>
-          <Plugins_Icon className="size-16" />
+          <WidgetAdd className="size-16" />
           <span className="text-large">Select a plugin from the list to begin your exploration.</span>
         </div>
       ) : (

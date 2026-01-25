@@ -1,9 +1,9 @@
 import {ChipProps} from '@heroui/chip';
 import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
-import {BoxDuo_Icon} from '@lynx_assets/icons';
 import {SubscribeStages} from '@lynx_common/types';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
+import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useMemo} from 'react';
 
 const getStageName = (stage: SubscribeStages) => {
@@ -39,7 +39,7 @@ export default function Versions({currentVersion}: Props) {
   return (
     <Dropdown size="sm" showArrow>
       <DropdownTrigger>
-        <Button size="sm" variant="flat" startContent={<BoxDuo_Icon className="size-3.5" />}>
+        <Button size="sm" variant="flat" startContent={<BoxMinimalistic className="size-3.5" />}>
           Target v{versions.find(item => item.commit === selectedVersion)?.version}
         </Button>
       </DropdownTrigger>
