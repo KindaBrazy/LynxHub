@@ -1,8 +1,8 @@
 import {useAppState} from '@lynx/redux/reducers/app';
 import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
-import {AltArrowLine_Icon} from '@lynx_assets/icons';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {AnimatePresence, motion, Transition} from 'framer-motion';
 import {memo, MouseEvent, ReactNode, useCallback, useMemo, useRef, useState, WheelEvent} from 'react';
 import {useDispatch} from 'react-redux';
@@ -39,7 +39,7 @@ const ScrollArrow = memo(
         style={{color: mutedText}}
         whileHover={{backgroundColor: hoverBg, color: isDark ? '#e5e7eb' : '#1f2937'}}
         className="flex items-center justify-center w-full py-2 rounded-xl cursor-pointer pointer-events-auto">
-        {direction === 'up' ? <AltArrowLine_Icon /> : <AltArrowLine_Icon className="rotate-180" />}
+        {direction === 'up' ? <AltArrowUp /> : <AltArrowDown />}
       </motion.button>
     );
   },

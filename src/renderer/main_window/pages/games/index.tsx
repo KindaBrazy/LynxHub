@@ -1,6 +1,6 @@
 import {ScrollShadow} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {GamePad_Icon} from '@lynx_assets/icons';
+import {GamePage_Icon} from '@lynx_assets/icons/pages';
 
 import CardsContainer, {CardContainerClasses} from '../CardsContainer';
 import Page from '../Page';
@@ -17,7 +17,7 @@ const GamesPage = ({show}: Props) => {
           title="Games"
           extraClassNames="mr-3"
           subTitle="Enjoy Games, Hobbies, and Fun AI Tools"
-          icon={<GamePad_Icon className={CardContainerClasses} />}>
+          icon={<GamePage_Icon className={CardContainerClasses} />}>
           <div className="flex size-full flex-row flex-wrap gap-7 overflow-visible">
             {addComponent.map((Comp, index) => (
               <Comp key={index} />

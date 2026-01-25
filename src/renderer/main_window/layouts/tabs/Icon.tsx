@@ -1,23 +1,23 @@
 import {TRANSITION_EASINGS} from '@heroui/framer-utils';
 import {Avatar, Spinner} from '@heroui/react';
+import {Terminal_Icon} from '@lynx_assets/icons';
 import {
-  AudioGeneration_Icon,
-  GamePad_Icon,
-  Home_Icon,
-  ImageGeneration_Icon,
-  Info_Icon,
-  MagicStickDuo_Icon,
-  Plugins_Icon,
-  Robot_Icon,
-  Rocket_Icon,
-  Slider_Icon,
-  Terminal_Icon,
-  TextGeneration_Icon,
-  Web_Icon,
-} from '@lynx_assets/icons';
+  AgentPage_Icon,
+  AudioPage_Icon,
+  DashboardPage_Icon,
+  GamePage_Icon,
+  HomePage_Icon,
+  ImagePage_Icon,
+  OthersPage_Icon,
+  PluginPage_Icon,
+  SettingPage_Icon,
+  TextPage_Icon,
+  ToolsPage_Icon,
+} from '@lynx_assets/icons/pages';
 import {APP_ICON_TRANSPARENT, PageID} from '@lynx_common/consts';
 import {TabInfo} from '@lynx_common/types';
 import {getCacheUrl} from '@lynx_common/utils';
+import {Earth} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
@@ -56,18 +56,18 @@ const TabItem_Icon = memo(({tab, currentView}: Props) => {
         />
       );
     }
-    if (currentView === 'browser') return <Web_Icon className="size-full" />;
-    if (pageID === PageID.home) return <Home_Icon className="size-full" />;
-    if (pageID === PageID.imageGen) return <ImageGeneration_Icon className="size-full" />;
-    if (pageID === PageID.textGen) return <TextGeneration_Icon className="size-full" />;
-    if (pageID === PageID.audioGen) return <AudioGeneration_Icon className="size-full" />;
-    if (pageID === PageID.agents) return <Robot_Icon className="size-full" />;
-    if (pageID === PageID.others) return <MagicStickDuo_Icon className="size-full" />;
-    if (pageID === PageID.games) return <GamePad_Icon className="size-full" />;
-    if (pageID === PageID.tools) return <Rocket_Icon className="size-full" />;
-    if (pageID === PageID.dashboard) return <Info_Icon className="size-full" />;
-    if (pageID === PageID.plugins) return <Plugins_Icon className="size-full" />;
-    if (pageID === PageID.settings) return <Slider_Icon className="size-full" />;
+    if (currentView === 'browser') return <Earth className="size-full" />;
+    if (pageID === PageID.home) return <HomePage_Icon className="size-full" />;
+    if (pageID === PageID.imageGen) return <ImagePage_Icon className="size-full" />;
+    if (pageID === PageID.textGen) return <TextPage_Icon className="size-full" />;
+    if (pageID === PageID.audioGen) return <AudioPage_Icon className="size-full" />;
+    if (pageID === PageID.agents) return <AgentPage_Icon className="size-full" />;
+    if (pageID === PageID.others) return <OthersPage_Icon className="size-full" />;
+    if (pageID === PageID.games) return <GamePage_Icon className="size-full" />;
+    if (pageID === PageID.tools) return <ToolsPage_Icon className="size-full" />;
+    if (pageID === PageID.dashboard) return <DashboardPage_Icon className="size-full" />;
+    if (pageID === PageID.plugins) return <PluginPage_Icon className="size-full" />;
+    if (pageID === PageID.settings) return <SettingPage_Icon className="size-full" />;
     return <Avatar radius="none" className="size-full" src={APP_ICON_TRANSPARENT} />;
   }, [tab, currentView, imgError, handleImgError]);
 

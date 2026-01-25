@@ -5,10 +5,10 @@ import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {tabsActions} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
-import {CloseSimple_Icon} from '@lynx_assets/icons';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {TabInfo} from '@lynx_common/types';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
+import {X} from 'lucide-react';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -122,7 +122,7 @@ export default function TabItem({tab}: Props) {
           onPress={() => handleRemove(false)}
           className="scale-75 cursor-default"
           isIconOnly>
-          <CloseSimple_Icon className="size-4" />
+          <X className="size-4" />
         </Button>
 
         <ProgressBar progress={tab.progress} />

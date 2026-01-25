@@ -4,18 +4,18 @@ import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {NavItem} from '@lynx/types';
 import {
-  AudioGeneration_Icon,
-  GamePad_Icon,
-  Home_Icon,
-  ImageGeneration_Icon,
-  MagicStickDuo_Icon,
-  Plugins_Icon,
-  Robot_Icon,
-  Rocket_Icon,
-  TextGeneration_Icon,
-  Tuning_Icon,
-  UserDuo_Icon,
-} from '@lynx_assets/icons';
+  AgentPage_Icon,
+  AudioPage_Icon,
+  DashboardPage_Icon,
+  GamePage_Icon,
+  HomePage_Icon,
+  ImagePage_Icon,
+  OthersPage_Icon,
+  PluginPage_Icon,
+  SettingPage_Icon,
+  TextPage_Icon,
+  ToolsPage_Icon,
+} from '@lynx_assets/icons/pages';
 import {PageID, PageTitles} from '@lynx_common/consts';
 import {isEmpty} from 'lodash';
 import {useMemo} from 'react';
@@ -26,11 +26,13 @@ export const ContentsNav = () => {
   const contentBar = useMemo(() => extensionsData.navBar.addButton.contentBar, []);
 
   const contentItems: NavItem[] = useMemo(() => {
-    const result: NavItem[] = [{icon: <Home_Icon className="size-full" />, title: PageTitles.home, path: PageID.home}];
+    const result: NavItem[] = [
+      {icon: <HomePage_Icon className="size-full" />, title: PageTitles.home, path: PageID.home},
+    ];
 
     if (hasCardsByPath(PageID.imageGen) || hasCardsByPath('/imageGenerationPage')) {
       result.push({
-        icon: <ImageGeneration_Icon className="size-full" />,
+        icon: <ImagePage_Icon className="size-full" />,
         title: PageTitles.imageGen,
         path: PageID.imageGen,
       });
@@ -38,7 +40,7 @@ export const ContentsNav = () => {
 
     if (hasCardsByPath(PageID.textGen) || hasCardsByPath('/textGenerationPage')) {
       result.push({
-        icon: <TextGeneration_Icon className="size-full" />,
+        icon: <TextPage_Icon className="size-full" />,
         title: PageTitles.textGen,
         path: PageID.textGen,
       });
@@ -46,7 +48,7 @@ export const ContentsNav = () => {
 
     if (hasCardsByPath(PageID.audioGen) || hasCardsByPath('/audioGenerationPage')) {
       result.push({
-        icon: <AudioGeneration_Icon className="size-full" />,
+        icon: <AudioPage_Icon className="size-full" />,
         title: PageTitles.audioGen,
         path: PageID.audioGen,
       });
@@ -54,31 +56,31 @@ export const ContentsNav = () => {
 
     if (hasCardsByPath(PageID.agents)) {
       result.push({
-        icon: <Robot_Icon className="size-full" />,
+        icon: <AgentPage_Icon className="size-full" />,
         title: PageTitles.agents,
         path: PageID.agents,
       });
     }
 
-    if (hasCardsByPath(PageID.others)) {
-      result.push({
-        icon: <MagicStickDuo_Icon className="size-full" />,
-        title: PageTitles.others,
-        path: PageID.others,
-      });
-    }
-
     if (!isEmpty(extensionsData.customizePages.tools.addComponent)) {
       result.push({
-        icon: <Rocket_Icon className="size-full" />,
+        icon: <ToolsPage_Icon className="size-full" />,
         title: PageTitles.tools,
         path: PageID.tools,
       });
     }
 
+    if (hasCardsByPath(PageID.others)) {
+      result.push({
+        icon: <OthersPage_Icon className="size-full" />,
+        title: PageTitles.others,
+        path: PageID.others,
+      });
+    }
+
     if (!isEmpty(extensionsData.customizePages.games.addComponent)) {
       result.push({
-        icon: <GamePad_Icon className="size-full" />,
+        icon: <GamePage_Icon className="size-full" />,
         title: PageTitles.games,
         path: PageID.games,
       });
@@ -108,18 +110,18 @@ export function SettingsNav() {
 
     return [
       {
-        icon: <UserDuo_Icon className="size-full" />,
+        icon: <DashboardPage_Icon className="size-full" />,
         title: PageTitles.dashboard,
         path: PageID.dashboard,
         badge: dashboardBadge,
       },
       {
-        icon: <Plugins_Icon className="size-full" />,
+        icon: <PluginPage_Icon className="size-full" />,
         title: PageTitles.plugins,
         path: PageID.plugins,
         badge: pluginsBadge,
       },
-      {icon: <Tuning_Icon className="size-full" />, title: PageTitles.settings, path: PageID.settings},
+      {icon: <SettingPage_Icon className="size-full" />, title: PageTitles.settings, path: PageID.settings},
     ];
   }, [syncList, appUpdateAvailable]);
 

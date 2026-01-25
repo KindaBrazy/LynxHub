@@ -1,6 +1,6 @@
 import {ScrollShadow} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {Rocket_Icon} from '@lynx_assets/icons';
+import {ToolsPage_Icon} from '@lynx_assets/icons/pages';
 import {motion, Variants} from 'framer-motion';
 import {memo} from 'react';
 
@@ -28,7 +28,7 @@ const ToolsPage = memo(({show}: Props) => {
           title="Tools"
           extraClassNames="mr-3"
           subTitle="Essential AI Utilities for Your Daily Tasks"
-          icon={<Rocket_Icon className={CardContainerClasses} />}>
+          icon={<ToolsPage_Icon className={CardContainerClasses} />}>
           <div className="flex size-full flex-row flex-wrap gap-7 overflow-visible">
             {addComponent.map((Comp, index) => (
               <motion.div

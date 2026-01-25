@@ -1,7 +1,7 @@
 import {ScrollShadow} from '@heroui/react';
 import {GetComponentsByPath} from '@lynx/components/card';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {TextGeneration_Icon} from '@lynx_assets/icons';
+import {TextPage_Icon} from '@lynx_assets/icons/pages';
 import {PageID} from '@lynx_common/consts';
 import {memo, useMemo} from 'react';
 
@@ -26,8 +26,8 @@ const TextGenerationPage = memo(({show}: Props) => {
         <CardsContainer
           extraClassNames="mr-3"
           title="Text Generation"
-          subTitle="Unleash Your Creativity with AI-Assisted Writing"
-          icon={<TextGeneration_Icon className={CardContainerClasses} />}>
+          icon={<TextPage_Icon className={CardContainerClasses} />}
+          subTitle="Unleash Your Creativity with AI-Assisted Writing">
           <GetComponentsByPath routePath={PageID.textGen} extensionsElements={cardsContainer} />
         </CardsContainer>
 

@@ -1,14 +1,8 @@
 import {Button, Card, CardBody, CardHeader, ScrollShadow} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {ContainersBg} from '@lynx/utils/common_styles';
-import {
-  Download2_Icon,
-  Info_Icon,
-  SmileCircleDuo_Icon,
-  User_Icon,
-  UserDuo_Icon,
-  UserHeart_Icon,
-} from '@lynx_assets/icons';
+import {Download2_Icon, Info_Icon, SmileCircleDuo_Icon, UserHeart_Icon} from '@lynx_assets/icons';
+import {DashboardPage_Icon} from '@lynx_assets/icons/pages';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
@@ -36,7 +30,7 @@ const initialGroupSections: GroupProps[] = [
     items: [
       {
         title: 'Profiles',
-        icon: <User_Icon className="size-4 shrink-0" />,
+        icon: <DashboardPage_Icon className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardProfileId,
       },
       {
@@ -192,7 +186,7 @@ const DashboardPageNav = () => {
   return (
     <Card className={`h-full my-2 text-medium w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
       <CardHeader className="justify-center gap-x-2 pt-4">
-        <UserDuo_Icon className="size-5" />
+        <DashboardPage_Icon className="size-5" />
         <span>Dashboard</span>
       </CardHeader>
       <CardBody className="pt-0" as={ScrollShadow} hideScrollBar>

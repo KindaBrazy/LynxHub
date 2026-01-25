@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useAppState} from '@lynx/redux/reducers/app';
-import {Home_Icon} from '@lynx_assets/icons';
+import {HomePage_Icon} from '@lynx_assets/icons/pages';
 import isEmpty from 'lodash/isEmpty';
 import {memo, useMemo} from 'react';
 
@@ -44,7 +44,7 @@ const TitleBar = memo(() => {
           }
           variant="light">
           <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
-            <Home_Icon />
+            <HomePage_Icon />
             <span>Initializer</span>
           </div>
         </Button>
