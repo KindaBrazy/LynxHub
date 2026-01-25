@@ -7,6 +7,7 @@ import {modalMotionProps} from '@lynx/utils/constants';
 import {ChosenArgumentsData} from '@lynx_common/types';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
+import {Diskette} from '@solar-icons/react-perf/BoldDuotone';
 import {Fragment, Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -110,7 +111,12 @@ const LaunchConfig = memo(({isOpen, title, haveArguments, id, tabID}: Props) => 
 
         <ModalFooter>
           {currentTab === tabs.arguments && (
-            <Button variant="light" color="success" onPress={saveArguments} isLoading={isSavingArgs}>
+            <Button
+              variant="light"
+              color="success"
+              onPress={saveArguments}
+              isLoading={isSavingArgs}
+              startContent={<Diskette className="size-4" />}>
               {!isSavingArgs && 'Save Arguments'}
             </Button>
           )}

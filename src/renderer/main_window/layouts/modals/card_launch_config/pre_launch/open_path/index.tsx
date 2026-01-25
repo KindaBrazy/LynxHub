@@ -1,11 +1,12 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import LynxTooltip from '@lynx/components/LynxTooltip';
-import {Add_Icon, FileDuo_Icon, FolderDuo_Icon} from '@lynx_assets/icons';
 import {PreOpenData} from '@lynx_common/types/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import {File, Folder} from '@solar-icons/react-perf/BoldDuotone';
 import {Empty} from 'antd';
 import {filter, isEmpty} from 'lodash';
+import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 
 import LaunchConfigSection from '../../Section';
@@ -55,17 +56,17 @@ export default function PreOpenPath({id}: Props) {
             <div>
               <DropdownTrigger>
                 <Button size="sm" variant="light" isIconOnly>
-                  <Add_Icon />
+                  <Plus className="size-4" />
                 </Button>
               </DropdownTrigger>
             </div>
           </LynxTooltip>
           <DropdownMenu aria-label="Open file or folder">
             <DropdownSection title="Select">
-              <DropdownItem key="add_folder" onPress={selectFolder} startContent={<FolderDuo_Icon />}>
+              <DropdownItem key="add_folder" onPress={selectFolder} startContent={<Folder />}>
                 Folder
               </DropdownItem>
-              <DropdownItem key="add_file" onPress={selectFile} startContent={<FileDuo_Icon />}>
+              <DropdownItem key="add_file" onPress={selectFile} startContent={<File />}>
                 File
               </DropdownItem>
             </DropdownSection>
@@ -79,7 +80,7 @@ export default function PreOpenPath({id}: Props) {
       ) : (
         <div className="space-y-2">
           {toOpen.map((open, index) => {
-            const icon = open.type === 'folder' ? <FolderDuo_Icon /> : <FileDuo_Icon />;
+            const icon = open.type === 'folder' ? <Folder /> : <File />;
             return (
               <PreOpenPathItem
                 icon={icon}

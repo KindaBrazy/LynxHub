@@ -50,52 +50,49 @@ export default function CustomRunBehavior({id}: Props) {
   }, [setTerminalValue, setBrowserValue, id]);
 
   return (
-    <>
-      <LaunchConfigSection title="Launch Behavior" customButton={<Fragment />}>
-        <div className="space-y-4">
-          <div className="flex w-full flex-row items-center space-x-2">
-            <Select
-              classNames={{
-                trigger: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack',
-              }}
-              label="Terminal"
-              selectionMode="single"
-              labelPlacement="outside"
-              selectedKeys={[terminalValue]}
-              onSelectionChange={onTerminalChange}
-              description="Configure how the terminal behaves when launching the AI."
-              disallowEmptySelection>
-              <SelectItem key="runScript" description="Execute the designated script (e.g., webui.bat).">
-                Run Script
-              </SelectItem>
-              <SelectItem key="empty" description="Open an empty terminal without executing any commands.">
-                Open Empty Terminal
-              </SelectItem>
-            </Select>
-          </div>
-          <div className="flex w-full flex-row items-center space-x-2">
-            <Select
-              label="Browser"
-              selectionMode="single"
-              labelPlacement="outside"
-              selectedKeys={[browserValue]}
-              onSelectionChange={onBrowserChange}
-              classNames={{trigger: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack'}}
-              description="Define what happens when the application detects an address to launch."
-              disallowEmptySelection>
-              <SelectItem key="appBrowser" description="Open the address in the integrated in-app browser.">
-                In-App Browser
-              </SelectItem>
-              <SelectItem key="defaultBrowser" description="Open the address in your system default browser.">
-                Default Browser
-              </SelectItem>
-            </Select>
-          </div>
-          <div className="flex w-full flex-col items-center gap-y-2">
-            <UrlCatch id={id} />
-          </div>
-        </div>
-      </LaunchConfigSection>
-    </>
+    <LaunchConfigSection
+      title="Launch Behavior"
+      customButton={<Fragment />}
+      description="Configure custom startup commands and manage terminal, browser, and URL detection behaviors">
+      <div className="flex flex-col">
+        <Select
+          classNames={{
+            trigger: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack',
+          }}
+          label="Terminal"
+          selectionMode="single"
+          labelPlacement="outside"
+          selectedKeys={[terminalValue]}
+          onSelectionChange={onTerminalChange}
+          description="Configure how the terminal behaves when launching the AI."
+          disallowEmptySelection>
+          <SelectItem key="runScript" description="Execute the designated script (e.g., webui.bat).">
+            Run Script
+          </SelectItem>
+          <SelectItem key="empty" description="Open an empty terminal without executing any commands.">
+            Open Empty Terminal
+          </SelectItem>
+        </Select>
+        <Select
+          label="Browser"
+          selectionMode="single"
+          labelPlacement="outside"
+          selectedKeys={[browserValue]}
+          onSelectionChange={onBrowserChange}
+          classNames={{trigger: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack'}}
+          description="Define what happens when the application detects an address to launch."
+          disallowEmptySelection>
+          <SelectItem key="appBrowser" description="Open the address in the integrated in-app browser.">
+            In-App Browser
+          </SelectItem>
+          <SelectItem key="defaultBrowser" description="Open the address in your system default browser.">
+            Default Browser
+          </SelectItem>
+        </Select>
+      </div>
+      <div className="flex w-full flex-col items-center gap-y-2">
+        <UrlCatch id={id} />
+      </div>
+    </LaunchConfigSection>
   );
 }

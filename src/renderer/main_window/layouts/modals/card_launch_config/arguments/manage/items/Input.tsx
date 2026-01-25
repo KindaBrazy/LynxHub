@@ -1,8 +1,8 @@
 import {Input} from '@heroui/react';
 import {useGetArgumentsByID} from '@lynx/plugins/modules';
 import {getArgumentDefaultValue} from '@lynx/utils/module_arguments';
-import {TextDuo_Icon} from '@lynx_assets/icons';
 import {ChosenArgument} from '@lynx_common/types';
+import {Text} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useState} from 'react';
 
 import ArgumentItemBase from './Base';
@@ -25,7 +25,7 @@ export default function InputArgItem({argument, changeValue, removeArg, id}: Pro
   }, []);
 
   return (
-    <ArgumentItemBase id={id} name={argument.name} removeArg={removeArg} icon={<TextDuo_Icon />}>
+    <ArgumentItemBase id={id} name={argument.name} removeArg={removeArg} icon={<Text className="size-3.5" />}>
       <Input
         onBlur={onBlur}
         spellCheck="false"

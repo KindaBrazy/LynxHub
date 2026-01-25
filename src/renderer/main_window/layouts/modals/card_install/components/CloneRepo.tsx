@@ -3,11 +3,12 @@ import OpenDialog from '@lynx/components/OpenDialog';
 import {modalActions} from '@lynx/redux/reducers/modals';
 import {AppDispatch} from '@lynx/redux/store';
 import {initGitProgress} from '@lynx/utils/constants';
-import {Folder2_Icon, GitHub_Icon} from '@lynx_assets/icons';
+import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {extractGitUrl, isWin} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';
+import {Folder2} from '@solar-icons/react-perf/BoldDuotone';
 import {Descriptions} from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
@@ -121,7 +122,7 @@ export default function CloneRepo({url, start, done, isOpen}: Props) {
           </Card>
           <Card className="dark:bg-foreground-100">
             <CardHeader className="gap-x-2">
-              <Folder2_Icon />
+              <Folder2 />
               <span>Save to</span>
             </CardHeader>
             <CardBody>

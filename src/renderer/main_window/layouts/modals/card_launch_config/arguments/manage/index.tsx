@@ -1,9 +1,9 @@
 import {Button, Chip, Tooltip, useDisclosure} from '@heroui/react';
-import {Add_Icon} from '@lynx_assets/icons';
 import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_common/types';
 import {Empty} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
+import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction} from 'react';
 
 import LaunchConfigSection from '../../Section';
@@ -40,7 +40,7 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
       customButton={
         <Tooltip radius="sm" delay={500} content={'Add New Arguments'} showArrow>
           <Button size="sm" variant="light" onPress={openAddArguments} isIconOnly>
-            <Add_Icon />
+            <Plus className="size-4" />
           </Button>
         </Tooltip>
       }

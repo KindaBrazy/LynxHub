@@ -1,8 +1,8 @@
 import {Button, Link, Spinner} from '@heroui/react';
-import {OpenFolder_Icon} from '@lynx_assets/icons';
 import {CardInfoDescriptions, CardInfoDescriptions_Items} from '@lynx_common/types/plugins/modules';
 import {isValidURL} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
+import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {Descriptions, DescriptionsProps, Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {useCallback} from 'react';
@@ -69,8 +69,8 @@ export default function CardInfoDescription({folders, descriptions}: Props) {
             variant="flat"
             endContent={<div />}
             key={`openFolder_${index}`}
+            startContent={<FolderOpen />}
             onPress={() => openDir(folder)}
-            startContent={<OpenFolder_Icon />}
             className="justify-between shrink-0"
             fullWidth>
             {folder}

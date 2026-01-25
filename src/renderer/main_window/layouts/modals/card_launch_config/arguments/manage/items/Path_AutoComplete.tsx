@@ -1,10 +1,9 @@
 import {Autocomplete, AutocompleteItem} from '@heroui/react';
 import {searchInStrings} from '@lynx/utils';
-import {File_Icon, Folder2_Icon} from '@lynx_assets/icons';
 import {FolderListData} from '@lynx_common/types';
 import filesIpc from '@lynx_shared/ipc/files';
+import {File, Folder} from '@solar-icons/react-perf/BoldDuotone';
 import {Key, useEffect, useState} from 'react';
-
 type Props = {
   baseDir: string;
   type?: 'folder' | 'file';
@@ -89,13 +88,11 @@ export default function AutoCompletePath({baseDir, onValueChange, defaultValue, 
       onInputChange={onInputChange}
       onSelectionChange={selectionChange}
       selectorButtonProps={{className: 'hidden'}}
-      classNames={{selectorButton: '!bg-red-500'}}
+      classNames={{selectorButton: 'bg-red-500!'}}
       inputProps={{classNames: {inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird'}}}
       allowsCustomValue>
       {item => (
-        <AutocompleteItem
-          key={item.name.toLowerCase()}
-          startContent={item.type === 'folder' ? <Folder2_Icon /> : <File_Icon />}>
+        <AutocompleteItem key={item.name.toLowerCase()} startContent={item.type === 'folder' ? <Folder /> : <File />}>
           {item.name}
         </AutocompleteItem>
       )}

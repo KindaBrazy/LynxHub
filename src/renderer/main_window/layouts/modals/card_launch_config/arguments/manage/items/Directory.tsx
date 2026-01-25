@@ -1,5 +1,5 @@
-import {FolderDuo_Icon} from '@lynx_assets/icons';
 import {ChosenArgument} from '@lynx_common/types';
+import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
 
 import PathArgItem from './Path';
 
@@ -12,9 +12,9 @@ export default function DirectoryArgItem({argument, changeValue, removeArg, id}:
       type="folder"
       argument={argument}
       removeArg={removeArg}
-      icon={<FolderDuo_Icon />}
       changeValue={changeValue}
       placeholder="Click to choose folder..."
+      icon={<MoveToFolder className="size-4" />}
     />
   );
 }
