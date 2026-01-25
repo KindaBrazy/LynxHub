@@ -1,9 +1,9 @@
 import {Button, Card, CardBody, CardHeader, ScrollShadow} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {ContainersBg} from '@lynx/utils/common_styles';
-import {Download2_Icon, Info_Icon, SmileCircleDuo_Icon, UserHeart_Icon} from '@lynx_assets/icons';
 import {DashboardPage_Icon} from '@lynx_assets/icons/pages';
 import staticsIpc from '@lynx_shared/ipc/statics';
+import {Download, HeartPulse2, InfoSquare, SmileCircle} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
@@ -35,7 +35,7 @@ const initialGroupSections: GroupProps[] = [
       },
       {
         title: 'Updates',
-        icon: <Download2_Icon className="size-4 shrink-0" />,
+        icon: <Download className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardUpdateId,
       },
     ],
@@ -45,12 +45,12 @@ const initialGroupSections: GroupProps[] = [
     items: [
       {
         title: 'Help & Feedback',
-        icon: <SmileCircleDuo_Icon className="size-4 shrink-0" />,
+        icon: <SmileCircle className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardReportIssueId,
       },
       {
         title: 'About',
-        icon: <Info_Icon className="size-4 shrink-0" />,
+        icon: <InfoSquare className="size-4 shrink-0" />,
         elementId: dashboardSectionId.DashboardAboutId,
       },
     ],
@@ -106,7 +106,7 @@ const DashboardPageNav = () => {
         const updatedSections = JSON.parse(JSON.stringify(initialGroupSections));
         updatedSections[0].items.push({
           title: 'Credits',
-          icon: <UserHeart_Icon className="size-4 shrink-0" />,
+          icon: <HeartPulse2 className="size-4 shrink-0" />,
           elementId: dashboardSectionId.DashboardCreditsId,
         });
         setSections(updatedSections);

@@ -17,13 +17,14 @@ import {
 import LynxScroll from '@lynx/components/LynxScroll';
 import {tabsActions} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
-import {BellDuo_Icon, CheckDuo_Icon, ExternalDuo_Icon} from '@lynx_assets/icons';
 import {AvailablePageIDs, PageID, PageTitles} from '@lynx_common/consts';
 import {Notification_Data} from '@lynx_common/types';
 import {isValidURL} from '@lynx_common/utils';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
+import {Bell, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
+import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
@@ -97,14 +98,14 @@ export default function Home_Notification() {
         color={haveWarn ? 'warning' : 'success'}>
         <Button
           className={
-            `cursor-default border border-foreground/10 bg-stone-50 shadow-md ` +
+            `border border-foreground/10 bg-stone-50 shadow-md ` +
             `dark:border-foreground/5 dark:bg-[#202020] dark:hover:bg-LynxNearBlack`
           }
           radius="full"
           variant="light"
           onPress={onPress}
           isIconOnly>
-          <BellDuo_Icon />
+          <Bell className="size-4" />
         </Button>
       </Badge>
       <Drawer
@@ -128,7 +129,7 @@ export default function Home_Notification() {
         <DrawerContent className="dark:bg-LynxRaisinBlack">
           {refreshing && <Progress size="sm" color="secondary" isIndeterminate />}
           <DrawerHeader className="flex flex-row items-center gap-x-2">
-            <BellDuo_Icon className="size-5" />
+            <Bell className="size-5" />
             <span>Notifications</span>
           </DrawerHeader>
 
@@ -182,7 +183,7 @@ export default function Home_Notification() {
                                 onPress={() => handleRead(notif.id)}
                                 className="h-7 min-w-0 px-2 text-xs text-foreground-500 hover:text-success"
                                 isIconOnly>
-                                <CheckDuo_Icon className="size-3.5" />
+                                <CheckRead className="size-3.5" />
                               </Button>
                             </div>
                           </CardHeader>
@@ -217,7 +218,7 @@ export default function Home_Notification() {
                                     key={btn.title}
                                     className="text-xs"
                                     color={btn.color || 'default'}
-                                    endContent={isUrl ? <ExternalDuo_Icon className="size-[0.85rem]" /> : undefined}>
+                                    endContent={isUrl ? <SquareTopDown className="size-[0.85rem]" /> : undefined}>
                                     {btn.title}
                                   </Button>
                                 );
@@ -235,8 +236,8 @@ export default function Home_Notification() {
             </AnimatePresence>
           </DrawerBody>
 
-          <DrawerFooter className="py-2">
-            <Button size="sm" variant="light" color="warning" onPress={onClose} className="cursor-default">
+          <DrawerFooter className="py-2 justify-start">
+            <Button size="sm" variant="light" color="warning" onPress={onClose}>
               Close
             </Button>
           </DrawerFooter>
