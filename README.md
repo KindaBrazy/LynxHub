@@ -33,7 +33,7 @@
 |--------------|---------------------------------------------------------------------|------------|
 | Insider      | [**V3.4.0**](https://www.patreon.com/collection/1557749)            | 2025-12-31 |
 | Early Access | [**V3.4.0**](https://www.patreon.com/collection/714004)             | 2025-12-31 |
-| Public       | [**V3.3.0**](https://github.com/KindaBrazy/LynxHub/releases/latest) | 2025-11-30 |
+| Public       | [**V3.4.0**](https://github.com/KindaBrazy/LynxHub/releases/latest) | 2026-01-26 |
 
 3. **Install and Launch the Application**
 
