@@ -17,10 +17,18 @@ type FindResult = {
 
 const FindInPage = memo(() => {
   const id = useContextState('targetID');
+  const selectedText = useContextState('selectedText');
   const [searchValue, setSearchValue] = useState<string>('');
   const [result, setResult] = useState<FindResult | null>(null);
   const [inputRef, setInputRef] = useState<HTMLInputElement | null>(null);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Set initial search value from selected text
+  useEffect(() => {
+    if (selectedText) {
+      setSearchValue(selectedText);
+    }
+  }, [selectedText]);
 
   useEffect(() => {
     if (searchValue) {
@@ -29,22 +37,21 @@ const FindInPage = memo(() => {
       browserIpc.send.stopFindInPage(id, 'clearSelection');
       setResult(null);
     }
+
+    if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
+    focusTimeoutRef.current = setTimeout(() => inputRef?.focus(), 0);
   }, [searchValue, id]);
 
   // Listen for find results from main process
   useEffect(() => {
-    const handleFoundInPage = (_event: any, findResult: FindResult) => {
+    const unsubscribe = browserIpc.on.foundInPage(findResult => {
       if (findResult.finalUpdate) {
         setResult(findResult);
       }
-    };
-
-    // @ts-ignore - Electron IPC event
-    window.electron?.ipcRenderer?.on('found-in-page', handleFoundInPage);
+    });
 
     return () => {
-      // @ts-ignore - Electron IPC event
-      window.electron?.ipcRenderer?.removeListener('found-in-page', handleFoundInPage);
+      unsubscribe();
     };
   }, []);
 
@@ -130,16 +137,16 @@ const FindInPage = memo(() => {
 
       {/* Search Input */}
       <Input
-        ref={setInputRef}
-        value={searchValue}
-        onKeyDown={handleKeyDown}
-        placeholder="Type to search..."
-        startContent={<Circle_Icon className="text-foreground-500" />}
-        onValueChange={setSearchValue}
         classNames={{
           input: 'text-sm',
           inputWrapper: noResults ? 'border-danger' : '',
         }}
+        ref={setInputRef}
+        value={searchValue}
+        onKeyDown={handleKeyDown}
+        onValueChange={setSearchValue}
+        placeholder="Type to search..."
+        startContent={<Circle_Icon className="text-foreground-500" />}
         autoFocus
       />
 
@@ -163,8 +170,8 @@ const FindInPage = memo(() => {
         <Button
           size="sm"
           variant="flat"
-          className="flex-1"
           onPress={back}
+          className="flex-1"
           isDisabled={isEmpty(searchValue) || !hasResults}
           startContent={<AltArrowUp className="size-4" />}
           aria-label="Previous match (Shift+Enter or Up Arrow)">
@@ -173,11 +180,11 @@ const FindInPage = memo(() => {
         <Button
           size="sm"
           variant="flat"
-          className="flex-1"
           onPress={next}
+          className="flex-1"
+          aria-label="Next match (Enter or Down Arrow)"
           isDisabled={isEmpty(searchValue) || !hasResults}
-          startContent={<AltArrowDown className="size-4" />}
-          aria-label="Next match (Enter or Down Arrow)">
+          startContent={<AltArrowDown className="size-4" />}>
           Next
         </Button>
         <Button
@@ -186,8 +193,8 @@ const FindInPage = memo(() => {
           color="danger"
           onPress={clear}
           isDisabled={isEmpty(searchValue)}
-          isIconOnly
-          aria-label="Clear search (Escape)">
+          aria-label="Clear search (Escape)"
+          isIconOnly>
           <X className="size-4" />
         </Button>
       </div>

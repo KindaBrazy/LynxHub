@@ -68,9 +68,22 @@ export async function listenForBrowserChannels(browserManager: BrowserManager) {
   const setPosition = (customPosition?: {x: number; y: number}) =>
     contextMenuManager.setCustomContextPosition(customPosition);
 
-  browserIpc.on.openFindInPage((id, customPosition) => {
+  browserIpc.on.openFindInPage(async (id, customPosition) => {
     setPosition(customPosition);
-    contextMenuIpc.send.onFind(id);
+
+    // Get selected text from webContents using executeJavaScript
+    const webContents = browserManager.getWebContentsById(id);
+    let selectedText = '';
+
+    if (webContents && !webContents.isDestroyed()) {
+      try {
+        selectedText = await webContents.executeJavaScript('window.getSelection().toString()');
+      } catch (error) {
+        console.error('Failed to get selected text:', error);
+      }
+    }
+
+    contextMenuIpc.send.onFind(id, selectedText);
   });
 
   browserIpc.on.openZoom((id, customPosition) => {
@@ -112,7 +125,7 @@ export const contextMenuIpc = {
 
     rightClick: (params: ContextMenuParams, navHistory: NavHistory, id: number) =>
       sendToCM(contextMenuChannels.rightClick, params, navHistory, id),
-    onFind: (id: string) => sendToCM(contextMenuChannels.onFind, id),
+    onFind: (id: string, selectedText?: string) => sendToCM(contextMenuChannels.onFind, id, selectedText),
     onZoom: (id: string, factor: number | undefined) => sendToCM(contextMenuChannels.onZoom, id, factor),
     onVolume: (data: ContextMenuVolumeData) => sendToCM(contextMenuChannels.onVolume, data),
     onTerminateAI: (id: string) => sendToCM(contextMenuChannels.onTerminateAI, id),

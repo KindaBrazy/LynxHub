@@ -10,7 +10,7 @@ import {FindInPageOptions} from 'electron';
 import {listenForBrowserChannels} from './context_menu';
 import lynxIpc from './lynxIpc';
 import {handleGetAudioState, handleSetMuted, handleSetVolume} from './methods/volume';
-import {sendToLP, sendToMain} from './sender';
+import {sendToCM, sendToLP, sendToMain} from './sender';
 
 let browserTimeout: NodeJS.Timeout | undefined = undefined;
 let browserIPCInitialized = false;
@@ -140,6 +140,8 @@ export const browserIpc = {
     onTabVolumeUpdate: (tabId: string, volume: number) => sendToMain(browserChannels.onTabVolumeUpdate, tabId, volume),
     onTabMutedUpdate: (tabId: string, muted: boolean) => sendToMain(browserChannels.onTabMutedUpdate, tabId, muted),
     onAudioStateChange: (id: string, state: AudioState) => sendToMain(browserChannels.onAudioStateChange, id, state),
+    onFoundInPage: (result: {activeMatchOrdinal: number; matches: number; finalUpdate: boolean}) =>
+      sendToCM(browserChannels.onFoundInPage, result),
   },
   on: {
     createBrowser: (callback: (id: string) => void) => lynxIpc.on(browserChannels.createBrowser, callback),
