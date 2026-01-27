@@ -4,7 +4,6 @@ import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {RunningCard} from '@lynx/types';
 import {formatWebAddress} from '@lynx_common/utils';
-import browserIpc from '@lynx_shared/ipc/browser';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Star} from '@solar-icons/react-perf/Bold';
 import {motion} from 'framer-motion';
@@ -234,7 +233,7 @@ const useAddressBar = ({runningCard, setCustomAddress}: Props) => {
           storageUtilsIpc.send.addBrowserRecent(url);
           // History is now tracked in main process on navigation events
           editableRef.current?.blur();
-          browserIpc.send.reload(cardId);
+          // Don't call reload() here - the useEffect in browser/index.tsx will handle loading the URL
         } catch (err) {
           console.error(`Invalid URL: ${err}`);
         }
