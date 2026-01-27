@@ -1,12 +1,12 @@
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Tooltip} from '@heroui/react';
+import {Button, Popover, PopoverContent, PopoverTrigger, ScrollShadow, Tooltip} from '@heroui/react';
 import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
-import {CloseSimple_Icon, FolderDuo_Icon, OpenFolder_Icon, Trash_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc from '@lynx_shared/ipc/storage';
+import {Broom, FolderOpen, MoveToFolder, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
-import {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import {memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 type Props = {id: string};
@@ -64,68 +64,84 @@ const CDTo = memo(({id}: Props) => {
     });
   }, []);
 
-  const items = useMemo(() => {
-    const baseItems = [
-      <DropdownItem key="select folder" onPress={selectDir} endContent={<OpenFolder_Icon />}>
-        Choose folder…
-      </DropdownItem>,
-    ];
-
-    baseItems.push(
-      ...history.map(item => (
-        <DropdownItem
-          endContent={
-            <Button
-              onPress={() => {
-                removeFromHistory(item);
-              }}
-              size="sm"
-              color="danger"
-              variant="light"
-              isIconOnly>
-              <Trash_Icon className="size-3" />
-            </Button>
-          }
-          key={item}
-          onPress={() => cdTo(item)}>
-          {item}
-        </DropdownItem>
-      )),
-    );
-
-    if (!isEmpty(history)) {
-      baseItems.push(
-        <DropdownItem
-          color="danger"
-          key="clear_history"
-          onPress={clearHistory}
-          className="text-danger"
-          endContent={<CloseSimple_Icon />}>
-          Clear folder history
-        </DropdownItem>,
-      );
-    }
-
-    return baseItems;
-  }, [history, selectDir, clearHistory, cdTo, removeFromHistory]);
-
   return (
-    <Dropdown
-      closeOnSelect={false}
-      className="bg-foreground-100"
-      classNames={{base: 'before:bg-foreground-100'}}
+    <Popover
+      classNames={{
+        base: 'before:bg-foreground-100',
+        content: 'p-0 bg-foreground-50',
+      }}
+      placement="bottom-start"
       showArrow>
       <Tooltip delay={500} content="Change terminal directory (cd)">
         <div className="max-w-fit">
-          <DropdownTrigger>
+          <PopoverTrigger>
             <Button size="sm" variant="light" isIconOnly>
-              <FolderDuo_Icon className="size-3.5" />
+              <MoveToFolder className="size-3.5" />
             </Button>
-          </DropdownTrigger>
+          </PopoverTrigger>
         </div>
       </Tooltip>
-      <DropdownMenu aria-label="Change directory history">{items}</DropdownMenu>
-    </Dropdown>
+      <PopoverContent className="w-[320px]">
+        <div className="flex w-full flex-col">
+          {/* Header */}
+          <div className="flex items-center justify-between px-3 py-2">
+            <h3 className="text-xs font-semibold text-foreground-700">Change Directory</h3>
+            {!isEmpty(history) && (
+              <Button size="sm" variant="light" onPress={clearHistory} className="text-danger" isIconOnly>
+                <Broom className="size-3" />
+              </Button>
+            )}
+          </div>
+
+          {/* Choose folder button */}
+          <Button
+            radius="none"
+            variant="flat"
+            onPress={selectDir}
+            className="justify-start"
+            startContent={<FolderOpen className="size-3.5" />}>
+            Choose folder…
+          </Button>
+
+          {/* History list */}
+          {isEmpty(history) ? (
+            <div className="flex flex-col items-center gap-1.5 py-6 text-center">
+              <MoveToFolder className="size-6 text-foreground-400" />
+              <p className="text-xs text-foreground-500">No recent directories</p>
+            </div>
+          ) : (
+            <ScrollShadow className="max-h-[200px]">
+              <div className="flex flex-col p-1.5">
+                {history.map(item => (
+                  <Button
+                    key={item}
+                    variant="light"
+                    className="group"
+                    onPress={() => cdTo(item)}
+                    startContent={<MoveToFolder className="size-3.5 shrink-0 text-foreground-500" />}>
+                    <div
+                      className={
+                        'min-w-0 flex-1 truncate text-left text-xs text-foreground-700 hover:text-foreground-900'
+                      }>
+                      {item}
+                    </div>
+                    <Button
+                      size="sm"
+                      color="danger"
+                      variant="light"
+                      onPress={() => removeFromHistory(item)}
+                      className="opacity-0 transition-opacity group-hover:opacity-100"
+                      isIconOnly>
+                      <TrashBin2 className="size-3" />
+                    </Button>
+                  </Button>
+                ))}
+              </div>
+            </ScrollShadow>
+          )}
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 });
 
