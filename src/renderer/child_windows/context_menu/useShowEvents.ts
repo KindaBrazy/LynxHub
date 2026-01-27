@@ -1,5 +1,6 @@
 import {DownloadItemInfo} from '@lynx_common/types/download_manager';
 import {ContextWindowWidthSizes} from '@lynx_common/types/ipc';
+import browserIpc from '@lynx_shared/ipc/browser';
 import contextMenuIpc from '@lynx_shared/ipc/context_menu';
 import windowDialogsIpc from '@lynx_shared/ipc/dialogs_window';
 import downloadManagerIpc from '@lynx_shared/ipc/download_manager';
@@ -54,6 +55,20 @@ export default function useShowEvents() {
         contextActions.showLayout({
           key: 'browserScale',
           value: {id, factor: zoomFactor * 100},
+          layout: MenuTypes.BrowserScale,
+          widthSize: 'md',
+        }),
+      );
+    });
+
+    // Auto-open zoom dialog when user changes zoom level (Ctrl+/- or mouse wheel)
+    const offZoomChanged = browserIpc.on.onZoomChanged((id, factor) => {
+      // Round to avoid floating-point precision issues in display
+      const roundedFactor = Math.round(factor * 100);
+      dispatch(
+        contextActions.showLayout({
+          key: 'browserScale',
+          value: {id, factor: roundedFactor},
           layout: MenuTypes.BrowserScale,
           widthSize: 'md',
         }),
@@ -188,6 +203,7 @@ export default function useShowEvents() {
 
     return () => {
       offZoom();
+      offZoomChanged();
       offFind();
       offInitView();
       offCloseApp();

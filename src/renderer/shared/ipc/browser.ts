@@ -120,6 +120,10 @@ const browserIpc = {
     // Listens for find in page results
     foundInPage: (callback: (result: {activeMatchOrdinal: number; matches: number; finalUpdate: boolean}) => void) =>
       lynxIpc.on(browserChannels.onFoundInPage, callback),
+
+    // Listens for zoom level changes (Ctrl+/- or mouse wheel zoom)
+    onZoomChanged: (callback: (id: string, factor: number) => void) =>
+      lynxIpc.on(browserChannels.onZoomChanged, callback),
   },
   invoke: {
     // Clears browser cache

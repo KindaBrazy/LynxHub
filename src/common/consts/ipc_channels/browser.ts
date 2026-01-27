@@ -8,6 +8,8 @@ const browserChannels = {
   openZoom: 'browser:openZoom',
   openVolume: 'browser:openVolume',
 
+  onZoomChanged: 'browser:on-zoom-changed',
+
   onLinkHover: 'browser:on-link-hover',
   resizeLinkPreview: 'browser:resize-link-preview',
 
