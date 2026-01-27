@@ -30,15 +30,20 @@ const Browser = memo(({runningCard}: Props) => {
   const isDomReady = useMemo(() => browserDomReadyIds.includes(id), [browserDomReadyIds, id]);
 
   const finalAddress = useMemo(() => customAddress || webUIAddress, [customAddress, webUIAddress]);
+  const previousFinalAddress = useRef<string>('');
 
   useEffect(() => {
-    if (finalAddress) {
-      // Always load the URL when finalAddress changes, even if it's in history
-      // This ensures clicking favorites/recents works even after navigating back
-      browserIpc.send.loadURL(id, finalAddress);
-    } else {
-      // Load about:blank to establish navigation history entry for empty page
-      browserIpc.send.loadURL(id, 'about:blank');
+    // Only load URL if finalAddress actually changed (not just from redirect sync)
+    if (finalAddress !== previousFinalAddress.current) {
+      previousFinalAddress.current = finalAddress;
+      
+      if (finalAddress) {
+        // Load the URL when finalAddress changes from user action
+        browserIpc.send.loadURL(id, finalAddress);
+      } else {
+        // Load about:blank to establish navigation history entry for empty page
+        browserIpc.send.loadURL(id, 'about:blank');
+      }
     }
   }, [id, finalAddress]);
 
@@ -80,12 +85,28 @@ const Browser = memo(({runningCard}: Props) => {
       if (targetID === id) {
         setCurrentUrl(url);
         // Sync customAddress with actual browser URL for back/forward navigation
+        // But don't sync during redirects - only sync when user explicitly navigates
         if (url === 'about:blank' && customAddress) {
           // Clear customAddress when navigating back to blank page
           dispatch(cardsActions.setRunningCardCustomAddress({tabId, address: ''}));
+          previousFinalAddress.current = '';
         } else if (url !== 'about:blank' && customAddress !== url) {
-          // Update customAddress when navigating forward/back to match actual URL
-          dispatch(cardsActions.setRunningCardCustomAddress({tabId, address: url}));
+          // Only update if this is a back/forward navigation, not a redirect
+          // Check if the URL is significantly different (not just a redirect in the same domain)
+          try {
+            const currentOrigin = new URL(url).origin;
+            const customOrigin = customAddress ? new URL(customAddress).origin : '';
+            const isBackForwardNav = !customAddress || currentOrigin !== customOrigin;
+            
+            if (isBackForwardNav) {
+              dispatch(cardsActions.setRunningCardCustomAddress({tabId, address: url}));
+              previousFinalAddress.current = url;
+            }
+          } catch {
+            // If URL parsing fails, treat as back/forward navigation
+            dispatch(cardsActions.setRunningCardCustomAddress({tabId, address: url}));
+            previousFinalAddress.current = url;
+          }
         }
       }
     });
