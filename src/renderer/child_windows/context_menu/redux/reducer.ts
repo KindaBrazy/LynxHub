@@ -28,6 +28,7 @@ type ContextState = {
   windowWidth: string;
   activeLayout: MenuTypes | undefined;
   targetID: string;
+  selectedText: string;
 
   browserScale: ZoomLayout;
   browserVolume: ContextMenuVolumeData;
@@ -48,6 +49,7 @@ type ContextStateTypes = {
 const initialState: ContextState = {
   windowWidth: 'w-44',
   activeLayout: undefined,
+  selectedText: '',
 
   browserScale: {id: '', factor: 100},
   targetID: '',

@@ -13,6 +13,7 @@ const browserChannels = {
 
   findInPage: 'browser:findInPage',
   stopFindInPage: 'browser:stopFindInPage',
+  onFoundInPage: 'browser:on-found-in-page',
   setZoomFactor: 'browser:setZoomFactor',
 
   focusWebView: 'browser:focus-webview',

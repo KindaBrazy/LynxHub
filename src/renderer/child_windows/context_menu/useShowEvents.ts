@@ -60,15 +60,18 @@ export default function useShowEvents() {
       );
     });
 
-    const offFind = contextMenuIpc.on.find(value => {
+    const offFind = contextMenuIpc.on.find((id, selectedText) => {
       dispatch(
         contextActions.showLayout({
           key: 'targetID',
-          value,
+          value: id,
           layout: MenuTypes.FindInPage,
           widthSize: 'md',
         }),
       );
+      if (selectedText) {
+        dispatch(contextActions.setContextState({key: 'selectedText', value: selectedText}));
+      }
     });
 
     const offCloseApp = contextMenuIpc.on.closeApp(() => {

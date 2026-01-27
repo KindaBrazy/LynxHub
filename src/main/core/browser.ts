@@ -52,6 +52,11 @@ export default class BrowserManager {
     return view.webContents;
   }
 
+  /** Public method to get WebContents by ID for external use */
+  public getWebContentsById(id: string): WebContents | undefined {
+    return this.getWebContents(id);
+  }
+
   /** Execute action on WebContents if valid, with optional error handling */
   private withWebContents<T>(id: string, action: (wc: WebContents) => T, fallback?: T): T | undefined {
     try {
@@ -265,15 +270,9 @@ export default class BrowserManager {
     });
   }
 
-  private listenForFindInPage(id: string, webContents: WebContents) {
+  private listenForFindInPage(webContents: WebContents) {
     webContents.on('found-in-page', (_, result) => {
-      const contextMenuManager = classHolder.contextMenuManager;
-      if (contextMenuManager) {
-        const contextWindow = contextMenuManager.getWindow();
-        if (contextWindow && !contextWindow.isDestroyed()) {
-          contextWindow.webContents.send('found-in-page', result);
-        }
-      }
+      browserIpc.send.onFoundInPage(result);
     });
   }
 
@@ -316,7 +315,7 @@ export default class BrowserManager {
     this.listenForFailLoad(webContents, id);
     this.listenForAudioEvents(id, webContents);
     this.listenForLinkHover(webContents);
-    this.listenForFindInPage(id, webContents);
+    this.listenForFindInPage(webContents);
 
     this.browsers.push({id, view: newView});
     mainWindow.contentView.addChildView(newView);

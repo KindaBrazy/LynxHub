@@ -84,7 +84,7 @@ const contextMenuIpc = {
       lynxIpc.on(contextMenuChannels.rightClick, callback),
 
     // Listens for find in page events
-    find: (callback: (id: string) => void) => lynxIpc.on(contextMenuChannels.onFind, callback),
+    find: (callback: (id: string, selectedText?: string) => void) => lynxIpc.on(contextMenuChannels.onFind, callback),
 
     // Listens for terminate AI events
     terminateProcess: (callback: (id: string) => void) => lynxIpc.on(contextMenuChannels.onTerminateAI, callback),

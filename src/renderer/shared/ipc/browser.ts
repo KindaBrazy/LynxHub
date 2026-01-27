@@ -116,6 +116,10 @@ const browserIpc = {
     // Listens for tab muted updates from context menu
     onTabMutedUpdate: (callback: (tabId: string, muted: boolean) => void) =>
       lynxIpc.on(browserChannels.onTabMutedUpdate, callback),
+
+    // Listens for find in page results
+    foundInPage: (callback: (result: {activeMatchOrdinal: number; matches: number; finalUpdate: boolean}) => void) =>
+      lynxIpc.on(browserChannels.onFoundInPage, callback),
   },
   invoke: {
     // Clears browser cache
