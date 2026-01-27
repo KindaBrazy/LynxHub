@@ -265,6 +265,18 @@ export default class BrowserManager {
     });
   }
 
+  private listenForFindInPage(id: string, webContents: WebContents) {
+    webContents.on('found-in-page', (_, result) => {
+      const contextMenuManager = classHolder.contextMenuManager;
+      if (contextMenuManager) {
+        const contextWindow = contextMenuManager.getWindow();
+        if (contextWindow && !contextWindow.isDestroyed()) {
+          contextWindow.webContents.send('found-in-page', result);
+        }
+      }
+    });
+  }
+
   private sendAudioStateChange(id: string, playing: boolean): void {
     const viewWc = this.getWebContents(id);
     if (!viewWc) return;
@@ -304,6 +316,7 @@ export default class BrowserManager {
     this.listenForFailLoad(webContents, id);
     this.listenForAudioEvents(id, webContents);
     this.listenForLinkHover(webContents);
+    this.listenForFindInPage(id, webContents);
 
     this.browsers.push({id, view: newView});
     mainWindow.contentView.addChildView(newView);
