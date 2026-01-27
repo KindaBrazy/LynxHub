@@ -40,7 +40,7 @@ export const ContentsNav = () => {
 
     if (hasCardsByPath(PageID.textGen) || hasCardsByPath('/textGenerationPage')) {
       result.push({
-        icon: <TextPage_Icon className="size-full" />,
+        icon: <TextPage_Icon className="size-full scale-110" />,
         title: PageTitles.textGen,
         path: PageID.textGen,
       });
