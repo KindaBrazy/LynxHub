@@ -223,12 +223,16 @@ export default class BrowserManager {
     });
   }
 
-  private listenForZoom(webContents: WebContents) {
+  private listenForZoom(id: string, webContents: WebContents) {
     webContents.on('zoom-changed', (_, zoomDirection) => {
       if (webContents.isDestroyed()) return;
       let resultFactor = webContents.getZoomFactor();
       resultFactor = zoomDirection === 'in' ? resultFactor + 0.1 : resultFactor - 0.1;
-      if (resultFactor > 0.1 && resultFactor < 5) webContents.setZoomFactor(resultFactor);
+      if (resultFactor > 0.1 && resultFactor < 5) {
+        webContents.setZoomFactor(resultFactor);
+        // Notify renderer about zoom change to auto-open zoom dialog
+        browserIpc.send.onZoomChanged(id, resultFactor);
+      }
     });
   }
 
@@ -310,7 +314,7 @@ export default class BrowserManager {
     this.listenForLoading(id, webContents);
     this.listenForTitle(id, webContents);
     this.listenForFavIcon(id, webContents);
-    this.listenForZoom(webContents);
+    this.listenForZoom(id, webContents);
     this.listenForFullScreen(newView);
     this.listenForFailLoad(webContents, id);
     this.listenForAudioEvents(id, webContents);
