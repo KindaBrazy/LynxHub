@@ -142,7 +142,7 @@ export const browserIpc = {
     onAudioStateChange: (id: string, state: AudioState) => sendToMain(browserChannels.onAudioStateChange, id, state),
     onFoundInPage: (result: {activeMatchOrdinal: number; matches: number; finalUpdate: boolean}) =>
       sendToCM(browserChannels.onFoundInPage, result),
-    onZoomChanged: (id: string, factor: number) => sendToCM(browserChannels.onZoomChanged, id, factor),
+    onZoomChanged: (id: string, factor: number) => sendToMain(browserChannels.onZoomChanged, id, factor),
   },
   on: {
     createBrowser: (callback: (id: string) => void) => lynxIpc.on(browserChannels.createBrowser, callback),

@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {Magnifer} from '@solar-icons/react-perf/BoldDuotone';
-import {useRef} from 'react';
+import {useEffect, useRef} from 'react';
 
 type Props = {id: string};
 export default function Browser_Zoom({id}: Props) {
@@ -16,6 +16,17 @@ export default function Browser_Zoom({id}: Props) {
       browserIpc.send.openZoom(id);
     }
   };
+
+  useEffect(() => {
+    const removeListener = browserIpc.on.onZoomChanged((eventId, _) => {
+      if (eventId === id) {
+        openZoomMenu();
+      }
+    });
+    return () => {
+      removeListener();
+    };
+  }, [id]);
 
   return (
     <Button size="sm" ref={btnRef} variant="light" onPress={openZoomMenu} className="cursor-default" isIconOnly>
