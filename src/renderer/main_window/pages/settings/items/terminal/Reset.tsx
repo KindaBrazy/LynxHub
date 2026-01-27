@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 import {terminalActions} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
-import {RefreshDuo_Icon} from '@lynx_assets/icons';
+import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -36,7 +36,7 @@ export default function Reset() {
         color="warning"
         onPress={onApply}
         isLoading={isSaving}
-        startContent={<RefreshDuo_Icon />}
+        startContent={<Refresh />}
         fullWidth>
         Reset All Terminal Settings
       </Button>

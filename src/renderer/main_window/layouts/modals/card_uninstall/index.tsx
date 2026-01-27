@@ -4,10 +4,10 @@ import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useGetUninstallType} from '@lynx/plugins/modules';
 import {useModalsState} from '@lynx/redux/reducers/modals';
 import {AppDispatch} from '@lynx/redux/store';
-import {ShieldCross_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {Fragment, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -98,7 +98,7 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="items-center gap-x-2">
-          <ShieldCross_Icon className="text-danger size-7" />
+          <ShieldCross className="text-danger size-7" />
           <span className="text-danger">Confirm Uninstallation</span>
         </ModalHeader>
         <ModalBody className="py-0">
