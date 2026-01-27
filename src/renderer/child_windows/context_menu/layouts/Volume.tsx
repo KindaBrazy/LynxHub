@@ -65,9 +65,9 @@ const VolumeMenu = memo(() => {
   }, []);
 
   return (
-    <div className="flex w-full flex-col gap-4 p-4">
+    <div className="flex w-full flex-col gap-2 p-3">
       <div className="flex items-center justify-between">
-        <span className="text-small font-medium">Volume Control</span>
+        <span className="text-xs font-medium">Volume</span>
         <Button
           size="sm"
           variant="light"
@@ -75,11 +75,11 @@ const VolumeMenu = memo(() => {
           className="cursor-default"
           aria-label={muted ? 'Unmute audio' : 'Mute audio'}
           isIconOnly>
-          {effectiveMuted ? <VolumeCross className="size-4" /> : <VolumeLoud className="size-4" />}
+          {effectiveMuted ? <VolumeCross className="size-3.5" /> : <VolumeLoud className="size-3.5" />}
         </Button>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-1">
         <Slider
           step={1}
           size="sm"
@@ -87,8 +87,8 @@ const VolumeMenu = memo(() => {
           maxValue={100}
           value={volume}
           className="max-w-full"
-          startContent={<Volume />}
-          endContent={<VolumeLoud />}
+          startContent={<Volume className="size-3.5" />}
+          endContent={<VolumeLoud className="size-3.5" />}
           onChange={handleVolumeChange}
           aria-label="Volume level slider"
         />
