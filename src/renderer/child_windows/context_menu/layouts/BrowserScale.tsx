@@ -42,20 +42,25 @@ const BrowserScale = memo(() => {
           color="default"
           onPress={handleReset}
           isDisabled={factor === 100}
-          startContent={<Refresh className="size-4" />}
-          aria-label="Reset zoom to 100%">
+          aria-label="Reset zoom to 100%"
+          startContent={<Refresh className="size-4" />}>
           Reset
         </Button>
       </div>
 
       {/* Current zoom display */}
       <div className="flex items-center justify-center rounded-lg bg-foreground-100 py-3">
-        <span className="text-2xl font-bold text-foreground-800">{factor}%</span>
+        <span className="text-2xl font-bold text-foreground-800">{Math.round(factor)}%</span>
       </div>
 
       {/* Slider */}
       <div className="flex flex-col gap-3">
         <Slider
+          classNames={{
+            thumb: 'cursor-default',
+            track: 'h-1.5',
+            filler: 'bg-primary',
+          }}
           step={5}
           size="md"
           minValue={10}
@@ -66,53 +71,48 @@ const BrowserScale = memo(() => {
           className="w-full"
           onChange={onChange}
           aria-label="Browser zoom level"
-          aria-valuetext={`${factor} percent`}
           getValue={value => `${value}%`}
-          startContent={<MinimalisticMagnifer className="size-4 text-foreground-500" />}
+          aria-valuetext={`${factor} percent`}
           endContent={<Magnifer className="size-5 text-foreground-500" />}
-          classNames={{
-            thumb: 'cursor-default',
-            track: 'h-1.5',
-            filler: 'bg-primary',
-          }}
+          startContent={<MinimalisticMagnifer className="size-4 text-foreground-500" />}
         />
 
         {/* Scale markers */}
         <div className="flex justify-between px-1 text-tiny text-foreground-500">
           <button
+            aria-label="Set zoom to 10%"
             onClick={() => updateZoom(10)}
-            className="transition-colors hover:text-foreground-800"
-            aria-label="Set zoom to 10%">
+            className="transition-colors hover:text-foreground-800">
             10%
           </button>
           <button
+            aria-label="Set zoom to 50%"
             onClick={() => updateZoom(50)}
-            className="transition-colors hover:text-foreground-800"
-            aria-label="Set zoom to 50%">
+            className="transition-colors hover:text-foreground-800">
             50%
           </button>
           <button
+            aria-label="Set zoom to 100%"
             onClick={() => updateZoom(100)}
-            className="font-medium transition-colors hover:text-foreground-800"
-            aria-label="Set zoom to 100%">
+            className="font-medium transition-colors hover:text-foreground-800">
             100%
           </button>
           <button
+            aria-label="Set zoom to 150%"
             onClick={() => updateZoom(150)}
-            className="transition-colors hover:text-foreground-800"
-            aria-label="Set zoom to 150%">
+            className="transition-colors hover:text-foreground-800">
             150%
           </button>
           <button
+            aria-label="Set zoom to 200%"
             onClick={() => updateZoom(200)}
-            className="transition-colors hover:text-foreground-800"
-            aria-label="Set zoom to 200%">
+            className="transition-colors hover:text-foreground-800">
             200%
           </button>
           <button
+            aria-label="Set zoom to 300%"
             onClick={() => updateZoom(300)}
-            className="transition-colors hover:text-foreground-800"
-            aria-label="Set zoom to 300%">
+            className="transition-colors hover:text-foreground-800">
             300%
           </button>
         </div>
@@ -124,25 +124,25 @@ const BrowserScale = memo(() => {
           size="sm"
           variant="flat"
           className="flex-1"
-          onPress={() => updateZoom(Math.max(10, factor - 10))}
-          aria-label="Decrease zoom by 10%">
+          aria-label="Decrease zoom by 10%"
+          onPress={() => updateZoom(Math.max(10, factor - 10))}>
           −10%
         </Button>
         <Button
           size="sm"
           variant="flat"
           className="flex-1"
-          onPress={() => updateZoom(100)}
+          aria-label="Reset to 100%"
           isDisabled={factor === 100}
-          aria-label="Reset to 100%">
+          onPress={() => updateZoom(100)}>
           100%
         </Button>
         <Button
           size="sm"
           variant="flat"
           className="flex-1"
-          onPress={() => updateZoom(Math.min(300, factor + 10))}
-          aria-label="Increase zoom by 10%">
+          aria-label="Increase zoom by 10%"
+          onPress={() => updateZoom(Math.min(300, factor + 10))}>
           +10%
         </Button>
       </div>
