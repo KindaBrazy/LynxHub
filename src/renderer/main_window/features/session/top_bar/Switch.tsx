@@ -2,7 +2,8 @@ import {Button} from '@heroui/react';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
-import {Terminal_Icon, Web_Icon} from '@lynx_assets/icons';
+import {Terminal_Icon} from '@lynx_assets/icons';
+import {Earth} from '@solar-icons/react-perf/BoldDuotone';
 import {useDispatch} from 'react-redux';
 
 type Props = {currentView: 'browser' | 'terminal'};
@@ -16,7 +17,7 @@ export default function Switch({currentView}: Props) {
 
   return (
     <Button size="sm" variant="light" onPress={onPress} className="cursor-default">
-      {currentView === 'browser' ? <Terminal_Icon className="size-4" /> : <Web_Icon className="size-4" />}
+      {currentView === 'browser' ? <Terminal_Icon className="size-4" /> : <Earth className="size-4" />}
     </Button>
   );
 }
