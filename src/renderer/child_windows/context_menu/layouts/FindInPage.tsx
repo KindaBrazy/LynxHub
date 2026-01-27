@@ -1,7 +1,7 @@
 import {Button, Chip, Input} from '@heroui/react';
 import {Circle_Icon} from '@lynx_assets/icons';
 import browserIpc from '@lynx_shared/ipc/browser';
-import {AltArrowDown, AltArrowUp, MinimalisticMagnifer} from '@solar-icons/react-perf/BoldDuotone';
+import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {X} from 'lucide-react';
 import {type KeyboardEvent, memo, useEffect, useRef, useState} from 'react';
@@ -125,7 +125,7 @@ const FindInPage = memo(() => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <MinimalisticMagnifer className="size-5 text-primary" />
+          <Circle_Icon className="size-5 text-primary" />
           <span className="text-sm font-semibold text-foreground-800">Find in Page</span>
         </div>
         {hasResults && (

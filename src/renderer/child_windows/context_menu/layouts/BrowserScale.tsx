@@ -1,7 +1,12 @@
 import {Button, Slider} from '@heroui/react';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {Magnifer, MinimalisticMagnifer, Refresh} from '@solar-icons/react-perf/BoldDuotone';
+import {
+  Magnifer,
+  MinimalisticMagniferZoomIn,
+  MinimalisticMagniferZoomOut,
+  Refresh,
+} from '@solar-icons/react-perf/BoldDuotone';
 import {isArray} from 'lodash';
 import {memo} from 'react';
 import {useDispatch} from 'react-redux';
@@ -73,8 +78,8 @@ const BrowserScale = memo(() => {
           aria-label="Browser zoom level"
           getValue={value => `${value}%`}
           aria-valuetext={`${factor} percent`}
-          endContent={<Magnifer className="size-5 text-foreground-500" />}
-          startContent={<MinimalisticMagnifer className="size-4 text-foreground-500" />}
+          endContent={<MinimalisticMagniferZoomIn className="size-5 text-foreground-500" />}
+          startContent={<MinimalisticMagniferZoomOut className="size-4 text-foreground-500" />}
         />
 
         {/* Scale markers */}
