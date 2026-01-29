@@ -36,7 +36,7 @@ const Browser = memo(({runningCard}: Props) => {
     // Only load URL if finalAddress actually changed (not just from redirect sync)
     if (finalAddress !== previousFinalAddress.current) {
       previousFinalAddress.current = finalAddress;
-      
+
       if (finalAddress) {
         // Load the URL when finalAddress changes from user action
         browserIpc.send.loadURL(id, finalAddress);
@@ -97,7 +97,7 @@ const Browser = memo(({runningCard}: Props) => {
             const currentOrigin = new URL(url).origin;
             const customOrigin = customAddress ? new URL(customAddress).origin : '';
             const isBackForwardNav = !customAddress || currentOrigin !== customOrigin;
-            
+
             if (isBackForwardNav) {
               dispatch(cardsActions.setRunningCardCustomAddress({tabId, address: url}));
               previousFinalAddress.current = url;

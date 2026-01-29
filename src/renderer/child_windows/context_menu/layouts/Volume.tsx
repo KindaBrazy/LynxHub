@@ -82,10 +82,10 @@ const VolumeMenu = memo(() => {
         <Button
           size="sm"
           variant="flat"
-          color={effectiveMuted ? 'danger' : 'default'}
           onPress={handleMuteToggle}
-          startContent={effectiveMuted ? <VolumeCross className="size-4" /> : <VolumeLoud className="size-4" />}
-          aria-label={muted ? 'Unmute audio' : 'Mute audio'}>
+          color={effectiveMuted ? 'danger' : 'default'}
+          aria-label={muted ? 'Unmute audio' : 'Mute audio'}
+          startContent={effectiveMuted ? <VolumeCross className="size-4" /> : <VolumeLoud className="size-4" />}>
           {effectiveMuted ? 'Unmute' : 'Mute'}
         </Button>
       </div>
@@ -102,15 +102,18 @@ const VolumeMenu = memo(() => {
           ) : (
             <VolumeLoud className="size-6 text-foreground-700" />
           )}
-          <span className="text-2xl font-bold text-foreground-800">
-            {effectiveMuted ? 'Muted' : `${volume}%`}
-          </span>
+          <span className="text-2xl font-bold text-foreground-800">{effectiveMuted ? 'Muted' : `${volume}%`}</span>
         </div>
       </div>
 
       {/* Slider */}
       <div className="flex flex-col gap-3">
         <Slider
+          classNames={{
+            thumb: 'cursor-default',
+            track: 'h-1.5',
+            filler: 'bg-primary',
+          }}
           step={1}
           size="md"
           minValue={0}
@@ -118,50 +121,45 @@ const VolumeMenu = memo(() => {
           value={volume}
           color="primary"
           className="w-full"
-          onChange={handleVolumeChange}
           aria-label="Volume level"
-          aria-valuetext={`${volume} percent`}
-          getValue={value => `${value}%`}
           isDisabled={effectiveMuted}
+          onChange={handleVolumeChange}
+          getValue={value => `${value}%`}
+          aria-valuetext={`${volume} percent`}
           startContent={<Volume className="size-4 text-foreground-500" />}
           endContent={<VolumeLoud className="size-5 text-foreground-500" />}
-          classNames={{
-            thumb: 'cursor-default',
-            track: 'h-1.5',
-            filler: 'bg-primary',
-          }}
         />
 
         {/* Volume markers */}
         <div className="flex justify-between px-1 text-tiny text-foreground-500">
           <button
             onClick={() => setVolume(0)}
-            className="transition-colors hover:text-foreground-800"
-            aria-label="Set volume to 0%">
+            aria-label="Set volume to 0%"
+            className="transition-colors hover:text-foreground-800">
             0%
           </button>
           <button
             onClick={() => setVolume(25)}
-            className="transition-colors hover:text-foreground-800"
-            aria-label="Set volume to 25%">
+            aria-label="Set volume to 25%"
+            className="transition-colors hover:text-foreground-800">
             25%
           </button>
           <button
             onClick={() => setVolume(50)}
-            className="transition-colors hover:text-foreground-800"
-            aria-label="Set volume to 50%">
+            aria-label="Set volume to 50%"
+            className="transition-colors hover:text-foreground-800">
             50%
           </button>
           <button
             onClick={() => setVolume(75)}
-            className="transition-colors hover:text-foreground-800"
-            aria-label="Set volume to 75%">
+            aria-label="Set volume to 75%"
+            className="transition-colors hover:text-foreground-800">
             75%
           </button>
           <button
             onClick={() => setVolume(100)}
-            className="font-medium transition-colors hover:text-foreground-800"
-            aria-label="Set volume to 100%">
+            aria-label="Set volume to 100%"
+            className="font-medium transition-colors hover:text-foreground-800">
             100%
           </button>
         </div>
@@ -173,17 +171,17 @@ const VolumeMenu = memo(() => {
           size="sm"
           variant="flat"
           className="flex-1"
-          onPress={() => setVolume(Math.max(0, volume - 10))}
+          aria-label="Decrease volume by 10%"
           isDisabled={effectiveMuted || volume === 0}
-          aria-label="Decrease volume by 10%">
+          onPress={() => setVolume(Math.max(0, volume - 10))}>
           −10%
         </Button>
         <Button
           size="sm"
           variant="flat"
           className="flex-1"
-          onPress={() => setVolume(50)}
           isDisabled={effectiveMuted}
+          onPress={() => setVolume(50)}
           aria-label="Set volume to 50%">
           50%
         </Button>
@@ -191,9 +189,9 @@ const VolumeMenu = memo(() => {
           size="sm"
           variant="flat"
           className="flex-1"
-          onPress={() => setVolume(Math.min(100, volume + 10))}
+          aria-label="Increase volume by 10%"
           isDisabled={effectiveMuted || volume === 100}
-          aria-label="Increase volume by 10%">
+          onPress={() => setVolume(Math.min(100, volume + 10))}>
           +10%
         </Button>
       </div>
