@@ -1,9 +1,6 @@
-import {
-  EMenuItem,
-  ExtensionMainApi,
-  MainExtensionUtils,
-} from '../../../src/main/Managements/Plugin/Extensions/ExtensionTypes_Main';
-import StorageManager from '../../../src/main/Managements/Storage/StorageManager';
+import {EMenuItem, ExtensionMainApi, MainExtensionUtils} from '@lynx_main/plugins/extensions/types';
+import StorageManager from '@lynx_main/storage/helper';
+
 import {listenForChannels} from './Methods/IpcChannels';
 
 let storeManager: StorageManager | undefined = undefined;

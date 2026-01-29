@@ -1,9 +1,9 @@
 import {Button} from '@heroui/react';
+import {useAppState} from '@lynx/redux/reducers/app';
+import {CardElementProps} from '@lynx_common/types/plugins/extensions';
 import {Fragment, useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {CardElementProps} from '../../../../src/cross/plugin/ExtensionTypes_Renderer';
-import {useAppState} from '../../../../src/renderer/src/App/Redux/Reducer/AppReducer';
 import {extensionActions, useExtensionState} from '../reducer';
 
 // @ts-ignore

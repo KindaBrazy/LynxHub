@@ -1,4 +1,4 @@
-import {ArgumentsData} from '../../../../src/cross/plugin/ModuleTypes';
+import {ArgumentsData} from '../../types';
 
 const comfyArguments: ArgumentsData = [
   {
