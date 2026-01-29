@@ -3,9 +3,11 @@ import {lynxTopToast} from '@lynx/hooks/utils';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
+import {useTerminalState} from '@lynx/redux/reducers/terminal';
 import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {RunningCard} from '@lynx/types';
+import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {CustomRunBehaviorData} from '@lynx_common/types/ipc';
 import {toMs} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
@@ -30,8 +32,10 @@ type Props = {
 
 const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal, setSelectedTerminalText}: Props) => {
   const copyPressed = useHotkeysState('copyPressed');
+  const hotkeys = useHotkeysState('hotkeys');
   const activeTab = useTabsState('activeTab');
   const tabs = useTabsState('tabs');
+  const quickCommands = useTerminalState('quickCommands');
   const allMethods = useAllCardMethods();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -42,6 +46,31 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
 
   const [browserBehavior, setBrowserBehavior] = useState<CustomRunBehaviorData['browser']>('appBrowser');
   const [urlCatchBehavior, setUrlCatchBehavior] = useState<CustomRunBehaviorData['urlCatch'] | undefined>(undefined);
+
+  const quickHotkeySet = useMemo(() => {
+    const quickNames = [
+      Hotkey_Names.terminalQuick1,
+      Hotkey_Names.terminalQuick2,
+      Hotkey_Names.terminalQuick3,
+      Hotkey_Names.terminalQuick4,
+      Hotkey_Names.terminalQuick5,
+      Hotkey_Names.terminalQuick6,
+    ];
+    const set = new Set<string>();
+
+    for (let index = 0; index < quickNames.length; index += 1) {
+      const quick = quickCommands[index];
+      if (!quick?.command) continue;
+
+      const hotkey = hotkeys.find(item => item.name === quickNames[index]);
+      if (!hotkey?.key) continue;
+
+      const key = hotkey.key.toLowerCase();
+      set.add(`${key}|${hotkey.control ? 1 : 0}${hotkey.shift ? 1 : 0}${hotkey.alt ? 1 : 0}${hotkey.meta ? 1 : 0}`);
+    }
+
+    return set;
+  }, [hotkeys, quickCommands]);
 
   const copySelection = useCallback(() => {
     const selection = xtermRef.current?.getSelection();
@@ -219,6 +248,12 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
 
       // Setup custom key handler
       api.terminal.attachCustomKeyEventHandler(e => {
+        const key = e.key.toLowerCase();
+        const lookupKey = `${key}|${e.ctrlKey ? 1 : 0}${e.shiftKey ? 1 : 0}${e.altKey ? 1 : 0}${e.metaKey ? 1 : 0}`;
+        if (quickHotkeySet.has(lookupKey)) {
+          return false;
+        }
+
         const isCmdOrCtrl = e.ctrlKey || e.metaKey;
 
         if (e.key === 'f' && isCmdOrCtrl) {
@@ -269,7 +304,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
         terminalContainer?.removeEventListener('contextmenu', handleContextMenu);
       };
     },
-    [clearTerminal, setSelectedTerminalText, id, copySelection],
+    [clearTerminal, setSelectedTerminalText, id, copySelection, quickHotkeySet],
   );
 
   return (
