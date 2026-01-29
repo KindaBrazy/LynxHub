@@ -1,8 +1,7 @@
 import {DropdownItem, DropdownSection} from '@heroui/react';
+import {UseCardStoreType} from '@lynx_common/types/plugins/extensions';
+import {Bug, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useEffect} from 'react';
-
-import {UseCardStoreType} from '../../../../src/cross/plugin/ExtensionTypes_Renderer';
-import {Bug_Icon, Trash_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
 
 type Props = {useCardStore: UseCardStoreType};
 
@@ -15,12 +14,12 @@ export default function CardsAddMenu({useCardStore}: Props) {
 
   return (
     <DropdownSection key="bugs" title="Bugs" showDivider>
-      <DropdownItem key="addBug" title="Add Bug" className="cursor-default" startContent={<Bug_Icon />}></DropdownItem>
+      <DropdownItem key="addBug" title="Add Bug" startContent={<Bug />} className="cursor-default"></DropdownItem>
       <DropdownItem
         key="removeBug"
         title="Remove Bug"
         className="cursor-default"
-        startContent={<Trash_Icon />}></DropdownItem>
+        startContent={<TrashBin2 />}></DropdownItem>
     </DropdownSection>
   );
 }

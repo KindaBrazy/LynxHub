@@ -1,6 +1,6 @@
 import federation from '@originjs/vite-plugin-federation';
 import react from '@vitejs/plugin-react';
-import {defineConfig, externalizeDepsPlugin} from 'electron-vite';
+import {defineConfig} from 'electron-vite';
 import {resolve} from 'path';
 
 // import packageJson from './package.json';
@@ -8,7 +8,6 @@ import {resolve} from 'path';
 export default defineConfig({
   main: {
     root: resolve('extension/src/main'),
-    plugins: [externalizeDepsPlugin()],
     build: {
       outDir: resolve('extension_out/main'),
       rollupOptions: {

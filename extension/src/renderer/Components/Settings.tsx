@@ -1,6 +1,6 @@
-import SettingsSection from '../../../../src/renderer/src/App/Components/Pages/SettingsPages/Settings/SettingsPage-ContentSection';
-import {GroupSection} from '../../../../src/renderer/src/App/Components/Pages/SettingsPages/Settings/SettingsPage-Nav';
-import {Bug_Icon} from '../../../../src/renderer/src/assets/icons/SvgIcons/SvgIcons';
+import SettingsSection from '@lynx/components/ContentSection';
+import {GroupSection} from '@lynx/pages/settings/Navigation';
+import {Bug} from '@solar-icons/react-perf/BoldDuotone';
 
 const sectionId = 'my_extension_settings';
 const sectionTitle = 'Config';
@@ -11,11 +11,10 @@ export function SettingsNavButton() {
       items={[
         {
           title: sectionTitle,
-          icon: <Bug_Icon className="size-4 shrink-0 dark:text-white text-black" />,
+          icon: <Bug className="size-4 shrink-0 dark:text-white text-black" />,
           elementId: sectionId,
         },
       ]}
-      activeSection=""
       title="My Extension"
     />
   );
@@ -23,7 +22,7 @@ export function SettingsNavButton() {
 
 export function SettingsContent() {
   return (
-    <SettingsSection id={sectionId} title={sectionTitle} icon={<Bug_Icon className="size-5" />} itemsCenter>
+    <SettingsSection id={sectionId} title={sectionTitle} icon={<Bug className="size-5" />} itemsCenter>
       This is extension settings
     </SettingsSection>
   );

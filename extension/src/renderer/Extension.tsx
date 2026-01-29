@@ -1,8 +1,8 @@
 import './index.css';
 
 import {Button} from '@heroui/react';
+import {ExtensionRendererApi} from '@lynx_common/types/plugins/extensions/api';
 
-import {ExtensionRendererApi} from '../../../src/cross/plugin/ExtensionTypes_Renderer_Api';
 import CardsAddMenu from './Components/Cards_AddMenu';
 import {
   Background,

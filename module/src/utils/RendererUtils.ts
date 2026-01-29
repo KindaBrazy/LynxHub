@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import {ArgumentsData, CardInfoApi, CardInfoCallback, InstallationStepper} from '../../../src/cross/plugin/ModuleTypes';
+import {ArgumentsData, CardInfoApi, CardInfoCallback, InstallationStepper} from '../types';
 import {DescriptionManager, formatSize} from './CrossUtils';
 
 export function isValidArg(name: string, Arguments: ArgumentsData): boolean {

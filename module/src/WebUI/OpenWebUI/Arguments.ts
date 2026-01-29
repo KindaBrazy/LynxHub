@@ -1,6 +1,6 @@
 // noinspection SpellCheckingInspection
 
-import {ArgumentsData} from '../../../../src/cross/plugin/ModuleTypes';
+import {ArgumentsData} from '../../types';
 
 /* eslint max-len: 0 */
 
