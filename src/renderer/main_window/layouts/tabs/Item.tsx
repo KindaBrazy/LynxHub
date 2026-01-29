@@ -44,7 +44,7 @@ export default function TabItem({tab}: Props) {
       if (running.type === 'browser') {
         removeTab({tabId});
       } else {
-        if (isCtrlPressed || !closeTabConfirm) {
+        if ((isCtrlPressed && !isHokey) || !closeTabConfirm) {
           removeTab({tabId});
         } else {
           const bounds = closeBtnRef.current?.getBoundingClientRect();
