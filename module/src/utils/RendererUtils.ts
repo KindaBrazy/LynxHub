@@ -1,6 +1,11 @@
 import _ from 'lodash';
 
-import {ArgumentsData, CardInfoApi, CardInfoCallback, InstallationStepper} from '../types';
+import {
+  ArgumentsData,
+  CardInfoApi,
+  CardInfoCallback,
+  InstallationStepper,
+} from '../../../src/common/types/plugins/modules';
 import {DescriptionManager, formatSize} from './CrossUtils';
 
 export function isValidArg(name: string, Arguments: ArgumentsData): boolean {

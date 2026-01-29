@@ -1,5 +1,5 @@
+import {CardModules} from '../../src/common/types/plugins/modules';
 import {COMFYUI_ID, OPEN_WEBUI_ID} from './Constants';
-import {CardModules} from './types';
 import comfyArguments from './WebUI/ComfyUI (comfyanonymous)/Arguments';
 import COMFYUI_RM from './WebUI/ComfyUI (comfyanonymous)/RendererMethods';
 import openArguments from './WebUI/OpenWebUI/Arguments';
@@ -7,7 +7,7 @@ import OPEN_WEBUI_RM from './WebUI/OpenWebUI/RendererMethods';
 
 const rendererModules: CardModules = [
   {
-    routePath: '/imageGenerationPage',
+    routePath: 'imageGen_page',
     cards: [
       {
         id: COMFYUI_ID,
@@ -18,9 +18,6 @@ const rendererModules: CardModules = [
         repoUrl: 'https://github.com/comfyanonymous/ComfyUI',
         extensionsDir: '/custom_nodes',
         type: 'image',
-        bgUrl:
-          'https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/e7be14a2-5e23-41df-b653-4ba5b45ad065' +
-          '/width=300/00008-2000176836.jpeg',
         arguments: comfyArguments,
         methods: COMFYUI_RM,
         installationType: 'git',
@@ -28,7 +25,7 @@ const rendererModules: CardModules = [
     ],
   },
   {
-    routePath: '/textGenerationPage',
+    routePath: 'textGen_page',
     cards: [
       {
         id: OPEN_WEBUI_ID,
@@ -39,9 +36,6 @@ const rendererModules: CardModules = [
           ' including Ollama and OpenAI-compatible APIs. ',
         repoUrl: 'https://github.com/open-webui/open-webui',
         type: 'text',
-        bgUrl:
-          'https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/223520d9-9071-4b73-9171-9628a804f89f/' +
-          'width=300/00025-4013828223.jpeg',
         methods: OPEN_WEBUI_RM,
         installationType: 'others',
         uninstallType: 'others',

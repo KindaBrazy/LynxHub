@@ -1,4 +1,4 @@
-import {CardInfoCallback, CardInfoDescriptions} from '../types';
+import {CardInfoCallback, CardInfoDescriptions} from '../../../src/common/types/plugins/modules';
 
 export let isWin: boolean = true;
 

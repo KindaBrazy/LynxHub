@@ -3,8 +3,7 @@ import path from 'node:path';
 import {compare} from 'semver';
 import treeKill from 'tree-kill';
 
-import {MainModuleUtils} from '../../types';
-import {CardMainMethodsInitial, ChosenArgument} from '../../types';
+import {CardMainMethodsInitial, ChosenArgument, MainModuleUtils} from '../../../../src/common/types/plugins/modules';
 import {getCdCommand, isWin, removeAnsi} from '../../utils/CrossUtils';
 import {
   determineShell,
