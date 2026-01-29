@@ -1,6 +1,6 @@
 // noinspection SpellCheckingInspection
 
-import {ArgumentsData} from '../../types';
+import {ArgumentsData} from '../../../../src/common/types/plugins/modules';
 
 /* eslint max-len: 0 */
 

@@ -1,5 +1,5 @@
+import {MainModules, MainModuleUtils} from '../../src/common/types/plugins/modules';
 import {COMFYUI_ID, OPEN_WEBUI_ID} from './Constants';
-import {MainModules, MainModuleUtils} from './types';
 import Comfy_MM from './WebUI/ComfyUI (comfyanonymous)/MainMethods';
 import OpenWebUI_MM from './WebUI/OpenWebUI/MainMethods';
 

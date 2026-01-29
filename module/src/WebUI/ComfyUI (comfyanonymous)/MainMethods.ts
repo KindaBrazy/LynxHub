@@ -1,5 +1,5 @@
+import {CardMainMethodsInitial, ChosenArgument} from '../../../../src/common/types/plugins/modules';
 import {COMFYUI_ID} from '../../Constants';
-import {CardMainMethodsInitial, ChosenArgument} from '../../types';
 import {isWin} from '../../utils/CrossUtils';
 import {utilReadArgs, utilRunCommands, utilSaveArgs} from '../../utils/MainUtils';
 import {parseArgsToString, parseStringToArgs} from './RendererMethods';

@@ -1,4 +1,4 @@
-import {ArgumentsData} from '../../types';
+import {ArgumentsData} from '../../../../src/common/types/plugins/modules';
 
 const comfyArguments: ArgumentsData = [
   {
