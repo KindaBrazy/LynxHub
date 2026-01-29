@@ -42,13 +42,14 @@ export default function QuickCommands({id}: Props) {
         return (
           <Button
             size="sm"
-            variant="flat"
+            variant="bordered"
             key={`terminal_quick_btn_${index}`}
-            onPress={() => ptyIpc.write(id, command)}>
+            onPress={() => ptyIpc.write(id, command)}
+            className="border-1 border-foreground-100 hover:border-foreground-200">
             <span className="flex flex-row items-center gap-x-1">
               <span>{label}</span>
               {hasHotkey && (
-                <Kbd className="text-[10px] rounded-sm! shadow-none! bg-foreground-200">{displayHotkey}</Kbd>
+                <Kbd className="text-[10px] rounded-sm! shadow-none! bg-foreground-100">{displayHotkey}</Kbd>
               )}
             </span>
           </Button>
