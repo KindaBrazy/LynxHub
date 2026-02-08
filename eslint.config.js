@@ -82,7 +82,7 @@ export default defineConfig([
         },
       ],
 
-      'max-len': ['error', {code: MAX_LINE_LENGTH}],
+      'max-len': ['error', {code: MAX_LINE_LENGTH, ignoreComments: true}],
 
       'sonarjs/os-command': 'off',
       'no-useless-escape': 'off',
