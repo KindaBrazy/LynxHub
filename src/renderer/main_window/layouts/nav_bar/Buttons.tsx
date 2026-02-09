@@ -30,7 +30,7 @@ export const ContentsNav = () => {
       {icon: <HomePage_Icon className="size-full" />, title: PageTitles.home, path: PageID.home},
     ];
 
-    if (hasCardsByPath(PageID.imageGen) || hasCardsByPath('/imageGenerationPage')) {
+    if (hasCardsByPath(PageID.imageGen) || !isEmpty(extensionsData.customizePages.image.add.cardsContainer)) {
       result.push({
         icon: <ImagePage_Icon className="size-full" />,
         title: PageTitles.imageGen,
@@ -38,7 +38,7 @@ export const ContentsNav = () => {
       });
     }
 
-    if (hasCardsByPath(PageID.textGen) || hasCardsByPath('/textGenerationPage')) {
+    if (hasCardsByPath(PageID.textGen) || !isEmpty(extensionsData.customizePages.text.add.cardsContainer)) {
       result.push({
         icon: <TextPage_Icon className="size-full scale-110" />,
         title: PageTitles.textGen,
@@ -46,7 +46,7 @@ export const ContentsNav = () => {
       });
     }
 
-    if (hasCardsByPath(PageID.audioGen) || hasCardsByPath('/audioGenerationPage')) {
+    if (hasCardsByPath(PageID.audioGen) || !isEmpty(extensionsData.customizePages.audio.add.cardsContainer)) {
       result.push({
         icon: <AudioPage_Icon className="size-full" />,
         title: PageTitles.audioGen,
@@ -54,7 +54,7 @@ export const ContentsNav = () => {
       });
     }
 
-    if (hasCardsByPath(PageID.agents)) {
+    if (hasCardsByPath(PageID.agents) || !isEmpty(extensionsData.customizePages.agents.add.cardsContainer)) {
       result.push({
         icon: <AgentPage_Icon className="size-full" />,
         title: PageTitles.agents,
@@ -62,7 +62,7 @@ export const ContentsNav = () => {
       });
     }
 
-    if (!isEmpty(extensionsData.customizePages.tools.addComponent)) {
+    if (hasCardsByPath(PageID.tools) || !isEmpty(extensionsData.customizePages.tools.addComponent)) {
       result.push({
         icon: <ToolsPage_Icon className="size-full" />,
         title: PageTitles.tools,
@@ -70,7 +70,7 @@ export const ContentsNav = () => {
       });
     }
 
-    if (hasCardsByPath(PageID.others)) {
+    if (hasCardsByPath(PageID.others) || !isEmpty(extensionsData.customizePages.others.add.cardsContainer)) {
       result.push({
         icon: <OthersPage_Icon className="size-full" />,
         title: PageTitles.others,
@@ -78,7 +78,7 @@ export const ContentsNav = () => {
       });
     }
 
-    if (!isEmpty(extensionsData.customizePages.games.addComponent)) {
+    if (hasCardsByPath(PageID.games) || !isEmpty(extensionsData.customizePages.games.addComponent)) {
       result.push({
         icon: <GamePage_Icon className="size-full" />,
         title: PageTitles.games,
