@@ -28,7 +28,7 @@ const OthersPage = memo(({show}: Props) => {
           extraClassNames="mr-3"
           icon={<OthersPage_Icon className={CardContainerClasses} />}
           subTitle="Explore miscellaneous tools and other AI features.">
-          <GetComponentsByPath routePath={PageID.agents} extensionsElements={cardsContainer} />
+          <GetComponentsByPath routePath={PageID.others} extensionsElements={cardsContainer} />
         </CardsContainer>
 
         {scrollBottom && scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}
