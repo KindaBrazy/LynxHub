@@ -89,10 +89,9 @@ export const ContentsNav = () => {
     return result;
   }, []);
 
-  // TODO: maxItems based on height of the app
   return (
     <>
-      <NavigationDock maxItems={6} items={contentItems} />
+      <NavigationDock items={contentItems} />
       {!isEmpty(contentBar) && contentBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );
@@ -127,7 +126,7 @@ export function SettingsNav() {
 
   return (
     <>
-      <NavigationDock maxItems={5} items={settingsItems} />
+      <NavigationDock items={settingsItems} />
       {!isEmpty(settingsBar) && settingsBar.map((NavButton, index) => <NavButton key={index} />)}
     </>
   );

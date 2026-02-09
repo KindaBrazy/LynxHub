@@ -4,7 +4,7 @@ import {AppDispatch} from '@lynx/redux/store';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
 import {AnimatePresence, motion, Transition} from 'framer-motion';
-import {memo, MouseEvent, ReactNode, useCallback, useMemo, useRef, useState, WheelEvent} from 'react';
+import {memo, MouseEvent, ReactNode, useCallback, useEffect, useMemo, useRef, useState, WheelEvent} from 'react';
 import {useDispatch} from 'react-redux';
 
 import Tooltip from './Tooltip';
@@ -18,8 +18,6 @@ export type NavItem = {
 
 type Props = {
   items: NavItem[];
-  /** Maximum number of items to display before scrolling is enabled. */
-  maxItems?: number;
 };
 
 const springTransition: Transition = {type: 'spring', stiffness: 400, damping: 40};
@@ -45,7 +43,7 @@ const ScrollArrow = memo(
   },
 );
 
-const NavigationDock = memo(({items, maxItems = 7}: Props) => {
+const NavigationDock = memo(({items}: Props) => {
   const isDark = useAppState('darkMode');
   const activePage = useTabsState('activePage');
 
@@ -55,6 +53,35 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
 
   const [startIndex, setStartIndex] = useState(0);
   const lastScrollTime = useRef(0);
+
+  // Responsive maxItems based on screen height
+  const [maxItems, setMaxItems] = useState(7);
+
+  useEffect(() => {
+    const updateMaxItems = () => {
+      const height = window.innerHeight;
+      // sm: < 640px -> 6 items
+      // md: 640-768px -> 7 items
+      // lg: 768-1024px -> 9 items
+      // xl: 1024-1280px -> 11 items
+      // 2xl: >= 1280px -> 13 items
+      if (height < 640) {
+        setMaxItems(6);
+      } else if (height < 768) {
+        setMaxItems(7);
+      } else if (height < 1024) {
+        setMaxItems(9);
+      } else if (height < 1280) {
+        setMaxItems(11);
+      } else {
+        setMaxItems(13);
+      }
+    };
+
+    updateMaxItems();
+    window.addEventListener('resize', updateMaxItems);
+    return () => window.removeEventListener('resize', updateMaxItems);
+  }, []);
 
   const primaryColor = isDark ? '#0050EF' : '#00A9FF';
 
@@ -72,7 +99,6 @@ const NavigationDock = memo(({items, maxItems = 7}: Props) => {
   }, []);
 
   const handleScrollDown = useCallback(() => {
-    if (!maxItems) return;
     setStartIndex(prev => Math.min(totalItems - maxItems, prev + 1));
   }, [totalItems, maxItems]);
 
