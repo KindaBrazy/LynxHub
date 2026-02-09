@@ -53,7 +53,7 @@ const RenderCardList = memo(({cards}: Props) => {
   const installedCardIds = useMemo(() => new Set(installedCards.map(c => c.id)), [installedCards]);
 
   if (!sortedCards || sortedCards.length === 0) {
-    return <p>No cards to display.</p>;
+    return null;
   }
 
   return (
