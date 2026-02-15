@@ -3,8 +3,8 @@ import {isWin} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {ReactNode, useEffect, useMemo} from 'react';
 
-import useRequirementChecks from '../useRequirementChecks';
 import CheckRow from './CheckRow';
+import useRequirementChecks from './useRequirementChecks';
 
 type Props = {
   onStatusChange: (isSatisfied: boolean) => void;

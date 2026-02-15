@@ -4,11 +4,11 @@ import storageIpc from '@lynx_shared/ipc/storage';
 import {AnimatePresence} from 'framer-motion';
 import {useCallback, useState} from 'react';
 
-import StepComplete from './steps/Completed';
-import StepSystemCheck from './steps/SystemCheck';
-import StepUpdate from './steps/Update';
-import StepWelcome from './steps/Welcome';
+import StepComplete from './CompletedStep';
+import StepSystemCheck from './SystemCheckStep';
 import {RequirementStatus} from './types';
+import StepUpdate from './UpdateStep';
+import StepWelcome from './WelcomeStep';
 
 type Props = {
   isUpgradeFlow: boolean;

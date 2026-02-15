@@ -6,10 +6,10 @@ import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import AddArguments from './add';
-import ManageArguments from './manage';
-import PresetsManager from './manage/Presets';
-import PreviewArguments from './Preview';
+import AddArguments from './ArgumentAdd';
+import ManageArguments from './ArgumentManage';
+import PresetsManager from './ArgumentManagePresets';
+import PreviewArguments from './ArgumentsPreview';
 
 type Props = {
   setChosenArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;

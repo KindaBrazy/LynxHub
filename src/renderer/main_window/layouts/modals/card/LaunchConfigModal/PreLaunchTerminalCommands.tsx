@@ -10,19 +10,19 @@ import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 
-import LaunchConfigSection from '../Section';
-import TerminalCommandItem from '../TerminalCommand-Item';
+import LaunchConfigSection from './Section';
+import TerminalCommandItem from './TerminalCommand-Item';
 
 type Props = {id: string};
-export default function CustomRunCommands({id}: Props) {
-  const [commands, setCommands] = useState<string[]>([]);
+export default function PreTerminalCommands({id}: Props) {
+  const [preCommands, setPreCommands] = useState<string[]>([]);
 
   useEffect(() => {
-    storageUtilsIpc.invoke.customRun('get', {id}).then(result => {
-      setCommands(result);
+    storageUtilsIpc.invoke.preCommands('get', {id}).then(result => {
+      setPreCommands(result);
     });
-    const removeListener = storageUtilsIpc.on.onCustomRun(preCommands => {
-      if (preCommands.id === id) setCommands(preCommands.commands);
+    const removeListener = storageUtilsIpc.on.onPreCommands(result => {
+      if (result.id === id) setPreCommands(result.commands);
     });
 
     return () => removeListener();
@@ -30,9 +30,9 @@ export default function CustomRunCommands({id}: Props) {
 
   const editCommand = useCallback(
     (index: number, value: string) => {
-      setCommands(prevState => {
+      setPreCommands(prevState => {
         const result = prevState.map((command, i) => (i === index ? value : command));
-        storageUtilsIpc.invoke.customRun('set', {command: result, id});
+        storageUtilsIpc.invoke.preCommands('set', {command: result, id});
         return result;
       });
     },
@@ -41,30 +41,30 @@ export default function CustomRunCommands({id}: Props) {
 
   const removeCommand = useCallback(
     (index: number) => {
-      storageUtilsIpc.invoke.customRun('remove', {command: index, id});
+      storageUtilsIpc.invoke.preCommands('remove', {command: index, id});
     },
     [id],
   );
 
   const addCommand = useCallback(() => {
-    storageUtilsIpc.invoke.customRun('add', {command: '', id});
+    storageUtilsIpc.invoke.preCommands('add', {command: '', id});
   }, [id]);
 
   const onReorder = (newOrder: string[]) => {
-    setCommands(newOrder);
+    setPreCommands(newOrder);
+  };
+
+  const onDoneReorder = () => {
+    storageUtilsIpc.invoke.preCommands('set', {command: preCommands, id});
   };
 
   const cdFolder = () => {
     filesIpc.openDlg({properties: ['openDirectory']}).then(result => {
       if (result) {
         const command = `cd "${result}"`;
-        storageUtilsIpc.invoke.customRun('add', {command, id});
+        storageUtilsIpc.invoke.preCommands('add', {command, id});
       }
     });
-  };
-
-  const onDoneReorder = () => {
-    storageUtilsIpc.invoke.customRun('set', {command: commands, id});
   };
 
   return (
@@ -92,15 +92,15 @@ export default function CustomRunCommands({id}: Props) {
           </DropdownMenu>
         </Dropdown>
       }
+      title="Terminal Commands"
       addTooltipTitle="Add New Command"
-      title="AI Execution (Terminal Commands)"
-      description="Execute these commands when launching AI, overriding default settings">
-      {isEmpty(commands) ? (
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No custom command available to execute" />
+      description="Execute these terminal commands before launching the AI.">
+      {isEmpty(preCommands) ? (
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No commans available to execute" />
       ) : (
         <AnimatePresence>
-          <Reorder.Group axis="y" values={commands} onReorder={onReorder} className="space-y-2 overflow-hidden">
-            {commands.map((command, index) => (
+          <Reorder.Group axis="y" values={preCommands} onReorder={onReorder} className="space-y-2 overflow-hidden">
+            {preCommands.map((command, index) => (
               <TerminalCommandItem
                 index={index}
                 key={command}

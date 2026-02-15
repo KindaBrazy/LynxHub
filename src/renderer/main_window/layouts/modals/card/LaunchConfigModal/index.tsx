@@ -12,9 +12,9 @@ import {Diskette} from '@solar-icons/react-perf/BoldDuotone';
 import {Fragment, Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import CardArguments from './arguments';
-import CustomRun from './custom_run';
-import CardPreLaunch from './pre_launch';
+import CardArguments from './Arguments';
+import CustomRun from './CustomRun';
+import CardPreLaunch from './PreLaunch';
 
 const tabs = {
   arguments: 'arguments',

@@ -1,8 +1,8 @@
 import {tabContentVariants} from '@lynx/layouts/modals/card/ExtensionsModal/Constants';
 import {motion} from 'framer-motion';
 
-import CustomRunBehavior from './Behavior';
-import CustomRunCommands from './Commands';
+import CustomRunBehavior from './CustomRunBehavior';
+import CustomRunCommands from './CustomRunCommands';
 
 type Props = {id: string};
 export default function CustomRun({id}: Props) {

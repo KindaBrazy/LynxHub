@@ -4,8 +4,8 @@ import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {isEmpty} from 'lodash';
 import {Fragment, useEffect, useState} from 'react';
 
-import LaunchConfigSection from '../Section';
-import {UrlCatch} from './UrlCatch';
+import {UrlCatch} from './CustomRunUrlCatch';
+import LaunchConfigSection from './Section';
 
 type TerminalType = CustomRunBehaviorData['terminal'];
 type BrowserType = CustomRunBehaviorData['browser'];
