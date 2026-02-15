@@ -13,7 +13,7 @@ import {
   StorageOperation,
 } from '@lynx_common/types/ipc';
 import StorageTypes, {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
-import classHolder from '@lynx_main/core/classHolder';
+import classHolder from '@lynx_main/managers/classHolder';
 import {app} from 'electron';
 
 import lynxIpc from './lynxIpc';

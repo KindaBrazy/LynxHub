@@ -12,8 +12,8 @@ import {
   TaskbarStatus,
   WinStateChange,
 } from '@lynx_common/types/ipc';
-import classHolder from '@lynx_main/core/classHolder';
-import {getAppDataPath, isAppDir, selectNewAppDataFolder} from '@lynx_main/core/dataFolder';
+import classHolder from '@lynx_main/managers/classHolder';
+import {getAppDataPath, isAppDir, selectNewAppDataFolder} from '@lynx_main/managers/dataFolder';
 import {
   getSystemDarkMode,
   getWebContentsIfAvailable,

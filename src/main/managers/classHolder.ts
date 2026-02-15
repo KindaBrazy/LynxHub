@@ -1,10 +1,10 @@
 import {clearInterval} from 'node:timers';
 
 import {toMs} from '@lynx_common/utils';
-import BrowserDownloadManager from '@lynx_main/childWindows/browserDownloadManager';
-import ContextMenuManager from '@lynx_main/childWindows/contextMenu';
-import LinkPreviewManager from '@lynx_main/childWindows/linkPreview';
-import ShareScreenManager from '@lynx_main/childWindows/shareScreen';
+import BrowserDownloadManager from '@lynx_main/windows/browserDownloadManager';
+import ContextMenuManager from '@lynx_main/windows/contextMenu';
+import LinkPreviewManager from '@lynx_main/windows/linkPreview';
+import ShareScreenManager from '@lynx_main/windows/shareScreen';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import ElectronAppManager from '@lynx_main/mainWindow';
 import {PluginManager} from '@lynx_main/plugins';

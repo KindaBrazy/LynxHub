@@ -8,7 +8,7 @@ import {
   PatreonSupporter,
 } from '@lynx_common/types';
 import {MainHT} from '@lynx_common/types/ipc';
-import classHolder from '@lynx_main/core/classHolder';
+import classHolder from '@lynx_main/managers/classHolder';
 
 import lynxIpc from './lynxIpc';
 

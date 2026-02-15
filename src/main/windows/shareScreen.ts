@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {ScreenShareSources} from '@lynx_common/types/shareScreen';
-import classHolder from '@lynx_main/core/classHolder';
+import classHolder from '@lynx_main/managers/classHolder';
 import {shareScreenIpc} from '@lynx_main/ipc/shareScreen';
 import {
   BrowserWindow,

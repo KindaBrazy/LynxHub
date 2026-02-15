@@ -3,7 +3,7 @@ import {stat} from 'node:fs/promises';
 import {platform} from 'node:os';
 import {promisify} from 'node:util';
 
-import {getAppDirectory} from '@lynx_main/core/dataFolder';
+import {getAppDirectory} from '@lynx_main/managers/dataFolder';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import path from 'path';
 

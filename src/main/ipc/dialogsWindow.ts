@@ -1,5 +1,5 @@
 import windowDialogsChannels from '@lynx_common/consts/ipcChannels/dialogsWindow';
-import classHolder from '@lynx_main/core/classHolder';
+import classHolder from '@lynx_main/managers/classHolder';
 import {IpcMainEvent} from 'electron';
 
 import lynxIpc from './lynxIpc';

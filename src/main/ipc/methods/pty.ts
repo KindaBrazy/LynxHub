@@ -1,8 +1,8 @@
 // PTY (Pseudo Terminal) IPC methods - Manages terminal processes for cards and custom commands
 import {platform} from 'node:os';
 
-import classHolder from '@lynx_main/core/classHolder';
-import LynxTerminal from '@lynx_main/core/lynxTerminal';
+import classHolder from '@lynx_main/managers/classHolder';
+import LynxTerminal from '@lynx_main/managers/lynxTerminal';
 import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
 import {app, shell} from 'electron';
 import {isArray, isEmpty, isNil} from 'lodash';

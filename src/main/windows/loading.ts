@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import classHolder from '@lynx_main/core/classHolder';
+import classHolder from '@lynx_main/managers/classHolder';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import {getWindowColor} from '@lynx_main/utils';
 import {BrowserWindow, BrowserWindowConstructorOptions} from 'electron';
