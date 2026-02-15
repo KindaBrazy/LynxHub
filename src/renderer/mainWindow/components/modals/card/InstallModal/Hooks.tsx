@@ -1,0 +1,210 @@
+import {
+  InstallationMethod,
+  InstallationStepper,
+  StarterStepOptions,
+  UserInputField,
+  UserInputResult,
+} from '@lynx_common/types/plugins/modules';
+import moduleIpc from '@lynx_shared/ipc/plugins/module';
+import ptyIpc from '@lynx_shared/ipc/pty';
+import {isNil} from 'lodash';
+import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
+import {useDispatch} from 'react-redux';
+
+import {eventUtil_CollectUserInputs} from '../../../../plugins/extensions/utils';
+import {useAllCardMethods} from '../../../../plugins/modules';
+import {cardsActions} from '../../../../redux/reducers/cards';
+import {AppDispatch} from '../../../../redux/store';
+import {lynxTopToast} from '../../../../utils/hooks';
+import InstallStepper from './Stepper';
+import {InstallState} from './types';
+
+type Props = {
+  setSteps: Dispatch<SetStateAction<string[]>>;
+  setCurrentStep: Dispatch<SetStateAction<number>>;
+  setUserInputElements: Dispatch<SetStateAction<{elements: UserInputField[]; title?: string}>>;
+  updateState: (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => void;
+  cloneResolver: RefObject<((dir: string) => void) | null>;
+  terminalResolver: RefObject<(() => void) | null>;
+  starterResolver: RefObject<((result: InstallationMethod) => void) | null>;
+  userInputResolver: RefObject<((result: UserInputResult[]) => void) | null>;
+  restartTerminal: RefObject<(() => void) | null>;
+  downloadFileFromUrl: (url: string) => ReturnType<InstallationStepper['downloadFileFromUrl']>;
+  setExtensionsToInstall: Dispatch<SetStateAction<{urls: string[]; dir: string} | undefined>>;
+  extensionsResolver: RefObject<(() => void) | null>;
+  setProgressBarState: Dispatch<
+    SetStateAction<{
+      isIndeterminate: boolean;
+      title?: string;
+      percentage?: number;
+      description?: {label: string; value: string}[];
+    }>
+  >;
+
+  cardId: string;
+};
+
+export function useStepper({
+  setSteps,
+  setCurrentStep,
+  updateState,
+  cloneResolver,
+  terminalResolver,
+  starterResolver,
+  restartTerminal,
+  userInputResolver,
+  setUserInputElements,
+  downloadFileFromUrl,
+  extensionsResolver,
+  setExtensionsToInstall,
+  setProgressBarState,
+  cardId,
+}: Props) {
+  const allMethods = useAllCardMethods();
+
+  const cloneRepository = useCallback(
+    async (url: string): ReturnType<InstallationStepper['cloneRepository']> => {
+      return new Promise(resolve => {
+        cloneResolver.current = resolve;
+        updateState({cloneUrl: url, body: 'clone'});
+      });
+    },
+    [cloneResolver],
+  );
+
+  const showFinalStep = useCallback((type: 'success' | 'error', title: string, description?: string) => {
+    updateState({doneAll: {type, title, description}, body: 'done'});
+  }, []);
+
+  const runTerminalScript = useCallback(
+    async (dir: string, file: string): ReturnType<InstallationStepper['runTerminalScript']> => {
+      return new Promise(resolve => {
+        restartTerminal.current = () => {
+          ptyIpc.stop(cardId);
+          ptyIpc.customProcess(cardId, dir, file);
+        };
+
+        terminalResolver.current = resolve;
+        updateState(prev => ({body: 'terminal', terminalKey: prev.terminalKey + 1}));
+        ptyIpc.customProcess(cardId, dir, file);
+      });
+    },
+    [],
+  );
+
+  const executeTerminalCommands = useCallback(
+    async (commands?: string | string[], dir?: string): ReturnType<InstallationStepper['executeTerminalCommands']> => {
+      return new Promise(resolve => {
+        restartTerminal.current = () => {
+          ptyIpc.stop(cardId);
+          ptyIpc.customCommands(cardId, commands, dir);
+        };
+
+        terminalResolver.current = resolve;
+        updateState(prev => ({body: 'terminal', terminalKey: prev.terminalKey + 1}));
+        ptyIpc.customCommands(cardId, commands, dir);
+      });
+    },
+    [],
+  );
+
+  const starterStep = useCallback(async (options?: StarterStepOptions): Promise<InstallationMethod> => {
+    return new Promise(resolve => {
+      starterResolver.current = resolve;
+      updateState({body: 'starter', disableSelectDir: options?.disableSelectDir});
+    });
+  }, []);
+
+  const collectUserInput = useCallback((elements: UserInputField[], title?: string): Promise<UserInputResult[]> => {
+    return new Promise(resolve => {
+      eventUtil_CollectUserInputs(cardId, extensionUserInput => {
+        userInputResolver.current = resolve;
+        setUserInputElements({elements, title});
+        updateState({body: 'user-input', extensionUserInput});
+      });
+    });
+  }, []);
+
+  const installExtensions = useCallback((extensionURLs: string[], extensionsDir: string): Promise<void> => {
+    return new Promise(resolve => {
+      extensionsResolver.current = resolve;
+      setExtensionsToInstall({urls: extensionURLs, dir: extensionsDir});
+      updateState({body: 'install-extensions'});
+    });
+  }, []);
+
+  const progressBar = useCallback(
+    (
+      isIndeterminate: boolean,
+      title?: string,
+      percentage?: number,
+      description?: {
+        label: string;
+        value: string;
+      }[],
+    ) => {
+      updateState({body: 'progress-bar'});
+      setProgressBarState({title, isIndeterminate, percentage, description});
+    },
+    [],
+  );
+
+  const dispatch = useDispatch<AppDispatch>();
+  const setUpdated = useCallback(() => {
+    dispatch(cardsActions.removeUpdateAvailable(cardId));
+  }, [dispatch, cardId]);
+
+  const updateType = useMemo(() => {
+    const type = allMethods.find(c => c.id === cardId)?.methods?.['manager']?.updater.updateType;
+    if (isNil(type)) return undefined;
+    return type;
+  }, [allMethods, cardId]);
+
+  const checkForUpdate = useCallback(
+    (dir: string | undefined) => {
+      moduleIpc.cardUpdateAvailable({dir, id: cardId}, updateType).then((isAvailable: boolean) => {
+        if (isAvailable) dispatch(cardsActions.addUpdateAvailable(cardId));
+      });
+    },
+    [updateType, cardId],
+  );
+
+  const showToast = useCallback(() => lynxTopToast(dispatch), [dispatch]);
+
+  return useMemo(() => {
+    return new InstallStepper({
+      showToast,
+      cardId,
+      setSteps,
+      setCurrentStep,
+      installExtensions,
+      cloneRepository,
+      showFinalStep,
+      runTerminalScript,
+      executeTerminalCommands,
+      downloadFileFromUrl,
+      starterStep,
+      collectUserInput,
+      progressBar,
+      setUpdated,
+      checkForUpdate,
+      updateState,
+    });
+  }, [
+    cardId,
+    setSteps,
+    setCurrentStep,
+    cloneRepository,
+    installExtensions,
+    showFinalStep,
+    runTerminalScript,
+    executeTerminalCommands,
+    downloadFileFromUrl,
+    progressBar,
+    starterStep,
+    collectUserInput,
+    setUpdated,
+    checkForUpdate,
+    updateState,
+  ]);
+}

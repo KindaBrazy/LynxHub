@@ -1,5 +1,4 @@
 import {DropdownItem} from '@heroui/react';
-import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
 import {useGetInstallType} from '@lynx/plugins/modules';
 import {useInstalledCard} from '@lynx/utils/hooks';
 import {Extensions2_Icon, GitHub_Icon} from '@lynx_assets/icons';
@@ -7,6 +6,7 @@ import {extractGitUrl} from '@lynx_common/utils';
 import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useMemo} from 'react';
 
+import {useTabModalManager} from '../../../modals/useTabModalManager';
 import {useCardStore} from '../../Wrapper';
 
 export const MenuLaunchConfig = () => {

@@ -1,0 +1,270 @@
+import {Modal, ModalContent} from '@heroui/react';
+import {DownloadProgress} from '@lynx_common/types/ipc';
+import {
+  CardRendererMethods,
+  InstallationMethod,
+  InstallationStepper,
+  UserInputField,
+  UserInputResult,
+} from '@lynx_common/types/plugins/modules';
+import ptyIpc from '@lynx_shared/ipc/pty';
+import utilsIpc from '@lynx_shared/ipc/utils';
+import {isEmpty, isNil} from 'lodash';
+import {Fragment, memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {useDispatch} from 'react-redux';
+
+import {extensionsData} from '../../../../plugins/extensions/loader';
+import {getCardMethod, useAllCardMethods} from '../../../../plugins/modules';
+import {cardsActions} from '../../../../redux/reducers/cards';
+import {useModalsState} from '../../../../redux/reducers/modals';
+import {AppDispatch} from '../../../../redux/store';
+import {useInstalledCard} from '../../../../utils/hooks';
+import {useTabModalLifecycle} from '../../useTabModalManager';
+import InstallBody from './Body';
+import InstallFooter from './Footer';
+import InstallHeader from './Header';
+import {useStepper} from './Hooks';
+import {InstallState} from './types';
+
+const initialState: InstallState = {
+  body: '',
+  cloneUrl: '',
+  doneAll: {
+    title: '',
+    description: '',
+    type: 'success',
+  },
+  startClone: false,
+  disableSelectDir: false,
+  extensionCustomContent: undefined,
+  extensionUserInput: undefined,
+  terminalKey: 0,
+};
+
+type Props = {isOpen: boolean; cardId: string; title: string; type: string; tabID: string};
+
+const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
+  const installedCard = useInstalledCard(cardId);
+  const allMethods = useAllCardMethods();
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  // -----------------------------------------------> States
+  const [steps, setSteps] = useState<string[]>([]);
+  const [currentStep, setCurrentStep] = useState<number>(0);
+  const [state, setState] = useState<InstallState>(initialState);
+
+  const methods: CardRendererMethods['manager'] = useMemo(
+    () => getCardMethod(allMethods, cardId, 'manager'),
+    [cardId, allMethods],
+  );
+
+  const [progressInfo, setProgressInfo] = useState<DownloadProgress | undefined>(undefined);
+  const [urlToDownload, setUrlToDownload] = useState<string | undefined>(undefined);
+
+  const [userInputElements, setUserInputElements] = useState<{elements: UserInputField[]; title?: string}>({
+    elements: [],
+    title: '',
+  });
+  const [userElementsReturn, setUserElementsReturn] = useState<UserInputResult[]>([]);
+
+  const [extensionsToInstall, setExtensionsToInstall] = useState<{urls: string[]; dir: string} | undefined>(undefined);
+
+  const canContinue = useMemo(() => {
+    if (state.body === 'user-input') {
+      for (const field of userInputElements.elements) {
+        if (field.isRequired) {
+          const correspondingResult = userElementsReturn.find(result => result.id === field.id);
+
+          if (!correspondingResult) {
+            return false;
+          }
+
+          if (
+            typeof correspondingResult.result === 'string' &&
+            (isEmpty(correspondingResult.result) || isNil(correspondingResult.result))
+          ) {
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  }, [state, userInputElements, userElementsReturn]);
+
+  useEffect(() => {
+    if (state.body === 'done' && state.doneAll.type === 'success' && type === 'update') {
+      dispatch(cardsActions.removeUpdateAvailable(cardId));
+    }
+  }, [state, type, cardId]);
+
+  const [progressBarState, setProgressBarState] = useState<{
+    isIndeterminate: boolean;
+    title?: string;
+    percentage?: number;
+    description?: {label: string; value: string}[];
+  }>({title: '', isIndeterminate: true});
+
+  const updateState = useCallback(
+    (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => {
+      setState(prevState => ({
+        ...prevState,
+        ...(typeof newState === 'function' ? newState(prevState) : newState),
+      }));
+    },
+    [],
+  );
+
+  // -----------------------------------------------> Resolvers
+  const cloneResolver = useRef<((dir: string) => void) | null>(null);
+  const terminalResolver = useRef<(() => void) | null>(null);
+  const starterResolver = useRef<((result: InstallationMethod) => void) | null>(null);
+  const userInputResolver = useRef<((result: UserInputResult[]) => void) | null>(null);
+  const restartTerminal = useRef<(() => void) | null>(null);
+  const extensionsResolver = useRef<(() => void) | null>(null);
+
+  // -----------------------------------------------> Handlers
+  const removeProgressListener = useRef<(() => void) | null>(null);
+
+  const downloadFileFromUrl = useCallback(
+    async (url: string): ReturnType<InstallationStepper['downloadFileFromUrl']> => {
+      return new Promise(resolve => {
+        setProgressInfo(undefined);
+        updateState({body: 'progress'});
+        setUrlToDownload(url);
+        utilsIpc.downloadFile(url);
+        removeProgressListener.current = utilsIpc.onDownloadFile(progress => {
+          if (progress.stage === 'done') {
+            setProgressInfo(undefined);
+            removeProgressListener.current?.();
+            resolve(progress.finalPath);
+          } else {
+            setProgressInfo(progress);
+          }
+        });
+      });
+    },
+    [setProgressInfo],
+  );
+
+  // -----------------------------------------------> Stepper
+  const stepper = useStepper({
+    setSteps,
+    setCurrentStep,
+    updateState,
+    cloneResolver,
+    terminalResolver,
+    restartTerminal,
+    downloadFileFromUrl,
+    starterResolver,
+    userInputResolver,
+    setUserInputElements,
+    setExtensionsToInstall,
+    extensionsResolver,
+    setProgressBarState,
+    cardId,
+  });
+
+  useEffect(() => {
+    if (isOpen && methods && stepper) {
+      if (type === 'install') {
+        methods.startInstall(stepper);
+      } else {
+        methods.updater.startUpdate?.(stepper, installedCard!.dir);
+      }
+    }
+  }, [isOpen, methods, stepper]);
+
+  // -----------------------------------------------> Handle UI
+  const {onOpenChange, show} = useTabModalLifecycle('installUI', tabID);
+
+  useEffect(() => {
+    return () => {
+      removeProgressListener.current?.();
+    };
+  }, []);
+
+  const handleClose = useCallback(() => {
+    if (state.body === 'terminal') ptyIpc.stop(cardId);
+    if (state.body === 'progress') {
+      utilsIpc.cancelDownload();
+      removeProgressListener.current?.();
+    }
+    updateState(initialState);
+    setCurrentStep(0);
+    setSteps([]);
+    onOpenChange(false);
+  }, [updateState, state, cardId, onOpenChange]);
+
+  const nextStep = useCallback(() => stepper.nextStep(), [stepper]);
+
+  return (
+    <Modal
+      classNames={{
+        backdrop: `top-10! ${show}`,
+        closeButton: 'cursor-default',
+        wrapper: `top-10! ${show}`,
+      }}
+      size="2xl"
+      shadow="lg"
+      backdrop="blur"
+      isOpen={isOpen}
+      placement="center"
+      isDismissable={false}
+      scrollBehavior="inside"
+      onOpenChange={onOpenChange}
+      className={`${state.body === 'terminal' && 'max-w-[80%]'}`}
+      hideCloseButton>
+      <ModalContent className="overflow-hidden">
+        <InstallHeader steps={steps} currentStep={currentStep} />
+        <InstallBody
+          state={state}
+          title={title}
+          isOpen={isOpen}
+          cardId={cardId}
+          progressInfo={progressInfo}
+          cloneResolver={cloneResolver}
+          progressBarState={progressBarState}
+          userInputElements={userInputElements}
+          extensionsResolver={extensionsResolver}
+          extensionsToInstall={extensionsToInstall}
+          setUserElementsReturn={setUserElementsReturn}
+        />
+        <InstallFooter
+          state={state}
+          tabId={tabID}
+          cardId={cardId}
+          nextStep={nextStep}
+          canContinue={canContinue}
+          updateState={updateState}
+          handleClose={handleClose}
+          progressInfo={progressInfo}
+          urlToDownload={urlToDownload}
+          restartTerminal={restartTerminal}
+          starterResolver={starterResolver}
+          terminalResolver={terminalResolver}
+          userInputResolver={userInputResolver}
+          userElementsReturn={userElementsReturn}
+          downloadFileFromUrl={downloadFileFromUrl}
+        />
+      </ModalContent>
+    </Modal>
+  );
+});
+
+const InstallCardModal = () => {
+  const InstallUI = useMemo(() => extensionsData.replaceModals.installUi, []);
+
+  const installUIModal = useModalsState('installUIModal');
+
+  return (
+    <>
+      {installUIModal.map(modal => (
+        <Fragment key={`${modal.tabID}_modal`}>{InstallUI ? <InstallUI /> : <InstallModal {...modal} />}</Fragment>
+      ))}
+    </>
+  );
+};
+
+export default InstallCardModal;
