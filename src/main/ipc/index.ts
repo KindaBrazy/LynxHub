@@ -1,7 +1,7 @@
-import classHolder from '@lynx_main/core/class_holder';
+import classHolder from '@lynx_main/core/classHolder';
 
 import listenApplication from './application';
-import listenContextMenu from './context_menu';
+import listenContextMenu from './contextMenu';
 import listenFiles from './files';
 import listenGit from './git';
 import listenModules, {listenModuleApi} from './plugins/modules';

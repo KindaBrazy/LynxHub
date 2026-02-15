@@ -6,7 +6,7 @@ import {Menu, Tray} from 'electron';
 
 import trayIconMenu from '../../../resources/16x16.png?asset';
 import trayIcon from '../../../resources/icon.ico?asset';
-import classHolder from './class_holder';
+import classHolder from './classHolder';
 
 /** Manages the system tray icon and its context menu for the application. */
 export default class TrayManager {

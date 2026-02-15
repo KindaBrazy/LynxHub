@@ -1,6 +1,6 @@
 import {platform} from 'node:os';
 
-import {storageUtilsChannels} from '@lynx_common/consts/ipc_channels/storage';
+import {storageUtilsChannels} from '@lynx_common/consts/ipcChannels/storage';
 import {ChosenArgumentsData, ConfirmMenuTypes} from '@lynx_common/types';
 import {
   BrowserHistoryData,
@@ -14,7 +14,7 @@ import {
 } from '@lynx_common/types/ipc';
 import {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
 import {compareUrls, isValidURL} from '@lynx_common/utils';
-import classHolder from '@lynx_main/core/class_holder';
+import classHolder from '@lynx_main/core/classHolder';
 import {storageUtilsIpc} from '@lynx_main/ipc/storage';
 import {
   getAbsolutePath,

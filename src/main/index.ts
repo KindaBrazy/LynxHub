@@ -7,20 +7,20 @@ import {app, Menu, nativeImage} from 'electron';
 import log from 'electron-log/main';
 
 import darwinIcon from '../../resources/icon-darwin.png?asset';
-import LoadingWindow from './child_windows/loading';
-import ShowToastWindow from './child_windows/toast';
-import classHolder from './core/class_holder';
-import {checkAppDirectories} from './core/data_folder';
-import {getImageCacheManager} from './core/image_cache';
+import LoadingWindow from './childWindows/loading';
+import ShowToastWindow from './childWindows/toast';
+import classHolder from './core/classHolder';
+import {checkAppDirectories} from './core/dataFolder';
+import {getImageCacheManager} from './core/imageCache';
 import {checkForUpdate} from './core/updater';
-import {beforeAppReady, handleAppReadyToShow, handleProtocols} from './index_methods';
+import {beforeAppReady, handleAppReadyToShow, handleProtocols} from './indexMethods';
 import {listenToIpcChannels} from './ipc';
 import {listenBrowser, resetBrowserIPC} from './ipc/browser';
-import listenDialogsWindow from './ipc/dialogs_window';
+import listenDialogsWindow from './ipc/dialogsWindow';
 import {stopAllPty} from './ipc/methods/pty';
-import PatreonAuth from './secure/patreon_auth';
+import PatreonAuth from './secure/patreonAuth';
 import {getPrivilegeText} from './utils';
-import downloadDU from './utils/calc_folder_size/download_du';
+import downloadDU from './utils/calcFolderSize/downloadDu';
 
 // In production save logs to file for reporting
 if (!isDev()) {

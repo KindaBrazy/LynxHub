@@ -1,4 +1,4 @@
-import appChannels from '@lynx_common/consts/ipc_channels/application';
+import appChannels from '@lynx_common/consts/ipcChannels/application';
 import {CustomNotificationInfo, HeroToastPlacement} from '@lynx_common/types';
 import {
   AppUpdateEventTypes,
@@ -12,8 +12,8 @@ import {
   TaskbarStatus,
   WinStateChange,
 } from '@lynx_common/types/ipc';
-import classHolder from '@lynx_main/core/class_holder';
-import {getAppDataPath, isAppDir, selectNewAppDataFolder} from '@lynx_main/core/data_folder';
+import classHolder from '@lynx_main/core/classHolder';
+import {getAppDataPath, isAppDir, selectNewAppDataFolder} from '@lynx_main/core/dataFolder';
 import {
   getSystemDarkMode,
   getWebContentsIfAvailable,

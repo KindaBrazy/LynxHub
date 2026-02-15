@@ -9,8 +9,8 @@ import {
   ValidatedPlugins,
 } from '@lynx_common/types/plugins';
 import {getUpdateType} from '@lynx_common/utils/plugins';
-import classHolder from '@lynx_main/core/class_holder';
-import {getAppDirectory} from '@lynx_main/core/data_folder';
+import classHolder from '@lynx_main/core/classHolder';
+import {getAppDirectory} from '@lynx_main/core/dataFolder';
 import GitManager from '@lynx_main/git';
 import {setupGitManagerListeners} from '@lynx_main/git/helper';
 import {removeDir} from '@lynx_main/ipc/methods';

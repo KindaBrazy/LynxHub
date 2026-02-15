@@ -25,7 +25,7 @@
         "src/common/*"
       ],
       "@lynx/*": [
-        "src/renderer/main_window/*"
+        "src/renderer/mainWindow/*"
       ],
       "@lynx_shared/*": [
         "src/renderer/shared/*"

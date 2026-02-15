@@ -1,7 +1,7 @@
-import modulesChannels, {moduleApiChannels} from '@lynx_common/consts/ipc_channels/module';
+import modulesChannels, {moduleApiChannels} from '@lynx_common/consts/ipcChannels/module';
 import {MainHT} from '@lynx_common/types/ipc';
 import {InstalledCard} from '@lynx_common/types/storage';
-import classHolder from '@lynx_main/core/class_holder';
+import classHolder from '@lynx_main/core/classHolder';
 import GitManager from '@lynx_main/git';
 import {getDirCreationDate} from '@lynx_main/utils';
 

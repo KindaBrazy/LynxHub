@@ -1,7 +1,7 @@
 // Downloader IPC methods - Handles file downloads with progress tracking
 import path from 'node:path';
 
-import classHolder from '@lynx_main/core/class_holder';
+import classHolder from '@lynx_main/core/classHolder';
 import {utilsIpc} from '@lynx_main/ipc/utils';
 import {app, DownloadItem} from 'electron';
 import {download} from 'electron-dl';

@@ -1,4 +1,4 @@
-import utilsChannels from '@lynx_common/consts/ipc_channels/utils';
+import utilsChannels from '@lynx_common/consts/ipcChannels/utils';
 import {DownloadProgress, ExtensionsData, ExtensionsUpdateStatus, OnUpdatingExtensions} from '@lynx_common/types/ipc';
 
 import lynxIpc from './lynxIpc';

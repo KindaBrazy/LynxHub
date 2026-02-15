@@ -9,7 +9,7 @@ import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebConten
 import {debounce, isEmpty, isNil} from 'lodash';
 
 import icon from '../../../resources/icon.png?asset';
-import classHolder from './class_holder';
+import classHolder from './classHolder';
 import RegisterHotkeys from './hotkeys';
 
 // Constants

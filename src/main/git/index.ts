@@ -5,7 +5,7 @@ import path from 'node:path';
 import {RepositoryInfo} from '@lynx_common/types';
 import {ShallowCloneOptions} from '@lynx_common/types/git';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
-import classHolder from '@lynx_main/core/class_holder';
+import classHolder from '@lynx_main/core/classHolder';
 import {checkPathExists, openDialog} from '@lynx_main/utils';
 import {isEmpty} from 'lodash';
 import {
