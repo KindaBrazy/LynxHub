@@ -1,7 +1,7 @@
 import {RunningCard} from '@lynx/types';
 import {useMemo} from 'react';
 
-import DownloadManager from '../browser/top_bar/DownloadManager';
+import DownloadManager from '../browser/DownloadManager';
 import Switch from './Switch';
 import Terminate_AI from './Terminate_AI';
 

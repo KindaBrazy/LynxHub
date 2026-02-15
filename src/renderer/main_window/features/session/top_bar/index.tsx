@@ -3,9 +3,9 @@ import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {memo, RefObject} from 'react';
 
-import Browser_TopBar from '../browser/top_bar';
-import Terminal_TopBar from '../terminal/top_bar';
-import SharedTopBar from './SharedTopBar';
+import Browser_TopBar from './browser';
+import SharedTopBar from './shared';
+import Terminal_TopBar from './terminal';
 
 type Props = {
   runningCard: RunningCard;
