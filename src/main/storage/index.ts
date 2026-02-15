@@ -6,9 +6,9 @@ import {APP_NAME} from '@lynx_common/consts';
 import {Get_Default_Hotkeys} from '@lynx_common/consts/hotkeys';
 import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '@lynx_common/types/ipc';
 import StorageTypes from '@lynx_common/types/storage';
-import classHolder from '@lynx_main/managers/classHolder';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import {changeWindowState} from '@lynx_main/ipc/methods';
+import classHolder from '@lynx_main/managers/classHolder';
 import {
   getAbsolutePath,
   getExePath,

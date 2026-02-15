@@ -1,10 +1,6 @@
 import {clearInterval} from 'node:timers';
 
 import {toMs} from '@lynx_common/utils';
-import BrowserDownloadManager from '@lynx_main/windows/browserDownloadManager';
-import ContextMenuManager from '@lynx_main/windows/contextMenu';
-import LinkPreviewManager from '@lynx_main/windows/linkPreview';
-import ShareScreenManager from '@lynx_main/windows/shareScreen';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import ElectronAppManager from '@lynx_main/mainWindow';
 import {PluginManager} from '@lynx_main/plugins';
@@ -12,6 +8,10 @@ import ExtensionManager from '@lynx_main/plugins/extensions';
 import ModuleManager from '@lynx_main/plugins/modules';
 import {ValidateCards} from '@lynx_main/plugins/modules/cardsValidator';
 import StorageManager from '@lynx_main/storage/helper';
+import BrowserDownloadManager from '@lynx_main/windows/browserDownloadManager';
+import ContextMenuManager from '@lynx_main/windows/contextMenu';
+import LinkPreviewManager from '@lynx_main/windows/linkPreview';
+import ShareScreenManager from '@lynx_main/windows/shareScreen';
 import axios from 'axios';
 import {app, BrowserWindow} from 'electron';
 

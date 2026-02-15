@@ -1,7 +1,6 @@
+import {PluginManager} from '@lynx_main/plugins';
 import StorageManager from '@lynx_main/storage/helper';
 import {app, BrowserWindow, dialog} from 'electron';
-
-import {PluginManager} from '@lynx_main/plugins';
 
 export function PluginMigrate(storageManager: StorageManager, pluginManager: PluginManager) {
   app.whenReady().then(async () => {

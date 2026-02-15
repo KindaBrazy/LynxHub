@@ -14,8 +14,8 @@ import {
 } from '@lynx_common/types/ipc';
 import {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
 import {compareUrls, isValidURL} from '@lynx_common/utils';
-import classHolder from '@lynx_main/managers/classHolder';
 import {storageUtilsIpc} from '@lynx_main/ipc/storage';
+import classHolder from '@lynx_main/managers/classHolder';
 import {
   getAbsolutePath,
   getExePath,
