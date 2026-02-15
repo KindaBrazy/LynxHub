@@ -2,8 +2,8 @@ import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import classHolder from '@lynx_main/core/classHolder';
-import RegisterHotkeys from '@lynx_main/core/hotkeys';
+import classHolder from '@lynx_main/managers/classHolder';
+import RegisterHotkeys from '@lynx_main/managers/hotkeys';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import lynxIpc from '@lynx_main/ipc/lynxIpc';
 import {getUserAgent, getWindowColor, RelaunchApp} from '@lynx_main/utils';

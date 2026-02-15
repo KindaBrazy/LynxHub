@@ -3,7 +3,7 @@ import {resolve} from 'node:path';
 import fileChannels from '@lynx_common/consts/ipcChannels/files';
 import {FolderListData, FolderNames} from '@lynx_common/types';
 import {MainHT} from '@lynx_common/types/ipc';
-import {getAppDirectory} from '@lynx_main/core/dataFolder';
+import {getAppDirectory} from '@lynx_main/managers/dataFolder';
 import {getAbsolutePath, getRelativePath, openDialog} from '@lynx_main/utils';
 import calcFolderSize from '@lynx_main/utils/calcFolderSize';
 import {OpenDialogOptions, shell} from 'electron';

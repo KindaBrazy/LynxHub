@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
-import classHolder from '@lynx_main/core/classHolder';
+import classHolder from '@lynx_main/managers/classHolder';
 import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
 import AddBreadcrumb_Main from '@lynx_main/utils/breadcrumbs';
 import {FSWatcher, watch} from 'chokidar';

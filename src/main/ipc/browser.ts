@@ -1,9 +1,9 @@
 import browserChannels from '@lynx_common/consts/ipcChannels/browser';
 import {AgentTypes, AudioState, CanGoType, ContextMenuVolumeData, MainHT, WHType} from '@lynx_common/types/ipc';
 import {toMs} from '@lynx_common/utils';
-import BrowserDownloadManager from '@lynx_main/childWindows/browserDownloadManager';
-import BrowserManager from '@lynx_main/core/browser';
-import classHolder from '@lynx_main/core/classHolder';
+import BrowserDownloadManager from '@lynx_main/windows/browserDownloadManager';
+import BrowserManager from '@lynx_main/managers/browser';
+import classHolder from '@lynx_main/managers/classHolder';
 import {getUserAgent} from '@lynx_main/utils';
 import {FindInPageOptions} from 'electron';
 

@@ -5,11 +5,11 @@ import {pathToFileURL} from 'node:url';
 import {APP_BUILD_NUMBER, APP_VERSION} from '@lynx_common/consts';
 import {app, net, protocol} from 'electron';
 
-import ShareScreenManager from './childWindows/shareScreen';
-import classHolder from './core/classHolder';
-import {getAppDirectory} from './core/dataFolder';
-import {getImageCacheManager, registerImageCacheScheme} from './core/imageCache';
-import {initSentry} from './secure/sentry';
+import ShareScreenManager from './windows/shareScreen';
+import classHolder from './managers/classHolder';
+import {getAppDirectory} from './managers/dataFolder';
+import {getImageCacheManager, registerImageCacheScheme} from './managers/imageCache';
+import {initSentry} from './monitoring/sentry';
 
 export async function beforeAppReady() {
   const {storageManager, appStartTime} = classHolder;
