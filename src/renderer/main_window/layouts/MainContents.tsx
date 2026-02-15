@@ -4,8 +4,8 @@ import {PageID} from '@lynx_common/consts';
 import {memo} from 'react';
 
 import AppPages from './AppPages';
-import NavBar from './nav_bar';
-import StatusBar from './status_bar';
+import NavBar from './navBar';
+import StatusBar from './statusBar';
 
 /** Main app contents */
 const MainContents = memo(() => {

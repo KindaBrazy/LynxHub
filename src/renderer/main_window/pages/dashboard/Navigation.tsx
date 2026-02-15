@@ -1,6 +1,6 @@
 import {Button, Card, CardBody, CardHeader, ScrollShadow} from '@heroui/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {ContainersBg} from '@lynx/utils/common_styles';
+import {ContainersBg} from '@lynx/utils/commonStyles';
 import {DashboardPage_Icon} from '@lynx_assets/icons/pages';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import {Download, HeartPulse2, InfoSquare, SmileCircle} from '@solar-icons/react-perf/BoldDuotone';

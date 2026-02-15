@@ -16,7 +16,7 @@ import {
 } from '@heroui/react';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {useGetArgumentsByID} from '@lynx/plugins/modules';
-import {getArgumentDefaultValue, getFilteredArguments} from '@lynx/utils/module_arguments';
+import {getArgumentDefaultValue, getFilteredArguments} from '@lynx/utils/moduleArguments';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
 import {Filter} from '@solar-icons/react-perf/BoldDuotone';

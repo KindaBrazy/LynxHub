@@ -2,7 +2,7 @@ import {Button, Card, CardBody, CardHeader, Input, ScrollShadow} from '@heroui/r
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
 import {searchInStrings} from '@lynx/utils';
-import {ContainersBg} from '@lynx/utils/common_styles';
+import {ContainersBg} from '@lynx/utils/commonStyles';
 import {Circle_Icon, Terminal_Icon} from '@lynx_assets/icons';
 import {SettingPage_Icon} from '@lynx_assets/icons/pages';
 import {

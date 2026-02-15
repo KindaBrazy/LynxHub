@@ -1,6 +1,6 @@
 import {Button, Card, CardBody, CardHeader, Divider} from '@heroui/react';
 import {useGetArgumentsByID} from '@lynx/plugins/modules';
-import {getArgumentDescription} from '@lynx/utils/module_arguments';
+import {getArgumentDescription} from '@lynx/utils/moduleArguments';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {Tooltip} from 'antd';
 import {Reorder, useDragControls} from 'framer-motion';

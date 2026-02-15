@@ -1,11 +1,11 @@
 import {useDisclosure} from '@heroui/react';
+import {tabContentVariants} from '@lynx/layouts/modals/cardExtensions/Constants';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_common/types';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {tabContentVariants} from '../../card_extensions/Constants';
 import AddArguments from './add';
 import ManageArguments from './manage';
 import PresetsManager from './manage/Presets';

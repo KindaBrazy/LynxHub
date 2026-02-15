@@ -3,9 +3,9 @@ import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {memo, RefObject} from 'react';
 
-import Browser_TopBar from './browser';
+import BrowserTopBar from './browser';
 import SharedTopBar from './shared';
-import Terminal_TopBar from './terminal';
+import TerminalTopBar from './terminal';
 
 type Props = {
   runningCard: RunningCard;
@@ -24,7 +24,7 @@ const TopBar = memo(({runningCard, serializeAddon, searchAddon, tabID, clearTerm
         ' flex flex-row gap-x-1 px-2 py-1 items-center justify-between'
       }>
       {runningCard.currentView === 'terminal' ? (
-        <Terminal_TopBar
+        <TerminalTopBar
           id={runningCard.id}
           tabId={runningCard.tabId}
           searchAddon={searchAddon}
@@ -34,7 +34,7 @@ const TopBar = memo(({runningCard, serializeAddon, searchAddon, tabID, clearTerm
           selectedTerminalText={selectedTerminalText}
         />
       ) : (
-        <Browser_TopBar tabID={tabID} runningCard={runningCard} />
+        <BrowserTopBar tabID={tabID} runningCard={runningCard} />
       )}
 
       <SharedTopBar runningCard={runningCard} />

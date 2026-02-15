@@ -1,7 +1,7 @@
 import {Card, CardBody, CardHeader} from '@heroui/react';
 import SettingsSearchHighlight from '@lynx/pages/settings/SettingsSearchHighlight';
 import {useRegisterSectionSearch} from '@lynx/pages/settings/SettingsSearchRegistry';
-import {ContainersBg} from '@lynx/utils/common_styles';
+import {ContainersBg} from '@lynx/utils/commonStyles';
 import {motion} from 'framer-motion';
 import {ReactNode} from 'react';
 

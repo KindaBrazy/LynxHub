@@ -7,7 +7,7 @@ import {useAppState} from '@lynx/redux/reducers/app';
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
-import {getAccentColorAsHex} from '@lynx/utils/accent_color_generator';
+import {getAccentColorAsHex} from '@lynx/utils/accentColorGenerator';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';

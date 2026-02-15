@@ -14,7 +14,7 @@ import tabs from './reducers/tabs';
 import terminal from './reducers/terminal';
 import user from './reducers/user';
 import volume from './reducers/volume';
-import {getStorageData, getSystemDarkMode} from './storage_init';
+import {getStorageData, getSystemDarkMode} from './storageInit';
 
 const staticReducers = {
   app,

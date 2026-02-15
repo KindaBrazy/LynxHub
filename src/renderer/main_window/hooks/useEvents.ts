@@ -12,7 +12,7 @@ import {
   usePatreon,
   useShowToast,
   useStorageData,
-} from './events_hooks';
+} from './eventsHooks';
 
 /** Listening for various app events and modify redux states */
 export default function useAppEvents() {
