@@ -1,5 +1,5 @@
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {InstallationStepper} from '@lynx_common/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';

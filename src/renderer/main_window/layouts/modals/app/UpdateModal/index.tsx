@@ -1,5 +1,4 @@
 import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {lynxTopToast, RenderSubItems} from '@lynx/hooks/utils';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {modalActions, useModalsState} from '@lynx/redux/reducers/modals';
 import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
@@ -7,6 +6,7 @@ import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
 import {modalMotionProps} from '@lynx/utils/constants';
+import {lynxTopToast, RenderSubItems} from '@lynx/utils/hooks';
 import {APP_BUILD_NUMBER, EARLY_RELEASES_PAGE, INSIDER_RELEASES_PAGE, RELEASES_PAGE} from '@lynx_common/consts';
 import {AppUpdateInfo, UpdateDownloadProgress} from '@lynx_common/types';
 import applicationIpc from '@lynx_shared/ipc/application';

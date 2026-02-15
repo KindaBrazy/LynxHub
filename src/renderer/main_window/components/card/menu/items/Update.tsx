@@ -1,9 +1,9 @@
 import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
-import {useInstalledCard, useIsAutoUpdateCard, useUpdateAvailable, useUpdatingCard} from '@lynx/hooks/utils';
 import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {AppDispatch} from '@lynx/redux/store';
+import {useInstalledCard, useIsAutoUpdateCard, useUpdateAvailable, useUpdatingCard} from '@lynx/utils/hooks';
 import {extractGitUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';

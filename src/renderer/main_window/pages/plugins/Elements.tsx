@@ -1,9 +1,9 @@
 import {ButtonProps} from '@heroui/button';
 import {Button} from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {pluginsActions, useIsUpdatingPlugin, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';

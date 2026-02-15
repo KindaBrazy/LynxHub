@@ -1,6 +1,6 @@
 import {Button, Popover, PopoverContent, PopoverTrigger, ScrollShadow, Tooltip} from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc from '@lynx_shared/ipc/storage';

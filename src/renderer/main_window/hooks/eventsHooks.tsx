@@ -10,6 +10,7 @@ import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {userActions, useUserState} from '@lynx/redux/reducers/user';
 import {AppDispatch} from '@lynx/redux/store';
 import {defaultTabItem} from '@lynx/utils/constants';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {APP_BUILD_NUMBER, PageTitleByPageId} from '@lynx_common/consts';
 import {toMs} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
@@ -26,8 +27,6 @@ import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {capitalize, compact, isNil} from 'lodash';
 import {useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {lynxTopToast} from './utils';
 
 export const useCheckCardsUpdate = () => {
   const dispatch = useDispatch<AppDispatch>();

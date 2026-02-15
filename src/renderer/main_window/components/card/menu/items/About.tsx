@@ -1,5 +1,4 @@
 import {DropdownItem} from '@heroui/react';
-import {useInstalledCard} from '@lynx/hooks/utils';
 import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
 import {duplicateCard, removeDuplicatedCard} from '@lynx/plugins/modules';
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
@@ -7,6 +6,7 @@ import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {modalActions} from '@lynx/redux/reducers/modals';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
+import {useInstalledCard} from '@lynx/utils/hooks';
 import {extractGitUrl} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import storageIpc from '@lynx_shared/ipc/storage';

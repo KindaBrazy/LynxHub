@@ -1,8 +1,8 @@
 import {Input, Progress} from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {useAppState} from '@lynx/redux/reducers/app';
 import {AppDispatch} from '@lynx/redux/store';
 import {initGitProgress} from '@lynx/utils/constants';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';

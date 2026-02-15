@@ -1,5 +1,4 @@
 import XTermCore, {XTermAPI} from '@lynx/components/XTermCore';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
@@ -7,6 +6,7 @@ import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {useTerminalState} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
 import {RunningCard} from '@lynx/types';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {CustomRunBehaviorData} from '@lynx_common/types/ipc';
 import {toMs} from '@lynx_common/utils';

@@ -1,10 +1,10 @@
 import {Button, Divider, Input, Progress, Skeleton} from '@heroui/react';
 import LynxScroll from '@lynx/components/LynxScroll';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {searchInStrings, showRestartModal} from '@lynx/utils';
 import {ContainersBg} from '@lynx/utils/commonStyles';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {PluginFilter, PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
@@ -15,7 +15,7 @@ import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {List_Item} from './Items';
-import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from './Utils';
+import {useFetchExtensions, useFilteredList, useFilterMenu, useSortedList} from './utils';
 
 export default function List() {
   const [selectedFilters, setSelectedFilters] = useState<PluginFilter>('all');

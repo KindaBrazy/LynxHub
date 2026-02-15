@@ -1,9 +1,9 @@
 import parseTerminalColors from '@lynx/features/session/terminal/colorHandler';
 import {getRendererMode, getTheme, getWindowPty} from '@lynx/features/session/terminal/utils';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {useAppState} from '@lynx/redux/reducers/app';
 import {useTerminalStat} from '@lynx/redux/reducers/terminal';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import applicationIpc from '@lynx_shared/ipc/application';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {CanvasAddon} from '@xterm/addon-canvas';

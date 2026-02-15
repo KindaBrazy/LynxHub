@@ -1,6 +1,6 @@
 import {Button, Checkbox, cn, User} from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {MAIN_MODULE_URL} from '@lynx_common/consts';
 import {extractGitUrl} from '@lynx_common/utils';
 import {getPluginIconUrl} from '@lynx_common/utils/plugins';

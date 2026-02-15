@@ -48,6 +48,11 @@ export function useIsAutoUpdateCard(cardId: string): boolean {
   return useMemo(() => autoUpdate.includes(cardId), [autoUpdate, cardId]);
 }
 
+/**
+ * Hook to check if a card's extensions are set for auto-update.
+ * @param cardId - The ID of the card to check
+ * @returns Boolean indicating if the card's extensions are set for auto-update
+ */
 export function useIsAutoUpdateExtensions(cardId: string): boolean {
   const autoUpdate = useCardsState('autoUpdateExtensions');
   return useMemo(() => autoUpdate.includes(cardId), [autoUpdate, cardId]);
@@ -61,6 +66,24 @@ export function useIsAutoUpdateExtensions(cardId: string): boolean {
 export function useIsPinnedCard(cardId: string): boolean {
   const pinnedCards = useCardsState('pinnedCards');
   return useMemo(() => pinnedCards.includes(cardId), [pinnedCards, cardId]);
+}
+
+/**
+ * Hook to determine if tooltips should be disabled based on settings.
+ * @param isEssential - Whether the tooltip is essential (always shown in 'essential' mode)
+ * @returns Boolean indicating if the tooltip should be disabled
+ */
+export function useDisableTooltip(isEssential: boolean = false): boolean {
+  const tooltipLevel = useSettingsState('tooltipLevel');
+
+  // Disable All
+  if (tooltipLevel === 'none') return true;
+
+  // Show All
+  if (tooltipLevel === 'full') return false;
+
+  // Show if tooltip set to essential
+  return !isEssential;
 }
 
 function topToast(options: {
@@ -95,6 +118,12 @@ function topToast(options: {
   });
 }
 
+/**
+ * Creates a toast notification helper with various severity levels.
+ * @param dispatch - Redux dispatch function
+ * @param placement - Toast placement on screen
+ * @returns Object with toast methods (success, error, warning, info, loading)
+ */
 export const lynxTopToast = (dispatch: Dispatch, placement: HeroToastPlacement = 'top-center') => {
   dispatch(appActions.setToastPlacement(placement));
   return {
@@ -107,19 +136,12 @@ export const lynxTopToast = (dispatch: Dispatch, placement: HeroToastPlacement =
   };
 };
 
-export const useDisableTooltip = (isEssential: boolean = false): boolean => {
-  const tooltipLevel = useSettingsState('tooltipLevel');
-
-  // Disable All
-  if (tooltipLevel === 'none') return true;
-
-  // Show All
-  if (tooltipLevel === 'full') return false;
-
-  // Show if tooltip set to essential
-  return !isEssential;
-};
-
+/**
+ * Recursively renders changelog items as a nested list.
+ * @param items - Array of changelog items
+ * @param parentKey - Parent key for React keys
+ * @returns JSX element or null
+ */
 export function RenderSubItems(items?: ChangelogItem[], parentKey: string = '') {
   if (isNil(items) || isEmpty(items)) return null;
 
@@ -138,4 +160,7 @@ export function RenderSubItems(items?: ChangelogItem[], parentKey: string = '') 
   );
 }
 
+/**
+ * Checks if the app is running as a Linux portable version.
+ */
 export const isLinuxPortable = window.isPortable === 'linux';

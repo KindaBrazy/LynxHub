@@ -1,7 +1,7 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {isLinuxPortable} from '@lynx/hooks/utils';
 import {modalActions, useModalsState} from '@lynx/redux/reducers/modals';
 import {AppDispatch} from '@lynx/redux/store';
+import {isLinuxPortable} from '@lynx/utils/hooks';
 import {Power_Icon} from '@lynx_assets/icons';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {Forward2, Restart, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';

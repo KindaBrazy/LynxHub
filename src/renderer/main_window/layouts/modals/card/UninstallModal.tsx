@@ -1,9 +1,9 @@
 import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tooltip} from '@heroui/react';
-import {lynxTopToast, useDisableTooltip, useInstalledCard} from '@lynx/hooks/utils';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useGetUninstallType} from '@lynx/plugins/modules';
 import {useModalsState} from '@lynx/redux/reducers/modals';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast, useDisableTooltip, useInstalledCard} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';

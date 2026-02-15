@@ -10,8 +10,8 @@ import {
   Spinner,
 } from '@heroui/react';
 import SettingsSection from '@lynx/components/ContentSection';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import storageIpc from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
 import {Broom, Database, Refresh, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';

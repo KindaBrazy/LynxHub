@@ -1,7 +1,7 @@
 import {Avatar, Card, Chip} from '@heroui/react';
 import SettingsSection from '@lynx/components/ContentSection';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {
   DiscordColor_Icon,
   ExternalDuo_Icon,
