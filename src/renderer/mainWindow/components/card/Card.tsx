@@ -1,5 +1,4 @@
 import {Card, CardBody, CardHeader, Chip, User} from '@heroui/react';
-import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
 import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {useAppState} from '@lynx/redux/reducers/app';
@@ -18,6 +17,7 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {CSSProperties, FormEvent, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {useTabModalManager} from '../modals/useTabModalManager';
 import Footer from './Footer';
 import {useCardStore} from './Wrapper';
 

@@ -1,5 +1,4 @@
 import {DropdownItem} from '@heroui/react';
-import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
 import {duplicateCard, removeDuplicatedCard} from '@lynx/plugins/modules';
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
@@ -15,6 +14,7 @@ import {Copy, FolderOpen, HomeAngle2, InfoCircle, SquareTopDown} from '@solar-ic
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {useTabModalManager} from '../../../modals/useTabModalManager';
 import {useCardStore} from '../../Wrapper';
 
 export const MenuInfo = () => {

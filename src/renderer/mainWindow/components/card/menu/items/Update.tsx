@@ -1,5 +1,4 @@
 import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
-import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {AppDispatch} from '@lynx/redux/store';
@@ -13,6 +12,7 @@ import {DownloadMinimalistic, Refresh} from '@solar-icons/react-perf/BoldDuotone
 import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {useTabModalManager} from '../../../modals/useTabModalManager';
 import {useCardStore} from '../../Wrapper';
 
 export const MenuUpdate = () => {
