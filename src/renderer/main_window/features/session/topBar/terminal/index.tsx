@@ -20,7 +20,7 @@ type Props = {
   tabId: string;
 };
 
-const Terminal_TopBar = memo(
+const TerminalTopBar = memo(
   ({startTime, serializeAddon, searchAddon, clearTerminal, id, selectedTerminalText, tabId}: Props) => {
     return (
       <>
@@ -45,4 +45,4 @@ const Terminal_TopBar = memo(
   },
 );
 
-export default Terminal_TopBar;
+export default TerminalTopBar;

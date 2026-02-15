@@ -4,7 +4,7 @@ import applicationIpc from '@lynx_shared/ipc/application';
 import {motion} from 'framer-motion';
 import {ReactNode, useCallback, useMemo} from 'react';
 
-import WindowButtons_Close from './WindowButtons_Close';
+import WindowButtons_Close from './WindowButtonsClose';
 
 const BUTTONS_COMMON_STYLE: string = 'notDraggable cursor-default transition-colors duration-300 ease-out';
 type WindowOperation = 'fullscreen' | 'minimize' | 'maximize' | 'close' | 'restart';

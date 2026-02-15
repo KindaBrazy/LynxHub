@@ -1,7 +1,7 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {useGetArgumentsByID} from '@lynx/plugins/modules';
 import {convertArrToObject} from '@lynx/utils';
-import {getArgumentDefaultValue, getArgumentValues} from '@lynx/utils/module_arguments';
+import {getArgumentDefaultValue, getArgumentValues} from '@lynx/utils/moduleArguments';
 import {ChosenArgument} from '@lynx_common/types';
 import {ListDownMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useState} from 'react';

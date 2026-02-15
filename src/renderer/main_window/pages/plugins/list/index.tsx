@@ -4,7 +4,7 @@ import {lynxTopToast} from '@lynx/hooks/utils';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {searchInStrings, showRestartModal} from '@lynx/utils';
-import {ContainersBg} from '@lynx/utils/common_styles';
+import {ContainersBg} from '@lynx/utils/commonStyles';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {PluginFilter, PluginItem} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';

@@ -1,6 +1,6 @@
+import {tabContentVariants} from '@lynx/layouts/modals/cardExtensions/Constants';
 import {motion} from 'framer-motion';
 
-import {tabContentVariants} from '../../card_extensions/Constants';
 import CustomRunBehavior from './Behavior';
 import CustomRunCommands from './Commands';
 

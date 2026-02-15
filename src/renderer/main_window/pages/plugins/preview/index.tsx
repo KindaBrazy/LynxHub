@@ -1,5 +1,5 @@
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
-import {ContainersBg} from '@lynx/utils/common_styles';
+import {ContainersBg} from '@lynx/utils/commonStyles';
 import {WidgetAdd} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {memo, useMemo} from 'react';

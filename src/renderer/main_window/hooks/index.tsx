@@ -1,7 +1,7 @@
 import {memo} from 'react';
 
 import {useRegisterHotkeys} from './hotkeys';
-import useHtmlAttributes from './html_attributes';
+import useHtmlAttributes from './htmlAttributes';
 import {useClearOldFaviconCache, useMigrateCardTitles} from './migration';
 import {useFilterPinnedCards} from './states';
 import useAppEvents from './useEvents';

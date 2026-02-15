@@ -1,6 +1,6 @@
 import {Input} from '@heroui/react';
 import {useGetArgumentsByID} from '@lynx/plugins/modules';
-import {getArgumentDefaultValue} from '@lynx/utils/module_arguments';
+import {getArgumentDefaultValue} from '@lynx/utils/moduleArguments';
 import {ChosenArgument} from '@lynx_common/types';
 import {Text} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useState} from 'react';

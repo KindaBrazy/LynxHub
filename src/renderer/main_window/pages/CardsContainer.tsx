@@ -1,5 +1,5 @@
 import {Card, CardBody, CardHeader} from '@heroui/react';
-import {ContainersBg} from '@lynx/utils/common_styles';
+import {ContainersBg} from '@lynx/utils/commonStyles';
 import {ReactNode} from 'react';
 
 type Props = {

@@ -16,7 +16,7 @@ import {useDispatch} from 'react-redux';
 
 import Browser from './browser';
 import Terminal from './terminal';
-import TopBar from './top_bar';
+import TopBar from './topBar';
 
 type Props = {runningCard: RunningCard};
 

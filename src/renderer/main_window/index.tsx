@@ -6,7 +6,7 @@ import '@lynx_shared/sentry/init';
 import ErrorWrapper from '@lynx/components/ErrorWrapper';
 import {loadExtensions} from '@lynx/plugins/extensions';
 import loadModules from '@lynx/plugins/modules';
-import {getStorageData, initializeStorage} from '@lynx/redux/storage_init';
+import {getStorageData, initializeStorage} from '@lynx/redux/storageInit';
 import {createStore} from '@lynx/redux/store';
 import {isDev} from '@lynx_common/utils';
 import {onBreadcrumbStateChange} from '@lynx_shared/sentry/Breadcrumbs';

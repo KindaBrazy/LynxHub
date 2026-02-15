@@ -10,7 +10,7 @@ import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
-import useModeAnimation, {ThemeAnimationType} from './theme_switch';
+import useModeAnimation, {ThemeAnimationType} from './themeSwitch';
 
 /** Manage app theme (Dark, Light, System) */
 export default function Theme() {
