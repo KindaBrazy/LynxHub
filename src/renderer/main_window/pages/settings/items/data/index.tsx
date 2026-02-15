@@ -1,7 +1,7 @@
 import {Button} from '@heroui/react';
 import SettingsSection from '@lynx/components/ContentSection';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Database, MoveToFolder, Repeat} from '@solar-icons/react-perf/BoldDuotone';

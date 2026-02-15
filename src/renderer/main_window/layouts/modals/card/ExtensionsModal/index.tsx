@@ -1,9 +1,9 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
-import {useIsAutoUpdateExtensions} from '@lynx/hooks/utils';
 import {useTabModalLifecycle} from '@lynx/layouts/modals/useTabModalManager';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useModalsState} from '@lynx/redux/reducers/modals';
 import {modalMotionProps} from '@lynx/utils/constants';
+import {useIsAutoUpdateExtensions} from '@lynx/utils/hooks';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';

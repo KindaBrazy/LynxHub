@@ -1,8 +1,8 @@
 import {Button, CardFooter} from '@heroui/react';
 import ShinyText from '@lynx/components/ShinyText';
-import {useIsPinnedCard} from '@lynx/hooks/utils';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useAppState} from '@lynx/redux/reducers/app';
+import {useIsPinnedCard} from '@lynx/utils/hooks';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Pin} from '@solar-icons/react-perf/Bold';

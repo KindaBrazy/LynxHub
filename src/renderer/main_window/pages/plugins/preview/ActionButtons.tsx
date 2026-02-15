@@ -1,9 +1,9 @@
 import {Button, useDisclosure} from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {extractGitUrl} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';

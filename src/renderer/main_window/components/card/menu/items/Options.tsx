@@ -1,7 +1,7 @@
 import {DropdownItem} from '@heroui/react';
-import {useInstalledCard} from '@lynx/hooks/utils';
 import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
 import {useGetInstallType} from '@lynx/plugins/modules';
+import {useInstalledCard} from '@lynx/utils/hooks';
 import {Extensions2_Icon, GitHub_Icon} from '@lynx_assets/icons';
 import {extractGitUrl} from '@lynx_common/utils';
 import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';

@@ -1,5 +1,4 @@
 import {Card, CardBody, CardHeader, Chip, User} from '@heroui/react';
-import {useInstalledCard, useIsAutoUpdateExtensions, useUpdateAvailable, useUpdatingCard} from '@lynx/hooks/utils';
 import {useTabModalManager} from '@lynx/layouts/modals/useTabModalManager';
 import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
@@ -8,6 +7,7 @@ import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {getAccentColorAsHex} from '@lynx/utils/accentColorGenerator';
+import {useInstalledCard, useIsAutoUpdateExtensions, useUpdateAvailable, useUpdatingCard} from '@lynx/utils/hooks';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';

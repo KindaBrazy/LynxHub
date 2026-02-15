@@ -1,5 +1,5 @@
 import {Button} from '@heroui/react';
-import {isLinuxPortable} from '@lynx/hooks/utils';
+import {isLinuxPortable} from '@lynx/utils/hooks';
 import {Power_Icon} from '@lynx_assets/icons';
 import applicationIpc from '@lynx_shared/ipc/application';
 import {Forward2, Restart} from '@solar-icons/react-perf/BoldDuotone';

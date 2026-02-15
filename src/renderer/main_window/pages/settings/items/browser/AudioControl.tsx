@@ -1,8 +1,8 @@
 import {Switch} from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useVolumeState, volumeActions} from '@lynx/redux/reducers/volume';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {Volume, VolumeCross} from '@solar-icons/react-perf/BoldDuotone';

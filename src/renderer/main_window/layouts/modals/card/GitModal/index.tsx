@@ -1,8 +1,8 @@
 import {Button, CircularProgress, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useModalsState} from '@lynx/redux/reducers/modals';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {RepositoryInfo} from '@lynx_common/types';
 import gitIpc from '@lynx_shared/ipc/git';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';

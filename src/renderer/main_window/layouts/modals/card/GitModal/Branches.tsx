@@ -1,6 +1,6 @@
 import {Button, Select, Selection, SelectItem} from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import gitIpc from '@lynx_shared/ipc/git';
 import {useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';

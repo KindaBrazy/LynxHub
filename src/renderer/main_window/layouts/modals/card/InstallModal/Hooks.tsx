@@ -1,8 +1,8 @@
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {eventUtil_CollectUserInputs} from '@lynx/plugins/extensions/utils';
 import {useAllCardMethods} from '@lynx/plugins/modules';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {
   InstallationMethod,
   InstallationStepper,

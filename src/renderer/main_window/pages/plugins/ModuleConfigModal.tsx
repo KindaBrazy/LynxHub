@@ -1,7 +1,7 @@
 import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {CardModules, RendererModuleImportType} from '@lynx_common/types/plugins/modules';
 import {isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';

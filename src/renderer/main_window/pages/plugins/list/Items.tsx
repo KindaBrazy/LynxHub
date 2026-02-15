@@ -11,7 +11,6 @@ import {
   useDisclosure,
   User,
 } from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {
   pluginsActions,
   useIsInstallingPlugin,
@@ -20,6 +19,7 @@ import {
 } from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {showRestartModal} from '@lynx/utils';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {Linux_Icon, MacOS_Icon, Windows_Icon} from '@lynx_assets/icons';
 import {PluginInstalledItem, PluginItem} from '@lynx_common/types/plugins';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';

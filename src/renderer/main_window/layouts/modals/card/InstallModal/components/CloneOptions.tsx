@@ -1,6 +1,6 @@
 import {Card, CardBody, CardHeader, Checkbox, CircularProgress, NumberInput, Select, SelectItem} from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import {extractGitUrl} from '@lynx_common/utils';
 import {SettingsMinimalistic, ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';

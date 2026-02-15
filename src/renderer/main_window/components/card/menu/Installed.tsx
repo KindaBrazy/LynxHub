@@ -1,7 +1,7 @@
 // @ts-nocheck
 import {Button, Dropdown, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
-import {useUpdatingCard} from '@lynx/hooks/utils';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useUpdatingCard} from '@lynx/utils/hooks';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useMemo} from 'react';
 

@@ -1,11 +1,11 @@
 import {Modal, ModalContent} from '@heroui/react';
-import {useInstalledCard} from '@lynx/hooks/utils';
 import {useTabModalLifecycle} from '@lynx/layouts/modals/useTabModalManager';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useModalsState} from '@lynx/redux/reducers/modals';
 import {AppDispatch} from '@lynx/redux/store';
+import {useInstalledCard} from '@lynx/utils/hooks';
 import {DownloadProgress} from '@lynx_common/types/ipc';
 import {
   CardRendererMethods,

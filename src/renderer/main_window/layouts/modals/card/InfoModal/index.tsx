@@ -1,9 +1,9 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
-import {useInstalledCard} from '@lynx/hooks/utils';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {modalActions, useModalsState} from '@lynx/redux/reducers/modals';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
+import {useInstalledCard} from '@lynx/utils/hooks';
 import {CardInfoDescriptions} from '@lynx_common/types/plugins/modules';
 import {extractGitUrl, getCacheUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';

@@ -1,6 +1,6 @@
 import {Button, Checkbox, CheckboxGroup} from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import isEmpty from 'lodash/isEmpty';

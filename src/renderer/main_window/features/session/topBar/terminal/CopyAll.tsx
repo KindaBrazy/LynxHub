@@ -1,6 +1,6 @@
 import {Button, Tooltip} from '@heroui/react';
-import {lynxTopToast} from '@lynx/hooks/utils';
 import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FileText} from '@solar-icons/react-perf/BoldDuotone';
 import {SerializeAddon} from '@xterm/addon-serialize';
