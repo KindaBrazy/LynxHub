@@ -1,4 +1,4 @@
-import {initPluginNodeSentry} from '@lynx_main/monitoring/sentry';
+import {initPluginNodeSentry} from '../sentry';
 import {EMenuItem, ExtensionData_Main, ExtensionMainApi} from './types';
 
 export default class ExtensionApi {

@@ -2,8 +2,8 @@ import * as https from 'node:https';
 import os from 'node:os';
 import path from 'node:path';
 
-import ShowToastWindow from '@lynx_main/windows/toast';
 import {getAppDirectory} from '@lynx_main/managers/dataFolder';
+import ShowToastWindow from '@lynx_main/windows/toast';
 import decompress from 'decompress';
 import {createWriteStream} from 'fs';
 import fs from 'graceful-fs';

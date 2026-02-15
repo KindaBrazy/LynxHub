@@ -13,11 +13,11 @@ import {
   VersionItemValidated,
 } from '@lynx_common/types/plugins';
 import {getUpdateType} from '@lynx_common/utils/plugins';
-import ShowToastWindow from '@lynx_main/windows/toast';
+import GitManager from '@lynx_main/git';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getAppDataPath, selectNewAppDataFolder} from '@lynx_main/managers/dataFolder';
-import GitManager from '@lynx_main/git';
 import {RelaunchApp} from '@lynx_main/utils';
+import ShowToastWindow from '@lynx_main/windows/toast';
 import {promises} from 'graceful-fs';
 import {satisfies} from 'semver';
 

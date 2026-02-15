@@ -9,12 +9,12 @@ import {
   ValidatedPlugins,
 } from '@lynx_common/types/plugins';
 import {getUpdateType} from '@lynx_common/utils/plugins';
-import classHolder from '@lynx_main/managers/classHolder';
-import {getAppDirectory} from '@lynx_main/managers/dataFolder';
 import GitManager from '@lynx_main/git';
 import {setupGitManagerListeners} from '@lynx_main/git/helper';
 import {removeDir} from '@lynx_main/ipc/methods';
 import {pluginsIpc} from '@lynx_main/ipc/plugins/plugins';
+import classHolder from '@lynx_main/managers/classHolder';
+import {getAppDirectory} from '@lynx_main/managers/dataFolder';
 import {captureException} from '@sentry/electron/main';
 import {constants, promises, readdirSync} from 'graceful-fs';
 import {includes, isString} from 'lodash';

@@ -1,8 +1,8 @@
 import {accessSync, constants as fsConstants, existsSync, mkdirSync} from 'node:fs';
 import {basename, join, parse} from 'node:path';
 
-import classHolder from '@lynx_main/managers/classHolder';
 import listenDownloadManager, {downloadManagerIpc} from '@lynx_main/ipc/downloadManager';
+import classHolder from '@lynx_main/managers/classHolder';
 import {app, BrowserWindow, dialog, DownloadItem, Session, shell} from 'electron';
 
 /**

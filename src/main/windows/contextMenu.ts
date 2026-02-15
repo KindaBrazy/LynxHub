@@ -2,10 +2,10 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {ContextResizeData} from '@lynx_common/types';
-import classHolder from '@lynx_main/managers/classHolder';
 import {contextMenuIpc} from '@lynx_main/ipc/contextMenu';
 import {dialogBlured} from '@lynx_main/ipc/dialogsWindow';
 import lynxIpc from '@lynx_main/ipc/lynxIpc';
+import classHolder from '@lynx_main/managers/classHolder';
 import AddBreadcrumb_Main from '@lynx_main/utils/breadcrumbs';
 import {BrowserWindow, BrowserWindowConstructorOptions, screen, WebContents} from 'electron';
 

@@ -7,20 +7,20 @@ import {app, Menu, nativeImage} from 'electron';
 import log from 'electron-log/main';
 
 import darwinIcon from '../../resources/icon-darwin.png?asset';
-import LoadingWindow from './windows/loading';
-import ShowToastWindow from './windows/toast';
-import classHolder from './managers/classHolder';
-import {checkAppDirectories} from './managers/dataFolder';
-import {getImageCacheManager} from './managers/imageCache';
-import {checkForUpdate} from './managers/updater';
 import {beforeAppReady, handleAppReadyToShow, handleProtocols} from './indexMethods';
 import {listenToIpcChannels} from './ipc';
 import {listenBrowser, resetBrowserIPC} from './ipc/browser';
 import listenDialogsWindow from './ipc/dialogsWindow';
 import {stopAllPty} from './ipc/methods/pty';
+import classHolder from './managers/classHolder';
+import {checkAppDirectories} from './managers/dataFolder';
+import {getImageCacheManager} from './managers/imageCache';
+import {checkForUpdate} from './managers/updater';
 import PatreonAuth from './monitoring/patreonAuth';
 import {getPrivilegeText} from './utils';
 import downloadDU from './utils/calcFolderSize/downloadDu';
+import LoadingWindow from './windows/loading';
+import ShowToastWindow from './windows/toast';
 
 // In production save logs to file for reporting
 if (!isDev()) {
