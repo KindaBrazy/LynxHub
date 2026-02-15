@@ -1,4 +1,4 @@
-import staticsChannels from '@lynx_common/consts/ipc_channels/statics';
+import staticsChannels from '@lynx_common/consts/ipcChannels/statics';
 import {
   AppUpdateData,
   AppUpdateInsiderData,
@@ -8,7 +8,7 @@ import {
   PatreonSupporter,
 } from '@lynx_common/types';
 import {MainHT} from '@lynx_common/types/ipc';
-import classHolder from '@lynx_main/core/class_holder';
+import classHolder from '@lynx_main/core/classHolder';
 
 import lynxIpc from './lynxIpc';
 

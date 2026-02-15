@@ -1,4 +1,4 @@
-import classHolder from '@lynx_main/core/class_holder';
+import classHolder from '@lynx_main/core/classHolder';
 import {addBreadcrumb} from '@sentry/electron/main';
 
 export default function AddBreadcrumb_Main(message: string) {

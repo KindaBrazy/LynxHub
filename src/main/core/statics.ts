@@ -16,8 +16,8 @@ import {toMs} from '@lynx_common/utils';
 import GitManager from '@lynx_main/git';
 import {promises} from 'graceful-fs';
 
-import classHolder from './class_holder';
-import {getAppDirectory} from './data_folder';
+import classHolder from './classHolder';
+import {getAppDirectory} from './dataFolder';
 
 type PluginAvailableItem = {metadata: PluginMetadata; versioning: PluginVersioning; url: string};
 

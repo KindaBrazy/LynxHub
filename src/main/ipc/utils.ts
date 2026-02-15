@@ -1,4 +1,4 @@
-import utilsChannels from '@lynx_common/consts/ipc_channels/utils';
+import utilsChannels from '@lynx_common/consts/ipcChannels/utils';
 import {
   DownloadProgress,
   ExtensionsData,
@@ -6,7 +6,7 @@ import {
   MainHT,
   OnUpdatingExtensions,
 } from '@lynx_common/types/ipc';
-import {getImageCacheManager} from '@lynx_main/core/image_cache';
+import {getImageCacheManager} from '@lynx_main/core/imageCache';
 
 import lynxIpc from './lynxIpc';
 import {decompressFile, getImageAsDataURL, isResponseValid} from './methods';
@@ -16,7 +16,7 @@ import {
   getExtensionsDetails,
   getExtensionsUpdate,
   updateAllExtensions,
-} from './methods/card_extensions';
+} from './methods/cardExtensions';
 import {cancelDownload, downloadFile} from './methods/downloader';
 import {sendToMain} from './sender';
 

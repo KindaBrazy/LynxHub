@@ -1,4 +1,4 @@
-import pluginChannels from '@lynx_common/consts/ipc_channels/plugins';
+import pluginChannels from '@lynx_common/consts/ipcChannels/plugins';
 import {SubscribeStages} from '@lynx_common/types';
 import {MainHT} from '@lynx_common/types/ipc';
 import {
@@ -8,7 +8,7 @@ import {
   PluginSyncItem,
   UnloadedPlugins,
 } from '@lynx_common/types/plugins';
-import classHolder from '@lynx_main/core/class_holder';
+import classHolder from '@lynx_main/core/classHolder';
 import {getList} from '@lynx_main/plugins/utils';
 
 import lynxIpc from '../lynxIpc';

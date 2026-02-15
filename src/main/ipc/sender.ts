@@ -1,4 +1,4 @@
-import classHolder from '@lynx_main/core/class_holder';
+import classHolder from '@lynx_main/core/classHolder';
 
 const createSender = <K extends keyof typeof classHolder>(managerKey: K) => {
   return (channel: string, ...args: any[]) => {

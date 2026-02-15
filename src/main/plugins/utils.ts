@@ -13,9 +13,9 @@ import {
   VersionItemValidated,
 } from '@lynx_common/types/plugins';
 import {getUpdateType} from '@lynx_common/utils/plugins';
-import ShowToastWindow from '@lynx_main/child_windows/toast';
-import classHolder from '@lynx_main/core/class_holder';
-import {getAppDataPath, selectNewAppDataFolder} from '@lynx_main/core/data_folder';
+import ShowToastWindow from '@lynx_main/childWindows/toast';
+import classHolder from '@lynx_main/core/classHolder';
+import {getAppDataPath, selectNewAppDataFolder} from '@lynx_main/core/dataFolder';
 import GitManager from '@lynx_main/git';
 import {RelaunchApp} from '@lynx_main/utils';
 import {promises} from 'graceful-fs';

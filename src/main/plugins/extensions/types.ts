@@ -1,4 +1,4 @@
-import ElectronAppManager from '@lynx_main/main_window';
+import ElectronAppManager from '@lynx_main/mainWindow';
 import StorageManager from '@lynx_main/storage/helper';
 import {Scope} from '@sentry/node';
 import {MenuItem, MenuItemConstructorOptions} from 'electron';

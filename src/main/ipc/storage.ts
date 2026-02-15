@@ -1,4 +1,4 @@
-import storageChannels, {storageUtilsChannels} from '@lynx_common/consts/ipc_channels/storage';
+import storageChannels, {storageUtilsChannels} from '@lynx_common/consts/ipcChannels/storage';
 import {ChosenArgumentsData, ConfirmMenuTypes} from '@lynx_common/types';
 import {
   BrowserHistoryData,
@@ -13,7 +13,7 @@ import {
   StorageOperation,
 } from '@lynx_common/types/ipc';
 import StorageTypes, {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
-import classHolder from '@lynx_main/core/class_holder';
+import classHolder from '@lynx_main/core/classHolder';
 import {app} from 'electron';
 
 import lynxIpc from './lynxIpc';

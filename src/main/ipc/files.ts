@@ -1,11 +1,11 @@
 import {resolve} from 'node:path';
 
-import fileChannels from '@lynx_common/consts/ipc_channels/files';
+import fileChannels from '@lynx_common/consts/ipcChannels/files';
 import {FolderListData, FolderNames} from '@lynx_common/types';
 import {MainHT} from '@lynx_common/types/ipc';
-import {getAppDirectory} from '@lynx_main/core/data_folder';
+import {getAppDirectory} from '@lynx_main/core/dataFolder';
 import {getAbsolutePath, getRelativePath, openDialog} from '@lynx_main/utils';
-import calcFolderSize from '@lynx_main/utils/calc_folder_size';
+import calcFolderSize from '@lynx_main/utils/calcFolderSize';
 import {OpenDialogOptions, shell} from 'electron';
 
 import lynxIpc from './lynxIpc';
