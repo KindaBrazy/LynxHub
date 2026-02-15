@@ -9,8 +9,8 @@ import {filter, isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 
-import LaunchConfigSection from '../../Section';
-import PreOpenPathItem from './Item';
+import PreOpenPathItem from './PreLaunchOpenPathItem';
+import LaunchConfigSection from './Section';
 
 type Props = {id: string};
 export default function PreOpenPath({id}: Props) {

@@ -25,7 +25,7 @@ import {isEmpty, some} from 'lodash';
 import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 
-import ArgumentCategory from './Category';
+import ArgumentCategory from './ArgumentAddCategory';
 
 type Props = {
   addArgumentsModal: ReturnType<typeof useDisclosure>;

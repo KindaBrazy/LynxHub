@@ -3,11 +3,11 @@ import {getArgumentType} from '@lynx/utils/moduleArguments';
 import {ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
 import {Dispatch, memo, SetStateAction, useCallback, useMemo} from 'react';
 
-import CheckBoxArgItem from './items/CheckBox';
-import DirectoryArgItem from './items/Directory';
-import DropdownArgItem from './items/Dropdown';
-import FileArgItem from './items/File';
-import InputArgItem from './items/Input';
+import CheckBoxArgItem from './ArgumentItems/CheckBox';
+import DirectoryArgItem from './ArgumentItems/Directory';
+import DropdownArgItem from './ArgumentItems/Dropdown';
+import FileArgItem from './ArgumentItems/File';
+import InputArgItem from './ArgumentItems/Input';
 
 type Props = {argument: ChosenArgument; setArguments: Dispatch<SetStateAction<ChosenArgumentsData>>; id: string};
 

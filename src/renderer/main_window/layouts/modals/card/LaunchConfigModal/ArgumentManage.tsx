@@ -6,8 +6,8 @@ import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction} from 'react';
 
-import LaunchConfigSection from '../../Section';
-import ManageArgumentsItem from './Item';
+import ManageArgumentsItem from './ArgumentManageItem';
+import LaunchConfigSection from './Section';
 
 type Props = {
   addArgumentsModal: ReturnType<typeof useDisclosure>;

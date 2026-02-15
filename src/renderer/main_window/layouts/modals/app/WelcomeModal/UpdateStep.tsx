@@ -5,8 +5,8 @@ import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {motion} from 'framer-motion';
 import {useCallback, useEffect, useState} from 'react';
 
-import CheckRow from '../components/CheckRow';
-import {RowData} from '../types';
+import CheckRow from './CheckRow';
+import {RowData} from './types';
 
 const containerVariants = {
   hidden: {opacity: 0, y: 20},

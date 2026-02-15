@@ -9,8 +9,8 @@ import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {X} from 'lucide-react';
 import {memo, RefObject, useCallback, useState} from 'react';
 
-import LocateWarning from './components/LocateWarning';
-import FooterTerminal from './components/TerminalStep_Footer';
+import LocateWarning from './LocateWarning';
+import FooterTerminal from './TerminalStepFooter';
 import {InstallState} from './types';
 
 type Props = {

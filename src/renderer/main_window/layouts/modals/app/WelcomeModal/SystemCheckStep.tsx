@@ -2,9 +2,9 @@ import {Button} from '@heroui/react';
 import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useMemo, useState} from 'react';
 
-import PluginSelector from '../components/PluginSelector';
-import RequirementsChecker from '../components/RequirementsChecker';
-import {RequirementStatus} from '../types';
+import PluginSelector from './PluginSelector';
+import RequirementsChecker from './RequirementsChecker';
+import {RequirementStatus} from './types';
 
 const containerVariants = {
   hidden: {opacity: 0, y: 20},

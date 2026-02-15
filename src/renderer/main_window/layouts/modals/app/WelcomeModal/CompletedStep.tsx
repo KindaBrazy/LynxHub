@@ -3,7 +3,7 @@ import {APP_NAME} from '@lynx_common/consts';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {motion} from 'framer-motion';
 
-import {RequirementStatus} from '../types';
+import {RequirementStatus} from './types';
 
 const containerVariants = {
   hidden: {opacity: 0, y: 20},

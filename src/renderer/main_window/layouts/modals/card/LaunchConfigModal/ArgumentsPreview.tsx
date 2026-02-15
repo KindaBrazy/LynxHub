@@ -4,7 +4,7 @@ import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {useMemo, useState} from 'react';
 
-import LaunchConfigSection from '../Section';
+import LaunchConfigSection from './Section';
 
 type Props = {text: string};
 /** Show arguments as text for preview and clipboard copying */

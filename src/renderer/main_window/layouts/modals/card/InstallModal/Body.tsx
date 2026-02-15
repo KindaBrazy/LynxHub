@@ -7,11 +7,11 @@ import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
 import {Dispatch, Fragment, memo, RefObject, SetStateAction, useCallback} from 'react';
 
-import CloneRepo from './components/CloneRepo';
-import InstallExtensions from './components/Extensions';
-import TerminalStep from './components/TerminalStep';
-import UserInputs from './components/UserInputs';
+import CloneRepo from './CloneRepo';
+import InstallExtensions from './Extensions';
+import TerminalStep from './TerminalStep';
 import {InstallState} from './types';
+import UserInputs from './UserInputs';
 
 type Props = {
   state: InstallState;

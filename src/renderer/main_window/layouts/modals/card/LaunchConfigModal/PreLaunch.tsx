@@ -1,8 +1,8 @@
 import {tabContentVariants} from '@lynx/layouts/modals/card/ExtensionsModal/Constants';
 import {motion} from 'framer-motion';
 
-import PreOpenPath from './open_path';
-import PreTerminalCommands from './TerminalCommands';
+import PreOpenPath from './PreLaunchOpenPath';
+import PreTerminalCommands from './PreLaunchTerminalCommands';
 
 type Props = {id: string};
 export default function CardPreLaunch({id}: Props) {
