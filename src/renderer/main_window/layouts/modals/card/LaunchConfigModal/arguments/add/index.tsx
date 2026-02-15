@@ -15,6 +15,7 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import LynxScroll from '@lynx/components/LynxScroll';
+import {useTabVisibility} from '@lynx/layouts/tabs/utils';
 import {useGetArgumentsByID} from '@lynx/plugins/modules';
 import {getArgumentDefaultValue, getFilteredArguments} from '@lynx/utils/moduleArguments';
 import {Circle_Icon} from '@lynx_assets/icons';
@@ -24,7 +25,6 @@ import {isEmpty, some} from 'lodash';
 import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 
-import {useTabVisibility} from '../../../../tabs/utils';
 import ArgumentCategory from './Category';
 
 type Props = {

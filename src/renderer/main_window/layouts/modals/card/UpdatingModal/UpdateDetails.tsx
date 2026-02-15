@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from '@heroui/react';
+import {useTabVisibility} from '@lynx/layouts/tabs/utils';
 import {modalActions, useModalsState} from '@lynx/redux/reducers/modals';
 import {AppDispatch} from '@lynx/redux/store';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
@@ -22,8 +23,6 @@ import {Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {ReactNode, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
-
-import {useTabVisibility} from '../../tabs/utils';
 
 const {Paragraph, Text} = Typography;
 

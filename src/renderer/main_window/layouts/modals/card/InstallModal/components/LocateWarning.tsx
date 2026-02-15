@@ -1,8 +1,7 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {useTabVisibility} from '@lynx/layouts/tabs/utils';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
 import {Dispatch, SetStateAction} from 'react';
-
-import {useTabVisibility} from '../../../tabs/utils';
 
 type Props = {isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>; tabId: string};
 export default function LocateWarning({isOpen, setIsOpen, tabId}: Props) {

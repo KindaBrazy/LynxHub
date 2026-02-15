@@ -1,5 +1,5 @@
 import {useDisclosure} from '@heroui/react';
-import {tabContentVariants} from '@lynx/layouts/modals/cardExtensions/Constants';
+import {tabContentVariants} from '@lynx/layouts/modals/card/ExtensionsModal/Constants';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_common/types';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
