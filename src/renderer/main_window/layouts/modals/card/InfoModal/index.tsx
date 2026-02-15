@@ -12,7 +12,7 @@ import {isEmpty, startCase} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useTabModalLifecycle} from '../useTabModalManager';
+import {useTabModalLifecycle} from '../../useTabModalManager';
 import CardInfoDescription from './Description';
 import useCardInfoApi from './useCardInfoApi';
 

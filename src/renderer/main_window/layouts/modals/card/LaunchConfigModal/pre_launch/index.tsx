@@ -1,4 +1,4 @@
-import {tabContentVariants} from '@lynx/layouts/modals/cardExtensions/Constants';
+import {tabContentVariants} from '@lynx/layouts/modals/card/ExtensionsModal/Constants';
 import {motion} from 'framer-motion';
 
 import PreOpenPath from './open_path';

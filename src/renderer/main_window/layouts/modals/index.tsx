@@ -1,19 +1,19 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {memo, useMemo} from 'react';
 
-import {RestartModal} from './appRestart';
-import UpdateApp from './appUpdate';
-import CardExtensionsModal from './cardExtensions';
-import GitManagerModal from './cardGit';
-import CardInfoModal from './cardInfo';
-import InstallCardModal from './cardInstall';
-import LaunchConfigModal from './cardLaunchConfig';
-import ReadMeModal from './cardReadme';
-import UnassignCardComp from './cardUnassign';
-import UninstallCardComp from './cardUninstall';
-import UpdatingNotification from './cardUpdating';
-import CustomNotification from './customNotification';
-import WarningModal from './warning';
+import {RestartModal} from './app/RestartModal';
+import UpdateApp from './app/UpdateModal';
+import CardExtensionsModal from './card/ExtensionsModal';
+import GitManagerModal from './card/GitModal';
+import CardInfoModal from './card/InfoModal';
+import InstallCardModal from './card/InstallModal';
+import LaunchConfigModal from './card/LaunchConfigModal';
+import ReadMeModal from './card/ReadmeModal';
+import UnassignCardComp from './card/UnassignModal';
+import UninstallCardComp from './card/UninstallModal';
+import UpdatingNotification from './card/UpdatingModal';
+import CustomNotification from './notification/CustomNotification';
+import WarningModal from './notification/WarningModal';
 
 const Modals = memo(() => {
   const {warning: Warning, updateApp: UApp} = useMemo(() => extensionsData.replaceModals, []);

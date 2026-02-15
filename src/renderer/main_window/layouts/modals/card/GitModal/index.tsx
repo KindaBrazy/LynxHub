@@ -10,7 +10,7 @@ import {Divider} from 'antd';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useTabModalLifecycle} from '../useTabModalManager';
+import {useTabModalLifecycle} from '../../useTabModalManager';
 import Branches from './Branches';
 import CommitInfo from './CommitInfo';
 import Reset_Shallow from './Reset_Shallow';

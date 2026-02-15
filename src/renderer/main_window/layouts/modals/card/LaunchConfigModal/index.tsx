@@ -1,5 +1,6 @@
 import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Tab, Tabs} from '@heroui/react';
 import {lynxTopToast} from '@lynx/hooks/utils';
+import {useTabModalLifecycle} from '@lynx/layouts/modals/useTabModalManager';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useModalsState} from '@lynx/redux/reducers/modals';
 import {AppDispatch} from '@lynx/redux/store';
@@ -11,7 +12,6 @@ import {Diskette} from '@solar-icons/react-perf/BoldDuotone';
 import {Fragment, Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useTabModalLifecycle} from '../useTabModalManager';
 import CardArguments from './arguments';
 import CustomRun from './custom_run';
 import CardPreLaunch from './pre_launch';

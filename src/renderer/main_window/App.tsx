@@ -2,7 +2,7 @@ import Background from '@lynx/components/Background';
 import AppHooks from '@lynx/hooks/index';
 import MainContents from '@lynx/layouts/MainContents';
 import Modals from '@lynx/layouts/modals';
-import Initializer from '@lynx/layouts/modals/appWelcome';
+import Initializer from '@lynx/layouts/modals/app/WelcomeModal';
 import TitleBar from '@lynx/layouts/titleBar';
 import ExtensionHooks from '@lynx/plugins/extensions/Hooks';
 

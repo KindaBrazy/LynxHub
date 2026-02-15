@@ -16,7 +16,7 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-import {useTabVisibility} from '../../tabs/utils';
+import {useTabVisibility} from '../../../tabs/utils';
 import Downloaded from './Downloaded';
 import Downloading from './Downloading';
 import Info from './Info';
