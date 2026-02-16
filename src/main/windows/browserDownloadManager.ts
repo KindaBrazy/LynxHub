@@ -312,52 +312,55 @@ export default class BrowserDownloadManager {
    */
   private resolveUniqueFilename(directory: string, filename: string): string {
     try {
-      // Sanitize the filename first to prevent path traversal and invalid characters
       filename = this.sanitizeFilename(filename);
-
-      // Parse the filename to separate name and extension
       const parsed = parse(filename);
-      const name = parsed.name;
-      const ext = parsed.ext;
-
-      // Handle edge case: filename with no extension
-      if (!ext && name.includes('.')) {
-        // If there's a dot but no extension detected, treat the whole thing as name
-        // This handles cases like ".gitignore" or "file."
-      }
+      const {name, ext} = parsed;
 
       // Check if the original filename exists (using cache)
-      let resolvedPath = join(directory, filename);
-      if (!this.cachedFileExists(resolvedPath)) {
+      if (!this.cachedFileExists(join(directory, filename))) {
         return filename;
       }
 
-      // File exists, start incrementing counter
-      let counter = 1;
-      let uniqueFilename: string;
-
-      do {
-        // Create filename with counter: "filename (N).ext"
-        uniqueFilename = `${name} (${counter})${ext}`;
-        resolvedPath = join(directory, uniqueFilename);
-        counter++;
-
-        // Safety check to prevent infinite loops (though unlikely)
-        if (counter > 10000) {
-          // Fallback to timestamp-based naming
-          uniqueFilename = `${name}_${Date.now()}${ext}`;
-          break;
-        }
-      } while (this.cachedFileExists(resolvedPath));
-
-      return uniqueFilename;
+      // File exists, find unique name with counter
+      return this.findUniqueFilenameWithCounter(directory, name, ext);
     } catch (error: any) {
-      // If any error occurs during filename resolution, fallback to timestamp-based naming
+      // Fallback to timestamp-based naming on error
+      return this.generateTimestampFilename(filename, error);
+    }
+  }
+
+  /**
+   * Finds a unique filename by incrementing a counter until an available name is found
+   */
+  private findUniqueFilenameWithCounter(directory: string, name: string, ext: string): string {
+    const MAX_ATTEMPTS = 10000;
+    let counter = 1;
+
+    while (counter <= MAX_ATTEMPTS) {
+      const uniqueFilename = `${name} (${counter})${ext}`;
+      const resolvedPath = join(directory, uniqueFilename);
+
+      if (!this.cachedFileExists(resolvedPath)) {
+        return uniqueFilename;
+      }
+
+      counter++;
+    }
+
+    // Safety fallback: use timestamp if max attempts reached
+    return `${name}_${Date.now()}${ext}`;
+  }
+
+  /**
+   * Generates a timestamp-based filename as fallback
+   */
+  private generateTimestampFilename(filename: string, error?: any): string {
+    if (error) {
       const fsError = this.handleFileSystemError(error);
       console.error('Error resolving unique filename:', fsError.userMessage);
-      const parsed = parse(filename);
-      return `${parsed.name}_${Date.now()}${parsed.ext}`;
     }
+    const parsed = parse(filename);
+    return `${parsed.name}_${Date.now()}${parsed.ext}`;
   }
 
   private initialWindow() {
@@ -585,40 +588,51 @@ export default class BrowserDownloadManager {
     }
   }
 
-  public cancelItem(name: string) {
+  /**
+   * Generic handler for download item operations (cancel, pause, resume)
+   */
+  private handleDownloadItemOperation(
+    name: string,
+    operation: 'cancel' | 'pause' | 'resume',
+    checkCondition: (item: DownloadItem) => boolean,
+    action: (item: DownloadItem) => void,
+  ): void {
     try {
       const item = this.getItemByName(name);
-      if (item && (!item.getState || item.getState() !== 'cancelled')) {
-        item.cancel();
+      if (item && checkCondition(item)) {
+        action(item);
       }
     } catch (error: any) {
       const fsError = this.handleFileSystemError(error);
-      console.error(`Failed to cancel download ${name}:`, fsError.userMessage);
+      console.error(`Failed to ${operation} download ${name}:`, fsError.userMessage);
     }
+  }
+
+  public cancelItem(name: string) {
+    this.handleDownloadItemOperation(
+      name,
+      'cancel',
+      item => !item.getState || item.getState() !== 'cancelled',
+      item => item.cancel(),
+    );
   }
 
   public pauseItem(name: string) {
-    try {
-      const item = this.getItemByName(name);
-      if (item && !item.isPaused()) {
-        item.pause();
-      }
-    } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
-      console.error(`Failed to pause download ${name}:`, fsError.userMessage);
-    }
+    this.handleDownloadItemOperation(
+      name,
+      'pause',
+      item => !item.isPaused(),
+      item => item.pause(),
+    );
   }
 
   public resumeItem(name: string) {
-    try {
-      const item = this.getItemByName(name);
-      if (item && item.canResume()) {
-        item.resume();
-      }
-    } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
-      console.error(`Failed to resume download ${name}:`, fsError.userMessage);
-    }
+    this.handleDownloadItemOperation(
+      name,
+      'resume',
+      item => item.canResume(),
+      item => item.resume(),
+    );
   }
 
   /**
