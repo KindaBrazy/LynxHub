@@ -62,7 +62,7 @@ export const ContentsNav = () => {
       });
     }
 
-    if (hasCardsByPath(PageID.tools) || !isEmpty(extensionsData.customizePages.tools.addComponent)) {
+    if (hasCardsByPath(PageID.tools) || !isEmpty(extensionsData.customizePages.tools.add.cardsContainer)) {
       result.push({
         icon: <ToolsPage_Icon className="size-full" />,
         title: PageTitles.tools,
@@ -78,7 +78,7 @@ export const ContentsNav = () => {
       });
     }
 
-    if (hasCardsByPath(PageID.games) || !isEmpty(extensionsData.customizePages.games.addComponent)) {
+    if (hasCardsByPath(PageID.games) || !isEmpty(extensionsData.customizePages.games.add.cardsContainer)) {
       result.push({
         icon: <GamePage_Icon className="size-full" />,
         title: PageTitles.games,

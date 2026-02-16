@@ -1,4 +1,4 @@
-import {ExtensionData_Renderer, ExtensionImport_Renderer, PageAdd} from '@lynx_common/types/plugins/extensions';
+import {ExtensionData_Renderer, ExtensionImport_Renderer} from '@lynx_common/types/plugins/extensions';
 import {ExtensionRendererApi} from '@lynx_common/types/plugins/extensions/api';
 import {ExtensionEvents, ExtensionEvents_IPC} from '@lynx_common/types/plugins/extensions/events';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
@@ -12,14 +12,6 @@ type EmitterType_IPC = Emitter<ExtensionEvents_IPC> & {all: Map<string, unknown[
 
 const emitter: EmitterType = mitt<ExtensionEvents>();
 const emitter_ipc: EmitterType_IPC = mitt<ExtensionEvents_IPC>();
-
-const PageAddInit: PageAdd = {
-  top: [],
-  bottom: [],
-  scrollTop: [],
-  scrollBottom: [],
-  cardsContainer: [],
-};
 
 export const extensionsData: ExtensionData_Renderer = {
   titleBar: {
@@ -98,11 +90,51 @@ export const extensionsData: ExtensionData_Renderer = {
         allCategory: [],
       },
     },
-    audio: {add: PageAddInit},
-    image: {add: PageAddInit},
-    text: {add: PageAddInit},
-    tools: {add: PageAddInit},
-    games: {add: PageAddInit},
+    audio: {
+      add: {
+        top: [],
+        bottom: [],
+        scrollTop: [],
+        scrollBottom: [],
+        cardsContainer: [],
+      },
+    },
+    image: {
+      add: {
+        top: [],
+        bottom: [],
+        scrollTop: [],
+        scrollBottom: [],
+        cardsContainer: [],
+      },
+    },
+    text: {
+      add: {
+        top: [],
+        bottom: [],
+        scrollTop: [],
+        scrollBottom: [],
+        cardsContainer: [],
+      },
+    },
+    tools: {
+      add: {
+        top: [],
+        bottom: [],
+        scrollTop: [],
+        scrollBottom: [],
+        cardsContainer: [],
+      },
+    },
+    games: {
+      add: {
+        top: [],
+        bottom: [],
+        scrollTop: [],
+        scrollBottom: [],
+        cardsContainer: [],
+      },
+    },
     settings: {
       add: {
         navButton: [],
