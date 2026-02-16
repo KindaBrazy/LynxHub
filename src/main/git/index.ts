@@ -19,6 +19,13 @@ import {
   StatusResult,
 } from 'simple-git';
 
+enum GitErrorType {
+  SpawnError,
+  DestinationExists,
+  ProgressOutput,
+  Unknown,
+}
+
 /** Manages Git operations such as cloning, pulling, and status checking. */
 export default class GitManager {
   private readonly showTaskbarProgress: boolean;
@@ -206,37 +213,12 @@ export default class GitManager {
   };
 
   /**
-   * Checks if a git error is actually just progress output from stderr.
-   * Git writes progress to stderr, which simple-git sometimes misinterprets as an error.
+   * Classifies git errors into specific error types for appropriate handling.
    */
-  private isProgressOutputError(error: any): boolean {
+  private classifyError(error: any): GitErrorType {
     const message = error?.message || error?.toString() || '';
-    // Check for common git progress patterns that indicate successful operations
-    const progressPatterns = [
-      /^Cloning into/,
-      /remote: (Enumerating|Counting|Compressing) objects/,
-      /Receiving objects:/,
-      /Resolving deltas:/,
-      /Unpacking objects:/,
-      /was checked out with 'git status'/,
-      /remote:.*done/i,
-    ];
-    return progressPatterns.some(pattern => pattern.test(message));
-  }
 
-  /**
-   * Checks if the error indicates the destination directory already exists.
-   */
-  private isDestinationExistsError(error: any): boolean {
-    const message = error?.message || error?.toString() || '';
-    return /already exists and is not an empty directory/i.test(message);
-  }
-
-  /**
-   * Checks if an error is a spawn-related error (git not found or permission issues).
-   */
-  private isSpawnError(error: any): boolean {
-    const message = error?.message || error?.toString() || '';
+    // Check for spawn errors (git not found or permission issues)
     const spawnPatterns = [
       /spawn UNKNOWN/i,
       /spawn ENOENT/i,
@@ -246,12 +228,36 @@ export default class GitManager {
       /git.*not found/i,
       /command not found.*git/i,
     ];
-    return spawnPatterns.some(pattern => pattern.test(message));
+    if (spawnPatterns.some(pattern => pattern.test(message))) {
+      return GitErrorType.SpawnError;
+    }
+
+    // Check for destination exists error
+    if (/already exists and is not an empty directory/i.test(message)) {
+      return GitErrorType.DestinationExists;
+    }
+
+    // Check for progress output misinterpreted as error
+    const progressPatterns = [
+      /^Cloning into/,
+      /remote: (Enumerating|Counting|Compressing) objects/,
+      /Receiving objects:/,
+      /Resolving deltas:/,
+      /Unpacking objects:/,
+      /was checked out with 'git status'/,
+      /remote:.*done/i,
+    ];
+    if (progressPatterns.some(pattern => pattern.test(message))) {
+      return GitErrorType.ProgressOutput;
+    }
+
+    return GitErrorType.Unknown;
   }
 
   private handleError(error: any): void {
-    // Handle spawn errors with a more user-friendly message
-    if (this.isSpawnError(error)) {
+    const errorType = this.classifyError(error);
+
+    if (errorType === GitErrorType.SpawnError) {
       const friendlyMessage = 'Git is not available. Please ensure Git is installed and accessible in your PATH.';
       console.error(`Git Spawn Error: ${error.message || error}`);
       this.onFailedProgress(friendlyMessage);
@@ -268,6 +274,33 @@ export default class GitManager {
   }
 
   /**
+   * Handles clone completion by checking for false-positive errors.
+   */
+  private async handleCloneCompletion(
+    error: any,
+    targetDirectory: string,
+    resolve: () => void,
+    reject: (error: any) => void,
+    operationType: string = 'Clone',
+  ): Promise<void> {
+    const errorType = this.classifyError(error);
+    const isValidRepo = await GitManager.isGitRepository(targetDirectory);
+
+    if (errorType === GitErrorType.ProgressOutput && isValidRepo) {
+      console.log(`${operationType} completed successfully (stderr progress output was misinterpreted as error)`);
+      this.handleProgressComplete();
+      resolve();
+    } else if (errorType === GitErrorType.DestinationExists && isValidRepo) {
+      console.log(`${operationType} skipped: destination already exists and is a valid git repository`);
+      this.handleProgressComplete();
+      resolve();
+    } else {
+      this.handleError(error);
+      reject(error);
+    }
+  }
+
+  /**
    * Clones a repository to the specified directory.
    */
   public async clone(url: string, directory: string): Promise<void> {
@@ -280,22 +313,7 @@ export default class GitManager {
           this.handleProgressComplete();
           resolve();
         })
-        .catch(async error => {
-          // Check if this is just stderr progress output being misinterpreted as an error
-          if (this.isProgressOutputError(error) && (await GitManager.isGitRepository(targetDirectory))) {
-            console.log('Clone completed successfully (stderr progress output was misinterpreted as error)');
-            this.handleProgressComplete();
-            resolve();
-          } else if (this.isDestinationExistsError(error) && (await GitManager.isGitRepository(targetDirectory))) {
-            // Directory already exists and is a valid repo - treat as success
-            console.log('Clone skipped: destination already exists and is a valid git repository');
-            this.handleProgressComplete();
-            resolve();
-          } else {
-            this.handleError(error);
-            reject(error);
-          }
-        });
+        .catch(error => this.handleCloneCompletion(error, targetDirectory, resolve, reject));
     });
   }
 
@@ -322,22 +340,7 @@ export default class GitManager {
           this.handleProgressComplete();
           resolve();
         })
-        .catch(async error => {
-          // Check if this is just stderr progress output being misinterpreted as an error
-          if (this.isProgressOutputError(error) && (await GitManager.isGitRepository(targetDirectory))) {
-            console.log('Shallow clone completed successfully (stderr progress output was misinterpreted as error)');
-            this.handleProgressComplete();
-            resolve();
-          } else if (this.isDestinationExistsError(error) && (await GitManager.isGitRepository(targetDirectory))) {
-            // Directory already exists and is a valid repo - treat as success
-            console.log('Clone skipped: destination already exists and is a valid git repository');
-            this.handleProgressComplete();
-            resolve();
-          } else {
-            this.handleError(error);
-            reject(error);
-          }
-        });
+        .catch(error => this.handleCloneCompletion(error, targetDirectory, resolve, reject, 'Shallow clone'));
     });
   }
 
@@ -358,33 +361,25 @@ export default class GitManager {
         return;
       }
 
-      try {
-        await this.git.fetch(['origin', `${branchName}:${branchName}`]);
-      } catch (fetchError) {
-        if (fetchError instanceof Error && fetchError.message.includes('could not find remote ref')) {
-          try {
-            await this.git.fetch(['--all']);
-            await checkout();
-
-            return;
-          } catch (e) {
-            this.handleError(new Error(`Branch "${branchName}" not found in the remote repository.`));
-            throw new Error(`Branch "${branchName}" not found in the remote repository.`);
-          }
-        } else {
-          this.handleError(fetchError);
-          throw fetchError;
-        }
-      }
-
-      await checkout();
+      await this.fetchAndCheckoutBranch(branchName, checkout);
     } catch (error) {
-      if (error instanceof Error) {
-        this.handleError(error);
-        throw error;
+      const errorMessage =
+        error instanceof Error ? error.message : 'An unknown error occurred while changing branches.';
+      this.handleError(error instanceof Error ? error : new Error(errorMessage));
+      throw error instanceof Error ? error : new Error(errorMessage);
+    }
+  }
+
+  private async fetchAndCheckoutBranch(branchName: string, checkout: () => Promise<void>): Promise<void> {
+    try {
+      await this.git.fetch(['origin', `${branchName}:${branchName}`]);
+      await checkout();
+    } catch (fetchError) {
+      if (fetchError instanceof Error && fetchError.message.includes('could not find remote ref')) {
+        await this.git.fetch(['--all']);
+        await checkout();
       } else {
-        this.handleError(new Error('An unknown error occurred while changing branches.'));
-        throw new Error('An unknown error occurred while changing branches.');
+        throw fetchError;
       }
     }
   }
@@ -488,36 +483,7 @@ export default class GitManager {
       this.git.cwd(targetDirectory);
 
       if (fetchBeforeReset) {
-        const fetchOptions: string[] = ['--prune'];
-
-        if (branch) {
-          fetchOptions.push(remote, branch);
-        } else {
-          fetchOptions.push('--all');
-        }
-
-        try {
-          await this.git.fetch(fetchOptions);
-          console.log('Fetch complete.');
-        } catch (fetchError) {
-          // Check if the error is due to a shallow clone that cannot fetch the target commit
-          const errorMessage = (fetchError as Error).message;
-          if (errorMessage.includes('shallow repository') || errorMessage.includes('pack-objects')) {
-            console.warn(
-              `Warning: Failed to fetch recent history in shallow clone ${dir}. ` +
-                `Attempting to unshallow using 'git fetch --unshallow'.`,
-            );
-
-            await this.git.fetch(['--unshallow', remote]);
-
-            if (branch) {
-              await this.git.fetch([remote, branch]);
-            }
-            console.log('Repository successfully unshallowed.');
-          } else {
-            throw fetchError;
-          }
-        }
+        await this.performFetchForReset(dir, branch, remote);
       }
 
       const resetResult = await this.git.reset(['--hard', commit]);
@@ -527,6 +493,47 @@ export default class GitManager {
     } catch (error) {
       console.error(`Error performing hard reset in ${dir}:`, error);
       throw error;
+    }
+  }
+
+  private async performFetchForReset(dir: string, branch: string | undefined, remote: string): Promise<void> {
+    const fetchOptions: string[] = ['--prune'];
+
+    if (branch) {
+      fetchOptions.push(remote, branch);
+    } else {
+      fetchOptions.push('--all');
+    }
+
+    try {
+      await this.git.fetch(fetchOptions);
+      console.log('Fetch complete.');
+    } catch (fetchError) {
+      await this.handleShallowCloneFetchError(fetchError as Error, dir, branch, remote);
+    }
+  }
+
+  private async handleShallowCloneFetchError(
+    fetchError: Error,
+    dir: string,
+    branch: string | undefined,
+    remote: string,
+  ): Promise<void> {
+    const errorMessage = fetchError.message;
+    if (errorMessage.includes('shallow repository') || errorMessage.includes('pack-objects')) {
+      console.warn(
+        `Warning: Failed to fetch recent history in shallow clone ${dir}. ` +
+          `Attempting to unshallow using 'git fetch --unshallow'.`,
+      );
+
+      await this.git.fetch(['--unshallow', remote]);
+
+      if (branch) {
+        await this.git.fetch([remote, branch]);
+      }
+      console.log('Repository successfully unshallowed.');
+    } else {
+      throw fetchError;
     }
   }
 
