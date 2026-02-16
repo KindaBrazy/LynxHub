@@ -1,8 +1,8 @@
 import {motion} from 'framer-motion';
 
-import {tabContentVariants} from '../ExtensionsModal/Constants';
-import PreOpenPath from './PreLaunchOpenPath';
-import PreTerminalCommands from './PreLaunchTerminalCommands';
+import {tabContentVariants} from '../../ExtensionsModal/Constants';
+import PreOpenPath from './OpenPath';
+import PreTerminalCommands from './TerminalCommands';
 
 type Props = {id: string};
 export default function CardPreLaunch({id}: Props) {

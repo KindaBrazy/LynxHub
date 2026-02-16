@@ -5,9 +5,9 @@ import {Repeat} from '@solar-icons/react-perf/BoldDuotone';
 import {Tooltip} from 'antd';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {useGetArgumentsByID} from '../../../../../plugins/modules';
-import {useCardsState} from '../../../../../redux/reducers/cards';
-import {getArgumentDefaultValue} from '../../../../../utils/moduleArguments';
+import {useGetArgumentsByID} from '../../../../../../plugins/modules';
+import {useCardsState} from '../../../../../../redux/reducers/cards';
+import {getArgumentDefaultValue} from '../../../../../../utils/moduleArguments';
 import ArgumentItemBase from './Base';
 import AutoCompletePath from './Path_AutoComplete';
 

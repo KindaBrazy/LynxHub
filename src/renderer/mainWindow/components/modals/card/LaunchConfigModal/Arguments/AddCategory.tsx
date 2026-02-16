@@ -4,7 +4,7 @@ import {cloneDeep, isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 import Highlighter from 'react-highlight-words';
 
-import {searchInStrings} from '../../../../utils';
+import {searchInStrings} from '../../../../../utils';
 
 type Props = {
   listData: ArgumentSection[] | ArgumentItem[];

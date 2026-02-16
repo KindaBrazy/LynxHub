@@ -5,8 +5,8 @@ import {Reorder, useDragControls} from 'framer-motion';
 import {GripVertical} from 'lucide-react';
 import {ReactNode, useMemo} from 'react';
 
-import {useGetArgumentsByID} from '../../../../../plugins/modules';
-import {getArgumentDescription} from '../../../../../utils/moduleArguments';
+import {useGetArgumentsByID} from '../../../../../../plugins/modules';
+import {getArgumentDescription} from '../../../../../../utils/moduleArguments';
 
 type Props = {
   onClick?: () => void;

@@ -3,8 +3,8 @@ import {ChosenArgument} from '@lynx_common/types';
 import {Text} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useState} from 'react';
 
-import {useGetArgumentsByID} from '../../../../../plugins/modules';
-import {getArgumentDefaultValue} from '../../../../../utils/moduleArguments';
+import {useGetArgumentsByID} from '../../../../../../plugins/modules';
+import {getArgumentDefaultValue} from '../../../../../../utils/moduleArguments';
 import ArgumentItemBase from './Base';
 
 type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void; id: string};

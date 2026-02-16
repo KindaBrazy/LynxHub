@@ -8,9 +8,9 @@ import {filter, isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 
-import LynxTooltip from '../../../LynxTooltip';
-import PreOpenPathItem from './PreLaunchOpenPathItem';
-import LaunchConfigSection from './Section';
+import LynxTooltip from '../../../../LynxTooltip';
+import LaunchConfigSection from '../Section';
+import PreOpenPathItem from './OpenPathItem';
 
 type Props = {id: string};
 export default function PreOpenPath({id}: Props) {

@@ -4,7 +4,7 @@ import filesIpc from '@lynx_shared/ipc/files';
 import {File, Folder} from '@solar-icons/react-perf/BoldDuotone';
 import {Key, useEffect, useState} from 'react';
 
-import {searchInStrings} from '../../../../../utils';
+import {searchInStrings} from '../../../../../../utils';
 type Props = {
   baseDir: string;
   type?: 'folder' | 'file';

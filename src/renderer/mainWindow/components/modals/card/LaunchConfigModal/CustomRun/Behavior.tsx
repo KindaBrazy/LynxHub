@@ -4,14 +4,14 @@ import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {isEmpty} from 'lodash';
 import {Fragment, useEffect, useState} from 'react';
 
-import {UrlCatch} from './CustomRunUrlCatch';
-import LaunchConfigSection from './Section';
+import LaunchConfigSection from '../Section';
+import {UrlCatch} from './UrlCatch';
 
 type TerminalType = CustomRunBehaviorData['terminal'];
 type BrowserType = CustomRunBehaviorData['browser'];
 
 type Props = {id: string};
-export default function CustomRunBehavior({id}: Props) {
+export default function Behavior({id}: Props) {
   const [terminalValue, setTerminalValue] = useState<TerminalType>('runScript');
   const [browserValue, setBrowserValue] = useState<BrowserType>('appBrowser');
 
