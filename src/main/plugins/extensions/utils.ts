@@ -1,5 +1,5 @@
 import ElectronAppManager from '@lynx_main/mainWindow';
-import StorageManager from '@lynx_main/storage/helper';
+import StorageManager from '@lynx_main/storage/storageOperations';
 import pty from 'node-pty';
 
 import ModuleManager from '../modules';

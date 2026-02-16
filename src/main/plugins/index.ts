@@ -10,7 +10,7 @@ import {
 } from '@lynx_common/types/plugins';
 import {getUpdateType} from '@lynx_common/utils/plugins';
 import GitManager from '@lynx_main/git';
-import {setupGitManagerListeners} from '@lynx_main/git/helper';
+import {setupGitManagerListeners} from '@lynx_main/git/gitListeners';
 import {removeDir} from '@lynx_main/ipc/methods';
 import {pluginsIpc} from '@lynx_main/ipc/plugins/plugins';
 import classHolder from '@lynx_main/managers/classHolder';
@@ -109,7 +109,7 @@ export class PluginManager {
     for (const folder of folders) {
       try {
         const targetDir = join(this.pluginPath, folder);
-        const remoteUrl = await GitManager.remoteUrlFromDir(targetDir);
+        const remoteUrl = await GitManager.getRemoteUrlFromDirectory(targetDir);
         if (!remoteUrl) continue;
 
         const gitManager = new GitManager(true);

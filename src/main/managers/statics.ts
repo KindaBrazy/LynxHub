@@ -195,7 +195,7 @@ export default class StaticsManager {
 
   private async clone() {
     try {
-      const dirUrl = await GitManager.remoteUrlFromDir(this.dir);
+      const dirUrl = await GitManager.getRemoteUrlFromDirectory(this.dir);
 
       if (dirUrl && dirUrl === STATICS_URL) return;
 

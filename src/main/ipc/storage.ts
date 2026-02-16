@@ -75,16 +75,16 @@ export function listenStorageUtils() {
   storageUtilsIpc.handle.recentlyUsedCards((opt, id) => storageManager.recentlyUsedCardsOpt(opt, id));
 
   // Manages home category organization
-  storageUtilsIpc.handle.homeCategory((opt, data) => storageManager.homeCategoryOpt(opt, data));
+  storageUtilsIpc.handle.homeCategory((opt, data) => storageManager.handleHomeCategoryOperation(opt, data));
 
   // Manages pre-commands for cards (commands run before card starts)
-  storageUtilsIpc.handle.preCommands((opt, data) => storageManager.preCommandOpt(opt, data));
+  storageUtilsIpc.handle.preCommands((opt, data) => storageManager.handlePreCommandOperation(opt, data));
 
   // Manages custom run commands for cards
-  storageUtilsIpc.handle.customRun((opt, data) => storageManager.customRunOpt(opt, data));
+  storageUtilsIpc.handle.customRun((opt, data) => storageManager.handleCustomRunOperation(opt, data));
 
   // Manages pre-open items (files/folders opened before card starts)
-  storageUtilsIpc.handle.preOpen((opt, data) => storageManager.preOpenOpt(opt, data));
+  storageUtilsIpc.handle.preOpen((opt, data) => storageManager.handlePreOpenOperation(opt, data));
 
   // Updates custom run behavior settings
   storageUtilsIpc.on.customRunBehavior(data => storageManager.updateCustomRunBehavior(data));

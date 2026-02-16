@@ -39,7 +39,7 @@ export default class BrowserDownloadManager {
   private downloadIdentifiers: Map<string, string>;
 
   // Cache for filename existence checks to improve performance
-  private filenameExistenceCache: Map<string, boolean>;
+  private fileExistsCache: Map<string, boolean>;
   private cacheExpirationTime: number = 5000; // 5 seconds
   private cacheTimestamps: Map<string, number>;
 
@@ -48,7 +48,7 @@ export default class BrowserDownloadManager {
 
     this.downloadingItems = [];
     this.downloadIdentifiers = new Map();
-    this.filenameExistenceCache = new Map();
+    this.fileExistsCache = new Map();
     this.cacheTimestamps = new Map();
 
     this.initialWindow();
@@ -278,7 +278,7 @@ export default class BrowserDownloadManager {
 
     // Check if cache is valid (not expired)
     if (cachedTimestamp && now - cachedTimestamp < this.cacheExpirationTime) {
-      const cachedValue = this.filenameExistenceCache.get(filePath);
+      const cachedValue = this.fileExistsCache.get(filePath);
       if (cachedValue !== undefined) {
         return cachedValue;
       }
@@ -286,7 +286,7 @@ export default class BrowserDownloadManager {
 
     // Cache miss or expired - check file system
     const exists = existsSync(filePath);
-    this.filenameExistenceCache.set(filePath, exists);
+    this.fileExistsCache.set(filePath, exists);
     this.cacheTimestamps.set(filePath, now);
 
     return exists;
@@ -297,7 +297,7 @@ export default class BrowserDownloadManager {
    * Called after downloads complete to ensure fresh checks
    */
   private clearFilenameCache(): void {
-    this.filenameExistenceCache.clear();
+    this.fileExistsCache.clear();
     this.cacheTimestamps.clear();
   }
 

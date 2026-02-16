@@ -120,7 +120,7 @@ export async function removeOldInstallations(folder: string) {
       if (entry.isDirectory()) {
         const subdirPath = resolve(folder, entry.name);
         try {
-          const url = await GitManager.remoteUrlFromDir(subdirPath);
+          const url = await GitManager.getRemoteUrlFromDirectory(subdirPath);
           if (url) oldInstallations.push(url);
         } catch (e) {
           // Ignore subdirectories that are not Git repositories or where the remote cannot be determined

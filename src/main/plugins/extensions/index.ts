@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {isDev} from '@lynx_common/utils';
 import ElectronAppManager from '@lynx_main/mainWindow';
-import StorageManager from '@lynx_main/storage/helper';
+import StorageManager from '@lynx_main/storage/storageOperations';
 import {captureException} from '@sentry/electron/main';
 
 import ModuleManager from '../modules';

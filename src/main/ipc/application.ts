@@ -19,7 +19,7 @@ import {
   getWebContentsIfAvailable,
   isDark,
   isGitInstalled,
-  isPwsh7Installed,
+  isPowerShell7Installed,
   noticeAllWindowsDarkMode,
 } from '@lynx_main/utils';
 import {nativeTheme, shell} from 'electron';
@@ -68,7 +68,7 @@ export default async function listenApplication() {
 
   applicationIpc.handle.checkGitInstalled(() => isGitInstalled());
 
-  applicationIpc.handle.checkPwsh7Installed(() => isPwsh7Installed());
+  applicationIpc.handle.checkPwsh7Installed(() => isPowerShell7Installed());
 
   applicationIpc.handle.getCurrentDataPath(() => getAppDataPath());
   applicationIpc.handle.selectAnotherDataPath(() => selectNewAppDataFolder());
