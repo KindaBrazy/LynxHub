@@ -33,8 +33,14 @@ export default function ModuleConfigModal({isOpen, onClose}: Props) {
           let modules: CardModules = [];
 
           if (isDev()) {
-            const devImport = await import('@lynx_module/renderer');
-            modules = devImport.default;
+            try {
+              const modulePath = '@lynx_module/renderer';
+              const devImport = await import(/* @vite-ignore */ modulePath);
+              modules = devImport.default;
+            } catch (e) {
+              console.log('No dev module found, skipping...');
+              modules = [];
+            }
           } else {
             const pluginAddresses = await pluginsIpc.getAddresses();
             const moduleAddresses = pluginAddresses.filter(item => item.type === 'module').map(item => item.address);
