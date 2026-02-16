@@ -94,8 +94,7 @@ export default class ModuleManager {
 
       if (isDev()) {
         try {
-          const modulePath = '../../../../module/src/main';
-          const initialModule: MainModuleImportType = await import(/* @vite-ignore */ modulePath);
+          const initialModule: MainModuleImportType = await import(/* @vite-ignore */ '../../../../module/src/main');
           const allMethods = await initialModule.default(utils);
           // Filter out disabled cards
           const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
