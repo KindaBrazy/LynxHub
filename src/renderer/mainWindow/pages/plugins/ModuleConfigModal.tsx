@@ -34,8 +34,7 @@ export default function ModuleConfigModal({isOpen, onClose}: Props) {
 
           if (isDev()) {
             try {
-              const modulePath = '@lynx_module/renderer';
-              const devImport = await import(/* @vite-ignore */ modulePath);
+              const devImport = await import(/* @vite-ignore */ '@lynx_module/renderer');
               modules = devImport.default;
             } catch (e) {
               console.log('No dev module found, skipping...');

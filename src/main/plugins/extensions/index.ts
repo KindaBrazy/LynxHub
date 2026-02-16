@@ -22,8 +22,9 @@ export default class ExtensionManager {
   public async importPlugins(extensionFolders: string[]) {
     if (isDev()) {
       try {
-        const extensionPath = '../../../../extension/src/main/lynxExtension';
-        const initial: ExtensionImport_Main = await import(/* @vite-ignore */ extensionPath);
+        const initial: ExtensionImport_Main = await import(
+          /* @vite-ignore */ '../../../../extension/src/main/lynxExtension'
+        );
         await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
       } catch (e) {
         console.log('No dev extension found, skipping...');
