@@ -15,7 +15,7 @@ import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
-import {convertArrToObject} from '../../../../utils';
+import {convertArrToObject} from '../../../../../utils';
 
 type Props = {
   presets: string[];

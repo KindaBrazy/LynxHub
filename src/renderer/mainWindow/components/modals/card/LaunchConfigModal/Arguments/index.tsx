@@ -4,12 +4,12 @@ import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {motion} from 'framer-motion';
 import {Dispatch, SetStateAction, useEffect, useState} from 'react';
 
-import {getCardMethod, useAllCardMethods} from '../../../../plugins/modules';
-import {tabContentVariants} from '../ExtensionsModal/Constants';
-import AddArguments from './ArgumentAdd';
-import ManageArguments from './ArgumentManage';
-import PresetsManager from './ArgumentManagePresets';
-import PreviewArguments from './ArgumentsPreview';
+import {getCardMethod, useAllCardMethods} from '../../../../../plugins/modules';
+import {tabContentVariants} from '../../ExtensionsModal/Constants';
+import AddArguments from './Add';
+import ManageArguments from './Manage';
+import PresetsManager from './ManagePresets';
+import PreviewArguments from './Preview';
 
 type Props = {
   setChosenArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;

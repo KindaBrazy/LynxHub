@@ -9,12 +9,12 @@ import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
 import {useCallback, useEffect, useState} from 'react';
 
-import LynxTooltip from '../../../LynxTooltip';
-import LaunchConfigSection from './Section';
-import TerminalCommandItem from './TerminalCommand-Item';
+import LynxTooltip from '../../../../LynxTooltip';
+import LaunchConfigSection from '../Section';
+import TerminalCommandItem from '../TerminalCommand-Item';
 
 type Props = {id: string};
-export default function CustomRunCommands({id}: Props) {
+export default function Commands({id}: Props) {
   const [commands, setCommands] = useState<string[]>([]);
 
   useEffect(() => {

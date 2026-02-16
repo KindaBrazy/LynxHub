@@ -21,11 +21,11 @@ import {isEmpty, some} from 'lodash';
 import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 
-import {useTabVisibility} from '../../../../layouts/tabs/utils';
-import {useGetArgumentsByID} from '../../../../plugins/modules';
-import {getArgumentDefaultValue, getFilteredArguments} from '../../../../utils/moduleArguments';
-import LynxScroll from '../../../LynxScroll';
-import ArgumentCategory from './ArgumentAddCategory';
+import {useTabVisibility} from '../../../../../layouts/tabs/utils';
+import {useGetArgumentsByID} from '../../../../../plugins/modules';
+import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../utils/moduleArguments';
+import LynxScroll from '../../../../LynxScroll';
+import ArgumentCategory from './AddCategory';
 
 type Props = {
   addArgumentsModal: ReturnType<typeof useDisclosure>;
