@@ -112,6 +112,36 @@ export class ValidateCards {
     }
   }
 
+  private async validatePathBasedCard(card: InstalledCard): Promise<PathCards | null> {
+    if (!card.dir || path.basename(card.dir).startsWith('.')) return null;
+
+    const exist = await this.dirExist(card.dir);
+    return exist ? {id: card.id, dir: card.dir} : null;
+  }
+
+  private async validateModuleBasedCard(card: InstalledCard, pathCards: PathCards[]): Promise<InstalledCard | null> {
+    const {moduleManager} = classHolder;
+    const isInstalledMethod = await moduleManager?.getMethodsById(card.id)?.().isInstalled;
+
+    if (!isInstalledMethod) return null;
+
+    const onInstalledDirExist = async (card: InstalledCard) => {
+      if (card.dir) {
+        pathCards.push({id: card.id, dir: card.dir});
+        return await this.dirExist(card.dir);
+      }
+      return false;
+    };
+
+    const installed = await isInstalledMethod(() => onInstalledDirExist(card));
+    return installed ? card : null;
+  }
+
+  private setupDirectoryWatchers(pathCards: PathCards[]) {
+    this.dirs = new Set(pathCards.map(card => path.resolve(path.dirname(card.dir))));
+    this.startWatching();
+  }
+
   /**
    * Validates the given cards by checking if their directories are Git repositories.
    * @param {InstalledCards} cards - The cards to validate
@@ -119,36 +149,24 @@ export class ValidateCards {
    */
   private async validateCards(cards: InstalledCards): Promise<InstalledCards> {
     const pathCards: PathCards[] = [];
-
     const moduleCards: InstalledCards = [];
 
-    const onInstalledDirExist = async (card: InstalledCard) => {
-      if (card.dir) {
-        pathCards.push({id: card.id, dir: card.dir});
-        return await this.dirExist(card.dir);
-      }
-
-      return false;
-    };
-
-    const {moduleManager} = classHolder;
-
     for (const card of cards) {
-      const isInstalledMethod = moduleManager?.getMethodsById(card.id)?.().isInstalled;
-      if (isInstalledMethod) {
-        const installed = await isInstalledMethod(() => onInstalledDirExist(card));
-        if (installed) moduleCards.push(card);
-      } else if (card.dir && !path.basename(card.dir).startsWith('.')) {
-        const exist = await this.dirExist(card.dir);
-        if (exist) {
-          pathCards.push({id: card.id, dir: card.dir!});
-        }
+      const {moduleManager} = classHolder;
+      const hasModuleMethod = moduleManager?.getMethodsById(card.id)?.().isInstalled;
+
+      if (hasModuleMethod) {
+        const validCard = await this.validateModuleBasedCard(card, pathCards);
+        console.log('Module Valid: ', card.id, !!validCard);
+        if (validCard) moduleCards.push(validCard);
+      } else {
+        const validCard = await this.validatePathBasedCard(card);
+        console.log('Path Valid: ', card.id, !!validCard);
+        if (validCard) pathCards.push(validCard);
       }
     }
 
-    this.dirs = new Set(pathCards.map(card => path.resolve(path.dirname(card.dir!))));
-
-    this.startWatching();
+    this.setupDirectoryWatchers(pathCards);
 
     return [...pathCards, ...moduleCards];
   }

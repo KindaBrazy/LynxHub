@@ -143,18 +143,14 @@ export async function removeOldInstallations(folder: string) {
   return oldInstallations;
 }
 
-export function isVersionCompatible(
+function checkSubscriptionStageCompatibility(
   version: VersionItem,
-  type: 'module' | 'extension',
   currentStage: SubscribeStages,
 ): {compatible: boolean; reason: string | undefined} {
-  // 1. Subscribe Stage Check
   switch (currentStage) {
-    // Have access to all stages
     case 'insider':
-      break;
+      return {compatible: true, reason: undefined};
 
-    // Have access to public and early access stages
     case 'early_access':
       if (version.stage === 'insider') {
         return {
@@ -164,9 +160,8 @@ export function isVersionCompatible(
             `Please upgrade your plan to get access.`,
         };
       }
-      break;
+      return {compatible: true, reason: undefined};
 
-    // Have access to only the public stage
     case 'public':
       if (version.stage !== 'public') {
         const requiredStage = version.stage === 'insider' ? 'Insider' : 'Early Access';
@@ -177,13 +172,14 @@ export function isVersionCompatible(
             `Please upgrade your plan to get access.`,
         };
       }
-      break;
+      return {compatible: true, reason: undefined};
   }
+}
 
+function checkPlatformCompatibility(version: VersionItem): {compatible: boolean; reason: string | undefined} {
   const currentPlatform = platform();
-
-  // 2. Platform Check
   const platforms = version.platforms;
+
   if (!platforms || !platforms.includes(currentPlatform)) {
     const supportedPlatforms = platforms?.join(', ') || 'none';
     return {
@@ -194,42 +190,62 @@ export function isVersionCompatible(
     };
   }
 
-  // 3. Engines/API Check
+  return {compatible: true, reason: undefined};
+}
+
+function checkApiVersionCompatibility(
+  version: VersionItem,
+  type: 'module' | 'extension',
+): {compatible: boolean; reason: string | undefined} {
   const engines = version.engines;
-  if (engines && typeof engines === 'object') {
-    const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
-    const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
 
-    const targetCheck = type === 'extension' ? extensionCheck : moduleCheck;
-    const requiredRange = engines[targetCheck.api as keyof PluginEngines];
-
-    if (requiredRange) {
-      if (!satisfies(targetCheck.version, requiredRange)) {
-        return {
-          compatible: false,
-          reason:
-            `Version ${version.version} requires a different application version.\n` +
-            `It needs ${type} api version ${requiredRange}, but current version api is ${targetCheck.version}.`,
-        };
-      }
-    } else {
-      // This suggests the package itself is malformed or invalid.
-      return {
-        compatible: false,
-        reason:
-          `Could not verify compatibility for version ${version.version}.\n` +
-          `The package metadata may be missing or corrupted.`,
-      };
-    }
-  } else {
-    // A fallback for the same reason as above.
+  if (!engines || typeof engines !== 'object') {
     return {
       compatible: false,
       reason: `Could not find compatibility information for version ${version.version}.`,
     };
   }
 
-  // If all checks pass, it's compatible.
+  const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
+  const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
+  const targetCheck = type === 'extension' ? extensionCheck : moduleCheck;
+  const requiredRange = engines[targetCheck.api as keyof PluginEngines];
+
+  if (!requiredRange) {
+    return {
+      compatible: false,
+      reason:
+        `Could not verify compatibility for version ${version.version}.\n` +
+        `The package metadata may be missing or corrupted.`,
+    };
+  }
+
+  if (!satisfies(targetCheck.version, requiredRange)) {
+    return {
+      compatible: false,
+      reason:
+        `Version ${version.version} requires a different application version.\n` +
+        `It needs ${type} api version ${requiredRange}, but current version api is ${targetCheck.version}.`,
+    };
+  }
+
+  return {compatible: true, reason: undefined};
+}
+
+export function isVersionCompatible(
+  version: VersionItem,
+  type: 'module' | 'extension',
+  currentStage: SubscribeStages,
+): {compatible: boolean; reason: string | undefined} {
+  const stageCheck = checkSubscriptionStageCompatibility(version, currentStage);
+  if (!stageCheck.compatible) return stageCheck;
+
+  const platformCheck = checkPlatformCompatibility(version);
+  if (!platformCheck.compatible) return platformCheck;
+
+  const apiCheck = checkApiVersionCompatibility(version, type);
+  if (!apiCheck.compatible) return apiCheck;
+
   return {compatible: true, reason: undefined};
 }
 
