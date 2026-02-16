@@ -25,6 +25,31 @@ class BaseStorage {
   private readonly CURRENT_VERSION: number = 0.95;
   private migratedTo: number = 0; // Tracks migration state for deferred operations
 
+  /**
+   * Migration functions ordered by version
+   */
+  private readonly migrations = new Map<number, () => void>([
+    [0.4, () => this.migrate_0_4()],
+    [0.5, () => this.migrate_0_5()],
+    [0.6, () => this.migrate_0_6()],
+    [0.7, () => this.migrate_0_7()],
+    [0.81, () => this.migrate_0_81()],
+    [0.82, () => this.migrate_0_82()],
+    [0.83, () => this.migrate_0_83()],
+    [0.84, () => this.migrate_0_84()],
+    [0.85, () => this.migrate_0_85()],
+    [0.86, () => this.migrate_0_86()],
+    [0.87, () => this.migrate_0_87()],
+    [0.88, () => this.migrate_0_88()],
+    [0.89, () => this.migrate_0_89()],
+    [0.9, () => this.migrate_0_9()],
+    [0.91, () => this.migrate_0_91()],
+    [0.92, () => this.migrate_0_92()],
+    [0.93, () => this.migrate_0_93()],
+    [0.94, () => this.migrate_0_94()],
+    [0.95, () => this.migrate_0_95()],
+  ]);
+
   private readonly DEFAULT_DATA: StorageTypes = {
     storage: {version: 0.95},
     cards: {
@@ -190,244 +215,8 @@ class BaseStorage {
         return;
       }
 
-      // Migration functions ordered by the version they migrate *from*
-      // The key is the version that requires this migration
-      const migrations = new Map<number, () => void>([
-        [
-          0.4,
-          () => {
-            this.storage.data.terminal = this.DEFAULT_DATA.terminal;
-          },
-        ],
-        [
-          0.5,
-          () => {
-            this.storage.data.cards.duplicated = [];
-          },
-        ],
-        [
-          0.6,
-          () => {
-            this.storage.data.app.openLastSize = false;
-            this.storage.data.app.dynamicAppTitle = true;
-            this.storage.data.app.lastSize = undefined;
-            this.storage.data.cards.checkUpdateInterval = 30;
-          },
-        ],
-        [
-          0.7,
-          () => {
-            // @ts-expect-error: in old versions, there isn't download things
-            this.storage.data.browser = {
-              favoriteAddress: [],
-              historyAddress: [],
-              recentAddress: [],
-              favIcons: [],
-              userAgent: 'lynxhub',
-              customUserAgent: getUserAgent('lynxhub'),
-            };
-            this.storage.data.app.closeTabConfirm = true;
-            this.storage.data.app.hotkeys = Get_Default_Hotkeys(platform());
-            this.storage.data.app.openLinkExternal = false;
-            this.storage.data.cards.zoomFactor = 1;
-            this.storage.data.app.hardwareAcceleration = true;
-            this.storage.data.app.disableLoadingAnimations = false;
-            this.storage.data.notification = {readNotifs: []};
-            this.storage.data.app.collectErrors = true;
-          },
-        ],
-        [
-          0.81,
-          () => {
-            this.storage.data.terminal.closeTabOnExit = true;
-          },
-        ],
-        [
-          0.82,
-          () => {
-            const recents = this.storage.data.browser.recentAddress as unknown[] as FavIcons[];
-            const urls = recents.map(recent => recent.url);
-            this.storage.data.browser.favoriteAddress = [];
-            this.storage.data.browser.favIcons = recents;
-            this.storage.data.browser.historyAddress = urls;
-            this.storage.data.browser.recentAddress = urls;
-          },
-        ],
-        [
-          0.83,
-          () => {
-            this.storage.data.cards.cardTerminalPreCommands = [];
-            this.storage.data.app.addBreadcrumbs = true;
-            this.migratedTo = 0.84;
-          },
-        ],
-        [
-          0.84,
-          () => {
-            this.storage.data.app.addBreadcrumbs = true;
-          },
-        ],
-        [
-          0.85,
-          () => {
-            this.storage.data.app.inited = false;
-          },
-        ],
-        [
-          0.86,
-          () => {
-            // @ts-expect-error: in old versions, there isn't disable cards
-            this.storage.data.plugin = {migrated: false};
-          },
-        ],
-        [
-          0.87,
-          () => {
-            const behavior = this.storage.data.cardsConfig.customRunBehavior;
-            if (!isEmpty(behavior)) {
-              // @ts-ignore-next-line
-              this.storage.data.cardsConfig.customRunBehavior = behavior.map((item: CustomRunBehaviorData_Legacy) => {
-                return {
-                  cardID: item.cardID,
-                  browser: item.browser === 'defaultBrowser' ? 'defaultBrowser' : 'appBrowser',
-                  terminal: item.terminal as CustomRunBehaviorData['terminal'],
-                  urlCatch: {
-                    delay: 10,
-                    customUrl: undefined,
-                    type: item.browser === 'doNothing' ? 'nothing' : 'module',
-                    findLine: undefined,
-                  },
-                };
-              });
-            }
-            this.storage.data.app.startMaximized = false;
-            if (this.storage.data.terminal.scrollBack === 10000) {
-              this.storage.data.terminal.scrollBack = 1000;
-            }
-          },
-        ],
-        [
-          0.88,
-          () => {
-            this.storage.data.terminal.cdHistory = [];
-          },
-        ],
-        [
-          0.89,
-          () => {
-            // Ensure quickCommands exists on terminal config
-            if (!this.storage.data.terminal.quickCommands) {
-              this.storage.data.terminal.quickCommands = [];
-            }
-
-            // Normalize customRunBehavior.urlCatch.moduleDelay
-            const behavior = this.storage.data.cardsConfig.customRunBehavior as CustomRunBehaviorData[];
-            if (!isEmpty(behavior)) {
-              this.storage.data.cardsConfig.customRunBehavior = behavior.map(item => {
-                const urlCatch = item.urlCatch || ({} as CustomRunBehaviorData['urlCatch']);
-
-                return {
-                  ...item,
-                  urlCatch: {
-                    ...urlCatch,
-                    moduleDelay:
-                      urlCatch.moduleDelay && Number.isFinite(urlCatch.moduleDelay) ? urlCatch.moduleDelay : 0,
-                  },
-                } as CustomRunBehaviorData;
-              });
-            }
-
-            // Ensure app.hotkeys contains all default hotkeys (including newly added ones)
-            const currentHotkeys = this.storage.data.app.hotkeys || [];
-            const defaultHotkeys = Get_Default_Hotkeys(platform());
-
-            const currentNames = currentHotkeys.map(h => h.name);
-            const mergedHotkeys = [...currentHotkeys];
-
-            defaultHotkeys.forEach(def => {
-              if (!currentNames.includes(def.name)) {
-                mergedHotkeys.push(def);
-              }
-            });
-
-            this.storage.data.app.hotkeys = mergedHotkeys;
-          },
-        ],
-        [
-          0.9,
-          () => {
-            this.storage.data.performance = this.DEFAULT_DATA.performance;
-          },
-        ],
-        [
-          0.91,
-          () => {
-            // Add download location and behavior settings if they don't exist
-            if (!this.storage.data.browser.downloadLocation) {
-              this.storage.data.browser.downloadLocation = join(app.getPath('downloads'), APP_NAME);
-            }
-            if (!this.storage.data.browser.downloadBehavior) {
-              this.storage.data.browser.downloadBehavior = 'default';
-            }
-            // Add cleared downloads tracking if it doesn't exist
-            if (!this.storage.data.browser.clearedDownloads) {
-              this.storage.data.browser.clearedDownloads = [];
-            }
-          },
-        ],
-        [
-          0.92,
-          () => {
-            // Add volume settings if they don't exist
-            if (!this.storage.data.browser.volumeSettings) {
-              this.storage.data.browser.volumeSettings = {
-                globalMuted: false,
-                tabVolumes: {},
-              };
-            }
-          },
-        ],
-        [
-          0.93,
-          () => {
-            // Add disabledCards for module card filtering
-            if (!this.storage.data.plugin.disabledCards) {
-              this.storage.data.plugin.disabledCards = [];
-            }
-          },
-        ],
-        [
-          0.94,
-          () => {
-            // Ensure app.hotkeys contains all default hotkeys (including toggleDevTools)
-            const currentHotkeys = this.storage.data.app.hotkeys || [];
-            const defaultHotkeys = Get_Default_Hotkeys(platform());
-
-            const currentNames = currentHotkeys.map(h => h.name);
-            const mergedHotkeys = [...currentHotkeys];
-
-            defaultHotkeys.forEach(def => {
-              if (!currentNames.includes(def.name)) {
-                mergedHotkeys.push(def);
-              }
-            });
-
-            this.storage.data.app.hotkeys = mergedHotkeys;
-          },
-        ],
-        [
-          0.95,
-          () => {
-            // Add enableLigatures setting for terminal font ligatures
-            if (this.storage.data.terminal.enableLigatures === undefined) {
-              this.storage.data.terminal.enableLigatures = true;
-            }
-          },
-        ],
-      ]);
-
-      // Apply all necessary migrations sequentially
-      for (const [version, migrationFn] of migrations.entries()) {
+      // Apply all necessary migrations sequentially using migration chain
+      for (const [version, migrationFn] of this.migrations.entries()) {
         if (storeVersion < version) {
           console.log(`Applying migration for v${version}...`);
           migrationFn();
@@ -439,6 +228,190 @@ class BaseStorage {
     } catch (e) {
       console.error('Failed to migrate storage', e);
     }
+  }
+
+  private migrate_0_4() {
+    this.storage.data.terminal = this.DEFAULT_DATA.terminal;
+  }
+
+  private migrate_0_5() {
+    this.storage.data.cards.duplicated = [];
+  }
+
+  private migrate_0_6() {
+    this.storage.data.app.openLastSize = false;
+    this.storage.data.app.dynamicAppTitle = true;
+    this.storage.data.app.lastSize = undefined;
+    this.storage.data.cards.checkUpdateInterval = 30;
+  }
+
+  private migrate_0_7() {
+    // @ts-expect-error: in old versions, there isn't download things
+    this.storage.data.browser = {
+      favoriteAddress: [],
+      historyAddress: [],
+      recentAddress: [],
+      favIcons: [],
+      userAgent: 'lynxhub',
+      customUserAgent: getUserAgent('lynxhub'),
+    };
+    this.storage.data.app.closeTabConfirm = true;
+    this.storage.data.app.hotkeys = Get_Default_Hotkeys(platform());
+    this.storage.data.app.openLinkExternal = false;
+    this.storage.data.cards.zoomFactor = 1;
+    this.storage.data.app.hardwareAcceleration = true;
+    this.storage.data.app.disableLoadingAnimations = false;
+    this.storage.data.notification = {readNotifs: []};
+    this.storage.data.app.collectErrors = true;
+  }
+
+  private migrate_0_81() {
+    this.storage.data.terminal.closeTabOnExit = true;
+  }
+
+  private migrate_0_82() {
+    const recents = this.storage.data.browser.recentAddress as unknown[] as FavIcons[];
+    const urls = recents.map(recent => recent.url);
+    this.storage.data.browser.favoriteAddress = [];
+    this.storage.data.browser.favIcons = recents;
+    this.storage.data.browser.historyAddress = urls;
+    this.storage.data.browser.recentAddress = urls;
+  }
+
+  private migrate_0_83() {
+    this.storage.data.cards.cardTerminalPreCommands = [];
+    this.storage.data.app.addBreadcrumbs = true;
+    this.migratedTo = 0.84;
+  }
+
+  private migrate_0_84() {
+    this.storage.data.app.addBreadcrumbs = true;
+  }
+
+  private migrate_0_85() {
+    this.storage.data.app.inited = false;
+  }
+
+  private migrate_0_86() {
+    // @ts-expect-error: in old versions, there isn't disable cards
+    this.storage.data.plugin = {migrated: false};
+  }
+
+  private migrate_0_87() {
+    const behavior = this.storage.data.cardsConfig.customRunBehavior;
+    if (!isEmpty(behavior)) {
+      // @ts-ignore-next-line
+      this.storage.data.cardsConfig.customRunBehavior = behavior.map((item: CustomRunBehaviorData_Legacy) => {
+        return {
+          cardID: item.cardID,
+          browser: item.browser === 'defaultBrowser' ? 'defaultBrowser' : 'appBrowser',
+          terminal: item.terminal as CustomRunBehaviorData['terminal'],
+          urlCatch: {
+            delay: 10,
+            customUrl: undefined,
+            type: item.browser === 'doNothing' ? 'nothing' : 'module',
+            findLine: undefined,
+          },
+        };
+      });
+    }
+    this.storage.data.app.startMaximized = false;
+    if (this.storage.data.terminal.scrollBack === 10000) {
+      this.storage.data.terminal.scrollBack = 1000;
+    }
+  }
+
+  private migrate_0_88() {
+    this.storage.data.terminal.cdHistory = [];
+  }
+
+  private migrate_0_89() {
+    if (!this.storage.data.terminal.quickCommands) {
+      this.storage.data.terminal.quickCommands = [];
+    }
+
+    this.normalizeCustomRunBehavior();
+    this.mergeDefaultHotkeys();
+  }
+
+  private migrate_0_9() {
+    this.storage.data.performance = this.DEFAULT_DATA.performance;
+  }
+
+  private migrate_0_91() {
+    if (!this.storage.data.browser.downloadLocation) {
+      this.storage.data.browser.downloadLocation = join(app.getPath('downloads'), APP_NAME);
+    }
+    if (!this.storage.data.browser.downloadBehavior) {
+      this.storage.data.browser.downloadBehavior = 'default';
+    }
+    if (!this.storage.data.browser.clearedDownloads) {
+      this.storage.data.browser.clearedDownloads = [];
+    }
+  }
+
+  private migrate_0_92() {
+    if (!this.storage.data.browser.volumeSettings) {
+      this.storage.data.browser.volumeSettings = {
+        globalMuted: false,
+        tabVolumes: {},
+      };
+    }
+  }
+
+  private migrate_0_93() {
+    if (!this.storage.data.plugin.disabledCards) {
+      this.storage.data.plugin.disabledCards = [];
+    }
+  }
+
+  private migrate_0_94() {
+    this.mergeDefaultHotkeys();
+  }
+
+  private migrate_0_95() {
+    if (this.storage.data.terminal.enableLigatures === undefined) {
+      this.storage.data.terminal.enableLigatures = true;
+    }
+  }
+
+  /**
+   * Helper: Normalizes customRunBehavior.urlCatch.moduleDelay
+   */
+  private normalizeCustomRunBehavior() {
+    const behavior = this.storage.data.cardsConfig.customRunBehavior as CustomRunBehaviorData[];
+    if (!isEmpty(behavior)) {
+      this.storage.data.cardsConfig.customRunBehavior = behavior.map(item => {
+        const urlCatch = item.urlCatch || ({} as CustomRunBehaviorData['urlCatch']);
+
+        return {
+          ...item,
+          urlCatch: {
+            ...urlCatch,
+            moduleDelay: urlCatch.moduleDelay && Number.isFinite(urlCatch.moduleDelay) ? urlCatch.moduleDelay : 0,
+          },
+        } as CustomRunBehaviorData;
+      });
+    }
+  }
+
+  /**
+   * Helper: Merges default hotkeys with existing ones
+   */
+  private mergeDefaultHotkeys() {
+    const currentHotkeys = this.storage.data.app.hotkeys || [];
+    const defaultHotkeys = Get_Default_Hotkeys(platform());
+
+    const currentNames = currentHotkeys.map(h => h.name);
+    const mergedHotkeys = [...currentHotkeys];
+
+    defaultHotkeys.forEach(def => {
+      if (!currentNames.includes(def.name)) {
+        mergedHotkeys.push(def);
+      }
+    });
+
+    this.storage.data.app.hotkeys = mergedHotkeys;
   }
 
   public getData<K extends keyof StorageTypes>(key: K): StorageTypes[K] {
