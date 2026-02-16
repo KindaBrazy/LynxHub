@@ -41,21 +41,21 @@ export default class GitManager {
   /**
    * Locates a card based on the repository URL.
    * @param url - The URL of the repository.
-   * @param dir - Optional directory instead of user choosing
+   * @param directory - Optional directory instead of user choosing
    * @returns A promise that resolves to the path of the card or undefined.
    */
-  public static async locateCard(url: string, dir?: string): Promise<string | undefined> {
+  public static async locateCard(url: string, directory?: string): Promise<string | undefined> {
     try {
       let resultPath: string | undefined;
-      if (dir) {
-        resultPath = dir;
+      if (directory) {
+        resultPath = directory;
       } else {
         resultPath = await openDialog({properties: ['openDirectory']});
       }
 
       if (!resultPath) return undefined;
 
-      const remote = await this.remoteUrlFromDir(resultPath);
+      const remote = await this.getRemoteUrlFromDirectory(resultPath);
 
       if (!remote) return undefined;
 
@@ -130,7 +130,7 @@ export default class GitManager {
    * @param dir - The directory to check.
    * @returns A promise that resolves to true if the directory is a Git repository, false otherwise.
    */
-  public static async isDirRepo(dir: string): Promise<boolean> {
+  public static async isGitRepository(dir: string): Promise<boolean> {
     if (!(await checkPathExists(dir))) return false;
     try {
       return await simpleGit(dir).checkIsRepo(CheckRepoActions.IS_REPO_ROOT);
@@ -159,7 +159,7 @@ export default class GitManager {
    * @param dir - The directory of the local repository.
    * @returns A promise that resolves to the formatted remote URL or undefined.
    */
-  public static async remoteUrlFromDir(dir: string): Promise<string | undefined> {
+  public static async getRemoteUrlFromDirectory(dir: string): Promise<string | undefined> {
     try {
       const result: RemoteWithRefs[] = await simpleGit(dir).getRemotes(true);
       return GitManager.formatGitUrl(result[0]?.refs.fetch);
@@ -282,11 +282,11 @@ export default class GitManager {
         })
         .catch(async error => {
           // Check if this is just stderr progress output being misinterpreted as an error
-          if (this.isProgressOutputError(error) && (await GitManager.isDirRepo(targetDirectory))) {
+          if (this.isProgressOutputError(error) && (await GitManager.isGitRepository(targetDirectory))) {
             console.log('Clone completed successfully (stderr progress output was misinterpreted as error)');
             this.handleProgressComplete();
             resolve();
-          } else if (this.isDestinationExistsError(error) && (await GitManager.isDirRepo(targetDirectory))) {
+          } else if (this.isDestinationExistsError(error) && (await GitManager.isGitRepository(targetDirectory))) {
             // Directory already exists and is a valid repo - treat as success
             console.log('Clone skipped: destination already exists and is a valid git repository');
             this.handleProgressComplete();
@@ -324,11 +324,11 @@ export default class GitManager {
         })
         .catch(async error => {
           // Check if this is just stderr progress output being misinterpreted as an error
-          if (this.isProgressOutputError(error) && (await GitManager.isDirRepo(targetDirectory))) {
+          if (this.isProgressOutputError(error) && (await GitManager.isGitRepository(targetDirectory))) {
             console.log('Shallow clone completed successfully (stderr progress output was misinterpreted as error)');
             this.handleProgressComplete();
             resolve();
-          } else if (this.isDestinationExistsError(error) && (await GitManager.isDirRepo(targetDirectory))) {
+          } else if (this.isDestinationExistsError(error) && (await GitManager.isGitRepository(targetDirectory))) {
             // Directory already exists and is a valid repo - treat as success
             console.log('Clone skipped: destination already exists and is a valid git repository');
             this.handleProgressComplete();
@@ -389,7 +389,7 @@ export default class GitManager {
     }
   }
 
-  public async unShallow(directory: string): Promise<void> {
+  public async convertToFullClone(directory: string): Promise<void> {
     const targetDirectory = path.resolve(directory);
     try {
       await this.git.cwd(targetDirectory);

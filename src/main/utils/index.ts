@@ -276,14 +276,14 @@ export function getUserAgent(type?: AgentTypes) {
  * Returns the encrypted data as a hexadecimal string.
  * Provides a warning if encryption is not available.
  */
-export function lynxEncryptString(data: string): string {
+export function encryptString(data: string): string {
   if (safeStorage.isEncryptionAvailable()) {
     return safeStorage.encryptString(data).toString('hex');
   }
   console.warn('safeStorage encryption not available. Data will not be encrypted.');
   return data; // Fallback: return original data if encryption isn't available
 }
-export function lynxEncryptStrings(data: string[]): string[] {
+export function encryptStrings(data: string[]): string[] {
   if (safeStorage.isEncryptionAvailable()) {
     return data.map(item => safeStorage.encryptString(item).toString('hex'));
   }
@@ -296,7 +296,7 @@ export function lynxEncryptStrings(data: string[]): string[] {
  * Expects the input to be a hexadecimal string.
  * Provides a warning and returns the original string if decryption fails or isn't available.
  */
-export function lynxDecryptString(encryptedData: string): string {
+export function decryptString(encryptedData: string): string {
   if (safeStorage.isEncryptionAvailable()) {
     try {
       return safeStorage.decryptString(Buffer.from(encryptedData, 'hex'));
@@ -307,7 +307,7 @@ export function lynxDecryptString(encryptedData: string): string {
   }
   return encryptedData; // Fallback: return original data if encryption isn't available
 }
-export function lynxDecryptStrings(encryptedData: string[]): string[] {
+export function decryptStrings(encryptedData: string[]): string[] {
   if (safeStorage.isEncryptionAvailable()) {
     try {
       return encryptedData.map(item => safeStorage.decryptString(Buffer.from(item, 'hex')));
@@ -372,7 +372,7 @@ export async function isGitInstalled(): Promise<string> {
   });
 }
 
-export async function isPwsh7Installed(): Promise<string> {
+export async function isPowerShell7Installed(): Promise<string> {
   return new Promise((resolve, reject) => {
     // Flag to ensure the promise is only settled once.
     let isSettled = false;

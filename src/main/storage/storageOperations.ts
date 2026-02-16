@@ -17,14 +17,14 @@ import {compareUrls, isValidURL} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_main/ipc/storage';
 import classHolder from '@lynx_main/managers/classHolder';
 import {
+  decryptString,
+  decryptStrings,
+  encryptString,
+  encryptStrings,
   getAbsolutePath,
   getExePath,
   getRelativePath,
   isPortable,
-  lynxDecryptString,
-  lynxDecryptStrings,
-  lynxEncryptString,
-  lynxEncryptStrings,
 } from '@lynx_main/utils';
 import lodash from 'lodash';
 
@@ -98,20 +98,20 @@ class StorageManager extends BaseStorage {
     url: string,
   ): Promise<void> {
     let addressArray = this.getBrowserDataSecurely()[arrayKey];
-    let existUrlIndex = -1;
+    let existingUrlIndex = -1;
 
     // Find existing URL by comparing normalized URLs
     for (let i = 0; i < addressArray.length; i++) {
       if (!isValidURL([addressArray[i], url])) continue;
       if (await compareUrls(addressArray[i], url)) {
-        existUrlIndex = i;
+        existingUrlIndex = i;
         break;
       }
     }
 
     // Move to front if exists, otherwise prepend
-    if (existUrlIndex !== -1) {
-      addressArray = [url, ...addressArray.slice(0, existUrlIndex), ...addressArray.slice(existUrlIndex + 1)];
+    if (existingUrlIndex !== -1) {
+      addressArray = [url, ...addressArray.slice(0, existingUrlIndex), ...addressArray.slice(existingUrlIndex + 1)];
     } else {
       addressArray = [url, ...addressArray];
     }
@@ -134,13 +134,13 @@ class StorageManager extends BaseStorage {
   public decryptBrowserData() {
     const rawData = this.getData('browser');
     this.decryptedBrowserData = {
-      recentAddress: lynxDecryptStrings(rawData.recentAddress),
-      favoriteAddress: lynxDecryptStrings(rawData.favoriteAddress),
-      historyAddress: lynxDecryptStrings(rawData.historyAddress),
+      recentAddress: decryptStrings(rawData.recentAddress),
+      favoriteAddress: decryptStrings(rawData.favoriteAddress),
+      historyAddress: decryptStrings(rawData.historyAddress),
       favIcons: rawData.favIcons.map(item => ({
-        url: lynxDecryptString(item.url),
-        favIcon: lynxDecryptString(item.favIcon),
-        title: item.title ? lynxDecryptString(item.title) : undefined,
+        url: decryptString(item.url),
+        favIcon: decryptString(item.favIcon),
+        title: item.title ? decryptString(item.title) : undefined,
       })),
     };
   }
@@ -334,7 +334,7 @@ class StorageManager extends BaseStorage {
     storageUtilsIpc.send.onHomeCategory(data);
   }
 
-  public homeCategoryOpt(opt: StorageOperation, data: string[]) {
+  public handleHomeCategoryOperation(opt: StorageOperation, data: string[]) {
     let result: HomeCategory = [];
 
     switch (opt) {
@@ -378,7 +378,7 @@ class StorageManager extends BaseStorage {
     }
   }
 
-  public preCommandOpt(opt: StorageOperation, data: PreCommands) {
+  public handlePreCommandOperation(opt: StorageOperation, data: PreCommands) {
     let result: string[] = [];
 
     switch (opt) {
@@ -432,7 +432,7 @@ class StorageManager extends BaseStorage {
     }
   }
 
-  public customRunOpt(opt: StorageOperation, data: PreCommands) {
+  public handleCustomRunOperation(opt: StorageOperation, data: PreCommands) {
     let result: string[] = [];
 
     switch (opt) {
@@ -458,15 +458,15 @@ class StorageManager extends BaseStorage {
 
   public addPreOpen(cardId: string, open: {type: 'folder' | 'file'; path: string}): void {
     const preOpen = this.getData('cardsConfig').preOpen;
-    const existCustomRun = preOpen.findIndex(custom => custom.cardId === cardId);
+    const existingCustomRunIndex = preOpen.findIndex(custom => custom.cardId === cardId);
 
     let targetOpen = open;
     if (targetOpen.path && isPortable()) {
       targetOpen = {type: targetOpen.type, path: getRelativePath(getExePath(), open.path)};
     }
 
-    if (existCustomRun !== -1) {
-      preOpen[existCustomRun].data.push(targetOpen);
+    if (existingCustomRunIndex !== -1) {
+      preOpen[existingCustomRunIndex].data.push(targetOpen);
     } else {
       preOpen.push({cardId, data: [targetOpen]});
     }
@@ -483,7 +483,7 @@ class StorageManager extends BaseStorage {
     this.updateData('cardsConfig', {preOpen});
   }
 
-  public preOpenOpt(opt: StorageOperation, data: PreOpen): PreOpenData {
+  public handlePreOpenOperation(opt: StorageOperation, data: PreOpen): PreOpenData {
     let result: PreOpenData = [];
 
     switch (opt) {
@@ -577,19 +577,19 @@ class StorageManager extends BaseStorage {
 
     // Encrypt data before storing
     if (encryptedData.recentAddress) {
-      encryptedData.recentAddress = lynxEncryptStrings(encryptedData.recentAddress);
+      encryptedData.recentAddress = encryptStrings(encryptedData.recentAddress);
     }
     if (encryptedData.favoriteAddress) {
-      encryptedData.favoriteAddress = lynxEncryptStrings(encryptedData.favoriteAddress);
+      encryptedData.favoriteAddress = encryptStrings(encryptedData.favoriteAddress);
     }
     if (encryptedData.historyAddress) {
-      encryptedData.historyAddress = lynxEncryptStrings(encryptedData.historyAddress);
+      encryptedData.historyAddress = encryptStrings(encryptedData.historyAddress);
     }
     if (encryptedData.favIcons) {
       encryptedData.favIcons = encryptedData.favIcons.map(item => ({
-        url: lynxEncryptString(item.url),
-        favIcon: lynxEncryptString(item.favIcon),
-        title: item.title ? lynxEncryptString(item.title) : undefined,
+        url: encryptString(item.url),
+        favIcon: encryptString(item.favIcon),
+        title: item.title ? encryptString(item.title) : undefined,
       }));
     }
 

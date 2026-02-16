@@ -28,7 +28,7 @@ async function getRepoFolders(dir: string): Promise<string[]> {
 
     const repoFolders = await Promise.all(
       folders.map(async folder => {
-        const isRepo = await GitManager.isDirRepo(path.join(dir, folder));
+        const isRepo = await GitManager.isGitRepository(path.join(dir, folder));
         return isRepo ? folder : null;
       }),
     );
@@ -85,7 +85,7 @@ export async function getExtensionsDetails(dir: string): Promise<ExtensionsData 
         if (!loadingExtensions) return null;
         const extensionDir = path.join(dir, extension);
         const [remoteUrl, size] = await Promise.all([
-          GitManager.remoteUrlFromDir(extensionDir).catch(() => ''),
+          GitManager.getRemoteUrlFromDirectory(extensionDir).catch(() => ''),
           calculateFolderSize(extensionDir),
         ]);
         return {name: extension, remoteUrl, size, isDisabled: extension.startsWith('.')};

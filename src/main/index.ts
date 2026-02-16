@@ -18,7 +18,7 @@ import {getImageCacheManager} from './managers/imageCache';
 import {checkForUpdate} from './managers/updater';
 import PatreonAuth from './monitoring/patreonAuth';
 import {getPrivilegeText} from './utils';
-import downloadDU from './utils/calcFolderSize/downloadDu';
+import downloadDU from './utils/calcFolderSize/downloadDiskUsageUtility';
 import LoadingWindow from './windows/loading';
 import ShowToastWindow from './windows/toast';
 
@@ -65,7 +65,7 @@ async function startLynxHub() {
   // Initialize and hold classes
   const {storageManager} = classHolder;
 
-  storageManager.onAppReady();
+  storageManager.completeDeferredMigrations();
   storageManager.decryptBrowserData();
 
   await classHolder.initializeManagers();

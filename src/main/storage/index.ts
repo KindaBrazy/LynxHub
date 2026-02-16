@@ -9,14 +9,7 @@ import StorageTypes from '@lynx_common/types/storage';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import {changeWindowState} from '@lynx_main/ipc/methods';
 import classHolder from '@lynx_main/managers/classHolder';
-import {
-  getAbsolutePath,
-  getExePath,
-  getUserAgent,
-  isPortable,
-  lynxEncryptString,
-  lynxEncryptStrings,
-} from '@lynx_main/utils';
+import {encryptString, encryptStrings, getAbsolutePath, getExePath, getUserAgent, isPortable} from '@lynx_main/utils';
 import {app} from 'electron';
 import fs from 'graceful-fs';
 import lodash, {isEmpty} from 'lodash';
@@ -152,24 +145,24 @@ class BaseStorage {
 
     this.storage = JSONFileSyncPreset<StorageTypes>(storagePath, this.DEFAULT_DATA);
     this.storage.read();
-    this.migration();
+    this.runStorageMigrations();
   }
 
   /**
    * Called after app is ready to perform deferred migrations that require app initialization
    */
-  public onAppReady() {
+  public completeDeferredMigrations() {
     // Deferred encryption migration: encrypt browser data after app is ready
     if (this.migratedTo === 0.84) {
       const {recentAddress, favoriteAddress, historyAddress, favIcons} = this.getData('browser');
 
       this.updateData('browser', {
-        recentAddress: lynxEncryptStrings(recentAddress),
-        favoriteAddress: lynxEncryptStrings(favoriteAddress),
-        historyAddress: lynxEncryptStrings(historyAddress),
+        recentAddress: encryptStrings(recentAddress),
+        favoriteAddress: encryptStrings(favoriteAddress),
+        historyAddress: encryptStrings(historyAddress),
         favIcons: favIcons.map(item => ({
-          url: lynxEncryptString(item.url),
-          favIcon: lynxEncryptString(item.favIcon),
+          url: encryptString(item.url),
+          favIcon: encryptString(item.favIcon),
         })),
       });
 
@@ -181,7 +174,7 @@ class BaseStorage {
    * Migrates storage data from older versions to current version
    * Migrations are applied sequentially based on stored version
    */
-  private migration() {
+  private runStorageMigrations() {
     try {
       const storeVersion = this.getData('storage').version;
 

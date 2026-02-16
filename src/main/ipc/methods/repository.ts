@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import {ShallowCloneOptions} from '@lynx_common/types/git';
 import GitManager from '@lynx_main/git';
-import {setupGitManagerListeners} from '@lynx_main/git/helper';
+import {setupGitManagerListeners} from '@lynx_main/git/gitListeners';
 
 export function shallowClone(options: ShallowCloneOptions): void {
   const manager = new GitManager(true);
@@ -28,7 +28,7 @@ export async function changeBranch(dir: string, branchName: string) {
 }
 
 export async function unShallow(dir: string) {
-  return new GitManager(true).unShallow(dir);
+  return new GitManager(true).convertToFullClone(dir);
 }
 
 export async function resetHard(dir: string) {
