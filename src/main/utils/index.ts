@@ -242,33 +242,72 @@ export function RelaunchApp(saveLastSize: boolean = true) {
   app.quit();
 }
 
-export function getUserAgent(type?: AgentTypes) {
-  // Determine the user agent type (parameter or from storage)
-  const targetType: AgentTypes = type || classHolder.storageManager.getData('browser').userAgent || 'lynxhub';
-
-  // Get OS string based on the platform
-  const osMap = {
+/**
+ * User agent configuration and templates
+ */
+const USER_AGENT_CONFIG = {
+  osMap: {
     darwin: '(Macintosh; Intel Mac OS X 10_15_7)',
     linux: '(X11; Linux x86_64)',
     win32: '(Windows NT 10.0; Win64; x64)',
-  };
-  const osString = osMap[platform()] || osMap.win32;
+  },
+  getVersionStrings: () => ({
+    lynxHub: `LynxHub/${app.getVersion()}`,
+    electron: `Electron/${process.versions.electron}`,
+    chrome: `Chrome/${process.versions.chrome}`,
+  }),
+};
 
-  // Define version strings
+/**
+ * Builds a user agent string based on the specified type
+ */
+export function getUserAgent(type?: AgentTypes) {
+  const targetType: AgentTypes = type || classHolder.storageManager.getData('browser').userAgent || 'lynxhub';
+
+  const osString = USER_AGENT_CONFIG.osMap[platform()] || USER_AGENT_CONFIG.osMap.win32;
   const baseUA = `Mozilla/5.0 ${osString} AppleWebKit/537.36 (KHTML, like Gecko)`;
-  const lynxHubString = `LynxHub/${app.getVersion()}`;
-  const electronString = `Electron/${process.versions.electron}`;
-  const chromeString = `Chrome/${process.versions.chrome}`;
+  const versions = USER_AGENT_CONFIG.getVersionStrings();
 
-  // User agent templates
-  const templates = {
-    lynxhub: () => `${baseUA} ${lynxHubString} ${chromeString} ${electronString} Safari/537.36`,
-    electron: () => `${baseUA} ${chromeString} ${electronString} Safari/537.36`,
-    chrome: () => `${baseUA} ${chromeString} Safari/537.36`,
+  const templates: Record<AgentTypes, () => string> = {
+    lynxhub: () => `${baseUA} ${versions.lynxHub} ${versions.chrome} ${versions.electron} Safari/537.36`,
+    electron: () => `${baseUA} ${versions.chrome} ${versions.electron} Safari/537.36`,
+    chrome: () => `${baseUA} ${versions.chrome} Safari/537.36`,
     custom: () => classHolder.storageManager.getData('browser').customUserAgent,
   };
 
-  return templates[targetType]() || templates.lynxhub();
+  return templates[targetType]?.() || templates.lynxhub();
+}
+
+/**
+ * Generic encryption/decryption handler for safeStorage operations
+ */
+function handleSafeStorageOperation<T extends string | string[]>(
+  data: T,
+  operation: 'encrypt' | 'decrypt',
+  operationName: string,
+): T {
+  if (!safeStorage.isEncryptionAvailable()) {
+    console.warn(`safeStorage ${operationName} not available. Data will not be ${operation}ed.`);
+    return data;
+  }
+
+  const isArray = Array.isArray(data);
+  const items = isArray ? data : [data];
+
+  try {
+    const processed = items.map(item => {
+      if (operation === 'encrypt') {
+        return safeStorage.encryptString(item).toString('hex');
+      } else {
+        return safeStorage.decryptString(Buffer.from(item, 'hex'));
+      }
+    });
+
+    return (isArray ? processed : processed[0]) as T;
+  } catch (e) {
+    console.error(`Failed to ${operation} data:`, e);
+    return data;
+  }
 }
 
 /**
@@ -277,18 +316,11 @@ export function getUserAgent(type?: AgentTypes) {
  * Provides a warning if encryption is not available.
  */
 export function encryptString(data: string): string {
-  if (safeStorage.isEncryptionAvailable()) {
-    return safeStorage.encryptString(data).toString('hex');
-  }
-  console.warn('safeStorage encryption not available. Data will not be encrypted.');
-  return data; // Fallback: return original data if encryption isn't available
+  return handleSafeStorageOperation(data, 'encrypt', 'encryption');
 }
+
 export function encryptStrings(data: string[]): string[] {
-  if (safeStorage.isEncryptionAvailable()) {
-    return data.map(item => safeStorage.encryptString(item).toString('hex'));
-  }
-  console.warn('safeStorage encryption not available. Data will not be encrypted.');
-  return data; // Fallback: return original data if encryption isn't available
+  return handleSafeStorageOperation(data, 'encrypt', 'encryption');
 }
 
 /**
@@ -297,26 +329,11 @@ export function encryptStrings(data: string[]): string[] {
  * Provides a warning and returns the original string if decryption fails or isn't available.
  */
 export function decryptString(encryptedData: string): string {
-  if (safeStorage.isEncryptionAvailable()) {
-    try {
-      return safeStorage.decryptString(Buffer.from(encryptedData, 'hex'));
-    } catch (e) {
-      console.error('Failed to decrypt data:', e);
-      return encryptedData; // Return original if decryption fails (e.g., malformed data)
-    }
-  }
-  return encryptedData; // Fallback: return original data if encryption isn't available
+  return handleSafeStorageOperation(encryptedData, 'decrypt', 'decryption');
 }
+
 export function decryptStrings(encryptedData: string[]): string[] {
-  if (safeStorage.isEncryptionAvailable()) {
-    try {
-      return encryptedData.map(item => safeStorage.decryptString(Buffer.from(item, 'hex')));
-    } catch (e) {
-      console.error('Failed to decrypt data:', e);
-      return encryptedData; // Return original if decryption fails (e.g., malformed data)
-    }
-  }
-  return encryptedData; // Fallback: return original data if encryption isn't available
+  return handleSafeStorageOperation(encryptedData, 'decrypt', 'decryption');
 }
 
 export const getPrivilegeText = () => {
