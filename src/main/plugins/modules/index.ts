@@ -93,11 +93,16 @@ export default class ModuleManager {
       const disabledCards = new Set(classHolder.storageManager.getData('plugin').disabledCards || []);
 
       if (isDev()) {
-        const initialModule: MainModuleImportType = await import('../../../../module/src/main');
-        const allMethods = await initialModule.default(utils);
-        // Filter out disabled cards
-        const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
-        this.mainMethods.push(...enabledMethods);
+        try {
+          // @ts-ignore-next-line
+          const initialModule: MainModuleImportType = await import('../../../../module/src/main');
+          const allMethods = await initialModule.default(utils);
+          // Filter out disabled cards
+          const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
+          this.mainMethods.push(...enabledMethods);
+        } catch (e) {
+          console.log('No dev module found, skipping...');
+        }
       } else {
         const importedModules: (MainModuleImportType | null)[] = await Promise.all(
           moduleFolders.map(async modulePath => {

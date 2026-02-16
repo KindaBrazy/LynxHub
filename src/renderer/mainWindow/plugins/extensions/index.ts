@@ -23,9 +23,16 @@ export async function loadExtensions() {
   let extensionIds: string[];
 
   if (isDev()) {
-    const extension = await import('@lynx_extension/renderer/Extension');
-    importedExtensions = [extension];
-    extensionIds = ['dev-extension'];
+    try {
+      // @ts-ignore-next-line
+      const extension = await import('@lynx_extension/renderer/Extension');
+      importedExtensions = [extension];
+      extensionIds = ['dev-extension'];
+    } catch (e) {
+      console.log('No dev extension found, skipping...');
+      importedExtensions = [];
+      extensionIds = [];
+    }
   } else {
     const pluginAddresses = await pluginsIpc.getAddresses();
     const extensionAddresses = pluginAddresses

@@ -21,8 +21,13 @@ export default class ExtensionManager {
 
   public async importPlugins(extensionFolders: string[]) {
     if (isDev()) {
-      const initial: ExtensionImport_Main = await import('../../../../extension/src/main/lynxExtension');
-      await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
+      try {
+        // @ts-ignore-next-line
+        const initial: ExtensionImport_Main = await import('../../../../extension/src/main/lynxExtension');
+        await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
+      } catch (e) {
+        console.log('No dev extension found, skipping...');
+      }
     } else {
       await Promise.all(
         extensionFolders.map(async extensionPath => {
