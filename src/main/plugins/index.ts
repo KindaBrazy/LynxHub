@@ -149,47 +149,44 @@ export class PluginManager {
     return undefined;
   }
 
-  public async install(url: string, commitHash?: string) {
+  private async resolvePluginMetadata(url: string, commitHash?: string) {
     const {staticManager} = classHolder;
+    const id = await staticManager?.getPluginIdByRepositoryUrl(url);
+    if (!id) return null;
+
+    const targetCommit = commitHash || (await getCommitByAppStage(id));
+    if (!targetCommit) return null;
+
+    const version = await getVersionByCommit(id, targetCommit);
+    if (!version) return null;
+
+    return {id, targetCommit, version};
+  }
+
+  private async performGitInstallation(url: string, directory: string, targetCommit: string) {
+    const gitManager = new GitManager(true);
+    setupGitManagerListeners(gitManager, url);
+    await gitManager.shallowClone({url, directory, singleBranch: true, branch: 'main'});
+    await gitManager.resetHard(directory, targetCommit, true, 'main');
+  }
+
+  public async install(url: string, commitHash?: string) {
     return new Promise<boolean>(async resolve => {
-      let targetCommit: string | undefined = undefined;
-      const id = await staticManager?.getPluginIdByRepositoryUrl(url);
+      const metadata = await this.resolvePluginMetadata(url, commitHash);
+      if (!metadata) {
+        resolve(false);
+        return;
+      }
 
-      if (id) {
-        if (commitHash) {
-          targetCommit = commitHash;
-        } else {
-          targetCommit = await getCommitByAppStage(id);
-        }
+      const {id, targetCommit, version} = metadata;
+      const directory = join(this.pluginPath, id);
 
-        if (!targetCommit) {
-          resolve(false);
-          return;
-        }
-
-        const version = await getVersionByCommit(id, targetCommit);
-        if (!version) {
-          resolve(false);
-          return;
-        }
-
-        const directory = join(this.pluginPath, id);
-
-        try {
-          const gitManager = new GitManager(true);
-
-          setupGitManagerListeners(gitManager, url);
-          await gitManager.shallowClone({url, directory, singleBranch: true, branch: 'main'});
-          await gitManager.resetHard(directory, targetCommit, true, 'main');
-
-          this.installed.push({id, url, version});
-
-          resolve(true);
-        } catch (e) {
-          console.warn(`Failed to install plugin: ${url}`, e);
-          resolve(false);
-        }
-      } else {
+      try {
+        await this.performGitInstallation(url, directory, targetCommit);
+        this.installed.push({id, url, version});
+        resolve(true);
+      } catch (e) {
+        console.warn(`Failed to install plugin: ${url}`, e);
         resolve(false);
       }
     });

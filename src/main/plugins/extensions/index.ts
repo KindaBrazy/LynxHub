@@ -19,35 +19,35 @@ export default class ExtensionManager {
     this.extensionApi = new ExtensionApi();
   }
 
+  private async importDevExtension() {
+    try {
+      const initial: ExtensionImport_Main = await import(
+        /* @vite-ignore */ '../../../../extension/src/main/lynxExtension'
+      );
+      await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
+    } catch (e) {
+      console.log('No dev extension found, skipping...');
+    }
+  }
+
+  private async importProductionExtension(extensionPath: string) {
+    try {
+      const fullExtensionPath = path.join(extensionPath, 'scripts', 'main', 'mainEntry.cjs');
+      const extensionUrl = `file://${fullExtensionPath}`;
+      const initial: ExtensionImport_Main = await import(extensionUrl);
+      await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
+    } catch (e) {
+      // TODO: show ui to user failed to load
+      console.error('Failed to load extension main entry: ', extensionPath, 'Error: ', e);
+      captureException(e);
+    }
+  }
+
   public async importPlugins(extensionFolders: string[]) {
     if (isDev()) {
-      try {
-        const initial: ExtensionImport_Main = await import(
-          /* @vite-ignore */ '../../../../extension/src/main/lynxExtension'
-        );
-        await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
-      } catch (e) {
-        console.log('No dev extension found, skipping...');
-      }
+      await this.importDevExtension();
     } else {
-      await Promise.all(
-        extensionFolders.map(async extensionPath => {
-          try {
-            const fullExtensionPath = path.join(extensionPath, 'scripts', 'main', 'mainEntry.cjs');
-
-            const extensionUrl = `file://${fullExtensionPath}`;
-
-            const initial: ExtensionImport_Main = await import(extensionUrl);
-
-            await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
-          } catch (e) {
-            // TODO: show ui to user failed to load
-            console.error('Failed to load extension main entry: ', extensionPath, 'Error: ', e);
-            captureException(e);
-            return;
-          }
-        }),
-      );
+      await Promise.all(extensionFolders.map(folder => this.importProductionExtension(folder)));
     }
   }
 
