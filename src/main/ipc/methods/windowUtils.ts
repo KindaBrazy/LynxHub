@@ -110,10 +110,10 @@ export function setTaskbarStatus(status: TaskbarStatus): void {
 }
 
 /**
- * Removes a directory and its contents.
+ * Permanently removes a directory and all its contents recursively.
  * @param dir - The directory path to remove.
  */
-export async function removeDir(dir: string): Promise<void> {
+export async function removeDirRecursive(dir: string): Promise<void> {
   try {
     const resolvedPath = path.resolve(dir);
     console.log(`Removing directory: ${resolvedPath}`);

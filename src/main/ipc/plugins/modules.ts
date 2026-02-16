@@ -5,7 +5,7 @@ import GitManager from '@lynx_main/git';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getDirCreationDate} from '@lynx_main/utils';
 
-import lynxIpc from '../lynxIpc';
+import lynxIpc from '../ipcWrapper';
 import {sendToMain} from '../sender';
 
 export default async function listenModules() {

@@ -11,7 +11,7 @@ import {getImageCacheManager, registerImageCacheScheme} from './managers/imageCa
 import {initSentry} from './monitoring/sentry';
 import ShareScreenManager from './windows/shareScreen';
 
-export async function beforeAppReady() {
+export async function configureAppBeforeReady() {
   const {storageManager, appStartTime} = classHolder;
 
   const {hardwareAcceleration, collectErrors} = storageManager.getData('app');
@@ -76,7 +76,7 @@ export async function beforeAppReady() {
   registerImageCacheScheme();
 }
 
-export async function handleProtocols() {
+export async function registerCustomProtocols() {
   // Initialize image cache manager
   await getImageCacheManager().initialize();
 

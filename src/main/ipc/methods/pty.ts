@@ -34,7 +34,7 @@ function createPtyManager(id: string, dir: string, useConpty: boolean): LynxTerm
   }
 }
 
-let ptyManager: LynxTerminal[] = [];
+let ptyProcesses: LynxTerminal[] = [];
 
 const LINE_ENDING = platform() === 'win32' ? '\r' : '\n';
 
@@ -46,12 +46,12 @@ function getValidDir(dir?: string): string {
 }
 
 /**
- * Runs multiple commands in the PTY.
+ * Runs multiple commands sequentially in the PTY.
  * @param id - The unique id of process running
  * @param commands - An array of commands to run.
  */
-function runMultiCommand(id: string, commands: string[]): void {
-  if (!isEmpty(commands) && ptyManager) {
+function runCommandsSequentially(id: string, commands: string[]): void {
+  if (!isEmpty(commands)) {
     commands.forEach(command => ptyWrite(id, `${command}${LINE_ENDING}`));
   }
 }
@@ -74,24 +74,24 @@ function runPreOpen(cardId: string): void {
 }
 
 function getPtyByID(id: string) {
-  return ptyManager.find(pty => pty.id === id);
+  return ptyProcesses.find(pty => pty.id === id);
 }
 
 export function stopPty(id: string) {
   getPtyByID(id)?.stop();
-  ptyManager = ptyManager.filter(pty => pty.id !== id);
+  ptyProcesses = ptyProcesses.filter(pty => pty.id !== id);
 }
 
 export async function stopAllPty(): Promise<void> {
-  for (const ptyProcess of ptyManager) {
+  for (const ptyProcess of ptyProcesses) {
     await ptyProcess.stopAsync();
   }
-  ptyManager = [];
+  ptyProcesses = [];
 }
 
 export async function emptyPtyProcess(id: string, dir?: string) {
   const pty = createPtyManager(id, getValidDir(dir), true);
-  if (pty) ptyManager.push(pty);
+  if (pty) ptyProcesses.push(pty);
 }
 
 export async function customPtyProcess(id: string, dir?: string, file?: string) {
@@ -100,7 +100,7 @@ export async function customPtyProcess(id: string, dir?: string, file?: string) 
   const pty = createPtyManager(id, getValidDir(dir), true);
   if (!pty) return;
 
-  ptyManager.push(pty);
+  ptyProcesses.push(pty);
 
   const extensionPreCommands = getExtPreCommands(id);
   executeCommands(id, extensionPreCommands);
@@ -114,7 +114,7 @@ export async function customPtyCommands(id: string, commands?: string | string[]
   const pty = createPtyManager(id, getValidDir(dir), true);
   if (!pty) return;
 
-  ptyManager.push(pty);
+  ptyProcesses.push(pty);
 
   const extensionPreCommands = getExtPreCommands(id);
   let finalCommands = [...extensionPreCommands];
@@ -144,7 +144,7 @@ export async function ptyProcess(id: string, cardId: string) {
   const pty = createPtyManager(id, getValidDir(cardDir), true);
   if (!pty) return;
 
-  ptyManager.push(pty);
+  ptyProcesses.push(pty);
 
   const preCommands = storageManager.getPreCommandById(cardId);
 
@@ -171,7 +171,7 @@ export async function ptyProcess(id: string, cardId: string) {
 function executeCommands(id: string, commands: string | string[] | undefined) {
   if (!isNil(commands) && !isEmpty(commands)) {
     if (isArray(commands)) {
-      runMultiCommand(id, commands);
+      runCommandsSequentially(id, commands);
     } else {
       ptyWrite(id, commands + LINE_ENDING);
     }

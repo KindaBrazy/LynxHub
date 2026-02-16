@@ -8,17 +8,17 @@ import BrowserDownloadManager from '@lynx_main/windows/browserDownloadManager';
 import {FindInPageOptions} from 'electron';
 
 import {listenForBrowserChannels} from './contextMenu';
-import lynxIpc from './lynxIpc';
+import lynxIpc from './ipcWrapper';
 import {handleGetAudioState, handleSetMuted, handleSetVolume} from './methods/volume';
-import {sendToCM, sendToLP, sendToMain} from './sender';
+import {sendToContextMenu, sendToLinkPreview, sendToMain} from './sender';
 
 let browserTimeout: NodeJS.Timeout | undefined = undefined;
-let browserIPCInitialized = false;
+let browserIpcInitialized = false;
 
 /** Resets the browserIPC initialization state. Call this before recreating
  *  the main window (e.g., on macOS activate). */
 export function resetBrowserIPC() {
-  browserIPCInitialized = false;
+  browserIpcInitialized = false;
   if (browserTimeout) {
     clearTimeout(browserTimeout);
     browserTimeout = undefined;
@@ -27,7 +27,7 @@ export function resetBrowserIPC() {
 
 export async function listenBrowser() {
   // Prevent registering handlers multiple times
-  if (browserIPCInitialized) {
+  if (browserIpcInitialized) {
     console.warn('listenBrowser already initialized, skipping...');
     return;
   }
@@ -43,7 +43,7 @@ export async function listenBrowser() {
 
   clearTimeout(browserTimeout);
   browserTimeout = undefined;
-  browserIPCInitialized = true;
+  browserIpcInitialized = true;
 
   const browserManager: BrowserManager = new BrowserManager(mainWindow);
   classHolder.browserDownloadManager = new BrowserDownloadManager(browserManager.getSession(), mainWindow);
@@ -127,7 +127,7 @@ export async function listenBrowser() {
 
 export const browserIpc = {
   send: {
-    onLinkHover: (url: string) => sendToLP(browserChannels.onLinkHover, url),
+    onLinkHover: (url: string) => sendToLinkPreview(browserChannels.onLinkHover, url),
     onCanGo: (id: string, canGo: CanGoType) => sendToMain(browserChannels.onCanGo, id, canGo),
     onUrlChange: (id: string, url: string) => sendToMain(browserChannels.onUrlChange, id, url),
     isLoading: (id: string, isLoading: boolean) => sendToMain(browserChannels.isLoading, id, isLoading),
@@ -141,7 +141,7 @@ export const browserIpc = {
     onTabMutedUpdate: (tabId: string, muted: boolean) => sendToMain(browserChannels.onTabMutedUpdate, tabId, muted),
     onAudioStateChange: (id: string, state: AudioState) => sendToMain(browserChannels.onAudioStateChange, id, state),
     onFoundInPage: (result: {activeMatchOrdinal: number; matches: number; finalUpdate: boolean}) =>
-      sendToCM(browserChannels.onFoundInPage, result),
+      sendToContextMenu(browserChannels.onFoundInPage, result),
     onZoomChanged: (id: string, factor: number) => sendToMain(browserChannels.onZoomChanged, id, factor),
   },
   on: {

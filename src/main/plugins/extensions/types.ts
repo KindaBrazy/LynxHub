@@ -1,4 +1,4 @@
-import ElectronAppManager from '@lynx_main/mainWindow';
+import MainWindowManager from '@lynx_main/mainWindow';
 import StorageManager from '@lynx_main/storage/storageOperations';
 import {Scope} from '@sentry/node';
 import {MenuItem, MenuItemConstructorOptions} from 'electron';
@@ -7,18 +7,18 @@ import ModuleManager from '../modules';
 
 export type EMenuItem = MenuItemConstructorOptions | MenuItem;
 
-type TsFC = () => void;
-type TsFCPromise = () => Promise<void>;
-type TsFC_Tray = () => {item: EMenuItem; index: number};
-type ApiFC = (fc: TsFC) => void;
-type ApiFCPromise = (fc: TsFCPromise) => void;
-type ApiFC_Tray = (fc: TsFC_Tray) => void;
+type TypeScriptFunctionComponent = () => void;
+type TypeScriptFunctionComponentPromise = () => Promise<void>;
+type TypeScriptFunctionComponent_Tray = () => {item: EMenuItem; index: number};
+type ApiFunctionCallback = (fc: TypeScriptFunctionComponent) => void;
+type ApiFunctionCallbackPromise = (fc: TypeScriptFunctionComponentPromise) => void;
+type ApiFunctionCallback_Tray = (fc: TypeScriptFunctionComponent_Tray) => void;
 
 export type ExtensionData_Main = {
-  listenForChannels: TsFC[];
-  onAppReady: TsFCPromise[];
-  onReadyToShow: TsFC[];
-  trayMenu_AddItem: TsFC_Tray[];
+  listenForChannels: TypeScriptFunctionComponent[];
+  onAppReady: TypeScriptFunctionComponentPromise[];
+  onReadyToShow: TypeScriptFunctionComponent[];
+  trayMenu_AddItem: TypeScriptFunctionComponent_Tray[];
 };
 
 export type ExtensionMainApi = {
@@ -26,24 +26,24 @@ export type ExtensionMainApi = {
    * Listen for specific IPC channels using ipcMain.
    * This allows communication between the main process and renderer processes.
    */
-  listenForChannels: ApiFC;
+  listenForChannels: ApiFunctionCallback;
 
   /**
    * Called when the application is ready.
    * This method is triggered after `app.whenReady()` resolves.
    */
-  onAppReady: ApiFCPromise;
+  onAppReady: ApiFunctionCallbackPromise;
 
   /**
    * Called when the main application window is ready to be displayed.
    * Corresponds to the `ready-to-show` event.
    */
-  onReadyToShow: ApiFC;
+  onReadyToShow: ApiFunctionCallback;
 
   initNodeSentry: (dsn: string) => Scope;
 
   /** Add a new item to the tray menu at a specific index. */
-  trayMenu_AddItem: ApiFC_Tray;
+  trayMenu_AddItem: ApiFunctionCallback_Tray;
 };
 
 export type MainExtensionUtils = {
@@ -54,10 +54,10 @@ export type MainExtensionUtils = {
   getStorageManager: () => Promise<StorageManager>;
 
   /**
-   * Retrieves the `ElectronAppManager` instance when it is ready.
-   * @returns A promise that resolves to the `ElectronAppManager`.
+   * Retrieves the `MainWindowManager` instance when it is ready.
+   * @returns A promise that resolves to the `MainWindowManager`.
    */
-  getAppManager: () => Promise<ElectronAppManager>;
+  getAppManager: () => Promise<MainWindowManager>;
 
   /**
    * Retrieves the `ModuleManager` instance when it is ready.

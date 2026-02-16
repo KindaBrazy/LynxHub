@@ -2,8 +2,8 @@ import classHolder from '@lynx_main/managers/classHolder';
 
 import listenApplication from './application';
 import listenContextMenu from './contextMenu';
-import listenFiles from './files';
-import listenGit from './git';
+import listenFiles from './filesIpc';
+import listenGit from './gitIpc';
 import listenModules, {listenModuleApi} from './plugins/modules';
 import listenPlugins from './plugins/plugins';
 import listenPty from './pty';

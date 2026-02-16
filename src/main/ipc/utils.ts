@@ -8,11 +8,11 @@ import {
 } from '@lynx_common/types/ipc';
 import {getImageCacheManager} from '@lynx_main/managers/imageCache';
 
-import lynxIpc from './lynxIpc';
-import {decompressFile, getImageAsDataURL, isResponseValid} from './methods';
+import lynxIpc from './ipcWrapper';
+import {decompressFile, getImageAsDataURL, isResponseValid} from './methods/windowUtils';
 import {
   disableExtension,
-  disableLoadingExtensions,
+  disableExtensionsLoading,
   getExtensionsDetails,
   getExtensionsUpdate,
   updateAllExtensions,
@@ -45,7 +45,7 @@ export default function listenUtils() {
   utilsIpc.handle.disableExtension((disable, dir) => disableExtension(disable, dir));
 
   // Cancels loading extension data operation
-  utilsIpc.on.cancelExtensionsData(() => disableLoadingExtensions());
+  utilsIpc.on.cancelExtensionsData(() => disableExtensionsLoading());
 
   // Downloads file from URL with progress tracking
   utilsIpc.on.downloadFile(url => downloadFile(url));

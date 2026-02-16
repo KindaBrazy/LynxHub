@@ -8,24 +8,24 @@ import {ContextMenuParams} from 'electron';
 import {applicationIpc} from './application';
 import {browserIpc} from './browser';
 import {downloadManagerIpc} from './downloadManager';
-import lynxIpc from './lynxIpc';
-import {downloadImageToClipboard} from './methods';
-import {sendToCM, sendToMain} from './sender';
+import lynxIpc from './ipcWrapper';
+import {downloadImageToClipboard} from './methods/windowUtils';
+import {sendToContextMenu, sendToMain} from './sender';
 
 export default async function listenContextMenu() {
   const contextMenuManager = await classHolder.waitForClass('contextMenuManager');
 
-  const getWebContent = (id: number) => contextMenuManager.getContentById(id);
+  const getWebContents = (id: number) => contextMenuManager.getContentById(id);
 
   contextMenuIpc.on.resizeWindow(data => contextMenuManager.resizeContextMenu(data));
 
-  contextMenuIpc.on.copy(id => getWebContent(id)?.copy());
-  contextMenuIpc.on.cut(id => getWebContent(id)?.cut());
-  contextMenuIpc.on.paste(id => getWebContent(id)?.paste());
-  contextMenuIpc.on.selectAll(id => getWebContent(id)?.selectAll());
-  contextMenuIpc.on.undo(id => getWebContent(id)?.undo());
-  contextMenuIpc.on.redo(id => getWebContent(id)?.redo());
-  contextMenuIpc.on.downloadImage((id, url) => getWebContent(id)?.downloadURL(url));
+  contextMenuIpc.on.copy(id => getWebContents(id)?.copy());
+  contextMenuIpc.on.cut(id => getWebContents(id)?.cut());
+  contextMenuIpc.on.paste(id => getWebContents(id)?.paste());
+  contextMenuIpc.on.selectAll(id => getWebContents(id)?.selectAll());
+  contextMenuIpc.on.undo(id => getWebContents(id)?.undo());
+  contextMenuIpc.on.redo(id => getWebContents(id)?.redo());
+  contextMenuIpc.on.downloadImage((id, url) => getWebContents(id)?.downloadURL(url));
   contextMenuIpc.on.copyImage(url => downloadImageToClipboard(url));
 
   contextMenuIpc.on.searchWithGoogle(text => {
@@ -33,7 +33,7 @@ export default async function listenContextMenu() {
     applicationIpc.send.onNewTab(searchUrl);
   });
   contextMenuIpc.on.inspectElement((id, x, y) => {
-    const webContents = getWebContent(id);
+    const webContents = getWebContents(id);
     if (webContents) {
       webContents.inspectElement(x, y);
     }
@@ -41,18 +41,18 @@ export default async function listenContextMenu() {
 
   contextMenuIpc.on.showWindow(() => contextMenuManager.showContextMenu());
   contextMenuIpc.on.hideWindow(() => contextMenuManager.hideContextMenu());
-  contextMenuIpc.on.replaceMisspelling((id, text) => getWebContent(id)?.replaceMisspelling(text));
+  contextMenuIpc.on.replaceMisspelling((id, text) => getWebContents(id)?.replaceMisspelling(text));
   contextMenuIpc.on.newTab(url => applicationIpc.send.onNewTab(url));
   contextMenuIpc.on.navigate((id, action) => {
     switch (action) {
       case 'back':
-        getWebContent(id)?.navigationHistory.goBack();
+        getWebContents(id)?.navigationHistory.goBack();
         break;
       case 'forward':
-        getWebContent(id)?.navigationHistory.goForward();
+        getWebContents(id)?.navigationHistory.goForward();
         break;
       case 'refresh':
-        getWebContent(id)?.reload();
+        getWebContents(id)?.reload();
         break;
     }
   });
@@ -124,14 +124,14 @@ export const contextMenuIpc = {
     onRemoveTab: (tabID: string) => sendToMain(contextMenuChannels.onRemoveTab, tabID),
 
     rightClick: (params: ContextMenuParams, navHistory: NavHistory, id: number) =>
-      sendToCM(contextMenuChannels.rightClick, params, navHistory, id),
-    onFind: (id: string, selectedText?: string) => sendToCM(contextMenuChannels.onFind, id, selectedText),
-    onZoom: (id: string, factor: number | undefined) => sendToCM(contextMenuChannels.onZoom, id, factor),
-    onVolume: (data: ContextMenuVolumeData) => sendToCM(contextMenuChannels.onVolume, data),
-    onTerminateAI: (id: string) => sendToCM(contextMenuChannels.onTerminateAI, id),
-    onTerminateTab: (id: string) => sendToCM(contextMenuChannels.onTerminateTab, id),
-    onCloseApp: () => sendToCM(contextMenuChannels.onCloseApp),
-    onDownloads: () => sendToCM(contextMenuChannels.onDownloads),
+      sendToContextMenu(contextMenuChannels.rightClick, params, navHistory, id),
+    onFind: (id: string, selectedText?: string) => sendToContextMenu(contextMenuChannels.onFind, id, selectedText),
+    onZoom: (id: string, factor: number | undefined) => sendToContextMenu(contextMenuChannels.onZoom, id, factor),
+    onVolume: (data: ContextMenuVolumeData) => sendToContextMenu(contextMenuChannels.onVolume, data),
+    onTerminateAI: (id: string) => sendToContextMenu(contextMenuChannels.onTerminateAI, id),
+    onTerminateTab: (id: string) => sendToContextMenu(contextMenuChannels.onTerminateTab, id),
+    onCloseApp: () => sendToContextMenu(contextMenuChannels.onCloseApp),
+    onDownloads: () => sendToContextMenu(contextMenuChannels.onDownloads),
   },
   on: {
     resizeWindow: (callback: (data: ContextResizeData) => void) =>

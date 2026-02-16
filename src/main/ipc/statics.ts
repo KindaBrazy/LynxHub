@@ -10,7 +10,7 @@ import {
 import {MainHT} from '@lynx_common/types/ipc';
 import classHolder from '@lynx_main/managers/classHolder';
 
-import lynxIpc from './lynxIpc';
+import lynxIpc from './ipcWrapper';
 
 export default async function listenStatics() {
   const staticManager = await classHolder.waitForClass('staticManager');

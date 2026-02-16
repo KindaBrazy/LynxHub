@@ -3,8 +3,8 @@ import {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '@lyn
 import {MainHT} from '@lynx_common/types/ipc';
 import classHolder from '@lynx_main/managers/classHolder';
 
-import lynxIpc from './lynxIpc';
-import {sendToCM, sendToMain} from './sender';
+import lynxIpc from './ipcWrapper';
+import {sendToContextMenu, sendToMain} from './sender';
 
 export default async function listenDownloadManager() {
   const browserDownloadManager = await classHolder.waitForClass('browserDownloadManager');
@@ -73,9 +73,9 @@ export default async function listenDownloadManager() {
 
 export const downloadManagerIpc = {
   send: {
-    onDlStart: (info: DownloadStartInfo) => sendToCM(browserDownloadChannels.onDlStart, info),
-    onProgress: (info: DownloadManagerProgress) => sendToCM(browserDownloadChannels.onProgress, info),
-    onDone: (info: DownloadDoneInfo) => sendToCM(browserDownloadChannels.onDone, info),
+    onDlStart: (info: DownloadStartInfo) => sendToContextMenu(browserDownloadChannels.onDlStart, info),
+    onProgress: (info: DownloadManagerProgress) => sendToContextMenu(browserDownloadChannels.onProgress, info),
+    onDone: (info: DownloadDoneInfo) => sendToContextMenu(browserDownloadChannels.onDone, info),
     dlCount: (count: number) => sendToMain(browserDownloadChannels.mainDownloadCount, count),
   },
   on: {

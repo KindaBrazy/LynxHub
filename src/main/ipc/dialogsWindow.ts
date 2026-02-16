@@ -2,16 +2,16 @@ import windowDialogsChannels from '@lynx_common/consts/ipcChannels/dialogsWindow
 import classHolder from '@lynx_main/managers/classHolder';
 import {IpcMainEvent} from 'electron';
 
-import lynxIpc from './lynxIpc';
-import {sendToCM} from './sender';
+import lynxIpc from './ipcWrapper';
+import {sendToContextMenu} from './sender';
 
-let dialogEvent: IpcMainEvent | undefined = undefined;
-let dialogDefaultResult: boolean | null | string = null;
+let currentDialogEvent: IpcMainEvent | undefined = undefined;
+let currentDialogDefaultResult: boolean | null | string = null;
 
 export const dialogBlured = () => {
-  if (dialogEvent) {
-    dialogEvent.returnValue = dialogDefaultResult;
-    dialogEvent = undefined;
+  if (currentDialogEvent) {
+    currentDialogEvent.returnValue = currentDialogDefaultResult;
+    currentDialogEvent = undefined;
   }
 };
 
@@ -34,8 +34,8 @@ export default async function listenDialogsWindow() {
 
     dialogsWindowIpc.send.promptShow(message, defaultValue);
 
-    dialogEvent = event;
-    dialogDefaultResult = null;
+    currentDialogEvent = event;
+    currentDialogDefaultResult = null;
   });
 
   dialogsWindowIpc.on.onConfirm((event, message) => {
@@ -43,8 +43,8 @@ export default async function listenDialogsWindow() {
 
     dialogsWindowIpc.send.confirmShow(message);
 
-    dialogEvent = event;
-    dialogDefaultResult = false;
+    currentDialogEvent = event;
+    currentDialogDefaultResult = false;
   });
 
   dialogsWindowIpc.on.onAlert((event, message) => {
@@ -52,21 +52,21 @@ export default async function listenDialogsWindow() {
 
     dialogsWindowIpc.send.alertShow(message);
 
-    dialogEvent = event;
-    dialogDefaultResult = null;
+    currentDialogEvent = event;
+    currentDialogDefaultResult = null;
   });
 
   dialogsWindowIpc.on.promptResult(result => {
-    if (dialogEvent) {
-      dialogEvent.returnValue = result;
-      dialogEvent = undefined;
+    if (currentDialogEvent) {
+      currentDialogEvent.returnValue = result;
+      currentDialogEvent = undefined;
     }
   });
 
   dialogsWindowIpc.on.confirmResult(result => {
-    if (dialogEvent) {
-      dialogEvent.returnValue = result;
-      dialogEvent = undefined;
+    if (currentDialogEvent) {
+      currentDialogEvent.returnValue = result;
+      currentDialogEvent = undefined;
     }
   });
 }
@@ -85,8 +85,8 @@ export const dialogsWindowIpc = {
   },
   send: {
     promptShow: (message: string, defaultValue?: string) =>
-      sendToCM(windowDialogsChannels.promptShow, message, defaultValue),
-    confirmShow: (message: string) => sendToCM(windowDialogsChannels.confirmShow, message),
-    alertShow: (message: string) => sendToCM(windowDialogsChannels.alertShow, message),
+      sendToContextMenu(windowDialogsChannels.promptShow, message, defaultValue),
+    confirmShow: (message: string) => sendToContextMenu(windowDialogsChannels.confirmShow, message),
+    alertShow: (message: string) => sendToContextMenu(windowDialogsChannels.alertShow, message),
   },
 };

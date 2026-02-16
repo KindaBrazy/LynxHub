@@ -1,6 +1,6 @@
 import ptyChannels from '@lynx_common/consts/ipcChannels/pty';
 
-import lynxIpc from './lynxIpc';
+import lynxIpc from './ipcWrapper';
 import {
   customPtyCommands,
   customPtyProcess,
