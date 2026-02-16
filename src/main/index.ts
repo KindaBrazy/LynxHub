@@ -7,7 +7,7 @@ import {app, Menu, nativeImage} from 'electron';
 import log from 'electron-log/main';
 
 import darwinIcon from '../../resources/icon-darwin.png?asset';
-import {beforeAppReady, handleAppReadyToShow, handleProtocols} from './indexMethods';
+import {beforeAppReady, handleAppReadyToShow, handleProtocols} from './appLifecycle';
 import {listenToIpcChannels} from './ipc';
 import {listenBrowser, resetBrowserIPC} from './ipc/browser';
 import listenDialogsWindow from './ipc/dialogsWindow';
