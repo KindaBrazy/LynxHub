@@ -91,32 +91,35 @@ class StorageManager extends BaseStorage {
   }
 
   /**
+   * Helper: Finds existing URL index by comparing normalized URLs
+   */
+  private async findUrlIndex(addressArray: string[], url: string): Promise<number> {
+    for (let i = 0; i < addressArray.length; i++) {
+      if (!isValidURL([addressArray[i], url])) continue;
+      if (await compareUrls(addressArray[i], url)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  /**
    * Helper: Adds a URL to a browser array, moving existing entry to front if found
    */
   private async addBrowserUrl(
     arrayKey: 'recentAddress' | 'favoriteAddress' | 'historyAddress',
     url: string,
   ): Promise<void> {
-    let addressArray = this.getBrowserDataSecurely()[arrayKey];
-    let existingUrlIndex = -1;
-
-    // Find existing URL by comparing normalized URLs
-    for (let i = 0; i < addressArray.length; i++) {
-      if (!isValidURL([addressArray[i], url])) continue;
-      if (await compareUrls(addressArray[i], url)) {
-        existingUrlIndex = i;
-        break;
-      }
-    }
+    const addressArray = this.getBrowserDataSecurely()[arrayKey];
+    const existingUrlIndex = await this.findUrlIndex(addressArray, url);
 
     // Move to front if exists, otherwise prepend
-    if (existingUrlIndex !== -1) {
-      addressArray = [url, ...addressArray.slice(0, existingUrlIndex), ...addressArray.slice(existingUrlIndex + 1)];
-    } else {
-      addressArray = [url, ...addressArray];
-    }
+    const updatedArray =
+      existingUrlIndex !== -1
+        ? [url, ...addressArray.slice(0, existingUrlIndex), ...addressArray.slice(existingUrlIndex + 1)]
+        : [url, ...addressArray];
 
-    this.updateBrowserDataSecurely({[arrayKey]: addressArray});
+    this.updateBrowserDataSecurely({[arrayKey]: updatedArray});
   }
 
   /**
@@ -276,57 +279,68 @@ class StorageManager extends BaseStorage {
     this.removeFromCardStringArray('pinnedCards', cardId, storageUtilsChannels.onPinnedCardsChange);
   }
 
-  public pinnedCardsOpt(opt: StorageOperation, id: string, pinnedCards?: string[]) {
-    let result: string[] = [];
-
+  /**
+   * Generic handler for storage operations with consistent patterns
+   */
+  private handleGenericStorageOperation<T>(
+    opt: StorageOperation | RecentlyOperation,
+    handlers: {
+      add?: () => void;
+      remove?: () => void;
+      get?: () => T;
+      set?: () => void;
+      update?: () => void;
+    },
+  ): T | undefined {
     switch (opt) {
       case 'add':
-        this.addPinnedCard(id);
+        handlers.add?.();
         break;
-
       case 'remove':
-        this.removePinnedCard(id);
+        handlers.remove?.();
         break;
-
       case 'get':
-        result = this.getData('cards').pinnedCards;
-        break;
-
+        return handlers.get?.();
       case 'set':
-        this.updateData('cards', {pinnedCards});
-        storageUtilsIpc.send.onPinnedCardsChange(pinnedCards || []);
+        handlers.set?.();
+        break;
+      case 'update':
+        handlers.update?.();
         break;
     }
+    return undefined;
+  }
 
-    return result;
+  public pinnedCardsOpt(opt: StorageOperation, id: string, pinnedCards?: string[]) {
+    return (
+      this.handleGenericStorageOperation<string[]>(opt, {
+        add: () => this.addPinnedCard(id),
+        remove: () => this.removePinnedCard(id),
+        get: () => this.getData('cards').pinnedCards,
+        set: () => {
+          this.updateData('cards', {pinnedCards});
+          storageUtilsIpc.send.onPinnedCardsChange(pinnedCards || []);
+        },
+      }) || []
+    );
   }
 
   public updateRecentlyUsedCards(id: string) {
     const newArray = lodash.without(this.getData('cards').recentlyUsedCards, id);
-    // Add the id to the beginning of the array
     newArray.unshift(id);
-    // Keep only the last 5 elements
     const result = lodash.take(newArray, 5);
 
     this.updateData('cards', {recentlyUsedCards: result});
-
     storageUtilsIpc.send.onRecentlyUsedCardsChange(result);
   }
 
   public recentlyUsedCardsOpt(opt: RecentlyOperation, id: string) {
-    let result: string[] = [];
-
-    switch (opt) {
-      case 'update':
-        this.updateRecentlyUsedCards(id);
-        break;
-
-      case 'get':
-        result = this.getData('cards').recentlyUsedCards;
-        break;
-    }
-
-    return result;
+    return (
+      this.handleGenericStorageOperation<string[]>(opt, {
+        update: () => this.updateRecentlyUsedCards(id),
+        get: () => this.getData('cards').recentlyUsedCards,
+      }) || []
+    );
   }
 
   public setHomeCategory(data: string[]) {
@@ -335,47 +349,64 @@ class StorageManager extends BaseStorage {
   }
 
   public handleHomeCategoryOperation(opt: StorageOperation, data: string[]) {
-    let result: HomeCategory = [];
+    return (
+      this.handleGenericStorageOperation<HomeCategory>(opt, {
+        set: () => this.setHomeCategory(data),
+        get: () => this.getData('app').homeCategory,
+      }) || []
+    );
+  }
 
-    switch (opt) {
-      case 'set':
-        this.setHomeCategory(data);
-        break;
+  /**
+   * Generic handler for card command operations (preCommands, customRun)
+   */
+  private handleCardCommandOperation<T extends {cardId: string; data: string[]}>(
+    configKey: 'preCommands' | 'customRun',
+    operation: 'add' | 'set' | 'remove',
+    cardId: string,
+    commandData: string | string[] | number,
+    ipcChannel?: (data: {commands: string[]; id: string}) => void,
+  ): void {
+    const configArray = this.getData('cardsConfig')[configKey];
 
-      case 'get':
-        result = this.getData('app').homeCategory;
+    switch (operation) {
+      case 'add': {
+        const {item} = this.findOrCreateCardConfig(configArray, cardId, () => ({cardId, data: []}));
+        item.data.push(commandData as string);
+        ipcChannel?.({commands: item.data, id: cardId});
+        this.updateData('cardsConfig', {[configKey]: configArray});
         break;
+      }
+
+      case 'set': {
+        const {item} = this.findOrCreateCardConfig(configArray, cardId, () => ({cardId, data: []}));
+        item.data = commandData as string[];
+        this.updateData('cardsConfig', {[configKey]: configArray});
+        break;
+      }
+
+      case 'remove': {
+        const indexFound = configArray.findIndex(item => item.cardId === cardId);
+        if (indexFound !== -1) {
+          configArray[indexFound].data.splice(commandData as number, 1);
+          ipcChannel?.({commands: configArray[indexFound].data, id: cardId});
+          this.updateData('cardsConfig', {[configKey]: configArray});
+        }
+        break;
+      }
     }
-
-    return result;
   }
 
   public addPreCommand(cardId: string, command: string): void {
-    const preCommands = this.getData('cardsConfig').preCommands;
-    const {item} = this.findOrCreateCardConfig(preCommands, cardId, () => ({cardId, data: []}));
-
-    item.data.push(command);
-    storageUtilsIpc.send.onPreCommands({commands: item.data, id: cardId});
-    this.updateData('cardsConfig', {preCommands});
+    this.handleCardCommandOperation('preCommands', 'add', cardId, command, storageUtilsIpc.send.onPreCommands);
   }
 
   public setPreCommand(cardId: string, commands: string[]): void {
-    const preCommands = this.getData('cardsConfig').preCommands;
-    const {item} = this.findOrCreateCardConfig(preCommands, cardId, () => ({cardId, data: []}));
-
-    item.data = commands;
-    this.updateData('cardsConfig', {preCommands});
+    this.handleCardCommandOperation('preCommands', 'set', cardId, commands);
   }
 
   public removePreCommand(cardId: string, index: number): void {
-    const preCommands = this.getData('cardsConfig').preCommands;
-    const indexFound = preCommands.findIndex(item => item.cardId === cardId);
-
-    if (indexFound !== -1) {
-      preCommands[indexFound].data.splice(index, 1);
-      storageUtilsIpc.send.onPreCommands({commands: preCommands[indexFound].data, id: cardId});
-      this.updateData('cardsConfig', {preCommands});
-    }
+    this.handleCardCommandOperation('preCommands', 'remove', cardId, index, storageUtilsIpc.send.onPreCommands);
   }
 
   public handlePreCommandOperation(opt: StorageOperation, data: PreCommands) {
@@ -403,33 +434,15 @@ class StorageManager extends BaseStorage {
   }
 
   public addCustomRun(cardId: string, command: string): void {
-    const customRun = this.getData('cardsConfig').customRun;
-    const {item} = this.findOrCreateCardConfig(customRun, cardId, () => ({cardId, data: []}));
-
-    item.data.push(command);
-    storageUtilsIpc.send.onCustomRun({commands: item.data, id: cardId});
-    this.updateData('cardsConfig', {customRun});
+    this.handleCardCommandOperation('customRun', 'add', cardId, command, storageUtilsIpc.send.onCustomRun);
   }
 
   public setCustomRun(cardId: string, commands: string[]): void {
-    const customRun = this.getData('cardsConfig').customRun;
-    const {item} = this.findOrCreateCardConfig(customRun, cardId, () => ({cardId, data: []}));
-
-    item.data = commands;
-    this.updateData('cardsConfig', {customRun});
+    this.handleCardCommandOperation('customRun', 'set', cardId, commands);
   }
 
   public removeCustomRun(cardId: string, index: number): void {
-    const customRun = this.getData('cardsConfig').customRun;
-    const indexFound = customRun.findIndex(item => item.cardId === cardId);
-
-    if (indexFound !== -1) {
-      customRun[indexFound].data.splice(index, 1);
-
-      storageUtilsIpc.send.onCustomRun({commands: customRun[indexFound].data, id: cardId});
-
-      this.updateData('cardsConfig', {customRun});
-    }
+    this.handleCardCommandOperation('customRun', 'remove', cardId, index, storageUtilsIpc.send.onCustomRun);
   }
 
   public handleCustomRunOperation(opt: StorageOperation, data: PreCommands) {
