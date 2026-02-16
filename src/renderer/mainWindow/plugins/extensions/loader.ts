@@ -1,4 +1,4 @@
-import {ExtensionData_Renderer, ExtensionImport_Renderer} from '@lynx_common/types/plugins/extensions';
+import {ExtensionData_Renderer, ExtensionImport_Renderer, PageAdd} from '@lynx_common/types/plugins/extensions';
 import {ExtensionRendererApi} from '@lynx_common/types/plugins/extensions/api';
 import {ExtensionEvents, ExtensionEvents_IPC} from '@lynx_common/types/plugins/extensions/events';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
@@ -12,6 +12,14 @@ type EmitterType_IPC = Emitter<ExtensionEvents_IPC> & {all: Map<string, unknown[
 
 const emitter: EmitterType = mitt<ExtensionEvents>();
 const emitter_ipc: EmitterType_IPC = mitt<ExtensionEvents_IPC>();
+
+const PageAddInit: PageAdd = {
+  top: [],
+  bottom: [],
+  scrollTop: [],
+  scrollBottom: [],
+  cardsContainer: [],
+};
 
 export const extensionsData: ExtensionData_Renderer = {
   titleBar: {
@@ -90,33 +98,11 @@ export const extensionsData: ExtensionData_Renderer = {
         allCategory: [],
       },
     },
-    audio: {
-      add: {
-        top: [],
-        bottom: [],
-        scrollTop: [],
-        scrollBottom: [],
-        cardsContainer: [],
-      },
-    },
-    image: {
-      add: {
-        top: [],
-        bottom: [],
-        scrollTop: [],
-        scrollBottom: [],
-        cardsContainer: [],
-      },
-    },
-    text: {
-      add: {
-        top: [],
-        bottom: [],
-        scrollTop: [],
-        scrollBottom: [],
-        cardsContainer: [],
-      },
-    },
+    audio: {add: PageAddInit},
+    image: {add: PageAddInit},
+    text: {add: PageAddInit},
+    tools: {add: PageAddInit},
+    games: {add: PageAddInit},
     settings: {
       add: {
         navButton: [],
@@ -128,12 +114,6 @@ export const extensionsData: ExtensionData_Renderer = {
         navButton: [],
         content: [],
       },
-    },
-    tools: {
-      addComponent: [],
-    },
-    games: {
-      addComponent: [],
     },
     agents: {
       add: {
@@ -368,6 +348,24 @@ export const extensionRendererApi: ExtensionRendererApi = {
         cardsContainer: comp => extensionsData.customizePages.others.add.cardsContainer.push(comp),
       },
     },
+    tools: {
+      add: {
+        top: comp => extensionsData.customizePages.tools.add.top.push(comp),
+        bottom: comp => extensionsData.customizePages.tools.add.bottom.push(comp),
+        scrollTop: comp => extensionsData.customizePages.tools.add.scrollTop.push(comp),
+        scrollBottom: comp => extensionsData.customizePages.tools.add.scrollBottom.push(comp),
+        cardsContainer: comp => extensionsData.customizePages.tools.add.cardsContainer.push(comp),
+      },
+    },
+    games: {
+      add: {
+        top: comp => extensionsData.customizePages.games.add.top.push(comp),
+        bottom: comp => extensionsData.customizePages.games.add.bottom.push(comp),
+        scrollTop: comp => extensionsData.customizePages.games.add.scrollTop.push(comp),
+        scrollBottom: comp => extensionsData.customizePages.games.add.scrollBottom.push(comp),
+        cardsContainer: comp => extensionsData.customizePages.games.add.cardsContainer.push(comp),
+      },
+    },
     settings: {
       add: {
         navButton: comp => extensionsData.customizePages.settings.add.navButton.push(comp),
@@ -379,12 +377,6 @@ export const extensionRendererApi: ExtensionRendererApi = {
         navButton: comp => extensionsData.customizePages.dashboard.add.navButton.push(comp),
         content: comp => extensionsData.customizePages.dashboard.add.content.push(comp),
       },
-    },
-    tools: {
-      addComponent: comp => extensionsData.customizePages.tools.addComponent.push(comp),
-    },
-    games: {
-      addComponent: comp => extensionsData.customizePages.games.addComponent.push(comp),
     },
   },
   addReducer: reducer => {
