@@ -281,8 +281,14 @@ const loadModules = async () => {
     const disabledCards = new Set(pluginStorage.disabledCards || []);
 
     if (isDev()) {
-      const devImport = await import('@lynx_module/renderer');
-      importedModules = [{path: 'dev', module: devImport}];
+      try {
+        // @ts-ignore-next-line
+        const devImport = await import('@lynx_module/renderer');
+        importedModules = [{path: 'dev', module: devImport}];
+      } catch (e) {
+        console.log('No dev module found, skipping...');
+        importedModules = [];
+      }
     } else {
       const pluginAddresses = await pluginsIpc.getAddresses();
       const moduleAddresses = pluginAddresses.filter(item => item.type === 'module').map(item => item.address);
