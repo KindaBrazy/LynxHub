@@ -3,7 +3,7 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {applicationIpc} from '@lynx_main/ipc/application';
-import lynxIpc from '@lynx_main/ipc/lynxIpc';
+import lynxIpc from '@lynx_main/ipc/ipcWrapper';
 import classHolder from '@lynx_main/managers/classHolder';
 import RegisterHotkeys from '@lynx_main/managers/hotkeys';
 import {getUserAgent, getWindowColor, RelaunchApp} from '@lynx_main/utils';
@@ -16,9 +16,9 @@ type Listener = () => void;
 /**
  * Manages the main application window and loading window for an Electron app.
  */
-export default class ElectronAppManager {
-  private createWindowListeners: Listener[] = [];
-  private readyToShowListeners: Listener[] = [];
+export default class MainWindowManager {
+  private onCreateWindowListeners: Listener[] = [];
+  private onReadyToShowListeners: Listener[] = [];
 
   private mainWindow?: BrowserWindow;
 
@@ -37,10 +37,10 @@ export default class ElectronAppManager {
   };
 
   public onCreateWindow(callback: Listener) {
-    this.createWindowListeners.push(callback);
+    this.onCreateWindowListeners.push(callback);
   }
   public onReadyToShow(callback: Listener) {
-    this.readyToShowListeners.push(callback);
+    this.onReadyToShowListeners.push(callback);
   }
 
   public getMainWindow(): BrowserWindow | undefined {
@@ -75,14 +75,14 @@ export default class ElectronAppManager {
   /** Creates and configures the main application window. */
   private createMainWindow(): void {
     const {contextMenuManager, linkPreviewManager} = classHolder;
-    this.mainWindow = new BrowserWindow(ElectronAppManager.MAIN_WINDOW_CONFIG);
+    this.mainWindow = new BrowserWindow(MainWindowManager.MAIN_WINDOW_CONFIG);
     this.mainWindow.setBackgroundColor(getWindowColor());
 
     RegisterHotkeys(this.mainWindow.webContents);
 
     this.setupMainWindowEventListeners();
     this.loadAppropriateURL(this.mainWindow, 'index.html');
-    this.createWindowListeners.forEach(listener => listener());
+    this.onCreateWindowListeners.forEach(listener => listener());
     contextMenuManager?.createWindow(this.mainWindow);
     linkPreviewManager?.createWindow(this.mainWindow);
   }
@@ -92,7 +92,7 @@ export default class ElectronAppManager {
     this.getMainWindow()?.once('ready-to-show', () => {
       this.getWebContent()?.setUserAgent(getUserAgent());
       setTimeout(() => {
-        this.readyToShowListeners.forEach(listener => listener());
+        this.onReadyToShowListeners.forEach(listener => listener());
       }, 2000);
     });
 

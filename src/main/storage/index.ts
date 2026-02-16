@@ -7,7 +7,7 @@ import {Get_Default_Hotkeys} from '@lynx_common/consts/hotkeys';
 import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '@lynx_common/types/ipc';
 import StorageTypes from '@lynx_common/types/storage';
 import {applicationIpc} from '@lynx_main/ipc/application';
-import {changeWindowState} from '@lynx_main/ipc/methods';
+import {changeWindowState} from '@lynx_main/ipc/methods/windowUtils';
 import classHolder from '@lynx_main/managers/classHolder';
 import {encryptString, encryptStrings, getAbsolutePath, getExePath, getUserAgent, isPortable} from '@lynx_main/utils';
 import {app} from 'electron';

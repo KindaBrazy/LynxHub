@@ -1,4 +1,4 @@
-import ElectronAppManager from '@lynx_main/mainWindow';
+import MainWindowManager from '@lynx_main/mainWindow';
 import StorageManager from '@lynx_main/storage/storageOperations';
 import pty from 'node-pty';
 
@@ -38,7 +38,7 @@ export default class ExtensionUtils implements MainExtensionUtils {
     this.resolvers.get('storage')!(manager);
   }
 
-  setAppManager(manager: ElectronAppManager) {
+  setAppManager(manager: MainWindowManager) {
     this.resolvers.get('app')!(manager);
   }
 

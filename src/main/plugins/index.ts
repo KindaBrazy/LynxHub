@@ -11,7 +11,7 @@ import {
 import {getUpdateType} from '@lynx_common/utils/plugins';
 import GitManager from '@lynx_main/git';
 import {setupGitManagerListeners} from '@lynx_main/git/gitListeners';
-import {removeDir} from '@lynx_main/ipc/methods';
+import {removeDirRecursive} from '@lynx_main/ipc/methods/windowUtils';
 import {pluginsIpc} from '@lynx_main/ipc/plugins/plugins';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getAppDirectory} from '@lynx_main/managers/dataFolder';
@@ -48,14 +48,14 @@ export class PluginManager {
 
   public async initPlugins() {
     try {
-      await this.readPlugin();
+      await this.loadPlugins();
     } catch (error) {
       console.error('Error initializing plugins:', error);
       captureException(error);
     }
   }
 
-  private async readPlugin() {
+  private async loadPlugins() {
     const {staticManager} = classHolder;
     return new Promise<void>(async resolve => {
       try {
@@ -199,7 +199,7 @@ export class PluginManager {
     const plugin = this.getDirById(id);
     if (!plugin) return false;
     try {
-      await removeDir(plugin);
+      await removeDirRecursive(plugin);
       this.syncList_remove(id);
       this.installed = this.installed.filter(plugin => plugin.id !== id);
       return true;
@@ -224,7 +224,7 @@ export class PluginManager {
         return false;
       }
 
-      this.syncList_add(targetItem);
+      this.addToSyncList(targetItem);
       return true;
     } catch (e) {
       console.warn(`Failed to check for updates ${id}: `, e);
@@ -285,7 +285,7 @@ export class PluginManager {
     }
 
     const target = {id, commit, version, type};
-    this.syncList_add(target);
+    this.addToSyncList(target);
   }
 
   public async syncAll(items: {id: string; commit: string}[]) {
@@ -318,7 +318,7 @@ export class PluginManager {
     this.syncList_noticeRenderer();
   }
 
-  private syncList_add(item: PluginSyncItem) {
+  private addToSyncList(item: PluginSyncItem) {
     let exist: boolean = false;
 
     this.syncAvailable = this.syncAvailable.map(syncItem => {

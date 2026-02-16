@@ -4,7 +4,7 @@ import {ShallowCloneOptions} from '@lynx_common/types/git';
 import {GitProgressState, MainHT} from '@lynx_common/types/ipc';
 import {PullResult, SimpleGitProgressEvent} from 'simple-git';
 
-import lynxIpc from './lynxIpc';
+import lynxIpc from './ipcWrapper';
 import {
   changeBranch,
   getRepositoryInfo,

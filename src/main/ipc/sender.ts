@@ -16,7 +16,7 @@ const createSender = <K extends keyof typeof classHolder>(managerKey: K) => {
 };
 
 const sendToMain = createSender('appManager');
-const sendToLP = createSender('linkPreviewManager');
-const sendToCM = createSender('contextMenuManager');
+const sendToLinkPreview = createSender('linkPreviewManager');
+const sendToContextMenu = createSender('contextMenuManager');
 
-export {sendToCM, sendToLP, sendToMain};
+export {sendToContextMenu, sendToLinkPreview, sendToMain};

@@ -16,7 +16,7 @@ import StorageTypes, {InstalledCard, InstalledCards} from '@lynx_common/types/st
 import classHolder from '@lynx_main/managers/classHolder';
 import {app} from 'electron';
 
-import lynxIpc from './lynxIpc';
+import lynxIpc from './ipcWrapper';
 import {sendToMain} from './sender';
 
 export default function listenStorage() {

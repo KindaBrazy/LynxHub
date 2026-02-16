@@ -8,8 +8,15 @@ import {getAbsolutePath, getRelativePath, openDialog} from '@lynx_main/utils';
 import calcFolderSize from '@lynx_main/utils/calcFolderSize';
 import {OpenDialogOptions, shell} from 'electron';
 
-import lynxIpc from './lynxIpc';
-import {checkFilesExist, getRelativeList, isEmptyDir, removeDir, saveToFile, trashDir} from './methods';
+import lynxIpc from './ipcWrapper';
+import {
+  checkFilesExist,
+  getRelativeList,
+  isEmptyDir,
+  removeDirRecursive,
+  saveToFile,
+  trashDir,
+} from './methods/windowUtils';
 
 export default function listenFiles() {
   // Gets app directory path by folder name (cards, extensions, etc.)
@@ -25,7 +32,7 @@ export default function listenFiles() {
   filesIpc.handle.saveToFile(content => saveToFile(content));
 
   // Permanently removes directory and all contents
-  filesIpc.handle.removeDir(dir => removeDir(dir));
+  filesIpc.handle.removeDir(dir => removeDirRecursive(dir));
 
   // Moves directory to system trash
   filesIpc.handle.trashDir(dir => trashDir(dir));

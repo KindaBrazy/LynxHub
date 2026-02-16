@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {browserIpc} from '@lynx_main/ipc/browser';
-import lynxIpc from '@lynx_main/ipc/lynxIpc';
+import lynxIpc from '@lynx_main/ipc/ipcWrapper';
 import {BrowserWindow, BrowserWindowConstructorOptions, WebContents} from 'electron';
 
 export default class LinkPreviewManager {

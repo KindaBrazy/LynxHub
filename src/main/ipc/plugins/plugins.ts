@@ -11,7 +11,7 @@ import {
 import classHolder from '@lynx_main/managers/classHolder';
 import {getList} from '@lynx_main/plugins/utils';
 
-import lynxIpc from '../lynxIpc';
+import lynxIpc from '../ipcWrapper';
 import {sendToMain} from '../sender';
 
 export default async function listenPlugins() {

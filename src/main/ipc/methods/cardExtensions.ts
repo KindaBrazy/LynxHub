@@ -8,10 +8,10 @@ import {calculateFolderSize} from '@lynx_main/utils';
 import fs from 'graceful-fs';
 import {compact} from 'lodash';
 
-let loadingExtensions = false;
+let isLoadingExtensions = false;
 
-export function disableLoadingExtensions(): void {
-  loadingExtensions = false;
+export function disableExtensionsLoading(): void {
+  isLoadingExtensions = false;
 }
 
 /**
@@ -50,18 +50,18 @@ export async function getExtensionsUpdate(dir: string): Promise<ExtensionsUpdate
     const filteredFolders = await getRepoFolders(path.resolve(dir));
     if (filteredFolders.length === 0) return [];
 
-    loadingExtensions = true;
+    isLoadingExtensions = true;
 
     const updateData = await Promise.all(
       filteredFolders.map(async extension => {
-        if (!loadingExtensions) return null;
+        if (!isLoadingExtensions) return null;
         const extensionDir = path.join(dir, extension);
         const updateAvailable = await GitManager.isUpdateAvailable(extensionDir);
         return {id: extension, updateAvailable, isDisabled: extension.startsWith('.')};
       }),
     );
 
-    return loadingExtensions ? (updateData.filter(Boolean) as ExtensionsUpdateStatus) : [];
+    return isLoadingExtensions ? (updateData.filter(Boolean) as ExtensionsUpdateStatus) : [];
   } catch (error) {
     console.error(`Error retrieving extension updates from ${dir}:`, error);
     return [];
@@ -78,11 +78,11 @@ export async function getExtensionsDetails(dir: string): Promise<ExtensionsData 
     const filteredFolders = await getRepoFolders(path.resolve(dir));
     if (filteredFolders.length === 0) return 'empty';
 
-    loadingExtensions = true;
+    isLoadingExtensions = true;
 
     const extensionsData = await Promise.all(
       filteredFolders.map(async extension => {
-        if (!loadingExtensions) return null;
+        if (!isLoadingExtensions) return null;
         const extensionDir = path.join(dir, extension);
         const [remoteUrl, size] = await Promise.all([
           GitManager.getRemoteUrlFromDirectory(extensionDir).catch(() => ''),
@@ -92,7 +92,7 @@ export async function getExtensionsDetails(dir: string): Promise<ExtensionsData 
       }),
     );
 
-    return loadingExtensions ? (extensionsData.filter(Boolean) as ExtensionsData) : 'empty';
+    return isLoadingExtensions ? (extensionsData.filter(Boolean) as ExtensionsData) : 'empty';
   } catch (error) {
     console.error(`Error retrieving extension details from ${dir}:`, error);
     return 'empty';

@@ -4,7 +4,7 @@ import {MainModuleImportType, MainModules, MainModuleUtils} from '@lynx_common/t
 import {InstalledCard} from '@lynx_common/types/storage';
 import {isDev, toMs} from '@lynx_common/utils';
 import GitManager from '@lynx_main/git';
-import {removeDir, trashDir} from '@lynx_main/ipc/methods';
+import {removeDirRecursive, trashDir} from '@lynx_main/ipc/methods/windowUtils';
 import {modulesIpc} from '@lynx_main/ipc/plugins/modules';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getAppDataPath} from '@lynx_main/managers/dataFolder';
@@ -43,7 +43,7 @@ export default class ModuleManager {
         },
       },
       pty,
-      removeDir,
+      removeDir: removeDirRecursive,
       trashDir,
       isPullAvailable: dir => GitManager.isUpdateAvailable(dir),
       pullDir: (dir, showTaskbarProgress = false) => {

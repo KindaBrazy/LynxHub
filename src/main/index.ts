@@ -7,7 +7,7 @@ import {app, Menu, nativeImage} from 'electron';
 import log from 'electron-log/main';
 
 import darwinIcon from '../../resources/icon-darwin.png?asset';
-import {beforeAppReady, handleAppReadyToShow, handleProtocols} from './appLifecycle';
+import {configureAppBeforeReady, handleAppReadyToShow, registerCustomProtocols} from './appLifecycle';
 import {listenToIpcChannels} from './ipc';
 import {listenBrowser, resetBrowserIPC} from './ipc/browser';
 import listenDialogsWindow from './ipc/dialogsWindow';
@@ -32,7 +32,7 @@ if (!isDev()) {
 Menu.setApplicationMenu(null);
 
 // Initialize command-line switches and protocol scheme before app getting ready
-beforeAppReady();
+configureAppBeforeReady();
 
 // First start loading window when app was ready
 const loadingWindow = new LoadingWindow();
@@ -40,11 +40,11 @@ const loadingWindow = new LoadingWindow();
 app.whenReady().then(async () => {
   await loadingWindow.startLoading();
 
-  await startLynxHub();
+  await initializeLynxHub();
 });
 
 // Second start lynxhub window after loading
-async function startLynxHub() {
+async function initializeLynxHub() {
   // Fix the macOS environment paths
   const {default: fixPath} = await import('fix-path');
   fixPath();
@@ -73,7 +73,7 @@ async function startLynxHub() {
 
   await downloadDU();
 
-  await handleProtocols();
+  await registerCustomProtocols();
 
   await classHolder.pluginManager!.initPlugins();
   await classHolder.extensionManager!.onAppReady();
@@ -104,15 +104,15 @@ async function startLynxHub() {
 
 // ====================================== App Events ======================================
 
-let isQuitting = false;
+let isAppQuitting = false;
 
 app.on('before-quit', e => {
-  if (!isQuitting) {
+  if (!isAppQuitting) {
     e.preventDefault();
     // Stop image cache manager
     getImageCacheManager().stop();
     stopAllPty().then(() => {
-      isQuitting = true;
+      isAppQuitting = true;
       app.quit();
     });
   }

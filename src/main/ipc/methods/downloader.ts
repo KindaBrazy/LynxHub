@@ -6,7 +6,7 @@ import classHolder from '@lynx_main/managers/classHolder';
 import {app, DownloadItem} from 'electron';
 import {download} from 'electron-dl';
 
-let downloadingItem: DownloadItem | undefined;
+let currentDownloadItem: DownloadItem | undefined;
 
 export function downloadFile(url: string) {
   const {appManager} = classHolder;
@@ -21,7 +21,7 @@ export function downloadFile(url: string) {
     showBadge: false,
     directory: path.join(app.getPath('downloads'), 'LynxHub'),
     onStarted: item => {
-      downloadingItem = item;
+      currentDownloadItem = item;
     },
     onProgress: progress => {
       utilsIpc.send.onDownloadFile({
@@ -29,7 +29,7 @@ export function downloadFile(url: string) {
         percentage: progress.percent,
         downloaded: progress.transferredBytes,
         total: progress.totalBytes,
-        fileName: downloadingItem?.getFilename(),
+        fileName: currentDownloadItem?.getFilename(),
       });
     },
   })
@@ -48,5 +48,5 @@ export function downloadFile(url: string) {
 }
 
 export function cancelDownload() {
-  downloadingItem?.cancel();
+  currentDownloadItem?.cancel();
 }

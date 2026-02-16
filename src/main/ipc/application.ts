@@ -24,8 +24,8 @@ import {
 } from '@lynx_main/utils';
 import {nativeTheme, shell} from 'electron';
 
-import lynxIpc from './lynxIpc';
-import {changeWindowState, setDarkMode, setTaskbarStatus} from './methods';
+import lynxIpc from './ipcWrapper';
+import {changeWindowState, setDarkMode, setTaskbarStatus} from './methods/windowUtils';
 import {getSystemInfo} from './methods/platform';
 import {sendToMain} from './sender';
 
@@ -75,7 +75,7 @@ export default async function listenApplication() {
   applicationIpc.handle.isValidDataPath(dir => isAppDir(dir));
 }
 
-const sendIsDarkToAllWindows = (isDark: boolean) => {
+const notifyAllWindowsDarkMode = (isDark: boolean) => {
   const {contextMenuManager, linkPreviewManager, shareScreenManager, toastWindow} = classHolder;
 
   sendToMain(appChannels.onDarkMode, isDark);
@@ -109,7 +109,7 @@ export const applicationIpc = {
       sendToMain(appChannels.showToast, message, type, placement),
     changeWinState: (state: WinStateChange) => sendToMain(appChannels.onChangeState, state),
     updateChannelChange: (channel: string) => sendToMain(appChannels.updateChannelChange, channel),
-    onDarkMode: (isDark: boolean) => sendIsDarkToAllWindows(isDark),
+    onDarkMode: (isDark: boolean) => notifyAllWindowsDarkMode(isDark),
   },
   on: {
     onChangeState: (callback: (state: ChangeWindowState) => void) => lynxIpc.on(appChannels.changeState, callback),

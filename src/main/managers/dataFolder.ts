@@ -8,7 +8,7 @@ import {
   STATICS_FOLDER_NAME,
 } from '@lynx_common/consts';
 import {FolderNames} from '@lynx_common/types';
-import {changeWindowState} from '@lynx_main/ipc/methods';
+import {changeWindowState} from '@lynx_main/ipc/methods/windowUtils';
 import {getExePath, getRelativePath, isPortable} from '@lynx_main/utils';
 import {app, BrowserWindow, dialog} from 'electron';
 import fs from 'graceful-fs';
