@@ -282,8 +282,8 @@ const loadModules = async () => {
 
     if (isDev()) {
       try {
-        // @ts-ignore-next-line
-        const devImport = await import('@lynx_module/renderer');
+        const modulePath = '@lynx_module/renderer';
+        const devImport = await import(/* @vite-ignore */ modulePath);
         importedModules = [{path: 'dev', module: devImport}];
       } catch (e) {
         console.log('No dev module found, skipping...');

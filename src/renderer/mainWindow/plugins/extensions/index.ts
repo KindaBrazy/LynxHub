@@ -24,8 +24,8 @@ export async function loadExtensions() {
 
   if (isDev()) {
     try {
-      // @ts-ignore-next-line
-      const extension = await import('@lynx_extension/renderer/Extension');
+      const extensionPath = '@lynx_extension/renderer/Extension';
+      const extension = await import(/* @vite-ignore */ extensionPath);
       importedExtensions = [extension];
       extensionIds = ['dev-extension'];
     } catch (e) {
