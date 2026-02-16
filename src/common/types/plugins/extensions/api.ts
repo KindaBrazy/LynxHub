@@ -37,6 +37,14 @@ type CompFcPropSearchResult = (component: FcPropSearchResult) => void;
 type CompFcPropAddCardMenu = (component: AddMenuType[]) => void;
 type CompFcPropReplaceMd = (component: FcPropReplaceMd) => void;
 
+type PageAdd = {
+  top: CompFc;
+  bottom: CompFc;
+  scrollTop: CompFc;
+  scrollBottom: CompFc;
+  cardsContainer: CompFc;
+};
+
 export type ExtensionRendererApi = {
   /** Modify the application Title Bar.
    * @see {@linkcode TitleBar} for implementation details. */
@@ -236,72 +244,13 @@ export type ExtensionRendererApi = {
       };
     };
 
-    /** Customize the Audio page.
-     * @see {@linkcode AudioGenerationPage} for implementation details. */
-    audio: {
-      /** Add new elements to the Audio page. */
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-        cardsContainer: CompFc;
-      };
-    };
-
-    /** Customize the Image page.
-     * @see {@linkcode ImageGenerationPage} for implementation details. */
-    image: {
-      /** Add new elements to the Image page. */
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-        cardsContainer: CompFc;
-      };
-    };
-
-    /** Customize the Text page.
-     * @see {@linkcode TextGenerationPage} for implementation details. */
-    text: {
-      /** Add new elements to the Text page. */
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-        cardsContainer: CompFc;
-      };
-    };
-
-    agents: {
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-        cardsContainer: CompFc;
-      };
-    };
-
-    others: {
-      add: {
-        top: CompFc;
-        bottom: CompFc;
-        scrollTop: CompFc;
-        scrollBottom: CompFc;
-        cardsContainer: CompFc;
-      };
-    };
-
-    /** Customize the Tools page.
-     * @see {@linkcode ToolsPage} for implementation details. */
-    tools: {addComponent: CompFc};
-
-    /** Customize the Games page.
-     * @see {@linkcode GamesPage} for implementation details. */
-    games: {addComponent: CompFc};
+    audio: {add: PageAdd};
+    image: {add: PageAdd};
+    text: {add: PageAdd};
+    agents: {add: PageAdd};
+    others: {add: PageAdd};
+    tools: {add: PageAdd};
+    games: {add: PageAdd};
 
     /** Customize the Settings page.
      * @see {@linkcode SettingsPage} for implementation details. */

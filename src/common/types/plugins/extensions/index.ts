@@ -23,6 +23,13 @@ export type FcPropSearchResult = FC<SearchResultProps>;
 export type FcPropReplaceMd = FC<ReplaceMdProps>;
 
 export type AddMenuType = {index: number; components: FcPropCardData[]};
+export type PageAdd = {
+  top: FC[];
+  bottom: FC[];
+  scrollTop: FC[];
+  scrollBottom: FC[];
+  cardsContainer: FC[];
+};
 
 // -----------------------------------------------> Extension Renderer API
 
@@ -105,53 +112,13 @@ export type ExtensionData_Renderer = {
         allCategory: FcPropCardData[];
       };
     };
-    audio: {
-      add: {
-        top: FC[];
-        bottom: FC[];
-        scrollTop: FC[];
-        scrollBottom: FC[];
-        cardsContainer: FC[];
-      };
-    };
-    image: {
-      add: {
-        top: FC[];
-        bottom: FC[];
-        scrollTop: FC[];
-        scrollBottom: FC[];
-        cardsContainer: FC[];
-      };
-    };
-    text: {
-      add: {
-        top: FC[];
-        bottom: FC[];
-        scrollTop: FC[];
-        scrollBottom: FC[];
-        cardsContainer: FC[];
-      };
-    };
-    agents: {
-      add: {
-        top: FC[];
-        bottom: FC[];
-        scrollTop: FC[];
-        scrollBottom: FC[];
-        cardsContainer: FC[];
-      };
-    };
-    others: {
-      add: {
-        top: FC[];
-        bottom: FC[];
-        scrollTop: FC[];
-        scrollBottom: FC[];
-        cardsContainer: FC[];
-      };
-    };
-    tools: {addComponent: FC[]};
-    games: {addComponent: FC[]};
+    audio: {add: PageAdd};
+    image: {add: PageAdd};
+    text: {add: PageAdd};
+    agents: {add: PageAdd};
+    others: {add: PageAdd};
+    tools: {add: PageAdd};
+    games: {add: PageAdd};
     settings: {
       add: {
         navButton: FC[];
