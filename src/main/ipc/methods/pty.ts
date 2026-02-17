@@ -1,6 +1,4 @@
-// PTY (Pseudo Terminal) IPC methods - Manages terminal processes for cards and custom commands
-import {platform} from 'node:os';
-
+import {isWin} from '@lynx_common/utils';
 import classHolder from '@lynx_main/managers/classHolder';
 import LynxTerminal from '@lynx_main/managers/lynxTerminal';
 import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
@@ -36,7 +34,7 @@ function createPtyManager(id: string, dir: string, useConpty: boolean): LynxTerm
 
 let ptyProcesses: LynxTerminal[] = [];
 
-const LINE_ENDING = platform() === 'win32' ? '\r' : '\n';
+const LINE_ENDING = isWin ? '\r' : '\n';
 
 /**
  * Validates and returns a valid directory path, falling back to home if invalid.
@@ -105,7 +103,7 @@ export async function customPtyProcess(id: string, dir?: string, file?: string) 
   const extensionPreCommands = getExtPreCommands(id);
   executeCommands(id, extensionPreCommands);
 
-  executeCommands(id, `${platform() === 'win32' ? './' : 'bash ./'}${file}`);
+  executeCommands(id, `${isWin ? './' : 'bash ./'}${file}`);
 }
 
 export async function customPtyCommands(id: string, commands?: string | string[], dir?: string) {

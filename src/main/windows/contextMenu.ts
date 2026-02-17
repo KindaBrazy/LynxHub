@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {ContextResizeData} from '@lynx_common/types';
+import {isMac} from '@lynx_common/utils';
 import {contextMenuIpc} from '@lynx_main/ipc/contextMenu';
 import {dialogBlured} from '@lynx_main/ipc/dialogsWindow';
 import lynxIpc from '@lynx_main/ipc/ipcWrapper';
@@ -29,7 +30,7 @@ export default class ContextMenuManager {
     skipTaskbar: true,
     useContentSize: true,
     minimizable: false,
-    titleBarStyle: process.platform === 'darwin' ? 'customButtonsOnHover' : 'default',
+    titleBarStyle: isMac ? 'customButtonsOnHover' : 'default',
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
       sandbox: false,

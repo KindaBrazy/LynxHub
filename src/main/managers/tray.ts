@@ -1,6 +1,5 @@
-import os from 'node:os';
-
 import {APP_NAME, APP_NAME_VERSION} from '@lynx_common/consts';
+import {isWin} from '@lynx_common/utils';
 import {EMenuItem} from '@lynx_main/plugins/extensions/types';
 import {Menu, Tray} from 'electron';
 
@@ -30,7 +29,7 @@ export default class TrayManager {
     if (this.tray) return;
     const {extensionManager} = classHolder;
 
-    const icon = os.platform() === 'win32' ? trayIcon : trayIconMenu;
+    const icon = isWin ? trayIcon : trayIconMenu;
 
     this.tray = new Tray(icon);
     this.tray.setToolTip(APP_NAME);

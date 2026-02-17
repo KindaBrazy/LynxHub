@@ -1,8 +1,8 @@
-import {platform} from 'node:os';
 import {join} from 'node:path';
 import {pathToFileURL} from 'node:url';
 
 import {APP_BUILD_NUMBER, APP_VERSION} from '@lynx_common/consts';
+import {isMac, isWin} from '@lynx_common/utils';
 import {app, net, protocol} from 'electron';
 
 import classHolder from './managers/classHolder';
@@ -103,7 +103,7 @@ export function handleAppReadyToShow() {
   extensionManager?.onReadyToShow();
   handleTaskbarStatus();
   handleStartupBehavior();
-  if (platform() === 'win32') setLoginItemSettings();
+  if (isWin) setLoginItemSettings();
   cardsValidator?.checkAndWatch();
 
   classHolder.shareScreenManager = new ShareScreenManager();
@@ -119,26 +119,26 @@ function handleTaskbarStatus() {
   switch (taskbarStatus) {
     case 'taskbar-tray':
       trayManager?.createTrayIcon();
-      if (platform() === 'win32') {
+      if (isWin) {
         mainWindow?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+      } else if (isMac && !app.dock?.isVisible()) {
         app.dock?.show();
       }
       break;
     case 'tray-minimized':
     case 'taskbar':
       trayManager?.destroyTrayIcon();
-      if (platform() === 'win32') {
+      if (isWin) {
         mainWindow?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+      } else if (isMac && !app.dock?.isVisible()) {
         app.dock?.show();
       }
       break;
     case 'tray':
       trayManager?.createTrayIcon();
-      if (platform() === 'win32') {
+      if (isWin) {
         mainWindow?.setSkipTaskbar(true);
-      } else if (platform() === 'darwin' && app.dock?.isVisible()) {
+      } else if (isMac && app.dock?.isVisible()) {
         app.dock?.hide();
       }
       break;

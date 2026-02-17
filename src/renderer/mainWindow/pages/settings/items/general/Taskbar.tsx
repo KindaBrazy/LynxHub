@@ -1,5 +1,6 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {TaskbarStatus} from '@lynx_common/types/ipc';
+import {isLinux, isMac} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {useCallback, useEffect, useState} from 'react';
@@ -25,10 +26,8 @@ export default function Taskbar() {
     });
   }, []);
 
-  const isDarwin = window.osPlatform === 'darwin';
-  const isLinux = window.osPlatform === 'linux';
-  const labelText = isDarwin ? 'Dock Options' : 'Taskbar Options';
-  const descriptionText = isDarwin
+  const labelText = isMac ? 'Dock Options' : 'Taskbar Options';
+  const descriptionText = isMac
     ? 'Select how the app should appear in the dock and system tray.'
     : 'Select how the app should appear in the taskbar and system tray.';
 
@@ -44,27 +43,27 @@ export default function Taskbar() {
         classNames={{trigger: 'cursor-default transition! duration-300!'}}
         disallowEmptySelection>
         <SelectItem key="taskbar-tray" className="cursor-default">
-          {isDarwin ? 'Dock & Tray' : 'Taskbar & Tray'}
+          {isMac ? 'Dock & Tray' : 'Taskbar & Tray'}
         </SelectItem>
         <SelectItem key="taskbar" className="cursor-default">
-          {isDarwin ? 'Dock Only' : 'Taskbar Only'}
+          {isMac ? 'Dock Only' : 'Taskbar Only'}
         </SelectItem>
         {isLinux ? (
           <SelectItem key="!" className="hidden" textValue="Nothing" />
         ) : (
           <SelectItem key="tray" className="cursor-default">
-            {isDarwin ? 'Tray Only' : 'Tray Only'}
+            {isMac ? 'Tray Only' : 'Tray Only'}
           </SelectItem>
         )}
         <SelectItem
           description={
-            isDarwin
+            isMac
               ? 'Show in the dock when focused, move to tray when minimized.'
               : 'Show in the taskbar when focused, move to tray when minimized.'
           }
           key="tray-minimized"
           className="cursor-default">
-          {isDarwin ? 'Dock when focused, Tray when minimized' : 'Taskbar when focused, Tray when minimized'}
+          {isMac ? 'Dock when focused, Tray when minimized' : 'Taskbar when focused, Tray when minimized'}
         </SelectItem>
       </Select>
     </SettingsFilterItem>

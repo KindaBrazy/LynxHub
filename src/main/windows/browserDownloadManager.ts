@@ -1,6 +1,7 @@
 import {accessSync, constants as fsConstants, existsSync, mkdirSync} from 'node:fs';
 import {basename, join, parse} from 'node:path';
 
+import {isWin} from '@lynx_common/utils';
 import listenDownloadManager, {downloadManagerIpc} from '@lynx_main/ipc/downloadManager';
 import classHolder from '@lynx_main/managers/classHolder';
 import {app, BrowserWindow, dialog, DownloadItem, Session, shell} from 'electron';
@@ -521,7 +522,7 @@ export default class BrowserDownloadManager {
     let sanitized = filename.replace(/[/\\]/g, '_').replace(/\.\./g, '_');
 
     // Remove invalid characters based on OS
-    if (process.platform === 'win32') {
+    if (isWin) {
       // Windows invalid characters: < > : " / \ | ? *
       sanitized = sanitized.replace(/[<>:"|?*]/g, '_');
       // Remove trailing dots and spaces (Windows doesn't allow these)
@@ -563,13 +564,13 @@ export default class BrowserDownloadManager {
       // Check for invalid characters (OS-specific)
       // Windows: < > : " | ? * (but NOT parentheses, which are valid)
       // Note: We don't check for / and \ as they are path separators
-      const invalidChars = process.platform === 'win32' ? /[<>"|?*]/ : /\0/;
+      const invalidChars = isWin ? /[<>"|?*]/ : /\0/;
       if (invalidChars.test(path)) {
         return {success: false, error: 'Path contains invalid characters'};
       }
 
       // Check path length limits (OS-specific)
-      const maxPathLength = process.platform === 'win32' ? 260 : 4096;
+      const maxPathLength = isWin ? 260 : 4096;
       if (path.length > maxPathLength) {
         return {success: false, error: `Path is too long (max ${maxPathLength} characters)`};
       }

@@ -2,6 +2,7 @@ import * as https from 'node:https';
 import os from 'node:os';
 import path from 'node:path';
 
+import {isWin} from '@lynx_common/utils';
 import {getAppDirectory} from '@lynx_main/managers/dataFolder';
 import ShowToastWindow from '@lynx_main/windows/toast';
 import decompress from 'decompress';
@@ -43,7 +44,7 @@ async function downloadAndExtractDuZip(savePath: string): Promise<void> {
 
 /** Downloads the DU utility if it's not already installed. */
 export default async function downloadDU(): Promise<void> {
-  if (os.platform() !== 'win32') return;
+  if (!isWin) return;
 
   const duBinPath = path.join(getAppDirectory('Binaries'), 'DiskUsage', DU_BINARY_NAME);
 

@@ -1,4 +1,3 @@
-import {platform} from 'node:os';
 import {dirname, isAbsolute, join} from 'node:path';
 
 import {
@@ -8,6 +7,7 @@ import {
   STATICS_FOLDER_NAME,
 } from '@lynx_common/consts';
 import {FolderNames} from '@lynx_common/types';
+import {isWin} from '@lynx_common/utils';
 import {changeWindowState} from '@lynx_main/ipc/methods/windowUtils';
 import {getExePath, getRelativePath, isPortable} from '@lynx_main/utils';
 import {app, BrowserWindow, dialog} from 'electron';
@@ -108,8 +108,7 @@ export async function selectNewAppDataFolder(targetWindow?: BrowserWindow): Prom
         throw new Error('The selected folder does not exist or has been moved.');
       } else if (nodeError.code === 'EACCES') {
         throw new Error(
-          `Permission denied. Try running as ${platform() === 'win32' ? 'administrator' : 'sudo'}` +
-            ` or select another folder.`,
+          `Permission denied. Try running as ${isWin ? 'administrator' : 'sudo'}` + ` or select another folder.`,
         );
       }
     }

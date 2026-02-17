@@ -1,10 +1,10 @@
 // Utility IPC methods - Window state, file operations, and general utilities
 import {writeFile} from 'node:fs/promises';
-import {platform} from 'node:os';
 import path from 'node:path';
 
 import {FolderListData} from '@lynx_common/types';
 import {ChangeWindowState, DarkModeTypes, TaskbarStatus} from '@lynx_common/types/ipc';
+import {isMac, isWin} from '@lynx_common/utils';
 import classHolder from '@lynx_main/managers/classHolder';
 import {noticeAllWindowsDarkMode} from '@lynx_main/utils';
 import decompress from 'decompress';
@@ -29,7 +29,7 @@ export function changeWindowState(state: ChangeWindowState): void {
     close: () => {
       storageManager.updateLastSize();
       mainWindow.close();
-      if (platform() === 'darwin') trayManager?.destroyTrayIcon();
+      if (isMac) trayManager?.destroyTrayIcon();
     },
     fullscreen: () => mainWindow.setFullScreen(!mainWindow.isFullScreen()),
     restart: () => appManager?.restart(),
@@ -68,33 +68,33 @@ export function setTaskbarStatus(status: TaskbarStatus): void {
   const actions: Record<TaskbarStatus, () => void> = {
     'taskbar-tray': () => {
       trayManager?.createTrayIcon();
-      if (platform() === 'win32') {
+      if (isWin) {
         mainWindow?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+      } else if (isMac && !app.dock?.isVisible()) {
         app.dock?.show();
       }
     },
     taskbar: () => {
       trayManager?.destroyTrayIcon();
-      if (platform() === 'win32') {
+      if (isWin) {
         mainWindow?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+      } else if (isMac && !app.dock?.isVisible()) {
         app.dock?.show();
       }
     },
     tray: () => {
       trayManager?.createTrayIcon();
-      if (platform() === 'win32') {
+      if (isWin) {
         mainWindow?.setSkipTaskbar(true);
-      } else if (platform() === 'darwin' && app.dock?.isVisible()) {
+      } else if (isMac && app.dock?.isVisible()) {
         app.dock?.hide();
       }
     },
     'tray-minimized': () => {
       trayManager?.destroyTrayIcon();
-      if (platform() === 'win32') {
+      if (isWin) {
         mainWindow?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+      } else if (isMac && !app.dock?.isVisible()) {
         app.dock?.show();
       }
     },

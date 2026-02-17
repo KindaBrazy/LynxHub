@@ -130,7 +130,7 @@ export const HotkeySettings = () => {
   }, []);
 
   const resetToDefault = useCallback(() => {
-    const result = Get_Default_Hotkeys(window.osPlatform);
+    const result = Get_Default_Hotkeys();
     dispatch(hotkeysActions.setHotkeys(result));
     storageIpc.update('app', {hotkeys: result});
   }, []);

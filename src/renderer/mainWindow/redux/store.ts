@@ -1,5 +1,6 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {PreloadState} from '@lynx/types/reducers';
+import {isWin} from '@lynx_common/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {configureStore} from '@reduxjs/toolkit';
 import {createReduxEnhancer} from '@sentry/react';
@@ -50,12 +51,11 @@ const buildPreloadedState = (): PreloadState | undefined => {
   let isUpgradeFlow: boolean = false;
   const oldSetupDone = storage.app.initialized;
   const newSetupDone = storage.app.inited;
-  const isWindows = window.osPlatform === 'win32';
 
   if (newSetupDone) {
     showWizard = false;
   } else {
-    if (oldSetupDone && !isWindows) {
+    if (oldSetupDone && !isWin) {
       storageIpc.update('app', {inited: true});
       showWizard = false;
     } else {

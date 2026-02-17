@@ -1,3 +1,5 @@
+import {isMac} from '@lynx_common/utils';
+
 import {LynxHotkey} from '../types/ipc';
 
 export const Hotkey_Names = {
@@ -111,9 +113,7 @@ export const Hotkey_Desc = {
   terminalQuick6: 'Executes the sixth configured terminal quick command in the active terminal.',
 };
 
-export const Get_Default_Hotkeys = (platform: 'darwin' | 'linux' | 'win32' | string): LynxHotkey[] => {
-  const isMac = platform === 'darwin';
-
+export const Get_Default_Hotkeys = (): LynxHotkey[] => {
   return [
     {
       name: Hotkey_Names.fullscreen,

@@ -1,5 +1,6 @@
 import {modalActions} from '@lynx/redux/reducers/modals';
 import {AppDispatch} from '@lynx/redux/store';
+import {isMac} from '@lynx_common/utils';
 import {capitalize, isEmpty} from 'lodash';
 
 /**
@@ -74,7 +75,6 @@ export function formatHotkey(hotkey: HotkeyLike | null): string {
     return 'Not Set';
   }
 
-  const isMac = window.osPlatform === 'darwin';
   const parts: string[] = [];
 
   // On macOS, show Cmd for meta, Ctrl for control
