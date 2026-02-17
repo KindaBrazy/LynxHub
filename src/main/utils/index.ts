@@ -21,9 +21,9 @@ export async function openDialog(options: OpenDialogOptions): Promise<string | u
   const {appManager} = classHolder;
   try {
     const mainWindow = appManager?.getMainWindow();
-    const result: OpenDialogReturnValue = await (mainWindow
-      ? dialog.showOpenDialog(mainWindow, options)
-      : dialog.showOpenDialog(options));
+    const result: OpenDialogReturnValue = mainWindow
+      ? await dialog.showOpenDialog(mainWindow, options)
+      : await dialog.showOpenDialog(options);
     if (result.filePaths) return result.filePaths[0];
     return undefined;
   } catch (error) {

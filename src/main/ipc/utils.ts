@@ -6,10 +6,10 @@ import {
   MainHT,
   OnUpdatingExtensions,
 } from '@lynx_common/types/ipc';
+import {formatBytes} from '@lynx_common/utils';
 import {getImageCacheManager} from '@lynx_main/managers/imageCache';
 
 import lynxIpc from './ipcWrapper';
-import {decompressFile, getImageAsDataURL, isResponseValid} from './methods/windowUtils';
 import {
   disableExtension,
   disableExtensionsLoading,
@@ -18,16 +18,8 @@ import {
   updateAllExtensions,
 } from './methods/cardExtensions';
 import {cancelDownload, downloadFile} from './methods/downloader';
+import {decompressFile, getImageAsDataURL, isResponseValid} from './methods/windowUtils';
 import {sendToMain} from './sender';
-
-/** Formats bytes to human readable string */
-function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 B';
-  const k = 1024;
-  const sizes = ['B', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
-}
 
 export default function listenUtils() {
   const cacheManager = getImageCacheManager();

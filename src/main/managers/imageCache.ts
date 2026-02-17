@@ -3,6 +3,7 @@ import {existsSync, mkdirSync, readdirSync, rmSync, writeFileSync} from 'node:fs
 import {readFile, stat, unlink, writeFile} from 'node:fs/promises';
 import {join} from 'node:path';
 
+import {formatBytes} from '@lynx_common/utils';
 import {net, protocol} from 'electron';
 
 import classHolder from './classHolder';
@@ -236,6 +237,28 @@ export class ImageCacheManager {
     delete this.metadata.entries[hash];
   }
 
+  /** Removes all cache entries and files */
+  private async clearAllEntries(): Promise<number> {
+    const entryCount = Object.keys(this.metadata.entries).length;
+
+    for (const entry of Object.values(this.metadata.entries)) {
+      const filePath = this.getCacheFilePath(entry.hash, entry.extension);
+      try {
+        if (existsSync(filePath)) {
+          await unlink(filePath);
+        }
+      } catch {
+        // Ignore individual file errors
+      }
+    }
+
+    this.metadata = this.createEmptyMetadata();
+    await this.saveMetadata();
+    this.cleanupOrphanedFiles();
+
+    return entryCount;
+  }
+
   /** Cleans up expired cache entries (older than 7 days) */
   private async cleanupExpiredEntries(): Promise<void> {
     const now = Date.now();
@@ -364,7 +387,8 @@ export class ImageCacheManager {
       await writeFile(filePath, buffer);
 
       // Update metadata
-      const entry: CacheEntry = {
+
+      this.metadata.entries[hash] = {
         url,
         hash,
         extension,
@@ -376,7 +400,6 @@ export class ImageCacheManager {
         lastModified: response.headers.get('last-modified') || undefined,
       };
 
-      this.metadata.entries[hash] = entry;
       await this.saveMetadata();
 
       // Enforce max cache size asynchronously
@@ -636,9 +659,9 @@ export class ImageCacheManager {
       version: this.metadata.version,
       entryCount: entries.length,
       totalSize,
-      totalSizeFormatted: this.formatBytes(totalSize),
+      totalSizeFormatted: formatBytes(totalSize),
       maxSize: MAX_CACHE_SIZE,
-      maxSizeFormatted: this.formatBytes(MAX_CACHE_SIZE),
+      maxSizeFormatted: formatBytes(MAX_CACHE_SIZE),
       usagePercent: Math.round((totalSize / MAX_CACHE_SIZE) * 100),
       lastCleanup: this.metadata.lastCleanup,
       lastCleanupFormatted: new Date(this.metadata.lastCleanup).toISOString(),
@@ -657,26 +680,7 @@ export class ImageCacheManager {
   /** Clears all cache entries */
   private async handleClearRequest(): Promise<Response> {
     try {
-      const entryCount = Object.keys(this.metadata.entries).length;
-
-      // Remove all cache files
-      for (const entry of Object.values(this.metadata.entries)) {
-        const filePath = this.getCacheFilePath(entry.hash, entry.extension);
-        try {
-          if (existsSync(filePath)) {
-            await unlink(filePath);
-          }
-        } catch {
-          // Ignore individual file errors
-        }
-      }
-
-      // Reset metadata
-      this.metadata = this.createEmptyMetadata();
-      await this.saveMetadata();
-
-      // Clean up any orphaned files
-      this.cleanupOrphanedFiles();
+      const entryCount = await this.clearAllEntries();
 
       return new Response(JSON.stringify({success: true, clearedEntries: entryCount}), {
         status: 200,
@@ -689,15 +693,6 @@ export class ImageCacheManager {
         headers: {'Content-Type': 'application/json'},
       });
     }
-  }
-
-  /** Formats bytes to human readable string */
-  private formatBytes(bytes: number): string {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   }
 
   /**
@@ -748,33 +743,7 @@ export class ImageCacheManager {
 
   /** Clears all cached entries */
   public async clearCache(): Promise<number> {
-    const entryCount = Object.keys(this.metadata.entries).length;
-
-    for (const entry of Object.values(this.metadata.entries)) {
-      const filePath = this.getCacheFilePath(entry.hash, entry.extension);
-      try {
-        if (existsSync(filePath)) {
-          await unlink(filePath);
-        }
-      } catch {
-        // Ignore
-      }
-    }
-
-    this.metadata = this.createEmptyMetadata();
-    await this.saveMetadata();
-    this.cleanupOrphanedFiles();
-
-    return entryCount;
-  }
-
-  /**
-   * Checks if a URL is already a cache URL
-   * @param url - The URL to check
-   * @returns True if the URL is a cache URL
-   */
-  public static isCacheUrl(url: string): boolean {
-    return url.startsWith('lynxcache://');
+    return this.clearAllEntries();
   }
 }
 
