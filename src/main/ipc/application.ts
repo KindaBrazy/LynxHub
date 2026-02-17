@@ -25,8 +25,8 @@ import {
 import {nativeTheme, shell} from 'electron';
 
 import lynxIpc from './ipcWrapper';
-import {changeWindowState, setDarkMode, setTaskbarStatus} from './methods/windowUtils';
 import {getSystemInfo} from './methods/platform';
+import {changeWindowState, setDarkMode, setTaskbarStatus} from './methods/windowUtils';
 import {sendToMain} from './sender';
 
 export default async function listenApplication() {
