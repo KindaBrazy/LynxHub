@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import {isWin} from '@lynx_common/utils';
+import {isWin, terminalLineEnding} from '@lynx_common/utils';
 import {ptyIpc} from '@lynx_main/ipc/pty';
 import {determineShell} from '@lynx_main/utils';
 import {app} from 'electron';
@@ -110,11 +110,10 @@ export default class LynxTerminal {
 
   public clear(): void {
     if (this.isRunning && this.process) {
-      const LINE_ENDING = isWin ? '\r' : '\n';
       const clearEscape = isWin ? '\x1b' : '\x15';
 
       this.write(clearEscape);
-      this.write(`clear${LINE_ENDING}`);
+      this.write(`clear${terminalLineEnding}`);
       this.write(clearEscape);
 
       this.process.clear();

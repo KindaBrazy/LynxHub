@@ -1,4 +1,4 @@
-import {isWin} from '@lynx_common/utils';
+import {isWin, terminalLineEnding} from '@lynx_common/utils';
 import classHolder from '@lynx_main/managers/classHolder';
 import LynxTerminal from '@lynx_main/managers/lynxTerminal';
 import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
@@ -34,8 +34,6 @@ function createPtyManager(id: string, dir: string, useConpty: boolean): LynxTerm
 
 let ptyProcesses: LynxTerminal[] = [];
 
-const LINE_ENDING = isWin ? '\r' : '\n';
-
 /**
  * Validates and returns a valid directory path, falling back to home if invalid.
  */
@@ -50,7 +48,7 @@ function getValidDir(dir?: string): string {
  */
 function runCommandsSequentially(id: string, commands: string[]): void {
   if (!isEmpty(commands)) {
-    commands.forEach(command => ptyWrite(id, `${command}${LINE_ENDING}`));
+    commands.forEach(command => ptyWrite(id, `${command}${terminalLineEnding}`));
   }
 }
 
@@ -171,7 +169,7 @@ function executeCommands(id: string, commands: string | string[] | undefined) {
     if (isArray(commands)) {
       runCommandsSequentially(id, commands);
     } else {
-      ptyWrite(id, commands + LINE_ENDING);
+      ptyWrite(id, commands + terminalLineEnding);
     }
   }
 }

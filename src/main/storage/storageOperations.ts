@@ -11,7 +11,7 @@ import {
   StorageOperation,
 } from '@lynx_common/types/ipc';
 import {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
-import {compareUrls, isValidURL, isWin} from '@lynx_common/utils';
+import {compareUrls, isValidURL, terminalLineEnding} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_main/ipc/storage';
 import classHolder from '@lynx_main/managers/classHolder';
 import {
@@ -698,8 +698,7 @@ class StorageManager extends BaseStorage {
    * Adds platform-specific line endings (CRLF for Windows, LF for Unix)
    */
   public setCardTerminalPreCommands(id: string, commands: string[]) {
-    const LINE_ENDING = isWin ? '\r' : '\n';
-    const commandLines = commands.map(command => `${command}${LINE_ENDING}`);
+    const commandLines = commands.map(command => `${command}${terminalLineEnding}`);
     let cardTerminalPreCommands = this.getData('cards').cardTerminalPreCommands;
 
     const findIndex = cardTerminalPreCommands.findIndex(command => command.id === id);

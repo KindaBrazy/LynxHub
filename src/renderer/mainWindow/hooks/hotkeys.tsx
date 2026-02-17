@@ -7,13 +7,11 @@ import {AppDispatch} from '@lynx/redux/store';
 import {defaultTabItem} from '@lynx/utils/constants';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {LynxHotkey} from '@lynx_common/types/ipc';
-import {isWin} from '@lynx_common/utils';
+import {terminalLineEnding} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
-
-const LINE_ENDING = isWin ? '\r' : '\n';
 
 // Create a fast lookup key from hotkey properties
 function createHotkeyKey(key: string, control: boolean, shift: boolean, alt: boolean, meta: boolean): string {
@@ -130,7 +128,7 @@ export function useRegisterHotkeys() {
       const card = runningCards.find(c => c.tabId === activeTab && (c.type === 'terminal' || c.type === 'both'));
       if (!card) return;
 
-      ptyIpc.write(card.id, quick.command + LINE_ENDING);
+      ptyIpc.write(card.id, quick.command + terminalLineEnding);
     },
     [activeTab, quickCommands, runningCards],
   );
