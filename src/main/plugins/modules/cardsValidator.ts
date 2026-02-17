@@ -121,7 +121,7 @@ export class ValidateCards {
 
   private async validateModuleBasedCard(card: InstalledCard, pathCards: PathCards[]): Promise<InstalledCard | null> {
     const {moduleManager} = classHolder;
-    const isInstalledMethod = await moduleManager?.getMethodsById(card.id)?.().isInstalled;
+    const isInstalledMethod = moduleManager?.getMethodsById(card.id)?.().isInstalled;
 
     if (!isInstalledMethod) return null;
 
@@ -157,11 +157,9 @@ export class ValidateCards {
 
       if (hasModuleMethod) {
         const validCard = await this.validateModuleBasedCard(card, pathCards);
-        console.log('Module Valid: ', card.id, !!validCard);
         if (validCard) moduleCards.push(validCard);
       } else {
         const validCard = await this.validatePathBasedCard(card);
-        console.log('Path Valid: ', card.id, !!validCard);
         if (validCard) pathCards.push(validCard);
       }
     }
