@@ -360,7 +360,7 @@ class StorageManager extends BaseStorage {
   /**
    * Generic handler for card command operations (preCommands, customRun)
    */
-  private handleCardCommandOperation<T extends {cardId: string; data: string[]}>(
+  private handleCardCommandOperation(
     configKey: 'preCommands' | 'customRun',
     operation: 'add' | 'set' | 'remove',
     cardId: string,
