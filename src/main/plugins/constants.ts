@@ -1,5 +1,3 @@
-export const hostName: string = 'localhost';
-
 export const pluginFolders = {
   module: {
     oldFolder: 'Modules',

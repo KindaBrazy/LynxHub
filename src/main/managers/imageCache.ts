@@ -72,8 +72,8 @@ interface CacheMetadata {
  * Cache is automatically revalidated and cleaned up every 7 days.
  */
 export class ImageCacheManager {
-  private cacheDir: string;
-  private metadataPath: string;
+  private readonly cacheDir: string;
+  private readonly metadataPath: string;
   private metadata: CacheMetadata;
   private initialized: boolean = false;
   private cleanupTimer: NodeJS.Timeout | null = null;
