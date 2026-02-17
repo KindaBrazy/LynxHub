@@ -3,7 +3,7 @@ import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {useTerminalState} from '@lynx/redux/reducers/terminal';
 import {formatHotkey} from '@lynx/utils';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
-import {isWin} from '@lynx_common/utils';
+import {terminalLineEnding} from '@lynx_common/utils';
 import ptyIpc from '@lynx_shared/ipc/pty';
 
 type Props = {id: string};
@@ -11,7 +11,6 @@ type Props = {id: string};
 export default function QuickCommands({id}: Props) {
   const quickCommands = useTerminalState('quickCommands');
   const hotkeys = useHotkeysState('hotkeys');
-  const LINE_ENDING = isWin ? '\r' : '\n';
 
   const hasAnyQuick = quickCommands.slice(0, 6).some(item => item && item.command);
   if (!hasAnyQuick) return null;
@@ -25,7 +24,7 @@ export default function QuickCommands({id}: Props) {
         if (!item || !item.command) return null;
 
         const label = item.label || `Cmd ${index + 1}`;
-        const command = item.command + LINE_ENDING;
+        const command = item.command + terminalLineEnding;
 
         const hotkeyNameMap: Record<number, string> = {
           0: Hotkey_Names.terminalQuick1,

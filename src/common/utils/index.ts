@@ -398,7 +398,7 @@ function detectIsMac(): boolean {
     return process.platform === 'darwin';
   }
   // Fallback (shouldn't happen in Electron)
-  return true;
+  return false;
 }
 
 function detectIsLinux(): boolean {
@@ -411,12 +411,14 @@ function detectIsLinux(): boolean {
     return process.platform === 'linux';
   }
   // Fallback (shouldn't happen in Electron)
-  return true;
+  return false;
 }
 
 export const isWin: boolean = detectIsWin();
 export const isMac: boolean = detectIsMac();
 export const isLinux: boolean = detectIsLinux();
+
+export const terminalLineEnding = isWin ? '\r' : '\n';
 
 /**
  * Generates a cache URL for a given image URL.
