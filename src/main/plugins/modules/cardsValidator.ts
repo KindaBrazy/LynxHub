@@ -4,7 +4,7 @@ import {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
 import AddBreadcrumb_Main from '@lynx_main/utils/breadcrumbs';
-import {FSWatcher, watch} from 'chokidar';
+import {ChokidarOptions, FSWatcher, watch} from 'chokidar';
 import {promises} from 'graceful-fs';
 import lodash from 'lodash';
 
@@ -38,7 +38,7 @@ export class ValidateCards {
    */
   private startWatcherForDir(dir: string, usePolling: boolean = false): void {
     try {
-      const watchOptions = {
+      const watchOptions: ChokidarOptions = {
         depth: 0,
         persistent: true,
         usePolling,

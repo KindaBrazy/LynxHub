@@ -488,9 +488,6 @@ export default class BrowserManager {
     const webContents = this.getWebContents(id);
     if (!webContents) return;
 
-    // Store browser id to verify it still exists after async operations
-    const browserId = id;
-
     try {
       // Wait for page to be ready for script execution
       if (webContents.isLoading()) {
@@ -507,7 +504,7 @@ export default class BrowserManager {
       }
 
       // Re-verify webContents is still valid after async wait
-      const currentWebContents = this.getWebContents(browserId);
+      const currentWebContents = this.getWebContents(id);
       if (!currentWebContents || currentWebContents.isDestroyed()) return;
 
       const volumeDecimal = Math.max(0, Math.min(100, volume)) / 100;
