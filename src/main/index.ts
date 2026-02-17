@@ -17,6 +17,7 @@ import {checkAppDirectories} from './managers/dataFolder';
 import {getImageCacheManager} from './managers/imageCache';
 import {checkForUpdate} from './managers/updater';
 import PatreonAuth from './monitoring/patreonAuth';
+import {PluginMigrate} from './setup/migration';
 import {getPrivilegeText} from './utils';
 import downloadDU from './utils/calcFolderSize/downloadDiskUsageUtility';
 import LoadingWindow from './windows/loading';
@@ -38,9 +39,17 @@ configureAppBeforeReady();
 const loadingWindow = new LoadingWindow();
 
 app.whenReady().then(async () => {
-  await loadingWindow.startLoading();
-
-  await initializeLynxHub();
+  // Check if plugin migration is needed for users coming from old versions
+  const storageManager = await classHolder.waitForClass('storageManager');
+  if (storageManager.getData('plugin').migrated) {
+    await loadingWindow.startLoading();
+    await initializeLynxHub();
+  } else {
+    // Initialize managers needed for migration
+    await classHolder.initializeManagers();
+    const pluginManager = await classHolder.waitForClass('pluginManager');
+    PluginMigrate(storageManager, pluginManager);
+  }
 });
 
 // Second start lynxhub window after loading
