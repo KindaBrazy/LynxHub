@@ -375,27 +375,48 @@ export function getSearchUrl(text: string, site: SearchQuerySites): string {
   return urlTemplate.replace('%s', encodedText);
 }
 
-/** Detect if file called this method is in renderer or main process
- * @returns
- * - **True**: renderer process
- * - **False**: main process
- * - **Undefined**: Can't detect
- * */
-export function isRenderer(): boolean | undefined {
-  if (typeof window !== 'undefined') return true;
-
-  if (typeof process !== 'undefined') return false;
-
-  return undefined;
-}
-
-export function isWin() {
-  if (isRenderer() === true && window.osPlatform) return window.osPlatform === 'win32';
-  if (isRenderer() === false && process.platform) return process.platform === 'win32';
-
+function detectIsWin(): boolean {
+  // Renderer process - use preload-exposed platform
+  if (typeof window !== 'undefined' && window.osPlatform) {
+    return window.osPlatform === 'win32';
+  }
+  // Main process - use process.platform directly (synchronous)
+  if (typeof process !== 'undefined' && process.platform) {
+    return process.platform === 'win32';
+  }
   // Fallback (shouldn't happen in Electron)
   return true;
 }
+
+function detectIsMac(): boolean {
+  // Renderer process - use preload-exposed platform
+  if (typeof window !== 'undefined' && window.osPlatform) {
+    return window.osPlatform === 'darwin';
+  }
+  // Main process - use process.platform directly (synchronous)
+  if (typeof process !== 'undefined' && process.platform) {
+    return process.platform === 'darwin';
+  }
+  // Fallback (shouldn't happen in Electron)
+  return true;
+}
+
+function detectIsLinux(): boolean {
+  // Renderer process - use preload-exposed platform
+  if (typeof window !== 'undefined' && window.osPlatform) {
+    return window.osPlatform === 'linux';
+  }
+  // Main process - use process.platform directly (synchronous)
+  if (typeof process !== 'undefined' && process.platform) {
+    return process.platform === 'linux';
+  }
+  // Fallback (shouldn't happen in Electron)
+  return true;
+}
+
+export const isWin: boolean = detectIsWin();
+export const isMac: boolean = detectIsMac();
+export const isLinux: boolean = detectIsLinux();
 
 /**
  * Generates a cache URL for a given image URL.

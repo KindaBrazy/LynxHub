@@ -1,7 +1,7 @@
-import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {isLinux, isMac, isWin} from '@lynx_common/utils';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import lynxIpc from '@lynx_main/ipc/ipcWrapper';
 import classHolder from '@lynx_main/managers/classHolder';
@@ -142,9 +142,9 @@ export default class MainWindowManager {
     const {storageManager, trayManager} = classHolder;
     if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
       trayManager?.createTrayIcon();
-      if (platform() === 'linux') {
+      if (isLinux) {
         this.getMainWindow()?.hide();
-      } else if (platform() === 'darwin' && app.dock?.isVisible()) {
+      } else if (isMac && app.dock?.isVisible()) {
         app.dock?.hide();
       } else {
         this.getMainWindow()?.setSkipTaskbar(true);
@@ -157,9 +157,9 @@ export default class MainWindowManager {
     const {storageManager, trayManager} = classHolder;
     if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
       trayManager?.destroyTrayIcon();
-      if (platform() === 'win32') {
+      if (isWin) {
         this.getMainWindow()?.setSkipTaskbar(false);
-      } else if (platform() === 'darwin' && !app.dock?.isVisible()) {
+      } else if (isMac && !app.dock?.isVisible()) {
         app.dock?.show();
       }
     }

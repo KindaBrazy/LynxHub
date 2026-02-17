@@ -2,6 +2,7 @@
 import os from 'node:os';
 
 import {SystemInfo} from '@lynx_common/types/ipc';
+import {isWin} from '@lynx_common/utils';
 
 /**
  * Parses the Windows build number from the release string.
@@ -21,7 +22,7 @@ export function getSystemInfo(): SystemInfo {
   const platform = process.platform;
   let buildNumber: string | number = os.release();
 
-  if (platform === 'win32') {
+  if (isWin) {
     buildNumber = parseWindowsBuildNumber(buildNumber);
   }
 

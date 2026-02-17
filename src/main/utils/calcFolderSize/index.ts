@@ -3,6 +3,7 @@ import {stat} from 'node:fs/promises';
 import {platform} from 'node:os';
 import {promisify} from 'node:util';
 
+import {isMac, isWin} from '@lynx_common/utils';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import {getAppDirectory} from '@lynx_main/managers/dataFolder';
 import path from 'path';
@@ -16,7 +17,7 @@ const execPromise = promisify(exec);
  * @throws {Error} If the operating system is not supported.
  */
 function processDuOutput(stdout: string): number {
-  if (platform() === 'win32') {
+  if (isWin) {
     const stats = stdout.trim().split('\n')[1]?.split(',') ?? [];
     return Number(stats.at(-2)) || 0;
   }
@@ -25,7 +26,7 @@ function processDuOutput(stdout: string): number {
   if (!match) return 0;
 
   const bytes = Number(match[1]);
-  return platform() === 'darwin' ? bytes * 1024 : bytes;
+  return isMac ? bytes * 1024 : bytes;
 }
 
 /**

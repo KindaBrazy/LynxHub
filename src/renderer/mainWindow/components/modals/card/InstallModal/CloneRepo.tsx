@@ -45,7 +45,7 @@ export default function CloneRepo({url, start, done, isOpen}: Props) {
 
   useEffect(() => {
     filesIpc.getAppDirectories('AIWorkspaces').then(dir => {
-      const directory = `${dir}${isWin() ? '\\' : '/'}${extractGitUrl(url).repo}`;
+      const directory = `${dir}${isWin ? '\\' : '/'}${extractGitUrl(url).repo}`;
       setDirectory(directory);
     });
   }, [url]);

@@ -23,7 +23,7 @@ export default function RequirementsChecker({onStatusChange, onReport}: Props) {
     if (isSuccess) {
       onReport({
         git: statuses.git.label || 'Ready',
-        pwsh: isWin() ? statuses.pwsh.label || 'Ready' : 'N/A',
+        pwsh: isWin ? statuses.pwsh.label || 'Ready' : 'N/A',
         appModule: statuses.appModule.result === 'ok' ? 'Installed' : 'Skipped',
       });
     }
@@ -97,7 +97,7 @@ export default function RequirementsChecker({onStatusChange, onReport}: Props) {
       <h3 className="font-semibold text-gray-800 dark:text-gray-100 mb-4">Requirements</h3>
       <div className="space-y-4 flex-1">
         <CheckRow label="Git" status={statuses.git} description="Required for version control features" />
-        {isWin() && (
+        {isWin && (
           <CheckRow
             label="PowerShell 7+"
             status={statuses.pwsh}

@@ -1,8 +1,8 @@
-import {platform} from 'node:os';
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import {ScreenShareSources} from '@lynx_common/types/shareScreen';
+import {isMac, isWin} from '@lynx_common/utils';
 import {shareScreenIpc} from '@lynx_main/ipc/shareScreen';
 import classHolder from '@lynx_main/managers/classHolder';
 import {
@@ -76,7 +76,7 @@ export default class ShareScreenManager {
 
       if (target) {
         const mainFrame = this.mainWindow?.webContents.mainFrame;
-        const audio = mainFrame || (platform() === 'win32' && data.shareAudio ? 'loopback' : undefined);
+        const audio = mainFrame || (isWin && data.shareAudio ? 'loopback' : undefined);
         callback({video: target, audio});
       } else {
         try {
@@ -154,7 +154,7 @@ export default class ShareScreenManager {
       resizable: false,
       maximizable: false,
       minimizable: false,
-      titleBarStyle: process.platform === 'darwin' ? 'customButtonsOnHover' : 'default',
+      titleBarStyle: isMac ? 'customButtonsOnHover' : 'default',
       skipTaskbar: true,
       parent: this.mainWindow,
       modal: true,

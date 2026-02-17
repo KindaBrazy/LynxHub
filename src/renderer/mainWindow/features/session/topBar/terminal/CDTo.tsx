@@ -1,6 +1,7 @@
 import {Button, Popover, PopoverContent, PopoverTrigger, ScrollShadow, Tooltip} from '@heroui/react';
 import {AppDispatch} from '@lynx/redux/store';
 import {lynxTopToast} from '@lynx/utils/hooks';
+import {isWin} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import storageIpc from '@lynx_shared/ipc/storage';
@@ -21,7 +22,7 @@ const CDTo = memo(({id}: Props) => {
       storageIpc.update('terminal', {cdHistory: newHistory});
       setHistory(newHistory);
 
-      const LINE_ENDING = window.osPlatform === 'win32' ? '\r' : '\n';
+      const LINE_ENDING = isWin ? '\r' : '\n';
       ptyIpc.write(id, `cd "${dir}"${LINE_ENDING}`);
     },
     [history],

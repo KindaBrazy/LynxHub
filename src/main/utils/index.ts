@@ -3,7 +3,7 @@ import {platform} from 'node:os';
 import {dirname, isAbsolute, relative, resolve} from 'node:path';
 
 import {AgentTypes, DarkModeTypes} from '@lynx_common/types/ipc';
-import {formatSize} from '@lynx_common/utils';
+import {formatSize, isLinux, isMac, isWin} from '@lynx_common/utils';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import classHolder from '@lynx_main/managers/classHolder';
 import {app, BrowserWindow, dialog, nativeTheme, OpenDialogOptions, OpenDialogReturnValue, safeStorage} from 'electron';
@@ -337,10 +337,9 @@ export function decryptStrings(encryptedData: string[]): string[] {
 }
 
 export const getPrivilegeText = () => {
-  const platform = process.platform;
-  if (platform === 'win32') {
+  if (isWin) {
     return 'administrator';
-  } else if (platform === 'darwin' || platform === 'linux') {
+  } else if (isMac || isLinux) {
     return 'sudo';
   }
   return 'elevated privileges';

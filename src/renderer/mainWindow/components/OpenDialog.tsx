@@ -45,7 +45,7 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
   const chooseDirectory = useCallback(() => {
     filesIpc.openDlg(dialogType).then(result => {
       if (result && inputRef.current) {
-        const resultDir = extraFolder ? `${result}${isWin() ? '\\' : '/'}${extraFolder}` : result;
+        const resultDir = extraFolder ? `${result}${isWin ? '\\' : '/'}${extraFolder}` : result;
         setDirectory(resultDir);
         inputRef.current.value = resultDir;
       }

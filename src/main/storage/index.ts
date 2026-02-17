@@ -1,4 +1,3 @@
-import {platform} from 'node:os';
 import {join} from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
@@ -86,7 +85,7 @@ class BaseStorage {
       dynamicAppTitle: true,
       openLinkExternal: false,
       lastPage: '/homePage',
-      hotkeys: Get_Default_Hotkeys(platform()),
+      hotkeys: Get_Default_Hotkeys(),
       initialized: false,
       inited: false,
       appDataDir: isPortable() ? `./${APP_NAME}_Data` : join(app.getPath('documents'), APP_NAME),
@@ -256,7 +255,7 @@ class BaseStorage {
       customUserAgent: getUserAgent('lynxhub'),
     };
     this.storage.data.app.closeTabConfirm = true;
-    this.storage.data.app.hotkeys = Get_Default_Hotkeys(platform());
+    this.storage.data.app.hotkeys = Get_Default_Hotkeys();
     this.storage.data.app.openLinkExternal = false;
     this.storage.data.cards.zoomFactor = 1;
     this.storage.data.app.hardwareAcceleration = true;
@@ -400,7 +399,7 @@ class BaseStorage {
    */
   private mergeDefaultHotkeys() {
     const currentHotkeys = this.storage.data.app.hotkeys || [];
-    const defaultHotkeys = Get_Default_Hotkeys(platform());
+    const defaultHotkeys = Get_Default_Hotkeys();
 
     const currentNames = currentHotkeys.map(h => h.name);
     const mergedHotkeys = [...currentHotkeys];

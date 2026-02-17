@@ -1,8 +1,6 @@
-import {platform} from 'node:os';
-
 import {electronApp, optimizer} from '@electron-toolkit/utils';
 import {APP_NAME} from '@lynx_common/consts';
-import {isDev} from '@lynx_common/utils';
+import {isDev, isMac} from '@lynx_common/utils';
 import {app, Menu, nativeImage} from 'electron';
 import log from 'electron-log/main';
 
@@ -89,7 +87,7 @@ async function initializeLynxHub() {
 
   electronApp.setAppUserModelId(APP_NAME);
 
-  if (platform() === 'darwin') app.dock?.setIcon(nativeImage.createFromPath(darwinIcon));
+  if (isMac) app.dock?.setIcon(nativeImage.createFromPath(darwinIcon));
 
   listenToIpcChannels();
 
@@ -128,7 +126,7 @@ app.on('before-quit', e => {
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
+  if (!isMac) {
     app.quit();
   }
 });

@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
+import {isMac} from '@lynx_common/utils';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getWindowColor} from '@lynx_main/utils';
@@ -19,7 +20,7 @@ export default class LoadingWindow {
     resizable: false,
     maximizable: false,
     minimizable: false,
-    titleBarStyle: process.platform === 'darwin' ? 'customButtonsOnHover' : 'default',
+    titleBarStyle: isMac ? 'customButtonsOnHover' : 'default',
     icon,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
