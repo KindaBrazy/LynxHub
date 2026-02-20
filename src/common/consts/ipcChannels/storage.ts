@@ -1,4 +1,8 @@
-const storageChannels = {
+/**
+ * IPC channels for storage operations.
+ * Handles data persistence, custom settings, and nested updates.
+ */
+export const storageChannels = {
   get: 'storage:getData',
 
   getCustom: 'storage:get-custom',
@@ -8,8 +12,12 @@ const storageChannels = {
   update: 'storage:updateData',
   updateNested: 'storage:updateNested',
   clear: 'storage:clearStorage',
-};
+} as const;
 
+/**
+ * IPC channels for storage utility operations.
+ * Handles card management, auto-updates, pinned items, and history.
+ */
 export const storageUtilsChannels = {
   setSystemStartup: 'storageUtils:setSystemStartup',
 
@@ -65,6 +73,5 @@ export const storageUtilsChannels = {
 
   unassignCard: 'storageUtils:unassign-card',
   getBrowserHistoryData: 'storageUtils:getBrowserHistoryData',
-};
+} as const;
 
-export default storageChannels;

@@ -1,5 +1,5 @@
 
-import userChannels from '@lynx_common/consts/ipcChannels/user';
+import { userChannels } from '@lynx_common/consts/ipcChannels/user';
 import {PatreonUserData, SubscribeStages} from '@lynx_common/types';
 import {MainHT} from '@lynx_common/types/ipc';
 

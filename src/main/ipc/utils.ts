@@ -1,5 +1,5 @@
 
-import utilsChannels from '@lynx_common/consts/ipcChannels/utils';
+import { utilsChannels } from '@lynx_common/consts/ipcChannels/utils';
 import {
   DownloadProgress,
   ExtensionsData,
