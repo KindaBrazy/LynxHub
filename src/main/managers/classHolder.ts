@@ -18,6 +18,14 @@ import ShareScreenManager from '../childWindows/shareScreen';
 import StaticsManager from './statics';
 import TrayManager from './tray';
 
+const ONLINE_CHECK_URL = 'https://google.com';
+const ONLINE_CHECK_TIMEOUT = 4000;
+const ONLINE_CHECK_INTERVAL = toMs(5, 'seconds');
+
+/**
+ * Singleton class to hold and manage instances of various managers and services.
+ * Acts as a central dependency injection container for the application.
+ */
 class ClassHolder {
   private readonly _storageManager: StorageManager;
 
@@ -46,14 +54,19 @@ class ClassHolder {
     this.checkOnline();
   }
 
+  /**
+   * Periodically checks internet connectivity.
+   * Updates the `isOnline` status and notifies the renderer process.
+   */
   private async checkOnline() {
-    const setResult = isOnline => {
+    const setResult = (isOnline: boolean) => {
       this.isOnline = isOnline;
       applicationIpc.send.onOnline(isOnline);
     };
+
     const checkStatus = () => {
       axios
-        .request({url: 'https://google.com', timeout: 4000})
+        .request({url: ONLINE_CHECK_URL, timeout: ONLINE_CHECK_TIMEOUT})
         .then(response => {
           setResult(response.statusText.toLowerCase() === 'ok');
         })
@@ -63,14 +76,20 @@ class ClassHolder {
     };
 
     checkStatus();
-    this.isOnlineInterval = setInterval(checkStatus, toMs(5, 'seconds'));
+    this.isOnlineInterval = setInterval(checkStatus, ONLINE_CHECK_INTERVAL);
 
     app.on('before-quit', () => {
-      clearInterval(this.isOnlineInterval);
-      this.isOnlineInterval = undefined;
+      if (this.isOnlineInterval) {
+        clearInterval(this.isOnlineInterval);
+        this.isOnlineInterval = undefined;
+      }
     });
   }
 
+  /**
+   * Initializes all manager instances.
+   * Should be called during application startup.
+   */
   public async initializeManagers() {
     this.moduleManager = new ModuleManager();
 
@@ -89,14 +108,23 @@ class ClassHolder {
     this.linkPreviewManager = new LinkPreviewManager();
   }
 
+  /**
+   * Checks if static requirements are met.
+   */
   public async checkStaticsRequirements() {
     try {
       await this.staticManager?.checkRequirements();
     } catch (err) {
-      console.warn('StaticsManager initialization failed:', err?.message || err);
+      console.warn('StaticsManager initialization failed:', (err as Error)?.message || err);
     }
   }
 
+  /**
+   * Waits for a specific manager class to be initialized.
+   * @param className The name of the property to wait for.
+   * @param options Timeout and interval options.
+   * @returns The initialized manager instance.
+   */
   public async waitForClass<K extends keyof this>(
     className: K,
     options: {timeout?: number; checkInterval?: number} = {},

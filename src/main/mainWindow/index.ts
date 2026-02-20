@@ -14,7 +14,8 @@ import icon from '../../../resources/icon.png?asset';
 type Listener = () => void;
 
 /**
- * Manages the main application window and loading window for an Electron app.
+ * Manages the main application window and its lifecycle events.
+ * Handles window creation, configuration, and inter-process communication.
  */
 export default class MainWindowManager {
   private onCreateWindowListeners: Listener[] = [];
@@ -32,40 +33,56 @@ export default class MainWindowManager {
     icon,
     webPreferences: {
       preload: path.join(__dirname, '../preload/index.cjs'),
-      sandbox: false,
+      sandbox: false, // Required for some Node.js APIs in renderer
     },
   };
 
+  /**
+   * Registers a listener to be called when the window is created.
+   * @param callback The function to call.
+   */
   public onCreateWindow(callback: Listener) {
     this.onCreateWindowListeners.push(callback);
   }
+
+  /**
+   * Registers a listener to be called when the window is ready to show.
+   * @param callback The function to call.
+   */
   public onReadyToShow(callback: Listener) {
     this.onReadyToShowListeners.push(callback);
   }
 
+  /**
+   * Retrieves the main BrowserWindow instance.
+   * @returns The BrowserWindow instance or undefined if not created or destroyed.
+   */
   public getMainWindow(): BrowserWindow | undefined {
-    if (!this.mainWindow) return undefined;
-
-    if (this.mainWindow.isDestroyed()) {
+    if (!this.mainWindow || this.mainWindow.isDestroyed()) {
       this.mainWindow = undefined;
       return undefined;
     }
-
     return this.mainWindow;
   }
 
+  /**
+   * Retrieves the WebContents of the main window.
+   * @returns The WebContents instance or undefined.
+   */
   public getWebContent(): WebContents | undefined {
-    const webContent = this.getMainWindow()?.webContents;
-
-    if (!webContent || webContent.isDestroyed()) return undefined;
-
-    return webContent;
+    const window = this.getMainWindow();
+    return window?.webContents;
   }
 
+  /**
+   * Sends a message to the renderer process via IPC.
+   * @param channel The IPC channel to send to.
+   * @param args The arguments to send.
+   */
   public sendMessage(channel: string, ...args: any[]): void {
     const webContents = this.getWebContent();
     if (!webContents) {
-      console.error('Failed to send message: appManager or webContents is not available.');
+      console.warn('Failed to send message: WebContents not available.');
       return;
     }
 
@@ -75,6 +92,7 @@ export default class MainWindowManager {
   /** Creates and configures the main application window. */
   private createMainWindow(): void {
     const {contextMenuManager, linkPreviewManager} = classHolder;
+    
     this.mainWindow = new BrowserWindow(MainWindowManager.MAIN_WINDOW_CONFIG);
     this.mainWindow.setBackgroundColor(getWindowColor());
 
@@ -82,57 +100,68 @@ export default class MainWindowManager {
 
     this.setupMainWindowEventListeners();
     this.loadAppropriateURL(this.mainWindow, 'index.html');
+    
+    // Notify listeners
     this.onCreateWindowListeners.forEach(listener => listener());
+    
+    // Initialize child windows that depend on the main window
     contextMenuManager?.createWindow(this.mainWindow);
     linkPreviewManager?.createWindow(this.mainWindow);
   }
 
   /** Sets up event listeners for the main window. */
   private setupMainWindowEventListeners(): void {
-    this.getMainWindow()?.once('ready-to-show', () => {
-      this.getWebContent()?.setUserAgent(getUserAgent());
+    const mainWindow = this.getMainWindow();
+    const webContents = this.getWebContent();
+
+    if (!mainWindow || !webContents) return;
+
+    // Show window when ready to prevent flickering
+    mainWindow.once('ready-to-show', () => {
+      webContents.setUserAgent(getUserAgent());
+      // Small delay to ensure smooth transition
       setTimeout(() => {
         this.onReadyToShowListeners.forEach(listener => listener());
-      }, 2000);
+      }, 2000); // TODO: Investigate if this 2s delay is still necessary
     });
 
-    this.getWebContent()?.setWindowOpenHandler(({url, disposition}) => {
+    // Handle external links and new tabs
+    webContents.setWindowOpenHandler(({url, disposition}) => {
       const {storageManager} = classHolder;
       const openExternal = storageManager.getData('app').openLinkExternal;
+      
       if (openExternal) {
         shell.openExternal(url);
       } else {
-        // background-tab = middle-click = open in background (don't switch)
+        // disposition 'background-tab' usually corresponds to middle-click
         const openInBackground = disposition === 'background-tab';
         applicationIpc.send.onNewTab(url, openInBackground);
       }
       return {action: 'deny'};
     });
 
-    this.getMainWindow()?.on('close', () => {
+    mainWindow.on('close', () => {
       this.mainWindow = undefined;
     });
 
-    this.getMainWindow()?.on('minimize', this.handleMinimize);
-    this.getMainWindow()?.on('focus', this.handleFocus);
+    mainWindow.on('minimize', this.handleMinimize);
+    mainWindow.on('focus', this.handleFocus);
 
-    const webContent = this.getWebContent();
-    if (!webContent) return;
+    // IPC state updates for UI synchronization
+    mainWindow.on('focus', () => applicationIpc.send.changeWinState({name: 'focus', value: true}));
+    mainWindow.on('blur', () => applicationIpc.send.changeWinState({name: 'focus', value: false}));
 
-    this.getMainWindow()?.on('focus', (): void => applicationIpc.send.changeWinState({name: 'focus', value: true}));
-    this.getMainWindow()?.on('blur', (): void => applicationIpc.send.changeWinState({name: 'focus', value: false}));
-
-    this.getMainWindow()?.on('maximize', (): void =>
+    mainWindow.on('maximize', () =>
       applicationIpc.send.changeWinState({name: 'maximize', value: true}),
     );
-    this.getMainWindow()?.on('unmaximize', (): void =>
+    mainWindow.on('unmaximize', () =>
       applicationIpc.send.changeWinState({name: 'maximize', value: false}),
     );
 
-    this.getMainWindow()?.on('enter-full-screen', (): void =>
+    mainWindow.on('enter-full-screen', () =>
       applicationIpc.send.changeWinState({name: 'full-screen', value: true}),
     );
-    this.getMainWindow()?.on('leave-full-screen', (): void =>
+    mainWindow.on('leave-full-screen', () =>
       applicationIpc.send.changeWinState({name: 'full-screen', value: false}),
     );
   }
@@ -140,14 +169,20 @@ export default class MainWindowManager {
   /** Handles the minimized event for the main window. */
   private handleMinimize = (): void => {
     const {storageManager, trayManager} = classHolder;
-    if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
+    const taskbarStatus = storageManager.getData('app').taskbarStatus;
+    
+    if (taskbarStatus === 'tray-minimized') {
       trayManager?.createTrayIcon();
+      
+      const mainWindow = this.getMainWindow();
+      if (!mainWindow) return;
+
       if (isLinux) {
-        this.getMainWindow()?.hide();
+        mainWindow.hide();
       } else if (isMac && app.dock?.isVisible()) {
         app.dock?.hide();
       } else {
-        this.getMainWindow()?.setSkipTaskbar(true);
+        mainWindow.setSkipTaskbar(true);
       }
     }
   };
@@ -155,10 +190,16 @@ export default class MainWindowManager {
   /** Handles the focus event for the main window. */
   private handleFocus = (): void => {
     const {storageManager, trayManager} = classHolder;
-    if (storageManager.getData('app').taskbarStatus === 'tray-minimized') {
+    const taskbarStatus = storageManager.getData('app').taskbarStatus;
+
+    if (taskbarStatus === 'tray-minimized') {
       trayManager?.destroyTrayIcon();
+      
+      const mainWindow = this.getMainWindow();
+      if (!mainWindow) return;
+
       if (isWin) {
-        this.getMainWindow()?.setSkipTaskbar(false);
+        mainWindow.setSkipTaskbar(false);
       } else if (isMac && !app.dock?.isVisible()) {
         app.dock?.show();
       }
@@ -166,9 +207,9 @@ export default class MainWindowManager {
   };
 
   /**
-   * Loads the appropriate URL based on the environment.
+   * Loads the appropriate URL based on the environment (dev/prod).
    * @param window - The BrowserWindow to load the URL into.
-   * @param htmlFile - The HTML file to load in production mode.
+   * @param htmlFile - The HTML file name.
    */
   private loadAppropriateURL(window: BrowserWindow, htmlFile: string): void {
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
@@ -183,6 +224,7 @@ export default class MainWindowManager {
     RelaunchApp();
   }
 
+  /** Initializes and starts the application window. */
   public startApp(): void {
     this.createMainWindow();
   }
