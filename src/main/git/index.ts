@@ -1,4 +1,3 @@
-// noinspection ExceptionCaughtLocallyJS
 
 import path from 'node:path';
 
@@ -26,7 +25,12 @@ enum GitErrorType {
   Unknown,
 }
 
-/** Manages Git operations such as cloning, pulling, and status checking. */
+const GITHUB_API_BASE = 'https://api.github.com';
+
+/**
+ * Manages Git operations such as cloning, pulling, and status checking.
+ * mix of static utility methods and instance methods for stateful operations.
+ */
 export default class GitManager {
   private readonly showTaskbarProgress: boolean;
   private abortController: AbortController;
@@ -73,7 +77,12 @@ export default class GitManager {
     }
   }
 
-  public static async getDirBranch(dir: string) {
+  /**
+   * Gets the current branch of a repository in the specified directory.
+   * @param dir - The directory to check.
+   * @returns The current branch name or 'unknown' on error.
+   */
+  public static async getDirBranch(dir: string): Promise<string> {
     const targetDir = path.resolve(dir);
     const git = simpleGit(targetDir);
     try {
@@ -214,6 +223,7 @@ export default class GitManager {
 
   /**
    * Classifies git errors into specific error types for appropriate handling.
+   * @param error - The error object or string.
    */
   private classifyError(error: any): GitErrorType {
     const message = error?.message || error?.toString() || '';
@@ -302,6 +312,8 @@ export default class GitManager {
 
   /**
    * Clones a repository to the specified directory.
+   * @param url - The repository URL.
+   * @param directory - The target directory.
    */
   public async clone(url: string, directory: string): Promise<void> {
     const targetDirectory = path.resolve(directory);
@@ -317,6 +329,10 @@ export default class GitManager {
     });
   }
 
+  /**
+   * Performs a shallow clone of a repository.
+   * @param options - The shallow clone options.
+   */
   public async shallowClone(options: ShallowCloneOptions): Promise<void> {
     return new Promise((resolve, reject) => {
       if (!classHolder.isOnline) reject('User is offline!');
@@ -344,6 +360,11 @@ export default class GitManager {
     });
   }
 
+  /**
+   * Changes the current branch of the repository.
+   * @param directory - The repository directory.
+   * @param branchName - The target branch name.
+   */
   public async changeBranch(directory: string, branchName: string): Promise<void> {
     const targetDirectory = path.resolve(directory);
 
@@ -384,6 +405,10 @@ export default class GitManager {
     }
   }
 
+  /**
+   * Converts a shallow clone to a full clone by fetching the complete history.
+   * @param directory - The repository directory.
+   */
   public async convertToFullClone(directory: string): Promise<void> {
     const targetDirectory = path.resolve(directory);
     try {
@@ -395,6 +420,11 @@ export default class GitManager {
     }
   }
 
+  /**
+   * Stashes local changes and then drops the stash.
+   * @param dir - The repository directory.
+   * @returns A promise resolving to the operation result.
+   */
   public async stashAndDrop(dir: string): Promise<{message: string; type: 'error' | 'success' | 'info'}> {
     const targetDir = path.resolve(dir);
     await this.git.cwd(targetDir);
@@ -422,6 +452,10 @@ export default class GitManager {
     });
   }
 
+  /**
+   * Retrieves comprehensive information about the repository.
+   * @param directory - The repository directory.
+   */
   public async getRepositoryInfo(directory: string): Promise<RepositoryInfo> {
     const targetDirectory = path.resolve(directory);
     try {
@@ -470,6 +504,14 @@ export default class GitManager {
     }
   }
 
+  /**
+   * Performs a hard reset to the specified commit.
+   * @param dir - The repository directory.
+   * @param commit - The commit hash or reference to reset to (default: 'HEAD').
+   * @param fetchBeforeReset - Whether to fetch before resetting.
+   * @param branch - Optional branch to fetch.
+   * @param remote - Remote name (default: 'origin').
+   */
   public async resetHard(
     dir: string,
     commit: string = 'HEAD',
@@ -537,6 +579,10 @@ export default class GitManager {
     }
   }
 
+  /**
+   * Gets the date of the last commit.
+   * @returns A promise resolving to the formatted date string.
+   */
   async getLastCommitDate(): Promise<string> {
     try {
       const isRepo = await this.git.checkIsRepo();
@@ -558,7 +604,7 @@ export default class GitManager {
       if (diffInDays > 7) {
         return lastCommitDate.toLocaleString();
       } else {
-        return this.getElapsedTime(lastCommitDate);
+        return this.formatElapsedTime(lastCommitDate);
       }
     } catch (error) {
       console.error(`Error getting last commit date for:`, error);
@@ -566,7 +612,7 @@ export default class GitManager {
     }
   }
 
-  private getElapsedTime(date: Date): string {
+  private formatElapsedTime(date: Date): string {
     const now = new Date();
     const diffInMs = now.getTime() - date.getTime();
 
@@ -596,21 +642,28 @@ export default class GitManager {
     }
   }
 
+  /**
+   * Gets a list of available branches for the repository.
+   * @param url - The repository URL.
+   * @returns A promise resolving to an array of branch names.
+   */
   public async getAvailableBranches(url: string): Promise<string[]> {
     if (!classHolder.isOnline) return [];
 
     try {
       const {owner, repo} = extractGitUrl(url);
-      const branchesResponse = await fetch(`https://api.github.com/repos/${owner}/${repo}/branches`);
-      if (!branchesResponse.ok) {
-        console.error(`Failed to fetch branches: ${branchesResponse.status}`);
+      const apiUrl = `${GITHUB_API_BASE}/repos/${owner}/${repo}/branches`;
+      
+      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        console.error(`Failed to fetch branches: ${response.status} ${response.statusText}`);
         return [];
       }
-      const branchesData: {name: string}[] = await branchesResponse.json();
-
+      
+      const branchesData: {name: string}[] = await response.json();
       return branchesData.map(b => b.name);
     } catch (err: any) {
-      console.error(err.message || 'An error occurred while fetching data.');
+      console.error(err.message || 'An error occurred while fetching branches.');
       return [];
     }
   }
@@ -645,6 +698,12 @@ export default class GitManager {
     }
   }
 
+  /**
+   * Gets the hash of the current commit.
+   * @param dir - The repository directory.
+   * @param short - Whether to return the short hash (default: true).
+   * @returns A promise resolving to the commit hash or undefined.
+   */
   public async getCurrentCommitHash(dir: string, short: boolean = true): Promise<string | undefined> {
     const targetDirectory = path.resolve(dir);
 
