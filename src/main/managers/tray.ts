@@ -1,6 +1,6 @@
 import {APP_NAME, APP_NAME_VERSION} from '@lynx_common/consts';
 import {isWin} from '@lynx_common/utils';
-import {EMenuItem} from '@lynx_main/plugins/extensions/types';
+import {ElectronMenuItem} from '@lynx_main/plugins/extensions/types';
 import {Menu, Tray} from 'electron';
 
 import trayIconMenu from '../../../resources/16x16.png?asset';
@@ -34,7 +34,7 @@ export default class TrayManager {
     this.tray = new Tray(icon);
     this.tray.setToolTip(APP_NAME);
 
-    const staticItems: EMenuItem[] = [
+    const staticItems: ElectronMenuItem[] = [
       {enabled: false, icon: trayIconMenu, label: APP_NAME_VERSION},
       {type: 'separator'},
       {label: 'Show', type: 'normal', click: this.showMainWindow},
