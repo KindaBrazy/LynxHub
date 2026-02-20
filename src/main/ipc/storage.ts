@@ -1,5 +1,5 @@
 
-import storageChannels, {storageUtilsChannels} from '@lynx_common/consts/ipcChannels/storage';
+import { storageChannels, storageUtilsChannels } from '@lynx_common/consts/ipcChannels/storage';
 import {ChosenArgumentsData, ConfirmMenuTypes} from '@lynx_common/types';
 import {
   BrowserHistoryData,

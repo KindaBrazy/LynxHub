@@ -2,6 +2,9 @@ import {isMac} from '@lynx_common/utils';
 
 import {LynxHotkey} from '../types/ipc';
 
+/**
+ * Names of available hotkeys.
+ */
 export const Hotkey_Names = {
   fullscreen: 'fullscreen',
   toggleNav: 'toggleNav',
@@ -25,9 +28,12 @@ export const Hotkey_Names = {
   terminalQuick4: 'terminalQuick4',
   terminalQuick5: 'terminalQuick5',
   terminalQuick6: 'terminalQuick6',
-};
+} as const;
 
-export const Hotkey_Sections: {kind: string; title: string; includes: string[]}[] = [
+/**
+ * Grouping of hotkeys for display in settings/help.
+ */
+export const Hotkey_Sections: readonly {kind: string; title: string; includes: string[]}[] = [
   {kind: 'app', title: 'Application', includes: [Hotkey_Names.fullscreen, Hotkey_Names.toggleNav]},
   {
     kind: 'tab',
@@ -63,6 +69,9 @@ export const Hotkey_Sections: {kind: string; title: string; includes: string[]}[
   },
 ];
 
+/**
+ * Display titles for hotkeys.
+ */
 export const Hotkey_Titles = {
   fullscreen: 'Toggle Fullscreen',
   toggleNav: 'Toggle Navigation Bar',
@@ -86,8 +95,11 @@ export const Hotkey_Titles = {
   terminalQuick4: 'Terminal Quick Command 4',
   terminalQuick5: 'Terminal Quick Command 5',
   terminalQuick6: 'Terminal Quick Command 6',
-};
+} as const;
 
+/**
+ * Descriptions for hotkeys.
+ */
 export const Hotkey_Desc = {
   fullscreen: 'Use this hotkey to switch between fullscreen and windowed modes.',
   toggleNav: 'Use this hotkey to show or hide the navigation panel.',
@@ -111,9 +123,14 @@ export const Hotkey_Desc = {
   terminalQuick4: 'Executes the fourth configured terminal quick command in the active terminal.',
   terminalQuick5: 'Executes the fifth configured terminal quick command in the active terminal.',
   terminalQuick6: 'Executes the sixth configured terminal quick command in the active terminal.',
-};
+} as const;
 
+/**
+ * Generates the default hotkey configuration.
+ * @returns Array of default hotkey settings.
+ */
 export const Get_Default_Hotkeys = (): LynxHotkey[] => {
+
   return [
     {
       name: Hotkey_Names.fullscreen,

@@ -1,4 +1,8 @@
-const ptyChannels = {
+/**
+ * IPC channels for PTY (Pseudo-Terminal) operations.
+ * Handles terminal process management, input/output, resizing, and custom commands.
+ */
+export const ptyChannels = {
   process: 'pty-process',
   customProcess: 'pty-custom-process',
   emptyProcess: 'pty-custom-process',
@@ -14,6 +18,5 @@ const ptyChannels = {
 
   // Terminal progress (ConEmu OSC 9;4 sequence)
   onProgress: 'pty-on-progress',
-};
+} as const;
 
-export default ptyChannels;

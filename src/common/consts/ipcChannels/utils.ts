@@ -1,4 +1,8 @@
-const utilsChannels = {
+/**
+ * IPC channels for utility operations.
+ * Handles extensions management, file downloads, decompression, and image cache.
+ */
+export const utilsChannels = {
   cancelExtensionsData: 'utils:cancel-extensions-data',
 
   updateAllExtensions: 'utils:update-all-extensions',
@@ -20,6 +24,5 @@ const utilsChannels = {
   getImageCacheStats: 'utils:getImageCacheStats',
   clearImageCache: 'utils:clearImageCache',
   triggerImageCacheCleanup: 'utils:triggerImageCacheCleanup',
-};
+} as const;
 
-export default utilsChannels;
