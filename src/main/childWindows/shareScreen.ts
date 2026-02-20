@@ -30,21 +30,22 @@ export default class ShareScreenManager {
     const mainWindow = appManager?.getMainWindow();
     if (mainWindow && !mainWindow.isDestroyed()) {
       this.mainWindow = mainWindow;
+      mainWindow.on('close', () => this.cleanup());
+    }
+  }
 
-      mainWindow.on('close', () => {
-        this.mainWindow = undefined;
-        this.availableSources = [];
-        if (this._selectorWindow && !this._selectorWindow.isDestroyed()) {
-          this._selectorWindow.close();
-        }
-      });
+  private cleanup() {
+    this.mainWindow = undefined;
+    this.availableSources = [];
+    if (this._selectorWindow && !this._selectorWindow.isDestroyed()) {
+      this._selectorWindow.close();
     }
   }
 
   private requestHandler(_: DisplayMediaRequestHandlerHandlerRequest, callback: (streams: Streams) => void) {
     this.showSelector();
     this.startShare(callback);
-    this.getSources();
+    this.registerSourceHandlers();
   }
 
   private onDone() {
@@ -53,22 +54,27 @@ export default class ShareScreenManager {
     this._selectorWindow?.close();
     this._selectorWindow?.on('closed', () => {
       this._selectorWindow = undefined;
-
-      // Use removeHandler for channels registered with ipcMain.handle()
       shareScreenIpc.removeHandler.getScreenSources();
       shareScreenIpc.removeHandler.getWindowSources();
     });
   }
 
+  /**
+   * Manages the share initiation process.
+   * Listens for start or cancel events from the renderer.
+   */
   private startShare(callback: (streams: Streams) => void) {
-    let offStartShare: (() => void) | undefined = undefined;
-    let offCancel: (() => void) | undefined = undefined;
+    let offStartShare: (() => void) | undefined;
+    let offCancel: (() => void) | undefined;
+
+    const cleanupListeners = () => {
+      if (offStartShare) offStartShare = undefined;
+      if (offCancel) offCancel = undefined;
+    };
 
     offStartShare = shareScreenIpc.once.startShare(data => {
-      if (offCancel) {
-        offCancel();
-        offCancel = undefined;
-      }
+      if (offCancel) offCancel();
+      cleanupListeners();
 
       const target = this.availableSources.find(
         item => (data.type === 'windows' ? item.id : item.display_id) === data.id,
@@ -82,7 +88,7 @@ export default class ShareScreenManager {
         try {
           callback({});
         } catch (e) {
-          console.log(e);
+          console.error('Error in share callback:', e);
         }
       }
 
@@ -90,59 +96,47 @@ export default class ShareScreenManager {
     });
 
     offCancel = shareScreenIpc.once.cancel(() => {
-      if (offStartShare) {
-        offStartShare();
-        offStartShare = undefined;
-      }
+      if (offStartShare) offStartShare();
+      cleanupListeners();
 
       try {
         callback({});
       } catch (e) {
-        console.log(e);
+        console.error('Error in cancel callback:', e);
       }
 
       this.onDone();
     });
   }
 
-  private getSources() {
-    // Prevent double-registration of handlers
+  private registerSourceHandlers() {
     if (this.handlersRegistered) return;
     this.handlersRegistered = true;
 
-    const resolveSources = (sources: DesktopCapturerSource[], resolve: (result: ScreenShareSources[]) => void) => {
-      const result: ScreenShareSources[] = sources.map(source => {
-        const thumbnail = source.thumbnail ? source.thumbnail.toDataURL() : undefined;
-        const icon = source.appIcon ? source.appIcon.toDataURL() : undefined;
+    shareScreenIpc.handle.getScreenSources(() => this.fetchSources('screen'));
+    shareScreenIpc.handle.getWindowSources(() => this.fetchSources('window'));
+  }
 
-        return {
-          display_id: source.display_id,
-          id: source.id,
-          name: source.name,
-          thumbnail,
-          icon,
-        };
-      });
-      this.availableSources.push(...sources);
-      resolve(result);
-    };
+  private fetchSources(type: 'screen' | 'window'): Promise<ScreenShareSources[]> {
+    return new Promise((resolve, reject) => {
+      desktopCapturer
+        .getSources({types: [type], fetchWindowIcons: true, thumbnailSize: {width: 400, height: 300}})
+        .then(sources => {
+          this.availableSources.push(...sources);
+          resolve(this.mapSources(sources));
+        })
+        .catch(reject);
+    });
+  }
 
-    shareScreenIpc.handle.getScreenSources(() => {
-      return new Promise((resolve, reject) => {
-        desktopCapturer
-          .getSources({types: ['screen'], fetchWindowIcons: true, thumbnailSize: {width: 400, height: 300}})
-          .then(sources => resolveSources(sources, resolve))
-          .catch(reject);
-      });
-    });
-    shareScreenIpc.handle.getWindowSources(() => {
-      return new Promise((resolve, reject) => {
-        desktopCapturer
-          .getSources({types: ['window'], fetchWindowIcons: true, thumbnailSize: {width: 400, height: 300}})
-          .then(sources => resolveSources(sources, resolve))
-          .catch(reject);
-      });
-    });
+  private mapSources(sources: DesktopCapturerSource[]): ScreenShareSources[] {
+    return sources.map(source => ({
+      display_id: source.display_id,
+      id: source.id,
+      name: source.name,
+      thumbnail: source.thumbnail?.toDataURL(),
+      icon: source.appIcon?.toDataURL(),
+    }));
   }
 
   private showSelector() {
@@ -164,21 +158,34 @@ export default class ShareScreenManager {
       },
     });
 
+    this.positionSelectorWindow();
+
     this._selectorWindow.on('ready-to-show', () => {
       this._selectorWindow?.show();
     });
 
-    if (this.mainWindow) {
-      const mainBounds = this.mainWindow.getBounds();
-      const x = mainBounds.x + (mainBounds.width - 620) / 2;
-      const y = mainBounds.y + 10;
-      this._selectorWindow.setBounds({
-        x: Math.floor(x),
-        y: Math.floor(y),
-        width: 620,
-        height: 480,
-      });
-    }
+    this.loadSelectorContent();
+  }
+
+  private positionSelectorWindow() {
+    if (!this.mainWindow || !this._selectorWindow) return;
+
+    const mainBounds = this.mainWindow.getBounds();
+    const width = 620;
+    const height = 480;
+    const x = mainBounds.x + (mainBounds.width - width) / 2;
+    const y = mainBounds.y + 10;
+
+    this._selectorWindow.setBounds({
+      x: Math.floor(x),
+      y: Math.floor(y),
+      width,
+      height,
+    });
+  }
+
+  private loadSelectorContent() {
+    if (!this._selectorWindow) return;
 
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
       this._selectorWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/shareScreen.html`);

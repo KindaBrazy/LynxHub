@@ -37,12 +37,10 @@ export default class LinkPreviewManager {
   };
 
   public createWindow(mainWindow: BrowserWindow) {
-    // Close existing link preview window if it exists (e.g., on macOS reactivation)
     if (this.linkPreviewWindow && !this.linkPreviewWindow.isDestroyed()) {
       this.linkPreviewWindow.close();
     }
 
-    // Remove listeners from old mainWindow if it exists
     this.removeMainWindowListeners();
 
     this.mainWindow = mainWindow;
@@ -54,18 +52,29 @@ export default class LinkPreviewManager {
     // Prevent the window from stealing focus
     this.linkPreviewWindow.setIgnoreMouseEvents(true);
 
+    this.loadWindowContent();
+    this.setupWindowListeners();
+  }
+
+  private loadWindowContent() {
+    if (!this.linkPreviewWindow) return;
+
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
       this.linkPreviewWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/linkPreview.html`);
     } else {
       this.linkPreviewWindow.loadFile(path.join(__dirname, '../renderer/linkPreview.html'));
     }
+  }
+
+  private setupWindowListeners() {
+    if (!this.mainWindow || !this.linkPreviewWindow) return;
 
     // Hide when main window is hidden/minimized/loses focus
-    mainWindow.on('hide', this.boundHide);
-    mainWindow.on('minimize', this.boundHide);
-    mainWindow.on('blur', this.boundHide);
-    mainWindow.on('move', this.boundUpdatePosition);
-    mainWindow.on('resize', this.boundUpdatePosition);
+    this.mainWindow.on('hide', this.boundHide);
+    this.mainWindow.on('minimize', this.boundHide);
+    this.mainWindow.on('blur', this.boundHide);
+    this.mainWindow.on('move', this.boundUpdatePosition);
+    this.mainWindow.on('resize', this.boundUpdatePosition);
 
     this.linkPreviewWindow.on('closed', () => {
       this.linkPreviewWindow = undefined;
@@ -75,8 +84,7 @@ export default class LinkPreviewManager {
       }
     });
 
-    mainWindow.on('close', () => {
-      // Remove listeners before clearing reference
+    this.mainWindow.on('close', () => {
       this.removeMainWindowListeners();
       this.mainWindow = undefined;
     });
@@ -108,31 +116,23 @@ export default class LinkPreviewManager {
   }
 
   public getWindow(): BrowserWindow | undefined {
-    if (!this.linkPreviewWindow) return undefined;
-
-    if (this.linkPreviewWindow.isDestroyed()) {
+    if (this.linkPreviewWindow?.isDestroyed()) {
       this.linkPreviewWindow = undefined;
-      return undefined;
     }
-
     return this.linkPreviewWindow;
   }
 
   public getWebContent(): WebContents | undefined {
-    const webContent = this.getWindow()?.webContents;
-
-    if (!webContent || webContent.isDestroyed()) return undefined;
-
-    return webContent;
+    const window = this.getWindow();
+    return window && !window.webContents.isDestroyed() ? window.webContents : undefined;
   }
 
   public sendMessage(channel: string, ...args: any[]): void {
     const webContents = this.getWebContent();
     if (!webContents) {
-      console.error('Failed to send message: linkPreview or webContents is not available.');
+      console.error('Failed to send message: webContents is not available.');
       return;
     }
-
     lynxIpc.send(webContents, channel, ...args);
   }
 
@@ -178,12 +178,20 @@ export default class LinkPreviewManager {
     const x = mainBounds.x + 4;
     const y = mainBounds.y + mainBounds.height - 23;
 
-    this.linkPreviewWindow.setPosition(Math.floor(x), Math.floor(y));
+    try {
+      this.linkPreviewWindow.setPosition(Math.floor(x), Math.floor(y));
+    } catch (e) {
+      // Ignore errors if window is destroyed during update
+    }
   }
 
+  /**
+   * Resizes the link preview window width.
+   * Clamps width between 100px and 800px.
+   */
   public resizeWindow(width: number) {
     if (!this.linkPreviewWindow || this.linkPreviewWindow.isDestroyed()) return;
-    // Clamp width to reasonable bounds
+
     const clampedWidth = Math.min(Math.max(width, 100), 800);
     this.linkPreviewWindow.setSize(clampedWidth, 24);
     this.updatePosition();

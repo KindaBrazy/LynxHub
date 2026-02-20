@@ -28,34 +28,54 @@ export default class LoadingWindow {
     },
   };
 
-  public async startLoading() {
-    applicationIpc.handle.disableLoadingAnimations(
-      () => classHolder.storageManager.getData('app').disableLoadingAnimations,
-    );
+  /**
+   * Initializes and shows the loading window.
+   * Resolves when the window is ready to show.
+   */
+  public async startLoading(): Promise<void> {
+    this.registerIpcHandlers();
 
     return new Promise<void>(resolve => {
       this.window = new BrowserWindow(LoadingWindow.LOADING_WINDOW_CONFIG);
-
       this.window.setBackgroundColor(getWindowColor('dark'));
 
-      this.window.on('close', () => {
-        this.window = undefined;
-      });
-
-      this.window.on('ready-to-show', () => {
-        this.window!.show();
-        resolve();
-      });
-
-      if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-        this.window.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/loading.html`);
-      } else {
-        this.window.loadFile(path.join(__dirname, `../renderer/loading.html`));
-      }
+      this.setupWindowListeners(resolve);
+      this.loadWindowContent();
     });
   }
 
+  private registerIpcHandlers() {
+    applicationIpc.handle.disableLoadingAnimations(
+      () => classHolder.storageManager.getData('app').disableLoadingAnimations,
+    );
+  }
+
+  private setupWindowListeners(resolve: () => void) {
+    if (!this.window) return;
+
+    this.window.on('close', () => {
+      this.window = undefined;
+    });
+
+    this.window.on('ready-to-show', () => {
+      this.window?.show();
+      resolve();
+    });
+  }
+
+  private loadWindowContent() {
+    if (!this.window) return;
+
+    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+      this.window.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/loading.html`);
+    } else {
+      this.window.loadFile(path.join(__dirname, '../renderer/loading.html'));
+    }
+  }
+
   public closeWindow() {
-    this.window?.close();
+    if (this.window && !this.window.isDestroyed()) {
+      this.window.close();
+    }
   }
 }
