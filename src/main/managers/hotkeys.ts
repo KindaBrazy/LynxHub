@@ -17,16 +17,28 @@ let prevModifiers = '';
 
 const registeredHotkeys: number[] = [];
 
-// Fast string-based comparison instead of deep object comparison
+/**
+ * Generates a string representation of modifier keys for efficient comparison.
+ * @param control - Control key state
+ * @param shift - Shift key state
+ * @param alt - Alt key state
+ * @param meta - Meta/Command key state
+ * @returns Short string representing modifiers (e.g., "csam")
+ */
 function getModifierString(control: boolean, shift: boolean, alt: boolean, meta: boolean): string {
   return `${control ? 'c' : ''}${shift ? 's' : ''}${alt ? 'a' : ''}${meta ? 'm' : ''}`;
 }
 
+/**
+ * Sends hotkey input to the renderer process if it differs from the previous input.
+ * Uses fast string comparison to avoid unnecessary IPC calls.
+ * @param input - The input event data
+ */
 function sendToRenderer(input: LynxInput) {
   const {key, type, control, shift, alt, meta} = input;
   const modifiers = getModifierString(control, shift, alt, meta);
 
-  // Fast string comparison instead of lodash isEqual
+  // Fast string comparison instead of deep object comparison
   if (key === prevKey && type === prevType && modifiers === prevModifiers) return;
 
   prevKey = key;
@@ -36,6 +48,10 @@ function sendToRenderer(input: LynxInput) {
   applicationIpc.send.onHotkeysChange(input);
 }
 
+/**
+ * Resets tracked keys when the window loses focus.
+ * Ensures stuck keys are cleared.
+ */
 function onBlur() {
   prevKey = '';
   prevType = '';
@@ -43,6 +59,12 @@ function onBlur() {
   applicationIpc.send.onHotkeysChange(initialKeys);
 }
 
+/**
+ * Handles input events from WebContents.
+ * Normalizes input and sends it to the renderer.
+ * @param _event - Electron event (unused)
+ * @param input - Input data from Electron
+ */
 function onInput(_event: Event, input: Input) {
   const {control, key, shift, alt, meta, type} = input;
   const lowerKey = key.toLowerCase();
@@ -51,6 +73,11 @@ function onInput(_event: Event, input: Input) {
   sendToRenderer(currentKeys);
 }
 
+/**
+ * Registers global hotkey listeners for a given WebContents instance.
+ * Tracks registered instances to prevent duplicate listeners.
+ * @param contents - The WebContents to listen to
+ */
 export default function RegisterHotkeys(contents: WebContents) {
   if (registeredHotkeys.includes(contents.id)) return;
   registeredHotkeys.push(contents.id);
@@ -64,7 +91,7 @@ export default function RegisterHotkeys(contents: WebContents) {
     if (index !== -1) {
       registeredHotkeys.splice(index, 1);
     }
-    // Listeners are automatically removed when WebContents is destroyed,
-    // but we need to clean up our tracking array
+    // Note: Event listeners attached to `contents` are automatically removed by Electron when destroyed.
+    // We only need to remove the ID from our tracking array.
   });
 }

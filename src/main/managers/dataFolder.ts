@@ -1,4 +1,4 @@
-import {dirname, isAbsolute, join} from 'node:path';
+import {dirname, isAbsolute, join, resolve} from 'node:path';
 
 import {
   BINARIES_FOLDER_NAME,
@@ -12,7 +12,6 @@ import {changeWindowState} from '@lynx_main/ipc/methods/windowUtils';
 import {getExePath, getRelativePath, isPortable} from '@lynx_main/utils';
 import {app, BrowserWindow, dialog} from 'electron';
 import fs from 'graceful-fs';
-import {resolve} from 'path';
 
 import classHolder from './classHolder';
 
@@ -20,6 +19,7 @@ const DIRECTORIES = [PLUGINS_FOLDER_NAME, BINARIES_FOLDER_NAME, REPOSITORIES_FOL
 
 /**
  * Creates application directories in the app data path.
+ * Ensures all required subdirectories exist.
  * @throws {Error} If directory creation fails
  */
 export async function checkAppDirectories(): Promise<void> {
@@ -42,7 +42,10 @@ export function getAppDirectory(name: FolderNames): string {
   return join(getAppDataPath(), name);
 }
 
-/** Retrieves the app data path from storage. */
+/** 
+ * Retrieves the app data path from storage.
+ * Resolves relative paths against the executable location.
+ */
 export function getAppDataPath(): string {
   const {storageManager} = classHolder;
   const dataDir = storageManager.getData('app').appDataDir;
@@ -59,6 +62,7 @@ export function getAppDataPath(): string {
 function setAppDataFolder(targetDir: string): void {
   const {storageManager, appManager} = classHolder;
   storageManager.updateData('app', {appDataDir: targetDir});
+  
   if (isPortable() === 'linux') {
     changeWindowState('close');
   } else {
@@ -68,12 +72,13 @@ function setAppDataFolder(targetDir: string): void {
 
 /**
  * Prompts the user to select a new app data folder.
+ * @param targetWindow - Optional window to attach the dialog to
  * @returns A promise that resolves when a new folder is selected or rejects if cancelled
  */
-
 export async function selectNewAppDataFolder(targetWindow?: BrowserWindow): Promise<string> {
   const {appManager} = classHolder;
   const window = targetWindow || appManager?.getMainWindow();
+  
   if (!window) {
     throw new Error('Main window is not available. Please ensure the application is properly initialized.');
   }
@@ -95,6 +100,7 @@ export async function selectNewAppDataFolder(targetWindow?: BrowserWindow): Prom
   const targetPath = result.filePaths[0];
 
   try {
+    // Verify write access
     fs.accessSync(targetPath, fs.constants.R_OK | fs.constants.W_OK);
 
     const newPath = getRelativePath(getExePath(), targetPath);
@@ -119,7 +125,12 @@ export async function selectNewAppDataFolder(targetWindow?: BrowserWindow): Prom
   }
 }
 
-export async function isAppDir(dir: string) {
+/**
+ * Checks if a given directory is within the application path.
+ * @param dir - The directory to check
+ * @returns True if the directory is inside the app path
+ */
+export async function isAppDir(dir: string): Promise<boolean> {
   const appPath = resolve(dirname(app.getPath('exe')));
   const target = resolve(dir);
   return target.startsWith(appPath);
