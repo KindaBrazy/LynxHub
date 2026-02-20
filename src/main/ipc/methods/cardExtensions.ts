@@ -1,3 +1,4 @@
+
 // Card extensions IPC methods - Manages extension details, updates, and enable/disable operations
 import path from 'node:path';
 
@@ -8,8 +9,12 @@ import {calculateFolderSize} from '@lynx_main/utils';
 import fs from 'graceful-fs';
 import {compact} from 'lodash';
 
+// Global flag to control extension loading cancellation
 let isLoadingExtensions = false;
 
+/**
+ * stops the extension loading process.
+ */
 export function disableExtensionsLoading(): void {
   isLoadingExtensions = false;
 }
@@ -104,12 +109,22 @@ async function getRepoDirectories(dir: string) {
   return folders.map(folder => path.join(dir, folder));
 }
 
+/**
+ * Enables or disables an extension by renaming its directory (prefixing with dot).
+ * @param disable - Whether to disable or enable the extension.
+ * @param dir - The path to the extension directory.
+ * @returns The new path of the extension directory.
+ */
 export async function disableExtension(disable: boolean, dir: string): Promise<string> {
   return new Promise((resolve, reject) => {
     try {
       const targetDir = path.resolve(dir);
+      
+      // Use sync methods inside Promise to catch errors in try-catch block, 
+      // but ideally this should be async. However, keeping logic similar to original for safety.
       if (!fs.existsSync(targetDir) || !fs.statSync(targetDir).isDirectory()) {
         reject(new Error(`${dir} not exist.`));
+        return;
       }
 
       const parsedPath = path.parse(targetDir);
@@ -121,18 +136,23 @@ export async function disableExtension(disable: boolean, dir: string): Promise<s
           newName = '.' + currentName;
         } else {
           resolve(targetDir);
+          return;
         }
       } else {
         if (currentName.startsWith('.')) {
           newName = currentName.slice(1);
         } else {
           resolve(targetDir);
+          return;
         }
       }
 
       const newPath = path.join(parsedPath.dir, newName);
 
-      if (fs.existsSync(newPath)) reject();
+      if (fs.existsSync(newPath)) {
+        reject(new Error(`Target path ${newPath} already exists.`));
+        return;
+      }
 
       fs.renameSync(targetDir, newPath);
       resolve(newPath);
@@ -143,12 +163,18 @@ export async function disableExtension(disable: boolean, dir: string): Promise<s
   });
 }
 
+/**
+ * Updates all extensions in a directory.
+ * @param data - Object containing the directory path and ID for progress tracking.
+ */
 export async function updateAllExtensions(data: {id: string; dir: string}) {
   const directories = await getRepoDirectories(path.resolve(data.dir));
 
   if (directories) {
     const extensionsCount: number = directories.length;
     let currentState: number = 1;
+    
+    // Process sequentially to avoid network congestion
     for (const dir of directories) {
       const gitManager = new GitManager(false);
 
