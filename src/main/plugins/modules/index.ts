@@ -14,6 +14,9 @@ import {ipcMain} from 'electron';
 import {compact, isEmpty} from 'lodash';
 import pty from 'node-pty';
 
+/**
+ * Manages the lifecycle and communication of modules (cards).
+ */
 export default class ModuleManager {
   private checkInterval?: NodeJS.Timeout = undefined;
   private availableCardUpdates: string[] = [];
@@ -22,7 +25,14 @@ export default class ModuleManager {
   private readonly maxImportRetries = 15;
   private importRetryCount = 0;
 
-  private getUtils() {
+  private maxRetries = 15;
+  private currentRetries = 0;
+
+  /**
+   * Generates utility functions for modules.
+   * @returns The utility object or undefined if webContent is not available
+   */
+  private getUtils(): MainModuleUtils | undefined {
     const webContent = classHolder.appManager?.getWebContent();
     if (!webContent) return undefined;
 
@@ -67,7 +77,11 @@ export default class ModuleManager {
     return utils;
   }
 
-  public async importPlugins(moduleFolders: string[]) {
+  /**
+   * Imports plugins from the specified folders.
+   * @param moduleFolders - Array of folders containing modules
+   */
+  public async importPlugins(moduleFolders: string[]): Promise<void> {
     try {
       const utils = this.getUtils();
 
@@ -93,47 +107,71 @@ export default class ModuleManager {
       const disabledCards = new Set(classHolder.storageManager.getData('plugin').disabledCards || []);
 
       if (isDev()) {
-        try {
-          const initialModule: MainModuleImportType = await import(/* @vite-ignore */ '../../../../module/src/main');
-          const allMethods = await initialModule.default(utils);
-          // Filter out disabled cards
-          const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
-          this.mainMethods.push(...enabledMethods);
-        } catch (e) {
-          console.log('No dev module found, skipping...');
-        }
+        await this.loadDevModule(utils, disabledCards);
       } else {
-        const importedModules: (MainModuleImportType | null)[] = await Promise.all(
-          moduleFolders.map(async modulePath => {
-            try {
-              const fullModulePath = path.join(modulePath, 'scripts', 'main.mjs');
-              const moduleUrl = `file://${fullModulePath}`;
-              return (await import(moduleUrl)) as MainModuleImportType;
-            } catch (e) {
-              console.error('Failed to load module main entry: ', modulePath, 'Error: ', e);
-              captureException(e);
-              return null;
-            }
-          }),
-        );
-
-        const loadedModules = compact(importedModules);
-
-        for (const importedModule of loadedModules) {
-          const allMethods = await importedModule.default(utils);
-          // Filter out disabled cards
-          const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
-          this.mainMethods.push(...enabledMethods);
-        }
+        await this.loadProductionModules(moduleFolders, utils, disabledCards);
       }
     } catch (e) {
       console.error(e);
     }
   }
 
-  private maxRetries = 15;
-  private currentRetries = 0;
+  /**
+   * Loads the development module.
+   * @param utils - The module utilities
+   * @param disabledCards - Set of disabled card IDs
+   */
+  private async loadDevModule(utils: MainModuleUtils, disabledCards: Set<string>) {
+    try {
+      const initialModule: MainModuleImportType = await import(/* @vite-ignore */ '../../../../module/src/main');
+      const allMethods = await initialModule.default(utils);
+      // Filter out disabled cards
+      const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
+      this.mainMethods.push(...enabledMethods);
+    } catch (e) {
+      console.log('No dev module found, skipping...');
+    }
+  }
 
+  /**
+   * Loads production modules from folders.
+   * @param moduleFolders - Array of folders containing modules
+   * @param utils - The module utilities
+   * @param disabledCards - Set of disabled card IDs
+   */
+  private async loadProductionModules(
+    moduleFolders: string[],
+    utils: MainModuleUtils,
+    disabledCards: Set<string>,
+  ) {
+    const importedModules: (MainModuleImportType | null)[] = await Promise.all(
+      moduleFolders.map(async modulePath => {
+        try {
+          const fullModulePath = path.join(modulePath, 'scripts', 'main.mjs');
+          const moduleUrl = `file://${fullModulePath}`;
+          return (await import(moduleUrl)) as MainModuleImportType;
+        } catch (e) {
+          console.error('Failed to load module main entry: ', modulePath, 'Error: ', e);
+          captureException(e);
+          return null;
+        }
+      }),
+    );
+
+    const loadedModules = compact(importedModules);
+
+    for (const importedModule of loadedModules) {
+      const allMethods = await importedModule.default(utils);
+      // Filter out disabled cards
+      const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
+      this.mainMethods.push(...enabledMethods);
+    }
+  }
+
+  /**
+   * Listens for IPC channels from the renderer.
+   * Retries if webContent is not available yet.
+   */
   public listenForChannels() {
     const {appManager} = classHolder;
     const webContent = appManager?.getWebContent();
@@ -156,11 +194,22 @@ export default class ModuleManager {
     this.mainMethods.forEach(({methods}) => methods().mainIpc?.());
   }
 
+  /**
+   * Retrieves methods for a specific module by ID.
+   * @param id - The module ID
+   * @returns The module methods or undefined if not found
+   */
   public getMethodsById(id: string): MainModules['methods'] | undefined {
     return this.mainMethods.find(plugin => plugin.id === id)?.methods;
   }
 
-  public async checkCardUpdate(card: InstalledCard, updateType: 'git' | 'stepper' | undefined) {
+  /**
+   * Checks if an update is available for a card.
+   * @param card - The installed card
+   * @param updateType - The update type (git or stepper)
+   * @returns True if update is available, false otherwise
+   */
+  public async checkCardUpdate(card: InstalledCard, updateType: 'git' | 'stepper' | undefined): Promise<boolean> {
     try {
       const {id, dir} = card;
       const method = this.getMethodsById(id)?.().updateAvailable;
@@ -177,6 +226,10 @@ export default class ModuleManager {
     }
   }
 
+  /**
+   * Checks for updates for all installed cards.
+   * @param updateTypes - Array of update types for each card
+   */
   private async checkAllCardsUpdate(updateTypes: {id: string; type: 'git' | 'stepper'}[]) {
     const {storageManager} = classHolder;
     let installedCards = storageManager.getData('cards').installedCards;
@@ -195,6 +248,10 @@ export default class ModuleManager {
     }
   }
 
+  /**
+   * Sets up an interval to check for card updates.
+   * @param updateType - Array of update types for each card
+   */
   public async cardsUpdateInterval(updateType: {id: string; type: 'git' | 'stepper'}[]) {
     const {storageManager} = classHolder;
     if (!this.checkInterval && !isEmpty(updateType)) {
@@ -205,6 +262,10 @@ export default class ModuleManager {
     }
   }
 
+  /**
+   * Uninstalls a card by its ID.
+   * @param id - The card ID
+   */
   public async uninstallCardByID(id: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const uninstall = this.getMethodsById(id)?.().uninstall;
@@ -216,3 +277,4 @@ export default class ModuleManager {
     });
   }
 }
+
