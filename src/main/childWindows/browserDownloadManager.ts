@@ -1,59 +1,43 @@
-import {accessSync, constants as fsConstants, existsSync, mkdirSync} from 'node:fs';
+import {existsSync} from 'node:fs';
 import {basename, join, parse} from 'node:path';
 
-import {isWin} from '@lynx_common/utils';
+import {sanitizeFilename} from '@lynx_common/utils/fileUtils';
 import listenDownloadManager, {downloadManagerIpc} from '@lynx_main/ipc/downloadManager';
 import classHolder from '@lynx_main/managers/classHolder';
+import {
+  ensureDirectoryExists,
+  handleFileSystemError,
+  validatePath,
+  validateWritableDirectory,
+} from '@lynx_main/utils/fileSystem';
 import {app, BrowserWindow, dialog, DownloadItem, Session, shell} from 'electron';
 
-/**
- * Error types for file system operations
- */
-type FileSystemError = {
-  code: string;
-  message: string;
-  userMessage: string;
-};
-
-/**
- * Maps Node.js error codes to user-friendly messages
- */
-const FILE_SYSTEM_ERROR_MESSAGES: Record<string, string> = {
-  EACCES: 'Permission denied. Please check folder permissions.',
-  EPERM: 'Operation not permitted. Please run with appropriate permissions.',
-  ENOSPC: 'Not enough disk space available.',
-  ENOENT: 'Path does not exist.',
-  ENOTDIR: 'Path is not a directory.',
-  EISDIR: 'Path is a directory, not a file.',
-  EMFILE: 'Too many open files.',
-  ENAMETOOLONG: 'Path name is too long.',
-  EROFS: 'File system is read-only.',
-  EEXIST: 'File or directory already exists.',
-};
-
 export default class BrowserDownloadManager {
-  private downloadingItems: DownloadItem[];
-
+  private downloadingItems: DownloadItem[] = [];
   private readonly mainWindow: BrowserWindow;
 
   // Map to track download identifiers (URL + filename) for persistence
-  private downloadIdentifiers: Map<string, string>;
+  private downloadIdentifiers = new Map<string, string>();
 
   // Cache for filename existence checks to improve performance
-  private fileExistsCache: Map<string, boolean>;
-  private cacheExpirationTime: number = 5000; // 5 seconds
-  private cacheTimestamps: Map<string, number>;
+  private fileExistsCache = new Map<string, boolean>();
+  private cacheExpirationTime = 5000; // 5 seconds
+  private cacheTimestamps = new Map<string, number>();
 
   constructor(session: Session, mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
+    this.setupWindowListeners();
+    this.setupDownloadListener(session);
+    listenDownloadManager();
+  }
 
-    this.downloadingItems = [];
-    this.downloadIdentifiers = new Map();
-    this.fileExistsCache = new Map();
-    this.cacheTimestamps = new Map();
+  private setupWindowListeners() {
+    this.mainWindow.on('close', () => {
+      this.cleanupAllItems();
+    });
+  }
 
-    this.initialWindow();
-
+  private setupDownloadListener(session: Session) {
     session.on('will-download', (_, item) => {
       const url = item.getURL();
       const filename = item.getFilename();
@@ -61,123 +45,93 @@ export default class BrowserDownloadManager {
       const behavior = this.getDownloadBehavior();
 
       // Check if this download was previously cleared
-      // If so, remove it from the cleared list (user is re-downloading)
       if (this.isDownloadCleared(identifier)) {
         this.unmarkDownloadAsCleared(identifier);
       }
 
-      if (behavior === 'ask') {
-        // For "ask" behavior, don't set save path - let Electron show its default save dialog
-        // Wait for the 'updated' event which fires after user selects location
-        let hasNotified = false;
+      // Ask behavior: Let Electron show default save dialog, wait for user selection
+    if (behavior === 'ask') {
+      this.handleAskBehavior(item, url);
+    } else {
+      // Default behavior: Save to default location automatically
+      this.handleDefaultBehavior(item, url, filename);
+    }
+    });
+  }
 
-        item.on('updated', () => {
-          // Once save path is set (user selected location), notify renderer
-          const savePath = item.getSavePath();
-          if (savePath && !hasNotified) {
-            hasNotified = true;
-            this.downloadingItems.push(item);
-            const actualFilename = basename(savePath);
-            const actualIdentifier = this.generateDownloadIdentifier(url, actualFilename);
-            this.downloadIdentifiers.set(actualFilename, actualIdentifier);
-            this.notifyRenderer(item);
-          }
-        });
+  private handleAskBehavior(item: DownloadItem, url: string) {
+    let hasNotified = false;
 
-        item.once('done', (_, state) => {
-          // Handle case where download completes very quickly or is cancelled before 'updated' fires
-          if (!hasNotified && state === 'cancelled') {
-            // User cancelled the save dialog, nothing to do
-            return;
-          }
-          if (!hasNotified) {
-            const savePath = item.getSavePath();
-            if (savePath) {
-              hasNotified = true;
-              this.downloadingItems.push(item);
-              const actualFilename = basename(savePath);
-              const actualIdentifier = this.generateDownloadIdentifier(url, actualFilename);
-              this.downloadIdentifiers.set(actualFilename, actualIdentifier);
-              this.notifyRenderer(item);
-            }
-          }
-        });
-      } else {
-        // For "default" behavior, set save path synchronously to prevent default dialog
-        const downloadDir = this.getDownloadLocation();
-
-        // Ensure download directory exists
-        if (!this.ensureDirectoryExists(downloadDir)) {
-          console.error('Failed to create download directory:', downloadDir);
-          item.cancel();
-          return;
-        }
-
-        const uniqueFilename = this.resolveUniqueFilename(downloadDir, filename);
-        const savePath = join(downloadDir, uniqueFilename);
-
-        item.setSavePath(savePath);
+    const notify = () => {
+      const savePath = item.getSavePath();
+      if (savePath && !hasNotified) {
+        hasNotified = true;
         this.downloadingItems.push(item);
-
-        const actualIdentifier = this.generateDownloadIdentifier(url, uniqueFilename);
-        this.downloadIdentifiers.set(uniqueFilename, actualIdentifier);
-
+        const actualFilename = basename(savePath);
+        const actualIdentifier = this.generateDownloadIdentifier(url, actualFilename);
+        this.downloadIdentifiers.set(actualFilename, actualIdentifier);
         this.notifyRenderer(item);
       }
-    });
+    };
 
-    listenDownloadManager();
+    item.on('updated', notify);
+
+    // Some downloads complete immediately or are cancelled before 'updated' fires
+    item.once('done', (_, state) => {
+      if (!hasNotified && state !== 'cancelled') {
+        notify();
+      }
+    });
+  }
+
+  private handleDefaultBehavior(item: DownloadItem, url: string, filename: string) {
+    const downloadDir = this.getDownloadLocation();
+
+    // Ensure download directory exists
+    if (!ensureDirectoryExists(downloadDir)) {
+      console.error('Failed to create download directory:', downloadDir);
+      item.cancel();
+      return;
+    }
+
+    const uniqueFilename = this.resolveUniqueFilename(downloadDir, filename);
+    const savePath = join(downloadDir, uniqueFilename);
+
+    item.setSavePath(savePath);
+    this.downloadingItems.push(item);
+
+    const actualIdentifier = this.generateDownloadIdentifier(url, uniqueFilename);
+    this.downloadIdentifiers.set(uniqueFilename, actualIdentifier);
+
+    this.notifyRenderer(item);
   }
 
   /**
    * Generates a unique identifier for a download based on URL and filename
-   * This identifier is used to track cleared downloads across sessions
-   * @param url - The download URL
-   * @param filename - The filename
-   * @returns A unique identifier string
    */
   private generateDownloadIdentifier(url: string, filename: string): string {
-    // Create a stable identifier from URL and filename
-    // We use a simple concatenation with a separator that's unlikely to appear in URLs
     return `${url}::${filename}`;
   }
 
-  /**
-   * Checks if a download was previously cleared by the user
-   * @param identifier - The download identifier
-   * @returns True if the download was cleared, false otherwise
-   */
   private isDownloadCleared(identifier: string): boolean {
     const {storageManager} = classHolder;
     const clearedDownloads = storageManager.getData('browser').clearedDownloads || [];
     return clearedDownloads.includes(identifier);
   }
 
-  /**
-   * Marks a download as cleared in storage to prevent reappearance
-   * @param identifier - The download identifier to mark as cleared
-   */
   private markDownloadAsCleared(identifier: string): void {
     const {storageManager} = classHolder;
     try {
       const clearedDownloads = storageManager.getData('browser').clearedDownloads || [];
-
-      // Only add if not already present
       if (!clearedDownloads.includes(identifier)) {
-        const updatedClearedDownloads = [...clearedDownloads, identifier];
-        storageManager.updateData('browser', {clearedDownloads: updatedClearedDownloads});
+        storageManager.updateData('browser', {clearedDownloads: [...clearedDownloads, identifier]});
       }
     } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
+      const fsError = handleFileSystemError(error);
       console.error('Failed to mark download as cleared:', fsError.userMessage);
     }
   }
 
-  /**
-   * Removes a download identifier from the cleared list
-   * This is useful if a user re-downloads the same file
-   * @param identifier - The download identifier to unmark
-   */
   private unmarkDownloadAsCleared(identifier: string): void {
     const {storageManager} = classHolder;
     try {
@@ -185,99 +139,18 @@ export default class BrowserDownloadManager {
       const updatedClearedDownloads = clearedDownloads.filter(id => id !== identifier);
       storageManager.updateData('browser', {clearedDownloads: updatedClearedDownloads});
     } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
+      const fsError = handleFileSystemError(error);
       console.error('Failed to unmark download as cleared:', fsError.userMessage);
     }
   }
 
   /**
-   * Converts a Node.js error to a FileSystemError with user-friendly message
-   * @param error - The error object
-   * @returns FileSystemError with code, technical message, and user-friendly message
-   */
-  public handleFileSystemError(error: any): FileSystemError {
-    const code = error.code || 'UNKNOWN';
-    const message = error.message || 'Unknown error occurred';
-    const userMessage = FILE_SYSTEM_ERROR_MESSAGES[code] || 'An unexpected error occurred with the file system.';
-
-    console.error(`File system error [${code}]:`, message);
-
-    return {
-      code,
-      message,
-      userMessage,
-    };
-  }
-
-  /**
-   * Ensures a directory exists, creating it if necessary
-   * @param dirPath - The directory path to ensure exists
-   * @returns True if successful, false otherwise
-   */
-  private ensureDirectoryExists(dirPath: string): boolean {
-    try {
-      if (!existsSync(dirPath)) {
-        mkdirSync(dirPath, {recursive: true});
-        console.log(`Created directory: ${dirPath}`);
-      }
-      return true;
-    } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
-      console.error(`Failed to create directory ${dirPath}:`, fsError.userMessage);
-      return false;
-    }
-  }
-
-  /**
-   * Checks if a path has write permissions
-   * @param path - The path to check
-   * @returns True if writable, false otherwise
-   */
-  private hasWritePermission(path: string): boolean {
-    try {
-      accessSync(path, fsConstants.W_OK);
-      return true;
-    } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
-      console.error(`No write permission for ${path}:`, fsError.userMessage);
-      return false;
-    }
-  }
-
-  /**
-   * Validates that a directory path is writable
-   * @param dirPath - The directory path to validate
-   * @returns Object with success status and optional error message
-   */
-  private validateWritableDirectory(dirPath: string): {success: boolean; error?: string} {
-    try {
-      // Ensure directory exists
-      if (!this.ensureDirectoryExists(dirPath)) {
-        return {success: false, error: 'Failed to create directory'};
-      }
-
-      // Check write permissions
-      if (!this.hasWritePermission(dirPath)) {
-        return {success: false, error: 'No write permission for directory'};
-      }
-
-      return {success: true};
-    } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
-      return {success: false, error: fsError.userMessage};
-    }
-  }
-
-  /**
    * Checks if a file exists, using cache for performance
-   * @param filePath - The full path to check
-   * @returns True if file exists, false otherwise
    */
   private cachedFileExists(filePath: string): boolean {
     const now = Date.now();
     const cachedTimestamp = this.cacheTimestamps.get(filePath);
 
-    // Check if cache is valid (not expired)
     if (cachedTimestamp && now - cachedTimestamp < this.cacheExpirationTime) {
       const cachedValue = this.fileExistsCache.get(filePath);
       if (cachedValue !== undefined) {
@@ -285,7 +158,6 @@ export default class BrowserDownloadManager {
       }
     }
 
-    // Cache miss or expired - check file system
     const exists = existsSync(filePath);
     this.fileExistsCache.set(filePath, exists);
     this.cacheTimestamps.set(filePath, now);
@@ -293,10 +165,6 @@ export default class BrowserDownloadManager {
     return exists;
   }
 
-  /**
-   * Clears the filename existence cache
-   * Called after downloads complete to ensure fresh checks
-   */
   private clearFilenameCache(): void {
     this.fileExistsCache.clear();
     this.cacheTimestamps.clear();
@@ -304,35 +172,23 @@ export default class BrowserDownloadManager {
 
   /**
    * Resolves a unique filename by appending a counter if the file already exists.
-   * Implements the pattern: "filename (N).ext" where N is an incrementing counter.
-   * Uses caching to improve performance for rapid duplicate checks.
-   *
-   * @param directory - The directory where the file will be saved
-   * @param filename - The original filename
-   * @returns The resolved unique filename (not the full path)
    */
   private resolveUniqueFilename(directory: string, filename: string): string {
     try {
-      filename = this.sanitizeFilename(filename);
+      filename = sanitizeFilename(filename);
       const parsed = parse(filename);
       const {name, ext} = parsed;
 
-      // Check if the original filename exists (using cache)
       if (!this.cachedFileExists(join(directory, filename))) {
         return filename;
       }
 
-      // File exists, find unique name with counter
       return this.findUniqueFilenameWithCounter(directory, name, ext);
     } catch (error: any) {
-      // Fallback to timestamp-based naming on error
       return this.generateTimestampFilename(filename, error);
     }
   }
 
-  /**
-   * Finds a unique filename by incrementing a counter until an available name is found
-   */
   private findUniqueFilenameWithCounter(directory: string, name: string, ext: string): string {
     const MAX_ATTEMPTS = 10000;
     let counter = 1;
@@ -344,11 +200,9 @@ export default class BrowserDownloadManager {
       if (!this.cachedFileExists(resolvedPath)) {
         return uniqueFilename;
       }
-
       counter++;
     }
 
-    // Safety fallback: use timestamp if max attempts reached
     return `${name}_${Date.now()}${ext}`;
   }
 
@@ -357,32 +211,32 @@ export default class BrowserDownloadManager {
    */
   private generateTimestampFilename(filename: string, error?: any): string {
     if (error) {
-      const fsError = this.handleFileSystemError(error);
+      const fsError = handleFileSystemError(error);
       console.error('Error resolving unique filename:', fsError.userMessage);
     }
     const parsed = parse(filename);
     return `${parsed.name}_${Date.now()}${parsed.ext}`;
   }
 
-  private initialWindow() {
-    this.mainWindow.on('close', () => {
-      this.downloadingItems.forEach(item => {
-        try {
-          item.removeAllListeners();
-        } catch (error) {
-          console.error('Error cleaning up download item:', error);
-        }
-      });
-      this.downloadingItems = [];
-      this.downloadIdentifiers.clear();
-      this.clearFilenameCache();
+  /**
+   * Cleans up all active downloads and listeners.
+   * Called on window close or context destruction.
+   */
+  private cleanupAllItems() {
+    this.downloadingItems.forEach(item => {
+      try {
+        item.removeAllListeners();
+      } catch (error) {
+        console.error('Error cleaning up download item:', error);
+      }
     });
-  }
-
-  public onContextClose() {
     this.downloadingItems = [];
     this.downloadIdentifiers.clear();
     this.clearFilenameCache();
+  }
+
+  public onContextClose() {
+    this.cleanupAllItems();
   }
 
   private getItemByName(name: string) {
@@ -401,7 +255,6 @@ export default class BrowserDownloadManager {
 
     item.on('done', (_, state) => {
       downloadManagerIpc.send.onDone({name: itemName, state});
-      // Clear filename cache when download completes to ensure fresh checks for next download
       this.clearFilenameCache();
     });
 
@@ -427,33 +280,21 @@ export default class BrowserDownloadManager {
     downloadManagerIpc.send.dlCount(this.downloadingItems.length);
   }
 
-  /**
-   * Gets the download location from storage with default fallback
-   * @returns The download directory path
-   */
   public getDownloadLocation(): string {
     const {storageManager} = classHolder;
     const location = storageManager.getData('browser').downloadLocation;
-    // Fallback to default if not set
     return location || join(app.getPath('downloads'), 'LynxHub');
   }
 
-  /**
-   * Sets the download location in storage with path validation
-   * @param path - The new download directory path
-   * @returns Object with success status and optional error message
-   */
   public setDownloadLocation(path: string): {success: boolean; error?: string} {
     const {storageManager} = classHolder;
     try {
-      // Validate path
-      const pathValidation = this.validatePath(path);
+      const pathValidation = validatePath(path);
       if (!pathValidation.success) {
         return {success: false, error: pathValidation.error};
       }
 
-      // Validate directory is writable
-      const dirValidation = this.validateWritableDirectory(path);
+      const dirValidation = validateWritableDirectory(path);
       if (!dirValidation.success) {
         return {success: false, error: dirValidation.error};
       }
@@ -461,16 +302,12 @@ export default class BrowserDownloadManager {
       storageManager.updateData('browser', {downloadLocation: path});
       return {success: true};
     } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
+      const fsError = handleFileSystemError(error);
       console.error('Failed to set download location:', fsError.userMessage);
       return {success: false, error: fsError.userMessage};
     }
   }
 
-  /**
-   * Opens a directory selection dialog for choosing download location
-   * @returns The selected path or null if cancelled
-   */
   public async openLocationDialog(): Promise<string | null> {
     try {
       const result = await dialog.showOpenDialog(this.mainWindow, {
@@ -482,7 +319,6 @@ export default class BrowserDownloadManager {
       if (result.canceled || result.filePaths.length === 0) {
         return null;
       }
-
       return result.filePaths[0];
     } catch (error) {
       console.error('Failed to open location dialog:', error);
@@ -490,108 +326,16 @@ export default class BrowserDownloadManager {
     }
   }
 
-  /**
-   * Gets the download behavior setting from storage
-   * @returns The download behavior ('ask' or 'default')
-   */
   public getDownloadBehavior(): 'ask' | 'default' {
     const {storageManager} = classHolder;
     return storageManager.getData('browser').downloadBehavior || 'default';
   }
 
-  /**
-   * Sets the download behavior in storage
-   * @param behavior - The download behavior to set
-   */
   public setDownloadBehavior(behavior: 'ask' | 'default'): void {
     const {storageManager} = classHolder;
     storageManager.updateData('browser', {downloadBehavior: behavior});
   }
 
-  /**
-   * Sanitizes a filename to prevent path traversal and invalid characters
-   * @param filename - The filename to sanitize
-   * @returns Sanitized filename safe for file system operations
-   */
-  private sanitizeFilename(filename: string): string {
-    if (!filename || filename.trim() === '') {
-      return 'download';
-    }
-
-    // Remove path separators and parent directory references
-    let sanitized = filename.replace(/[/\\]/g, '_').replace(/\.\./g, '_');
-
-    // Remove invalid characters based on OS
-    if (isWin) {
-      // Windows invalid characters: < > : " / \ | ? *
-      sanitized = sanitized.replace(/[<>:"|?*]/g, '_');
-      // Remove trailing dots and spaces (Windows doesn't allow these)
-      sanitized = sanitized.replace(/[\s.]+$/, '');
-    } else {
-      // Unix-like systems: only null character is invalid
-      sanitized = sanitized.replace(/\0/g, '_');
-    }
-
-    // Ensure filename is not empty after sanitization
-    if (sanitized.trim() === '') {
-      return 'download';
-    }
-
-    // Limit filename length (leaving room for counter suffix)
-    const maxLength = 200;
-    if (sanitized.length > maxLength) {
-      const parsed = parse(sanitized);
-      const ext = parsed.ext;
-      const name = parsed.name.substring(0, maxLength - ext.length);
-      sanitized = name + ext;
-    }
-
-    return sanitized;
-  }
-
-  /**
-   * Validates a file system path
-   * @param path - The path to validate
-   * @returns Object with success status and optional error message
-   */
-  private validatePath(path: string): {success: boolean; error?: string} {
-    try {
-      // Check for empty path
-      if (!path || path.trim() === '') {
-        return {success: false, error: 'Path cannot be empty'};
-      }
-
-      // Check for invalid characters (OS-specific)
-      // Windows: < > : " | ? * (but NOT parentheses, which are valid)
-      // Note: We don't check for / and \ as they are path separators
-      const invalidChars = isWin ? /[<>"|?*]/ : /\0/;
-      if (invalidChars.test(path)) {
-        return {success: false, error: 'Path contains invalid characters'};
-      }
-
-      // Check path length limits (OS-specific)
-      const maxPathLength = isWin ? 260 : 4096;
-      if (path.length > maxPathLength) {
-        return {success: false, error: `Path is too long (max ${maxPathLength} characters)`};
-      }
-
-      // Check if path exists
-      if (existsSync(path)) {
-        return {success: true};
-      }
-
-      // Path doesn't exist - this is okay, we can create it later
-      return {success: true};
-    } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
-      console.error('Path validation error:', fsError.userMessage);
-      return {success: false, error: fsError.userMessage};
-    }
-  }
-
-  /**
-   * Generic handler for download item operations (cancel, pause, resume)
-   */
   private handleDownloadItemOperation(
     name: string,
     operation: 'cancel' | 'pause' | 'resume',
@@ -604,7 +348,7 @@ export default class BrowserDownloadManager {
         action(item);
       }
     } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
+      const fsError = handleFileSystemError(error);
       console.error(`Failed to ${operation} download ${name}:`, fsError.userMessage);
     }
   }
@@ -647,47 +391,32 @@ export default class BrowserDownloadManager {
    */
   public clearItem(name: string) {
     try {
-      // Find the item to clear
       const itemToRemove = this.getItemByName(name);
 
       if (itemToRemove) {
         try {
           this.cancelItem(name);
-          // Remove all event listeners to prevent memory leaks
           itemToRemove.removeAllListeners();
         } catch (error: any) {
-          // Log error but continue with removal
-          const fsError = this.handleFileSystemError(error);
+          const fsError = handleFileSystemError(error);
           console.error(`Error cleaning up download item ${name}:`, fsError.userMessage);
         }
       }
 
-      // Mark the download as cleared in storage for persistence
       const identifier = this.downloadIdentifiers.get(name);
       if (identifier) {
         this.markDownloadAsCleared(identifier);
         this.downloadIdentifiers.delete(name);
       }
 
-      // Remove the item from the array
       this.downloadingItems = this.downloadingItems.filter(item => basename(item.getSavePath()) !== name);
-
-      // Update the download count in the main window
       downloadManagerIpc.send.dlCount(this.downloadingItems.length);
 
-      // Hide the download menu window if no items remain
       if (this.downloadingItems.length === 0) {
-        const contextMenuManager = classHolder.contextMenuManager;
-        if (contextMenuManager) {
-          contextMenuManager.hideContextMenu();
-        } else {
-          classHolder.waitForClass('contextMenuManager').then(contextMenuManager => {
-            contextMenuManager.hideContextMenu();
-          });
-        }
+        this.hideContextMenu();
       }
     } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
+      const fsError = handleFileSystemError(error);
       console.error(`Failed to clear download item ${name}:`, fsError.userMessage);
     }
   }
@@ -700,48 +429,39 @@ export default class BrowserDownloadManager {
    */
   public clearAllItems() {
     try {
-      // Cancel all active or paused downloads and clean up listeners
       this.downloadingItems.forEach(item => {
         try {
-          // If the item is still downloading or paused, cancel it first
-
           this.cancelItem(basename(item.getSavePath()));
-
-          // Remove all event listeners to prevent memory leaks
           item.removeAllListeners();
-
-          // Mark each download as cleared in storage
           const name = basename(item.getSavePath());
           const identifier = this.downloadIdentifiers.get(name);
           if (identifier) {
             this.markDownloadAsCleared(identifier);
           }
         } catch (error: any) {
-          // Log error but continue with other items
-          const fsError = this.handleFileSystemError(error);
+          const fsError = handleFileSystemError(error);
           console.error(`Error cleaning up download item:`, fsError.userMessage);
         }
       });
 
-      // Clear the arrays
       this.downloadingItems = [];
       this.downloadIdentifiers.clear();
-
-      // Update the download count in the main window to zero
       downloadManagerIpc.send.dlCount(0);
-
-      // Hide the download menu window since there are no items
-      const contextMenuManager = classHolder.contextMenuManager;
-      if (contextMenuManager) {
-        contextMenuManager.hideContextMenu();
-      } else {
-        classHolder.waitForClass('contextMenuManager').then(contextMenuManager => {
-          contextMenuManager.hideContextMenu();
-        });
-      }
+      this.hideContextMenu();
     } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
+      const fsError = handleFileSystemError(error);
       console.error('Failed to clear all downloads:', fsError.userMessage);
+    }
+  }
+
+  private hideContextMenu() {
+    const contextMenuManager = classHolder.contextMenuManager;
+    if (contextMenuManager) {
+      contextMenuManager.hideContextMenu();
+    } else {
+      classHolder.waitForClass('contextMenuManager').then(contextMenuManager => {
+        contextMenuManager.hideContextMenu();
+      });
     }
   }
 
@@ -751,7 +471,7 @@ export default class BrowserDownloadManager {
       if (savePath) {
         if (action === 'open') {
           shell.openPath(savePath).catch((error: any) => {
-            const fsError = this.handleFileSystemError(error);
+            const fsError = handleFileSystemError(error);
             console.error(`Failed to open file ${savePath}:`, fsError.userMessage);
             dialog.showErrorBox('Open File Error', `Failed to open file: ${fsError.userMessage}`);
           });
@@ -760,7 +480,7 @@ export default class BrowserDownloadManager {
         }
       }
     } catch (error: any) {
-      const fsError = this.handleFileSystemError(error);
+      const fsError = handleFileSystemError(error);
       console.error(`Failed to ${action} item ${name}:`, fsError.userMessage);
       dialog.showErrorBox('File Operation Error', `Failed to ${action} file: ${fsError.userMessage}`);
     }

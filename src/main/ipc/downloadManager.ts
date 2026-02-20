@@ -2,6 +2,7 @@ import {browserDownloadChannels} from '@lynx_common/consts/ipcChannels/downloadM
 import {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '@lynx_common/types/downloadManager';
 import {MainHT} from '@lynx_common/types/ipc';
 import classHolder from '@lynx_main/managers/classHolder';
+import {handleFileSystemError} from '@lynx_main/utils/fileSystem';
 
 import lynxIpc from './ipcWrapper';
 import {sendToContextMenu, sendToMain} from './sender';
@@ -30,7 +31,7 @@ export default async function listenDownloadManager() {
     try {
       return browserDownloadManager.setDownloadLocation(targetPath);
     } catch (error: any) {
-      const fsError = browserDownloadManager.handleFileSystemError(error);
+      const fsError = handleFileSystemError(error);
       return {success: false, error: fsError.userMessage};
     }
   });
@@ -48,7 +49,7 @@ export default async function listenDownloadManager() {
       }
       return {success: false, error: result.error};
     } catch (error: any) {
-      const fsError = browserDownloadManager.handleFileSystemError(error);
+      const fsError = handleFileSystemError(error);
       return {success: false, error: fsError.userMessage};
     }
   });
