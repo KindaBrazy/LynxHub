@@ -163,7 +163,7 @@ export class ImageCacheManager {
         }
       }
     } catch (error) {
-      console.error('[ImageCache] Failed to load metadata:', error);
+      console.warn('[ImageCache] Failed to load metadata, creating new:', error);
       this.metadata = this.createEmptyMetadata();
     }
   }
@@ -174,7 +174,7 @@ export class ImageCacheManager {
       await writeFile(this.metadataPath, JSON.stringify(this.metadata, null, 2), 'utf-8');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      console.error('[ImageCache] Failed to save metadata:', errorMessage);
+      console.warn('[ImageCache] Failed to save metadata:', errorMessage);
       // Don't crash on OOM, just log and continue
     }
   }
@@ -185,7 +185,7 @@ export class ImageCacheManager {
       writeFileSync(this.metadataPath, JSON.stringify(this.metadata, null, 2), 'utf-8');
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : String(error);
-      console.error('[ImageCache] Failed to save metadata sync:', errorMessage);
+      console.warn('[ImageCache] Failed to save metadata sync:', errorMessage);
       // Don't crash on OOM, just log and continue
     }
   }
@@ -231,7 +231,7 @@ export class ImageCacheManager {
         await unlink(filePath);
       }
     } catch (error) {
-      console.error(`[ImageCache] Failed to delete cache file ${filePath}:`, error);
+      console.warn(`[ImageCache] Failed to delete cache file ${filePath}:`, error);
     }
 
     delete this.metadata.entries[hash];
@@ -302,12 +302,12 @@ export class ImageCacheManager {
             rmSync(filePath);
             console.log(`[ImageCache] Removed orphaned file: ${file}`);
           } catch (error) {
-            console.error(`[ImageCache] Failed to remove orphaned file ${file}:`, error);
+            console.warn(`[ImageCache] Failed to remove orphaned file ${file}:`, error);
           }
         }
       }
     } catch (error) {
-      console.error('[ImageCache] Failed to cleanup orphaned files:', error);
+      console.warn('[ImageCache] Failed to cleanup orphaned files:', error);
     }
   }
 
@@ -410,7 +410,7 @@ export class ImageCacheManager {
         headers: {'Content-Type': mimeType, 'X-Cache': 'MISS'},
       });
     } catch (error) {
-      console.error(`[ImageCache] Error fetching ${url}:`, error);
+      console.warn(`[ImageCache] Error fetching ${url}:`, error);
       return new Response('Failed to fetch image', {status: 500});
     }
   }
@@ -548,7 +548,7 @@ export class ImageCacheManager {
 
       return new Response('Failed to revalidate', {status: 500});
     } catch (error) {
-      console.error(`[ImageCache] Revalidation failed for ${entry.url}:`, error);
+      console.warn(`[ImageCache] Revalidation failed for ${entry.url}:`, error);
 
       // On error, serve stale cache if available
       const cachedResponse = await this.serveFromCache(entry);
@@ -637,7 +637,8 @@ export class ImageCacheManager {
       await this.saveMetadata();
     }
 
-    if (classHolder.isOnline) {
+    const {isOnline} = classHolder;
+    if (isOnline) {
       // Fetch and cache
       return this.fetchAndCache(url, hash);
     } else {
@@ -687,7 +688,7 @@ export class ImageCacheManager {
         headers: {'Content-Type': 'application/json'},
       });
     } catch (error) {
-      console.error('[ImageCache] Failed to clear cache:', error);
+      console.warn('[ImageCache] Failed to clear cache:', error);
       return new Response(JSON.stringify({success: false, error: String(error)}), {
         status: 500,
         headers: {'Content-Type': 'application/json'},
