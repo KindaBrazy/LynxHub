@@ -8,13 +8,13 @@ import ExtensionManager from '@lynx_main/plugins/extensions';
 import ModuleManager from '@lynx_main/plugins/modules';
 import {ValidateCards} from '@lynx_main/plugins/modules/cardsValidator';
 import StorageManager from '@lynx_main/storage/storageOperations';
-import BrowserDownloadManager from '@lynx_main/windows/browserDownloadManager';
-import ContextMenuManager from '@lynx_main/windows/contextMenu';
-import LinkPreviewManager from '@lynx_main/windows/linkPreview';
-import ShareScreenManager from '@lynx_main/windows/shareScreen';
 import axios from 'axios';
 import {app, BrowserWindow} from 'electron';
 
+import BrowserDownloadManager from '../childWindows/browserDownloadManager';
+import ContextMenuManager from '../childWindows/contextMenu';
+import LinkPreviewManager from '../childWindows/linkPreview';
+import ShareScreenManager from '../childWindows/shareScreen';
 import StaticsManager from './statics';
 import TrayManager from './tray';
 

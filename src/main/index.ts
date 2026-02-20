@@ -6,6 +6,8 @@ import log from 'electron-log/main';
 
 import darwinIcon from '../../resources/icon-darwin.png?asset';
 import {configureAppBeforeReady, handleAppReadyToShow, registerCustomProtocols} from './appLifecycle';
+import LoadingWindow from './childWindows/loading';
+import ShowToastWindow from './childWindows/toast';
 import {listenToIpcChannels} from './ipc';
 import {listenBrowser, resetBrowserIPC} from './ipc/browser';
 import listenDialogsWindow from './ipc/dialogsWindow';
@@ -18,8 +20,6 @@ import PatreonAuth from './monitoring/patreonAuth';
 import {PluginMigrate} from './setup/migration';
 import {getPrivilegeText} from './utils';
 import downloadDU from './utils/calcFolderSize/downloadDiskUsageUtility';
-import LoadingWindow from './windows/loading';
-import ShowToastWindow from './windows/toast';
 
 // In production save logs to file for reporting
 if (!isDev()) {

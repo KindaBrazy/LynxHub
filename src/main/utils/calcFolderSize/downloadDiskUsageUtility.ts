@@ -4,11 +4,12 @@ import path from 'node:path';
 
 import {isWin} from '@lynx_common/utils';
 import {getAppDirectory} from '@lynx_main/managers/dataFolder';
-import ShowToastWindow from '@lynx_main/windows/toast';
 import decompress from 'decompress';
 import {createWriteStream} from 'fs';
 import fs from 'graceful-fs';
 import {pipeline} from 'stream/promises';
+
+import ShowToastWindow from '../../childWindows/toast';
 
 const DU_ZIP_URL = 'https://download.sysinternals.com/files/DU.zip';
 const DU_BINARY_NAME = 'du64.exe';

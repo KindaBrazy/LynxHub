@@ -17,9 +17,10 @@ import GitManager from '@lynx_main/git';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getAppDataPath, selectNewAppDataFolder} from '@lynx_main/managers/dataFolder';
 import {RelaunchApp} from '@lynx_main/utils';
-import ShowToastWindow from '@lynx_main/windows/toast';
 import {promises} from 'graceful-fs';
 import {satisfies} from 'semver';
+
+import ShowToastWindow from '../childWindows/toast';
 
 export function getTargetVersion(versions: PluginVersions, type: 'module' | 'extension', stage: SubscribeStages) {
   return versions.find(version => isVersionCompatible(version, type, stage).compatible);
