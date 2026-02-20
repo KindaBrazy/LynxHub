@@ -4,9 +4,9 @@ import {toMs} from '@lynx_common/utils';
 import BrowserManager from '@lynx_main/managers/browser';
 import classHolder from '@lynx_main/managers/classHolder';
 import {getUserAgent} from '@lynx_main/utils';
-import BrowserDownloadManager from '@lynx_main/windows/browserDownloadManager';
 import {FindInPageOptions} from 'electron';
 
+import BrowserDownloadManager from '../childWindows/browserDownloadManager';
 import {listenForBrowserChannels} from './contextMenu';
 import lynxIpc from './ipcWrapper';
 import {handleGetAudioState, handleSetMuted, handleSetVolume} from './methods/volume';

@@ -5,11 +5,11 @@ import {APP_BUILD_NUMBER, APP_VERSION} from '@lynx_common/consts';
 import {isMac, isWin} from '@lynx_common/utils';
 import {app, net, protocol} from 'electron';
 
+import ShareScreenManager from './childWindows/shareScreen';
 import classHolder from './managers/classHolder';
 import {getAppDirectory} from './managers/dataFolder';
 import {getImageCacheManager, registerImageCacheScheme} from './managers/imageCache';
 import {initSentry} from './monitoring/sentry';
-import ShareScreenManager from './windows/shareScreen';
 
 export async function configureAppBeforeReady() {
   const {storageManager, appStartTime} = classHolder;
