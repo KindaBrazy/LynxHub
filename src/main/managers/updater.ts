@@ -8,6 +8,8 @@ const {autoUpdater, CancellationToken} = updater;
 
 /**
  * Checks if an error is a network-related error that should be silently ignored.
+ * @param error - The error object to check
+ * @returns True if the error is network-related, false otherwise
  */
 function isNetworkError(error: Error | any): boolean {
   const message = error?.message || error?.toString() || '';
@@ -40,20 +42,25 @@ function isNetworkError(error: Error | any): boolean {
   return networkErrorPatterns.some(pattern => pattern.test(message));
 }
 
+/**
+ * Configures and initializes the auto-updater.
+ * Sets up IPC listeners for update actions and handles updater events.
+ */
 export function checkForUpdate() {
   autoUpdater.autoDownload = false;
   autoUpdater.allowPrerelease = false;
   autoUpdater.disableWebInstaller = true;
 
   autoUpdater.logger = electron_log;
-  // @ts-ignore
+  // @ts-ignore - electron-log types mismatch with electron-updater logger interface
   autoUpdater.logger.transports.file.level = 'debug';
 
   let cancelToken = new CancellationToken();
 
+  // IPC Listeners
   applicationIpc.on.updateDownload(() => {
     autoUpdater.downloadUpdate(cancelToken).catch(e => {
-      console.error('autoUpdater.downloadUpdate: ', e);
+      console.warn('autoUpdater.downloadUpdate failed:', e);
     });
   });
 
@@ -65,9 +72,11 @@ export function checkForUpdate() {
     const {appManager} = classHolder;
     appManager?.getMainWindow()?.setProgressBar(-1);
     cancelToken.cancel();
+    // Create new token for next attempt
     cancelToken = new CancellationToken();
   });
 
+  // Updater Event Handlers
   autoUpdater.on('update-available', () => {
     applicationIpc.send.updateStatus('update-available');
   });
@@ -86,13 +95,14 @@ export function checkForUpdate() {
 
   autoUpdater.on('error', (e: Error | any, message?: string) => {
     const {appManager} = classHolder;
+    
     // Silently ignore network errors - user may be offline or have unstable connection
     if (isNetworkError(e)) {
       console.warn('Update check failed due to network error:', e.message || e);
       return;
     }
 
-    if (e.statusCode === 403) {
+    if (e?.statusCode === 403) {
       applicationIpc.send.updateError();
     } else {
       applicationIpc.send.updateStatus('error', message);

@@ -41,7 +41,7 @@ export default class TrayManager {
       {label: 'Quit', type: 'normal', click: this.closeMainWindow},
     ];
 
-    const resultItems = extensionManager!.getTrayItems(staticItems);
+    const resultItems = extensionManager?.getTrayItems(staticItems) ?? staticItems;
     const contextMenu = Menu.buildFromTemplate(resultItems);
 
     this.tray.setContextMenu(contextMenu);
