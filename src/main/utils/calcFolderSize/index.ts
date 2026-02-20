@@ -1,12 +1,12 @@
 import {exec} from 'node:child_process';
 import {stat} from 'node:fs/promises';
 import {platform} from 'node:os';
+import path from 'node:path';
 import {promisify} from 'node:util';
 
 import {isMac, isWin} from '@lynx_common/utils';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import {getAppDirectory} from '@lynx_main/managers/dataFolder';
-import path from 'path';
 
 const execPromise = promisify(exec);
 
@@ -30,10 +30,10 @@ function processDuOutput(stdout: string): number {
 }
 
 /**
- * Calculates the size of a folder using the du64.exe utility.
- * @param target - The path to the target folder.
- * @returns A promise that resolves to the folder size in bytes.
- * @throws Will throw an error if the command execution fails.
+ * Calculates the size of a folder using system utilities (du or du64.exe).
+ *
+ * @param target - The absolute path to the target folder.
+ * @returns A promise that resolves to the folder size in bytes. Returns 0 on error.
  */
 export default async function calcFolderSize(target: string): Promise<number> {
   // Check if the target path exists and is a directory
@@ -60,7 +60,9 @@ export default async function calcFolderSize(target: string): Promise<number> {
   }
 
   let command: string;
-  switch (platform()) {
+  const currentPlatform = platform();
+
+  switch (currentPlatform) {
     case 'linux': {
       command = 'du -sb .';
       break;
@@ -75,7 +77,7 @@ export default async function calcFolderSize(target: string): Promise<number> {
       break;
     }
     default: {
-      const message = `Unsupported operating system: ${platform()}`;
+      const message = `Unsupported operating system: ${currentPlatform}`;
       console.error(message);
       applicationIpc.send.showToast(message, 'error');
       return 0;
@@ -92,3 +94,4 @@ export default async function calcFolderSize(target: string): Promise<number> {
     return 0;
   }
 }
+

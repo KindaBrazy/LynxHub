@@ -21,21 +21,28 @@ import {PluginMigrate} from './setup/migration';
 import {getPrivilegeText} from './utils';
 import downloadDU from './utils/calcFolderSize/downloadDiskUsageUtility';
 
-// In production save logs to file for reporting
+/**
+ * Initializes logging for production environments.
+ * Redirects console output to electron-log files.
+ */
 if (!isDev()) {
   log.initialize();
   Object.assign(console, log.functions);
 }
 
-// Suppress menu as we use in app menu's
+// Suppress default menu as we use custom in-app menus
 Menu.setApplicationMenu(null);
 
 // Initialize command-line switches and protocol scheme before app getting ready
 configureAppBeforeReady();
 
-// First start loading window when app was ready
+// Create the loading window instance immediately
 const loadingWindow = new LoadingWindow();
 
+/**
+ * Main application entry point.
+ * Handles app readiness, migration, and initialization flow.
+ */
 app.whenReady().then(async () => {
   // Check if plugin migration is needed for users coming from old versions
   const storageManager = await classHolder.waitForClass('storageManager');
@@ -50,8 +57,11 @@ app.whenReady().then(async () => {
   }
 });
 
-// Second start lynxhub window after loading
-async function initializeLynxHub() {
+/**
+ * Initializes the main LynxHub application components.
+ * Sets up environment, directories, managers, protocols, and the main window.
+ */
+async function initializeLynxHub(): Promise<void> {
   // Fix the macOS environment paths
   const {default: fixPath} = await import('fix-path');
   fixPath();
@@ -67,6 +77,7 @@ async function initializeLynxHub() {
      you can change the data folder in the settings page to another folder that does not require admin rights.`,
       type: 'error',
     });
+    return;
   }
 
   // Initialize and hold classes
@@ -161,3 +172,4 @@ app.on('activate', async () => {
     mainWindow.show();
   }
 });
+

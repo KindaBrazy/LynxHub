@@ -16,7 +16,8 @@ import {LowSync} from 'lowdb';
 import {JSONFileSyncPreset} from 'lowdb/node';
 
 /**
- * Base storage class handling low-level storage operations, migrations, and data persistence
+ * Base storage class handling low-level storage operations, migrations, and data persistence.
+ * Uses `lowdb` for JSON file storage.
  */
 class BaseStorage {
   private readonly storage: LowSync<StorageTypes>;
@@ -25,7 +26,8 @@ class BaseStorage {
   private migratedTo: number = 0; // Tracks migration state for deferred operations
 
   /**
-   * Migration functions ordered by version
+   * Migration functions ordered by version.
+   * Maps version number to migration function.
    */
   private readonly migrations = new Map<number, () => void>([
     [0.4, () => this.migrate_0_4()],
@@ -154,6 +156,8 @@ class BaseStorage {
     if (isPortable()) {
       storagePath = join(getExePath(), `${APP_NAME}_Data`, storageFile);
       const dataFolderPath = join(getExePath(), `${APP_NAME}_Data`);
+      
+      // Ensure data folder exists
       if (!fs.existsSync(dataFolderPath)) {
         try {
           fs.mkdirSync(dataFolderPath, {recursive: true});
@@ -173,9 +177,10 @@ class BaseStorage {
   }
 
   /**
-   * Called after app is ready to perform deferred migrations that require app initialization
+   * Performs deferred migrations that require the app to be fully ready.
+   * Example: Encryption which depends on safeStorage availability.
    */
-  public completeDeferredMigrations() {
+  public completeDeferredMigrations(): void {
     // Deferred encryption migration: encrypt browser data after app is ready
     if (this.migratedTo === 0.84) {
       const {recentAddress, favoriteAddress, historyAddress, favIcons} = this.getData('browser');
@@ -195,10 +200,10 @@ class BaseStorage {
   }
 
   /**
-   * Migrates storage data from older versions to current version
-   * Migrations are applied sequentially based on stored version
+   * Migrates storage data from older versions to current version.
+   * Migrations are applied sequentially based on stored version.
    */
-  private runStorageMigrations() {
+  private runStorageMigrations(): void {
     try {
       const storeVersion = this.getData('storage').version;
 
@@ -229,6 +234,7 @@ class BaseStorage {
     }
   }
 
+  // #region Migrations
   private migrate_0_4() {
     this.storage.data.terminal = this.DEFAULT_DATA.terminal;
   }
@@ -373,6 +379,7 @@ class BaseStorage {
       this.storage.data.terminal.enableLigatures = true;
     }
   }
+  // #endregion
 
   /**
    * Helper: Normalizes customRunBehavior.urlCatch.moduleDelay
@@ -401,11 +408,11 @@ class BaseStorage {
     const currentHotkeys = this.storage.data.app.hotkeys || [];
     const defaultHotkeys = Get_Default_Hotkeys();
 
-    const currentNames = currentHotkeys.map(h => h.name);
+    const currentNames = new Set(currentHotkeys.map(h => h.name));
     const mergedHotkeys = [...currentHotkeys];
 
     defaultHotkeys.forEach(def => {
-      if (!currentNames.includes(def.name)) {
+      if (!currentNames.has(def.name)) {
         mergedHotkeys.push(def);
       }
     });
@@ -413,22 +420,35 @@ class BaseStorage {
     this.storage.data.app.hotkeys = mergedHotkeys;
   }
 
+  /**
+   * Retrieves data from storage by key.
+   * @param key - The key of the data to retrieve
+   */
   public getData<K extends keyof StorageTypes>(key: K): StorageTypes[K] {
     return this.storage.data[key];
   }
 
-  public getCustomData(id: string) {
+  /**
+   * Retrieves custom data by ID.
+   * @param id - The ID of the custom data
+   */
+  public getCustomData(id: string): any {
     return this.storage.data[id];
   }
 
-  public setCustomData(id: string, data: any) {
+  /**
+   * Sets custom data by ID and persists to disk.
+   * @param id - The ID of the custom data
+   * @param data - The data to store
+   */
+  public setCustomData(id: string, data: any): void {
     this.storage.data[id] = data;
     this.write();
   }
 
   /**
-   * Returns a deep clone of all storage data
-   * Converts relative paths to absolute paths in portable mode
+   * Returns a deep clone of all storage data.
+   * Converts relative paths to absolute paths in portable mode.
    */
   public getAll(): StorageTypes {
     const data = this.storage.data;
@@ -444,14 +464,19 @@ class BaseStorage {
     return result;
   }
 
-  public updateData<K extends keyof StorageTypes>(key: K, updateData: Partial<StorageTypes[K]>) {
+  /**
+   * Updates data for a specific key and persists to disk.
+   * @param key - The key of the data to update
+   * @param updateData - The partial data to merge
+   */
+  public updateData<K extends keyof StorageTypes>(key: K, updateData: Partial<StorageTypes[K]>): void {
     this.storage.data[key] = {...this.storage.data[key], ...updateData};
     this.write();
   }
 
   /**
-   * Clears all storage data and restarts the app
-   * On Linux portable mode, closes window instead of restarting
+   * Clears all storage data and restarts the app.
+   * On Linux portable mode, closes window instead of restarting.
    */
   public clearStorage(): void {
     const {appManager} = classHolder;
@@ -465,9 +490,10 @@ class BaseStorage {
   }
 
   /**
-   * Writes storage data to disk and adds breadcrumb for tracking
+   * Writes storage data to disk and adds breadcrumb for tracking.
+   * Handles Out of Memory errors gracefully.
    */
-  public write() {
+  public write(): void {
     try {
       this.storage.write();
     } catch (e) {
