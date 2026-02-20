@@ -30,6 +30,10 @@ import {
   showGitOwnershipToast,
 } from './utils';
 
+/**
+ * Manages the lifecycle of plugins (extensions and modules).
+ * Handles installation, updates, and synchronization.
+ */
 export class PluginManager {
   private addresses: PluginAddresses = [];
   private skipped: UnloadedPlugins[] = [];
@@ -46,7 +50,10 @@ export class PluginManager {
     this.pluginPath = getAppDirectory('Plugins');
   }
 
-  public async initPlugins() {
+  /**
+   * Initializes the plugin system.
+   */
+  public async initPlugins(): Promise<void> {
     try {
       await this.loadPlugins();
     } catch (error) {
@@ -55,55 +62,56 @@ export class PluginManager {
     }
   }
 
-  private async loadPlugins() {
+  /**
+   * Loads installed plugins from the disk.
+   */
+  private async loadPlugins(): Promise<void> {
     const {staticManager} = classHolder;
-    return new Promise<void>(async resolve => {
+    try {
+      // Ensure plugin directory exists before reading
       try {
-        // Ensure plugin directory exists before reading
-        try {
-          await promises.access(this.pluginPath, constants.F_OK);
-        } catch {
-          // Directory doesn't exist - create it and return early (no plugins to load)
-          await promises.mkdir(this.pluginPath, {recursive: true});
-          resolve();
-          return;
-        }
-
-        const files = readdirSync(this.pluginPath, {withFileTypes: true});
-        const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
-        const validFolders = await this.validatePluginFolders(folders);
-
-        this.addresses = validFolders.map(({folder, type}) => ({
-          address: `lynxplugin://${folder}`,
-          type,
-        }));
-
-        await this.setInstalledPlugins(folders);
-
-        const moduleFolders: string[] = [];
-        const extensionFolder: string[] = [];
-
-        for (const validItem of validFolders) {
-          const metadata = await staticManager?.getPluginMetadataById(validItem.folder);
-          if (!metadata) continue;
-          if (metadata.type === 'module') {
-            moduleFolders.push(join(this.pluginPath, validItem.folder));
-          } else if (metadata.type === 'extension') {
-            extensionFolder.push(join(this.pluginPath, validItem.folder));
-          }
-        }
-        await this.extensionManager.importPlugins(extensionFolder);
-        await this.moduleManager.importPlugins(moduleFolders);
-
-        resolve();
-      } catch (error: any) {
-        console.error(`Loading Plugin Error: `, error);
-        captureException(error);
-        resolve();
+        await promises.access(this.pluginPath, constants.F_OK);
+      } catch {
+        // Directory doesn't exist - create it and return early (no plugins to load)
+        await promises.mkdir(this.pluginPath, {recursive: true});
+        return;
       }
-    });
+
+      const files = readdirSync(this.pluginPath, {withFileTypes: true});
+      const folders = files.filter(file => file.isDirectory()).map(folder => folder.name);
+      const validFolders = await this.validatePluginFolders(folders);
+
+      this.addresses = validFolders.map(({folder, type}) => ({
+        address: `lynxplugin://${folder}`,
+        type,
+      }));
+
+      await this.setInstalledPlugins(folders);
+
+      const moduleFolders: string[] = [];
+      const extensionFolder: string[] = [];
+
+      for (const validItem of validFolders) {
+        const metadata = await staticManager?.getPluginMetadataById(validItem.folder);
+        if (!metadata) continue;
+        if (metadata.type === 'module') {
+          moduleFolders.push(join(this.pluginPath, validItem.folder));
+        } else if (metadata.type === 'extension') {
+          extensionFolder.push(join(this.pluginPath, validItem.folder));
+        }
+      }
+      await this.extensionManager.importPlugins(extensionFolder);
+      await this.moduleManager.importPlugins(moduleFolders);
+    } catch (error: any) {
+      console.error(`Loading Plugin Error: `, error);
+      captureException(error);
+    }
   }
 
+  /**
+   * Identifies installed plugins and populates the installed list.
+   * @param folders - List of plugin folders.
+   */
   private async setInstalledPlugins(folders: string[]) {
     const {staticManager} = classHolder;
     for (const folder of folders) {
@@ -129,19 +137,33 @@ export class PluginManager {
     }
   }
 
+  /**
+   * Gets the list of plugin addresses.
+   */
   public getAddresses(): PluginAddresses {
     return this.addresses;
   }
 
+  /**
+   * Gets the list of unloaded plugins.
+   */
   public getUnloadedList(): UnloadedPlugins[] {
     return this.skipped;
   }
 
+  /**
+   * Gets the list of installed plugins.
+   */
   public getInstalledList(): PluginInstalledItem[] {
     return this.installed;
   }
 
-  public getDirById(id: string) {
+  /**
+   * Gets the directory path for a specific plugin ID.
+   * @param id - The plugin ID.
+   * @returns The directory path or undefined if not found.
+   */
+  public getDirById(id: string): string | undefined {
     const plugin = this.installed.find(installed => installed.id === id);
 
     if (plugin) return join(this.pluginPath, plugin.id);
@@ -149,6 +171,12 @@ export class PluginManager {
     return undefined;
   }
 
+  /**
+   * Resolves plugin metadata for installation.
+   * @param url - The repository URL.
+   * @param commitHash - Optional commit hash.
+   * @returns Metadata object or null.
+   */
   private async resolvePluginMetadata(url: string, commitHash?: string) {
     const {staticManager} = classHolder;
     const id = await staticManager?.getPluginIdByRepositoryUrl(url);
@@ -163,6 +191,12 @@ export class PluginManager {
     return {id, targetCommit, version};
   }
 
+  /**
+   * Performs the Git installation process.
+   * @param url - The repository URL.
+   * @param directory - The target directory.
+   * @param targetCommit - The target commit hash.
+   */
   private async performGitInstallation(url: string, directory: string, targetCommit: string) {
     const gitManager = new GitManager(true);
     setupGitManagerListeners(gitManager, url);
@@ -170,29 +204,37 @@ export class PluginManager {
     await gitManager.resetHard(directory, targetCommit, true, 'main');
   }
 
-  public async install(url: string, commitHash?: string) {
-    return new Promise<boolean>(async resolve => {
-      const metadata = await this.resolvePluginMetadata(url, commitHash);
-      if (!metadata) {
-        resolve(false);
-        return;
-      }
+  /**
+   * Installs a plugin from a URL.
+   * @param url - The repository URL.
+   * @param commitHash - Optional commit hash.
+   * @returns True if installation succeeded, false otherwise.
+   */
+  public async install(url: string, commitHash?: string): Promise<boolean> {
+    const metadata = await this.resolvePluginMetadata(url, commitHash);
+    if (!metadata) {
+      return false;
+    }
 
-      const {id, targetCommit, version} = metadata;
-      const directory = join(this.pluginPath, id);
+    const {id, targetCommit, version} = metadata;
+    const directory = join(this.pluginPath, id);
 
-      try {
-        await this.performGitInstallation(url, directory, targetCommit);
-        this.installed.push({id, url, version});
-        resolve(true);
-      } catch (e) {
-        console.warn(`Failed to install plugin: ${url}`, e);
-        resolve(false);
-      }
-    });
+    try {
+      await this.performGitInstallation(url, directory, targetCommit);
+      this.installed.push({id, url, version});
+      return true;
+    } catch (e) {
+      console.warn(`Failed to install plugin: ${url}`, e);
+      return false;
+    }
   }
 
-  public async uninstall(id: string) {
+  /**
+   * Uninstalls a plugin by ID.
+   * @param id - The plugin ID.
+   * @returns True if uninstallation succeeded, false otherwise.
+   */
+  public async uninstall(id: string): Promise<boolean> {
     const plugin = this.getDirById(id);
     if (!plugin) return false;
     try {
@@ -206,7 +248,13 @@ export class PluginManager {
     }
   }
 
-  private async isSyncRequired(id: string, stage: SubscribeStages) {
+  /**
+   * Checks if a specific plugin requires synchronization.
+   * @param id - The plugin ID.
+   * @param stage - The subscription stage.
+   * @returns True if sync is required (and added to list), false otherwise.
+   */
+  private async isSyncRequired(id: string, stage: SubscribeStages): Promise<boolean> {
     try {
       const targetDir = this.getDirById(id);
       if (!targetDir) return false;
@@ -229,6 +277,10 @@ export class PluginManager {
     }
   }
 
+  /**
+   * Checks for synchronization updates for all installed plugins.
+   * @param stage - The subscription stage.
+   */
   public async checkForSync(stage: SubscribeStages): Promise<void> {
     try {
       for (const plugin of this.installed) {
@@ -238,12 +290,18 @@ export class PluginManager {
     } catch (error) {
       console.error('Error checking for all updates:', error);
 
-      const errorMessage = isString(error) ? error : error.message;
+      const errorMessage = isString(error) ? error : (error as Error).message;
       if (includes(errorMessage, 'detected dubious ownership')) showGitOwnershipToast();
     }
   }
 
-  public async syncItem(id: string, commit: string) {
+  /**
+   * Syncs a plugin to a specific commit.
+   * @param id - The plugin ID.
+   * @param commit - The target commit hash.
+   * @returns True if successful, false otherwise.
+   */
+  public async syncItem(id: string, commit: string): Promise<boolean> {
     const targetDir = this.getDirById(id);
     if (!targetDir) return false;
 
@@ -259,6 +317,11 @@ export class PluginManager {
     }
   }
 
+  /**
+   * Updates a sync item with a new commit.
+   * @param id - The plugin ID.
+   * @param commit - The new commit hash.
+   */
   public async updateSyncItem(id: string, commit: string) {
     const {staticManager} = classHolder;
     const versioning = await staticManager?.getPluginVersioningById(id);
@@ -285,7 +348,12 @@ export class PluginManager {
     this.addToSyncList(target);
   }
 
-  public async syncAll(items: {id: string; commit: string}[]) {
+  /**
+   * Syncs multiple items.
+   * @param items - List of items to sync.
+   * @returns List of synced IDs.
+   */
+  public async syncAll(items: {id: string; commit: string}[]): Promise<string[]> {
     const synced: string[] = [];
 
     try {
@@ -331,6 +399,11 @@ export class PluginManager {
     this.syncList_noticeRenderer();
   }
 
+  /**
+   * Validates plugin folders to ensure they have the required structure.
+   * @param folderPaths - List of folder names.
+   * @returns List of validated plugins.
+   */
   private async validatePluginFolders(folderPaths: string[]): Promise<ValidatedPlugins> {
     const {staticManager} = classHolder;
     const validatedFolders: ValidatedPlugins = [];
@@ -384,6 +457,9 @@ export class PluginManager {
     return validatedFolders;
   }
 
+  /**
+   * Migrates old plugin installations to the new structure.
+   */
   public async migrate() {
     const {staticManager} = classHolder;
     const targetModuleDir = join(dirname(this.pluginPath), pluginFolders.module.oldFolder);

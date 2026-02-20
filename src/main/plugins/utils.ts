@@ -22,10 +22,23 @@ import {satisfies} from 'semver';
 
 import ShowToastWindow from '../childWindows/toast';
 
+/**
+ * Finds the target version compatible with the given type and stage.
+ * @param versions - List of available versions.
+ * @param type - The type of plugin (module or extension).
+ * @param stage - The subscription stage.
+ * @returns The compatible version item or undefined.
+ */
 export function getTargetVersion(versions: PluginVersions, type: 'module' | 'extension', stage: SubscribeStages) {
   return versions.find(version => isVersionCompatible(version, type, stage).compatible);
 }
 
+/**
+ * Retrieves the version string associated with a specific commit hash.
+ * @param id - The plugin ID.
+ * @param commit - The commit hash.
+ * @returns The version string or undefined.
+ */
 export async function getVersionByCommit(id: string, commit: string) {
   const {staticManager} = classHolder;
   const versioning = await staticManager?.getPluginVersioningById(id);
@@ -35,10 +48,10 @@ export async function getVersionByCommit(id: string, commit: string) {
 
 /**
  * Checks if an update is available and determines if it's an upgrade or downgrade.
- * @param id Plugin ID.
- * @param currentCommit The commit hash currently installed.
- * @param stage The target subscription stage.
- * @returns A PluginUpdateList item if an update is available, otherwise undefined.
+ * @param id - Plugin ID.
+ * @param currentCommit - The commit hash currently installed.
+ * @param stage - The target subscription stage.
+ * @returns A PluginSyncItem if an update is available, otherwise undefined.
  */
 export async function isSyncRequired(
   id: string,
@@ -55,8 +68,7 @@ export async function isSyncRequired(
 
   if (!targetVersion) return undefined;
 
-  const version = targetVersion.version;
-  const commit = targetVersion.commit;
+  const {version, commit} = targetVersion;
 
   const updateType = getUpdateType(versioning.versions, currentCommit, commit);
 
@@ -70,6 +82,11 @@ export async function isSyncRequired(
   };
 }
 
+/**
+ * Gets the target commit hash for a plugin based on the current app stage.
+ * @param id - The plugin ID.
+ * @returns The commit hash or undefined.
+ */
 export async function getCommitByAppStage(id: string) {
   const {staticManager} = classHolder;
   const versioning = await staticManager!.getPluginVersioningById(id);
@@ -82,6 +99,9 @@ export async function getCommitByAppStage(id: string) {
   return getTargetVersion(versioning.versions, metadata.type, stage)?.commit;
 }
 
+/**
+ * Shows a toast warning about dubious Git ownership.
+ */
 export function showGitOwnershipToast() {
   ShowToastWindow(
     {
@@ -110,6 +130,11 @@ export function showGitOwnershipToast() {
   );
 }
 
+/**
+ * Removes old installations from a folder and returns the list of remote URLs found.
+ * @param folder - The folder to clean up.
+ * @returns A list of remote URLs of the removed installations.
+ */
 export async function removeOldInstallations(folder: string) {
   const oldInstallations: string[] = [];
 
@@ -144,39 +169,36 @@ export async function removeOldInstallations(folder: string) {
   return oldInstallations;
 }
 
+/**
+ * Checks compatibility based on subscription stage.
+ */
 function checkSubscriptionStageCompatibility(
   version: VersionItem,
   currentStage: SubscribeStages,
 ): {compatible: boolean; reason: string | undefined} {
-  switch (currentStage) {
-    case 'insider':
-      return {compatible: true, reason: undefined};
+  if (currentStage === 'insider') return {compatible: true, reason: undefined};
 
-    case 'early_access':
-      if (version.stage === 'insider') {
-        return {
-          compatible: false,
-          reason:
-            `Version ${version.version} is only available for Insider subscribers.\n` +
-            `Please upgrade your plan to get access.`,
-        };
-      }
-      return {compatible: true, reason: undefined};
-
-    case 'public':
-      if (version.stage !== 'public') {
-        const requiredStage = version.stage === 'insider' ? 'Insider' : 'Early Access';
-        return {
-          compatible: false,
-          reason:
-            `Version ${version.version} requires an ${requiredStage} or higher subscription.\n` +
-            `Please upgrade your plan to get access.`,
-        };
-      }
-      return {compatible: true, reason: undefined};
+  if (currentStage === 'early_access' && version.stage === 'insider') {
+    return {
+      compatible: false,
+      reason: `Version ${version.version} is only available for Insider subscribers.\nPlease upgrade your plan to get access.`,
+    };
   }
+
+  if (currentStage === 'public' && version.stage !== 'public') {
+    const requiredStage = version.stage === 'insider' ? 'Insider' : 'Early Access';
+    return {
+      compatible: false,
+      reason: `Version ${version.version} requires an ${requiredStage} or higher subscription.\nPlease upgrade your plan to get access.`,
+    };
+  }
+
+  return {compatible: true, reason: undefined};
 }
 
+/**
+ * Checks compatibility based on the operating system platform.
+ */
 function checkPlatformCompatibility(version: VersionItem): {compatible: boolean; reason: string | undefined} {
   const currentPlatform = platform();
   const platforms = version.platforms;
@@ -185,15 +207,16 @@ function checkPlatformCompatibility(version: VersionItem): {compatible: boolean;
     const supportedPlatforms = platforms?.join(', ') || 'none';
     return {
       compatible: false,
-      reason:
-        `Version ${version.version} is not compatible with your operating system\n` +
-        `(${currentPlatform}). It only supports: ${supportedPlatforms}.`,
+      reason: `Version ${version.version} is not compatible with your operating system\n(${currentPlatform}). It only supports: ${supportedPlatforms}.`,
     };
   }
 
   return {compatible: true, reason: undefined};
 }
 
+/**
+ * Checks compatibility based on the API version (engines).
+ */
 function checkApiVersionCompatibility(
   version: VersionItem,
   type: 'module' | 'extension',
@@ -207,49 +230,60 @@ function checkApiVersionCompatibility(
     };
   }
 
-  const moduleCheck = {api: 'moduleApi', version: MODULE_API_VERSION, type: 'Module'};
-  const extensionCheck = {api: 'extensionApi', version: EXTENSION_API_VERSION, type: 'Extension'};
-  const targetCheck = type === 'extension' ? extensionCheck : moduleCheck;
-  const requiredRange = engines[targetCheck.api as keyof PluginEngines];
+  const isExtension = type === 'extension';
+  const apiType = isExtension ? 'extensionApi' : 'moduleApi';
+  const currentApiVersion = isExtension ? EXTENSION_API_VERSION : MODULE_API_VERSION;
+
+  const requiredRange = engines[apiType as keyof PluginEngines];
 
   if (!requiredRange) {
     return {
       compatible: false,
-      reason:
-        `Could not verify compatibility for version ${version.version}.\n` +
-        `The package metadata may be missing or corrupted.`,
+      reason: `Could not verify compatibility for version ${version.version}.\nThe package metadata may be missing or corrupted.`,
     };
   }
 
-  if (!satisfies(targetCheck.version, requiredRange)) {
+  if (!satisfies(currentApiVersion, requiredRange)) {
     return {
       compatible: false,
-      reason:
-        `Version ${version.version} requires a different application version.\n` +
-        `It needs ${type} api version ${requiredRange}, but current version api is ${targetCheck.version}.`,
+      reason: `Version ${version.version} requires a different application version.\nIt needs ${type} api version ${requiredRange}, but current version api is ${currentApiVersion}.`,
     };
   }
 
   return {compatible: true, reason: undefined};
 }
 
+/**
+ * Checks if a version is compatible with the current environment.
+ * @param version - The version item to check.
+ * @param type - The type of plugin.
+ * @param currentStage - The current subscription stage.
+ * @returns Compatibility status and reason.
+ */
 export function isVersionCompatible(
   version: VersionItem,
   type: 'module' | 'extension',
   currentStage: SubscribeStages,
 ): {compatible: boolean; reason: string | undefined} {
-  const stageCheck = checkSubscriptionStageCompatibility(version, currentStage);
-  if (!stageCheck.compatible) return stageCheck;
+  const checks = [
+    () => checkSubscriptionStageCompatibility(version, currentStage),
+    () => checkPlatformCompatibility(version),
+    () => checkApiVersionCompatibility(version, type),
+  ];
 
-  const platformCheck = checkPlatformCompatibility(version);
-  if (!platformCheck.compatible) return platformCheck;
-
-  const apiCheck = checkApiVersionCompatibility(version, type);
-  if (!apiCheck.compatible) return apiCheck;
+  for (const check of checks) {
+    const result = check();
+    if (!result.compatible) return result;
+  }
 
   return {compatible: true, reason: undefined};
 }
 
+/**
+ * Gets the list of available plugins for the current stage.
+ * @param currentStage - The current subscription stage.
+ * @returns A list of plugin items.
+ */
 export async function getList(currentStage: SubscribeStages): Promise<PluginItem[]> {
   const {staticManager} = classHolder;
 
@@ -257,30 +291,25 @@ export async function getList(currentStage: SubscribeStages): Promise<PluginItem
   const validated: PluginItem[] = [];
 
   for (const item of list) {
-    const versions: VersionItemValidated[] = [];
-
-    for (const v of item.versioning.versions) {
-      const {version, commit, stage, platforms} = v;
+    const versions: VersionItemValidated[] = item.versioning.versions.map(v => {
       const {compatible: isCompatible, reason: incompatibleReason} = isVersionCompatible(
         v,
         item.metadata.type,
         currentStage,
       );
-      versions.push({version, commit, stage, platforms, isCompatible, incompatibleReason});
-    }
+      return {...v, isCompatible, incompatibleReason};
+    });
 
-    const isCompatible: boolean = versions.some(v => v.isCompatible);
-    const incompatibleReason: string | undefined = versions.find(v => !v.isCompatible)?.incompatibleReason;
-
-    const {metadata, url, versioning} = item;
+    const isCompatible = versions.some(v => v.isCompatible);
+    const incompatibleReason = versions.find(v => !v.isCompatible)?.incompatibleReason;
 
     validated.push({
       isCompatible,
-      metadata,
-      url,
+      metadata: item.metadata,
+      url: item.url,
       versions,
       incompatibleReason,
-      changes: versioning.changes,
+      changes: item.versioning.changes,
     });
   }
 

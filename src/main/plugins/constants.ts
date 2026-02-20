@@ -1,3 +1,7 @@
+/**
+ * Configuration for plugin folder structures and entry points.
+ * Defines the standard paths for modules and extensions within the plugin system.
+ */
 export const pluginFolders = {
   module: {
     oldFolder: 'Modules',

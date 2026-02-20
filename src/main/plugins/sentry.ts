@@ -1,6 +1,11 @@
 import {defaultStackParser, getDefaultIntegrations, makeNodeTransport, NodeClient, Scope} from '@sentry/node';
 
-export function initPluginNodeSentry(dsn: string) {
+/**
+ * Initializes Sentry for a plugin in the Node.js environment.
+ * @param dsn - The Sentry DSN (Data Source Name).
+ * @returns The initialized Sentry scope.
+ */
+export function initPluginNodeSentry(dsn: string): Scope {
   const integrations = getDefaultIntegrations({}).filter(defaultIntegration => {
     return !['BrowserApiErrors', 'Breadcrumbs', 'GlobalHandlers'].includes(defaultIntegration.name);
   });
@@ -9,7 +14,7 @@ export function initPluginNodeSentry(dsn: string) {
     dsn,
     transport: makeNodeTransport,
     stackParser: defaultStackParser,
-    integrations: integrations,
+    integrations,
   });
 
   const scope = new Scope();
