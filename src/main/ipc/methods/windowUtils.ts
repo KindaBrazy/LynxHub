@@ -1,3 +1,4 @@
+
 // Utility IPC methods - Window state, file operations, and general utilities
 import {writeFile} from 'node:fs/promises';
 import path from 'node:path';
@@ -9,7 +10,7 @@ import classHolder from '@lynx_main/managers/classHolder';
 import {noticeAllWindowsDarkMode} from '@lynx_main/utils';
 import decompress from 'decompress';
 import {app, clipboard, dialog, nativeImage, net, shell} from 'electron';
-import {promises, readdir} from 'graceful-fs';
+import fs, {promises} from 'graceful-fs';
 
 import {applicationIpc} from '../application';
 
@@ -119,7 +120,7 @@ export async function removeDirRecursive(dir: string): Promise<void> {
     console.log(`Removing directory: ${resolvedPath}`);
     return await promises.rm(resolvedPath, {recursive: true, force: true});
   } catch (e) {
-    console.error(e);
+    console.error(`Error removing directory ${dir}:`, e);
     throw e;
   }
 }
@@ -171,7 +172,7 @@ export async function trashDir(dir: string): Promise<void> {
     console.log(`Moving directory to trash: ${resolvedPath}`);
     return await shell.trashItem(resolvedPath);
   } catch (e) {
-    console.error(e);
+    console.error(`Error moving ${dir} to trash:`, e);
     throw e;
   }
 }
@@ -190,9 +191,14 @@ export async function isEmptyDir(dir: string): Promise<boolean> {
   }
 }
 
-export function listDirectory(path: string): Promise<FolderListData[]> {
+/**
+ * Lists files and folders in a directory.
+ * @param dirPath - The directory path.
+ * @returns A promise resolving to a list of files and folders.
+ */
+export function listDirectory(dirPath: string): Promise<FolderListData[]> {
   return new Promise((resolve, reject) => {
-    readdir(path, {withFileTypes: true}, (err, files) => {
+    fs.readdir(dirPath, {withFileTypes: true}, (err, files) => {
       if (err) {
         reject(err);
         return;
@@ -214,23 +220,37 @@ export function listDirectory(path: string): Promise<FolderListData[]> {
   });
 }
 
+/**
+ * Lists files in a relative path.
+ * @param dirPath - The base directory path.
+ * @param relatives - The relative path segments.
+ * @returns A promise resolving to a list of files and folders.
+ */
 export async function getRelativeList(dirPath: string, relatives: string[]): Promise<FolderListData[]> {
   const resolvePath = path.resolve(dirPath, ...relatives);
-  console.log('resolvePath', resolvePath);
   try {
     return await listDirectory(resolvePath);
   } catch (e) {
     try {
-      relatives.pop();
-      const newResolvePath = path.resolve(dirPath, ...relatives);
-      return await listDirectory(newResolvePath);
-    } catch (e) {
-      console.error('Reading Dir', e);
+      // Fallback: try removing the last segment if resolution failed
+      if (relatives.length > 0) {
+        relatives.pop();
+        const newResolvePath = path.resolve(dirPath, ...relatives);
+        return await listDirectory(newResolvePath);
+      }
+      return [];
+    } catch (innerError) {
+      console.error('Error reading relative directory:', innerError);
       return [];
     }
   }
 }
 
+/**
+ * Decompresses a file to the Downloads folder.
+ * @param filePath - The path of the file to decompress.
+ * @returns A promise resolving to the output path.
+ */
 export async function decompressFile(filePath: string): Promise<string> {
   return new Promise(async (resolve, reject) => {
     try {
@@ -239,13 +259,19 @@ export async function decompressFile(filePath: string): Promise<string> {
       await decompress(filePath, finalPath);
       resolve(finalPath);
     } catch (e) {
-      console.error(e);
+      console.error('Error decompressing file:', e);
       reject(e);
     }
   });
 }
 
-export async function checkFilesExist(dir: string, files: string[]) {
+/**
+ * Checks if a list of files exists in a directory.
+ * @param dir - The directory to check.
+ * @param files - The list of file names.
+ * @returns True if all files exist, false otherwise.
+ */
+export async function checkFilesExist(dir: string, files: string[]): Promise<boolean> {
   try {
     for (const file of files) {
       const fullPath = path.join(dir, file);
@@ -262,17 +288,26 @@ export async function checkFilesExist(dir: string, files: string[]) {
   }
 }
 
+/**
+ * Checks if a URL returns a valid response.
+ * @param url - The URL to check.
+ * @returns True if response is OK, false otherwise.
+ */
 export async function isResponseValid(url: string): Promise<boolean> {
   try {
     const response = await fetch(url);
-
     return response.ok;
   } catch (e) {
     return false;
   }
 }
 
-export async function getImageAsDataURL(imageUrl: string) {
+/**
+ * Fetches an image from a URL and converts it to a Data URL (base64).
+ * @param imageUrl - The URL of the image.
+ * @returns The Data URL string or null on failure.
+ */
+export async function getImageAsDataURL(imageUrl: string): Promise<string | null> {
   try {
     const response = await fetch(imageUrl);
 
@@ -286,9 +321,7 @@ export async function getImageAsDataURL(imageUrl: string) {
     }
 
     const arrayBuffer = await response.arrayBuffer();
-
     const buffer = Buffer.from(arrayBuffer);
-
     const base64String = buffer.toString('base64');
 
     return `data:${contentType};base64,${base64String}`;
@@ -298,6 +331,10 @@ export async function getImageAsDataURL(imageUrl: string) {
   }
 }
 
+/**
+ * Downloads an image from a URL and copies it to the clipboard.
+ * @param url - The URL of the image.
+ */
 export async function downloadImageToClipboard(url: string): Promise<void> {
   try {
     const response = await net.fetch(url);

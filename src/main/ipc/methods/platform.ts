@@ -1,3 +1,4 @@
+
 // Platform IPC methods - Retrieves system information (OS platform and build number)
 import os from 'node:os';
 
@@ -6,12 +7,12 @@ import {isWin} from '@lynx_common/utils';
 
 /**
  * Parses the Windows build number from the release string.
- * @param releaseString - The Windows release string.
+ * @param releaseString - The Windows release string (e.g., "10.0.19042").
  * @returns The parsed build number.
  */
 function parseWindowsBuildNumber(releaseString: string): number {
-  const buildNumber = releaseString.split('.')[2];
-  return parseInt(buildNumber, 10);
+  const parts = releaseString.split('.');
+  return parts.length >= 3 ? parseInt(parts[2], 10) : 0;
 }
 
 /**
