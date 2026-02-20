@@ -1,3 +1,4 @@
+
 import gitChannels from '@lynx_common/consts/ipcChannels/git';
 import {RepositoryInfo} from '@lynx_common/types';
 import {ShallowCloneOptions} from '@lynx_common/types/git';
@@ -18,6 +19,9 @@ import {
 } from './methods/repository';
 import {sendToMain} from './sender';
 
+/**
+ * Initializes listeners for Git operations.
+ */
 export default function listenGit() {
   // Pulls latest changes from remote repository
   gitIpc.on.pull((dir, id) => pullRepo(dir, id));
@@ -47,8 +51,12 @@ export default function listenGit() {
   gitIpc.handle.resetHard(dir => resetHard(dir));
 }
 
+/**
+ * IPC interface for Git operations.
+ */
 export const gitIpc = {
   send: {
+    /** Sends Git progress event */
     onProgress: (
       id: string | undefined,
       state: GitProgressState,
@@ -56,21 +64,30 @@ export const gitIpc = {
     ) => sendToMain(gitChannels.onProgress, id, state, progress),
   },
   on: {
+    /** Listens for pull request */
     pull: (callback: (dir: string, id: string) => void) => lynxIpc.on(gitChannels.pull, callback),
+    /** Listens for shallow clone request */
     shallowClone: (callback: (options: ShallowCloneOptions) => void) => lynxIpc.on(gitChannels.shallowClone, callback),
   },
   handle: {
+    /** Handles validate Git directory request */
     validateGitDir: (callback: (dir: string, url: string) => MainHT<boolean>) =>
       lynxIpc.handle(gitChannels.validateGitDir, callback),
+    /** Handles shallow clone promise request */
     shallowClonePromise: (callback: (options: ShallowCloneOptions) => MainHT<void>) =>
       lynxIpc.handle(gitChannels.shallowClonePromise, callback),
+    /** Handles stash drop request */
     stashDrop: (callback: (dir: string) => MainHT<{message: string; type: 'error' | 'success' | 'info'}>) =>
       lynxIpc.handle(gitChannels.stashDrop, callback),
+    /** Handles get repository info request */
     getRepoInfo: (callback: (dir: string) => MainHT<RepositoryInfo>) =>
       lynxIpc.handle(gitChannels.getRepoInfo, callback),
+    /** Handles change branch request */
     changeBranch: (callback: (dir: string, branchName: string) => MainHT<void>) =>
       lynxIpc.handle(gitChannels.changeBranch, callback),
+    /** Handles unshallow request */
     unShallow: (callback: (dir: string) => MainHT<void>) => lynxIpc.handle(gitChannels.unShallow, callback),
+    /** Handles reset hard request */
     resetHard: (callback: (dir: string) => MainHT<string>) => lynxIpc.handle(gitChannels.resetHard, callback),
   },
 };

@@ -1,3 +1,4 @@
+
 import windowDialogsChannels from '@lynx_common/consts/ipcChannels/dialogsWindow';
 import classHolder from '@lynx_main/managers/classHolder';
 import {IpcMainEvent} from 'electron';
@@ -8,6 +9,10 @@ import {sendToContextMenu} from './sender';
 let currentDialogEvent: IpcMainEvent | undefined = undefined;
 let currentDialogDefaultResult: boolean | null | string = null;
 
+/**
+ * Called when the dialog window is blurred.
+ * Sets the default result for the current dialog event.
+ */
 export const dialogBlured = () => {
   if (currentDialogEvent) {
     currentDialogEvent.returnValue = currentDialogDefaultResult;
@@ -15,6 +20,9 @@ export const dialogBlured = () => {
   }
 };
 
+/**
+ * Initializes listeners for dialog window events.
+ */
 export default async function listenDialogsWindow() {
   const [contextMenuManager, appManager] = await Promise.all([
     classHolder.waitForClass('contextMenuManager'),
@@ -29,6 +37,7 @@ export default async function listenDialogsWindow() {
     }
   };
 
+  // Prompt dialog
   dialogsWindowIpc.on.onPrompt((event, message, defaultValue) => {
     setCenterPosition();
 
@@ -38,6 +47,7 @@ export default async function listenDialogsWindow() {
     currentDialogDefaultResult = null;
   });
 
+  // Confirm dialog
   dialogsWindowIpc.on.onConfirm((event, message) => {
     setCenterPosition();
 
@@ -47,6 +57,7 @@ export default async function listenDialogsWindow() {
     currentDialogDefaultResult = false;
   });
 
+  // Alert dialog
   dialogsWindowIpc.on.onAlert((event, message) => {
     setCenterPosition();
 
@@ -56,6 +67,7 @@ export default async function listenDialogsWindow() {
     currentDialogDefaultResult = null;
   });
 
+  // Dialog results
   dialogsWindowIpc.on.promptResult(result => {
     if (currentDialogEvent) {
       currentDialogEvent.returnValue = result;
@@ -71,22 +83,33 @@ export default async function listenDialogsWindow() {
   });
 }
 
+/**
+ * IPC interface for dialog window events.
+ */
 export const dialogsWindowIpc = {
   on: {
+    /** Listens for prompt request */
     onPrompt: (callback: (event: IpcMainEvent, message: string, defaultValue?: string) => void) =>
       lynxIpc.on(windowDialogsChannels.onPrompt, callback),
+    /** Listens for confirm request */
     onConfirm: (callback: (event: IpcMainEvent, message: string) => void) =>
       lynxIpc.on(windowDialogsChannels.onConfirm, callback),
+    /** Listens for alert request */
     onAlert: (callback: (event: IpcMainEvent, message: string) => void) =>
       lynxIpc.on(windowDialogsChannels.onAlert, callback),
+    /** Listens for prompt result */
     promptResult: (callback: (result: string | null) => void) =>
       lynxIpc.on(windowDialogsChannels.promptResult, callback),
+    /** Listens for confirm result */
     confirmResult: (callback: (result: boolean) => void) => lynxIpc.on(windowDialogsChannels.confirmResult, callback),
   },
   send: {
+    /** Sends prompt show command to context menu (which renders the dialog) */
     promptShow: (message: string, defaultValue?: string) =>
       sendToContextMenu(windowDialogsChannels.promptShow, message, defaultValue),
+    /** Sends confirm show command to context menu */
     confirmShow: (message: string) => sendToContextMenu(windowDialogsChannels.confirmShow, message),
+    /** Sends alert show command to context menu */
     alertShow: (message: string) => sendToContextMenu(windowDialogsChannels.alertShow, message),
   },
 };

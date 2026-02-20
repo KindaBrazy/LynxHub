@@ -1,3 +1,4 @@
+
 import contextMenuChannels from '@lynx_common/consts/ipcChannels/contextMenu';
 import {ContextResizeData} from '@lynx_common/types';
 import {ContextMenuVolumeData, NavHistory} from '@lynx_common/types/ipc';
@@ -12,26 +13,36 @@ import lynxIpc from './ipcWrapper';
 import {downloadImageToClipboard} from './methods/windowUtils';
 import {sendToContextMenu, sendToMain} from './sender';
 
+/**
+ * Initializes listeners for context menu events.
+ */
 export default async function listenContextMenu() {
   const contextMenuManager = await classHolder.waitForClass('contextMenuManager');
 
   const getWebContents = (id: number) => contextMenuManager.getContentById(id);
 
+  // Resizes the context menu window
   contextMenuIpc.on.resizeWindow(data => contextMenuManager.resizeContextMenu(data));
 
+  // Edit operations
   contextMenuIpc.on.copy(id => getWebContents(id)?.copy());
   contextMenuIpc.on.cut(id => getWebContents(id)?.cut());
   contextMenuIpc.on.paste(id => getWebContents(id)?.paste());
   contextMenuIpc.on.selectAll(id => getWebContents(id)?.selectAll());
   contextMenuIpc.on.undo(id => getWebContents(id)?.undo());
   contextMenuIpc.on.redo(id => getWebContents(id)?.redo());
+
+  // Image operations
   contextMenuIpc.on.downloadImage((id, url) => getWebContents(id)?.downloadURL(url));
   contextMenuIpc.on.copyImage(url => downloadImageToClipboard(url));
 
+  // Search with Google
   contextMenuIpc.on.searchWithGoogle(text => {
     const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(text)}`;
     applicationIpc.send.onNewTab(searchUrl);
   });
+
+  // Inspect element
   contextMenuIpc.on.inspectElement((id, x, y) => {
     const webContents = getWebContents(id);
     if (webContents) {
@@ -39,17 +50,23 @@ export default async function listenContextMenu() {
     }
   });
 
+  // Show/Hide context menu
   contextMenuIpc.on.showWindow(() => contextMenuManager.showContextMenu());
   contextMenuIpc.on.hideWindow(() => contextMenuManager.hideContextMenu());
+
+  // Replace misspelling
   contextMenuIpc.on.replaceMisspelling((id, text) => getWebContents(id)?.replaceMisspelling(text));
+
+  // Navigation
   contextMenuIpc.on.newTab(url => applicationIpc.send.onNewTab(url));
   contextMenuIpc.on.navigate((id, action) => {
+    const history = getWebContents(id)?.navigationHistory;
     switch (action) {
       case 'back':
-        getWebContents(id)?.navigationHistory.goBack();
+        history?.goBack();
         break;
       case 'forward':
-        getWebContents(id)?.navigationHistory.goForward();
+        history?.goForward();
         break;
       case 'refresh':
         getWebContents(id)?.reload();
@@ -57,21 +74,26 @@ export default async function listenContextMenu() {
     }
   });
 
+  // AI & Tab Management
   contextMenuIpc.on.relaunchAI(id => contextMenuIpc.send.onRelaunchAI(id));
   contextMenuIpc.on.stopAI(id => contextMenuIpc.send.onStopAI(id));
   contextMenuIpc.on.removeTab(tabID => contextMenuIpc.send.onRemoveTab(tabID));
 }
 
+/**
+ * Listens for browser events that should trigger context menu actions.
+ * @param browserManager - The browser manager instance.
+ */
 export async function listenForBrowserChannels(browserManager: BrowserManager) {
   const contextMenuManager = await classHolder.waitForClass('contextMenuManager');
 
   const setPosition = (customPosition?: {x: number; y: number}) =>
     contextMenuManager.setCustomContextPosition(customPosition);
 
+  // Open Find in Page
   browserIpc.on.openFindInPage(async (id, customPosition) => {
     setPosition(customPosition);
 
-    // Get selected text from webContents using executeJavaScript
     const webContents = browserManager.getWebContentsById(id);
     let selectedText = '';
 
@@ -86,83 +108,125 @@ export async function listenForBrowserChannels(browserManager: BrowserManager) {
     contextMenuIpc.send.onFind(id, selectedText);
   });
 
+  // Open Zoom control
   browserIpc.on.openZoom((id, customPosition) => {
     setPosition(customPosition);
     contextMenuIpc.send.onZoom(id, browserManager.getCurrentZoom(id));
   });
 
+  // Open Volume control
   browserIpc.on.openVolume((data, customPosition) => {
     setPosition(customPosition);
     contextMenuIpc.send.onVolume(data);
   });
 
+  // Open Terminate AI
   contextMenuIpc.on.openTerminateAI(id => {
     setPosition(undefined);
     contextMenuIpc.send.onTerminateAI(id);
   });
 
+  // Open Terminate Tab
   contextMenuIpc.on.openTerminateTab((id, customPosition) => {
     setPosition(customPosition);
     contextMenuIpc.send.onTerminateTab(id);
   });
 
+  // Open Close App
   contextMenuIpc.on.openCloseApp(() => {
     setPosition(undefined);
     contextMenuIpc.send.onCloseApp();
   });
 
+  // Open Downloads Menu
   downloadManagerIpc.on.openDownloadsMenu(() => {
     setPosition(undefined);
     contextMenuIpc.send.onDownloads();
   });
 }
 
+/**
+ * IPC interface for context menu events.
+ */
 export const contextMenuIpc = {
   send: {
+    /** Sends event to relaunch AI */
     onRelaunchAI: (id: string) => sendToMain(contextMenuChannels.onRelaunchAI, id),
+    /** Sends event to stop AI */
     onStopAI: (id: string) => sendToMain(contextMenuChannels.onStopAI, id),
+    /** Sends event to remove a tab */
     onRemoveTab: (tabID: string) => sendToMain(contextMenuChannels.onRemoveTab, tabID),
 
+    /** Sends right-click event to context menu */
     rightClick: (params: ContextMenuParams, navHistory: NavHistory, id: number) =>
       sendToContextMenu(contextMenuChannels.rightClick, params, navHistory, id),
+    /** Sends find in page event to context menu */
     onFind: (id: string, selectedText?: string) => sendToContextMenu(contextMenuChannels.onFind, id, selectedText),
+    /** Sends zoom event to context menu */
     onZoom: (id: string, factor: number | undefined) => sendToContextMenu(contextMenuChannels.onZoom, id, factor),
+    /** Sends volume event to context menu */
     onVolume: (data: ContextMenuVolumeData) => sendToContextMenu(contextMenuChannels.onVolume, data),
+    /** Sends terminate AI event to context menu */
     onTerminateAI: (id: string) => sendToContextMenu(contextMenuChannels.onTerminateAI, id),
+    /** Sends terminate tab event to context menu */
     onTerminateTab: (id: string) => sendToContextMenu(contextMenuChannels.onTerminateTab, id),
+    /** Sends close app event to context menu */
     onCloseApp: () => sendToContextMenu(contextMenuChannels.onCloseApp),
+    /** Sends downloads event to context menu */
     onDownloads: () => sendToContextMenu(contextMenuChannels.onDownloads),
   },
   on: {
+    /** Listens for resize window request */
     resizeWindow: (callback: (data: ContextResizeData) => void) =>
       lynxIpc.on(contextMenuChannels.resizeWindow, callback),
+    /** Listens for copy request */
     copy: (callback: (id: number) => void) => lynxIpc.on(contextMenuChannels.copy, callback),
+    /** Listens for cut request */
     cut: (callback: (id: number) => void) => lynxIpc.on(contextMenuChannels.cut, callback),
+    /** Listens for paste request */
     paste: (callback: (id: number) => void) => lynxIpc.on(contextMenuChannels.paste, callback),
+    /** Listens for select all request */
     selectAll: (callback: (id: number) => void) => lynxIpc.on(contextMenuChannels.selectAll, callback),
+    /** Listens for undo request */
     undo: (callback: (id: number) => void) => lynxIpc.on(contextMenuChannels.undo, callback),
+    /** Listens for redo request */
     redo: (callback: (id: number) => void) => lynxIpc.on(contextMenuChannels.redo, callback),
+    /** Listens for download image request */
     downloadImage: (callback: (id: number, url: string) => void) =>
       lynxIpc.on(contextMenuChannels.downloadImage, callback),
+    /** Listens for copy image request */
     copyImage: (callback: (url: string) => void) => lynxIpc.on(contextMenuChannels.copyImage, callback),
+    /** Listens for Google search request */
     searchWithGoogle: (callback: (text: string) => void) => lynxIpc.on(contextMenuChannels.searchWithGoogle, callback),
+    /** Listens for inspect element request */
     inspectElement: (callback: (id: number, x: number, y: number) => void) =>
       lynxIpc.on(contextMenuChannels.inspectElement, callback),
+    /** Listens for show window request */
     showWindow: (callback: () => void) => lynxIpc.on(contextMenuChannels.showWindow, callback),
+    /** Listens for hide window request */
     hideWindow: (callback: () => void) => lynxIpc.on(contextMenuChannels.hideWindow, callback),
+    /** Listens for replace misspelling request */
     replaceMisspelling: (callback: (id: number, text: string) => void) =>
       lynxIpc.on(contextMenuChannels.replaceMisspelling, callback),
+    /** Listens for new tab request */
     newTab: (callback: (url: string) => void) => lynxIpc.on(contextMenuChannels.newTab, callback),
+    /** Listens for navigation request */
     navigate: (callback: (id: number, action: 'back' | 'forward' | 'refresh') => void) =>
       lynxIpc.on(contextMenuChannels.navigate, callback),
 
+    /** Listens for relaunch AI request */
     relaunchAI: (callback: (id: string) => void) => lynxIpc.on(contextMenuChannels.relaunchAI, callback),
+    /** Listens for stop AI request */
     stopAI: (callback: (id: string) => void) => lynxIpc.on(contextMenuChannels.stopAI, callback),
+    /** Listens for remove tab request */
     removeTab: (callback: (tabID: string) => void) => lynxIpc.on(contextMenuChannels.removeTab, callback),
 
+    /** Listens for open terminate AI request */
     openTerminateAI: (callback: (id: string) => void) => lynxIpc.on(contextMenuChannels.openTerminateAI, callback),
+    /** Listens for open terminate tab request */
     openTerminateTab: (callback: (id: string, customPosition?: {x: number; y: number}) => void) =>
       lynxIpc.on(contextMenuChannels.openTerminateTab, callback),
+    /** Listens for open close app request */
     openCloseApp: (callback: () => void) => lynxIpc.on(contextMenuChannels.openCloseApp, callback),
   },
   handle: {},
