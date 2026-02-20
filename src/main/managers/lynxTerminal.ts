@@ -10,7 +10,10 @@ import treeKill from 'tree-kill';
 
 import classHolder from './classHolder';
 
-/** Manages pseudo-terminal (PTY) processes for different shells. */
+/**
+ * Manages pseudo-terminal (PTY) processes for different shells.
+ * Handles spawning, resizing, data transmission, and cleanup of terminal sessions.
+ */
 export default class LynxTerminal {
   private isRunning: boolean;
   private process: pty.IPty | undefined;
@@ -19,7 +22,7 @@ export default class LynxTerminal {
   public id: string;
 
   constructor(id: string, dir?: string, sendDataToRenderer = false) {
-    const storageManager = classHolder.storageManager;
+    const {storageManager} = classHolder;
     this.id = id;
 
     const {useConpty} = storageManager.getData('terminal');
@@ -40,6 +43,7 @@ export default class LynxTerminal {
       cols: 150,
       rows: 150,
       env: process.env,
+      // 'auto' uses default behavior, 'yes' forces ConPTY on Windows
       useConpty: useConpty === 'auto' ? undefined : useConpty === 'yes',
     });
 
@@ -57,6 +61,10 @@ export default class LynxTerminal {
     this.process.onExit(() => ptyIpc.send.onExit(this.id));
   }
 
+  /**
+   * Asynchronously stops the terminal process.
+   * Ensures the process is killed and resources are freed.
+   */
   public async stopAsync(): Promise<void> {
     return new Promise<void>(resolve => {
       if (this.isRunning && this.process) {
@@ -70,7 +78,7 @@ export default class LynxTerminal {
         treeKill(this.process.pid);
         this.isRunning = false;
 
-        // Safety timeout in case onExit never fires
+        // Safety timeout in case onExit never fires (e.g. process already dead)
         setTimeout(() => {
           this.process = undefined;
           resolve();
@@ -82,7 +90,8 @@ export default class LynxTerminal {
   }
 
   /**
-   * Stops the current PTY process.
+   * Synchronously requests the terminal process to stop.
+   * Note: Does not wait for the process to actually exit.
    */
   public stop(): void {
     if (this.isRunning && this.process) {
@@ -108,8 +117,13 @@ export default class LynxTerminal {
     }
   }
 
+  /**
+   * Clears the terminal screen.
+   * Sends clear commands appropriate for the OS and shell.
+   */
   public clear(): void {
     if (this.isRunning && this.process) {
+      // Standard ANSI escape for clearing screen (or Ctrl+L equivalent)
       const clearEscape = isWin ? '\x1b' : '\x15';
 
       this.write(clearEscape);

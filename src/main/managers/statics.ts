@@ -21,6 +21,10 @@ import {getAppDirectory} from './dataFolder';
 
 type PluginAvailableItem = {metadata: PluginMetadata; versioning: PluginVersioning; url: string};
 
+/**
+ * Manages static assets and configuration files synced from a remote Git repository.
+ * Handles cloning, updating, and serving static data like releases, notifications, and plugin info.
+ */
 export default class StaticsManager {
   private gitManager: GitManager;
   private readonly dir: string;
@@ -34,12 +38,19 @@ export default class StaticsManager {
     this.dir = getAppDirectory('Statics');
   }
 
-  /** Returns true if statics are available (git installed and clone succeeded) */
+  /** 
+   * Returns true if statics are available (git installed and clone succeeded) 
+   */
   public isAvailable(): boolean {
     return this.requirementsCheckCompleted && this.gitAvailable;
   }
 
-  public async checkRequirements() {
+  /**
+   * Checks if requirements are met and initializes the statics repository.
+   * Clones the repo if missing, or pulls updates if present.
+   * Schedules periodic updates if online.
+   */
+  public async checkRequirements(): Promise<void> {
     if (this.requirementsCheckPromise) {
       return this.requirementsCheckPromise;
     }
@@ -68,8 +79,8 @@ export default class StaticsManager {
         try {
           await promises.access(this.dir);
           this.requirementsCheckCompleted = true;
-        } catch (e) {
-          console.log('not available statics');
+        } catch {
+          console.warn('StaticsManager: Offline and statics directory missing.');
           this.requirementsCheckCompleted = false;
         }
       }
@@ -78,11 +89,16 @@ export default class StaticsManager {
     return this.requirementsCheckPromise;
   }
 
+  /**
+   * Pulls the latest changes from the remote repository.
+   * Re-clones if the local repository is corrupted.
+   */
   public async pull() {
     if (!this.gitAvailable || !classHolder.isOnline) return;
     try {
       await this.gitManager.pull(this.dir);
     } catch {
+      // If pull fails (e.g. merge conflicts, corruption), wipe and re-clone
       rmSync(this.dir, {recursive: true, force: true});
       await this.clone();
     }
@@ -136,6 +152,9 @@ export default class StaticsManager {
     return entry ? entry[0] : undefined;
   }
 
+  /**
+   * Determines the current application update stage (public, early_access, insider).
+   */
   public async getCurrentAppState(): Promise<SubscribeStages> {
     const releases = await this.getReleases();
     const insider = await this.getInsider();
@@ -153,6 +172,9 @@ export default class StaticsManager {
     return 'public';
   }
 
+  /**
+   * Retrieves a list of available plugins with their metadata and versioning info.
+   */
   public async getPluginsList(): Promise<PluginAvailableItem[]> {
     if (!this.isAvailable()) return [];
 
@@ -193,10 +215,15 @@ export default class StaticsManager {
     }
   }
 
+  /**
+   * Clones the statics repository.
+   * Handles cases where Git is missing or cloning fails.
+   */
   private async clone() {
     try {
       const dirUrl = await GitManager.getRemoteUrlFromDirectory(this.dir);
 
+      // If already cloned from correct URL, skip
       if (dirUrl && dirUrl === STATICS_URL) return;
 
       return this.gitManager.shallowClone({url: STATICS_URL, directory: this.dir, singleBranch: true, branch: 'main'});
@@ -207,11 +234,15 @@ export default class StaticsManager {
         console.warn('StaticsManager: Git is not installed or not in PATH. Statics will not be available.');
         throw new Error('Git is not available');
       }
-      // For other errors, try cloning again
+      // For other errors, try cloning again (might be corrupted repo)
       return this.gitManager.shallowClone({url: STATICS_URL, directory: this.dir, singleBranch: true, branch: 'main'});
     }
   }
 
+  /**
+   * Helper to read and parse a JSON file from the statics directory.
+   * Handles retry logic for transient file system errors.
+   */
   private async getDataAsJson<T>(fileName: string): Promise<T | undefined> {
     if (this.requirementsCheckPromise) {
       await this.requirementsCheckPromise;
