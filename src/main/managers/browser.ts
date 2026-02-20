@@ -19,6 +19,10 @@ const DEBOUNCE_DELAY_MS = 50;
 const PAGE_LOAD_TIMEOUT_MS = 2000;
 const SCRIPT_EXECUTION_TIMEOUT_MS = 3000;
 
+/**
+ * Manages the lifecycle and layout of browser views (tabs).
+ * Handles creation, navigation, resizing, and IPC for each browser instance.
+ */
 export default class BrowserManager {
   private browsers: {id: string; view: WebContentsView}[] = [];
   private readonly mainWindow: BrowserWindow;
@@ -28,6 +32,7 @@ export default class BrowserManager {
   constructor(mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
 
+    // Optimize resize handling
     const debouncedSetBounds = debounce(() => this.setBounds(), DEBOUNCE_DELAY_MS);
     this.mainWindow.on('maximize', debouncedSetBounds);
     this.mainWindow.on('unmaximize', debouncedSetBounds);
@@ -36,16 +41,24 @@ export default class BrowserManager {
     this.mainWindow.on('resize', debouncedSetBounds);
   }
 
+  /**
+   * Retrieves the main BrowserWindow if it exists and is not destroyed.
+   */
   private getMainWindow() {
     if (isNil(this.mainWindow) || this.mainWindow.isDestroyed()) return undefined;
     return this.mainWindow;
   }
 
+  /**
+   * Retrieves a specific browser view by its ID.
+   */
   private getViewByID(id: string) {
     return this.browsers.find(view => view.id === id)?.view;
   }
 
-  /** Get valid WebContents by ID, returns undefined if not found or destroyed */
+  /** 
+   * Get valid WebContents by ID, returns undefined if not found or destroyed 
+   */
   private getWebContents(id: string): WebContents | undefined {
     const view = this.getViewByID(id);
     if (!view?.webContents || view.webContents.isDestroyed()) return undefined;
@@ -57,18 +70,23 @@ export default class BrowserManager {
     return this.getWebContents(id);
   }
 
-  /** Execute action on WebContents if valid, with optional error handling */
+  /** 
+   * Execute action on WebContents if valid, with optional error handling 
+   */
   private withWebContents<T>(id: string, action: (wc: WebContents) => T, fallback?: T): T | undefined {
     try {
       const wc = this.getWebContents(id);
       if (!wc) return fallback;
       return action(wc);
     } catch (error) {
-      console.error(`WebContents action failed for ${id}:`, error);
+      console.warn(`WebContents action failed for ${id}:`, error);
       return fallback;
     }
   }
 
+  /**
+   * Calculates the total offset from all active sidebars/panels.
+   */
   private getOffsetResult() {
     if (this.cachedOffset) return this.cachedOffset;
 
@@ -87,6 +105,10 @@ export default class BrowserManager {
     this.cachedOffset = null;
   }
 
+  /**
+   * Recalculates and sets the bounds for all browser views.
+   * Ensures views fit within the main window, accounting for navbar and offsets.
+   */
   private setBounds() {
     if (isEmpty(this.browsers)) return;
 
@@ -111,6 +133,9 @@ export default class BrowserManager {
     });
   }
 
+  /**
+   * Sets up listeners for navigation events to update UI state (back/forward buttons, URL bar).
+   */
   private listenForNavigate(id: string, webContents: WebContents) {
     const sendToRenderer = () => {
       const viewWc = this.getWebContents(id);
@@ -124,6 +149,7 @@ export default class BrowserManager {
       browserIpc.send.onCanGo(id, canGo);
     };
 
+    // Initial state
     sendToRenderer();
 
     webContents.on('did-navigate', (_, url) => {
@@ -146,7 +172,7 @@ export default class BrowserManager {
 
   /** Track URL in browser history (shared helper to avoid duplication) */
   private trackUrl(url: string) {
-    const storageManager = classHolder.storageManager;
+    const {storageManager} = classHolder;
     if (url && !url.startsWith('about:') && !url.includes('error_page.html')) {
       const formattedUrl = formatWebAddress(url);
       storageManager.addBrowserRecent(formattedUrl);
@@ -166,9 +192,9 @@ export default class BrowserManager {
       const viewWc = this.getWebContents(id);
       if (!viewWc) return;
 
-      const storageManager = classHolder.storageManager;
-
+      const {storageManager} = classHolder;
       const title = viewWc.getTitle();
+      
       browserIpc.send.onTitleChange(id, title);
       storageManager.updateBrowserFavIconTitle(formatWebAddress(viewWc.getURL()), title);
     });
@@ -179,7 +205,7 @@ export default class BrowserManager {
       const viewWc = this.getWebContents(id);
       if (!viewWc) return;
 
-      const storageManager = classHolder.storageManager;
+      const {storageManager} = classHolder;
 
       // Prefer higher quality formats: SVG > PNG > other > ICO
       const url =
@@ -194,9 +220,13 @@ export default class BrowserManager {
     });
   }
 
+  /**
+   * Handles requests for new windows (tabs).
+   */
   private setupWindowOpenHandler(webContents: WebContents) {
     webContents.setWindowOpenHandler(({url, disposition}) => {
       const {storageManager, appManager} = classHolder;
+      
       if (disposition === 'new-window') {
         return {
           action: 'allow',
@@ -215,6 +245,7 @@ export default class BrowserManager {
         // foreground-tab = Shift+middle-click = switch to new tab
         const openInBackground = disposition === 'background-tab';
         applicationIpc.send.onNewTab(url, openInBackground);
+        
         // Track URLs opened in new tabs (like real browsers)
         this.trackUrl(url);
       }
@@ -228,6 +259,7 @@ export default class BrowserManager {
       if (webContents.isDestroyed()) return;
       let resultFactor = webContents.getZoomFactor();
       resultFactor = zoomDirection === 'in' ? resultFactor + 0.1 : resultFactor - 0.1;
+      
       if (resultFactor > 0.1 && resultFactor < 5) {
         webContents.setZoomFactor(resultFactor);
         // Notify renderer about zoom change to auto-open zoom dialog
@@ -239,7 +271,7 @@ export default class BrowserManager {
   private listenForFullScreen(view: WebContentsView) {
     const webContents = view.webContents;
     webContents.on('enter-html-full-screen', () => {
-      const appManager = classHolder.appManager;
+      const {appManager} = classHolder;
       const mainBounds = appManager?.getMainWindow()?.getBounds();
       if (mainBounds) {
         view.setBounds({x: 0, y: 0, width: mainBounds.width, height: mainBounds.height});
@@ -249,11 +281,12 @@ export default class BrowserManager {
 
   private listenForFailLoad(view: WebContents, id: string) {
     view.on('did-fail-load', (_, errorCode, errorDescription, validatedURL, isMainFrame) => {
+      // Ignore abort errors (usually navigation cancelled) or subframe errors
       if (errorCode === -3 || !isMainFrame) return;
 
       this.setVisible(id, false);
       browserIpc.send.onFailedLoadUrl(id, errorCode, errorDescription, validatedURL);
-      console.error('failed load:', errorCode, errorDescription, validatedURL);
+      console.warn('Failed load:', errorCode, errorDescription, validatedURL);
     });
   }
 
@@ -269,7 +302,7 @@ export default class BrowserManager {
 
   private listenForLinkHover(webContents: WebContents) {
     webContents.on('update-target-url', (_, url) => {
-      const linkPreviewManager = classHolder.linkPreviewManager;
+      const {linkPreviewManager} = classHolder;
       linkPreviewManager?.updateUrl(url);
     });
   }
@@ -287,10 +320,16 @@ export default class BrowserManager {
     browserIpc.send.onAudioStateChange(id, {playing, muted: viewWc.audioMuted});
   }
 
+  /**
+   * Gets the persistent session for the browser.
+   */
   public getSession() {
     return session.fromPartition(BROWSER_SESSION_PARTITION);
   }
 
+  /**
+   * Creates a new browser view (tab) with the given ID.
+   */
   public createBrowser(id: string) {
     if (this.browsers.some(view => view.id === id)) return;
 
@@ -299,17 +338,22 @@ export default class BrowserManager {
 
     const {storageManager, contextMenuManager} = classHolder;
     const newView = new WebContentsView({
-      webPreferences: {session: this.getSession(), preload: path.join(__dirname, '../preload/webview.cjs')},
+      webPreferences: {
+        session: this.getSession(),
+        preload: path.join(__dirname, '../preload/webview.cjs')
+      },
     });
+    
     const webContents = newView.webContents;
     newView.setBackgroundColor(getWindowColor());
 
     webContents.setUserAgent(getUserAgent());
-
     webContents.setZoomFactor(storageManager.getData('cards').zoomFactor);
 
+    // Notify when DOM is ready
     webContents.on('dom-ready', () => browserIpc.send.onDomReady(id, true));
 
+    // Setup all listeners
     this.listenForNavigate(id, webContents);
     this.listenForLoading(id, webContents);
     this.listenForTitle(id, webContents);
@@ -346,6 +390,9 @@ export default class BrowserManager {
     return this.getSession().clearData({dataTypes: ['cookies', 'indexedDB', 'localStorage']});
   }
 
+  /**
+   * Register extra layout offset (e.g. for sidebars).
+   */
   public addOffset(id: string, offset: WHType) {
     const existingOffset = this.extraOffset.findIndex(item => item.id === id);
     if (existingOffset !== -1) {
@@ -357,7 +404,7 @@ export default class BrowserManager {
   }
 
   public clearHistory(selected: string[]) {
-    const storageManager = classHolder.storageManager;
+    const {storageManager} = classHolder;
     if (selected.includes('favorites')) {
       storageManager.updateBrowserDataSecurely({favoriteAddress: []});
     }
@@ -375,6 +422,9 @@ export default class BrowserManager {
     });
   }
 
+  /**
+   * Removes and destroys a browser view.
+   */
   public removeBrowser(id: string) {
     const browserIndex = this.browsers.findIndex(view => view.id === id);
     if (browserIndex === -1) return;
@@ -395,7 +445,8 @@ export default class BrowserManager {
       webContents.loadURL('about:blank').finally(() => {
         if (!webContents.isDestroyed()) {
           webContents.removeAllListeners();
-          webContents.close();
+          // Forcefully close the webContents
+          (webContents as any).close?.(); 
         }
       });
     }
@@ -418,12 +469,15 @@ export default class BrowserManager {
       wc.loadURL(url).catch(error => {
         // ERR_ABORTED (-3) happens on redirects - not a real error
         if (error?.errno === -3 || error?.code === 'ERR_ABORTED') return;
-        console.error(`Failed to load URL ${url}:`, error);
+        console.warn(`Failed to load URL ${url}:`, error);
       });
       // URL tracking is handled by listenForNavigate's did-navigate event
     });
   }
 
+  /**
+   * Controls visibility of a browser view.
+   */
   public setVisible(id: string, visible: boolean) {
     const view = this.getViewByID(id);
     const mainWindow = this.getMainWindow();
@@ -484,12 +538,16 @@ export default class BrowserManager {
     this.withWebContents(id, wc => wc.setAudioMuted(muted));
   }
 
+  /**
+   * Sets the volume of media elements on the page.
+   * Uses script injection to control both existing and dynamically added audio/video elements.
+   */
   public async setVolume(id: string, volume: number): Promise<void> {
     const webContents = this.getWebContents(id);
     if (!webContents) return;
 
     try {
-      // Wait for page to be ready for script execution
+      // Wait for page to be ready for script execution if it's loading
       if (webContents.isLoading()) {
         await new Promise<void>(resolve => {
           const onFinish = () => {
@@ -508,23 +566,29 @@ export default class BrowserManager {
       if (!currentWebContents || currentWebContents.isDestroyed()) return;
 
       const volumeDecimal = Math.max(0, Math.min(100, volume)) / 100;
+      
+      // Script to set volume and observe for new media elements
       const script = `
         (function() {
-          document.querySelectorAll('audio, video').forEach(el => { el.volume = ${volumeDecimal}; });
+          const vol = ${volumeDecimal};
+          const setVol = (el) => { el.volume = vol; };
+          
+          document.querySelectorAll('audio, video').forEach(setVol);
+          
           if (!window.__lynxVolumeObserver) {
             window.__lynxVolumeObserver = new MutationObserver(mutations => {
               mutations.forEach(mutation => {
                 mutation.addedNodes.forEach(node => {
-                  if (node.nodeName === 'AUDIO' || node.nodeName === 'VIDEO') node.volume = ${volumeDecimal};
+                  if (node.nodeName === 'AUDIO' || node.nodeName === 'VIDEO') setVol(node);
                   if (node.querySelectorAll) {
-                    node.querySelectorAll('audio, video').forEach(el => { el.volume = ${volumeDecimal}; });
+                    node.querySelectorAll('audio, video').forEach(setVol);
                   }
                 });
               });
             });
             window.__lynxVolumeObserver.observe(document.body, {childList: true, subtree: true});
           }
-          window.__lynxVolume = ${volumeDecimal};
+          window.__lynxVolume = vol;
         })();
       `;
 
