@@ -1,3 +1,4 @@
+
 import {resolve} from 'node:path';
 
 import fileChannels from '@lynx_common/consts/ipcChannels/files';
@@ -18,6 +19,9 @@ import {
   trashDir,
 } from './methods/windowUtils';
 
+/**
+ * Initializes listeners for file system events.
+ */
 export default function listenFiles() {
   // Gets app directory path by folder name (cards, extensions, etc.)
   filesIpc.handle.getAppDirectories(name => getAppDirectory(name));
@@ -56,28 +60,43 @@ export default function listenFiles() {
   filesIpc.handle.getAbsolutePath((basePath, targetPath) => getAbsolutePath(basePath, targetPath));
 }
 
+/**
+ * IPC interface for file system operations.
+ */
 export const filesIpc = {
   on: {
+    /** Listens for open path request */
     openPath: (callback: (dir: string) => void) => lynxIpc.on(fileChannels.openPath, callback),
   },
   handle: {
+    /** Handles get app directories request */
     getAppDirectories: (callback: (name: FolderNames) => MainHT<string>) =>
       lynxIpc.handle(fileChannels.getAppDirectories, callback),
+    /** Handles open dialog request */
     dialog: (callback: (option: OpenDialogOptions) => MainHT<string | undefined>) =>
       lynxIpc.handle(fileChannels.dialog, callback),
+    /** Handles save to file request */
     saveToFile: (callback: (content: string) => MainHT<string | null>) =>
       lynxIpc.handle(fileChannels.saveToFile, callback),
+    /** Handles remove directory request */
     removeDir: (callback: (dir: string) => MainHT<void>) => lynxIpc.handle(fileChannels.removeDir, callback),
+    /** Handles trash directory request */
     trashDir: (callback: (dir: string) => MainHT<void>) => lynxIpc.handle(fileChannels.trashDir, callback),
+    /** Handles check if directory is empty request */
     isEmptyDir: (callback: (dir: string) => MainHT<boolean>) => lynxIpc.handle(fileChannels.isEmptyDir, callback),
+    /** Handles list directory request */
     listDir: (callback: (dirPath: string, relatives: string[]) => MainHT<FolderListData[]>) =>
       lynxIpc.handle(fileChannels.listDir, callback),
+    /** Handles check files exist request */
     checkFilesExist: (callback: (dir: string, fileNames: string[]) => MainHT<boolean>) =>
       lynxIpc.handle(fileChannels.checkFilesExist, callback),
+    /** Handles calculate folder size request */
     calcFolderSize: (callback: (dir: string) => MainHT<number>) =>
       lynxIpc.handle(fileChannels.calcFolderSize, callback),
+    /** Handles get relative path request */
     getRelativePath: (callback: (basePath: string, targetPath: string) => MainHT<string>) =>
       lynxIpc.handle(fileChannels.getRelativePath, callback),
+    /** Handles get absolute path request */
     getAbsolutePath: (callback: (basePath: string, targetPath: string) => MainHT<string>) =>
       lynxIpc.handle(fileChannels.getAbsolutePath, callback),
   },

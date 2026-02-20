@@ -1,3 +1,4 @@
+
 import classHolder from '@lynx_main/managers/classHolder';
 
 import listenApplication from './application';
@@ -11,6 +12,9 @@ import listenStatics from './statics';
 import listenStorage, {listenStorageUtils} from './storage';
 import listenUtils from './utils';
 
+/**
+ * Initializes managers that have IPC channels.
+ */
 async function listenManagers() {
   try {
     const [moduleManager, extensionManager, linkPreviewManager] = await Promise.all([
@@ -22,11 +26,14 @@ async function listenManagers() {
     moduleManager.listenForChannels();
     extensionManager.listenForChannels();
     linkPreviewManager.listenForChannels();
-  } catch (err) {
+  } catch (err: any) {
     console.error('Failed to initialize managers for IPC channels:', err?.message || err);
   }
 }
 
+/**
+ * Main entry point for initializing all IPC listeners.
+ */
 export async function listenToIpcChannels() {
   listenStorage();
   listenStorageUtils();

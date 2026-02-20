@@ -1,3 +1,4 @@
+
 import appChannels from '@lynx_common/consts/ipcChannels/application';
 import {CustomNotificationInfo, HeroToastPlacement} from '@lynx_common/types';
 import {
@@ -29,6 +30,9 @@ import {getSystemInfo} from './methods/platform';
 import {changeWindowState, setDarkMode, setTaskbarStatus} from './methods/windowUtils';
 import {sendToMain} from './sender';
 
+/**
+ * Sets up IPC listeners for application-level events.
+ */
 export default async function listenApplication() {
   const storageManager = classHolder.storageManager;
   const appManager = await classHolder.waitForClass('appManager');
@@ -48,7 +52,6 @@ export default async function listenApplication() {
   applicationIpc.on.setTaskBarStatus(status => setTaskbarStatus(status));
 
   // Opens URL in default system browser
-
   applicationIpc.on.openUrlDefaultBrowser(url => shell.openExternal(url));
 
   // Sets window progress bar (taskbar/dock) - value: 0-1 for progress, -1 to remove, >1 for indeterminate
@@ -75,6 +78,10 @@ export default async function listenApplication() {
   applicationIpc.handle.isValidDataPath(dir => isAppDir(dir));
 }
 
+/**
+ * Notifies all application windows about the dark mode change.
+ * @param isDark - Whether dark mode is enabled.
+ */
 const notifyAllWindowsDarkMode = (isDark: boolean) => {
   const {contextMenuManager, linkPreviewManager, shareScreenManager, toastWindow} = classHolder;
 
@@ -93,52 +100,84 @@ const notifyAllWindowsDarkMode = (isDark: boolean) => {
   if (toast) toast.send(appChannels.onDarkMode, isDark);
 };
 
+/**
+ * IPC interface for application events.
+ */
 export const applicationIpc = {
   send: {
+    /** Sends event to open a new tab */
     onNewTab: (url: string, background?: boolean) => sendToMain(appChannels.onNewTab, url, background),
+    /** Sends online status update */
     onOnline: (isOnline: boolean) => sendToMain(appChannels.onOnline, isOnline),
+    /** Sends hotkey change event */
     onHotkeysChange: (input: LynxInput) => sendToMain(appChannels.hotkeysChange, input),
+    /** Sends application update status */
     updateStatus: (type: AppUpdateEventTypes, status?: AppUpdateStatus) =>
       sendToMain(appChannels.updateStatus, type, status),
+    /** Sends update error event */
     updateError: () => sendToMain(appChannels.updateError),
 
+    /** Sends custom notification open event */
     onCustomNotifOpen: (data: CustomNotificationInfo) => sendToMain(appChannels.onCustomNotifOpen, data),
+    /** Sends custom notification close event */
     onCustomNotifClose: (key: string) => sendToMain(appChannels.onCustomNotifClose, key),
 
+    /** Shows a toast message */
     showToast: (message: string, type: ShowToastTypes, placement: HeroToastPlacement = 'bottom-right') =>
       sendToMain(appChannels.showToast, message, type, placement),
+    /** Changes window state */
     changeWinState: (state: WinStateChange) => sendToMain(appChannels.onChangeState, state),
+    /** Updates channel change event */
     updateChannelChange: (channel: string) => sendToMain(appChannels.updateChannelChange, channel),
+    /** Notifies about dark mode change */
     onDarkMode: (isDark: boolean) => notifyAllWindowsDarkMode(isDark),
   },
   on: {
+    /** Listens for window state change requests */
     onChangeState: (callback: (state: ChangeWindowState) => void) => lynxIpc.on(appChannels.changeState, callback),
+    /** Listens for dark mode change requests */
     setDarkMode: (callback: (darkMode: DarkModeTypes) => void) => lynxIpc.on(appChannels.setDarkMode, callback),
+    /** Listens for taskbar status change requests */
     setTaskBarStatus: (callback: (status: TaskbarStatus) => void) => lynxIpc.on(appChannels.setTaskBarStatus, callback),
+    /** Listens for requests to open URL in default browser */
     openUrlDefaultBrowser: (callback: (url: string) => void) => lynxIpc.on(appChannels.openUrlDefaultBrowser, callback),
+    /** Listens for progress bar updates */
     setProgressBar: (
       callback: (progress: number, options?: {mode: 'none' | 'normal' | 'indeterminate' | 'error' | 'paused'}) => void,
     ) => lynxIpc.on(appChannels.setProgressBar, callback),
+    /** Listens for update download request */
     updateDownload: (callback: () => void) => lynxIpc.on(appChannels.updateDownload, callback),
+    /** Listens for update install request */
     updateInstall: (callback: () => void) => lynxIpc.on(appChannels.updateInstall, callback),
+    /** Listens for update cancel request */
     updateCancel: (callback: () => void) => lynxIpc.on(appChannels.updateCancel, callback),
 
+    /** Listens for custom notification button press */
     onCustomNotifBtnPress: (callback: (btnId: string, notifKey: string) => void) =>
       lynxIpc.on(appChannels.onCustomNotifBtnPress, callback),
   },
   handle: {
+    /** Gets system dark mode setting */
     getSystemDarkMode: (callback: () => MainHT<'dark' | 'light'>) =>
       lynxIpc.handle(appChannels.getSystemDarkMode, callback),
+    /** Checks if dark mode is active */
     isDarkMode: (callback: () => MainHT<boolean>) => lynxIpc.handle(appChannels.isDarkMode, callback),
+    /** Gets system information */
     getSystemInfo: (callback: () => MainHT<SystemInfo>) => lynxIpc.handle(appChannels.getSystemInfo, callback),
+    /** Disables loading animations */
     disableLoadingAnimations: (callback: () => MainHT<boolean>) =>
       lynxIpc.handle(appChannels.disableLoadingAnimations, callback),
+    /** Checks if Git is installed */
     checkGitInstalled: (callback: () => MainHT<string>) => lynxIpc.handle(appChannels.checkGitInstalled, callback),
+    /** Checks if PowerShell 7 is installed */
     checkPwsh7Installed: (callback: () => MainHT<string>) => lynxIpc.handle(appChannels.checkPwsh7Installed, callback),
 
+    /** Gets current app data path */
     getCurrentDataPath: (callback: () => MainHT<string>) => lynxIpc.handle(appChannels.getCurrentDataPath, callback),
+    /** Selects a new app data path */
     selectAnotherDataPath: (callback: () => MainHT<string>) =>
       lynxIpc.handle(appChannels.selectAnotherDataPath, callback),
+    /** Checks if a path is a valid app data directory */
     isValidDataPath: (callback: (dir: string) => MainHT<boolean>) =>
       lynxIpc.handle(appChannels.isValidDataPath, callback),
   },

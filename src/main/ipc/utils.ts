@@ -1,3 +1,4 @@
+
 import utilsChannels from '@lynx_common/consts/ipcChannels/utils';
 import {
   DownloadProgress,
@@ -21,6 +22,9 @@ import {cancelDownload, downloadFile} from './methods/downloader';
 import {decompressFile, getImageAsDataURL, isResponseValid} from './methods/windowUtils';
 import {sendToMain} from './sender';
 
+/**
+ * Initializes listeners for utility operations.
+ */
 export default function listenUtils() {
   const cacheManager = getImageCacheManager();
 
@@ -79,32 +83,48 @@ export default function listenUtils() {
   });
 }
 
+/**
+ * IPC interface for utility operations.
+ */
 export const utilsIpc = {
   send: {
+    /** Sends extension update progress */
     onUpdateAllExtensions: (updateInfo: OnUpdatingExtensions) =>
       sendToMain(utilsChannels.onUpdateAllExtensions, updateInfo),
+    /** Sends file download progress */
     onDownloadFile: (progress: Partial<DownloadProgress>) => sendToMain(utilsChannels.onDownloadFile, progress),
   },
   on: {
+    /** Listens for update all extensions request */
     updateAllExtensions: (callback: (data: {id: string; dir: string}) => void) =>
       lynxIpc.on(utilsChannels.updateAllExtensions, callback),
+    /** Listens for cancel extensions data request */
     cancelExtensionsData: (callback: () => void) => lynxIpc.on(utilsChannels.cancelExtensionsData, callback),
+    /** Listens for download file request */
     downloadFile: (callback: (url: string) => void) => lynxIpc.on(utilsChannels.downloadFile, callback),
+    /** Listens for cancel download request */
     cancelDownload: (callback: () => void) => lynxIpc.on(utilsChannels.cancelDownload, callback),
   },
   handle: {
+    /** Handles get extensions details request */
     extensionsDetails: (callback: (dir: string) => MainHT<ExtensionsData>) =>
       lynxIpc.handle(utilsChannels.extensionsDetails, callback),
+    /** Handles get extensions update status request */
     updateStatus: (callback: (dir: string) => MainHT<ExtensionsUpdateStatus>) =>
       lynxIpc.handle(utilsChannels.updateStatus, callback),
+    /** Handles disable/enable extension request */
     disableExtension: (callback: (disable: boolean, dir: string) => MainHT<string>) =>
       lynxIpc.handle(utilsChannels.disableExtension, callback),
+    /** Handles decompress file request */
     decompressFile: (callback: (filePath: string) => MainHT<string>) =>
       lynxIpc.handle(utilsChannels.decompressFile, callback),
+    /** Handles check response valid request */
     isResponseValid: (callback: (url: string) => MainHT<boolean>) =>
       lynxIpc.handle(utilsChannels.isResponseValid, callback),
+    /** Handles get image as data URL request */
     getImageAsDataURL: (callback: (url: string) => MainHT<string | null>) =>
       lynxIpc.handle(utilsChannels.getImageAsDataURL, callback),
+    /** Handles get image cache stats request */
     getImageCacheStats: (
       callback: () => MainHT<{
         entryCount: number;
@@ -114,8 +134,10 @@ export const utilsIpc = {
         lastCleanupFormatted: string;
       }>,
     ) => lynxIpc.handle(utilsChannels.getImageCacheStats, callback),
+    /** Handles clear image cache request */
     clearImageCache: (callback: () => MainHT<{success: boolean; clearedEntries: number}>) =>
       lynxIpc.handle(utilsChannels.clearImageCache, callback),
+    /** Handles trigger image cache cleanup request */
     triggerImageCacheCleanup: (callback: () => MainHT<{success: boolean}>) =>
       lynxIpc.handle(utilsChannels.triggerImageCacheCleanup, callback),
   },
