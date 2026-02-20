@@ -1,5 +1,5 @@
 
-import pluginChannels from '@lynx_common/consts/ipcChannels/plugins';
+import { pluginChannels } from '@lynx_common/consts/ipcChannels/plugins';
 import {SubscribeStages} from '@lynx_common/types';
 import {MainHT} from '@lynx_common/types/ipc';
 import {

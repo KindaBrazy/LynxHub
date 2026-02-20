@@ -1,3 +1,7 @@
+/**
+ * IPC channels for general application events and commands.
+ * Handles state changes, dark mode, system info, updates, and more.
+ */
 export const appChannels = {
   changeState: 'app:changeState',
   onChangeState: 'app:onChangeState',
@@ -42,6 +46,5 @@ export const appChannels = {
   onCustomNotifOpen: 'app:onCustomNotifOpen',
   onCustomNotifClose: 'app:onCustomNotifClose',
   onCustomNotifBtnPress: 'app:onCustomNotifBtnPress',
-};
+} as const;
 
-export default appChannels;

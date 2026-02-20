@@ -1,4 +1,8 @@
-const windowDialogsChannels = {
+/**
+ * IPC channels for dialog windows (prompt, confirm, alert).
+ * Handles communication between the main process and dialog windows.
+ */
+export const windowDialogsChannels = {
   promptResult: 'prompt_dialog:result',
   promptShow: 'prompt_dialog:on-show',
 
@@ -10,6 +14,5 @@ const windowDialogsChannels = {
   onPrompt: 'prompt_dialog:on-prompt',
   onConfirm: 'confirm_dialog:on-confirm',
   onAlert: 'alert_dialog:on-alert',
-};
+} as const;
 
-export default windowDialogsChannels;

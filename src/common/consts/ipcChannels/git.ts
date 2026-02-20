@@ -1,4 +1,8 @@
-const gitChannels = {
+/**
+ * IPC channels for Git operations.
+ * Handles cloning, pulling, branch management, and repository info.
+ */
+export const gitChannels = {
   shallowClone: 'git:clone-shallow',
   shallowClonePromise: 'git:clone-shallow-promise',
 
@@ -14,6 +18,5 @@ const gitChannels = {
   pull: 'git:pull',
 
   onProgress: 'git:on-progress',
-};
+} as const;
 
-export default gitChannels;

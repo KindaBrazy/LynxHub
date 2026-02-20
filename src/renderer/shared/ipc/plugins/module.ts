@@ -1,4 +1,4 @@
-import modulesChannels, {moduleApiChannels} from '@lynx_common/consts/ipcChannels/module';
+import { moduleApiChannels, modulesChannels } from '@lynx_common/consts/ipcChannels/module';
 import {InstalledCard} from '@lynx_common/types/storage';
 
 import lynxIpc from '../lynxIpc';

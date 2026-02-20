@@ -1,4 +1,8 @@
-const pluginChannels = {
+/**
+ * IPC channels for plugin management.
+ * Handles plugin installation, uninstallation, syncing, and listing.
+ */
+export const pluginChannels = {
   onSyncAvailable: 'plugins:on-sync-available',
 
   getList: 'plugins:get-list',
@@ -13,6 +17,5 @@ const pluginChannels = {
   checkForSync: 'plugins:check-for-sync',
 
   updateSyncList: 'plugins:update-sync-list',
-};
+} as const;
 
-export default pluginChannels;

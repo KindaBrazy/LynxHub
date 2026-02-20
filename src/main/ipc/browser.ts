@@ -1,5 +1,5 @@
 
-import browserChannels from '@lynx_common/consts/ipcChannels/browser';
+import { browserChannels } from '@lynx_common/consts/ipcChannels/browser';
 import {AgentTypes, AudioState, CanGoType, ContextMenuVolumeData, MainHT, WHType} from '@lynx_common/types/ipc';
 import {toMs} from '@lynx_common/utils';
 import BrowserManager from '@lynx_main/managers/browser';

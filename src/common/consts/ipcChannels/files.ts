@@ -1,3 +1,7 @@
+/**
+ * IPC channels for file system operations.
+ * Handles directory listing, file dialogs, path manipulation, and other file-related tasks.
+ */
 export const fileChannels = {
   getAppDirectories: 'app:getAppDirectories',
   dialog: 'app:openDialog',
@@ -13,6 +17,5 @@ export const fileChannels = {
   getAbsolutePath: 'app:getAbsolutePath',
 
   isEmptyDir: 'app:isEmptyDir',
-};
+} as const;
 
-export default fileChannels;

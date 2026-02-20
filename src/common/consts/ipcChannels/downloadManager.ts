@@ -1,3 +1,7 @@
+/**
+ * IPC channels for the browser download manager.
+ * Handles download progress, control (pause/resume/cancel), and UI interactions.
+ */
 export const browserDownloadChannels = {
   onDone: 'browserDL:on-done',
   onProgress: 'browserDL:on-progress',
@@ -19,4 +23,5 @@ export const browserDownloadChannels = {
   getDownloadBehavior: 'browserDL:get-download-behavior',
 
   mainDownloadCount: 'browserDL:main-download-count',
-};
+} as const;
+
