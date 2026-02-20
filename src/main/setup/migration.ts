@@ -1,8 +1,69 @@
 import {PluginManager} from '@lynx_main/plugins';
 import StorageManager from '@lynx_main/storage/storageOperations';
 import {app, BrowserWindow, dialog} from 'electron';
+import {setTimeout} from 'node:timers/promises';
 
-export function PluginMigrate(storageManager: StorageManager, pluginManager: PluginManager) {
+/**
+ * HTML content for the migration window
+ */
+const MIGRATION_HTML = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #212121;
+      color: #f0f0f0;
+      text-align: center;
+      overflow: hidden;
+      border-radius: 8px;
+      user-select: none;
+    }
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1.5s linear infinite;
+      margin-bottom: 20px;
+    }
+    h2 { margin: 0; }
+    #status { 
+      color: #aaa;
+      margin-top: 8px;
+      min-height: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="loader"></div>
+  <h2>Applying Updates</h2>
+  <p id="status">Initializing migration...</p>
+</body>
+</html>
+`;
+
+/**
+ * Handles the migration process for plugins and extensions.
+ * Shows a splash screen during migration and restarts the app upon completion.
+ *
+ * @param storageManager - The storage manager instance
+ * @param pluginManager - The plugin manager instance
+ */
+export function PluginMigrate(storageManager: StorageManager, pluginManager: PluginManager): void {
   app.whenReady().then(async () => {
     const migrationWindow = new BrowserWindow({
       width: 450,
@@ -11,84 +72,41 @@ export function PluginMigrate(storageManager: StorageManager, pluginManager: Plu
       frame: false,
       show: false,
       alwaysOnTop: true,
+      center: true,
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
       },
     });
 
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <style>
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-          body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #212121;
-            color: #f0f0f0;
-            text-align: center;
-            overflow: hidden;
-            border-radius: 8px;
-          }
-          .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1.5s linear infinite;
-            margin-bottom: 20px;
-          }
-          h2 { margin: 0; }
-          #status { 
-            color: #aaa;
-            margin-top: 8px;
-            min-height: 20px;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="loader"></div>
-        <h2>Applying Updates</h2>
-        <p id="status">Initializing migration...</p>
-      </body>
-      </html>
-    `;
-
-    await migrationWindow.loadURL(`data:text/html;charset=UTF-8,${encodeURIComponent(htmlContent)}`);
+    await migrationWindow.loadURL(`data:text/html;charset=UTF-8,${encodeURIComponent(MIGRATION_HTML)}`);
 
     migrationWindow.on('ready-to-show', async () => {
       migrationWindow.show();
 
+      /**
+       * Updates the status text in the migration window
+       */
       const updateStatus = async (message: string) => {
-        const script = `document.getElementById('status').innerText = ${JSON.stringify(message)};`;
         if (migrationWindow && !migrationWindow.isDestroyed()) {
+          const script = `document.getElementById('status').innerText = ${JSON.stringify(message)};`;
           await migrationWindow.webContents.executeJavaScript(script);
         }
       };
 
       try {
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await setTimeout(500);
 
         await updateStatus('Migrating extensions and modules...');
         await pluginManager.migrate();
 
+        // Mark as migrated in storage
         storageManager.updateData('plugin', {migrated: true});
 
         await updateStatus('Done! Restarting the application...');
+        await setTimeout(2000);
 
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
+        // Relaunch the application
         app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
         app.quit();
       } catch (error) {
@@ -116,20 +134,23 @@ export function PluginMigrate(storageManager: StorageManager, pluginManager: Plu
           migrationWindow.close();
         }
 
-        if (result.response === 0) {
-          // Retry - relaunch the app
-          app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
-          app.quit();
-        } else if (result.response === 1) {
-          // Skip - mark as migrated to prevent retry loop, then relaunch
-          storageManager.updateData('plugin', {migrated: true});
-          app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
-          app.quit();
-        } else {
-          // Quit
-          app.quit();
+        // Handle user choice
+        switch (result.response) {
+          case 0: // Retry
+            app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
+            app.quit();
+            break;
+          case 1: // Skip & Continue
+            storageManager.updateData('plugin', {migrated: true});
+            app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
+            app.quit();
+            break;
+          default: // Quit
+            app.quit();
+            break;
         }
       }
     });
   });
 }
+

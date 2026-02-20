@@ -11,7 +11,11 @@ import {getAppDirectory} from './managers/dataFolder';
 import {getImageCacheManager, registerImageCacheScheme} from './managers/imageCache';
 import {initSentry} from './monitoring/sentry';
 
-export async function configureAppBeforeReady() {
+/**
+ * Configures application settings, command line switches, and protocols before the app is ready.
+ * Initializes Sentry, sets hardware acceleration, and registers custom schemes.
+ */
+export async function configureAppBeforeReady(): Promise<void> {
   const {storageManager, appStartTime} = classHolder;
 
   const {hardwareAcceleration, collectErrors} = storageManager.getData('app');
@@ -76,7 +80,11 @@ export async function configureAppBeforeReady() {
   registerImageCacheScheme();
 }
 
-export async function registerCustomProtocols() {
+/**
+ * Registers handlers for custom protocols like 'lynxplugin'.
+ * Initializes the image cache manager.
+ */
+export async function registerCustomProtocols(): Promise<void> {
   // Initialize image cache manager
   await getImageCacheManager().initialize();
 
@@ -98,7 +106,11 @@ export async function registerCustomProtocols() {
   });
 }
 
-export function handleAppReadyToShow() {
+/**
+ * Handles application initialization tasks when the app is ready to show UI.
+ * Sets up extensions, taskbar/dock state, startup behavior, login items, and background services.
+ */
+export function handleAppReadyToShow(): void {
   const {extensionManager, cardsValidator} = classHolder;
   extensionManager?.onReadyToShow();
   handleTaskbarStatus();
@@ -110,7 +122,10 @@ export function handleAppReadyToShow() {
   classHolder.shareScreenManager.start();
 }
 
-function handleTaskbarStatus() {
+/**
+ * Configures the taskbar/dock visibility and tray icon based on settings.
+ */
+function handleTaskbarStatus(): void {
   const {storageManager, appManager, trayManager} = classHolder;
 
   const {taskbarStatus} = storageManager.getData('app');
@@ -145,7 +160,10 @@ function handleTaskbarStatus() {
   }
 }
 
-function handleStartupBehavior() {
+/**
+ * Handles the initial window state (minimized/maximized/bounds) based on startup settings.
+ */
+function handleStartupBehavior(): void {
   const {storageManager, appManager} = classHolder;
 
   const {startMinimized, startMaximized, lastSize, openLastSize} = storageManager.getData('app');
@@ -171,9 +189,13 @@ function handleStartupBehavior() {
   }
 }
 
-function setLoginItemSettings() {
+/**
+ * Configures the app to open at login if enabled in settings.
+ */
+function setLoginItemSettings(): void {
   const {storageManager} = classHolder;
 
   const {systemStartup} = storageManager.getData('app');
   app.setLoginItemSettings({openAtLogin: systemStartup});
 }
+

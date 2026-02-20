@@ -24,13 +24,12 @@ import {
   getRelativePath,
   isPortable,
 } from '@lynx_main/utils';
-import lodash from 'lodash';
 
 import BaseStorage from './index';
 
 /**
- * Storage manager extending BaseStorage with high-level operations
- * Handles card management, browser data encryption, and configuration operations
+ * Storage manager extending BaseStorage with high-level operations.
+ * Handles card management, browser data encryption, and configuration operations.
  */
 class StorageManager extends BaseStorage {
   private decryptedBrowserData!: BrowserHistoryData;
@@ -40,7 +39,10 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Helper: Adds an item to a string array if it doesn't exist, updates storage, and notifies renderer
+   * Helper: Adds an item to a string array if it doesn't exist, updates storage, and notifies renderer.
+   * @param arrayKey - The key of the array in the storage.
+   * @param cardId - The ID of the card to add.
+   * @param channel - The IPC channel to notify.
    */
   private addToCardStringArray(
     arrayKey: 'autoUpdateCards' | 'autoUpdateExtensions' | 'pinnedCards',
@@ -48,7 +50,7 @@ class StorageManager extends BaseStorage {
     channel: string,
   ): void {
     const currentArray = this.getData('cards')[arrayKey];
-    if (lodash.includes(currentArray, cardId)) return;
+    if (currentArray.includes(cardId)) return;
 
     const updatedArray = [...currentArray, cardId];
 
@@ -57,7 +59,10 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Helper: Removes an item from a string array, updates storage, and notifies renderer
+   * Helper: Removes an item from a string array, updates storage, and notifies renderer.
+   * @param arrayKey - The key of the array in the storage.
+   * @param cardId - The ID of the card to remove.
+   * @param channel - The IPC channel to notify.
    */
   private removeFromCardStringArray(
     arrayKey: 'autoUpdateCards' | 'autoUpdateExtensions' | 'pinnedCards',
@@ -72,7 +77,7 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Helper: Finds or creates a card config entry and returns its index
+   * Helper: Finds or creates a card config entry and returns its index.
    */
   private findOrCreateCardConfig<T extends {cardId: string; data: any}>(
     configArray: T[],
@@ -89,7 +94,7 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Helper: Finds existing URL index by comparing normalized URLs
+   * Helper: Finds existing URL index by comparing normalized URLs.
    */
   private async findUrlIndex(addressArray: string[], url: string): Promise<number> {
     for (let i = 0; i < addressArray.length; i++) {
@@ -102,7 +107,7 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Helper: Adds a URL to a browser array, moving existing entry to front if found
+   * Helper: Adds a URL to a browser array, moving existing entry to front if found.
    */
   private async addBrowserUrl(
     arrayKey: 'recentAddress' | 'favoriteAddress' | 'historyAddress',
@@ -121,7 +126,7 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Helper: Removes a URL from a browser array
+   * Helper: Removes a URL from a browser array.
    */
   private removeBrowserUrl(arrayKey: 'recentAddress' | 'favoriteAddress' | 'historyAddress', url: string): void {
     const addressArray = this.getBrowserDataSecurely()[arrayKey];
@@ -129,10 +134,10 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Decrypts browser data and caches it for secure access
-   * Must be called before accessing browser data securely
+   * Decrypts browser data and caches it for secure access.
+   * Must be called before accessing browser data securely.
    */
-  public decryptBrowserData() {
+  public decryptBrowserData(): void {
     const rawData = this.getData('browser');
     this.decryptedBrowserData = {
       recentAddress: decryptStrings(rawData.recentAddress),
@@ -188,9 +193,9 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Gets card arguments, loading from module if not cached
+   * Gets card arguments, loading from module if not cached.
    */
-  public async getCardArgumentsById(cardId: string) {
+  public async getCardArgumentsById(cardId: string): Promise<ChosenArgumentsData> {
     const {moduleManager} = classHolder;
     const args = this.getArgs(cardId);
     if (args) return args;
@@ -205,7 +210,7 @@ class StorageManager extends BaseStorage {
     return result;
   }
 
-  public async setCardArguments(cardId: string, args: ChosenArgumentsData) {
+  public async setCardArguments(cardId: string, args: ChosenArgumentsData): Promise<void> {
     const {moduleManager} = classHolder;
     this.setArgs(cardId, args);
 
@@ -214,7 +219,7 @@ class StorageManager extends BaseStorage {
     await moduleManager?.getMethodsById(cardId)?.().saveArgs?.(result);
   }
 
-  public addInstalledCard(card: InstalledCard) {
+  public addInstalledCard(card: InstalledCard): void {
     const {cardsValidator} = classHolder;
     const storedCards = this.getData('cards').installedCards;
 
@@ -233,7 +238,7 @@ class StorageManager extends BaseStorage {
     cardsValidator?.changedCards();
   }
 
-  public removeInstalledCard(id: string) {
+  public removeInstalledCard(id: string): void {
     const {cardsValidator} = classHolder;
     const storedCards = this.getData('cards').installedCards;
 
@@ -245,7 +250,7 @@ class StorageManager extends BaseStorage {
     cardsValidator?.changedCards();
   }
 
-  public removeInstalledCardByPath(dir: string) {
+  public removeInstalledCardByPath(dir: string): void {
     const installedCards = this.getData('cards').installedCards.filter(
       card => getAbsolutePath(getExePath(), card.dir || '') !== getAbsolutePath(getExePath(), dir),
     );
@@ -253,32 +258,32 @@ class StorageManager extends BaseStorage {
     storageUtilsIpc.send.onInstalledCards(installedCards);
   }
 
-  public addAutoUpdateCard(cardId: string) {
+  public addAutoUpdateCard(cardId: string): void {
     this.addToCardStringArray('autoUpdateCards', cardId, storageUtilsChannels.onAutoUpdateCards);
   }
 
-  public removeAutoUpdateCard(cardId: string) {
+  public removeAutoUpdateCard(cardId: string): void {
     this.removeFromCardStringArray('autoUpdateCards', cardId, storageUtilsChannels.onAutoUpdateCards);
   }
 
-  public addAutoUpdateExtensions(cardId: string) {
+  public addAutoUpdateExtensions(cardId: string): void {
     this.addToCardStringArray('autoUpdateExtensions', cardId, storageUtilsChannels.onAutoUpdateExtensions);
   }
 
-  public removeAutoUpdateExtensions(cardId: string) {
+  public removeAutoUpdateExtensions(cardId: string): void {
     this.removeFromCardStringArray('autoUpdateExtensions', cardId, storageUtilsChannels.onAutoUpdateExtensions);
   }
 
-  public addPinnedCard(cardId: string) {
+  public addPinnedCard(cardId: string): void {
     this.addToCardStringArray('pinnedCards', cardId, storageUtilsChannels.onPinnedCardsChange);
   }
 
-  public removePinnedCard(cardId: string) {
+  public removePinnedCard(cardId: string): void {
     this.removeFromCardStringArray('pinnedCards', cardId, storageUtilsChannels.onPinnedCardsChange);
   }
 
   /**
-   * Generic handler for storage operations with consistent patterns
+   * Generic handler for storage operations with consistent patterns.
    */
   private handleGenericStorageOperation<T>(
     opt: StorageOperation | RecentlyOperation,
@@ -309,7 +314,7 @@ class StorageManager extends BaseStorage {
     return undefined;
   }
 
-  public pinnedCardsOpt(opt: StorageOperation, id: string, pinnedCards?: string[]) {
+  public pinnedCardsOpt(opt: StorageOperation, id: string, pinnedCards?: string[]): string[] {
     return (
       this.handleGenericStorageOperation<string[]>(opt, {
         add: () => this.addPinnedCard(id),
@@ -323,16 +328,17 @@ class StorageManager extends BaseStorage {
     );
   }
 
-  public updateRecentlyUsedCards(id: string) {
-    const newArray = lodash.without(this.getData('cards').recentlyUsedCards, id);
+  public updateRecentlyUsedCards(id: string): void {
+    // Remove if exists, then add to front
+    const newArray = this.getData('cards').recentlyUsedCards.filter(cardId => cardId !== id);
     newArray.unshift(id);
-    const result = lodash.take(newArray, 5);
+    const result = newArray.slice(0, 5);
 
     this.updateData('cards', {recentlyUsedCards: result});
     storageUtilsIpc.send.onRecentlyUsedCardsChange(result);
   }
 
-  public recentlyUsedCardsOpt(opt: RecentlyOperation, id: string) {
+  public recentlyUsedCardsOpt(opt: RecentlyOperation, id: string): string[] {
     return (
       this.handleGenericStorageOperation<string[]>(opt, {
         update: () => this.updateRecentlyUsedCards(id),
@@ -341,12 +347,12 @@ class StorageManager extends BaseStorage {
     );
   }
 
-  public setHomeCategory(data: string[]) {
+  public setHomeCategory(data: string[]): void {
     this.updateData('app', {homeCategory: data});
     storageUtilsIpc.send.onHomeCategory(data);
   }
 
-  public handleHomeCategoryOperation(opt: StorageOperation, data: string[]) {
+  public handleHomeCategoryOperation(opt: StorageOperation, data: string[]): HomeCategory {
     return (
       this.handleGenericStorageOperation<HomeCategory>(opt, {
         set: () => this.setHomeCategory(data),
@@ -356,7 +362,7 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Generic handler for card command operations (preCommands, customRun)
+   * Generic handler for card command operations (preCommands, customRun).
    */
   private handleCardCommandOperation(
     configKey: 'preCommands' | 'customRun',
@@ -407,7 +413,7 @@ class StorageManager extends BaseStorage {
     this.handleCardCommandOperation('preCommands', 'remove', cardId, index, storageUtilsIpc.send.onPreCommands);
   }
 
-  public handlePreCommandOperation(opt: StorageOperation, data: PreCommands) {
+  public handlePreCommandOperation(opt: StorageOperation, data: PreCommands): string[] {
     let result: string[] = [];
 
     switch (opt) {
@@ -424,7 +430,7 @@ class StorageManager extends BaseStorage {
         break;
 
       case 'set':
-        if (lodash.isArray(data.command)) this.setPreCommand(data.id, data.command);
+        if (Array.isArray(data.command)) this.setPreCommand(data.id, data.command);
         break;
     }
 
@@ -443,7 +449,7 @@ class StorageManager extends BaseStorage {
     this.handleCardCommandOperation('customRun', 'remove', cardId, index, storageUtilsIpc.send.onCustomRun);
   }
 
-  public handleCustomRunOperation(opt: StorageOperation, data: PreCommands) {
+  public handleCustomRunOperation(opt: StorageOperation, data: PreCommands): string[] {
     let result: string[] = [];
 
     switch (opt) {
@@ -460,7 +466,7 @@ class StorageManager extends BaseStorage {
         break;
 
       case 'set':
-        if (lodash.isArray(data.command)) this.setCustomRun(data.id, data.command);
+        if (Array.isArray(data.command)) this.setCustomRun(data.id, data.command);
         break;
     }
 
@@ -515,9 +521,9 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Updates custom run behavior for a card, merging with defaults if new
+   * Updates custom run behavior for a card, merging with defaults if new.
    */
-  public updateCustomRunBehavior(data: Partial<CustomRunBehaviorData>) {
+  public updateCustomRunBehavior(data: Partial<CustomRunBehaviorData>): void {
     if (!data.cardID) return;
 
     let customRunBehavior = this.getData('cardsConfig').customRunBehavior;
@@ -552,10 +558,10 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Updates the last window size/position
-   * Preserves previous bounds if window is maximized
+   * Updates the last window size/position.
+   * Preserves previous bounds if window is maximized.
    */
-  public updateLastSize() {
+  public updateLastSize(): void {
     const {appManager} = classHolder;
     const isMaximized = appManager?.getMainWindow()?.isMaximized() || false;
     const bounds = appManager?.getMainWindow()?.getBounds();
@@ -575,7 +581,7 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Updates browser data: updates decrypted cache and encrypts before storing
+   * Updates browser data: updates decrypted cache and encrypts before storing.
    */
   public updateBrowserDataSecurely(data: Partial<BrowserHistoryData>): void {
     const encryptedData: Partial<BrowserHistoryData> = structuredClone(data);
@@ -607,15 +613,15 @@ class StorageManager extends BaseStorage {
     this.updateData('browser', encryptedData);
   }
 
-  public async addBrowserRecent(recentEntry: string) {
+  public async addBrowserRecent(recentEntry: string): Promise<void> {
     await this.addBrowserUrl('recentAddress', recentEntry);
   }
 
   /**
-   * Adds or updates a favicon for a URL
-   * Updates existing entry if URL matches, otherwise adds new entry
+   * Adds or updates a favicon for a URL.
+   * Updates existing entry if URL matches, otherwise adds new entry.
    */
-  public async addBrowserFavIcon(url: string, icon: string, title?: string) {
+  public async addBrowserFavIcon(url: string, icon: string, title?: string): Promise<void> {
     const favIcons = this.getBrowserDataSecurely().favIcons;
     let updatedExisting: boolean = false;
 
@@ -639,9 +645,9 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Updates the title for an existing favicon entry
+   * Updates the title for an existing favicon entry.
    */
-  public async updateBrowserFavIconTitle(url: string, title: string) {
+  public async updateBrowserFavIconTitle(url: string, title: string): Promise<void> {
     const favIcons = this.getBrowserDataSecurely().favIcons;
 
     for (const favIcon of favIcons) {
@@ -656,27 +662,27 @@ class StorageManager extends BaseStorage {
     }
   }
 
-  public async addBrowserFavorite(favoriteEntry: string) {
+  public async addBrowserFavorite(favoriteEntry: string): Promise<void> {
     await this.addBrowserUrl('favoriteAddress', favoriteEntry);
   }
 
-  public async addBrowserHistory(historyEntry: string) {
+  public async addBrowserHistory(historyEntry: string): Promise<void> {
     await this.addBrowserUrl('historyAddress', historyEntry);
   }
 
-  public removeBrowserRecent(url: string) {
+  public removeBrowserRecent(url: string): void {
     this.removeBrowserUrl('recentAddress', url);
   }
 
-  public removeBrowserFavorite(url: string) {
+  public removeBrowserFavorite(url: string): void {
     this.removeBrowserUrl('favoriteAddress', url);
   }
 
-  public removeBrowserHistory(url: string) {
+  public removeBrowserHistory(url: string): void {
     this.removeBrowserUrl('historyAddress', url);
   }
 
-  public setShowConfirm(type: ConfirmMenuTypes, enable: boolean) {
+  public setShowConfirm(type: ConfirmMenuTypes, enable: boolean): void {
     const prevState = this.getData('app');
     prevState[type] = enable;
 
@@ -685,7 +691,7 @@ class StorageManager extends BaseStorage {
     this.write();
   }
 
-  public addReadNotif(id: string) {
+  public addReadNotif(id: string): void {
     const prevReadNotifs = this.getData('notification').readNotifs;
 
     if (prevReadNotifs.includes(id)) return;
@@ -694,10 +700,10 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Sets terminal pre-commands for a card
-   * Adds platform-specific line endings (CRLF for Windows, LF for Unix)
+   * Sets terminal pre-commands for a card.
+   * Adds platform-specific line endings (CRLF for Windows, LF for Unix).
    */
-  public setCardTerminalPreCommands(id: string, commands: string[]) {
+  public setCardTerminalPreCommands(id: string, commands: string[]): void {
     const commandLines = commands.map(command => `${command}${terminalLineEnding}`);
     let cardTerminalPreCommands = this.getData('cards').cardTerminalPreCommands;
 
@@ -713,9 +719,9 @@ class StorageManager extends BaseStorage {
   }
 
   /**
-   * Unassigns a card and optionally clears all its configurations
+   * Unassigns a card and optionally clears all its configurations.
    */
-  public unassignCard(id: string, clearConfigs: boolean) {
+  public unassignCard(id: string, clearConfigs: boolean): void {
     const cards = this.getData('cards');
     const cardsConfig = this.getData('cardsConfig');
 

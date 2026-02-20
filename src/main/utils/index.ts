@@ -14,8 +14,8 @@ import calcFolderSize from './calcFolderSize';
 /**
  * Opens a system file/folder dialog and returns the selected path.
  *
- * @param {'openDirectory' | 'openFile'} options - Select folder or file
- * @returns {string | undefined} The selected file/folder path, or undefined if cancelled.
+ * @param options - Electron OpenDialogOptions to configure the dialog (e.g. title, properties)
+ * @returns {Promise<string | undefined>} The selected file/folder path, or undefined if cancelled.
  */
 export async function openDialog(options: OpenDialogOptions): Promise<string | undefined> {
   const {appManager} = classHolder;
@@ -33,11 +33,10 @@ export async function openDialog(options: OpenDialogOptions): Promise<string | u
 }
 
 /**
- * Check if a given path exists and is accessible.
+ * Check if a given path exists and is accessible for reading.
  *
- * @param {string} path - The path to check.
- * @returns {Promise<boolean>} A promise that resolves with a boolean value
- * indicating whether the path exists and is accessible.
+ * @param {string} path - The absolute path to check.
+ * @returns {Promise<boolean>} A promise that resolves to true if the path exists and is readable, false otherwise.
  */
 export const checkPathExists = async (path: string): Promise<boolean> => {
   try {
@@ -57,8 +56,8 @@ export const checkPathExists = async (path: string): Promise<boolean> => {
 /**
  * Calculates the total size of a folder and its contents recursively.
  *
- * @param {string} folderPath - The path of the folder to calculate the size for.
- * @returns {Promise<number>} A promise that resolves with the total size of the folder in bytes.
+ * @param {string} folderPath - The absolute path of the folder to calculate the size for.
+ * @returns {Promise<string>} A promise that resolves with the formatted total size of the folder (e.g. "1.5 MB"). Returns '0' on error.
  */
 export async function calculateFolderSize(folderPath: string): Promise<string> {
   try {
@@ -71,6 +70,12 @@ export async function calculateFolderSize(folderPath: string): Promise<string> {
   }
 }
 
+/**
+ * Gets the creation date (birthtime) of a directory formatted as a string.
+ *
+ * @param dir - The path to the directory.
+ * @returns {Promise<string>} The formatted creation date (YYYY-MM-DD HH:mm:ss) or empty string if not found/error.
+ */
 export async function getDirCreationDate(dir: string): Promise<string> {
   const dirPath = resolve(dir);
 
@@ -94,7 +99,9 @@ export async function getDirCreationDate(dir: string): Promise<string> {
 
 /**
  * Gets the highest available PowerShell version on the system.
- * @returns The major version number of PowerShell, or 0 if PowerShell is not found.
+ * Checks for `pwsh` (PowerShell Core) first, then `powershell` (Windows PowerShell).
+ *
+ * @returns {number} The major version number of PowerShell, or -1 if PowerShell is not found or version is too low.
  */
 export function getPowerShellVersion(): number {
   const command = '$PSVersionTable.PSVersion.Major';
@@ -130,8 +137,12 @@ export function getPowerShellVersion(): number {
 }
 
 /**
- * Determines the appropriate shell based on the operating system and PowerShell version.
- * @returns The shell command to use.
+ * Determines the appropriate shell executable based on the operating system.
+ * - macOS: zsh
+ * - Linux: bash
+ * - Windows: pwsh.exe (if v7+), powershell.exe (if v5+), or cmd.exe fallback
+ *
+ * @returns {string} The shell command to use.
  */
 export function determineShell(): string {
   switch (platform()) {
@@ -150,10 +161,18 @@ export function determineShell(): string {
   }
 }
 
-export function getSystemDarkMode() {
+/**
+ * Gets the system's current dark mode preference.
+ * @returns {'dark' | 'light'} The system theme preference.
+ */
+export function getSystemDarkMode(): 'dark' | 'light' {
   return nativeTheme.shouldUseDarkColors ? 'dark' : 'light';
 }
 
+/**
+ * Determines if the app should be in dark mode based on settings and system preference.
+ * @returns {boolean} True if dark mode should be enabled.
+ */
 export function isDark(): boolean {
   const {storageManager} = classHolder;
   const darkMode = storageManager.getData('app').darkMode;
@@ -167,13 +186,22 @@ export function isDark(): boolean {
   }
 }
 
-export function getWebContentsIfAvailable(window: BrowserWindow | undefined) {
+/**
+ * Safely gets the WebContents of a window if it hasn't been destroyed.
+ * @param window - The BrowserWindow to get WebContents from.
+ * @returns {Electron.WebContents | undefined} The WebContents or undefined.
+ */
+export function getWebContentsIfAvailable(window: BrowserWindow | undefined): Electron.WebContents | undefined {
   if (window && !window.isDestroyed() && !window.webContents.isDestroyed()) return window.webContents;
 
   return undefined;
 }
 
-export function noticeAllWindowsDarkMode(darkMode: DarkModeTypes) {
+/**
+ * Notifies the renderer process about dark mode changes.
+ * @param darkMode - The new dark mode setting.
+ */
+export function noticeAllWindowsDarkMode(darkMode: DarkModeTypes): void {
   const value = darkMode === 'system' ? getSystemDarkMode() : darkMode;
   const isDark = value === 'dark';
 
@@ -184,18 +212,32 @@ function getWindowBgColor(isDark: boolean) {
   return isDark ? '#212121' : '#ffffff';
 }
 
-export function getWindowColor(preferred?: 'dark' | 'light') {
+/**
+ * Gets the window background color based on the current theme or preference.
+ * @param preferred - Optional preferred theme ('dark' or 'light').
+ * @returns {string} The hex color code.
+ */
+export function getWindowColor(preferred?: 'dark' | 'light'): string {
   if (preferred) return getWindowBgColor(preferred === 'dark');
 
   return getWindowBgColor(isDark());
 }
 
+/**
+ * Checks if the application is running in portable mode.
+ * @returns {'win' | 'linux' | null} The platform if portable, or null if standard installation.
+ */
 export function isPortable(): 'win' | 'linux' | null {
   if (process.env.PORTABLE_EXECUTABLE_FILE) return 'win';
   if (process.env.APPIMAGE) return 'linux';
   return null;
 }
 
+/**
+ * Gets the directory path of the executable.
+ * Handles portable versions and standard installations.
+ * @returns {string} The absolute path to the executable's directory.
+ */
 export function getExePath(): string {
   try {
     const winPortablePath = process.env.PORTABLE_EXECUTABLE_FILE && dirname(process.env.PORTABLE_EXECUTABLE_FILE);
@@ -211,6 +253,13 @@ export function getExePath(): string {
   }
 }
 
+/**
+ * Calculates a relative path from a base path to a target path.
+ * If target path is already relative, returns it as is.
+ * @param basePath - The base directory.
+ * @param targetPath - The target file or directory.
+ * @returns {string} The relative path.
+ */
 export function getRelativePath(basePath: string, targetPath: string): string {
   try {
     if (!isAbsolute(targetPath)) {
@@ -223,6 +272,13 @@ export function getRelativePath(basePath: string, targetPath: string): string {
   }
 }
 
+/**
+ * Resolves a relative path to an absolute path based on a base path.
+ * If target path is already absolute, returns it as is.
+ * @param basePath - The base directory.
+ * @param targetPath - The target file or directory (absolute or relative).
+ * @returns {string} The absolute path.
+ */
 export function getAbsolutePath(basePath: string, targetPath: string): string {
   try {
     if (isAbsolute(targetPath)) {
@@ -235,7 +291,11 @@ export function getAbsolutePath(basePath: string, targetPath: string): string {
   }
 }
 
-export function RelaunchApp(saveLastSize: boolean = true) {
+/**
+ * Relaunches the application.
+ * @param saveLastSize - Whether to save the window size/position before relaunching.
+ */
+export function RelaunchApp(saveLastSize: boolean = true): void {
   const {storageManager} = classHolder;
   if (saveLastSize) storageManager.updateLastSize();
   app.relaunch({execPath: process.env.PORTABLE_EXECUTABLE_FILE || process.env.APPIMAGE});
@@ -259,9 +319,11 @@ const USER_AGENT_CONFIG = {
 };
 
 /**
- * Builds a user agent string based on the specified type
+ * Builds a user agent string based on the specified type.
+ * @param type - The type of user agent to generate.
+ * @returns {string} The user agent string.
  */
-export function getUserAgent(type?: AgentTypes) {
+export function getUserAgent(type?: AgentTypes): string {
   const targetType: AgentTypes = type || classHolder.storageManager.getData('browser').userAgent || 'lynxhub';
 
   const osString = USER_AGENT_CONFIG.osMap[platform()] || USER_AGENT_CONFIG.osMap.win32;
@@ -336,7 +398,11 @@ export function decryptStrings(encryptedData: string[]): string[] {
   return handleSafeStorageOperation(encryptedData, 'decrypt', 'decryption');
 }
 
-export const getPrivilegeText = () => {
+/**
+ * Gets the text representation of required privileges based on OS.
+ * @returns {'administrator' | 'sudo' | 'elevated privileges'}
+ */
+export const getPrivilegeText = (): string => {
   if (isWin) {
     return 'administrator';
   } else if (isMac || isLinux) {
@@ -345,6 +411,11 @@ export const getPrivilegeText = () => {
   return 'elevated privileges';
 };
 
+/**
+ * Checks if Git is installed and returns the version.
+ * @returns {Promise<string>} The git version string.
+ * @throws Will reject if git is not found or fails.
+ */
 export async function isGitInstalled(): Promise<string> {
   return new Promise((resolve, reject) => {
     const commandProcess = spawn('git', ['--version']);
@@ -388,6 +459,11 @@ export async function isGitInstalled(): Promise<string> {
   });
 }
 
+/**
+ * Checks if PowerShell 7+ (pwsh) is installed.
+ * @returns {Promise<string>} The PowerShell version string (e.g. "V7.4.1").
+ * @throws Will reject if pwsh is not found or version is < 7.
+ */
 export async function isPowerShell7Installed(): Promise<string> {
   return new Promise((resolve, reject) => {
     // Flag to ensure the promise is only settled once.
@@ -445,3 +521,4 @@ export async function isPowerShell7Installed(): Promise<string> {
     });
   });
 }
+
