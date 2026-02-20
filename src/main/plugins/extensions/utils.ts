@@ -1,48 +1,64 @@
 import MainWindowManager from '@lynx_main/mainWindow';
 import StorageManager from '@lynx_main/storage/storageOperations';
-import pty from 'node-pty';
+import * as pty from 'node-pty';
 
 import ModuleManager from '../modules';
 import {MainExtensionUtils} from './types';
 
+/**
+ * Utility class implementation for extensions.
+ * Provides access to core managers and node-pty.
+ */
 export default class ExtensionUtils implements MainExtensionUtils {
-  private managerPromises: Map<string, Promise<any>> = new Map();
-  private resolvers: Map<string, (manager: any) => void> = new Map();
   public nodePty = pty;
 
+  private storageResolver!: (manager: StorageManager) => void;
+  private appResolver!: (manager: MainWindowManager) => void;
+  private moduleResolver!: (manager: ModuleManager) => void;
+
+  private readonly storagePromise: Promise<StorageManager>;
+  private readonly appPromise: Promise<MainWindowManager>;
+  private readonly modulePromise: Promise<ModuleManager>;
+
   constructor() {
-    const managers = ['storage', 'app', 'module'];
-    managers.forEach(manager => {
-      this.managerPromises.set(
-        manager,
-        new Promise(resolve => {
-          this.resolvers.set(manager, resolve);
-        }),
-      );
+    this.storagePromise = new Promise(resolve => {
+      this.storageResolver = resolve;
+    });
+    this.appPromise = new Promise(resolve => {
+      this.appResolver = resolve;
+    });
+    this.modulePromise = new Promise(resolve => {
+      this.moduleResolver = resolve;
     });
   }
 
-  getStorageManager() {
-    return this.managerPromises.get('storage')!;
+  public getStorageManager(): Promise<StorageManager> {
+    return this.storagePromise;
   }
 
-  getAppManager() {
-    return this.managerPromises.get('app')!;
+  public getAppManager(): Promise<MainWindowManager> {
+    return this.appPromise;
   }
 
-  getModuleManager() {
-    return this.managerPromises.get('module')!;
+  public getModuleManager(): Promise<ModuleManager> {
+    return this.modulePromise;
   }
 
-  setStorageManager(manager: StorageManager) {
-    this.resolvers.get('storage')!(manager);
+  public setStorageManager(manager: StorageManager): void {
+    if (this.storageResolver) {
+      this.storageResolver(manager);
+    }
   }
 
-  setAppManager(manager: MainWindowManager) {
-    this.resolvers.get('app')!(manager);
+  public setAppManager(manager: MainWindowManager): void {
+    if (this.appResolver) {
+      this.appResolver(manager);
+    }
   }
 
-  setModuleManager(manager: ModuleManager) {
-    this.resolvers.get('module')!(manager);
+  public setModuleManager(manager: ModuleManager): void {
+    if (this.moduleResolver) {
+      this.moduleResolver(manager);
+    }
   }
 }

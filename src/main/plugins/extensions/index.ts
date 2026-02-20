@@ -7,9 +7,13 @@ import {captureException} from '@sentry/electron/main';
 
 import ModuleManager from '../modules';
 import ExtensionApi from './api';
-import {EMenuItem, ExtensionImport_Main} from './types';
+import {ElectronMenuItem, ExtensionImport_Main} from './types';
 import ExtensionUtils from './utils';
 
+/**
+ * Manages the lifecycle and loading of extensions (plugins).
+ * Handles importing, initialization, and communication with extensions.
+ */
 export default class ExtensionManager {
   private readonly extensionUtils: ExtensionUtils;
   private readonly extensionApi: ExtensionApi;
@@ -19,31 +23,42 @@ export default class ExtensionManager {
     this.extensionApi = new ExtensionApi();
   }
 
-  private async importDevExtension() {
+  /**
+   * Imports the development extension if in dev mode.
+   * Scans the specific local path for the extension entry point.
+   */
+  private async importDevExtension(): Promise<void> {
     try {
       const initial: ExtensionImport_Main = await import(
         /* @vite-ignore */ '../../../../extension/src/main/lynxExtension'
       );
       await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
     } catch (e) {
-      console.log('No dev extension found, skipping...');
+      console.log('No dev extension found or failed to load, skipping...', e);
     }
   }
 
-  private async importProductionExtension(extensionPath: string) {
+  /**
+   * Imports a production extension from the given path.
+   * @param extensionPath - The root path of the extension.
+   */
+  private async importProductionExtension(extensionPath: string): Promise<void> {
     try {
       const fullExtensionPath = path.join(extensionPath, 'scripts', 'main', 'mainEntry.cjs');
       const extensionUrl = `file://${fullExtensionPath}`;
       const initial: ExtensionImport_Main = await import(extensionUrl);
       await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
     } catch (e) {
-      // TODO: show ui to user failed to load
-      console.error('Failed to load extension main entry: ', extensionPath, 'Error: ', e);
+      console.error(`Failed to load extension from ${extensionPath}:`, e);
       captureException(e);
     }
   }
 
-  public async importPlugins(extensionFolders: string[]) {
+  /**
+   * Imports and initializes all plugins/extensions.
+   * @param extensionFolders - List of folder paths to load extensions from.
+   */
+  public async importPlugins(extensionFolders: string[]): Promise<void> {
     if (isDev()) {
       await this.importDevExtension();
     } else {
@@ -51,31 +66,57 @@ export default class ExtensionManager {
     }
   }
 
-  public setStorageManager(manager: StorageManager) {
+  /**
+   * Sets the StorageManager instance for extensions to use.
+   * @param manager - The StorageManager instance.
+   */
+  public setStorageManager(manager: StorageManager): void {
     this.extensionUtils.setStorageManager(manager);
   }
 
-  public setAppManager(manager: ElectronAppManager) {
+  /**
+   * Sets the ElectronAppManager instance for extensions to use.
+   * @param manager - The ElectronAppManager instance.
+   */
+  public setAppManager(manager: ElectronAppManager): void {
     this.extensionUtils.setAppManager(manager);
   }
 
-  public setModuleManager(manager: ModuleManager) {
+  /**
+   * Sets the ModuleManager instance for extensions to use.
+   * @param manager - The ModuleManager instance.
+   */
+  public setModuleManager(manager: ModuleManager): void {
     this.extensionUtils.setModuleManager(manager);
   }
 
-  public listenForChannels() {
+  /**
+   * Triggers the `listenForChannels` lifecycle event for all extensions.
+   */
+  public listenForChannels(): void {
     this.extensionApi.listenForChannels();
   }
 
-  public async onAppReady() {
+  /**
+   * Triggers the `onAppReady` lifecycle event for all extensions.
+   */
+  public async onAppReady(): Promise<void> {
     await this.extensionApi.onAppReady();
   }
 
-  public onReadyToShow() {
+  /**
+   * Triggers the `onReadyToShow` lifecycle event for all extensions.
+   */
+  public onReadyToShow(): void {
     this.extensionApi.onReadyToShow();
   }
 
-  public getTrayItems(staticItems: EMenuItem[]) {
+  /**
+   * Retrieves and merges tray items from all extensions.
+   * @param staticItems - The initial list of tray items.
+   * @returns The combined list of tray items.
+   */
+  public getTrayItems(staticItems: ElectronMenuItem[]): ElectronMenuItem[] {
     return this.extensionApi.getTrayItems(staticItems);
   }
 }
