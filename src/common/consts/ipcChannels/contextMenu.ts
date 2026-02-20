@@ -1,4 +1,8 @@
-const contextMenuChannels = {
+/**
+ * IPC channels for context menu actions.
+ * Handles right-click menus, text editing operations, and specific context actions.
+ */
+export const contextMenuChannels = {
   rightClick: 'context:rightClick',
   onFind: 'context:find-in-page',
   onTerminateAI: 'context:on-terminate-ai',
@@ -41,4 +45,3 @@ const contextMenuChannels = {
   openCloseApp: 'context:open-close-app',
 } as const;
 
-export default contextMenuChannels;

@@ -1,4 +1,4 @@
-import contextMenuChannels from '@lynx_common/consts/ipcChannels/contextMenu';
+import { contextMenuChannels } from '@lynx_common/consts/ipcChannels/contextMenu';
 import {ContextResizeData} from '@lynx_common/types';
 import {ContextMenuVolumeData} from '@lynx_common/types/ipc';
 import {NavHistory} from '@lynx_common/types/ipc';

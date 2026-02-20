@@ -1,5 +1,5 @@
 
-import gitChannels from '@lynx_common/consts/ipcChannels/git';
+import { gitChannels } from '@lynx_common/consts/ipcChannels/git';
 import {RepositoryInfo} from '@lynx_common/types';
 import {ShallowCloneOptions} from '@lynx_common/types/git';
 import {GitProgressState, MainHT} from '@lynx_common/types/ipc';

@@ -1,4 +1,8 @@
-const browserChannels = {
+/**
+ * IPC channels for browser-related functionality.
+ * Handles tab management, navigation, zoom, volume, and other webview interactions.
+ */
+export const browserChannels = {
   createBrowser: 'browser:create-browser',
   removeBrowser: 'browser:remove-browser',
   loadURL: 'browser:load-url',
@@ -56,6 +60,4 @@ const browserChannels = {
   onTabMutedUpdate: 'volume:onTabMutedUpdate',
 
   onAudioStateChange: 'volume:onAudioStateChange',
-};
-
-export default browserChannels;
+} as const;

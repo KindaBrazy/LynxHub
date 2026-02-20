@@ -1,4 +1,4 @@
-import windowDialogsChannels from '@lynx_common/consts/ipcChannels/dialogsWindow';
+import { windowDialogsChannels } from '@lynx_common/consts/ipcChannels/dialogsWindow';
 
 import lynxIpc from './lynxIpc';
 

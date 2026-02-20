@@ -1,5 +1,5 @@
 
-import appChannels from '@lynx_common/consts/ipcChannels/application';
+import { appChannels } from '@lynx_common/consts/ipcChannels/application';
 import {CustomNotificationInfo, HeroToastPlacement} from '@lynx_common/types';
 import {
   AppUpdateEventTypes,
