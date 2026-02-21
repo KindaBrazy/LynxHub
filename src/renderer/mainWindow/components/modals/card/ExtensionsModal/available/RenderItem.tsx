@@ -1,11 +1,10 @@
-import {Button} from '@heroui/react';
+import {Avatar, Button, Chip} from '@heroui/react';
 import {extractGitUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Star} from '@solar-icons/react-perf/Bold';
 import {Home2} from '@solar-icons/react-perf/BoldDuotone';
-import {Avatar, List, Tag, Typography} from 'antd';
 import {capitalize} from 'lodash';
-import {useCallback, useState} from 'react';
+import {memo, useCallback, useState} from 'react';
 import Highlighter from 'react-highlight-words';
 import {useDispatch} from 'react-redux';
 
@@ -14,7 +13,7 @@ import {useTabsState} from '../../../../../redux/reducers/tabs';
 import {AppDispatch} from '../../../../../redux/store';
 import {formatNumber} from '../../../../../utils';
 import {lynxTopToast} from '../../../../../utils/hooks';
-import {ExtensionsInfo} from './index';
+import {ExtensionsInfo} from '../types';
 
 type Props = {
   item: ExtensionsInfo;
@@ -24,17 +23,19 @@ type Props = {
 };
 
 /** Render available modules to install. */
-export default function RenderItem({item, updateTable, dir, searchValue}: Props) {
+const RenderItem = memo(({item, updateTable, dir, searchValue}: Props) => {
   const [installing, setInstalling] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
   const activeTab = useTabsState('activeTab');
+
+  const {owner, repo, avatarUrl} = extractGitUrl(item.url);
 
   const install = useCallback(() => {
     setInstalling(true);
     gitIpc
       .cloneShallowPromise({
         url: item.url || '',
-        directory: `${dir}/${extractGitUrl(item.url).repo || ''}`,
+        directory: `${dir}/${repo || ''}`,
         singleBranch: true,
         depth: 1,
       })
@@ -43,75 +44,83 @@ export default function RenderItem({item, updateTable, dir, searchValue}: Props)
         updateTable();
       })
       .catch(() => {
-        lynxTopToast(dispatch).error('Convert default export to named');
+        lynxTopToast(dispatch).error('Error installing extension');
       })
       .finally(() => {
         setInstalling(false);
       });
-  }, [item.url, item.title, dispatch]);
+  }, [item.url, dir, repo, dispatch, updateTable]);
 
-  const homePage = () => {
+  const homePage = useCallback(() => {
     dispatch(modalActions.openReadme({url: item.url, title: item.title, tabID: activeTab}));
-  };
+  }, [dispatch, item.url, item.title, activeTab]);
 
   return (
-    <>
-      <List.Item
-        className={
-          'mb-2 h-20 rounded-lg border-2 bg-gray-50 px-2! transition duration-300 hover:bg-gray-200 ' +
-          'border-transparent hover:border-white hover:shadow-lg dark:bg-black/15' +
-          ' dark:hover:border-black dark:hover:bg-black/25'
-        }
-        extra={
-          <div className="flex h-full flex-row items-center justify-center gap-x-1 text-gray-500">
-            <Button variant="light" color="success" onPress={install} isLoading={installing} isDisabled={installing}>
-              {!installing && 'Install'}
-            </Button>
-            <Button size="sm" variant="light" onPress={homePage} isIconOnly>
-              <Home2 className="size-4" />
-            </Button>
-          </div>
-        }
-        key={item.title}>
-        <List.Item.Meta
-          description={
-            <Typography.Text ellipsis={{tooltip: true}} className="text-gray-500 dark:text-gray-400">
+    <div
+      className={
+        'mb-2 flex w-full flex-row items-center justify-between rounded-lg border-2 bg-content2 px-4 py-3 ' +
+        'border-transparent transition duration-300 hover:border-default-200 hover:bg-content3 hover:shadow-md'
+      }>
+      <div className="flex min-w-0 flex-1 flex-row items-center gap-4">
+        <Avatar src={avatarUrl} size="lg" isBordered className="shrink-0" />
+        <div className="flex min-w-0 flex-col gap-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noreferrer"
+              className="truncate text-large font-semibold hover:underline">
               <Highlighter
-                className="flex"
-                highlightTag="div"
-                highlightClassName="bg-warning/50"
+                className="inline-block"
+                highlightTag="span"
+                textToHighlight={item.title}
+                highlightClassName="bg-warning/70 rounded-sm px-0.5"
                 searchWords={searchValue.split(' ')}
-                textToHighlight={item.description || ''}
+                autoEscape={true}
               />
-            </Typography.Text>
-          }
-          title={
-            <div className="flex flex-row space-x-1">
-              <Typography.Link
-                onClick={() => {
-                  window.open(item.url);
-                }}
-                className="mr-2">
-                <Highlighter
-                  className="flex"
-                  highlightTag="div"
-                  textToHighlight={item.title}
-                  highlightClassName="bg-warning/70"
-                  searchWords={searchValue.split(' ')}
-                />
-              </Typography.Link>
-              <Tag variant="filled">{capitalize(extractGitUrl(item.url).owner)}</Tag>
-              {item.stars && (
-                <Tag variant="filled" className="flex flex-row items-center justify-center gap-x-1">
-                  <Star className={item.stars >= 1000 ? 'fill-yellow-400' : 'fill-yellow-200'} />
-                  {formatNumber(item.stars)}
-                </Tag>
-              )}
-            </div>
-          }
-          avatar={<Avatar size={54} src={extractGitUrl(item.url).avatarUrl} />}
-        />
-      </List.Item>
-    </>
+            </a>
+            <Chip size="sm" variant="flat" color="default">
+              {capitalize(owner)}
+            </Chip>
+            {item.stars && (
+              <Chip
+                size="sm"
+                variant="flat"
+                color="warning"
+                startContent={<Star className={item.stars >= 1000 ? 'text-yellow-500' : 'text-yellow-600'} size={14} />}>
+                {formatNumber(item.stars)}
+              </Chip>
+            )}
+          </div>
+          <div className="truncate text-small text-default-500">
+            <Highlighter
+              className="inline-block"
+              highlightTag="span"
+              highlightClassName="bg-warning/50 rounded-sm px-0.5"
+              searchWords={searchValue.split(' ')}
+              textToHighlight={item.description || ''}
+              autoEscape={true}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="ml-4 flex shrink-0 flex-row items-center gap-2">
+        <Button
+          size="sm"
+          variant="flat"
+          color="success"
+          onPress={install}
+          isLoading={installing}
+          isDisabled={installing}>
+          {!installing && 'Install'}
+        </Button>
+        <Button size="sm" variant="light" onPress={homePage} isIconOnly>
+          <Home2 className="size-5 text-default-500" />
+        </Button>
+      </div>
+    </div>
   );
-}
+});
+
+export default RenderItem;

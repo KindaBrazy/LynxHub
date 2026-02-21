@@ -1,10 +1,9 @@
-import {Input, Progress} from '@heroui/react';
+import {Card, CardBody, Input, Progress} from '@heroui/react';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {extractGitUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
-import {Card} from 'antd';
 import {motion} from 'framer-motion';
 import {capitalize, startCase} from 'lodash';
 import {useCallback, useEffect, useState} from 'react';
@@ -45,7 +44,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
     } else {
       setAlreadyInstalled(false);
     }
-  }, [downloadBox]);
+  }, [downloadBox, installedExtensions]);
 
   const readClipboard = useCallback(async () => {
     try {
@@ -77,7 +76,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
     if (isFocused) {
       readClipboard();
     }
-  }, [isFocused]);
+  }, [isFocused, readClipboard]);
 
   useEffect(() => {
     setCloning(false);
@@ -87,7 +86,7 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
     setResultUrl('');
 
     if (visible) readClipboard();
-  }, [visible]);
+  }, [visible, readClipboard]);
 
   const onValueChange = useCallback((text: string) => {
     const lowerCaseText = text.toLowerCase();
@@ -138,14 +137,18 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
     const removeListener = gitIpc.onProgress(onProgress);
 
     return () => removeListener();
-  }, [visible]);
+  }, [visible, dispatch, updateTable]);
 
   if (!visible) return null;
 
   return (
     <>
       {!cloning ? (
-        <motion.div initial="init" animate="animate" variants={tabContentVariants}>
+        <motion.div
+          className="flex flex-col gap-y-2 items-center"
+          initial="init"
+          animate="animate"
+          variants={tabContentVariants}>
           <Input
             variant="flat"
             color="default"
@@ -159,44 +162,42 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
           />
           {downloadBox && (
             <Card
-              className={
-                'group mb-4 flex justify-center overflow-hidden bg-default-100 text-center' +
-                ` transition duration-300 ${!alreadyInstalled && 'hover:bg-default-200'}`
-              }
-              onClick={clone}
-              variant="borderless"
-              hoverable={!alreadyInstalled}>
-              {alreadyInstalled ? (
-                <Card.Meta title={<span className="text-success">This extension has already been installed.</span>} />
-              ) : (
-                <>
-                  <Download
-                    className={'size-10 group-hover:opacity-100 left-7 opacity-50 absolute transition duration-300'}
-                  />
-                  <Card.Meta
-                    title={
-                      <div className="flex flex-row items-center justify-center">
-                        <span>{startCase(downloadBox.name)}</span>
-                        <span className="mx-1 scale-85 opacity-75">by</span>
-                        <span>{startCase(downloadBox.owner)}</span>
-                      </div>
-                    }
-                    description={downloadBox.url}
-                  />
-                </>
-              )}
+              className={`mb-4 overflow-hidden bg-default-100 text-center transition duration-300 w-[90%] ${
+                !alreadyInstalled ? 'hover:bg-default-200' : ''
+              }`}
+              isPressable={!alreadyInstalled}
+              onPress={clone}
+              shadow="none">
+              <CardBody className="items-center justify-center p-4">
+                {alreadyInstalled ? (
+                  <span className="font-semibold text-success">This extension has already been installed.</span>
+                ) : (
+                  <div className="relative flex w-full flex-col items-center justify-center">
+                    <Download className="absolute left-7 size-10 opacity-50 transition duration-300 group-hover:opacity-100" />
+                    <div className="flex flex-row items-center justify-center text-large font-bold">
+                      <span>{startCase(downloadBox.name)}</span>
+                      <span className="mx-1 scale-85 opacity-75">by</span>
+                      <span>{startCase(downloadBox.owner)}</span>
+                    </div>
+                    <div className="text-small text-default-500">{downloadBox.url}</div>
+                  </div>
+                )}
+              </CardBody>
             </Card>
           )}
         </motion.div>
       ) : (
-        <Card variant="borderless" className="bg-default-100">
-          <Progress
-            label={`Stage: ${capitalize(cloneProgress.stage)} | 
-                    Item: ${cloneProgress.processed} | Total: ${cloneProgress.total}`}
-            color="secondary"
-            value={cloneProgress.progress}
-            showValueLabel
-          />
+        <Card shadow="none" className="bg-default-100">
+          <CardBody>
+            <Progress
+              label={`Stage: ${capitalize(cloneProgress.stage)} | Item: ${cloneProgress.processed} | Total: ${
+                cloneProgress.total
+              }`}
+              color="secondary"
+              value={cloneProgress.progress}
+              showValueLabel
+            />
+          </CardBody>
         </Card>
       )}
     </>

@@ -8,3 +8,10 @@ export type InstalledExtensionsTable = {
   remove: ReactNode;
   disable: ReactNode;
 };
+
+export type ExtensionsInfo = {
+  title: string;
+  description: string;
+  url: string;
+  stars?: number;
+};
