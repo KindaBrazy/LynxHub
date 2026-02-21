@@ -1,6 +1,6 @@
 import {ExtensionData_Renderer, ExtensionImport_Renderer} from '@lynx_common/types/plugins/extensions';
 import {ExtensionRendererApi} from '@lynx_common/types/plugins/extensions/api';
-import {ExtensionEvents, ExtensionEvents_IPC} from '@lynx_common/types/plugins/extensions/events';
+import {ExtensionEvents} from '@lynx_common/types/plugins/extensions/events';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import mitt, {Emitter} from 'mitt';
 
@@ -8,10 +8,8 @@ import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByP
 import {initPluginBrowserSentry} from '../sentry';
 
 type EmitterType = Emitter<ExtensionEvents> & {all: Map<string, unknown[]>};
-type EmitterType_IPC = Emitter<ExtensionEvents_IPC> & {all: Map<string, unknown[]>};
 
 const emitter: EmitterType = mitt<ExtensionEvents>();
-const emitter_ipc: EmitterType_IPC = mitt<ExtensionEvents_IPC>();
 
 export const extensionsData: ExtensionData_Renderer = {
   titleBar: {
@@ -216,7 +214,8 @@ export const extensionRendererApi: ExtensionRendererApi = {
     },
   },
   router: {
-    add: function (routeObject: []): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    add: function (routeObject: any[]): void {
       extensionsData.router.add = [...extensionsData.router.add, ...routeObject];
     },
     replace: {
@@ -445,15 +444,6 @@ export const extensionRendererApi: ExtensionRendererApi = {
     emit: emitter.emit,
     getListenerCount: (eventName: keyof ExtensionEvents) => {
       const listeners = emitter.all.get(eventName);
-      return listeners ? listeners.length : 0;
-    },
-  },
-  events_ipc: {
-    on: emitter_ipc.on,
-    off: emitter_ipc.off,
-    emit: emitter_ipc.emit,
-    getListenerCount: (eventName: keyof ExtensionEvents_IPC) => {
-      const listeners = emitter_ipc.all.get(eventName);
       return listeners ? listeners.length : 0;
     },
   },

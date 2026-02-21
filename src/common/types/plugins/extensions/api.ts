@@ -1,11 +1,12 @@
 import type {Reducer} from '@reduxjs/toolkit';
 import type {Scope} from '@sentry/browser';
+import type {IpcRenderer} from 'electron';
 import type {Emitter} from 'mitt';
 import type {FC} from 'react';
 
 import type {AvailablePageIDs} from '../../../consts';
 import type {ArgumentsData, CardData, CardModules, CardRendererMethods, LoadedCardData} from '../modules';
-import type {ExtensionEvents, ExtensionEvents_IPC} from './events';
+import type {ExtensionEvents} from './events';
 import type {
   AddMenuType,
   FcProp,
@@ -16,11 +17,41 @@ import type {
   FcPropSearchResult,
 } from './index';
 
+/**
+ * Data related to modules available to extensions.
+ */
 export type ModuleData = {
+  /**
+   * All available modules.
+   */
   allModules: CardModules;
+
+  /**
+   * All available cards.
+   */
   allCards: CardData[];
+
+  /**
+   * Hook to get arguments for a specific card ID.
+   * @param id - The ID of the card.
+   * @returns The arguments data or undefined.
+   */
   useGetArgumentsByID: (id: string) => ArgumentsData | undefined;
+
+  /**
+   * Hook to get cards associated with a specific path (page).
+   * @param path - The page ID.
+   * @returns Array of loaded card data or undefined.
+   */
   useGetCardsByPath: (path: AvailablePageIDs) => LoadedCardData[] | undefined;
+
+  /**
+   * Helper to get a specific method from a card's renderer methods.
+   * @param cards - Array of card data.
+   * @param id - The ID of the card.
+   * @param method - The method name to retrieve.
+   * @returns The method function or undefined.
+   */
   getCardMethod: <T extends keyof CardRendererMethods>(
     cards: CardData[],
     id: string,
@@ -28,6 +59,7 @@ export type ModuleData = {
   ) => CardRendererMethods[T] | undefined;
 };
 
+// Type aliases for component injection functions
 type CompFc = (component: FC) => void;
 type CompFcProp = (component: FcProp) => void;
 type CompFcPropRef = (component: FcPropRef) => void;
@@ -37,17 +69,31 @@ type CompFcPropSearchResult = (component: FcPropSearchResult) => void;
 type CompFcPropAddCardMenu = (component: AddMenuType[]) => void;
 type CompFcPropReplaceMd = (component: FcPropReplaceMd) => void;
 
+/**
+ * Structure for adding components to a page.
+ */
 type PageAdd = {
+  /** Add component to the top of the page. */
   top: CompFc;
+  /** Add component to the bottom of the page. */
   bottom: CompFc;
+  /** Add component to the top of the scrollable area. */
   scrollTop: CompFc;
+  /** Add component to the bottom of the scrollable area. */
   scrollBottom: CompFc;
+  /** Add component to the cards container. */
   cardsContainer: CompFc;
 };
 
+/**
+ * The main API exposed to extensions in the renderer process.
+ * Allows modification of the UI, handling events, and interacting with the core application.
+ */
 export type ExtensionRendererApi = {
-  /** Modify the application Title Bar.
-   * @see {@linkcode TitleBar} for implementation details. */
+  /**
+   * Modify the application Title Bar.
+
+   */
   titleBar: {
     /** Add elements to the **start** of the Title Bar (Left-aligned). */
     addStart: CompFcProp;
@@ -55,16 +101,20 @@ export type ExtensionRendererApi = {
     addCenter: CompFcProp;
     /** Add elements to the **end** of the Title Bar (Right-aligned). */
     addEnd: CompFcProp;
-    /** Replace the **center** elements of the Title Bar.
-     * Commonly used to replace the default {@linkcode RunningCardManager} component. */
+    /**
+     * Replace the **center** elements of the Title Bar.
+     */
     replaceCenter: CompFcProp;
-    /** Replace the **end** elements of the Title Bar.
-     * Commonly used to replace the default {@linkcode WindowButtons} component. */
+    /**
+     * Replace the **end** elements of the Title Bar.
+     */
     replaceEnd: CompFcProp;
   };
 
-  /** Modify the application Status Bar.
-   * @see {@linkcode StatusBar} for implementation details. */
+  /**
+   * Modify the application Status Bar.
+
+   */
   statusBar: {
     /** Add elements to the **start** of the Status Bar (Left-aligned). */
     addStart: CompFcProp;
@@ -76,26 +126,37 @@ export type ExtensionRendererApi = {
     replaceContainer: CompFcPropRef;
   };
 
-  /** Modify components within the Running AI view.
-   * @see {@linkcode RunningCardView} for implementation details. */
+  /**
+   * Modify components within the Running AI view.
+
+   */
   runningAI: {
-    /** Replace the entire Running AI container,
-     * including both the Terminal and Browser views. */
+    /**
+     * Replace the entire Running AI container,
+     * including both the Terminal and Browser views.
+     */
     container: CompFc;
-    /** Replace the Terminal view within the Running AI container.
-     * Commonly used to replace the default {@linkcode LynxTerminal} component. */
+    /**
+     * Replace the Terminal view within the Running AI container.
+     */
     terminal: CompFc;
-    /** Replace the Browser view within the Running AI container.
-     * Commonly used to replace the default {@linkcode Browser} component. */
+    /**
+     * Replace the Browser view within the Running AI container.
+     */
     browser: CompFc;
   };
 
-  /** Modify the application router and its associated pages.
-   * @see {@linkcode initRouter} for implementation details. */
+  /**
+   * Modify the application router and its associated pages.
+
+   */
   router: {
-    /** Add new routes to the application router.
-     * To include a navigation button for the new route, add it to the `navBar` object. */
-    add: (routeObject: []) => void;
+    /**
+     * Add new routes to the application router.
+     * To include a navigation button for the new route, add it to the `navBar` object.
+     */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    add: (routeObject: any[]) => void;
     /** Replace existing pages within the router. */
     replace: {
       /** Replace the Home page component. */
@@ -120,111 +181,136 @@ export type ExtensionRendererApi = {
       settingsPage: CompFc;
     };
   };
+
   /** Modify navigation bar components and behavior. */
   navBar: {
-    /** Replace default components of the navigation bar.
-     * @see {@linkcode NavBar} for implementation details. */
+    /**
+     * Replace default components of the navigation bar.*/
     replace: {
       /** Replace the entire navigation bar container. */
       container: CompFc;
-      /** Replace the **content navigation bar** (Top bar),
-       * which includes buttons for navigating through sections like Home, Images, etc. */
+      /**
+       * Replace the **content navigation bar** (Top bar),
+       * which includes buttons for navigating through sections like Home, Images, etc.
+       */
       contentBar: CompFc;
-      /** Replace the **settings navigation bar** (Bottom bar),
-       * which includes buttons for navigating through sections like Settings, Modules, etc. */
+      /**
+       * Replace the **settings navigation bar** (Bottom bar),
+       * which includes buttons for navigating through sections like Settings, Modules, etc.
+       */
       settingsBar: CompFc;
     };
     /** Add new buttons to the navigation bar for navigating to specific routes. */
     addButton: {
-      /** Add a new button to the **content navigation bar** (Top bar).
-       * @see {@linkcode ContentPagesButtons} for implementation details. */
+      /**
+       * Add a new button to the **content navigation bar** (Top bar).  */
       contentBar: CompFc;
-      /** Add a new button to the **settings navigation bar** (Bottom bar).
-       * @see {@linkcode SettingsPagesButtons} for implementation details. */
+      /**
+       * Add a new button to the **settings navigation bar** (Bottom bar).  */
       settingsBar: CompFc;
     };
   };
-  /** Add custom modal to the existing modals
-   * @see {@linkcode Modals} for implementation details. */
+
+  /**
+   * Add custom modal to the existing modals
+
+   */
   addModal: CompFc;
-  /** Replace default modals in the application.
-   * @see {@linkcode Modals} for implementation details. */
+
+  /**
+   * Replace default modals in the application.
+
+   */
   replaceModals: {
-    /** Replace the modal for updating the application.
-     * This modal notifies users about app updates and helps manage the update process.
-     * @see {@linkcode UpdateApp} for implementation details. */
+    /**
+     * Replace the modal for updating the application.
+     * This modal notifies users about app updates and helps manage the update process.*/
     updateApp: CompFc;
-    /** Replace the modal for managing launch configurations.
-     * This modal allows customization of card launches, including commands, arguments, etc.
-     * @see {@linkcode LaunchConfig} for implementation details. */
+    /**
+     * Replace the modal for managing launch configurations.
+     * This modal allows customization of card launches, including commands, arguments, etc.*/
     launchConfig: CompFc;
-    /** Replace the modal for managing card extensions.
-     * This modal facilitates installing, updating, and removing extensions for cards.
-     * @see {@linkcode CardExtensions} for implementation details. */
+    /**
+     * Replace the modal for managing card extensions.
+     * This modal facilitates installing, updating, and removing extensions for cards.*/
     cardExtensions: CompFc;
-    /** Replace the modal for updating notifications.
-     * This modal displays the result and information about updated cards.
-     * @see {@linkcode UpdatingNotification} for implementation details. */
+    /**
+     * Replace the modal for updating notifications.
+     * This modal displays the result and information about updated cards.*/
     updatingNotification: CompFc;
-    /** Replace the modal for displaying card information.
-     * This modal shows details such as disk usage, developer info, and repository links.
-     * @see {@linkcode CardInfoModal} for implementation details. */
+    /**
+     * Replace the modal for displaying card information.
+     * This modal shows details such as disk usage, developer info, and repository links.*/
     cardInfo: CompFc;
-    /** Replace the modal for installing a card.
+    /**
+     * Replace the modal for installing a card.
      * This modal provides a step-by-step process for installing or locating a selected card.
-     * It offers an advanced alternative to the simpler `install` modal.
-     * @see {@linkcode InstallUIModal} for implementation details. */
+     * It offers an advanced alternative to the simpler `install` modal.*/
     installUi: CompFc;
-    /** Replace the modal for uninstalling a card.
-     * This modal manages the uninstallation process of a selected card.
-     * @see {@linkcode UninstallCard} for implementation details. */
+    /**
+     * Replace the modal for uninstalling a card.
+     * This modal manages the uninstallation process of a selected card.*/
     uninstallCard: CompFc;
+    /**
+     * Replace the modal for unassigning a card.
+     */
     unassignCard: CompFc;
-    /** Replace the modal for displaying warning messages.
-     * This modal is used in cases like failed installations or other critical alerts.
-     * @see {@linkcode WarningModal} for implementation details. */
+    /**
+     * Replace the modal for displaying warning messages.
+     * This modal is used in cases like failed installations or other critical alerts.*/
     warning: CompFc;
-    /** Replace the modal for viewing a card's README file.
-     * This modal renders GitHub-style Markdown README files to provide users with detailed documentation.
-     * @see {@linkcode CardReadmeModal} for implementation details. */
+    /**
+     * Replace the modal for viewing a card's README file.
+     * This modal renders GitHub-style Markdown README files to provide users with detailed documentation.*/
     cardReadme: CompFc;
+    /**
+     * Replace the modal for the Git Manager.
+     */
     gitManager: CompFc;
   };
 
-  /** Replace the MarkDown viewer component.
+  /**
+   * Replace the MarkDown viewer component.
    * This component is used to render Markdown files.
-   * @see {@linkcode MarkdownViewer} for implementation details. */
+
+   */
   replaceMarkdownViewer: CompFcPropReplaceMd;
 
-  /** Add a custom hook to the application.
-   * @see {@linkcode ExtensionHooks} for implementation details. */
+  /**
+   * Add a custom hook to the application.
+
+   */
   addCustomHook: CompFc;
 
-  /** Replace the main background color of the application.
-   * @see {@linkcode Background} for implementation details. */
+  /**
+   * Replace the main background color of the application.
+
+   */
   replaceBackground: CompFc;
 
   /** Customize application pages by adding or replacing elements. */
   customizePages: {
-    /** Customize the Home page.
-     * @see {@linkcode HomePage} for implementation details. */
+    /**
+     * Customize the Home page.*/
     home: {
       /** Replace existing elements on the Home page. */
       replace: {
-        /** Replace the top search input and filter button.
-         * @see {@linkcode HomePage} for implementation details. */
+        /**
+         * Replace the top search input and filter button.    */
         searchAndFilter: CompFc;
-        /** Replace the search result section.
-         * @see {@linkcode HomePage} for implementation details. */
+        /**
+         * Replace the search result section.    */
         searchResult: CompFcPropSearchResult;
-        /** Replace the categories container.
-         * @see {@linkcode HomePage} for implementation details. */
+        /**
+         * Replace the categories container.    */
         categories: CompFc;
       };
       /** Add new elements to the Home page. */
       add: {
-        /** Add elements to the top of the page, below the search and filter section
-         * but above the scroll and categories. */
+        /**
+         * Add elements to the top of the page, below the search and filter section
+         * but above the scroll and categories.
+         */
         top: CompFc;
         /** Add elements to the bottom of the page, below the scroll and categories. */
         bottom: CompFc;
@@ -232,42 +318,49 @@ export type ExtensionRendererApi = {
         scrollTop: CompFc;
         /** Add elements to the bottom of the scroll component. */
         scrollBottom: CompFc;
-        /** Add elements to the end of the pinned category section.
-         * @see {@linkcode PinnedCars} for implementation details. */
+        /**
+         * Add elements to the end of the pinned category section.    */
         pinCategory: CompFc;
-        /** Add elements to the end of the recently used category section.
-         * @see {@linkcode RecentlyCards} for implementation details. */
+        /**
+         * Add elements to the end of the recently used category section.    */
         recentlyCategory: CompFc;
-        /** Add elements to the end of the "all categories" section.
-         * @see {@linkcode AllCardsSection} for implementation details. */
+        /**
+         * Add elements to the end of the "all categories" section.    */
         allCategory: CompFcPropCardData;
       };
     };
 
+    /** Customize the Audio Generation page. */
     audio: {add: PageAdd};
+    /** Customize the Image Generation page. */
     image: {add: PageAdd};
+    /** Customize the Text Generation page. */
     text: {add: PageAdd};
+    /** Customize the Agents page. */
     agents: {add: PageAdd};
+    /** Customize the Others page. */
     others: {add: PageAdd};
+    /** Customize the Tools page. */
     tools: {add: PageAdd};
+    /** Customize the Games page. */
     games: {add: PageAdd};
 
-    /** Customize the Settings page.
-     * @see {@linkcode SettingsPage} for implementation details. */
+    /**
+     * Customize the Settings page.*/
     settings: {
       /** Add new elements to the Settings page. */
       add: {
-        /** Add a new navigation button.
-         * @see {@linkcode SettingsPageNav} for implementation details. */
+        /**
+         * Add a new navigation button.    */
         navButton: CompFc;
-        /** Add new content to the page.
-         * @see {@linkcode SettingsPageContents} for implementation details. */
+        /**
+         * Add new content to the page.    */
         content: CompFc;
       };
     };
 
-    /** Customize the Dashboard page.
-     * @see {@linkcode DashboardPage} for implementation details. */
+    /**
+     * Customize the Dashboard page.*/
     dashboard: {
       /** Add new elements to the Dashboard page. */
       add: {
@@ -277,20 +370,25 @@ export type ExtensionRendererApi = {
     };
   };
 
-  /** Add a new reducer to the Redux store.
-   * @see {@linkcode createStore} for implementation details. */
-  addReducer: (reducer: {name: string; reducer: Reducer}[]) => void;
+  /**
+   * Add a new reducer to the Redux store.
+
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  addReducer: (reducer: {name: string; reducer: Reducer<any, any>}[]) => void;
 
   /** Modify card-related components and handlers. */
   cards: {
-    /** Replace the default cards handler.
-     * This handler receives an array of cards as props and returns a component to display the cards. */
+    /**
+     * Replace the default cards handler.
+     * This handler receives an array of cards as props and returns a component to display the cards.
+     */
     replace: CompFcPropCard;
-    /** Replace the default card component used to display a single card.
-     * @see {@linkcode LynxCard} for implementation details. */
+    /**
+     * Replace the default card component used to display a single card.*/
     replaceComponent: CompFcPropCardData;
-    /** Customize various sections of the default card component.
-     * @see {@linkcode LynxCard} for implementation details. */
+    /**
+     * Customize various sections of the default card component.*/
     customize: {
       /** Replace the card's header section. */
       header: CompFcPropCardData;
@@ -298,14 +396,14 @@ export type ExtensionRendererApi = {
       body: CompFcPropCardData;
       /** Replace the card's footer section. */
       footer: CompFcPropCardData;
-      /** Customize the card's menu.
-       * @see {@linkcode CardMenu} for implementation details. */
+      /**
+       * Customize the card's menu.  */
       menu: {
-        /** Replace the default card menu.
-         * @see {@linkcode CardMenu} for implementation details. */
+        /**
+         * Replace the default card menu.    */
         replace: CompFcPropCardData;
-        /** Add sections and items to the card menu.
-         * @see {@linkcode CardMenu} for implementation details. */
+        /**
+         * Add sections and items to the card menu.    */
         addSection: CompFcPropAddCardMenu;
       };
     };
@@ -323,22 +421,28 @@ export type ExtensionRendererApi = {
     getListenerCount: (eventName: keyof ExtensionEvents) => number;
   };
 
-  events_ipc: {
-    /** Register an event listener. */
-    on: Emitter<ExtensionEvents_IPC>['on'];
-    /** Remove an event handler for the given type. */
-    off: Emitter<ExtensionEvents_IPC>['off'];
-    /** Emit an event. */
-    emit: Emitter<ExtensionEvents_IPC>['emit'];
-    /** Get the number of listeners for a specific event. */
-    getListenerCount: (eventName: keyof ExtensionEvents_IPC) => number;
-  };
-
+  /**
+   * Set pre-commands for a card's terminal.
+   * @param id - The ID of the card.
+   * @param preCommands - Array of commands to run before the main command.
+   */
   setCards_TerminalPreCommands: (id: string, preCommands: string[]) => void;
 
+  /**
+   * Data related to modules.
+   */
   modulesData?: ModuleData;
 
-  rendererIpc?: any;
+  /**
+   * IPC Renderer instance.
+   * Exposed from Electron to allow extensions to communicate with the main process.
+   */
+  rendererIpc?: IpcRenderer;
 
+  /**
+   * Initialize Sentry for the browser environment.
+   * @param dsn - The Sentry DSN.
+   * @returns The Sentry scope.
+   */
   initBrowserSentry: (dsn: string) => Scope;
 };
