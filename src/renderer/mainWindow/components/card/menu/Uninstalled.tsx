@@ -3,7 +3,7 @@ import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
 import {useCardStore} from '../Wrapper';
-import {MenuDuplicate, MenuHomePage} from './items/About';
+import {DuplicateMenuItem, HomePageMenuItem} from './items/About';
 
 const UninstalledMenu = memo(() => {
   const menuIsOpen = useCardStore(state => state.menuIsOpen);
@@ -23,8 +23,8 @@ const UninstalledMenu = memo(() => {
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label="Card Menu">
-        {MenuHomePage()}
-        {MenuDuplicate()}
+        {HomePageMenuItem()}
+        {DuplicateMenuItem()}
       </DropdownMenu>
     </Dropdown>
   );

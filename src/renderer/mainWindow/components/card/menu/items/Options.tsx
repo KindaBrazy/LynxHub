@@ -9,7 +9,10 @@ import {useCallback, useMemo} from 'react';
 import {useTabModalManager} from '../../../modals/useTabModalManager';
 import {useCardStore} from '../../Wrapper';
 
-export const MenuLaunchConfig = () => {
+/**
+ * Menu item to open the launch configuration modal.
+ */
+export const LaunchConfigMenuItem = () => {
   const {openModal} = useTabModalManager();
 
   const id = useCardStore(state => state.id);
@@ -33,7 +36,11 @@ export const MenuLaunchConfig = () => {
   );
 };
 
-export const MenuExtensions = () => {
+/**
+ * Menu item to open the extensions modal.
+ * Hidden if the card has no extensions directory.
+ */
+export const ExtensionsMenuItem = () => {
   const id = useCardStore(state => state.id);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
   const repoUrl = useCardStore(state => state.repoUrl);
@@ -46,7 +53,7 @@ export const MenuExtensions = () => {
   const {openModal} = useTabModalManager();
 
   const onPress = useCallback(() => {
-    if (card)
+    if (card) {
       openModal(
         'cardExtensions',
         {
@@ -56,10 +63,15 @@ export const MenuExtensions = () => {
         },
         'active',
       );
+    }
     setMenuIsOpen(false);
   }, [setMenuIsOpen, card, extensionsDir, title, devName, id, openModal]);
 
-  return extensionsDir ? (
+  if (!extensionsDir) {
+    return <DropdownItem className="hidden" key="extensions-hidden" textValue="extensions_hidden" />;
+  }
+
+  return (
     <DropdownItem
       key="extensions"
       onPress={onPress}
@@ -67,18 +79,21 @@ export const MenuExtensions = () => {
       className="cursor-default"
       startContent={<Extensions2_Icon className="size-4" />}
     />
-  ) : (
-    <DropdownItem className="hidden" key="extensions-hidden" textValue="extensions_hidden" />
   );
 };
 
-export const MenuRepoConfig = () => {
+/**
+ * Menu item to open the repository configuration modal.
+ * Hidden if the install type is 'others'.
+ */
+export const RepoConfigMenuItem = () => {
   const id = useCardStore(state => state.id);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
   const title = useCardStore(state => state.title);
 
   const installType = useGetInstallType(id);
-  const dir = useInstalledCard(id)?.dir;
+  const webUI = useInstalledCard(id);
+  const dir = webUI?.dir;
 
   const {openModal} = useTabModalManager();
 
@@ -89,8 +104,9 @@ export const MenuRepoConfig = () => {
     }
   }, [setMenuIsOpen, dir, title, openModal]);
 
-  if (installType === 'others')
+  if (installType === 'others') {
     return <DropdownItem className="hidden" key="repoSetting-hidden" textValue="repoSetting_hidden" />;
+  }
 
   return (
     <DropdownItem
