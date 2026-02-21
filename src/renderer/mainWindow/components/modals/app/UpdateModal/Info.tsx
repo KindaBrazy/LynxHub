@@ -1,62 +1,96 @@
+import {Accordion, AccordionItem, Button, Card, CardBody, CardHeader} from '@heroui/react';
 import {APP_BUILD_NUMBER, APP_VERSION, RELEASES_PAGE} from '@lynx_common/consts';
 import {AppUpdateInfo} from '@lynx_common/types';
 import {SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
-import {Button, Card, Collapse, CollapseProps, Descriptions, Empty, Typography} from 'antd';
-import DescriptionsItem from 'antd/es/descriptions/Item';
 import {isEmpty} from 'lodash';
 
-type Props = {items: CollapseProps['items']; updateInfo: Omit<AppUpdateInfo, 'earlyAccess'> | undefined};
+import {RenderSubItems} from '../../../../utils/hooks';
+import {ReleaseNote} from './useUpdateApp';
 
-/** Information and release notes about update  */
-export default function Info({updateInfo, items}: Props) {
+type Props = {
+  releaseNotes: ReleaseNote[];
+  updateInfo: Omit<AppUpdateInfo, 'earlyAccess'> | undefined;
+};
+
+/** Information and release notes about update */
+export default function Info({updateInfo, releaseNotes}: Props) {
   return (
-    <>
-      <Descriptions size="small" layout="vertical" className="w-full text-center" bordered>
-        <DescriptionsItem label="Version">
-          <Typography.Text code>
-            <span className="font-JetBrainsMono">{APP_VERSION}</span>
-            <span className="font-JetBrainsMono text-foreground-300">{' -> '}</span>
-            <span className="font-JetBrainsMono text-success">{updateInfo?.currentVersion}</span>
-          </Typography.Text>
-        </DescriptionsItem>
-        <DescriptionsItem label="Build Number">
-          <Typography.Text code>
-            <span className="font-JetBrainsMono">{APP_BUILD_NUMBER}</span>
-            <span className="font-JetBrainsMono text-foreground-300">{' -> '}</span>
-            <span className="font-JetBrainsMono text-success">{updateInfo?.currentBuild}</span>
-          </Typography.Text>
-        </DescriptionsItem>
-        <DescriptionsItem label="Release Date">
-          <Typography.Text className="text-success" code>
-            <span className="font-JetBrainsMono">{updateInfo?.releaseDate}</span>
-          </Typography.Text>
-        </DescriptionsItem>
-      </Descriptions>
-      <Card
-        size="small"
-        variant="borderless"
-        title="Release Notes"
-        classNames={{title: 'text-center'}}
-        className="mt-2 flex w-full cursor-default flex-col justify-center"
-        hoverable>
-        {isEmpty(items) ? (
-          <>
-            <Empty description="No notes found 😔" image={Empty.PRESENTED_IMAGE_SIMPLE} />
-            <Button
-              onClick={() => {
-                window.open(RELEASES_PAGE);
-              }}
-              type="link"
-              iconPlacement="end"
-              icon={<SquareTopDown />}
-              block>
-              Releases Page
-            </Button>
-          </>
-        ) : (
-          <Collapse size="small" items={items} defaultActiveKey={['0']} className="font-JetBrainsMono" />
-        )}
+    <div className="flex w-full flex-col items-center gap-4">
+      <div className="grid w-full grid-cols-3 gap-4 border-b border-default-200 pb-4 text-center">
+        <div className="flex flex-col gap-1">
+          <span className="text-small text-default-500">Version</span>
+          <div className="flex justify-center gap-2 font-mono text-small">
+            <span>{APP_VERSION}</span>
+            <span className="text-default-300">{'->'}</span>
+            <span className="text-success">{updateInfo?.currentVersion}</span>
+          </div>
+        </div>
+        
+        <div className="flex flex-col gap-1">
+          <span className="text-small text-default-500">Build Number</span>
+          <div className="flex justify-center gap-2 font-mono text-small">
+            <span>{APP_BUILD_NUMBER}</span>
+            <span className="text-default-300">{'->'}</span>
+            <span className="text-success">{updateInfo?.currentBuild}</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-1">
+          <span className="text-small text-default-500">Release Date</span>
+          <div className="font-mono text-small text-success">
+            {updateInfo?.releaseDate}
+          </div>
+        </div>
+      </div>
+
+      <Card className="w-full bg-content1/50" shadow="sm">
+        <CardHeader className="justify-center pb-0 pt-4">
+          <h4 className="font-bold text-large">Release Notes</h4>
+        </CardHeader>
+        <CardBody className="px-3 pb-3">
+          {isEmpty(releaseNotes) ? (
+            <div className="flex flex-col items-center gap-4 py-8">
+              <div className="flex flex-col items-center gap-2 text-default-500">
+                <span className="text-large">No notes found 😔</span>
+              </div>
+              <Button
+                color="primary"
+                variant="flat"
+                onPress={() => window.open(RELEASES_PAGE)}
+                endContent={<SquareTopDown />}
+              >
+                Releases Page
+              </Button>
+            </div>
+          ) : (
+            <Accordion variant="light" selectionMode="multiple">
+              {releaseNotes.map((note, index) => (
+                <AccordionItem 
+                  key={index} 
+                  aria-label={`Version ${note.version}`} 
+                  title={`Version ${note.version}`}
+                  classNames={{
+                    title: "font-mono text-small"
+                  }}
+                >
+                  <div className="flex flex-col gap-4">
+                    {note.changes.map((change, changeIndex) => (
+                      <div key={changeIndex} className="flex flex-col gap-2">
+                        <div className="w-full border-b border-default-100 pb-1 text-small font-bold text-default-600">
+                          {change.title}
+                        </div>
+                        <ul className="list-disc pl-4 text-small text-default-500">
+                          {RenderSubItems(change.items, `section_${index}_${changeIndex}`)}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          )}
+        </CardBody>
       </Card>
-    </>
+    </div>
   );
 }
