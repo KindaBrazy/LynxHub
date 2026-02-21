@@ -1,33 +1,41 @@
 import {Button, Input} from '@heroui/react';
 import windowDialogsIpc from '@lynx_shared/ipc/dialogsWindow';
 import {Check, TextCursorInput, X} from 'lucide-react';
-import {memo, useEffect, useState} from 'react';
+import {memo, useCallback, useEffect, useState} from 'react';
 
 import {useContextState} from '../../redux/reducer';
 import {hideContextWindow} from '../Shared';
 
-const PromptWindow = memo(() => {
-  const [inputValue, setInputValue] = useState<string | undefined>(undefined);
+/**
+ * PromptWindow Component
+ * Displays a prompt dialog with an input field, OK, and Cancel buttons.
+ */
+const PromptWindow = memo(function PromptWindow() {
+  const [inputValue, setInputValue] = useState<string>('');
 
   const {message, defaultValue} = useContextState('promptWindow');
 
   useEffect(() => {
-    setInputValue(defaultValue);
+    if (defaultValue !== undefined) {
+      setInputValue(defaultValue);
+    }
   }, [defaultValue]);
 
-  const done = () => {
-    const result: string | null = inputValue === '' || inputValue === undefined ? null : inputValue;
+  const done = useCallback(() => {
+    const result: string | null = inputValue === '' ? null : inputValue;
 
     windowDialogsIpc.promptResult(result);
 
     hideContextWindow();
-  };
+  }, [inputValue]);
 
   return (
     <div className="py-4 px-5 flex flex-col gap-y-3">
       <div className="flex gap-x-2 items-center">
-        <TextCursorInput className="size-6" />
-        <span className="w-full line-clamp-2">{message}</span>
+        <TextCursorInput className="size-6" aria-hidden="true" />
+        <span className="w-full line-clamp-2" id="prompt-message">
+          {message}
+        </span>
       </div>
 
       <Input
@@ -42,14 +50,25 @@ const PromptWindow = memo(() => {
         className="notDraggable"
         onValueChange={setInputValue}
         autoFocus
+        aria-labelledby="prompt-message"
       />
 
       <div className="flex justify-between">
-        <Button variant="light" color="warning" onPress={hideContextWindow} startContent={<X className="size-4" />}>
+        <Button
+          variant="light"
+          color="warning"
+          onPress={hideContextWindow}
+          startContent={<X className="size-4" />}
+          aria-label="Cancel">
           Cancel
         </Button>
 
-        <Button onPress={done} variant="flat" color="success" startContent={<Check className="size-4" />}>
+        <Button
+          onPress={done}
+          variant="flat"
+          color="success"
+          startContent={<Check className="size-4" />}
+          aria-label="OK">
           OK
         </Button>
       </div>

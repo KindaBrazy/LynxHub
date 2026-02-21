@@ -6,7 +6,11 @@ import {memo} from 'react';
 import {useContextState} from '../../redux/reducer';
 import {hideContextWindow, setElementFocus} from '../Shared';
 
-const ConfirmWindow = memo(() => {
+/**
+ * ConfirmWindow Component
+ * Displays a confirmation dialog with OK and Cancel buttons.
+ */
+const ConfirmWindow = memo(function ConfirmWindow() {
   const {message} = useContextState('confirmWindow');
 
   const handleResult = (result: boolean) => {
@@ -17,8 +21,10 @@ const ConfirmWindow = memo(() => {
   return (
     <div className="py-5 px-5 flex flex-col gap-y-5 draggable">
       <div className="flex gap-x-2 items-center">
-        <ShieldCheck className="size-8 text-warning" />
-        <span className="w-full">{message}</span>
+        <ShieldCheck className="size-8 text-warning" aria-hidden="true" />
+        <span className="w-full" role="alert">
+          {message}
+        </span>
       </div>
 
       <div className="flex justify-between">
@@ -27,7 +33,8 @@ const ConfirmWindow = memo(() => {
           color="warning"
           className="notDraggable"
           onPress={() => handleResult(false)}
-          startContent={<X className="size-4" />}>
+          startContent={<X className="size-4" />}
+          aria-label="Cancel">
           Cancel
         </Button>
 
@@ -38,7 +45,8 @@ const ConfirmWindow = memo(() => {
           className="notDraggable"
           onPress={() => handleResult(true)}
           startContent={<Check className="size-4" />}
-          autoFocus>
+          autoFocus
+          aria-label="OK">
           OK
         </Button>
       </div>

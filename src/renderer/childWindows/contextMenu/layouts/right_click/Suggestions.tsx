@@ -1,19 +1,27 @@
 import {Divider} from '@heroui/react';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {isEmpty} from 'lodash';
+import {memo} from 'react';
 
 import {ActionButton, createActionHandler} from './Utils';
 
-type Props = {suggestions: string[]; id: number};
-export function Suggestions({suggestions, id}: Props) {
+type SuggestionsProps = {
+  suggestions: string[];
+  id: number;
+};
+
+/**
+ * Component that displays spelling suggestions in the context menu.
+ */
+export const Suggestions = memo(function Suggestions({suggestions, id}: SuggestionsProps) {
   if (isEmpty(suggestions)) return null;
 
   return (
     <>
-      <span key="suggestions_title" className="ml-2 text-sm mb-1 font-semibold text-gray-600 dark:text-gray-400 px-2">
+      <span className="ml-2 text-sm mb-1 font-semibold text-gray-600 dark:text-gray-400 px-2">
         Suggestions
       </span>
-      {...suggestions.map((text, index) => (
+      {suggestions.map((text, index) => (
         <ActionButton
           onPress={createActionHandler(() => {
             contextMenuIpc.send.rightClickItems.replaceMisspelling(id, text);
@@ -23,7 +31,7 @@ export function Suggestions({suggestions, id}: Props) {
           key={`suggestion_${text}_${index}`}
         />
       ))}
-      <Divider className="my-2" key="sep_suggestions" />
+      <Divider className="my-2" />
     </>
   );
-}
+});

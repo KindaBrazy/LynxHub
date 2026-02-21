@@ -4,15 +4,23 @@ import {memo} from 'react';
 
 import {ActionButton, createActionHandler} from './Utils';
 
-type Props = {id: number; x: number; y: number};
-const PageActions = memo(({id, x, y}: Props) => {
+type PageActionsProps = {
+  id: number;
+  x: number;
+  y: number;
+};
+
+/**
+ * Component that renders page-level actions in the context menu.
+ * Currently allows inspecting the element at the given coordinates.
+ */
+const PageActions = memo(function PageActions({id, x, y}: PageActionsProps) {
   return (
     <ActionButton
       onPress={createActionHandler(() => {
         contextMenuIpc.send.rightClickItems.inspectElement(id, x, y);
       })}
       title="Inspect Element"
-      key="context_inspectElement"
       icon={<Code className="size-4" />}
     />
   );

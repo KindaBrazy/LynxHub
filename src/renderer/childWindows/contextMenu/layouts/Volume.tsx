@@ -1,75 +1,17 @@
 import {Button, Slider} from '@heroui/react';
-import browserIpc from '@lynx_shared/ipc/browser';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
-import {memo, useCallback, useEffect, useMemo, useRef} from 'react';
-import {useDispatch} from 'react-redux';
+import {memo, useMemo} from 'react';
 
-import {contextActions, useContextState} from '../redux/reducer';
-import {ContextDispatch} from '../redux/store';
+import {useVolume} from './useVolume';
 
+/**
+ * VolumeMenu component for controlling browser volume and mute state.
+ * Uses useVolume hook for state management and IPC.
+ */
 const VolumeMenu = memo(() => {
-  const {id, tabId, volume, muted, globalMuted} = useContextState('browserVolume');
-
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const volumeIpcTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const dispatch = useDispatch<ContextDispatch>();
-
-  const handleVolumeChange = useCallback(
-    (value: number | number[]) => {
-      const newVolume = Array.isArray(value) ? value[0] : value;
-      const clampedVolume = Math.max(0, Math.min(100, newVolume));
-      dispatch(contextActions.updateVolume(clampedVolume));
-
-      // Debounce the IPC call to avoid flooding main process
-      if (volumeIpcTimerRef.current) {
-        clearTimeout(volumeIpcTimerRef.current);
-      }
-      volumeIpcTimerRef.current = setTimeout(() => {
-        browserIpc.invoke.setVolume(id, clampedVolume).catch(error => {
-          console.error('Failed to set volume:', error);
-        });
-      }, 50);
-
-      // Debounce Redux state update to avoid excessive updates
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
-      }
-      debounceTimerRef.current = setTimeout(() => {
-        browserIpc.send.updateTabVolume(tabId, clampedVolume);
-      }, 150);
-    },
-    [id, tabId],
-  );
-
-  const handleMuteToggle = useCallback(async () => {
-    const newMutedState = !muted;
-    dispatch(contextActions.updateMuted(newMutedState));
-
-    try {
-      await browserIpc.invoke.setMuted(id, newMutedState);
-      // Notify main window to update Redux state
-      browserIpc.send.updateTabMuted(tabId, newMutedState);
-    } catch (error) {
-      console.error('Failed to set mute state:', error);
-    }
-  }, [id, tabId, muted]);
-
-  const setVolume = useCallback(
-    (newVolume: number) => {
-      handleVolumeChange(newVolume);
-    },
-    [handleVolumeChange],
-  );
+  const {volume, muted, globalMuted, handleVolumeChange, toggleMute} = useVolume();
 
   const effectiveMuted = useMemo(() => muted || globalMuted, [muted, globalMuted]);
-
-  useEffect(() => {
-    return () => {
-      if (debounceTimerRef.current) clearTimeout(debounceTimerRef.current);
-      if (volumeIpcTimerRef.current) clearTimeout(volumeIpcTimerRef.current);
-    };
-  }, []);
 
   return (
     <div className="flex w-full flex-col gap-4 p-4">
@@ -82,7 +24,7 @@ const VolumeMenu = memo(() => {
         <Button
           size="sm"
           variant="flat"
-          onPress={handleMuteToggle}
+          onPress={toggleMute}
           color={effectiveMuted ? 'danger' : 'default'}
           aria-label={muted ? 'Unmute audio' : 'Mute audio'}
           startContent={effectiveMuted ? <VolumeCross className="size-4" /> : <VolumeLoud className="size-4" />}>
@@ -132,36 +74,15 @@ const VolumeMenu = memo(() => {
 
         {/* Volume markers */}
         <div className="flex justify-between px-1 text-tiny text-foreground-500">
-          <button
-            onClick={() => setVolume(0)}
-            aria-label="Set volume to 0%"
-            className="transition-colors hover:text-foreground-800">
-            0%
-          </button>
-          <button
-            onClick={() => setVolume(25)}
-            aria-label="Set volume to 25%"
-            className="transition-colors hover:text-foreground-800">
-            25%
-          </button>
-          <button
-            onClick={() => setVolume(50)}
-            aria-label="Set volume to 50%"
-            className="transition-colors hover:text-foreground-800">
-            50%
-          </button>
-          <button
-            onClick={() => setVolume(75)}
-            aria-label="Set volume to 75%"
-            className="transition-colors hover:text-foreground-800">
-            75%
-          </button>
-          <button
-            onClick={() => setVolume(100)}
-            aria-label="Set volume to 100%"
-            className="font-medium transition-colors hover:text-foreground-800">
-            100%
-          </button>
+          {[0, 25, 50, 75, 100].map(val => (
+            <button
+              key={val}
+              onClick={() => handleVolumeChange(val)}
+              aria-label={`Set volume to ${val}%`}
+              className="transition-colors hover:text-foreground-800">
+              {val}%
+            </button>
+          ))}
         </div>
       </div>
 
@@ -173,7 +94,7 @@ const VolumeMenu = memo(() => {
           className="flex-1"
           aria-label="Decrease volume by 10%"
           isDisabled={effectiveMuted || volume === 0}
-          onPress={() => setVolume(Math.max(0, volume - 10))}>
+          onPress={() => handleVolumeChange(Math.max(0, volume - 10))}>
           −10%
         </Button>
         <Button
@@ -181,7 +102,7 @@ const VolumeMenu = memo(() => {
           variant="flat"
           className="flex-1"
           isDisabled={effectiveMuted}
-          onPress={() => setVolume(50)}
+          onPress={() => handleVolumeChange(50)}
           aria-label="Set volume to 50%">
           50%
         </Button>
@@ -191,7 +112,7 @@ const VolumeMenu = memo(() => {
           className="flex-1"
           aria-label="Increase volume by 10%"
           isDisabled={effectiveMuted || volume === 100}
-          onPress={() => setVolume(Math.min(100, volume + 10))}>
+          onPress={() => handleVolumeChange(Math.min(100, volume + 10))}>
           +10%
         </Button>
       </div>
