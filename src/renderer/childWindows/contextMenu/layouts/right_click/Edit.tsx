@@ -3,20 +3,57 @@ import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {ClipboardText, Copy, Scissors, TextSelection, UndoLeftRound} from '@solar-icons/react-perf/BoldDuotone';
 import type {EditFlags} from 'electron';
 import {isEmpty} from 'lodash';
+import {memo, useCallback} from 'react';
 
 import {ActionButton, createActionHandler} from './Utils';
 
-type Props = {flags: EditFlags; selection: string; id: number};
-export function Edit({flags, selection, id}: Props) {
+type EditProps = {
+  /** Edit flags provided by Electron */
+  flags: EditFlags;
+  /** The currently selected text */
+  selection: string;
+  /** The ID of the target window/contents */
+  id: number;
+};
+
+/**
+ * Edit component renders standard edit actions (Undo, Redo, Cut, Copy, Paste, Select All)
+ * based on the provided flags and selection.
+ */
+export const Edit = memo(({flags, selection, id}: EditProps) => {
   const {canUndo, canCut, canRedo, canPaste, canSelectAll, canCopy} = flags;
+
+  // Handlers
+  const onUndo = useCallback(
+    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.undo(id)),
+    [id],
+  );
+  const onRedo = useCallback(
+    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.redo(id)),
+    [id],
+  );
+  const onCut = useCallback(
+    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.cut(id)),
+    [id],
+  );
+  const onCopy = useCallback(
+    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.copy(id)),
+    [id],
+  );
+  const onPaste = useCallback(
+    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.paste(id)),
+    [id],
+  );
+  const onSelectAll = useCallback(
+    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.selectAll(id)),
+    [id],
+  );
 
   return (
     <>
       {canUndo && (
         <ActionButton
-          onPress={createActionHandler(() => {
-            contextMenuIpc.send.rightClickItems.undo(id);
-          })}
+          onPress={onUndo()}
           title="Undo"
           key="context_undo"
           icon={<UndoLeftRound className="size-4" />}
@@ -24,9 +61,7 @@ export function Edit({flags, selection, id}: Props) {
       )}
       {canRedo && (
         <ActionButton
-          onPress={createActionHandler(() => {
-            contextMenuIpc.send.rightClickItems.redo(id);
-          })}
+          onPress={onRedo()}
           title="Redo"
           key="context_redo"
           icon={<UndoLeftRound className="size-4 scale-x-[-1]" />}
@@ -34,9 +69,7 @@ export function Edit({flags, selection, id}: Props) {
       )}
       {canCut && !isEmpty(selection) && (
         <ActionButton
-          onPress={createActionHandler(() => {
-            contextMenuIpc.send.rightClickItems.cut(id);
-          })}
+          onPress={onCut()}
           title="Cut"
           key="context_cut"
           icon={<Scissors className="size-4" />}
@@ -44,9 +77,7 @@ export function Edit({flags, selection, id}: Props) {
       )}
       {canCopy && !isEmpty(selection) && (
         <ActionButton
-          onPress={createActionHandler(() => {
-            contextMenuIpc.send.rightClickItems.copy(id);
-          })}
+          onPress={onCopy()}
           title="Copy"
           key="context_copy"
           icon={<Copy className="size-4" />}
@@ -54,9 +85,7 @@ export function Edit({flags, selection, id}: Props) {
       )}
       {canPaste && (
         <ActionButton
-          onPress={createActionHandler(() => {
-            contextMenuIpc.send.rightClickItems.paste(id);
-          })}
+          onPress={onPaste()}
           title="Paste"
           key="context_paste"
           icon={<ClipboardText className="size-4" />}
@@ -64,9 +93,7 @@ export function Edit({flags, selection, id}: Props) {
       )}
       {canSelectAll && (
         <ActionButton
-          onPress={createActionHandler(() => {
-            contextMenuIpc.send.rightClickItems.selectAll(id);
-          })}
+          onPress={onSelectAll()}
           title="Select All"
           key="context_selectAll"
           icon={<TextSelection className="size-4" />}
@@ -75,4 +102,4 @@ export function Edit({flags, selection, id}: Props) {
       <Divider className="my-2" key="sep_edit_page" />
     </>
   );
-}
+});

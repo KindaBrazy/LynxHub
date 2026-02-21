@@ -1,53 +1,85 @@
 import {Divider} from '@heroui/react';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {Copy, GalleryCircle, GalleryDownload, GalleryWide, Link} from '@solar-icons/react-perf/BoldDuotone';
+import {memo, useCallback} from 'react';
 
 import {ActionButton, createActionHandler} from './Utils';
 
-type Props = {id: number; url: string};
-export function Image({id, url}: Props) {
+type ImageProps = {
+  /** The ID of the target window/contents */
+  id: number;
+  /** The URL of the image */
+  url: string;
+};
+
+/**
+ * Image component renders actions related to image context menus (Open, Copy, Save, Search).
+ */
+export const Image = memo(({id, url}: ImageProps) => {
   if (!url) return null;
+
+  // Handlers
+  const onOpenImageTab = useCallback(
+    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.newTab(url)),
+    [url],
+  );
+
+  const onCopyImage = useCallback(
+    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.copyImage(url)),
+    [url],
+  );
+
+  const onSaveImage = useCallback(
+    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.downloadImage(id, url)),
+    [id, url],
+  );
+
+  const onCopyImageAddress = useCallback(
+    () =>
+      createActionHandler(() => {
+        navigator.clipboard.writeText(url);
+      }),
+    [url],
+  );
+
+  const onSearchImage = useCallback(
+    () =>
+      createActionHandler(() => {
+        contextMenuIpc.send.rightClickItems.newTab(
+          `https://lens.google.com/uploadbyurl?url=${encodeURIComponent(url)}`,
+        );
+      }),
+    [url],
+  );
 
   return (
     <>
       <ActionButton
-        onPress={createActionHandler(() => {
-          contextMenuIpc.send.rightClickItems.newTab(url);
-        })}
+        onPress={onOpenImageTab()}
         key="context_openImageTab"
         title="Open Image in New Tab"
         icon={<GalleryWide className="size-4" />}
       />
       <ActionButton
-        onPress={createActionHandler(() => {
-          contextMenuIpc.send.rightClickItems.copyImage(url);
-        })}
+        onPress={onCopyImage()}
         title="Copy Image"
         key="context_copyImage"
         icon={<Copy className="size-4" />}
       />
       <ActionButton
-        onPress={createActionHandler(() => {
-          contextMenuIpc.send.rightClickItems.downloadImage(id, url);
-        })}
+        onPress={onSaveImage()}
         title="Save Image"
         key="context_saveImage"
         icon={<GalleryDownload className="size-4" />}
       />
       <ActionButton
-        onPress={createActionHandler(() => {
-          navigator.clipboard.writeText(url);
-        })}
+        onPress={onCopyImageAddress()}
         title="Copy Image Address"
         key="context_copyImageAddress"
         icon={<Link className="size-4" />}
       />
       <ActionButton
-        onPress={createActionHandler(() => {
-          contextMenuIpc.send.rightClickItems.newTab(
-            `https://lens.google.com/uploadbyurl?url=${encodeURIComponent(url)}`,
-          );
-        })}
+        onPress={onSearchImage()}
         key="context_searchImage"
         title="Search Web for Image"
         icon={<GalleryCircle className="size-4" />}
@@ -55,4 +87,4 @@ export function Image({id, url}: Props) {
       <Divider className="my-2" key="sep_image_text" />
     </>
   );
-}
+});

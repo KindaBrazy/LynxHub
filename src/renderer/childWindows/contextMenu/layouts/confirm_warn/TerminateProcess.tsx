@@ -8,6 +8,10 @@ import {useContextState} from '../../redux/reducer';
 import {hideContextWindow, setElementFocus} from '../Shared';
 import ConfirmElement from './ConfirmElement';
 
+/**
+ * Component for the "Terminate Process" confirmation dialog.
+ * Used when stopping or relaunching an AI process/card.
+ */
 const TerminateProcess = memo(() => {
   const id = useContextState('targetID');
 

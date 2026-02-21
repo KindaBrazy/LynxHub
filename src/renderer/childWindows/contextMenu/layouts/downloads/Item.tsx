@@ -4,45 +4,60 @@ import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
 import {Pause, Play, Restart} from '@solar-icons/react-perf/Bold';
 import {FileDownload, FolderOpen, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {X} from 'lucide-react';
+import {memo, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {contextActions} from '../../redux/reducer';
 import {formatBytes, formatETA, formatSpeed, getProgress, getStatusColor} from './utils';
 
-type Props = {
+type DownloadItemProps = {
   item: DownloadItemInfo;
 };
 
-export default function DownloadItem({item}: Props) {
+/**
+ * DownloadItem component displays a single download item with progress and actions.
+ */
+const DownloadItem = memo(({item}: DownloadItemProps) => {
   const dispatch = useDispatch();
 
-  const handleAction = (name: string, action: 'pause' | 'resume' | 'cancel' | 'open' | 'openFolder' | 'clear') => {
-    if (action === 'open' || action === 'openFolder') {
-      downloadManagerIpc.send.openItem(name, action);
-    } else if (action === 'clear') {
-      dispatch(contextActions.removeDownload(name));
-      downloadManagerIpc.send.clear(name);
-    } else {
+  const handleAction = useCallback(
+    (name: string, action: 'pause' | 'resume' | 'cancel' | 'open' | 'openFolder' | 'clear') => {
       switch (action) {
+        case 'open':
+        case 'openFolder':
+          downloadManagerIpc.send.openItem(name, action);
+          break;
+        case 'clear':
+          dispatch(contextActions.removeDownload(name));
+          downloadManagerIpc.send.clear(name);
+          break;
         case 'pause':
           downloadManagerIpc.send.pause(name);
           dispatch(contextActions.updateDownloadProgress({name, status: 'paused', bytesPerSecond: 0}));
           break;
         case 'resume':
           downloadManagerIpc.send.resume(name);
-          dispatch(contextActions.updateDownloadProgress({name, status: 'downloading', bytesPerSecond: 524288}));
+          dispatch(contextActions.updateDownloadProgress({name, status: 'downloading', bytesPerSecond: 524288})); // Why 524288?
           break;
         case 'cancel':
           downloadManagerIpc.send.cancel(name);
           dispatch(contextActions.updateDownloadProgress({name, status: 'cancelled', bytesPerSecond: 0}));
           break;
       }
-    }
-  };
+    },
+    [dispatch],
+  );
+
+  const onOpen = useCallback(() => handleAction(item.name, 'open'), [item.name, handleAction]);
+  const onOpenFolder = useCallback(() => handleAction(item.name, 'openFolder'), [item.name, handleAction]);
+  const onClear = useCallback(() => handleAction(item.name, 'clear'), [item.name, handleAction]);
+  const onPause = useCallback(() => handleAction(item.name, 'pause'), [item.name, handleAction]);
+  const onResume = useCallback(() => handleAction(item.name, 'resume'), [item.name, handleAction]);
+  const onCancel = useCallback(() => handleAction(item.name, 'cancel'), [item.name, handleAction]);
 
   return (
     <Card as="div" className="cursor-default bg-foreground-100 shadow-sm shrink-0" fullWidth isPressable>
-      <CardHeader className={'pb-1'}>
+      <CardHeader className="pb-1">
         {/* Item Header */}
         <div className="flex items-start justify-between w-full">
           <div className="flex-1 min-w-0">
@@ -79,7 +94,7 @@ export default function DownloadItem({item}: Props) {
               </div>
             }
             size="sm"
-            aria-label={'Downloading...'}
+            aria-label="Downloading..."
             color={getStatusColor(item.status)}
             classNames={{label: 'text-xs', value: 'text-xs'}}
             value={getProgress(item.receivedBytes, item.totalBytes)}
@@ -93,54 +108,30 @@ export default function DownloadItem({item}: Props) {
         <ButtonGroup size="sm" variant="flat" className="flex" fullWidth>
           {item.status === 'completed' ? (
             <>
-              <Button
-                onPress={() => {
-                  handleAction(item.name, 'open');
-                }}
-                color="success"
-                startContent={<FileDownload className="size-3.5" />}
-                fullWidth>
+              <Button onPress={onOpen} color="success" startContent={<FileDownload className="size-3.5" />} fullWidth>
                 Open File
               </Button>
 
               <Button
-                onPress={() => {
-                  handleAction(item.name, 'openFolder');
-                }}
+                onPress={onOpenFolder}
                 color="success"
                 startContent={<FolderOpen className="size-3.5" />}
                 fullWidth>
                 Open Path
               </Button>
 
-              <Button
-                onPress={() => {
-                  handleAction(item.name, 'clear');
-                }}
-                color="default"
-                startContent={<TrashBin2 className="size-3.5" />}
-                fullWidth>
+              <Button onPress={onClear} color="default" startContent={<TrashBin2 className="size-3.5" />} fullWidth>
                 Clear
               </Button>
             </>
           ) : (
             <>
               {item.status === 'downloading' ? (
-                <Button
-                  onPress={() => {
-                    handleAction(item.name, 'pause');
-                  }}
-                  color="warning"
-                  startContent={<Pause className="size-3.5" />}>
+                <Button onPress={onPause} color="warning" startContent={<Pause className="size-3.5" />}>
                   Pause
                 </Button>
               ) : item.status === 'paused' ? (
-                <Button
-                  onPress={() => {
-                    handleAction(item.name, 'resume');
-                  }}
-                  color="primary"
-                  startContent={<Play className="size-3.5" />}>
+                <Button onPress={onResume} color="primary" startContent={<Play className="size-3.5" />}>
                   Resume
                 </Button>
               ) : null}
@@ -148,19 +139,11 @@ export default function DownloadItem({item}: Props) {
               {item.status === 'cancelled' && item.receivedBytes > 0 ? (
                 // Show both clear and retry for cancelled downloads with partial progress
                 <>
-                  <Button
-                    onPress={() => {
-                      handleAction(item.name, 'resume');
-                    }}
-                    color="primary"
-                    startContent={<Restart className="size-3.5" />}
-                    fullWidth>
+                  <Button onPress={onResume} color="primary" startContent={<Restart className="size-3.5" />} fullWidth>
                     Retry
                   </Button>
                   <Button
-                    onPress={() => {
-                      handleAction(item.name, 'clear');
-                    }}
+                    onPress={onClear}
                     color="default"
                     startContent={<TrashBin2 className="size-3.5" />}
                     fullWidth>
@@ -168,20 +151,12 @@ export default function DownloadItem({item}: Props) {
                   </Button>
                 </>
               ) : item.status === 'cancelled' ? (
-                <Button
-                  onPress={() => {
-                    handleAction(item.name, 'clear');
-                  }}
-                  color="default"
-                  startContent={<TrashBin2 className="size-3.5" />}
-                  fullWidth>
+                <Button onPress={onClear} color="default" startContent={<TrashBin2 className="size-3.5" />} fullWidth>
                   Clear
                 </Button>
               ) : (
                 <Button
-                  onPress={() => {
-                    handleAction(item.name, 'cancel');
-                  }}
+                  onPress={onCancel}
                   color="danger"
                   startContent={<X className="size-3.5" />}
                   className={`${(item.status === 'downloading' || item.status === 'paused') && 'max-w-24'}`}>
@@ -194,4 +169,6 @@ export default function DownloadItem({item}: Props) {
       </CardFooter>
     </Card>
   );
-}
+});
+
+export default DownloadItem;

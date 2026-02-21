@@ -1,20 +1,24 @@
 import {Button, Chip} from '@heroui/react';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
 import {Broom, DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
-import {memo} from 'react';
+import {memo, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {contextActions, useContextState} from '../../redux/reducer';
 import DownloadItem from './Item';
 
+/**
+ * DownloadMenu component displays a list of active and completed downloads.
+ * It allows clearing all downloads and managing individual items.
+ */
 const DownloadMenu = memo(() => {
   const downloads = useContextState('downloads');
   const dispatch = useDispatch();
 
-  const handleClearAll = () => {
+  const handleClearAll = useCallback(() => {
     dispatch(contextActions.clearAllDownloads());
     downloadManagerIpc.send.clearAll();
-  };
+  }, [dispatch]);
 
   return (
     <div className="flex flex-col">
@@ -37,7 +41,7 @@ const DownloadMenu = memo(() => {
       </div>
 
       {/* Download List */}
-      <div className={'px-3 py-1 pb-4 gap-y-2 flex flex-col justify-start max-h-200 overflow-y-auto overflow-x-hidden'}>
+      <div className="px-3 py-1 pb-4 gap-y-2 flex flex-col justify-start max-h-200 overflow-y-auto overflow-x-hidden">
         {downloads.map(item => (
           <DownloadItem item={item} key={item.name} />
         ))}

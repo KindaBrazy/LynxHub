@@ -8,6 +8,10 @@ import {memo} from 'react';
 import {hideContextWindow, setElementFocus} from '../Shared';
 import ConfirmElement from './ConfirmElement';
 
+/**
+ * Component for the "Close App" confirmation dialog.
+ * Allows the user to exit, restart (if not portable), or cancel.
+ */
 const CloseApp = memo(() => {
   const onRestart = () => applicationIpc.send.changeWinState('restart');
   const onClose = () => applicationIpc.send.changeWinState('close');
