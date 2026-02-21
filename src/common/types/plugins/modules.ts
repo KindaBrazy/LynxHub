@@ -1,8 +1,9 @@
-import {ElectronAPI} from '@electron-toolkit/preload';
+import type {ElectronAPI} from '@electron-toolkit/preload';
+import type * as pty from 'node-pty';
 
-import {AvailablePageIDs} from '../../consts';
-import {CustomRunBehaviorData} from '../ipc';
-import {InstalledCard} from '../storage';
+import type {AvailablePageIDs} from '../../consts';
+import type {CustomRunBehaviorData} from '../ipc';
+import type {InstalledCard} from '../storage';
 
 declare global {
   interface Window {
@@ -12,22 +13,99 @@ declare global {
   }
 }
 
+/**
+ * Basic metadata for an extension.
+ */
 export type ExtensionData = {
+  /** The display title of the extension. */
   title: string;
+  /** A brief description of the extension. */
   description: string;
+  /** The URL of the extension's repository or homepage. */
   url: string;
+  /** The number of stars (e.g., on GitHub), if available. */
   stars?: number;
 };
 
-export type StorageType = {get: (key: string) => any; set: (key: string, data: any) => void};
+/**
+ * Interface for a simple key-value storage mechanism.
+ */
+export type StorageType = {
+  /**
+   * Retrieve a value from storage.
+   * @param key - The key to retrieve.
+   * @returns The stored value.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  get: <T = any>(key: string) => T;
+  /**
+   * Save a value to storage.
+   * @param key - The key to store.
+   * @param data - The data to save.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  set: <T = any>(key: string, data: T) => void;
+};
 
+/**
+ * Interface for IPC communication in the main process.
+ */
 export type MainIpcTypes = {
+  /**
+   * Handle an IPC invocation from the renderer.
+   * @param channel - The channel to listen on.
+   * @param listener - The callback function.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handle(channel: string, listener: (event: any, ...args: any[]) => any): void;
+  /**
+   * Listen for an IPC message.
+   * @param channel - The channel to listen on.
+   * @param listener - The callback function.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   on(channel: string, listener: (event: any, ...args: any[]) => void): void;
+  /**
+   * Send an IPC message.
+   * @param channel - The channel to send on.
+   * @param args - Arguments to send.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   send: (channel: string, ...args: any[]) => void;
 };
 
-/** These methods will be called in the main process */
+/**
+ * Interface for IPC communication in the renderer process.
+ */
+export type RendererIpcTypes = {
+  /**
+   * Invoke an IPC handler in the main process.
+   * @param channel - The channel to invoke.
+   * @param args - Arguments to pass.
+   * @returns A promise resolving to the result.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  invoke<T = any>(channel: string, ...args: any[]): Promise<T>;
+  /**
+   * Listen for an IPC message.
+   * @param channel - The channel to listen on.
+   * @param listener - The callback function.
+   * @returns A function to remove the listener.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  on(channel: string, listener: (event: any, ...args: any[]) => void): () => void;
+  /**
+   * Send an IPC message.
+   * @param channel - The channel to send on.
+   * @param args - Arguments to send.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  send(channel: string, ...args: any[]): void;
+};
+
+/**
+ * Methods available to a card module in the main process (Initial version).
+ */
 export type CardMainMethodsInitial = (utils: MainModuleUtils) => {
   /** Return commands based on installed directory to be executed with terminal */
   getRunCommands: () => Promise<string | string[]>;
@@ -39,11 +117,13 @@ export type CardMainMethodsInitial = (utils: MainModuleUtils) => {
   saveArgs?: (args: ChosenArgument[]) => Promise<void>;
   mainIpc?: () => void;
   updateAvailable?: () => Promise<boolean>;
-  isInstalled?: (onInstalledDirExist: (card: InstalledCard) => Promise<false | true>) => Promise<boolean>;
+  isInstalled?: (onInstalledDirExist: (card: InstalledCard) => Promise<boolean>) => Promise<boolean>;
   uninstall?: () => Promise<void>;
 };
 
-/** These methods will be called in the main process */
+/**
+ * Methods available to a card module in the main process.
+ */
 export type CardMainMethods = () => {
   /** Return commands based on installed directory to be executed with terminal */
   getRunCommands: () => Promise<string | string[]>;
@@ -55,12 +135,26 @@ export type CardMainMethods = () => {
   saveArgs?: (args: ChosenArgument[]) => Promise<void>;
   mainIpc?: () => void;
   updateAvailable?: () => Promise<boolean>;
-  isInstalled?: (onInstalledDirExist: (card: InstalledCard) => Promise<false | true>) => Promise<boolean>;
+  isInstalled?: (onInstalledDirExist: (card: InstalledCard) => Promise<boolean>) => Promise<boolean>;
   uninstall?: () => Promise<void>;
 };
 
-export type InstallationMethod = {chosen: 'install' | 'locate'; targetDirectory?: string};
+/**
+ * Represents the method chosen for installation.
+ */
+export type InstallationMethod = {
+  chosen: 'install' | 'locate';
+  targetDirectory?: string;
+};
+
+/**
+ * Supported types for user input fields.
+ */
 export type UserInputFieldType = 'checkbox' | 'text-input' | 'select' | 'directory' | 'file';
+
+/**
+ * Configuration for a single user input field.
+ */
 export type UserInputField = {
   id: string;
   label: string;
@@ -69,15 +163,28 @@ export type UserInputField = {
   defaultValue?: string | boolean;
   isRequired?: boolean;
 };
-export type UserInputResult = {id: string; result: string | boolean};
-export type StarterStepOptions = {disableSelectDir?: boolean};
-export type RendererIpcTypes = {
-  invoke(channel: string, ...args: any[]): Promise<any>;
-  on(channel: string, listener: any): () => void;
-  send(channel: string, ...args: any[]): void;
+
+/**
+ * Result of a user input interaction.
+ */
+export type UserInputResult = {
+  id: string;
+  result: string | boolean;
 };
+
+/**
+ * Options for the starter step of installation.
+ */
+export type StarterStepOptions = {
+  disableSelectDir?: boolean;
+};
+
+/**
+ * Interface for the installation stepper, guiding the user through the installation process.
+ */
 export type InstallationStepper = {
-  /** Initialize the installation process by setting up the required steps.
+  /**
+   * Initialize the installation process by setting up the required steps.
    * @param stepTitles An array of step titles representing the installation workflow.
    */
   initialSteps: (stepTitles: string[]) => void;
@@ -85,32 +192,37 @@ export type InstallationStepper = {
   /** Advance to the next step in the installation process. */
   nextStep: () => Promise<void>;
 
-  /** Normally the first step (Contain locating or start installation)
+  /**
+   * Normally the first step (Contain locating or start installation)
    * @return A promise resolving to the user's choice of installation method.
    */
   starterStep: (options?: StarterStepOptions) => Promise<InstallationMethod>;
 
-  /** Clone a Git repository to a user-selected directory.
-   * @param repositoryUrl The URL of the Git repository to clone.
+  /**
+   * Clone a Git repository to a user-selected directory.
+   * @param url The URL of the Git repository to clone.
    * @returns A promise resolving to the path of the cloned repository.
    */
   cloneRepository: (url: string) => Promise<string>;
 
-  /** Execute a terminal script file.
+  /**
+   * Execute a terminal script file.
    * @param workingDirectory The directory in which to execute the script.
    * @param scriptFileName The name of the script file to execute.
    * @returns A promise that resolves when execution is complete and the user proceeds.
    */
   runTerminalScript: (workingDirectory: string, scriptFileName: string) => Promise<void>;
 
-  /** Execute one or more terminal commands.
+  /**
+   * Execute one or more terminal commands.
    * @param commands A single command or an array of commands to execute.
    * @param workingDirectory Optional directory in which to execute the commands.
    * @returns A promise that resolves when execution is complete and the user proceeds.
    */
   executeTerminalCommands: (commands: string | string[], workingDirectory?: string) => Promise<void>;
 
-  /** Download a file from a given URL.
+  /**
+   * Download a file from a given URL.
    * @param fileUrl The URL of the file to download.
    * @returns A promise resolving to the path of the downloaded file.
    */
@@ -118,8 +230,8 @@ export type InstallationStepper = {
 
   /**
    * Displays a progress bar UI element.
-   * @param title The title of the progress bar.
    * @param isIndeterminate Whether the progress is indeterminate (true) or determinate (false).
+   * @param title The title of the progress bar.
    * @param percentage The completion percentage (0-100) for determinate progress. Ignored if isIndeterminate is true.
    * @param description Optional array of label-value pairs to provide additional information about the progress.
    */
@@ -133,20 +245,27 @@ export type InstallationStepper = {
     }[],
   ) => void;
 
-  /** Call this when installation is done to set the card installed
+  /**
+   * Call this when installation is done to set the card installed
    * @param dir The directory to save
    */
   setInstalled: (dir?: string) => void;
 
+  /**
+   * Mark the installation as updated.
+   */
   setUpdated: () => void;
 
-  /** Collect user input for various configuration options.
+  /**
+   * Collect user input for various configuration options.
    * @param inputFields An array of input fields to present to the user.
+   * @param title Optional title for the input dialog.
    * @returns A promise resolving to an array of user input results.
    */
   collectUserInput: (inputFields: UserInputField[], title?: string) => Promise<UserInputResult[]>;
 
-  /** Display the final step of the installation process with a result message.
+  /**
+   * Display the final step of the installation process with a result message.
    * @param resultType The type of result: 'success' or 'error'.
    * @param resultTitle A title summarizing the result.
    * @param resultDescription An optional detailed description of the result.
@@ -159,7 +278,11 @@ export type InstallationStepper = {
    */
   ipc: RendererIpcTypes;
 
-  storage: {get: (key: string) => any; set: (key: string, data: any) => void};
+  /**
+   * Storage access for the installation process.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  storage: {get: <T = any>(key: string) => Promise<T>; set: <T = any>(key: string, data: T) => void};
 
   /** Use these operations after the `setInstalled` function */
   postInstall: {
@@ -215,65 +338,100 @@ export type InstallationStepper = {
 
   /** Utility functions that don't involve UI interaction */
   utils: {
-    /** Decompress a file.
+    /**
+     * Decompress a file.
      * @param compressedFilePath The path to the compressed file.
      * @returns A promise resolving to the path of the decompressed data.
      */
     decompressFile: (compressedFilePath: string) => Promise<string>;
 
-    /** Validate if a local directory matches a given Git repository URL.
+    /**
+     * Validate if a local directory matches a given Git repository URL.
      * @param localDirectory The local directory to validate.
      * @param repositoryUrl The Git repository URL to compare against.
      * @returns A promise resolving to true if the directory matches the repository, false otherwise.
      */
     validateGitRepository: (localDirectory: string, repositoryUrl: string) => Promise<boolean>;
 
-    /** Check for the existence of specified files or folders in a directory.
+    /**
+     * Check for the existence of specified files or folders in a directory.
      * @param directory The directory to search in.
      * @param itemNames An array of file or folder names to check for.
      * @returns A promise resolving to true if all items exist, false otherwise.
      */
     verifyFilesExist: (directory: string, itemNames: string[]) => Promise<boolean>;
 
-    /** Open a file or folder using the system's default manner.
-     * @param path Absolute path to open
+    /**
+     * Open a file or folder using the system's default manner.
+     * @param itemPath Absolute path to open
      */
     openFileOrFolder: (itemPath: string) => void;
   };
 
+  /**
+   * Display toast notifications.
+   */
   showToast: () => {
     success: (title: string, timeout?: number) => void;
     error: (title: string, timeout?: number) => void;
     warning: (title: string, timeout?: number) => void;
     info: (title: string, timeout?: number) => void;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     loading: (title: string, promise: Promise<any>) => void;
   };
 };
 
+/**
+ * API available to the card info callback.
+ */
 export type CardInfoApi = {
+  /** The folder where the card is installed. */
   installationFolder?: string;
 
-  storage: {get: (key: string) => Promise<any>; set: (key: string, data: any) => void};
+  /** Storage access. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  storage: {get: <T = any>(key: string) => Promise<T>; set: <T = any>(key: string, data: T) => void};
+  /** IPC access. */
   ipc: RendererIpcTypes;
 
+  /** Get the size of a folder. */
   getFolderSize: (dir: string) => Promise<number>;
+  /** Get the creation time of a folder. */
   getFolderCreationTime: (dir: string) => Promise<string>;
+  /** Get the last pulled date of a git repository. */
   getLastPulledDate: (dir: string) => Promise<string>;
+  /** Get the current release tag of a git repository. */
   getCurrentReleaseTag: (dir: string) => Promise<string>;
 };
 
+/**
+ * Items for card info description.
+ */
 export type CardInfoDescriptions_Items = {label: string; result: string | 'loading' | undefined | null}[];
+
+/**
+ * Structure for card info descriptions.
+ */
 export type CardInfoDescriptions = {title: string; items: CardInfoDescriptions_Items}[] | undefined;
+
+/**
+ * Callback interface for card info updates.
+ */
 export type CardInfoCallback = {
   setDescription: (descriptions: CardInfoDescriptions) => void;
   setOpenFolders: (dir: string[] | undefined) => void;
 };
 
-/** These methods will be called in the renderer process */
+/**
+ * Methods provided by the card renderer.
+ */
 export type CardRendererMethods = {
-  /** This method will be called with terminal output line parameter
+  /**
+   * This method will be called with terminal output line parameter
+   * @param line - The terminal output line.
    * @return URL of running AI to be showing in browser of the user and
-   * @return undefined if URL is not in that line */
+   * @return undefined if URL is not in that line
+   */
   catchAddress?: (line: string) => string | undefined;
 
   /** Fetching and return array of available extensions in type of `ExtensionData` */
@@ -285,8 +443,10 @@ export type CardRendererMethods = {
   /** Parse given string to the arguments */
   parseStringToArgs?: (args: string) => ChosenArgument[];
 
+  /** Display card information. */
   cardInfo?: (api: CardInfoApi, callback: CardInfoCallback) => void;
 
+  /** Installation manager methods. */
   manager?: {
     startInstall: (stepper: InstallationStepper) => void;
     updater: {
@@ -296,6 +456,9 @@ export type CardRendererMethods = {
   };
 };
 
+/**
+ * Data structure representing a Card (Module).
+ */
 export type CardData = {
   /**  ID will be used to managing state of card */
   id: string;
@@ -314,8 +477,10 @@ export type CardData = {
    */
   extensionsDir?: string;
 
+  /** Type of installation. */
   installationType: 'git' | 'others';
 
+  /** Type of uninstallation. */
   uninstallType?: 'removeFolder' | 'others';
 
   /** Type of AI (Using type for things like discord activity status) */
@@ -332,10 +497,24 @@ export type CardData = {
   methods: CardRendererMethods;
 };
 
+/**
+ * Card data loaded into the application, including route path.
+ */
 export type LoadedCardData = Omit<CardData, 'arguments' | 'methods'> & {routePath: AvailablePageIDs};
+
+/**
+ * Arguments loaded for a card.
+ */
 export type LoadedArguments = Pick<CardData, 'arguments' | 'id'>;
+
+/**
+ * Methods loaded for a card.
+ */
 export type LoadedMethods = Pick<CardData, 'methods' | 'id'>;
 
+/**
+ * Data for a page containing cards.
+ */
 export type PagesData = {
   /** Router path (For placing the card in relative page) */
   routePath: AvailablePageIDs;
@@ -344,41 +523,77 @@ export type PagesData = {
   cards: CardData[];
 };
 
+/**
+ * Collection of card modules.
+ */
 export type CardModules = PagesData[];
 
+/**
+ * A chosen argument value.
+ */
 export type ChosenArgument = {name: string; value: string};
 
+/**
+ * Supported argument types.
+ */
 export type ArgumentType = 'Directory' | 'File' | 'Input' | 'DropDown' | 'CheckBox';
 
+/**
+ * Definition of a single argument item.
+ */
 export type ArgumentItem = {
   name: string;
   description?: string;
   type: ArgumentType;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   defaultValue?: any;
   values?: string[];
 };
 
+/**
+ * A section of arguments.
+ */
 export type ArgumentSection = {
   section: string;
   items: ArgumentItem[];
 };
 
+/**
+ * A data section containing arguments.
+ */
 export type DataSection = {
   category: string;
   condition?: string;
   sections: ArgumentSection[];
 };
+
+/**
+ * A data item containing arguments.
+ */
 export type DataItem = {
   category: string;
   condition?: string;
   items: ArgumentItem[];
 };
 
+/**
+ * Structure for arguments data.
+ */
 export type ArgumentsData = (DataItem | DataSection)[];
 
+/**
+ * Simple argument type.
+ */
 export type ArgType = {name: string; value: string};
+
+/**
+ * Category of argument.
+ */
 export type Category = 'env' | 'envVar' | 'cl' | undefined;
 
+/**
+ * Structure for main process modules.
+ */
 export type MainModules = {
   /** The ID of the card that using these methods */
   id: string;
@@ -389,34 +604,53 @@ export type MainModules = {
   methods: CardMainMethods;
 };
 
+/**
+ * Asset in a GitHub release.
+ */
 export type GitHubReleaseAsset = {
   name: string;
   browser_download_url: string;
 };
 
+/**
+ * GitHub release information.
+ */
 export type GitHubRelease = {
   tag_name: string;
   prerelease: boolean;
   assets: GitHubReleaseAsset[];
 };
+
+/**
+ * Simplified release info.
+ */
 export type ReleaseInfo = {
   version: string;
   downloadUrl: string;
 };
 
+/**
+ * Type for importing a main module.
+ */
 export type MainModuleImportType = {
   default: (utils: MainModuleUtils) => Promise<MainModules[]>;
 };
 
+/**
+ * Type for importing a renderer module.
+ */
 export type RendererModuleImportType = {
   default: CardModules;
   setCurrentBuild?: (build: number) => void;
 };
 
+/**
+ * Utilities available to main modules.
+ */
 export type MainModuleUtils = {
   storage: StorageType;
   ipc: MainIpcTypes;
-  pty: any;
+  pty: typeof pty;
   isPullAvailable: (dir: string) => Promise<boolean>;
   trashDir: (dir: string) => Promise<void>;
   removeDir: (dir: string) => Promise<void>;
