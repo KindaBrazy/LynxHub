@@ -8,10 +8,14 @@ import {useContextState} from '../../redux/reducer';
 import {hideContextWindow, setElementFocus} from '../Shared';
 import ConfirmElement from './ConfirmElement';
 
+/**
+ * Component for the "Terminate Tab" confirmation dialog.
+ * Used when closing a tab that requires confirmation.
+ */
 const TerminateTab = memo(() => {
   const id = useContextState('targetID');
 
-  const removeTab = () => {
+  const onRemoveTab = () => {
     contextMenuIpc.send.removeTab(id);
     hideContextWindow();
   };
@@ -30,7 +34,7 @@ const TerminateTab = memo(() => {
           <Button
             size="sm"
             color="danger"
-            onPress={removeTab}
+            onPress={onRemoveTab}
             ref={setElementFocus}
             startContent={<Power_Icon />}
             autoFocus>
