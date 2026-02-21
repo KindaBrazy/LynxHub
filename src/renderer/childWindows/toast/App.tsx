@@ -1,27 +1,16 @@
-import {Button} from '@heroui/react';
-import {Power_Icon} from '@lynx_assets/icons';
 import {ToastWindowMessageType} from '@lynx_common/types';
-import toastWindowIpc from '@lynx_shared/ipc/toastWindow';
-import {CheckCircle, DangerCircle, InfoCircle, Refresh, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
-import {X} from 'lucide-react';
-import {useEffect, useState} from 'react';
 
-const getIcon = (type: string) => {
-  switch (type) {
-    case 'success':
-      return <CheckCircle className="size-7 text-emerald-500" />;
-    case 'warning':
-      return <DangerCircle className="size-7 text-amber-500" />;
-    case 'error':
-      return <ShieldCross className="size-7 text-red-500" />;
-    case 'info':
-      return <InfoCircle className="size-7 text-blue-500" />;
-    default:
-      return <InfoCircle className="size-7 text-foreground" />;
-  }
-};
+import {ToastBody} from './ToastBody';
+import {ToastFooter} from './ToastFooter';
+import {ToastHeader} from './ToastHeader';
+import {useToastMessage} from './useToastMessage';
 
-const getTypeStyles = (type: string) => {
+/**
+ * Returns the CSS classes for the toast border based on the type.
+ * @param type The toast message type.
+ * @returns The CSS class string.
+ */
+const getTypeStyles = (type: ToastWindowMessageType['type']) => {
   switch (type) {
     case 'success':
       return 'border-l-emerald-500';
@@ -36,22 +25,12 @@ const getTypeStyles = (type: string) => {
   }
 };
 
+/**
+ * Main application component for the Toast Window.
+ * Displays a toast notification with optional buttons.
+ */
 export default function ToastContent() {
-  const [toastMessage, setToastMessage] = useState<ToastWindowMessageType | null>(null);
-
-  useEffect(() => {
-    const offMessage = toastWindowIpc.onShowMessage(data => {
-      setToastMessage(data);
-      document.title = data.title;
-    });
-
-    return () => offMessage();
-  }, []);
-
-  const handleClose = () => toastWindowIpc.closeToast();
-  const handleExitApp = () => toastWindowIpc.exitApp();
-  const handleRestart = () => toastWindowIpc.restartApp();
-  const handleCustomBtnClick = toastWindowIpc.customBtnPressed;
+  const {toastMessage, handlers} = useToastMessage();
 
   if (!toastMessage) return null;
 
@@ -59,77 +38,20 @@ export default function ToastContent() {
     <div
       className={
         `${getTypeStyles(toastMessage.type)} size-full overflow-hidden scrollbar-hide ` +
-        ` border-l-8 transition-all duration-300 ease-out draggable flex flex-col dark:bg-LynxRaisinBlack bg-white`
+        ` draggable flex flex-col border-l-8 bg-white transition-all duration-300 ease-out dark:bg-LynxRaisinBlack`
       }>
-      {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-foreground-100">
-        <div className="flex items-center gap-3">
-          <div className="shrink-0">{getIcon(toastMessage.type)}</div>
-          <h2 className="text-lg font-semibold text-foreground-800">{toastMessage.title}</h2>
-        </div>
+      <ToastHeader title={toastMessage.title} type={toastMessage.type} />
 
-        <div className="flex items-center gap-2">
-          <div className="text-xs text-foreground-500">{new Date().toLocaleTimeString()}</div>
-        </div>
-      </div>
+      <ToastBody message={toastMessage.message} />
 
-      {/* Content */}
-      <div className="h-33 overflow-hidden notDraggable">
-        <div className="px-4 py-2 overflow-y-auto size-full">
-          <span className="text-foreground-600 leading-relaxed">{toastMessage.message}</span>
-        </div>
-      </div>
-
-      {/* Footer with subtle pattern */}
-      <div className="px-7 h-14 flex justify-between items-center border-foreground-100">
-        <div>
-          {toastMessage.buttons && toastMessage.buttons.includes('close') && (
-            <Button
-              size={'sm'}
-              onPress={handleClose}
-              className={'notDraggable'}
-              startContent={<X className={'size-3.5'} />}>
-              Close Toast
-            </Button>
-          )}
-        </div>
-
-        {/* Action buttons */}
-        <div className="flex items-center gap-3">
-          {toastMessage.buttons && toastMessage.buttons.includes('restart') && (
-            <Button
-              size={'sm'}
-              color={'primary'}
-              onPress={handleRestart}
-              className={'notDraggable'}
-              startContent={<Refresh className={'size-3.5'} />}>
-              Restart LynxHub
-            </Button>
-          )}
-          {toastMessage.buttons && toastMessage.buttons.includes('exit') && (
-            <Button
-              size={'sm'}
-              color={'danger'}
-              onPress={handleExitApp}
-              className={'notDraggable'}
-              startContent={<Power_Icon className={'size-3.5'} />}>
-              Exit LynxHub
-            </Button>
-          )}
-
-          {toastMessage.customButtons &&
-            toastMessage.customButtons.map(btn => (
-              <Button
-                size="sm"
-                key={btn.id}
-                color={btn.color}
-                onPress={() => handleCustomBtnClick(btn.id)}
-                className={`notDraggable ${btn.cursor === 'default' && 'cursor-default'}`}>
-                {btn.label}
-              </Button>
-            ))}
-        </div>
-      </div>
+      <ToastFooter
+        buttons={toastMessage.buttons}
+        customButtons={toastMessage.customButtons}
+        onClose={handlers.handleClose}
+        onCustomClick={handlers.handleCustomBtnClick}
+        onExit={handlers.handleExitApp}
+        onRestart={handlers.handleRestart}
+      />
     </div>
   );
 }
