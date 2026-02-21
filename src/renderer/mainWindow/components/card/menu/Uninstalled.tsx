@@ -2,7 +2,7 @@ import {Button, Dropdown, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
-import {useCardStore} from '../Wrapper';
+import {useCardStore} from '../store';
 import {DuplicateMenuItem, HomePageMenuItem} from './items/About';
 
 const UninstalledMenu = memo(() => {

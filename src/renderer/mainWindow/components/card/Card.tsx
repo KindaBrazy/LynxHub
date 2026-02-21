@@ -1,74 +1,41 @@
-import {Card, CardBody, CardHeader, Chip, User} from '@heroui/react';
-import {extensionRendererApi} from '@lynx/plugins/extensions/loader';
-import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
+import {Card, CardBody} from '@heroui/react';
 import {useAppState} from '@lynx/redux/reducers/app';
-import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
-import {useTabsState} from '@lynx/redux/reducers/tabs';
-import {AppDispatch} from '@lynx/redux/store';
 import {getAccentColorAsHex} from '@lynx/utils/accentColorGenerator';
-import {useInstalledCard, useIsAutoUpdateExtensions, useUpdateAvailable, useUpdatingCard} from '@lynx/utils/hooks';
-import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
-import ptyIpc from '@lynx_shared/ipc/pty';
-import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import utilsIpc from '@lynx_shared/ipc/utils';
-import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
-import {AnimatePresence, motion} from 'framer-motion';
-import {CSSProperties, FormEvent, memo, useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {extractGitUrl} from '@lynx_common/utils';
+import {motion} from 'framer-motion';
+import {memo, useMemo} from 'react';
 
-import {useTabModalManager} from '../modals/useTabModalManager';
+import {CardHeaderContent} from './CardHeaderContent';
 import Footer from './Footer';
-import {useCardStore} from './Wrapper';
+import {useCardStore} from './store';
+import {useCardActions} from './useCardActions';
+import {useCardTitle} from './useCardTitle';
 
-type AccentStyle = CSSProperties & {'--accent-bg-color'?: string};
+type AccentStyle = React.CSSProperties & {'--accent-bg-color'?: string};
 
+/**
+ * Main Card component for displaying a plugin/module.
+ */
 const LynxCard = memo(() => {
-  const dispatch = useDispatch<AppDispatch>();
-
-  const allMethods = useAllCardMethods();
-
-  const activeTab = useTabsState('activeTab');
-  const runningCard = useCardsState('runningCard');
-  const updatingExtensions = useCardsState('updatingExtensions');
-
-  const id = useCardStore(state => state.id);
   const isInstalled = useCardStore(state => state.installed);
   const title = useCardStore(state => state.title);
   const repoUrl = useCardStore(state => state.repoUrl);
   const description = useCardStore(state => state.description);
-  const extensionsDir = useCardStore(state => state.extensionsDir);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
-  const card = useInstalledCard(id);
-  const updating = useUpdatingCard(id);
-  const updateAvailable = useUpdateAvailable(id);
-  const autoUpdateExtensions = useIsAutoUpdateExtensions(id);
+  const {startAi, install, isRunning, updating, updateAvailable, isUpdatingExtensions, updateCount} = useCardActions();
 
-  const [customTitle, setCustomTitle] = useState<string | null>(null);
-
-  const {openModal} = useTabModalManager();
-
-  useEffect(() => {
-    let isMounted = true;
-    storageIpc.getCustom(`${id}_title_edited`).then(value => {
-      if (isMounted) setCustomTitle(value || null);
-    });
-    return () => {
-      isMounted = false;
-    };
-  }, [id]);
-
-  const modifiedTitle = customTitle ?? title;
-
-  const {developer, avatarSrc} = useMemo(() => {
-    const {owner, avatarUrl} = extractGitUrl(repoUrl);
-    return {developer: owner, avatarSrc: getCacheUrl(avatarUrl)};
-  }, [repoUrl]);
-  const isRunning = useMemo(() => runningCard.some(item => item.id === id), [runningCard, id]);
-  const accentColor = useMemo(() => getAccentColorAsHex(title, developer), [title, developer]);
+  const {modifiedTitle, onTitleChange} = useCardTitle();
 
   const isDarkMode = useAppState('darkMode');
+
+  // Calculate accent color based on developer name and title
+  const {developer} = useMemo(() => {
+    const {owner} = extractGitUrl(repoUrl);
+    return {developer: owner};
+  }, [repoUrl]);
+
+  const accentColor = useMemo(() => getAccentColorAsHex(title, developer), [title, developer]);
 
   const accentStyle: AccentStyle = useMemo(
     () =>
@@ -78,132 +45,37 @@ const LynxCard = memo(() => {
     [isInstalled, accentColor, isDarkMode],
   );
 
-  const [isUpdatingExtensions, setIsUpdatingExtensions] = useState<boolean>(false);
-  const [updateCount, setUpdateCount] = useState<string>('');
-
-  useEffect(() => {
-    if (updatingExtensions && updatingExtensions.id === id) {
-      if (updatingExtensions.step === 'done') {
-        setIsUpdatingExtensions(false);
-      } else {
-        setUpdateCount(updatingExtensions.step);
-      }
-    }
-  }, [updatingExtensions]);
-
-  const startAi = useCallback(() => {
-    AddBreadcrumb_Renderer(`Starting AI: id:${id}`);
-    extensionRendererApi.events.emit('before_card_start', {id});
-    if (autoUpdateExtensions && card) {
-      AddBreadcrumb_Renderer(`Updating AI Extensions: id:${id}`);
-      utilsIpc.updateAllExtensions({id, dir: card.dir! + extensionsDir!});
-      setIsUpdatingExtensions(true);
-    } else {
-      ptyIpc.process(id, id);
-      storageUtilsIpc.invoke.recentlyUsedCards('update', id);
-      dispatch(cardsActions.addRunningCard({tabId: activeTab, id}));
-    }
-  }, [id, autoUpdateExtensions, activeTab, dispatch]);
-
-  const install = useCallback(() => {
-    AddBreadcrumb_Renderer(`Start Installing AI: id:${id}`);
-    if (getCardMethod(allMethods, id, 'manager')) {
-      extensionRendererApi.events.emit('before_card_install', {id});
-      openModal('installUI', {cardId: id, type: 'install', title}, 'active');
-    }
-  }, [repoUrl, title, id, allMethods, openModal]);
-
-  const onTitleChange = useCallback(
-    (e: FormEvent<HTMLSpanElement>) => {
-      const newTitle = e.currentTarget.textContent || title;
-      setCustomTitle(newTitle);
-      storageIpc.setCustom(`${id}_title_edited`, newTitle);
-    },
-    [id, title],
-  );
-
   return (
     <Card
-      className={
-        'relative w-75 h-52.5 border border-foreground-100 px-2 group ' +
-        'hover:scale-[1.02] shadow-md transition-all hover:shadow-lg duration-300'
-      }
       as={motion.div}
+      className={
+        'relative h-52.5 w-75 border border-foreground-100 px-2 shadow-md transition-all duration-300 ' +
+        'group hover:scale-[1.02] hover:shadow-lg'
+      }
+      isPressable={!isRunning && !updating && !isUpdatingExtensions}
       whileHover="hover"
       onContextMenu={() => setMenuIsOpen(true)}
-      onPress={isInstalled ? startAi : install}
-      isPressable={!isRunning && !updating && !isUpdatingExtensions}>
+      onPress={isInstalled ? startAi : install}>
       <div
+        className={`absolute inset-0 z-0 scale-150 opacity-50 ${isInstalled ? 'bg-installed' : 'bg-uninstalled'}`}
         style={accentStyle}
-        className={`absolute scale-150 opacity-50 inset-0 z-0 ${isInstalled ? 'bg-installed' : 'bg-uninstalled'}`}
       />
 
-      <CardHeader className="justify-between">
-        <User
-          avatarProps={{
-            src: avatarSrc,
-            name: modifiedTitle,
-            isBordered: true,
-            showFallback: true,
-            classNames: {base: isInstalled && 'ring-primary-200'},
-          }}
-          name={
-            <span
-              onBlur={() => {
-                const selection = window.getSelection();
-                if (selection) {
-                  selection.removeAllRanges();
-                }
-              }}
-              className={
-                'cursor-text outline-none focus:border-2 border-transparent focus:border-foreground-200' +
-                ' focus:px-1 rounded-lg transition duration-300'
-              }
-              onKeyDown={e => {
-                e.stopPropagation();
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  e.currentTarget.blur();
-                }
-              }}
-              spellCheck="false"
-              onInput={onTitleChange}
-              onClick={e => e.stopPropagation()}
-              contentEditable
-              suppressContentEditableWarning>
-              {modifiedTitle}
-            </span>
-          }
-          description={`By ${developer}`}
-          className="scale-120 mx-3 mt-2"
-          classNames={{description: 'text-[0.7rem]'}}
-        />
-        <AnimatePresence>
-          {updateAvailable && (
-            <Chip
-              size="sm"
-              variant="flat"
-              as={motion.div}
-              color="success"
-              key="chip_update"
-              exit={{opacity: 0, translateY: 2}}
-              className="flex flex-row gap-x-0.5"
-              initial={{opacity: 0, translateY: 2}}
-              animate={{opacity: 1, translateY: 0}}
-              startContent={<DownloadMinimalistic className="size-3" />}>
-              Update
-            </Chip>
-          )}
-        </AnimatePresence>
-      </CardHeader>
-      <CardBody className="py-2 justify-center">
-        <span className=" line-clamp-3 text-foreground-500 text-sm">{description}</span>
+      <CardHeaderContent
+        modifiedTitle={modifiedTitle}
+        updateAvailable={updateAvailable}
+        onTitleChange={onTitleChange}
+      />
+
+      <CardBody className="justify-center py-2">
+        <span className="line-clamp-3 text-sm text-foreground-500">{description}</span>
       </CardBody>
+
       <Footer
-        id={id}
-        updating={updating}
+        id={useCardStore(state => state.id)}
         isRunning={isRunning}
         updateCount={updateCount}
+        updating={updating}
         updatingExtensions={isUpdatingExtensions}
       />
     </Card>

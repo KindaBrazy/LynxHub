@@ -7,7 +7,7 @@ import {SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useMemo} from 'react';
 
 import {useTabModalManager} from '../../../modals/useTabModalManager';
-import {useCardStore} from '../../Wrapper';
+import {useCardStore} from '../../store';
 
 /**
  * Menu item to open the launch configuration modal.

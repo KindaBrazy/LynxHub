@@ -5,7 +5,7 @@ import {useUpdatingCard} from '@lynx/utils/hooks';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useMemo} from 'react';
 
-import {useCardStore} from '../Wrapper';
+import {useCardStore} from '../store';
 import {AboutMenuItem, DuplicateMenuItem, HomePageMenuItem} from './items/About';
 import {UnAssignMenuItem, UninstallMenuItem} from './items/DangerZone';
 import {ExtensionsMenuItem, LaunchConfigMenuItem, RepoConfigMenuItem} from './items/Options';

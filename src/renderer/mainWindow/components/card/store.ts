@@ -1,11 +1,23 @@
 import {CardState} from '@lynx_common/types';
 import {LoadedCardData} from '@lynx_common/types/plugins/modules';
 import {validateGitRepoUrl} from '@lynx_common/utils';
-import {create} from 'zustand';
+import {createContext, useContext} from 'react';
+import {create, StoreApi, UseBoundStore} from 'zustand';
 
-// Create a reusable function to generate a store
-export const createCardStore = (initialData: LoadedCardData & {isInstalled: boolean; hasArguments: boolean}) => {
-  return create<CardState>(set => ({
+/**
+ * Type definition for the Card Store.
+ */
+export type CardStore = UseBoundStore<StoreApi<CardState>>;
+
+/**
+ * Creates a Zustand store for a specific card instance.
+ * @param initialData The initial data for the card.
+ * @returns A Zustand store.
+ */
+export const createCardStore = (
+  initialData: LoadedCardData & {isInstalled: boolean; hasArguments: boolean},
+): CardStore => {
+  return create<CardState>((set) => ({
     // Static Info from props
     title: initialData.title,
     id: initialData.id,
@@ -21,10 +33,26 @@ export const createCardStore = (initialData: LoadedCardData & {isInstalled: bool
     installed: initialData.isInstalled,
 
     // Actions that modify the state
-    setMenuIsOpen: isOpen => set({menuIsOpen: isOpen}),
-    setCheckingForUpdate: isChecking => set({checkingForUpdate: isChecking}),
+    setMenuIsOpen: (isOpen) => set({menuIsOpen: isOpen}),
+    setCheckingForUpdate: (isChecking) => set({checkingForUpdate: isChecking}),
   }));
 };
 
-// We will use this type for our React Context
-export type CardStore = ReturnType<typeof createCardStore>;
+/**
+ * Context for providing the Card Store to child components.
+ */
+export const CardStoreContext = createContext<CardStore | null>(null);
+
+/**
+ * Custom hook to access the Card Store.
+ * @param selector A selector function to pick a slice of the state.
+ * @returns The selected state slice.
+ * @throws Error if used outside of a CardStoreContext.Provider.
+ */
+export const useCardStore = <T>(selector: (state: CardState) => T): T => {
+  const store = useContext(CardStoreContext);
+  if (!store) {
+    throw new Error('Missing CardStoreContext.Provider');
+  }
+  return store(selector);
+};
