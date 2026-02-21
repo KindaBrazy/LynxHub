@@ -4,10 +4,25 @@ import {Dispatch, SetStateAction} from 'react';
 
 import {useTabVisibility} from '../../../../layouts/tabs/utils';
 
-type Props = {isOpen: boolean; setIsOpen: Dispatch<SetStateAction<boolean>>; tabId: string};
-export default function LocateWarning({isOpen, setIsOpen, tabId}: Props) {
+export interface LocateWarningProps {
+  /** Enables or disables the visibility of the modal. */
+  isOpen: boolean;
+  /** Sets the state of the modal's visibility. */
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  /** The id of the current tab for syncing visibility logic. */
+  tabId: string;
+}
+
+/**
+ * A warning modal displayed when a user attempts to select the application's installation directory for data storage.
+ * It prevents accidental data loss by warning the user to select another directory.
+ *
+ * @param {LocateWarningProps} props - The component props.
+ */
+export default function LocateWarning({isOpen, setIsOpen, tabId}: LocateWarningProps) {
   const onClose = () => setIsOpen(false);
   const show = useTabVisibility(tabId);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -21,10 +36,10 @@ export default function LocateWarning({isOpen, setIsOpen, tabId}: Props) {
           <span className="font-bold">Installation Directory</span>
         </ModalHeader>
         <ModalBody>
-          <span>
+          <p>
             Saving data to an application&#39;s installation directory can result in{' '}
             <span className="text-warning font-semibold">data loss</span>. Please move your data to a different folder.
-          </span>
+          </p>
         </ModalBody>
         <ModalFooter>
           <Button variant="light" color="warning" onPress={onClose} className="cursor-default">

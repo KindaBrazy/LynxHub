@@ -6,12 +6,20 @@ import {BaseStepsProps} from 'antd/es/steps';
 import {startCase} from 'lodash';
 import {RefObject, useEffect, useState} from 'react';
 
-type Props = {
+export interface InstallExtensionsProps {
+  /** The list of git repository URLs representing the extensions to clone, along with a target directory inside the base module folder. */
   extensionsURLs: {urls: string[]; dir: string} | undefined;
+  /** Ref to a function fired when all extensions have been cloned. */
   extensionsResolver: RefObject<(() => void) | null>;
-};
+}
 
-export default function InstallExtensions({extensionsURLs, extensionsResolver}: Props) {
+/**
+ * Handles the background cloning/installation of any required sub-extensions for a module.
+ * Visualizes the process using an ant-design stepper.
+ *
+ * @param {InstallExtensionsProps} props - The component props.
+ */
+export default function InstallExtensions({extensionsURLs, extensionsResolver}: InstallExtensionsProps) {
   const [current, setCurrent] = useState<number>(0);
   const [steps, setSteps] = useState<BaseStepsProps['items']>([]);
 

@@ -13,9 +13,20 @@ type Branch = {
   name: string;
 };
 
-type Props = {url: string; setCloneOptionsResult: Dispatch<SetStateAction<CloneOptionsResult>>};
+export interface CloneOptionsProps {
+  /** The original git URL used to calculate dynamic repository attributes (like branch lists). */
+  url: string;
+  /** Standard React setState method to hook clone variables up to the parent component. */
+  setCloneOptionsResult: Dispatch<SetStateAction<CloneOptionsResult>>;
+}
 
-export default function CloneOptions({url, setCloneOptionsResult}: Props) {
+/**
+ * Handles customizing advanced git settings (ex: specifying a branch to use, or doing shallow depth clones).
+ * Dynamically queries Github for meta branches info to pre-fill the selections.
+ *
+ * @param {CloneOptionsProps} props - The component props.
+ */
+export default function CloneOptions({url, setCloneOptionsResult}: CloneOptionsProps) {
   const [loading, setLoading] = useState<boolean>(true);
 
   const [enabledDepth, setEnabledDepth] = useState<boolean>(false);

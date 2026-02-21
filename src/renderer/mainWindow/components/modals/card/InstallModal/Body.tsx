@@ -13,15 +13,24 @@ import TerminalStep from './TerminalStep';
 import {InstallState} from './types';
 import UserInputs from './UserInputs';
 
-type Props = {
+export interface InstallBodyProps {
+  /** The global modal state driving which view is currently toggled. */
   state: InstallState;
+  /** Formatted title name of the repository or card being installed. */
   title: string;
+  /** Tracking information from the OS downloader IPC service. */
   progressInfo?: DownloadProgress;
+  /** Custom configurations defining what the user needs to select or type. */
   userInputElements: {elements: UserInputField[]; title?: string};
+  /** Mutates internal hook state to record answers for fields parsed in `userInputElements`. */
   setUserElementsReturn: Dispatch<SetStateAction<UserInputResult[]>>;
+  /** Ref to a callback acknowledging the repository git clone is finished. */
   cloneResolver: RefObject<((dir: string) => void) | null>;
+  /** Settings detailing extensions requiring download. */
   extensionsToInstall: {urls: string[]; dir: string} | undefined;
+  /** Ref block triggering the app to bypass the extension stage. */
   extensionsResolver: RefObject<(() => void) | null>;
+  /** Object determining how to render the dynamic progress bar UI for custom installation tracks. */
   progressBarState: {
     isIndeterminate: boolean;
     title?: string;
@@ -29,10 +38,18 @@ type Props = {
     description?: {label: string; value: string}[];
   };
 
+  /** Value indicating if the complete Install Modal parent is visibly toggled. */
   isOpen: boolean;
+  /** Identifying hash mapping to this unique installation record. */
   cardId: string;
-};
+}
 
+/**
+ * Handles toggling and rendering all major center-screen content throughout the entire installation flow.
+ * Displays components conditionally by matching against the standard InstallState object.
+ *
+ * @param {InstallBodyProps} props - The component props.
+ */
 const InstallBody = memo(
   ({
     state,
@@ -46,7 +63,7 @@ const InstallBody = memo(
     progressBarState,
     isOpen,
     cardId,
-  }: Props) => {
+  }: InstallBodyProps) => {
     const doneClone = useCallback(
       (dir: string) => {
         if (cloneResolver.current) {

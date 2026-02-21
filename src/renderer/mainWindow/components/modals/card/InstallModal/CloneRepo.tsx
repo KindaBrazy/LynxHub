@@ -24,13 +24,24 @@ export type CloneOptionsResult = {
   depth?: number;
 };
 
-type Props = {
+export interface CloneRepoProps {
+  /** The standard Git repository URL to be cloned. */
   url: string;
+  /** Starts the clone sequence immediately if true. Keeps the options panel visible if false. */
   start: boolean;
+  /** Callback fired containing the final filesystem path once cloning succeeds. */
   done: (dir: string) => void;
+  /** Used to detect if the prompt is open to skip duplicate IPC dispatches. */
   isOpen: boolean;
-};
-export default function CloneRepo({url, start, done, isOpen}: Props) {
+}
+
+/**
+ * Orchestrates Git cloning interactions, utilizing the OS filesystem picker for path selection
+ * and rendering a simple-git progress visualization.
+ *
+ * @param {CloneRepoProps} props - The component props.
+ */
+export default function CloneRepo({url, start, done, isOpen}: CloneRepoProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const [cloneOptionsResult, setCloneOptionsResult] = useState<CloneOptionsResult>({
