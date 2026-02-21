@@ -1,16 +1,24 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {CardState} from '@lynx_common/types';
 import {LoadedCardData} from '@lynx_common/types/plugins/modules';
-import {createContext, memo, useContext, useMemo} from 'react';
+import {memo, useMemo} from 'react';
 
 import LynxCard from './Card';
-import {CardStore, createCardStore} from './store';
+import {CardStoreContext, createCardStore, useCardStore} from './store';
 
-const CardStoreContext = createContext<CardStore | null>(null);
+type WrapperProps = {
+  /** The data for the card. */
+  cardData: LoadedCardData;
+  /** Whether the card is installed. */
+  isInstalled: boolean;
+  /** Whether the card has arguments. */
+  hasArguments: boolean;
+};
 
-type Props = {cardData: LoadedCardData; isInstalled: boolean; hasArguments: boolean};
-
-const Wrapper = memo(({cardData, isInstalled, hasArguments}: Props) => {
+/**
+ * Wrapper component that provides the CardStore context to its children.
+ * It also handles the logic for replacing the card component via extensions.
+ */
+const Wrapper = memo(({cardData, isInstalled, hasArguments}: WrapperProps) => {
   const ReplaceComponent = useMemo(() => extensionsData.cards.replaceComponent, []);
 
   const storeValue = useMemo(
@@ -21,7 +29,7 @@ const Wrapper = memo(({cardData, isInstalled, hasArguments}: Props) => {
   return (
     <CardStoreContext.Provider value={storeValue}>
       {ReplaceComponent ? (
-        <ReplaceComponent useCardStore={useCardStore} key={`${cardData.id}-card-key`} />
+        <ReplaceComponent key={`${cardData.id}-card-key`} useCardStore={useCardStore} />
       ) : (
         <LynxCard key={`${cardData.id}-card-key`} />
       )}
@@ -30,9 +38,3 @@ const Wrapper = memo(({cardData, isInstalled, hasArguments}: Props) => {
 });
 
 export default Wrapper;
-
-export const useCardStore = <T,>(selector: (state: CardState) => T): T => {
-  const store = useContext(CardStoreContext);
-  if (!store) throw new Error('Missing CardStoreContext.Provider');
-  return store(selector);
-};

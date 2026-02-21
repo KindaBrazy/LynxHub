@@ -4,7 +4,7 @@ import {MinusSquare, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';
 
 import {useTabModalManager} from '../../../modals/useTabModalManager';
-import {useCardStore} from '../../Wrapper';
+import {useCardStore} from '../../store';
 
 /**
  * Menu item to unassign the card.

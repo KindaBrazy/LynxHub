@@ -13,7 +13,7 @@ import {useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {useTabModalManager} from '../../../modals/useTabModalManager';
-import {useCardStore} from '../../Wrapper';
+import {useCardStore} from '../../store';
 
 /**
  * Menu item to trigger an update for the card.
