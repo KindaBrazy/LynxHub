@@ -48,8 +48,8 @@ export default class ModuleManager {
         handle(channel: string, listener: (event: any, ...args: any[]) => any) {
           return ipcMain.handle(channel, listener);
         },
-        send(channel: string, listener: (event: any, ...args: any[]) => void) {
-          return webContent.send(channel, listener);
+        send(channel: string, ...args: any[]) {
+          return webContent.send(channel, ...args);
         },
       },
       pty,
