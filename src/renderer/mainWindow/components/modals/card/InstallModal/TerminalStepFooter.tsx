@@ -4,9 +4,20 @@ import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {X} from 'lucide-react';
 import {RefObject, useState} from 'react';
 
-type Props = {restartTerminal: RefObject<(() => void) | null>; onDoneTerminal: () => void};
+export interface FooterTerminalProps {
+  /** A ref containing a function to trigger a terminal restart. */
+  restartTerminal: RefObject<(() => void) | null>;
+  /** Callback fired when the user successfully confirms the terminal commands finished. */
+  onDoneTerminal: () => void;
+}
 
-export default function FooterTerminal({restartTerminal, onDoneTerminal}: Props) {
+/**
+ * Renders the footer specifically for the terminal step in the installation modal.
+ * Includes interactive popovers to verify if commands completed successfully or if a restart is needed.
+ *
+ * @param {FooterTerminalProps} props - The component props.
+ */
+export default function FooterTerminal({restartTerminal, onDoneTerminal}: FooterTerminalProps) {
   const [isRestartOpen, setIsRestartOpen] = useState<boolean>(false);
   const [isNextOpen, setIsNextOpen] = useState<boolean>(false);
 
@@ -39,10 +50,10 @@ export default function FooterTerminal({restartTerminal, onDoneTerminal}: Props)
             Restart Terminal
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="p-4 gap-y-2 max-w-xs bg-foreground-100">
-          <span className="font-bold w-full text-sm">Confirm Terminal Restart</span>
+        <PopoverContent className="bg-foreground-100 max-w-xs gap-y-2 p-4">
+          <span className="w-full text-sm font-bold">Confirm Terminal Restart</span>
           <span>Are you sure you want to restart the terminal and run commands again?</span>
-          <div className="flex flex-row w-full mt-2">
+          <div className="mt-2 flex w-full flex-row gap-2">
             <Button
               size="sm"
               variant="flat"
@@ -74,10 +85,10 @@ export default function FooterTerminal({restartTerminal, onDoneTerminal}: Props)
             Next
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="p-4 gap-y-2 bg-foreground-100">
-          <span className="font-bold w-full text-sm">Installation complete?</span>
+        <PopoverContent className="bg-foreground-100 gap-y-2 p-4">
+          <span className="w-full text-sm font-bold">Installation complete?</span>
           <span>Please confirm that all commands finished successfully without any errors.</span>
-          <div className="flex flex-row w-full mt-2">
+          <div className="mt-2 flex w-full flex-row gap-2">
             <Button
               size="sm"
               color="danger"

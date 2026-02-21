@@ -41,9 +41,27 @@ const initialState: InstallState = {
   terminalKey: 0,
 };
 
-type Props = {isOpen: boolean; cardId: string; title: string; type: string; tabID: string};
+export interface InstallModalProps {
+  /** Controls if the specific modal instance is currently active and visible. */
+  isOpen: boolean;
+  /** The unique ID of the plugin/card being operated on. */
+  cardId: string;
+  /** Human-readable title of the plugin to display. */
+  title: string;
+  /** Indicates if this flow is a fresh `install` or an `update` sequence. */
+  type: string;
+  /** Browser tab ID this modal is bound to. */
+  tabID: string;
+}
 
-const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
+/**
+ * The main container mapping internal states, Redux, and IPC callbacks to construct the
+ * installation wizard for LynxHub extensions and cards.
+ * Combines the Header, Body, and Footer layout blocks.
+ *
+ * @param {InstallModalProps} props - The component props.
+ */
+const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalProps) => {
   const installedCard = useInstalledCard(cardId);
   const allMethods = useAllCardMethods();
 
@@ -145,7 +163,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
         });
       });
     },
-    [setProgressInfo],
+    [updateState],
   );
 
   // -----------------------------------------------> Stepper
@@ -174,7 +192,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: Props) => {
         methods.updater.startUpdate?.(stepper, installedCard!.dir);
       }
     }
-  }, [isOpen, methods, stepper]);
+  }, [installedCard, isOpen, methods, stepper, type]);
 
   // -----------------------------------------------> Handle UI
   const {onOpenChange, show} = useTabModalLifecycle('installUI', tabID);

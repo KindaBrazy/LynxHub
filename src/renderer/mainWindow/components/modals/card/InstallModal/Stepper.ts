@@ -10,6 +10,30 @@ import {extensionRendererApi} from '../../../../plugins/extensions/loader';
 import {lynxTopToast} from '../../../../utils/hooks';
 import {InstallState} from './types';
 
+export interface InstallStepperData {
+  /** The unique identifier of the card being installed. */
+  cardId: string;
+  setSteps: Dispatch<SetStateAction<string[]>>;
+  setCurrentStep: Dispatch<SetStateAction<number>>;
+  cloneRepository: InstallationStepper['cloneRepository'];
+  showFinalStep: InstallationStepper['showFinalStep'];
+  runTerminalScript: InstallationStepper['runTerminalScript'];
+  executeTerminalCommands: InstallationStepper['executeTerminalCommands'];
+  downloadFileFromUrl: InstallationStepper['downloadFileFromUrl'];
+  starterStep: InstallationStepper['starterStep'];
+  collectUserInput: InstallationStepper['collectUserInput'];
+  installExtensions: InstallationStepper['postInstall']['installExtensions'];
+  progressBar: InstallationStepper['progressBar'];
+  setUpdated: InstallationStepper['setUpdated'];
+  showToast: () => ReturnType<typeof lynxTopToast>;
+  checkForUpdate: (dir: string | undefined) => void;
+  updateState: (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => void;
+}
+
+/**
+ * Manages the sequential logic and external integrations for the installation process.
+ * This class provides plugins with a predictable API (IPC, storage, utils) during installation.
+ */
 export default class InstallStepper {
   private readonly setSteps: Dispatch<SetStateAction<string[]>>;
   private readonly setNextStep: Dispatch<SetStateAction<number>>;
@@ -20,25 +44,7 @@ export default class InstallStepper {
   private readonly cardId: string;
   private nextStepResolver?: () => void;
 
-  constructor(data: {
-    cardId: string;
-    setSteps: Dispatch<SetStateAction<string[]>>;
-    setCurrentStep: Dispatch<SetStateAction<number>>;
-    cloneRepository: InstallationStepper['cloneRepository'];
-    showFinalStep: InstallationStepper['showFinalStep'];
-    runTerminalScript: InstallationStepper['runTerminalScript'];
-    executeTerminalCommands: InstallationStepper['executeTerminalCommands'];
-    downloadFileFromUrl: InstallationStepper['downloadFileFromUrl'];
-    starterStep: InstallationStepper['starterStep'];
-    collectUserInput: InstallationStepper['collectUserInput'];
-    installExtensions: InstallationStepper['postInstall']['installExtensions'];
-    progressBar: InstallationStepper['progressBar'];
-    setUpdated: InstallationStepper['setUpdated'];
-    showToast: () => ReturnType<typeof lynxTopToast>;
-
-    checkForUpdate: (dir: string | undefined) => void;
-    updateState: (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => void;
-  }) {
+  constructor(data: InstallStepperData) {
     this.totalSteps = 0;
     this.customStepContents = [];
 

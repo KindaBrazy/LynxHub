@@ -13,24 +13,45 @@ import LocateWarning from './LocateWarning';
 import FooterTerminal from './TerminalStepFooter';
 import {InstallState} from './types';
 
-type Props = {
+export interface InstallFooterProps {
+  /** The current active UI and internal installation state. */
   state: InstallState;
+  /** Function to cleanly close the modal and revert states. */
   handleClose: () => void;
+  /** Ref hook for restarting the attached terminal session. */
   restartTerminal: RefObject<(() => void) | null>;
+  /** Ref resolver for the starting step of installation. */
   starterResolver: RefObject<((result: InstallationMethod) => void) | null>;
+  /** Ref resolver for generic terminal operations. */
   terminalResolver: RefObject<(() => void) | null>;
+  /** Utility function to partially mutate the modal state. */
   updateState: (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => void;
+  /** Ref resolver triggered when user submits required elements. */
   userInputResolver: RefObject<((result: UserInputResult[]) => void) | null>;
+  /** The final inputs returned by standard input field components. */
   userElementsReturn: UserInputResult[];
+  /** Helper function to download generic configuration files if required. */
   downloadFileFromUrl: (url: string) => Promise<string>;
+  /** The target URL configured for a generic download command. */
   urlToDownload: string | undefined;
+  /** Active tracking details for files being downloaded. */
   progressInfo: DownloadProgress | undefined;
+  /** Unique card ID driving this installation. */
   cardId: string;
+  /** The ID of the web tab handling this instance. */
   tabId: string;
+  /** Computed check indicating whether user fields are correctly filled to enable next actions. */
   canContinue: boolean;
+  /** Trigger for stepping into the next sequence of an extension-custom UI. */
   nextStep: () => void;
-};
+}
 
+/**
+ * The dynamic footer container for the InstallModal.
+ * Displays appropriate user action buttons (Next, Resolve, Cancel, Try Again) conditionally based on the `body` state.
+ *
+ * @param {InstallFooterProps} props - The component props.
+ */
 const InstallFooter = memo(
   ({
     state,
@@ -48,7 +69,7 @@ const InstallFooter = memo(
     tabId,
     canContinue,
     nextStep,
-  }: Props) => {
+  }: InstallFooterProps) => {
     const [locateWarnIsOpen, setLocateWarnIsOpen] = useState<boolean>(false);
     const onDoneTerminal = useCallback(() => {
       if (terminalResolver.current) {
