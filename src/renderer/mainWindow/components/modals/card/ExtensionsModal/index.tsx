@@ -3,7 +3,7 @@ import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
-import {Fragment, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import {Fragment, Key, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {extensionsData} from '../../../../plugins/extensions/loader';
 import {useModalsState} from '../../../../redux/reducers/modals';
@@ -12,39 +12,40 @@ import {useIsAutoUpdateExtensions} from '../../../../utils/hooks';
 import {useTabModalLifecycle} from '../../useTabModalManager';
 import Available from './available';
 import Clone from './Clone';
+import {useInstalledExtensions} from './hooks/useInstalledExtensions';
 import Installed from './Installed';
 
 type Props = {isOpen: boolean; title: string; id: string; tabID: string; dir: string};
 
-const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
-  const [installedExtensions, setInstalledExtensions] = useState<string[]>([]);
-
-  const [currentTab, setCurrentTab] = useState<any>('installed');
-  const [updatesAvailable, setUpdatesAvailable] = useState<string[]>([]);
-  const [isUpdatingAll, setIsUpdatingAll] = useState<boolean>(false);
-  const installedRef = useRef<{updateAll: () => void; getExtensions: () => void}>(null);
+const ExtensionsModalContent = ({isOpen, title, id, dir, tabID}: Props) => {
+  const [currentTab, setCurrentTab] = useState<Key>('installed');
   const autoUpdate = useIsAutoUpdateExtensions(id);
+
+  const {
+    extensions,
+    installedUrls,
+    updatesAvailable,
+    isUpdatingAll,
+    statusMap,
+    isLoading,
+    getExtensions,
+    checkUpdates,
+    deleteExtension,
+    disableExtension,
+    updateExtension,
+    updateAll,
+  } = useInstalledExtensions(dir);
 
   useDebounceBreadcrumb('Card Extension Modal: ', [isOpen, title]);
   useDebounceBreadcrumb('Card Extension Modal Tabs: ', [currentTab]);
 
   const {onOpenChange, show} = useTabModalLifecycle('cardExtensions', tabID);
 
-  const updateAll = useCallback(() => {
-    installedRef.current?.updateAll();
-  }, []);
-
-  const updateTable = useCallback(() => {
-    installedRef.current?.getExtensions();
-  }, []);
-
   useEffect(() => {
-    setUpdatesAvailable([]);
     setCurrentTab('installed');
-    setInstalledExtensions([]);
   }, [isOpen]);
 
-  const onPress = useCallback(
+  const onAutoUpdateChange = useCallback(
     () =>
       autoUpdate
         ? storageUtilsIpc.send.removeAutoUpdateExtensions(id)
@@ -54,11 +55,11 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
 
   const isUpdateAvailable = useMemo(() => {
     return !isEmpty(updatesAvailable);
-  }, [updatesAvailable, id]);
+  }, [updatesAvailable]);
 
   const isExtensionAvailable = useMemo(() => {
-    return !isEmpty(installedExtensions);
-  }, [installedExtensions, id]);
+    return !isEmpty(extensions);
+  }, [extensions]);
 
   return (
     <Modal
@@ -69,7 +70,7 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
       onOpenChange={onOpenChange}
       motionProps={modalMotionProps}
       classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! scrollbar-hide ${show}`}}
-      className="max-w-[80%] border-2 border-foreground/10 dark:border-foreground/5 overflow-hidden"
+      className="max-w-[80%] border-2 border-foreground/10 overflow-hidden dark:border-foreground/5"
       hideCloseButton>
       <ModalContent>
         <ModalHeader className="flex-col gap-y-2 text-center">
@@ -91,25 +92,28 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
             <Installed
               dir={dir}
               isOpen={isOpen}
-              ref={installedRef}
-              setIsUpdatingAll={setIsUpdatingAll}
-              updatesAvailable={updatesAvailable}
               visible={currentTab === 'installed'}
-              setUpdatesAvailable={setUpdatesAvailable}
-              setInstalledExtensions={setInstalledExtensions}
+              extensions={extensions}
+              statusMap={statusMap}
+              isLoading={isLoading}
+              getExtensions={getExtensions}
+              checkUpdates={checkUpdates}
+              deleteExtension={deleteExtension}
+              disableExtension={disableExtension}
+              updateExtension={updateExtension}
             />
             <Clone
               dir={dir}
-              updateTable={updateTable}
+              updateTable={getExtensions}
               visible={currentTab === 'clone'}
-              installedExtensions={installedExtensions}
+              installedExtensions={installedUrls}
             />
             <Available
               id={id}
               dir={dir}
-              updateTable={updateTable}
+              updateTable={getExtensions}
               visible={currentTab === 'available'}
-              installedExtensions={installedExtensions}
+              installedExtensions={installedUrls}
             />
           </div>
         </ModalBody>
@@ -117,7 +121,11 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
           <div className="flex w-full flex-row justify-between">
             <div>
               {currentTab === 'installed' && (
-                <Checkbox size="sm" isSelected={autoUpdate} onValueChange={onPress} isDisabled={!isExtensionAvailable}>
+                <Checkbox
+                  size="sm"
+                  isSelected={autoUpdate}
+                  onValueChange={onAutoUpdateChange}
+                  isDisabled={!isExtensionAvailable}>
                   Auto Update on Launch
                 </Checkbox>
               )}
@@ -145,7 +153,7 @@ const CardExtensions = ({isOpen, title, id, dir, tabID}: Props) => {
   );
 };
 
-const CardExtensionsModal = () => {
+const ExtensionsModal = () => {
   const CardExt = useMemo(() => extensionsData.replaceModals.cardExtensions, []);
 
   const cardExtensions = useModalsState('cardExtensions');
@@ -153,10 +161,12 @@ const CardExtensionsModal = () => {
   return (
     <>
       {cardExtensions.map(modal => (
-        <Fragment key={`${modal.tabID}_modal`}>{CardExt ? <CardExt /> : <CardExtensions {...modal} />}</Fragment>
+        <Fragment key={`${modal.tabID}_modal`}>
+          {CardExt ? <CardExt /> : <ExtensionsModalContent {...modal} />}
+        </Fragment>
       ))}
     </>
   );
 };
 
-export default CardExtensionsModal;
+export default ExtensionsModal;

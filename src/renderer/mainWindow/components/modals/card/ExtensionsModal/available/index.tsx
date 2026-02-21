@@ -1,11 +1,12 @@
-import {Input, Spinner} from '@heroui/react';
+import {Input, Pagination, Spinner} from '@heroui/react';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {validateGitRepoUrl} from '@lynx_common/utils';
-import {Empty, List, PaginationProps} from 'antd';
-import {useEffect, useState} from 'react';
+import {Empty} from 'antd';
+import {memo, useEffect, useMemo, useState} from 'react';
 
 import {getCardMethod, useAllCardMethods} from '../../../../../plugins/modules';
 import {searchInStrings} from '../../../../../utils';
+import {ExtensionsInfo} from '../types';
 import RenderItem from './RenderItem';
 
 type Props = {
@@ -15,27 +16,26 @@ type Props = {
   id: string;
   dir: string;
 };
-export type ExtensionsInfo = {
-  title: string;
-  description: string;
-  url: string;
-  stars?: number;
-};
 
-export default function Available({visible, updateTable, installedExtensions, id, dir}: Props) {
-  const [pageSize, setPageSize] = useState<number>(10);
+const Available = memo(({visible, updateTable, installedExtensions, id, dir}: Props) => {
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [data, setData] = useState<ExtensionsInfo[]>([]);
   const [list, setList] = useState<ExtensionsInfo[]>([]);
-  const [searchedData, setSearchedData] = useState<ExtensionsInfo[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
   const allMethods = useAllCardMethods();
 
-  useEffect(() => {
-    setSearchedData(
-      data.filter(extension => searchInStrings(searchValue, [extension.title, extension.description, extension.url])),
+  const searchedData = useMemo(() => {
+    return data.filter(extension =>
+      searchInStrings(searchValue, [extension.title, extension.description, extension.url]),
     );
   }, [searchValue, data]);
+
+  const paginatedData = useMemo(() => {
+    const start = (page - 1) * pageSize;
+    return searchedData.slice(start, start + pageSize);
+  }, [page, pageSize, searchedData]);
 
   useEffect(() => {
     // Remove installed extensions from the list
@@ -61,15 +61,12 @@ export default function Available({visible, updateTable, installedExtensions, id
     }
 
     if (visible) fetchModules();
-  }, [visible, allMethods]);
-
-  const onPageSizeChange: PaginationProps['onShowSizeChange'] = (_, pageSize) => {
-    setPageSize(pageSize);
-  };
+  }, [visible, allMethods, id]);
 
   if (!visible) return null;
+
   return (
-    <>
+    <div className="flex h-full flex-col">
       <div className="mb-4 flex w-full justify-center">
         <Input
           classNames={{
@@ -85,36 +82,43 @@ export default function Available({visible, updateTable, installedExtensions, id
           autoFocus
         />
       </div>
+
       {isLoading ? (
-        <div className="size-full text-center">
+        <div className="flex size-full items-center justify-center text-center">
           <Spinner label="Loading extensions list..." />
         </div>
-      ) : (
-        <List
-          pagination={
-            searchedData.length <= pageSize
-              ? false
-              : {
-                  onShowSizeChange: onPageSizeChange,
-                  align: 'center',
-                  pageSize: pageSize,
-                }
-          }
-          locale={{
-            emptyText: (
-              <Empty
-                description="There are no extensions available at the moment,
-                 but be sure to check back later for new additions!"
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-              />
-            ),
-          }}
-          split={false}
-          itemLayout="vertical"
-          dataSource={searchedData}
-          renderItem={item => <RenderItem dir={dir} item={item} updateTable={updateTable} searchValue={searchValue} />}
+      ) : searchedData.length === 0 ? (
+        <Empty
+          description="There are no extensions available at the moment, but be sure to check back later for new additions!"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
         />
+      ) : (
+        <div className="flex flex-1 flex-col gap-2">
+          {paginatedData.map(item => (
+            <RenderItem
+              dir={dir}
+              item={item}
+              key={item.url}
+              updateTable={updateTable}
+              searchValue={searchValue}
+            />
+          ))}
+
+          {searchedData.length > pageSize && (
+            <div className="mt-4 flex justify-center">
+              <Pagination
+                total={Math.ceil(searchedData.length / pageSize)}
+                page={page}
+                onChange={setPage}
+                showControls
+                color="secondary"
+              />
+            </div>
+          )}
+        </div>
       )}
-    </>
+    </div>
   );
-}
+});
+
+export default Available;
