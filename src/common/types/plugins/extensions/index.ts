@@ -1,39 +1,112 @@
-import {Reducer} from '@reduxjs/toolkit';
-import {ComponentProps, FC} from 'react';
+import type {Reducer} from '@reduxjs/toolkit';
+import type {ComponentProps, FC} from 'react';
 
-import {CardState} from '../../index';
-import {LoadedCardData} from '../modules';
-import {ExtensionRendererApi} from './api';
+import type {CardState} from '../../index';
+import type {LoadedCardData} from '../modules';
+import type {ExtensionRendererApi} from './api';
 
+/**
+ * Hook to access the card store.
+ * @param selector - Selector function to retrieve specific data from the state.
+ */
 export type UseCardStoreType = <T>(selector: (state: CardState) => T) => T;
 
 // -----------------------------------------------> Elements & Props
+
+/**
+ * Standard props for a div element.
+ */
 export type ElementProps = ComponentProps<'div'>;
+
+/**
+ * Props for a div element with a ref.
+ */
 export type RefElementProps = ComponentProps<'div'> & {ref: (node: HTMLDivElement) => void};
+
+/**
+ * Props for a component that receives a list of cards.
+ */
 export type CardElementProps = ComponentProps<'div'> & {cards: LoadedCardData[]};
+
+/**
+ * Props for a search result component.
+ */
 export type SearchResultProps = ComponentProps<'div'> & {searchValue: string};
+
+/**
+ * Props for a component that needs access to the card store.
+ */
 export type CardDataProps = ComponentProps<'div'> & {useCardStore: UseCardStoreType};
+
+/**
+ * Props for the Markdown replacement component.
+ */
 export type ReplaceMdProps = ComponentProps<'div'> & {repoPath: string; rounded?: boolean};
 
+/**
+ * Functional Component with standard div props.
+ */
 export type FcProp = FC<ElementProps>;
+
+/**
+ * Functional Component with ref props.
+ */
 export type FcPropRef = FC<RefElementProps>;
+
+/**
+ * Functional Component with card data store access.
+ */
 export type FcPropCardData = FC<CardDataProps>;
+
+/**
+ * Functional Component with card list props.
+ */
 export type FcPropCard = FC<CardElementProps>;
+
+/**
+ * Functional Component for search results.
+ */
 export type FcPropSearchResult = FC<SearchResultProps>;
+
+/**
+ * Functional Component for Markdown replacement.
+ */
 export type FcPropReplaceMd = FC<ReplaceMdProps>;
 
-export type AddMenuType = {index: number; components: FcPropCardData[]};
+/**
+ * Definition for a menu addition type.
+ */
+export type AddMenuType = {
+  /** The index where the menu item should be added. */
+  index: number;
+  /** The components to add to the menu. */
+  components: FcPropCardData[];
+};
+
+/**
+ * Structure for page additions (top, bottom, scroll areas).
+ */
 export type PageAdd = {
+  /** Components added to the top of the page. */
   top: FC[];
+  /** Components added to the bottom of the page. */
   bottom: FC[];
+  /** Components added to the top of the scrollable area. */
   scrollTop: FC[];
+  /** Components added to the bottom of the scrollable area. */
   scrollBottom: FC[];
+  /** Components added to the cards container. */
   cardsContainer: FC[];
 };
 
 // -----------------------------------------------> Extension Renderer API
 
+/**
+ * Data structure holding the active extensions' modifications to the renderer.
+ * This mirrors the structure of `ExtensionRendererApi` but holds the actual components/values.
+ */
 export type ExtensionData_Renderer = {
+  /** Title Bar modifications. */
   titleBar: {
     addStart: FcProp[];
     addCenter: FcProp[];
@@ -41,19 +114,28 @@ export type ExtensionData_Renderer = {
     replaceCenter: FcProp | undefined;
     replaceEnd: FcProp | undefined;
   };
+
+  /** Status Bar modifications. */
   statusBar: {
     addStart: FcProp[];
     addCenter: FcProp[];
     addEnd: FcProp[];
     replaceContainer: FcPropRef | undefined;
   };
+
+  /** Running AI view modifications. */
   runningAI: {
     container: FC | undefined;
     terminal: FC | undefined;
     browser: FC | undefined;
   };
+
+  /** Router modifications. */
   router: {
-    add: [];
+    /** Added routes. */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    add: any[];
+    /** Replaced page components. */
     replace: {
       homePage: FC | undefined;
       imageGenerationPage: FC | undefined;
@@ -67,6 +149,8 @@ export type ExtensionData_Renderer = {
       settingsPage: FC | undefined;
     };
   };
+
+  /** Navigation Bar modifications. */
   navBar: {
     replace: {
       container: FC | undefined;
@@ -78,6 +162,8 @@ export type ExtensionData_Renderer = {
       settingsBar: FC[];
     };
   };
+
+  /** Replaced modals. */
   replaceModals: {
     updateApp: FC | undefined;
     launchConfig: FC | undefined;
@@ -91,10 +177,20 @@ export type ExtensionData_Renderer = {
     cardReadme: FC | undefined;
     gitManager: FC | undefined;
   };
+
+  /** Replaced Markdown viewer. */
   replaceMarkdownViewer: FcPropReplaceMd | undefined;
+
+  /** Added modals. */
   addModal: FC[];
+
+  /** Added custom hooks. */
   addCustomHook: FC[];
+
+  /** Replaced background component. */
   replaceBackground: FC | undefined;
+
+  /** Page customizations. */
   customizePages: {
     home: {
       replace: {
@@ -132,7 +228,12 @@ export type ExtensionData_Renderer = {
       };
     };
   };
-  addReducer: {name: string; reducer: Reducer}[];
+
+  /** Added Redux reducers. */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  addReducer: {name: string; reducer: Reducer<any, any>}[];
+
+  /** Card modifications. */
   cards: {
     replace: FcPropCard | undefined;
     replaceComponent: FcPropCardData | undefined;
@@ -145,6 +246,14 @@ export type ExtensionData_Renderer = {
   };
 };
 
+/**
+ * Interface for the extension entry point.
+ */
 export type ExtensionImport_Renderer = {
+  /**
+   * Function called to initialize the extension.
+   * @param lynxAPI - The API provided to the extension.
+   * @param extensionId - The ID of the extension.
+   */
   InitialExtensions: (lynxAPI: ExtensionRendererApi, extensionId: string) => void;
 };
