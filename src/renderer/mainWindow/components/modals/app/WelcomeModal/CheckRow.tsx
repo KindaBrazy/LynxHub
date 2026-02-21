@@ -1,5 +1,6 @@
 import {Chip, Spinner} from '@heroui/react';
 import {motion} from 'framer-motion';
+import {useMemo} from 'react';
 
 import {CheckResult, RowData} from './types';
 
@@ -13,6 +14,8 @@ function getStatusProps(status: CheckResult): {color: 'success' | 'danger' | 'de
       return {color: 'default', label: 'Checking...'};
     case 'installing':
       return {color: 'default', label: 'Installing...'};
+    case 'skipped':
+      return {color: 'default', label: 'Skipped'};
     default:
       return {color: 'default', label: 'Unknown'};
   }
@@ -21,7 +24,7 @@ function getStatusProps(status: CheckResult): {color: 'success' | 'danger' | 'de
 type Props = {label: string; description?: string; status: RowData};
 
 export default function CheckRow({label, description, status}: Props) {
-  const {color, label: statusLabelText} = getStatusProps(status.result);
+  const {color, label: statusLabelText} = useMemo(() => getStatusProps(status.result), [status.result]);
   const isBusy = status.result === 'checking' || status.result === 'installing';
   const labelText = status.result === 'ok' && status.label ? status.label : statusLabelText;
 

@@ -4,7 +4,7 @@ import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {useCallback, useMemo, useState} from 'react';
 
-import {RowData} from './types';
+import {FailureType, RowData} from './types';
 
 type Statuses = {
   git: RowData;
@@ -19,9 +19,9 @@ export default function useRequirementChecks() {
     appModule: {result: 'unknown'},
   });
 
-  const updateStatus = (key: keyof Statuses, newStatus: RowData) => {
+  const updateStatus = useCallback((key: keyof Statuses, newStatus: RowData) => {
     setStatuses(prev => ({...prev, [key]: newStatus}));
-  };
+  }, []);
 
   const checkGit = useCallback(async () => {
     updateStatus('git', {result: 'checking'});
@@ -37,7 +37,7 @@ export default function useRequirementChecks() {
       updateStatus('git', {result: 'failed'});
       return false;
     }
-  }, []);
+  }, [updateStatus]);
 
   const checkPwsh = useCallback(async () => {
     if (!isWin) return true;
@@ -54,30 +54,32 @@ export default function useRequirementChecks() {
       updateStatus('pwsh', {result: 'failed'});
       return false;
     }
-  }, []);
+  }, [updateStatus]);
 
   const installModule = useCallback(async () => {
     updateStatus('appModule', {result: 'checking'});
-    const installedList = await pluginsIpc.getInstalledList();
-    if (installedList.some(p => p.url === MAIN_MODULE_URL)) {
-      updateStatus('appModule', {result: 'ok'});
-      return true;
-    }
-
-    updateStatus('appModule', {result: 'installing'});
     try {
+      const installedList = await pluginsIpc.getInstalledList();
+      if (installedList.some(p => p.url === MAIN_MODULE_URL)) {
+        updateStatus('appModule', {result: 'ok'});
+        return true;
+      }
+
+      updateStatus('appModule', {result: 'installing'});
       const result = await pluginsIpc.install(MAIN_MODULE_URL);
+      
       if (result) {
         updateStatus('appModule', {result: 'ok'});
         return true;
       }
+      
       updateStatus('appModule', {result: 'failed'});
       return false;
     } catch {
       updateStatus('appModule', {result: 'failed'});
       return false;
     }
-  }, []);
+  }, [updateStatus]);
 
   const checkAll = useCallback(async () => {
     if (await checkGit()) {
@@ -88,11 +90,14 @@ export default function useRequirementChecks() {
   }, [checkGit, checkPwsh, installModule]);
 
   const isSuccess = useMemo(
-    () => statuses.git.result === 'ok' && statuses.pwsh.result === 'ok' && statuses.appModule.result === 'ok',
+    () => 
+      statuses.git.result === 'ok' && 
+      statuses.pwsh.result === 'ok' && 
+      (statuses.appModule.result === 'ok' || statuses.appModule.result === 'skipped'),
     [statuses],
   );
 
-  const failureType = useMemo(() => {
+  const failureType: FailureType = useMemo(() => {
     if (statuses.git.result === 'failed') return 'git';
     if (statuses.pwsh.result === 'failed') return 'pwsh';
     if (statuses.appModule.result === 'failed') return 'appModule';
@@ -100,9 +105,8 @@ export default function useRequirementChecks() {
   }, [statuses]);
 
   const skipAppModule = useCallback(() => {
-    // Treat as "ok" for the purpose of satisfying requirements, but don't change the label
-    updateStatus('appModule', {result: 'ok', label: 'Skipped'});
-  }, []);
+    updateStatus('appModule', {result: 'skipped', label: 'Skipped'});
+  }, [updateStatus]);
 
   return {
     statuses,
