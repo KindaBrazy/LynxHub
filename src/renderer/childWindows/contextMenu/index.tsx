@@ -7,10 +7,17 @@ import {Provider as ReduxProvider} from 'react-redux';
 import ContextMenu from './App';
 import {store} from './redux/store';
 
-createRoot(document.getElementById('root') as HTMLElement).render(
-  <ReduxProvider store={store}>
-    <HeroUIProvider>
-      <ContextMenu />
-    </HeroUIProvider>
-  </ReduxProvider>,
-);
+// Initialize React application
+const rootElement = document.getElementById('root');
+
+if (rootElement) {
+  createRoot(rootElement).render(
+    <ReduxProvider store={store}>
+      <HeroUIProvider>
+        <ContextMenu />
+      </HeroUIProvider>
+    </ReduxProvider>,
+  );
+} else {
+  console.error('Failed to find the root element');
+}

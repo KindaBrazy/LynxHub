@@ -8,13 +8,19 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {MenuTypes} from './consts';
+import {showContextWindow} from './layouts/Shared';
 import {contextActions} from './redux/reducer';
 import {ContextDispatch} from './redux/store';
 
+/**
+ * Custom hook to handle IPC events for showing different context menu layouts.
+ * Listens for events from the main process and updates the Redux state accordingly.
+ */
 export default function useShowEvents() {
   const dispatch = useDispatch<ContextDispatch>();
 
   useEffect(() => {
+    // Right Click Menu
     const offInitView = contextMenuIpc.on.rightClick((params, navHistory, contextId) => {
       const hasLinkItems = !isEmpty(params.linkURL);
       const hasImageItems = params.mediaType === 'image';
@@ -38,6 +44,8 @@ export default function useShowEvents() {
           widthSize,
         }),
       );
+      showContextWindow();
+
       dispatch(
         contextActions.updateRightClickParams({
           hasEditItems,
@@ -49,6 +57,7 @@ export default function useShowEvents() {
       );
     });
 
+    // Zoom Control
     const offZoom = contextMenuIpc.on.zoom((id, zoomFactor) => {
       dispatch(
         contextActions.showLayout({
@@ -58,8 +67,10 @@ export default function useShowEvents() {
           widthSize: 'md',
         }),
       );
+      showContextWindow();
     });
 
+    // Find in Page
     const offFind = contextMenuIpc.on.find((id, selectedText) => {
       dispatch(
         contextActions.showLayout({
@@ -69,11 +80,14 @@ export default function useShowEvents() {
           widthSize: 'md',
         }),
       );
+      showContextWindow();
+
       if (selectedText) {
         dispatch(contextActions.setContextState({key: 'selectedText', value: selectedText}));
       }
     });
 
+    // Close App Confirmation
     const offCloseApp = contextMenuIpc.on.closeApp(() => {
       dispatch(
         contextActions.showLayout({
@@ -82,8 +96,10 @@ export default function useShowEvents() {
           widthSize: 'lg',
         }),
       );
+      showContextWindow();
     });
 
+    // Terminate Process Confirmation
     const offTerminateProcess = contextMenuIpc.on.terminateProcess(value => {
       dispatch(
         contextActions.showLayout({
@@ -93,8 +109,10 @@ export default function useShowEvents() {
           widthSize: 'lg',
         }),
       );
+      showContextWindow();
     });
 
+    // Terminate Tab Confirmation
     const offTerminateTab = contextMenuIpc.on.terminateTab(value => {
       dispatch(
         contextActions.showLayout({
@@ -104,8 +122,10 @@ export default function useShowEvents() {
           widthSize: 'lg',
         }),
       );
+      showContextWindow();
     });
 
+    // Volume Control
     const offVolume = contextMenuIpc.on.volume(value => {
       dispatch(
         contextActions.showLayout({
@@ -115,8 +135,10 @@ export default function useShowEvents() {
           widthSize: 'md',
         }),
       );
+      showContextWindow();
     });
 
+    // Downloads Menu
     const OffDownloads = contextMenuIpc.on.downloads(() => {
       dispatch(
         contextActions.showLayout({
@@ -125,8 +147,10 @@ export default function useShowEvents() {
           widthSize: 'lg',
         }),
       );
+      showContextWindow();
     });
 
+    // Prompt Dialog
     const offPrompt = windowDialogsIpc.promptShow((message: string, defaultValue?: string) => {
       dispatch(
         contextActions.showLayout({
@@ -136,8 +160,10 @@ export default function useShowEvents() {
           widthSize: 'lg',
         }),
       );
+      showContextWindow();
     });
 
+    // Alert Dialog
     const offAlert = windowDialogsIpc.alertShow((message: string) => {
       dispatch(
         contextActions.showLayout({
@@ -147,8 +173,10 @@ export default function useShowEvents() {
           widthSize: 'lg',
         }),
       );
+      showContextWindow();
     });
 
+    // Confirm Dialog
     const offConfirm = windowDialogsIpc.confirmShow((message: string) => {
       dispatch(
         contextActions.showLayout({
@@ -158,6 +186,7 @@ export default function useShowEvents() {
           widthSize: 'lg',
         }),
       );
+      showContextWindow();
     });
 
     // Download manager IPC listeners
@@ -202,5 +231,5 @@ export default function useShowEvents() {
       offProgress();
       offDone();
     };
-  }, []);
+  }, [dispatch]);
 }

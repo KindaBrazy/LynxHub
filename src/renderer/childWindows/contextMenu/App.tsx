@@ -1,3 +1,6 @@
+import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
+import {useEffect, useRef} from 'react';
+
 import {MenuTypes} from './consts';
 import BrowserScale from './layouts/BrowserScale';
 import CloseApp from './layouts/confirm_warn/CloseApp';
@@ -11,19 +14,69 @@ import AlertWindow from './layouts/window_dialogs/Alert';
 import ConfirmWindow from './layouts/window_dialogs/Confirm';
 import PromptWindow from './layouts/window_dialogs/Prompt';
 import {useContextState} from './redux/reducer';
-import {ResizeWindowToContentSize} from './ResizeWindow';
 import useShowEvents from './useShowEvents';
 
+/**
+ * Main Context Menu component.
+ * Renders different layouts based on the active layout state.
+ * Handles window resizing based on content.
+ */
 export default function ContextMenu() {
   const windowWidth = useContextState('windowWidth');
   const activeLayout = useContextState('activeLayout');
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useShowEvents();
 
+  // Resize window logic moved here as a useEffect
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    let rafId: number | null = null;
+    let lastSent: {w: number; h: number} | null = null;
+
+    const sendSize = () => {
+      if (!element) return;
+
+      const rect = element.getBoundingClientRect();
+      const width = Math.max(Math.ceil(element.scrollWidth), Math.ceil(rect.width));
+      const height = Math.max(Math.ceil(element.scrollHeight), Math.ceil(rect.height));
+
+      const PADDING = 2;
+      const w = Math.max(1, Math.round(width + PADDING));
+      const h = Math.max(1, Math.round(height + PADDING));
+
+      if (lastSent && lastSent.w === w && lastSent.h === h) {
+        return;
+      }
+
+      lastSent = {w, h};
+      const dpr = window.devicePixelRatio || 1;
+      contextMenuIpc.send.resizeWindow({width: w, height: h, dpr});
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        sendSize();
+      });
+    });
+
+    resizeObserver.observe(element);
+    sendSize(); // Initial size send
+
+    return () => {
+      resizeObserver.disconnect();
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, [activeLayout, windowWidth]); // Re-run when layout or width class changes
+
   return (
     <div
-      ref={ResizeWindowToContentSize}
-      className={`size-fit flex flex-col dark:bg-LynxRaisinBlack bg-white overflow-hidden ${windowWidth}`}>
+      ref={containerRef}
+      className={`flex size-fit flex-col overflow-hidden bg-white dark:bg-LynxRaisinBlack ${windowWidth}`}>
       {activeLayout === MenuTypes.BrowserScale && <BrowserScale />}
       {activeLayout === MenuTypes.FindInPage && <FindInPage />}
       {activeLayout === MenuTypes.RightClick && <RightClick />}

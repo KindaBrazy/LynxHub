@@ -1,51 +1,20 @@
 import {DownloadItemInfo} from '@lynx_common/types/downloadManager';
-import {ContextMenuVolumeData, ContextWindowWidthSizes} from '@lynx_common/types/ipc';
-import {NavHistory} from '@lynx_common/types/ipc';
+import {ContextWindowWidthSizes} from '@lynx_common/types/ipc';
 import {createSlice, current, PayloadAction} from '@reduxjs/toolkit';
-import type {ContextMenuParams} from 'electron';
 import {cloneDeep} from 'lodash';
 import {useSelector} from 'react-redux';
 
 import {MenuTypes} from '../consts';
-import {showContextWindow} from '../layouts/Shared';
+import {ContextState, RightClickParams} from '../types';
 import {RootState} from './store';
-
-type ZoomLayout = {id: string; factor: number};
-type RightClick = {id: number; contextMenuParams: ContextMenuParams | undefined; navigationHistory: NavHistory};
-type RightClickParams = {
-  hasLinkItems: boolean;
-  hasImageItems: boolean;
-  hasTextSelection: boolean;
-  hasEditItems: boolean;
-  isActionsAvailable: boolean;
-};
-
-type PromptWindow = {message: string; defaultValue?: string};
-type AlertWindow = {message: string};
-type ConfirmWindow = {message: string};
-
-type ContextState = {
-  windowWidth: string;
-  activeLayout: MenuTypes | undefined;
-  targetID: string;
-  selectedText: string;
-
-  browserScale: ZoomLayout;
-  browserVolume: ContextMenuVolumeData;
-  promptWindow: PromptWindow;
-
-  rightClick: RightClick;
-  rightClickParams: RightClickParams;
-  alertWindow: AlertWindow;
-  confirmWindow: ConfirmWindow;
-  downloads: DownloadItemInfo[];
-};
 
 type ContextStateTypes = {
   [K in keyof ContextState]: ContextState[K];
 };
 
-// Default initial state - actual values come from preloadedState in Store.ts
+/**
+ * Initial state for the context menu.
+ */
 const initialState: ContextState = {
   windowWidth: 'w-44',
   activeLayout: undefined,
@@ -88,14 +57,17 @@ const initialState: ContextState = {
   downloads: [],
 };
 
-const getWidth = (state: ContextWindowWidthSizes) => {
+/**
+ * Helper to determine window width based on size constant.
+ */
+const getWidth = (state: ContextWindowWidthSizes): string => {
   switch (state) {
     case 'md':
       return 'w-72';
     case 'lg':
       return 'w-96';
-    default:
     case 'sm':
+    default:
       return 'w-44';
   }
 };
@@ -104,12 +76,21 @@ const appSlice = createSlice({
   name: 'context',
   initialState,
   reducers: {
+    /**
+     * Sets a specific key in the context state.
+     */
     setContextState: <K extends keyof ContextState>(
       state: ContextState,
       action: PayloadAction<{key: K; value: ContextState[K]}>,
     ) => {
       state[action.payload.key] = action.payload.value;
     },
+
+    /**
+     * Prepares the state for showing a specific layout.
+     * Note: This reducer is pure and does NOT show the window itself.
+     * The side effect of showing the window must be handled by the caller.
+     */
     showLayout: <K extends keyof ContextState>(
       state: ContextState,
       action: PayloadAction<{
@@ -121,23 +102,25 @@ const appSlice = createSlice({
     ) => {
       const {layout, widthSize, key, value} = action.payload;
 
-      const result = cloneDeep(initialState);
-      result.downloads = current(state).downloads;
+      // Reset state but keep downloads
+      const downloads = current(state).downloads;
+      const newState = cloneDeep(initialState);
+      newState.downloads = downloads;
 
-      result.windowWidth = getWidth(widthSize);
+      // Apply new configuration
+      newState.windowWidth = getWidth(widthSize);
+      if (layout) {
+        newState.activeLayout = layout;
+      }
+      newState[key] = value;
 
-      if (layout) result.activeLayout = layout;
-
-      result[key] = value;
-
-      showContextWindow();
-
-      return result;
+      return newState;
     },
 
     updateZoomFactor: (state: ContextState, action: PayloadAction<number>) => {
       state.browserScale.factor = action.payload;
     },
+
     updateRightClickParams: (state: ContextState, action: PayloadAction<RightClickParams>) => {
       state.rightClickParams = action.payload;
     },
@@ -145,6 +128,7 @@ const appSlice = createSlice({
     updateVolume: (state: ContextState, action: PayloadAction<number>) => {
       state.browserVolume.volume = action.payload;
     },
+
     updateMuted: (state: ContextState, action: PayloadAction<boolean>) => {
       state.browserVolume.muted = action.payload;
     },
@@ -153,6 +137,7 @@ const appSlice = createSlice({
     addDownload: (state: ContextState, action: PayloadAction<DownloadItemInfo>) => {
       state.downloads = [action.payload, ...state.downloads];
     },
+
     updateDownloadProgress: (
       state: ContextState,
       action: PayloadAction<Partial<DownloadItemInfo> & {name: string}>,
@@ -162,6 +147,7 @@ const appSlice = createSlice({
         state.downloads[index] = {...state.downloads[index], ...action.payload};
       }
     },
+
     updateDownloadStatus: (
       state: ContextState,
       action: PayloadAction<{name: string; status: DownloadItemInfo['status']}>,
@@ -171,16 +157,22 @@ const appSlice = createSlice({
         state.downloads[index].status = action.payload.status;
       }
     },
+
     removeDownload: (state: ContextState, action: PayloadAction<string>) => {
       state.downloads = state.downloads.filter(item => item.name !== action.payload);
     },
+
     clearAllDownloads: (state: ContextState) => {
       state.downloads = [];
     },
   },
 });
 
+/**
+ * Custom hook to select a specific part of the context state.
+ */
 export const useContextState = <K extends keyof ContextState>(key: K): ContextStateTypes[K] =>
   useSelector((state: RootState) => state.context[key]);
+
 export const contextActions = appSlice.actions;
 export default appSlice.reducer;
