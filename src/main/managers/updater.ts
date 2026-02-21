@@ -50,6 +50,7 @@ export function checkForUpdate() {
   autoUpdater.autoDownload = false;
   autoUpdater.allowPrerelease = false;
   autoUpdater.disableWebInstaller = true;
+  autoUpdater.forceDevUpdateConfig = true;
 
   autoUpdater.logger = electron_log;
   // @ts-ignore - electron-log types mismatch with electron-updater logger interface
@@ -95,7 +96,7 @@ export function checkForUpdate() {
 
   autoUpdater.on('error', (e: Error | any, message?: string) => {
     const {appManager} = classHolder;
-    
+
     // Silently ignore network errors - user may be offline or have unstable connection
     if (isNetworkError(e)) {
       console.warn('Update check failed due to network error:', e.message || e);

@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import applicationIpc from '@lynx_shared/ipc/application';
-import {Result} from 'antd';
+import {CheckCircle, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -26,36 +26,40 @@ export default function Downloaded({errMsg, success, tryAgain, cancel, onClose}:
   }, [onClose]);
 
   return (
-    <>
+    <div className="flex w-full flex-col items-center justify-center gap-6 py-4 text-center">
       {success ? (
-        <Result
-          extra={[
-            <Button variant="flat" color="success" key="restart-now" onPress={install}>
+        <>
+          <CheckCircle className="size-20 text-success" />
+          <div className="flex flex-col gap-2">
+            <h2 className="text-xl font-bold">Update Successfully Downloaded</h2>
+            <p className="text-default-500">The update will be installed when you restart the application.</p>
+          </div>
+          <div className="flex gap-4">
+            <Button variant="flat" color="success" onPress={install}>
               Restart Now
-            </Button>,
-            <Button variant="flat" color="warning" key="restart-later" onPress={installLater}>
+            </Button>
+            <Button variant="flat" color="warning" onPress={installLater}>
               Restart Later
-            </Button>,
-          ]}
-          status="success"
-          title="Update Successfully Downloaded"
-          subTitle="The update will be installed when you restart the application."
-        />
+            </Button>
+          </div>
+        </>
       ) : (
-        <Result
-          extra={[
-            <Button variant="flat" key="try-again" color="success" onPress={tryAgain}>
+        <>
+          <ShieldCross className="size-20 text-danger" />
+          <div className="flex flex-col gap-2">
+            <h2 className="text-xl font-bold">Download Unsuccessful</h2>
+            <p className="text-default-500">{errMsg || 'An unknown error occurred.'}</p>
+          </div>
+          <div className="flex gap-4">
+            <Button variant="flat" color="success" onPress={tryAgain}>
               Try Again
-            </Button>,
-            <Button key="cancel" variant="flat" color="warning" onPress={cancel}>
+            </Button>
+            <Button variant="flat" color="warning" onPress={cancel}>
               Cancel
-            </Button>,
-          ]}
-          status="error"
-          subTitle={errMsg}
-          title="Download Unsuccessful"
-        />
+            </Button>
+          </div>
+        </>
       )}
-    </>
+    </div>
   );
 }
