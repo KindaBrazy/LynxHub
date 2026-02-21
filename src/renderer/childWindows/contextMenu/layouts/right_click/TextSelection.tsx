@@ -5,9 +5,16 @@ import {memo} from 'react';
 
 import {ActionButton, createActionHandler} from './Utils';
 
-type Props = {selection: string};
+type TextSelectionProps = {
+  /** The currently selected text */
+  selection: string;
+};
 
-const TextSelection = memo(({selection}: Props) => {
+/**
+ * Component that renders context menu actions for selected text.
+ * Currently allows searching the selection with Google.
+ */
+const TextSelection = memo(function TextSelection({selection}: TextSelectionProps) {
   if (!selection) return null;
 
   return (
@@ -16,11 +23,10 @@ const TextSelection = memo(({selection}: Props) => {
         onPress={createActionHandler(() => {
           contextMenuIpc.send.rightClickItems.searchWithGoogle(selection);
         })}
-        key="context_searchGoogle"
         title={`Search with Google`}
         icon={<MagniferBug className="size-4" />}
       />
-      <Divider className="my-2" key="sep_text_edit" />
+      <Divider className="my-2" />
     </>
   );
 });

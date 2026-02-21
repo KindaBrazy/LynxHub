@@ -4,7 +4,7 @@ import browserIpc from '@lynx_shared/ipc/browser';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {X} from 'lucide-react';
-import {type KeyboardEvent, memo, useEffect, useRef, useState} from 'react';
+import {type KeyboardEvent, memo, useCallback, useEffect, useRef, useState} from 'react';
 
 import {useContextState} from '../redux/reducer';
 import {hideContextWindow} from './Shared';
@@ -15,7 +15,11 @@ type FindResult = {
   finalUpdate: boolean;
 };
 
-const FindInPage = memo(() => {
+/**
+ * FindInPage Component
+ * Allows users to search for text within the current browser page.
+ */
+const FindInPage = memo(function FindInPage() {
   const id = useContextState('targetID');
   const selectedText = useContextState('selectedText');
   const [searchValue, setSearchValue] = useState<string>('');
@@ -40,7 +44,7 @@ const FindInPage = memo(() => {
 
     if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
     focusTimeoutRef.current = setTimeout(() => inputRef?.focus(), 0);
-  }, [searchValue, id]);
+  }, [searchValue, id, inputRef]);
 
   // Listen for find results from main process
   useEffect(() => {
@@ -55,45 +59,48 @@ const FindInPage = memo(() => {
     };
   }, []);
 
-  const next = () => {
+  const next = useCallback(() => {
     browserIpc.send.findInPage(id, searchValue, {findNext: false, forward: true});
-  };
+  }, [id, searchValue]);
 
-  const back = () => {
+  const back = useCallback(() => {
     browserIpc.send.findInPage(id, searchValue, {findNext: false, forward: false});
-  };
+  }, [id, searchValue]);
 
-  const clear = () => {
+  const clear = useCallback(() => {
     setSearchValue('');
     setResult(null);
     browserIpc.send.stopFindInPage(id, 'clearSelection');
     // Refocus input after clearing
     if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
     focusTimeoutRef.current = setTimeout(() => inputRef?.focus(), 0);
-  };
+  }, [id, inputRef]);
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (isEmpty(searchValue)) return;
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent<HTMLInputElement>) => {
+      if (isEmpty(searchValue)) return;
 
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      if (e.shiftKey) {
-        back();
-      } else {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (e.shiftKey) {
+          back();
+        } else {
+          next();
+        }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
         next();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        back();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        clear();
+        hideContextWindow();
       }
-    } else if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      next();
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      back();
-    } else if (e.key === 'Escape') {
-      e.preventDefault();
-      clear();
-      hideContextWindow();
-    }
-  };
+    },
+    [searchValue, back, next, clear],
+  );
 
   // Clear search when window closes
   useEffect(() => {
@@ -125,7 +132,7 @@ const FindInPage = memo(() => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Circle_Icon className="size-5 text-primary" />
+          <Circle_Icon className="size-5 text-primary" aria-hidden="true" />
           <span className="text-sm font-semibold text-foreground-800">Find in Page</span>
         </div>
         {hasResults && (
@@ -146,15 +153,20 @@ const FindInPage = memo(() => {
         onKeyDown={handleKeyDown}
         onValueChange={setSearchValue}
         placeholder="Type to search..."
-        startContent={<Circle_Icon className="text-foreground-500" />}
+        startContent={<Circle_Icon className="text-foreground-500" aria-hidden="true" />}
         autoFocus
+        aria-label="Find in page"
       />
 
       {/* Status Message */}
       {searchValue && (
-        <div className="flex items-center justify-center rounded-lg bg-foreground-100 py-2">
+        <div
+          className="flex items-center justify-center rounded-lg bg-foreground-100 py-2"
+          aria-live="polite">
           {noResults ? (
-            <span className="text-sm text-danger">No matches found</span>
+            <span className="text-sm text-danger" role="alert">
+              No matches found
+            </span>
           ) : hasResults ? (
             <span className="text-sm text-foreground-700">
               Match {result.activeMatchOrdinal} of {result.matches}

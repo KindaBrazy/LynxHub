@@ -2,11 +2,20 @@ import {Divider} from '@heroui/react';
 import applicationIpc from '@lynx_shared/ipc/application';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {Export, Link, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
+import {memo} from 'react';
 
 import {ActionButton, createActionHandler} from './Utils';
 
-type Props = {url: string};
-export function Links({url}: Props) {
+type LinksProps = {
+  /** The URL to perform actions on */
+  url: string;
+};
+
+/**
+ * Component that renders context menu actions for links.
+ * Includes options to open in new tab, open in default browser, and copy link.
+ */
+export const Links = memo(function Links({url}: LinksProps) {
   if (!url) return null;
 
   return (
@@ -15,7 +24,6 @@ export function Links({url}: Props) {
         onPress={createActionHandler(() => {
           contextMenuIpc.send.rightClickItems.newTab(url);
         })}
-        key="context_newTab"
         title="Open link in new tab"
         icon={<SquareTopDown className="size-4" />}
       />
@@ -23,7 +31,6 @@ export function Links({url}: Props) {
         onPress={createActionHandler(() => {
           applicationIpc.send.openUrlDefaultBrowser(url);
         })}
-        key="context_openExternal"
         title="Open link in default browser"
         icon={<Export className="size-4" />}
       />
@@ -31,11 +38,10 @@ export function Links({url}: Props) {
         onPress={createActionHandler(() => {
           navigator.clipboard.writeText(url);
         })}
-        key="context_copyLink"
         title="Copy Link Address"
         icon={<Link className="size-4" />}
       />
-      <Divider className="my-2" key="sep_link_image" />
+      <Divider className="my-2" />
     </>
   );
-}
+});
