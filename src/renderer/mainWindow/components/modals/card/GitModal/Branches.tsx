@@ -6,14 +6,14 @@ import {useDispatch} from 'react-redux';
 import {AppDispatch} from '../../../../redux/store';
 import {lynxTopToast} from '../../../../utils/hooks';
 
-type Props = {
+interface BranchesProps {
   dir: string;
   currentBranch: string;
   availableBranches: string[];
   refreshData: () => void;
-};
+}
 
-export default function Branches({dir, availableBranches, currentBranch, refreshData}: Props) {
+export default function Branches({dir, availableBranches, currentBranch, refreshData}: BranchesProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedBranch, setSelectedBranch] = useState<string | undefined>(undefined);
   const dispatch = useDispatch<AppDispatch>();
@@ -29,23 +29,20 @@ export default function Branches({dir, availableBranches, currentBranch, refresh
     }
   }, []);
 
-  const handleBranchChange = () => {
-    if (dir && selectedBranch) {
-      setLoading(true);
-      gitIpc
-        .changeBranch(dir, selectedBranch)
-        .then(() => {
-          lynxTopToast(dispatch).success(`Successfully switched to branch: ${selectedBranch}`);
-          refreshData();
-        })
-        .catch(err => {
-          lynxTopToast(dispatch).error(`Failed to switch branch: ${err.message || 'Unknown error'}`);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+  const handleBranchChange = useCallback(async () => {
+    if (!dir || !selectedBranch || selectedBranch === currentBranch) return;
+
+    setLoading(true);
+    try {
+      await gitIpc.changeBranch(dir, selectedBranch);
+      lynxTopToast(dispatch).success(`Successfully switched to branch: ${selectedBranch}`);
+      refreshData();
+    } catch (err: any) {
+      lynxTopToast(dispatch).error(`Failed to switch branch: ${err.message || 'Unknown error'}`);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [dir, selectedBranch, currentBranch, dispatch, refreshData]);
 
   return (
     <div className="flex w-full items-center gap-x-4">
@@ -56,9 +53,12 @@ export default function Branches({dir, availableBranches, currentBranch, refresh
         placeholder="Select a branch"
         onSelectionChange={onSelectionChange}
         selectedKeys={selectedBranch ? [selectedBranch] : []}
-        fullWidth>
+        fullWidth
+        aria-label="Select branch to switch to">
         {availableBranches.map(branch => (
-          <SelectItem key={branch}>{branch}</SelectItem>
+          <SelectItem key={branch} textValue={branch}>
+            {branch}
+          </SelectItem>
         ))}
       </Select>
       <Button

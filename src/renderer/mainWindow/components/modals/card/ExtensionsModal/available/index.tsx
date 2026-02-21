@@ -19,7 +19,7 @@ type Props = {
 
 const Available = memo(({visible, updateTable, installedExtensions, id, dir}: Props) => {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize] = useState(10);
   const [data, setData] = useState<ExtensionsInfo[]>([]);
   const [list, setList] = useState<ExtensionsInfo[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');

@@ -5,78 +5,83 @@ import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {Descriptions, DescriptionsProps, Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
-import {useCallback} from 'react';
+import {memo, useCallback} from 'react';
 
-type Props = {
+interface CardInfoDescriptionProps {
   folders: string[] | undefined;
   descriptions: CardInfoDescriptions;
-};
+}
 
 const progressElem = <Spinner size="sm" className="flex-row space-x-1" classNames={{label: 'text-foreground/70'}} />;
 
-export default function CardInfoDescription({folders, descriptions}: Props) {
-  const getItems = useCallback((items: CardInfoDescriptions_Items) => {
-    const result: DescriptionsProps['items'] = [];
+function CardInfoDescription({folders, descriptions}: CardInfoDescriptionProps) {
+  const getItems = useCallback((items: CardInfoDescriptions_Items): DescriptionsProps['items'] => {
+    return items
+      .map((item, index) => {
+        if (isNil(item.result)) return null;
 
-    items.forEach((item, index) => {
-      if (isNil(item.result)) {
-        return;
-      } else if (item.result === 'loading') {
-        result.push({key: index, label: item.label, children: progressElem});
-      } else if (isValidURL(item.result)) {
-        result.push({
-          key: index,
-          label: item.label,
-          children: (
-            <Link
-              size="sm"
-              href={item.result}
-              color="foreground"
-              className="transition-colors duration-300 hover:text-primary"
-              isExternal>
-              {item.result}
-            </Link>
-          ),
-        });
-      } else {
-        result.push({key: index, label: item.label, children: item.result});
-      }
-    });
+        if (item.result === 'loading') {
+          return {key: index, label: item.label, children: progressElem};
+        }
+        
+        if (isValidURL(item.result)) {
+          return {
+            key: index,
+            label: item.label,
+            children: (
+              <Link
+                size="sm"
+                href={item.result}
+                color="foreground"
+                className="transition-colors duration-300 hover:text-primary"
+                isExternal>
+                {item.result}
+              </Link>
+            ),
+          };
+        }
 
-    return result;
+        return {key: index, label: item.label, children: item.result};
+      })
+      .filter((item): item is NonNullable<typeof item> => item !== null);
   }, []);
 
   const openDir = useCallback((dir: string) => {
     filesIpc.openPath(dir);
   }, []);
 
+  if (isEmpty(descriptions) && isEmpty(folders)) return null;
+
   return (
     <>
       {descriptions?.map((desc, index) => {
-        return isEmpty(getItems(desc.items)) ? null : (
+        const items = getItems(desc.items);
+        if (isEmpty(items)) return null;
+
+        return (
           <div key={`desc_${index}`}>
-            <Descriptions column={2} size="small" layout="vertical" title={desc.title} items={getItems(desc.items)} />
+            <Descriptions column={2} size="small" layout="vertical" title={desc.title} items={items} />
             {index !== descriptions.length - 1 && <Divider variant="dashed" className="mb-4" />}
           </div>
         );
       })}
 
-      {!isEmpty(folders) && <Divider variant="dashed" className="mb-4" />}
+      {!isEmpty(folders) && !isEmpty(descriptions) && <Divider variant="dashed" className="mb-4" />}
 
-      {folders?.map((folder, index) => {
-        return (
-          <Button
-            variant="flat"
-            endContent={<div />}
-            key={`openFolder_${index}`}
-            startContent={<FolderOpen />}
-            onPress={() => openDir(folder)}
-            className="justify-between shrink-0"
-            fullWidth>
-            {folder}
-          </Button>
-        );
-      })}
+      {folders?.map((folder, index) => (
+        <Button
+          variant="flat"
+          endContent={<div />}
+          key={`openFolder_${index}`}
+          startContent={<FolderOpen />}
+          onPress={() => openDir(folder)}
+          className="justify-between shrink-0 mb-2"
+          fullWidth>
+          {folder}
+        </Button>
+      ))}
     </>
   );
 }
+
+export default memo(CardInfoDescription);

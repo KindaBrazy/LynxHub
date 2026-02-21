@@ -3,7 +3,7 @@ import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
-import {Fragment, Key, useCallback, useEffect, useMemo, useState} from 'react';
+import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {extensionsData} from '../../../../plugins/extensions/loader';
 import {useModalsState} from '../../../../redux/reducers/modals';
@@ -18,7 +18,7 @@ import Installed from './Installed';
 type Props = {isOpen: boolean; title: string; id: string; tabID: string; dir: string};
 
 const ExtensionsModalContent = ({isOpen, title, id, dir, tabID}: Props) => {
-  const [currentTab, setCurrentTab] = useState<Key>('installed');
+  const [currentTab, setCurrentTab] = useState<string | number>('installed');
   const autoUpdate = useIsAutoUpdateExtensions(id);
 
   const {

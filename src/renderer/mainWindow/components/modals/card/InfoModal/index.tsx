@@ -16,9 +16,15 @@ import {useTabModalLifecycle} from '../../useTabModalManager';
 import CardInfoDescription from './Description';
 import useCardInfoApi from './useCardInfoApi';
 
-type Props = {cardId: string; isOpen: boolean; devName: string; url: string; tabID: string};
+interface CardInfoModalContentProps {
+  cardId: string;
+  isOpen: boolean;
+  devName: string;
+  url: string;
+  tabID: string;
+}
 
-const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
+const CardInfoModalContent = ({cardId, isOpen, devName, url, tabID}: CardInfoModalContentProps) => {
   const activeTab = useTabsState('activeTab');
   const dispatch = useDispatch<AppDispatch>();
   const webUI = useInstalledCard(cardId);
@@ -35,7 +41,7 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
 
   const avatarUrl = useMemo(() => getCacheUrl(extractGitUrl(url).avatarUrl), [url]);
 
-  useDebounceBreadcrumb('Card Git Manager Modal: ', [isOpen, cardId]);
+  useDebounceBreadcrumb('Card Info Modal: ', [isOpen, cardId]);
 
   useCardInfoApi(cardId, setOpenFolders, setCardInfoDescriptions, webUI?.dir);
 
@@ -43,7 +49,7 @@ const CardInfoModalNew = ({cardId, isOpen, devName, url, tabID}: Props) => {
 
   const onClose = useCallback(() => {
     dispatch(modalActions.setInfoCardId({cardID: '', tabID: activeTab}));
-  }, [dispatch]);
+  }, [dispatch, activeTab]);
 
   return (
     <Modal
@@ -106,7 +112,9 @@ const CardInfoModal = () => {
   return (
     <>
       {cardInfoModal.map(modal => (
-        <Fragment key={`${modal.tabID}_modal`}>{CardInfo ? <CardInfo /> : <CardInfoModalNew {...modal} />}</Fragment>
+        <Fragment key={`${modal.tabID}_modal`}>
+          {CardInfo ? <CardInfo /> : <CardInfoModalContent {...modal} />}
+        </Fragment>
       ))}
     </>
   );

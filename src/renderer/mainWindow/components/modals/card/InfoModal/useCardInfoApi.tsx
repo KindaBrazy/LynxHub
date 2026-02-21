@@ -35,10 +35,10 @@ export default function useCardInfoApi(
           get: (key: string) => storageIpc.getCustom(key),
           set: (key: string, data: any) => storageIpc.setCustom(key, data),
         },
-        getFolderSize: (dir: string) => filesIpc.calcFolderSize(dir),
-        getFolderCreationTime: (dir: string) => moduleApiIpc.getFolderCreationTime(dir),
-        getLastPulledDate: (dir: string) => moduleApiIpc.getLastPulledDate(dir),
-        getCurrentReleaseTag: (dir: string) => moduleApiIpc.getCurrentReleaseTag(dir),
+        getFolderSize: (path: string) => filesIpc.calcFolderSize(path),
+        getFolderCreationTime: (path: string) => moduleApiIpc.getFolderCreationTime(path),
+        getLastPulledDate: (path: string) => moduleApiIpc.getLastPulledDate(path),
+        getCurrentReleaseTag: (path: string) => moduleApiIpc.getCurrentReleaseTag(path),
       };
 
       const callBack: CardInfoCallback = {setOpenFolders, setDescription: setCardInfoDescriptions};
@@ -49,5 +49,5 @@ export default function useCardInfoApi(
         console.error('Failed to execute cardInfo method:', error);
       }
     }
-  }, [cardId, dir, allMethods]);
+  }, [cardId, dir, allMethods, setOpenFolders, setCardInfoDescriptions]);
 }

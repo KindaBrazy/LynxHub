@@ -89,7 +89,7 @@ const Installed = memo(
     }, [extensions, statusMap, deleteModalStates, dir]);
 
     const renderCell = useCallback(
-      (row: any, columnKey: Key) => {
+      (row: any, columnKey: string | number) => {
         const status = row.status as ExtensionStatus;
 
         switch (columnKey) {
