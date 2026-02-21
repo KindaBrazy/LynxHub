@@ -13,11 +13,16 @@ import {lynxTopToast} from '../../../../utils/hooks';
 import {useTabModalLifecycle} from '../../useTabModalManager';
 import Branches from './Branches';
 import CommitInfo from './CommitInfo';
-import Reset_Shallow from './Reset_Shallow';
+import ResetShallow from './Reset_Shallow';
 
-type Props = {isOpen: boolean; tabID: string; title: string; dir: string};
+interface GitManagerModalContentProps {
+  isOpen: boolean;
+  tabID: string;
+  title: string;
+  dir: string;
+}
 
-function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
+function GitManagerModalContent({isOpen, dir, title, tabID}: GitManagerModalContentProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const [repoInfo, setRepoInfo] = useState<RepositoryInfo | undefined>(undefined);
@@ -31,25 +36,34 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
     }
   }, [isOpen]);
 
-  const getRepoInfo = useCallback(() => {
+  const getRepoInfo = useCallback(async () => {
+    if (!dir) return;
+    
     setLoading(true);
-    gitIpc
-      .getRepoInfo(dir)
-      .then(repositoryInfo => {
-        setRepoInfo(repositoryInfo);
-      })
-      .catch(e => {
-        lynxTopToast(dispatch).error('Something went wrong while getting the repository info.');
-        console.error(e);
-      })
-      .finally(() => setLoading(false));
-  }, [dir]);
+    try {
+      const repositoryInfo = await gitIpc.getRepoInfo(dir);
+      setRepoInfo(repositoryInfo);
+    } catch (e) {
+      lynxTopToast(dispatch).error('Something went wrong while getting the repository info.');
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [dir, dispatch]);
 
   useEffect(() => {
-    if (dir) getRepoInfo();
-  }, [isOpen, dir]);
+    if (dir && isOpen) {
+      getRepoInfo();
+    }
+  }, [isOpen, dir, getRepoInfo]);
 
   const {onOpenChange, show} = useTabModalLifecycle('gitManager', tabID);
+
+  const handleOpenRemote = useCallback(() => {
+    if (repoInfo?.remoteUrl) {
+      window.open(repoInfo.remoteUrl);
+    }
+  }, [repoInfo?.remoteUrl]);
 
   return (
     <Modal
@@ -69,7 +83,7 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
           }>
           <span className="text-lg font-semibold">{title}</span>
           {repoInfo && (
-            <Link className="cursor-pointer" onPress={() => window.open(repoInfo.remoteUrl)}>
+            <Link className="cursor-pointer" onPress={handleOpenRemote}>
               {repoInfo.remoteUrl}
             </Link>
           )}
@@ -90,7 +104,7 @@ function CardGitManager_Modal({isOpen, dir, title, tabID}: Props) {
                     availableBranches={repoInfo.availableBranches}
                   />
 
-                  <Reset_Shallow dir={dir} title={title} refreshData={getRepoInfo} isShallow={repoInfo.isShallow} />
+                  <ResetShallow dir={dir} title={title} refreshData={getRepoInfo} isShallow={repoInfo.isShallow} />
 
                   <Divider variant="dashed" />
                   <CommitInfo repoInfo={repoInfo} />
@@ -118,7 +132,7 @@ const GitManagerModal = () => {
     <>
       {gitManager.map(modal => (
         <Fragment key={`${modal.tabID}_modal`}>
-          {GitManagerExt ? <GitManagerExt /> : <CardGitManager_Modal {...modal} />}
+          {GitManagerExt ? <GitManagerExt /> : <GitManagerModalContent {...modal} />}
         </Fragment>
       ))}
     </>
