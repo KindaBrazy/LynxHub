@@ -1,10 +1,17 @@
 import {Color, Mesh, Program, Renderer, Triangle} from 'ogl';
-import {useEffect, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 
-interface ThreadsProps {
-  color?: [number, number, number];
+/**
+ * Props for the Threads component.
+ */
+interface ThreadsProps extends React.HTMLAttributes<HTMLDivElement> {
+  /** Color of the threads as an RGB array [r, g, b]. Default is [1, 1, 1]. */
+  baseColor?: [number, number, number];
+  /** Amplitude of the thread distortion. Default is 1. */
   amplitude?: number;
+  /** Distance factor for the threads. Default is 0. */
   distance?: number;
+  /** Enable mouse interaction. Default is false. */
   enableMouseInteraction?: boolean;
 }
 
@@ -125,8 +132,11 @@ void main() {
 }
 `;
 
-export default function ThreadsBG({
-  color = [1, 1, 1],
+/**
+ * Threads component renders a set of animated, noise-distorted lines using WebGL.
+ */
+export default function Threads({
+  baseColor = [1, 1, 1],
   amplitude = 1,
   distance = 0,
   enableMouseInteraction = false,
@@ -155,7 +165,7 @@ export default function ThreadsBG({
         iResolution: {
           value: new Color(gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height),
         },
-        uColor: {value: new Color(...color)},
+        uColor: {value: new Color(...baseColor)},
         uAmplitude: {value: amplitude},
         uDistance: {value: distance},
         uMouse: {value: new Float32Array([0.5, 0.5])},
@@ -202,6 +212,8 @@ export default function ThreadsBG({
         program.uniforms.uMouse.value[0] = currentMouse[0];
         program.uniforms.uMouse.value[1] = currentMouse[1];
       } else {
+        // Only reset if needed, but safe to do every frame.
+        // If not interactive, we want it centered.
         program.uniforms.uMouse.value[0] = 0.5;
         program.uniforms.uMouse.value[1] = 0.5;
       }
@@ -224,7 +236,7 @@ export default function ThreadsBG({
       if (container.contains(gl.canvas)) container.removeChild(gl.canvas);
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
-  }, [color, amplitude, distance, enableMouseInteraction]);
+  }, [baseColor, amplitude, distance, enableMouseInteraction]);
 
   return <div ref={containerRef} className="size-full absolute -translate-y-4" {...rest} />;
 }

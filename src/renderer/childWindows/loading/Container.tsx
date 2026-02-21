@@ -1,5 +1,9 @@
 import {ReactNode} from 'react';
 
+/**
+ * Container component that provides a full-screen, dark-themed, centered layout.
+ * It also enables window dragging.
+ */
 export default function Container({children}: {children: ReactNode}) {
   return (
     <div

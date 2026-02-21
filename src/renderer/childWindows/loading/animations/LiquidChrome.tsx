@@ -1,6 +1,9 @@
 import {Mesh, Program, Renderer, Triangle} from 'ogl';
 import React, {useEffect, useRef} from 'react';
 
+/**
+ * Props for the LiquidChrome component.
+ */
 interface LiquidChromeProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Base color as an RGB array. Default is [0.1, 0.1, 0.1]. */
   baseColor?: [number, number, number];
@@ -16,7 +19,11 @@ interface LiquidChromeProps extends React.HTMLAttributes<HTMLDivElement> {
   interactive?: boolean;
 }
 
-export default function LiquidChromeBG({
+/**
+ * LiquidChrome component renders a fluid, metallic, interactive background using WebGL.
+ * It uses a custom fragment shader to create a liquid-like distortion effect.
+ */
+export default function LiquidChrome({
   baseColor = [0.1, 0.1, 0.1],
   speed = 0.2,
   amplitude = 0.5,
