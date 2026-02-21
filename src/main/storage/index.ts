@@ -3,8 +3,8 @@ import {join} from 'node:path';
 import {is} from '@electron-toolkit/utils';
 import {APP_NAME} from '@lynx_common/consts';
 import {Get_Default_Hotkeys} from '@lynx_common/consts/hotkeys';
-import {CustomRunBehaviorData, CustomRunBehaviorData_Legacy, FavIcons} from '@lynx_common/types/ipc';
-import StorageTypes from '@lynx_common/types/storage';
+import {CustomRunBehaviorData, FavIcons, LegacyCustomRunBehaviorData} from '@lynx_common/types/ipc';
+import AppStorageData from '@lynx_common/types/storage';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import {changeWindowState} from '@lynx_main/ipc/methods/windowUtils';
 import classHolder from '@lynx_main/managers/classHolder';
@@ -20,7 +20,7 @@ import {JSONFileSyncPreset} from 'lowdb/node';
  * Uses `lowdb` for JSON file storage.
  */
 class BaseStorage {
-  private readonly storage: LowSync<StorageTypes>;
+  private readonly storage: LowSync<AppStorageData>;
 
   private readonly CURRENT_VERSION: number = 0.95;
   private migratedTo: number = 0; // Tracks migration state for deferred operations
@@ -51,7 +51,7 @@ class BaseStorage {
     [0.95, () => this.migrate_0_95()],
   ]);
 
-  private readonly DEFAULT_DATA: StorageTypes = {
+  private readonly DEFAULT_DATA: AppStorageData = {
     storage: {version: 0.95},
     cards: {
       installedCards: [],
@@ -171,7 +171,7 @@ class BaseStorage {
       }
     }
 
-    this.storage = JSONFileSyncPreset<StorageTypes>(storagePath, this.DEFAULT_DATA);
+    this.storage = JSONFileSyncPreset<AppStorageData>(storagePath, this.DEFAULT_DATA);
     this.storage.read();
     this.runStorageMigrations();
   }
@@ -306,7 +306,7 @@ class BaseStorage {
     const behavior = this.storage.data.cardsConfig.customRunBehavior;
     if (!isEmpty(behavior)) {
       // @ts-ignore-next-line
-      this.storage.data.cardsConfig.customRunBehavior = behavior.map((item: CustomRunBehaviorData_Legacy) => {
+      this.storage.data.cardsConfig.customRunBehavior = behavior.map((item: LegacyCustomRunBehaviorData) => {
         return {
           cardID: item.cardID,
           browser: item.browser === 'defaultBrowser' ? 'defaultBrowser' : 'appBrowser',
@@ -424,7 +424,7 @@ class BaseStorage {
    * Retrieves data from storage by key.
    * @param key - The key of the data to retrieve
    */
-  public getData<K extends keyof StorageTypes>(key: K): StorageTypes[K] {
+  public getData<K extends keyof AppStorageData>(key: K): AppStorageData[K] {
     return this.storage.data[key];
   }
 
@@ -450,7 +450,7 @@ class BaseStorage {
    * Returns a deep clone of all storage data.
    * Converts relative paths to absolute paths in portable mode.
    */
-  public getAll(): StorageTypes {
+  public getAll(): AppStorageData {
     const data = this.storage.data;
     const result = lodash.cloneDeep(data);
 
@@ -469,7 +469,7 @@ class BaseStorage {
    * @param key - The key of the data to update
    * @param updateData - The partial data to merge
    */
-  public updateData<K extends keyof StorageTypes>(key: K, updateData: Partial<StorageTypes[K]>): void {
+  public updateData<K extends keyof AppStorageData>(key: K, updateData: Partial<AppStorageData[K]>): void {
     this.storage.data[key] = {...this.storage.data[key], ...updateData};
     this.write();
   }

@@ -55,11 +55,11 @@ export default function ScreenShare() {
         `${activeTab === 'screens' ? 'max-w-full' : 'max-w-64'} h-fit`
       }
       key={item.id}
-      onPress={() => setSelectedItem(activeTab === 'windows' ? item.id : item.display_id)}
+      onPress={() => setSelectedItem(activeTab === 'windows' ? item.id : item.displayId)}
       isPressable>
       <CardHeader className="p-0 relative overflow-hidden">
         <img alt={item.name} src={item.thumbnail} className="size-full object-cover" />
-        {selectedItem === (activeTab === 'windows' ? item.id : item.display_id) && (
+        {selectedItem === (activeTab === 'windows' ? item.id : item.displayId) && (
           <div className="absolute inset-0 flex items-center justify-center bg-primary/70 animate-appearance-in z-10">
             <Record className="size-4 animate-appearance-in" />
           </div>

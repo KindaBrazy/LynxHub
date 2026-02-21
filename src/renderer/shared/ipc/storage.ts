@@ -11,7 +11,7 @@ import {
   RecentlyOperation,
   StorageOperation,
 } from '@lynx_common/types/ipc';
-import StorageTypes, {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
+import AppStorageData, {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
 
 import lynxIpc from './lynxIpc';
 
@@ -23,13 +23,13 @@ const storageIpc = {
   setCustom: (key: string, data: any) => lynxIpc.send(storageChannels.setCustom, key, data),
 
   // Gets typed storage data by key
-  get: <K extends keyof StorageTypes>(key: K) => lynxIpc.invoke<StorageTypes[K]>(storageChannels.get, key),
+  get: <K extends keyof AppStorageData>(key: K) => lynxIpc.invoke<AppStorageData[K]>(storageChannels.get, key),
 
   // Gets all storage data
-  getAll: () => lynxIpc.invoke<StorageTypes>(storageChannels.getAll),
+  getAll: () => lynxIpc.invoke<AppStorageData>(storageChannels.getAll),
 
   // Updates storage data partially
-  update: <K extends keyof StorageTypes>(key: K, updateData: Partial<StorageTypes[K]>) =>
+  update: <K extends keyof AppStorageData>(key: K, updateData: Partial<AppStorageData[K]>) =>
     lynxIpc.invoke<void>(storageChannels.update, key, updateData),
 
   // Clears all storage data

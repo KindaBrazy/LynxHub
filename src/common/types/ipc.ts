@@ -1,9 +1,17 @@
-import {PullResult, SimpleGitProgressEvent} from 'simple-git';
+import type {PullResult, SimpleGitProgressEvent} from 'simple-git';
 
-import {UpdateDownloadProgress} from './index';
+import type {OsPlatforms, UpdateDownloadProgress} from './index';
 
-export type WinStateChange = {name: 'focus' | 'maximize' | 'full-screen'; value: boolean};
+/**
+ * Payload for window state change events.
+ */
+export type WinStateChange = {name: 'focus' | 'maximize' | 'fullscreen'; value: boolean};
+
+/**
+ * Desired state to change the window to.
+ */
 export type ChangeWindowState = 'minimize' | 'maximize' | 'close' | 'fullscreen' | 'restart';
+
 export type DarkModeTypes = 'dark' | 'light' | 'system';
 export type TaskbarStatus = 'taskbar-tray' | 'taskbar' | 'tray' | 'tray-minimized';
 export type TooltipStatus = 'essential' | 'full' | 'none';
@@ -31,11 +39,18 @@ export type StorageOperation = 'add' | 'remove' | 'get' | 'set';
 export type RecentlyOperation = 'update' | 'get';
 export type StoragePreOpenData = {cardId: string; data: PreOpenData}[];
 
-export type CustomRunBehaviorData_Legacy = {
+/**
+ * Legacy configuration for custom run behavior (deprecated).
+ */
+export type LegacyCustomRunBehaviorData = {
   cardID: string;
   terminal: 'runScript' | 'empty' | string;
   browser: 'appBrowser' | 'defaultBrowser' | 'doNothing' | string;
 };
+
+/**
+ * Configuration for custom run behavior of cards.
+ */
 export type CustomRunBehaviorData = {
   cardID: string;
   terminal: 'runScript' | 'empty';
@@ -59,7 +74,12 @@ export type PreOpenData = {type: 'folder' | 'file'; path: string}[];
 export type OnPreCommands = {id: string; commands: string[]};
 
 export type HomeCategory = ('Pin' | 'Recently' | 'All' | string)[];
-export type SystemInfo = {os: NodeJS.Platform; buildNumber: string | number};
+
+/**
+ * System information including OS platform and build number.
+ */
+export type SystemInfo = {os: OsPlatforms; buildNumber: string | number};
+
 export type LynxInput = {
   type: 'keyUp' | 'keyDown' | string;
   key: string;

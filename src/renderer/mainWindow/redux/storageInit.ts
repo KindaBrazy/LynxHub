@@ -1,9 +1,9 @@
-import StorageTypes from '@lynx_common/types/storage';
+import AppStorageData from '@lynx_common/types/storage';
 import applicationIpc from '@lynx_shared/ipc/application';
 import storageIpc from '@lynx_shared/ipc/storage';
 
 type AllStorageData = {
-  [K in keyof StorageTypes]: StorageTypes[K];
+  [K in keyof AppStorageData]: AppStorageData[K];
 };
 
 let cachedStorage: AllStorageData | null = null;

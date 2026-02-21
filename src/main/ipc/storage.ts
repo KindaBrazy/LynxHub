@@ -13,7 +13,7 @@ import {
   RecentlyOperation,
   StorageOperation,
 } from '@lynx_common/types/ipc';
-import StorageTypes, {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
+import AppStorageData, {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
 import classHolder from '@lynx_main/managers/classHolder';
 import {app} from 'electron';
 
@@ -155,12 +155,12 @@ export const storageIpc = {
     /** Handles get custom data request */
     getCustom: (callback: (key: string) => MainHT<any>) => lynxIpc.handle(storageChannels.getCustom, callback),
     /** Handles get data request */
-    get: (callback: (key: keyof StorageTypes) => MainHT<any>) => lynxIpc.handle(storageChannels.get, callback),
+    get: (callback: (key: keyof AppStorageData) => MainHT<any>) => lynxIpc.handle(storageChannels.get, callback),
     /** Handles get all data request */
-    getAll: (callback: () => MainHT<StorageTypes>) => lynxIpc.handle(storageChannels.getAll, callback),
+    getAll: (callback: () => MainHT<AppStorageData>) => lynxIpc.handle(storageChannels.getAll, callback),
     /** Handles update data request */
     update: (
-      callback: (key: keyof StorageTypes, updateData: Partial<StorageTypes[keyof StorageTypes]>) => MainHT<void>,
+      callback: (key: keyof AppStorageData, updateData: Partial<AppStorageData[keyof AppStorageData]>) => MainHT<void>,
     ) => lynxIpc.handle(storageChannels.update, callback),
     /** Handles clear storage request */
     clear: (callback: () => MainHT<void>) => lynxIpc.handle(storageChannels.clear, callback),
