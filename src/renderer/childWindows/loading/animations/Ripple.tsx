@@ -1,11 +1,22 @@
 import {cn} from '@heroui/react';
 import React, {ComponentPropsWithoutRef, CSSProperties} from 'react';
 
+/**
+ * Props for the Ripple component.
+ */
 interface RippleProps extends ComponentPropsWithoutRef<'div'> {
+  /** Size of the innermost circle in pixels. Default is 210. */
   mainCircleSize?: number;
+  /** Opacity of the innermost circle. Default is 0.24. */
   mainCircleOpacity?: number;
+  /** Number of concentric circles to render. Default is 8. */
   numCircles?: number;
 }
+
+/**
+ * Ripple component renders a set of expanding, fading concentric circles.
+ * It uses CSS animations for the ripple effect.
+ */
 export const Ripple = React.memo(function Ripple({
   mainCircleSize = 210,
   mainCircleOpacity = 0.24,

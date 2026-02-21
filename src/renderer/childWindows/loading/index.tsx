@@ -8,6 +8,10 @@ import RippleLoading from './loadings/Ripple';
 import SimpleLoading from './loadings/Simple';
 import ThreadsLoading from './loadings/Threads';
 
+/**
+ * Initializes the loading screen.
+ * It checks if loading animations are disabled and selects a random animation component accordingly.
+ */
 applicationIpc.invoke.disableLoadingAnimations().then(isDisabled => {
   let TargetComponent = SimpleLoading;
 
