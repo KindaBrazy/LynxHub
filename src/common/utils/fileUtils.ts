@@ -1,11 +1,10 @@
-import {parse} from 'node:path';
-
-import {isWin} from './index';
+import {isWin} from './platform';
 
 /**
- * Sanitizes a filename to prevent path traversal and invalid characters
- * @param filename - The filename to sanitize
- * @returns Sanitized filename safe for file system operations
+ * Sanitizes a filename to prevent path traversal and invalid characters.
+ *
+ * @param {string} filename - The filename to sanitize.
+ * @returns {string} Sanitized filename safe for file system operations.
  */
 export function sanitizeFilename(filename: string): string {
   if (!filename || filename.trim() === '') {
@@ -34,10 +33,29 @@ export function sanitizeFilename(filename: string): string {
   // Limit filename length (leaving room for counter suffix)
   const maxLength = 200;
   if (sanitized.length > maxLength) {
-    const parsed = parse(sanitized);
-    const ext = parsed.ext;
-    const name = parsed.name.substring(0, maxLength - ext.length);
-    sanitized = name + ext;
+    // Manual extension extraction to avoid node:path dependency
+    const lastDotIndex = sanitized.lastIndexOf('.');
+    let name: string;
+    let ext: string;
+
+    if (lastDotIndex !== -1 && lastDotIndex > 0) {
+      ext = sanitized.substring(lastDotIndex);
+      name = sanitized.substring(0, lastDotIndex);
+    } else {
+      ext = '';
+      name = sanitized;
+    }
+
+    // Truncate name to fit maxLength including extension
+    // Ensure we don't cut in the middle of a surrogate pair if possible (though JS strings are UTF-16)
+    const availableLength = maxLength - ext.length;
+    if (availableLength > 0) {
+      name = name.substring(0, availableLength);
+      sanitized = name + ext;
+    } else {
+      // Extension is too long, just truncate the whole string
+      sanitized = sanitized.substring(0, maxLength);
+    }
   }
 
   return sanitized;

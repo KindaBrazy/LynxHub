@@ -1,7 +1,19 @@
 import {PluginVersions} from '../types/plugins';
-import {extractGitUrl} from './index';
+import {extractGitUrl} from './urlUtils';
 
-export function getUpdateType(versions: PluginVersions, currentCommit: string, targetCommit: string) {
+/**
+ * Determines the update type (upgrade or downgrade) based on commit history.
+ *
+ * @param {PluginVersions} versions - List of plugin versions.
+ * @param {string} currentCommit - The current commit hash.
+ * @param {string} targetCommit - The target commit hash.
+ * @returns {'upgrade' | 'downgrade' | undefined} The update type, or undefined if target commit not found.
+ */
+export function getUpdateType(
+  versions: PluginVersions,
+  currentCommit: string,
+  targetCommit: string,
+): 'downgrade' | 'upgrade' | undefined {
   const currentCommitIndex = versions.findIndex(v => v.commit === currentCommit);
   const targetCommitIndex = versions.findIndex(v => v.commit === targetCommit);
 
@@ -27,7 +39,13 @@ export function getUpdateType(versions: PluginVersions, currentCommit: string, t
   return type;
 }
 
-export function getPluginReadmeUrl(repoUrl: string | undefined) {
+/**
+ * Generates the raw content URL for the README.md file of a plugin repository.
+ *
+ * @param {string | undefined} repoUrl - The repository URL.
+ * @returns {string | undefined} The raw content URL for README.md, or undefined if invalid.
+ */
+export function getPluginReadmeUrl(repoUrl: string | undefined): string | undefined {
   if (!repoUrl) return undefined;
 
   try {
@@ -44,7 +62,13 @@ export function getPluginReadmeUrl(repoUrl: string | undefined) {
   }
 }
 
-export function getPluginIconUrl(repoUrl: string | undefined) {
+/**
+ * Generates the raw content URL for the icon.png file of a plugin repository.
+ *
+ * @param {string | undefined} repoUrl - The repository URL.
+ * @returns {string | undefined} The raw content URL for icon.png, or undefined if invalid.
+ */
+export function getPluginIconUrl(repoUrl: string | undefined): string | undefined {
   if (!repoUrl) return undefined;
 
   try {
