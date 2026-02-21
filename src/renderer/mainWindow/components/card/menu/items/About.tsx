@@ -17,7 +17,11 @@ import {useDispatch} from 'react-redux';
 import {useTabModalManager} from '../../../modals/useTabModalManager';
 import {useCardStore} from '../../Wrapper';
 
-export const MenuInfo = () => {
+/**
+ * Menu item to show card information or open its folder.
+ * Displays 'Open Folder' if Ctrl is pressed and directory exists.
+ */
+export const AboutMenuItem = () => {
   const id = useCardStore(state => state.id);
   const extensionsDir = useCardStore(state => state.extensionsDir);
   const repoUrl = useCardStore(state => state.repoUrl);
@@ -31,11 +35,11 @@ export const MenuInfo = () => {
 
   const showOpenFolder = useMemo(() => {
     return !!webUI?.dir && isCtrlPressed;
-  }, [webUI, isCtrlPressed]);
+  }, [webUI?.dir, isCtrlPressed]);
 
-  const onPress = () => {
-    if (showOpenFolder) {
-      filesIpc.openPath(webUI!.dir!);
+  const onPress = useCallback(() => {
+    if (showOpenFolder && webUI?.dir) {
+      filesIpc.openPath(webUI.dir);
       setMenuIsOpen(false);
     } else {
       dispatch(
@@ -50,20 +54,24 @@ export const MenuInfo = () => {
       );
       setMenuIsOpen(false);
     }
-  };
+  }, [showOpenFolder, webUI?.dir, setMenuIsOpen, dispatch, id, repoUrl, extensionsDir, title, activeTab]);
 
   return (
     <DropdownItem
       key="information"
       onPress={onPress}
-      className={`${!showOpenFolder && 'cursor-default'}`}
+      className={!showOpenFolder ? 'cursor-default' : ''}
       title={showOpenFolder ? 'Open Folder' : 'Information'}
       startContent={showOpenFolder ? <FolderOpen className="size-4" /> : <InfoCircle className="size-4" />}
     />
   );
 };
 
-export const MenuHomePage = () => {
+/**
+ * Menu item to open the card's homepage (repo URL) or readme.
+ * Opens in browser if Ctrl is pressed.
+ */
+export const HomePageMenuItem = () => {
   const repoUrl = useCardStore(state => state.repoUrl);
   const title = useCardStore(state => state.title);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
@@ -88,13 +96,16 @@ export const MenuHomePage = () => {
       title="HomePage"
       onPress={onPress}
       startContent={<HomeAngle2 className="size-4" />}
-      className={`${!isCtrlPressed && 'cursor-default'}`}
+      className={!isCtrlPressed ? 'cursor-default' : ''}
       endContent={isCtrlPressed && <SquareTopDown className="size-3.5" />}
     />
   );
 };
 
-export const MenuDuplicate = () => {
+/**
+ * Menu item to duplicate or remove a duplicate of the card.
+ */
+export const DuplicateMenuItem = () => {
   const id = useCardStore(state => state.id);
 
   const duplicates = useCardsState('duplicates');

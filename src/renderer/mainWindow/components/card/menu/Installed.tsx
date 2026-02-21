@@ -6,10 +6,10 @@ import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useMemo} from 'react';
 
 import {useCardStore} from '../Wrapper';
-import {MenuDuplicate, MenuHomePage, MenuInfo} from './items/About';
-import {MenuUnAssign, MenuUninstall} from './items/DangerZone';
-import {MenuExtensions, MenuLaunchConfig, MenuRepoConfig} from './items/Options';
-import {MenuAutoUpdate, MenuCheckForUpdate, MenuUpdate} from './items/Update';
+import {AboutMenuItem, DuplicateMenuItem, HomePageMenuItem} from './items/About';
+import {UnAssignMenuItem, UninstallMenuItem} from './items/DangerZone';
+import {ExtensionsMenuItem, LaunchConfigMenuItem, RepoConfigMenuItem} from './items/Options';
+import {AutoUpdateMenuItem, CheckForUpdateMenuItem, UpdateMenuItem} from './items/Update';
 
 export const InstalledMenu = memo(() => {
   const id = useCardStore(state => state.id);
@@ -51,29 +51,29 @@ export const InstalledMenu = memo(() => {
           return Comp({key: index, useCardStore});
         })}
         <DropdownSection key="options" classNames={{divider: 'bg-foreground-100'}} showDivider>
-          {MenuLaunchConfig()}
-          {MenuExtensions()}
-          {MenuRepoConfig()}
+          {LaunchConfigMenuItem()}
+          {ExtensionsMenuItem()}
+          {RepoConfigMenuItem()}
         </DropdownSection>
         {second.map((Comp, index) => {
           return Comp({key: index, useCardStore});
         })}
         <DropdownSection key="update" classNames={{divider: 'bg-foreground-100'}} showDivider>
-          {MenuUpdate()}
-          {MenuCheckForUpdate()}
-          {MenuAutoUpdate()}
+          {UpdateMenuItem()}
+          {CheckForUpdateMenuItem()}
+          {AutoUpdateMenuItem()}
         </DropdownSection>
         {third.map((Comp, index) => {
           return Comp({key: index, useCardStore});
         })}
         <DropdownSection key="info" classNames={{divider: 'bg-foreground-100'}} showDivider>
-          {MenuInfo()}
-          {MenuHomePage()}
+          {AboutMenuItem()}
+          {HomePageMenuItem()}
         </DropdownSection>
         <DropdownSection key="card_modify">
-          {MenuDuplicate()}
-          {MenuUnAssign()}
-          {MenuUninstall()}
+          {DuplicateMenuItem()}
+          {UnAssignMenuItem()}
+          {UninstallMenuItem()}
         </DropdownSection>
 
         {fourth.map((Comp, index) => {

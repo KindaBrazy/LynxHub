@@ -15,7 +15,10 @@ import {useDispatch} from 'react-redux';
 import {useTabModalManager} from '../../../modals/useTabModalManager';
 import {useCardStore} from '../../Wrapper';
 
-export const MenuUpdate = () => {
+/**
+ * Menu item to trigger an update for the card.
+ */
+export const UpdateMenuItem = () => {
   const id = useCardStore(state => state.id);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
   const repoUrl = useCardStore(state => state.repoUrl);
@@ -42,7 +45,7 @@ export const MenuUpdate = () => {
       setMenuIsOpen(false);
       gitIpc.pull(webUi.dir, id);
     }
-  }, [dispatch, setMenuIsOpen, webUi, devName, id, title, openModal]);
+  }, [dispatch, setMenuIsOpen, webUi, devName, id, title, openModal, allMethods]);
 
   if (!updateAvailable || autoUpdate)
     return <DropdownItem className="hidden" key="update-hidden" textValue="update_hidden" />;
@@ -61,7 +64,10 @@ export const MenuUpdate = () => {
   );
 };
 
-export const MenuCheckForUpdate = () => {
+/**
+ * Menu item to check for updates manually.
+ */
+export const CheckForUpdateMenuItem = () => {
   const id = useCardStore(state => state.id);
   const checkingForUpdate = useCardStore(state => state.checkingForUpdate);
   const setCheckingForUpdate = useCardStore(state => state.setCheckingForUpdate);
@@ -106,7 +112,10 @@ export const MenuCheckForUpdate = () => {
   );
 };
 
-export const MenuAutoUpdate = () => {
+/**
+ * Menu item to toggle auto-update.
+ */
+export const AutoUpdateMenuItem = () => {
   const id = useCardStore(state => state.id);
   const repoUrl = useCardStore(state => state.repoUrl);
   const title = useCardStore(state => state.title);

@@ -6,7 +6,10 @@ import {useCallback} from 'react';
 import {useTabModalManager} from '../../../modals/useTabModalManager';
 import {useCardStore} from '../../Wrapper';
 
-export function MenuUnAssign() {
+/**
+ * Menu item to unassign the card.
+ */
+export const UnAssignMenuItem = () => {
   const id = useCardStore(state => state.id);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
@@ -28,9 +31,12 @@ export function MenuUnAssign() {
       startContent={<MinusSquare className="size-4" />}
     />
   );
-}
+};
 
-export function MenuUninstall() {
+/**
+ * Menu item to uninstall the card.
+ */
+export const UninstallMenuItem = () => {
   const id = useCardStore(state => state.id);
   const setMenuIsOpen = useCardStore(state => state.setMenuIsOpen);
 
@@ -52,4 +58,4 @@ export function MenuUninstall() {
       startContent={<TrashBin2 className="size-4" />}
     />
   );
-}
+};
