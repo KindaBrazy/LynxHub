@@ -2,7 +2,7 @@ import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
 import { toastWindowChannels } from '@lynx_common/consts/ipcChannels/toastWindow';
-import {ToastWindow_MessageType} from '@lynx_common/types';
+import {ToastWindowMessageType} from '@lynx_common/types';
 import lynxIpc from '@lynx_main/ipc/ipcWrapper';
 import classHolder from '@lynx_main/managers/classHolder';
 import {RelaunchApp} from '@lynx_main/utils';
@@ -30,7 +30,7 @@ const WINDOW_CONFIG: BrowserWindowConstructorOptions = {
  * @param onBtnPress - Optional callback for custom button presses
  */
 export default function ShowToastWindow(
-  message: ToastWindow_MessageType,
+  message: ToastWindowMessageType,
   onBtnPress?: (id: string, window?: BrowserWindow) => void,
 ) {
   const createWindow = () => {
@@ -59,7 +59,7 @@ function loadWindowContent(window: BrowserWindow) {
 
 function setupWindowListeners(
   window: BrowserWindow,
-  message: ToastWindow_MessageType,
+  message: ToastWindowMessageType,
   onBtnPress?: (id: string, window?: BrowserWindow) => void,
 ) {
   // Show window and send message when content is ready

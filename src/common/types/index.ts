@@ -8,6 +8,9 @@ import type {
   STATICS_FOLDER_NAME,
 } from '../consts';
 
+/**
+ * Information about a git repository branch and status.
+ */
 export type RepositoryInfo = {
   currentBranch: string;
   availableBranches: string[];
@@ -18,6 +21,9 @@ export type RepositoryInfo = {
   lastCommitTime: string;
 };
 
+/**
+ * Supported Operating System platforms.
+ */
 export type OsPlatforms =
   | 'aix'
   | 'android'
@@ -36,6 +42,9 @@ export type ArgumentsPresets = {preset: string; arguments: ChosenArgument[]};
 export type ChosenArgumentsData = {activePreset: string; data: ArgumentsPresets[]};
 export type StorageChosenArgumentsData = {cardId: string; activePreset: string; data: ArgumentsPresets[]}[];
 
+/**
+ * Progress information for downloads or updates.
+ */
 export type UpdateDownloadProgress = {
   total: number;
   delta: number;
@@ -44,7 +53,26 @@ export type UpdateDownloadProgress = {
   bytesPerSecond: number;
 };
 
-export type ModulesInfo = {
+/**
+ * Represents a single item in a changelog.
+ */
+export type ChangelogItem = {
+  label: string;
+  subitems?: ChangelogItem[];
+};
+
+/**
+ * Represents a changelog entry with a title and items.
+ */
+export type Changelog = {
+  title: string;
+  items: ChangelogItem[];
+};
+
+/**
+ * Information about a downloadable module.
+ */
+export type ModuleInfo = {
   id: string;
 
   title: string;
@@ -56,7 +84,7 @@ export type ModulesInfo = {
   updateDate: string;
 
   changeLog: string;
-  changes: Changelogs[];
+  changes: Changelog[];
 
   description: string;
 
@@ -74,17 +102,10 @@ export type ModulesInfo = {
   owner?: boolean;
 };
 
-export type ChangelogItem = {
-  label: string;
-  subitems?: ChangelogItem[];
-};
-
-export type Changelogs = {
-  title: string;
-  items: ChangelogItem[];
-};
-
-export type ExtensionsInfo = {
+/**
+ * Information about a downloadable extension.
+ */
+export type ExtensionInfo = {
   id: string;
 
   title: string;
@@ -95,7 +116,7 @@ export type ExtensionsInfo = {
 
   updateDate: string;
 
-  changeLog: Changelogs[];
+  changeLog: Changelog[];
 
   description: string;
 
@@ -112,6 +133,9 @@ export type ExtensionsInfo = {
   platforms: OsPlatforms[];
 };
 
+/**
+ * Basic information about an app update.
+ */
 export type AppUpdateInfo = {
   currentVersion: string;
   currentBuild: number;
@@ -123,8 +147,11 @@ export type AppUpdateInfo = {
   };
 };
 
+/**
+ * Detailed app update data including changelogs.
+ */
 export type AppUpdateData = AppUpdateInfo & {
-  changeLog: {build: number; version: string; changes: Changelogs[]}[];
+  changeLog: {build: number; version: string; changes: Changelog[]}[];
 };
 export type AppUpdateInsiderData = Omit<AppUpdateData, 'earlyAccess'>;
 
@@ -154,7 +181,10 @@ export type TabInfo = {
   progress?: {state: 0 | 1 | 2 | 3 | 4; value: number};
 };
 
-export type Notification_Data = {
+/**
+ * Data for a notification.
+ */
+export type NotificationData = {
   id: string;
   title: string;
   titleColor?: 'primary' | 'success' | 'secondary' | 'warning' | 'danger';
@@ -177,14 +207,20 @@ export type PatreonSupporter = {
   homePage: string;
 };
 
-type CustomBtn = {
+/**
+ * Configuration for a custom button in toast or notification.
+ */
+export type CustomBtn = {
   id: string;
   label: string;
   color: 'success' | 'danger' | 'warning' | 'default';
   cursor?: 'default' | 'pointer';
 };
 
-export type ToastWindow_MessageType = {
+/**
+ * Message type for Toast Window.
+ */
+export type ToastWindowMessageType = {
   type: 'success' | 'warning' | 'error' | 'info';
   message: string;
   title: string;

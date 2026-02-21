@@ -2,9 +2,9 @@ import { staticsChannels } from '@lynx_common/consts/ipcChannels/statics';
 import {
   AppUpdateData,
   AppUpdateInsiderData,
-  ExtensionsInfo,
-  ModulesInfo,
-  Notification_Data,
+  ExtensionInfo,
+  ModuleInfo,
+  NotificationData,
   PatreonSupporter,
 } from '@lynx_common/types';
 
@@ -21,16 +21,16 @@ const staticsIpc = {
   getInsider: () => lynxIpc.invoke<AppUpdateInsiderData | undefined>(staticsChannels.getInsider),
 
   // Gets notification data
-  getNotification: () => lynxIpc.invoke<Notification_Data[] | undefined>(staticsChannels.getNotification),
+  getNotification: () => lynxIpc.invoke<NotificationData[] | undefined>(staticsChannels.getNotification),
 
   // Gets available modules list
-  getModules: () => lynxIpc.invoke<ModulesInfo[] | undefined>(staticsChannels.getModules),
+  getModules: () => lynxIpc.invoke<ModuleInfo[] | undefined>(staticsChannels.getModules),
 
   // Gets available extensions list
-  getExtensions: () => lynxIpc.invoke<ExtensionsInfo[] | undefined>(staticsChannels.getExtensions),
+  getExtensions: () => lynxIpc.invoke<ExtensionInfo[] | undefined>(staticsChannels.getExtensions),
 
   // Gets early access extensions list
-  getExtensionsEA: () => lynxIpc.invoke<ExtensionsInfo[] | undefined>(staticsChannels.getExtensionsEA),
+  getExtensionsEA: () => lynxIpc.invoke<ExtensionInfo[] | undefined>(staticsChannels.getExtensionsEA),
 
   // Gets Patreon supporters list
   getPatrons: () => lynxIpc.invoke<PatreonSupporter[] | undefined>(staticsChannels.getPatrons),

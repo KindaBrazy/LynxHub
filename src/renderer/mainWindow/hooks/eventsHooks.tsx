@@ -164,7 +164,7 @@ export const useIpcEvents = () => {
         case 'maximize':
           dispatch(appActions.setAppState({key: 'maximized', value}));
           break;
-        case 'full-screen':
+        case 'fullscreen':
           dispatch(appActions.setAppState({key: 'fullscreen', value}));
           break;
       }

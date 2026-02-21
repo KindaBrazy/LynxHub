@@ -159,10 +159,10 @@ export default class MainWindowManager {
     );
 
     mainWindow.on('enter-full-screen', () =>
-      applicationIpc.send.changeWinState({name: 'full-screen', value: true}),
+      applicationIpc.send.changeWinState({name: 'fullscreen', value: true}),
     );
     mainWindow.on('leave-full-screen', () =>
-      applicationIpc.send.changeWinState({name: 'full-screen', value: false}),
+      applicationIpc.send.changeWinState({name: 'fullscreen', value: false}),
     );
   }
 

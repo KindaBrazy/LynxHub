@@ -1,10 +1,10 @@
 import { toastWindowChannels } from '@lynx_common/consts/ipcChannels/toastWindow';
-import {ToastWindow_MessageType} from '@lynx_common/types';
+import {ToastWindowMessageType} from '@lynx_common/types';
 
 import lynxIpc from './lynxIpc';
 
 const toastWindowIpc = {
-  onShowMessage: (callback: (data: ToastWindow_MessageType) => void) =>
+  onShowMessage: (callback: (data: ToastWindowMessageType) => void) =>
     lynxIpc.on(toastWindowChannels.onShowMessage, callback),
   closeToast: () => lynxIpc.send(toastWindowChannels.closeToast),
   exitApp: () => lynxIpc.send(toastWindowChannels.exitApp),

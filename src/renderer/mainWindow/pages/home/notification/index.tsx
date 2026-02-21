@@ -18,7 +18,7 @@ import LynxScroll from '@lynx/components/LynxScroll';
 import {tabsActions} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {AvailablePageIDs, PageID, PageTitles} from '@lynx_common/consts';
-import {Notification_Data} from '@lynx_common/types';
+import {NotificationData} from '@lynx_common/types';
 import {isValidURL} from '@lynx_common/utils';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
@@ -38,7 +38,7 @@ export default function Home_Notification() {
   const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure();
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  const [notifications, setNotifications] = useState<Notification_Data[]>([]);
+  const [notifications, setNotifications] = useState<NotificationData[]>([]);
   const {staticNotifs, staticNotifCount, haveWarn} = useStaticNotifications();
 
   const onPress = useCallback(() => {
@@ -46,7 +46,7 @@ export default function Home_Notification() {
     onOpen();
   }, []);
 
-  const filterData = (data: Notification_Data[]) => {
+  const filterData = (data: NotificationData[]) => {
     storageIpc.get('notification').then(({readNotifs}) => {
       setNotifications(data.filter(notif => !readNotifs.includes(notif.id)));
     });

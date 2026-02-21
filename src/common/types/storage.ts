@@ -1,5 +1,3 @@
-import {Rectangle} from 'electron';
-
 import {StorageChosenArgumentsData} from './index';
 import {
   AgentTypes,
@@ -16,6 +14,20 @@ import {
   TooltipStatus,
 } from './ipc';
 
+/**
+ * Rectangle definition compatible with Electron's Rectangle.
+ * Used for window bounds.
+ */
+export type Rectangle = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+/**
+ * Represents an installed card (module/extension).
+ */
 export type InstalledCard = {
   id: string;
   dir?: string;
@@ -23,114 +35,158 @@ export type InstalledCard = {
 
 export type InstalledCards = InstalledCard[];
 
-type StorageTypes = {
-  storage: {
-    version: number;
-  };
-  cards: {
-    installedCards: InstalledCards;
-    autoUpdateCards: string[];
-    autoUpdateExtensions: string[];
-    checkUpdateInterval: number;
-    pinnedCards: string[];
-    recentlyUsedCards: string[];
-    zoomFactor: number;
-    duplicated: {ogID: string; id: string; title: string}[];
-    cardTerminalPreCommands: {id: string; commands: string[]}[];
-  };
-  cardsConfig: {
-    preCommands: {cardId: string; data: string[]}[];
-    customRun: {cardId: string; data: string[]}[];
-    customRunBehavior: CustomRunBehaviorStore;
-    preOpen: StoragePreOpenData;
-    args: StorageChosenArgumentsData;
-  };
-  app: {
-    closeConfirm: boolean;
-    terminateAIConfirm: boolean;
-    closeTabConfirm: boolean;
-    openLastSize: boolean;
-    dynamicAppTitle: boolean;
-    openLinkExternal: boolean;
-    hardwareAcceleration: boolean;
-    lastSize:
-      | {
-          maximized: boolean;
-          bounds: Rectangle | undefined;
-        }
-      | undefined;
-    homeCategory: HomeCategory;
-    darkMode: DarkModeTypes;
-    taskbarStatus: TaskbarStatus;
-    tooltipStatus: TooltipStatus;
-    systemStartup: boolean;
-    startMinimized: boolean;
-    startMaximized: boolean;
-    startupLastActivePage: boolean;
-    lastPage: string;
-    hotkeys: LynxHotkey[];
-    initialized: boolean;
-    inited: boolean;
-    appDataDir: string;
-    disableLoadingAnimations: boolean;
-    collectErrors: boolean;
-    addBreadcrumbs: boolean;
-  };
-  terminal: {
-    outputColor: boolean;
-    useConpty: TerminalUseConpty;
-    scrollBack: number;
-    fontSize: number;
-    cursorStyle: TerminalCursorStyle;
-    cursorInactiveStyle: TerminalCursorInactiveStyle;
-    blinkCursor: boolean;
-    resizeDelay: number;
-    closeTabOnExit: boolean;
-    enableLigatures: boolean;
-    cdHistory: string[];
-    quickCommands: {label: string; command: string}[];
-  };
-  browser: {
-    recentAddress: string[];
-    favoriteAddress: string[];
-    historyAddress: string[];
-    favIcons: FavIcons[];
-    userAgent: AgentTypes;
-    customUserAgent: string;
-    downloadLocation: string;
-    downloadBehavior: 'ask' | 'default';
-    clearedDownloads: string[];
-    volumeSettings: {
-      globalMuted: boolean;
-      tabVolumes: {[cardId: string]: number};
-    };
-  };
-  notification: {
-    readNotifs: string[];
-  };
-  plugin: {
-    migrated: boolean;
-    disabledCards: string[];
-  };
-  performance: {
-    forceColorProfile: 'default' | 'srgb' | 'display-p3' | 'color-spin-gamma24';
-    highDpiSupport: boolean;
-    autoplayPolicy:
-      | 'default'
-      | 'no-user-gesture-required'
-      | 'user-gesture-required'
-      | 'document-user-activation-required';
-    enableAcceleratedVideoDecode: boolean;
-    jsMaxOldSpaceSize: 2048 | 4096 | 8192;
-    ignoreGpuBlacklist: boolean;
-    diskCacheSize: 0 | 268435456 | 536870912 | 1073741824;
-    enableWebAssemblySimd: boolean;
-    forceHighPerformanceGpu: boolean;
-    disableGpuVsync: boolean;
-    disableFrameRateLimit: boolean;
-    enableGpuRasterization: boolean;
-    enableZeroCopy: boolean;
+/**
+ * Storage section for cards (modules) configuration.
+ */
+export type CardsStorage = {
+  installedCards: InstalledCards;
+  autoUpdateCards: string[];
+  autoUpdateExtensions: string[];
+  checkUpdateInterval: number;
+  pinnedCards: string[];
+  recentlyUsedCards: string[];
+  zoomFactor: number;
+  duplicated: {ogID: string; id: string; title: string}[];
+  cardTerminalPreCommands: {id: string; commands: string[]}[];
+};
+
+/**
+ * Storage section for cards execution configuration.
+ */
+export type CardsConfigStorage = {
+  preCommands: {cardId: string; data: string[]}[];
+  customRun: {cardId: string; data: string[]}[];
+  customRunBehavior: CustomRunBehaviorStore;
+  preOpen: StoragePreOpenData;
+  args: StorageChosenArgumentsData;
+};
+
+/**
+ * Storage section for general application settings.
+ */
+export type AppConfigStorage = {
+  closeConfirm: boolean;
+  terminateAIConfirm: boolean;
+  closeTabConfirm: boolean;
+  openLastSize: boolean;
+  dynamicAppTitle: boolean;
+  openLinkExternal: boolean;
+  hardwareAcceleration: boolean;
+  lastSize:
+    | {
+        maximized: boolean;
+        bounds: Rectangle | undefined;
+      }
+    | undefined;
+  homeCategory: HomeCategory;
+  darkMode: DarkModeTypes;
+  taskbarStatus: TaskbarStatus;
+  tooltipStatus: TooltipStatus;
+  systemStartup: boolean;
+  startMinimized: boolean;
+  startMaximized: boolean;
+  startupLastActivePage: boolean;
+  lastPage: string;
+  hotkeys: LynxHotkey[];
+  initialized: boolean;
+  inited: boolean;
+  appDataDir: string;
+  disableLoadingAnimations: boolean;
+  collectErrors: boolean;
+  addBreadcrumbs: boolean;
+};
+
+/**
+ * Storage section for terminal emulator settings.
+ */
+export type TerminalStorage = {
+  outputColor: boolean;
+  useConpty: TerminalUseConpty;
+  scrollBack: number;
+  fontSize: number;
+  cursorStyle: TerminalCursorStyle;
+  cursorInactiveStyle: TerminalCursorInactiveStyle;
+  blinkCursor: boolean;
+  resizeDelay: number;
+  closeTabOnExit: boolean;
+  enableLigatures: boolean;
+  cdHistory: string[];
+  quickCommands: {label: string; command: string}[];
+};
+
+/**
+ * Storage section for internal browser settings.
+ */
+export type BrowserStorage = {
+  recentAddress: string[];
+  favoriteAddress: string[];
+  historyAddress: string[];
+  favIcons: FavIcons[];
+  userAgent: AgentTypes;
+  customUserAgent: string;
+  downloadLocation: string;
+  downloadBehavior: 'ask' | 'default';
+  clearedDownloads: string[];
+  volumeSettings: {
+    globalMuted: boolean;
+    tabVolumes: {[cardId: string]: number};
   };
 };
 
-export default StorageTypes;
+/**
+ * Storage section for notifications.
+ */
+export type NotificationStorage = {
+  readNotifs: string[];
+};
+
+/**
+ * Storage section for plugins state.
+ */
+export type PluginStorage = {
+  migrated: boolean;
+  disabledCards: string[];
+};
+
+/**
+ * Storage section for performance and hardware settings.
+ */
+export type PerformanceStorage = {
+  forceColorProfile: 'default' | 'srgb' | 'display-p3' | 'color-spin-gamma24';
+  highDpiSupport: boolean;
+  autoplayPolicy:
+    | 'default'
+    | 'no-user-gesture-required'
+    | 'user-gesture-required'
+    | 'document-user-activation-required';
+  enableAcceleratedVideoDecode: boolean;
+  jsMaxOldSpaceSize: 2048 | 4096 | 8192;
+  ignoreGpuBlacklist: boolean;
+  diskCacheSize: 0 | 268435456 | 536870912 | 1073741824;
+  enableWebAssemblySimd: boolean;
+  forceHighPerformanceGpu: boolean;
+  disableGpuVsync: boolean;
+  disableFrameRateLimit: boolean;
+  enableGpuRasterization: boolean;
+  enableZeroCopy: boolean;
+};
+
+/**
+ * Main storage data structure for the application.
+ * Used by LowDB for persistence.
+ */
+type AppStorageData = {
+  storage: {
+    version: number;
+  };
+  cards: CardsStorage;
+  cardsConfig: CardsConfigStorage;
+  app: AppConfigStorage;
+  terminal: TerminalStorage;
+  browser: BrowserStorage;
+  notification: NotificationStorage;
+  plugin: PluginStorage;
+  performance: PerformanceStorage;
+};
+
+export default AppStorageData;

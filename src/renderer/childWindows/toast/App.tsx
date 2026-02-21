@@ -1,6 +1,6 @@
 import {Button} from '@heroui/react';
 import {Power_Icon} from '@lynx_assets/icons';
-import {ToastWindow_MessageType} from '@lynx_common/types';
+import {ToastWindowMessageType} from '@lynx_common/types';
 import toastWindowIpc from '@lynx_shared/ipc/toastWindow';
 import {CheckCircle, DangerCircle, InfoCircle, Refresh, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {X} from 'lucide-react';
@@ -37,7 +37,7 @@ const getTypeStyles = (type: string) => {
 };
 
 export default function ToastContent() {
-  const [toastMessage, setToastMessage] = useState<ToastWindow_MessageType | null>(null);
+  const [toastMessage, setToastMessage] = useState<ToastWindowMessageType | null>(null);
 
   useEffect(() => {
     const offMessage = toastWindowIpc.onShowMessage(data => {

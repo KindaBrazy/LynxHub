@@ -5,9 +5,9 @@ import {APP_BUILD_NUMBER, STATICS_URL} from '@lynx_common/consts';
 import {
   AppUpdateData,
   AppUpdateInsiderData,
-  ExtensionsInfo,
-  ModulesInfo,
-  Notification_Data,
+  ExtensionInfo,
+  ModuleInfo,
+  NotificationData,
   PatreonSupporter,
   SubscribeStages,
 } from '@lynx_common/types';
@@ -112,20 +112,20 @@ export default class StaticsManager {
     return this.getDataAsJson<AppUpdateInsiderData>('insider.json');
   }
 
-  public async getNotification(): Promise<Notification_Data[] | undefined> {
-    return this.getDataAsJson<Notification_Data[]>('notifications.json');
+  public async getNotification(): Promise<NotificationData[] | undefined> {
+    return this.getDataAsJson<NotificationData[]>('notifications.json');
   }
 
-  public async getModules(): Promise<ModulesInfo[] | undefined> {
-    return this.getDataAsJson<ModulesInfo[]>('modules.json');
+  public async getModules(): Promise<ModuleInfo[] | undefined> {
+    return this.getDataAsJson<ModuleInfo[]>('modules.json');
   }
 
-  public async getExtensions(): Promise<ExtensionsInfo[] | undefined> {
-    return this.getDataAsJson<ExtensionsInfo[]>('extensions.json');
+  public async getExtensions(): Promise<ExtensionInfo[] | undefined> {
+    return this.getDataAsJson<ExtensionInfo[]>('extensions.json');
   }
 
-  public async getExtensionsEA(): Promise<ExtensionsInfo[] | undefined> {
-    return this.getDataAsJson<ExtensionsInfo[]>('extensions_ea.json');
+  public async getExtensionsEA(): Promise<ExtensionInfo[] | undefined> {
+    return this.getDataAsJson<ExtensionInfo[]>('extensions_ea.json');
   }
 
   public async getPatrons(): Promise<PatreonSupporter[] | undefined> {

@@ -131,7 +131,7 @@ export default class ShareScreenManager {
 
   private mapSources(sources: DesktopCapturerSource[]): ScreenShareSources[] {
     return sources.map(source => ({
-      display_id: source.display_id,
+      displayId: source.display_id,
       id: source.id,
       name: source.name,
       thumbnail: source.thumbnail?.toDataURL(),
