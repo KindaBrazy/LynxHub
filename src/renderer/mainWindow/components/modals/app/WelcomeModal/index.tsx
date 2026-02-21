@@ -1,7 +1,8 @@
 import {AnimatePresence, motion} from 'framer-motion';
 
 import {useAppState} from '../../../../redux/reducers/app';
-import OnboardingWizard from './Wizard';
+import Background from './Background';
+import OnboardingWizard from './OnboardingWizard';
 
 export default function Initializer() {
   const {showWizard, isUpgradeFlow} = useAppState('initializer');
@@ -24,21 +25,8 @@ export default function Initializer() {
             exit={{scale: 0.95, y: 20, opacity: 0}}
             initial={{scale: 0.95, y: 20, opacity: 0}}
             transition={{duration: 0.4, ease: 'easeOut'}}>
-            {/* New Modern Background */}
-            <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-30">
-              <div
-                className={
-                  'absolute bottom-0 left-[-20%] right-0 top-[-10%] h-125 w-125 rounded-full' +
-                  ' bg-[radial-gradient(circle_farthest-side,rgba(0,120,255,0.4),rgba(255,255,255,0))]'
-                }
-              />
-              <div
-                className={
-                  'absolute bottom-[-20%] right-0 top-[-10%] h-125 w-125 rounded-full' +
-                  ' bg-[radial-gradient(circle_farthest-side,rgba(255,0,180,0.3),rgba(255,255,255,0))]'
-                }
-              />
-            </div>
+            
+            <Background />
 
             <OnboardingWizard isUpgradeFlow={isUpgradeFlow} />
           </motion.div>

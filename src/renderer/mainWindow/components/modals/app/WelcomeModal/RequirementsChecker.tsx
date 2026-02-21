@@ -1,18 +1,18 @@
-import {Alert, Button} from '@heroui/react';
 import {isWin} from '@lynx_common/utils';
-import applicationIpc from '@lynx_shared/ipc/application';
-import {ReactNode, useEffect, useMemo} from 'react';
+import {useEffect} from 'react';
 
 import CheckRow from './CheckRow';
+import RequirementAlert from './RequirementAlert';
+import {RequirementStatus} from './types';
 import useRequirementChecks from './useRequirementChecks';
 
 type Props = {
   onStatusChange: (isSatisfied: boolean) => void;
-  onReport: (report: {git: string; pwsh: string; appModule: string}) => void;
+  onReport: (report: RequirementStatus) => void;
 };
 
 export default function RequirementsChecker({onStatusChange, onReport}: Props) {
-  const {statuses, isSuccess, hasFailure, failureType, skipAppModule, checkAll} = useRequirementChecks();
+  const {statuses, isSuccess, failureType, skipAppModule, checkAll} = useRequirementChecks();
 
   useEffect(() => {
     checkAll();
@@ -28,69 +28,6 @@ export default function RequirementsChecker({onStatusChange, onReport}: Props) {
       });
     }
   }, [isSuccess, onStatusChange, onReport, statuses]);
-
-  const AlertElement: ReactNode = useMemo(() => {
-    if (!hasFailure) return null;
-
-    const commonProps = {className: 'mt-4', classNames: {title: 'text-sm', description: 'text-xs'}};
-
-    switch (failureType) {
-      case 'git':
-        return (
-          <Alert
-            {...commonProps}
-            endContent={
-              <Button
-                size="sm"
-                variant="flat"
-                color="danger"
-                onPress={() => applicationIpc.send.openUrlDefaultBrowser('https://git-scm.com/downloads')}>
-                Download Git
-              </Button>
-            }
-            color="danger"
-            title="Git is Missing"
-            description="Git is required for core functionalities. Please install it."
-          />
-        );
-      case 'pwsh':
-        return (
-          <Alert
-            {...commonProps}
-            endContent={
-              <Button
-                onPress={() =>
-                  applicationIpc.send.openUrlDefaultBrowser('https://github.com/PowerShell/PowerShell/releases/latest')
-                }
-                size="sm"
-                variant="flat"
-                color="warning">
-                Download
-              </Button>
-            }
-            color="warning"
-            title="PowerShell 7+ is Missing"
-            description="PowerShell 7+ is required. Please install it to continue."
-          />
-        );
-      case 'appModule':
-        return (
-          <Alert
-            {...commonProps}
-            endContent={
-              <Button size="sm" color="default" onPress={skipAppModule}>
-                Skip for now
-              </Button>
-            }
-            color="default"
-            title="Main Module Failed"
-            description="You can skip this and install it manually from the Plugins page later."
-          />
-        );
-      default:
-        return null;
-    }
-  }, [hasFailure, failureType, skipAppModule]);
 
   return (
     <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-xl h-full flex flex-col">
@@ -110,7 +47,9 @@ export default function RequirementsChecker({onStatusChange, onReport}: Props) {
           description="Provides core local AI functionalities"
         />
       </div>
-      <div>{AlertElement}</div>
+      <div>
+        <RequirementAlert failureType={failureType} skipAppModule={skipAppModule} />
+      </div>
     </div>
   );
 }
