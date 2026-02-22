@@ -1,18 +1,31 @@
-import {useSettingsState} from '@lynx/redux/reducers/settings';
-import {searchInStrings} from '@lynx/utils';
-import {PropsWithChildren, useMemo} from 'react';
+import { useSettingsState } from '@lynx/redux/reducers/settings';
+import { searchInStrings } from '@lynx/utils';
+import { PropsWithChildren } from 'react';
 
-type Props = PropsWithChildren<{
+/** Props for SettingsFilterItem component */
+export type SettingsFilterItemProps = PropsWithChildren<{
+  /** Array of strings that define the searchable content for this settings item */
   searchTexts: (string | undefined)[];
 }>;
 
-const SettingsFilterItem = ({searchTexts, children}: Props) => {
+/**
+ * Helper to determine if a settings item falls within the parameter of the search string.
+ * This is widely used across individual inner card setups.
+ */
+export function canSettingItemShow(searchValue: string, searchTexts: (string | undefined)[]) {
+  if (!searchValue) return true;
+  return searchInStrings(searchValue, searchTexts);
+}
+
+/**
+ * Renders the children if the parent active search value matches local component text.
+ * Skips rendering the nodes completely if the search omits it.
+ */
+const SettingsFilterItem = ({ searchTexts, children }: SettingsFilterItemProps) => {
   const searchValue = useSettingsState('searchValue');
 
-  const visible = useMemo(() => {
-    if (!searchValue) return true;
-    return searchInStrings(searchValue, searchTexts);
-  }, [searchTexts, searchValue]);
+  // Directly calculate visibility avoiding unnecessary memoization
+  const visible = canSettingItemShow(searchValue, searchTexts);
 
   if (!visible) {
     return null;
@@ -20,10 +33,5 @@ const SettingsFilterItem = ({searchTexts, children}: Props) => {
 
   return <div className="contents">{children}</div>;
 };
-
-export function canSettingItemShow(searchValue: string, searchTexts: (string | undefined)[]) {
-  if (!searchValue) return true;
-  return searchInStrings(searchValue, searchTexts);
-}
 
 export default SettingsFilterItem;
