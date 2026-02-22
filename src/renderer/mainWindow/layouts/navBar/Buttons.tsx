@@ -2,7 +2,6 @@ import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {hasCardsByPath} from '@lynx/plugins/modules';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
-import {NavItem} from '@lynx/types';
 import {
   AgentPage_Icon,
   AudioPage_Icon,
@@ -20,8 +19,12 @@ import {PageID, PageTitles} from '@lynx_common/consts';
 import {isEmpty} from 'lodash';
 import {useMemo} from 'react';
 
-import NavigationDock from './Dock';
+import NavigationDock, {NavItem} from './Dock';
 
+/**
+ * Navigation component for the main content pages (Home, Image Gen, Text Gen, etc.).
+ * Dynamically renders items based on available modules and extensions.
+ */
 export const ContentsNav = () => {
   const contentBar = useMemo(() => extensionsData.navBar.addButton.contentBar, []);
 
@@ -97,6 +100,10 @@ export const ContentsNav = () => {
   );
 };
 
+/**
+ * Navigation component for settings and system pages (Dashboard, Plugins, Settings).
+ * Displays badges for updates and sync status.
+ */
 export function SettingsNav() {
   const settingsBar = useMemo(() => extensionsData.navBar.addButton.settingsBar, []);
 

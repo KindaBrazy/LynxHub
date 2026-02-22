@@ -7,7 +7,10 @@ import {ContentsNav, SettingsNav} from './Buttons';
 
 const CONTAINER_WIDTH = 'w-[5.5rem]';
 
-/** Navigation bar containing two sections: Contents and Settings */
+/**
+ * Navigation bar containing two sections: Contents and Settings.
+ * Supports extension replacements for container, content bar, and settings bar.
+ */
 const NavBar = memo(() => {
   const navBar = useAppState('navBar');
   const {
