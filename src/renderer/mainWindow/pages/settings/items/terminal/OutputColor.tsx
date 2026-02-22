@@ -1,18 +1,22 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
-import {AppDispatch} from '@lynx/redux/store';
-import {useCallback} from 'react';
-import {useDispatch} from 'react-redux';
+import { terminalActions, useTerminalState } from '@lynx/redux/reducers/terminal';
+import { AppDispatch } from '@lynx/redux/store';
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
+/**
+ * Settings component that toggles whether to colorize specific output text (errors, warnings, etc.) in the terminal.
+ * Updates the 'outputColor' state in REDUX.
+ */
 export default function OutputColor() {
   const outputColor = useTerminalState('outputColor');
   const dispatch = useDispatch<AppDispatch>();
 
   const onEnabledChange = useCallback(
     (value: boolean) => {
-      dispatch(terminalActions.setTerminalState({key: 'outputColor', value}));
+      dispatch(terminalActions.setTerminalState({ key: 'outputColor', value }));
     },
     [dispatch],
   );

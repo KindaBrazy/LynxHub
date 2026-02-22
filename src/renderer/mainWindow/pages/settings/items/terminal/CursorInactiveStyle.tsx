@@ -1,13 +1,17 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
-import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
-import {AppDispatch} from '@lynx/redux/store';
-import {TerminalCursorInactiveStyle} from '@lynx_common/types/ipc';
-import {useCallback} from 'react';
-import {useDispatch} from 'react-redux';
+import { Select, Selection, SelectItem } from '@heroui/react';
+import { terminalActions, useTerminalState } from '@lynx/redux/reducers/terminal';
+import { AppDispatch } from '@lynx/redux/store';
+import { TerminalCursorInactiveStyle } from '@lynx_common/types/ipc';
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
+/**
+ * Settings component that allows the user to select the appearance of the terminal cursor when inactive.
+ * Updates the 'cursorInactiveStyle' state in REDUX.
+ */
 export default function CursorInactiveStyle() {
   const cursorInactiveStyle = useTerminalState('cursorInactiveStyle');
   const dispatch = useDispatch<AppDispatch>();
@@ -16,7 +20,7 @@ export default function CursorInactiveStyle() {
     (keys: Selection) => {
       if (keys !== 'all') {
         const value = keys.values().next().value as TerminalCursorInactiveStyle;
-        dispatch(terminalActions.setTerminalState({key: 'cursorInactiveStyle', value}));
+        dispatch(terminalActions.setTerminalState({ key: 'cursorInactiveStyle', value }));
       }
     },
     [dispatch],
@@ -33,7 +37,7 @@ export default function CursorInactiveStyle() {
         selectedKeys={[cursorInactiveStyle]}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!'}}
+        classNames={{ trigger: 'cursor-default transition! duration-300!' }}
         disallowEmptySelection>
         <SelectItem key="bar" className="cursor-default">
           Bar

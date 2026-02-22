@@ -1,6 +1,6 @@
-import {Spacer} from '@heroui/react';
+import { Spacer } from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
-import {Terminal_Icon} from '@lynx_assets/icons';
+import { Terminal_Icon } from '@lynx_assets/icons';
 
 import BlinkCursor from './BlinkCursor';
 import CloseOnExit from './CloseOnExit';
@@ -15,8 +15,15 @@ import Reset from './Reset';
 import ResizeDelay from './ResizeDelay';
 import ScrollBack from './ScrollBack';
 
+/**
+ * The DOM ID assigned to the terminal settings wrapper.
+ */
 export const SettingsTerminalId = 'settings_terminal_elem';
 
+/**
+ * Main wrapper component for the Terminal Settings page section.
+ * Aggregates all specific configuration sub-components for terminal behavior.
+ */
 export default function SettingsTerminal() {
   return (
     <SettingsSection title="Terminal" id={SettingsTerminalId} icon={<Terminal_Icon className="size-5" />}>
