@@ -1,9 +1,9 @@
-import {Button, Chip, User} from '@heroui/react';
-import {usePluginsState} from '@lynx/redux/reducers/plugins';
-import {useUserState} from '@lynx/redux/reducers/user';
-import {PluginInstalledItem} from '@lynx_common/types/plugins';
-import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
-import {getPluginIconUrl} from '@lynx_common/utils/plugins';
+import { Button, Chip, User } from '@heroui/react';
+import { usePluginsState } from '@lynx/redux/reducers/plugins';
+import { useUserState } from '@lynx/redux/reducers/user';
+import { PluginInstalledItem } from '@lynx_common/types/plugins';
+import { extractGitUrl, getCacheUrl } from '@lynx_common/utils';
+import { getPluginIconUrl } from '@lynx_common/utils/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {
   BoxMinimalistic,
@@ -13,34 +13,59 @@ import {
   User as UserIcon,
   WidgetAdd,
 } from '@solar-icons/react-perf/BoldDuotone';
-import {ArrowRight} from '@solar-icons/react-perf/LineDuotone';
-import {useMemo} from 'react';
+import { ArrowRight } from '@solar-icons/react-perf/LineDuotone';
+import { useCallback, useMemo } from 'react';
 
-import ActionButtons from './ActionButtons';
+import PluginActionButtons from './ActionButtons';
 
-export default function PreviewHeader({installedExt}: {installedExt: PluginInstalledItem | undefined}) {
+/**
+ * Props for the {@link PluginPreviewHeader} component.
+ */
+interface PluginPreviewHeaderProps {
+  /** The installed plugin entry if the selected plugin is currently installed, or undefined. */
+  installedPlugin: PluginInstalledItem | undefined;
+}
+
+/**
+ * Header section of the plugin preview panel.
+ * Displays plugin metadata (title, version, date, type, owner, homepage link)
+ * and exposes action buttons for install/uninstall/update operations.
+ */
+export default function PluginPreviewHeader({ installedPlugin }: PluginPreviewHeaderProps) {
   const selectedPlugin = usePluginsState('selectedPlugin');
   const syncList = usePluginsState('syncList');
-  const updateChannel = useUserState('updateChannel');
 
-  const {currentVersion, currentDate, isUpgrade, targetVersion} = useMemo(() => {
-    const targetInstallVersion = selectedPlugin ? selectedPlugin.versions.find(item => item.isCompatible) : undefined;
+  // updateChannel is subscribed but only used to trigger recomputation when the user's
+  // subscription tier changes (which may affect available versions).
+  useUserState('updateChannel');
 
-    const currentVersion = installedExt?.version || targetInstallVersion?.version || 'N/A';
-    const targetUpdate = syncList.find(update => update.id === selectedPlugin?.metadata.id);
-    const isUpgrade = targetUpdate?.type === 'upgrade';
-    const targetVersion = targetUpdate?.version;
-    const currentDate = selectedPlugin?.changes.find(item => item.version === currentVersion)?.date || 'N/A';
+  const { resolvedVersion, releaseDate, isUpgradeAvailable, targetVersion } = useMemo(() => {
+    const firstCompatibleVersion = selectedPlugin?.versions.find(v => v.isCompatible);
 
-    return {currentVersion, currentDate, isUpgrade, targetVersion};
-  }, [installedExt, selectedPlugin, syncList, updateChannel]);
+    const resolvedVersion = installedPlugin?.version || firstCompatibleVersion?.version || 'N/A';
+    const syncTarget = syncList.find(item => item.id === selectedPlugin?.metadata.id);
+    const isUpgradeAvailable = syncTarget?.type === 'upgrade';
+    const targetVersion = syncTarget?.version;
+    const releaseDate = selectedPlugin?.changes.find(entry => entry.version === resolvedVersion)?.date || 'N/A';
+
+    return { resolvedVersion, releaseDate, isUpgradeAvailable, targetVersion };
+  }, [installedPlugin, selectedPlugin, syncList]);
+
+  const handleOpenHomePage = useCallback(() => {
+    AddBreadcrumb_Renderer(`Plugin homepage: id:${selectedPlugin?.metadata.id}`);
+    window.open(selectedPlugin?.url);
+  }, [selectedPlugin?.metadata.id, selectedPlugin?.url]);
+
+  const pluginOwner = extractGitUrl(selectedPlugin?.url || '').owner;
+  const pluginType = selectedPlugin?.metadata.type;
+  const pluginIconUrl = getCacheUrl(getPluginIconUrl(selectedPlugin?.url));
 
   return (
     <div className="w-full flex sm:flex-col lg:flex-row p-5 sm:gap-y-2 shrink-0">
       <div className="w-full flex flex-col">
         <User
           avatarProps={{
-            src: getCacheUrl(getPluginIconUrl(selectedPlugin?.url)),
+            src: pluginIconUrl,
             className: 'bg-black/0',
             showFallback: true,
             name: selectedPlugin?.metadata.title,
@@ -48,52 +73,55 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
           }}
           description={
             <div className="flex flex-row gap-x-2 items-center">
+              {/* Version chip with optional upgrade/downgrade arrow indicator */}
               <Chip
                 size="sm"
                 variant="light"
                 className="text-foreground-600"
                 startContent={<BoxMinimalistic className="size-3.5" />}
-                classNames={{content: 'flex flex-row items-center justify-center gap-x-1'}}>
-                <span>v{currentVersion}</span>
+                classNames={{ content: 'flex flex-row items-center justify-center gap-x-1' }}>
+                <span>v{resolvedVersion}</span>
                 {targetVersion && (
                   <>
                     <ArrowRight className="size-3" />
-                    <span className={`${isUpgrade ? 'text-success' : 'text-warning'}`}>v{targetVersion}</span>
+                    <span className={isUpgradeAvailable ? 'text-success' : 'text-warning'}>v{targetVersion}</span>
                   </>
                 )}
               </Chip>
+
+              {/* Release date chip */}
               <Chip
                 size="sm"
                 variant="light"
                 className="text-foreground-600"
                 startContent={<CalendarMinimalistic className="size-3.5" />}>
-                {currentDate}
+                {releaseDate}
               </Chip>
+
+              {/* Plugin type indicator (extension vs module) */}
               <div
-                className={
-                  `flex flex-row gap-x-1 items-center` +
-                  ` ${selectedPlugin?.metadata.type === 'extension' ? 'text-primary-500' : 'text-secondary'}`
-                }>
+                className={`flex flex-row gap-x-1 items-center ${pluginType === 'extension' ? 'text-primary-500' : 'text-secondary'
+                  }`}>
                 <WidgetAdd />
-                {selectedPlugin?.metadata.type === 'extension' ? <span>Extension</span> : <span>Module</span>}
+                <span>{pluginType === 'extension' ? 'Extension' : 'Module'}</span>
               </div>
             </div>
           }
           className="self-start"
           name={<span className="font-semibold text-foreground text-xl">{selectedPlugin?.metadata.title}</span>}
         />
+
+        {/* Owner & homepage link row */}
         <div className="flex flex-row items-center ml-12">
           <Chip variant="light" startContent={<UserIcon />}>
-            {extractGitUrl(selectedPlugin?.url || '').owner}
+            {pluginOwner}
           </Chip>
           <Button
-            onPress={() => {
-              AddBreadcrumb_Renderer(`Plugin homepage: id:${selectedPlugin?.metadata.id}`);
-              window.open(selectedPlugin?.url);
-            }}
+            onPress={handleOpenHomePage}
             size="sm"
             variant="light"
             className="text-small"
+            aria-label="Open plugin home page"
             startContent={<HomeAngle2 />}
             endContent={<SquareTopDown className="size-3" />}>
             Home Page
@@ -101,7 +129,7 @@ export default function PreviewHeader({installedExt}: {installedExt: PluginInsta
         </div>
       </div>
 
-      <ActionButtons installed={!!installedExt} currentVersion={currentVersion} />
+      <PluginActionButtons isInstalled={!!installedPlugin} currentVersion={resolvedVersion} />
     </div>
   );
 }

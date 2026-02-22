@@ -37,16 +37,29 @@ import {SimpleGitProgressEvent} from 'simple-git';
 import {UpdateButton} from '../Elements';
 import ModuleConfigModal from '../ModuleConfigModal';
 
-type Props = {item: PluginItem; installed: PluginInstalledItem[]};
-export function List_Item({item, installed}: Props) {
+/** Props for the PluginListItem component. */
+interface PluginListItemProps {
+  /** The plugin item details to display. */
+  item: PluginItem;
+  /** The list of currently installed plugins used to check the installation state. */
+  installed: PluginInstalledItem[];
+}
+
+/**
+ * Renders an individual card representing a plugin (extension or module).
+ * Handles the display of metadata, installation status, OS compatibility, and module configuration.
+ */
+export function PluginListItem({item, installed}: PluginListItemProps) {
   const dispatch = useDispatch<AppDispatch>();
+
   const selectedPlugin = usePluginsState('selectedPlugin');
   const skipped = usePluginsState('unloadedList');
+  const syncList = usePluginsState('syncList');
+
   const isInstalling = useIsInstallingPlugin(item.metadata.id);
   const isUnInstalling = useIsUninstallingPlugin(item.metadata.id);
-  const configModal = useDisclosure();
 
-  const syncList = usePluginsState('syncList');
+  const configModal = useDisclosure();
 
   const isSelected = useMemo(
     () => selectedPlugin?.metadata.id === item.metadata.id,
@@ -54,56 +67,53 @@ export function List_Item({item, installed}: Props) {
   );
 
   const {isExtension, foundInstalled, foundUnloaded, win32, darwin, linux, isCompatible} = useMemo(() => {
-    const isExtension = item.metadata.type === 'extension';
-    const isCompatible = item.isCompatible;
+    const isExt = item.metadata.type === 'extension';
+    const compatible = item.isCompatible;
 
-    const foundInstalled = installed.find(i => i.id === item.metadata.id);
-    const foundUnloaded = skipped.find(u => foundInstalled?.id === u.id);
+    const installedPlugin = installed.find(i => i.id === item.metadata.id);
+    const unloadedPlugin = skipped.find(u => installedPlugin?.id === u.id);
 
-    const {linux, win32, darwin} = {
-      linux: item.versions.some(v => v.platforms.includes('linux')),
-      win32: item.versions.some(v => v.platforms.includes('win32')),
-      darwin: item.versions.some(v => v.platforms.includes('darwin')),
-    };
+    const hasLinux = item.versions.some(v => v.platforms.includes('linux'));
+    const hasWin32 = item.versions.some(v => v.platforms.includes('win32'));
+    const hasDarwin = item.versions.some(v => v.platforms.includes('darwin'));
 
     return {
-      isExtension,
-      foundInstalled,
-      foundUnloaded,
-      linux,
-      win32,
-      darwin,
-      isCompatible,
+      isExtension: isExt,
+      foundInstalled: installedPlugin,
+      foundUnloaded: unloadedPlugin,
+      linux: hasLinux,
+      win32: hasWin32,
+      darwin: hasDarwin,
+      isCompatible: compatible,
     };
   }, [item, installed, skipped]);
 
   const currentVersion = useMemo(() => {
-    const targetInstallVersion = item.versions.find(item => item.isCompatible);
-
-    let v: string = 'N/A';
+    const targetInstallVersion = item.versions.find(versionItem => versionItem.isCompatible);
 
     if (foundInstalled) {
-      v = foundInstalled.version;
-    } else if (targetInstallVersion) {
-      v = targetInstallVersion.version;
+      return foundInstalled.version;
+    }
+    if (targetInstallVersion) {
+      return targetInstallVersion.version;
     }
 
-    return v;
+    return 'N/A';
   }, [item.versions, foundInstalled]);
 
   const {targetUpdate, targetVersion, isUpgrade} = useMemo(() => {
-    const targetUpdate = syncList.find(update => update.id === item.metadata.id);
-    const isUpgrade = targetUpdate?.type === 'upgrade';
-    const targetVersion = targetUpdate?.version;
+    const updateTarget = syncList.find(update => update.id === item.metadata.id);
+    const upgradeState = updateTarget?.type === 'upgrade';
+    const tgtVersion = updateTarget?.version;
 
     return {
-      targetUpdate,
-      isUpgrade,
-      targetVersion,
+      targetUpdate: updateTarget,
+      isUpgrade: upgradeState,
+      targetVersion: tgtVersion,
     };
   }, [syncList, item.metadata.id]);
 
-  const uninstall = useCallback(() => {
+  const handleUninstall = useCallback(() => {
     pluginsIpc.uninstall(item.metadata.id).then(result => {
       if (result) {
         lynxTopToast(dispatch).success(`${item.metadata.title} uninstalled successfully`);
@@ -113,16 +123,18 @@ export function List_Item({item, installed}: Props) {
     });
   }, [item, dispatch]);
 
+  const handleSelect = useCallback(() => {
+    AddBreadcrumb_Renderer(`Plugin Select: id:${item.metadata.id}`);
+    dispatch(pluginsActions.setSelectedPlugin(item));
+  }, [dispatch, item]);
+
   return (
     <Card
-      onPress={() => {
-        AddBreadcrumb_Renderer(`Plugin Select: id:${item.metadata.id}`);
-        dispatch(pluginsActions.setSelectedPlugin(item));
-      }}
+      onPress={handleSelect}
       className={
-        `hover:bg-foreground-100 hover:shadow-medium relative border-2 ` +
-        ` border-foreground-100 ${isSelected && (isExtension ? 'border-primary!' : 'border-secondary!')}` +
-        ` rounded-xl transition-all! duration-300! bg-foreground-50`
+        `relative border-2 border-foreground-100 bg-foreground-50 transition-all! duration-300!` +
+        ` hover:bg-foreground-100 hover:shadow-medium` +
+        ` ${isSelected && (isExtension ? 'border-primary!' : 'border-secondary!')}`
       }
       as="div"
       shadow="sm"
@@ -130,7 +142,7 @@ export function List_Item({item, installed}: Props) {
       key={`${item.metadata.id}_plugin_list_item`}
       fullWidth>
       {!isCompatible && (
-        <div className="absolute inset-0 z-20 gap-y-1 bg-black/50 flex flex-col items-center justify-center">
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-y-1 bg-black/50">
           <Tooltip
             delay={300}
             color="warning"
@@ -139,25 +151,26 @@ export function List_Item({item, installed}: Props) {
             showArrow>
             <QuestionCircle
               className={
-                'size-10 text-warning/80 hover:text-warning transition-colors' +
-                ' duration-200 p-1 bg-background/80 rounded-full'
+                'size-10 rounded-full bg-background/80 p-1 text-warning/80 transition-colors' +
+                ' duration-200 hover:text-warning'
               }
             />
           </Tooltip>
-          <span className="text-sm px-2 py-1 bg-background/80 rounded-lg">Incompatible</span>
+          <span className="rounded-lg bg-background/80 px-2 py-1 text-sm">Incompatible</span>
           {foundInstalled && (
-            <div className="absolute top-2 right-2 p-1 bg-background/80 rounded-lg">
-              <Button size="sm" variant="flat" color="danger" onPress={uninstall} isIconOnly>
+            <div className="absolute right-2 top-2 rounded-lg bg-background/80 p-1">
+              <Button size="sm" variant="flat" color="danger" onPress={handleUninstall} isIconOnly>
                 <TrashBin2 className="size-4" />
               </Button>
             </div>
           )}
         </div>
       )}
+
       <CardHeader className="pb-0">
         <User
           description={
-            <span className="text-foreground-500 text-xs">
+            <span className="text-xs text-foreground-500">
               By <span className="font-bold text-foreground-500">{extractGitUrl(item.url).owner}</span>
             </span>
           }
@@ -171,10 +184,7 @@ export function List_Item({item, installed}: Props) {
           name={
             <div className="space-x-2">
               <Link
-                className={
-                  `${isExtension ? 'text-primary-500' : 'text-secondary-500'}` +
-                  ` transition-colors duration-300 font-semibold `
-                }
+                className={`font-semibold transition-colors duration-300 ${isExtension ? 'text-primary-500' : 'text-secondary-500'}`}
                 size="lg"
                 href={item.url}
                 isExternal>
@@ -195,16 +205,16 @@ export function List_Item({item, installed}: Props) {
               </Chip>
             </div>
           }
-          className="justify-start mt-2"
+          className="mt-2 justify-start"
         />
       </CardHeader>
 
-      <CardBody className="pl-[3.7rem] py-0">
-        <span className="mb-1.5 mt-1 text-xs text-foreground-700 line-clamp-3">{item.metadata.description}</span>
+      <CardBody className="py-0 pl-[3.7rem]">
+        <span className="mb-1.5 mt-1 line-clamp-3 text-xs text-foreground-700">{item.metadata.description}</span>
       </CardBody>
 
-      <CardFooter className="flex flex-row items-center gap-x-2 pt-0 justify-between">
-        <div className="flex flex-row items-center px-0 gap-x-1">
+      <CardFooter className="flex flex-row items-center justify-between gap-x-2 pt-0">
+        <div className="flex flex-row items-center gap-x-1 px-0">
           {linux && <Linux_Icon className="size-4" />}
           {win32 && <Windows_Icon className="size-4" />}
           {darwin && <MacOS_Icon className="size-4" />}
@@ -244,7 +254,7 @@ export function List_Item({item, installed}: Props) {
               delay={300}
               radius="sm"
               color="warning"
-              className="py-2 px-4"
+              className="px-4 py-2"
               content={foundUnloaded.message}
               showArrow>
               <Chip
@@ -266,6 +276,7 @@ export function List_Item({item, installed}: Props) {
             Installing...
           </Button>
         )}
+
         {isUnInstalling && (
           <Button size="sm" color="danger" variant="light" className="mr-4" isLoading isDisabled>
             Uninstalling...
@@ -278,20 +289,36 @@ export function List_Item({item, installed}: Props) {
   );
 }
 
-type InstallProps = {isInstalling: boolean; pluginUrl: string};
-function InstallProgress({isInstalling, pluginUrl}: InstallProps) {
+/** Props for the InstallProgress component. */
+interface InstallProgressProps {
+  /** Indicates whether the plugin is actively being installed. */
+  isInstalling: boolean;
+  /** The remote Git repository URL of the plugin. */
+  pluginUrl: string;
+}
+
+/**
+ * Renders a progress bar that listens to download progression via simple-git IPC.
+ * It appears at the bottom of the card only when the plugin is being installed.
+ */
+function InstallProgress({isInstalling, pluginUrl}: InstallProgressProps) {
   const [installProgress, setInstallProgress] = useState<number>(0);
 
   useEffect(() => {
+    // We only attach the event listener if an installation is actually taking place
+    if (!isInstalling) return;
+
+    let isMounted = true;
+
+    // Attach listener via IPC
     const removeListener = gitIpc.onProgress((url, state, result) => {
-      if (url === pluginUrl) {
+      // Validate that this notification belongs to this particular plugin installation
+      if (url === pluginUrl && isMounted) {
         switch (state) {
           case 'Progress':
             setInstallProgress((result as SimpleGitProgressEvent).progress);
             break;
           case 'Failed':
-            setInstallProgress(0);
-            break;
           case 'Completed':
             setInstallProgress(0);
             break;
@@ -299,8 +326,11 @@ function InstallProgress({isInstalling, pluginUrl}: InstallProps) {
       }
     });
 
-    return () => removeListener();
-  }, [pluginUrl, setInstallProgress]);
+    return () => {
+      isMounted = false;
+      removeListener();
+    };
+  }, [pluginUrl, isInstalling]);
 
   if (!isInstalling) return null;
 

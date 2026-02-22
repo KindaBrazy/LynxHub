@@ -11,8 +11,18 @@ import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
-type UpdateButtonProps = {item: PluginItem};
+/**
+ * Props for the UpdateButton component.
+ */
+interface UpdateButtonProps {
+  /** The plugin item for which you want to display the update or downgrade buttons. */
+  item: PluginItem;
+}
 
+/**
+ * Button component that handles syncing a plugin to its remote codebase,
+ * either by upgrading or downgrading. Provides UI feedback during the operation.
+ */
 export function UpdateButton({item}: UpdateButtonProps) {
   const dispatch = useDispatch<AppDispatch>();
   const syncList = usePluginsState('syncList');
@@ -22,24 +32,35 @@ export function UpdateButton({item}: UpdateButtonProps) {
   const {id, title} = useMemo(() => item.metadata, [item]);
 
   const {updateItem, isUpgrade, color} = useMemo(() => {
-    const updateItem = syncList.find(available => available.id === id);
-    const isUpgrade = updateItem?.type === 'upgrade';
-    const color: ButtonProps['color'] = isUpgrade ? 'success' : 'warning';
+    const updateTarget = syncList.find(available => available.id === id);
+    const upgradeState = updateTarget?.type === 'upgrade';
+    const buttonColor: ButtonProps['color'] = upgradeState ? 'success' : 'warning';
 
-    return {updateItem, isUpgrade, color};
+    return {updateItem: updateTarget, isUpgrade: upgradeState, color: buttonColor};
   }, [syncList, id]);
 
   const {variant, text} = useMemo(() => {
-    const variant: ButtonProps['variant'] = isUpdating ? 'light' : 'flat';
-    const text = isUpdating ? (isUpgrade ? 'Upgrading...' : 'Downgrading...') : isUpgrade ? 'Upgrade' : 'Downgrade';
+    const buttonVariant: ButtonProps['variant'] = isUpdating ? 'light' : 'flat';
 
-    return {variant, text};
+    // Determine the button text based on update state
+    const buttonText = isUpdating
+      ? isUpgrade
+        ? 'Upgrading...'
+        : 'Downgrading...'
+      : isUpgrade
+        ? 'Upgrade'
+        : 'Downgrade';
+
+    return {variant: buttonVariant, text: buttonText};
   }, [isUpdating, isUpgrade]);
 
   const handleSync = useCallback(() => {
+    if (!updateItem) return;
+
     AddBreadcrumb_Renderer(`Plugin sync: id:${id}`);
     dispatch(pluginsActions.manageSet({key: 'updating', id, operation: 'add'}));
-    const {version, commit} = updateItem!;
+
+    const {version, commit} = updateItem;
 
     pluginsIpc.sync(id, commit).then(isUpdated => {
       if (isUpdated) {
@@ -51,7 +72,11 @@ export function UpdateButton({item}: UpdateButtonProps) {
     });
   }, [dispatch, id, title, updateItem]);
 
-  return updateItem ? (
+  if (!updateItem) {
+    return null;
+  }
+
+  return (
     <Button
       size="sm"
       color={color}
@@ -62,5 +87,5 @@ export function UpdateButton({item}: UpdateButtonProps) {
       startContent={!isUpdating && <DownloadMinimalistic />}>
       {text}
     </Button>
-  ) : null;
+  );
 }
