@@ -2,14 +2,16 @@ import {Accordion, AccordionItem, Button} from '@heroui/react';
 import CopyClipboard from '@lynx/components/CopyClipboard';
 import {LinkBroken, Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
-type FailedLoad = {errorCode: number; errorDescription: string; validatedURL: string};
+import {memo} from 'react';
+
+export type FailedLoad = {errorCode: number; errorDescription: string; validatedURL: string};
 
 type Props = {
   error: FailedLoad;
   onReload: () => void;
 };
 
-export function Browser_Error({error, onReload}: Props) {
+const BrowserError = memo(({error, onReload}: Props) => {
   const details = `URL: ${error.validatedURL}\nError Code: ${error.errorCode}\nDescription: ${error.errorDescription}`;
 
   return (
@@ -79,4 +81,6 @@ export function Browser_Error({error, onReload}: Props) {
       </motion.div>
     </div>
   );
-}
+});
+
+export default BrowserError;
