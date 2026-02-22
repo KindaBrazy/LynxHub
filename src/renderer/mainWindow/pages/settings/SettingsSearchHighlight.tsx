@@ -1,14 +1,23 @@
-import {useSettingsState} from '@lynx/redux/reducers/settings';
+import { useSettingsState } from '@lynx/redux/reducers/settings';
 import Highlighter from 'react-highlight-words';
 
-type Props = {
+/** Props for the SettingsSearchHighlight component */
+export type SettingsSearchHighlightProps = {
+  /** Explicit text to highlight */
   text?: string;
+  /** Children element resolving to text string */
   children?: string;
+  /** Wrapper class name if no highlight matches, or parent wrapper class */
   className?: string;
+  /** Specific class applied to fully highlighted matches */
   highlightClassName?: string;
 };
 
-const SettingsSearchHighlight = ({text, children, className, highlightClassName}: Props) => {
+/**
+ * Renders text matching the active settings search terminology with a highlight wrapper.
+ * Will render text minimally without highlights if empty or no text provided.
+ */
+const SettingsSearchHighlight = ({ text, children, className, highlightClassName }: SettingsSearchHighlightProps) => {
   const searchWords = useSettingsState('searchWords');
   const content = text ?? children ?? '';
 

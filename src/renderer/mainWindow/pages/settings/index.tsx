@@ -1,13 +1,21 @@
-import {memo} from 'react';
+import { memo } from 'react';
 
 import Page from '../Page';
 import SettingsPageContents from './Contents';
 import SettingsPageNav from './Navigation';
-import {useSectionSearchSnapshot} from './SettingsSearchRegistry';
+import { useSectionSearchSnapshot } from './SettingsSearchRegistry';
 
-type Props = {show: boolean};
+/** Props for the SettingsPage component */
+export type SettingsPageProps = {
+  /** Whether the settings page should be shown */
+  show: boolean;
+};
 
-const SettingsPage = memo(({show}: Props) => {
+/**
+ * Main Settings Page wrapper component.
+ * Composes the sidebar navigation and scrollable contents.
+ */
+const SettingsPage = memo(({ show }: SettingsPageProps) => {
   const sectionTexts = useSectionSearchSnapshot();
 
   return (

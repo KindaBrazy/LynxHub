@@ -10,28 +10,37 @@ import {
   Database,
   Earth,
   Keyboard,
+  Rocket,
   SpedometerMiddle,
   TrashBin2,
 } from '@solar-icons/react-perf/BoldDuotone';
-import {Rocket} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
-import {ReactNode, useCallback, useMemo} from 'react';
+import {ReactNode, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {settingsSectionId} from './Container';
 import {SettingsGeneralId} from './items/general';
 import SettingsSearchHighlight from './SettingsSearchHighlight';
 
+/** Represents a single navigable item inside a settings group */
 export type GroupItem = {
+  /** Icon displayed next to the item title */
   icon: ReactNode;
+  /** Display title for the underlying item */
   title: string;
+  /** Optional theme color override for specific visual impact (e.g., danger actions) */
   color?: 'danger' | 'warning' | 'success';
+  /** Target section element ID to navigate to */
   elementId: string;
 };
 
+/** Props structure for a navigation grouping of items */
 export type GroupProps = {
+  /** Title header for the settings group */
   title: string;
+  /** Array of nested navigation items within this group */
   items: GroupItem[];
+  /** Whether the section indicates danger/destructive actions */
   danger?: boolean;
 };
 
@@ -98,9 +107,12 @@ const groupSections: GroupProps[] = [
 export const GroupSection = ({title, items, danger = false}: GroupProps) => {
   const dispatch = useDispatch();
   const selectedSection = useSettingsState('selectedSection');
-  const setSelectedSection = useCallback((value: string) => {
-    dispatch(settingsActions.setSettingsState({key: 'selectedSection', value}));
-  }, []);
+  const setSelectedSection = useCallback(
+    (value: string) => {
+      dispatch(settingsActions.setSettingsState({key: 'selectedSection', value}));
+    },
+    [dispatch],
+  );
 
   const targetSection = selectedSection || SettingsGeneralId;
 
@@ -138,33 +150,37 @@ export const GroupSection = ({title, items, danger = false}: GroupProps) => {
   );
 };
 
-/** Settings navigation bar */
-type SettingsPageNavProps = {sectionTexts: Map<string, string>};
+/** Props for the SettingsPageNav component */
+export type SettingsPageNavProps = {
+  /** Map of section IDs to their searchable text descriptions */
+  sectionTexts: Map<string, string>;
+};
 
 const SettingsPageNav = ({sectionTexts}: SettingsPageNavProps) => {
   const dispatch = useDispatch();
 
   const searchValue = useSettingsState('searchValue');
-  const setSearchValue = useCallback((value: string) => {
-    dispatch(settingsActions.setSearchValue(value));
-  }, []);
+  const setSearchValue = useCallback(
+    (value: string) => {
+      dispatch(settingsActions.setSearchValue(value));
+    },
+    [dispatch],
+  );
 
-  const buttons = useMemo(() => extensionsData.customizePages.settings.add.navButton, []);
+  const buttons = extensionsData.customizePages.settings.add.navButton;
 
-  const filteredGroups = useMemo(() => {
-    if (!searchValue) return groupSections;
+  // The arrays are small, so finding and filtering can be derived quickly on each render
 
-    return groupSections
-      .map(group => ({
-        ...group,
-        items: group.items.filter(item =>
-          searchInStrings(searchValue, [item.title, group.title, sectionTexts.get(item.elementId) ?? '']),
-        ),
-      }))
-      .filter(group => group.items.length > 0);
-  }, [searchValue, sectionTexts]);
-
-  const groupsToRender = searchValue ? filteredGroups : groupSections;
+  const groupsToRender = searchValue
+    ? groupSections
+        .map(group => ({
+          ...group,
+          items: group.items.filter(item =>
+            searchInStrings(searchValue, [item.title, group.title, sectionTexts.get(item.elementId) ?? '']),
+          ),
+        }))
+        .filter(group => group.items.length > 0)
+    : groupSections;
 
   return (
     <Card className={`h-full my-2 text-medium w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
