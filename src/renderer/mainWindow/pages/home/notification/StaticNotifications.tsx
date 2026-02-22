@@ -1,13 +1,13 @@
-import {ReactNode, useEffect, useState} from 'react';
+import {ReactNode, useMemo} from 'react';
 
+/**
+ * Hook to manage static notifications (e.g., system warnings or upgrade notices).
+ * Currently returns an empty list as a placeholder for future implementations.
+ *
+ * @returns {Object} An object containing static notifications, their count, and a warning state flag.
+ */
 export default function useStaticNotifications() {
-  const [staticNotifs, setStaticNotifs] = useState<ReactNode[]>([]);
-  const [haveWarn, setHaveWarn] = useState<boolean>(false);
+  const staticNotifs = useMemo<ReactNode[]>(() => [], []);
 
-  useEffect(() => {
-    setStaticNotifs([]);
-    setHaveWarn(false);
-  }, []);
-
-  return {staticNotifs, staticNotifCount: staticNotifs.length, haveWarn};
+  return {staticNotifs, staticNotifCount: staticNotifs.length, haveWarn: false};
 }

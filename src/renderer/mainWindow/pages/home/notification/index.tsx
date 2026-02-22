@@ -15,73 +15,206 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import LynxScroll from '@lynx/components/LynxScroll';
-import {tabsActions} from '@lynx/redux/reducers/tabs';
-import {AppDispatch} from '@lynx/redux/store';
-import {AvailablePageIDs, PageID, PageTitles} from '@lynx_common/consts';
-import {NotificationData} from '@lynx_common/types';
-import {isValidURL} from '@lynx_common/utils';
+import { tabsActions } from '@lynx/redux/reducers/tabs';
+import { AppDispatch } from '@lynx/redux/store';
+import { AvailablePageIDs, PageID, PageTitles } from '@lynx_common/consts';
+import { NotificationData } from '@lynx_common/types';
+import { isValidURL } from '@lynx_common/utils';
 import staticsIpc from '@lynx_shared/ipc/statics';
-import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import storageIpc, { storageUtilsIpc } from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import {Bell, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
-import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
-import {Empty} from 'antd';
-import {AnimatePresence, motion} from 'framer-motion';
-import {isEmpty} from 'lodash';
-import {useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { Bell, SquareTopDown } from '@solar-icons/react-perf/BoldDuotone';
+import { CheckRead } from '@solar-icons/react-perf/LineDuotone';
+import { Empty } from 'antd';
+import { AnimatePresence, motion } from 'framer-motion';
+import { isEmpty } from 'lodash';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import useStaticNotifications from './StaticNotifications';
 
-export default function Home_Notification() {
-  const dispatch = useDispatch<AppDispatch>();
-  const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure();
-  const [refreshing, setRefreshing] = useState<boolean>(false);
-
+/**
+ * Hook to manage notification state and data fetching.
+ *
+ * @returns {Object} An object containing the current notifications, a refreshing flag, and a function to mark notifications as read.
+ */
+function useNotificationsData() {
   const [notifications, setNotifications] = useState<NotificationData[]>([]);
-  const {staticNotifs, staticNotifCount, haveWarn} = useStaticNotifications();
+  const [isRefreshing, setIsRefreshing] = useState<boolean>(false);
 
-  const onPress = useCallback(() => {
-    AddBreadcrumb_Renderer(`Open Notifications`);
-    onOpen();
-  }, []);
-
-  const filterData = (data: NotificationData[]) => {
-    storageIpc.get('notification').then(({readNotifs}) => {
+  /**
+   * Filter and set unread notifications based on previously read notification IDs.
+   */
+  const filterAndSetNotifications = useCallback((data: NotificationData[]) => {
+    storageIpc.get('notification').then(({ readNotifs }) => {
       setNotifications(data.filter(notif => !readNotifs.includes(notif.id)));
     });
-  };
-
-  useEffect(() => {
-    staticsIpc.getNotification().then(data => {
-      if (data) filterData(data);
-    });
-    setRefreshing(true);
-    staticsIpc.pull().finally(() =>
-      staticsIpc
-        .getNotification()
-        .then(data => {
-          if (data) filterData(data);
-        })
-        .finally(() => setRefreshing(false)),
-    );
   }, []);
 
-  const handleRead = (id: string) => {
-    storageUtilsIpc.send.addReadNotif(id);
-    filterData(notifications);
-  };
+  /**
+   * Fetch latest notifications and filter them.
+   */
+  const fetchAndFilterNotifications = useCallback(async () => {
+    const data = await staticsIpc.getNotification();
+    if (data) filterAndSetNotifications(data);
+  }, [filterAndSetNotifications]);
 
-  const openPage = (destination: AvailablePageIDs | string) => {
-    dispatch(
-      tabsActions.setActivePage({
-        pageID: PageID[destination],
-        title: PageTitles[destination],
-      }),
-    );
-  };
+  useEffect(() => {
+    // Initial fetch
+    fetchAndFilterNotifications();
 
-  const notifCount = useMemo(() => {
+    // Pull new static data and then fetch again
+    setIsRefreshing(true);
+    staticsIpc
+      .pull()
+      .finally(() => {
+        fetchAndFilterNotifications().finally(() => setIsRefreshing(false));
+      });
+  }, [fetchAndFilterNotifications]);
+
+  const markAsRead = useCallback(
+    (id: string) => {
+      storageUtilsIpc.send.addReadNotif(id);
+      filterAndSetNotifications(notifications);
+    },
+    [filterAndSetNotifications, notifications]
+  );
+
+  return {
+    notifications,
+    isRefreshing,
+    markAsRead,
+  };
+}
+
+/**
+ * Props for the NotificationItem component.
+ */
+interface NotificationItemProps {
+  /** The notification data object to display. */
+  notif: NotificationData;
+  /** Callback fired when the user dismisses/reads the notification. */
+  onRead: (id: string) => void;
+  /** Function to handle navigation to an internal page. */
+  onNavigatePage: (destination: AvailablePageIDs | string) => void;
+  /** Callback to close the notification drawer, usually after navigating. */
+  onCloseDrawer: () => void;
+}
+
+/**
+ * A sub-component rendering a single notification card.
+ */
+function NotificationItem({ notif, onRead, onNavigatePage, onCloseDrawer }: NotificationItemProps) {
+  const { buttons, icon, titleColor, title, description } = notif;
+
+  return (
+    <motion.div
+      layoutId={notif.id}
+      exit={{ x: 300, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      initial={{ x: 300, opacity: 0 }}>
+      <Card
+        className={
+          'bg-foreground-50/70 border-foreground/10 hover:border-primary/40 rounded-xl border transition-colors ' +
+          'dark:border-foreground/5 dark:bg-[#151515]'
+        }
+        shadow="sm">
+        <CardHeader className="flex items-center gap-3">
+          <div className="bg-foreground-200/80 flex h-8 w-8 items-center justify-center rounded-full text-base dark:bg-[#202020]">
+            {icon && isValidURL(icon) ? (
+              <Image src={icon} height={20} radius="none" alt="Notification Icon" />
+            ) : (
+              <span>{icon}</span>
+            )}
+          </div>
+          <div className="flex flex-1 items-center justify-between gap-2">
+            <span
+              className={
+                titleColor ? `text-${titleColor} text-sm font-semibold` : 'text-foreground text-sm font-semibold'
+              }>
+              {title}
+            </span>
+            <Button
+              size="sm"
+              radius="full"
+              variant="light"
+              onPress={() => onRead(notif.id)}
+              className="hover:text-success text-foreground-500 h-7 min-w-0 px-2 text-xs"
+              isIconOnly>
+              <CheckRead className="size-3.5" />
+            </Button>
+          </div>
+        </CardHeader>
+        <CardBody className="flex flex-col gap-y-1.5 text-xs leading-relaxed">
+          {description.map((desc, index) => (
+            <span key={`desc_${index}`} className={desc.color ? `text-${desc.color}` : 'text-foreground'}>
+              {desc.text}
+            </span>
+          ))}
+        </CardBody>
+
+        {!isEmpty(buttons) && (
+          <CardFooter className="justify-end gap-2 pt-1">
+            {buttons!.map(btn => {
+              const isUrl = isValidURL(btn.destination);
+              return (
+                <Button
+                  onPress={() => {
+                    onCloseDrawer();
+                    if (isUrl) {
+                      window.open(btn.destination);
+                    } else {
+                      onNavigatePage(btn.destination);
+                    }
+                  }}
+                  size="sm"
+                  variant="flat"
+                  key={btn.title}
+                  className="text-xs"
+                  color={btn.color || 'default'}
+                  endContent={isUrl ? <SquareTopDown className="size-[0.85rem]" /> : undefined}>
+                  {btn.title}
+                </Button>
+              );
+            })}
+          </CardFooter>
+        )}
+      </Card>
+    </motion.div>
+  );
+}
+
+/**
+ * The Home Notification Drawer and Button component.
+ * Displays an icon with a badge, and opens a drawer containing all unread notifications.
+ *
+ * @returns {JSX.Element} The rendered notification drawer and trigger button.
+ */
+export default function HomeNotificationDrawer() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+
+  const { notifications, isRefreshing, markAsRead } = useNotificationsData();
+  const { staticNotifs, staticNotifCount, haveWarn } = useStaticNotifications();
+
+  const handleOpenDrawer = useCallback(() => {
+    AddBreadcrumb_Renderer(`Open Notifications`);
+    onOpen();
+  }, [onOpen]);
+
+  const handleNavigatePage = useCallback(
+    (destination: AvailablePageIDs | string) => {
+      dispatch(
+        tabsActions.setActivePage({
+          pageID: PageID[destination],
+          title: PageTitles[destination],
+        }),
+      );
+    },
+    [dispatch]
+  );
+
+  const totalNotificationCount = useMemo(() => {
     return notifications.length + staticNotifCount;
   }, [notifications, staticNotifCount]);
 
@@ -93,17 +226,17 @@ export default function Home_Notification() {
         variant="solid"
         showOutline={false}
         placement="top-left"
-        content={notifCount}
-        isInvisible={notifCount === 0}
+        content={totalNotificationCount}
+        isInvisible={totalNotificationCount === 0}
         color={haveWarn ? 'warning' : 'success'}>
         <Button
           className={
-            `border border-foreground/10 bg-stone-50 shadow-md ` +
-            `dark:border-foreground/5 dark:bg-[#202020] dark:hover:bg-LynxNearBlack`
+            'border-foreground/10 bg-stone-50 border shadow-md ' +
+            'dark:border-foreground/5 dark:bg-[#202020] dark:hover:bg-LynxNearBlack'
           }
           radius="full"
           variant="light"
-          onPress={onPress}
+          onPress={handleOpenDrawer}
           isIconOnly>
           <Bell className="size-4" />
         </Button>
@@ -124,10 +257,10 @@ export default function Home_Notification() {
         isOpen={isOpen}
         className="mb-14!"
         onOpenChange={onOpenChange}
-        classNames={{backdrop: 'mt-10', wrapper: 'mt-12'}}
+        classNames={{ backdrop: 'mt-10', wrapper: 'mt-12' }}
         hideCloseButton>
         <DrawerContent className="dark:bg-LynxRaisinBlack">
-          {refreshing && <Progress size="sm" color="secondary" isIndeterminate />}
+          {isRefreshing && <Progress size="sm" color="secondary" isIndeterminate />}
           <DrawerHeader className="flex flex-row items-center gap-x-2">
             <Bell className="size-5" />
             <span>Notifications</span>
@@ -135,108 +268,28 @@ export default function Home_Notification() {
 
           <DrawerBody as={LynxScroll}>
             <AnimatePresence>
-              {notifCount <= 0 ? (
+              {totalNotificationCount <= 0 ? (
                 <Empty className="mt-24" description="No notifications yet" image={Empty.PRESENTED_IMAGE_SIMPLE} />
               ) : (
                 <div className="flex flex-col gap-y-2">
-                  {notifications.map(notif => {
-                    const {buttons, icon, titleColor, title, description} = notif;
-                    return (
-                      <motion.div
-                        key={notif.id}
-                        layoutId={notif.id}
-                        exit={{x: 300, opacity: 0}}
-                        animate={{x: 0, opacity: 1}}
-                        initial={{x: 300, opacity: 0}}>
-                        <Card
-                          className={
-                            'bg-foreground-50/70 dark:bg-[#151515] border border-foreground/10' +
-                            ' dark:border-foreground/5 rounded-xl hover:border-primary/40' +
-                            ' transition-colors'
-                          }
-                          shadow="sm">
-                          <CardHeader className="flex items-center gap-3">
-                            <div
-                              className={
-                                'flex h-8 w-8 items-center justify-center rounded-full' +
-                                ' bg-foreground-200/80 dark:bg-[#202020] text-base'
-                              }>
-                              {icon && isValidURL(icon) ? (
-                                <Image src={icon} height={20} radius="none" alt="Notification Icon" />
-                              ) : (
-                                <span>{icon}</span>
-                              )}
-                            </div>
-                            <div className="flex flex-1 items-center justify-between gap-2">
-                              <span
-                                className={
-                                  titleColor
-                                    ? `text-${titleColor} text-sm font-semibold`
-                                    : 'text-foreground text-sm font-semibold'
-                                }>
-                                {title}
-                              </span>
-                              <Button
-                                size="sm"
-                                radius="full"
-                                variant="light"
-                                onPress={() => handleRead(notif.id)}
-                                className="h-7 min-w-0 px-2 text-xs text-foreground-500 hover:text-success"
-                                isIconOnly>
-                                <CheckRead className="size-3.5" />
-                              </Button>
-                            </div>
-                          </CardHeader>
-                          <CardBody className="flex flex-col gap-y-1.5 text-xs leading-relaxed">
-                            {description.map((desc, index) => {
-                              return (
-                                <span
-                                  key={`desc_${index}`}
-                                  className={desc.color ? `text-${desc.color}` : 'text-foreground'}>
-                                  {desc.text}
-                                </span>
-                              );
-                            })}
-                          </CardBody>
+                  {notifications.map(notif => (
+                    <NotificationItem
+                      key={notif.id}
+                      notif={notif}
+                      onRead={markAsRead}
+                      onNavigatePage={handleNavigatePage}
+                      onCloseDrawer={onClose}
+                    />
+                  ))}
 
-                          {!isEmpty(buttons) && (
-                            <CardFooter className="justify-end pt-1 gap-2">
-                              {buttons!.map(btn => {
-                                const isUrl = isValidURL(btn.destination);
-                                return (
-                                  <Button
-                                    onPress={() => {
-                                      onClose();
-                                      if (isUrl) {
-                                        window.open(btn.destination);
-                                      } else {
-                                        openPage(btn.destination);
-                                      }
-                                    }}
-                                    size="sm"
-                                    variant="flat"
-                                    key={btn.title}
-                                    className="text-xs"
-                                    color={btn.color || 'default'}
-                                    endContent={isUrl ? <SquareTopDown className="size-[0.85rem]" /> : undefined}>
-                                    {btn.title}
-                                  </Button>
-                                );
-                              })}
-                            </CardFooter>
-                          )}
-                        </Card>
-                      </motion.div>
-                    );
-                  })}
-
+                  {/* Spread static notifications here */}
                   {...staticNotifs}
                 </div>
               )}
             </AnimatePresence>
           </DrawerBody>
 
-          <DrawerFooter className="py-2 justify-start">
+          <DrawerFooter className="justify-start py-2">
             <Button size="sm" variant="light" color="warning" onPress={onClose}>
               Close
             </Button>

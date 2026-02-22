@@ -1,21 +1,34 @@
-import {ScrollShadow} from '@heroui/react';
-import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {useCardsState} from '@lynx/redux/reducers/cards';
-import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
-import {AnimatePresence, LayoutGroup} from 'framer-motion';
-import {isEmpty} from 'lodash';
-import {memo, useMemo, useState} from 'react';
+import { ScrollShadow } from '@heroui/react';
+import { extensionsData } from '@lynx/plugins/extensions/loader';
+import { useCardsState } from '@lynx/redux/reducers/cards';
+import { useDebounceBreadcrumb } from '@lynx_shared/sentry/Breadcrumbs';
+import { AnimatePresence, LayoutGroup } from 'framer-motion';
+import { isEmpty } from 'lodash';
+import { memo, useMemo, useState } from 'react';
 
-import {AllCardsSection, CardsBySearch, PinnedCars, RecentlyCards} from '../CardsCategory';
+import { AllCardsSection, CardsBySearch, PinnedCars, RecentlyCards } from '../CardsCategory';
 import Page from '../Page';
 import HomeFilter from './Filter';
-import Home_Notification from './notification';
+import HomeNotificationDrawer from './notification';
 import HomeSearchBox from './SearchBox';
-import Home_TopBar from './TopBar';
+import HomeTopBar from './TopBar';
 
-type Props = {show: boolean};
+/**
+ * Props for the HomePage component.
+ */
+interface HomePageProps {
+  /** Controls the visibility of the Home page within the tab system. */
+  show: boolean;
+}
 
-const HomePage = memo(({show}: Props) => {
+/**
+ * The main Home Page component.
+ * It renders the search, categories, extension injects, top bars, and cards grid.
+ *
+ * @param {HomePageProps} props Visibility flag from the parent Router/Tabs.
+ * @returns {JSX.Element} The rendered Home Page.
+ */
+const HomePage = memo(({ show }: HomePageProps) => {
   const homeCategory = useCardsState('homeCategory');
   const [searchValue, setSearchValue] = useState<string>('');
 
@@ -26,7 +39,7 @@ const HomePage = memo(({show}: Props) => {
     categories: Categories,
     searchResult: SearchResult,
   } = useMemo(() => extensionsData.customizePages.home.replace, []);
-  const {bottom, scrollBottom, scrollTop, top} = useMemo(() => extensionsData.customizePages.home.add, []);
+  const { bottom, scrollBottom, scrollTop, top } = useMemo(() => extensionsData.customizePages.home.add, []);
 
   return (
     <Page show={show}>
@@ -37,18 +50,18 @@ const HomePage = memo(({show}: Props) => {
           <div className="my-4 flex w-full items-center justify-between space-x-3 px-2">
             <HomeSearchBox searchValue={searchValue} setSearchValue={setSearchValue} />
             <HomeFilter selectedCategories={homeCategory} />
-            <Home_Notification />
+            <HomeNotificationDrawer />
           </div>
         )}
 
-        <Home_TopBar />
+        <HomeTopBar />
 
         {top && top.map((Top, index) => <Top key={index} />)}
 
         <ScrollShadow
           size={20}
           offset={-1}
-          className="size-full space-y-8 overflow-y-scroll pb-4 pt-6 px-2 scrollbar-hide">
+          className="scrollbar-hide size-full space-y-8 overflow-y-scroll pb-4 pt-6 px-2">
           {scrollTop && scrollTop.map((Top, index) => <Top key={index} />)}
 
           {Categories ? (

@@ -1,22 +1,35 @@
-import {motion} from 'framer-motion';
-import {ReactNode} from 'react';
+import { motion } from 'framer-motion';
+import { ReactNode } from 'react';
 
 import CardsContainer from '../CardsContainer';
 
-type Props = {
+/**
+ * Props for the HomeCategory component.
+ */
+interface HomeCategoryProps {
+  /** The children nodes (usually the list of cards) to strictly render within the category. */
   children: ReactNode;
+  /** The icon component to display next to the category title. */
   icon: ReactNode;
+  /** The main title of the category (e.g., "PINNED", "RECENTLY USED"). */
   title: string;
+  /** An optional subtitle to display under or next to the main title. */
   subTitle?: string;
-};
+}
 
-export default function HomeCategory({children, subTitle, icon, title}: Props) {
+/**
+ * A wrapper component that applies animation and standardized layout for a section of cards on the Home page.
+ *
+ * @param {HomeCategoryProps} props Contains the category title, icon, subtitle, and child elements.
+ * @returns {JSX.Element} The animated wrapper surrounding the CardsContainer.
+ */
+export default function HomeCategory({ children, subTitle, icon, title }: HomeCategoryProps) {
   return (
     <motion.div
-      transition={{duration: 0.2}}
+      transition={{ duration: 0.2 }}
       className="flex w-full flex-col p-4 py-0"
-      animate={{opacity: 1, scale: 1, translateY: 0}}
-      initial={{opacity: 0, scale: 0.95, translateY: 5}}
+      animate={{ opacity: 1, scale: 1, translateY: 0 }}
+      initial={{ opacity: 0, scale: 0.95, translateY: 5 }}
       layout>
       <CardsContainer icon={icon} title={title} subTitle={subTitle}>
         {children}
