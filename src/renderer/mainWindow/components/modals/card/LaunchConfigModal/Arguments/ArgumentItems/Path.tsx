@@ -1,8 +1,7 @@
-import {Button} from '@heroui/react';
+import {Button, Tooltip} from '@heroui/react';
 import {ChosenArgument} from '@lynx_common/types';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Repeat} from '@solar-icons/react-perf/BoldDuotone';
-import {Tooltip} from 'antd';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useGetArgumentsByID} from '../../../../../../plugins/modules';
@@ -12,16 +11,35 @@ import ArgumentItemBase from './Base';
 import AutoCompletePath from './Path_AutoComplete';
 
 type PathArgItemProps = {
+  /** Type of the path: file or folder */
   type: 'file' | 'folder';
+  /** Icon to display */
   icon: ReactNode;
+  /** Placeholder text */
   placeholder: string;
+  /** The argument data */
   argument: ChosenArgument;
+  /** Function to remove the argument */
   removeArg: () => void;
+  /** Function to change the argument value */
   changeValue: (value: any) => void;
+  /** The ID of the card */
   id: string;
 };
 
-export default function PathArgItem({type, icon, placeholder, argument, changeValue, removeArg, id}: PathArgItemProps) {
+/**
+ * Component for handling path arguments (files or folders).
+ * Supports both absolute paths (via system dialog) and relative paths (via autocomplete).
+ */
+export default function PathArgItem({
+  type,
+  icon,
+  placeholder,
+  argument,
+  changeValue,
+  removeArg,
+  id,
+}: PathArgItemProps) {
   const installedCards = useCardsState('installedCards');
   const cardArgument = useGetArgumentsByID(id);
 
@@ -31,6 +49,7 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
   const [isRelative, setIsRelative] = useState<boolean>(false);
   const [rotateEffect, setRotateEffect] = useState<boolean>(false);
 
+  // Initialize isRelative based on current value
   useEffect(() => {
     if (argument.value) {
       const isDefaultRelative = argument.value.startsWith('.') || argument.value.startsWith('/');
@@ -56,8 +75,12 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
 
   const changePathType = useCallback(() => {
     setIsRelative(prevState => {
+      // If switching modes and we have a valid path, try to convert it
       if (baseDir && selectedValue && selectedValue !== placeholder) {
-        filesIpc[prevState ? 'getAbsolutePath' : 'getRelativePath'](baseDir, selectedValue).then(result => {
+        // If currently relative (prevState=true), we want absolute.
+        // If currently absolute (prevState=false), we want relative.
+        const method = prevState ? 'getAbsolutePath' : 'getRelativePath';
+        filesIpc[method](baseDir, selectedValue).then(result => {
           setSelectedValue(result);
           changeValue(result);
         });
@@ -65,14 +88,19 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
       return !prevState;
     });
     setRotateEffect(true);
-  }, [setIsRelative, setRotateEffect, baseDir, selectedValue, placeholder, changeValue]);
+  }, [baseDir, selectedValue, placeholder, changeValue]);
 
   return (
     <ArgumentItemBase
       extra={
         baseDir ? (
-          <Tooltip color="#111111" title={`Change to ${isRelative ? 'Absolute' : 'Relative'}`}>
-            <Button size="sm" variant="light" onPress={changePathType} isIconOnly>
+          <Tooltip content={`Change to ${isRelative ? 'Absolute' : 'Relative'}`} delay={800} showArrow>
+            <Button
+              size="sm"
+              variant="light"
+              onPress={changePathType}
+              isIconOnly
+              aria-label="Toggle path type">
               <Repeat
                 onAnimationEnd={() => setRotateEffect(false)}
                 className={`${rotateEffect && 'animate-[spin_0.5s]'}`}
@@ -88,9 +116,16 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
       removeArg={removeArg}
       defaultCursor={isRelative}>
       {isRelative ? (
-        <AutoCompletePath type={type} baseDir={baseDir!} onValueChange={changeValue} defaultValue={selectedValue} />
+        <AutoCompletePath
+          type={type}
+          baseDir={baseDir!}
+          onValueChange={changeValue}
+          defaultValue={selectedValue}
+        />
       ) : (
-        <span className="text-xs dark:bg-LynxRaisinBlack bg-LynxWhiteThird p-3 rounded-medium">{selectedValue}</span>
+        <span className="text-xs dark:bg-LynxRaisinBlack bg-LynxWhiteThird p-3 rounded-medium block truncate">
+          {selectedValue}
+        </span>
       )}
     </ArgumentItemBase>
   );

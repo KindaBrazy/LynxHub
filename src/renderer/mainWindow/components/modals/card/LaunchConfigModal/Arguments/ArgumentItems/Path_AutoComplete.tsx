@@ -5,43 +5,39 @@ import {File, Folder} from '@solar-icons/react-perf/BoldDuotone';
 import {Key, useEffect, useState} from 'react';
 
 import {searchInStrings} from '../../../../../../utils';
+
 type Props = {
+  /** The base directory to start relative paths from */
   baseDir: string;
+  /** Whether to look for files or folders */
   type?: 'folder' | 'file';
+  /** Callback when the value changes */
   onValueChange?: (value: string) => void;
+  /** Initial value */
   defaultValue?: string;
 };
 
-export default function AutoCompletePath({baseDir, onValueChange, defaultValue, type = 'file'}: Props) {
-  const [inputValue, setInputValue] = useState<string>('./');
-
+/**
+ * Autocomplete component for file system paths.
+ * Lists files and directories relative to a base directory.
+ */
+export default function PathAutoComplete({
+  baseDir,
+  onValueChange,
+  defaultValue = './',
+  type = 'file',
+}: Props) {
+  const [inputValue, setInputValue] = useState<string>(defaultValue);
   const [data, setData] = useState<FolderListData[]>([]);
   const [searchData, setSearchData] = useState<FolderListData[]>([]);
 
-  useEffect(() => {
-    if (defaultValue?.startsWith('.') || defaultValue?.startsWith('/')) {
-      setInputValue(defaultValue);
-      const relatives = defaultValue?.split('/') || [];
-      relatives.pop();
-      filesIpc
-        .listDir(baseDir, relatives)
-        .then((result: FolderListData[]) => {
-          let filteredResult = result;
-          if (type === 'folder') {
-            filteredResult = result.filter(dir => dir.type === 'folder');
-          }
-          setData(filteredResult);
-          setSearchData(filteredResult);
-        })
-        .catch(_e => {
-          console.error(_e);
-        });
-    }
-  }, [defaultValue, type]);
-
+  // Fetch directory contents based on current input path
   useEffect(() => {
     if (inputValue.startsWith('.') || inputValue.startsWith('/')) {
-      const relatives = inputValue ? inputValue.split('/') : [];
+      const relatives = inputValue.split('/');
+      // Remove the last segment to get the directory to list
+      relatives.pop();
+
       filesIpc
         .listDir(baseDir, relatives)
         .then((result: FolderListData[]) => {
@@ -50,34 +46,58 @@ export default function AutoCompletePath({baseDir, onValueChange, defaultValue, 
             filteredResult = result.filter(dir => dir.type === 'folder');
           }
           setData(filteredResult);
+          
+          // Also update search data immediately if we just loaded a new dir
+          // This logic might need refinement to filter based on the current last segment
+          const lastSegment = inputValue.split('/').pop() || '';
+          if (lastSegment) {
+             const lowerLast = lastSegment.toLowerCase();
+             setSearchData(filteredResult.filter(item => searchInStrings(lowerLast, [item.name])));
+          } else {
+             setSearchData(filteredResult);
+          }
         })
-        .catch(_e => {
-          console.error(_e);
+        .catch(error => {
+          console.error('Failed to list directory:', error);
         });
-      onValueChange?.(inputValue);
     }
-  }, [inputValue, type]);
+  }, [inputValue, baseDir, type]);
 
-  const onInputChange = (value: string) => {
+  // Sync state with prop if it changes
+  useEffect(() => {
+    if (defaultValue !== undefined && defaultValue !== inputValue) {
+      setInputValue(defaultValue);
+    }
+  }, [defaultValue]);
+
+  const handleInputChange = (value: string) => {
+    setInputValue(value);
+    onValueChange?.(value);
     if (value === '') {
       setSearchData([]);
-    } else {
-      const words = value.toLowerCase().split('/');
-      const endValue = words[words.length - 1];
-      setSearchData(data.filter(item => searchInStrings(endValue, [item.name])));
+      return;
     }
-    setInputValue(value);
+
+    // Filter existing data for immediate feedback
+    const segments = value.toLowerCase().split('/');
+    const lastSegment = segments[segments.length - 1];
+
+    // We filter the *current* data. If the user moved to a new dir (e.g. typed '/'),
+    // the useEffect will kick in and fetch new data eventually.
+    setSearchData(data.filter(item => searchInStrings(lastSegment, [item.name])));
   };
 
-  const selectionChange = (key: Key | null) => {
-    setInputValue(prevState => {
-      const segments = prevState.split('/');
-      if (key !== null) {
+  const onSelectionChange = (key: Key | null) => {
+    if (key !== null) {
+      setInputValue(prev => {
+        const segments = prev.split('/');
         segments[segments.length - 1] = key.toString();
-        return segments.join('/');
-      }
-      return prevState;
-    });
+        const newValue = segments.join('/');
+        // Defer the callback to avoid side effects in render/state update cycle
+        setTimeout(() => onValueChange?.(newValue), 0);
+        return newValue;
+      });
+    }
   };
 
   return (
@@ -85,15 +105,22 @@ export default function AutoCompletePath({baseDir, onValueChange, defaultValue, 
       items={searchData}
       selectedKey={null}
       inputValue={inputValue}
-      aria-label="relative path"
-      onInputChange={onInputChange}
-      onSelectionChange={selectionChange}
+      aria-label="Relative Path Autocomplete"
+      onInputChange={handleInputChange}
+      onSelectionChange={onSelectionChange}
       selectorButtonProps={{className: 'hidden'}}
       classNames={{selectorButton: 'bg-red-500!'}}
-      inputProps={{classNames: {inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird'}}}
+      inputProps={{
+        classNames: {
+          inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird',
+        },
+      }}
       allowsCustomValue>
       {item => (
-        <AutocompleteItem key={item.name.toLowerCase()} startContent={item.type === 'folder' ? <Folder /> : <File />}>
+        <AutocompleteItem
+          key={item.name}
+          textValue={item.name}
+          startContent={item.type === 'folder' ? <Folder className="size-4" /> : <File className="size-4" />}>
           {item.name}
         </AutocompleteItem>
       )}

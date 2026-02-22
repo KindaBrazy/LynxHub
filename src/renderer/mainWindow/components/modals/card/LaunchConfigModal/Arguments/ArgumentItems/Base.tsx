@@ -1,6 +1,5 @@
-import {Button, Card, CardBody, CardHeader, Divider} from '@heroui/react';
+import {Button, Card, CardBody, CardHeader, Divider, Tooltip} from '@heroui/react';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
-import {Tooltip} from 'antd';
 import {Reorder, useDragControls} from 'framer-motion';
 import {GripVertical} from 'lucide-react';
 import {ReactNode, useMemo} from 'react';
@@ -20,6 +19,10 @@ type Props = {
   id: string;
 };
 
+/**
+ * Base component for argument items in the Launch Config modal.
+ * Handles drag-and-drop reordering, tooltip display, and the common card layout.
+ */
 export default function ArgumentItemBase({
   children,
   icon,
@@ -40,25 +43,27 @@ export default function ArgumentItemBase({
       value={name}
       dragListener={false}
       dragControls={controls}
-      className="flex flex-row items-scratch size-full">
+      className="flex flex-row items-stretch size-full">
       <div
-        className={
-          'w-7 active:cursor-grabbing cursor-grab text-foreground-500 hover:text-foreground-600 transition-all ' +
-          ' duration-300 flex items-center justify-center dark:bg-foreground-50 bg-white rounded-l-medium' +
-          ' relative'
-        }
+        className="w-7 active:cursor-grabbing cursor-grab text-foreground-500 hover:text-foreground-600 transition-all duration-300 flex items-center justify-center dark:bg-foreground-50 bg-white rounded-l-medium relative"
         onPointerDown={e => controls.start(e)}>
         <GripVertical className="size-4" />
         <Divider orientation="vertical" className="absolute right-0 bg-LynxWhiteSecond dark:bg-LynxRaisinBlack" />
       </div>
-      <Tooltip title={tooltipText} mouseEnterDelay={0.8} rootClassName="max-w-[65%] whitespace-pre-line">
+      <Tooltip
+        content={tooltipText}
+        delay={800}
+        showArrow
+        classNames={{content: 'max-w-[65%] whitespace-pre-line'}}
+        placement="top"
+        isDisabled={!tooltipText}>
         <Card
           as="div"
           key={name}
           shadow="none"
           isPressable={!!onClick && !defaultCursor}
           onPress={defaultCursor ? undefined : onClick}
-          className={`${defaultCursor && 'cursor-default'} rounded-l-none`}
+          className={`${defaultCursor ? 'cursor-default' : ''} rounded-l-none`}
           fullWidth>
           <CardHeader className={`justify-between ${children ? 'pb-1' : 'pb-2'} pt-2 text-sm`}>
             <div className="flex gap-x-2 text-success">
@@ -67,7 +72,13 @@ export default function ArgumentItemBase({
             </div>
             <div className="flex flex-row items-center gap-x-1">
               {extra}
-              <Button size="sm" color="danger" variant="light" onPress={removeArg} isIconOnly>
+              <Button
+                size="sm"
+                color="danger"
+                variant="light"
+                onPress={removeArg}
+                isIconOnly
+                aria-label="Remove argument">
                 <TrashBin2 className="size-3.5" />
               </Button>
             </div>

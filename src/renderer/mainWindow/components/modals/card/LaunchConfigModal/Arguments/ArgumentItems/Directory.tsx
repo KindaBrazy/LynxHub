@@ -3,8 +3,23 @@ import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
 
 import PathArgItem from './Path';
 
-type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void; id: string};
+type Props = {
+  /** The argument data */
+  argument: ChosenArgument;
+  /** Function to remove the argument */
+  removeArg: () => void;
+  /** Function to change the argument value */
+  changeValue: (value: any) => void;
+  /** The ID of the card */
+  id: string;
+};
 
+/**
+ * Renders a Directory argument item.
+ * Uses PathArgItem with type="folder" to allow selecting directories.
+ *
+ * @returns {JSX.Element} The rendered DirectoryArgItem component.
+ */
 export default function DirectoryArgItem({argument, changeValue, removeArg, id}: Props) {
   return (
     <PathArgItem

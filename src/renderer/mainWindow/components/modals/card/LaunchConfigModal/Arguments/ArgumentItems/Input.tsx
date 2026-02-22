@@ -1,14 +1,29 @@
 import {Input} from '@heroui/react';
 import {ChosenArgument} from '@lynx_common/types';
 import {Text} from '@solar-icons/react-perf/BoldDuotone';
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 import {useGetArgumentsByID} from '../../../../../../plugins/modules';
 import {getArgumentDefaultValue} from '../../../../../../utils/moduleArguments';
 import ArgumentItemBase from './Base';
 
-type Props = {argument: ChosenArgument; removeArg: () => void; changeValue: (value: any) => void; id: string};
+type Props = {
+  /** The argument data */
+  argument: ChosenArgument;
+  /** Function to remove the argument */
+  removeArg: () => void;
+  /** Function to change the argument value */
+  changeValue: (value: any) => void;
+  /** The ID of the card */
+  id: string;
+};
 
+/**
+ * Renders an Input argument item for free-form text entry.
+ * Updates the value on blur to minimize re-renders in parent.
+ *
+ * @returns {JSX.Element} The rendered InputArgItem component.
+ */
 export default function InputArgItem({argument, changeValue, removeArg, id}: Props) {
   const cardArgument = useGetArgumentsByID(id);
 
@@ -16,9 +31,16 @@ export default function InputArgItem({argument, changeValue, removeArg, id}: Pro
     argument.value || getArgumentDefaultValue(argument.name, cardArgument) || '',
   );
 
+  // Sync state with prop updates
+  useEffect(() => {
+    if (argument.value !== undefined) {
+      setInputValue(argument.value);
+    }
+  }, [argument.value]);
+
   const onBlur = useCallback(() => {
     changeValue(inputValue);
-  }, [inputValue]);
+  }, [inputValue, changeValue]);
 
   const onChange = useCallback((value: string) => {
     setInputValue(value);
