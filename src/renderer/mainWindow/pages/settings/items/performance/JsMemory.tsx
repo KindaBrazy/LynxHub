@@ -1,18 +1,22 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
-import {AppDispatch} from '@lynx/redux/store';
-import {showRestartModal} from '@lynx/utils';
+import { Select, Selection, SelectItem } from '@heroui/react';
+import { AppDispatch } from '@lynx/redux/store';
+import { showRestartModal } from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 type JsMemorySize = 2048 | 4096 | 8192;
 
+/**
+ * Component to configure the maximum heap size for the JavaScript engine.
+ * Saves settings directly to storage via IPC and prompts for application restart.
+ */
 export default function JsMemory() {
   const dispatch = useDispatch<AppDispatch>();
-  const [selectedKey, setSelectedKey] = useState<string>('4096');
+  const [selectedKey, setSelectedKey] = useState('4096');
 
   useEffect(() => {
     storageIpc.get('performance').then(data => {
@@ -24,7 +28,7 @@ export default function JsMemory() {
     (keys: Selection) => {
       if (keys !== 'all') {
         const value = Number(keys.values().next().value) as JsMemorySize;
-        storageIpc.update('performance', {jsMaxOldSpaceSize: value});
+        storageIpc.update('performance', { jsMaxOldSpaceSize: value });
         setSelectedKey(String(value));
         showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
       }
@@ -45,7 +49,7 @@ export default function JsMemory() {
         onSelectionChange={onChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!'}}
+        classNames={{ trigger: 'cursor-default transition! duration-300!' }}
         disallowEmptySelection>
         <SelectItem
           key="2048"

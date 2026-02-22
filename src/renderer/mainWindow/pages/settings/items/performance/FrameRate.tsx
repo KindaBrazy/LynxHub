@@ -1,16 +1,20 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import {AppDispatch} from '@lynx/redux/store';
-import {showRestartModal} from '@lynx/utils';
+import { AppDispatch } from '@lynx/redux/store';
+import { showRestartModal } from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
-import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { ShieldWarning } from '@solar-icons/react-perf/BoldDuotone';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
+/**
+ * Component to toggle the disabled frame rate limit.
+ * Saves settings directly to storage via IPC and prompts for application restart.
+ */
 export default function FrameRate() {
   const dispatch = useDispatch<AppDispatch>();
-  const [enabled, setEnabled] = useState<boolean>(false);
+  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
     storageIpc.get('performance').then(data => {
@@ -20,7 +24,7 @@ export default function FrameRate() {
 
   const onEnabledChange = useCallback(
     (selected: boolean) => {
-      storageIpc.update('performance', {disableFrameRateLimit: selected});
+      storageIpc.update('performance', { disableFrameRateLimit: selected });
       setEnabled(selected);
       showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
     },

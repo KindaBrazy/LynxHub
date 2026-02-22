@@ -1,18 +1,22 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
-import {AppDispatch} from '@lynx/redux/store';
-import {showRestartModal} from '@lynx/utils';
+import { Select, Selection, SelectItem } from '@heroui/react';
+import { AppDispatch } from '@lynx/redux/store';
+import { showRestartModal } from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 type DiskCacheSize = 0 | 268435456 | 536870912 | 1073741824;
 
+/**
+ * Component to configure the disk cache size.
+ * Saves settings directly to storage via IPC and prompts for application restart.
+ */
 export default function DiskCache() {
   const dispatch = useDispatch<AppDispatch>();
-  const [selectedKey, setSelectedKey] = useState<string>('0');
+  const [selectedKey, setSelectedKey] = useState('0');
 
   useEffect(() => {
     storageIpc.get('performance').then(data => {
@@ -24,7 +28,7 @@ export default function DiskCache() {
     (keys: Selection) => {
       if (keys !== 'all') {
         const value = Number(keys.values().next().value) as DiskCacheSize;
-        storageIpc.update('performance', {diskCacheSize: value});
+        storageIpc.update('performance', { diskCacheSize: value });
         setSelectedKey(String(value));
         showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
       }
@@ -44,7 +48,7 @@ export default function DiskCache() {
         onSelectionChange={onChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!'}}
+        classNames={{ trigger: 'cursor-default transition! duration-300!' }}
         disallowEmptySelection>
         <SelectItem key="0" className="cursor-default" description="Use browser default cache size.">
           Default
