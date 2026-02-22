@@ -1,15 +1,19 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import {AppDispatch} from '@lynx/redux/store';
-import {showRestartModal} from '@lynx/utils';
+import { AppDispatch } from '@lynx/redux/store';
+import { showRestartModal } from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
+/**
+ * Component to toggle forcing high-performance GPU selection.
+ * Saves settings directly to storage via IPC and prompts for application restart.
+ */
 export default function GpuSelection() {
   const dispatch = useDispatch<AppDispatch>();
-  const [enabled, setEnabled] = useState<boolean>(false);
+  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
     storageIpc.get('performance').then(data => {
@@ -19,7 +23,7 @@ export default function GpuSelection() {
 
   const onEnabledChange = useCallback(
     (selected: boolean) => {
-      storageIpc.update('performance', {forceHighPerformanceGpu: selected});
+      storageIpc.update('performance', { forceHighPerformanceGpu: selected });
       setEnabled(selected);
       showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
     },

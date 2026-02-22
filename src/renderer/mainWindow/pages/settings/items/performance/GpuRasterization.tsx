@@ -1,15 +1,19 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import {AppDispatch} from '@lynx/redux/store';
-import {showRestartModal} from '@lynx/utils';
+import { AppDispatch } from '@lynx/redux/store';
+import { showRestartModal } from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
+/**
+ * Component to toggle GPU rasterization.
+ * Saves settings directly to storage via IPC and prompts for application restart.
+ */
 export default function GpuRasterization() {
   const dispatch = useDispatch<AppDispatch>();
-  const [enabled, setEnabled] = useState<boolean>(true);
+  const [enabled, setEnabled] = useState(true);
 
   useEffect(() => {
     storageIpc.get('performance').then(data => {
@@ -19,7 +23,7 @@ export default function GpuRasterization() {
 
   const onEnabledChange = useCallback(
     (selected: boolean) => {
-      storageIpc.update('performance', {enableGpuRasterization: selected});
+      storageIpc.update('performance', { enableGpuRasterization: selected });
       setEnabled(selected);
       showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
     },

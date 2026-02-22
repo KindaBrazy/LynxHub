@@ -1,5 +1,5 @@
 import SettingsSection from '@lynx/components/SettingsSection';
-import {SpedometerMiddle} from '@solar-icons/react-perf/BoldDuotone';
+import { SpedometerMiddle } from '@solar-icons/react-perf/BoldDuotone';
 
 import HWAcc from '../general/HWAcc';
 import Autoplay from './Autoplay';
@@ -18,6 +18,10 @@ import ZeroCopy from './ZeroCopy';
 
 export const SettingsPerformanceId = 'settings_performance_elem';
 
+/**
+ * Settings section containing performance-related configurations.
+ * Allows users to tweak GPU usage, rendering modes, cache sizes, and memory limits.
+ */
 export default function SettingsPerformance() {
   return (
     <SettingsSection title="Performance" id={SettingsPerformanceId} icon={<SpedometerMiddle className="size-5" />}>
