@@ -1,14 +1,17 @@
-import {Button} from '@heroui/react';
-import {terminalActions} from '@lynx/redux/reducers/terminal';
-import {AppDispatch} from '@lynx/redux/store';
-import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
-import {useCallback, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { Button } from '@heroui/react';
+import { terminalActions } from '@lynx/redux/reducers/terminal';
+import { AppDispatch } from '@lynx/redux/store';
+import { Refresh } from '@solar-icons/react-perf/BoldDuotone';
+import { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
+/**
+ * Settings component providing a button to reset all terminal configuration settings back to their defaults.
+ */
 export default function Reset() {
-  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -20,7 +23,7 @@ export default function Reset() {
     setTimeout(() => {
       setIsSaving(false);
     }, fakeDelay);
-  }, []);
+  }, [dispatch]);
 
   return (
     <SettingsFilterItem

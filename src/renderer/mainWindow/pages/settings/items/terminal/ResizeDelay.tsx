@@ -1,16 +1,20 @@
-import {NumberInput} from '@heroui/react';
-import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
-import {AppDispatch} from '@lynx/redux/store';
-import {useDispatch} from 'react-redux';
+import { NumberInput } from '@heroui/react';
+import { terminalActions, useTerminalState } from '@lynx/redux/reducers/terminal';
+import { AppDispatch } from '@lynx/redux/store';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
+/**
+ * Settings component that configures the latency/delay used during terminal viewport resizing.
+ * Updates the 'resizeDelay' state in REDUX.
+ */
 export default function ResizeDelay() {
   const resizeDelay = useTerminalState('resizeDelay');
   const dispatch = useDispatch<AppDispatch>();
 
   const onChange = (value: number) => {
-    dispatch(terminalActions.setTerminalState({key: 'resizeDelay', value}));
+    dispatch(terminalActions.setTerminalState({ key: 'resizeDelay', value }));
   };
 
   return (
