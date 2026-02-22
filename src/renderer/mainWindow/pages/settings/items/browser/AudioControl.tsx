@@ -1,18 +1,22 @@
-import {Switch} from '@heroui/react';
-import {useCardsState} from '@lynx/redux/reducers/cards';
-import {useVolumeState, volumeActions} from '@lynx/redux/reducers/volume';
-import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import { Switch } from '@heroui/react';
+import { useCardsState } from '@lynx/redux/reducers/cards';
+import { useVolumeState, volumeActions } from '@lynx/redux/reducers/volume';
+import { AppDispatch } from '@lynx/redux/store';
+import { lynxTopToast } from '@lynx/utils/hooks';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {Volume, VolumeCross} from '@solar-icons/react-perf/BoldDuotone';
-import {useCallback, useEffect, useMemo, useRef} from 'react';
-import {useDispatch} from 'react-redux';
+import { Volume, VolumeCross } from '@solar-icons/react-perf/BoldDuotone';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
-export default function AudioControl() {
+/**
+ * Custom hook encapsulating logic for managing and persisting global audio mute settings.
+ * Synchronizes the setting with browser tabs dynamically.
+ */
+function useAudioControlSettings() {
   const dispatch = useDispatch<AppDispatch>();
   const globalMuted = useVolumeState('globalMuted');
   const tabMuted = useVolumeState('tabMuted');
@@ -27,7 +31,7 @@ export default function AudioControl() {
   const applyGlobalMuteToAllTabs = useCallback(
     async (muted: boolean) => {
       for (const card of browserTabs) {
-        const isTabMuted = tabMuted[card.tabId] || false;
+        const isTabMuted = tabMuted[card.tabId] ?? false;
         const effectiveMute = isTabMuted || muted;
 
         try {
@@ -93,10 +97,21 @@ export default function AudioControl() {
     [dispatch, saveToStorage, applyGlobalMuteToAllTabs],
   );
 
+  return {
+    globalMuted,
+    handleMuteToggle,
+  };
+}
+
+/**
+ * Settings component controlling global audio mute behavior. 
+ */
+export default function AudioControl() {
+  const { globalMuted, handleMuteToggle } = useAudioControlSettings();
+
   const muteTitle = 'Global Mute';
   const muteDescription =
-    'Mute all browser audio. Individual tab mute controls remain functional but have no' +
-    ' audible effect when global mute is enabled.';
+    'Mute all browser audio. Individual tab mute controls remain functional but have no audible effect when global mute is enabled.';
 
   const muteSearchTexts = useMemo(
     () => [muteTitle, muteDescription, 'audio', 'mute', 'silence', 'sound', 'global', 'all', 'tabs'],
@@ -122,7 +137,7 @@ export default function AudioControl() {
             aria-checked={globalMuted}
             aria-label="Global mute toggle"
             onValueChange={handleMuteToggle}
-            classNames={{wrapper: globalMuted ? 'bg-danger-500' : 'bg-default-300'}}>
+            classNames={{ wrapper: globalMuted ? 'bg-danger-500' : 'bg-default-300' }}>
             <span className="text-sm">{globalMuted ? 'All audio muted' : 'Audio enabled'}</span>
           </Switch>
         </div>
