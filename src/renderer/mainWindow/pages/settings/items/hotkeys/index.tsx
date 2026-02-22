@@ -1,5 +1,5 @@
 import {Button, Input, Listbox, ListboxItem, ListboxSection} from '@heroui/react';
-import SettingsSection from '@lynx/components/ContentSection';
+import SettingsSection from '@lynx/components/SettingsSection';
 import {hotkeysActions, useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {useTerminalState} from '@lynx/redux/reducers/terminal';

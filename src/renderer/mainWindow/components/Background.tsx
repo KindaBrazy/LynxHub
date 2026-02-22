@@ -1,9 +1,13 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {isNil} from 'lodash';
-import {memo, useMemo} from 'react';
+import {memo} from 'react';
 
+/**
+ * Background component for the main window.
+ * Renders a custom background from extensions if available, otherwise renders the default background.
+ */
 const Background = memo(() => {
-  const BG = useMemo(() => extensionsData.replaceBackground, []);
+  const BG = extensionsData.replaceBackground;
 
   return !isNil(BG) ? (
     <BG />

@@ -6,15 +6,23 @@ import {motion} from 'framer-motion';
 import {ReactNode} from 'react';
 
 type Props = {
+  /** The title of the settings section */
   title: string;
+  /** Unique identifier for the section, used for search and navigation */
   id?: string;
+  /** Optional icon to display next to the title */
   icon?: ReactNode;
+  /** Content of the section */
   children?: ReactNode;
+  /** Optional title color class. Defaults to inherit */
   titleColor?: 'text-warning' | 'text-danger' | string;
+  /** Whether to center the items in the card body. Defaults to false */
   itemsCenter?: boolean;
 };
 
-/** Render card for a specif settings */
+/**
+ * Renders a card for a specific settings section with search registration and animation.
+ */
 export default function SettingsSection({children, id, title, titleColor = '', itemsCenter = false, icon}: Props) {
   useRegisterSectionSearch(id, title);
 

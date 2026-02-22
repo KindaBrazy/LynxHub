@@ -5,31 +5,56 @@ import filesIpc from '@lynx_shared/ipc/files';
 import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
 import {OpenDialogOptions} from 'electron';
 import {useCallback, useEffect, useRef, useState} from 'react';
+
 type Props = {
+  /** Options for the electron open dialog */
   dialogType: OpenDialogOptions;
+  /** Current directory path */
   directory: string;
+  /** Callback to update the directory path */
   setDirectory: (directory: string) => void;
+  /** Optional extra folder to append to the selected path */
   extraFolder?: string;
 };
 
-/** Input field with a button to open a file/directory dialog. */
+/**
+ * Input field with a button to open a file/directory dialog.
+ * Validates if the selected directory is empty or if it is the app folder.
+ */
 export default function OpenDialog({dialogType, directory, extraFolder = '', setDirectory}: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
-    filesIpc.isEmptyDir(directory).then(isEmpty => {
-      if (!isEmpty) {
-        setIsInvalid(true);
-        setErrorMessage('Selected directory is not empty. Please choose an empty directory.');
-      } else {
-        applicationIpc.invoke.isValidDataPath(directory).then(isAppDir => {
-          setIsInvalid(isAppDir);
-          setErrorMessage('Selecting the app folder can be dangerous and may lead to data loss.');
-        });
+    let isMounted = true;
+
+    const validateDirectory = async () => {
+      try {
+        const isEmpty = await filesIpc.isEmptyDir(directory);
+        if (!isMounted) return;
+
+        if (!isEmpty) {
+          setIsInvalid(true);
+          setErrorMessage('Selected directory is not empty. Please choose an empty directory.');
+          return;
+        }
+
+        const isAppDir = await applicationIpc.invoke.isValidDataPath(directory);
+        if (!isMounted) return;
+
+        setIsInvalid(isAppDir);
+        setErrorMessage('Selecting the app folder can be dangerous and may lead to data loss.');
+      } catch (error) {
+        console.error('Failed to validate directory:', error);
       }
-    });
+    };
+
+    void validateDirectory();
+
+    return () => {
+      isMounted = false;
+    };
   }, [directory]);
 
   const changeDirectory = useCallback(
@@ -42,14 +67,17 @@ export default function OpenDialog({dialogType, directory, extraFolder = '', set
     [setDirectory],
   );
 
-  const chooseDirectory = useCallback(() => {
-    filesIpc.openDlg(dialogType).then(result => {
+  const chooseDirectory = useCallback(async () => {
+    try {
+      const result = await filesIpc.openDlg(dialogType);
       if (result && inputRef.current) {
         const resultDir = extraFolder ? `${result}${isWin ? '\\' : '/'}${extraFolder}` : result;
         setDirectory(resultDir);
         inputRef.current.value = resultDir;
       }
-    });
+    } catch (error) {
+      console.error('Failed to open dialog:', error);
+    }
   }, [dialogType, extraFolder, setDirectory]);
 
   return (

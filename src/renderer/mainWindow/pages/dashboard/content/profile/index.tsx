@@ -1,4 +1,4 @@
-import SettingsSection from '@lynx/components/ContentSection';
+import SettingsSection from '@lynx/components/SettingsSection';
 import {DashboardPage_Icon} from '@lynx_assets/icons/pages';
 
 import Profile_Patreon from './Patreon';

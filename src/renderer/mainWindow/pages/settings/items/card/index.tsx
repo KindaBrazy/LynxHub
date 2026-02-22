@@ -1,4 +1,4 @@
-import SettingsSection from '@lynx/components/ContentSection';
+import SettingsSection from '@lynx/components/SettingsSection';
 import {Card as CardIcon} from '@solar-icons/react-perf/BoldDuotone';
 
 import CheckUpdateInterval from './UpdateInterval';

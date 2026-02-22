@@ -9,7 +9,7 @@ import {
   PopoverTrigger,
   Spinner,
 } from '@heroui/react';
-import SettingsSection from '@lynx/components/ContentSection';
+import SettingsSection from '@lynx/components/SettingsSection';
 import {AppDispatch} from '@lynx/redux/store';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import storageIpc from '@lynx_shared/ipc/storage';

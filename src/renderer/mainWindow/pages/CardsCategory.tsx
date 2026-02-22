@@ -1,5 +1,5 @@
 import RenderCardList from '@lynx/components/card/RenderList';
-import NavigatePluginsPage from '@lynx/components/NavigatePluginsPage';
+import NavigateToPluginsButton from '@lynx/components/NavigateToPluginsButton';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useAllCardDataWithPath, useSearchCards} from '@lynx/plugins/modules';
 import {useCardsState} from '@lynx/redux/reducers/cards';
@@ -40,7 +40,7 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
         {isNil(ReplaceCards) ? (
           isEmpty(cards) ? (
             <Empty className="size-full" description="No Card to Display!">
-              <NavigatePluginsPage />
+              <NavigateToPluginsButton />
             </Empty>
           ) : (
             <RenderCardList cards={cards} />
@@ -63,7 +63,7 @@ const AllCards = () => {
   if (isEmpty(allCards) && isEmpty(allCategory))
     return (
       <Empty className="size-full" description="No Card to Display!">
-        <NavigatePluginsPage />
+        <NavigateToPluginsButton />
       </Empty>
     );
 

@@ -1,5 +1,5 @@
 import {Spacer} from '@heroui/react';
-import SettingsSection from '@lynx/components/ContentSection';
+import SettingsSection from '@lynx/components/SettingsSection';
 import {Terminal_Icon} from '@lynx_assets/icons';
 
 import BlinkCursor from './BlinkCursor';

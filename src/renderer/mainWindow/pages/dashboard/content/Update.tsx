@@ -1,5 +1,5 @@
 import {Button, Card, Chip, Select, Selection, SelectItem} from '@heroui/react';
-import SettingsSection from '@lynx/components/ContentSection';
+import SettingsSection from '@lynx/components/SettingsSection';
 import {modalActions} from '@lynx/redux/reducers/modals';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {useUserState} from '@lynx/redux/reducers/user';

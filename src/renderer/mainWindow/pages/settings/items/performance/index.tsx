@@ -1,4 +1,4 @@
-import SettingsSection from '@lynx/components/ContentSection';
+import SettingsSection from '@lynx/components/SettingsSection';
 import {SpedometerMiddle} from '@solar-icons/react-perf/BoldDuotone';
 
 import HWAcc from '../general/HWAcc';

@@ -4,14 +4,19 @@ import {GitHub_Icon} from '@lynx_assets/icons';
 import {ISSUE_PAGE} from '@lynx_common/consts';
 import {isDev} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
-import {Result} from 'antd';
+import {Danger} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect} from 'react';
 import {FallbackProps} from 'react-error-boundary';
 
 import CopyClipboard from './CopyClipboard';
 
+/**
+ * Fallback component for the global error boundary.
+ * Displays the error message and provides options to retry, reload, or restart the app.
+ */
 export default function ErrorWrapper({error, resetErrorBoundary}: FallbackProps) {
   const errorObj = error instanceof Error ? error : new Error(String(error));
+
   const handleReload = useCallback(() => {
     window.location.reload();
   }, []);
@@ -32,53 +37,57 @@ export default function ErrorWrapper({error, resetErrorBoundary}: FallbackProps)
 
   return (
     <div className="bg-foreground-100 absolute inset-0">
-      <div
-        className={
-          'absolute inset-2 rounded-lg bg-background flex items-center justify-center draggable overflow-hidden'
-        }>
-        <Result
-          subTitle={
-            <div className="text-danger flex items-center justify-center gap-2">
-              {errorObj.message}
-              <CopyClipboard
-                className="notDraggable"
-                tooltipTitle="Copy full error message"
-                contentToCopy={`Message:\n${errorObj.message}\n\n\nStack:\n${errorObj.stack}`}
-              />
-            </div>
-          }
-          extra={
-            <ButtonGroup fullWidth>
-              <Button size="sm" key="retry" className="notDraggable" onPress={resetErrorBoundary}>
-                Retry
-              </Button>
-              <Button size="sm" key="reload" color="warning" onPress={handleReload} className="notDraggable">
-                Reload
-              </Button>
-              <Button
-                size="sm"
-                key="restart"
-                color="danger"
-                className="notDraggable"
-                onPress={isLinuxPortable ? handleClose : handleRestart}>
-                {isLinuxPortable ? 'Exit' : 'Restart'}
-              </Button>
-            </ButtonGroup>
-          }
-          status="403"
-          className="text-center"
-          title="Oops! Something went wrong."
-        />
-        <div className="flex flex-col gap-y-4 w-full bottom-0 absolute inset-x-0 text-center">
-          <span className="text-warning">If the issue persists, please consider reporting it on GitHub issues.</span>
+      <div className="absolute inset-2 rounded-lg bg-background flex flex-col items-center justify-center draggable overflow-hidden p-8 gap-6">
+        {/* Error Icon & Title */}
+        <div className="flex flex-col items-center gap-4 text-center">
+          <Danger className="size-16 text-danger" />
+          <h1 className="text-2xl font-bold">Oops! Something went wrong.</h1>
+        </div>
+
+        {/* Error Message & Details */}
+        <div className="text-danger flex flex-col items-center justify-center gap-2 text-center max-w-lg">
+          <div className="flex items-center gap-2">
+            <span className="font-medium">{errorObj.message}</span>
+            <CopyClipboard
+              className="notDraggable"
+              tooltipTitle="Copy full error message"
+              contentToCopy={`Message:\n${errorObj.message}\n\n\nStack:\n${errorObj.stack}`}
+            />
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex flex-col gap-4 w-full max-w-md items-center">
+          <ButtonGroup fullWidth>
+            <Button size="sm" key="retry" className="notDraggable" onPress={resetErrorBoundary}>
+              Retry
+            </Button>
+            <Button size="sm" key="reload" color="warning" onPress={handleReload} className="notDraggable">
+              Reload
+            </Button>
+            <Button
+              size="sm"
+              key="restart"
+              color="danger"
+              className="notDraggable"
+              onPress={isLinuxPortable ? handleClose : handleRestart}>
+              {isLinuxPortable ? 'Exit' : 'Restart'}
+            </Button>
+          </ButtonGroup>
+        </div>
+
+        <div className="flex flex-col gap-y-2 w-full text-center absolute bottom-0">
+          <span className="text-warning text-sm">
+            If the issue persists, please consider reporting it on GitHub issues.
+          </span>
           <Button
             radius="none"
             variant="flat"
             color="warning"
             onPress={openIssues}
-            className="notDraggable"
+            className="notDraggable w-full"
             startContent={<GitHub_Icon />}>
-            GtiHub Issues
+            GitHub Issues
           </Button>
         </div>
       </div>
