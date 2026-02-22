@@ -1,101 +1,195 @@
-import {Button, Input, Select, Selection, SelectItem} from '@heroui/react';
-import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
-import {AgentTypes} from '@lynx_common/types/ipc';
+import { Button, Input, Select, Selection, SelectItem } from '@heroui/react';
+import { AppDispatch } from '@lynx/redux/store';
+import { lynxTopToast } from '@lynx/utils/hooks';
+import { AgentTypes } from '@lynx_common/types/ipc';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {Diskette} from '@solar-icons/react-perf/BoldDuotone';
-import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { Diskette } from '@solar-icons/react-perf/BoldDuotone';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
-export default function UserAgent() {
+/**
+ * Interface representing a user agent option fetched from the IPC.
+ */
+interface UserAgentOption {
+  id: AgentTypes;
+  value: string | undefined;
+}
+
+/**
+ * Custom hook to manage fetching and updating user agent settings.
+ * Synchronizes the visual state and external storage for browser user agent configuration.
+ */
+function useUserAgentSettings() {
+  const dispatch = useDispatch<AppDispatch>();
   const [selectedAgent, setSelectedAgent] = useState<AgentTypes | undefined>('lynxhub');
   const [customValue, setCustomValue] = useState<string>('');
+  const [agentDescriptions, setAgentDescriptions] = useState<UserAgentOption[]>([]);
 
-  const [desc, setDesc] = useState<{id: string; value: string}[]>([]);
-  const dispatch = useDispatch<AppDispatch>();
-
+  // Fetch initial configuration on mount
   useEffect(() => {
-    const agents = async () => {
-      const {userAgent} = await storageIpc.get('browser');
-      setSelectedAgent(userAgent);
+    let isMounted = true;
 
-      if (userAgent === 'custom') {
-        storageIpc.get('browser').then(result => {
-          setCustomValue(result.customUserAgent);
-        });
+    const fetchAgents = async () => {
+      try {
+        const { userAgent, customUserAgent } = await storageIpc.get('browser');
+
+        if (!isMounted) return;
+
+        setSelectedAgent(userAgent);
+        if (userAgent === 'custom' && customUserAgent) {
+          setCustomValue(customUserAgent);
+        }
+
+        const [lynxhubValue, electronValue, chromeValue, customAgentValue] = await Promise.all([
+          browserIpc.invoke.getUserAgent('lynxhub'),
+          browserIpc.invoke.getUserAgent('electron'),
+          browserIpc.invoke.getUserAgent('chrome'),
+          browserIpc.invoke.getUserAgent('custom'),
+        ]);
+
+        if (!isMounted) return;
+
+        setAgentDescriptions([
+          { id: 'lynxhub', value: lynxhubValue },
+          { id: 'electron', value: electronValue },
+          { id: 'chrome', value: chromeValue },
+          { id: 'custom', value: customAgentValue },
+        ]);
+      } catch (error) {
+        console.error('Failed to resolve user agent values:', error);
       }
-
-      const lynxhubValue = await browserIpc.invoke.getUserAgent('lynxhub');
-      const electronValue = await browserIpc.invoke.getUserAgent('electron');
-      const chromeValue = await browserIpc.invoke.getUserAgent('chrome');
-      const customValue = await browserIpc.invoke.getUserAgent('custom');
-
-      setDesc([
-        {id: 'lynxhub', value: lynxhubValue},
-        {id: 'electron', value: electronValue},
-        {id: 'chrome', value: chromeValue},
-        {id: 'custom', value: customValue},
-      ]);
     };
 
-    agents();
+    fetchAgents();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const onSelectionChange = useCallback((keys: Selection) => {
-    if (keys !== 'all') {
-      const value = keys.values().next().value?.toString() as AgentTypes;
-      setSelectedAgent(value);
-      if (value === 'custom') {
-        storageIpc.get('browser').then(result => {
+  // Handler for agent selection drop down
+  const handleAgentSelection = useCallback((keys: Selection) => {
+    if (keys === 'all') return;
+
+    const value = keys.values().next().value?.toString() as AgentTypes;
+    if (!value) return;
+
+    setSelectedAgent(value);
+
+    // If changing to custom, load any previously stored custom agent value
+    if (value === 'custom') {
+      storageIpc.get('browser').then(result => {
+        if (result?.customUserAgent) {
           setCustomValue(result.customUserAgent);
-        });
-      }
-      storageIpc.update('browser', {userAgent: value});
-      browserIpc.send.updateUserAgent();
+        }
+      }).catch(err => {
+        console.error('Failed to load custom user agent:', err);
+      });
     }
+
+    // Persist new selection and update live browser context
+    storageIpc.update('browser', { userAgent: value });
+    browserIpc.send.updateUserAgent();
   }, []);
 
-  const saveCustom = () => {
-    storageIpc.update('browser', {customUserAgent: customValue, userAgent: 'custom'});
+  // Save changes to the custom text string explicitly
+  const saveCustomAgent = useCallback(() => {
+    storageIpc.update('browser', { customUserAgent: customValue, userAgent: 'custom' });
     lynxTopToast(dispatch).success('Custom user agent saved successfully!');
+  }, [customValue, dispatch]);
+
+  return {
+    selectedAgent,
+    customValue,
+    setCustomValue,
+    agentDescriptions,
+    handleAgentSelection,
+    saveCustomAgent,
+  };
+}
+
+/**
+ * Settings component to configure the user agent mimicking behavior.
+ * Lets users switch between basic built-in presets or define their own custom user agent header.
+ */
+export default function UserAgent() {
+  const {
+    selectedAgent,
+    customValue,
+    setCustomValue,
+    agentDescriptions,
+    handleAgentSelection,
+    saveCustomAgent,
+  } = useUserAgentSettings();
+
+  const getAgentDescription = (id: AgentTypes) => {
+    return agentDescriptions.find(d => d.id === id)?.value || undefined;
   };
 
+  const filterSearchTexts = [
+    'User Agent',
+    'browser',
+    'user agent',
+    'lynxhub',
+    'electron',
+    'chrome',
+    'custom',
+    'ua',
+  ];
+
   return (
-    <SettingsFilterItem
-      searchTexts={['User Agent', 'browser', 'user agent', 'lynxhub', 'electron', 'chrome', 'custom', 'ua']}>
+    <SettingsFilterItem searchTexts={filterSearchTexts}>
       <div className="flex flex-col gap-y-2">
         <Select
-          onSelectionChange={onSelectionChange}
+          onSelectionChange={handleAgentSelection}
           selectedKeys={selectedAgent ? [selectedAgent] : []}
-          label={<SettingsSearchHighlight text="User Agent" />}>
+          label={<SettingsSearchHighlight text="User Agent" />}
+          aria-label="Select User Agent">
           <SelectItem
             key="lynxhub"
             variant="flat"
             color="success"
-            description={desc.find(d => d.id === 'lynxhub')?.value || undefined}>
+            description={getAgentDescription('lynxhub')}>
             LynxHub (Default)
           </SelectItem>
           <SelectItem
             key="electron"
             variant="flat"
-            description={desc.find(d => d.id === 'electron')?.value || undefined}>
+            description={getAgentDescription('electron')}>
             Electron
           </SelectItem>
-          <SelectItem key="chrome" variant="flat" description={desc.find(d => d.id === 'chrome')?.value || undefined}>
+          <SelectItem
+            key="chrome"
+            variant="flat"
+            description={getAgentDescription('chrome')}>
             Chrome
           </SelectItem>
-          <SelectItem key="custom" variant="flat" description={desc.find(d => d.id === 'custom')?.value || undefined}>
+          <SelectItem
+            key="custom"
+            variant="flat"
+            description={getAgentDescription('custom')}>
             Custom
           </SelectItem>
         </Select>
+
         {selectedAgent === 'custom' && (
-          <div className="flex gap-x-2 flex-row w-full items-center">
-            <Input value={customValue} onValueChange={setCustomValue} />
-            <Button variant="flat" color="success" onPress={saveCustom} isIconOnly>
+          <div className="flex w-full flex-row items-center gap-x-2">
+            <Input
+              value={customValue}
+              onValueChange={setCustomValue}
+              aria-label="Custom User Agent Input"
+              placeholder="Enter custom User-Agent string..."
+            />
+            <Button
+              variant="flat"
+              color="success"
+              onPress={saveCustomAgent}
+              isIconOnly
+              aria-label="Save custom user agent">
               <Diskette />
             </Button>
           </div>

@@ -9,7 +9,7 @@ import SettingsCard, { SettingsCardId } from './items/card';
 import SettingsClear, { SettingsClearId } from './items/clear';
 import SettingsData, { SettingsDataId } from './items/data';
 import SettingsGeneral, { SettingsGeneralId } from './items/general';
-import { HotkeySettings, SettingsHotkeysId } from './items/hotkeys';
+import SettingsHotkeys, { SettingsHotkeysId } from './items/hotkeys';
 import SettingsPerformance, { SettingsPerformanceId } from './items/performance';
 import SettingsStartup, { SettingsStartupId } from './items/startup';
 import SettingsTerminal, { SettingsTerminalId } from './items/terminal';
@@ -51,7 +51,7 @@ const builtInSections: SettingsSectionDefinition[] = [
   { title: 'Card', elementId: settingsSectionId.SettingsCardId, Component: SettingsCard },
   { title: 'Terminal', elementId: settingsSectionId.SettingsTerminalId, Component: SettingsTerminal },
   { title: 'Browser', elementId: settingsSectionId.SettingsBrowserId, Component: SettingsBrowser },
-  { title: 'Hotkeys', elementId: settingsSectionId.SettingsHotkeysId, Component: HotkeySettings },
+  { title: 'Hotkeys', elementId: settingsSectionId.SettingsHotkeysId, Component: SettingsHotkeys },
   { title: 'Data', elementId: settingsSectionId.SettingsDataId, Component: SettingsData },
   { title: 'Clear', elementId: settingsSectionId.SettingsClearId, Component: SettingsClear },
 ];

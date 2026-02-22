@@ -10,19 +10,19 @@ import {
   Spinner,
 } from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
-import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import { AppDispatch } from '@lynx/redux/store';
+import { lynxTopToast } from '@lynx/utils/hooks';
 import storageIpc from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
-import {Broom, Database, Refresh, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
-import {useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { Broom, Database, Refresh, TrashBin2 } from '@solar-icons/react-perf/BoldDuotone';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 export const SettingsClearId = 'settings_rmv_data_elem';
 
-type CacheStats = {
+export type CacheStats = {
   entryCount: number;
   totalSize: number;
   totalSizeFormatted: string;
@@ -30,7 +30,11 @@ type CacheStats = {
   lastCleanupFormatted: string;
 };
 
-/** Clear app settings and cache */
+/**
+ * Renders the "Clear" settings section.
+ * Provides options to reset application settings, clear caches,
+ * and view cache statistics.
+ */
 export default function SettingsClear() {
   const [isClearSettingsOpen, setIsClearSettingsOpen] = useState<boolean>(false);
   const [isClearCacheOpen, setIsClearCacheOpen] = useState<boolean>(false);
@@ -39,12 +43,7 @@ export default function SettingsClear() {
   const [isClearing, setIsClearing] = useState<boolean>(false);
   const dispatch = useDispatch<AppDispatch>();
 
-  // Load cache stats on mount
-  useEffect(() => {
-    loadCacheStats();
-  }, []);
-
-  const loadCacheStats = async () => {
+  const loadCacheStats = useCallback(async () => {
     try {
       setIsLoadingStats(true);
       const stats = await utilsIpc.getImageCacheStats();
@@ -55,9 +54,14 @@ export default function SettingsClear() {
     } finally {
       setIsLoadingStats(false);
     }
-  };
+  }, [dispatch]);
 
-  const clearImageCache = async () => {
+  // Load cache stats on mount
+  useEffect(() => {
+    loadCacheStats();
+  }, [loadCacheStats]);
+
+  const handleClearImageCache = async () => {
     try {
       setIsClearing(true);
       const result = await utilsIpc.clearImageCache();
@@ -81,7 +85,7 @@ export default function SettingsClear() {
         shadow="sm"
         isOpen={isClearSettingsOpen}
         onOpenChange={setIsClearSettingsOpen}
-        classNames={{base: 'before:bg-foreground-100'}}
+        classNames={{ base: 'before:bg-foreground-100' }}
         showArrow>
         <PopoverTrigger>
           <Button variant="flat" color="danger" startContent={<Refresh />} fullWidth>
@@ -154,7 +158,7 @@ export default function SettingsClear() {
                 shadow="sm"
                 isOpen={isClearCacheOpen}
                 onOpenChange={setIsClearCacheOpen}
-                classNames={{base: 'before:bg-foreground-100'}}
+                classNames={{ base: 'before:bg-foreground-100' }}
                 showArrow>
                 <PopoverTrigger>
                   <Button
@@ -177,7 +181,7 @@ export default function SettingsClear() {
                     />
                   </span>
                   <ButtonGroup className="flex flex-row w-full mt-2" fullWidth>
-                    <Button size="sm" color="warning" startContent={<Broom />} onPress={clearImageCache}>
+                    <Button size="sm" color="warning" startContent={<Broom />} onPress={handleClearImageCache}>
                       Clear
                     </Button>
                     <Button size="sm" className="cursor-default" onPress={() => setIsClearCacheOpen(false)}>

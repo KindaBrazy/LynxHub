@@ -1,21 +1,25 @@
-import {NumberInput} from '@heroui/react';
-import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
-import {AppDispatch} from '@lynx/redux/store';
+import { NumberInput } from '@heroui/react';
+import { cardsActions, useCardsState } from '@lynx/redux/reducers/cards';
+import { AppDispatch } from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {Stopwatch} from '@solar-icons/react-perf/BoldDuotone';
-import {useDispatch} from 'react-redux';
+import { Stopwatch } from '@solar-icons/react-perf/BoldDuotone';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
-export default function CheckUpdateInterval() {
+/**
+ * Allows the user to configure the frequency (in minutes) at which
+ * the application checks for updates to their dashboard cards.
+ */
+export default function UpdateInterval() {
   const updateInterval = useCardsState('checkUpdateInterval');
   const dispatch = useDispatch<AppDispatch>();
 
-  const onChange = (value: number) => {
+  const handleIntervalChange = (value: number) => {
     if (value) {
       dispatch(cardsActions.setUpdateInterval(value));
-      storageIpc.update('cards', {checkUpdateInterval: value});
+      storageIpc.update('cards', { checkUpdateInterval: value });
     }
   };
 
@@ -33,7 +37,7 @@ export default function CheckUpdateInterval() {
           minValue={2}
           value={updateInterval}
           labelPlacement="outside"
-          onValueChange={onChange}
+          onValueChange={handleIntervalChange}
           aria-label="Card Update Interval"
           endContent={<span className="text-sm">Minutes</span>}
         />

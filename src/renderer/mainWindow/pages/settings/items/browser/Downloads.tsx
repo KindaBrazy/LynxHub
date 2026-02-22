@@ -1,28 +1,42 @@
-import {Button, Radio, RadioGroup} from '@heroui/react';
-import {AppDispatch} from '@lynx/redux/store';
-import {lynxTopToast} from '@lynx/utils/hooks';
+import { Button, Radio, RadioGroup } from '@heroui/react';
+import { AppDispatch } from '@lynx/redux/store';
+import { lynxTopToast } from '@lynx/utils/hooks';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
-import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
-import {useCallback, useEffect, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { MoveToFolder } from '@solar-icons/react-perf/BoldDuotone';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
-export default function Downloads() {
+/**
+ * Custom hook encapsulating state and IPC interactions for browser download settings.
+ * Includes fetching, modifying behavior, and resolving file paths.
+ */
+function useDownloadSettings() {
   const dispatch = useDispatch<AppDispatch>();
   const [downloadLocation, setDownloadLocation] = useState<string>('');
   const [downloadBehavior, setDownloadBehavior] = useState<'ask' | 'default'>('default');
+
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [isLoadingBehavior, setIsLoadingBehavior] = useState(false);
+
   const [locationError, setLocationError] = useState<string>('');
   const [behaviorError, setBehaviorError] = useState<string>('');
 
   // Load current settings on mount
   useEffect(() => {
+    let isMounted = true;
+
     const loadSettings = async () => {
       try {
-        const locationResult = await downloadManagerIpc.invoke.getDownloadLocation();
+        const [locationResult, behaviorResult] = await Promise.all([
+          downloadManagerIpc.invoke.getDownloadLocation(),
+          downloadManagerIpc.invoke.getDownloadBehavior()
+        ]);
+
+        if (!isMounted) return;
+
         if (locationResult.success && locationResult.path) {
           setDownloadLocation(locationResult.path);
           setLocationError('');
@@ -31,7 +45,6 @@ export default function Downloads() {
           lynxTopToast(dispatch).warning(`Failed to load download location: ${locationResult.error}`);
         }
 
-        const behaviorResult = await downloadManagerIpc.invoke.getDownloadBehavior();
         if (behaviorResult.success && behaviorResult.behavior) {
           setDownloadBehavior(behaviorResult.behavior);
           setBehaviorError('');
@@ -41,11 +54,12 @@ export default function Downloads() {
         }
       } catch (error) {
         console.error('Failed to load download settings:', error);
-        lynxTopToast(dispatch).warning('Failed to load download settings!');
+        if (isMounted) lynxTopToast(dispatch).warning('Failed to load download settings!');
       }
     };
 
     loadSettings();
+    return () => { isMounted = false; };
   }, [dispatch]);
 
   const handleChangeLocation = useCallback(async () => {
@@ -96,27 +110,52 @@ export default function Downloads() {
     [dispatch],
   );
 
+  return {
+    downloadLocation,
+    downloadBehavior,
+    isLoadingLocation,
+    isLoadingBehavior,
+    locationError,
+    behaviorError,
+    handleChangeLocation,
+    handleBehaviorChange,
+  };
+}
+
+/**
+ * Settings component to configure default download behavior and persistent drop folder mappings.
+ */
+export default function Downloads() {
+  const {
+    downloadLocation,
+    downloadBehavior,
+    isLoadingLocation,
+    isLoadingBehavior,
+    locationError,
+    behaviorError,
+    handleChangeLocation,
+    handleBehaviorChange,
+  } = useDownloadSettings();
+
   const locationTitle = 'Download Location';
   const locationDescription = 'Choose where downloaded files are saved';
   const behaviorTitle = 'Download Behavior';
   const behaviorDescription = 'Control how downloads are handled';
 
+  const locationSearchTexts = useMemo(
+    () => [locationTitle, locationDescription, 'download', 'location', 'folder', 'directory', 'save'],
+    []
+  );
+
+  const behaviorSearchTexts = useMemo(
+    () => [behaviorTitle, behaviorDescription, 'download', 'behavior', 'ask', 'default', 'prompt', 'automatic'],
+    []
+  );
+
   return (
     <>
-      <SettingsFilterItem
-        searchTexts={[
-          locationTitle,
-          locationDescription,
-          'download',
-          'location',
-          'folder',
-          'directory',
-          'save',
-          downloadLocation,
-        ]}>
-        <div
-          className="flex flex-col gap-2 bg-default-100 rounded-lg px-4 py-2.5 border-2
-           border-transparent">
+      <SettingsFilterItem searchTexts={locationSearchTexts}>
+        <div className="flex flex-col gap-2 bg-default-100 rounded-lg px-4 py-2.5 border-2 border-transparent">
           <div className="flex flex-col gap-1">
             <SettingsSearchHighlight text={locationTitle} className="text-sm font-medium" />
             <SettingsSearchHighlight text={locationDescription} className="text-tiny text-default-400" />
@@ -124,11 +163,10 @@ export default function Downloads() {
           <div className="flex flex-col gap-2 mt-1">
             <div className="flex flex-row items-center gap-2">
               <div
-                className={`flex-1 text-xs font-mono rounded-lg px-2 py-1.5 truncate ${
-                  locationError
+                className={`flex-1 text-xs font-mono rounded-lg px-2 py-1.5 truncate ${locationError
                     ? 'bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400'
                     : 'text-default-500 bg-default-200'
-                }`}>
+                  }`}>
                 {downloadLocation || 'Loading...'}
               </div>
               <Button
@@ -148,20 +186,8 @@ export default function Downloads() {
         </div>
       </SettingsFilterItem>
 
-      <SettingsFilterItem
-        searchTexts={[
-          behaviorTitle,
-          behaviorDescription,
-          'download',
-          'behavior',
-          'ask',
-          'default',
-          'prompt',
-          'automatic',
-        ]}>
-        <div
-          className="flex flex-col gap-2 bg-default-100 rounded-lg px-4 py-2.5 border-2
-           border-transparent">
+      <SettingsFilterItem searchTexts={behaviorSearchTexts}>
+        <div className="flex flex-col gap-2 bg-default-100 rounded-lg px-4 py-2.5 border-2 border-transparent">
           <div className="flex flex-col gap-1">
             <SettingsSearchHighlight text={behaviorTitle} className="text-sm font-medium" />
             <SettingsSearchHighlight text={behaviorDescription} className="text-tiny text-default-400" />
@@ -171,12 +197,12 @@ export default function Downloads() {
               value={downloadBehavior}
               orientation="horizontal"
               isDisabled={isLoadingBehavior}
-              classNames={{wrapper: 'gap-4'}}
+              classNames={{ wrapper: 'gap-4' }}
               onValueChange={handleBehaviorChange}>
-              <Radio value="default" classNames={{label: 'text-sm'}}>
+              <Radio value="default" classNames={{ label: 'text-sm' }}>
                 <SettingsSearchHighlight text="Use default location" />
               </Radio>
-              <Radio value="ask" classNames={{label: 'text-sm'}}>
+              <Radio value="ask" classNames={{ label: 'text-sm' }}>
                 <SettingsSearchHighlight text="Always ask where to save" />
               </Radio>
             </RadioGroup>
