@@ -1,16 +1,40 @@
-import {ExtensionData_Renderer, ExtensionImport_Renderer} from '@lynx_common/types/plugins/extensions';
-import {ExtensionRendererApi} from '@lynx_common/types/plugins/extensions/api';
-import {ExtensionEvents} from '@lynx_common/types/plugins/extensions/events';
-import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import mitt, {Emitter} from 'mitt';
+import { ExtensionData_Renderer, ExtensionImport_Renderer } from '@lynx_common/types/plugins/extensions';
+import { ExtensionRendererApi } from '@lynx_common/types/plugins/extensions/api';
+import { ExtensionEvents } from '@lynx_common/types/plugins/extensions/events';
+import { storageUtilsIpc } from '@lynx_shared/ipc/storage';
+import mitt, { Emitter } from 'mitt';
 
-import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../modules';
-import {initPluginBrowserSentry} from '../sentry';
+import { allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath } from '../modules';
+import { initPluginBrowserSentry } from '../sentry';
 
-type EmitterType = Emitter<ExtensionEvents> & {all: Map<string, unknown[]>};
+// ─── Event Emitter ────────────────────────────────────────────────────────────
 
-const emitter: EmitterType = mitt<ExtensionEvents>();
+/**
+ * Extended emitter type that exposes the internal `all` listeners map so we
+ * can inspect listener counts via `emitter.all.get(eventName)?.length`.
+ * This workaround is required because `mitt` does not expose a count API.
+ */
+type ExtensionEmitter = Emitter<ExtensionEvents> & { all: Map<string, unknown[]> };
 
+/**
+ * Application-level event emitter used for cross-extension communication.
+ * Extensions subscribe to events (e.g. `card_collect_user_input`) via the
+ * `events` property of the renderer API, and the core app emits those events
+ * at the appropriate lifecycle points.
+ */
+const emitter: ExtensionEmitter = mitt<ExtensionEvents>();
+
+// ─── Extension Data Store ─────────────────────────────────────────────────────
+
+/**
+ * Mutable registry that accumulates all UI modifications contributed by loaded
+ * extensions. It is populated synchronously during `initializeExtensions` —
+ * before React mounts — so the values are effectively stable after that point.
+ *
+ * Each array or `undefined` field maps 1-to-1 with a method on
+ * `ExtensionRendererApi`. Arrays are filled by the "add*" methods; optional
+ * fields are set by the "replace*" methods.
+ */
 export const extensionsData: ExtensionData_Renderer = {
   titleBar: {
     addStart: [],
@@ -89,79 +113,31 @@ export const extensionsData: ExtensionData_Renderer = {
       },
     },
     audio: {
-      add: {
-        top: [],
-        bottom: [],
-        scrollTop: [],
-        scrollBottom: [],
-        cardsContainer: [],
-      },
+      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
     },
     image: {
-      add: {
-        top: [],
-        bottom: [],
-        scrollTop: [],
-        scrollBottom: [],
-        cardsContainer: [],
-      },
+      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
     },
     text: {
-      add: {
-        top: [],
-        bottom: [],
-        scrollTop: [],
-        scrollBottom: [],
-        cardsContainer: [],
-      },
+      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
     },
     tools: {
-      add: {
-        top: [],
-        bottom: [],
-        scrollTop: [],
-        scrollBottom: [],
-        cardsContainer: [],
-      },
+      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
     },
     games: {
-      add: {
-        top: [],
-        bottom: [],
-        scrollTop: [],
-        scrollBottom: [],
-        cardsContainer: [],
-      },
+      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
     },
     settings: {
-      add: {
-        navButton: [],
-        content: [],
-      },
+      add: { navButton: [], content: [] },
     },
     dashboard: {
-      add: {
-        navButton: [],
-        content: [],
-      },
+      add: { navButton: [], content: [] },
     },
     agents: {
-      add: {
-        top: [],
-        bottom: [],
-        scrollTop: [],
-        scrollBottom: [],
-        cardsContainer: [],
-      },
+      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
     },
     others: {
-      add: {
-        top: [],
-        bottom: [],
-        scrollTop: [],
-        scrollBottom: [],
-        cardsContainer: [],
-      },
+      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
     },
   },
   addReducer: [],
@@ -182,7 +158,19 @@ export const extensionsData: ExtensionData_Renderer = {
   replaceMarkdownViewer: undefined,
 };
 
+// ─── Extension Renderer API ───────────────────────────────────────────────────
+
+/**
+ * The concrete implementation of `ExtensionRendererApi` that is handed to each
+ * extension's `InitialExtensions` entry point.
+ *
+ * Every method mutates the shared `extensionsData` object, which the app reads
+ * after all extensions have finished initializing. Since initialization is
+ * synchronous and happens before React renders, these mutations are safe —
+ * there is no concurrent read/write hazard.
+ */
 export const extensionRendererApi: ExtensionRendererApi = {
+  // ── Title Bar ────────────────────────────────────────────────────────────
   titleBar: {
     addStart: comp => extensionsData.titleBar.addStart.push(comp),
     addCenter: comp => extensionsData.titleBar.addCenter.push(comp),
@@ -194,6 +182,8 @@ export const extensionRendererApi: ExtensionRendererApi = {
       extensionsData.titleBar.replaceEnd = comp;
     },
   },
+
+  // ── Status Bar ───────────────────────────────────────────────────────────
   statusBar: {
     addStart: comp => extensionsData.statusBar.addStart.push(comp),
     addCenter: comp => extensionsData.statusBar.addCenter.push(comp),
@@ -202,6 +192,8 @@ export const extensionRendererApi: ExtensionRendererApi = {
       extensionsData.statusBar.replaceContainer = comp;
     },
   },
+
+  // ── Running AI View ──────────────────────────────────────────────────────
   runningAI: {
     container: comp => {
       extensionsData.runningAI.container = comp;
@@ -213,9 +205,11 @@ export const extensionRendererApi: ExtensionRendererApi = {
       extensionsData.runningAI.browser = comp;
     },
   },
+
+  // ── Router ───────────────────────────────────────────────────────────────
   router: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    add: function (routeObject: any[]): void {
+    add: (routeObject: any[]) => {
       extensionsData.router.add = [...extensionsData.router.add, ...routeObject];
     },
     replace: {
@@ -251,6 +245,8 @@ export const extensionRendererApi: ExtensionRendererApi = {
       },
     },
   },
+
+  // ── Navigation Bar ───────────────────────────────────────────────────────
   navBar: {
     replace: {
       container: comp => {
@@ -268,6 +264,8 @@ export const extensionRendererApi: ExtensionRendererApi = {
       settingsBar: comp => extensionsData.navBar.addButton.settingsBar.push(comp),
     },
   },
+
+  // ── Modals ───────────────────────────────────────────────────────────────
   replaceModals: {
     updateApp: comp => {
       extensionsData.replaceModals.updateApp = comp;
@@ -303,14 +301,22 @@ export const extensionRendererApi: ExtensionRendererApi = {
       extensionsData.replaceModals.gitManager = comp;
     },
   },
+
+  // ── Markdown Viewer ──────────────────────────────────────────────────────
   replaceMarkdownViewer: comp => {
     extensionsData.replaceMarkdownViewer = comp;
   },
+
+  // ── Custom Hooks & Modals ────────────────────────────────────────────────
   addCustomHook: comp => extensionsData.addCustomHook.push(comp),
   addModal: comp => extensionsData.addModal.push(comp),
+
+  // ── Background ───────────────────────────────────────────────────────────
   replaceBackground: comp => {
     extensionsData.replaceBackground = comp;
   },
+
+  // ── Page Customization ───────────────────────────────────────────────────
   customizePages: {
     home: {
       replace: {
@@ -410,9 +416,13 @@ export const extensionRendererApi: ExtensionRendererApi = {
       },
     },
   },
+
+  // ── Redux Reducers ───────────────────────────────────────────────────────
   addReducer: reducer => {
     extensionsData.addReducer = [...extensionsData.addReducer, ...reducer];
   },
+
+  // ── Cards ────────────────────────────────────────────────────────────────
   cards: {
     replace: comp => {
       extensionsData.cards.replace = comp;
@@ -438,23 +448,49 @@ export const extensionRendererApi: ExtensionRendererApi = {
       },
     },
   },
+
+  // ── Events ───────────────────────────────────────────────────────────────
   events: {
     on: emitter.on,
     off: emitter.off,
     emit: emitter.emit,
+    /**
+     * Returns the number of active listeners for the given event.
+     * Used by utilities like `collectExtensionUserInputs` to determine whether
+     * to emit an event at all (skipping if no one is listening).
+     */
     getListenerCount: (eventName: keyof ExtensionEvents) => {
       const listeners = emitter.all.get(eventName);
       return listeners ? listeners.length : 0;
     },
   },
+
+  // ── Card Terminal Pre-Commands ────────────────────────────────────────────
   setCards_TerminalPreCommands: (id: string, preCommands: string[]) => {
     storageUtilsIpc.send.setCardTerminalPreCommands(id, preCommands);
   },
 
+  // ── Sentry ───────────────────────────────────────────────────────────────
   initBrowserSentry: initPluginBrowserSentry,
 };
 
-export default function loader(extensions: {id: string; module: ExtensionImport_Renderer}[]) {
+// ─── Extension Initializer ────────────────────────────────────────────────────
+
+/** Shape of each entry passed to `initializeExtensions`. */
+type LoadedExtension = { id: string; module: ExtensionImport_Renderer };
+
+/**
+ * Calls `InitialExtensions` on each successfully-loaded extension module,
+ * injecting the full renderer API and the extension's own ID.
+ *
+ * Extensions may call any method on the provided API during initialization to
+ * register components, hooks, reducers, or event listeners. All side-effects
+ * are written to the shared `extensionsData` object, which the React tree
+ * reads after this function returns.
+ *
+ * @param extensions - Array of `{id, module}` pairs for every loaded extension.
+ */
+export default function initializeExtensions(extensions: LoadedExtension[]) {
   for (const extension of extensions) {
     extension.module.InitialExtensions(
       {
