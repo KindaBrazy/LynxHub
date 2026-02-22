@@ -3,10 +3,16 @@ import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, RefObject, useCallback} from 'react';
 
 type Props = {
+  /**
+   * Reference to the clear terminal function.
+   */
   clearTerminal: RefObject<(() => void) | undefined>;
 };
 
-const ClearAll = memo(({clearTerminal}: Props) => {
+/**
+ * A button to clear the terminal content.
+ */
+const TerminalClearAll = memo(({clearTerminal}: Props) => {
   const clearTerm = useCallback(() => {
     if (clearTerminal.current) {
       clearTerminal.current();
@@ -15,11 +21,13 @@ const ClearAll = memo(({clearTerminal}: Props) => {
 
   return (
     <Tooltip delay={500} content="Clear all">
-      <Button size="sm" variant="light" onPress={clearTerm} isIconOnly>
+      <Button size="sm" variant="light" onPress={clearTerm} isIconOnly aria-label="Clear all">
         <Broom className="size-3.5" />
       </Button>
     </Tooltip>
   );
 });
 
-export default ClearAll;
+TerminalClearAll.displayName = 'TerminalClearAll';
+
+export default TerminalClearAll;

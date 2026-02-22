@@ -1,20 +1,35 @@
 import {RunningCard} from '@lynx/types';
-import {useMemo} from 'react';
+import {memo, useMemo} from 'react';
 
-import DownloadManager from '../browser/DownloadManager';
-import Switch from './Switch';
-import Terminate_AI from './TerminateAI';
+import BrowserDownloadManager from '../browser/BrowserDownloadManager';
+import TerminateProcessButton from './TerminateProcessButton';
+import ViewSwitch from './ViewSwitch';
 
-type Props = {runningCard: RunningCard};
+type Props = {
+  /**
+   * The running card data.
+   */
+  runningCard: RunningCard;
+};
 
-export default function SharedTopBar({runningCard}: Props) {
-  const {type, currentView} = useMemo(() => runningCard, [runningCard]);
+/**
+ * Shared top bar components for both browser and terminal views.
+ */
+const SharedTopBar = memo(({runningCard}: Props) => {
+  const {type, currentView, id} = runningCard;
+
+  const showSwitch = useMemo(() => type === 'both', [type]);
+  const showTerminate = useMemo(() => type === 'both' || type === 'terminal', [type]);
 
   return (
     <div className="flex flex-row gap-x-1">
-      {type === 'both' && <Switch currentView={currentView} />}
-      {(type === 'both' || type === 'terminal') && <Terminate_AI id={runningCard.id} />}
-      <DownloadManager />
+      {showSwitch && <ViewSwitch currentView={currentView} />}
+      {showTerminate && <TerminateProcessButton id={id} />}
+      <BrowserDownloadManager />
     </div>
   );
-}
+});
+
+SharedTopBar.displayName = 'SharedTopBar';
+
+export default SharedTopBar;

@@ -8,10 +8,16 @@ import {memo, useCallback} from 'react';
 const endContent = <SquareTopDown className="size-3 group-hover:opacity-100 opacity-0 transition duration-300" />;
 
 type Props = {
+  /**
+   * The selected text in the terminal.
+   */
   selectedTerminalText: string;
 };
 
-const SearchBy = memo(({selectedTerminalText}: Props) => {
+/**
+ * Dropdown to search selected terminal text on various search engines.
+ */
+const TerminalSearchBy = memo(({selectedTerminalText}: Props) => {
   const searchSelectedText = useCallback(
     (key: SearchQuerySites) => {
       window.open(getSearchUrl(selectedTerminalText, key));
@@ -30,7 +36,7 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
             <Tooltip delay={500} content="Search selected text by">
               <div className="max-w-fit">
                 <DropdownTrigger>
-                  <Button size="sm" variant="light" isIconOnly>
+                  <Button size="sm" variant="light" isIconOnly aria-label="Search selected text">
                     <Earth className="size-3.5" />
                   </Button>
                 </DropdownTrigger>
@@ -117,4 +123,6 @@ const SearchBy = memo(({selectedTerminalText}: Props) => {
   );
 });
 
-export default SearchBy;
+TerminalSearchBy.displayName = 'TerminalSearchBy';
+
+export default TerminalSearchBy;

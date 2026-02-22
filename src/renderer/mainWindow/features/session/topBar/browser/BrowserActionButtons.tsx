@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button, Tooltip} from '@heroui/react';
 import useHotkeyPress from '@lynx/hooks/hotkeys';
 import {useIsActiveTab} from '@lynx/layouts/tabs/utils';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
@@ -8,6 +8,7 @@ import {ArrowLeft, ArrowRight, Home2, Restart} from '@solar-icons/react-perf/Bol
 import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
 import {X} from 'lucide-react';
 import {memo, useEffect, useMemo, useState} from 'react';
+
 const variants: Variants = {
   animate: {scale: 1, opacity: 1},
   exit: {scale: 0.7, opacity: 0},
@@ -15,9 +16,29 @@ const variants: Variants = {
 
 const transition: Transition = {duration: 0.3};
 
-type Props = {webuiAddress: string; tabID: string; id: string; isDomReady: boolean};
+type Props = {
+  /**
+   * The web UI address (home page).
+   */
+  webuiAddress: string;
+  /**
+   * The ID of the tab.
+   */
+  tabID: string;
+  /**
+   * The ID of the browser/card.
+   */
+  id: string;
+  /**
+   * Whether the DOM is ready.
+   */
+  isDomReady: boolean;
+};
 
-const Browser_ActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props) => {
+/**
+ * Browser navigation buttons (Back, Forward, Reload/Stop, Home).
+ */
+const BrowserActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props) => {
   const isActiveTab = useIsActiveTab(tabID);
   const tabs = useTabsState('tabs');
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
@@ -47,16 +68,24 @@ const Browser_ActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props
       }
     });
     return () => offCanGo();
-  }, []);
+  }, [id]);
 
   return (
     <div className="flex flex-row gap-x-1 ml-1">
       <AnimatePresence>
         {canGoBack && (
           <motion.div exit="exit" initial="exit" animate="animate" variants={variants} transition={transition}>
-            <Button size="sm" variant="light" onPress={goBack} className="cursor-default" isIconOnly>
-              <ArrowLeft className="size-4" />
-            </Button>
+            <Tooltip content="Click to go back" delay={1000}>
+              <Button
+                size="sm"
+                variant="light"
+                onPress={goBack}
+                className="cursor-default"
+                isIconOnly
+                aria-label="Go Back">
+                <ArrowLeft className="size-4" />
+              </Button>
+            </Tooltip>
           </motion.div>
         )}
       </AnimatePresence>
@@ -64,30 +93,64 @@ const Browser_ActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props
       <AnimatePresence>
         {canGoForward && (
           <motion.div exit="exit" initial="exit" animate="animate" variants={variants} transition={transition}>
-            <Button size="sm" variant="light" onPress={goForward} className="cursor-default" isIconOnly>
-              <ArrowRight className="size-4" />
-            </Button>
+            <Tooltip content="Click to go forward" delay={1000}>
+              <Button
+                size="sm"
+                variant="light"
+                onPress={goForward}
+                className="cursor-default"
+                isIconOnly
+                aria-label="Go Forward">
+                <ArrowRight className="size-4" />
+              </Button>
+            </Tooltip>
           </motion.div>
         )}
       </AnimatePresence>
 
       {isLoading ? (
-        <Button size="sm" onPress={stop} variant="light" className="cursor-default" isIconOnly>
-          <X className="size-4" />
-        </Button>
+        <Tooltip content="Stop loading" delay={1000}>
+          <Button
+            size="sm"
+            onPress={stop}
+            variant="light"
+            className="cursor-default"
+            isIconOnly
+            aria-label="Stop Loading">
+            <X className="size-4" />
+          </Button>
+        </Tooltip>
       ) : (
-        <Button size="sm" variant="light" onPress={reload} className="cursor-default" isIconOnly>
-          <Restart className="size-4" />
-        </Button>
+        <Tooltip content="Reload page" delay={1000}>
+          <Button
+            size="sm"
+            variant="light"
+            onPress={reload}
+            className="cursor-default"
+            isIconOnly
+            aria-label="Reload Page">
+            <Restart className="size-4" />
+          </Button>
+        </Tooltip>
       )}
 
       {webuiAddress && (
-        <Button size="sm" variant="light" onPress={loadWebuiURL} className="cursor-default" isIconOnly>
-          <Home2 className="size-4" />
-        </Button>
+        <Tooltip content="Go to Home" delay={1000}>
+          <Button
+            size="sm"
+            variant="light"
+            onPress={loadWebuiURL}
+            className="cursor-default"
+            isIconOnly
+            aria-label="Go Home">
+            <Home2 className="size-4" />
+          </Button>
+        </Tooltip>
       )}
     </div>
   );
 });
 
-export default Browser_ActionButtons;
+BrowserActionButtons.displayName = 'BrowserActionButtons';
+
+export default BrowserActionButtons;

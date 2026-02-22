@@ -16,10 +16,19 @@ import {useDispatch} from 'react-redux';
 
 import Browser from './browser';
 import Terminal from './terminal';
-import TopBar from './topBar';
+import SessionTopBar from './topBar';
 
-type Props = {runningCard: RunningCard};
+type Props = {
+  /**
+   * The running card data.
+   */
+  runningCard: RunningCard;
+};
 
+/**
+ * The main session view component.
+ * Manages the layout between browser and terminal views, handles title updates, and custom run behaviors.
+ */
 const SessionView = ({runningCard}: Props) => {
   const {currentView, id, tabId, isEmptyRunning, browserTitle} = runningCard;
 
@@ -36,34 +45,53 @@ const SessionView = ({runningCard}: Props) => {
 
   const customUrlTimeout = useRef<NodeJS.Timeout>(undefined);
 
+  // Sync tab isTerminal state
   useEffect(() => {
     if (tabId === activeTab) {
       const isBrowserView = currentView === 'browser';
       dispatch(tabsActions.setTabIsTerminal({tabID: tabId, isTerminal: !isBrowserView}));
     }
-  }, [tabId, currentView]);
+  }, [tabId, currentView, activeTab, dispatch]);
 
+  // Listen for terminal title changes
   useEffect(() => {
     const offTitle = ptyIpc.onTitle((targetID, title) => {
       if (targetID === id) setTerminalName(title);
     });
 
     return () => offTitle();
-  }, []);
+  }, [id]);
 
+  // Update tab title
   useEffect(() => {
     const isBrowserView = currentView === 'browser';
-
     const terminalTitle = isEmptyRunning ? terminalName : allCardsData.find(card => card.id === id)?.title;
-
     const title = isBrowserView ? browserTitle : terminalTitle;
-
     const currentTitle = tabs.find(tab => tab.id === activeTab)?.title;
-    if (title && title !== currentTitle) dispatch(tabsActions.setTabTitle({title, tabID: tabId}));
-  }, [isEmptyRunning, id, tabId, currentView, activeTab, terminalName, browserTitle]);
 
+    if (title && title !== currentTitle) {
+      dispatch(tabsActions.setTabTitle({title, tabID: tabId}));
+    }
+  }, [
+    isEmptyRunning,
+    id,
+    tabId,
+    currentView,
+    activeTab,
+    terminalName,
+    browserTitle,
+    allCardsData,
+    tabs,
+    dispatch,
+  ]);
+
+  // Handle custom run behavior (URL catch)
   useEffect(() => {
+    let isMounted = true;
+
     storageIpc.get('cardsConfig').then(result => {
+      if (!isMounted) return;
+
       const custom = result.customRunBehavior.find(customRun => customRun.cardID === id);
       if (custom && custom.urlCatch.type === 'custom' && custom.urlCatch.customUrl) {
         const url = custom.urlCatch.customUrl;
@@ -83,19 +111,23 @@ const SessionView = ({runningCard}: Props) => {
     });
 
     return () => {
+      isMounted = false;
       clearTimeout(customUrlTimeout.current);
       customUrlTimeout.current = undefined;
     };
-  }, [id]);
+  }, [id, activeTab, dispatch]);
 
   const [serializeAddon] = useState<SerializeAddon>(new SerializeAddon());
   const [searchAddon] = useState<SearchAddon>(new SearchAddon());
   const [selectedTerminalText, setSelectedTerminalText] = useState<string>('');
   const clearTerminal = useRef<(() => void) | undefined>(undefined);
 
+  const showTerminal = runningCard.type !== 'browser';
+  const showBrowser = runningCard.type !== 'terminal';
+
   return (
     <>
-      <TopBar
+      <SessionTopBar
         tabID={tabId}
         runningCard={runningCard}
         searchAddon={searchAddon}
@@ -103,7 +135,7 @@ const SessionView = ({runningCard}: Props) => {
         serializeAddon={serializeAddon}
         selectedTerminalText={selectedTerminalText}
       />
-      {runningCard.type !== 'browser' &&
+      {showTerminal &&
         (isNil(ExtTerminal) ? (
           <Terminal
             runningCard={runningCard}
@@ -115,7 +147,7 @@ const SessionView = ({runningCard}: Props) => {
         ) : (
           <ExtTerminal />
         ))}
-      {runningCard.type !== 'terminal' && (isNil(ExtBrowser) ? <Browser runningCard={runningCard} /> : <ExtBrowser />)}
+      {showBrowser && (isNil(ExtBrowser) ? <Browser runningCard={runningCard} /> : <ExtBrowser />)}
     </>
   );
 };

@@ -10,8 +10,17 @@ import {isEmpty} from 'lodash';
 import {memo, useCallback, useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-type Props = {id: string};
-const CDTo = memo(({id}: Props) => {
+type Props = {
+  /**
+   * The ID of the terminal/card.
+   */
+  id: string;
+};
+
+/**
+ * A button to change the terminal directory (cd).
+ */
+const TerminalCDTo = memo(({id}: Props) => {
   const [history, setHistory] = useState<string[]>([]);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -24,7 +33,7 @@ const CDTo = memo(({id}: Props) => {
 
       ptyIpc.write(id, `cd "${dir}"${terminalLineEnding}`);
     },
-    [history],
+    [history, id],
   );
 
   const removeFromHistory = useCallback(
@@ -56,7 +65,7 @@ const CDTo = memo(({id}: Props) => {
         console.error(e);
         lynxTopToast(dispatch).error('Error opening directory');
       });
-  }, [id, cdTo]);
+  }, [id, cdTo, dispatch]);
 
   useEffect(() => {
     storageIpc.get('terminal').then(({cdHistory}) => {
@@ -75,7 +84,7 @@ const CDTo = memo(({id}: Props) => {
       <Tooltip delay={500} content="Change terminal directory (cd)">
         <div className="max-w-fit">
           <PopoverTrigger>
-            <Button size="sm" variant="light" isIconOnly>
+            <Button size="sm" variant="light" isIconOnly aria-label="Change Directory">
               <MoveToFolder className="size-3.5" />
             </Button>
           </PopoverTrigger>
@@ -145,4 +154,6 @@ const CDTo = memo(({id}: Props) => {
   );
 });
 
-export default CDTo;
+TerminalCDTo.displayName = 'TerminalCDTo';
+
+export default TerminalCDTo;

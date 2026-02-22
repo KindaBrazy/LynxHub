@@ -8,9 +8,22 @@ import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
 import {Magnifer} from '@solar-icons/react-perf/BoldDuotone';
 import {SearchAddon} from '@xterm/addon-search';
 import {KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
-type Props = {searchAddon: SearchAddon; tabId: string};
 
-const SearchText = memo(({searchAddon, tabId}: Props) => {
+type Props = {
+  /**
+   * The search addon for xterm.js.
+   */
+  searchAddon: SearchAddon;
+  /**
+   * The ID of the tab.
+   */
+  tabId: string;
+};
+
+/**
+ * A search input for the terminal.
+ */
+const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
   const [searchText, setSearchText] = useState<string>('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const hotkeys = useHotkeysState('hotkeys');
@@ -25,7 +38,7 @@ const SearchText = memo(({searchAddon, tabId}: Props) => {
       setSearchText('');
       searchAddon.clearActiveDecoration();
     };
-  }, [isOpen]);
+  }, [isOpen, searchAddon]);
 
   const onInputKeyUp = useCallback(
     (e: KeyboardEvent) => {
@@ -35,7 +48,7 @@ const SearchText = memo(({searchAddon, tabId}: Props) => {
         searchAddon.findPrevious(searchText);
       }
     },
-    [searchText],
+    [searchText, searchAddon],
   );
 
   useHotkeyPress([
@@ -45,10 +58,13 @@ const SearchText = memo(({searchAddon, tabId}: Props) => {
     },
   ]);
 
-  const onInputValueChange = useCallback((value: string) => {
-    searchAddon.findNext(value);
-    setSearchText(value);
-  }, []);
+  const onInputValueChange = useCallback(
+    (value: string) => {
+      searchAddon.findNext(value);
+      setSearchText(value);
+    },
+    [searchAddon],
+  );
 
   return (
     <Popover
@@ -71,7 +87,7 @@ const SearchText = memo(({searchAddon, tabId}: Props) => {
         delay={500}>
         <div className="max-w-fit">
           <PopoverTrigger>
-            <Button size="sm" variant="light" isIconOnly>
+            <Button size="sm" variant="light" isIconOnly aria-label="Search for text">
               <Magnifer className="size-3.5" />
             </Button>
           </PopoverTrigger>
@@ -100,4 +116,6 @@ const SearchText = memo(({searchAddon, tabId}: Props) => {
   );
 });
 
-export default SearchText;
+TerminalSearchText.displayName = 'TerminalSearchText';
+
+export default TerminalSearchText;

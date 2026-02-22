@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button, Tooltip} from '@heroui/react';
 import useHotkeyPress from '@lynx/hooks/hotkeys';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {Circle_Icon} from '@lynx_assets/icons';
@@ -6,11 +6,24 @@ import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {memo, useRef} from 'react';
 
-type Props = {id: string; tabID: string};
+type Props = {
+  /**
+   * The ID of the browser/card.
+   */
+  id: string;
+  /**
+   * The ID of the tab.
+   */
+  tabID: string;
+};
 
-const Browser_Search = memo(({id, tabID}: Props) => {
+/**
+ * A button to open the "Find in Page" dialog.
+ */
+const BrowserSearch = memo(({id, tabID}: Props) => {
   const activeTab = useTabsState('activeTab');
   const btnRef = useRef<HTMLButtonElement | null>(null);
+
   const openSearchMenu = () => {
     const bounds = btnRef.current?.getBoundingClientRect();
     if (bounds) {
@@ -24,10 +37,21 @@ const Browser_Search = memo(({id, tabID}: Props) => {
   useHotkeyPress([{name: Hotkey_Names.findInPage, method: tabID === activeTab ? openSearchMenu : null}]);
 
   return (
-    <Button size="sm" ref={btnRef} variant="light" onPress={openSearchMenu} className="cursor-default" isIconOnly>
-      <Circle_Icon className="size-4" />
-    </Button>
+    <Tooltip content="Find in Page" delay={1000}>
+      <Button
+        size="sm"
+        ref={btnRef}
+        variant="light"
+        onPress={openSearchMenu}
+        className="cursor-default"
+        isIconOnly
+        aria-label="Find in Page">
+        <Circle_Icon className="size-4" />
+      </Button>
+    </Tooltip>
   );
 });
 
-export default Browser_Search;
+BrowserSearch.displayName = 'BrowserSearch';
+
+export default BrowserSearch;

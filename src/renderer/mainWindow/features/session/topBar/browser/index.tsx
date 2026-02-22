@@ -2,18 +2,30 @@ import {useCardsState} from '@lynx/redux/reducers/cards';
 import {RunningCard} from '@lynx/types';
 import {memo, useMemo} from 'react';
 
-import BrowserActionButtons from './ActionButtons';
-import BrowserAddressBar from './AddressBar';
-import BrowserSearch from './Search';
-import BrowserVolume from './Volume';
-import BrowserZoom from './Zoom';
+import BrowserActionButtons from './BrowserActionButtons';
+import BrowserAddressBar from './BrowserAddressBar';
+import BrowserSearch from './BrowserSearch';
+import BrowserVolume from './BrowserVolume';
+import BrowserZoom from './BrowserZoom';
 
 type Props = {
+  /**
+   * The running card data.
+   */
   runningCard: RunningCard;
+  /**
+   * Optional callback to set custom address.
+   */
   setCustomAddress?: (address: string) => void;
+  /**
+   * The ID of the tab.
+   */
   tabID: string;
 };
 
+/**
+ * Top bar for the browser view, containing navigation, address bar, and tools.
+ */
 const BrowserTopBar = memo(({runningCard, setCustomAddress, tabID}: Props) => {
   const domReadyIds = useCardsState('browserDomReadyIds');
 
@@ -39,5 +51,7 @@ const BrowserTopBar = memo(({runningCard, setCustomAddress, tabID}: Props) => {
     </>
   );
 });
+
+BrowserTopBar.displayName = 'BrowserTopBar';
 
 export default BrowserTopBar;
