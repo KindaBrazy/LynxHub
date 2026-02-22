@@ -4,7 +4,7 @@ import {isEmpty} from 'lodash';
 import {useMemo, useState} from 'react';
 
 import CopyClipboard from '../../../../CopyClipboard';
-import LaunchConfigSection from '../Section';
+import LaunchConfigSection from '../LaunchConfigSection';
 
 type Props = {text: string};
 

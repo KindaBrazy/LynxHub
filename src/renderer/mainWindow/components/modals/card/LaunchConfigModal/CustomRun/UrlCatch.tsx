@@ -1,12 +1,10 @@
 import {Input, NumberInput, Select, Selection, SelectItem} from '@heroui/react';
 import {CustomRunBehaviorData} from '@lynx_common/types/ipc';
-import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import {isEmpty} from 'lodash';
-import {useEffect, useMemo, useState} from 'react';
+import {useMemo} from 'react';
 
 type UrlCatchType = CustomRunBehaviorData['urlCatch'];
 
-const initialUrlCatch: UrlCatchType = {
+export const initialUrlCatch: UrlCatchType = {
   type: 'module',
   moduleDelay: 0,
   delay: 5,
@@ -14,65 +12,38 @@ const initialUrlCatch: UrlCatchType = {
   findLine: undefined,
 };
 
-type Props = {id: string};
-export function UrlCatch({id}: Props) {
-  const [urlCatchValue, setUrlCatchValue] = useState<UrlCatchType>(initialUrlCatch);
+type Props = {
+  value?: UrlCatchType;
+  onUpdate: (newValue: UrlCatchType) => void;
+};
 
+export function UrlCatch({value = initialUrlCatch, onUpdate}: Props) {
   const {type, findLine, customUrl, delay, moduleDelay} = useMemo(() => {
-    return urlCatchValue;
-  }, [urlCatchValue]);
+    return value;
+  }, [value]);
 
-  const onTypeChange = (value: Selection) => {
-    if (value && value !== 'all') {
-      const result = value.values().next().value as UrlCatchType['type'];
-      setUrlCatchValue(prev => ({...prev, type: result}));
-      storageUtilsIpc.send.updateCustomRunBehavior({
-        cardID: id,
-        urlCatch: {...urlCatchValue, type: result},
-      });
+  const onTypeChange = (selection: Selection) => {
+    if (selection && selection !== 'all') {
+      const result = selection.values().next().value as UrlCatchType['type'];
+      onUpdate({...value, type: result});
     }
   };
 
-  const onFindLineChange = (value: string) => {
-    setUrlCatchValue(prev => ({...prev, findLine: value}));
-    storageUtilsIpc.send.updateCustomRunBehavior({
-      cardID: id,
-      urlCatch: {...urlCatchValue, findLine: value},
-    });
+  const onFindLineChange = (val: string) => {
+    onUpdate({...value, findLine: val});
   };
 
-  const onCustomUrlChange = (value: string) => {
-    setUrlCatchValue(prev => ({...prev, customUrl: value}));
-    storageUtilsIpc.send.updateCustomRunBehavior({
-      cardID: id,
-      urlCatch: {...urlCatchValue, customUrl: value},
-    });
+  const onCustomUrlChange = (val: string) => {
+    onUpdate({...value, customUrl: val});
   };
 
-  const onDelayChange = (value: number) => {
-    setUrlCatchValue(prev => ({...prev, delay: value}));
-    storageUtilsIpc.send.updateCustomRunBehavior({
-      cardID: id,
-      urlCatch: {...urlCatchValue, delay: value},
-    });
+  const onDelayChange = (val: number) => {
+    onUpdate({...value, delay: val});
   };
 
-  const onModuleDelayChange = (value: number) => {
-    setUrlCatchValue(prev => ({...prev, moduleDelay: value}));
-    storageUtilsIpc.send.updateCustomRunBehavior({
-      cardID: id,
-      urlCatch: {...urlCatchValue, moduleDelay: value},
-    });
+  const onModuleDelayChange = (val: number) => {
+    onUpdate({...value, moduleDelay: val});
   };
-
-  useEffect(() => {
-    storageIpc.get('cardsConfig').then(result => {
-      if (!isEmpty(result.customRunBehavior)) {
-        const data = result.customRunBehavior.find(customRun => customRun.cardID === id);
-        if (data) setUrlCatchValue(data.urlCatch);
-      }
-    });
-  }, [id]);
 
   return (
     <>

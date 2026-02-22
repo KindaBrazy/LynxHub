@@ -1,0 +1,71 @@
+import {Button, Input} from '@heroui/react';
+import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {Reorder} from 'framer-motion';
+import {isEmpty} from 'lodash';
+import {GripVertical} from 'lucide-react';
+import {KeyboardEvent, memo, useCallback, useState} from 'react';
+
+type Props = {
+  /** The index of the command in the list */
+  index: number;
+  /** The initial text value of the command */
+  initialValue: string;
+  /** Callback when the remove button is pressed */
+  onRemove?: (index: number) => void;
+  /** Callback when the command is edited */
+  onEdit?: (index: number, value: string) => void;
+  /** Callback when reordering is done */
+  onDoneReorder?: () => void;
+};
+
+/**
+ * Display card for adding, removing, and editing terminal commands.
+ * Used in a Reorder.Group list.
+ */
+const TerminalCommandItem = memo(({initialValue, onEdit, index, onRemove, onDoneReorder}: Props) => {
+  const [inputValue, setInputValue] = useState<string>(initialValue);
+
+  const handleEdit = useCallback(() => {
+    onEdit?.(index, inputValue);
+  }, [index, inputValue, onEdit]);
+
+  const onKeyUp = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Enter') handleEdit();
+    },
+    [handleEdit],
+  );
+
+  const remove = useCallback(() => onRemove?.(index), [onRemove, index]);
+
+  return (
+    <Reorder.Item
+      value={initialValue}
+      animate={{opacity: 1}}
+      initial={{opacity: 0}}
+      onPointerUp={onDoneReorder}
+      className="rounded-medium bg-foreground-50 cursor-grab active:cursor-grabbing flex items-center gap-x-2 p-2">
+      <GripVertical className="text-foreground-500 size-4" />
+      <span className="text-sm">{index + 1}</span>
+      <Input
+        size="sm"
+        variant="flat"
+        onBlur={handleEdit}
+        onKeyUp={onKeyUp}
+        spellCheck="false"
+        value={inputValue}
+        onValueChange={setInputValue}
+        autoFocus={isEmpty(initialValue)}
+        classNames={{
+          input: 'font-JetBrainsMono! text-xs!',
+          inputWrapper: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack',
+        }}
+      />
+      <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>
+        <TrashBin2 className="size-3.5" />
+      </Button>
+    </Reorder.Item>
+  );
+});
+
+export default TerminalCommandItem;

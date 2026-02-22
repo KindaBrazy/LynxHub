@@ -1,52 +1,35 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
-import {PreOpenData} from '@lynx_common/types/ipc';
 import filesIpc from '@lynx_shared/ipc/files';
-import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {File, Folder} from '@solar-icons/react-perf/BoldDuotone';
 import {Empty} from 'antd';
-import {filter, isEmpty} from 'lodash';
+import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback} from 'react';
 
 import LynxTooltip from '../../../../LynxTooltip';
-import LaunchConfigSection from '../Section';
+import {usePreOpenPath} from '../hooks/usePreOpenPath';
+import LaunchConfigSection from '../LaunchConfigSection';
 import PreOpenPathItem from './OpenPathItem';
 
 type Props = {id: string};
 export default function PreOpenPath({id}: Props) {
-  const [toOpen, setToOpen] = useState<PreOpenData>([]);
-
-  useEffect(() => {
-    storageUtilsIpc.invoke.preOpen('get', {id}).then(result => {
-      setToOpen(result || []);
-    });
-  }, []);
-
-  const onRemove = useCallback(
-    (index: number) => {
-      setToOpen(prevState => [...filter(prevState, (_, i) => i !== index)]);
-      storageUtilsIpc.invoke.preOpen('remove', {id, open: index});
-    },
-    [id],
-  );
+  const {items, addPath, removePath} = usePreOpenPath(id);
 
   const selectFolder = useCallback(() => {
     filesIpc.openDlg({properties: ['openDirectory']}).then(result => {
       if (result) {
-        setToOpen(prevState => [...prevState, {path: result, type: 'folder'}]);
-        storageUtilsIpc.invoke.preOpen('add', {id, open: {path: result, type: 'folder'}});
+        addPath(result, 'folder');
       }
     });
-  }, [id]);
+  }, [addPath]);
 
   const selectFile = useCallback(() => {
     filesIpc.openDlg({properties: ['openFile']}).then(result => {
       if (result) {
-        setToOpen(prevState => [...prevState, {path: result, type: 'file'}]);
-        storageUtilsIpc.invoke.preOpen('add', {id, open: {path: result, type: 'file'}});
+        addPath(result, 'file');
       }
     });
-  }, [id]);
+  }, [addPath]);
 
   return (
     <LaunchConfigSection
@@ -75,18 +58,18 @@ export default function PreOpenPath({id}: Props) {
       }
       title="Open"
       description="Launch AI after opening selected files or folders">
-      {isEmpty(toOpen) ? (
+      {isEmpty(items) ? (
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No items available to open" />
       ) : (
         <div className="space-y-2">
-          {toOpen.map((open, index) => {
+          {items.map((open, index) => {
             const icon = open.type === 'folder' ? <Folder /> : <File />;
             return (
               <PreOpenPathItem
                 icon={icon}
                 index={index}
-                onRemove={onRemove}
-                defaultText={open.path}
+                onRemove={removePath}
+                path={open.path}
                 key={`${index}_openThing`}
               />
             );

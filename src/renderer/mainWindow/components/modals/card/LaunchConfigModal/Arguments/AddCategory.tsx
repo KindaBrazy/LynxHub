@@ -63,7 +63,6 @@ export default function ArgumentSelectionList({
 
     // 2. Filter by search value
     if (searchValue) {
-      const searchWords = searchValue.toLowerCase().split(' ');
       const filterItem = (item: ArgumentItem) =>
         searchInStrings(searchValue, [item.name, item.description || '']);
 
