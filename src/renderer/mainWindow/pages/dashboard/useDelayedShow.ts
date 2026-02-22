@@ -1,11 +1,20 @@
 import {useEffect, useState} from 'react';
 
-export function useDelayedShow(delayMs: number) {
+/**
+ * A hook that returns true after a specified delay.
+ * Useful for delaying the rendering of heavy components to allow initial paint.
+ *
+ * @param delayMs - The delay in milliseconds.
+ * @returns boolean - True after the delay.
+ */
+export const useDelayedShow = (delayMs: number): boolean => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    let frameId = 0;
+    let frameId: number;
     const timeoutId = window.setTimeout(() => {
+      // Use requestAnimationFrame to ensure the state update happens
+      // in the next frame after the timeout
       frameId = window.requestAnimationFrame(() => {
         setShow(true);
       });
@@ -18,4 +27,4 @@ export function useDelayedShow(delayMs: number) {
   }, [delayMs]);
 
   return show;
-}
+};

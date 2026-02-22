@@ -1,23 +1,30 @@
 import {Card, CardBody, CardHeader, Skeleton} from '@heroui/react';
 import {ContainersBg} from '@lynx/utils/commonStyles';
+import {memo} from 'react';
 
-const SettingsContentSkeleton = () => {
+/**
+ * Skeleton loader for the Dashboard page.
+ * Displays a placeholder structure while content is loading.
+ */
+const DashboardSkeleton = memo(() => {
   return (
     <div className="flex flex-col gap-y-4">
       {/* First Section */}
-      <SettingsSectionSkeleton itemCount={3} />
+      <SectionSkeleton itemCount={3} />
 
       {/* Second Section */}
-      <SettingsSectionSkeleton itemCount={5} />
+      <SectionSkeleton itemCount={5} />
 
       {/* Third Section */}
-      <SettingsSectionSkeleton itemCount={4} />
+      <SectionSkeleton itemCount={4} />
     </div>
   );
-};
+});
+
+DashboardSkeleton.displayName = 'DashboardSkeleton';
 
 /** Skeleton for a settings section card with header and items */
-const SettingsSectionSkeleton = ({itemCount}: {itemCount: number}) => {
+const SectionSkeleton = memo(({itemCount}: {itemCount: number}) => {
   return (
     <Card className={`w-full ${ContainersBg} border-1 border-foreground-100`}>
       {/* Section Header */}
@@ -29,15 +36,17 @@ const SettingsSectionSkeleton = ({itemCount}: {itemCount: number}) => {
       {/* Section Body with Setting Items */}
       <CardBody className="flex flex-col gap-y-3">
         {Array.from({length: itemCount}).map((_, index) => (
-          <SettingItemSkeleton key={index} />
+          <ItemSkeleton key={index} />
         ))}
       </CardBody>
     </Card>
   );
-};
+});
+
+SectionSkeleton.displayName = 'SectionSkeleton';
 
 /** Skeleton for a single setting item with title, description, and toggle */
-const SettingItemSkeleton = () => {
+const ItemSkeleton = memo(() => {
   return (
     <div
       className={
@@ -55,6 +64,8 @@ const SettingItemSkeleton = () => {
       </div>
     </div>
   );
-};
+});
 
-export default SettingsContentSkeleton;
+ItemSkeleton.displayName = 'ItemSkeleton';
+
+export default DashboardSkeleton;

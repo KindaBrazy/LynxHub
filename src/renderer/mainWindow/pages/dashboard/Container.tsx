@@ -1,7 +1,7 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import {isEmpty} from 'lodash';
-import {useEffect, useMemo, useState} from 'react';
+import {ComponentType, memo, useEffect, useMemo, useState} from 'react';
 
 import DashboardAbout, {DashboardAboutId} from './content/About';
 import DashboardCredits, {DashboardCreditsId} from './content/Credits';
@@ -17,14 +17,25 @@ export const dashboardSectionId = {
   DashboardAboutId,
 };
 
-export const DashboardSections = () => {
-  const content = useMemo(() => extensionsData.customizePages.dashboard.add.content, []);
+/**
+ * Renders all dashboard sections including built-in and plugin-added ones.
+ */
+export const DashboardSections = memo(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const content = useMemo(() => extensionsData.customizePages.dashboard.add.content as ComponentType<any>[], []);
 
   const [creditsAvailable, setCreditsAvailable] = useState<boolean>(false);
+  
   useEffect(() => {
+    let mounted = true;
     staticsIpc.getPatrons().then(cr => {
-      setCreditsAvailable(!isEmpty(cr));
+      if (mounted) {
+        setCreditsAvailable(!isEmpty(cr));
+      }
     });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   return (
@@ -36,8 +47,10 @@ export const DashboardSections = () => {
       <DashboardAbout />
 
       {content.map((Content, index) => (
-        <Content key={index} />
+        <Content key={`plugin-content-${index}`} />
       ))}
     </>
   );
-};
+});
+
+DashboardSections.displayName = 'DashboardSections';

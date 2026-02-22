@@ -28,19 +28,19 @@ import {
   YOUTUBE_URL,
 } from '@lynx_common/consts';
 import {Copy, InfoSquare} from '@solar-icons/react-perf/BoldDuotone';
-import {useCallback} from 'react';
+import {memo, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 export const DashboardAboutId = 'settings_about_elem';
 
 /** Information about application and developer */
-export default function DashboardAbout() {
+const DashboardAbout = memo(() => {
   const dispatch = useDispatch<AppDispatch>();
 
   const copyText = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
     lynxTopToast(dispatch).info(`Copied to clipboard: ${text}`);
-  }, []);
+  }, [dispatch]);
 
   const socialLinks = [
     {
@@ -150,4 +150,8 @@ export default function DashboardAbout() {
       </div>
     </SettingsSection>
   );
-}
+});
+
+DashboardAbout.displayName = 'DashboardAbout';
+
+export default DashboardAbout;
