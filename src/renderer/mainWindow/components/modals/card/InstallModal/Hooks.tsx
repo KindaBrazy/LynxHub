@@ -7,17 +7,17 @@ import {
 } from '@lynx_common/types/plugins/modules';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import ptyIpc from '@lynx_shared/ipc/pty';
-import {isNil} from 'lodash';
-import {Dispatch, RefObject, SetStateAction, useCallback, useMemo} from 'react';
-import {useDispatch} from 'react-redux';
+import { isNil } from 'lodash';
+import { Dispatch, RefObject, SetStateAction, useCallback, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 
-import {eventUtil_CollectUserInputs} from '../../../../plugins/extensions/utils';
-import {useAllCardMethods} from '../../../../plugins/modules';
-import {cardsActions} from '../../../../redux/reducers/cards';
-import {AppDispatch} from '../../../../redux/store';
-import {lynxTopToast} from '../../../../utils/hooks';
+import { collectExtensionUserInputs } from '../../../../plugins/extensions/utils';
+import { useAllCardMethods } from '../../../../plugins/modules';
+import { cardsActions } from '../../../../redux/reducers/cards';
+import { AppDispatch } from '../../../../redux/store';
+import { lynxTopToast } from '../../../../utils/hooks';
 import InstallStepper from './Stepper';
-import {InstallState} from './types';
+import { InstallState } from './types';
 
 export interface UseStepperProps {
   /** The unique identifier of the card being installed. */
@@ -43,16 +43,16 @@ export interface UseStepperProps {
   /** Modifies the global modal state object directly. */
   updateState: (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => void;
   /** Sets the required fields to display during the user-input step. */
-  setUserInputElements: Dispatch<SetStateAction<{elements: UserInputField[]; title?: string}>>;
+  setUserInputElements: Dispatch<SetStateAction<{ elements: UserInputField[]; title?: string }>>;
   /** Determines which extension URLs and target directory to clone into. */
-  setExtensionsToInstall: Dispatch<SetStateAction<{urls: string[]; dir: string} | undefined>>;
+  setExtensionsToInstall: Dispatch<SetStateAction<{ urls: string[]; dir: string } | undefined>>;
   /** Configures the ui details shown during a progress-bar state. */
   setProgressBarState: Dispatch<
     SetStateAction<{
       isIndeterminate: boolean;
       title?: string;
       percentage?: number;
-      description?: {label: string; value: string}[];
+      description?: { label: string; value: string }[];
     }>
   >;
 }
@@ -87,7 +87,7 @@ export function useStepper({
     async (url: string): ReturnType<InstallationStepper['cloneRepository']> => {
       return new Promise(resolve => {
         cloneResolver.current = resolve;
-        updateState({cloneUrl: url, body: 'clone'});
+        updateState({ cloneUrl: url, body: 'clone' });
       });
     },
     [cloneResolver, updateState],
@@ -95,7 +95,7 @@ export function useStepper({
 
   const showFinalStep = useCallback(
     (type: 'success' | 'error', title: string, description?: string) => {
-      updateState({doneAll: {type, title, description}, body: 'done'});
+      updateState({ doneAll: { type, title, description }, body: 'done' });
     },
     [updateState],
   );
@@ -109,7 +109,7 @@ export function useStepper({
         };
 
         terminalResolver.current = resolve;
-        updateState(prev => ({body: 'terminal', terminalKey: prev.terminalKey + 1}));
+        updateState(prev => ({ body: 'terminal', terminalKey: prev.terminalKey + 1 }));
         ptyIpc.customProcess(cardId, dir, file);
       });
     },
@@ -125,7 +125,7 @@ export function useStepper({
         };
 
         terminalResolver.current = resolve;
-        updateState(prev => ({body: 'terminal', terminalKey: prev.terminalKey + 1}));
+        updateState(prev => ({ body: 'terminal', terminalKey: prev.terminalKey + 1 }));
         ptyIpc.customCommands(cardId, commands, dir);
       });
     },
@@ -136,7 +136,7 @@ export function useStepper({
     async (options?: StarterStepOptions): Promise<InstallationMethod> => {
       return new Promise(resolve => {
         starterResolver.current = resolve;
-        updateState({body: 'starter', disableSelectDir: options?.disableSelectDir});
+        updateState({ body: 'starter', disableSelectDir: options?.disableSelectDir });
       });
     },
     [starterResolver, updateState],
@@ -145,10 +145,10 @@ export function useStepper({
   const collectUserInput = useCallback(
     (elements: UserInputField[], title?: string): Promise<UserInputResult[]> => {
       return new Promise(resolve => {
-        eventUtil_CollectUserInputs(cardId, extensionUserInput => {
+        collectExtensionUserInputs(cardId, extensionUserInput => {
           userInputResolver.current = resolve;
-          setUserInputElements({elements, title});
-          updateState({body: 'user-input', extensionUserInput});
+          setUserInputElements({ elements, title });
+          updateState({ body: 'user-input', extensionUserInput });
         });
       });
     },
@@ -159,8 +159,8 @@ export function useStepper({
     (extensionURLs: string[], extensionsDir: string): Promise<void> => {
       return new Promise(resolve => {
         extensionsResolver.current = resolve;
-        setExtensionsToInstall({urls: extensionURLs, dir: extensionsDir});
-        updateState({body: 'install-extensions'});
+        setExtensionsToInstall({ urls: extensionURLs, dir: extensionsDir });
+        updateState({ body: 'install-extensions' });
       });
     },
     [extensionsResolver, setExtensionsToInstall, updateState],
@@ -176,8 +176,8 @@ export function useStepper({
         value: string;
       }[],
     ) => {
-      updateState({body: 'progress-bar'});
-      setProgressBarState({title, isIndeterminate, percentage, description});
+      updateState({ body: 'progress-bar' });
+      setProgressBarState({ title, isIndeterminate, percentage, description });
     },
     [setProgressBarState, updateState],
   );
@@ -195,7 +195,7 @@ export function useStepper({
 
   const checkForUpdate = useCallback(
     (dir: string | undefined) => {
-      moduleIpc.cardUpdateAvailable({dir, id: cardId}, updateType).then((isAvailable: boolean) => {
+      moduleIpc.cardUpdateAvailable({ dir, id: cardId }, updateType).then((isAvailable: boolean) => {
         if (isAvailable) dispatch(cardsActions.addUpdateAvailable(cardId));
       });
     },
