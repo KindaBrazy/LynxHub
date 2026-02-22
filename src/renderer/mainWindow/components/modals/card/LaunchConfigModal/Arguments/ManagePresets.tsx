@@ -13,7 +13,7 @@ import {ChosenArgumentsData} from '@lynx_common/types';
 import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
-import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
+import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
 
 import {convertArrToObject} from '../../../../../utils';
 
@@ -23,89 +23,94 @@ type Props = {
   chosenArguments: ChosenArgumentsData;
 };
 
-type Preset = {
-  name: string;
-};
-
-/** PresetsManager component for managing and switching between multiple presets for arguments */
+/**
+ * PresetsManager component for managing and switching between multiple presets for arguments.
+ * Allows creating new presets, duplicating existing ones, and deleting presets.
+ */
 export default function PresetsManager({chosenArguments, presets, setChosenArguments}: Props) {
   const [inputValue, setInputValue] = useState<string>('');
-  const [inputErrorMessage, setInputErrorMessage] = useState<string>('');
   const [createIsOpen, setCreateIsOpen] = useState<boolean>(false);
-  const [selectedKey, setSelectedKey] = useState<Selection>(new Set([]));
 
-  useEffect(() => {
-    setInputValue('');
-  }, [createIsOpen]);
-
-  useEffect(() => {
+  // Derive error message directly from input value and existing presets
+  const inputErrorMessage = useMemo(() => {
+    if (!createIsOpen) return '';
+    if (isEmpty(inputValue)) return 'Please enter preset name!';
     if (chosenArguments.data.some(data => data.preset === inputValue)) {
-      setInputErrorMessage('The chosen name already exists!');
-    } else if (isEmpty(inputValue)) {
-      setInputErrorMessage('Please enter preset name!');
-    } else {
-      setInputErrorMessage('');
+      return 'The chosen name already exists!';
     }
-  }, [inputValue]);
+    return '';
+  }, [inputValue, chosenArguments.data, createIsOpen]);
 
-  useEffect(() => {
-    if (selectedKey !== 'all' && !selectedKey.has(chosenArguments.activePreset)) {
-      setSelectedKey(new Set([chosenArguments.activePreset]));
-    }
-  }, [chosenArguments, selectedKey]);
+  const isInputValid = isEmpty(inputErrorMessage) && !isEmpty(inputValue);
+
+  // Sync selected key with active preset
+  const selectedKey = useMemo(
+    () => new Set([chosenArguments.activePreset]),
+    [chosenArguments.activePreset]
+  );
 
   const deletePreset = useCallback(
     (name: string) => {
       setChosenArguments(prevState => {
         const newData = prevState.data.filter(data => data.preset !== name);
+        // If we deleted the active preset, switch to the previous one or the first one
         if (prevState.activePreset === name) {
           const dataIndex = prevState.data.findIndex(data => data.preset === name);
-          const activePreset = newData[dataIndex === 0 ? 0 : dataIndex - 1]?.preset || '';
-          return {activePreset, data: newData};
+          const newActivePreset = newData[dataIndex === 0 ? 0 : dataIndex - 1]?.preset || '';
+          return {activePreset: newActivePreset, data: newData};
         }
         return {...prevState, data: newData};
       });
     },
-    [setChosenArguments],
+    [setChosenArguments]
   );
 
   const changeActivePreset = useCallback(
     (keys: Selection) => {
       if (keys !== 'all') {
         const activePreset = keys.values().next().value?.toString();
-        setChosenArguments(prevState => (activePreset ? {...prevState, activePreset} : {...prevState}));
+        if (activePreset) {
+          setChosenArguments(prevState => ({...prevState, activePreset}));
+        }
       }
     },
-    [setChosenArguments],
+    [setChosenArguments]
   );
 
-  const createNew = useCallback(() => {
+  const handleCreateNew = useCallback(() => {
+    if (!isInputValid) return;
+
+    setChosenArguments(prevState => ({
+      activePreset: inputValue,
+      data: [...prevState.data, {arguments: [], preset: inputValue}],
+    }));
+    setCreateIsOpen(false);
+    setInputValue('');
+  }, [inputValue, isInputValid, setChosenArguments]);
+
+  const handleDuplicateExisting = useCallback(() => {
+    if (!isInputValid) return;
+
     setChosenArguments(prevState => {
-      return {activePreset: inputValue, data: [...prevState.data, {arguments: [], preset: inputValue}]};
+      const existingArgs =
+        prevState.data.find(data => data.preset === prevState.activePreset)?.arguments || [];
+      return {
+        activePreset: inputValue,
+        data: [...prevState.data, {arguments: existingArgs, preset: inputValue}],
+      };
     });
     setCreateIsOpen(false);
-  }, [inputValue]);
+    setInputValue('');
+  }, [inputValue, isInputValid, setChosenArguments]);
 
-  const duplicateExisting = useCallback(() => {
-    if (selectedKey !== 'all') {
-      setChosenArguments((prevState: ChosenArgumentsData): ChosenArgumentsData => {
-        const selectedValue = selectedKey.values().next().value;
-        const existing = prevState.data.find(data => data.preset === selectedValue)?.arguments || [];
-        return {
-          activePreset: inputValue,
-          data: [...prevState.data, {arguments: existing, preset: inputValue}],
-        };
-      });
-      setCreateIsOpen(false);
-    }
-  }, [selectedKey, inputValue]);
-
-  const sectionItems: Preset[] = useMemo(() => convertArrToObject(presets), [presets]);
-
-  const isInputValid = isEmpty(inputErrorMessage);
+  const sectionItems = useMemo(() => convertArrToObject(presets), [presets]);
 
   return (
-    <motion.div animate={{opacity: 1}} initial={{opacity: 0}} className="flex flex-row space-x-2 items-end">
+    <motion.div
+      animate={{opacity: 1}}
+      initial={{opacity: 0}}
+      className="flex flex-row space-x-2 items-end"
+    >
       {!isEmpty(sectionItems) && (
         <Select
           label="Preset:"
@@ -115,22 +120,30 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
           selectedKeys={selectedKey}
           labelPlacement="outside-left"
           onSelectionChange={changeActivePreset}
-          disallowEmptySelection>
+          disallowEmptySelection
+          classNames={{
+            trigger: 'min-w-[150px]',
+          }}
+        >
           {item => (
             <SelectItem
+              key={item.name}
               endContent={
                 item.name !== 'Default' && (
                   <button
-                    className={
-                      'rounded-sm transition-all duration-300 hover:bg-danger/30 size-[1.4rem] flex ' +
-                      'items-center justify-center cursor-pointer'
-                    }
-                    onClick={() => deletePreset(item.name)}>
-                    <TrashBin2 className="text-danger" />
+                    className="rounded-sm transition-all duration-300 hover:bg-danger/30 size-[1.4rem] flex items-center justify-center cursor-pointer text-danger"
+                    onClick={e => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      deletePreset(item.name);
+                    }}
+                    aria-label={`Delete ${item.name} preset`}
+                  >
+                    <TrashBin2 size={16} />
                   </button>
                 )
               }
-              key={item.name}>
+            >
               {item.name}
             </SelectItem>
           )}
@@ -139,29 +152,39 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
       <Popover
         size="sm"
         placement="bottom"
-        title="New Preset"
         isOpen={createIsOpen}
-        onOpenChange={setCreateIsOpen}
+        onOpenChange={isOpen => {
+          setCreateIsOpen(isOpen);
+          if (!isOpen) setInputValue('');
+        }}
         classNames={{content: 'border border-foreground/5'}}
-        showArrow>
+        showArrow
+      >
         <PopoverTrigger>
           <Button variant="flat">New</Button>
         </PopoverTrigger>
-        <PopoverContent className="gap-y-2 p-4 items-start">
+        <PopoverContent className="gap-y-2 p-4 items-start w-[250px]">
+          <h4 className="font-bold text-small">New Preset</h4>
           <Input
             onKeyUp={e => {
-              if (e.key === 'Enter') createNew();
+              if (e.key === 'Enter') handleCreateNew();
             }}
             size="sm"
             spellCheck="false"
             label="Preset Name"
-            isInvalid={!isInputValid}
+            isInvalid={!!inputErrorMessage && !isEmpty(inputValue)}
             onValueChange={setInputValue}
             errorMessage={inputErrorMessage}
+            value={inputValue}
+            autoFocus
           />
-          <ButtonGroup size="sm" variant="flat" isDisabled={!isInputValid}>
-            <Button onPress={createNew}>Create</Button>
-            <Button onPress={duplicateExisting}>Duplicate Active</Button>
+          <ButtonGroup size="sm" variant="flat" isDisabled={!isInputValid} className="w-full">
+            <Button onPress={handleCreateNew} className="flex-1">
+              Create
+            </Button>
+            <Button onPress={handleDuplicateExisting} className="flex-1">
+              Duplicate
+            </Button>
           </ButtonGroup>
         </PopoverContent>
       </Popover>

@@ -1,15 +1,15 @@
 import {useDisclosure} from '@heroui/react';
-import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_common/types';
+import {ChosenArgumentsData} from '@lynx_common/types';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {motion} from 'framer-motion';
-import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import {Dispatch, SetStateAction, useEffect, useMemo, useState} from 'react';
 
 import {getCardMethod, useAllCardMethods} from '../../../../../plugins/modules';
 import {tabContentVariants} from '../../ExtensionsModal/Constants';
-import AddArguments from './Add';
-import ManageArguments from './Manage';
-import PresetsManager from './ManagePresets';
-import PreviewArguments from './Preview';
+import AddArgumentModal from './Add';
+import ArgumentsList from './Manage';
+import PresetSelector from './ManagePresets';
+import ArgumentsPreview from './Preview';
 
 type Props = {
   setChosenArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;
@@ -18,15 +18,17 @@ type Props = {
   tabId: string;
 };
 
-/** Manage card arguments: add, edit, or remove */
-export default function CardArguments({chosenArguments, setChosenArguments, id, tabId}: Props) {
-  const [activePreset, setActivePreset] = useState<ArgumentsPresets>({arguments: [], preset: ''});
-  const [presets, setPresets] = useState<string[]>([]);
+/**
+ * Manage card arguments: add, edit, or remove.
+ * Orchestrates presets, argument list, adding new arguments, and preview.
+ */
+export default function ArgumentsManager({chosenArguments, setChosenArguments, id, tabId}: Props) {
   const [previewText, setPreviewText] = useState<string>('');
 
   const addArgumentsModal = useDisclosure();
   const allMethods = useAllCardMethods();
 
+  // Load initial arguments
   useEffect(() => {
     storageUtilsIpc.invoke
       .getCardArguments(id)
@@ -34,40 +36,57 @@ export default function CardArguments({chosenArguments, setChosenArguments, id, 
         setChosenArguments(result);
       })
       .catch(e => {
-        console.log(`Failed get card arguments for ${id}: `, e);
+        console.error(`Failed get card arguments for ${id}: `, e);
       });
-  }, []);
+  }, [id, setChosenArguments]);
 
-  useEffect(() => {
-    const getParsedArgs = getCardMethod(allMethods, id, 'parseArgsToString');
-    if (getParsedArgs) setPreviewText(getParsedArgs(activePreset.arguments));
-  }, [activePreset, id, allMethods]);
-
-  useEffect(() => {
-    setPresets(chosenArguments.data.map(arg => arg.preset));
-
-    setActivePreset({
-      ...(chosenArguments.data.find(data => data.preset === chosenArguments.activePreset) || {
+  // Derive active preset from chosenArguments
+  const activePreset = useMemo(
+    () =>
+      chosenArguments.data.find(data => data.preset === chosenArguments.activePreset) || {
         arguments: [],
         preset: 'Default',
-      }),
-    });
-  }, [chosenArguments]);
+      },
+    [chosenArguments.data, chosenArguments.activePreset]
+  );
+
+  // Derive presets list
+  const presets = useMemo(
+    () => chosenArguments.data.map(arg => arg.preset),
+    [chosenArguments.data]
+  );
+
+  // Update preview text when arguments or method changes
+  useEffect(() => {
+    const getParsedArgs = getCardMethod(allMethods, id, 'parseArgsToString');
+    if (getParsedArgs) {
+      setPreviewText(getParsedArgs(activePreset.arguments));
+    }
+  }, [activePreset.arguments, id, allMethods]);
 
   return (
-    <motion.div initial="init" animate="animate" className="space-y-5" variants={tabContentVariants}>
-      <PresetsManager presets={presets} chosenArguments={chosenArguments} setChosenArguments={setChosenArguments} />
-      <ManageArguments
+    <motion.div
+      initial="init"
+      animate="animate"
+      className="space-y-5"
+      variants={tabContentVariants}
+    >
+      <PresetSelector
+        presets={presets}
+        chosenArguments={chosenArguments}
+        setChosenArguments={setChosenArguments}
+      />
+      <ArgumentsList
         id={id}
         chosenArguments={activePreset}
         addArgumentsModal={addArgumentsModal}
         setChosenArguments={setChosenArguments}
       />
-      <PreviewArguments text={previewText} />
-      <AddArguments
+      <ArgumentsPreview text={previewText} />
+      <AddArgumentModal
         id={id}
         tabId={tabId}
-        chosenArguments={activePreset}
+        chosenArguments={chosenArguments}
         addArgumentsModal={addArgumentsModal}
         setChosenArguments={setChosenArguments}
       />
