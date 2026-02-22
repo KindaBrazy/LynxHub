@@ -1,5 +1,5 @@
-import {RefObject, useEffect, useRef, useState} from 'react';
-import {flushSync} from 'react-dom';
+import { RefObject, useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 
 // [!NOTE] Using https://github.com/MinhOmega/react-theme-switch-animation
 
@@ -22,9 +22,8 @@ const injectBaseStyles = () => {
           ${isHighResolution ? 'transform: translateZ(0);' : ''}
         }
         
-        ${
-          isHighResolution
-            ? `
+        ${isHighResolution
+          ? `
         ::view-transition-group(root),
         ::view-transition-image-pair(root),
         ::view-transition-old(root),
@@ -34,7 +33,7 @@ const injectBaseStyles = () => {
           transform: translate3d(0, 0, 0);
         }
         `
-            : ''
+          : ''
         }
       `;
       document.head.appendChild(style);
@@ -66,6 +65,10 @@ export interface ReactThemeSwitchAnimationProps {
   onDarkModeChange?: (isDark: boolean) => void;
 }
 
+/**
+ * Custom hook to handle theme switching with elegant view transition animations.
+ * Provides multiple animation styles like CIRCLE, BLUR_CIRCLE, and QR_SCAN.
+ */
 export default function useModeAnimation(props?: ReactThemeSwitchAnimationProps): ReactThemeSwitchAnimationHook {
   const {
     duration: propsDuration = 750,
@@ -135,7 +138,7 @@ export default function useModeAnimation(props?: ReactThemeSwitchAnimationProps)
       existingStyle.remove();
     }
 
-    const {top, left, width, height} = ref.current.getBoundingClientRect();
+    const { top, left, width, height } = ref.current.getBoundingClientRect();
     const x = left + width / 2;
     const y = top + height / 2;
 
@@ -166,18 +169,17 @@ export default function useModeAnimation(props?: ReactThemeSwitchAnimationProps)
       styleElement.textContent = `
         ::view-transition-group(root) {
           animation-duration: ${duration}ms;
-          animation-timing-function: ${
-            isHighResolution
-              ? 'cubic-bezier(0.2, 0, 0.2, 1)'
-              : 'linear(' +
-                '0 0%, 0.2342 12.49%, 0.4374 24.99%,' +
-                '0.6093 37.49%, 0.6835 43.74%,' +
-                '0.7499 49.99%, 0.8086 56.25%,' +
-                '0.8593 62.5%, 0.9023 68.75%, 0.9375 75%,' +
-                '0.9648 81.25%, 0.9844 87.5%,' +
-                '0.9961 93.75%, 1 100%' +
-                ')'
-          };
+          animation-timing-function: ${isHighResolution
+          ? 'cubic-bezier(0.2, 0, 0.2, 1)'
+          : 'linear(' +
+          '0 0%, 0.2342 12.49%, 0.4374 24.99%,' +
+          '0.6093 37.49%, 0.6835 43.74%,' +
+          '0.7499 49.99%, 0.8086 56.25%,' +
+          '0.8593 62.5%, 0.9023 68.75%, 0.9375 75%,' +
+          '0.9648 81.25%, 0.9844 87.5%,' +
+          '0.9961 93.75%, 1 100%' +
+          ')'
+        };
           will-change: transform;
         }
 

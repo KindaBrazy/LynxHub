@@ -1,14 +1,19 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {onBreadcrumbStateChange} from '@lynx_shared/sentry/Breadcrumbs';
-import {useCallback, useEffect, useState} from 'react';
+import { onBreadcrumbStateChange } from '@lynx_shared/sentry/Breadcrumbs';
+import { useCallback, useEffect, useState } from 'react';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
+/**
+ * Component to toggle anonymous error reporting and user interaction breadcrumbs.
+ * Saves settings directly to storage via IPC.
+ */
 export default function CollectErrors() {
   const [collectErrors, setCollectErrors] = useState<boolean>(true);
   const [addBreadcrumbs, setAddBreadcrumbs] = useState<boolean>(true);
 
+  // Fetch initial state from storage
   useEffect(() => {
     storageIpc.get('app').then(result => {
       setCollectErrors(result.collectErrors);
@@ -17,21 +22,23 @@ export default function CollectErrors() {
   }, []);
 
   const onBreadcrumbChange = useCallback((selected: boolean) => {
-    storageIpc.update('app', {addBreadcrumbs: selected});
+    storageIpc.update('app', { addBreadcrumbs: selected });
     setAddBreadcrumbs(selected);
     onBreadcrumbStateChange(selected);
   }, []);
 
-  useEffect(() => {
-    if (!collectErrors && addBreadcrumbs) {
-      onBreadcrumbChange(false);
-    }
-  }, [addBreadcrumbs, collectErrors]);
+  const onErrorChange = useCallback(
+    (selected: boolean) => {
+      storageIpc.update('app', { collectErrors: selected });
+      setCollectErrors(selected);
 
-  const onErrorChange = useCallback((selected: boolean) => {
-    storageIpc.update('app', {collectErrors: selected});
-    setCollectErrors(selected);
-  }, []);
+      // If disabling error collection, turn off breadcrumbs automatically
+      if (!selected && addBreadcrumbs) {
+        onBreadcrumbChange(false);
+      }
+    },
+    [addBreadcrumbs, onBreadcrumbChange],
+  );
 
   return (
     <>
