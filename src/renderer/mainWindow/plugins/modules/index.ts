@@ -1,5 +1,5 @@
-import {searchInStrings} from '@lynx/utils';
-import {AvailablePageIDs} from '@lynx_common/consts';
+import { searchInStrings } from '@lynx/utils';
+import { AvailablePageIDs } from '@lynx_common/consts';
 import {
   ArgumentsData,
   CardData,
@@ -10,14 +10,22 @@ import {
   LoadedMethods,
   RendererModuleImportType,
 } from '@lynx_common/types/plugins/modules';
-import {extractGitUrl, isDev} from '@lynx_common/utils';
+import { extractGitUrl, isDev } from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {captureException} from '@sentry/electron/renderer';
-import {compact} from 'lodash';
-import {useSyncExternalStore} from 'react';
+import { captureException } from '@sentry/electron/renderer';
+import { compact } from 'lodash';
+import { useSyncExternalStore } from 'react';
 
-type CardSearchData = {id: string; data: string[]}[];
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+/** Flat list of pre-extracted search tokens per card, used for fast text search. */
+type CardSearchIndex = { id: string; tokens: string[] }[];
+
+// ─── Module-level State ───────────────────────────────────────────────────────
+// All state lives at module scope so it persists across React render cycles
+// and can be shared freely between hooks (via useSyncExternalStore) and
+// imperative mutation functions (duplicateCard, removeDuplicatedCard, etc.).
 
 let allModules: CardModules = [];
 let allCards: CardData[] = [];
@@ -25,309 +33,409 @@ let allCards: CardData[] = [];
 let allCardDataWithPath: LoadedCardData[] = [];
 let allCardArguments: LoadedArguments[] = [];
 let allCardMethods: LoadedMethods[] = [];
-let allCardSearchData: CardSearchData = [];
+let cardSearchIndex: CardSearchIndex = [];
+
+/**
+ * Set of card IDs that have arguments defined.
+ * Kept as a `Set` for O(1) membership checks in render-hot paths.
+ */
 let hasArguments: Set<string> = new Set([]);
 
-const listeners = new Set<() => void>();
+// ─── External Store Subscribe/Notify ─────────────────────────────────────────
+// React's `useSyncExternalStore` requires a stable `subscribe` function and
+// a way to notify all subscribers when state changes. We implement this with
+// a simple listener Set — whenever module-level state mutates, `notifyListeners`
+// iterates and calls every registered callback.
 
+const changeListeners = new Set<() => void>();
+
+/** Registers a React subscriber; returns the cleanup (unsubscribe) function. */
 function subscribe(listener: () => void) {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
+  changeListeners.add(listener);
+  return () => changeListeners.delete(listener);
 }
 
-function emitChange() {
-  for (const listener of listeners) {
+/** Notifies all `useSyncExternalStore` subscribers that state has changed. */
+function notifyListeners() {
+  for (const listener of changeListeners) {
     listener();
   }
 }
 
+// ─── React Hooks (useSyncExternalStore wrappers) ──────────────────────────────
+// Each hook subscribes to the shared module-level state via `useSyncExternalStore`.
+// This gives React a way to schedule re-renders whenever `notifyListeners` fires
+// after a mutation (e.g. after loadModules or duplicateCard completes).
+
+/** @returns All loaded module groups (grouped by page route). */
 const useAllModules = (): CardModules => useSyncExternalStore(subscribe, () => allModules);
 
+/** @returns All loaded cards with their associated route path. */
 const useAllCardDataWithPath = (): LoadedCardData[] => useSyncExternalStore(subscribe, () => allCardDataWithPath);
+
+/** @returns All loaded card argument definitions. */
 const useAllCardArguments = (): LoadedArguments[] => useSyncExternalStore(subscribe, () => allCardArguments);
+
+/** @returns All loaded card renderer methods. */
 const useAllCardMethods = (): LoadedMethods[] => useSyncExternalStore(subscribe, () => allCardMethods);
-const useAllCardSearchData = (): CardSearchData => useSyncExternalStore(subscribe, () => allCardSearchData);
+
+/** @internal Used by `useSearchCards` to reactively access the search index. */
+const useCardSearchIndex = (): CardSearchIndex => useSyncExternalStore(subscribe, () => cardSearchIndex);
+
+/** @returns The set of card IDs that have arguments configured. */
 const useHasArguments = (): Set<string> => useSyncExternalStore(subscribe, () => hasArguments);
 
-const splitCardData = (card: CardData, routePath: AvailablePageIDs, originalId: string) => {
-  const {arguments: args, methods, ...restOfCard} = card;
-
-  const originalIndex = allCardDataWithPath.findIndex(c => c.id === originalId);
-
-  if (originalIndex !== -1) {
-    allCardDataWithPath = [
-      ...allCardDataWithPath.slice(0, originalIndex + 1),
-      {...restOfCard, routePath},
-      ...allCardDataWithPath.slice(originalIndex + 1),
-    ];
-
-    allCardArguments = [
-      ...allCardArguments.slice(0, originalIndex + 1),
-      {id: card.id, arguments: args},
-      ...allCardArguments.slice(originalIndex + 1),
-    ];
-
-    allCardMethods = [
-      ...allCardMethods.slice(0, originalIndex + 1),
-      {id: card.id, methods},
-      ...allCardMethods.slice(originalIndex + 1),
-    ];
-
-    allCardSearchData = [
-      ...allCardSearchData.slice(0, originalIndex + 1),
-      {
-        id: card.id,
-        data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
-      },
-      ...allCardSearchData.slice(originalIndex + 1),
-    ];
-  } else {
-    // If original card is not found, add the new data to the end of a new array
-    allCardDataWithPath = [...allCardDataWithPath, {...restOfCard, routePath}];
-    allCardArguments = [...allCardArguments, {id: card.id, arguments: args}];
-    allCardMethods = [...allCardMethods, {id: card.id, methods}];
-    allCardSearchData = [
-      ...allCardSearchData,
-      {
-        id: card.id,
-        data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
-      },
-    ];
-  }
-
-  if (args) hasArguments.add(card.id);
-};
+// ─── Derived / Selector Hooks ─────────────────────────────────────────────────
 
 /**
- * Retrieves the arguments for a specific card.
- * @param id The ID of the card.
- * @returns The arguments data or undefined if not found.
+ * Returns the argument definitions for a given card ID.
+ *
+ * @param id - The unique card ID to look up.
+ * @returns The card's `ArgumentsData`, or `undefined` if it has none.
  */
 const useGetArgumentsByID = (id: string): ArgumentsData | undefined =>
   useAllCardArguments().find(card => card.id === id)?.arguments;
 
+/**
+ * Searches all loaded cards by title, description, and repository owner/name.
+ *
+ * @param searchValue - The user-entered search string.
+ * @returns Cards whose search tokens match the given value.
+ */
 const useSearchCards = (searchValue: string) => {
-  const searchData = useAllCardSearchData();
-  return allCardDataWithPath.filter(card =>
-    searchInStrings(searchValue, searchData.find(data => data.id === card.id)?.data),
-  );
+  const index = useCardSearchIndex();
+  return allCardDataWithPath.filter(card => searchInStrings(searchValue, index.find(entry => entry.id === card.id)?.tokens));
 };
 
 /**
- * Retrieves all cards associated with a specific path.
- * @param path The path to filter cards by.
- * @returns An array of cards or undefined if no module matches the path.
+ * Returns all cards that belong to the given page route.
+ *
+ * @param path - The page identifier (e.g. `'imageGen_page'`).
+ * @returns Filtered array of `LoadedCardData` for that route.
  */
 const useGetCardsByPath = (path: AvailablePageIDs): LoadedCardData[] =>
-  useAllCardDataWithPath().filter(module => module.routePath === path);
+  useAllCardDataWithPath().filter(card => card.routePath === path);
 
-const hasCardsByPath = (path: AvailablePageIDs | string): boolean => {
-  return allCardDataWithPath.some(card => card.routePath === path);
-};
+/**
+ * Non-reactive check for whether any cards exist on a given route.
+ * Use this in non-React contexts (e.g. at nav-bar initialization time).
+ *
+ * @param path - The page identifier to check.
+ * @returns `true` if at least one card is registered on that route.
+ */
+const hasCardsByPath = (path: AvailablePageIDs | string): boolean =>
+  allCardDataWithPath.some(card => card.routePath === path);
 
+/**
+ * Retrieves a specific renderer method from a card's method collection.
+ *
+ * @param cardMethods - The full list of loaded card methods.
+ * @param id - The card ID to look up.
+ * @param method - The method name to retrieve.
+ * @returns The typed method, or `undefined` if not present.
+ */
 const getCardMethod = <T extends keyof CardRendererMethods>(
   cardMethods: LoadedMethods[],
   id: string,
   method: T,
-): CardRendererMethods[T] | undefined => {
-  return cardMethods.find(card => card.id === id)?.methods?.[method] as CardRendererMethods[T] | undefined;
-};
-
-const useGetInstallType = (id: string) =>
-  useAllCardDataWithPath().find(card => card.id === id)?.installationType || 'others';
-const useGetUninstallType = (id: string) =>
-  useAllCardDataWithPath().find(card => card.id === id)?.uninstallType || 'removeFolder';
+): CardRendererMethods[T] | undefined => cardMethods.find(card => card.id === id)?.methods?.[method] as CardRendererMethods[T] | undefined;
 
 /**
- * Duplicate a card
+ * Returns the installation type for a card.
+ * Defaults to `'others'` if the card is not found or has no install type set.
+ *
+ * @param id - The card ID.
  */
-const duplicateCard = (id: string, defaultID?: string, defaultTitle?: string) => {
-  let newId: string = '';
-  let newTitle: string = '';
-  let routePath: AvailablePageIDs = 'imageGen_page';
+const useGetInstallType = (id: string) =>
+  useAllCardDataWithPath().find(card => card.id === id)?.installationType ?? 'others';
 
-  // Function to generate the next ID
-  const generateNewId = (baseId: string): string => {
-    let counter = 2;
-    let newId = `${baseId}_${counter}`;
+/**
+ * Returns the uninstall type for a card.
+ * Defaults to `'removeFolder'` if the card is not found or has no uninstall type set.
+ *
+ * @param id - The card ID.
+ */
+const useGetUninstallType = (id: string) =>
+  useAllCardDataWithPath().find(card => card.id === id)?.uninstallType ?? 'removeFolder';
 
-    while (allCards.some(card => card.id === newId)) {
-      counter++;
-      newId = `${baseId}_${counter}`;
-    }
+// ─── Internal Helpers ─────────────────────────────────────────────────────────
 
-    return newId;
-  };
-
-  const generateNewTitle = (ogTitle: string) => {
-    let counter = 2;
-    let newTitle = `${ogTitle} (${counter})`;
-
-    while (allCards.some(card => card.title === newTitle)) {
-      counter++;
-      newTitle = `${ogTitle} (${counter})`;
-    }
-
-    return newTitle;
-  };
-
-  // Use find and map together for efficiency
-  let duplicatedCard: CardData | undefined;
-  const updatedModules = allModules.map(page => {
-    const cardIndex = page.cards.findIndex(card => card.id === id);
-    if (cardIndex === -1) {
-      return page; // Card not found in this page
-    }
-
-    // Card found, duplicate and add to the page
-    const originalCard = page.cards[cardIndex];
-    newId = defaultID || generateNewId(originalCard.id);
-    newTitle = defaultTitle || generateNewTitle(originalCard.title);
-    duplicatedCard = {...originalCard, id: newId, title: newTitle}; // Add new title
-    const updatedCards = [...page.cards];
-    updatedCards.splice(cardIndex + 1, 0, duplicatedCard);
-
-    routePath = page.routePath;
-
-    return {...page, cards: updatedCards};
-  });
-
-  if (!duplicatedCard) {
-    return undefined; // Card not found at all
-  }
-
-  allModules = updatedModules;
-  allCards = [...allCards, duplicatedCard];
-
-  splitCardData(duplicatedCard, routePath, id);
-
-  emitChange();
-
-  console.log('duplicated');
-
-  return {id: newId, title: newTitle, routePath};
-};
-
-const removeDuplicatedCard = (id: string) => {
-  let cardRemoved = false;
-
-  // Remove from allModules
-  const updatedModules = allModules.map(page => {
-    const cardIndex = page.cards.findIndex(card => card.id === id);
-    if (cardIndex === -1) {
-      return page; // Card not found in this page
-    }
-
-    cardRemoved = true;
-    const updatedCards = [...page.cards];
-    updatedCards.splice(cardIndex, 1);
-
-    return {...page, cards: updatedCards};
-  });
-
-  // Remove from allCards
-  const initialAllCardsLength = allCards.length;
-  allCards = allCards.filter(card => card.id !== id);
-  if (allCards.length !== initialAllCardsLength) {
-    cardRemoved = true;
-  }
-
-  if (cardRemoved) {
-    allModules = updatedModules;
-    allCardDataWithPath = allCardDataWithPath.filter(card => card.id !== id);
-    hasArguments.delete(id);
-    allCardArguments = allCardArguments.filter(arg => arg.id !== id);
-    allCardMethods = allCardMethods.filter(method => method.id !== id);
-    allCardSearchData = allCardSearchData.filter(card => card.id !== id);
-    emitChange();
-  }
-};
-
-async function emitLoaded(
-  _newAllModules: CardModules,
-  _newAllCards: CardData[],
-  _newCardDataWithPath: LoadedCardData[],
-  _newCardArguments: LoadedArguments[],
-  _newCardMethods: LoadedMethods[],
-  _newCardSearchData: CardSearchData,
-) {
-  const {duplicated} = await storageIpc.get('cards');
-
-  allModules = _newAllModules;
-  allCards = _newAllCards;
-  allCardDataWithPath = _newCardDataWithPath;
-  allCardArguments = _newCardArguments;
-  hasArguments = new Set(_newCardArguments.filter(arg => !!arg.arguments).map(item => item.id));
-  allCardMethods = _newCardMethods;
-  allCardSearchData = _newCardSearchData;
-
-  duplicated.forEach(item => duplicateCard(item.ogID, item.id, item.title));
-
-  emitChange();
+/**
+ * Builds the search token array for a single card.
+ * Tokens include: description, title, repo owner, and repo name.
+ */
+function buildCardSearchTokens(card: CardData): string[] {
+  const { owner, repo } = extractGitUrl(card.repoUrl);
+  return [card.description, card.title, owner, repo];
 }
 
 /**
- * Loads all modules and their associated cards.
- * This function fetches module data, imports the corresponding modules,
- * and sets the `allModules` and `allCards` variables.
- * Disabled cards are filtered out based on user configuration.
+ * Inserts or appends the derived data for a single card (path info, arguments,
+ * methods, search tokens) into the four parallel arrays.
+ *
+ * When inserting a **duplicate** card, it is placed immediately after its
+ * original in every array so that UI ordering stays consistent.
+ *
+ * @param card - The card whose data to insert.
+ * @param routePath - The page route the card belongs to.
+ * @param originalCardId - ID of the card this was duplicated from (used to
+ *   determine insertion position). Pass the card's own `id` for non-duplicates.
+ */
+function insertCardData(card: CardData, routePath: AvailablePageIDs, originalCardId: string) {
+  const { arguments: args, methods, ...cardWithoutInternals } = card;
+
+  const insertAfterIndex = allCardDataWithPath.findIndex(c => c.id === originalCardId);
+
+  if (insertAfterIndex !== -1) {
+    // Insert immediately after the original card in every parallel array.
+    const pos = insertAfterIndex + 1;
+
+    allCardDataWithPath = [
+      ...allCardDataWithPath.slice(0, pos),
+      { ...cardWithoutInternals, routePath },
+      ...allCardDataWithPath.slice(pos),
+    ];
+    allCardArguments = [
+      ...allCardArguments.slice(0, pos),
+      { id: card.id, arguments: args },
+      ...allCardArguments.slice(pos),
+    ];
+    allCardMethods = [
+      ...allCardMethods.slice(0, pos),
+      { id: card.id, methods },
+      ...allCardMethods.slice(pos),
+    ];
+    cardSearchIndex = [
+      ...cardSearchIndex.slice(0, pos),
+      { id: card.id, tokens: buildCardSearchTokens(card) },
+      ...cardSearchIndex.slice(pos),
+    ];
+  } else {
+    // Original not found — append to the end of every array.
+    allCardDataWithPath = [...allCardDataWithPath, { ...cardWithoutInternals, routePath }];
+    allCardArguments = [...allCardArguments, { id: card.id, arguments: args }];
+    allCardMethods = [...allCardMethods, { id: card.id, methods }];
+    cardSearchIndex = [...cardSearchIndex, { id: card.id, tokens: buildCardSearchTokens(card) }];
+  }
+
+  if (args) hasArguments.add(card.id);
+}
+
+// ─── Card Duplication ─────────────────────────────────────────────────────────
+
+/**
+ * Generates the next available unique ID for a duplicated card.
+ * Appends `_2`, `_3`, etc. until a non-colliding ID is found.
+ */
+function generateUniqueCardId(baseId: string): string {
+  let counter = 2;
+  let candidate = `${baseId}_${counter}`;
+  while (allCards.some(card => card.id === candidate)) {
+    candidate = `${baseId}_${++counter}`;
+  }
+  return candidate;
+}
+
+/**
+ * Generates the next available unique title for a duplicated card.
+ * Appends ` (2)`, ` (3)`, etc. until a non-colliding title is found.
+ */
+function generateUniqueCardTitle(originalTitle: string): string {
+  let counter = 2;
+  let candidate = `${originalTitle} (${counter})`;
+  while (allCards.some(card => card.title === candidate)) {
+    candidate = `${originalTitle} (${++counter})`;
+  }
+  return candidate;
+}
+
+/**
+ * Creates a copy of an existing card and inserts it immediately after the
+ * original across all module-level state arrays.
+ *
+ * @param originalId - The ID of the card to duplicate.
+ * @param overrideId - Optional explicit ID for the new card (used when
+ *   restoring a duplication from persisted storage).
+ * @param overrideTitle - Optional explicit title for the new card.
+ * @returns An object `{id, title, routePath}` describing the new card,
+ *   or `undefined` if `originalId` was not found.
+ */
+const duplicateCard = (
+  originalId: string,
+  overrideId?: string,
+  overrideTitle?: string,
+): { id: string; title: string; routePath: AvailablePageIDs } | undefined => {
+  let newId = '';
+  let newTitle = '';
+  let routePath: AvailablePageIDs = 'imageGen_page';
+  let duplicatedCard: CardData | undefined;
+
+  const updatedModules = allModules.map(page => {
+    const cardIndex = page.cards.findIndex(card => card.id === originalId);
+    if (cardIndex === -1) return page;
+
+    const originalCard = page.cards[cardIndex];
+    newId = overrideId ?? generateUniqueCardId(originalCard.id);
+    newTitle = overrideTitle ?? generateUniqueCardTitle(originalCard.title);
+    routePath = page.routePath;
+
+    duplicatedCard = { ...originalCard, id: newId, title: newTitle };
+    const updatedCards = [...page.cards];
+    updatedCards.splice(cardIndex + 1, 0, duplicatedCard);
+
+    return { ...page, cards: updatedCards };
+  });
+
+  if (!duplicatedCard) return undefined;
+
+  allModules = updatedModules;
+  allCards = [...allCards, duplicatedCard];
+  insertCardData(duplicatedCard, routePath, originalId);
+  notifyListeners();
+
+  return { id: newId, title: newTitle, routePath };
+};
+
+/**
+ * Removes a previously duplicated card from all module-level state arrays.
+ * Does nothing and emits no change if the card ID is not found.
+ *
+ * @param id - The ID of the duplicated card to remove.
+ */
+const removeDuplicatedCard = (id: string) => {
+  let cardWasFound = false;
+
+  const updatedModules = allModules.map(page => {
+    const cardIndex = page.cards.findIndex(card => card.id === id);
+    if (cardIndex === -1) return page;
+
+    cardWasFound = true;
+    const updatedCards = [...page.cards];
+    updatedCards.splice(cardIndex, 1);
+    return { ...page, cards: updatedCards };
+  });
+
+  const previousLength = allCards.length;
+  allCards = allCards.filter(card => card.id !== id);
+  if (allCards.length !== previousLength) cardWasFound = true;
+
+  if (!cardWasFound) return;
+
+  allModules = updatedModules;
+  allCardDataWithPath = allCardDataWithPath.filter(card => card.id !== id);
+  allCardArguments = allCardArguments.filter(arg => arg.id !== id);
+  allCardMethods = allCardMethods.filter(method => method.id !== id);
+  cardSearchIndex = cardSearchIndex.filter(entry => entry.id !== id);
+  hasArguments.delete(id);
+  notifyListeners();
+};
+
+// ─── State Commit ─────────────────────────────────────────────────────────────
+
+/**
+ * Atomically writes a freshly built set of module data into the module-level
+ * state, then replays any persisted card duplications before notifying React.
+ *
+ * **Why async?** It needs to fetch the `duplicated` list from storage via IPC
+ * before committing, ensuring duplicates are restored on every reload.
+ */
+async function commitModuleState(
+  newAllModules: CardModules,
+  newAllCards: CardData[],
+  newCardDataWithPath: LoadedCardData[],
+  newCardArguments: LoadedArguments[],
+  newCardMethods: LoadedMethods[],
+  newCardSearchIndex: CardSearchIndex,
+) {
+  const { duplicated } = await storageIpc.get('cards');
+
+  allModules = newAllModules;
+  allCards = newAllCards;
+  allCardDataWithPath = newCardDataWithPath;
+  allCardArguments = newCardArguments;
+  allCardMethods = newCardMethods;
+  cardSearchIndex = newCardSearchIndex;
+  // Rebuild the hasArguments Set from loaded data to clear any stale entries.
+  hasArguments = new Set(newCardArguments.filter(arg => !!arg.arguments).map(item => item.id));
+
+  // Restore previously duplicated cards (e.g. from a previous session).
+  duplicated.forEach(item => duplicateCard(item.ogID, item.id, item.title));
+
+  notifyListeners();
+}
+
+// ─── Module Loader ────────────────────────────────────────────────────────────
+
+/**
+ * Discovers, imports, and registers all plugin modules and their associated
+ * cards into the renderer's module-level state.
+ *
+ * **Dev mode**: Attempts a single import of the local `@lynx_module/renderer`
+ * alias. Skips silently if not configured.
+ *
+ * **Production mode**: Fetches plugin server addresses via IPC, filters to
+ * `module` type, then imports each module's renderer entry concurrently.
+ * Individual import failures are captured to Sentry and nulled out so the
+ * remaining modules can still load.
+ *
+ * After all imports resolve, cards are aggregated across modules (de-duplicated
+ * by ID and filtered against the user's disabled-cards list), then
+ * `commitModuleState` is called to write the result to module-level state and
+ * trigger a React re-render.
  */
 const loadModules = async () => {
   try {
-    let importedModules: ({path: string; module: RendererModuleImportType} | null)[];
+    let importedModules: ({ path: string; module: RendererModuleImportType } | null)[];
 
-    // Get disabled cards from storage
     const pluginStorage = await storageIpc.get('plugin');
-    const disabledCards = new Set(pluginStorage.disabledCards || []);
+    const disabledCards = new Set(pluginStorage.disabledCards ?? []);
 
     if (isDev()) {
+      // ── Dev shortcut ───────────────────────────────────────────────────────
       try {
         const devImport = await import(/* @vite-ignore */ '@lynx_module/renderer');
-        importedModules = [{path: 'dev', module: devImport}];
-      } catch (e) {
+        importedModules = [{ path: 'dev', module: devImport }];
+      } catch {
         console.log('No dev module found, skipping...');
         importedModules = [];
       }
     } else {
+      // ── Production: load from live plugin servers ──────────────────────────
       const pluginAddresses = await pluginsIpc.getAddresses();
       const moduleAddresses = pluginAddresses.filter(item => item.type === 'module').map(item => item.address);
 
-      // Use Promise.all for concurrent module imports
       importedModules = await Promise.all(
-        moduleAddresses.map(async path => {
+        moduleAddresses.map(async serverAddress => {
           try {
-            const module = await import(/* @vite-ignore */ `${path}/scripts/renderer.mjs?${Date.now()}`);
-            return {path, module};
-          } catch (e) {
-            console.error('Failed to load module renderer entry: ', path, 'Error: ', e);
-            captureException(e);
+            // Cache-bust with a timestamp so updated modules are always fetched.
+            const module = await import(/* @vite-ignore */ `${serverAddress}/scripts/renderer.mjs?${Date.now()}`);
+            return { path: serverAddress, module };
+          } catch (error) {
+            console.error('Failed to load module renderer entry:', serverAddress, error);
+            captureException(error);
             return null;
           }
         }),
       );
     }
 
+    // ── Aggregate cards from all loaded modules ─────────────────────────────
     const newAllModules: CardModules = [];
     const newAllCards: CardData[] = [];
-
     const newCardDataWithPath: LoadedCardData[] = [];
     const newCardArguments: LoadedArguments[] = [];
     const newCardMethods: LoadedMethods[] = [];
-    const newCardSearchData: CardSearchData = [];
+    const newCardSearchIndex: CardSearchIndex = [];
 
-    // Optimize module and card aggregation using reduce for better performance
-    compact(importedModules).reduce((acc, {module}) => {
-      const importedModule = module as RendererModuleImportType;
-
-      importedModule.default.forEach(mod => {
-        // Filter out disabled cards
+    compact(importedModules).forEach(({ module }) => {
+      (module as RendererModuleImportType).default.forEach(mod => {
         const enabledCards = mod.cards.filter(card => !disabledCards.has(card.id));
         if (enabledCards.length === 0) return;
 
         const existingModuleIndex = newAllModules.findIndex(m => m.routePath === mod.routePath);
 
         if (existingModuleIndex !== -1) {
-          // Add new cards to existing module, avoiding duplicates
+          // Merge into an existing module page — skip cards already registered.
           const existingModule = newAllModules[existingModuleIndex];
           enabledCards.forEach(card => {
             if (!existingModule.cards.some(c => c.id === card.id)) {
@@ -336,37 +444,35 @@ const loadModules = async () => {
             }
           });
         } else {
-          newAllModules.push({...mod, cards: enabledCards});
+          // First time seeing this route — create a new module entry.
+          newAllModules.push({ ...mod, cards: enabledCards });
           newAllCards.push(...enabledCards);
 
           enabledCards.forEach(card => {
-            const {arguments: args, methods, ...restOfCard} = card;
-            newCardDataWithPath.push({...restOfCard, routePath: mod.routePath});
-            newCardArguments.push({id: card.id, arguments: args});
-            newCardMethods.push({id: card.id, methods});
-            newCardSearchData.push({
-              id: card.id,
-              data: [card.description, card.title, extractGitUrl(card.repoUrl).owner, extractGitUrl(card.repoUrl).repo],
-            });
+            const { arguments: args, methods, ...cardWithoutInternals } = card;
+            newCardDataWithPath.push({ ...cardWithoutInternals, routePath: mod.routePath });
+            newCardArguments.push({ id: card.id, arguments: args });
+            newCardMethods.push({ id: card.id, methods });
+            newCardSearchIndex.push({ id: card.id, tokens: buildCardSearchTokens(card) });
           });
         }
       });
+    });
 
-      return acc;
-    }, {});
-
-    await emitLoaded(
+    await commitModuleState(
       newAllModules,
       newAllCards,
       newCardDataWithPath,
       newCardArguments,
       newCardMethods,
-      newCardSearchData,
+      newCardSearchIndex,
     );
   } catch (error) {
-    console.error('Error importing modules:', error);
+    console.error('Error loading plugin modules:', error);
   }
 };
+
+// ─── Exports ──────────────────────────────────────────────────────────────────
 
 export {
   allCards,
@@ -379,7 +485,6 @@ export {
   useAllCardArguments,
   useAllCardDataWithPath,
   useAllCardMethods,
-  useAllCardSearchData,
   useAllModules,
   useGetArgumentsByID,
   useGetCardsByPath,
