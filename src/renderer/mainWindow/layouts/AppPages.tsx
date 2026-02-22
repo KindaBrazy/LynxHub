@@ -6,11 +6,15 @@ import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {useTerminalState} from '@lynx/redux/reducers/terminal';
 import {PageComponents} from '@lynx/utils/constants';
 import ptyIpc from '@lynx_shared/ipc/pty';
-import {useEffect, useMemo} from 'react';
+import {memo, useEffect, useMemo} from 'react';
 
 import {useRemoveTab} from './tabs/utils';
 
-export default function AppPages() {
+/**
+ * Component that renders the content of the active tab.
+ * It maps through all tabs and renders either the session view (browser/terminal) or the internal page.
+ */
+const AppPages = memo(() => {
   const runningCards = useCardsState('runningCard');
   const closeTabOnExit = useTerminalState('closeTabOnExit');
   const tabs = useTabsState('tabs');
@@ -24,6 +28,7 @@ export default function AppPages() {
     return Container ? Container : SessionView;
   }, []);
 
+  // Handle PTY exit events
   useEffect(() => {
     const removeListener = ptyIpc.onExit(id => {
       if (closeTabOnExit) removeTab({id});
@@ -41,9 +46,12 @@ export default function AppPages() {
 
         if (foundRunningCard) {
           return (
-            <a className={isActiveTab ? 'block' : 'hidden'} key={`${foundRunningCard.id}_${foundRunningCard.tabId}`}>
+            <div 
+              className={isActiveTab ? 'block h-full' : 'hidden'} 
+              key={tab.id}
+            >
               <RunningView runningCard={foundRunningCard} />
-            </a>
+            </div>
           );
         }
 
@@ -57,4 +65,6 @@ export default function AppPages() {
       })}
     </>
   );
-}
+});
+
+export default AppPages;
