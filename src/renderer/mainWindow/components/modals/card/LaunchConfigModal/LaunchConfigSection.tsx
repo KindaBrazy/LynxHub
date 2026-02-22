@@ -6,15 +6,24 @@ import {ReactNode} from 'react';
 import LynxTooltip from '../../../LynxTooltip';
 
 type Props = {
+  /** The content of the section */
   children: ReactNode;
+  /** The title of the section */
   title: ReactNode;
+  /** Optional description text */
   description?: string;
+  /** Callback when the add button is pressed */
   onAddPress?: () => void;
+  /** Tooltip text for the add button */
   addTooltipTitle?: string;
+  /** Custom button element to replace the default add button */
   customButton?: ReactNode;
 };
 
-/** Display card containing configurations */
+/**
+ * Display card containing configurations for Launch Config Modal.
+ * Provides a consistent layout with title, description, and action button.
+ */
 export default function LaunchConfigSection({
   children,
   title,

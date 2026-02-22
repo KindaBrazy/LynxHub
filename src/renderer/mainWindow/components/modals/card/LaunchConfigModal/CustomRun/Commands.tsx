@@ -1,71 +1,33 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
-import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
 import {Empty} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback} from 'react';
 
 import LynxTooltip from '../../../../LynxTooltip';
-import LaunchConfigSection from '../Section';
-import TerminalCommandItem from '../TerminalCommand-Item';
+import {useTerminalCommands} from '../hooks/useTerminalCommands';
+import LaunchConfigSection from '../LaunchConfigSection';
+import TerminalCommandItem from '../TerminalCommandItem';
 
 type Props = {id: string};
 export default function Commands({id}: Props) {
-  const [commands, setCommands] = useState<string[]>([]);
-
-  useEffect(() => {
-    storageUtilsIpc.invoke.customRun('get', {id}).then(result => {
-      setCommands(result);
-    });
-    const removeListener = storageUtilsIpc.on.onCustomRun(preCommands => {
-      if (preCommands.id === id) setCommands(preCommands.commands);
-    });
-
-    return () => removeListener();
-  }, []);
-
-  const editCommand = useCallback(
-    (index: number, value: string) => {
-      setCommands(prevState => {
-        const result = prevState.map((command, i) => (i === index ? value : command));
-        storageUtilsIpc.invoke.customRun('set', {command: result, id});
-        return result;
-      });
-    },
-    [id],
+  const {commands, addCommand, editCommand, removeCommand, reorderCommands, saveReorder} = useTerminalCommands(
+    id,
+    'customRun',
   );
 
-  const removeCommand = useCallback(
-    (index: number) => {
-      storageUtilsIpc.invoke.customRun('remove', {command: index, id});
-    },
-    [id],
-  );
-
-  const addCommand = useCallback(() => {
-    storageUtilsIpc.invoke.customRun('add', {command: '', id});
-  }, [id]);
-
-  const onReorder = (newOrder: string[]) => {
-    setCommands(newOrder);
-  };
-
-  const cdFolder = () => {
+  const cdFolder = useCallback(() => {
     filesIpc.openDlg({properties: ['openDirectory']}).then(result => {
       if (result) {
         const command = `cd "${result}"`;
-        storageUtilsIpc.invoke.customRun('add', {command, id});
+        addCommand(command);
       }
     });
-  };
-
-  const onDoneReorder = () => {
-    storageUtilsIpc.invoke.customRun('set', {command: commands, id});
-  };
+  }, [addCommand]);
 
   return (
     <LaunchConfigSection
@@ -82,7 +44,7 @@ export default function Commands({id}: Props) {
           </LynxTooltip>
           <DropdownMenu aria-label="Add new command">
             <DropdownSection title="Add">
-              <DropdownItem key="add_folder" onPress={addCommand} startContent={<Terminal_Icon />}>
+              <DropdownItem key="add_folder" onPress={() => addCommand()} startContent={<Terminal_Icon />}>
                 Command
               </DropdownItem>
               <DropdownItem key="add_file" onPress={cdFolder} startContent={<MoveToFolder className="size-3.5" />}>
@@ -99,15 +61,15 @@ export default function Commands({id}: Props) {
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No custom command available to execute" />
       ) : (
         <AnimatePresence>
-          <Reorder.Group axis="y" values={commands} onReorder={onReorder} className="space-y-2 overflow-hidden">
+          <Reorder.Group axis="y" values={commands} onReorder={reorderCommands} className="space-y-2 overflow-hidden">
             {commands.map((command, index) => (
               <TerminalCommandItem
                 index={index}
                 key={command}
-                defaultText={command}
+                initialValue={command}
                 onRemove={removeCommand}
-                editCommand={editCommand}
-                onDoneReorder={onDoneReorder}
+                onEdit={editCommand}
+                onDoneReorder={saveReorder}
               />
             ))}
           </Reorder.Group>

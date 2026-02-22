@@ -1,10 +1,9 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {CustomRunBehaviorData} from '@lynx_common/types/ipc';
-import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import {isEmpty} from 'lodash';
-import {Fragment, useEffect, useState} from 'react';
+import {Fragment, useCallback} from 'react';
 
-import LaunchConfigSection from '../Section';
+import {useCustomRunBehavior} from '../hooks/useCustomRunBehavior';
+import LaunchConfigSection from '../LaunchConfigSection';
 import {UrlCatch} from './UrlCatch';
 
 type TerminalType = CustomRunBehaviorData['terminal'];
@@ -12,42 +11,35 @@ type BrowserType = CustomRunBehaviorData['browser'];
 
 type Props = {id: string};
 export default function Behavior({id}: Props) {
-  const [terminalValue, setTerminalValue] = useState<TerminalType>('runScript');
-  const [browserValue, setBrowserValue] = useState<BrowserType>('appBrowser');
+  const {behavior, updateBehavior} = useCustomRunBehavior(id);
+  const {terminal = 'runScript', browser = 'appBrowser', urlCatch} = behavior;
 
-  const onTerminalChange = (value: Selection) => {
-    if (value && value !== 'all') {
-      const result = value.values().next().value as TerminalType;
-      setTerminalValue(result);
-      storageUtilsIpc.send.updateCustomRunBehavior({
-        cardID: id,
-        terminal: result,
-      });
-    }
-  };
-
-  const onBrowserChange = (value: Selection) => {
-    if (value && value !== 'all') {
-      const result = value.values().next().value as BrowserType;
-      setBrowserValue(result);
-      storageUtilsIpc.send.updateCustomRunBehavior({
-        cardID: id,
-        browser: result,
-      });
-    }
-  };
-
-  useEffect(() => {
-    storageIpc.get('cardsConfig').then(result => {
-      if (!isEmpty(result.customRunBehavior)) {
-        const data = result.customRunBehavior.find(customRun => customRun.cardID === id);
-        if (data) {
-          setBrowserValue(data.browser);
-          setTerminalValue(data.terminal);
-        }
+  const onTerminalChange = useCallback(
+    (value: Selection) => {
+      if (value && value !== 'all') {
+        const result = value.values().next().value as TerminalType;
+        updateBehavior({terminal: result});
       }
-    });
-  }, [setTerminalValue, setBrowserValue, id]);
+    },
+    [updateBehavior],
+  );
+
+  const onBrowserChange = useCallback(
+    (value: Selection) => {
+      if (value && value !== 'all') {
+        const result = value.values().next().value as BrowserType;
+        updateBehavior({browser: result});
+      }
+    },
+    [updateBehavior],
+  );
+
+  const onUrlCatchUpdate = useCallback(
+    (newUrlCatch: CustomRunBehaviorData['urlCatch']) => {
+      updateBehavior({urlCatch: newUrlCatch});
+    },
+    [updateBehavior],
+  );
 
   return (
     <LaunchConfigSection
@@ -62,7 +54,7 @@ export default function Behavior({id}: Props) {
           label="Terminal"
           selectionMode="single"
           labelPlacement="outside"
-          selectedKeys={[terminalValue]}
+          selectedKeys={[terminal]}
           onSelectionChange={onTerminalChange}
           description="Configure how the terminal behaves when launching the AI."
           disallowEmptySelection>
@@ -77,7 +69,7 @@ export default function Behavior({id}: Props) {
           label="Browser"
           selectionMode="single"
           labelPlacement="outside"
-          selectedKeys={[browserValue]}
+          selectedKeys={[browser]}
           onSelectionChange={onBrowserChange}
           classNames={{trigger: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack'}}
           description="Define what happens when the application detects an address to launch."
@@ -91,7 +83,7 @@ export default function Behavior({id}: Props) {
         </Select>
       </div>
       <div className="flex w-full flex-col items-center gap-y-2">
-        <UrlCatch id={id} />
+        <UrlCatch value={urlCatch} onUpdate={onUrlCatchUpdate} />
       </div>
     </LaunchConfigSection>
   );

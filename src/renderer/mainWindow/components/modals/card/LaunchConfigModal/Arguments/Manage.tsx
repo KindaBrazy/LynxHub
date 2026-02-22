@@ -6,7 +6,7 @@ import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
 import {Dispatch, SetStateAction, useCallback} from 'react';
 
-import LaunchConfigSection from '../Section';
+import LaunchConfigSection from '../LaunchConfigSection';
 import ManageArgumentsItem from './ManageItem';
 
 type Props = {
