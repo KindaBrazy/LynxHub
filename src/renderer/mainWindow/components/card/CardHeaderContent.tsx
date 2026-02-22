@@ -34,39 +34,40 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
           src: avatarSrc,
           name: modifiedTitle,
           isBordered: true,
+          className: 'shrink-0',
           showFallback: true,
           classNames: {base: isInstalled && 'ring-primary-200'},
         }}
-        className="mx-3 mt-2 scale-120"
-        classNames={{description: 'text-[0.7rem]'}}
-        description={`By ${developer}`}
         name={
           <span
-            className={
-              'cursor-text rounded-lg border-2 border-transparent px-1 outline-none transition duration-300 ' +
-              'focus:border-foreground-200'
-            }
-            contentEditable
-            spellCheck="false"
-            suppressContentEditableWarning
             onBlur={() => {
               const selection = window.getSelection();
               if (selection) {
                 selection.removeAllRanges();
               }
             }}
-            onClick={e => e.stopPropagation()}
-            onInput={onTitleChange}
+            className={
+              'cursor-text outline-none focus:border-2 border-transparent focus:border-foreground-200' +
+              ' focus:px-1 rounded-lg transition duration-300 line-clamp-1'
+            }
             onKeyDown={e => {
               e.stopPropagation();
               if (e.key === 'Enter') {
                 e.preventDefault();
                 e.currentTarget.blur();
               }
-            }}>
+            }}
+            spellCheck="false"
+            onInput={onTitleChange}
+            onClick={e => e.stopPropagation()}
+            contentEditable
+            suppressContentEditableWarning>
             {modifiedTitle}
           </span>
         }
+        description={`By ${developer}`}
+        className="scale-120 mx-3 mt-2"
+        classNames={{description: 'text-[0.7rem]'}}
       />
       <AnimatePresence>
         {updateAvailable && (
