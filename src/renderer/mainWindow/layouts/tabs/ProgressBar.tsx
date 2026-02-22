@@ -1,28 +1,31 @@
 import {Progress} from '@heroui/react';
-import {memo} from 'react';
+import {memo, useMemo} from 'react';
+
+type ProgressState = 0 | 1 | 2 | 3 | 4;
 
 type Props = {
-  progress?: {state: 0 | 1 | 2 | 3 | 4; value: number};
+  progress?: {state: ProgressState; value: number};
 };
 
+const ProgressColors: Record<number, 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'default'> = {
+  1: 'primary', // Normal
+  2: 'danger', // Error
+  3: 'primary', // Indeterminate
+  4: 'warning', // Paused/Warning
+};
+
+/**
+ * Renders a progress bar at the bottom of the tab item.
+ * Supports different states (normal, error, indeterminate, paused).
+ */
 const ProgressBar = memo(({progress}: Props) => {
-  if (!progress || progress.state === 0) return null;
+  if (!progress || progress.state === 0) {
+    return null;
+  }
 
   const {state, value} = progress;
 
-  // Determine color based on state
-  // 1: Normal, 2: Error, 3: Indeterminate, 4: Paused/Warning
-  const getColor = () => {
-    switch (state) {
-      case 2:
-        return 'danger';
-      case 4:
-        return 'warning';
-      default:
-        return 'primary';
-    }
-  };
-
+  const color = useMemo(() => ProgressColors[state] || 'primary', [state]);
   const isIndeterminate = state === 3;
 
   return (
@@ -35,10 +38,11 @@ const ProgressBar = memo(({progress}: Props) => {
         }}
         size="sm"
         radius="none"
-        color={getColor()}
+        color={color}
         className="w-full"
         isIndeterminate={isIndeterminate}
         value={isIndeterminate ? undefined : value}
+        aria-label="Tab progress"
       />
     </div>
   );

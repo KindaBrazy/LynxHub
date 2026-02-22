@@ -11,6 +11,10 @@ type Props = {
   id: string;
 };
 
+/**
+ * Component that displays an audio indicator for a tab.
+ * Allows toggling mute state for the tab.
+ */
 const AudioIndicator = memo(({tabId, id}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const tabAudioPlaying = useVolumeState('tabAudioPlaying');
@@ -22,6 +26,8 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
 
   const handleMuteToggle = useCallback(async () => {
     const newMutedState = !isMuted;
+    
+    // Optimistically update UI
     dispatch(volumeActions.setTabMuted({tabId, muted: newMutedState}));
 
     try {
@@ -30,6 +36,8 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
       await browserIpc.invoke.setMuted(id, effectiveMute);
     } catch (error) {
       console.error('Failed to toggle mute state:', error);
+      // Revert on error
+      dispatch(volumeActions.setTabMuted({tabId, muted: !newMutedState}));
     }
   }, [dispatch, id, tabId, isMuted, globalMuted]);
 
@@ -37,8 +45,9 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
     () => (isMuted ? <VolumeCross className="size-3.5 shrink-0" /> : <VolumeLoud className="size-3.5 shrink-0" />),
     [isMuted],
   );
-  const ariaLabel = useMemo(() => (isMuted ? 'Unmute tab audio' : 'Mute tab audio'), [isMuted]);
-  const ariaDescription = useMemo(() => (isPlaying ? 'Audio is currently playing' : 'Audio indicator'), [isPlaying]);
+  
+  const ariaLabel = isMuted ? 'Unmute tab audio' : 'Mute tab audio';
+  const ariaDescription = isPlaying ? 'Audio is currently playing' : 'Audio indicator';
 
   // Don't render if not playing and not muted
   if (!isPlaying && !isMuted) {

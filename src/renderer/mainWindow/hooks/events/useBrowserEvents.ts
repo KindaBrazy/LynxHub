@@ -1,4 +1,4 @@
-import {appActions} from '@lynx/redux/reducers/app';
+import {appActions, useAppState} from '@lynx/redux/reducers/app';
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
 import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
@@ -56,6 +56,7 @@ export const useBrowserEvents = () => {
  */
 export const useAppTitleEvents = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const appTitle = useAppState('appTitle');
 
   const activeTab = useTabsState('activeTab');
   const tabs = useTabsState('tabs');
@@ -64,8 +65,10 @@ export const useAppTitleEvents = () => {
   useEffect(() => {
     const currentView = capitalize(runningCard.find(card => card.tabId === activeTab)?.currentView);
     const title = tabs.find(tab => tab.id === activeTab)?.title;
-    dispatch(appActions.setAppTitle(title && `${title} - ${currentView}`));
-  }, [runningCard, activeTab, tabs, dispatch]);
+    const result = title && `${title} - ${currentView}`;
+
+    if (result && appTitle !== result) dispatch(appActions.setAppTitle(title && `${title} - ${currentView}`));
+  }, [runningCard, activeTab, tabs, appTitle, dispatch]);
 };
 
 /**

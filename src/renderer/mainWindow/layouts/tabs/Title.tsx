@@ -1,15 +1,23 @@
 import {Dispatch, memo, SetStateAction, useEffect, useRef} from 'react';
 
-type Props = {title: string; setIsTruncated: Dispatch<SetStateAction<boolean>>};
+type Props = {
+  title: string;
+  setIsTruncated: Dispatch<SetStateAction<boolean>>;
+};
 
-const Title = memo(({title, setIsTruncated}: Props) => {
+/**
+ * Displays the tab title and detects truncation.
+ * Updates the parent's state `setIsTruncated` if the text overflows.
+ */
+const TabTitle = memo(({title, setIsTruncated}: Props) => {
   const spanRef = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
     if (spanRef.current) {
-      setIsTruncated(spanRef.current.offsetWidth < spanRef.current.scrollWidth);
+      const isTruncated = spanRef.current.offsetWidth < spanRef.current.scrollWidth;
+      setIsTruncated(isTruncated);
     }
-  }, [title]);
+  }, [title, setIsTruncated]);
 
   return (
     <span ref={spanRef} className="truncate">
@@ -18,4 +26,4 @@ const Title = memo(({title, setIsTruncated}: Props) => {
   );
 });
 
-export default Title;
+export default TabTitle;
