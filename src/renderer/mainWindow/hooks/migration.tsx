@@ -1,6 +1,10 @@
 import storageIpc from '@lynx_shared/ipc/storage';
 import {useEffect} from 'react';
 
+/**
+ * Migrates old card titles from localStorage to the new IPC-based storage.
+ * This is a one-time migration that runs on app startup.
+ */
 export const useMigrateCardTitles = () => {
   useEffect(() => {
     const checkAndMigrate = async () => {

@@ -5,7 +5,9 @@ import browserIpc from '@lynx_shared/ipc/browser';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
-/** Syncs volume state updates from context menu window and audio events to Redux */
+/**
+ * Syncs volume state updates from context menu window and audio events to Redux.
+ */
 export default function useVolumeSync() {
   const dispatch = useDispatch<AppDispatch>();
   const runningCards = useCardsState('runningCard');

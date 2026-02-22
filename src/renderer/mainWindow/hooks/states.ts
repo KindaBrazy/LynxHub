@@ -3,7 +3,10 @@ import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {isEmpty, isEqual} from 'lodash';
 import {useEffect} from 'react';
 
-// Remove not installed cards from pinned cards
+/**
+ * Ensures that pinned cards list is consistent with installed cards.
+ * Removes any pinned cards that are no longer installed.
+ */
 export function useFilterPinnedCards() {
   const installedCards = useCardsState('installedCards');
   const pinnedCards = useCardsState('pinnedCards');
