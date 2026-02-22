@@ -7,6 +7,13 @@ import {useDispatch} from 'react-redux';
 import {modalActions, useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';
 import {isLinuxPortable} from '../../../utils/hooks';
+
+/**
+ * Modal that prompts the user to restart the application or exit.
+ * Used when a configuration change requires a restart to take effect.
+ *
+ * @returns {JSX.Element} The rendered RestartModal component.
+ */
 export function RestartModal() {
   const dispatch = useDispatch<AppDispatch>();
   const {isOpen, message} = useModalsState('restartModal');
