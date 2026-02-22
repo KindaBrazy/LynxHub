@@ -9,8 +9,11 @@ import PageView from '../Page';
 import List from './list';
 import Preview from './preview';
 
-type Props = {show: boolean};
-const Index = memo(({show}: Props) => {
+/**
+ * Custom hook to initialize the plugins page state by fetching installed
+ * and unloaded lists, and checking for sync updates.
+ */
+function useInitializePlugins() {
   const dispatch = useDispatch<AppDispatch>();
   const updateChannel = useUserState('updateChannel');
 
@@ -18,11 +21,29 @@ const Index = memo(({show}: Props) => {
     pluginsIpc.getInstalledList().then(items => {
       dispatch(pluginsActions.setPluginsState({key: 'installedList', value: items}));
     });
+
     pluginsIpc.checkForSync(updateChannel);
+
     pluginsIpc.getUnloadedList().then(items => {
       dispatch(pluginsActions.setPluginsState({key: 'unloadedList', value: items}));
     });
-  }, [updateChannel]);
+  }, [dispatch, updateChannel]);
+}
+
+/**
+ * Props for the PluginsPage component.
+ */
+interface PluginsPageProps {
+  /** Determines if the plugins page is currently visible. */
+  show: boolean;
+}
+
+/**
+ * The main entry point for the Plugins page.
+ * Manages the layout for the plugin list and plugin preview components.
+ */
+const PluginsPage = memo(({show}: PluginsPageProps) => {
+  useInitializePlugins();
 
   return (
     <PageView show={show} className="gap-x-6">
@@ -32,4 +53,6 @@ const Index = memo(({show}: Props) => {
   );
 });
 
-export default Index;
+PluginsPage.displayName = 'PluginsPage';
+
+export default PluginsPage;

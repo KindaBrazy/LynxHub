@@ -1,19 +1,41 @@
-import {usePluginsState} from '@lynx/redux/reducers/plugins';
-import {ContainersBg} from '@lynx/utils/commonStyles';
-import {WidgetAdd} from '@solar-icons/react-perf/BoldDuotone';
-import {isEmpty} from 'lodash';
-import {memo, useMemo} from 'react';
+import { usePluginsState } from '@lynx/redux/reducers/plugins';
+import { ContainersBg } from '@lynx/utils/commonStyles';
+import { WidgetAdd } from '@solar-icons/react-perf/BoldDuotone';
+import { isEmpty } from 'lodash';
+import { memo } from 'react';
 
 import PreviewBody from './Body';
 import PreviewHeader from './Header';
 
-const Preview = memo(() => {
-  const selectedPlugin = usePluginsState('selectedPlugin');
-  const installed = usePluginsState('installedList');
-  const installedExt = useMemo(
-    () => installed.find(item => item.id === selectedPlugin?.metadata.id),
-    [installed, selectedPlugin],
+/**
+ * Empty state placeholder shown when no plugin is selected.
+ * Displays a centered icon and instructional text.
+ */
+function EmptySelectionPlaceholder() {
+  return (
+    <div
+      className={
+        'bg-white dark:bg-LynxRaisinBlack size-full flex items-center' +
+        ' justify-center gap-y-4 flex-col px-4 text-center'
+      }>
+      <WidgetAdd className="size-16" />
+      <span className="text-large">Select a plugin from the list to begin your exploration.</span>
+    </div>
   );
+}
+
+/**
+ * Plugin preview panel that occupies the right side of the plugins page.
+ * Shows either an empty state prompt or the selected plugin's header and body.
+ */
+const PluginPreviewPanel = memo(() => {
+  const selectedPlugin = usePluginsState('selectedPlugin');
+  const installedList = usePluginsState('installedList');
+
+  // Derive installed extension info directly during render instead of useMemo,
+  // since the lookup is cheap and avoids a hook overhead.
+  const installedPlugin = installedList.find(item => item.id === selectedPlugin?.metadata.id);
+
   return (
     <div
       className={
@@ -22,22 +44,17 @@ const Preview = memo(() => {
         ` ${ContainersBg} rounded-xl flex flex-col`
       }>
       {isEmpty(selectedPlugin) ? (
-        <div
-          className={
-            'bg-white dark:bg-LynxRaisinBlack size-full flex items-center' +
-            ' justify-center gap-y-4 flex-col px-4 text-center'
-          }>
-          <WidgetAdd className="size-16" />
-          <span className="text-large">Select a plugin from the list to begin your exploration.</span>
-        </div>
+        <EmptySelectionPlaceholder />
       ) : (
         <>
-          <PreviewHeader installedExt={installedExt} />
-          <PreviewBody installed={!!installedExt} />
+          <PreviewHeader installedPlugin={installedPlugin} />
+          <PreviewBody isInstalled={!!installedPlugin} />
         </>
       )}
     </div>
   );
 });
 
-export default Preview;
+PluginPreviewPanel.displayName = 'PluginPreviewPanel';
+
+export default PluginPreviewPanel;

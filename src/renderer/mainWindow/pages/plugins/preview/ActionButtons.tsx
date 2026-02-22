@@ -1,143 +1,184 @@
-import {Button, useDisclosure} from '@heroui/react';
-import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
-import {useTabsState} from '@lynx/redux/reducers/tabs';
-import {AppDispatch} from '@lynx/redux/store';
-import {showRestartModal} from '@lynx/utils';
-import {lynxTopToast} from '@lynx/utils/hooks';
-import {extractGitUrl} from '@lynx_common/utils';
+import { Button, useDisclosure } from '@heroui/react';
+import { pluginsActions, useIsInstallingPlugin, useIsUninstallingPlugin, usePluginsState } from '@lynx/redux/reducers/plugins';
+import { useTabsState } from '@lynx/redux/reducers/tabs';
+import { AppDispatch } from '@lynx/redux/store';
+import { showRestartModal } from '@lynx/utils';
+import { lynxTopToast } from '@lynx/utils/hooks';
+import { extractGitUrl } from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import {DownloadMinimalistic, SettingsMinimalistic, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
-import {useCallback, useEffect, useMemo, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { DownloadMinimalistic, SettingsMinimalistic, TrashBin2 } from '@solar-icons/react-perf/BoldDuotone';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-import {UpdateButton} from '../Elements';
+import { UpdateButton } from '../Elements';
 import ModuleConfigModal from '../ModuleConfigModal';
 import SecurityWarning from '../SecurityWarning';
-import Versions from './Versions';
+import VersionSelector from './Versions';
 
-type Props = {installed: boolean; currentVersion: string};
-export default function ActionButtons({installed, currentVersion}: Props) {
+/**
+ * Custom hook that encapsulates plugin install/uninstall IPC logic.
+ * Manages dispatching breadcrumbs, managing loading states, and triggering restart prompts.
+ */
+function usePluginActions() {
   const dispatch = useDispatch<AppDispatch>();
-
   const selectedPlugin = usePluginsState('selectedPlugin');
-  const installing = usePluginsState('installing');
-  const unInstalling = usePluginsState('unInstalling');
-  const activeTab = useTabsState('activeTab');
 
-  const configModal = useDisclosure();
+  const installPlugin = useCallback(
+    (targetVersion: string) => {
+      if (!selectedPlugin?.url) return;
 
-  const isModule = useMemo(() => selectedPlugin?.metadata.type === 'module', [selectedPlugin]);
+      const pluginId = selectedPlugin.metadata.id;
+      AddBreadcrumb_Renderer(`Plugin install: id:${pluginId}`);
+      dispatch(pluginsActions.manageSet({ key: 'installing', id: pluginId, operation: 'add' }));
 
-  const isInstalling = useMemo(
-    () => installing.includes(selectedPlugin?.metadata.id || ''),
-    [installing, selectedPlugin?.metadata.id],
-  );
-  const isUnInstalling = useMemo(
-    () => unInstalling.includes(selectedPlugin?.metadata.id || ''),
-    [unInstalling, selectedPlugin?.metadata.id],
-  );
+      const matchedVersion = selectedPlugin.versions.find(v => v.version === targetVersion);
 
-  const [isCompatible, setIsCompatible] = useState<boolean>(true);
-  const [isSecOpen, setIsSecOpen] = useState<boolean>(false);
-
-  useEffect(() => {
-    applicationIpc.invoke.getSystemInfo().then(result => {
-      setIsCompatible(selectedPlugin?.versions.some(v => v.platforms.includes(result.os)) || false);
-    });
-  }, [selectedPlugin]);
-
-  const installExtension = useCallback(() => {
-    AddBreadcrumb_Renderer(`Plugin install: id:${selectedPlugin?.metadata.id}`);
-    dispatch(pluginsActions.manageSet({key: 'installing', id: selectedPlugin?.metadata.id, operation: 'add'}));
-
-    if (selectedPlugin?.url) {
-      const targetVersion = selectedPlugin.versions.find(v => v.version === currentVersion);
-      pluginsIpc.install(selectedPlugin.url, targetVersion?.commit).then(result => {
-        dispatch(pluginsActions.manageSet({key: 'installing', id: selectedPlugin?.metadata.id, operation: 'remove'}));
-        if (result) {
+      pluginsIpc.install(selectedPlugin.url, matchedVersion?.commit).then(wasInstalled => {
+        dispatch(pluginsActions.manageSet({ key: 'installing', id: pluginId, operation: 'remove' }));
+        if (wasInstalled) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} installed successfully`);
           showRestartModal(dispatch, 'To apply the installation, please restart the app.');
-          if (targetVersion) {
+          if (matchedVersion) {
             dispatch(
               pluginsActions.addInstalled({
-                version: targetVersion.version,
+                version: matchedVersion.version,
                 url: selectedPlugin.url,
-                id: selectedPlugin.metadata.id,
+                id: pluginId,
               }),
             );
           }
         }
       });
-    }
-  }, [selectedPlugin, currentVersion, dispatch]);
+    },
+    [selectedPlugin, dispatch],
+  );
 
-  const uninstallExtension = useCallback(() => {
-    AddBreadcrumb_Renderer(`Plugin uninstall: id:${selectedPlugin?.metadata.id}`);
-    dispatch(pluginsActions.manageSet({key: 'unInstalling', id: selectedPlugin?.metadata.id, operation: 'add'}));
+  const uninstallPlugin = useCallback(() => {
+    const pluginId = selectedPlugin?.metadata.id;
+    if (!pluginId) return;
 
-    if (selectedPlugin?.metadata.id) {
-      pluginsIpc.uninstall(selectedPlugin.metadata.id).then(result => {
-        dispatch(pluginsActions.manageSet({key: 'unInstalling', id: selectedPlugin?.metadata.id, operation: 'remove'}));
-        if (result) {
-          lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} uninstalled successfully`);
-          showRestartModal(dispatch, 'To complete the uninstallation, please restart the app.');
-          dispatch(pluginsActions.removeInstalled(selectedPlugin.metadata.id));
-        }
-      });
-    }
+    AddBreadcrumb_Renderer(`Plugin uninstall: id:${pluginId}`);
+    dispatch(pluginsActions.manageSet({ key: 'unInstalling', id: pluginId, operation: 'add' }));
+
+    pluginsIpc.uninstall(pluginId).then(wasUninstalled => {
+      dispatch(pluginsActions.manageSet({ key: 'unInstalling', id: pluginId, operation: 'remove' }));
+      if (wasUninstalled) {
+        lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} uninstalled successfully`);
+        showRestartModal(dispatch, 'To complete the uninstallation, please restart the app.');
+        dispatch(pluginsActions.removeInstalled(pluginId));
+      }
+    });
+  }, [selectedPlugin, dispatch]);
+
+  return { installPlugin, uninstallPlugin };
+}
+
+/**
+ * Props for the {@link PluginActionButtons} component.
+ */
+interface PluginActionButtonsProps {
+  /** Whether the currently selected plugin is installed. */
+  isInstalled: boolean;
+  /** The resolved current version string for the selected plugin. */
+  currentVersion: string;
+}
+
+/**
+ * Action buttons panel for the plugin preview header.
+ * Provides install, uninstall, update, configure, and version selection controls.
+ */
+export default function PluginActionButtons({ isInstalled, currentVersion }: PluginActionButtonsProps) {
+  const selectedPlugin = usePluginsState('selectedPlugin');
+  const activeTab = useTabsState('activeTab');
+  const configModal = useDisclosure();
+
+  const pluginId = selectedPlugin?.metadata.id || '';
+
+  const isInstalling = useIsInstallingPlugin(pluginId);
+  const isUninstalling = useIsUninstallingPlugin(pluginId);
+
+  const isModuleType = selectedPlugin?.metadata.type === 'module';
+
+  const { installPlugin, uninstallPlugin } = usePluginActions();
+
+  // Check platform compatibility via a one-time system info query when plugin changes.
+  const [isPlatformCompatible, setIsPlatformCompatible] = useState<boolean>(true);
+  useEffect(() => {
+    applicationIpc.invoke.getSystemInfo().then(systemInfo => {
+      setIsPlatformCompatible(selectedPlugin?.versions.some(v => v.platforms.includes(systemInfo.os)) || false);
+    });
   }, [selectedPlugin]);
 
-  const handleInstall = () => {
-    AddBreadcrumb_Renderer(`Plugin handleInstall: id:${selectedPlugin?.metadata.id}`);
-    setIsSecOpen(true);
-  };
+  const [isSecurityWarningOpen, setIsSecurityWarningOpen] = useState<boolean>(false);
+
+  /** Opens the security warning modal before proceeding with installation. */
+  const handleInstallRequest = useCallback(() => {
+    AddBreadcrumb_Renderer(`Plugin handleInstall: id:${pluginId}`);
+    setIsSecurityWarningOpen(true);
+  }, [pluginId]);
+
+  /** Invokes the actual install once the user confirms via SecurityWarning. */
+  const handleInstallConfirmed = useCallback(() => {
+    installPlugin(currentVersion);
+  }, [installPlugin, currentVersion]);
+
+  const pluginOwner = useMemo(() => extractGitUrl(selectedPlugin?.url || '').owner, [selectedPlugin?.url]);
 
   return (
     <div className="flex flex-col gap-y-1 items-end">
       <SecurityWarning
         type="extension"
         tabId={activeTab}
-        isOpen={isSecOpen}
-        setIsOpen={setIsSecOpen}
-        onAgree={installExtension}
+        isOpen={isSecurityWarningOpen}
+        setIsOpen={setIsSecurityWarningOpen}
+        onAgree={handleInstallConfirmed}
         title={selectedPlugin?.metadata.title}
-        owner={extractGitUrl(selectedPlugin?.url || '').owner}
+        owner={pluginOwner}
       />
-      {isModule && installed && <ModuleConfigModal isOpen={configModal.isOpen} onClose={configModal.onClose} />}
-      {installed && <Versions currentVersion={currentVersion} />}
+
+      {isModuleType && isInstalled && <ModuleConfigModal isOpen={configModal.isOpen} onClose={configModal.onClose} />}
+      {isInstalled && <VersionSelector currentVersion={currentVersion} />}
+
       <div className="flex flex-row items-center gap-x-2">
-        {isModule && installed && (
+        {/* Module configuration button – only visible for installed modules */}
+        {isModuleType && isInstalled && (
           <Button
             size="sm"
             variant="flat"
             color="secondary"
             onPress={configModal.onOpen}
+            aria-label="Open module configuration"
             startContent={<SettingsMinimalistic />}>
             Configure
           </Button>
         )}
+
         <UpdateButton item={selectedPlugin!} />
-        {installed ? (
+
+        {/* Install or uninstall button depending on current installation state */}
+        {isInstalled ? (
           <Button
             size="sm"
             color="danger"
             variant="flat"
-            isLoading={isUnInstalling}
-            onPress={uninstallExtension}
-            startContent={!isUnInstalling && <TrashBin2 />}>
-            {isUnInstalling ? 'Uninstalling...' : 'Uninstall'}
+            isLoading={isUninstalling}
+            onPress={uninstallPlugin}
+            aria-label="Uninstall plugin"
+            startContent={!isUninstalling && <TrashBin2 />}>
+            {isUninstalling ? 'Uninstalling...' : 'Uninstall'}
           </Button>
         ) : (
           <Button
             size="sm"
-            onPress={handleInstall}
+            onPress={handleInstallRequest}
             isLoading={isInstalling}
-            isDisabled={!isCompatible}
-            color={isCompatible ? 'success' : 'warning'}
+            isDisabled={!isPlatformCompatible}
+            color={isPlatformCompatible ? 'success' : 'warning'}
+            aria-label={isPlatformCompatible ? 'Install plugin' : 'Plugin not compatible with your platform'}
             startContent={!isInstalling && <DownloadMinimalistic />}>
-            {!isCompatible ? 'Not Compatible' : isInstalling ? 'Installing...' : 'Install'}
+            {!isPlatformCompatible ? 'Not Compatible' : isInstalling ? 'Installing...' : 'Install'}
           </Button>
         )}
       </div>

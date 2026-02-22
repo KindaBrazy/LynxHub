@@ -1,66 +1,114 @@
-import {ChipProps} from '@heroui/chip';
-import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
-import {usePluginsState} from '@lynx/redux/reducers/plugins';
-import {SubscribeStages} from '@lynx_common/types';
+import { ChipProps } from '@heroui/chip';
+import { Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, SharedSelection } from '@heroui/react';
+import { usePluginsState } from '@lynx/redux/reducers/plugins';
+import { SubscribeStages } from '@lynx_common/types';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
-import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
-import {useMemo} from 'react';
+import { BoxMinimalistic } from '@solar-icons/react-perf/BoldDuotone';
+import { useCallback, useMemo } from 'react';
 
-const getStageName = (stage: SubscribeStages) => {
-  return stage === 'insider' ? 'Insider' : stage === 'early_access' ? 'Early Access' : 'Public';
-};
+/**
+ * Returns a user-friendly name for a given subscription stage.
+ */
+function getStageDisplayName(stage: SubscribeStages) {
+  switch (stage) {
+    case 'insider':
+      return 'Insider';
+    case 'early_access':
+      return 'Early Access';
+    default:
+      return 'Public';
+  }
+}
 
-const getColor = (stage: SubscribeStages): ChipProps['color'] => {
-  return stage === 'insider' ? 'secondary' : stage === 'early_access' ? 'primary' : 'success';
-};
+/**
+ * Returns the appropriate color for a stage indicator chip.
+ */
+function getStageColor(stage: SubscribeStages): ChipProps['color'] {
+  switch (stage) {
+    case 'insider':
+      return 'secondary';
+    case 'early_access':
+      return 'primary';
+    default:
+      return 'success';
+  }
+}
 
-type Props = {currentVersion: string};
-export default function Versions({currentVersion}: Props) {
+/**
+ * Props for the {@link PluginVersionSelector} component.
+ */
+interface PluginVersionSelectorProps {
+  /** The currently installed version of the plugin. */
+  currentVersion: string;
+}
+
+/**
+ * Dropdown selector that allows users to choose a specific version/commit of a plugin to sync to.
+ * Primarily used for upgrading, downgrading, or switching between release tracks.
+ */
+export default function PluginVersionSelector({ currentVersion }: PluginVersionSelectorProps) {
   const selectedPlugin = usePluginsState('selectedPlugin');
   const syncList = usePluginsState('syncList');
 
-  const {versions, disabledKeys, selectedVersion} = useMemo(() => {
-    const versions = selectedPlugin?.versions || [];
-    const version = versions.find(item => item.version === currentVersion);
-    const disabledKeys = versions.filter(item => !item.isCompatible).map(item => item.commit);
+  /**
+   * Derives the available versions, currently selected sync version, and disabled versions
+   * (incompatible) based on the plugin's metadata and existing sync items.
+   */
+  const { availableVersions, disabledCommitKeys, activeCommit } = useMemo(() => {
+    const availableVersions = selectedPlugin?.versions || [];
+    const installedVersionEntry = availableVersions.find(item => item.version === currentVersion);
+    const disabledCommitKeys = availableVersions.filter(item => !item.isCompatible).map(item => item.commit);
 
-    const sync = syncList.find(item => item.id === selectedPlugin?.metadata.id);
-    const selectedVersion = sync?.commit || version?.commit || '';
+    // Check if there is already a pending sync entry for this plugin
+    const pendingSyncEntry = syncList.find(item => item.id === selectedPlugin?.metadata.id);
+    const activeCommit = pendingSyncEntry?.commit || installedVersionEntry?.commit || '';
 
-    return {versions, disabledKeys, selectedVersion};
+    return { availableVersions, disabledCommitKeys, activeCommit };
   }, [selectedPlugin, syncList, currentVersion]);
 
-  const onSelectionChange = value => {
-    const commit = Array.from(value)[0] as string;
-    const id = selectedPlugin?.metadata.id;
-    if (id) pluginsIpc.updateSyncList(id, commit);
-  };
+  /**
+   * Handles selection changes in the version dropdown.
+   * Updates the sync list via IPC to mark the target version for synchronization.
+   */
+  const handleSelectionChange = useCallback(
+    (selection: SharedSelection) => {
+      const targetCommit = Array.from(selection)[0] as string;
+      const pluginId = selectedPlugin?.metadata.id;
+
+      if (pluginId && targetCommit) {
+        pluginsIpc.updateSyncList(pluginId, targetCommit);
+      }
+    },
+    [selectedPlugin?.metadata.id],
+  );
+
+  const activeVersionNumber = availableVersions.find(item => item.commit === activeCommit)?.version;
 
   return (
     <Dropdown size="sm" showArrow>
       <DropdownTrigger>
         <Button size="sm" variant="flat" startContent={<BoxMinimalistic className="size-3.5" />}>
-          Target v{versions.find(item => item.commit === selectedVersion)?.version}
+          Target v{activeVersionNumber}
         </Button>
       </DropdownTrigger>
       <DropdownMenu
         variant="flat"
         selectionMode="single"
-        disabledKeys={disabledKeys}
-        selectedKeys={[selectedVersion]}
-        onSelectionChange={onSelectionChange}
+        disabledKeys={disabledCommitKeys}
+        selectedKeys={[activeCommit]}
+        onSelectionChange={handleSelectionChange}
         disallowEmptySelection>
-        {versions.map(v => (
+        {availableVersions.map(version => (
           <DropdownItem
+            key={version.commit}
+            description={version.incompatibleReason}
+            classNames={{ description: 'whitespace-pre text-warning' }}
             endContent={
-              <Chip size="sm" variant="flat" className="scale-80" color={getColor(v.stage)}>
-                {getStageName(v.stage)}
+              <Chip size="sm" variant="flat" className="scale-80" color={getStageColor(version.stage)}>
+                {getStageDisplayName(version.stage)}
               </Chip>
-            }
-            key={v.commit}
-            description={v.incompatibleReason}
-            classNames={{description: 'whitespace-pre text-warning'}}>
-            v{v.version}
+            }>
+            v{version.version}
           </DropdownItem>
         ))}
       </DropdownMenu>

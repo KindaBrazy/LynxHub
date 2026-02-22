@@ -1,30 +1,46 @@
-import {Tab, Tabs} from '@heroui/react';
+import { Tab, Tabs } from '@heroui/react';
 import MarkdownViewer from '@lynx/components/MarkdownViewer';
-import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {usePluginsState} from '@lynx/redux/reducers/plugins';
-import {getPluginReadmeUrl} from '@lynx_common/utils/plugins';
-import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
-import {HomeAngle2} from '@solar-icons/react-perf/BoldDuotone';
-import {Checklist} from '@solar-icons/react-perf/LineDuotone';
-import {AnimatePresence, motion} from 'framer-motion';
-import {isNil} from 'lodash';
-import {Key, useEffect, useMemo, useState} from 'react';
+import { extensionsData } from '@lynx/plugins/extensions/loader';
+import { usePluginsState } from '@lynx/redux/reducers/plugins';
+import { getPluginReadmeUrl } from '@lynx_common/utils/plugins';
+import { useDebounceBreadcrumb } from '@lynx_shared/sentry/Breadcrumbs';
+import { HomeAngle2 } from '@solar-icons/react-perf/BoldDuotone';
+import { Checklist } from '@solar-icons/react-perf/LineDuotone';
+import { AnimatePresence, motion } from 'framer-motion';
+import { isNil } from 'lodash';
+import { Key, useEffect, useMemo, useState } from 'react';
 
 import ChangelogList from './ChangelogList';
 
-export default function PreviewBody({installed}: {installed: boolean}) {
+/**
+ * Props for the {@link PluginPreviewBody} component.
+ */
+interface PluginPreviewBodyProps {
+  /** Indicates if the currently selected plugin is installed. */
+  isInstalled: boolean;
+}
+
+/**
+ * Body content of the plugin preview panel.
+ * Includes a tabbed view for "Readme" and "Changelog".
+ * Defaults to "Changelog" if the plugin is installed, otherwise defaults to "Readme".
+ */
+export default function PluginPreviewBody({ isInstalled }: PluginPreviewBodyProps) {
   const selectedPlugin = usePluginsState('selectedPlugin');
-  const [currentTab, setCurrentTab] = useState<Key>('changelog');
+  const [currentTabKey, setCurrentTabKey] = useState<Key>('changelog');
 
-  useDebounceBreadcrumb('Plugin tab', [currentTab]);
+  useDebounceBreadcrumb('Plugin tab', [currentTabKey]);
 
+  // Synchronize the default tab based on whether the plugin is installed.
   useEffect(() => {
-    setCurrentTab(installed ? 'changelog' : 'readme');
-  }, [installed]);
+    setCurrentTabKey(isInstalled ? 'changelog' : 'readme');
+  }, [isInstalled]);
 
-  const ReplaceMd = useMemo(() => extensionsData.replaceMarkdownViewer, []);
+  /** Optional replacement component for Markdown rendering, provided by extensions. */
+  const ReplacementMarkdownViewer = extensionsData.replaceMarkdownViewer;
 
-  const rawReadmeUrl = useMemo(() => {
+  /** Resolves the raw README URL from the selected plugin's repository. */
+  const readmeUrl = useMemo(() => {
     const repoUrl = selectedPlugin?.url;
     return getPluginReadmeUrl(repoUrl) || '';
   }, [selectedPlugin?.url]);
@@ -35,8 +51,8 @@ export default function PreviewBody({installed}: {installed: boolean}) {
         variant="light"
         color="primary"
         className="mb-2 ml-2"
-        onSelectionChange={setCurrentTab}
-        selectedKey={currentTab.toString()}>
+        onSelectionChange={setCurrentTabKey}
+        selectedKey={currentTabKey.toString()}>
         <Tab
           title={
             <div className="flex flex-row items-center gap-x-2">
@@ -44,7 +60,7 @@ export default function PreviewBody({installed}: {installed: boolean}) {
               <span>Readme</span>
             </div>
           }
-          key={'readme'}
+          key="readme"
         />
         <Tab
           title={
@@ -53,28 +69,28 @@ export default function PreviewBody({installed}: {installed: boolean}) {
               <span>Changelog</span>
             </div>
           }
-          key={'changelog'}
+          key="changelog"
         />
       </Tabs>
 
       <AnimatePresence mode="wait">
-        {currentTab === 'readme' && (
+        {currentTabKey === 'readme' && (
           <motion.div
             key="readme"
-            exit={{opacity: 0, y: -20}}
-            animate={{opacity: 1, y: 0}}
-            transition={{duration: 0.3}}
-            initial={{opacity: 0, y: 20}}
+            exit={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, y: 20 }}
             className="size-full overflow-hidden">
-            {isNil(ReplaceMd) ? (
-              <MarkdownViewer urlType="raw" url={rawReadmeUrl} />
+            {isNil(ReplacementMarkdownViewer) ? (
+              <MarkdownViewer urlType="raw" url={readmeUrl} />
             ) : (
-              <ReplaceMd repoPath={selectedPlugin?.url || ''} />
+              <ReplacementMarkdownViewer repoPath={selectedPlugin?.url || ''} />
             )}
           </motion.div>
         )}
 
-        {currentTab === 'changelog' && <ChangelogList />}
+        {currentTabKey === 'changelog' && <ChangelogList />}
       </AnimatePresence>
     </div>
   );
