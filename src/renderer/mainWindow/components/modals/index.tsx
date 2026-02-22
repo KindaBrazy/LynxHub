@@ -1,6 +1,5 @@
 import {memo, useMemo} from 'react';
 
-import {extensionsData} from '../../plugins/extensions/loader';
 import {RestartModal} from './app/RestartModal';
 import UpdateApp from './app/UpdateModal';
 import CardExtensionsModal from './card/ExtensionsModal';
@@ -14,8 +13,15 @@ import UninstallCardComp from './card/UninstallModal';
 import UpdatingNotification from './card/UpdatingModal';
 import CustomNotification from './notification/CustomNotification';
 import WarningModal from './notification/WarningModal';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
 
+/**
+ * Main Modals container component.
+ * Renders all global modals and handles dynamic modal injection from extensions.
+ * Wrapped in `memo` to prevent unnecessary re-renders.
+ */
 const Modals = memo(() => {
+  // Use extension-provided components if available, otherwise fall back to default implementations
   const {warning: Warning, updateApp: UApp} = useMemo(() => extensionsData.replaceModals, []);
 
   const addModal = useMemo(() => extensionsData.addModal, []);
