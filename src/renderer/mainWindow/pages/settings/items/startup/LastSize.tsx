@@ -1,23 +1,22 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
-import {AppDispatch} from '@lynx/redux/store';
+import { settingsActions, useSettingsState } from '@lynx/redux/reducers/settings';
+import { AppDispatch } from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback} from 'react';
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
+/**
+ * Settings toggle to remember and restore the last window size and position.
+ */
 export default function LastSize() {
   const dispatch = useDispatch<AppDispatch>();
   const openLastSize = useSettingsState('openLastSize');
 
-  const onOpenLastSizeChange = useCallback(
-    (selected: boolean) => {
-      storageIpc.update('app', {openLastSize: selected});
-      dispatch(settingsActions.setSettingsState({key: 'openLastSize', value: selected}));
-    },
-    [dispatch],
-  );
+  const handleEnabledChange = (isEnabled: boolean) => {
+    storageIpc.update('app', { openLastSize: isEnabled });
+    dispatch(settingsActions.setSettingsState({ key: 'openLastSize', value: isEnabled }));
+  };
 
   return (
     <SettingsFilterItem
@@ -31,7 +30,7 @@ export default function LastSize() {
       ]}>
       <LynxSwitch
         enabled={openLastSize}
-        onEnabledChange={onOpenLastSizeChange}
+        onEnabledChange={handleEnabledChange}
         title="Start in Last Window Size and Position"
         description="Start the app in the same window size and position as when it was last closed."
       />

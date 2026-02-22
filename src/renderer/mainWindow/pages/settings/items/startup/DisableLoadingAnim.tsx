@@ -1,23 +1,23 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
-import {AppDispatch} from '@lynx/redux/store';
+import { settingsActions, useSettingsState } from '@lynx/redux/reducers/settings';
+import { AppDispatch } from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback} from 'react';
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
+/**
+ * Settings toggle to disable loading window animations.
+ * Helps improve startup performance by removing visual effects.
+ */
 export default function DisableLoadingAnim() {
   const dispatch = useDispatch<AppDispatch>();
   const disableLoadingAnimations = useSettingsState('disableLoadingAnimations');
 
-  const onEnabledChange = useCallback(
-    (selected: boolean) => {
-      storageIpc.update('app', {disableLoadingAnimations: selected});
-      dispatch(settingsActions.setSettingsState({key: 'disableLoadingAnimations', value: selected}));
-    },
-    [dispatch],
-  );
+  const handleEnabledChange = (isEnabled: boolean) => {
+    storageIpc.update('app', { disableLoadingAnimations: isEnabled });
+    dispatch(settingsActions.setSettingsState({ key: 'disableLoadingAnimations', value: isEnabled }));
+  };
 
   return (
     <SettingsFilterItem
@@ -30,7 +30,7 @@ export default function DisableLoadingAnim() {
         'performance',
       ]}>
       <LynxSwitch
-        onEnabledChange={onEnabledChange}
+        onEnabledChange={handleEnabledChange}
         enabled={disableLoadingAnimations}
         title="Disable Loading Window Animations"
         description={'Disables loading windows animations to reduce visual effects and improve performance'}

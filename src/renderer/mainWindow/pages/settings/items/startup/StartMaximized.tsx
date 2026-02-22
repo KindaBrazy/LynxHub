@@ -1,31 +1,37 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback, useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
-/** Manage app start minimized */
+/**
+ * Settings toggle to manage launching the app in a maximized state.
+ */
 export default function StartMaximized() {
-  const [isSelected, setIsSelected] = useState<boolean>(false);
+  const [isEnabled, setIsEnabled] = useState<boolean>(false);
 
   useEffect(() => {
+    let isMounted = true;
     storageIpc.get('app').then(app => {
-      setIsSelected(app.startMaximized);
+      if (isMounted) setIsEnabled(app.startMaximized);
     });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const onEnabledChange = useCallback((selected: boolean) => {
-    storageIpc.update('app', {startMaximized: selected});
-    setIsSelected(selected);
-  }, []);
+  const handleEnabledChange = (enabled: boolean) => {
+    storageIpc.update('app', { startMaximized: enabled });
+    setIsEnabled(enabled);
+  };
 
   return (
     <SettingsFilterItem
       searchTexts={['Start Maximized', 'startup', 'launch maximized', 'maximize window', 'window size']}>
       <LynxSwitch
-        enabled={isSelected}
+        enabled={isEnabled}
         title="Start Maximized"
-        onEnabledChange={onEnabledChange}
+        onEnabledChange={handleEnabledChange}
         description="Launch the app in a maximized state."
       />
     </SettingsFilterItem>

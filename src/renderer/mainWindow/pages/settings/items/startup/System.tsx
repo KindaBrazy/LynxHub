@@ -1,24 +1,30 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import { storageUtilsIpc } from '@lynx_shared/ipc/storage';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback, useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
-/** Manage launch app on system startup */
+/**
+ * Settings toggle to manage launching the app on system startup.
+ */
 export default function System() {
-  const [isSelected, setIsSelected] = useState<boolean>(false);
+  const [isEnabled, setIsEnabled] = useState<boolean>(false);
 
   useEffect(() => {
+    let isMounted = true;
     storageIpc.get('app').then(app => {
-      setIsSelected(app.systemStartup);
+      if (isMounted) setIsEnabled(app.systemStartup);
     });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const onEnabledChange = useCallback((selected: boolean) => {
-    storageUtilsIpc.send.setSystemStartup(selected);
-    setIsSelected(selected);
-  }, []);
+  const handleEnabledChange = (enabled: boolean) => {
+    storageUtilsIpc.send.setSystemStartup(enabled);
+    setIsEnabled(enabled);
+  };
 
   return (
     <SettingsFilterItem
@@ -31,9 +37,9 @@ export default function System() {
         'startup',
       ]}>
       <LynxSwitch
-        enabled={isSelected}
+        enabled={isEnabled}
         title="Launch on System Startup"
-        onEnabledChange={onEnabledChange}
+        onEnabledChange={handleEnabledChange}
         description="Automatically start the app when the system boots up."
       />
     </SettingsFilterItem>
