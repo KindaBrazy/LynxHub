@@ -1,5 +1,9 @@
 import {modalActions} from '../../redux/reducers/modals';
 
+/**
+ * Registry of modal actions for tab-based modals.
+ * Each entry defines the open, close, and remove actions for a specific modal type.
+ */
 export const tabModalRegistry = {
   readme: {
     open: modalActions.openReadme,
@@ -43,4 +47,5 @@ export const tabModalRegistry = {
   },
 } as const;
 
+/** Union of all available tab modal keys */
 export type TabModalKey = keyof typeof tabModalRegistry;

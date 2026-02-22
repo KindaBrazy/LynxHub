@@ -3,11 +3,16 @@ import applicationIpc from '@lynx_shared/ipc/application';
 import {notification} from 'antd';
 import {useEffect} from 'react';
 
+/**
+ * Component that listens for custom notification events from the main process
+ * and displays them using Ant Design's notification system.
+ */
 export default function CustomNotification() {
   const [api, contextHolder] = notification.useNotification();
 
   useEffect(() => {
     const offOpen = applicationIpc.on.onCustomNotifOpen(data => {
+      // data.type is one of 'success' | 'info' | 'warning' | 'error'
       api[data.type]({
         closeIcon: null,
         placement: 'bottomRight',
@@ -49,7 +54,7 @@ export default function CustomNotification() {
       offOpen();
       offClose();
     };
-  }, []);
+  }, [api]);
 
   return <>{contextHolder}</>;
 }
