@@ -3,38 +3,43 @@ import {GetComponentsByPath} from '@lynx/components/card';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {TextPage_Icon} from '@lynx_assets/icons/pages';
 import {PageID} from '@lynx_common/consts';
-import {memo, useMemo} from 'react';
+import {memo} from 'react';
 
 import CardsContainer, {CardContainerClasses} from '../CardsContainer';
 import Page from '../Page';
 
-type Props = {show: boolean};
+type Props = {
+  /** Whether the page is currently visible */
+  show: boolean;
+};
 
+/**
+ * Text Generation Page Component
+ * Renders the Text Generation page with customized sections from extensions.
+ */
 const TextGenerationPage = memo(({show}: Props) => {
-  const {top, scrollTop, scrollBottom, bottom, cardsContainer} = useMemo(
-    () => extensionsData.customizePages.text.add,
-    [],
-  );
+  const {top, scrollTop, scrollBottom, bottom, cardsContainer} = extensionsData.customizePages.text.add;
 
   return (
     <Page show={show}>
-      {top && top.map((Top, index) => <Top key={index} />)}
+      {top?.map((Top, index) => <Top key={index} />)}
 
       <ScrollShadow size={20} className="size-full overflow-y-scroll p-5 scrollbar-hide">
-        {scrollTop && scrollTop.map((ScrollTop, index) => <ScrollTop key={index} />)}
+        {scrollTop?.map((ScrollTop, index) => <ScrollTop key={index} />)}
 
         <CardsContainer
           extraClassNames="mr-3"
           title="Text Generation"
           icon={<TextPage_Icon className={CardContainerClasses} />}
-          subTitle="Unleash Your Creativity with AI-Assisted Writing">
+          subTitle="Unleash Your Creativity with AI-Assisted Writing"
+        >
           <GetComponentsByPath routePath={PageID.textGen} extensionsElements={cardsContainer} />
         </CardsContainer>
 
-        {scrollBottom && scrollBottom.map((ScrollBottom, index) => <ScrollBottom key={index} />)}
+        {scrollBottom?.map((ScrollBottom, index) => <ScrollBottom key={index} />)}
       </ScrollShadow>
 
-      {bottom && bottom.map((Bottom, index) => <Bottom key={index} />)}
+      {bottom?.map((Bottom, index) => <Bottom key={index} />)}
     </Page>
   );
 });
