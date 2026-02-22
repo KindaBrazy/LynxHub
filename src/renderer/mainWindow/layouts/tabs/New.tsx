@@ -4,18 +4,29 @@ import {AppDispatch} from '@lynx/redux/store';
 import {defaultTabItem} from '@lynx/utils/constants';
 import {motion} from 'framer-motion';
 import {Plus} from 'lucide-react';
-import {memo} from 'react';
+import {memo, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
+/**
+ * Component to render the "New Tab" button.
+ * Adds a new default tab when clicked.
+ */
 const NewTab = memo(() => {
   const dispatch = useDispatch<AppDispatch>();
-  const addTab = () => {
+
+  const addTab = useCallback(() => {
     dispatch(tabsActions.addTab(defaultTabItem));
-  };
+  }, [dispatch]);
 
   return (
     <motion.div layoutId="new_tab" transition={{duration: 0.37, type: 'spring'}} layout>
-      <Button size="sm" variant="light" onPress={addTab} className="cursor-default mb-1" isIconOnly>
+      <Button
+        size="sm"
+        variant="light"
+        onPress={addTab}
+        className="cursor-default mb-1"
+        aria-label="New tab"
+        isIconOnly>
         <Plus className="size-4" />
       </Button>
     </motion.div>

@@ -30,7 +30,43 @@ const iconTransition = {
   transition: {duration: 0.15, ease: TRANSITION_EASINGS.easeOut},
 };
 
-const TabItem_Icon = memo(({tab, currentView}: Props) => {
+/**
+ * Helper to get the icon component based on page ID.
+ */
+const getPageIcon = (pageID: string) => {
+  switch (pageID) {
+    case PageID.home:
+      return <HomePage_Icon className="size-full" />;
+    case PageID.imageGen:
+      return <ImagePage_Icon className="size-full" />;
+    case PageID.textGen:
+      return <TextPage_Icon className="size-full" />;
+    case PageID.audioGen:
+      return <AudioPage_Icon className="size-full" />;
+    case PageID.agents:
+      return <AgentPage_Icon className="size-full" />;
+    case PageID.others:
+      return <OthersPage_Icon className="size-full" />;
+    case PageID.games:
+      return <GamePage_Icon className="size-full" />;
+    case PageID.tools:
+      return <ToolsPage_Icon className="size-full" />;
+    case PageID.dashboard:
+      return <DashboardPage_Icon className="size-full" />;
+    case PageID.plugins:
+      return <PluginPage_Icon className="size-full" />;
+    case PageID.settings:
+      return <SettingPage_Icon className="size-full" />;
+    default:
+      return <Avatar radius="none" className="size-full" src={APP_ICON_TRANSPARENT} />;
+  }
+};
+
+/**
+ * Component to display the icon for a tab.
+ * Handles favicons, internal page icons, loading states, and terminal icons.
+ */
+const TabIcon = memo(({tab, currentView}: Props) => {
   const [imgError, setImgError] = useState(false);
   const favIconUrl = tab.favIcon.url;
 
@@ -56,19 +92,12 @@ const TabItem_Icon = memo(({tab, currentView}: Props) => {
         />
       );
     }
-    if (currentView === 'browser') return <Earth className="size-full" />;
-    if (pageID === PageID.home) return <HomePage_Icon className="size-full" />;
-    if (pageID === PageID.imageGen) return <ImagePage_Icon className="size-full" />;
-    if (pageID === PageID.textGen) return <TextPage_Icon className="size-full" />;
-    if (pageID === PageID.audioGen) return <AudioPage_Icon className="size-full" />;
-    if (pageID === PageID.agents) return <AgentPage_Icon className="size-full" />;
-    if (pageID === PageID.others) return <OthersPage_Icon className="size-full" />;
-    if (pageID === PageID.games) return <GamePage_Icon className="size-full" />;
-    if (pageID === PageID.tools) return <ToolsPage_Icon className="size-full" />;
-    if (pageID === PageID.dashboard) return <DashboardPage_Icon className="size-full" />;
-    if (pageID === PageID.plugins) return <PluginPage_Icon className="size-full" />;
-    if (pageID === PageID.settings) return <SettingPage_Icon className="size-full" />;
-    return <Avatar radius="none" className="size-full" src={APP_ICON_TRANSPARENT} />;
+    
+    if (currentView === 'browser') {
+      return <Earth className="size-full" />;
+    }
+    
+    return getPageIcon(pageID);
   }, [tab, currentView, imgError, handleImgError]);
 
   const iconState = useMemo(() => {
@@ -100,4 +129,4 @@ const TabItem_Icon = memo(({tab, currentView}: Props) => {
   );
 });
 
-export default TabItem_Icon;
+export default TabIcon;

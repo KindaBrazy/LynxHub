@@ -9,25 +9,30 @@ import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {TabInfo} from '@lynx_common/types';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {X} from 'lucide-react';
-import {useEffect, useRef, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import AudioIndicator from './AudioIndicator';
-import TabItem_Icon from './Icon';
+import TabIcon from './Icon';
 import ProgressBar from './ProgressBar';
-import Title from './Title';
+import TabTitle from './Title';
 import {useIsActiveTab, useRemoveTab} from './utils';
 
 type Props = {
   tab: TabInfo;
 };
 
-export default function TabItem({tab}: Props) {
+/**
+ * Component representing a single tab in the tab bar.
+ * Handles selection, closing, and drag interactions.
+ */
+const TabItem = memo(({tab}: Props) => {
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const isActiveTab = useIsActiveTab(tab.id);
   const runningCards = useCardsState('runningCard');
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const [isTruncated, setIsTruncated] = useState<boolean>(false);
 
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
 
@@ -35,20 +40,23 @@ export default function TabItem({tab}: Props) {
 
   const removeTab = useRemoveTab();
 
-  const handleRemove = (isHokey: boolean) => {
+  const runningCard = useMemo(
+    () => runningCards.find(card => card.tabId === tab.id),
+    [runningCards, tab.id]
+  );
+
+  const handleRemove = useCallback((isHotkey: boolean) => {
     const tabId = tab.id;
 
-    const running = runningCards.find(card => card.tabId === tabId);
-
-    if (running) {
-      if (running.type === 'browser') {
+    if (runningCard) {
+      if (runningCard.type === 'browser') {
         removeTab({tabId});
       } else {
-        if ((isCtrlPressed && !isHokey) || !closeTabConfirm) {
+        if ((isCtrlPressed && !isHotkey) || !closeTabConfirm) {
           removeTab({tabId});
         } else {
           const bounds = closeBtnRef.current?.getBoundingClientRect();
-          if (bounds && isHokey) {
+          if (bounds && isHotkey) {
             contextMenuIpc.send.openTerminateTab(tabId, {x: bounds.x, y: bounds.y});
           } else {
             contextMenuIpc.send.openTerminateTab(tabId);
@@ -58,32 +66,33 @@ export default function TabItem({tab}: Props) {
     } else {
       removeTab({tabId});
     }
-  };
+  }, [tab.id, runningCard, isCtrlPressed, closeTabConfirm, removeTab]);
 
-  const handleEvent = (e: MouseEvent) => {
+  const handleAuxClick = useCallback((e: MouseEvent) => {
     if (e.button === 1) {
       e.preventDefault();
       handleRemove(false);
     }
-  };
+  }, [handleRemove]);
 
   useHotkeyPress([{name: Hotkey_Names.closeTab, method: isActiveTab ? () => handleRemove(true) : null}]);
 
   useEffect(() => {
-    if (btnRef.current) {
-      btnRef.current.addEventListener('auxclick', handleEvent);
+    const btn = btnRef.current;
+    if (btn) {
+      btn.addEventListener('auxclick', handleAuxClick);
     }
 
     return () => {
-      if (btnRef.current) {
-        btnRef.current.removeEventListener('auxclick', handleEvent);
+      if (btn) {
+        btn.removeEventListener('auxclick', handleAuxClick);
       }
     };
-  }, [btnRef, handleEvent]);
+  }, [handleAuxClick]);
 
-  const onPress = () => dispatch(tabsActions.setActiveTab(tab.id));
-
-  const [isTruncated, setIsTruncated] = useState<boolean>(false);
+  const onPress = useCallback(() => {
+    dispatch(tabsActions.setActiveTab(tab.id));
+  }, [dispatch, tab.id]);
 
   return (
     <Tooltip
@@ -103,15 +112,17 @@ export default function TabItem({tab}: Props) {
         ref={btnRef}
         radius="none"
         variant="light"
-        onPress={onPress}>
+        onPress={onPress}
+        aria-label={`Tab: ${tab.title}`}
+        aria-selected={isActiveTab}>
         <div className="flex gap-x-0.5 flex-row items-center min-w-0 flex-1">
-          <TabItem_Icon tab={tab} currentView={runningCards.find(card => card.tabId === tab.id)?.currentView} />
+          <TabIcon tab={tab} currentView={runningCard?.currentView} />
 
-          {runningCards.find(card => card.tabId === tab.id) && (
-            <AudioIndicator tabId={tab.id} id={runningCards.find(card => card.tabId === tab.id)!.id} />
+          {runningCard && (
+            <AudioIndicator tabId={tab.id} id={runningCard.id} />
           )}
 
-          <Title title={tab.title} setIsTruncated={setIsTruncated} />
+          <TabTitle title={tab.title} setIsTruncated={setIsTruncated} />
         </div>
 
         <Button
@@ -121,6 +132,7 @@ export default function TabItem({tab}: Props) {
           ref={closeBtnRef}
           onPress={() => handleRemove(false)}
           className="scale-75 cursor-default"
+          aria-label="Close tab"
           isIconOnly>
           <X className="size-4" />
         </Button>
@@ -129,4 +141,6 @@ export default function TabItem({tab}: Props) {
       </Button>
     </Tooltip>
   );
-}
+});
+
+export default TabItem;

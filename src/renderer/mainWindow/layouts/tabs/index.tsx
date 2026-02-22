@@ -1,40 +1,52 @@
 import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
+import {TabInfo} from '@lynx_common/types';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {Divider} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEqual} from 'lodash';
-import {memo, useEffect, useRef, useState} from 'react';
+import {memo, useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 import TabItem from './Item';
 import NewTab from './New';
 import {useRemoveTab} from './utils';
 
-const TabContainer = memo(() => {
+/**
+ * Container component for the tabs list.
+ * Handles drag-and-drop reordering, context menu interactions, and rendering of individual tabs.
+ */
+const TabsList = memo(() => {
   const dispatch = useDispatch<AppDispatch>();
 
   const tabsFromRedux = useTabsState('tabs');
   const removeTab = useRemoveTab();
 
-  const [localTabs, setLocalTabs] = useState(tabsFromRedux);
+  const [localTabs, setLocalTabs] = useState<TabInfo[]>(tabsFromRedux);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  // Sync local state with Redux when Redux state changes (e.g. new tab added from elsewhere)
   useEffect(() => {
     setLocalTabs(tabsFromRedux);
   }, [tabsFromRedux]);
 
+  // Prevent default middle-click scrolling behavior on the tab container
   useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.addEventListener('mousedown', event => {
+    const container = containerRef.current;
+    if (container) {
+      const handleMouseDown = (event: MouseEvent) => {
         if (event.button === 1) {
           event.preventDefault();
         }
-      });
+      };
+      container.addEventListener('mousedown', handleMouseDown);
+      return () => container.removeEventListener('mousedown', handleMouseDown);
     }
-  }, [containerRef]);
+    return undefined;
+  }, []);
 
+  // Listen for remove tab events from context menu
   useEffect(() => {
     const offRemoveTab = contextMenuIpc.on.removeTab(tabId => {
       removeTab({tabId});
@@ -43,21 +55,21 @@ const TabContainer = memo(() => {
     return () => offRemoveTab();
   }, [removeTab]);
 
-  const onReorder = (reorderedIds: string[]) => {
-    const newOrder = reorderedIds
-      .map(tabID => localTabs.find(tab => tab.id === tabID))
-      .filter((tab): tab is NonNullable<typeof tab> => tab !== undefined);
+  const onReorder = useCallback((reorderedIds: string[]) => {
+    setLocalTabs(prevTabs => {
+      const newOrder = reorderedIds
+        .map(tabID => prevTabs.find(tab => tab.id === tabID))
+        .filter((tab): tab is TabInfo => tab !== undefined);
 
-    if (newOrder.length === localTabs.length) {
-      setLocalTabs(newOrder);
-    }
-  };
+      return newOrder.length === prevTabs.length ? newOrder : prevTabs;
+    });
+  }, []);
 
-  const handleReorderEnd = () => {
+  const handleReorderEnd = useCallback(() => {
     if (!isEqual(tabsFromRedux, localTabs)) {
       dispatch(tabsActions.setTabState({key: 'tabs', value: localTabs}));
     }
-  };
+  }, [tabsFromRedux, localTabs, dispatch]);
 
   return (
     <div
@@ -72,11 +84,11 @@ const TabContainer = memo(() => {
         onMouseUp={handleReorderEnd}
         values={localTabs.map(tab => tab.id)}
         className="items-center h-full w-full flex flex-row overflow-y-hidden overflow-x-scroll scrollbar-hide">
-        <AnimatePresence>
+        <AnimatePresence mode="popLayout">
           {localTabs.map((tab, index) => (
             <Reorder.Item
               transition={{
-                layout: {duration: 0.5, type: 'spring'},
+                layout: {duration: 0.2, type: 'spring', bounce: 0, visualDuration: 0.2},
               }}
               as="div"
               key={tab.id}
@@ -86,7 +98,7 @@ const TabContainer = memo(() => {
               className="h-full flex items-center max-w-60 min-w-24"
               exit={{scale: 0.5, y: 10, x: 20, transition: {duration: 0.07, ease: 'backIn'}}}
               animate={{scale: 1, y: 0, x: 0, opacity: 1, transition: {duration: 0.25, ease: 'backOut'}}}>
-              <TabItem tab={tab} key={tab.id} />
+              <TabItem tab={tab} />
               {index < localTabs.length - 1 && <Divider className="mx-1" orientation="vertical" />}
             </Reorder.Item>
           ))}
@@ -98,4 +110,4 @@ const TabContainer = memo(() => {
   );
 });
 
-export default TabContainer;
+export default TabsList;
