@@ -1,7 +1,7 @@
 import {Button, ButtonGroup, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
-import {Fragment, useCallback, useMemo} from 'react';
+import {Fragment, memo, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../../plugins/extensions/loader';
@@ -10,9 +10,13 @@ import {AppDispatch} from '../../../redux/store';
 import {lynxTopToast} from '../../../utils/hooks';
 import {useTabModalLifecycle} from '../useTabModalManager';
 
-type Props = {cardId: string; isOpen: boolean; tabID: string};
+type Props = {
+  cardId: string;
+  isOpen: boolean;
+  tabID: string;
+};
 
-const UnassignCard = ({cardId, isOpen, tabID}: Props) => {
+const UnassignDialog = memo(({cardId, isOpen, tabID}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const {onOpenChange, show} = useTabModalLifecycle('cardUnassign', tabID);
@@ -34,7 +38,7 @@ const UnassignCard = ({cardId, isOpen, tabID}: Props) => {
           lynxTopToast(dispatch).error('An error occurred while unassigning.');
         });
     },
-    [cardId, closeHandle],
+    [cardId, closeHandle, dispatch],
   );
 
   return (
@@ -76,20 +80,19 @@ const UnassignCard = ({cardId, isOpen, tabID}: Props) => {
       </ModalContent>
     </Modal>
   );
-};
+});
 
-const UnassignCardComp = () => {
+const UnassignModal = () => {
   const Unassign = useMemo(() => extensionsData.replaceModals.unassignCard, []);
-
   const cardUnassignModal = useModalsState('cardUnassignModal');
 
   return (
     <>
       {cardUnassignModal.map(modal => (
-        <Fragment key={`${modal.tabID}_modal`}>{Unassign ? <Unassign /> : <UnassignCard {...modal} />}</Fragment>
+        <Fragment key={`${modal.tabID}_modal`}>{Unassign ? <Unassign /> : <UnassignDialog {...modal} />}</Fragment>
       ))}
     </>
   );
 };
 
-export default UnassignCardComp;
+export default UnassignModal;

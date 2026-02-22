@@ -34,34 +34,31 @@ type DetailsRow = {
   deletions: number;
 }[];
 
-type DetailsColumns = {key: string; label: string}[];
-
-const columns: DetailsColumns = [
+const columns = [
   {key: 'name', label: 'File Name'},
   {key: 'insertions', label: 'Insertions'},
   {key: 'deletions', label: 'Deletions'},
 ];
 
-/** Showing details and changes about updated card */
+/**
+ * Modal showing details and changes about updated card.
+ */
 export default function UpdateDetails() {
   const {details, isOpen, title, tabID} = useModalsState('updateDetails');
   const dispatch = useDispatch<AppDispatch>();
+  const show = useTabVisibility(tabID);
 
   const handleClose = useCallback(() => {
     dispatch(modalActions.closeUpdateDetails());
   }, [dispatch]);
 
-  const show = useTabVisibility(tabID);
-
   const rows = useMemo<DetailsRow>(() => {
-    return details.files.map((file, index) => {
-      return {
-        deletions: details.deletions[file] || 0,
-        insertions: details.insertions[file] || 0,
-        key: index,
-        name: <p className="md:max-w-72! lg:max-w-full! truncate overflow-hidden">{file}</p>,
-      };
-    });
+    return details.files.map((file, index) => ({
+      deletions: details.deletions[file] || 0,
+      insertions: details.insertions[file] || 0,
+      key: index,
+      name: <p className="md:max-w-72! lg:max-w-full! truncate overflow-hidden">{file}</p>,
+    }));
   }, [details]);
 
   const renderFileList = useCallback((files: string[]) => {
@@ -111,7 +108,7 @@ export default function UpdateDetails() {
               {!isEmpty(details.files) ? (
                 <Table aria-label="Update changed files">
                   <TableHeader columns={columns}>
-                    {columns => <TableColumn key={columns.key}>{columns.label}</TableColumn>}
+                    {col => <TableColumn key={col.key}>{col.label}</TableColumn>}
                   </TableHeader>
                   <TableBody items={rows}>
                     {row => (

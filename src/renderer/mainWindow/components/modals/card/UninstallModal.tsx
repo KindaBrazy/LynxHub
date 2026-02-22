@@ -3,7 +3,7 @@ import filesIpc from '@lynx_shared/ipc/files';
 import moduleIpc from '@lynx_shared/ipc/plugins/module';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
-import {Fragment, useCallback, useMemo} from 'react';
+import {Fragment, memo, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {extensionsData} from '../../../plugins/extensions/loader';
@@ -13,9 +13,13 @@ import {AppDispatch} from '../../../redux/store';
 import {lynxTopToast, useDisableTooltip, useInstalledCard} from '../../../utils/hooks';
 import {useTabModalLifecycle} from '../useTabModalManager';
 
-type Props = {cardId: string; isOpen: boolean; tabID: string};
+type Props = {
+  cardId: string;
+  isOpen: boolean;
+  tabID: string;
+};
 
-const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
+const UninstallDialog = memo(({cardId, isOpen, tabID}: Props) => {
   const card = useInstalledCard(cardId);
   const dispatch = useDispatch<AppDispatch>();
   const disableTooltip = useDisableTooltip(true);
@@ -54,11 +58,10 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
         lynxTopToast(dispatch).loading(type === 'removeDir' ? 'Uninstalling...' : 'Moving to trash...', promise);
       }
     },
-    [card, cardId, closeHandle],
+    [card, cardId, closeHandle, dispatch],
   );
 
   const remove = useCallback(() => uninstallHandle('removeDir'), [uninstallHandle]);
-
   const trash = useCallback(() => uninstallHandle('trashDir'), [uninstallHandle]);
 
   const uninstall = useCallback(() => {
@@ -80,7 +83,7 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
     });
 
     lynxTopToast(dispatch).loading('Uninstalling...', promise);
-  }, [cardId, closeHandle]);
+  }, [cardId, closeHandle, dispatch]);
 
   return (
     <Modal
@@ -143,20 +146,19 @@ const UninstallCard = ({cardId, isOpen, tabID}: Props) => {
       </ModalContent>
     </Modal>
   );
-};
+});
 
-const UninstallCardComp = () => {
+const UninstallModal = () => {
   const Uninstall = useMemo(() => extensionsData.replaceModals.uninstallCard, []);
-
   const cardUninstallModal = useModalsState('cardUninstallModal');
 
   return (
     <>
       {cardUninstallModal.map(modal => (
-        <Fragment key={`${modal.tabID}_modal`}>{Uninstall ? <Uninstall /> : <UninstallCard {...modal} />}</Fragment>
+        <Fragment key={`${modal.tabID}_modal`}>{Uninstall ? <Uninstall /> : <UninstallDialog {...modal} />}</Fragment>
       ))}
     </>
   );
 };
 
-export default UninstallCardComp;
+export default UninstallModal;
