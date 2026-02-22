@@ -1,15 +1,18 @@
 import {useAppState} from '@lynx/redux/reducers/app';
 import {Maximize_Icon, Minimize_Icon, UnMaximize_Icon} from '@lynx_assets/icons';
 import applicationIpc from '@lynx_shared/ipc/application';
-import {motion} from 'framer-motion';
+import {HTMLMotionProps, motion} from 'framer-motion';
 import {ReactNode, useCallback, useMemo} from 'react';
 
 import WindowButtons_Close from './WindowButtonsClose';
 
-const BUTTONS_COMMON_STYLE: string = 'notDraggable cursor-default transition-colors duration-300 ease-out';
+const BUTTONS_COMMON_STYLE = 'notDraggable cursor-default transition-colors duration-300 ease-out';
 type WindowOperation = 'fullscreen' | 'minimize' | 'maximize' | 'close' | 'restart';
 
-/** Managing window controls (minimize, maximize, close). */
+/**
+ * Managing window controls (minimize, maximize, close).
+ * Handles the state changes and renders appropriate buttons based on window state.
+ */
 const WindowButtons = () => {
   const onFocus = useAppState('onFocus');
   const maximized = useAppState('maximized');
@@ -19,7 +22,7 @@ const WindowButtons = () => {
     [],
   );
 
-  const buttonProps = useMemo(
+  const buttonProps: HTMLMotionProps<'button'> = useMemo(
     () => ({
       whileHover: {scale: 1.1},
       animate: {opacity: onFocus ? 1 : 0.5},
