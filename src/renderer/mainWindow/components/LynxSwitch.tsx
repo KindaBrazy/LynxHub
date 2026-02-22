@@ -3,9 +3,13 @@ import SettingsSearchHighlight from '@lynx/pages/settings/SettingsSearchHighligh
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
 type Props = {
+  /** Initial enabled state for uncontrolled usage, or current state for controlled usage */
   enabled?: boolean;
+  /** Callback when state changes */
   onEnabledChange?: (selected: boolean) => void;
+  /** Title of the switch */
   title: string;
+  /** Optional description displayed below the title */
   description?: string | ReactNode;
   isDisabled?: boolean;
   className?: string;
@@ -14,7 +18,10 @@ type Props = {
   thumbIcon?: ReactNode;
 };
 
-/** Customizable switch with title and description. */
+/**
+ * Customizable switch component with title, description, and search highlighting.
+ * Supports both controlled and uncontrolled modes.
+ */
 export default function LynxSwitch({
   enabled = false,
   onEnabledChange,
@@ -48,10 +55,10 @@ export default function LynxSwitch({
       size === 'sm' ? 'px-2 py-1' : `px-4 ${icon && 'pl-1!'} py-2.5`,
       'border-2 border-transparent data-[selected=true]:border-secondary/30',
     );
-  }, [size]);
+  }, [size, icon]);
 
   const wrapperClassName = useMemo(() => {
-    return `p-0 ${size === 'sm' ? 'w-8 h-2' : 'w-10 h-3.5'} bg-foreground-300 overflow-visible`;
+    return cn('p-0 bg-foreground-300 overflow-visible', size === 'sm' ? 'w-8 h-2' : 'w-10 h-3.5');
   }, [size]);
 
   const thumbClassName = useMemo(() => {
@@ -76,7 +83,7 @@ export default function LynxSwitch({
       isSelected={isSelected}
       isDisabled={isDisabled}
       onValueChange={onChange}
-      className={'cursor-default whitespace-pre-line ' + className}>
+      className={cn('cursor-default whitespace-pre-line', className)}>
       <div className="flex flex-raw gap-x-2 items-center">
         {icon}
         <div className="flex flex-col gap-y-1">
@@ -85,7 +92,7 @@ export default function LynxSwitch({
             (typeof description === 'string' ? (
               <SettingsSearchHighlight text={description} className="text-tiny text-default-400" />
             ) : (
-              <p className="text-tiny text-default-400">{description}</p>
+              <div className="text-tiny text-default-400">{description}</div>
             ))}
         </div>
       </div>

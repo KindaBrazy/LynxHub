@@ -1,5 +1,5 @@
 import {Button, Card, User} from '@heroui/react';
-import SettingsSection from '@lynx/components/ContentSection';
+import SettingsSection from '@lynx/components/SettingsSection';
 import {Patreon_Icon} from '@lynx_assets/icons';
 import {PATREON_URL} from '@lynx_common/consts';
 import {PatreonSupporter, PatreonSupporterTier} from '@lynx_common/types';

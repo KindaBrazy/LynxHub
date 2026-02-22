@@ -4,13 +4,21 @@ import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
 
 type Props = {
+  /** Optional custom tooltip text */
   tooltipTitle?: string;
+  /** Whether to show the tooltip. Defaults to true */
   showTooltip?: boolean;
+  /** The text content to copy to clipboard */
   contentToCopy?: string;
+  /** Optional className for the button */
   className?: string;
+  /** Optional callback when copy is performed. If provided, overrides default clipboard action */
   onCopy?: () => void;
 };
 
+/**
+ * A reusable button component that copies text to clipboard and shows a success state.
+ */
 const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, className, onCopy}: Props) => {
   const [copied, setCopied] = useState<boolean>(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -25,7 +33,9 @@ const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, cl
     if (onCopy) {
       onCopy();
     } else {
-      if (contentToCopy) navigator.clipboard.writeText(contentToCopy);
+      if (contentToCopy) {
+        void navigator.clipboard.writeText(contentToCopy);
+      }
     }
 
     setCopied(true);
@@ -33,7 +43,7 @@ const CopyClipboard = memo(({showTooltip = true, tooltipTitle, contentToCopy, cl
     timeoutRef.current = setTimeout(() => {
       setCopied(false);
     }, 1000);
-  }, [contentToCopy]);
+  }, [contentToCopy, onCopy]);
 
   return (
     <Tooltip

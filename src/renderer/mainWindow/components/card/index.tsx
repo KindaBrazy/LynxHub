@@ -1,5 +1,5 @@
 import {Card, CardBody} from '@heroui/react';
-import NavigatePluginsPage from '@lynx/components/NavigatePluginsPage';
+import NavigateToPluginsButton from '@lynx/components/NavigateToPluginsButton';
 import Page from '@lynx/pages/Page';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useGetCardsByPath} from '@lynx/plugins/modules';
@@ -33,7 +33,7 @@ export const GetComponentsByPath = memo(({routePath, extensionsElements}: GetCom
           <CardBody className="items-center text-center">
             <h3 className="mb-2 text-xl font-semibold text-foreground">Oops! No cards to display right now</h3>
             <p className="mb-6 text-foreground-500">Please install related modules to see cards</p>
-            <NavigatePluginsPage size="md" />
+            <NavigateToPluginsButton size="md" />
           </CardBody>
         </Card>
       </div>

@@ -5,7 +5,11 @@ import {PageID, PageTitles} from '@lynx_common/consts';
 import {WidgetAdd} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';
 import {useDispatch} from 'react-redux';
-export default function NavigatePluginsPage({size}: {size?: 'sm' | 'md'}) {
+
+/**
+ * A button that navigates to the Plugins page when clicked.
+ */
+export default function NavigateToPluginsButton({size}: {size?: 'sm' | 'md'}) {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleGoModules = useCallback(() => {

@@ -11,6 +11,9 @@ type Props = {
   spotlightColor?: string;
 };
 
+/**
+ * A card component that displays a spotlight effect following the mouse cursor.
+ */
 export default function SpotlightCard({children, className = '', spotlightColor = 'rgba(255, 255, 255, 0.25)'}: Props) {
   const divRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState<boolean>(false);

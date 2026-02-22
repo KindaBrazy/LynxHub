@@ -36,7 +36,10 @@ type CustomCodeProps = HTMLAttributes<HTMLElement> & {
   'data-inline'?: boolean;
 };
 
-const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: MarkdownViewerProps) => {
+/**
+ * Custom hook to fetch markdown content.
+ */
+const useMarkdownContent = (url: string, urlType: MarkdownViewerProps['urlType']) => {
   const [content, setContent] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
@@ -100,10 +103,19 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
       }
     };
 
-    fetchContent();
+    void fetchContent();
 
     return () => controller.abort();
   }, [url, urlType, repository]);
+
+  return {content, loading, error, repository};
+};
+
+/**
+ * Renders a markdown viewer with syntax highlighting, raw HTML support, and GitHub integration.
+ */
+const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: MarkdownViewerProps) => {
+  const {content, loading, error, repository} = useMarkdownContent(url, urlType);
 
   const transformImageUrl = useCallback(
     (src: string) => {
@@ -142,110 +154,113 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
     }
   };
 
-  const components: Components = {
-    img: ({src, alt, height, width, ...props}) => {
-      const style: CSSProperties = {};
+  const components: Components = useMemo(
+    () => ({
+      img: ({src, alt, height, width, ...props}) => {
+        const style: CSSProperties = {};
 
-      if (height) {
-        style.height = `${height}px`;
-        style.objectFit = 'contain';
-      }
+        if (height) {
+          style.height = `${height}px`;
+          style.objectFit = 'contain';
+        }
 
-      if (width) {
-        style.width = `${width}px`;
-      }
+        if (width) {
+          style.width = `${width}px`;
+        }
 
-      return (
-        <img
-          onError={e => {
-            const target = e.target as HTMLImageElement;
-            if (target.src.includes('/HEAD/')) {
-              target.src = target.src.replace('/HEAD/', '/master/');
-            }
-          }}
-          style={style}
-          loading="lazy"
-          alt={alt || ''}
-          className="mx-1 inline-block"
-          src={transformImageUrl(src || '')}
-          {...props}
-        />
-      );
-    },
-    a: ({href, children, ...props}) => {
-      if (href?.startsWith('#')) {
+        return (
+          <img
+            onError={e => {
+              const target = e.target as HTMLImageElement;
+              if (target.src.includes('/HEAD/')) {
+                target.src = target.src.replace('/HEAD/', '/master/');
+              }
+            }}
+            style={style}
+            loading="lazy"
+            alt={alt || ''}
+            className="mx-1 inline-block"
+            src={transformImageUrl(src || '')}
+            {...props}
+          />
+        );
+      },
+      a: ({href, children, ...props}) => {
+        if (href?.startsWith('#')) {
+          return (
+            <a
+              href={href}
+              onClick={handleLinkClick}
+              className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+              {...props}>
+              {children}
+            </a>
+          );
+        }
         return (
           <a
             href={href}
-            onClick={handleLinkClick}
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
             {...props}>
             {children}
           </a>
         );
-      }
-      return (
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-          {...props}>
-          {children}
-        </a>
-      );
-    },
-    code: ({className, children, 'data-inline': inline, ...props}: CustomCodeProps) => {
-      const language = /language-(\w+)/.exec(className || '');
+      },
+      code: ({className, children, 'data-inline': inline, ...props}: CustomCodeProps) => {
+        const language = /language-(\w+)/.exec(className || '');
 
-      if (inline) {
+        if (inline) {
+          return (
+            <code className="rounded bg-gray-100 px-1 py-0.5 text-foreground-100 text-sm dark:bg-gray-800" {...props}>
+              {children}
+            </code>
+          );
+        }
+
         return (
-          <code className="rounded bg-gray-100 px-1 py-0.5 text-foreground-100 text-sm dark:bg-gray-800" {...props}>
+          <code className={`${language ? className : ''} text-foreground-800`} {...props}>
             {children}
           </code>
         );
-      }
-
-      return (
-        <code className={`${language ? className : ''} text-foreground-800`} {...props}>
+      },
+      pre: ({children, ...props}) => (
+        <pre className="overflow-x-auto rounded-lg bg-gray-100 p-4 dark:bg-gray-800" {...props}>
           {children}
-        </code>
-      );
-    },
-    pre: ({children, ...props}) => (
-      <pre className="overflow-x-auto rounded-lg bg-gray-100 p-4 dark:bg-gray-800" {...props}>
-        {children}
-      </pre>
-    ),
-    div: ({className, 'data-align': align, children, ...props}: CustomDivProps) => (
-      <div
-        className={`${className || ''} ${
-          align === 'center' ? 'flex flex-wrap items-center justify-center gap-2 text-center' : ''
-        }`}
-        {...props}>
-        {children}
-      </div>
-    ),
-    p: ({children, ...props}) => {
-      const childArray = Children.toArray(children);
-      const hasOnlyImages = childArray.every(child => isValidElement(child) && child.type === 'img');
-      const hasMultipleImages = childArray.filter(child => isValidElement(child) && child.type === 'img').length > 1;
-
-      return (
-        <p
-          className={
-            ` ${hasOnlyImages ? 'flex flex-wrap gap-2' : ''} ` +
-            ` ${hasMultipleImages ? 'flex-col items-start' : 'items-center'} `
-          }
+        </pre>
+      ),
+      div: ({className, 'data-align': align, children, ...props}: CustomDivProps) => (
+        <div
+          className={`${className || ''} ${
+            align === 'center' ? 'flex flex-wrap items-center justify-center gap-2 text-center' : ''
+          }`}
           {...props}>
           {children}
-        </p>
-      );
-    },
-    kbd: ({...props}) => <Kbd {...props} />,
-    details: ({...props}) => <details className="my-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-800/50" {...props} />,
-    summary: ({...props}) => <summary className="cursor-pointer font-medium" {...props} />,
-  };
+        </div>
+      ),
+      p: ({children, ...props}) => {
+        const childArray = Children.toArray(children);
+        const hasOnlyImages = childArray.every(child => isValidElement(child) && child.type === 'img');
+        const hasMultipleImages = childArray.filter(child => isValidElement(child) && child.type === 'img').length > 1;
+
+        return (
+          <p
+            className={
+              ` ${hasOnlyImages ? 'flex flex-wrap gap-2' : ''} ` +
+              ` ${hasMultipleImages ? 'flex-col items-start' : 'items-center'} `
+            }
+            {...props}>
+            {children}
+          </p>
+        );
+      },
+      kbd: ({...props}) => <Kbd {...props} />,
+      details: ({...props}) => <details className="my-4 rounded-lg bg-gray-50 p-4 dark:bg-gray-800/50" {...props} />,
+      summary: ({...props}) => <summary className="cursor-pointer font-medium" {...props} />,
+    }),
+    [transformImageUrl],
+  );
 
   return loading ? (
     <Spinner size="lg" color="primary" label="Please wait..." className="size-full my-16" />

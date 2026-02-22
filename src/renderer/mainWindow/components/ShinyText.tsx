@@ -8,6 +8,9 @@ type ShinyTextProps = {
   darkMode?: boolean;
 };
 
+/**
+ * Renders text with a shiny animation effect.
+ */
 export default function ShinyText({
   text,
   disabled = false,

@@ -5,6 +5,10 @@ import {ReactNode} from 'react';
 import SpotlightCard from './SpotlightCard';
 
 type Props = {title: string; description: string; icon: string; onPress: () => void; footer?: ReactNode};
+
+/**
+ * A card component for the Tools page, featuring a spotlight effect and hover animations.
+ */
 export function ToolsCard({title, description, icon, onPress, footer}: Props) {
   const isDarkMode = useAppState('darkMode');
 

@@ -1,4 +1,4 @@
-import SettingsSection from '@lynx/components/ContentSection';
+import SettingsSection from '@lynx/components/SettingsSection';
 import {isWin} from '@lynx_common/utils';
 import {Rocket} from '@solar-icons/react-perf/BoldDuotone';
 
