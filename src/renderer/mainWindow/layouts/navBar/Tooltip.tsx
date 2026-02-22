@@ -2,19 +2,20 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {ReactNode, RefObject, useLayoutEffect, useRef, useState} from 'react';
 import {createPortal} from 'react-dom';
 
-const PortalTooltipContent = ({
-  content,
-  position,
-  isDark,
-  tooltipRef,
-}: {
+type PortalTooltipContentProps = {
   content: string;
   position: {top: number; left: number};
   isDark: boolean;
   tooltipRef: RefObject<HTMLDivElement | null>;
-}) => {
+};
+
+/**
+ * Portal component for rendering the tooltip content outside the DOM hierarchy.
+ */
+const PortalTooltipContent = ({content, position, isDark, tooltipRef}: PortalTooltipContentProps) => {
   const textColor = isDark ? '#e5e7eb' : '#1f2937';
   const borderColor = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+  const bgColor = isDark ? '#2d2d32' : '#ffffff';
 
   return createPortal(
     <motion.div
@@ -32,15 +33,15 @@ const PortalTooltipContent = ({
       initial={{opacity: 0, x: -10}}>
       <div
         style={{
-          backgroundColor: isDark ? '#2d2d32' : '#ffffff',
+          backgroundColor: bgColor,
           color: textColor,
           border: `1px solid ${borderColor}`,
         }}
-        className="px-3 py-2 rounded-xl shadow-xl whitespace-nowrap text-sm font-medium">
+        className="px-3 py-2 rounded-xl shadow-xl whitespace-nowrap text-sm font-medium relative">
         {content}
         <div
           style={{
-            borderRightColor: isDark ? '#2d2d32' : '#ffffff',
+            borderRightColor: bgColor,
           }}
           className="absolute right-full top-1/2 -translate-y-1/2 border-8 border-transparent"
         />
@@ -50,12 +51,15 @@ const PortalTooltipContent = ({
   );
 };
 
-type TooltipProps = {
+export type TooltipProps = {
   children: ReactNode;
   content: string;
   isDark: boolean;
 };
 
+/**
+ * Tooltip component that renders content in a portal on hover.
+ */
 const Tooltip = ({children, content, isDark}: TooltipProps) => {
   const triggerRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
@@ -74,7 +78,10 @@ const Tooltip = ({children, content, isDark}: TooltipProps) => {
 
   return (
     <>
-      <div ref={triggerRef} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+      <div
+        ref={triggerRef}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}>
         {children}
       </div>
 

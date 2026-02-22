@@ -5,6 +5,11 @@ import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 
 const classNames = 'flex size-full items-center overflow-x-scroll scrollbar-hide';
 
+/**
+ * StatusBar component displaying extension-added items at start, center, and end positions.
+ * Supports container replacement via extensions.
+ * Reports its height to the main process via IPC.
+ */
 const StatusBar = memo(() => {
   const {addEnd, addStart, addCenter, replaceContainer: ReplaceContainer} = useMemo(() => extensionsData.statusBar, []);
 
@@ -41,7 +46,8 @@ const StatusBar = memo(() => {
   return (
     <>
       {!isNil(ReplaceContainer) ? (
-        // @ts-ignore
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore: Extension component typing is loose
         <ReplaceContainer ref={setRef} />
       ) : (
         !isEmptyAdd && (
@@ -72,4 +78,5 @@ const StatusBar = memo(() => {
     </>
   );
 });
+
 export default StatusBar;
