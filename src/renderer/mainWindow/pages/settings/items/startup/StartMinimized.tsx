@@ -1,31 +1,37 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback, useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
-/** Manage app start minimized */
+/**
+ * Settings toggle to manage launching the app in a minimized state.
+ */
 export default function StartMinimized() {
-  const [isSelected, setIsSelected] = useState<boolean>(false);
+  const [isEnabled, setIsEnabled] = useState<boolean>(false);
 
   useEffect(() => {
+    let isMounted = true;
     storageIpc.get('app').then(app => {
-      setIsSelected(app.startMinimized);
+      if (isMounted) setIsEnabled(app.startMinimized);
     });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const onEnabledChange = useCallback((selected: boolean) => {
-    storageIpc.update('app', {startMinimized: selected});
-    setIsSelected(selected);
-  }, []);
+  const handleEnabledChange = (enabled: boolean) => {
+    storageIpc.update('app', { startMinimized: enabled });
+    setIsEnabled(enabled);
+  };
 
   return (
     <SettingsFilterItem
       searchTexts={['Start Minimized', 'startup', 'launch minimized', 'minimize', 'system tray', 'taskbar']}>
       <LynxSwitch
-        enabled={isSelected}
+        enabled={isEnabled}
         title="Start Minimized"
-        onEnabledChange={onEnabledChange}
+        onEnabledChange={handleEnabledChange}
         description="Launch the app in a minimized state."
       />
     </SettingsFilterItem>

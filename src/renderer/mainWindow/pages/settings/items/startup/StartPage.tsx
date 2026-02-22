@@ -1,23 +1,29 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback, useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
-/** Manage app reopen page */
+/**
+ * Settings toggle to manage resuming the last session on startup.
+ */
 export default function StartPage() {
-  const [isSelected, setIsSelected] = useState<boolean>(true);
+  const [isEnabled, setIsEnabled] = useState<boolean>(true);
 
   useEffect(() => {
+    let isMounted = true;
     storageIpc.get('app').then(app => {
-      setIsSelected(app.startupLastActivePage);
+      if (isMounted) setIsEnabled(app.startupLastActivePage);
     });
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
-  const onEnabledChange = useCallback((selected: boolean) => {
-    storageIpc.update('app', {startupLastActivePage: selected});
-    setIsSelected(selected);
-  }, []);
+  const handleEnabledChange = (enabled: boolean) => {
+    storageIpc.update('app', { startupLastActivePage: enabled });
+    setIsEnabled(enabled);
+  };
 
   return (
     <SettingsFilterItem
@@ -30,9 +36,9 @@ export default function StartPage() {
         'startup',
       ]}>
       <LynxSwitch
-        enabled={isSelected}
+        enabled={isEnabled}
         title="Resume Last Session"
-        onEnabledChange={onEnabledChange}
+        onEnabledChange={handleEnabledChange}
         description={'Resume the last active page when reopening the app.\nIf disabled, the Home page will be shown.'}
       />
     </SettingsFilterItem>
