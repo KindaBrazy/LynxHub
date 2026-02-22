@@ -9,9 +9,15 @@ import DropdownArgItem from './ArgumentItems/Dropdown';
 import FileArgItem from './ArgumentItems/File';
 import InputArgItem from './ArgumentItems/Input';
 
-type Props = {argument: ChosenArgument; setArguments: Dispatch<SetStateAction<ChosenArgumentsData>>; id: string};
+type Props = {
+  argument: ChosenArgument;
+  setArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;
+  id: string;
+};
 
-/** Display the argument manager element based on the argument type: DropDown, Input, Directory, etc. */
+/**
+ * Display the argument manager element based on the argument type: DropDown, Input, Directory, etc.
+ */
 const ManageArgumentsItem = memo(({argument, setArguments, id}: Props) => {
   const cardArgument = useGetArgumentsByID(id);
 
@@ -28,43 +34,49 @@ const ManageArgumentsItem = memo(({argument, setArguments, id}: Props) => {
       });
       return {...prevState, data: [...data]};
     });
-  }, []);
+  }, [setArguments, argument.name]);
 
-  const changeValue = useCallback((value: any) => {
-    setArguments((prevState: ChosenArgumentsData): ChosenArgumentsData => {
-      const data = prevState.data.map(arg => {
-        if (arg.preset === prevState.activePreset) {
-          return {
-            ...arg,
-            arguments: arg.arguments.map(arg => (arg.name === argument.name ? {...arg, value} : arg)),
-          };
-        }
-        return arg;
+  const changeValue = useCallback(
+    (value: any) => {
+      setArguments((prevState: ChosenArgumentsData): ChosenArgumentsData => {
+        const data = prevState.data.map(arg => {
+          if (arg.preset === prevState.activePreset) {
+            return {
+              ...arg,
+              arguments: arg.arguments.map(a => (a.name === argument.name ? {...a, value} : a)),
+            };
+          }
+          return arg;
+        });
+        return {...prevState, data};
       });
-      return {...prevState, data};
-    });
-  }, []);
+    },
+    [setArguments, argument.name]
+  );
 
-  const renderItem = useMemo(() => {
-    const Props = {argument, changeValue, removeArg};
-
-    switch (getArgumentType(argument.name, cardArgument)) {
+  const Component = useMemo(() => {
+    const type = getArgumentType(argument.name, cardArgument);
+    switch (type) {
       case 'Directory':
-        return <DirectoryArgItem {...Props} id={id} />;
+        return DirectoryArgItem;
       case 'File':
-        return <FileArgItem {...Props} id={id} />;
+        return FileArgItem;
       case 'Input':
-        return <InputArgItem {...Props} id={id} />;
+        return InputArgItem;
       case 'DropDown':
-        return <DropdownArgItem {...Props} id={id} />;
+        return DropdownArgItem;
       case 'CheckBox':
-        return <CheckBoxArgItem {...Props} id={id} />;
+        return CheckBoxArgItem;
       default:
         return null;
     }
-  }, []);
+  }, [argument.name, cardArgument]);
 
-  return <>{renderItem}</>;
+  if (!Component) return null;
+
+  return <Component argument={argument} changeValue={changeValue} removeArg={removeArg} id={id} />;
 });
+
+ManageArgumentsItem.displayName = 'ManageArgumentsItem';
 
 export default ManageArgumentsItem;

@@ -15,7 +15,7 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import {Circle_Icon} from '@lynx_assets/icons';
-import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
+import {ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
 import {Filter} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, some} from 'lodash';
 import {Plus} from 'lucide-react';
@@ -25,45 +25,51 @@ import {useTabVisibility} from '../../../../../layouts/tabs/utils';
 import {useGetArgumentsByID} from '../../../../../plugins/modules';
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../utils/moduleArguments';
 import LynxScroll from '../../../../LynxScroll';
-import ArgumentCategory from './AddCategory';
+import ArgumentSelectionList from './AddCategory';
 
 type Props = {
   addArgumentsModal: ReturnType<typeof useDisclosure>;
-  chosenArguments: ArgumentsPresets;
+  chosenArguments: ChosenArgumentsData;
   setChosenArguments: Dispatch<SetStateAction<ChosenArgumentsData>>;
   id: string;
   tabId: string;
 };
 
-const isEmptyData = (data): boolean => {
+const isEmptyData = (data: any): boolean => {
+  if (!data) return true;
   if ('sections' in data) {
-    // Data has the 'sections' property
-    return data.sections.every(section => section.items.length === 0);
+    return data.sections.every((section: any) => section.items.length === 0);
   } else if ('items' in data) {
-    // Data has the 'items' property
     return data.items.length === 0;
   }
-
-  // Invalid input data
-  return false;
+  return true;
 };
 
-/** Select and add arguments */
-export default function AddArguments({addArgumentsModal, chosenArguments, setChosenArguments, id, tabId}: Props) {
+/**
+ * Modal to select and add new arguments to the configuration.
+ */
+export default function AddArgumentModal({
+  addArgumentsModal,
+  chosenArguments,
+  setChosenArguments,
+  id,
+  tabId,
+}: Props) {
   const [filterArguments, setFilterArguments] = useState<Set<string>>(new Set(['all']));
   const [selectedArguments, setSelectedArguments] = useState<Set<string>>(new Set([]));
   const [searchValue, setSearchValue] = useState<string>('');
 
   const cardArgument = useGetArgumentsByID(id);
 
-  const listData = useMemo(
-    () =>
-      getFilteredArguments(
-        cardArgument,
-        chosenArguments.arguments.map(argument => argument.name),
-      ),
-    [chosenArguments, cardArgument],
-  );
+  // Memoize the filtered list of available arguments
+  const listData = useMemo(() => {
+    const currentArgNames =
+      chosenArguments.data
+        .find(data => data.preset === chosenArguments.activePreset)
+        ?.arguments.map(arg => arg.name) || [];
+
+    return getFilteredArguments(cardArgument, currentArgNames);
+  }, [chosenArguments.data, chosenArguments.activePreset, cardArgument]);
 
   const removeSelected = useCallback((value: string) => {
     setSelectedArguments(prevState => {
@@ -84,30 +90,36 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
   }, [clearSelected, addArgumentsModal]);
 
   const onAdd = useCallback(() => {
+    if (selectedArguments.size === 0) return;
+
     setChosenArguments(prevState => {
-      const selectedArg = Array.from(selectedArguments).filter(
-        arg =>
-          !prevState.data
-            .find(data => data.preset === prevState.activePreset)
-            ?.arguments.some(data => data.name === arg),
+      const activePresetData = prevState.data.find(data => data.preset === prevState.activePreset);
+      const currentArgs = activePresetData?.arguments || [];
+
+      const newArgsToAdd = Array.from(selectedArguments).filter(
+        argName => !currentArgs.some(existingArg => existingArg.name === argName)
       );
 
-      const result: ChosenArgument[] = selectedArg.map(arg => {
-        return {name: arg, value: getArgumentDefaultValue(arg, cardArgument) || ''};
+      const newChosenArgs: ChosenArgument[] = newArgsToAdd.map(argName => ({
+        name: argName,
+        value: getArgumentDefaultValue(argName, cardArgument) || '',
+      }));
+
+      const newData = prevState.data.map(presetData => {
+        if (presetData.preset === prevState.activePreset) {
+          return {
+            ...presetData,
+            arguments: [...presetData.arguments, ...newChosenArgs],
+          };
+        }
+        return presetData;
       });
 
-      // return {...prevState, arguments: [...prevState.arguments, result]};
-      const data = [...prevState.data].map(arg => {
-        const argResult = arg;
-        if (arg.preset === prevState.activePreset) {
-          argResult.arguments = [...argResult.arguments, ...result];
-        }
-        return argResult;
-      });
-      return {...prevState, data};
+      return {...prevState, data: newData};
     });
+
     onClose();
-  }, [selectedArguments, id, onClose, cardArgument]);
+  }, [selectedArguments, cardArgument, onClose, setChosenArguments]);
 
   const show = useTabVisibility(tabId);
 
@@ -120,10 +132,11 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
       isOpen={addArgumentsModal.isOpen}
       onOpenChange={addArgumentsModal.onOpenChange}
       classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! scrollbar-hide ${show}`}}
-      hideCloseButton>
+      hideCloseButton
+    >
       <ModalContent>
         <ModalHeader className="flex flex-col space-y-2">
-          <div className="flex w-full flex-row space-x-2">
+          <div className="flex w-full flex-row space-x-2 items-center">
             <span className="font-bold">Add Argument</span>
             {!isEmpty(selectedArguments) && (
               <Button size="sm" color="danger" variant="light" onPress={clearSelected}>
@@ -132,7 +145,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
             )}
           </div>
           {!isEmpty(selectedArguments) && (
-            <div className="flex w-full flex-row flex-wrap gap-1 px-2 py-0.5">
+            <div className="flex w-full flex-row flex-wrap gap-1 px-2 py-0.5 max-h-[60px] overflow-y-auto scrollbar-hide">
               {Array.from(selectedArguments).map((value: string) => (
                 <Chip
                   size="sm"
@@ -140,7 +153,8 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
                   variant="flat"
                   color="success"
                   onClick={() => removeSelected(value)}
-                  className="transition-colors duration-300 hover:bg-success/10 cursor-pointer">
+                  className="transition-colors duration-300 hover:bg-success/10 cursor-pointer"
+                >
                   {value}
                 </Chip>
               ))}
@@ -154,6 +168,7 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
               startContent={<Circle_Icon className="size-4" />}
               autoFocus
               isClearable
+              value={searchValue}
             />
             <Dropdown>
               <DropdownTrigger>
@@ -169,7 +184,8 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
                 selectionMode="single"
                 aria-label="Filter Arguments"
                 selectedKeys={filterArguments}
-                disallowEmptySelection>
+                disallowEmptySelection
+              >
                 <DropdownSection title="Show">
                   <DropdownItem key="all" className="cursor-default">
                     All
@@ -189,15 +205,19 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
           <div className="space-y-2">
             {listData?.map((data, index) => {
               if (isEmptyData(data)) return null;
+              // Check if the category condition is met (if any)
               if (
                 data.condition &&
                 !selectedArguments.has(data.condition) &&
-                !some(chosenArguments.arguments, {name: data.condition})
+                !some(
+                  chosenArguments.data.find(d => d.preset === chosenArguments.activePreset)?.arguments,
+                  {name: data.condition}
+                )
               ) {
                 return null;
               }
               return (
-                <ArgumentCategory
+                <ArgumentSelectionList
                   title={data.category}
                   searchValue={searchValue}
                   key={`${index}_category`}
@@ -216,7 +236,8 @@ export default function AddArguments({addArgumentsModal, chosenArguments, setCho
             color="success"
             onPress={onAdd}
             isDisabled={isEmpty(selectedArguments)}
-            startContent={<Plus className="size-4" />}>
+            startContent={<Plus className="size-4" />}
+          >
             Add
           </Button>
           <Button color="warning" variant="light" onPress={onClose}>

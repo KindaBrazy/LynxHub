@@ -1,10 +1,10 @@
 import {Button, Chip, Tooltip, useDisclosure} from '@heroui/react';
-import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_common/types';
+import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
 import {Empty} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
-import {Dispatch, SetStateAction} from 'react';
+import {Dispatch, SetStateAction, useCallback} from 'react';
 
 import LaunchConfigSection from '../Section';
 import ManageArgumentsItem from './ManageItem';
@@ -16,24 +16,32 @@ type Props = {
   id: string;
 };
 
-/** Show selected arguments */
+/**
+ * Show selected arguments and allow reordering.
+ */
 export default function ManageArguments({addArgumentsModal, chosenArguments, setChosenArguments, id}: Props) {
-  const openAddArguments = () => addArgumentsModal.onOpen();
+  const openAddArguments = useCallback(() => addArgumentsModal.onOpen(), [addArgumentsModal]);
 
-  const onReorder = (items: string[]) => {
-    const newOrder = items.map(name => chosenArguments.arguments.find(argument => argument.name === name));
-    if (newOrder.every(item => item !== undefined)) {
-      setChosenArguments(prevState => {
-        const data = prevState.data.map(arg => {
-          if (arg.preset === prevState.activePreset) {
-            return {...arg, arguments: newOrder};
-          }
-          return arg;
+  const onReorder = useCallback(
+    (items: string[]) => {
+      const newOrder = items
+        .map(name => chosenArguments.arguments.find(argument => argument.name === name))
+        .filter((item): item is ChosenArgument => item !== undefined);
+
+      if (newOrder.length === items.length) {
+        setChosenArguments(prevState => {
+          const data = prevState.data.map(arg => {
+            if (arg.preset === prevState.activePreset) {
+              return {...arg, arguments: newOrder};
+            }
+            return arg;
+          });
+          return {...prevState, data};
         });
-        return {...prevState, data};
-      });
-    }
-  };
+      }
+    },
+    [chosenArguments.arguments, setChosenArguments]
+  );
 
   return (
     <LaunchConfigSection
@@ -52,24 +60,36 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
               size="sm"
               radius="full"
               variant="flat"
-              className="scale-85 hover:bg-success/10 transition-colors duration-300">
+              className="scale-85 hover:bg-success/10 transition-colors duration-300"
+            >
               {chosenArguments.arguments.length}
             </Chip>
           )}
         </div>
       }
-      description="Configurate environments and command lines">
+      description="Configurate environments and command lines"
+    >
       {isEmpty(chosenArguments.arguments) ? (
-        <Empty className="m-" image={Empty.PRESENTED_IMAGE_SIMPLE} description="No item selected to display" />
+        <Empty
+          className="m-"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description="No item selected to display"
+        />
       ) : (
         <AnimatePresence>
           <Reorder.Group
             axis="y"
             onReorder={onReorder}
             className="flex flex-col space-y-2 overflow-hidden"
-            values={chosenArguments.arguments.map(argument => argument.name)}>
+            values={chosenArguments.arguments.map(argument => argument.name)}
+          >
             {chosenArguments.arguments.map(argument => (
-              <ManageArgumentsItem id={id} key={argument.name} argument={argument} setArguments={setChosenArguments} />
+              <ManageArgumentsItem
+                id={id}
+                key={argument.name}
+                argument={argument}
+                setArguments={setChosenArguments}
+              />
             ))}
           </Reorder.Group>
         </AnimatePresence>

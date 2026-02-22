@@ -1,7 +1,7 @@
 import {Card, CardBody, CardHeader, Listbox, ListboxItem, ListboxSection, Selection} from '@heroui/react';
 import {ArgumentItem, ArgumentSection} from '@lynx_common/types/plugins/modules';
-import {cloneDeep, isEmpty} from 'lodash';
-import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
+import {isEmpty} from 'lodash';
+import {Dispatch, SetStateAction, useCallback, useMemo} from 'react';
 import Highlighter from 'react-highlight-words';
 
 import {searchInStrings} from '../../../../../utils';
@@ -11,30 +11,26 @@ type Props = {
   title: string;
   selectedArguments: Set<string>;
   setSelectedArguments: Dispatch<SetStateAction<Set<string>>>;
-
   filterArguments: Set<string>;
   searchValue: string;
 };
 
 const isEmptyData = (data: ArgumentSection[] | ArgumentItem[]) => {
   if (Array.isArray(data)) {
-    if (data.length === 0) {
-      return true; // Empty array
-    }
-
-    if (data.every(item => Object.prototype.hasOwnProperty.call(item, 'items'))) {
-      // Check if all ArgumentSection items have an empty 'items' array
+    if (data.length === 0) return true;
+    if (data.every(item => 'items' in item)) {
       return (data as ArgumentSection[]).every(section => section.items.length === 0);
-    } else {
-      // Data is an array of ArgumentItem
-      return false; // Non-empty array of ArgumentItem
     }
+    return false;
   }
-
-  return false; // Invalid input data
+  return false;
 };
 
-export default function ArgumentCategory({
+/**
+ * Renders a list of arguments, either grouped by section or as a flat list.
+ * Supports filtering by selection status and search term.
+ */
+export default function ArgumentSelectionList({
   filterArguments,
   listData,
   searchValue,
@@ -42,111 +38,106 @@ export default function ArgumentCategory({
   setSelectedArguments,
   title,
 }: Props) {
-  const [dataBySearch, setDataBySearch] = useState<ArgumentSection[] | ArgumentItem[]>(listData);
+  const filteredData = useMemo(() => {
+    let result: ArgumentSection[] | ArgumentItem[] = listData;
 
-  useEffect(() => {
-    let resultByFilter: ArgumentSection[] | ArgumentItem[];
-    // -----------------------------------------------> By Filter
+    // 1. Filter by selection status (All / Selected / Not Selected)
     const filterType = filterArguments.values().next().value;
-
-    let isSection: boolean = false;
-
-    if (!isEmpty(listData)) {
-      isSection = 'section' in listData[0];
-    }
-
-    if (filterType === 'all') {
-      resultByFilter = listData;
-    } else {
+    if (filterType !== 'all') {
       const shouldInclude = filterType === 'selected';
-      resultByFilter = isSection
-        ? (listData as ArgumentSection[]).map(section => ({
+      const isSection = !isEmpty(result) && 'items' in result[0];
+
+      if (isSection) {
+        result = (result as ArgumentSection[])
+          .map(section => ({
             ...section,
             items: section.items.filter(item => shouldInclude === selectedArguments.has(item.name)),
           }))
-        : (listData as ArgumentItem[]).filter(item => shouldInclude === selectedArguments.has(item.name));
-    }
-
-    if (!isEmpty(resultByFilter) && 'section' in resultByFilter[0]) {
-      resultByFilter = (resultByFilter as ArgumentSection[]).filter(state => !isEmpty(state.items));
-    }
-    setDataBySearch(resultByFilter);
-
-    // -----------------------------------------------> By search
-    const filterItem = () => (argument: {name: string; description?: string}) => {
-      const {description = '', name} = argument;
-      return searchInStrings(searchValue, [description, name]);
-    };
-
-    if (searchValue && !isEmpty(resultByFilter)) {
-      const isSection = 'section' in resultByFilter[0];
-
-      let newFilteredData = isSection
-        ? ([...resultByFilter] as ArgumentSection[]).map(section => ({
-            ...section,
-            items: section.items.filter(filterItem()),
-          }))
-        : ([...resultByFilter] as ArgumentItem[]).filter(filterItem());
-
-      if (!isEmpty(newFilteredData) && 'section' in newFilteredData[0]) {
-        newFilteredData = (newFilteredData as ArgumentSection[]).filter(state => !isEmpty(state.items));
+          .filter(section => !isEmpty(section.items));
+      } else {
+        result = (result as ArgumentItem[]).filter(
+          item => shouldInclude === selectedArguments.has(item.name)
+        );
       }
-      setDataBySearch(newFilteredData);
     }
-  }, [filterArguments, searchValue, selectedArguments]);
+
+    // 2. Filter by search value
+    if (searchValue) {
+      const searchWords = searchValue.toLowerCase().split(' ');
+      const filterItem = (item: ArgumentItem) =>
+        searchInStrings(searchValue, [item.name, item.description || '']);
+
+      const isSection = !isEmpty(result) && 'items' in result[0];
+
+      if (isSection) {
+        result = (result as ArgumentSection[])
+          .map(section => ({
+            ...section,
+            items: section.items.filter(filterItem),
+          }))
+          .filter(section => !isEmpty(section.items));
+      } else {
+        result = (result as ArgumentItem[]).filter(filterItem);
+      }
+    }
+
+    return result;
+  }, [listData, filterArguments, selectedArguments, searchValue]);
 
   const onSelectionChange = useCallback(
     (keys: Selection) => {
       setSelectedArguments(keys as Set<string>);
     },
-    [setSelectedArguments],
+    [setSelectedArguments]
   );
 
-  const renderItem = (item: ArgumentItem) => {
-    return (
-      <ListboxItem key={item.name} className="cursor-default" textValue={`Select ${item.name}`}>
-        <Highlighter
-          highlightTag="div"
-          textToHighlight={item.name}
-          className="flex w-full flex-wrap"
-          searchWords={searchValue.split(' ')}
-          highlightClassName="bg-primary-400/70"
-        />
-        <Highlighter
-          highlightTag="div"
-          searchWords={searchValue.split(' ')}
-          highlightClassName="bg-primary-400/50"
-          textToHighlight={item.description || ''}
-          className="flex w-full text-wrap text-xs text-foreground/50"
-        />
-      </ListboxItem>
-    );
-  };
+  const renderItem = useCallback(
+    (item: ArgumentItem) => {
+      const searchWords = searchValue.split(' ');
+      return (
+        <ListboxItem key={item.name} className="cursor-default" textValue={`Select ${item.name}`}>
+          <Highlighter
+            highlightTag="div"
+            textToHighlight={item.name}
+            className="flex w-full flex-wrap font-medium"
+            searchWords={searchWords}
+            highlightClassName="bg-primary-400/70"
+          />
+          <Highlighter
+            highlightTag="div"
+            searchWords={searchWords}
+            highlightClassName="bg-primary-400/50"
+            textToHighlight={item.description || ''}
+            className="flex w-full text-wrap text-xs text-foreground/50 mt-0.5"
+          />
+        </ListboxItem>
+      );
+    },
+    [searchValue]
+  );
 
-  const data = useMemo(() => {
-    return cloneDeep(dataBySearch);
-  }, [dataBySearch]);
-
-  if (isEmptyData(data)) return null;
+  if (isEmptyData(filteredData)) return null;
 
   return (
     <Card shadow="none" className="bg-foreground-100">
-      <CardHeader className="justify-center text-LynxOrange pt-4">{title}</CardHeader>
+      <CardHeader className="justify-center text-LynxOrange pt-4 font-bold">{title}</CardHeader>
       <CardBody>
-        {'section' in data[0] ? (
+        {!isEmpty(filteredData) && 'items' in filteredData[0] ? (
           <Listbox
             variant="flat"
             selectionMode="multiple"
             aria-label="Arguments List"
             selectedKeys={selectedArguments}
-            items={data as ArgumentSection[]}
-            onSelectionChange={onSelectionChange}>
+            items={filteredData as ArgumentSection[]}
+            onSelectionChange={onSelectionChange}
+          >
             {section => (
               <ListboxSection
                 key={section.section}
                 items={section.items}
                 title={section.section}
-                classNames={{heading: 'text-warning'}}>
+                classNames={{heading: 'text-warning font-semibold'}}
+              >
                 {item => renderItem(item)}
               </ListboxSection>
             )}
@@ -156,9 +147,10 @@ export default function ArgumentCategory({
             variant="flat"
             selectionMode="multiple"
             aria-label="Arguments List"
-            items={data as ArgumentItem[]}
+            items={filteredData as ArgumentItem[]}
             selectedKeys={selectedArguments}
-            onSelectionChange={onSelectionChange}>
+            onSelectionChange={onSelectionChange}
+          >
             {item => renderItem(item)}
           </Listbox>
         )}
