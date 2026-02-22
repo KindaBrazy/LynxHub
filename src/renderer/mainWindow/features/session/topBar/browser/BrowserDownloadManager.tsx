@@ -1,9 +1,12 @@
-import {Badge, Button} from '@heroui/react';
+import {Badge, Button, Tooltip} from '@heroui/react';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
 import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
-import {useEffect, useState} from 'react';
+import {memo, useEffect, useState} from 'react';
 
-export default function DownloadManager() {
+/**
+ * A button that shows the number of active downloads and opens the download manager.
+ */
+const BrowserDownloadManager = memo(() => {
   const [itemCount, setItemCount] = useState<number>(0);
 
   useEffect(() => {
@@ -26,9 +29,21 @@ export default function DownloadManager() {
       content={itemCount}
       placement="bottom-right"
       className="border-0 mr-1.5 mb-1.5 scale-75 pointer-events-none">
-      <Button size="sm" variant="light" className="cursor-default" onPress={openDownloadsWindow} isIconOnly>
-        <DownloadMinimalistic className="size-4" />
-      </Button>
+      <Tooltip content="Show Downloads" delay={1000}>
+        <Button
+          size="sm"
+          variant="light"
+          className="cursor-default"
+          onPress={openDownloadsWindow}
+          isIconOnly
+          aria-label="Downloads">
+          <DownloadMinimalistic className="size-4" />
+        </Button>
+      </Tooltip>
     </Badge>
   );
-}
+});
+
+BrowserDownloadManager.displayName = 'BrowserDownloadManager';
+
+export default BrowserDownloadManager;

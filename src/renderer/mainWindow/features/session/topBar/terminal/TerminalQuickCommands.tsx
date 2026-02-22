@@ -5,10 +5,19 @@ import {formatHotkey} from '@lynx/utils';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {terminalLineEnding} from '@lynx_common/utils';
 import ptyIpc from '@lynx_shared/ipc/pty';
+import {memo} from 'react';
 
-type Props = {id: string};
+type Props = {
+  /**
+   * The ID of the terminal/card.
+   */
+  id: string;
+};
 
-export default function QuickCommands({id}: Props) {
+/**
+ * Quick command buttons for the terminal.
+ */
+const TerminalQuickCommands = memo(({id}: Props) => {
   const quickCommands = useTerminalState('quickCommands');
   const hotkeys = useHotkeysState('hotkeys');
 
@@ -57,4 +66,8 @@ export default function QuickCommands({id}: Props) {
       })}
     </>
   );
-}
+});
+
+TerminalQuickCommands.displayName = 'TerminalQuickCommands';
+
+export default TerminalQuickCommands;

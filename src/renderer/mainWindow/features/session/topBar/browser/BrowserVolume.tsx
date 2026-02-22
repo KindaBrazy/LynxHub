@@ -1,15 +1,24 @@
-import {Button} from '@heroui/react';
+import {Button, Tooltip} from '@heroui/react';
 import {useVolumeState} from '@lynx/redux/reducers/volume';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {Volume, VolumeCross, VolumeLoud} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback, useMemo, useRef} from 'react';
 
 type Props = {
+  /**
+   * The ID of the browser/card.
+   */
   id: string;
+  /**
+   * The ID of the tab.
+   */
   tabId: string;
 };
 
-const Browser_Volume = memo(({id, tabId}: Props) => {
+/**
+ * A button to control the volume of the browser tab.
+ */
+const BrowserVolume = memo(({id, tabId}: Props) => {
   const btnRef = useRef<HTMLButtonElement | null>(null);
 
   const tabAudioPlaying = useVolumeState('tabAudioPlaying');
@@ -64,18 +73,22 @@ const Browser_Volume = memo(({id, tabId}: Props) => {
   }, [isMuted, globalMuted, isPlaying, volume]);
 
   return (
-    <Button
-      size="sm"
-      ref={btnRef}
-      variant="light"
-      aria-label={ariaLabel}
-      onPress={openVolumeMenu}
-      className="cursor-default"
-      aria-description={ariaDescription}
-      isIconOnly>
-      {icon}
-    </Button>
+    <Tooltip content={ariaLabel} delay={1000}>
+      <Button
+        size="sm"
+        ref={btnRef}
+        variant="light"
+        aria-label={ariaLabel}
+        onPress={openVolumeMenu}
+        className="cursor-default"
+        aria-description={ariaDescription}
+        isIconOnly>
+        {icon}
+      </Button>
+    </Tooltip>
   );
 });
 
-export default Browser_Volume;
+BrowserVolume.displayName = 'BrowserVolume';
+
+export default BrowserVolume;

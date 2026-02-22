@@ -16,9 +16,17 @@ const calc = (startTime: string) => {
 
 type TimeType = {hh: number; mm: number; ss: number};
 
-type Props = {startTime: string};
+type Props = {
+  /**
+   * The start time string.
+   */
+  startTime: string;
+};
 
-const Timer = memo(({startTime}: Props) => {
+/**
+ * A timer displaying the elapsed time since start.
+ */
+const TerminalTimer = memo(({startTime}: Props) => {
   const activeTab = useTabsState('activeTab');
   const [{ss, hh, mm}, setTime] = useState<TimeType>(calc(startTime));
 
@@ -28,7 +36,7 @@ const Timer = memo(({startTime}: Props) => {
     }, 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [startTime]);
 
   return (
     <NumberFlowGroup>
@@ -51,4 +59,6 @@ const Timer = memo(({startTime}: Props) => {
   );
 });
 
-export default Timer;
+TerminalTimer.displayName = 'TerminalTimer';
+
+export default TerminalTimer;
