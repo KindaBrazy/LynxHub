@@ -5,7 +5,8 @@ import {PATREON_URL} from '@lynx_common/consts';
 import {PatreonSupporter, PatreonSupporterTier} from '@lynx_common/types';
 import staticsIpc from '@lynx_shared/ipc/statics';
 import {HeartAngle, HeartPulse2, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
-import {useEffect, useMemo, useState} from 'react';
+import {memo, useEffect, useMemo, useState} from 'react';
+
 export const DashboardCreditsId = 'settings_credits_elem';
 
 const TIER_EMOJI: Record<PatreonSupporterTier, string> = {
@@ -28,14 +29,20 @@ const MAX_DISPLAYED_SUPPORTERS = 50;
 const tiers: PatreonSupporterTier[] = ['Diamond Sponsor', 'Platinum Sponsor'];
 
 /** Reporting app issues on GitHub */
-export default function DashboardCredits() {
+const DashboardCredits = memo(() => {
   const [expandedTier, setExpandedTier] = useState<PatreonSupporterTier | null>(null);
   const [supporters, setSupporters] = useState<PatreonSupporter[]>([]);
 
   useEffect(() => {
+    let mounted = true;
     staticsIpc.getPatrons().then(data => {
-      if (data) setSupporters(data);
+      if (mounted && data) {
+        setSupporters(data);
+      }
     });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const groupedSupporters = useMemo(
@@ -65,7 +72,7 @@ export default function DashboardCredits() {
           'relative mb-6 overflow-hidden rounded-2xl bg-linear-to-br from-blue-50 via-sky-50' +
           ' to-indigo-50 p-6 dark:from-blue-900/20 dark:via-sky-900/20 dark:to-indigo-900/20'
         }>
-        <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 via-sky-500/10 to-indigo-500/10"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-blue-500/10 via-sky-500/10 to-indigo-500/10" />
         <div className="relative z-10 text-center">
           <div className="mb-3 flex items-center justify-center">
             <div className="animate-pulse rounded-full bg-linear-to-r from-blue-500 to-indigo-500 p-2">
@@ -202,4 +209,8 @@ export default function DashboardCredits() {
       </div>
     </SettingsSection>
   );
-}
+});
+
+DashboardCredits.displayName = 'DashboardCredits';
+
+export default DashboardCredits;

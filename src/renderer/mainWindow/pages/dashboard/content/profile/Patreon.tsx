@@ -6,10 +6,10 @@ import {getCacheUrl} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import userIpc from '@lynx_shared/ipc/user';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import {useCallback, useState} from 'react';
+import {memo, useCallback, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-export default function Profile_Patreon() {
+const Profile_Patreon = memo(() => {
   const patreonLoggedIn = useUserState('patreonLoggedIn');
   const patreonUserData = useUserState('patreonUserData');
   const [isNotMember, setIsNotMember] = useState<boolean>(false);
@@ -53,15 +53,19 @@ export default function Profile_Patreon() {
       .finally(() => setIsLoading(false));
   }, [dispatch]);
 
-  const cancelLoading = () => {
+  const cancelLoading = useCallback(() => {
     AddBreadcrumb_Renderer(`Patreon Cancel Loading`);
     setIsLoading(false);
     window.electron.ipcRenderer.send('patreon-cancel-process');
-  };
+  }, []);
 
-  const openPatreonPage = () => {
+  const openPatreonPage = useCallback(() => {
     window.open('https://www.patreon.com/lynxhub');
-  };
+  }, []);
+
+  const closeAlert = useCallback(() => {
+    setIsNotMember(false);
+  }, []);
 
   return (
     <Card
@@ -88,7 +92,7 @@ export default function Profile_Patreon() {
                   <Button size="sm" variant="flat" color="primary" onPress={openPatreonPage}>
                     Become a Member
                   </Button>
-                  <Button size="sm" variant="light" onPress={() => setIsNotMember(false)}>
+                  <Button size="sm" variant="light" onPress={closeAlert}>
                     Close
                   </Button>
                 </div>
@@ -97,15 +101,6 @@ export default function Profile_Patreon() {
               title="You are not a member of the Lynxhub Patreon."
               classNames={{description: 'py-1 w-full', title: 'text-warning'}}
             />
-            {/*<div className="flex flex-row space-x-2">
-              <Button size="sm" variant="flat" color="primary" onPress={openPatreonPage}>
-                Become a Member
-              </Button>
-              <Button size="sm" variant="light" onPress={() => setIsNotMember(false)}>
-                Close
-              </Button>
-            </div>
-            <p className="text-xs text-danger">You are not a member of the Lynxhub Patreon.</p>*/}
           </div>
         ) : (
           <div className="flex flex-row space-x-2">
@@ -128,4 +123,8 @@ export default function Profile_Patreon() {
       </div>
     </Card>
   );
-}
+});
+
+Profile_Patreon.displayName = 'Profile_Patreon';
+
+export default Profile_Patreon;

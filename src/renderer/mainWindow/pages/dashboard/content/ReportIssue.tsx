@@ -3,11 +3,12 @@ import SettingsSection from '@lynx/components/SettingsSection';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {ISSUE_PAGE} from '@lynx_common/consts';
 import {SmileCircle, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
+import {memo} from 'react';
 
 export const DashboardReportIssueId = 'settings_report_issue_elem';
 
 /** Reporting app issues on GitHub */
-export default function DashboardReportIssue() {
+const DashboardReportIssue = memo(() => {
   return (
     <SettingsSection
       title="Help & Feedback"
@@ -31,4 +32,8 @@ export default function DashboardReportIssue() {
       </Button>
     </SettingsSection>
   );
-}
+});
+
+DashboardReportIssue.displayName = 'DashboardReportIssue';
+
+export default DashboardReportIssue;

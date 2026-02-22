@@ -11,14 +11,14 @@ import staticsIpc from '@lynx_shared/ipc/statics';
 import userIpc from '@lynx_shared/ipc/user';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Download} from '@solar-icons/react-perf/BoldDuotone';
-import {useCallback, useEffect, useMemo, useState} from 'react';
+import {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 export const DashboardUpdateId = 'settings_update_elem';
 
 type UpdateStatus = {version: string; build: number; date: string};
 
-export default function DashboardUpdate() {
+const DashboardUpdate = memo(() => {
   const patreonLoggedIn = useUserState('patreonLoggedIn');
   const patreonUserData = useUserState('patreonUserData');
 
@@ -30,9 +30,12 @@ export default function DashboardUpdate() {
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
+    let mounted = true;
     async function fetchStatus() {
       const data = await staticsIpc.getReleases();
       const insider = await staticsIpc.getInsider();
+
+      if (!mounted) return;
 
       if (data) {
         setStatusPublic({version: data.currentVersion, build: data.currentBuild, date: data.releaseDate});
@@ -51,6 +54,9 @@ export default function DashboardUpdate() {
     }
 
     fetchStatus();
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const openUpdate = useCallback(() => {
@@ -90,7 +96,7 @@ export default function DashboardUpdate() {
       case 'public':
         return ['early_access', 'insider'];
     }
-  }, [patreonUserData]);
+  }, [patreonUserData.subscribeStage]);
 
   return (
     <SettingsSection title="Updates" id={DashboardUpdateId} icon={<Download className="size-5" />} itemsCenter>
@@ -236,4 +242,8 @@ export default function DashboardUpdate() {
       </div>
     </SettingsSection>
   );
-}
+});
+
+DashboardUpdate.displayName = 'DashboardUpdate';
+
+export default DashboardUpdate;

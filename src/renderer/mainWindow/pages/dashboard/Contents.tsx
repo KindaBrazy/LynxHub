@@ -1,21 +1,27 @@
 import LynxScroll from '@lynx/components/LynxScroll';
+import {memo} from 'react';
 
 import {DashboardSections} from './Container';
-import SettingsContentSkeleton from './SettingsContentSkeleton';
+import DashboardSkeleton from './SettingsContentSkeleton';
 import {useDelayedShow} from './useDelayedShow';
 
-/** Settings content */
-const DashboardPageContents = () => {
+/**
+ * Main content area for the Dashboard page.
+ * Handles lazy loading of sections.
+ */
+const DashboardContent = memo(() => {
   const showSections = useDelayedShow(300);
 
   return (
     <LynxScroll className="size-full pl-1 pr-4 py-2">
-      <div className=" flex flex-col gap-y-4">
-        {!showSections && <SettingsContentSkeleton />}
+      <div className="flex flex-col gap-y-4">
+        {!showSections && <DashboardSkeleton />}
         {showSections && <DashboardSections />}
       </div>
     </LynxScroll>
   );
-};
+});
 
-export default DashboardPageContents;
+DashboardContent.displayName = 'DashboardContent';
+
+export default DashboardContent;

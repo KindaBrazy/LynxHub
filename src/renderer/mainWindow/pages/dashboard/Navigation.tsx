@@ -6,15 +6,16 @@ import staticsIpc from '@lynx_shared/ipc/statics';
 import {Download, HeartPulse2, InfoSquare, SmileCircle} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
-import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
+import {memo, ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
 
 import SettingsSearchHighlight from '../settings/SettingsSearchHighlight';
 import {dashboardSectionId} from './Container';
+import {useScrollSpy} from './useScrollSpy';
 
 type GroupItem = {
   icon: ReactNode;
   title: string;
-  color?: 'danger' | 'warning' | 'success';
+  color?: 'danger' | 'warning' | 'success' | 'default';
   elementId: string;
 };
 
@@ -58,7 +59,7 @@ const initialGroupSections: GroupProps[] = [
 ];
 
 /** Dashboard navigation bar group and items */
-const DashboardGroupSection = ({title, items, danger = false, activeSection}: GroupProps & {activeSection: string}) => {
+const DashboardGroupSection = memo(({title, items, danger = false, activeSection}: GroupProps & {activeSection: string}) => {
   const onPress = useCallback((id: string) => {
     document.getElementById(id)?.scrollIntoView({behavior: 'smooth', block: 'start'});
   }, []);
@@ -93,25 +94,39 @@ const DashboardGroupSection = ({title, items, danger = false, activeSection}: Gr
       </div>
     </div>
   );
-};
+});
 
-const DashboardPageNav = () => {
-  const buttons = useMemo(() => extensionsData.customizePages.dashboard.add.navButton, []);
+DashboardGroupSection.displayName = 'DashboardGroupSection';
+
+const DashboardNavigation = memo(() => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const buttons = useMemo(() => extensionsData.customizePages.dashboard.add.navButton as React.ComponentType<any>[], []);
   const [sections, setSections] = useState<GroupProps[]>(initialGroupSections);
-  const [activeSection, setActiveSection] = useState<string>('');
 
   useEffect(() => {
+    let mounted = true;
     staticsIpc.getPatrons().then(cr => {
+      if (!mounted) return;
       if (!isEmpty(cr)) {
-        const updatedSections = JSON.parse(JSON.stringify(initialGroupSections));
-        updatedSections[0].items.push({
-          title: 'Credits',
-          icon: <HeartPulse2 className="size-4 shrink-0" />,
-          elementId: dashboardSectionId.DashboardCreditsId,
+        setSections(prev => {
+          // Avoid duplicate addition if this runs multiple times
+          if (prev[0].items.some(item => item.elementId === dashboardSectionId.DashboardCreditsId)) {
+            return prev;
+          }
+          
+          const updatedSections = JSON.parse(JSON.stringify(initialGroupSections));
+          updatedSections[0].items.push({
+            title: 'Credits',
+            icon: <HeartPulse2 className="size-4 shrink-0" />,
+            elementId: dashboardSectionId.DashboardCreditsId,
+          });
+          return updatedSections;
         });
-        setSections(updatedSections);
       }
     });
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // Collect all item IDs across all groups
@@ -119,69 +134,7 @@ const DashboardPageNav = () => {
     return sections.flatMap(group => group.items.map(item => item.elementId));
   }, [sections]);
 
-  // Set up intersection observers for all sections globally
-  useEffect(() => {
-    const observers: IntersectionObserver[] = [];
-    let timeoutId: NodeJS.Timeout;
-
-    const setupObservers = () => {
-      if (allItemIds.length === 0) return;
-
-      // Find the scroll container
-      const firstElem = document.getElementById(allItemIds[0]);
-      if (!firstElem) {
-        timeoutId = setTimeout(setupObservers, 100);
-        return;
-      }
-
-      // Find the OverlayScrollbars viewport
-      let scrollContainer: Element | null = firstElem;
-      while (scrollContainer && !scrollContainer.classList.contains('os-viewport')) {
-        scrollContainer = scrollContainer.parentElement;
-      }
-
-      // Track intersection ratios for ALL sections globally
-      const intersectionRatios = new Map<string, number>();
-
-      allItemIds.forEach(itemId => {
-        const elem = document.getElementById(itemId);
-        if (elem) {
-          const observer = new IntersectionObserver(
-            ([entry]) => {
-              intersectionRatios.set(itemId, entry.intersectionRatio);
-
-              // Find the section with the highest intersection ratio across ALL groups
-              let maxRatio = 0;
-              let topSection = '';
-              intersectionRatios.forEach((ratio, id) => {
-                if (ratio > maxRatio) {
-                  maxRatio = ratio;
-                  topSection = id;
-                }
-              });
-
-              if (maxRatio > 0.1) {
-                setActiveSection(topSection);
-              }
-            },
-            {
-              root: scrollContainer,
-              threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
-            },
-          );
-          observer.observe(elem);
-          observers.push(observer);
-        }
-      });
-    };
-
-    timeoutId = setTimeout(setupObservers, 100);
-
-    return () => {
-      clearTimeout(timeoutId);
-      observers.forEach(observer => observer.disconnect());
-    };
-  }, [allItemIds]);
+  const activeSection = useScrollSpy(allItemIds);
 
   return (
     <Card className={`h-full my-2 text-medium w-48 shrink-0 border-1 border-foreground-100 ${ContainersBg}`}>
@@ -194,11 +147,13 @@ const DashboardPageNav = () => {
           <DashboardGroupSection key={index} {...section} activeSection={activeSection} />
         ))}
         {buttons.map((Btn, index) => (
-          <Btn key={index} />
+          <Btn key={`nav-btn-${index}`} />
         ))}
       </CardBody>
     </Card>
   );
-};
+});
 
-export default DashboardPageNav;
+DashboardNavigation.displayName = 'DashboardNavigation';
+
+export default DashboardNavigation;
