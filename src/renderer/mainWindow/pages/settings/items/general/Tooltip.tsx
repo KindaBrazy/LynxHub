@@ -1,27 +1,27 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
-import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
-import {AppDispatch} from '@lynx/redux/store';
-import {TooltipStatus} from '@lynx_common/types/ipc';
+import { Select, Selection, SelectItem } from '@heroui/react';
+import { settingsActions, useSettingsState } from '@lynx/redux/reducers/settings';
+import { AppDispatch } from '@lynx/redux/store';
+import { TooltipStatus } from '@lynx_common/types/ipc';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
-/** Manage tooltip behavior */
+/**
+ * Component for configuring the verbosity of UI tooltips throughout the application.
+ */
 export default function Tooltip() {
   const dispatch = useDispatch<AppDispatch>();
   const tooltipStatus = useSettingsState('tooltipLevel');
-  const [selectedKey, setSelectedKey] = useState<string>(tooltipStatus);
 
   const onChange = useCallback(
     (keys: Selection) => {
       if (keys !== 'all') {
         const value = keys.values().next().value as TooltipStatus;
-        dispatch(settingsActions.setSettingsState({key: 'tooltipLevel', value}));
-        storageIpc.update('app', {tooltipStatus: value});
-        setSelectedKey(value);
+        dispatch(settingsActions.setSettingsState({ key: 'tooltipLevel', value }));
+        storageIpc.update('app', { tooltipStatus: value });
       }
     },
     [dispatch],
@@ -36,11 +36,11 @@ export default function Tooltip() {
       <Select
         className="my-0!"
         labelPlacement="outside"
-        selectedKeys={[selectedKey]}
+        selectedKeys={[tooltipStatus]}
         onSelectionChange={onChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!'}}
+        classNames={{ trigger: 'cursor-default transition! duration-300!' }}
         disallowEmptySelection>
         <SelectItem key="essential" className="cursor-default" description="Show tooltips for essential elements only.">
           Essential

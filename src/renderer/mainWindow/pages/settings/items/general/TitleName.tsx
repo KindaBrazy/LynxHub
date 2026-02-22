@@ -1,20 +1,24 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
-import {AppDispatch} from '@lynx/redux/store';
+import { settingsActions, useSettingsState } from '@lynx/redux/reducers/settings';
+import { AppDispatch } from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback} from 'react';
-import {useDispatch} from 'react-redux';
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
+/**
+ * Component to toggle dynamic application title and taskbar name.
+ * When enabled, the app title updates based on the active AI task or tool.
+ */
 export default function TitleName() {
   const dispatch = useDispatch<AppDispatch>();
   const dynamicAppTitle = useSettingsState('dynamicAppTitle');
 
   const onAppTitleChange = useCallback(
     (selected: boolean) => {
-      storageIpc.update('app', {dynamicAppTitle: selected});
-      dispatch(settingsActions.setSettingsState({key: 'dynamicAppTitle', value: selected}));
+      storageIpc.update('app', { dynamicAppTitle: selected });
+      dispatch(settingsActions.setSettingsState({ key: 'dynamicAppTitle', value: selected }));
     },
     [dispatch],
   );

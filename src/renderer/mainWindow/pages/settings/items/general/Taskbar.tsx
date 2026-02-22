@@ -1,14 +1,16 @@
-import {Select, Selection, SelectItem} from '@heroui/react';
-import {TaskbarStatus} from '@lynx_common/types/ipc';
-import {isLinux, isMac} from '@lynx_common/utils';
+import { Select, Selection, SelectItem } from '@heroui/react';
+import { TaskbarStatus } from '@lynx_common/types/ipc';
+import { isLinux, isMac } from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import storageIpc from '@lynx_shared/ipc/storage';
-import {useCallback, useEffect, useState} from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
-/** App taskbar and tray behavior */
+/**
+ * Component to configure how the app integrates with the OS taskbar, dock, and system tray.
+ */
 export default function Taskbar() {
   const [selectedKey, setSelectedKey] = useState<TaskbarStatus>('taskbar-tray');
 
@@ -40,7 +42,7 @@ export default function Taskbar() {
         onSelectionChange={onChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{trigger: 'cursor-default transition! duration-300!'}}
+        classNames={{ trigger: 'cursor-default transition! duration-300!' }}
         disallowEmptySelection>
         <SelectItem key="taskbar-tray" className="cursor-default">
           {isMac ? 'Dock & Tray' : 'Taskbar & Tray'}
