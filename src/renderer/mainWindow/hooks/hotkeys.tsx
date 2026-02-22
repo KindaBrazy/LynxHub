@@ -13,12 +13,16 @@ import ptyIpc from '@lynx_shared/ipc/pty';
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
-// Create a fast lookup key from hotkey properties
+/**
+ * Creates a fast lookup key from hotkey properties.
+ */
 function createHotkeyKey(key: string, control: boolean, shift: boolean, alt: boolean, meta: boolean): string {
   return `${key}|${control ? 1 : 0}${shift ? 1 : 0}${alt ? 1 : 0}${meta ? 1 : 0}`;
 }
 
-// Build a Map for O(1) hotkey lookup instead of O(n) array iteration
+/**
+ * Builds a Map for O(1) hotkey lookup instead of O(n) array iteration.
+ */
 function buildHotkeyMap(hotkeys: LynxHotkey[]): Map<string, string> {
   const map = new Map<string, string>();
   for (const {name, key, control, shift, alt, meta} of hotkeys) {
@@ -29,6 +33,10 @@ function buildHotkeyMap(hotkeys: LynxHotkey[]): Map<string, string> {
   return map;
 }
 
+/**
+ * Hook to handle hotkey presses based on the registered configuration.
+ * @param keys Array of hotkey names and their corresponding callback methods.
+ */
 export default function useHotkeyPress(keys: {name: string; method: (() => void) | null}[]) {
   const hotkeys = useHotkeysState('hotkeys');
   const input = useHotkeysState('input');
@@ -67,7 +75,9 @@ export default function useHotkeyPress(keys: {name: string; method: (() => void)
   }, [input, hotkeyMap]);
 }
 
-/** Register application hotkeys */
+/**
+ * Registers application-wide hotkeys and their actions.
+ */
 export function useRegisterHotkeys() {
   const activeTab = useTabsState('activeTab');
   const runningCards = useCardsState('runningCard');
@@ -96,6 +106,7 @@ export function useRegisterHotkeys() {
     dispatch(tabsActions.switchTab({direction}));
   }, []);
 
+  // Handle adding a running card after a new tab is created
   useEffect(() => {
     if (addEmpty) {
       dispatch(
@@ -106,7 +117,7 @@ export function useRegisterHotkeys() {
       );
       setAddEmpty(false);
     }
-  }, [activeTab]);
+  }, [activeTab, addEmpty, emptyType, dispatch]);
 
   const addRunningEmpty = (type: 'browser' | 'terminal' | 'both') => {
     handleNewTab();
@@ -115,9 +126,7 @@ export function useRegisterHotkeys() {
   };
 
   const newTerminalTab = () => addRunningEmpty('terminal');
-
   const newBrowserTab = () => addRunningEmpty('browser');
-
   const newTerminalBrowserTab = () => addRunningEmpty('both');
 
   const runQuickCommand = useCallback(
@@ -135,10 +144,7 @@ export function useRegisterHotkeys() {
 
   useHotkeyPress([
     {name: Hotkey_Names.fullscreen, method: handleFullscreen},
-    {
-      name: Hotkey_Names.toggleNav,
-      method: handleToggleNav,
-    },
+    {name: Hotkey_Names.toggleNav, method: handleToggleNav},
     {name: Hotkey_Names.toggleAiView, method: handleToggleAIView},
     {name: Hotkey_Names.newTab, method: handleNewTab},
     {name: Hotkey_Names.switchTab, method: () => switchTab('next')},
