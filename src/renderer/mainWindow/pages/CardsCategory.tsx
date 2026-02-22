@@ -1,38 +1,38 @@
 import RenderCardList from '@lynx/components/card/RenderList';
 import NavigateToPluginsButton from '@lynx/components/NavigateToPluginsButton';
-import {extensionsData} from '@lynx/plugins/extensions/loader';
-import {useAllCardDataWithPath, useSearchCards} from '@lynx/plugins/modules';
-import {useCardsState} from '@lynx/redux/reducers/cards';
-import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
-import {LoadedCardData} from '@lynx_common/types/plugins/modules';
-import {Empty} from 'antd';
-import {AnimatePresence, LayoutGroup} from 'framer-motion';
-import {isEmpty, isNil} from 'lodash';
-import {memo, useMemo} from 'react';
+import { extensionsData } from '@lynx/plugins/extensions/loader';
+import { useAllCardDataWithPath, useSearchCards } from '@lynx/plugins/modules';
+import { useCardsState } from '@lynx/redux/reducers/cards';
+import { Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon } from '@lynx_assets/icons/Icons_Colorful';
+import { LoadedCardData } from '@lynx_common/types/plugins/modules';
+import { Empty } from 'antd';
+import { AnimatePresence, LayoutGroup } from 'framer-motion';
+import { isEmpty, isNil } from 'lodash';
+import { memo, useMemo } from 'react';
 
-import {CardContainerClasses} from './CardsContainer';
+import { CardContainerClasses } from './CardsContainer';
 import HomeCategory from './home/Category';
 
+// ─── Private helpers ─────────────────────────────────────────────────────────
+
 /**
- * Custom hook that returns cards by their IDs
- * @param cardIds Array of card IDs
- * @returns Array of CardData objects
+ * Custom hook that filters the full card list down to the provided IDs,
+ * preserving original ordering of `cardIds`.
  */
 const useCardsById = (cardIds: string[]): LoadedCardData[] => {
   const allCards = useAllCardDataWithPath();
 
-  return useMemo(() => {
-    return allCards.filter(card => cardIds.includes(card.id));
-  }, [cardIds, allCards]);
+  return useMemo(
+    () => allCards.filter(card => cardIds.includes(card.id)),
+    [cardIds, allCards],
+  );
 };
 
-/**
- * Renders a list of cards by their IDs
- */
-const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
+/** Renders a filtered card list by an array of IDs. */
+const CardsByIds = ({ cardIds, cat }: { cardIds: string[]; cat: string }) => {
   const cards = useCardsById(cardIds);
-
-  const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
+  // Extension point: plugins can completely replace the card renderer.
+  const ReplaceCards = extensionsData.cards.replace;
 
   return (
     <LayoutGroup id={`${cat}_cards_category`}>
@@ -53,19 +53,21 @@ const CardsById = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
   );
 };
 
-/** Renders all available cards */
+/** Renders every available card, delegating to the plugin replace-slot if present. */
 const AllCards = () => {
-  const allCategory = useMemo(() => extensionsData.customizePages.home.add.allCategory, []);
-  const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
-
   const allCards = useAllCardDataWithPath();
+  // Extension point: plugins may add custom category content after the main list.
+  const allCategory = extensionsData.customizePages.home.add.allCategory;
+  // Extension point: plugins can completely replace the card renderer.
+  const ReplaceCards = extensionsData.cards.replace;
 
-  if (isEmpty(allCards) && isEmpty(allCategory))
+  if (isEmpty(allCards) && isEmpty(allCategory)) {
     return (
       <Empty className="size-full" description="No Card to Display!">
         <NavigateToPluginsButton />
       </Empty>
     );
+  }
 
   return (
     <LayoutGroup id="all_cards_category">
@@ -76,11 +78,13 @@ const AllCards = () => {
   );
 };
 
-/** Renders the "PINNED" category section */
+// ─── Exported category sections ───────────────────────────────────────────────
+
+/** Renders the "PINNED" home page category section. */
 export const PinnedCars = memo(() => {
   const pinnedCards = useCardsState('pinnedCards');
-
-  const pinCategory = useMemo(() => extensionsData.customizePages.home.add.pinCategory, []);
+  // Extension point: plugins may inject custom items alongside pinned cards.
+  const pinCategory = extensionsData.customizePages.home.add.pinCategory;
 
   return (
     <HomeCategory
@@ -96,7 +100,7 @@ export const PinnedCars = memo(() => {
           />
         ) : (
           <>
-            <CardsById cat="pinned" cardIds={pinnedCards} />
+            <CardsByIds cat="pinned" cardIds={pinnedCards} />
             {...pinCategory.map((Pin, index) => <Pin key={index} />)}
           </>
         )}
@@ -105,11 +109,11 @@ export const PinnedCars = memo(() => {
   );
 });
 
-// Renders the "RECENTLY USED" category section
+/** Renders the "RECENTLY USED" home page category section. */
 export const RecentlyCards = memo(() => {
   const recentlyUsedCards = useCardsState('recentlyUsedCards');
-
-  const recentlyCategory = useMemo(() => extensionsData.customizePages.home.add.recentlyCategory, []);
+  // Extension point: plugins may inject custom items alongside recently-used cards.
+  const recentlyCategory = extensionsData.customizePages.home.add.recentlyCategory;
 
   return (
     <HomeCategory
@@ -121,7 +125,7 @@ export const RecentlyCards = memo(() => {
           <Empty className="size-full" description="No Recently Used Card to Display!" />
         ) : (
           <>
-            <CardsById cat="recently" cardIds={recentlyUsedCards} />
+            <CardsByIds cat="recently" cardIds={recentlyUsedCards} />
             {...recentlyCategory.map((Recent, index) => <Recent key={index} />)}
           </>
         )}
@@ -130,7 +134,7 @@ export const RecentlyCards = memo(() => {
   );
 });
 
-// Renders the "All" category section
+/** Renders the "All" home page category section showing every available card. */
 export const AllCardsSection = memo(() => {
   return (
     <HomeCategory
@@ -144,9 +148,20 @@ export const AllCardsSection = memo(() => {
   );
 });
 
-export function CardsBySearch({searchValue}: {searchValue: string}) {
+/** Props for the CardsBySearch component. */
+export interface CardsBySearchProps {
+  /** The active search string used to filter cards. */
+  searchValue: string;
+}
+
+/**
+ * Renders a filtered list of cards that match the current search query.
+ * Delegates to the plugin replace-slot when one is registered.
+ */
+export function CardsBySearch({ searchValue }: CardsBySearchProps) {
   const filteredCards = useSearchCards(searchValue);
-  const ReplaceCards = useMemo(() => extensionsData.cards.replace, []);
+  // Extension point: plugins can completely replace the card renderer.
+  const ReplaceCards = extensionsData.cards.replace;
 
   return (
     <div className="flex w-full flex-wrap gap-5 overflow-y-scroll pb-6 pl-1 scrollbar-hide">
