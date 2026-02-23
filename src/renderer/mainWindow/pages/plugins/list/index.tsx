@@ -1,4 +1,4 @@
-import {Button, Divider, Input, Progress, Skeleton} from '@heroui/react';
+import {Button, Card, CardBody, Divider, Input, Progress, Skeleton} from '@heroui/react';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
@@ -9,7 +9,6 @@ import {Circle_Icon} from '@lynx_assets/icons';
 import {PluginFilter} from '@lynx_common/types/plugins';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
-import {Empty} from 'antd';
 import {isEmpty} from 'lodash';
 import {useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -44,26 +43,26 @@ export default function PluginList() {
 
   const emptyText = useMemo(() => {
     return (
-      <Empty
-        description={
-          <div className="flex flex-col items-center justify-center text-center">
-            {isEmpty(searchValue) ? (
-              <>
-                <p className="mb-2 text-gray-300">It looks like there are no plugin available right now.</p>
-                <p className="text-gray-500">
-                  This could be temporary. Please try again later or check your internet connection.
-                </p>
-              </>
-            ) : (
-              <>
-                <p className="mb-2 text-gray-300">Couldn't find any plugins matching your search.</p>
-                <p className="text-gray-500">Try refining your search terms or checking for typos.</p>
-              </>
-            )}
+      <Card className="border border-foreground-200/70 bg-foreground-50/50 shadow-none">
+        <CardBody className="items-center gap-y-2 px-6 py-10 text-center">
+          <div className="rounded-full bg-foreground-100/80 p-3 text-foreground-500">
+            <Circle_Icon className="size-5" />
           </div>
-        }
-        image={Empty.PRESENTED_IMAGE_SIMPLE}
-      />
+          {isEmpty(searchValue) ? (
+            <>
+              <p className="text-foreground-600">It looks like there are no plugin available right now.</p>
+              <p className="text-sm text-foreground-500">
+                This could be temporary. Please try again later or check your internet connection.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-foreground-600">Couldn't find any plugins matching your search.</p>
+              <p className="text-sm text-foreground-500">Try refining your search terms or checking for typos.</p>
+            </>
+          )}
+        </CardBody>
+      </Card>
     );
   }, [searchValue]);
 
@@ -106,7 +105,7 @@ export default function PluginList() {
                 </div>
               ))}
           </div>
-        ) : isEmpty(resultList) ? (
+        ) : !isEmpty(resultList) ? (
           emptyText
         ) : (
           <div className="flex flex-col gap-y-2 pb-4">

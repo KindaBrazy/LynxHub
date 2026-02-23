@@ -135,7 +135,7 @@ export default function BrowserHome({type}: Props) {
             onRefresh={handleDataRefresh}
             emptyDescription="Star sites to add them here"
             subtitle="Quick access to your bookmarked sites"
-            icon={<Star className="size-6 text-amber-500" />}
+            icon={<Star className="size-10 text-amber-500" />}
           />
 
           <HistorySection
@@ -147,7 +147,7 @@ export default function BrowserHome({type}: Props) {
             onRefresh={handleDataRefresh}
             subtitle="Your browsing history"
             emptyDescription="Your history will appear here"
-            icon={<History_Color_Icon className="size-6" id="empty_page_history" />}
+            icon={<History_Color_Icon className="size-10" id="empty_page_history" />}
           />
         </motion.div>
       </LynxScroll>
