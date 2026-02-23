@@ -1,5 +1,5 @@
 import { staticsChannels } from '@lynx_common/consts/ipcChannels/statics';
-import {
+import type {
   AppUpdateData,
   AppUpdateInsiderData,
   ExtensionInfo,
@@ -9,6 +9,8 @@ import {
 } from '@lynx_common/types';
 
 import lynxIpc from './lynxIpc';
+
+type OptionalList<T> = T[] | undefined;
 
 const staticsIpc = {
   // Pulls latest static data from server
@@ -21,19 +23,19 @@ const staticsIpc = {
   getInsider: () => lynxIpc.invoke<AppUpdateInsiderData | undefined>(staticsChannels.getInsider),
 
   // Gets notification data
-  getNotification: () => lynxIpc.invoke<NotificationData[] | undefined>(staticsChannels.getNotification),
+  getNotification: () => lynxIpc.invoke<OptionalList<NotificationData>>(staticsChannels.getNotification),
 
   // Gets available modules list
-  getModules: () => lynxIpc.invoke<ModuleInfo[] | undefined>(staticsChannels.getModules),
+  getModules: () => lynxIpc.invoke<OptionalList<ModuleInfo>>(staticsChannels.getModules),
 
   // Gets available extensions list
-  getExtensions: () => lynxIpc.invoke<ExtensionInfo[] | undefined>(staticsChannels.getExtensions),
+  getExtensions: () => lynxIpc.invoke<OptionalList<ExtensionInfo>>(staticsChannels.getExtensions),
 
   // Gets early access extensions list
-  getExtensionsEA: () => lynxIpc.invoke<ExtensionInfo[] | undefined>(staticsChannels.getExtensionsEA),
+  getExtensionsEA: () => lynxIpc.invoke<OptionalList<ExtensionInfo>>(staticsChannels.getExtensionsEA),
 
   // Gets Patreon supporters list
-  getPatrons: () => lynxIpc.invoke<PatreonSupporter[] | undefined>(staticsChannels.getPatrons),
+  getPatrons: () => lynxIpc.invoke<OptionalList<PatreonSupporter>>(staticsChannels.getPatrons),
 };
 
 export default staticsIpc;

@@ -3,13 +3,18 @@ import type {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from 
 
 import lynxIpc from './lynxIpc';
 
+type DownloadItemAction = 'open' | 'openFolder';
+type DownloadLocationResult = {success: boolean; path?: string; error?: string};
+type DownloadBehaviorResult = {success: boolean; behavior?: 'ask' | 'default'; error?: string};
+type DownloadUpdateResult = {success: boolean; error?: string};
+
 const downloadManagerIpc = {
   send: {
     // Opens downloads menu window
     openMenu: () => lynxIpc.send(browserDownloadChannels.openDownloadsMenu),
 
     // Opens downloaded item or its folder
-    openItem: (name: string, action: 'open' | 'openFolder') =>
+    openItem: (name: string, action: DownloadItemAction) =>
       lynxIpc.send(browserDownloadChannels.openItem, name, action),
 
     // Cancels download
@@ -30,42 +35,38 @@ const downloadManagerIpc = {
 
   invoke: {
     // Gets current download location
-    getDownloadLocation: () =>
-      lynxIpc.invoke<{success: boolean; path?: string; error?: string}>(browserDownloadChannels.getDownloadLocation),
+    getDownloadLocation: () => lynxIpc.invoke<DownloadLocationResult>(browserDownloadChannels.getDownloadLocation),
 
     // Sets download location
-    setDownloadLocation: (path: string) =>
-      lynxIpc.invoke<{success: boolean; error?: string}>(browserDownloadChannels.setDownloadLocation, path),
+    setDownloadLocation: (path: string) => lynxIpc.invoke<DownloadUpdateResult>(browserDownloadChannels.setDownloadLocation, path),
 
     // Opens location selection dialog
-    openLocationDialog: () =>
-      lynxIpc.invoke<{success: boolean; path?: string; error?: string}>(browserDownloadChannels.openLocationDialog),
+    openLocationDialog: () => lynxIpc.invoke<DownloadLocationResult>(browserDownloadChannels.openLocationDialog),
 
     // Gets download behavior setting
-    getDownloadBehavior: () =>
-      lynxIpc.invoke<{success: boolean; behavior?: 'ask' | 'default'; error?: string}>(
-        browserDownloadChannels.getDownloadBehavior,
-      ),
+    getDownloadBehavior: () => lynxIpc.invoke<DownloadBehaviorResult>(browserDownloadChannels.getDownloadBehavior),
 
     // Sets download behavior
     setDownloadBehavior: (behavior: 'ask' | 'default') =>
-      lynxIpc.invoke<{success: boolean; error?: string}>(browserDownloadChannels.setDownloadBehavior, behavior),
+      lynxIpc.invoke<DownloadUpdateResult>(browserDownloadChannels.setDownloadBehavior, behavior),
   },
 
   on: {
     // Listens for download count changes
-    downloadCount: (callback: (count: number) => void) =>
+    downloadCount: (callback: (count: number) => void): (() => void) =>
       lynxIpc.on(browserDownloadChannels.mainDownloadCount, callback),
 
     // Listens for download start events
-    dlStart: (callback: (info: DownloadStartInfo) => void) => lynxIpc.on(browserDownloadChannels.onDlStart, callback),
+    dlStart: (callback: (info: DownloadStartInfo) => void): (() => void) =>
+      lynxIpc.on(browserDownloadChannels.onDlStart, callback),
 
     // Listens for download progress events
-    progress: (callback: (info: DownloadManagerProgress) => void) =>
+    progress: (callback: (info: DownloadManagerProgress) => void): (() => void) =>
       lynxIpc.on(browserDownloadChannels.onProgress, callback),
 
     // Listens for download completion events
-    done: (callback: (info: DownloadDoneInfo) => void) => lynxIpc.on(browserDownloadChannels.onDone, callback),
+    done: (callback: (info: DownloadDoneInfo) => void): (() => void) =>
+      lynxIpc.on(browserDownloadChannels.onDone, callback),
   },
 };
 
