@@ -1,12 +1,19 @@
 import {heroui} from '@heroui/react';
 
+const sharedThemeColors = {
+  danger: {
+    DEFAULT: '#dc2626',
+  },
+} as const;
+
+/**
+ * Shared HeroUI Tailwind plugin configuration used by child-window renderers.
+ */
 export default heroui({
   themes: {
     dark: {
       colors: {
-        danger: {
-          DEFAULT: '#dc2626',
-        },
+        ...sharedThemeColors,
         primary: {
           DEFAULT: '#0050EF',
         },
@@ -17,9 +24,7 @@ export default heroui({
     },
     light: {
       colors: {
-        danger: {
-          DEFAULT: '#dc2626',
-        },
+        ...sharedThemeColors,
         primary: {
           DEFAULT: '#00A9FF',
         },
