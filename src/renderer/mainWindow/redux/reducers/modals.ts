@@ -85,7 +85,7 @@ type ModalsState = {
   };
 };
 
-type ModalsStateTypes = {
+type ModalsStateValueByKey = {
   [K in keyof ModalsState]: ModalsState[K];
 };
 
@@ -97,6 +97,17 @@ type CardInfoData = {
   extensionsDir?: string;
   tabID: string;
 };
+
+type ModalWithTabId = {
+  isOpen: boolean;
+  tabID: string;
+};
+
+const closeTabModal = <T extends ModalWithTabId>(items: T[], tabID: string): T[] =>
+  items.map(modal => (modal.tabID === tabID ? {...modal, isOpen: false} : modal));
+
+const removeTabModal = <T extends ModalWithTabId>(items: T[], tabID: string): T[] =>
+  items.filter(modal => modal.tabID !== tabID);
 
 const initialState: ModalsState = {
   cardExtensions: [],
@@ -145,21 +156,13 @@ const modalSlice = createSlice({
   name: 'modals',
   reducers: {
     openCardExtensions: (state, action: PayloadAction<{title: string; dir: string; id: string; tabID: string}>) => {
-      state.cardExtensions = [...state.cardExtensions, {...action.payload, isOpen: true}];
+      state.cardExtensions.push({...action.payload, isOpen: true});
     },
     closeCardExtensions: (state, action: PayloadAction<{tabID: string}>) => {
-      state.cardExtensions = state.cardExtensions.map(modal =>
-        modal.tabID === action.payload.tabID
-          ? {
-              ...modal,
-              isOpen: false,
-            }
-          : modal,
-      );
+      state.cardExtensions = closeTabModal(state.cardExtensions, action.payload.tabID);
     },
     removeCardExtensions: (state, action: PayloadAction<{tabID: string}>) => {
-      const {tabID} = action.payload;
-      state.cardExtensions = state.cardExtensions.filter(modal => modal.tabID !== tabID);
+      state.cardExtensions = removeTabModal(state.cardExtensions, action.payload.tabID);
     },
 
     openCardLaunchConfig: (
@@ -171,57 +174,33 @@ const modalSlice = createSlice({
         tabID: string;
       }>,
     ) => {
-      state.cardLaunchConfig = [...state.cardLaunchConfig, {...action.payload, isOpen: true}];
+      state.cardLaunchConfig.push({...action.payload, isOpen: true});
     },
     closeCardLaunchConfig: (state, action: PayloadAction<{tabID: string}>) => {
-      state.cardLaunchConfig = state.cardLaunchConfig.map(modal =>
-        modal.tabID === action.payload.tabID
-          ? {
-              ...modal,
-              isOpen: false,
-            }
-          : modal,
-      );
+      state.cardLaunchConfig = closeTabModal(state.cardLaunchConfig, action.payload.tabID);
     },
     removeCardLaunchConfig: (state, action: PayloadAction<{tabID: string}>) => {
-      const {tabID} = action.payload;
-      state.cardLaunchConfig = state.cardLaunchConfig.filter(modal => modal.tabID !== tabID);
+      state.cardLaunchConfig = removeTabModal(state.cardLaunchConfig, action.payload.tabID);
     },
 
     openUninstallCard: (state, action: PayloadAction<{cardId: string; tabID: string}>) => {
-      state.cardUninstallModal = [...state.cardUninstallModal, {...action.payload, isOpen: true}];
+      state.cardUninstallModal.push({...action.payload, isOpen: true});
     },
     closeUninstallCard: (state, action: PayloadAction<{tabID: string}>) => {
-      state.cardUninstallModal = state.cardUninstallModal.map(modal =>
-        modal.tabID === action.payload.tabID
-          ? {
-              ...modal,
-              isOpen: false,
-            }
-          : modal,
-      );
+      state.cardUninstallModal = closeTabModal(state.cardUninstallModal, action.payload.tabID);
     },
     removeUninstallCard: (state, action: PayloadAction<{tabID: string}>) => {
-      const {tabID} = action.payload;
-      state.cardUninstallModal = state.cardUninstallModal.filter(modal => modal.tabID !== tabID);
+      state.cardUninstallModal = removeTabModal(state.cardUninstallModal, action.payload.tabID);
     },
 
     openUnassignCard: (state, action: PayloadAction<{cardId: string; tabID: string}>) => {
-      state.cardUnassignModal = [...state.cardUnassignModal, {...action.payload, isOpen: true}];
+      state.cardUnassignModal.push({...action.payload, isOpen: true});
     },
     closeUnassignCard: (state, action: PayloadAction<{tabID: string}>) => {
-      state.cardUnassignModal = state.cardUnassignModal.map(modal =>
-        modal.tabID === action.payload.tabID
-          ? {
-              ...modal,
-              isOpen: false,
-            }
-          : modal,
-      );
+      state.cardUnassignModal = closeTabModal(state.cardUnassignModal, action.payload.tabID);
     },
     removeUnassignCard: (state, action: PayloadAction<{tabID: string}>) => {
-      const {tabID} = action.payload;
-      state.cardUnassignModal = state.cardUnassignModal.filter(modal => modal.tabID !== tabID);
+      state.cardUnassignModal = removeTabModal(state.cardUnassignModal, action.payload.tabID);
     },
 
     openUpdateDetails: (state, action: PayloadAction<{title: string; details: PullResult; tabID: string}>) => {
@@ -232,39 +211,23 @@ const modalSlice = createSlice({
     },
 
     openGitManager: (state, action: PayloadAction<{title: string; dir: string; tabID: string}>) => {
-      state.gitManager = [...state.gitManager, {...action.payload, isOpen: true}];
+      state.gitManager.push({...action.payload, isOpen: true});
     },
     closeGitManager: (state, action: PayloadAction<{tabID: string}>) => {
-      state.gitManager = state.gitManager.map(modal =>
-        modal.tabID === action.payload.tabID
-          ? {
-              ...modal,
-              isOpen: false,
-            }
-          : modal,
-      );
+      state.gitManager = closeTabModal(state.gitManager, action.payload.tabID);
     },
     removeGitManager: (state, action: PayloadAction<{tabID: string}>) => {
-      const {tabID} = action.payload;
-      state.gitManager = state.gitManager.filter(modal => modal.tabID !== tabID);
+      state.gitManager = removeTabModal(state.gitManager, action.payload.tabID);
     },
 
     openCardInfo: (state, action: PayloadAction<CardInfoData>) => {
-      state.cardInfoModal = [...state.cardInfoModal, {...action.payload, isOpen: true}];
+      state.cardInfoModal.push({...action.payload, isOpen: true});
     },
     closeCardInfo: (state, action: PayloadAction<{tabID: string}>) => {
-      state.cardInfoModal = state.cardInfoModal.map(modal =>
-        modal.tabID === action.payload.tabID
-          ? {
-              ...modal,
-              isOpen: false,
-            }
-          : modal,
-      );
+      state.cardInfoModal = closeTabModal(state.cardInfoModal, action.payload.tabID);
     },
     removeCardInfo: (state, action: PayloadAction<{tabID: string}>) => {
-      const {tabID} = action.payload;
-      state.cardInfoModal = state.cardInfoModal.filter(modal => modal.tabID !== tabID);
+      state.cardInfoModal = removeTabModal(state.cardInfoModal, action.payload.tabID);
     },
     setInfoCardId: (state, action: PayloadAction<{cardID: string; tabID: string}>) => {
       state.cardInfoModal = state.cardInfoModal.map(modal =>
@@ -278,21 +241,13 @@ const modalSlice = createSlice({
     },
 
     openReadme: (state, action: PayloadAction<{url: string; title: string; tabID: string}>) => {
-      state.readmeModal = [...state.readmeModal, {...action.payload, isOpen: true}];
+      state.readmeModal.push({...action.payload, isOpen: true});
     },
     closeReadme: (state, action: PayloadAction<{tabID: string}>) => {
-      state.readmeModal = state.readmeModal.map(modal =>
-        modal.tabID === action.payload.tabID
-          ? {
-              ...modal,
-              isOpen: false,
-            }
-          : modal,
-      );
+      state.readmeModal = closeTabModal(state.readmeModal, action.payload.tabID);
     },
     removeReadme: (state, action: PayloadAction<{tabID: string}>) => {
-      const {tabID} = action.payload;
-      state.readmeModal = state.readmeModal.filter(modal => modal.tabID !== tabID);
+      state.readmeModal = removeTabModal(state.readmeModal, action.payload.tabID);
     },
 
     openInstallUICard: (
@@ -304,22 +259,14 @@ const modalSlice = createSlice({
         tabID: string;
       }>,
     ) => {
-      state.installUIModal = [...state.installUIModal, {...action.payload, isOpen: true}];
+      state.installUIModal.push({...action.payload, isOpen: true});
     },
 
     closeInstallUICard: (state, action: PayloadAction<{tabID: string}>) => {
-      state.installUIModal = state.installUIModal.map(modal =>
-        modal.tabID === action.payload.tabID
-          ? {
-              ...modal,
-              isOpen: false,
-            }
-          : modal,
-      );
+      state.installUIModal = closeTabModal(state.installUIModal, action.payload.tabID);
     },
     removeInstallUICard: (state, action: PayloadAction<{tabID: string}>) => {
-      const {tabID} = action.payload;
-      state.installUIModal = state.installUIModal.filter(modal => modal.tabID !== tabID);
+      state.installUIModal = removeTabModal(state.installUIModal, action.payload.tabID);
     },
 
     openUpdateApp: state => {
@@ -361,7 +308,10 @@ const modalSlice = createSlice({
   },
 });
 
-export const useModalsState = <T extends keyof ModalsState>(name: T): ModalsStateTypes[T] =>
+/**
+ * Hook to access a single modals state field with key-safe typing.
+ */
+export const useModalsState = <T extends keyof ModalsState>(name: T): ModalsStateValueByKey[T] =>
   useSelector((state: RootState) => state.modals[name]);
 
 export const modalActions = modalSlice.actions;

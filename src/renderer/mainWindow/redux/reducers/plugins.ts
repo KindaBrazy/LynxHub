@@ -1,13 +1,12 @@
 import {PluginInstalledItem, PluginItem, PluginSyncItem, UnloadedPlugins} from '@lynx_common/types/plugins';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {isArray} from 'lodash';
 import {useSelector} from 'react-redux';
 
 import {RootState} from '../store';
 
-type SetKeys = 'installing' | 'updating' | 'unInstalling';
-type ManageOperation = 'add' | 'remove';
-type IdType = string | string[] | undefined;
+type PluginQueueKey = 'installing' | 'updating' | 'unInstalling';
+type QueueOperation = 'add' | 'remove';
+type PluginIdInput = string | string[] | undefined;
 
 type PluginsState = {
   installing: string[];
@@ -22,9 +21,11 @@ type PluginsState = {
   selectedPlugin: PluginItem | undefined;
 };
 
-type PluginsStateTypes = {
+type PluginsStateValueByKey = {
   [K in keyof PluginsState]: PluginsState[K];
 };
+
+const normalizePluginIds = (ids: PluginIdInput): string[] => (Array.isArray(ids) ? ids : ids ? [ids] : []);
 
 const initialState: PluginsState = {
   installing: [],
@@ -56,7 +57,7 @@ const pluginsSlice = createSlice({
       state.updatingAll = action.payload;
     },
     addInstalled: (state: PluginsState, action: PayloadAction<PluginInstalledItem>) => {
-      state.installedList = [...state.installedList, action.payload];
+      state.installedList.push(action.payload);
     },
     removeInstalled: (state: PluginsState, action: PayloadAction<string>) => {
       state.installedList = state.installedList.filter(item => item.id !== action.payload);
@@ -65,7 +66,7 @@ const pluginsSlice = createSlice({
       state: PluginsState,
       action: PayloadAction<{id: string; version: string} | {id: string; version: string}[]>,
     ) => {
-      if (isArray(action.payload)) {
+      if (Array.isArray(action.payload)) {
         const items = action.payload;
         state.installedList = state.installedList.map(item => {
           const updatedItem = items.find(payloadItem => payloadItem.id === item.id);
@@ -90,27 +91,29 @@ const pluginsSlice = createSlice({
         });
       }
     },
-    manageSet: (state: PluginsState, action: PayloadAction<{key: SetKeys; id: IdType; operation: ManageOperation}>) => {
+    manageSet: (
+      state: PluginsState,
+      action: PayloadAction<{key: PluginQueueKey; id: PluginIdInput; operation: QueueOperation}>,
+    ) => {
       const {key, id, operation} = action.payload;
-      if (id) {
-        const currentArray = state[key];
+      const currentArray = state[key];
+      const idsToManage = normalizePluginIds(id);
+      if (idsToManage.length === 0) return;
 
-        const idsToManage = isArray(id) ? id : [id];
-
-        if (operation === 'add') {
-          // Add only unique IDs
-          const newIds = idsToManage.filter(idToAdd => !currentArray.includes(idToAdd));
-          state[key] = [...currentArray, ...newIds];
-        } else {
-          // Remove IDs
-          state[key] = currentArray.filter(currentId => !idsToManage.includes(currentId));
-        }
+      if (operation === 'add') {
+        const nextIds = idsToManage.filter(idToAdd => !currentArray.includes(idToAdd));
+        state[key] = [...currentArray, ...nextIds];
+      } else {
+        state[key] = currentArray.filter(currentId => !idsToManage.includes(currentId));
       }
     },
   },
 });
 
-export const usePluginsState = <K extends keyof PluginsState>(key: K): PluginsStateTypes[K] =>
+/**
+ * Hook to access plugins reducer state by key with inferred return type.
+ */
+export const usePluginsState = <K extends keyof PluginsState>(key: K): PluginsStateValueByKey[K] =>
   useSelector((state: RootState) => state.plugins[key]);
 
 export const useIsInstallingPlugin = (id: string): boolean =>

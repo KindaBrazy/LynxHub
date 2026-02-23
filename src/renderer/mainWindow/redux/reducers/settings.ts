@@ -4,7 +4,7 @@ import {useSelector} from 'react-redux';
 
 import {RootState} from '../store';
 
-type SettingStateTypes = {
+type SettingStateValueByKey = {
   [K in keyof SettingState]: SettingState[K];
 };
 
@@ -34,7 +34,7 @@ const settingsSlice = createSlice({
   name: 'settings',
   reducers: {
     setSettingsState: <K extends keyof SettingState>(
-      state: SettingState,
+      state,
       action: PayloadAction<{
         key: K;
         value: SettingState[K];
@@ -42,14 +42,18 @@ const settingsSlice = createSlice({
     ) => {
       state[action.payload.key] = action.payload.value;
     },
-    setSearchValue: (state: SettingState, action: PayloadAction<string>) => {
-      state.searchValue = action.payload.trim();
-      state.searchWords = action.payload.trim().split(/\s+/).filter(Boolean);
+    setSearchValue: (state, action: PayloadAction<string>) => {
+      const normalizedSearchValue = action.payload.trim();
+      state.searchValue = normalizedSearchValue;
+      state.searchWords = normalizedSearchValue ? normalizedSearchValue.split(/\s+/) : [];
     },
   },
 });
 
-export const useSettingsState = <T extends keyof SettingState>(name: T): SettingStateTypes[T] =>
+/**
+ * Hook to access a single settings state field with key-safe typing.
+ */
+export const useSettingsState = <T extends keyof SettingState>(name: T): SettingStateValueByKey[T] =>
   useSelector((state: RootState) => state.settings[name]);
 
 export const settingsActions = settingsSlice.actions;

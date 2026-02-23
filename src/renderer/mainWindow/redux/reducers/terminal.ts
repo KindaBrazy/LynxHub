@@ -9,8 +9,7 @@ type TerminalStateTypes = {
   [K in keyof TerminalState]: TerminalState[K];
 };
 
-// Default initial state - actual values come from preloadedState in Store.ts
-const initialState: TerminalState = {
+const createDefaultTerminalState = (): TerminalState => ({
   outputColor: true,
   useConpty: 'auto',
   scrollBack: 5000,
@@ -23,15 +22,17 @@ const initialState: TerminalState = {
   enableLigatures: false,
   cdHistory: [],
   quickCommands: [],
-};
+});
+
+// Default initial state - actual values come from preloadedState in Store.ts
+const initialState: TerminalState = createDefaultTerminalState();
 
 const terminalSlice = createSlice({
   initialState,
   name: 'terminal',
   reducers: {
-    initState: (state: TerminalState, action: PayloadAction<TerminalState>) => {
-      state = action.payload;
-      return state;
+    initState: (_state: TerminalState, action: PayloadAction<TerminalState>) => {
+      return action.payload;
     },
     setTerminalState: <K extends keyof TerminalState>(
       state: TerminalState,
@@ -40,18 +41,22 @@ const terminalSlice = createSlice({
         value: TerminalState[K];
       }>,
     ) => {
-      state[action.payload.key] = action.payload.value;
-      storageIpc.update('terminal', {[action.payload.key]: action.payload.value});
+      const {key, value} = action.payload;
+      state[key] = value;
+      storageIpc.update('terminal', {[key]: value});
     },
 
-    resetToDefaults: (state: TerminalState) => {
-      state = initialState;
-      storageIpc.update('terminal', initialState);
-      return state;
+    resetToDefaults: (_state: TerminalState) => {
+      const nextState = createDefaultTerminalState();
+      storageIpc.update('terminal', nextState);
+      return nextState;
     },
   },
 });
 
+/**
+ * Hook to access terminal reducer state by key with inferred return type.
+ */
 export const useTerminalState = <T extends keyof TerminalState>(name: T): TerminalStateTypes[T] =>
   useSelector((state: RootState) => state.terminal[name]);
 

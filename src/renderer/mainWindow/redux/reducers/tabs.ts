@@ -16,6 +16,19 @@ type TabStateTypes = {
   [K in keyof TabState]: TabState[K];
 };
 
+const findUniqueTabId = (baseId: string, tabs: TabInfo[]): string => {
+  let idNumber = 1;
+  let candidateId = baseId;
+  while (tabs.some(tab => tab.id === candidateId)) {
+    candidateId = `${baseId}_${idNumber}`;
+    idNumber += 1;
+  }
+  return candidateId;
+};
+
+const updateTabById = (tabs: TabInfo[], tabID: string, updater: (tab: TabInfo) => TabInfo): TabInfo[] =>
+  tabs.map(tab => (tab.id === tabID ? updater(tab) : tab));
+
 const initialState: TabState = {
   tabs: [defaultTabItem],
   activeTab: defaultTabItem.id,
@@ -31,26 +44,14 @@ const tabsSlice = createSlice({
       state[action.payload.key] = action.payload.value;
     },
     addTab: (state: TabState, action: PayloadAction<TabInfo & {background?: boolean}>) => {
-      let newID = action.payload.id;
-      let idNumber = 1;
-
-      const checkDuplicateId = () => {
-        const existTab = state.tabs.find(tab => tab.id === newID);
-        if (existTab) {
-          newID = `${action.payload.id}_${idNumber}`;
-          idNumber++;
-          checkDuplicateId();
-        }
-      };
-
-      checkDuplicateId();
-
-      state.tabs.push({...action.payload, id: newID});
+      const {background, ...nextTabPayload} = action.payload;
+      const newID = findUniqueTabId(nextTabPayload.id, state.tabs);
+      state.tabs.push({...nextTabPayload, id: newID});
 
       // Only switch to new tab if not opening in background
-      if (!action.payload.background) {
+      if (!background) {
         state.activeTab = newID;
-        state.activePage = action.payload.pageID;
+        state.activePage = nextTabPayload.pageID;
       }
     },
     removeTab: (state: TabState, action: PayloadAction<string>) => {
@@ -71,7 +72,7 @@ const tabsSlice = createSlice({
       }
 
       if (state.tabs.length <= 0) {
-        state.tabs = initialState.tabs;
+        state.tabs = [defaultTabItem];
       }
     },
     setActiveTab: (state: TabState, action: PayloadAction<string>) => {
@@ -100,21 +101,21 @@ const tabsSlice = createSlice({
     },
     setTabLoading: (state: TabState, action: PayloadAction<{isLoading: boolean; tabID: string}>) => {
       const {tabID, isLoading} = action.payload;
-      state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, isLoading} : tab));
+      state.tabs = updateTabById(state.tabs, tabID, tab => ({...tab, isLoading}));
     },
     setActiveTabLoading: (state: TabState, action: PayloadAction<boolean>) => {
-      state.tabs = state.tabs.map(tab => (tab.id === state.activeTab ? {...tab, isLoading: action.payload} : tab));
+      state.tabs = updateTabById(state.tabs, state.activeTab, tab => ({...tab, isLoading: action.payload}));
     },
     setTabTitle: (state: TabState, action: PayloadAction<{tabID: string; title: string}>) => {
       const {tabID, title} = action.payload;
-      state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, title} : tab));
+      state.tabs = updateTabById(state.tabs, tabID, tab => ({...tab, title}));
     },
     setTabIsTerminal: (state: TabState, action: PayloadAction<{tabID: string; isTerminal: boolean}>) => {
       const {tabID, isTerminal} = action.payload;
-      state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, isTerminal} : tab));
+      state.tabs = updateTabById(state.tabs, tabID, tab => ({...tab, isTerminal}));
     },
     setActiveTabTitle: (state: TabState, action: PayloadAction<string>) => {
-      state.tabs = state.tabs.map(tab => (tab.id === state.activeTab ? {...tab, title: action.payload} : tab));
+      state.tabs = updateTabById(state.tabs, state.activeTab, tab => ({...tab, title: action.payload}));
     },
     setTabFavIcon: (
       state: TabState,
@@ -125,14 +126,14 @@ const tabsSlice = createSlice({
       }>,
     ) => {
       const {tabID, ...favIcon} = action.payload;
-      state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, favIcon} : tab));
+      state.tabs = updateTabById(state.tabs, tabID, tab => ({...tab, favIcon}));
     },
     setTabProgress: (
       state: TabState,
       action: PayloadAction<{tabID: string; progress: {state: 0 | 1 | 2 | 3 | 4; value: number} | undefined}>,
     ) => {
       const {tabID, progress} = action.payload;
-      state.tabs = state.tabs.map(tab => (tab.id === tabID ? {...tab, progress} : tab));
+      state.tabs = updateTabById(state.tabs, tabID, tab => ({...tab, progress}));
     },
     setActivePage: (
       state: TabState,
@@ -149,7 +150,7 @@ const tabsSlice = createSlice({
           ...state.tabs[index],
           pageID,
           title,
-          isTerminal: isTerminal || false,
+          isTerminal: isTerminal ?? false,
           favIcon: {show: false, url: ''},
         };
       }
@@ -158,6 +159,9 @@ const tabsSlice = createSlice({
   },
 });
 
+/**
+ * Hook to access tabs reducer state by key with inferred return type.
+ */
 export const useTabsState = <K extends keyof TabState>(key: K): TabStateTypes[K] =>
   useSelector((state: RootState) => state.tabs[key]);
 
