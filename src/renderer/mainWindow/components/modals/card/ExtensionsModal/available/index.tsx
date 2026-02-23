@@ -1,7 +1,7 @@
 import {Input, Pagination, Spinner} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {validateGitRepoUrl} from '@lynx_common/utils';
-import {Empty} from 'antd';
 import {memo, useEffect, useMemo, useState} from 'react';
 
 import {getCardMethod, useAllCardMethods} from '../../../../../plugins/modules';
@@ -88,12 +88,7 @@ const Available = memo(({visible, updateTable, installedExtensions, id, dir}: Pr
           <Spinner label="Loading extensions list..." />
         </div>
       ) : searchedData.length === 0 ? (
-        <Empty
-          description={
-            'There are no extensions available at the moment, but be sure to check back later for new additions!'
-          }
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        />
+        <EmptyStateCard description="There are no extensions available at the moment, but be sure to check back later for new additions!" />
       ) : (
         <div className="flex flex-1 flex-col gap-2">
           {paginatedData.map(item => (

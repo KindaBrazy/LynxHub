@@ -1,6 +1,6 @@
 import {getKeyValue, Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import filesIpc from '@lynx_shared/ipc/files';
-import {Empty} from 'antd';
 import {motion} from 'framer-motion';
 import {startCase} from 'lodash';
 import {Key, memo, useCallback, useEffect, useMemo, useState} from 'react';
@@ -143,7 +143,7 @@ const Installed = memo(
     const emptyContent = isLoading ? (
       <Spinner label="Checking Extensions" />
     ) : (
-      <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No extensions to display." />
+      <EmptyStateCard bodyClassName="py-8" description="No extensions to display." />
     );
 
     return (

@@ -1,6 +1,6 @@
 import {Button, Chip, Tooltip, useDisclosure} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
-import {Empty} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
@@ -68,7 +68,7 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
       }
       description="Configurate environments and command lines">
       {isEmpty(chosenArguments.arguments) ? (
-        <Empty className="m-" image={Empty.PRESENTED_IMAGE_SIMPLE} description="No item selected to display" />
+        <EmptyStateCard bodyClassName="py-8" description="No argument selected to display" />
       ) : (
         <AnimatePresence>
           <Reorder.Group
