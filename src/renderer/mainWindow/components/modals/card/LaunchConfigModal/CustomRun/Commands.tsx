@@ -1,8 +1,7 @@
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import {Button, Card, CardBody, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
 import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
-import {Empty} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
@@ -58,7 +57,11 @@ export default function Commands({id}: Props) {
       title="AI Execution (Terminal Commands)"
       description="Execute these commands when launching AI, overriding default settings">
       {isEmpty(commands) ? (
-        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No custom command available to execute" />
+        <Card className="border border-foreground-200/70 bg-foreground-50/50 shadow-none">
+          <CardBody className="flex items-center justify-center py-8 text-center">
+            <p className="text-sm text-foreground-500">No custom command available to execute</p>
+          </CardBody>
+        </Card>
       ) : (
         <AnimatePresence>
           <Reorder.Group axis="y" values={commands} onReorder={reorderCommands} className="space-y-2 overflow-hidden">
