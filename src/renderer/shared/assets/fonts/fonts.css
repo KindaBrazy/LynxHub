@@ -3,7 +3,7 @@
   font-family: 'Nunito';
   src: url('Nunito/Nunito-VariableFont_wght.ttf');
   font-weight: 100 1000;
-  font-display: block;
+  font-display: swap;
 }
 
 @font-face {
@@ -11,7 +11,7 @@
   src: url('Nunito/Nunito-Italic-VariableFont_wght.ttf');
   font-weight: 100 1000;
   font-style: italic;
-  font-display: block;
+  font-display: swap;
 }
 
 /* -----------------------------------------------> JetBrains Mono */

@@ -1,10 +1,13 @@
 import {ReactElement} from 'react';
 
-import {SvgProps} from './types';
+import {GradientSvgProps, SvgProps} from './types';
 
 /* eslint max-len: 0 */
 
-export function History_Color_Icon(props: SvgProps): ReactElement {
+/**
+ * Colorful History icon with internal gradient definitions.
+ */
+export function History_Color_Icon(props: GradientSvgProps): ReactElement {
   return (
     <svg {...props} height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
@@ -13,7 +16,7 @@ export function History_Color_Icon(props: SvgProps): ReactElement {
           d="M7.698 5a.75.75 0 0 1 .75.75V7.5h1.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1-.75-.75v-2.5a.75.75 0 0 1 .75-.75"
         />
         <path
-          fill={`url(#${props.id}fluentColorHistory161)`}
+          fill={`url(#${props.id}_fluentColorHistory161)`}
           d="M7.947 3.5a4.5 4.5 0 1 1-4.454 5.14a.75.75 0 1 0-1.485.212a6.001 6.001 0 1 0 1.94-5.324V2.75a.75.75 0 1 0-1.5 0v3c0 .414.335.75.75.75h2.5a.75.75 0 1 0 0-1.5H4.592a4.5 4.5 0 0 1 3.354-1.5"
         />
         <defs>
@@ -33,7 +36,7 @@ export function History_Color_Icon(props: SvgProps): ReactElement {
             y1="2.706"
             y2="16.186"
             gradientUnits="userSpaceOnUse"
-            id={`${props.id}fluentColorHistory161`}>
+            id={`${props.id}_fluentColorHistory161`}>
             <stop stopColor="#0fafff" />
             <stop offset="1" stopColor="#0067bf" />
           </linearGradient>
@@ -42,7 +45,11 @@ export function History_Color_Icon(props: SvgProps): ReactElement {
     </svg>
   );
 }
-export function Pin_Color_Icon(props: SvgProps): ReactElement {
+
+/**
+ * Colorful Pin icon with layered gradients.
+ */
+export function Pin_Color_Icon(props: GradientSvgProps): ReactElement {
   return (
     <svg {...props} height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
@@ -98,7 +105,10 @@ export function Pin_Color_Icon(props: SvgProps): ReactElement {
   );
 }
 
-export function Apps_Color_Icon(props: SvgProps): ReactElement {
+/**
+ * Colorful Apps icon with gradient tiles.
+ */
+export function Apps_Color_Icon(props: GradientSvgProps): ReactElement {
   return (
     <svg {...props} height="1em" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
       <g fill="none">
@@ -165,6 +175,9 @@ export function Apps_Color_Icon(props: SvgProps): ReactElement {
   );
 }
 
+/**
+ * YouTube brand icon.
+ */
 export function Youtube_Color_Icon(props: SvgProps): ReactElement {
   return (
     <svg {...props} height="1em" width="1.43em" viewBox="0 0 256 180" xmlns="http://www.w3.org/2000/svg">
