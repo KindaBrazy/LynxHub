@@ -1,6 +1,10 @@
 import 'vite/client';
 
-import {ElectronAPI} from '@electron-toolkit/preload';
+import type {ElectronAPI} from '@electron-toolkit/preload';
+
+/**
+ * Global preload-injected window API and runtime metadata.
+ */
 
 declare global {
   interface Window {
