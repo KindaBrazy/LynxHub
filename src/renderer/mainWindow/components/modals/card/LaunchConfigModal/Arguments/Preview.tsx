@@ -1,5 +1,5 @@
 import {Card, CardBody} from '@heroui/react';
-import {Empty} from 'antd';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {isEmpty} from 'lodash';
 import {useMemo, useState} from 'react';
 
@@ -30,7 +30,7 @@ export default function ArgumentsPreview({text}: Props) {
       description="Preview of the final result to be saved"
       customButton={<CopyClipboard contentToCopy={text} tooltipTitle="Copy Preview to Clipboard" showTooltip />}>
       {isEmpty(text) ? (
-        <Empty className="m-0" image={Empty.PRESENTED_IMAGE_DEFAULT} description="No preview available to display" />
+        <EmptyStateCard className="m-0" bodyClassName="py-8" description="No preview available to display" />
       ) : (
         <Card
           className={
