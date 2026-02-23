@@ -41,6 +41,7 @@
   background-color: #212121;
   font-family: Nunito, sans-serif;
 
+  /* Card overlay variables shared by installed/uninstalled card backgrounds. */
   --uninstalled-card-bg-color: #ededed;
   --accent-bg-color: #212121;
   --xterm-scrollbar-thumb-color: rgba(0, 0, 0, 0.1);

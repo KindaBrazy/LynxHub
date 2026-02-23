@@ -1,5 +1,5 @@
 import {modalActions} from '@lynx/redux/reducers/modals';
-import {AppDispatch} from '@lynx/redux/store';
+import type {AppDispatch} from '@lynx/redux/store';
 import {isMac} from '@lynx_common/utils';
 import {capitalize, isEmpty} from 'lodash';
 
@@ -10,9 +10,15 @@ import {capitalize, isEmpty} from 'lodash';
  */
 export function formatNumber(num: number): string {
   const suffixes = ['', 'K', 'M', 'B', 'T'];
-  const magnitude = Math.floor(Math.log10(Math.abs(num)) / 3);
-  if (magnitude === 0 || !Number.isFinite(num)) return num.toString();
+
+  if (!Number.isFinite(num)) return num.toString();
+
+  const absoluteValue = Math.abs(num);
+  if (absoluteValue < 1000) return num.toString();
+
+  const magnitude = Math.min(Math.floor(Math.log10(absoluteValue) / 3), suffixes.length - 1);
   const scaled = num / Math.pow(10, magnitude * 3);
+
   return `${scaled.toFixed(1).replace(/\.0$/, '')}${suffixes[magnitude]}`;
 }
 

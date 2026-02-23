@@ -12,9 +12,12 @@ import TextGenerationPage from '@lynx/pages/text';
 import ToolsPage from '@lynx/pages/tools';
 import {PageID} from '@lynx_common/consts';
 import {TabInfo} from '@lynx_common/types';
-import {HTMLMotionProps} from 'framer-motion';
-import {SimpleGitProgressEvent} from 'simple-git';
+import type {HTMLMotionProps} from 'framer-motion';
+import type {SimpleGitProgressEvent} from 'simple-git';
 
+/**
+ * Mapping of internal page IDs to their renderer components.
+ */
 export const PageComponents = {
   [PageID.home]: HomePage,
   [PageID.imageGen]: ImageGenerationPage,
@@ -33,6 +36,9 @@ export const PageComponents = {
 
 export const REMOVE_MODAL_DELAY: number = 500;
 
+/**
+ * Base palette used by terminal/theme-related helpers.
+ */
 const colors = {
   black: `rgba(0, 0, 0, 1)`,
   danger: `rgba(220, 38, 38, 1)`,
@@ -72,6 +78,9 @@ export const initGitProgress: SimpleGitProgressEvent = {
   total: 0,
 };
 
+/**
+ * Shared motion variants used for modal enter/exit transitions.
+ */
 export const modalMotionProps: Omit<HTMLMotionProps<'section'>, 'ref'> = {
   variants: {
     enter: {
@@ -106,6 +115,9 @@ export const modalMotionProps: Omit<HTMLMotionProps<'section'>, 'ref'> = {
   },
 };
 
+/**
+ * Default tab descriptor used when creating or resetting tabs.
+ */
 export const defaultTabItem: TabInfo = {
   id: 'tab',
   title: 'Home',

@@ -1,4 +1,16 @@
-import {ArgumentItem, ArgumentsData} from '@lynx_common/types/plugins/modules';
+import type {ArgumentItem, ArgumentsData, DataSection} from '@lynx_common/types/plugins/modules';
+
+function hasSections(argumentGroup: ArgumentsData[number]): argumentGroup is DataSection {
+  return 'sections' in argumentGroup;
+}
+
+function getArgumentItems(argumentGroup: ArgumentsData[number]): ArgumentItem[] {
+  if (hasSections(argumentGroup)) {
+    return argumentGroup.sections.flatMap(section => section.items);
+  }
+
+  return argumentGroup.items;
+}
 
 /**
  * Checks if an argument with the given name exists in the Arguments data structure.
@@ -9,12 +21,7 @@ import {ArgumentItem, ArgumentsData} from '@lynx_common/types/plugins/modules';
 export function isValidArg(args: ArgumentsData, name: string): boolean {
   if (!name) return false;
 
-  return args.some(arg => {
-    if ('sections' in arg) {
-      return arg.sections.some(section => section.items.some(item => item.name === name));
-    }
-    return arg.items.some(item => item.name === name);
-  });
+  return args.some(argumentGroup => getArgumentItems(argumentGroup).some(item => item.name === name));
 }
 
 /**
@@ -52,17 +59,14 @@ export function getFilteredArguments(args?: ArgumentsData, filterKeys: string[] 
 export function getArgumentByName(args: ArgumentsData, name: string): ArgumentItem | undefined {
   if (!name) return undefined;
 
-  for (const arg of args) {
-    if ('sections' in arg) {
-      for (const section of arg.sections) {
-        const found = section.items.find(item => item.name === name);
-        if (found) return found;
+  for (const argumentGroup of args) {
+    for (const item of getArgumentItems(argumentGroup)) {
+      if (item.name === name) {
+        return item;
       }
-    } else {
-      const found = arg.items.find(item => item.name === name);
-      if (found) return found;
     }
   }
+
   return undefined;
 }
 

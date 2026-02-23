@@ -7,7 +7,8 @@ import {isDev} from '@lynx_common/utils';
 import {onBreadcrumbStateChange} from '@lynx_shared/sentry/Breadcrumbs';
 import {reactErrorHandler} from '@sentry/react';
 import log from 'electron-log/renderer';
-import {createRoot, RootOptions} from 'react-dom/client';
+import {createRoot} from 'react-dom/client';
+import type {RootOptions} from 'react-dom/client';
 import {ErrorBoundary} from 'react-error-boundary';
 import {Provider as ReduxProvider} from 'react-redux';
 
@@ -45,7 +46,12 @@ const rootOptions: RootOptions | undefined = collectErrors
     }
   : undefined;
 
-createRoot(document.getElementById('root') as HTMLElement, rootOptions).render(
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error('Root element with id "root" was not found.');
+}
+
+createRoot(rootElement, rootOptions).render(
   <ReduxProvider store={createStore(collectErrors)}>
     <ErrorBoundary FallbackComponent={ErrorWrapper}>
       <App />
