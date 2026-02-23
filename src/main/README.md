@@ -1,92 +1,206 @@
-# LynxHub Main Process
+# LynxHub Main Process (`src/main`)
 
-This directory (`src/main`) contains the source code for the **Electron Main Process** of LynxHub. The main process is responsible for creating and managing application windows, handling system events, and interacting with the operating system.
+This folder is the Electron backend runtime for LynxHub. It owns:
 
-## 🚀 Entry Point
+- application lifecycle
+- OS/native integrations
+- window and child-window orchestration
+- storage and migrations
+- plugin/module/extension loading
+- IPC handlers for renderer and preload calls
 
-The entry point for the main process is [`index.ts`](./index.ts). This file is responsible for:
+If a feature needs Electron APIs, Node-only APIs, or file-system control, it usually belongs here.
 
-1.  **Lifecycle Management**: Handling app startup, activation, and shutdown events.
-2.  **Initialization**: Setting up logging, fixing environment paths (macOS), and initializing core components.
-3.  **Migration**: Checking and running data migrations if necessary.
-4.  **Window Creation**: creating the main application window via `AppManager`.
+## Responsibilities at a glance
 
-## 🏗️ Architecture & Core Components
+| Area | Main process ownership |
+| --- | --- |
+| App lifecycle | startup, activation, shutdown, relaunch |
+| Windows | main window + loading + context menu + toast + share screen + link preview |
+| IPC server | all `ipcMain` listeners/handlers and event fan-out |
+| Storage | lowdb persistence, migrations, secure browser-data handling |
+| Plugins | validate, install, sync, import module/extension runtimes |
+| Native ops | PTY, filesystem, shell, tray, updater, desktop capture |
+| Protocols | `lynxplugin://` and image-cache custom schemes |
 
-The main process is structured around a central dependency injection container and a set of managers that handle specific domains of the application.
+## Startup flow (actual runtime sequence)
 
-### 1. ClassHolder (Dependency Injection)
+Main entry is `src/main/index.ts`.
 
-Located in [`managers/classHolder.ts`](./managers/classHolder.ts), the `ClassHolder` is a singleton that initializes and holds references to all major managers. It acts as the central hub for accessing services like `StorageManager`, `PluginManager`, `AppManager`, etc.
+1. `configureAppBeforeReady()` runs before `app.whenReady()`:
+   - applies performance command-line switches from storage
+   - optionally disables hardware acceleration
+   - initializes Sentry when enabled
+   - registers privileged schemes (`lynxplugin`, image cache)
+2. Loading window class is created.
+3. On `app.whenReady()`:
+   - checks plugin migration flag from storage
+   - if migration needed, runs `PluginMigrate` flow
+   - otherwise starts loading window and continues initialization
+4. `initializeLynxHub()`:
+   - fixes environment path (`fix-path`)
+   - ensures app data folders exist
+   - completes deferred storage migrations and decrypt cache data
+   - initializes managers via `classHolder.initializeManagers()`
+   - checks statics requirements
+   - registers custom protocols
+   - initializes plugins/extensions (`pluginManager.initPlugins()`, `extensionManager.onAppReady()`)
+   - registers all IPC listeners (`listenToIpcChannels()`)
+   - starts main window
+   - starts updater checks
+5. On main window ready:
+   - loading window closes
+   - post-show setup applies taskbar/tray behavior and startup window state
+   - share-screen manager is started
 
-### 2. Managers
+## Core architecture
 
-Managers encapsulate the logic for specific features. They are located in [`managers/`](./managers/). Key managers include:
+### `managers/classHolder.ts` is the central runtime container
 
-- **`AppManager`** (`mainWindow/`): Manages the main browser window lifecycle.
-- **`PluginManager`** (`plugins/`): Handles installation, loading, and updating of plugins (Extensions & Modules).
-- **`StorageManager`** (`storage/`): Handles local file storage and data persistence.
-- **`TrayManager`**: Manages the system tray icon and menu.
-- **`BrowserDownloadManager`**: Manages file downloads.
+`ClassHolder` is a singleton dependency container with:
 
-### 3. IPC (Inter-Process Communication)
+- eager services: `storageManager`, online status checker
+- initialized services: `moduleManager`, `extensionManager`, `pluginManager`, `appManager`, `trayManager`, etc.
+- readiness utility: `waitForClass()` for async-safe manager access
 
-Communication between the Main process and the Renderer process is handled via IPC channels defined in [`ipc/`](./ipc/).
+Use `waitForClass()` whenever initialization order is uncertain.
 
-- **`index.ts`**: Registers all IPC listeners.
-- **`methods/`**: Contains the actual implementation of IPC handlers.
-- **`ipcWrapper.ts`**: Provides a type-safe wrapper for IPC calls.
+### Manager responsibilities
 
-### 4. Plugins System
+| Path | Role |
+| --- | --- |
+| `mainWindow/index.ts` | Main `BrowserWindow` creation, event wiring, URL loading, hotkey registration. |
+| `managers/dataFolder.ts` | App data path strategy (portable vs installed), folder checks, data-dir switching. |
+| `managers/updater.ts` | `electron-updater` integration and update event relay. |
+| `managers/statics.ts` | Clones/pulls static metadata repository and serves typed content. |
+| `managers/tray.ts` | Tray creation/update and taskbar/tray mode integration. |
+| `managers/hotkeys.ts` | WebContents input listener and hotkey IPC events. |
+| `managers/imageCache.ts` | Custom image cache scheme lifecycle. |
 
-The plugin system (`plugins/`) allows LynxHub to be extended.
+### Plugin stack
 
-- **`PluginManager`**: Orchestrates the loading and validation of plugins.
-- **`ModuleManager`**: Handles "Modules" (core functionalities).
-- **`ExtensionManager`**: Handles "Extensions" (add-ons).
-- Plugins are loaded from the user's `Plugins` data directory and are git-based.
+Plugin loading and lifecycle lives under `plugins/`:
 
-### 5. Child Windows
+- `plugins/index.ts` (`PluginManager`) validates folder structure, installs/uninstalls/syncs plugins
+- `plugins/modules/index.ts` (`ModuleManager`) imports module main scripts and exposes module methods
+- `plugins/extensions/index.ts` (`ExtensionManager`) imports extension main entry points and lifecycle callbacks
+- plugin metadata/version compatibility is resolved via statics data
 
-Secondary windows (like the loading screen, context menus, toast notifications) are managed in [`childWindows/`](./childWindows/).
+Migration path from older plugin layout is in `setup/migration.ts`.
 
-## 🔄 How it Works (Startup Flow)
+### Storage stack
 
-1.  **`index.ts`** starts.
-2.  **`configureAppBeforeReady()`** sets up protocols and flags.
-3.  **`app.whenReady()`** triggers.
-4.  **Migration Check**: Checks if `plugin` storage needs migration.
-    - If yes, runs `PluginMigrate`.
-    - If no, calls `initializeLynxHub()`.
-5.  **`initializeLynxHub()`**:
-    - Checks/Creates app data directories.
-    - Initializes all managers via `classHolder.initializeManagers()`.
-    - Registers IPC listeners (`listenToIpcChannels()`).
-    - Starts the main window via `appManager.startApp()`.
+- `storage/index.ts` is low-level lowdb persistence + schema migrations
+- `storage/storageOperations.ts` provides high-level domain operations and IPC notifications
+- storage schema lives in `src/common/types/storage.ts`
 
-## 🛠️ Development Guide
+### Child windows
 
-### Adding a New IPC Channel
+`childWindows/` manages specialized windows:
 
-1.  Define the handler in a relevant file within `ipc/methods/` or create a new one.
-2.  Register the listener in `ipc/index.ts` or a specific IPC loader (e.g., `ipc/application.ts`).
-3.  Ensure types are shared with the renderer (usually in `src/common`).
+- `loading.ts`
+- `contextMenu.ts`
+- `toast.ts`
+- `shareScreen.ts`
+- `linkPreview.ts`
+- `browserDownloadManager.ts`
 
-### Adding a New Manager
+These windows are intentionally isolated and communicate through IPC channels.
 
-1.  Create the manager class in `managers/`.
-2.  Add it to `ClassHolder` in `managers/classHolder.ts`.
-3.  Initialize it in `ClassHolder.initializeManagers()`.
+## IPC architecture
 
-## 📂 Directory Structure
+Main-side IPC entrypoint: `ipc/index.ts`
 
-- `childWindows/`: Logic for secondary windows.
-- `git/`: Git operation handlers.
-- `ipc/`: IPC listeners and handlers.
-- `mainWindow/`: Main window configuration and management.
-- `managers/`: Core logic and state management.
-- `monitoring/`: Sentry and authentication monitoring.
-- `plugins/`: Plugin system logic.
-- `setup/`: Migration and setup scripts.
-- `storage/`: File system storage logic.
-- `utils/`: General utility functions.
+This bootstraps domain listeners in order:
+
+- storage and storage utilities
+- application
+- files
+- git
+- misc utilities
+- PTY
+- module APIs
+- plugin APIs
+- context menu/statics domains
+- manager-owned channel listeners
+
+Implementation pattern:
+
+- channel constants: `src/common/consts/ipcChannels/*`
+- main listener/handler: `src/main/ipc/*`
+- renderer wrapper: `src/renderer/shared/ipc/*`
+
+Do not invent ad-hoc string channels inside feature files.
+
+## Folder map
+
+| Folder | Purpose |
+| --- | --- |
+| `childWindows/` | Child-window classes and controllers. |
+| `git/` | Git manager and listener integration. |
+| `ipc/` | Main IPC listeners, wrappers, handlers, and domain methods. |
+| `mainWindow/` | Main app window manager. |
+| `managers/` | Core service managers and runtime orchestration. |
+| `monitoring/` | Sentry, Patreon auth, token helpers. |
+| `plugins/` | Plugin/module/extension lifecycle and compatibility logic. |
+| `setup/` | One-time migration flows. |
+| `storage/` | Persistence, schema defaults, migration functions, domain storage ops. |
+| `utils/` | Main-process utility helpers. |
+
+## Contributor workflows
+
+### Add a new IPC feature
+
+1. Add channel constant in `src/common/consts/ipcChannels/<domain>.ts`.
+2. Add/update payload types in `src/common/types`.
+3. Add main listener/handler in `src/main/ipc`.
+4. Add renderer wrapper in `src/renderer/shared/ipc`.
+5. Use wrapper from renderer UI code.
+
+### Add a new manager
+
+1. Create manager class under `src/main/managers`.
+2. Add property + getter/setter to `ClassHolder`.
+3. Initialize in `ClassHolder.initializeManagers()`.
+4. If startup-critical, integrate in `src/main/index.ts` flow.
+
+### Add a new child window
+
+1. Create class under `src/main/childWindows`.
+2. Load `*.html` via dev/prod URL pattern.
+3. Wire lifecycle from main window or app lifecycle.
+4. Add matching renderer entry in `src/renderer/childWindows`.
+5. Register HTML input in `electron.vite.config.ts`.
+
+## Operational notes and pitfalls
+
+- Avoid assuming main window exists; use `classHolder.waitForClass('appManager')` when needed.
+- Main process can restart window lifecycle on macOS activate; keep handlers idempotent.
+- Plugin and statics operations must tolerate offline mode and missing Git.
+- For portable mode, prefer helpers in `managers/dataFolder.ts` and `utils` for path conversion.
+- Do not block startup with long synchronous operations in listeners.
+
+## Validate changes
+
+```bash
+npm run typecheck
+```
+
+Recommended for main-heavy changes:
+
+```bash
+npm run dev
+```
+
+Then validate:
+
+- app boot and shutdown
+- IPC round-trips for modified domains
+- plugin/module loading
+- child window behavior impacted by your change
+
+## Related docs
+
+- shared contracts: `src/common/README.md`
+- renderer architecture: `src/renderer/README.md`
+- project overview: `README.md`

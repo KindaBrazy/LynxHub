@@ -1,52 +1,117 @@
-# LynxHub Common Shared Code
+# LynxHub Shared Contracts (`src/common`)
 
-This directory (`src/common`) contains source code that is **shared** between the **Electron Main Process** (`src/main`) and the **Renderer Process** (`src/renderer`).
+`src/common` is the contract layer shared by:
 
-Code in this directory must be platform-agnostic or safely handle environment differences, as it is imported in both Node.js (Main) and Browser (Renderer) environments.
+- main process code (`src/main`)
+- renderer code (`src/renderer`)
+- preload code (`src/preload`)
+- plugin/module API surfaces consumed by external packages
 
-## 📂 Directory Structure
+If something crosses process/runtime boundaries, it should usually be defined here first.
 
-- **`consts/`**: Application-wide constants.
-  - **`ipcChannels/`**: Definitions of IPC channel names used for communication between Main and Renderer.
-  - **`hotkeys.ts`**: Keyboard shortcut definitions.
-- **`types/`**: TypeScript type definitions and interfaces.
-  - **`plugins/`**: Types related to the plugin system (Extensions & Modules).
-  - **`index.ts`**: Core application types (RepositoryInfo, AppUpdateInfo, NotificationData, etc.).
-- **`utils/`**: Shared utility functions.
-  - **`env.ts`**: Environment checks.
-  - **`fileUtils.ts`**: Common file path and handling utilities.
-  - **`formatting.ts`**: Text and data formatting helpers.
+## Why this folder exists
 
-## 🚀 Key Components
+This folder keeps cross-process behavior stable by centralizing:
 
-### 1. IPC Channels (`consts/ipcChannels`)
+- IPC channel names
+- shared TypeScript models
+- utility functions safe to reuse in multiple runtimes
+- app-level constants sourced from `package.json`
 
-Defines the contract for Inter-Process Communication. Both the Main process (which listens for these events) and the Renderer process (which sends them) import these constants to ensure type safety and consistency.
+Without this layer, main and renderer can drift and break each other silently.
 
-Example:
-- `application.ts`: General app events (dark mode, window state).
-- `git.ts`: Git-related operations.
-- `plugins.ts`: Plugin management events.
+## Directory map
 
-### 2. Shared Types (`types/`)
+| Path | Purpose | Notes |
+| --- | --- | --- |
+| `consts/index.ts` | App-level constants (name, version, links, page IDs, folder names). | Pulls from `package.json` and is consumed by both processes. |
+| `consts/hotkeys.ts` | Default hotkey definitions and metadata. | Used by storage defaults and UI settings. |
+| `consts/ipcChannels/*.ts` | Canonical IPC channel names grouped by domain. | Must stay in sync with main handlers and renderer wrappers. |
+| `types/index.ts` | Core shared types (`RepositoryInfo`, updates, notifications, tab data, etc.). | General contracts across app features. |
+| `types/ipc.ts` | IPC payload/event types. | Keep channel payload types here, not inside handlers. |
+| `types/storage.ts` | Full persistent storage schema (`AppStorageData`). | Source of truth for storage structure. |
+| `types/plugins/*` | Module/extension API contracts. | Breaking changes here can break external plugins. |
+| `utils/*.ts` | Runtime-safe helpers (formatting, URL, file name sanitizing, time, plugin helpers). | Avoid direct Electron dependencies here. |
 
-Ensures that data structures passed between processes (e.g., `RepositoryInfo`, `NotificationData`) are consistent. If you change a type here, it updates for both the backend and frontend.
+## IPC contract model
 
-Key types:
-- `RepositoryInfo`: Git branch and status info.
-- `ModuleInfo` / `ExtensionInfo`: Plugin metadata.
-- `AppUpdateInfo`: Auto-updater status.
+Channel names are declared in `consts/ipcChannels/*` and then used in:
 
-### 3. Utilities (`utils/`)
+- main listeners and handlers in `src/main/ipc/*`
+- renderer wrappers in `src/renderer/shared/ipc/*`
 
-Helper functions that don't rely on specific Electron Main or Renderer APIs, or that abstract them away.
+Current domain files:
 
-- **`platform.ts`**: OS detection.
-- **`time.ts`**: Date and time formatting.
-- **`urlUtils.ts`**: URL validation and manipulation.
+- `application.ts`
+- `browser.ts`
+- `contextMenu.ts`
+- `dialogsWindow.ts`
+- `downloadManager.ts`
+- `files.ts`
+- `git.ts`
+- `module.ts`
+- `plugins.ts`
+- `pty.ts`
+- `shareScreen.ts`
+- `statics.ts`
+- `storage.ts`
+- `toastWindow.ts`
+- `user.ts`
+- `utils.ts`
 
-## ⚠️ Development Guidelines
+### Adding a new IPC method
 
-1.  **No Node.js-only APIs**: Avoid importing modules like `fs` or `path` directly if the code will run in the browser, unless polyfilled or handled gracefully.
-2.  **No DOM-only APIs**: Avoid accessing `window` or `document` directly without checking if the environment is the browser.
-3.  **Type Safety**: Use this folder to define the "contract" between your frontend and backend.
+1. Add/extend a channel in `src/common/consts/ipcChannels/<domain>.ts`.
+2. Define or update payload/result types in `src/common/types/ipc.ts` (or another relevant shared type file).
+3. Implement main-side listener/handler in `src/main/ipc`.
+4. Expose renderer-side wrapper in `src/renderer/shared/ipc`.
+5. Use the wrapper from UI code instead of raw `window.electron.ipcRenderer`.
+
+## Shared plugin API surface
+
+The plugin contract lives in `src/common/types/plugins`:
+
+- `modules.ts` defines module card APIs (install flow, methods, renderer/main contracts)
+- `extensions/*` defines extension renderer APIs, events, and injection points
+- `index.ts` defines metadata/versioning compatibility models
+
+If you change these files, treat it as public API work.
+
+Recommended when changing plugin contracts:
+
+1. Keep changes backward compatible when possible.
+2. If breaking, bump API version fields in `package.json` (`moduleApiVersion`, `extensionApiVersion`).
+3. Update both main and renderer implementations in the same PR.
+
+## Runtime boundary rules
+
+Code in `src/common` is imported by both Node/Electron and browser contexts.
+
+Keep these rules:
+
+- Do not depend on Electron modules here.
+- Avoid Node-only APIs unless usage is guarded and safe for renderer bundles.
+- Avoid direct DOM globals unless guarded.
+- Prefer pure functions and serializable types.
+- Keep side effects out of shared type/const modules.
+
+## Contributor checklist
+
+Before opening a PR that touches `src/common`:
+
+1. Confirm the change is truly cross-process/shared.
+2. Verify main and renderer compile against the updated contracts.
+3. Run:
+
+```bash
+npm run typecheck
+```
+
+4. If IPC-related, manually test the full request/response flow.
+5. If plugin contract-related, validate module/extension loading paths.
+
+## Related docs
+
+- main process guide: `src/main/README.md`
+- renderer guide: `src/renderer/README.md`
+- root project guide: `README.md`

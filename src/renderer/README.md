@@ -1,212 +1,205 @@
-# LynxHub Renderer Process
+# LynxHub Renderer (`src/renderer`)
 
-This directory (`src/renderer`) contains all **Electron Renderer Process** code for LynxHub.
-It includes the main app UI (`mainWindow`), secondary renderer windows (`childWindows`), and shared renderer utilities (`shared`).
+This folder contains all renderer-side UI code (React + TypeScript) for:
 
-The renderer is React + TypeScript, built with `electron-vite`, and communicates with the Main process through typed IPC wrappers.
+- the main application window
+- small auxiliary windows (context menu, loading, toast, share-screen picker, link preview)
+- shared renderer services (IPC clients, Sentry boot, styles, shared providers/assets)
 
-## 🚀 What Lives Here
+## Runtime map
 
-- **`mainWindow/`**: Primary application UI (tabs, pages, modals, settings, card system, plugin hooks).
-- **`childWindows/`**: Lightweight standalone windows (context menu, loading, toast, share screen, link preview).
-- **`shared/`**: Cross-renderer assets and utilities (styles, HeroUI provider wrapper, IPC clients, Sentry init).
-- **`*.html`**: Entry HTML files used by Vite as multi-page renderer build inputs.
+| Area | Purpose |
+| --- | --- |
+| `mainWindow/` | Primary app UI, state, layout, pages, plugin composition. |
+| `childWindows/` | Independent lightweight renderer apps for secondary windows. |
+| `shared/` | Cross-window renderer utilities: IPC wrappers, shared styles, assets, sentry, providers. |
+| `*.html` | Multi-entry build inputs used by electron-vite for each renderer window. |
 
-## 🏗️ High-Level Architecture
+## Boot sequence (main window)
 
-### 1. Main Window (`mainWindow/`)
+Main entry: `src/renderer/mainWindow/index.tsx`
 
-The main app UI is bootstrapped from [`mainWindow/index.tsx`](./mainWindow/index.tsx).
+Actual order:
 
-Startup flow:
+1. initialize storage cache once via IPC (`initializeStorage()`)
+2. load module renderer code (`loadModules()`)
+3. load extension renderer code (`loadExtensions()`)
+4. read settings from cached storage (`collectErrors`, `addBreadcrumbs`, etc.)
+5. configure root error handling and Redux store
+6. render `<App />` inside providers and error boundaries
 
-1. Initialize storage cache with one IPC request (`initializeStorage`).
-2. Load renderer-side plugin modules (`loadModules`) and extensions (`loadExtensions`).
-3. Read app settings from cached storage (error collection, breadcrumbs, etc.).
-4. Build Redux store with preloaded state from storage.
-5. Render React root with providers and error boundaries.
+Root layout is in `src/renderer/mainWindow/App.tsx`:
 
-Root component: [`mainWindow/App.tsx`](./mainWindow/App.tsx)
+- `UIProviders`
+- `AppHooks`
+- onboarding initializer
+- extension-injected hooks
+- background, title bar, main content, modals
 
-The app root wires:
+## Main window architecture
 
-- Global UI providers (`UIProviders`)
-- App hooks (`AppHooks`) for lifecycle/event sync
-- Extension hooks (`ExtensionHooks`)
-- Main layout primitives (`Background`, `TitleBar`, `MainContents`, `Modals`)
+### Feature layout
 
-### 2. Child Windows (`childWindows/`)
+`mainWindow/` is split by responsibility:
 
-Each child window has its own React entry point and runs independently from the main window state tree.
+- `components/`: reusable UI components and modal systems
+- `features/`: heavy feature blocks (session browser/terminal/top bar flows)
+- `layouts/`: shell structure (`titleBar`, `tabs`, `navBar`, `statusBar`)
+- `pages/`: route-level pages (home, settings, plugins, dashboard, etc.)
+- `hooks/`: app-level event wiring and side effects
+- `redux/`: reducers, store setup, storage preloading
+- `plugins/`: runtime module/extension composition
 
-Current child windows:
+### State model
 
-- `contextMenu/`
-- `loading/`
-- `toast/`
-- `shareScreen/`
-- `linkPreview/`
+Main-window state uses Redux Toolkit plus plugin extension reducers:
 
-Each window is mapped to an HTML input in `electron.vite.config.ts`:
+- static reducers defined in `redux/reducers/*`
+- preloaded state built from storage cache in `redux/store.ts`
+- extension reducers injected from `plugins/extensions/loader.ts`
+- Sentry Redux enhancer enabled when `collectErrors` is true
 
-- `src/renderer/contextMenu.html`
-- `src/renderer/loading.html`
-- `src/renderer/toast.html`
-- `src/renderer/shareScreen.html`
-- `src/renderer/linkPreview.html`
+Module card data is managed via `useSyncExternalStore` in
+`mainWindow/plugins/modules/index.ts`, enabling reactive shared module state
+outside Redux for plugin-loaded cards.
 
-### 3. Shared Renderer Layer (`shared/`)
+## Plugin runtime in renderer
 
-Shared renderer code used across main and child windows:
+Renderer loads two plugin classes:
 
-- **`ipc/`**: Renderer-side IPC wrappers (application, storage, files, git, browser, plugins, etc.)
-- **`styles.css`**: Tailwind v4 + shared theme tokens for child windows
-- **`HeroUIProvider.tsx`**: Shared provider wrapper for small renderer windows
-- **`sentry/`**: Renderer Sentry initialization + breadcrumbs integration
+### Modules (cards)
 
-## 📂 Directory Structure
+- loader: `mainWindow/plugins/modules/index.ts`
+- dev mode: tries local alias `@lynx_module/renderer`
+- production: imports module entries from plugin addresses returned by IPC
+- applies disabled-card filtering from storage and rebuilds card indexes/search data
 
-```text
-src/renderer/
-  childWindows/
-    contextMenu/
-    linkPreview/
-    loading/
-    shareScreen/
-    toast/
-  mainWindow/
-    components/
-      card/
-      modals/
-    contexts/
-    features/
-    hooks/
-    layouts/
-      navBar/
-      statusBar/
-      tabs/
-      titleBar/
-    pages/
-      agents/
-      audio/
-      dashboard/
-      games/
-      home/
-      image/
-      others/
-      plugins/
-      settings/
-      text/
-      tools/
-    plugins/
-      extensions/
-      modules/
-    redux/
-      reducers/
-    types/
-    utils/
-    App.tsx
-    index.tsx
-    index.css
-  shared/
-    assets/
-    ipc/
-    public/
-    sentry/
-    HeroUIProvider.tsx
-    styles.css
-  contextMenu.html
-  index.html
-  linkPreview.html
-  loading.html
-  shareScreen.html
-  toast.html
+### Extensions (UI injections)
+
+- loader: `mainWindow/plugins/extensions/index.ts`
+- API registry: `mainWindow/plugins/extensions/loader.ts`
+- dev mode: tries `@lynx_extension/renderer/Extension`
+- production: registers remotes via Module Federation and loads each extension entry
+- one failing extension does not block others
+
+Extensions can contribute:
+
+- title/status/nav bar UI
+- page customizations
+- modal replacements/additions
+- custom hooks
+- additional reducers
+- event listeners via emitter-backed extension events API
+
+## Child windows
+
+Each child window is its own renderer app with independent entry:
+
+- `childWindows/contextMenu`
+- `childWindows/loading`
+- `childWindows/toast`
+- `childWindows/shareScreen`
+- `childWindows/linkPreview`
+
+Each has a dedicated HTML file at `src/renderer/*.html`, registered in
+`electron.vite.config.ts` under `renderer.build.rollupOptions.input`.
+
+These windows should stay small, focused, and weakly coupled to main-window state.
+
+## Shared renderer layer (`shared/`)
+
+| Path | Role |
+| --- | --- |
+| `shared/ipc/*` | Typed IPC wrappers used by renderer feature code. |
+| `shared/ipc/lynxIpc.ts` | Low-level adapter over `window.electron.ipcRenderer`. |
+| `shared/sentry/*` | Renderer Sentry init + breadcrumb controls. |
+| `shared/HeroUIProvider.tsx` | Shared provider wrapper used by child windows. |
+| `shared/styles.css` | Shared styles/theme for auxiliary windows. |
+| `shared/assets/*` | Shared fonts/icons/static assets. |
+
+## IPC rule in renderer
+
+Do this:
+
+- call domain wrappers in `shared/ipc/*`
+- keep channel constants in `src/common/consts/ipcChannels/*`
+- keep payload types in `src/common/types/*`
+
+Avoid this:
+
+- direct raw channel strings in feature components
+- direct `window.electron.ipcRenderer` usage outside wrappers
+
+## Imports and aliases
+
+Common aliases used in renderer code:
+
+- `@lynx/*` -> `src/renderer/mainWindow/*`
+- `@lynx_shared/*` -> `src/renderer/shared/*`
+- `@lynx_assets/*` -> `src/renderer/shared/assets/*`
+- `@lynx_common/*` -> `src/common/*`
+- `@lynx_module/*` and `@lynx_extension/*` for local dev plugin loading
+
+## Contributor workflows
+
+### Add a new main-window page
+
+1. Add page under `mainWindow/pages/<name>/`.
+2. Wire page into layout/router flow (`layouts` / page container usage).
+3. Add/update reducer state if needed.
+4. If native data is needed, add IPC wrapper in `shared/ipc`.
+
+### Add a new child window
+
+1. Create `src/renderer/childWindows/<name>/index.tsx`.
+2. Add `src/renderer/<name>.html` with `#root`.
+3. Register HTML entry in `electron.vite.config.ts`.
+4. Add main-process window management in `src/main/childWindows`.
+
+### Add a new IPC method used by UI
+
+1. Add channel in `src/common/consts/ipcChannels`.
+2. Add/update shared type in `src/common/types`.
+3. Implement main handler/listener in `src/main/ipc`.
+4. Expose typed renderer function in `src/renderer/shared/ipc`.
+5. Consume wrapper in UI code.
+
+### Add extension injection points
+
+1. Extend extension API types in `src/common/types/plugins/extensions`.
+2. Implement mutation target in `mainWindow/plugins/extensions/loader.ts`.
+3. Consume that injected data in target UI component/layout.
+4. Verify no-extension and multi-extension behavior.
+
+## Conventions and guardrails
+
+- Keep business logic near its owning feature folder.
+- Keep child windows isolated from main-window Redux when possible.
+- Treat plugin-loaded code as untrusted: fail gracefully and isolate errors.
+- Prefer shared helpers/contracts in `src/common` for cross-process logic.
+- Keep startup paths deterministic; avoid async side effects in render-only components.
+
+## Validate renderer changes
+
+```bash
+npm run typecheck:web
 ```
 
-## 🔌 IPC in Renderer
+For cross-boundary changes:
 
-Renderer code should call Main-process functionality through wrappers in [`shared/ipc/`](./shared/ipc):
+```bash
+npm run typecheck
+```
 
-- Avoid calling `window.electron.ipcRenderer` directly from feature code.
-- Add/extend typed wrapper methods in `shared/ipc/*`.
-- Keep channel names defined in `src/common/consts/ipcChannels`.
+Recommended manual checks:
 
-`lynxIpc.ts` is the low-level adapter (`send`, `sendSync`, `invoke`, `on`, `once`) used by typed wrappers.
+- app launch and initial render
+- module/extension loading behavior (dev and production assumptions)
+- affected child windows
+- IPC events for changed domains
 
-## 🧠 State Management
+## Related docs
 
-Main window state is Redux-based (`mainWindow/redux`).
-
-- Slice reducers live in `mainWindow/redux/reducers`.
-- Initial state is hydrated from storage in `storageInit.ts` + `store.ts`.
-- Store creation is aware of extension-provided reducers.
-- Sentry Redux enhancer is enabled when `collectErrors` is enabled in app settings.
-
-## 🧩 Plugin & Extension Integration (Renderer)
-
-Renderer dynamically loads plugin UI code at startup:
-
-- **Modules** (`mainWindow/plugins/modules`): provide cards/pages metadata and renderer methods.
-- **Extensions** (`mainWindow/plugins/extensions`): loaded via Module Federation remotes.
-
-Behavior:
-
-- In development, local aliases (`@lynx_module`, `@lynx_extension`) are used if available.
-- In production, plugin addresses are discovered via IPC and imported dynamically.
-- Failures are isolated so one bad plugin does not block all others.
-
-## 🎨 UI & Styling
-
-UI stack in renderer:
-
-- React 19
-- Tailwind CSS v4
-- HeroUI
-- Ant Design (main window providers)
-
-Guidelines:
-
-- Keep shared window styling in `shared/styles.css`.
-- Keep main-window app-specific styling in `mainWindow/index.css`.
-- Reuse shared provider wrappers for small windows to keep behavior consistent.
-
-## 🛠️ Development Workflows
-
-### Add a New Main Window Page/Feature
-
-1. Create page UI under `mainWindow/pages/<pageName>/`.
-2. Add or wire layout navigation/tab integration under `layouts/` and relevant reducers.
-3. If backend data is needed, add/update an IPC wrapper in `shared/ipc`.
-4. Add shared types/constants in `src/common` when contracts are shared with Main process.
-
-### Add a New Child Window
-
-1. Create `src/renderer/childWindows/<windowName>/index.tsx` and related components.
-2. Add `<windowName>.html` in `src/renderer/` with a `root` element.
-3. Register the new HTML input in `electron.vite.config.ts` (`renderer.build.rollupOptions.input`).
-4. Wire window creation/open logic in Main process (`src/main`).
-
-### Add a New IPC Method for Renderer
-
-1. Define channel constant in `src/common/consts/ipcChannels`.
-2. Implement main-side listener/handler in `src/main/ipc`.
-3. Add renderer wrapper method in `src/renderer/shared/ipc`.
-4. Use wrapper in UI code (not raw IPC calls).
-
-## ✅ Contributor Checklist
-
-Before opening a PR touching renderer code:
-
-1. Run `npm run typecheck:web`.
-2. Run full checks if your change crosses process boundaries: `npm run typecheck`.
-3. Validate affected window(s): main window and/or specific child window.
-4. Ensure shared contracts in `src/common` remain backward-compatible.
-5. Verify plugin/module loading still works for your path (dev and production assumptions).
-
-## ⚠️ Renderer Conventions
-
-- Keep renderer-side business logic close to the owning feature folder.
-- Prefer shared IPC wrappers over direct global calls.
-- Avoid hard-coding process-specific assumptions into reusable components.
-- Use `src/common` for contracts shared with Main/preload/module/extension code.
-- Keep child windows small and isolated; avoid coupling them to main window state.
+- shared contracts: `src/common/README.md`
+- main process architecture: `src/main/README.md`
+- project overview: `README.md`
