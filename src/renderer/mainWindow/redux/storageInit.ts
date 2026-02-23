@@ -2,18 +2,14 @@ import AppStorageData from '@lynx_common/types/storage';
 import applicationIpc from '@lynx_shared/ipc/application';
 import storageIpc from '@lynx_shared/ipc/storage';
 
-type AllStorageData = {
-  [K in keyof AppStorageData]: AppStorageData[K];
-};
-
-let cachedStorage: AllStorageData | null = null;
+let cachedStorage: AppStorageData | null = null;
 let systemDarkMode: 'dark' | 'light' | null = null;
 
 /**
  * Fetches all storage data in a single IPC call.
  * This should be called once at app startup before creating the Redux store.
  */
-export const initializeStorage = async (): Promise<AllStorageData> => {
+export const initializeStorage = async (): Promise<AppStorageData> => {
   const [storage, darkMode] = await Promise.all([storageIpc.getAll(), applicationIpc.invoke.getSystemDarkMode()]);
 
   cachedStorage = storage;
@@ -25,7 +21,7 @@ export const initializeStorage = async (): Promise<AllStorageData> => {
 /**
  * Gets the cached storage data. Returns null if not initialized.
  */
-export const getStorageData = (): AllStorageData | null => {
+export const getStorageData = (): AppStorageData | null => {
   return cachedStorage;
 };
 

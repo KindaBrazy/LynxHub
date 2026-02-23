@@ -30,39 +30,44 @@ const staticReducers = {
   volume,
 };
 
+const emptyHotkeyInput = {
+  key: '',
+  shift: false,
+  control: false,
+  alt: false,
+  meta: false,
+  type: '',
+} as const;
+
 const sentryReduxEnhancer = createReduxEnhancer({});
+
+const resolveDarkMode = (storageDarkMode: 'dark' | 'light' | 'system'): boolean => {
+  if (storageDarkMode === 'dark') return true;
+  if (storageDarkMode === 'light') return false;
+  return getSystemDarkMode() === 'dark';
+};
+
+const resolveInitializerState = (oldSetupDone: boolean, newSetupDone: boolean): PreloadState['app']['initializer'] => {
+  if (newSetupDone) {
+    return {showWizard: false, isUpgradeFlow: false};
+  }
+
+  if (oldSetupDone && !isWin) {
+    storageIpc.update('app', {inited: true});
+    return {showWizard: false, isUpgradeFlow: false};
+  }
+
+  return {showWizard: true, isUpgradeFlow: oldSetupDone};
+};
 
 const buildPreloadedState = (): PreloadState | undefined => {
   const storage = getStorageData();
   if (!storage) return undefined;
 
-  // Compute dark mode
-  let darkMode: boolean;
-  if (storage.app.darkMode === 'dark') {
-    darkMode = true;
-  } else if (storage.app.darkMode === 'light') {
-    darkMode = false;
-  } else {
-    darkMode = getSystemDarkMode() === 'dark';
-  }
-
-  // Compute wizard state
-  let showWizard: boolean;
-  let isUpgradeFlow: boolean = false;
+  const darkMode = resolveDarkMode(storage.app.darkMode);
   const oldSetupDone = storage.app.initialized;
   const newSetupDone = storage.app.inited;
-
-  if (newSetupDone) {
-    showWizard = false;
-  } else {
-    if (oldSetupDone && !isWin) {
-      storageIpc.update('app', {inited: true});
-      showWizard = false;
-    } else {
-      isUpgradeFlow = oldSetupDone;
-      showWizard = true;
-    }
-  }
+  const initializer = resolveInitializerState(oldSetupDone, newSetupDone);
 
   return {
     app: {
@@ -74,7 +79,7 @@ const buildPreloadedState = (): PreloadState | undefined => {
       navBar: true,
       appTitle: undefined,
       toastPlacement: 'top-center' as const,
-      initializer: {showWizard, isUpgradeFlow},
+      initializer,
     },
     cards: {
       autoUpdate: storage.cards.autoUpdateCards,
@@ -93,7 +98,7 @@ const buildPreloadedState = (): PreloadState | undefined => {
       browserDomReadyIds: [],
     },
     hotkeys: {
-      input: {key: '', shift: false, control: false, alt: false, meta: false, type: ''},
+      input: emptyHotkeyInput,
       isCtrlPressed: false,
       isShiftPressed: false,
       isAltPressed: false,
@@ -136,10 +141,13 @@ let store = configureStore({
 });
 
 export const createStore = (collectError: boolean) => {
-  const extensionReducers = extensionsData.addReducer.reduce((acc, reducer) => {
-    acc[reducer.name] = reducer.reducer;
-    return acc;
-  }, {});
+  const extensionReducers = extensionsData.addReducer.reduce<Record<string, (state: unknown, action: unknown) => unknown>>(
+    (acc, reducer) => {
+      acc[reducer.name] = reducer.reducer;
+      return acc;
+    },
+    {},
+  );
 
   const preloadedState = buildPreloadedState();
 

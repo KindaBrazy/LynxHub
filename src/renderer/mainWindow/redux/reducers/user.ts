@@ -10,7 +10,7 @@ type UserState = {
   updateChannel: SubscribeStages;
 };
 
-type UserStateTypes = {
+type UserStateValueByKey = {
   [K in keyof UserState]: UserState[K];
 };
 
@@ -49,10 +49,10 @@ const userSlice = createSlice({
 
 /**
  * Hook to access app state
- * @param key - The key of the app state to retrieve
- * @returns The value of the specified app state
+ * @param key - The key of the user state to retrieve
+ * @returns The value of the specified user state field
  */
-export const useUserState = <K extends keyof UserState>(key: K): UserStateTypes[K] =>
+export const useUserState = <K extends keyof UserState>(key: K): UserStateValueByKey[K] =>
   useSelector((state: RootState) => state.user[key]);
 
 export const userActions = userSlice.actions;

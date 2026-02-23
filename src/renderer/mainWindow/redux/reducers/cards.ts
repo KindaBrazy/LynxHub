@@ -5,14 +5,23 @@ import {InstalledCards} from '@lynx_common/types/storage';
 import browserIpc from '@lynx_shared/ipc/browser';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {includes} from 'lodash';
 import {useSelector} from 'react-redux';
 
 import {RootState} from '../store';
 
-type CardsStateTypes = {
+type CardsStateValueByKey = {
   [K in keyof CardsState]: CardsState[K];
 };
+
+const buildRunningCardBase = (tabId: string, id: string) => ({
+  tabId,
+  id,
+  webUIAddress: '',
+  customAddress: '',
+  currentAddress: '',
+  browserTitle: 'Browser',
+  startTime: new Date().toString(),
+});
 
 // Default initial state - actual values come from preloadedState in Store.ts
 const initialState: CardsState = {
@@ -37,8 +46,8 @@ const cardsSlice = createSlice({
   name: 'cards',
   reducers: {
     addUpdateAvailable: (state, action: PayloadAction<string>) => {
-      if (!includes(state.updateAvailable, action.payload)) {
-        state.updateAvailable = [...state.updateAvailable, action.payload];
+      if (!state.updateAvailable.includes(action.payload)) {
+        state.updateAvailable.push(action.payload);
       }
     },
     setUpdateAvailable: (state, action: PayloadAction<string[]>) => {
@@ -56,8 +65,9 @@ const cardsSlice = createSlice({
     },
 
     addUpdatingCard: (state, action: PayloadAction<UpdatingCard>) => {
-      if (!includes(state.updatingCards, action.payload)) {
-        state.updatingCards = [...state.updatingCards, action.payload];
+      const alreadyUpdating = state.updatingCards.some(card => card.id === action.payload.id);
+      if (!alreadyUpdating) {
+        state.updatingCards.push(action.payload);
       }
     },
     removeUpdatingCard: (state, action: PayloadAction<string>) => {
@@ -89,7 +99,7 @@ const cardsSlice = createSlice({
 
     addDomReady: (state, action: PayloadAction<string>) => {
       if (!state.browserDomReadyIds.includes(action.payload)) {
-        state.browserDomReadyIds = [...state.browserDomReadyIds, action.payload];
+        state.browserDomReadyIds.push(action.payload);
       }
     },
 
@@ -99,21 +109,7 @@ const cardsSlice = createSlice({
       const id = `${tabId}_${type}`;
       const currentView = type === 'browser' ? 'browser' : 'terminal';
 
-      state.runningCard = [
-        ...state.runningCard,
-        {
-          tabId,
-          type,
-          id,
-          currentView,
-          webUIAddress: '',
-          customAddress: '',
-          currentAddress: '',
-          browserTitle: 'Browser',
-          startTime: new Date().toString(),
-          isEmptyRunning: true,
-        },
-      ];
+      state.runningCard.push({...buildRunningCardBase(tabId, id), type, currentView, isEmptyRunning: true});
 
       if (type !== 'terminal') browserIpc.send.createBrowser(id);
       if (type !== 'browser') ptyIpc.emptyProcess(id);
@@ -121,21 +117,7 @@ const cardsSlice = createSlice({
 
     addRunningCard: (state, action: PayloadAction<{tabId: string; id: string}>) => {
       const {tabId, id} = action.payload;
-      state.runningCard = [
-        ...state.runningCard,
-        {
-          tabId,
-          id,
-          type: 'both',
-          webUIAddress: '',
-          customAddress: '',
-          currentAddress: '',
-          browserTitle: 'Browser',
-          currentView: 'terminal',
-          startTime: new Date().toString(),
-          isEmptyRunning: false,
-        },
-      ];
+      state.runningCard.push({...buildRunningCardBase(tabId, id), type: 'both', currentView: 'terminal', isEmptyRunning: false});
       browserIpc.send.createBrowser(id);
     },
     setRunningCardAddress: (state, action: PayloadAction<{tabId: string; address: string}>) => {
@@ -200,7 +182,10 @@ const cardsSlice = createSlice({
   },
 });
 
-export const useCardsState = <T extends keyof CardsState>(name: T): CardsStateTypes[T] =>
+/**
+ * Hook to access a single cards state field with key-safe typing.
+ */
+export const useCardsState = <T extends keyof CardsState>(name: T): CardsStateValueByKey[T] =>
   useSelector((state: RootState) => state.cards[name]);
 
 export const cardsActions = cardsSlice.actions;
