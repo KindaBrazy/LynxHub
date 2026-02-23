@@ -15,12 +15,14 @@ import AppStorageData, {InstalledCard, InstalledCards} from '@lynx_common/types/
 
 import lynxIpc from './lynxIpc';
 
+type StorageCustomValue = unknown;
+
 const storageIpc = {
   // Gets custom storage data by key
-  getCustom: (key: string) => lynxIpc.invoke<any>(storageChannels.getCustom, key),
+  getCustom: <T = StorageCustomValue>(key: string) => lynxIpc.invoke<T>(storageChannels.getCustom, key),
 
   // Sets custom storage data by key
-  setCustom: (key: string, data: any) => lynxIpc.send(storageChannels.setCustom, key, data),
+  setCustom: <T = StorageCustomValue>(key: string, data: T) => lynxIpc.send(storageChannels.setCustom, key, data),
 
   // Gets typed storage data by key
   get: <K extends keyof AppStorageData>(key: K) => lynxIpc.invoke<AppStorageData[K]>(storageChannels.get, key),

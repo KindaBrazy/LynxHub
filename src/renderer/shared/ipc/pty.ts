@@ -14,11 +14,11 @@ const ptyIpc = {
   emptyProcess: (id: string, dir?: string): void => lynxIpc.send(ptyChannels.emptyProcess, id, dir),
 
   // Executes custom commands in PTY
-  customCommands: (id: string, commands?: string | string[], dir?: string) =>
+  customCommands: (id: string, commands?: string | string[], dir?: string): void =>
     lynxIpc.send(ptyChannels.customCommands, id, commands, dir),
 
   // Stops PTY process by ID
-  stop: (id: string) => lynxIpc.send(ptyChannels.stopProcess, id),
+  stop: (id: string): void => lynxIpc.send(ptyChannels.stopProcess, id),
 
   // Writes data to PTY input
   write: (id: string, data: string): void => lynxIpc.send(ptyChannels.write, id, data),
@@ -30,13 +30,13 @@ const ptyIpc = {
   resize: (id: string, cols: number, rows: number): void => lynxIpc.send(ptyChannels.resize, id, cols, rows),
 
   // Listens for PTY output data
-  onData: (result: (id: string, data: string) => void) => lynxIpc.on(ptyChannels.onData, result),
+  onData: (result: (id: string, data: string) => void): (() => void) => lynxIpc.on(ptyChannels.onData, result),
 
   // Listens for PTY title changes
-  onTitle: (result: (id: string, title: string) => void) => lynxIpc.on(ptyChannels.onTitle, result),
+  onTitle: (result: (id: string, title: string) => void): (() => void) => lynxIpc.on(ptyChannels.onTitle, result),
 
   // Listens for PTY process exit
-  onExit: (result: (id: string) => void) => lynxIpc.on(ptyChannels.onExit, result),
+  onExit: (result: (id: string) => void): (() => void) => lynxIpc.on(ptyChannels.onExit, result),
 };
 
 export default ptyIpc;

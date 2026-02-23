@@ -1,6 +1,6 @@
 import { pluginChannels } from '@lynx_common/consts/ipcChannels/plugins';
-import {SubscribeStages} from '@lynx_common/types';
-import {
+import type {SubscribeStages} from '@lynx_common/types';
+import type {
   PluginAddresses,
   PluginInstalledItem,
   PluginItem,
@@ -33,7 +33,7 @@ const pluginsIpc = {
   sync: (id: string, commit: string) => lynxIpc.invoke<boolean>(pluginChannels.sync, id, commit),
 
   // Updates sync list entry for plugin
-  updateSyncList: (id: string, commit: string) => lynxIpc.invoke<boolean>(pluginChannels.updateSyncList, id, commit),
+  updateSyncList: (id: string, commit: string) => lynxIpc.invoke<void>(pluginChannels.updateSyncList, id, commit),
 
   // Syncs multiple plugins to their commits
   syncAll: (items: {id: string; commit: string}[]) => lynxIpc.invoke<string[]>(pluginChannels.syncAll, items),

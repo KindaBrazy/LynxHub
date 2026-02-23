@@ -1,12 +1,12 @@
 import { userChannels } from '@lynx_common/consts/ipcChannels/user';
-import {PatreonUserData, SubscribeStages} from '@lynx_common/types';
+import type {PatreonUserData, SubscribeStages} from '@lynx_common/types';
 
 import lynxIpc from './lynxIpc';
 
 const userIpc = {
   patreon: {
     // Gets Patreon user information
-    getInfo: (): Promise<PatreonUserData | undefined> => lynxIpc.invoke(userChannels.patreon.getInfo),
+    getInfo: (): Promise<PatreonUserData | null> => lynxIpc.invoke(userChannels.patreon.getInfo),
     // Logs in to Patreon
     login: (): Promise<PatreonUserData> => lynxIpc.invoke(userChannels.patreon.login),
     // Logs out from Patreon

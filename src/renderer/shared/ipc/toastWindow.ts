@@ -1,5 +1,5 @@
 import { toastWindowChannels } from '@lynx_common/consts/ipcChannels/toastWindow';
-import {ToastWindowMessageType} from '@lynx_common/types';
+import type {ToastWindowMessageType} from '@lynx_common/types';
 
 import lynxIpc from './lynxIpc';
 

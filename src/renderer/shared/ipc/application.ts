@@ -1,6 +1,6 @@
 import { appChannels } from '@lynx_common/consts/ipcChannels/application';
-import {CustomNotificationInfo, HeroToastPlacement} from '@lynx_common/types';
-import {
+import type {CustomNotificationInfo, HeroToastPlacement} from '@lynx_common/types';
+import type {
   AppUpdateEventTypes,
   AppUpdateStatus,
   ChangeWindowState,
@@ -75,37 +75,41 @@ const applicationIpc = {
   },
   on: {
     // Listens for window state change events
-    windowStateChange: (result: (result: WinStateChange) => void) => lynxIpc.on(appChannels.onChangeState, result),
+    windowStateChange: (result: (result: WinStateChange) => void): (() => void) =>
+      lynxIpc.on(appChannels.onChangeState, result),
 
     // Listens for dark mode change events
-    darkMode: (result: (isDark: boolean) => void) => lynxIpc.on(appChannels.onDarkMode, result),
+    darkMode: (result: (isDark: boolean) => void): (() => void) => lynxIpc.on(appChannels.onDarkMode, result),
 
     // Listens for hotkey change events
-    onHotkeysChange: (result: (input: LynxInput) => void) => lynxIpc.on(appChannels.hotkeysChange, result),
+    onHotkeysChange: (result: (input: LynxInput) => void): (() => void) => lynxIpc.on(appChannels.hotkeysChange, result),
 
     // Listens for toast notification events
-    onShowToast: (result: (message: string, type: ShowToastTypes, placement?: HeroToastPlacement) => void) =>
+    onShowToast: (result: (message: string, type: ShowToastTypes, placement?: HeroToastPlacement) => void): (() => void) =>
       lynxIpc.on(appChannels.showToast, result),
 
     // Listens for new tab events
-    onNewTab: (result: (url: string, background?: boolean) => void) => lynxIpc.on(appChannels.onNewTab, result),
+    onNewTab: (result: (url: string, background?: boolean) => void): (() => void) =>
+      lynxIpc.on(appChannels.onNewTab, result),
 
     // Listens for app update error events
-    updateError: (result: () => void) => lynxIpc.on(appChannels.updateError, result),
-    updateChannelChange: (result: (channel: string) => void) => lynxIpc.on(appChannels.updateChannelChange, result),
+    updateError: (result: () => void): (() => void) => lynxIpc.on(appChannels.updateError, result),
+    updateChannelChange: (result: (channel: string) => void): (() => void) =>
+      lynxIpc.on(appChannels.updateChannelChange, result),
 
     // Listens for app update status events
-    updateStatus: (result: (type: AppUpdateEventTypes, status: AppUpdateStatus) => void) =>
+    updateStatus: (result: (type: AppUpdateEventTypes, status: AppUpdateStatus) => void): (() => void) =>
       lynxIpc.on(appChannels.updateStatus, result),
 
-    onOnline: (result: (isOnline: boolean) => void) => lynxIpc.on(appChannels.onOnline, result),
+    onOnline: (result: (isOnline: boolean) => void): (() => void) => lynxIpc.on(appChannels.onOnline, result),
 
     // Listens for custom notification open events
-    onCustomNotifOpen: (result: (info: CustomNotificationInfo) => void) =>
+    onCustomNotifOpen: (result: (info: CustomNotificationInfo) => void): (() => void) =>
       lynxIpc.on(appChannels.onCustomNotifOpen, result),
 
     // Listens for custom notification close events
-    onCustomNotifClose: (result: (key: string) => void) => lynxIpc.on(appChannels.onCustomNotifClose, result),
+    onCustomNotifClose: (result: (key: string) => void): (() => void) =>
+      lynxIpc.on(appChannels.onCustomNotifClose, result),
   },
 };
 
