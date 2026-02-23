@@ -1,5 +1,10 @@
 const GOLDEN_RATIO_CONJUGATE = 0.61803398875;
+const ACCENT_SATURATION = 100;
+const ACCENT_LIGHTNESS = 60;
 
+/**
+ * Builds a deterministic integer hash from a string.
+ */
 function simpleHash(str: string): number {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
@@ -10,18 +15,27 @@ function simpleHash(str: string): number {
   return hash;
 }
 
-export const getAccentColorAdvanced = (title: string, developerName: string): string => {
+/**
+ * Derives a stable hue value (0-359) from card metadata.
+ */
+function getAccentHue(title: string, developerName: string): number {
   const combinedString = `${title.toLowerCase()}-${developerName.toLowerCase()}`;
   const hash = simpleHash(combinedString);
 
-  const hue = (Math.abs(hash) * GOLDEN_RATIO_CONJUGATE * 360) % 360;
+  return Math.floor((Math.abs(hash) * GOLDEN_RATIO_CONJUGATE * 360) % 360);
+}
 
-  const saturation = 100;
-  const lightness = 60;
-
-  return `hsl(${Math.floor(hue)}, ${saturation}%, ${lightness}%)`;
+/**
+ * Returns the deterministic accent color as an HSL string.
+ */
+export const getAccentColorAdvanced = (title: string, developerName: string): string => {
+  const hue = getAccentHue(title, developerName);
+  return `hsl(${hue}, ${ACCENT_SATURATION}%, ${ACCENT_LIGHTNESS}%)`;
 };
 
+/**
+ * Converts HSL values to a HEX color string.
+ */
 function hslToHex(h: number, s: number, l: number): string {
   s /= 100;
   l /= 100;
@@ -47,18 +61,18 @@ function hslToHex(h: number, s: number, l: number): string {
     [r, g, b] = [c, 0, x];
   }
 
-  const toHex = (c: number) => {
-    const hex = Math.round((c + m) * 255).toString(16);
-    return hex.length === 1 ? '0' + hex : hex;
+  const toHex = (channelValue: number) => {
+    const hex = Math.round((channelValue + m) * 255).toString(16);
+    return hex.length === 1 ? `0${hex}` : hex;
   };
 
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
+/**
+ * Returns the deterministic accent color as a HEX string.
+ */
 export const getAccentColorAsHex = (title: string, developerName: string): string => {
-  const hslString = getAccentColorAdvanced(title, developerName);
-
-  const [h, s, l] = hslString.match(/\d+/g)?.map(Number) ?? [0, 0, 0];
-
-  return hslToHex(h, s, l);
+  const hue = getAccentHue(title, developerName);
+  return hslToHex(hue, ACCENT_SATURATION, ACCENT_LIGHTNESS);
 };

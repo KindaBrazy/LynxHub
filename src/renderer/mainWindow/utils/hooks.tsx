@@ -6,7 +6,7 @@ import {ChangelogItem, HeroToastPlacement} from '@lynx_common/types';
 import {InstalledCard} from '@lynx_common/types/storage';
 import {Dispatch} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, useMemo} from 'react';
+import {Fragment} from 'react';
 
 /**
  * Hook to get an installed card by its ID.
@@ -15,7 +15,7 @@ import {Fragment, useMemo} from 'react';
  */
 export function useInstalledCard(cardId: string): InstalledCard | undefined {
   const installedCards = useCardsState('installedCards');
-  return useMemo(() => installedCards.find(card => card.id === cardId), [installedCards, cardId]);
+  return installedCards.find(card => card.id === cardId);
 }
 
 /**
@@ -25,7 +25,7 @@ export function useInstalledCard(cardId: string): InstalledCard | undefined {
  */
 export function useUpdatingCard(cardId: string): boolean {
   const updatingCards = useCardsState('updatingCards');
-  return useMemo(() => updatingCards.some(card => card.id === cardId), [updatingCards, cardId]);
+  return updatingCards.some(card => card.id === cardId);
 }
 
 /**
@@ -35,7 +35,7 @@ export function useUpdatingCard(cardId: string): boolean {
  */
 export function useUpdateAvailable(cardId: string): boolean {
   const updateAvailable = useCardsState('updateAvailable');
-  return useMemo(() => updateAvailable.includes(cardId), [updateAvailable, cardId]);
+  return updateAvailable.includes(cardId);
 }
 
 /**
@@ -45,7 +45,7 @@ export function useUpdateAvailable(cardId: string): boolean {
  */
 export function useIsAutoUpdateCard(cardId: string): boolean {
   const autoUpdate = useCardsState('autoUpdate');
-  return useMemo(() => autoUpdate.includes(cardId), [autoUpdate, cardId]);
+  return autoUpdate.includes(cardId);
 }
 
 /**
@@ -55,7 +55,7 @@ export function useIsAutoUpdateCard(cardId: string): boolean {
  */
 export function useIsAutoUpdateExtensions(cardId: string): boolean {
   const autoUpdate = useCardsState('autoUpdateExtensions');
-  return useMemo(() => autoUpdate.includes(cardId), [autoUpdate, cardId]);
+  return autoUpdate.includes(cardId);
 }
 
 /**
@@ -65,7 +65,7 @@ export function useIsAutoUpdateExtensions(cardId: string): boolean {
  */
 export function useIsPinnedCard(cardId: string): boolean {
   const pinnedCards = useCardsState('pinnedCards');
-  return useMemo(() => pinnedCards.includes(cardId), [pinnedCards, cardId]);
+  return pinnedCards.includes(cardId);
 }
 
 /**

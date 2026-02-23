@@ -8,6 +8,9 @@ import Modals from './components/modals';
 import Initializer from './components/modals/app/WelcomeModal';
 import UIProviders from './contexts/UIProviders';
 
+/**
+ * Root renderer application layout for the main window.
+ */
 export default function App() {
   return (
     <UIProviders>

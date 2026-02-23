@@ -2,8 +2,13 @@ import {HeroToastPlacement} from '@lynx_common/types';
 import {LynxHotkey, LynxInput, OnUpdatingExtensions, TooltipStatus} from '@lynx_common/types/ipc';
 import StorageTypes, {InstalledCards} from '@lynx_common/types/storage';
 
-import {RunningCard, UpdatingCards} from './index';
+import type {RunningCard, UpdatingCards} from './index';
 
+type DuplicatedCard = {ogID: string; id: string; title: string};
+
+/**
+ * Redux `app` reducer state shape.
+ */
 export type AppState = {
   darkMode: boolean;
   onFocus: boolean;
@@ -34,7 +39,7 @@ export type CardsState = {
   recentlyUsedCards: string[];
   runningCard: RunningCard[];
   homeCategory: string[];
-  duplicates: {ogID: string; id: string; title: string}[];
+  duplicates: DuplicatedCard[];
 
   activeTab: string;
 
@@ -80,6 +85,9 @@ export type SettingState = {
 
 export type TerminalState = StorageTypes['terminal'];
 
+/**
+ * Redux `volume` reducer state shape.
+ */
 export type VolumeState = {
   // Per-tab volume levels (0-100)
   tabVolumes: {[tabId: string]: number};
@@ -94,6 +102,9 @@ export type VolumeState = {
   globalMuted: boolean;
 };
 
+/**
+ * Root preload state passed into Redux store initialization.
+ */
 export type PreloadState = {
   app: AppState;
   cards: CardsState;
