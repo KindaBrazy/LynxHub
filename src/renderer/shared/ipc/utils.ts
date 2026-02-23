@@ -1,14 +1,25 @@
 import { utilsChannels } from '@lynx_common/consts/ipcChannels/utils';
-import {DownloadProgress, ExtensionsData, ExtensionsUpdateStatus, OnUpdatingExtensions} from '@lynx_common/types/ipc';
+import type {DownloadProgress, ExtensionsData, ExtensionsUpdateStatus, OnUpdatingExtensions} from '@lynx_common/types/ipc';
 
 import lynxIpc from './lynxIpc';
 
+type ExtensionsUpdateRequest = {id: string; dir: string};
+type ImageCacheStats = {
+  entryCount: number;
+  totalSize: number;
+  totalSizeFormatted: string;
+  lastCleanup: number;
+  lastCleanupFormatted: string;
+};
+type ClearImageCacheResult = {success: boolean; clearedEntries: number};
+type SuccessResult = {success: boolean};
+
 const utilsIpc = {
   // Updates all extensions in directory sequentially
-  updateAllExtensions: (data: {id: string; dir: string}) => lynxIpc.send(utilsChannels.updateAllExtensions, data),
+  updateAllExtensions: (data: ExtensionsUpdateRequest) => lynxIpc.send(utilsChannels.updateAllExtensions, data),
 
   // Listens for extension update progress
-  onUpdateAllExtensions: (result: (updateInfo: OnUpdatingExtensions) => void) =>
+  onUpdateAllExtensions: (result: (updateInfo: OnUpdatingExtensions) => void): (() => void) =>
     lynxIpc.on(utilsChannels.onUpdateAllExtensions, result),
 
   // Gets detailed information about extensions in directory
@@ -31,7 +42,8 @@ const utilsIpc = {
   cancelDownload: () => lynxIpc.send(utilsChannels.cancelDownload),
 
   // Listens for file download progress updates
-  onDownloadFile: (result: (progress: DownloadProgress) => void) => lynxIpc.on(utilsChannels.onDownloadFile, result),
+  onDownloadFile: (result: (progress: DownloadProgress) => void): (() => void) =>
+    lynxIpc.on(utilsChannels.onDownloadFile, result),
 
   // Decompresses archive file (zip, tar, etc.)
   decompressFile: (filePath: string) => lynxIpc.invoke<string>(utilsChannels.decompressFile, filePath),
@@ -43,20 +55,13 @@ const utilsIpc = {
   getImageAsDataURL: (url: string) => lynxIpc.invoke<string | null>(utilsChannels.getImageAsDataURL, url),
 
   // Gets cache statistics (entry count, total size, last cleanup)
-  getImageCacheStats: () =>
-    lynxIpc.invoke<{
-      entryCount: number;
-      totalSize: number;
-      totalSizeFormatted: string;
-      lastCleanup: number;
-      lastCleanupFormatted: string;
-    }>(utilsChannels.getImageCacheStats),
+  getImageCacheStats: () => lynxIpc.invoke<ImageCacheStats>(utilsChannels.getImageCacheStats),
 
   // Clears all cached images
-  clearImageCache: () => lynxIpc.invoke<{success: boolean; clearedEntries: number}>(utilsChannels.clearImageCache),
+  clearImageCache: () => lynxIpc.invoke<ClearImageCacheResult>(utilsChannels.clearImageCache),
 
   // Triggers manual cache cleanup (removes expired entries)
-  triggerImageCacheCleanup: () => lynxIpc.invoke<{success: boolean}>(utilsChannels.triggerImageCacheCleanup),
+  triggerImageCacheCleanup: () => lynxIpc.invoke<SuccessResult>(utilsChannels.triggerImageCacheCleanup),
 };
 
 export default utilsIpc;

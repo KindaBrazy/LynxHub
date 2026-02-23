@@ -1,10 +1,12 @@
 import { contextMenuChannels } from '@lynx_common/consts/ipcChannels/contextMenu';
-import {ContextResizeData} from '@lynx_common/types';
-import {ContextMenuVolumeData} from '@lynx_common/types/ipc';
-import {NavHistory} from '@lynx_common/types/ipc';
+import type {ContextResizeData} from '@lynx_common/types';
+import type {ContextMenuVolumeData, NavHistory} from '@lynx_common/types/ipc';
 import type {ContextMenuParams} from 'electron';
 
 import lynxIpc from './lynxIpc';
+
+type ContextMenuPosition = {x: number; y: number};
+type ContextNavigateAction = 'back' | 'forward' | 'refresh';
 
 const contextMenuIpc = {
   send: {
@@ -21,7 +23,7 @@ const contextMenuIpc = {
     openTerminateProcess: (id: string) => lynxIpc.send(contextMenuChannels.openTerminateAI, id),
 
     // Opens terminate tab dialog
-    openTerminateTab: (id: string, customPosition?: {x: number; y: number}) =>
+    openTerminateTab: (id: string, customPosition?: ContextMenuPosition) =>
       lynxIpc.send(contextMenuChannels.openTerminateTab, id, customPosition),
 
     // Opens close app dialog
@@ -34,7 +36,7 @@ const contextMenuIpc = {
     stopAI: (id: string) => lynxIpc.send(contextMenuChannels.stopAI, id),
 
     // Removes browser tab
-    removeTab: (tabID: string) => lynxIpc.send(contextMenuChannels.removeTab, tabID),
+    removeTab: (tabId: string) => lynxIpc.send(contextMenuChannels.removeTab, tabId),
 
     rightClickItems: {
       copy: (id: number) => lynxIpc.send(contextMenuChannels.copy, id),
@@ -73,48 +75,55 @@ const contextMenuIpc = {
       inspectElement: (id: number, x: number, y: number) => lynxIpc.send(contextMenuChannels.inspectElement, id, x, y),
 
       // Navigates browser (back, forward, or refresh)
-      navigate: (id: number, action: 'back' | 'forward' | 'refresh') =>
+      navigate: (id: number, action: ContextNavigateAction) =>
         lynxIpc.send(contextMenuChannels.navigate, id, action),
     },
   },
 
   on: {
     // Listens for context menu view initialization events
-    rightClick: (callback: (params: ContextMenuParams, navHistory: NavHistory, id: number) => void) =>
+    rightClick: (callback: (params: ContextMenuParams, navHistory: NavHistory, id: number) => void): (() => void) =>
       lynxIpc.on(contextMenuChannels.rightClick, callback),
 
     // Listens for find in page events
-    find: (callback: (id: string, selectedText?: string) => void) => lynxIpc.on(contextMenuChannels.onFind, callback),
+    find: (callback: (id: string, selectedText?: string) => void): (() => void) =>
+      lynxIpc.on(contextMenuChannels.onFind, callback),
 
     // Listens for terminate AI events
-    terminateProcess: (callback: (id: string) => void) => lynxIpc.on(contextMenuChannels.onTerminateAI, callback),
+    terminateProcess: (callback: (id: string) => void): (() => void) =>
+      lynxIpc.on(contextMenuChannels.onTerminateAI, callback),
 
     // Listens for terminate tab events
-    terminateTab: (callback: (id: string) => void) => lynxIpc.on(contextMenuChannels.onTerminateTab, callback),
+    terminateTab: (callback: (id: string) => void): (() => void) =>
+      lynxIpc.on(contextMenuChannels.onTerminateTab, callback),
 
     // Listens for close app events
-    closeApp: (callback: () => void) => lynxIpc.on(contextMenuChannels.onCloseApp, callback),
+    closeApp: (callback: () => void): (() => void) => lynxIpc.on(contextMenuChannels.onCloseApp, callback),
 
     // Listens for zoom events
-    zoom: (callback: (id: string, zoomFactor: number) => void) => lynxIpc.on(contextMenuChannels.onZoom, callback),
+    zoom: (callback: (id: string, zoomFactor: number) => void): (() => void) =>
+      lynxIpc.on(contextMenuChannels.onZoom, callback),
 
-    prompt: (callback: (message: string, defaultValue?: string) => void) =>
+    prompt: (callback: (message: string, defaultValue?: string) => void): (() => void) =>
       lynxIpc.on(contextMenuChannels.onPrompt, callback),
 
     // Listens for zoom events
-    downloads: (callback: () => void) => lynxIpc.on(contextMenuChannels.onDownloads, callback),
+    downloads: (callback: () => void): (() => void) => lynxIpc.on(contextMenuChannels.onDownloads, callback),
 
     // Listens for volume control events
-    volume: (callback: (data: ContextMenuVolumeData) => void) => lynxIpc.on(contextMenuChannels.onVolume, callback),
+    volume: (callback: (data: ContextMenuVolumeData) => void): (() => void) =>
+      lynxIpc.on(contextMenuChannels.onVolume, callback),
 
     // Listens for AI relaunch events
-    relaunchProcess: (callback: (id: string) => void) => lynxIpc.on(contextMenuChannels.onRelaunchAI, callback),
+    relaunchProcess: (callback: (id: string) => void): (() => void) =>
+      lynxIpc.on(contextMenuChannels.onRelaunchAI, callback),
 
     // Listens for AI stop events
-    stopProcess: (callback: (id: string) => void) => lynxIpc.on(contextMenuChannels.onStopAI, callback),
+    stopProcess: (callback: (id: string) => void): (() => void) =>
+      lynxIpc.on(contextMenuChannels.onStopAI, callback),
 
     // Listens for tab removal events
-    removeTab: (callback: (tabID: string) => void) => lynxIpc.on(contextMenuChannels.onRemoveTab, callback),
+    removeTab: (callback: (tabId: string) => void): (() => void) => lynxIpc.on(contextMenuChannels.onRemoveTab, callback),
   },
 };
 
