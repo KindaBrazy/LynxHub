@@ -1,3 +1,4 @@
+import {Card, CardBody} from '@heroui/react';
 import RenderCardList from '@lynx/components/card/RenderList';
 import NavigateToPluginsButton from '@lynx/components/NavigateToPluginsButton';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
@@ -5,10 +6,9 @@ import {useAllCardDataWithPath, useSearchCards} from '@lynx/plugins/modules';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
 import {LoadedCardData} from '@lynx_common/types/plugins/modules';
-import {Empty} from 'antd';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
-import {memo, useMemo} from 'react';
+import {memo, ReactNode, useMemo} from 'react';
 
 import {CardContainerClasses} from './CardsContainer';
 import HomeCategory from './home/Category';
@@ -25,6 +25,21 @@ const useCardsById = (cardIds: string[]): LoadedCardData[] => {
   return useMemo(() => allCards.filter(card => cardIds.includes(card.id)), [cardIds, allCards]);
 };
 
+type CategoryEmptyStateProps = {
+  description: string;
+  children?: ReactNode;
+  className?: string;
+};
+
+const CategoryEmptyState = ({description, children, className = 'w-full'}: CategoryEmptyStateProps) => (
+  <Card className={`${className} border border-foreground-200/70 bg-foreground-50/50 shadow-none`}>
+    <CardBody className="items-center gap-y-3 px-6 py-10 text-center">
+      <p className="text-foreground-500">{description}</p>
+      {children}
+    </CardBody>
+  </Card>
+);
+
 /** Renders a filtered card list by an array of IDs. */
 const CardsByIds = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
   const cards = useCardsById(cardIds);
@@ -36,9 +51,9 @@ const CardsByIds = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
       <AnimatePresence>
         {isNil(ReplaceCards) ? (
           isEmpty(cards) ? (
-            <Empty className="size-full" description="No Card to Display!">
+            <CategoryEmptyState className="size-full" description="No Card to Display!">
               <NavigateToPluginsButton />
-            </Empty>
+            </CategoryEmptyState>
           ) : (
             <RenderCardList cards={cards} />
           )
@@ -60,9 +75,9 @@ const AllCards = () => {
 
   if (isEmpty(allCards) && isEmpty(allCategory)) {
     return (
-      <Empty className="size-full" description="No Card to Display!">
+      <CategoryEmptyState className="size-full" description="No Card to Display!">
         <NavigateToPluginsButton />
-      </Empty>
+      </CategoryEmptyState>
     );
   }
 
@@ -90,11 +105,7 @@ export const PinnedCars = memo(() => {
       icon={<Pin_Color_Icon id="home_category_pin" className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         {isEmpty(pinnedCards) && isEmpty(pinCategory) ? (
-          <Empty
-            className="size-full"
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description="Pin your favorite cards to easily access them here."
-          />
+          <CategoryEmptyState className="size-full" description="Pin your favorite cards to easily access them here." />
         ) : (
           <>
             <CardsByIds cat="pinned" cardIds={pinnedCards} />
@@ -119,7 +130,7 @@ export const RecentlyCards = memo(() => {
       icon={<History_Color_Icon id="home_category_history" className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         {isEmpty(recentlyUsedCards) && isEmpty(recentlyCategory) ? (
-          <Empty className="size-full" description="No Recently Used Card to Display!" />
+          <CategoryEmptyState className="size-full" description="No Recently Used Card to Display!" />
         ) : (
           <>
             <CardsByIds cat="recently" cardIds={recentlyUsedCards} />
@@ -163,7 +174,7 @@ export function CardsBySearch({searchValue}: CardsBySearchProps) {
   return (
     <div className="flex w-full flex-wrap gap-5 overflow-y-scroll pb-6 pl-1 scrollbar-hide">
       {isEmpty(filteredCards) ? (
-        <Empty className="w-full" description="No cards match your search." />
+        <CategoryEmptyState description="No cards match your search." />
       ) : isNil(ReplaceCards) ? (
         <RenderCardList cards={filteredCards} />
       ) : (
