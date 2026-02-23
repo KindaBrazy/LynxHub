@@ -117,7 +117,12 @@ const cardsSlice = createSlice({
 
     addRunningCard: (state, action: PayloadAction<{tabId: string; id: string}>) => {
       const {tabId, id} = action.payload;
-      state.runningCard.push({...buildRunningCardBase(tabId, id), type: 'both', currentView: 'terminal', isEmptyRunning: false});
+      state.runningCard.push({
+        ...buildRunningCardBase(tabId, id),
+        type: 'both',
+        currentView: 'terminal',
+        isEmptyRunning: false,
+      });
       browserIpc.send.createBrowser(id);
     },
     setRunningCardAddress: (state, action: PayloadAction<{tabId: string; address: string}>) => {

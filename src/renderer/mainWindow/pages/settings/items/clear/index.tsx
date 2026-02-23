@@ -10,13 +10,13 @@ import {
   Spinner,
 } from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
-import { AppDispatch } from '@lynx/redux/store';
-import { lynxTopToast } from '@lynx/utils/hooks';
+import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import storageIpc from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
-import { Broom, Database, Refresh, TrashBin2 } from '@solar-icons/react-perf/BoldDuotone';
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {Broom, Database, Refresh, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
@@ -85,7 +85,7 @@ export default function SettingsClear() {
         shadow="sm"
         isOpen={isClearSettingsOpen}
         onOpenChange={setIsClearSettingsOpen}
-        classNames={{ base: 'before:bg-foreground-100' }}
+        classNames={{base: 'before:bg-foreground-100'}}
         showArrow>
         <PopoverTrigger>
           <Button variant="flat" color="danger" startContent={<Refresh />} fullWidth>
@@ -158,7 +158,7 @@ export default function SettingsClear() {
                 shadow="sm"
                 isOpen={isClearCacheOpen}
                 onOpenChange={setIsClearCacheOpen}
-                classNames={{ base: 'before:bg-foreground-100' }}
+                classNames={{base: 'before:bg-foreground-100'}}
                 showArrow>
                 <PopoverTrigger>
                   <Button

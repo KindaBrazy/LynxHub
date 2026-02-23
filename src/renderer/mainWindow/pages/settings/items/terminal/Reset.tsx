@@ -1,9 +1,9 @@
-import { Button } from '@heroui/react';
-import { terminalActions } from '@lynx/redux/reducers/terminal';
-import { AppDispatch } from '@lynx/redux/store';
-import { Refresh } from '@solar-icons/react-perf/BoldDuotone';
-import { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {Button} from '@heroui/react';
+import {terminalActions} from '@lynx/redux/reducers/terminal';
+import {AppDispatch} from '@lynx/redux/store';
+import {Refresh} from '@solar-icons/react-perf/BoldDuotone';
+import {useCallback, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 

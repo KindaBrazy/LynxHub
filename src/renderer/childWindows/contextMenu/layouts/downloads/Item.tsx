@@ -108,30 +108,30 @@ const DownloadItem = memo(({item}: DownloadItemProps) => {
         <ButtonGroup size="sm" variant="flat" className="flex" fullWidth>
           {item.status === 'completed' ? (
             <>
-              <Button onPress={onOpen} color="success" startContent={<FileDownload className="size-3.5" />} fullWidth>
+              <Button color="success" onPress={onOpen} startContent={<FileDownload className="size-3.5" />} fullWidth>
                 Open File
               </Button>
 
               <Button
-                onPress={onOpenFolder}
                 color="success"
+                onPress={onOpenFolder}
                 startContent={<FolderOpen className="size-3.5" />}
                 fullWidth>
                 Open Path
               </Button>
 
-              <Button onPress={onClear} color="default" startContent={<TrashBin2 className="size-3.5" />} fullWidth>
+              <Button color="default" onPress={onClear} startContent={<TrashBin2 className="size-3.5" />} fullWidth>
                 Clear
               </Button>
             </>
           ) : (
             <>
               {item.status === 'downloading' ? (
-                <Button onPress={onPause} color="warning" startContent={<Pause className="size-3.5" />}>
+                <Button color="warning" onPress={onPause} startContent={<Pause className="size-3.5" />}>
                   Pause
                 </Button>
               ) : item.status === 'paused' ? (
-                <Button onPress={onResume} color="primary" startContent={<Play className="size-3.5" />}>
+                <Button color="primary" onPress={onResume} startContent={<Play className="size-3.5" />}>
                   Resume
                 </Button>
               ) : null}
@@ -139,25 +139,21 @@ const DownloadItem = memo(({item}: DownloadItemProps) => {
               {item.status === 'cancelled' && item.receivedBytes > 0 ? (
                 // Show both clear and retry for cancelled downloads with partial progress
                 <>
-                  <Button onPress={onResume} color="primary" startContent={<Restart className="size-3.5" />} fullWidth>
+                  <Button color="primary" onPress={onResume} startContent={<Restart className="size-3.5" />} fullWidth>
                     Retry
                   </Button>
-                  <Button
-                    onPress={onClear}
-                    color="default"
-                    startContent={<TrashBin2 className="size-3.5" />}
-                    fullWidth>
+                  <Button color="default" onPress={onClear} startContent={<TrashBin2 className="size-3.5" />} fullWidth>
                     Clear
                   </Button>
                 </>
               ) : item.status === 'cancelled' ? (
-                <Button onPress={onClear} color="default" startContent={<TrashBin2 className="size-3.5" />} fullWidth>
+                <Button color="default" onPress={onClear} startContent={<TrashBin2 className="size-3.5" />} fullWidth>
                   Clear
                 </Button>
               ) : (
                 <Button
-                  onPress={onCancel}
                   color="danger"
+                  onPress={onCancel}
                   startContent={<X className="size-3.5" />}
                   className={`${(item.status === 'downloading' || item.status === 'paused') && 'max-w-24'}`}>
                   Cancel

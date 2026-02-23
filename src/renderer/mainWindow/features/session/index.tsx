@@ -72,18 +72,7 @@ const SessionView = ({runningCard}: Props) => {
     if (title && title !== currentTitle) {
       dispatch(tabsActions.setTabTitle({title, tabID: tabId}));
     }
-  }, [
-    isEmptyRunning,
-    id,
-    tabId,
-    currentView,
-    activeTab,
-    terminalName,
-    browserTitle,
-    allCardsData,
-    tabs,
-    dispatch,
-  ]);
+  }, [isEmptyRunning, id, tabId, currentView, activeTab, terminalName, browserTitle, allCardsData, tabs, dispatch]);
 
   // Handle custom run behavior (URL catch)
   useEffect(() => {

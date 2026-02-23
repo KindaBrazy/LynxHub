@@ -18,4 +18,3 @@ export const pluginChannels = {
 
   updateSyncList: 'plugins:update-sync-list',
 } as const;
-

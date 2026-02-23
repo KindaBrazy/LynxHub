@@ -92,7 +92,7 @@ export default class MainWindowManager {
   /** Creates and configures the main application window. */
   private createMainWindow(): void {
     const {contextMenuManager, linkPreviewManager} = classHolder;
-    
+
     this.mainWindow = new BrowserWindow(MainWindowManager.MAIN_WINDOW_CONFIG);
     this.mainWindow.setBackgroundColor(getWindowColor());
 
@@ -100,10 +100,10 @@ export default class MainWindowManager {
 
     this.setupMainWindowEventListeners();
     this.loadAppropriateURL(this.mainWindow, 'index.html');
-    
+
     // Notify listeners
     this.onCreateWindowListeners.forEach(listener => listener());
-    
+
     // Initialize child windows that depend on the main window
     contextMenuManager?.createWindow(this.mainWindow);
     linkPreviewManager?.createWindow(this.mainWindow);
@@ -129,7 +129,7 @@ export default class MainWindowManager {
     webContents.setWindowOpenHandler(({url, disposition}) => {
       const {storageManager} = classHolder;
       const openExternal = storageManager.getData('app').openLinkExternal;
-      
+
       if (openExternal) {
         shell.openExternal(url);
       } else {
@@ -151,29 +151,21 @@ export default class MainWindowManager {
     mainWindow.on('focus', () => applicationIpc.send.changeWinState({name: 'focus', value: true}));
     mainWindow.on('blur', () => applicationIpc.send.changeWinState({name: 'focus', value: false}));
 
-    mainWindow.on('maximize', () =>
-      applicationIpc.send.changeWinState({name: 'maximize', value: true}),
-    );
-    mainWindow.on('unmaximize', () =>
-      applicationIpc.send.changeWinState({name: 'maximize', value: false}),
-    );
+    mainWindow.on('maximize', () => applicationIpc.send.changeWinState({name: 'maximize', value: true}));
+    mainWindow.on('unmaximize', () => applicationIpc.send.changeWinState({name: 'maximize', value: false}));
 
-    mainWindow.on('enter-full-screen', () =>
-      applicationIpc.send.changeWinState({name: 'fullscreen', value: true}),
-    );
-    mainWindow.on('leave-full-screen', () =>
-      applicationIpc.send.changeWinState({name: 'fullscreen', value: false}),
-    );
+    mainWindow.on('enter-full-screen', () => applicationIpc.send.changeWinState({name: 'fullscreen', value: true}));
+    mainWindow.on('leave-full-screen', () => applicationIpc.send.changeWinState({name: 'fullscreen', value: false}));
   }
 
   /** Handles the minimized event for the main window. */
   private handleMinimize = (): void => {
     const {storageManager, trayManager} = classHolder;
     const taskbarStatus = storageManager.getData('app').taskbarStatus;
-    
+
     if (taskbarStatus === 'tray-minimized') {
       trayManager?.createTrayIcon();
-      
+
       const mainWindow = this.getMainWindow();
       if (!mainWindow) return;
 
@@ -194,7 +186,7 @@ export default class MainWindowManager {
 
     if (taskbarStatus === 'tray-minimized') {
       trayManager?.destroyTrayIcon();
-      
+
       const mainWindow = this.getMainWindow();
       if (!mainWindow) return;
 

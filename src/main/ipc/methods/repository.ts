@@ -1,4 +1,3 @@
-
 // Git repository IPC methods - Handles Git operations (clone, pull, branch changes, etc.)
 import path from 'node:path';
 

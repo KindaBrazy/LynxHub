@@ -68,8 +68,8 @@ export default function PreOpenPath({id}: Props) {
               <PreOpenPathItem
                 icon={icon}
                 index={index}
-                onRemove={removePath}
                 path={open.path}
+                onRemove={removePath}
                 key={`${index}_openThing`}
               />
             );

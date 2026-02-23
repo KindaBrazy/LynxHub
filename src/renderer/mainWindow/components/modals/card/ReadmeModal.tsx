@@ -22,6 +22,11 @@ const CardReadmeDialog = memo(({isOpen, url, title, tabID}: Props) => {
 
   return (
     <Modal
+      classNames={{
+        backdrop: `top-10! ${show}`,
+        closeButton: 'cursor-default',
+        wrapper: `top-10! ${show}`,
+      }}
       size="2xl"
       isOpen={isOpen}
       backdrop="blur"
@@ -30,14 +35,10 @@ const CardReadmeDialog = memo(({isOpen, url, title, tabID}: Props) => {
       scrollBehavior="inside"
       className="max-w-[95%]"
       onOpenChange={onOpenChange}
-      classNames={{
-        backdrop: `top-10! ${show}`,
-        closeButton: 'cursor-default',
-        wrapper: `top-10! ${show}`,
-      }}
       hideCloseButton>
       <ModalContent className="overflow-hidden">
-        <ModalHeader className="shrink-0 justify-center overflow-hidden bg-foreground-200 shadow-md dark:bg-foreground-100">
+        <ModalHeader
+          className={'shrink-0 justify-center overflow-hidden bg-foreground-200 shadow-md dark:bg-foreground-100'}>
           <User
             description={
               <Link size="sm" href={url} isExternal>
@@ -57,7 +58,7 @@ const CardReadmeDialog = memo(({isOpen, url, title, tabID}: Props) => {
             ))}
         </ModalBody>
         <ModalFooter>
-          <Button onPress={() => onOpenChange(false)} variant="light" color="warning">
+          <Button variant="light" color="warning" onPress={() => onOpenChange(false)}>
             Close
           </Button>
         </ModalFooter>

@@ -3,7 +3,7 @@ import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
-import {useIsAutoUpdateExtensions, useInstalledCard, useUpdateAvailable, useUpdatingCard} from '@lynx/utils/hooks';
+import {useInstalledCard, useIsAutoUpdateExtensions, useUpdateAvailable, useUpdatingCard} from '@lynx/utils/hooks';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import utilsIpc from '@lynx_shared/ipc/utils';
@@ -22,9 +22,9 @@ export const useCardActions = () => {
   const {openModal} = useTabModalManager();
   const allMethods = useAllCardMethods();
 
-  const id = useCardStore((state) => state.id);
-  const title = useCardStore((state) => state.title);
-  const extensionsDir = useCardStore((state) => state.extensionsDir);
+  const id = useCardStore(state => state.id);
+  const title = useCardStore(state => state.title);
+  const extensionsDir = useCardStore(state => state.extensionsDir);
 
   const activeTab = useTabsState('activeTab');
   const runningCard = useCardsState('runningCard');
@@ -38,7 +38,7 @@ export const useCardActions = () => {
   const [isUpdatingExtensions, setIsUpdatingExtensions] = useState<boolean>(false);
   const [updateCount, setUpdateCount] = useState<string>('');
 
-  const isRunning = useMemo(() => runningCard.some((item) => item.id === id), [runningCard, id]);
+  const isRunning = useMemo(() => runningCard.some(item => item.id === id), [runningCard, id]);
 
   useEffect(() => {
     if (updatingExtensions && updatingExtensions.id === id) {

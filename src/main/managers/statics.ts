@@ -38,8 +38,8 @@ export default class StaticsManager {
     this.dir = getAppDirectory('Statics');
   }
 
-  /** 
-   * Returns true if statics are available (git installed and clone succeeded) 
+  /**
+   * Returns true if statics are available (git installed and clone succeeded)
    */
   public isAvailable(): boolean {
     return this.requirementsCheckCompleted && this.gitAvailable;
@@ -232,7 +232,7 @@ export default class StaticsManager {
       const message = (error as Error)?.message || '';
       if (/spawn (git )?ENOENT/i.test(message) || /git.*not found/i.test(message)) {
         console.warn('StaticsManager: Git is not installed or not in PATH. Statics will not be available.');
-        throw new Error('Git is not available');
+        throw new Error('Git is not available', {cause: error});
       }
       // For other errors, try cloning again (might be corrupted repo)
       return this.gitManager.shallowClone({url: STATICS_URL, directory: this.dir, singleBranch: true, branch: 'main'});

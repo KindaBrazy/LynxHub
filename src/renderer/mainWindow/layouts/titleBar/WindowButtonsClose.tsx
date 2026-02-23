@@ -21,7 +21,7 @@ const WindowButtonsClose = memo(({buttonProps, commonStyles}: Props) => {
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const activePage = useTabsState('activePage');
   const showCloseConfirm = useSettingsState('closeConfirm');
-  
+
   const close = useCallback(() => applicationIpc.send.changeWinState('close'), []);
 
   const onClick = useCallback(() => {

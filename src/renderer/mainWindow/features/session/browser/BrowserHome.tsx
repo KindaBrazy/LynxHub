@@ -95,8 +95,8 @@ export default function BrowserHome({type}: Props) {
             {type === 'both' && (
               <motion.div
                 className={
-                  'flex flex-col items-center rounded-2xl border border-foreground-200/50 bg-foreground-50/50 px-6 py-8 text-center' +
-                  ' dark:border-foreground-100/20 dark:bg-foreground-50/30'
+                  'flex flex-col items-center rounded-2xl border border-foreground-200/50 bg-foreground-50/50 px-6' +
+                  ' py-8 text-center dark:border-foreground-100/20 dark:bg-foreground-50/30'
                 }
                 variants={fadeIn}
                 exit={{opacity: 0}}>
@@ -128,26 +128,26 @@ export default function BrowserHome({type}: Props) {
 
           <HistorySection
             title="Favorites"
+            itemType="favorite"
+            data={favoriteAddress}
+            favIconMap={favIconMap}
+            emptyTitle="No favorites yet"
+            onRefresh={handleDataRefresh}
+            emptyDescription="Star sites to add them here"
             subtitle="Quick access to your bookmarked sites"
             icon={<Star className="size-6 text-amber-500" />}
-            emptyTitle="No favorites yet"
-            emptyDescription="Star sites to add them here"
-            data={favoriteAddress}
-            itemType="favorite"
-            favIconMap={favIconMap}
-            onRefresh={handleDataRefresh}
           />
 
           <HistorySection
             title="Recent"
-            subtitle="Your browsing history"
-            icon={<History_Color_Icon className="size-6" id="empty_page_history" />}
-            emptyTitle="No recent visits"
-            emptyDescription="Your history will appear here"
-            data={recentAddress}
             itemType="recent"
+            data={recentAddress}
             favIconMap={favIconMap}
+            emptyTitle="No recent visits"
             onRefresh={handleDataRefresh}
+            subtitle="Your browsing history"
+            emptyDescription="Your history will appear here"
+            icon={<History_Color_Icon className="size-6" id="empty_page_history" />}
           />
         </motion.div>
       </LynxScroll>

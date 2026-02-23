@@ -1,4 +1,3 @@
-
 // Utility IPC methods - Window state, file operations, and general utilities
 import {writeFile} from 'node:fs/promises';
 import path from 'node:path';

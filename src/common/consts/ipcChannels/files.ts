@@ -18,4 +18,3 @@ export const fileChannels = {
 
   isEmptyDir: 'app:isEmptyDir',
 } as const;
-

@@ -1,5 +1,4 @@
-
-import { browserChannels } from '@lynx_common/consts/ipcChannels/browser';
+import {browserChannels} from '@lynx_common/consts/ipcChannels/browser';
 import {AgentTypes, AudioState, CanGoType, ContextMenuVolumeData, MainHT, WHType} from '@lynx_common/types/ipc';
 import {toMs} from '@lynx_common/utils';
 import BrowserManager from '@lynx_main/managers/browser';
@@ -16,9 +15,9 @@ import {sendToContextMenu, sendToLinkPreview, sendToMain} from './sender';
 let browserTimeout: NodeJS.Timeout | undefined = undefined;
 let browserIpcInitialized = false;
 
-/** 
+/**
  * Resets the browserIPC initialization state. Call this before recreating
- * the main window (e.g., on macOS activate). 
+ * the main window (e.g., on macOS activate).
  */
 export function resetBrowserIPC() {
   browserIpcInitialized = false;

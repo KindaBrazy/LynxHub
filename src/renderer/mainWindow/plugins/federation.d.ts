@@ -13,13 +13,9 @@ declare module '__federation__' {
   /** Registers a remote module so it can be retrieved by `getRemote`. */
   export const __federation_method_setRemote: (
     remoteName: string,
-    config: { format?: 'esm' | 'systemjs' | 'var'; from?: 'vite' | 'webpack'; url: string },
+    config: {format?: 'esm' | 'systemjs' | 'var'; from?: 'vite' | 'webpack'; url: string},
   ) => void;
 
   /** Dynamically imports a named export from a previously registered remote. */
-  export const __federation_method_getRemote: (
-    remoteName: string,
-    exportName: string,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  ) => Promise<any>;
+  export const __federation_method_getRemote: (remoteName: string, exportName: string) => Promise<any>;
 }

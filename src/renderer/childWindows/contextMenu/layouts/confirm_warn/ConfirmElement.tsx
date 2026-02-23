@@ -51,11 +51,7 @@ const ConfirmElement = memo(({title, enabledTitle, confirmName, buttons}: Confir
         <span className="text-medium font-semibold">{title}</span>
       </div>
 
-      <Checkbox
-        size="sm"
-        className="my-1"
-        isSelected={isSkipConfirmSelected}
-        onValueChange={onToggleSkipConfirm}>
+      <Checkbox size="sm" className="my-1" isSelected={isSkipConfirmSelected} onValueChange={onToggleSkipConfirm}>
         {enabledTitle}
       </Checkbox>
 

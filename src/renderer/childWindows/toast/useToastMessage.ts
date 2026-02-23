@@ -20,7 +20,7 @@ export function useToastMessage(): UseToastMessageReturn {
   const [toastMessage, setToastMessage] = useState<ToastWindowMessageType | null>(null);
 
   useEffect(() => {
-    const offMessage = toastWindowIpc.onShowMessage((data) => {
+    const offMessage = toastWindowIpc.onShowMessage(data => {
       setToastMessage(data);
       document.title = data.title;
     });

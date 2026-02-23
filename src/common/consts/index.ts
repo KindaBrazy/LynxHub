@@ -125,4 +125,3 @@ export const PageTitleByPageId = {
   [PageID.plugins]: 'Plugins',
   [PageID.settings]: 'Settings',
 } as const;
-

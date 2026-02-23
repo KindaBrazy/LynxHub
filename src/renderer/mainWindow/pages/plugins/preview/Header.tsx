@@ -1,9 +1,9 @@
-import { Button, Chip, User } from '@heroui/react';
-import { usePluginsState } from '@lynx/redux/reducers/plugins';
-import { useUserState } from '@lynx/redux/reducers/user';
-import { PluginInstalledItem } from '@lynx_common/types/plugins';
-import { extractGitUrl, getCacheUrl } from '@lynx_common/utils';
-import { getPluginIconUrl } from '@lynx_common/utils/plugins';
+import {Button, Chip, User} from '@heroui/react';
+import {usePluginsState} from '@lynx/redux/reducers/plugins';
+import {useUserState} from '@lynx/redux/reducers/user';
+import {PluginInstalledItem} from '@lynx_common/types/plugins';
+import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
+import {getPluginIconUrl} from '@lynx_common/utils/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {
   BoxMinimalistic,
@@ -13,8 +13,8 @@ import {
   User as UserIcon,
   WidgetAdd,
 } from '@solar-icons/react-perf/BoldDuotone';
-import { ArrowRight } from '@solar-icons/react-perf/LineDuotone';
-import { useCallback, useMemo } from 'react';
+import {ArrowRight} from '@solar-icons/react-perf/LineDuotone';
+import {useCallback, useMemo} from 'react';
 
 import PluginActionButtons from './ActionButtons';
 
@@ -31,7 +31,7 @@ interface PluginPreviewHeaderProps {
  * Displays plugin metadata (title, version, date, type, owner, homepage link)
  * and exposes action buttons for install/uninstall/update operations.
  */
-export default function PluginPreviewHeader({ installedPlugin }: PluginPreviewHeaderProps) {
+export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHeaderProps) {
   const selectedPlugin = usePluginsState('selectedPlugin');
   const syncList = usePluginsState('syncList');
 
@@ -39,7 +39,7 @@ export default function PluginPreviewHeader({ installedPlugin }: PluginPreviewHe
   // subscription tier changes (which may affect available versions).
   useUserState('updateChannel');
 
-  const { resolvedVersion, releaseDate, isUpgradeAvailable, targetVersion } = useMemo(() => {
+  const {resolvedVersion, releaseDate, isUpgradeAvailable, targetVersion} = useMemo(() => {
     const firstCompatibleVersion = selectedPlugin?.versions.find(v => v.isCompatible);
 
     const resolvedVersion = installedPlugin?.version || firstCompatibleVersion?.version || 'N/A';
@@ -48,7 +48,7 @@ export default function PluginPreviewHeader({ installedPlugin }: PluginPreviewHe
     const targetVersion = syncTarget?.version;
     const releaseDate = selectedPlugin?.changes.find(entry => entry.version === resolvedVersion)?.date || 'N/A';
 
-    return { resolvedVersion, releaseDate, isUpgradeAvailable, targetVersion };
+    return {resolvedVersion, releaseDate, isUpgradeAvailable, targetVersion};
   }, [installedPlugin, selectedPlugin, syncList]);
 
   const handleOpenHomePage = useCallback(() => {
@@ -79,7 +79,7 @@ export default function PluginPreviewHeader({ installedPlugin }: PluginPreviewHe
                 variant="light"
                 className="text-foreground-600"
                 startContent={<BoxMinimalistic className="size-3.5" />}
-                classNames={{ content: 'flex flex-row items-center justify-center gap-x-1' }}>
+                classNames={{content: 'flex flex-row items-center justify-center gap-x-1'}}>
                 <span>v{resolvedVersion}</span>
                 {targetVersion && (
                   <>
@@ -100,8 +100,9 @@ export default function PluginPreviewHeader({ installedPlugin }: PluginPreviewHe
 
               {/* Plugin type indicator (extension vs module) */}
               <div
-                className={`flex flex-row gap-x-1 items-center ${pluginType === 'extension' ? 'text-primary-500' : 'text-secondary'
-                  }`}>
+                className={`flex flex-row gap-x-1 items-center ${
+                  pluginType === 'extension' ? 'text-primary-500' : 'text-secondary'
+                }`}>
                 <WidgetAdd />
                 <span>{pluginType === 'extension' ? 'Extension' : 'Module'}</span>
               </div>
@@ -117,12 +118,12 @@ export default function PluginPreviewHeader({ installedPlugin }: PluginPreviewHe
             {pluginOwner}
           </Chip>
           <Button
-            onPress={handleOpenHomePage}
             size="sm"
             variant="light"
             className="text-small"
-            aria-label="Open plugin home page"
+            onPress={handleOpenHomePage}
             startContent={<HomeAngle2 />}
+            aria-label="Open plugin home page"
             endContent={<SquareTopDown className="size-3" />}>
             Home Page
           </Button>

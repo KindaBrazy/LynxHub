@@ -78,10 +78,7 @@ const Tooltip = ({children, content, isDark}: TooltipProps) => {
 
   return (
     <>
-      <div
-        ref={triggerRef}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}>
+      <div ref={triggerRef} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
         {children}
       </div>
 

@@ -1,4 +1,3 @@
-
 import {ipcMain, WebContents} from 'electron';
 
 /**

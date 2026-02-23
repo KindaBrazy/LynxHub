@@ -73,7 +73,7 @@ const BrowserVolume = memo(({id, tabId}: Props) => {
   }, [isMuted, globalMuted, isPlaying, volume]);
 
   return (
-    <Tooltip content={ariaLabel} delay={1000}>
+    <Tooltip delay={1000} content={ariaLabel}>
       <Button
         size="sm"
         ref={btnRef}

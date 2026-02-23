@@ -1,6 +1,6 @@
-import { useSettingsState } from '@lynx/redux/reducers/settings';
-import { searchInStrings } from '@lynx/utils';
-import { PropsWithChildren } from 'react';
+import {useSettingsState} from '@lynx/redux/reducers/settings';
+import {searchInStrings} from '@lynx/utils';
+import {PropsWithChildren} from 'react';
 
 /** Props for SettingsFilterItem component */
 export type SettingsFilterItemProps = PropsWithChildren<{
@@ -21,7 +21,7 @@ export function canSettingItemShow(searchValue: string, searchTexts: (string | u
  * Renders the children if the parent active search value matches local component text.
  * Skips rendering the nodes completely if the search omits it.
  */
-const SettingsFilterItem = ({ searchTexts, children }: SettingsFilterItemProps) => {
+const SettingsFilterItem = ({searchTexts, children}: SettingsFilterItemProps) => {
   const searchValue = useSettingsState('searchValue');
 
   // Directly calculate visibility avoiding unnecessary memoization

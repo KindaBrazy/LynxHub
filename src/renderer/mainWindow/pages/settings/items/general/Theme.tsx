@@ -1,16 +1,16 @@
-import { Select, Selection, SelectItem } from '@heroui/react';
-import { appActions, useAppState } from '@lynx/redux/reducers/app';
-import { AppDispatch } from '@lynx/redux/store';
-import { DarkModeTypes } from '@lynx_common/types/ipc';
+import {Select, Selection, SelectItem} from '@heroui/react';
+import {appActions, useAppState} from '@lynx/redux/reducers/app';
+import {AppDispatch} from '@lynx/redux/store';
+import {DarkModeTypes} from '@lynx_common/types/ipc';
 import applicationIpc from '@lynx_shared/ipc/application';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { Display, Moon, Sun2 } from '@solar-icons/react-perf/BoldDuotone';
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {Display, Moon, Sun2} from '@solar-icons/react-perf/BoldDuotone';
+import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
-import useModeAnimation, { ThemeAnimationType } from './themeSwitch';
+import useModeAnimation, {ThemeAnimationType} from './themeSwitch';
 
 /**
  * Component to select the application appearance theme (Dark, Light, or System).
@@ -21,7 +21,7 @@ export default function Theme() {
 
   const darkMode = useAppState('darkMode');
 
-  const { ref, toggleSwitchTheme } = useModeAnimation({
+  const {ref, toggleSwitchTheme} = useModeAnimation({
     animationType: ThemeAnimationType.QR_SCAN,
     isDarkMode: darkMode,
     duration: 1000,
@@ -31,7 +31,7 @@ export default function Theme() {
   const [selectedTheme, setSelectedTheme] = useState<DarkModeTypes>('system');
 
   useEffect(() => {
-    storageIpc.get('app').then(({ darkMode }) => {
+    storageIpc.get('app').then(({darkMode}) => {
       setSelectedTheme(darkMode);
     });
   }, []);
@@ -54,7 +54,7 @@ export default function Theme() {
       const themeIsChanging = newIsDarkMode !== darkMode;
 
       const applyThemeChanges = () => {
-        dispatch(appActions.setAppState({ key: 'darkMode', value: newIsDarkMode }));
+        dispatch(appActions.setAppState({key: 'darkMode', value: newIsDarkMode}));
 
         applicationIpc.send.setDarkMode(newSelectedTheme);
         setSelectedTheme(newSelectedTheme);
@@ -83,7 +83,7 @@ export default function Theme() {
         onSelectionChange={onThemeChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{ trigger: 'cursor-default transition! duration-300!' }}
+        classNames={{trigger: 'cursor-default transition! duration-300!'}}
         startContent={selectedTheme === 'system' ? <Display /> : selectedTheme === 'dark' ? <Moon /> : <Sun2 />}
         disallowEmptySelection>
         <SelectItem key="dark" startContent={<Moon />} className="cursor-default">

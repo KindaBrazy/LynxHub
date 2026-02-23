@@ -1,5 +1,5 @@
 import SettingsSection from '@lynx/components/SettingsSection';
-import { SettingPage_Icon } from '@lynx_assets/icons/pages';
+import {SettingPage_Icon} from '@lynx_assets/icons/pages';
 
 import CollectErrors from './CollectErrors';
 import Confirm from './Confirm';

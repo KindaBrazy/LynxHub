@@ -9,8 +9,12 @@ type HotkeysStateValueByKey = {
   [K in keyof HotkeysState]: HotkeysState[K];
 };
 
-const isModifierKeyPressed = (modifierKey: string, activeKey: string, eventType: string, modifierState: boolean): boolean =>
-  activeKey === modifierKey ? eventType === 'keyDown' : modifierState;
+const isModifierKeyPressed = (
+  modifierKey: string,
+  activeKey: string,
+  eventType: string,
+  modifierState: boolean,
+): boolean => (activeKey === modifierKey ? eventType === 'keyDown' : modifierState);
 
 // Default initial state - actual values come from preloadedState in Store.ts
 const initialState: HotkeysState = {

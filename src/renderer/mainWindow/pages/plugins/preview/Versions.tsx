@@ -1,10 +1,10 @@
-import { ChipProps } from '@heroui/chip';
-import { Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, SharedSelection } from '@heroui/react';
-import { usePluginsState } from '@lynx/redux/reducers/plugins';
-import { SubscribeStages } from '@lynx_common/types';
+import {ChipProps} from '@heroui/chip';
+import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, SharedSelection} from '@heroui/react';
+import {usePluginsState} from '@lynx/redux/reducers/plugins';
+import {SubscribeStages} from '@lynx_common/types';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
-import { BoxMinimalistic } from '@solar-icons/react-perf/BoldDuotone';
-import { useCallback, useMemo } from 'react';
+import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
+import {useCallback, useMemo} from 'react';
 
 /**
  * Returns a user-friendly name for a given subscription stage.
@@ -46,7 +46,7 @@ interface PluginVersionSelectorProps {
  * Dropdown selector that allows users to choose a specific version/commit of a plugin to sync to.
  * Primarily used for upgrading, downgrading, or switching between release tracks.
  */
-export default function PluginVersionSelector({ currentVersion }: PluginVersionSelectorProps) {
+export default function PluginVersionSelector({currentVersion}: PluginVersionSelectorProps) {
   const selectedPlugin = usePluginsState('selectedPlugin');
   const syncList = usePluginsState('syncList');
 
@@ -54,7 +54,7 @@ export default function PluginVersionSelector({ currentVersion }: PluginVersionS
    * Derives the available versions, currently selected sync version, and disabled versions
    * (incompatible) based on the plugin's metadata and existing sync items.
    */
-  const { availableVersions, disabledCommitKeys, activeCommit } = useMemo(() => {
+  const {availableVersions, disabledCommitKeys, activeCommit} = useMemo(() => {
     const availableVersions = selectedPlugin?.versions || [];
     const installedVersionEntry = availableVersions.find(item => item.version === currentVersion);
     const disabledCommitKeys = availableVersions.filter(item => !item.isCompatible).map(item => item.commit);
@@ -63,7 +63,7 @@ export default function PluginVersionSelector({ currentVersion }: PluginVersionS
     const pendingSyncEntry = syncList.find(item => item.id === selectedPlugin?.metadata.id);
     const activeCommit = pendingSyncEntry?.commit || installedVersionEntry?.commit || '';
 
-    return { availableVersions, disabledCommitKeys, activeCommit };
+    return {availableVersions, disabledCommitKeys, activeCommit};
   }, [selectedPlugin, syncList, currentVersion]);
 
   /**
@@ -94,20 +94,20 @@ export default function PluginVersionSelector({ currentVersion }: PluginVersionS
       <DropdownMenu
         variant="flat"
         selectionMode="single"
-        disabledKeys={disabledCommitKeys}
         selectedKeys={[activeCommit]}
+        disabledKeys={disabledCommitKeys}
         onSelectionChange={handleSelectionChange}
         disallowEmptySelection>
         {availableVersions.map(version => (
           <DropdownItem
-            key={version.commit}
-            description={version.incompatibleReason}
-            classNames={{ description: 'whitespace-pre text-warning' }}
             endContent={
               <Chip size="sm" variant="flat" className="scale-80" color={getStageColor(version.stage)}>
                 {getStageDisplayName(version.stage)}
               </Chip>
-            }>
+            }
+            key={version.commit}
+            description={version.incompatibleReason}
+            classNames={{description: 'whitespace-pre text-warning'}}>
             v{version.version}
           </DropdownItem>
         ))}

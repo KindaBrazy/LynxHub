@@ -72,7 +72,7 @@ export default function ResetShallow({isShallow, dir, refreshData, title}: Reset
 
   return (
     <ButtonGroup fullWidth>
-      <Popover isOpen={isResetConfirmOpen} onOpenChange={setIsResetConfirmOpen} showArrow placement="bottom">
+      <Popover placement="bottom" isOpen={isResetConfirmOpen} onOpenChange={setIsResetConfirmOpen} showArrow>
         <PopoverTrigger>
           <Button variant="flat" color="danger" isLoading={isResetting} fullWidth>
             Reset Hard
@@ -92,7 +92,7 @@ export default function ResetShallow({isShallow, dir, refreshData, title}: Reset
       </Popover>
 
       {isShallow && (
-        <Popover isOpen={isShallowConfirmOpen} onOpenChange={setIsShallowConfirmOpen} showArrow placement="bottom">
+        <Popover placement="bottom" isOpen={isShallowConfirmOpen} onOpenChange={setIsShallowConfirmOpen} showArrow>
           <PopoverTrigger>
             <Button variant="flat" color="secondary" isLoading={isLoadingShallow} fullWidth>
               UnShallow

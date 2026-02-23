@@ -1,9 +1,9 @@
-import { NumberInput } from '@heroui/react';
-import { cardsActions, useCardsState } from '@lynx/redux/reducers/cards';
-import { AppDispatch } from '@lynx/redux/store';
+import {NumberInput} from '@heroui/react';
+import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
+import {AppDispatch} from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { Stopwatch } from '@solar-icons/react-perf/BoldDuotone';
-import { useDispatch } from 'react-redux';
+import {Stopwatch} from '@solar-icons/react-perf/BoldDuotone';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
@@ -19,7 +19,7 @@ export default function UpdateInterval() {
   const handleIntervalChange = (value: number) => {
     if (value) {
       dispatch(cardsActions.setUpdateInterval(value));
-      storageIpc.update('cards', { checkUpdateInterval: value });
+      storageIpc.update('cards', {checkUpdateInterval: value});
     }
   };
 
@@ -37,8 +37,8 @@ export default function UpdateInterval() {
           minValue={2}
           value={updateInterval}
           labelPlacement="outside"
-          onValueChange={handleIntervalChange}
           aria-label="Card Update Interval"
+          onValueChange={handleIntervalChange}
           endContent={<span className="text-sm">Minutes</span>}
         />
       </div>

@@ -47,4 +47,3 @@ export const appChannels = {
   onCustomNotifClose: 'app:onCustomNotifClose',
   onCustomNotifBtnPress: 'app:onCustomNotifBtnPress',
 } as const;
-

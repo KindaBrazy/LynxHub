@@ -37,15 +37,15 @@ const BrowserSearch = memo(({id, tabID}: Props) => {
   useHotkeyPress([{name: Hotkey_Names.findInPage, method: tabID === activeTab ? openSearchMenu : null}]);
 
   return (
-    <Tooltip content="Find in Page" delay={1000}>
+    <Tooltip delay={1000} content="Find in Page">
       <Button
         size="sm"
         ref={btnRef}
         variant="light"
         onPress={openSearchMenu}
+        aria-label="Find in Page"
         className="cursor-default"
-        isIconOnly
-        aria-label="Find in Page">
+        isIconOnly>
         <Circle_Icon className="size-4" />
       </Button>
     </Tooltip>

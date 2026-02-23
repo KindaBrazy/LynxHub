@@ -15,6 +15,8 @@ import {formatNumber} from '../../../../../utils';
 import {lynxTopToast} from '../../../../../utils/hooks';
 import {ExtensionsInfo} from '../types';
 
+/* eslint-disable perfectionist/sort-jsx-props */
+
 type Props = {
   item: ExtensionsInfo;
   updateTable: () => void;
@@ -62,7 +64,7 @@ const RenderItem = memo(({item, updateTable, dir, searchValue}: Props) => {
         'border-transparent transition duration-300 hover:border-default-200 hover:bg-content3 hover:shadow-md'
       }>
       <div className="flex min-w-0 flex-1 flex-row items-center gap-4">
-        <Avatar src={avatarUrl} size="lg" isBordered className="shrink-0" />
+        <Avatar size="lg" src={avatarUrl} className="shrink-0" isBordered />
         <div className="flex min-w-0 flex-col gap-1">
           <div className="flex flex-wrap items-center gap-2">
             <a
@@ -71,12 +73,12 @@ const RenderItem = memo(({item, updateTable, dir, searchValue}: Props) => {
               rel="noreferrer"
               className="truncate text-large font-semibold hover:underline">
               <Highlighter
-                className="inline-block"
-                highlightTag="span"
-                textToHighlight={item.title}
-                highlightClassName="bg-warning/70 rounded-sm px-0.5"
-                searchWords={searchValue.split(' ')}
                 autoEscape={true}
+                highlightTag="span"
+                className="inline-block"
+                textToHighlight={item.title}
+                searchWords={searchValue.split(' ')}
+                highlightClassName="bg-warning/70 rounded-sm px-0.5"
               />
             </a>
             <Chip size="sm" variant="flat" color="default">
@@ -87,19 +89,21 @@ const RenderItem = memo(({item, updateTable, dir, searchValue}: Props) => {
                 size="sm"
                 variant="flat"
                 color="warning"
-                startContent={<Star className={item.stars >= 1000 ? 'text-yellow-500' : 'text-yellow-600'} size={14} />}>
+                startContent={
+                  <Star size={14} className={item.stars >= 1000 ? 'text-yellow-500' : 'text-yellow-600'} />
+                }>
                 {formatNumber(item.stars)}
               </Chip>
             )}
           </div>
           <div className="truncate text-small text-default-500">
             <Highlighter
-              className="inline-block"
+              autoEscape={true}
               highlightTag="span"
-              highlightClassName="bg-warning/50 rounded-sm px-0.5"
+              className="inline-block"
               searchWords={searchValue.split(' ')}
               textToHighlight={item.description || ''}
-              autoEscape={true}
+              highlightClassName="bg-warning/50 rounded-sm px-0.5"
             />
           </div>
         </div>

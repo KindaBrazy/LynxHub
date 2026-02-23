@@ -40,7 +40,7 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
         });
       }
     },
-    [chosenArguments.arguments, setChosenArguments]
+    [chosenArguments.arguments, setChosenArguments],
   );
 
   return (
@@ -60,36 +60,24 @@ export default function ManageArguments({addArgumentsModal, chosenArguments, set
               size="sm"
               radius="full"
               variant="flat"
-              className="scale-85 hover:bg-success/10 transition-colors duration-300"
-            >
+              className="scale-85 hover:bg-success/10 transition-colors duration-300">
               {chosenArguments.arguments.length}
             </Chip>
           )}
         </div>
       }
-      description="Configurate environments and command lines"
-    >
+      description="Configurate environments and command lines">
       {isEmpty(chosenArguments.arguments) ? (
-        <Empty
-          className="m-"
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description="No item selected to display"
-        />
+        <Empty className="m-" image={Empty.PRESENTED_IMAGE_SIMPLE} description="No item selected to display" />
       ) : (
         <AnimatePresence>
           <Reorder.Group
             axis="y"
             onReorder={onReorder}
             className="flex flex-col space-y-2 overflow-hidden"
-            values={chosenArguments.arguments.map(argument => argument.name)}
-          >
+            values={chosenArguments.arguments.map(argument => argument.name)}>
             {chosenArguments.arguments.map(argument => (
-              <ManageArgumentsItem
-                id={id}
-                key={argument.name}
-                argument={argument}
-                setArguments={setChosenArguments}
-              />
+              <ManageArgumentsItem id={id} key={argument.name} argument={argument} setArguments={setChosenArguments} />
             ))}
           </Reorder.Group>
         </AnimatePresence>

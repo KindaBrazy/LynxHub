@@ -1,5 +1,6 @@
 import {isEqual} from 'lodash';
 import normalizeUrl, {Options} from 'normalize-url';
+
 import {SearchQuerySites} from '../types';
 
 /**

@@ -1,18 +1,18 @@
-import { extensionsData } from '@lynx/plugins/extensions/loader';
-import { useSettingsState } from '@lynx/redux/reducers/settings';
-import { searchInStrings } from '@lynx/utils';
-import { compact } from 'lodash';
-import { type ComponentType, useMemo } from 'react';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useSettingsState} from '@lynx/redux/reducers/settings';
+import {searchInStrings} from '@lynx/utils';
+import {compact} from 'lodash';
+import {type ComponentType, useMemo} from 'react';
 
-import SettingsBrowser, { SettingsBrowserId } from './items/browser';
-import SettingsCard, { SettingsCardId } from './items/card';
-import SettingsClear, { SettingsClearId } from './items/clear';
-import SettingsData, { SettingsDataId } from './items/data';
-import SettingsGeneral, { SettingsGeneralId } from './items/general';
-import SettingsHotkeys, { SettingsHotkeysId } from './items/hotkeys';
-import SettingsPerformance, { SettingsPerformanceId } from './items/performance';
-import SettingsStartup, { SettingsStartupId } from './items/startup';
-import SettingsTerminal, { SettingsTerminalId } from './items/terminal';
+import SettingsBrowser, {SettingsBrowserId} from './items/browser';
+import SettingsCard, {SettingsCardId} from './items/card';
+import SettingsClear, {SettingsClearId} from './items/clear';
+import SettingsData, {SettingsDataId} from './items/data';
+import SettingsGeneral, {SettingsGeneralId} from './items/general';
+import SettingsHotkeys, {SettingsHotkeysId} from './items/hotkeys';
+import SettingsPerformance, {SettingsPerformanceId} from './items/performance';
+import SettingsStartup, {SettingsStartupId} from './items/startup';
+import SettingsTerminal, {SettingsTerminalId} from './items/terminal';
 
 /** Object mapping setting section names to their respective unique IDs */
 export const settingsSectionId = {
@@ -45,22 +45,22 @@ export type SettingsSectionsProps = {
 
 // Moving static definitions outside the component to avoid unnecessary re-creation or memoization
 const builtInSections: SettingsSectionDefinition[] = [
-  { title: 'General', elementId: settingsSectionId.SettingsGeneralId, Component: SettingsGeneral },
-  { title: 'Startup', elementId: settingsSectionId.SettingsStartupId, Component: SettingsStartup },
-  { title: 'Performance', elementId: settingsSectionId.SettingsPerformanceId, Component: SettingsPerformance },
-  { title: 'Card', elementId: settingsSectionId.SettingsCardId, Component: SettingsCard },
-  { title: 'Terminal', elementId: settingsSectionId.SettingsTerminalId, Component: SettingsTerminal },
-  { title: 'Browser', elementId: settingsSectionId.SettingsBrowserId, Component: SettingsBrowser },
-  { title: 'Hotkeys', elementId: settingsSectionId.SettingsHotkeysId, Component: SettingsHotkeys },
-  { title: 'Data', elementId: settingsSectionId.SettingsDataId, Component: SettingsData },
-  { title: 'Clear', elementId: settingsSectionId.SettingsClearId, Component: SettingsClear },
+  {title: 'General', elementId: settingsSectionId.SettingsGeneralId, Component: SettingsGeneral},
+  {title: 'Startup', elementId: settingsSectionId.SettingsStartupId, Component: SettingsStartup},
+  {title: 'Performance', elementId: settingsSectionId.SettingsPerformanceId, Component: SettingsPerformance},
+  {title: 'Card', elementId: settingsSectionId.SettingsCardId, Component: SettingsCard},
+  {title: 'Terminal', elementId: settingsSectionId.SettingsTerminalId, Component: SettingsTerminal},
+  {title: 'Browser', elementId: settingsSectionId.SettingsBrowserId, Component: SettingsBrowser},
+  {title: 'Hotkeys', elementId: settingsSectionId.SettingsHotkeysId, Component: SettingsHotkeys},
+  {title: 'Data', elementId: settingsSectionId.SettingsDataId, Component: SettingsData},
+  {title: 'Clear', elementId: settingsSectionId.SettingsClearId, Component: SettingsClear},
 ];
 
 /**
  * Renders all available settings sections (built-in and extension-provided)
  * and filters them based on the active search or selected navigation tab.
  */
-export const SettingsSections = ({ sectionTexts }: SettingsSectionsProps) => {
+export const SettingsSections = ({sectionTexts}: SettingsSectionsProps) => {
   const content = extensionsData.customizePages.settings.add.content;
   const searchValue = useSettingsState('searchValue');
   const selectedSection = useSettingsState('selectedSection');
@@ -82,14 +82,14 @@ export const SettingsSections = ({ sectionTexts }: SettingsSectionsProps) => {
       const targetSection = selectedSection || SettingsGeneralId;
 
       return compact(
-        allSections.map(section => (section.elementId === targetSection ? { ...section, visible: true } : null)),
+        allSections.map(section => (section.elementId === targetSection ? {...section, visible: true} : null)),
       );
     }
 
     return allSections.map(section => {
       const dynamicText = section.elementId ? sectionTexts.get(section.elementId) : undefined;
       const visible = searchInStrings(searchValue, [dynamicText, section.title]);
-      return { ...section, visible };
+      return {...section, visible};
     });
   }, [extensionSections, searchValue, sectionTexts, selectedSection]);
 
@@ -100,7 +100,7 @@ export const SettingsSections = ({ sectionTexts }: SettingsSectionsProps) => {
       {!hasVisibleSection && searchValue && (
         <div className="py-10 text-center text-sm text-foreground-500">No settings match “{searchValue}”.</div>
       )}
-      {sectionsWithVisibility.map(({ Component, elementId, title, visible }, index) => (
+      {sectionsWithVisibility.map(({Component, elementId, title, visible}, index) => (
         <div key={elementId || `${title}_${index}`} className={visible ? 'contents' : 'hidden'}>
           <Component />
         </div>

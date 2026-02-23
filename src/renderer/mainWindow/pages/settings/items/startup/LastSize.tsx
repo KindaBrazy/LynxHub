@@ -1,8 +1,8 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import { settingsActions, useSettingsState } from '@lynx/redux/reducers/settings';
-import { AppDispatch } from '@lynx/redux/store';
+import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
+import {AppDispatch} from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { useDispatch } from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
@@ -14,8 +14,8 @@ export default function LastSize() {
   const openLastSize = useSettingsState('openLastSize');
 
   const handleEnabledChange = (isEnabled: boolean) => {
-    storageIpc.update('app', { openLastSize: isEnabled });
-    dispatch(settingsActions.setSettingsState({ key: 'openLastSize', value: isEnabled }));
+    storageIpc.update('app', {openLastSize: isEnabled});
+    dispatch(settingsActions.setSettingsState({key: 'openLastSize', value: isEnabled}));
   };
 
   return (

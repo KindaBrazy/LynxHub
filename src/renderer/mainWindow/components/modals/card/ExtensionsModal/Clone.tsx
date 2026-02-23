@@ -145,10 +145,10 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
     <>
       {!cloning ? (
         <motion.div
-          className="flex flex-col gap-y-2 items-center"
           initial="init"
           animate="animate"
-          variants={tabContentVariants}>
+          variants={tabContentVariants}
+          className="flex flex-col gap-y-2 items-center">
           <Input
             variant="flat"
             color="default"
@@ -165,15 +165,17 @@ export default function Clone({updateTable, visible, installedExtensions, dir}: 
               className={`mb-4 overflow-hidden bg-default-100 text-center transition duration-300 w-[90%] ${
                 !alreadyInstalled ? 'hover:bg-default-200' : ''
               }`}
-              isPressable={!alreadyInstalled}
+              shadow="none"
               onPress={clone}
-              shadow="none">
+              isPressable={!alreadyInstalled}>
               <CardBody className="items-center justify-center p-4">
                 {alreadyInstalled ? (
                   <span className="font-semibold text-success">This extension has already been installed.</span>
                 ) : (
                   <div className="relative flex w-full flex-col items-center justify-center">
-                    <Download className="absolute left-7 size-10 opacity-50 transition duration-300 group-hover:opacity-100" />
+                    <Download
+                      className={'absolute left-7 size-10 opacity-50 transition duration-300 group-hover:opacity-100'}
+                    />
                     <div className="flex flex-row items-center justify-center text-large font-bold">
                       <span>{startCase(downloadBox.name)}</span>
                       <span className="mx-1 scale-85 opacity-75">by</span>

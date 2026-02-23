@@ -18,4 +18,3 @@ export const moduleApiChannels = {
   getLastPulledDate: 'moduleApi:getLastPulledDate',
   getCurrentReleaseTag: 'moduleApi:getCurrentReleaseTag',
 } as const;
-

@@ -24,26 +24,11 @@ export const Edit = memo(({flags, selection, id}: EditProps) => {
   const {canUndo, canCut, canRedo, canPaste, canSelectAll, canCopy} = flags;
 
   // Handlers
-  const onUndo = useCallback(
-    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.undo(id)),
-    [id],
-  );
-  const onRedo = useCallback(
-    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.redo(id)),
-    [id],
-  );
-  const onCut = useCallback(
-    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.cut(id)),
-    [id],
-  );
-  const onCopy = useCallback(
-    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.copy(id)),
-    [id],
-  );
-  const onPaste = useCallback(
-    () => createActionHandler(() => contextMenuIpc.send.rightClickItems.paste(id)),
-    [id],
-  );
+  const onUndo = useCallback(() => createActionHandler(() => contextMenuIpc.send.rightClickItems.undo(id)), [id]);
+  const onRedo = useCallback(() => createActionHandler(() => contextMenuIpc.send.rightClickItems.redo(id)), [id]);
+  const onCut = useCallback(() => createActionHandler(() => contextMenuIpc.send.rightClickItems.cut(id)), [id]);
+  const onCopy = useCallback(() => createActionHandler(() => contextMenuIpc.send.rightClickItems.copy(id)), [id]);
+  const onPaste = useCallback(() => createActionHandler(() => contextMenuIpc.send.rightClickItems.paste(id)), [id]);
   const onSelectAll = useCallback(
     () => createActionHandler(() => contextMenuIpc.send.rightClickItems.selectAll(id)),
     [id],
@@ -52,49 +37,34 @@ export const Edit = memo(({flags, selection, id}: EditProps) => {
   return (
     <>
       {canUndo && (
-        <ActionButton
-          onPress={onUndo()}
-          title="Undo"
-          key="context_undo"
-          icon={<UndoLeftRound className="size-4" />}
-        />
+        <ActionButton title="Undo" onPress={onUndo()} key="context_undo" icon={<UndoLeftRound className="size-4" />} />
       )}
       {canRedo && (
         <ActionButton
-          onPress={onRedo()}
           title="Redo"
+          onPress={onRedo()}
           key="context_redo"
           icon={<UndoLeftRound className="size-4 scale-x-[-1]" />}
         />
       )}
       {canCut && !isEmpty(selection) && (
-        <ActionButton
-          onPress={onCut()}
-          title="Cut"
-          key="context_cut"
-          icon={<Scissors className="size-4" />}
-        />
+        <ActionButton title="Cut" onPress={onCut()} key="context_cut" icon={<Scissors className="size-4" />} />
       )}
       {canCopy && !isEmpty(selection) && (
-        <ActionButton
-          onPress={onCopy()}
-          title="Copy"
-          key="context_copy"
-          icon={<Copy className="size-4" />}
-        />
+        <ActionButton title="Copy" onPress={onCopy()} key="context_copy" icon={<Copy className="size-4" />} />
       )}
       {canPaste && (
         <ActionButton
-          onPress={onPaste()}
           title="Paste"
+          onPress={onPaste()}
           key="context_paste"
           icon={<ClipboardText className="size-4" />}
         />
       )}
       {canSelectAll && (
         <ActionButton
-          onPress={onSelectAll()}
           title="Select All"
+          onPress={onSelectAll()}
           key="context_selectAll"
           icon={<TextSelection className="size-4" />}
         />

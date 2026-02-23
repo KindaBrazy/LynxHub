@@ -1,4 +1,4 @@
-import { contextMenuChannels } from '@lynx_common/consts/ipcChannels/contextMenu';
+import {contextMenuChannels} from '@lynx_common/consts/ipcChannels/contextMenu';
 import type {ContextResizeData} from '@lynx_common/types';
 import type {ContextMenuVolumeData, NavHistory} from '@lynx_common/types/ipc';
 import type {ContextMenuParams} from 'electron';
@@ -75,8 +75,7 @@ const contextMenuIpc = {
       inspectElement: (id: number, x: number, y: number) => lynxIpc.send(contextMenuChannels.inspectElement, id, x, y),
 
       // Navigates browser (back, forward, or refresh)
-      navigate: (id: number, action: ContextNavigateAction) =>
-        lynxIpc.send(contextMenuChannels.navigate, id, action),
+      navigate: (id: number, action: ContextNavigateAction) => lynxIpc.send(contextMenuChannels.navigate, id, action),
     },
   },
 
@@ -119,11 +118,11 @@ const contextMenuIpc = {
       lynxIpc.on(contextMenuChannels.onRelaunchAI, callback),
 
     // Listens for AI stop events
-    stopProcess: (callback: (id: string) => void): (() => void) =>
-      lynxIpc.on(contextMenuChannels.onStopAI, callback),
+    stopProcess: (callback: (id: string) => void): (() => void) => lynxIpc.on(contextMenuChannels.onStopAI, callback),
 
     // Listens for tab removal events
-    removeTab: (callback: (tabId: string) => void): (() => void) => lynxIpc.on(contextMenuChannels.onRemoveTab, callback),
+    removeTab: (callback: (tabId: string) => void): (() => void) =>
+      lynxIpc.on(contextMenuChannels.onRemoveTab, callback),
   },
 };
 

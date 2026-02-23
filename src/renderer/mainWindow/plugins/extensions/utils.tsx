@@ -1,6 +1,6 @@
-import { FC } from 'react';
+import {FC} from 'react';
 
-import { extensionRendererApi } from './loader';
+import {extensionRendererApi} from './loader';
 
 /**
  * Collects custom user-input React components from all loaded extensions

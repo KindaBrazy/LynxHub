@@ -1,8 +1,7 @@
+import {FavIcons} from '@lynx_common/types/ipc';
 import {Empty} from 'antd';
 import {motion} from 'framer-motion';
 import {memo, ReactNode} from 'react';
-
-import {FavIcons} from '@lynx_common/types/ipc';
 
 import HistoryItem from './HistoryItem';
 import {getCachedHistoryData, invalidateHistoryCache} from './utils';

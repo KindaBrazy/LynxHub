@@ -25,4 +25,3 @@ export const utilsChannels = {
   clearImageCache: 'utils:clearImageCache',
   triggerImageCacheCleanup: 'utils:triggerImageCacheCleanup',
 } as const;
-

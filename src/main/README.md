@@ -13,15 +13,15 @@ If a feature needs Electron APIs, Node-only APIs, or file-system control, it usu
 
 ## Responsibilities at a glance
 
-| Area | Main process ownership |
-| --- | --- |
-| App lifecycle | startup, activation, shutdown, relaunch |
-| Windows | main window + loading + context menu + toast + share screen + link preview |
-| IPC server | all `ipcMain` listeners/handlers and event fan-out |
-| Storage | lowdb persistence, migrations, secure browser-data handling |
-| Plugins | validate, install, sync, import module/extension runtimes |
-| Native ops | PTY, filesystem, shell, tray, updater, desktop capture |
-| Protocols | `lynxplugin://` and image-cache custom schemes |
+| Area          | Main process ownership                                                     |
+| ------------- | -------------------------------------------------------------------------- |
+| App lifecycle | startup, activation, shutdown, relaunch                                    |
+| Windows       | main window + loading + context menu + toast + share screen + link preview |
+| IPC server    | all `ipcMain` listeners/handlers and event fan-out                         |
+| Storage       | lowdb persistence, migrations, secure browser-data handling                |
+| Plugins       | validate, install, sync, import module/extension runtimes                  |
+| Native ops    | PTY, filesystem, shell, tray, updater, desktop capture                     |
+| Protocols     | `lynxplugin://` and image-cache custom schemes                             |
 
 ## Startup flow (actual runtime sequence)
 
@@ -67,15 +67,15 @@ Use `waitForClass()` whenever initialization order is uncertain.
 
 ### Manager responsibilities
 
-| Path | Role |
-| --- | --- |
-| `mainWindow/index.ts` | Main `BrowserWindow` creation, event wiring, URL loading, hotkey registration. |
+| Path                     | Role                                                                               |
+| ------------------------ | ---------------------------------------------------------------------------------- |
+| `mainWindow/index.ts`    | Main `BrowserWindow` creation, event wiring, URL loading, hotkey registration.     |
 | `managers/dataFolder.ts` | App data path strategy (portable vs installed), folder checks, data-dir switching. |
-| `managers/updater.ts` | `electron-updater` integration and update event relay. |
-| `managers/statics.ts` | Clones/pulls static metadata repository and serves typed content. |
-| `managers/tray.ts` | Tray creation/update and taskbar/tray mode integration. |
-| `managers/hotkeys.ts` | WebContents input listener and hotkey IPC events. |
-| `managers/imageCache.ts` | Custom image cache scheme lifecycle. |
+| `managers/updater.ts`    | `electron-updater` integration and update event relay.                             |
+| `managers/statics.ts`    | Clones/pulls static metadata repository and serves typed content.                  |
+| `managers/tray.ts`       | Tray creation/update and taskbar/tray mode integration.                            |
+| `managers/hotkeys.ts`    | WebContents input listener and hotkey IPC events.                                  |
+| `managers/imageCache.ts` | Custom image cache scheme lifecycle.                                               |
 
 ### Plugin stack
 
@@ -134,18 +134,18 @@ Do not invent ad-hoc string channels inside feature files.
 
 ## Folder map
 
-| Folder | Purpose |
-| --- | --- |
-| `childWindows/` | Child-window classes and controllers. |
-| `git/` | Git manager and listener integration. |
-| `ipc/` | Main IPC listeners, wrappers, handlers, and domain methods. |
-| `mainWindow/` | Main app window manager. |
-| `managers/` | Core service managers and runtime orchestration. |
-| `monitoring/` | Sentry, Patreon auth, token helpers. |
-| `plugins/` | Plugin/module/extension lifecycle and compatibility logic. |
-| `setup/` | One-time migration flows. |
-| `storage/` | Persistence, schema defaults, migration functions, domain storage ops. |
-| `utils/` | Main-process utility helpers. |
+| Folder          | Purpose                                                                |
+| --------------- | ---------------------------------------------------------------------- |
+| `childWindows/` | Child-window classes and controllers.                                  |
+| `git/`          | Git manager and listener integration.                                  |
+| `ipc/`          | Main IPC listeners, wrappers, handlers, and domain methods.            |
+| `mainWindow/`   | Main app window manager.                                               |
+| `managers/`     | Core service managers and runtime orchestration.                       |
+| `monitoring/`   | Sentry, Patreon auth, token helpers.                                   |
+| `plugins/`      | Plugin/module/extension lifecycle and compatibility logic.             |
+| `setup/`        | One-time migration flows.                                              |
+| `storage/`      | Persistence, schema defaults, migration functions, domain storage ops. |
+| `utils/`        | Main-process utility helpers.                                          |
 
 ## Contributor workflows
 

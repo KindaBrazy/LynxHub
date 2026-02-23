@@ -1,9 +1,9 @@
-import { Select, Selection, SelectItem } from '@heroui/react';
-import { AppDispatch } from '@lynx/redux/store';
-import { showRestartModal } from '@lynx/utils';
+import {Select, Selection, SelectItem} from '@heroui/react';
+import {AppDispatch} from '@lynx/redux/store';
+import {showRestartModal} from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
@@ -28,7 +28,7 @@ export default function ColorProfile() {
     (keys: Selection) => {
       if (keys !== 'all') {
         const value = keys.values().next().value as ColorProfile;
-        storageIpc.update('performance', { forceColorProfile: value });
+        storageIpc.update('performance', {forceColorProfile: value});
         setSelectedKey(value);
         showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
       }
@@ -48,7 +48,7 @@ export default function ColorProfile() {
         onSelectionChange={onChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{ trigger: 'cursor-default transition! duration-300!' }}
+        classNames={{trigger: 'cursor-default transition! duration-300!'}}
         disallowEmptySelection>
         <SelectItem key="default" className="cursor-default" description="Use system default color profile.">
           Default

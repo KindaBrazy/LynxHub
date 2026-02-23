@@ -1,7 +1,7 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import { storageUtilsIpc } from '@lynx_shared/ipc/storage';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 

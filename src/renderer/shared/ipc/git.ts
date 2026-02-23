@@ -1,4 +1,4 @@
-import { gitChannels } from '@lynx_common/consts/ipcChannels/git';
+import {gitChannels} from '@lynx_common/consts/ipcChannels/git';
 import type {RepositoryInfo} from '@lynx_common/types';
 import type {ShallowCloneOptions} from '@lynx_common/types/git';
 import type {GitProgressCallback} from '@lynx_common/types/ipc';

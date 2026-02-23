@@ -1,9 +1,9 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import { AppDispatch } from '@lynx/redux/store';
-import { showRestartModal } from '@lynx/utils';
+import {AppDispatch} from '@lynx/redux/store';
+import {showRestartModal} from '@lynx/utils';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
@@ -23,7 +23,7 @@ export default function VideoDecoding() {
 
   const onEnabledChange = useCallback(
     (selected: boolean) => {
-      storageIpc.update('performance', { enableAcceleratedVideoDecode: selected });
+      storageIpc.update('performance', {enableAcceleratedVideoDecode: selected});
       setEnabled(selected);
       showRestartModal(dispatch, 'To apply performance changes, please restart the app.');
     },

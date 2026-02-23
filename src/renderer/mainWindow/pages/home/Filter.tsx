@@ -1,9 +1,9 @@
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Selection } from '@heroui/react';
-import { Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon } from '@lynx_assets/icons/Icons_Colorful';
-import { storageUtilsIpc } from '@lynx_shared/ipc/storage';
+import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Selection} from '@heroui/react';
+import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import { Filter } from '@solar-icons/react-perf/BoldDuotone';
-import { memo, useCallback } from 'react';
+import {Filter} from '@solar-icons/react-perf/BoldDuotone';
+import {memo, useCallback} from 'react';
 
 /**
  * Props for the HomeFilter component.
@@ -19,7 +19,7 @@ interface HomeFilterProps {
  * @param {HomeFilterProps} props Contains the currently selected category strings.
  * @returns {JSX.Element} A dropdown selection menu for filtering cards.
  */
-const HomeFilter = memo(({ selectedCategories }: HomeFilterProps) => {
+const HomeFilter = memo(({selectedCategories}: HomeFilterProps) => {
   /**
    * Handles selection changes from the DropdownMenu.
    * Modifies the global category preference using the storage IPC.
@@ -52,11 +52,11 @@ const HomeFilter = memo(({ selectedCategories }: HomeFilterProps) => {
 
       <DropdownMenu
         variant="faded"
-        aria-label="Filter Categories"
         closeOnSelect={false}
         selectionMode="multiple"
-        onSelectionChange={handleSelectionChange}
+        aria-label="Filter Categories"
         selectedKeys={selectedCategories}
+        onSelectionChange={handleSelectionChange}
         disallowEmptySelection>
         <DropdownSection title="Categories">
           <DropdownItem

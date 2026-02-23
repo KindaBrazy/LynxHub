@@ -1,6 +1,6 @@
-import { Card, CardBody, CardHeader } from '@heroui/react';
-import { ContainersBg } from '@lynx/utils/commonStyles';
-import { ReactNode } from 'react';
+import {Card, CardBody, CardHeader} from '@heroui/react';
+import {ContainersBg} from '@lynx/utils/commonStyles';
+import {ReactNode} from 'react';
 
 /** Props for the CardsContainer component. */
 export interface CardsContainerProps {
@@ -22,7 +22,7 @@ export const CardContainerClasses = 'size-6 mr-2 hover:transition hover:duration
  * A standardized container component for grouping cards on the home page.
  * Includes a header with an icon, title, and subtitle, and a body for the content.
  */
-export default function CardsContainer({ children, icon, title, subTitle, extraClassNames }: CardsContainerProps) {
+export default function CardsContainer({children, icon, title, subTitle, extraClassNames}: CardsContainerProps) {
   return (
     <Card className={[ContainersBg, extraClassNames].filter(Boolean).join(' ')}>
       <CardHeader className="flex-col items-start px-6 pt-5">

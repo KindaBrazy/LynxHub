@@ -29,7 +29,7 @@ const Wrapper = memo(({cardData, isInstalled, hasArguments}: WrapperProps) => {
   return (
     <CardStoreContext.Provider value={storeValue}>
       {ReplaceComponent ? (
-        <ReplaceComponent key={`${cardData.id}-card-key`} useCardStore={useCardStore} />
+        <ReplaceComponent useCardStore={useCardStore} key={`${cardData.id}-card-key`} />
       ) : (
         <LynxCard key={`${cardData.id}-card-key`} />
       )}

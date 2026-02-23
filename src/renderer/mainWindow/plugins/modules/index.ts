@@ -1,5 +1,5 @@
-import { searchInStrings } from '@lynx/utils';
-import { AvailablePageIDs } from '@lynx_common/consts';
+import {searchInStrings} from '@lynx/utils';
+import {AvailablePageIDs} from '@lynx_common/consts';
 import {
   ArgumentsData,
   CardData,
@@ -10,17 +10,17 @@ import {
   LoadedMethods,
   RendererModuleImportType,
 } from '@lynx_common/types/plugins/modules';
-import { extractGitUrl, isDev } from '@lynx_common/utils';
+import {extractGitUrl, isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { captureException } from '@sentry/electron/renderer';
-import { compact } from 'lodash';
-import { useSyncExternalStore } from 'react';
+import {captureException} from '@sentry/electron/renderer';
+import {compact} from 'lodash';
+import {useSyncExternalStore} from 'react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 /** Flat list of pre-extracted search tokens per card, used for fast text search. */
-type CardSearchIndex = { id: string; tokens: string[] }[];
+type CardSearchIndex = {id: string; tokens: string[]}[];
 
 // ─── Module-level State ───────────────────────────────────────────────────────
 // All state lives at module scope so it persists across React render cycles
@@ -104,7 +104,9 @@ const useGetArgumentsByID = (id: string): ArgumentsData | undefined =>
  */
 const useSearchCards = (searchValue: string) => {
   const index = useCardSearchIndex();
-  return allCardDataWithPath.filter(card => searchInStrings(searchValue, index.find(entry => entry.id === card.id)?.tokens));
+  return allCardDataWithPath.filter(card =>
+    searchInStrings(searchValue, index.find(entry => entry.id === card.id)?.tokens),
+  );
 };
 
 /**
@@ -138,7 +140,8 @@ const getCardMethod = <T extends keyof CardRendererMethods>(
   cardMethods: LoadedMethods[],
   id: string,
   method: T,
-): CardRendererMethods[T] | undefined => cardMethods.find(card => card.id === id)?.methods?.[method] as CardRendererMethods[T] | undefined;
+): CardRendererMethods[T] | undefined =>
+  cardMethods.find(card => card.id === id)?.methods?.[method] as CardRendererMethods[T] | undefined;
 
 /**
  * Returns the installation type for a card.
@@ -165,7 +168,7 @@ const useGetUninstallType = (id: string) =>
  * Tokens include: description, title, repo owner, and repo name.
  */
 function buildCardSearchTokens(card: CardData): string[] {
-  const { owner, repo } = extractGitUrl(card.repoUrl);
+  const {owner, repo} = extractGitUrl(card.repoUrl);
   return [card.description, card.title, owner, repo];
 }
 
@@ -182,7 +185,7 @@ function buildCardSearchTokens(card: CardData): string[] {
  *   determine insertion position). Pass the card's own `id` for non-duplicates.
  */
 function insertCardData(card: CardData, routePath: AvailablePageIDs, originalCardId: string) {
-  const { arguments: args, methods, ...cardWithoutInternals } = card;
+  const {arguments: args, methods, ...cardWithoutInternals} = card;
 
   const insertAfterIndex = allCardDataWithPath.findIndex(c => c.id === originalCardId);
 
@@ -192,30 +195,26 @@ function insertCardData(card: CardData, routePath: AvailablePageIDs, originalCar
 
     allCardDataWithPath = [
       ...allCardDataWithPath.slice(0, pos),
-      { ...cardWithoutInternals, routePath },
+      {...cardWithoutInternals, routePath},
       ...allCardDataWithPath.slice(pos),
     ];
     allCardArguments = [
       ...allCardArguments.slice(0, pos),
-      { id: card.id, arguments: args },
+      {id: card.id, arguments: args},
       ...allCardArguments.slice(pos),
     ];
-    allCardMethods = [
-      ...allCardMethods.slice(0, pos),
-      { id: card.id, methods },
-      ...allCardMethods.slice(pos),
-    ];
+    allCardMethods = [...allCardMethods.slice(0, pos), {id: card.id, methods}, ...allCardMethods.slice(pos)];
     cardSearchIndex = [
       ...cardSearchIndex.slice(0, pos),
-      { id: card.id, tokens: buildCardSearchTokens(card) },
+      {id: card.id, tokens: buildCardSearchTokens(card)},
       ...cardSearchIndex.slice(pos),
     ];
   } else {
     // Original not found — append to the end of every array.
-    allCardDataWithPath = [...allCardDataWithPath, { ...cardWithoutInternals, routePath }];
-    allCardArguments = [...allCardArguments, { id: card.id, arguments: args }];
-    allCardMethods = [...allCardMethods, { id: card.id, methods }];
-    cardSearchIndex = [...cardSearchIndex, { id: card.id, tokens: buildCardSearchTokens(card) }];
+    allCardDataWithPath = [...allCardDataWithPath, {...cardWithoutInternals, routePath}];
+    allCardArguments = [...allCardArguments, {id: card.id, arguments: args}];
+    allCardMethods = [...allCardMethods, {id: card.id, methods}];
+    cardSearchIndex = [...cardSearchIndex, {id: card.id, tokens: buildCardSearchTokens(card)}];
   }
 
   if (args) hasArguments.add(card.id);
@@ -264,7 +263,7 @@ const duplicateCard = (
   originalId: string,
   overrideId?: string,
   overrideTitle?: string,
-): { id: string; title: string; routePath: AvailablePageIDs } | undefined => {
+): {id: string; title: string; routePath: AvailablePageIDs} | undefined => {
   let newId = '';
   let newTitle = '';
   let routePath: AvailablePageIDs = 'imageGen_page';
@@ -279,11 +278,11 @@ const duplicateCard = (
     newTitle = overrideTitle ?? generateUniqueCardTitle(originalCard.title);
     routePath = page.routePath;
 
-    duplicatedCard = { ...originalCard, id: newId, title: newTitle };
+    duplicatedCard = {...originalCard, id: newId, title: newTitle};
     const updatedCards = [...page.cards];
     updatedCards.splice(cardIndex + 1, 0, duplicatedCard);
 
-    return { ...page, cards: updatedCards };
+    return {...page, cards: updatedCards};
   });
 
   if (!duplicatedCard) return undefined;
@@ -293,7 +292,7 @@ const duplicateCard = (
   insertCardData(duplicatedCard, routePath, originalId);
   notifyListeners();
 
-  return { id: newId, title: newTitle, routePath };
+  return {id: newId, title: newTitle, routePath};
 };
 
 /**
@@ -312,7 +311,7 @@ const removeDuplicatedCard = (id: string) => {
     cardWasFound = true;
     const updatedCards = [...page.cards];
     updatedCards.splice(cardIndex, 1);
-    return { ...page, cards: updatedCards };
+    return {...page, cards: updatedCards};
   });
 
   const previousLength = allCards.length;
@@ -347,7 +346,7 @@ async function commitModuleState(
   newCardMethods: LoadedMethods[],
   newCardSearchIndex: CardSearchIndex,
 ) {
-  const { duplicated } = await storageIpc.get('cards');
+  const {duplicated} = await storageIpc.get('cards');
 
   allModules = newAllModules;
   allCards = newAllCards;
@@ -385,7 +384,7 @@ async function commitModuleState(
  */
 const loadModules = async () => {
   try {
-    let importedModules: ({ path: string; module: RendererModuleImportType } | null)[];
+    let importedModules: ({path: string; module: RendererModuleImportType} | null)[];
 
     const pluginStorage = await storageIpc.get('plugin');
     const disabledCards = new Set(pluginStorage.disabledCards ?? []);
@@ -394,7 +393,7 @@ const loadModules = async () => {
       // ── Dev shortcut ───────────────────────────────────────────────────────
       try {
         const devImport = await import(/* @vite-ignore */ '@lynx_module/renderer');
-        importedModules = [{ path: 'dev', module: devImport }];
+        importedModules = [{path: 'dev', module: devImport}];
       } catch {
         console.log('No dev module found, skipping...');
         importedModules = [];
@@ -409,7 +408,7 @@ const loadModules = async () => {
           try {
             // Cache-bust with a timestamp so updated modules are always fetched.
             const module = await import(/* @vite-ignore */ `${serverAddress}/scripts/renderer.mjs?${Date.now()}`);
-            return { path: serverAddress, module };
+            return {path: serverAddress, module};
           } catch (error) {
             console.error('Failed to load module renderer entry:', serverAddress, error);
             captureException(error);
@@ -427,7 +426,7 @@ const loadModules = async () => {
     const newCardMethods: LoadedMethods[] = [];
     const newCardSearchIndex: CardSearchIndex = [];
 
-    compact(importedModules).forEach(({ module }) => {
+    compact(importedModules).forEach(({module}) => {
       (module as RendererModuleImportType).default.forEach(mod => {
         const enabledCards = mod.cards.filter(card => !disabledCards.has(card.id));
         if (enabledCards.length === 0) return;
@@ -445,15 +444,15 @@ const loadModules = async () => {
           });
         } else {
           // First time seeing this route — create a new module entry.
-          newAllModules.push({ ...mod, cards: enabledCards });
+          newAllModules.push({...mod, cards: enabledCards});
           newAllCards.push(...enabledCards);
 
           enabledCards.forEach(card => {
-            const { arguments: args, methods, ...cardWithoutInternals } = card;
-            newCardDataWithPath.push({ ...cardWithoutInternals, routePath: mod.routePath });
-            newCardArguments.push({ id: card.id, arguments: args });
-            newCardMethods.push({ id: card.id, methods });
-            newCardSearchIndex.push({ id: card.id, tokens: buildCardSearchTokens(card) });
+            const {arguments: args, methods, ...cardWithoutInternals} = card;
+            newCardDataWithPath.push({...cardWithoutInternals, routePath: mod.routePath});
+            newCardArguments.push({id: card.id, arguments: args});
+            newCardMethods.push({id: card.id, methods});
+            newCardSearchIndex.push({id: card.id, tokens: buildCardSearchTokens(card)});
           });
         }
       });

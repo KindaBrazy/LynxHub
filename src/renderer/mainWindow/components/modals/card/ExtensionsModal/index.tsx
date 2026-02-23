@@ -92,15 +92,15 @@ const ExtensionsModalContent = ({isOpen, title, id, dir, tabID}: Props) => {
             <Installed
               dir={dir}
               isOpen={isOpen}
-              visible={currentTab === 'installed'}
-              extensions={extensions}
               statusMap={statusMap}
               isLoading={isLoading}
-              getExtensions={getExtensions}
+              extensions={extensions}
               checkUpdates={checkUpdates}
+              getExtensions={getExtensions}
               deleteExtension={deleteExtension}
-              disableExtension={disableExtension}
               updateExtension={updateExtension}
+              disableExtension={disableExtension}
+              visible={currentTab === 'installed'}
             />
             <Clone
               dir={dir}
@@ -112,8 +112,8 @@ const ExtensionsModalContent = ({isOpen, title, id, dir, tabID}: Props) => {
               id={id}
               dir={dir}
               updateTable={getExtensions}
-              visible={currentTab === 'available'}
               installedExtensions={installedUrls}
+              visible={currentTab === 'available'}
             />
           </div>
         </ModalBody>

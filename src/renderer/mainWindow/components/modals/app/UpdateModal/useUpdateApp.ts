@@ -135,12 +135,12 @@ export const useUpdateApp = () => {
         setUpdateInfo({currentBuild: build, currentVersion: version, releaseDate: date});
 
         const sourceData = isInsider ? insiderData : data;
-        
+
         if (isEmpty(sourceData.changeLog)) return;
-        
-        sourceData.changeLog.forEach((change) => {
+
+        sourceData.changeLog.forEach(change => {
           if (change.build <= APP_BUILD_NUMBER || change.build > latestBuild) return;
-          
+
           result.push({
             version: change.version,
             changes: change.changes,

@@ -22,24 +22,31 @@ const TextGenerationPage = memo(({show}: Props) => {
 
   return (
     <Page show={show}>
-      {top?.map((Top, index) => <Top key={index} />)}
+      {top?.map((Top, index) => (
+        <Top key={index} />
+      ))}
 
       <ScrollShadow size={20} className="size-full overflow-y-scroll p-5 scrollbar-hide">
-        {scrollTop?.map((ScrollTop, index) => <ScrollTop key={index} />)}
+        {scrollTop?.map((ScrollTop, index) => (
+          <ScrollTop key={index} />
+        ))}
 
         <CardsContainer
           extraClassNames="mr-3"
           title="Text Generation"
           icon={<TextPage_Icon className={CardContainerClasses} />}
-          subTitle="Unleash Your Creativity with AI-Assisted Writing"
-        >
+          subTitle="Unleash Your Creativity with AI-Assisted Writing">
           <GetComponentsByPath routePath={PageID.textGen} extensionsElements={cardsContainer} />
         </CardsContainer>
 
-        {scrollBottom?.map((ScrollBottom, index) => <ScrollBottom key={index} />)}
+        {scrollBottom?.map((ScrollBottom, index) => (
+          <ScrollBottom key={index} />
+        ))}
       </ScrollShadow>
 
-      {bottom?.map((Bottom, index) => <Bottom key={index} />)}
+      {bottom?.map((Bottom, index) => (
+        <Bottom key={index} />
+      ))}
     </Page>
   );
 });

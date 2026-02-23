@@ -22,24 +22,31 @@ const AudioGenerationPage = memo(({show}: Props) => {
 
   return (
     <Page show={show}>
-      {top?.map((Top, index) => <Top key={index} />)}
+      {top?.map((Top, index) => (
+        <Top key={index} />
+      ))}
 
       <ScrollShadow size={20} className="size-full overflow-y-scroll p-5 scrollbar-hide">
-        {scrollTop?.map((ScrollTop, index) => <ScrollTop key={index} />)}
+        {scrollTop?.map((ScrollTop, index) => (
+          <ScrollTop key={index} />
+        ))}
 
         <CardsContainer
           extraClassNames="mr-3"
           title="Audio Generation"
           icon={<AudioPage_Icon className={CardContainerClasses} />}
-          subTitle="Compose and Manipulate Audio Effortlessly with AI"
-        >
+          subTitle="Compose and Manipulate Audio Effortlessly with AI">
           <GetComponentsByPath routePath={PageID.audioGen} extensionsElements={cardsContainer} />
         </CardsContainer>
 
-        {scrollBottom?.map((ScrollBottom, index) => <ScrollBottom key={index} />)}
+        {scrollBottom?.map((ScrollBottom, index) => (
+          <ScrollBottom key={index} />
+        ))}
       </ScrollShadow>
 
-      {bottom?.map((Bottom, index) => <Bottom key={index} />)}
+      {bottom?.map((Bottom, index) => (
+        <Bottom key={index} />
+      ))}
     </Page>
   );
 });

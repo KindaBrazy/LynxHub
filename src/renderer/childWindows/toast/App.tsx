@@ -40,17 +40,17 @@ export default function ToastContent() {
         `${getTypeStyles(toastMessage.type)} size-full overflow-hidden scrollbar-hide ` +
         ` draggable flex flex-col border-l-8 bg-white transition-all duration-300 ease-out dark:bg-LynxRaisinBlack`
       }>
-      <ToastHeader title={toastMessage.title} type={toastMessage.type} />
+      <ToastHeader type={toastMessage.type} title={toastMessage.title} />
 
       <ToastBody message={toastMessage.message} />
 
       <ToastFooter
         buttons={toastMessage.buttons}
-        customButtons={toastMessage.customButtons}
         onClose={handlers.handleClose}
-        onCustomClick={handlers.handleCustomBtnClick}
         onExit={handlers.handleExitApp}
         onRestart={handlers.handleRestart}
+        customButtons={toastMessage.customButtons}
+        onCustomClick={handlers.handleCustomBtnClick}
       />
     </div>
   );

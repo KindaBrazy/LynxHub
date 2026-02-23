@@ -172,4 +172,3 @@ app.on('activate', async () => {
     mainWindow.show();
   }
 });
-

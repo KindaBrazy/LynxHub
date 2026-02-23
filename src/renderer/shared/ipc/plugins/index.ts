@@ -1,4 +1,4 @@
-import { pluginChannels } from '@lynx_common/consts/ipcChannels/plugins';
+import {pluginChannels} from '@lynx_common/consts/ipcChannels/plugins';
 import type {SubscribeStages} from '@lynx_common/types';
 import type {
   PluginAddresses,

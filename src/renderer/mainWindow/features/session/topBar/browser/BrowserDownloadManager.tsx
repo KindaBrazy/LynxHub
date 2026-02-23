@@ -29,14 +29,14 @@ const BrowserDownloadManager = memo(() => {
       content={itemCount}
       placement="bottom-right"
       className="border-0 mr-1.5 mb-1.5 scale-75 pointer-events-none">
-      <Tooltip content="Show Downloads" delay={1000}>
+      <Tooltip delay={1000} content="Show Downloads">
         <Button
           size="sm"
           variant="light"
+          aria-label="Downloads"
           className="cursor-default"
           onPress={openDownloadsWindow}
-          isIconOnly
-          aria-label="Downloads">
+          isIconOnly>
           <DownloadMinimalistic className="size-4" />
         </Button>
       </Tooltip>

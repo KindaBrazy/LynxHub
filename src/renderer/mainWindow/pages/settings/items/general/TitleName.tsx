@@ -1,9 +1,9 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import { settingsActions, useSettingsState } from '@lynx/redux/reducers/settings';
-import { AppDispatch } from '@lynx/redux/store';
+import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
+import {AppDispatch} from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import {useCallback} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
@@ -17,8 +17,8 @@ export default function TitleName() {
 
   const onAppTitleChange = useCallback(
     (selected: boolean) => {
-      storageIpc.update('app', { dynamicAppTitle: selected });
-      dispatch(settingsActions.setSettingsState({ key: 'dynamicAppTitle', value: selected }));
+      storageIpc.update('app', {dynamicAppTitle: selected});
+      dispatch(settingsActions.setSettingsState({key: 'dynamicAppTitle', value: selected}));
     },
     [dispatch],
   );

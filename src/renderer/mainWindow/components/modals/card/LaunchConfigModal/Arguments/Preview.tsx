@@ -28,21 +28,21 @@ export default function ArgumentsPreview({text}: Props) {
     <LaunchConfigSection
       title="Preview"
       description="Preview of the final result to be saved"
-      customButton={<CopyClipboard contentToCopy={text} tooltipTitle="Copy Preview to Clipboard" showTooltip />}
-    >
+      customButton={<CopyClipboard contentToCopy={text} tooltipTitle="Copy Preview to Clipboard" showTooltip />}>
       {isEmpty(text) ? (
-        <Empty
-          className="m-0"
-          image={Empty.PRESENTED_IMAGE_DEFAULT}
-          description="No preview available to display"
-        />
+        <Empty className="m-0" image={Empty.PRESENTED_IMAGE_DEFAULT} description="No preview available to display" />
       ) : (
         <Card
-          className="relative border border-foreground-100 bg-white dark:bg-[#171717] shadow hover:shadow-md transition-all duration-200"
-          shadow="none"
-        >
+          className={
+            'relative border border-foreground-100 bg-white dark:bg-[#171717] shadow hover:shadow-md' +
+            ' transition-all duration-200'
+          }
+          shadow="none">
           <CardBody className="p-4 gap-y-2">
-            <pre className="whitespace-pre-wrap font-JetBrainsMono text-sm leading-relaxed text-foreground-800 break-words">
+            <pre
+              className={
+                'whitespace-pre-wrap font-JetBrainsMono text-sm leading-relaxed text-foreground-800 wrap-break-word'
+              }>
               {displayText}
               {shouldTruncate && !isExpanded && <span className="text-foreground-400">...</span>}
             </pre>
@@ -50,8 +50,7 @@ export default function ArgumentsPreview({text}: Props) {
             {shouldTruncate && (
               <button
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="text-xs text-foreground-500 hover:text-primary-500 transition-colors self-start"
-              >
+                className="text-xs text-foreground-500 hover:text-primary-500 transition-colors self-start">
                 {isExpanded ? '... Collapse' : '... Expand'}
               </button>
             )}

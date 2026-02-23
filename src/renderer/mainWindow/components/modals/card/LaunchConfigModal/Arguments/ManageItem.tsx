@@ -51,7 +51,7 @@ const ManageArgumentsItem = memo(({argument, setArguments, id}: Props) => {
         return {...prevState, data};
       });
     },
-    [setArguments, argument.name]
+    [setArguments, argument.name],
   );
 
   const Component = useMemo(() => {
@@ -74,7 +74,7 @@ const ManageArgumentsItem = memo(({argument, setArguments, id}: Props) => {
 
   if (!Component) return null;
 
-  return <Component argument={argument} changeValue={changeValue} removeArg={removeArg} id={id} />;
+  return <Component id={id} argument={argument} removeArg={removeArg} changeValue={changeValue} />;
 });
 
 ManageArgumentsItem.displayName = 'ManageArgumentsItem';

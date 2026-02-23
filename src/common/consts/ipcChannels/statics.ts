@@ -12,4 +12,3 @@ export const staticsChannels = {
   getExtensionsEA: 'statics:getExtensionsEA',
   getPatrons: 'statics:getPatrons',
 } as const;
-

@@ -51,9 +51,7 @@ export default function ScreenShare() {
         <CardBody className="items-center text-center">
           <Monitor className="mb-4 size-12 text-default-300" />
           <h3 className="text-lg font-medium text-foreground">Nothing to share</h3>
-          <p className="text-small text-default-500">
-            No {activeTab} available to capture.
-          </p>
+          <p className="text-small text-default-500">No {activeTab} available to capture.</p>
         </CardBody>
       </Card>
     </div>
@@ -71,29 +69,24 @@ export default function ScreenShare() {
 
         {/* Tabs */}
         <div className="px-6 py-1.5">
-          <Tabs
-            fullWidth
-            color="secondary"
-            selectedKey={activeTab}
-            size="sm"
-            onSelectionChange={handleTabChange}>
+          <Tabs size="sm" color="secondary" selectedKey={activeTab} onSelectionChange={handleTabChange} fullWidth>
             <Tab
-              key="windows"
               title={
                 <div className="flex items-center space-x-2">
                   <WindowFrame className="size-4" />
                   <span>Application Window</span>
                 </div>
               }
+              key="windows"
             />
             <Tab
-              key="screens"
               title={
                 <div className="flex items-center space-x-2">
                   <Monitor className="size-4" />
                   <span>Entire Screen</span>
                 </div>
               }
+              key="screens"
             />
           </Tabs>
         </div>
@@ -102,7 +95,7 @@ export default function ScreenShare() {
         <div className="flex-1 overflow-hidden pl-6 pr-1">
           {isLoading ? (
             <div className="flex size-full items-center justify-center">
-              <Spinner label="Detecting available windows and screens..." size="lg" />
+              <Spinner size="lg" label="Detecting available windows and screens..." />
             </div>
           ) : (
             <div className="h-full overflow-y-auto pb-4 pr-2 pt-2">
@@ -110,15 +103,13 @@ export default function ScreenShare() {
                 renderEmptyState()
               ) : (
                 <div className="flex flex-row flex-wrap items-center justify-center gap-4">
-                  {currentData.map((item) => (
+                  {currentData.map(item => (
                     <SourceCard
+                      item={item}
                       key={item.id}
                       isScreen={activeTab === 'screens'}
                       isSelected={selectedItem === (activeTab === 'windows' ? item.id : item.displayId)}
-                      item={item}
-                      onSelect={() =>
-                        setSelectedItem(activeTab === 'windows' ? item.id : item.displayId)
-                      }
+                      onSelect={() => setSelectedItem(activeTab === 'windows' ? item.id : item.displayId)}
                     />
                   ))}
                 </div>
@@ -136,24 +127,24 @@ export default function ScreenShare() {
                 startContent: 'size-[0.65rem]',
                 endContent: 'size-[0.65rem]',
               }}
+              size="sm"
               endContent={<X />}
               isSelected={shareAudio}
-              size="sm"
               startContent={<VolumeLoud />}
               onValueChange={setShareAudio}>
               Share audio
             </Switch>
             <div className="flex justify-between gap-x-3">
-              <Button color="warning" size="sm" variant="light" onPress={handleCancel}>
+              <Button size="sm" color="warning" variant="light" onPress={handleCancel}>
                 Cancel
               </Button>
               <Button
-                color="primary"
-                isDisabled={!selectedItem}
                 size="sm"
-                startContent={<Screencast className="size-4" />}
                 variant="flat"
-                onPress={handleShare}>
+                color="primary"
+                onPress={handleShare}
+                isDisabled={!selectedItem}
+                startContent={<Screencast className="size-4" />}>
                 Share
               </Button>
             </div>

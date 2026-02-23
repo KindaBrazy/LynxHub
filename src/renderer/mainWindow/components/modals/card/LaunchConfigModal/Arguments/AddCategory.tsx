@@ -55,16 +55,13 @@ export default function ArgumentSelectionList({
           }))
           .filter(section => !isEmpty(section.items));
       } else {
-        result = (result as ArgumentItem[]).filter(
-          item => shouldInclude === selectedArguments.has(item.name)
-        );
+        result = (result as ArgumentItem[]).filter(item => shouldInclude === selectedArguments.has(item.name));
       }
     }
 
     // 2. Filter by search value
     if (searchValue) {
-      const filterItem = (item: ArgumentItem) =>
-        searchInStrings(searchValue, [item.name, item.description || '']);
+      const filterItem = (item: ArgumentItem) => searchInStrings(searchValue, [item.name, item.description || '']);
 
       const isSection = !isEmpty(result) && 'items' in result[0];
 
@@ -87,7 +84,7 @@ export default function ArgumentSelectionList({
     (keys: Selection) => {
       setSelectedArguments(keys as Set<string>);
     },
-    [setSelectedArguments]
+    [setSelectedArguments],
   );
 
   const renderItem = useCallback(
@@ -97,10 +94,10 @@ export default function ArgumentSelectionList({
         <ListboxItem key={item.name} className="cursor-default" textValue={`Select ${item.name}`}>
           <Highlighter
             highlightTag="div"
-            textToHighlight={item.name}
-            className="flex w-full flex-wrap font-medium"
             searchWords={searchWords}
+            textToHighlight={item.name}
             highlightClassName="bg-primary-400/70"
+            className="flex w-full flex-wrap font-medium"
           />
           <Highlighter
             highlightTag="div"
@@ -112,7 +109,7 @@ export default function ArgumentSelectionList({
         </ListboxItem>
       );
     },
-    [searchValue]
+    [searchValue],
   );
 
   if (isEmptyData(filteredData)) return null;
@@ -127,16 +124,14 @@ export default function ArgumentSelectionList({
             selectionMode="multiple"
             aria-label="Arguments List"
             selectedKeys={selectedArguments}
-            items={filteredData as ArgumentSection[]}
             onSelectionChange={onSelectionChange}
-          >
+            items={filteredData as ArgumentSection[]}>
             {section => (
               <ListboxSection
                 key={section.section}
                 items={section.items}
                 title={section.section}
-                classNames={{heading: 'text-warning font-semibold'}}
-              >
+                classNames={{heading: 'text-warning font-semibold'}}>
                 {item => renderItem(item)}
               </ListboxSection>
             )}
@@ -146,10 +141,9 @@ export default function ArgumentSelectionList({
             variant="flat"
             selectionMode="multiple"
             aria-label="Arguments List"
-            items={filteredData as ArgumentItem[]}
             selectedKeys={selectedArguments}
             onSelectionChange={onSelectionChange}
-          >
+            items={filteredData as ArgumentItem[]}>
             {item => renderItem(item)}
           </Listbox>
         )}

@@ -181,7 +181,9 @@ function checkSubscriptionStageCompatibility(
   if (currentStage === 'early_access' && version.stage === 'insider') {
     return {
       compatible: false,
-      reason: `Version ${version.version} is only available for Insider subscribers.\nPlease upgrade your plan to get access.`,
+      reason:
+        `Version ${version.version} is only available for Insider subscribers.` +
+        `\nPlease upgrade your plan to get access.`,
     };
   }
 
@@ -189,7 +191,9 @@ function checkSubscriptionStageCompatibility(
     const requiredStage = version.stage === 'insider' ? 'Insider' : 'Early Access';
     return {
       compatible: false,
-      reason: `Version ${version.version} requires an ${requiredStage} or higher subscription.\nPlease upgrade your plan to get access.`,
+      reason:
+        `Version ${version.version} requires an ${requiredStage} or higher subscription.` +
+        `\nPlease upgrade your plan to get access.`,
     };
   }
 
@@ -207,7 +211,9 @@ function checkPlatformCompatibility(version: VersionItem): {compatible: boolean;
     const supportedPlatforms = platforms?.join(', ') || 'none';
     return {
       compatible: false,
-      reason: `Version ${version.version} is not compatible with your operating system\n(${currentPlatform}). It only supports: ${supportedPlatforms}.`,
+      reason:
+        `Version ${version.version} is not compatible with your operating system` +
+        `\n(${currentPlatform}). It only supports: ${supportedPlatforms}.`,
     };
   }
 
@@ -239,14 +245,18 @@ function checkApiVersionCompatibility(
   if (!requiredRange) {
     return {
       compatible: false,
-      reason: `Could not verify compatibility for version ${version.version}.\nThe package metadata may be missing or corrupted.`,
+      reason:
+        `Could not verify compatibility for version ${version.version}.` +
+        `\nThe package metadata may be missing or corrupted.`,
     };
   }
 
   if (!satisfies(currentApiVersion, requiredRange)) {
     return {
       compatible: false,
-      reason: `Version ${version.version} requires a different application version.\nIt needs ${type} api version ${requiredRange}, but current version api is ${currentApiVersion}.`,
+      reason:
+        `Version ${version.version} requires a different application version.` +
+        `\nIt needs ${type} api version ${requiredRange}, but current version api is ${currentApiVersion}.`,
     };
   }
 

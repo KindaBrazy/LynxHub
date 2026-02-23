@@ -22,16 +22,16 @@ Without this layer, main and renderer can drift and break each other silently.
 
 ## Directory map
 
-| Path | Purpose | Notes |
-| --- | --- | --- |
-| `consts/index.ts` | App-level constants (name, version, links, page IDs, folder names). | Pulls from `package.json` and is consumed by both processes. |
-| `consts/hotkeys.ts` | Default hotkey definitions and metadata. | Used by storage defaults and UI settings. |
-| `consts/ipcChannels/*.ts` | Canonical IPC channel names grouped by domain. | Must stay in sync with main handlers and renderer wrappers. |
-| `types/index.ts` | Core shared types (`RepositoryInfo`, updates, notifications, tab data, etc.). | General contracts across app features. |
-| `types/ipc.ts` | IPC payload/event types. | Keep channel payload types here, not inside handlers. |
-| `types/storage.ts` | Full persistent storage schema (`AppStorageData`). | Source of truth for storage structure. |
-| `types/plugins/*` | Module/extension API contracts. | Breaking changes here can break external plugins. |
-| `utils/*.ts` | Runtime-safe helpers (formatting, URL, file name sanitizing, time, plugin helpers). | Avoid direct Electron dependencies here. |
+| Path                      | Purpose                                                                             | Notes                                                        |
+| ------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `consts/index.ts`         | App-level constants (name, version, links, page IDs, folder names).                 | Pulls from `package.json` and is consumed by both processes. |
+| `consts/hotkeys.ts`       | Default hotkey definitions and metadata.                                            | Used by storage defaults and UI settings.                    |
+| `consts/ipcChannels/*.ts` | Canonical IPC channel names grouped by domain.                                      | Must stay in sync with main handlers and renderer wrappers.  |
+| `types/index.ts`          | Core shared types (`RepositoryInfo`, updates, notifications, tab data, etc.).       | General contracts across app features.                       |
+| `types/ipc.ts`            | IPC payload/event types.                                                            | Keep channel payload types here, not inside handlers.        |
+| `types/storage.ts`        | Full persistent storage schema (`AppStorageData`).                                  | Source of truth for storage structure.                       |
+| `types/plugins/*`         | Module/extension API contracts.                                                     | Breaking changes here can break external plugins.            |
+| `utils/*.ts`              | Runtime-safe helpers (formatting, URL, file name sanitizing, time, plugin helpers). | Avoid direct Electron dependencies here.                     |
 
 ## IPC contract model
 

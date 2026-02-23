@@ -94,4 +94,3 @@ export default async function calcFolderSize(target: string): Promise<number> {
     return 0;
   }
 }
-

@@ -1,4 +1,4 @@
-import { useEffect, useSyncExternalStore } from 'react';
+import {useEffect, useSyncExternalStore} from 'react';
 
 const sectionTexts = new Map<string, string>();
 const listeners = new Set<() => void>();
@@ -118,7 +118,7 @@ export const useRegisterSectionSearch = (sectionId?: string, staticText?: string
       update();
 
       observer = new MutationObserver(update);
-      observer.observe(element, { childList: true, subtree: true, characterData: true });
+      observer.observe(element, {childList: true, subtree: true, characterData: true});
     };
 
     connect();

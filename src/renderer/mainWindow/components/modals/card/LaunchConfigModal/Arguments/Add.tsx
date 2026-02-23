@@ -48,13 +48,7 @@ const isEmptyData = (data: any): boolean => {
 /**
  * Modal to select and add new arguments to the configuration.
  */
-export default function AddArgumentModal({
-  addArgumentsModal,
-  chosenArguments,
-  setChosenArguments,
-  id,
-  tabId,
-}: Props) {
+export default function AddArgumentModal({addArgumentsModal, chosenArguments, setChosenArguments, id, tabId}: Props) {
   const [filterArguments, setFilterArguments] = useState<Set<string>>(new Set(['all']));
   const [selectedArguments, setSelectedArguments] = useState<Set<string>>(new Set([]));
   const [searchValue, setSearchValue] = useState<string>('');
@@ -64,9 +58,8 @@ export default function AddArgumentModal({
   // Memoize the filtered list of available arguments
   const listData = useMemo(() => {
     const currentArgNames =
-      chosenArguments.data
-        .find(data => data.preset === chosenArguments.activePreset)
-        ?.arguments.map(arg => arg.name) || [];
+      chosenArguments.data.find(data => data.preset === chosenArguments.activePreset)?.arguments.map(arg => arg.name) ||
+      [];
 
     return getFilteredArguments(cardArgument, currentArgNames);
   }, [chosenArguments.data, chosenArguments.activePreset, cardArgument]);
@@ -97,7 +90,7 @@ export default function AddArgumentModal({
       const currentArgs = activePresetData?.arguments || [];
 
       const newArgsToAdd = Array.from(selectedArguments).filter(
-        argName => !currentArgs.some(existingArg => existingArg.name === argName)
+        argName => !currentArgs.some(existingArg => existingArg.name === argName),
       );
 
       const newChosenArgs: ChosenArgument[] = newArgsToAdd.map(argName => ({
@@ -132,8 +125,7 @@ export default function AddArgumentModal({
       isOpen={addArgumentsModal.isOpen}
       onOpenChange={addArgumentsModal.onOpenChange}
       classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! scrollbar-hide ${show}`}}
-      hideCloseButton
-    >
+      hideCloseButton>
       <ModalContent>
         <ModalHeader className="flex flex-col space-y-2">
           <div className="flex w-full flex-row space-x-2 items-center">
@@ -145,7 +137,7 @@ export default function AddArgumentModal({
             )}
           </div>
           {!isEmpty(selectedArguments) && (
-            <div className="flex w-full flex-row flex-wrap gap-1 px-2 py-0.5 max-h-[60px] overflow-y-auto scrollbar-hide">
+            <div className={'flex w-full flex-row flex-wrap gap-1 px-2 py-0.5 max-h-15 overflow-y-auto scrollbar-hide'}>
               {Array.from(selectedArguments).map((value: string) => (
                 <Chip
                   size="sm"
@@ -153,8 +145,7 @@ export default function AddArgumentModal({
                   variant="flat"
                   color="success"
                   onClick={() => removeSelected(value)}
-                  className="transition-colors duration-300 hover:bg-success/10 cursor-pointer"
-                >
+                  className="transition-colors duration-300 hover:bg-success/10 cursor-pointer">
                   {value}
                 </Chip>
               ))}
@@ -163,12 +154,12 @@ export default function AddArgumentModal({
           <div className="flex w-full flex-row gap-x-2">
             <Input
               spellCheck="false"
+              value={searchValue}
               onValueChange={setSearchValue}
               placeholder="Search by name or description..."
               startContent={<Circle_Icon className="size-4" />}
               autoFocus
               isClearable
-              value={searchValue}
             />
             <Dropdown>
               <DropdownTrigger>
@@ -184,8 +175,7 @@ export default function AddArgumentModal({
                 selectionMode="single"
                 aria-label="Filter Arguments"
                 selectedKeys={filterArguments}
-                disallowEmptySelection
-              >
+                disallowEmptySelection>
                 <DropdownSection title="Show">
                   <DropdownItem key="all" className="cursor-default">
                     All
@@ -209,10 +199,9 @@ export default function AddArgumentModal({
               if (
                 data.condition &&
                 !selectedArguments.has(data.condition) &&
-                !some(
-                  chosenArguments.data.find(d => d.preset === chosenArguments.activePreset)?.arguments,
-                  {name: data.condition}
-                )
+                !some(chosenArguments.data.find(d => d.preset === chosenArguments.activePreset)?.arguments, {
+                  name: data.condition,
+                })
               ) {
                 return null;
               }
@@ -236,8 +225,7 @@ export default function AddArgumentModal({
             color="success"
             onPress={onAdd}
             isDisabled={isEmpty(selectedArguments)}
-            startContent={<Plus className="size-4" />}
-          >
+            startContent={<Plus className="size-4" />}>
             Add
           </Button>
           <Button color="warning" variant="light" onPress={onClose}>

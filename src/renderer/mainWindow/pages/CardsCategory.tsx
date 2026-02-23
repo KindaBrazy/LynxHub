@@ -1,16 +1,16 @@
 import RenderCardList from '@lynx/components/card/RenderList';
 import NavigateToPluginsButton from '@lynx/components/NavigateToPluginsButton';
-import { extensionsData } from '@lynx/plugins/extensions/loader';
-import { useAllCardDataWithPath, useSearchCards } from '@lynx/plugins/modules';
-import { useCardsState } from '@lynx/redux/reducers/cards';
-import { Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon } from '@lynx_assets/icons/Icons_Colorful';
-import { LoadedCardData } from '@lynx_common/types/plugins/modules';
-import { Empty } from 'antd';
-import { AnimatePresence, LayoutGroup } from 'framer-motion';
-import { isEmpty, isNil } from 'lodash';
-import { memo, useMemo } from 'react';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useAllCardDataWithPath, useSearchCards} from '@lynx/plugins/modules';
+import {useCardsState} from '@lynx/redux/reducers/cards';
+import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
+import {LoadedCardData} from '@lynx_common/types/plugins/modules';
+import {Empty} from 'antd';
+import {AnimatePresence, LayoutGroup} from 'framer-motion';
+import {isEmpty, isNil} from 'lodash';
+import {memo, useMemo} from 'react';
 
-import { CardContainerClasses } from './CardsContainer';
+import {CardContainerClasses} from './CardsContainer';
 import HomeCategory from './home/Category';
 
 // ─── Private helpers ─────────────────────────────────────────────────────────
@@ -22,14 +22,11 @@ import HomeCategory from './home/Category';
 const useCardsById = (cardIds: string[]): LoadedCardData[] => {
   const allCards = useAllCardDataWithPath();
 
-  return useMemo(
-    () => allCards.filter(card => cardIds.includes(card.id)),
-    [cardIds, allCards],
-  );
+  return useMemo(() => allCards.filter(card => cardIds.includes(card.id)), [cardIds, allCards]);
 };
 
 /** Renders a filtered card list by an array of IDs. */
-const CardsByIds = ({ cardIds, cat }: { cardIds: string[]; cat: string }) => {
+const CardsByIds = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
   const cards = useCardsById(cardIds);
   // Extension point: plugins can completely replace the card renderer.
   const ReplaceCards = extensionsData.cards.replace;
@@ -158,7 +155,7 @@ export interface CardsBySearchProps {
  * Renders a filtered list of cards that match the current search query.
  * Delegates to the plugin replace-slot when one is registered.
  */
-export function CardsBySearch({ searchValue }: CardsBySearchProps) {
+export function CardsBySearch({searchValue}: CardsBySearchProps) {
   const filteredCards = useSearchCards(searchValue);
   // Extension point: plugins can completely replace the card renderer.
   const ReplaceCards = extensionsData.cards.replace;

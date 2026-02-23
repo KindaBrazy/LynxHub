@@ -85,7 +85,7 @@ export const useInstalledExtensions = (dir: string) => {
             hasUpdate: false,
             isDeleting: false,
           };
-          
+
           newMap.set(id, {
             ...current,
             hasUpdate: updateAvailable,

@@ -1,5 +1,5 @@
 import SettingsSection from '@lynx/components/SettingsSection';
-import { SpedometerMiddle } from '@solar-icons/react-perf/BoldDuotone';
+import {SpedometerMiddle} from '@solar-icons/react-perf/BoldDuotone';
 
 import HWAcc from '../general/HWAcc';
 import Autoplay from './Autoplay';

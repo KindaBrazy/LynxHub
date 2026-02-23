@@ -1,8 +1,8 @@
-import { usePluginsState } from '@lynx/redux/reducers/plugins';
-import { ContainersBg } from '@lynx/utils/commonStyles';
-import { WidgetAdd } from '@solar-icons/react-perf/BoldDuotone';
-import { isEmpty } from 'lodash';
-import { memo } from 'react';
+import {usePluginsState} from '@lynx/redux/reducers/plugins';
+import {ContainersBg} from '@lynx/utils/commonStyles';
+import {WidgetAdd} from '@solar-icons/react-perf/BoldDuotone';
+import {isEmpty} from 'lodash';
+import {memo} from 'react';
 
 import PreviewBody from './Body';
 import PreviewHeader from './Header';

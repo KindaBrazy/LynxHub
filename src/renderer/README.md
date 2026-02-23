@@ -8,12 +8,12 @@ This folder contains all renderer-side UI code (React + TypeScript) for:
 
 ## Runtime map
 
-| Area | Purpose |
-| --- | --- |
-| `mainWindow/` | Primary app UI, state, layout, pages, plugin composition. |
-| `childWindows/` | Independent lightweight renderer apps for secondary windows. |
-| `shared/` | Cross-window renderer utilities: IPC wrappers, shared styles, assets, sentry, providers. |
-| `*.html` | Multi-entry build inputs used by electron-vite for each renderer window. |
+| Area            | Purpose                                                                                  |
+| --------------- | ---------------------------------------------------------------------------------------- |
+| `mainWindow/`   | Primary app UI, state, layout, pages, plugin composition.                                |
+| `childWindows/` | Independent lightweight renderer apps for secondary windows.                             |
+| `shared/`       | Cross-window renderer utilities: IPC wrappers, shared styles, assets, sentry, providers. |
+| `*.html`        | Multi-entry build inputs used by electron-vite for each renderer window.                 |
 
 ## Boot sequence (main window)
 
@@ -108,14 +108,14 @@ These windows should stay small, focused, and weakly coupled to main-window stat
 
 ## Shared renderer layer (`shared/`)
 
-| Path | Role |
-| --- | --- |
-| `shared/ipc/*` | Typed IPC wrappers used by renderer feature code. |
-| `shared/ipc/lynxIpc.ts` | Low-level adapter over `window.electron.ipcRenderer`. |
-| `shared/sentry/*` | Renderer Sentry init + breadcrumb controls. |
-| `shared/HeroUIProvider.tsx` | Shared provider wrapper used by child windows. |
-| `shared/styles.css` | Shared styles/theme for auxiliary windows. |
-| `shared/assets/*` | Shared fonts/icons/static assets. |
+| Path                        | Role                                                  |
+| --------------------------- | ----------------------------------------------------- |
+| `shared/ipc/*`              | Typed IPC wrappers used by renderer feature code.     |
+| `shared/ipc/lynxIpc.ts`     | Low-level adapter over `window.electron.ipcRenderer`. |
+| `shared/sentry/*`           | Renderer Sentry init + breadcrumb controls.           |
+| `shared/HeroUIProvider.tsx` | Shared provider wrapper used by child windows.        |
+| `shared/styles.css`         | Shared styles/theme for auxiliary windows.            |
+| `shared/assets/*`           | Shared fonts/icons/static assets.                     |
 
 ## IPC rule in renderer
 

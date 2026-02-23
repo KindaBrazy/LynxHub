@@ -38,15 +38,15 @@ const BrowserZoom = memo(({id}: Props) => {
   }, [id]);
 
   return (
-    <Tooltip content="Zoom Control" delay={1000}>
+    <Tooltip delay={1000} content="Zoom Control">
       <Button
         size="sm"
         ref={btnRef}
         variant="light"
         onPress={openZoomMenu}
+        aria-label="Zoom Control"
         className="cursor-default"
-        isIconOnly
-        aria-label="Zoom Control">
+        isIconOnly>
         <MagniferZoomIn className="size-4" />
       </Button>
     </Tooltip>

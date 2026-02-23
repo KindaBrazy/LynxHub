@@ -38,7 +38,8 @@ const downloadManagerIpc = {
     getDownloadLocation: () => lynxIpc.invoke<DownloadLocationResult>(browserDownloadChannels.getDownloadLocation),
 
     // Sets download location
-    setDownloadLocation: (path: string) => lynxIpc.invoke<DownloadUpdateResult>(browserDownloadChannels.setDownloadLocation, path),
+    setDownloadLocation: (path: string) =>
+      lynxIpc.invoke<DownloadUpdateResult>(browserDownloadChannels.setDownloadLocation, path),
 
     // Opens location selection dialog
     openLocationDialog: () => lynxIpc.invoke<DownloadLocationResult>(browserDownloadChannels.openLocationDialog),

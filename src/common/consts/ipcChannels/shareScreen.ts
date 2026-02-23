@@ -8,4 +8,3 @@ export const screenShareChannels = {
   startShare: 'screenShare-startShare',
   cancel: 'screenShare-cancel',
 } as const;
-

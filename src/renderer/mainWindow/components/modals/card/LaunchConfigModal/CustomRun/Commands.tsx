@@ -66,9 +66,9 @@ export default function Commands({id}: Props) {
               <TerminalCommandItem
                 index={index}
                 key={command}
+                onEdit={editCommand}
                 initialValue={command}
                 onRemove={removeCommand}
-                onEdit={editCommand}
                 onDoneReorder={saveReorder}
               />
             ))}

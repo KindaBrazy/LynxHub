@@ -16,4 +16,3 @@ export default function AddBreadcrumb_Main(message: string): void {
     });
   }
 }
-

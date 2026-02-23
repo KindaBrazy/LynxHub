@@ -1,4 +1,3 @@
-
 import path from 'node:path';
 
 import {RepositoryInfo} from '@lynx_common/types';
@@ -653,13 +652,13 @@ export default class GitManager {
     try {
       const {owner, repo} = extractGitUrl(url);
       const apiUrl = `${GITHUB_API_BASE}/repos/${owner}/${repo}/branches`;
-      
+
       const response = await fetch(apiUrl);
       if (!response.ok) {
         console.error(`Failed to fetch branches: ${response.status} ${response.statusText}`);
         return [];
       }
-      
+
       const branchesData: {name: string}[] = await response.json();
       return branchesData.map(b => b.name);
     } catch (err: any) {

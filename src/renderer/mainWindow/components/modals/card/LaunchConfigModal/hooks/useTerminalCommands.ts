@@ -76,12 +76,9 @@ export function useTerminalCommands(id: string, type: CommandType) {
     [id, type],
   );
 
-  const reorderCommands = useCallback(
-    (newOrder: string[]) => {
-      setCommands(newOrder);
-    },
-    [],
-  );
+  const reorderCommands = useCallback((newOrder: string[]) => {
+    setCommands(newOrder);
+  }, []);
 
   const saveReorder = useCallback(() => {
     if (type === 'preCommands') {

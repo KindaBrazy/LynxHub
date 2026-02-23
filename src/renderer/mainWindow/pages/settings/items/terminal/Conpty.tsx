@@ -1,9 +1,9 @@
-import { Select, Selection, SelectItem } from '@heroui/react';
-import { terminalActions, useTerminalState } from '@lynx/redux/reducers/terminal';
-import { AppDispatch } from '@lynx/redux/store';
-import { TerminalUseConpty } from '@lynx_common/types/ipc';
-import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import {Select, Selection, SelectItem} from '@heroui/react';
+import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
+import {AppDispatch} from '@lynx/redux/store';
+import {TerminalUseConpty} from '@lynx_common/types/ipc';
+import {useCallback} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
@@ -20,7 +20,7 @@ export default function Conpty() {
     (keys: Selection) => {
       if (keys !== 'all') {
         const value = keys.values().next().value as TerminalUseConpty;
-        dispatch(terminalActions.setTerminalState({ key: 'useConpty', value }));
+        dispatch(terminalActions.setTerminalState({key: 'useConpty', value}));
       }
     },
     [dispatch],
@@ -38,7 +38,7 @@ export default function Conpty() {
         onSelectionChange={onChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{ trigger: 'cursor-default transition! duration-300!' }}
+        classNames={{trigger: 'cursor-default transition! duration-300!'}}
         disallowEmptySelection>
         <SelectItem key="auto" className="cursor-default">
           Auto

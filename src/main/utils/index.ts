@@ -521,4 +521,3 @@ export async function isPowerShell7Installed(): Promise<string> {
     });
   });
 }
-

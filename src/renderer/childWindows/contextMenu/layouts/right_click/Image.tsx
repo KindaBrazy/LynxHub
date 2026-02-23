@@ -16,8 +16,6 @@ type ImageProps = {
  * Image component renders actions related to image context menus (Open, Copy, Save, Search).
  */
 export const Image = memo(({id, url}: ImageProps) => {
-  if (!url) return null;
-
   // Handlers
   const onOpenImageTab = useCallback(
     () => createActionHandler(() => contextMenuIpc.send.rightClickItems.newTab(url)),
@@ -52,6 +50,8 @@ export const Image = memo(({id, url}: ImageProps) => {
     [url],
   );
 
+  if (!url) return null;
+
   return (
     <>
       <ActionButton
@@ -61,20 +61,20 @@ export const Image = memo(({id, url}: ImageProps) => {
         icon={<GalleryWide className="size-4" />}
       />
       <ActionButton
-        onPress={onCopyImage()}
         title="Copy Image"
+        onPress={onCopyImage()}
         key="context_copyImage"
         icon={<Copy className="size-4" />}
       />
       <ActionButton
-        onPress={onSaveImage()}
         title="Save Image"
+        onPress={onSaveImage()}
         key="context_saveImage"
         icon={<GalleryDownload className="size-4" />}
       />
       <ActionButton
-        onPress={onCopyImageAddress()}
         title="Copy Image Address"
+        onPress={onCopyImageAddress()}
         key="context_copyImageAddress"
         icon={<Link className="size-4" />}
       />

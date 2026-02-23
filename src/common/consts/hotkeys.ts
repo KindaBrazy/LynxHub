@@ -130,7 +130,6 @@ export const Hotkey_Desc = {
  * @returns Array of default hotkey settings.
  */
 export const Get_Default_Hotkeys = (): LynxHotkey[] => {
-
   return [
     {
       name: Hotkey_Names.fullscreen,

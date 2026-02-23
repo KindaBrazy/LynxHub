@@ -141,13 +141,12 @@ let store = configureStore({
 });
 
 export const createStore = (collectError: boolean) => {
-  const extensionReducers = extensionsData.addReducer.reduce<Record<string, (state: unknown, action: unknown) => unknown>>(
-    (acc, reducer) => {
-      acc[reducer.name] = reducer.reducer;
-      return acc;
-    },
-    {},
-  );
+  const extensionReducers = extensionsData.addReducer.reduce<
+    Record<string, (state: unknown, action: unknown) => unknown>
+  >((acc, reducer) => {
+    acc[reducer.name] = reducer.reducer;
+    return acc;
+  }, {});
 
   const preloadedState = buildPreloadedState();
 

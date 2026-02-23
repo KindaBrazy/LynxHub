@@ -198,4 +198,3 @@ function setLoginItemSettings(): void {
   const {systemStartup} = storageManager.getData('app');
   app.setLoginItemSettings({openAtLogin: systemStartup});
 }
-

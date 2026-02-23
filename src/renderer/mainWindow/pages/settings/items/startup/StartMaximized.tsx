@@ -1,6 +1,6 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
@@ -21,7 +21,7 @@ export default function StartMaximized() {
   }, []);
 
   const handleEnabledChange = (enabled: boolean) => {
-    storageIpc.update('app', { startMaximized: enabled });
+    storageIpc.update('app', {startMaximized: enabled});
     setIsEnabled(enabled);
   };
 

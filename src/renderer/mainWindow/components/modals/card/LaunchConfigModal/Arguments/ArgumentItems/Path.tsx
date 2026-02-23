@@ -31,15 +31,7 @@ type PathArgItemProps = {
  * Component for handling path arguments (files or folders).
  * Supports both absolute paths (via system dialog) and relative paths (via autocomplete).
  */
-export default function PathArgItem({
-  type,
-  icon,
-  placeholder,
-  argument,
-  changeValue,
-  removeArg,
-  id,
-}: PathArgItemProps) {
+export default function PathArgItem({type, icon, placeholder, argument, changeValue, removeArg, id}: PathArgItemProps) {
   const installedCards = useCardsState('installedCards');
   const cardArgument = useGetArgumentsByID(id);
 
@@ -94,13 +86,8 @@ export default function PathArgItem({
     <ArgumentItemBase
       extra={
         baseDir ? (
-          <Tooltip content={`Change to ${isRelative ? 'Absolute' : 'Relative'}`} delay={800} showArrow>
-            <Button
-              size="sm"
-              variant="light"
-              onPress={changePathType}
-              isIconOnly
-              aria-label="Toggle path type">
+          <Tooltip delay={800} content={`Change to ${isRelative ? 'Absolute' : 'Relative'}`} showArrow>
+            <Button size="sm" variant="light" onPress={changePathType} aria-label="Toggle path type" isIconOnly>
               <Repeat
                 onAnimationEnd={() => setRotateEffect(false)}
                 className={`${rotateEffect && 'animate-[spin_0.5s]'}`}
@@ -116,12 +103,7 @@ export default function PathArgItem({
       removeArg={removeArg}
       defaultCursor={isRelative}>
       {isRelative ? (
-        <AutoCompletePath
-          type={type}
-          baseDir={baseDir!}
-          onValueChange={changeValue}
-          defaultValue={selectedValue}
-        />
+        <AutoCompletePath type={type} baseDir={baseDir!} onValueChange={changeValue} defaultValue={selectedValue} />
       ) : (
         <span className="text-xs dark:bg-LynxRaisinBlack bg-LynxWhiteThird p-3 rounded-medium block truncate">
           {selectedValue}

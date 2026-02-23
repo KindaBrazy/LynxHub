@@ -29,7 +29,7 @@ const RenderCardList = memo(({cards}: Props) => {
   const installedCards = useCardsState('installedCards');
   const hasArguments = useHasArguments();
 
-  const installedCardIds = useMemo(() => new Set(installedCards.map((c) => c.id)), [installedCards]);
+  const installedCardIds = useMemo(() => new Set(installedCards.map(c => c.id)), [installedCards]);
 
   if (!sortedCards || sortedCards.length === 0) {
     return null;
@@ -38,13 +38,7 @@ const RenderCardList = memo(({cards}: Props) => {
   return (
     <>
       {sortedCards.map((card, index) => (
-        <motion.div
-          key={card.id}
-          animate="animate"
-          custom={index}
-          initial="initial"
-          layout
-          variants={variants}>
+        <motion.div key={card.id} custom={index} animate="animate" initial="initial" variants={variants} layout>
           <Wrapper
             cardData={card}
             hasArguments={hasArguments.has(card.id)}

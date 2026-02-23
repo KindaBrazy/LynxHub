@@ -15,21 +15,21 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import LynxScroll from '@lynx/components/LynxScroll';
-import { tabsActions } from '@lynx/redux/reducers/tabs';
-import { AppDispatch } from '@lynx/redux/store';
-import { AvailablePageIDs, PageID, PageTitles } from '@lynx_common/consts';
-import { NotificationData } from '@lynx_common/types';
-import { isValidURL } from '@lynx_common/utils';
+import {tabsActions} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {AvailablePageIDs, PageID, PageTitles} from '@lynx_common/consts';
+import {NotificationData} from '@lynx_common/types';
+import {isValidURL} from '@lynx_common/utils';
 import staticsIpc from '@lynx_shared/ipc/statics';
-import storageIpc, { storageUtilsIpc } from '@lynx_shared/ipc/storage';
+import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import { Bell, SquareTopDown } from '@solar-icons/react-perf/BoldDuotone';
-import { CheckRead } from '@solar-icons/react-perf/LineDuotone';
-import { Empty } from 'antd';
-import { AnimatePresence, motion } from 'framer-motion';
-import { isEmpty } from 'lodash';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {Bell, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
+import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
+import {Empty} from 'antd';
+import {AnimatePresence, motion} from 'framer-motion';
+import {isEmpty} from 'lodash';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import useStaticNotifications from './StaticNotifications';
 
@@ -46,7 +46,7 @@ function useNotificationsData() {
    * Filter and set unread notifications based on previously read notification IDs.
    */
   const filterAndSetNotifications = useCallback((data: NotificationData[]) => {
-    storageIpc.get('notification').then(({ readNotifs }) => {
+    storageIpc.get('notification').then(({readNotifs}) => {
       setNotifications(data.filter(notif => !readNotifs.includes(notif.id)));
     });
   }, []);
@@ -65,11 +65,9 @@ function useNotificationsData() {
 
     // Pull new static data and then fetch again
     setIsRefreshing(true);
-    staticsIpc
-      .pull()
-      .finally(() => {
-        fetchAndFilterNotifications().finally(() => setIsRefreshing(false));
-      });
+    staticsIpc.pull().finally(() => {
+      fetchAndFilterNotifications().finally(() => setIsRefreshing(false));
+    });
   }, [fetchAndFilterNotifications]);
 
   const markAsRead = useCallback(
@@ -77,7 +75,7 @@ function useNotificationsData() {
       storageUtilsIpc.send.addReadNotif(id);
       filterAndSetNotifications(notifications);
     },
-    [filterAndSetNotifications, notifications]
+    [filterAndSetNotifications, notifications],
   );
 
   return {
@@ -104,15 +102,15 @@ interface NotificationItemProps {
 /**
  * A sub-component rendering a single notification card.
  */
-function NotificationItem({ notif, onRead, onNavigatePage, onCloseDrawer }: NotificationItemProps) {
-  const { buttons, icon, titleColor, title, description } = notif;
+function NotificationItem({notif, onRead, onNavigatePage, onCloseDrawer}: NotificationItemProps) {
+  const {buttons, icon, titleColor, title, description} = notif;
 
   return (
     <motion.div
       layoutId={notif.id}
-      exit={{ x: 300, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      initial={{ x: 300, opacity: 0 }}>
+      exit={{x: 300, opacity: 0}}
+      animate={{x: 0, opacity: 1}}
+      initial={{x: 300, opacity: 0}}>
       <Card
         className={
           'bg-foreground-50/70 border-foreground/10 hover:border-primary/40 rounded-xl border transition-colors ' +
@@ -120,7 +118,10 @@ function NotificationItem({ notif, onRead, onNavigatePage, onCloseDrawer }: Noti
         }
         shadow="sm">
         <CardHeader className="flex items-center gap-3">
-          <div className="bg-foreground-200/80 flex h-8 w-8 items-center justify-center rounded-full text-base dark:bg-[#202020]">
+          <div
+            className={
+              'bg-foreground-200/80 flex h-8 w-8 items-center justify-center rounded-full text-base dark:bg-[#202020]'
+            }>
             {icon && isValidURL(icon) ? (
               <Image src={icon} height={20} radius="none" alt="Notification Icon" />
             ) : (
@@ -192,10 +193,10 @@ function NotificationItem({ notif, onRead, onNavigatePage, onCloseDrawer }: Noti
  */
 export default function HomeNotificationDrawer() {
   const dispatch = useDispatch<AppDispatch>();
-  const { isOpen, onOpen, onClose, onOpenChange } = useDisclosure();
+  const {isOpen, onOpen, onClose, onOpenChange} = useDisclosure();
 
-  const { notifications, isRefreshing, markAsRead } = useNotificationsData();
-  const { staticNotifs, staticNotifCount, haveWarn } = useStaticNotifications();
+  const {notifications, isRefreshing, markAsRead} = useNotificationsData();
+  const {staticNotifs, staticNotifCount, haveWarn} = useStaticNotifications();
 
   const handleOpenDrawer = useCallback(() => {
     AddBreadcrumb_Renderer(`Open Notifications`);
@@ -211,7 +212,7 @@ export default function HomeNotificationDrawer() {
         }),
       );
     },
-    [dispatch]
+    [dispatch],
   );
 
   const totalNotificationCount = useMemo(() => {
@@ -227,8 +228,8 @@ export default function HomeNotificationDrawer() {
         showOutline={false}
         placement="top-left"
         content={totalNotificationCount}
-        isInvisible={totalNotificationCount === 0}
-        color={haveWarn ? 'warning' : 'success'}>
+        color={haveWarn ? 'warning' : 'success'}
+        isInvisible={totalNotificationCount === 0}>
         <Button
           className={
             'border-foreground/10 bg-stone-50 border shadow-md ' +
@@ -257,7 +258,7 @@ export default function HomeNotificationDrawer() {
         isOpen={isOpen}
         className="mb-14!"
         onOpenChange={onOpenChange}
-        classNames={{ backdrop: 'mt-10', wrapper: 'mt-12' }}
+        classNames={{backdrop: 'mt-10', wrapper: 'mt-12'}}
         hideCloseButton>
         <DrawerContent className="dark:bg-LynxRaisinBlack">
           {isRefreshing && <Progress size="sm" color="secondary" isIndeterminate />}
@@ -274,11 +275,11 @@ export default function HomeNotificationDrawer() {
                 <div className="flex flex-col gap-y-2">
                   {notifications.map(notif => (
                     <NotificationItem
-                      key={notif.id}
                       notif={notif}
+                      key={notif.id}
                       onRead={markAsRead}
-                      onNavigatePage={handleNavigatePage}
                       onCloseDrawer={onClose}
+                      onNavigatePage={handleNavigatePage}
                     />
                   ))}
 

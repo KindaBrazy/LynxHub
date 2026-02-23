@@ -1,4 +1,3 @@
-
 import {isWin, terminalLineEnding} from '@lynx_common/utils';
 import classHolder from '@lynx_main/managers/classHolder';
 import LynxTerminal from '@lynx_main/managers/lynxTerminal';

@@ -28,26 +28,21 @@ type ActionButtonProps = {
  * A reusable button component for context menu items.
  * Renders an icon (if provided) and a title.
  */
-export const ActionButton = memo(function ActionButton({
-  icon,
-  title,
-  onPress,
-  className,
-}: ActionButtonProps) {
+export const ActionButton = memo(function ActionButton({icon, title, onPress, className}: ActionButtonProps) {
   return (
     <div
-      className={
-        `w-full hover:bg-foreground-200 transition-colors duration-300 py-2 px-3` +
-        ` flex justify-between items-center text-sm ${className || ''} cursor-pointer`
-      }
-      onClick={onPress}
-      role="button"
-      tabIndex={0}
       onKeyDown={e => {
         if (e.key === 'Enter' || e.key === ' ') {
           onPress();
         }
-      }}>
+      }}
+      className={
+        `w-full hover:bg-foreground-200 transition-colors duration-300 py-2 px-3` +
+        ` flex justify-between items-center text-sm ${className || ''} cursor-pointer`
+      }
+      tabIndex={0}
+      role="button"
+      onClick={onPress}>
       {icon || <div className="size-4" />}
       <span>{title}</span>
       <div className="size-4" /> {/* Spacer for alignment */}

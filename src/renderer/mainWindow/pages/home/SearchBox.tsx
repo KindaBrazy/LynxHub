@@ -1,6 +1,6 @@
-import { Input } from '@heroui/react';
-import { Circle_Icon } from '@lynx_assets/icons';
-import { Dispatch, memo, SetStateAction } from 'react';
+import {Input} from '@heroui/react';
+import {Circle_Icon} from '@lynx_assets/icons';
+import {Dispatch, memo, SetStateAction} from 'react';
 
 /**
  * Props for the HomeSearchBox component.
@@ -18,7 +18,7 @@ interface HomeSearchBoxProps {
  * @param {HomeSearchBoxProps} props The current search state and its mutation dispatch.
  * @returns {JSX.Element} The search input element.
  */
-const HomeSearchBox = memo(({ searchValue, setSearchValue }: HomeSearchBoxProps) => {
+const HomeSearchBox = memo(({searchValue, setSearchValue}: HomeSearchBoxProps) => {
   return (
     <Input
       classNames={{

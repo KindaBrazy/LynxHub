@@ -37,10 +37,13 @@ export const DashboardAboutId = 'settings_about_elem';
 const DashboardAbout = memo(() => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const copyText = useCallback((text: string) => {
-    navigator.clipboard.writeText(text);
-    lynxTopToast(dispatch).info(`Copied to clipboard: ${text}`);
-  }, [dispatch]);
+  const copyText = useCallback(
+    (text: string) => {
+      navigator.clipboard.writeText(text);
+      lynxTopToast(dispatch).info(`Copied to clipboard: ${text}`);
+    },
+    [dispatch],
+  );
 
   const socialLinks = [
     {

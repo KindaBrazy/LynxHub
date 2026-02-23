@@ -31,14 +31,14 @@ const TerminateProcessButton = memo(({id}: Props) => {
   }, [id, isCtrlPressed, showTerminateConfirm]);
 
   return (
-    <Tooltip content="Terminate Process" delay={500}>
+    <Tooltip delay={500} content="Terminate Process">
       <Button
         size="sm"
         variant="light"
         onPress={handleStop}
         className="cursor-default"
-        isIconOnly
-        aria-label="Terminate Process">
+        aria-label="Terminate Process"
+        isIconOnly>
         <Stop_Icon className="size-4 text-danger" />
       </Button>
     </Tooltip>

@@ -1,4 +1,3 @@
-
 import {browserDownloadChannels} from '@lynx_common/consts/ipcChannels/downloadManager';
 import {DownloadDoneInfo, DownloadManagerProgress, DownloadStartInfo} from '@lynx_common/types/downloadManager';
 import {MainHT} from '@lynx_common/types/ipc';

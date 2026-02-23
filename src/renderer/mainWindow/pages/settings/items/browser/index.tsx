@@ -1,5 +1,5 @@
 import SettingsSection from '@lynx/components/SettingsSection';
-import { Earth } from '@solar-icons/react-perf/BoldDuotone';
+import {Earth} from '@solar-icons/react-perf/BoldDuotone';
 
 import AudioControl from './AudioControl';
 import ClearBrowserData from './ClearBrowserData';

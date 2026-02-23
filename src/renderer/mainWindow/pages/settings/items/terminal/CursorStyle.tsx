@@ -1,9 +1,9 @@
-import { Select, Selection, SelectItem } from '@heroui/react';
-import { terminalActions, useTerminalState } from '@lynx/redux/reducers/terminal';
-import { AppDispatch } from '@lynx/redux/store';
-import { TerminalCursorStyle } from '@lynx_common/types/ipc';
-import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import {Select, Selection, SelectItem} from '@heroui/react';
+import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
+import {AppDispatch} from '@lynx/redux/store';
+import {TerminalCursorStyle} from '@lynx_common/types/ipc';
+import {useCallback} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
@@ -20,7 +20,7 @@ export default function CursorStyle() {
     (keys: Selection) => {
       if (keys !== 'all') {
         const value = keys.values().next().value as TerminalCursorStyle;
-        dispatch(terminalActions.setTerminalState({ key: 'cursorStyle', value }));
+        dispatch(terminalActions.setTerminalState({key: 'cursorStyle', value}));
       }
     },
     [dispatch],
@@ -38,7 +38,7 @@ export default function CursorStyle() {
         onSelectionChange={onChange}
         label={<SettingsSearchHighlight text={labelText} />}
         description={<SettingsSearchHighlight text={descriptionText} />}
-        classNames={{ trigger: 'cursor-default transition! duration-300!', mainWrapper: 'mt-2' }}
+        classNames={{trigger: 'cursor-default transition! duration-300!', mainWrapper: 'mt-2'}}
         disallowEmptySelection>
         <SelectItem key="bar" className="cursor-default">
           Bar
