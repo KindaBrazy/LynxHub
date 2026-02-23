@@ -3,6 +3,9 @@ import storageIpc from '@lynx_shared/ipc/storage';
 import {extraErrorDataIntegration, init as electronInit} from '@sentry/electron/renderer';
 import {init as reactInit} from '@sentry/react';
 
+const MODULE_LOAD_PATTERN = /\/scripts\/[^/]+\.(?:m?js|ts)/i;
+const EXTENSION_LOAD_PATTERN = /\/([^/]+)\/scripts\//i;
+
 const {collectErrors} = await storageIpc.get('app');
 
 if (collectErrors) {
@@ -16,10 +19,10 @@ if (collectErrors) {
         const exception = event.exception?.values?.[0];
 
         const exceptionValue = exception?.value;
-        const isIpcInvokeError = exception?.value?.includes('Error invoking remote method');
+        const isIpcInvokeError = exceptionValue?.includes('Error invoking remote method');
 
         if (isIpcInvokeError) {
-          const isNoHandlerRegistered = exceptionValue?.includes("No handler registered for '");
+          const isNoHandlerRegistered = exceptionValue?.includes("No handler registered for '") ?? false;
 
           if (!isNoHandlerRegistered) {
             console.log('Sentry event from IPC invocation handler failure detected. Dropping.');
@@ -31,16 +34,12 @@ if (collectErrors) {
           return event;
         }
 
-        const moduleLoadPattern = /\/scripts\/[^/]+\.(?:m?js|ts)/i;
-
-        const extensionLoadPattern = /\/([^/]+)\/scripts\//i;
-
         const isFromPluginCode = exception.stacktrace.frames.some(frame => {
           if (!frame.filename) return false;
 
-          if (extensionLoadPattern.test(frame.filename)) return true;
+          if (EXTENSION_LOAD_PATTERN.test(frame.filename)) return true;
 
-          return moduleLoadPattern.test(frame.filename);
+          return MODULE_LOAD_PATTERN.test(frame.filename);
         });
 
         if (isFromPluginCode) {
