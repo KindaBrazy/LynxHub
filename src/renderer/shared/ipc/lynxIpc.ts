@@ -1,14 +1,14 @@
 const ipc = window.electron.ipcRenderer;
 
-const send = (channel: string, ...args: any[]): void => ipc.send(channel, ...args);
-const sendSync = (channel: string, ...args: any[]): void => ipc.sendSync(channel, ...args);
-const invoke = <T>(channel: string, ...args: any[]): Promise<T> => ipc.invoke(channel, ...args);
-const on = (channel: string, callback: (...args: any[]) => void): (() => void) => {
-  return ipc.on(channel, (_, ...args: any[]) => callback(...args));
-};
-const once = (channel: string, callback: (...args: any[]) => void): (() => void) => {
-  return ipc.once(channel, (_, ...args: any[]) => callback(...args));
-};
+type IpcArgs = unknown[];
+
+const send = (channel: string, ...args: IpcArgs): void => ipc.send(channel, ...args);
+const sendSync = <T = unknown>(channel: string, ...args: IpcArgs): T => ipc.sendSync(channel, ...args);
+const invoke = <T>(channel: string, ...args: IpcArgs): Promise<T> => ipc.invoke(channel, ...args);
+const on = <TArgs extends IpcArgs>(channel: string, callback: (...args: TArgs) => void): (() => void) =>
+  ipc.on(channel, (_, ...args: IpcArgs) => callback(...(args as TArgs)));
+const once = <TArgs extends IpcArgs>(channel: string, callback: (...args: TArgs) => void): (() => void) =>
+  ipc.once(channel, (_, ...args: IpcArgs) => callback(...(args as TArgs)));
 
 const lynxIpc = {
   send,

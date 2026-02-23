@@ -14,7 +14,7 @@ export const useCardTitle = () => {
 
   useEffect(() => {
     let isMounted = true;
-    storageIpc.getCustom(`${id}_title_edited`).then((value) => {
+    storageIpc.getCustom<string | null>(`${id}_title_edited`).then((value) => {
       if (isMounted) setCustomTitle(value || null);
     });
     return () => {

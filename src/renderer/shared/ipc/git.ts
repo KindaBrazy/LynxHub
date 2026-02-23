@@ -1,7 +1,7 @@
 import { gitChannels } from '@lynx_common/consts/ipcChannels/git';
-import {RepositoryInfo} from '@lynx_common/types';
-import {ShallowCloneOptions} from '@lynx_common/types/git';
-import {GitProgressCallback} from '@lynx_common/types/ipc';
+import type {RepositoryInfo} from '@lynx_common/types';
+import type {ShallowCloneOptions} from '@lynx_common/types/git';
+import type {GitProgressCallback} from '@lynx_common/types/ipc';
 
 import lynxIpc from './lynxIpc';
 
@@ -22,7 +22,7 @@ const gitIpc = {
   unShallow: (dir: string) => lynxIpc.invoke<void>(gitChannels.unShallow, dir),
 
   // Performs hard reset to HEAD
-  resetHard: (dir: string) => lynxIpc.invoke<void>(gitChannels.resetHard, dir),
+  resetHard: (dir: string) => lynxIpc.invoke<string>(gitChannels.resetHard, dir),
 
   // Validates if directory is a valid Git repository matching the URL
   validateGitDir: (dir: string, url: string) => lynxIpc.invoke<boolean>(gitChannels.validateGitDir, dir, url),
