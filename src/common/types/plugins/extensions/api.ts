@@ -1,12 +1,11 @@
 import type {Reducer} from '@reduxjs/toolkit';
 import type {Scope} from '@sentry/browser';
 import type {IpcRenderer} from 'electron';
-import type {Emitter} from 'mitt';
 import type {FC} from 'react';
 
 import type {AvailablePageIDs} from '../../../consts';
+import type {ExtensionIpcEventsApi, RendererIpcHookMethod} from '../../ipcEvents';
 import type {ArgumentsData, CardData, CardModules, CardRendererMethods, LoadedCardData} from '../modules';
-import type {ExtensionEvents} from './events';
 import type {
   AddMenuType,
   FcProp,
@@ -16,6 +15,7 @@ import type {
   FcPropReplaceMd,
   FcPropSearchResult,
 } from './index';
+import type {ExtensionEvents} from './events';
 
 /**
  * Data related to modules available to extensions.
@@ -68,6 +68,19 @@ type CompFcPropCardData = (component: FcPropCardData) => void;
 type CompFcPropSearchResult = (component: FcPropSearchResult) => void;
 type CompFcPropAddCardMenu = (component: AddMenuType[]) => void;
 type CompFcPropReplaceMd = (component: FcPropReplaceMd) => void;
+
+type ExtensionEventsApi = {
+  on: <TEvent extends keyof ExtensionEvents>(
+    event: TEvent,
+    callback: (payload: ExtensionEvents[TEvent]) => void,
+  ) => () => void;
+  off: <TEvent extends keyof ExtensionEvents>(
+    event: TEvent,
+    callback: (payload: ExtensionEvents[TEvent]) => void,
+  ) => void;
+  emit: <TEvent extends keyof ExtensionEvents>(event: TEvent, payload: ExtensionEvents[TEvent]) => void;
+  getListenerCount: (event: keyof ExtensionEvents) => number;
+};
 
 /**
  * Structure for adding components to a page.
@@ -409,24 +422,23 @@ export type ExtensionRendererApi = {
     };
   };
 
-  /** Event emitter for cross-extension communication. */
-  events: {
-    /** Register an event listener. */
-    on: Emitter<ExtensionEvents>['on'];
-    /** Remove an event handler for the given type. */
-    off: Emitter<ExtensionEvents>['off'];
-    /** Emit an event. */
-    emit: Emitter<ExtensionEvents>['emit'];
-    /** Get the number of listeners for a specific event. */
-    getListenerCount: (eventName: keyof ExtensionEvents) => number;
-  };
-
   /**
    * Set pre-commands for a card's terminal.
    * @param id - The ID of the card.
    * @param preCommands - Array of commands to run before the main command.
    */
   setCards_TerminalPreCommands: (id: string, preCommands: string[]) => void;
+
+  /**
+   * Core extension event bus used across renderer lifecycle hooks.
+   */
+  events: ExtensionEventsApi;
+
+  /**
+   * Listen to renderer IPC lifecycle hooks (before/after).
+   * Includes `send`, `sendSync`, `invoke`, `on`, and `once`.
+   */
+  ipcEvents: ExtensionIpcEventsApi<RendererIpcHookMethod>;
 
   /**
    * Data related to modules.

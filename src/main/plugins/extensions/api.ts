@@ -1,3 +1,5 @@
+import {mainIpcEventsApi} from '@lynx_main/ipc/ipcEvents';
+
 import {initPluginNodeSentry} from '../sentry';
 import {ElectronMenuItem, ExtensionCallbacks, ExtensionMainApi} from './types';
 
@@ -22,6 +24,7 @@ export default class ExtensionApi {
       onAppReady: callback => this.callbacks.onAppReady.push(callback),
       onReadyToShow: callback => this.callbacks.onReadyToShow.push(callback),
       trayMenu_AddItem: callback => this.callbacks.trayMenu_AddItem.push(callback),
+      ipcEvents: mainIpcEventsApi,
       initNodeSentry: initPluginNodeSentry,
     };
   }

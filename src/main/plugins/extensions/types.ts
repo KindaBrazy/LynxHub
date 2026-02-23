@@ -1,5 +1,6 @@
 import MainWindowManager from '@lynx_main/mainWindow';
 import StorageManager from '@lynx_main/storage/storageOperations';
+import {ExtensionIpcEventsApi, MainIpcHookMethod} from '@lynx_common/types/ipcEvents';
 import {Scope} from '@sentry/node';
 import {MenuItem, MenuItemConstructorOptions} from 'electron';
 import * as pty from 'node-pty';
@@ -75,6 +76,12 @@ export type ExtensionMainApi = {
    * @param callback - The function to execute.
    */
   onReadyToShow: RegisterSyncCallback;
+
+  /**
+   * Listen to main-process IPC lifecycle hooks (before/after).
+   * Includes `send`, `on`, `once`, and `handle` method events.
+   */
+  ipcEvents: ExtensionIpcEventsApi<MainIpcHookMethod>;
 
   /**
    * Initializes Sentry for the extension node process.

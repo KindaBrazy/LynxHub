@@ -1,28 +1,11 @@
 import {ExtensionData_Renderer, ExtensionImport_Renderer} from '@lynx_common/types/plugins/extensions';
 import {ExtensionRendererApi} from '@lynx_common/types/plugins/extensions/api';
-import {ExtensionEvents} from '@lynx_common/types/plugins/extensions/events';
+import type {ExtensionEvents} from '@lynx_common/types/plugins/extensions/events';
+import {rendererIpcEventsApi} from '@lynx_shared/ipc/ipcEvents';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
-import mitt, {Emitter} from 'mitt';
 
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../modules';
 import {initPluginBrowserSentry} from '../sentry';
-
-// ─── Event Emitter ────────────────────────────────────────────────────────────
-
-/**
- * Extended emitter type that exposes the internal `all` listeners map so we
- * can inspect listener counts via `emitter.all.get(eventName)?.length`.
- * This workaround is required because `mitt` does not expose a count API.
- */
-type ExtensionEmitter = Emitter<ExtensionEvents> & {all: Map<string, unknown[]>};
-
-/**
- * Application-level event emitter used for cross-extension communication.
- * Extensions subscribe to events (e.g. `card_collect_user_input`) via the
- * `events` property of the renderer API, and the core app emits those events
- * at the appropriate lifecycle points.
- */
-const emitter: ExtensionEmitter = mitt<ExtensionEvents>();
 
 // ─── Extension Data Store ─────────────────────────────────────────────────────
 
@@ -156,6 +139,57 @@ export const extensionsData: ExtensionData_Renderer = {
   },
   addModal: [],
   replaceMarkdownViewer: undefined,
+};
+
+type ExtensionEventName = keyof ExtensionEvents;
+type ExtensionEventListener = (payload: ExtensionEvents[ExtensionEventName]) => void;
+
+const extensionEventNames: ExtensionEventName[] = [
+  'before_card_start',
+  'before_card_install',
+  'card_install_addStep',
+  'card_collect_user_input',
+];
+
+const extensionEventListeners = new Map<ExtensionEventName, Set<ExtensionEventListener>>(
+  extensionEventNames.map(name => [name, new Set<ExtensionEventListener>()]),
+);
+
+const getEventListeners = (event: ExtensionEventName): Set<ExtensionEventListener> => {
+  const listeners = extensionEventListeners.get(event);
+  if (listeners) {
+    return listeners;
+  }
+
+  const fallback = new Set<ExtensionEventListener>();
+  extensionEventListeners.set(event, fallback);
+  return fallback;
+};
+
+const extensionEventsApi: ExtensionRendererApi['events'] = {
+  on: (event, callback) => {
+    const listeners = getEventListeners(event);
+    const wrapped = callback as ExtensionEventListener;
+    listeners.add(wrapped);
+    return () => {
+      listeners.delete(wrapped);
+    };
+  },
+  off: (event, callback) => {
+    const listeners = getEventListeners(event);
+    listeners.delete(callback as ExtensionEventListener);
+  },
+  emit: (event, payload) => {
+    const listeners = [...getEventListeners(event)];
+    for (const listener of listeners) {
+      try {
+        listener(payload as ExtensionEvents[ExtensionEventName]);
+      } catch (error) {
+        console.error(`Extension event "${String(event)}" failed:`, error);
+      }
+    }
+  },
+  getListenerCount: event => getEventListeners(event).size,
 };
 
 // ─── Extension Renderer API ───────────────────────────────────────────────────
@@ -448,26 +482,16 @@ export const extensionRendererApi: ExtensionRendererApi = {
     },
   },
 
-  // ── Events ───────────────────────────────────────────────────────────────
-  events: {
-    on: emitter.on,
-    off: emitter.off,
-    emit: emitter.emit,
-    /**
-     * Returns the number of active listeners for the given event.
-     * Used by utilities like `collectExtensionUserInputs` to determine whether
-     * to emit an event at all (skipping if no one is listening).
-     */
-    getListenerCount: (eventName: keyof ExtensionEvents) => {
-      const listeners = emitter.all.get(eventName);
-      return listeners ? listeners.length : 0;
-    },
-  },
-
   // ── Card Terminal Pre-Commands ────────────────────────────────────────────
   setCards_TerminalPreCommands: (id: string, preCommands: string[]) => {
     storageUtilsIpc.send.setCardTerminalPreCommands(id, preCommands);
   },
+
+  // ── Extension Event Hooks ───────────────────────────────────────────────
+  events: extensionEventsApi,
+
+  // ── IPC Event Hooks ─────────────────────────────────────────────────────
+  ipcEvents: rendererIpcEventsApi,
 
   // ── Sentry ───────────────────────────────────────────────────────────────
   initBrowserSentry: initPluginBrowserSentry,

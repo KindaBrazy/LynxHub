@@ -1,5 +1,7 @@
 import classHolder from '@lynx_main/managers/classHolder';
 
+import {emitMainIpcEventSync} from './ipcEvents';
+
 /**
  * Creates a sender function that sends IPC messages to a specific manager's window.
  * @param managerKey - The key of the manager in classHolder.
@@ -7,18 +9,65 @@ import classHolder from '@lynx_main/managers/classHolder';
  */
 const createSender = <K extends keyof typeof classHolder>(managerKey: K) => {
   return (channel: string, ...args: any[]) => {
-    const manager = classHolder[managerKey];
-    // Check if manager exists and has sendMessage method
-    if (manager && typeof manager === 'object' && 'sendMessage' in manager) {
-      (manager as any).sendMessage(channel, ...args);
-    } else {
-      // Wait for manager to be initialized if not available yet
-      classHolder.waitForClass(managerKey).then(manager => {
-        if (manager && typeof manager === 'object' && 'sendMessage' in manager) {
-          (manager as any).sendMessage(channel, ...args);
-        }
+    const eventStart = Date.now();
+    const beforeEvent = {
+      phase: 'before' as const,
+      method: 'send' as const,
+      channel,
+      args: [...args],
+      timestamp: eventStart,
+      context: {
+        source: 'sender',
+        target: String(managerKey),
+      },
+    };
+
+    emitMainIpcEventSync(beforeEvent);
+
+    const emitAfter = (status: 'success' | 'error', error?: unknown): void => {
+      emitMainIpcEventSync({
+        ...beforeEvent,
+        phase: 'after',
+        status,
+        durationMs: Date.now() - eventStart,
+        error,
       });
+    };
+
+    const trySend = (manager: unknown): boolean => {
+      if (!(manager && typeof manager === 'object' && 'sendMessage' in manager)) {
+        return false;
+      }
+
+      try {
+        (manager as any).sendMessage(channel, ...args);
+        emitAfter('success');
+      } catch (error) {
+        emitAfter('error', error);
+        throw error;
+      }
+
+      return true;
+    };
+
+    if (trySend(classHolder[managerKey])) {
+      return;
     }
+
+    classHolder
+      .waitForClass(managerKey)
+      .then(manager => {
+        if (trySend(manager)) {
+          return;
+        }
+
+        const error = new Error(`Manager "${String(managerKey)}" does not support sendMessage.`);
+        emitAfter('error', error);
+        console.error(error.message);
+      })
+      .catch(error => {
+        emitAfter('error', error);
+      });
   };
 };
 
