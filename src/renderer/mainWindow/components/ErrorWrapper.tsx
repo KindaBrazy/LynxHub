@@ -37,7 +37,11 @@ export default function ErrorWrapper({error, resetErrorBoundary}: FallbackProps)
 
   return (
     <div className="bg-foreground-100 absolute inset-0">
-      <div className="absolute inset-2 rounded-lg bg-background flex flex-col items-center justify-center draggable overflow-hidden p-8 gap-6">
+      <div
+        className={
+          'absolute inset-2 rounded-lg bg-background flex flex-col items-center justify-center' +
+          ' draggable overflow-hidden p-8 gap-6'
+        }>
         {/* Error Icon & Title */}
         <div className="flex flex-col items-center gap-4 text-center">
           <Danger className="size-16 text-danger" />
@@ -85,8 +89,8 @@ export default function ErrorWrapper({error, resetErrorBoundary}: FallbackProps)
             variant="flat"
             color="warning"
             onPress={openIssues}
-            className="notDraggable w-full"
-            startContent={<GitHub_Icon />}>
+            startContent={<GitHub_Icon />}
+            className="notDraggable w-full">
             GitHub Issues
           </Button>
         </div>

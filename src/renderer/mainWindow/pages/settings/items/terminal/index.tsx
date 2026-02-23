@@ -1,6 +1,6 @@
-import { Spacer } from '@heroui/react';
+import {Spacer} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
-import { Terminal_Icon } from '@lynx_assets/icons';
+import {Terminal_Icon} from '@lynx_assets/icons';
 
 import BlinkCursor from './BlinkCursor';
 import CloseOnExit from './CloseOnExit';

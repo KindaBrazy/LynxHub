@@ -36,14 +36,14 @@ export type StorageType = {
    * @param key - The key to retrieve.
    * @returns The stored value.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   get: <T = any>(key: string) => T;
   /**
    * Save a value to storage.
    * @param key - The key to store.
    * @param data - The data to save.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   set: <T = any>(key: string, data: T) => void;
 };
 
@@ -56,21 +56,21 @@ export type MainIpcTypes = {
    * @param channel - The channel to listen on.
    * @param listener - The callback function.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   handle(channel: string, listener: (event: any, ...args: any[]) => any): void;
   /**
    * Listen for an IPC message.
    * @param channel - The channel to listen on.
    * @param listener - The callback function.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   on(channel: string, listener: (event: any, ...args: any[]) => void): void;
   /**
    * Send an IPC message.
    * @param channel - The channel to send on.
    * @param args - Arguments to send.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   send: (channel: string, ...args: any[]) => void;
 };
 
@@ -84,7 +84,7 @@ export type RendererIpcTypes = {
    * @param args - Arguments to pass.
    * @returns A promise resolving to the result.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   invoke<T = any>(channel: string, ...args: any[]): Promise<T>;
   /**
    * Listen for an IPC message.
@@ -92,14 +92,14 @@ export type RendererIpcTypes = {
    * @param listener - The callback function.
    * @returns A function to remove the listener.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   on(channel: string, listener: (event: any, ...args: any[]) => void): () => void;
   /**
    * Send an IPC message.
    * @param channel - The channel to send on.
    * @param args - Arguments to send.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   send(channel: string, ...args: any[]): void;
 };
 
@@ -281,7 +281,7 @@ export type InstallationStepper = {
   /**
    * Storage access for the installation process.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   storage: {get: <T = any>(key: string) => Promise<T>; set: <T = any>(key: string, data: T) => void};
 
   /** Use these operations after the `setInstalled` function */
@@ -376,7 +376,7 @@ export type InstallationStepper = {
     error: (title: string, timeout?: number) => void;
     warning: (title: string, timeout?: number) => void;
     info: (title: string, timeout?: number) => void;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     loading: (title: string, promise: Promise<any>) => void;
   };
 };
@@ -389,7 +389,7 @@ export type CardInfoApi = {
   installationFolder?: string;
 
   /** Storage access. */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   storage: {get: <T = any>(key: string) => Promise<T>; set: <T = any>(key: string, data: T) => void};
   /** IPC access. */
   ipc: RendererIpcTypes;
@@ -545,7 +545,7 @@ export type ArgumentItem = {
   name: string;
   description?: string;
   type: ArgumentType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   defaultValue?: any;
   values?: string[];
 };

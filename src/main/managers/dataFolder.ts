@@ -42,7 +42,7 @@ export function getAppDirectory(name: FolderNames): string {
   return join(getAppDataPath(), name);
 }
 
-/** 
+/**
  * Retrieves the app data path from storage.
  * Resolves relative paths against the executable location.
  */
@@ -62,7 +62,7 @@ export function getAppDataPath(): string {
 function setAppDataFolder(targetDir: string): void {
   const {storageManager, appManager} = classHolder;
   storageManager.updateData('app', {appDataDir: targetDir});
-  
+
   if (isPortable() === 'linux') {
     changeWindowState('close');
   } else {
@@ -78,7 +78,7 @@ function setAppDataFolder(targetDir: string): void {
 export async function selectNewAppDataFolder(targetWindow?: BrowserWindow): Promise<string> {
   const {appManager} = classHolder;
   const window = targetWindow || appManager?.getMainWindow();
-  
+
   if (!window) {
     throw new Error('Main window is not available. Please ensure the application is properly initialized.');
   }
@@ -111,16 +111,18 @@ export async function selectNewAppDataFolder(targetWindow?: BrowserWindow): Prom
     if (error && typeof error === 'object' && 'code' in error) {
       const nodeError = error as NodeJS.ErrnoException;
       if (nodeError.code === 'ENOENT') {
-        throw new Error('The selected folder does not exist or has been moved.');
+        throw new Error('The selected folder does not exist or has been moved.', {cause: error});
       } else if (nodeError.code === 'EACCES') {
         throw new Error(
           `Permission denied. Try running as ${isWin ? 'administrator' : 'sudo'}` + ` or select another folder.`,
+          {cause: error},
         );
       }
     }
 
     throw new Error(
       `Unable to access the selected folder: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      {cause: error},
     );
   }
 }

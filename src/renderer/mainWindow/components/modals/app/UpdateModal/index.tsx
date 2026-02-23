@@ -1,4 +1,5 @@
 import {Button, CircularProgress, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+
 import {modalMotionProps} from '../../../../utils/constants';
 import Downloaded from './Downloaded';
 import Downloading from './Downloading';
@@ -35,8 +36,7 @@ const UpdateApp = () => {
       scrollBehavior="inside"
       motionProps={modalMotionProps}
       classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! scrollbar-hide ${show}`}}
-      hideCloseButton
-    >
+      hideCloseButton>
       <ModalContent>
         <ModalHeader className="text-success">{title}</ModalHeader>
         <ModalBody className="items-center pb-5 scrollbar-hide">
@@ -47,7 +47,7 @@ const UpdateApp = () => {
           ) : downloadState === 'progress' ? (
             <Downloading progress={downloadProgress} />
           ) : fetched ? (
-            <Info releaseNotes={releaseNotes} updateInfo={updateInfo} />
+            <Info updateInfo={updateInfo} releaseNotes={releaseNotes} />
           ) : (
             <CircularProgress size="lg" color="secondary" label="Retrieving Release Notes..." />
           )}
@@ -59,8 +59,7 @@ const UpdateApp = () => {
                 color="success"
                 variant="light"
                 className="cursor-default"
-                onPress={autoDownload ? openDownloadPage : startDownload}
-              >
+                onPress={autoDownload ? openDownloadPage : startDownload}>
                 {autoDownload ? 'Download Page' : 'Download'}
               </Button>
             )}

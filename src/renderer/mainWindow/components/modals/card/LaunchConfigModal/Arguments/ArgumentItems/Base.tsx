@@ -45,18 +45,21 @@ export default function ArgumentItemBase({
       dragControls={controls}
       className="flex flex-row items-stretch size-full">
       <div
-        className="w-7 active:cursor-grabbing cursor-grab text-foreground-500 hover:text-foreground-600 transition-all duration-300 flex items-center justify-center dark:bg-foreground-50 bg-white rounded-l-medium relative"
+        className={
+          'w-7 active:cursor-grabbing cursor-grab text-foreground-500 hover:text-foreground-600 transition-all' +
+          ' duration-300 flex items-center justify-center dark:bg-foreground-50 bg-white rounded-l-medium relative'
+        }
         onPointerDown={e => controls.start(e)}>
         <GripVertical className="size-4" />
         <Divider orientation="vertical" className="absolute right-0 bg-LynxWhiteSecond dark:bg-LynxRaisinBlack" />
       </div>
       <Tooltip
-        content={tooltipText}
         delay={800}
-        showArrow
-        classNames={{content: 'max-w-[65%] whitespace-pre-line'}}
         placement="top"
-        isDisabled={!tooltipText}>
+        content={tooltipText}
+        isDisabled={!tooltipText}
+        classNames={{content: 'max-w-[65%] whitespace-pre-line'}}
+        showArrow>
         <Card
           as="div"
           key={name}
@@ -77,8 +80,8 @@ export default function ArgumentItemBase({
                 color="danger"
                 variant="light"
                 onPress={removeArg}
-                isIconOnly
-                aria-label="Remove argument">
+                aria-label="Remove argument"
+                isIconOnly>
                 <TrashBin2 className="size-3.5" />
               </Button>
             </div>

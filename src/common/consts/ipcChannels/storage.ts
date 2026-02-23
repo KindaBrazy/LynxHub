@@ -74,4 +74,3 @@ export const storageUtilsChannels = {
   unassignCard: 'storageUtils:unassign-card',
   getBrowserHistoryData: 'storageUtils:getBrowserHistoryData',
 } as const;
-

@@ -29,7 +29,7 @@ type Props = {
 const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}: Props) => {
   const darkMode = useAppState('darkMode');
 
-  const isInstalled = useCardStore((state) => state.installed);
+  const isInstalled = useCardStore(state => state.installed);
   const isPinned = useIsPinnedCard(id);
 
   const onPress = useCallback(() => {
@@ -54,40 +54,30 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
           ))}
         {isInstalled && (
           <Button
-            isIconOnly
             className={
               `shrink-0 -translate-x-2 opacity-0 transition duration-400 ` +
               `group-hover:translate-x-0 group-hover:opacity-100`
             }
-            radius="full"
             size="sm"
+            radius="full"
             variant="light"
-            onPress={onPress}>
+            onPress={onPress}
+            isIconOnly>
             {isPinned ? <Pin className="size-3" /> : <PinLine className="size-3" />}
           </Button>
         )}
       </div>
       {updating ? (
-        <ShinyText
-          className="text-xs font-bold text-success/70"
-          darkMode={darkMode}
-          speed={2}
-          text="Updating"
-        />
+        <ShinyText speed={2} text="Updating" darkMode={darkMode} className="text-xs font-bold text-success/70" />
       ) : updatingExtensions ? (
         <ShinyText
-          className="text-xs font-bold text-secondary/70"
-          darkMode={darkMode}
           speed={2}
+          darkMode={darkMode}
           text={`Updating Extensions ${updateCount}`}
+          className="text-xs font-bold text-secondary/70"
         />
       ) : isRunning ? (
-        <ShinyText
-          className="text-xs font-bold text-primary/70"
-          darkMode={darkMode}
-          speed={2}
-          text="Running"
-        />
+        <ShinyText speed={2} text="Running" darkMode={darkMode} className="text-xs font-bold text-primary/70" />
       ) : (
         <div
           className={

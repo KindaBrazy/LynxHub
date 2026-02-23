@@ -52,9 +52,9 @@ export default function Branches({dir, availableBranches, currentBranch, refresh
         label="Available Branches"
         placeholder="Select a branch"
         onSelectionChange={onSelectionChange}
+        aria-label="Select branch to switch to"
         selectedKeys={selectedBranch ? [selectedBranch] : []}
-        fullWidth
-        aria-label="Select branch to switch to">
+        fullWidth>
         {availableBranches.map(branch => (
           <SelectItem key={branch} textValue={branch}>
             {branch}

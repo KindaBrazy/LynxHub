@@ -46,7 +46,6 @@ const StatusBar = memo(() => {
   return (
     <>
       {!isNil(ReplaceContainer) ? (
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore: Extension component typing is loose
         <ReplaceContainer ref={setRef} />
       ) : (

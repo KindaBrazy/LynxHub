@@ -1,4 +1,4 @@
-import { BrowserClient, defaultStackParser, getDefaultIntegrations, makeFetchTransport, Scope } from '@sentry/browser';
+import {BrowserClient, defaultStackParser, getDefaultIntegrations, makeFetchTransport, Scope} from '@sentry/browser';
 
 /**
  * Initializes an isolated Sentry `BrowserClient` scoped to a single plugin's

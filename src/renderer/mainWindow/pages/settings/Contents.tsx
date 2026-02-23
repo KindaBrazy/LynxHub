@@ -1,6 +1,6 @@
 import LynxScroll from '@lynx/components/LynxScroll';
 
-import { SettingsSections } from './Container';
+import {SettingsSections} from './Container';
 
 /** Props for the SettingsPageContents component */
 export type SettingsPageContentsProps = {
@@ -11,7 +11,7 @@ export type SettingsPageContentsProps = {
 /**
  * Renders the scrollable container for settings sections.
  */
-const SettingsPageContents = ({ sectionTexts }: SettingsPageContentsProps) => {
+const SettingsPageContents = ({sectionTexts}: SettingsPageContentsProps) => {
   return (
     <LynxScroll className="size-full pl-1 pr-4 py-2">
       <div className="flex flex-col gap-y-4">

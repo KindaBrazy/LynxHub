@@ -1,4 +1,4 @@
-import { extensionsData } from './loader';
+import {extensionsData} from './loader';
 
 /**
  * Renders all custom hooks registered by loaded extensions.

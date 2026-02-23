@@ -53,7 +53,7 @@ const TerminalCopyAll = memo(({serializeAddon}: Props) => {
       <CopyClipboard onCopy={handleCopy} tooltipTitle="Copy all to clipboard" />
 
       <Tooltip delay={500} content="Export all to file">
-        <Button size="sm" variant="light" onPress={saveFile} isIconOnly aria-label="Export all to file">
+        <Button size="sm" variant="light" onPress={saveFile} aria-label="Export all to file" isIconOnly>
           <FileText className="size-3.5" />
         </Button>
       </Tooltip>

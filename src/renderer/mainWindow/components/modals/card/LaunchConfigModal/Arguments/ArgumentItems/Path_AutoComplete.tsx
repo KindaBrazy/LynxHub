@@ -21,12 +21,7 @@ type Props = {
  * Autocomplete component for file system paths.
  * Lists files and directories relative to a base directory.
  */
-export default function PathAutoComplete({
-  baseDir,
-  onValueChange,
-  defaultValue = './',
-  type = 'file',
-}: Props) {
+export default function PathAutoComplete({baseDir, onValueChange, defaultValue = './', type = 'file'}: Props) {
   const [inputValue, setInputValue] = useState<string>(defaultValue);
   const [data, setData] = useState<FolderListData[]>([]);
   const [searchData, setSearchData] = useState<FolderListData[]>([]);
@@ -46,15 +41,15 @@ export default function PathAutoComplete({
             filteredResult = result.filter(dir => dir.type === 'folder');
           }
           setData(filteredResult);
-          
+
           // Also update search data immediately if we just loaded a new dir
           // This logic might need refinement to filter based on the current last segment
           const lastSegment = inputValue.split('/').pop() || '';
           if (lastSegment) {
-             const lowerLast = lastSegment.toLowerCase();
-             setSearchData(filteredResult.filter(item => searchInStrings(lowerLast, [item.name])));
+            const lowerLast = lastSegment.toLowerCase();
+            setSearchData(filteredResult.filter(item => searchInStrings(lowerLast, [item.name])));
           } else {
-             setSearchData(filteredResult);
+            setSearchData(filteredResult);
           }
         })
         .catch(error => {
@@ -102,19 +97,19 @@ export default function PathAutoComplete({
 
   return (
     <Autocomplete
-      items={searchData}
-      selectedKey={null}
-      inputValue={inputValue}
-      aria-label="Relative Path Autocomplete"
-      onInputChange={handleInputChange}
-      onSelectionChange={onSelectionChange}
-      selectorButtonProps={{className: 'hidden'}}
-      classNames={{selectorButton: 'bg-red-500!'}}
       inputProps={{
         classNames: {
           inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird',
         },
       }}
+      items={searchData}
+      selectedKey={null}
+      inputValue={inputValue}
+      onInputChange={handleInputChange}
+      onSelectionChange={onSelectionChange}
+      aria-label="Relative Path Autocomplete"
+      selectorButtonProps={{className: 'hidden'}}
+      classNames={{selectorButton: 'bg-red-500!'}}
       allowsCustomValue>
       {item => (
         <AutocompleteItem

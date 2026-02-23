@@ -1,6 +1,6 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
@@ -21,7 +21,7 @@ export default function StartMinimized() {
   }, []);
 
   const handleEnabledChange = (enabled: boolean) => {
-    storageIpc.update('app', { startMinimized: enabled });
+    storageIpc.update('app', {startMinimized: enabled});
     setIsEnabled(enabled);
   };
 

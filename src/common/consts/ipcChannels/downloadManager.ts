@@ -24,4 +24,3 @@ export const browserDownloadChannels = {
 
   mainDownloadCount: 'browserDL:main-download-count',
 } as const;
-

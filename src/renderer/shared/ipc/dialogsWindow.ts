@@ -1,4 +1,4 @@
-import { windowDialogsChannels } from '@lynx_common/consts/ipcChannels/dialogsWindow';
+import {windowDialogsChannels} from '@lynx_common/consts/ipcChannels/dialogsWindow';
 
 import lynxIpc from './lynxIpc';
 
@@ -7,7 +7,8 @@ const windowDialogsIpc = {
   promptShow: (callback: (message: string, defaultValue?: string) => void): (() => void) =>
     lynxIpc.on(windowDialogsChannels.promptShow, callback),
 
-  alertShow: (callback: (message: string) => void): (() => void) => lynxIpc.on(windowDialogsChannels.alertShow, callback),
+  alertShow: (callback: (message: string) => void): (() => void) =>
+    lynxIpc.on(windowDialogsChannels.alertShow, callback),
 
   confirmResult: (value: boolean) => lynxIpc.send(windowDialogsChannels.confirmResult, value),
   confirmShow: (callback: (message: string) => void): (() => void) =>

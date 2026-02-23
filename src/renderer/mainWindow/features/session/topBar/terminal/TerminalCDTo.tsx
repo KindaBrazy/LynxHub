@@ -84,7 +84,7 @@ const TerminalCDTo = memo(({id}: Props) => {
       <Tooltip delay={500} content="Change terminal directory (cd)">
         <div className="max-w-fit">
           <PopoverTrigger>
-            <Button size="sm" variant="light" isIconOnly aria-label="Change Directory">
+            <Button size="sm" variant="light" aria-label="Change Directory" isIconOnly>
               <MoveToFolder className="size-3.5" />
             </Button>
           </PopoverTrigger>

@@ -59,48 +59,52 @@ const initialGroupSections: GroupProps[] = [
 ];
 
 /** Dashboard navigation bar group and items */
-const DashboardGroupSection = memo(({title, items, danger = false, activeSection}: GroupProps & {activeSection: string}) => {
-  const onPress = useCallback((id: string) => {
-    document.getElementById(id)?.scrollIntoView({behavior: 'smooth', block: 'start'});
-  }, []);
+const DashboardGroupSection = memo(
+  ({title, items, danger = false, activeSection}: GroupProps & {activeSection: string}) => {
+    const onPress = useCallback((id: string) => {
+      document.getElementById(id)?.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }, []);
 
-  return (
-    <div className="mt-3 flex flex-col gap-y-2 text-start">
-      <span className={`font-semibold text-sm uppercase tracking-tight ${danger ? 'text-danger' : ''}`}>{title}</span>
-      <div className="flex flex-col gap-y-1">
-        {items.map(item => (
-          <Button
-            size="sm"
-            variant="light"
-            color={item.color || 'default'}
-            key={`${item.title}_settings_section`}
-            onPress={() => onPress(item.elementId)}
-            className={`duration-100 overflow-visible ${activeSection === item.elementId && 'cursor-default'}`}
-            fullWidth
-            disableRipple>
-            <div className="z-10 flex justify-start w-full items-center gap-x-1.5 text-[0.82rem] font-medium">
-              {item.icon}
-              <SettingsSearchHighlight text={item.title} />
-            </div>
-            {activeSection === item.elementId && (
-              <motion.div
-                layoutId="setting_nav_indicator"
-                transition={{duration: 0.4, type: 'spring'}}
-                className="absolute inset-0 z-0 bg-primary/50 rounded-lg"
-              />
-            )}
-          </Button>
-        ))}
+    return (
+      <div className="mt-3 flex flex-col gap-y-2 text-start">
+        <span className={`font-semibold text-sm uppercase tracking-tight ${danger ? 'text-danger' : ''}`}>{title}</span>
+        <div className="flex flex-col gap-y-1">
+          {items.map(item => (
+            <Button
+              size="sm"
+              variant="light"
+              color={item.color || 'default'}
+              key={`${item.title}_settings_section`}
+              onPress={() => onPress(item.elementId)}
+              className={`duration-100 overflow-visible ${activeSection === item.elementId && 'cursor-default'}`}
+              fullWidth
+              disableRipple>
+              <div className="z-10 flex justify-start w-full items-center gap-x-1.5 text-[0.82rem] font-medium">
+                {item.icon}
+                <SettingsSearchHighlight text={item.title} />
+              </div>
+              {activeSection === item.elementId && (
+                <motion.div
+                  layoutId="setting_nav_indicator"
+                  transition={{duration: 0.4, type: 'spring'}}
+                  className="absolute inset-0 z-0 bg-primary/50 rounded-lg"
+                />
+              )}
+            </Button>
+          ))}
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  },
+);
 
 DashboardGroupSection.displayName = 'DashboardGroupSection';
 
 const DashboardNavigation = memo(() => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const buttons = useMemo(() => extensionsData.customizePages.dashboard.add.navButton as React.ComponentType<any>[], []);
+  const buttons = useMemo(
+    () => extensionsData.customizePages.dashboard.add.navButton as React.ComponentType<any>[],
+    [],
+  );
   const [sections, setSections] = useState<GroupProps[]>(initialGroupSections);
 
   useEffect(() => {
@@ -113,7 +117,7 @@ const DashboardNavigation = memo(() => {
           if (prev[0].items.some(item => item.elementId === dashboardSectionId.DashboardCreditsId)) {
             return prev;
           }
-          
+
           const updatedSections = JSON.parse(JSON.stringify(initialGroupSections));
           updatedSections[0].items.push({
             title: 'Credits',

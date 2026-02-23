@@ -23,7 +23,7 @@ function CardInfoDescription({folders, descriptions}: CardInfoDescriptionProps) 
         if (item.result === 'loading') {
           return {key: index, label: item.label, children: progressElem};
         }
-        
+
         if (isValidURL(item.result)) {
           return {
             key: index,
@@ -60,7 +60,7 @@ function CardInfoDescription({folders, descriptions}: CardInfoDescriptionProps) 
 
         return (
           <div key={`desc_${index}`}>
-            <Descriptions column={2} size="small" layout="vertical" title={desc.title} items={items} />
+            <Descriptions column={2} size="small" items={items} layout="vertical" title={desc.title} />
             {index !== descriptions.length - 1 && <Divider variant="dashed" className="mb-4" />}
           </div>
         );

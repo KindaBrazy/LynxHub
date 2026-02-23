@@ -12,4 +12,3 @@ export const userChannels = {
     onReleaseChannel: 'patreon:onReleaseChannel',
   },
 } as const;
-

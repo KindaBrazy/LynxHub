@@ -1,12 +1,12 @@
-import { ScrollShadow } from '@heroui/react';
-import { extensionsData } from '@lynx/plugins/extensions/loader';
-import { useCardsState } from '@lynx/redux/reducers/cards';
-import { useDebounceBreadcrumb } from '@lynx_shared/sentry/Breadcrumbs';
-import { AnimatePresence, LayoutGroup } from 'framer-motion';
-import { isEmpty } from 'lodash';
-import { memo, useMemo, useState } from 'react';
+import {ScrollShadow} from '@heroui/react';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {useCardsState} from '@lynx/redux/reducers/cards';
+import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
+import {AnimatePresence, LayoutGroup} from 'framer-motion';
+import {isEmpty} from 'lodash';
+import {memo, useMemo, useState} from 'react';
 
-import { AllCardsSection, CardsBySearch, PinnedCars, RecentlyCards } from '../CardsCategory';
+import {AllCardsSection, CardsBySearch, PinnedCars, RecentlyCards} from '../CardsCategory';
 import Page from '../Page';
 import HomeFilter from './Filter';
 import HomeNotificationDrawer from './notification';
@@ -28,7 +28,7 @@ interface HomePageProps {
  * @param {HomePageProps} props Visibility flag from the parent Router/Tabs.
  * @returns {JSX.Element} The rendered Home Page.
  */
-const HomePage = memo(({ show }: HomePageProps) => {
+const HomePage = memo(({show}: HomePageProps) => {
   const homeCategory = useCardsState('homeCategory');
   const [searchValue, setSearchValue] = useState<string>('');
 
@@ -39,7 +39,7 @@ const HomePage = memo(({ show }: HomePageProps) => {
     categories: Categories,
     searchResult: SearchResult,
   } = useMemo(() => extensionsData.customizePages.home.replace, []);
-  const { bottom, scrollBottom, scrollTop, top } = useMemo(() => extensionsData.customizePages.home.add, []);
+  const {bottom, scrollBottom, scrollTop, top} = useMemo(() => extensionsData.customizePages.home.add, []);
 
   return (
     <Page show={show}>

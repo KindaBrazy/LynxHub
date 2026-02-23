@@ -44,10 +44,7 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
   const isInputValid = isEmpty(inputErrorMessage) && !isEmpty(inputValue);
 
   // Sync selected key with active preset
-  const selectedKey = useMemo(
-    () => new Set([chosenArguments.activePreset]),
-    [chosenArguments.activePreset]
-  );
+  const selectedKey = useMemo(() => new Set([chosenArguments.activePreset]), [chosenArguments.activePreset]);
 
   const deletePreset = useCallback(
     (name: string) => {
@@ -62,7 +59,7 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
         return {...prevState, data: newData};
       });
     },
-    [setChosenArguments]
+    [setChosenArguments],
   );
 
   const changeActivePreset = useCallback(
@@ -74,7 +71,7 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
         }
       }
     },
-    [setChosenArguments]
+    [setChosenArguments],
   );
 
   const handleCreateNew = useCallback(() => {
@@ -92,8 +89,7 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
     if (!isInputValid) return;
 
     setChosenArguments(prevState => {
-      const existingArgs =
-        prevState.data.find(data => data.preset === prevState.activePreset)?.arguments || [];
+      const existingArgs = prevState.data.find(data => data.preset === prevState.activePreset)?.arguments || [];
       return {
         activePreset: inputValue,
         data: [...prevState.data, {arguments: existingArgs, preset: inputValue}],
@@ -106,13 +102,12 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
   const sectionItems = useMemo(() => convertArrToObject(presets), [presets]);
 
   return (
-    <motion.div
-      animate={{opacity: 1}}
-      initial={{opacity: 0}}
-      className="flex flex-row space-x-2 items-end"
-    >
+    <motion.div animate={{opacity: 1}} initial={{opacity: 0}} className="flex flex-row space-x-2 items-end">
       {!isEmpty(sectionItems) && (
         <Select
+          classNames={{
+            trigger: 'min-w-[150px]',
+          }}
           label="Preset:"
           items={sectionItems}
           selectionMode="single"
@@ -120,46 +115,42 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
           selectedKeys={selectedKey}
           labelPlacement="outside-left"
           onSelectionChange={changeActivePreset}
-          disallowEmptySelection
-          classNames={{
-            trigger: 'min-w-[150px]',
-          }}
-        >
+          disallowEmptySelection>
           {item => (
             <SelectItem
-              key={item.name}
               endContent={
                 item.name !== 'Default' && (
                   <button
-                    className="rounded-sm transition-all duration-300 hover:bg-danger/30 size-[1.4rem] flex items-center justify-center cursor-pointer text-danger"
                     onClick={e => {
                       e.stopPropagation();
                       e.preventDefault();
                       deletePreset(item.name);
                     }}
-                    aria-label={`Delete ${item.name} preset`}
-                  >
+                    className={
+                      'rounded-sm transition-all duration-300 hover:bg-danger/30 size-[1.4rem] flex' +
+                      ' items-center justify-center cursor-pointer text-danger'
+                    }
+                    aria-label={`Delete ${item.name} preset`}>
                     <TrashBin2 size={16} />
                   </button>
                 )
               }
-            >
+              key={item.name}>
               {item.name}
             </SelectItem>
           )}
         </Select>
       )}
       <Popover
-        size="sm"
-        placement="bottom"
-        isOpen={createIsOpen}
         onOpenChange={isOpen => {
           setCreateIsOpen(isOpen);
           if (!isOpen) setInputValue('');
         }}
+        size="sm"
+        placement="bottom"
+        isOpen={createIsOpen}
         classNames={{content: 'border border-foreground/5'}}
-        showArrow
-      >
+        showArrow>
         <PopoverTrigger>
           <Button variant="flat">New</Button>
         </PopoverTrigger>
@@ -171,18 +162,18 @@ export default function PresetsManager({chosenArguments, presets, setChosenArgum
             }}
             size="sm"
             spellCheck="false"
+            value={inputValue}
             label="Preset Name"
-            isInvalid={!!inputErrorMessage && !isEmpty(inputValue)}
             onValueChange={setInputValue}
             errorMessage={inputErrorMessage}
-            value={inputValue}
+            isInvalid={!!inputErrorMessage && !isEmpty(inputValue)}
             autoFocus
           />
-          <ButtonGroup size="sm" variant="flat" isDisabled={!isInputValid} className="w-full">
-            <Button onPress={handleCreateNew} className="flex-1">
+          <ButtonGroup size="sm" variant="flat" className="w-full" isDisabled={!isInputValid}>
+            <Button className="flex-1" onPress={handleCreateNew}>
               Create
             </Button>
-            <Button onPress={handleDuplicateExisting} className="flex-1">
+            <Button className="flex-1" onPress={handleDuplicateExisting}>
               Duplicate
             </Button>
           </ButtonGroup>

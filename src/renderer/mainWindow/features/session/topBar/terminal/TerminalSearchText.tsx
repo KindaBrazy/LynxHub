@@ -87,7 +87,7 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
         delay={500}>
         <div className="max-w-fit">
           <PopoverTrigger>
-            <Button size="sm" variant="light" isIconOnly aria-label="Search for text">
+            <Button size="sm" variant="light" aria-label="Search for text" isIconOnly>
               <Magnifer className="size-3.5" />
             </Button>
           </PopoverTrigger>

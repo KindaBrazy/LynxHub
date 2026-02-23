@@ -1,4 +1,3 @@
-
 import classHolder from '@lynx_main/managers/classHolder';
 
 import listenApplication from './application';

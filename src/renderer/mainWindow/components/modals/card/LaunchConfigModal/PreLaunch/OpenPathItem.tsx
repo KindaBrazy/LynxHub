@@ -23,7 +23,7 @@ const PreOpenPathItem = memo(({path, icon, index, onRemove}: Props) => {
   return (
     <Card shadow="none" className="flex flex-row items-center p-2 gap-x-2">
       {icon}
-      <span className="w-full truncate text-xs" title={path}>
+      <span title={path} className="w-full truncate text-xs">
         {path}
       </span>
       <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>

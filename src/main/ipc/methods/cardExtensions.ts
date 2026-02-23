@@ -1,4 +1,3 @@
-
 // Card extensions IPC methods - Manages extension details, updates, and enable/disable operations
 import path from 'node:path';
 
@@ -119,8 +118,8 @@ export async function disableExtension(disable: boolean, dir: string): Promise<s
   return new Promise((resolve, reject) => {
     try {
       const targetDir = path.resolve(dir);
-      
-      // Use sync methods inside Promise to catch errors in try-catch block, 
+
+      // Use sync methods inside Promise to catch errors in try-catch block,
       // but ideally this should be async. However, keeping logic similar to original for safety.
       if (!fs.existsSync(targetDir) || !fs.statSync(targetDir).isDirectory()) {
         reject(new Error(`${dir} not exist.`));
@@ -173,7 +172,7 @@ export async function updateAllExtensions(data: {id: string; dir: string}) {
   if (directories) {
     const extensionsCount: number = directories.length;
     let currentState: number = 1;
-    
+
     // Process sequentially to avoid network congestion
     for (const dir of directories) {
       const gitManager = new GitManager(false);

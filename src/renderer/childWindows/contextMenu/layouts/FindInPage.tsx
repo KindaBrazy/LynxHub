@@ -132,7 +132,7 @@ const FindInPage = memo(function FindInPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Circle_Icon className="size-5 text-primary" aria-hidden="true" />
+          <Circle_Icon aria-hidden="true" className="size-5 text-primary" />
           <span className="text-sm font-semibold text-foreground-800">Find in Page</span>
         </div>
         {hasResults && (
@@ -151,20 +151,18 @@ const FindInPage = memo(function FindInPage() {
         ref={setInputRef}
         value={searchValue}
         onKeyDown={handleKeyDown}
+        aria-label="Find in page"
         onValueChange={setSearchValue}
         placeholder="Type to search..."
-        startContent={<Circle_Icon className="text-foreground-500" aria-hidden="true" />}
+        startContent={<Circle_Icon aria-hidden="true" className="text-foreground-500" />}
         autoFocus
-        aria-label="Find in page"
       />
 
       {/* Status Message */}
       {searchValue && (
-        <div
-          className="flex items-center justify-center rounded-lg bg-foreground-100 py-2"
-          aria-live="polite">
+        <div aria-live="polite" className="flex items-center justify-center rounded-lg bg-foreground-100 py-2">
           {noResults ? (
-            <span className="text-sm text-danger" role="alert">
+            <span role="alert" className="text-sm text-danger">
               No matches found
             </span>
           ) : hasResults ? (

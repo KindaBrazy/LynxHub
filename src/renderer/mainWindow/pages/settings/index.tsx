@@ -1,9 +1,9 @@
-import { memo } from 'react';
+import {memo} from 'react';
 
 import Page from '../Page';
 import SettingsPageContents from './Contents';
 import SettingsPageNav from './Navigation';
-import { useSectionSearchSnapshot } from './SettingsSearchRegistry';
+import {useSectionSearchSnapshot} from './SettingsSearchRegistry';
 
 /** Props for the SettingsPage component */
 export type SettingsPageProps = {
@@ -15,7 +15,7 @@ export type SettingsPageProps = {
  * Main Settings Page wrapper component.
  * Composes the sidebar navigation and scrollable contents.
  */
-const SettingsPage = memo(({ show }: SettingsPageProps) => {
+const SettingsPage = memo(({show}: SettingsPageProps) => {
   const sectionTexts = useSectionSearchSnapshot();
 
   return (

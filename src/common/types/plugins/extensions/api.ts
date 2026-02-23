@@ -155,7 +155,7 @@ export type ExtensionRendererApi = {
      * Add new routes to the application router.
      * To include a navigation button for the new route, add it to the `navBar` object.
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     add: (routeObject: any[]) => void;
     /** Replace existing pages within the router. */
     replace: {
@@ -374,7 +374,7 @@ export type ExtensionRendererApi = {
    * Add a new reducer to the Redux store.
 
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   addReducer: (reducer: {name: string; reducer: Reducer<any, any>}[]) => void;
 
   /** Modify card-related components and handlers. */

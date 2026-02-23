@@ -89,29 +89,25 @@ const Available = memo(({visible, updateTable, installedExtensions, id, dir}: Pr
         </div>
       ) : searchedData.length === 0 ? (
         <Empty
-          description="There are no extensions available at the moment, but be sure to check back later for new additions!"
+          description={
+            'There are no extensions available at the moment, but be sure to check back later for new additions!'
+          }
           image={Empty.PRESENTED_IMAGE_SIMPLE}
         />
       ) : (
         <div className="flex flex-1 flex-col gap-2">
           {paginatedData.map(item => (
-            <RenderItem
-              dir={dir}
-              item={item}
-              key={item.url}
-              updateTable={updateTable}
-              searchValue={searchValue}
-            />
+            <RenderItem dir={dir} item={item} key={item.url} updateTable={updateTable} searchValue={searchValue} />
           ))}
 
           {searchedData.length > pageSize && (
             <div className="mt-4 flex justify-center">
               <Pagination
-                total={Math.ceil(searchedData.length / pageSize)}
                 page={page}
-                onChange={setPage}
-                showControls
                 color="secondary"
+                onChange={setPage}
+                total={Math.ceil(searchedData.length / pageSize)}
+                showControls
               />
             </div>
           )}

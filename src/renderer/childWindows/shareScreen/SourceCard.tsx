@@ -23,19 +23,15 @@ export function SourceCard({item, isSelected, onSelect, isScreen}: SourceCardPro
         `shadow-md border border-foreground-200 animate-appearance-in ` +
         `${isScreen ? 'max-w-full' : 'max-w-64'} h-fit`
       }
-      isPressable
-      onPress={onSelect}>
+      onPress={onSelect}
+      isPressable>
       <CardHeader className="p-0 relative overflow-hidden">
         {/*
           Using regular img for thumbnail as it's a data URL usually and we want strict control.
           HeroUI Image component adds wrappers that might interfere with exact layout here if not careful,
           but we can use it if we want. Original code used `img`.
         */}
-        <img
-          alt={item.name}
-          className="size-full object-cover aspect-video"
-          src={item.thumbnail}
-        />
+        <img alt={item.name} src={item.thumbnail} className="size-full object-cover aspect-video" />
         {isSelected && (
           <div className="absolute inset-0 flex items-center justify-center bg-primary/70 animate-appearance-in z-10">
             <Record className="size-8 text-white animate-appearance-in" />
@@ -49,13 +45,7 @@ export function SourceCard({item, isSelected, onSelect, isScreen}: SourceCardPro
           ' bg-foreground-50 flex flex-row gap-x-2 items-center'
         }>
         {item.icon && (
-          <Image
-            alt="Source Icon"
-            classNames={{wrapper: 'shrink-0'}}
-            radius="sm"
-            src={item.icon}
-            className="size-6"
-          />
+          <Image radius="sm" src={item.icon} alt="Source Icon" className="size-6" classNames={{wrapper: 'shrink-0'}} />
         )}
         <p className="truncate text-sm font-medium text-foreground">{item.name}</p>
       </CardBody>

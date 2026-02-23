@@ -1,4 +1,4 @@
-import { userChannels } from '@lynx_common/consts/ipcChannels/user';
+import {userChannels} from '@lynx_common/consts/ipcChannels/user';
 import type {PatreonUserData, SubscribeStages} from '@lynx_common/types';
 
 import lynxIpc from './lynxIpc';

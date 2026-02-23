@@ -1,11 +1,11 @@
-import { Button, Checkbox, CheckboxGroup } from '@heroui/react';
-import { AppDispatch } from '@lynx/redux/store';
-import { lynxTopToast } from '@lynx/utils/hooks';
+import {Button, Checkbox, CheckboxGroup} from '@heroui/react';
+import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import browserIpc from '@lynx_shared/ipc/browser';
-import { Broom } from '@solar-icons/react-perf/BoldDuotone';
+import {Broom} from '@solar-icons/react-perf/BoldDuotone';
 import isEmpty from 'lodash/isEmpty';
-import { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {useCallback, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
@@ -14,11 +14,11 @@ import SettingsSearchHighlight from '../../SettingsSearchHighlight';
  * Available browser data types that can be cleared by the user.
  */
 const BROWSER_DATA_OPTIONS = [
-  { value: 'cache', label: 'Cache' },
-  { value: 'cookies', label: 'Cookies' },
-  { value: 'favorites', label: 'Favorites' },
-  { value: 'history', label: 'History' },
-  { value: 'fav-icons', label: 'Fav Icons' },
+  {value: 'cache', label: 'Cache'},
+  {value: 'cookies', label: 'Cookies'},
+  {value: 'favorites', label: 'Favorites'},
+  {value: 'history', label: 'History'},
+  {value: 'fav-icons', label: 'Fav Icons'},
 ] as const;
 
 /**
@@ -75,12 +75,7 @@ function useClearBrowserData() {
  * such as cookies, cache, or history.
  */
 export default function ClearBrowserData() {
-  const {
-    selectedOptions,
-    setSelectedOptions,
-    isClearing,
-    performClearData,
-  } = useClearBrowserData();
+  const {selectedOptions, setSelectedOptions, isClearing, performClearData} = useClearBrowserData();
 
   const filterSearchTexts = [
     'Select browser data to clear:',
@@ -98,12 +93,12 @@ export default function ClearBrowserData() {
     <SettingsFilterItem searchTexts={filterSearchTexts}>
       <div className="flex flex-row items-center justify-between">
         <CheckboxGroup
-          value={selectedOptions}
           className="w-fit"
+          value={selectedOptions}
           isDisabled={isClearing}
           orientation="horizontal"
           onValueChange={setSelectedOptions}
-          classNames={{ label: 'text-warning' }}
+          classNames={{label: 'text-warning'}}
           label={<SettingsSearchHighlight text="Select browser data to clear:" />}>
           {BROWSER_DATA_OPTIONS.map(option => (
             <Checkbox key={option.value} value={option.value}>
@@ -115,9 +110,9 @@ export default function ClearBrowserData() {
           variant="flat"
           color="warning"
           isLoading={isClearing}
-          startContent={!isClearing && <Broom />}
           onPress={performClearData}
-          isDisabled={isEmpty(selectedOptions)}>
+          isDisabled={isEmpty(selectedOptions)}
+          startContent={!isClearing && <Broom />}>
           Clear
         </Button>
       </div>

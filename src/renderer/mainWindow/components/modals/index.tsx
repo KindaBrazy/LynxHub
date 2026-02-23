@@ -1,3 +1,4 @@
+import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {memo, useMemo} from 'react';
 
 import {RestartModal} from './app/RestartModal';
@@ -13,7 +14,6 @@ import UninstallCardComp from './card/UninstallModal';
 import UpdatingNotification from './card/UpdatingModal';
 import CustomNotification from './notification/CustomNotification';
 import WarningModal from './notification/WarningModal';
-import {extensionsData} from '@lynx/plugins/extensions/loader';
 
 /**
  * Main Modals container component.

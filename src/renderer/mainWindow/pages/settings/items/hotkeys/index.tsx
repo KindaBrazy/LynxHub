@@ -1,10 +1,10 @@
-import { Button, Input, Listbox, ListboxItem, ListboxSection } from '@heroui/react';
+import {Button, Input, Listbox, ListboxItem, ListboxSection} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
-import { hotkeysActions, useHotkeysState } from '@lynx/redux/reducers/hotkeys';
-import { useSettingsState } from '@lynx/redux/reducers/settings';
-import { useTerminalState } from '@lynx/redux/reducers/terminal';
-import { AppDispatch } from '@lynx/redux/store';
-import { formatHotkey, HotkeyLike } from '@lynx/utils';
+import {hotkeysActions, useHotkeysState} from '@lynx/redux/reducers/hotkeys';
+import {useSettingsState} from '@lynx/redux/reducers/settings';
+import {useTerminalState} from '@lynx/redux/reducers/terminal';
+import {AppDispatch} from '@lynx/redux/store';
+import {formatHotkey, HotkeyLike} from '@lynx/utils';
 import {
   Get_Default_Hotkeys,
   Hotkey_Desc,
@@ -12,14 +12,14 @@ import {
   Hotkey_Sections,
   Hotkey_Titles,
 } from '@lynx_common/consts/hotkeys';
-import { LynxHotkey } from '@lynx_common/types/ipc';
+import {LynxHotkey} from '@lynx_common/types/ipc';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { Keyboard, Refresh } from '@solar-icons/react-perf/BoldDuotone';
-import { compact } from 'lodash';
-import { KeyboardEvent, useCallback, useMemo, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {Keyboard, Refresh} from '@solar-icons/react-perf/BoldDuotone';
+import {compact} from 'lodash';
+import {KeyboardEvent, useCallback, useMemo, useRef, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
-import { canSettingItemShow } from '../../SettingsFilterItem';
+import {canSettingItemShow} from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
 export const SettingsHotkeysId = 'settings_hotkeys_elem';
@@ -82,7 +82,7 @@ export default function SettingsHotkeys() {
     (event: KeyboardEvent<HTMLInputElement>, name: string) => {
       event.preventDefault();
 
-      const { key, ctrlKey, shiftKey, altKey, metaKey } = event;
+      const {key, ctrlKey, shiftKey, altKey, metaKey} = event;
       const lowerCaseKey = key.toLowerCase();
 
       if (lowerCaseKey === 'escape') {
@@ -120,7 +120,7 @@ export default function SettingsHotkeys() {
       });
 
       dispatch(hotkeysActions.setHotkeys(result));
-      storageIpc.update('app', { hotkeys: result });
+      storageIpc.update('app', {hotkeys: result});
 
       setRecordingName(null);
       inputRefs.current[name]?.blur();
@@ -137,13 +137,13 @@ export default function SettingsHotkeys() {
   const resetToDefault = useCallback(() => {
     const result = Get_Default_Hotkeys();
     dispatch(hotkeysActions.setHotkeys(result));
-    storageIpc.update('app', { hotkeys: result });
+    storageIpc.update('app', {hotkeys: result});
   }, [dispatch]);
 
   const renderItems = useCallback(
     (include: string[]) => {
       const config = hotkeys.map(hot => {
-        const { name, ...hotkey } = hot;
+        const {name, ...hotkey} = hot;
         const baseLabel = Hotkey_Titles[name];
         const dynamicLabel = quickCommandLabelMap[name];
 
@@ -157,7 +157,7 @@ export default function SettingsHotkeys() {
 
       return compact(
         config.map(item => {
-          const { label, hotkey, description, name } = item;
+          const {label, hotkey, description, name} = item;
           const isRecording = recordingName === name;
           const canShow = canSettingItemShow(searchValue, [label, description, formatHotkey(hotkey)]);
 
@@ -191,7 +191,7 @@ export default function SettingsHotkeys() {
                     value={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
                     onKeyDown={isRecording ? e => handleKeyDown(e, name) : undefined}
                     placeholder={isRecording ? 'Press keys...' : formatHotkey(hotkey)}
-                    classNames={{ input: 'cursor-default', innerWrapper: 'cursor-default' }}
+                    classNames={{input: 'cursor-default', innerWrapper: 'cursor-default'}}
                     isReadOnly
                   />
                 </div>
@@ -225,4 +225,4 @@ export default function SettingsHotkeys() {
       </Button>
     </SettingsSection>
   );
-};
+}

@@ -19,4 +19,3 @@ export const ptyChannels = {
   // Terminal progress (ConEmu OSC 9;4 sequence)
   onProgress: 'pty-on-progress',
 } as const;
-

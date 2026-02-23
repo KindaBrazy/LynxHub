@@ -1,4 +1,3 @@
-
 import {AudioState} from '@lynx_common/types/ipc';
 import BrowserManager from '@lynx_main/managers/browser';
 

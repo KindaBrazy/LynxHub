@@ -32,7 +32,7 @@ export const useVolume = () => {
     (value: number | number[]) => {
       const newVolume = Array.isArray(value) ? value[0] : value;
       const clampedVolume = Math.max(0, Math.min(100, newVolume));
-      
+
       // Update local Redux state immediately for UI responsiveness
       dispatch(contextActions.updateVolume(clampedVolume));
 

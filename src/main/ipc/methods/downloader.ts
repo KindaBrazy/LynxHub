@@ -1,4 +1,3 @@
-
 // Downloader IPC methods - Handles file downloads with progress tracking
 import path from 'node:path';
 

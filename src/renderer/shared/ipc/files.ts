@@ -1,4 +1,4 @@
-import { fileChannels } from '@lynx_common/consts/ipcChannels/files';
+import {fileChannels} from '@lynx_common/consts/ipcChannels/files';
 import type {FolderListData, FolderNames} from '@lynx_common/types';
 import type {OpenDialogOptions} from 'electron';
 

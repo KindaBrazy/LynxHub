@@ -96,9 +96,9 @@ const Installed = memo(
           case 'name':
             return (
               <a
-                href={row.remoteUrl}
                 target="_blank"
                 rel="noreferrer"
+                href={row.remoteUrl}
                 className="text-small text-foreground hover:underline">
                 {startCase(row.name)}
               </a>
@@ -108,29 +108,27 @@ const Installed = memo(
           case 'update':
             return (
               <UpdateButton
-                status={status.isUpdating ? 'updating' : status.hasUpdate ? 'available' : 'updated'}
                 onPress={() => updateExtension(row.name)}
+                status={status.isUpdating ? 'updating' : status.hasUpdate ? 'available' : 'updated'}
               />
             );
           case 'remove':
             return (
               <RemoveButton
-                isDisabled={status.isDeleting}
                 name={row.name}
+                isDisabled={status.isDeleting}
                 isOpen={row.isDeleteModalOpen}
                 onOpenChange={open => toggleDeleteModal(row.name, open)}
-                onDeletePerman={() => deleteExtension(row.name, 'removeDir')}
                 onMoveToTrash={() => deleteExtension(row.name, 'trashDir')}
+                onDeletePerman={() => deleteExtension(row.name, 'removeDir')}
               />
             );
           case 'disable':
             return (
               <DisableButton
-                isDisabled={status.isDisabled}
                 isLoading={false} // Loading state not fully tracked for disable in hook yet, or we can add it
-                onPress={() =>
-                  disableExtension(row.name, status.isDisabled, status.resultDir || `${dir}/${row.name}`)
-                }
+                isDisabled={status.isDisabled}
+                onPress={() => disableExtension(row.name, status.isDisabled, status.resultDir || `${dir}/${row.name}`)}
               />
             );
           default:
@@ -152,9 +150,9 @@ const Installed = memo(
       <motion.div initial="init" animate="animate" variants={tabContentVariants}>
         <Table
           selectionMode="multiple"
-          hideHeader={extensions.length === 0}
           selectionBehavior="replace"
           onRowAction={onDoubleClick}
+          hideHeader={extensions.length === 0}
           aria-label="Installed extensions table"
           removeWrapper>
           <TableHeader columns={extensionsColumns}>

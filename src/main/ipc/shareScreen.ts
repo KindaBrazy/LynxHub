@@ -1,4 +1,3 @@
-
 import {screenShareChannels} from '@lynx_common/consts/ipcChannels/shareScreen';
 import {MainHT} from '@lynx_common/types/ipc';
 import {ScreenShareSources, ScreenShareStart} from '@lynx_common/types/shareScreen';

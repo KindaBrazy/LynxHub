@@ -1,4 +1,4 @@
-import { browserChannels } from '@lynx_common/consts/ipcChannels/browser';
+import {browserChannels} from '@lynx_common/consts/ipcChannels/browser';
 import type {AgentTypes, AudioState, CanGoType, ContextMenuVolumeData, WHType} from '@lynx_common/types/ipc';
 import type {FindInPageOptions} from 'electron';
 
@@ -52,8 +52,7 @@ const browserIpc = {
       lynxIpc.send(browserChannels.findInPage, id, value, options),
 
     // Stops find in page operation
-    stopFindInPage: (id: string, action: StopFindAction) =>
-      lynxIpc.send(browserChannels.stopFindInPage, id, action),
+    stopFindInPage: (id: string, action: StopFindAction) => lynxIpc.send(browserChannels.stopFindInPage, id, action),
 
     // Focuses browser webview
     focusWebView: (id: string) => lynxIpc.send(browserChannels.focusWebView, id),
@@ -121,8 +120,7 @@ const browserIpc = {
     // Listens for failed URL load events
     failedLoadUrl: (
       result: (id: string, errorCode: number, errorDescription: string, validatedURL: string) => void,
-    ): (() => void) =>
-      lynxIpc.on(browserChannels.onFailedLoadUrl, result),
+    ): (() => void) => lynxIpc.on(browserChannels.onFailedLoadUrl, result),
 
     // Listens for cleared failed URL events
     clearFailed: (result: (id: string) => void): (() => void) => lynxIpc.on(browserChannels.onClearFailed, result),

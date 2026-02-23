@@ -1,9 +1,9 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import { settingsActions, useSettingsState } from '@lynx/redux/reducers/settings';
-import { AppDispatch } from '@lynx/redux/store';
+import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
+import {AppDispatch} from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import {useCallback} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
@@ -20,24 +20,24 @@ export default function Confirm() {
 
   const onCloseConfirmChange = useCallback(
     (selected: boolean) => {
-      storageIpc.update('app', { closeConfirm: selected });
-      dispatch(settingsActions.setSettingsState({ key: 'closeConfirm', value: selected }));
+      storageIpc.update('app', {closeConfirm: selected});
+      dispatch(settingsActions.setSettingsState({key: 'closeConfirm', value: selected}));
     },
     [dispatch],
   );
 
   const onCloseTabConfirmChange = useCallback(
     (selected: boolean) => {
-      storageIpc.update('app', { closeTabConfirm: selected });
-      dispatch(settingsActions.setSettingsState({ key: 'closeTabConfirm', value: selected }));
+      storageIpc.update('app', {closeTabConfirm: selected});
+      dispatch(settingsActions.setSettingsState({key: 'closeTabConfirm', value: selected}));
     },
     [dispatch],
   );
 
   const onTerminateAIConfirmChange = useCallback(
     (selected: boolean) => {
-      storageIpc.update('app', { terminateAIConfirm: selected });
-      dispatch(settingsActions.setSettingsState({ key: 'terminateAIConfirm', value: selected }));
+      storageIpc.update('app', {terminateAIConfirm: selected});
+      dispatch(settingsActions.setSettingsState({key: 'terminateAIConfirm', value: selected}));
     },
     [dispatch],
   );

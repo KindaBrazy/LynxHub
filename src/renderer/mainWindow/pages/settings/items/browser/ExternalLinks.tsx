@@ -1,9 +1,9 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import { settingsActions, useSettingsState } from '@lynx/redux/reducers/settings';
-import { AppDispatch } from '@lynx/redux/store';
+import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
+import {AppDispatch} from '@lynx/redux/store';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import {useCallback} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
@@ -18,8 +18,8 @@ export default function ExternalLinks() {
 
   const handleExternalLinkToggle = useCallback(
     (enabled: boolean) => {
-      storageIpc.update('app', { openLinkExternal: enabled });
-      dispatch(settingsActions.setSettingsState({ key: 'openLinkExternal', value: enabled }));
+      storageIpc.update('app', {openLinkExternal: enabled});
+      dispatch(settingsActions.setSettingsState({key: 'openLinkExternal', value: enabled}));
     },
     [dispatch],
   );
@@ -36,10 +36,10 @@ export default function ExternalLinks() {
   return (
     <SettingsFilterItem searchTexts={filterSearchTexts}>
       <LynxSwitch
-        title="Open links externally"
-        description="When enabled, links will open in your system’s default browser instead of inside the app."
         enabled={openLinkExternal}
+        title="Open links externally"
         onEnabledChange={handleExternalLinkToggle}
+        description="When enabled, links will open in your system’s default browser instead of inside the app."
       />
     </SettingsFilterItem>
   );

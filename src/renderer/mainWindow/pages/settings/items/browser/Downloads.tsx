@@ -1,10 +1,10 @@
-import { Button, Radio, RadioGroup } from '@heroui/react';
-import { AppDispatch } from '@lynx/redux/store';
-import { lynxTopToast } from '@lynx/utils/hooks';
+import {Button, Radio, RadioGroup} from '@heroui/react';
+import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
-import { MoveToFolder } from '@solar-icons/react-perf/BoldDuotone';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
@@ -32,7 +32,7 @@ function useDownloadSettings() {
       try {
         const [locationResult, behaviorResult] = await Promise.all([
           downloadManagerIpc.invoke.getDownloadLocation(),
-          downloadManagerIpc.invoke.getDownloadBehavior()
+          downloadManagerIpc.invoke.getDownloadBehavior(),
         ]);
 
         if (!isMounted) return;
@@ -59,7 +59,9 @@ function useDownloadSettings() {
     };
 
     loadSettings();
-    return () => { isMounted = false; };
+    return () => {
+      isMounted = false;
+    };
   }, [dispatch]);
 
   const handleChangeLocation = useCallback(async () => {
@@ -144,12 +146,12 @@ export default function Downloads() {
 
   const locationSearchTexts = useMemo(
     () => [locationTitle, locationDescription, 'download', 'location', 'folder', 'directory', 'save'],
-    []
+    [],
   );
 
   const behaviorSearchTexts = useMemo(
     () => [behaviorTitle, behaviorDescription, 'download', 'behavior', 'ask', 'default', 'prompt', 'automatic'],
-    []
+    [],
   );
 
   return (
@@ -163,10 +165,11 @@ export default function Downloads() {
           <div className="flex flex-col gap-2 mt-1">
             <div className="flex flex-row items-center gap-2">
               <div
-                className={`flex-1 text-xs font-mono rounded-lg px-2 py-1.5 truncate ${locationError
+                className={`flex-1 text-xs font-mono rounded-lg px-2 py-1.5 truncate ${
+                  locationError
                     ? 'bg-danger-100 text-danger-700 dark:bg-danger-900/30 dark:text-danger-400'
                     : 'text-default-500 bg-default-200'
-                  }`}>
+                }`}>
                 {downloadLocation || 'Loading...'}
               </div>
               <Button
@@ -197,12 +200,12 @@ export default function Downloads() {
               value={downloadBehavior}
               orientation="horizontal"
               isDisabled={isLoadingBehavior}
-              classNames={{ wrapper: 'gap-4' }}
+              classNames={{wrapper: 'gap-4'}}
               onValueChange={handleBehaviorChange}>
-              <Radio value="default" classNames={{ label: 'text-sm' }}>
+              <Radio value="default" classNames={{label: 'text-sm'}}>
                 <SettingsSearchHighlight text="Use default location" />
               </Radio>
-              <Radio value="ask" classNames={{ label: 'text-sm' }}>
+              <Radio value="ask" classNames={{label: 'text-sm'}}>
                 <SettingsSearchHighlight text="Always ask where to save" />
               </Radio>
             </RadioGroup>

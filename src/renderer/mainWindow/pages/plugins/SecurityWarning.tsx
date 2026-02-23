@@ -2,7 +2,7 @@ import {Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHead
 import {useTabVisibility} from '@lynx/layouts/tabs/utils';
 import {APP_AUTHOR_NAME} from '@lynx_common/consts';
 import {ShieldWarning} from '@solar-icons/react-perf/BoldDuotone';
-import {Dispatch, SetStateAction, useEffect, useMemo, useState, useRef, useCallback} from 'react';
+import {Dispatch, SetStateAction, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 
 /**
  * Props for the SecurityWarning component.

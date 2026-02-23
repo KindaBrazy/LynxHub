@@ -15,4 +15,3 @@ export const windowDialogsChannels = {
   onConfirm: 'confirm_dialog:on-confirm',
   onAlert: 'alert_dialog:on-alert',
 } as const;
-

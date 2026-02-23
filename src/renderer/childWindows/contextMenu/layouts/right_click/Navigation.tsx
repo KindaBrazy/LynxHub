@@ -13,10 +13,10 @@ function NavButton({icon, onPress, className, isDisabled}: NavBtnProps) {
         `size-full flex items-center rounded-lg justify-center transition-colors duration-150` +
         ` ${isDisabled ? 'opacity-50' : 'hover:bg-foreground-200 cursor-pointer'} ${className}`
       }
-      onClick={isDisabled ? undefined : onPress}
       role="button"
+      aria-disabled={isDisabled}
       tabIndex={isDisabled ? -1 : 0}
-      aria-disabled={isDisabled}>
+      onClick={isDisabled ? undefined : onPress}>
       {icon}
     </div>
   );

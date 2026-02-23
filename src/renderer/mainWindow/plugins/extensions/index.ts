@@ -1,9 +1,9 @@
-import { __federation_method_getRemote, __federation_method_setRemote } from '__federation__';
-import { ExtensionImport_Renderer } from '@lynx_common/types/plugins/extensions';
-import { isDev } from '@lynx_common/utils';
+import {__federation_method_getRemote, __federation_method_setRemote} from '__federation__';
+import {ExtensionImport_Renderer} from '@lynx_common/types/plugins/extensions';
+import {isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
-import { captureException } from '@sentry/electron/renderer';
-import { compact } from 'lodash';
+import {captureException} from '@sentry/electron/renderer';
+import {compact} from 'lodash';
 
 import initializeExtensions from './loader';
 
@@ -71,7 +71,7 @@ export async function loadExtensions() {
 
     const extensionEntryUrls = pluginAddresses
       .filter(item => item.type === 'extension')
-      .map(({ address }) => `${address}/scripts/renderer/rendererEntry.mjs`);
+      .map(({address}) => `${address}/scripts/renderer/rendererEntry.mjs`);
 
     // Derive a stable, unique ID from each entry URL by extracting the host
     // segment that sits between the protocol and the `/scripts` path.
@@ -85,9 +85,7 @@ export async function loadExtensions() {
     );
 
     // Register remotes before importing so Module Federation can resolve them.
-    extensionEntryUrls.forEach((url, index) =>
-      setRemote(extensionIds[index], { format: 'esm', from: 'vite', url }),
-    );
+    extensionEntryUrls.forEach((url, index) => setRemote(extensionIds[index], {format: 'esm', from: 'vite', url}));
 
     // Import all remotes concurrently; null-out any that fail so `compact`
     // below can filter them before passing to the initializer.

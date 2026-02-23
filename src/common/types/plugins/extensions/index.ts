@@ -133,7 +133,7 @@ export type ExtensionData_Renderer = {
   /** Router modifications. */
   router: {
     /** Added routes. */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
     add: any[];
     /** Replaced page components. */
     replace: {
@@ -230,7 +230,7 @@ export type ExtensionData_Renderer = {
   };
 
   /** Added Redux reducers. */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   addReducer: {name: string; reducer: Reducer<any, any>}[];
 
   /** Card modifications. */

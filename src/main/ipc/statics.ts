@@ -1,5 +1,4 @@
-
-import { staticsChannels } from '@lynx_common/consts/ipcChannels/statics';
+import {staticsChannels} from '@lynx_common/consts/ipcChannels/statics';
 import {
   AppUpdateData,
   AppUpdateInsiderData,

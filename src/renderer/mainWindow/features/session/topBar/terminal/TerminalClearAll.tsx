@@ -21,7 +21,7 @@ const TerminalClearAll = memo(({clearTerminal}: Props) => {
 
   return (
     <Tooltip delay={500} content="Clear all">
-      <Button size="sm" variant="light" onPress={clearTerm} isIconOnly aria-label="Clear all">
+      <Button size="sm" variant="light" onPress={clearTerm} aria-label="Clear all" isIconOnly>
         <Broom className="size-3.5" />
       </Button>
     </Tooltip>

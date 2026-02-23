@@ -650,7 +650,7 @@ export type ExtensionEvents_IPC = {
   /**
    * Set a custom storage value.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   storage_set_custom: {key: string; data: any};
 
   /**
@@ -666,7 +666,7 @@ export type ExtensionEvents_IPC = {
   /**
    * Update a value in storage.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   storage_update: {key: keyof StorageTypes; updateData: any};
 
   /**

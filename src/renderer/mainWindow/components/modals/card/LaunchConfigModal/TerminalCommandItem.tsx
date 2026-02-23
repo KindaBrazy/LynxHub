@@ -48,18 +48,18 @@ const TerminalCommandItem = memo(({initialValue, onEdit, index, onRemove, onDone
       <GripVertical className="text-foreground-500 size-4" />
       <span className="text-sm">{index + 1}</span>
       <Input
-        size="sm"
-        variant="flat"
-        onBlur={handleEdit}
-        onKeyUp={onKeyUp}
-        spellCheck="false"
-        value={inputValue}
-        onValueChange={setInputValue}
-        autoFocus={isEmpty(initialValue)}
         classNames={{
           input: 'font-JetBrainsMono! text-xs!',
           inputWrapper: 'bg-LynxWhiteThird dark:bg-LynxRaisinBlack',
         }}
+        size="sm"
+        variant="flat"
+        onKeyUp={onKeyUp}
+        spellCheck="false"
+        value={inputValue}
+        onBlur={handleEdit}
+        onValueChange={setInputValue}
+        autoFocus={isEmpty(initialValue)}
       />
       <Button size="sm" color="danger" variant="light" onPress={remove} isIconOnly>
         <TrashBin2 className="size-3.5" />

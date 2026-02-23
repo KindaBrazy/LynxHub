@@ -1,11 +1,11 @@
-import { ExtensionData_Renderer, ExtensionImport_Renderer } from '@lynx_common/types/plugins/extensions';
-import { ExtensionRendererApi } from '@lynx_common/types/plugins/extensions/api';
-import { ExtensionEvents } from '@lynx_common/types/plugins/extensions/events';
-import { storageUtilsIpc } from '@lynx_shared/ipc/storage';
-import mitt, { Emitter } from 'mitt';
+import {ExtensionData_Renderer, ExtensionImport_Renderer} from '@lynx_common/types/plugins/extensions';
+import {ExtensionRendererApi} from '@lynx_common/types/plugins/extensions/api';
+import {ExtensionEvents} from '@lynx_common/types/plugins/extensions/events';
+import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
+import mitt, {Emitter} from 'mitt';
 
-import { allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath } from '../modules';
-import { initPluginBrowserSentry } from '../sentry';
+import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../modules';
+import {initPluginBrowserSentry} from '../sentry';
 
 // ─── Event Emitter ────────────────────────────────────────────────────────────
 
@@ -14,7 +14,7 @@ import { initPluginBrowserSentry } from '../sentry';
  * can inspect listener counts via `emitter.all.get(eventName)?.length`.
  * This workaround is required because `mitt` does not expose a count API.
  */
-type ExtensionEmitter = Emitter<ExtensionEvents> & { all: Map<string, unknown[]> };
+type ExtensionEmitter = Emitter<ExtensionEvents> & {all: Map<string, unknown[]>};
 
 /**
  * Application-level event emitter used for cross-extension communication.
@@ -113,31 +113,31 @@ export const extensionsData: ExtensionData_Renderer = {
       },
     },
     audio: {
-      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
+      add: {top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: []},
     },
     image: {
-      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
+      add: {top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: []},
     },
     text: {
-      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
+      add: {top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: []},
     },
     tools: {
-      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
+      add: {top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: []},
     },
     games: {
-      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
+      add: {top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: []},
     },
     settings: {
-      add: { navButton: [], content: [] },
+      add: {navButton: [], content: []},
     },
     dashboard: {
-      add: { navButton: [], content: [] },
+      add: {navButton: [], content: []},
     },
     agents: {
-      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
+      add: {top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: []},
     },
     others: {
-      add: { top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: [] },
+      add: {top: [], bottom: [], scrollTop: [], scrollBottom: [], cardsContainer: []},
     },
   },
   addReducer: [],
@@ -208,7 +208,6 @@ export const extensionRendererApi: ExtensionRendererApi = {
 
   // ── Router ───────────────────────────────────────────────────────────────
   router: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     add: (routeObject: any[]) => {
       extensionsData.router.add = [...extensionsData.router.add, ...routeObject];
     },
@@ -477,7 +476,7 @@ export const extensionRendererApi: ExtensionRendererApi = {
 // ─── Extension Initializer ────────────────────────────────────────────────────
 
 /** Shape of each entry passed to `initializeExtensions`. */
-type LoadedExtension = { id: string; module: ExtensionImport_Renderer };
+type LoadedExtension = {id: string; module: ExtensionImport_Renderer};
 
 /**
  * Calls `InitialExtensions` on each successfully-loaded extension module,

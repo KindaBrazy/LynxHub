@@ -38,7 +38,7 @@ function GitManagerModalContent({isOpen, dir, title, tabID}: GitManagerModalCont
 
   const getRepoInfo = useCallback(async () => {
     if (!dir) return;
-    
+
     setLoading(true);
     try {
       const repositoryInfo = await gitIpc.getRepoInfo(dir);

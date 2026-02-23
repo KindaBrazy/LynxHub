@@ -9,4 +9,3 @@ export const toastWindowChannels = {
   restartApp: 'toast:restartApp',
   customBtnPressed: 'toast:customBtnPressed',
 } as const;
-

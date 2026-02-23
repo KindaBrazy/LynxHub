@@ -1,6 +1,6 @@
+import {cn} from '@heroui/react';
 import ShinyText from '@lynx/components/ShinyText';
 import {APP_NAME} from '@lynx_common/consts';
-import {cn} from '@heroui/react';
 
 interface AppNameProps {
   /** Optional className for the container div. Defaults to 'absolute bottom-10'. */

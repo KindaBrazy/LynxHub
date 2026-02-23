@@ -25,7 +25,6 @@ export default function Initializer() {
             exit={{scale: 0.95, y: 20, opacity: 0}}
             initial={{scale: 0.95, y: 20, opacity: 0}}
             transition={{duration: 0.4, ease: 'easeOut'}}>
-            
             <Background />
 
             <OnboardingWizard isUpgradeFlow={isUpgradeFlow} />

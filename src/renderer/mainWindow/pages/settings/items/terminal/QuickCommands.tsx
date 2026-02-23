@@ -1,15 +1,15 @@
-import { Button, Input } from '@heroui/react';
-import { terminalActions, useTerminalState } from '@lynx/redux/reducers/terminal';
-import { AppDispatch } from '@lynx/redux/store';
-import { Broom } from '@solar-icons/react-perf/BoldDuotone';
-import { useDispatch } from 'react-redux';
+import {Button, Input} from '@heroui/react';
+import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
+import {AppDispatch} from '@lynx/redux/store';
+import {Broom} from '@solar-icons/react-perf/BoldDuotone';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
 /**
  * Interface representing a single quick command item.
  */
-type QuickCommand = { label: string; command: string };
+type QuickCommand = {label: string; command: string};
 
 /**
  * Settings component that allows the user to configure up to 6 quick command buttons for the terminal.
@@ -20,15 +20,15 @@ export default function QuickCommands() {
   const quickCommands = useTerminalState('quickCommands');
   const dispatch = useDispatch<AppDispatch>();
 
-  const normalized: QuickCommand[] = Array.from({ length: 6 }, (_, index) => {
+  const normalized: QuickCommand[] = Array.from({length: 6}, (_, index) => {
     const existing = quickCommands[index];
-    if (!existing) return { label: '', command: '' };
-    return { label: existing.label || '', command: existing.command || '' };
+    if (!existing) return {label: '', command: ''};
+    return {label: existing.label || '', command: existing.command || ''};
   });
 
   const updateQuickCommands = (index: number, patch: Partial<QuickCommand>) => {
-    const next = normalized.map((item, i) => (i === index ? { ...item, ...patch } : item));
-    dispatch(terminalActions.setTerminalState({ key: 'quickCommands', value: next }));
+    const next = normalized.map((item, i) => (i === index ? {...item, ...patch} : item));
+    dispatch(terminalActions.setTerminalState({key: 'quickCommands', value: next}));
   };
 
   return (
@@ -45,18 +45,18 @@ export default function QuickCommands() {
                 size="sm"
                 value={item.label}
                 label={`Quick Command ${slot} Label`}
-                onValueChange={value => updateQuickCommands(index, { label: value })}
+                onValueChange={value => updateQuickCommands(index, {label: value})}
               />
               <Input
                 size="sm"
                 value={item.command}
                 label={`Quick Command ${slot}`}
-                onValueChange={value => updateQuickCommands(index, { command: value })}
+                onValueChange={value => updateQuickCommands(index, {command: value})}
               />
               <Button
                 variant="light"
                 color="warning"
-                onPress={() => updateQuickCommands(index, { label: '', command: '' })}
+                onPress={() => updateQuickCommands(index, {label: '', command: ''})}
                 isIconOnly>
                 <Broom />
               </Button>

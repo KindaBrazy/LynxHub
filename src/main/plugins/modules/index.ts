@@ -139,11 +139,7 @@ export default class ModuleManager {
    * @param utils - The module utilities
    * @param disabledCards - Set of disabled card IDs
    */
-  private async loadProductionModules(
-    moduleFolders: string[],
-    utils: MainModuleUtils,
-    disabledCards: Set<string>,
-  ) {
+  private async loadProductionModules(moduleFolders: string[], utils: MainModuleUtils, disabledCards: Set<string>) {
     const importedModules: (MainModuleImportType | null)[] = await Promise.all(
       moduleFolders.map(async modulePath => {
         try {
@@ -277,4 +273,3 @@ export default class ModuleManager {
     });
   }
 }
-

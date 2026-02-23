@@ -19,4 +19,3 @@ export const gitChannels = {
 
   onProgress: 'git:on-progress',
 } as const;
-

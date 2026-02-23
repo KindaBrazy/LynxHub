@@ -50,12 +50,12 @@ export default class BrowserDownloadManager {
       }
 
       // Ask behavior: Let Electron show default save dialog, wait for user selection
-    if (behavior === 'ask') {
-      this.handleAskBehavior(item, url);
-    } else {
-      // Default behavior: Save to default location automatically
-      this.handleDefaultBehavior(item, url, filename);
-    }
+      if (behavior === 'ask') {
+        this.handleAskBehavior(item, url);
+      } else {
+        // Default behavior: Save to default location automatically
+        this.handleDefaultBehavior(item, url, filename);
+      }
     });
   }
 

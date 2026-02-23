@@ -48,7 +48,7 @@ const BrowserScale = memo(function BrowserScale() {
       {/* Header with title and reset button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Magnifer className="size-5 text-primary" aria-hidden="true" />
+          <Magnifer aria-hidden="true" className="size-5 text-primary" />
           <span className="text-sm font-semibold text-foreground-800">Browser Scale</span>
         </div>
         <Button
@@ -64,9 +64,7 @@ const BrowserScale = memo(function BrowserScale() {
       </div>
 
       {/* Current zoom display */}
-      <div
-        className="flex items-center justify-center rounded-lg bg-foreground-100 py-3"
-        aria-live="polite">
+      <div aria-live="polite" className="flex items-center justify-center rounded-lg bg-foreground-100 py-3">
         <span className="text-2xl font-bold text-foreground-800">{Math.round(factor)}%</span>
       </div>
 
@@ -90,15 +88,8 @@ const BrowserScale = memo(function BrowserScale() {
           aria-label="Browser zoom level"
           getValue={value => `${value}%`}
           aria-valuetext={`${factor} percent`}
-          endContent={
-            <MinimalisticMagniferZoomIn className="size-5 text-foreground-500" aria-hidden="true" />
-          }
-          startContent={
-            <MinimalisticMagniferZoomOut
-              className="size-4 text-foreground-500"
-              aria-hidden="true"
-            />
-          }
+          endContent={<MinimalisticMagniferZoomIn aria-hidden="true" className="size-5 text-foreground-500" />}
+          startContent={<MinimalisticMagniferZoomOut aria-hidden="true" className="size-4 text-foreground-500" />}
         />
 
         {/* Scale markers */}
@@ -106,11 +97,9 @@ const BrowserScale = memo(function BrowserScale() {
           {[10, 50, 100, 150, 200, 300].map(zoom => (
             <button
               key={zoom}
-              aria-label={`Set zoom to ${zoom}%`}
               onClick={() => updateZoom(zoom)}
-              className={`transition-colors hover:text-foreground-800 ${
-                zoom === 100 ? 'font-medium' : ''
-              }`}>
+              aria-label={`Set zoom to ${zoom}%`}
+              className={`transition-colors hover:text-foreground-800 ${zoom === 100 ? 'font-medium' : ''}`}>
               {zoom}%
             </button>
           ))}

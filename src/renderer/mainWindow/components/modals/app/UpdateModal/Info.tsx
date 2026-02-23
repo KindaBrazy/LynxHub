@@ -25,7 +25,7 @@ export default function Info({updateInfo, releaseNotes}: Props) {
             <span className="text-success">{updateInfo?.currentVersion}</span>
           </div>
         </div>
-        
+
         <div className="flex flex-col gap-1">
           <span className="text-small text-default-500">Build Number</span>
           <div className="flex justify-center gap-2 font-mono text-small">
@@ -37,13 +37,11 @@ export default function Info({updateInfo, releaseNotes}: Props) {
 
         <div className="flex flex-col gap-1">
           <span className="text-small text-default-500">Release Date</span>
-          <div className="font-mono text-small text-success">
-            {updateInfo?.releaseDate}
-          </div>
+          <div className="font-mono text-small text-success">{updateInfo?.releaseDate}</div>
         </div>
       </div>
 
-      <Card className="w-full bg-content1/50" shadow="sm">
+      <Card shadow="sm" className="w-full bg-content1/50">
         <CardHeader className="justify-center pb-0 pt-4">
           <h4 className="font-bold text-large">Release Notes</h4>
         </CardHeader>
@@ -54,25 +52,23 @@ export default function Info({updateInfo, releaseNotes}: Props) {
                 <span className="text-large">No notes found 😔</span>
               </div>
               <Button
-                color="primary"
                 variant="flat"
-                onPress={() => window.open(RELEASES_PAGE)}
+                color="primary"
                 endContent={<SquareTopDown />}
-              >
+                onPress={() => window.open(RELEASES_PAGE)}>
                 Releases Page
               </Button>
             </div>
           ) : (
             <Accordion variant="light" selectionMode="multiple">
               {releaseNotes.map((note, index) => (
-                <AccordionItem 
-                  key={index} 
-                  aria-label={`Version ${note.version}`} 
-                  title={`Version ${note.version}`}
+                <AccordionItem
                   classNames={{
-                    title: "font-mono text-small"
+                    title: 'font-mono text-small',
                   }}
-                >
+                  key={index}
+                  title={`Version ${note.version}`}
+                  aria-label={`Version ${note.version}`}>
                   <div className="flex flex-col gap-4">
                     {note.changes.map((change, changeIndex) => (
                       <div key={changeIndex} className="flex flex-col gap-2">

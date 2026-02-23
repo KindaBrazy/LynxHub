@@ -33,7 +33,7 @@ const PromptWindow = memo(function PromptWindow() {
     <div className="py-4 px-5 flex flex-col gap-y-3">
       <div className="flex gap-x-2 items-center">
         <TextCursorInput className="size-6" aria-hidden="true" />
-        <span className="w-full line-clamp-2" id="prompt-message">
+        <span id="prompt-message" className="w-full line-clamp-2">
           {message}
         </span>
       </div>
@@ -49,17 +49,17 @@ const PromptWindow = memo(function PromptWindow() {
         value={inputValue}
         className="notDraggable"
         onValueChange={setInputValue}
-        autoFocus
         aria-labelledby="prompt-message"
+        autoFocus
       />
 
       <div className="flex justify-between">
         <Button
           variant="light"
           color="warning"
+          aria-label="Cancel"
           onPress={hideContextWindow}
-          startContent={<X className="size-4" />}
-          aria-label="Cancel">
+          startContent={<X className="size-4" />}>
           Cancel
         </Button>
 
@@ -67,8 +67,8 @@ const PromptWindow = memo(function PromptWindow() {
           onPress={done}
           variant="flat"
           color="success"
-          startContent={<Check className="size-4" />}
-          aria-label="OK">
+          aria-label="OK"
+          startContent={<Check className="size-4" />}>
           OK
         </Button>
       </div>

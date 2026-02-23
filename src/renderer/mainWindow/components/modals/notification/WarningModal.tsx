@@ -114,7 +114,7 @@ const WarningModal = () => {
                 showAnchorIcon>
                 Report
               </Button>
-              <Button color="danger" variant="light" className="cursor-default" onPress={handleClose}>
+              <Button color="danger" variant="light" onPress={handleClose} className="cursor-default">
                 Close
               </Button>
             </Space>

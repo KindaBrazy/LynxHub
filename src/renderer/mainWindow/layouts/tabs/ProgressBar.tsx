@@ -1,5 +1,5 @@
 import {Progress} from '@heroui/react';
-import {memo, useMemo} from 'react';
+import {memo} from 'react';
 
 type ProgressState = 0 | 1 | 2 | 3 | 4;
 
@@ -25,7 +25,7 @@ const ProgressBar = memo(({progress}: Props) => {
 
   const {state, value} = progress;
 
-  const color = useMemo(() => ProgressColors[state] || 'primary', [state]);
+  const color = ProgressColors[state] || 'primary';
   const isIndeterminate = state === 3;
 
   return (
@@ -40,9 +40,9 @@ const ProgressBar = memo(({progress}: Props) => {
         radius="none"
         color={color}
         className="w-full"
+        aria-label="Tab progress"
         isIndeterminate={isIndeterminate}
         value={isIndeterminate ? undefined : value}
-        aria-label="Tab progress"
       />
     </div>
   );

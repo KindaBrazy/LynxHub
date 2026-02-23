@@ -46,10 +46,7 @@ const AppPages = memo(() => {
 
         if (foundRunningCard) {
           return (
-            <div 
-              className={isActiveTab ? 'block h-full' : 'hidden'} 
-              key={tab.id}
-            >
+            <div key={tab.id} className={isActiveTab ? 'block h-full' : 'hidden'}>
               <RunningView runningCard={foundRunningCard} />
             </div>
           );

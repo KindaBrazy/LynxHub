@@ -18,9 +18,7 @@ export const Suggestions = memo(function Suggestions({suggestions, id}: Suggesti
 
   return (
     <>
-      <span className="ml-2 text-sm mb-1 font-semibold text-gray-600 dark:text-gray-400 px-2">
-        Suggestions
-      </span>
+      <span className="ml-2 text-sm mb-1 font-semibold text-gray-600 dark:text-gray-400 px-2">Suggestions</span>
       {suggestions.map((text, index) => (
         <ActionButton
           onPress={createActionHandler(() => {

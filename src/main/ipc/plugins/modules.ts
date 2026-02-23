@@ -1,5 +1,4 @@
-
-import { moduleApiChannels, modulesChannels } from '@lynx_common/consts/ipcChannels/module';
+import {moduleApiChannels, modulesChannels} from '@lynx_common/consts/ipcChannels/module';
 import {MainHT} from '@lynx_common/types/ipc';
 import {InstalledCard} from '@lynx_common/types/storage';
 import GitManager from '@lynx_main/git';

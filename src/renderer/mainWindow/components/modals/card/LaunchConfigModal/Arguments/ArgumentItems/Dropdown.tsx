@@ -28,18 +28,21 @@ type Props = {
 export default function DropdownArgItem({argument, changeValue, removeArg, id}: Props) {
   const cardArgument = useGetArgumentsByID(id);
 
-  const defaultValue = useMemo(() => getArgumentDefaultValue(argument.name, cardArgument), [argument.name, cardArgument]);
-  
+  const defaultValue = useMemo(
+    () => getArgumentDefaultValue(argument.name, cardArgument),
+    [argument.name, cardArgument],
+  );
+
   const [selectedKey, setSelectedKey] = useState<Selection>(
-    new Set(argument.value ? [argument.value] : defaultValue ? [defaultValue] : [])
+    new Set(argument.value ? [argument.value] : defaultValue ? [defaultValue] : []),
   );
 
   // Sync state with prop updates
   useEffect(() => {
     if (argument.value) {
-        setSelectedKey(new Set([argument.value]));
+      setSelectedKey(new Set([argument.value]));
     } else if (defaultValue) {
-        setSelectedKey(new Set([defaultValue]));
+      setSelectedKey(new Set([defaultValue]));
     }
   }, [argument.value, defaultValue]);
 
@@ -56,8 +59,8 @@ export default function DropdownArgItem({argument, changeValue, removeArg, id}: 
   );
 
   const items = useMemo(
-      () => convertArrToObject(getArgumentValues(argument.name, cardArgument) || []),
-      [argument.name, cardArgument]
+    () => convertArrToObject(getArgumentValues(argument.name, cardArgument) || []),
+    [argument.name, cardArgument],
   );
 
   return (
@@ -67,12 +70,12 @@ export default function DropdownArgItem({argument, changeValue, removeArg, id}: 
       removeArg={removeArg}
       icon={<ListDownMinimalistic className="size-4.5" />}>
       <Select
+        items={items}
         variant="flat"
+        selectedKeys={selectedKey}
         aria-label="Select an item"
         onSelectionChange={onChange}
         placeholder="Select an item"
-        selectedKeys={selectedKey}
-        items={items}
         classNames={{trigger: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird', value: 'text-xs'}}>
         {item => (
           <SelectItem key={item.name} textValue={item.name} classNames={{title: 'text-xs'}}>

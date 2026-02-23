@@ -44,4 +44,3 @@ export const contextMenuChannels = {
   openTerminateTab: 'context:open-terminate-tab',
   openCloseApp: 'context:open-close-app',
 } as const;
-

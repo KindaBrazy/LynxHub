@@ -1,7 +1,7 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { onBreadcrumbStateChange } from '@lynx_shared/sentry/Breadcrumbs';
-import { useCallback, useEffect, useState } from 'react';
+import {onBreadcrumbStateChange} from '@lynx_shared/sentry/Breadcrumbs';
+import {useCallback, useEffect, useState} from 'react';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
@@ -22,14 +22,14 @@ export default function CollectErrors() {
   }, []);
 
   const onBreadcrumbChange = useCallback((selected: boolean) => {
-    storageIpc.update('app', { addBreadcrumbs: selected });
+    storageIpc.update('app', {addBreadcrumbs: selected});
     setAddBreadcrumbs(selected);
     onBreadcrumbStateChange(selected);
   }, []);
 
   const onErrorChange = useCallback(
     (selected: boolean) => {
-      storageIpc.update('app', { collectErrors: selected });
+      storageIpc.update('app', {collectErrors: selected});
       setCollectErrors(selected);
 
       // If disabling error collection, turn off breadcrumbs automatically

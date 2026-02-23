@@ -77,8 +77,8 @@ const VolumeMenu = memo(() => {
           {[0, 25, 50, 75, 100].map(val => (
             <button
               key={val}
-              onClick={() => handleVolumeChange(val)}
               aria-label={`Set volume to ${val}%`}
+              onClick={() => handleVolumeChange(val)}
               className="transition-colors hover:text-foreground-800">
               {val}%
             </button>
@@ -102,8 +102,8 @@ const VolumeMenu = memo(() => {
           variant="flat"
           className="flex-1"
           isDisabled={effectiveMuted}
-          onPress={() => handleVolumeChange(50)}
-          aria-label="Set volume to 50%">
+          aria-label="Set volume to 50%"
+          onPress={() => handleVolumeChange(50)}>
           50%
         </Button>
         <Button

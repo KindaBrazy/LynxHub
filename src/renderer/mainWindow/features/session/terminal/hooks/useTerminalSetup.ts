@@ -35,7 +35,7 @@ export function useTerminalSetup({
       xtermRef.current = api;
 
       // Setup clear terminal ref
-      // eslint-disable-next-line no-param-reassign
+
       (clearTerminal as MutableRefObject<(() => void) | undefined>).current = () => api.clear();
 
       // Setup selection change handler

@@ -46,10 +46,6 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
                 selection.removeAllRanges();
               }
             }}
-            className={
-              'cursor-text outline-none focus:border-2 border-transparent focus:border-foreground-200' +
-              ' focus:px-1 rounded-lg transition duration-300 line-clamp-1'
-            }
             onKeyDown={e => {
               e.stopPropagation();
               if (e.key === 'Enter') {
@@ -57,6 +53,10 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
                 e.currentTarget.blur();
               }
             }}
+            className={
+              'cursor-text outline-none focus:border-2 border-transparent focus:border-foreground-200' +
+              ' focus:px-1 rounded-lg transition duration-300 line-clamp-1'
+            }
             spellCheck="false"
             onInput={onTitleChange}
             onClick={e => e.stopPropagation()}
@@ -72,16 +72,16 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
       <AnimatePresence>
         {updateAvailable && (
           <Chip
-            key="chip_update"
-            animate={{opacity: 1, translateY: 0}}
-            as={motion.div}
-            className="flex flex-row gap-x-0.5"
-            color="success"
-            exit={{opacity: 0, translateY: 2}}
-            initial={{opacity: 0, translateY: 2}}
             size="sm"
-            startContent={<DownloadMinimalistic className="size-3" />}
-            variant="flat">
+            variant="flat"
+            as={motion.div}
+            color="success"
+            key="chip_update"
+            exit={{opacity: 0, translateY: 2}}
+            className="flex flex-row gap-x-0.5"
+            animate={{opacity: 1, translateY: 0}}
+            initial={{opacity: 0, translateY: 2}}
+            startContent={<DownloadMinimalistic className="size-3" />}>
             Update
           </Chip>
         )}

@@ -82,4 +82,3 @@ export default async function downloadDU(): Promise<void> {
     }
   }
 }
-

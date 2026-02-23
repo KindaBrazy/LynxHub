@@ -130,7 +130,6 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
 
   return (
     <Card
-      onPress={handleSelect}
       className={
         `relative border-2 border-foreground-100 bg-foreground-50 transition-all! duration-300!` +
         ` hover:bg-foreground-100 hover:shadow-medium` +
@@ -138,6 +137,7 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
       }
       as="div"
       shadow="sm"
+      onPress={handleSelect}
       isPressable={isCompatible}
       key={`${item.metadata.id}_plugin_list_item`}
       fullWidth>
@@ -184,7 +184,10 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
           name={
             <div className="space-x-2">
               <Link
-                className={`font-semibold transition-colors duration-300 ${isExtension ? 'text-primary-500' : 'text-secondary-500'}`}
+                className={
+                  `font-semibold transition-colors duration-300 ` +
+                  `${isExtension ? 'text-primary-500' : 'text-secondary-500'}`
+                }
                 size="lg"
                 href={item.url}
                 isExternal>

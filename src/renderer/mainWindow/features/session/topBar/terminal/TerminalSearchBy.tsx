@@ -36,7 +36,7 @@ const TerminalSearchBy = memo(({selectedTerminalText}: Props) => {
             <Tooltip delay={500} content="Search selected text by">
               <div className="max-w-fit">
                 <DropdownTrigger>
-                  <Button size="sm" variant="light" isIconOnly aria-label="Search selected text">
+                  <Button size="sm" variant="light" aria-label="Search selected text" isIconOnly>
                     <Earth className="size-3.5" />
                   </Button>
                 </DropdownTrigger>

@@ -8,11 +8,11 @@ type Props = {progress: UpdateDownloadProgress | undefined};
 export default function Downloading({progress}: Props) {
   return (
     <div className="flex flex-col gap-6 py-4">
-      <Progress 
-        color="secondary" 
-        value={progress?.percent || 0} 
-        aria-label="Download Progress" 
+      <Progress
         size="lg"
+        color="secondary"
+        value={progress?.percent || 0}
+        aria-label="Download Progress"
         showValueLabel
       />
 
@@ -21,7 +21,7 @@ export default function Downloading({progress}: Props) {
           <span className="text-small text-default-500">Percentage</span>
           <span className="font-mono text-medium">{Math.floor(progress?.percent || 0)}%</span>
         </div>
-        
+
         <div className="flex flex-col gap-1">
           <span className="text-small text-default-500">Size</span>
           <span className="font-mono text-medium">
@@ -31,9 +31,7 @@ export default function Downloading({progress}: Props) {
 
         <div className="flex flex-col gap-1">
           <span className="text-small text-default-500">Speed</span>
-          <span className="font-mono text-medium">
-            {formatSize(progress?.bytesPerSecond)}/s
-          </span>
+          <span className="font-mono text-medium">{formatSize(progress?.bytesPerSecond)}/s</span>
         </div>
       </div>
     </div>

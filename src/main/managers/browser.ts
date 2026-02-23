@@ -56,8 +56,8 @@ export default class BrowserManager {
     return this.browsers.find(view => view.id === id)?.view;
   }
 
-  /** 
-   * Get valid WebContents by ID, returns undefined if not found or destroyed 
+  /**
+   * Get valid WebContents by ID, returns undefined if not found or destroyed
    */
   private getWebContents(id: string): WebContents | undefined {
     const view = this.getViewByID(id);
@@ -70,8 +70,8 @@ export default class BrowserManager {
     return this.getWebContents(id);
   }
 
-  /** 
-   * Execute action on WebContents if valid, with optional error handling 
+  /**
+   * Execute action on WebContents if valid, with optional error handling
    */
   private withWebContents<T>(id: string, action: (wc: WebContents) => T, fallback?: T): T | undefined {
     try {
@@ -194,7 +194,7 @@ export default class BrowserManager {
 
       const {storageManager} = classHolder;
       const title = viewWc.getTitle();
-      
+
       browserIpc.send.onTitleChange(id, title);
       storageManager.updateBrowserFavIconTitle(formatWebAddress(viewWc.getURL()), title);
     });
@@ -226,7 +226,7 @@ export default class BrowserManager {
   private setupWindowOpenHandler(webContents: WebContents) {
     webContents.setWindowOpenHandler(({url, disposition}) => {
       const {storageManager, appManager} = classHolder;
-      
+
       if (disposition === 'new-window') {
         return {
           action: 'allow',
@@ -245,7 +245,7 @@ export default class BrowserManager {
         // foreground-tab = Shift+middle-click = switch to new tab
         const openInBackground = disposition === 'background-tab';
         applicationIpc.send.onNewTab(url, openInBackground);
-        
+
         // Track URLs opened in new tabs (like real browsers)
         this.trackUrl(url);
       }
@@ -259,7 +259,7 @@ export default class BrowserManager {
       if (webContents.isDestroyed()) return;
       let resultFactor = webContents.getZoomFactor();
       resultFactor = zoomDirection === 'in' ? resultFactor + 0.1 : resultFactor - 0.1;
-      
+
       if (resultFactor > 0.1 && resultFactor < 5) {
         webContents.setZoomFactor(resultFactor);
         // Notify renderer about zoom change to auto-open zoom dialog
@@ -340,10 +340,10 @@ export default class BrowserManager {
     const newView = new WebContentsView({
       webPreferences: {
         session: this.getSession(),
-        preload: path.join(__dirname, '../preload/webview.cjs')
+        preload: path.join(__dirname, '../preload/webview.cjs'),
       },
     });
-    
+
     const webContents = newView.webContents;
     newView.setBackgroundColor(getWindowColor());
 
@@ -446,7 +446,7 @@ export default class BrowserManager {
         if (!webContents.isDestroyed()) {
           webContents.removeAllListeners();
           // Forcefully close the webContents
-          (webContents as any).close?.(); 
+          (webContents as any).close?.();
         }
       });
     }
@@ -566,7 +566,7 @@ export default class BrowserManager {
       if (!currentWebContents || currentWebContents.isDestroyed()) return;
 
       const volumeDecimal = Math.max(0, Math.min(100, volume)) / 100;
-      
+
       // Script to set volume and observe for new media elements
       const script = `
         (function() {

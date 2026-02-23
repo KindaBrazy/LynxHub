@@ -7,14 +7,14 @@ import {useCardStore} from './store';
  * Custom hook to handle card title editing.
  */
 export const useCardTitle = () => {
-  const id = useCardStore((state) => state.id);
-  const title = useCardStore((state) => state.title);
+  const id = useCardStore(state => state.id);
+  const title = useCardStore(state => state.title);
 
   const [customTitle, setCustomTitle] = useState<string | null>(null);
 
   useEffect(() => {
     let isMounted = true;
-    storageIpc.getCustom<string | null>(`${id}_title_edited`).then((value) => {
+    storageIpc.getCustom<string | null>(`${id}_title_edited`).then(value => {
       if (isMounted) setCustomTitle(value || null);
     });
     return () => {

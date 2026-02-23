@@ -31,10 +31,10 @@ export const useScrollSpy = (itemIds: string[], threshold = 0.1): string => {
         scrollContainer = scrollContainer.parentElement;
         if (!scrollContainer) break; // Safety break
       }
-      
+
       // If no os-viewport found, fallback to null (viewport) or maybe the immediate parent
       // But IntersectionObserver root=null means viewport.
-      // The original code tried to find 'os-viewport'. 
+      // The original code tried to find 'os-viewport'.
       // If we don't find it, using null (viewport) might be wrong if it's a nested scroll.
       // But let's stick to the logic: if found, use it.
 

@@ -1,6 +1,6 @@
 import SettingsSection from '@lynx/components/SettingsSection';
-import { isWin } from '@lynx_common/utils';
-import { Rocket } from '@solar-icons/react-perf/BoldDuotone';
+import {isWin} from '@lynx_common/utils';
+import {Rocket} from '@solar-icons/react-perf/BoldDuotone';
 
 import DisableLoadingAnim from './DisableLoadingAnim';
 import LastSize from './LastSize';

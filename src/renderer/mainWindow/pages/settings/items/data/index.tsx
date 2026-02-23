@@ -1,12 +1,12 @@
-import { Button } from '@heroui/react';
+import {Button} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
-import { AppDispatch } from '@lynx/redux/store';
-import { lynxTopToast } from '@lynx/utils/hooks';
+import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
 import applicationIpc from '@lynx_shared/ipc/application';
 import filesIpc from '@lynx_shared/ipc/files';
-import { Database, MoveToFolder, Repeat } from '@solar-icons/react-perf/BoldDuotone';
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {Database, MoveToFolder, Repeat} from '@solar-icons/react-perf/BoldDuotone';
+import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
 
@@ -56,11 +56,11 @@ export default function SettingsData() {
         <SettingsSearchHighlight text="App data, including extensions, modules and binaries, will be saved here." />
       </span>
 
-      <Button variant="flat" onPress={handleOpenFolder} startContent={<MoveToFolder />} isDisabled={!currentPath}>
+      <Button variant="flat" isDisabled={!currentPath} onPress={handleOpenFolder} startContent={<MoveToFolder />}>
         {currentPath || 'Loading path...'}
       </Button>
 
-      <Button variant="flat" color="warning" onPress={handleChangeDataPath} startContent={<Repeat />}>
+      <Button variant="flat" color="warning" startContent={<Repeat />} onPress={handleChangeDataPath}>
         <SettingsSearchHighlight text="Change (Restart Required)" />
       </Button>
     </SettingsSection>

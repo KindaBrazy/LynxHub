@@ -67,12 +67,12 @@ export default function useRequirementChecks() {
 
       updateStatus('appModule', {result: 'installing'});
       const result = await pluginsIpc.install(MAIN_MODULE_URL);
-      
+
       if (result) {
         updateStatus('appModule', {result: 'ok'});
         return true;
       }
-      
+
       updateStatus('appModule', {result: 'failed'});
       return false;
     } catch {
@@ -90,9 +90,9 @@ export default function useRequirementChecks() {
   }, [checkGit, checkPwsh, installModule]);
 
   const isSuccess = useMemo(
-    () => 
-      statuses.git.result === 'ok' && 
-      statuses.pwsh.result === 'ok' && 
+    () =>
+      statuses.git.result === 'ok' &&
+      statuses.pwsh.result === 'ok' &&
       (statuses.appModule.result === 'ok' || statuses.appModule.result === 'skipped'),
     [statuses],
   );

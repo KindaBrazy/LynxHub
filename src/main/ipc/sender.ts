@@ -1,4 +1,3 @@
-
 import classHolder from '@lynx_main/managers/classHolder';
 
 /**

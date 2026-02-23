@@ -7,8 +7,8 @@ import {isDev} from '@lynx_common/utils';
 import {onBreadcrumbStateChange} from '@lynx_shared/sentry/Breadcrumbs';
 import {reactErrorHandler} from '@sentry/react';
 import log from 'electron-log/renderer';
-import {createRoot} from 'react-dom/client';
 import type {RootOptions} from 'react-dom/client';
+import {createRoot} from 'react-dom/client';
 import {ErrorBoundary} from 'react-error-boundary';
 import {Provider as ReduxProvider} from 'react-redux';
 

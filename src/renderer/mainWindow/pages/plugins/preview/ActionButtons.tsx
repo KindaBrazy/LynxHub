@@ -1,18 +1,23 @@
-import { Button, useDisclosure } from '@heroui/react';
-import { pluginsActions, useIsInstallingPlugin, useIsUninstallingPlugin, usePluginsState } from '@lynx/redux/reducers/plugins';
-import { useTabsState } from '@lynx/redux/reducers/tabs';
-import { AppDispatch } from '@lynx/redux/store';
-import { showRestartModal } from '@lynx/utils';
-import { lynxTopToast } from '@lynx/utils/hooks';
-import { extractGitUrl } from '@lynx_common/utils';
+import {Button, useDisclosure} from '@heroui/react';
+import {
+  pluginsActions,
+  useIsInstallingPlugin,
+  useIsUninstallingPlugin,
+  usePluginsState,
+} from '@lynx/redux/reducers/plugins';
+import {useTabsState} from '@lynx/redux/reducers/tabs';
+import {AppDispatch} from '@lynx/redux/store';
+import {showRestartModal} from '@lynx/utils';
+import {lynxTopToast} from '@lynx/utils/hooks';
+import {extractGitUrl} from '@lynx_common/utils';
 import applicationIpc from '@lynx_shared/ipc/application';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import { DownloadMinimalistic, SettingsMinimalistic, TrashBin2 } from '@solar-icons/react-perf/BoldDuotone';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {DownloadMinimalistic, SettingsMinimalistic, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {useCallback, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
-import { UpdateButton } from '../Elements';
+import {UpdateButton} from '../Elements';
 import ModuleConfigModal from '../ModuleConfigModal';
 import SecurityWarning from '../SecurityWarning';
 import VersionSelector from './Versions';
@@ -31,12 +36,12 @@ function usePluginActions() {
 
       const pluginId = selectedPlugin.metadata.id;
       AddBreadcrumb_Renderer(`Plugin install: id:${pluginId}`);
-      dispatch(pluginsActions.manageSet({ key: 'installing', id: pluginId, operation: 'add' }));
+      dispatch(pluginsActions.manageSet({key: 'installing', id: pluginId, operation: 'add'}));
 
       const matchedVersion = selectedPlugin.versions.find(v => v.version === targetVersion);
 
       pluginsIpc.install(selectedPlugin.url, matchedVersion?.commit).then(wasInstalled => {
-        dispatch(pluginsActions.manageSet({ key: 'installing', id: pluginId, operation: 'remove' }));
+        dispatch(pluginsActions.manageSet({key: 'installing', id: pluginId, operation: 'remove'}));
         if (wasInstalled) {
           lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} installed successfully`);
           showRestartModal(dispatch, 'To apply the installation, please restart the app.');
@@ -60,10 +65,10 @@ function usePluginActions() {
     if (!pluginId) return;
 
     AddBreadcrumb_Renderer(`Plugin uninstall: id:${pluginId}`);
-    dispatch(pluginsActions.manageSet({ key: 'unInstalling', id: pluginId, operation: 'add' }));
+    dispatch(pluginsActions.manageSet({key: 'unInstalling', id: pluginId, operation: 'add'}));
 
     pluginsIpc.uninstall(pluginId).then(wasUninstalled => {
-      dispatch(pluginsActions.manageSet({ key: 'unInstalling', id: pluginId, operation: 'remove' }));
+      dispatch(pluginsActions.manageSet({key: 'unInstalling', id: pluginId, operation: 'remove'}));
       if (wasUninstalled) {
         lynxTopToast(dispatch).success(`${selectedPlugin.metadata.title} uninstalled successfully`);
         showRestartModal(dispatch, 'To complete the uninstallation, please restart the app.');
@@ -72,7 +77,7 @@ function usePluginActions() {
     });
   }, [selectedPlugin, dispatch]);
 
-  return { installPlugin, uninstallPlugin };
+  return {installPlugin, uninstallPlugin};
 }
 
 /**
@@ -89,7 +94,7 @@ interface PluginActionButtonsProps {
  * Action buttons panel for the plugin preview header.
  * Provides install, uninstall, update, configure, and version selection controls.
  */
-export default function PluginActionButtons({ isInstalled, currentVersion }: PluginActionButtonsProps) {
+export default function PluginActionButtons({isInstalled, currentVersion}: PluginActionButtonsProps) {
   const selectedPlugin = usePluginsState('selectedPlugin');
   const activeTab = useTabsState('activeTab');
   const configModal = useDisclosure();
@@ -101,7 +106,7 @@ export default function PluginActionButtons({ isInstalled, currentVersion }: Plu
 
   const isModuleType = selectedPlugin?.metadata.type === 'module';
 
-  const { installPlugin, uninstallPlugin } = usePluginActions();
+  const {installPlugin, uninstallPlugin} = usePluginActions();
 
   // Check platform compatibility via a one-time system info query when plugin changes.
   const [isPlatformCompatible, setIsPlatformCompatible] = useState<boolean>(true);
@@ -131,11 +136,11 @@ export default function PluginActionButtons({ isInstalled, currentVersion }: Plu
       <SecurityWarning
         type="extension"
         tabId={activeTab}
-        isOpen={isSecurityWarningOpen}
-        setIsOpen={setIsSecurityWarningOpen}
-        onAgree={handleInstallConfirmed}
-        title={selectedPlugin?.metadata.title}
         owner={pluginOwner}
+        isOpen={isSecurityWarningOpen}
+        onAgree={handleInstallConfirmed}
+        setIsOpen={setIsSecurityWarningOpen}
+        title={selectedPlugin?.metadata.title}
       />
 
       {isModuleType && isInstalled && <ModuleConfigModal isOpen={configModal.isOpen} onClose={configModal.onClose} />}
@@ -163,8 +168,8 @@ export default function PluginActionButtons({ isInstalled, currentVersion }: Plu
             size="sm"
             color="danger"
             variant="flat"
-            isLoading={isUninstalling}
             onPress={uninstallPlugin}
+            isLoading={isUninstalling}
             aria-label="Uninstall plugin"
             startContent={!isUninstalling && <TrashBin2 />}>
             {isUninstalling ? 'Uninstalling...' : 'Uninstall'}
@@ -172,12 +177,12 @@ export default function PluginActionButtons({ isInstalled, currentVersion }: Plu
         ) : (
           <Button
             size="sm"
-            onPress={handleInstallRequest}
             isLoading={isInstalling}
+            onPress={handleInstallRequest}
             isDisabled={!isPlatformCompatible}
             color={isPlatformCompatible ? 'success' : 'warning'}
-            aria-label={isPlatformCompatible ? 'Install plugin' : 'Plugin not compatible with your platform'}
-            startContent={!isInstalling && <DownloadMinimalistic />}>
+            startContent={!isInstalling && <DownloadMinimalistic />}
+            aria-label={isPlatformCompatible ? 'Install plugin' : 'Plugin not compatible with your platform'}>
             {!isPlatformCompatible ? 'Not Compatible' : isInstalling ? 'Installing...' : 'Install'}
           </Button>
         )}

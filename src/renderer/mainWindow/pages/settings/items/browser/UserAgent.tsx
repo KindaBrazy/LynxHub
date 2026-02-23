@@ -1,12 +1,12 @@
-import { Button, Input, Select, Selection, SelectItem } from '@heroui/react';
-import { AppDispatch } from '@lynx/redux/store';
-import { lynxTopToast } from '@lynx/utils/hooks';
-import { AgentTypes } from '@lynx_common/types/ipc';
+import {Button, Input, Select, Selection, SelectItem} from '@heroui/react';
+import {AppDispatch} from '@lynx/redux/store';
+import {lynxTopToast} from '@lynx/utils/hooks';
+import {AgentTypes} from '@lynx_common/types/ipc';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
-import { Diskette } from '@solar-icons/react-perf/BoldDuotone';
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import {Diskette} from '@solar-icons/react-perf/BoldDuotone';
+import {useCallback, useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 import SettingsSearchHighlight from '../../SettingsSearchHighlight';
@@ -35,7 +35,7 @@ function useUserAgentSettings() {
 
     const fetchAgents = async () => {
       try {
-        const { userAgent, customUserAgent } = await storageIpc.get('browser');
+        const {userAgent, customUserAgent} = await storageIpc.get('browser');
 
         if (!isMounted) return;
 
@@ -54,10 +54,10 @@ function useUserAgentSettings() {
         if (!isMounted) return;
 
         setAgentDescriptions([
-          { id: 'lynxhub', value: lynxhubValue },
-          { id: 'electron', value: electronValue },
-          { id: 'chrome', value: chromeValue },
-          { id: 'custom', value: customAgentValue },
+          {id: 'lynxhub', value: lynxhubValue},
+          {id: 'electron', value: electronValue},
+          {id: 'chrome', value: chromeValue},
+          {id: 'custom', value: customAgentValue},
         ]);
       } catch (error) {
         console.error('Failed to resolve user agent values:', error);
@@ -82,23 +82,26 @@ function useUserAgentSettings() {
 
     // If changing to custom, load any previously stored custom agent value
     if (value === 'custom') {
-      storageIpc.get('browser').then(result => {
-        if (result?.customUserAgent) {
-          setCustomValue(result.customUserAgent);
-        }
-      }).catch(err => {
-        console.error('Failed to load custom user agent:', err);
-      });
+      storageIpc
+        .get('browser')
+        .then(result => {
+          if (result?.customUserAgent) {
+            setCustomValue(result.customUserAgent);
+          }
+        })
+        .catch(err => {
+          console.error('Failed to load custom user agent:', err);
+        });
     }
 
     // Persist new selection and update live browser context
-    storageIpc.update('browser', { userAgent: value });
+    storageIpc.update('browser', {userAgent: value});
     browserIpc.send.updateUserAgent();
   }, []);
 
   // Save changes to the custom text string explicitly
   const saveCustomAgent = useCallback(() => {
-    storageIpc.update('browser', { customUserAgent: customValue, userAgent: 'custom' });
+    storageIpc.update('browser', {customUserAgent: customValue, userAgent: 'custom'});
     lynxTopToast(dispatch).success('Custom user agent saved successfully!');
   }, [customValue, dispatch]);
 
@@ -117,61 +120,33 @@ function useUserAgentSettings() {
  * Lets users switch between basic built-in presets or define their own custom user agent header.
  */
 export default function UserAgent() {
-  const {
-    selectedAgent,
-    customValue,
-    setCustomValue,
-    agentDescriptions,
-    handleAgentSelection,
-    saveCustomAgent,
-  } = useUserAgentSettings();
+  const {selectedAgent, customValue, setCustomValue, agentDescriptions, handleAgentSelection, saveCustomAgent} =
+    useUserAgentSettings();
 
   const getAgentDescription = (id: AgentTypes) => {
     return agentDescriptions.find(d => d.id === id)?.value || undefined;
   };
 
-  const filterSearchTexts = [
-    'User Agent',
-    'browser',
-    'user agent',
-    'lynxhub',
-    'electron',
-    'chrome',
-    'custom',
-    'ua',
-  ];
+  const filterSearchTexts = ['User Agent', 'browser', 'user agent', 'lynxhub', 'electron', 'chrome', 'custom', 'ua'];
 
   return (
     <SettingsFilterItem searchTexts={filterSearchTexts}>
       <div className="flex flex-col gap-y-2">
         <Select
+          aria-label="Select User Agent"
           onSelectionChange={handleAgentSelection}
           selectedKeys={selectedAgent ? [selectedAgent] : []}
-          label={<SettingsSearchHighlight text="User Agent" />}
-          aria-label="Select User Agent">
-          <SelectItem
-            key="lynxhub"
-            variant="flat"
-            color="success"
-            description={getAgentDescription('lynxhub')}>
+          label={<SettingsSearchHighlight text="User Agent" />}>
+          <SelectItem key="lynxhub" variant="flat" color="success" description={getAgentDescription('lynxhub')}>
             LynxHub (Default)
           </SelectItem>
-          <SelectItem
-            key="electron"
-            variant="flat"
-            description={getAgentDescription('electron')}>
+          <SelectItem key="electron" variant="flat" description={getAgentDescription('electron')}>
             Electron
           </SelectItem>
-          <SelectItem
-            key="chrome"
-            variant="flat"
-            description={getAgentDescription('chrome')}>
+          <SelectItem key="chrome" variant="flat" description={getAgentDescription('chrome')}>
             Chrome
           </SelectItem>
-          <SelectItem
-            key="custom"
-            variant="flat"
-            description={getAgentDescription('custom')}>
+          <SelectItem key="custom" variant="flat" description={getAgentDescription('custom')}>
             Custom
           </SelectItem>
         </Select>
@@ -188,8 +163,8 @@ export default function UserAgent() {
               variant="flat"
               color="success"
               onPress={saveCustomAgent}
-              isIconOnly
-              aria-label="Save custom user agent">
+              aria-label="Save custom user agent"
+              isIconOnly>
               <Diskette />
             </Button>
           </div>

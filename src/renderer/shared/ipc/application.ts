@@ -1,4 +1,4 @@
-import { appChannels } from '@lynx_common/consts/ipcChannels/application';
+import {appChannels} from '@lynx_common/consts/ipcChannels/application';
 import type {CustomNotificationInfo, HeroToastPlacement} from '@lynx_common/types';
 import type {
   AppUpdateEventTypes,
@@ -82,11 +82,13 @@ const applicationIpc = {
     darkMode: (result: (isDark: boolean) => void): (() => void) => lynxIpc.on(appChannels.onDarkMode, result),
 
     // Listens for hotkey change events
-    onHotkeysChange: (result: (input: LynxInput) => void): (() => void) => lynxIpc.on(appChannels.hotkeysChange, result),
+    onHotkeysChange: (result: (input: LynxInput) => void): (() => void) =>
+      lynxIpc.on(appChannels.hotkeysChange, result),
 
     // Listens for toast notification events
-    onShowToast: (result: (message: string, type: ShowToastTypes, placement?: HeroToastPlacement) => void): (() => void) =>
-      lynxIpc.on(appChannels.showToast, result),
+    onShowToast: (
+      result: (message: string, type: ShowToastTypes, placement?: HeroToastPlacement) => void,
+    ): (() => void) => lynxIpc.on(appChannels.showToast, result),
 
     // Listens for new tab events
     onNewTab: (result: (url: string, background?: boolean) => void): (() => void) =>

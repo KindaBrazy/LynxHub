@@ -24,8 +24,8 @@ const NewTab = memo(() => {
         size="sm"
         variant="light"
         onPress={addTab}
-        className="cursor-default mb-1"
         aria-label="New tab"
+        className="cursor-default mb-1"
         isIconOnly>
         <Plus className="size-4" />
       </Button>

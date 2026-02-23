@@ -20,24 +20,13 @@ type ToastFooterProps = {
  * Component for the footer section of the toast notification.
  * Renders action buttons (Close, Restart, Exit) and custom buttons.
  */
-export function ToastFooter({
-  buttons,
-  customButtons,
-  onClose,
-  onExit,
-  onRestart,
-  onCustomClick,
-}: ToastFooterProps) {
+export function ToastFooter({buttons, customButtons, onClose, onExit, onRestart, onCustomClick}: ToastFooterProps) {
   return (
     <div className="flex h-14 items-center justify-between border-t border-foreground-100 px-7">
       {/* Left side: Close button */}
       <div>
         {buttons?.includes('close') && (
-          <Button
-            className="notDraggable"
-            size="sm"
-            startContent={<X className="size-3.5" />}
-            onPress={onClose}>
+          <Button size="sm" onPress={onClose} className="notDraggable" startContent={<X className="size-3.5" />}>
             Close Toast
           </Button>
         )}
@@ -47,33 +36,33 @@ export function ToastFooter({
       <div className="flex items-center gap-3">
         {buttons?.includes('restart') && (
           <Button
-            className="notDraggable"
-            color="primary"
             size="sm"
-            startContent={<Refresh className="size-3.5" />}
-            onPress={onRestart}>
+            color="primary"
+            onPress={onRestart}
+            className="notDraggable"
+            startContent={<Refresh className="size-3.5" />}>
             Restart LynxHub
           </Button>
         )}
 
         {buttons?.includes('exit') && (
           <Button
-            className="notDraggable"
-            color="danger"
             size="sm"
-            startContent={<Power_Icon className="size-3.5" />}
-            onPress={onExit}>
+            color="danger"
+            onPress={onExit}
+            className="notDraggable"
+            startContent={<Power_Icon className="size-3.5" />}>
             Exit LynxHub
           </Button>
         )}
 
-        {customButtons?.map((btn) => (
+        {customButtons?.map(btn => (
           <Button
-            key={btn.id}
-            className={`notDraggable ${btn.cursor === 'default' ? 'cursor-default' : ''}`}
-            color={btn.color === 'default' ? 'default' : btn.color} // Map 'default' color correctly if needed by HeroUI, though 'default' is usually valid
             size="sm"
-            onPress={() => onCustomClick(btn.id)}>
+            key={btn.id}
+            onPress={() => onCustomClick(btn.id)}
+            color={btn.color === 'default' ? 'default' : btn.color} // Map 'default' color correctly if needed by HeroUI, though 'default' is usually valid
+            className={`notDraggable ${btn.cursor === 'default' ? 'cursor-default' : ''}`}>
             {btn.label}
           </Button>
         ))}

@@ -92,11 +92,11 @@ const TabIcon = memo(({tab, currentView}: Props) => {
         />
       );
     }
-    
+
     if (currentView === 'browser') {
       return <Earth className="size-full" />;
     }
-    
+
     return getPageIcon(pageID);
   }, [tab, currentView, imgError, handleImgError]);
 

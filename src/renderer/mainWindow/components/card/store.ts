@@ -17,7 +17,7 @@ export type CardStore = UseBoundStore<StoreApi<CardState>>;
 export const createCardStore = (
   initialData: LoadedCardData & {isInstalled: boolean; hasArguments: boolean},
 ): CardStore => {
-  return create<CardState>((set) => ({
+  return create<CardState>(set => ({
     // Static Info from props
     title: initialData.title,
     id: initialData.id,
@@ -33,8 +33,8 @@ export const createCardStore = (
     installed: initialData.isInstalled,
 
     // Actions that modify the state
-    setMenuIsOpen: (isOpen) => set({menuIsOpen: isOpen}),
-    setCheckingForUpdate: (isChecking) => set({checkingForUpdate: isChecking}),
+    setMenuIsOpen: isOpen => set({menuIsOpen: isOpen}),
+    setCheckingForUpdate: isChecking => set({checkingForUpdate: isChecking}),
   }));
 };
 

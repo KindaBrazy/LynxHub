@@ -1,7 +1,6 @@
-import {useEffect, useState} from 'react';
-
 import {ScreenShareSources} from '@lynx_common/types/shareScreen';
 import shareScreenIpc from '@lynx_shared/ipc/shareScreen';
+import {useEffect, useState} from 'react';
 
 export type UseScreenSourcesReturn = {
   isLoading: boolean;
@@ -30,7 +29,7 @@ export function useScreenSources(): UseScreenSourcesReturn {
           setWindows(fetchedWindows);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Failed to fetch screen sources:', error);
         // If there's an error, we might want to close the window or show an error state.
         // For now, following original logic, we just cancel.

@@ -22,11 +22,6 @@ type Props = {
  */
 export default function CheckBoxArgItem({argument, removeArg, id}: Props) {
   return (
-    <ArgumentItemBase
-      id={id}
-      name={argument.name}
-      removeArg={removeArg}
-      icon={<CheckSquare className="size-4" />}
-    />
+    <ArgumentItemBase id={id} name={argument.name} removeArg={removeArg} icon={<CheckSquare className="size-4" />} />
   );
 }

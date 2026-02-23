@@ -47,24 +47,24 @@ const LynxCard = memo(() => {
 
   return (
     <Card
-      as={motion.div}
       className={
         'relative h-52.5 w-75 border border-foreground-100 px-2 shadow-md transition-all duration-300 ' +
         'group hover:scale-[1.02] hover:shadow-lg'
       }
-      isPressable={!isRunning && !updating && !isUpdatingExtensions}
+      as={motion.div}
       whileHover="hover"
       onContextMenu={() => setMenuIsOpen(true)}
-      onPress={isInstalled ? startAi : install}>
+      onPress={isInstalled ? startAi : install}
+      isPressable={!isRunning && !updating && !isUpdatingExtensions}>
       <div
-        className={`absolute inset-0 z-0 scale-150 opacity-50 ${isInstalled ? 'bg-installed' : 'bg-uninstalled'}`}
         style={accentStyle}
+        className={`absolute inset-0 z-0 scale-150 opacity-50 ${isInstalled ? 'bg-installed' : 'bg-uninstalled'}`}
       />
 
       <CardHeaderContent
         modifiedTitle={modifiedTitle}
-        updateAvailable={updateAvailable}
         onTitleChange={onTitleChange}
+        updateAvailable={updateAvailable}
       />
 
       <CardBody className="justify-center py-2">
@@ -72,10 +72,10 @@ const LynxCard = memo(() => {
       </CardBody>
 
       <Footer
-        id={useCardStore(state => state.id)}
+        updating={updating}
         isRunning={isRunning}
         updateCount={updateCount}
-        updating={updating}
+        id={useCardStore(state => state.id)}
         updatingExtensions={isUpdatingExtensions}
       />
     </Card>

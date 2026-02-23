@@ -25,9 +25,7 @@ export function useTabModalManager() {
   const cardUninstall = useTabModalOpen(
     tabModalRegistry.cardUninstall.open as unknown as ActionCreatorWithPayload<any>,
   );
-  const cardUnassign = useTabModalOpen(
-    tabModalRegistry.cardUnassign.open as unknown as ActionCreatorWithPayload<any>,
-  );
+  const cardUnassign = useTabModalOpen(tabModalRegistry.cardUnassign.open as unknown as ActionCreatorWithPayload<any>);
   const gitManager = useTabModalOpen(tabModalRegistry.gitManager.open as unknown as ActionCreatorWithPayload<any>);
 
   const map: Record<TabModalKey, {openInActiveTab: (p: any) => void; openInNewTab: (p: any) => void}> = {
@@ -57,16 +55,7 @@ export function useTabModalManager() {
       const fn = scope === 'active' ? openInActiveTab : openInNewTab;
       fn(payload);
     },
-    [
-      readme,
-      cardInfo,
-      installUI,
-      cardLaunchConfig,
-      cardExtensions,
-      cardUninstall,
-      cardUnassign,
-      gitManager,
-    ],
+    [readme, cardInfo, installUI, cardLaunchConfig, cardExtensions, cardUninstall, cardUnassign, gitManager],
   );
 
   return {openModal};

@@ -47,14 +47,11 @@ export default function ArgumentsManager({chosenArguments, setChosenArguments, i
         arguments: [],
         preset: 'Default',
       },
-    [chosenArguments.data, chosenArguments.activePreset]
+    [chosenArguments.data, chosenArguments.activePreset],
   );
 
   // Derive presets list
-  const presets = useMemo(
-    () => chosenArguments.data.map(arg => arg.preset),
-    [chosenArguments.data]
-  );
+  const presets = useMemo(() => chosenArguments.data.map(arg => arg.preset), [chosenArguments.data]);
 
   // Update preview text when arguments or method changes
   useEffect(() => {
@@ -65,17 +62,8 @@ export default function ArgumentsManager({chosenArguments, setChosenArguments, i
   }, [activePreset.arguments, id, allMethods]);
 
   return (
-    <motion.div
-      initial="init"
-      animate="animate"
-      className="space-y-5"
-      variants={tabContentVariants}
-    >
-      <PresetSelector
-        presets={presets}
-        chosenArguments={chosenArguments}
-        setChosenArguments={setChosenArguments}
-      />
+    <motion.div initial="init" animate="animate" className="space-y-5" variants={tabContentVariants}>
+      <PresetSelector presets={presets} chosenArguments={chosenArguments} setChosenArguments={setChosenArguments} />
       <ArgumentsList
         id={id}
         chosenArguments={activePreset}

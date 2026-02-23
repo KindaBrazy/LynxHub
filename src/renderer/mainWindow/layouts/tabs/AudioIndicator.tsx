@@ -26,7 +26,7 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
 
   const handleMuteToggle = useCallback(async () => {
     const newMutedState = !isMuted;
-    
+
     // Optimistically update UI
     dispatch(volumeActions.setTabMuted({tabId, muted: newMutedState}));
 
@@ -45,7 +45,7 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
     () => (isMuted ? <VolumeCross className="size-3.5 shrink-0" /> : <VolumeLoud className="size-3.5 shrink-0" />),
     [isMuted],
   );
-  
+
   const ariaLabel = isMuted ? 'Unmute tab audio' : 'Mute tab audio';
   const ariaDescription = isPlaying ? 'Audio is currently playing' : 'Audio indicator';
 

@@ -15,8 +15,8 @@ const AlertWindow = memo(function AlertWindow() {
   return (
     <div className="py-4 px-5 flex flex-col gap-y-3 draggable">
       <div className="flex gap-x-2 mt-2 items-start">
-        <ShieldAlert className="size-8 text-danger" aria-hidden="true" />
-        <span className="w-full" role="alert">
+        <ShieldAlert aria-hidden="true" className="size-8 text-danger" />
+        <span role="alert" className="w-full">
           {message}
         </span>
       </div>
@@ -25,10 +25,10 @@ const AlertWindow = memo(function AlertWindow() {
         <Button
           variant="flat"
           color="success"
+          aria-label="OK"
           className="notDraggable"
           onPress={hideContextWindow}
-          startContent={<Check className="size-4" />}
-          aria-label="OK">
+          startContent={<Check className="size-4" />}>
           OK
         </Button>
       </div>

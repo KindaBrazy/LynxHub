@@ -40,40 +40,43 @@ const TabItem = memo(({tab}: Props) => {
 
   const removeTab = useRemoveTab();
 
-  const runningCard = useMemo(
-    () => runningCards.find(card => card.tabId === tab.id),
-    [runningCards, tab.id]
-  );
+  const runningCard = useMemo(() => runningCards.find(card => card.tabId === tab.id), [runningCards, tab.id]);
 
-  const handleRemove = useCallback((isHotkey: boolean) => {
-    const tabId = tab.id;
+  const handleRemove = useCallback(
+    (isHotkey: boolean) => {
+      const tabId = tab.id;
 
-    if (runningCard) {
-      if (runningCard.type === 'browser') {
-        removeTab({tabId});
-      } else {
-        if ((isCtrlPressed && !isHotkey) || !closeTabConfirm) {
+      if (runningCard) {
+        if (runningCard.type === 'browser') {
           removeTab({tabId});
         } else {
-          const bounds = closeBtnRef.current?.getBoundingClientRect();
-          if (bounds && isHotkey) {
-            contextMenuIpc.send.openTerminateTab(tabId, {x: bounds.x, y: bounds.y});
+          if ((isCtrlPressed && !isHotkey) || !closeTabConfirm) {
+            removeTab({tabId});
           } else {
-            contextMenuIpc.send.openTerminateTab(tabId);
+            const bounds = closeBtnRef.current?.getBoundingClientRect();
+            if (bounds && isHotkey) {
+              contextMenuIpc.send.openTerminateTab(tabId, {x: bounds.x, y: bounds.y});
+            } else {
+              contextMenuIpc.send.openTerminateTab(tabId);
+            }
           }
         }
+      } else {
+        removeTab({tabId});
       }
-    } else {
-      removeTab({tabId});
-    }
-  }, [tab.id, runningCard, isCtrlPressed, closeTabConfirm, removeTab]);
+    },
+    [tab.id, runningCard, isCtrlPressed, closeTabConfirm, removeTab],
+  );
 
-  const handleAuxClick = useCallback((e: MouseEvent) => {
-    if (e.button === 1) {
-      e.preventDefault();
-      handleRemove(false);
-    }
-  }, [handleRemove]);
+  const handleAuxClick = useCallback(
+    (e: MouseEvent) => {
+      if (e.button === 1) {
+        e.preventDefault();
+        handleRemove(false);
+      }
+    },
+    [handleRemove],
+  );
 
   useHotkeyPress([{name: Hotkey_Names.closeTab, method: isActiveTab ? () => handleRemove(true) : null}]);
 
@@ -113,14 +116,12 @@ const TabItem = memo(({tab}: Props) => {
         radius="none"
         variant="light"
         onPress={onPress}
-        aria-label={`Tab: ${tab.title}`}
-        aria-selected={isActiveTab}>
+        aria-selected={isActiveTab}
+        aria-label={`Tab: ${tab.title}`}>
         <div className="flex gap-x-0.5 flex-row items-center min-w-0 flex-1">
           <TabIcon tab={tab} currentView={runningCard?.currentView} />
 
-          {runningCard && (
-            <AudioIndicator tabId={tab.id} id={runningCard.id} />
-          )}
+          {runningCard && <AudioIndicator tabId={tab.id} id={runningCard.id} />}
 
           <TabTitle title={tab.title} setIsTruncated={setIsTruncated} />
         </div>
@@ -130,9 +131,9 @@ const TabItem = memo(({tab}: Props) => {
           size="sm"
           variant="light"
           ref={closeBtnRef}
+          aria-label="Close tab"
           onPress={() => handleRemove(false)}
           className="scale-75 cursor-default"
-          aria-label="Close tab"
           isIconOnly>
           <X className="size-4" />
         </Button>

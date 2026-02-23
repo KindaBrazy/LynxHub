@@ -1,7 +1,8 @@
+import {setTimeout} from 'node:timers/promises';
+
 import {PluginManager} from '@lynx_main/plugins';
 import StorageManager from '@lynx_main/storage/storageOperations';
 import {app, BrowserWindow, dialog} from 'electron';
-import {setTimeout} from 'node:timers/promises';
 
 /**
  * HTML content for the migration window
@@ -153,4 +154,3 @@ export function PluginMigrate(storageManager: StorageManager, pluginManager: Plu
     });
   });
 }
-

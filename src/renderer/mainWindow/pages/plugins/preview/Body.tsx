@@ -1,14 +1,14 @@
-import { Tab, Tabs } from '@heroui/react';
+import {Tab, Tabs} from '@heroui/react';
 import MarkdownViewer from '@lynx/components/MarkdownViewer';
-import { extensionsData } from '@lynx/plugins/extensions/loader';
-import { usePluginsState } from '@lynx/redux/reducers/plugins';
-import { getPluginReadmeUrl } from '@lynx_common/utils/plugins';
-import { useDebounceBreadcrumb } from '@lynx_shared/sentry/Breadcrumbs';
-import { HomeAngle2 } from '@solar-icons/react-perf/BoldDuotone';
-import { Checklist } from '@solar-icons/react-perf/LineDuotone';
-import { AnimatePresence, motion } from 'framer-motion';
-import { isNil } from 'lodash';
-import { Key, useEffect, useMemo, useState } from 'react';
+import {extensionsData} from '@lynx/plugins/extensions/loader';
+import {usePluginsState} from '@lynx/redux/reducers/plugins';
+import {getPluginReadmeUrl} from '@lynx_common/utils/plugins';
+import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
+import {HomeAngle2} from '@solar-icons/react-perf/BoldDuotone';
+import {Checklist} from '@solar-icons/react-perf/LineDuotone';
+import {AnimatePresence, motion} from 'framer-motion';
+import {isNil} from 'lodash';
+import {Key, useEffect, useMemo, useState} from 'react';
 
 import ChangelogList from './ChangelogList';
 
@@ -25,7 +25,7 @@ interface PluginPreviewBodyProps {
  * Includes a tabbed view for "Readme" and "Changelog".
  * Defaults to "Changelog" if the plugin is installed, otherwise defaults to "Readme".
  */
-export default function PluginPreviewBody({ isInstalled }: PluginPreviewBodyProps) {
+export default function PluginPreviewBody({isInstalled}: PluginPreviewBodyProps) {
   const selectedPlugin = usePluginsState('selectedPlugin');
   const [currentTabKey, setCurrentTabKey] = useState<Key>('changelog');
 
@@ -77,10 +77,10 @@ export default function PluginPreviewBody({ isInstalled }: PluginPreviewBodyProp
         {currentTabKey === 'readme' && (
           <motion.div
             key="readme"
-            exit={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-            initial={{ opacity: 0, y: 20 }}
+            exit={{opacity: 0, y: -20}}
+            animate={{opacity: 1, y: 0}}
+            transition={{duration: 0.3}}
+            initial={{opacity: 0, y: 20}}
             className="size-full overflow-hidden">
             {isNil(ReplacementMarkdownViewer) ? (
               <MarkdownViewer urlType="raw" url={readmeUrl} />

@@ -1,8 +1,8 @@
 import LynxSwitch from '@lynx/components/LynxSwitch';
-import { terminalActions, useTerminalState } from '@lynx/redux/reducers/terminal';
-import { AppDispatch } from '@lynx/redux/store';
-import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import {terminalActions, useTerminalState} from '@lynx/redux/reducers/terminal';
+import {AppDispatch} from '@lynx/redux/store';
+import {useCallback} from 'react';
+import {useDispatch} from 'react-redux';
 
 import SettingsFilterItem from '../../SettingsFilterItem';
 
@@ -16,7 +16,7 @@ export default function Ligatures() {
 
   const onEnabledChange = useCallback(
     (value: boolean) => {
-      dispatch(terminalActions.setTerminalState({ key: 'enableLigatures', value }));
+      dispatch(terminalActions.setTerminalState({key: 'enableLigatures', value}));
     },
     [dispatch],
   );
