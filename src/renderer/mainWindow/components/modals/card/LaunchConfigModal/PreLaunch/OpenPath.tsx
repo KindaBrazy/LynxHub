@@ -1,4 +1,5 @@
-import {Button, Card, CardBody, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import filesIpc from '@lynx_shared/ipc/files';
 import {File, Folder} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
@@ -58,11 +59,7 @@ export default function PreOpenPath({id}: Props) {
       title="Open"
       description="Launch AI after opening selected files or folders">
       {isEmpty(items) ? (
-        <Card className="border border-foreground-200/70 bg-foreground-50/50 shadow-none">
-          <CardBody className="flex items-center justify-center py-8 text-center">
-            <p className="text-sm text-foreground-500">No items available to open</p>
-          </CardBody>
-        </Card>
+        <EmptyStateCard bodyClassName="py-8" description="No items available to open" />
       ) : (
         <div className="space-y-2">
           {items.map((open, index) => {

@@ -1,4 +1,4 @@
-import {Card, CardBody} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {FavIcons} from '@lynx_common/types/ipc';
 import {motion} from 'framer-motion';
 import {memo, ReactNode} from 'react';
@@ -38,7 +38,7 @@ const itemFade = {
 
 const HistorySection = memo(
   ({title, subtitle, icon, emptyTitle, emptyDescription, data, itemType, favIconMap, onRefresh}: SectionConfig) => {
-    if (data.length > 1000) {
+    if (data.length > 0) {
       return (
         <motion.section variants={fadeIn} className="w-full">
           <div className="mb-5 flex items-center gap-3">
@@ -70,19 +70,16 @@ const HistorySection = memo(
 
     return (
       <motion.div variants={fadeIn}>
-        <Card
+        <EmptyStateCard
           className={
-            'rounded-2xl border border-foreground-200/50 bg-foreground-50/50 shadow-none' +
+            'rounded-2xl border-foreground-200/50 bg-foreground-50/50' +
             ' dark:border-foreground-100/20 dark:bg-foreground-50/30'
-          }>
-          <CardBody className="px-6 py-12">
-            <div className="mb-4 flex justify-center opacity-60">{icon}</div>
-            <div className="space-y-1 text-center">
-              <h3 className="text-base font-medium text-foreground-600">{emptyTitle}</h3>
-              <p className="text-sm text-foreground-400">{emptyDescription}</p>
-            </div>
-          </CardBody>
-        </Card>
+          }
+          bodyClassName="gap-y-0 px-6 py-12"
+          icon={<div className="mb-4 flex justify-center opacity-60">{icon}</div>}
+          description={<p className="text-sm text-foreground-400">{emptyDescription}</p>}
+          title={<h3 className="text-base font-medium text-foreground-600">{emptyTitle}</h3>}
+        />
       </motion.div>
     );
   },
