@@ -14,6 +14,7 @@ import {
   Progress,
   useDisclosure,
 } from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {tabsActions} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
@@ -269,15 +270,11 @@ export default function HomeNotificationDrawer() {
           <DrawerBody as={LynxScroll}>
             <AnimatePresence>
               {totalNotificationCount <= 0 ? (
-                <Card
-                  className={
-                    'mt-24 border border-foreground-200/70 bg-foreground-50/50 shadow-none dark:bg-foreground-50/30'
-                  }>
-                  <CardBody className="items-center gap-y-2 py-10 text-center">
-                    <Bell className="size-8 text-foreground-400" />
-                    <p className="text-sm text-foreground-500">No notifications yet</p>
-                  </CardBody>
-                </Card>
+                <EmptyStateCard
+                  className="mt-24 dark:bg-foreground-50/30"
+                  icon={<Bell className="size-8 text-foreground-400" />}
+                  description="No notifications yet"
+                />
               ) : (
                 <div className="flex flex-col gap-y-2">
                   {notifications.map(notif => (

@@ -1,4 +1,5 @@
-import {Button, Card, CardBody, Divider, Input, Progress, Skeleton} from '@heroui/react';
+import {Button, Divider, Input, Progress, Skeleton} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
@@ -43,26 +44,27 @@ export default function PluginList() {
 
   const emptyText = useMemo(() => {
     return (
-      <Card className="border border-foreground-200/70 bg-foreground-50/50 shadow-none">
-        <CardBody className="items-center gap-y-2 px-6 py-10 text-center">
+      <EmptyStateCard
+        icon={
           <div className="rounded-full bg-foreground-100/80 p-3 text-foreground-500">
             <Circle_Icon className="size-5" />
           </div>
-          {isEmpty(searchValue) ? (
-            <>
-              <p className="text-foreground-600">It looks like there are no plugin available right now.</p>
-              <p className="text-sm text-foreground-500">
-                This could be temporary. Please try again later or check your internet connection.
-              </p>
-            </>
+        }
+        title={
+          isEmpty(searchValue)
+            ? 'It looks like there are no plugin available right now.'
+            : `Couldn't find any plugins matching your search.`
+        }
+        description={
+          isEmpty(searchValue) ? (
+            <p className="text-sm text-foreground-500">
+              This could be temporary. Please try again later or check your internet connection.
+            </p>
           ) : (
-            <>
-              <p className="text-foreground-600">Couldn't find any plugins matching your search.</p>
-              <p className="text-sm text-foreground-500">Try refining your search terms or checking for typos.</p>
-            </>
-          )}
-        </CardBody>
-      </Card>
+            <p className="text-sm text-foreground-500">Try refining your search terms or checking for typos.</p>
+          )
+        }
+      />
     );
   }, [searchValue]);
 
@@ -105,7 +107,7 @@ export default function PluginList() {
                 </div>
               ))}
           </div>
-        ) : !isEmpty(resultList) ? (
+        ) : isEmpty(resultList) ? (
           emptyText
         ) : (
           <div className="flex flex-col gap-y-2 pb-4">
