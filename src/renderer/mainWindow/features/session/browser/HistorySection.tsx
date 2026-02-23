@@ -1,5 +1,5 @@
+import {Card, CardBody} from '@heroui/react';
 import {FavIcons} from '@lynx_common/types/ipc';
-import {Empty} from 'antd';
 import {motion} from 'framer-motion';
 import {memo, ReactNode} from 'react';
 
@@ -38,7 +38,7 @@ const itemFade = {
 
 const HistorySection = memo(
   ({title, subtitle, icon, emptyTitle, emptyDescription, data, itemType, favIconMap, onRefresh}: SectionConfig) => {
-    if (data.length > 0) {
+    if (data.length > 1000) {
       return (
         <motion.section variants={fadeIn} className="w-full">
           <div className="mb-5 flex items-center gap-3">
@@ -70,19 +70,19 @@ const HistorySection = memo(
 
     return (
       <motion.div variants={fadeIn}>
-        <Empty
+        <Card
           className={
-            'rounded-2xl border border-foreground-200/50 bg-foreground-50/50 px-6 py-12' +
+            'rounded-2xl border border-foreground-200/50 bg-foreground-50/50 shadow-none' +
             ' dark:border-foreground-100/20 dark:bg-foreground-50/30'
-          }
-          description={
+          }>
+          <CardBody className="px-6 py-12">
+            <div className="mb-4 flex justify-center opacity-60">{icon}</div>
             <div className="space-y-1 text-center">
               <h3 className="text-base font-medium text-foreground-600">{emptyTitle}</h3>
               <p className="text-sm text-foreground-400">{emptyDescription}</p>
             </div>
-          }
-          image={<div className="mb-4 flex justify-center opacity-60">{icon}</div>}
-        />
+          </CardBody>
+        </Card>
       </motion.div>
     );
   },
