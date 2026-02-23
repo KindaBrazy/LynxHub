@@ -25,7 +25,6 @@ import storageIpc, {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Bell, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
-import {Empty} from 'antd';
 import {AnimatePresence, motion} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useState} from 'react';
@@ -270,7 +269,12 @@ export default function HomeNotificationDrawer() {
           <DrawerBody as={LynxScroll}>
             <AnimatePresence>
               {totalNotificationCount <= 0 ? (
-                <Empty className="mt-24" description="No notifications yet" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+                <Card className="mt-24 border border-foreground-200/70 bg-foreground-50/50 shadow-none dark:bg-foreground-50/30">
+                  <CardBody className="items-center gap-y-2 py-10 text-center">
+                    <Bell className="size-8 text-foreground-400" />
+                    <p className="text-sm text-foreground-500">No notifications yet</p>
+                  </CardBody>
+                </Card>
               ) : (
                 <div className="flex flex-col gap-y-2">
                   {notifications.map(notif => (
