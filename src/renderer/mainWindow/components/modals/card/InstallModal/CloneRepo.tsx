@@ -1,12 +1,11 @@
 import {Card, CardBody, CardHeader, Link, ModalBody, Progress} from '@heroui/react';
 import {GitHub_Icon} from '@lynx_assets/icons';
+import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {extractGitUrl, isWin} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';
 import {Folder2} from '@solar-icons/react-perf/BoldDuotone';
-import {Descriptions} from 'antd';
-import DescriptionsItem from 'antd/es/descriptions/Item';
 import {capitalize} from 'lodash';
 import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -53,6 +52,11 @@ export default function CloneRepo({url, start, done, isOpen}: CloneRepoProps) {
   const [downloading, setDownloading] = useState<boolean>(false);
   const [downloadProgress, setDownloadProgress] = useState<SimpleGitProgressEvent>(initGitProgress);
   const [directory, setDirectory] = useState<string>('');
+  const progressItems: DescriptionGridItem[] = [
+    {key: 'stage', label: 'Stage', content: capitalize(downloadProgress.stage)},
+    {key: 'item', label: 'Item', content: downloadProgress.processed},
+    {key: 'total', label: 'Total', content: downloadProgress.total},
+  ];
 
   useEffect(() => {
     filesIpc.getAppDirectories('AIWorkspaces').then(dir => {
@@ -107,11 +111,7 @@ export default function CloneRepo({url, start, done, isOpen}: CloneRepoProps) {
             isIndeterminate={downloadProgress.stage === 'unknown'}
             showValueLabel
           />
-          <Descriptions size="small" layout="vertical">
-            <DescriptionsItem label="Stage">{capitalize(downloadProgress.stage)}</DescriptionsItem>
-            <DescriptionsItem label="Item">{downloadProgress.processed}</DescriptionsItem>
-            <DescriptionsItem label="Total">{downloadProgress.total}</DescriptionsItem>
-          </Descriptions>
+          <DescriptionGrid className="mt-6" columns={2} items={progressItems} />
         </>
       ) : (
         <div className="space-y-4">

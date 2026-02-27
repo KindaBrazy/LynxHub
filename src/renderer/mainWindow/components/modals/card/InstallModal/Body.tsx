@@ -1,9 +1,10 @@
+import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {ModalBody, Progress} from '@heroui/react';
 import {DownloadProgress} from '@lynx_common/types/ipc';
 import {UserInputField, UserInputResult} from '@lynx_common/types/plugins/modules';
 import {formatSize} from '@lynx_common/utils';
-import {Descriptions, Result} from 'antd';
-import DescriptionsItem from 'antd/es/descriptions/Item';
+import {CheckCircle, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize} from 'lodash';
 import {Dispatch, Fragment, memo, RefObject, SetStateAction, useCallback} from 'react';
 
@@ -75,6 +76,30 @@ const InstallBody = memo(
     );
 
     const renderBody = () => {
+      const progressBarItems: DescriptionGridItem[] = (progressBarState.description ?? []).map((desc, index) => ({
+        key: `${desc.label}_${index}`,
+        label: desc.label,
+        content: desc.value,
+      }));
+
+      const downloadItems: DescriptionGridItem[] = [
+        {
+          key: 'fileName',
+          label: 'File Name',
+          content: progressInfo?.fileName ? capitalize(progressInfo.fileName) : 'Unknown',
+        },
+        {
+          key: 'downloaded',
+          label: 'Downloaded So Far',
+          content: progressInfo?.downloaded ? formatSize(progressInfo.downloaded) : 'Calculating...',
+        },
+        {
+          key: 'total',
+          label: 'Total File Size',
+          content: progressInfo?.total ? formatSize(progressInfo.total) : 'Calculating...',
+        },
+      ];
+
       switch (state.body) {
         case 'clone':
           return <CloneRepo isOpen={isOpen} done={doneClone} url={state.cloneUrl} start={state.startClone} />;
@@ -92,23 +117,16 @@ const InstallBody = memo(
                 isIndeterminate={progressBarState.isIndeterminate}
                 showValueLabel
               />
-              {progressBarState.description && (
-                <Descriptions size="small" className="mt-8" layout="vertical">
-                  {progressBarState.description.map((desc, index) => (
-                    <DescriptionsItem key={index} label={desc.label}>
-                      {desc.value}
-                    </DescriptionsItem>
-                  ))}
-                </Descriptions>
-              )}
+              {progressBarItems.length > 0 && <DescriptionGrid className="mt-8 text-start" columns={2} items={progressBarItems} />}
             </div>
           );
         case 'progress':
           return progressInfo?.stage === 'failed' ? (
-            <Result
-              status="error"
+            <EmptyStateCard
+              className="my-6"
+              icon={<ShieldCross className="size-12 text-danger" />}
               title="Download Failed"
-              subTitle="Please check your internet connection and try again."
+              description="Please check your internet connection and try again."
             />
           ) : (
             <div className="my-6">
@@ -118,22 +136,23 @@ const InstallBody = memo(
                 value={progressInfo?.percentage}
                 showValueLabel
               />
-              <Descriptions size="small" layout="vertical">
-                <DescriptionsItem label="File Name">
-                  {progressInfo?.fileName ? capitalize(progressInfo.fileName) : 'Unknown'}
-                </DescriptionsItem>
-                <DescriptionsItem label="Downloaded So Far">
-                  {progressInfo?.downloaded ? formatSize(progressInfo.downloaded) : 'Calculating...'}
-                </DescriptionsItem>
-                <DescriptionsItem label="Total File Size">
-                  {progressInfo?.total ? formatSize(progressInfo.total) : 'Calculating...'}
-                </DescriptionsItem>
-              </Descriptions>
+              <DescriptionGrid className="mt-6" columns={2} items={downloadItems} />
             </div>
           );
         case 'done':
           return (
-            <Result title={state.doneAll.title} status={state.doneAll.type} subTitle={state.doneAll.description} />
+            <EmptyStateCard
+              className="my-6"
+              icon={
+                state.doneAll.type === 'success' ? (
+                  <CheckCircle className="size-12 text-success" />
+                ) : (
+                  <ShieldCross className="size-12 text-danger" />
+                )
+              }
+              title={state.doneAll.title}
+              description={state.doneAll.description}
+            />
           );
         case 'starter':
           return (
