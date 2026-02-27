@@ -1,37 +1,39 @@
-import {Button, Link} from '@heroui/react';
+import {
+  Accordion,
+  AccordionItem,
+  Button,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from '@heroui/react';
 import {ISSUE_PAGE} from '@lynx_common/consts';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
-import {Collapse, Modal, Space, Typography} from 'antd';
-import {Fragment, ReactNode, useCallback, useEffect} from 'react';
+import {ReactNode, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {modalActions, useModalsState} from '../../../redux/reducers/modals';
 import {AppDispatch} from '../../../redux/store';
 
-const {Paragraph, Text} = Typography;
-
 /**
  * Component to display "Open Issue" instructions in the warning modal.
  */
 const OpenIssue = () => (
-  <Collapse
-    items={[
-      {
-        children: (
-          <Paragraph type="warning">
-            <span>If you continue to experience problems, please open a new issue on my GitHub repository.</span>
-            <br />
-            <span>This will allow me to investigate and address the issue more effectively.</span>
-          </Paragraph>
-        ),
-        key: '1',
-        label: <Text type="warning">📣 Report an Issue</Text>,
-      },
-    ]}
-    size="small"
-    bordered={false}
-    className="cursor-default"
-  />
+  <Accordion
+    className="px-0"
+    variant="splitted"
+    selectionMode="multiple"
+    itemClasses={{base: 'bg-foreground-100 shadow-none', trigger: 'cursor-default'}}>
+    <AccordionItem key="report" title={<span className="text-warning">📣 Report an Issue</span>}>
+      <p className="text-sm text-warning">
+        <span>If you continue to experience problems, please open a new issue on my GitHub repository.</span>
+        <br />
+        <span>This will allow me to investigate and address the issue more effectively.</span>
+      </p>
+    </AccordionItem>
+  </Accordion>
 );
 
 /**
@@ -48,31 +50,25 @@ const warnTitle: Record<string, ReactNode> = {
 const warnContent: Record<string, ReactNode> = {
   CLONE_REPO: (
     <>
-      <Paragraph className="mt-4" strong>
-        Please ensure you have a stable internet connection and try again.
-      </Paragraph>
-      <Text>If the issue persists, it could be due to one of the following reasons:</Text>
-      <Paragraph>
-        <ul>
-          <li>The directory is empty and you have the necessary permissions to access it..</li>
-          <li>The repository is too large, and your network is unable to handle the file transfer.</li>
-          <li>Firewalls or proxy settings are blocking the connection.</li>
-        </ul>
-      </Paragraph>
+      <p className="mt-4 font-semibold">Please ensure you have a stable internet connection and try again.</p>
+      <p className="text-sm text-foreground-600">
+        If the issue persists, it could be due to one of the following reasons:
+      </p>
+      <ul className="list-disc space-y-1 pl-5 text-sm text-foreground-600">
+        <li>The directory is empty and you have the necessary permissions to access it..</li>
+        <li>The repository is too large, and your network is unable to handle the file transfer.</li>
+        <li>Firewalls or proxy settings are blocking the connection.</li>
+      </ul>
       <OpenIssue />
     </>
   ),
   LOCATE_REPO: (
     <>
-      <Paragraph className="mt-4" strong>
-        Please ensure the following:
-      </Paragraph>
-      <Paragraph>
-        <ul>
-          <li>The directory exists and you have the necessary permissions to access it.</li>
-          <li>The directory is a valid Git repository matching the URL.</li>
-        </ul>
-      </Paragraph>
+      <p className="mt-4 font-semibold">Please ensure the following:</p>
+      <ul className="list-disc space-y-1 pl-5 text-sm text-foreground-600">
+        <li>The directory exists and you have the necessary permissions to access it.</li>
+        <li>The directory is a valid Git repository matching the URL.</li>
+      </ul>
       <OpenIssue />
     </>
   ),
@@ -80,7 +76,7 @@ const warnContent: Record<string, ReactNode> = {
 
 /**
  * Component that displays a warning modal based on the global warning state.
- * Uses Ant Design's Modal.warning method.
+ * Uses HeroUI modal components.
  */
 const WarningModal = () => {
   const {contentId, isOpen} = useModalsState('warningModal');
@@ -90,47 +86,41 @@ const WarningModal = () => {
 
   const handleClose = useCallback(() => {
     dispatch(modalActions.closeWarning());
-    Modal.destroyAll();
   }, [dispatch]);
 
-  useEffect(() => {
-    if (isOpen) {
-      Modal.warning({
-        afterClose: () => {
-          dispatch(modalActions.closeWarning());
-        },
-        centered: true,
-        content: warnContent[contentId],
-        footer: (
-          <div className="mt-4 flex items-end justify-end">
-            <Space>
-              <Button
-                as={Link}
-                variant="light"
-                color="warning"
-                href={ISSUE_PAGE}
-                className="hover:text-warning"
-                isExternal
-                showAnchorIcon>
-                Report
-              </Button>
-              <Button color="danger" variant="light" onPress={handleClose} className="cursor-default">
-                Close
-              </Button>
-            </Space>
+  return (
+    <Modal
+      onOpenChange={open => {
+        if (!open) handleClose();
+      }}
+      isOpen={isOpen}
+      placement="center"
+      classNames={{backdrop: 'top-10!', wrapper: 'top-10! scrollbar-hide'}}
+      isDismissable
+      hideCloseButton>
+      <ModalContent>
+        <ModalHeader>{warnTitle[contentId]}</ModalHeader>
+        <ModalBody>{warnContent[contentId]}</ModalBody>
+        <ModalFooter>
+          <div className="flex flex-row gap-x-2">
+            <Button
+              as={Link}
+              variant="light"
+              color="warning"
+              href={ISSUE_PAGE}
+              className="hover:text-warning"
+              isExternal
+              showAnchorIcon>
+              Report
+            </Button>
+            <Button color="danger" variant="light" onPress={handleClose} className="cursor-default">
+              Close
+            </Button>
           </div>
-        ),
-        mask: {closable: true},
-        okButtonProps: {className: 'cursor-default', color: 'danger'},
-        rootClassName: 'scrollbar-hide',
-        styles: {mask: {top: '2.5rem'}},
-        title: warnTitle[contentId],
-        wrapClassName: 'mt-10',
-      });
-    }
-  }, [isOpen, contentId, dispatch, handleClose]);
-
-  return <Fragment />;
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
 };
 
 export default WarningModal;
