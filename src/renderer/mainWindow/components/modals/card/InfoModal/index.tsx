@@ -1,8 +1,8 @@
 import {Button, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, User} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {CardInfoDescriptions} from '@lynx_common/types/plugins/modules';
 import {extractGitUrl, getCacheUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
-import {Result} from 'antd';
 import {isEmpty, startCase} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -83,7 +83,7 @@ const CardInfoModalContent = ({cardId, isOpen, devName, url, tabID}: CardInfoMod
         </ModalHeader>
         <ModalBody className="my-4 pb-0 scrollbar-hide">
           {isEmpty(openFolders) && isEmpty(cardInfoDescriptions) ? (
-            <Result title="No data available to show!" />
+            <EmptyStateCard bodyClassName="py-8" title="No data available to show!" />
           ) : (
             <CardInfoDescription folders={openFolders} descriptions={cardInfoDescriptions} />
           )}
