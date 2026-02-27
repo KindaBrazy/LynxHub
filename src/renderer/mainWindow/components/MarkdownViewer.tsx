@@ -1,6 +1,6 @@
 import {Kbd, Spinner} from '@heroui/react';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {extractGitUrl} from '@lynx_common/utils';
-import {Result} from 'antd';
 import {isEmpty} from 'lodash';
 import {
   Children,
@@ -265,7 +265,12 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
   return loading ? (
     <Spinner size="lg" color="primary" label="Please wait..." className="size-full my-16" />
   ) : error ? (
-    <Result title={error} status="error" subTitle="Please check your internet connection and try again." />
+    <EmptyStateCard
+      title={error}
+      bodyClassName="py-8"
+      className="my-8 mx-4"
+      description="Please check your internet connection and try again."
+    />
   ) : (
     <LynxScroll className={`size-full ${rounded && 'rounded-xl'}`}>
       <div

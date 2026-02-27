@@ -1,3 +1,4 @@
+import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
 import {RepositoryInfo} from '@lynx_common/types';
 import {memo} from 'react';
 
@@ -6,25 +7,23 @@ interface CommitInfoProps {
 }
 
 function CommitInfo({repoInfo}: CommitInfoProps) {
+  const commitItems: DescriptionGridItem[] = [
+    {key: 'branch', label: 'Current Branch', content: repoInfo.currentBranch},
+    {
+      key: 'hash',
+      label: 'Last Commit Hash',
+      content: <span className="break-all">{repoInfo.lastCommitHash}</span>,
+    },
+    {
+      key: 'message',
+      label: 'Last Commit Message',
+      content: <span className="whitespace-pre-wrap">{repoInfo.lastCommitMessage}</span>,
+    },
+    {key: 'time', label: 'Last Commit Time', content: repoInfo.lastCommitTime},
+  ];
+
   return (
-    <div className="grid grid-cols-2 gap-8">
-      <div className="flex flex-col">
-        <span className="font-semibold text-foreground">Current Branch: </span>
-        <span className="text-foreground-500">{repoInfo.currentBranch}</span>
-      </div>
-      <div className="flex flex-col overflow-hidden">
-        <span className="font-semibold text-foreground">Last Commit Hash: </span>
-        <span className="text-foreground-500 break-all">{repoInfo.lastCommitHash}</span>
-      </div>
-      <div className="flex flex-col">
-        <span className="font-semibold text-foreground">Last Commit Message: </span>
-        <span className="text-foreground-500 whitespace-pre-wrap">{repoInfo.lastCommitMessage}</span>
-      </div>
-      <div className="flex flex-col">
-        <span className="font-semibold text-foreground">Last Commit Time: </span>
-        <span className="text-foreground-500">{repoInfo.lastCommitTime}</span>
-      </div>
-    </div>
+    <DescriptionGrid title="Commit Info" items={commitItems} columns={2} />
   );
 }
 
