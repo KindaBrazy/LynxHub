@@ -1,8 +1,17 @@
-import {Button, CircularProgress, Link, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader} from '@heroui/react';
+import {
+  Button,
+  CircularProgress,
+  Divider,
+  Link,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from '@heroui/react';
 import {RepositoryInfo} from '@lynx_common/types';
 import gitIpc from '@lynx_shared/ipc/git';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
-import {Divider} from 'antd';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -106,7 +115,7 @@ function GitManagerModalContent({isOpen, dir, title, tabID}: GitManagerModalCont
 
                   <ResetShallow dir={dir} title={title} refreshData={getRepoInfo} isShallow={repoInfo.isShallow} />
 
-                  <Divider variant="dashed" />
+                  <Divider />
                   <CommitInfo repoInfo={repoInfo} />
                 </>
               )}
