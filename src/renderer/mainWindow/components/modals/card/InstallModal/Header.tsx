@@ -1,6 +1,7 @@
 import {ModalHeader} from '@heroui/react';
-import {Steps} from 'antd';
 import {memo, useMemo} from 'react';
+
+import StepProgress from './StepProgress';
 
 export interface InstallHeaderProps {
   /** An array of string labels representing the installation steps. */
@@ -16,26 +17,19 @@ export interface InstallHeaderProps {
  */
 const InstallHeader = ({steps, currentStep}: InstallHeaderProps) => {
   const maxTitleWidth = useMemo(() => (steps.length > 5 ? 'max-w-16' : 'max-w-24'), [steps.length]);
+  const stepItems = useMemo(() => steps.map((step, index) => ({key: index, title: step})), [steps]);
 
   return (
     <ModalHeader className="shrink-0 overflow-hidden bg-foreground-100 shadow-sm">
-      <Steps
-        items={steps.map((step, index) => ({
-          title: (
-            <span
-              className={`block truncate text-xs ${maxTitleWidth} ${
-                index < currentStep ? 'text-foreground/40' : 'font-bold text-foreground/80'
-              }`}
-              title={step}>
-              {step}
-            </span>
-          ),
-        }))}
-        size="small"
-        type="default"
-        current={currentStep}
-        className="w-full! items-center justify-center"
-      />
+      <div className="flex w-full justify-center">
+        <StepProgress
+          items={stepItems}
+          current={currentStep}
+          orientation="horizontal"
+          titleClassName={maxTitleWidth}
+          className="max-w-full"
+        />
+      </div>
     </ModalHeader>
   );
 };
