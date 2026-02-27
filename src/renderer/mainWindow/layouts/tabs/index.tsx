@@ -1,8 +1,8 @@
+import {Divider} from '@heroui/react';
 import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {TabInfo} from '@lynx_common/types';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
-import {Divider} from 'antd';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEqual} from 'lodash';
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
@@ -99,7 +99,9 @@ const TabsList = memo(() => {
               exit={{scale: 0.5, y: 10, x: 20, transition: {duration: 0.07, ease: 'backIn'}}}
               animate={{scale: 1, y: 0, x: 0, opacity: 1, transition: {duration: 0.25, ease: 'backOut'}}}>
               <TabItem tab={tab} />
-              {index < localTabs.length - 1 && <Divider className="mx-1" orientation="vertical" />}
+              {index < localTabs.length - 1 && (
+                <Divider orientation="vertical" className="mx-1 max-h-4 dark:bg-foreground-200/80 bg-foreground-200" />
+              )}
             </Reorder.Item>
           ))}
         </AnimatePresence>

@@ -16,7 +16,6 @@ import {
   TableRow,
 } from '@heroui/react';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
-import {Typography} from 'antd';
 import {isEmpty} from 'lodash';
 import {ReactNode, useCallback, useMemo} from 'react';
 import {useDispatch} from 'react-redux';
@@ -24,8 +23,6 @@ import {useDispatch} from 'react-redux';
 import {useTabVisibility} from '../../../../layouts/tabs/utils';
 import {modalActions, useModalsState} from '../../../../redux/reducers/modals';
 import {AppDispatch} from '../../../../redux/store';
-
-const {Paragraph, Text} = Typography;
 
 type DetailsRow = {
   key: number;
@@ -63,15 +60,13 @@ export default function UpdateDetails() {
 
   const renderFileList = useCallback((files: string[]) => {
     return isEmpty(files) ? (
-      <Text>No files found in this category.</Text>
+      <p className="text-sm text-foreground-500">No files found in this category.</p>
     ) : (
-      <Paragraph>
-        <ul>
-          {files.map((file, index) => (
-            <li key={index}>{file}</li>
-          ))}
-        </ul>
-      </Paragraph>
+      <ul className="list-disc pl-5 text-sm text-foreground-600">
+        {files.map((file, index) => (
+          <li key={index}>{file}</li>
+        ))}
+      </ul>
     );
   }, []);
 
@@ -89,7 +84,9 @@ export default function UpdateDetails() {
       className="max-w-[70%] overflow-hidden"
       hideCloseButton>
       <ModalContent>
-        <ModalHeader className="justify-center bg-foreground-100">{title || <Text>Update Details.</Text>}</ModalHeader>
+        <ModalHeader className="justify-center bg-foreground-100">
+          {title || <span className="text-foreground-700">Update Details.</span>}
+        </ModalHeader>
         <ModalBody className="scrollbar-hide">
           <Accordion
             className="mt-4"
@@ -119,17 +116,15 @@ export default function UpdateDetails() {
                   </TableBody>
                 </Table>
               ) : (
-                <Text>No files have been modified.</Text>
+                <p className="text-sm text-foreground-500">No files have been modified.</p>
               )}
             </AccordionItem>
             <AccordionItem key="summary" title="Summary">
-              <Paragraph>
-                <ul>
-                  <li>Deletions: {details.summary.deletions}</li>
-                  <li>Insertions: {details.summary.insertions}</li>
-                  <li>Changes: {details.summary.changes}</li>
-                </ul>
-              </Paragraph>
+              <ul className="list-disc pl-5 text-sm text-foreground-600">
+                <li>Deletions: {details.summary.deletions}</li>
+                <li>Insertions: {details.summary.insertions}</li>
+                <li>Changes: {details.summary.changes}</li>
+              </ul>
             </AccordionItem>
           </Accordion>
         </ModalBody>
