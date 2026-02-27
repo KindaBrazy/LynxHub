@@ -1,9 +1,9 @@
 import {Button, Link, Spinner} from '@heroui/react';
+import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
 import {CardInfoDescriptions, CardInfoDescriptions_Items} from '@lynx_common/types/plugins/modules';
 import {isValidURL} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
-import {Descriptions, DescriptionsProps, Divider} from 'antd';
 import {isEmpty, isNil} from 'lodash';
 import {memo, useCallback} from 'react';
 
@@ -15,25 +15,25 @@ interface CardInfoDescriptionProps {
 const progressElem = <Spinner size="sm" className="flex-row space-x-1" classNames={{label: 'text-foreground/70'}} />;
 
 function CardInfoDescription({folders, descriptions}: CardInfoDescriptionProps) {
-  const getItems = useCallback((items: CardInfoDescriptions_Items): DescriptionsProps['items'] => {
+  const getItems = useCallback((items: CardInfoDescriptions_Items): DescriptionGridItem[] => {
     return items
       .map((item, index) => {
         if (isNil(item.result)) return null;
 
         if (item.result === 'loading') {
-          return {key: index, label: item.label, children: progressElem};
+          return {key: index, label: item.label, content: progressElem};
         }
 
         if (isValidURL(item.result)) {
           return {
             key: index,
             label: item.label,
-            children: (
+            content: (
               <Link
                 size="sm"
+                color="primary"
                 href={item.result}
-                color="foreground"
-                className="transition-colors duration-300 hover:text-primary"
+                className="break-all transition-colors duration-300 hover:opacity-80"
                 isExternal>
                 {item.result}
               </Link>
@@ -41,7 +41,7 @@ function CardInfoDescription({folders, descriptions}: CardInfoDescriptionProps) 
           };
         }
 
-        return {key: index, label: item.label, children: item.result};
+        return {key: index, label: item.label, content: item.result};
       })
       .filter((item): item is NonNullable<typeof item> => item !== null);
   }, []);
@@ -59,25 +59,31 @@ function CardInfoDescription({folders, descriptions}: CardInfoDescriptionProps) 
         if (isEmpty(items)) return null;
 
         return (
-          <div key={`desc_${index}`}>
-            <Descriptions column={2} size="small" items={items} layout="vertical" title={desc.title} />
-            {index !== descriptions.length - 1 && <Divider variant="dashed" className="mb-4" />}
+          <div className="space-y-4" key={`desc_${index}`}>
+            <DescriptionGrid columns={2} items={items} title={desc.title} />
+            {index !== descriptions.length - 1 && (
+              <div className="h-px bg-linear-to-r from-transparent via-foreground-200 to-transparent" />
+            )}
           </div>
         );
       })}
 
-      {!isEmpty(folders) && !isEmpty(descriptions) && <Divider variant="dashed" className="mb-4" />}
+      {!isEmpty(folders) && !isEmpty(descriptions) && (
+        <div className="h-px bg-linear-to-r from-transparent via-foreground-200 to-transparent" />
+      )}
 
       {folders?.map((folder, index) => (
         <Button
+          className={
+            'justify-start shrink-0 h-12 rounded-xl border border-foreground-200/70 bg-content2/70' +
+            ' hover:bg-content2'
+          }
           variant="flat"
-          endContent={<div />}
           key={`openFolder_${index}`}
           startContent={<FolderOpen />}
           onPress={() => openDir(folder)}
-          className="justify-between shrink-0 mb-2"
           fullWidth>
-          {folder}
+          <span className="truncate text-sm font-medium">{folder}</span>
         </Button>
       ))}
     </>
