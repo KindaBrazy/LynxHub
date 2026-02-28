@@ -1,5 +1,5 @@
 import {appChannels} from '@lynx_common/consts/ipcChannels/application';
-import {CustomNotificationInfo, HeroToastPlacement} from '@lynx_common/types';
+import {HeroToastPlacement} from '@lynx_common/types';
 import {
   AppUpdateEventTypes,
   AppUpdateStatus,
@@ -116,11 +116,6 @@ export const applicationIpc = {
     /** Sends update error event */
     updateError: () => sendToMain(appChannels.updateError),
 
-    /** Sends custom notification open event */
-    onCustomNotifOpen: (data: CustomNotificationInfo) => sendToMain(appChannels.onCustomNotifOpen, data),
-    /** Sends custom notification close event */
-    onCustomNotifClose: (key: string) => sendToMain(appChannels.onCustomNotifClose, key),
-
     /** Shows a toast message */
     showToast: (message: string, type: ShowToastTypes, placement: HeroToastPlacement = 'bottom-right') =>
       sendToMain(appChannels.showToast, message, type, placement),
@@ -150,10 +145,6 @@ export const applicationIpc = {
     updateInstall: (callback: () => void) => lynxIpc.on(appChannels.updateInstall, callback),
     /** Listens for update cancel request */
     updateCancel: (callback: () => void) => lynxIpc.on(appChannels.updateCancel, callback),
-
-    /** Listens for custom notification button press */
-    onCustomNotifBtnPress: (callback: (btnId: string, notifKey: string) => void) =>
-      lynxIpc.on(appChannels.onCustomNotifBtnPress, callback),
   },
   handle: {
     /** Gets system dark mode setting */

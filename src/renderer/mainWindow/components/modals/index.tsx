@@ -12,7 +12,6 @@ import ReadMeModal from './card/ReadmeModal';
 import UnassignCardComp from './card/UnassignModal';
 import UninstallCardComp from './card/UninstallModal';
 import UpdatingNotification from './card/UpdatingModal';
-import CustomNotification from './notification/CustomNotification';
 import WarningModal from './notification/WarningModal';
 
 /**
@@ -39,7 +38,6 @@ const Modals = memo(() => {
       <RestartModal />
 
       <UpdatingNotification />
-      <CustomNotification />
 
       {Warning ? <Warning /> : <WarningModal />}
       {UApp ? <UApp /> : <UpdateApp />}
