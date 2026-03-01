@@ -15,7 +15,6 @@ export interface InstallExtensionsProps {
 
 /**
  * Handles the background cloning/installation of any required sub-extensions for a module.
- * Visualizes the process using an ant-design stepper.
  *
  * @param {InstallExtensionsProps} props - The component props.
  */

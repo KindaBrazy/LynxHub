@@ -1,5 +1,3 @@
-@layer theme, base, antd, components, utilities;
-
 @import '../shared/assets/fonts/fonts.css';
 @import 'tailwindcss';
 
