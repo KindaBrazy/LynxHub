@@ -2,15 +2,7 @@ import {Avatar, Card, Chip} from '@heroui/react';
 import SettingsSection from '@lynx/components/SettingsSection';
 import {AppDispatch} from '@lynx/redux/store';
 import {lynxTopToast} from '@lynx/utils/hooks';
-import {
-  DiscordColor_Icon,
-  ExternalDuo_Icon,
-  GitHub_Icon,
-  Gmail_Icon,
-  Reddit_Icon,
-  Scales_Icon,
-  XSite_Icon,
-} from '@lynx_assets/icons';
+import {DiscordColor_Icon, GitHub_Icon, Gmail_Icon, Reddit_Icon, Scales_Icon, XSite_Icon} from '@lynx_assets/icons';
 import {Youtube_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
 import {
   APP_BUILD_NUMBER,
@@ -27,7 +19,7 @@ import {
   X_URL,
   YOUTUBE_URL,
 } from '@lynx_common/consts';
-import {Copy, InfoSquare} from '@solar-icons/react-perf/BoldDuotone';
+import {Copy, InfoSquare, SquareTopDown} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -56,31 +48,31 @@ const DashboardAbout = memo(() => {
       name: 'GitHub',
       icon: <GitHub_Icon className="size-5" />,
       action: () => window.open(GITHUB_URL),
-      actionIcon: <ExternalDuo_Icon className="size-3.5" />,
+      actionIcon: <SquareTopDown className="size-3.5" />,
     },
     {
       name: 'Discord',
       icon: <DiscordColor_Icon className="size-5" />,
       action: () => window.open(DISCORD_SERVER),
-      actionIcon: <ExternalDuo_Icon className="size-3.5" />,
+      actionIcon: <SquareTopDown className="size-3.5" />,
     },
     {
       name: 'X',
       icon: <XSite_Icon className="size-5" />,
       action: () => window.open(X_URL),
-      actionIcon: <ExternalDuo_Icon className="size-3.5" />,
+      actionIcon: <SquareTopDown className="size-3.5" />,
     },
     {
       name: 'Reddit',
       icon: <Reddit_Icon className="size-5" />,
       action: () => window.open(REDDIT_URL),
-      actionIcon: <ExternalDuo_Icon className="size-3.5" />,
+      actionIcon: <SquareTopDown className="size-3.5" />,
     },
     {
       name: 'YouTube',
       icon: <Youtube_Color_Icon className="size-5" />,
       action: () => window.open(YOUTUBE_URL),
-      actionIcon: <ExternalDuo_Icon className="size-3.5" />,
+      actionIcon: <SquareTopDown className="size-3.5" />,
     },
   ];
 
@@ -147,7 +139,7 @@ const DashboardAbout = memo(() => {
             isPressable>
             <Scales_Icon className="size-5 text-success" />
             <span className="font-medium">{LICENSE_NAME}</span>
-            <ExternalDuo_Icon className="size-3.5 opacity-0 group-hover:opacity-60 transition-opacity" />
+            <SquareTopDown className="size-3.5 opacity-0 group-hover:opacity-60 transition-opacity" />
           </Card>
         </div>
       </div>
