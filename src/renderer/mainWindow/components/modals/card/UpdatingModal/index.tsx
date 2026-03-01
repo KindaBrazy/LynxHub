@@ -9,11 +9,7 @@ import UpdateDetails from './UpdateDetails';
 const UpdatingNotification = () => {
   useUpdatingProgress();
 
-  return (
-    <>
-      <UpdateDetails />
-    </>
-  );
+  return <UpdateDetails />;
 };
 
 export default UpdatingNotification;

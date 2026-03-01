@@ -1,17 +1,19 @@
-import {Button} from '@heroui/react';
-import {GitProgressCallback} from '@lynx_common/types/ipc';
+import {addToast, Button, closeToast} from '@heroui/react';
 import gitIpc from '@lynx_shared/ipc/git';
-import {List} from '@solar-icons/react-perf/BoldDuotone';
-import {Descriptions, notification} from 'antd';
+import {Documents} from '@solar-icons/react-perf/BoldDuotone';
+import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {isEmpty} from 'lodash';
+import {LucideReplace, Minus, Plus} from 'lucide-react';
 import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 import {PullResult} from 'simple-git';
 
+import {appActions} from '../../../../../redux/reducers/app';
 import {cardsActions, useCardsState} from '../../../../../redux/reducers/cards';
 import {modalActions} from '../../../../../redux/reducers/modals';
 import {useTabsState} from '../../../../../redux/reducers/tabs';
 import {AppDispatch} from '../../../../../redux/store';
+import DescriptionGrid from '../../../../DescriptionGrid';
 
 /**
  * Hook to listen for git update progress and show notifications.
@@ -24,90 +26,110 @@ export function useUpdatingProgress() {
   useEffect(() => {
     if (isEmpty(updatingCards)) return;
 
-    const onProgress: GitProgressCallback = (id, state, result) => {
+    const removeListener = gitIpc.onProgress((id, state, progress) => {
       if (!id) return;
 
       const card = updatingCards.find(value => value.id === id);
       if (!card) return;
 
-      notification.destroy(`${card.devName}-update-error`);
+      dispatch(appActions.setToastPlacement('bottom-right'));
 
       if (state === 'Failed') {
-        notification.error({
-          key: `${card.devName}-update-error`,
-          description: <div className="whitespace-pre-line">{typeof result === 'string' && result}</div>,
-          title: (
-            <div className="whitespace-pre-line">
-              Failed to Update {card.title} ({card.devName})
-            </div>
-          ),
+        addToast({
+          color: 'danger',
+          classNames: {
+            base: `right-3 bottom-3 gap-y-2 cursor-default`,
+          },
+          title: <span className="whitespace-pre-line">Failed to Update {card.title}</span>,
+          description:
+            typeof progress === 'string' ? <span className="whitespace-pre-line">{progress}</span> : undefined,
         });
 
         dispatch(cardsActions.removeUpdatingCard(card.id));
-      } else if (state === 'Completed' && result) {
+      } else if (state === 'Completed' && progress) {
         const {
           summary: {changes, insertions, deletions},
-        } = result as PullResult;
-        notification.success({
-          closeIcon: null,
-          actions: (
-            <div className="flex flex-row gap-x-2">
+        } = progress as PullResult;
+        const toastID = addToast({
+          color: 'success',
+          classNames: {
+            base: `right-3 bottom-3 cursor-default`,
+            description: 'size-full',
+          },
+          title: (
+            <div className="flex items-center gap-x-2">
+              <CheckRead size={25} />
+              <span className="whitespace-pre-line">{card.title} Updated Successfully.</span>
+            </div>
+          ),
+          timeout: 0,
+          shouldShowTimeoutProgress: true,
+          hideIcon: true,
+          description: (
+            <div className="flex flex-col items-start">
+              <DescriptionGrid
+                items={[
+                  {
+                    key: 'Insertions',
+                    label: (
+                      <div className="flex flex-col items-center gap-y-1">
+                        <Plus className="size-4 text-success" />
+                        <span>{insertions}</span>
+                      </div>
+                    ),
+                    content: 2,
+                  },
+                  {
+                    key: 'Deletions',
+                    label: (
+                      <div className="flex flex-col items-center gap-y-1">
+                        <Minus className="size-4 text-danger" />
+                        <span>{deletions}</span>
+                      </div>
+                    ),
+                    content: 50,
+                  },
+                  {
+                    key: 'Changes',
+                    label: (
+                      <div className="flex flex-col items-center gap-y-1">
+                        <LucideReplace className="size-4 text-primary" />
+                        <span>{changes}</span>
+                      </div>
+                    ),
+                    content: 360,
+                  },
+                ]}
+                columns={3}
+                className="shadow-none w-full bg-transparent"
+                itemClassName="bg-white dark:bg-LynxNearBlack text-center"
+              />
               <Button
                 onPress={() => {
-                  if ('summary' in result) {
+                  if ('summary' in progress) {
                     dispatch(
                       modalActions.openUpdateDetails({
-                        details: result,
+                        details: progress,
                         title: `${card.title} (${card.devName}) Update Details.`,
                         tabID: activeTab,
                       }),
                     );
+                    if (toastID) closeToast(toastID);
                   }
-                  notification.destroy(`${card.devName}-updateDetails`);
                 }}
-                size="sm"
                 variant="flat"
                 color="success"
-                startContent={<List />}>
+                startContent={<Documents size={15} />}
+                fullWidth>
                 Details
               </Button>
-              <Button
-                onPress={() => {
-                  notification.destroy(`${card.devName}-updateDetails`);
-                }}
-                size="sm"
-                color="warning"
-                variant="light">
-                Close
-              </Button>
             </div>
-          ),
-          description: (
-            <Descriptions
-              items={[
-                {children: insertions, label: 'Insertions'},
-                {children: deletions, label: 'Deletions'},
-                {children: changes, label: 'Changes'},
-              ]}
-              column={2}
-              size="small"
-            />
-          ),
-          duration: 0,
-          key: `${card.devName}-updateDetails`,
-          className: 'top-10! dark:bg-foreground-100 !shadow-medium !overflow-hidden rounded-xl',
-          title: (
-            <span className="font-semibold">
-              {card.title} ({card.devName}) Updated Successfully
-            </span>
           ),
         });
         dispatch(cardsActions.removeUpdatingCard(card.id));
         dispatch(cardsActions.removeUpdateAvailable(card.id));
       }
-    };
-
-    const removeListener = gitIpc.onProgress(onProgress);
+    });
 
     return () => removeListener();
   }, [updatingCards, dispatch, activeTab]);
