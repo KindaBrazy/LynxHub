@@ -40,6 +40,7 @@ export const useUpdateApp = () => {
   const show = useTabVisibility(activeTab);
 
   const listenProgress = useCallback(() => {
+    if (removeListener.current) removeListener.current();
     removeListener.current = applicationIpc.on.updateStatus((type, status) => {
       switch (type) {
         case 'update-available': {
