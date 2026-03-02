@@ -13,9 +13,6 @@ const contextMenuIpc = {
     // Resizes context menu window
     resizeWindow: (data: ContextResizeData) => lynxIpc.send(contextMenuChannels.resizeWindow, data),
 
-    // Shows context menu window
-    showWindow: () => lynxIpc.send(contextMenuChannels.showWindow),
-
     // Hides context menu window
     hideWindow: () => lynxIpc.send(contextMenuChannels.hideWindow),
 
