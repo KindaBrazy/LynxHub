@@ -8,13 +8,6 @@ export const hideContextWindow = (): void => {
 };
 
 /**
- * Shows the context menu window via IPC.
- */
-export const showContextWindow = (): void => {
-  contextMenuIpc.send.showWindow();
-};
-
-/**
  * Sets focus to a specific HTML element with a slight delay.
  * Useful when the element might not be immediately focusable (e.g., after a render update).
  *

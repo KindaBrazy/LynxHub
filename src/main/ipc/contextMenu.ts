@@ -51,7 +51,6 @@ export default async function listenContextMenu() {
   });
 
   // Show/Hide context menu
-  contextMenuIpc.on.showWindow(() => contextMenuManager.showContextMenu());
   contextMenuIpc.on.hideWindow(() => contextMenuManager.hideContextMenu());
 
   // Replace misspelling
@@ -208,8 +207,6 @@ export const contextMenuIpc = {
     /** Listens for inspect element request */
     inspectElement: (callback: (id: number, x: number, y: number) => void) =>
       lynxIpc.on(contextMenuChannels.inspectElement, callback),
-    /** Listens for show window request */
-    showWindow: (callback: () => void) => lynxIpc.on(contextMenuChannels.showWindow, callback),
     /** Listens for hide window request */
     hideWindow: (callback: () => void) => lynxIpc.on(contextMenuChannels.hideWindow, callback),
     /** Listens for replace misspelling request */

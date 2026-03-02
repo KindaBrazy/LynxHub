@@ -22,7 +22,6 @@ export const contextMenuChannels = {
   onRemoveTab: 'context:on-remove-tab',
 
   resizeWindow: 'context:resize-window',
-  showWindow: 'context:show-window',
   hideWindow: 'context:hide-window',
   copy: 'context:copy',
   cut: 'context:cut',
