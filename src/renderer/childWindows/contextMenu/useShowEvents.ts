@@ -7,7 +7,6 @@ import {useEffect} from 'react';
 import {useDispatch} from 'react-redux';
 
 import {MenuTypes} from './consts';
-import {showContextWindow} from './layouts/Shared';
 import {contextActions} from './redux/reducer';
 import {ContextDispatch} from './redux/store';
 
@@ -40,7 +39,6 @@ export default function useShowEvents() {
           layout: MenuTypes.RightClick,
         }),
       );
-      showContextWindow();
 
       dispatch(
         contextActions.updateRightClickParams({
@@ -62,7 +60,6 @@ export default function useShowEvents() {
           layout: MenuTypes.BrowserScale,
         }),
       );
-      showContextWindow();
     });
 
     // Find in Page
@@ -74,7 +71,6 @@ export default function useShowEvents() {
           layout: MenuTypes.FindInPage,
         }),
       );
-      showContextWindow();
 
       if (selectedText) {
         dispatch(contextActions.setContextState({key: 'selectedText', value: selectedText}));
@@ -89,7 +85,6 @@ export default function useShowEvents() {
           value: MenuTypes.CloseAppConfirm,
         }),
       );
-      showContextWindow();
     });
 
     // Terminate Process Confirmation
@@ -101,7 +96,6 @@ export default function useShowEvents() {
           layout: MenuTypes.TerminateProcessConfirm,
         }),
       );
-      showContextWindow();
     });
 
     // Terminate Tab Confirmation
@@ -113,7 +107,6 @@ export default function useShowEvents() {
           layout: MenuTypes.TerminateTabConfirm,
         }),
       );
-      showContextWindow();
     });
 
     // Volume Control
@@ -125,7 +118,6 @@ export default function useShowEvents() {
           layout: MenuTypes.Volume,
         }),
       );
-      showContextWindow();
     });
 
     // Downloads Menu
@@ -136,7 +128,6 @@ export default function useShowEvents() {
           value: MenuTypes.Downloads,
         }),
       );
-      showContextWindow();
     });
 
     // Prompt Dialog
@@ -148,7 +139,6 @@ export default function useShowEvents() {
           layout: MenuTypes.Prompt,
         }),
       );
-      showContextWindow();
     });
 
     // Alert Dialog
@@ -160,7 +150,6 @@ export default function useShowEvents() {
           layout: MenuTypes.Alert,
         }),
       );
-      showContextWindow();
     });
 
     // Confirm Dialog
@@ -172,7 +161,6 @@ export default function useShowEvents() {
           layout: MenuTypes.Confirm,
         }),
       );
-      showContextWindow();
     });
 
     // Download manager IPC listeners

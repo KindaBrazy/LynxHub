@@ -30,10 +30,10 @@ const PromptWindow = memo(function PromptWindow() {
   }, [inputValue]);
 
   return (
-    <div className="py-4 px-5 flex flex-col gap-y-3">
+    <div className="py-4 px-5 flex flex-col gap-y-3 w-100">
       <div className="flex gap-x-2 items-center">
-        <TextCursorInput className="size-6" aria-hidden="true" />
-        <span id="prompt-message" className="w-full line-clamp-2">
+        <TextCursorInput aria-hidden="true" className="size-6 shrink-0" />
+        <span id="prompt-message" className="line-clamp-2 max-w-100 w-fit">
           {message}
         </span>
       </div>

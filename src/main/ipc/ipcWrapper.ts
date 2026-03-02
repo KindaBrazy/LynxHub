@@ -1,4 +1,4 @@
-import {ipcMain, WebContents} from 'electron';
+import {ipcMain, IpcMainEvent, WebContents} from 'electron';
 
 import {emitMainIpcEvent, emitMainIpcEventSync} from './ipcEvents';
 
@@ -31,6 +31,51 @@ const on = (channel: string, callback: (...args: any[]) => void) => {
 
     try {
       const result = callback(...args);
+      emitMainIpcEventSync({
+        ...beforeEvent,
+        phase: 'after',
+        status: 'success',
+        durationMs: Date.now() - eventStart,
+        result,
+      });
+    } catch (error) {
+      emitMainIpcEventSync({
+        ...beforeEvent,
+        phase: 'after',
+        status: 'error',
+        durationMs: Date.now() - eventStart,
+        error,
+      });
+      throw error;
+    }
+  };
+  ipcMain.on(channel, subscription);
+  return () => {
+    ipcMain.removeListener(channel, subscription);
+  };
+};
+
+/**
+ * Listens for a message on the specified channel with ipc event.
+ * @param channel - The channel name.
+ * @param callback - The callback function.
+ * @returns A function to remove the listener.
+ */
+const onEvent = (channel: string, callback: (event: IpcMainEvent, ...args: any[]) => void) => {
+  const subscription = (event: IpcMainEvent, ...args: any[]) => {
+    const eventStart = Date.now();
+    const beforeEvent = {
+      phase: 'before' as const,
+      method: 'on' as const,
+      channel,
+      args: [...args],
+      timestamp: eventStart,
+    };
+
+    emitMainIpcEventSync(beforeEvent);
+
+    try {
+      const result = callback(event, ...args);
       emitMainIpcEventSync({
         ...beforeEvent,
         phase: 'after',
@@ -151,6 +196,6 @@ const handle = <T>(channel: string, callback: (...args: any[]) => Promise<T> | T
  */
 const removeHandler = (channel: string) => ipcMain.removeHandler(channel);
 
-const lynxIpc = {send, on, once, handle, removeHandler};
+const lynxIpc = {send, on, onEvent, once, handle, removeHandler};
 
 export default lynxIpc;

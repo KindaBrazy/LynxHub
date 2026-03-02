@@ -106,42 +106,49 @@ export async function listenForBrowserChannels(browserManager: BrowserManager) {
     }
 
     contextMenuIpc.send.onFind(id, selectedText);
+    contextMenuManager.showContextMenu();
   });
 
   // Open Zoom control
   browserIpc.on.openZoom((id, customPosition) => {
     setPosition(customPosition);
     contextMenuIpc.send.onZoom(id, browserManager.getCurrentZoom(id));
+    contextMenuManager.showContextMenu();
   });
 
   // Open Volume control
   browserIpc.on.openVolume((data, customPosition) => {
     setPosition(customPosition);
     contextMenuIpc.send.onVolume(data);
+    contextMenuManager.showContextMenu();
   });
 
   // Open Terminate AI
   contextMenuIpc.on.openTerminateAI(id => {
     setPosition(undefined);
     contextMenuIpc.send.onTerminateAI(id);
+    contextMenuManager.showContextMenu();
   });
 
   // Open Terminate Tab
   contextMenuIpc.on.openTerminateTab((id, customPosition) => {
     setPosition(customPosition);
     contextMenuIpc.send.onTerminateTab(id);
+    contextMenuManager.showContextMenu();
   });
 
   // Open Close App
   contextMenuIpc.on.openCloseApp(() => {
     setPosition(undefined);
     contextMenuIpc.send.onCloseApp();
+    contextMenuManager.showContextMenu();
   });
 
   // Open Downloads Menu
   downloadManagerIpc.on.openDownloadsMenu(() => {
     setPosition(undefined);
     contextMenuIpc.send.onDownloads();
+    contextMenuManager.showContextMenu();
   });
 }
 

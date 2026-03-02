@@ -13,7 +13,7 @@ const AlertWindow = memo(function AlertWindow() {
   const {message} = useContextState('alertWindow');
 
   return (
-    <div className="py-4 px-5 flex flex-col gap-y-3 draggable">
+    <div className="py-4 px-5 flex flex-col gap-y-3 draggable w-100">
       <div className="flex gap-x-2 mt-2 items-start">
         <ShieldAlert aria-hidden="true" className="size-8 text-danger" />
         <span role="alert" className="w-full">
