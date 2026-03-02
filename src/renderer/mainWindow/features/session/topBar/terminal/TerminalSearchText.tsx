@@ -5,7 +5,7 @@ import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {formatHotkey} from '@lynx/utils';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
-import {Magnifer} from '@solar-icons/react-perf/BoldDuotone';
+import {Magnifier} from '@solar-icons/react-perf/BoldDuotone';
 import {SearchAddon} from '@xterm/addon-search';
 import {KeyboardEvent, memo, useCallback, useEffect, useState} from 'react';
 
@@ -40,15 +40,22 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
     };
   }, [isOpen, searchAddon]);
 
+  const findNext = useCallback(() => {
+    searchAddon.findNext(searchText);
+  }, [searchAddon, searchText]);
+  const findPrev = useCallback(() => {
+    searchAddon.findPrevious(searchText);
+  }, [searchAddon, searchText]);
+
   const onInputKeyUp = useCallback(
     (e: KeyboardEvent) => {
       if (e.code === 'ArrowDown') {
-        searchAddon.findNext(searchText);
+        findNext();
       } else if (e.code === 'ArrowUp') {
-        searchAddon.findPrevious(searchText);
+        findPrev();
       }
     },
-    [searchText, searchAddon],
+    [findNext, findPrev],
   );
 
   useHotkeyPress([
@@ -88,26 +95,28 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
         <div className="max-w-fit">
           <PopoverTrigger>
             <Button size="sm" variant="light" aria-label="Search for text" isIconOnly>
-              <Magnifer className="size-3.5" />
+              <Magnifier className="size-3.5" />
             </Button>
           </PopoverTrigger>
         </div>
       </Tooltip>
 
-      <PopoverContent className="border border-foreground-100 bg-foreground-50/80">
+      <PopoverContent className="border border-foreground-100 bg-foreground-50/95">
         <div className="flex flex-row px-1 py-2 gap-x-1.5 items-center">
           <Input
             size="sm"
+            spellCheck="false"
             value={searchText}
             onKeyUp={onInputKeyUp}
             placeholder="Search for..."
             onValueChange={onInputValueChange}
             autoFocus
+            isClearable
           />
-          <Button size="sm" variant="light" isIconOnly>
+          <Button size="sm" variant="light" onPress={findNext} isIconOnly>
             <AltArrowDown className="size-3.5" />
           </Button>
-          <Button size="sm" variant="light" isIconOnly>
+          <Button size="sm" variant="light" onPress={findPrev} isIconOnly>
             <AltArrowUp className="size-3.5" />
           </Button>
         </div>
