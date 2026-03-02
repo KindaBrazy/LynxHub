@@ -14,7 +14,7 @@ const VolumeMenu = memo(() => {
   const effectiveMuted = useMemo(() => muted || globalMuted, [muted, globalMuted]);
 
   return (
-    <div className="flex w-full flex-col gap-4 p-4">
+    <div className="flex w-65 flex-col gap-4 p-4">
       {/* Header with title and mute button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">

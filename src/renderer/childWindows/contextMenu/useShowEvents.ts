@@ -1,5 +1,4 @@
 import {DownloadItemInfo} from '@lynx_common/types/downloadManager';
-import {ContextWindowWidthSizes} from '@lynx_common/types/ipc';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import windowDialogsIpc from '@lynx_shared/ipc/dialogsWindow';
 import downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
@@ -34,14 +33,11 @@ export default function useShowEvents() {
         params.editFlags.canSelectAll;
       const isActionsAvailable = hasLinkItems || hasEditItems || hasImageItems || hasTextSelection;
 
-      const widthSize: ContextWindowWidthSizes = hasLinkItems || hasImageItems || hasTextSelection ? 'md' : 'sm';
-
       dispatch(
         contextActions.showLayout({
           key: 'rightClick',
           value: {id: contextId, contextMenuParams: params, navigationHistory: navHistory},
           layout: MenuTypes.RightClick,
-          widthSize,
         }),
       );
       showContextWindow();
@@ -64,7 +60,6 @@ export default function useShowEvents() {
           key: 'browserScale',
           value: {id, factor: zoomFactor * 100},
           layout: MenuTypes.BrowserScale,
-          widthSize: 'md',
         }),
       );
       showContextWindow();
@@ -77,7 +72,6 @@ export default function useShowEvents() {
           key: 'targetID',
           value: id,
           layout: MenuTypes.FindInPage,
-          widthSize: 'md',
         }),
       );
       showContextWindow();
@@ -93,7 +87,6 @@ export default function useShowEvents() {
         contextActions.showLayout({
           key: 'activeLayout',
           value: MenuTypes.CloseAppConfirm,
-          widthSize: 'lg',
         }),
       );
       showContextWindow();
@@ -106,7 +99,6 @@ export default function useShowEvents() {
           key: 'targetID',
           value,
           layout: MenuTypes.TerminateProcessConfirm,
-          widthSize: 'lg',
         }),
       );
       showContextWindow();
@@ -119,7 +111,6 @@ export default function useShowEvents() {
           key: 'targetID',
           value,
           layout: MenuTypes.TerminateTabConfirm,
-          widthSize: 'lg',
         }),
       );
       showContextWindow();
@@ -132,7 +123,6 @@ export default function useShowEvents() {
           key: 'browserVolume',
           value,
           layout: MenuTypes.Volume,
-          widthSize: 'md',
         }),
       );
       showContextWindow();
@@ -144,7 +134,6 @@ export default function useShowEvents() {
         contextActions.showLayout({
           key: 'activeLayout',
           value: MenuTypes.Downloads,
-          widthSize: 'lg',
         }),
       );
       showContextWindow();
@@ -157,7 +146,6 @@ export default function useShowEvents() {
           key: 'promptWindow',
           value: {message, defaultValue},
           layout: MenuTypes.Prompt,
-          widthSize: 'lg',
         }),
       );
       showContextWindow();
@@ -170,7 +158,6 @@ export default function useShowEvents() {
           key: 'alertWindow',
           value: {message},
           layout: MenuTypes.Alert,
-          widthSize: 'lg',
         }),
       );
       showContextWindow();
@@ -183,7 +170,6 @@ export default function useShowEvents() {
           key: 'confirmWindow',
           value: {message},
           layout: MenuTypes.Confirm,
-          widthSize: 'lg',
         }),
       );
       showContextWindow();

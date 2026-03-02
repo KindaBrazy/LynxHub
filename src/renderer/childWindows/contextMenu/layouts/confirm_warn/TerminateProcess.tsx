@@ -31,20 +31,27 @@ const TerminateProcess = memo(() => {
           <Button
             size="sm"
             color="success"
+            className="w-20"
             onPress={hideContextWindow}
-            startContent={<Forward2 className="rotate-180" />}>
+            startContent={<Forward2 className="rotate-180 shrink-0 size-3.5" />}>
             Cancel
           </Button>
           <div className="space-x-2">
-            <Button size="sm" color="warning" onPress={onRelaunch} startContent={<Restart />}>
+            <Button
+              size="sm"
+              color="warning"
+              className="w-25"
+              onPress={onRelaunch}
+              startContent={<Restart className="shrink-0 size-3.5" />}>
               Relaunch
             </Button>
             <Button
               size="sm"
               color="danger"
+              className="w-25"
               onPress={onStop}
               ref={setElementFocus}
-              startContent={<Power_Icon />}
+              startContent={<Power_Icon className="shrink-0 size-3.5" />}
               autoFocus>
               Terminate
             </Button>

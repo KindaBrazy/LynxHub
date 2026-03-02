@@ -123,7 +123,6 @@ export type AudioState = {
 };
 
 export type ContextMenuVolumeData = {id: string; tabId: string; volume: number; muted: boolean; globalMuted: boolean};
-export type ContextWindowWidthSizes = 'sm' | 'md' | 'lg';
 
 export type MainHT<T> = Promise<T> | T;
 

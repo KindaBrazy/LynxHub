@@ -27,16 +27,18 @@ const TerminateTab = memo(() => {
           <Button
             size="sm"
             color="success"
+            className="w-20"
             onPress={hideContextWindow}
-            startContent={<Forward2 className="rotate-180" />}>
+            startContent={<Forward2 className="rotate-180 shrink-0 size-3.5" />}>
             Cancel
           </Button>
           <Button
             size="sm"
             color="danger"
+            className="w-25"
             onPress={onRemoveTab}
             ref={setElementFocus}
-            startContent={<Power_Icon />}
+            startContent={<Power_Icon className="shrink-0 size-3.5" />}
             autoFocus>
             Terminate
           </Button>

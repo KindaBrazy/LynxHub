@@ -2,9 +2,9 @@ import {Button, Slider} from '@heroui/react';
 import browserIpc from '@lynx_shared/ipc/browser';
 import storageIpc from '@lynx_shared/ipc/storage';
 import {
-  Magnifer,
-  MinimalisticMagniferZoomIn,
-  MinimalisticMagniferZoomOut,
+  Magnifier,
+  MinimalisticMagnifierZoomIn,
+  MinimalisticMagnifierZoomOut,
   Refresh,
 } from '@solar-icons/react-perf/BoldDuotone';
 import {isArray} from 'lodash';
@@ -44,11 +44,11 @@ const BrowserScale = memo(function BrowserScale() {
   }, [updateZoom]);
 
   return (
-    <div className="flex w-full flex-col gap-4 p-4">
+    <div className="flex flex-col gap-4 p-4 w-65">
       {/* Header with title and reset button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Magnifer aria-hidden="true" className="size-5 text-primary" />
+          <Magnifier aria-hidden="true" className="size-5 text-primary" />
           <span className="text-sm font-semibold text-foreground-800">Browser Scale</span>
         </div>
         <Button
@@ -88,8 +88,8 @@ const BrowserScale = memo(function BrowserScale() {
           aria-label="Browser zoom level"
           getValue={value => `${value}%`}
           aria-valuetext={`${factor} percent`}
-          endContent={<MinimalisticMagniferZoomIn aria-hidden="true" className="size-5 text-foreground-500" />}
-          startContent={<MinimalisticMagniferZoomOut aria-hidden="true" className="size-4 text-foreground-500" />}
+          endContent={<MinimalisticMagnifierZoomIn aria-hidden="true" className="size-5 text-foreground-500" />}
+          startContent={<MinimalisticMagnifierZoomOut aria-hidden="true" className="size-4 text-foreground-500" />}
         />
 
         {/* Scale markers */}

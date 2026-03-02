@@ -25,7 +25,7 @@ const RightClick = memo(function RightClick() {
   // but logically it usually appears with a page.
 
   return (
-    <>
+    <div className="overflow-hidden">
       <div className="w-full h-2" />
       <Navigation id={id} navHistory={navigationHistory} />
       <Divider className="my-1" />
@@ -51,7 +51,7 @@ const RightClick = memo(function RightClick() {
       )}
 
       <div className="w-full h-2" />
-    </>
+    </div>
   );
 });
 

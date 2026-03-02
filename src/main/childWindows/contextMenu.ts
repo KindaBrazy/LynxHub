@@ -28,7 +28,6 @@ export default class ContextMenuManager {
     resizable: false,
     maximizable: false,
     skipTaskbar: true,
-    useContentSize: true,
     minimizable: false,
     titleBarStyle: isMac ? 'customButtonsOnHover' : 'default',
     webPreferences: {
@@ -231,7 +230,7 @@ export default class ContextMenuManager {
 
     try {
       addBreadcrumb(`Resizing context menu: ${contentW}x${contentH}`);
-      window.setContentSize(contentW, contentH);
+      window.setBounds({width: contentW, height: contentH});
     } catch (error) {
       console.error('Failed to resize context menu:', error);
     }

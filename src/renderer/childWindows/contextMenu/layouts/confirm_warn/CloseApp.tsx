@@ -23,22 +23,29 @@ const CloseApp = memo(() => {
           <Button
             size="sm"
             color="success"
+            className="w-20"
             onPress={hideContextWindow}
-            startContent={<Forward2 className="rotate-180" />}>
+            startContent={<Forward2 className="rotate-180 shrink-0 size-3.5" />}>
             Stay
           </Button>
           <div className="space-x-2">
             {!isLinuxPortable && (
-              <Button size="sm" color="warning" onPress={onRestart} startContent={<Restart />}>
+              <Button
+                size="sm"
+                color="warning"
+                className="w-25"
+                onPress={onRestart}
+                startContent={<Restart className="shrink-0 size-3.5" />}>
                 Restart
               </Button>
             )}
             <Button
               size="sm"
               color="danger"
+              className="w-25"
               onPress={onClose}
               ref={setElementFocus}
-              startContent={<Power_Icon />}
+              startContent={<Power_Icon className="shrink-0 size-3.5" />}
               autoFocus>
               Exit
             </Button>
