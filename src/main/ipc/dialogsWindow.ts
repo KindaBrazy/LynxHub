@@ -12,7 +12,7 @@ let currentDialogDefaultResult: boolean | null | string = null;
  * Called when the dialog window is blurred.
  * Sets the default result for the current dialog event.
  */
-export const dialogBlured = () => {
+export const dialogBlurred = () => {
   if (currentDialogEvent) {
     currentDialogEvent.returnValue = currentDialogDefaultResult;
     currentDialogEvent = undefined;
@@ -44,6 +44,8 @@ export default async function listenDialogsWindow() {
 
     currentDialogEvent = event;
     currentDialogDefaultResult = null;
+
+    contextMenuManager.showContextMenu();
   });
 
   // Confirm dialog
@@ -54,6 +56,8 @@ export default async function listenDialogsWindow() {
 
     currentDialogEvent = event;
     currentDialogDefaultResult = false;
+
+    contextMenuManager.showContextMenu();
   });
 
   // Alert dialog
@@ -64,6 +68,8 @@ export default async function listenDialogsWindow() {
 
     currentDialogEvent = event;
     currentDialogDefaultResult = null;
+
+    contextMenuManager.showContextMenu();
   });
 
   // Dialog results
@@ -89,13 +95,13 @@ export const dialogsWindowIpc = {
   on: {
     /** Listens for prompt request */
     onPrompt: (callback: (event: IpcMainEvent, message: string, defaultValue?: string) => void) =>
-      lynxIpc.on(windowDialogsChannels.onPrompt, callback),
+      lynxIpc.onEvent(windowDialogsChannels.onPrompt, callback),
     /** Listens for confirm request */
     onConfirm: (callback: (event: IpcMainEvent, message: string) => void) =>
-      lynxIpc.on(windowDialogsChannels.onConfirm, callback),
+      lynxIpc.onEvent(windowDialogsChannels.onConfirm, callback),
     /** Listens for alert request */
     onAlert: (callback: (event: IpcMainEvent, message: string) => void) =>
-      lynxIpc.on(windowDialogsChannels.onAlert, callback),
+      lynxIpc.onEvent(windowDialogsChannels.onAlert, callback),
     /** Listens for prompt result */
     promptResult: (callback: (result: string | null) => void) =>
       lynxIpc.on(windowDialogsChannels.promptResult, callback),

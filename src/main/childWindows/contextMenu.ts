@@ -4,7 +4,7 @@ import {is} from '@electron-toolkit/utils';
 import {ContextResizeData} from '@lynx_common/types';
 import {isMac} from '@lynx_common/utils';
 import {contextMenuIpc} from '@lynx_main/ipc/contextMenu';
-import {dialogBlured} from '@lynx_main/ipc/dialogsWindow';
+import {dialogBlurred} from '@lynx_main/ipc/dialogsWindow';
 import lynxIpc from '@lynx_main/ipc/ipcWrapper';
 import classHolder from '@lynx_main/managers/classHolder';
 import addBreadcrumb from '@lynx_main/utils/breadcrumbs';
@@ -111,6 +111,8 @@ export default class ContextMenuManager {
         {canGoBack: contents.navigationHistory.canGoBack(), canGoForward: contents.navigationHistory.canGoForward()},
         contents.id,
       );
+
+      this.showContextMenu();
     });
   }
 
@@ -152,7 +154,7 @@ export default class ContextMenuManager {
     const window = this.contextMenuWindow;
     if (!window || window.isDestroyed() || !window.isVisible() || this.isHiding) return;
 
-    dialogBlured();
+    dialogBlurred();
     this.isHiding = true;
 
     this.animateOpacity(0, () => {

@@ -19,7 +19,7 @@ const ConfirmWindow = memo(function ConfirmWindow() {
   };
 
   return (
-    <div className="py-5 px-5 flex flex-col gap-y-5 draggable">
+    <div className="py-5 px-5 flex flex-col gap-y-5 draggable w-100">
       <div className="flex gap-x-2 items-center">
         <ShieldCheck aria-hidden="true" className="size-8 text-warning" />
         <span role="alert" className="w-full">
