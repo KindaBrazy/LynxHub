@@ -138,8 +138,20 @@ export async function saveToFile(content: string): Promise<string | null> {
 
     // The dialog returns a promise that resolves with a SaveDialogReturnValue object
     const {canceled, filePath} = await (mainWindow
-      ? dialog.showSaveDialog(mainWindow, {properties: ['createDirectory']})
-      : dialog.showSaveDialog({properties: ['createDirectory']}));
+      ? dialog.showSaveDialog(mainWindow, {
+          properties: ['createDirectory'],
+          filters: [
+            {name: 'txt', extensions: ['txt']},
+            {name: 'all', extensions: ['*']},
+          ],
+        })
+      : dialog.showSaveDialog({
+          properties: ['createDirectory'],
+          filters: [
+            {name: 'txt', extensions: ['txt']},
+            {name: 'all', extensions: ['*']},
+          ],
+        }));
 
     // 1. Check if the user cancelled the dialog
     if (canceled || !filePath) {
