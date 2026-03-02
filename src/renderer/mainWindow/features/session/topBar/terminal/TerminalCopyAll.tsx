@@ -26,7 +26,11 @@ const TerminalCopyAll = memo(({serializeAddon}: Props) => {
     const contentToCopy = serializeAddon.serialize();
     if (!contentToCopy) return;
 
-    navigator.clipboard.writeText(contentToCopy);
+    try {
+      navigator.clipboard.writeText(contentToCopy);
+    } catch (e) {
+      lynxTopToast(dispatch).error('Failed to copy terminal text to clipboard!');
+    }
   }, [serializeAddon]);
 
   const saveFile = useCallback(() => {
