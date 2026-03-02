@@ -43,11 +43,7 @@ const TerminalCopyAll = memo(({serializeAddon}: Props) => {
     filesIpc
       .saveToFile(contentToSave)
       .then(result => {
-        if (result) {
-          lynxTopToast(dispatch).success('Saved terminal text to file!');
-        } else {
-          lynxTopToast(dispatch).error('Failed to save terminal text to file!');
-        }
+        if (result) lynxTopToast(dispatch).success(`Successfully saved terminal data.`);
       })
       .catch(() => lynxTopToast(dispatch).error('Failed to save terminal text to file!'));
   }, [serializeAddon, dispatch]);
