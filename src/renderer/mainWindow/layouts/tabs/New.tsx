@@ -27,7 +27,7 @@ const NewTab = memo(() => {
         aria-label="New tab"
         className="cursor-default mb-1"
         isIconOnly>
-        <Plus className="size-4" />
+        <Plus size={18} />
       </Button>
     </motion.div>
   );

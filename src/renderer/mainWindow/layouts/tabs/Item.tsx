@@ -135,7 +135,7 @@ const TabItem = memo(({tab}: Props) => {
           onPress={() => handleRemove(false)}
           className="scale-75 cursor-default"
           isIconOnly>
-          <X className="size-4" />
+          <X size={18} />
         </Button>
 
         <ProgressBar progress={tab.progress} />
