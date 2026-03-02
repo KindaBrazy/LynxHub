@@ -192,7 +192,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
         methods.updater.startUpdate?.(stepper, installedCard!.dir);
       }
     }
-  }, [installedCard, isOpen, methods, stepper, type]);
+  }, [isOpen, methods, stepper, type]);
 
   // -----------------------------------------------> Handle UI
   const {onOpenChange, show} = useTabModalLifecycle('installUI', tabID);
