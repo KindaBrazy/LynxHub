@@ -37,15 +37,14 @@ export const ActionButton = memo(function ActionButton({icon, title, onPress, cl
         }
       }}
       className={
-        `w-full hover:bg-foreground-200 transition-colors duration-300 py-2 px-3` +
-        ` flex justify-between items-center text-sm ${className || ''} cursor-pointer`
+        `w-full hover:bg-foreground-200 transition-colors duration-200 py-2 px-4 gap-x-2` +
+        ` flex items-center text-sm ${className || ''} cursor-pointer shrink-0`
       }
       tabIndex={0}
       role="button"
       onClick={onPress}>
-      {icon || <div className="size-4" />}
-      <span>{title}</span>
-      <div className="size-4" /> {/* Spacer for alignment */}
+      <div className="shrink-0">{icon}</div>
+      <span className="text-nowrap mr-2">{title}</span>
     </div>
   );
 });

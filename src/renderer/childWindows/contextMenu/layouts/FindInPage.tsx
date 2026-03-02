@@ -128,7 +128,7 @@ const FindInPage = memo(function FindInPage() {
   const noResults = searchValue && result && result.matches === 0;
 
   return (
-    <div className="flex w-full flex-col gap-3 p-4">
+    <div className="flex w-65 flex-col gap-3 p-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">

@@ -1,5 +1,4 @@
 import {DownloadItemInfo} from '@lynx_common/types/downloadManager';
-import {ContextWindowWidthSizes} from '@lynx_common/types/ipc';
 import {createSlice, current, PayloadAction} from '@reduxjs/toolkit';
 import {cloneDeep} from 'lodash';
 import {useSelector} from 'react-redux';
@@ -16,7 +15,6 @@ type ContextStateTypes = {
  * Initial state for the context menu.
  */
 const initialState: ContextState = {
-  windowWidth: 'w-44',
   activeLayout: undefined,
   selectedText: '',
 
@@ -57,21 +55,6 @@ const initialState: ContextState = {
   downloads: [],
 };
 
-/**
- * Helper to determine window width based on size constant.
- */
-const getWidth = (state: ContextWindowWidthSizes): string => {
-  switch (state) {
-    case 'md':
-      return 'w-72';
-    case 'lg':
-      return 'w-96';
-    case 'sm':
-    default:
-      return 'w-44';
-  }
-};
-
 const appSlice = createSlice({
   name: 'context',
   initialState,
@@ -93,22 +76,15 @@ const appSlice = createSlice({
      */
     showLayout: <K extends keyof ContextState>(
       state: ContextState,
-      action: PayloadAction<{
-        key: K;
-        value: ContextState[K];
-        layout?: MenuTypes;
-        widthSize: ContextWindowWidthSizes;
-      }>,
+      action: PayloadAction<{key: K; value: ContextState[K]; layout?: MenuTypes}>,
     ) => {
-      const {layout, widthSize, key, value} = action.payload;
+      const {layout, key, value} = action.payload;
 
       // Reset state but keep downloads
       const downloads = current(state).downloads;
       const newState = cloneDeep(initialState);
       newState.downloads = downloads;
 
-      // Apply new configuration
-      newState.windowWidth = getWidth(widthSize);
       if (layout) {
         newState.activeLayout = layout;
       }

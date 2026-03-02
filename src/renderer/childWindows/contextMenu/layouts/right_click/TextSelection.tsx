@@ -1,6 +1,6 @@
 import {Divider} from '@heroui/react';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
-import {MagniferBug} from '@solar-icons/react-perf/BoldDuotone';
+import {Magnifier} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
 import {ActionButton, createActionHandler} from './Utils';
@@ -24,7 +24,7 @@ const TextSelection = memo(function TextSelection({selection}: TextSelectionProp
           contextMenuIpc.send.rightClickItems.searchWithGoogle(selection);
         })}
         title={`Search with Google`}
-        icon={<MagniferBug className="size-4" />}
+        icon={<Magnifier className="size-4" />}
       />
       <Divider className="my-2" />
     </>

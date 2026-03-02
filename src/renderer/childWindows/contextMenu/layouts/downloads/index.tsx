@@ -21,7 +21,7 @@ const DownloadMenu = memo(() => {
   }, [dispatch]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-100">
       {/* Header */}
       <div className="px-4 py-4 flex flex-row items-center justify-between">
         <h2 className="text-lg font-semibold flex items-center gap-2">

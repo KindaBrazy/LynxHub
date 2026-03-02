@@ -22,7 +22,6 @@ import useShowEvents from './useShowEvents';
  * Handles window resizing based on content.
  */
 export default function ContextMenu() {
-  const windowWidth = useContextState('windowWidth');
   const activeLayout = useContextState('activeLayout');
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -33,7 +32,6 @@ export default function ContextMenu() {
     const element = containerRef.current;
     if (!element) return;
 
-    let rafId: number | null = null;
     let lastSent: {w: number; h: number} | null = null;
 
     const sendSize = () => {
@@ -43,40 +41,27 @@ export default function ContextMenu() {
       const width = Math.max(Math.ceil(element.scrollWidth), Math.ceil(rect.width));
       const height = Math.max(Math.ceil(element.scrollHeight), Math.ceil(rect.height));
 
-      const PADDING = 2;
-      const w = Math.max(1, Math.round(width + PADDING));
-      const h = Math.max(1, Math.round(height + PADDING));
-
-      if (lastSent && lastSent.w === w && lastSent.h === h) {
+      if (lastSent && lastSent.w === width && lastSent.h === height) {
         return;
       }
 
-      lastSent = {w, h};
+      lastSent = {w: width, h: height};
       const dpr = window.devicePixelRatio || 1;
-      contextMenuIpc.send.resizeWindow({width: w, height: h, dpr});
+      contextMenuIpc.send.resizeWindow({width, height, dpr});
     };
 
     const resizeObserver = new ResizeObserver(() => {
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(() => {
-        rafId = null;
-        sendSize();
-      });
+      sendSize();
     });
 
     resizeObserver.observe(element);
     sendSize(); // Initial size send
 
-    return () => {
-      resizeObserver.disconnect();
-      if (rafId !== null) cancelAnimationFrame(rafId);
-    };
-  }, [activeLayout, windowWidth]); // Re-run when layout or width class changes
+    return () => resizeObserver.disconnect();
+  }, [activeLayout]); // Re-run when layout or width class changes
 
   return (
-    <div
-      ref={containerRef}
-      className={`flex size-fit flex-col overflow-hidden bg-white dark:bg-LynxRaisinBlack ${windowWidth}`}>
+    <div ref={containerRef} className={`flex size-fit flex-col overflow-hidden bg-white dark:bg-LynxRaisinBlack`}>
       {activeLayout === MenuTypes.BrowserScale && <BrowserScale />}
       {activeLayout === MenuTypes.FindInPage && <FindInPage />}
       {activeLayout === MenuTypes.RightClick && <RightClick />}

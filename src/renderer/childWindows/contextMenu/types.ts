@@ -26,7 +26,6 @@ export type AlertWindow = {message: string};
 export type ConfirmWindow = {message: string};
 
 export type ContextState = {
-  windowWidth: string;
   activeLayout: MenuTypes | undefined;
   targetID: string;
   selectedText: string;
