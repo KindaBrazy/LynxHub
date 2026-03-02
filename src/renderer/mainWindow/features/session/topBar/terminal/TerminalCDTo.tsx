@@ -22,10 +22,13 @@ type Props = {
  */
 const TerminalCDTo = memo(({id}: Props) => {
   const [history, setHistory] = useState<string[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
   const dispatch = useDispatch<AppDispatch>();
 
   const cdTo = useCallback(
     (dir: string) => {
+      setIsOpen(false);
       const newHistory = [dir, ...history.filter(item => item !== dir)];
 
       storageIpc.update('terminal', {cdHistory: newHistory});
@@ -52,6 +55,7 @@ const TerminalCDTo = memo(({id}: Props) => {
   }, []);
 
   const selectDir = useCallback(() => {
+    setIsOpen(false);
     filesIpc
       .openDlg({properties: ['openDirectory']})
       .then(dir => {
@@ -79,6 +83,8 @@ const TerminalCDTo = memo(({id}: Props) => {
         base: 'before:bg-foreground-100',
         content: 'p-0 bg-foreground-50',
       }}
+      isOpen={isOpen}
+      onOpenChange={setIsOpen}
       placement="bottom-start"
       showArrow>
       <Tooltip delay={500} content="Change terminal directory (cd)">
@@ -119,7 +125,7 @@ const TerminalCDTo = memo(({id}: Props) => {
               <p className="text-xs text-foreground-500">No recent directories</p>
             </div>
           ) : (
-            <ScrollShadow className="max-h-[200px]">
+            <ScrollShadow className="max-h-50">
               <div className="flex flex-col p-1.5">
                 {history.map(item => (
                   <Button
