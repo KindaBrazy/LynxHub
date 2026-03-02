@@ -101,8 +101,8 @@ const InstallFooter = memo(
             variant="flat"
             onPress={handleClose}
             color={state.body === 'done' ? 'success' : 'danger'}
-            startContent={state.body === 'done' ? <CheckRead className="size-4" /> : <X className="size-3.5" />}>
-            {state.body === 'done' ? 'OK' : 'Cancel'}
+            startContent={state.body === 'done' ? <CheckRead className="size-5" /> : <X className="size-3.5" />}>
+            {state.body === 'done' ? 'Finish' : 'Cancel'}
           </Button>
           {state.body === 'terminal' && (
             <FooterTerminal onDoneTerminal={onDoneTerminal} restartTerminal={restartTerminal} />
