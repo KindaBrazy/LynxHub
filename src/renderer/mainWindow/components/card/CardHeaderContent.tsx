@@ -73,7 +73,7 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
         classNames={{description: 'text-[0.7rem]'}}
       />
       <AnimatePresence>
-        {updateAvailable && (
+        {isInstalled && updateAvailable && (
           <Chip
             size="sm"
             variant="flat"
@@ -91,7 +91,7 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
       </AnimatePresence>
 
       <AnimatePresence>
-        {updateChecking === id && (
+        {isInstalled && updateChecking === id && (
           <Spinner
             size="sm"
             variant="dots"
