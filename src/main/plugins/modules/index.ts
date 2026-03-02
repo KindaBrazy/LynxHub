@@ -237,11 +237,14 @@ export default class ModuleManager {
     this.availableCardUpdates = [];
 
     for (const card of installedCards) {
+      modulesIpc.send.onCardUpdateChecking(card.id);
       const updateType = updateTypes.find(update => update.id === card.id)?.type;
       const isAvailable = await this.checkCardUpdate(card, updateType);
       if (isAvailable) this.availableCardUpdates.push(card.id);
       modulesIpc.send.onCardsUpdateAvailable(this.availableCardUpdates);
     }
+
+    modulesIpc.send.onCardUpdateChecking('');
   }
 
   /**

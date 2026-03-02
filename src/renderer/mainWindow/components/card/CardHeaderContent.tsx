@@ -1,9 +1,10 @@
-import {CardHeader, Chip, User} from '@heroui/react';
+import {CardHeader, Chip, Spinner, User} from '@heroui/react';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {FormEvent, useMemo} from 'react';
 
+import {useCardsState} from '../../redux/reducers/cards';
 import {useCardStore} from './store';
 
 type CardHeaderContentProps = {
@@ -19,8 +20,10 @@ type CardHeaderContentProps = {
  * Component to display the header of the card, including user info and update status.
  */
 export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable}: CardHeaderContentProps) {
+  const updateChecking = useCardsState('updateChecking');
   const repoUrl = useCardStore(state => state.repoUrl);
   const isInstalled = useCardStore(state => state.installed);
+  const id = useCardStore(state => state.id);
 
   const {developer, avatarSrc} = useMemo(() => {
     const {owner, avatarUrl} = extractGitUrl(repoUrl);
@@ -84,6 +87,21 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
             startContent={<DownloadMinimalistic className="size-3" />}>
             Update
           </Chip>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {updateChecking === id && (
+          <Spinner
+            size="sm"
+            variant="dots"
+            as={motion.div}
+            color="success"
+            className="absolute top-1 right-3"
+            exit={{opacity: 0, translateY: 2}}
+            animate={{opacity: 1, translateY: 0}}
+            initial={{opacity: 0, translateY: 2}}
+          />
         )}
       </AnimatePresence>
     </CardHeader>

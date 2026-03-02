@@ -45,6 +45,8 @@ export const modulesIpc = {
   send: {
     /** Sends an event when card updates are available */
     onCardsUpdateAvailable: (cards: string[]) => sendToMain(modulesChannels.onCardsUpdateAvailable, cards),
+    /** Sends an event when checking for card update */
+    onCardUpdateChecking: (card: string) => sendToMain(modulesChannels.onCardUpdateChecking, card),
   },
   on: {
     /** Listens for interval update checks */
