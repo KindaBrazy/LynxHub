@@ -89,22 +89,22 @@ export default function ArgumentSelectionList({
 
   const renderItem = useCallback(
     (item: ArgumentItem) => {
-      const searchWords = searchValue.split(' ');
+      const searchWords = searchValue.split(/\s+/);
       return (
         <ListboxItem key={item.name} className="cursor-default" textValue={`Select ${item.name}`}>
           <Highlighter
-            highlightTag="div"
             searchWords={searchWords}
             textToHighlight={item.name}
-            highlightClassName="bg-primary-400/70"
-            className="flex w-full flex-wrap font-medium"
+            className="flex flex-wrap font-medium"
+            highlightClassName="bg-warning/40 rounded-sm px-0.5"
+            autoEscape
           />
           <Highlighter
-            highlightTag="div"
             searchWords={searchWords}
-            highlightClassName="bg-primary-400/50"
             textToHighlight={item.description || ''}
-            className="flex w-full text-wrap text-xs text-foreground/50 mt-0.5"
+            highlightClassName="bg-warning/40 rounded-sm px-0.5"
+            className="text-wrap text-xs text-foreground/50 mt-0.5"
+            autoEscape
           />
         </ListboxItem>
       );
@@ -124,6 +124,7 @@ export default function ArgumentSelectionList({
             selectionMode="multiple"
             aria-label="Arguments List"
             selectedKeys={selectedArguments}
+            key={`${searchValue}_argumentList`}
             onSelectionChange={onSelectionChange}
             items={filteredData as ArgumentSection[]}>
             {section => (
@@ -142,6 +143,7 @@ export default function ArgumentSelectionList({
             selectionMode="multiple"
             aria-label="Arguments List"
             selectedKeys={selectedArguments}
+            key={`${searchValue}_argumentList`}
             onSelectionChange={onSelectionChange}
             items={filteredData as ArgumentItem[]}>
             {item => renderItem(item)}
