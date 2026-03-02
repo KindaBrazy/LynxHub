@@ -61,7 +61,7 @@ export interface UseStepperProps {
  * Initializes and manages a stable `InstallStepper` instance.
  * It connects the plugin module's method calls to the internal React states and UI steps of the installation modal.
  *
- * @param {UseStepperProps} props - Dependecies and setState methods used to render the modal.
+ * @param {UseStepperProps} props - Dependencies and setState methods used to render the modal.
  * @returns {InstallStepper} The configured stepper to pass to the module API.
  */
 
