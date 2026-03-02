@@ -27,11 +27,17 @@ export const useCheckCardsUpdate = () => {
   const allMethods = useAllCardMethods();
 
   useEffect(() => {
-    const removeListener = moduleIpc.onCardsUpdateAvailable(cards => {
+    const offCardUpdate = moduleIpc.onCardsUpdateAvailable(cards => {
       dispatch(cardsActions.setUpdateAvailable(cards));
     });
+    const offCardCheck = moduleIpc.onCardUpdateChecking(card => {
+      dispatch(cardsActions.setUpdateChecking(card));
+    });
 
-    return () => removeListener();
+    return () => {
+      offCardUpdate();
+      offCardCheck();
+    };
   }, [dispatch]);
 
   useEffect(() => {

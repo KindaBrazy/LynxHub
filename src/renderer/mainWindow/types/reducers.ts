@@ -34,6 +34,7 @@ export type CardsState = {
 
   updatingCards: UpdatingCards;
   updateAvailable: string[];
+  updateChecking: string;
 
   pinnedCards: string[];
   recentlyUsedCards: string[];

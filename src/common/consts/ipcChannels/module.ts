@@ -7,6 +7,7 @@ export const modulesChannels = {
   uninstallCardByID: 'modules:uninstall-card-by-id',
   checkCardsUpdateInterval: 'modules:cards_update_interval',
   onCardsUpdateAvailable: 'modules:on_cards_update_available',
+  onCardUpdateChecking: 'modules:on_cards_update_checking',
 } as const;
 
 /**

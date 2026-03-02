@@ -39,6 +39,7 @@ const initialState: CardsState = {
   checkUpdateInterval: 0,
   activeTab: '',
   browserDomReadyIds: [],
+  updateChecking: '',
 };
 
 const cardsSlice = createSlice({
@@ -52,6 +53,9 @@ const cardsSlice = createSlice({
     },
     setUpdateAvailable: (state, action: PayloadAction<string[]>) => {
       state.updateAvailable = action.payload;
+    },
+    setUpdateChecking: (state, action: PayloadAction<string>) => {
+      state.updateChecking = action.payload;
     },
     removeUpdateAvailable: (state, action: PayloadAction<string>) => {
       state.updateAvailable = state.updateAvailable.filter(card => card !== action.payload);

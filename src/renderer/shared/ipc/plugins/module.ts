@@ -18,6 +18,9 @@ const moduleIpc = {
   // Listens for card update availability events
   onCardsUpdateAvailable: (result: (cards: string[]) => void) =>
     lynxIpc.on(modulesChannels.onCardsUpdateAvailable, result),
+
+  // Listens for card update checking events
+  onCardUpdateChecking: (result: (cards: string) => void) => lynxIpc.on(modulesChannels.onCardUpdateChecking, result),
 };
 
 export const moduleApiIpc = {
