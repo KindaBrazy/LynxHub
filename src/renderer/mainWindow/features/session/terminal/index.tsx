@@ -2,7 +2,7 @@ import XTermCore, {XTermAPI} from '@lynx/components/XTermCore';
 import {RunningCard} from '@lynx/types';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
-import {Dispatch, memo, MutableRefObject, RefObject, SetStateAction, useMemo, useRef} from 'react';
+import {Dispatch, memo, RefObject, SetStateAction, useMemo, useRef} from 'react';
 
 import {useTerminalBrowserIntegration} from './hooks/useTerminalBrowserIntegration';
 import {useTerminalClipboard} from './hooks/useTerminalClipboard';
@@ -41,7 +41,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
   // 6. Setup (Ready handler)
   const {handleTerminalReady} = useTerminalSetup({
     id,
-    xtermRef: xtermRef as MutableRefObject<XTermAPI | null>,
+    xtermRef: xtermRef as RefObject<XTermAPI | null>,
     clearTerminal,
     setSelectedTerminalText,
     quickHotkeySet,
