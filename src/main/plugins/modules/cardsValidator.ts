@@ -1,4 +1,4 @@
-import path from 'node:path';
+import path, {dirname, resolve} from 'node:path';
 
 import {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
 import classHolder from '@lynx_main/managers/classHolder';
@@ -6,11 +6,11 @@ import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
 import AddBreadcrumb_Main from '@lynx_main/utils/breadcrumbs';
 import {ChokidarOptions, FSWatcher, watch} from 'chokidar';
 import {promises} from 'graceful-fs';
-import {isEqual} from 'lodash';
+import {compact, isEqual} from 'lodash';
 
-type PathCards = {
+type CardsType = {
   id: string;
-  dir: string;
+  dir?: string;
 };
 
 /**
@@ -124,7 +124,7 @@ export class ValidateCards {
    * @param card - The installed card to validate
    * @returns The path card info if valid, null otherwise
    */
-  private async validatePathBasedCard(card: InstalledCard): Promise<PathCards | null> {
+  private async validateCardDir(card: InstalledCard): Promise<CardsType | null> {
     if (!card.dir || path.basename(card.dir).startsWith('.')) return null;
 
     const exist = await this.dirExist(card.dir);
@@ -132,63 +132,41 @@ export class ValidateCards {
   }
 
   /**
-   * Validates a module-based card.
-   * @param card - The installed card to validate
-   * @param pathCards - Array to populate with path info if valid
-   * @returns The installed card if valid, null otherwise
-   */
-  private async validateModuleBasedCard(card: InstalledCard, pathCards: PathCards[]): Promise<InstalledCard | null> {
-    const {moduleManager} = classHolder;
-    const isInstalledMethod = moduleManager?.getMethodsById(card.id)?.().isInstalled;
-
-    if (!isInstalledMethod) return null;
-
-    const onInstalledDirExist = async (cardToCheck: InstalledCard) => {
-      if (cardToCheck.dir) {
-        pathCards.push({id: cardToCheck.id, dir: cardToCheck.dir});
-        return await this.dirExist(cardToCheck.dir);
-      }
-      return false;
-    };
-
-    const installed = await isInstalledMethod(() => onInstalledDirExist(card));
-    return installed ? card : null;
-  }
-
-  /**
    * Sets up watchers for the parent directories of the valid cards.
-   * @param pathCards - The valid path-based cards
+   * @param dirs - The valid path-based cards
    */
-  private setupDirectoryWatchers(pathCards: PathCards[]) {
-    this.dirs = new Set(pathCards.map(card => path.resolve(path.dirname(card.dir))));
+  private setupDirectoryWatchers(dirs: string[]) {
+    this.dirs = new Set(dirs.map(dir => resolve(dirname(dir))));
     this.startWatching();
   }
 
   /**
    * Validates the given cards by checking if their directories are Git repositories.
-   * @param cards - The cards to validate
+   * @param installedCards - The cards to validate
    * @returns Resolves to an array of valid cards
    */
-  private async validateCards(cards: InstalledCards): Promise<InstalledCards> {
-    const pathCards: PathCards[] = [];
-    const moduleCards: InstalledCards = [];
+  private async validateCards(installedCards: InstalledCards): Promise<InstalledCards> {
+    const validCards: CardsType[] = [];
 
-    for (const card of cards) {
-      const {moduleManager} = classHolder;
-      const hasModuleMethod = moduleManager?.getMethodsById(card.id)?.().isInstalled;
+    const moduleManager = await classHolder.waitForClass('moduleManager');
 
-      if (hasModuleMethod) {
-        const validCard = await this.validateModuleBasedCard(card, pathCards);
-        if (validCard) moduleCards.push(validCard);
+    for (const card of installedCards) {
+      // Check if module provided installation check
+      const cardMethods = moduleManager.getMethodsById(card.id);
+      const moduleMethod = cardMethods ? cardMethods().isInstalled : undefined;
+
+      if (moduleMethod) {
+        const validCard = await moduleMethod();
+        if (validCard) validCards.push(card);
       } else {
-        const validCard = await this.validatePathBasedCard(card);
-        if (validCard) pathCards.push(validCard);
+        const validCard = await this.validateCardDir(card);
+        if (validCard) validCards.push(card);
       }
     }
 
-    this.setupDirectoryWatchers(pathCards);
+    this.setupDirectoryWatchers(compact(validCards.map(card => card.dir)));
 
-    return [...pathCards, ...moduleCards];
+    return validCards;
   }
 
   // -----------------------------------------------> Public Methods
@@ -202,7 +180,7 @@ export class ValidateCards {
       let installedCards: InstalledCards = storageManager.getData('cards').installedCards;
       if (isPortable()) {
         installedCards = installedCards.map(card => {
-          return {id: card.id, dir: getAbsolutePath(getExePath(), card.dir || '')};
+          return {id: card.id, dir: card.dir ? getAbsolutePath(getExePath(), card.dir) : undefined};
         });
       }
 
@@ -220,8 +198,6 @@ export class ValidateCards {
   /** Restarts the watching process when cards have changed. */
   public changedCards(): void {
     this.stopWatching();
-    this.checkAndWatch().catch(error => {
-      console.error('[DataValidator - changedCards]: Failed to restart watching:', error);
-    });
+    this.checkAndWatch();
   }
 }
