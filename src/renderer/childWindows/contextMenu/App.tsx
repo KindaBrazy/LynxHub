@@ -51,7 +51,7 @@ export default function ContextMenu() {
     sendSize(); // Initial size send
 
     return () => resizeObserver.disconnect();
-  }, [activeLayout]); // Re-run when layout or width class changes
+  }, []);
 
   return (
     <div ref={containerRef} className={`flex size-fit flex-col overflow-hidden bg-white dark:bg-LynxRaisinBlack`}>
