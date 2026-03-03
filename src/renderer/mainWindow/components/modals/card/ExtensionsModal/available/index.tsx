@@ -2,6 +2,7 @@ import {Input, Pagination, Spinner} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {validateGitRepoUrl} from '@lynx_common/utils';
+import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useEffect, useMemo, useState} from 'react';
 
 import {getCardMethod, useAllCardMethods} from '../../../../../plugins/modules';
@@ -69,17 +70,15 @@ const Available = memo(({visible, updateTable, installedExtensions, id, dir}: Pr
     <div className="flex h-full flex-col">
       <div className="mb-4 flex w-full justify-center">
         <Input
-          classNames={{
-            inputWrapper: 'dark:bg-black/20 dark:hover:bg-white/5 bg-stone-50 shadow-md overflow-hidden',
-          }}
           type="search"
           spellCheck="false"
-          className="w-full"
           value={searchValue}
           onValueChange={setSearchValue}
-          startContent={<Circle_Icon className="size-5" />}
+          startContent={<Circle_Icon />}
           placeholder="Search by title, description or url..."
+          fullWidth
           autoFocus
+          isClearable
         />
       </div>
 
@@ -88,7 +87,7 @@ const Available = memo(({visible, updateTable, installedExtensions, id, dir}: Pr
           <Spinner label="Loading extensions list..." />
         </div>
       ) : searchedData.length === 0 ? (
-        <EmptyStateCard description="There are no extensions available at the moment, but be sure to check back later for new additions!" />
+        <EmptyStateCard icon={<Inbox size={40} />} description="There are no extensions available at the moment!" />
       ) : (
         <div className="flex flex-1 flex-col gap-2">
           {paginatedData.map(item => (

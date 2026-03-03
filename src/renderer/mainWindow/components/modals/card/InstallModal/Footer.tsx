@@ -94,15 +94,18 @@ const InstallFooter = memo(
     }, [starterResolver]);
 
     const renderFooterButtons = () => {
+      const isSuccess = state.doneAll.type === 'success';
+      const isDone = state.body === 'done';
+
       return (
         <>
           <LocateWarning tabId={tabId} isOpen={locateWarnIsOpen} setIsOpen={setLocateWarnIsOpen} />
           <Button
             variant="flat"
             onPress={handleClose}
-            color={state.body === 'done' ? 'success' : 'danger'}
-            startContent={state.body === 'done' ? <CheckRead className="size-5" /> : <X className="size-3.5" />}>
-            {state.body === 'done' ? 'Finish' : 'Cancel'}
+            color={isDone && isSuccess ? 'success' : 'danger'}
+            startContent={isDone && isSuccess ? <CheckRead className="size-5" /> : <X className="size-3.5" />}>
+            {!isDone ? 'Cancel' : isSuccess ? 'Finish' : 'Close'}
           </Button>
           {state.body === 'terminal' && (
             <FooterTerminal onDoneTerminal={onDoneTerminal} restartTerminal={restartTerminal} />

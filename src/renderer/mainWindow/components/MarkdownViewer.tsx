@@ -1,6 +1,7 @@
 import {Kbd, Spinner} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {extractGitUrl} from '@lynx_common/utils';
+import {Link} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {
   Children,
@@ -268,7 +269,8 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
     <EmptyStateCard
       title={error}
       bodyClassName="py-8"
-      className="my-8 mx-4"
+      className="mt-8 mx-16"
+      icon={<Link size={50} className="text-warning" />}
       description="Please check your internet connection and try again."
     />
   ) : (

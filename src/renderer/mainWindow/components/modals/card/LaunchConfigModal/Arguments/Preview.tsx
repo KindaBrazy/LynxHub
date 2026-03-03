@@ -1,5 +1,6 @@
 import {Card, CardBody} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
+import {InboxLine} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {useMemo, useState} from 'react';
 
@@ -30,7 +31,12 @@ export default function ArgumentsPreview({text}: Props) {
       description="Preview of the final result to be saved"
       customButton={<CopyClipboard contentToCopy={text} tooltipTitle="Copy Preview to Clipboard" showTooltip />}>
       {isEmpty(text) ? (
-        <EmptyStateCard className="m-0" bodyClassName="py-8" description="No preview available to display" />
+        <EmptyStateCard
+          className="m-0"
+          bodyClassName="py-8"
+          icon={<InboxLine size={40} />}
+          description="No preview available to display"
+        />
       ) : (
         <Card
           className={

@@ -2,7 +2,7 @@ import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownT
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
-import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
+import {Inbox, MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
@@ -58,7 +58,11 @@ export default function Commands({id}: Props) {
       title="AI Execution (Terminal Commands)"
       description="Execute these commands when launching AI, overriding default settings">
       {isEmpty(commands) ? (
-        <EmptyStateCard bodyClassName="py-8" description="No custom command available to execute" />
+        <EmptyStateCard
+          bodyClassName="py-8"
+          icon={<Inbox size={40} />}
+          description="No custom command available to execute!"
+        />
       ) : (
         <AnimatePresence>
           <Reorder.Group axis="y" values={commands} onReorder={reorderCommands} className="space-y-2 overflow-hidden">
