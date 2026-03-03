@@ -3,7 +3,6 @@ import type * as pty from 'node-pty';
 
 import type {AvailablePageIDs} from '../../consts';
 import type {CustomRunBehaviorData} from '../ipc';
-import type {InstalledCard} from '../storage';
 
 declare global {
   interface Window {
@@ -117,7 +116,7 @@ export type CardMainMethodsInitial = (utils: MainModuleUtils) => {
   saveArgs?: (args: ChosenArgument[]) => Promise<void>;
   mainIpc?: () => void;
   updateAvailable?: () => Promise<boolean>;
-  isInstalled?: (onInstalledDirExist: (card: InstalledCard) => Promise<boolean>) => Promise<boolean>;
+  isInstalled?: () => Promise<boolean>;
   uninstall?: () => Promise<void>;
 };
 
@@ -135,7 +134,7 @@ export type CardMainMethods = () => {
   saveArgs?: (args: ChosenArgument[]) => Promise<void>;
   mainIpc?: () => void;
   updateAvailable?: () => Promise<boolean>;
-  isInstalled?: (onInstalledDirExist: (card: InstalledCard) => Promise<boolean>) => Promise<boolean>;
+  isInstalled?: () => Promise<boolean>;
   uninstall?: () => Promise<void>;
 };
 
