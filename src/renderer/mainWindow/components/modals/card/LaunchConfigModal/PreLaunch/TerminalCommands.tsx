@@ -2,7 +2,7 @@ import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownT
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import filesIpc from '@lynx_shared/ipc/files';
-import {MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
+import {Inbox, MoveToFolder} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
 import {Plus} from 'lucide-react';
@@ -58,7 +58,11 @@ export default function PreTerminalCommands({id}: Props) {
       addTooltipTitle="Add New Command"
       description="Execute these terminal commands before launching the AI.">
       {isEmpty(commands) ? (
-        <EmptyStateCard bodyClassName="py-8" description="No commands available to execute" />
+        <EmptyStateCard
+          bodyClassName="py-8"
+          icon={<Inbox size={40} />}
+          description="No commands available to execute"
+        />
       ) : (
         <AnimatePresence>
           <Reorder.Group axis="y" values={commands} onReorder={reorderCommands} className="space-y-2 overflow-hidden">

@@ -1,10 +1,10 @@
+import {ModalBody, Progress} from '@heroui/react';
 import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import {ModalBody, Progress} from '@heroui/react';
 import {DownloadProgress} from '@lynx_common/types/ipc';
 import {UserInputField, UserInputResult} from '@lynx_common/types/plugins/modules';
 import {formatSize} from '@lynx_common/utils';
-import {CheckCircle, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
+import {CheckCircle, SadCircle, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize} from 'lodash';
 import {Dispatch, Fragment, memo, RefObject, SetStateAction, useCallback} from 'react';
 
@@ -117,15 +117,17 @@ const InstallBody = memo(
                 isIndeterminate={progressBarState.isIndeterminate}
                 showValueLabel
               />
-              {progressBarItems.length > 0 && <DescriptionGrid className="mt-8 text-start" columns={2} items={progressBarItems} />}
+              {progressBarItems.length > 0 && (
+                <DescriptionGrid columns={2} items={progressBarItems} className="mt-8 text-start" />
+              )}
             </div>
           );
         case 'progress':
           return progressInfo?.stage === 'failed' ? (
             <EmptyStateCard
               className="my-6"
-              icon={<ShieldCross className="size-12 text-danger" />}
               title="Download Failed"
+              icon={<ShieldCross className="size-12 text-danger" />}
               description="Please check your internet connection and try again."
             />
           ) : (
@@ -136,20 +138,20 @@ const InstallBody = memo(
                 value={progressInfo?.percentage}
                 showValueLabel
               />
-              <DescriptionGrid className="mt-6" columns={2} items={downloadItems} />
+              <DescriptionGrid columns={2} className="mt-6" items={downloadItems} />
             </div>
           );
         case 'done':
           return (
             <EmptyStateCard
-              className="my-6"
               icon={
                 state.doneAll.type === 'success' ? (
-                  <CheckCircle className="size-12 text-success" />
+                  <CheckCircle className="size-16 text-success" />
                 ) : (
-                  <ShieldCross className="size-12 text-danger" />
+                  <SadCircle className="size-16 text-danger" />
                 )
               }
+              className="my-6"
               title={state.doneAll.title}
               description={state.doneAll.description}
             />

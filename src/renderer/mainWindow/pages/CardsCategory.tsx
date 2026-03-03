@@ -1,11 +1,12 @@
-import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import RenderCardList from '@lynx/components/card/RenderList';
+import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import NavigateToPluginsButton from '@lynx/components/NavigateToPluginsButton';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useAllCardDataWithPath, useSearchCards} from '@lynx/plugins/modules';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
 import {LoadedCardData} from '@lynx_common/types/plugins/modules';
+import {Inbox, PinCircle} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
 import {memo, useMemo} from 'react';
@@ -39,8 +40,10 @@ const CardsByIds = ({cardIds, cat}: {cardIds: string[]; cat: string}) => {
             <EmptyStateCard
               className="size-full"
               bodyClassName="gap-y-3"
-              description="No Card to Display!"
+              icon={<Inbox size={40} />}
+              title="No Card to Display!"
               action={<NavigateToPluginsButton />}
+              description="Please install at least one module in plugins page."
             />
           ) : (
             <RenderCardList cards={cards} />
@@ -66,8 +69,10 @@ const AllCards = () => {
       <EmptyStateCard
         className="size-full"
         bodyClassName="gap-y-3"
-        description="No Card to Display!"
+        icon={<Inbox size={40} />}
+        title="No Card to Display!"
         action={<NavigateToPluginsButton />}
+        description="Please install at least one module in plugins page."
       />
     );
   }
@@ -99,6 +104,8 @@ export const PinnedCars = memo(() => {
           <EmptyStateCard
             className="size-full"
             bodyClassName="gap-y-3"
+            title="No pinned card!"
+            icon={<PinCircle size={45} />}
             description="Pin your favorite cards to easily access them here."
           />
         ) : (
@@ -124,8 +131,13 @@ export const RecentlyCards = memo(() => {
       subTitle="Your Most Recent AI Interactions"
       icon={<History_Color_Icon id="home_category_history" className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
-        {isEmpty(recentlyUsedCards) && isEmpty(recentlyCategory) ? (
-          <EmptyStateCard className="size-full" bodyClassName="gap-y-3" description="No Recently Used Card to Display!" />
+        {!isEmpty(recentlyUsedCards) && isEmpty(recentlyCategory) ? (
+          <EmptyStateCard
+            className="size-full"
+            bodyClassName="gap-y-3"
+            icon={<Inbox size={40} />}
+            description="No Recently Used Card to Display!"
+          />
         ) : (
           <>
             <CardsByIds cat="recently" cardIds={recentlyUsedCards} />

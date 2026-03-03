@@ -3,6 +3,7 @@ import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {CardInfoDescriptions} from '@lynx_common/types/plugins/modules';
 import {extractGitUrl, getCacheUrl, validateGitRepoUrl} from '@lynx_common/utils';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
+import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, startCase} from 'lodash';
 import {Fragment, useCallback, useEffect, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -83,7 +84,7 @@ const CardInfoModalContent = ({cardId, isOpen, devName, url, tabID}: CardInfoMod
         </ModalHeader>
         <ModalBody className="my-4 pb-0 scrollbar-hide">
           {isEmpty(openFolders) && isEmpty(cardInfoDescriptions) ? (
-            <EmptyStateCard bodyClassName="py-8" title="No data available to show!" />
+            <EmptyStateCard bodyClassName="py-8" icon={<Inbox size={40} />} title="No data available to display!" />
           ) : (
             <CardInfoDescription folders={openFolders} descriptions={cardInfoDescriptions} />
           )}

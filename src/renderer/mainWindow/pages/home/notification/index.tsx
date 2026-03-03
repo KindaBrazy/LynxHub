@@ -271,9 +271,9 @@ export default function HomeNotificationDrawer() {
             <AnimatePresence>
               {totalNotificationCount <= 0 ? (
                 <EmptyStateCard
-                  description="No notifications yet"
-                  className="mt-24 dark:bg-foreground-50/30"
-                  icon={<Bell className="size-8 text-foreground-400" />}
+                  description="No notifications yet!"
+                  className="dark:bg-foreground-50/30"
+                  icon={<Bell size={40} className="text-foreground-400" />}
                 />
               ) : (
                 <div className="flex flex-col gap-y-2">
