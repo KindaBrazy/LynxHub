@@ -22,7 +22,6 @@ export default async function listenContextMenu() {
 
   // Resizes the context menu window
   contextMenuIpc.on.resizeWindow(data => contextMenuManager.resizeContextMenu(data));
-  lynxIpc.on('context_size', (_, width, height) => contextMenuManager.resizeContextMenu({width, height, dpr: 0}));
 
   // Edit operations
   contextMenuIpc.on.copy(id => getWebContents(id)?.copy());
