@@ -21,10 +21,8 @@ export default class ContextMenuManager {
   private static readonly CONTEXT_WINDOW_CONFIG: BrowserWindowConstructorOptions = {
     frame: false,
     show: false,
-    width: 180,
-    height: 290,
-    minWidth: 0,
-    minHeight: 0,
+    minWidth: 1,
+    minHeight: 1,
     resizable: false,
     maximizable: false,
     skipTaskbar: true,
@@ -233,7 +231,7 @@ export default class ContextMenuManager {
 
     try {
       addBreadcrumb(`Resizing context menu: ${contentW}x${contentH}`);
-      window.setBounds({width: contentW, height: contentH});
+      window.setBounds({width: contentW, height: contentH}, false);
     } catch (error) {
       console.error('Failed to resize context menu:', error);
     }
@@ -249,7 +247,7 @@ export default class ContextMenuManager {
     const window = this.contextMenuWindow;
     if (!window || window.isDestroyed()) return;
 
-    const [menuWidth, menuHeight] = window.getContentSize();
+    const {width: menuWidth, height: menuHeight} = window.getBounds();
     let clickPoint: {x: number; y: number};
 
     if (this.customContextPosition && this.mainWindow && !this.mainWindow.isDestroyed()) {
@@ -269,7 +267,7 @@ export default class ContextMenuManager {
     let newY = clickPoint.y;
 
     if (newX + menuWidth > workArea.x + workArea.width) {
-      newX = clickPoint.x - menuWidth;
+      newX = clickPoint.x - (this.customContextPosition ? menuWidth / 2 : menuWidth);
     }
 
     if (newY + menuHeight > workArea.y + workArea.height) {
@@ -280,7 +278,7 @@ export default class ContextMenuManager {
     newY = Math.max(newY, workArea.y);
 
     try {
-      window.setPosition(Math.floor(newX), Math.floor(newY), true);
+      window.setBounds({x: Math.floor(newX), y: Math.floor(newY)}, false);
     } catch (e) {
       console.error('Failed to set context menu position:', e);
     }
