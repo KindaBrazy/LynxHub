@@ -143,11 +143,12 @@ export default class ContextMenuManager {
     this.isHiding = false;
     this.clearAnimation();
 
-    this.positionContextMenuAtCursor();
     this.contextMenuWindow.setOpacity(0);
     this.contextMenuWindow.show();
 
     this.animateOpacity(1);
+
+    this.positionContextMenuAtCursor();
   }
 
   public hideContextMenu(focusMainWindow: boolean = true) {
@@ -186,7 +187,7 @@ export default class ContextMenuManager {
     if (!window || window.isDestroyed()) return;
 
     let opacity = window.getOpacity();
-    const step = target > opacity ? 0.2 : -0.2;
+    const step = target > opacity ? 0.1 : -0.1;
 
     this.animationInterval = setInterval(() => {
       if (!window || window.isDestroyed()) {
@@ -236,6 +237,8 @@ export default class ContextMenuManager {
     } catch (error) {
       console.error('Failed to resize context menu:', error);
     }
+
+    this.positionContextMenuAtCursor();
   }
 
   /**

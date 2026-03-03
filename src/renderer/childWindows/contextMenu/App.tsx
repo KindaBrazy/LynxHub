@@ -32,8 +32,6 @@ export default function ContextMenu() {
     const element = containerRef.current;
     if (!element) return;
 
-    let lastSent: {w: number; h: number} | null = null;
-
     const sendSize = () => {
       if (!element) return;
 
@@ -41,11 +39,6 @@ export default function ContextMenu() {
       const width = Math.max(Math.ceil(element.scrollWidth), Math.ceil(rect.width));
       const height = Math.max(Math.ceil(element.scrollHeight), Math.ceil(rect.height));
 
-      if (lastSent && lastSent.w === width && lastSent.h === height) {
-        return;
-      }
-
-      lastSent = {w: width, h: height};
       const dpr = window.devicePixelRatio || 1;
       contextMenuIpc.send.resizeWindow({width, height, dpr});
     };
