@@ -5,7 +5,7 @@ import {Forward2, Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
 import {useContextState} from '../../redux/reducer';
-import {hideContextWindow, setElementFocus} from '../Shared';
+import {hideContextWindow, useFocus} from '../Shared';
 import ConfirmElement from './ConfirmElement';
 
 /**
@@ -24,12 +24,15 @@ const TerminateProcess = memo(() => {
     hideContextWindow();
   };
 
+  const focusRef = useFocus();
+
   return (
     <ConfirmElement
       buttons={
         <>
           <Button
             size="sm"
+            tabIndex={2}
             color="success"
             className="w-20"
             onPress={hideContextWindow}
@@ -39,6 +42,7 @@ const TerminateProcess = memo(() => {
           <div className="space-x-2">
             <Button
               size="sm"
+              tabIndex={1}
               color="warning"
               className="w-25"
               onPress={onRelaunch}
@@ -47,12 +51,12 @@ const TerminateProcess = memo(() => {
             </Button>
             <Button
               size="sm"
+              tabIndex={0}
               color="danger"
+              ref={focusRef}
               className="w-25"
               onPress={onStop}
-              ref={setElementFocus}
-              startContent={<Power_Icon className="shrink-0 size-3.5" />}
-              autoFocus>
+              startContent={<Power_Icon className="shrink-0 size-3.5" />}>
               Terminate
             </Button>
           </div>

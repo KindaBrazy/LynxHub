@@ -4,7 +4,7 @@ import {Check, ShieldCheck, X} from 'lucide-react';
 import {memo} from 'react';
 
 import {useContextState} from '../../redux/reducer';
-import {hideContextWindow, setElementFocus} from '../Shared';
+import {hideContextWindow, useFocus} from '../Shared';
 
 /**
  * ConfirmWindow Component
@@ -18,6 +18,8 @@ const ConfirmWindow = memo(function ConfirmWindow() {
     hideContextWindow();
   };
 
+  const focusRef = useFocus();
+
   return (
     <div className="py-5 px-5 flex flex-col gap-y-5 draggable w-100">
       <div className="flex gap-x-2 items-center">
@@ -29,6 +31,7 @@ const ConfirmWindow = memo(function ConfirmWindow() {
 
       <div className="flex justify-between">
         <Button
+          tabIndex={1}
           variant="light"
           color="warning"
           aria-label="Cancel"
@@ -39,14 +42,14 @@ const ConfirmWindow = memo(function ConfirmWindow() {
         </Button>
 
         <Button
+          tabIndex={0}
           variant="flat"
+          ref={focusRef}
           color="success"
-          aria-label="OK"
-          ref={setElementFocus}
+          aria-label="Confirm"
           className="notDraggable"
           onPress={() => handleResult(true)}
-          startContent={<Check className="size-4" />}
-          autoFocus>
+          startContent={<Check className="size-4" />}>
           OK
         </Button>
       </div>
