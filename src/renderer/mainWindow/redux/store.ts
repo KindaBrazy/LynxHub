@@ -96,6 +96,7 @@ const buildPreloadedState = (): PreloadState | undefined => {
       checkUpdateInterval: storage.cards.checkUpdateInterval,
       activeTab: '',
       browserDomReadyIds: [],
+      updateChecking: '',
     },
     hotkeys: {
       input: emptyHotkeyInput,
