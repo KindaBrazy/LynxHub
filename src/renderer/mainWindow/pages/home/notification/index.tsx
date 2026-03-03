@@ -271,9 +271,9 @@ export default function HomeNotificationDrawer() {
             <AnimatePresence>
               {totalNotificationCount <= 0 ? (
                 <EmptyStateCard
+                  description="No notifications yet"
                   className="mt-24 dark:bg-foreground-50/30"
                   icon={<Bell className="size-8 text-foreground-400" />}
-                  description="No notifications yet"
                 />
               ) : (
                 <div className="flex flex-col gap-y-2">
@@ -294,8 +294,8 @@ export default function HomeNotificationDrawer() {
             </AnimatePresence>
           </DrawerBody>
 
-          <DrawerFooter className="justify-start py-2">
-            <Button size="sm" variant="light" color="warning" onPress={onClose}>
+          <DrawerFooter className="justify-start p-3">
+            <Button variant="light" color="warning" onPress={onClose}>
               Close
             </Button>
           </DrawerFooter>
