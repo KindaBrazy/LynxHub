@@ -5,7 +5,7 @@ import applicationIpc from '@lynx_shared/ipc/application';
 import {Forward2, Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {memo} from 'react';
 
-import {hideContextWindow, setElementFocus} from '../Shared';
+import {hideContextWindow, useFocus} from '../Shared';
 import ConfirmElement from './ConfirmElement';
 
 /**
@@ -16,12 +16,15 @@ const CloseApp = memo(() => {
   const onRestart = () => applicationIpc.send.changeWinState('restart');
   const onClose = () => applicationIpc.send.changeWinState('close');
 
+  const focusRef = useFocus();
+
   return (
     <ConfirmElement
       buttons={
         <>
           <Button
             size="sm"
+            tabIndex={2}
             color="success"
             className="w-20"
             onPress={hideContextWindow}
@@ -32,6 +35,7 @@ const CloseApp = memo(() => {
             {!isLinuxPortable && (
               <Button
                 size="sm"
+                tabIndex={1}
                 color="warning"
                 className="w-25"
                 onPress={onRestart}
@@ -41,12 +45,12 @@ const CloseApp = memo(() => {
             )}
             <Button
               size="sm"
+              tabIndex={0}
               color="danger"
+              ref={focusRef}
               className="w-25"
               onPress={onClose}
-              ref={setElementFocus}
-              startContent={<Power_Icon className="shrink-0 size-3.5" />}
-              autoFocus>
+              startContent={<Power_Icon className="shrink-0 size-3.5" />}>
               Exit
             </Button>
           </div>

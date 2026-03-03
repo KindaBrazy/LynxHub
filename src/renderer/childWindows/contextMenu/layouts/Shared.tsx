@@ -1,4 +1,5 @@
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
+import {useEffect, useRef} from 'react';
 
 /**
  * Hides the context menu window via IPC.
@@ -8,16 +9,21 @@ export const hideContextWindow = (): void => {
 };
 
 /**
- * Sets focus to a specific HTML element with a slight delay.
- * Useful when the element might not be immediately focusable (e.g., after a render update).
- *
- * @param node - The HTML element to focus.
+ * Sets focus to a specific HTML element.
  */
-export const setElementFocus = (node: HTMLElement | null): void => {
-  if (node) {
-    // Small delay to ensure the DOM is ready/visible before focusing
-    setTimeout(() => {
-      node?.focus();
-    }, 100);
-  }
-};
+export function useFocus() {
+  const focusRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    const target = focusRef.current;
+    if (!target) return;
+
+    target.focus();
+
+    return () => {
+      target.blur();
+    };
+  }, []);
+
+  return focusRef;
+}
