@@ -20,7 +20,7 @@
     "buildNumber": 45,
     "detailedDescription": "Open-source, cross-platform terminal and browser, designed for managing AI. Highly modular and extensible, it's the all-in-one environment for AI power users.",
     "moduleApiVersion": "2.0.0",
-    "extensionApiVersion": "1.0.0"
+    "extensionApiVersion": "2.0.0"
   },
   "scripts": {
     "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
