@@ -19,7 +19,6 @@ export type {XTermAPI};
 export interface XTermCoreProps {
   id: string;
   onReady?: (api: XTermAPI) => void;
-  outputColor?: boolean;
   className?: string;
 
   // Optional external addons
@@ -54,7 +53,6 @@ const XTermCore = memo(
       {
         id,
         onReady,
-        outputColor = true,
         className = '',
         serializeAddon,
         searchAddon,
@@ -86,6 +84,7 @@ const XTermCore = memo(
       const resizeDelay = resizeDelayOverride ?? terminalSettings.resizeDelay;
       const useConpty = terminalSettings.useConpty;
       const enableLigatures = terminalSettings.enableLigatures;
+      const outputColor = terminalSettings.outputColor;
 
       const apiRef = useXTerm({
         id,
