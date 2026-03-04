@@ -2,11 +2,11 @@ import {addToast, Button} from '@heroui/react';
 import {appActions} from '@lynx/redux/reducers/app';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
-import {ChangelogItem, HeroToastPlacement} from '@lynx_common/types';
+import {ChangelogItem, type ElementResizeData, HeroToastPlacement} from '@lynx_common/types';
 import {InstalledCard} from '@lynx_common/types/storage';
 import {Dispatch} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment} from 'react';
+import {Fragment, useEffect, useRef} from 'react';
 
 /**
  * Hook to get an installed card by its ID.
@@ -164,3 +164,34 @@ export function RenderSubItems(items?: ChangelogItem[], parentKey: string = '') 
  * Checks if the app is running as a Linux portable version.
  */
 export const isLinuxPortable = window.isPortable === 'linux';
+
+export function useElementResizing(onResize: (data: ElementResizeData) => void) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = containerRef.current;
+    if (!element) return;
+
+    const sendSize = () => {
+      if (!element) return;
+
+      const rect = element.getBoundingClientRect();
+      const width = Math.max(Math.ceil(element.scrollWidth), Math.ceil(rect.width));
+      const height = Math.max(Math.ceil(element.scrollHeight), Math.ceil(rect.height));
+
+      const dpr = window.devicePixelRatio || 1;
+      onResize({width, height, dpr});
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      sendSize();
+    });
+
+    resizeObserver.observe(element);
+    sendSize(); // Initial size send
+
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  return containerRef;
+}

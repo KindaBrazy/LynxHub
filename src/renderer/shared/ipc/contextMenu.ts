@@ -1,5 +1,5 @@
 import {contextMenuChannels} from '@lynx_common/consts/ipcChannels/contextMenu';
-import type {ContextResizeData} from '@lynx_common/types';
+import type {ElementResizeData} from '@lynx_common/types';
 import type {ContextMenuVolumeData, NavHistory} from '@lynx_common/types/ipc';
 import type {ContextMenuParams} from 'electron';
 
@@ -11,7 +11,7 @@ type ContextNavigateAction = 'back' | 'forward' | 'refresh';
 const contextMenuIpc = {
   send: {
     // Resizes context menu window
-    resizeWindow: (data: ContextResizeData) => lynxIpc.send(contextMenuChannels.resizeWindow, data),
+    resizeWindow: (data: ElementResizeData) => lynxIpc.send(contextMenuChannels.resizeWindow, data),
 
     // Hides context menu window
     hideWindow: () => lynxIpc.send(contextMenuChannels.hideWindow),
