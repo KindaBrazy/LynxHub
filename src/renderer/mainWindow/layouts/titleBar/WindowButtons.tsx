@@ -6,7 +6,7 @@ import {ReactNode, useCallback, useMemo} from 'react';
 
 import WindowButtons_Close from './WindowButtonsClose';
 
-const BUTTONS_COMMON_STYLE = 'notDraggable cursor-default transition-colors duration-300 ease-out';
+const BUTTONS_COMMON_STYLE = 'notDraggable cursor-default transition-colors duration-200 ease-out';
 type WindowOperation = 'fullscreen' | 'minimize' | 'maximize' | 'close' | 'restart';
 
 /**
