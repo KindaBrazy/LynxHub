@@ -1,7 +1,7 @@
 import path from 'node:path';
 
 import {is} from '@electron-toolkit/utils';
-import {ContextResizeData} from '@lynx_common/types';
+import {ElementResizeData} from '@lynx_common/types';
 import {isMac} from '@lynx_common/utils';
 import {contextMenuIpc} from '@lynx_main/ipc/contextMenu';
 import {dialogBlurred} from '@lynx_main/ipc/dialogsWindow';
@@ -214,7 +214,7 @@ export default class ContextMenuManager {
    * Resizes the context menu based on content dimensions from the renderer.
    * Ensures the window stays within safe bounds (20x20 to 4096x4096).
    */
-  public resizeContextMenu(data: ContextResizeData) {
+  public resizeContextMenu(data: ElementResizeData) {
     const window = this.contextMenuWindow;
     if (!window || window.isDestroyed()) return;
 

@@ -1,5 +1,5 @@
 import {contextMenuChannels} from '@lynx_common/consts/ipcChannels/contextMenu';
-import {ContextResizeData} from '@lynx_common/types';
+import {ElementResizeData} from '@lynx_common/types';
 import {ContextMenuVolumeData, NavHistory} from '@lynx_common/types/ipc';
 import BrowserManager from '@lynx_main/managers/browser';
 import classHolder from '@lynx_main/managers/classHolder';
@@ -182,7 +182,7 @@ export const contextMenuIpc = {
   },
   on: {
     /** Listens for resize window request */
-    resizeWindow: (callback: (data: ContextResizeData) => void) =>
+    resizeWindow: (callback: (data: ElementResizeData) => void) =>
       lynxIpc.on(contextMenuChannels.resizeWindow, callback),
     /** Listens for copy request */
     copy: (callback: (id: number) => void) => lynxIpc.on(contextMenuChannels.copy, callback),

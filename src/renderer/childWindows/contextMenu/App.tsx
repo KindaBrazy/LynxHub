@@ -1,5 +1,5 @@
+import {useElementResizing} from '@lynx/utils/hooks';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
-import {useEffect, useRef} from 'react';
 
 import {MenuTypes} from './consts';
 import BrowserScale from './layouts/BrowserScale';
@@ -23,35 +23,9 @@ import useShowEvents from './useShowEvents';
  */
 export default function ContextMenu() {
   const activeLayout = useContextState('activeLayout');
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useElementResizing(contextMenuIpc.send.resizeWindow);
 
   useShowEvents();
-
-  // Resize window logic moved here as a useEffect
-  useEffect(() => {
-    const element = containerRef.current;
-    if (!element) return;
-
-    const sendSize = () => {
-      if (!element) return;
-
-      const rect = element.getBoundingClientRect();
-      const width = Math.max(Math.ceil(element.scrollWidth), Math.ceil(rect.width));
-      const height = Math.max(Math.ceil(element.scrollHeight), Math.ceil(rect.height));
-
-      const dpr = window.devicePixelRatio || 1;
-      contextMenuIpc.send.resizeWindow({width, height, dpr});
-    };
-
-    const resizeObserver = new ResizeObserver(() => {
-      sendSize();
-    });
-
-    resizeObserver.observe(element);
-    sendSize(); // Initial size send
-
-    return () => resizeObserver.disconnect();
-  }, []);
 
   return (
     <div ref={containerRef} className={`flex size-fit flex-col overflow-hidden bg-white dark:bg-LynxRaisinBlack`}>
