@@ -1,12 +1,13 @@
 import path from 'node:path';
 
-import {AudioState, CanGoType, WHType} from '@lynx_common/types/ipc';
+import {ElementResizeData} from '@lynx_common/types';
+import {AudioState, CanGoType} from '@lynx_common/types/ipc';
 import {formatWebAddress} from '@lynx_common/utils';
 import {applicationIpc} from '@lynx_main/ipc/application';
 import {browserIpc} from '@lynx_main/ipc/browser';
 import {getUserAgent, getWindowColor} from '@lynx_main/utils';
 import {BrowserWindow, FindInPageOptions, session, shell, WebContents, WebContentsView} from 'electron';
-import {debounce, isEmpty, isNil} from 'lodash';
+import {isNil} from 'lodash';
 
 import icon from '../../../resources/icon.png?asset';
 import classHolder from './classHolder';
@@ -14,8 +15,6 @@ import RegisterHotkeys from './hotkeys';
 
 // Constants
 const BROWSER_SESSION_PARTITION = 'persist:lynxhub_browser';
-const NAVBAR_HEIGHT = 80;
-const DEBOUNCE_DELAY_MS = 50;
 const PAGE_LOAD_TIMEOUT_MS = 2000;
 const SCRIPT_EXECUTION_TIMEOUT_MS = 3000;
 
@@ -26,19 +25,10 @@ const SCRIPT_EXECUTION_TIMEOUT_MS = 3000;
 export default class BrowserManager {
   private browsers: {id: string; view: WebContentsView}[] = [];
   private readonly mainWindow: BrowserWindow;
-  private extraOffset: {id: string; offset: WHType}[] = [];
-  private cachedOffset: WHType | null = null;
+  private lastViewSize: ElementResizeData | undefined = undefined;
 
   constructor(mainWindow: BrowserWindow) {
     this.mainWindow = mainWindow;
-
-    // Optimize resize handling
-    const debouncedSetBounds = debounce(() => this.setBounds(), DEBOUNCE_DELAY_MS);
-    this.mainWindow.on('maximize', debouncedSetBounds);
-    this.mainWindow.on('unmaximize', debouncedSetBounds);
-    this.mainWindow.on('enter-full-screen', debouncedSetBounds);
-    this.mainWindow.on('leave-full-screen', debouncedSetBounds);
-    this.mainWindow.on('resize', debouncedSetBounds);
   }
 
   /**
@@ -84,52 +74,25 @@ export default class BrowserManager {
     }
   }
 
-  /**
-   * Calculates the total offset from all active sidebars/panels.
-   */
-  private getOffsetResult() {
-    if (this.cachedOffset) return this.cachedOffset;
+  public resizeViews(data?: ElementResizeData) {
+    let targetSize: ElementResizeData | undefined = undefined;
 
-    let width = 0;
-    let height = 0;
-    for (const {offset} of this.extraOffset) {
-      width += offset.width;
-      height += offset.height;
+    if (data) {
+      targetSize = data;
+      this.lastViewSize = data;
+    } else if (this.lastViewSize) {
+      targetSize = this.lastViewSize;
     }
-    this.cachedOffset = {width, height};
-    return this.cachedOffset;
-  }
 
-  /** Invalidate cached offset when offsets change */
-  private invalidateOffsetCache() {
-    this.cachedOffset = null;
-  }
+    if (!targetSize) {
+      console.warn('Failed to get valid resizing data resize the browser view');
+      return;
+    }
 
-  /**
-   * Recalculates and sets the bounds for all browser views.
-   * Ensures views fit within the main window, accounting for navbar and offsets.
-   */
-  private setBounds() {
-    if (isEmpty(this.browsers)) return;
-
-    const window = this.getMainWindow();
-    if (!window) return;
-
-    const [width, height] = window.getContentSize();
-    const offset = this.getOffsetResult();
-    const calculatedWidth = width - offset.width;
-    const calculatedHeight = height - NAVBAR_HEIGHT - offset.height;
-
-    // Validate bounds are positive
-    if (calculatedWidth <= 0 || calculatedHeight <= 0) return;
+    const {x, y, width, height} = targetSize;
 
     this.browsers.forEach(browser => {
-      browser.view.setBounds({
-        x: 0,
-        y: NAVBAR_HEIGHT,
-        width: calculatedWidth,
-        height: calculatedHeight,
-      });
+      browser.view.setBounds({x: x || 0, y: y || 80, width, height});
     });
   }
 
@@ -368,7 +331,7 @@ export default class BrowserManager {
     this.browsers.push({id, view: newView});
     mainWindow.contentView.addChildView(newView);
 
-    this.setBounds();
+    // this.setBounds();
 
     this.setupWindowOpenHandler(webContents);
     RegisterHotkeys(webContents);
@@ -388,19 +351,6 @@ export default class BrowserManager {
 
   public async clearCookies() {
     return this.getSession().clearData({dataTypes: ['cookies', 'indexedDB', 'localStorage']});
-  }
-
-  /**
-   * Register extra layout offset (e.g. for sidebars).
-   */
-  public addOffset(id: string, offset: WHType) {
-    const existingOffset = this.extraOffset.findIndex(item => item.id === id);
-    if (existingOffset !== -1) {
-      this.extraOffset[existingOffset].offset = offset;
-    } else {
-      this.extraOffset.push({id, offset});
-    }
-    this.invalidateOffsetCache();
   }
 
   public clearHistory(selected: string[]) {

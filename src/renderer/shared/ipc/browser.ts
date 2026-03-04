@@ -1,5 +1,6 @@
 import {browserChannels} from '@lynx_common/consts/ipcChannels/browser';
-import type {AgentTypes, AudioState, CanGoType, ContextMenuVolumeData, WHType} from '@lynx_common/types/ipc';
+import type {ElementResizeData} from '@lynx_common/types';
+import type {AgentTypes, AudioState, CanGoType, ContextMenuVolumeData} from '@lynx_common/types/ipc';
 import type {FindInPageOptions} from 'electron';
 
 import lynxIpc from './lynxIpc';
@@ -22,6 +23,8 @@ const invokeWithSoftTimeout = async (channel: string, timeoutMessage: string, ..
 const browserIpc = {
   send: {
     resizeLinkPreview: (width: number) => lynxIpc.send(browserChannels.resizeLinkPreview, width),
+
+    resizeBrowserView: (data: ElementResizeData) => lynxIpc.send(browserChannels.resizeBrowserView, data),
 
     // Creates new browser webview instance
     createBrowser: (id: string) => lynxIpc.send(browserChannels.createBrowser, id),
@@ -77,9 +80,6 @@ const browserIpc = {
 
     // Updates user agent for all browsers
     updateUserAgent: () => lynxIpc.send(browserChannels.updateUserAgent),
-
-    // Adds offset to browser webview position
-    addOffset: (id: string, offset: WHType) => lynxIpc.send(browserChannels.addOffset, id, offset),
 
     // Clears browser history for selected URLs
     clearHistory: (selected: string[]) => lynxIpc.send(browserChannels.clearHistory, selected),

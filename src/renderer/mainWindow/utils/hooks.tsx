@@ -180,7 +180,7 @@ export function useElementResizing(onResize: (data: ElementResizeData) => void) 
       const height = Math.max(Math.ceil(element.scrollHeight), Math.ceil(rect.height));
 
       const dpr = window.devicePixelRatio || 1;
-      onResize({width, height, dpr});
+      onResize({width, height, dpr, x: rect.x, y: rect.y});
     };
 
     const resizeObserver = new ResizeObserver(() => {

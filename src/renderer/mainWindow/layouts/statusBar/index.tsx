@@ -1,7 +1,6 @@
 import {extensionsData} from '@lynx/plugins/extensions/loader';
-import browserIpc from '@lynx_shared/ipc/browser';
 import {isEmpty, isNil} from 'lodash';
-import {memo, useCallback, useEffect, useMemo, useState} from 'react';
+import {memo, useMemo} from 'react';
 
 const classNames = 'flex size-full items-center overflow-x-scroll scrollbar-hide';
 
@@ -17,32 +16,6 @@ const StatusBar = memo(() => {
     return isEmpty(addStart) && isEmpty(addCenter) && isEmpty(addEnd);
   }, [addStart, addCenter, addEnd]);
 
-  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
-
-  const setRef = useCallback(
-    (node: HTMLDivElement) => {
-      setContainerRef(node);
-    },
-    [setContainerRef],
-  );
-
-  useEffect(() => {
-    const observer = new ResizeObserver(entries => {
-      if (entries[0]) {
-        const {height} = entries[0].contentRect;
-        browserIpc.send.addOffset('statusBar', {width: 0, height});
-      }
-    });
-
-    if (containerRef) {
-      observer.observe(containerRef);
-    } else {
-      browserIpc.send.addOffset('statusBar', {width: 0, height: 0});
-    }
-
-    return () => observer.disconnect();
-  }, [containerRef]);
-
   return (
     <>
       {!isNil(ReplaceContainer) ? (
@@ -54,8 +27,7 @@ const StatusBar = memo(() => {
             className={
               'flex h-7 w-full flex-row justify-between overflow-hidden border-t border-foreground/10' +
               ' items-center bg-foreground-100/50 px-3 text-small dark:bg-LynxRaisinBlack/50'
-            }
-            ref={setRef}>
+            }>
             <div className={[classNames, 'justify-start'].join(' ')}>
               {addStart.map((Start, index) => (
                 <Start key={index} />

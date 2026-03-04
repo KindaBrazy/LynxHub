@@ -1,5 +1,6 @@
 import {browserChannels} from '@lynx_common/consts/ipcChannels/browser';
-import {AgentTypes, AudioState, CanGoType, ContextMenuVolumeData, MainHT, WHType} from '@lynx_common/types/ipc';
+import {ElementResizeData} from '@lynx_common/types';
+import {AgentTypes, AudioState, CanGoType, ContextMenuVolumeData, MainHT} from '@lynx_common/types/ipc';
 import {toMs} from '@lynx_common/utils';
 import BrowserManager from '@lynx_main/managers/browser';
 import classHolder from '@lynx_main/managers/classHolder';
@@ -101,15 +102,14 @@ export async function listenBrowser() {
     if (webContents) webContents.setUserAgent(getUserAgent());
   });
 
-  // Adds offset to browser webview position
-  browserIpc.on.addOffset((id, offset) => browserManager.addOffset(id, offset));
-
   // Clears browser history for selected URLs
   browserIpc.on.clearHistory(selected => browserManager.clearHistory(selected));
 
   // Forward volume updates from context menu to main window
   browserIpc.on.updateTabVolume((tabId, volume) => browserIpc.send.onTabVolumeUpdate(tabId, volume));
   browserIpc.on.updateTabMuted((tabId, muted) => browserIpc.send.onTabMutedUpdate(tabId, muted));
+
+  browserIpc.on.resizeBrowserView(data => browserManager.resizeViews(data));
 
   // Clears browser cache - remove existing handler first to prevent duplicate registration
   browserIpc.handle.clearCache(() => browserManager.clearCache());
@@ -199,8 +199,6 @@ export const browserIpc = {
     focusWebView: (callback: (id: string) => void) => lynxIpc.on(browserChannels.focusWebView, callback),
     /** Listens for update user agent request */
     updateUserAgent: (callback: () => void) => lynxIpc.on(browserChannels.updateUserAgent, callback),
-    /** Listens for add offset request */
-    addOffset: (callback: (id: string, offset: WHType) => void) => lynxIpc.on(browserChannels.addOffset, callback),
     /** Listens for clear history request */
     clearHistory: (callback: (selected: string[]) => void) => lynxIpc.on(browserChannels.clearHistory, callback),
 
@@ -222,6 +220,9 @@ export const browserIpc = {
     /** Listens for tab mute update */
     updateTabMuted: (callback: (tabId: string, muted: boolean) => void) =>
       lynxIpc.on(browserChannels.updateTabMuted, callback),
+    /** Listens for browser view resizing */
+    resizeBrowserView: (callback: (data: ElementResizeData) => void) =>
+      lynxIpc.on(browserChannels.resizeBrowserView, callback),
   },
   handle: {
     /** Handles clear cache request */
