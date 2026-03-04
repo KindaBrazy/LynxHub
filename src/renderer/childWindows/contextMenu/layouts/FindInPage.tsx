@@ -1,4 +1,4 @@
-import {Button, Chip, Input} from '@heroui/react';
+import {Button, Chip, Input, Switch} from '@heroui/react';
 import {Circle_Icon} from '@lynx_assets/icons';
 import browserIpc from '@lynx_shared/ipc/browser';
 import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/BoldDuotone';
@@ -27,6 +27,8 @@ const FindInPage = memo(function FindInPage() {
   const [inputRef, setInputRef] = useState<HTMLInputElement | null>(null);
   const focusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const [matchCase, setMatchCase] = useState<boolean>(false);
+
   // Set initial search value from selected text
   useEffect(() => {
     if (selectedText) {
@@ -36,7 +38,7 @@ const FindInPage = memo(function FindInPage() {
 
   useEffect(() => {
     if (searchValue) {
-      browserIpc.send.findInPage(id, searchValue, {findNext: true});
+      browserIpc.send.findInPage(id, searchValue, {findNext: true, matchCase});
     } else {
       browserIpc.send.stopFindInPage(id, 'clearSelection');
       setResult(null);
@@ -44,7 +46,7 @@ const FindInPage = memo(function FindInPage() {
 
     if (focusTimeoutRef.current) clearTimeout(focusTimeoutRef.current);
     focusTimeoutRef.current = setTimeout(() => inputRef?.focus(), 0);
-  }, [searchValue, id, inputRef]);
+  }, [searchValue, id, inputRef, matchCase]);
 
   // Listen for find results from main process
   useEffect(() => {
@@ -60,12 +62,12 @@ const FindInPage = memo(function FindInPage() {
   }, []);
 
   const next = useCallback(() => {
-    browserIpc.send.findInPage(id, searchValue, {findNext: false, forward: true});
-  }, [id, searchValue]);
+    browserIpc.send.findInPage(id, searchValue, {findNext: false, forward: true, matchCase});
+  }, [id, searchValue, matchCase]);
 
   const back = useCallback(() => {
-    browserIpc.send.findInPage(id, searchValue, {findNext: false, forward: false});
-  }, [id, searchValue]);
+    browserIpc.send.findInPage(id, searchValue, {findNext: false, forward: false, matchCase});
+  }, [id, searchValue, matchCase]);
 
   const clear = useCallback(() => {
     setSearchValue('');
@@ -208,6 +210,10 @@ const FindInPage = memo(function FindInPage() {
           <X className="size-4" />
         </Button>
       </div>
+
+      <Switch size="sm" isSelected={matchCase} onValueChange={setMatchCase}>
+        Match Case
+      </Switch>
 
       {/* Keyboard Shortcuts Help */}
       <div className="flex flex-col gap-1 rounded-lg bg-foreground-50 p-2 text-tiny text-foreground-500">
