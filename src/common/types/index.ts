@@ -37,7 +37,7 @@ export type OsPlatforms =
   | 'cygwin'
   | 'netbsd';
 
-export type ChosenArgument = {name: string; value: string};
+export type ChosenArgument = {name: string; value: string | number};
 export type ArgumentsPresets = {preset: string; arguments: ChosenArgument[]};
 export type ChosenArgumentsData = {activePreset: string; data: ArgumentsPresets[]};
 export type StorageChosenArgumentsData = {cardId: string; activePreset: string; data: ArgumentsPresets[]}[];

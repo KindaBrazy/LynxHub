@@ -535,7 +535,7 @@ export type ChosenArgument = {name: string; value: string};
 /**
  * Supported argument types.
  */
-export type ArgumentType = 'Directory' | 'File' | 'Input' | 'DropDown' | 'CheckBox';
+export type ArgumentType = 'Directory' | 'File' | 'Input' | 'Number' | 'DropDown' | 'CheckBox';
 
 /**
  * Definition of a single argument item.
@@ -544,6 +544,10 @@ export type ArgumentItem = {
   name: string;
   description?: string;
   type: ArgumentType;
+
+  numberStep?: number;
+  numberMax?: number;
+  numberMin?: number;
 
   defaultValue?: any;
   values?: string[];
@@ -618,14 +622,6 @@ export type GitHubRelease = {
   tag_name: string;
   prerelease: boolean;
   assets: GitHubReleaseAsset[];
-};
-
-/**
- * Simplified release info.
- */
-export type ReleaseInfo = {
-  version: string;
-  downloadUrl: string;
 };
 
 /**

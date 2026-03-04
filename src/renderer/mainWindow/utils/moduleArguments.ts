@@ -96,3 +96,11 @@ export const getArgumentValues = (name: string, args?: ArgumentsData) => getArgu
 
 export const getArgumentDescription = (name: string, args?: ArgumentsData) =>
   getArgumentProperty(name, args, 'description');
+
+export const getArgumentNumberConfig = (name: string, args?: ArgumentsData) => {
+  const numberStep = getArgumentProperty(name, args, 'numberStep');
+  const numberMin = getArgumentProperty(name, args, 'numberMin');
+  const numberMax = getArgumentProperty(name, args, 'numberMax');
+
+  return {numberStep, numberMin, numberMax};
+};

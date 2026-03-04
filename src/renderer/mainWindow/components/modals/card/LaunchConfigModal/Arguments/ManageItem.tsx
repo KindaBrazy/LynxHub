@@ -8,6 +8,7 @@ import DirectoryArgItem from './ArgumentItems/Directory';
 import DropdownArgItem from './ArgumentItems/Dropdown';
 import FileArgItem from './ArgumentItems/File';
 import InputArgItem from './ArgumentItems/Input';
+import NumberArgItem from './ArgumentItems/Number';
 
 type Props = {
   argument: ChosenArgument;
@@ -63,6 +64,8 @@ const ManageArgumentsItem = memo(({argument, setArguments, id}: Props) => {
         return FileArgItem;
       case 'Input':
         return InputArgItem;
+      case 'Number':
+        return NumberArgItem;
       case 'DropDown':
         return DropdownArgItem;
       case 'CheckBox':
