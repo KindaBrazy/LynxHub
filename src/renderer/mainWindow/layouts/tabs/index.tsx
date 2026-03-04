@@ -8,6 +8,7 @@ import {isEqual} from 'lodash';
 import {memo, useCallback, useEffect, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {useAppState} from '../../redux/reducers/app';
 import TabItem from './Item';
 import NewTab from './New';
 import {useRemoveTab} from './utils';
@@ -21,6 +22,7 @@ const TabsList = memo(() => {
 
   const tabsFromRedux = useTabsState('tabs');
   const removeTab = useRemoveTab();
+  const onFocus = useAppState('onFocus');
 
   const [localTabs, setLocalTabs] = useState<TabInfo[]>(tabsFromRedux);
 
@@ -100,7 +102,12 @@ const TabsList = memo(() => {
               animate={{scale: 1, y: 0, x: 0, opacity: 1, transition: {duration: 0.25, ease: 'backOut'}}}>
               <TabItem tab={tab} />
               {index < localTabs.length - 1 && (
-                <Divider orientation="vertical" className="mx-1 max-h-4 dark:bg-foreground-200/80 bg-foreground-200" />
+                <Divider
+                  className={`mx-1 max-h-4 dark:bg-foreground-200/50 ${
+                    onFocus ? 'bg-foreground-400/30' : 'bg-foreground-400/10'
+                  }`}
+                  orientation="vertical"
+                />
               )}
             </Reorder.Item>
           ))}
