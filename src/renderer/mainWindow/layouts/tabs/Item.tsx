@@ -110,7 +110,7 @@ const TabItem = memo(({tab}: Props) => {
       <Button
         className={
           'pr-0 text-small pl-2 flex rounded-t-lg! data-[hover=true]:bg-foreground-100 flex-row relative ' +
-          `cursor-default gap-x-0 ${isActiveTab && 'bg-white dark:bg-[#303033]'}`
+          `cursor-default gap-x-0 ${isActiveTab && 'bg-white dark:bg-[#303033]'} h-9`
         }
         ref={btnRef}
         radius="none"

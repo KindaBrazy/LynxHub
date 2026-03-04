@@ -10,8 +10,8 @@ import WindowButtons from './WindowButtons';
 
 const TITLE_BAR_HEIGHT = 'h-10';
 const BACKGROUND_CLASSES = {
-  default: 'bg-LynxWhiteFifth/10 dark:bg-LynxNearBlack/10 border-b border-foreground/0',
-  focused: 'bg-LynxWhiteFifth/70 dark:bg-LynxNearBlack/50 border-b border-foreground-100',
+  default: 'bg-neutral-300/10 dark:bg-neutral-900/10',
+  focused: 'bg-neutral-300/70 dark:bg-neutral-900/70',
 };
 
 /**
@@ -34,7 +34,7 @@ const TitleBar = memo(() => {
     <div
       className={
         `draggable absolute inset-x-0 top-0 z-50 flex ${TITLE_BAR_HEIGHT} flex-row items-center ` +
-        ` justify-between overflow-hidden transition-colors duration-500 ${backgroundClass} `
+        ` justify-between overflow-hidden transition-colors duration-500 ${backgroundClass}`
       }>
       {showWizard ? (
         <Button
