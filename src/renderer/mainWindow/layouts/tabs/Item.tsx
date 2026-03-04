@@ -127,13 +127,15 @@ const TabItem = memo(({tab}: Props) => {
         </div>
 
         <Button
+          className={`cursor-default opacity-100 scale-75 ${
+            isActiveTab ? ' opacity-100 scale-75 ' : ' opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-75'
+          }`}
           as="span"
           size="sm"
           variant="light"
           ref={closeBtnRef}
           aria-label="Close tab"
           onPress={() => handleRemove(false)}
-          className="scale-75 cursor-default"
           isIconOnly>
           <X size={18} />
         </Button>
