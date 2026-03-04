@@ -258,7 +258,7 @@ export type CardState = {
 export type SubscribeStages = 'insider' | 'early_access' | 'public';
 export type SearchQuerySites = 'Google' | 'DuckDuckGo' | 'Reddit' | 'ChatGPT' | 'Perplexity' | 'Claude';
 
-export type ElementResizeData = {width: number; height: number; dpr: number};
+export type ElementResizeData = {width: number; height: number; dpr: number; x?: number; y?: number};
 
 export type StorageUnit = 'B' | 'KB' | 'MB' | 'GB' | 'TB' | 'PB' | 'b' | 'kb' | 'mb' | 'gb' | 'tb' | 'pb';
 

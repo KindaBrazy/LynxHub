@@ -3,6 +3,7 @@ import {memo} from 'react';
 
 import BrowserError from './BrowserError';
 import BrowserHome from './BrowserHome';
+import BrowserViewPlaceholder from './BrowserViewPlaceholder';
 import {useBrowser} from './hooks/useBrowser';
 
 type Props = {runningCard: RunningCard};
@@ -20,7 +21,9 @@ const Browser = memo(({runningCard}: Props) => {
         <BrowserHome type={type} />
       ) : failedLoad ? (
         <BrowserError error={failedLoad} onReload={handleReload} />
-      ) : null}
+      ) : (
+        <BrowserViewPlaceholder />
+      )}
     </div>
   );
 });

@@ -16,6 +16,7 @@ export const browserChannels = {
 
   onLinkHover: 'browser:on-link-hover',
   resizeLinkPreview: 'browser:resize-link-preview',
+  resizeBrowserView: 'browser:resize-browser-view',
 
   findInPage: 'browser:findInPage',
   stopFindInPage: 'browser:stopFindInPage',
@@ -44,7 +45,6 @@ export const browserChannels = {
   getUserAgent: 'browser:get-user-agent',
   updateUserAgent: 'browser:update-user-agent',
 
-  addOffset: 'browser:add-offset',
   clearHistory: 'browser:clear-history',
 
   onFailedLoadUrl: 'browser:on-failed-load-url',
