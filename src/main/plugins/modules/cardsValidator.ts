@@ -6,12 +6,7 @@ import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
 import AddBreadcrumb_Main from '@lynx_main/utils/breadcrumbs';
 import {ChokidarOptions, FSWatcher, watch} from 'chokidar';
 import {promises} from 'graceful-fs';
-import {compact, isEqual} from 'lodash';
-
-type CardsType = {
-  id: string;
-  dir?: string;
-};
+import {compact, isEqual, uniqBy} from 'lodash';
 
 /**
  * Handle the validation and watching of installed cards.
@@ -124,7 +119,7 @@ export class ValidateCards {
    * @param card - The installed card to validate
    * @returns The path card info if valid, null otherwise
    */
-  private async validateCardDir(card: InstalledCard): Promise<CardsType | null> {
+  private async validateCardDir(card: InstalledCard): Promise<InstalledCard | null> {
     if (!card.dir || path.basename(card.dir).startsWith('.')) return null;
 
     const exist = await this.dirExist(card.dir);
@@ -146,7 +141,7 @@ export class ValidateCards {
    * @returns Resolves to an array of valid cards
    */
   private async validateCards(installedCards: InstalledCards): Promise<InstalledCards> {
-    const validCards: CardsType[] = [];
+    const validCards: InstalledCard[] = [];
 
     const moduleManager = await classHolder.waitForClass('moduleManager');
 
@@ -187,7 +182,7 @@ export class ValidateCards {
       const validCards = await this.validateCards(installedCards);
 
       if (!isEqual(installedCards, validCards)) {
-        storageManager.updateData('cards', {installedCards: validCards});
+        storageManager.updateData('cards', {installedCards: uniqBy(validCards, 'id')});
       }
     } catch (error) {
       console.error('[DataValidator - checkAndWatch]: Failed to validate cards:', error);
