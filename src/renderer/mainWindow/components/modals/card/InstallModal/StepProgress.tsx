@@ -1,6 +1,8 @@
 import {cn, Spinner} from '@heroui/react';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
-import {memo, ReactNode} from 'react';
+import {memo, ReactNode, useEffect, useRef} from 'react';
+
+import {useHasScroll} from '../../../../utils/hooks';
 
 type StepItem = {
   key: string | number;
@@ -42,6 +44,31 @@ function StepIndicator({status}: {status: 'complete' | 'current' | 'upcoming'}) 
 }
 
 function StepProgress({items, current, orientation = 'horizontal', className, titleClassName}: StepProgressProps) {
+  const {hasScroll, containerRef, setContainerRef} = useHasScroll();
+  const currentActiveItem = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const item = currentActiveItem.current;
+
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) {
+            if (hasScroll && item && containerRef) {
+              const offsetLeft = item.offsetLeft;
+              containerRef.scrollTo({behavior: 'smooth', left: offsetLeft});
+            }
+          }
+        });
+      },
+      {root: containerRef},
+    );
+
+    if (item) observer.observe(item);
+
+    return () => observer.disconnect();
+  }, [current, hasScroll]);
+
   if (items.length === 0) return null;
 
   if (orientation === 'vertical') {
@@ -75,14 +102,21 @@ function StepProgress({items, current, orientation = 'horizontal', className, ti
   }
 
   return (
-    <div className={cn('overflow-x-auto px-1 py-1', className)}>
+    <div ref={setContainerRef} className={cn('overflow-x-scroll scrollbar-hide px-1 py-1', className)}>
       <div className="flex min-w-max items-start">
         {items.map((item, index) => {
           const status = getStatus(index, current);
           const isLast = index === items.length - 1;
 
           return (
-            <div key={item.key} className="flex items-start">
+            <div
+              ref={node => {
+                if (status === 'current') {
+                  currentActiveItem.current = node;
+                }
+              }}
+              key={item.key}
+              className="flex items-start">
               <div className="flex min-w-0 flex-col items-center gap-1.5">
                 <StepIndicator status={status} />
                 <span
