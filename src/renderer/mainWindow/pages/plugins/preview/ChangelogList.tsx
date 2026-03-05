@@ -1,9 +1,12 @@
 import {Chip} from '@heroui/react';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
+import {SubscribeStages} from '@lynx_common/types';
 import {ChangelogItem, ChangelogSubItem, PluginChangelog} from '@lynx_common/types/plugins';
 import {motion} from 'framer-motion';
 import {memo} from 'react';
+
+import {getStageColor, getStageDisplayName} from './utils';
 
 /**
  * Props for the {@link ChangelogEntry} component.
@@ -124,12 +127,13 @@ interface VersionHistoryCardProps {
   isInstalledVersion: boolean;
   /** Total number of versions in the list. */
   totalCount: number;
+  stage: SubscribeStages | undefined;
 }
 
 /**
  * Renders a card representing a single version in the plugin's history.
  */
-function VersionHistoryCard({versionData, index, isInstalledVersion, totalCount}: VersionHistoryCardProps) {
+function VersionHistoryCard({versionData, index, isInstalledVersion, totalCount, stage}: VersionHistoryCardProps) {
   const isLatest = index === 0;
 
   return (
@@ -147,20 +151,28 @@ function VersionHistoryCard({versionData, index, isInstalledVersion, totalCount}
             : 'border-foreground-100 hover:border-foreground-200'
         }`}>
         {/* Version markers (Latest, Current, Version Number) */}
-        <div className="flex items-center gap-x-2 relative">
-          <Chip size="sm" variant={isLatest ? 'shadow' : 'solid'} color={isLatest ? 'secondary' : 'default'}>
-            {versionData.version}
-          </Chip>
-
-          {isInstalledVersion && (
-            <Chip size="sm" color="success">
-              Current
+        <div className="flex items-center gap-x-2 relative w-full justify-between">
+          <div className="flex items-center gap-x-2">
+            <Chip size="sm" color={isLatest ? 'secondary' : 'default'}>
+              {versionData.version}
             </Chip>
-          )}
 
-          {isLatest && (
-            <Chip size="sm" color="primary">
-              Latest
+            {isInstalledVersion && (
+              <Chip size="sm" color="success">
+                Installed
+              </Chip>
+            )}
+
+            {isLatest && (
+              <Chip size="sm" color="primary">
+                Latest
+              </Chip>
+            )}
+          </div>
+
+          {stage && (
+            <Chip size="sm" variant="shadow" color={getStageColor(stage)}>
+              {getStageDisplayName(stage)}
             </Chip>
           )}
         </div>
@@ -207,15 +219,19 @@ const PluginChangelogList = memo(() => {
       transition={{duration: 0.3}}
       className="size-full overflow-hidden">
       <LynxScroll className="gap-y-8 px-6 py-4 size-full">
-        {selectedPlugin?.changes.map((version, index) => (
-          <VersionHistoryCard
-            index={index}
-            key={version.version}
-            versionData={version}
-            totalCount={selectedPlugin.changes.length}
-            isInstalledVersion={version.version === installedVersion}
-          />
-        ))}
+        {selectedPlugin?.changes.map((version, index) => {
+          const stage = selectedPlugin?.versions.find(v => v.version === version.version)?.stage;
+          return (
+            <VersionHistoryCard
+              index={index}
+              stage={stage}
+              key={version.version}
+              versionData={version}
+              totalCount={selectedPlugin.changes.length}
+              isInstalledVersion={version.version === installedVersion}
+            />
+          );
+        })}
       </LynxScroll>
     </motion.div>
   );
