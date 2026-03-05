@@ -25,6 +25,7 @@ import {
   getRelativePath,
   isPortable,
 } from '@lynx_main/utils';
+import {uniqBy} from 'lodash';
 
 import BaseStorage from './index';
 
@@ -237,34 +238,38 @@ class StorageManager extends BaseStorage {
   }
 
   public addInstalledCard(card: InstalledCard): void {
-    const {cardsValidator} = classHolder;
-    const storedCards = this.getData('cards').installedCards;
+    classHolder.waitForClass('cardsValidator').then(cardsValidator => {
+      const storedCards = this.getData('cards').installedCards;
 
-    const cardExists = storedCards.some(c => c.id === card.id);
+      const cardExists = storedCards.some(c => c.id === card.id);
 
-    if (!cardExists) {
-      if (card.dir && isPortable()) {
-        card.dir = getRelativePath(getExePath(), card.dir);
+      if (!cardExists) {
+        if (card.dir && isPortable()) {
+          card.dir = getRelativePath(getExePath(), card.dir);
+        }
+        const installedCards: InstalledCards = [...storedCards, card];
+
+        this.updateData('cards', {installedCards});
+
+        storageUtilsIpc.send.onInstalledCards(uniqBy(installedCards, 'id'));
+
+        cardsValidator.changedCards();
       }
-      const installedCards: InstalledCards = [...storedCards, card];
+    });
+  }
+
+  public removeInstalledCard(id: string): void {
+    classHolder.waitForClass('cardsValidator').then(cardsValidator => {
+      const storedCards = this.getData('cards').installedCards;
+
+      const installedCards = storedCards.filter(card => card.id !== id);
 
       this.updateData('cards', {installedCards});
 
       storageUtilsIpc.send.onInstalledCards(installedCards);
-    }
-    cardsValidator?.changedCards();
-  }
 
-  public removeInstalledCard(id: string): void {
-    const {cardsValidator} = classHolder;
-    const storedCards = this.getData('cards').installedCards;
-
-    const installedCards = storedCards.filter(card => card.id !== id);
-
-    this.updateData('cards', {installedCards});
-
-    storageUtilsIpc.send.onInstalledCards(installedCards);
-    cardsValidator?.changedCards();
+      cardsValidator.changedCards();
+    });
   }
 
   public removeInstalledCardByPath(dir: string): void {
@@ -579,17 +584,18 @@ class StorageManager extends BaseStorage {
    * Preserves previous bounds if window is maximized.
    */
   public updateLastSize(): void {
-    const {appManager} = classHolder;
-    const isMaximized = appManager?.getMainWindow()?.isMaximized() || false;
-    const bounds = appManager?.getMainWindow()?.getBounds();
+    classHolder.waitForClass('appManager').then(appManager => {
+      const isMaximized = appManager.getMainWindow()?.isMaximized() || false;
+      const bounds = appManager.getMainWindow()?.getBounds();
 
-    const prevBounds = this.getData('app').lastSize?.bounds;
+      const prevBounds = this.getData('app').lastSize?.bounds;
 
-    this.updateData('app', {
-      lastSize: {
-        maximized: isMaximized,
-        bounds: isMaximized ? prevBounds : bounds, // Keep previous bounds when maximized
-      },
+      this.updateData('app', {
+        lastSize: {
+          maximized: isMaximized,
+          bounds: isMaximized ? prevBounds : bounds, // Keep previous bounds when maximized
+        },
+      });
     });
   }
 
