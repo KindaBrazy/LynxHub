@@ -7,6 +7,7 @@ import type {
   REPOSITORIES_FOLDER_NAME,
   STATICS_FOLDER_NAME,
 } from '../consts';
+import {ChosenArgument} from './plugins/modules';
 
 /**
  * Information about a git repository branch and status.
@@ -37,7 +38,6 @@ export type OsPlatforms =
   | 'cygwin'
   | 'netbsd';
 
-export type ChosenArgument = {name: string; value: string | number};
 export type ArgumentsPresets = {preset: string; arguments: ChosenArgument[]};
 export type ChosenArgumentsData = {activePreset: string; data: ArgumentsPresets[]};
 export type StorageChosenArgumentsData = {cardId: string; activePreset: string; data: ArgumentsPresets[]}[];
