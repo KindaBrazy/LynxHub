@@ -5,17 +5,20 @@
  * in both Main (Node.js) and Renderer (Browser) environments.
  */
 
+export const isElectronRenderer = typeof window !== 'undefined';
+export const isElectronMain = typeof process !== 'undefined';
+
 /**
  * Detects if the current platform is Windows.
  * @returns {boolean} True if running on Windows.
  */
 function detectIsWin(): boolean {
   // Renderer process - use preload-exposed platform
-  if (typeof window !== 'undefined' && (window as any).osPlatform) {
+  if (isElectronRenderer && (window as any).osPlatform) {
     return (window as any).osPlatform === 'win32';
   }
   // Main process - use process.platform directly
-  if (typeof process !== 'undefined' && process.platform) {
+  if (isElectronMain && process.platform) {
     return process.platform === 'win32';
   }
   // Fallback (shouldn't happen in Electron)
@@ -28,11 +31,11 @@ function detectIsWin(): boolean {
  */
 function detectIsMac(): boolean {
   // Renderer process - use preload-exposed platform
-  if (typeof window !== 'undefined' && (window as any).osPlatform) {
+  if (isElectronRenderer && (window as any).osPlatform) {
     return (window as any).osPlatform === 'darwin';
   }
   // Main process - use process.platform directly
-  if (typeof process !== 'undefined' && process.platform) {
+  if (isElectronMain && process.platform) {
     return process.platform === 'darwin';
   }
   // Fallback
@@ -45,11 +48,11 @@ function detectIsMac(): boolean {
  */
 function detectIsLinux(): boolean {
   // Renderer process - use preload-exposed platform
-  if (typeof window !== 'undefined' && (window as any).osPlatform) {
+  if (isElectronRenderer && (window as any).osPlatform) {
     return (window as any).osPlatform === 'linux';
   }
   // Main process - use process.platform directly
-  if (typeof process !== 'undefined' && process.platform) {
+  if (isElectronMain && process.platform) {
     return process.platform === 'linux';
   }
   // Fallback
