@@ -9,6 +9,7 @@ import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
 import {X} from 'lucide-react';
 import {memo, RefObject, useCallback, useState} from 'react';
 
+import {XTermAPI} from '../../../useXTerm';
 import LocateWarning from './LocateWarning';
 import FooterTerminal from './TerminalStepFooter';
 import {InstallState} from './types';
@@ -44,6 +45,7 @@ export interface InstallFooterProps {
   canContinue: boolean;
   /** Trigger for stepping into the next sequence of an extension-custom UI. */
   nextStep: () => void;
+  xtermRef: RefObject<XTermAPI | null>;
 }
 
 /**
@@ -69,6 +71,7 @@ const InstallFooter = memo(
     tabId,
     canContinue,
     nextStep,
+    xtermRef,
   }: InstallFooterProps) => {
     const [locateWarnIsOpen, setLocateWarnIsOpen] = useState<boolean>(false);
     const onDoneTerminal = useCallback(() => {
@@ -108,7 +111,12 @@ const InstallFooter = memo(
             {!isDone ? 'Cancel' : isSuccess ? 'Finish' : 'Close'}
           </Button>
           {state.body === 'terminal' && (
-            <FooterTerminal onDoneTerminal={onDoneTerminal} restartTerminal={restartTerminal} />
+            <FooterTerminal
+              cardID={cardId}
+              xtermRef={xtermRef}
+              onDoneTerminal={onDoneTerminal}
+              restartTerminal={restartTerminal}
+            />
           )}
           {state.body === 'starter' && (
             <>

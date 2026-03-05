@@ -8,6 +8,7 @@ import {CheckCircle, SadCircle, ShieldCross} from '@solar-icons/react-perf/BoldD
 import {capitalize} from 'lodash';
 import {Dispatch, Fragment, memo, RefObject, SetStateAction, useCallback} from 'react';
 
+import {XTermAPI} from '../../../useXTerm';
 import CloneRepo from './CloneRepo';
 import InstallExtensions from './Extensions';
 import TerminalStep from './TerminalStep';
@@ -43,6 +44,7 @@ export interface InstallBodyProps {
   isOpen: boolean;
   /** Identifying hash mapping to this unique installation record. */
   cardId: string;
+  xtermRef: RefObject<XTermAPI | null>;
 }
 
 /**
@@ -64,6 +66,7 @@ const InstallBody = memo(
     progressBarState,
     isOpen,
     cardId,
+    xtermRef,
   }: InstallBodyProps) => {
     const doneClone = useCallback(
       (dir: string) => {
@@ -104,7 +107,7 @@ const InstallBody = memo(
         case 'clone':
           return <CloneRepo isOpen={isOpen} done={doneClone} url={state.cloneUrl} start={state.startClone} />;
         case 'terminal':
-          return <TerminalStep id={cardId} key={state.terminalKey} />;
+          return <TerminalStep id={cardId} xtermRef={xtermRef} key={state.terminalKey} />;
         case 'progress-bar':
           return (
             <div className="mb-8 mt-4 text-center">

@@ -19,6 +19,7 @@ import {cardsActions} from '../../../../redux/reducers/cards';
 import {useModalsState} from '../../../../redux/reducers/modals';
 import {AppDispatch} from '../../../../redux/store';
 import {useInstalledCard} from '../../../../utils/hooks';
+import {XTermAPI} from '../../../useXTerm';
 import {useTabModalLifecycle} from '../../useTabModalManager';
 import InstallBody from './Body';
 import InstallFooter from './Footer';
@@ -217,6 +218,9 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
 
   const nextStep = useCallback(() => stepper.nextStep(), [stepper]);
 
+  // -----------------------------------------------> Refernces
+  const xtermRef = useRef<XTermAPI | null>(null);
+
   return (
     <Modal
       classNames={{
@@ -241,6 +245,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
           title={title}
           isOpen={isOpen}
           cardId={cardId}
+          xtermRef={xtermRef}
           progressInfo={progressInfo}
           cloneResolver={cloneResolver}
           progressBarState={progressBarState}
@@ -254,6 +259,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
           tabId={tabID}
           cardId={cardId}
           nextStep={nextStep}
+          xtermRef={xtermRef}
           canContinue={canContinue}
           updateState={updateState}
           handleClose={handleClose}
