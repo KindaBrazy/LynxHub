@@ -1,38 +1,10 @@
-import {ChipProps} from '@heroui/chip';
 import {Button, Chip, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, SharedSelection} from '@heroui/react';
 import {usePluginsState} from '@lynx/redux/reducers/plugins';
-import {SubscribeStages} from '@lynx_common/types';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {BoxMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useMemo} from 'react';
 
-/**
- * Returns a user-friendly name for a given subscription stage.
- */
-function getStageDisplayName(stage: SubscribeStages) {
-  switch (stage) {
-    case 'insider':
-      return 'Insider';
-    case 'early_access':
-      return 'Early Access';
-    default:
-      return 'Public';
-  }
-}
-
-/**
- * Returns the appropriate color for a stage indicator chip.
- */
-function getStageColor(stage: SubscribeStages): ChipProps['color'] {
-  switch (stage) {
-    case 'insider':
-      return 'secondary';
-    case 'early_access':
-      return 'primary';
-    default:
-      return 'success';
-  }
-}
+import {getStageColor, getStageDisplayName} from './utils';
 
 /**
  * Props for the {@link PluginVersionSelector} component.
