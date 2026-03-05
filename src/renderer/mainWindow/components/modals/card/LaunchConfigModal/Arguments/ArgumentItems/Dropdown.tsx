@@ -1,6 +1,6 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
 import {ArgumentDropdownValues, ChosenArgument} from '@lynx_common/types/plugins/modules';
-import {isStringArray} from '@lynx_common/utils/arrays';
+import {isStringArray} from '@lynx_common/utils';
 import {ListDownMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 

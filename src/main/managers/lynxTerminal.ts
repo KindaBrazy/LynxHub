@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import {isWin, terminalLineEnding} from '@lynx_common/utils';
+import {isWin, removeExtraEndings, terminalLineEnding} from '@lynx_common/utils';
 import {ptyIpc} from '@lynx_main/ipc/pty';
 import {determineShell} from '@lynx_main/utils';
 import {app} from 'electron';
@@ -142,9 +142,9 @@ export default class LynxTerminal {
     if (!this.isRunning) return;
 
     if (Array.isArray(data)) {
-      data.forEach(text => this.process?.write(text));
+      data.forEach(text => this.process?.write(removeExtraEndings(text, terminalLineEnding)));
     } else {
-      this.process?.write(data);
+      this.process?.write(removeExtraEndings(data, terminalLineEnding));
     }
   }
 }
