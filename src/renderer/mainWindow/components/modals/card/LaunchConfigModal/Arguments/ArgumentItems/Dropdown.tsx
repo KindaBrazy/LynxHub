@@ -1,10 +1,10 @@
 import {Select, Selection, SelectItem} from '@heroui/react';
-import {ChosenArgument} from '@lynx_common/types';
+import {ArgumentDropdownValues, ChosenArgument} from '@lynx_common/types/plugins/modules';
+import {isStringArray} from '@lynx_common/utils/arrays';
 import {ListDownMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useGetArgumentsByID} from '../../../../../../plugins/modules';
-import {convertArrToObject} from '../../../../../../utils';
 import {getArgumentDefaultValue, getArgumentValues} from '../../../../../../utils/moduleArguments';
 import ArgumentItemBase from './Base';
 
@@ -23,7 +23,7 @@ type Props = {
  * Renders a Dropdown argument item using a Select component.
  * Allows selecting a single value from a predefined list.
  *
- * @returns {JSX.Element} The rendered DropdownArgItem component.
+ * @returns The rendered DropdownArgItem component.
  */
 export default function DropdownArgItem({argument, changeValue, removeArg, id}: Props) {
   const cardArgument = useGetArgumentsByID(id);
@@ -58,10 +58,14 @@ export default function DropdownArgItem({argument, changeValue, removeArg, id}: 
     [changeValue],
   );
 
-  const items = useMemo(
-    () => convertArrToObject(getArgumentValues(argument.name, cardArgument) || []),
-    [argument.name, cardArgument],
-  );
+  const items: ArgumentDropdownValues = useMemo(() => {
+    const values = getArgumentValues(argument.name, cardArgument) || [];
+    if (isStringArray(values)) {
+      return values.map(value => ({value, description: undefined}));
+    }
+
+    return values as ArgumentDropdownValues;
+  }, [argument.name, cardArgument]);
 
   return (
     <ArgumentItemBase
@@ -78,8 +82,12 @@ export default function DropdownArgItem({argument, changeValue, removeArg, id}: 
         placeholder="Select an item"
         classNames={{trigger: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird', value: 'text-xs'}}>
         {item => (
-          <SelectItem key={item.name} textValue={item.name} classNames={{title: 'text-xs'}}>
-            {item.name}
+          <SelectItem
+            key={item.value}
+            textValue={item.value}
+            description={item.description}
+            classNames={{title: 'text-xs'}}>
+            {item.value}
           </SelectItem>
         )}
       </Select>

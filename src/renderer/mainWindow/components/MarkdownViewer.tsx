@@ -270,7 +270,7 @@ const MarkdownViewer = ({url, rounded = true, showBackground, urlType}: Markdown
       title={error}
       bodyClassName="py-8"
       className="mt-8 mx-16"
-      icon={<Link size={50} className="text-warning" />}
+      icon={<Link size={45} className="text-warning" />}
       description="Please check your internet connection and try again."
     />
   ) : (

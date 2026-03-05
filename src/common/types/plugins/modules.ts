@@ -536,6 +536,7 @@ export type ChosenArgument = {name: string; value: string | number};
  * Supported argument types.
  */
 export type ArgumentType = 'Directory' | 'File' | 'Input' | 'Number' | 'DropDown' | 'CheckBox';
+export type ArgumentDropdownValues = {value: string; description?: string}[];
 
 /**
  * Definition of a single argument item.
@@ -550,7 +551,7 @@ export type ArgumentItem = {
   numberMin?: number;
 
   defaultValue?: any;
-  values?: string[];
+  values?: string[] | ArgumentDropdownValues;
 };
 
 /**
