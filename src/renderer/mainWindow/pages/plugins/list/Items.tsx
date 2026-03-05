@@ -142,7 +142,11 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
       key={`${item.metadata.id}_plugin_list_item`}
       fullWidth>
       {!isCompatible && (
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-y-1 bg-black/50">
+        <div
+          className={
+            'absolute inset-0 z-20 flex flex-col items-center justify-center gap-y-1 ' +
+            'dark:bg-black/50 bg-foreground-300/50'
+          }>
           <Tooltip
             delay={300}
             color="warning"
