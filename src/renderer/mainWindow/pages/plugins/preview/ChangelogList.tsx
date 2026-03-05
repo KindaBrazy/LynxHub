@@ -30,14 +30,12 @@ function ChangelogEntry({item, depth = 0, id}: ChangelogEntryProps) {
         key={id}
         animate={{opacity: 1, x: 0}}
         initial={{opacity: 0, x: -10}}
-        transition={{duration: 0.3, delay: depth * 0.05}}
-        className={`${depth > 0 ? 'ml-6 mt-2' : 'mt-3'}`}>
-        <div className="flex items-start gap-3 group">
+        className={`${depth > 0 && 'ml-6'} mt-1`}
+        transition={{duration: 0.3, delay: depth * 0.05}}>
+        <div className="flex items-start gap-x-2 group">
           <motion.div
-            className={`w-2 h-2 rounded-full mt-1.5 shrink-0 transition-colors duration-200 ${
-              depth > 0
-                ? 'bg-foreground-400 group-hover:bg-foreground-500'
-                : 'bg-linear-to-br from-blue-500 to-blue-600 group-hover:shadow-lg group-hover:shadow-blue-500/50'
+            className={`size-2 rounded-full mt-1.5 shrink-0 transition-colors duration-200 group-hover:scale-110 ${
+              depth > 0 ? 'bg-foreground-400 group-hover:bg-foreground-500' : 'bg-primary group-hover:bg-primary-500'
             }`}
             whileHover={{scale: 1.3}}
           />
@@ -59,10 +57,18 @@ function ChangelogEntry({item, depth = 0, id}: ChangelogEntryProps) {
       animate={{opacity: 1, y: 0}}
       transition={{duration: 0.4}}
       initial={{opacity: 0, y: -10}}
-      className={`${depth > 0 ? 'ml-6' : ''} mt-3`}>
+      className={`${depth > 0 && 'ml-6'} mt-1`}>
       {Object.entries(item).map(([label, subItems]) => (
         <div key={label}>
-          <div className="text-sm font-semibold text-foreground-800 mb-1.5">{label}</div>
+          <div className="flex items-start gap-x-2 group">
+            <motion.div
+              className={`size-2 rounded-full mt-1.5 shrink-0 transition-colors duration-200 group-hover:scale-110 ${
+                depth > 0 ? 'bg-foreground-400 group-hover:bg-foreground-500' : 'bg-primary group-hover:bg-primary-500'
+              }`}
+              whileHover={{scale: 1.3}}
+            />
+            <div className="text-sm font-semibold text-foreground-800 mb-1.5">{label}</div>
+          </div>
           <div className="space-y-1">
             {subItems.map((subItem, index) => (
               <ChangelogEntry id={index} item={subItem} depth={depth + 1} key={`${label}_${index}`} />
@@ -80,11 +86,9 @@ function ChangelogEntry({item, depth = 0, id}: ChangelogEntryProps) {
 function CategoryGroup({category, entries}: {category: string; entries: ChangelogSubItem[]}) {
   return (
     <div>
-      <div className="flex items-center gap-3 mb-3">
+      <div className="flex items-center gap-3 my-4">
         <div className="h-px flex-1 bg-linear-to-r from-transparent via-foreground-200 to-transparent" />
-        <Chip size="sm" variant="flat">
-          {category}
-        </Chip>
+        <Chip variant="flat">{category}</Chip>
         <div className="h-px flex-1 bg-linear-to-r from-transparent via-foreground-200 to-transparent" />
       </div>
       <div className="space-y-2">
