@@ -530,7 +530,7 @@ export type CardModules = PagesData[];
 /**
  * A chosen argument value.
  */
-export type ChosenArgument = {name: string; value: string};
+export type ChosenArgument = {name: string; value: string | number};
 
 /**
  * Supported argument types.

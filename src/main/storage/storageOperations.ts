@@ -10,6 +10,7 @@ import {
   RecentlyOperation,
   StorageOperation,
 } from '@lynx_common/types/ipc';
+import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {InstalledCard, InstalledCards} from '@lynx_common/types/storage';
 import {compareUrls, isValidURL, terminalLineEnding} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_main/ipc/storage';
@@ -196,27 +197,43 @@ class StorageManager extends BaseStorage {
    * Gets card arguments, loading from module if not cached.
    */
   public async getCardArgumentsById(cardId: string): Promise<ChosenArgumentsData> {
-    const {moduleManager} = classHolder;
+    const moduleManager = await classHolder.waitForClass('moduleManager');
     const args = this.getArgs(cardId);
     if (args) return args;
 
-    // Load arguments from module if not in storage
-    const returnArgs = await moduleManager?.getMethodsById(cardId)?.().readArgs?.();
-    const result: ChosenArgumentsData = {
-      activePreset: 'Default',
-      data: [{preset: 'Default', arguments: returnArgs || []}],
+    const getResult = (argData?: ChosenArgument[]) => {
+      return {
+        activePreset: 'Default',
+        data: [{preset: 'Default', arguments: argData || []}],
+      };
     };
+
+    const moduleMethods = moduleManager.getMethodsById(cardId);
+    if (!moduleMethods) return getResult();
+    const argReader = moduleMethods().readArgs;
+    if (!argReader) return getResult();
+
+    // Load arguments from module if not in storage
+    const returnArgs = await argReader();
+
+    const result = getResult(returnArgs);
     this.setArgs(cardId, result);
+
     return result;
   }
 
   public async setCardArguments(cardId: string, args: ChosenArgumentsData): Promise<void> {
-    const {moduleManager} = classHolder;
+    const moduleManager = await classHolder.waitForClass('moduleManager');
     this.setArgs(cardId, args);
 
     const result = args.data.find(arg => arg.preset === args.activePreset)?.arguments || [];
 
-    await moduleManager?.getMethodsById(cardId)?.().saveArgs?.(result);
+    const moduleMethods = moduleManager.getMethodsById(cardId);
+    if (!moduleMethods) return;
+    const argSaver = moduleMethods().saveArgs;
+    if (!argSaver) return;
+
+    await argSaver(result);
   }
 
   public addInstalledCard(card: InstalledCard): void {
