@@ -6,7 +6,7 @@ import {ChangelogItem, type ElementResizeData, HeroToastPlacement} from '@lynx_c
 import {InstalledCard} from '@lynx_common/types/storage';
 import {Dispatch} from '@reduxjs/toolkit';
 import {isEmpty, isNil} from 'lodash';
-import {Fragment, useEffect, useRef} from 'react';
+import {Fragment, useEffect, useRef, useState} from 'react';
 
 /**
  * Hook to get an installed card by its ID.
@@ -194,4 +194,15 @@ export function useElementResizing(onResize: (data: ElementResizeData) => void) 
   }, []);
 
   return containerRef;
+}
+
+export function useHasScroll() {
+  const [hasScroll, setHasScroll] = useState<boolean>(false);
+  const [containerRef, setContainerRef] = useState<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (containerRef) setHasScroll(containerRef.scrollWidth > containerRef.clientWidth);
+  }, [containerRef]);
+
+  return {hasScroll, containerRef, setContainerRef};
 }
