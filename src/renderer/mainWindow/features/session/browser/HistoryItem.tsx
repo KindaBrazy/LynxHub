@@ -6,7 +6,7 @@ import {FavIcons} from '@lynx_common/types/ipc';
 import {formatWebAddress, getCacheUrl, getUrlName} from '@lynx_common/utils';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import {Earth, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
-import {memo, useCallback, useMemo, useState} from 'react';
+import {memo, MouseEvent, useCallback, useMemo, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
 type Props = {
@@ -31,6 +31,13 @@ const HistoryItem = memo(({recent, type, favIconMap, onDataChange}: Props) => {
     dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: recent}));
   }, [dispatch, activeTab, recent]);
 
+  const openNewTab = useCallback(
+    (e: MouseEvent) => {
+      if (e.button === 1) window.open(recent);
+    },
+    [recent],
+  );
+
   const handleRemove = useCallback(() => {
     if (type === 'recent') {
       storageUtilsIpc.send.removeBrowserRecent(recent);
@@ -43,7 +50,7 @@ const HistoryItem = memo(({recent, type, favIconMap, onDataChange}: Props) => {
 
   return (
     <Tooltip radius="sm" delay={300} content={favItem?.title || recent} showArrow>
-      <Card shadow="sm" onPress={openRecent} className="h-32 w-36" isPressable>
+      <Card shadow="sm" onPress={openRecent} className="h-32 w-36" onMouseUp={openNewTab} isPressable>
         <CardBody
           className={
             'group flex-col items-center justify-center gap-2 shrink-0 text-center transition-colors duration-300' +
@@ -60,7 +67,7 @@ const HistoryItem = memo(({recent, type, favIconMap, onDataChange}: Props) => {
             color="danger"
             variant="light"
             onPress={handleRemove}
-            className="absolute top-1 right-1 cursor-default opacity-0 group-hover:opacity-100"
+            className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
             isIconOnly>
             <TrashBin2 className="size-3.5" />
           </Button>
