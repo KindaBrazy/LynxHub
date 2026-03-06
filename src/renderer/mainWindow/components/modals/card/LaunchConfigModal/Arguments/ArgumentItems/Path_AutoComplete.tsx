@@ -84,10 +84,13 @@ export default function PathAutoComplete({baseDir, onValueChange, defaultValue =
 
   const onSelectionChange = (key: Key | null) => {
     if (key !== null) {
+      let currentSelection = key.toString();
+      if (!currentSelection.includes('.') && !currentSelection.endsWith('/')) currentSelection = currentSelection + '/';
       setInputValue(prev => {
         const segments = prev.split('/');
-        segments[segments.length - 1] = key.toString();
+        segments[segments.length - 1] = currentSelection;
         const newValue = segments.join('/');
+
         // Defer the callback to avoid side effects in render/state update cycle
         setTimeout(() => onValueChange?.(newValue), 0);
         return newValue;
