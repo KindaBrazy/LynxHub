@@ -1,5 +1,5 @@
 import {NumberInput} from '@heroui/react';
-import {ChosenArgument} from '@lynx_common/types';
+import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Text} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useMemo, useState} from 'react';
 

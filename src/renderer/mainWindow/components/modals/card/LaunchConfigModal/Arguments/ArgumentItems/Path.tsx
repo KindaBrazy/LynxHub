@@ -1,5 +1,5 @@
 import {Button, Tooltip} from '@heroui/react';
-import {ChosenArgument} from '@lynx_common/types';
+import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
@@ -44,7 +44,7 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
   // Initialize isRelative based on current value
   useEffect(() => {
     if (argument.value) {
-      const isDefaultRelative = argument.value.startsWith('.') || argument.value.startsWith('/');
+      const isDefaultRelative = argument.value.toString().startsWith('.') || argument.value.toString().startsWith('/');
       setIsRelative(isDefaultRelative);
     }
   }, [argument.value]);

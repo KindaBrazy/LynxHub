@@ -1,4 +1,4 @@
-import {ChosenArgument} from '@lynx_common/types';
+import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {File} from '@solar-icons/react-perf/BoldDuotone';
 
 import PathArgItem from './Path';

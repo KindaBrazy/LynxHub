@@ -1,5 +1,5 @@
 import {Input} from '@heroui/react';
-import {ChosenArgument} from '@lynx_common/types';
+import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Text} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useState} from 'react';
 
@@ -34,7 +34,7 @@ export default function InputArgItem({argument, changeValue, removeArg, id}: Pro
   // Sync state with prop updates
   useEffect(() => {
     if (argument.value !== undefined) {
-      setInputValue(argument.value);
+      setInputValue(argument.value.toString());
     }
   }, [argument.value]);
 

@@ -1,6 +1,7 @@
 import {Button, Chip, Tooltip, useDisclosure} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
-import {ArgumentsPresets, ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
+import {ArgumentsPresets, ChosenArgumentsData} from '@lynx_common/types';
+import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Inbox} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, Reorder} from 'framer-motion';
 import {isEmpty} from 'lodash';
