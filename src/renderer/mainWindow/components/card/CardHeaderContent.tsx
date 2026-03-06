@@ -63,18 +63,22 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
                 selection.removeAllRanges();
               }
             }}
+            className={
+              'cursor-text outline-none focus:border border-transparent focus:border-foreground-200' +
+              ' focus:px-1.5 focus:py-0.5 rounded-lg transition duration-200 line-clamp-1'
+            }
             onKeyDown={e => {
               e.stopPropagation();
               if (e.key === 'Enter') {
                 e.preventDefault();
                 e.currentTarget.blur();
+              } else if (e.key === 'Escape') {
+                e.preventDefault();
+                e.currentTarget.blur();
               }
             }}
-            className={
-              'cursor-text outline-none focus:border-2 border-transparent focus:border-foreground-200' +
-              ' focus:px-1 rounded-lg transition duration-300 line-clamp-1'
-            }
             spellCheck="false"
+            key={`${id}_title`}
             onInput={onTitleChange}
             onClick={e => e.stopPropagation()}
             contentEditable
