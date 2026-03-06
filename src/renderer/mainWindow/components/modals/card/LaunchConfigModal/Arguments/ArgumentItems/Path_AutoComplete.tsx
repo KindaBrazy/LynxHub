@@ -12,11 +12,12 @@ type Props = {
   /** Whether to look for files or folders */
   type?: 'folder' | 'file';
   /** Callback when the value changes */
-  onValueChange?: (value: string) => void;
+  onValueChange?: (value: string | undefined) => void;
   /** Initial value */
   defaultValue?: string;
 };
 
+const replaceSlash = (value: string) => value.replaceAll('\\', '/').replaceAll('\\\\', '/');
 /**
  * Autocomplete component for file system paths.
  * Lists files and directories relative to a base directory.
@@ -61,20 +62,23 @@ export default function PathAutoComplete({baseDir, onValueChange, defaultValue =
   // Sync state with prop if it changes
   useEffect(() => {
     if (defaultValue !== undefined && defaultValue !== inputValue) {
-      setInputValue(defaultValue.replaceAll('\\', '/'));
+      setInputValue(defaultValue);
     }
   }, [defaultValue]);
 
   const handleInputChange = (value: string) => {
-    setInputValue(value.replaceAll('\\', '/'));
-    onValueChange?.(value);
-    if (value === '') {
+    const targetValue = replaceSlash(value);
+
+    setInputValue(targetValue);
+    onValueChange?.(targetValue);
+
+    if (targetValue === '') {
       setSearchData([]);
       return;
     }
 
     // Filter existing data for immediate feedback
-    const segments = value.toLowerCase().split('/');
+    const segments = targetValue.toLowerCase().split('/');
     const lastSegment = segments[segments.length - 1];
 
     // We filter the *current* data. If the user moved to a new dir (e.g. typed '/'),
@@ -85,7 +89,11 @@ export default function PathAutoComplete({baseDir, onValueChange, defaultValue =
   const onSelectionChange = (key: Key | null) => {
     if (key !== null) {
       let currentSelection = key.toString();
-      if (!currentSelection.includes('.') && !currentSelection.endsWith('/')) currentSelection = currentSelection + '/';
+      currentSelection = replaceSlash(currentSelection);
+      if (!currentSelection.includes('.') && !currentSelection.endsWith('/')) {
+        currentSelection = currentSelection + '/';
+      }
+
       setInputValue(prev => {
         const segments = prev.split('/');
         segments[segments.length - 1] = currentSelection;

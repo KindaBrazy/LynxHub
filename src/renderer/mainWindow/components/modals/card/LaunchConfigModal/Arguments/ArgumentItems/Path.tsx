@@ -41,6 +41,13 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
   const [isRelative, setIsRelative] = useState<boolean>(false);
   const [rotateEffect, setRotateEffect] = useState<boolean>(false);
 
+  const setPath = (value: string | undefined) => {
+    if (!value) return;
+
+    setSelectedValue(value);
+    changeValue(value);
+  };
+
   // Initialize isRelative based on current value
   useEffect(() => {
     if (argument.value) {
@@ -56,12 +63,7 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
   const openDialog = useCallback(() => {
     if (!isRelative) {
       const properties: ('openFile' | 'openDirectory')[] = type === 'file' ? ['openFile'] : ['openDirectory'];
-      filesIpc.openDlg({properties}).then(result => {
-        if (result) {
-          setSelectedValue(result);
-          changeValue(result);
-        }
-      });
+      filesIpc.openDlg({properties}).then(setPath);
     }
   }, [changeValue, isRelative, type]);
 
@@ -106,7 +108,7 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
         <AutoCompletePath
           type={type}
           baseDir={baseDir!}
-          onValueChange={changeValue}
+          onValueChange={setPath}
           defaultValue={selectedValue !== placeholder ? selectedValue : undefined}
         />
       ) : (
