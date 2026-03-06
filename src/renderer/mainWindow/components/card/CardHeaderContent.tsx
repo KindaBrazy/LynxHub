@@ -3,7 +3,7 @@ import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {DownloadMinimalistic, FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
-import {InputEvent, useMemo} from 'react';
+import {useMemo} from 'react';
 
 import {useCardsState} from '../../redux/reducers/cards';
 import {useHotkeysState} from '../../redux/reducers/hotkeys';
@@ -14,7 +14,7 @@ type CardHeaderContentProps = {
   /** The currently displayed title (could be custom). */
   modifiedTitle: string;
   /** Callback when the title is edited. */
-  onTitleChange: (e: InputEvent<HTMLSpanElement>) => void;
+  onTitleChange: (target: string) => void;
   /** Whether an update is available for this card. */
   updateAvailable: boolean;
 };
@@ -27,7 +27,6 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
   const repoUrl = useCardStore(state => state.repoUrl);
   const isInstalled = useCardStore(state => state.installed);
   const id = useCardStore(state => state.id);
-  const title = useCardStore(state => state.title);
 
   const {developer, avatarSrc} = useMemo(() => {
     const {owner, avatarUrl} = extractGitUrl(repoUrl);
@@ -46,7 +45,7 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
   };
 
   return (
-    <CardHeader className="justify-between">
+    <CardHeader key={`${id}_ttt`} className="justify-between">
       <User
         avatarProps={{
           src: avatarSrc,
@@ -75,13 +74,13 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
                 e.currentTarget.blur();
               } else if (e.key === 'Escape') {
                 e.preventDefault();
-                e.currentTarget.textContent = title;
+                onTitleChange('');
                 e.currentTarget.blur();
               }
             }}
             spellCheck="false"
-            onInput={onTitleChange}
             onClick={e => e.stopPropagation()}
+            onInput={e => onTitleChange(e.currentTarget.textContent)}
             contentEditable
             suppressContentEditableWarning>
             {modifiedTitle}
