@@ -1,4 +1,4 @@
-import {resolve} from 'node:path';
+import {isAbsolute, resolve} from 'node:path';
 
 import {fileChannels} from '@lynx_common/consts/ipcChannels/files';
 import {FolderListData, FolderNames} from '@lynx_common/types';
@@ -57,6 +57,8 @@ export default function listenFiles() {
 
   // Converts relative path to absolute path
   filesIpc.handle.getAbsolutePath((basePath, targetPath) => getAbsolutePath(basePath, targetPath));
+
+  filesIpc.handle.isAbsolute(dir => isAbsolute(dir));
 }
 
 /**
@@ -98,5 +100,6 @@ export const filesIpc = {
     /** Handles get absolute path request */
     getAbsolutePath: (callback: (basePath: string, targetPath: string) => MainHT<string>) =>
       lynxIpc.handle(fileChannels.getAbsolutePath, callback),
+    isAbsolute: (callback: (dir: string) => MainHT<boolean>) => lynxIpc.handle(fileChannels.isAbsolute, callback),
   },
 };
