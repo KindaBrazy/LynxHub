@@ -1,17 +1,20 @@
-import {CardHeader, Chip, Spinner, User} from '@heroui/react';
+import {Button, CardHeader, Chip, Spinner, User} from '@heroui/react';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
-import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
+import filesIpc from '@lynx_shared/ipc/files';
+import {DownloadMinimalistic, FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
-import {FormEvent, useMemo} from 'react';
+import {InputEvent, useMemo} from 'react';
 
 import {useCardsState} from '../../redux/reducers/cards';
+import {useHotkeysState} from '../../redux/reducers/hotkeys';
+import {useInstalledCard} from '../../utils/hooks';
 import {useCardStore} from './store';
 
 type CardHeaderContentProps = {
   /** The currently displayed title (could be custom). */
   modifiedTitle: string;
   /** Callback when the title is edited. */
-  onTitleChange: (e: FormEvent<HTMLSpanElement>) => void;
+  onTitleChange: (e: InputEvent<HTMLSpanElement>) => void;
   /** Whether an update is available for this card. */
   updateAvailable: boolean;
 };
@@ -29,6 +32,17 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
     const {owner, avatarUrl} = extractGitUrl(repoUrl);
     return {developer: owner, avatarSrc: getCacheUrl(avatarUrl)};
   }, [repoUrl]);
+
+  const isCtrlPressed = useHotkeysState('isCtrlPressed');
+  const webUI = useInstalledCard(id);
+
+  const showOpenFolder = useMemo(() => {
+    return !!webUI?.dir && isCtrlPressed;
+  }, [webUI, isCtrlPressed]);
+
+  const openFolder = () => {
+    if (webUI && webUI.dir) filesIpc.openPath(webUI.dir);
+  };
 
   return (
     <CardHeader className="justify-between">
@@ -102,6 +116,24 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
             animate={{opacity: 1, translateY: 0}}
             initial={{opacity: 0, translateY: 2}}
           />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showOpenFolder && (
+          <Button
+            as={motion.div}
+            variant="light"
+            onPress={openFolder}
+            transition={{type: 'spring', duration: 0.5}}
+            exit={{opacity: 0, scale: 0.8, translateY: 10}}
+            animate={{opacity: 1, scale: 1, translateY: 0}}
+            initial={{opacity: 0, scale: 0.8, translateY: 10}}
+            className="absolute bottom-2 right-1/2 translate-x-1/2"
+            isIconOnly
+            disableAnimation>
+            <FolderOpen size={16} className="text-foreground-600" />
+          </Button>
         )}
       </AnimatePresence>
     </CardHeader>
