@@ -1,6 +1,6 @@
 import storageIpc from '@lynx_shared/ipc/storage';
 import {isEmpty} from 'lodash';
-import {InputEvent, useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 
 import {useCardStore} from './store';
 
@@ -26,9 +26,8 @@ export const useCardTitle = () => {
   const modifiedTitle = customTitle ?? title;
 
   const onTitleChange = useCallback(
-    (e: InputEvent<HTMLSpanElement>) => {
-      const inputText = e.currentTarget.textContent;
-      const newTitle = isEmpty(inputText) ? title : inputText;
+    (target: string) => {
+      const newTitle = isEmpty(target) ? title : target;
       setCustomTitle(newTitle);
       storageIpc.setCustom(`${id}_title_edited`, newTitle);
     },
