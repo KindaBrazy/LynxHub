@@ -125,6 +125,7 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
             as={motion.div}
             variant="light"
             onPress={openFolder}
+            // @ts-ignore-next-line
             transition={{type: 'spring', duration: 0.5}}
             exit={{opacity: 0, scale: 0.8, translateY: 10}}
             animate={{opacity: 1, scale: 1, translateY: 0}}
