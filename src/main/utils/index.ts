@@ -265,7 +265,9 @@ export function getRelativePath(basePath: string, targetPath: string): string {
     if (!isAbsolute(targetPath)) {
       return targetPath;
     }
-    return relative(basePath, targetPath);
+    const relPath = relative(basePath, targetPath);
+
+    return relPath.startsWith('..') ? relPath : `./${relPath}`;
   } catch (error) {
     console.error('Error calculating relative path:', error);
     return resolve(targetPath);

@@ -1,5 +1,6 @@
 import {Button, Tooltip} from '@heroui/react';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
+import {replaceSlashes} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {ReactNode, useCallback, useEffect, useMemo, useState} from 'react';
@@ -51,8 +52,9 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
   // Initialize isRelative based on current value
   useEffect(() => {
     if (argument.value) {
-      const isDefaultRelative = argument.value.toString().startsWith('.') || argument.value.toString().startsWith('/');
-      setIsRelative(isDefaultRelative);
+      filesIpc.isAbsolute(argument.value.toString()).then(isAbsolute => {
+        setIsRelative(!isAbsolute);
+      });
     }
   }, [argument.value]);
 
@@ -75,8 +77,9 @@ export default function PathArgItem({type, icon, placeholder, argument, changeVa
         // If currently absolute (prevState=false), we want relative.
         const method = prevState ? 'getAbsolutePath' : 'getRelativePath';
         filesIpc[method](baseDir, selectedValue).then(result => {
-          setSelectedValue(result);
-          changeValue(result);
+          const value = replaceSlashes(result);
+          setSelectedValue(value);
+          changeValue(value);
         });
       }
       return !prevState;

@@ -1,5 +1,6 @@
 import {Autocomplete, AutocompleteItem} from '@heroui/react';
 import {FolderListData} from '@lynx_common/types';
+import {replaceSlashes} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {File, Folder} from '@solar-icons/react-perf/BoldDuotone';
 import {Key, useEffect, useState} from 'react';
@@ -17,7 +18,6 @@ type Props = {
   defaultValue?: string;
 };
 
-const replaceSlash = (value: string) => value.replaceAll('\\', '/').replaceAll('\\\\', '/');
 /**
  * Autocomplete component for file system paths.
  * Lists files and directories relative to a base directory.
@@ -67,7 +67,7 @@ export default function PathAutoComplete({baseDir, onValueChange, defaultValue =
   }, [defaultValue]);
 
   const handleInputChange = (value: string) => {
-    const targetValue = replaceSlash(value);
+    const targetValue = replaceSlashes(value);
 
     setInputValue(targetValue);
     onValueChange?.(targetValue);
@@ -89,8 +89,8 @@ export default function PathAutoComplete({baseDir, onValueChange, defaultValue =
   const onSelectionChange = (key: Key | null) => {
     if (key !== null) {
       let currentSelection = key.toString();
-      currentSelection = replaceSlash(currentSelection);
-      if (!currentSelection.includes('.') && !currentSelection.endsWith('/')) {
+      currentSelection = replaceSlashes(currentSelection);
+      if (!currentSelection.endsWith('/')) {
         currentSelection = currentSelection + '/';
       }
 
