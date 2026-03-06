@@ -61,12 +61,12 @@ export default function PathAutoComplete({baseDir, onValueChange, defaultValue =
   // Sync state with prop if it changes
   useEffect(() => {
     if (defaultValue !== undefined && defaultValue !== inputValue) {
-      setInputValue(defaultValue);
+      setInputValue(defaultValue.replaceAll('\\', '/'));
     }
   }, [defaultValue]);
 
   const handleInputChange = (value: string) => {
-    setInputValue(value);
+    setInputValue(value.replaceAll('\\', '/'));
     onValueChange?.(value);
     if (value === '') {
       setSearchData([]);
@@ -99,6 +99,7 @@ export default function PathAutoComplete({baseDir, onValueChange, defaultValue =
     <Autocomplete
       inputProps={{
         classNames: {
+          input: 'text-xs',
           inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird',
         },
       }}
