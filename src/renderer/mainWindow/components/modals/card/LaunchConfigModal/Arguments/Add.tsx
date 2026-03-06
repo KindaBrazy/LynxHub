@@ -15,7 +15,8 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import {Circle_Icon} from '@lynx_assets/icons';
-import {ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
+import {ChosenArgumentsData} from '@lynx_common/types';
+import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Filter} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, some} from 'lodash';
 import {Plus} from 'lucide-react';

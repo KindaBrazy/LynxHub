@@ -1,4 +1,5 @@
-import {ChosenArgument, ChosenArgumentsData} from '@lynx_common/types';
+import {ChosenArgumentsData} from '@lynx_common/types';
+import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Dispatch, memo, SetStateAction, useCallback, useMemo} from 'react';
 
 import {useGetArgumentsByID} from '../../../../../plugins/modules';

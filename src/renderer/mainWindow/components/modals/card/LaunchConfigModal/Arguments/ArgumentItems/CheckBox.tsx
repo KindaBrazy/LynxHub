@@ -1,4 +1,4 @@
-import {ChosenArgument} from '@lynx_common/types';
+import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {CheckSquare} from '@solar-icons/react-perf/BoldDuotone';
 
 import ArgumentItemBase from './Base';
