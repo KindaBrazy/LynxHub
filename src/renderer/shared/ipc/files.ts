@@ -44,6 +44,7 @@ const filesIpc = {
 
   // Checks if directory is empty
   isEmptyDir: (dir: string) => lynxIpc.invoke<boolean>(fileChannels.isEmptyDir, dir),
+  isAbsolute: (dir: string) => lynxIpc.invoke<boolean>(fileChannels.isAbsolute, dir),
 };
 
 export default filesIpc;

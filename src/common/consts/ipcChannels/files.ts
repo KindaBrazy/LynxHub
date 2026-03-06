@@ -17,4 +17,5 @@ export const fileChannels = {
   getAbsolutePath: 'app:getAbsolutePath',
 
   isEmptyDir: 'app:isEmptyDir',
+  isAbsolute: 'app:isAbsolute',
 } as const;
