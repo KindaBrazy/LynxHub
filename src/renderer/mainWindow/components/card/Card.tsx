@@ -3,7 +3,7 @@ import {useAppState} from '@lynx/redux/reducers/app';
 import {getAccentColorAsHex} from '@lynx/utils/accentColorGenerator';
 import {extractGitUrl} from '@lynx_common/utils';
 import {motion} from 'framer-motion';
-import {memo, useMemo} from 'react';
+import {CSSProperties, memo, useMemo} from 'react';
 
 import {CardHeaderContent} from './CardHeaderContent';
 import Footer from './Footer';
@@ -11,7 +11,7 @@ import {useCardStore} from './store';
 import {useCardActions} from './useCardActions';
 import {useCardTitle} from './useCardTitle';
 
-type AccentStyle = React.CSSProperties & {'--accent-bg-color'?: string};
+type AccentStyle = CSSProperties & {'--accent-bg-color'?: string};
 
 /**
  * Main Card component for displaying a plugin/module.
