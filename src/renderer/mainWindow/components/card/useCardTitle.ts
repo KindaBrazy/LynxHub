@@ -1,5 +1,6 @@
 import storageIpc from '@lynx_shared/ipc/storage';
-import {FormEvent, useCallback, useEffect, useState} from 'react';
+import {isEmpty} from 'lodash';
+import {InputEvent, useCallback, useEffect, useState} from 'react';
 
 import {useCardStore} from './store';
 
@@ -25,8 +26,9 @@ export const useCardTitle = () => {
   const modifiedTitle = customTitle ?? title;
 
   const onTitleChange = useCallback(
-    (e: FormEvent<HTMLSpanElement>) => {
-      const newTitle = e.currentTarget.textContent || title;
+    (e: InputEvent<HTMLSpanElement>) => {
+      const inputText = e.currentTarget.textContent;
+      const newTitle = isEmpty(inputText) ? title : inputText;
       setCustomTitle(newTitle);
       storageIpc.setCustom(`${id}_title_edited`, newTitle);
     },
