@@ -60,3 +60,5 @@ export function sanitizeFilename(filename: string): string {
 
   return sanitized;
 }
+
+export const replaceSlashes = (value: string) => value.replaceAll('\\', '/').replaceAll('\\\\', '/');
