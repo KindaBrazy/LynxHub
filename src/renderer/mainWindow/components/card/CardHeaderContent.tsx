@@ -27,6 +27,7 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
   const repoUrl = useCardStore(state => state.repoUrl);
   const isInstalled = useCardStore(state => state.installed);
   const id = useCardStore(state => state.id);
+  const title = useCardStore(state => state.title);
 
   const {developer, avatarSrc} = useMemo(() => {
     const {owner, avatarUrl} = extractGitUrl(repoUrl);
@@ -74,11 +75,11 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
                 e.currentTarget.blur();
               } else if (e.key === 'Escape') {
                 e.preventDefault();
+                e.currentTarget.textContent = title;
                 e.currentTarget.blur();
               }
             }}
             spellCheck="false"
-            key={`${id}_title`}
             onInput={onTitleChange}
             onClick={e => e.stopPropagation()}
             contentEditable
