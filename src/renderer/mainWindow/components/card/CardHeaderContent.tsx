@@ -57,16 +57,17 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
         }}
         name={
           <span
-            onBlur={() => {
-              const selection = window.getSelection();
-              if (selection) {
-                selection.removeAllRanges();
-              }
-            }}
             className={
               'cursor-text outline-none focus:border border-transparent focus:border-foreground-200' +
               ' focus:px-1.5 focus:py-0.5 rounded-lg transition duration-200 line-clamp-1'
             }
+            onBlur={e => {
+              const selection = window.getSelection();
+              if (selection) {
+                selection.removeAllRanges();
+              }
+              onTitleChange(e.currentTarget.textContent);
+            }}
             onKeyDown={e => {
               e.stopPropagation();
               if (e.key === 'Enter') {
@@ -74,14 +75,13 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
                 e.currentTarget.blur();
               } else if (e.key === 'Escape') {
                 e.preventDefault();
+                e.currentTarget.blur();
                 // Reset title to original name
                 onTitleChange('');
-                e.currentTarget.blur();
               }
             }}
             spellCheck="false"
             onClick={e => e.stopPropagation()}
-            onInput={e => onTitleChange(e.currentTarget.textContent)}
             contentEditable
             suppressContentEditableWarning>
             {modifiedTitle}
