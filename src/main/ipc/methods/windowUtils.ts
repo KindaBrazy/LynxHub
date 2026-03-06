@@ -1,6 +1,6 @@
 // Utility IPC methods - Window state, file operations, and general utilities
 import {writeFile} from 'node:fs/promises';
-import path from 'node:path';
+import {basename, extname, join, resolve} from 'node:path';
 
 import {FolderListData} from '@lynx_common/types';
 import {ChangeWindowState, DarkModeTypes, TaskbarStatus} from '@lynx_common/types/ipc';
@@ -115,7 +115,7 @@ export function setTaskbarStatus(status: TaskbarStatus): void {
  */
 export async function removeDirRecursive(dir: string): Promise<void> {
   try {
-    const resolvedPath = path.resolve(dir);
+    const resolvedPath = resolve(dir);
     console.log(`Removing directory: ${resolvedPath}`);
     return await promises.rm(resolvedPath, {recursive: true, force: true});
   } catch (e) {
@@ -179,7 +179,7 @@ export async function saveToFile(content: string): Promise<string | null> {
  */
 export async function trashDir(dir: string): Promise<void> {
   try {
-    const resolvedPath = path.resolve(dir);
+    const resolvedPath = resolve(dir);
     console.log(`Moving directory to trash: ${resolvedPath}`);
     return await shell.trashItem(resolvedPath);
   } catch (e) {
@@ -238,7 +238,7 @@ export function listDirectory(dirPath: string): Promise<FolderListData[]> {
  * @returns A promise resolving to a list of files and folders.
  */
 export async function getRelativeList(dirPath: string, relatives: string[]): Promise<FolderListData[]> {
-  const resolvePath = path.resolve(dirPath, ...relatives);
+  const resolvePath = resolve(dirPath, ...relatives);
   try {
     return await listDirectory(resolvePath);
   } catch (e) {
@@ -246,7 +246,7 @@ export async function getRelativeList(dirPath: string, relatives: string[]): Pro
       // Fallback: try removing the last segment if resolution failed
       if (relatives.length > 0) {
         relatives.pop();
-        const newResolvePath = path.resolve(dirPath, ...relatives);
+        const newResolvePath = resolve(dirPath, ...relatives);
         return await listDirectory(newResolvePath);
       }
       return [];
@@ -265,8 +265,8 @@ export async function getRelativeList(dirPath: string, relatives: string[]): Pro
 export async function decompressFile(filePath: string): Promise<string> {
   return new Promise(async (resolve, reject) => {
     try {
-      const fileName = path.basename(filePath, path.extname(filePath));
-      const finalPath = path.join(app.getPath('downloads'), 'LynxHub', fileName);
+      const fileName = basename(filePath, extname(filePath));
+      const finalPath = join(app.getPath('downloads'), 'LynxHub', fileName);
       await decompress(filePath, finalPath);
       resolve(finalPath);
     } catch (e) {
@@ -285,7 +285,7 @@ export async function decompressFile(filePath: string): Promise<string> {
 export async function checkFilesExist(dir: string, files: string[]): Promise<boolean> {
   try {
     for (const file of files) {
-      const fullPath = path.join(dir, file);
+      const fullPath = join(dir, file);
       try {
         await promises.access(fullPath);
       } catch (error) {
