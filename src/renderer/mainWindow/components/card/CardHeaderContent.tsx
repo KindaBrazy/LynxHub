@@ -3,7 +3,7 @@ import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import {DownloadMinimalistic, FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
-import {useMemo} from 'react';
+import {memo, useMemo} from 'react';
 
 import {useCardsState} from '../../redux/reducers/cards';
 import {useHotkeysState} from '../../redux/reducers/hotkeys';
@@ -22,7 +22,7 @@ type CardHeaderContentProps = {
 /**
  * Component to display the header of the card, including user info and update status.
  */
-export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable}: CardHeaderContentProps) {
+export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvailable}: CardHeaderContentProps) => {
   const updateChecking = useCardsState('updateChecking');
   const repoUrl = useCardStore(state => state.repoUrl);
   const isInstalled = useCardStore(state => state.installed);
@@ -74,6 +74,7 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
                 e.currentTarget.blur();
               } else if (e.key === 'Escape') {
                 e.preventDefault();
+                // Reset title to original name
                 onTitleChange('');
                 e.currentTarget.blur();
               }
@@ -143,4 +144,4 @@ export function CardHeaderContent({modifiedTitle, onTitleChange, updateAvailable
       </AnimatePresence>
     </CardHeader>
   );
-}
+});
