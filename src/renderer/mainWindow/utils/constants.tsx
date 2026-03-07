@@ -6,7 +6,7 @@ import GamesPage from '@lynx/pages/games';
 import HomePage from '@lynx/pages/home';
 import ImageGenerationPage from '@lynx/pages/image';
 import OthersPage from '@lynx/pages/others';
-import Index from '@lynx/pages/plugins';
+import PluginsPage from '@lynx/pages/plugins';
 import SettingsPage from '@lynx/pages/settings';
 import TextGenerationPage from '@lynx/pages/text';
 import ToolsPage from '@lynx/pages/tools';
@@ -30,7 +30,7 @@ export const PageComponents = {
   [PageID.agents]: Agents,
 
   [PageID.dashboard]: DashboardPage,
-  [PageID.plugins]: Index,
+  [PageID.plugins]: PluginsPage,
   [PageID.settings]: SettingsPage,
 };
 
