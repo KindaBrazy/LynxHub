@@ -117,7 +117,8 @@ const TabItem = memo(({tab}: Props) => {
         variant="light"
         onPress={onPress}
         aria-selected={isActiveTab}
-        aria-label={`Tab: ${tab.title}`}>
+        aria-label={`Tab: ${tab.title}`}
+        disableRipple>
         <div className="flex gap-x-0.5 flex-row items-center min-w-0 flex-1">
           <TabIcon tab={tab} currentView={runningCard?.currentView} />
 
