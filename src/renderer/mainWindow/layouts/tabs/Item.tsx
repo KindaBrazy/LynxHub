@@ -8,6 +8,7 @@ import {AppDispatch} from '@lynx/redux/store';
 import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {TabInfo} from '@lynx_common/types';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
+import {motion} from 'framer-motion';
 import {X} from 'lucide-react';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
@@ -109,8 +110,8 @@ const TabItem = memo(({tab}: Props) => {
       showArrow>
       <Button
         className={
-          'pr-0 text-small pl-2 flex rounded-t-lg! data-[hover=true]:bg-foreground-100 flex-row relative ' +
-          `cursor-default gap-x-0 ${isActiveTab && 'bg-white dark:bg-[#303033]'} h-9`
+          'pr-0 text-small pl-2 flex data-[hover=true]:bg-foreground-100 flex-row relative ' +
+          `cursor-default gap-x-0 h-9 overflow-visible rounded-t-lg!`
         }
         ref={btnRef}
         radius="none"
@@ -142,6 +143,14 @@ const TabItem = memo(({tab}: Props) => {
         </Button>
 
         <ProgressBar progress={tab.progress} />
+
+        {isActiveTab && (
+          <motion.div
+            layoutId="active_tab_indicator"
+            transition={{duration: 0.3, type: 'spring'}}
+            className="absolute inset-0 -z-1 bg-white dark:bg-[#303033] rounded-t-lg"
+          />
+        )}
       </Button>
     </Tooltip>
   );
