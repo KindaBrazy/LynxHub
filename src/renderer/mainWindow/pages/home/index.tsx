@@ -16,19 +16,16 @@ import HomeTopBar from './TopBar';
 /**
  * Props for the HomePage component.
  */
-interface HomePageProps {
+type props = {
   /** Controls the visibility of the Home page within the tab system. */
   show: boolean;
-}
+};
 
 /**
  * The main Home Page component.
  * It renders the search, categories, extension injects, top bars, and cards grid.
- *
- * @param {HomePageProps} props Visibility flag from the parent Router/Tabs.
- * @returns {JSX.Element} The rendered Home Page.
  */
-const HomePage = memo(({show}: HomePageProps) => {
+const HomePage = memo(({show}: props) => {
   const homeCategory = useCardsState('homeCategory');
   const [searchValue, setSearchValue] = useState<string>('');
 

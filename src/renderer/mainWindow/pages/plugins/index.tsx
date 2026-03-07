@@ -33,16 +33,16 @@ function useInitializePlugins() {
 /**
  * Props for the PluginsPage component.
  */
-interface PluginsPageProps {
+type props = {
   /** Determines if the plugins page is currently visible. */
   show: boolean;
-}
+};
 
 /**
  * The main entry point for the Plugins page.
  * Manages the layout for the plugin list and plugin preview components.
  */
-const PluginsPage = memo(({show}: PluginsPageProps) => {
+const PluginsPage = memo(({show}: props) => {
   useInitializePlugins();
 
   return (
