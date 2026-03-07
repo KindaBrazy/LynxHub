@@ -126,8 +126,8 @@ export function useBrowser(runningCard: RunningCard) {
   }, [id]);
 
   useEffect(() => {
-    if (currentView === 'browser') browserIpc.send.focus(id);
-  }, [currentView, id]);
+    if (currentView === 'browser' && isActiveTab) browserIpc.send.focus(id);
+  }, [currentView, id, isActiveTab]);
 
   const showEmptyPage = isEmpty(finalAddress) || currentUrl === 'about:blank';
 
