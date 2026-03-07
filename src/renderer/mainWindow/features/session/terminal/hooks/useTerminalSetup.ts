@@ -1,11 +1,11 @@
 import {XTermAPI} from '@lynx/components/XTermCore';
 import ptyIpc from '@lynx_shared/ipc/pty';
 import {isEmpty} from 'lodash';
-import {Dispatch, MutableRefObject, RefObject, SetStateAction, useCallback, useEffect, useRef} from 'react';
+import {Dispatch, RefObject, SetStateAction, useCallback, useEffect, useRef} from 'react';
 
 type UseTerminalSetupProps = {
   id: string;
-  xtermRef: MutableRefObject<XTermAPI | null>;
+  xtermRef: RefObject<XTermAPI | null>;
   clearTerminal: RefObject<(() => void) | undefined>;
   setSelectedTerminalText: Dispatch<SetStateAction<string>>;
   quickHotkeySet: Set<string>;
@@ -33,10 +33,11 @@ export function useTerminalSetup({
   const handleTerminalReady = useCallback(
     (api: XTermAPI) => {
       xtermRef.current = api;
+      if (api.terminal) api.terminal.focus();
 
       // Setup clear terminal ref
 
-      (clearTerminal as MutableRefObject<(() => void) | undefined>).current = () => api.clear();
+      clearTerminal.current = () => api.clear();
 
       // Setup selection change handler
       api.terminal.onSelectionChange(() => setSelectedTerminalText(api.getSelection()));

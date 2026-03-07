@@ -80,6 +80,9 @@ export async function listenBrowser() {
   // Reloads current page
   browserIpc.on.reload(id => browserManager.reload(id));
 
+  // Focus on current paage
+  browserIpc.on.focus(id => browserManager.focus(id));
+
   // Stops loading current page
   browserIpc.on.stop(id => browserManager.stop(id));
 
@@ -187,6 +190,8 @@ export const browserIpc = {
       lynxIpc.on(browserChannels.setZoomFactor, callback),
     /** Listens for reload request */
     reload: (callback: (id: string) => void) => lynxIpc.on(browserChannels.reload, callback),
+    /** Listens for focus request */
+    focus: (callback: (id: string) => void) => lynxIpc.on(browserChannels.focus, callback),
     /** Listens for stop loading request */
     stop: (callback: (id: string) => void) => lynxIpc.on(browserChannels.stop, callback),
     /** Listens for go back request */

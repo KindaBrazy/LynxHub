@@ -66,6 +66,9 @@ const browserIpc = {
     // Reloads current page
     reload: (id: string) => lynxIpc.send(browserChannels.reload, id),
 
+    // Focus on current page
+    focus: (id: string) => lynxIpc.send(browserChannels.focus, id),
+
     // Stops loading current page
     stop: (id: string) => lynxIpc.send(browserChannels.stop, id),
 
