@@ -1,4 +1,4 @@
-import {Button, Input, Kbd, Popover, PopoverContent, PopoverTrigger, Switch, Tooltip} from '@heroui/react';
+import {Button, Input, Popover, PopoverContent, PopoverTrigger, Switch, Tooltip} from '@heroui/react';
 import useHotkeyPress from '@lynx/hooks/hotkeys';
 import {useIsActiveTab} from '@lynx/layouts/tabs/utils';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
@@ -113,7 +113,12 @@ const TerminalSearchText = memo(({searchAddon, tabId}: Props) => {
           hasHotkey ? (
             <div className="flex flex-row items-center gap-x-1">
               <span>Search for text</span>
-              <Kbd className="text-[10px]">{hotkeyLabel}</Kbd>
+              <span
+                className={
+                  'h-4 font-semibold text-xs rounded-sm bg-foreground-100 p-1 flex items-center justify-center'
+                }>
+                {hotkeyLabel}
+              </span>
             </div>
           ) : (
             'Search for text'
