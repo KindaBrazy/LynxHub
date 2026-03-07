@@ -437,6 +437,7 @@ export default class BrowserManager {
       mainWindow.contentView.addChildView(view);
     } else {
       mainWindow.contentView.removeChildView(view);
+      mainWindow.webContents.focus();
     }
   }
 
