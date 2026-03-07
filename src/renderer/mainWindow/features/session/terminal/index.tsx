@@ -4,6 +4,7 @@ import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {Dispatch, memo, RefObject, SetStateAction, useEffect, useMemo, useRef} from 'react';
 
+import {useTabsState} from '../../../redux/reducers/tabs';
 import {useTerminalBrowserIntegration} from './hooks/useTerminalBrowserIntegration';
 import {useTerminalClipboard} from './hooks/useTerminalClipboard';
 import {useTerminalHotkeys} from './hooks/useTerminalHotkeys';
@@ -21,14 +22,15 @@ type Props = {
 
 const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal, setSelectedTerminalText}: Props) => {
   const {webUIAddress, id, currentView, tabId} = useMemo(() => runningCard, [runningCard]);
+  const activeTab = useTabsState('activeTab');
   const xtermRef = useRef<XTermAPI | null>(null);
 
   useEffect(() => {
-    if (currentView === 'terminal') {
+    if (currentView === 'terminal' && activeTab === tabId) {
       const term = xtermRef.current?.terminal;
       if (term) term.focus();
     }
-  }, [currentView]);
+  }, [currentView, activeTab, tabId]);
 
   // 1. Hotkeys
   const {quickHotkeySet} = useTerminalHotkeys();
