@@ -462,6 +462,10 @@ export default class BrowserManager {
     this.withWebContents(id, wc => wc.reload());
   }
 
+  public focus(id: string) {
+    this.withWebContents(id, wc => wc.focus());
+  }
+
   public stop(id: string) {
     this.withWebContents(id, wc => wc.stop());
   }

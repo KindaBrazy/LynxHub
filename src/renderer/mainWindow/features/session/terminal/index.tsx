@@ -2,7 +2,7 @@ import XTermCore, {XTermAPI} from '@lynx/components/XTermCore';
 import {RunningCard} from '@lynx/types';
 import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
-import {Dispatch, memo, RefObject, SetStateAction, useMemo, useRef} from 'react';
+import {Dispatch, memo, RefObject, SetStateAction, useEffect, useMemo, useRef} from 'react';
 
 import {useTerminalBrowserIntegration} from './hooks/useTerminalBrowserIntegration';
 import {useTerminalClipboard} from './hooks/useTerminalClipboard';
@@ -23,6 +23,13 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
   const {webUIAddress, id, currentView, tabId} = useMemo(() => runningCard, [runningCard]);
   const xtermRef = useRef<XTermAPI | null>(null);
 
+  useEffect(() => {
+    if (currentView === 'terminal') {
+      const term = xtermRef.current?.terminal;
+      if (term) term.focus();
+    }
+  }, [currentView]);
+
   // 1. Hotkeys
   const {quickHotkeySet} = useTerminalHotkeys();
 
@@ -41,7 +48,7 @@ const Terminal = memo(({runningCard, serializeAddon, searchAddon, clearTerminal,
   // 6. Setup (Ready handler)
   const {handleTerminalReady} = useTerminalSetup({
     id,
-    xtermRef: xtermRef as RefObject<XTermAPI | null>,
+    xtermRef,
     clearTerminal,
     setSelectedTerminalText,
     quickHotkeySet,

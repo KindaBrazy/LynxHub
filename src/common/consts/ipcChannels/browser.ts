@@ -29,6 +29,7 @@ export const browserChannels = {
   clearCookies: 'browser:clear-cookies',
 
   reload: 'browser:reload',
+  focus: 'browser:focus',
   stop: 'browser:stop',
   goBack: 'browser:goBack',
   goForward: 'browser:goForward',
