@@ -3,17 +3,17 @@ import applicationIpc from '@lynx_shared/ipc/application';
 import storageIpc from '@lynx_shared/ipc/storage';
 
 let cachedStorage: AppStorageData | null = null;
-let systemDarkMode: 'dark' | 'light' | null = null;
+let isDarkMode: boolean = true;
 
 /**
  * Fetches all storage data in a single IPC call.
  * This should be called once at app startup before creating the Redux store.
  */
 export const initializeStorage = async (): Promise<AppStorageData> => {
-  const [storage, darkMode] = await Promise.all([storageIpc.getAll(), applicationIpc.invoke.getSystemDarkMode()]);
+  const [storage, darkMode] = await Promise.all([storageIpc.getAll(), applicationIpc.invoke.isDarkMode()]);
 
   cachedStorage = storage;
-  systemDarkMode = darkMode;
+  isDarkMode = darkMode;
 
   return storage;
 };
@@ -28,8 +28,8 @@ export const getStorageData = (): AppStorageData | null => {
 /**
  * Gets the system dark mode preference.
  */
-export const getSystemDarkMode = (): 'dark' | 'light' => {
-  return systemDarkMode ?? 'dark';
+export const getIsDarkMode = (): boolean => {
+  return isDarkMode;
 };
 
 /**

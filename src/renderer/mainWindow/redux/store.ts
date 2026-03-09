@@ -15,7 +15,7 @@ import tabs from './reducers/tabs';
 import terminal from './reducers/terminal';
 import user from './reducers/user';
 import volume from './reducers/volume';
-import {getStorageData, getSystemDarkMode} from './storageInit';
+import {getIsDarkMode, getStorageData} from './storageInit';
 
 const staticReducers = {
   app,
@@ -41,12 +41,6 @@ const emptyHotkeyInput = {
 
 const sentryReduxEnhancer = createReduxEnhancer({});
 
-const resolveDarkMode = (storageDarkMode: 'dark' | 'light' | 'system'): boolean => {
-  if (storageDarkMode === 'dark') return true;
-  if (storageDarkMode === 'light') return false;
-  return getSystemDarkMode() === 'dark';
-};
-
 const resolveInitializerState = (oldSetupDone: boolean, newSetupDone: boolean): PreloadState['app']['initializer'] => {
   if (newSetupDone) {
     return {showWizard: false, isUpgradeFlow: false};
@@ -64,7 +58,7 @@ const buildPreloadedState = (): PreloadState | undefined => {
   const storage = getStorageData();
   if (!storage) return undefined;
 
-  const darkMode = resolveDarkMode(storage.app.darkMode);
+  const darkMode = getIsDarkMode();
   const oldSetupDone = storage.app.initialized;
   const newSetupDone = storage.app.inited;
   const initializer = resolveInitializerState(oldSetupDone, newSetupDone);
