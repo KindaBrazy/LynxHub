@@ -107,7 +107,7 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
       placement="bottom"
       content={tab.title}
       isDisabled={!isTruncated}
-      classNames={{content: 'bg-foreground-100', base: 'before:dark:bg-foreground-100'}}
+      classNames={{content: 'dark:bg-foreground-100', base: 'before:dark:bg-foreground-100'}}
       showArrow>
       <Button
         className={
