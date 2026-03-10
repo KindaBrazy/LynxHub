@@ -6,7 +6,7 @@ import {useIsPinnedCard} from '@lynx/utils/hooks';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {Pin} from '@solar-icons/react-perf/Bold';
-import {Download, Play} from '@solar-icons/react-perf/BoldDuotone';
+import {DownloadMinimalistic, Play} from '@solar-icons/react-perf/BoldDuotone';
 import {Pin as PinLine} from '@solar-icons/react-perf/LineDuotone';
 import {memo, useCallback, useMemo} from 'react';
 
@@ -83,7 +83,7 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
           className={
             'translate-y-2 opacity-0 transition duration-400 group-hover:translate-y-0 group-hover:opacity-100'
           }>
-          {isInstalled ? <Play className="size-4 text-primary" /> : <Download className="size-4" />}
+          {isInstalled ? <Play className="size-4 text-primary" /> : <DownloadMinimalistic className="size-4" />}
         </div>
       )}
     </CardFooter>
