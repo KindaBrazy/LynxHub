@@ -21,13 +21,14 @@ import {useIsActiveTab, useRemoveTab} from './utils';
 
 type Props = {
   tab: TabInfo;
+  isOrdering: boolean;
 };
 
 /**
  * Component representing a single tab in the tab bar.
  * Handles selection, closing, and drag interactions.
  */
-const TabItem = memo(({tab}: Props) => {
+const TabItem = memo(({tab, isOrdering}: Props) => {
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const isActiveTab = useIsActiveTab(tab.id);
   const runningCards = useCardsState('runningCard');
@@ -95,8 +96,8 @@ const TabItem = memo(({tab}: Props) => {
   }, [handleAuxClick]);
 
   const onPress = useCallback(() => {
-    dispatch(tabsActions.setActiveTab(tab.id));
-  }, [dispatch, tab.id]);
+    if (!isOrdering) dispatch(tabsActions.setActiveTab(tab.id));
+  }, [dispatch, tab.id, isOrdering]);
 
   return (
     <Tooltip
