@@ -28,6 +28,8 @@ const TabsList = memo(() => {
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  const [isOrdering, setIsOrdering] = useState<boolean>(false);
+
   // Sync local state with Redux when Redux state changes (e.g. new tab added from elsewhere)
   useEffect(() => {
     setLocalTabs(tabsFromRedux);
@@ -58,6 +60,7 @@ const TabsList = memo(() => {
   }, [removeTab]);
 
   const onReorder = useCallback((reorderedIds: string[]) => {
+    setIsOrdering(true);
     setLocalTabs(prevTabs => {
       const newOrder = reorderedIds
         .map(tabID => prevTabs.find(tab => tab.id === tabID))
@@ -68,6 +71,7 @@ const TabsList = memo(() => {
   }, []);
 
   const handleReorderEnd = useCallback(() => {
+    setTimeout(() => setIsOrdering(false), 100);
     if (!isEqual(tabsFromRedux, localTabs)) {
       dispatch(tabsActions.setTabState({key: 'tabs', value: localTabs}));
     }
@@ -100,7 +104,7 @@ const TabsList = memo(() => {
               className="h-full flex items-center max-w-60 min-w-24"
               exit={{scale: 0.5, y: 10, x: 20, transition: {duration: 0.07, ease: 'backIn'}}}
               animate={{scale: 1, y: 0, x: 0, opacity: 1, transition: {duration: 0.25, ease: 'backOut'}}}>
-              <TabItem tab={tab} />
+              <TabItem tab={tab} isOrdering={isOrdering} />
               {index < localTabs.length - 1 && (
                 <Divider
                   className={`mx-1 max-h-4 dark:bg-foreground-200/50 ${
