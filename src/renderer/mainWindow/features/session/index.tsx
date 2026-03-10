@@ -14,6 +14,7 @@ import {isNil} from 'lodash';
 import {useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {XTermAPI} from '../../components/useXTerm';
 import Browser from './browser';
 import Terminal from './terminal';
 import SessionTopBar from './topBar';
@@ -109,6 +110,7 @@ const SessionView = ({runningCard}: Props) => {
   const [serializeAddon] = useState<SerializeAddon>(new SerializeAddon());
   const [searchAddon] = useState<SearchAddon>(new SearchAddon());
   const [selectedTerminalText, setSelectedTerminalText] = useState<string>('');
+  const xtermRef = useRef<XTermAPI | null>(null);
   const clearTerminal = useRef<(() => void) | undefined>(undefined);
 
   const showTerminal = runningCard.type !== 'browser';
@@ -118,6 +120,7 @@ const SessionView = ({runningCard}: Props) => {
     <>
       <SessionTopBar
         tabID={tabId}
+        xtermRef={xtermRef}
         runningCard={runningCard}
         searchAddon={searchAddon}
         clearTerminal={clearTerminal}
@@ -127,6 +130,7 @@ const SessionView = ({runningCard}: Props) => {
       {showTerminal &&
         (isNil(ExtTerminal) ? (
           <Terminal
+            xtermRef={xtermRef}
             runningCard={runningCard}
             searchAddon={searchAddon}
             clearTerminal={clearTerminal}

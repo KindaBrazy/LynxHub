@@ -3,6 +3,7 @@ import {SearchAddon} from '@xterm/addon-search';
 import {SerializeAddon} from '@xterm/addon-serialize';
 import {memo, RefObject} from 'react';
 
+import {XTermAPI} from '../../../components/useXTerm';
 import BrowserTopBar from './browser';
 import SharedTopBar from './shared';
 import TerminalTopBar from './terminal';
@@ -32,6 +33,7 @@ type Props = {
    * The selected text in the terminal.
    */
   selectedTerminalText: string;
+  xtermRef: RefObject<XTermAPI | null>;
 };
 
 /**
@@ -39,7 +41,7 @@ type Props = {
  * Switches between browser and terminal top bars based on the current view.
  */
 const SessionTopBar = memo(
-  ({runningCard, serializeAddon, searchAddon, tabID, clearTerminal, selectedTerminalText}: Props) => {
+  ({runningCard, serializeAddon, searchAddon, tabID, clearTerminal, selectedTerminalText, xtermRef}: Props) => {
     return (
       <div
         className={
@@ -49,6 +51,7 @@ const SessionTopBar = memo(
         {runningCard.currentView === 'terminal' ? (
           <TerminalTopBar
             id={runningCard.id}
+            xtermRef={xtermRef}
             tabId={runningCard.tabId}
             searchAddon={searchAddon}
             clearTerminal={clearTerminal}
