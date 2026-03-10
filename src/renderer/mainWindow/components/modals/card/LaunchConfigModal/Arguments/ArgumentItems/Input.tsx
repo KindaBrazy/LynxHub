@@ -1,6 +1,6 @@
-import {Input} from '@heroui/react';
+import {Button, Input, Textarea, Tooltip} from '@heroui/react';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
-import {Text} from '@solar-icons/react-perf/BoldDuotone';
+import {Restart, Text} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback, useEffect, useState} from 'react';
 
 import {useGetArgumentsByID} from '../../../../../../plugins/modules';
@@ -27,6 +27,9 @@ type Props = {
 export default function InputArgItem({argument, changeValue, removeArg, id}: Props) {
   const cardArgument = useGetArgumentsByID(id);
 
+  const [isInputBox, setIsInputBox] = useState<boolean>(false);
+  const [rotateEffect, setRotateEffect] = useState<boolean>(false);
+
   const [inputValue, setInputValue] = useState<string>(
     argument.value || getArgumentDefaultValue(argument.name, cardArgument) || '',
   );
@@ -46,16 +49,43 @@ export default function InputArgItem({argument, changeValue, removeArg, id}: Pro
     setInputValue(value);
   }, []);
 
+  const toggleInput = () => setIsInputBox(prev => !prev);
+
   return (
-    <ArgumentItemBase id={id} name={argument.name} removeArg={removeArg} icon={<Text className="size-3.5" />}>
-      <Input
-        onBlur={onBlur}
-        spellCheck="false"
-        value={inputValue}
-        onValueChange={onChange}
-        placeholder="Enter argument value here..."
-        classNames={{inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird'}}
-      />
+    <ArgumentItemBase
+      extra={
+        <Tooltip delay={800} content={`Change to ${isInputBox ? 'One line' : 'Multiline'}`} showArrow>
+          <Button size="sm" variant="light" onPress={toggleInput} aria-label="Toggle path type" isIconOnly>
+            <Restart
+              onAnimationEnd={() => setRotateEffect(false)}
+              className={`${rotateEffect && 'animate-[spin_0.5s]'}`}
+            />
+          </Button>
+        </Tooltip>
+      }
+      id={id}
+      name={argument.name}
+      removeArg={removeArg}
+      icon={<Text className="size-3.5" />}>
+      {isInputBox ? (
+        <Textarea
+          onBlur={onBlur}
+          value={inputValue}
+          spellCheck="false"
+          onValueChange={onChange}
+          placeholder="Enter argument value here..."
+          classNames={{inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird'}}
+        />
+      ) : (
+        <Input
+          onBlur={onBlur}
+          spellCheck="false"
+          value={inputValue}
+          onValueChange={onChange}
+          placeholder="Enter argument value here..."
+          classNames={{inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird'}}
+        />
+      )}
     </ArgumentItemBase>
   );
 }
