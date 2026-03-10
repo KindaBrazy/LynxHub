@@ -39,7 +39,8 @@ export interface InstallBodyProps {
     percentage?: number;
     description?: {label: string; value: string}[];
   };
-
+  /** Utility function to partially mutate the modal state. */
+  updateState: (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => void;
   /** Value indicating if the complete Install Modal parent is visibly toggled. */
   isOpen: boolean;
   /** Identifying hash mapping to this unique installation record. */
@@ -59,6 +60,7 @@ const InstallBody = memo(
     title,
     progressInfo,
     userInputElements,
+    updateState,
     setUserElementsReturn,
     cloneResolver,
     extensionsToInstall,
@@ -105,7 +107,15 @@ const InstallBody = memo(
 
       switch (state.body) {
         case 'clone':
-          return <CloneRepo isOpen={isOpen} done={doneClone} url={state.cloneUrl} start={state.startClone} />;
+          return (
+            <CloneRepo
+              isOpen={isOpen}
+              done={doneClone}
+              url={state.cloneUrl}
+              start={state.startClone}
+              updateState={updateState}
+            />
+          );
         case 'terminal':
           return <TerminalStep id={cardId} xtermRef={xtermRef} key={state.terminalKey} />;
         case 'progress-bar':

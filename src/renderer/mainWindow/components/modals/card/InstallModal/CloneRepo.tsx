@@ -1,6 +1,6 @@
 import {Card, CardBody, CardHeader, Link, ModalBody, Progress} from '@heroui/react';
-import {GitHub_Icon} from '@lynx_assets/icons';
 import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
+import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
 import {extractGitUrl, isWin} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
@@ -16,6 +16,7 @@ import {AppDispatch} from '../../../../redux/store';
 import {initGitProgress} from '../../../../utils/constants';
 import OpenDialog from '../../../OpenDialog';
 import CloneOptions from './CloneOptions';
+import {InstallState} from './types';
 
 export type CloneOptionsResult = {
   branch: string;
@@ -32,6 +33,8 @@ export interface CloneRepoProps {
   done: (dir: string) => void;
   /** Used to detect if the prompt is open to skip duplicate IPC dispatches. */
   isOpen: boolean;
+  /** Utility function to partially mutate the modal state. */
+  updateState: (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => void;
 }
 
 /**
@@ -40,7 +43,7 @@ export interface CloneRepoProps {
  *
  * @param {CloneRepoProps} props - The component props.
  */
-export default function CloneRepo({url, start, done, isOpen}: CloneRepoProps) {
+export default function CloneRepo({url, start, done, isOpen, updateState}: CloneRepoProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const [cloneOptionsResult, setCloneOptionsResult] = useState<CloneOptionsResult>({
@@ -83,6 +86,7 @@ export default function CloneRepo({url, start, done, isOpen}: CloneRepoProps) {
             dispatch(modalActions.setWarningContentId('CLONE_REPO'));
             dispatch(modalActions.openWarning());
             setDownloading(false);
+            updateState({startClone: false});
             break;
           case 'Completed':
             setDownloading(false);
@@ -111,7 +115,7 @@ export default function CloneRepo({url, start, done, isOpen}: CloneRepoProps) {
             isIndeterminate={downloadProgress.stage === 'unknown'}
             showValueLabel
           />
-          <DescriptionGrid className="mt-6" columns={2} items={progressItems} />
+          <DescriptionGrid columns={2} className="mt-6" items={progressItems} />
         </>
       ) : (
         <div className="space-y-4">
