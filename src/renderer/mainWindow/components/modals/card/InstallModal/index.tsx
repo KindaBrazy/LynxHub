@@ -246,6 +246,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
           isOpen={isOpen}
           cardId={cardId}
           xtermRef={xtermRef}
+          updateState={updateState}
           progressInfo={progressInfo}
           cloneResolver={cloneResolver}
           progressBarState={progressBarState}
