@@ -1,11 +1,17 @@
+import type {AvailablePageIDs} from '@lynx_common/consts';
+import type {ExtensionIpcEventsApi, RendererIpcHookMethod} from '@lynx_common/types/ipcEvents';
+import type {
+  ArgumentsData,
+  CardData,
+  CardModules,
+  CardRendererMethods,
+  LoadedCardData,
+} from '@lynx_common/types/plugins/modules';
 import type {Reducer} from '@reduxjs/toolkit';
 import type {Scope} from '@sentry/browser';
-import type {IpcRenderer} from 'electron';
 import type {FC} from 'react';
 
-import type {AvailablePageIDs} from '../../../consts';
-import type {ExtensionIpcEventsApi, RendererIpcHookMethod} from '../../ipcEvents';
-import type {ArgumentsData, CardData, CardModules, CardRendererMethods, LoadedCardData} from '../modules';
+import type {ExtensionEvents} from './events';
 import type {
   AddMenuType,
   FcProp,
@@ -15,7 +21,6 @@ import type {
   FcPropReplaceMd,
   FcPropSearchResult,
 } from './index';
-import type {ExtensionEvents} from './events';
 
 /**
  * Data related to modules available to extensions.
@@ -444,12 +449,6 @@ export type ExtensionRendererApi = {
    * Data related to modules.
    */
   modulesData?: ModuleData;
-
-  /**
-   * IPC Renderer instance.
-   * Exposed from Electron to allow extensions to communicate with the main process.
-   */
-  rendererIpc?: IpcRenderer;
 
   /**
    * Initialize Sentry for the browser environment.

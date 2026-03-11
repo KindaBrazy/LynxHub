@@ -1,11 +1,12 @@
-import {ExtensionData_Renderer, ExtensionImport_Renderer} from '@lynx_common/types/plugins/extensions';
-import {ExtensionRendererApi} from '@lynx_common/types/plugins/extensions/api';
-import type {ExtensionEvents} from '@lynx_common/types/plugins/extensions/events';
 import {rendererIpcEventsApi} from '@lynx_shared/ipc/ipcEvents';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 
 import {allCards, allModules, getCardMethod, useGetArgumentsByID, useGetCardsByPath} from '../modules';
 import {initPluginBrowserSentry} from '../sentry';
+import {rendererIpcApi} from './ipcApi';
+import {ExtensionData_Renderer, ExtensionImport_Renderer} from './types';
+import {ExtensionRendererApi} from './types/api';
+import type {ExtensionEvents} from './types/events';
 
 // ─── Extension Data Store ─────────────────────────────────────────────────────
 
@@ -526,6 +527,7 @@ export default function initializeExtensions(extensions: LoadedExtension[]) {
           getCardMethod,
         },
       },
+      rendererIpcApi,
       extension.id,
     );
   }
