@@ -25,7 +25,7 @@ export const Links = memo(function Links({url}: LinksProps) {
           contextMenuIpc.send.rightClickItems.newTab(url);
         })}
         title="Open link in new tab"
-        icon={<SquareTopDown className="size-4" />}
+        icon={<SquareTopDown className="size-3.5" />}
       />
       <ActionButton
         onPress={createActionHandler(() => {
