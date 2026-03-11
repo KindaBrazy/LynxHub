@@ -1,0 +1,33 @@
+import type applicationIpc from '@lynx_shared/ipc/application';
+import type browserIpc from '@lynx_shared/ipc/browser';
+import type contextMenuIpc from '@lynx_shared/ipc/contextMenu';
+import type windowDialogsIpc from '@lynx_shared/ipc/dialogsWindow';
+import type downloadManagerIpc from '@lynx_shared/ipc/downloadManager';
+import type filesIpc from '@lynx_shared/ipc/files';
+import type gitIpc from '@lynx_shared/ipc/git';
+import type lynxIpc from '@lynx_shared/ipc/lynxIpc';
+import type ptyIpc from '@lynx_shared/ipc/pty';
+import type shareScreenIpc from '@lynx_shared/ipc/shareScreen';
+import type staticsIpc from '@lynx_shared/ipc/statics';
+import type storageIpc from '@lynx_shared/ipc/storage';
+import type toastWindowIpc from '@lynx_shared/ipc/toastWindow';
+import type userIpc from '@lynx_shared/ipc/user';
+import type utilsIpc from '@lynx_shared/ipc/utils';
+
+export type RendererIpcApi = {
+  lynxIpc: typeof lynxIpc;
+  application: typeof applicationIpc;
+  browser: typeof browserIpc;
+  contextMenu: typeof contextMenuIpc;
+  windowDialogs: typeof windowDialogsIpc;
+  downloadManager: typeof downloadManagerIpc;
+  files: typeof filesIpc;
+  git: typeof gitIpc;
+  pty: typeof ptyIpc;
+  shareScreen: typeof shareScreenIpc;
+  statics: typeof staticsIpc;
+  storage: typeof storageIpc;
+  toastWindow: typeof toastWindowIpc;
+  user: typeof userIpc;
+  utils: typeof utilsIpc;
+};

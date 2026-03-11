@@ -1,9 +1,10 @@
+import type {CardState} from '@lynx_common/types';
+import type {LoadedCardData} from '@lynx_common/types/plugins/modules';
 import type {Reducer} from '@reduxjs/toolkit';
 import type {ComponentProps, FC} from 'react';
 
-import type {CardState} from '../../index';
-import type {LoadedCardData} from '../modules';
-import type {ExtensionRendererApi} from './api';
+import {ExtensionRendererApi} from './api';
+import {RendererIpcApi} from './ipcWrapper';
 
 /**
  * Hook to access the card store.
@@ -255,5 +256,5 @@ export type ExtensionImport_Renderer = {
    * @param lynxAPI - The API provided to the extension.
    * @param extensionId - The ID of the extension.
    */
-  InitialExtensions: (lynxAPI: ExtensionRendererApi, extensionId: string) => void;
+  InitialExtensions: (lynxAPI: ExtensionRendererApi, rendererIpc: RendererIpcApi, extensionId: string) => void;
 };

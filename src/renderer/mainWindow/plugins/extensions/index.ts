@@ -1,11 +1,11 @@
 import {__federation_method_getRemote, __federation_method_setRemote} from '__federation__';
-import {ExtensionImport_Renderer} from '@lynx_common/types/plugins/extensions';
 import {isDev} from '@lynx_common/utils';
 import pluginsIpc from '@lynx_shared/ipc/plugins';
 import {captureException} from '@sentry/electron/renderer';
 import {compact} from 'lodash';
 
 import initializeExtensions from './loader';
+import {ExtensionImport_Renderer} from './types';
 
 // ─── Module Federation type wrappers ─────────────────────────────────────────
 // These cast the untyped federation globals to their correct signatures so the
