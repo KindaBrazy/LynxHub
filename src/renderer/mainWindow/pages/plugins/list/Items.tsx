@@ -202,7 +202,10 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
                 radius="sm"
                 variant="flat"
                 classNames={{content: 'flex flex-row items-center justify-center gap-x-1'}}>
-                <span>v{currentVersion}</span>
+                <span>
+                  {currentVersion !== 'N/A' && 'v'}
+                  {currentVersion}
+                </span>
                 {targetUpdate && (
                   <>
                     <ArrowRight className="size-3" />

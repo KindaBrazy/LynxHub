@@ -80,7 +80,10 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
                 className="text-foreground-600"
                 startContent={<BoxMinimalistic className="size-3.5" />}
                 classNames={{content: 'flex flex-row items-center justify-center gap-x-1'}}>
-                <span>v{resolvedVersion}</span>
+                <span>
+                  {resolvedVersion !== 'N/A' && 'v'}
+                  {resolvedVersion}
+                </span>
                 {targetVersion && (
                   <>
                     <ArrowRight className="size-3" />
