@@ -1,11 +1,12 @@
+import {ExtensionIpcEventsApi, MainIpcHookMethod} from '@lynx_common/types/ipcEvents';
 import MainWindowManager from '@lynx_main/mainWindow';
 import StorageManager from '@lynx_main/storage/storageOperations';
-import {ExtensionIpcEventsApi, MainIpcHookMethod} from '@lynx_common/types/ipcEvents';
 import {Scope} from '@sentry/node';
 import {MenuItem, MenuItemConstructorOptions} from 'electron';
 import * as pty from 'node-pty';
 
 import ModuleManager from '../modules';
+import {MainIpcApi} from './ipcWrapper';
 
 /**
  * Union type for Electron menu items.
@@ -133,5 +134,5 @@ export type ExtensionImport_Main = {
    * @param lynxApi - The API provided by LynxHub.
    * @param utils - Utility functions provided by LynxHub.
    */
-  initialExtension: (lynxApi: ExtensionMainApi, utils: MainExtensionUtils) => Promise<void>;
+  initialExtension: (lynxApi: ExtensionMainApi, utils: MainExtensionUtils, mainIpc: MainIpcApi) => Promise<void>;
 };
