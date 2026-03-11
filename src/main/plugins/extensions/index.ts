@@ -7,6 +7,7 @@ import {captureException} from '@sentry/electron/main';
 
 import ModuleManager from '../modules';
 import ExtensionApi from './api';
+import {mainIpcApi} from './ipcApi';
 import {ElectronMenuItem, ExtensionImport_Main} from './types';
 import ExtensionUtils from './utils';
 
@@ -32,7 +33,7 @@ export default class ExtensionManager {
       const initial: ExtensionImport_Main = await import(
         /* @vite-ignore */ '../../../../extension/src/main/lynxExtension'
       );
-      await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
+      await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils, mainIpcApi);
     } catch (e) {
       console.log('No dev extension found or failed to load, skipping...', e);
     }
@@ -47,7 +48,7 @@ export default class ExtensionManager {
       const fullExtensionPath = path.join(extensionPath, 'scripts', 'main', 'mainEntry.cjs');
       const extensionUrl = `file://${fullExtensionPath}`;
       const initial: ExtensionImport_Main = await import(extensionUrl);
-      await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils);
+      await initial.initialExtension(this.extensionApi.getApi(), this.extensionUtils, mainIpcApi);
     } catch (e) {
       console.error(`Failed to load extension from ${extensionPath}:`, e);
       captureException(e);
