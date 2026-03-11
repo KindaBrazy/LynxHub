@@ -39,8 +39,11 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
   // subscription tier changes (which may affect available versions).
   useUserState('updateChannel');
 
-  const {resolvedVersion, releaseDate, isUpgradeAvailable, targetVersion} = useMemo(() => {
+  const {resolvedVersion, releaseDate, isUpgradeAvailable, targetVersion, isInstalled} = useMemo(() => {
     const firstCompatibleVersion = selectedPlugin?.versions.find(v => v.isCompatible);
+
+    const isInstalled = !!installedPlugin;
+    console.log(isInstalled);
 
     const resolvedVersion = installedPlugin?.version || firstCompatibleVersion?.version || 'N/A';
     const syncTarget = syncList.find(item => item.id === selectedPlugin?.metadata.id);
@@ -48,7 +51,7 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
     const targetVersion = syncTarget?.version;
     const releaseDate = selectedPlugin?.changes.find(entry => entry.version === resolvedVersion)?.date || 'N/A';
 
-    return {resolvedVersion, releaseDate, isUpgradeAvailable, targetVersion};
+    return {resolvedVersion, releaseDate, isUpgradeAvailable, targetVersion, isInstalled};
   }, [installedPlugin, selectedPlugin, syncList]);
 
   const handleOpenHomePage = useCallback(() => {
@@ -61,7 +64,11 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
   const pluginIconUrl = getCacheUrl(getPluginIconUrl(selectedPlugin?.url));
 
   return (
-    <div className="w-full flex sm:flex-col lg:flex-row p-5 sm:gap-y-2 shrink-0">
+    <div
+      className={
+        `w-full flex flex-col p-5 sm:gap-y-2 shrink-0 ` +
+        `${isInstalled ? 'min-[77rem]:flex-row' : 'min-[53rem]:flex-row'}`
+      }>
       <div className="w-full flex flex-col">
         <User
           avatarProps={{
@@ -133,7 +140,7 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
         </div>
       </div>
 
-      <PluginActionButtons isInstalled={!!installedPlugin} currentVersion={resolvedVersion} />
+      <PluginActionButtons isInstalled={isInstalled} currentVersion={resolvedVersion} />
     </div>
   );
 }

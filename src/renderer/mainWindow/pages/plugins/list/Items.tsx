@@ -220,10 +220,12 @@ export function PluginListItem({item, installed}: PluginListItemProps) {
       </CardHeader>
 
       <CardBody className="py-0 pl-[3.7rem]">
-        <span className="mb-1.5 mt-1 line-clamp-3 text-xs text-foreground-700">{item.metadata.description}</span>
+        <span className="mb-1.5 mt-1 line-clamp-3 max-[63rem]:line-clamp-2 text-xs text-foreground-700">
+          {item.metadata.description}
+        </span>
       </CardBody>
 
-      <CardFooter className="flex flex-row items-center justify-between gap-x-2 pt-0">
+      <CardFooter className="flex flex-row max-[63rem]:flex-col items-center justify-between gap-x-2 pt-0">
         <div className="flex flex-row items-center gap-x-1 px-0">
           {linux && <Linux_Icon className="size-4" />}
           {win32 && <Windows_Icon className="size-4" />}
