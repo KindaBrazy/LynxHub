@@ -112,6 +112,7 @@ export type TerminalStorage = {
   enableLigatures: boolean;
   cdHistory: string[];
   quickCommands: {label: string; command: string}[];
+  sendYWithExit: boolean;
 };
 
 /**

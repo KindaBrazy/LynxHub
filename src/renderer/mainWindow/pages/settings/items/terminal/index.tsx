@@ -14,6 +14,7 @@ import QuickCommands from './QuickCommands';
 import Reset from './Reset';
 import ResizeDelay from './ResizeDelay';
 import ScrollBack from './ScrollBack';
+import SendYWithExit from './SendYWithExit';
 
 /**
  * The DOM ID assigned to the terminal settings wrapper.
@@ -37,8 +38,11 @@ export default function SettingsTerminal() {
       <BlinkCursor />
       <OutputColor />
       <CloseOnExit />
+      <SendYWithExit />
+
       <Spacer />
       <QuickCommands />
+
       <Reset />
     </SettingsSection>
   );

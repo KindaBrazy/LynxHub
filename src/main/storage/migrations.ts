@@ -9,8 +9,6 @@ import {app} from 'electron';
 import {isEmpty} from 'lodash';
 import {LowSync} from 'lowdb';
 
-export const CURRENT_STORAGE_VERSION = 0.95;
-
 /**
  * Handles storage migration execution and deferred migration steps.
  */
@@ -37,6 +35,7 @@ export class StorageMigrationManager {
     [0.93, () => this.migrate_0_93()],
     [0.94, () => this.migrate_0_94()],
     [0.95, () => this.migrate_0_95()],
+    [0.96, () => this.migrate_0_96()],
   ]);
 
   constructor(
@@ -73,7 +72,7 @@ export class StorageMigrationManager {
    * Migrates storage data from older versions to current version.
    * Migrations are applied sequentially based on stored version.
    */
-  public runStorageMigrations(): void {
+  public runStorageMigrations(currentVersion: number): void {
     try {
       const storeVersion = this.storage.data.storage.version;
 
@@ -83,7 +82,7 @@ export class StorageMigrationManager {
         return;
       }
 
-      if (storeVersion >= CURRENT_STORAGE_VERSION) {
+      if (storeVersion >= currentVersion) {
         return;
       }
 
@@ -96,7 +95,7 @@ export class StorageMigrationManager {
 
       this.storage.data.storage = {
         ...this.storage.data.storage,
-        version: CURRENT_STORAGE_VERSION,
+        version: currentVersion,
       };
       this.write();
     } catch (e) {
@@ -247,6 +246,10 @@ export class StorageMigrationManager {
     if (this.storage.data.terminal.enableLigatures === undefined) {
       this.storage.data.terminal.enableLigatures = true;
     }
+  }
+
+  private migrate_0_96() {
+    this.storage.data.terminal.sendYWithExit = false;
   }
 
   private normalizeCustomRunBehavior() {

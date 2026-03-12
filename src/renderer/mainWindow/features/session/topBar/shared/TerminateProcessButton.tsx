@@ -2,8 +2,13 @@ import {Button, Tooltip} from '@heroui/react';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
 import {useSettingsState} from '@lynx/redux/reducers/settings';
 import {Stop_Icon} from '@lynx_assets/icons';
+import {terminalLineEnding} from '@lynx_common/utils/platform';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
+import ptyIpc from '@lynx_shared/ipc/pty';
+import {Exit} from '@solar-icons/react-perf/BoldDuotone';
 import {memo, useCallback} from 'react';
+
+import {useTerminalState} from '../../../../redux/reducers/terminal';
 
 type Props = {
   /**
@@ -19,6 +24,7 @@ type Props = {
 const TerminateProcessButton = memo(({id}: Props) => {
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const showTerminateConfirm = useSettingsState('terminateAIConfirm');
+  const sendYWithExit = useTerminalState('sendYWithExit');
 
   const handleStop = useCallback(() => {
     if (!id) return;
@@ -30,8 +36,18 @@ const TerminateProcessButton = memo(({id}: Props) => {
     }
   }, [id, isCtrlPressed, showTerminateConfirm]);
 
+  const handleExit = useCallback(() => {
+    ptyIpc.write(id, '\x03');
+    if (sendYWithExit) ptyIpc.write(id, 'y' + terminalLineEnding);
+  }, [id, sendYWithExit]);
+
   return (
     <>
+      <Tooltip delay={500} content="Send exit signal to the process">
+        <Button size="sm" color="warning" variant="light" onPress={handleExit} isIconOnly>
+          <Exit size={16} />
+        </Button>
+      </Tooltip>
       <Tooltip delay={500} content="Terminate Process">
         <Button size="sm" color="danger" variant="light" onPress={handleStop} aria-label="Terminate Process" isIconOnly>
           <Stop_Icon className="size-4" />

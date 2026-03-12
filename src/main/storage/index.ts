@@ -25,7 +25,7 @@ class BaseStorage {
   private readonly migrationManager: StorageMigrationManager;
 
   private readonly DEFAULT_DATA: AppStorageData = {
-    storage: {version: 0.95},
+    storage: {version: 0.96},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -83,6 +83,7 @@ class BaseStorage {
       enableLigatures: true,
       cdHistory: [],
       quickCommands: [],
+      sendYWithExit: false,
     },
     browser: {
       recentAddress: [],
@@ -147,7 +148,7 @@ class BaseStorage {
     this.storage = JSONFileSyncPreset<AppStorageData>(storagePath, this.DEFAULT_DATA);
     this.storage.read();
     this.migrationManager = new StorageMigrationManager(this.storage, this.DEFAULT_DATA, () => this.write());
-    this.migrationManager.runStorageMigrations();
+    this.migrationManager.runStorageMigrations(this.DEFAULT_DATA.storage.version);
   }
 
   /**
