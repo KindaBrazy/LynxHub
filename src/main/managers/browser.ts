@@ -458,9 +458,9 @@ export default class BrowserManager {
   }
 
   public reload(id: string) {
-    browserIpc.send.onClearFailed(id);
     this.setVisible(id, true);
     this.withWebContents(id, wc => wc.reload());
+    browserIpc.send.onClearFailed(id);
   }
 
   public focus(id: string) {
@@ -473,10 +473,12 @@ export default class BrowserManager {
 
   public goBack(id: string) {
     this.withWebContents(id, wc => wc.navigationHistory.goBack());
+    browserIpc.send.onClearFailed(id);
   }
 
   public goForward(id: string) {
     this.withWebContents(id, wc => wc.navigationHistory.goForward());
+    browserIpc.send.onClearFailed(id);
   }
 
   public toggleDevTools(id: string) {
