@@ -8,6 +8,8 @@ import {ReactNode} from 'react';
 type Props = {
   /** The title of the settings section */
   title: string;
+  /** The description of the settings section */
+  description?: ReactNode;
   /** Unique identifier for the section, used for search and navigation */
   id?: string;
   /** Optional icon to display next to the title */
@@ -23,7 +25,15 @@ type Props = {
 /**
  * Renders a card for a specific settings section with search registration and animation.
  */
-export default function SettingsSection({children, id, title, titleColor = '', itemsCenter = false, icon}: Props) {
+export default function SettingsSection({
+  children,
+  id,
+  title,
+  description,
+  titleColor = '',
+  itemsCenter = false,
+  icon,
+}: Props) {
   useRegisterSectionSearch(id, title);
 
   return (
@@ -32,9 +42,12 @@ export default function SettingsSection({children, id, title, titleColor = '', i
       animate={{translateX: 0, opacity: 1}}
       initial={{translateX: -50, opacity: 0}}>
       <Card id={id} shadow="sm" className={`w-full ${ContainersBg} border-1 border-foreground-100`}>
-        <CardHeader className={`flex flex-row items-center justify-center gap-x-2 ${titleColor}`}>
-          {icon}
-          <SettingsSearchHighlight text={title} />
+        <CardHeader className={`flex flex-col items-center justify-center gap-x-2 ${titleColor}`}>
+          <div className="flex flex-row items-center justify-center gap-x-2">
+            {icon}
+            <SettingsSearchHighlight text={title} />
+          </div>
+          <span className="text-sm text-foreground-500">{description}</span>
         </CardHeader>
         <CardBody className={`${itemsCenter && 'justify-center'} flex flex-col gap-y-3`}>{children}</CardBody>
       </Card>
