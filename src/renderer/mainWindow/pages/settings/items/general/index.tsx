@@ -1,5 +1,6 @@
 import SettingsSection from '@lynx/components/SettingsSection';
 import {SettingPage_Icon} from '@lynx_assets/icons/pages';
+import {Shield} from '@solar-icons/react-perf/BoldDuotone';
 
 import CollectErrors from './CollectErrors';
 import Confirm from './Confirm';
@@ -16,13 +17,17 @@ export const SettingsGeneralId = 'settings_app_elem';
  */
 export default function SettingsGeneral() {
   return (
-    <SettingsSection title="General" id={SettingsGeneralId} icon={<SettingPage_Icon className="size-5" />}>
-      <Theme />
-      <Taskbar />
-      <Tooltip />
-      <TitleName />
-      <Confirm />
-      <CollectErrors />
-    </SettingsSection>
+    <>
+      <SettingsSection title="General" id={SettingsGeneralId} icon={<SettingPage_Icon className="size-5" />}>
+        <Theme />
+        <Taskbar />
+        <Tooltip />
+        <TitleName />
+        <CollectErrors />
+      </SettingsSection>
+      <SettingsSection title="Confirmations" id={SettingsGeneralId} icon={<Shield className="size-5" />}>
+        <Confirm />
+      </SettingsSection>
+    </>
   );
 }
