@@ -30,13 +30,7 @@ const ViewSwitch = memo(({currentView}: Props) => {
 
   return (
     <Tooltip delay={500} content={tooltipContent}>
-      <Button
-        size="sm"
-        variant="light"
-        onPress={handlePress}
-        className="cursor-default"
-        aria-label={tooltipContent}
-        isIconOnly>
+      <Button size="sm" variant="light" color="primary" onPress={handlePress} aria-label={tooltipContent} isIconOnly>
         {isBrowser ? <Terminal_Icon className="size-4" /> : <Earth className="size-4" />}
       </Button>
     </Tooltip>
