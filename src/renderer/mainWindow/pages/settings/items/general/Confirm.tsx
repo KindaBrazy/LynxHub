@@ -54,53 +54,43 @@ export default function Confirm() {
   return (
     <>
       <SettingsFilterItem
-        searchTexts={['Close Confirmation', 'close app', 'confirmation window', 'ctrl', 'bypass confirmation']}>
+        searchTexts={['Close App', 'close app', 'confirmation window', 'ctrl', 'bypass confirmation']}>
         <LynxSwitch
-          description="Show a confirmation window when closing the app.
-         (Hold CTRL and click on close to bypass this confirmation.)"
+          title="Close App"
           enabled={closeConfirm}
-          title="Close Confirmation"
           onEnabledChange={onCloseConfirmChange}
+          description="Show a confirmation window when closing the app."
         />
       </SettingsFilterItem>
       <SettingsFilterItem
-        searchTexts={[
-          'Close Tab Confirmation',
-          'close tab',
-          'terminal tab',
-          'confirmation window',
-          'ctrl',
-          'bypass confirmation',
-        ]}>
+        searchTexts={['Close Tab', 'close tab', 'terminal tab', 'confirmation window', 'ctrl', 'bypass confirmation']}>
         <LynxSwitch
-          description="Show a confirmation window when closing tab with terminal open.
-         (Hold CTRL and click on terminate to bypass this confirmation.)"
+          title="Close Tab"
           enabled={closeTabConfirm}
-          title="Close Tab Confirmation"
           onEnabledChange={onCloseTabConfirmChange}
+          description="Show a confirmation window when closing tab with terminal open."
         />
       </SettingsFilterItem>
       <SettingsFilterItem
         searchTexts={[
-          'Terminate AI Confirmation',
-          'terminate ai',
+          'Terminate Process',
+          'terminate process',
           'stop ai',
           'confirmation window',
           'ctrl',
           'bypass confirmation',
         ]}>
         <LynxSwitch
-          description="Show a confirmation window when terminating running AI.
-         (Hold CTRL and click on terminate to bypass this confirmation.)"
+          title="Terminate Process"
           enabled={terminateAIConfirm}
-          title="Terminate AI Confirmation"
           onEnabledChange={onTerminateAIConfirmChange}
+          description="Show a confirmation window when terminating running process"
         />
       </SettingsFilterItem>
 
       <SettingsFilterItem
         searchTexts={[
-          'Send Signal Confirmation',
+          'Send Exit Signal (Terminal)',
           'terminal',
           'exit confirmation',
           'confirm',
@@ -108,14 +98,11 @@ export default function Confirm() {
           'bypass confirmation',
         ]}>
         <LynxSwitch
-          description={
-            'Show a confirmation window when sending signal to process.\n' +
-            '(Hold CTRL and click on close to bypass this confirmation.)'
-          }
           size="default"
           enabled={exitSignalConfirm}
-          title="Send Signal Confirmation"
+          title="Send Exit Signal (Terminal)"
           onEnabledChange={onSendSignalConfirmChange}
+          description={'Show a confirmation window when sending exit signal to process.'}
         />
       </SettingsFilterItem>
     </>
