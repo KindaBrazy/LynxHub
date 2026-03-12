@@ -25,7 +25,15 @@ export default function SettingsGeneral() {
         <TitleName />
         <CollectErrors />
       </SettingsSection>
-      <SettingsSection title="Confirmations" id={SettingsGeneralId} icon={<Shield className="size-5" />}>
+      <SettingsSection
+        description={
+          <span>
+            Hold <span className="bg-foreground-100 px-1 rounded-sm">CTRL</span> to bypass any of these confirmations.
+          </span>
+        }
+        title="Confirmations"
+        id={SettingsGeneralId}
+        icon={<Shield className="size-5" />}>
         <Confirm />
       </SettingsSection>
     </>
