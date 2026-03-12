@@ -32,6 +32,7 @@ const ConfirmElement = memo(({title, enabledTitle, confirmName, buttons}: Confir
 
   useEffect(() => {
     let isMounted = true;
+
     storageIpc.get('app').then(appConfig => {
       if (isMounted) {
         // appConfig[confirmName] is true if confirmation is enabled.
@@ -39,6 +40,7 @@ const ConfirmElement = memo(({title, enabledTitle, confirmName, buttons}: Confir
         setIsSkipConfirmSelected(!appConfig[confirmName]);
       }
     });
+
     return () => {
       isMounted = false;
     };
