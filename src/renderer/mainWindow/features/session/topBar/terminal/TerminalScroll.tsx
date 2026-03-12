@@ -1,5 +1,6 @@
 import {Button, Tooltip} from '@heroui/react';
-import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Bold';
+import {AltArrowDown, AltArrowUp} from '@solar-icons/react-perf/Linear';
+import {IDisposable} from '@xterm/xterm';
 import {AnimatePresence, motion} from 'framer-motion';
 import {ReactNode, RefObject, useEffect, useState} from 'react';
 
@@ -32,17 +33,27 @@ export default function TerminalScroll({xtermRef}: Props) {
   const [baseY, setBaseY] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    const ref = xtermRef.current;
-    if (!ref) return;
-    const term = ref.terminal;
-    if (!term) return;
+    let listener: IDisposable | undefined = undefined;
 
-    const listener = term.onScroll(value => {
-      setCurrentScroll(value);
-      setBaseY(term.buffer.active.baseY);
-    });
+    const listenForScroll = () => {
+      const ref = xtermRef.current;
+      if (!ref) return;
+      const term = ref.terminal;
+      if (!term) return;
 
-    return () => listener.dispose();
+      return term.onScroll(value => {
+        setCurrentScroll(value);
+        setBaseY(term.buffer.active.baseY);
+      });
+    };
+
+    listener = listenForScroll();
+
+    setTimeout(() => {
+      listener = listenForScroll();
+    }, 2000);
+
+    return () => listener?.dispose();
   }, []);
 
   const scrollTop = () => {
