@@ -14,6 +14,7 @@ const initialState: SettingState = {
   closeConfirm: true,
   closeTabConfirm: true,
   terminateAIConfirm: true,
+  exitSignalConfirm: true,
   openLastSize: false,
   updatedModules: [],
   newModules: [],
@@ -34,11 +35,8 @@ const settingsSlice = createSlice({
   name: 'settings',
   reducers: {
     setSettingsState: <K extends keyof SettingState>(
-      state,
-      action: PayloadAction<{
-        key: K;
-        value: SettingState[K];
-      }>,
+      state: SettingState,
+      action: PayloadAction<{key: K; value: SettingState[K]}>,
     ) => {
       state[action.payload.key] = action.payload.value;
     },

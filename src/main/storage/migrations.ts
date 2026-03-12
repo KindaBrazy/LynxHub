@@ -250,6 +250,7 @@ export class StorageMigrationManager {
 
   private migrate_0_96() {
     this.storage.data.terminal.sendYWithExit = false;
+    this.storage.data.app.exitSignalConfirm = true;
   }
 
   private normalizeCustomRunBehavior() {

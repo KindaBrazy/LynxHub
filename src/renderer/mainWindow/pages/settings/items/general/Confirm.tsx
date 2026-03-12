@@ -15,6 +15,7 @@ export default function Confirm() {
   const closeConfirm = useSettingsState('closeConfirm');
   const closeTabConfirm = useSettingsState('closeTabConfirm');
   const terminateAIConfirm = useSettingsState('terminateAIConfirm');
+  const exitSignalConfirm = useSettingsState('exitSignalConfirm');
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -38,6 +39,14 @@ export default function Confirm() {
     (selected: boolean) => {
       storageIpc.update('app', {terminateAIConfirm: selected});
       dispatch(settingsActions.setSettingsState({key: 'terminateAIConfirm', value: selected}));
+    },
+    [dispatch],
+  );
+
+  const onSendSignalConfirmChange = useCallback(
+    (selected: boolean) => {
+      storageIpc.update('app', {exitSignalConfirm: selected});
+      dispatch(settingsActions.setSettingsState({key: 'exitSignalConfirm', value: selected}));
     },
     [dispatch],
   );
@@ -86,6 +95,27 @@ export default function Confirm() {
           enabled={terminateAIConfirm}
           title="Terminate AI Confirmation"
           onEnabledChange={onTerminateAIConfirmChange}
+        />
+      </SettingsFilterItem>
+
+      <SettingsFilterItem
+        searchTexts={[
+          'Send Signal Confirmation',
+          'terminal',
+          'exit confirmation',
+          'confirm',
+          'ctrl',
+          'bypass confirmation',
+        ]}>
+        <LynxSwitch
+          description={
+            'Show a confirmation window when sending signal to process.\n' +
+            '(Hold CTRL and click on close to bypass this confirmation.)'
+          }
+          size="default"
+          enabled={exitSignalConfirm}
+          title="Send Signal Confirmation"
+          onEnabledChange={onSendSignalConfirmChange}
         />
       </SettingsFilterItem>
     </>

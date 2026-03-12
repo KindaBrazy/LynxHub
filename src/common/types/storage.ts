@@ -68,6 +68,7 @@ export type AppConfigStorage = {
   closeConfirm: boolean;
   terminateAIConfirm: boolean;
   closeTabConfirm: boolean;
+  exitSignalConfirm: boolean;
   openLastSize: boolean;
   dynamicAppTitle: boolean;
   openLinkExternal: boolean;

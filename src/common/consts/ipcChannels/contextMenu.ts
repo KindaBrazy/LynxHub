@@ -6,6 +6,7 @@ export const contextMenuChannels = {
   rightClick: 'context:rightClick',
   onFind: 'context:find-in-page',
   onTerminateAI: 'context:on-terminate-ai',
+  onSendExitProcess: 'context:on-send-exit-process',
   onTerminateTab: 'context:on-terminate-tab',
   onCloseApp: 'context:on-close-app',
   onZoom: 'context:zoom-page',
@@ -40,6 +41,7 @@ export const contextMenuChannels = {
   navigate: 'context:navigate',
 
   openTerminateAI: 'context:open-terminate-ai',
+  openSendExitSignal: 'context:open-send-exit-signal',
   openTerminateTab: 'context:open-terminate-tab',
   openCloseApp: 'context:open-close-app',
 } as const;

@@ -48,6 +48,7 @@ class BaseStorage {
       closeConfirm: true,
       closeTabConfirm: true,
       terminateAIConfirm: true,
+      exitSignalConfirm: false,
       openLastSize: false,
       homeCategory: ['All', 'Pin'],
       darkMode: 'dark',
