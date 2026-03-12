@@ -19,6 +19,9 @@ const contextMenuIpc = {
     // Opens terminate AI dialog
     openTerminateProcess: (id: string) => lynxIpc.send(contextMenuChannels.openTerminateAI, id),
 
+    // Opens send exit signal dialog
+    openSendExitSignal: (id: string) => lynxIpc.send(contextMenuChannels.openSendExitSignal, id),
+
     // Opens terminate tab dialog
     openTerminateTab: (id: string, customPosition?: ContextMenuPosition) =>
       lynxIpc.send(contextMenuChannels.openTerminateTab, id, customPosition),
@@ -88,6 +91,9 @@ const contextMenuIpc = {
     // Listens for terminate AI events
     terminateProcess: (callback: (id: string) => void): (() => void) =>
       lynxIpc.on(contextMenuChannels.onTerminateAI, callback),
+    // Listens for sending exit signal events
+    sendExitProcess: (callback: (id: string) => void): (() => void) =>
+      lynxIpc.on(contextMenuChannels.onSendExitProcess, callback),
 
     // Listens for terminate tab events
     terminateTab: (callback: (id: string) => void): (() => void) =>

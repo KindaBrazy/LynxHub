@@ -24,6 +24,7 @@ type Props = {
 const TerminateProcessButton = memo(({id}: Props) => {
   const isCtrlPressed = useHotkeysState('isCtrlPressed');
   const showTerminateConfirm = useSettingsState('terminateAIConfirm');
+  const exitSignalConfirm = useSettingsState('exitSignalConfirm');
   const sendYWithExit = useTerminalState('sendYWithExit');
 
   const handleStop = useCallback(() => {
@@ -37,9 +38,13 @@ const TerminateProcessButton = memo(({id}: Props) => {
   }, [id, isCtrlPressed, showTerminateConfirm]);
 
   const handleExit = useCallback(() => {
-    ptyIpc.write(id, '\x03');
-    if (sendYWithExit) ptyIpc.write(id, 'y' + terminalLineEnding);
-  }, [id, sendYWithExit]);
+    if (isCtrlPressed || !exitSignalConfirm) {
+      ptyIpc.write(id, '\x03');
+      if (sendYWithExit) ptyIpc.write(id, 'y' + terminalLineEnding);
+    } else {
+      contextMenuIpc.send.openSendExitSignal(id);
+    }
+  }, [id, sendYWithExit, exitSignalConfirm, isCtrlPressed]);
 
   return (
     <>

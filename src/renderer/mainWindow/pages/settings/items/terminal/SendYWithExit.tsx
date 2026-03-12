@@ -22,7 +22,8 @@ export default function SendYWithExit() {
   );
 
   const titleText = 'Send "Y" with exit';
-  const descriptionText = 'Whether auto send the "Y" after exit button pressed.';
+  const descriptionText =
+    'Whether auto send the "Y" after exit button pressed.\n(When CTRL held or confirm is disabled)';
 
   return (
     <SettingsFilterItem searchTexts={[titleText, descriptionText, 'terminal', 'exit', 'y']}>

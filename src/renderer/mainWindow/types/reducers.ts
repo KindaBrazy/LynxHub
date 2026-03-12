@@ -67,6 +67,7 @@ export type SettingState = {
   closeConfirm: boolean;
   closeTabConfirm: boolean;
   terminateAIConfirm: boolean;
+  exitSignalConfirm: boolean;
   openLastSize: boolean;
   dynamicAppTitle: boolean;
   openLinkExternal: boolean;

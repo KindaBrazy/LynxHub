@@ -128,6 +128,13 @@ export async function listenForBrowserChannels(browserManager: BrowserManager) {
     contextMenuManager.showContextMenu();
   });
 
+  // Open send exit signal process
+  contextMenuIpc.on.openSendExitSignal(id => {
+    setPosition(undefined);
+    contextMenuIpc.send.onSendExitProcess(id);
+    contextMenuManager.showContextMenu();
+  });
+
   // Open Terminate Tab
   contextMenuIpc.on.openTerminateTab((id, customPosition) => {
     setPosition(customPosition);
@@ -173,6 +180,8 @@ export const contextMenuIpc = {
     onVolume: (data: ContextMenuVolumeData) => sendToContextMenu(contextMenuChannels.onVolume, data),
     /** Sends terminate AI event to context menu */
     onTerminateAI: (id: string) => sendToContextMenu(contextMenuChannels.onTerminateAI, id),
+    /** Sends exit signal event to context menu */
+    onSendExitProcess: (id: string) => sendToContextMenu(contextMenuChannels.onSendExitProcess, id),
     /** Sends terminate tab event to context menu */
     onTerminateTab: (id: string) => sendToContextMenu(contextMenuChannels.onTerminateTab, id),
     /** Sends close app event to context menu */
@@ -226,6 +235,9 @@ export const contextMenuIpc = {
 
     /** Listens for open terminate AI request */
     openTerminateAI: (callback: (id: string) => void) => lynxIpc.on(contextMenuChannels.openTerminateAI, callback),
+    /** Listens for open send exit signal request */
+    openSendExitSignal: (callback: (id: string) => void) =>
+      lynxIpc.on(contextMenuChannels.openSendExitSignal, callback),
     /** Listens for open terminate tab request */
     openTerminateTab: (callback: (id: string, customPosition?: {x: number; y: number}) => void) =>
       lynxIpc.on(contextMenuChannels.openTerminateTab, callback),

@@ -13,4 +13,5 @@ export enum MenuTypes {
   Prompt,
   Alert,
   Confirm,
+  ProcessExitSignal,
 }

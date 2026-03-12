@@ -98,6 +98,17 @@ export default function useShowEvents() {
       );
     });
 
+    // Terminate Process Confirmation
+    const offSendExitProcess = contextMenuIpc.on.sendExitProcess(value => {
+      dispatch(
+        contextActions.showLayout({
+          key: 'targetID',
+          value,
+          layout: MenuTypes.ProcessExitSignal,
+        }),
+      );
+    });
+
     // Terminate Tab Confirmation
     const offTerminateTab = contextMenuIpc.on.terminateTab(value => {
       dispatch(
@@ -195,6 +206,7 @@ export default function useShowEvents() {
       offInitView();
       offCloseApp();
       offTerminateProcess();
+      offSendExitProcess();
       offTerminateTab();
       offVolume();
       OffDownloads();

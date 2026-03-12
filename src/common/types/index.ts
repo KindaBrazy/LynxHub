@@ -270,4 +270,4 @@ export type HeroToastPlacement =
   | 'top-left'
   | 'top-center';
 
-export type ConfirmMenuTypes = 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm';
+export type ConfirmMenuTypes = 'closeConfirm' | 'terminateAIConfirm' | 'closeTabConfirm' | 'exitSignalConfirm';
