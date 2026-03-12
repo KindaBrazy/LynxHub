@@ -22,6 +22,7 @@ const createDefaultTerminalState = (): TerminalState => ({
   enableLigatures: false,
   cdHistory: [],
   quickCommands: [],
+  sendYWithExit: false,
 });
 
 // Default initial state - actual values come from preloadedState in Store.ts
