@@ -12,7 +12,7 @@ type AnimProp = {
 };
 function AnimateChild({show, children}: AnimProp) {
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="popLayout">
       {show && (
         <motion.div
           layout={true}
