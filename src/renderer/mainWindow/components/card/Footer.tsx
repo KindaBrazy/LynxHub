@@ -5,8 +5,8 @@ import {useAppState} from '@lynx/redux/reducers/app';
 import {useIsPinnedCard} from '@lynx/utils/hooks';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
-import {Pin} from '@solar-icons/react-perf/Bold';
-import {DownloadMinimalistic, Play} from '@solar-icons/react-perf/BoldDuotone';
+import {Pin, Play} from '@solar-icons/react-perf/Bold';
+import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {Pin as PinLine} from '@solar-icons/react-perf/LineDuotone';
 import {memo, useCallback, useMemo} from 'react';
 
