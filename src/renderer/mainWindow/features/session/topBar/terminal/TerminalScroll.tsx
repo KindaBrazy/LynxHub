@@ -41,6 +41,9 @@ export default function TerminalScroll({xtermRef}: Props) {
       const term = ref.terminal;
       if (!term) return;
 
+      setCurrentScroll(term.buffer.active.viewportY);
+      setBaseY(term.buffer.active.baseY);
+
       return term.onScroll(value => {
         setCurrentScroll(value);
         setBaseY(term.buffer.active.baseY);
