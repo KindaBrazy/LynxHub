@@ -12,6 +12,8 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
+  Tab,
+  Tabs,
   useDisclosure,
 } from '@heroui/react';
 import {Circle_Icon} from '@lynx_assets/icons';
@@ -20,13 +22,14 @@ import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Filter} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, some} from 'lodash';
 import {Plus} from 'lucide-react';
-import {Dispatch, SetStateAction, useCallback, useMemo, useState} from 'react';
+import {Dispatch, Key, SetStateAction, useCallback, useMemo, useState} from 'react';
 
 import {useTabVisibility} from '../../../../../layouts/tabs/utils';
 import {useGetArgumentsByID} from '../../../../../plugins/modules';
 import {getArgumentDefaultValue, getFilteredArguments} from '../../../../../utils/moduleArguments';
 import LynxScroll from '../../../../LynxScroll';
 import ArgumentSelectionList from './AddCategory';
+import CustomArguments from './CustomArguments';
 
 type Props = {
   addArgumentsModal: ReturnType<typeof useDisclosure>;
@@ -53,6 +56,7 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
   const [filterArguments, setFilterArguments] = useState<Set<string>>(new Set(['all']));
   const [selectedArguments, setSelectedArguments] = useState<Set<string>>(new Set([]));
   const [searchValue, setSearchValue] = useState<string>('');
+  const [currentTab, setCurrentTab] = useState<Key>('module');
 
   const cardArgument = useGetArgumentsByID(id);
 
@@ -128,7 +132,7 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
       classNames={{backdrop: `top-10! ${show}`, wrapper: `top-10! scrollbar-hide ${show}`}}
       hideCloseButton>
       <ModalContent>
-        <ModalHeader className="flex flex-col space-y-2">
+        <ModalHeader className="flex flex-col gap-y-2">
           <div className="flex w-full flex-row space-x-2 items-center">
             <span className="font-bold">Add Argument</span>
             {!isEmpty(selectedArguments) && (
@@ -191,34 +195,41 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
               </DropdownMenu>
             </Dropdown>
           </div>
+          <Tabs className="my-2" onSelectionChange={setCurrentTab} selectedKey={currentTab.toString()} fullWidth>
+            <Tab key="module" title="Module Provided" />
+            <Tab key="custom" title="Custom" />
+          </Tabs>
         </ModalHeader>
         <ModalBody as={LynxScroll} className="mr-2 pr-4">
-          <div className="space-y-2">
-            {listData?.map((data, index) => {
-              if (isEmptyData(data)) return null;
-              // Check if the category condition is met (if any)
-              if (
-                data.condition &&
-                !selectedArguments.has(data.condition) &&
-                !some(chosenArguments.data.find(d => d.preset === chosenArguments.activePreset)?.arguments, {
-                  name: data.condition,
-                })
-              ) {
-                return null;
-              }
-              return (
-                <ArgumentSelectionList
-                  title={data.category}
-                  searchValue={searchValue}
-                  key={`${index}_category`}
-                  filterArguments={filterArguments}
-                  selectedArguments={selectedArguments}
-                  setSelectedArguments={setSelectedArguments}
-                  listData={'sections' in data ? data.sections : data.items}
-                />
-              );
-            })}
-          </div>
+          {currentTab === 'module' && (
+            <div className="space-y-2">
+              {listData?.map((data, index) => {
+                if (isEmptyData(data)) return null;
+                // Check if the category condition is met (if any)
+                if (
+                  data.condition &&
+                  !selectedArguments.has(data.condition) &&
+                  !some(chosenArguments.data.find(d => d.preset === chosenArguments.activePreset)?.arguments, {
+                    name: data.condition,
+                  })
+                ) {
+                  return null;
+                }
+                return (
+                  <ArgumentSelectionList
+                    title={data.category}
+                    searchValue={searchValue}
+                    key={`${index}_category`}
+                    filterArguments={filterArguments}
+                    selectedArguments={selectedArguments}
+                    setSelectedArguments={setSelectedArguments}
+                    listData={'sections' in data ? data.sections : data.items}
+                  />
+                );
+              })}
+            </div>
+          )}
+          {currentTab === 'custom' && <CustomArguments />}
         </ModalBody>
         <ModalFooter>
           <Button
