@@ -1,5 +1,6 @@
 import {
   Button,
+  Chip,
   Divider,
   Dropdown,
   DropdownItem,
@@ -255,6 +256,52 @@ function RenderItem(
                     {item.defaultValue || 'Press to set default file...'}
                   </Button>
                 </>
+              )}
+              {item.type === 'DropDown' && (
+                <div className="flex flex-col w-full gap-y-2">
+                  <div className="flex items-center gap-x-2 w-full">
+                    <span className="shrink-0">Default Values:</span>
+                    <Input
+                      size="sm"
+                      spellCheck="false"
+                      onValueChange={onDefaultValueChange}
+                      placeholder="Enter values comma separated (value1, value2)"
+                      value={typeof item.defaultValue !== 'string' ? '' : item.defaultValue}
+                      fullWidth
+                      isClearable
+                    />
+                  </div>
+                  {item.defaultValue && (
+                    <div className="flex items-center gap-x-2">
+                      {typeof item.defaultValue === 'string' &&
+                        item.defaultValue.split(',').map(value => {
+                          const targetValue = value.trim();
+
+                          if (!targetValue) return null;
+
+                          const removeValue = () => {
+                            const removedResult = (item.defaultValue as string)
+                              .split(',')
+                              .filter(v => v !== value)
+                              .map(v => v.trim());
+                            onDefaultValueChange(removedResult.join(', '));
+                          };
+
+                          return (
+                            <Chip
+                              size="sm"
+                              key={value}
+                              variant="flat"
+                              color="success"
+                              onClose={removeValue}
+                              isCloseable>
+                              {targetValue}
+                            </Chip>
+                          );
+                        })}
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </motion.div>
