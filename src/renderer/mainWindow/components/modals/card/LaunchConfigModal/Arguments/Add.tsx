@@ -229,7 +229,7 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
               })}
             </div>
           )}
-          {currentTab === 'custom' && <CustomArguments />}
+          {currentTab === 'custom' && <CustomArguments id={id} />}
         </ModalBody>
         <ModalFooter>
           <Button
