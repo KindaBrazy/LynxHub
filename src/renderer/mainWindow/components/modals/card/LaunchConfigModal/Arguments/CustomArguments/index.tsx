@@ -33,11 +33,11 @@ type Props = {
   description: string;
   list: CustomArg[];
   setList: Dispatch<SetStateAction<CustomArg[]>>;
+  addList: CustomArg[];
+  setAddList: Dispatch<SetStateAction<CustomArg[]>>;
 };
 
-const CustomArgComp = memo(({title, description, list, setList}: Props) => {
-  const [addedList, setAddedList] = useState<CustomArg[]>([]);
-
+const CustomArgComp = memo(({title, description, list, setList, addList, setAddList}: Props) => {
   const addCustom = (itemKind: CustomArgKinds) => {
     setList(prevState => {
       let baseName: string;
@@ -72,15 +72,15 @@ const CustomArgComp = memo(({title, description, list, setList}: Props) => {
   };
 
   const isAdded = (item: CustomArg) => {
-    return addedList.some(listItem => listItem.name === item.name);
+    return addList.some(listItem => listItem.name === item.name);
   };
 
   const addItem = (item: CustomArg) => {
-    if (!isAdded(item)) setAddedList(prevState => [...prevState, item]);
+    if (!isAdded(item)) setAddList(prevState => [...prevState, item]);
   };
 
   const removeItem = (item: CustomArg) => {
-    setAddedList(prevState => prevState.filter(listItem => listItem.name !== item.name));
+    setAddList(prevState => prevState.filter(listItem => listItem.name !== item.name));
     setList(prevState => prevState.filter(listItem => listItem.name !== item.name));
   };
 
@@ -156,40 +156,53 @@ const CustomArgComp = memo(({title, description, list, setList}: Props) => {
 export default function CustomArguments({id}: {id: string}) {
   const [globalList, setGlobalList] = useState<CustomArg[]>([]);
   const [perCardList, setPerCardList] = useState<CustomArg[]>([]);
+  const [addList, setAddList] = useState<CustomArg[]>([]);
+
   const [title, setTitle] = useState<string>();
+  const [initializingLists, setInitializingLists] = useState<boolean>(true);
 
   useEffect(() => {
-    storageIpc.get('cardsConfig').then(value => {
-      storageIpc.update('cardsConfig', {customArgs: {...value.customArgs, global: globalList}});
-    });
-  }, [globalList, id]);
+    if (!initializingLists) storageIpc.update('cardsConfig', {addedCustomArgs: addList});
+  }, [addList, initializingLists]);
 
   useEffect(() => {
-    storageIpc.get('cardsConfig').then(value => {
-      // Update existing card with new args
-      const updatedPerCard = value.customArgs.perCard.map(card =>
-        card.cardId === id ? {...card, args: perCardList} : card,
-      );
-
-      // Check if the card with the given id exists in the updated array
-      const existingCard = updatedPerCard.some(card => card.cardId === id);
-
-      // If the card does not exist, add it to the array
-      if (!existingCard) {
-        updatedPerCard.push({cardId: id, args: perCardList});
-      }
-
-      // Update the storage with the new perCard array
-      storageIpc.update('cardsConfig', {
-        customArgs: {
-          ...value.customArgs,
-          perCard: updatedPerCard,
-        },
+    if (!initializingLists) {
+      storageIpc.get('cardsConfig').then(value => {
+        storageIpc.update('cardsConfig', {customArgs: {...value.customArgs, global: globalList}});
       });
-    });
-  }, [perCardList, id]);
+    }
+  }, [globalList, id, initializingLists]);
 
   useEffect(() => {
+    if (!initializingLists) {
+      storageIpc.get('cardsConfig').then(value => {
+        // Update existing card with new args
+        const updatedPerCard = value.customArgs.perCard.map(card =>
+          card.cardId === id ? {...card, args: perCardList} : card,
+        );
+
+        // Check if the card with the given id exists in the updated array
+        const existingCard = updatedPerCard.some(card => card.cardId === id);
+
+        // If the card does not exist, add it to the array
+        if (!existingCard) {
+          updatedPerCard.push({cardId: id, args: perCardList});
+        }
+
+        // Update the storage with the new perCard array
+        storageIpc.update('cardsConfig', {
+          customArgs: {
+            ...value.customArgs,
+            perCard: updatedPerCard,
+          },
+        });
+      });
+    }
+  }, [perCardList, id, initializingLists]);
+
+  useEffect(() => {
+    setInitializingLists(true);
+
     const cardTitle = getTitleById(id);
     setTitle(cardTitle);
 
@@ -198,17 +211,30 @@ export default function CustomArguments({id}: {id: string}) {
 
       const cardData = value.customArgs.perCard.find(item => item.cardId === id);
       if (cardData && cardData.args) setPerCardList(cardData.args);
+
+      setAddList(value.addedCustomArgs);
+
+      setInitializingLists(false);
     });
   }, [id]);
 
   return (
     <div className="flex flex-col relative gap-y-2">
-      <CustomArgComp title="Global" list={globalList} setList={setGlobalList} description="Access these all over app" />
       <CustomArgComp
+        title="Global"
+        addList={addList}
+        list={globalList}
+        setAddList={setAddList}
+        setList={setGlobalList}
+        description="Global arguments to be accessible in all cards"
+      />
+      <CustomArgComp
+        addList={addList}
         list={perCardList}
+        setAddList={setAddList}
         setList={setPerCardList}
         title={title + ' Specified'}
-        description={'Specified for ' + title}
+        description={'Local arguments belong to this card'}
       />
     </div>
   );
