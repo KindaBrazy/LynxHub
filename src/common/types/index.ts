@@ -7,7 +7,7 @@ import type {
   REPOSITORIES_FOLDER_NAME,
   STATICS_FOLDER_NAME,
 } from '../consts';
-import {ChosenArgument} from './plugins/modules';
+import {ArgumentType, ChosenArgument} from './plugins/modules';
 
 /**
  * Information about a git repository branch and status.
@@ -41,6 +41,9 @@ export type OsPlatforms =
 export type ArgumentsPresets = {preset: string; arguments: ChosenArgument[]};
 export type ChosenArgumentsData = {activePreset: string; data: ArgumentsPresets[]};
 export type StorageChosenArgumentsData = {cardId: string; activePreset: string; data: ArgumentsPresets[]}[];
+
+export type CustomArgKinds = 'envVar' | 'commandLine' | 'custom' | 'comment';
+export type CustomArg = {name: string; kind: CustomArgKinds; type: ArgumentType; defaultValue?: any};
 
 /**
  * Progress information for downloads or updates.

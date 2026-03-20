@@ -36,6 +36,7 @@ export class StorageMigrationManager {
     [0.94, () => this.migrate_0_94()],
     [0.95, () => this.migrate_0_95()],
     [0.96, () => this.migrate_0_96()],
+    [0.97, () => this.migrate_0_97()],
   ]);
 
   constructor(
@@ -251,6 +252,14 @@ export class StorageMigrationManager {
   private migrate_0_96() {
     this.storage.data.terminal.sendYWithExit = false;
     this.storage.data.app.exitSignalConfirm = true;
+  }
+
+  private migrate_0_97() {
+    this.storage.data.cardsConfig.customArgs = {
+      global: [],
+      perCard: [],
+    };
+    this.storage.data.cardsConfig.addedCustomArgs = [];
   }
 
   private normalizeCustomRunBehavior() {

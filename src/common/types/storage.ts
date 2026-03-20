@@ -1,4 +1,4 @@
-import {StorageChosenArgumentsData} from './index';
+import {CustomArg, StorageChosenArgumentsData} from './index';
 import {
   AgentTypes,
   CustomRunBehaviorStore,
@@ -59,6 +59,8 @@ export type CardsConfigStorage = {
   customRunBehavior: CustomRunBehaviorStore;
   preOpen: StoragePreOpenData;
   args: StorageChosenArgumentsData;
+  customArgs: {global: CustomArg[]; perCard: {cardId: string; args: CustomArg[]}[]};
+  addedCustomArgs: CustomArg[];
 };
 
 /**

@@ -1,6 +1,7 @@
 import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from '@heroui/react';
 import {getTitleById} from '@lynx/plugins/modules';
-import {ArgumentType} from '@lynx_common/types/plugins/modules';
+import {CustomArg, CustomArgKinds} from '@lynx_common/types';
+import storageIpc from '@lynx_shared/ipc/storage';
 import {HomeAdd, Inbox, Notes, Pen2, SettingsMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {some} from 'lodash';
@@ -10,16 +11,13 @@ import {Dispatch, memo, SetStateAction, useEffect, useState} from 'react';
 import EmptyStateCard from '../../../../../EmptyStateCard';
 import RenderCustomItem from './RenderItem';
 
-export type ItemKinds = 'envVar' | 'commandLine' | 'custom' | 'comment';
-export type CustomItem = {name: string; kind: ItemKinds; type: ArgumentType; defaultValue?: any};
-
 // Helper function to check if a name is already in the list
-function isNameUnique(items: CustomItem[], newName: string): boolean {
+function isNameUnique(items: CustomArg[], newName: string): boolean {
   return !some(items, {name: newName});
 }
 
 // Helper function to generate a unique name
-function generateUniqueName(items: CustomItem[], baseName: string): string {
+function generateUniqueName(items: CustomArg[], baseName: string): string {
   let counter = 1;
   let newName = baseName;
 
@@ -33,14 +31,14 @@ function generateUniqueName(items: CustomItem[], baseName: string): string {
 type Props = {
   title: string;
   description: string;
-  list: CustomItem[];
-  setList: Dispatch<SetStateAction<CustomItem[]>>;
+  list: CustomArg[];
+  setList: Dispatch<SetStateAction<CustomArg[]>>;
 };
 
-const CustomArg = memo(({title, description, list, setList}: Props) => {
-  const [addedList, setAddedList] = useState<CustomItem[]>([]);
+const CustomArgComp = memo(({title, description, list, setList}: Props) => {
+  const [addedList, setAddedList] = useState<CustomArg[]>([]);
 
-  const addCustom = (itemKind: ItemKinds) => {
+  const addCustom = (itemKind: CustomArgKinds) => {
     setList(prevState => {
       let baseName: string;
 
@@ -63,7 +61,7 @@ const CustomArg = memo(({title, description, list, setList}: Props) => {
       }
 
       const uniqueName = generateUniqueName(prevState, baseName);
-      const itemToAdd: CustomItem = {
+      const itemToAdd: CustomArg = {
         name: uniqueName,
         type: 'Input',
         kind: itemKind,
@@ -73,15 +71,15 @@ const CustomArg = memo(({title, description, list, setList}: Props) => {
     });
   };
 
-  const isAdded = (item: CustomItem) => {
+  const isAdded = (item: CustomArg) => {
     return addedList.some(listItem => listItem.name === item.name);
   };
 
-  const addItem = (item: CustomItem) => {
+  const addItem = (item: CustomArg) => {
     if (!isAdded(item)) setAddedList(prevState => [...prevState, item]);
   };
 
-  const removeItem = (item: CustomItem) => {
+  const removeItem = (item: CustomArg) => {
     setAddedList(prevState => prevState.filter(listItem => listItem.name !== item.name));
     setList(prevState => prevState.filter(listItem => listItem.name !== item.name));
   };
@@ -156,20 +154,57 @@ const CustomArg = memo(({title, description, list, setList}: Props) => {
 });
 
 export default function CustomArguments({id}: {id: string}) {
-  const [globalList, setGlobalList] = useState<CustomItem[]>([]);
-  const [perCardList, setPerCardList] = useState<CustomItem[]>([]);
-
+  const [globalList, setGlobalList] = useState<CustomArg[]>([]);
+  const [perCardList, setPerCardList] = useState<CustomArg[]>([]);
   const [title, setTitle] = useState<string>();
+
+  useEffect(() => {
+    storageIpc.get('cardsConfig').then(value => {
+      storageIpc.update('cardsConfig', {customArgs: {...value.customArgs, global: globalList}});
+    });
+  }, [globalList, id]);
+
+  useEffect(() => {
+    storageIpc.get('cardsConfig').then(value => {
+      // Update existing card with new args
+      const updatedPerCard = value.customArgs.perCard.map(card =>
+        card.cardId === id ? {...card, args: perCardList} : card,
+      );
+
+      // Check if the card with the given id exists in the updated array
+      const existingCard = updatedPerCard.some(card => card.cardId === id);
+
+      // If the card does not exist, add it to the array
+      if (!existingCard) {
+        updatedPerCard.push({cardId: id, args: perCardList});
+      }
+
+      // Update the storage with the new perCard array
+      storageIpc.update('cardsConfig', {
+        customArgs: {
+          ...value.customArgs,
+          perCard: updatedPerCard,
+        },
+      });
+    });
+  }, [perCardList, id]);
 
   useEffect(() => {
     const cardTitle = getTitleById(id);
     setTitle(cardTitle);
+
+    storageIpc.get('cardsConfig').then(value => {
+      setGlobalList(value.customArgs.global);
+
+      const cardData = value.customArgs.perCard.find(item => item.cardId === id);
+      if (cardData && cardData.args) setPerCardList(cardData.args);
+    });
   }, [id]);
 
   return (
     <div className="flex flex-col relative gap-y-2">
-      <CustomArg title="Global" list={globalList} setList={setGlobalList} description="Access these all over app" />
-      <CustomArg
+      <CustomArgComp title="Global" list={globalList} setList={setGlobalList} description="Access these all over app" />
+      <CustomArgComp
         list={perCardList}
         setList={setPerCardList}
         title={title + ' Specified'}
