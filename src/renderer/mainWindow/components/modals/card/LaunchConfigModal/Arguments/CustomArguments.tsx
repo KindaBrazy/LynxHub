@@ -11,13 +11,15 @@ import {
   Select,
   SelectItem,
   SharedSelection,
+  Textarea,
 } from '@heroui/react';
 import {ArgumentType} from '@lynx_common/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
 import {
   CloseCircle,
-  HomeAddAngle,
+  HomeAdd,
   Inbox,
+  Notes,
   Pen2,
   SettingsMinimalistic,
   TrashBin2,
@@ -30,7 +32,7 @@ import {Dispatch, ReactNode, SetStateAction, useState} from 'react';
 
 import EmptyStateCard from '../../../../EmptyStateCard';
 
-type ItemKinds = 'envVar' | 'commandLine' | 'comment';
+type ItemKinds = 'envVar' | 'commandLine' | 'custom' | 'comment';
 type CustomItem = {name: string; kind: ItemKinds; type: ArgumentType; defaultValue?: any};
 
 type AnimProp = {
@@ -70,13 +72,15 @@ function AnimateChild({show, children}: AnimProp) {
   );
 }
 
-function RenderItem(
-  item: CustomItem,
-  isAdded: boolean,
-  setCustomList: Dispatch<SetStateAction<CustomItem[]>>,
-  addItem: (item: CustomItem) => void,
-  removeItem: (item: CustomItem) => void,
-) {
+type RenderProps = {
+  item: CustomItem;
+  isAdded: boolean;
+  setCustomList: Dispatch<SetStateAction<CustomItem[]>>;
+  addItem: (item: CustomItem) => void;
+  removeItem: (item: CustomItem) => void;
+};
+
+function RenderItem({item, isAdded, setCustomList, addItem, removeItem}: RenderProps) {
   const onNameChange = (value: string) => {
     setCustomList(prevState =>
       prevState.map(listItem => {
@@ -130,7 +134,7 @@ function RenderItem(
                   `flex items-center gap-x-2 font-semibold ` +
                   `${item.kind === 'envVar' ? 'text-primary-500' : 'text-secondary-500'}`
                 }>
-                {item.kind === 'envVar' ? <HomeAddAngle /> : <SettingsMinimalistic />}
+                {item.kind === 'envVar' ? <HomeAdd /> : <SettingsMinimalistic />}
                 <span>{item.kind === 'envVar' ? 'Environment Variable' : 'Command Line'}</span>
               </div>
               <div className="flex items-center gap-x-1">
@@ -307,6 +311,7 @@ function RenderItem(
           </motion.div>
         </AnimatePresence>
       );
+    case 'custom':
     case 'comment':
       return (
         <AnimatePresence>
@@ -316,9 +321,13 @@ function RenderItem(
             className="text-sm bg-background dark:bg-LynxNearBlack flex flex-col px-4 py-3 rounded-xl gap-y-2"
             layout>
             <div className="flex justify-between items-center">
-              <div className="flex items-center gap-x-2 text-warning-400 font-semibold">
-                <Pen2 />
-                <span>Comment</span>
+              <div
+                className={
+                  `flex items-center gap-x-2 font-semibold ` +
+                  `${item.kind === 'comment' ? 'text-warning-600' : 'text-success-600'}`
+                }>
+                {item.kind === 'comment' ? <Pen2 /> : <Notes />}
+                <span>{item.kind === 'comment' ? 'Comment' : 'Custom'}</span>
               </div>
               <div className="flex items-center gap-x-1">
                 <AnimateChild show={isAdded}>
@@ -340,8 +349,8 @@ function RenderItem(
 
             <div className="flex items-center gap-x-4">
               <div className="flex items-center gap-x-2 flex-1">
-                <span className="shrink-0">Comment Text:</span>
-                <Input
+                <span className="shrink-0">{item.kind === 'comment' ? 'Comment Text' : 'Custom Data'}:</span>
+                <Textarea
                   size="sm"
                   spellCheck="false"
                   value={item.defaultValue}
@@ -374,6 +383,9 @@ export default function CustomArguments() {
           break;
         case 'comment':
           baseName = 'comment';
+          break;
+        case 'custom':
+          baseName = 'custom';
           break;
         default:
           baseName = 'unknown';
@@ -416,7 +428,7 @@ export default function CustomArguments() {
             </Button>
           </DropdownTrigger>
           <DropdownMenu>
-            <DropdownItem key="envVar" startContent={<HomeAddAngle />} onPress={() => addCustom('envVar')}>
+            <DropdownItem key="envVar" startContent={<HomeAdd />} onPress={() => addCustom('envVar')}>
               Environment Variable
             </DropdownItem>
             <DropdownItem
@@ -424,6 +436,9 @@ export default function CustomArguments() {
               startContent={<SettingsMinimalistic />}
               onPress={() => addCustom('commandLine')}>
               Command Line
+            </DropdownItem>
+            <DropdownItem key="custom" startContent={<Notes />} onPress={() => addCustom('custom')}>
+              Custom
             </DropdownItem>
             <DropdownItem key="comment" startContent={<Pen2 />} onPress={() => addCustom('comment')}>
               Comment
@@ -449,7 +464,16 @@ export default function CustomArguments() {
               />
             </motion.div>
           ) : (
-            customList.map(item => RenderItem(item, isAdded(item), setCustomList, addItem, removeItem))
+            customList.map(item => (
+              <RenderItem
+                item={item}
+                key={item.name}
+                addItem={addItem}
+                isAdded={isAdded(item)}
+                removeItem={removeItem}
+                setCustomList={setCustomList}
+              />
+            ))
           )}
         </AnimatePresence>
       </div>
