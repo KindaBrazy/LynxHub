@@ -128,6 +128,8 @@ const useGetCardsByPath = (path: AvailablePageIDs): LoadedCardData[] =>
 const hasCardsByPath = (path: AvailablePageIDs | string): boolean =>
   allCardDataWithPath.some(card => card.routePath === path);
 
+const getTitleById = (id: string): string | undefined => allCards.find(card => card.id === id)?.title;
+
 /**
  * Retrieves a specific renderer method from a card's method collection.
  *
@@ -478,6 +480,7 @@ export {
   allModules,
   duplicateCard,
   getCardMethod,
+  getTitleById,
   hasCardsByPath,
   loadModules,
   removeDuplicatedCard,
