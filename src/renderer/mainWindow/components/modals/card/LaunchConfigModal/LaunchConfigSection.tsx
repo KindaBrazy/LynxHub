@@ -33,7 +33,7 @@ export default function LaunchConfigSection({
   customButton,
 }: Props) {
   return (
-    <Card className="bg-foreground-100">
+    <Card shadow="none" className="bg-foreground-100">
       <CardHeader className="px-4 flex-col items-start">
         <div className="flex w-full flex-row items-center justify-between">
           {isString(title) ? <span>{title}</span> : title}
