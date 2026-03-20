@@ -1,12 +1,11 @@
 import {Button, Chip, Divider, Input, NumberInput, Select, SelectItem, SharedSelection, Textarea} from '@heroui/react';
+import {CustomArg} from '@lynx_common/types';
 import {ArgumentType} from '@lynx_common/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
 import {CloseCircle, HomeAdd, Notes, Pen2, SettingsMinimalistic, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {CheckRead, Unread} from '@solar-icons/react-perf/Linear';
 import {AnimatePresence, motion} from 'framer-motion';
 import {Dispatch, ReactNode, SetStateAction} from 'react';
-
-import {CustomItem} from './index';
 
 type AnimProp = {
   children: ReactNode;
@@ -29,11 +28,11 @@ function AnimateChild({show, children}: AnimProp) {
 }
 
 type RenderProps = {
-  item: CustomItem;
+  item: CustomArg;
   isAdded: boolean;
-  setCustomList: Dispatch<SetStateAction<CustomItem[]>>;
-  addItem: (item: CustomItem) => void;
-  removeItem: (item: CustomItem) => void;
+  setCustomList: Dispatch<SetStateAction<CustomArg[]>>;
+  addItem: (item: CustomArg) => void;
+  removeItem: (item: CustomArg) => void;
 };
 
 export default function RenderCustomItem({item, isAdded, setCustomList, addItem, removeItem}: RenderProps) {
@@ -95,7 +94,7 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
               </div>
               <div className="flex items-center gap-x-1">
                 <AnimateChild show={isAdded}>
-                  <Button size="sm" color="success" variant="light" isIconOnly>
+                  <Button size="sm" variant="flat" color="success" isDisabled isIconOnly>
                     <CheckRead className="size-4.5" />
                   </Button>
                 </AnimateChild>
@@ -269,6 +268,7 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
       );
     case 'custom':
     case 'comment':
+    default:
       return (
         <AnimatePresence>
           <motion.div
