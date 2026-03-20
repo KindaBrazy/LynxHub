@@ -238,7 +238,7 @@ export default function CustomArguments({id}: {id: string}) {
         list={globalList}
         setAddList={setAddList}
         setList={setGlobalList}
-        description="Global arguments to be accessible in all cards"
+        description="Global arguments to access in all cards"
       />
     </div>
   );
