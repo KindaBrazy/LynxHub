@@ -25,7 +25,7 @@ class BaseStorage {
   private readonly migrationManager: StorageMigrationManager;
 
   private readonly DEFAULT_DATA: AppStorageData = {
-    storage: {version: 0.96},
+    storage: {version: 0.97},
     cards: {
       installedCards: [],
       autoUpdateCards: [],
@@ -43,6 +43,11 @@ class BaseStorage {
       preOpen: [],
       args: [],
       customRunBehavior: [],
+      customArgs: {
+        global: [],
+        perCard: [],
+      },
+      addedCustomArgs: [],
     },
     app: {
       closeConfirm: true,
