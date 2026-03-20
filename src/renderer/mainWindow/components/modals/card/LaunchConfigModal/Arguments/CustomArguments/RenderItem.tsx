@@ -1,61 +1,17 @@
-import {
-  Button,
-  Chip,
-  Divider,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Input,
-  NumberInput,
-  Select,
-  SelectItem,
-  SharedSelection,
-  Textarea,
-} from '@heroui/react';
+import {Button, Chip, Divider, Input, NumberInput, Select, SelectItem, SharedSelection, Textarea} from '@heroui/react';
 import {ArgumentType} from '@lynx_common/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
-import {
-  CloseCircle,
-  HomeAdd,
-  Inbox,
-  Notes,
-  Pen2,
-  SettingsMinimalistic,
-  TrashBin2,
-} from '@solar-icons/react-perf/BoldDuotone';
+import {CloseCircle, HomeAdd, Notes, Pen2, SettingsMinimalistic, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {CheckRead, Unread} from '@solar-icons/react-perf/Linear';
 import {AnimatePresence, motion} from 'framer-motion';
-import {some} from 'lodash';
-import {Plus} from 'lucide-react';
-import {Dispatch, ReactNode, SetStateAction, useState} from 'react';
+import {Dispatch, ReactNode, SetStateAction} from 'react';
 
-import EmptyStateCard from '../../../../EmptyStateCard';
-
-type ItemKinds = 'envVar' | 'commandLine' | 'custom' | 'comment';
-type CustomItem = {name: string; kind: ItemKinds; type: ArgumentType; defaultValue?: any};
+import {CustomItem} from './Global';
 
 type AnimProp = {
   children: ReactNode;
   show: boolean;
 };
-
-// Helper function to check if a name is already in the list
-function isNameUnique(items: CustomItem[], newName: string): boolean {
-  return !some(items, {name: newName});
-}
-
-// Helper function to generate a unique name
-function generateUniqueName(items: CustomItem[], baseName: string): string {
-  let counter = 1;
-  let newName = baseName;
-
-  while (!isNameUnique(items, newName)) {
-    newName = `${baseName}_${counter++}`;
-  }
-
-  return newName;
-}
 
 function AnimateChild({show, children}: AnimProp) {
   return (
@@ -80,7 +36,7 @@ type RenderProps = {
   removeItem: (item: CustomItem) => void;
 };
 
-function RenderItem({item, isAdded, setCustomList, addItem, removeItem}: RenderProps) {
+export default function RenderCustomItem({item, isAdded, setCustomList, addItem, removeItem}: RenderProps) {
   const onNameChange = (value: string) => {
     setCustomList(prevState =>
       prevState.map(listItem => {
@@ -364,119 +320,4 @@ function RenderItem({item, isAdded, setCustomList, addItem, removeItem}: RenderP
         </AnimatePresence>
       );
   }
-}
-
-export default function CustomArguments() {
-  const [customList, setCustomList] = useState<CustomItem[]>([]);
-  const [addedList, setAddedList] = useState<CustomItem[]>([]);
-
-  const addCustom = (itemKind: ItemKinds) => {
-    setCustomList(prevState => {
-      let baseName: string;
-
-      switch (itemKind) {
-        case 'envVar':
-          baseName = 'environment';
-          break;
-        case 'commandLine':
-          baseName = 'command';
-          break;
-        case 'comment':
-          baseName = 'comment';
-          break;
-        case 'custom':
-          baseName = 'custom';
-          break;
-        default:
-          baseName = 'unknown';
-          break;
-      }
-
-      const uniqueName = generateUniqueName(prevState, baseName);
-      const itemToAdd: CustomItem = {
-        name: uniqueName,
-        type: 'Input',
-        kind: itemKind,
-      };
-
-      return [...prevState, itemToAdd];
-    });
-  };
-
-  const isAdded = (item: CustomItem) => {
-    return addedList.some(listItem => listItem.name === item.name);
-  };
-
-  const addItem = (item: CustomItem) => {
-    if (!isAdded(item)) setAddedList(prevState => [...prevState, item]);
-  };
-
-  const removeItem = (item: CustomItem) => {
-    setAddedList(prevState => prevState.filter(listItem => listItem.name !== item.name));
-    setCustomList(prevState => prevState.filter(listItem => listItem.name !== item.name));
-  };
-
-  return (
-    <div className="bg-foreground-100 rounded-xl flex flex-col inset-0 items-center p-4 relative">
-      <div className="size-full flex justify-between mb-4">
-        <div />
-        <span className="font-bold text-LynxOrange">Custom Arguments List</span>
-        <Dropdown showArrow>
-          <DropdownTrigger>
-            <Button size="sm" variant="light" isIconOnly>
-              <Plus className="size-4" />
-            </Button>
-          </DropdownTrigger>
-          <DropdownMenu>
-            <DropdownItem key="envVar" startContent={<HomeAdd />} onPress={() => addCustom('envVar')}>
-              Environment Variable
-            </DropdownItem>
-            <DropdownItem
-              key="commandLine"
-              startContent={<SettingsMinimalistic />}
-              onPress={() => addCustom('commandLine')}>
-              Command Line
-            </DropdownItem>
-            <DropdownItem key="custom" startContent={<Notes />} onPress={() => addCustom('custom')}>
-              Custom
-            </DropdownItem>
-            <DropdownItem key="comment" startContent={<Pen2 />} onPress={() => addCustom('comment')}>
-              Comment
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </div>
-      <div className="w-full flex flex-col gap-y-2">
-        <AnimatePresence mode="popLayout">
-          {customList.length === 0 ? (
-            <motion.div
-              animate={{translateY: 0, opacity: 1, scale: 1}}
-              initial={{translateY: 5, opacity: 0, scale: 0.9}}>
-              <EmptyStateCard
-                description={
-                  <span className="flex items-center gap-x-1 text-sm text-foreground-500">
-                    Use <Plus className="size-3 text-foreground" /> Button to add new item.
-                  </span>
-                }
-                icon={<Inbox size={40} />}
-                className="bg-foreground-50"
-                title="No custom argument available to display"
-              />
-            </motion.div>
-          ) : (
-            customList.map(item => (
-              <RenderItem
-                item={item}
-                key={item.name}
-                addItem={addItem}
-                isAdded={isAdded(item)}
-                removeItem={removeItem}
-                setCustomList={setCustomList}
-              />
-            ))
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
-  );
 }
