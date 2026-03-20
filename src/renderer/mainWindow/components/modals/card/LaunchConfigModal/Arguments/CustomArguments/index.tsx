@@ -117,25 +117,29 @@ const CustomArgComp = memo(({title, description, list, setList, addList, setAddL
             </DropdownMenu>
           </Dropdown>
         </div>
-        <div className="w-full flex flex-col gap-y-2">
-          <AnimatePresence mode="popLayout">
-            {list.length === 0 ? (
-              <motion.div
-                animate={{translateY: 0, opacity: 1, scale: 1}}
-                initial={{translateY: 5, opacity: 0, scale: 0.9}}>
-                <EmptyStateCard
-                  description={
-                    <span className="flex items-center gap-x-1 text-sm text-foreground-500">
-                      Use <Plus className="size-3 text-foreground" /> Button to add new item.
-                    </span>
-                  }
-                  icon={<Inbox size={40} />}
-                  className="bg-foreground-50"
-                  title="No custom argument available to display"
-                />
-              </motion.div>
-            ) : (
-              list.map(item => (
+
+        <AnimatePresence mode="popLayout">
+          {list.length === 0 ? (
+            <motion.div
+              animate={{translateY: 0, opacity: 1, scale: 1}}
+              initial={{translateY: 5, opacity: 0, scale: 0.9}}>
+              <EmptyStateCard
+                description={
+                  <span className="flex items-center gap-x-1 text-sm text-foreground-500">
+                    Use <Plus className="size-3 text-foreground" /> Button to add new item.
+                  </span>
+                }
+                icon={<Inbox size={40} />}
+                className="bg-foreground-50 w-120"
+                title="No custom argument available to display"
+              />
+            </motion.div>
+          ) : (
+            <div
+              className={
+                `w-full grid gap-2 ` + `${list.length === 1 ? 'grid-cols-1' : 'max-lg:grid-cols-1 lg:grid-cols-2'}`
+              }>
+              {list.map(item => (
                 <RenderCustomItem
                   item={item}
                   key={item.name}
@@ -144,10 +148,10 @@ const CustomArgComp = memo(({title, description, list, setList, addList, setAddL
                   removeItem={removeItem}
                   setCustomList={setList}
                 />
-              ))
-            )}
-          </AnimatePresence>
-        </div>
+              ))}
+            </div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
