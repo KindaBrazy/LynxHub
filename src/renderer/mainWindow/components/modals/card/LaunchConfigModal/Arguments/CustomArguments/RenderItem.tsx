@@ -6,7 +6,7 @@ import {CheckRead, Unread} from '@solar-icons/react-perf/Linear';
 import {AnimatePresence, motion} from 'framer-motion';
 import {Dispatch, ReactNode, SetStateAction} from 'react';
 
-import {CustomItem} from './Global';
+import {CustomItem} from './index';
 
 type AnimProp = {
   children: ReactNode;
@@ -306,14 +306,24 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
             <div className="flex items-center gap-x-4">
               <div className="flex items-center gap-x-2 flex-1">
                 <span className="shrink-0">{item.kind === 'comment' ? 'Comment Text' : 'Custom Data'}:</span>
-                <Textarea
-                  size="sm"
-                  spellCheck="false"
-                  value={item.defaultValue}
-                  onValueChange={onDefaultValueChange}
-                  placeholder="Enter defualt value..."
-                  fullWidth
-                />
+                {item.kind === 'comment' ? (
+                  <Input
+                    size="sm"
+                    spellCheck="false"
+                    value={item.defaultValue}
+                    onValueChange={onDefaultValueChange}
+                    placeholder="Enter defualt value..."
+                    fullWidth
+                  />
+                ) : (
+                  <Textarea
+                    spellCheck="false"
+                    value={item.defaultValue}
+                    onValueChange={onDefaultValueChange}
+                    placeholder="Enter defualt value..."
+                    fullWidth
+                  />
+                )}
               </div>
             </div>
           </motion.div>
