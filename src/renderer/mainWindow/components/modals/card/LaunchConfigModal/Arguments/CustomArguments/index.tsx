@@ -221,20 +221,20 @@ export default function CustomArguments({id}: {id: string}) {
   return (
     <div className="flex flex-col relative gap-y-2">
       <CustomArgComp
-        title="Global"
-        addList={addList}
-        list={globalList}
-        setAddList={setAddList}
-        setList={setGlobalList}
-        description="Global arguments to be accessible in all cards"
-      />
-      <CustomArgComp
         addList={addList}
         list={perCardList}
         setAddList={setAddList}
         setList={setPerCardList}
         title={title + ' Specified'}
         description={'Local arguments belong to this card'}
+      />
+      <CustomArgComp
+        title="Global"
+        addList={addList}
+        list={globalList}
+        setAddList={setAddList}
+        setList={setGlobalList}
+        description="Global arguments to be accessible in all cards"
       />
     </div>
   );
