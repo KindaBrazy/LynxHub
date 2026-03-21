@@ -17,12 +17,12 @@ import {
   useDisclosure,
 } from '@heroui/react';
 import {Circle_Icon} from '@lynx_assets/icons';
-import {ChosenArgumentsData} from '@lynx_common/types';
+import {ChosenArgumentsData, CustomArg} from '@lynx_common/types';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Filter} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty, some} from 'lodash';
 import {Plus} from 'lucide-react';
-import {Dispatch, Key, SetStateAction, useCallback, useMemo, useState} from 'react';
+import {Dispatch, Key, SetStateAction, useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useTabVisibility} from '../../../../../layouts/tabs/utils';
 import {useGetArgumentsByID} from '../../../../../plugins/modules';
@@ -58,7 +58,17 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
   const [searchValue, setSearchValue] = useState<string>('');
   const [currentTab, setCurrentTab] = useState<Key>('module');
 
+  const [customArgs, setCustomArgs] = useState<CustomArg[]>([]);
+
   const cardArgument = useGetArgumentsByID(id);
+
+  useEffect(() => {
+    setSelectedArguments(prevState => {
+      const newSet = new Set(prevState);
+      customArgs.forEach(item => newSet.add(item.name));
+      return newSet;
+    });
+  }, [customArgs]);
 
   // Memoize the filtered list of available arguments
   const listData = useMemo(() => {
@@ -75,6 +85,7 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
       newSet.delete(value);
       return newSet;
     });
+    setCustomArgs(prev => prev.filter(item => item.name !== value));
   }, []);
 
   const clearSelected = useCallback(() => {
@@ -92,7 +103,9 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
 
     setChosenArguments(prevState => {
       const activePresetData = prevState.data.find(data => data.preset === prevState.activePreset);
-      const currentArgs = activePresetData?.arguments || [];
+      if (!activePresetData) return prevState;
+
+      const currentArgs = activePresetData.arguments;
 
       const newArgsToAdd = Array.from(selectedArguments).filter(
         argName => !currentArgs.some(existingArg => existingArg.name === argName),
@@ -102,6 +115,14 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
         name: argName,
         value: getArgumentDefaultValue(argName, cardArgument) || '',
       }));
+
+      newChosenArgs.push(
+        ...customArgs.map(item => ({
+          name: item.name,
+          value: item.defaultValue,
+          custom: {kind: item.kind, type: item.type},
+        })),
+      );
 
       const newData = prevState.data.map(presetData => {
         if (presetData.preset === prevState.activePreset) {
@@ -117,7 +138,7 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
     });
 
     onClose();
-  }, [selectedArguments, cardArgument, onClose, setChosenArguments]);
+  }, [selectedArguments, cardArgument, onClose, setChosenArguments, customArgs]);
 
   const show = useTabVisibility(tabId);
 
@@ -229,7 +250,9 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
               })}
             </div>
           )}
-          {currentTab === 'custom' && <CustomArguments id={id} />}
+          {currentTab === 'custom' && (
+            <CustomArguments id={id} setCustomArgs={setCustomArgs} selectedArguments={selectedArguments} />
+          )}
         </ModalBody>
         <ModalFooter>
           <Button
