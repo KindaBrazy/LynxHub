@@ -491,6 +491,11 @@ export type CardData = {
    */
   arguments?: ArgumentsData;
 
+  /** Whether this module handles the custom arguments defined by user
+   * Leave undefined for disabling custom tab in argument modal
+   */
+  supportCustomArguments?: boolean;
+
   /** These methods will be called in the renderer process
    * @description This methods will be used when user interaction (Like recognizing URL to show in browser)
    */
