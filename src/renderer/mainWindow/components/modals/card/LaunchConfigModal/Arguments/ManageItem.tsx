@@ -57,7 +57,7 @@ const ManageArgumentsItem = memo(({argument, setArguments, id}: Props) => {
   );
 
   const Component = useMemo(() => {
-    const type = getArgumentType(argument.name, cardArgument);
+    const type = argument.custom?.type || getArgumentType(argument.name, cardArgument);
     switch (type) {
       case 'Directory':
         return DirectoryArgItem;
@@ -80,7 +80,5 @@ const ManageArgumentsItem = memo(({argument, setArguments, id}: Props) => {
 
   return <Component id={id} argument={argument} removeArg={removeArg} changeValue={changeValue} />;
 });
-
-ManageArgumentsItem.displayName = 'ManageArgumentsItem';
 
 export default ManageArgumentsItem;
