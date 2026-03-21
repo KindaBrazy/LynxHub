@@ -2,6 +2,7 @@ import type {ElectronAPI} from '@electron-toolkit/preload';
 import type * as pty from 'node-pty';
 
 import type {AvailablePageIDs} from '../../consts';
+import {CustomArg} from '../index';
 import type {CustomRunBehaviorData} from '../ipc';
 
 declare global {
@@ -530,7 +531,7 @@ export type CardModules = PagesData[];
 /**
  * A chosen argument value.
  */
-export type ChosenArgument = {name: string; value: string | number};
+export type ChosenArgument = {name: string; value: string | number; custom?: Pick<CustomArg, 'type' | 'kind'>};
 
 /**
  * Supported argument types.

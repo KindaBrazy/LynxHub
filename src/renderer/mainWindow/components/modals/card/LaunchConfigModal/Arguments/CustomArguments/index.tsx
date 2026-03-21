@@ -33,11 +33,13 @@ type Props = {
   description: string;
   list: CustomArg[];
   setList: Dispatch<SetStateAction<CustomArg[]>>;
-  addList: CustomArg[];
-  setAddList: Dispatch<SetStateAction<CustomArg[]>>;
+
+  addItem: (item: CustomArg) => void;
+  removeItem: (item: CustomArg) => void;
+  isAdded: (item: CustomArg) => boolean;
 };
 
-const CustomArgComp = memo(({title, description, list, setList, addList, setAddList}: Props) => {
+const CustomArgComp = memo(({title, description, list, setList, addItem, isAdded, removeItem}: Props) => {
   const addCustom = (itemKind: CustomArgKinds) => {
     setList(prevState => {
       let baseName: string;
@@ -71,17 +73,9 @@ const CustomArgComp = memo(({title, description, list, setList, addList, setAddL
     });
   };
 
-  const isAdded = (item: CustomArg) => {
-    return addList.some(listItem => listItem.name === item.name);
-  };
-
-  const addItem = (item: CustomArg) => {
-    if (!isAdded(item)) setAddList(prevState => [...prevState, item]);
-  };
-
-  const removeItem = (item: CustomArg) => {
-    setAddList(prevState => prevState.filter(listItem => listItem.name !== item.name));
+  const onRemove = (item: CustomArg) => {
     setList(prevState => prevState.filter(listItem => listItem.name !== item.name));
+    removeItem(item);
   };
 
   return (
@@ -144,8 +138,8 @@ const CustomArgComp = memo(({title, description, list, setList, addList, setAddL
                   item={item}
                   key={item.name}
                   addItem={addItem}
+                  removeItem={onRemove}
                   isAdded={isAdded(item)}
-                  removeItem={removeItem}
                   setCustomList={setList}
                 />
               ))}
@@ -157,7 +151,13 @@ const CustomArgComp = memo(({title, description, list, setList, addList, setAddL
   );
 });
 
-export default function CustomArguments({id}: {id: string}) {
+type CustomProps = {
+  id: string;
+  setCustomArgs: Dispatch<SetStateAction<CustomArg[]>>;
+  selectedArguments: Set<string>;
+};
+
+export default function CustomArguments({id, setCustomArgs, selectedArguments}: CustomProps) {
   const [globalList, setGlobalList] = useState<CustomArg[]>([]);
   const [perCardList, setPerCardList] = useState<CustomArg[]>([]);
   const [addList, setAddList] = useState<CustomArg[]>([]);
@@ -222,21 +222,37 @@ export default function CustomArguments({id}: {id: string}) {
     });
   }, [id]);
 
+  const addItem = (item: CustomArg) => {
+    setCustomArgs(prevState => {
+      return prevState.some(value => value.name === item.name) ? prevState : [...prevState, item];
+    });
+  };
+
+  const removeItem = (item: CustomArg) => {
+    setCustomArgs(prevState => prevState.filter(value => value.name !== item.name));
+  };
+
+  const isAdded = (item: CustomArg) => {
+    return selectedArguments.has(item.name);
+  };
+
   return (
     <div className="flex flex-col relative gap-y-2">
       <CustomArgComp
-        addList={addList}
+        addItem={addItem}
+        isAdded={isAdded}
         list={perCardList}
-        setAddList={setAddList}
+        removeItem={removeItem}
         setList={setPerCardList}
         title={title + ' Specified'}
         description={'Local arguments belong to this card'}
       />
       <CustomArgComp
         title="Global"
-        addList={addList}
+        isAdded={isAdded}
+        addItem={addItem}
         list={globalList}
-        setAddList={setAddList}
+        removeItem={removeItem}
         setList={setGlobalList}
         description="Global arguments to access in all cards"
       />
