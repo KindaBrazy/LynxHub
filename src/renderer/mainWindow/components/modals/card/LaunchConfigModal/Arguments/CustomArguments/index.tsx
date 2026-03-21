@@ -131,7 +131,8 @@ const CustomArgComp = memo(({title, description, list, setList, addItem, isAdded
           ) : (
             <div
               className={
-                `w-full grid gap-2 ` + `${list.length === 1 ? 'grid-cols-1' : 'max-lg:grid-cols-1 lg:grid-cols-2'}`
+                `w-full grid gap-2 ` +
+                `${list.length === 1 ? 'grid-cols-1' : 'max-[1400px]:grid-cols-1 min-[1400px]:grid-cols-2'}`
               }>
               {list.map(item => (
                 <RenderCustomItem
