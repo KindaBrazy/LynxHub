@@ -123,24 +123,29 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
                 size="sm"
                 selectedKeys={[item.type]}
                 onSelectionChange={onTypeChange}
-                aria-label="Select the argument type">
-                <SelectItem key="Input" variant="flat">
-                  Input (Text)
+                classNames={{label: 'truncate'}}
+                aria-label="Select the argument type"
+                label="Choose how this argument will be processed">
+                <SelectItem key="Input" variant="flat" description="Text input field for free-form text entries">
+                  Text Input
                 </SelectItem>
-                <SelectItem key="Number" variant="flat">
+                <SelectItem key="Number" variant="flat" description="Input field for numeric values only">
                   Number
                 </SelectItem>
-                <SelectItem variant="flat" key="Directory">
+                <SelectItem variant="flat" key="Directory" description="Select a folder from the system">
                   Folder
                 </SelectItem>
-                <SelectItem key="File" variant="flat">
+                <SelectItem key="File" variant="flat" description="Select a file from the system">
                   File
                 </SelectItem>
-                <SelectItem variant="flat" key="CheckBox">
+                <SelectItem
+                  key="CheckBox"
+                  variant="flat"
+                  description="Value that is either present (enabled) or absent (disabled)">
                   Boolean
                 </SelectItem>
-                <SelectItem variant="flat" key="DropDown">
-                  Select (Predefined Values)
+                <SelectItem key="DropDown" variant="flat" description="Select from a predefined list of values">
+                  Select
                 </SelectItem>
               </Select>
             </div>
