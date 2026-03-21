@@ -172,6 +172,7 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
                 <NumberInput
                   size="sm"
                   spellCheck="false"
+                  aria-label="Number value"
                   onValueChange={onDefaultValueChange}
                   placeholder="Enter defualt value..."
                   value={typeof item.defaultValue === 'string' ? 0 : item.defaultValue}
