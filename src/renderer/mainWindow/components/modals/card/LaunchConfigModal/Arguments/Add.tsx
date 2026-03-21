@@ -107,7 +107,9 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
 
       const currentArgs = activePresetData.arguments;
 
-      const newArgsToAdd = Array.from(selectedArguments).filter(
+      const filterSelected = Array.from(selectedArguments).filter(item => !customArgs.some(ar => ar.name === item));
+
+      const newArgsToAdd = filterSelected.filter(
         argName => !currentArgs.some(existingArg => existingArg.name === argName),
       );
 
