@@ -16,6 +16,7 @@ import {
   Tabs,
   useDisclosure,
 } from '@heroui/react';
+import {useSupportCustomArg} from '@lynx/plugins/modules';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {ChosenArgumentsData, CustomArg} from '@lynx_common/types';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
@@ -142,6 +143,8 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
     onClose();
   }, [selectedArguments, cardArgument, onClose, setChosenArguments, customArgs]);
 
+  const supportCustomArg = useSupportCustomArg(id);
+
   const show = useTabVisibility(tabId);
 
   return (
@@ -218,10 +221,12 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
               </DropdownMenu>
             </Dropdown>
           </div>
-          <Tabs className="my-2" onSelectionChange={setCurrentTab} selectedKey={currentTab.toString()} fullWidth>
-            <Tab key="module" title="Module Provided" />
-            <Tab key="custom" title="Custom" />
-          </Tabs>
+          {supportCustomArg && (
+            <Tabs className="my-2" onSelectionChange={setCurrentTab} selectedKey={currentTab.toString()} fullWidth>
+              <Tab key="module" title="Module Provided" />
+              <Tab key="custom" title="Custom" />
+            </Tabs>
+          )}
         </ModalHeader>
         <ModalBody as={LynxScroll} className="mr-2 pr-4">
           {currentTab === 'module' && (

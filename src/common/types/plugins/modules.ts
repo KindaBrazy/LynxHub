@@ -510,7 +510,7 @@ export type LoadedCardData = Omit<CardData, 'arguments' | 'methods'> & {routePat
 /**
  * Arguments loaded for a card.
  */
-export type LoadedArguments = Pick<CardData, 'arguments' | 'id'>;
+export type LoadedArguments = Pick<CardData, 'arguments' | 'supportCustomArguments' | 'id'>;
 
 /**
  * Methods loaded for a card.
