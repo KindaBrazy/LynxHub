@@ -96,6 +96,8 @@ const useHasArguments = (): Set<string> => useSyncExternalStore(subscribe, () =>
 const useGetArgumentsByID = (id: string): ArgumentsData | undefined =>
   useAllCardArguments().find(card => card.id === id)?.arguments;
 
+const useSupportCustomArg = (id: string) => useAllCardArguments().find(card => card.id === id)?.supportCustomArguments;
+
 /**
  * Searches all loaded cards by title, description, and repository owner/name.
  *
@@ -202,7 +204,7 @@ function insertCardData(card: CardData, routePath: AvailablePageIDs, originalCar
     ];
     allCardArguments = [
       ...allCardArguments.slice(0, pos),
-      {id: card.id, arguments: args},
+      {id: card.id, arguments: args, supportCustomArguments: card.supportCustomArguments},
       ...allCardArguments.slice(pos),
     ];
     allCardMethods = [...allCardMethods.slice(0, pos), {id: card.id, methods}, ...allCardMethods.slice(pos)];
@@ -214,7 +216,10 @@ function insertCardData(card: CardData, routePath: AvailablePageIDs, originalCar
   } else {
     // Original not found — append to the end of every array.
     allCardDataWithPath = [...allCardDataWithPath, {...cardWithoutInternals, routePath}];
-    allCardArguments = [...allCardArguments, {id: card.id, arguments: args}];
+    allCardArguments = [
+      ...allCardArguments,
+      {id: card.id, arguments: args, supportCustomArguments: card.supportCustomArguments},
+    ];
     allCardMethods = [...allCardMethods, {id: card.id, methods}];
     cardSearchIndex = [...cardSearchIndex, {id: card.id, tokens: buildCardSearchTokens(card)}];
   }
@@ -452,7 +457,7 @@ const loadModules = async () => {
           enabledCards.forEach(card => {
             const {arguments: args, methods, ...cardWithoutInternals} = card;
             newCardDataWithPath.push({...cardWithoutInternals, routePath: mod.routePath});
-            newCardArguments.push({id: card.id, arguments: args});
+            newCardArguments.push({id: card.id, arguments: args, supportCustomArguments: card.supportCustomArguments});
             newCardMethods.push({id: card.id, methods});
             newCardSearchIndex.push({id: card.id, tokens: buildCardSearchTokens(card)});
           });
@@ -494,6 +499,7 @@ export {
   useGetUninstallType,
   useHasArguments,
   useSearchCards,
+  useSupportCustomArg,
 };
 
 export default loadModules;
