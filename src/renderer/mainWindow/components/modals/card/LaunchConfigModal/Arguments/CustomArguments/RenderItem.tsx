@@ -295,6 +295,10 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
           </div>
 
           <div className="flex items-center gap-x-4 size-full">
+            <div className="flex items-center gap-x-2">
+              <span className="shrink-0">Name:</span>
+              <Input size="sm" value={item.name} onValueChange={onNameChange} />
+            </div>
             <div className="flex items-center gap-x-2 flex-1">
               <span className="shrink-0">{item.kind === 'comment' ? 'Comment Text' : 'Custom Data'}:</span>
               {item.kind === 'comment' ? (
@@ -305,6 +309,7 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
                   onValueChange={onDefaultValueChange}
                   placeholder="Enter defualt value..."
                   fullWidth
+                  isClearable
                 />
               ) : (
                 <Textarea
@@ -313,6 +318,7 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
                   onValueChange={onDefaultValueChange}
                   placeholder="Enter defualt value..."
                   fullWidth
+                  isClearable
                 />
               )}
             </div>
