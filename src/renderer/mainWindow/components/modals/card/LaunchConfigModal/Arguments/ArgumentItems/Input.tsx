@@ -1,7 +1,7 @@
 import {Button, Input, Textarea, Tooltip} from '@heroui/react';
 import {ChosenArgument} from '@lynx_common/types/plugins/modules';
 import {Restart, Text} from '@solar-icons/react-perf/BoldDuotone';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {useGetArgumentsByID} from '../../../../../../plugins/modules';
 import {getArgumentDefaultValue} from '../../../../../../utils/moduleArguments';
@@ -22,7 +22,7 @@ type Props = {
  * Renders an Input argument item for free-form text entry.
  * Updates the value on blur to minimize re-renders in parent.
  *
- * @returns {JSX.Element} The rendered InputArgItem component.
+ * @returns The rendered InputArgItem component.
  */
 export default function InputArgItem({argument, changeValue, removeArg, id}: Props) {
   const cardArgument = useGetArgumentsByID(id);
@@ -49,6 +49,8 @@ export default function InputArgItem({argument, changeValue, removeArg, id}: Pro
     setInputValue(value);
   }, []);
 
+  const isCustomArg = useMemo(() => argument.custom?.kind === 'custom', []);
+
   const toggleInput = () => setIsInputBox(prev => !prev);
 
   return (
@@ -67,7 +69,7 @@ export default function InputArgItem({argument, changeValue, removeArg, id}: Pro
       name={argument.name}
       removeArg={removeArg}
       icon={<Text className="size-3.5" />}>
-      {isInputBox ? (
+      {isInputBox || isCustomArg ? (
         <Textarea
           onBlur={onBlur}
           value={inputValue}
