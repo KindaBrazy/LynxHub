@@ -189,7 +189,7 @@ function buildCardSearchTokens(card: CardData): string[] {
  *   determine insertion position). Pass the card's own `id` for non-duplicates.
  */
 function insertCardData(card: CardData, routePath: AvailablePageIDs, originalCardId: string) {
-  const {arguments: args, methods, ...cardWithoutInternals} = card;
+  const {arguments: args, methods, supportCustomArguments, ...cardWithoutInternals} = card;
 
   const insertAfterIndex = allCardDataWithPath.findIndex(c => c.id === originalCardId);
 
@@ -204,7 +204,7 @@ function insertCardData(card: CardData, routePath: AvailablePageIDs, originalCar
     ];
     allCardArguments = [
       ...allCardArguments.slice(0, pos),
-      {id: card.id, arguments: args, supportCustomArguments: card.supportCustomArguments},
+      {id: card.id, arguments: args, supportCustomArguments},
       ...allCardArguments.slice(pos),
     ];
     allCardMethods = [...allCardMethods.slice(0, pos), {id: card.id, methods}, ...allCardMethods.slice(pos)];
@@ -216,10 +216,7 @@ function insertCardData(card: CardData, routePath: AvailablePageIDs, originalCar
   } else {
     // Original not found — append to the end of every array.
     allCardDataWithPath = [...allCardDataWithPath, {...cardWithoutInternals, routePath}];
-    allCardArguments = [
-      ...allCardArguments,
-      {id: card.id, arguments: args, supportCustomArguments: card.supportCustomArguments},
-    ];
+    allCardArguments = [...allCardArguments, {id: card.id, arguments: args, supportCustomArguments}];
     allCardMethods = [...allCardMethods, {id: card.id, methods}];
     cardSearchIndex = [...cardSearchIndex, {id: card.id, tokens: buildCardSearchTokens(card)}];
   }
@@ -455,9 +452,9 @@ const loadModules = async () => {
           newAllCards.push(...enabledCards);
 
           enabledCards.forEach(card => {
-            const {arguments: args, methods, ...cardWithoutInternals} = card;
+            const {arguments: args, methods, supportCustomArguments, ...cardWithoutInternals} = card;
             newCardDataWithPath.push({...cardWithoutInternals, routePath: mod.routePath});
-            newCardArguments.push({id: card.id, arguments: args, supportCustomArguments: card.supportCustomArguments});
+            newCardArguments.push({id: card.id, arguments: args, supportCustomArguments});
             newCardMethods.push({id: card.id, methods});
             newCardSearchIndex.push({id: card.id, tokens: buildCardSearchTokens(card)});
           });
