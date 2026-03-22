@@ -4,7 +4,7 @@ import Page from '@lynx/pages/Page';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useGetCardsByPath} from '@lynx/plugins/modules';
 import {AvailablePageIDs} from '@lynx_common/consts';
-import {LayoutGroup} from 'framer-motion';
+import {LayoutGroup, motion, Variants} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
 import {FC, memo, useMemo} from 'react';
 
@@ -15,6 +15,15 @@ type GetComponentsByPathProps = {
   routePath: AvailablePageIDs;
   /** Optional additional elements from extensions. */
   extensionsElements?: FC[];
+};
+
+const variants: Variants = {
+  initial: {opacity: 0, translateY: 20},
+  animate: (index: number) => ({
+    opacity: 1,
+    translateY: 0,
+    transition: {delay: index * 0.05},
+  }),
 };
 
 /**
@@ -50,7 +59,15 @@ export const GetComponentsByPath = memo(({routePath, extensionsElements}: GetCom
             {isNil(ReplaceCards) ? <RenderCardList cards={cards} /> : <ReplaceCards cards={cards} />}
           </LayoutGroup>
           {extensionsElements?.map((Comp, index) => (
-            <Comp key={index} />
+            <motion.div
+              animate="animate"
+              initial="initial"
+              variants={variants}
+              custom={index + cards.length}
+              key={`extension_card_${index}`}
+              layout>
+              <Comp key={index} />{' '}
+            </motion.div>
           ))}
         </>
       )}
