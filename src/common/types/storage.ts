@@ -60,7 +60,6 @@ export type CardsConfigStorage = {
   preOpen: StoragePreOpenData;
   args: StorageChosenArgumentsData;
   customArgs: {global: CustomArg[]; perCard: {cardId: string; args: CustomArg[]}[]};
-  addedCustomArgs: CustomArg[];
 };
 
 /**

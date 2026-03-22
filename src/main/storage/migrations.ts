@@ -259,7 +259,6 @@ export class StorageMigrationManager {
       global: [],
       perCard: [],
     };
-    this.storage.data.cardsConfig.addedCustomArgs = [];
   }
 
   private normalizeCustomRunBehavior() {
