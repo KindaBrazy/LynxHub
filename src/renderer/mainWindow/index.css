@@ -48,6 +48,10 @@
 * {
   -webkit-user-select: none;
   -webkit-user-drag: none;
+}
+
+html,
+body {
   font-family: Nunito, sans-serif;
 }
 
