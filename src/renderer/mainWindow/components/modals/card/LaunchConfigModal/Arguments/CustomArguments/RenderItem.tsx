@@ -284,7 +284,7 @@ export default function RenderCustomItem({item, isAdded, setCustomList, addItem,
             </div>
             <div className="flex items-center gap-x-1">
               <AnimateChild show={isAdded}>
-                <Button size="sm" color="success" variant="light" isIconOnly>
+                <Button size="sm" variant="flat" color="success" isDisabled isIconOnly>
                   <CheckRead className="size-4.5" />
                 </Button>
               </AnimateChild>
