@@ -94,6 +94,7 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
 
   const clearSelected = useCallback(() => {
     setSelectedArguments(new Set([]));
+    setCustomArgs([]);
   }, []);
 
   const onClose = useCallback(() => {
