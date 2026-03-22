@@ -160,14 +160,9 @@ type CustomProps = {
 export default function CustomArguments({id, setCustomArgs, selectedArguments}: CustomProps) {
   const [globalList, setGlobalList] = useState<CustomArg[]>([]);
   const [perCardList, setPerCardList] = useState<CustomArg[]>([]);
-  const [addList, setAddList] = useState<CustomArg[]>([]);
 
   const [title, setTitle] = useState<string>();
   const [initializingLists, setInitializingLists] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (!initializingLists) storageIpc.update('cardsConfig', {addedCustomArgs: addList});
-  }, [addList, initializingLists]);
 
   useEffect(() => {
     if (!initializingLists) {
@@ -215,8 +210,6 @@ export default function CustomArguments({id, setCustomArgs, selectedArguments}: 
 
       const cardData = value.customArgs.perCard.find(item => item.cardId === id);
       if (cardData && cardData.args) setPerCardList(cardData.args);
-
-      setAddList(value.addedCustomArgs);
 
       setInitializingLists(false);
     });

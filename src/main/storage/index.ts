@@ -47,7 +47,6 @@ class BaseStorage {
         global: [],
         perCard: [],
       },
-      addedCustomArgs: [],
     },
     app: {
       closeConfirm: true,
