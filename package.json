@@ -75,7 +75,7 @@
     "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@electron-toolkit/tsconfig": "^2.0.0",
     "@eslint/js": "^10.0.1",
-    "@heroui/react": "^2.8.9",
+    "@heroui/react": "^2.8.10",
     "@number-flow/react": "^0.5.12",
     "@reduxjs/toolkit": "^2.11.2",
     "@sentry/vite-plugin": "^4.9.1",
