@@ -74,6 +74,7 @@ export default function DropdownArgItem({argument, changeValue, removeArg, id}: 
       removeArg={removeArg}
       icon={<ListDownMinimalistic className="size-4.5" />}>
       <Select
+        size="sm"
         items={items}
         variant="flat"
         selectedKeys={selectedKey}

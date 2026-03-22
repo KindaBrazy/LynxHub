@@ -71,6 +71,7 @@ export default function InputArgItem({argument, changeValue, removeArg, id}: Pro
       icon={<Text className="size-3.5" />}>
       {isInputBox || isCustomArg ? (
         <Textarea
+          size="sm"
           onBlur={onBlur}
           value={inputValue}
           spellCheck="false"
@@ -80,6 +81,7 @@ export default function InputArgItem({argument, changeValue, removeArg, id}: Pro
         />
       ) : (
         <Input
+          size="sm"
           onBlur={onBlur}
           spellCheck="false"
           value={inputValue}

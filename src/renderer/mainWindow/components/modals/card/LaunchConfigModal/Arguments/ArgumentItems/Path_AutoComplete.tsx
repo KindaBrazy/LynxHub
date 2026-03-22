@@ -114,6 +114,7 @@ export default function PathAutoComplete({baseDir, onValueChange, defaultValue =
           inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird',
         },
       }}
+      size="sm"
       items={searchData}
       selectedKey={null}
       inputValue={inputValue}
