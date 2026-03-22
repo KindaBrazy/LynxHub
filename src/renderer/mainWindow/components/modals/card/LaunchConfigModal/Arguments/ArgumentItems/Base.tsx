@@ -69,7 +69,7 @@ export default function ArgumentItemBase({
           className={`${defaultCursor ? 'cursor-default' : ''} rounded-l-none`}
           fullWidth>
           <CardHeader className={`justify-between pt-1 ${children ? 'pb-0' : 'pb-1'} text-xs`}>
-            <div className="flex gap-x-1 text-success">
+            <div className="flex gap-x-1 text-success-700 dark:text-success-300">
               <div className="flex items-center justify-center">{icon}</div>
               <span className="font-JetBrainsMono font-semibold">{name}</span>
             </div>
