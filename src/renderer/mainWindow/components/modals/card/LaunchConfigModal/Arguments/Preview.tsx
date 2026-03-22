@@ -1,15 +1,21 @@
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
+import {isWin} from '@lynx_common/utils';
 import {InboxLine} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
 import {PrismLight as SyntaxHighlighter} from 'react-syntax-highlighter';
+import bash from 'react-syntax-highlighter/dist/esm/languages/prism/bash';
 import batch from 'react-syntax-highlighter/dist/esm/languages/prism/batch';
 import {materialDark, materialLight} from 'react-syntax-highlighter/dist/esm/styles/prism';
-
-SyntaxHighlighter.registerLanguage('batch', batch);
 
 import {useAppState} from '../../../../../redux/reducers/app';
 import CopyClipboard from '../../../../CopyClipboard';
 import LaunchConfigSection from '../LaunchConfigSection';
+
+if (isWin) {
+  SyntaxHighlighter.registerLanguage('batch', batch);
+} else {
+  SyntaxHighlighter.registerLanguage('bash', bash);
+}
 
 type Props = {text: string};
 
@@ -40,7 +46,7 @@ export default function ArgumentsPreview({text}: Props) {
               padding: '1rem',
               fontFamily: 'JetBrainsMono, monospace',
             }}
-            language="batch"
+            language={isWin ? 'batch' : 'bash'}
             style={isDark ? materialDark : materialLight}
             codeTagProps={{className: 'text-foreground-800'}}
             wrapLongLines>
