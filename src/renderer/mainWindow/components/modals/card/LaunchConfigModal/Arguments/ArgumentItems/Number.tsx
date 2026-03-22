@@ -57,6 +57,7 @@ export default function NumberArgItem({argument, changeValue, removeArg, id}: Pr
         minValue={numberMin}
         maxValue={numberMax}
         onValueChange={onChange}
+        aria-label="Argument number input"
         placeholder="Enter argument value here..."
         classNames={{inputWrapper: 'dark:bg-LynxRaisinBlack bg-LynxWhiteThird'}}
       />
