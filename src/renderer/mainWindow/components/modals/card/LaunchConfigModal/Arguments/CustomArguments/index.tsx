@@ -133,14 +133,14 @@ const CustomArgComp = memo(({title, description, list, setList, addItem, isAdded
               className={
                 `w-full grid gap-2 ` + `${list.length === 1 ? 'grid-cols-1' : 'max-2xl:grid-cols-1 2xl:grid-cols-2'}`
               }>
-              {list.map(item => (
+              {list.map((item, index) => (
                 <RenderCustomItem
                   item={item}
-                  key={item.name}
                   addItem={addItem}
                   removeItem={onRemove}
                   isAdded={isAdded(item)}
                   setCustomList={setList}
+                  key={`custom_item_${index}`}
                 />
               ))}
             </div>
