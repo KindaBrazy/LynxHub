@@ -71,14 +71,17 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
     });
   }, [customArgs]);
 
+  const currentArgNames = useMemo(
+    () =>
+      chosenArguments.data.find(data => data.preset === chosenArguments.activePreset)?.arguments.map(arg => arg.name) ||
+      [],
+    [chosenArguments],
+  );
+
   // Memoize the filtered list of available arguments
   const listData = useMemo(() => {
-    const currentArgNames =
-      chosenArguments.data.find(data => data.preset === chosenArguments.activePreset)?.arguments.map(arg => arg.name) ||
-      [];
-
     return getFilteredArguments(cardArgument, currentArgNames);
-  }, [chosenArguments.data, chosenArguments.activePreset, cardArgument]);
+  }, [currentArgNames, cardArgument]);
 
   const removeSelected = useCallback((value: string) => {
     setSelectedArguments(prevState => {
@@ -258,7 +261,12 @@ export default function AddArgumentModal({addArgumentsModal, chosenArguments, se
             </div>
           )}
           {currentTab === 'custom' && (
-            <CustomArguments id={id} setCustomArgs={setCustomArgs} selectedArguments={selectedArguments} />
+            <CustomArguments
+              id={id}
+              currentArgs={currentArgNames}
+              setCustomArgs={setCustomArgs}
+              selectedArguments={selectedArguments}
+            />
           )}
         </ModalBody>
         <ModalFooter>

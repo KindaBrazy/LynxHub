@@ -155,9 +155,10 @@ type CustomProps = {
   id: string;
   setCustomArgs: Dispatch<SetStateAction<CustomArg[]>>;
   selectedArguments: Set<string>;
+  currentArgs: string[];
 };
 
-export default function CustomArguments({id, setCustomArgs, selectedArguments}: CustomProps) {
+export default function CustomArguments({id, setCustomArgs, selectedArguments, currentArgs}: CustomProps) {
   const [globalList, setGlobalList] = useState<CustomArg[]>([]);
   const [perCardList, setPerCardList] = useState<CustomArg[]>([]);
 
@@ -226,7 +227,7 @@ export default function CustomArguments({id, setCustomArgs, selectedArguments}: 
   };
 
   const isAdded = (item: CustomArg) => {
-    return selectedArguments.has(item.name);
+    return selectedArguments.has(item.name) || currentArgs.includes(item.name);
   };
 
   return (
