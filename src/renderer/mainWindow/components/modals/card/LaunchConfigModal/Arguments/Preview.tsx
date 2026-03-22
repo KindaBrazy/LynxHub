@@ -42,13 +42,12 @@ export default function ArgumentsPreview({text}: Props) {
           <SyntaxHighlighter
             customStyle={{
               borderRadius: '1rem',
-              fontSize: '0.875rem',
-              padding: '1rem',
-              fontFamily: 'JetBrainsMono, monospace',
+              fontSize: '0.8rem',
+              padding: '1.1rem',
             }}
             language={isWin ? 'batch' : 'bash'}
             style={isDark ? materialDark : materialLight}
-            codeTagProps={{className: 'text-foreground-800'}}
+            codeTagProps={{className: 'text-foreground-800 font-JetBrainsMono'}}
             wrapLongLines>
             {text}
           </SyntaxHighlighter>
