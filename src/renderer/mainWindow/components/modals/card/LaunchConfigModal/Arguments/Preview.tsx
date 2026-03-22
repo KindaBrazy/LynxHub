@@ -1,9 +1,13 @@
-import {Card, CardBody} from '@heroui/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {InboxLine} from '@solar-icons/react-perf/BoldDuotone';
 import {isEmpty} from 'lodash';
-import {useMemo, useState} from 'react';
+import {PrismLight as SyntaxHighlighter} from 'react-syntax-highlighter';
+import batch from 'react-syntax-highlighter/dist/esm/languages/prism/batch';
+import {materialDark, materialLight} from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+SyntaxHighlighter.registerLanguage('batch', batch);
+
+import {useAppState} from '../../../../../redux/reducers/app';
 import CopyClipboard from '../../../../CopyClipboard';
 import LaunchConfigSection from '../LaunchConfigSection';
 
@@ -13,17 +17,7 @@ type Props = {text: string};
  * Show arguments as text for preview and clipboard copying.
  */
 export default function ArgumentsPreview({text}: Props) {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const {shouldTruncate, displayText} = useMemo(() => {
-    if (isEmpty(text)) return {shouldTruncate: false, displayText: ''};
-
-    const lines = text.split('\n');
-    const shouldTruncate = lines.length > 3;
-    const displayText = shouldTruncate && !isExpanded ? lines.slice(0, 3).join('\n') : text;
-
-    return {shouldTruncate, displayText};
-  }, [text, isExpanded]);
+  const isDark = useAppState('darkMode');
 
   return (
     <LaunchConfigSection
@@ -38,30 +32,21 @@ export default function ArgumentsPreview({text}: Props) {
           description="No preview available to display"
         />
       ) : (
-        <Card
-          className={
-            'relative border border-foreground-100 bg-white dark:bg-[#171717] shadow hover:shadow-md' +
-            ' transition-all duration-200'
-          }
-          shadow="none">
-          <CardBody className="p-4 gap-y-2">
-            <pre
-              className={
-                'whitespace-pre-wrap font-JetBrainsMono text-sm leading-relaxed text-foreground-800 wrap-break-word'
-              }>
-              {displayText}
-              {shouldTruncate && !isExpanded && <span className="text-foreground-400">...</span>}
-            </pre>
-
-            {shouldTruncate && (
-              <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="text-xs text-foreground-500 hover:text-primary-500 transition-colors self-start">
-                {isExpanded ? '... Collapse' : '... Expand'}
-              </button>
-            )}
-          </CardBody>
-        </Card>
+        <>
+          <SyntaxHighlighter
+            customStyle={{
+              borderRadius: '1rem',
+              fontSize: '0.875rem',
+              padding: '1rem',
+              fontFamily: 'JetBrainsMono, monospace',
+            }}
+            language="batch"
+            style={isDark ? materialDark : materialLight}
+            codeTagProps={{className: 'text-foreground-800'}}
+            wrapLongLines>
+            {text}
+          </SyntaxHighlighter>
+        </>
       )}
     </LaunchConfigSection>
   );
