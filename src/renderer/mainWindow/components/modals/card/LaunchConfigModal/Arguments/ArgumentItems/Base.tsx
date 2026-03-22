@@ -46,7 +46,7 @@ export default function ArgumentItemBase({
       className="flex flex-row items-stretch size-full">
       <div
         className={
-          'w-7 active:cursor-grabbing cursor-grab text-foreground-500 hover:text-foreground-600 transition-all' +
+          'w-5 active:cursor-grabbing cursor-grab text-foreground-500 hover:text-foreground-600 transition-all' +
           ' duration-300 flex items-center justify-center dark:bg-foreground-50 bg-white rounded-l-medium relative'
         }
         onPointerDown={e => controls.start(e)}>
@@ -68,10 +68,10 @@ export default function ArgumentItemBase({
           onPress={defaultCursor ? undefined : onClick}
           className={`${defaultCursor ? 'cursor-default' : ''} rounded-l-none`}
           fullWidth>
-          <CardHeader className={`justify-between ${children ? 'pb-1' : 'pb-2'} pt-2 text-sm`}>
-            <div className="flex gap-x-2 text-success">
+          <CardHeader className={`justify-between pt-1 pb-0 text-xs`}>
+            <div className="flex gap-x-1 text-success">
               <div className="flex items-center justify-center">{icon}</div>
-              <span className="font-JetBrainsMono">{name}</span>
+              <span className="font-JetBrainsMono font-semibold">{name}</span>
             </div>
             <div className="flex flex-row items-center gap-x-1">
               {extra}
@@ -86,7 +86,7 @@ export default function ArgumentItemBase({
               </Button>
             </div>
           </CardHeader>
-          {children && <CardBody className="pt-1">{children}</CardBody>}
+          {children && <CardBody className="p-2">{children}</CardBody>}
         </Card>
       </Tooltip>
     </Reorder.Item>

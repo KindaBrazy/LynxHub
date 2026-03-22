@@ -51,6 +51,7 @@ export default function NumberArgItem({argument, changeValue, removeArg, id}: Pr
   return (
     <ArgumentItemBase id={id} name={argument.name} removeArg={removeArg} icon={<Text className="size-3.5" />}>
       <NumberInput
+        size="sm"
         onBlur={onBlur}
         step={numberStep}
         value={inputValue}
