@@ -67,6 +67,8 @@
     "lowdb": "^7.0.1",
     "mitt": "^3.0.1",
     "node-pty": "^1.1.0",
+    "prism-react-renderer": "^2.4.1",
+    "react-syntax-highlighter": "^16.1.1",
     "semver": "^7.7.4",
     "tree-kill": "^1.2.2",
     "zustand": "^5.0.11"
@@ -90,6 +92,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/react-highlight-words": "^0.20.1",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "@types/semver": "^7.7.1",
     "@types/serve-handler": "^6.1.4",
     "@vitejs/plugin-react": "^5.1.4",
