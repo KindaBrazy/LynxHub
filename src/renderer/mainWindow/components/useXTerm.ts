@@ -20,6 +20,10 @@ import FontFaceObserver from 'fontfaceobserver';
 import {isEmpty, isEqual} from 'lodash';
 import {RefObject, useCallback, useEffect, useRef} from 'react';
 
+import {cardsActions} from '../redux/reducers/cards';
+import {useTabsState} from '../redux/reducers/tabs';
+import {triggerActions} from '../redux/reducers/triggers';
+
 const FONT_FAMILY = 'JetBrainsMono';
 
 export interface XTermAPI {
@@ -54,6 +58,7 @@ export interface UseXTermProps {
   dispatch: AppDispatch;
   useConpty: TerminalUseConpty;
   enableLigatures: boolean;
+  openLinkNewTab: boolean;
 }
 
 export const useXTerm = ({
@@ -78,7 +83,10 @@ export const useXTerm = ({
   dispatch,
   useConpty,
   enableLigatures,
+  openLinkNewTab,
 }: UseXTermProps) => {
+  const activeTab = useTabsState('activeTab');
+
   const terminal = useRef<XTerminal | null>(null);
   const fitAddon = useRef<FitAddon | null>(null);
   const apiRef = useRef<XTermAPI | null>(null);
@@ -124,7 +132,18 @@ export const useXTerm = ({
       xTerm.loadAddon(new Unicode11Addon());
       xTerm.unicode.activeVersion = '11';
       xTerm.loadAddon(new ClipboardAddon());
-      xTerm.loadAddon(new WebLinksAddon((_, uri) => window.open(uri)));
+
+      xTerm.loadAddon(
+        new WebLinksAddon((event, uri) => {
+          if (openLinkNewTab || event.button === 1) {
+            window.open(uri);
+          } else {
+            dispatch(cardsActions.setRunningCardCustomAddress({tabId: activeTab, address: uri}));
+            dispatch(cardsActions.setRunningCardView({tabId: activeTab, view: 'browser'}));
+            dispatch(triggerActions.trigger('clearBrowserFail'));
+          }
+        }),
+      );
 
       // Load optional external addons
       if (serializeAddon) xTerm.loadAddon(serializeAddon);
