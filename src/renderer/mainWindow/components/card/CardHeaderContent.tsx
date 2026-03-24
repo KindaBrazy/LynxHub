@@ -1,13 +1,10 @@
-import {Button, CardHeader, Chip, Spinner, User} from '@heroui/react';
+import {CardHeader, Chip, Spinner, User} from '@heroui/react';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
-import filesIpc from '@lynx_shared/ipc/files';
-import {DownloadMinimalistic, FolderOpen} from '@solar-icons/react-perf/BoldDuotone';
+import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
 import {memo, useMemo} from 'react';
 
 import {useCardsState} from '../../redux/reducers/cards';
-import {useHotkeysState} from '../../redux/reducers/hotkeys';
-import {useInstalledCard} from '../../utils/hooks';
 import {useCardStore} from './store';
 
 type CardHeaderContentProps = {
@@ -32,17 +29,6 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
     const {owner, avatarUrl} = extractGitUrl(repoUrl);
     return {developer: owner, avatarSrc: getCacheUrl(avatarUrl)};
   }, [repoUrl]);
-
-  const isCtrlPressed = useHotkeysState('isCtrlPressed');
-  const webUI = useInstalledCard(id);
-
-  const showOpenFolder = useMemo(() => {
-    return !!webUI?.dir && isCtrlPressed;
-  }, [webUI, isCtrlPressed]);
-
-  const openFolder = () => {
-    if (webUI && webUI.dir) filesIpc.openPath(webUI.dir);
-  };
 
   return (
     <CardHeader key={`${id}_ttt`} className="justify-between">
@@ -121,25 +107,6 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
             animate={{opacity: 1, translateY: 0}}
             initial={{opacity: 0, translateY: 2}}
           />
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {showOpenFolder && (
-          <Button
-            as={motion.div}
-            variant="light"
-            onPress={openFolder}
-            // @ts-ignore-next-line
-            transition={{type: 'spring', duration: 0.5}}
-            exit={{opacity: 0, scale: 0.8, translateY: 10}}
-            animate={{opacity: 1, scale: 1, translateY: 0}}
-            initial={{opacity: 0, scale: 0.8, translateY: 10}}
-            className="absolute bottom-2 right-1/2 translate-x-1/2"
-            isIconOnly
-            disableAnimation>
-            <FolderOpen size={16} className="text-foreground-600" />
-          </Button>
         )}
       </AnimatePresence>
     </CardHeader>
