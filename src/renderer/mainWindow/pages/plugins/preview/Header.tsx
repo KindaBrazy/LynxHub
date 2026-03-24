@@ -43,7 +43,6 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
     const firstCompatibleVersion = selectedPlugin?.versions.find(v => v.isCompatible);
 
     const isInstalled = !!installedPlugin;
-    console.log(isInstalled);
 
     const resolvedVersion = installedPlugin?.version || firstCompatibleVersion?.version || 'N/A';
     const syncTarget = syncList.find(item => item.id === selectedPlugin?.metadata.id);
