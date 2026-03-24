@@ -8,6 +8,7 @@ import {isEmpty} from 'lodash';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {triggerActions, useTriggerState} from '../../../../redux/reducers/triggers';
 import {FailedLoad} from '../BrowserError';
 
 export function useBrowser(runningCard: RunningCard) {
@@ -18,6 +19,8 @@ export function useBrowser(runningCard: RunningCard) {
   const tabVolumes = useVolumeState('tabVolumes');
   const tabMuted = useVolumeState('tabMuted');
   const globalMuted = useVolumeState('globalMuted');
+  const clearBrowserFail = useTriggerState('clearBrowserFail');
+
   const volumeAppliedRef = useRef(false);
 
   const [failedLoad, setFailedLoad] = useState<FailedLoad | undefined>(undefined);
@@ -27,6 +30,13 @@ export function useBrowser(runningCard: RunningCard) {
 
   const finalAddress = useMemo(() => customAddress || webUIAddress, [customAddress, webUIAddress]);
   const previousFinalAddress = useRef<string>('');
+
+  useEffect(() => {
+    if (clearBrowserFail) {
+      setFailedLoad(undefined);
+      dispatch(triggerActions.clear('clearBrowserFail'));
+    }
+  }, [clearBrowserFail]);
 
   useEffect(() => {
     // Only load URL if finalAddress actually changed (not just from redirect sync)
@@ -74,9 +84,11 @@ export function useBrowser(runningCard: RunningCard) {
         setFailedLoad({errorCode, errorDescription, validatedURL});
       }
     });
+
     const offClearFailed = browserIpc.on.clearFailed(targetID => {
       if (targetID === id) setFailedLoad(undefined);
     });
+
     const offUrlChange = browserIpc.on.urlChanged((targetID, url) => {
       if (targetID === id) {
         setCurrentUrl(url);
