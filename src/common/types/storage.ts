@@ -115,6 +115,7 @@ export type TerminalStorage = {
   cdHistory: string[];
   quickCommands: {label: string; command: string}[];
   sendYWithExit: boolean;
+  openLinkNewTab: boolean;
 };
 
 /**
