@@ -4,7 +4,7 @@ import {Star} from '@solar-icons/react-perf/Bold';
 import {motion} from 'framer-motion';
 import {memo} from 'react';
 
-import {useAddressBar} from './hooks/useAddressBar';
+import {useAddressBar} from './useAddressBar';
 
 type Props = {
   /**
