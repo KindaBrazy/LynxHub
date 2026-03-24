@@ -89,6 +89,7 @@ class BaseStorage {
       cdHistory: [],
       quickCommands: [],
       sendYWithExit: false,
+      openLinkNewTab: false,
     },
     browser: {
       recentAddress: [],

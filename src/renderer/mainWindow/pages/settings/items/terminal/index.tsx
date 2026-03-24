@@ -9,6 +9,7 @@ import CursorInactiveStyle from './CursorInactiveStyle';
 import CursorStyle from './CursorStyle';
 import FontSize from './FontSize';
 import Ligatures from './Ligatures';
+import OpenLinks from './OpenLinks';
 import OutputColor from './OutputColor';
 import QuickCommands from './QuickCommands';
 import Reset from './Reset';
@@ -39,6 +40,7 @@ export default function SettingsTerminal() {
       <OutputColor />
       <CloseOnExit />
       <SendYWithExit />
+      <OpenLinks />
 
       <Spacer />
       <QuickCommands />

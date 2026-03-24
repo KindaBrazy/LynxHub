@@ -259,6 +259,7 @@ export class StorageMigrationManager {
       global: [],
       perCard: [],
     };
+    this.storage.data.terminal.openLinkNewTab = false;
   }
 
   private normalizeCustomRunBehavior() {
