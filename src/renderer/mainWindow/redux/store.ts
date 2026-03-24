@@ -13,6 +13,7 @@ import plugins from './reducers/plugins';
 import settings from './reducers/settings';
 import tabs from './reducers/tabs';
 import terminal from './reducers/terminal';
+import trigger from './reducers/triggers';
 import user from './reducers/user';
 import volume from './reducers/volume';
 import {getIsDarkMode, getStorageData} from './storageInit';
@@ -28,6 +29,7 @@ const staticReducers = {
   hotkeys,
   plugins,
   volume,
+  trigger,
 };
 
 const emptyHotkeyInput = {
