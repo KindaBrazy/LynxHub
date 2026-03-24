@@ -23,6 +23,7 @@ const createDefaultTerminalState = (): TerminalState => ({
   cdHistory: [],
   quickCommands: [],
   sendYWithExit: false,
+  openLinkNewTab: false,
 });
 
 // Default initial state - actual values come from preloadedState in Store.ts

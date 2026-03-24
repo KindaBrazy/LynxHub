@@ -85,12 +85,14 @@ const XTermCore = memo(
       const useConpty = terminalSettings.useConpty;
       const enableLigatures = terminalSettings.enableLigatures;
       const outputColor = terminalSettings.outputColor;
+      const openLinkNewTab = terminalSettings.openLinkNewTab;
 
       const apiRef = useXTerm({
         id,
         terminalContainerRef,
         onReady,
         outputColor,
+        openLinkNewTab,
         serializeAddon,
         searchAddon,
         fontSize,
