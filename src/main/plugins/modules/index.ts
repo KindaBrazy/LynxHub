@@ -11,7 +11,7 @@ import {getAppDataPath} from '@lynx_main/managers/dataFolder';
 import {getAbsolutePath, getExePath, isPortable} from '@lynx_main/utils';
 import {captureException} from '@sentry/electron/main';
 import {ipcMain} from 'electron';
-import {compact, isEmpty} from 'lodash';
+import {isEmpty} from 'lodash';
 import pty from 'node-pty';
 
 /**
@@ -36,7 +36,7 @@ export default class ModuleManager {
     const webContent = classHolder.appManager?.getWebContent();
     if (!webContent) return undefined;
 
-    const utils: MainModuleUtils = {
+    return {
       storage: {
         get: key => classHolder.storageManager.getCustomData(key),
         set: (key, data) => classHolder.storageManager.setCustomData(key, data),
@@ -73,8 +73,6 @@ export default class ModuleManager {
         classHolder.storageManager.getData('cards').cardTerminalPreCommands.find(commands => commands.id === id)
           ?.commands || [],
     };
-
-    return utils;
   }
 
   /**
@@ -140,28 +138,25 @@ export default class ModuleManager {
    * @param disabledCards - Set of disabled card IDs
    */
   private async loadProductionModules(moduleFolders: string[], utils: MainModuleUtils, disabledCards: Set<string>) {
-    const importedModules: (MainModuleImportType | null)[] = await Promise.all(
+    await Promise.all(
       moduleFolders.map(async modulePath => {
         try {
           const fullModulePath = path.join(modulePath, 'scripts', 'main.mjs');
           const moduleUrl = `file://${fullModulePath}`;
-          return (await import(moduleUrl)) as MainModuleImportType;
+
+          const importedModule = (await import(moduleUrl)) as MainModuleImportType;
+          const allMethods = await importedModule.default(utils);
+
+          // Filter out disabled cards
+          const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
+
+          this.mainMethods.push(...enabledMethods);
         } catch (e) {
           console.error('Failed to load module main entry: ', modulePath, 'Error: ', e);
           captureException(e);
-          return null;
         }
       }),
     );
-
-    const loadedModules = compact(importedModules);
-
-    for (const importedModule of loadedModules) {
-      const allMethods = await importedModule.default(utils);
-      // Filter out disabled cards
-      const enabledMethods = allMethods.filter(m => !disabledCards.has(m.id));
-      this.mainMethods.push(...enabledMethods);
-    }
   }
 
   /**
