@@ -45,34 +45,31 @@ const BrowserError = memo(({error, onReload}: Props) => {
           </ul>
         </div>
 
-        <Accordion variant="light">
+        <Accordion variant="splitted">
           <AccordionItem
             title={
-              <div className="flex items-center gap-x-2">
-                Show details
+              <div className="flex items-center gap-x-1 font-semibold">
+                Details
                 <CopyClipboard contentToCopy={details} />
               </div>
             }
-            className="max-w-lg">
-            <div className="flex flex-col gap-3">
+            classNames={{trigger: 'cursor-pointer py-2'}}
+            className="shadow-sm place-self-center w-sm border border-foreground-100 mt-4">
+            <div className="flex flex-col gap-3 font-JetBrainsMono">
               <div className="flex flex-col gap-2">
                 <div className="flex flex-col gap-1 rounded-lg bg-foreground-100 p-3">
                   <span className="text-xs font-semibold text-foreground-500">URL</span>
-                  <code className="break-all font-JetBrainsMono! text-xs text-foreground-800">
-                    {error.validatedURL}
-                  </code>
+                  <code className="break-all text-xs text-foreground-800">{error.validatedURL}</code>
                 </div>
 
                 <div className="flex flex-col gap-1 rounded-lg bg-foreground-100 p-3 ">
                   <span className="text-xs font-semibold text-danger">Error Code</span>
-                  <code className="font-JetBrainsMono! text-xs text-danger-700">{error.errorCode}</code>
+                  <code className="text-xs text-danger-700">{error.errorCode}</code>
                 </div>
 
                 <div className="flex flex-col gap-1 rounded-lg bg-foreground-100 p-3 ">
                   <span className="text-xs font-semibold text-warning">Description</span>
-                  <code className="break-all font-JetBrainsMono! text-xs text-warning-700">
-                    {error.errorDescription}
-                  </code>
+                  <code className="break-all text-xs text-warning-700">{error.errorDescription}</code>
                 </div>
               </div>
             </div>
