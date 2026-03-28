@@ -141,15 +141,15 @@ export async function saveToFile(content: string): Promise<string | null> {
       ? dialog.showSaveDialog(mainWindow, {
           properties: ['createDirectory'],
           filters: [
-            {name: 'txt', extensions: ['txt']},
-            {name: 'all', extensions: ['*']},
+            {name: 'Text file', extensions: ['txt']},
+            {name: 'All types', extensions: ['*']},
           ],
         })
       : dialog.showSaveDialog({
           properties: ['createDirectory'],
           filters: [
-            {name: 'txt', extensions: ['txt']},
-            {name: 'all', extensions: ['*']},
+            {name: 'Text file', extensions: ['txt']},
+            {name: 'All types', extensions: ['*']},
           ],
         }));
 
