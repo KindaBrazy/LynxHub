@@ -229,7 +229,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
         closeButton: 'cursor-default',
         wrapper: `top-10! ${show}`,
       }}
-      size="2xl"
+      size="3xl"
       shadow="lg"
       backdrop="blur"
       isOpen={isOpen}
