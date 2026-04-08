@@ -179,6 +179,24 @@ export type StarterStepOptions = {
   disableSelectDir?: boolean;
 };
 
+export type AlertTypes = 'default' | 'note' | 'warning' | 'danger';
+export type CustomAlertParams = {
+  /** The type effect state of alert, color and icon */
+  type?: AlertTypes;
+  title: string;
+  description?: string;
+  /** The url's appear as link or button for user to navigate */
+  urls?: {title: string; url: string}[];
+};
+
+export type InitialStep =
+  | string
+  | {
+      title: string;
+      alerts: CustomAlertParams[];
+    };
+export type InitialSteps = InitialStep[];
+
 /**
  * Interface for the installation stepper, guiding the user through the installation process.
  */
@@ -187,7 +205,7 @@ export type InstallationStepper = {
    * Initialize the installation process by setting up the required steps.
    * @param stepTitles An array of step titles representing the installation workflow.
    */
-  initialSteps: (stepTitles: string[]) => void;
+  initialSteps: (stepTitles: InitialSteps) => void;
 
   /** Advance to the next step in the installation process. */
   nextStep: () => Promise<void>;

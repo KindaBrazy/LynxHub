@@ -2,6 +2,7 @@ import {Modal, ModalContent} from '@heroui/react';
 import {DownloadProgress} from '@lynx_common/types/ipc';
 import {
   CardRendererMethods,
+  InitialSteps,
   InstallationMethod,
   InstallationStepper,
   UserInputField,
@@ -69,7 +70,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
   const dispatch = useDispatch<AppDispatch>();
 
   // -----------------------------------------------> States
-  const [steps, setSteps] = useState<string[]>([]);
+  const [steps, setSteps] = useState<InitialSteps>([]);
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [state, setState] = useState<InstallState>(initialState);
 
@@ -218,7 +219,7 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
 
   const nextStep = useCallback(() => stepper.nextStep(), [stepper]);
 
-  // -----------------------------------------------> Refernces
+  // -----------------------------------------------> References
   const xtermRef = useRef<XTermAPI | null>(null);
 
   return (
@@ -241,14 +242,15 @@ const InstallModal = memo(({isOpen, cardId, title, type, tabID}: InstallModalPro
       <ModalContent className="overflow-hidden">
         <InstallHeader steps={steps} currentStep={currentStep} />
         <InstallBody
-          state={state}
           title={title}
+          state={state}
           isOpen={isOpen}
           cardId={cardId}
           xtermRef={xtermRef}
           updateState={updateState}
           progressInfo={progressInfo}
           cloneResolver={cloneResolver}
+          currentStep={steps[currentStep]}
           progressBarState={progressBarState}
           userInputElements={userInputElements}
           extensionsResolver={extensionsResolver}

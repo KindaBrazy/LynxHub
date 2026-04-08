@@ -2,7 +2,7 @@ import {ModalBody, Progress} from '@heroui/react';
 import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import {DownloadProgress} from '@lynx_common/types/ipc';
-import {UserInputField, UserInputResult} from '@lynx_common/types/plugins/modules';
+import {InitialStep, UserInputField, UserInputResult} from '@lynx_common/types/plugins/modules';
 import {formatSize} from '@lynx_common/utils';
 import {CheckCircle, SadCircle, ShieldCross} from '@solar-icons/react-perf/BoldDuotone';
 import {capitalize} from 'lodash';
@@ -10,6 +10,7 @@ import {Dispatch, Fragment, memo, RefObject, SetStateAction, useCallback} from '
 
 import {XTermAPI} from '../../../useXTerm';
 import CloneRepo from './CloneRepo';
+import {renderAlerts} from './CustomAlert';
 import InstallExtensions from './Extensions';
 import TerminalStep from './TerminalStep';
 import {InstallState} from './types';
@@ -46,6 +47,8 @@ export interface InstallBodyProps {
   /** Identifying hash mapping to this unique installation record. */
   cardId: string;
   xtermRef: RefObject<XTermAPI | null>;
+
+  currentStep: InitialStep;
 }
 
 /**
@@ -69,6 +72,7 @@ const InstallBody = memo(
     isOpen,
     cardId,
     xtermRef,
+    currentStep,
   }: InstallBodyProps) => {
     const doneClone = useCallback(
       (dir: string) => {
@@ -113,14 +117,20 @@ const InstallBody = memo(
               done={doneClone}
               url={state.cloneUrl}
               start={state.startClone}
+              currentStep={currentStep}
               updateState={updateState}
             />
           );
         case 'terminal':
-          return <TerminalStep id={cardId} xtermRef={xtermRef} key={state.terminalKey} />;
+          return (
+            <div className="size-full flex flex-col gap-y-2">
+              <TerminalStep id={cardId} xtermRef={xtermRef} key={state.terminalKey} />
+              {renderAlerts(currentStep)}
+            </div>
+          );
         case 'progress-bar':
           return (
-            <div className="mb-8 mt-4 text-center">
+            <div className="mb-8 mt-4 text-center flex flex-col">
               {progressBarState.title && <span className="text-large font-semibold">{progressBarState.title}</span>}
               <Progress
                 className="mt-4"
@@ -133,6 +143,8 @@ const InstallBody = memo(
               {progressBarItems.length > 0 && (
                 <DescriptionGrid columns={2} items={progressBarItems} className="mt-8 text-start" />
               )}
+
+              <div className="flex flex-col py-2 gap-y-2">{renderAlerts(currentStep)}</div>
             </div>
           );
         case 'progress':
@@ -152,22 +164,27 @@ const InstallBody = memo(
                 showValueLabel
               />
               <DescriptionGrid columns={2} className="mt-6" items={downloadItems} />
+              <div className="flex flex-col py-2 gap-y-2">{renderAlerts(currentStep)}</div>
             </div>
           );
         case 'done':
           return (
-            <EmptyStateCard
-              icon={
-                state.doneAll.type === 'success' ? (
-                  <CheckCircle className="size-16 text-success" />
-                ) : (
-                  <SadCircle className="size-16 text-danger" />
-                )
-              }
-              className="my-6"
-              title={state.doneAll.title}
-              description={state.doneAll.description}
-            />
+            <div className="size-full flex flex-col gap-y-2">
+              <EmptyStateCard
+                icon={
+                  state.doneAll.type === 'success' ? (
+                    <CheckCircle className="shrink-0 size-14 text-success" />
+                  ) : (
+                    <SadCircle className="shrink-0 size-14 text-danger" />
+                  )
+                }
+                className="my-6"
+                title={state.doneAll.title}
+                description={state.doneAll.description}
+              />
+
+              {renderAlerts(currentStep)}
+            </div>
           );
         case 'starter':
           return (
@@ -175,6 +192,7 @@ const InstallBody = memo(
               <p className="text-xl font-semibold">
                 {"You're"} about to install <span className="font-bold">{capitalize(title)}</span>
               </p>
+              {renderAlerts(currentStep)}
               <p>Choose an option below to proceed with the installation or locate a pre-existing installation.</p>
             </div>
           );
