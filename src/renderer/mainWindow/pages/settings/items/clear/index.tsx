@@ -1,5 +1,5 @@
 import SettingsSection from '@lynx/components/SettingsSection';
-import {TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
+import {Album, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 
 import ImageCache from './ImageCache';
 import ResetSettings from './ResetSettings';
@@ -13,9 +13,21 @@ export const SettingsClearId = 'settings_rmv_data_elem';
  */
 export default function SettingsClear() {
   return (
-    <SettingsSection title="Clear" id={SettingsClearId} icon={<TrashBin2 className="size-5" />} itemsCenter>
-      <ImageCache />
-      <ResetSettings />
-    </SettingsSection>
+    <>
+      <SettingsSection title="Clear" id={SettingsClearId} icon={<TrashBin2 className="size-5" />} itemsCenter>
+        <ResetSettings />
+      </SettingsSection>
+      <SettingsSection
+        description={
+          'Image cache stores remote images locally for faster loading. ' +
+          'Cache is automatically cleaned every 7 days.'
+        }
+        title="Image Cache"
+        id={SettingsClearId}
+        icon={<Album className="size-5" />}
+        itemsCenter>
+        <ImageCache />
+      </SettingsSection>
+    </>
   );
 }
