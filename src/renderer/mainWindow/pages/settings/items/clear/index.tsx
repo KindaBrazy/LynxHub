@@ -14,8 +14,8 @@ export const SettingsClearId = 'settings_rmv_data_elem';
 export default function SettingsClear() {
   return (
     <SettingsSection title="Clear" id={SettingsClearId} icon={<TrashBin2 className="size-5" />} itemsCenter>
-      <ResetSettings />
       <ImageCache />
+      <ResetSettings />
     </SettingsSection>
   );
 }
