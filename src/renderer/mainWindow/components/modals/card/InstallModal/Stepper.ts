@@ -1,4 +1,4 @@
-import {InstallationStepper} from '@lynx_common/types/plugins/modules';
+import {InitialSteps, InstallationStepper} from '@lynx_common/types/plugins/modules';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';
 import lynxIpc from '@lynx_shared/ipc/lynxIpc';
@@ -13,7 +13,7 @@ import {InstallState} from './types';
 export interface InstallStepperData {
   /** The unique identifier of the card being installed. */
   cardId: string;
-  setSteps: Dispatch<SetStateAction<string[]>>;
+  setSteps: Dispatch<SetStateAction<InitialSteps>>;
   setCurrentStep: Dispatch<SetStateAction<number>>;
   cloneRepository: InstallationStepper['cloneRepository'];
   showFinalStep: InstallationStepper['showFinalStep'];
@@ -35,7 +35,7 @@ export interface InstallStepperData {
  * This class provides plugins with a predictable API (IPC, storage, utils) during installation.
  */
 export default class InstallStepper {
-  private readonly setSteps: Dispatch<SetStateAction<string[]>>;
+  private readonly setSteps: Dispatch<SetStateAction<InitialSteps>>;
   private readonly setNextStep: Dispatch<SetStateAction<number>>;
   private readonly finalStep: InstallationStepper['showFinalStep'];
   private totalSteps: number;
@@ -167,7 +167,7 @@ export default class InstallStepper {
 
   public setUpdated: InstallationStepper['setUpdated'];
 
-  public initialSteps(steps: string[]) {
+  public initialSteps(steps: InitialSteps) {
     this.totalSteps = steps.length - 1;
     this.setSteps(steps);
 

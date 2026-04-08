@@ -1,4 +1,5 @@
 import {
+  InitialSteps,
   InstallationMethod,
   InstallationStepper,
   StarterStepOptions,
@@ -23,7 +24,7 @@ export interface UseStepperProps {
   /** The unique identifier of the card being installed. */
   cardId: string;
   /** Sets the list of step names shown in the header stepper. */
-  setSteps: Dispatch<SetStateAction<string[]>>;
+  setSteps: Dispatch<SetStateAction<InitialSteps>>;
   /** Sets the current active step index. */
   setCurrentStep: Dispatch<SetStateAction<number>>;
   /** Ref to the function that triggers a terminal restart. */

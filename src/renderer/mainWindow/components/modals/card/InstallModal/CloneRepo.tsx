@@ -2,6 +2,7 @@ import {Card, CardBody, CardHeader, Link, ModalBody, Progress} from '@heroui/rea
 import DescriptionGrid, {DescriptionGridItem} from '@lynx/components/DescriptionGrid';
 import {GitHub_Icon} from '@lynx_assets/icons';
 import {GitProgressCallback} from '@lynx_common/types/ipc';
+import {InitialStep} from '@lynx_common/types/plugins/modules';
 import {extractGitUrl, isWin} from '@lynx_common/utils';
 import filesIpc from '@lynx_shared/ipc/files';
 import gitIpc from '@lynx_shared/ipc/git';
@@ -16,6 +17,7 @@ import {AppDispatch} from '../../../../redux/store';
 import {initGitProgress} from '../../../../utils/constants';
 import OpenDialog from '../../../OpenDialog';
 import CloneOptions from './CloneOptions';
+import {renderAlerts} from './CustomAlert';
 import {InstallState} from './types';
 
 export type CloneOptionsResult = {
@@ -35,6 +37,8 @@ export interface CloneRepoProps {
   isOpen: boolean;
   /** Utility function to partially mutate the modal state. */
   updateState: (newState: Partial<InstallState> | ((prev: InstallState) => Partial<InstallState>)) => void;
+
+  currentStep: InitialStep;
 }
 
 /**
@@ -43,7 +47,7 @@ export interface CloneRepoProps {
  *
  * @param {CloneRepoProps} props - The component props.
  */
-export default function CloneRepo({url, start, done, isOpen, updateState}: CloneRepoProps) {
+export default function CloneRepo({url, start, done, isOpen, updateState, currentStep}: CloneRepoProps) {
   const dispatch = useDispatch<AppDispatch>();
 
   const [cloneOptionsResult, setCloneOptionsResult] = useState<CloneOptionsResult>({
@@ -150,6 +154,7 @@ export default function CloneRepo({url, start, done, isOpen, updateState}: Clone
             </CardBody>
           </Card>
           <CloneOptions url={url} setCloneOptionsResult={setCloneOptionsResult} />
+          {renderAlerts(currentStep)}
         </div>
       )}
     </ModalBody>

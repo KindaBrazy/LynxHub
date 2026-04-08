@@ -1,11 +1,12 @@
 import {ModalHeader} from '@heroui/react';
+import {InitialSteps} from '@lynx_common/types/plugins/modules';
 import {memo, useMemo} from 'react';
 
 import StepProgress from './StepProgress';
 
 export interface InstallHeaderProps {
   /** An array of string labels representing the installation steps. */
-  steps: string[];
+  steps: InitialSteps;
   /** The 0-indexed integer of the currently active step. */
   currentStep: number;
 }
@@ -17,17 +18,16 @@ export interface InstallHeaderProps {
  */
 const InstallHeader = ({steps, currentStep}: InstallHeaderProps) => {
   const maxTitleWidth = useMemo(() => (steps.length > 5 ? 'max-w-16' : 'max-w-24'), [steps.length]);
-  const stepItems = useMemo(() => steps.map((step, index) => ({key: index, title: step})), [steps]);
 
   return (
     <ModalHeader className="shrink-0 overflow-hidden bg-foreground-100 shadow-sm">
       <div className="flex w-full justify-center">
         <StepProgress
-          items={stepItems}
+          steps={steps}
           current={currentStep}
+          className="max-w-full"
           orientation="horizontal"
           titleClassName={maxTitleWidth}
-          className="max-w-full"
         />
       </div>
     </ModalHeader>

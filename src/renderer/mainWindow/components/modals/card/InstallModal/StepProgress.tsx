@@ -1,16 +1,12 @@
 import {cn, Spinner} from '@heroui/react';
+import {InitialSteps} from '@lynx_common/types/plugins/modules';
 import {CheckRead} from '@solar-icons/react-perf/LineDuotone';
-import {memo, ReactNode, useEffect, useRef} from 'react';
+import {memo, useEffect, useRef} from 'react';
 
 import {useHasScroll} from '../../../../utils/hooks';
 
-type StepItem = {
-  key: string | number;
-  title: ReactNode;
-};
-
 interface StepProgressProps {
-  items: StepItem[];
+  steps: InitialSteps;
   current: number;
   orientation?: 'horizontal' | 'vertical';
   className?: string;
@@ -43,7 +39,7 @@ function StepIndicator({status}: {status: 'complete' | 'current' | 'upcoming'}) 
   return <div className="size-5 rounded-full border border-foreground-300 bg-foreground-200/30" />;
 }
 
-function StepProgress({items, current, orientation = 'horizontal', className, titleClassName}: StepProgressProps) {
+function StepProgress({steps, current, orientation = 'horizontal', className, titleClassName}: StepProgressProps) {
   const {hasScroll, containerRef, setContainerRef} = useHasScroll();
   const currentActiveItem = useRef<HTMLDivElement | null>(null);
 
@@ -69,16 +65,17 @@ function StepProgress({items, current, orientation = 'horizontal', className, ti
     return () => observer.disconnect();
   }, [current, hasScroll]);
 
-  if (items.length === 0) return null;
+  if (steps.length === 0) return null;
 
   if (orientation === 'vertical') {
     return (
       <div className={cn('space-y-3', className)}>
-        {items.map((item, index) => {
+        {steps.map((item, index) => {
           const status = getStatus(index, current);
+          const title = typeof item === 'string' ? item : item.title;
 
           return (
-            <div key={item.key} className="flex items-start gap-3">
+            <div key={index} className="flex items-start gap-3">
               <div className="pt-0.5">
                 <StepIndicator status={status} />
               </div>
@@ -91,7 +88,7 @@ function StepProgress({items, current, orientation = 'horizontal', className, ti
                     status === 'upcoming' && 'text-foreground-600',
                     titleClassName,
                   )}>
-                  {item.title}
+                  {title}
                 </span>
               </div>
             </div>
@@ -104,9 +101,11 @@ function StepProgress({items, current, orientation = 'horizontal', className, ti
   return (
     <div ref={setContainerRef} className={cn('overflow-x-scroll scrollbar-hide px-1 py-1', className)}>
       <div className="flex min-w-max items-start">
-        {items.map((item, index) => {
+        {steps.map((item, index) => {
           const status = getStatus(index, current);
-          const isLast = index === items.length - 1;
+          const isLast = index === steps.length - 1;
+
+          const title = typeof item === 'string' ? item : item.title;
 
           return (
             <div
@@ -115,7 +114,7 @@ function StepProgress({items, current, orientation = 'horizontal', className, ti
                   currentActiveItem.current = node;
                 }
               }}
-              key={item.key}
+              key={index}
               className="flex items-start">
               <div className="flex min-w-0 flex-col items-center gap-1.5">
                 <StepIndicator status={status} />
@@ -127,8 +126,8 @@ function StepProgress({items, current, orientation = 'horizontal', className, ti
                     status === 'upcoming' && 'text-foreground/70',
                     titleClassName,
                   )}
-                  title={typeof item.title === 'string' ? item.title : undefined}>
-                  {item.title}
+                  title={title}>
+                  {title}
                 </span>
               </div>
               {!isLast && (
