@@ -5,6 +5,7 @@ import {RootState} from '../store';
 
 type TriggerState = {
   clearBrowserFail: boolean;
+  reloadBrowserHomePage: boolean;
 };
 
 type TriggerStateValueByKey = {
@@ -18,6 +19,7 @@ type BooleanTriggerStateKey = {
 // Default initial state - actual values come from preloadedState in Store.ts
 const initialState: TriggerState = {
   clearBrowserFail: false,
+  reloadBrowserHomePage: false,
 };
 
 const triggerSlice = createSlice({

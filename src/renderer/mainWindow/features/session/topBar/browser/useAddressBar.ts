@@ -6,8 +6,10 @@ import {useDispatch} from 'react-redux';
 
 import {cardsActions} from '../../../../redux/reducers/cards';
 import {useTabsState} from '../../../../redux/reducers/tabs';
+import {triggerActions} from '../../../../redux/reducers/triggers';
 import {AppDispatch} from '../../../../redux/store';
 import {RunningCard} from '../../../../types';
+import {invalidateHistoryCache} from '../../browser/utils';
 
 const findAutocomplete = (input: string, historyUrls: string[]): string => {
   if (!input || input.length < 2) return '';
@@ -259,6 +261,9 @@ export const useAddressBar = ({runningCard, setCustomAddress}: UseAddressBarProp
       if (!url) return;
 
       const action = isFavorite ? storageUtilsIpc.send.removeBrowserFavorite : storageUtilsIpc.send.addBrowserFavorite;
+
+      invalidateHistoryCache();
+      dispatch(triggerActions.trigger('reloadBrowserHomePage'));
 
       action(url);
       getFavorites();

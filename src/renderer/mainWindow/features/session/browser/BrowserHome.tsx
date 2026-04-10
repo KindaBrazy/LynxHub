@@ -11,6 +11,7 @@ import {AnimatePresence, motion} from 'framer-motion';
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
+import {triggerActions, useTriggerState} from '../../../redux/reducers/triggers';
 import HistorySection from './HistorySection';
 import {getCachedHistoryData} from './utils';
 
@@ -31,7 +32,9 @@ const staggerContainer = {
 
 export default function BrowserHome({type}: Props) {
   const activeTab = useTabsState('activeTab');
+  const reloadBrowserHomePage = useTriggerState('reloadBrowserHomePage');
   const dispatch = useDispatch<AppDispatch>();
+
   const [recentAddress, setRecentAddress] = useState<string[]>([]);
   const [favoriteAddress, setFavoriteAddress] = useState<string[]>([]);
   const [favIcons, setFavIcons] = useState<FavIcons[]>([]);
@@ -52,19 +55,30 @@ export default function BrowserHome({type}: Props) {
     [],
   );
 
-  useEffect(() => {
-    mountedRef.current = true;
+  const reloadPage = useCallback(() => {
     setIsLoading(true);
 
     getCachedHistoryData().then(result => {
       handleDataRefresh(result);
       setIsLoading(false);
     });
+  }, [handleDataRefresh]);
+
+  useEffect(() => {
+    if (reloadBrowserHomePage) {
+      reloadPage();
+      dispatch(triggerActions.clear('reloadBrowserHomePage'));
+    }
+  }, [reloadBrowserHomePage, reloadPage]);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    reloadPage();
 
     return () => {
       mountedRef.current = false;
     };
-  }, [handleDataRefresh]);
+  }, [reloadPage]);
 
   // Create a map for quick favicon lookup
   const favIconMap = useMemo(() => {

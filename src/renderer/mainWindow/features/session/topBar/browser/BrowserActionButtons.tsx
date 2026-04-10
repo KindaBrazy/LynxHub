@@ -8,6 +8,10 @@ import {ArrowLeft, ArrowRight, Home2, Restart} from '@solar-icons/react-perf/Bol
 import {AnimatePresence, motion, Transition, Variants} from 'framer-motion';
 import {X} from 'lucide-react';
 import {memo, useEffect, useMemo, useState} from 'react';
+import {useDispatch} from 'react-redux';
+
+import {triggerActions} from '../../../../redux/reducers/triggers';
+import {AppDispatch} from '../../../../redux/store';
 
 const variants: Variants = {
   animate: {scale: 1, opacity: 1},
@@ -41,6 +45,8 @@ type Props = {
 const BrowserActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props) => {
   const isActiveTab = useIsActiveTab(tabID);
   const tabs = useTabsState('tabs');
+  const dispatch = useDispatch<AppDispatch>();
+
   const [canGoBack, setCanGoBack] = useState<boolean>(false);
   const [canGoForward, setCanGoForward] = useState<boolean>(false);
 
@@ -48,7 +54,10 @@ const BrowserActionButtons = memo(({webuiAddress, tabID, id, isDomReady}: Props)
 
   const goBack = () => browserIpc.send.goBack(id);
   const goForward = () => browserIpc.send.goForward(id);
-  const reload = () => browserIpc.send.reload(id);
+  const reload = () => {
+    browserIpc.send.reload(id);
+    dispatch(triggerActions.trigger('reloadBrowserHomePage'));
+  };
   const stop = () => browserIpc.send.stop(id);
   const loadWebuiURL = () => browserIpc.send.loadURL(id, webuiAddress);
   const toggleDevTools = () => browserIpc.send.toggleDevTools(id);
