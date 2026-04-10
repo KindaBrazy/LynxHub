@@ -20,7 +20,7 @@ const Browser = memo(({runningCard}: Props) => {
       {showEmptyPage ? (
         <BrowserHome type={type} />
       ) : failedLoad ? (
-        <BrowserError error={failedLoad} onReload={handleReload} />
+        <BrowserError error={failedLoad} id={runningCard.id} onReload={handleReload} />
       ) : (
         <BrowserViewPlaceholder />
       )}
