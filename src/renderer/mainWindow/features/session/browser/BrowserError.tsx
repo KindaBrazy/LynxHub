@@ -1,18 +1,36 @@
 import {Accordion, AccordionItem, Button} from '@heroui/react';
 import CopyClipboard from '@lynx/components/CopyClipboard';
+import browserIpc from '@lynx_shared/ipc/browser';
 import {LinkBroken, Restart} from '@solar-icons/react-perf/BoldDuotone';
 import {motion} from 'framer-motion';
-import {memo} from 'react';
+import {memo, useEffect} from 'react';
 
 export type FailedLoad = {errorCode: number; errorDescription: string; validatedURL: string};
 
 type Props = {
   error: FailedLoad;
   onReload: () => void;
+  id: string;
 };
 
-const BrowserError = memo(({error, onReload}: Props) => {
+const BrowserError = memo(({error, onReload, id}: Props) => {
   const details = `URL: ${error.validatedURL}\nError Code: ${error.errorCode}\nDescription: ${error.errorDescription}`;
+
+  useEffect(() => {
+    const listener = (e: MouseEvent) => {
+      if (e.button === 3) {
+        browserIpc.send.goBack(id);
+      } else if (e.button === 4) {
+        browserIpc.send.goForward(id);
+      }
+    };
+
+    window.addEventListener('mouseup', listener);
+
+    return () => {
+      window.removeEventListener('mouseup', listener);
+    };
+  }, []);
 
   return (
     <div className="flex h-full w-full select-none items-center justify-center bg-white p-8 dark:bg-LynxNearBlack">
