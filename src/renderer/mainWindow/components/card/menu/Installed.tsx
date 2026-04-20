@@ -1,5 +1,4 @@
-// @ts-nocheck
-import {Button, Dropdown, DropdownMenu, DropdownSection, DropdownTrigger} from '@heroui/react';
+import {Button, Dropdown, Header} from '@heroui-v3/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useUpdatingCard} from '@lynx/utils/hooks';
 import {MenuDots} from '@solar-icons/react-perf/BoldDuotone';
@@ -30,56 +29,54 @@ export const InstalledMenu = memo(() => {
   }, []);
 
   return (
-    <Dropdown
-      isOpen={menuIsOpen}
-      closeOnSelect={false}
-      onOpenChange={setMenuIsOpen}
-      className="border border-foreground-100!"
-      classNames={{base: 'before:bg-foreground-100', content: 'border-foreground-100'}}
-      showArrow>
-      <DropdownTrigger>
-        <Button radius="lg" variant="flat" color="primary" isLoading={updating} isIconOnly>
-          {!updating && (
-            <MenuDots
-              className={`size-[1.3rem] ${menuIsOpen ? 'rotate-90' : 'rotate-0'} transition-all duration-500`}
-            />
-          )}
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu aria-label="Card Menu">
-        {first.map((Comp, index) => {
-          return Comp({key: index, useCardStore});
-        })}
-        <DropdownSection key="options" classNames={{divider: 'bg-foreground-100'}} showDivider>
-          {LaunchConfigMenuItem()}
-          {ExtensionsMenuItem()}
-          {RepoConfigMenuItem()}
-        </DropdownSection>
-        {second.map((Comp, index) => {
-          return Comp({key: index, useCardStore});
-        })}
-        <DropdownSection key="update" classNames={{divider: 'bg-foreground-100'}} showDivider>
-          {UpdateMenuItem()}
-          {CheckForUpdateMenuItem()}
-          {AutoUpdateMenuItem()}
-        </DropdownSection>
-        {third.map((Comp, index) => {
-          return Comp({key: index, useCardStore});
-        })}
-        <DropdownSection key="info" classNames={{divider: 'bg-foreground-100'}} showDivider>
-          {AboutMenuItem()}
-          {HomePageMenuItem()}
-        </DropdownSection>
-        <DropdownSection key="card_modify">
-          {DuplicateMenuItem()}
-          {UnAssignMenuItem()}
-          {UninstallMenuItem()}
-        </DropdownSection>
+    <Dropdown isOpen={menuIsOpen} onOpenChange={setMenuIsOpen}>
+      <Button variant="tertiary" isPending={updating} isIconOnly>
+        {!updating && (
+          <MenuDots className={`size-[1.3rem] ${menuIsOpen ? 'rotate-90' : 'rotate-0'} transition-all duration-500`} />
+        )}
+      </Button>
+      <Dropdown.Popover>
+        <Dropdown.Menu aria-label="Card Menu">
+          {first.map((Comp, index) => {
+            return <Comp key={index} useCardStore={useCardStore} />;
+          })}
+          <Dropdown.Section key="options">
+            <Header>Options</Header>
+            <LaunchConfigMenuItem />
+            <ExtensionsMenuItem />
+            <RepoConfigMenuItem />
+          </Dropdown.Section>
 
-        {fourth.map((Comp, index) => {
-          return Comp({key: index, useCardStore});
-        })}
-      </DropdownMenu>
+          {second.map((Comp, index) => {
+            return <Comp key={index} useCardStore={useCardStore} />;
+          })}
+          <Dropdown.Section key="update">
+            <Header>Update</Header>
+            <UpdateMenuItem />
+            <CheckForUpdateMenuItem />
+            <AutoUpdateMenuItem />
+          </Dropdown.Section>
+
+          {third.map((Comp, index) => {
+            return <Comp key={index} useCardStore={useCardStore} />;
+          })}
+          <Dropdown.Section key="info">
+            <Header>Info</Header>
+            <AboutMenuItem />
+            <HomePageMenuItem />
+          </Dropdown.Section>
+
+          <Dropdown.Section key="card_modify">
+            <Header>Danger Zone</Header>
+            <DuplicateMenuItem />
+            <UnAssignMenuItem />
+            <UninstallMenuItem />
+          </Dropdown.Section>
+          {fourth.map((Comp, index) => {
+            return <Comp key={index} useCardStore={useCardStore} />;
+          })}
+        </Dropdown.Menu>
+      </Dropdown.Popover>
     </Dropdown>
   );
 });

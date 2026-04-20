@@ -1,4 +1,4 @@
-import {DropdownItem} from '@heroui/react';
+import {DropdownItem} from '@heroui-v3/react';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
 import {MinusSquare, TrashBin2} from '@solar-icons/react-perf/BoldDuotone';
 import {useCallback} from 'react';
@@ -22,14 +22,10 @@ export const UnAssignMenuItem = () => {
   }, [setMenuIsOpen, id, openModal]);
 
   return (
-    <DropdownItem
-      key="unassign"
-      color="warning"
-      title="Unassign"
-      onPress={onPress}
-      className="cursor-default text-warning"
-      startContent={<MinusSquare className="size-4" />}
-    />
+    <DropdownItem key="unassign" onPress={onPress} className="text-warning">
+      <MinusSquare className="size-4" />
+      Unassign
+    </DropdownItem>
   );
 };
 
@@ -49,13 +45,9 @@ export const UninstallMenuItem = () => {
   }, [setMenuIsOpen, id, openModal]);
 
   return (
-    <DropdownItem
-      color="danger"
-      key="uninstall"
-      title="Uninstall"
-      onPress={onPress}
-      className="cursor-default text-danger"
-      startContent={<TrashBin2 className="size-4" />}
-    />
+    <DropdownItem key="uninstall" onPress={onPress} className="text-danger">
+      <TrashBin2 className="size-4" />
+      Uninstall
+    </DropdownItem>
   );
 };

@@ -1,4 +1,4 @@
-import {DropdownItem} from '@heroui/react';
+import {DropdownItem} from '@heroui-v3/react';
 import {useGetInstallType} from '@lynx/plugins/modules';
 import {useInstalledCard} from '@lynx/utils/hooks';
 import {Extensions2_Icon, GitHub_Icon} from '@lynx_assets/icons';
@@ -26,13 +26,10 @@ export const LaunchConfigMenuItem = () => {
   }, [setMenuIsOpen, title, haveArguments, id, openModal]);
 
   return (
-    <DropdownItem
-      onPress={onPress}
-      key="launch-config"
-      title="Launch Config"
-      className="cursor-default"
-      startContent={<SettingsMinimalistic className="size-4" />}
-    />
+    <DropdownItem onPress={onPress} key="launch-config">
+      <SettingsMinimalistic className="size-4" />
+      Launch Config
+    </DropdownItem>
   );
 };
 
@@ -67,18 +64,13 @@ export const ExtensionsMenuItem = () => {
     setMenuIsOpen(false);
   }, [setMenuIsOpen, card, extensionsDir, title, devName, id, openModal]);
 
-  if (!extensionsDir) {
-    return <DropdownItem className="hidden" key="extensions-hidden" textValue="extensions_hidden" />;
-  }
+  if (!extensionsDir) return null;
 
   return (
-    <DropdownItem
-      key="extensions"
-      onPress={onPress}
-      title="Extensions"
-      className="cursor-default"
-      startContent={<Extensions2_Icon className="size-4" />}
-    />
+    <DropdownItem key="extensions" onPress={onPress}>
+      <Extensions2_Icon className="size-4" />
+      Extensions
+    </DropdownItem>
   );
 };
 
@@ -104,17 +96,12 @@ export const RepoConfigMenuItem = () => {
     }
   }, [setMenuIsOpen, dir, title, openModal]);
 
-  if (installType === 'others') {
-    return <DropdownItem className="hidden" key="repoSetting-hidden" textValue="repoSetting_hidden" />;
-  }
+  if (installType === 'others') return null;
 
   return (
-    <DropdownItem
-      key="repoSetting"
-      onPress={onPress}
-      title="Repository"
-      className="cursor-default"
-      startContent={<GitHub_Icon className="ml-0.5 size-3.5" />}
-    />
+    <DropdownItem key="repoSetting" onPress={onPress}>
+      <GitHub_Icon className="ml-0.5 size-3.5" />
+      Repository
+    </DropdownItem>
   );
 };

@@ -1,4 +1,4 @@
-import {DropdownItem} from '@heroui/react';
+import {DropdownItem} from '@heroui-v3/react';
 import {duplicateCard, removeDuplicatedCard} from '@lynx/plugins/modules';
 import {cardsActions, useCardsState} from '@lynx/redux/reducers/cards';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
@@ -57,13 +57,10 @@ export const AboutMenuItem = () => {
   }, [showOpenFolder, webUI?.dir, setMenuIsOpen, dispatch, id, repoUrl, extensionsDir, title, activeTab]);
 
   return (
-    <DropdownItem
-      key="information"
-      onPress={onPress}
-      className={!showOpenFolder ? 'cursor-default' : ''}
-      title={showOpenFolder ? 'Open Folder' : 'Information'}
-      startContent={showOpenFolder ? <FolderOpen className="size-4" /> : <InfoCircle className="size-4" />}
-    />
+    <DropdownItem key="information" onPress={onPress}>
+      {showOpenFolder ? <FolderOpen className="size-4" /> : <InfoCircle className="size-4" />}
+      {showOpenFolder ? 'Open Folder' : 'Information'}
+    </DropdownItem>
   );
 };
 
@@ -91,14 +88,11 @@ export const HomePageMenuItem = () => {
   }, [setMenuIsOpen, repoUrl, title, isCtrlPressed, openModal]);
 
   return (
-    <DropdownItem
-      key="homepage"
-      title="HomePage"
-      onPress={onPress}
-      startContent={<HomeAngle2 className="size-4" />}
-      className={!isCtrlPressed ? 'cursor-default' : ''}
-      endContent={isCtrlPressed && <SquareTopDown className="size-3.5" />}
-    />
+    <DropdownItem key="homepage" onPress={onPress}>
+      <HomeAngle2 className="size-4" />
+      HomePage
+      {isCtrlPressed && <SquareTopDown className="size-3.5" />}
+    </DropdownItem>
   );
 };
 
@@ -131,11 +125,8 @@ export const DuplicateMenuItem = () => {
   }, [dispatch, isDuplicated, duplicates, id]);
 
   return (
-    <DropdownItem
-      onPress={onPress}
-      key="duplicate_card"
-      className="cursor-default"
-      startContent={<Copy className="size-4" />}>
+    <DropdownItem onPress={onPress} key="duplicate_card">
+      <Copy className="size-4" />
       {isDuplicated ? 'Remove Duplicate' : 'Duplicate'}
     </DropdownItem>
   );
