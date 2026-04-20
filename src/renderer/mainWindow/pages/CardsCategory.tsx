@@ -9,7 +9,7 @@ import {LoadedCardData} from '@lynx_common/types/plugins/modules';
 import {Inbox, PinCircle} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, LayoutGroup} from 'framer-motion';
 import {isEmpty, isNil} from 'lodash';
-import {memo, useMemo} from 'react';
+import {memo, useId, useMemo} from 'react';
 
 import {CardContainerClasses} from './CardsContainer';
 import HomeCategory from './home/Category';
@@ -91,14 +91,17 @@ const AllCards = () => {
 /** Renders the "PINNED" home page category section. */
 export const PinnedCars = memo(() => {
   const pinnedCards = useCardsState('pinnedCards');
+
   // Extension point: plugins may inject custom items alongside pinned cards.
   const pinCategory = extensionsData.customizePages.home.add.pinCategory;
+
+  const id = useId();
 
   return (
     <HomeCategory
       title="PINNED"
       subTitle="Quick Access to Your Top AI Tools"
-      icon={<Pin_Color_Icon id="home_category_pin" className={CardContainerClasses} />}>
+      icon={<Pin_Color_Icon id={'home_category_pin' + id} className={CardContainerClasses} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         {isEmpty(pinnedCards) && isEmpty(pinCategory) ? (
           <EmptyStateCard
@@ -122,14 +125,17 @@ export const PinnedCars = memo(() => {
 /** Renders the "RECENTLY USED" home page category section. */
 export const RecentlyCards = memo(() => {
   const recentlyUsedCards = useCardsState('recentlyUsedCards');
+
   // Extension point: plugins may inject custom items alongside recently-used cards.
   const recentlyCategory = extensionsData.customizePages.home.add.recentlyCategory;
+
+  const id = useId();
 
   return (
     <HomeCategory
       title="RECENTLY USED"
       subTitle="Your Most Recent AI Interactions"
-      icon={<History_Color_Icon id="home_category_history" className={CardContainerClasses} />}>
+      icon={<History_Color_Icon className={CardContainerClasses} id={'home_category_history' + id} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         {!isEmpty(recentlyUsedCards) && isEmpty(recentlyCategory) ? (
           <EmptyStateCard
@@ -151,11 +157,13 @@ export const RecentlyCards = memo(() => {
 
 /** Renders the "All" home page category section showing every available card. */
 export const AllCardsSection = memo(() => {
+  const id = useId();
+
   return (
     <HomeCategory
       title="All"
       subTitle="Explore the Complete List of AI Interfaces"
-      icon={<Apps_Color_Icon id="home_category_app_color" className={CardContainerClasses} />}>
+      icon={<Apps_Color_Icon className={CardContainerClasses} id={'home_category_app_color' + id} />}>
       <div className="flex w-full flex-wrap gap-5 overflow-visible scrollbar-hide">
         <AllCards />
       </div>
