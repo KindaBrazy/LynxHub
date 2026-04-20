@@ -1,10 +1,10 @@
-import {Button, Divider, Input, Progress, Skeleton} from '@heroui/react';
+import {Button, Input, Progress, Skeleton} from '@heroui/react';
+import {Card, Separator} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {pluginsActions, usePluginsState} from '@lynx/redux/reducers/plugins';
 import {AppDispatch} from '@lynx/redux/store';
 import {searchInStrings, showRestartModal} from '@lynx/utils';
-import {ContainersBg} from '@lynx/utils/commonStyles';
 import {lynxTopToast} from '@lynx/utils/hooks';
 import {Circle_Icon} from '@lynx_assets/icons';
 import {PluginFilter} from '@lynx_common/types/plugins';
@@ -69,14 +69,23 @@ export default function PluginList() {
   }, [searchValue]);
 
   return (
-    <div
+    <Card
       className={
-        `absolute inset-y-2 border border-foreground-100 shadow-small sm:w-76 lg:w-[24rem] 2xl:w-120` +
-        ` flex shrink-0 flex-col overflow-hidden rounded-xl transition-[width] duration-500 ${ContainersBg}`
-      }>
-      {refreshing && <Progress size="sm" color="secondary" aria-label="Refreshing Item" isIndeterminate />}
+        `absolute inset-y-4 sm:w-76 lg:w-[24rem] 2xl:w-120` +
+        ` flex shrink-0 flex-col overflow-hidden transition-[width] duration-500`
+      }
+      variant="secondary">
+      {refreshing && (
+        <Progress
+          size="sm"
+          color="secondary"
+          aria-label="Refreshing Item"
+          className="absolute top-0 inset-x-0"
+          isIndeterminate
+        />
+      )}
 
-      <div className="flex w-full flex-col gap-y-4 p-4 shadow-small">
+      <div className="flex w-full flex-col gap-y-4">
         <div className="flex w-full flex-row items-center justify-between">
           <span className="text-xl font-semibold">Plugins</span>
           <SyncAllButton />
@@ -93,7 +102,7 @@ export default function PluginList() {
         </div>
       </div>
 
-      <Divider />
+      <Separator />
 
       <LynxScroll className="size-full space-y-2 px-3 pt-2">
         {loading ? (
@@ -117,7 +126,7 @@ export default function PluginList() {
           </div>
         )}
       </LynxScroll>
-    </div>
+    </Card>
   );
 }
 

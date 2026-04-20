@@ -65,8 +65,7 @@ export default function PluginPreviewHeader({installedPlugin}: PluginPreviewHead
   return (
     <div
       className={
-        `w-full flex flex-col p-5 sm:gap-y-2 shrink-0 ` +
-        `${isInstalled ? 'min-[77rem]:flex-row' : 'min-[53rem]:flex-row'}`
+        `w-full flex flex-col sm:gap-y-2 shrink-0 ` + `${isInstalled ? 'min-[77rem]:flex-row' : 'min-[53rem]:flex-row'}`
       }>
       <div className="w-full flex flex-col">
         <User

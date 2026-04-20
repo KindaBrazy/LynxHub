@@ -1,5 +1,4 @@
-import {Card, CardBody, CardHeader} from '@heroui/react';
-import {ContainersBg} from '@lynx/utils/commonStyles';
+import {Card, Description, Label} from '@heroui-v3/react';
 import {ReactNode} from 'react';
 
 /** Props for the CardsContainer component. */
@@ -24,15 +23,15 @@ export const CardContainerClasses = 'size-6 mr-2 hover:transition hover:duration
  */
 export default function CardsContainer({children, icon, title, subTitle, extraClassNames}: CardsContainerProps) {
   return (
-    <Card className={[ContainersBg, extraClassNames].filter(Boolean).join(' ')}>
-      <CardHeader className="flex-col items-start px-6 pt-5">
+    <Card variant="secondary" className={[extraClassNames].filter(Boolean).join(' ')}>
+      <Card.Header>
         <div className="flex flex-row items-center">
           {icon}
-          <span className="text-lg font-bold hover:transition hover:duration-500 hover:opacity-80">{title}</span>
+          <Label className="text-lg font-bold">{title}</Label>
         </div>
-        <span className="text-small text-foreground-500">{subTitle}</span>
-      </CardHeader>
-      <CardBody className="overflow-hidden px-6 pb-6 scrollbar-hide">{children}</CardBody>
+        <Description className="text-sm">{subTitle}</Description>
+      </Card.Header>
+      <Card.Content className="overflow-hidden scrollbar-hide">{children}</Card.Content>
     </Card>
   );
 }
