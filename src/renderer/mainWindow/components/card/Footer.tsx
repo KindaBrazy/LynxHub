@@ -1,4 +1,4 @@
-import {Button, CardFooter} from '@heroui/react';
+import {Button, CardFooter} from '@heroui-v3/react';
 import ShinyText from '@lynx/components/ShinyText';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useAppState} from '@lynx/redux/reducers/app';
@@ -16,6 +16,8 @@ import {useHotkeysState} from '../../redux/reducers/hotkeys';
 import InstalledMenu from './menu/Installed';
 import UninstalledMenu from './menu/Uninstalled';
 import {useCardStore} from './store';
+
+const MotionButton = motion(Button);
 
 type Props = {
   isRunning: boolean;
@@ -69,12 +71,11 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
         {isInstalled && (
           <Button
             className={
-              `shrink-0 -translate-x-2 opacity-0 transition duration-400 ` +
+              `shrink-0 -translate-x-2 opacity-0 transition duration-200 ` +
               `group-hover:translate-x-0 group-hover:opacity-100`
             }
             size="sm"
-            radius="full"
-            variant="light"
+            variant="ghost"
             onPress={onPress}
             isIconOnly>
             {isPinned ? <Pin className="size-3" /> : <PinLine className="size-3" />}
@@ -103,20 +104,17 @@ const Footer = memo(({isRunning, updatingExtensions, updating, updateCount, id}:
 
       <AnimatePresence>
         {showOpenFolder && (
-          <Button
+          <MotionButton
             size="sm"
-            variant="flat"
-            as={motion.div}
+            variant="tertiary"
             onPress={openFolder}
-            // @ts-ignore-next-line
             transition={{type: 'spring', duration: 0.5}}
             exit={{opacity: 0, scale: 0.8, translateY: 10}}
             animate={{opacity: 1, scale: 1, translateY: 0}}
             initial={{opacity: 0, scale: 0.8, translateY: 10}}
-            className="absolute bottom-2 right-1/2 translate-x-1/2"
-            disableAnimation>
+            className="absolute bottom-2 right-1/2 translate-x-1/2 duration-0 shrink-0">
             <FolderOpen size={16} className="text-foreground-600" />
-          </Button>
+          </MotionButton>
         )}
       </AnimatePresence>
     </CardFooter>
