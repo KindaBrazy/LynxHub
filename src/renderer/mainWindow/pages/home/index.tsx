@@ -1,4 +1,4 @@
-import {ScrollShadow} from '@heroui/react';
+import {ScrollShadow} from '@heroui-v3/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useDebounceBreadcrumb} from '@lynx_shared/sentry/Breadcrumbs';
@@ -55,10 +55,7 @@ const HomePage = memo(({show}: props) => {
 
         {top && top.map((Top, index) => <Top key={index} />)}
 
-        <ScrollShadow
-          size={20}
-          offset={-1}
-          className="scrollbar-hide size-full space-y-8 overflow-y-scroll pb-4 pt-6 px-2">
+        <ScrollShadow className="scrollbar-hide size-full space-y-8 overflow-y-scroll pb-4 pt-6 px-2">
           {scrollTop && scrollTop.map((Top, index) => <Top key={index} />)}
 
           {Categories ? (
