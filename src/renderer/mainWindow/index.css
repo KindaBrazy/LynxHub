@@ -16,6 +16,9 @@
   --color-LynxNearBlack: #191919;
   --color-LynxRaisinBlack: #212121;
 
+  --color-LynxBlue: var(--color-LynxBlue);
+  --color-LynxPurple: var(--color-LynxPurple);
+
   --color-LynxWhiteSecond: #f6f6f6;
   --color-LynxWhiteThird: #ececec;
   --color-LynxWhiteFourth: #e1e1e1;
@@ -49,10 +52,15 @@
 :root,
 [data-theme='light'] {
   --accent: oklch(0.705 0.169 242.482);
+  --color-LynxBlue: oklch(0.705 0.169 242.482);
+  --color-LynxPurple: oklch(0.636 0.305 319.947);
 }
+
 .dark,
 [data-theme='dark'] {
   --accent: oklch(0.509 0.246 262.557);
+  --color-LynxBlue: oklch(0.509 0.246 262.557);
+  --color-LynxPurple: oklch(0.581 0.299 307.027);
 }
 
 * {
