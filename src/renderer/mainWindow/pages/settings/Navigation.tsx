@@ -1,8 +1,8 @@
-import {Button, Card, CloseButton, Header, InputGroup, ScrollShadow} from '@heroui-v3/react';
+import {Button, Card, Header, ScrollShadow, SearchField} from '@heroui-v3/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {settingsActions, useSettingsState} from '@lynx/redux/reducers/settings';
 import {searchInStrings} from '@lynx/utils';
-import {Circle_Icon, Terminal_Icon} from '@lynx_assets/icons';
+import {Terminal_Icon} from '@lynx_assets/icons';
 import {SettingPage_Icon} from '@lynx_assets/icons/pages';
 import {
   Card as CardIcon,
@@ -189,25 +189,17 @@ const SettingsPageNav = ({sectionTexts}: SettingsPageNavProps) => {
         <SettingsSearchHighlight text="Settings" />
       </Card.Header>
       <Card.Content className="flex flex-col">
-        <InputGroup>
-          <InputGroup.Prefix>
-            <Circle_Icon />
-          </InputGroup.Prefix>
-          <InputGroup.Input
-            value={searchValue}
-            placeholder="Search settings..."
-            aria-label="Search settings sections"
-            onChange={event => setSearchValue(event.target.value)}
-          />
-
-          {searchValue && (
-            <CloseButton
-              aria-label="Clear"
-              onPress={() => setSearchValue('')}
-              className="absolute right-5.5 scale-80"
+        <SearchField value={searchValue} onChange={setSearchValue}>
+          <SearchField.Group>
+            <SearchField.SearchIcon />
+            <SearchField.Input
+              spellCheck="false"
+              placeholder="Search settings..."
+              aria-label="Search settings sections"
             />
-          )}
-        </InputGroup>
+            <SearchField.ClearButton />
+          </SearchField.Group>
+        </SearchField>
 
         <ScrollShadow className="h-full flex flex-col gap-y-3" hideScrollBar>
           {groupsToRender.length === 0 && searchValue && (
