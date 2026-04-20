@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {extensionsData} from '@lynx/plugins/extensions/loader';
 import {useAppState} from '@lynx/redux/reducers/app';
 import {HomePage_Icon} from '@lynx_assets/icons/pages';
@@ -39,10 +39,10 @@ const TitleBar = memo(() => {
       {showWizard ? (
         <Button
           className={
-            'pr-2 notDraggable text-small pl-2 flex rounded-t-lg! rounded-b-none! flex-row cursor-default' +
+            'pr-2 notDraggable text-small pl-2 flex rounded-t-xl! rounded-b-none! flex-row cursor-default' +
             ' gap-x-0 bg-white dark:bg-[#303033] ml-0.5 mt-1'
           }
-          variant="light">
+          variant="ghost">
           <div className="flex gap-x-1 flex-row items-center min-w-0 flex-1">
             <HomePage_Icon />
             <span>Initializer</span>

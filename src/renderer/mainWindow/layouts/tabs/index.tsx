@@ -1,4 +1,4 @@
-import {Divider} from '@heroui/react';
+import {Separator} from '@heroui-v3/react';
 import {tabsActions, useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
 import {TabInfo} from '@lynx_common/types';
@@ -106,11 +106,9 @@ const TabsList = memo(() => {
               animate={{scale: 1, y: 0, x: 0, opacity: 1, transition: {duration: 0.25, ease: 'backOut'}}}>
               <TabItem tab={tab} isOrdering={isOrdering} />
               {index < localTabs.length - 1 && (
-                <Divider
-                  className={`mx-1 max-h-4 dark:bg-foreground-200/50 ${
-                    onFocus ? 'bg-foreground-400/30' : 'bg-foreground-400/10'
-                  }`}
+                <Separator
                   orientation="vertical"
+                  className={`mx-1 my-3 ${onFocus ? 'bg-foreground-400/30' : 'bg-foreground-400/10'}`}
                 />
               )}
             </Reorder.Item>

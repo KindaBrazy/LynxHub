@@ -1,5 +1,6 @@
 import {TRANSITION_EASINGS} from '@heroui/framer-utils';
-import {Avatar, Spinner} from '@heroui/react';
+import {Avatar} from '@heroui/react';
+import {Spinner} from '@heroui-v3/react';
 import {Terminal_Icon} from '@lynx_assets/icons';
 import {
   AgentPage_Icon,
@@ -116,7 +117,7 @@ const TabIcon = memo(({tab, currentView}: Props) => {
         )}
         {iconState === 'loading' && (
           <motion.div key="loading" className="absolute inset-0 flex items-center justify-center" {...iconTransition}>
-            <Spinner size="sm" color="primary" variant="gradient" className="scale-80" />
+            <Spinner size="sm" color="accent" />
           </motion.div>
         )}
         {iconState === 'icon' && (

@@ -31,7 +31,7 @@ export default function CardsContainer({children, icon, title, subTitle, extraCl
         </div>
         <Description className="text-sm">{subTitle}</Description>
       </Card.Header>
-      <Card.Content className="overflow-hidden scrollbar-hide">{children}</Card.Content>
+      <Card.Content className="overflow-hidden scrollbar-hide pt-2 pb-5 px-3">{children}</Card.Content>
     </Card>
   );
 }
