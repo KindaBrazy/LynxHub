@@ -1,4 +1,5 @@
-import {Checkbox, DropdownItem, Spinner} from '@heroui/react';
+import {Checkbox, Spinner} from '@heroui/react';
+import {DropdownItem} from '@heroui-v3/react';
 import {getCardMethod, useAllCardMethods} from '@lynx/plugins/modules';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {AppDispatch} from '@lynx/redux/store';
@@ -47,20 +48,18 @@ export const UpdateMenuItem = () => {
     }
   }, [dispatch, setMenuIsOpen, webUi, devName, id, title, openModal, allMethods]);
 
-  if (!updateAvailable || autoUpdate)
-    return <DropdownItem className="hidden" key="update-hidden" textValue="update_hidden" />;
+  if (!updateAvailable || autoUpdate) return null;
 
   return (
     <DropdownItem
       key="update"
-      title="Update"
-      color="success"
       onPress={onPress}
       isDisabled={updating}
-      startContent={<DownloadMinimalistic className="size-4" />}
-      endContent={updating && <Spinner size="sm" color="primary" />}
-      className={updateAvailable ? 'text-success' : 'cursor-default'}
-    />
+      className={updateAvailable ? 'text-success' : 'cursor-default'}>
+      <DownloadMinimalistic className="size-4" />
+      Update
+      {updating && <Spinner size="sm" color="primary" />}
+    </DropdownItem>
   );
 };
 
@@ -91,24 +90,17 @@ export const CheckForUpdateMenuItem = () => {
     }
   }, [dispatch, setCheckingForUpdate, card, id, allMethods]);
 
-  if (updateAvailable || autoUpdate)
-    return <DropdownItem className="hidden" key="check-update-hidden" textValue="check_update_hidden" />;
+  if (updateAvailable || autoUpdate) return null;
 
   return (
-    <DropdownItem
-      startContent={
-        checkingForUpdate ? (
-          <Spinner size="sm" color="primary" variant="gradient" className="scale-95" />
-        ) : (
-          <Refresh className="size-4" />
-        )
-      }
-      onPress={onPress}
-      key="check-update"
-      title="Check For Updates"
-      className="cursor-default"
-      isDisabled={checkingForUpdate}
-    />
+    <DropdownItem onPress={onPress} key="check-update" isDisabled={checkingForUpdate}>
+      {checkingForUpdate ? (
+        <Spinner size="sm" color="primary" variant="gradient" className="scale-95" />
+      ) : (
+        <Refresh className="size-4" />
+      )}
+      Check For Updates
+    </DropdownItem>
   );
 };
 
@@ -151,10 +143,10 @@ export const AutoUpdateMenuItem = () => {
     }
   }, [dispatch, autoUpdate, updateAvailable, webUi, devName, id, title]);
 
-  if (customUpdate) return <DropdownItem className="hidden" key="auto-update-hidden" textValue="auto_update_hidden" />;
+  if (customUpdate) return null;
 
   return (
-    <DropdownItem key="auto-update" onPress={onPress} textValue="Auto Update" className="cursor-default">
+    <DropdownItem key="auto-update" onPress={onPress} textValue="Auto Update">
       <Checkbox size="sm" isSelected={autoUpdate} onValueChange={onPress} classNames={{hiddenInput: 'cursor-default'}}>
         Auto Update
       </Checkbox>
