@@ -40,7 +40,7 @@ export const InstalledMenu = memo(() => {
           {first.map((Comp, index) => {
             return <Comp key={index} useCardStore={useCardStore} />;
           })}
-          <Dropdown.Section key="options">
+          <Dropdown.Section>
             <Header>Options</Header>
             <LaunchConfigMenuItem />
             <ExtensionsMenuItem />
@@ -50,31 +50,44 @@ export const InstalledMenu = memo(() => {
           {second.map((Comp, index) => {
             return <Comp key={index} useCardStore={useCardStore} />;
           })}
-          <Dropdown.Section key="update">
+          <Dropdown.Section>
             <Header>Update</Header>
             <UpdateMenuItem />
             <CheckForUpdateMenuItem />
             <AutoUpdateMenuItem />
           </Dropdown.Section>
 
-          {third.map((Comp, index) => {
-            return <Comp key={index} useCardStore={useCardStore} />;
-          })}
-          <Dropdown.Section key="info">
-            <Header>Info</Header>
-            <AboutMenuItem />
-            <HomePageMenuItem />
-          </Dropdown.Section>
+          <Dropdown.Section>
+            <Header>Other</Header>
+            <Dropdown.SubmenuTrigger>
+              <Dropdown.Item>
+                Other
+                <Dropdown.SubmenuIndicator />
+              </Dropdown.Item>
+              <Dropdown.Popover>
+                <Dropdown.Menu>
+                  {third.map((Comp, index) => {
+                    return <Comp key={index} useCardStore={useCardStore} />;
+                  })}
+                  <Dropdown.Section key="info">
+                    <Header>Info</Header>
+                    <AboutMenuItem />
+                    <HomePageMenuItem />
+                  </Dropdown.Section>
 
-          <Dropdown.Section key="card_modify">
-            <Header>Danger Zone</Header>
-            <DuplicateMenuItem />
-            <UnAssignMenuItem />
-            <UninstallMenuItem />
+                  <Dropdown.Section key="card_modify">
+                    <Header>Danger Zone</Header>
+                    <DuplicateMenuItem />
+                    <UnAssignMenuItem />
+                    <UninstallMenuItem />
+                  </Dropdown.Section>
+                  {fourth.map((Comp, index) => {
+                    return <Comp key={index} useCardStore={useCardStore} />;
+                  })}
+                </Dropdown.Menu>
+              </Dropdown.Popover>
+            </Dropdown.SubmenuTrigger>
           </Dropdown.Section>
-          {fourth.map((Comp, index) => {
-            return <Comp key={index} useCardStore={useCardStore} />;
-          })}
         </Dropdown.Menu>
       </Dropdown.Popover>
     </Dropdown>
