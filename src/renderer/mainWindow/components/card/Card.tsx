@@ -1,12 +1,14 @@
-import {Card, CardBody} from '@heroui/react';
+import {Card, Description} from '@heroui-v3/react';
 import {useAppState} from '@lynx/redux/reducers/app';
 import {getAccentColorAsHex} from '@lynx/utils/accentColorGenerator';
 import {extractGitUrl} from '@lynx_common/utils';
 import {motion} from 'framer-motion';
 import {CSSProperties, memo, useMemo} from 'react';
 
-import {CardHeaderContent} from './CardHeaderContent';
+const MotionCard = motion(Card);
+
 import Footer from './Footer';
+import {CardHeaderContent} from './Header';
 import {useCardStore} from './store';
 import {useCardActions} from './useCardActions';
 import {useCardTitle} from './useCardTitle';
@@ -45,17 +47,17 @@ const LynxCard = memo(() => {
     [isInstalled, accentColor, isDarkMode],
   );
 
+  const isPressable = !isRunning && !updating && !isUpdatingExtensions;
+
   return (
-    <Card
+    <MotionCard
       className={
-        'relative h-52.5 w-75 border border-foreground-100 px-2 shadow-md transition-all duration-300 ' +
-        'group hover:scale-[1.02] hover:shadow-lg'
+        'relative h-46 w-75 border border-surface transition-all duration-200 ' +
+        `group hover:scale-[1.02] hover:shadow-lg ${isPressable && 'cursor-pointer'}`
       }
-      as={motion.div}
       whileHover="hover"
       onContextMenu={() => setMenuIsOpen(true)}
-      onPress={isInstalled ? startAi : install}
-      isPressable={!isRunning && !updating && !isUpdatingExtensions}>
+      onClick={isPressable ? (isInstalled ? startAi : install) : undefined}>
       <div
         style={accentStyle}
         className={`absolute inset-0 z-0 scale-150 opacity-50 ${isInstalled ? 'bg-installed' : 'bg-uninstalled'}`}
@@ -67,9 +69,9 @@ const LynxCard = memo(() => {
         updateAvailable={updateAvailable}
       />
 
-      <CardBody className="justify-center py-2">
-        <span className="line-clamp-3 text-sm text-foreground-500">{description}</span>
-      </CardBody>
+      <Card.Content>
+        <Description className="line-clamp-3 text-xs">{description}</Description>
+      </Card.Content>
 
       <Footer
         updating={updating}
@@ -78,7 +80,7 @@ const LynxCard = memo(() => {
         id={useCardStore(state => state.id)}
         updatingExtensions={isUpdatingExtensions}
       />
-    </Card>
+    </MotionCard>
   );
 });
 

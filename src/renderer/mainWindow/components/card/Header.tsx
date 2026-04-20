@@ -1,4 +1,5 @@
-import {CardHeader, Chip, Spinner, User} from '@heroui/react';
+import {Chip, Spinner} from '@heroui/react';
+import {Avatar, CardHeader, Description, Label} from '@heroui-v3/react';
 import {extractGitUrl, getCacheUrl} from '@lynx_common/utils';
 import {DownloadMinimalistic} from '@solar-icons/react-perf/BoldDuotone';
 import {AnimatePresence, motion} from 'framer-motion';
@@ -31,21 +32,17 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
   }, [repoUrl]);
 
   return (
-    <CardHeader key={`${id}_ttt`} className="justify-between">
-      <User
-        avatarProps={{
-          src: avatarSrc,
-          name: modifiedTitle,
-          isBordered: true,
-          className: 'shrink-0',
-          showFallback: true,
-          classNames: {base: isInstalled && 'ring-primary-200'},
-        }}
-        name={
-          <span
+    <CardHeader className="justify-between">
+      <div className="inline-flex items-center gap-2">
+        <Avatar className={`size-12 shrink-0 ${isInstalled && 'ring-LynxBlue ring-2'}`}>
+          <Avatar.Image src={avatarSrc} alt={modifiedTitle} />
+          <Avatar.Fallback>{...modifiedTitle.split(' ').map(item => item.slice(0, 1))}</Avatar.Fallback>
+        </Avatar>
+        <div className="flex flex-col">
+          <Label
             className={
               'cursor-text outline-none focus:border border-transparent focus:border-foreground-200' +
-              ' focus:px-1.5 focus:py-0.5 rounded-lg transition duration-200 line-clamp-1'
+              ' focus:px-1.5 focus:py-0.5 rounded-lg transition duration-200 line-clamp-1 z-20'
             }
             onBlur={e => {
               const selection = window.getSelection();
@@ -71,12 +68,10 @@ export const CardHeaderContent = memo(({modifiedTitle, onTitleChange, updateAvai
             contentEditable
             suppressContentEditableWarning>
             {modifiedTitle}
-          </span>
-        }
-        description={`By ${developer}`}
-        className="scale-120 mx-3 mt-2"
-        classNames={{description: 'text-[0.7rem]'}}
-      />
+          </Label>
+          <Description>By {developer}</Description>
+        </div>
+      </div>
       <AnimatePresence>
         {isInstalled && updateAvailable && (
           <Chip

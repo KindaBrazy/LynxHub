@@ -58,13 +58,13 @@ export const InstalledMenu = memo(() => {
           </Dropdown.Section>
 
           <Dropdown.Section>
-            <Header>Other</Header>
+            <Header>More...</Header>
             <Dropdown.SubmenuTrigger>
               <Dropdown.Item>
-                Other
+                More
                 <Dropdown.SubmenuIndicator />
               </Dropdown.Item>
-              <Dropdown.Popover>
+              <Dropdown.Popover className="min-h-fit">
                 <Dropdown.Menu>
                   {third.map((Comp, index) => {
                     return <Comp key={index} useCardStore={useCardStore} />;
