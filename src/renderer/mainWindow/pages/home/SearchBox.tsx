@@ -1,5 +1,4 @@
-import {InputGroup} from '@heroui-v3/react';
-import {Circle_Icon} from '@lynx_assets/icons';
+import {SearchField} from '@heroui-v3/react';
 import {Dispatch, memo, SetStateAction} from 'react';
 
 /**
@@ -20,17 +19,13 @@ interface HomeSearchBoxProps {
  */
 const HomeSearchBox = memo(({searchValue, setSearchValue}: HomeSearchBoxProps) => {
   return (
-    <InputGroup variant="secondary" fullWidth>
-      <InputGroup.Prefix>
-        <Circle_Icon />
-      </InputGroup.Prefix>
-      <InputGroup.Input
-        spellCheck="false"
-        value={searchValue}
-        placeholder="Search interfaces..."
-        onChange={event => setSearchValue(event.target.value)}
-      />
-    </InputGroup>
+    <SearchField variant="secondary" value={searchValue} onChange={setSearchValue} fullWidth>
+      <SearchField.Group>
+        <SearchField.SearchIcon />
+        <SearchField.Input spellCheck="false" placeholder="Search interfaces..." />
+        <SearchField.ClearButton />
+      </SearchField.Group>
+    </SearchField>
   );
 });
 
