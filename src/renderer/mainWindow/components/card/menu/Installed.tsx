@@ -36,7 +36,7 @@ export const InstalledMenu = memo(() => {
         )}
       </Button>
       <Dropdown.Popover>
-        <Dropdown.Menu aria-label="Card Menu">
+        <Dropdown.Menu aria-label="Card Menu" shouldCloseOnSelect={false}>
           {first.map((Comp, index) => {
             return <Comp key={index} useCardStore={useCardStore} />;
           })}
