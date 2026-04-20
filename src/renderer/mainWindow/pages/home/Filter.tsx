@@ -1,4 +1,5 @@
-import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Selection} from '@heroui/react';
+import {Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger, Selection} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {Apps_Color_Icon, History_Color_Icon, Pin_Color_Icon} from '@lynx_assets/icons/Icons_Colorful';
 import {storageUtilsIpc} from '@lynx_shared/ipc/storage';
 import AddBreadcrumb_Renderer from '@lynx_shared/sentry/Breadcrumbs';
@@ -38,15 +39,8 @@ const HomeFilter = memo(({selectedCategories}: HomeFilterProps) => {
   return (
     <Dropdown size="sm" className="border-foreground/15! border drop-shadow-lg" showArrow>
       <DropdownTrigger>
-        <Button
-          className={
-            'border-foreground/10 bg-stone-50 border shadow-md ' +
-            'dark:border-foreground/5 dark:bg-[#202020] dark:hover:bg-LynxNearBlack'
-          }
-          radius="full"
-          variant="light"
-          isIconOnly>
-          <Filter className="size-3.5" />
+        <Button variant="tertiary" className="shrink-0" isIconOnly>
+          <Filter />
         </Button>
       </DropdownTrigger>
 

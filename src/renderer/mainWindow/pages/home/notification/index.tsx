@@ -1,6 +1,5 @@
 import {
   Badge,
-  Button,
   Card,
   CardBody,
   CardFooter,
@@ -14,6 +13,7 @@ import {
   Progress,
   useDisclosure,
 } from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import EmptyStateCard from '@lynx/components/EmptyStateCard';
 import LynxScroll from '@lynx/components/LynxScroll';
 import {tabsActions} from '@lynx/redux/reducers/tabs';
@@ -137,8 +137,7 @@ function NotificationItem({notif, onRead, onNavigatePage, onCloseDrawer}: Notifi
             </span>
             <Button
               size="sm"
-              radius="full"
-              variant="light"
+              variant="tertiary"
               onPress={() => onRead(notif.id)}
               className="hover:text-success text-foreground-500 h-7 min-w-0 px-2 text-xs"
               isIconOnly>
@@ -169,12 +168,11 @@ function NotificationItem({notif, onRead, onNavigatePage, onCloseDrawer}: Notifi
                     }
                   }}
                   size="sm"
-                  variant="flat"
                   key={btn.title}
-                  className="text-xs"
-                  color={btn.color || 'default'}
-                  endContent={isUrl ? <SquareTopDown className="size-[0.85rem]" /> : undefined}>
+                  variant="tertiary"
+                  className="text-xs">
                   {btn.title}
+                  isUrl ? <SquareTopDown className="size-[0.85rem]" /> : undefined
                 </Button>
               );
             })}
@@ -230,16 +228,8 @@ export default function HomeNotificationDrawer() {
         content={totalNotificationCount}
         color={haveWarn ? 'warning' : 'success'}
         isInvisible={totalNotificationCount === 0}>
-        <Button
-          className={
-            'border-foreground/10 bg-stone-50 border shadow-md ' +
-            'dark:border-foreground/5 dark:bg-[#202020] dark:hover:bg-LynxNearBlack'
-          }
-          radius="full"
-          variant="light"
-          onPress={handleOpenDrawer}
-          isIconOnly>
-          <Bell className="size-4" />
+        <Button variant="tertiary" className="shrink-0" onPress={handleOpenDrawer} isIconOnly>
+          <Bell />
         </Button>
       </Badge>
       <Drawer
@@ -295,7 +285,7 @@ export default function HomeNotificationDrawer() {
           </DrawerBody>
 
           <DrawerFooter className="justify-start p-3">
-            <Button variant="light" color="warning" onPress={onClose}>
+            <Button variant="ghost" onPress={onClose}>
               Close
             </Button>
           </DrawerFooter>

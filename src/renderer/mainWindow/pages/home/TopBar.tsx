@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {cardsActions} from '@lynx/redux/reducers/cards';
 import {useTabsState} from '@lynx/redux/reducers/tabs';
 import {AppDispatch} from '@lynx/redux/store';
@@ -12,8 +12,6 @@ import {useDispatch} from 'react-redux';
 /**
  * Animated top bar component for the Home page.
  * Provides quick actions to open new terminals, browsers, or split views.
- *
- * @returns {JSX.Element} A set of animated action buttons.
  */
 export default function HomeTopBar() {
   const activeTab = useTabsState('activeTab');
@@ -59,40 +57,24 @@ export default function HomeTopBar() {
         animate={{scale: 1, translateY: 0, opacity: 1}}
         initial={{scale: 0.96, translateY: -10, opacity: 0}}>
         <motion.div transition={{delay: 0.1}} animate={{opacity: 1, y: 0}} initial={{opacity: 0, y: -10}}>
-          <Button
-            size="sm"
-            onPress={handleNewTerminal}
-            startContent={<Terminal_Icon />}
-            className="dark:bg-foreground-200 bg-white shadow-sm hover:scale-105">
-            <motion.span whileHover={{x: 2}} transition={{duration: 0.2}}>
-              Terminal
-            </motion.span>
+          <Button size="sm" variant="tertiary" onPress={handleNewTerminal}>
+            <Terminal_Icon />
+            Terminal
           </Button>
         </motion.div>
 
         <motion.div transition={{delay: 0.2}} animate={{opacity: 1, y: 0}} initial={{opacity: 0, y: -10}}>
-          <Button
-            size="sm"
-            startContent={<Earth />}
-            onPress={handleNewBrowser}
-            className="dark:bg-foreground-200 bg-white shadow-sm hover:scale-105">
-            <motion.span whileHover={{x: 2}} transition={{duration: 0.2}}>
-              Browser
-            </motion.span>
+          <Button size="sm" variant="tertiary" onPress={handleNewBrowser}>
+            <Earth />
+            Browser
           </Button>
         </motion.div>
 
         <motion.div transition={{delay: 0.3}} animate={{opacity: 1, y: 0}} initial={{opacity: 0, y: -10}}>
-          <Button size="sm" onPress={handleNewTerminalBrowser} className={'bg-primary shadow-sm hover:scale-105'}>
-            <motion.div
-              whileTap={{scale: 0.9}}
-              whileHover={{scale: 1.1}}
-              transition={{duration: 0.2}}
-              className="flex items-center justify-center gap-x-1">
-              <Terminal_Icon />
-              <Plus className="size-2 opacity-60" />
-              <Earth />
-            </motion.div>
+          <Button size="sm" onPress={handleNewTerminalBrowser}>
+            <Terminal_Icon />
+            <Plus className="size-2 opacity-60" />
+            <Earth />
           </Button>
         </motion.div>
       </motion.div>
