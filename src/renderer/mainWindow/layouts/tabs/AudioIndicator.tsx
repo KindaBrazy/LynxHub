@@ -1,4 +1,4 @@
-import {Button} from '@heroui/react';
+import {Button} from '@heroui-v3/react';
 import {useVolumeState, volumeActions} from '@lynx/redux/reducers/volume';
 import {AppDispatch} from '@lynx/redux/store';
 import browserIpc from '@lynx_shared/ipc/browser';
@@ -42,7 +42,7 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
   }, [dispatch, id, tabId, isMuted, globalMuted]);
 
   const icon = useMemo(
-    () => (isMuted ? <VolumeCross className="size-3.5 shrink-0" /> : <VolumeLoud className="size-3.5 shrink-0" />),
+    () => (isMuted ? <VolumeCross className="shrink-0" /> : <VolumeLoud className="shrink-0" />),
     [isMuted],
   );
 
@@ -56,14 +56,13 @@ const AudioIndicator = memo(({tabId, id}: Props) => {
 
   return (
     <Button
-      as="div"
       size="sm"
-      variant="light"
+      variant="ghost"
       aria-label={ariaLabel}
       aria-pressed={isMuted}
       onPress={handleMuteToggle}
+      className="scale-85 shrink-0"
       aria-description={ariaDescription}
-      className="cursor-default scale-90 min-w-0 p-1 shrink-0"
       isIconOnly>
       {icon}
     </Button>

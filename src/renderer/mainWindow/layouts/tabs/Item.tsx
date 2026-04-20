@@ -1,4 +1,4 @@
-import {Button, Tooltip} from '@heroui/react';
+import {Button, CloseButton, Tooltip} from '@heroui-v3/react';
 import useHotkeyPress from '@lynx/hooks/hotkeys';
 import {useCardsState} from '@lynx/redux/reducers/cards';
 import {useHotkeysState} from '@lynx/redux/reducers/hotkeys';
@@ -9,7 +9,6 @@ import {Hotkey_Names} from '@lynx_common/consts/hotkeys';
 import {TabInfo} from '@lynx_common/types';
 import contextMenuIpc from '@lynx_shared/ipc/contextMenu';
 import {motion} from 'framer-motion';
-import {X} from 'lucide-react';
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {useDispatch} from 'react-redux';
 
@@ -24,6 +23,8 @@ type Props = {
   isOrdering: boolean;
 };
 
+// TODO: like installer step progress use scroll detection to auto scroll to active tab
+
 /**
  * Component representing a single tab in the tab bar.
  * Handles selection, closing, and drag interactions.
@@ -35,6 +36,8 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
   const btnRef = useRef<HTMLButtonElement | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const [isTruncated, setIsTruncated] = useState<boolean>(false);
+
+  const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
 
@@ -100,27 +103,23 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
   }, [dispatch, tab.id, isOrdering]);
 
   return (
-    <Tooltip
-      delay={300}
-      radius="sm"
-      offset={-2}
-      placement="bottom"
-      content={tab.title}
-      isDisabled={!isTruncated}
-      classNames={{content: 'dark:bg-foreground-100', base: 'before:dark:bg-foreground-100'}}
-      showArrow>
+    <Tooltip delay={300} isDisabled={!isTruncated}>
+      <Tooltip.Content placement="bottom" showArrow>
+        <Tooltip.Arrow />
+        <p>{tab.title}</p>
+      </Tooltip.Content>
+
       <Button
         className={
-          'pr-0 text-small pl-2 flex data-[hover=true]:bg-foreground-100 flex-row relative ' +
-          `cursor-default gap-x-0 h-9 overflow-visible rounded-t-lg!`
+          'text-small pl-2 flex hover:bg-foreground-100 flex-row relative pr-1 ' +
+          `cursor-default gap-x-0 h-9 overflow-hidden rounded-none rounded-t-xl! `
         }
         ref={btnRef}
-        radius="none"
-        variant="light"
+        variant="ghost"
         onPress={onPress}
         aria-selected={isActiveTab}
-        aria-label={`Tab: ${tab.title}`}
-        disableRipple>
+        onHoverChange={setIsHovered}
+        aria-label={`Tab: ${tab.title}`}>
         <div className="flex gap-x-0.5 flex-row items-center min-w-0 flex-1">
           <TabIcon tab={tab} currentView={runningCard?.currentView} />
 
@@ -129,19 +128,15 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
           <TabTitle title={tab.title} setIsTruncated={setIsTruncated} />
         </div>
 
-        <Button
-          className={`cursor-default opacity-100 scale-75 ${
-            isActiveTab ? ' opacity-100 scale-75 ' : ' opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-75'
-          }`}
-          as="span"
-          size="sm"
-          variant="light"
+        <CloseButton
+          className={
+            `scale-85 bg-transparent hover:bg-surface-secondary ` +
+            `${isActiveTab || isHovered ? 'opacity-100' : 'opacity-0'}`
+          }
           ref={closeBtnRef}
           aria-label="Close tab"
           onPress={() => handleRemove(false)}
-          isIconOnly>
-          <X size={18} />
-        </Button>
+        />
 
         <ProgressBar progress={tab.progress} />
 
@@ -149,7 +144,7 @@ const TabItem = memo(({tab, isOrdering}: Props) => {
           <motion.div
             layoutId="active_tab_indicator"
             transition={{duration: 0.3, type: 'spring'}}
-            className="absolute inset-0 -z-1 bg-white dark:bg-[#303033] rounded-t-lg"
+            className="absolute inset-0 -z-1 bg-white dark:bg-[#303033] rounded-t-xl"
           />
         )}
       </Button>

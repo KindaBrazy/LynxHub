@@ -1,4 +1,4 @@
-import {Progress} from '@heroui/react';
+import {ProgressBar as Progress, ProgressBarProps} from '@heroui-v3/react';
 import {memo} from 'react';
 
 type ProgressState = 0 | 1 | 2 | 3 | 4;
@@ -7,10 +7,10 @@ type Props = {
   progress?: {state: ProgressState; value: number};
 };
 
-const ProgressColors: Record<number, 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'default'> = {
-  1: 'primary', // Normal
+const ProgressColors: Record<number, ProgressBarProps['color']> = {
+  1: 'default', // Normal
   2: 'danger', // Error
-  3: 'primary', // Indeterminate
+  3: 'accent', // Indeterminate
   4: 'warning', // Paused/Warning
 };
 
@@ -25,25 +25,21 @@ const ProgressBar = memo(({progress}: Props) => {
 
   const {state, value} = progress;
 
-  const color = ProgressColors[state] || 'primary';
+  const color = ProgressColors[state] || 'default';
   const isIndeterminate = state === 3;
 
   return (
     <div className="absolute bottom-0.75 inset-x-0">
       <Progress
-        classNames={{
-          base: 'h-0.5 max-h-0.5',
-          track: 'h-0.5 bg-foreground-900/30',
-          indicator: 'h-0.5',
-        }}
         size="sm"
-        radius="none"
         color={color}
-        className="w-full"
         aria-label="Tab progress"
         isIndeterminate={isIndeterminate}
-        value={isIndeterminate ? undefined : value}
-      />
+        value={isIndeterminate ? undefined : value}>
+        <Progress.Track>
+          <Progress.Fill />
+        </Progress.Track>
+      </Progress>
     </div>
   );
 });
